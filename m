@@ -2,144 +2,91 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0721DC352BE
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 22:05:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08C4EC352BE
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 22:05:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E4E9F218AC
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 22:05:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3F3821973
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 22:05:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587074725;
+	bh=9goen5q97IXE1QNsquPqQOAcD07uSEh64MmoAuyZQVU=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=bAOigh/72ROPm4gfXBWev0fVnHcnMOEyYtZw0DRXEHTWxbHGsk92S1qT8HDayzUcu
+	 Ry8diUwVKPUvirFzM8q+qBeGh28dA5w6amTitzq8GK659Vx+FzW6G+DGbR0UjKuA9A
+	 hdzhk2WfAvRo+7Uo4ZhDIE2+VfpAzP17n1JWdZUo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728650AbgDPWFS (ORCPT
+        id S1728760AbgDPWFZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 18:05:18 -0400
-Received: from mail-il1-f197.google.com ([209.85.166.197]:40274 "EHLO
-        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728086AbgDPWFQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 18:05:16 -0400
-Received: by mail-il1-f197.google.com with SMTP id k5so579054ilg.7
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 15:05:15 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=t94OE0w+w7k6OaH2ej/qCaib3DJVNZtB6q/8wxE75iQ=;
-        b=HwnmGfsW/idSN173NG9cQeYGhNgyMlC+1gUAU2GIE9cFm3ips0alSFCGsLN6/rIJGt
-         hxNuDY7BCSrV9LVVB7m+Pga96l4m9xBJxBP690fLEu2HI8srRv0biIkqKxoa3Wcb3R/p
-         OYswSHJja29unFFndC8GJdFYWOPLH6e4GAAJen4Tebf/PlhDlIhaTj/4v2U2uKJdus/C
-         aUmTBIQALsb7LEGGQKrZ5YBOutr5qlwaRgkHdpqS7lllBV+3UxRE5eDkIS+AxmUinfPN
-         vaIspnWQiJ+e5b8DABYfNzCpEPbKCSS/8hcrkjvTdVkUIciS5Wgmbqo2uzvyPLvVm/jZ
-         Q5nQ==
-X-Gm-Message-State: AGi0Pubf/iA1OE2XtM5wEGoHOJ+Ocnpel1wKmlsUFEnj1ULVAmF5TP+i
-        7aQ705p1PGv6Kl3SwA6IGYX50rswzZKmltFNNeXH1taH9pNO
-X-Google-Smtp-Source: APiQypJw4VEz7a7ZK6kPE6sSsJOCqcuC22BtBrPpJPQexqa9LMleUwiBkxlpyGS6A6L7N5GhN5ONllJ72gMHfjw7/b/j8UC4fjlw
+        Thu, 16 Apr 2020 18:05:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46702 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728086AbgDPWFX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 18:05:23 -0400
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 96B35218AC;
+        Thu, 16 Apr 2020 22:05:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587074723;
+        bh=9goen5q97IXE1QNsquPqQOAcD07uSEh64MmoAuyZQVU=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=TVXfprzCU3S0/bb29TUEpGCQ6zLmeTHCdg0sVNPb0WNrplplrAKzxCwyQQRDWj6qt
+         PU+3UJlqAppJEcrekP7G6XxpayRPbolAXoH9TzwvTNq5ppFYe5KhGqKmYaUh97HLBX
+         Pjd9LDuIFhPL8vwge13tNBFXmxPDPLfRZryi79/4=
+Subject: Re: [PATCH 5.4 000/232] 5.4.33-rc1 review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org, shuah <shuah@kernel.org>
+References: <20200416131316.640996080@linuxfoundation.org>
+From:   shuah <shuah@kernel.org>
+Message-ID: <1fbc738b-30d4-59db-184f-5d4812892481@kernel.org>
+Date:   Thu, 16 Apr 2020 16:05:22 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-X-Received: by 2002:a92:a183:: with SMTP id b3mr8712ill.74.1587074715380; Thu,
- 16 Apr 2020 15:05:15 -0700 (PDT)
-Date:   Thu, 16 Apr 2020 15:05:15 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000a475ac05a36fa01e@google.com>
-Subject: WARNING: locking bug in tomoyo_supervisor
-From:   syzbot <syzbot+1c36440b364ea3774701@syzkaller.appspotmail.com>
-To:     jmorris@namei.org, linux-kernel@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        penguin-kernel@I-love.SAKURA.ne.jp, serge@hallyn.com,
-        syzkaller-bugs@googlegroups.com, takedakn@nttdata.co.jp
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200416131316.640996080@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On 4/16/20 7:21 AM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.4.33 release.
+> There are 232 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Sat, 18 Apr 2020 13:11:20 +0000.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.33-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.4.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
+> 
 
-syzbot found the following crash on:
+Compiled and booted on my test system. No dmesg regressions.
+reboot and poweroff hang forever. The same problem I am seeing
+on Linux 5.7-rc1 and Linux 5.6.5-rc1 and now on 5.4.33-rc1.
 
-HEAD commit:    4f8a3cc1 Merge tag 'x86-urgent-2020-04-12' of git://git.ke..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=1599027de00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=3bfbde87e8e65624
-dashboard link: https://syzkaller.appspot.com/bug?extid=1c36440b364ea3774701
-compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=150733cde00000
+I am starting bisect on 5.6.5.
 
-Bisection is inconclusive: the first bad commit could be any of:
-
-9211bfbf netfilter: add missing IS_ENABLED(CONFIG_BRIDGE_NETFILTER) checks to header-file.
-47e640af netfilter: add missing IS_ENABLED(CONFIG_NF_TABLES) check to header-file.
-a1b2f04e netfilter: add missing includes to a number of header-files.
-0abc8bf4 netfilter: add missing IS_ENABLED(CONFIG_NF_CONNTRACK) checks to some header-files.
-bd96b4c7 netfilter: inline four headers files into another one.
-43dd16ef netfilter: nf_tables: store data in offload context registers
-78458e3e netfilter: add missing IS_ENABLED(CONFIG_NETFILTER) checks to some header-files.
-20a9379d netfilter: remove "#ifdef __KERNEL__" guards from some headers.
-bd8699e9 netfilter: nft_bitwise: add offload support
-2a475c40 kbuild: remove all netfilter headers from header-test blacklist.
-7e59b3fe netfilter: remove unnecessary spaces
-1b90af29 ipvs: Improve robustness to the ipvs sysctl
-5785cf15 netfilter: nf_tables: add missing prototypes.
-0a30ba50 netfilter: nf_nat_proto: make tables static
-e84fb4b3 netfilter: conntrack: use shared sysctl constants
-10533343 netfilter: connlabels: prefer static lock initialiser
-8c0bb787 netfilter: synproxy: rename mss synproxy_options field
-c162610c Merge git://git.kernel.org/pub/scm/linux/kernel/git/pablo/nf-next
-
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=10aacf5de00000
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+1c36440b364ea3774701@syzkaller.appspotmail.com
-
-------------[ cut here ]------------
-WARNING: CPU: 1 PID: 8602 at kernel/locking/lockdep.c:873 look_up_lock_class+0x207/0x280 kernel/locking/lockdep.c:863
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 1 PID: 8602 Comm: syz-executor.5 Not tainted 5.6.0-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x1e9/0x30e lib/dump_stack.c:118
- panic+0x264/0x7a0 kernel/panic.c:221
- __warn+0x102/0x210 kernel/panic.c:574
- look_up_lock_class+0x207/0x280 kernel/locking/lockdep.c:863
- __warn+0x209/0x210 kernel/panic.c:582
- look_up_lock_class+0x207/0x280 kernel/locking/lockdep.c:863
- report_bug+0x1ac/0x2d0 lib/bug.c:195
- fixup_bug arch/x86/kernel/traps.c:175 [inline]
- do_error_trap+0xca/0x1c0 arch/x86/kernel/traps.c:267
- do_invalid_op+0x32/0x40 arch/x86/kernel/traps.c:286
- look_up_lock_class+0x207/0x280 kernel/locking/lockdep.c:863
- invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
-RIP: 0010:look_up_lock_class+0x207/0x280 kernel/locking/lockdep.c:863
-Code: 3d 91 8c 12 08 00 0f 85 35 ff ff ff 31 db 48 c7 c7 19 59 e5 88 48 c7 c6 03 ea e6 88 31 c0 e8 10 18 ec ff 0f 0b e9 7b ff ff ff <0f> 0b e9 74 ff ff ff 48 c7 c1 30 4d 55 8b 80 e1 07 80 c1 03 38 c1
-RSP: 0018:ffffc90006017a98 EFLAGS: 00010002
-RAX: ffffffff8ab05460 RBX: ffffffff8ad678f8 RCX: 0000000000000000
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffff888096695860
-RBP: ffff888096695878 R08: 0000000000000001 R09: 0000000000000000
-R10: fffffbfff12d7735 R11: 0000000000000000 R12: 1ffff11012cd2b0c
-R13: ffffffff89063ea9 R14: ffff888096695860 R15: dffffc0000000000
- register_lock_class+0x97/0x10d0 kernel/locking/lockdep.c:1220
- tomoyo_supervisor+0x13d/0x1310 security/tomoyo/common.c:2076
- __lock_acquire+0x102/0x2c30 kernel/locking/lockdep.c:4234
- rcu_lock_release+0x5/0x20 include/linux/rcupdate.h:212
- srcu_read_unlock include/linux/srcu.h:181 [inline]
- tomoyo_read_unlock security/tomoyo/common.h:1123 [inline]
- tomoyo_inet_entry security/tomoyo/network.c:487 [inline]
- tomoyo_check_inet_address+0x661/0x8e0 security/tomoyo/network.c:532
- lock_acquire+0x169/0x480 kernel/locking/lockdep.c:4934
- spin_lock_bh include/linux/spinlock.h:358 [inline]
- lock_sock_nested+0x43/0x110 net/core/sock.c:2959
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+thanks,
+-- Shuah
