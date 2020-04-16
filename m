@@ -2,122 +2,165 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6892C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 11:31:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24CA5C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 11:31:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AF515208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 11:31:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2C7921D7F
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 11:31:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=kalray.eu header.i=@kalray.eu header.b="Aqfdl3Bo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2633052AbgDPLa7 (ORCPT
+        id S2506295AbgDPLbK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 07:30:59 -0400
-Received: from foss.arm.com ([217.140.110.172]:58956 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2506191AbgDPLJb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 07:09:31 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EB356C14;
-        Thu, 16 Apr 2020 03:45:30 -0700 (PDT)
-Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D08083F73D;
-        Thu, 16 Apr 2020 03:45:29 -0700 (PDT)
-Date:   Thu, 16 Apr 2020 11:45:27 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Andrei Vagin <avagin@gmail.com>
-Cc:     Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Dmitry Safonov <dima@arista.com>
-Subject: Re: [PATCH 3/6] arm64/vdso: Add time napespace page
-Message-ID: <20200416104527.GD4987@lakrids.cambridge.arm.com>
-References: <20200416052618.804515-1-avagin@gmail.com>
- <20200416052618.804515-4-avagin@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200416052618.804515-4-avagin@gmail.com>
-User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
+        Thu, 16 Apr 2020 07:31:10 -0400
+Received: from zimbra2.kalray.eu ([92.103.151.219]:45020 "EHLO
+        zimbra2.kalray.eu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2505842AbgDPLJa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 07:09:30 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by zimbra2.kalray.eu (Postfix) with ESMTP id E483227E0BEB;
+        Thu, 16 Apr 2020 13:09:27 +0200 (CEST)
+Received: from zimbra2.kalray.eu ([127.0.0.1])
+        by localhost (zimbra2.kalray.eu [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id Kl8XApNDOTIE; Thu, 16 Apr 2020 13:09:27 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by zimbra2.kalray.eu (Postfix) with ESMTP id 8437127E0B48;
+        Thu, 16 Apr 2020 13:09:27 +0200 (CEST)
+DKIM-Filter: OpenDKIM Filter v2.10.3 zimbra2.kalray.eu 8437127E0B48
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kalray.eu;
+        s=32AE1B44-9502-11E5-BA35-3734643DEF29; t=1587035367;
+        bh=BTeyNExfyxQjnOaSPJGAKwarwW1+gJT+EEBl7fj1eRk=;
+        h=From:To:Date:Message-Id;
+        b=Aqfdl3Bof+6vnT8DAxK7JRGpaIYA7auThwnIeG0tN+r09Xs4mk8wQZVhbwb0dMcOf
+         Zg0DGIG7nE6LR+LEp46uiwdIzZCoji/+yZ7dtyOC+l6Fxg3v8w79TrNdFWnse5AGp9
+         lNouqjIaCfFt/fvsgCnhylfkPHJ3TIpPmd30NTOg=
+X-Virus-Scanned: amavisd-new at zimbra2.kalray.eu
+Received: from zimbra2.kalray.eu ([127.0.0.1])
+        by localhost (zimbra2.kalray.eu [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id qYJlB-6xkymO; Thu, 16 Apr 2020 13:09:27 +0200 (CEST)
+Received: from triton.lin.mbt.kalray.eu (unknown [192.168.37.25])
+        by zimbra2.kalray.eu (Postfix) with ESMTPSA id 7166827E02FA;
+        Thu, 16 Apr 2020 13:09:27 +0200 (CEST)
+From:   Clement Leger <cleger@kalray.eu>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Clement Leger <cleger@kalray.eu>
+Subject: [PATCH 2/2] spi: dw: remove cs_control and poll_mode members from chip_data
+Date:   Thu, 16 Apr 2020 13:09:16 +0200
+Message-Id: <20200416110916.22633-2-cleger@kalray.eu>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200416110916.22633-1-cleger@kalray.eu>
+References: <20200416110823.22565-1-cleger@kalray.eu>
+ <20200416110916.22633-1-cleger@kalray.eu>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andrei,
+Since these members were initialized only with previous dw_spi_chip
+struct members and that there is no user anymore, remove them. Along
+this removal, remove code path which were using these members.
 
-On Wed, Apr 15, 2020 at 10:26:15PM -0700, Andrei Vagin wrote:
-> diff --git a/arch/arm64/include/asm/vdso.h b/arch/arm64/include/asm/vdso.h
-> index 07468428fd29..351c145d3808 100644
-> --- a/arch/arm64/include/asm/vdso.h
-> +++ b/arch/arm64/include/asm/vdso.h
-> @@ -12,6 +12,12 @@
->   */
->  #define VDSO_LBASE	0x0
->  
-> +#ifdef CONFIG_TIME_NS
-> +#define __VVAR_PAGES    2
-> +#else
-> +#define __VVAR_PAGES    1
-> +#endif
-> +
->  #ifndef __ASSEMBLY__
-  
-> +#ifdef CONFIG_TIME_NS
-> +static __always_inline const struct vdso_data *__arch_get_timens_vdso_data(void)
-> +{
-> +	const struct vdso_data *ret;
-> +
-> +	ret = _timens_data;
-> +	OPTIMIZER_HIDE_VAR(ret);
-> +
-> +	return ret;
-> +}
-> +#endif
+Signed-off-by: Clement Leger <cleger@kalray.eu>
+---
+ drivers/spi/spi-dw.c | 41 +----------------------------------------
+ 1 file changed, 1 insertion(+), 40 deletions(-)
 
-Sorry for the confusion here, but please either:
+diff --git a/drivers/spi/spi-dw.c b/drivers/spi/spi-dw.c
+index fda8d433a769..2b79c5a983c0 100644
+--- a/drivers/spi/spi-dw.c
++++ b/drivers/spi/spi-dw.c
+@@ -24,11 +24,8 @@ struct chip_data {
+ 	u8 tmode;		/* TR/TO/RO/EEPROM */
+ 	u8 type;		/* SPI/SSP/MicroWire */
+ 
+-	u8 poll_mode;		/* 1 means use poll mode */
+-
+ 	u16 clk_div;		/* baud rate divider */
+ 	u32 speed_hz;		/* baud rate */
+-	void (*cs_control)(u32 command);
+ };
+ 
+ #ifdef CONFIG_DEBUG_FS
+@@ -127,11 +124,6 @@ static inline void dw_spi_debugfs_remove(struct dw_spi *dws)
+ void dw_spi_set_cs(struct spi_device *spi, bool enable)
+ {
+ 	struct dw_spi *dws = spi_controller_get_devdata(spi->controller);
+-	struct chip_data *chip = spi_get_ctldata(spi);
+-
+-	/* Chip select logic is inverted from spi_set_cs() */
+-	if (chip && chip->cs_control)
+-		chip->cs_control(!enable);
+ 
+ 	if (!enable)
+ 		dw_writel(dws, DW_SPI_SER, BIT(spi->chip_select));
+@@ -265,18 +257,6 @@ static irqreturn_t dw_spi_irq(int irq, void *dev_id)
+ 	return dws->transfer_handler(dws);
+ }
+ 
+-/* Must be called inside pump_transfers() */
+-static int poll_transfer(struct dw_spi *dws)
+-{
+-	do {
+-		dw_writer(dws);
+-		dw_reader(dws);
+-		cpu_relax();
+-	} while (dws->rx_end > dws->rx);
+-
+-	return 0;
+-}
+-
+ static int dw_spi_transfer_one(struct spi_controller *master,
+ 		struct spi_device *spi, struct spi_transfer *transfer)
+ {
+@@ -324,22 +304,6 @@ static int dw_spi_transfer_one(struct spi_controller *master,
+ 			(((spi->mode & SPI_LOOP) ? 1 : 0) << SPI_SRL_OFFSET))
+ 		| (chip->tmode << SPI_TMOD_OFFSET);
+ 
+-	/*
+-	 * Adjust transfer mode if necessary. Requires platform dependent
+-	 * chipselect mechanism.
+-	 */
+-	if (chip->cs_control) {
+-		if (dws->rx && dws->tx)
+-			chip->tmode = SPI_TMOD_TR;
+-		else if (dws->rx)
+-			chip->tmode = SPI_TMOD_RO;
+-		else
+-			chip->tmode = SPI_TMOD_TO;
+-
+-		cr0 &= ~SPI_TMOD_MASK;
+-		cr0 |= (chip->tmode << SPI_TMOD_OFFSET);
+-	}
+-
+ 	dw_writel(dws, DW_SPI_CTRL0, cr0);
+ 
+ 	/* Check if current transfer is a DMA transaction */
+@@ -359,7 +323,7 @@ static int dw_spi_transfer_one(struct spi_controller *master,
+ 			spi_enable_chip(dws, 1);
+ 			return ret;
+ 		}
+-	} else if (!chip->poll_mode) {
++	} else {
+ 		txlevel = min_t(u16, dws->fifo_len / 2, dws->len / dws->n_bytes);
+ 		dw_writel(dws, DW_SPI_TXFLTR, txlevel);
+ 
+@@ -379,9 +343,6 @@ static int dw_spi_transfer_one(struct spi_controller *master,
+ 			return ret;
+ 	}
+ 
+-	if (chip->poll_mode)
+-		return poll_transfer(dws);
+-
+ 	return 1;
+ }
+ 
+-- 
+2.17.1
 
-* Add a preparatory patch making __arch_get_vdso_data() use
-  OPTIMIZER_HIDE_VAR(), and use OPTIMIZER_HIDE_VAR() here.
-
-* Use the same assembly as __arch_get_vdso_data() currently does.
-
-... and either way add a comment here:
-
-	/* See __arch_get_vdso_data() */
-
-... so taht the rationale is obvious.
-
-[...]
-
-> +enum vvar_pages {
-> +	VVAR_DATA_PAGE_OFFSET = 0,
-> +#ifdef CONFIG_TIME_NS
-> +	VVAR_TIMENS_PAGE_OFFSET = 1,
-> +#endif /* CONFIG_TIME_NS */
-> +	VVAR_NR_PAGES = __VVAR_PAGES,
-> +};
-
-Pet peeve, but we don't need the initializers here, as enums start from
-zero. The last element shouldn't have a trailing comma as we don't
-expect to add elements after it in future.
-
-Rather than assigning to VVAR_NR_PAGES, it'd be better to use a
-BUILD_BUG_ON() to verify that it is the number we expect:
-
-enum vvar_pages {
-	VVAR_DATA_PAGE,
-#ifdef CONFIG_TIME_NS
-	VVAR_TIMENS_PAGE,
-#endif
-	VVAR_NR_PAGES
-};
-
-BUILD_BUG_ON(VVAR_NR_PAGES != __VVAR_PAGES);
-
-Thanks,
-Mark.
