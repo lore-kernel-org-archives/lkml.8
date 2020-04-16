@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D09FC2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:25:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA821C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:25:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 67CDB2076D
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:25:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B741C2076D
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:25:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587047142;
-	bh=+09gj9DFydIP7mf6pVPiMl7RvRE9gZ7eUk45AMpunfA=;
+	s=default; t=1587047154;
+	bh=oK4EUs+DRClyG/3rKXZm1ZxXK0l4/9QJpxPizuGmNhw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=syvy+D72D6zuirw7oaEnITT5lm/7SsCPyjGiHnQOSUCnhWOOh9H5U91+tb4+MejE8
-	 sf7SXY9GWe0fHm+/yoEJ7hih3Z/IZVaNP7aMqqKfXRvD9MccvKXr/sq0mfe43whAd7
-	 A7IqGKGkLlrAa0QUcd7Lk884QDCRRSSNSlqmWunI=
+	b=lYNkDvr/4Wk6pqoezaQeT8gu7h6AbwpTFS9UB8H57qFtxG/X9SHsVZszYqGbbD5Bx
+	 TaNgW+ojltJ1LETcCF2jzH1YMDZwC2nDndQZ9Fma1zz+dADkJp7dD0oCFoS0xjkjVT
+	 umJ4tA+Wow7zpSrDOm6UrVxT4BhUHMinbS4TpBAw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2410006AbgDPOZj (ORCPT
+        id S1728334AbgDPOZx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:25:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45146 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 10:25:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45128 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2636331AbgDPN6H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:58:07 -0400
+        id S2441867AbgDPN6Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:58:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 90B952078B;
-        Thu, 16 Apr 2020 13:58:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5A4D02078B;
+        Thu, 16 Apr 2020 13:58:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587045486;
-        bh=+09gj9DFydIP7mf6pVPiMl7RvRE9gZ7eUk45AMpunfA=;
+        s=default; t=1587045495;
+        bh=oK4EUs+DRClyG/3rKXZm1ZxXK0l4/9QJpxPizuGmNhw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jNdLLgjcx8bJjdK6Nnf9tCbzRM7as1TkycUgzAqhoEUCSw66QuvWQFEF0cdc8opU5
-         gaW4VR/iL0+qVSrdHKa22W6iodkdhYrzsMBgib8z4+3WLDsRsexx3dXmKUWU9tuN+o
-         qEtU+XijFdGMWwvSFn5hfBqMvU5OXVCpUF4b8LWc=
+        b=DtS5JsZl4LSoFJxzGKlAkolwjdEJevdaKvWKKLXfxF5IHnL7qp1td04XXpmUbV2m9
+         +kIxTOJaTd+HOuQWmnZB8sXcR606Y3Z6oA3I0pz8r2/NF5kXCUQOMok8GdvpXYRjXw
+         nKh8eAtZUcAifQZCow/QMHul+py+94/I9ErIN2MA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qu Wenruo <wqu@suse.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 5.6 155/254] btrfs: unset reloc control if we fail to recover
-Date:   Thu, 16 Apr 2020 15:24:04 +0200
-Message-Id: <20200416131345.994367461@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Sibi Sankar <sibis@codeaurora.org>
+Subject: [PATCH 5.6 158/254] remoteproc: qcom_q6v5_mss: Dont reassign mpss region on shutdown
+Date:   Thu, 16 Apr 2020 15:24:07 +0200
+Message-Id: <20200416131346.381431027@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.804095985@linuxfoundation.org>
 References: <20200416131325.804095985@linuxfoundation.org>
@@ -60,70 +60,100 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josef Bacik <josef@toxicpanda.com>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-commit fb2d83eefef4e1c717205bac71cb1941edf8ae11 upstream.
+commit 900fc60df22748dbc28e4970838e8f7b8f1013ce upstream.
 
-If we fail to load an fs root, or fail to start a transaction we can
-bail without unsetting the reloc control, which leads to problems later
-when we free the reloc control but still have it attached to the file
-system.
+Trying to reclaim mpss memory while the mba is not running causes the
+system to crash on devices with security fuses blown, so leave it
+assigned to the remote on shutdown and recover it on a subsequent boot.
 
-In the normal path we'll end up calling unset_reloc_control() twice, but
-all it does is set fs_info->reloc_control = NULL, and we can only have
-one balance at a time so it's not racey.
-
-CC: stable@vger.kernel.org # 5.4+
-Reviewed-by: Qu Wenruo <wqu@suse.com>
-Signed-off-by: Josef Bacik <josef@toxicpanda.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Fixes: 6c5a9dc2481b ("remoteproc: qcom: Make secure world call for mem ownership switch")
+Cc: stable@vger.kernel.org
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+Tested-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Link: https://lore.kernel.org/r/20200304194729.27979-2-sibis@codeaurora.org
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/relocation.c |   10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ drivers/remoteproc/qcom_q6v5_mss.c |   35 ++++++++++++++++++++++++-----------
+ 1 file changed, 24 insertions(+), 11 deletions(-)
 
---- a/fs/btrfs/relocation.c
-+++ b/fs/btrfs/relocation.c
-@@ -4593,9 +4593,8 @@ int btrfs_recover_relocation(struct btrf
- 
- 	trans = btrfs_join_transaction(rc->extent_root);
- 	if (IS_ERR(trans)) {
--		unset_reloc_control(rc);
- 		err = PTR_ERR(trans);
--		goto out_free;
-+		goto out_unset;
+--- a/drivers/remoteproc/qcom_q6v5_mss.c
++++ b/drivers/remoteproc/qcom_q6v5_mss.c
+@@ -1001,11 +1001,6 @@ static void q6v5_mba_reclaim(struct q6v5
+ 		writel(val, qproc->reg_base + QDSP6SS_PWR_CTL_REG);
  	}
  
- 	rc->merge_reloc_tree = 1;
-@@ -4615,7 +4614,7 @@ int btrfs_recover_relocation(struct btrf
- 		if (IS_ERR(fs_root)) {
- 			err = PTR_ERR(fs_root);
- 			list_add_tail(&reloc_root->root_list, &reloc_roots);
--			goto out_free;
-+			goto out_unset;
- 		}
+-	ret = q6v5_xfer_mem_ownership(qproc, &qproc->mpss_perm,
+-				      false, qproc->mpss_phys,
+-				      qproc->mpss_size);
+-	WARN_ON(ret);
+-
+ 	q6v5_reset_assert(qproc);
  
- 		err = __add_reloc_root(reloc_root);
-@@ -4625,7 +4624,7 @@ int btrfs_recover_relocation(struct btrf
+ 	q6v5_clk_disable(qproc->dev, qproc->reset_clks,
+@@ -1095,6 +1090,14 @@ static int q6v5_mpss_load(struct q6v5 *q
+ 			max_addr = ALIGN(phdr->p_paddr + phdr->p_memsz, SZ_4K);
+ 	}
  
- 	err = btrfs_commit_transaction(trans);
- 	if (err)
--		goto out_free;
-+		goto out_unset;
++	/**
++	 * In case of a modem subsystem restart on secure devices, the modem
++	 * memory can be reclaimed only after MBA is loaded. For modem cold
++	 * boot this will be a nop
++	 */
++	q6v5_xfer_mem_ownership(qproc, &qproc->mpss_perm, false,
++				qproc->mpss_phys, qproc->mpss_size);
++
+ 	mpss_reloc = relocate ? min_addr : qproc->mpss_phys;
+ 	qproc->mpss_reloc = mpss_reloc;
+ 	/* Load firmware segments */
+@@ -1184,8 +1187,16 @@ static void qcom_q6v5_dump_segment(struc
+ 	void *ptr = rproc_da_to_va(rproc, segment->da, segment->size);
  
- 	merge_reloc_roots(rc);
+ 	/* Unlock mba before copying segments */
+-	if (!qproc->dump_mba_loaded)
++	if (!qproc->dump_mba_loaded) {
+ 		ret = q6v5_mba_load(qproc);
++		if (!ret) {
++			/* Reset ownership back to Linux to copy segments */
++			ret = q6v5_xfer_mem_ownership(qproc, &qproc->mpss_perm,
++						      false,
++						      qproc->mpss_phys,
++						      qproc->mpss_size);
++		}
++	}
  
-@@ -4641,7 +4640,8 @@ out_clean:
- 	ret = clean_dirty_subvols(rc);
- 	if (ret < 0 && !err)
- 		err = ret;
--out_free:
-+out_unset:
-+	unset_reloc_control(rc);
- 	kfree(rc);
- out:
- 	if (!list_empty(&reloc_roots))
+ 	if (!ptr || ret)
+ 		memset(dest, 0xff, segment->size);
+@@ -1196,8 +1207,14 @@ static void qcom_q6v5_dump_segment(struc
+ 
+ 	/* Reclaim mba after copying segments */
+ 	if (qproc->dump_segment_mask == qproc->dump_complete_mask) {
+-		if (qproc->dump_mba_loaded)
++		if (qproc->dump_mba_loaded) {
++			/* Try to reset ownership back to Q6 */
++			q6v5_xfer_mem_ownership(qproc, &qproc->mpss_perm,
++						true,
++						qproc->mpss_phys,
++						qproc->mpss_size);
+ 			q6v5_mba_reclaim(qproc);
++		}
+ 	}
+ }
+ 
+@@ -1237,10 +1254,6 @@ static int q6v5_start(struct rproc *rpro
+ 	return 0;
+ 
+ reclaim_mpss:
+-	xfermemop_ret = q6v5_xfer_mem_ownership(qproc, &qproc->mpss_perm,
+-						false, qproc->mpss_phys,
+-						qproc->mpss_size);
+-	WARN_ON(xfermemop_ret);
+ 	q6v5_mba_reclaim(qproc);
+ 
+ 	return ret;
 
 
