@@ -2,67 +2,120 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C901AC2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:35:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0097C2BB85
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:35:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AEF5E21D7E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:35:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FD9D21D7E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:35:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587047738;
+	bh=jDt6vkUMyGZfura59hrrftwobQmgudUKhDGGO98R2Z4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Sv9AumUsWZhMaorZWWagc6/m/WSR6O0X630B8nFUag/MSV5/PNzkBjNurixxFaPdj
+	 AofLC5dJf8DCtadZcPENiRXNgS4cGV5XL3E8f4JGJ5HfJot/n8KLx6A+wvO21C/XPf
+	 AAdTnB65JBfXB/5l1MCXaWFZxB4b3fkUQMaq6PBI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389220AbgDPOfX (ORCPT
+        id S2438787AbgDPORW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:35:23 -0400
-Received: from mga14.intel.com ([192.55.52.115]:32947 "EHLO mga14.intel.com"
+        Thu, 16 Apr 2020 10:17:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38956 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390489AbgDPOfQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 10:35:16 -0400
-IronPort-SDR: +EoHWgc5JHZbsFU6TEE873X72BrAPnLUjSQe0ZhoXXntDb2Re65mKPQMIltgMo4o89+AEAH6bZ
- l1Vvkef/BVcQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2020 07:35:16 -0700
-IronPort-SDR: Yczz4GfRLg57htWIkGagIvfQxxAfgXJ/Yc+9bq+5r6lkNggGyJwnt2bduztBdXN2nuoMj+0k6m
- j7/qTxPSTwVA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,391,1580803200"; 
-   d="scan'208";a="332860044"
-Received: from mylly.fi.intel.com (HELO [10.237.72.51]) ([10.237.72.51])
-  by orsmga001.jf.intel.com with ESMTP; 16 Apr 2020 07:35:14 -0700
-To:     linux-efi@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-From:   Jarkko Nikula <jarkko.nikula@linux.intel.com>
-Subject: Regression with commit 0a67361dcdaa
-Message-ID: <eb0d88d0-879e-c500-261e-69c76fb68a89@linux.intel.com>
-Date:   Thu, 16 Apr 2020 17:35:14 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        id S2440349AbgDPNwg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:52:36 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D6EAE2078B;
+        Thu, 16 Apr 2020 13:52:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587045156;
+        bh=jDt6vkUMyGZfura59hrrftwobQmgudUKhDGGO98R2Z4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=ZVFJceqITjpv/OnJnO8ZS6j1X5kfsslNweMVPBsIdfN5mOCU8mICaUmii8brz9sA5
+         74yzfSb5oXl8f+SmoMl3IurzMFYpDvBDx7N68+/XWL8EB13baKVa0jkMcdKotPyc/v
+         zfYvMarESzdwvF2LsxYo7jz3RlI03VAI9iI3fX64=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Bart Van Assche <bvanassche@acm.org>,
+        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
+        Johannes Thumshirn <jth@kernel.org>,
+        Hannes Reinecke <hare@suse.com>,
+        Ming Lei <ming.lei@redhat.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.6 020/254] null_blk: Suppress an UBSAN complaint triggered when setting memory_backed
+Date:   Thu, 16 Apr 2020 15:21:49 +0200
+Message-Id: <20200416131328.342674812@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.1
+In-Reply-To: <20200416131325.804095985@linuxfoundation.org>
+References: <20200416131325.804095985@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi
+From: Bart Van Assche <bvanassche@acm.org>
 
-v5.7-rc1 hangs in early boot on an Intel Atom based prototype hardware 
-while v5.6 boots fine. I bisected the regression into 0a67361dcdaa 
-("efi/x86: Remove runtime table address from kexec EFI setup data").
+[ Upstream commit b9853b4d6fb403ccb1d4d82e2d39fc17fc07519c ]
 
-v5.7-rc1 caused a reboot loop on another Intel Core based prototype HW. 
-Reboots also on top of 0a67361dcdaa but boots fine with that commit 
-reverted.
+Although it is not clear to me why UBSAN complains when 'memory_backed'
+is set, this patch suppresses the UBSAN complaint that is triggered when
+setting that configfs attribute.
 
-Our test system uses kexec to boot the test kernel. These two machines 
-got regression with v5.7-rc1. We have also others that boot fine.
+UBSAN: Undefined behaviour in drivers/block/null_blk_main.c:327:1
+load of value 16 is not a valid value for type '_Bool'
+CPU: 2 PID: 8396 Comm: check Not tainted 5.6.0-rc1-dbg+ #14
+Hardware name: Bochs Bochs, BIOS Bochs 01/01/2011
+Call Trace:
+ dump_stack+0xa5/0xe6
+ ubsan_epilogue+0x9/0x26
+ __ubsan_handle_load_invalid_value+0x6d/0x76
+ nullb_device_memory_backed_store.cold+0x2c/0x38 [null_blk]
+ configfs_write_file+0x1c4/0x250 [configfs]
+ __vfs_write+0x4c/0x90
+ vfs_write+0x145/0x2c0
+ ksys_write+0xd7/0x180
+ __x64_sys_write+0x47/0x50
+ do_syscall_64+0x6f/0x2f0
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
+Signed-off-by: Bart Van Assche <bvanassche@acm.org>
+Reviewed-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
+Cc: Johannes Thumshirn <jth@kernel.org>
+Cc: Hannes Reinecke <hare@suse.com>
+Cc: Ming Lei <ming.lei@redhat.com>
+Cc: Christoph Hellwig <hch@infradead.org>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/block/null_blk_main.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/block/null_blk_main.c b/drivers/block/null_blk_main.c
+index d5b4a92033d48..2b8b4cb447cfb 100644
+--- a/drivers/block/null_blk_main.c
++++ b/drivers/block/null_blk_main.c
+@@ -276,7 +276,7 @@ nullb_device_##NAME##_store(struct config_item *item, const char *page,	\
+ {									\
+ 	int (*apply_fn)(struct nullb_device *dev, TYPE new_value) = APPLY;\
+ 	struct nullb_device *dev = to_nullb_device(item);		\
+-	TYPE uninitialized_var(new_value);				\
++	TYPE new_value = 0;						\
+ 	int ret;							\
+ 									\
+ 	ret = nullb_device_##TYPE##_attr_store(&new_value, page, count);\
 -- 
-Jarkko
+2.20.1
+
+
+
