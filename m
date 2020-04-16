@@ -2,97 +2,183 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-19.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83780C3815B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 20:16:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CBB1C352BE
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 20:16:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 564E42076D
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 20:16:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587068166;
-	bh=AiNPZ2VgZl2CSCjt2mS5/A1PD/WVdJmhWFR07XM6x5Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=HBaEjYkOugBsQy1f/JUmYns0yNUz1ByhsYlbBYzTVY/VKnRbiR7VOy3IV8GffsfpJ
-	 PH5nib6/4lA2I4iYNS1oZHLHr9/74Jy3Z109po0exkdkZqaW5Jo+Hzrvvm/ob2dq/F
-	 tTOJT2LtBftHiXelmIbPayIXk6stbl50oKTqL6NU=
+	by mail.kernel.org (Postfix) with ESMTP id 793C12076D
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 20:16:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DiLrCwPu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728913AbgDPUQF (ORCPT
+        id S1729084AbgDPUQm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 16:16:05 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:34541 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726523AbgDPUPt (ORCPT
+        Thu, 16 Apr 2020 16:16:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34872 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726523AbgDPUQk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 16:15:49 -0400
-Received: by mail-ot1-f65.google.com with SMTP id m2so4216784otr.1;
-        Thu, 16 Apr 2020 13:15:47 -0700 (PDT)
+        Thu, 16 Apr 2020 16:16:40 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1EB7AC03C1A8
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 13:16:40 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id r4so2177626pgg.4
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 13:16:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=vUAOCtCt8du7Os+3vw2Znw14Nonp2UoTlR0pT/AkghM=;
+        b=DiLrCwPu0nkuET40jCIp+nDwIo+rN/MpIQKmb/JprzCw+bTM3hdnYeXF8G/NzKbHa0
+         sNBe++iudA9Zo4z1DzsoSgR52AWXq/kDU32msbyLU+21z2HumOSfWInDq2l3pWXHHktJ
+         psWOB/UZ2KSkQWsW9gO2dsvvBW9/BjYOxuwOWqg9zRJoQTh+TFvfcizmUgM3V/WvByRZ
+         z5J32EndrIgceSdtNNvs08D2+jvvqMcsoYAtmkd5R2XuDUTe+GZscFLuuQ4Wm2UYEbZo
+         EuXvNDTF+4SLM/B5+tHDv7eOriWPd0emj9c13tacfeQcGiinXBUURMeYdoIvbNJwdcf7
+         Sdsw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=1P8yKmsIvoKMG/emgLl0/MHDjpc5RU9WDXXNgLV3Wdo=;
-        b=LWW5qgAFjuo+3fS+wvZ1U4JIwNcyZHsNC8/qo/vnefr6qX8pGIl9tRUI3zZcV0/GTv
-         kepo4ykmj0Kr1D2Y1twXaTFZ+eJNac7EGVjU2waoGf5SIC+WN31oLR9QAFXE0l1mxuk9
-         f702y5JTcCN2gthlhwkfRNOMuUTLaRa2Ioinsl5ubE0VWnGRhJ5VAHYqGilq0L88xT6d
-         d95ZG3Dddl3ieaB93hXNjfVPkyC9+bO/Ky2ynLbwI+v86OqcsZQU4Nhhtmzrmha1811L
-         sANy8eppo2zc5gMKkzHhy7EXGtcACXuUKowng9NCgTfqcG9UgsXc/IdAU6+TwvlTL2BS
-         vwgw==
-X-Gm-Message-State: AGi0PuaXYrmstcmOBv/7waGXcVOM/fO4K8dGjYpFf/mezG8qS2LICYee
-        BhRxa5Z47B7+0gOqfYxtZw==
-X-Google-Smtp-Source: APiQypJYATkzNqD1aOs3NsiPGqQoj9fe+miZIzifCuLxvAFoelYIaGEuOG4n+UvKF/rnltbQaG+fIg==
-X-Received: by 2002:a9d:77d5:: with SMTP id w21mr16346328otl.5.1587068147529;
-        Thu, 16 Apr 2020 13:15:47 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id c81sm7140920oib.35.2020.04.16.13.15.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Apr 2020 13:15:47 -0700 (PDT)
-Received: (nullmailer pid 6335 invoked by uid 1000);
-        Thu, 16 Apr 2020 20:15:46 -0000
-Date:   Thu, 16 Apr 2020 15:15:46 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH 29/35] MAINTAINERS: dt: fix pointers for ARM Integrator,
- Versatile and RealView
-Message-ID: <20200416201546.GA6021@bogus>
-References: <cover.1586359676.git.mchehab+huawei@kernel.org>
- <d8b0656cb3f1eacb10ca6168babb235d59a853a1.1586359676.git.mchehab+huawei@kernel.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=vUAOCtCt8du7Os+3vw2Znw14Nonp2UoTlR0pT/AkghM=;
+        b=WoPlmfdLHG1SWc2jAApohaZMIYDwazwyGTBvVqTc1/dcAVwwZyg3yo9gn1mFEOYxF8
+         aM8LHSaK2+k4NTNczroC93VpSiwcCN+pP2zzuYKasX3LzU70zwnANGF/NzYCMOeqnekW
+         m9mSkfln5r0iCMMuTrtK5qYAsN0VA8LttMTxx3n20kly6RsNJPwmzffBz9IkbJ6fbUMX
+         qMHmXW/VNOT81lh5rv8OtonA0KW5IffsOnGZCOWwl4d6pJY6RQK4MZzAKFwOOP/vayb2
+         8rWF3tTxPuFAp8QjwQ0nuULu4QMKEa/MoFitJPwPqVT2JgmS8ym9s905Qt850jS9crKY
+         pGBA==
+X-Gm-Message-State: AGi0PuZODzJQRb5wDkL8uB/pF3cY8vkjha2ljDmHdxCd2mwxOerGuo+x
+        kdfb0Iy9ZUbHqThkJFsKPeuK87xxFz1p6bMROD8+KA==
+X-Google-Smtp-Source: APiQypIyUzh78zWnsuEDX4jhiKakNZ8iouIlNXWcbtqennK3yV9EzmmHfcPXezDACiq0jgMRkO0JT+njkryOVukiahU=
+X-Received: by 2002:aa7:919a:: with SMTP id x26mr34178999pfa.39.1587068199267;
+ Thu, 16 Apr 2020 13:16:39 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d8b0656cb3f1eacb10ca6168babb235d59a853a1.1586359676.git.mchehab+huawei@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200416182402.16858-1-natechancellor@gmail.com>
+In-Reply-To: <20200416182402.16858-1-natechancellor@gmail.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Thu, 16 Apr 2020 13:16:27 -0700
+Message-ID: <CAKwvOdkCMsDUGK88xGqfsA5Nc1eNmR+PbLBoHE0dv65aimcJyQ@mail.gmail.com>
+Subject: Re: [PATCH] mmc: sdhci-of-arasan: Remove uninitialized ret variables
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Manish Narani <manish.narani@xilinx.com>,
+        linux-mmc@vger.kernel.org,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        "kernelci . org bot" <bot@kernelci.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 08, 2020 at 05:46:21PM +0200, Mauro Carvalho Chehab wrote:
-> There's a conversion from a plain text binding file into 4 yaml ones.
-> The old file got removed, causing this new warning:
-> 
-> 	Warning: MAINTAINERS references a file that doesn't exist: Documentation/devicetree/bindings/arm/arm-boards
-> 
-> Address it by replacing the old reference by the new ones
-> 
-> Fixes: 4b900070d50d ("dt-bindings: arm: Add Versatile YAML schema")
-> Fixes: 2d483550b6d2 ("dt-bindings: arm: Drop the non-YAML bindings")
-> Fixes: 7db625b9fa75 ("dt-bindings: arm: Add RealView YAML schema")
-> Fixes: 4fb00d9066c1 ("dt-bindings: arm: Add Versatile Express and Juno YAML schema")
-> Fixes: 33fbfb3eaf4e ("dt-bindings: arm: Add Integrator YAML schema")
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-> Acked-by: Linus Walleij <linus.walleij@linaro.org>
+On Thu, Apr 16, 2020 at 11:24 AM Nathan Chancellor
+<natechancellor@gmail.com> wrote:
+>
+> Clang warns:
+>
+> drivers/mmc/host/sdhci-of-arasan.c:784:9: warning: variable 'ret' is
+> uninitialized when used here [-Wuninitialized]
+>         return ret;
+>                ^~~
+> drivers/mmc/host/sdhci-of-arasan.c:738:9: note: initialize the variable
+> 'ret' to silence this warning
+>         int ret;
+>                ^
+>                 = 0
+> drivers/mmc/host/sdhci-of-arasan.c:860:9: warning: variable 'ret' is
+> uninitialized when used here [-Wuninitialized]
+>         return ret;
+>                ^~~
+> drivers/mmc/host/sdhci-of-arasan.c:810:9: note: initialize the variable
+> 'ret' to silence this warning
+>         int ret;
+>                ^
+>                 = 0
+> 2 warnings generated.
+>
+> This looks like a copy paste error. Neither function has handling that
+> needs ret so just remove it and return 0 directly.
+
+Forgive me for not taking the time to look into this more carefully,
+but just a thought:
+
+Having functions always return a single integer literal as opposed to
+having a `void` return type in their function signature is a code
+smell.  Did you consider the call sites of these functions to see if
+they do anything with the return value?  I understand it may not be
+worthwhile/possible if these functions fulfil an interface that
+requires the int return type function signature.  (It's also probably
+faster for me to just look rather than type this all out, but I saw no
+mention of this consideration in the commit message or patch, so
+wanted to check that it had been performed).
+
+>
+> Fixes: f73e66a36772 ("sdhci: arasan: Add support for Versal Tap Delays")
+> Link: https://github.com/ClangBuiltLinux/linux/issues/996
+> Reported-by: kernelci.org bot <bot@kernelci.org>
+> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
 > ---
->  MAINTAINERS | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
+>  drivers/mmc/host/sdhci-of-arasan.c | 6 ++----
+>  1 file changed, 2 insertions(+), 4 deletions(-)
+>
+> diff --git a/drivers/mmc/host/sdhci-of-arasan.c b/drivers/mmc/host/sdhci-of-arasan.c
+> index 16e26c217a77..18bf0e76b1eb 100644
+> --- a/drivers/mmc/host/sdhci-of-arasan.c
+> +++ b/drivers/mmc/host/sdhci-of-arasan.c
+> @@ -735,7 +735,6 @@ static int sdhci_versal_sdcardclk_set_phase(struct clk_hw *hw, int degrees)
+>                 container_of(clk_data, struct sdhci_arasan_data, clk_data);
+>         struct sdhci_host *host = sdhci_arasan->host;
+>         u8 tap_delay, tap_max = 0;
+> -       int ret;
+>
+>         /*
+>          * This is applicable for SDHCI_SPEC_300 and above
+> @@ -781,7 +780,7 @@ static int sdhci_versal_sdcardclk_set_phase(struct clk_hw *hw, int degrees)
+>                 sdhci_writel(host, regval, SDHCI_ARASAN_OTAPDLY_REGISTER);
+>         }
+>
+> -       return ret;
+> +       return 0;
+>  }
+>
+>  static const struct clk_ops versal_sdcardclk_ops = {
+> @@ -807,7 +806,6 @@ static int sdhci_versal_sampleclk_set_phase(struct clk_hw *hw, int degrees)
+>                 container_of(clk_data, struct sdhci_arasan_data, clk_data);
+>         struct sdhci_host *host = sdhci_arasan->host;
+>         u8 tap_delay, tap_max = 0;
+> -       int ret;
+>
+>         /*
+>          * This is applicable for SDHCI_SPEC_300 and above
+> @@ -857,7 +855,7 @@ static int sdhci_versal_sampleclk_set_phase(struct clk_hw *hw, int degrees)
+>                 sdhci_writel(host, regval, SDHCI_ARASAN_ITAPDLY_REGISTER);
+>         }
+>
+> -       return ret;
+> +       return 0;
+>  }
+>
+>  static const struct clk_ops versal_sampleclk_ops = {
+>
+> base-commit: a3ca59b9af21e68069555ffff1ad89bd2a7c40fc
+> --
+> 2.26.1
+>
+> --
+> You received this message because you are subscribed to the Google Groups "Clang Built Linux" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to clang-built-linux+unsubscribe@googlegroups.com.
+> To view this discussion on the web visit https://groups.google.com/d/msgid/clang-built-linux/20200416182402.16858-1-natechancellor%40gmail.com.
 
-Applied.
 
-Rob
+
+-- 
+Thanks,
+~Nick Desaulniers
