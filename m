@@ -5,198 +5,440 @@ X-Spam-Level:
 X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79EE7C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:51:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29813C2BB85
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:51:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4B3D121927
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:51:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7CF120732
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:51:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="t7ARLeBk"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rFcQrxNZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2410632AbgDPPvE (ORCPT
+        id S2410646AbgDPPvM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:51:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49754 "EHLO
+        Thu, 16 Apr 2020 11:51:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49824 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2442776AbgDPPui (ORCPT
+        by vger.kernel.org with ESMTP id S2410539AbgDPPvF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 11:50:38 -0400
-Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA337C061A0C
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 08:50:38 -0700 (PDT)
-Received: by mail-qk1-x744.google.com with SMTP id m67so21714537qke.12
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 08:50:38 -0700 (PDT)
+        Thu, 16 Apr 2020 11:51:05 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2771BC061A0C;
+        Thu, 16 Apr 2020 08:51:05 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id ms17so533077pjb.0;
+        Thu, 16 Apr 2020 08:51:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=tRruGjOqMYa0IrZR4+8JzDj9DjzXOMU0WS8KtXJYvIA=;
-        b=t7ARLeBk0wSFWf7qbRF3xK464DEA5h6f4wnw6KtH0dqKybvG+sryMrK5cz4LuwfpzY
-         SUyzj5W17vpMjz16iRe/fT1S73GoYf1mNSnc4Rs7ZrK2F3r+S3XkaVOGO6H0Nfvr8AsA
-         ccBqShrVoa8Q7l/YUGwONx8eseT4FIqVkNbZa+iB1HCWyFfubHkJ+SoEUxKqcmHhGfWV
-         AtCq+gaYPqpXwDVJhMxs/Ff0AGucdgT8SGDD76gMXbTB8wBc9KnJ/IomF7voxkgOTHSp
-         eLbD1OowT1JQ2lxNMbZdHaHWrol3e7pYbSp/yr+zyDs2Cn5TyABd+XV5RZD/aQ6ge59y
-         J9Eg==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=xGcWxKE8xZiXHv4kbJrLQBtTyFPo8mQ6cVI9O81qpNs=;
+        b=rFcQrxNZTTUm1PO04qUDHLFklpKcFeL/KFFyqL6JZxTPX0USZYU7mYRiZ2CaX3i2AY
+         tF5kL4kn2uJGJhEG1+/Ufp5n1W2CYhwog6afuIBukXNjDFYJWipcFB8EtjYMWCuT66cm
+         tJew0K0kmk6/K9+ExsIyeIB1p+J5WN9y3CDU9YisJr/FQupC2givtVTvL1ZjgdooiQDd
+         BTekJc/ytldCQaakS0kOUVhbflZ5Q4YHQwrnhmEfbvYUieLkGUwR/tBgIzuEtSPwBrMk
+         FNsSRIsa5LSPL6BHnvtJi8HrwJH2dca1PFH3PwfaU+lQBa/xg7iGqCS51KVdMHhkvs6p
+         LqRg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=tRruGjOqMYa0IrZR4+8JzDj9DjzXOMU0WS8KtXJYvIA=;
-        b=UB3dSwOFmQLs/0itLEn2bCan8j6X3WgagMsMMJ7JVJjskCsBGevPHkksCJ7HHYrJr+
-         57LN6mS9VpGVU55fNt5LYspw2Ae2T1xVJaHd7D+puZxkKlos4GIggtMMtJLi6k3F9DBQ
-         7j2EuOmuB9gT3LI41dfhIsz2JkpONY3unnEs3iOcfy0nTihWrdPZ0XLHYA07opGTFy6Y
-         zJgR/CxxbhqAuco/Xt6YYN/0x4aiOkeOxCtv0FvjFKX+APLbgUW6ylf1EqsvUVR9DLU3
-         0zIz9ngl4hGgjx0mMjGvBvR/ZWUi7jrh9FoUZ8jODYdXDQR5a8akvdiQpZOY2ONt+oIm
-         Xn8w==
-X-Gm-Message-State: AGi0PuYEJisVWXGICUpT0jsMz+as1f1k2Tpb74Pk2AtCo8GG28zWLavu
-        q0R6r3ku21K4h+JQybUk7Fw=
-X-Google-Smtp-Source: APiQypKEtfoNxiaWVLRyQt9NJ0qzg2Q0n8jdvGsyqynjjwvEE01Bx9XZK83hsUMl0bzc7xfxF24IpQ==
-X-Received: by 2002:a05:620a:1232:: with SMTP id v18mr4928688qkj.429.1587052237885;
-        Thu, 16 Apr 2020 08:50:37 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([179.97.37.151])
-        by smtp.gmail.com with ESMTPSA id r18sm824644qtt.25.2020.04.16.08.50.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Apr 2020 08:50:37 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id D9099409A3; Thu, 16 Apr 2020 12:50:33 -0300 (-03)
-Date:   Thu, 16 Apr 2020 12:50:33 -0300
-To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-kernel@vger.kernel.org, Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH v2] perf stat: force error in fallback on :k events
-Message-ID: <20200416155033.GD2650@kernel.org>
-References: <20200414161550.225588-1-irogers@google.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xGcWxKE8xZiXHv4kbJrLQBtTyFPo8mQ6cVI9O81qpNs=;
+        b=afqfxbzGO3PyB4lvp5lQAdZoZNhiuclndv0IFUIC6q/nvUuRVfvaO3yHOkzBJY/L6n
+         iabdzMlpmtGaQvrkmZyENAlGeHbwYd1KyhX+aC4YhL88nO6XX21op2uJH7sirtX9VTKL
+         UoSz19NUaOr14RHelm/E+se+QoeWA1/4veBDAOQvkH+8P3muh67qfF7sc/673YKKrsQ7
+         7efjDQeFuKuep0dDQdFGIXEV6bKM8ZXkRnVGs+Erc6bLPREvzjJaTyo+PmVtiu/ZEksw
+         ehtak3IeYpgIQiQIDVrZQnPS2bdDMpfyyoByDd/47+sRT6VPLLtpJ2cX+neP6R6upXjL
+         N/hw==
+X-Gm-Message-State: AGi0PubkKvnjZX8fc/7q3hjzvsEiFCGO4Zg5F+PW4rJOrNqU4G2ArHUa
+        cIH9ZHKyCgdoH7gMOF0HdIWH+LxgVtjm4UZjvfo=
+X-Google-Smtp-Source: APiQypKsU0PDkJF2BTo1Osb5YuZEoRRyeR0eZ1sFaOBvI9dvf7Q+7TrGUm7kQt4PmIul2QnO4QluHKrY09hj4Quvrh0=
+X-Received: by 2002:a17:90a:364c:: with SMTP id s70mr5787100pjb.143.1587052264379;
+ Thu, 16 Apr 2020 08:51:04 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200414161550.225588-1-irogers@google.com>
-X-Url:  http://acmel.wordpress.com
+References: <20200416152345.23077-1-zhengdejin5@gmail.com>
+In-Reply-To: <20200416152345.23077-1-zhengdejin5@gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 16 Apr 2020 18:50:57 +0300
+Message-ID: <CAHp75VdECDC5Tfx+OWBQG-i7p3P8c-RukA7peiJ70MX5uHqHKw@mail.gmail.com>
+Subject: Re: [PATCH v2] i2c: busses: remove duplicate dev_err()
+To:     Dejin Zheng <zhengdejin5@gmail.com>
+Cc:     Thor Thayer <thor.thayer@linux.intel.com>,
+        krzysztof.adamski@nokia.com, Hans de Goede <hdegoede@redhat.com>,
+        Dong Aisheng <aisheng.dong@nxp.com>,
+        Vignesh R <vigneshr@ti.com>, Ard Biesheuvel <ardb@kernel.org>,
+        gcherian@marvell.com,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>, alpawi@amazon.com,
+        linux-i2c <linux-i2c@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Markus Elfring <Markus.Elfring@web.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Tue, Apr 14, 2020 at 09:15:50AM -0700, Ian Rogers escreveu:
-> From: Stephane Eranian <eranian@google.com>
-> 
-> When it is not possible for a non-privilege perf command
-> to monitor at the kernel level (:k), the fallback code forces
-> a :u. That works if the event was previously monitoring both levels.
-> But if the event was already constrained to kernel only, then it does
-> not make sense to restrict it to user only.
-> Given the code works by exclusion, a kernel only event would have:
-> attr->exclude_user = 1
-> The fallback code would add:
-> attr->exclude_kernel = 1;
-> 
-> In the end the end would not monitor in either the user level or kernel
-> level. In other words, it would count nothing.
-> 
-> An event programmed to monitor kernel only cannot be switched to user only
-> without seriously warning the user.
-> 
-> This patch forces an error in this case to make it clear the request
-> cannot really be satisfied.
-> 
-> Behavior with paranoid 1:
-> $ sudo bash -c "echo 1 > /proc/sys/kernel/perf_event_paranoid"
-> $ perf stat -e cycles:k sleep 1
-> 
->  Performance counter stats for 'sleep 1':
-> 
->          1,520,413      cycles:k
-> 
->        1.002361664 seconds time elapsed
-> 
->        0.002480000 seconds user
->        0.000000000 seconds sys
-> 
-> Old behavior with paranoid 2:
-> $ sudo bash -c "echo 2 > /proc/sys/kernel/perf_event_paranoid"
-> $ perf stat -e cycles:k sleep 1
->  Performance counter stats for 'sleep 1':
-> 
->                  0      cycles:ku
-> 
->        1.002358127 seconds time elapsed
-> 
->        0.002384000 seconds user
->        0.000000000 seconds sys
-> 
-> New behavior with paranoid 2:
-> $ sudo bash -c "echo 2 > /proc/sys/kernel/perf_event_paranoid"
-> $ perf stat -e cycles:k sleep 1
-> Error:
-> You may not have permission to collect stats.
-> 
-> Consider tweaking /proc/sys/kernel/perf_event_paranoid,
-> which controls use of the performance events system by
-> unprivileged users (without CAP_PERFMON or CAP_SYS_ADMIN).
-> 
-> The current value is 2:
-> 
->   -1: Allow use of (almost) all events by all users
->       Ignore mlock limit after perf_event_mlock_kb without CAP_IPC_LOCK
-> >= 0: Disallow ftrace function tracepoint by users without CAP_PERFMON or CAP_SYS_ADMIN
->       Disallow raw tracepoint access by users without CAP_SYS_PERFMON or CAP_SYS_ADMIN
-> >= 1: Disallow CPU event access by users without CAP_PERFMON or CAP_SYS_ADMIN
-> >= 2: Disallow kernel profiling by users without CAP_PERFMON or CAP_SYS_ADMIN
-> 
-> To make this setting permanent, edit /etc/sysctl.conf too, e.g.:
-> 
->         kernel.perf_event_paranoid = -1
-> 
-> v2 of this patch addresses the review feedback from jolsa@redhat.com.
+On Thu, Apr 16, 2020 at 6:30 PM Dejin Zheng <zhengdejin5@gmail.com> wrote:
+>
+> it will print an error message by itself when platform_get_irq()
+> goes wrong. so don't need dev_err() in here again.
+>
 
-Hey, thanks _a lot_ for providing the before/after output, this allows
-me to review the code and then just go mechanically follow your steps to
-reproduce the results, awesome, keep doing it that way.
+All of them makes sense to me, thanks!
 
-And Jiri is right, one-liners are fantastic, this one came close enough
-:-)
-
-I did some reflowing of the commit text, check if you're curious when
-this goes upstream, no original content changed, just added some spaces,
-separator blank lines and moved the examples two spaces to the right.
-
-Thanks,
-
-- Arnaldo
- 
-> Signed-off-by: Stephane Eranian <eranian@google.com>
-> Reviewed-by: Ian Rogers <irogers@google.com>
+> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Suggested-by: Markus Elfring <Markus.Elfring@web.de>
+> Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
 > ---
->  tools/perf/util/evsel.c | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-> index d23db6755f51..b4e8bcb5ab05 100644
-> --- a/tools/perf/util/evsel.c
-> +++ b/tools/perf/util/evsel.c
-> @@ -2446,6 +2446,10 @@ bool perf_evsel__fallback(struct evsel *evsel, int err,
->  		char *new_name;
->  		const char *sep = ":";
->  
-> +		/* If event has exclude user then don't exclude kernel. */
-> +		if (evsel->core.attr.exclude_user)
-> +			return false;
-> +
->  		/* Is there already the separator in the name. */
->  		if (strchr(name, '/') ||
->  		    strchr(name, ':'))
-> -- 
-> 2.26.0.110.g2183baf09c-goog
-> 
+> v1 -> v2:
+>         - add 19 similar changes by Markus's suggestion.
+>         - Andy help me review patch v1 (i2c-img-scb.c), Thanks Andy.
+>
+>  drivers/i2c/busses/i2c-altera.c     | 4 +---
+>  drivers/i2c/busses/i2c-axxia.c      | 4 +---
+>  drivers/i2c/busses/i2c-bcm-kona.c   | 3 +--
+>  drivers/i2c/busses/i2c-cht-wc.c     | 6 ++----
+>  drivers/i2c/busses/i2c-img-scb.c    | 4 +---
+>  drivers/i2c/busses/i2c-imx-lpi2c.c  | 4 +---
+>  drivers/i2c/busses/i2c-lpc2k.c      | 4 +---
+>  drivers/i2c/busses/i2c-meson.c      | 4 +---
+>  drivers/i2c/busses/i2c-omap.c       | 4 +---
+>  drivers/i2c/busses/i2c-owl.c        | 4 +---
+>  drivers/i2c/busses/i2c-pnx.c        | 1 -
+>  drivers/i2c/busses/i2c-pxa.c        | 4 +---
+>  drivers/i2c/busses/i2c-qup.c        | 4 +---
+>  drivers/i2c/busses/i2c-rk3x.c       | 4 +---
+>  drivers/i2c/busses/i2c-sprd.c       | 4 +---
+>  drivers/i2c/busses/i2c-sun6i-p2wi.c | 4 +---
+>  drivers/i2c/busses/i2c-synquacer.c  | 4 +---
+>  drivers/i2c/busses/i2c-uniphier-f.c | 4 +---
+>  drivers/i2c/busses/i2c-uniphier.c   | 4 +---
+>  drivers/i2c/busses/i2c-xlp9xx.c     | 4 +---
+>  20 files changed, 20 insertions(+), 58 deletions(-)
+>
+> diff --git a/drivers/i2c/busses/i2c-altera.c b/drivers/i2c/busses/i2c-altera.c
+> index 8f62ba10215d..d40d6691dbb9 100644
+> --- a/drivers/i2c/busses/i2c-altera.c
+> +++ b/drivers/i2c/busses/i2c-altera.c
+> @@ -393,10 +393,8 @@ static int altr_i2c_probe(struct platform_device *pdev)
+>                 return PTR_ERR(idev->base);
+>
+>         irq = platform_get_irq(pdev, 0);
+> -       if (irq < 0) {
+> -               dev_err(&pdev->dev, "missing interrupt resource\n");
+> +       if (irq < 0)
+>                 return irq;
+> -       }
+>
+>         idev->i2c_clk = devm_clk_get(&pdev->dev, NULL);
+>         if (IS_ERR(idev->i2c_clk)) {
+> diff --git a/drivers/i2c/busses/i2c-axxia.c b/drivers/i2c/busses/i2c-axxia.c
+> index d45e2290c3f7..5294b73beca8 100644
+> --- a/drivers/i2c/busses/i2c-axxia.c
+> +++ b/drivers/i2c/busses/i2c-axxia.c
+> @@ -746,10 +746,8 @@ static int axxia_i2c_probe(struct platform_device *pdev)
+>                 return PTR_ERR(base);
+>
+>         idev->irq = platform_get_irq(pdev, 0);
+> -       if (idev->irq < 0) {
+> -               dev_err(&pdev->dev, "missing interrupt resource\n");
+> +       if (idev->irq < 0)
+>                 return idev->irq;
+> -       }
+>
+>         idev->i2c_clk = devm_clk_get(&pdev->dev, "i2c");
+>         if (IS_ERR(idev->i2c_clk)) {
+> diff --git a/drivers/i2c/busses/i2c-bcm-kona.c b/drivers/i2c/busses/i2c-bcm-kona.c
+> index 3e63f706f66b..ed5e1275ae46 100644
+> --- a/drivers/i2c/busses/i2c-bcm-kona.c
+> +++ b/drivers/i2c/busses/i2c-bcm-kona.c
+> @@ -821,8 +821,7 @@ static int bcm_kona_i2c_probe(struct platform_device *pdev)
+>         /* Get the interrupt number */
+>         dev->irq = platform_get_irq(pdev, 0);
+>         if (dev->irq < 0) {
+> -               dev_err(dev->device, "no irq resource\n");
+> -               rc = -ENODEV;
+> +               rc = dev->irq;
+>                 goto probe_disable_clk;
+>         }
+>
+> diff --git a/drivers/i2c/busses/i2c-cht-wc.c b/drivers/i2c/busses/i2c-cht-wc.c
+> index 35e55feda763..f80d79e973cd 100644
+> --- a/drivers/i2c/busses/i2c-cht-wc.c
+> +++ b/drivers/i2c/busses/i2c-cht-wc.c
+> @@ -314,10 +314,8 @@ static int cht_wc_i2c_adap_i2c_probe(struct platform_device *pdev)
+>         int ret, reg, irq;
+>
+>         irq = platform_get_irq(pdev, 0);
+> -       if (irq < 0) {
+> -               dev_err(&pdev->dev, "Error missing irq resource\n");
+> -               return -EINVAL;
+> -       }
+> +       if (irq < 0)
+> +               return irq;
+>
+>         adap = devm_kzalloc(&pdev->dev, sizeof(*adap), GFP_KERNEL);
+>         if (!adap)
+> diff --git a/drivers/i2c/busses/i2c-img-scb.c b/drivers/i2c/busses/i2c-img-scb.c
+> index c937ea79300c..98a89301ed2a 100644
+> --- a/drivers/i2c/busses/i2c-img-scb.c
+> +++ b/drivers/i2c/busses/i2c-img-scb.c
+> @@ -1342,10 +1342,8 @@ static int img_i2c_probe(struct platform_device *pdev)
+>                 return PTR_ERR(i2c->base);
+>
+>         irq = platform_get_irq(pdev, 0);
+> -       if (irq < 0) {
+> -               dev_err(&pdev->dev, "can't get irq number\n");
+> +       if (irq < 0)
+>                 return irq;
+> -       }
+>
+>         i2c->sys_clk = devm_clk_get(&pdev->dev, "sys");
+>         if (IS_ERR(i2c->sys_clk)) {
+> diff --git a/drivers/i2c/busses/i2c-imx-lpi2c.c b/drivers/i2c/busses/i2c-imx-lpi2c.c
+> index 94743ba581fe..9db6ccded5e9 100644
+> --- a/drivers/i2c/busses/i2c-imx-lpi2c.c
+> +++ b/drivers/i2c/busses/i2c-imx-lpi2c.c
+> @@ -551,10 +551,8 @@ static int lpi2c_imx_probe(struct platform_device *pdev)
+>                 return PTR_ERR(lpi2c_imx->base);
+>
+>         irq = platform_get_irq(pdev, 0);
+> -       if (irq < 0) {
+> -               dev_err(&pdev->dev, "can't get irq number\n");
+> +       if (irq < 0)
+>                 return irq;
+> -       }
+>
+>         lpi2c_imx->adapter.owner        = THIS_MODULE;
+>         lpi2c_imx->adapter.algo         = &lpi2c_imx_algo;
+> diff --git a/drivers/i2c/busses/i2c-lpc2k.c b/drivers/i2c/busses/i2c-lpc2k.c
+> index 197cb64b2a42..4e30c5267142 100644
+> --- a/drivers/i2c/busses/i2c-lpc2k.c
+> +++ b/drivers/i2c/busses/i2c-lpc2k.c
+> @@ -360,10 +360,8 @@ static int i2c_lpc2k_probe(struct platform_device *pdev)
+>                 return PTR_ERR(i2c->base);
+>
+>         i2c->irq = platform_get_irq(pdev, 0);
+> -       if (i2c->irq < 0) {
+> -               dev_err(&pdev->dev, "can't get interrupt resource\n");
+> +       if (i2c->irq < 0)
+>                 return i2c->irq;
+> -       }
+>
+>         init_waitqueue_head(&i2c->wait);
+>
+> diff --git a/drivers/i2c/busses/i2c-meson.c b/drivers/i2c/busses/i2c-meson.c
+> index b3bd869281d3..c5dec572fc48 100644
+> --- a/drivers/i2c/busses/i2c-meson.c
+> +++ b/drivers/i2c/busses/i2c-meson.c
+> @@ -426,10 +426,8 @@ static int meson_i2c_probe(struct platform_device *pdev)
+>                 return PTR_ERR(i2c->regs);
+>
+>         irq = platform_get_irq(pdev, 0);
+> -       if (irq < 0) {
+> -               dev_err(&pdev->dev, "can't find IRQ\n");
+> +       if (irq < 0)
+>                 return irq;
+> -       }
+>
+>         ret = devm_request_irq(&pdev->dev, irq, meson_i2c_irq, 0, NULL, i2c);
+>         if (ret < 0) {
+> diff --git a/drivers/i2c/busses/i2c-omap.c b/drivers/i2c/busses/i2c-omap.c
+> index 71b4637c86b7..175c590b93b7 100644
+> --- a/drivers/i2c/busses/i2c-omap.c
+> +++ b/drivers/i2c/busses/i2c-omap.c
+> @@ -1365,10 +1365,8 @@ omap_i2c_probe(struct platform_device *pdev)
+>         u16 minor, major;
+>
+>         irq = platform_get_irq(pdev, 0);
+> -       if (irq < 0) {
+> -               dev_err(&pdev->dev, "no irq resource?\n");
+> +       if (irq < 0)
+>                 return irq;
+> -       }
+>
+>         omap = devm_kzalloc(&pdev->dev, sizeof(struct omap_i2c_dev), GFP_KERNEL);
+>         if (!omap)
+> diff --git a/drivers/i2c/busses/i2c-owl.c b/drivers/i2c/busses/i2c-owl.c
+> index fba6efc1dca8..672f1f239bd6 100644
+> --- a/drivers/i2c/busses/i2c-owl.c
+> +++ b/drivers/i2c/busses/i2c-owl.c
+> @@ -407,10 +407,8 @@ static int owl_i2c_probe(struct platform_device *pdev)
+>                 return PTR_ERR(i2c_dev->base);
+>
+>         irq = platform_get_irq(pdev, 0);
+> -       if (irq < 0) {
+> -               dev_err(dev, "failed to get IRQ number\n");
+> +       if (irq < 0)
+>                 return irq;
+> -       }
+>
+>         if (of_property_read_u32(dev->of_node, "clock-frequency",
+>                                  &i2c_dev->bus_freq))
+> diff --git a/drivers/i2c/busses/i2c-pnx.c b/drivers/i2c/busses/i2c-pnx.c
+> index 686c06f31625..5d7207c10f1d 100644
+> --- a/drivers/i2c/busses/i2c-pnx.c
+> +++ b/drivers/i2c/busses/i2c-pnx.c
+> @@ -720,7 +720,6 @@ static int i2c_pnx_probe(struct platform_device *pdev)
+>
+>         alg_data->irq = platform_get_irq(pdev, 0);
+>         if (alg_data->irq < 0) {
+> -               dev_err(&pdev->dev, "Failed to get IRQ from platform resource\n");
+>                 ret = alg_data->irq;
+>                 goto out_clock;
+>         }
+> diff --git a/drivers/i2c/busses/i2c-pxa.c b/drivers/i2c/busses/i2c-pxa.c
+> index 466e4f681d7a..37246cbbe14c 100644
+> --- a/drivers/i2c/busses/i2c-pxa.c
+> +++ b/drivers/i2c/busses/i2c-pxa.c
+> @@ -1267,10 +1267,8 @@ static int i2c_pxa_probe(struct platform_device *dev)
+>                 return PTR_ERR(i2c->reg_base);
+>
+>         irq = platform_get_irq(dev, 0);
+> -       if (irq < 0) {
+> -               dev_err(&dev->dev, "no irq resource: %d\n", irq);
+> +       if (irq < 0)
+>                 return irq;
+> -       }
+>
+>         /* Default adapter num to device id; i2c_pxa_probe_dt can override. */
+>         i2c->adap.nr = dev->id;
+> diff --git a/drivers/i2c/busses/i2c-qup.c b/drivers/i2c/busses/i2c-qup.c
+> index 155dcde70fc9..0e3525fe613f 100644
+> --- a/drivers/i2c/busses/i2c-qup.c
+> +++ b/drivers/i2c/busses/i2c-qup.c
+> @@ -1761,10 +1761,8 @@ static int qup_i2c_probe(struct platform_device *pdev)
+>                 return PTR_ERR(qup->base);
+>
+>         qup->irq = platform_get_irq(pdev, 0);
+> -       if (qup->irq < 0) {
+> -               dev_err(qup->dev, "No IRQ defined\n");
+> +       if (qup->irq < 0)
+>                 return qup->irq;
+> -       }
+>
+>         if (has_acpi_companion(qup->dev)) {
+>                 ret = device_property_read_u32(qup->dev,
+> diff --git a/drivers/i2c/busses/i2c-rk3x.c b/drivers/i2c/busses/i2c-rk3x.c
+> index fbe41c8cc126..bc698240c4aa 100644
+> --- a/drivers/i2c/busses/i2c-rk3x.c
+> +++ b/drivers/i2c/busses/i2c-rk3x.c
+> @@ -1260,10 +1260,8 @@ static int rk3x_i2c_probe(struct platform_device *pdev)
+>
+>         /* IRQ setup */
+>         irq = platform_get_irq(pdev, 0);
+> -       if (irq < 0) {
+> -               dev_err(&pdev->dev, "cannot find rk3x IRQ\n");
+> +       if (irq < 0)
+>                 return irq;
+> -       }
+>
+>         ret = devm_request_irq(&pdev->dev, irq, rk3x_i2c_irq,
+>                                0, dev_name(&pdev->dev), i2c);
+> diff --git a/drivers/i2c/busses/i2c-sprd.c b/drivers/i2c/busses/i2c-sprd.c
+> index 123a42bfe3b1..19cda6742423 100644
+> --- a/drivers/i2c/busses/i2c-sprd.c
+> +++ b/drivers/i2c/busses/i2c-sprd.c
+> @@ -492,10 +492,8 @@ static int sprd_i2c_probe(struct platform_device *pdev)
+>                 return PTR_ERR(i2c_dev->base);
+>
+>         i2c_dev->irq = platform_get_irq(pdev, 0);
+> -       if (i2c_dev->irq < 0) {
+> -               dev_err(&pdev->dev, "failed to get irq resource\n");
+> +       if (i2c_dev->irq < 0)
+>                 return i2c_dev->irq;
+> -       }
+>
+>         i2c_set_adapdata(&i2c_dev->adap, i2c_dev);
+>         init_completion(&i2c_dev->complete);
+> diff --git a/drivers/i2c/busses/i2c-sun6i-p2wi.c b/drivers/i2c/busses/i2c-sun6i-p2wi.c
+> index 17c27f79029b..2f6f6468214d 100644
+> --- a/drivers/i2c/busses/i2c-sun6i-p2wi.c
+> +++ b/drivers/i2c/busses/i2c-sun6i-p2wi.c
+> @@ -236,10 +236,8 @@ static int p2wi_probe(struct platform_device *pdev)
+>
+>         strlcpy(p2wi->adapter.name, pdev->name, sizeof(p2wi->adapter.name));
+>         irq = platform_get_irq(pdev, 0);
+> -       if (irq < 0) {
+> -               dev_err(dev, "failed to retrieve irq: %d\n", irq);
+> +       if (irq < 0)
+>                 return irq;
+> -       }
+>
+>         p2wi->clk = devm_clk_get(dev, NULL);
+>         if (IS_ERR(p2wi->clk)) {
+> diff --git a/drivers/i2c/busses/i2c-synquacer.c b/drivers/i2c/busses/i2c-synquacer.c
+> index 8cc91a8da5a0..c9a3dba6a75d 100644
+> --- a/drivers/i2c/busses/i2c-synquacer.c
+> +++ b/drivers/i2c/busses/i2c-synquacer.c
+> @@ -578,10 +578,8 @@ static int synquacer_i2c_probe(struct platform_device *pdev)
+>                 return PTR_ERR(i2c->base);
+>
+>         i2c->irq = platform_get_irq(pdev, 0);
+> -       if (i2c->irq < 0) {
+> -               dev_err(&pdev->dev, "no IRQ resource found\n");
+> +       if (i2c->irq < 0)
+>                 return -ENODEV;
+> -       }
+>
+>         ret = devm_request_irq(&pdev->dev, i2c->irq, synquacer_i2c_isr,
+>                                0, dev_name(&pdev->dev), i2c);
+> diff --git a/drivers/i2c/busses/i2c-uniphier-f.c b/drivers/i2c/busses/i2c-uniphier-f.c
+> index 2b258d54d68c..cb4666c54a23 100644
+> --- a/drivers/i2c/busses/i2c-uniphier-f.c
+> +++ b/drivers/i2c/busses/i2c-uniphier-f.c
+> @@ -529,10 +529,8 @@ static int uniphier_fi2c_probe(struct platform_device *pdev)
+>                 return PTR_ERR(priv->membase);
+>
+>         irq = platform_get_irq(pdev, 0);
+> -       if (irq < 0) {
+> -               dev_err(dev, "failed to get IRQ number\n");
+> +       if (irq < 0)
+>                 return irq;
+> -       }
+>
+>         if (of_property_read_u32(dev->of_node, "clock-frequency", &bus_speed))
+>                 bus_speed = I2C_MAX_STANDARD_MODE_FREQ;
+> diff --git a/drivers/i2c/busses/i2c-uniphier.c b/drivers/i2c/busses/i2c-uniphier.c
+> index 668b1fa2b0ef..ee00a44bf4c7 100644
+> --- a/drivers/i2c/busses/i2c-uniphier.c
+> +++ b/drivers/i2c/busses/i2c-uniphier.c
+> @@ -324,10 +324,8 @@ static int uniphier_i2c_probe(struct platform_device *pdev)
+>                 return PTR_ERR(priv->membase);
+>
+>         irq = platform_get_irq(pdev, 0);
+> -       if (irq < 0) {
+> -               dev_err(dev, "failed to get IRQ number\n");
+> +       if (irq < 0)
+>                 return irq;
+> -       }
+>
+>         if (of_property_read_u32(dev->of_node, "clock-frequency", &bus_speed))
+>                 bus_speed = I2C_MAX_STANDARD_MODE_FREQ;
+> diff --git a/drivers/i2c/busses/i2c-xlp9xx.c b/drivers/i2c/busses/i2c-xlp9xx.c
+> index 286faa9c855e..f2241cedf5d3 100644
+> --- a/drivers/i2c/busses/i2c-xlp9xx.c
+> +++ b/drivers/i2c/busses/i2c-xlp9xx.c
+> @@ -517,10 +517,8 @@ static int xlp9xx_i2c_probe(struct platform_device *pdev)
+>                 return PTR_ERR(priv->base);
+>
+>         priv->irq = platform_get_irq(pdev, 0);
+> -       if (priv->irq <= 0) {
+> -               dev_err(&pdev->dev, "invalid irq!\n");
+> +       if (priv->irq <= 0)
+>                 return priv->irq;
+> -       }
+>         /* SMBAlert irq */
+>         priv->alert_data.irq = platform_get_irq(pdev, 1);
+>         if (priv->alert_data.irq <= 0)
+> --
+> 2.25.0
+>
+
 
 -- 
-
-- Arnaldo
+With Best Regards,
+Andy Shevchenko
