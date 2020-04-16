@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B10DC2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:37:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3C75C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:37:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 589AC21D91
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:37:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBAC3214AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:37:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587051443;
-	bh=zIhIZGj24O1o982in8b2nseAv+Soag+2J7fvks+6GeU=;
+	s=default; t=1587051450;
+	bh=0t/oLzkgFXhjX5DcSYiAxTJvv2saLqLGZ+qwSaWFEk8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nOLftjxj4deel2kZxCvp6Wf5f+3Yz4Ol30wCztQrh9Y9Zgyh1Mb1zF1iJCJnsfz5z
-	 aRubby3kFP4Z4d8twM+t0YXgkegH+jI4puiQPFACwxk0OVHAFXe33b31RBuROZJCM+
-	 1R42SjDEdbrutgwkGqp1IvcHPjFT/lkYEla4K9/A=
+	b=yl1F6bYCYr6c9Y+NvjERWIf6ZvTYpoJ6XhJT2afQEsLHW/A0iKySvYJPWVwK5J97a
+	 ROK9Ty3NAdZq4DNyrk1DonOAQ0TTY15x7DcW/8ref0I47sbgizYfkU9e1u+qvSM2+w
+	 SvPiVGF3rteybEEM+E5Wor2TtBHdJp8XOYhLzj7k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2633202AbgDPPhU (ORCPT
+        id S2408261AbgDPPh3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:37:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51840 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 11:37:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51800 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2897967AbgDPNj2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:39:28 -0400
+        id S2897955AbgDPNj0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:39:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 84C3F206E9;
-        Thu, 16 Apr 2020 13:39:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 172D62063A;
+        Thu, 16 Apr 2020 13:39:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044368;
-        bh=zIhIZGj24O1o982in8b2nseAv+Soag+2J7fvks+6GeU=;
+        s=default; t=1587044365;
+        bh=0t/oLzkgFXhjX5DcSYiAxTJvv2saLqLGZ+qwSaWFEk8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=e+1g8qq4YcddGkuWO2ZEIAGb5NxPQeae9IJkO2MM2SfE+gEsjPu6PCZPL8VhRKaKm
-         cz/sYnZLH//hWjT94kg1QcrOMLPxyDgFVaH/rzvyK0HSK/Z799CsbmajAlZ16Nq6ax
-         hvmL6Zm9BvcuwKQjFaMtGGEIpv+W3eLYdpRmt1PA=
+        b=nHvjlFE5ZAb8dWaDmPvQIcpIFOgjjWLWADV7QSo+AKFLH7LsJDZtRkVHVC5vTZyjo
+         kcC/k1mAg6hNUcdLYPflIqW3g/1YfvYfn1al+yunemQGt/hl4WG5FgZ4TRS8S7u48T
+         OnBfXcfPwFzp5nKf1urdTxo38RBoN+k5BKpfPx5c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qu Wenruo <wqu@suse.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 5.5 162/257] btrfs: drop block from cache on error in relocation
-Date:   Thu, 16 Apr 2020 15:23:33 +0200
-Message-Id: <20200416131346.804076413@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Matthew Wilcox (Oracle)" <willy@infradead.org>
+Subject: [PATCH 5.5 188/257] XArray: Fix xas_pause for large multi-index entries
+Date:   Thu, 16 Apr 2020 15:23:59 +0200
+Message-Id: <20200416131349.783449444@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.891903893@linuxfoundation.org>
 References: <20200416131325.891903893@linuxfoundation.org>
@@ -60,41 +59,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josef Bacik <josef@toxicpanda.com>
+From: Matthew Wilcox (Oracle) <willy@infradead.org>
 
-commit 8e19c9732ad1d127b5575a10f4fbcacf740500ff upstream.
+commit c36d451ad386b34f452fc3c8621ff14b9eaa31a6 upstream.
 
-If we have an error while building the backref tree in relocation we'll
-process all the pending edges and then free the node.  However if we
-integrated some edges into the cache we'll lose our link to those edges
-by simply freeing this node, which means we'll leak memory and
-references to any roots that we've found.
+Inspired by the recent Coverity report, I looked for other places where
+the offset wasn't being converted to an unsigned long before being
+shifted, and I found one in xas_pause() when the entry being paused is
+of order >32.
 
-Instead we need to use remove_backref_node(), which walks through all of
-the edges that are still linked to this node and free's them up and
-drops any root references we may be holding.
-
-CC: stable@vger.kernel.org # 4.9+
-Reviewed-by: Qu Wenruo <wqu@suse.com>
-Signed-off-by: Josef Bacik <josef@toxicpanda.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Fixes: b803b42823d0 ("xarray: Add XArray iterators")
+Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+Cc: stable@vger.kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/relocation.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ lib/test_xarray.c |   37 +++++++++++++++++++++++++++++++++++++
+ lib/xarray.c      |    2 +-
+ 2 files changed, 38 insertions(+), 1 deletion(-)
 
---- a/fs/btrfs/relocation.c
-+++ b/fs/btrfs/relocation.c
-@@ -1186,7 +1186,7 @@ out:
- 			free_backref_node(cache, lower);
- 		}
+--- a/lib/test_xarray.c
++++ b/lib/test_xarray.c
+@@ -1156,6 +1156,42 @@ static noinline void check_find_entry(st
+ 	XA_BUG_ON(xa, !xa_empty(xa));
+ }
  
--		free_backref_node(cache, node);
-+		remove_backref_node(cache, node);
- 		return ERR_PTR(err);
- 	}
- 	ASSERT(!node || !node->detached);
++static noinline void check_pause(struct xarray *xa)
++{
++	XA_STATE(xas, xa, 0);
++	void *entry;
++	unsigned int order;
++	unsigned long index = 1;
++	unsigned int count = 0;
++
++	for (order = 0; order < order_limit; order++) {
++		XA_BUG_ON(xa, xa_store_order(xa, index, order,
++					xa_mk_index(index), GFP_KERNEL));
++		index += 1UL << order;
++	}
++
++	rcu_read_lock();
++	xas_for_each(&xas, entry, ULONG_MAX) {
++		XA_BUG_ON(xa, entry != xa_mk_index(1UL << count));
++		count++;
++	}
++	rcu_read_unlock();
++	XA_BUG_ON(xa, count != order_limit);
++
++	count = 0;
++	xas_set(&xas, 0);
++	rcu_read_lock();
++	xas_for_each(&xas, entry, ULONG_MAX) {
++		XA_BUG_ON(xa, entry != xa_mk_index(1UL << count));
++		count++;
++		xas_pause(&xas);
++	}
++	rcu_read_unlock();
++	XA_BUG_ON(xa, count != order_limit);
++
++	xa_destroy(xa);
++}
++
+ static noinline void check_move_tiny(struct xarray *xa)
+ {
+ 	XA_STATE(xas, xa, 0);
+@@ -1664,6 +1700,7 @@ static int xarray_checks(void)
+ 	check_xa_alloc();
+ 	check_find(&array);
+ 	check_find_entry(&array);
++	check_pause(&array);
+ 	check_account(&array);
+ 	check_destroy(&array);
+ 	check_move(&array);
+--- a/lib/xarray.c
++++ b/lib/xarray.c
+@@ -970,7 +970,7 @@ void xas_pause(struct xa_state *xas)
+ 
+ 	xas->xa_node = XAS_RESTART;
+ 	if (node) {
+-		unsigned int offset = xas->xa_offset;
++		unsigned long offset = xas->xa_offset;
+ 		while (++offset < XA_CHUNK_SIZE) {
+ 			if (!xa_is_sibling(xa_entry(xas->xa, node, offset)))
+ 				break;
 
 
