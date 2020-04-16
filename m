@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15872C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:19:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46C65C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:19:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DA49B2222D
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:19:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A59A2222D
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:19:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587050349;
-	bh=NHSzpWdd0woxrY0Yj64I2OfPbkenwbmRuhHcEx0NkHQ=;
+	s=default; t=1587050357;
+	bh=zIhIZGj24O1o982in8b2nseAv+Soag+2J7fvks+6GeU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fuA47B2htN15lCaS4kTY9w/QC6L1yOpsFBYXucskHEt/r+AwlxTBEMxfYEx7ei+2x
-	 DVvmZwggvCRj0lvI7m9tfRgd8likgf5/XDdqp4i5kX9i75U2IpDmzzKY42RSZhNaOw
-	 K5jJaSfd/yKaye60nQV+1RwIdpMMx7NkNlnFMvH4=
+	b=RYwt4KVa/SC52Op+ko/O47cTF31Z83e3U6qP1sevHrHjYGvrQpwqPcr/xtNMKyccz
+	 uovYMUz/fCwzn8IqFOlEcNZJGa4QabRcN3GRQjqtwD4bbi7lwZyg0y5eJSyqtBNE0b
+	 pm9agTdzR9AGQzDP8TmTgBhZQ4OThOK9q6HQWN1k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395120AbgDPPTI (ORCPT
+        id S2395088AbgDPPTO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:19:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34154 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 11:19:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34114 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392314AbgDPNsH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:48:07 -0400
+        id S2390133AbgDPNsC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:48:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B733021734;
-        Thu, 16 Apr 2020 13:48:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BC8C72222C;
+        Thu, 16 Apr 2020 13:48:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044887;
-        bh=NHSzpWdd0woxrY0Yj64I2OfPbkenwbmRuhHcEx0NkHQ=;
+        s=default; t=1587044882;
+        bh=zIhIZGj24O1o982in8b2nseAv+Soag+2J7fvks+6GeU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nXA+YT86ZSxRLMn2erzLG8katm3Fxv8qQ+7YCUc2Z8mCFr7vJKjH3tCYTi5mYh+7+
-         CmgjENkDOqK7hu2N2FDSyYGYoqwlZKaPzHil1Jox72P8RO/vfBvnJxZ8hs+Odp9I3R
-         jTsLqvTHa5z6ReLsBE9Q0ffHUw+ygdNLiBqCKqHA=
+        b=xTUMgahuGmk2EneIrzIOwq4woo6zR/GXCsFfs8lM2+E6Tmx0mRb3QCE/hasMefqUo
+         xlvnM+m53V0BxssjiHp0yLHas1L5EhtODf0aKdqhL/XQbKdWUw72f955UCKE/aUSKN
+         PLFiwghXFxfXoQdYwiditmBwMUJXVw0JiWVWQ0zE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Qu Wenruo <wqu@suse.com>,
         Josef Bacik <josef@toxicpanda.com>,
         David Sterba <dsterba@suse.com>
-Subject: [PATCH 5.4 143/232] btrfs: unset reloc control if we fail to recover
-Date:   Thu, 16 Apr 2020 15:23:57 +0200
-Message-Id: <20200416131332.865813442@linuxfoundation.org>
+Subject: [PATCH 5.4 141/232] btrfs: drop block from cache on error in relocation
+Date:   Thu, 16 Apr 2020 15:23:55 +0200
+Message-Id: <20200416131332.620071433@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131316.640996080@linuxfoundation.org>
 References: <20200416131316.640996080@linuxfoundation.org>
@@ -62,18 +62,19 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Josef Bacik <josef@toxicpanda.com>
 
-commit fb2d83eefef4e1c717205bac71cb1941edf8ae11 upstream.
+commit 8e19c9732ad1d127b5575a10f4fbcacf740500ff upstream.
 
-If we fail to load an fs root, or fail to start a transaction we can
-bail without unsetting the reloc control, which leads to problems later
-when we free the reloc control but still have it attached to the file
-system.
+If we have an error while building the backref tree in relocation we'll
+process all the pending edges and then free the node.  However if we
+integrated some edges into the cache we'll lose our link to those edges
+by simply freeing this node, which means we'll leak memory and
+references to any roots that we've found.
 
-In the normal path we'll end up calling unset_reloc_control() twice, but
-all it does is set fs_info->reloc_control = NULL, and we can only have
-one balance at a time so it's not racey.
+Instead we need to use remove_backref_node(), which walks through all of
+the edges that are still linked to this node and free's them up and
+drops any root references we may be holding.
 
-CC: stable@vger.kernel.org # 5.4+
+CC: stable@vger.kernel.org # 4.9+
 Reviewed-by: Qu Wenruo <wqu@suse.com>
 Signed-off-by: Josef Bacik <josef@toxicpanda.com>
 Reviewed-by: David Sterba <dsterba@suse.com>
@@ -81,49 +82,19 @@ Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/relocation.c |   10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ fs/btrfs/relocation.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 --- a/fs/btrfs/relocation.c
 +++ b/fs/btrfs/relocation.c
-@@ -4584,9 +4584,8 @@ int btrfs_recover_relocation(struct btrf
- 
- 	trans = btrfs_join_transaction(rc->extent_root);
- 	if (IS_ERR(trans)) {
--		unset_reloc_control(rc);
- 		err = PTR_ERR(trans);
--		goto out_free;
-+		goto out_unset;
- 	}
- 
- 	rc->merge_reloc_tree = 1;
-@@ -4606,7 +4605,7 @@ int btrfs_recover_relocation(struct btrf
- 		if (IS_ERR(fs_root)) {
- 			err = PTR_ERR(fs_root);
- 			list_add_tail(&reloc_root->root_list, &reloc_roots);
--			goto out_free;
-+			goto out_unset;
+@@ -1186,7 +1186,7 @@ out:
+ 			free_backref_node(cache, lower);
  		}
  
- 		err = __add_reloc_root(reloc_root);
-@@ -4616,7 +4615,7 @@ int btrfs_recover_relocation(struct btrf
- 
- 	err = btrfs_commit_transaction(trans);
- 	if (err)
--		goto out_free;
-+		goto out_unset;
- 
- 	merge_reloc_roots(rc);
- 
-@@ -4632,7 +4631,8 @@ out_clean:
- 	ret = clean_dirty_subvols(rc);
- 	if (ret < 0 && !err)
- 		err = ret;
--out_free:
-+out_unset:
-+	unset_reloc_control(rc);
- 	kfree(rc);
- out:
- 	if (!list_empty(&reloc_roots))
+-		free_backref_node(cache, node);
++		remove_backref_node(cache, node);
+ 		return ERR_PTR(err);
+ 	}
+ 	ASSERT(!node || !node->detached);
 
 
