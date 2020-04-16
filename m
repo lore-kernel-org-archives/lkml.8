@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72892C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:24:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B0F4C352BE
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:24:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 50AD02076D
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:24:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 180FD2076D
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:24:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587047048;
-	bh=kxAl/kLJfUsCpIvICM6QwVBnOzWBV/taZCwvMzq5wjc=;
+	s=default; t=1587047055;
+	bh=E4Xt0jaCiE8HVhys4kN8r55umD1bQArBZZistsB45IE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CPfuTiRBJdN7YoB0MUJdqusepv/0kb+qaviytKnjxKuvv9s/b0Q2TMEy+b4lRVlfb
-	 jqbhDZaSbCIcOb+TMHY26Db6X4nsMla5GhljKvZH9vVTT4ZvsIhxEc8dLi0agIwZDw
-	 +ZZipASkCiSxGtaiADjiR31ywwrLokWU0fAiVFSU=
+	b=DXzIAK8A61LDKQ7xos4FeSrF1oFkILwTcTqWSOf/spfWdS3aQsxifcIdMF9k+m6cH
+	 IOzFN2gqWdMOcGusbpMEQbWAl1yqxJ73ikCjA9Y9u+9D17WTKxS8mI3UR/8yT4yws9
+	 3QylcK4zIEY5suxdB1/5+n6qYGclkLejFiSGtmeI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409812AbgDPOYE (ORCPT
+        id S2409858AbgDPOYN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:24:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44344 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 10:24:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44266 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2409305AbgDPN5R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:57:17 -0400
+        id S2409284AbgDPN5N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:57:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D2F2321734;
-        Thu, 16 Apr 2020 13:57:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0059220732;
+        Thu, 16 Apr 2020 13:57:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587045437;
-        bh=kxAl/kLJfUsCpIvICM6QwVBnOzWBV/taZCwvMzq5wjc=;
+        s=default; t=1587045432;
+        bh=E4Xt0jaCiE8HVhys4kN8r55umD1bQArBZZistsB45IE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=G0CNuD/FOybRjWVPOmot4RmJ76+MMnT5Wigj7wibhpk9aymwGqlnp5RfibESLH3LR
-         jmIm9x62towCy83hD8qc0fK98EuN5T1mMVs7aLqvfvd2RWSXtKLIAQ2F6Gwts6bxlo
-         w5ArjG1g51DxshseWKZUOq8i+zwnuF6FIobE7TxY=
+        b=i/qXCM8iBVZj37JPaO6Sv1/7Eliufj9x7jUkeobdh4XedriZAoNDOxKHKXjihZdka
+         HFbAuRsekGkC2y4U0z6j/HD66HKNJ7I1sReOsCZ/elVg7ObDm9cPr2iwx8kEL1QfFv
+         vmHZKqDeYR6jl+lqrsAKr2Q9pfwLnNdF0BaljmdM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Hildenbrand <david@redhat.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>
-Subject: [PATCH 5.6 133/254] KVM: s390: vsie: Fix delivery of addressing exceptions
-Date:   Thu, 16 Apr 2020 15:23:42 +0200
-Message-Id: <20200416131343.116657448@linuxfoundation.org>
+        stable@vger.kernel.org, Liran Alon <liran.alon@oracle.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH 5.6 131/254] KVM: nVMX: Properly handle userspace interrupt window request
+Date:   Thu, 16 Apr 2020 15:23:40 +0200
+Message-Id: <20200416131342.869006935@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.804095985@linuxfoundation.org>
 References: <20200416131325.804095985@linuxfoundation.org>
@@ -60,50 +60,163 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Hildenbrand <david@redhat.com>
+From: Sean Christopherson <sean.j.christopherson@intel.com>
 
-commit 4d4cee96fb7a3cc53702a9be8299bf525be4ee98 upstream.
+commit a1c77abb8d93381e25a8d2df3a917388244ba776 upstream.
 
-Whenever we get an -EFAULT, we failed to read in guest 2 physical
-address space. Such addressing exceptions are reported via a program
-intercept to the nested hypervisor.
+Return true for vmx_interrupt_allowed() if the vCPU is in L2 and L1 has
+external interrupt exiting enabled.  IRQs are never blocked in hardware
+if the CPU is in the guest (L2 from L1's perspective) when IRQs trigger
+VM-Exit.
 
-We faked the intercept, we have to return to guest 2. Instead, right
-now we would be returning -EFAULT from the intercept handler, eventually
-crashing the VM.
-the correct thing to do is to return 1 as rc == 1 is the internal
-representation of "we have to go back into g2".
+The new check percolates up to kvm_vcpu_ready_for_interrupt_injection()
+and thus vcpu_run(), and so KVM will exit to userspace if userspace has
+requested an interrupt window (to inject an IRQ into L1).
 
-Addressing exceptions can only happen if the g2->g3 page tables
-reference invalid g2 addresses (say, either a table or the final page is
-not accessible - so something that basically never happens in sane
-environments.
+Remove the @external_intr param from vmx_check_nested_events(), which is
+actually an indicator that userspace wants an interrupt window, e.g.
+it's named @req_int_win further up the stack.  Injecting a VM-Exit into
+L1 to try and bounce out to L0 userspace is all kinds of broken and is
+no longer necessary.
 
-Identified by manual code inspection.
+Remove the hack in nested_vmx_vmexit() that attempted to workaround the
+breakage in vmx_check_nested_events() by only filling interrupt info if
+there's an actual interrupt pending.  The hack actually made things
+worse because it caused KVM to _never_ fill interrupt info when the
+LAPIC resides in userspace (kvm_cpu_has_interrupt() queries
+interrupt.injected, which is always cleared by prepare_vmcs12() before
+reaching the hack in nested_vmx_vmexit()).
 
-Fixes: a3508fbe9dc6 ("KVM: s390: vsie: initial support for nested virtualization")
-Cc: <stable@vger.kernel.org> # v4.8+
-Signed-off-by: David Hildenbrand <david@redhat.com>
-Link: https://lore.kernel.org/r/20200403153050.20569-3-david@redhat.com
-Reviewed-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
-Reviewed-by: Christian Borntraeger <borntraeger@de.ibm.com>
-[borntraeger@de.ibm.com: fix patch description]
-Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
+Fixes: 6550c4df7e50 ("KVM: nVMX: Fix interrupt window request with "Acknowledge interrupt on exit"")
+Cc: stable@vger.kernel.org
+Cc: Liran Alon <liran.alon@oracle.com>
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/s390/kvm/vsie.c |    1 +
- 1 file changed, 1 insertion(+)
+ arch/x86/include/asm/kvm_host.h |    2 +-
+ arch/x86/kvm/vmx/nested.c       |   18 ++++--------------
+ arch/x86/kvm/vmx/vmx.c          |    9 +++++++--
+ arch/x86/kvm/x86.c              |   10 +++++-----
+ 4 files changed, 17 insertions(+), 22 deletions(-)
 
---- a/arch/s390/kvm/vsie.c
-+++ b/arch/s390/kvm/vsie.c
-@@ -1202,6 +1202,7 @@ static int vsie_run(struct kvm_vcpu *vcp
- 		scb_s->iprcc = PGM_ADDRESSING;
- 		scb_s->pgmilc = 4;
- 		scb_s->gpsw.addr = __rewind_psw(scb_s->gpsw, 4);
-+		rc = 1;
- 	}
- 	return rc;
+--- a/arch/x86/include/asm/kvm_host.h
++++ b/arch/x86/include/asm/kvm_host.h
+@@ -1180,7 +1180,7 @@ struct kvm_x86_ops {
+ 	bool (*pt_supported)(void);
+ 	bool (*pku_supported)(void);
+ 
+-	int (*check_nested_events)(struct kvm_vcpu *vcpu, bool external_intr);
++	int (*check_nested_events)(struct kvm_vcpu *vcpu);
+ 	void (*request_immediate_exit)(struct kvm_vcpu *vcpu);
+ 
+ 	void (*sched_in)(struct kvm_vcpu *kvm, int cpu);
+--- a/arch/x86/kvm/vmx/nested.c
++++ b/arch/x86/kvm/vmx/nested.c
+@@ -3604,7 +3604,7 @@ static void nested_vmx_update_pending_db
+ 			    vcpu->arch.exception.payload);
  }
+ 
+-static int vmx_check_nested_events(struct kvm_vcpu *vcpu, bool external_intr)
++static int vmx_check_nested_events(struct kvm_vcpu *vcpu)
+ {
+ 	struct vcpu_vmx *vmx = to_vmx(vcpu);
+ 	unsigned long exit_qual;
+@@ -3680,8 +3680,7 @@ static int vmx_check_nested_events(struc
+ 		return 0;
+ 	}
+ 
+-	if ((kvm_cpu_has_interrupt(vcpu) || external_intr) &&
+-	    nested_exit_on_intr(vcpu)) {
++	if (kvm_cpu_has_interrupt(vcpu) && nested_exit_on_intr(vcpu)) {
+ 		if (block_nested_events)
+ 			return -EBUSY;
+ 		nested_vmx_vmexit(vcpu, EXIT_REASON_EXTERNAL_INTERRUPT, 0, 0);
+@@ -4329,17 +4328,8 @@ void nested_vmx_vmexit(struct kvm_vcpu *
+ 	vcpu->arch.mp_state = KVM_MP_STATE_RUNNABLE;
+ 
+ 	if (likely(!vmx->fail)) {
+-		/*
+-		 * TODO: SDM says that with acknowledge interrupt on
+-		 * exit, bit 31 of the VM-exit interrupt information
+-		 * (valid interrupt) is always set to 1 on
+-		 * EXIT_REASON_EXTERNAL_INTERRUPT, so we shouldn't
+-		 * need kvm_cpu_has_interrupt().  See the commit
+-		 * message for details.
+-		 */
+-		if (nested_exit_intr_ack_set(vcpu) &&
+-		    exit_reason == EXIT_REASON_EXTERNAL_INTERRUPT &&
+-		    kvm_cpu_has_interrupt(vcpu)) {
++		if (exit_reason == EXIT_REASON_EXTERNAL_INTERRUPT &&
++		    nested_exit_intr_ack_set(vcpu)) {
+ 			int irq = kvm_cpu_get_interrupt(vcpu);
+ 			WARN_ON(irq < 0);
+ 			vmcs12->vm_exit_intr_info = irq |
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -4507,8 +4507,13 @@ static int vmx_nmi_allowed(struct kvm_vc
+ 
+ static int vmx_interrupt_allowed(struct kvm_vcpu *vcpu)
+ {
+-	return (!to_vmx(vcpu)->nested.nested_run_pending &&
+-		vmcs_readl(GUEST_RFLAGS) & X86_EFLAGS_IF) &&
++	if (to_vmx(vcpu)->nested.nested_run_pending)
++		return false;
++
++	if (is_guest_mode(vcpu) && nested_exit_on_intr(vcpu))
++		return true;
++
++	return (vmcs_readl(GUEST_RFLAGS) & X86_EFLAGS_IF) &&
+ 		!(vmcs_read32(GUEST_INTERRUPTIBILITY_INFO) &
+ 			(GUEST_INTR_STATE_STI | GUEST_INTR_STATE_MOV_SS));
+ }
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -7635,7 +7635,7 @@ static void update_cr8_intercept(struct
+ 	kvm_x86_ops->update_cr8_intercept(vcpu, tpr, max_irr);
+ }
+ 
+-static int inject_pending_event(struct kvm_vcpu *vcpu, bool req_int_win)
++static int inject_pending_event(struct kvm_vcpu *vcpu)
+ {
+ 	int r;
+ 
+@@ -7671,7 +7671,7 @@ static int inject_pending_event(struct k
+ 	 * from L2 to L1.
+ 	 */
+ 	if (is_guest_mode(vcpu) && kvm_x86_ops->check_nested_events) {
+-		r = kvm_x86_ops->check_nested_events(vcpu, req_int_win);
++		r = kvm_x86_ops->check_nested_events(vcpu);
+ 		if (r != 0)
+ 			return r;
+ 	}
+@@ -7733,7 +7733,7 @@ static int inject_pending_event(struct k
+ 		 * KVM_REQ_EVENT only on certain events and not unconditionally?
+ 		 */
+ 		if (is_guest_mode(vcpu) && kvm_x86_ops->check_nested_events) {
+-			r = kvm_x86_ops->check_nested_events(vcpu, req_int_win);
++			r = kvm_x86_ops->check_nested_events(vcpu);
+ 			if (r != 0)
+ 				return r;
+ 		}
+@@ -8266,7 +8266,7 @@ static int vcpu_enter_guest(struct kvm_v
+ 			goto out;
+ 		}
+ 
+-		if (inject_pending_event(vcpu, req_int_win) != 0)
++		if (inject_pending_event(vcpu) != 0)
+ 			req_immediate_exit = true;
+ 		else {
+ 			/* Enable SMI/NMI/IRQ window open exits if needed.
+@@ -8496,7 +8496,7 @@ static inline int vcpu_block(struct kvm
+ static inline bool kvm_vcpu_running(struct kvm_vcpu *vcpu)
+ {
+ 	if (is_guest_mode(vcpu) && kvm_x86_ops->check_nested_events)
+-		kvm_x86_ops->check_nested_events(vcpu, false);
++		kvm_x86_ops->check_nested_events(vcpu);
+ 
+ 	return (vcpu->arch.mp_state == KVM_MP_STATE_RUNNABLE &&
+ 		!vcpu->arch.apf.halted);
 
 
