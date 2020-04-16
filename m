@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFE1EC2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:29:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 819C6C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:29:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B56F9217D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:29:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E4EE206E9
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:29:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587043750;
-	bh=cWNjo3ufoi2L8D9rzD7+OpFBpQLefCSdKcauXILmL3E=;
+	s=default; t=1587043758;
+	bh=plcbiY9bqamDGSPKaGgFotz/H0XVxLwbhltRpzxUrCc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xElGZvFnia3atnNhuU0ZTGiHSvj5qH+/OGT3qbdiwJJDNxoQOva9k/pddt/WXNpZ8
-	 xtcwTCmKfGKXXkULmDNAmiBImfRdKuHcwr8yZkDbwbA1KNAwgQ7IpMn/FGDtsdka4Z
-	 t5X79WaLebiOmYRGYkbIQwS83Se7mGVnKFSXYgBY=
+	b=P9MD3d2J1e0jheu6fL7YRRkKLxhCLtJsBr6o27KczRnNfuWmqX5vctCiwoMogVD2Q
+	 vO3r0xKJBEbOxg4AB1MkyBSl9gEXYzExDWL76Efwg7JH20ifPTo6CwhcfGDVeZQv6d
+	 1psRUKhobLApvts3TqYzA9V//wP6s9zpkPo9aZK4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2895951AbgDPN3J (ORCPT
+        id S2895981AbgDPN3O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 09:29:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35924 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 09:29:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36016 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2895500AbgDPN13 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:27:29 -0400
+        id S2895515AbgDPN1c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:27:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0D128217D8;
-        Thu, 16 Apr 2020 13:27:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 79A14221F4;
+        Thu, 16 Apr 2020 13:27:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587043649;
-        bh=cWNjo3ufoi2L8D9rzD7+OpFBpQLefCSdKcauXILmL3E=;
+        s=default; t=1587043651;
+        bh=plcbiY9bqamDGSPKaGgFotz/H0XVxLwbhltRpzxUrCc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=B5gCzzqdTLIOmcxcignjqTUh+931NX34ZtRqi/wzcHM7SDY6SzuQdTn5Ei8i+HkkL
-         eVcrOP4nBgiCO30HVQueAZWC2Y72DzxVZDtH8nC11PUqLKyaxx6d4zhKrcz48bvFe2
-         kOhIzYd97dF+NXt1MZoOMyGLS4CEN6RlaUGB81VM=
+        b=vh/bCgdquOKArxbgpKsmFP9I4d1DNg2tWCJ+WQCB3FgiTctwEnvC1Ivko6yQ0Rkgq
+         2XVFMAzR0lNpPJgrDukuw8vjpgqSEFw/Gse1fe5734E/tjgmfmvjH9DUIFD4/eh6i2
+         Ez/x+MhZjGY/XY/aUqO5Ffu9WmtLU9MiBBTuxGxM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Gyeongtaek Lee <gt82.lee@samsung.com>,
         Mark Brown <broonie@kernel.org>
-Subject: [PATCH 4.19 044/146] ASoC: fix regwmask
-Date:   Thu, 16 Apr 2020 15:23:05 +0200
-Message-Id: <20200416131248.745154993@linuxfoundation.org>
+Subject: [PATCH 4.19 045/146] ASoC: dapm: connect virtual mux with default value
+Date:   Thu, 16 Apr 2020 15:23:06 +0200
+Message-Id: <20200416131248.943645694@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131242.353444678@linuxfoundation.org>
 References: <20200416131242.353444678@linuxfoundation.org>
@@ -61,41 +61,42 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: 이경택 <gt82.lee@samsung.com>
 
-commit 0ab070917afdc93670c2d0ea02ab6defb6246a7c upstream.
+commit 3bbbb7728fc853d71dbce4073fef9f281fbfb4dd upstream.
 
-If regwshift is 32 and the selected architecture compiles '<<' operator
-for signed int literal into rotating shift, '1<<regwshift' became 1 and
-it makes regwmask to 0x0.
-The literal is set to unsigned long to get intended regwmask.
+Since a virtual mixer has no backing registers
+to decide which path to connect,
+it will try to match with initial state.
+This is to ensure that the default mixer choice will be
+correctly powered up during initialization.
+Invert flag is used to select initial state of the virtual switch.
+Since actual hardware can't be disconnected by virtual switch,
+connected is better choice as initial state in many cases.
 
 Signed-off-by: Gyeongtaek Lee <gt82.lee@samsung.com>
-Link: https://lore.kernel.org/r/001001d60665$db7af3e0$9270dba0$@samsung.com
+Link: https://lore.kernel.org/r/01a301d60731$b724ea10$256ebe30$@samsung.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/soc/soc-ops.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ sound/soc/soc-dapm.c |    8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
---- a/sound/soc/soc-ops.c
-+++ b/sound/soc/soc-ops.c
-@@ -832,7 +832,7 @@ int snd_soc_get_xr_sx(struct snd_kcontro
- 	unsigned int regbase = mc->regbase;
- 	unsigned int regcount = mc->regcount;
- 	unsigned int regwshift = component->val_bytes * BITS_PER_BYTE;
--	unsigned int regwmask = (1<<regwshift)-1;
-+	unsigned int regwmask = (1UL<<regwshift)-1;
- 	unsigned int invert = mc->invert;
- 	unsigned long mask = (1UL<<mc->nbits)-1;
- 	long min = mc->min;
-@@ -881,7 +881,7 @@ int snd_soc_put_xr_sx(struct snd_kcontro
- 	unsigned int regbase = mc->regbase;
- 	unsigned int regcount = mc->regcount;
- 	unsigned int regwshift = component->val_bytes * BITS_PER_BYTE;
--	unsigned int regwmask = (1<<regwshift)-1;
-+	unsigned int regwmask = (1UL<<regwshift)-1;
- 	unsigned int invert = mc->invert;
- 	unsigned long mask = (1UL<<mc->nbits)-1;
- 	long max = mc->max;
+--- a/sound/soc/soc-dapm.c
++++ b/sound/soc/soc-dapm.c
+@@ -792,7 +792,13 @@ static void dapm_set_mixer_path_status(s
+ 			val = max - val;
+ 		p->connect = !!val;
+ 	} else {
+-		p->connect = 0;
++		/* since a virtual mixer has no backing registers to
++		 * decide which path to connect, it will try to match
++		 * with initial state.  This is to ensure
++		 * that the default mixer choice will be
++		 * correctly powered up during initialization.
++		 */
++		p->connect = invert;
+ 	}
+ }
+ 
 
 
