@@ -2,231 +2,116 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE39AC352BE
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:59:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14AEDC2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:59:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C2FAA206D9
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:59:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587049156;
-	bh=OXTaSvniQ1UXb0hmkBl4gEkcBZlaD+i87FviMcuLA/s=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=w9UW0kp2wmuRQbAlhqlAGz3uFlgeaFcdKqYaJ4b4CNDv7JCey1sWZokwS0NrIqaPa
-	 SmNuuTUvFOInQV/VlyPF4CpD+MwRHmaxdPyqPZcCKJHy1M8KRG1uPD1VPtRHgubiIV
-	 7i/Zq87cxCIWMIgJhCaROZldKyX/rg8OON9J0a04=
+	by mail.kernel.org (Postfix) with ESMTP id EA2AB206D9
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:59:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409593AbgDPO7P (ORCPT
+        id S2407129AbgDPO7W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:59:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41634 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2409096AbgDPNzD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:55:03 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6808F2078B;
-        Thu, 16 Apr 2020 13:55:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587045302;
-        bh=OXTaSvniQ1UXb0hmkBl4gEkcBZlaD+i87FviMcuLA/s=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=z+UcOSngl73nfw3Zuc8PtppPXplCaRUuTkCDs05+MIQlStomdFe/WFKO7VU/Y+K5o
-         tj96GkMLIDxQ4EHdXUUvp5tSxABhhi0TBFG7RmfcYGjFL+kqSOJiqYTXhqrVuJMLSB
-         H/omXKCKXR15N3F7sVV/0wnbvjwJnH9Xj9kMA7VM=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Thomas Hebb <tommyhebb@gmail.com>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.6 079/254] ALSA: doc: Document PC Beep Hidden Register on Realtek ALC256
-Date:   Thu, 16 Apr 2020 15:22:48 +0200
-Message-Id: <20200416131335.761203563@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200416131325.804095985@linuxfoundation.org>
-References: <20200416131325.804095985@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Thu, 16 Apr 2020 10:59:22 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:63996 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2409558AbgDPO7O (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 10:59:14 -0400
+Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03GEX74o061412
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 10:59:12 -0400
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30erh9a0b4-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 10:59:11 -0400
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <imbrenda@linux.ibm.com>;
+        Thu, 16 Apr 2020 15:58:31 +0100
+Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 16 Apr 2020 15:58:27 +0100
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03GEx34v46596366
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 16 Apr 2020 14:59:03 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 559385205A;
+        Thu, 16 Apr 2020 14:59:03 +0000 (GMT)
+Received: from p-imbrenda (unknown [9.145.0.99])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 88FAA5204E;
+        Thu, 16 Apr 2020 14:59:02 +0000 (GMT)
+Date:   Thu, 16 Apr 2020 16:59:00 +0200
+From:   Claudio Imbrenda <imbrenda@linux.ibm.com>
+To:     Dave Hansen <dave.hansen@intel.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Andy Lutomirski <luto@kernel.org>, linux-next@vger.kernel.org,
+        akpm@linux-foundation.org, jack@suse.cz, kirill@shutemov.name,
+        "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        borntraeger@de.ibm.com, david@redhat.com, aarcange@redhat.com,
+        linux-mm@kvack.org, frankja@linux.ibm.com, sfr@canb.auug.org.au,
+        jhubbard@nvidia.com, linux-kernel@vger.kernel.org,
+        linux-s390@vger.kernel.org, Will Deacon <will@kernel.org>,
+        "Williams, Dan J" <dan.j.williams@intel.com>
+Subject: Re: [PATCH v4 2/2] mm/gup/writeback: add callbacks for inaccessible
+ pages
+In-Reply-To: <de56aa8e-9035-4b68-33cb-15682d073e26@intel.com>
+References: <20200306132537.783769-1-imbrenda@linux.ibm.com>
+        <20200306132537.783769-3-imbrenda@linux.ibm.com>
+        <3ae46945-0c7b-03cd-700a-a6fe8003c6ab@intel.com>
+        <20200415221754.GM2483@worktop.programming.kicks-ass.net>
+        <a7c2eb84-94c2-a608-4b04-a740fa9a389d@intel.com>
+        <20200416141547.29be5ea0@p-imbrenda>
+        <de56aa8e-9035-4b68-33cb-15682d073e26@intel.com>
+Organization: IBM
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 20041614-0016-0000-0000-00000305A88E
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20041614-0017-0000-0000-00003369AD2E
+Message-Id: <20200416165900.68bd4dba@p-imbrenda>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-16_05:2020-04-14,2020-04-16 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=658
+ impostorscore=0 lowpriorityscore=0 phishscore=0 clxscore=1015 mlxscore=0
+ priorityscore=1501 adultscore=0 suspectscore=0 bulkscore=0 spamscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004160105
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Hebb <tommyhebb@gmail.com>
+On Thu, 16 Apr 2020 07:20:48 -0700
+Dave Hansen <dave.hansen@intel.com> wrote:
 
-commit f128090491c3f5aacef91a863f8c52abf869c436 upstream.
+> On 4/16/20 5:15 AM, Claudio Imbrenda wrote:
+> >> I assumed that this was all anonymous-only so it's always dirty
+> >> before writeback starts.  
+> > it could also be mmapped  
+> 
+> Let's say you have a mmap()'d ramfs file.  Another process calls which
+> doesn't have it mapped calls sys_write() and writes to the file.
+> 
+> This means that host host has to write to the physical page and must
+> do arch_make_page_accessible() in the sys_write() path somewhere.
+> 
+> There is a get_user_pages() in that path, but it's on the _source_
+> buffer, not the ramfs page because the ramfs page is not mapped.
+> There's also no __test_set_page_writeback() because you can't write
+> back ramfs.
+> 
+> Where is the arch_make_page_accessible() in this case on the ramfs
+> page?
 
-This codec (among others) has a hidden set of audio routes, apparently
-designed to allow PC Beep output without a mixer widget on the output
-path, which are controlled by an undocumented Realtek vendor register.
-The default configuration of these routes means that certain inputs
-aren't accessible, necessitating driver control of the register.
-However, Realtek has provided no documentation of the register, instead
-opting to fix issues by providing magic numbers, most of which have been
-at least somewhat erroneous. These magic numbers then get copied by
-others into model-specific fixups, leading to a fragmented and buggy set
-of configurations.
-
-To get out of this situation, I've reverse engineered the register by
-flipping bits and observing how the codec's behavior changes. This
-commit documents my findings. It does not change any code.
-
-Cc: stable@vger.kernel.org
-Signed-off-by: Thomas Hebb <tommyhebb@gmail.com>
-Link: https://lore.kernel.org/r/bd69dfdeaf40ff31c4b7b797c829bb320031739c.1585584498.git.tommyhebb@gmail.com
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- Documentation/sound/hd-audio/index.rst           |    1 
- Documentation/sound/hd-audio/realtek-pc-beep.rst |  129 +++++++++++++++++++++++
- 2 files changed, 130 insertions(+)
-
---- a/Documentation/sound/hd-audio/index.rst
-+++ b/Documentation/sound/hd-audio/index.rst
-@@ -8,3 +8,4 @@ HD-Audio
-    models
-    controls
-    dp-mst
-+   realtek-pc-beep
---- /dev/null
-+++ b/Documentation/sound/hd-audio/realtek-pc-beep.rst
-@@ -0,0 +1,129 @@
-+===============================
-+Realtek PC Beep Hidden Register
-+===============================
-+
-+This file documents the "PC Beep Hidden Register", which is present in certain
-+Realtek HDA codecs and controls a muxer and pair of passthrough mixers that can
-+route audio between pins but aren't themselves exposed as HDA widgets. As far
-+as I can tell, these hidden routes are designed to allow flexible PC Beep output
-+for codecs that don't have mixer widgets in their output paths. Why it's easier
-+to hide a mixer behind an undocumented vendor register than to just expose it
-+as a widget, I have no idea.
-+
-+Register Description
-+====================
-+
-+The register is accessed via processing coefficient 0x36 on NID 20h. Bits not
-+identified below have no discernible effect on my machine, a Dell XPS 13 9350::
-+
-+  MSB                           LSB
-+  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-+  | |h|S|L|         | B |R|       | Known bits
-+  +=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
-+  |0|0|1|1|  0x7  |0|0x0|1|  0x7  | Reset value
-+  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-+
-+1Ah input select (B): 2 bits
-+  When zero, expose the PC Beep line (from the internal beep generator, when
-+  enabled with the Set Beep Generation verb on NID 01h, or else from the
-+  external PCBEEP pin) on the 1Ah pin node. When nonzero, expose the headphone
-+  jack (or possibly Line In on some machines) input instead. If PC Beep is
-+  selected, the 1Ah boost control has no effect.
-+
-+Amplify 1Ah loopback, left (L): 1 bit
-+  Amplify the left channel of 1Ah before mixing it into outputs as specified
-+  by h and S bits. Does not affect the level of 1Ah exposed to other widgets.
-+
-+Amplify 1Ah loopback, right (R): 1 bit
-+  Amplify the right channel of 1Ah before mixing it into outputs as specified
-+  by h and S bits. Does not affect the level of 1Ah exposed to other widgets.
-+
-+Loopback 1Ah to 21h [active low] (h): 1 bit
-+  When zero, mix 1Ah (possibly with amplification, depending on L and R bits)
-+  into 21h (headphone jack on my machine). Mixed signal respects the mute
-+  setting on 21h.
-+
-+Loopback 1Ah to 14h (S): 1 bit
-+  When one, mix 1Ah (possibly with amplification, depending on L and R bits)
-+  into 14h (internal speaker on my machine). Mixed signal **ignores** the mute
-+  setting on 14h and is present whenever 14h is configured as an output.
-+
-+Path diagrams
-+=============
-+
-+1Ah input selection (DIV is the PC Beep divider set on NID 01h)::
-+
-+  <Beep generator>   <PCBEEP pin>    <Headphone jack>
-+          |                |                |
-+          +--DIV--+--!DIV--+       {1Ah boost control}
-+                  |                         |
-+                  +--(b == 0)--+--(b != 0)--+
-+                               |
-+               >1Ah (Beep/Headphone Mic/Line In)<
-+
-+Loopback of 1Ah to 21h/14h::
-+
-+               <1Ah (Beep/Headphone Mic/Line In)>
-+                               |
-+                        {amplify if L/R}
-+                               |
-+                  +-----!h-----+-----S-----+
-+                  |                        |
-+          {21h mute control}               |
-+                  |                        |
-+          >21h (Headphone)<     >14h (Internal Speaker)<
-+
-+Background
-+==========
-+
-+All Realtek HDA codecs have a vendor-defined widget with node ID 20h which
-+provides access to a bank of registers that control various codec functions.
-+Registers are read and written via the standard HDA processing coefficient
-+verbs (Set/Get Coefficient Index, Set/Get Processing Coefficient). The node is
-+named "Realtek Vendor Registers" in public datasheets' verb listings and,
-+apart from that, is entirely undocumented.
-+
-+This particular register, exposed at coefficient 0x36 and named in commits from
-+Realtek, is of note: unlike most registers, which seem to control detailed
-+amplifier parameters not in scope of the HDA specification, it controls audio
-+routing which could just as easily have been defined using standard HDA mixer
-+and selector widgets.
-+
-+Specifically, it selects between two sources for the input pin widget with Node
-+ID (NID) 1Ah: the widget's signal can come either from an audio jack (on my
-+laptop, a Dell XPS 13 9350, it's the headphone jack, but comments in Realtek
-+commits indicate that it might be a Line In on some machines) or from the PC
-+Beep line (which is itself multiplexed between the codec's internal beep
-+generator and external PCBEEP pin, depending on if the beep generator is
-+enabled via verbs on NID 01h). Additionally, it can mix (with optional
-+amplification) that signal onto the 21h and/or 14h output pins.
-+
-+The register's reset value is 0x3717, corresponding to PC Beep on 1Ah that is
-+then amplified and mixed into both the headphones and the speakers. Not only
-+does this violate the HDA specification, which says that "[a vendor defined
-+beep input pin] connection may be maintained *only* while the Link reset
-+(**RST#**) is asserted", it means that we cannot ignore the register if we care
-+about the input that 1Ah would otherwise expose or if the PCBEEP trace is
-+poorly shielded and picks up chassis noise (both of which are the case on my
-+machine).
-+
-+Unfortunately, there are lots of ways to get this register configuration wrong.
-+Linux, it seems, has gone through most of them. For one, the register resets
-+after S3 suspend: judging by existing code, this isn't the case for all vendor
-+registers, and it's led to some fixes that improve behavior on cold boot but
-+don't last after suspend. Other fixes have successfully switched the 1Ah input
-+away from PC Beep but have failed to disable both loopback paths. On my
-+machine, this means that the headphone input is amplified and looped back to
-+the headphone output, which uses the exact same pins! As you might expect, this
-+causes terrible headphone noise, the character of which is controlled by the
-+1Ah boost control. (If you've seen instructions online to fix XPS 13 headphone
-+noise by changing "Headphone Mic Boost" in ALSA, now you know why.)
-+
-+The information here has been obtained through black-box reverse engineering of
-+the ALC256 codec's behavior and is not guaranteed to be correct. It likely
-+also applies for the ALC255, ALC257, ALC235, and ALC236, since those codecs
-+seem to be close relatives of the ALC256. (They all share one initialization
-+function.) Additionally, other codecs like the ALC225 and ALC285 also have this
-+register, judging by existing fixups in ``patch_realtek.c``, but specific
-+data (e.g. node IDs, bit positions, pin mappings) for those codecs may differ
-+from what I've described here.
-
+it's in the fault handler for the exception the CPU will get when
+attempting to write the data to the protected page
 
