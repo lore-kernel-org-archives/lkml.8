@@ -2,79 +2,128 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC20DC2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 03:15:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FD70C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 03:23:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 913FF20771
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 03:15:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EAF552072D
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 03:23:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390759AbgDPDPC (ORCPT
+        id S2390625AbgDPDXF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 23:15:02 -0400
-Received: from mga09.intel.com ([134.134.136.24]:45062 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389962AbgDPDO5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 23:14:57 -0400
-IronPort-SDR: N93R/e6EPVGtO1GcGg6Bw6YJUxE9L/p+XettevDMhEg/JXAfSfqopcHdB/Z2YKvpKk5Q+d/v0W
- 6QmcCvJqvR+g==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2020 20:14:56 -0700
-IronPort-SDR: nJ/ObJtTerZ12AULlwlqgONCFEelIpxGPx931S4mMsulIEETZto0/88U3iX5v0eQ74TKfz37Sh
- j3j5MPcb3doQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,388,1580803200"; 
-   d="scan'208";a="454164532"
-Received: from yilunxu-optiplex-7050.sh.intel.com ([10.239.159.141])
-  by fmsmga005.fm.intel.com with ESMTP; 15 Apr 2020 20:14:54 -0700
-From:   Xu Yilun <yilun.xu@intel.com>
-To:     mdf@kernel.org, linux-fpga@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     trix@redhat.com, bhu@redhat.com,
-        Matthew Gerlach <matthew.gerlach@linux.intel.com>,
-        Xu Yilun <yilun.xu@intel.com>
-Subject: [PATCH 2/2] fpga: dfl: fix bug in port reset handshake
-Date:   Thu, 16 Apr 2020 11:11:52 +0800
-Message-Id: <1587006712-22696-3-git-send-email-yilun.xu@intel.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1587006712-22696-1-git-send-email-yilun.xu@intel.com>
-References: <1587006712-22696-1-git-send-email-yilun.xu@intel.com>
+        Wed, 15 Apr 2020 23:23:05 -0400
+Received: from mail-sz.amlogic.com ([211.162.65.117]:16356 "EHLO
+        mail-sz.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388679AbgDPDXA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 23:23:00 -0400
+Received: from [10.28.39.241] (10.28.39.241) by mail-sz.amlogic.com
+ (10.28.11.5) with Microsoft SMTP Server id 15.1.1591.10; Thu, 16 Apr 2020
+ 11:23:40 +0800
+Subject: Re: [PATCH v2 0/2] Add a watchdog driver that uses ARM Secure Monitor
+ Calls.
+To:     Julius Werner <jwerner@chromium.org>
+CC:     Evan Benn <evanbenn@google.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Anson Huang <Anson.Huang@nxp.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Olof Johansson <olof@lixom.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Rob Herring <robh@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Vinod Koul <vkoul@kernel.org>, Will Deacon <will@kernel.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        <devicetree@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        LINUX-WATCHDOG <linux-watchdog@vger.kernel.org>,
+        Jianxin Pan <jianxin.pan@amlogic.com>,
+        Yonghui Yu <yonghui.yu@amlogic.com>,
+        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>
+References: <20200403052900.258855-1-evanbenn@chromium.org>
+ <CAKz_xw0gV+w_gMkLfB4qUBdULLfFoiv1TBWp9_PHy33wP_XWyA@mail.gmail.com>
+ <890948ef-7276-fdae-d270-eb30eff3eab2@amlogic.com>
+ <243e107c-35c1-2d14-5285-c9e13744963c@amlogic.com>
+ <CAODwPW9RSB37+4EJ2QXAwz=ShFB23L1GKC2mLYE5L5JuQR2tPw@mail.gmail.com>
+From:   Xingyu Chen <xingyu.chen@amlogic.com>
+Message-ID: <ea5ae44f-8b63-d34d-b313-c8deeafd86e1@amlogic.com>
+Date:   Thu, 16 Apr 2020 11:23:39 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
+MIME-Version: 1.0
+In-Reply-To: <CAODwPW9RSB37+4EJ2QXAwz=ShFB23L1GKC2mLYE5L5JuQR2tPw@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.28.39.241]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matthew Gerlach <matthew.gerlach@linux.intel.com>
+Hi,Julius
 
-When putting the port in reset, driver must wait for the soft reset
-acknowledgment bit instead of the soft reset bit.
+On 2020/4/16 6:29, Julius Werner wrote:
+>> In addition, It looks more reasonable to use the "msec" as the unit of
+>> timeout parameter for the ATF fw interface with SMCWD_SET_TIMEOUT:
+>>
+>> - The fw interface will compatible with the uboot generic watchdog
+>> interface at [0], and there is no need to convert timeout from msec
+>> to sec.
+> 
+> I think we're trying hard to keep this compatible to a Trusted
+> Firmware counterpart that we have already shipped, so we would prefer
+> to keep it at seconds if possible. That's what the Linux watchdog core
+> uses as well after all, so it just seems natural. I don't really see
+> how what U-Boot does would have anything to do with this.
 
-Fixes: 47c1b19c160f (fpga: dfl: afu: add port ops support)
-Signed-off-by: Matthew Gerlach <matthew.gerlach@linux.intel.com>
-Signed-off-by: Xu Yilun <yilun.xu@intel.com>
----
- drivers/fpga/dfl-afu-main.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+If the uboot introduces a smcwd driver, and it maybe work like this:
 
-diff --git a/drivers/fpga/dfl-afu-main.c b/drivers/fpga/dfl-afu-main.c
-index b0c3178..3fa2c59 100644
---- a/drivers/fpga/dfl-afu-main.c
-+++ b/drivers/fpga/dfl-afu-main.c
-@@ -83,7 +83,8 @@ int __afu_port_disable(struct platform_device *pdev)
- 	 * on this port and minimum soft reset pulse width has elapsed.
- 	 * Driver polls port_soft_reset_ack to determine if reset done by HW.
- 	 */
--	if (readq_poll_timeout(base + PORT_HDR_CTRL, v, v & PORT_CTRL_SFTRST,
-+	if (readq_poll_timeout(base + PORT_HDR_CTRL, v,
-+			       v & PORT_CTRL_SFTRST_ACK,
- 			       RST_POLL_INVL, RST_POLL_TIMEOUT)) {
- 		dev_err(&pdev->dev, "timeout, fail to reset device\n");
- 		return -ETIMEDOUT;
--- 
-2.7.4
+static const struct wdt_ops XXX_wdt_ops = {
+	.start = XXX_wdt_start,
+	...
+}
 
+static int XXX_wdt_start(struct udevice *dev, u64 ms, ulong flags) {
+	timeout =  ms / 1000;  //convert timeout from msec to sec.
+	smcwd_call(SMCWD_SET_TIMEOUT, timeout, NULL);
+	smcwd_call(SMCWD_ENABLE, 0, NULL);
+}
+
+Best Regards
+> 
+>> - Some vendor's watchdog may be not support the "wdt_trigger_reset"
+>> reset operation, but they can use the method below to reset the system
+>> by the watchdog right now.
+>>
+>> watchdog_set_time(1);  //1ms
+>> watchdog_enable();
+> 
+> They can still do that but they should do that on the Trusted Firmware
+> side. Emulating a missing reset functionality should be handled by the
+> hardware abstraction layer (in this case Trusted Firmware), not at the
+> Linux API level. So Linux would still send a PSCI_SYSTEM_RESET SMC,
+> but then Trusted Firmware can choose to implement that by setting the
+> watchdog to the smallest possible timeout (which it can because it's
+> accessing it directly, not through this SMC interface) and letting it
+> expire.
+> 
+> .
+> 
