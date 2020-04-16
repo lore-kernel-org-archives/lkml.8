@@ -2,75 +2,77 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74B14C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:26:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBCB4C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:26:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 469D72223D
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:26:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E040206D6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:26:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="wycNX20Y"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IHq2tYSx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2505276AbgDPP0n (ORCPT
+        id S2409014AbgDPP0w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:26:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45704 "EHLO
+        Thu, 16 Apr 2020 11:26:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45502 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2442483AbgDPPZN (ORCPT
+        by vger.kernel.org with ESMTP id S2634381AbgDPPX6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 11:25:13 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29B34C061A0F
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 08:25:13 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id z6so5369536wml.2
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 08:25:13 -0700 (PDT)
+        Thu, 16 Apr 2020 11:23:58 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65C97C061A0C;
+        Thu, 16 Apr 2020 08:23:58 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id g2so1475125plo.3;
+        Thu, 16 Apr 2020 08:23:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=bR9DiK3aOVvTCz5I8F8jU+7ZtH4qDqB1SoqUxvBNo3Y=;
-        b=wycNX20Y/kotaGzxeauNNZ+jmVU4RqjStASYkyQhnG2y0UvXPCvaOzMkJ4dsXjJ2nt
-         HmG1YMlucxFZqmEM6kPQSDfa5CKkabdoB67JDd5b+cRnGlCU+3biUrQrtZ+nxgf9HQzJ
-         fWYgMIW77IKaoBISpdxOLZykarX9B+DizDoY3QQ9kYNSJx7jBLxZSKXBJ8e9oQgvErHC
-         xPMBxZzpsf1oXZDzYpK9O9Ts55ERn2FBN2/aZbRAdtDHetwwIp3Z8kwHCgqG/P0ddSKy
-         cU3xS57mXo5H2qscx1ROEMYzX8txLApUbbxa7Iu8foYnD0+snp0YaFPxTDSj/D7T2LS9
-         O9MQ==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=OYF2UOdU9sXLonjUmTfqnwJTqG1hy5Kk0/uLb1Y360g=;
+        b=IHq2tYSxhrgn48DlaPDanpX4szHx49C1a3mF9opkbr24VCXl5Xu4OHuBz9LW+D63jw
+         8fSVPNnuQONX6FbCs1w7iPq7SYoos/k3mw9yKNGmdHkWQTm3DpdKLLMfEXcssS74e0fc
+         1FDZuGUV5OK+7uSiMRHtBL3pdTFknKbnXpCSztOC5bbtlou14Srv85FOI45oXWpqvGCX
+         qUko+gf0QFd8Oyi5ED1s7HjgIgYB2NbNiX+FdOFQVGlH/O7m/AjP+79YAoULpZjLTlHt
+         YY3qVBKb/B6Uy3lw/F6Xz1yZRdgTZnX0aomicYioR496VVFz+Xz5ehbdCrmbaQl23iso
+         SOcQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=bR9DiK3aOVvTCz5I8F8jU+7ZtH4qDqB1SoqUxvBNo3Y=;
-        b=f4Lp6T6ORs15y5Hw/Ejnl631wINcjBevL9XxP+m246I2qsCUy95FcvCOdo1sGXDYfl
-         pU9qPJZyzDqnKuBzCW8dqUDA6VUlVNSVLaOEElPI847OV6y0NXxac/iG7SMce854Ak4q
-         ZdayfKBHlDIQ9Z8yLRw8KMsRLW1BoGpJ5oygD8CHCBk2rpq7llT7jivjteh0bSrwsFYD
-         l/RdgALF4aGMvMmGPjpRrBN4PL9Po62cu7O4CpXINhbA0N88mL9WgSEkART/n7DFA17y
-         n+JVIigX36GnFKELD+7+JvaeE0xvGkUJbY+i+LR80qWQk4Wi1FqAqP1K1JaFNrJeAX99
-         bj3w==
-X-Gm-Message-State: AGi0PuZ1Q9rnp1lER51WGIg2ktnPlE/rR2Uark5o3MgU1SptyrIgbSo/
-        4aX8PmlV0RH9yV+HzhEKeYp69Q==
-X-Google-Smtp-Source: APiQypJvenUvw7p4+/VYWj+GE96AXgoiSCX0ESQn3/vvWiTeTDfOQSsUALsB6HzTGuIKfGRlSJS0Hw==
-X-Received: by 2002:a7b:ce88:: with SMTP id q8mr5737386wmj.161.1587050711235;
-        Thu, 16 Apr 2020 08:25:11 -0700 (PDT)
-Received: from localhost.localdomain ([2a01:e35:2ec0:82b0:39cc:a07:8b48:cc56])
-        by smtp.gmail.com with ESMTPSA id i17sm18019489wru.39.2020.04.16.08.25.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Apr 2020 08:25:10 -0700 (PDT)
-From:   Neil Armstrong <narmstrong@baylibre.com>
-To:     daniel@ffwll.ch, dri-devel@lists.freedesktop.org
-Cc:     Neil Armstrong <narmstrong@baylibre.com>,
-        linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Kevin Hilman <khilman@baylibre.com>
-Subject: [PATCH v5 3/8] drm/meson: overlay: setup overlay for Amlogic FBC
-Date:   Thu, 16 Apr 2020 17:24:55 +0200
-Message-Id: <20200416152500.29429-4-narmstrong@baylibre.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20200416152500.29429-1-narmstrong@baylibre.com>
-References: <20200416152500.29429-1-narmstrong@baylibre.com>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=OYF2UOdU9sXLonjUmTfqnwJTqG1hy5Kk0/uLb1Y360g=;
+        b=Mks2JmaFbbbJL8NhmVhhtQQe73/W1mmp2l2R64TC6GlxayQoIG4LqofDRk4jmwqzVC
+         ZnSZGSFK6KPplbIG8sG63MBg4hP3rv+SSt2i/eKzXsxQPOreH5t+OYOue9KrTA+TNWXl
+         gwZZ+DCxR3AcjVGLwMSzj1XtMQEx/bMcA/AOQyeEicg9JQdKt4ZSzRuw83iAyQgd+Fre
+         lpFZtvLRHzatyzyo+5mPV6omg56G0zHY+YxW1nVXo9MZ1suBztxQ5RIEItT7Jhny+3qk
+         qOHCjQcOI/XCsMQguECgLyP+6gIoGF5oF+WZoo0E/oJxiQzcF6zlbJl2/ttKXNHd6Wgv
+         nWmQ==
+X-Gm-Message-State: AGi0PuYTkvasZDAD2yjXp7Mt8cvHBwwBFtKRxsDMtlul9cWPoYUTYPuf
+        6j9Jeq4EeFeCj41CAw3lwF4=
+X-Google-Smtp-Source: APiQypL7D6kuXHTs1W16g9riMM2uPQ8VA7+/PbtAd6l30MAVyi02pqHuBhc3WQN8Cl/zsCgyhO3ICg==
+X-Received: by 2002:a17:902:a50d:: with SMTP id s13mr10573091plq.5.1587050637662;
+        Thu, 16 Apr 2020 08:23:57 -0700 (PDT)
+Received: from localhost ([89.208.244.140])
+        by smtp.gmail.com with ESMTPSA id f4sm3019492pjk.33.2020.04.16.08.23.56
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 16 Apr 2020 08:23:57 -0700 (PDT)
+From:   Dejin Zheng <zhengdejin5@gmail.com>
+To:     thor.thayer@linux.intel.com, krzysztof.adamski@nokia.com,
+        hdegoede@redhat.com, aisheng.dong@nxp.com, vigneshr@ti.com,
+        ardb@kernel.org, gcherian@marvell.com,
+        wsa+renesas@sang-engineering.com, krzk@kernel.org,
+        alpawi@amazon.com, linux-i2c@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Dejin Zheng <zhengdejin5@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Markus Elfring <Markus.Elfring@web.de>
+Subject: [PATCH v2] i2c: busses: remove duplicate dev_err()
+Date:   Thu, 16 Apr 2020 23:23:45 +0800
+Message-Id: <20200416152345.23077-1-zhengdejin5@gmail.com>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -78,415 +80,354 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Setup the Amlogic FBC decoder for the VD1 video overlay plane.
+it will print an error message by itself when platform_get_irq()
+goes wrong. so don't need dev_err() in here again.
 
-The VD1 Amlogic FBC decoder is integrated in the pipeline like the
-YUV pixel reading/formatter but used a direct memory address instead.
-
-This adds support for the basic layout, and needs to calculate the content
-body size since the header is allocated after.
-
-Tested-by: Kevin Hilman <khilman@baylibre.com>
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Suggested-by: Markus Elfring <Markus.Elfring@web.de>
+Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
 ---
- drivers/gpu/drm/meson/meson_drv.h     |  16 ++
- drivers/gpu/drm/meson/meson_overlay.c | 252 +++++++++++++++++++++++++-
- 2 files changed, 260 insertions(+), 8 deletions(-)
+v1 -> v2:
+	- add 19 similar changes by Markus's suggestion.
+	- Andy help me review patch v1 (i2c-img-scb.c), Thanks Andy.
 
-diff --git a/drivers/gpu/drm/meson/meson_drv.h b/drivers/gpu/drm/meson/meson_drv.h
-index 04fdf3826643..da951964e988 100644
---- a/drivers/gpu/drm/meson/meson_drv.h
-+++ b/drivers/gpu/drm/meson/meson_drv.h
-@@ -80,6 +80,7 @@ struct meson_drm {
+ drivers/i2c/busses/i2c-altera.c     | 4 +---
+ drivers/i2c/busses/i2c-axxia.c      | 4 +---
+ drivers/i2c/busses/i2c-bcm-kona.c   | 3 +--
+ drivers/i2c/busses/i2c-cht-wc.c     | 6 ++----
+ drivers/i2c/busses/i2c-img-scb.c    | 4 +---
+ drivers/i2c/busses/i2c-imx-lpi2c.c  | 4 +---
+ drivers/i2c/busses/i2c-lpc2k.c      | 4 +---
+ drivers/i2c/busses/i2c-meson.c      | 4 +---
+ drivers/i2c/busses/i2c-omap.c       | 4 +---
+ drivers/i2c/busses/i2c-owl.c        | 4 +---
+ drivers/i2c/busses/i2c-pnx.c        | 1 -
+ drivers/i2c/busses/i2c-pxa.c        | 4 +---
+ drivers/i2c/busses/i2c-qup.c        | 4 +---
+ drivers/i2c/busses/i2c-rk3x.c       | 4 +---
+ drivers/i2c/busses/i2c-sprd.c       | 4 +---
+ drivers/i2c/busses/i2c-sun6i-p2wi.c | 4 +---
+ drivers/i2c/busses/i2c-synquacer.c  | 4 +---
+ drivers/i2c/busses/i2c-uniphier-f.c | 4 +---
+ drivers/i2c/busses/i2c-uniphier.c   | 4 +---
+ drivers/i2c/busses/i2c-xlp9xx.c     | 4 +---
+ 20 files changed, 20 insertions(+), 58 deletions(-)
+
+diff --git a/drivers/i2c/busses/i2c-altera.c b/drivers/i2c/busses/i2c-altera.c
+index 8f62ba10215d..d40d6691dbb9 100644
+--- a/drivers/i2c/busses/i2c-altera.c
++++ b/drivers/i2c/busses/i2c-altera.c
+@@ -393,10 +393,8 @@ static int altr_i2c_probe(struct platform_device *pdev)
+ 		return PTR_ERR(idev->base);
  
- 		bool vd1_enabled;
- 		bool vd1_commit;
-+		bool vd1_afbc;
- 		unsigned int vd1_planes;
- 		uint32_t vd1_if0_gen_reg;
- 		uint32_t vd1_if0_luma_x0;
-@@ -105,6 +106,21 @@ struct meson_drm {
- 		uint32_t vd1_height0;
- 		uint32_t vd1_height1;
- 		uint32_t vd1_height2;
-+		uint32_t vd1_afbc_mode;
-+		uint32_t vd1_afbc_en;
-+		uint32_t vd1_afbc_head_addr;
-+		uint32_t vd1_afbc_body_addr;
-+		uint32_t vd1_afbc_conv_ctrl;
-+		uint32_t vd1_afbc_dec_def_color;
-+		uint32_t vd1_afbc_vd_cfmt_ctrl;
-+		uint32_t vd1_afbc_vd_cfmt_w;
-+		uint32_t vd1_afbc_vd_cfmt_h;
-+		uint32_t vd1_afbc_mif_hor_scope;
-+		uint32_t vd1_afbc_mif_ver_scope;
-+		uint32_t vd1_afbc_size_out;
-+		uint32_t vd1_afbc_pixel_hor_scope;
-+		uint32_t vd1_afbc_pixel_ver_scope;
-+		uint32_t vd1_afbc_size_in;
- 		uint32_t vpp_pic_in_height;
- 		uint32_t vpp_postblend_vd1_h_start_end;
- 		uint32_t vpp_postblend_vd1_v_start_end;
-diff --git a/drivers/gpu/drm/meson/meson_overlay.c b/drivers/gpu/drm/meson/meson_overlay.c
-index 2468b0212d52..3127bd1a5d70 100644
---- a/drivers/gpu/drm/meson/meson_overlay.c
-+++ b/drivers/gpu/drm/meson/meson_overlay.c
-@@ -5,6 +5,7 @@
-  * Copyright (C) 2015 Amlogic, Inc. All rights reserved.
-  */
+ 	irq = platform_get_irq(pdev, 0);
+-	if (irq < 0) {
+-		dev_err(&pdev->dev, "missing interrupt resource\n");
++	if (irq < 0)
+ 		return irq;
+-	}
  
-+#define DEBUG
- #include <linux/bitfield.h>
+ 	idev->i2c_clk = devm_clk_get(&pdev->dev, NULL);
+ 	if (IS_ERR(idev->i2c_clk)) {
+diff --git a/drivers/i2c/busses/i2c-axxia.c b/drivers/i2c/busses/i2c-axxia.c
+index d45e2290c3f7..5294b73beca8 100644
+--- a/drivers/i2c/busses/i2c-axxia.c
++++ b/drivers/i2c/busses/i2c-axxia.c
+@@ -746,10 +746,8 @@ static int axxia_i2c_probe(struct platform_device *pdev)
+ 		return PTR_ERR(base);
  
- #include <drm/drm_atomic.h>
-@@ -76,6 +77,84 @@
- #define VD_REGION24_START(value)	FIELD_PREP(GENMASK(11, 0), value)
- #define VD_REGION13_END(value)		FIELD_PREP(GENMASK(27, 16), value)
+ 	idev->irq = platform_get_irq(pdev, 0);
+-	if (idev->irq < 0) {
+-		dev_err(&pdev->dev, "missing interrupt resource\n");
++	if (idev->irq < 0)
+ 		return idev->irq;
+-	}
  
-+/* AFBC_ENABLE */
-+#define AFBC_DEC_ENABLE			BIT(8)
-+#define AFBC_FRM_START			BIT(0)
-+
-+/* AFBC_MODE */
-+#define AFBC_HORZ_SKIP_UV(value)	FIELD_PREP(GENMASK(1, 0), value)
-+#define AFBC_VERT_SKIP_UV(value)	FIELD_PREP(GENMASK(3, 2), value)
-+#define AFBC_HORZ_SKIP_Y(value)		FIELD_PREP(GENMASK(5, 4), value)
-+#define AFBC_VERT_SKIP_Y(value)		FIELD_PREP(GENMASK(7, 6), value)
-+#define AFBC_COMPBITS_YUV(value)	FIELD_PREP(GENMASK(13, 8), value)
-+#define AFBC_COMPBITS_8BIT		0
-+#define AFBC_COMPBITS_10BIT		(2 | (2 << 2) | (2 << 4))
-+#define AFBC_BURST_LEN(value)		FIELD_PREP(GENMASK(15, 14), value)
-+#define AFBC_HOLD_LINE_NUM(value)	FIELD_PREP(GENMASK(22, 16), value)
-+#define AFBC_MIF_URGENT(value)		FIELD_PREP(GENMASK(25, 24), value)
-+#define AFBC_REV_MODE(value)		FIELD_PREP(GENMASK(27, 26), value)
-+#define AFBC_BLK_MEM_MODE		BIT(28)
-+#define AFBC_SCATTER_MODE		BIT(29)
-+#define AFBC_SOFT_RESET			BIT(31)
-+
-+/* AFBC_SIZE_IN */
-+#define AFBC_HSIZE_IN(value)		FIELD_PREP(GENMASK(28, 16), value)
-+#define AFBC_VSIZE_IN(value)		FIELD_PREP(GENMASK(12, 0), value)
-+
-+/* AFBC_DEC_DEF_COLOR */
-+#define AFBC_DEF_COLOR_Y(value)		FIELD_PREP(GENMASK(29, 20), value)
-+#define AFBC_DEF_COLOR_U(value)		FIELD_PREP(GENMASK(19, 10), value)
-+#define AFBC_DEF_COLOR_V(value)		FIELD_PREP(GENMASK(9, 0), value)
-+
-+/* AFBC_CONV_CTRL */
-+#define AFBC_CONV_LBUF_LEN(value)	FIELD_PREP(GENMASK(11, 0), value)
-+
-+/* AFBC_LBUF_DEPTH */
-+#define AFBC_DEC_LBUF_DEPTH(value)	FIELD_PREP(GENMASK(27, 16), value)
-+#define AFBC_MIF_LBUF_DEPTH(value)	FIELD_PREP(GENMASK(11, 0), value)
-+
-+/* AFBC_OUT_XSCOPE/AFBC_SIZE_OUT */
-+#define AFBC_HSIZE_OUT(value)		FIELD_PREP(GENMASK(28, 16), value)
-+#define AFBC_VSIZE_OUT(value)		FIELD_PREP(GENMASK(12, 0), value)
-+#define AFBC_OUT_HORZ_BGN(value)	FIELD_PREP(GENMASK(28, 16), value)
-+#define AFBC_OUT_HORZ_END(value)	FIELD_PREP(GENMASK(12, 0), value)
-+
-+/* AFBC_OUT_YSCOPE */
-+#define AFBC_OUT_VERT_BGN(value)	FIELD_PREP(GENMASK(28, 16), value)
-+#define AFBC_OUT_VERT_END(value)	FIELD_PREP(GENMASK(12, 0), value)
-+
-+/* AFBC_VD_CFMT_CTRL */
-+#define AFBC_HORZ_RPT_PIXEL0		BIT(23)
-+#define AFBC_HORZ_Y_C_RATIO(value)	FIELD_PREP(GENMASK(22, 21), value)
-+#define AFBC_HORZ_FMT_EN		BIT(20)
-+#define AFBC_VERT_RPT_LINE0		BIT(16)
-+#define AFBC_VERT_INITIAL_PHASE(value)	FIELD_PREP(GENMASK(11, 8), value)
-+#define AFBC_VERT_PHASE_STEP(value)	FIELD_PREP(GENMASK(7, 1), value)
-+#define AFBC_VERT_FMT_EN		BIT(0)
-+
-+/* AFBC_VD_CFMT_W */
-+#define AFBC_VD_V_WIDTH(value)		FIELD_PREP(GENMASK(11, 0), value)
-+#define AFBC_VD_H_WIDTH(value)		FIELD_PREP(GENMASK(27, 16), value)
-+
-+/* AFBC_MIF_HOR_SCOPE */
-+#define AFBC_MIF_BLK_BGN_H(value)	FIELD_PREP(GENMASK(25, 16), value)
-+#define AFBC_MIF_BLK_END_H(value)	FIELD_PREP(GENMASK(9, 0), value)
-+
-+/* AFBC_MIF_VER_SCOPE */
-+#define AFBC_MIF_BLK_BGN_V(value)	FIELD_PREP(GENMASK(27, 16), value)
-+#define AFBC_MIF_BLK_END_V(value)	FIELD_PREP(GENMASK(11, 0), value)
-+
-+/* AFBC_PIXEL_HOR_SCOPE */
-+#define AFBC_DEC_PIXEL_BGN_H(value)	FIELD_PREP(GENMASK(28, 16), value)
-+#define AFBC_DEC_PIXEL_END_H(value)	FIELD_PREP(GENMASK(12, 0), value)
-+
-+/* AFBC_PIXEL_VER_SCOPE */
-+#define AFBC_DEC_PIXEL_BGN_V(value)	FIELD_PREP(GENMASK(28, 16), value)
-+#define AFBC_DEC_PIXEL_END_V(value)	FIELD_PREP(GENMASK(12, 0), value)
-+
-+/* AFBC_VD_CFMT_H */
-+#define AFBC_VD_HEIGHT(value)		FIELD_PREP(GENMASK(12, 0), value)
-+
- struct meson_overlay {
- 	struct drm_plane base;
- 	struct meson_drm *priv;
-@@ -157,6 +236,9 @@ static void meson_overlay_setup_scaler_params(struct meson_drm *priv,
- 	unsigned int ratio_x, ratio_y;
- 	int temp_height, temp_width;
- 	unsigned int w_in, h_in;
-+	int afbc_left, afbc_right;
-+	int afbc_top_src, afbc_bottom_src;
-+	int afbc_top, afbc_bottom;
- 	int temp, start, end;
- 
- 	if (!crtc_state) {
-@@ -169,7 +251,7 @@ static void meson_overlay_setup_scaler_params(struct meson_drm *priv,
- 
- 	w_in = fixed16_to_int(state->src_w);
- 	h_in = fixed16_to_int(state->src_h);
--	crop_top = fixed16_to_int(state->src_x);
-+	crop_top = fixed16_to_int(state->src_y);
- 	crop_left = fixed16_to_int(state->src_x);
- 
- 	video_top = state->crtc_y;
-@@ -243,6 +325,14 @@ static void meson_overlay_setup_scaler_params(struct meson_drm *priv,
- 	DRM_DEBUG("vsc startp %d endp %d start_lines %d end_lines %d\n",
- 		 vsc_startp, vsc_endp, vd_start_lines, vd_end_lines);
- 
-+	afbc_top = round_down(vd_start_lines, 4);
-+	afbc_bottom = round_up(vd_end_lines + 1, 4);
-+	afbc_top_src = 0;
-+	afbc_bottom_src = round_up(h_in + 1, 4);
-+
-+	DRM_DEBUG("afbc top %d (src %d) bottom %d (src %d)\n",
-+		  afbc_top, afbc_top_src, afbc_bottom, afbc_bottom_src);
-+
- 	/* Horizontal */
- 
- 	start = video_left + video_width / 2 - ((w_in << 17) / ratio_x);
-@@ -278,6 +368,16 @@ static void meson_overlay_setup_scaler_params(struct meson_drm *priv,
- 	DRM_DEBUG("hsc startp %d endp %d start_lines %d end_lines %d\n",
- 		 hsc_startp, hsc_endp, hd_start_lines, hd_end_lines);
- 
-+	if (hd_start_lines > 0 || (hd_end_lines < w_in)) {
-+		afbc_left = 0;
-+		afbc_right = round_up(w_in, 32);
-+	} else {
-+		afbc_left = round_down(hd_start_lines, 32);
-+		afbc_right = round_up(hd_end_lines + 1, 32);
-+	}
-+
-+	DRM_DEBUG("afbc left %d right %d\n", afbc_left, afbc_right);
-+
- 	priv->viu.vpp_vsc_start_phase_step = ratio_y << 6;
- 
- 	priv->viu.vpp_vsc_ini_phase = vphase << 8;
-@@ -293,6 +393,35 @@ static void meson_overlay_setup_scaler_params(struct meson_drm *priv,
- 			VD_H_WIDTH(hd_end_lines - hd_start_lines + 1) |
- 			VD_V_WIDTH(hd_end_lines/2 - hd_start_lines/2 + 1);
- 
-+	priv->viu.vd1_afbc_vd_cfmt_w =
-+			AFBC_VD_H_WIDTH(afbc_right - afbc_left) |
-+			AFBC_VD_V_WIDTH(afbc_right / 2 - afbc_left / 2);
-+
-+	priv->viu.vd1_afbc_vd_cfmt_h =
-+			AFBC_VD_HEIGHT((afbc_bottom - afbc_top) / 2);
-+
-+	priv->viu.vd1_afbc_mif_hor_scope = AFBC_MIF_BLK_BGN_H(afbc_left / 32) |
-+				AFBC_MIF_BLK_END_H((afbc_right / 32) - 1);
-+
-+	priv->viu.vd1_afbc_mif_ver_scope = AFBC_MIF_BLK_BGN_V(afbc_top / 4) |
-+				AFBC_MIF_BLK_END_H((afbc_bottom / 4) - 1);
-+
-+	priv->viu.vd1_afbc_size_out =
-+			AFBC_HSIZE_OUT(afbc_right - afbc_left) |
-+			AFBC_VSIZE_OUT(afbc_bottom - afbc_top);
-+
-+	priv->viu.vd1_afbc_pixel_hor_scope =
-+			AFBC_DEC_PIXEL_BGN_H(hd_start_lines - afbc_left) |
-+			AFBC_DEC_PIXEL_END_H(hd_end_lines - afbc_left);
-+
-+	priv->viu.vd1_afbc_pixel_ver_scope =
-+			AFBC_DEC_PIXEL_BGN_V(vd_start_lines - afbc_top) |
-+			AFBC_DEC_PIXEL_END_V(vd_end_lines - afbc_top);
-+
-+	priv->viu.vd1_afbc_size_in =
-+				AFBC_HSIZE_IN(afbc_right - afbc_left) |
-+				AFBC_VSIZE_IN(afbc_bottom_src - afbc_top_src);
-+
- 	priv->viu.vd1_if0_luma_y0 = VD_Y_START(vd_start_lines) |
- 				    VD_Y_END(vd_end_lines);
- 
-@@ -350,11 +479,57 @@ static void meson_overlay_atomic_update(struct drm_plane *plane,
- 
- 	spin_lock_irqsave(&priv->drm->event_lock, flags);
- 
--	priv->viu.vd1_if0_gen_reg = VD_URGENT_CHROMA |
--				    VD_URGENT_LUMA |
--				    VD_HOLD_LINES(9) |
--				    VD_CHRO_RPT_LASTL_CTRL |
--				    VD_ENABLE;
-+	if ((fb->modifier & DRM_FORMAT_MOD_AMLOGIC_FBC(0)) ==
-+			    DRM_FORMAT_MOD_AMLOGIC_FBC(0)) {
-+		priv->viu.vd1_afbc = true;
-+
-+		priv->viu.vd1_afbc_mode = AFBC_MIF_URGENT(3) |
-+					  AFBC_HOLD_LINE_NUM(8) |
-+					  AFBC_BURST_LEN(2);
-+
-+		priv->viu.vd1_afbc_en = 0x1600 | AFBC_DEC_ENABLE;
-+
-+		priv->viu.vd1_afbc_conv_ctrl = AFBC_CONV_LBUF_LEN(256);
-+
-+		priv->viu.vd1_afbc_dec_def_color = AFBC_DEF_COLOR_Y(1023);
-+
-+		/* 420: horizontal / 2, vertical / 4 */
-+		priv->viu.vd1_afbc_vd_cfmt_ctrl = AFBC_HORZ_RPT_PIXEL0 |
-+						  AFBC_HORZ_Y_C_RATIO(1) |
-+						  AFBC_HORZ_FMT_EN |
-+						  AFBC_VERT_RPT_LINE0 |
-+						  AFBC_VERT_INITIAL_PHASE(12) |
-+						  AFBC_VERT_PHASE_STEP(8) |
-+						  AFBC_VERT_FMT_EN;
-+
-+		switch (fb->format->format) {
-+		/* AFBC Only formats */
-+		case DRM_FORMAT_YUV420_10BIT:
-+			priv->viu.vd1_afbc_mode |=
-+				AFBC_COMPBITS_YUV(AFBC_COMPBITS_10BIT);
-+			priv->viu.vd1_afbc_dec_def_color |=
-+					AFBC_DEF_COLOR_U(512) |
-+					AFBC_DEF_COLOR_V(512);
-+			break;
-+		case DRM_FORMAT_YUV420_8BIT:
-+			priv->viu.vd1_afbc_dec_def_color |=
-+					AFBC_DEF_COLOR_U(128) |
-+					AFBC_DEF_COLOR_V(128);
-+			break;
-+		}
-+
-+		priv->viu.vd1_if0_gen_reg = 0;
-+		priv->viu.vd1_if0_canvas0 = 0;
-+		priv->viu.viu_vd1_fmt_ctrl = 0;
-+	} else {
-+		priv->viu.vd1_afbc = false;
-+
-+		priv->viu.vd1_if0_gen_reg = VD_URGENT_CHROMA |
-+					    VD_URGENT_LUMA |
-+					    VD_HOLD_LINES(9) |
-+					    VD_CHRO_RPT_LASTL_CTRL |
-+					    VD_ENABLE;
-+	}
- 
- 	/* Setup scaler params */
- 	meson_overlay_setup_scaler_params(priv, plane, interlace_mode);
-@@ -370,6 +545,7 @@ static void meson_overlay_atomic_update(struct drm_plane *plane,
- 	priv->viu.vd1_if0_gen_reg2 = 0;
- 	priv->viu.viu_vd1_fmt_ctrl = 0;
- 
-+	/* None will match for AFBC Only formats */
- 	switch (fb->format->format) {
- 	/* TOFIX DRM_FORMAT_RGB888 should be supported */
- 	case DRM_FORMAT_YUYV:
-@@ -488,13 +664,28 @@ static void meson_overlay_atomic_update(struct drm_plane *plane,
- 		priv->viu.vd1_stride0 = fb->pitches[0];
- 		priv->viu.vd1_height0 =
- 			drm_format_info_plane_height(fb->format,
--						fb->height, 0);
-+						     fb->height, 0);
- 		DRM_DEBUG("plane 0 addr 0x%x stride %d height %d\n",
- 			 priv->viu.vd1_addr0,
- 			 priv->viu.vd1_stride0,
- 			 priv->viu.vd1_height0);
+ 	idev->i2c_clk = devm_clk_get(&pdev->dev, "i2c");
+ 	if (IS_ERR(idev->i2c_clk)) {
+diff --git a/drivers/i2c/busses/i2c-bcm-kona.c b/drivers/i2c/busses/i2c-bcm-kona.c
+index 3e63f706f66b..ed5e1275ae46 100644
+--- a/drivers/i2c/busses/i2c-bcm-kona.c
++++ b/drivers/i2c/busses/i2c-bcm-kona.c
+@@ -821,8 +821,7 @@ static int bcm_kona_i2c_probe(struct platform_device *pdev)
+ 	/* Get the interrupt number */
+ 	dev->irq = platform_get_irq(pdev, 0);
+ 	if (dev->irq < 0) {
+-		dev_err(dev->device, "no irq resource\n");
+-		rc = -ENODEV;
++		rc = dev->irq;
+ 		goto probe_disable_clk;
  	}
  
-+	if (priv->viu.vd1_afbc) {
-+		unsigned long body_size;
-+
-+		/* Default mode is 4k per superblock */
-+		body_size = (ALIGN(priv->viu.vd1_stride0, 64) / 64) *
-+			    (ALIGN(priv->viu.vd1_height0, 32) / 32) *
-+			    4096;
-+
-+		priv->viu.vd1_afbc_body_addr = priv->viu.vd1_addr0 >> 4;
-+
-+		/* Header is after body content */
-+		priv->viu.vd1_afbc_head_addr = (priv->viu.vd1_addr0 +
-+						body_size) >> 4;
-+	}
-+
- 	priv->viu.vd1_enabled = true;
+diff --git a/drivers/i2c/busses/i2c-cht-wc.c b/drivers/i2c/busses/i2c-cht-wc.c
+index 35e55feda763..f80d79e973cd 100644
+--- a/drivers/i2c/busses/i2c-cht-wc.c
++++ b/drivers/i2c/busses/i2c-cht-wc.c
+@@ -314,10 +314,8 @@ static int cht_wc_i2c_adap_i2c_probe(struct platform_device *pdev)
+ 	int ret, reg, irq;
  
- 	spin_unlock_irqrestore(&priv->drm->event_lock, flags);
-@@ -531,6 +722,42 @@ static const struct drm_plane_helper_funcs meson_overlay_helper_funcs = {
- 	.prepare_fb	= drm_gem_fb_prepare_fb,
- };
+ 	irq = platform_get_irq(pdev, 0);
+-	if (irq < 0) {
+-		dev_err(&pdev->dev, "Error missing irq resource\n");
+-		return -EINVAL;
+-	}
++	if (irq < 0)
++		return irq;
  
-+static bool meson_overlay_format_mod_supported(struct drm_plane *plane,
-+					       u32 format, u64 modifier)
-+{
-+	if (modifier == DRM_FORMAT_MOD_LINEAR &&
-+	    format != DRM_FORMAT_YUV420_8BIT &&
-+	    format != DRM_FORMAT_YUV420_10BIT)
-+		return true;
-+
-+	if ((modifier & DRM_FORMAT_MOD_AMLOGIC_FBC(0)) ==
-+			DRM_FORMAT_MOD_AMLOGIC_FBC(0)) {
-+		unsigned int layout = modifier &
-+			DRM_FORMAT_MOD_AMLOGIC_FBC(
-+				DRM_FORMAT_MOD_AMLOGIC_FBC_LAYOUT_MASK);
-+
-+		if (format != DRM_FORMAT_YUV420_8BIT &&
-+		    format != DRM_FORMAT_YUV420_10BIT) {
-+			DRM_DEBUG_KMS("%llx invalid format 0x%08x\n",
-+				      modifier, format);
-+			return false;
-+		}
-+
-+		if (layout != DRM_FORMAT_MOD_AMLOGIC_FBC_LAYOUT_BASIC) {
-+			DRM_DEBUG_KMS("%llx invalid layout %x\n",
-+				      modifier, layout);
-+			return false;
-+		}
-+
-+		return true;
-+	}
-+
-+	DRM_DEBUG_KMS("invalid modifier %llx for format 0x%08x\n",
-+		      modifier, format);
-+
-+	return false;
-+}
-+
- static const struct drm_plane_funcs meson_overlay_funcs = {
- 	.update_plane		= drm_atomic_helper_update_plane,
- 	.disable_plane		= drm_atomic_helper_disable_plane,
-@@ -538,6 +765,7 @@ static const struct drm_plane_funcs meson_overlay_funcs = {
- 	.reset			= drm_atomic_helper_plane_reset,
- 	.atomic_duplicate_state = drm_atomic_helper_plane_duplicate_state,
- 	.atomic_destroy_state	= drm_atomic_helper_plane_destroy_state,
-+	.format_mod_supported   = meson_overlay_format_mod_supported,
- };
+ 	adap = devm_kzalloc(&pdev->dev, sizeof(*adap), GFP_KERNEL);
+ 	if (!adap)
+diff --git a/drivers/i2c/busses/i2c-img-scb.c b/drivers/i2c/busses/i2c-img-scb.c
+index c937ea79300c..98a89301ed2a 100644
+--- a/drivers/i2c/busses/i2c-img-scb.c
++++ b/drivers/i2c/busses/i2c-img-scb.c
+@@ -1342,10 +1342,8 @@ static int img_i2c_probe(struct platform_device *pdev)
+ 		return PTR_ERR(i2c->base);
  
- static const uint32_t supported_drm_formats[] = {
-@@ -549,6 +777,14 @@ static const uint32_t supported_drm_formats[] = {
- 	DRM_FORMAT_YUV420,
- 	DRM_FORMAT_YUV411,
- 	DRM_FORMAT_YUV410,
-+	DRM_FORMAT_YUV420_8BIT, /* Amlogic FBC Only */
-+	DRM_FORMAT_YUV420_10BIT, /* Amlogic FBC Only */
-+};
-+
-+static const uint64_t format_modifiers[] = {
-+	DRM_FORMAT_MOD_AMLOGIC_FBC(DRM_FORMAT_MOD_AMLOGIC_FBC_LAYOUT_BASIC),
-+	DRM_FORMAT_MOD_LINEAR,
-+	DRM_FORMAT_MOD_INVALID,
- };
+ 	irq = platform_get_irq(pdev, 0);
+-	if (irq < 0) {
+-		dev_err(&pdev->dev, "can't get irq number\n");
++	if (irq < 0)
+ 		return irq;
+-	}
  
- int meson_overlay_create(struct meson_drm *priv)
-@@ -570,7 +806,7 @@ int meson_overlay_create(struct meson_drm *priv)
- 				 &meson_overlay_funcs,
- 				 supported_drm_formats,
- 				 ARRAY_SIZE(supported_drm_formats),
--				 NULL,
-+				 format_modifiers,
- 				 DRM_PLANE_TYPE_OVERLAY, "meson_overlay_plane");
+ 	i2c->sys_clk = devm_clk_get(&pdev->dev, "sys");
+ 	if (IS_ERR(i2c->sys_clk)) {
+diff --git a/drivers/i2c/busses/i2c-imx-lpi2c.c b/drivers/i2c/busses/i2c-imx-lpi2c.c
+index 94743ba581fe..9db6ccded5e9 100644
+--- a/drivers/i2c/busses/i2c-imx-lpi2c.c
++++ b/drivers/i2c/busses/i2c-imx-lpi2c.c
+@@ -551,10 +551,8 @@ static int lpi2c_imx_probe(struct platform_device *pdev)
+ 		return PTR_ERR(lpi2c_imx->base);
  
- 	drm_plane_helper_add(plane, &meson_overlay_helper_funcs);
+ 	irq = platform_get_irq(pdev, 0);
+-	if (irq < 0) {
+-		dev_err(&pdev->dev, "can't get irq number\n");
++	if (irq < 0)
+ 		return irq;
+-	}
+ 
+ 	lpi2c_imx->adapter.owner	= THIS_MODULE;
+ 	lpi2c_imx->adapter.algo		= &lpi2c_imx_algo;
+diff --git a/drivers/i2c/busses/i2c-lpc2k.c b/drivers/i2c/busses/i2c-lpc2k.c
+index 197cb64b2a42..4e30c5267142 100644
+--- a/drivers/i2c/busses/i2c-lpc2k.c
++++ b/drivers/i2c/busses/i2c-lpc2k.c
+@@ -360,10 +360,8 @@ static int i2c_lpc2k_probe(struct platform_device *pdev)
+ 		return PTR_ERR(i2c->base);
+ 
+ 	i2c->irq = platform_get_irq(pdev, 0);
+-	if (i2c->irq < 0) {
+-		dev_err(&pdev->dev, "can't get interrupt resource\n");
++	if (i2c->irq < 0)
+ 		return i2c->irq;
+-	}
+ 
+ 	init_waitqueue_head(&i2c->wait);
+ 
+diff --git a/drivers/i2c/busses/i2c-meson.c b/drivers/i2c/busses/i2c-meson.c
+index b3bd869281d3..c5dec572fc48 100644
+--- a/drivers/i2c/busses/i2c-meson.c
++++ b/drivers/i2c/busses/i2c-meson.c
+@@ -426,10 +426,8 @@ static int meson_i2c_probe(struct platform_device *pdev)
+ 		return PTR_ERR(i2c->regs);
+ 
+ 	irq = platform_get_irq(pdev, 0);
+-	if (irq < 0) {
+-		dev_err(&pdev->dev, "can't find IRQ\n");
++	if (irq < 0)
+ 		return irq;
+-	}
+ 
+ 	ret = devm_request_irq(&pdev->dev, irq, meson_i2c_irq, 0, NULL, i2c);
+ 	if (ret < 0) {
+diff --git a/drivers/i2c/busses/i2c-omap.c b/drivers/i2c/busses/i2c-omap.c
+index 71b4637c86b7..175c590b93b7 100644
+--- a/drivers/i2c/busses/i2c-omap.c
++++ b/drivers/i2c/busses/i2c-omap.c
+@@ -1365,10 +1365,8 @@ omap_i2c_probe(struct platform_device *pdev)
+ 	u16 minor, major;
+ 
+ 	irq = platform_get_irq(pdev, 0);
+-	if (irq < 0) {
+-		dev_err(&pdev->dev, "no irq resource?\n");
++	if (irq < 0)
+ 		return irq;
+-	}
+ 
+ 	omap = devm_kzalloc(&pdev->dev, sizeof(struct omap_i2c_dev), GFP_KERNEL);
+ 	if (!omap)
+diff --git a/drivers/i2c/busses/i2c-owl.c b/drivers/i2c/busses/i2c-owl.c
+index fba6efc1dca8..672f1f239bd6 100644
+--- a/drivers/i2c/busses/i2c-owl.c
++++ b/drivers/i2c/busses/i2c-owl.c
+@@ -407,10 +407,8 @@ static int owl_i2c_probe(struct platform_device *pdev)
+ 		return PTR_ERR(i2c_dev->base);
+ 
+ 	irq = platform_get_irq(pdev, 0);
+-	if (irq < 0) {
+-		dev_err(dev, "failed to get IRQ number\n");
++	if (irq < 0)
+ 		return irq;
+-	}
+ 
+ 	if (of_property_read_u32(dev->of_node, "clock-frequency",
+ 				 &i2c_dev->bus_freq))
+diff --git a/drivers/i2c/busses/i2c-pnx.c b/drivers/i2c/busses/i2c-pnx.c
+index 686c06f31625..5d7207c10f1d 100644
+--- a/drivers/i2c/busses/i2c-pnx.c
++++ b/drivers/i2c/busses/i2c-pnx.c
+@@ -720,7 +720,6 @@ static int i2c_pnx_probe(struct platform_device *pdev)
+ 
+ 	alg_data->irq = platform_get_irq(pdev, 0);
+ 	if (alg_data->irq < 0) {
+-		dev_err(&pdev->dev, "Failed to get IRQ from platform resource\n");
+ 		ret = alg_data->irq;
+ 		goto out_clock;
+ 	}
+diff --git a/drivers/i2c/busses/i2c-pxa.c b/drivers/i2c/busses/i2c-pxa.c
+index 466e4f681d7a..37246cbbe14c 100644
+--- a/drivers/i2c/busses/i2c-pxa.c
++++ b/drivers/i2c/busses/i2c-pxa.c
+@@ -1267,10 +1267,8 @@ static int i2c_pxa_probe(struct platform_device *dev)
+ 		return PTR_ERR(i2c->reg_base);
+ 
+ 	irq = platform_get_irq(dev, 0);
+-	if (irq < 0) {
+-		dev_err(&dev->dev, "no irq resource: %d\n", irq);
++	if (irq < 0)
+ 		return irq;
+-	}
+ 
+ 	/* Default adapter num to device id; i2c_pxa_probe_dt can override. */
+ 	i2c->adap.nr = dev->id;
+diff --git a/drivers/i2c/busses/i2c-qup.c b/drivers/i2c/busses/i2c-qup.c
+index 155dcde70fc9..0e3525fe613f 100644
+--- a/drivers/i2c/busses/i2c-qup.c
++++ b/drivers/i2c/busses/i2c-qup.c
+@@ -1761,10 +1761,8 @@ static int qup_i2c_probe(struct platform_device *pdev)
+ 		return PTR_ERR(qup->base);
+ 
+ 	qup->irq = platform_get_irq(pdev, 0);
+-	if (qup->irq < 0) {
+-		dev_err(qup->dev, "No IRQ defined\n");
++	if (qup->irq < 0)
+ 		return qup->irq;
+-	}
+ 
+ 	if (has_acpi_companion(qup->dev)) {
+ 		ret = device_property_read_u32(qup->dev,
+diff --git a/drivers/i2c/busses/i2c-rk3x.c b/drivers/i2c/busses/i2c-rk3x.c
+index fbe41c8cc126..bc698240c4aa 100644
+--- a/drivers/i2c/busses/i2c-rk3x.c
++++ b/drivers/i2c/busses/i2c-rk3x.c
+@@ -1260,10 +1260,8 @@ static int rk3x_i2c_probe(struct platform_device *pdev)
+ 
+ 	/* IRQ setup */
+ 	irq = platform_get_irq(pdev, 0);
+-	if (irq < 0) {
+-		dev_err(&pdev->dev, "cannot find rk3x IRQ\n");
++	if (irq < 0)
+ 		return irq;
+-	}
+ 
+ 	ret = devm_request_irq(&pdev->dev, irq, rk3x_i2c_irq,
+ 			       0, dev_name(&pdev->dev), i2c);
+diff --git a/drivers/i2c/busses/i2c-sprd.c b/drivers/i2c/busses/i2c-sprd.c
+index 123a42bfe3b1..19cda6742423 100644
+--- a/drivers/i2c/busses/i2c-sprd.c
++++ b/drivers/i2c/busses/i2c-sprd.c
+@@ -492,10 +492,8 @@ static int sprd_i2c_probe(struct platform_device *pdev)
+ 		return PTR_ERR(i2c_dev->base);
+ 
+ 	i2c_dev->irq = platform_get_irq(pdev, 0);
+-	if (i2c_dev->irq < 0) {
+-		dev_err(&pdev->dev, "failed to get irq resource\n");
++	if (i2c_dev->irq < 0)
+ 		return i2c_dev->irq;
+-	}
+ 
+ 	i2c_set_adapdata(&i2c_dev->adap, i2c_dev);
+ 	init_completion(&i2c_dev->complete);
+diff --git a/drivers/i2c/busses/i2c-sun6i-p2wi.c b/drivers/i2c/busses/i2c-sun6i-p2wi.c
+index 17c27f79029b..2f6f6468214d 100644
+--- a/drivers/i2c/busses/i2c-sun6i-p2wi.c
++++ b/drivers/i2c/busses/i2c-sun6i-p2wi.c
+@@ -236,10 +236,8 @@ static int p2wi_probe(struct platform_device *pdev)
+ 
+ 	strlcpy(p2wi->adapter.name, pdev->name, sizeof(p2wi->adapter.name));
+ 	irq = platform_get_irq(pdev, 0);
+-	if (irq < 0) {
+-		dev_err(dev, "failed to retrieve irq: %d\n", irq);
++	if (irq < 0)
+ 		return irq;
+-	}
+ 
+ 	p2wi->clk = devm_clk_get(dev, NULL);
+ 	if (IS_ERR(p2wi->clk)) {
+diff --git a/drivers/i2c/busses/i2c-synquacer.c b/drivers/i2c/busses/i2c-synquacer.c
+index 8cc91a8da5a0..c9a3dba6a75d 100644
+--- a/drivers/i2c/busses/i2c-synquacer.c
++++ b/drivers/i2c/busses/i2c-synquacer.c
+@@ -578,10 +578,8 @@ static int synquacer_i2c_probe(struct platform_device *pdev)
+ 		return PTR_ERR(i2c->base);
+ 
+ 	i2c->irq = platform_get_irq(pdev, 0);
+-	if (i2c->irq < 0) {
+-		dev_err(&pdev->dev, "no IRQ resource found\n");
++	if (i2c->irq < 0)
+ 		return -ENODEV;
+-	}
+ 
+ 	ret = devm_request_irq(&pdev->dev, i2c->irq, synquacer_i2c_isr,
+ 			       0, dev_name(&pdev->dev), i2c);
+diff --git a/drivers/i2c/busses/i2c-uniphier-f.c b/drivers/i2c/busses/i2c-uniphier-f.c
+index 2b258d54d68c..cb4666c54a23 100644
+--- a/drivers/i2c/busses/i2c-uniphier-f.c
++++ b/drivers/i2c/busses/i2c-uniphier-f.c
+@@ -529,10 +529,8 @@ static int uniphier_fi2c_probe(struct platform_device *pdev)
+ 		return PTR_ERR(priv->membase);
+ 
+ 	irq = platform_get_irq(pdev, 0);
+-	if (irq < 0) {
+-		dev_err(dev, "failed to get IRQ number\n");
++	if (irq < 0)
+ 		return irq;
+-	}
+ 
+ 	if (of_property_read_u32(dev->of_node, "clock-frequency", &bus_speed))
+ 		bus_speed = I2C_MAX_STANDARD_MODE_FREQ;
+diff --git a/drivers/i2c/busses/i2c-uniphier.c b/drivers/i2c/busses/i2c-uniphier.c
+index 668b1fa2b0ef..ee00a44bf4c7 100644
+--- a/drivers/i2c/busses/i2c-uniphier.c
++++ b/drivers/i2c/busses/i2c-uniphier.c
+@@ -324,10 +324,8 @@ static int uniphier_i2c_probe(struct platform_device *pdev)
+ 		return PTR_ERR(priv->membase);
+ 
+ 	irq = platform_get_irq(pdev, 0);
+-	if (irq < 0) {
+-		dev_err(dev, "failed to get IRQ number\n");
++	if (irq < 0)
+ 		return irq;
+-	}
+ 
+ 	if (of_property_read_u32(dev->of_node, "clock-frequency", &bus_speed))
+ 		bus_speed = I2C_MAX_STANDARD_MODE_FREQ;
+diff --git a/drivers/i2c/busses/i2c-xlp9xx.c b/drivers/i2c/busses/i2c-xlp9xx.c
+index 286faa9c855e..f2241cedf5d3 100644
+--- a/drivers/i2c/busses/i2c-xlp9xx.c
++++ b/drivers/i2c/busses/i2c-xlp9xx.c
+@@ -517,10 +517,8 @@ static int xlp9xx_i2c_probe(struct platform_device *pdev)
+ 		return PTR_ERR(priv->base);
+ 
+ 	priv->irq = platform_get_irq(pdev, 0);
+-	if (priv->irq <= 0) {
+-		dev_err(&pdev->dev, "invalid irq!\n");
++	if (priv->irq <= 0)
+ 		return priv->irq;
+-	}
+ 	/* SMBAlert irq */
+ 	priv->alert_data.irq = platform_get_irq(pdev, 1);
+ 	if (priv->alert_data.irq <= 0)
 -- 
-2.22.0
+2.25.0
 
