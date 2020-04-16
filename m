@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94313C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:49:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 815CEC2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:49:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6FDAB21D93
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:49:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5279A2223D
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:49:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587048572;
-	bh=oLa9ZCMXCNwNPdswBzANyD/1hXfKDvp9bSGTKy6lpvM=;
+	s=default; t=1587048578;
+	bh=aBs0U7UDsdXOR98ZbF/DFAx8LAlxF0lzVvph7LALPJo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KFUOTbk3GBhYDLon9+k9vZeaRlXOQnEHfhpU/j8eVKmgvpCkCEvhqcNusg1QWB4/N
-	 2Yyi/UPaXEWesQcicQdf6PMaYJV5Nt8z2JIte9D1ItE05I6LcXMrZ41VxgTin0E3O+
-	 8Zgo/WJ3ynti54KLYr1b2UuL5C3pIfiAn/ndYth8=
+	b=oNoE2H0W8g5q50708k9oP1guRlYqYKbJIWPeWcgAuzAPAjgD6ISxWko4RnQPBEtuY
+	 Tv7YKCYJhNd1Sw2mTFhUJ4zvY72LJt98cQDs5uRYMtdG1Dj+gdN96TXkFOd/gA5cZ2
+	 K1E3kuVynZy001SvO2bPecFy2/WMuOHZ61gBIV5k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394800AbgDPOt1 (ORCPT
+        id S2394803AbgDPOtf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:49:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45690 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 10:49:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45730 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729446AbgDPN6o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729547AbgDPN6o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 16 Apr 2020 09:58:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D2BEE217D8;
-        Thu, 16 Apr 2020 13:58:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4B9DB21744;
+        Thu, 16 Apr 2020 13:58:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587045520;
-        bh=oLa9ZCMXCNwNPdswBzANyD/1hXfKDvp9bSGTKy6lpvM=;
+        s=default; t=1587045522;
+        bh=aBs0U7UDsdXOR98ZbF/DFAx8LAlxF0lzVvph7LALPJo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NSboMxJtAa6CMpKrGWGVDNCZXCiwoYAO8Oh10IyZcqpwGnjXLjMiWZtNbmjz3rzQ2
-         A5H4wgUuWHrmXwUf7phJ0JCXvzERfQO5TGgurs9uCyBXyi0uOskSUOkpoNCd+hih7U
-         Xy9R2TW4CxxD22xY/ZqhKaXzYOMXy5G+GK3MKnZA=
+        b=ARsxIn5e5DqOgQwVPkgXzfsjWC1uppMSt1INxxNGGTdo4yKkPiv67L+PjnNvwSfXc
+         BTpCZA3MMiw2O0QyEOQW4aUXikw51W7ggCls3EBkNMksasKL/42k/GAs7q+0ge/IR4
+         tFqgGhSt432aYusvN+aH+lP8yBPZLkbl6eBtR/Dw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ronnie Sahlberg <lsahlber@redhat.com>,
-        Murphy Zhou <jencce.kernel@gmail.com>,
-        Steve French <stfrench@microsoft.com>
-Subject: [PATCH 5.6 141/254] CIFS: check new file size when extending file by fallocate
-Date:   Thu, 16 Apr 2020 15:23:50 +0200
-Message-Id: <20200416131344.104090672@linuxfoundation.org>
+        stable@vger.kernel.org, Sean Tranchetti <stranche@codeaurora.org>,
+        Subash Abhinov Kasiviswanathan <subashab@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Alex Elder <elder@linaro.org>
+Subject: [PATCH 5.6 168/254] net: qualcomm: rmnet: Allow configuration updates to existing devices
+Date:   Thu, 16 Apr 2020 15:24:17 +0200
+Message-Id: <20200416131347.528538989@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.804095985@linuxfoundation.org>
 References: <20200416131325.804095985@linuxfoundation.org>
@@ -60,40 +62,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Murphy Zhou <jencce.kernel@gmail.com>
+From: Subash Abhinov Kasiviswanathan <subashab@codeaurora.org>
 
-commit ef4a632ccc1c7d3fb71a5baae85b79af08b7f94b upstream.
+commit 2abb5792387eb188b12051337d5dcd2cba615cb0 upstream.
 
-xfstests generic/228 checks if fallocate respect RLIMIT_FSIZE.
-After fallocate mode 0 extending enabled, we can hit this failure.
-Fix this by check the new file size with vfs helper, return
-error if file size is larger then RLIMIT_FSIZE(ulimit -f).
+This allows the changelink operation to succeed if the mux_id was
+specified as an argument. Note that the mux_id must match the
+existing mux_id of the rmnet device or should be an unused mux_id.
 
-This patch has been tested by LTP/xfstests aginst samba and
-Windows server.
-
-Acked-by: Ronnie Sahlberg <lsahlber@redhat.com>
-Signed-off-by: Murphy Zhou <jencce.kernel@gmail.com>
-Signed-off-by: Steve French <stfrench@microsoft.com>
-CC: Stable <stable@vger.kernel.org>
+Fixes: 1dc49e9d164c ("net: rmnet: do not allow to change mux id if mux id is duplicated")
+Reported-and-tested-by: Alex Elder <elder@linaro.org>
+Signed-off-by: Sean Tranchetti <stranche@codeaurora.org>
+Signed-off-by: Subash Abhinov Kasiviswanathan <subashab@codeaurora.org>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Cc: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/cifs/smb2ops.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/net/ethernet/qualcomm/rmnet/rmnet_config.c |   31 ++++++++++++---------
+ 1 file changed, 19 insertions(+), 12 deletions(-)
 
---- a/fs/cifs/smb2ops.c
-+++ b/fs/cifs/smb2ops.c
-@@ -3248,6 +3248,10 @@ static long smb3_simple_falloc(struct fi
- 	 * Extending the file
- 	 */
- 	if ((keep_size == false) && i_size_read(inode) < off + len) {
-+		rc = inode_newsize_ok(inode, off + len);
-+		if (rc)
-+			goto out;
-+
- 		if ((cifsi->cifsAttrs & FILE_ATTRIBUTE_SPARSE_FILE) == 0)
- 			smb2_set_sparse(xid, tcon, cfile, inode, false);
+--- a/drivers/net/ethernet/qualcomm/rmnet/rmnet_config.c
++++ b/drivers/net/ethernet/qualcomm/rmnet/rmnet_config.c
+@@ -279,7 +279,6 @@ static int rmnet_changelink(struct net_d
+ {
+ 	struct rmnet_priv *priv = netdev_priv(dev);
+ 	struct net_device *real_dev;
+-	struct rmnet_endpoint *ep;
+ 	struct rmnet_port *port;
+ 	u16 mux_id;
  
+@@ -294,19 +293,27 @@ static int rmnet_changelink(struct net_d
+ 
+ 	if (data[IFLA_RMNET_MUX_ID]) {
+ 		mux_id = nla_get_u16(data[IFLA_RMNET_MUX_ID]);
+-		if (rmnet_get_endpoint(port, mux_id)) {
+-			NL_SET_ERR_MSG_MOD(extack, "MUX ID already exists");
+-			return -EINVAL;
+-		}
+-		ep = rmnet_get_endpoint(port, priv->mux_id);
+-		if (!ep)
+-			return -ENODEV;
+ 
+-		hlist_del_init_rcu(&ep->hlnode);
+-		hlist_add_head_rcu(&ep->hlnode, &port->muxed_ep[mux_id]);
++		if (mux_id != priv->mux_id) {
++			struct rmnet_endpoint *ep;
++
++			ep = rmnet_get_endpoint(port, priv->mux_id);
++			if (!ep)
++				return -ENODEV;
++
++			if (rmnet_get_endpoint(port, mux_id)) {
++				NL_SET_ERR_MSG_MOD(extack,
++						   "MUX ID already exists");
++				return -EINVAL;
++			}
++
++			hlist_del_init_rcu(&ep->hlnode);
++			hlist_add_head_rcu(&ep->hlnode,
++					   &port->muxed_ep[mux_id]);
+ 
+-		ep->mux_id = mux_id;
+-		priv->mux_id = mux_id;
++			ep->mux_id = mux_id;
++			priv->mux_id = mux_id;
++		}
+ 	}
+ 
+ 	if (data[IFLA_RMNET_FLAGS]) {
 
 
