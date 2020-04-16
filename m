@@ -2,69 +2,80 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ABA1C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 06:54:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB99FC2BA2B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 06:54:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6223F2087E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 06:54:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AA212087E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 06:54:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qUXYZs7y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437276AbgDPGxK (ORCPT
+        id S2437039AbgDPGyo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 02:53:10 -0400
-Received: from helcar.hmeau.com ([216.24.177.18]:41474 "EHLO fornost.hmeau.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2436923AbgDPGwQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 02:52:16 -0400
-Received: from gwarestrin.me.apana.org.au ([192.168.0.7] helo=gwarestrin.arnor.me.apana.org.au)
-        by fornost.hmeau.com with smtp (Exim 4.89 #2 (Debian))
-        id 1jOyNK-0005Jq-CU; Thu, 16 Apr 2020 16:51:51 +1000
-Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Thu, 16 Apr 2020 16:51:50 +1000
-Date:   Thu, 16 Apr 2020 16:51:50 +1000
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Markus Elfring <Markus.Elfring@web.de>
-Cc:     linux-crypto@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Deepak Saxena <dsaxena@plexity.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Matt Mackall <mpm@selenic.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org,
-        Tang Bin <tangbin@cmss.chinamobile.com>
-Subject: Re: [PATCH] hwrng: omap - Delete an error message in
- of_get_omap_rng_device_details()
-Message-ID: <20200416065150.GG7901@gondor.apana.org.au>
-References: <eae7170c-4371-4865-7b85-589c0ed2b5b6@web.de>
+        Thu, 16 Apr 2020 02:54:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50544 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2437468AbgDPGy1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 02:54:27 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 536CDC061A0C;
+        Wed, 15 Apr 2020 23:54:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=PhktM7xkiFtBGJ6dx8UYLKoYK1Fp1IPWa9qQEpZldmY=; b=qUXYZs7ybgSXUPkdc9bshfC+TP
+        YyTj+O9gfG0xSQUFcPVmDbSivTYGU6T8/JuO8e+CniEHH5g4brZ+JIjPGkHNQ1Qgd9FQuMnHRH9DA
+        pYH8fUNhGvOZjF3ofrnhGaElg7f6EIZCxYZ7ErJZHnaKVw1IhmGBjHgHu9iYquVmRmQq3Z1R2CDwX
+        8jyvhp/HLmJlwW8wPJnyfCNCsNlth/WA6d2FKQ0szNVS+hZYuffh7eyhNWbHofsN5HjZc+KXsnQj5
+        hphNYzS+rYK+nICKfsydWgXQr87HpsubyYPPTg9E5LA0ddCCMxD5mqZ3UUxLFLm3cEFXcundK/gP2
+        +gLPWsqw==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jOyPi-00010l-Cc; Thu, 16 Apr 2020 06:54:18 +0000
+Date:   Wed, 15 Apr 2020 23:54:18 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     NeilBrown <neilb@suse.de>
+Cc:     Trond Myklebust <trondmy@hammerspace.com>,
+        "Anna.Schumaker@Netapp.com" <Anna.Schumaker@netapp.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jan Kara <jack@suse.cz>, Michal Hocko <mhocko@kernel.org>,
+        linux-mm@kvack.org, linux-nfs@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/2 V3] MM: replace PF_LESS_THROTTLE with
+ PF_LOCAL_THROTTLE
+Message-ID: <20200416065418.GA1092@infradead.org>
+References: <87tv2b7q72.fsf@notabene.neil.brown.name>
+ <87v9miydai.fsf@notabene.neil.brown.name>
+ <87ftdgw58w.fsf@notabene.neil.brown.name>
+ <87wo6gs26e.fsf@notabene.neil.brown.name>
+ <87tv1ks24t.fsf@notabene.neil.brown.name>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <eae7170c-4371-4865-7b85-589c0ed2b5b6@web.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <87tv1ks24t.fsf@notabene.neil.brown.name>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Apr 04, 2020 at 04:56:57PM +0200, Markus Elfring wrote:
-> From: Markus Elfring <elfring@users.sourceforge.net>
-> Date: Sat, 4 Apr 2020 16:45:57 +0200
-> 
-> The function “platform_get_irq” can log an error already.
-> Thus omit a redundant message for the exception handling in the
-> calling function.
-> 
-> This issue was detected by using the Coccinelle software.
-> 
-> Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
-> ---
->  drivers/char/hw_random/omap-rng.c | 5 +----
->  1 file changed, 1 insertion(+), 4 deletions(-)
+> +		if (current->flags & PF_LOCAL_THROTTLE)
+> +			/* This task must only be throttled based on the bdi
+> +			 * it is writing to - dirty pages for other bdis might
+> +			 * be pages this task is trying to write out.  So it
+> +			 * gets a free pass unless both global and local
+> +			 * thresholds are exceeded.  i.e unless
+> +			 * "dirty_exceeded".
+> +			 */
 
-Patch applied.  Thanks.
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+This is not our normal multi-line comment style.  The first line should
+be just a
+
+			/*
+
+Otherwise this looks good.
