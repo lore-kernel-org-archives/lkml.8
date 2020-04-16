@@ -2,151 +2,91 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFCFEC2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:53:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03157C2BB85
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:54:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AC9A9206D9
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:53:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587048839;
-	bh=vHr6g5MwzQjKMd6VRdS/hjjFnOfpLL/Nb7slM5ESHiA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mSyMc/JQTqVr9xVu2BO+0G4iwZtjSXrx+r3J5GGBzIcjl/ramZyNz7UdNe1bSUQCR
-	 asyJYQmaTZs7S5g4F6LFQOXROI63DK5bMOxIQawy5kvETMEjq6NDgG11n3L5YNDQuz
-	 bcvVTmS028JC3G+THQNgF2oHi9Pjt0mSPS9lG3U4=
+	by mail.kernel.org (Postfix) with ESMTP id D53662051A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:54:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405677AbgDPOxz (ORCPT
+        id S2408049AbgDPOyP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:53:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44012 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2441817AbgDPN46 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:56:58 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5BFF321734;
-        Thu, 16 Apr 2020 13:56:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587045417;
-        bh=vHr6g5MwzQjKMd6VRdS/hjjFnOfpLL/Nb7slM5ESHiA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=d5F+JxYun7YTvc6nro24bVPLP4gZq9ApEB9/padZ1oeH1AKdXieh1435+4d6JNwB+
-         evkVmGiMytZQ1aX8VgZSZy/QX3Vq9nukFWg3hOhJK3Kq6BMsQYU7g0msHOENiOuqxK
-         FxB0LVHnp10x/VhehzE2JNR+jlWEkg7exRfC2flM=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH 5.6 125/254] x86/tsc_msr: Use named struct initializers
-Date:   Thu, 16 Apr 2020 15:23:34 +0200
-Message-Id: <20200416131342.020942175@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200416131325.804095985@linuxfoundation.org>
-References: <20200416131325.804095985@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Thu, 16 Apr 2020 10:54:15 -0400
+Received: from hostingweb31-40.netsons.net ([89.40.174.40]:54697 "EHLO
+        hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2394837AbgDPOxV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 10:53:21 -0400
+Received: from [88.147.80.45] (port=36640 helo=[192.168.77.62])
+        by hostingweb31.netsons.net with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.93)
+        (envelope-from <luca@lucaceresoli.net>)
+        id 1jP5t7-00283A-Tv; Thu, 16 Apr 2020 16:53:10 +0200
+Subject: Re: [RFC PATCH v2 2/6] i2c: allow DT nodes without 'compatible'
+To:     Wolfram Sang <wsa@the-dreams.de>
+Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        linux-i2c@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        linux-i3c@lists.infradead.org,
+        Kieran Bingham <kieran@ksquared.org.uk>,
+        =?UTF-8?Q?Niklas_S=c3=b6derlund?= <niklas.soderlund@ragnatech.se>,
+        Jacopo Mondi <jacopo@jmondi.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Rob Herring <robh@kernel.org>
+References: <20200318150059.21714-1-wsa+renesas@sang-engineering.com>
+ <20200318150059.21714-3-wsa+renesas@sang-engineering.com>
+ <11ca7487-ac07-f714-8573-20d1a0040212@lucaceresoli.net>
+ <20200415075911.GA1141@ninjato>
+From:   Luca Ceresoli <luca@lucaceresoli.net>
+Message-ID: <e1791500-d7ca-f6d0-44ff-8d830de4bf58@lucaceresoli.net>
+Date:   Thu, 16 Apr 2020 16:53:07 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200415075911.GA1141@ninjato>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - hostingweb31.netsons.net
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - lucaceresoli.net
+X-Get-Message-Sender-Via: hostingweb31.netsons.net: authenticated_id: luca@lucaceresoli.net
+X-Authenticated-Sender: hostingweb31.netsons.net: luca@lucaceresoli.net
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+Hi,
 
-commit 812c2d7506fde7cdf83cb2532810a65782b51741 upstream.
+On 15/04/20 09:59, Wolfram Sang wrote:
+> 
+>> As I said in the reply to v1, I think we should reserve addresses also
+>> when there is a compatible string but no matching driver, but this is
+>> another story and can be handled separately.
+> 
+> Unless I misunderstand you, I think they do already. Note that
+> only 'i2cdetect' shows a device as busy *IFF* there is a driver bound to
+> it. The internal 'i2c_check_addr_busy' does not care about a driver
+> being bound. You can check this by trying to use
+> i2c_new_ancillary_device() with an address which is already described in
+> DT but which driver is disabled.
+> 
 
-Use named struct initializers for the freq_desc struct-s initialization
-and change the "u8 msr_plat" to a "bool use_msr_plat" to make its meaning
-more clear instead of relying on a comment to explain it.
+Ah, yes! I was assuming the opposite but I double checked and you're
+right of course.
 
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: stable@vger.kernel.org
-Link: https://lkml.kernel.org/r/20200223140610.59612-1-hdegoede@redhat.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Sorry for the noise.
 
----
- arch/x86/kernel/tsc_msr.c |   28 ++++++++++++++++++----------
- 1 file changed, 18 insertions(+), 10 deletions(-)
-
---- a/arch/x86/kernel/tsc_msr.c
-+++ b/arch/x86/kernel/tsc_msr.c
-@@ -22,10 +22,10 @@
-  * read in MSR_PLATFORM_ID[12:8], otherwise in MSR_PERF_STAT[44:40].
-  * Unfortunately some Intel Atom SoCs aren't quite compliant to this,
-  * so we need manually differentiate SoC families. This is what the
-- * field msr_plat does.
-+ * field use_msr_plat does.
-  */
- struct freq_desc {
--	u8 msr_plat;	/* 1: use MSR_PLATFORM_INFO, 0: MSR_IA32_PERF_STATUS */
-+	bool use_msr_plat;
- 	u32 freqs[MAX_NUM_FREQS];
- };
- 
-@@ -35,31 +35,39 @@ struct freq_desc {
-  * by MSR based on SDM.
-  */
- static const struct freq_desc freq_desc_pnw = {
--	0, { 0, 0, 0, 0, 0, 99840, 0, 83200 }
-+	.use_msr_plat = false,
-+	.freqs = { 0, 0, 0, 0, 0, 99840, 0, 83200 },
- };
- 
- static const struct freq_desc freq_desc_clv = {
--	0, { 0, 133200, 0, 0, 0, 99840, 0, 83200 }
-+	.use_msr_plat = false,
-+	.freqs = { 0, 133200, 0, 0, 0, 99840, 0, 83200 },
- };
- 
- static const struct freq_desc freq_desc_byt = {
--	1, { 83300, 100000, 133300, 116700, 80000, 0, 0, 0 }
-+	.use_msr_plat = true,
-+	.freqs = { 83300, 100000, 133300, 116700, 80000, 0, 0, 0 },
- };
- 
- static const struct freq_desc freq_desc_cht = {
--	1, { 83300, 100000, 133300, 116700, 80000, 93300, 90000, 88900, 87500 }
-+	.use_msr_plat = true,
-+	.freqs = { 83300, 100000, 133300, 116700, 80000, 93300, 90000,
-+		   88900, 87500 },
- };
- 
- static const struct freq_desc freq_desc_tng = {
--	1, { 0, 100000, 133300, 0, 0, 0, 0, 0 }
-+	.use_msr_plat = true,
-+	.freqs = { 0, 100000, 133300, 0, 0, 0, 0, 0 },
- };
- 
- static const struct freq_desc freq_desc_ann = {
--	1, { 83300, 100000, 133300, 100000, 0, 0, 0, 0 }
-+	.use_msr_plat = true,
-+	.freqs = { 83300, 100000, 133300, 100000, 0, 0, 0, 0 },
- };
- 
- static const struct freq_desc freq_desc_lgm = {
--	1, { 78000, 78000, 78000, 78000, 78000, 78000, 78000, 78000 }
-+	.use_msr_plat = true,
-+	.freqs = { 78000, 78000, 78000, 78000, 78000, 78000, 78000, 78000 },
- };
- 
- static const struct x86_cpu_id tsc_msr_cpu_ids[] = {
-@@ -91,7 +99,7 @@ unsigned long cpu_khz_from_msr(void)
- 		return 0;
- 
- 	freq_desc = (struct freq_desc *)id->driver_data;
--	if (freq_desc->msr_plat) {
-+	if (freq_desc->use_msr_plat) {
- 		rdmsr(MSR_PLATFORM_INFO, lo, hi);
- 		ratio = (lo >> 8) & 0xff;
- 	} else {
-
-
+-- 
+Luca
