@@ -2,166 +2,158 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA43AC2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:42:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A7CBC2BB85
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:42:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8F13121D93
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:42:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 464F321D7E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:42:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587048162;
+	bh=I0O0ffcTQDLvbIA9cqZLny6cy4vZJ+L0A/xovm88QmI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=iXoNBLUIQPXjrz9S6993ZTHyo0Yq7VCfs/wxNkMjPlvZUoEg9F8Tp+WoGi0nBRcpP
+	 /Rr4iL+6Wn0otjuhZIBH3zZYB3alJvhYJDKHFz1yYWu+6NES2wmwgR+5Gl+vwK9eI1
+	 JDByKPRTnYUpEqVH2WlUEehcuhy8vY1LH9KD4o3Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394497AbgDPOmY (ORCPT
+        id S2394524AbgDPOmk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:42:24 -0400
-Received: from mga05.intel.com ([192.55.52.43]:39396 "EHLO mga05.intel.com"
+        Thu, 16 Apr 2020 10:42:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47914 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728522AbgDPOmB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 10:42:01 -0400
-IronPort-SDR: eywTvYHzDjkPog1u8P4uJqRr5jKt82OHoCEjbA8JMknfgCMRDRpIrv6ptyC34Pp/2XHpGRXzmf
- Cs1CcbFwUjGg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2020 07:42:00 -0700
-IronPort-SDR: lvEpJOC50Hm1QMcKm0qilThYshi+I5TJTmGGWAwOLMchzbZnR3x0Ld8AXoUhQhceEgHmn6XE/y
- ODRLedmDsamA==
-X-IronPort-AV: E=Sophos;i="5.72,391,1580803200"; 
-   d="scan'208";a="427852877"
-Received: from likexu-mobl1.ccr.corp.intel.com (HELO [10.249.170.42]) ([10.249.170.42])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2020 07:41:58 -0700
-Subject: Re: [PATCH v2] KVM: x86/pmu: Reduce counter period change overhead
- and delay the effective time
-From:   Like Xu <like.xu@linux.intel.com>
-To:     pbonzini@redhat.com
-Cc:     ehankland@google.com, jmattson@google.com, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, wanpengli@tencent.com
-References: <20200317075315.70933-1-like.xu@linux.intel.com>
- <20200317081458.88714-1-like.xu@linux.intel.com>
- <1528e1b4-3dee-161b-9463-57471263b5a8@linux.intel.com>
- <6a57b701-99a2-3917-3879-bc8141dca9d4@linux.intel.com>
-Organization: Intel OTC
-Message-ID: <c5e4723a-3136-e017-5997-77f56c4c27c1@linux.intel.com>
-Date:   Thu, 16 Apr 2020 22:41:57 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        id S2392656AbgDPOAs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 10:00:48 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4031A2078B;
+        Thu, 16 Apr 2020 14:00:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587045647;
+        bh=I0O0ffcTQDLvbIA9cqZLny6cy4vZJ+L0A/xovm88QmI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=LIFTSmK2LK30HH3Ev1Ek39UboBrgNtAAUgWjhtbY3nY/uJNF65yW9eS4qqAe47GZy
+         x7mhPsmtwxPiL0UFOaSbhGhPA4vFUUuyfwnf1eSrSezzApY3U+qJYKDfmlFReWLlAC
+         b0XbonVXxI++mG97FGHr04K+mJTs2rNfr1Zl1A1w=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Mike Willard <mwillard@izotope.com>,
+        Mark Brown <broonie@kernel.org>
+Subject: [PATCH 5.6 219/254] ASoC: cs4270: pull reset GPIO low then high
+Date:   Thu, 16 Apr 2020 15:25:08 +0200
+Message-Id: <20200416131353.339943848@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.1
+In-Reply-To: <20200416131325.804095985@linuxfoundation.org>
+References: <20200416131325.804095985@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <6a57b701-99a2-3917-3879-bc8141dca9d4@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Ping.
+From: Mike Willard <mwillard@izotope.com>
 
-On 2020/4/8 22:04, Like Xu wrote:
-> Hi Paolo,
->
-> Could you please take a look at this patch?
-> If there is anything needs to be improved, please let me know.
->
-> Thanks,
-> Like Xu
->
-> On 2020/3/26 20:47, Like Xu wrote:
->> Anyone to help review this change?
->>
->> Thanks,
->> Like Xu
->>
->> On 2020/3/17 16:14, Like Xu wrote:
->>> The cost of perf_event_period() is unstable, and when the guest samples
->>> multiple events, the overhead increases dramatically (5378 ns on E5-2699).
->>>
->>> For a non-running counter, the effective time of the new period is when
->>> its corresponding enable bit is enabled. Calling perf_event_period()
->>> in advance is superfluous. For a running counter, it's safe to delay the
->>> effective time until the KVM_REQ_PMU event is handled. If there are
->>> multiple perf_event_period() calls before handling KVM_REQ_PMU,
->>> it helps to reduce the total cost.
->>>
->>> Signed-off-by: Like Xu <like.xu@linux.intel.com>
->>> ---
->>>   arch/x86/kvm/pmu.c           | 11 -----------
->>>   arch/x86/kvm/pmu.h           | 11 +++++++++++
->>>   arch/x86/kvm/vmx/pmu_intel.c | 10 ++++------
->>>   3 files changed, 15 insertions(+), 17 deletions(-)
->>>
->>> diff --git a/arch/x86/kvm/pmu.c b/arch/x86/kvm/pmu.c
->>> index d1f8ca57d354..527a8bb85080 100644
->>> --- a/arch/x86/kvm/pmu.c
->>> +++ b/arch/x86/kvm/pmu.c
->>> @@ -437,17 +437,6 @@ void kvm_pmu_init(struct kvm_vcpu *vcpu)
->>>       kvm_pmu_refresh(vcpu);
->>>   }
->>> -static inline bool pmc_speculative_in_use(struct kvm_pmc *pmc)
->>> -{
->>> -    struct kvm_pmu *pmu = pmc_to_pmu(pmc);
->>> -
->>> -    if (pmc_is_fixed(pmc))
->>> -        return fixed_ctrl_field(pmu->fixed_ctr_ctrl,
->>> -            pmc->idx - INTEL_PMC_IDX_FIXED) & 0x3;
->>> -
->>> -    return pmc->eventsel & ARCH_PERFMON_EVENTSEL_ENABLE;
->>> -}
->>> -
->>>   /* Release perf_events for vPMCs that have been unused for a full 
->>> time slice.  */
->>>   void kvm_pmu_cleanup(struct kvm_vcpu *vcpu)
->>>   {
->>> diff --git a/arch/x86/kvm/pmu.h b/arch/x86/kvm/pmu.h
->>> index d7da2b9e0755..cd112e825d2c 100644
->>> --- a/arch/x86/kvm/pmu.h
->>> +++ b/arch/x86/kvm/pmu.h
->>> @@ -138,6 +138,17 @@ static inline u64 get_sample_period(struct kvm_pmc 
->>> *pmc, u64 counter_value)
->>>       return sample_period;
->>>   }
->>> +static inline bool pmc_speculative_in_use(struct kvm_pmc *pmc)
->>> +{
->>> +    struct kvm_pmu *pmu = pmc_to_pmu(pmc);
->>> +
->>> +    if (pmc_is_fixed(pmc))
->>> +        return fixed_ctrl_field(pmu->fixed_ctr_ctrl,
->>> +            pmc->idx - INTEL_PMC_IDX_FIXED) & 0x3;
->>> +
->>> +    return pmc->eventsel & ARCH_PERFMON_EVENTSEL_ENABLE;
->>> +}
->>> +
->>>   void reprogram_gp_counter(struct kvm_pmc *pmc, u64 eventsel);
->>>   void reprogram_fixed_counter(struct kvm_pmc *pmc, u8 ctrl, int 
->>> fixed_idx);
->>>   void reprogram_counter(struct kvm_pmu *pmu, int pmc_idx);
->>> diff --git a/arch/x86/kvm/vmx/pmu_intel.c b/arch/x86/kvm/vmx/pmu_intel.c
->>> index 7c857737b438..20f654a0c09b 100644
->>> --- a/arch/x86/kvm/vmx/pmu_intel.c
->>> +++ b/arch/x86/kvm/vmx/pmu_intel.c
->>> @@ -263,15 +263,13 @@ static int intel_pmu_set_msr(struct kvm_vcpu 
->>> *vcpu, struct msr_data *msr_info)
->>>               if (!msr_info->host_initiated)
->>>                   data = (s64)(s32)data;
->>>               pmc->counter += data - pmc_read_counter(pmc);
->>> -            if (pmc->perf_event)
->>> -                perf_event_period(pmc->perf_event,
->>> -                          get_sample_period(pmc, data));
->>> +            if (pmc_speculative_in_use(pmc))
->>> +                kvm_make_request(KVM_REQ_PMU, vcpu);
->>>               return 0;
->>>           } else if ((pmc = get_fixed_pmc(pmu, msr))) {
->>>               pmc->counter += data - pmc_read_counter(pmc);
->>> -            if (pmc->perf_event)
->>> -                perf_event_period(pmc->perf_event,
->>> -                          get_sample_period(pmc, data));
->>> +            if (pmc_speculative_in_use(pmc))
->>> +                kvm_make_request(KVM_REQ_PMU, vcpu);
->>>               return 0;
->>>           } else if ((pmc = get_gp_pmc(pmu, msr, MSR_P6_EVNTSEL0))) {
->>>               if (data == pmc->eventsel)
->>>
->>
->
+commit ccfc531695f3a4aada042f6bdb33ac6be24e1aec upstream.
+
+Pull the RST line low then high when initializing the driver,
+in order to force a reset of the chip.
+Previously, the line was not pulled low, which could result in
+the chip registers not resetting to their default values on boot.
+
+Signed-off-by: Mike Willard <mwillard@izotope.com>
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/r/20200401205454.79792-1-mwillard@izotope.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ sound/soc/codecs/cs4270.c |   40 +++++++++++++++++++++++++++++++++++-----
+ 1 file changed, 35 insertions(+), 5 deletions(-)
+
+--- a/sound/soc/codecs/cs4270.c
++++ b/sound/soc/codecs/cs4270.c
+@@ -137,6 +137,9 @@ struct cs4270_private {
+ 
+ 	/* power domain regulators */
+ 	struct regulator_bulk_data supplies[ARRAY_SIZE(supply_names)];
++
++	/* reset gpio */
++	struct gpio_desc *reset_gpio;
+ };
+ 
+ static const struct snd_soc_dapm_widget cs4270_dapm_widgets[] = {
+@@ -649,6 +652,22 @@ static const struct regmap_config cs4270
+ };
+ 
+ /**
++ * cs4270_i2c_remove - deinitialize the I2C interface of the CS4270
++ * @i2c_client: the I2C client object
++ *
++ * This function puts the chip into low power mode when the i2c device
++ * is removed.
++ */
++static int cs4270_i2c_remove(struct i2c_client *i2c_client)
++{
++	struct cs4270_private *cs4270 = i2c_get_clientdata(i2c_client);
++
++	gpiod_set_value_cansleep(cs4270->reset_gpio, 0);
++
++	return 0;
++}
++
++/**
+  * cs4270_i2c_probe - initialize the I2C interface of the CS4270
+  * @i2c_client: the I2C client object
+  * @id: the I2C device ID (ignored)
+@@ -660,7 +679,6 @@ static int cs4270_i2c_probe(struct i2c_c
+ 	const struct i2c_device_id *id)
+ {
+ 	struct cs4270_private *cs4270;
+-	struct gpio_desc *reset_gpiod;
+ 	unsigned int val;
+ 	int ret, i;
+ 
+@@ -679,10 +697,21 @@ static int cs4270_i2c_probe(struct i2c_c
+ 	if (ret < 0)
+ 		return ret;
+ 
+-	reset_gpiod = devm_gpiod_get_optional(&i2c_client->dev, "reset",
+-					      GPIOD_OUT_HIGH);
+-	if (PTR_ERR(reset_gpiod) == -EPROBE_DEFER)
+-		return -EPROBE_DEFER;
++	/* reset the device */
++	cs4270->reset_gpio = devm_gpiod_get_optional(&i2c_client->dev, "reset",
++						     GPIOD_OUT_LOW);
++	if (IS_ERR(cs4270->reset_gpio)) {
++		dev_dbg(&i2c_client->dev, "Error getting CS4270 reset GPIO\n");
++		return PTR_ERR(cs4270->reset_gpio);
++	}
++
++	if (cs4270->reset_gpio) {
++		dev_dbg(&i2c_client->dev, "Found reset GPIO\n");
++		gpiod_set_value_cansleep(cs4270->reset_gpio, 1);
++	}
++
++	/* Sleep 500ns before i2c communications */
++	ndelay(500);
+ 
+ 	cs4270->regmap = devm_regmap_init_i2c(i2c_client, &cs4270_regmap);
+ 	if (IS_ERR(cs4270->regmap))
+@@ -735,6 +764,7 @@ static struct i2c_driver cs4270_i2c_driv
+ 	},
+ 	.id_table = cs4270_id,
+ 	.probe = cs4270_i2c_probe,
++	.remove = cs4270_i2c_remove,
+ };
+ 
+ module_i2c_driver(cs4270_i2c_driver);
+
 
