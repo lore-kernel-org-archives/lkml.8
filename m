@@ -2,110 +2,78 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C65FC2BA2B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 06:24:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B381C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 06:25:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7A7922078A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 06:24:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hmhHjntt"
+	by mail.kernel.org (Postfix) with ESMTP id 42BDD2078A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 06:25:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407836AbgDPGYG (ORCPT
+        id S2407945AbgDPGZL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 02:24:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45808 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2407332AbgDPGX5 (ORCPT
+        Thu, 16 Apr 2020 02:25:11 -0400
+Received: from mail-il1-f198.google.com ([209.85.166.198]:44095 "EHLO
+        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2407734AbgDPGZG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 02:23:57 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 272AFC061A0C;
-        Wed, 15 Apr 2020 23:23:55 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id g2so999433plo.3;
-        Wed, 15 Apr 2020 23:23:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=k9LiR9gqBCcCZdNQq4/YQxuQV5mvCYKBntiHSmfOytk=;
-        b=hmhHjntthZH7KFvuW/uCALSyrDaaZpjaURcbC1eWuZMaO/14HeEKZjksmWnkPw86qP
-         RwhRYDHjFfELQ1N77QeliUg4AKNXsdgS1gJVGunUKpARc6C1g7NUEmFfYx2SQ2+tVL5V
-         kX7pcDrYBDPxYNwfRtiKoi103cX8L991eZey7IoOSqCK9XbRvk+W9LgXEydGNzKNnICP
-         3HGyw/F+BC+u87V2vXZYhHCRmW7iX4HOyjs7e/GCt0zU5Oha+YUHdOZaKN9atjXhv0Qd
-         LjnIFYJ6Xo1yz0RT+XTkGJNVps8+WkaJux61hW/XAIBLY2sS+r09gagZE7MqhtDZAs/F
-         g7XA==
+        Thu, 16 Apr 2020 02:25:06 -0400
+Received: by mail-il1-f198.google.com with SMTP id c4so8107251ilf.11
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 23:25:04 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=k9LiR9gqBCcCZdNQq4/YQxuQV5mvCYKBntiHSmfOytk=;
-        b=hayXNpWYcuY/s+nhLCRNXI133AabRGf47tCF3UkOcKqUGFIqMs7v6Lpk83inZGPVeu
-         Q8/8JpO8Dvy9NhAkRfi13e7IYvfr+KosVc42mPrjvbLwgc+VHIg0v72HCn/wo0qT6c1y
-         xAaAe3EBRc7gfto3BpKXlmWXr/7YHq4Nt+4GE4keBgruT42LG7KOsrlCi6Z7t4hpLxsM
-         n7PEw4zgsgAsojXIT/BqHQGI+YuVBvJ/ebpviZ+I9s9wEIOs85eUmLmdKf1CsK8Sn5Mc
-         +SfPe3ZbVZ22iKi3mj+5pKLwvvUmU09mQAuXU5PxPODWt/YAedvy6SPTNqnxe+Bp/oGF
-         /2YQ==
-X-Gm-Message-State: AGi0PuY1ziIEVLIfAghJlyhzpzVlOP8pCqnyx0UUAHFpJvh3pM0OsYzx
-        4Mvp99q429n2XNdU6c9b4g==
-X-Google-Smtp-Source: APiQypKaVK5tHJIcKhm+h8B/y2dD4tsICDzX+exf1e1PqrpGq2QKMRt2sf3yVpSSWLw0bNTdtafcMQ==
-X-Received: by 2002:a17:902:9f95:: with SMTP id g21mr8282218plq.66.1587018234586;
-        Wed, 15 Apr 2020 23:23:54 -0700 (PDT)
-Received: from localhost.localdomain ([2402:3a80:13bf:b0b1:dcfd:f4e2:a41f:9129])
-        by smtp.gmail.com with ESMTPSA id u13sm1501463pjb.45.2020.04.15.23.23.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Apr 2020 23:23:53 -0700 (PDT)
-From:   madhuparnabhowmik10@gmail.com
-To:     dan.j.williams@intel.com, vkoul@kernel.org
-Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        andrianov@ispras.ru, ldv-project@linuxtesting.org,
-        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
-Subject: [PATCH] drivers: dma: pch_dma.c: Avoid data race between probe and irq handler
-Date:   Thu, 16 Apr 2020 11:53:35 +0530
-Message-Id: <20200416062335.29223-1-madhuparnabhowmik10@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=S9b/LLGTp46xQuNkjprKkHL+JPInIWFFm9gLUxjatqM=;
+        b=d1epOEha3ojAGEB3BAEFOIAMZjjFgQB6oPkykGm2PqCjC9NwiQMupPss4ONY8c9KS5
+         UwPjzvfj2CdIyKomeQMKayCh6XM+SeOhp1ZygGUTVcCMt2L+3eX6dS/LNI6WRMKF+dg/
+         J6u01ixl51ZFJYvYL+7IA0zKRw+dSX+FkW9uGX0C2r+ZQ0jw64BhOIFINP1hWriO3mMU
+         93blui8yEkeuTJVCl3W7UjZ7LNxPcF8tfMMLEy51F1b+xWlHmORg3mO00OAlF7CvZmMM
+         k3idtJgq85cY32UQ3X5cxb7PhCPvLfmk0zzBLSNpu+u9asNuw+WcWbydv54yF77/ur/A
+         Q53A==
+X-Gm-Message-State: AGi0PuYDAgjnemFw0ItTfLW1qUEL2oHTZC3aTd3GsPlXK7sb2UYDafQu
+        k1YRWxU7SCno+xQ54qWddiwgWUnQwNBWaVgbrYIAiEUbgBmj
+X-Google-Smtp-Source: APiQypK09xIpakUrRfClLjOKpZtYwC1UGo9n92wVet0wCZAL1e3IjdYSABPD1sVWI6uUY3bx7dSm2rd/iq5XTtAOUItChPURo+pC
+MIME-Version: 1.0
+X-Received: by 2002:a92:d1c1:: with SMTP id u1mr9027999ilg.280.1587018304537;
+ Wed, 15 Apr 2020 23:25:04 -0700 (PDT)
+Date:   Wed, 15 Apr 2020 23:25:04 -0700
+In-Reply-To: <0000000000009b1944058ca3e4a8@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000004b4bbc05a3627e5e@google.com>
+Subject: Re: WARNING: refcount bug in kobject_add_internal
+From:   syzbot <syzbot+32259bb9bc1a487ad206@syzkaller.appspotmail.com>
+To:     benh@kernel.crashing.org, gregkh@linuxfoundation.org,
+        linux-kernel@vger.kernel.org, longman@redhat.com, mingo@kernel.org,
+        peterz@infradead.org, rafael@kernel.org,
+        syzkaller-bugs@googlegroups.com, torvalds@linux-foundation.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+syzbot suspects this bug was fixed by commit:
 
-pd->dma.dev is read in irq handler pd_irq().
-However, it is set to pdev->dev after request_irq().
-Therefore, set pd->dma.dev to pdev->dev before request_irq() to
-avoid data race between pch_dma_probe() and pd_irq().
+commit 810507fe6fd5ff3de429121adff49523fabb643a
+Author: Waiman Long <longman@redhat.com>
+Date:   Thu Feb 6 15:24:08 2020 +0000
 
-Found by Linux Driver Verification project (linuxtesting.org).
+    locking/lockdep: Reuse freed chain_hlocks entries
 
-Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
----
- drivers/dma/pch_dma.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1127249be00000
+start commit:   6fbc7275 Linux 5.2-rc7
+git tree:       upstream
+kernel config:  https://syzkaller.appspot.com/x/.config?x=bff6583efcfaed3f
+dashboard link: https://syzkaller.appspot.com/bug?extid=32259bb9bc1a487ad206
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=115bad39a00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1241bdd5a00000
 
-diff --git a/drivers/dma/pch_dma.c b/drivers/dma/pch_dma.c
-index 581e7a290d98..a3b0b4c56a19 100644
---- a/drivers/dma/pch_dma.c
-+++ b/drivers/dma/pch_dma.c
-@@ -865,6 +865,7 @@ static int pch_dma_probe(struct pci_dev *pdev,
- 	}
- 
- 	pci_set_master(pdev);
-+	pd->dma.dev = &pdev->dev;
- 
- 	err = request_irq(pdev->irq, pd_irq, IRQF_SHARED, DRV_NAME, pd);
- 	if (err) {
-@@ -880,7 +881,6 @@ static int pch_dma_probe(struct pci_dev *pdev,
- 		goto err_free_irq;
- 	}
- 
--	pd->dma.dev = &pdev->dev;
- 
- 	INIT_LIST_HEAD(&pd->dma.channels);
- 
--- 
-2.17.1
+If the result looks correct, please mark the bug fixed by replying with:
 
+#syz fix: locking/lockdep: Reuse freed chain_hlocks entries
+
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
