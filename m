@@ -2,114 +2,240 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1381FC2BA2B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 06:57:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF668C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 06:57:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DF5E02087E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 06:57:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N5/wr5Fc"
+	by mail.kernel.org (Postfix) with ESMTP id C1254214D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 06:57:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437185AbgDPG5D (ORCPT
+        id S2437758AbgDPG5Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 02:57:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50918 "EHLO
+        Thu, 16 Apr 2020 02:57:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50974 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2436660AbgDPG4w (ORCPT
+        by vger.kernel.org with ESMTP id S2437726AbgDPG5M (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 02:56:52 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D697C061A0C;
-        Wed, 15 Apr 2020 23:56:52 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id k18so1021635pll.6;
-        Wed, 15 Apr 2020 23:56:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Qj5kgZ4ZycbAqsn/p7zs9dZ6xqHz+7ARuIFuoD3k3CY=;
-        b=N5/wr5Fco2wljHjzliXhvFmJFSotzjTFEMHU8zVUulMJEDhDXIHq9CIHwmHxHaH1CD
-         z+CXoBgEmlkGkAoGSWygBuZTlHHllwi7KDdOk6xxawYdmStZuuGaZIf7OM8pw8LCxyZe
-         CO5OnPub9PZcWklFTXogbCupMm9ZShRarCfm+OibotImuwf1xq+W+s7M2CwzkgzdQAh4
-         sZ1RZFLmo50L7IjL9LTDMy2Wz5Z932Yaj0M4k/aMXyANPni2DO3C9BV9D7yrWDc9EaaW
-         31WvtvAtSHnXIENA/e0D4fFt3qZ0MiGVYWxMaJT0MmO9StHKUrIRS7M/LBczcjSQZSka
-         j8jg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Qj5kgZ4ZycbAqsn/p7zs9dZ6xqHz+7ARuIFuoD3k3CY=;
-        b=YLUVj1Gn5TAtFwOit3trlpQn+A+CovBA3KRyVhVvwhmX091JJyyF/hH83Zvv8SZJ8V
-         UiG+vh36lJWULOnhM3GTPgwszfrUiK0rpM5NMrYy7nMBYJTJgE39HzGKOtEZ5Wbt8goa
-         OfW0YeiMw+HRGNUKycd5z6DWlnY1U28aw0TteT4ABlWp66JirF2ktTYA+800PgH7fT5B
-         nIrTRqiqy8oVFz5QI/xw0XNSergfzeszHonPbNNe4AvbxSSvMJO6QPpybbU1RFCodBhs
-         wfqcz2ShRsoZyOEaFO27yOggZxYl3e0xf2l3wnARW4c8Y11pe/VoXV1ywPH30vf6KrPX
-         xkDg==
-X-Gm-Message-State: AGi0PuZ3tuhNfilJcLBWAa9ZhUIUynzRUf4IadKz23kCV5CGkgNOkNl+
-        51rDQ9ElAAG+iOFTOCjHejI=
-X-Google-Smtp-Source: APiQypLG4TJ+NW7W0Hjp0IMS5gRAiLqoRQrHx2kNg1LBi9nBaICMZv3bqdiBtF8K4/JmGe1+OecfnQ==
-X-Received: by 2002:a17:902:cf87:: with SMTP id l7mr8998414ply.307.1587020211294;
-        Wed, 15 Apr 2020 23:56:51 -0700 (PDT)
-Received: from gmail.com ([2601:600:817f:a132:df3e:521d:99d5:710d])
-        by smtp.gmail.com with ESMTPSA id v4sm15818108pfb.31.2020.04.15.23.56.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Apr 2020 23:56:50 -0700 (PDT)
-Date:   Wed, 15 Apr 2020 23:56:48 -0700
-From:   Andrei Vagin <avagin@gmail.com>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michael Kerrisk <mtk.manpages@gmail.com>
-Cc:     linux-api@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Eric W . Biederman" <ebiederm@xmission.com>,
-        Dmitry Safonov <0x7f454c46@gmail.com>
-Subject: Re: [PATCH v2] timens: show clock symbolic names in
- /proc/pid/timens_offsets
-Message-ID: <20200416065648.GA801745@gmail.com>
-References: <96bedbaf-49ea-f24b-b7b1-fb9a57fb6c7d@gmail.com>
- <20200411154031.642557-1-avagin@gmail.com>
+        Thu, 16 Apr 2020 02:57:12 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4D3FC061A41
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 23:57:11 -0700 (PDT)
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jOySH-00050M-F3; Thu, 16 Apr 2020 08:56:57 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jOySF-0002To-Ra; Thu, 16 Apr 2020 08:56:55 +0200
+Date:   Thu, 16 Apr 2020 08:56:55 +0200
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Chris Ruehl <chris.ruehl@gtsys.com.hk>
+Cc:     devicetree@vger.kernel.org, Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alexandru Tachici <alexandru.tachici@analog.com>,
+        Steve Winslow <swinslow@gmail.com>, linux-iio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 2/3] iio: DAC extension for ltc2634-12/10/8
+Message-ID: <20200416065655.cxy67hlj267dpjrw@pengutronix.de>
+References: <20200416012016.21422-1-chris.ruehl@gtsys.com.hk>
+ <20200416012016.21422-3-chris.ruehl@gtsys.com.hk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=koi8-r
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20200411154031.642557-1-avagin@gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200416012016.21422-3-chris.ruehl@gtsys.com.hk>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Apr 11, 2020 at 08:40:31AM -0700, Andrei Vagin wrote:
-> Michael Kerrisk suggested to replace numeric clock IDs on symbolic
-> names.
-> 
-> Now the content of these files looks like this:
-> $ cat /proc/774/timens_offsets
-> monotonic      864000         0
-> boottime      1728000         0
-> 
-> For setting offsets, both representations of clocks can be used.
-> 
-> As for compatibility, it is acceptable to change things as long as
-> userspace doesn't care. The format of timens_offsets files is very
-> new and there are no userspace tools that rely on this format.
-> 
-> But three projects crun, util-linux and criu rely on the interface of
-> setting time offsets and this is why we need to continue supporting the
-> clock IDs in this case.
-> 
-> Fixes: 04a8682a71be ("fs/proc: Introduce /proc/pid/timens_offsets")
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Eric W. Biederman <ebiederm@xmission.com>
-> Cc: Dmitry Safonov <0x7f454c46@gmail.com>
-> Acked-by: Michael Kerrisk <mtk.manpages@gmail.com>                                                                                                                                            
+Hello,
 
-Thomas and Andrew, could you merge this patch? I am sorry, I used the
-wrong subsystem prefix. Let me know if I need to send the third version
-of this patch.
+dropped stefan.popa@analog.com from recipents as the address bounces for
+me.
 
-Thanks,
-Andrei
+On Thu, Apr 16, 2020 at 09:20:10AM +0800, Chris Ruehl wrote:
+> This patch add support for Analog Devices (Linear Technology)
+> LTC2634 Quad 12-/10-/8-Bit Rail-to-Rail DAC.
+> The SPI functionality based on them from LTC2632 therefor
+> add the definitions only and update the Kconfig.
+> 
+> Signed-off-by: Chris Ruehl <chris.ruehl@gtsys.com.hk>
+> ---
+> v4:
+> -hide version from commit text
+> v3:
+> -Consistens decimal separator in help text
+> v2:
+> -Send the documentation fix in a extra patch
+> -Kconfig simplify the driver description, details to the help text
+> -ltc2632.txt add to this patch-set (prepare to convert to yaml)
+> 
+>  .../devicetree/bindings/iio/dac/ltc2632.txt   |  8 ++-
+>  drivers/iio/dac/Kconfig                       |  6 +-
+>  drivers/iio/dac/ltc2632.c                     | 60 +++++++++++++++++++
+>  3 files changed, 70 insertions(+), 4 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/dac/ltc2632.txt b/Documentation/devicetree/bindings/iio/dac/ltc2632.txt
+> index 338c3220f01a..1ab9570cf219 100644
+> --- a/Documentation/devicetree/bindings/iio/dac/ltc2632.txt
+> +++ b/Documentation/devicetree/bindings/iio/dac/ltc2632.txt
+> @@ -1,4 +1,4 @@
+> -Linear Technology LTC2632/2636 DAC
+> +Linear Technology LTC2632/2634/2636 DAC
+>  
+>  Required properties:
+>   - compatible: Has to contain one of the following:
+> @@ -8,6 +8,12 @@ Required properties:
+>  	lltc,ltc2632-h12
+>  	lltc,ltc2632-h10
+>  	lltc,ltc2632-h8
+> +	lltc,ltc2634-l12
+> +	lltc,ltc2634-l10
+> +	lltc,ltc2634-l8
+> +	lltc,ltc2634-h12
+> +	lltc,ltc2634-h10
+> +	lltc,ltc2634-h8
+>  	lltc,ltc2636-l12
+>  	lltc,ltc2636-l10
+>  	lltc,ltc2636-l8
+> diff --git a/drivers/iio/dac/Kconfig b/drivers/iio/dac/Kconfig
+> index 93744011b63f..aee13ced6ddf 100644
+> --- a/drivers/iio/dac/Kconfig
+> +++ b/drivers/iio/dac/Kconfig
+> @@ -279,12 +279,12 @@ config LTC1660
+>  	  module will be called ltc1660.
+>  
+>  config LTC2632
+> -	tristate "Linear Technology LTC2632-12/10/8 and LTC2636-12/10/8 DAC spi driver"
+> +	tristate "Linear Technology LTC2632-12/10/8 and similar DAC spi driver"
+>  	depends on SPI
+>  	help
+>  	  Say yes here to build support for Linear Technology
+> -	  LTC2632-12, LTC2632-10, LTC2632-8, LTC2636-12, LTC2636-10 and
+> -	  LTC2636-8 converters (DAC).
+> +	  LTC2632, LTC2634 and LTC2636 DAC resolution 12/10/8 bit
+> +	  low 0-2.5V and high 0-4.096V range converters.
+>  
+>  	  To compile this driver as a module, choose M here: the
+>  	  module will be called ltc2632.
+> diff --git a/drivers/iio/dac/ltc2632.c b/drivers/iio/dac/ltc2632.c
+> index 2a84ea654645..e939d7f81014 100644
+> --- a/drivers/iio/dac/ltc2632.c
+> +++ b/drivers/iio/dac/ltc2632.c
+> @@ -54,6 +54,12 @@ enum ltc2632_supported_device_ids {
+>  	ID_LTC2632H12,
+>  	ID_LTC2632H10,
+>  	ID_LTC2632H8,
+> +	ID_LTC2634L12,
+> +	ID_LTC2634L10,
+> +	ID_LTC2634L8,
+> +	ID_LTC2634H12,
+> +	ID_LTC2634H10,
+> +	ID_LTC2634H8,
+>  	ID_LTC2636L12,
+>  	ID_LTC2636L10,
+>  	ID_LTC2636L8,
+> @@ -236,6 +242,36 @@ static const struct ltc2632_chip_info ltc2632_chip_info_tbl[] = {
+>  		.num_channels	= 2,
+>  		.vref_mv	= 4096,
+>  	},
+> +	[ID_LTC2634L12] = {
+> +		.channels	= ltc2632x12_channels,
+> +		.num_channels	= 4,
+> +		.vref_mv	= 2500,
+> +	},
+> +	[ID_LTC2634L10] = {
+> +		.channels	= ltc2632x10_channels,
+> +		.num_channels	= 4,
+> +		.vref_mv	= 2500,
+> +	},
+> +	[ID_LTC2634L8] =  {
+> +		.channels	= ltc2632x8_channels,
+> +		.num_channels	= 4,
+> +		.vref_mv	= 2500,
+> +	},
+> +	[ID_LTC2634H12] = {
+> +		.channels	= ltc2632x12_channels,
+> +		.num_channels	= 4,
+> +		.vref_mv	= 4096,
+> +	},
+> +	[ID_LTC2634H10] = {
+> +		.channels	= ltc2632x10_channels,
+> +		.num_channels	= 4,
+> +		.vref_mv	= 4096,
+> +	},
+> +	[ID_LTC2634H8] =  {
+> +		.channels	= ltc2632x8_channels,
+> +		.num_channels	= 4,
+> +		.vref_mv	= 4096,
+> +	},
+>  	[ID_LTC2636L12] = {
+>  		.channels	= ltc2632x12_channels,
+>  		.num_channels	= 8,
+> @@ -357,6 +393,12 @@ static const struct spi_device_id ltc2632_id[] = {
+>  	{ "ltc2632-h12", (kernel_ulong_t)&ltc2632_chip_info_tbl[ID_LTC2632H12] },
+>  	{ "ltc2632-h10", (kernel_ulong_t)&ltc2632_chip_info_tbl[ID_LTC2632H10] },
+>  	{ "ltc2632-h8", (kernel_ulong_t)&ltc2632_chip_info_tbl[ID_LTC2632H8] },
+> +	{ "ltc2634-l12", (kernel_ulong_t)&ltc2632_chip_info_tbl[ID_LTC2634L12] },
+> +	{ "ltc2634-l10", (kernel_ulong_t)&ltc2632_chip_info_tbl[ID_LTC2634L10] },
+> +	{ "ltc2634-l8", (kernel_ulong_t)&ltc2632_chip_info_tbl[ID_LTC2634L8] },
+> +	{ "ltc2634-h12", (kernel_ulong_t)&ltc2632_chip_info_tbl[ID_LTC2634H12] },
+> +	{ "ltc2634-h10", (kernel_ulong_t)&ltc2632_chip_info_tbl[ID_LTC2634H10] },
+> +	{ "ltc2634-h8", (kernel_ulong_t)&ltc2632_chip_info_tbl[ID_LTC2634H8] },
+>  	{ "ltc2636-l12", (kernel_ulong_t)&ltc2632_chip_info_tbl[ID_LTC2636L12] },
+>  	{ "ltc2636-l10", (kernel_ulong_t)&ltc2632_chip_info_tbl[ID_LTC2636L10] },
+>  	{ "ltc2636-l8", (kernel_ulong_t)&ltc2632_chip_info_tbl[ID_LTC2636L8] },
+> @@ -386,6 +428,24 @@ static const struct of_device_id ltc2632_of_match[] = {
+>  	}, {
+>  		.compatible = "lltc,ltc2632-h8",
+>  		.data = &ltc2632_chip_info_tbl[ID_LTC2632H8]
+> +	}, {
+> +		.compatible = "lltc,ltc2634-l12",
+> +		.data = &ltc2632_chip_info_tbl[ID_LTC2634L12]
+> +	}, {
+> +		.compatible = "lltc,ltc2634-l10",
+> +		.data = &ltc2632_chip_info_tbl[ID_LTC2634L10]
+> +	}, {
+> +		.compatible = "lltc,ltc2634-l8",
+> +		.data = &ltc2632_chip_info_tbl[ID_LTC2634L8]
+> +	}, {
+> +		.compatible = "lltc,ltc2634-h12",
+> +		.data = &ltc2632_chip_info_tbl[ID_LTC2634H12]
+> +	}, {
+> +		.compatible = "lltc,ltc2634-h10",
+> +		.data = &ltc2632_chip_info_tbl[ID_LTC2634H10]
+> +	}, {
+> +		.compatible = "lltc,ltc2634-h8",
+> +		.data = &ltc2632_chip_info_tbl[ID_LTC2634H8]
+>  	}, {
+>  		.compatible = "lltc,ltc2636-l12",
+>  		.data = &ltc2632_chip_info_tbl[ID_LTC2636L12]
+
+Looks good to me:
+
+Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+
+Thanks
+Uwe
+
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
