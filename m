@@ -2,188 +2,100 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9341FC2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:48:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58DB4C3815B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:49:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6B52321D93
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:48:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Krne45FA"
+	by mail.kernel.org (Postfix) with ESMTP id 30B6522261
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:49:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587048552;
+	bh=W67J4mpFhxI5aIfA8+lYU7Gbb6BRpGz4wwe69mq9YR8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=N1t6yMlDMMmmsN3ECqUmVRSfx5Z6DzB1IZcMPEoEC4kqshGH38jUAs20rj0zC9W3N
+	 kUQOyjDvNGXYbB5xDdd2AyD7EQrOl10JSTR5DPi0EDag6swOAOA2SFzaV15Epp7EJa
+	 Dw54+baOObQgzidQfReOIbrPD9eVBTp03zENFtnk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394543AbgDPOsx (ORCPT
+        id S2409400AbgDPN6t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:48:53 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:52765 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2394733AbgDPOsi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 10:48:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587048517;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=mMOcvd8rqB/SDYGbEUATBrqiayoKdChDgtyzI2z56+k=;
-        b=Krne45FAuGtE+nCqLRJI2urtG1H855rkgdOygzUb8CAk6ntjUqaWou8CFiRuOxy0wASgJ/
-        C/Fzc1ng1e8/UbQ1keRubk8PqXJ3lg7BVydY4DnhvDi/fl+jZXxSZ/xn8YcLjIEm7B5FO6
-        P56j/AN6g8y6ZoIy2E4Kh+ESDb1bKaI=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-458-Le46VK3hP4KmFRFu2epPvQ-1; Thu, 16 Apr 2020 10:48:29 -0400
-X-MC-Unique: Le46VK3hP4KmFRFu2epPvQ-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Thu, 16 Apr 2020 09:58:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52084 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2897894AbgDPNjk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:39:40 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5360E85EE81;
-        Thu, 16 Apr 2020 14:48:12 +0000 (UTC)
-Received: from w520.home (ovpn-112-162.phx2.redhat.com [10.3.112.162])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 9CDFE5C1C5;
-        Thu, 16 Apr 2020 14:48:11 +0000 (UTC)
-Date:   Thu, 16 Apr 2020 08:48:11 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     "Liu, Yi L" <yi.l.liu@intel.com>
-Cc:     "jean-philippe@linaro.org" <jean-philippe@linaro.org>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "Tian, Jun J" <jun.j.tian@intel.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Sun, Yi Y" <yi.y.sun@intel.com>, "Wu, Hao" <hao.wu@intel.com>
-Subject: Re: [PATCH v1 7/8] vfio/type1: Add VFIO_IOMMU_CACHE_INVALIDATE
-Message-ID: <20200416084811.5acf4424@w520.home>
-In-Reply-To: <20200416084031.7266ad40@w520.home>
-References: <1584880325-10561-1-git-send-email-yi.l.liu@intel.com>
-        <1584880325-10561-8-git-send-email-yi.l.liu@intel.com>
-        <20200402142428.2901432e@w520.home>
-        <AADFC41AFE54684AB9EE6CBC0274A5D19D807C4A@SHSMSX104.ccr.corp.intel.com>
-        <20200403093436.094b1928@w520.home>
-        <A2975661238FB949B60364EF0F2C25743A231BAA@SHSMSX104.ccr.corp.intel.com>
-        <20200416084031.7266ad40@w520.home>
+        by mail.kernel.org (Postfix) with ESMTPSA id B5CC22063A;
+        Thu, 16 Apr 2020 13:39:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587044380;
+        bh=W67J4mpFhxI5aIfA8+lYU7Gbb6BRpGz4wwe69mq9YR8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=kHyZhJZgjyya+9BBMMF/6sOJBWyMDBjtb23py6HWu+pK52L37ySqQ+tM4Sta5Q8K/
+         SjWPA27sB6nqt3ki5NYHnin7ETynNv6KHduYFuyiE91Llh2SzsUxe9PHNHG39bgdJP
+         IX9Oa0l68L1ydS3W/YuNy043vZIslimkK3k1c9+k=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Gilad Ben-Yossef <gilad@benyossef.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Subject: [PATCH 5.5 193/257] crypto: ccree - only try to map auth tag if needed
+Date:   Thu, 16 Apr 2020 15:24:04 +0200
+Message-Id: <20200416131350.357933492@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.1
+In-Reply-To: <20200416131325.891903893@linuxfoundation.org>
+References: <20200416131325.891903893@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 16 Apr 2020 08:40:31 -0600
-Alex Williamson <alex.williamson@redhat.com> wrote:
+From: Gilad Ben-Yossef <gilad@benyossef.com>
 
-> On Thu, 16 Apr 2020 10:40:03 +0000
-> "Liu, Yi L" <yi.l.liu@intel.com> wrote:
-> 
-> > Hi Alex,
-> > Still have a direction question with you. Better get agreement with you
-> > before heading forward.
-> >   
-> > > From: Alex Williamson <alex.williamson@redhat.com>
-> > > Sent: Friday, April 3, 2020 11:35 PM    
-> > [...]  
-> > > > > > + *
-> > > > > > + * returns: 0 on success, -errno on failure.
-> > > > > > + */
-> > > > > > +struct vfio_iommu_type1_cache_invalidate {
-> > > > > > +	__u32   argsz;
-> > > > > > +	__u32   flags;
-> > > > > > +	struct	iommu_cache_invalidate_info cache_info;
-> > > > > > +};
-> > > > > > +#define VFIO_IOMMU_CACHE_INVALIDATE      _IO(VFIO_TYPE,    
-> > > VFIO_BASE    
-> > > > > + 24)
-> > > > >
-> > > > > The future extension capabilities of this ioctl worry me, I wonder if
-> > > > > we should do another data[] with flag defining that data as CACHE_INFO.    
-> > > >
-> > > > Can you elaborate? Does it mean with this way we don't rely on iommu
-> > > > driver to provide version_to_size conversion and instead we just pass
-> > > > data[] to iommu driver for further audit?    
-> > > 
-> > > No, my concern is that this ioctl has a single function, strictly tied
-> > > to the iommu uapi.  If we replace cache_info with data[] then we can
-> > > define a flag to specify that data[] is struct
-> > > iommu_cache_invalidate_info, and if we need to, a different flag to
-> > > identify data[] as something else.  For example if we get stuck
-> > > expanding cache_info to meet new demands and develop a new uapi to
-> > > solve that, how would we expand this ioctl to support it rather than
-> > > also create a new ioctl?  There's also a trade-off in making the ioctl
-> > > usage more difficult for the user.  I'd still expect the vfio layer to
-> > > check the flag and interpret data[] as indicated by the flag rather
-> > > than just passing a blob of opaque data to the iommu layer though.
-> > > Thanks,    
-> > 
-> > Based on your comments about defining a single ioctl and a unified
-> > vfio structure (with a @data[] field) for pasid_alloc/free, bind/
-> > unbind_gpasid, cache_inv. After some offline trying, I think it would
-> > be good for bind/unbind_gpasid and cache_inv as both of them use the
-> > iommu uapi definition. While the pasid alloc/free operation doesn't.
-> > It would be weird to put all of them together. So pasid alloc/free
-> > may have a separate ioctl. It would look as below. Does this direction
-> > look good per your opinion?
-> > 
-> > ioctl #22: VFIO_IOMMU_PASID_REQUEST
-> > /**
-> >   * @pasid: used to return the pasid alloc result when flags == ALLOC_PASID
-> >   *         specify a pasid to be freed when flags == FREE_PASID
-> >   * @range: specify the allocation range when flags == ALLOC_PASID
-> >   */
-> > struct vfio_iommu_pasid_request {
-> > 	__u32	argsz;
-> > #define VFIO_IOMMU_ALLOC_PASID	(1 << 0)
-> > #define VFIO_IOMMU_FREE_PASID	(1 << 1)
-> > 	__u32	flags;
-> > 	__u32	pasid;
-> > 	struct {
-> > 		__u32	min;
-> > 		__u32	max;
-> > 	} range;
-> > };  
-> 
-> Can't the ioctl return the pasid valid on alloc (like GET_DEVICE_FD)?
+commit 504e84abec7a635b861afd8d7f92ecd13eaa2b09 upstream.
 
-s/valid/value/
+Make sure to only add the size of the auth tag to the source mapping
+for encryption if it is an in-place operation. Failing to do this
+previously caused us to try and map auth size len bytes from a NULL
+mapping and crashing if both the cryptlen and assoclen are zero.
 
-> Would it be useful to support freeing a range of pasids?  If so then we
-> could simply use range for both, ie. allocate a pasid from this range
-> and return it, or free all pasids in this range?  vfio already needs to
-> track pasids to free them on release, so presumably this is something
-> we could support easily.
->  
-> > ioctl #23: VFIO_IOMMU_NESTING_OP
-> > struct vfio_iommu_type1_nesting_op {
-> > 	__u32	argsz;
-> > 	__u32	flags;
-> > 	__u32	op;
-> > 	__u8	data[];
-> > };  
-> 
-> data only has 4-byte alignment, I think we really want it at an 8-byte
-> alignment.  This is why I embedded the "op" into the flag for
-> DEVICE_FEATURE.  Thanks,
-> 
-> Alex
-> 
-> > 
-> > /* Nesting Ops */
-> > #define VFIO_IOMMU_NESTING_OP_BIND_PGTBL        0
-> > #define VFIO_IOMMU_NESTING_OP_UNBIND_PGTBL      1
-> > #define VFIO_IOMMU_NESTING_OP_CACHE_INVLD       2
-> >  
-> > Thanks,
-> > Yi Liu
-> >   
-> 
-> _______________________________________________
-> iommu mailing list
-> iommu@lists.linux-foundation.org
-> https://lists.linuxfoundation.org/mailman/listinfo/iommu
-> 
+Reported-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Gilad Ben-Yossef <gilad@benyossef.com>
+Cc: stable@vger.kernel.org # v4.19+
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ drivers/crypto/ccree/cc_buffer_mgr.c |    6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+--- a/drivers/crypto/ccree/cc_buffer_mgr.c
++++ b/drivers/crypto/ccree/cc_buffer_mgr.c
+@@ -1109,9 +1109,11 @@ int cc_map_aead_request(struct cc_drvdat
+ 	}
+ 
+ 	size_to_map = req->cryptlen + areq_ctx->assoclen;
+-	if (areq_ctx->gen_ctx.op_type == DRV_CRYPTO_DIRECTION_ENCRYPT)
++	/* If we do in-place encryption, we also need the auth tag */
++	if ((areq_ctx->gen_ctx.op_type == DRV_CRYPTO_DIRECTION_ENCRYPT) &&
++	   (req->src == req->dst)) {
+ 		size_to_map += authsize;
+-
++	}
+ 	if (is_gcm4543)
+ 		size_to_map += crypto_aead_ivsize(tfm);
+ 	rc = cc_map_sg(dev, req->src, size_to_map, DMA_BIDIRECTIONAL,
+
 
