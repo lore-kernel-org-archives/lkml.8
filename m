@@ -7,47 +7,51 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E10E1C2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:50:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 254BCC2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:50:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B385221D93
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:50:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01D3421D93
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:50:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587048624;
-	bh=YTCURO/wpL4mZgGhN38MtVtgTdD2kwxE6Zl9cpyaaFg=;
+	s=default; t=1587048632;
+	bh=uS2XvlTl56H4jcaiC9wk+rQLx8ZcbiN32EuYD9MrFuo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=M9k29wQW3oTn0Eqyw/FKCpgrjjO6hm8+4ZcY1hj6EYinbTzg5lr1qr/prNBC3R4JF
-	 O4lpSSs5kHwVKRIvC1uzPlqFg7P1hQxVtImzgbKdOwheFKbSDINMqfhSxK0KYqWjo5
-	 T+8+tnYw0ZbOobgXAUoCGjYhIRE+AFcrHUPIsbzY=
+	b=tK2ZEcZSIkflHYUEHTDZHmPC33hGrTjoF3dPA3ImShNj703sOzg2Zk7ZOniARdMYB
+	 2bxN1oz6WJmuQHc9zHJocebSj0LVOTD1S0gAOYDpOgip1S61gg8J9xR+dSH1sGfZbu
+	 B1zb1ISP3ip/UwRZ9pE/dnqEEi6f74vFcyTihWrw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394738AbgDPOuX (ORCPT
+        id S1729205AbgDPOu2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:50:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45440 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 10:50:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45398 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405693AbgDPN62 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:58:28 -0400
+        id S1731230AbgDPN60 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:58:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8AB462078B;
-        Thu, 16 Apr 2020 13:58:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1E66720786;
+        Thu, 16 Apr 2020 13:58:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587045508;
-        bh=YTCURO/wpL4mZgGhN38MtVtgTdD2kwxE6Zl9cpyaaFg=;
+        s=default; t=1587045505;
+        bh=uS2XvlTl56H4jcaiC9wk+rQLx8ZcbiN32EuYD9MrFuo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uoIogT3c1Unh82B2EI5KaVS5pP2UxHO70AQZz+oJrN3LOFEX7TUrddG3hprQtltlP
-         Z7fh1txeGcUegw5hS7AHxQnijd4Dzf+btJEoQgfqFn0xsux0nbs8wQ8OZ1fYFHLx9S
-         HFdeRM94qQieW62wPm5Lq53h1Tz4PJd/iYZYoJCY=
+        b=eewccISnGrz2dj7Nq5o/gUCenUq3VKzXbMQH/TGNCW7VUv7aaqVdMY92pRsRZ36Bt
+         ckvn/CBWNDlHSvXh9FMhg+JnpTrnKE7Qv8LLAG4VqqQQvGU7j1UiYJwFNC8/N7Xy3I
+         fj9hONxiJwVBiyE8seXvYPY/tb0nQJLFlchzcjns=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Neil Horman <nhorman@tuxdriver.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 5.6 163/254] crypto: rng - Fix a refcounting bug in crypto_rng_reset()
-Date:   Thu, 16 Apr 2020 15:24:12 +0200
-Message-Id: <20200416131346.958192326@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>,
+        Dmitry Safonov <dima@arista.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andrei Vagin <avagin@gmail.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        stable@kernel.org
+Subject: [PATCH 5.6 162/254] time/namespace: Add max_time_namespaces ucount
+Date:   Thu, 16 Apr 2020 15:24:11 +0200
+Message-Id: <20200416131346.861418414@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.804095985@linuxfoundation.org>
 References: <20200416131325.804095985@linuxfoundation.org>
@@ -60,43 +64,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Dmitry Safonov <dima@arista.com>
 
-commit eed74b3eba9eda36d155c11a12b2b4b50c67c1d8 upstream.
+commit eeec26d5da8248ea4e240b8795bb4364213d3247 upstream.
 
-We need to decrement this refcounter on these error paths.
+Michael noticed that userns limit for number of time namespaces is missing.
 
-Fixes: f7d76e05d058 ("crypto: user - fix use_after_free of struct xxx_request")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Acked-by: Neil Horman <nhorman@tuxdriver.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Furthermore, time namespace introduced UCOUNT_TIME_NAMESPACES, but didn't
+introduce an array member in user_table[]. It would make array's
+initialisation OOB write, but by luck the user_table array has an excessive
+empty member (all accesses to the array are limited with UCOUNT_COUNTS - so
+it silently reuses the last free member.
+
+Fixes user-visible regression: max_inotify_instances by reason of the
+missing UCOUNT_ENTRY() has limited max number of namespaces instead of the
+number of inotify instances.
+
+Fixes: 769071ac9f20 ("ns: Introduce Time Namespace")
+Reported-by: Michael Kerrisk (man-pages) <mtk.manpages@gmail.com>
+Signed-off-by: Dmitry Safonov <dima@arista.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Acked-by: Andrei Vagin <avagin@gmail.com>
+Acked-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
+Cc: stable@kernel.org
+Link: https://lkml.kernel.org/r/20200406171342.128733-1-dima@arista.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- crypto/rng.c |    8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ Documentation/admin-guide/sysctl/user.rst |    6 ++++++
+ kernel/ucount.c                           |    1 +
+ 2 files changed, 7 insertions(+)
 
---- a/crypto/rng.c
-+++ b/crypto/rng.c
-@@ -37,12 +37,16 @@ int crypto_rng_reset(struct crypto_rng *
- 	crypto_stats_get(alg);
- 	if (!seed && slen) {
- 		buf = kmalloc(slen, GFP_KERNEL);
--		if (!buf)
-+		if (!buf) {
-+			crypto_alg_put(alg);
- 			return -ENOMEM;
-+		}
+--- a/Documentation/admin-guide/sysctl/user.rst
++++ b/Documentation/admin-guide/sysctl/user.rst
+@@ -65,6 +65,12 @@ max_pid_namespaces
+   The maximum number of pid namespaces that any user in the current
+   user namespace may create.
  
- 		err = get_random_bytes_wait(buf, slen);
--		if (err)
-+		if (err) {
-+			crypto_alg_put(alg);
- 			goto out;
-+		}
- 		seed = buf;
- 	}
++max_time_namespaces
++===================
++
++  The maximum number of time namespaces that any user in the current
++  user namespace may create.
++
+ max_user_namespaces
+ ===================
  
+--- a/kernel/ucount.c
++++ b/kernel/ucount.c
+@@ -69,6 +69,7 @@ static struct ctl_table user_table[] = {
+ 	UCOUNT_ENTRY("max_net_namespaces"),
+ 	UCOUNT_ENTRY("max_mnt_namespaces"),
+ 	UCOUNT_ENTRY("max_cgroup_namespaces"),
++	UCOUNT_ENTRY("max_time_namespaces"),
+ #ifdef CONFIG_INOTIFY_USER
+ 	UCOUNT_ENTRY("max_inotify_instances"),
+ 	UCOUNT_ENTRY("max_inotify_watches"),
 
 
