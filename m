@@ -2,188 +2,122 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30232C2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 10:07:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 228CEC2BB85
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 10:08:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0941C21D93
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 10:07:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 008EE21D92
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 10:08:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587031678;
-	bh=U07hiohRA+D9y6jbCgSK5eKp4Syf0sJdVgvk/8g3YAg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=T6yuQdnndMYlzYkvUKBlBoM5MjK0IF8Pr2bgrgI2RDJRoZW+pWvsB48SG6bSJPhyd
-	 CAYDFoiBv5AjyKVjvCcIm8Pk3t82NtA3vu+/JYspeThg6piJj54xpHWeA7x+AljN0F
-	 Dne+Kp0UGm+xUANI/u/3mJDBF0TEXrssHSKfvGFQ=
+	s=default; t=1587031705;
+	bh=K0WP10TiIcLv27eDTOY6OMpM34tUS8V0xWTdgNc2fLU=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=2rZvifuI6aJd10PlNGrX1dnNFQxrMVRJOUq1x/R7B4QUO417JtFRuehuk7bdXwnUf
+	 ejo+EAAxsDQvY0HQmF7AB+0NjwDb90F0NNzGxDGWj+tBRfUI+zd4G3psxa6UXO9zxp
+	 n2Svtki+LKZYW6cQzHx7zpJcqelEqr6A+f/5u+Js=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2504759AbgDPKHz (ORCPT
+        id S2504771AbgDPKIQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 06:07:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52658 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2504502AbgDPKHn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 06:07:43 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15791C061A0C;
-        Thu, 16 Apr 2020 03:07:43 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id g12so4175916wmh.3;
-        Thu, 16 Apr 2020 03:07:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=OlzqNuRAf4M1JO6sfzgiibPFGi4knfJaatl8Sy869Yc=;
-        b=TegZ0HssEhBvvlvwTu2nZs6DxIi6nIPmIjIHw4srcWPisr91rqUeZaSd6SeWAPbylt
-         MlkkFoLfpt0pGJ6cGW2oACMTqGjRM055ByGn1a5PpoFK2Hd0sNkdJtleufzAGiT7k3eo
-         43999l9SrgK7855poFj0PoI+1EgnnjAfc81otOAFU7271t+vgAglTppC84o8sWKRq0we
-         M6Wkaboy8Od/VA3tNfJzykxtdcemGwizN2naOljwDnYHAXUzeImhr3uDv/1zNqrBW8g9
-         ZL/8TuajcIw+ngGp9AVIcWv9ppgBt/TqlOvV/pUapCMou+ofHZLCMtxKccudu0IRpstO
-         jTag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=OlzqNuRAf4M1JO6sfzgiibPFGi4knfJaatl8Sy869Yc=;
-        b=shjsY5i2CzOGBIFSY7kCUkvnMiRjU3C96c9XkWRpZvCq/+6dss1FZpm5QiYj1NNGiK
-         bo8+8QQRcGOTytBw6Tq4xuexWi0jxtoFWDNQ55xeWZ3DdoQtsAw8AUmFaEDOTLIUWXY7
-         RmUwbsdVNcd/9Y6menZnjbGOyrPQYDALpAt+Ft6T0DqTDNouaJlLc/vg1A0V+JnpdrtD
-         GNiM3p8PsfPpqjlBuygjHcmsV6qCAQZKx5TMLej6eP7gQhQCwKYpxH7YTIrQ99m9K4ey
-         nBCsxzsRoz25y0Ldk25xEPn0csp5+UmiocJHzwVnJouKOIWp7iijPrsHQpK8wgH2Em34
-         a4tg==
-X-Gm-Message-State: AGi0PuanqVRJnYBL1Klx62gJy/XBj5sdd/RSaNEJQTPP5gIzQE19KwP+
-        QqHy5CKTAmituYkMJDoCqNY=
-X-Google-Smtp-Source: APiQypLnANVYVz8+YLsANYD1nEKM9cffSvsulKQtEUTSFn41Z/E6LePJcnU7wy56my/PxqjCaZ0f8A==
-X-Received: by 2002:a7b:c118:: with SMTP id w24mr3938775wmi.173.1587031661719;
-        Thu, 16 Apr 2020 03:07:41 -0700 (PDT)
-Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
-        by smtp.gmail.com with ESMTPSA id l26sm19586480wrb.7.2020.04.16.03.07.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Apr 2020 03:07:40 -0700 (PDT)
-Date:   Thu, 16 Apr 2020 12:07:38 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>, Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Clark Williams <williams@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: Re: [GIT PULL] perf/urgent fixes
-Message-ID: <20200416100738.GC18982@gmail.com>
-References: <20200414164854.26026-1-acme@kernel.org>
+        Thu, 16 Apr 2020 06:08:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35412 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2504761AbgDPKH4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 06:07:56 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A9B2A21D92;
+        Thu, 16 Apr 2020 10:07:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587031675;
+        bh=K0WP10TiIcLv27eDTOY6OMpM34tUS8V0xWTdgNc2fLU=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=cW536kFNR+lJ390TAjqmnns3zSb2Sh5McnMQQEIyxViOUSyHa8wZMP4EaYMDSHepJ
+         JJflAD42r0ahyWpHQJjmamC3yOF6SlZN5zxT7fwLPejwi3VwLufZwNyCCjB4SA5Vnl
+         GgkbeFFqwlke+dMMAE8IIANO9UktKIjxlZl7sMCE=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 7F12735227CC; Thu, 16 Apr 2020 03:07:55 -0700 (PDT)
+Date:   Thu, 16 Apr 2020 03:07:55 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Joe Perches <joe@perches.com>
+Cc:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+        kernel-team@fb.com, mingo@kernel.org, stern@rowland.harvard.edu,
+        parri.andrea@gmail.com, will@kernel.org, peterz@infradead.org,
+        boqun.feng@gmail.com, npiggin@gmail.com, dhowells@redhat.com,
+        j.alglave@ucl.ac.uk, luc.maranget@inria.fr, akiyks@gmail.com,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>
+Subject: Re: [PATCH lkmm tip/core/rcu 06/10] MAINTAINERS: Update maintainers
+ for new Documentaion/litmus-tests/
+Message-ID: <20200416100755.GP17661@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200415183343.GA12265@paulmck-ThinkPad-P72>
+ <20200415184945.16487-6-paulmck@kernel.org>
+ <1288d0e231eb61566fefc8a9c0510fc123528da2.camel@perches.com>
+ <20200416001741.GJ17661@paulmck-ThinkPad-P72>
+ <9cd5b3c0a9a0f55d799a3d3ebd68ba8ff5f907d8.camel@perches.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200414164854.26026-1-acme@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <9cd5b3c0a9a0f55d799a3d3ebd68ba8ff5f907d8.camel@perches.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Apr 15, 2020 at 06:46:21PM -0700, Joe Perches wrote:
+> On Wed, 2020-04-15 at 17:17 -0700, Paul E. McKenney wrote:
+> > On Wed, Apr 15, 2020 at 02:39:59PM -0700, Joe Perches wrote:
+> > > On Wed, 2020-04-15 at 11:49 -0700, paulmck@kernel.org wrote:
+> > > > Also add me as Reviewer for LKMM. Previously a patch to do this was
+> > > > Acked but somewhere along the line got lost. Add myself in this patch.
+> > > []
+> > > > diff --git a/MAINTAINERS b/MAINTAINERS
+> > > []
+> > > > @@ -9806,6 +9806,7 @@ M:	Luc Maranget <luc.maranget@inria.fr>
+> > > >  M:	"Paul E. McKenney" <paulmck@kernel.org>
+> > > >  R:	Akira Yokosawa <akiyks@gmail.com>
+> > > >  R:	Daniel Lustig <dlustig@nvidia.com>
+> > > > +R:	Joel Fernandes <joel@joelfernandes.org>
+> > > >  L:	linux-kernel@vger.kernel.org
+> > > >  L:	linux-arch@vger.kernel.org
+> > > >  S:	Supported
+> > > > @@ -9816,6 +9817,7 @@ F:	Documentation/core-api/atomic_ops.rst
+> > > >  F:	Documentation/core-api/refcount-vs-atomic.rst
+> > > >  F:	Documentation/memory-barriers.txt
+> > > >  F:	tools/memory-model/
+> > > > +F:	Documentation/litmus-tests/
+> > > 
+> > > trivia:
+> > > 
+> > > Alphabetic ordering of F: entries please.
+> > > This should be between core-api and memory-barriers.
+> > > 
+> > > >  LIS3LV02D ACCELEROMETER DRIVER
+> > > >  M:	Eric Piel <eric.piel@tremplin-utc.net>
+> > 
+> > New one on me, but it does make a lot of sense, especially for cases
+> > with lots of scattered paths.  How about the following?
+> 
+> Thanks Paul.
+> 
+> If the recent commits that Linus did just before v5.7-rc1:
+> 
+> 3b50142d8528 ("MAINTAINERS: sort field names for all entries")
+> 4400b7d68f6e ("MAINTAINERS: sort entries by entry name")
+> 
+> don't create too many problems I suppose
+> 
+> $ scripts/parse-maintainers.pl --order --input=MAINTAINERS --output=MAINTAINERS
+> 
+> could be run just before every -rc1 to keep all this stuff organized.
+> 
+> We'll see.
 
-* Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+Easier than me remembering, I suppose.  ;-)
 
-> Hi Ingo/Thomas,
-> 
-> 	Please consider pulling,
-> 
-> Best regards,
-> 
-> - Arnaldo
-> 
-> Test results at the end of this message, as usual.
-> 
-> The following changes since commit 8f3d9f354286745c751374f5f1fcafee6b3f3136:
-> 
->   Linux 5.7-rc1 (2020-04-12 12:35:55 -0700)
-> 
-> are available in the Git repository at:
-> 
->   git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-urgent-for-mingo-5.7-20200414
-> 
-> for you to fetch changes up to e3698b23ecb8c099b4b523e7d5c8c042e93ef15d:
-> 
->   tools headers: Synchronize linux/bits.h with the kernel sources (2020-04-14 11:40:05 -0300)
-> 
-> ----------------------------------------------------------------
-> perf/urgent fixes:
-> 
-> perf stat:
-> 
->   Jin Yao:
-> 
->   - Fix no metric header if --per-socket and --metric-only set
-> 
-> build system:
-> 
->   - Fix python building when built with clang, that was failing if the clang
->     version doesn't support -fno-semantic-interposition.
-> 
-> tools UAPI headers:
-> 
->   Arnaldo Carvalho de Melo:
-> 
->   - Update various copies of kernel headers, some ended up automatically
->     updating build-time generated tables to enable tools such as 'perf trace'
->     to decode syscalls and tracepoints arguments.
-> 
->     Now the tools/perf build is free of UAPI drift warnings.
-> 
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> 
-> ----------------------------------------------------------------
-> Arnaldo Carvalho de Melo (14):
->       tools arch x86: Sync the msr-index.h copy with the kernel sources
->       perf python: Check if clang supports -fno-semantic-interposition
->       tools headers: Update linux/vdso.h and grab a copy of vdso/const.h
->       tools headers UAPI: Sync sched.h with the kernel
->       tools headers UAPI: Sync linux/mman.h with the kernel
->       tools arch x86: Sync asm/cpufeatures.h with the kernel sources
->       tools include UAPI: Sync linux/vhost.h with the kernel sources
->       tools headers UAPI: Sync linux/fscrypt.h with the kernel sources
->       tools headers kvm: Sync linux/kvm.h with the kernel sources
->       tools headers UAPI: Update tools's copy of drm.h headers
->       tools headers UAPI: Sync drm/i915_drm.h with the kernel sources
->       tools headers: Update x86's syscall_64.tbl with the kernel sources
->       tools headers: Adopt verbatim copy of compiletime_assert() from kernel sources
->       tools headers: Synchronize linux/bits.h with the kernel sources
-> 
-> Jin Yao (1):
->       perf stat: Fix no metric header if --per-socket and --metric-only set
-> 
->  tools/arch/x86/include/asm/cpufeatures.h          |   5 +-
->  tools/arch/x86/include/asm/msr-index.h            |   9 +
->  tools/include/linux/bits.h                        |  24 +-
->  tools/include/linux/build_bug.h                   |  82 +++
->  tools/include/linux/compiler.h                    |  26 +
->  tools/include/linux/const.h                       |   5 +-
->  tools/include/linux/kernel.h                      |   4 +-
->  tools/include/uapi/drm/drm.h                      |   2 +
->  tools/include/uapi/drm/i915_drm.h                 |  21 +
->  tools/include/uapi/linux/fscrypt.h                |   1 +
->  tools/include/uapi/linux/kvm.h                    |  47 +-
->  tools/include/uapi/linux/mman.h                   |   5 +-
->  tools/include/uapi/linux/sched.h                  |   5 +
->  tools/include/uapi/linux/vhost.h                  |  24 +
->  tools/include/vdso/bits.h                         |   9 +
->  tools/include/vdso/const.h                        |  10 +
->  tools/perf/arch/x86/entry/syscalls/syscall_64.tbl | 740 +++++++++++-----------
->  tools/perf/check-headers.sh                       |   3 +
->  tools/perf/trace/beauty/clone.c                   |   1 +
->  tools/perf/trace/beauty/mmap.c                    |   1 +
->  tools/perf/util/setup.py                          |   2 +
->  tools/perf/util/stat-shadow.c                     |   7 +-
->  22 files changed, 646 insertions(+), 387 deletions(-)
->  create mode 100644 tools/include/linux/build_bug.h
->  create mode 100644 tools/include/vdso/bits.h
->  create mode 100644 tools/include/vdso/const.h
-
-Pulled into tip:perf/urgent, thanks a lot Arnaldo!
-
-	Ingo
+							Thanx, Paul
