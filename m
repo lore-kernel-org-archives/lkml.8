@@ -2,95 +2,160 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F433C2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 09:29:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B9B3C2BB85
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 09:31:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4DCDC21BE5
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 09:29:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5772321BE5
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 09:31:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2440658AbgDPJ36 (ORCPT
+        id S2503249AbgDPJbS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 05:29:58 -0400
-Received: from m142-177.yeah.net ([123.58.177.142]:18648 "EHLO
-        m142-177.yeah.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392235AbgDPJ3v (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 05:29:51 -0400
-Received: from vivo.com (localhost [127.0.0.1])
-        by m142-177.yeah.net (Hmail) with ESMTP id A6E7D644350;
-        Thu, 16 Apr 2020 17:29:29 +0800 (CST)
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: base64
-Message-ID: <AIgAKQBlCIqtPx5U5P0kFqpr.3.1587029369636.Hmail.wenhu.wang@vivo.com>
-To:     Wang Wenhu <wenhu.wang@vivo.com>
-Cc:     gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-        oss@buserror.net, christophe.leroy@c-s.fr,
-        linuxppc-dev@lists.ozlabs.org, kernel@vivo.com
-Subject: =?UTF-8?B?UmU6W1BBVENIIHYzLDAvNF0gZHJpdmVyczogdWlvOiBuZXcgZHJpdmVyIHVpb19mc2xfODV4eF9jYWNoZV9zcmFt?=
-X-Priority: 3
-X-Mailer: HMail Webmail Server V2.0 Copyright (c) 2016-163.com
-X-Originating-IP: 58.251.74.227
-In-Reply-To: <20200416074918.3617-1-wenhu.wang@vivo.com>
+        Thu, 16 Apr 2020 05:31:18 -0400
+Received: from foss.arm.com ([217.140.110.172]:57890 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2502117AbgDPJbL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 05:31:11 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A3815C14;
+        Thu, 16 Apr 2020 02:31:10 -0700 (PDT)
+Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C23D23F73D;
+        Thu, 16 Apr 2020 02:31:08 -0700 (PDT)
+Date:   Thu, 16 Apr 2020 10:31:06 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Will Deacon <will@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+        kernel-team@android.com, Michael Ellerman <mpe@ellerman.id.au>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Segher Boessenkool <segher@kernel.crashing.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Peter Oberparleiter <oberpar@linux.ibm.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Robin Murphy <robin.murphy@arm.com>
+Subject: Re: [PATCH v3 05/12] arm64: csum: Disable KASAN for do_csum()
+Message-ID: <20200416093106.GB4987@lakrids.cambridge.arm.com>
+References: <20200415165218.20251-1-will@kernel.org>
+ <20200415165218.20251-6-will@kernel.org>
+ <20200415172813.GA2272@lakrids.cambridge.arm.com>
+ <20200415192605.GA21804@willie-the-truck>
 MIME-Version: 1.0
-Received: from wenhu.wang@vivo.com( [58.251.74.227) ] by ajax-webmail ( [127.0.0.1] ) ; Thu, 16 Apr 2020 17:29:29 +0800 (GMT+08:00)
-From:   =?UTF-8?B?546L5paH6JmO?= <wenhu.wang@vivo.com>
-Date:   Thu, 16 Apr 2020 17:29:29 +0800 (GMT+08:00)
-X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgYFAkeWUFZTlVJQkJLS0tJTUhJSk9KSllXWShZQU
-        hPN1dZLVlBSVdZCQ4XHghZQVk1NCk2OjckKS43PlkG
-X-HM-Sender-Digest: e1kJHlYWEh9ZQUhMSU1KTUxCTU1PN1dZDB4ZWUEPCQ4eV1kSHx4VD1lB
-        WUc6Mhw6MCo5FzgyCg8rA04uTitLED0KCwlVSFVKTkNMS0lCSExKTE9DVTMWGhIXVQweFRMOVQwa
-        FRw7DRINFFUYFBZFWVdZEgtZQVlOQ1VJTkpVTE9VSUlMWVdZCAFZQU5JTEI3Bg++
-X-HM-Tid: 0a718252635a6473kursa6e7d644350
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200415192605.GA21804@willie-the-truck>
+User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksClNlZW1zIHRoZXJlIGlzIHNvbWV0aGluZyB3cm9uZyB3aXRoIHRoZSBzZXJ2ZXIgdGhhdCBt
-dWx0aXBsZSBkdW1wbGljYXRpb25zCm9mIHRoZSB2MyBwYXRjaGVzIHdlcmUgc2VudCBvdXQsIHBs
-ZWFzZSBpZ25vcmUgdGhlIHJlc3QgYW5kIHRha2UgdGhpcyBuZXdlc3QKc2VyaWVzIGFzIGZvcm1h
-bCBjb3VudC4KClRoYW5rcywKV2VuaHUKCkZyb206IFdhbmcgV2VuaHUgPHdlbmh1LndhbmdAdml2
-by5jb20+CkRhdGU6IDIwMjAtMDQtMTYgMTU6NDk6MTQKVG86ICBncmVna2hAbGludXhmb3VuZGF0
-aW9uLm9yZyxsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnLG9zc0BidXNlcnJvci5uZXQsY2hy
-aXN0b3BoZS5sZXJveUBjLXMuZnIsbGludXhwcGMtZGV2QGxpc3RzLm96bGFicy5vcmcKQ2M6ICBr
-ZXJuZWxAdml2by5jb20sV2FuZyBXZW5odSA8d2VuaHUud2FuZ0B2aXZvLmNvbT4KU3ViamVjdDog
-W1BBVENIIHYzLDAvNF0gZHJpdmVyczogdWlvOiBuZXcgZHJpdmVyIHVpb19mc2xfODV4eF9jYWNo
-ZV9zcmFtPlRoaXMgc2VyaWVzIGFkZCBhIG5ldyB1aW8gZHJpdmVyIGZvciBmcmVlc2NhbGUgODV4
-eCBwbGF0Zm9ybXMgdG8KPmFjY2VzcyB0aGUgQ2FjaGUtU3JhbSBmb3JtIHVzZXIgbGV2ZWwuIFRo
-aXMgaXMgZXh0cmVtZWx5IGhlbHBmdWwKPmZvciB0aGUgdXNlci1zcGFjZSBhcHBsaWNhdGlvbnMg
-dGhhdCByZXF1aXJlIGhpZ2ggcGVyZm9ybWFuY2UgbWVtb3J5Cj5hY2Nlc3Nlcy4KPgo+SXQgZml4
-ZXMgdGhlIGNvbXBpbGUgZXJyb3JzIGFuZCB3YXJuaW5nIG9mIHRoZSBoYXJkd2FyZSBsZXZlbCBk
-cml2ZXJzCj5hbmQgaW1wbGVtZW50cyB0aGUgdWlvIGRyaXZlciBpbiB1aW9fZnNsXzg1eHhfY2Fj
-aGVfc3JhbS5jLgo+Cj5DaGFuZ2VzIHNpbmNlIHYxOgo+ICogQWRkcmVzc2VkIGNvbW1lbnRzIGZy
-b20gR3JlZyBLLUgKPiAqIE1vdmVkIGtmcmVlKGluZm8tPm5hbWUpIGludG8gdWlvX2luZm9fZnJl
-ZV9pbnRlcm5hbCgpCj4KPkNoYW5nZXMgc2luY2UgdjI6Cj4gKiBEcm9wIHRoZSBwYXRjaCB0aGF0
-IG1vZGlmaWVzIEtjb25maWdzIG9mIGFyY2gvcG93ZXJwYy9wbGF0Zm9ybXMKPiAgIGFuZCBtb2Rp
-ZmllZCB0aGUgc2VxdWVuY2Ugb2YgcGF0Y2hlczoKPiAgICAwMTpkcm9wcGVkLCAwMi0+MDMsIDAz
-LT4wMiwgMDQtPjAxLCAwNS0+MDQKPiAqIEFkZHJlc3NlZCBjb21tZW50cyBmcm9tIEdyZWcsIFNj
-b3R0IGFuZCBDaHJpc3RvcGhlCj4gKiBVc2UgInVpb21lbS0+aW50ZXJuYWxfYWRkciIgYXMgaWYg
-Y29uZGl0aW9uIGZvciBzcmFtIG1lbW9yeSBmcmVlLAo+ICAgYW5kIG1lbXNldCB0aGUgdWlvbWVt
-IGVudHJ5Cj4gKiBNb2RpZmllZCBvZl9tYXRjaF90YWJsZSBtYWtlIHRoZSBkcml2ZXIgYXBhcnQg
-ZnJvbSBDYWNoZS1TcmFtIEhXIGluZm8KPiAgIHdoaWNoIGJlbG9uZyB0byB0aGUgSFcgbGV2ZWwg
-ZHJpdmVyIGZzbF84NXh4X2NhY2hlX3NyYW0gdG8gbWF0Y2gKPiAqIFVzZSByb3VuZHVwX3Bvd19v
-Zl90d28gZm9yIGFsaWduIGNhbGMocmVhbGx5IGxlYXJuZWQgYSBsb3QgZnJvbSBDaHJpc3RvcGhl
-KQo+ICogUmVtb3ZlIHVzZWxlc3MgY2xlYXIgYmxvY2sgb2YgdWlvbWVtIGVudHJpZXMuCj4gKiBV
-c2UgVUlPX0lORk9fVkVSIG1pY3JvIGZvciBpbmZvLT52ZXJzaW9uLCBhbmQgZGVmaW5lIGl0IGFz
-Cj4gICAiZGV2aWNldHJlZSxwc2V1ZG8iLCBtZWFuaW5nIHRoaXMgaXMgcHNldWRvIGRldmljZSBh
-bmQgcHJvYmVkIGZyb20KPiAgIGRldmljZSB0cmVlIGNvbmZpZ3VyYXRpb24KPiAqIFNlbGVjdCBG
-U0xfODVYWF9DQUNIRV9TUkFNIHJhdGhlciB0aGFuIGRlcGVuZHMgb24gaXQKPgo+V2FuZyBXZW5o
-dSAoNCk6Cj4gIHBvd2VycGM6IHN5c2RldjogZml4IGNvbXBpbGUgZXJyb3IgZm9yIGZzbF84NXh4
-X2wyY3Rscgo+ICBwb3dlcnBjOiBzeXNkZXY6IGZpeCBjb21waWxlIGVycm9yIGZvciBmc2xfODV4
-eF9jYWNoZV9zcmFtCj4gIHBvd2VycGM6IHN5c2RldjogZml4IGNvbXBpbGUgd2FybmluZyBmb3Ig
-ZnNsXzg1eHhfY2FjaGVfc3JhbQo+ICBkcml2ZXJzOiB1aW86IG5ldyBkcml2ZXIgZm9yIGZzbF84
-NXh4X2NhY2hlX3NyYW0KPgo+IGFyY2gvcG93ZXJwYy9zeXNkZXYvZnNsXzg1eHhfY2FjaGVfc3Jh
-bS5jIHwgICAzICstCj4gYXJjaC9wb3dlcnBjL3N5c2Rldi9mc2xfODV4eF9sMmN0bHIuYyAgICAg
-fCAgIDEgKwo+IGRyaXZlcnMvdWlvL0tjb25maWcgICAgICAgICAgICAgICAgICAgICAgIHwgICA5
-ICsrCj4gZHJpdmVycy91aW8vTWFrZWZpbGUgICAgICAgICAgICAgICAgICAgICAgfCAgIDEgKwo+
-IGRyaXZlcnMvdWlvL3Vpb19mc2xfODV4eF9jYWNoZV9zcmFtLmMgICAgIHwgMTU4ICsrKysrKysr
-KysrKysrKysrKysrKysKPiA1IGZpbGVzIGNoYW5nZWQsIDE3MSBpbnNlcnRpb25zKCspLCAxIGRl
-bGV0aW9uKC0pCj4gY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvdWlvL3Vpb19mc2xfODV4eF9j
-YWNoZV9zcmFtLmMKPgo+LS0gCj4yLjE3LjEKPgoNCg0K
+On Wed, Apr 15, 2020 at 08:26:05PM +0100, Will Deacon wrote:
+> On Wed, Apr 15, 2020 at 06:28:14PM +0100, Mark Rutland wrote:
+> > On Wed, Apr 15, 2020 at 05:52:11PM +0100, Will Deacon wrote:
+> > > do_csum() over-reads the source buffer and therefore abuses
+> > > READ_ONCE_NOCHECK() to avoid tripping up KASAN. In preparation for
+> > > READ_ONCE_NOCHECK() becoming a macro, and therefore losing its
+> > > '__no_sanitize_address' annotation, just annotate do_csum() explicitly
+> > > and fall back to normal loads.
+> > 
+> > I'm confused by this. The whole point of READ_ONCE_NOCHECK() is that it
+> > isn't checked by KASAN, so if that semantic is removed it has no reason
+> > to exist.
+> 
+> Oh, I thought it was there to be used by things like KASAN itself and
+> because READ_ONCE() was implemented using a static function, then that
+> function had to be marked as __no_sanitize_address when used in these
+> cases. Now that it's just a macro, that's not necessary so it's just
+> the same as normal READ_ONCE().
+
+I believe that the KASAN core files are compiled without
+instrumentation, so they can use either without issue.
+
+> Do we have a "nocheck" version where we don't require the READ_ONCE()
+> semantics? 
+
+For the unwind code we rely on the ONCE semantic (but arguably don't
+need single-copy-atomicity) so that we operate on a consistent snapshot.
+
+> I think abusing a relaxed concurrency primitive for this is
+> not the right thing to do, particularly when the __no_sanitize_address
+> annotation is available. I fact, it's almost an argument in favour
+> of removing READ_ONCE_NOCHECK() so that people use the annotation instead!
+
+Arguably we *are* using it as a relaxed concurrency primitive, to get a
+snapshot of a varaible undergoing concurrent modification.
+
+FWIW, for the arm64 unwind code we could add a helper to snapshot the
+frame record, and mark that as __no_sanitize_address, e.g.
+
+/*
+ * Get a snapshot of a frame record that might be undergoing concurrent
+ * modification (and hence we must also avoid a KASAN splat).
+ */
+static __no_sanitize_address snapshot_frame(struct stackframe *frame,
+					    unsigned long fp)
+{
+	frame->fp = READ_ONCE(*(unsigned long *)(fp));
+	frame->pc = READ_ONCE(*(unsigned long *)(fp + 8));
+}
+
+... we'd need to do likewied in a few bits of unwind code:
+
+arch/s390/kernel/unwind_bc.c:	       READ_ONCE_NOCHECK(regs->psw.mask) & PSW_MASK_PSTATE;
+arch/s390/kernel/unwind_bc.c:		ip = READ_ONCE_NOCHECK(sf->gprs[8]);
+arch/s390/kernel/unwind_bc.c:		sp = READ_ONCE_NOCHECK(sf->back_chain);
+arch/s390/kernel/unwind_bc.c:			ip = READ_ONCE_NOCHECK(sf->gprs[8]);
+arch/s390/kernel/unwind_bc.c:			ip = READ_ONCE_NOCHECK(regs->psw.addr);
+arch/s390/kernel/unwind_bc.c:			sp = READ_ONCE_NOCHECK(regs->gprs[15]);
+arch/s390/kernel/unwind_bc.c:		ip = READ_ONCE_NOCHECK(sf->gprs[8]);
+arch/x86/include/asm/atomic.h:	 * Note for KASAN: we deliberately don't use READ_ONCE_NOCHECK() here,
+arch/x86/include/asm/unwind.h:		val = READ_ONCE_NOCHECK(x);		\
+arch/x86/kernel/dumpstack.c:			unsigned long addr = READ_ONCE_NOCHECK(*stack);
+arch/x86/kernel/process.c:	fp = READ_ONCE_NOCHECK(((struct inactive_task_frame *)sp)->bp);
+arch/x86/kernel/process.c:		ip = READ_ONCE_NOCHECK(*(unsigned long *)(fp + sizeof(unsigned long)));
+arch/x86/kernel/process.c:		fp = READ_ONCE_NOCHECK(*(unsigned long *)fp);
+arch/x86/kernel/unwind_frame.c:			word = READ_ONCE_NOCHECK(*sp);
+arch/x86/kernel/unwind_guess.c:	addr = READ_ONCE_NOCHECK(*state->sp);
+arch/x86/kernel/unwind_guess.c:			unsigned long addr = READ_ONCE_NOCHECK(*state->sp);
+arch/x86/kernel/unwind_orc.c:	*val = READ_ONCE_NOCHECK(*(unsigned long *)addr);
+arch/x86/kernel/unwind_orc.c:		state->bp = READ_ONCE_NOCHECK(frame->bp);
+arch/x86/kernel/unwind_orc.c:		state->ip = READ_ONCE_NOCHECK(frame->ret_addr);
+include/linux/compiler.h: * Use READ_ONCE_NOCHECK() instead of READ_ONCE() if you need
+include/linux/compiler.h:#define READ_ONCE_NOCHECK(x) __READ_ONCE(x, 0)
+kernel/trace/trace_stack.c:			 * The READ_ONCE_NOCHECK is used to let KASAN know that
+kernel/trace/trace_stack.c:			if ((READ_ONCE_NOCHECK(*p)) == stack_dump_trace[i]) {
+
+> > I would like to keep the unwinding robust in the first case, even if the
+> > second case doesn't apply, and I'd prefer to not mark the entirety of
+> > the unwinding code as unchecked as that's sufficiently large an subtle
+> > that it could have nasty bugs.
+> 
+> Hmm, maybe. I don't really see what's wrong with annotating the unwinding
+> code, though. You can still tell kasan about the accesses you're making,
+> like we do in the checksumming code here, and it's not hard to move the
+> frame-pointer chasing code into a separate function.
+
+Sure; agreed as above. We just need to fix up a number of places.
+
+> > Is there any way we keep something like READ_ONCE_NOCHECK() around even
+> > if we have to give it reduced functionality relative to READ_ONCE()?
+> > 
+> > I'm not enirely sure why READ_ONCE_NOCHECK() had to go, so if there's a
+> > particular pain point I'm happy to take a look.
+> 
+> I got rid if it because I thought it wasn't required now that it's
+> implemented entirely as a macro. I'd be reluctant to bring it back if
+> there isn't a non-ONCE version of the helper.
+
+As above, I think that we *do* care about the ONCE-ness for the unwind
+code, but I'm happy for those to be dealt with by special helpers.
+
+Thanks,
+Mark.
