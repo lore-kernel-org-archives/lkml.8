@@ -2,224 +2,128 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42172C2BA19
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 01:20:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55AC2C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 01:21:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 26FEC2076D
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 01:20:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C60A208E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 01:21:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587000061;
+	bh=j7HF3kcK7YzNQSZbSdo5UcD8kpKCPlMlLH2PspzFFvQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=XORcoKwVdzchQeNr5uIyUfmRDdhIPapgeGmqjJGWpIxOaYoMYomWzjMYHdkdS92nE
+	 PCKaDQheSameKwvu9mseYqMWskaAE15fHwO/ZzjQfXPqvkXxqzgF9LOqq1F/BEKXzV
+	 rkyS8ToqxLTM3+XG5hB0D+aejk2cSFDam7Xu3Q3o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731595AbgDPBUy (ORCPT
+        id S2387502AbgDPBU7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 21:20:54 -0400
-Received: from server-x.ipv4.hkg02.ds.network ([27.111.83.178]:32802 "EHLO
-        mail.gtsys.com.hk" rhost-flags-OK-FAIL-OK-OK) by vger.kernel.org
-        with ESMTP id S1731354AbgDPBUo (ORCPT
+        Wed, 15 Apr 2020 21:20:59 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:37743 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729511AbgDPBUq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 21:20:44 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.gtsys.com.hk (Postfix) with ESMTP id 2B3C1200D5DE;
-        Thu, 16 Apr 2020 09:20:40 +0800 (HKT)
-X-Virus-Scanned: Debian amavisd-new at gtsys.com.hk
-Received: from mail.gtsys.com.hk ([127.0.0.1])
-        by localhost (mail.gtsys.com.hk [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id OYZEcFptmivO; Thu, 16 Apr 2020 09:20:40 +0800 (HKT)
-Received: from s01.gtsys.com.hk (unknown [10.128.4.2])
-        by mail.gtsys.com.hk (Postfix) with ESMTP id 0FF1F200D5DA;
-        Thu, 16 Apr 2020 09:20:40 +0800 (HKT)
-Received: from armhf2.gtsys.com.hk (unknown [10.128.4.15])
-        by s01.gtsys.com.hk (Postfix) with ESMTP id 0AA9AC019EC;
-        Thu, 16 Apr 2020 09:20:40 +0800 (HKT)
-Received: by armhf2.gtsys.com.hk (Postfix, from userid 1000)
-        id 05080201602; Thu, 16 Apr 2020 09:20:40 +0800 (HKT)
-From:   Chris Ruehl <chris.ruehl@gtsys.com.hk>
-To:     chris.ruehl@gtsys.com.hk
-Cc:     devicetree@vger.kernel.org, Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Stefan Popa <stefan.popa@analog.com>,
-        Alexandru Tachici <alexandru.tachici@analog.com>,
-        Steve Winslow <swinslow@gmail.com>, linux-iio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v4 2/3] iio: DAC extension for ltc2634-12/10/8
-Date:   Thu, 16 Apr 2020 09:20:10 +0800
-Message-Id: <20200416012016.21422-3-chris.ruehl@gtsys.com.hk>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200416012016.21422-1-chris.ruehl@gtsys.com.hk>
-References: <20200416012016.21422-1-chris.ruehl@gtsys.com.hk>
+        Wed, 15 Apr 2020 21:20:46 -0400
+Received: by mail-pl1-f196.google.com with SMTP id m16so737183pls.4;
+        Wed, 15 Apr 2020 18:20:45 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=t/UVxcfsOZlATHrxT1BtEcSV7XCXKURmZ3LY2D7NJu8=;
+        b=GRK6vtwHQr7J5X5gTqGepEtXDoAkqfJ2WjCUR9SUFTH5op5ZTalSNcQ7tna/6/ZJQs
+         afGzNMNaL09l6yF0o+ltAy2ExfbmqrE/UbemKRDgzpbUBpT2ve+P3InAK4bvuTRuO00T
+         fN4gYNCxxrpvfrfJFb6g7u8ySOiYKGRKCzOkByz3pGFvkHoToadeuGhThyoiEVDELVJq
+         p3+vTb6OnwhjFHbWZU5Q9BeiuQvKg3bIasZfL5sOByY2YB3tluGAl+yQYVzZ7pXClMnk
+         gdPU1S60ao+2f8HHoX58QuE0LwreD/sPpzE03NBCylLm4dyZ+gj4uWGtSxiam4MUrXkj
+         1wbA==
+X-Gm-Message-State: AGi0Puaip4bddKRY3O/5wr2HMO6rWfxKhYP4+pyv8xzCcCxbsqHOWgLN
+        GsSf06JvUSHGe85MtKVy7DE=
+X-Google-Smtp-Source: APiQypKsoy5OswG4beg+t+DZPY2ToYWmF3rusQi++8/xjuNFf2sr4eDmbcDmFPW16CTt2byhESFlqA==
+X-Received: by 2002:a17:902:9b89:: with SMTP id y9mr6854674plp.75.1587000044633;
+        Wed, 15 Apr 2020 18:20:44 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id c3sm14942152pfa.160.2020.04.15.18.20.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Apr 2020 18:20:43 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id C7B7C40277; Thu, 16 Apr 2020 01:20:42 +0000 (UTC)
+Date:   Thu, 16 Apr 2020 01:20:42 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Eric Sandeen <sandeen@sandeen.net>
+Cc:     axboe@kernel.dk, viro@zeniv.linux.org.uk, bvanassche@acm.org,
+        gregkh@linuxfoundation.org, rostedt@goodmis.org, mingo@redhat.com,
+        jack@suse.cz, ming.lei@redhat.com, nstange@suse.de,
+        akpm@linux-foundation.org, mhocko@suse.com, yukuai3@huawei.com,
+        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Omar Sandoval <osandov@fb.com>,
+        Hannes Reinecke <hare@suse.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        syzbot+603294af2d01acfdd6da@syzkaller.appspotmail.com
+Subject: Re: [PATCH 2/5] blktrace: fix debugfs use after free
+Message-ID: <20200416012042.GD11244@42.do-not-panic.com>
+References: <20200414041902.16769-1-mcgrof@kernel.org>
+ <20200414041902.16769-3-mcgrof@kernel.org>
+ <55401e02-f61c-25eb-271c-3ec7baf35e28@sandeen.net>
+ <20200416005636.GA11244@42.do-not-panic.com>
+ <924950e6-e016-25b2-4ee1-b5ea9f752c12@sandeen.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <924950e6-e016-25b2-4ee1-b5ea9f752c12@sandeen.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch add support for Analog Devices (Linear Technology)
-LTC2634 Quad 12-/10-/8-Bit Rail-to-Rail DAC.
-The SPI functionality based on them from LTC2632 therefor
-add the definitions only and update the Kconfig.
+On Wed, Apr 15, 2020 at 08:02:04PM -0500, Eric Sandeen wrote:
+> 
+> 
+> On 4/15/20 7:56 PM, Luis Chamberlain wrote:
+> > On Wed, Apr 15, 2020 at 12:38:26PM -0500, Eric Sandeen wrote:
+> >> On 4/13/20 11:18 PM, Luis Chamberlain wrote:
+> >>> On commit 6ac93117ab00 ("blktrace: use existing disk debugfs directory")
+> >>> merged on v4.12 Omar fixed the original blktrace code for request-based
+> >>> drivers (multiqueue). This however left in place a possible crash, if you
+> >>> happen to abuse blktrace in a way it was not intended.
+> >>>
+> >>> Namely, if you loop adding a device, setup the blktrace with BLKTRACESETUP,
+> >>> forget to BLKTRACETEARDOWN, and then just remove the device you end up
+> >>> with a panic:
+> >>
+> >> I think this patch makes this all cleaner anyway, but - without the apparent
+> >> loop bug mentioned by Bart which allows removal of the loop device while blktrace
+> >> is active (if I read that right), can this still happen?
+> > 
+> > I have not tested that, but some modifications of the break-blktrace
+> > program could enable us to test that
+> 
+> FWIW, I modified it to modprobe & rmmod scsi_debug instead of the loop ioctls,
+> and the module can't be unloaded after the blktrace is started since it's busy.
+> 
+> Not sure that's equivalent tho.
 
-Signed-off-by: Chris Ruehl <chris.ruehl@gtsys.com.hk>
----
-v4:
--hide version from commit text
-v3:
--Consistens decimal separator in help text
-v2:
--Send the documentation fix in a extra patch
--Kconfig simplify the driver description, details to the help text
--ltc2632.txt add to this patch-set (prepare to convert to yaml)
+Given what Bart mentioned about sd_open, that might be the saving grace
+for blocking async behaviour on scsi. If it only refcounted the
+request_queue as the loop driver it would have been exposed to the
+same bug.
 
- .../devicetree/bindings/iio/dac/ltc2632.txt   |  8 ++-
- drivers/iio/dac/Kconfig                       |  6 +-
- drivers/iio/dac/ltc2632.c                     | 60 +++++++++++++++++++
- 3 files changed, 70 insertions(+), 4 deletions(-)
+> > however I don't think the race
+> > would be possible after patch 3/5 "blktrace: refcount the request_queue
+> > during ioctl" is merged, as removal then a pending blktrace would
+> > refcount the request_queue and the removal would have to wait until
+> > the refcount is decremeneted, until after the blktrace ioctl.
+> 
+> I'm out of my depth in the block layer, not sure who's supposed to take
+> refs on what. ;)
 
-diff --git a/Documentation/devicetree/bindings/iio/dac/ltc2632.txt b/Documentation/devicetree/bindings/iio/dac/ltc2632.txt
-index 338c3220f01a..1ab9570cf219 100644
---- a/Documentation/devicetree/bindings/iio/dac/ltc2632.txt
-+++ b/Documentation/devicetree/bindings/iio/dac/ltc2632.txt
-@@ -1,4 +1,4 @@
--Linear Technology LTC2632/2636 DAC
-+Linear Technology LTC2632/2634/2636 DAC
- 
- Required properties:
-  - compatible: Has to contain one of the following:
-@@ -8,6 +8,12 @@ Required properties:
- 	lltc,ltc2632-h12
- 	lltc,ltc2632-h10
- 	lltc,ltc2632-h8
-+	lltc,ltc2634-l12
-+	lltc,ltc2634-l10
-+	lltc,ltc2634-l8
-+	lltc,ltc2634-h12
-+	lltc,ltc2634-h10
-+	lltc,ltc2634-h8
- 	lltc,ltc2636-l12
- 	lltc,ltc2636-l10
- 	lltc,ltc2636-l8
-diff --git a/drivers/iio/dac/Kconfig b/drivers/iio/dac/Kconfig
-index 93744011b63f..aee13ced6ddf 100644
---- a/drivers/iio/dac/Kconfig
-+++ b/drivers/iio/dac/Kconfig
-@@ -279,12 +279,12 @@ config LTC1660
- 	  module will be called ltc1660.
- 
- config LTC2632
--	tristate "Linear Technology LTC2632-12/10/8 and LTC2636-12/10/8 DAC spi driver"
-+	tristate "Linear Technology LTC2632-12/10/8 and similar DAC spi driver"
- 	depends on SPI
- 	help
- 	  Say yes here to build support for Linear Technology
--	  LTC2632-12, LTC2632-10, LTC2632-8, LTC2636-12, LTC2636-10 and
--	  LTC2636-8 converters (DAC).
-+	  LTC2632, LTC2634 and LTC2636 DAC resolution 12/10/8 bit
-+	  low 0-2.5V and high 0-4.096V range converters.
- 
- 	  To compile this driver as a module, choose M here: the
- 	  module will be called ltc2632.
-diff --git a/drivers/iio/dac/ltc2632.c b/drivers/iio/dac/ltc2632.c
-index 2a84ea654645..e939d7f81014 100644
---- a/drivers/iio/dac/ltc2632.c
-+++ b/drivers/iio/dac/ltc2632.c
-@@ -54,6 +54,12 @@ enum ltc2632_supported_device_ids {
- 	ID_LTC2632H12,
- 	ID_LTC2632H10,
- 	ID_LTC2632H8,
-+	ID_LTC2634L12,
-+	ID_LTC2634L10,
-+	ID_LTC2634L8,
-+	ID_LTC2634H12,
-+	ID_LTC2634H10,
-+	ID_LTC2634H8,
- 	ID_LTC2636L12,
- 	ID_LTC2636L10,
- 	ID_LTC2636L8,
-@@ -236,6 +242,36 @@ static const struct ltc2632_chip_info ltc2632_chip_info_tbl[] = {
- 		.num_channels	= 2,
- 		.vref_mv	= 4096,
- 	},
-+	[ID_LTC2634L12] = {
-+		.channels	= ltc2632x12_channels,
-+		.num_channels	= 4,
-+		.vref_mv	= 2500,
-+	},
-+	[ID_LTC2634L10] = {
-+		.channels	= ltc2632x10_channels,
-+		.num_channels	= 4,
-+		.vref_mv	= 2500,
-+	},
-+	[ID_LTC2634L8] =  {
-+		.channels	= ltc2632x8_channels,
-+		.num_channels	= 4,
-+		.vref_mv	= 2500,
-+	},
-+	[ID_LTC2634H12] = {
-+		.channels	= ltc2632x12_channels,
-+		.num_channels	= 4,
-+		.vref_mv	= 4096,
-+	},
-+	[ID_LTC2634H10] = {
-+		.channels	= ltc2632x10_channels,
-+		.num_channels	= 4,
-+		.vref_mv	= 4096,
-+	},
-+	[ID_LTC2634H8] =  {
-+		.channels	= ltc2632x8_channels,
-+		.num_channels	= 4,
-+		.vref_mv	= 4096,
-+	},
- 	[ID_LTC2636L12] = {
- 		.channels	= ltc2632x12_channels,
- 		.num_channels	= 8,
-@@ -357,6 +393,12 @@ static const struct spi_device_id ltc2632_id[] = {
- 	{ "ltc2632-h12", (kernel_ulong_t)&ltc2632_chip_info_tbl[ID_LTC2632H12] },
- 	{ "ltc2632-h10", (kernel_ulong_t)&ltc2632_chip_info_tbl[ID_LTC2632H10] },
- 	{ "ltc2632-h8", (kernel_ulong_t)&ltc2632_chip_info_tbl[ID_LTC2632H8] },
-+	{ "ltc2634-l12", (kernel_ulong_t)&ltc2632_chip_info_tbl[ID_LTC2634L12] },
-+	{ "ltc2634-l10", (kernel_ulong_t)&ltc2632_chip_info_tbl[ID_LTC2634L10] },
-+	{ "ltc2634-l8", (kernel_ulong_t)&ltc2632_chip_info_tbl[ID_LTC2634L8] },
-+	{ "ltc2634-h12", (kernel_ulong_t)&ltc2632_chip_info_tbl[ID_LTC2634H12] },
-+	{ "ltc2634-h10", (kernel_ulong_t)&ltc2632_chip_info_tbl[ID_LTC2634H10] },
-+	{ "ltc2634-h8", (kernel_ulong_t)&ltc2632_chip_info_tbl[ID_LTC2634H8] },
- 	{ "ltc2636-l12", (kernel_ulong_t)&ltc2632_chip_info_tbl[ID_LTC2636L12] },
- 	{ "ltc2636-l10", (kernel_ulong_t)&ltc2632_chip_info_tbl[ID_LTC2636L10] },
- 	{ "ltc2636-l8", (kernel_ulong_t)&ltc2632_chip_info_tbl[ID_LTC2636L8] },
-@@ -386,6 +428,24 @@ static const struct of_device_id ltc2632_of_match[] = {
- 	}, {
- 		.compatible = "lltc,ltc2632-h8",
- 		.data = &ltc2632_chip_info_tbl[ID_LTC2632H8]
-+	}, {
-+		.compatible = "lltc,ltc2634-l12",
-+		.data = &ltc2632_chip_info_tbl[ID_LTC2634L12]
-+	}, {
-+		.compatible = "lltc,ltc2634-l10",
-+		.data = &ltc2632_chip_info_tbl[ID_LTC2634L10]
-+	}, {
-+		.compatible = "lltc,ltc2634-l8",
-+		.data = &ltc2632_chip_info_tbl[ID_LTC2634L8]
-+	}, {
-+		.compatible = "lltc,ltc2634-h12",
-+		.data = &ltc2632_chip_info_tbl[ID_LTC2634H12]
-+	}, {
-+		.compatible = "lltc,ltc2634-h10",
-+		.data = &ltc2632_chip_info_tbl[ID_LTC2634H10]
-+	}, {
-+		.compatible = "lltc,ltc2634-h8",
-+		.data = &ltc2632_chip_info_tbl[ID_LTC2634H8]
- 	}, {
- 		.compatible = "lltc,ltc2636-l12",
- 		.data = &ltc2632_chip_info_tbl[ID_LTC2636L12]
--- 
-2.20.1
+I'm new to all this code, only been a few weeks looking into it, but am
+trying to do my best ot make sense of it. So the above is what I can
+tell would be needed.
 
+  Luis
