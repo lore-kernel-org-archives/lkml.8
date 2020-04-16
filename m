@@ -2,122 +2,138 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A11AEC2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:52:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77BE3C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:52:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8752021734
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:52:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 526B82063A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:52:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587045179;
+	bh=/BTERr8ntuoVM+oROY3RpI5yVZsGtjKuXRPEP0DY5B8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=sSEwGtWP/X2B+J759wHvD6mrB2GQlaOAOERt9Nx7vudXXOe+KaBiDv+Tn7TG34B7j
+	 aw/bRWtV6iiqG8ZrIfLcC1Wzh/ENr3pCZZkz/SGckIuer3mxVJtwOj/tLAG97I8t+X
+	 1KV1d2KQmKYkpSXl3fwdLB/PTkZC1hUyR+31tMms=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2441645AbgDPNwj (ORCPT
+        id S2408920AbgDPNw5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 09:52:39 -0400
-Received: from mout.kundenserver.de ([212.227.126.187]:38091 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2897390AbgDPNhA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:52:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49148 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2897397AbgDPNhA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 16 Apr 2020 09:37:00 -0400
-Received: from mail-qk1-f179.google.com ([209.85.222.179]) by
- mrelayeu.kundenserver.de (mreue009 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1N79q8-1jAqgf0EW4-017YmP; Thu, 16 Apr 2020 15:36:57 +0200
-Received: by mail-qk1-f179.google.com with SMTP id j4so21187396qkc.11;
-        Thu, 16 Apr 2020 06:36:56 -0700 (PDT)
-X-Gm-Message-State: AGi0PuZjfQOakkBeJhSdzg1EQ4Yni8buejfx9qHBBF5n5sgs2SjRWb8c
-        slfbla8MWhx1viB09XWLFEWqV1uSewhZje81w0Y=
-X-Google-Smtp-Source: APiQypLVyFmoRVlk38JL3t/KgQwGOgf5vTbZbwYZ8CAepAFC6fF8Q7UEBWUdcp5NmdoSyWhbML+tvWJCMo127crkfFc=
-X-Received: by 2002:a37:851:: with SMTP id 78mr31807202qki.352.1587044215844;
- Thu, 16 Apr 2020 06:36:55 -0700 (PDT)
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6E19321BE5;
+        Thu, 16 Apr 2020 13:36:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587044219;
+        bh=/BTERr8ntuoVM+oROY3RpI5yVZsGtjKuXRPEP0DY5B8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=rmv2zcOwZhObRGnzgDYEqpGza+Xx5zH75Y5gtEHLiTGyJkx27uhiXHriEw6bk1Df5
+         62PYxle9DQLOZtJskHx/imRDj/H6/xhPTFMrAngm3NpUAjGf0etwNb99fzYIq07K7Q
+         2S7lyUsPBC4k1JNgUy3gmsiRn9sLXZMYfEAOSxPw=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Vasily Averin <vvs@virtuozzo.com>,
+        Kees Cook <keescook@chromium.org>
+Subject: [PATCH 5.5 130/257] pstore: pstore_ftrace_seq_next should increase position index
+Date:   Thu, 16 Apr 2020 15:23:01 +0200
+Message-Id: <20200416131342.666222972@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.1
+In-Reply-To: <20200416131325.891903893@linuxfoundation.org>
+References: <20200416131325.891903893@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-References: <20200416115658.20406-1-geert+renesas@glider.be>
- <20200416115658.20406-3-geert+renesas@glider.be> <20200416125630.GF4987@lakrids.cambridge.arm.com>
-In-Reply-To: <20200416125630.GF4987@lakrids.cambridge.arm.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Thu, 16 Apr 2020 15:36:39 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a3HkXotBFVfbL3iaqUAM2ENpBKh7gy+hXH8TXsZHPfwTQ@mail.gmail.com>
-Message-ID: <CAK8P3a3HkXotBFVfbL3iaqUAM2ENpBKh7gy+hXH8TXsZHPfwTQ@mail.gmail.com>
-Subject: Re: [PATCH 2/2] [RFC] arm64: Add dependencies to vendor-specific errata
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Andy Gross <agross@kernel.org>, Wei Xu <xuwei5@hisilicon.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Robert Richter <rrichter@marvell.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:zICuUsxQPPQJD0mFrfj74gKDbR2oFM2uttNnB1Q9C3oNdi5LUtv
- 5D6vxZFGM/iFgzEoQ5IUx5wa/5KVR2w0jlyVvP4fg+H74Ianhbu1TbcYM3puwlF/LOmYA1g
- ipQbQGngZ9ulwoqwP43Iy+D+FiperRfFB1lS5OwY7cFdRnKwHSy9XcKbs6ze/eAmuhzbQc6
- ba3Xk7hYzVpNGelRS4umw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:lWGfSsnYJZU=:cg0dI2jhukpt3KneC3m51U
- 4dp48keK9naDXcPzv+ZxDaUthdtZZp4jiK2p0jlHlQ/hlS9LIoR70Lzo7xxWdY1TVM1NcUOFz
- 4DEk7JN2+Oiv8O83Xc3f9BtleBV6Le8MWI8+ESBu1OIqv4Yw4N49W0jUfZDbQaPmJbFhyUtgH
- E8Ik75fnVMl74xDRoHroFqVKTcisthkw5epvHqyMdGS5ct1i15TCz00X3NOZMdzUWG7xmM2Th
- jv3JObSm9NpoD+sA+zxmZaHgtX0tKtdQQfr+Tfsje34OaftldJnj3kmJIe3JtssyAprc8Ru8o
- LKw876ziLaoncBv6AM5asEyOcJMFgiG/0jmSKSsUmZK/SoVZXYgoBp5e1QUPVEJ7Xqalkgz1x
- 36pneyTABXBkzAjuPivkDEslewaUIMj0k2LEtXlWSGW6WqDKpvGlXm/IGHJlfi0DF0uJ8usgk
- 8Q+AV3nSGobnvvsEMBIdEwjl28qLflaLCzVkV/BPXvZnO2cHNt+kDJcQYMWvynGCktgZuXpTf
- +mplQBjiPq5Narv2crbmgINc/PSxY3AfmYWBjEHjzuO6EsooFIjNUJbFNgAzSvTw+72KRmuAo
- F+LIXifeAZ6NZLqH+Hc3KOTy2DlKihNwmjvFt0YGQiR8Mbxgi4qVdlKQXlvn4K7kcDjh7k0Gt
- RDxQjsN5zeUYPOYeJ32hFtZu/+hfKsMsb+BvMnzH6JmPuwVkqpAfN0FPCXVgr7naD0edb2p2Q
- k+0n1j1v6GHyuZkYxrCBTTlDxJYYLsukDlDEIoGb7XqlIBY6FzG3+UeR9ntO/xMNLfmVcRgsQ
- itFMpk7bMYhDtLr+NI7ueNyh/Ficmo9MbEXhlxqRfH5QyoCMmo=
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 16, 2020 at 2:56 PM Mark Rutland <mark.rutland@arm.com> wrote:
-> On Thu, Apr 16, 2020 at 01:56:58PM +0200, Geert Uytterhoeven wrote:
-> > Currently the user is asked about enabling support for each and every
-> > vendor-specific erratum, even when support for the specific platform is
-> > not enabled.
-> >
-> > Fix this by adding platform dependencies to the config options
-> > controlling support for vendor-specific errata.
-> >
-> > Note that FUJITSU_ERRATUM_010001 is left untouched, as no config symbol
-> > exists for the Fujitsu A64FX platform.
-> >
-> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
->
-> I'm not su1re that it makes sense to do this in general, becaose the
-> ARCH_* platform symbols are about plactform/SoC support (e.g. pinctrl
-> drivers), and these are (mostly) CPU-local and/or VM-visible.
->
-> I think that it makes sense for those to be independent because:
->
-> * future SoCs in the same family might not need the same CPU errata
->   workarounds, and it's arguably just as confusing to have the option
->   there.
->
-> * It prevents building a minimal VM image with all (non-virtualized)
->   platform support disabled, but all possible (VM-visible) errata
->   options enabled. I do that occassionally for testing/analysis, and I
->   can imagine this is useful for those building images that are only
->   intended to be used in VMs.
+From: Vasily Averin <vvs@virtuozzo.com>
 
-Most architectures over time grow a CPU selection option that is
-at least somewhat orthogonal to the platform selection. I think so far
-arm64 has intentionally resisted this based on the idea that the CPUs
-are mostly equal and differences are better handled at runtime.
+commit 6c871b7314dde9ab64f20de8f5aa3d01be4518e8 upstream.
 
-If we decide to revisit this in the future that might help both the
-errata selection and give a way to e.g. build for an ARMv8.2
-baseline.
-This does seem pretty far out at the moment of course, given
-that most SoCs we work on are still based on Cortex-A53 or A72 ;-)
+In Aug 2018 NeilBrown noticed
+commit 1f4aace60b0e ("fs/seq_file.c: simplify seq_file iteration code and interface")
+"Some ->next functions do not increment *pos when they return NULL...
+Note that such ->next functions are buggy and should be fixed.
+A simple demonstration is
 
-> I think the change to SOCIONEXT_SYNQUACER_PREITS makes sense given
-> that's a platform-level detail. Arguably that should be moved into
-> drivers/irqchip/Kconfig.
+ dd if=/proc/swaps bs=1000 skip=1
 
-Agreed
+Choose any block size larger than the size of /proc/swaps. This will
+always show the whole last line of /proc/swaps"
 
-       Arnd
+/proc/swaps output was fixed recently, however there are lot of other
+affected files, and one of them is related to pstore subsystem.
+
+If .next function does not change position index, following .show function
+will repeat output related to current position index.
+
+There are at least 2 related problems:
+- read after lseek beyond end of file, described above by NeilBrown
+  "dd if=<AFFECTED_FILE> bs=1000 skip=1" will generate whole last list
+- read after lseek on in middle of last line will output expected rest of
+  last line but then repeat whole last line once again.
+
+If .show() function generates multy-line output (like
+pstore_ftrace_seq_show() does ?) following bash script cycles endlessly
+
+ $ q=;while read -r r;do echo "$((++q)) $r";done < AFFECTED_FILE
+
+Unfortunately I'm not familiar enough to pstore subsystem and was unable
+to find affected pstore-related file on my test node.
+
+If .next function does not change position index, following .show function
+will repeat output related to current position index.
+
+Cc: stable@vger.kernel.org
+Fixes: 1f4aace60b0e ("fs/seq_file.c: simplify seq_file iteration code ...")
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=206283
+Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
+Link: https://lore.kernel.org/r/4e49830d-4c88-0171-ee24-1ee540028dad@virtuozzo.com
+[kees: with robustness tweak from Joel Fernandes <joelaf@google.com>]
+Signed-off-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ fs/pstore/inode.c |    5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+--- a/fs/pstore/inode.c
++++ b/fs/pstore/inode.c
+@@ -87,11 +87,11 @@ static void *pstore_ftrace_seq_next(stru
+ 	struct pstore_private *ps = s->private;
+ 	struct pstore_ftrace_seq_data *data = v;
+ 
++	(*pos)++;
+ 	data->off += REC_SIZE;
+ 	if (data->off + REC_SIZE > ps->total_size)
+ 		return NULL;
+ 
+-	(*pos)++;
+ 	return data;
+ }
+ 
+@@ -101,6 +101,9 @@ static int pstore_ftrace_seq_show(struct
+ 	struct pstore_ftrace_seq_data *data = v;
+ 	struct pstore_ftrace_record *rec;
+ 
++	if (!data)
++		return 0;
++
+ 	rec = (struct pstore_ftrace_record *)(ps->record->buf + data->off);
+ 
+ 	seq_printf(s, "CPU:%d ts:%llu %08lx  %08lx  %ps <- %pS\n",
+
+
