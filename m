@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B0F4C352BE
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:24:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 273B0C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:24:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 180FD2076D
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:24:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00D0E221F7
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:24:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587047055;
-	bh=E4Xt0jaCiE8HVhys4kN8r55umD1bQArBZZistsB45IE=;
+	s=default; t=1587047063;
+	bh=dCX/9VEFD6+WLI0a2M54V2K3mrAnSiT8YLP0Wpigb/A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DXzIAK8A61LDKQ7xos4FeSrF1oFkILwTcTqWSOf/spfWdS3aQsxifcIdMF9k+m6cH
-	 IOzFN2gqWdMOcGusbpMEQbWAl1yqxJ73ikCjA9Y9u+9D17WTKxS8mI3UR/8yT4yws9
-	 3QylcK4zIEY5suxdB1/5+n6qYGclkLejFiSGtmeI=
+	b=ulm3w7p8s+y2TyYxOLggM9sUPzdB5iGZ62EFHPW5eSn5BycQzSaNp+uZt8gO0351z
+	 ATD5Q4TAXYJONKnZ5GfFgiz0u02AwnoEdRtEnjSK7NgboPY0Kgs+4irEs7zJLHuwdH
+	 MIVwsS6bQki0ajcxEKVbzCtwxAsKdYj9grehcHIM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409858AbgDPOYN (ORCPT
+        id S2409069AbgDPOYV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:24:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44266 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 10:24:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44478 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2409284AbgDPN5N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:57:13 -0400
+        id S1731540AbgDPN5Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:57:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0059220732;
-        Thu, 16 Apr 2020 13:57:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1DB1D21734;
+        Thu, 16 Apr 2020 13:57:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587045432;
-        bh=E4Xt0jaCiE8HVhys4kN8r55umD1bQArBZZistsB45IE=;
+        s=default; t=1587045444;
+        bh=dCX/9VEFD6+WLI0a2M54V2K3mrAnSiT8YLP0Wpigb/A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=i/qXCM8iBVZj37JPaO6Sv1/7Eliufj9x7jUkeobdh4XedriZAoNDOxKHKXjihZdka
-         HFbAuRsekGkC2y4U0z6j/HD66HKNJ7I1sReOsCZ/elVg7ObDm9cPr2iwx8kEL1QfFv
-         vmHZKqDeYR6jl+lqrsAKr2Q9pfwLnNdF0BaljmdM=
+        b=KG5+YPL6d2tESrpsisgBHB0pf8lNRkhlOWTdsJd+16LlFFViWnN/d1k0oLvBRmR4S
+         gpIcrn+GkFatzc4r1RBRH9PdXYtbp+BJAtWb8zDO2D16DkUo8rEd0MlJ6zKxGDkwQW
+         te2dwZhWgPRCOCj83fONsozKyqCM2efeEcX318uI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Liran Alon <liran.alon@oracle.com>,
+        stable@vger.kernel.org,
         Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
         Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 5.6 131/254] KVM: nVMX: Properly handle userspace interrupt window request
-Date:   Thu, 16 Apr 2020 15:23:40 +0200
-Message-Id: <20200416131342.869006935@linuxfoundation.org>
+Subject: [PATCH 5.6 135/254] KVM: VMX: Always VMCLEAR in-use VMCSes during crash with kexec support
+Date:   Thu, 16 Apr 2020 15:23:44 +0200
+Message-Id: <20200416131343.390099626@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.804095985@linuxfoundation.org>
 References: <20200416131325.804095985@linuxfoundation.org>
@@ -62,161 +63,178 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Sean Christopherson <sean.j.christopherson@intel.com>
 
-commit a1c77abb8d93381e25a8d2df3a917388244ba776 upstream.
+commit 31603d4fc2bb4f0815245d496cb970b27b4f636a upstream.
 
-Return true for vmx_interrupt_allowed() if the vCPU is in L2 and L1 has
-external interrupt exiting enabled.  IRQs are never blocked in hardware
-if the CPU is in the guest (L2 from L1's perspective) when IRQs trigger
-VM-Exit.
+VMCLEAR all in-use VMCSes during a crash, even if kdump's NMI shootdown
+interrupted a KVM update of the percpu in-use VMCS list.
 
-The new check percolates up to kvm_vcpu_ready_for_interrupt_injection()
-and thus vcpu_run(), and so KVM will exit to userspace if userspace has
-requested an interrupt window (to inject an IRQ into L1).
+Because NMIs are not blocked by disabling IRQs, it's possible that
+crash_vmclear_local_loaded_vmcss() could be called while the percpu list
+of VMCSes is being modified, e.g. in the middle of list_add() in
+vmx_vcpu_load_vmcs().  This potential corner case was called out in the
+original commit[*], but the analysis of its impact was wrong.
 
-Remove the @external_intr param from vmx_check_nested_events(), which is
-actually an indicator that userspace wants an interrupt window, e.g.
-it's named @req_int_win further up the stack.  Injecting a VM-Exit into
-L1 to try and bounce out to L0 userspace is all kinds of broken and is
-no longer necessary.
+Skipping the VMCLEARs is wrong because it all but guarantees that a
+loaded, and therefore cached, VMCS will live across kexec and corrupt
+memory in the new kernel.  Corruption will occur because the CPU's VMCS
+cache is non-coherent, i.e. not snooped, and so the writeback of VMCS
+memory on its eviction will overwrite random memory in the new kernel.
+The VMCS will live because the NMI shootdown also disables VMX, i.e. the
+in-progress VMCLEAR will #UD, and existing Intel CPUs do not flush the
+VMCS cache on VMXOFF.
 
-Remove the hack in nested_vmx_vmexit() that attempted to workaround the
-breakage in vmx_check_nested_events() by only filling interrupt info if
-there's an actual interrupt pending.  The hack actually made things
-worse because it caused KVM to _never_ fill interrupt info when the
-LAPIC resides in userspace (kvm_cpu_has_interrupt() queries
-interrupt.injected, which is always cleared by prepare_vmcs12() before
-reaching the hack in nested_vmx_vmexit()).
+Furthermore, interrupting list_add() and list_del() is safe due to
+crash_vmclear_local_loaded_vmcss() using forward iteration.  list_add()
+ensures the new entry is not visible to forward iteration unless the
+entire add completes, via WRITE_ONCE(prev->next, new).  A bad "prev"
+pointer could be observed if the NMI shootdown interrupted list_del() or
+list_add(), but list_for_each_entry() does not consume ->prev.
 
-Fixes: 6550c4df7e50 ("KVM: nVMX: Fix interrupt window request with "Acknowledge interrupt on exit"")
+In addition to removing the temporary disabling of VMCLEAR, open code
+loaded_vmcs_init() in __loaded_vmcs_clear() and reorder VMCLEAR so that
+the VMCS is deleted from the list only after it's been VMCLEAR'd.
+Deleting the VMCS before VMCLEAR would allow a race where the NMI
+shootdown could arrive between list_del() and vmcs_clear() and thus
+neither flow would execute a successful VMCLEAR.  Alternatively, more
+code could be moved into loaded_vmcs_init(), but that gets rather silly
+as the only other user, alloc_loaded_vmcs(), doesn't need the smp_wmb()
+and would need to work around the list_del().
+
+Update the smp_*() comments related to the list manipulation, and
+opportunistically reword them to improve clarity.
+
+[*] https://patchwork.kernel.org/patch/1675731/#3720461
+
+Fixes: 8f536b7697a0 ("KVM: VMX: provide the vmclear function and a bitmap to support VMCLEAR in kdump")
 Cc: stable@vger.kernel.org
-Cc: Liran Alon <liran.alon@oracle.com>
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Message-Id: <20200321193751.24985-2-sean.j.christopherson@intel.com>
+Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
 Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/include/asm/kvm_host.h |    2 +-
- arch/x86/kvm/vmx/nested.c       |   18 ++++--------------
- arch/x86/kvm/vmx/vmx.c          |    9 +++++++--
- arch/x86/kvm/x86.c              |   10 +++++-----
- 4 files changed, 17 insertions(+), 22 deletions(-)
+ arch/x86/kvm/vmx/vmx.c |   67 +++++++++++--------------------------------------
+ 1 file changed, 16 insertions(+), 51 deletions(-)
 
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -1180,7 +1180,7 @@ struct kvm_x86_ops {
- 	bool (*pt_supported)(void);
- 	bool (*pku_supported)(void);
- 
--	int (*check_nested_events)(struct kvm_vcpu *vcpu, bool external_intr);
-+	int (*check_nested_events)(struct kvm_vcpu *vcpu);
- 	void (*request_immediate_exit)(struct kvm_vcpu *vcpu);
- 
- 	void (*sched_in)(struct kvm_vcpu *kvm, int cpu);
---- a/arch/x86/kvm/vmx/nested.c
-+++ b/arch/x86/kvm/vmx/nested.c
-@@ -3604,7 +3604,7 @@ static void nested_vmx_update_pending_db
- 			    vcpu->arch.exception.payload);
- }
- 
--static int vmx_check_nested_events(struct kvm_vcpu *vcpu, bool external_intr)
-+static int vmx_check_nested_events(struct kvm_vcpu *vcpu)
- {
- 	struct vcpu_vmx *vmx = to_vmx(vcpu);
- 	unsigned long exit_qual;
-@@ -3680,8 +3680,7 @@ static int vmx_check_nested_events(struc
- 		return 0;
- 	}
- 
--	if ((kvm_cpu_has_interrupt(vcpu) || external_intr) &&
--	    nested_exit_on_intr(vcpu)) {
-+	if (kvm_cpu_has_interrupt(vcpu) && nested_exit_on_intr(vcpu)) {
- 		if (block_nested_events)
- 			return -EBUSY;
- 		nested_vmx_vmexit(vcpu, EXIT_REASON_EXTERNAL_INTERRUPT, 0, 0);
-@@ -4329,17 +4328,8 @@ void nested_vmx_vmexit(struct kvm_vcpu *
- 	vcpu->arch.mp_state = KVM_MP_STATE_RUNNABLE;
- 
- 	if (likely(!vmx->fail)) {
--		/*
--		 * TODO: SDM says that with acknowledge interrupt on
--		 * exit, bit 31 of the VM-exit interrupt information
--		 * (valid interrupt) is always set to 1 on
--		 * EXIT_REASON_EXTERNAL_INTERRUPT, so we shouldn't
--		 * need kvm_cpu_has_interrupt().  See the commit
--		 * message for details.
--		 */
--		if (nested_exit_intr_ack_set(vcpu) &&
--		    exit_reason == EXIT_REASON_EXTERNAL_INTERRUPT &&
--		    kvm_cpu_has_interrupt(vcpu)) {
-+		if (exit_reason == EXIT_REASON_EXTERNAL_INTERRUPT &&
-+		    nested_exit_intr_ack_set(vcpu)) {
- 			int irq = kvm_cpu_get_interrupt(vcpu);
- 			WARN_ON(irq < 0);
- 			vmcs12->vm_exit_intr_info = irq |
 --- a/arch/x86/kvm/vmx/vmx.c
 +++ b/arch/x86/kvm/vmx/vmx.c
-@@ -4507,8 +4507,13 @@ static int vmx_nmi_allowed(struct kvm_vc
- 
- static int vmx_interrupt_allowed(struct kvm_vcpu *vcpu)
- {
--	return (!to_vmx(vcpu)->nested.nested_run_pending &&
--		vmcs_readl(GUEST_RFLAGS) & X86_EFLAGS_IF) &&
-+	if (to_vmx(vcpu)->nested.nested_run_pending)
-+		return false;
-+
-+	if (is_guest_mode(vcpu) && nested_exit_on_intr(vcpu))
-+		return true;
-+
-+	return (vmcs_readl(GUEST_RFLAGS) & X86_EFLAGS_IF) &&
- 		!(vmcs_read32(GUEST_INTERRUPTIBILITY_INFO) &
- 			(GUEST_INTR_STATE_STI | GUEST_INTR_STATE_MOV_SS));
- }
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -7635,7 +7635,7 @@ static void update_cr8_intercept(struct
- 	kvm_x86_ops->update_cr8_intercept(vcpu, tpr, max_irr);
+@@ -666,43 +666,15 @@ void loaded_vmcs_init(struct loaded_vmcs
  }
  
--static int inject_pending_event(struct kvm_vcpu *vcpu, bool req_int_win)
-+static int inject_pending_event(struct kvm_vcpu *vcpu)
+ #ifdef CONFIG_KEXEC_CORE
+-/*
+- * This bitmap is used to indicate whether the vmclear
+- * operation is enabled on all cpus. All disabled by
+- * default.
+- */
+-static cpumask_t crash_vmclear_enabled_bitmap = CPU_MASK_NONE;
+-
+-static inline void crash_enable_local_vmclear(int cpu)
+-{
+-	cpumask_set_cpu(cpu, &crash_vmclear_enabled_bitmap);
+-}
+-
+-static inline void crash_disable_local_vmclear(int cpu)
+-{
+-	cpumask_clear_cpu(cpu, &crash_vmclear_enabled_bitmap);
+-}
+-
+-static inline int crash_local_vmclear_enabled(int cpu)
+-{
+-	return cpumask_test_cpu(cpu, &crash_vmclear_enabled_bitmap);
+-}
+-
+ static void crash_vmclear_local_loaded_vmcss(void)
  {
- 	int r;
+ 	int cpu = raw_smp_processor_id();
+ 	struct loaded_vmcs *v;
  
-@@ -7671,7 +7671,7 @@ static int inject_pending_event(struct k
- 	 * from L2 to L1.
+-	if (!crash_local_vmclear_enabled(cpu))
+-		return;
+-
+ 	list_for_each_entry(v, &per_cpu(loaded_vmcss_on_cpu, cpu),
+ 			    loaded_vmcss_on_cpu_link)
+ 		vmcs_clear(v->vmcs);
+ }
+-#else
+-static inline void crash_enable_local_vmclear(int cpu) { }
+-static inline void crash_disable_local_vmclear(int cpu) { }
+ #endif /* CONFIG_KEXEC_CORE */
+ 
+ static void __loaded_vmcs_clear(void *arg)
+@@ -714,19 +686,24 @@ static void __loaded_vmcs_clear(void *ar
+ 		return; /* vcpu migration can race with cpu offline */
+ 	if (per_cpu(current_vmcs, cpu) == loaded_vmcs->vmcs)
+ 		per_cpu(current_vmcs, cpu) = NULL;
+-	crash_disable_local_vmclear(cpu);
++
++	vmcs_clear(loaded_vmcs->vmcs);
++	if (loaded_vmcs->shadow_vmcs && loaded_vmcs->launched)
++		vmcs_clear(loaded_vmcs->shadow_vmcs);
++
+ 	list_del(&loaded_vmcs->loaded_vmcss_on_cpu_link);
+ 
+ 	/*
+-	 * we should ensure updating loaded_vmcs->loaded_vmcss_on_cpu_link
+-	 * is before setting loaded_vmcs->vcpu to -1 which is done in
+-	 * loaded_vmcs_init. Otherwise, other cpu can see vcpu = -1 fist
+-	 * then adds the vmcs into percpu list before it is deleted.
++	 * Ensure all writes to loaded_vmcs, including deleting it from its
++	 * current percpu list, complete before setting loaded_vmcs->vcpu to
++	 * -1, otherwise a different cpu can see vcpu == -1 first and add
++	 * loaded_vmcs to its percpu list before it's deleted from this cpu's
++	 * list. Pairs with the smp_rmb() in vmx_vcpu_load_vmcs().
  	 */
- 	if (is_guest_mode(vcpu) && kvm_x86_ops->check_nested_events) {
--		r = kvm_x86_ops->check_nested_events(vcpu, req_int_win);
-+		r = kvm_x86_ops->check_nested_events(vcpu);
- 		if (r != 0)
- 			return r;
- 	}
-@@ -7733,7 +7733,7 @@ static int inject_pending_event(struct k
- 		 * KVM_REQ_EVENT only on certain events and not unconditionally?
+ 	smp_wmb();
+ 
+-	loaded_vmcs_init(loaded_vmcs);
+-	crash_enable_local_vmclear(cpu);
++	loaded_vmcs->cpu = -1;
++	loaded_vmcs->launched = 0;
+ }
+ 
+ void loaded_vmcs_clear(struct loaded_vmcs *loaded_vmcs)
+@@ -1345,18 +1322,17 @@ void vmx_vcpu_load_vmcs(struct kvm_vcpu
+ 	if (!already_loaded) {
+ 		loaded_vmcs_clear(vmx->loaded_vmcs);
+ 		local_irq_disable();
+-		crash_disable_local_vmclear(cpu);
+ 
+ 		/*
+-		 * Read loaded_vmcs->cpu should be before fetching
+-		 * loaded_vmcs->loaded_vmcss_on_cpu_link.
+-		 * See the comments in __loaded_vmcs_clear().
++		 * Ensure loaded_vmcs->cpu is read before adding loaded_vmcs to
++		 * this cpu's percpu list, otherwise it may not yet be deleted
++		 * from its previous cpu's percpu list.  Pairs with the
++		 * smb_wmb() in __loaded_vmcs_clear().
  		 */
- 		if (is_guest_mode(vcpu) && kvm_x86_ops->check_nested_events) {
--			r = kvm_x86_ops->check_nested_events(vcpu, req_int_win);
-+			r = kvm_x86_ops->check_nested_events(vcpu);
- 			if (r != 0)
- 				return r;
- 		}
-@@ -8266,7 +8266,7 @@ static int vcpu_enter_guest(struct kvm_v
- 			goto out;
- 		}
+ 		smp_rmb();
  
--		if (inject_pending_event(vcpu, req_int_win) != 0)
-+		if (inject_pending_event(vcpu) != 0)
- 			req_immediate_exit = true;
- 		else {
- 			/* Enable SMI/NMI/IRQ window open exits if needed.
-@@ -8496,7 +8496,7 @@ static inline int vcpu_block(struct kvm
- static inline bool kvm_vcpu_running(struct kvm_vcpu *vcpu)
- {
- 	if (is_guest_mode(vcpu) && kvm_x86_ops->check_nested_events)
--		kvm_x86_ops->check_nested_events(vcpu, false);
-+		kvm_x86_ops->check_nested_events(vcpu);
+ 		list_add(&vmx->loaded_vmcs->loaded_vmcss_on_cpu_link,
+ 			 &per_cpu(loaded_vmcss_on_cpu, cpu));
+-		crash_enable_local_vmclear(cpu);
+ 		local_irq_enable();
+ 	}
  
- 	return (vcpu->arch.mp_state == KVM_MP_STATE_RUNNABLE &&
- 		!vcpu->arch.apf.halted);
+@@ -2292,17 +2268,6 @@ static int hardware_enable(void)
+ 	INIT_LIST_HEAD(&per_cpu(blocked_vcpu_on_cpu, cpu));
+ 	spin_lock_init(&per_cpu(blocked_vcpu_on_cpu_lock, cpu));
+ 
+-	/*
+-	 * Now we can enable the vmclear operation in kdump
+-	 * since the loaded_vmcss_on_cpu list on this cpu
+-	 * has been initialized.
+-	 *
+-	 * Though the cpu is not in VMX operation now, there
+-	 * is no problem to enable the vmclear operation
+-	 * for the loaded_vmcss_on_cpu list is empty!
+-	 */
+-	crash_enable_local_vmclear(cpu);
+-
+ 	kvm_cpu_vmxon(phys_addr);
+ 	if (enable_ept)
+ 		ept_sync_global();
 
 
