@@ -2,131 +2,128 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8CABC2BA2B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 07:48:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B1B8C2D0EF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 07:50:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 87C522076A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 07:48:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mitsubishielectricgroup.onmicrosoft.com header.i=@mitsubishielectricgroup.onmicrosoft.com header.b="cp2Ns5tt"
+	by mail.kernel.org (Postfix) with ESMTP id EE7482076A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 07:50:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587023458;
+	bh=OFHqz9GYYZNwc+I9swBEm5dzUhRk5QACD1V1CxcDFlo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=WArGBHUQSwA0YFMu/tPzdtohDoh5EtDcmMpUBwRCYhBwlb24YmmLJmD6GvtTr4zxi
+	 w78OEnhNiB2heDkPOTsuDDZBmarozuGI09xizfiOxz1I4dqznUvnfplw0hS8QmfR+f
+	 0zqrf5vEBJ06Ft6livJ68DPYNjH0Dx+dfVtc8iLs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439661AbgDPHsn (ORCPT
+        id S2439710AbgDPHu4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 03:48:43 -0400
-Received: from mx04.melco.co.jp ([192.218.140.144]:33154 "EHLO
-        mx04.melco.co.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2439526AbgDPHs1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 03:48:27 -0400
-Received: from mr04.melco.co.jp (mr04 [133.141.98.166])
-        by mx04.melco.co.jp (Postfix) with ESMTP id F13DF3A4331;
-        Thu, 16 Apr 2020 16:48:21 +0900 (JST)
-Received: from mr04.melco.co.jp (unknown [127.0.0.1])
-        by mr04.imss (Postfix) with ESMTP id 492rts6ThzzRkHt;
-        Thu, 16 Apr 2020 16:48:21 +0900 (JST)
-Received: from mf03_second.melco.co.jp (unknown [192.168.20.183])
-        by mr04.melco.co.jp (Postfix) with ESMTP id 492rts69hFzRkD8;
-        Thu, 16 Apr 2020 16:48:21 +0900 (JST)
-Received: from mf03.melco.co.jp (unknown [133.141.98.183])
-        by mf03_second.melco.co.jp (Postfix) with ESMTP id 492rts5rN7zRkBs;
-        Thu, 16 Apr 2020 16:48:21 +0900 (JST)
-Received: from JPN01-OS2-obe.outbound.protection.outlook.com (unknown [104.47.92.57])
-        by mf03.melco.co.jp (Postfix) with ESMTP id 492rts5RWbzRjNp;
-        Thu, 16 Apr 2020 16:48:21 +0900 (JST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=B2d/TAIVczd8YwFKifMTw12fw/dCk+ptvSHmJnms0mXFbV5bkOncHZaojs3Ojm5yQVWOIsmURQKrRgvmi72DX/ktN+HdjCUuge3K5UirX4TwFi2jZIxwGful3RZZoNeoq0+fN78x1SQGwW58Bc0d1Ky42DppwXtsmAojgruwaLlYknxtOQzmpvm0O6JaUz3IL7BvAcyjn+k4PjzjBNvYruUDRnFysya2saTeq34b8wIbPMQ2/gIwyqrdFPJbtWsGhcYPAQRgzcE7ic7b/rvhx20fASCD2SfyUbAJ6vMtpxxN+sxjQqn+g49u2fkdhr2mX0CamdhYz2c0kmGUBrjzyA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LoAN6DY5xaBiywTHT4ePfb1eWEdJeE3jfCVJpWa58J8=;
- b=cOQXdmXpLMqGmj479UwcsrCFEdI7Pqj6o4zalCjMBBLt0Y8VcAeBAmcbz16NbjpYFuWUIegCOpKJZwfrEcqeqqLkdhbLq0gBGYFHQY5TcmrEDSstKEfakEHdburqBRXJY1LQKtt6EzyaKpVLyHSdvSxOW+8cEsyAqlI332QPgXAfzs2iSJ6o6uRdz+GZspcLOeklMQoLFxgnd438f6kUqC/3SpnvOyIuSj0mezUJ+GEWS6FOrtEWblw00kLmNhrXNnsjMLwjECJ/RhDKcYmdIKupOkUxTHW52kSc3zh7Lmx3h2YJ2itJ4JlAtpGkJuGouvTIIAXqggbWXDKvMG8NDg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=dc.mitsubishielectric.co.jp; dmarc=pass action=none
- header.from=dc.mitsubishielectric.co.jp; dkim=pass
- header.d=dc.mitsubishielectric.co.jp; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mitsubishielectricgroup.onmicrosoft.com;
- s=selector2-mitsubishielectricgroup-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LoAN6DY5xaBiywTHT4ePfb1eWEdJeE3jfCVJpWa58J8=;
- b=cp2Ns5ttliv8yS5vuL1aUTzYDwZvvw8hKDFTTeDFTc0q1fl0Lw/rPSv0jFCl/L2lKsPrdJtFLv9YpkYz4EQ+Q5RNqtR4Hm5RpRgBLVlahEjGredQqIg3hyV1bVChzdqE6QUKisxlkqJvRFaHlbs+JUl7XeKPyPqM5ZAszIXQjrs=
-Received: from TY1PR01MB1578.jpnprd01.prod.outlook.com (52.133.161.22) by
- TY1SPR01MB1.jpnprd01.prod.outlook.com (52.133.164.23) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2900.15; Thu, 16 Apr 2020 07:48:21 +0000
-Received: from TY1PR01MB1578.jpnprd01.prod.outlook.com
- ([fe80::c5d6:a88e:62c6:4b96]) by TY1PR01MB1578.jpnprd01.prod.outlook.com
- ([fe80::c5d6:a88e:62c6:4b96%3]) with mapi id 15.20.2900.028; Thu, 16 Apr 2020
- 07:48:21 +0000
-From:   "Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp" 
-        <Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
-To:     'Namjae Jeon' <namjae.jeon@samsung.com>
-CC:     "Mori.Takahiro@ab.MitsubishiElectric.co.jp" 
-        <Mori.Takahiro@ab.MitsubishiElectric.co.jp>,
-        "Motai.Hirotaka@aj.MitsubishiElectric.co.jp" 
-        <Motai.Hirotaka@aj.MitsubishiElectric.co.jp>,
-        'Sungjong Seo' <sj1557.seo@samsung.com>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        'Matthew Wilcox' <willy@infradead.org>
-Subject: RE: [PATCH v2] exfat: replace 'time_ms' with 'time_10ms'
-Thread-Topic: [PATCH v2] exfat: replace 'time_ms' with 'time_10ms'
-Thread-Index: AQHWDXnb7kFzLdIDe0GisWVV38Nr1KhvFNoAgAenMeCABJ7GAIAADzTw
-Date:   Thu, 16 Apr 2020 07:45:47 +0000
-Deferred-Delivery: Thu, 16 Apr 2020 07:48:00 +0000
-Message-ID: <TY1PR01MB157830C8558819413762A95D90D80@TY1PR01MB1578.jpnprd01.prod.outlook.com>
-References: <20200408074610.35591-1-Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
-        <20200408112152.GP21484@bombadil.infradead.org>
-        <CGME20200413094319epcas1p236a2145766a672f718030b4199b82956@epcas1p2.samsung.com>
-        <TY1PR01MB157894A971A781BE900C5A7590DD0@TY1PR01MB1578.jpnprd01.prod.outlook.com>
- <006a01d613ba$e2e19e10$a8a4da30$@samsung.com>
-In-Reply-To: <006a01d613ba$e2e19e10$a8a4da30$@samsung.com>
-Accept-Language: ja-JP, en-US
-Content-Language: ja-JP
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-melpop: 1
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp; 
-x-originating-ip: [121.80.0.162]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 6f3b3a77-2475-401c-03d2-08d7e1da8905
-x-ms-traffictypediagnostic: TY1SPR01MB1:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <TY1SPR01MB1821A6D0880D8D71CC98990D80@TY1SPR01MB1.jpnprd01.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3276;
-x-forefront-prvs: 0375972289
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TY1PR01MB1578.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(376002)(366004)(396003)(346002)(136003)(39860400002)(316002)(54906003)(2906002)(71200400001)(478600001)(6916009)(6666004)(8936002)(558084003)(8676002)(7696005)(52536014)(66446008)(86362001)(9686003)(81156014)(66946007)(6506007)(64756008)(76116006)(66556008)(33656002)(66476007)(26005)(55016002)(5660300002)(4326008)(186003);DIR:OUT;SFP:1102;
-received-spf: None (protection.outlook.com: dc.MitsubishiElectric.co.jp does
- not designate permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: MyiyuEbXHK7pM4OChmCQ9JtGLahqEfQR9P0gu3XqMNHSil2TsKmqrIUJImgP1xwjJcno0/Y2ZGpakdEz++TWmiT7i/sPp6b2SeYDpXYh7z4gfJyqWrax7FTG8v6Nq3pdp6Axwyq4Yp5adxP1aI3YOq4xk69bpF2f1BHXNo3lNMM2kIESlfFtROe+rZH8PWdzgi4tZLSmKGUJDQacsvMms2cYH0kiUoaBC7hFadGvkpoMm9bI0K20tTfiLQQOghNXyrdlBq5bivW8uCl8TpkerM7EaoYsfK/e0kgbHFi4HpeuKI7e50CyQJmJO/JdqUwAcYY1nR/4BF6i+Xf86OwyLEM54HUU9tl8XLequ3ZGAE/0vMNnBXlTZ6wLkq153mUcwUhef8HE+e9NpOyvZObTxWsxDTVQVMvGI5Bcn4fJ9o3ZI/MCzy89eAW+8NGyrRDm
-x-ms-exchange-antispam-messagedata: UylaPUySsdktcP0feYJIrbSODiuHstlQRwc1QrwCRAbCvWS2gVcx3sf6bBJXxoB3dKgtbo6zTDF8YCY7VBOIqwUYstO4jkLAJ1q3YnRNeXn2LcBtvJ0O6qVPSgmgsaKqvWrRvn53FCpNuxdv1q1N3Q==
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Thu, 16 Apr 2020 03:50:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56510 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2439438AbgDPHut (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 03:50:49 -0400
+Received: from mail-il1-f177.google.com (mail-il1-f177.google.com [209.85.166.177])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 134A52076A;
+        Thu, 16 Apr 2020 07:50:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587023449;
+        bh=OFHqz9GYYZNwc+I9swBEm5dzUhRk5QACD1V1CxcDFlo=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=KZcD59NIBi3fSTJa9R3dm9SUE41lbsKpYBdDP7DYKp2lCFhz+WVORehUZFIWPY6cj
+         0vgcsAVA8xIEXgiwx8uUO3ae0nXXWMHi0nDPOF8S5JPQCg391UW8ZSfOp4iYiysmLv
+         Xl/X7Mvexhs6KXq+jLXS8bmun/3zNDOV3gU6qZec=
+Received: by mail-il1-f177.google.com with SMTP id e4so6031637ils.4;
+        Thu, 16 Apr 2020 00:50:49 -0700 (PDT)
+X-Gm-Message-State: AGi0PuZzqNK4DwGc65TDZeUaD8FldjrbRkB0xvDH0lS/QEleM/koTiyL
+        cIOiFGHBL+4NKfMUFLL83jfZJ0nlcVQUH3vVzSo=
+X-Google-Smtp-Source: APiQypI5ojUj0Vjwe5ylB1JFpUhtyPIygOqNmKrjZ41jxKYyJbInoum3YZtcRuho0AfeBevcdVTm443eRLyhFE/uFFQ=
+X-Received: by 2002:a92:aa0f:: with SMTP id j15mr9438871ili.211.1587023448452;
+ Thu, 16 Apr 2020 00:50:48 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: dc.MitsubishiElectric.co.jp
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6f3b3a77-2475-401c-03d2-08d7e1da8905
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Apr 2020 07:48:21.2842
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: c5a75b62-4bff-4c96-a720-6621ce9978e5
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 7v9yU8abVxVJXQ/FjuVXYVjcilTqo4NJ+m35ZjiqzqNEjJDHkVoYaLBndYyslwdPNCUgTZuqtfTcuB/oaChoPA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY1SPR01MB1
+References: <20200415221520.2692512-1-nivedita@alum.mit.edu> <20200415221520.2692512-2-nivedita@alum.mit.edu>
+In-Reply-To: <20200415221520.2692512-2-nivedita@alum.mit.edu>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Thu, 16 Apr 2020 09:50:36 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXE7aNm5XWrB2PkEedXA02gGmpcPW7rjziAXeTSPL_786A@mail.gmail.com>
+Message-ID: <CAMj1kXE7aNm5XWrB2PkEedXA02gGmpcPW7rjziAXeTSPL_786A@mail.gmail.com>
+Subject: Re: [PATCH 1/5] efi/arm: Remove __efistub_global annotation
+To:     Arvind Sankar <nivedita@alum.mit.edu>
+Cc:     linux-efi <linux-efi@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        X86 ML <x86@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiA+IFdoZW4gdXNpbmcgJzEwMCcgZm9yIHRoZSBkaXZpc29yLCBJIHRoaW5rIGNzIChjZW50aS1z
-ZWMpIGlzIGVhc2llciB0bw0KPiA+IHVuZGVyc3RhbmQgdGhhbiAxMG1zLg0KPiA+IFdoaWNoIGRv
-IHlvdSBwcmVmZXIsIHRpbWVfMTBtcyBvciB0aW1lX2NzPw0KPiBDYW4geW91IHJlc2VuZCB0aGUg
-cGF0Y2ggYWdhaW4gYWZ0ZXIgY2hhbmdpbmcgdG8gdGltZV9jcyA/DQoNCk9mIGNvdXJzZS4NCkFu
-ZCwgcmViYXNlIHRvIHlvdXIgZm9yLW5leHQuDQoNCg0KQlINCi0tLQ0KS29oYWRhIFRldHN1aGly
-byA8S29oYWRhLlRldHN1aGlyb0BkYy5NaXRzdWJpc2hpRWxlY3RyaWMuY28uanA+DQo=
+On Thu, 16 Apr 2020 at 00:15, Arvind Sankar <nivedita@alum.mit.edu> wrote:
+>
+> Instead of using __efistub_global to force variables into the .data
+> section, leave them in the .bss but pull the EFI stub's .bss section
+> into .data in the linker script for the compressed kernel.
+>
+> Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
+
+Reviewed-by: Ard Biesheuvel <ardb@kernel.org>
+
+> ---
+>  arch/arm/boot/compressed/vmlinux.lds.S | 2 +-
+>  drivers/firmware/efi/libstub/Makefile  | 7 ++++---
+>  drivers/firmware/efi/libstub/efistub.h | 2 +-
+>  3 files changed, 6 insertions(+), 5 deletions(-)
+>
+> diff --git a/arch/arm/boot/compressed/vmlinux.lds.S b/arch/arm/boot/compressed/vmlinux.lds.S
+> index b247f399de71..b6793c7932a9 100644
+> --- a/arch/arm/boot/compressed/vmlinux.lds.S
+> +++ b/arch/arm/boot/compressed/vmlinux.lds.S
+> @@ -78,7 +78,7 @@ SECTIONS
+>       * The EFI stub always executes from RAM, and runs strictly before the
+>       * decompressor, so we can make an exception for its r/w data, and keep it
+>       */
+> -    *(.data.efistub)
+> +    *(.data.efistub .bss.efistub)
+>      __pecoff_data_end = .;
+>
+>      /*
+> diff --git a/drivers/firmware/efi/libstub/Makefile b/drivers/firmware/efi/libstub/Makefile
+> index 094eabdecfe6..45ffe0822df1 100644
+> --- a/drivers/firmware/efi/libstub/Makefile
+> +++ b/drivers/firmware/efi/libstub/Makefile
+> @@ -100,8 +100,9 @@ quiet_cmd_stubcopy = STUBCPY $@
+>
+>  #
+>  # ARM discards the .data section because it disallows r/w data in the
+> -# decompressor. So move our .data to .data.efistub, which is preserved
+> -# explicitly by the decompressor linker script.
+> +# decompressor. So move our .data to .data.efistub and .bss to .bss.efistub,
+> +# which are preserved explicitly by the decompressor linker script.
+>  #
+> -STUBCOPY_FLAGS-$(CONFIG_ARM)   += --rename-section .data=.data.efistub
+> +STUBCOPY_FLAGS-$(CONFIG_ARM)   += --rename-section .data=.data.efistub \
+> +                                  --rename-section .bss=.bss.efistub,load,alloc
+>  STUBCOPY_RELOC-$(CONFIG_ARM)   := R_ARM_ABS
+> diff --git a/drivers/firmware/efi/libstub/efistub.h b/drivers/firmware/efi/libstub/efistub.h
+> index bd0b86b63936..a92d42ffd9f7 100644
+> --- a/drivers/firmware/efi/libstub/efistub.h
+> +++ b/drivers/firmware/efi/libstub/efistub.h
+> @@ -25,7 +25,7 @@
+>  #define EFI_ALLOC_ALIGN                EFI_PAGE_SIZE
+>  #endif
+>
+> -#if defined(CONFIG_ARM) || defined(CONFIG_X86)
+> +#if defined(CONFIG_X86)
+>  #define __efistub_global       __section(.data)
+>  #else
+>  #define __efistub_global
+> --
+> 2.24.1
+>
