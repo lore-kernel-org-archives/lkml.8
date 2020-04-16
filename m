@@ -2,239 +2,352 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 852F0C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 11:49:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED2EDC2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 11:49:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5C4FA20656
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 11:49:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C691321D7F
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 11:49:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="SfpxavV1"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="p/C50Mqy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2506672AbgDPLt3 (ORCPT
+        id S2506662AbgDPLty (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 07:49:29 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:42209 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2506548AbgDPLs4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 07:48:56 -0400
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200416114849euoutp02ea7f5200b28f28ce2d5701bb8273c802~GSmgG-ZHM3075130751euoutp02O
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 11:48:49 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200416114849euoutp02ea7f5200b28f28ce2d5701bb8273c802~GSmgG-ZHM3075130751euoutp02O
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1587037729;
-        bh=LtJiapRZh1Ea64p7LdbSiBgjXuP3s8Uvyni6NX+lMbI=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=SfpxavV1P9cZ5c5nOEaxfLj3RP0aNc+JtZ78ozQRM6iQ8N5LhcGpunGHkJbVpbOcc
-         cFP0TuQ0jDXD8WXLRECz/pQT8/mqxu4vrqfMMQebCW6zADsKklQwPTFV21OF0agVdu
-         VlGyEqiRvBW+JFL5Zv2Nk0X68sk/DgU6ksOXm9QQ=
-Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20200416114848eucas1p22ab13090a3fe7b4992627149d2e5ac90~GSmfuxvu60903309033eucas1p28;
-        Thu, 16 Apr 2020 11:48:48 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges2new.samsung.com (EUCPMTA) with SMTP id 8B.5A.60679.026489E5; Thu, 16
-        Apr 2020 12:48:48 +0100 (BST)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20200416114848eucas1p26436783dd625463955ec0d8fc9bb6e09~GSmfQuTS71105311053eucas1p2p;
-        Thu, 16 Apr 2020 11:48:48 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200416114848eusmtrp2def4490817dd88b069636a889ccc2aa7~GSmfPshja1089610896eusmtrp2L;
-        Thu, 16 Apr 2020 11:48:48 +0000 (GMT)
-X-AuditID: cbfec7f4-0cbff7000001ed07-0c-5e9846205236
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id 41.C0.07950.026489E5; Thu, 16
-        Apr 2020 12:48:48 +0100 (BST)
-Received: from [106.210.88.143] (unknown [106.210.88.143]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200416114847eusmtip140b27105c59b66ea3210be2b8bb787db~GSmd8phLs0505005050eusmtip1R;
-        Thu, 16 Apr 2020 11:48:46 +0000 (GMT)
-Subject: Re: [PATCH v2 00/33] iommu: Move iommu_group setup to IOMMU core
- code
-To:     Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Rob Clark <robdclark@gmail.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>
-Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        linux-samsung-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-mediatek@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-s390@vger.kernel.org,
-        linux-tegra@vger.kernel.org,
-        virtualization@lists.linux-foundation.org
-From:   Marek Szyprowski <m.szyprowski@samsung.com>
-Message-ID: <551c48b8-3268-6034-2dc6-cec3dbbec250@samsung.com>
-Date:   Thu, 16 Apr 2020 13:48:46 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
-        Thunderbird/68.7.0
+        Thu, 16 Apr 2020 07:49:54 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:64875 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2506661AbgDPLtQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 07:49:16 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 492yDl5Lkcz9tylt;
+        Thu, 16 Apr 2020 13:49:11 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=p/C50Mqy; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id eTocy9pa4yBm; Thu, 16 Apr 2020 13:49:11 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 492yDl422lz9tyls;
+        Thu, 16 Apr 2020 13:49:11 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1587037751; bh=7q+zozMeephcGFHZ1fFO0nN3uQx2WfNcxoZsYISBC/k=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=p/C50Mqyd8FuINA3IAXANWlxjFvfRcB1bjjZo/qbCNbXDZUDsQr0idImzFrGVGy9s
+         Mu2ASeb2bi5SwlvGtpBAM1Oi2v3MRGBen3qloIOotXVrzk+AWGsII+NX2BtIK0t5u2
+         luCl/wq+5kJyYC40iDBMMB6Vxa6TEaI1ae6ygpuI=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id C1AA78BC07;
+        Thu, 16 Apr 2020 13:49:12 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id RV3xYndJTuvU; Thu, 16 Apr 2020 13:49:12 +0200 (CEST)
+Received: from [192.168.4.90] (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id B6C558BC06;
+        Thu, 16 Apr 2020 13:49:11 +0200 (CEST)
+Subject: Re: [PATCH RESEND,v3,4/4] drivers: uio: new driver for
+ fsl_85xx_cache_sram
+To:     Wang Wenhu <wenhu.wang@vivo.com>, gregkh@linuxfoundation.org,
+        linux-kernel@vger.kernel.org, oss@buserror.net,
+        linuxppc-dev@lists.ozlabs.org
+Cc:     kernel@vivo.com, Michael Ellerman <mpe@ellerman.id.au>
+References: <20200416111609.4191-1-wenhu.wang@vivo.com>
+ <20200416111609.4191-5-wenhu.wang@vivo.com>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <6173e4ce-bc26-b87c-e679-65329e8336cc@c-s.fr>
+Date:   Thu, 16 Apr 2020 13:49:01 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <20200414131542.25608-1-joro@8bytes.org>
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Se0hTYRjG+XaOZ2fW5HMVvlp0GRQVZhcTPjKyoOIQVHYhKrBa7WiSW7Kj
-        lhVkbV1cV5NwTVtm0bSbpmkqlmiY1NKtVhahZLnuzsTZxS4ut5Plf8/7fL+H93nhYynFJSaM
-        TdSm8DqtKknJBNIV9/rs08YvNm2YYdVHkeaOnzQpyypniK22iyZZRdkUqep8zxDv608BJL82
-        mmRccQQQg7mAJpm5JVJyouMTRez2AZVV2yQlzuo8hjj1jxDpafdS5OR5PUVM9jsSktlrZsh+
-        QyR5d/47Req6XQGkr9pCE2uThSGG1qj5oZyrziLhrlquIq7udT3DVZnbpFxZ4VSu9HImw7W2
-        1DCc5f4KruziXi77uRVxx/RdDHerxUJxntKxsfL1gXPVfFJiGq+bPm9T4NbvPZV0cueEnQXv
-        8iQZyBNmRDIW8GwoNJymjSiQVeBCBDUP8xhx6EVwz2hifJQCexAUH9s9mHjpLJGIkBWB3tT3
-        F/qM4LZH4dMjcCw4zvZTPmgk/kZDfkO5f6BwpQS+Nr1BPorBM8HoNvrTcjwPbG3H/ZrGE8HV
-        kTEQYNlROA5yWlaLSDDcP+OifbYMR8GzU+t8NoXHwS13HiXqEHjhOucvB9jFgje3SiK2XggV
-        XYeQqEfAx8abUlGPAW/VYECP4FXzNak4HEXg3G/6m4iG1uYfjG8zhadAcfV00V4Amcfdfhtw
-        EDx3B4slguBURQ4l2nI4fFAh0pPA3Hj939o6x2PqJFKah1xmHnKOecg55v978xF9GYXwqYIm
-        gRdmafkdEYJKI6RqEyK2bNeUooHfa+tv7K1E1b821yPMIuVw+aYY0wZFgCpNSNfUI2Ap5Uh5
-        UNSAJVer0nfxuu0bdalJvFCPRrO0MkQeWfAhToETVCn8Np5P5nWDrxJWFpaBlqEDb7qLDPPV
-        0omlZ7Jr5qwrXrL8rSdtSvcq57C1i8rVX9vu2qJXdkesyYlL7my3hYZXLt1bNM7xpD94TU/z
-        B2tFfGs6p1k9rTDu6Z5IY/yNlAvxk5MTr8Rc/1hQtm+3Vx1+4rfkiPSbUMJs+xK+0Y3Xygwy
-        +4MLsQ3h2gZ3jGOHR0kLW1Uzp1I6QfUHpZO/gLkDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA02SXUhTYRzGeXfOjmfS4ji/XiX8mHhR0HSb09c+LLuQI0gYQyFLa+lJK7fZ
-        ziYZUSu9mKPyq0ynrBJLLS/MVdMpyiRKMTORLEOx3MrCHKG7KIxscwa7+/E8v+eFF/4kJujn
-        RpJnVFpGo1KUColAfPzvq/ndMRlNBYnrE2HojWMdR5a6ZwQaH3bhqK6rAUP9P74RaGNxmYvu
-        De9F+sdvuajK1Iaj6paeAFTjWMbQ5KSH6oYnAtC0rZVA05VTAK1+2sBQ7f1KDDVNDnFQtdtE
-        oGtVUrR0/xeG7D+dXPTbZsZRx4SZQFVzsoMRtNNu5tDd5m5A2xdHCLrfNB9AWzp30b2Pqgl6
-        bmaQoM1jR2hL+xW64UMHoG9UugjaOmPG6LXeqGx+nmifRq3TMjElala7X3hMjCQicSoSSZJS
-        RWJpSv4eiUyYkLaviCk9U85oEtJOikp+rfbhZT9iL7QttXL0YC3SCHgkpJLgwnQPxwgCSQH1
-        AMCvyxaur9gBxxr1WxwM/8wYCZ+0AmBnswPzFsHUYWh/+AR4ixBqHYftHwY2LYzq48DVhheb
-        loAyAPj3e6yXCUoMjSvep3gkn0qD4/M3Nxmn4qHToff4JBlK5cOqqZ0+JQiONTtxb8yjZPB9
-        /VFvjFHJ0Gz5jPk4GlpXWrc4HH503uXUAoHJb23ym5j8Jia/yT2APwIhjI5VFitZiYhVKFmd
-        qlhUqFb2As/ZPH/5+2kfMLrkI4AigXAb/+SBpgIBV1HOVihHACQxYQh/u8wT8YsUFRcZjfqE
-        RlfKsCNA5vlaHRYZWqj2HKFKe0IsE6egVHGKNEWajIThfANlPy6gihVa5hzDlDGa/zsOyYvU
-        g5brVrTDVfGV/qI7dDuvKH8+fiEqYiDXFpr9OrvJmvVe3uEuD7rTUnJpNi19tswuz0nN2bC8
-        G1L2R0d/mijkz6VLqbOLo39yTxska6EPVjtiDVfjglhbTafz1uVTe89nxv18OEoMLqMG13pW
-        zeucRNSu6eJdzOh0yzPr3X1hjUKcLVGId2EaVvEPnvogHEwDAAA=
-X-CMS-MailID: 20200416114848eucas1p26436783dd625463955ec0d8fc9bb6e09
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200414131600eucas1p16f1ff6aedb780eb795a770dc08e5dec5
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200414131600eucas1p16f1ff6aedb780eb795a770dc08e5dec5
-References: <CGME20200414131600eucas1p16f1ff6aedb780eb795a770dc08e5dec5@eucas1p1.samsung.com>
-        <20200414131542.25608-1-joro@8bytes.org>
+In-Reply-To: <20200416111609.4191-5-wenhu.wang@vivo.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Joerg,
 
-On 14.04.2020 15:15, Joerg Roedel wrote:
-> here is the second version of this patch-set. The first version with
-> some more introductory text can be found here:
->
-> 	https://lore.kernel.org/lkml/20200407183742.4344-1-joro@8bytes.org/
->
-> Changes v1->v2:
->
-> 	* Rebased to v5.7-rc1
->
-> 	* Re-wrote the arm-smmu changes as suggested by Robin Murphy
->
-> 	* Re-worked the Exynos patches to hopefully not break the
-> 	  driver anymore
 
-Thanks for this rework. This version is much better. Works fine on 
-various Exynos-based boards (ARM and ARM64).
+Le 16/04/2020 à 13:16, Wang Wenhu a écrit :
+> A driver for freescale 85xx platforms to access the Cache-Sram form
+> user level. This is extremely helpful for some user-space applications
+> that require high performance memory accesses.
+> 
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Christophe Leroy <christophe.leroy@c-s.fr>
+> Cc: Scott Wood <oss@buserror.net>
+> Cc: Michael Ellerman <mpe@ellerman.id.au>
+> Cc: linuxppc-dev@lists.ozlabs.org
+> Signed-off-by: Wang Wenhu <wenhu.wang@vivo.com>
+> ---
+> Changes since v1:
+>   * Addressed comments from Greg K-H
+>   * Moved kfree(info->name) into uio_info_free_internal()
+> Changes since v2:
+>   * Addressed comments from Greg, Scott and Christophe
+>   * Use "uiomem->internal_addr" as if condition for sram memory free,
+>     and memset the uiomem entry
+>   * Modified of_match_table make the driver apart from Cache-Sram HW info
+>     which belong to the HW level driver fsl_85xx_cache_sram to match
+>   * Use roundup_pow_of_two for align calculation
+>   * Remove useless clear block of uiomem entries.
+>   * Use UIO_INFO_VER micro for info->version, and define it as
+>     "devicetree,pseudo", meaning this is pseudo device and probed from
+>     device tree configuration
+>   * Select FSL_85XX_CACHE_SRAM rather than depends on it
+> ---
+>   drivers/uio/Kconfig                   |   9 ++
+>   drivers/uio/Makefile                  |   1 +
+>   drivers/uio/uio_fsl_85xx_cache_sram.c | 158 ++++++++++++++++++++++++++
+>   3 files changed, 168 insertions(+)
+>   create mode 100644 drivers/uio/uio_fsl_85xx_cache_sram.c
+> 
+> diff --git a/drivers/uio/Kconfig b/drivers/uio/Kconfig
+> index 202ee81cfc2b..9c3b47461b71 100644
+> --- a/drivers/uio/Kconfig
+> +++ b/drivers/uio/Kconfig
+> @@ -105,6 +105,15 @@ config UIO_NETX
+>   	  To compile this driver as a module, choose M here; the module
+>   	  will be called uio_netx.
+>   
+> +config UIO_FSL_85XX_CACHE_SRAM
+> +	tristate "Freescale 85xx Cache-Sram driver"
+> +	depends on FSL_SOC_BOOKE && PPC32
+> +	select FSL_85XX_CACHE_SRAM
+> +	help
+> +	  Generic driver for accessing the Cache-Sram form user level. This
+> +	  is extremely helpful for some user-space applications that require
+> +	  high performance memory accesses.
+> +
+>   config UIO_FSL_ELBC_GPCM
+>   	tristate "eLBC/GPCM driver"
+>   	depends on FSL_LBC
+> diff --git a/drivers/uio/Makefile b/drivers/uio/Makefile
+> index c285dd2a4539..be2056cffc21 100644
+> --- a/drivers/uio/Makefile
+> +++ b/drivers/uio/Makefile
+> @@ -10,4 +10,5 @@ obj-$(CONFIG_UIO_NETX)	+= uio_netx.o
+>   obj-$(CONFIG_UIO_PRUSS)         += uio_pruss.o
+>   obj-$(CONFIG_UIO_MF624)         += uio_mf624.o
+>   obj-$(CONFIG_UIO_FSL_ELBC_GPCM)	+= uio_fsl_elbc_gpcm.o
+> +obj-$(CONFIG_UIO_FSL_85XX_CACHE_SRAM)	+= uio_fsl_85xx_cache_sram.o
+>   obj-$(CONFIG_UIO_HV_GENERIC)	+= uio_hv_generic.o
+> diff --git a/drivers/uio/uio_fsl_85xx_cache_sram.c b/drivers/uio/uio_fsl_85xx_cache_sram.c
+> new file mode 100644
+> index 000000000000..8701df695307
+> --- /dev/null
+> +++ b/drivers/uio/uio_fsl_85xx_cache_sram.c
+> @@ -0,0 +1,158 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (C) 2020 Vivo Communication Technology Co. Ltd.
+> + * Copyright (C) 2020 Wang Wenhu <wenhu.wang@vivo.com>
+> + * All rights reserved.
+> + */
+> +
+> +#include <linux/platform_device.h>
+> +#include <linux/uio_driver.h>
+> +#include <linux/stringify.h>
+> +#include <linux/module.h>
+> +#include <linux/kernel.h>
+> +#include <asm/fsl_85xx_cache_sram.h>
+> +
+> +#define DRIVER_NAME	"uio_fsl_85xx_cache_sram"
+> +#define UIO_INFO_VER	"devicetree,pseudo"
+> +#define UIO_NAME	"uio_cache_sram"
+> +
+> +static void uio_info_free_internal(struct uio_info *info)
+> +{
+> +	struct uio_mem *uiomem = info->mem;
+> +
+> +	while (uiomem < &info->mem[MAX_UIO_MAPS]) {
 
-Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
+As suggested by Scott, maybe it would be better to use a loop with an 
+index, something like
 
-Acked-by: Marek Szyprowski <m.szyprowski@samsung.com> (for Exynos and 
-core changes)
+	for (i = 0; i < MAX_UIO_MAPS; i++, uiomem++) {
+		struct uio_mem *uiomem = info->mem[i];
 
-> 	* Fixed a missing mutex_unlock() reported by Marek Szyprowski,
-> 	  thanks for that.
->
-> There is also a git-branch available with these patches applied:
->
-> 	https://git.kernel.org/pub/scm/linux/kernel/git/joro/linux.git/log/?h=iommu-probe-device-v2
->
-> Please review.
->
-> Thanks,
->
-> 	Joerg
->
-> Joerg Roedel (32):
->    iommu: Move default domain allocation to separate function
->    iommu/amd: Implement iommu_ops->def_domain_type call-back
->    iommu/vt-d: Wire up iommu_ops->def_domain_type
->    iommu/amd: Remove dma_mask check from check_device()
->    iommu/amd: Return -ENODEV in add_device when device is not handled by
->      IOMMU
->    iommu: Add probe_device() and remove_device() call-backs
->    iommu: Move default domain allocation to iommu_probe_device()
->    iommu: Keep a list of allocated groups in __iommu_probe_device()
->    iommu: Move new probe_device path to separate function
->    iommu: Split off default domain allocation from group assignment
->    iommu: Move iommu_group_create_direct_mappings() out of
->      iommu_group_add_device()
->    iommu: Export bus_iommu_probe() and make is safe for re-probing
->    iommu/amd: Remove dev_data->passthrough
->    iommu/amd: Convert to probe/release_device() call-backs
->    iommu/vt-d: Convert to probe/release_device() call-backs
->    iommu/arm-smmu: Convert to probe/release_device() call-backs
->    iommu/pamu: Convert to probe/release_device() call-backs
->    iommu/s390: Convert to probe/release_device() call-backs
->    iommu/virtio: Convert to probe/release_device() call-backs
->    iommu/msm: Convert to probe/release_device() call-backs
->    iommu/mediatek: Convert to probe/release_device() call-backs
->    iommu/mediatek-v1 Convert to probe/release_device() call-backs
->    iommu/qcom: Convert to probe/release_device() call-backs
->    iommu/rockchip: Convert to probe/release_device() call-backs
->    iommu/tegra: Convert to probe/release_device() call-backs
->    iommu/renesas: Convert to probe/release_device() call-backs
->    iommu/omap: Remove orphan_dev tracking
->    iommu/omap: Convert to probe/release_device() call-backs
->    iommu/exynos: Use first SYSMMU in controllers list for IOMMU core
->    iommu/exynos: Convert to probe/release_device() call-backs
->    iommu: Remove add_device()/remove_device() code-paths
->    iommu: Unexport iommu_group_get_for_dev()
->
-> Sai Praneeth Prakhya (1):
->    iommu: Add def_domain_type() callback in iommu_ops
->
->   drivers/iommu/amd_iommu.c       |  97 ++++----
->   drivers/iommu/amd_iommu_types.h |   1 -
->   drivers/iommu/arm-smmu-v3.c     |  38 +--
->   drivers/iommu/arm-smmu.c        |  39 ++--
->   drivers/iommu/exynos-iommu.c    |  24 +-
->   drivers/iommu/fsl_pamu_domain.c |  22 +-
->   drivers/iommu/intel-iommu.c     |  68 +-----
->   drivers/iommu/iommu.c           | 393 +++++++++++++++++++++++++-------
->   drivers/iommu/ipmmu-vmsa.c      |  60 ++---
->   drivers/iommu/msm_iommu.c       |  34 +--
->   drivers/iommu/mtk_iommu.c       |  24 +-
->   drivers/iommu/mtk_iommu_v1.c    |  50 ++--
->   drivers/iommu/omap-iommu.c      |  99 ++------
->   drivers/iommu/qcom_iommu.c      |  24 +-
->   drivers/iommu/rockchip-iommu.c  |  26 +--
->   drivers/iommu/s390-iommu.c      |  22 +-
->   drivers/iommu/tegra-gart.c      |  24 +-
->   drivers/iommu/tegra-smmu.c      |  31 +--
->   drivers/iommu/virtio-iommu.c    |  41 +---
->   include/linux/iommu.h           |  21 +-
->   20 files changed, 533 insertions(+), 605 deletions(-)
->
-Best regards
--- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
+> +		if (uiomem->internal_addr) {
+> +			mpc85xx_cache_sram_free(uiomem->internal_addr);
+> +			kfree(uiomem->name);
 
+Unneeded when using devm_kstrdup(), see in the probe function.
+
+> +			memset(uiomem, 0, sizeof(*uiomem));
+> +		}
+> +		uiomem++;
+> +	}
+> +
+> +	kfree(info->name);
+
+That's a bit unbalanced. This function is handy for the things allocated 
+inside the loop, but for the info->name allocated outside the loop, it 
+should be released outside this function.
+
+At the end if you use devm_kstrdup(), it will void anyway.
+
+> +}
+> +
+> +static int uio_fsl_85xx_cache_sram_probe(struct platform_device *pdev)
+> +{
+> +	struct device_node *parent = pdev->dev.of_node;
+> +	struct device_node *node = NULL;
+> +	struct uio_info *info;
+> +	struct uio_mem *uiomem;
+> +	const char *dt_name;
+> +	u32 mem_size;
+> +	int ret;
+> +
+> +	/* alloc uio_info for one device */
+> +	info = kzalloc(sizeof(*info), GFP_KERNEL);
+
+Maybe use devm_kzalloc(). That way, it will be automatically freed when 
+the driver is released, both a normal release and on probe failure.
+
+> +	if (!info)
+> +		return -ENOMEM;
+> +
+> +	/* get optional uio name */
+> +	if (of_property_read_string(parent, "uio_name", &dt_name))
+> +		dt_name = UIO_NAME;
+> +
+> +	info->name = kstrdup(dt_name, GFP_KERNEL);
+
+Can use devm_kstrdup()
+
+> +	if (!info->name) {
+> +		ret = -ENOMEM;
+
+If using devm_kzalloc(), you can then directly do return -ENOMEM, and 
+the release will be automatic.
+
+> +		goto err_info_free;
+> +	}
+> +
+> +	uiomem = info->mem;
+> +	for_each_child_of_node(parent, node) {
+> +		void *virt;
+> +		phys_addr_t phys;
+> +
+> +		ret = of_property_read_u32(node, "cache-mem-size", &mem_size);
+> +		if (ret) {
+> +			ret = -EINVAL;
+> +			goto err_info_free_internal;
+> +		}
+> +
+> +		if (mem_size == 0) {
+> +			dev_err(&pdev->dev, "cache-mem-size should not be 0\n");
+> +			ret = -EINVAL;
+> +			goto err_info_free_internal;
+> +		}
+> +
+> +		virt = mpc85xx_cache_sram_alloc(mem_size,
+> +						&phys,
+
+I think &phys can fit on first line.
+
+> +						roundup_pow_of_two(mem_size));
+> +		if (!virt) {
+> +			/* mpc85xx_cache_sram_alloc to define the real cause */
+> +			ret = -ENOMEM;
+> +			goto err_info_free_internal;
+> +		}
+> +
+> +		uiomem->memtype = UIO_MEM_PHYS;
+> +		uiomem->addr = phys;
+> +		uiomem->size = mem_size;
+> +		uiomem->name = kstrdup(node->name, GFP_KERNEL);;
+
+Use devm_kstrdup()
+
+> +		uiomem->internal_addr = virt;
+> +		uiomem++;
+> +
+> +		if (uiomem >= &info->mem[MAX_UIO_MAPS]) {
+> +			dev_warn(&pdev->dev, "more than %d uio-maps for device.\n",
+> +				 MAX_UIO_MAPS);
+> +			break;
+> +		}
+> +	}
+> +
+> +	if (uiomem == info->mem) {
+> +		dev_err(&pdev->dev, "error no valid uio-map configured\n");
+> +		ret = -EINVAL;
+> +		goto err_info_free_internal;
+
+Is there anything to free up if nothing has been allocated ?
+
+> +	}
+> +
+> +	info->version = UIO_INFO_VER;
+> +
+> +	/* register uio device */
+> +	if (uio_register_device(&pdev->dev, info)) {
+> +		dev_err(&pdev->dev, "uio registration failed\n");
+> +		ret = -ENODEV;
+> +		goto err_info_free_internal;
+> +	}
+> +
+> +	platform_set_drvdata(pdev, info);
+> +
+> +	return 0;
+> +err_info_free_internal:
+> +	uio_info_free_internal(info);
+> +err_info_free:
+> +	kfree(info);
+
+Shouldn't be needed when using devm_kzalloc().
+
+> +	return ret;
+> +}
+> +
+> +static int uio_fsl_85xx_cache_sram_remove(struct platform_device *pdev)
+> +{
+> +	struct uio_info *info = platform_get_drvdata(pdev);
+> +
+> +	uio_unregister_device(info);
+> +
+> +	uio_info_free_internal(info);
+> +
+> +	kfree(info);
+
+Not needed when using dev_kzalloc()
+
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id uio_mpc85xx_l2ctlr_of_match[] = {
+> +	{	.compatible = "uio,mpc85xx-cache-sram",	},
+> +	{},
+> +};
+> +
+> +static struct platform_driver uio_fsl_85xx_cache_sram = {
+> +	.probe = uio_fsl_85xx_cache_sram_probe,
+> +	.remove = uio_fsl_85xx_cache_sram_remove,
+> +	.driver = {
+> +		.name = DRIVER_NAME,
+> +		.owner = THIS_MODULE,
+> +		.of_match_table	= uio_mpc85xx_l2ctlr_of_match,
+> +	},
+> +};
+> +
+> +module_platform_driver(uio_fsl_85xx_cache_sram);
+> +
+> +MODULE_AUTHOR("Wang Wenhu <wenhu.wang@vivo.com>");
+> +MODULE_DESCRIPTION("Freescale MPC85xx Cache-Sram UIO Platform Driver");
+> +MODULE_ALIAS("platform:" DRIVER_NAME);
+> +MODULE_LICENSE("GPL v2");
+> 
+
+Christophe
