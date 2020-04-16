@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 532C1C2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:46:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FDEEC2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:47:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2901D21744
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:46:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FDD32222C
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:47:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587044818;
-	bh=Ccx5IMb0hrnaC5537dtoCxBIqyonxRrmjubp0SWGv5o=;
+	s=default; t=1587044826;
+	bh=akbKUhbtfBKfRWBbrLrWfpWB85pshxJLlbLzz96tEAc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ax/IFKvQnhW14VivZuQoVv5QgSxzU9FxgpntHRUYTmPb/1lyDp0Nm3vGQSnbnOPIu
-	 g/NibASg/rt2DXbmg0kGek1jz0MEw0upgCBQp3QbpUr5z8svPT/LEa3o2CzpeslHi6
-	 9emNt2luuZXaw5p/3Gyx/6Pm2VOkqGBvrs7zsOQA=
+	b=L+UVzp08fctfQm1Jywi4s34JDRZungScGBVu9mzBnAMtgpO2Bw+FMbq4jM/2bJrTM
+	 Csy8XQ5xfaJ9H0S+dF0lBoCS0Dgk7Wwg+aOJEwUaod8IN8zwBf5YVxpX9pIqvjojn9
+	 vVLxU4RlKCizPvUMGMxDA5uvXmtvCccWpY0zBu+o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2898634AbgDPNqy (ORCPT
+        id S1731800AbgDPNrE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 09:46:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47220 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 09:47:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47266 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2895984AbgDPNfT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:35:19 -0400
+        id S2897087AbgDPNfV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:35:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 561D420732;
-        Thu, 16 Apr 2020 13:35:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CC891208E4;
+        Thu, 16 Apr 2020 13:35:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044118;
-        bh=Ccx5IMb0hrnaC5537dtoCxBIqyonxRrmjubp0SWGv5o=;
+        s=default; t=1587044121;
+        bh=akbKUhbtfBKfRWBbrLrWfpWB85pshxJLlbLzz96tEAc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yx/9meMjizZ3N5cAYP9j9jIbNjgk7FPIHyENHyziBYfNkilNOLJxipmkiD9NCLzqF
-         pvg+9m0oKzpsshRF4ejN0b070xBEYPSNfi+0cSmnq/5DztozAOnQb4u44dxL16tUcN
-         wRj3xBv7r7da08iqmK0T3w+C/ddbTwdc0Gg7vMGM=
+        b=igg14mZGHNzembiGg755DUgjC7pRMtwRT9iEIatnv2alTsTztOnsrZKIIPIui4BLh
+         Ks2sEECbDrQ+jhhSIpRKka+Vee2pI+9zrzPA4sYV7fh4KiZSLscrmMCFXQPKznaRxE
+         SiB+oiCB7OESjtuP3wCxmIn52iWMIeq2quJW/vDY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Jaroslav Kysela <perex@perex.cz>,
         Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.5 089/257] ALSA: hda: Fix potential access overflow in beep helper
-Date:   Thu, 16 Apr 2020 15:22:20 +0200
-Message-Id: <20200416131337.097785990@linuxfoundation.org>
+Subject: [PATCH 5.5 090/257] ALSA: ice1724: Fix invalid access for enumerated ctl items
+Date:   Thu, 16 Apr 2020 15:22:21 +0200
+Message-Id: <20200416131337.253642879@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.891903893@linuxfoundation.org>
 References: <20200416131325.891903893@linuxfoundation.org>
@@ -61,44 +61,44 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Takashi Iwai <tiwai@suse.de>
 
-commit 0ad3f0b384d58f3bd1f4fb87d0af5b8f6866f41a upstream.
+commit c47914c00be346bc5b48c48de7b0da5c2d1a296c upstream.
 
-The beep control helper function blindly stores the values in two
-stereo channels no matter whether the actual control is mono or
-stereo.  This is practically harmless, but it annoys the recently
-introduced sanity check, resulting in an error when the checker is
-enabled.
+The access to Analog Capture Source control value implemented in
+prodigy_hifi.c is wrong, as caught by the recently introduced sanity
+check; it should be accessing value.enumerated.item[] instead of
+value.integer.value[].  This patch corrects the wrong access pattern.
 
-This patch corrects the behavior to store only on the defined array
-member.
-
-Fixes: 0401e8548eac ("ALSA: hda - Move beep helper functions to hda_beep.c")
+Fixes: 6b8d6e5518e2 ("[ALSA] ICE1724: Added support for Audiotrak Prodigy 7.1 HiFi & HD2, Hercules Fortissimo IV")
 BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=207139
 Reviewed-by: Jaroslav Kysela <perex@perex.cz>
 Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200407084402.25589-2-tiwai@suse.de
+Link: https://lore.kernel.org/r/20200407084402.25589-3-tiwai@suse.de
 Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/pci/hda/hda_beep.c |    6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ sound/pci/ice1712/prodigy_hifi.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/sound/pci/hda/hda_beep.c
-+++ b/sound/pci/hda/hda_beep.c
-@@ -290,8 +290,12 @@ int snd_hda_mixer_amp_switch_get_beep(st
- {
- 	struct hda_codec *codec = snd_kcontrol_chip(kcontrol);
- 	struct hda_beep *beep = codec->beep;
-+	int chs = get_amp_channels(kcontrol);
-+
- 	if (beep && (!beep->enabled || !ctl_has_mute(kcontrol))) {
--		ucontrol->value.integer.value[0] =
-+		if (chs & 1)
-+			ucontrol->value.integer.value[0] = beep->enabled;
-+		if (chs & 2)
- 			ucontrol->value.integer.value[1] = beep->enabled;
- 		return 0;
- 	}
+--- a/sound/pci/ice1712/prodigy_hifi.c
++++ b/sound/pci/ice1712/prodigy_hifi.c
+@@ -536,7 +536,7 @@ static int wm_adc_mux_enum_get(struct sn
+ 	struct snd_ice1712 *ice = snd_kcontrol_chip(kcontrol);
+ 
+ 	mutex_lock(&ice->gpio_mutex);
+-	ucontrol->value.integer.value[0] = wm_get(ice, WM_ADC_MUX) & 0x1f;
++	ucontrol->value.enumerated.item[0] = wm_get(ice, WM_ADC_MUX) & 0x1f;
+ 	mutex_unlock(&ice->gpio_mutex);
+ 	return 0;
+ }
+@@ -550,7 +550,7 @@ static int wm_adc_mux_enum_put(struct sn
+ 
+ 	mutex_lock(&ice->gpio_mutex);
+ 	oval = wm_get(ice, WM_ADC_MUX);
+-	nval = (oval & 0xe0) | ucontrol->value.integer.value[0];
++	nval = (oval & 0xe0) | ucontrol->value.enumerated.item[0];
+ 	if (nval != oval) {
+ 		wm_put(ice, WM_ADC_MUX, nval);
+ 		change = 1;
 
 
