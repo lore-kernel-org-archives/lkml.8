@@ -2,116 +2,270 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D095C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 22:38:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DFF1C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 22:50:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 15B39206B9
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 22:38:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E77F22201
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 22:50:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Rj/g8RKp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728975AbgDPWik (ORCPT
+        id S1729059AbgDPWuA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 18:38:40 -0400
-Received: from mga05.intel.com ([192.55.52.43]:7423 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727910AbgDPWij (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 18:38:39 -0400
-IronPort-SDR: UXzYDfW1b1guq+RjSji5tWwv09rKstPCy0lLPs956y0/VXic7yY1k1SRjPBg2KTuE7YQIp8GJQ
- MGVSZb96W90A==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2020 15:38:38 -0700
-IronPort-SDR: TO4B+VLgyNRQ2Fizqod7x7k3vRJ5tlg08Pw1Fd44aa81hvnwA4GNkyQtIJJPty/uxyZpNJK6Mj
- znPYxDB3tbRw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,392,1580803200"; 
-   d="scan'208";a="257381079"
-Received: from unknown (HELO [10.254.73.107]) ([10.254.73.107])
-  by orsmga006.jf.intel.com with ESMTP; 16 Apr 2020 15:38:38 -0700
-Subject: Re: [PATCH, RFC] x86/mm/pat: Restore large pages after fragmentation
-To:     "Kirill A. Shutemov" <kirill@shutemov.name>
-Cc:     "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-References: <20200416213229.19174-1-kirill.shutemov@linux.intel.com>
- <bf3e6e77-b812-992c-9916-76f19ae5c94a@intel.com>
- <20200416221238.qrkaajbe3m6ca2h2@box>
-From:   Dave Hansen <dave.hansen@intel.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- mQINBE6HMP0BEADIMA3XYkQfF3dwHlj58Yjsc4E5y5G67cfbt8dvaUq2fx1lR0K9h1bOI6fC
- oAiUXvGAOxPDsB/P6UEOISPpLl5IuYsSwAeZGkdQ5g6m1xq7AlDJQZddhr/1DC/nMVa/2BoY
- 2UnKuZuSBu7lgOE193+7Uks3416N2hTkyKUSNkduyoZ9F5twiBhxPJwPtn/wnch6n5RsoXsb
- ygOEDxLEsSk/7eyFycjE+btUtAWZtx+HseyaGfqkZK0Z9bT1lsaHecmB203xShwCPT49Blxz
- VOab8668QpaEOdLGhtvrVYVK7x4skyT3nGWcgDCl5/Vp3TWA4K+IofwvXzX2ON/Mj7aQwf5W
- iC+3nWC7q0uxKwwsddJ0Nu+dpA/UORQWa1NiAftEoSpk5+nUUi0WE+5DRm0H+TXKBWMGNCFn
- c6+EKg5zQaa8KqymHcOrSXNPmzJuXvDQ8uj2J8XuzCZfK4uy1+YdIr0yyEMI7mdh4KX50LO1
- pmowEqDh7dLShTOif/7UtQYrzYq9cPnjU2ZW4qd5Qz2joSGTG9eCXLz5PRe5SqHxv6ljk8mb
- ApNuY7bOXO/A7T2j5RwXIlcmssqIjBcxsRRoIbpCwWWGjkYjzYCjgsNFL6rt4OL11OUF37wL
- QcTl7fbCGv53KfKPdYD5hcbguLKi/aCccJK18ZwNjFhqr4MliQARAQABtEVEYXZpZCBDaHJp
- c3RvcGhlciBIYW5zZW4gKEludGVsIFdvcmsgQWRkcmVzcykgPGRhdmUuaGFuc2VuQGludGVs
- LmNvbT6JAjgEEwECACIFAlQ+9J0CGwMGCwkIBwMCBhUIAgkKCwQWAgMBAh4BAheAAAoJEGg1
- lTBwyZKwLZUP/0dnbhDc229u2u6WtK1s1cSd9WsflGXGagkR6liJ4um3XCfYWDHvIdkHYC1t
- MNcVHFBwmQkawxsYvgO8kXT3SaFZe4ISfB4K4CL2qp4JO+nJdlFUbZI7cz/Td9z8nHjMcWYF
- IQuTsWOLs/LBMTs+ANumibtw6UkiGVD3dfHJAOPNApjVr+M0P/lVmTeP8w0uVcd2syiaU5jB
- aht9CYATn+ytFGWZnBEEQFnqcibIaOrmoBLu2b3fKJEd8Jp7NHDSIdrvrMjYynmc6sZKUqH2
- I1qOevaa8jUg7wlLJAWGfIqnu85kkqrVOkbNbk4TPub7VOqA6qG5GCNEIv6ZY7HLYd/vAkVY
- E8Plzq/NwLAuOWxvGrOl7OPuwVeR4hBDfcrNb990MFPpjGgACzAZyjdmYoMu8j3/MAEW4P0z
- F5+EYJAOZ+z212y1pchNNauehORXgjrNKsZwxwKpPY9qb84E3O9KYpwfATsqOoQ6tTgr+1BR
- CCwP712H+E9U5HJ0iibN/CDZFVPL1bRerHziuwuQuvE0qWg0+0SChFe9oq0KAwEkVs6ZDMB2
- P16MieEEQ6StQRlvy2YBv80L1TMl3T90Bo1UUn6ARXEpcbFE0/aORH/jEXcRteb+vuik5UGY
- 5TsyLYdPur3TXm7XDBdmmyQVJjnJKYK9AQxj95KlXLVO38lcuQINBFRjzmoBEACyAxbvUEhd
- GDGNg0JhDdezyTdN8C9BFsdxyTLnSH31NRiyp1QtuxvcqGZjb2trDVuCbIzRrgMZLVgo3upr
- MIOx1CXEgmn23Zhh0EpdVHM8IKx9Z7V0r+rrpRWFE8/wQZngKYVi49PGoZj50ZEifEJ5qn/H
- Nsp2+Y+bTUjDdgWMATg9DiFMyv8fvoqgNsNyrrZTnSgoLzdxr89FGHZCoSoAK8gfgFHuO54B
- lI8QOfPDG9WDPJ66HCodjTlBEr/Cwq6GruxS5i2Y33YVqxvFvDa1tUtl+iJ2SWKS9kCai2DR
- 3BwVONJEYSDQaven/EHMlY1q8Vln3lGPsS11vSUK3QcNJjmrgYxH5KsVsf6PNRj9mp8Z1kIG
- qjRx08+nnyStWC0gZH6NrYyS9rpqH3j+hA2WcI7De51L4Rv9pFwzp161mvtc6eC/GxaiUGuH
- BNAVP0PY0fqvIC68p3rLIAW3f97uv4ce2RSQ7LbsPsimOeCo/5vgS6YQsj83E+AipPr09Caj
- 0hloj+hFoqiticNpmsxdWKoOsV0PftcQvBCCYuhKbZV9s5hjt9qn8CE86A5g5KqDf83Fxqm/
- vXKgHNFHE5zgXGZnrmaf6resQzbvJHO0Fb0CcIohzrpPaL3YepcLDoCCgElGMGQjdCcSQ+Ci
- FCRl0Bvyj1YZUql+ZkptgGjikQARAQABiQIfBBgBAgAJBQJUY85qAhsMAAoJEGg1lTBwyZKw
- l4IQAIKHs/9po4spZDFyfDjunimEhVHqlUt7ggR1Hsl/tkvTSze8pI1P6dGp2XW6AnH1iayn
- yRcoyT0ZJ+Zmm4xAH1zqKjWplzqdb/dO28qk0bPso8+1oPO8oDhLm1+tY+cOvufXkBTm+whm
- +AyNTjaCRt6aSMnA/QHVGSJ8grrTJCoACVNhnXg/R0g90g8iV8Q+IBZyDkG0tBThaDdw1B2l
- asInUTeb9EiVfL/Zjdg5VWiF9LL7iS+9hTeVdR09vThQ/DhVbCNxVk+DtyBHsjOKifrVsYep
- WpRGBIAu3bK8eXtyvrw1igWTNs2wazJ71+0z2jMzbclKAyRHKU9JdN6Hkkgr2nPb561yjcB8
- sIq1pFXKyO+nKy6SZYxOvHxCcjk2fkw6UmPU6/j/nQlj2lfOAgNVKuDLothIxzi8pndB8Jju
- KktE5HJqUUMXePkAYIxEQ0mMc8Po7tuXdejgPMwgP7x65xtfEqI0RuzbUioFltsp1jUaRwQZ
- MTsCeQDdjpgHsj+P2ZDeEKCbma4m6Ez/YWs4+zDm1X8uZDkZcfQlD9NldbKDJEXLIjYWo1PH
- hYepSffIWPyvBMBTW2W5FRjJ4vLRrJSUoEfJuPQ3vW9Y73foyo/qFoURHO48AinGPZ7PC7TF
- vUaNOTjKedrqHkaOcqB185ahG2had0xnFsDPlx5y
-Message-ID: <fb793919-df5d-42cc-6b2e-d387e0faa42e@intel.com>
-Date:   Thu, 16 Apr 2020 15:38:38 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        Thu, 16 Apr 2020 18:50:00 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:47436 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728305AbgDPWt7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 18:49:59 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03GMnhY3112084;
+        Thu, 16 Apr 2020 22:49:43 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=QlfJLMxks0tyI/rrqcehNcCSZpC0cqzuJ2JiKv9/wiY=;
+ b=Rj/g8RKpnk4K2a20FUpS21AE9ugzQzNN6SMTcaOOb0JRQIJwS7d3vBKeogdDaJwFZ/Ix
+ ts6i6onGkkSqF1uH+ZGHxNDUiJalkLvFaX50AACx9dII9qySTfXG5eG9njOaPATzLa/D
+ eTlFi7v0s5kPBDQ9bXAAPy7YhGCTpk1cXTMe9+V5uNdMHDlvZptEk+Fq/I5oDtrZlBRR
+ JvPMfGqi2hVIKGnKfrEPUgQ9qrRuidR1Z+tKqQmwG18nnXJZq6HEMDEXGNxHyH04qLQv
+ nBbp7RNnqPt5KakMrVNMdoJ1IR1yV8vSjbcjnLujYIv1vntB+FpWiruFP4vUJLGgePE7 FA== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 30e0aa9spu-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 16 Apr 2020 22:49:42 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03GMbCNR164717;
+        Thu, 16 Apr 2020 22:49:42 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3020.oracle.com with ESMTP id 30emep8byd-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 16 Apr 2020 22:49:42 +0000
+Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 03GMndXj001342;
+        Thu, 16 Apr 2020 22:49:39 GMT
+Received: from localhost (/10.159.254.82)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 16 Apr 2020 15:49:38 -0700
+Date:   Thu, 16 Apr 2020 15:49:37 -0700
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Ira Weiny <ira.weiny@intel.com>
+Cc:     linux-kernel@vger.kernel.org, Jan Kara <jack@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jeff Moyer <jmoyer@redhat.com>,
+        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH RFC 4/8] fs/ext4: Introduce DAX inode flag
+Message-ID: <20200416224937.GY6749@magnolia>
+References: <20200414040030.1802884-1-ira.weiny@intel.com>
+ <20200414040030.1802884-5-ira.weiny@intel.com>
+ <20200416162504.GB6733@magnolia>
+ <20200416223327.GO2309605@iweiny-DESK2.sc.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20200416221238.qrkaajbe3m6ca2h2@box>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200416223327.GO2309605@iweiny-DESK2.sc.intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9593 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 mlxscore=0 suspectscore=0
+ mlxlogscore=999 phishscore=0 spamscore=0 bulkscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004160157
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9593 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 clxscore=1015
+ impostorscore=0 mlxlogscore=999 mlxscore=0 lowpriorityscore=0
+ suspectscore=0 adultscore=0 spamscore=0 malwarescore=0 phishscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004160157
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/16/20 3:12 PM, Kirill A. Shutemov wrote:
-> We already have it in kernel: CONFIG_CPA_DEBUG. It messes up with the
-> mapping every 30 seconds. It is pretty good for the change too. It
-> produces a lot of 2M/1G pages to be restored. I run it over night in my
-> setup and it survives.
+On Thu, Apr 16, 2020 at 03:33:27PM -0700, Ira Weiny wrote:
+> On Thu, Apr 16, 2020 at 09:25:04AM -0700, Darrick J. Wong wrote:
+> > On Mon, Apr 13, 2020 at 09:00:26PM -0700, ira.weiny@intel.com wrote:
+> > > From: Ira Weiny <ira.weiny@intel.com>
+> > > 
+> > > Add a flag to preserve FS_XFLAG_DAX in the ext4 inode.
+> > > 
+> > > Set the flag to be user visible and changeable.  Set the flag to be
+> > > inherited.  Allow applications to change the flag at any time.
+> > > 
+> > > Finally, on regular files, flag the inode to not be cached to facilitate
+> > > changing S_DAX on the next creation of the inode.
+> > > 
+> > > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+> > > ---
+> > >  fs/ext4/ext4.h  | 13 +++++++++----
+> > >  fs/ext4/ioctl.c | 21 ++++++++++++++++++++-
+> > >  2 files changed, 29 insertions(+), 5 deletions(-)
+> > > 
+> > > diff --git a/fs/ext4/ext4.h b/fs/ext4/ext4.h
+> > > index 61b37a052052..434021fcec88 100644
+> > > --- a/fs/ext4/ext4.h
+> > > +++ b/fs/ext4/ext4.h
+> > > @@ -415,13 +415,16 @@ struct flex_groups {
+> > >  #define EXT4_VERITY_FL			0x00100000 /* Verity protected inode */
+> > >  #define EXT4_EA_INODE_FL	        0x00200000 /* Inode used for large EA */
+> > >  #define EXT4_EOFBLOCKS_FL		0x00400000 /* Blocks allocated beyond EOF */
+> > > +
+> > > +#define EXT4_DAX_FL			0x00800000 /* Inode is DAX */
+> > 
+> > Sooo, fun fact about ext4 vs. the world--
+> > 
+> > The GETFLAGS/SETFLAGS ioctl, since it came from ext2, shares the same
+> > flag values as the ondisk inode flags in ext*.  Therefore, each of these
+> > EXT4_[whatever]_FL values are supposed to have a FS_[whatever]_FL
+> > equivalent in include/uapi/linux/fs.h.
+> 
+> Interesting...
+> 
+> > 
+> > (Note that the "[whatever]" is a straight translation since the same
+> > uapi header also defines the FS_XFLAG_[xfswhatever] flag values; ignore
+> > those.)
+> > 
+> > Evidently, FS_NOCOW_FL already took 0x800000, but ext4.h was never
+> > updated to note that the value was taken.  I think Ted might be inclined
+> > to reserve the ondisk inode bit just in case ext4 ever does support copy
+> > on write, though that's his call. :)
+> 
+> Seems like I should change this...  And I did not realize I was inherently
+> changing a bit definition which was exposed to other FS's...
 
-That's good for stability, and thanks for running it!  (and please add
-that nugget to the changelog)
+<nod> This whole thing is a mess, particularly now that we have two vfs
+ioctls to set per-fs inode attributes, both of which were inherited from
+other filesystems... :(
 
-It's good that you see it restoring some mappings, but, does it restore
-*all* the 1G/2M pages that it started with (minus the ones that were
-fractured for other reasons)?  That should be pretty easy to check for.
+> > 
+> > Long story short - can you use 0x1000000 for this instead, and add the
+> > corresponding value to the uapi fs.h?  I guess that also means that we
+> > can change FS_XFLAG_DAX (in the form of FS_DAX_FL in FSSETFLAGS) after
+> > that.
+> 
+> :-/
+> 
+> Are there any potential users of FS_XFLAG_DAX now?
+
+Yes, it's in the userspace ABI so we can't get rid of it.
+
+(FWIW there are several flags that exist in both FS_XFLAG_* and FS_*_FL
+form.)
+
+> From what it looks like, changing FS_XFLAG_DAX to FS_DAX_FL would be pretty
+> straight forward.  Just to be sure, looks like XFS converts the FS_[xxx]_FL to
+> FS_XFLAGS_[xxx] in xfs_merge_ioc_xflags()?  But it does not look like all the
+> FS_[xxx]_FL flags are converted.  Is is that XFS does not support those
+> options?  Or is it depending on the VFS layer for some of them?
+
+XFS doesn't support most of the FS_*_FL flags.
+
+--D
+
+> Ira
+> 
+> > 
+> > --D
+> > 
+> > > +
+> > >  #define EXT4_INLINE_DATA_FL		0x10000000 /* Inode has inline data. */
+> > >  #define EXT4_PROJINHERIT_FL		0x20000000 /* Create with parents projid */
+> > >  #define EXT4_CASEFOLD_FL		0x40000000 /* Casefolded file */
+> > >  #define EXT4_RESERVED_FL		0x80000000 /* reserved for ext4 lib */
+> > >  
+> > > -#define EXT4_FL_USER_VISIBLE		0x705BDFFF /* User visible flags */
+> > > -#define EXT4_FL_USER_MODIFIABLE		0x604BC0FF /* User modifiable flags */
+> > > +#define EXT4_FL_USER_VISIBLE		0x70DBDFFF /* User visible flags */
+> > > +#define EXT4_FL_USER_MODIFIABLE		0x60CBC0FF /* User modifiable flags */
+> > >  
+> > >  /* Flags we can manipulate with through EXT4_IOC_FSSETXATTR */
+> > >  #define EXT4_FL_XFLAG_VISIBLE		(EXT4_SYNC_FL | \
+> > > @@ -429,14 +432,16 @@ struct flex_groups {
+> > >  					 EXT4_APPEND_FL | \
+> > >  					 EXT4_NODUMP_FL | \
+> > >  					 EXT4_NOATIME_FL | \
+> > > -					 EXT4_PROJINHERIT_FL)
+> > > +					 EXT4_PROJINHERIT_FL | \
+> > > +					 EXT4_DAX_FL)
+> > >  
+> > >  /* Flags that should be inherited by new inodes from their parent. */
+> > >  #define EXT4_FL_INHERITED (EXT4_SECRM_FL | EXT4_UNRM_FL | EXT4_COMPR_FL |\
+> > >  			   EXT4_SYNC_FL | EXT4_NODUMP_FL | EXT4_NOATIME_FL |\
+> > >  			   EXT4_NOCOMPR_FL | EXT4_JOURNAL_DATA_FL |\
+> > >  			   EXT4_NOTAIL_FL | EXT4_DIRSYNC_FL |\
+> > > -			   EXT4_PROJINHERIT_FL | EXT4_CASEFOLD_FL)
+> > > +			   EXT4_PROJINHERIT_FL | EXT4_CASEFOLD_FL |\
+> > > +			   EXT4_DAX_FL)
+> > >  
+> > >  /* Flags that are appropriate for regular files (all but dir-specific ones). */
+> > >  #define EXT4_REG_FLMASK (~(EXT4_DIRSYNC_FL | EXT4_TOPDIR_FL | EXT4_CASEFOLD_FL |\
+> > > diff --git a/fs/ext4/ioctl.c b/fs/ext4/ioctl.c
+> > > index ee3401a32e79..ca07d5086f03 100644
+> > > --- a/fs/ext4/ioctl.c
+> > > +++ b/fs/ext4/ioctl.c
+> > > @@ -539,12 +539,15 @@ static inline __u32 ext4_iflags_to_xflags(unsigned long iflags)
+> > >  		xflags |= FS_XFLAG_NOATIME;
+> > >  	if (iflags & EXT4_PROJINHERIT_FL)
+> > >  		xflags |= FS_XFLAG_PROJINHERIT;
+> > > +	if (iflags & EXT4_DAX_FL)
+> > > +		xflags |= FS_XFLAG_DAX;
+> > >  	return xflags;
+> > >  }
+> > >  
+> > >  #define EXT4_SUPPORTED_FS_XFLAGS (FS_XFLAG_SYNC | FS_XFLAG_IMMUTABLE | \
+> > >  				  FS_XFLAG_APPEND | FS_XFLAG_NODUMP | \
+> > > -				  FS_XFLAG_NOATIME | FS_XFLAG_PROJINHERIT)
+> > > +				  FS_XFLAG_NOATIME | FS_XFLAG_PROJINHERIT | \
+> > > +				  FS_XFLAG_DAX)
+> > >  
+> > >  /* Transfer xflags flags to internal */
+> > >  static inline unsigned long ext4_xflags_to_iflags(__u32 xflags)
+> > > @@ -563,6 +566,8 @@ static inline unsigned long ext4_xflags_to_iflags(__u32 xflags)
+> > >  		iflags |= EXT4_NOATIME_FL;
+> > >  	if (xflags & FS_XFLAG_PROJINHERIT)
+> > >  		iflags |= EXT4_PROJINHERIT_FL;
+> > > +	if (xflags & FS_XFLAG_DAX)
+> > > +		iflags |= EXT4_DAX_FL;
+> > >  
+> > >  	return iflags;
+> > >  }
+> > > @@ -813,6 +818,17 @@ static int ext4_ioctl_get_es_cache(struct file *filp, unsigned long arg)
+> > >  	return error;
+> > >  }
+> > >  
+> > > +static void ext4_dax_dontcache(struct inode *inode, unsigned int flags)
+> > > +{
+> > > +	struct ext4_inode_info *ei = EXT4_I(inode);
+> > > +
+> > > +	if (S_ISDIR(inode->i_mode))
+> > > +		return;
+> > > +
+> > > +	if ((ei->i_flags ^ flags) == EXT4_DAX_FL)
+> > > +		inode->i_state |= I_DONTCACHE;
+> > > +}
+> > > +
+> > >  long ext4_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
+> > >  {
+> > >  	struct inode *inode = file_inode(filp);
+> > > @@ -1273,6 +1289,9 @@ long ext4_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
+> > >  			return err;
+> > >  
+> > >  		inode_lock(inode);
+> > > +
+> > > +		ext4_dax_dontcache(inode, flags);
+> > > +
+> > >  		ext4_fill_fsxattr(inode, &old_fa);
+> > >  		err = vfs_ioc_fssetxattr_check(inode, &old_fa, &fa);
+> > >  		if (err)
+> > > -- 
+> > > 2.25.1
+> > > 
