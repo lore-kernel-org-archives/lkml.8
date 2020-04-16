@@ -2,81 +2,124 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 567C9C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 07:16:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C249DC2BA2B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 07:17:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 323D0206D5
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 07:16:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9955C206D5
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 07:17:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="VzBHyF2i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439011AbgDPHQt (ORCPT
+        id S2439027AbgDPHRE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 03:16:49 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:2380 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2438717AbgDPHQA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 03:16:00 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 9916B9C4B29A166B4B0F;
-        Thu, 16 Apr 2020 15:15:57 +0800 (CST)
-Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
- (10.3.19.203) with Microsoft SMTP Server (TLS) id 14.3.487.0; Thu, 16 Apr
- 2020 15:15:52 +0800
-Subject: Re: [f2fs-dev] [PATCH] f2fs: fix quota_sync failure due to
- f2fs_lock_op
-To:     Jaegeuk Kim <jaegeuk@kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-f2fs-devel@lists.sourceforge.net>, <kernel-team@android.com>
-References: <20200409173056.229855-1-jaegeuk@kernel.org>
-From:   Chao Yu <yuchao0@huawei.com>
-Message-ID: <77e9f2e6-f3f3-8ca9-e6b5-3d57c4d2acc5@huawei.com>
-Date:   Thu, 16 Apr 2020 15:15:51 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Thu, 16 Apr 2020 03:17:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53852 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2438101AbgDPHPi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 03:15:38 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD1D9C0610D5;
+        Thu, 16 Apr 2020 00:15:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
+        :Reply-To:Content-Type:Content-ID:Content-Description;
+        bh=b7FtVufzfrDqdrI7Jtm65uDbDTAbyPNK71CKczufNq4=; b=VzBHyF2i45emK+0pREh3JHgnux
+        92tmEhshbeZ3WWV6JXXTAXpZ96YCgM3wTaQNWcOwpOYloHGfhuMZFUNOYWJW0iceUP47oI7f+YsTa
+        2W5m1eX4zf7tXpCo4tNoxsTAbJn5R3Ni3PEF3WtkmxY2Re+6F31ldzmvyFSCOIx6NmbfAbd3t8x1n
+        V/QkrkQWcGIRgZ91DovFPzeYh61xpleJZyopSTm0XMlH7haCXCEmR1JsWMILPkA88VvxoF5/ff9XM
+        C9GADxCYpLZsVN41pD69JvnkzFjdaBFT10A/dI9KfIFtH71qaNrJtUl74ovQvfch6sEoszJHqn1L0
+        0vjjcSdA==;
+Received: from [2001:4bb8:184:4aa1:c70:4a89:bc61:2] (helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jOykE-0003IA-Fn; Thu, 16 Apr 2020 07:15:31 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     axboe@kernel.dk
+Cc:     yuyufen@huawei.com, tj@kernel.org, jack@suse.cz,
+        bvanassche@acm.org, tytso@mit.edu, gregkh@linuxfoundation.org,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 3/8] bdi: add a ->dev_name field to struct backing_dev_info
+Date:   Thu, 16 Apr 2020 09:15:14 +0200
+Message-Id: <20200416071519.807660-4-hch@lst.de>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200416071519.807660-1-hch@lst.de>
+References: <20200416071519.807660-1-hch@lst.de>
 MIME-Version: 1.0
-In-Reply-To: <20200409173056.229855-1-jaegeuk@kernel.org>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.134.22.195]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/4/10 1:30, Jaegeuk Kim wrote:
-> f2fs_quota_sync() uses f2fs_lock_op() before flushing dirty pages, but
-> f2fs_write_data_page() returns EAGAIN.
-> Likewise dentry blocks, we can just bypass getting the lock, since quota
-> blocks are also maintained by checkpoint.
-> 
-> Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
-> ---
->  fs/f2fs/data.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
-> index 358c5f0bd6346..1139d8cf4b8d1 100644
-> --- a/fs/f2fs/data.c
-> +++ b/fs/f2fs/data.c
-> @@ -2707,8 +2707,8 @@ int f2fs_write_single_data_page(struct page *page, int *submitted,
->  			f2fs_available_free_memory(sbi, BASE_CHECK))))
->  		goto redirty_out;
->  
-> -	/* Dentry blocks are controlled by checkpoint */
-> -	if (S_ISDIR(inode->i_mode)) {
-> +	/* Dentry/quota blocks are controlled by checkpoint */
-> +	if (S_ISDIR(inode->i_mode) || IS_NOQUOTA(inode)) {
+Cache a copy of the name for the life time of the backing_dev_info
+structure so that we can reference it even after unregistering.
 
-Should cover multipage write path, in the case of normal quota file
-(such as /quota.user or /quota.group) is set as compressed.
+Fixes: 68f23b89067f ("memcg: fix a crash in wb_workfn when a device disappears")
+Reported-by: Yufen Yu <yuyufen@huawei.com>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+---
+ include/linux/backing-dev-defs.h |  1 +
+ mm/backing-dev.c                 | 13 ++++++++++---
+ 2 files changed, 11 insertions(+), 3 deletions(-)
 
-Thanks,
+diff --git a/include/linux/backing-dev-defs.h b/include/linux/backing-dev-defs.h
+index 4fc87dee005a..249590bcccf7 100644
+--- a/include/linux/backing-dev-defs.h
++++ b/include/linux/backing-dev-defs.h
+@@ -220,6 +220,7 @@ struct backing_dev_info {
+ 	wait_queue_head_t wb_waitq;
+ 
+ 	struct device *dev;
++	const char *dev_name;
+ 	struct device *owner;
+ 
+ 	struct timer_list laptop_mode_wb_timer;
+diff --git a/mm/backing-dev.c b/mm/backing-dev.c
+index c2c44c89ee5d..4f6c05df72f9 100644
+--- a/mm/backing-dev.c
++++ b/mm/backing-dev.c
+@@ -938,9 +938,15 @@ int bdi_register_va(struct backing_dev_info *bdi, const char *fmt, va_list args)
+ 	if (bdi->dev)	/* The driver needs to use separate queues per device */
+ 		return 0;
+ 
+-	dev = device_create_vargs(bdi_class, NULL, MKDEV(0, 0), bdi, fmt, args);
+-	if (IS_ERR(dev))
++	bdi->dev_name = kvasprintf(GFP_KERNEL, fmt, args);
++	if (!bdi->dev_name)
++		return -ENOMEM;
++
++	dev = device_create(bdi_class, NULL, MKDEV(0, 0), bdi, bdi->dev_name);
++	if (IS_ERR(dev)) {
++		kfree(bdi->dev_name);
+ 		return PTR_ERR(dev);
++	}
+ 
+ 	cgwb_bdi_register(bdi);
+ 	bdi->dev = dev;
+@@ -1034,6 +1040,7 @@ static void release_bdi(struct kref *ref)
+ 	WARN_ON_ONCE(bdi->dev);
+ 	wb_exit(&bdi->wb);
+ 	cgwb_bdi_exit(bdi);
++	kfree(bdi->dev_name);
+ 	kfree(bdi);
+ }
+ 
+@@ -1047,7 +1054,7 @@ const char *bdi_dev_name(struct backing_dev_info *bdi)
+ {
+ 	if (!bdi || !bdi->dev)
+ 		return bdi_unknown_name;
+-	return dev_name(bdi->dev);
++	return bdi->dev_name;
+ }
+ EXPORT_SYMBOL_GPL(bdi_dev_name);
+ 
+-- 
+2.25.1
 
->  		fio.need_lock = LOCK_DONE;
->  		err = f2fs_do_write_data_page(&fio);
->  		goto done;
-> 
