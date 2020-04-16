@@ -7,49 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EF00C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:55:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E460CC2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:55:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F0EE221927
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:55:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B12472078B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:55:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587045303;
-	bh=HLGjj7h3WyvaDbSqmdm6oGvafQSOOqJMpGqMCWrwNTY=;
+	s=default; t=1587045317;
+	bh=1W5KIwf4IEZ/S6UWBR0GAJ66klrhUvvnU62RubpXa4Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AWnn/zj6UBmu4zL0gpEzy6VNFalWHS5PMGiQ7lZw2KJcXpXuv6Zzg6ojZYMSFdb1O
-	 zId5C1/3IpCMNECXeuhZw9LMlH71kcKlXQOk1KpiBE6jNuAPrT1xNrHDgxf8SgEhYQ
-	 Ltf18uZOgJiASzBF6XDMACClI4b4224iigP9XLbE=
+	b=TpiHGAyOnaEBPECww766XgI5SL4xpVcn9Gh+e3tg6aLFzC23iMXHojl1mE84eZCrX
+	 mndiUwxnxj+xoJKnc8wIl5m541xRLiun6SsF3LLC12Ht9RKHUGkrwBYw31N5HEAWFd
+	 LiWouR5zU75PrQuiBn/sGPwwYAerbwnHmNd42l0c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409084AbgDPNy6 (ORCPT
+        id S2409122AbgDPNzK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 09:54:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50548 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 09:55:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50586 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2897637AbgDPNiG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:38:06 -0400
+        id S2897651AbgDPNiJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:38:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E4E3822201;
-        Thu, 16 Apr 2020 13:38:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7326921BE5;
+        Thu, 16 Apr 2020 13:38:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044286;
-        bh=HLGjj7h3WyvaDbSqmdm6oGvafQSOOqJMpGqMCWrwNTY=;
+        s=default; t=1587044288;
+        bh=1W5KIwf4IEZ/S6UWBR0GAJ66klrhUvvnU62RubpXa4Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nQeVuqSxGeEpCUGJ9jZBirDRvvMJCrwmGuivOqgpY8bsKEnnYajLZSH6TAQNxSARu
-         5wEuOVmQovddhA8sw+rcs07Mry2mIk35wTZsGy5uMmbvJxo/6XAh4kywnu2FeB0kLm
-         E8Zwlx+Uh+Cjqx0UYR8ugo2BBNOEd0CmZeyOp4d8=
+        b=cGmXZODKtsYuFzVEUaK/2ppN+Oxot06WimN4rSJwuFbknERLojcYrjufN7HypER8Y
+         3z+EsV0kmjWtG3Uw2olL7V2Cr0opjGB6OT+wx2UkpoIzVYxye0FxiXGJxa03UHF74I
+         kzmw1u7TgPvg3HlDgBHNAVikSuz2l4oyDmVsk/oY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>
-Subject: [PATCH 5.5 119/257] sched/fair: Fix enqueue_task_fair warning
-Date:   Thu, 16 Apr 2020 15:22:50 +0200
-Message-Id: <20200416131341.177449306@linuxfoundation.org>
+        stable@vger.kernel.org, Piotr Sroka <piotrs@cadence.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: [PATCH 5.5 155/257] mtd: rawnand: cadence: fix the calculation of the avaialble OOB size
+Date:   Thu, 16 Apr 2020 15:23:26 +0200
+Message-Id: <20200416131345.945130591@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.891903893@linuxfoundation.org>
 References: <20200416131325.891903893@linuxfoundation.org>
@@ -62,91 +59,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vincent Guittot <vincent.guittot@linaro.org>
+From: Piotr Sroka <piotrs@cadence.com>
 
-commit fe61468b2cbc2b7ce5f8d3bf32ae5001d4c434e9 upstream.
+commit e4578af0354176ff6b4ae78b9998b4f479f7c31c upstream.
 
-When a cfs rq is throttled, the latter and its child are removed from the
-leaf list but their nr_running is not changed which includes staying higher
-than 1. When a task is enqueued in this throttled branch, the cfs rqs must
-be added back in order to ensure correct ordering in the list but this can
-only happens if nr_running == 1.
-When cfs bandwidth is used, we call unconditionnaly list_add_leaf_cfs_rq()
-when enqueuing an entity to make sure that the complete branch will be
-added.
+The value of cdns_chip->sector_count is not known at the moment
+of the derivation of ecc_size, leading to a zero value. Fix
+this by assigning ecc_size later in the code.
 
-Similarly unthrottle_cfs_rq() can stop adding cfs in the list when a parent
-is throttled. Iterate the remaining entity to ensure that the complete
-branch will be added in the list.
-
-Reported-by: Christian Borntraeger <borntraeger@de.ibm.com>
-Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
-Tested-by: Christian Borntraeger <borntraeger@de.ibm.com>
-Tested-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
+Fixes: ec4ba01e894d ("mtd: rawnand: Add new Cadence NAND driver to MTD subsystem")
 Cc: stable@vger.kernel.org
-Cc: stable@vger.kernel.org #v5.1+
-Link: https://lkml.kernel.org/r/20200306135257.25044-1-vincent.guittot@linaro.org
+Signed-off-by: Piotr Sroka <piotrs@cadence.com>
+Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+Link: https://lore.kernel.org/linux-mtd/1581328530-29966-2-git-send-email-piotrs@cadence.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/sched/fair.c |   26 ++++++++++++++++++++++----
- 1 file changed, 22 insertions(+), 4 deletions(-)
+ drivers/mtd/nand/raw/cadence-nand-controller.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -3943,6 +3943,7 @@ static inline void check_schedstat_requi
- #endif
- }
+--- a/drivers/mtd/nand/raw/cadence-nand-controller.c
++++ b/drivers/mtd/nand/raw/cadence-nand-controller.c
+@@ -2585,7 +2585,7 @@ int cadence_nand_attach_chip(struct nand
+ {
+ 	struct cdns_nand_ctrl *cdns_ctrl = to_cdns_nand_ctrl(chip->controller);
+ 	struct cdns_nand_chip *cdns_chip = to_cdns_nand_chip(chip);
+-	u32 ecc_size = cdns_chip->sector_count * chip->ecc.bytes;
++	u32 ecc_size;
+ 	struct mtd_info *mtd = nand_to_mtd(chip);
+ 	u32 max_oob_data_size;
+ 	int ret;
+@@ -2625,6 +2625,7 @@ int cadence_nand_attach_chip(struct nand
+ 	/* Error correction configuration. */
+ 	cdns_chip->sector_size = chip->ecc.size;
+ 	cdns_chip->sector_count = mtd->writesize / cdns_chip->sector_size;
++	ecc_size = cdns_chip->sector_count * chip->ecc.bytes;
  
-+static inline bool cfs_bandwidth_used(void);
+ 	cdns_chip->avail_oob_size = mtd->oobsize - ecc_size;
  
- /*
-  * MIGRATION
-@@ -4021,10 +4022,16 @@ enqueue_entity(struct cfs_rq *cfs_rq, st
- 		__enqueue_entity(cfs_rq, se);
- 	se->on_rq = 1;
- 
--	if (cfs_rq->nr_running == 1) {
-+	/*
-+	 * When bandwidth control is enabled, cfs might have been removed
-+	 * because of a parent been throttled but cfs->nr_running > 1. Try to
-+	 * add it unconditionnally.
-+	 */
-+	if (cfs_rq->nr_running == 1 || cfs_bandwidth_used())
- 		list_add_leaf_cfs_rq(cfs_rq);
-+
-+	if (cfs_rq->nr_running == 1)
- 		check_enqueue_throttle(cfs_rq);
--	}
- }
- 
- static void __clear_buddies_last(struct sched_entity *se)
-@@ -4605,11 +4612,22 @@ void unthrottle_cfs_rq(struct cfs_rq *cf
- 			break;
- 	}
- 
--	assert_list_leaf_cfs_rq(rq);
--
- 	if (!se)
- 		add_nr_running(rq, task_delta);
- 
-+	/*
-+	 * The cfs_rq_throttled() breaks in the above iteration can result in
-+	 * incomplete leaf list maintenance, resulting in triggering the
-+	 * assertion below.
-+	 */
-+	for_each_sched_entity(se) {
-+		cfs_rq = cfs_rq_of(se);
-+
-+		list_add_leaf_cfs_rq(cfs_rq);
-+	}
-+
-+	assert_list_leaf_cfs_rq(rq);
-+
- 	/* Determine whether we need to wake up potentially idle CPU: */
- 	if (rq->curr == rq->idle && rq->cfs.nr_running)
- 		resched_curr(rq);
 
 
