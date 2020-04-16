@@ -2,102 +2,173 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 397E0C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:52:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A428C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:52:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1186621927
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:52:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="bcbScya9"
+	by mail.kernel.org (Postfix) with ESMTP id 6BAA420732
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:52:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587052349;
+	bh=SJKfbcTMFH18rnumuVrFY/CSI7v7IEsH07v35ULM5S0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=rr7A/5EEspKLWoagZp8SRDx1OO535gJMVIwcBw8rc6FBi1E6WR+iof4wob5wWj2ng
+	 +s+BUsyCjuRhbgcSqOOSpqyCOmTkqvy9LdrLVhV4Qh72WfydmlHnCoDJoeVAW0l82h
+	 BJ7NZp3gb7qr6hQrq7PVFBheJXvcttSXr+70trTc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2633868AbgDPPwP (ORCPT
+        id S2439800AbgDPPw0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:52:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49994 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2387689AbgDPPwK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 11:52:10 -0400
-Received: from mail-lf1-x130.google.com (mail-lf1-x130.google.com [IPv6:2a00:1450:4864:20::130])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9970AC061A0C
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 08:52:09 -0700 (PDT)
-Received: by mail-lf1-x130.google.com with SMTP id m19so5918104lfq.13
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 08:52:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=FfAE3K8uyhxoa402bGrMeSvXqOseWRk+R6RkoAmXNwQ=;
-        b=bcbScya9mobQkne7CdnBOoVV0Pajye6caK4t9DX8OVKbpk4KPaho2o6R7qNTWu5hnS
-         pnX3o2qdBH68qltybzBhi3TbamMqIgkeQ5uVLW/l+hzuqqCtAYuUiJ7hUJyF3fKI7Vvl
-         UxZBC24nupXXkjC5dj6Wxo4LhFM+Dnwu3vdLc/ZcAac2M9dNVfNoNra8OD5jYJjHJ75m
-         oEcYZ3ZVRC1k/pC4TWuqO3PMHvCmaf5O1YZKzraCCc6lletIanyHf+q7M41QIaxksWlX
-         qAZfNCcK3TUwerJja/lIYutfXFqR80lcGYOsiXSp5aTtmCyhuAiZ9MluAoLWqb4AfwNy
-         Z1Ng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=FfAE3K8uyhxoa402bGrMeSvXqOseWRk+R6RkoAmXNwQ=;
-        b=E3/KOMPDjSw7NXTDRwcoeuA60Sn5jqrCFp2bO55MfUhX7UwyhPNc26wqcpd6SgsSnQ
-         DCafx7NaTUrSCfToCNh7egZc5xoKG0wfeCurt0IYaSQRqTWtsRKKAHT6XyR6V72np0Sp
-         dFzQo+Xi9pwBU7d+cf1s+DkNQrqfjJhjP6CXakKIod9jonH0jHv1vWkzEYavR3XxFTM6
-         AvKhbjMi40kFnsgtWUX5zMdtvCyQ8OYAdUut10cG83ymnbADdW2Yc09BB/QLUljlQkGr
-         mo2/J+3pI1h2G6Bj5xXR+F8VzorIAqisGIwQA4apkeTJpCkByPxGvwjiRUTNuIoLUIb7
-         TXqg==
-X-Gm-Message-State: AGi0PuZEhG5F7KIf68agv9k+UrmlAvONBzsNG96Wqe15MAJptWEI8SK/
-        tn3DdqbWz++1z3o85Ibzc4bWKA==
-X-Google-Smtp-Source: APiQypKWeWNUzL67I509RIb9cMtVwbJ40Fy04qdiLCdyRp3hf4Kij6z4C0dlcJSnwDWpHBjQm6okLQ==
-X-Received: by 2002:ac2:5e86:: with SMTP id b6mr6319687lfq.65.1587052328016;
-        Thu, 16 Apr 2020 08:52:08 -0700 (PDT)
-Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id w16sm15683130lfk.49.2020.04.16.08.52.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Apr 2020 08:52:07 -0700 (PDT)
-Received: by box.localdomain (Postfix, from userid 1000)
-        id 0F317102E22; Thu, 16 Apr 2020 18:52:06 +0300 (+03)
-Date:   Thu, 16 Apr 2020 18:52:06 +0300
-From:   "Kirill A. Shutemov" <kirill@shutemov.name>
-To:     Yang Shi <yang.shi@linux.alibaba.com>
-Cc:     "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        akpm@linux-foundation.org, Andrea Arcangeli <aarcange@redhat.com>,
-        Zi Yan <ziy@nvidia.com>, Ralph Campbell <rcampbell@nvidia.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        William Kucharski <william.kucharski@oracle.com>,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCHv3, RESEND 8/8] khugepaged: Introduce 'max_ptes_shared'
- tunable
-Message-ID: <20200416155206.bqpd5p45oud4chg6@box>
-References: <20200413125220.663-1-kirill.shutemov@linux.intel.com>
- <20200413125220.663-9-kirill.shutemov@linux.intel.com>
- <fcbfabac-1837-a4ea-1333-15445587e9fd@linux.alibaba.com>
+        Thu, 16 Apr 2020 11:52:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44090 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2896564AbgDPNc4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:32:56 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 96987208E4;
+        Thu, 16 Apr 2020 13:31:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587043920;
+        bh=SJKfbcTMFH18rnumuVrFY/CSI7v7IEsH07v35ULM5S0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=RY1lmPv5l/9kPOr0WzbkbMAGoU41f3QaChdqotfK/V31eCdNUCYxSZv1hY4G0m6rm
+         eTKuJJDygwQLBoxs/vi9gpSOeEQRAoM3AORz2OtwBI0Lt+yqKmADgt10bGxP7gmf1Z
+         ke36OOn8ejq5v4ghSsSHGzVOIaSamRXgQokn9Xgc=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Eric Biggers <ebiggers@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        Jessica Yu <jeyu@kernel.org>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Jeff Vander Stoep <jeffv@google.com>,
+        Ben Hutchings <benh@debian.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.19 118/146] kmod: make request_module() return an error when autoloading is disabled
+Date:   Thu, 16 Apr 2020 15:24:19 +0200
+Message-Id: <20200416131258.731165940@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.1
+In-Reply-To: <20200416131242.353444678@linuxfoundation.org>
+References: <20200416131242.353444678@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <fcbfabac-1837-a4ea-1333-15445587e9fd@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 15, 2020 at 02:25:30PM -0700, Yang Shi wrote:
-> > @@ -595,6 +626,12 @@ static int __collapse_huge_page_isolate(struct vm_area_struct *vma,
-> >   		VM_BUG_ON_PAGE(!PageAnon(page), page);
-> > +		if (page_mapcount(page) > 1 &&
-> > +				++shared > khugepaged_max_ptes_shared) {
-> > +			result = SCAN_EXCEED_SHARED_PTE;
-> 
-> It may be better to extract the check into a helper? For example, bool
-> exceed_max_ptes_shared(struct page)?
+From: Eric Biggers <ebiggers@google.com>
 
-It might be reasonable as part of wider cleanup: the same has to be done
-to khugepaged_max_ptes_none and khugepaged_max_ptes_swap.
+commit d7d27cfc5cf0766a26a8f56868c5ad5434735126 upstream.
 
-Volunteers? :P
+Patch series "module autoloading fixes and cleanups", v5.
 
--- 
- Kirill A. Shutemov
+This series fixes a bug where request_module() was reporting success to
+kernel code when module autoloading had been completely disabled via
+'echo > /proc/sys/kernel/modprobe'.
+
+It also addresses the issues raised on the original thread
+(https://lkml.kernel.org/lkml/20200310223731.126894-1-ebiggers@kernel.org/T/#u)
+bydocumenting the modprobe sysctl, adding a self-test for the empty path
+case, and downgrading a user-reachable WARN_ONCE().
+
+This patch (of 4):
+
+It's long been possible to disable kernel module autoloading completely
+(while still allowing manual module insertion) by setting
+/proc/sys/kernel/modprobe to the empty string.
+
+This can be preferable to setting it to a nonexistent file since it
+avoids the overhead of an attempted execve(), avoids potential
+deadlocks, and avoids the call to security_kernel_module_request() and
+thus on SELinux-based systems eliminates the need to write SELinux rules
+to dontaudit module_request.
+
+However, when module autoloading is disabled in this way,
+request_module() returns 0.  This is broken because callers expect 0 to
+mean that the module was successfully loaded.
+
+Apparently this was never noticed because this method of disabling
+module autoloading isn't used much, and also most callers don't use the
+return value of request_module() since it's always necessary to check
+whether the module registered its functionality or not anyway.
+
+But improperly returning 0 can indeed confuse a few callers, for example
+get_fs_type() in fs/filesystems.c where it causes a WARNING to be hit:
+
+	if (!fs && (request_module("fs-%.*s", len, name) == 0)) {
+		fs = __get_fs_type(name, len);
+		WARN_ONCE(!fs, "request_module fs-%.*s succeeded, but still no fs?\n", len, name);
+	}
+
+This is easily reproduced with:
+
+	echo > /proc/sys/kernel/modprobe
+	mount -t NONEXISTENT none /
+
+It causes:
+
+	request_module fs-NONEXISTENT succeeded, but still no fs?
+	WARNING: CPU: 1 PID: 1106 at fs/filesystems.c:275 get_fs_type+0xd6/0xf0
+	[...]
+
+This should actually use pr_warn_once() rather than WARN_ONCE(), since
+it's also user-reachable if userspace immediately unloads the module.
+Regardless, request_module() should correctly return an error when it
+fails.  So let's make it return -ENOENT, which matches the error when
+the modprobe binary doesn't exist.
+
+I've also sent patches to document and test this case.
+
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Reviewed-by: Jessica Yu <jeyu@kernel.org>
+Acked-by: Luis Chamberlain <mcgrof@kernel.org>
+Cc: Alexei Starovoitov <ast@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Jeff Vander Stoep <jeffv@google.com>
+Cc: Ben Hutchings <benh@debian.org>
+Cc: Josh Triplett <josh@joshtriplett.org>
+Cc: <stable@vger.kernel.org>
+Link: http://lkml.kernel.org/r/20200310223731.126894-1-ebiggers@kernel.org
+Link: http://lkml.kernel.org/r/20200312202552.241885-1-ebiggers@kernel.org
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ kernel/kmod.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+--- a/kernel/kmod.c
++++ b/kernel/kmod.c
+@@ -120,7 +120,7 @@ out:
+  * invoke it.
+  *
+  * If module auto-loading support is disabled then this function
+- * becomes a no-operation.
++ * simply returns -ENOENT.
+  */
+ int __request_module(bool wait, const char *fmt, ...)
+ {
+@@ -137,7 +137,7 @@ int __request_module(bool wait, const ch
+ 	WARN_ON_ONCE(wait && current_is_async());
+ 
+ 	if (!modprobe_path[0])
+-		return 0;
++		return -ENOENT;
+ 
+ 	va_start(args, fmt);
+ 	ret = vsnprintf(module_name, MODULE_NAME_LEN, fmt, args);
+
+
