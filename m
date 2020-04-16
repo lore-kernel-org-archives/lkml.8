@@ -2,313 +2,187 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1FF7C2BA19
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 02:02:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14D65C2BA19
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 02:04:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8655B20725
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 02:02:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E080020725
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 02:04:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BJ08i6nx"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dFuhPIKF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731358AbgDPCB5 (ORCPT
+        id S1729967AbgDPCEF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 22:01:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33530 "EHLO
+        Wed, 15 Apr 2020 22:04:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33878 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729464AbgDPCBp (ORCPT
+        by vger.kernel.org with ESMTP id S1728397AbgDPCEA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 22:01:45 -0400
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CFF44C061A0C;
-        Wed, 15 Apr 2020 19:01:41 -0700 (PDT)
-Received: by mail-lf1-x143.google.com with SMTP id u10so4341882lfo.8;
-        Wed, 15 Apr 2020 19:01:41 -0700 (PDT)
+        Wed, 15 Apr 2020 22:04:00 -0400
+Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C209C061A0C
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 19:04:00 -0700 (PDT)
+Received: by mail-ot1-x342.google.com with SMTP id j4so1783268otr.11
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 19:04:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=FOqIc/TOVs6L09OcBTbR6ZTsfXk3SzvVBeRG5EOHvT8=;
-        b=BJ08i6nxi096nOw2iLrhhmUn/XkX8+p282HCVpqdDuxmxEjiHVA4m9L9WqBsrU01su
-         vQQqKaHdJjqBuOIR2+xwzc55iZ/eednW8iOFat7f2jdSwoqxMyj2TokuTUqUhGWoxR2c
-         DbpimohrbpNeXHhtp+4FIn1DZrKHWxXCWM/JAXvr0FEiyHMpFLHkd+8j/kCT+V/DCsfF
-         a4AUXxSfrg39quw4seJy69WkbMXPgHCI73bI/OmMFzTZsv3Uyj80ryX0t4XNBWfRJEC2
-         Exp5GAzsVi5f3M/CFmhvJyidpMqD3uXPvUR5XUGn0okZ9edvD7MvDnsryEnUitwylpB8
-         zm0g==
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=WUOdBHVjTYSAdHEkzTfIK+cQNyJIvAhfkkqze9Y3vHY=;
+        b=dFuhPIKF68NNEtuqTBL5h6FNtryPc7t+6DAdUlHMtza7uJ0lRStsOHpmMu2bth4kbg
+         EoLKBlW00QfAXI9xwv5Uba5MgnBSFpa2S12qa3l5NWosBUseQPZ4CMntQhK8OZpDnpjR
+         xC6WFPWIVmL9FYv1TmGjK99eXmZOYJgFoGzVl2CkW3VtnvHf09jWjFE3x+q84wf0xkKb
+         Cdc4s1FVZGiKG/ePW971uFULtyONT0W5mZKaEvAa3YfXg09Aw2nr2y+kQAjd6uz8Xmwu
+         h+AaE0g4c9LYi3y29ho6N/YgqTrMrDU82FapTLDMsqqEQh/2WDj/HK9IAhsa3Ny7hgvl
+         b9gA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=FOqIc/TOVs6L09OcBTbR6ZTsfXk3SzvVBeRG5EOHvT8=;
-        b=cPmJWYPKujNDJH7ufgvnNLYEH6h4fCd8eB0z+ClAu/QRRce4MRZ6CodsLQ7SnUMSRu
-         nnkaAwjwPZ7ScEX0QeLWVyIZNERiJsE8pyGkcbVb8zTudC7C84YzeKQshh6JxpUffJ3z
-         etxmlC5yeqzwlm3KSSGddkPUb3luyQhgq5RToPj+o1YSMDUi4XKPSOCqxB3ydGu8byO3
-         GMAd2ebkkclRbTyHqqTPtru/9W8qvuX0T44In9Gb6e7K9ecrpq89k4YtreR/yeKh4dMR
-         4uk8DOrX/pKtaUY0CXlAlYmkzM1Tsvauca7AgYs+rH4jhD571mV+RS4uxkj5v1qcaZCF
-         qP/A==
-X-Gm-Message-State: AGi0PuZYUviyYTDJnEyKLPS8Ax9uunBoDG1PMiC2zySQkQjHG6pAUUVa
-        RsPrncdw0FCiS66tBiE3w3dXJykgwHreGv4R02Y=
-X-Google-Smtp-Source: APiQypL1MKE1uoflFbDDZHj6SDB3nJCYOPEtW1SaLCCzW9NjU3rmqFbT4wb9Vx75XqGVUC4u6fBYWnbtBrUV6ATL8h4=
-X-Received: by 2002:a05:6512:259:: with SMTP id b25mr4594523lfo.16.1587002500226;
- Wed, 15 Apr 2020 19:01:40 -0700 (PDT)
-MIME-Version: 1.0
-References: <1586521984-5890-1-git-send-email-orson.unisoc@gmail.com>
- <CA+H2tpH4+cLN0z7v50UdKCXOqZDt2rSYF5Lvm9-WBYJ3YWtJVg@mail.gmail.com> <c50deb5a-e3c1-a3c7-1467-fb78b13ceea8@akamai.com>
-In-Reply-To: <c50deb5a-e3c1-a3c7-1467-fb78b13ceea8@akamai.com>
-From:   Orson Zhai <orsonzhai@gmail.com>
-Date:   Thu, 16 Apr 2020 10:01:28 +0800
-Message-ID: <CA+H2tpELUK_ZFjDz79ydp3d4uG+5c_SsG5100NeC4WAj_vZPHQ@mail.gmail.com>
-Subject: Re: [PATCH] dynamic_debug: Add an option to enable dynamic debug for
- modules only
-To:     Jason Baron <jbaron@akamai.com>
-Cc:     Orson Zhai <orson.unisoc@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=WUOdBHVjTYSAdHEkzTfIK+cQNyJIvAhfkkqze9Y3vHY=;
+        b=QOn6PYqX+KBZU/qhBpwJ7dR3zIci+K421O+GJiSCSBC7/XI8xJPRopELx4HvSzhQET
+         GrrO4dcEOKCcNALL5b6AZb+evLf2UUHj3Mx2VWAgyc8hTe2xP2frMUPOhGlLvjCeSqf5
+         fMfKmSxRQJK8opjL3Hw3oJO+oWM/t0xXkC1GBuYOCN8r7tN+WpzMCIKYJ94RTJBWo6/7
+         B3r2cj9nmIB/idy5jaRS8urR7ITKEcjpp8Z6yr5vMABU/argUHlntsYc+PTracoWA3hr
+         hknlvasbSscz5R0Zs1V3fazdvAJPCExEfutOc4TLSWQRDtY6bYyf1STOP+4K1gwaA2I/
+         7bqw==
+X-Gm-Message-State: AGi0PuZq/IWtUWkjzOtj7xB0arZAHS6c6ECNefPRFbpS1irp+Z0ItCzD
+        AQHyG7cSop4q0Me6IXisDdZEhA==
+X-Google-Smtp-Source: APiQypI5I024fVI+5QUPWnaypCmcRINpmltlMJymdc1sEELchumFcKCJnzObCJmn4NWDBztKx9JyXQ==
+X-Received: by 2002:a9d:620c:: with SMTP id g12mr30601otj.158.1587002639307;
+        Wed, 15 Apr 2020 19:03:59 -0700 (PDT)
+Received: from eggly.attlocal.net (172-10-233-147.lightspeed.sntcca.sbcglobal.net. [172.10.233.147])
+        by smtp.gmail.com with ESMTPSA id v15sm7492966ook.37.2020.04.15.19.03.58
+        (version=TLS1 cipher=ECDHE-ECDSA-AES128-SHA bits=128/128);
+        Wed, 15 Apr 2020 19:03:58 -0700 (PDT)
+Date:   Wed, 15 Apr 2020 19:03:56 -0700 (PDT)
+From:   Hugh Dickins <hughd@google.com>
+X-X-Sender: hugh@eggly.anvils
+To:     Yang Shi <shy828301@gmail.com>
+cc:     syzbot <syzbot+c8a8197c8852f566b9d9@syzkaller.appspotmail.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
+        Hugh Dickins <hughd@google.com>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-doc@vger.kernel.org,
-        Android Kernel Team <kernel-team@android.com>,
-        Orson Zhai <orson.zhai@unisoc.com>
-Content-Type: text/plain; charset="UTF-8"
+        Linux MM <linux-mm@kvack.org>, syzkaller-bugs@googlegroups.com,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: possible deadlock in shmem_uncharge
+In-Reply-To: <CAHbLzkpJjpOjizxhG6oS1OsbdycwaRdLeA8nb1R4Y2C4F7nV+g@mail.gmail.com>
+Message-ID: <alpine.LSU.2.11.2004151828350.12919@eggly.anvils>
+References: <000000000000e5838c05a3152f53@google.com> <CAHbLzkpJjpOjizxhG6oS1OsbdycwaRdLeA8nb1R4Y2C4F7nV+g@mail.gmail.com>
+User-Agent: Alpine 2.11 (LSU 23 2013-08-11)
+MIME-Version: 1.0
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 16, 2020 at 2:48 AM Jason Baron <jbaron@akamai.com> wrote:
->
->
->
-> On 4/15/20 12:31 PM, Orson Zhai wrote:
-> > Hi Jason,
+On Mon, 13 Apr 2020, Yang Shi wrote:
+> On Sun, Apr 12, 2020 at 3:11 AM syzbot
+> <syzbot+c8a8197c8852f566b9d9@syzkaller.appspotmail.com> wrote:
 > >
-> > On Fri, Apr 10, 2020 at 8:33 PM Orson Zhai <orson.unisoc@gmail.com> wrote:
-> >>
-> >> From: Orson Zhai <orson.zhai@unisoc.com>
-> >>
-> >> Instead of enabling dynamic debug globally with CONFIG_DYNAMIC_DEBUG,
-> >> CONFIG_DYNAMIC_DEBUG_CORE will only enable core function of dynamic
-> >> debug. With the DEBUG_MODULE defined for any modules, dynamic debug
-> >> will be tied to them.
-> >>
-> >> This is useful for people who only want to enable dynamic debug for
-> >> kernel modules without worrying about kernel image size and memory
-> >> consumption is increasing too much.
-> >>
+> > Hello,
 > >
-> > Do you have any comments for this patch?
+> > syzbot found the following crash on:
 > >
->
-> So I like that you added the 'DEBUG_MODULE', but I'm wondering if the
-> naming is too generic? Maybe DYNAMIC_DEBUG_MODULE?
-
-OK, I think it is more precise than before.
-
->
-> There may also be other places where you want to have the per-module
-> dependency, for example netdev_dbg()? But perhaps further expansion
-> could wait for a user...
-
-Yes.
-I find more in netdevice.h, net.h and ib_verbs.h.
-I will change all of them in V2.
-But acpi.h seems different which I'd like to ignore.
-
-Best,
-Orson
-
->
-> Thanks,
->
-> -Jason
->
->
-> > Best Regards,
-> > Orson
+> > HEAD commit:    ae46d2aa mm/gup: Let __get_user_pages_locked() return -EIN..
+> > git tree:       upstream
+> > console output: https://syzkaller.appspot.com/x/log.txt?x=14a30a77e00000
+> > kernel config:  https://syzkaller.appspot.com/x/.config?x=ca75979eeebf06c2
+> > dashboard link: https://syzkaller.appspot.com/bug?extid=c8a8197c8852f566b9d9
+> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15f5632be00000
+> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=132ade57e00000
 > >
-> >> Signed-off-by: Orson Zhai <orson.zhai@unisoc.com>
-> >> ---
-> >>  Documentation/admin-guide/dynamic-debug-howto.rst |  7 +++++--
-> >>  include/linux/dev_printk.h                        |  6 ++++--
-> >>  include/linux/dynamic_debug.h                     |  2 +-
-> >>  include/linux/printk.h                            | 14 +++++++++-----
-> >>  lib/Kconfig.debug                                 | 12 ++++++++++++
-> >>  lib/Makefile                                      |  2 +-
-> >>  lib/dynamic_debug.c                               |  9 +++++++--
-> >>  7 files changed, 39 insertions(+), 13 deletions(-)
-> >>
-> >> diff --git a/Documentation/admin-guide/dynamic-debug-howto.rst b/Documentation/admin-guide/dynamic-debug-howto.rst
-> >> index 0dc2eb8..fa5b8d4 100644
-> >> --- a/Documentation/admin-guide/dynamic-debug-howto.rst
-> >> +++ b/Documentation/admin-guide/dynamic-debug-howto.rst
-> >> @@ -13,8 +13,11 @@ kernel code to obtain additional kernel information.  Currently, if
-> >>  ``print_hex_dump_debug()``/``print_hex_dump_bytes()`` calls can be dynamically
-> >>  enabled per-callsite.
-> >>
-> >> -If ``CONFIG_DYNAMIC_DEBUG`` is not set, ``print_hex_dump_debug()`` is just
-> >> -shortcut for ``print_hex_dump(KERN_DEBUG)``.
-> >> +If ``CONFIG_DYNAMIC_DEBUG_CORE`` is set, only the modules with ``DEBUG_MODULE``
-> >> +defined will be tied into dynamic debug.
-> >> +
-> >> +If ``CONFIG_DYNAMIC_DEBUG`` or ``CONFIG_DYNAMIC_DEBUG_CORE`` is not set,
-> >> +``print_hex_dump_debug()`` is just shortcut for ``print_hex_dump(KERN_DEBUG)``.
-> >>
-> >>  For ``print_hex_dump_debug()``/``print_hex_dump_bytes()``, format string is
-> >>  its ``prefix_str`` argument, if it is constant string; or ``hexdump``
-> >> diff --git a/include/linux/dev_printk.h b/include/linux/dev_printk.h
-> >> index 5aad06b..2fb0671 100644
-> >> --- a/include/linux/dev_printk.h
-> >> +++ b/include/linux/dev_printk.h
-> >> @@ -109,7 +109,8 @@ void _dev_info(const struct device *dev, const char *fmt, ...)
-> >>  #define dev_info(dev, fmt, ...)                                                \
-> >>         _dev_info(dev, dev_fmt(fmt), ##__VA_ARGS__)
-> >>
-> >> -#if defined(CONFIG_DYNAMIC_DEBUG)
-> >> +#if defined(CONFIG_DYNAMIC_DEBUG) || \
-> >> +       (defined(CONFIG_DYNAMIC_DEBUG_CORE) && defined(DEBUG_MODULE))
-> >>  #define dev_dbg(dev, fmt, ...)                                         \
-> >>         dynamic_dev_dbg(dev, dev_fmt(fmt), ##__VA_ARGS__)
-> >>  #elif defined(DEBUG)
-> >> @@ -181,7 +182,8 @@ do {                                                                        \
-> >>         dev_level_ratelimited(dev_notice, dev, fmt, ##__VA_ARGS__)
-> >>  #define dev_info_ratelimited(dev, fmt, ...)                            \
-> >>         dev_level_ratelimited(dev_info, dev, fmt, ##__VA_ARGS__)
-> >> -#if defined(CONFIG_DYNAMIC_DEBUG)
-> >> +#if defined(CONFIG_DYNAMIC_DEBUG) || \
-> >> +       (defined(CONFIG_DYNAMIC_DEBUG_CORE) && defined(DEBUG_MODULE))
-> >>  /* descriptor check is first to prevent flooding with "callbacks suppressed" */
-> >>  #define dev_dbg_ratelimited(dev, fmt, ...)                             \
-> >>  do {                                                                   \
-> >> diff --git a/include/linux/dynamic_debug.h b/include/linux/dynamic_debug.h
-> >> index 4cf02ec..abcd5fd 100644
-> >> --- a/include/linux/dynamic_debug.h
-> >> +++ b/include/linux/dynamic_debug.h
-> >> @@ -48,7 +48,7 @@ struct _ddebug {
-> >>
-> >>
-> >>
-> >> -#if defined(CONFIG_DYNAMIC_DEBUG)
-> >> +#if defined(CONFIG_DYNAMIC_DEBUG_CORE)
-> >>  int ddebug_add_module(struct _ddebug *tab, unsigned int n,
-> >>                                 const char *modname);
-> >>  extern int ddebug_remove_module(const char *mod_name);
-> >> diff --git a/include/linux/printk.h b/include/linux/printk.h
-> >> index 1e6108b..77fab5b 100644
-> >> --- a/include/linux/printk.h
-> >> +++ b/include/linux/printk.h
-> >> @@ -291,8 +291,9 @@ extern int kptr_restrict;
-> >>  /*
-> >>   * These can be used to print at the various log levels.
-> >>   * All of these will print unconditionally, although note that pr_debug()
-> >> - * and other debug macros are compiled out unless either DEBUG is defined
-> >> - * or CONFIG_DYNAMIC_DEBUG is set.
-> >> + * and other debug macros are compiled out unless either DEBUG is defined,
-> >> + * CONFIG_DYNAMIC_DEBUG is set, or CONFIG_DYNAMIC_DEBUG_CORE is set when
-> >> + * DEBUG_MODULE being defined for any modules.
-> >>   */
-> >>  #define pr_emerg(fmt, ...) \
-> >>         printk(KERN_EMERG pr_fmt(fmt), ##__VA_ARGS__)
-> >> @@ -327,7 +328,8 @@ extern int kptr_restrict;
-> >>
-> >>
-> >>  /* If you are writing a driver, please use dev_dbg instead */
-> >> -#if defined(CONFIG_DYNAMIC_DEBUG)
-> >> +#if defined(CONFIG_DYNAMIC_DEBUG) || \
-> >> +       (defined(CONFIG_DYNAMIC_DEBUG_CORE) && defined(DEBUG_MODULE))
-> >>  #include <linux/dynamic_debug.h>
-> >>
-> >>  /* dynamic_pr_debug() uses pr_fmt() internally so we don't need it here */
-> >> @@ -453,7 +455,8 @@ extern int kptr_restrict;
-> >>  #endif
-> >>
-> >>  /* If you are writing a driver, please use dev_dbg instead */
-> >> -#if defined(CONFIG_DYNAMIC_DEBUG)
-> >> +#if defined(CONFIG_DYNAMIC_DEBUG) || \
-> >> +       (defined(CONFIG_DYNAMIC_DEBUG_CORE) && defined(DEBUG_MODULE))
-> >>  /* descriptor check is first to prevent flooding with "callbacks suppressed" */
-> >>  #define pr_debug_ratelimited(fmt, ...)                                 \
-> >>  do {                                                                   \
-> >> @@ -500,7 +503,8 @@ static inline void print_hex_dump_bytes(const char *prefix_str, int prefix_type,
-> >>
-> >>  #endif
-> >>
-> >> -#if defined(CONFIG_DYNAMIC_DEBUG)
-> >> +#if defined(CONFIG_DYNAMIC_DEBUG) || \
-> >> +       (defined(CONFIG_DYNAMIC_DEBUG_CORE) && defined(DEBUG_MODULE))
-> >>  #define print_hex_dump_debug(prefix_str, prefix_type, rowsize, \
-> >>                              groupsize, buf, len, ascii)        \
-> >>         dynamic_hex_dump(prefix_str, prefix_type, rowsize,      \
-> >> diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-> >> index 50c1f5f..25a1b9de 100644
-> >> --- a/lib/Kconfig.debug
-> >> +++ b/lib/Kconfig.debug
-> >> @@ -99,6 +99,7 @@ config DYNAMIC_DEBUG
-> >>         default n
-> >>         depends on PRINTK
-> >>         depends on (DEBUG_FS || PROC_FS)
-> >> +       select DYNAMIC_DEBUG_CORE
-> >>         help
-> >>
-> >>           Compiles debug level messages into the kernel, which would not
-> >> @@ -165,6 +166,17 @@ config DYNAMIC_DEBUG
-> >>           See Documentation/admin-guide/dynamic-debug-howto.rst for additional
-> >>           information.
-> >>
-> >> +config DYNAMIC_DEBUG_CORE
-> >> +       bool "Enable core function of dynamic debug support"
-> >> +       depends on PRINTK
-> >> +       depends on (DEBUG_FS || PROC_FS)
-> >> +       help
-> >> +         Enable core functional support of dynamic debug. It is useful
-> >> +         when you want to tie dynamic debug to your kernel modules with
-> >> +         DEBUG_MODULE defined for each of them, especially for the case
-> >> +         of embedded system where the kernel image size is sensitive for
-> >> +         people.
-> >> +
-> >>  config SYMBOLIC_ERRNAME
-> >>         bool "Support symbolic error names in printf"
-> >>         default y if PRINTK
-> >> diff --git a/lib/Makefile b/lib/Makefile
-> >> index 685aee6..8952772 100644
-> >> --- a/lib/Makefile
-> >> +++ b/lib/Makefile
-> >> @@ -186,7 +186,7 @@ lib-$(CONFIG_GENERIC_BUG) += bug.o
-> >>
-> >>  obj-$(CONFIG_HAVE_ARCH_TRACEHOOK) += syscall.o
-> >>
-> >> -obj-$(CONFIG_DYNAMIC_DEBUG) += dynamic_debug.o
-> >> +obj-$(CONFIG_DYNAMIC_DEBUG_CORE) += dynamic_debug.o
-> >>  obj-$(CONFIG_SYMBOLIC_ERRNAME) += errname.o
-> >>
-> >>  obj-$(CONFIG_NLATTR) += nlattr.o
-> >> diff --git a/lib/dynamic_debug.c b/lib/dynamic_debug.c
-> >> index 8f199f4..321437b 100644
-> >> --- a/lib/dynamic_debug.c
-> >> +++ b/lib/dynamic_debug.c
-> >> @@ -1032,8 +1032,13 @@ static int __init dynamic_debug_init(void)
-> >>         int verbose_bytes = 0;
-> >>
-> >>         if (&__start___verbose == &__stop___verbose) {
-> >> -               pr_warn("_ddebug table is empty in a CONFIG_DYNAMIC_DEBUG build\n");
-> >> -               return 1;
-> >> +               if (IS_ENABLED(CONFIG_DYNAMIC_DEBUG)) {
-> >> +                       pr_warn("_ddebug table is empty in a CONFIG_DYNAMIC_DEBUG build\n");
-> >> +                       return 1;
-> >> +               }
-> >> +               pr_info("Ignore empty _ddebug table in a CONFIG_DYNAMIC_DEBUG_CORE build\n");
-> >> +               ddebug_init_success = 1;
-> >> +               return 0;
-> >>         }
-> >>         iter = __start___verbose;
-> >>         modname = iter->modname;
-> >> --
-> >> 2.7.4
-> >>
+> > The bug was bisected to:
+> >
+> > commit 71725ed10c40696dc6bdccf8e225815dcef24dba
+> > Author: Hugh Dickins <hughd@google.com>
+> > Date:   Tue Apr 7 03:07:57 2020 +0000
+> >
+> >     mm: huge tmpfs: try to split_huge_page() when punching hole
+> >
+> > bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=120a752be00000
+> > final crash:    https://syzkaller.appspot.com/x/report.txt?x=110a752be00000
+> > console output: https://syzkaller.appspot.com/x/log.txt?x=160a752be00000
+> >
+> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> > Reported-by: syzbot+c8a8197c8852f566b9d9@syzkaller.appspotmail.com
+> > Fixes: 71725ed10c40 ("mm: huge tmpfs: try to split_huge_page() when punching hole")
+
+No, that commit just gave syzkaller an easier way to reach old code.
+
+> >
+> > =====================================================
+> > WARNING: SOFTIRQ-safe -> SOFTIRQ-unsafe lock order detected
+> > 5.6.0-syzkaller #0 Not tainted
+> > -----------------------------------------------------
+> > syz-executor428/8337 [HC0[0]:SC0[0]:HE0:SE1] is trying to acquire:
+> > ffff8880a851c778 (&info->lock){....}-{2:2}, at: shmem_uncharge+0x24/0x270 mm/shmem.c:341
+> >
+> > and this task is already holding:
+> > ffff8880a851cac8 (&xa->xa_lock#4){..-.}-{2:2}, at: spin_lock include/linux/spinlock.h:353 [inline]
+> > ffff8880a851cac8 (&xa->xa_lock#4){..-.}-{2:2}, at: split_huge_page_to_list+0xad0/0x33b0 mm/huge_memory.c:2864
+> > which would create a new lock dependency:
+> >  (&xa->xa_lock#4){..-.}-{2:2} -> (&info->lock){....}-{2:2}
+> >
+> > but this new dependency connects a SOFTIRQ-irq-safe lock:
+> >  (&xa->xa_lock#4){..-.}-{2:2}
+> 
+> It looks shmem_uncharge() is just called by __split_huge_page() and
+> collapse_file(). The collapse_file() has acquired xa_lock with irq
+> disabled before acquiring info->lock, so it is safe.
+> __split_huge_page() is called with holding xa_lock with irq enabled,
+> but lru_lock is acquired with irq disabled before acquiring xa_lock.
+> 
+> So, it is unnecessary to acquire info->lock with irq disabled in
+> shmem_uncharge(). Can syzbot try the below patch?
+
+But I disagree with the patch below.  You're right that IRQ-disabling
+here is unnecessary, given its two callers; but I'm not sure that we
+want it to look different from shmem_charge() and all other info->lock
+takers; and, more importantly, I don't see how removing the redundant
+IRQ-saving below could make it any less liable to deadlock.
+
+The crucial observation comes lower down
+> > to a SOFTIRQ-irq-unsafe lock:
+> >  (shmlock_user_lock){+.+.}-{2:2}
+and there's another syzbot report that's come out on shmlock_user_lock,
+"possible deadlock in user_shm_lock".
+
+I believe all that's needed to fix both reports is not to use info->lock
+in shmem_lock() - I see now that we saw lockdep reports of this kind
+internally, a long time ago, and fixed them in that way.
+
+(I haven't composed the patch and references yet, and not decided if
+I'll add it here or there or separately. I'll put it together now.)
+
+Hugh
+
+> 
+> diff --git a/mm/shmem.c b/mm/shmem.c
+> index d722eb8..100117b 100644
+> --- a/mm/shmem.c
+> +++ b/mm/shmem.c
+> @@ -334,15 +334,14 @@ bool shmem_charge(struct inode *inode, long pages)
+>  void shmem_uncharge(struct inode *inode, long pages)
+>  {
+>         struct shmem_inode_info *info = SHMEM_I(inode);
+> -       unsigned long flags;
+> 
+>         /* nrpages adjustment done by __delete_from_page_cache() or caller */
+> 
+> -       spin_lock_irqsave(&info->lock, flags);
+> +       spin_lock(&info->lock);
+>         info->alloced -= pages;
+>         inode->i_blocks -= pages * BLOCKS_PER_PAGE;
+>         shmem_recalc_inode(inode);
+> -       spin_unlock_irqrestore(&info->lock, flags);
+> +       spin_unlock(&info->lock);
+> 
+>         shmem_inode_unacct_blocks(inode, pages);
+>  }
