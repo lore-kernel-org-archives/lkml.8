@@ -7,47 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAE18C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:05:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A54AEC352BE
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:05:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BAA9320774
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:05:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BFC0214AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:05:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587049510;
-	bh=aj+C3qty4HdDe8GL8geUEloqbIzbEgqKD6KeLaYq//Q=;
+	s=default; t=1587049517;
+	bh=0XrRqotfepK3zUNWdd8fnIccrvPnNVyNdW6GWO8JWtQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=r1Y+XAEu17uyeOLcnldcRMn5TQR2/PxoN8PNO2C8ubBkAzRqOGr2TaXfYV36mzvE/
-	 sNGSHc01NmzdhX7tqEK5pLdH5rMAXf9DLK6cAq2ykmhG9rqRiDiEVpcRjU0cZEtvDh
-	 0YJ0qiBBN+pvLR2J5ci8WJB1WWUDLVOTXx/8dc6g=
+	b=xWOlGrV5GWL6yM2EfxFnP7ulCpZ5Q8P+yCDVlR6E9Nit3SG2bc1k0v0EkC5J+N8t3
+	 sIp3+5S7eO+2poQs9HxcSJceQ4qUccPMW7WeI/Hq5dwugxhNPieE36qYmYZWMOjdU3
+	 NVEmiaFGO+K7xJEtNpn7Vjm1S3XdW+dNP3vNNoHs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406910AbgDPPFI (ORCPT
+        id S2389058AbgDPPFP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:05:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39156 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 11:05:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39122 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733176AbgDPNwq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:52:46 -0400
+        id S2441696AbgDPNwo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:52:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AD0A120786;
-        Thu, 16 Apr 2020 13:52:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3C0E120732;
+        Thu, 16 Apr 2020 13:52:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587045166;
-        bh=aj+C3qty4HdDe8GL8geUEloqbIzbEgqKD6KeLaYq//Q=;
+        s=default; t=1587045163;
+        bh=0XrRqotfepK3zUNWdd8fnIccrvPnNVyNdW6GWO8JWtQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GrT6xJXwSQ6ChYtzsQjg77lD40+nKgQj+stcM9tjmWLoWzOSBygTYRy3N8DCqyqPq
-         lbdTA1Nb6k1EMSKXbezcewfechSzqZqE2yBjRRFbE+MtilCTEcVmEoXXn1H4yg7VXq
-         YY+tzjm/poXOU/IFjib5BFmRyjTjNxriCs6LEAT8=
+        b=Eo7anQNB2uZtVDgRZKwhl9ytpGWg9D1YhZp+sVRQZziQF+94u5gt4pNQyCtuFSp55
+         r3R13t5GErmjUBs/IDDr5sMuntopcFwJ2fmALUhK/7XkREhgiZhF+BtVgfNakDZKcW
+         cBW5zHHK7XnYIOhzv1WTabE09oTqOW2cf4+gXhF8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Mathias Nyman <mathias.nyman@linux.intel.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Rui Miguel Silva <rmfrfs@gmail.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 024/254] xhci: bail out early if driver cant accress host in resume
-Date:   Thu, 16 Apr 2020 15:21:53 +0200
-Message-Id: <20200416131328.855576270@linuxfoundation.org>
+Subject: [PATCH 5.6 023/254] media: imx: imx7-media-csi: Fix video field handling
+Date:   Thu, 16 Apr 2020 15:21:52 +0200
+Message-Id: <20200416131328.737138646@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.804095985@linuxfoundation.org>
 References: <20200416131325.804095985@linuxfoundation.org>
@@ -60,43 +63,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mathias Nyman <mathias.nyman@linux.intel.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 
-[ Upstream commit 72ae194704da212e2ec312ab182a96799d070755 ]
+[ Upstream commit f7b8488bd39ae8feced4dfbb41cf1431277b893f ]
 
-Bail out early if the xHC host needs to be reset at resume
-but driver can't access xHC PCI registers.
+Commit 4791bd7d6adc ("media: imx: Try colorimetry at both sink and
+source pads") reworked the way that formats are set on the sink pad of
+the CSI subdevice, and accidentally removed video field handling.
+Restore it by defaulting to V4L2_FIELD_NONE if the field value isn't
+supported, with the only two supported value being V4L2_FIELD_NONE and
+V4L2_FIELD_INTERLACED.
 
-If xhci driver already fails to reset the controller then there
-is no point in attempting to free, re-initialize, re-allocate and
-re-start the host. If failure to access the host is detected later,
-failing the resume, xhci interrupts will be double freed
-when remove is called.
-
-Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
-Link: https://lore.kernel.org/r/20200312144517.1593-2-mathias.nyman@linux.intel.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 4791bd7d6adc ("media: imx: Try colorimetry at both sink and source pads")
+Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Reviewed-by: Rui Miguel Silva <rmfrfs@gmail.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/host/xhci.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/staging/media/imx/imx7-media-csi.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/usb/host/xhci.c b/drivers/usb/host/xhci.c
-index dbac0fa9748d5..fe38275363e0f 100644
---- a/drivers/usb/host/xhci.c
-+++ b/drivers/usb/host/xhci.c
-@@ -1157,8 +1157,10 @@ int xhci_resume(struct xhci_hcd *xhci, bool hibernated)
- 		xhci_dbg(xhci, "Stop HCD\n");
- 		xhci_halt(xhci);
- 		xhci_zero_64b_regs(xhci);
--		xhci_reset(xhci);
-+		retval = xhci_reset(xhci);
- 		spin_unlock_irq(&xhci->lock);
-+		if (retval)
-+			return retval;
- 		xhci_cleanup_msix(xhci);
+diff --git a/drivers/staging/media/imx/imx7-media-csi.c b/drivers/staging/media/imx/imx7-media-csi.c
+index db30e2c70f2fe..f45920b3137e4 100644
+--- a/drivers/staging/media/imx/imx7-media-csi.c
++++ b/drivers/staging/media/imx/imx7-media-csi.c
+@@ -1009,6 +1009,7 @@ static int imx7_csi_try_fmt(struct imx7_csi *csi,
+ 		sdformat->format.width = in_fmt->width;
+ 		sdformat->format.height = in_fmt->height;
+ 		sdformat->format.code = in_fmt->code;
++		sdformat->format.field = in_fmt->field;
+ 		*cc = in_cc;
  
- 		xhci_dbg(xhci, "// Disabling event ring interrupts\n");
+ 		sdformat->format.colorspace = in_fmt->colorspace;
+@@ -1023,6 +1024,9 @@ static int imx7_csi_try_fmt(struct imx7_csi *csi,
+ 							 false);
+ 			sdformat->format.code = (*cc)->codes[0];
+ 		}
++
++		if (sdformat->format.field != V4L2_FIELD_INTERLACED)
++			sdformat->format.field = V4L2_FIELD_NONE;
+ 		break;
+ 	default:
+ 		return -EINVAL;
 -- 
 2.20.1
 
