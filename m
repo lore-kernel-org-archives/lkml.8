@@ -2,91 +2,257 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9882C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:47:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91C28C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:47:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B798121D93
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:47:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ajCfJ1M6"
+	by mail.kernel.org (Postfix) with ESMTP id 682F421D93
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:47:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587048462;
+	bh=16MRUCU6snLRWWVpqH8LfJr+huMqXQc8E9e/L4ZEB34=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=RDpGEEussXduuWu8C9R5tyEpw/KgwcnNTOGHXdDcMq+nAcH3PFb8tTcmiW8lylEIY
+	 fTQ3B9EIgjFOx1025QE7U1GKD81LGAzQcgdL8tPszHu1s/cDI1lGjWd79eeOkq9MiN
+	 liOeMSPPZ3t9Ptp42eWyGES005NlJn3MO5Fx9SZ4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394684AbgDPOra (ORCPT
+        id S2393364AbgDPOrk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:47:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39748 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2394668AbgDPOrK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 10:47:10 -0400
-Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D11B2C061A0C;
-        Thu, 16 Apr 2020 07:47:09 -0700 (PDT)
-Received: by mail-ot1-x341.google.com with SMTP id w12so3210324otm.13;
-        Thu, 16 Apr 2020 07:47:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=SzZBIJ1vFMB5OIxa5Nui2vPMLFwAMxv68r5Gb9P72a4=;
-        b=ajCfJ1M6r2pZxJFBvjyDS8dD2joULw4EAc5H0mUZ34t9TrnLn82hTVK4ipAPhoLJ3g
-         H6Wpxu5xO09esKSA678AUobqdfxkPv+4G2L5gLqxZOc3w9idnRf2OW19iCOkJ4RXl4Q1
-         XNiOX/I3JPJlp3dUju+l1JTdKbcI3CNOIJGMAcJjKxEsBV9tJv2pdzgEuUuFerEK0mHq
-         CDNHbUGp93DHYehQeGHMdBDIaj+40uajAF8xsfwo8u3p9SKulj+82I+z+LFTZ9PZgNOH
-         SoB5Bqg4Pgt6gR2OralSQexTeQ3UbkYiwFmJRSDru20gyW0b6J8xWXSZqBf4qQuE2D4e
-         2bgg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=SzZBIJ1vFMB5OIxa5Nui2vPMLFwAMxv68r5Gb9P72a4=;
-        b=G8N3SlkVrImm+abMSKvWrclAvW4wHjgPbSMCGekCyZ4GLyvezUS8S91yLmYSVJ8aAz
-         5ixieeWM2O0vtJ4j9cYvQgTilTSww5XKtAZdFeEeucvFT8IpizQZDc9q8Q3PSACDc0lH
-         pqVEg5D8xUPvB8jncnVehlz7Ax3E3tVVYbLCcGNKhuEwVMTehy5FJ3zkwHRqIreGoit1
-         lw3CC81lT5T13oQ51qVLrbzmNVwNqZOyiKz1JJZ6qM5lyFwRErIn79dxgLeo76GgTqgE
-         18UfwZZiKwis/ibP2VdGYLVsgNnrDVGe3mwzAO7Sx50j5mEvlua4ZISicZLHVAxy4bRi
-         nwuQ==
-X-Gm-Message-State: AGi0PuYcQ8GA2mGYYV4wTqiPPI7blaPFi7FpLQ509jnyNMRnRBYyunWM
-        ktN+nHrZSg76VdKKiD7i/cJMCsO0UZ4lQhtfuzg=
-X-Google-Smtp-Source: APiQypLdEbF3+t9LzDqALjNDG7plEaTTms/SfdlHEm65gdxa0jPdwNRVRRoUCOFXZeveNmrPK2qn+MtBebHlL6rUyeQ=
-X-Received: by 2002:a9d:12f6:: with SMTP id g109mr10158623otg.0.1587048429098;
- Thu, 16 Apr 2020 07:47:09 -0700 (PDT)
+        Thu, 16 Apr 2020 10:47:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46088 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2898023AbgDPN7F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:59:05 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2E4C720786;
+        Thu, 16 Apr 2020 13:59:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587045544;
+        bh=16MRUCU6snLRWWVpqH8LfJr+huMqXQc8E9e/L4ZEB34=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=LZ1M8Jh8DNmoS39kl9DyWlmfWePqR6XDUBC956FP+zzZImfZCKuGaY0cPIsRYXcod
+         F/Ur6zsVWjmjWPD3LtdxHOt/FBgsn2QBwDqOxDrG/FTkbQmmYLeVluqGc3Y5bPhRlc
+         qknfEFn0d6MH1axwmw6DkvtyRTwVcaAxU75pmguw=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Nikos Tsironis <ntsironis@arrikto.com>,
+        Mike Snitzer <snitzer@redhat.com>
+Subject: [PATCH 5.6 177/254] dm clone: Fix handling of partial region discards
+Date:   Thu, 16 Apr 2020 15:24:26 +0200
+Message-Id: <20200416131348.511499867@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.1
+In-Reply-To: <20200416131325.804095985@linuxfoundation.org>
+References: <20200416131325.804095985@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-From:   Sven Van Asbroeck <thesven73@gmail.com>
-Date:   Thu, 16 Apr 2020 10:46:58 -0400
-Message-ID: <CAGngYiVa9v9jGPNu4W+KHUnvemKU-BVE89-XNLcWOmoZjAPMTg@mail.gmail.com>
-Subject: [Q] devicetree overlays
-To:     Pantelis Antoniou <pantelis.antoniou@konsulko.com>,
-        Frank Rowand <frowand.list@gmail.com>
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Pantelis, Frank,
+From: Nikos Tsironis <ntsironis@arrikto.com>
 
-A quick question about the state of devicetree overlays. There don't seem to
-be many in-kernel overlay users (rcar and fpga only?). Does it make sense for
-new projects to use them?
+commit 4b5142905d4ff58a4b93f7c8eaa7ba829c0a53c9 upstream.
 
-My situation is this: I have hardware which consists of several modules.
-Knowledge about the type and location of these modules is located in an
-on-board eeprom.
+There is a bug in the way dm-clone handles discards, which can lead to
+discarding the wrong blocks or trying to discard blocks beyond the end
+of the device.
 
-So now I need to assemble a devicetree, by puzzling various 'blobs' together.
-This could be done in the bootloader, but also by a rcar-like driver, which
-queries the eeprom and inserts devicetree fragments/overlays into a live kernel.
+This could lead to data corruption, if the destination device indeed
+discards the underlying blocks, i.e., if the discard operation results
+in the original contents of a block to be lost.
 
-A couple of questions:
-- are devicetree overlays here to stay? (given that there are 2 in-kernel users)
-- does it make sense to solve the modular devicetree problem in a rcar-like
-  fashion?
-- is there perhaps a more canonical / idiomatic way to solve this?
+The root of the problem is the code that calculates the range of regions
+covered by a discard request and decides which regions to discard.
 
-Sven
+Since dm-clone handles the device in units of regions, we don't discard
+parts of a region, only whole regions.
+
+The range is calculated as:
+
+    rs = dm_sector_div_up(bio->bi_iter.bi_sector, clone->region_size);
+    re = bio_end_sector(bio) >> clone->region_shift;
+
+, where 'rs' is the first region to discard and (re - rs) is the number
+of regions to discard.
+
+The bug manifests when we try to discard part of a single region, i.e.,
+when we try to discard a block with size < region_size, and the discard
+request both starts at an offset with respect to the beginning of that
+region and ends before the end of the region.
+
+The root cause is the following comparison:
+
+  if (rs == re)
+    // skip discard and complete original bio immediately
+
+, which doesn't take into account that 'rs' might be greater than 're'.
+
+Thus, we then issue a discard request for the wrong blocks, instead of
+skipping the discard all together.
+
+Fix the check to also take into account the above case, so we don't end
+up discarding the wrong blocks.
+
+Also, add some range checks to dm_clone_set_region_hydrated() and
+dm_clone_cond_set_range(), which update dm-clone's region bitmap.
+
+Note that the aforementioned bug doesn't cause invalid memory accesses,
+because dm_clone_is_range_hydrated() returns True for this case, so the
+checks are just precautionary.
+
+Fixes: 7431b7835f55 ("dm: add clone target")
+Cc: stable@vger.kernel.org # v5.4+
+Signed-off-by: Nikos Tsironis <ntsironis@arrikto.com>
+Signed-off-by: Mike Snitzer <snitzer@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ drivers/md/dm-clone-metadata.c |   13 ++++++++++++
+ drivers/md/dm-clone-target.c   |   43 +++++++++++++++++++++++++++--------------
+ 2 files changed, 42 insertions(+), 14 deletions(-)
+
+--- a/drivers/md/dm-clone-metadata.c
++++ b/drivers/md/dm-clone-metadata.c
+@@ -850,6 +850,12 @@ int dm_clone_set_region_hydrated(struct
+ 	struct dirty_map *dmap;
+ 	unsigned long word, flags;
+ 
++	if (unlikely(region_nr >= cmd->nr_regions)) {
++		DMERR("Region %lu out of range (total number of regions %lu)",
++		      region_nr, cmd->nr_regions);
++		return -ERANGE;
++	}
++
+ 	word = region_nr / BITS_PER_LONG;
+ 
+ 	spin_lock_irqsave(&cmd->bitmap_lock, flags);
+@@ -879,6 +885,13 @@ int dm_clone_cond_set_range(struct dm_cl
+ 	struct dirty_map *dmap;
+ 	unsigned long word, region_nr;
+ 
++	if (unlikely(start >= cmd->nr_regions || (start + nr_regions) < start ||
++		     (start + nr_regions) > cmd->nr_regions)) {
++		DMERR("Invalid region range: start %lu, nr_regions %lu (total number of regions %lu)",
++		      start, nr_regions, cmd->nr_regions);
++		return -ERANGE;
++	}
++
+ 	spin_lock_irq(&cmd->bitmap_lock);
+ 
+ 	if (cmd->read_only) {
+--- a/drivers/md/dm-clone-target.c
++++ b/drivers/md/dm-clone-target.c
+@@ -293,10 +293,17 @@ static inline unsigned long bio_to_regio
+ 
+ /* Get the region range covered by the bio */
+ static void bio_region_range(struct clone *clone, struct bio *bio,
+-			     unsigned long *rs, unsigned long *re)
++			     unsigned long *rs, unsigned long *nr_regions)
+ {
++	unsigned long end;
++
+ 	*rs = dm_sector_div_up(bio->bi_iter.bi_sector, clone->region_size);
+-	*re = bio_end_sector(bio) >> clone->region_shift;
++	end = bio_end_sector(bio) >> clone->region_shift;
++
++	if (*rs >= end)
++		*nr_regions = 0;
++	else
++		*nr_regions = end - *rs;
+ }
+ 
+ /* Check whether a bio overwrites a region */
+@@ -454,7 +461,7 @@ static void trim_bio(struct bio *bio, se
+ 
+ static void complete_discard_bio(struct clone *clone, struct bio *bio, bool success)
+ {
+-	unsigned long rs, re;
++	unsigned long rs, nr_regions;
+ 
+ 	/*
+ 	 * If the destination device supports discards, remap and trim the
+@@ -463,9 +470,9 @@ static void complete_discard_bio(struct
+ 	 */
+ 	if (test_bit(DM_CLONE_DISCARD_PASSDOWN, &clone->flags) && success) {
+ 		remap_to_dest(clone, bio);
+-		bio_region_range(clone, bio, &rs, &re);
++		bio_region_range(clone, bio, &rs, &nr_regions);
+ 		trim_bio(bio, rs << clone->region_shift,
+-			 (re - rs) << clone->region_shift);
++			 nr_regions << clone->region_shift);
+ 		generic_make_request(bio);
+ 	} else
+ 		bio_endio(bio);
+@@ -473,12 +480,21 @@ static void complete_discard_bio(struct
+ 
+ static void process_discard_bio(struct clone *clone, struct bio *bio)
+ {
+-	unsigned long rs, re;
++	unsigned long rs, nr_regions;
+ 
+-	bio_region_range(clone, bio, &rs, &re);
+-	BUG_ON(re > clone->nr_regions);
++	bio_region_range(clone, bio, &rs, &nr_regions);
++	if (!nr_regions) {
++		bio_endio(bio);
++		return;
++	}
+ 
+-	if (unlikely(rs == re)) {
++	if (WARN_ON(rs >= clone->nr_regions || (rs + nr_regions) < rs ||
++		    (rs + nr_regions) > clone->nr_regions)) {
++		DMERR("%s: Invalid range (%lu + %lu, total regions %lu) for discard (%llu + %u)",
++		      clone_device_name(clone), rs, nr_regions,
++		      clone->nr_regions,
++		      (unsigned long long)bio->bi_iter.bi_sector,
++		      bio_sectors(bio));
+ 		bio_endio(bio);
+ 		return;
+ 	}
+@@ -487,7 +503,7 @@ static void process_discard_bio(struct c
+ 	 * The covered regions are already hydrated so we just need to pass
+ 	 * down the discard.
+ 	 */
+-	if (dm_clone_is_range_hydrated(clone->cmd, rs, re - rs)) {
++	if (dm_clone_is_range_hydrated(clone->cmd, rs, nr_regions)) {
+ 		complete_discard_bio(clone, bio, true);
+ 		return;
+ 	}
+@@ -1169,7 +1185,7 @@ static void process_deferred_discards(st
+ 	int r = -EPERM;
+ 	struct bio *bio;
+ 	struct blk_plug plug;
+-	unsigned long rs, re;
++	unsigned long rs, nr_regions;
+ 	struct bio_list discards = BIO_EMPTY_LIST;
+ 
+ 	spin_lock_irq(&clone->lock);
+@@ -1185,14 +1201,13 @@ static void process_deferred_discards(st
+ 
+ 	/* Update the metadata */
+ 	bio_list_for_each(bio, &discards) {
+-		bio_region_range(clone, bio, &rs, &re);
++		bio_region_range(clone, bio, &rs, &nr_regions);
+ 		/*
+ 		 * A discard request might cover regions that have been already
+ 		 * hydrated. There is no need to update the metadata for these
+ 		 * regions.
+ 		 */
+-		r = dm_clone_cond_set_range(clone->cmd, rs, re - rs);
+-
++		r = dm_clone_cond_set_range(clone->cmd, rs, nr_regions);
+ 		if (unlikely(r))
+ 			break;
+ 	}
+
+
