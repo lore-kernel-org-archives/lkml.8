@@ -2,113 +2,143 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F414C352BE
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 05:48:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17859C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 05:49:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1EECB2076D
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 05:48:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BbnMDIAH"
+	by mail.kernel.org (Postfix) with ESMTP id F1D832076D
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 05:48:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407256AbgDPFst (ORCPT
+        id S2407278AbgDPFs6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 01:48:49 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:36590 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2407169AbgDPFsU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 01:48:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587016097;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=Ae5ly7M/OETZeDnJohKJkBFZBczMSVWSQhC8QwiJPZs=;
-        b=BbnMDIAHKp7abEuFM5DPZp0zIXuxamuWfj/Zidk2jC+d2j205dGPAkVrQJjJQUXcNBQuGH
-        SeG2YqUNXhzSggQvN+rNQyTYkMw8vLA+6YKdRyGaK2aL2PnF4LrpItorLRhGkk3345Qlxa
-        ydQA9AlpHpY/5/FF+SSZxZhCJSZxNmI=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-97-y0juUd9SPm6Dr1B_bF4zJA-1; Thu, 16 Apr 2020 01:48:13 -0400
-X-MC-Unique: y0juUd9SPm6Dr1B_bF4zJA-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 09D7B801A09;
-        Thu, 16 Apr 2020 05:48:11 +0000 (UTC)
-Received: from T590 (ovpn-8-29.pek2.redhat.com [10.72.8.29])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id ED6405C1C5;
-        Thu, 16 Apr 2020 05:47:55 +0000 (UTC)
-Date:   Thu, 16 Apr 2020 13:47:50 +0800
-From:   Ming Lei <ming.lei@redhat.com>
-To:     Luis Chamberlain <mcgrof@kernel.org>
-Cc:     axboe@kernel.dk, viro@zeniv.linux.org.uk, bvanassche@acm.org,
-        gregkh@linuxfoundation.org, rostedt@goodmis.org, mingo@redhat.com,
-        jack@suse.cz, nstange@suse.de, akpm@linux-foundation.org,
-        mhocko@suse.com, yukuai3@huawei.com, linux-block@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Omar Sandoval <osandov@fb.com>,
-        Hannes Reinecke <hare@suse.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        syzbot+603294af2d01acfdd6da@syzkaller.appspotmail.com
-Subject: Re: [PATCH 2/5] blktrace: fix debugfs use after free
-Message-ID: <20200416054750.GA2723777@T590>
-References: <20200414041902.16769-1-mcgrof@kernel.org>
- <20200414041902.16769-3-mcgrof@kernel.org>
- <20200416021036.GA2717677@T590>
- <20200416052524.GH11244@42.do-not-panic.com>
+        Thu, 16 Apr 2020 01:48:58 -0400
+Received: from mga14.intel.com ([192.55.52.115]:2915 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2407149AbgDPFsQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 01:48:16 -0400
+IronPort-SDR: 1MnNJUp19vJwvEROKs1VPjwHDiNl+sHqxUqVVnHvjNvG/8paaw7KN3+Al7o0eY8Vv+uXDY47pg
+ 9qBNlJA6wmrg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2020 22:48:15 -0700
+IronPort-SDR: kSgWfODYLPIBI+Ko+8skThE/Mc9TejguXhlMxJ86rY+O8OqEpbwA0DhMGRuh59LaPdUH6Xz8iP
+ sW/20cnw+ODQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,388,1580803200"; 
+   d="scan'208";a="245887317"
+Received: from xingzhen-mobl1.ccr.corp.intel.com (HELO [10.238.5.222]) ([10.238.5.222])
+  by fmsmga008.fm.intel.com with ESMTP; 15 Apr 2020 22:48:12 -0700
+Subject: Re: [LKP] Re: [ext4] b1b4705d54: filebench.sum_bytes_mb/s -20.2%
+ regression
+To:     Jan Kara <jack@suse.cz>
+Cc:     Rong Chen <rong.a.chen@intel.com>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>,
+        Matthew Bobrowski <mbobrowski@mbobrowski.org>,
+        Ritesh Harjani <riteshh@linux.ibm.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        lkp@lists.01.org
+References: <20191224005915.GW2760@shao2-debian>
+ <20200107134106.GD25547@quack2.suse.cz> <20200107165708.GA3619@mit.edu>
+ <20200107172824.GK25547@quack2.suse.cz>
+ <fde1ad11-c9b0-4393-a123-3f7625c819fa@intel.com>
+ <7ec6b078-7b09-fb87-8ad2-a328e96c5bf9@linux.intel.com>
+ <49a59199-53af-206f-d07c-5c8c45f498b3@linux.intel.com>
+ <20200325143102.GJ28951@quack2.suse.cz>
+ <309baa89-9f69-0545-946e-4b3624f83e60@linux.intel.com>
+ <20200415083954.GD501@quack2.suse.cz>
+From:   Xing Zhengjun <zhengjun.xing@linux.intel.com>
+Message-ID: <3dbd1c40-00d5-5e3e-f864-cb9abe30a7fa@linux.intel.com>
+Date:   Thu, 16 Apr 2020 13:48:11 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200416052524.GH11244@42.do-not-panic.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+In-Reply-To: <20200415083954.GD501@quack2.suse.cz>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 16, 2020 at 05:25:24AM +0000, Luis Chamberlain wrote:
-> On Thu, Apr 16, 2020 at 10:10:36AM +0800, Ming Lei wrote:
-> > In theory, multiple partitions can be traced concurrently, but looks
-> > it never works, so it won't cause trouble for multiple partition trace.
-> > 
-> > One userspace visible change is that blktrace debugfs dir name is switched 
-> > to disk name from partition name in case of partition trace, will it
-> > break some utilities?
+
+
+On 4/15/2020 4:39 PM, Jan Kara wrote:
+> On Wed 15-04-20 15:55:09, Xing Zhengjun wrote:
+>>
+>>
+>> On 3/25/2020 10:31 PM, Jan Kara wrote:
+>>> On Wed 25-03-20 13:50:09, Xing Zhengjun wrote:
+>>>> ping...
+>>>> The issue still exists in v5.6-rc7.
+>>>
+>>> So I have tried again to reproduce this so that I can look into the
+>>> regression. When observing what is actually happening in the system I have
+>>> to say that this workfile (or actually its implementation in filebench) is
+>>> pretty dubious. The problem is that filebench first creates the files by
+>>> writing them through ordinary write(2). Then it immediately starts reading
+>>> the files with direct IO read. So what happens is that by the time direct
+>>> IO read is running, the system is still writing back the create files and
+>>> depending on how read vs writes get scheduled, you get different results.
+>>> Also direct IO read will first flush the range it is going to read from the
+>>> page cache so to some extent this is actually parallel small ranged
+>>> fsync(2) benchmark. Finally differences in how we achieve integrity of
+>>> direct IO reads with dirty page cache are going to impact this benchmark.
+>>>
+>>
+>> Sounds reasonable!  Thanks for the clarification!
+>>
+>>> So overall can now see why this commit makes a difference but the workload
+>>> is IMHO largely irrelevant. What would make sense is to run filebench once,
+>>> then unmount & mount the fs to force files to disk and clear page cache and
+>>> then run it again. Filebench will reuse the files in this case and then
+>>> parallel direct IO readers without page cache are a sensible workload. But
+>>> I didn't see any difference in that (even with rotating disk) on my
+>>> machines.
+>>>
+>> We do a test per your suggestion, run "filebench" once during setup stage,
+>> then do a "sync",  after that run "filebench" again, from the attached test
+>> result "compare", "filebench.sum_bytes_mb/s" regression is disappeared.
 > 
-> How is this possible, its not clear to me, we go from:
+> Cool. Thanks for improving the testcase! I'd just note that if you only do
+> sync(2) between the setup and benchmark phase, you'll still have files
+> cached in the page cache and so direct IO will go through the slow path
+> when it has to evict pages from the page cache. The standard (and optimized
+> for) situation for direct IO is that there is no page cache for the files
+> direct IO is performed to. That's why I suggested remounting the
+> filesystem, not just calling sync(2)...
+>
+
+Thanks. We will keep improving the test case and try to make sure there 
+is no page cache for the files direct IO is performed to.
+
+> 								Honza
 > 
-> -	q->debugfs_dir = debugfs_create_dir(kobject_name(q->kobj.parent),
-> -					    blk_debugfs_root);
+>> =========================================================================================
+>> tbox_group/testcase/rootfs/kconfig/compiler/debug-setup/disk/fs/test/cpufreq_governor/ucode:
+>>    lkp-hsw-d01/filebench/debian-x86_64-20191114.cgz/x86_64-rhel-7.6/gcc-7/test2/1HDD/ext4/fivestreamreaddirect.f/performance/0x27
+>>
+>> commit:
+>>    b1b4705d54abedfd69dcdf42779c521aa1e0fbd3
+>>    09edf4d381957b144440bac18a4769c53063b943
+>>    v5.5
+>>    v5.7-rc1
+>>
+>> b1b4705d54abedfd 09edf4d381957b144440bac18a4                        v5.5                    v5.7-rc1
+>> ---------------- --------------------------- --------------------------- ---------------------------
+>>           %stddev     %change         %stddev     %change         %stddev     %change         %stddev
+>>               \          |                \          |                \          |                \
+>>       59.40            +0.0%      59.40            -0.8%      58.93            -1.0%      58.80        filebench.sum_bytes_mb/s
+>>        3570            +0.0%       3570            -0.8%       3541            -1.0%       3533        filebench.sum_operations
+>>       59.50            +0.0%      59.50            -0.8%      59.02            -1.0%      58.89        filebench.sum_operations/s
+>>       59.33            +0.0%      59.33            +0.0%      59.33            -0.6%      59.00        filebench.sum_reads/s
+>>       83.98            -1.5%      82.75            +0.8%      84.62            +1.0%      84.84        filebench.sum_time_ms/op
 > 
-> To this:
-> 
-> +	q->debugfs_dir = debugfs_create_dir(kobject_name(q->kobj.parent),
-> +					    blk_debugfs_root);
-> 
-> 
-> Maybe I am overlooking something.
 
-Your patch removes the blktrace debugfs dir:
-
-do_blk_trace_setup()
-
--       dir = debugfs_lookup(buts->name, blk_debugfs_root);
--       if (!dir)
--               bt->dir = dir = debugfs_create_dir(buts->name, blk_debugfs_root);
--
-
-Then create blktrace attributes under the dir of q->debugfs_dir.
-
-However, buts->name could be one partition device name, but
-q->debugfs_dir has to be disk name.
-
-This change is visible to blktrace utilities.
-
-Thanks,
-Ming
-
+-- 
+Zhengjun Xing
