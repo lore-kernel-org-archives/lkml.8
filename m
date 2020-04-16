@@ -2,117 +2,93 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39E0EC2BA19
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 00:29:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A11CC2BA19
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 00:30:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 122B1206D6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 00:29:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fkzxHgIO"
+	by mail.kernel.org (Postfix) with ESMTP id 26450206D6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 00:30:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391751AbgDPA3S (ORCPT
+        id S2403966AbgDPAaI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 20:29:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47400 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2391714AbgDPA3O (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 20:29:14 -0400
-Received: from mail-oi1-x242.google.com (mail-oi1-x242.google.com [IPv6:2607:f8b0:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8476C061A0F
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 17:29:12 -0700 (PDT)
-Received: by mail-oi1-x242.google.com with SMTP id x10so5773222oie.1
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 17:29:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=GeXd8f9J30PgVFJ7Z+WgbUhdu7rs2z9sqFP5jQ5Rms4=;
-        b=fkzxHgIOqEjwuIosHr9XmQjcVbxGyuyyncMmIKtBRy2n1ATDf9hSL8qMF8+8CCdDyA
-         wououMrcJsN/rDXNRAzh59RbkXQpLrJ0BNFC4X1fEwtKE8izrLemCYJZsVeRrPfxJITu
-         wkI5ti8qldm3gUdm95Zq5S+B6IleEGfxZ31au8kCUg+w39Fq8riSYOHkd1CyGMzPjQXL
-         9l9Z8YgX35Q1cIQgH0i9nYi0TXXTbgLFEsAd4/mId92Z6HWufi2SVoucENSPZOK5Z30q
-         HiErD0IrYQ8+hAlaLCpqdV/U/1SEpWoRWOsgu4IzMphWBg7nJRo5hw6Td0LQDZ3PdnUh
-         5dNQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=GeXd8f9J30PgVFJ7Z+WgbUhdu7rs2z9sqFP5jQ5Rms4=;
-        b=HvF37PTr3CXbVquanWLNdSLQ+4dTkgEbhEhJEL5ebdeo3B4f9/GxR+Hd/WuXIDzi3v
-         gtKpRV723/i4BhlGmqdtEm5FNDoSaziEb+iSx4bqBtvNv6Ab5Y/Gmps/EjCDk7hYSUWV
-         mv6wuP2S3RXtvh0vY7obxjxu68aQVd/sIKuM3r/KNM3z3xn3lb+7Z/j0e011afBBZLWu
-         jMXXDaYEjlhgflf15ub/B2PDcLSQGADgl8w8g+sBFGAj3Pxq1Pv1fJ7ZmhsZ/gLHtb3/
-         ZS5Yf6FXa7yIy5vexWcodpIyeeF1CJDuU0+qSJoaPTaScIU5jHBe/+ycxurmDhvjfS9a
-         puww==
-X-Gm-Message-State: AGi0PuYgJ7EtvYWsMOhHXz/TaX7SOdpQuYxQ9Swv1zoo2Df4NcUBRZlh
-        YGpa+KI7DYceHzPsv+06rjVyaogZ16gUcKOpL0RQhQ==
-X-Google-Smtp-Source: APiQypKqxX1Fl3V2SnfLeZZgj6SmNm3X1EEdrsgQfCYgSGa09GLLNNURx+AKzwqwjs7SlbDusY22alHpQpyRzJdkTLk=
-X-Received: by 2002:aca:5d83:: with SMTP id r125mr1414954oib.8.1586996951792;
- Wed, 15 Apr 2020 17:29:11 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200416002616.1456-1-rcampbell@nvidia.com>
-In-Reply-To: <20200416002616.1456-1-rcampbell@nvidia.com>
-From:   Mina Almasry <almasrymina@google.com>
-Date:   Wed, 15 Apr 2020 17:29:00 -0700
-Message-ID: <CAHS8izNenS4ZW3fxFtJ-jzZ9QwP192N3KPB7n6qQrVcoP8PNgg@mail.gmail.com>
-Subject: Re: [PATCH] hugetlb_cgroup: remove unused variable 'i'
-To:     Ralph Campbell <rcampbell@nvidia.com>
-Cc:     linux-kselftest@vger.kernel.org, Linux-MM <linux-mm@kvack.org>,
-        open list <linux-kernel@vger.kernel.org>,
+        Wed, 15 Apr 2020 20:30:08 -0400
+Received: from mx2.suse.de ([195.135.220.15]:42916 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2391755AbgDPA36 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 20:29:58 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 39771AF8A;
+        Thu, 16 Apr 2020 00:29:53 +0000 (UTC)
+From:   NeilBrown <neilb@suse.de>
+To:     Trond Myklebust <trondmy@hammerspace.com>,
+        "Anna.Schumaker\@Netapp.com" <Anna.Schumaker@Netapp.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Jan Kara <jack@suse.cz>, Michal Hocko <mhocko@kernel.org>
+Date:   Thu, 16 Apr 2020 10:29:45 +1000
+Cc:     linux-mm@kvack.org, linux-nfs@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Writeback fixes for NFS - V3
+In-Reply-To: <87ftdgw58w.fsf@notabene.neil.brown.name>
+References: <87tv2b7q72.fsf@notabene.neil.brown.name> <87v9miydai.fsf@notabene.neil.brown.name> <87ftdgw58w.fsf@notabene.neil.brown.name>
+Message-ID: <87wo6gs26e.fsf@notabene.neil.brown.name>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 15, 2020 at 5:26 PM Ralph Campbell <rcampbell@nvidia.com> wrote=
-:
->
-> Compiling tests in tools/testing/selftests/vm/ results in a C compiler
-> warning:
->
-> write_to_hugetlbfs.c: In function =E2=80=98main=E2=80=99:
-> write_to_hugetlbfs.c:77:16: warning: unused variable =E2=80=98i=E2=80=99
->    77 |  unsigned long i;
->
-> Delete the unused variable.
->
-> Fixes: 29750f71a9b4 ("hugetlb_cgroup: add hugetlb_cgroup reservation test=
-s")
-> Signed-off-by: Ralph Campbell <rcampbell@nvidia.com>
+--=-=-=
+Content-Type: text/plain
 
-Whoops, sorry about that.
 
-Reviewed-by: Mina Almasry <almasrymina@google.com>
+This is version 3 (I think) of my patches to improve NFS writeaback.
 
-> ---
->  tools/testing/selftests/vm/write_to_hugetlbfs.c | 2 --
->  1 file changed, 2 deletions(-)
->
-> diff --git a/tools/testing/selftests/vm/write_to_hugetlbfs.c b/tools/test=
-ing/selftests/vm/write_to_hugetlbfs.c
-> index 110bc4e4015d..6a2caba19ee1 100644
-> --- a/tools/testing/selftests/vm/write_to_hugetlbfs.c
-> +++ b/tools/testing/selftests/vm/write_to_hugetlbfs.c
-> @@ -74,8 +74,6 @@ int main(int argc, char **argv)
->         int write =3D 0;
->         int reserve =3D 1;
->
-> -       unsigned long i;
-> -
->         if (signal(SIGINT, sig_handler) =3D=3D SIG_ERR)
->                 err(1, "\ncan't catch SIGINT\n");
->
-> --
-> 2.25.2
->
+Changes:
+ - the code for adding legacy values to /proc/vmstat was broken.
+   I haven't taken the approach that Michal and Jan discussed but
+   a simpler (I hope) approach that just seq_puts() the lines at an
+   appropriate place.
+
+ - I've modified the handling of PF_LOCAL_THROTTLE - sufficiently that
+   I dropped Jan's reviewed-by.
+   Rather than invoking the same behaviour as BDI_CAP_STRICTLIMIT,
+   I now just use the part I needed.
+   So if the global threshold is not exceeded, PF_LOCAL_THROTTLE tasks
+   are not throttled.  This is the case for normal processes, but not
+   when BDI_CAP_STRICTLIMIT is in effect.
+   If the global threshold *is* exceeded, only then to we check the
+   local per-bdi threshold.  If that is not exceeded then
+   PF_LOCAL_THROTTLE again avoid any throttling.  Only if both the
+   thresholds are exceeded are these tasks throttled.
+   I think this is more refletive if what we actually need.
+
+
+Thanks,
+NeilBrown
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAl6XpvkACgkQOeye3VZi
+gbmE0g//fohyxqVmWfY0gBY1Eu5eE69mCobqspLO+gxINBuecBNhzJRXDub+b9Jk
+gGwg5NnJ0yJfUxN//Et4UzX+ZhQWg5rrJ9fYPXkNt4LrsRR1fnr31jUI3+S+XpcZ
+GxnJjWCHskHVlqf7N9cjdFj+i6Yl4/yVqP0XqWtBVW+IDBvP8WAmICh5BM5rEqrB
+0MEKRU3UwVFWLvn+tH6BrSboiSCNHIxsGL/t2nYQf3/CD+s00t4YzRp1FPzV8/WE
+T1i93OdjiOzaWqDQs3VBaPqyb7fzo/Y35s/2cDJ/WXD2kuEDefmM5P+7uF/UUXir
+DlCa1IC5mlbsP2qMsrJl4SgbL0IUgqZXpZZUU7n77N7hd6QznJMI60mXKBthrnwq
+J6Tuua66nAWI7te6EHJkLYP5zTHiAa8dQEk5o7S0ENx/ojcoXjU2LWfMEgCVGrud
+GUCHWWswFD4w3Xz29UDwAfUTkntbML77hgwlhUI9bKsOtu3IvlQ3npbyVS3DN8wu
+WQh0YR5e/C3vAQA6vHgw3WhJcMG2vqqMdZeCIwcGOBZ9Z+c00j7t+T9PN2UHiLWs
+3OX6yo70TJwYvzRqWrqWJMnaQ1kPxMJVDCt9ZteVkCgmE/PTYCqDNuAUKnZds5Ej
+XFbpwoyhzN/hxLJRbUOndIb7NJspO5hPVzJvkrrt9era8tXt7j8=
+=pJOU
+-----END PGP SIGNATURE-----
+--=-=-=--
