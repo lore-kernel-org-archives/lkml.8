@@ -2,70 +2,106 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F0EFC2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 11:26:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3B42C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 11:26:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5882A21841
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 11:26:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C92F21841
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 11:26:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pUm/dCpD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2633156AbgDPL0W (ORCPT
+        id S2633168AbgDPL0h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 07:26:22 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:52226 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2633029AbgDPLXJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 07:23:09 -0400
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id B4DE0BEC26C13D528FF6;
-        Thu, 16 Apr 2020 19:22:58 +0800 (CST)
-Received: from localhost.localdomain (10.69.192.58) by
- DGGEMS401-HUB.china.huawei.com (10.3.19.201) with Microsoft SMTP Server id
- 14.3.487.0; Thu, 16 Apr 2020 19:22:47 +0800
-From:   John Garry <john.garry@huawei.com>
-To:     <axboe@kernel.dk>
-CC:     <linux-block@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <ming.lei@redhat.com>, John Garry <john.garry@huawei.com>
-Subject: [PATCH] blk-mq: Put driver tag in blk_mq_dispatch_rq_list() when no budget
-Date:   Thu, 16 Apr 2020 19:18:51 +0800
-Message-ID: <1587035931-125028-1-git-send-email-john.garry@huawei.com>
-X-Mailer: git-send-email 2.8.1
+        Thu, 16 Apr 2020 07:26:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36508 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2632893AbgDPLYq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 07:24:46 -0400
+Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9E55C061A0F
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 04:24:45 -0700 (PDT)
+Received: by mail-lf1-x141.google.com with SMTP id j14so5289370lfg.9
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 04:24:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=91IoQt8MKAEQHzNhIomKMTipSgMe5lSxVgD3BjRS3II=;
+        b=pUm/dCpD1e2p3xp5gP2FxIaTOJYH0dKsBte/U1WzRr/sqJJwTvU48GZ1Hka/i50iXd
+         qtjfcbVtvHLKx1XrN94vL42DhN/4djLHGAUiQ5poHDIcSowJ443iu7reqIKF+ON22+gS
+         Y2NWQ06wB3tcXZq7wXxv8j6UfTyqFg3Ar5jehrqa1s0ETPFwDt4DA6rXO3d3p5W2yh5s
+         gSl/BFbmFQAJSUmGZd4GHYpEh869jkZu7qzgqocMT1j15y9uHq9Hfr2K1ZO69FmFxPFp
+         oxAyzQs5QM5P4B4ak5prGL/jnsvIWWmJE4hd7EEfjVMUtMwd1GH6SW70YOJSrqloA4gF
+         M0Xg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=91IoQt8MKAEQHzNhIomKMTipSgMe5lSxVgD3BjRS3II=;
+        b=K6RIDRaX8jsCPk5frmOfuOiafpk8OX+b5zyeSf6NoJXXODBhvhAUfC2ri3PTK4kyD+
+         bwp5svBEJF7cUITeeyapzv93B1/Qodrw35tPClwAQhrn2OGEAMlsE41CVQYH2CGZra9H
+         RqE4Qkz+eZTWtsJZr5JPNYGpHqiW9HJdw+zJUG0Th+GCjY/g3glwrDWhjx0OVgcpd94j
+         SmoHyZk29WR386/5/uQ9VUFBtLFFqvOSrilZNwS4X5Nqj8gs3pf1mMYsxrx4RxtT3wIz
+         qP2iiaNcmM4OdpoMCXfIl9i+yKMbJplhNTNZrLptLgvUCBrs7sBCQZnyaQtfzIlOBGhq
+         xEyw==
+X-Gm-Message-State: AGi0PuY3vtA2YsJ+Hscijns7fV+9eEEhcz4skGiWSIs7qk4xcsZWbb+d
+        nDrx+nKyGm8L/bBzetYGbpvezZRlfaXEBOSJbfjjQQ==
+X-Google-Smtp-Source: APiQypKER/2EB8Z5ELqVAMozkqwK3O4AQM7q+civrEIeHemg21DnYBd8b8x4Owji7jfW3OIAelN4bep/jvanKBdDm+A=
+X-Received: by 2002:a19:48c3:: with SMTP id v186mr5679216lfa.194.1587036284149;
+ Thu, 16 Apr 2020 04:24:44 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.69.192.58]
-X-CFilter-Loop: Reflected
+References: <1586882894-19905-1-git-send-email-gupt21@gmail.com>
+In-Reply-To: <1586882894-19905-1-git-send-email-gupt21@gmail.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 16 Apr 2020 13:24:33 +0200
+Message-ID: <CACRpkdYZ1_EzPPFaiEUihnxuMB=9EquVPnRxf3pVeJfxn8AbcA@mail.gmail.com>
+Subject: Re: [PATCH 1/1] HID: mcp2221: add GPIO functionality support
+To:     Rishi Gupta <gupt21@gmail.com>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux Input <linux-input@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If in blk_mq_dispatch_rq_list() we find no budget, then we break of the
-dispatch loop, but the request may keep the driver tag, evaulated
-in 'nxt' in the previous loop iteration.
+On Tue, Apr 14, 2020 at 6:48 PM Rishi Gupta <gupt21@gmail.com> wrote:
 
-Fix by putting the driver tag for that request.
+> MCP2221 has 4 pins that can be used as GPIO or configured
+> for alternate functionality such as clock generation and
+> IRQ detection. This patch adds support for GPIO functionality.
+>
+> To set direction of a pin or to toggle its state after it
+> has been configured as GPIO, driver sends command to mcp2221
+> and parses response received from mcp2221. Based on this
+> response either 0 or appropriate error code is returned to
+> GPIO framework.
+>
+> To get the direction or current state of a pin, driver
+> sends command and read response from the device. Based on
+> the response received from device direction or value
+> is sent to the GPIO framework.
+>
+> Command from driver to mcp2221 device are output report.
+> Response received from mcp2221 is input report.
+>
+> Datasheet (page 45-48) contains details about how to decode
+> the response received from device:
+> http://ww1.microchip.com/downloads/en/DeviceDoc/20005565B.pdf
+>
+> Signed-off-by: Rishi Gupta <gupt21@gmail.com>
 
-Signed-off-by: John Garry <john.garry@huawei.com>
+This looks good to me.
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-diff --git a/block/blk-mq.c b/block/blk-mq.c
-index 8e56884fd2e9..a7785df2c944 100644
---- a/block/blk-mq.c
-+++ b/block/blk-mq.c
-@@ -1222,8 +1222,10 @@ bool blk_mq_dispatch_rq_list(struct request_queue *q, struct list_head *list,
- 		rq = list_first_entry(list, struct request, queuelist);
- 
- 		hctx = rq->mq_hctx;
--		if (!got_budget && !blk_mq_get_dispatch_budget(hctx))
-+		if (!got_budget && !blk_mq_get_dispatch_budget(hctx)) {
-+			blk_mq_put_driver_tag(rq);
- 			break;
-+		}
- 
- 		if (!blk_mq_get_driver_tag(rq)) {
- 			/*
--- 
-2.16.4
-
+Yours,
+Linus Walleij
