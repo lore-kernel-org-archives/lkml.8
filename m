@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DF11C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:58:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81D76C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:58:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3ADD62051A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:58:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E6AA206A2
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:58:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587049082;
-	bh=0ZzAX2FSs2sfE8UahH9v8hh73bqQgv9fyahjVD79mw4=;
+	s=default; t=1587049098;
+	bh=4gadm28wxegsVG+5goEWoRjI0J2a1ktHlwEXTFjGKEA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eW59oAkisVyVZu7UrNGLtz8XddGkJnPyeupss2519TxouyaZOzrtWlKtfyDtQbbYe
-	 H0s4MABUwUrwqSccjtFiMSgk7CgYTXGU8zuUwcJe/lEmmUtx9XjD2s+prD1k+wKFdL
-	 lbljBul3gQlATZSyOQmUjJayIR8E4m6VlNjDtL9k=
+	b=AsaHN/D6QJsekNToudf++AjhcWJtNegVYwSgu9QXqJRMkpBJ9FlsdyZl1KjhIl8Cg
+	 ueDYkUkYpIxoqk/ghMFSghVMQoKcpGnIvgBb7q+iV9XTEk0dtc2C6JFJWMuK3Q+soZ
+	 EoYqsRZBhlqbKr875Rc0FxSwxJnqmgt2dKS173pM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732523AbgDPO6B (ORCPT
+        id S2409152AbgDPO6Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:58:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42184 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 10:58:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42078 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392535AbgDPNzd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:55:33 -0400
+        id S2392517AbgDPNz1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:55:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C7BF020732;
-        Thu, 16 Apr 2020 13:55:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E88B12076D;
+        Thu, 16 Apr 2020 13:55:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587045332;
-        bh=0ZzAX2FSs2sfE8UahH9v8hh73bqQgv9fyahjVD79mw4=;
+        s=default; t=1587045327;
+        bh=4gadm28wxegsVG+5goEWoRjI0J2a1ktHlwEXTFjGKEA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oNQJ8Bp3jWgdmQtQVrGLGBun2sHipDkeYBIhKeOa02ZykWv0UmNgKL9y2Mb/misPV
-         liFZ3j6z+8e5zORAGYAkqpy/FpITl763SdaM4EA6AG++OKLsgyg2l/H/klPn5FZ0cm
-         KLub9e7YjPOL1mGbhiGxwv7Fqcv/t38OzXVUCSxI=
+        b=uhUKCaEGo56iHo6z21v5RvOVLKv7epZEMcXqvDbf58Q+SIeMMacs1FogLkMFuHTBZ
+         k1DCejnsqwbvVvVwihVQYLw/irUm3wrbaaUKKRiiSrj2I2UzQDJrB1B+jRn0YWmJr0
+         s8r10EI8NXl1QkHtRxOL5JH91B3GqhiwKZ5Jb4Gc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Subject: [PATCH 5.6 090/254] ACPI: EC: Avoid printing confusing messages in acpi_ec_setup()
-Date:   Thu, 16 Apr 2020 15:22:59 +0200
-Message-Id: <20200416131337.194760816@linuxfoundation.org>
+        stable@vger.kernel.org, Benoit Parrot <bparrot@ti.com>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Subject: [PATCH 5.6 088/254] media: ti-vpe: cal: fix a kernel oops when unloading module
+Date:   Thu, 16 Apr 2020 15:22:57 +0200
+Message-Id: <20200416131336.928553484@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.804095985@linuxfoundation.org>
 References: <20200416131325.804095985@linuxfoundation.org>
@@ -59,62 +61,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+From: Benoit Parrot <bparrot@ti.com>
 
-commit c823c17a8ea4db4943152388a0beb9a556715716 upstream.
+commit 80264809ea0a3fd2ee8251f31a9eb85d2c3fc77e upstream.
 
-It doesn't really make sense to pass ec->handle of the ECDT EC to
-acpi_handle_info(), because it is set to ACPI_ROOT_OBJECT in
-acpi_ec_ecdt_probe(), so rework acpi_ec_setup() to avoid using
-acpi_handle_info() for printing messages.
+After the switch to use v4l2_async_notifier_add_subdev() and
+v4l2_async_notifier_cleanup(), unloading the ti_cal module would cause a
+kernel oops.
 
-First, notice that the "Used as first EC" message is not really
-useful, because it is immediately followed by a more meaningful one
-from either acpi_ec_ecdt_probe() or acpi_ec_dsdt_probe() (the latter
-also includes the EC object path), so drop it altogether.
+This was root cause to the fact that v4l2_async_notifier_cleanup() tries
+to kfree the asd pointer passed into v4l2_async_notifier_add_subdev().
 
-Second, use pr_info() for printing the EC configuration information.
+In our case the asd reference was from a statically allocated struct.
+So in effect v4l2_async_notifier_cleanup() was trying to free a pointer
+that was not kalloc.
 
-While at it, make the code in question avoid printing invalid GPE or
-IRQ numbers and make it print the GPE/IRQ information only when the
-driver is ready to handle events.
+So here we switch to using a kzalloc struct instead of a static one.
+To achieve this we re-order some of the calls to prevent asd allocation
+from leaking.
 
-Fixes: 72c77b7ea9ce ("ACPI / EC: Cleanup first_ec/boot_ec code")
-Fixes: 406857f773b0 ("ACPI: EC: add support for hardware-reduced systems")
-Cc: 5.5+ <stable@vger.kernel.org> # 5.5+
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Fixes: d079f94c9046 ("media: platform: Switch to v4l2_async_notifier_add_subdev")
+Cc: stable@vger.kernel.org
+Signed-off-by: Benoit Parrot <bparrot@ti.com>
+Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/acpi/ec.c |   15 ++++++++++-----
- 1 file changed, 10 insertions(+), 5 deletions(-)
+ drivers/media/platform/ti-vpe/cal.c |   13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
 
---- a/drivers/acpi/ec.c
-+++ b/drivers/acpi/ec.c
-@@ -1584,14 +1584,19 @@ static int acpi_ec_setup(struct acpi_ec
- 		return ret;
+--- a/drivers/media/platform/ti-vpe/cal.c
++++ b/drivers/media/platform/ti-vpe/cal.c
+@@ -372,8 +372,6 @@ struct cal_ctx {
+ 	struct v4l2_subdev	*sensor;
+ 	struct v4l2_fwnode_endpoint	endpoint;
  
- 	/* First EC capable of handling transactions */
--	if (!first_ec) {
-+	if (!first_ec)
- 		first_ec = ec;
--		acpi_handle_info(first_ec->handle, "Used as first EC\n");
-+
-+	pr_info("EC_CMD/EC_SC=0x%lx, EC_DATA=0x%lx\n", ec->command_addr,
-+		ec->data_addr);
-+
-+	if (test_bit(EC_FLAGS_EVENT_HANDLER_INSTALLED, &ec->flags)) {
-+		if (ec->gpe >= 0)
-+			pr_info("GPE=0x%x\n", ec->gpe);
-+		else
-+			pr_info("IRQ=%d\n", ec->irq);
+-	struct v4l2_async_subdev asd;
+-
+ 	struct v4l2_fh		fh;
+ 	struct cal_dev		*dev;
+ 	struct cc_data		*cc;
+@@ -2032,7 +2030,6 @@ static int of_cal_create_instance(struct
+ 
+ 	parent = pdev->dev.of_node;
+ 
+-	asd = &ctx->asd;
+ 	endpoint = &ctx->endpoint;
+ 
+ 	ep_node = NULL;
+@@ -2079,8 +2076,6 @@ static int of_cal_create_instance(struct
+ 		ctx_dbg(3, ctx, "can't get remote parent\n");
+ 		goto cleanup_exit;
  	}
+-	asd->match_type = V4L2_ASYNC_MATCH_FWNODE;
+-	asd->match.fwnode = of_fwnode_handle(sensor_node);
  
--	acpi_handle_info(ec->handle,
--			 "GPE=0x%x, IRQ=%d, EC_CMD/EC_SC=0x%lx, EC_DATA=0x%lx\n",
--			 ec->gpe, ec->irq, ec->command_addr, ec->data_addr);
- 	return ret;
- }
+ 	v4l2_fwnode_endpoint_parse(of_fwnode_handle(ep_node), endpoint);
+ 
+@@ -2110,9 +2105,17 @@ static int of_cal_create_instance(struct
+ 
+ 	v4l2_async_notifier_init(&ctx->notifier);
+ 
++	asd = kzalloc(sizeof(*asd), GFP_KERNEL);
++	if (!asd)
++		goto cleanup_exit;
++
++	asd->match_type = V4L2_ASYNC_MATCH_FWNODE;
++	asd->match.fwnode = of_fwnode_handle(sensor_node);
++
+ 	ret = v4l2_async_notifier_add_subdev(&ctx->notifier, asd);
+ 	if (ret) {
+ 		ctx_err(ctx, "Error adding asd\n");
++		kfree(asd);
+ 		goto cleanup_exit;
+ 	}
  
 
 
