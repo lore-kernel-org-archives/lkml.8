@@ -2,129 +2,120 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CF05C2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 09:53:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16BF5C2BB85
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 09:54:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ED19421D7B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 09:53:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="TMxuolbg"
+	by mail.kernel.org (Postfix) with ESMTP id E56C72063A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 09:54:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2504091AbgDPJxQ (ORCPT
+        id S2504254AbgDPJyQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 05:53:16 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:35600 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2503852AbgDPJxD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 05:53:03 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03G9mLw6079677;
-        Thu, 16 Apr 2020 09:52:30 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- content-transfer-encoding : in-reply-to; s=corp-2020-01-29;
- bh=ORNkJh0El/FiFaNrBZ35C8htJjikUv/QO8+cVqgjYns=;
- b=TMxuolbgxTh7AfZ1jZZNYK/K8B4EvLKcEvSHnOoKKE3pd1UpDP4SogboxBc+mCqK7hZY
- 70Ou+a/w2oeJ4XEf8CoIOK8aEmlQWrm1qaJFgp9rBKNNlhJYoZvru1FAtbcMpcO2lHLR
- jxYqtLx5vQ7eOy/ZKyzQkYa48fJQEJUf4bmDBNPRLdWTtJZeXgiZWuQj1HEqH3b4QjhA
- NI/dNbj5qNPYvvpA97aypERJf8lY7k112u8pn1YL2OU1CWz9xBLn5UztR93BPKzOjj9i
- IrdT4l/61lPvXDqZO+UZQybyNvoHFPloHpVc6oDTm8pmQ4wotBQSCgNiDnRLjkT+ovmn hA== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 30e0aa5x1b-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 16 Apr 2020 09:52:30 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03G9l5h3106098;
-        Thu, 16 Apr 2020 09:50:30 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3020.oracle.com with ESMTP id 30ememjd48-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 16 Apr 2020 09:50:30 +0000
-Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 03G9oAKA028024;
-        Thu, 16 Apr 2020 09:50:10 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 16 Apr 2020 02:50:10 -0700
-Date:   Thu, 16 Apr 2020 12:49:56 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     =?iso-8859-1?Q?=D8rjan?= Eide <orjan.eide@arm.com>
-Cc:     devel@driverdev.osuosl.org, nd@arm.com,
-        Todd Kjos <tkjos@android.com>,
-        Lecopzer Chen <lecopzer.chen@mediatek.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linaro-mm-sig@lists.linaro.org,
-        Arve =?iso-8859-1?B?SGr4bm5lduVn?= <arve@android.com>,
-        john.stultz@linaro.org, anders.pedersen@arm.com,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        "Darren Hart (VMware)" <dvhart@infradead.org>,
-        Laura Abbott <labbott@redhat.com>,
-        Martijn Coenen <maco@android.com>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Christian Brauner <christian@brauner.io>,
-        linux-media@vger.kernel.org
-Subject: Re: [PATCH] staging: android: ion: Skip sync if not mapped
-Message-ID: <20200416094955.GM1163@kadam>
-References: <20200414134629.54567-1-orjan.eide@arm.com>
- <20200414141849.55654-1-orjan.eide@arm.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200414141849.55654-1-orjan.eide@arm.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9592 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 mlxscore=0 suspectscore=0
- mlxlogscore=999 phishscore=0 spamscore=0 bulkscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004160067
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9592 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 clxscore=1011
- impostorscore=0 mlxlogscore=999 mlxscore=0 lowpriorityscore=0
- suspectscore=0 adultscore=0 spamscore=0 malwarescore=0 phishscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004160067
+        Thu, 16 Apr 2020 05:54:16 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:51350 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2504124AbgDPJyG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 05:54:06 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id A7BB4200C79;
+        Thu, 16 Apr 2020 11:54:01 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id E42CA200C66;
+        Thu, 16 Apr 2020 11:53:58 +0200 (CEST)
+Received: from titan.ap.freescale.net (titan.ap.freescale.net [10.192.208.233])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 295EC402A8;
+        Thu, 16 Apr 2020 17:53:55 +0800 (SGT)
+From:   Yuantian Tang <andy.tang@nxp.com>
+To:     rui.zhang@intel.com, edubezval@gmail.com, daniel.lezcano@linaro.org
+Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Yuantian Tang <andy.tang@nxp.com>
+Subject: [PATCH v2] thermal: qoriq: Update the settings for TMUv2
+Date:   Thu, 16 Apr 2020 17:39:40 +0800
+Message-Id: <20200416093940.34371-1-andy.tang@nxp.com>
+X-Mailer: git-send-email 2.9.5
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 14, 2020 at 04:18:47PM +0200, Ørjan Eide wrote:
-> @@ -238,6 +242,10 @@ static void ion_unmap_dma_buf(struct dma_buf_attachment *attachment,
->  			      struct sg_table *table,
->  			      enum dma_data_direction direction)
->  {
-> +	struct ion_dma_buf_attachment *a = attachment->priv;
-> +
-> +	a->mapped = false;
+For TMU v2, TMSAR registers need to be set properly to get the
+accurate temperature values.
+Also temperature reading needs to convert to degree Celsius
+since it is in degrees Kelvin.
 
-Possibly a stupid question but here we're not holding a lock.  Is
-concurrency an issue?
+Signed-off-by: Yuantian Tang <andy.tang@nxp.com>
+---
+v2:
+	- change the temp in millicelsius
 
-> +
->  	dma_unmap_sg(attachment->dev, table->sgl, table->nents, direction);
->  }
->  
-> @@ -297,6 +305,8 @@ static int ion_dma_buf_begin_cpu_access(struct dma_buf *dmabuf,
->  
->  	mutex_lock(&buffer->lock);
->  	list_for_each_entry(a, &buffer->attachments, list) {
-> +		if (!a->mapped)
-> +			continue;
->  		dma_sync_sg_for_cpu(a->dev, a->table->sgl, a->table->nents,
->  				    direction);
->  	}
+ drivers/thermal/qoriq_thermal.c | 15 ++++++++++++++-
+ 1 file changed, 14 insertions(+), 1 deletion(-)
 
-regards,
-dan carpenter
-
+diff --git a/drivers/thermal/qoriq_thermal.c b/drivers/thermal/qoriq_thermal.c
+index 028a6bbf75dc..f6371127f707 100644
+--- a/drivers/thermal/qoriq_thermal.c
++++ b/drivers/thermal/qoriq_thermal.c
+@@ -23,6 +23,7 @@
+ #define TMTMIR_DEFAULT	0x0000000f
+ #define TIER_DISABLE	0x0
+ #define TEUMR0_V2		0x51009c00
++#define TMSARA_V2		0xe
+ #define TMU_VER1		0x1
+ #define TMU_VER2		0x2
+ 
+@@ -50,6 +51,9 @@
+ 					    * Site Register
+ 					    */
+ #define TRITSR_V	BIT(31)
++#define REGS_V2_TMSAR(n)	(0x304 + 16 * (n))	/* TMU monitoring
++						* site adjustment register
++						*/
+ #define REGS_TTRnCR(n)	(0xf10 + 4 * (n)) /* Temperature Range n
+ 					   * Control Register
+ 					   */
+@@ -100,7 +104,11 @@ static int tmu_get_temp(void *p, int *temp)
+ 				     10 * USEC_PER_MSEC))
+ 		return -ENODATA;
+ 
+-	*temp = (val & 0xff) * 1000;
++	/* For TMUv2, temperature reading in degrees Kelvin */
++	if (qdata->ver == TMU_VER1)
++		*temp = (val & 0xff) * 1000;
++	else
++		*temp = ((val & 0x1ff) - 273) * 1000;
+ 
+ 	return 0;
+ }
+@@ -192,6 +200,8 @@ static int qoriq_tmu_calibration(struct device *dev,
+ 
+ static void qoriq_tmu_init_device(struct qoriq_tmu_data *data)
+ {
++	int i;
++
+ 	/* Disable interrupt, using polling instead */
+ 	regmap_write(data->regmap, REGS_TIER, TIER_DISABLE);
+ 
+@@ -202,6 +212,8 @@ static void qoriq_tmu_init_device(struct qoriq_tmu_data *data)
+ 	} else {
+ 		regmap_write(data->regmap, REGS_V2_TMTMIR, TMTMIR_DEFAULT);
+ 		regmap_write(data->regmap, REGS_V2_TEUMR(0), TEUMR0_V2);
++		for (i = 0; i < 7; i++)
++			regmap_write(data->regmap, REGS_V2_TMSAR(i), TMSARA_V2);
+ 	}
+ 
+ 	/* Disable monitoring */
+@@ -212,6 +224,7 @@ static const struct regmap_range qoriq_yes_ranges[] = {
+ 	regmap_reg_range(REGS_TMR, REGS_TSCFGR),
+ 	regmap_reg_range(REGS_TTRnCR(0), REGS_TTRnCR(3)),
+ 	regmap_reg_range(REGS_V2_TEUMR(0), REGS_V2_TEUMR(2)),
++	regmap_reg_range(REGS_V2_TMSAR(0), REGS_V2_TMSAR(15)),
+ 	regmap_reg_range(REGS_IPBRR(0), REGS_IPBRR(1)),
+ 	/* Read only registers below */
+ 	regmap_reg_range(REGS_TRITSR(0), REGS_TRITSR(15)),
+-- 
+2.17.1
 
