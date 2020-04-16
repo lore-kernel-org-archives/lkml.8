@@ -2,174 +2,203 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59B20C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 22:14:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49FD4C352BE
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 22:15:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 337602220A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 22:14:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587075262;
-	bh=GxZQfPfLWVM3GiXkfRMb5hzBGoNR1/BGxlJTbhYRfAg=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=AYO+dW06KG62N+3K8n8oQBDdSfdfBn0EXLA+Gtat+DBAGBYHTW+q+pNHGtmi8ODqI
-	 qhzF4Wy+xjbTgvIAIyTpZfvIGS4G+4WLSqrtdMrA/domM0+XlWKLHC4Pg+JzhSPjmR
-	 AtOf9UL6Zu/Y70+cv8MuLOm4WXbHIaGXG2utSdtI=
+	by mail.kernel.org (Postfix) with ESMTP id 23FB0218AC
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 22:15:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pxKMvYQ7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728971AbgDPWOU convert rfc822-to-8bit (ORCPT
+        id S1728892AbgDPWPM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 18:14:20 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:57887 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728918AbgDPWOU (ORCPT
+        Thu, 16 Apr 2020 18:15:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53308 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729206AbgDPWPF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 18:14:20 -0400
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-406-iy6EfzOFMNWUpHa7q905TA-1; Thu, 16 Apr 2020 18:14:11 -0400
-X-MC-Unique: iy6EfzOFMNWUpHa7q905TA-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 29A19800D53;
-        Thu, 16 Apr 2020 22:14:09 +0000 (UTC)
-Received: from krava.redhat.com (unknown [10.40.195.119])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 4B9AE1000325;
-        Thu, 16 Apr 2020 22:14:06 +0000 (UTC)
-From:   Jiri Olsa <jolsa@kernel.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Thomas Richter <tmricht@linux.ibm.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
+        Thu, 16 Apr 2020 18:15:05 -0400
+Received: from mail-pl1-x64a.google.com (mail-pl1-x64a.google.com [IPv6:2607:f8b0:4864:20::64a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06E58C061A41
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 15:15:05 -0700 (PDT)
+Received: by mail-pl1-x64a.google.com with SMTP id w7so207118ply.0
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 15:15:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=inZXCTMba3jhQ/kntq9OhKXPlzo6YURcAjj5vzw18C0=;
+        b=pxKMvYQ7DabwUBM1a6onah0dl6Qj90Y4U9Mf9KGSUzGtjyyWHxLj5s4SBqIH5M6oFi
+         Emyyrkxwb2Apu0hegTDR740cnn0II5WhoMzpQ8LUKLSotsKxK9eoQ++40JyfihJcOH2+
+         mTa+AfqiPk6uNuziHOhZhx4e/4fM+jKhN76ArO3ar+LyFlpwJFLpBgic+gyqZFznTcDM
+         7iMIxtRfHvGjqQASvHO0CRIAKlToaeglkHCDQHtQhzlEpVNzQeMWmRFr1FNewoKwVCCS
+         MV+zmadcQzM/oO4m5yaqZ2e3DlnCvIkkgpTR1GMCkQBTULFeakp8Vpk7KIdRMBG2YaiA
+         ITmA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=inZXCTMba3jhQ/kntq9OhKXPlzo6YURcAjj5vzw18C0=;
+        b=eqi3ONIGvGGpLVwVcjrOdK72TvICUbEH4Mqaf894JpfkI4ENnTNK1SwR3cAh4H//DD
+         i71nZ6HmprM+cpNi3S+abUJM3H1UiJYkCEwkFZz4riUc6ks9Dy0UDwCYkAeHaz/5Yqg4
+         math2W7r8hpN5ggneoVXjM5FotHmmYOx1s2erJq2NSuOjpXWzDCzetQXFdEC5ku811ku
+         QD8AktxoBzSeAhWG8q2fvIHPAQoA/pLRwPnVCYZ0CJzcOGLkohnqvZNgQFQWEmF71XeG
+         BqNeuPTYF5X2dqVGeDzAZ2sqW+biaXyXarfbiOHCP6gjWSQBAb8cFi0no/sQwih+/ME3
+         fqlw==
+X-Gm-Message-State: AGi0PuaRAcPZdXl/hNBLw7tHP9EqP1dGLWIkoPdUfMBMeTzvodONsbt6
+        OK5j1tnux9q+lS4ppF0XI6F9+yv9RUO2
+X-Google-Smtp-Source: APiQypKdhmZVuK+l63hSvUne2M/aWeY0m/egjfQuMzorZNUkGMgskeil6BFSxzh6F4UD486ve2XtkmxIV82t
+X-Received: by 2002:a17:90a:8c96:: with SMTP id b22mr584589pjo.25.1587075304229;
+ Thu, 16 Apr 2020 15:15:04 -0700 (PDT)
+Date:   Thu, 16 Apr 2020 15:14:53 -0700
+Message-Id: <20200416221457.46710-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.26.1.301.g55bc3eb7cb9-goog
+Subject: [PATCH v11 0/4] perf tools: add support for libpfm4
+From:   Ian Rogers <irogers@google.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Sumanth Korikkar <sumanthk@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>
-Subject: [PATCH] perf tools: Add support to specify rXXX event withing pmu
-Date:   Fri, 17 Apr 2020 00:14:05 +0200
-Message-Id: <20200416221405.437788-1-jolsa@kernel.org>
-MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: kernel.org
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8BIT
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Igor Lubashev <ilubashe@akamai.com>,
+        Alexey Budankov <alexey.budankov@linux.intel.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Jiwei Sun <jiwei.sun@windriver.com>,
+        yuzhoujian <yuzhoujian@didichuxing.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Leo Yan <leo.yan@linaro.org>,
+        John Garry <john.garry@huawei.com>,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, linux-perf-users@vger.kernel.org
+Cc:     Stephane Eranian <eranian@google.com>,
+        Ian Rogers <irogers@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiri Olsa <jolsa@redhat.com>
+This patch links perf with the libpfm4 library if it is available
+and NO_LIBPFM4 isn't passed to the build. The libpfm4 library
+contains hardware event tables for all processors supported by
+perf_events. It is a helper library that helps convert from a
+symbolic event name to the event encoding required by the
+underlying kernel interface. This library is open-source and
+available from: http://perfmon2.sf.net.
+    
+With this patch, it is possible to specify full hardware events
+by name. Hardware filters are also supported. Events must be
+specified via the --pfm-events and not -e option. Both options
+are active at the same time and it is possible to mix and match:
+    
+$ perf stat --pfm-events inst_retired:any_p:c=1:i -e cycles ....
 
-The current rXXXX event specification creates event under
-PERF_TYPE_RAW pmu type. This change allows to use rXXXX
-within pmu syntax, so it's type is used via following
-syntax:
+v11 reformats the perf list output to be:
+List of pre-defined events (to be used in -e):
 
-  -e 'cpu/r3c/'
-  -e 'cpum_cf/r0/'
+  branch-instructions OR branches                    [Hardware event]
+  branch-misses                                      [Hardware event]
+...
 
-The XXXX number goes directly to perf_event_attr::config the
-same way as in '-e rXXXX' event. The perf_event_attr::type is
-filled with pmu type.
+List of pre-defined events (to be used in --pfm-events):
 
-Requested-by: Thomas Richter <tmricht@linux.ibm.com>
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
----
- tools/perf/Documentation/perf-list.txt |  5 +++++
- tools/perf/tests/parse-events.c        | 17 ++++++++++++++++-
- tools/perf/util/parse-events.l         |  1 +
- tools/perf/util/parse-events.y         |  9 +++++++++
- 4 files changed, 31 insertions(+), 1 deletion(-)
+ix86arch:
+  UNHALTED_CORE_CYCLES
+    [count core clock cycles whenever the clock signal on the specific core is running (not halted)]
+  INSTRUCTION_RETIRED
+    [count the number of instructions at retirement. For instructions that consists of multiple mic>
+...
+skx:
+  UNHALTED_CORE_CYCLES
+    [Count core clock cycles whenever the clock signal on the specific core is running (not halted)]
+...
+  BACLEARS
+    [Branch re-steered]
+      BACLEARS:ANY
+        [Number of front-end re-steers due to BPU misprediction]
+...
+v10 addresses review comments from jolsa@redhat.com.
+v9 removes some unnecessary #ifs.
+v8 addresses review comments from jolsa@redhat.com.
+   Breaks the patch into 4, adds a test and moves the libpfm code into its
+   own file. perf list encoding tries to be closer to existing.
+v7 rebases and adds fallback code for libpfm4 events.
+   The fallback code is to force user only priv level in case the
+   perf_event_open() syscall failed for permissions reason.
+   the fallback forces a user privilege level restriction on the event
+   string, so depending on the syntax either u or :u is needed.
+    
+   But libpfm4 can use a : or . as the separator, so simply searching
+   for ':' vs. '/' is not good enough to determine the syntax needed.
+   Therefore, this patch introduces a new evsel boolean field to mark
+   events coming from  libpfm4. The field is then used to adjust the
+   fallback string.
+v6 was a rebase.
+v5 was a rebase.
+v4 was a rebase on
+   git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git
+   branch perf/core and re-adds the tools/build/feature/test-libpfm4.c
+   missed in v3.
+v3 is against acme/perf/core and removes a diagnostic warning.
+v2 of this patch makes the --pfm-events man page documentation
+   conditional on libpfm4 behing configured. It tidies some of the
+   documentation and adds the feature test missed in the v1 patch.
 
-diff --git a/tools/perf/Documentation/perf-list.txt b/tools/perf/Documentation/perf-list.txt
-index cb23667531ab..376a50b3452d 100644
---- a/tools/perf/Documentation/perf-list.txt
-+++ b/tools/perf/Documentation/perf-list.txt
-@@ -115,6 +115,11 @@ raw encoding of 0x1A8 can be used:
-  perf stat -e r1a8 -a sleep 1
-  perf record -e r1a8 ...
- 
-+It's also possible to use pmu syntax:
-+
-+ perf record -e r1a8 -a sleep 1
-+ perf record -e cpu/r1a8/ ...
-+
- You should refer to the processor specific documentation for getting these
- details. Some of them are referenced in the SEE ALSO section below.
- 
-diff --git a/tools/perf/tests/parse-events.c b/tools/perf/tests/parse-events.c
-index 091c3aeccc27..902bd9d591a0 100644
---- a/tools/perf/tests/parse-events.c
-+++ b/tools/perf/tests/parse-events.c
-@@ -1356,6 +1356,16 @@ static int test__checkevent_complex_name(struct evlist *evlist)
- 	return 0;
- }
- 
-+static int test__checkevent_raw_pmu(struct evlist *evlist)
-+{
-+	struct evsel *evsel = evlist__first(evlist);
-+
-+	TEST_ASSERT_VAL("wrong number of entries", 1 == evlist->core.nr_entries);
-+	TEST_ASSERT_VAL("wrong type", PERF_TYPE_SOFTWARE == evsel->core.attr.type);
-+	TEST_ASSERT_VAL("wrong config", 0x1a == evsel->core.attr.config);
-+	return 0;
-+}
-+
- static int test__sym_event_slash(struct evlist *evlist)
- {
- 	struct evsel *evsel = evlist__first(evlist);
-@@ -1750,7 +1760,12 @@ static struct evlist_test test__events_pmu[] = {
- 		.name  = "cpu/name='COMPLEX_CYCLES_NAME:orig=cycles,desc=chip-clock-ticks',period=0x1,event=0x2/ukp",
- 		.check = test__checkevent_complex_name,
- 		.id    = 3,
--	}
-+	},
-+	{
-+		.name  = "software/r1a/",
-+		.check = test__checkevent_raw_pmu,
-+		.id    = 4,
-+	},
- };
- 
- struct terms_test {
-diff --git a/tools/perf/util/parse-events.l b/tools/perf/util/parse-events.l
-index baa48f28d57d..c589fc42f058 100644
---- a/tools/perf/util/parse-events.l
-+++ b/tools/perf/util/parse-events.l
-@@ -286,6 +286,7 @@ no-overwrite		{ return term(yyscanner, PARSE_EVENTS__TERM_TYPE_NOOVERWRITE); }
- percore			{ return term(yyscanner, PARSE_EVENTS__TERM_TYPE_PERCORE); }
- aux-output		{ return term(yyscanner, PARSE_EVENTS__TERM_TYPE_AUX_OUTPUT); }
- aux-sample-size		{ return term(yyscanner, PARSE_EVENTS__TERM_TYPE_AUX_SAMPLE_SIZE); }
-+r{num_raw_hex}		{ return raw(yyscanner); }
- ,			{ return ','; }
- "/"			{ BEGIN(INITIAL); return '/'; }
- {name_minus}		{ return str(yyscanner, PE_NAME); }
-diff --git a/tools/perf/util/parse-events.y b/tools/perf/util/parse-events.y
-index 94f8bcd83582..e879eb257874 100644
---- a/tools/perf/util/parse-events.y
-+++ b/tools/perf/util/parse-events.y
-@@ -706,6 +706,15 @@ event_term
- }
- 
- event_term:
-+PE_RAW
-+{
-+	struct parse_events_term *term;
-+
-+	ABORT_ON(parse_events_term__num(&term, PARSE_EVENTS__TERM_TYPE_CONFIG,
-+					NULL, $1, false, &@1, NULL));
-+	$$ = term;
-+}
-+|
- PE_NAME '=' PE_NAME
- {
- 	struct parse_events_term *term;
+Ian Rogers (1):
+  perf doc: allow ASCIIDOC_EXTRA to be an argument
+
+Stephane Eranian (3):
+  tools feature: add support for detecting libpfm4
+  perf pmu: add perf_pmu__find_by_type helper
+  perf tools: add support for libpfm4
+
+ tools/build/Makefile.feature             |   3 +-
+ tools/build/feature/Makefile             |   6 +-
+ tools/build/feature/test-libpfm4.c       |   9 +
+ tools/perf/Documentation/Makefile        |   4 +-
+ tools/perf/Documentation/perf-record.txt |  11 +
+ tools/perf/Documentation/perf-stat.txt   |  10 +
+ tools/perf/Documentation/perf-top.txt    |  11 +
+ tools/perf/Makefile.config               |  13 ++
+ tools/perf/Makefile.perf                 |   6 +-
+ tools/perf/builtin-list.c                |   3 +
+ tools/perf/builtin-record.c              |   8 +
+ tools/perf/builtin-stat.c                |   8 +
+ tools/perf/builtin-top.c                 |   8 +
+ tools/perf/tests/Build                   |   1 +
+ tools/perf/tests/builtin-test.c          |   9 +
+ tools/perf/tests/pfm.c                   | 207 +++++++++++++++++
+ tools/perf/tests/tests.h                 |   3 +
+ tools/perf/util/Build                    |   2 +
+ tools/perf/util/evsel.c                  |   2 +-
+ tools/perf/util/evsel.h                  |   1 +
+ tools/perf/util/parse-events.c           |  30 ++-
+ tools/perf/util/parse-events.h           |   4 +
+ tools/perf/util/pfm.c                    | 278 +++++++++++++++++++++++
+ tools/perf/util/pfm.h                    |  43 ++++
+ tools/perf/util/pmu.c                    |  11 +
+ tools/perf/util/pmu.h                    |   1 +
+ 26 files changed, 678 insertions(+), 14 deletions(-)
+ create mode 100644 tools/build/feature/test-libpfm4.c
+ create mode 100644 tools/perf/tests/pfm.c
+ create mode 100644 tools/perf/util/pfm.c
+ create mode 100644 tools/perf/util/pfm.h
+
 -- 
-2.25.2
+2.26.1.301.g55bc3eb7cb9-goog
 
