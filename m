@@ -2,96 +2,87 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA9CDC2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:45:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96C58C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:45:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 84F7E20732
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:45:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6703C20732
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:45:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587051921;
-	bh=Zdg/vgCZtVzpvtzNd6vjcd/5iwmO3Je1o3bPcCol/5I=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=t6trbU9udG40FHQh/q+shGS5jjNhA+PLB6BLSfcA4Xgn+wRBKfKcNPsBMIXJDZESv
-	 nfqlEZc6S38Eg0BPRVF6PIfcfduJ73ac57eL2HNxHKfu8yIXYhBk0SNv2nWj7SAZ6x
-	 b93u81nPIsU1PIGNstKjXqD3uUM7oh6Uz0X7ZPRs=
+	s=default; t=1587051930;
+	bh=9ry9z5cPWT6b3qsfKrvwd1wOLF1JAP7Tyrk+39VbvE8=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
+	b=KQaK87ztXIUxvXHmMWeIFh2qDVi+zX/gwHHYsYasDPaKcERTkG8ljBB7fTk+esStW
+	 5ixwglHr+2yxlbN3B8IXY2on9ebLq1T1lxf3jkbAtrAu5O1QMOi7CRM1NeCQX6tY5a
+	 EvRWOAJubSX4sUz3+/d7e8l0JWfKilm7eroL/TWY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2894721AbgDPPpT (ORCPT
+        id S2410533AbgDPPp1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:45:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47006 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 11:45:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52562 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2897055AbgDPNfK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:35:10 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        id S2409689AbgDPPpK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 11:45:10 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 88B9621BE5;
-        Thu, 16 Apr 2020 13:35:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C60F421D91;
+        Thu, 16 Apr 2020 15:45:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044109;
-        bh=Zdg/vgCZtVzpvtzNd6vjcd/5iwmO3Je1o3bPcCol/5I=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VlZic/oF+ZC1w58phC3KI18MzdtF5MVBigVtTA8UukFeV+aZbu+caRRtvN5LgUdT0
-         lFQ74Z8eHl2/yig9/9/5x50yXdUWQUDaF2lX64IHo0w/sbGOBf22pCpdmS4kF1R77G
-         L2CBCYbGGzdaz0puU06AIXIcOak7i79eTFXgN2qs=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Sriharsha Allenki <sallenki@codeaurora.org>,
-        Peter Chen <peter.chen@nxp.com>
-Subject: [PATCH 5.5 085/257] usb: gadget: f_fs: Fix use after free issue as part of queue failure
-Date:   Thu, 16 Apr 2020 15:22:16 +0200
-Message-Id: <20200416131336.594045522@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200416131325.891903893@linuxfoundation.org>
-References: <20200416131325.891903893@linuxfoundation.org>
-User-Agent: quilt/0.66
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        s=default; t=1587051910;
+        bh=9ry9z5cPWT6b3qsfKrvwd1wOLF1JAP7Tyrk+39VbvE8=;
+        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+        b=i+W8m4d5EBX8ql5pApge80SNjO055BMgbvxSI7dv8kgwml5LUFY5/2iiEkoEe/OnE
+         8c/5xUi4O0ZwtTT3qirjMXXRiR9wKzo0HqVDDyeE9ATpp/Jm279hN3z4G+ZJO3bx0N
+         Ge6YHoMWFr4dTAeCpYFSxNset/qQnWJX3l6LgWiI=
+Date:   Thu, 16 Apr 2020 16:45:07 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Clement Leger <cleger@kalray.eu>
+Cc:     linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org
+In-Reply-To: <20200416110823.22565-1-cleger@kalray.eu>
+References: <20200416110823.22565-1-cleger@kalray.eu>
+Subject: Re: [PATCH 0/2] Cleanup chip info in spi-dw driver
+Message-Id: <158705187475.53607.4216901757113789779.b4-ty@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sriharsha Allenki <sallenki@codeaurora.org>
+On Thu, 16 Apr 2020 13:08:23 +0200, Clement Leger wrote:
+> Some mechanisms have no more user, and as such code paths are unused.
+> Remove these code paths and associated structs members.
+> 
+> Clement Leger (2):
+>   spi: dw: remove unused dw_spi_chip handling
+>   spi: dw: remove cs_control and poll_mode members from chip_data
+> 
+> [...]
 
-commit f63ec55ff904b2f2e126884fcad93175f16ab4bb upstream.
+Applied, thanks!
 
-In AIO case, the request is freed up if ep_queue fails.
-However, io_data->req still has the reference to this freed
-request. In the case of this failure if there is aio_cancel
-call on this io_data it will lead to an invalid dequeue
-operation and a potential use after free issue.
-Fix this by setting the io_data->req to NULL when the request
-is freed as part of queue failure.
+[1/2] spi: dw: remove unused dw_spi_chip handling
+      commit: ae9e6ac4d8542d1b16fad4bd3c3e447632437623
+[2/2] spi: dw: remove cs_control and poll_mode members from chip_data
+      commit: 33e8fd4bfbd7eb0921eb55caceed54e51912a4e6
 
-Fixes: 2e4c7553cd6f ("usb: gadget: f_fs: add aio support")
-Signed-off-by: Sriharsha Allenki <sallenki@codeaurora.org>
-CC: stable <stable@vger.kernel.org>
-Reviewed-by: Peter Chen <peter.chen@nxp.com>
-Link: https://lore.kernel.org/r/20200326115620.12571-1-sallenki@codeaurora.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
 
----
- drivers/usb/gadget/function/f_fs.c |    1 +
- 1 file changed, 1 insertion(+)
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
---- a/drivers/usb/gadget/function/f_fs.c
-+++ b/drivers/usb/gadget/function/f_fs.c
-@@ -1120,6 +1120,7 @@ static ssize_t ffs_epfile_io(struct file
- 
- 		ret = usb_ep_queue(ep->ep, req, GFP_ATOMIC);
- 		if (unlikely(ret)) {
-+			io_data->req = NULL;
- 			usb_ep_free_request(ep->ep, req);
- 			goto error_lock;
- 		}
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
+Thanks,
+Mark
