@@ -2,147 +2,74 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C22CC2BA2B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 06:43:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD62CC2BA2B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 06:43:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 661FD206D6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 06:43:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="Mz6xjOho";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="eMPRhPF7"
+	by mail.kernel.org (Postfix) with ESMTP id A75C2206D6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 06:43:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408367AbgDPGnN (ORCPT
+        id S2408192AbgDPGnX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 02:43:13 -0400
-Received: from wnew1-smtp.messagingengine.com ([64.147.123.26]:56697 "EHLO
-        wnew1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2408168AbgDPGnF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 02:43:05 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.west.internal (Postfix) with ESMTP id BE3AB7D6;
-        Thu, 16 Apr 2020 02:42:47 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Thu, 16 Apr 2020 02:42:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=qCRyzl00MQBivzL68vkel39NEbd
-        7kC6dFuyLRxBAey0=; b=Mz6xjOhoyl6u3JLJF3XNH/WDRWC0mCT6w/uiIwB8GXd
-        UpxsH9oudz3X48RMKQfGJbGVDAHug8ZXney1LdfZdZRq90LqW1W0/A6iVYMtK1mN
-        EU59olTzwMNiYltMNJBPysQF0H63fbn5e/tsDm+LApzpl9Y1Sw18AZHKdzIsmaEf
-        9+M1vvWOyW669ZVwQQ7awZo8Cj7vc6UYa6yBhQm8s+v3rqgHnFf6xakj6sV5HtJy
-        j8vNj53XWuWvnoqroGZji7jvJbTKs9v3cgxRMfEEZdJgii7uQdjwtKHH0A6lf3I6
-        8ffKsfT/ph6VFQvi+fA3JKKLi4LFnglOMoqGVSlscBQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=qCRyzl
-        00MQBivzL68vkel39NEbd7kC6dFuyLRxBAey0=; b=eMPRhPF78n2AJHUnF3n8N7
-        nDj6R2uaCMywF1zqUJb8H41DWXRLIqM1X1ixKQ+5du5Sep0O62e5Zg70DW4miS5c
-        q+6UZlgUneRQ5zBCZRQTn2+qXHpcWSINUMIVtTQcMv4fBlmNQ0cDxvod+yis2IMy
-        Qn9LgZrrIPxvZU1tIvrIvajwPmKsY2XzJGObIt+ux8BDMn9VQLisIuN1sQagIjTc
-        2yVfkg9fn7+7uqJ5UWxMBZLYc2drb5gpFG/CrUVannsfz1vkv8nOhZz7tV+2yvw0
-        Ini85WXCVW9bOz1VY1ANTmk22DTeHV41NcnSM3ax/Ybs4KlWFUPVQUigEqOYYq4Q
-        ==
-X-ME-Sender: <xms:ZP6XXpgBOuLk6y78w-8QXnLsPxfPb8tJCQV-nhCw3w9E3J6Z_6umzA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrfeeggdduudduucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjsehgtderredttddvnecuhfhrohhmpeforgigihhm
-    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecukfhppeeltd
-    drkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghi
-    lhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
-X-ME-Proxy: <xmx:ZP6XXlHUnHhPoyiEoNq4uvG-eeIU9F7rJ3L8YM4tBAlhX9jwZlg92Q>
-    <xmx:ZP6XXgxO_UPW-eCgOnJDSb4q6E6_zvBdAp-UhPR4OHFshAivUQ-klg>
-    <xmx:ZP6XXkq3F6zITJzf5EbL-eKRftc0jlz2H_3d673Bq8y2Zr17XFw4_g>
-    <xmx:Z_6XXi9WoWOt_JDiBWjK2eTP19mseq86rp4c8pS9eo_D669xJmpieNKZPV8>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 59AE0328005E;
-        Thu, 16 Apr 2020 02:42:44 -0400 (EDT)
-Date:   Thu, 16 Apr 2020 08:42:42 +0200
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Rob Herring <robh@kernel.org>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>, Vinod Koul <vkoul@kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Heiko Stuebner <heiko@sntech.de>, Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Fabio Estevam <festevam@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Amit Kucheria <amit.kucheria@linaro.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-i2c@vger.kernel.org,
-        linux-hwmon@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-input@vger.kernel.org, linux-leds@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-mmc@vger.kernel.org,
-        linux-mtd@lists.infradead.org, linux-can@vger.kernel.org,
-        netdev@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-remoteproc@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-rtc@vger.kernel.org, linux-serial@vger.kernel.org,
-        alsa-devel@alsa-project.org, linux-spi@vger.kernel.org
-Subject: Re: [PATCH 1/2] dt-bindings: Clean-up schema indentation formatting
-Message-ID: <20200416064242.azdjulo76ymwgpfq@gilmour.lan>
-References: <20200416005549.9683-1-robh@kernel.org>
+        Thu, 16 Apr 2020 02:43:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52466 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2408168AbgDPGnO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 02:43:14 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8AA5720787;
+        Thu, 16 Apr 2020 06:43:13 +0000 (UTC)
+Date:   Thu, 16 Apr 2020 08:43:11 +0200
+From:   Greg KH <greg@kroah.com>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Zhenyu Wang <zhenyuw@linux.intel.com>,
+        Zhi Wang <zhi.a.wang@intel.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>, Jens Axboe <axboe@kernel.dk>,
+        linux-kernel@vger.kernel.org, amd-gfx@lists.freedesktop.org,
+        intel-gvt-dev@lists.freedesktop.org,
+        intel-gfx@lists.freedesktop.org, linux-usb@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        linux-fsdevel@vger.kernel.org, io-uring@vger.kernel.org,
+        linux-mm@kvack.org
+Subject: Re: [PATCH 3/3] kernel: set USER_DS in kthread_use_mm
+Message-ID: <20200416064311.GA300290@kroah.com>
+References: <20200416053158.586887-1-hch@lst.de>
+ <20200416053158.586887-4-hch@lst.de>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="s675c5ai5d6avmtq"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200416005549.9683-1-robh@kernel.org>
+In-Reply-To: <20200416053158.586887-4-hch@lst.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Apr 16, 2020 at 07:31:58AM +0200, Christoph Hellwig wrote:
+> Some architectures like arm64 and s390 require USER_DS to be set for
+> kernel threads to access user address space, which is the whole purpose
+> of kthread_use_mm, but other like x86 don't.  That has lead to a huge
+> mess where some callers are fixed up once they are tested on said
+> architectures, while others linger around and yet other like io_uring
+> try to do "clever" optimizations for what usually is just a trivial
+> asignment to a member in the thread_struct for most architectures.
+> 
+> Make kthread_use_mm set USER_DS, and kthread_unuse_mm restore to the
+> previous value instead.
+> 
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> Acked-by: Michael S. Tsirkin <mst@redhat.com> [vhost]
+> ---
 
---s675c5ai5d6avmtq
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Wed, Apr 15, 2020 at 07:55:48PM -0500, Rob Herring wrote:
-> Fix various inconsistencies in schema indentation. Most of these are
-> list indentation which should be 2 spaces more than the start of the
-> enclosing keyword. This doesn't matter functionally, but affects running
-> scripts which do transforms on the schema files.
->
-> Signed-off-by: Rob Herring <robh@kernel.org>
-
-For allwinner,
-Acked-by: Maxime Ripard <mripard@kernel.org>
-
-Thanks!
-Maxime
-
---s675c5ai5d6avmtq
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXpf+YgAKCRDj7w1vZxhR
-xZmqAPwLCqvPnd6KBgcsRgWmwe8BxcsE0xhduyc59wNSaliiHQEAhUMizDtya0EL
-yGrmpfvuS8/nRsvbMHGM2twyMWfc6QE=
-=F+e6
------END PGP SIGNATURE-----
-
---s675c5ai5d6avmtq--
+Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org> [usb]
