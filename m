@@ -2,131 +2,185 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1FC3C38A29
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 18:05:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44D22C3815B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 18:08:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AFA8021924
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 18:05:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 291B321924
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 18:08:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="Nl5IfyW6"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vjGtAumv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387982AbgDPSFk (ORCPT
+        id S2388163AbgDPSIC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 14:05:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42810 "EHLO
+        Thu, 16 Apr 2020 14:08:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43182 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1731394AbgDPSFi (ORCPT
+        by vger.kernel.org with ESMTP id S1729050AbgDPSIA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 14:05:38 -0400
-Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43234C061A41
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 11:05:38 -0700 (PDT)
-Received: by mail-qk1-x741.google.com with SMTP id v7so22386562qkc.0
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 11:05:38 -0700 (PDT)
+        Thu, 16 Apr 2020 14:08:00 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 675BAC061A0C
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 11:08:00 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id j14so6301026lfg.9
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 11:08:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Fftro3jZbixsL8aeMcmWYxRlcOZc1xYOuCyBw47w/C8=;
-        b=Nl5IfyW61dNBvqPmzCjDg2WCgVKn+WFlEvYzGa2/Vrnc/VsdQvuSMtSJLw96V+j4cv
-         dejqS2JY8YzSiyRBlm/hUKJgwK0Tzom0hkNIV5ncn9tn6oI8GL9vvyOSS+TwwBl3sWr6
-         eB1vfy9a/ugWT7bvmGZ8rswnhmYtjyiewE66r/iz8C0/ifJemhTzwk37NhpK5HVa2mGC
-         mct5lE9F2dC0DGY9hSdmw0pKAAp++x4KY85qRRtX7ytHUbEKeNAyxdXTsiSKdER8zo9l
-         mDhbSmRmNGo36pfEh+D9rtGp/tvR2jQxxDtegfyWmsNeEflc3I7b5Hqfkgt66pgB08TY
-         cBAA==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=/jeBVrKCSTz6BXkemvfuZzibOp/NI30GK2F1rleWJg0=;
+        b=vjGtAumvfCtlRH6CAP/IO6Lap1bsQ2dTI3kRVDElmxEhvW+u66SIvtvF4cykEmiELV
+         C2hRodFA6KCf/bIIaMhxpRm+QlZ51KL8OwsuqAbrUm+AEj3JT+/IBxpze6KHYP4ka4Mj
+         V9ugTNcW5Cwbaax6NbR1IhXJtKdGPasEXfwF4CVmDS9PzDVa2zIkds2NHNWV/78XNzi/
+         j2AHUAxyAkZk3oYwm6VZ6qik0+jGikyk802AIthfVwYZcYjTp1hbo+nKGOIx1VYigq5Q
+         6eSsQwpcPediLoNTZcWv0iQvYzO2GQ9AWhrlEK+Pr9R6+0XeL8SwupStrlg2CJqAQasS
+         7wbg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Fftro3jZbixsL8aeMcmWYxRlcOZc1xYOuCyBw47w/C8=;
-        b=LBlFvJPNYpMo2mJH4aV41QNN1w+2pNlARCdYij89dy1KDpBphQl7NdkWMyaBYQ0F/X
-         8bfRc6jLQFOx2aQbNlrs3UDKk6N+9ELzK4R2XXcVg0qMPVPVeFq3X+ijHCoTMDmpSPWS
-         cNxjZPjCpqkbkgWlulIHn/zEPfqpcdHV+CfAqURaU+NJ81aquIuzAvxAmgcKh6k/iL7D
-         rzTrzdW1lY8aOt5qfTTBUo6bsawA+LIiMUv7DNO+HmWrkIM0TbqNvo1ePvZ2Sf6dn8sI
-         5r7QjP9yNDKY9PMdEORCSZSKYWnz49WDVyDMYsDX0Kl4+wIJAZag2IuFFUtkSkTtIWRN
-         Ezfw==
-X-Gm-Message-State: AGi0PuY7cA5wbUNYW173ihBfF7/MI0UbihjeLczmJbRhTUeIVRUJ1XZF
-        qtaRi4tAc1Aq+Wsi/6RSXzLZtg==
-X-Google-Smtp-Source: APiQypJriZ2ts89EQA9ZmbRGIKxW4OALaXNJVu4hOm4BVdrkDvh3k+fSMcXaWS8jrdSR/LMHDO1tYg==
-X-Received: by 2002:a37:8741:: with SMTP id j62mr30990828qkd.441.1587060337403;
-        Thu, 16 Apr 2020 11:05:37 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
-        by smtp.gmail.com with ESMTPSA id n185sm6205781qke.82.2020.04.16.11.05.36
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 16 Apr 2020 11:05:36 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1jP8tM-00069t-Dc; Thu, 16 Apr 2020 15:05:36 -0300
-Date:   Thu, 16 Apr 2020 15:05:36 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Jani Nikula <jani.nikula@linux.intel.com>,
-        Saeed Mahameed <saeedm@mellanox.com>,
-        "narmstrong@baylibre.com" <narmstrong@baylibre.com>,
-        "masahiroy@kernel.org" <masahiroy@kernel.org>,
-        "Laurent.pinchart@ideasonboard.com" 
-        <Laurent.pinchart@ideasonboard.com>,
-        "leon@kernel.org" <leon@kernel.org>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "nico@fluxnic.net" <nico@fluxnic.net>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "kieran.bingham+renesas@ideasonboard.com" 
-        <kieran.bingham+renesas@ideasonboard.com>,
-        "a.hajda@samsung.com" <a.hajda@samsung.com>,
-        "jonas@kwiboo.se" <jonas@kwiboo.se>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "airlied@linux.ie" <airlied@linux.ie>,
-        "jernej.skrabec@siol.net" <jernej.skrabec@siol.net>
-Subject: Re: [RFC 0/6] Regressions for "imply" behavior change
-Message-ID: <20200416180536.GW5100@ziepe.ca>
-References: <20200414152312.GF5100@ziepe.ca>
- <CAK8P3a1PjP9_b5NdmqTLeGN4y+3JXx_yyTE8YAf1u5rYHWPA9g@mail.gmail.com>
- <f6d83b08fc0bc171b5ba5b2a0bc138727d92e2c0.camel@mellanox.com>
- <CAK8P3a1-J=4EAxh7TtQxugxwXk239u8ffgxZNRdw_WWy8ExFoQ@mail.gmail.com>
- <834c7606743424c64951dd2193ca15e29799bf18.camel@mellanox.com>
- <CAK8P3a3Wx5_bUOKnN3_hG5nLOqv3WCUtMSq6vOkJzWZgsmAz+A@mail.gmail.com>
- <874ktj4tvn.fsf@intel.com>
- <CAK8P3a1S2x1jnx9Q5B22vX8gBHs0Ztu-znA9hqZ5xp5tRAykGg@mail.gmail.com>
- <20200416145235.GR5100@ziepe.ca>
- <CAK8P3a3HwFYKfZftm2fWE=Lzi486rXpMBwjy1F4oohYU2+o7-g@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=/jeBVrKCSTz6BXkemvfuZzibOp/NI30GK2F1rleWJg0=;
+        b=FjtxroxpdUKevX7r98UsIFVW2sxJh1MCX4ZgvzLjTtoI/phb4qu+BL+lieQKKI2qIN
+         ccRp39+tFzjR4CGGtoSLuw0Dq1ttksi9IiTr4gNn6AfDSSXi3MJ5bvXVgYWnT0CrHNbl
+         Vz3trMQhMaGGUdvfx8Gf7ZitVGrhkuiA/w+LvaAtaWnqBpCky3SEBSSFcTcu28X9fc0V
+         x+u+s6+Gt2p4934bMLAdsPcSsd8n3NOD+0IH59pndIJ4LGwMbNLyygU4CEIRW2ERpE25
+         VPFpCMO4caUV3kft7CfrRYyLVgnpKcSaIWmv+IWS8ZDHlKLUeGb7P3BgBPCh7W9DUR71
+         ElFg==
+X-Gm-Message-State: AGi0PuaSrCUcY2X07yPzT0jgFTjDLckLNgHMp9Tvz3fDIpCXcNO9DF3U
+        mF4vHTMwKYJ8I9iJcOM1zEkqVcgraqpv5Rh/fVcX8A==
+X-Google-Smtp-Source: APiQypIz1Nyt0YvK5h9ya5Ont4Bp/erVWj19vId3QI1k/cHk1N3ALIIaOb77r4ac04xrwFe3OnMJV0bWrWCZRgvd5oQ=
+X-Received: by 2002:a19:4014:: with SMTP id n20mr6483217lfa.6.1587060478709;
+ Thu, 16 Apr 2020 11:07:58 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAK8P3a3HwFYKfZftm2fWE=Lzi486rXpMBwjy1F4oohYU2+o7-g@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200416131325.804095985@linuxfoundation.org>
+In-Reply-To: <20200416131325.804095985@linuxfoundation.org>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Thu, 16 Apr 2020 23:37:47 +0530
+Message-ID: <CA+G9fYtm0vpovNM5exU69WnQxpa3LHaumogCE9V8BCHgdcFr2A@mail.gmail.com>
+Subject: Re: [PATCH 5.6 000/254] 5.6.5-rc1 review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        lkft-triage@lists.linaro.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        linux- stable <stable@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 16, 2020 at 05:58:31PM +0200, Arnd Bergmann wrote:
-> On Thu, Apr 16, 2020 at 4:52 PM Jason Gunthorpe <jgg@ziepe.ca> wrote:
-> > On Thu, Apr 16, 2020 at 02:38:50PM +0200, Arnd Bergmann wrote:
-> > > On Thu, Apr 16, 2020 at 12:17 PM Jani Nikula <jani.nikula@linux.intel.com> wrote:
-> > > > Of course, this is all just talk until someone(tm) posts a patch
-> > > > actually making the change. I've looked at the kconfig tool sources
-> > > > before; not going to make the same mistake again.
-> > >
-> > > Right. OTOH whoever implements it gets to pick the color of the
-> > > bikeshed. ;-)
-> >
-> > I hope someone takes it up, especially now that imply, which
-> > apparently used to do this, doesn't any more :)
-> 
-> The old 'imply' was something completely different, it was more of a
-> 'try to select if you can so we can assume it's there, but give up
-> if it can only be a module and we need it to be built-in".
+On Thu, 16 Apr 2020 at 19:26, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 5.6.5 release.
+> There are 254 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Sat, 18 Apr 2020 13:11:20 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-=
+5.6.5-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-5.6.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
 
-But it seems to have done this as a side-effect, and drivers were
-relying on that, otherwise this series wouldn't exist..
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
 
-Jason
+
+Summary
+------------------------------------------------------------------------
+
+kernel: 5.6.5-rc1
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
+le-rc.git
+git branch: linux-5.6.y
+git commit: 576aa353744ce5f1279071363e4a55e97f486f39
+git describe: v5.6.4-255-g576aa353744c
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-5.6-oe/bui=
+ld/v5.6.4-255-g576aa353744c
+
+No regressions (compared to build v5.6.3-39-g62251e4703ac)
+
+No fixes (compared to build v5.6.3-39-g62251e4703ac)
+
+Ran 33508 total tests in the following environments and test suites.
+
+Environments
+--------------
+- dragonboard-410c
+- hi6220-hikey
+- i386
+- juno-r2
+- juno-r2-compat
+- juno-r2-kasan
+- nxp-ls2088
+- qemu_arm
+- qemu_arm64
+- qemu_i386
+- qemu_x86_64
+- x15
+- x86
+- x86-kasan
+
+Test Suites
+-----------
+* build
+* install-android-platform-tools-r2600
+* install-android-platform-tools-r2800
+* libgpiod
+* libhugetlbfs
+* linux-log-parser
+* ltp-cap_bounds-tests
+* ltp-commands-tests
+* ltp-containers-tests
+* ltp-cpuhotplug-tests
+* ltp-crypto-tests
+* ltp-cve-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-hugetlb-tests
+* ltp-ipc-tests
+* ltp-math-tests
+* ltp-mm-tests
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-securebits-tests
+* ltp-syscalls-tests
+* perf
+* v4l2-compliance
+* kvm-unit-tests
+* kselftest
+* ltp-dio-tests
+* ltp-io-tests
+* ltp-open-posix-tests
+* ltp-sched-tests
+* network-basic-tests
+* spectre-meltdown-checker-test
+* kselftest-vsyscall-mode-native
+* kselftest-vsyscall-mode-none
+
+--=20
+Linaro LKFT
+https://lkft.linaro.org
