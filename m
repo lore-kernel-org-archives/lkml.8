@@ -2,169 +2,137 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1600C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 07:45:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 071A2C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 07:46:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AD97021556
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 07:45:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587023113;
-	bh=hE1B/GqPyAwbhU6GurhlP98Cp3yFkzngF+v28Ae6CuY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=gHnwETxn4akWeOJgMvUKsHBLdHgckcKvGInHo5lcYvtSun0fjliq2uYsJOCq0Ljgk
-	 E0IZAQPOcIU2B2p2dr9rTU17vreh28m6nPKkTuHR+MHfy9yfYMk5plZljAyeaq57Nq
-	 z6AQizTN2Jrj0mxOfpTywmDuVKmC1bWvIluKUuiE=
+	by mail.kernel.org (Postfix) with ESMTP id D6D602076A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 07:46:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="i+G/8B+L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439628AbgDPHpK (ORCPT
+        id S2439655AbgDPHp5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 03:45:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48506 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2439413AbgDPHpB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 03:45:01 -0400
-Received: from mail-io1-f50.google.com (mail-io1-f50.google.com [209.85.166.50])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Thu, 16 Apr 2020 03:45:57 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:54295 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2439413AbgDPHpq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 03:45:46 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587023142;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=xtMw61WExPfRdJ7k/9e2uGO0mShWA0MWE6V5DxSJKqU=;
+        b=i+G/8B+LndcvuUIqQdKBrI4GZL1jtZ6CTu+DL/h6yBNydVgnq5V2kcb77kLQ4A7WZbGedH
+        lEHOvUzLDW4hWnGrPxMBJSgtyIzh3jrWpdcOQjAlfOkAqmrtQLSg8FnscRDejq031V/M0+
+        fZJZBuhG309cxzchzwSuj6aWPFKhSTw=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-362-UyxvZ--jPOSsOW2DrZQkxw-1; Thu, 16 Apr 2020 03:45:35 -0400
+X-MC-Unique: UyxvZ--jPOSsOW2DrZQkxw-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5269E21569;
-        Thu, 16 Apr 2020 07:45:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587023100;
-        bh=hE1B/GqPyAwbhU6GurhlP98Cp3yFkzngF+v28Ae6CuY=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=SefdfvWwUvkpCeZp632BCeHzCD1E+eBxMDa0onCAH2Tli/pzkNVZABj0lO3n08pjY
-         VmCQN2x6QO95MKY5BUqMKZ4c1AH4K5buh1gDeCK6qDQM8rcrHaQo2cDaCTUluNRYae
-         GB4jKKXt3Dw279ToHWFpWHh8k1UkuKegrxexBgm4=
-Received: by mail-io1-f50.google.com with SMTP id i19so20000090ioh.12;
-        Thu, 16 Apr 2020 00:45:00 -0700 (PDT)
-X-Gm-Message-State: AGi0PuYu8mYXck4Ea3/DjMk8hO07aHjn5WbDUDaJ3YgJauMCilQIJTDe
-        TdlvP9q/q7LALh98Db9sgWl2GFYjxoosntD85TE=
-X-Google-Smtp-Source: APiQypLeNbjPF2bsg5mHsKG6G7YQ+2nbEUjMovAnSywp2+B1+QAFYCPiz1sV8RVxrQ6TQUjDzT1dDy7DHtl2X6Sr8S8=
-X-Received: by 2002:a02:3341:: with SMTP id k1mr20976288jak.74.1587023099650;
- Thu, 16 Apr 2020 00:44:59 -0700 (PDT)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7354A8017F5;
+        Thu, 16 Apr 2020 07:45:32 +0000 (UTC)
+Received: from [10.36.115.53] (ovpn-115-53.ams2.redhat.com [10.36.115.53])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 943CE60BE0;
+        Thu, 16 Apr 2020 07:45:25 +0000 (UTC)
+Subject: Re: [PATCH v11 00/13] SMMUv3 Nested Stage Setup (IOMMU part)
+To:     Zhangfei Gao <zhangfei.gao@linaro.org>, eric.auger.pro@gmail.com,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, kvmarm@lists.cs.columbia.edu, will@kernel.org,
+        joro@8bytes.org, maz@kernel.org, robin.murphy@arm.com
+Cc:     jean-philippe@linaro.org, shameerali.kolothum.thodi@huawei.com,
+        alex.williamson@redhat.com, jacob.jun.pan@linux.intel.com,
+        yi.l.liu@intel.com, peter.maydell@linaro.org, tn@semihalf.com,
+        bbhushan2@marvell.com
+References: <20200414150607.28488-1-eric.auger@redhat.com>
+ <eb27f625-ad7a-fcb5-2185-5471e4666f09@linaro.org>
+From:   Auger Eric <eric.auger@redhat.com>
+Message-ID: <06fe02f7-2556-8986-2f1e-dcdf59773b8c@redhat.com>
+Date:   Thu, 16 Apr 2020 09:45:24 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-References: <20200415195422.19866-1-atish.patra@wdc.com>
-In-Reply-To: <20200415195422.19866-1-atish.patra@wdc.com>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Thu, 16 Apr 2020 09:44:48 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXEJGED_uumBR3V-cVjmCpJZu9mwW42gc9hptw+YS-004w@mail.gmail.com>
-Message-ID: <CAMj1kXEJGED_uumBR3V-cVjmCpJZu9mwW42gc9hptw+YS-004w@mail.gmail.com>
-Subject: Re: [v3 PATCH 0/5] Add UEFI support for RISC-V
-To:     Atish Patra <atish.patra@wdc.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        linux-riscv@lists.infradead.org,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Will Deacon <will@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <eb27f625-ad7a-fcb5-2185-5471e4666f09@linaro.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-(+ Arvind)
+Hi Zhangfei,
 
-On Wed, 15 Apr 2020 at 21:54, Atish Patra <atish.patra@wdc.com> wrote:
->
-> This series adds UEFI support for RISC-V. Currently, only boot time
-> services have been added. Runtime services will be added in a separate
-> series. This series depends on some core EFI patches
-> present in current in efi-next and following other patches.
->
-> U-Boot: Adds the boot hartid under chosen node.
-> https://lists.denx.de/pipermail/u-boot/2020-April/405726.html
->
-> Linux kernel: 5.7-rc1
->
-> OpenSBI: master
->
-> Patch 1 just moves arm-stub code to a generic code so that it can be used
-> across different architecture.
->
-> Patch 3 adds fixmap bindings so that CONFIG_EFI can be compiled and we do not
-> have create separate config to enable boot time services.
-> As runtime services are not enabled at this time, full generic early ioremap
-> support is also not added in this series.
->
-> Patch 4 and 5 adds the PE/COFF header and EFI stub code support for RISC-V
-> respectively.
->
-> The patches can also be found in following git repo.
->
-> https://github.com/atishp04/linux/tree/wip_uefi_riscv_v3
->
-> The patches have been verified on Qemu using bootefi command in U-Boot.
->
-> Changes from v2->v3:
-> 1. Rebased on top of latest efi patches.
-> 2. Improved handle_kernel_image().
->
-> Changes from v1->v2:
-> 1. Rebased on 5.7-rc1.
-> 2. Fixed minor typos and removed redundant macros/comments.
->
-> Changes from previous version:
-> 1. Renamed to the generic efi stub macro.
-> 2. Address all redundant comments.
-> 3. Supported EFI kernel image with normal booti command.
-> 4. Removed runtime service related macro defines.
->
-> Atish Patra (5):
-> efi: Move arm-stub to a common file
-> include: pe.h: Add RISC-V related PE definition
-> RISC-V: Define fixmap bindings for generic early ioremap support
-> RISC-V: Add PE/COFF header for EFI stub
-> RISC-V: Add EFI stub support.
->
+On 4/16/20 6:25 AM, Zhangfei Gao wrote:
+>=20
+>=20
+> On 2020/4/14 =E4=B8=8B=E5=8D=8811:05, Eric Auger wrote:
+>> This version fixes an issue observed by Shameer on an SMMU 3.2,
+>> when moving from dual stage config to stage 1 only config.
+>> The 2 high 64b of the STE now get reset. Otherwise, leaving the
+>> S2TTB set may cause a C_BAD_STE error.
+>>
+>> This series can be found at:
+>> https://github.com/eauger/linux/tree/v5.6-2stage-v11_10.1
+>> (including the VFIO part)
+>> The QEMU fellow series still can be found at:
+>> https://github.com/eauger/qemu/tree/v4.2.0-2stage-rfcv6
+>>
+>> Users have expressed interest in that work and tested v9/v10:
+>> - https://patchwork.kernel.org/cover/11039995/#23012381
+>> - https://patchwork.kernel.org/cover/11039995/#23197235
+>>
+>> Background:
+>>
+>> This series brings the IOMMU part of HW nested paging support
+>> in the SMMUv3. The VFIO part is submitted separately.
+>>
+>> The IOMMU API is extended to support 2 new API functionalities:
+>> 1) pass the guest stage 1 configuration
+>> 2) pass stage 1 MSI bindings
+>>
+>> Then those capabilities gets implemented in the SMMUv3 driver.
+>>
+>> The virtualizer passes information through the VFIO user API
+>> which cascades them to the iommu subsystem. This allows the guest
+>> to own stage 1 tables and context descriptors (so-called PASID
+>> table) while the host owns stage 2 tables and main configuration
+>> structures (STE).
+>>
+>>
+>=20
+> Thanks Eric
+>=20
+> Tested v11 on Hisilicon kunpeng920 board via hardware zip accelerator.
+> 1. no-sva works, where guest app directly use physical address via ioct=
+l.
+Thank you for the testing. Glad it works for you.
+> 2. vSVA still not work, same as v10,
+Yes that's normal this series is not meant to support vSVM at this stage.
 
-I had some comments regarding patch #5, but the other ones look fine.
+I intend to add the missing pieces during the next weeks.
 
-Given that there are two series in flight now that touch the same
-code, I am going to merge the patches #1 and #2 of this series into
-efi/next.
+Thanks
 
-Once the remaining changes are good to go, I can take them as well,
-but I'll need one of the RISC-V maintainers to ack them first.
+Eric
+> 3.=C2=A0 the v10 issue reported by Shameer has been solved,=C2=A0 first=
+ start qemu
+> with=C2=A0 iommu=3Dsmmuv3, then start qemu without=C2=A0 iommu=3Dsmmuv3
+> 4. no-sva also works without=C2=A0 iommu=3Dsmmuv3
+>=20
+> Test details in https://docs.qq.com/doc/DRU5oR1NtUERseFNL
+>=20
+> Thanks
+>=20
 
-
-> arch/arm/Kconfig                              |   2 +-
-> arch/arm64/Kconfig                            |   2 +-
-> arch/riscv/Kconfig                            |  21 ++++
-> arch/riscv/Makefile                           |   1 +
-> arch/riscv/configs/defconfig                  |   1 +
-> arch/riscv/include/asm/Kbuild                 |   1 +
-> arch/riscv/include/asm/efi.h                  |  44 +++++++
-> arch/riscv/include/asm/fixmap.h               |  18 +++
-> arch/riscv/include/asm/io.h                   |   1 +
-> arch/riscv/include/asm/sections.h             |  13 ++
-> arch/riscv/kernel/Makefile                    |   4 +
-> arch/riscv/kernel/efi-header.S                |  99 ++++++++++++++++
-> arch/riscv/kernel/head.S                      |  16 +++
-> arch/riscv/kernel/image-vars.h                |  53 +++++++++
-> arch/riscv/kernel/vmlinux.lds.S               |  20 +++-
-> drivers/firmware/efi/Kconfig                  |   4 +-
-> drivers/firmware/efi/libstub/Makefile         |  19 ++-
-> .../efi/libstub/{arm-stub.c => efi-stub.c}    |   0
-> drivers/firmware/efi/libstub/riscv-stub.c     | 111 ++++++++++++++++++
-> include/linux/pe.h                            |   3 +
-> 20 files changed, 421 insertions(+), 12 deletions(-)
-> create mode 100644 arch/riscv/include/asm/efi.h
-> create mode 100644 arch/riscv/include/asm/sections.h
-> create mode 100644 arch/riscv/kernel/efi-header.S
-> create mode 100644 arch/riscv/kernel/image-vars.h
-> rename drivers/firmware/efi/libstub/{arm-stub.c => efi-stub.c} (100%)
-> create mode 100644 drivers/firmware/efi/libstub/riscv-stub.c
->
-> --
-> 2.24.0
->
