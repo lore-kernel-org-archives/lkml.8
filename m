@@ -2,247 +2,225 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62AB1C2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:39:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97342C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:39:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3AF3621D94
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:39:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587047982;
-	bh=NMUFoBmpwGS7c58K7u9EuChI6F1ONVgzsCUkmu/9A2Y=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QRwhVX81ywv577/9+XZSDjyQSr7PFeii5LuHGvLqjV3E82dBaBx80tWXZwmRoiVuq
-	 R2/KVwSQXas14ElsOxJeYzPtnFJtsS+DS381eNKDgy1Gfr9eIga/q5DHdly5NLvM9U
-	 pQQ/4P/mAQgzRBsWwZAlS/BXfLC/dOiHX4eMkZHg=
+	by mail.kernel.org (Postfix) with ESMTP id 669DC21D94
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:39:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="KbG4b23U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407257AbgDPOjl (ORCPT
+        id S2394418AbgDPOjr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:39:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49348 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2409560AbgDPOB7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 10:01:59 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ACC7F20732;
-        Thu, 16 Apr 2020 14:01:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587045719;
-        bh=NMUFoBmpwGS7c58K7u9EuChI6F1ONVgzsCUkmu/9A2Y=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=A9RXipklNvrBvL4ywCHEuK4HvXDAmfz1E0Wm8P+4+kQ27SeNI+oxgQuhE65OSIVrA
-         jrI6Lit4EQMigxOOtCRgGwrn10IfatqTgFOdW/piOhWJ89EHudLvFudhVK9kK1IcUa
-         PtU8uueUzsQPurZbKcl6xpLgVkRDGCOxkr2i0UOI=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Sodhi, Vunny" <vunny.sodhi@intel.com>,
-        Daniele Ceraolo Spurio <daniele.ceraolospurio@intel.com>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        Mika Kuoppala <mika.kuoppala@linux.intel.com>,
-        Matthew Auld <matthew.auld@intel.com>,
-        Michal Wajdeczko <michal.wajdeczko@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 249/254] drm/i915/ggtt: do not set bits 1-11 in gen12 ptes
-Date:   Thu, 16 Apr 2020 15:25:38 +0200
-Message-Id: <20200416131356.766805369@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200416131325.804095985@linuxfoundation.org>
-References: <20200416131325.804095985@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Thu, 16 Apr 2020 10:39:47 -0400
+Received: from mail-db8eur05on2066.outbound.protection.outlook.com ([40.107.20.66]:27375
+        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2393448AbgDPOjI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 10:39:08 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=gPIfSK/AMuPaBKKcofA9NOGTMY0DMsV7WAqyqu/8Km/F5+wW2GfnOxK37iV1HNPBeX1yI0GvsMZEp0QcnSOhdv9wkSwImAjMd9hm8nOzEhFboh6WEKDJ8KwURFSyWDngMoVZyWtFF692ywxeL+byg48KL80fzIsNBIwqPmv5r6uKwZYBWVbITij+yiYN1SZ8jtCBRv8hdEAywrRCvTMTvSOBon7PAeRNYsUH1m8SQV51pDJ0ZYYHTuqhu66d5OFmza/hq0GEsWnGer7rQzC/7EWWUi9/zvbgE/jN+YlTQ+GyP2kKkvcdstgYHKbydkCb+timP8SU2ESXIlyDLaje3Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=mv0L9wisMdrDeZAAW4q1d3+Ep4YUnQEGSJbfPcidB8A=;
+ b=G4UCjFsx+ca7elC2aFSlty8LQxHQX5sgSC+9VHZWK8z/lR/1jXYAztJQnD/P7H2cVzrldORz9XQd5DV1E/ymJCWCkz+Ubtd8UwST37mJnXC2xc1v8+UiGveylanesVw2gqISAfMvt86aHRfD2Fw3Pg76kTycEvwxKslhnE4TQegCG2jpJ9zP5372jbkEd7WAkq4Z/+sGZojbaKZ90Gzr9Mt4ugwSpw/6l6IrIz0Zkse0fi+aQEQ177V5CjiznHg9HZKqzO19HNGbAdnO7swZkj4bvKpB6CJWyiFkZ8MGtnSjs9GyzSmZCMo0Dttt2K+LDAU9ulJtWexRZb0ORjTJXA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=mv0L9wisMdrDeZAAW4q1d3+Ep4YUnQEGSJbfPcidB8A=;
+ b=KbG4b23UX8zrNhlfnX2Ntlb2CRcZLZIKCp6k+D1D4xIJf3kM1PGNeUdiONFvs4+OOGW/9S3WFSVwOjLKaS8Zy05YSufmDxQc2aOjz5nqXRjFFG9q190+vphWCVNsTHfy5aQZDbY8jJ6aKAVYTZJAA0Q85VeCXNHGi42Ky5mjFxo=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=laurentiu.tudor@nxp.com; 
+Received: from AM6PR04MB5925.eurprd04.prod.outlook.com (2603:10a6:20b:ab::19)
+ by AM6PR04MB5173.eurprd04.prod.outlook.com (2603:10a6:20b:d::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.26; Thu, 16 Apr
+ 2020 14:39:02 +0000
+Received: from AM6PR04MB5925.eurprd04.prod.outlook.com
+ ([fe80::dd71:5f33:1b21:cd9e]) by AM6PR04MB5925.eurprd04.prod.outlook.com
+ ([fe80::dd71:5f33:1b21:cd9e%5]) with mapi id 15.20.2900.028; Thu, 16 Apr 2020
+ 14:39:02 +0000
+Subject: Re: [RFC PATCH 1/4] bus: fsl-mc: add custom .dma_configure
+ implementation
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
+        linux-arm-kernel@lists.infradead.org, linux-acpi@vger.kernel.org,
+        robin.murphy@arm.com, ard.biesheuvel@linaro.org,
+        ioana.ciornei@nxp.com, diana.craciun@oss.nxp.com, maz@kernel.org,
+        jon@solid-run.com, pankaj.bansal@nxp.com, makarand.pawagi@nxp.com,
+        calvin.johnson@nxp.com, V.Sethi@nxp.com, cristian.sovaiala@nxp.com,
+        Stuart.Yoder@arm.com, jeremy.linton@arm.com, joro@8bytes.org,
+        tglx@linutronix.de, jason@lakedaemon.net
+References: <20200227100542.13819-1-laurentiu.tudor@nxp.com>
+ <20200325125109.GA5430@red-moon.cambridge.arm.com>
+ <499fbf9a-416f-d7c7-0655-881d92138a6c@nxp.com>
+ <20200414143211.GA14905@red-moon.cambridge.arm.com>
+ <d37ca4e3-58cb-9d6f-3a98-5e4a21ca948b@nxp.com>
+ <20200415160425.GA6436@e121166-lin.cambridge.arm.com>
+From:   Laurentiu Tudor <laurentiu.tudor@nxp.com>
+Message-ID: <bd786e30-321a-26b1-dbc5-bc233f89c11b@nxp.com>
+Date:   Thu, 16 Apr 2020 17:38:56 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
+In-Reply-To: <20200415160425.GA6436@e121166-lin.cambridge.arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: AM0PR06CA0101.eurprd06.prod.outlook.com
+ (2603:10a6:208:fa::42) To AM6PR04MB5925.eurprd04.prod.outlook.com
+ (2603:10a6:20b:ab::19)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [192.168.1.107] (86.123.59.151) by AM0PR06CA0101.eurprd06.prod.outlook.com (2603:10a6:208:fa::42) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2921.25 via Frontend Transport; Thu, 16 Apr 2020 14:38:59 +0000
+X-Originating-IP: [86.123.59.151]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: d34658d0-2807-4807-ffa1-08d7e213e810
+X-MS-TrafficTypeDiagnostic: AM6PR04MB5173:|AM6PR04MB5173:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <AM6PR04MB5173EAF19513D8155EE26B46ECD80@AM6PR04MB5173.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
+X-Forefront-PRVS: 0375972289
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR04MB5925.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(376002)(366004)(136003)(396003)(39860400002)(346002)(2906002)(81156014)(316002)(6486002)(478600001)(8676002)(4326008)(31696002)(8936002)(2616005)(36756003)(6666004)(86362001)(6916009)(7416002)(52116002)(44832011)(66556008)(956004)(66476007)(16576012)(66946007)(26005)(31686004)(53546011)(16526019)(5660300002)(186003)(142923001);DIR:OUT;SFP:1101;
+Received-SPF: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: pZuSikilcFEwzZIUbEH+S6NszKBybxsb9JG4Ck4wEr4dZnHAaXkXUPrRqkbid/Hn7zcvNT5ZVszzTL4JgEs1m2rM4dI0zNPlCR1LiFbFYHfgBI4D0mNM5G/6UrVmIuED30ZtMXa2MIfdzyeQXybanrFydGT7cn50klHe29uvjWVvbJhU0jeHQju5jpbcZBQLzlLpbKijnfAC0ArPObqWfNj2eX5UTYuTt1XWaW/VjlX41Hshubp5lx2mHktvtELs1ixEfYy9ibeFirSjXHnOkfPvP6cv+Z/fiT8tQotNJjVGvTMRcuLf2PFqXphg/aijXCYxe9NqkXHxG+o//M4VCPGGE8i61bA8RgmfbKdxGDVjjkOxC843z+ra0H+9ST9FWE/oNWNbgrXKv4I56GMWl3NGUCxw76tbH2f8mDbaNHl6KKLr9rKi64suT8AeXnqP2GtLuU4y33KaaK+Mjq7SRXbc1EfysQ6cNjrrpwsBiHk6NFguBIV90WD8ieSYQ+5r
+X-MS-Exchange-AntiSpam-MessageData: pEKdB/zdcSu9HzeeFwfLURt9TP/f6Hy3Ex6SPuzVDF7MZ7UUSXjArAyB2Hj0UdP+VIEAHh+5bI/k43afraPS+Xm2f3pBVftfPaaYiNa8vEV5vtIb/yeVo4TjUTKsLucThbrVBpImfqltOg7Yku9hoQ==
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d34658d0-2807-4807-ffa1-08d7e213e810
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Apr 2020 14:39:02.4477
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: DMGvykdCt0ATECvepsAlhQ/0U4cNoTtBZ4dtIi9/ZlWFYz5flBD4dY80ruQTCR72b+JRHevjGWN9DYqAtbi18A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR04MB5173
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniele Ceraolo Spurio <daniele.ceraolospurio@intel.com>
 
-[ Upstream commit 69edc390a54268d41e45089cb972bf71510f5f07 ]
 
-On TGL, bits 2-4 in the GGTT PTE are not ignored anymore and are
-instead used for some extra VT-d capabilities. We don't (yet?) have
-support for those capabilities, but, given that we shared the pte_encode
-function betweed GGTT and PPGTT, we still set those bits to the PPGTT
-PPAT values. The DMA engine gets very confused when those bits are
-set while the iommu is enabled, leading to errors. E.g. when loading
-the GuC we get:
+On 4/15/2020 7:04 PM, Lorenzo Pieralisi wrote:
+> On Wed, Apr 15, 2020 at 06:44:37PM +0300, Laurentiu Tudor wrote:
+>>
+>>
+>> On 4/14/2020 5:32 PM, Lorenzo Pieralisi wrote:
+>>> On Wed, Mar 25, 2020 at 06:48:55PM +0200, Laurentiu Tudor wrote:
+>>>> Hi Lorenzo,
+>>>>
+>>>> On 3/25/2020 2:51 PM, Lorenzo Pieralisi wrote:
+>>>>> On Thu, Feb 27, 2020 at 12:05:39PM +0200, laurentiu.tudor@nxp.com wrote:
+>>>>>> From: Laurentiu Tudor <laurentiu.tudor@nxp.com>
+>>>>>>
+>>>>>> The devices on this bus are not discovered by way of device tree
+>>>>>> but by queries to the firmware. It makes little sense to trick the
+>>>>>> generic of layer into thinking that these devices are of related so
+>>>>>> that we can get our dma configuration. Instead of doing that, add
+>>>>>> our custom dma configuration implementation.
+>>>>>>
+>>>>>> Signed-off-by: Laurentiu Tudor <laurentiu.tudor@nxp.com>
+>>>>>> ---
+>>>>>>  drivers/bus/fsl-mc/fsl-mc-bus.c | 31 ++++++++++++++++++++++++++++++-
+>>>>>>  1 file changed, 30 insertions(+), 1 deletion(-)
+>>>>>>
+>>>>>> diff --git a/drivers/bus/fsl-mc/fsl-mc-bus.c b/drivers/bus/fsl-mc/fsl-mc-bus.c
+>>>>>> index 36eb25f82c8e..eafaa0e0b906 100644
+>>>>>> --- a/drivers/bus/fsl-mc/fsl-mc-bus.c
+>>>>>> +++ b/drivers/bus/fsl-mc/fsl-mc-bus.c
+>>>>>> @@ -132,11 +132,40 @@ static int fsl_mc_bus_uevent(struct device *dev, struct kobj_uevent_env *env)
+>>>>>>  static int fsl_mc_dma_configure(struct device *dev)
+>>>>>>  {
+>>>>>>  	struct device *dma_dev = dev;
+>>>>>> +	struct iommu_fwspec *fwspec;
+>>>>>> +	const struct iommu_ops *iommu_ops;
+>>>>>> +	struct fsl_mc_device *mc_dev = to_fsl_mc_device(dev);
+>>>>>> +	int ret;
+>>>>>> +	u32 icid;
+>>>>>>  
+>>>>>>  	while (dev_is_fsl_mc(dma_dev))
+>>>>>>  		dma_dev = dma_dev->parent;
+>>>>>>  
+>>>>>> -	return of_dma_configure(dev, dma_dev->of_node, 0);
+>>>>>> +	fwspec = dev_iommu_fwspec_get(dma_dev);
+>>>>>> +	if (!fwspec)
+>>>>>> +		return -ENODEV;
+>>>>>> +	iommu_ops = iommu_ops_from_fwnode(fwspec->iommu_fwnode);
+>>>>>> +	if (!iommu_ops)
+>>>>>> +		return -ENODEV;
+>>>>>> +
+>>>>>> +	ret = iommu_fwspec_init(dev, fwspec->iommu_fwnode, iommu_ops);
+>>>>>> +	if (ret)
+>>>>>> +		return ret;
+>>>>>> +
+>>>>>> +	icid = mc_dev->icid;
+>>>>>> +	ret = iommu_fwspec_add_ids(dev, &icid, 1);
+>>>>>
+>>>>> I see. So with this patch we would use the MC named component only to
+>>>>> retrieve the iommu_ops
+>>>>
+>>>> Right. I'd also add that the implementation tries to follow the existing
+>>>> standard .dma_configure implementations, e.g. of_dma_configure +
+>>>> of_iommu_configure. I'd also note that similarly to the ACPI case, this
+>>>> MC FW device is probed as a platform device in the DT scenario, binding
+>>>> here [1].
+>>>> A similar approach is used for the retrieval of the msi irq domain, see
+>>>> following patch.
+>>>>
+>>>>> - the streamid are injected directly here bypassing OF/IORT bindings translations altogether. 
+>>>>
+>>>> Actually I've submitted a v2 [2] that calls into .of_xlate() to allow
+>>>> the smmu driver to do some processing on the raw streamid coming from
+>>>> the firmware. I have not yet tested this with ACPI but expect it to
+>>>> work, however, it's debatable how valid is this approach in the context
+>>>> of ACPI.
+>>>
+>>> Actually, what I think you need is of_map_rid() (and an IORT
+>>> equivalent, that I am going to write - generalizing iort_msi_map_rid()).
+>>>
+>>> Would that be enough to enable IORT "normal" mappings in the MC bus
+>>> named components ?
+>>>
+>>
+>> At a first glance, looks like this could very well fix the ACPI
+>> scenario, but I have some unclarities on the approach:
+>>  * are we going to rely in DT and ACPI generic layers even if these
+>> devices are not published / enumerated through DT or ACPI tables?
+>>  * the firmware manages and provides discrete streamids for the devices
+>> it exposes so there's no translation involved. There's no
+>>    requestor_id / input_id involved but it seems that we would still do
+>> some kind of translation relying for this on the DT/ACPI functions.
+>>  * MC firmware has its own stream_id (e.g. on some chips 0x4000, others
+>> 0xf00, so outside the range of stream_ids used for the mc devices)
+>>    while for the devices on this bus, MC allocates stream_ids from a
+>> range (e.g. 0x17 - 0x3f). Is it possible to describe this in the IORT table?
+>>  * Regarding the of_map_rid() use you mentioned, I was planning to
+>> decouple the mc bus from the DT layer by dropping the use of
+>> of_map_rid(), see patch 4.
+>> I briefly glanced over the iort code and spotted this static function:
+>> iort_iommu_xlate(). Wouldn't it also help, of course after making it public?
+> 
+> Guys I have lost you honestly. I don't understand what you really need
+> to do with DT and ACPI here. Are they needed to describe what you need
+> or not ? If the MC dma configure function does not need any DT/ACPI
+> bindings that's fine by me, I don't understand though why you are still
+> asking how to represent MC in ACPI then, what for.
+> 
 
-[    9.796218] DMAR: DRHD: handling fault status reg 2
-[    9.796235] DMAR: [DMA Write] Request device [00:02.0] PASID ffffffff fault addr 0 [fault reason 02] Present bit in context entry is clear
-[    9.899215] [drm:intel_guc_fw_upload [i915]] *ERROR* GuC firmware signature verification failed
-
-To fix this, just have dedicated gen8_pte_encode function per type of
-gtt. Also, explicitly set vm->pte_encode for gen8_ppgtt, even if we
-don't use it, to make sure we don't accidentally assign it to the GGTT
-one, like we do for gen6_ppgtt, in case we need it in the future.
-
-Reported-by: "Sodhi, Vunny" <vunny.sodhi@intel.com>
-Signed-off-by: Daniele Ceraolo Spurio <daniele.ceraolospurio@intel.com>
-Cc: Chris Wilson <chris@chris-wilson.co.uk>
-Cc: Mika Kuoppala <mika.kuoppala@linux.intel.com>
-Cc: Matthew Auld <matthew.auld@intel.com>
-Cc: Michal Wajdeczko <michal.wajdeczko@intel.com>
-Reviewed-by: Mika Kuoppala <mika.kuoppala@linux.intel.com>
-Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200226185657.26445-1-daniele.ceraolospurio@intel.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Sorry for the stress and all this back and forth. Perhaps it's due to my
+lack of understanding why we would need this translation complexity.
+We'll return with a proposal in the next spin of the patches so we have
+something concrete to discuss on.
 ---
- drivers/gpu/drm/i915/gt/gen8_ppgtt.c | 26 ++++++++++++++++++++++++++
- drivers/gpu/drm/i915/gt/intel_ggtt.c | 13 ++++++++++---
- drivers/gpu/drm/i915/gt/intel_gtt.c  | 24 ------------------------
- drivers/gpu/drm/i915/gt/intel_gtt.h  |  4 ----
- 4 files changed, 36 insertions(+), 31 deletions(-)
-
-diff --git a/drivers/gpu/drm/i915/gt/gen8_ppgtt.c b/drivers/gpu/drm/i915/gt/gen8_ppgtt.c
-index 4d1de2d97d5cf..9aabc5815d388 100644
---- a/drivers/gpu/drm/i915/gt/gen8_ppgtt.c
-+++ b/drivers/gpu/drm/i915/gt/gen8_ppgtt.c
-@@ -25,6 +25,30 @@ static u64 gen8_pde_encode(const dma_addr_t addr,
- 	return pde;
- }
- 
-+static u64 gen8_pte_encode(dma_addr_t addr,
-+			   enum i915_cache_level level,
-+			   u32 flags)
-+{
-+	gen8_pte_t pte = addr | _PAGE_PRESENT | _PAGE_RW;
-+
-+	if (unlikely(flags & PTE_READ_ONLY))
-+		pte &= ~_PAGE_RW;
-+
-+	switch (level) {
-+	case I915_CACHE_NONE:
-+		pte |= PPAT_UNCACHED;
-+		break;
-+	case I915_CACHE_WT:
-+		pte |= PPAT_DISPLAY_ELLC;
-+		break;
-+	default:
-+		pte |= PPAT_CACHED;
-+		break;
-+	}
-+
-+	return pte;
-+}
-+
- static void gen8_ppgtt_notify_vgt(struct i915_ppgtt *ppgtt, bool create)
- {
- 	struct drm_i915_private *i915 = ppgtt->vm.i915;
-@@ -706,6 +730,8 @@ struct i915_ppgtt *gen8_ppgtt_create(struct intel_gt *gt)
- 	ppgtt->vm.allocate_va_range = gen8_ppgtt_alloc;
- 	ppgtt->vm.clear_range = gen8_ppgtt_clear;
- 
-+	ppgtt->vm.pte_encode = gen8_pte_encode;
-+
- 	if (intel_vgpu_active(gt->i915))
- 		gen8_ppgtt_notify_vgt(ppgtt, true);
- 
-diff --git a/drivers/gpu/drm/i915/gt/intel_ggtt.c b/drivers/gpu/drm/i915/gt/intel_ggtt.c
-index 531d501be01fa..5fd8b3e0cd19c 100644
---- a/drivers/gpu/drm/i915/gt/intel_ggtt.c
-+++ b/drivers/gpu/drm/i915/gt/intel_ggtt.c
-@@ -167,6 +167,13 @@ static void gmch_ggtt_invalidate(struct i915_ggtt *ggtt)
- 	intel_gtt_chipset_flush();
- }
- 
-+static u64 gen8_ggtt_pte_encode(dma_addr_t addr,
-+				enum i915_cache_level level,
-+				u32 flags)
-+{
-+	return addr | _PAGE_PRESENT;
-+}
-+
- static void gen8_set_pte(void __iomem *addr, gen8_pte_t pte)
- {
- 	writeq(pte, addr);
-@@ -182,7 +189,7 @@ static void gen8_ggtt_insert_page(struct i915_address_space *vm,
- 	gen8_pte_t __iomem *pte =
- 		(gen8_pte_t __iomem *)ggtt->gsm + offset / I915_GTT_PAGE_SIZE;
- 
--	gen8_set_pte(pte, gen8_pte_encode(addr, level, 0));
-+	gen8_set_pte(pte, gen8_ggtt_pte_encode(addr, level, 0));
- 
- 	ggtt->invalidate(ggtt);
- }
-@@ -195,7 +202,7 @@ static void gen8_ggtt_insert_entries(struct i915_address_space *vm,
- 	struct i915_ggtt *ggtt = i915_vm_to_ggtt(vm);
- 	struct sgt_iter sgt_iter;
- 	gen8_pte_t __iomem *gtt_entries;
--	const gen8_pte_t pte_encode = gen8_pte_encode(0, level, 0);
-+	const gen8_pte_t pte_encode = gen8_ggtt_pte_encode(0, level, 0);
- 	dma_addr_t addr;
- 
- 	/*
-@@ -890,7 +897,7 @@ static int gen8_gmch_probe(struct i915_ggtt *ggtt)
- 	ggtt->vm.vma_ops.set_pages   = ggtt_set_pages;
- 	ggtt->vm.vma_ops.clear_pages = clear_pages;
- 
--	ggtt->vm.pte_encode = gen8_pte_encode;
-+	ggtt->vm.pte_encode = gen8_ggtt_pte_encode;
- 
- 	setup_private_pat(ggtt->vm.gt->uncore);
- 
-diff --git a/drivers/gpu/drm/i915/gt/intel_gtt.c b/drivers/gpu/drm/i915/gt/intel_gtt.c
-index 16acdc5d67340..f6fcf05d54f36 100644
---- a/drivers/gpu/drm/i915/gt/intel_gtt.c
-+++ b/drivers/gpu/drm/i915/gt/intel_gtt.c
-@@ -454,30 +454,6 @@ void gtt_write_workarounds(struct intel_gt *gt)
- 	}
- }
- 
--u64 gen8_pte_encode(dma_addr_t addr,
--		    enum i915_cache_level level,
--		    u32 flags)
--{
--	gen8_pte_t pte = addr | _PAGE_PRESENT | _PAGE_RW;
--
--	if (unlikely(flags & PTE_READ_ONLY))
--		pte &= ~_PAGE_RW;
--
--	switch (level) {
--	case I915_CACHE_NONE:
--		pte |= PPAT_UNCACHED;
--		break;
--	case I915_CACHE_WT:
--		pte |= PPAT_DISPLAY_ELLC;
--		break;
--	default:
--		pte |= PPAT_CACHED;
--		break;
--	}
--
--	return pte;
--}
--
- static void tgl_setup_private_ppat(struct intel_uncore *uncore)
- {
- 	/* TGL doesn't support LLC or AGE settings */
-diff --git a/drivers/gpu/drm/i915/gt/intel_gtt.h b/drivers/gpu/drm/i915/gt/intel_gtt.h
-index 7da7681c20b1b..7db9f3ac9aedb 100644
---- a/drivers/gpu/drm/i915/gt/intel_gtt.h
-+++ b/drivers/gpu/drm/i915/gt/intel_gtt.h
-@@ -515,10 +515,6 @@ struct i915_ppgtt *i915_ppgtt_create(struct intel_gt *gt);
- void i915_gem_suspend_gtt_mappings(struct drm_i915_private *i915);
- void i915_gem_restore_gtt_mappings(struct drm_i915_private *i915);
- 
--u64 gen8_pte_encode(dma_addr_t addr,
--		    enum i915_cache_level level,
--		    u32 flags);
--
- int setup_page_dma(struct i915_address_space *vm, struct i915_page_dma *p);
- void cleanup_page_dma(struct i915_address_space *vm, struct i915_page_dma *p);
- 
--- 
-2.20.1
-
-
-
+Thanks & Best Regards, Laurentiu
