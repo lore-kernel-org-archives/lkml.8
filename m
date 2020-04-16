@@ -2,55 +2,58 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B12DC2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:52:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54A0DC2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:52:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3652320732
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:52:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32669214AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:52:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587052375;
-	bh=bFUCpEEVzOrm1acvZr3Ly3iJYoGVkZhsua8izAbxhqI=;
+	s=default; t=1587052379;
+	bh=K2m3pcjtFaB1WdUGw6/97iAE58R7nthpPofK+CoeoqM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JMTjHXyZUmbBG0UqRG1Wn/fWo7Mv90rtMe8T0snltqiIRN/OqjRhLAwo76PiyIj+z
-	 P4ns7zo7qcSrN9nK5e39uvi1LdhQbsmpb89h77fsPGZunOdFzcTqHHqXa5n0g4GxOM
-	 7bbUk/VXs5MhhVYsENNdLFXNOQfe8RMPzLZDEkFg=
+	b=uTmbkV7ajwTW9hMMjzS9uY2BN6Opgqv7bYhLJs2ipjv28436pvn4Y0w01tDgq7icJ
+	 X2sqYc44xePuQuXdL4d5TUWlS6CGCseDYc7aA2BK6CSzA01HoDVm5lW1mbUcgEhfiD
+	 T0ttxpnphPe2+/ID5nYPVIDKG61FD30PJBEmpYGk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2895090AbgDPPwy (ORCPT
+        id S2895774AbgDPPw5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:52:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43732 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 11:52:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44092 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2896559AbgDPNcz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2896572AbgDPNcz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 16 Apr 2020 09:32:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0DA5D22251;
-        Thu, 16 Apr 2020 13:31:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0B41D22252;
+        Thu, 16 Apr 2020 13:32:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587043910;
-        bh=bFUCpEEVzOrm1acvZr3Ly3iJYoGVkZhsua8izAbxhqI=;
+        s=default; t=1587043922;
+        bh=K2m3pcjtFaB1WdUGw6/97iAE58R7nthpPofK+CoeoqM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OQK0sZiaaGjJm8v7zU2SHzD46mUleB2cYhSbzGdvqhJZeVTyC7ODHaKmG6IG/vzxJ
-         8De/WKGIaL3hlIp9lwgklYDONueT2rQSVr5m3yUg0f6oPeeI6KW+xEF8uP176vcTG3
-         rJJzocePKiI34CRl+mpOE21qlhezulitNvPILn48=
+        b=yaKCQ0/vgegKRLKlHUp6wWTuhLxaDRGlMiOXvvAcT7qV1J9e+U59IsvSixRjMUzEs
+         CP8ZoHYbRK8I62jEnSGLhYguCjDq/ay+rHwh2LtgbAnZP7lr8zo6GROpEoMRMLRYpl
+         yBGtPfYTlspXNZtVfASO7gHH758khqq1Y+T3xOgM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
-        Andrew Donnellan <ajd@linux.ibm.com>
-Subject: [PATCH 4.19 124/146] powerpc/powernv/idle: Restore AMR/UAMOR/AMOR after idle
-Date:   Thu, 16 Apr 2020 15:24:25 +0200
-Message-Id: <20200416131259.520587819@linuxfoundation.org>
+        stable@vger.kernel.org, Ondrej Jirman <megous@megous.com>,
+        Maxime Ripard <maxime@cerno.tech>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.5 001/257] ARM: dts: sun8i-a83t-tbs-a711: HM5065 doesnt like such a high voltage
+Date:   Thu, 16 Apr 2020 15:20:52 +0200
+Message-Id: <20200416131326.082745566@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200416131242.353444678@linuxfoundation.org>
-References: <20200416131242.353444678@linuxfoundation.org>
+In-Reply-To: <20200416131325.891903893@linuxfoundation.org>
+References: <20200416131325.891903893@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -59,79 +62,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Ellerman <mpe@ellerman.id.au>
+From: Ondrej Jirman <megous@megous.com>
 
-commit 53a712bae5dd919521a58d7bad773b949358add0 upstream.
+[ Upstream commit a40550952c000667b20082d58077bc647da6c890 ]
 
-In order to implement KUAP (Kernel Userspace Access Protection) on
-Power9 we will be using the AMR, and therefore indirectly the
-UAMOR/AMOR.
+Lowering the voltage solves the quick image degradation over time
+(minutes), that was probably caused by overheating.
 
-So save/restore these regs in the idle code.
-
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-[ajd: Backport to 4.19 tree, CVE-2020-11669]
-Signed-off-by: Andrew Donnellan <ajd@linux.ibm.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Ondrej Jirman <megous@megous.com>
+Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/kernel/idle_book3s.S |   27 +++++++++++++++++++++++----
- 1 file changed, 23 insertions(+), 4 deletions(-)
+ arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/arch/powerpc/kernel/idle_book3s.S
-+++ b/arch/powerpc/kernel/idle_book3s.S
-@@ -170,8 +170,11 @@ core_idle_lock_held:
- 	bne-	core_idle_lock_held
- 	blr
+diff --git a/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts b/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
+index f781d330cff50..e8b3669e0e5d8 100644
+--- a/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
++++ b/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
+@@ -374,8 +374,8 @@
+ };
  
--/* Reuse an unused pt_regs slot for IAMR */
-+/* Reuse some unused pt_regs slots for AMR/IAMR/UAMOR/UAMOR */
-+#define PNV_POWERSAVE_AMR	_TRAP
- #define PNV_POWERSAVE_IAMR	_DAR
-+#define PNV_POWERSAVE_UAMOR	_DSISR
-+#define PNV_POWERSAVE_AMOR	RESULT
+ &reg_dldo3 {
+-	regulator-min-microvolt = <2800000>;
+-	regulator-max-microvolt = <2800000>;
++	regulator-min-microvolt = <1800000>;
++	regulator-max-microvolt = <1800000>;
+ 	regulator-name = "vdd-csi";
+ };
  
- /*
-  * Pass requested state in r3:
-@@ -205,8 +208,16 @@ pnv_powersave_common:
- 	SAVE_NVGPRS(r1)
- 
- BEGIN_FTR_SECTION
-+	mfspr	r4, SPRN_AMR
- 	mfspr	r5, SPRN_IAMR
-+	mfspr	r6, SPRN_UAMOR
-+	std	r4, PNV_POWERSAVE_AMR(r1)
- 	std	r5, PNV_POWERSAVE_IAMR(r1)
-+	std	r6, PNV_POWERSAVE_UAMOR(r1)
-+BEGIN_FTR_SECTION_NESTED(42)
-+	mfspr	r7, SPRN_AMOR
-+	std	r7, PNV_POWERSAVE_AMOR(r1)
-+END_FTR_SECTION_NESTED_IFSET(CPU_FTR_HVMODE, 42)
- END_FTR_SECTION_IFSET(CPU_FTR_ARCH_207S)
- 
- 	mfcr	r5
-@@ -935,12 +946,20 @@ END_FTR_SECTION_IFSET(CPU_FTR_HVMODE)
- 	REST_GPR(2, r1)
- 
- BEGIN_FTR_SECTION
--	/* IAMR was saved in pnv_powersave_common() */
-+	/* These regs were saved in pnv_powersave_common() */
-+	ld	r4, PNV_POWERSAVE_AMR(r1)
- 	ld	r5, PNV_POWERSAVE_IAMR(r1)
-+	ld	r6, PNV_POWERSAVE_UAMOR(r1)
-+	mtspr	SPRN_AMR, r4
- 	mtspr	SPRN_IAMR, r5
-+	mtspr	SPRN_UAMOR, r6
-+BEGIN_FTR_SECTION_NESTED(42)
-+	ld	r7, PNV_POWERSAVE_AMOR(r1)
-+	mtspr	SPRN_AMOR, r7
-+END_FTR_SECTION_NESTED_IFSET(CPU_FTR_HVMODE, 42)
- 	/*
--	 * We don't need an isync here because the upcoming mtmsrd is
--	 * execution synchronizing.
-+	 * We don't need an isync here after restoring IAMR because the upcoming
-+	 * mtmsrd is execution synchronizing.
- 	 */
- END_FTR_SECTION_IFSET(CPU_FTR_ARCH_207S)
- 
+-- 
+2.20.1
+
 
 
