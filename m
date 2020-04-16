@@ -2,52 +2,53 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5146C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:56:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 824B1C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:56:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 810E5214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:56:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52025214AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:56:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587052603;
-	bh=0kYo+Ygoz8g+mwJNSuGqdJSweqANX1YCeMGUlk4MmN8=;
+	s=default; t=1587052608;
+	bh=vAJ3XMJ+64UTF8UdA1rtf/aMMyHBYqKrlx4E7E88V40=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eiGvnIdET25MrOa0xNdW5n81p+LHK9MiC4XYlKm3PzAsj8zKANEWZz9OF5YE7UEp0
-	 XHEt1YizqoaohewZ+tv1R1+JOXxPmUeT7xdOanvvsFAESpQdwg2xzvsFQy3UZr7KAe
-	 +1sJKUIiQOpibzGXLektdB/LBILfupp+gc7vX5mU=
+	b=HyEWZ3ph8HsB8icxcrOSZbXlNiUXFfuT70MnekuEWPEDD3dG+YJM6J+KnZV73LFOJ
+	 C+ozb6JOVFeUSjuigFHP+2+l7LSF57ypmhwnJcBrjcX860yoQ+W4Oq3mpTBbj6G7Rg
+	 YHKHK94FEnXdzpuFrzPxb6LvL0ZvKhuM+fnj4CJ8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407099AbgDPP4l (ORCPT
+        id S2410611AbgDPP4q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:56:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38084 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 11:56:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38156 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2895879AbgDPN2v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:28:51 -0400
+        id S2895902AbgDPN2y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:28:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6271E206E9;
-        Thu, 16 Apr 2020 13:28:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D134E217D8;
+        Thu, 16 Apr 2020 13:28:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587043729;
-        bh=0kYo+Ygoz8g+mwJNSuGqdJSweqANX1YCeMGUlk4MmN8=;
+        s=default; t=1587043732;
+        bh=vAJ3XMJ+64UTF8UdA1rtf/aMMyHBYqKrlx4E7E88V40=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=n34dG3ztWMgVyOTsYclzAingEhblf7dGD1KuzpnJkGBWKr+ylZF85ilfMDn75wDS6
-         xetSoYLC2etxHZDX0Vzgot0sheCOyQC6/iTgGgPz1dmBmQ2eLQYHTMLaE/HGDz8ONm
-         aI1i99bghyHlRQw3fUWBpY+QGD8MafRV3vuBP+uQ=
+        b=BBjHPIXd+B04IL+Pw30qfeF2r3ZVLbcBHP5jSifqqI1npNnuyoMH2hxKsP1iy9A//
+         zpetkjDUvnKulc3oWBLVgt9wYVFOpLfdGR0E39r5yLW8dtmu/sX672Lz2XtNRCn3ko
+         X1oUxwhvv35ue4BQyY4yXkNICES6CwrbVgziiRBs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pei Huang <huangpei@loongson.cn>,
-        Huacai Chen <chenhc@lemote.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Subject: [PATCH 4.19 074/146] MIPS/tlbex: Fix LDDIR usage in setup_pw() for Loongson-3
-Date:   Thu, 16 Apr 2020 15:23:35 +0200
-Message-Id: <20200416131253.069150894@linuxfoundation.org>
+        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 036/146] locking/lockdep: Avoid recursion in lockdep_count_{for,back}ward_deps()
+Date:   Thu, 16 Apr 2020 15:22:57 +0200
+Message-Id: <20200416131247.435680058@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131242.353444678@linuxfoundation.org>
 References: <20200416131242.353444678@linuxfoundation.org>
@@ -60,55 +61,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Huacai Chen <chenhc@lemote.com>
+From: Boqun Feng <boqun.feng@gmail.com>
 
-commit d191aaffe3687d1e73e644c185f5f0550ec242b5 upstream.
+[ Upstream commit 25016bd7f4caf5fc983bbab7403d08e64cba3004 ]
 
-LDDIR/LDPTE is Loongson-3's acceleration for Page Table Walking. If BD
-(Base Directory, the 4th page directory) is not enabled, then GDOffset
-is biased by BadVAddr[63:62]. So, if GDOffset (aka. BadVAddr[47:36] for
-Loongson-3) is big enough, "0b11(BadVAddr[63:62])|BadVAddr[47:36]|...."
-can far beyond pg_swapper_dir. This means the pg_swapper_dir may NOT be
-accessed by LDDIR correctly, so fix it by set PWDirExt in CP0_PWCtl.
+Qian Cai reported a bug when PROVE_RCU_LIST=y, and read on /proc/lockdep
+triggered a warning:
 
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Pei Huang <huangpei@loongson.cn>
-Signed-off-by: Huacai Chen <chenhc@lemote.com>
-Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+  [ ] DEBUG_LOCKS_WARN_ON(current->hardirqs_enabled)
+  ...
+  [ ] Call Trace:
+  [ ]  lock_is_held_type+0x5d/0x150
+  [ ]  ? rcu_lockdep_current_cpu_online+0x64/0x80
+  [ ]  rcu_read_lock_any_held+0xac/0x100
+  [ ]  ? rcu_read_lock_held+0xc0/0xc0
+  [ ]  ? __slab_free+0x421/0x540
+  [ ]  ? kasan_kmalloc+0x9/0x10
+  [ ]  ? __kmalloc_node+0x1d7/0x320
+  [ ]  ? kvmalloc_node+0x6f/0x80
+  [ ]  __bfs+0x28a/0x3c0
+  [ ]  ? class_equal+0x30/0x30
+  [ ]  lockdep_count_forward_deps+0x11a/0x1a0
 
+The warning got triggered because lockdep_count_forward_deps() call
+__bfs() without current->lockdep_recursion being set, as a result
+a lockdep internal function (__bfs()) is checked by lockdep, which is
+unexpected, and the inconsistency between the irq-off state and the
+state traced by lockdep caused the warning.
+
+Apart from this warning, lockdep internal functions like __bfs() should
+always be protected by current->lockdep_recursion to avoid potential
+deadlocks and data inconsistency, therefore add the
+current->lockdep_recursion on-and-off section to protect __bfs() in both
+lockdep_count_forward_deps() and lockdep_count_backward_deps()
+
+Reported-by: Qian Cai <cai@lca.pw>
+Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Link: https://lkml.kernel.org/r/20200312151258.128036-1-boqun.feng@gmail.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/mips/mm/tlbex.c |    5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ kernel/locking/lockdep.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/arch/mips/mm/tlbex.c
-+++ b/arch/mips/mm/tlbex.c
-@@ -1479,6 +1479,7 @@ static void build_r4000_tlb_refill_handl
+diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
+index 1e272f6a01e73..8a1758b094b70 100644
+--- a/kernel/locking/lockdep.c
++++ b/kernel/locking/lockdep.c
+@@ -1260,9 +1260,11 @@ unsigned long lockdep_count_forward_deps(struct lock_class *class)
+ 	this.class = class;
  
- static void setup_pw(void)
- {
-+	unsigned int pwctl;
- 	unsigned long pgd_i, pgd_w;
- #ifndef __PAGETABLE_PMD_FOLDED
- 	unsigned long pmd_i, pmd_w;
-@@ -1505,6 +1506,7 @@ static void setup_pw(void)
+ 	raw_local_irq_save(flags);
++	current->lockdep_recursion = 1;
+ 	arch_spin_lock(&lockdep_lock);
+ 	ret = __lockdep_count_forward_deps(&this);
+ 	arch_spin_unlock(&lockdep_lock);
++	current->lockdep_recursion = 0;
+ 	raw_local_irq_restore(flags);
  
- 	pte_i = ilog2(_PAGE_GLOBAL);
- 	pte_w = 0;
-+	pwctl = 1 << 30; /* Set PWDirExt */
+ 	return ret;
+@@ -1287,9 +1289,11 @@ unsigned long lockdep_count_backward_deps(struct lock_class *class)
+ 	this.class = class;
  
- #ifndef __PAGETABLE_PMD_FOLDED
- 	write_c0_pwfield(pgd_i << 24 | pmd_i << 12 | pt_i << 6 | pte_i);
-@@ -1515,8 +1517,9 @@ static void setup_pw(void)
- #endif
+ 	raw_local_irq_save(flags);
++	current->lockdep_recursion = 1;
+ 	arch_spin_lock(&lockdep_lock);
+ 	ret = __lockdep_count_backward_deps(&this);
+ 	arch_spin_unlock(&lockdep_lock);
++	current->lockdep_recursion = 0;
+ 	raw_local_irq_restore(flags);
  
- #ifdef CONFIG_MIPS_HUGE_TLB_SUPPORT
--	write_c0_pwctl(1 << 6 | psn);
-+	pwctl |= (1 << 6 | psn);
- #endif
-+	write_c0_pwctl(pwctl);
- 	write_c0_kpgd((long)swapper_pg_dir);
- 	kscratch_used_mask |= (1 << 7); /* KScratch6 is used for KPGD */
- }
+ 	return ret;
+-- 
+2.20.1
+
 
 
