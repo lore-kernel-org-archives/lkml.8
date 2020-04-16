@@ -2,209 +2,171 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FC6BC2D0EF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 09:16:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB392C2BB85
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 09:16:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0661520644
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 09:16:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B610C20644
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 09:16:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ljCN0Eh8"
+	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="WTUflOrJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392054AbgDPJQf (ORCPT
+        id S2392079AbgDPJQr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 05:16:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33616 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2441113AbgDPIGy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 04:06:54 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 384BFC061A0C
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 01:05:58 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id h2so3530313wmb.4
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 01:05:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=uV16bW5Qou5HX/ecLg8k6CUH6HA5iJ8FFoob8YYamBs=;
-        b=ljCN0Eh8i0yJ4+SXVeS8uWjAW7ZFvAZJwKpZ6fLDVwjGW0e0Ehfcf1AEfaWthyab7o
-         2FDZt6F/h9cJMPeHORes/2aQElMBh/q6ri1YKBxOuaZcX+Gj9Q/8WHIqWYXdYS1qLTQx
-         bfFGjpPm98kDJjPq3KAYPa56+q4LakqovsK8WZzKFPdTr/L94OjT9/7rH1OAW6E9gR+W
-         JFQiEv+r7VIOHA2qEJiL73R6mhtpsawbtsAlYHk/f3uSifyTm3cGDY6Vf6ciRpGEH3pz
-         JT3yNCMwEOkIjG61/Qk/vBqLyhd29BBp0TC+MT7XEcbpLelji96T5FAdiQUEMvigVGEZ
-         B4EQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=uV16bW5Qou5HX/ecLg8k6CUH6HA5iJ8FFoob8YYamBs=;
-        b=EJz2LYz6mKz0FlSrJh0lamIFP0NDot/cRAeKs6DedlRVyVaGo3mz017gGnz4Bv1yiz
-         hOh0R7XpAORaaT1qzpMtcj6kgKzqg0XS2z60ZGel2G7pL1bsyiXGEb8wkjKB/AwJUy40
-         SFoSKL3qKKCQwJGc3/obdI5Z7s24XBXgud0idJ51XjkoNq0AFSKOtojhZlJwOcnMsP+R
-         j1UIUIpl77bktPmS+Btjegl1BdN1B273sLLKbHdXOAF9v6dvU+c4e5zKV1+wnHSaA6Df
-         PMiKdHetZRBVKqHmXaDWg8ABQRhH7PNkuHNqbl7RaOmZEfIu04b8jXr9mExJQj2wJERk
-         PbPA==
-X-Gm-Message-State: AGi0Puaq4PCGCeapeqSEMPo843F5CZe8/Wm0bPWWEuzdHp0k3TZWThiy
-        XLfvxbchRwcQNoJG07NCPSAsdQ==
-X-Google-Smtp-Source: APiQypIRGcjIwp1s+fOs+F0CzIqeFfO2L62PN8lr+ClPBiAGKeNKI2rZAgQCnriNtLAp60EQECv19Q==
-X-Received: by 2002:a05:600c:22d1:: with SMTP id 17mr3296204wmg.167.1587024356884;
-        Thu, 16 Apr 2020 01:05:56 -0700 (PDT)
-Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.googlemail.com with ESMTPSA id t67sm2687859wmg.40.2020.04.16.01.05.55
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 16 Apr 2020 01:05:56 -0700 (PDT)
-Subject: Re: [PATCH] ASoC: qcom: lpass-cpu: support full duplex operation
-To:     broonie@kernel.org
-Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        Takahide Higuchi <takahidehiguchi@gmail.com>
-References: <20200306130147.27452-1-srinivas.kandagatla@linaro.org>
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Message-ID: <841cb73b-82d3-9fb9-0ed3-547882872085@linaro.org>
-Date:   Thu, 16 Apr 2020 09:05:55 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20200306130147.27452-1-srinivas.kandagatla@linaro.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Thu, 16 Apr 2020 05:16:47 -0400
+Received: from mga06.intel.com ([134.134.136.31]:51144 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2440234AbgDPIGz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 04:06:55 -0400
+IronPort-SDR: UNXyBisfBdbIkFlJ9abnRQb+bEZM65WnsNXRlcNzPLwJmFraqDBneVEQGpvtYBTGxzeJazLPN1
+ KqOWCf57bhkA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2020 01:06:22 -0700
+IronPort-SDR: DFTGoNJIc6gOtBQ0c0VA9eJF7kdDagdNl2QIHfugzrioU0dK0Fa/Y5z+l4Nn9noMDeqKafZjWj
+ zoJLh0l1MSUg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,390,1580803200"; 
+   d="scan'208";a="277908531"
+Received: from orsmsx103.amr.corp.intel.com ([10.22.225.130])
+  by fmsmga004.fm.intel.com with ESMTP; 16 Apr 2020 01:06:22 -0700
+Received: from orsmsx155.amr.corp.intel.com (10.22.240.21) by
+ ORSMSX103.amr.corp.intel.com (10.22.225.130) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Thu, 16 Apr 2020 01:06:21 -0700
+Received: from ORSEDG001.ED.cps.intel.com (10.7.248.4) by
+ ORSMSX155.amr.corp.intel.com (10.22.240.21) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Thu, 16 Apr 2020 01:06:21 -0700
+Received: from NAM02-SN1-obe.outbound.protection.outlook.com (104.47.36.54) by
+ edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server (TLS) id
+ 14.3.439.0; Thu, 16 Apr 2020 01:06:21 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=VLh3bFeNFP0o9eSLA+FBKGTcPfTcMqVAWgfmxgxeJatrsb8p9nmnvr4G68d49gEshnFupz+YnzHQJwcWVPvnyetEoXE19i7iLQtxAHtEEY+gGCZyfjj3dYYpN/rSyaDZj35u/w+YZJWfRxvV2Opp5vi3wKG2IDMoVQrX2ISWqhL+VXlUlVJN2ntvQ76wKBF2m00Muc6yCITXfsaQP6NSJWQTNadiSBcYu4P/M5E/jHunYiGfxUaDAIaTyPTKXdc5ZxKK9k8esD0wGEtHvWLC2R1UiaKAF4u77NsVZVZf3Y6idQdpS4C+qXTogGjfNJ0JsRwJy8FqRph+YjRMC8cajg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=FqGPTpmakIKV7ZEIIwt7ru9Z4QDIzR0HelfcZjcfnIU=;
+ b=KnHwtkj0bF8eDmWjGDouc2Avh3Ov7Ie/m+GnPWUX3gzMmX6fk7ozLLTrznDh6UnLaUdCfPW7002OJuEKU3gLhstWrzezZm207NHaci1rYEnfSomMhQsNSz241YwsoERD/Kk6QplpOZI6vLClRDtNg5HijO04k0Ycflco6A1UPsJFFuN8FKxPdKk324JS4Il1fsDJewI9VLQkYDOUaHgaS9t3yH5x/DsfVucEUeGGZTMHVpkCP6J8Z57MUsdf7aujiqB6w+yCpImT1sDs3EQBSBKtSpa6d4V+nipmRtv+l63IzEznrzJ7dvxz5wxj3OxCBb4XUZwoFdX6HT5/5sjU1g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
+ s=selector2-intel-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=FqGPTpmakIKV7ZEIIwt7ru9Z4QDIzR0HelfcZjcfnIU=;
+ b=WTUflOrJkYb4/LhaGX7/9yX6M2ujrxkk+Hl0sDjoikDdfxW6KboZnM4dVYD3QQX1gdcqx5Qkb/hK893mfkwmxZu1vhiGBqgE9r/ng50QAS/5A4gU9ZH7vKzMsraq9ilMC4JB4sH2fvb3e3SOliU2dCIomO86HAd2jnIWGOWn0sk=
+Received: from DM6PR11MB3819.namprd11.prod.outlook.com (2603:10b6:5:13f::31)
+ by DM6PR11MB2809.namprd11.prod.outlook.com (2603:10b6:5:c5::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.24; Thu, 16 Apr
+ 2020 08:06:17 +0000
+Received: from DM6PR11MB3819.namprd11.prod.outlook.com
+ ([fe80::98a:bb06:5551:e5a3]) by DM6PR11MB3819.namprd11.prod.outlook.com
+ ([fe80::98a:bb06:5551:e5a3%3]) with mapi id 15.20.2900.028; Thu, 16 Apr 2020
+ 08:06:17 +0000
+From:   "Wu, Hao" <hao.wu@intel.com>
+To:     "Xu, Yilun" <yilun.xu@intel.com>,
+        "mdf@kernel.org" <mdf@kernel.org>,
+        "linux-fpga@vger.kernel.org" <linux-fpga@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     "trix@redhat.com" <trix@redhat.com>,
+        "bhu@redhat.com" <bhu@redhat.com>,
+        Matthew Gerlach <matthew.gerlach@linux.intel.com>,
+        "Xu, Yilun" <yilun.xu@intel.com>
+Subject: RE: [PATCH 2/2] fpga: dfl: fix bug in port reset handshake
+Thread-Topic: [PATCH 2/2] fpga: dfl: fix bug in port reset handshake
+Thread-Index: AQHWE52IkB2SGtNF80OKjurJ2t/Pbah7ZCHw
+Date:   Thu, 16 Apr 2020 08:06:17 +0000
+Message-ID: <DM6PR11MB381991FD47E055D344B77D2985D80@DM6PR11MB3819.namprd11.prod.outlook.com>
+References: <1587006712-22696-1-git-send-email-yilun.xu@intel.com>
+ <1587006712-22696-3-git-send-email-yilun.xu@intel.com>
+In-Reply-To: <1587006712-22696-3-git-send-email-yilun.xu@intel.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-reaction: no-action
+dlp-version: 11.2.0.6
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=hao.wu@intel.com; 
+x-originating-ip: [192.102.204.36]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 5efc5064-f30c-45ef-5416-08d7e1dd0a68
+x-ms-traffictypediagnostic: DM6PR11MB2809:
+x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DM6PR11MB2809DDEE32B4FEC720EF203985D80@DM6PR11MB2809.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4941;
+x-forefront-prvs: 0375972289
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR11MB3819.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(136003)(396003)(39860400002)(376002)(346002)(366004)(66476007)(64756008)(66446008)(6506007)(110136005)(478600001)(52536014)(54906003)(86362001)(316002)(55016002)(53546011)(5660300002)(66946007)(186003)(66556008)(71200400001)(76116006)(26005)(4326008)(9686003)(33656002)(7696005)(81156014)(8676002)(2906002)(8936002);DIR:OUT;SFP:1102;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: j42wy1Kplr5sWdh1baHG2d+joJz/vjKshcnfcfhBXEHmyph4I4bKeLn7/x+Y8BbWXT+N5xvjBaA7CLWWsCQHI952NqCX1zu+owjNkAoCqkLY0MSCStZX8tk4PWHMBfPAuAp8fbYqH1FbTjR7vO2x1C9f9QGSXl2XU89WER7eI7axV6Bw2pkKAUDXXvd7lZa2PN3EYeOTOc31SHuHczDfq9H5q5DdTaRwAuXyjnx7qaOmBBscwHgrB475uLk7c0aSABtTfwsIZXfSDYQdUGAUofFfQX9wxq2dyGqXBgEYpBQEDizmhhAkmlF/JjcVTbhyhtKMtfW9t6/kdMr9WA0pIfMJ+nXZ/Q4d6peZbc/70q+42BIl5pgHJ23Bo1a0MVwpTBkUES7AUzPFf6DVplOq2N3BTqj8705GGfB2bmWXVztvsRgLUHDbtsvGdzcbF9+8
+x-ms-exchange-antispam-messagedata: HanXiDOjuYvIIUmvkuJs6tahNeE2Tm6/C0u0vDrvz+aFcNAXDKDjwNiVSv0kzSvlflgNsnCrueP4ho4ilh4UUDV+Bhj+p1GhR44gvHwmWKyDuRLGprpHSXGmrz7NC4V0z4dLhPeNDW2K+T12JVyX9A==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5efc5064-f30c-45ef-5416-08d7e1dd0a68
+X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Apr 2020 08:06:17.3376
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: OzO9Nhv19hktOBfWpDCQ5cWcMO+4IWiHgwmY/Zg8zqhhyH7H+X9lPPlFrW4OMECMjKDPmw+ZipTCohWCaYjysA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR11MB2809
+X-OriginatorOrg: intel.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mark,
+> -----Original Message-----
+> From: linux-fpga-owner@vger.kernel.org <linux-fpga-owner@vger.kernel.org>
+> On Behalf Of Xu Yilun
+> Sent: Thursday, April 16, 2020 11:12 AM
+> To: mdf@kernel.org; linux-fpga@vger.kernel.org; linux-
+> kernel@vger.kernel.org
+> Cc: trix@redhat.com; bhu@redhat.com; Matthew Gerlach
+> <matthew.gerlach@linux.intel.com>; Xu, Yilun <yilun.xu@intel.com>
+> Subject: [PATCH 2/2] fpga: dfl: fix bug in port reset handshake
+>=20
+> From: Matthew Gerlach <matthew.gerlach@linux.intel.com>
+>=20
+> When putting the port in reset, driver must wait for the soft reset
+> acknowledgment bit instead of the soft reset bit.
+>=20
+> Fixes: 47c1b19c160f (fpga: dfl: afu: add port ops support)
+> Signed-off-by: Matthew Gerlach <matthew.gerlach@linux.intel.com>
+> Signed-off-by: Xu Yilun <yilun.xu@intel.com>
 
+Thanks for catching this.
 
-On 06/03/2020 13:01, Srinivas Kandagatla wrote:
-> From: Takahide Higuchi <takahidehiguchi@gmail.com>
-> 
-> This patch fixes a bug where playback on bidirectional I2S interface stops
-> when we start recording on the same interface.
-> 
-> We use regmap_update_bits instead of regmap_write so that we will not clear
-> SPKEN and SPKMODE bits when we start/stop recording.
-> 
-> Signed-off-by: Takahide Higuchi <takahidehiguchi@gmail.com>
-> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-
-Looks like this patch was missed in last cycle, Should I resend this one 
-or are you okay to apply this. This patch is required to get full duplex 
-on msm8916 based platforms.
-
-
-thanks,
-srini
+Acked-by: Wu Hao <hao.wu@intel.com>
 
 > ---
->   sound/soc/qcom/lpass-apq8016.c   |  2 ++
->   sound/soc/qcom/lpass-cpu.c       | 24 ++++++++++++++++++------
->   sound/soc/qcom/lpass-lpaif-reg.h |  2 +-
->   3 files changed, 21 insertions(+), 7 deletions(-)
-> 
-> diff --git a/sound/soc/qcom/lpass-apq8016.c b/sound/soc/qcom/lpass-apq8016.c
-> index 6575da549237..85079c697faa 100644
-> --- a/sound/soc/qcom/lpass-apq8016.c
-> +++ b/sound/soc/qcom/lpass-apq8016.c
-> @@ -121,6 +121,8 @@ static struct snd_soc_dai_driver apq8016_lpass_cpu_dai_driver[] = {
->   		},
->   		.probe	= &asoc_qcom_lpass_cpu_dai_probe,
->   		.ops    = &asoc_qcom_lpass_cpu_dai_ops,
-> +		.symmetric_samplebits   = 1,
-> +		.symmetric_rates        = 1,
->   	},
->   };
->   
-> diff --git a/sound/soc/qcom/lpass-cpu.c b/sound/soc/qcom/lpass-cpu.c
-> index dbce7e92baf3..dc8acb380b6f 100644
-> --- a/sound/soc/qcom/lpass-cpu.c
-> +++ b/sound/soc/qcom/lpass-cpu.c
-> @@ -72,6 +72,7 @@ static int lpass_cpu_daiops_hw_params(struct snd_pcm_substream *substream,
->   	snd_pcm_format_t format = params_format(params);
->   	unsigned int channels = params_channels(params);
->   	unsigned int rate = params_rate(params);
-> +	unsigned int mask;
->   	unsigned int regval;
->   	int bitwidth, ret;
->   
-> @@ -81,6 +82,9 @@ static int lpass_cpu_daiops_hw_params(struct snd_pcm_substream *substream,
->   		return bitwidth;
->   	}
->   
-> +	mask   = LPAIF_I2SCTL_LOOPBACK_MASK |
-> +			LPAIF_I2SCTL_WSSRC_MASK |
-> +			LPAIF_I2SCTL_BITWIDTH_MASK;
->   	regval = LPAIF_I2SCTL_LOOPBACK_DISABLE |
->   			LPAIF_I2SCTL_WSSRC_INTERNAL;
->   
-> @@ -100,6 +104,7 @@ static int lpass_cpu_daiops_hw_params(struct snd_pcm_substream *substream,
->   	}
->   
->   	if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK) {
-> +		mask   |= LPAIF_I2SCTL_SPKMODE_MASK | LPAIF_I2SCTL_SPKMONO_MASK;
->   		switch (channels) {
->   		case 1:
->   			regval |= LPAIF_I2SCTL_SPKMODE_SD0;
-> @@ -127,6 +132,7 @@ static int lpass_cpu_daiops_hw_params(struct snd_pcm_substream *substream,
->   			return -EINVAL;
->   		}
->   	} else {
-> +		mask   |= LPAIF_I2SCTL_MICMODE_MASK | LPAIF_I2SCTL_MICMONO_MASK;
->   		switch (channels) {
->   		case 1:
->   			regval |= LPAIF_I2SCTL_MICMODE_SD0;
-> @@ -155,9 +161,9 @@ static int lpass_cpu_daiops_hw_params(struct snd_pcm_substream *substream,
->   		}
->   	}
->   
-> -	ret = regmap_write(drvdata->lpaif_map,
-> -			   LPAIF_I2SCTL_REG(drvdata->variant, dai->driver->id),
-> -			   regval);
-> +	ret = regmap_update_bits(drvdata->lpaif_map,
-> +			 LPAIF_I2SCTL_REG(drvdata->variant, dai->driver->id),
-> +			 mask, regval);
->   	if (ret) {
->   		dev_err(dai->dev, "error writing to i2sctl reg: %d\n", ret);
->   		return ret;
-> @@ -178,11 +184,17 @@ static int lpass_cpu_daiops_hw_free(struct snd_pcm_substream *substream,
->   		struct snd_soc_dai *dai)
->   {
->   	struct lpass_data *drvdata = snd_soc_dai_get_drvdata(dai);
-> +	unsigned int mask;
->   	int ret;
->   
-> -	ret = regmap_write(drvdata->lpaif_map,
-> -			   LPAIF_I2SCTL_REG(drvdata->variant, dai->driver->id),
-> -			   0);
-> +	if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK)
-> +		mask   = LPAIF_I2SCTL_SPKMODE_MASK;
-> +	else
-> +		mask   = LPAIF_I2SCTL_MICMODE_MASK;
-> +
-> +	ret = regmap_update_bits(drvdata->lpaif_map,
-> +			 LPAIF_I2SCTL_REG(drvdata->variant, dai->driver->id),
-> +			 mask, 0);
->   	if (ret)
->   		dev_err(dai->dev, "error writing to i2sctl reg: %d\n", ret);
->   
-> diff --git a/sound/soc/qcom/lpass-lpaif-reg.h b/sound/soc/qcom/lpass-lpaif-reg.h
-> index 3d74ae123e9d..7a2b9cf99976 100644
-> --- a/sound/soc/qcom/lpass-lpaif-reg.h
-> +++ b/sound/soc/qcom/lpass-lpaif-reg.h
-> @@ -56,7 +56,7 @@
->   #define LPAIF_I2SCTL_MICMODE_6CH	(7 << LPAIF_I2SCTL_MICMODE_SHIFT)
->   #define LPAIF_I2SCTL_MICMODE_8CH	(8 << LPAIF_I2SCTL_MICMODE_SHIFT)
->   
-> -#define LPAIF_I2SCTL_MIMONO_MASK	GENMASK(3, 3)
-> +#define LPAIF_I2SCTL_MICMONO_MASK	GENMASK(3, 3)
->   #define LPAIF_I2SCTL_MICMONO_SHIFT	3
->   #define LPAIF_I2SCTL_MICMONO_STEREO	(0 << LPAIF_I2SCTL_MICMONO_SHIFT)
->   #define LPAIF_I2SCTL_MICMONO_MONO	(1 << LPAIF_I2SCTL_MICMONO_SHIFT)
-> 
+>  drivers/fpga/dfl-afu-main.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/fpga/dfl-afu-main.c b/drivers/fpga/dfl-afu-main.c
+> index b0c3178..3fa2c59 100644
+> --- a/drivers/fpga/dfl-afu-main.c
+> +++ b/drivers/fpga/dfl-afu-main.c
+> @@ -83,7 +83,8 @@ int __afu_port_disable(struct platform_device *pdev)
+>  	 * on this port and minimum soft reset pulse width has elapsed.
+>  	 * Driver polls port_soft_reset_ack to determine if reset done by HW.
+>  	 */
+> -	if (readq_poll_timeout(base + PORT_HDR_CTRL, v, v &
+> PORT_CTRL_SFTRST,
+> +	if (readq_poll_timeout(base + PORT_HDR_CTRL, v,
+> +			       v & PORT_CTRL_SFTRST_ACK,
+>  			       RST_POLL_INVL, RST_POLL_TIMEOUT)) {
+>  		dev_err(&pdev->dev, "timeout, fail to reset device\n");
+>  		return -ETIMEDOUT;
+> --
+> 2.7.4
+
