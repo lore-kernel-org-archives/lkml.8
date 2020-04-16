@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E75C4C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:54:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73C4EC2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:54:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C511C214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:54:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51088214AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:54:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587052489;
-	bh=xqhYctsbPYWAQFJ5JpgiISPALWCmUCtnpQ4HqLrMCZw=;
+	s=default; t=1587052494;
+	bh=n4gMo6AOjihmI1Q+oarcYaDlhVYqFweCvZItTBIEFX4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gv6Qo6y55rnIxIgHIlmEsVTrYthhPiM2CB/qY3zymiGukR6IBwisbpk3rN0RTNWBw
-	 AFzCXH97/Rl0FTbcJuaJ3K7NVeomcod+IvpHxOFcN6eVAabUhncUejpkNtFGyRTgPR
-	 NDawVYKd1mLmEsX4m8wqgdV52I5nCji6SqR4XVjs=
+	b=dj2Vln1isH7RkG78nBKQwS8xr4vdgZmQuTd+SsgHv85gPjcAQY/aFm4SBG04pGgsq
+	 w2Vi5DKTOdleIJgFsGvRXko88VQ+UA4hDkp+A9DwLp+EahElk+IBQuFiiNzBNDFtOn
+	 jklQHZVr9lghNY9OlIkR5a+5PVLquB8l51tFW/2c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2442541AbgDPPys (ORCPT
+        id S2896877AbgDPPyw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:54:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40394 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 11:54:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40346 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2895908AbgDPNaN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:30:13 -0400
+        id S2896175AbgDPNaL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:30:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3D4F0208E4;
-        Thu, 16 Apr 2020 13:30:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B1E26206E9;
+        Thu, 16 Apr 2020 13:30:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587043812;
-        bh=xqhYctsbPYWAQFJ5JpgiISPALWCmUCtnpQ4HqLrMCZw=;
+        s=default; t=1587043810;
+        bh=n4gMo6AOjihmI1Q+oarcYaDlhVYqFweCvZItTBIEFX4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PRoWCA0ut7TR7FzwC5rEpc2KzVY3ul1MPSO9KAqDwKl1/kx/vgz5FGsoTnanpKhld
-         lglkjbYj3obvrn7c8iWI385UW4bwKaZ4JLiTLDYFd9Gak/xBgOTXRd26MIkXLdoJhd
-         g1kpkYZucRkcW7BNsxZ+NZMHKO9E0BVauPby2EG0=
+        b=iRMxyDQt7EcknNYEWyeOYSssyZ8daWQKBMjHvzftBcuv10qBXkfSiosPN/SfMPfSG
+         bU6fVNi/pa7YR0c6uKhpsoGuKIQZ3in9babEk4lRQ/p8ekGmrQosiBjFTickagO4lA
+         D5UDe4/5fAbuSLO1gJ1oR7fLMqR5kpUC4UYSmTK0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Libor Pechacek <lpechacek@suse.cz>,
-        Michal Suchanek <msuchanek@suse.de>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 4.19 109/146] powerpc/pseries: Avoid NULL pointer dereference when drmem is unavailable
-Date:   Thu, 16 Apr 2020 15:24:10 +0200
-Message-Id: <20200416131257.595487715@linuxfoundation.org>
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Christian Gmeiner <christian.gmeiner@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>
+Subject: [PATCH 4.19 108/146] drm/etnaviv: rework perfmon query infrastructure
+Date:   Thu, 16 Apr 2020 15:24:09 +0200
+Message-Id: <20200416131257.469946725@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131242.353444678@linuxfoundation.org>
 References: <20200416131242.353444678@linuxfoundation.org>
@@ -60,101 +60,144 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Libor Pechacek <lpechacek@suse.cz>
+From: Christian Gmeiner <christian.gmeiner@gmail.com>
 
-commit a83836dbc53e96f13fec248ecc201d18e1e3111d upstream.
+commit ed1dd899baa32d47d9a93d98336472da50564346 upstream.
 
-In guests without hotplugagble memory drmem structure is only zero
-initialized. Trying to manipulate DLPAR parameters results in a crash.
+Report the correct perfmon domains and signals depending
+on the supported feature flags.
 
-  $ echo "memory add count 1" > /sys/kernel/dlpar
-  Oops: Kernel access of bad area, sig: 11 [#1]
-  LE PAGE_SIZE=64K MMU=Hash SMP NR_CPUS=2048 NUMA pSeries
-  ...
-  NIP:  c0000000000ff294 LR: c0000000000ff248 CTR: 0000000000000000
-  REGS: c0000000fb9d3880 TRAP: 0300   Tainted: G            E      (5.5.0-rc6-2-default)
-  MSR:  8000000000009033 <SF,EE,ME,IR,DR,RI,LE>  CR: 28242428  XER: 20000000
-  CFAR: c0000000009a6c10 DAR: 0000000000000010 DSISR: 40000000 IRQMASK: 0
-  ...
-  NIP dlpar_memory+0x6e4/0xd00
-  LR  dlpar_memory+0x698/0xd00
-  Call Trace:
-    dlpar_memory+0x698/0xd00 (unreliable)
-    handle_dlpar_errorlog+0xc0/0x190
-    dlpar_store+0x198/0x4a0
-    kobj_attr_store+0x30/0x50
-    sysfs_kf_write+0x64/0x90
-    kernfs_fop_write+0x1b0/0x290
-    __vfs_write+0x3c/0x70
-    vfs_write+0xd0/0x260
-    ksys_write+0xdc/0x130
-    system_call+0x5c/0x68
-
-Taking closer look at the code, I can see that for_each_drmem_lmb is a
-macro expanding into `for (lmb = &drmem_info->lmbs[0]; lmb <=
-&drmem_info->lmbs[drmem_info->n_lmbs - 1]; lmb++)`. When drmem_info->lmbs
-is NULL, the loop would iterate through the whole address range if it
-weren't stopped by the NULL pointer dereference on the next line.
-
-This patch aligns for_each_drmem_lmb and for_each_drmem_lmb_in_range
-macro behavior with the common C semantics, where the end marker does
-not belong to the scanned range, and alters get_lmb_range() semantics.
-As a side effect, the wraparound observed in the crash is prevented.
-
-Fixes: 6c6ea53725b3 ("powerpc/mm: Separate ibm, dynamic-memory data from DT format")
-Cc: stable@vger.kernel.org # v4.16+
-Signed-off-by: Libor Pechacek <lpechacek@suse.cz>
-Signed-off-by: Michal Suchanek <msuchanek@suse.de>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20200131132829.10281-1-msuchanek@suse.de
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+Fixes: 9e2c2e273012 ("drm/etnaviv: add infrastructure to query perf counter")
+Cc: stable@vger.kernel.org
+Signed-off-by: Christian Gmeiner <christian.gmeiner@gmail.com>
+Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/powerpc/include/asm/drmem.h                |    4 ++--
- arch/powerpc/platforms/pseries/hotplug-memory.c |    8 ++++----
- 2 files changed, 6 insertions(+), 6 deletions(-)
+ drivers/gpu/drm/etnaviv/etnaviv_perfmon.c |   60 ++++++++++++++++++++++++++----
+ 1 file changed, 53 insertions(+), 7 deletions(-)
 
---- a/arch/powerpc/include/asm/drmem.h
-+++ b/arch/powerpc/include/asm/drmem.h
-@@ -28,12 +28,12 @@ struct drmem_lmb_info {
- extern struct drmem_lmb_info *drmem_info;
+--- a/drivers/gpu/drm/etnaviv/etnaviv_perfmon.c
++++ b/drivers/gpu/drm/etnaviv/etnaviv_perfmon.c
+@@ -4,6 +4,7 @@
+  * Copyright (C) 2017 Zodiac Inflight Innovations
+  */
  
- #define for_each_drmem_lmb_in_range(lmb, start, end)		\
--	for ((lmb) = (start); (lmb) <= (end); (lmb)++)
-+	for ((lmb) = (start); (lmb) < (end); (lmb)++)
++#include "common.xml.h"
+ #include "etnaviv_gpu.h"
+ #include "etnaviv_perfmon.h"
+ #include "state_hi.xml.h"
+@@ -31,6 +32,7 @@ struct etnaviv_pm_domain {
+ };
  
- #define for_each_drmem_lmb(lmb)					\
- 	for_each_drmem_lmb_in_range((lmb),			\
- 		&drmem_info->lmbs[0],				\
--		&drmem_info->lmbs[drmem_info->n_lmbs - 1])
-+		&drmem_info->lmbs[drmem_info->n_lmbs])
+ struct etnaviv_pm_domain_meta {
++	unsigned int feature;
+ 	const struct etnaviv_pm_domain *domains;
+ 	u32 nr_domains;
+ };
+@@ -388,36 +390,78 @@ static const struct etnaviv_pm_domain do
  
- /*
-  * The of_drconf_cell_v1 struct defines the layout of the LMB data
---- a/arch/powerpc/platforms/pseries/hotplug-memory.c
-+++ b/arch/powerpc/platforms/pseries/hotplug-memory.c
-@@ -227,7 +227,7 @@ static int get_lmb_range(u32 drc_index,
- 			 struct drmem_lmb **end_lmb)
+ static const struct etnaviv_pm_domain_meta doms_meta[] = {
+ 	{
++		.feature = chipFeatures_PIPE_3D,
+ 		.nr_domains = ARRAY_SIZE(doms_3d),
+ 		.domains = &doms_3d[0]
+ 	},
+ 	{
++		.feature = chipFeatures_PIPE_2D,
+ 		.nr_domains = ARRAY_SIZE(doms_2d),
+ 		.domains = &doms_2d[0]
+ 	},
+ 	{
++		.feature = chipFeatures_PIPE_VG,
+ 		.nr_domains = ARRAY_SIZE(doms_vg),
+ 		.domains = &doms_vg[0]
+ 	}
+ };
+ 
++static unsigned int num_pm_domains(const struct etnaviv_gpu *gpu)
++{
++	unsigned int num = 0, i;
++
++	for (i = 0; i < ARRAY_SIZE(doms_meta); i++) {
++		const struct etnaviv_pm_domain_meta *meta = &doms_meta[i];
++
++		if (gpu->identity.features & meta->feature)
++			num += meta->nr_domains;
++	}
++
++	return num;
++}
++
++static const struct etnaviv_pm_domain *pm_domain(const struct etnaviv_gpu *gpu,
++	unsigned int index)
++{
++	const struct etnaviv_pm_domain *domain = NULL;
++	unsigned int offset = 0, i;
++
++	for (i = 0; i < ARRAY_SIZE(doms_meta); i++) {
++		const struct etnaviv_pm_domain_meta *meta = &doms_meta[i];
++
++		if (!(gpu->identity.features & meta->feature))
++			continue;
++
++		if (meta->nr_domains < (index - offset)) {
++			offset += meta->nr_domains;
++			continue;
++		}
++
++		domain = meta->domains + (index - offset);
++	}
++
++	return domain;
++}
++
+ int etnaviv_pm_query_dom(struct etnaviv_gpu *gpu,
+ 	struct drm_etnaviv_pm_domain *domain)
  {
- 	struct drmem_lmb *lmb, *start, *end;
--	struct drmem_lmb *last_lmb;
-+	struct drmem_lmb *limit;
+-	const struct etnaviv_pm_domain_meta *meta = &doms_meta[domain->pipe];
++	const unsigned int nr_domains = num_pm_domains(gpu);
+ 	const struct etnaviv_pm_domain *dom;
  
- 	start = NULL;
- 	for_each_drmem_lmb(lmb) {
-@@ -240,10 +240,10 @@ static int get_lmb_range(u32 drc_index,
- 	if (!start)
+-	if (domain->iter >= meta->nr_domains)
++	if (domain->iter >= nr_domains)
  		return -EINVAL;
  
--	end = &start[n_lmbs - 1];
-+	end = &start[n_lmbs];
+-	dom = meta->domains + domain->iter;
++	dom = pm_domain(gpu, domain->iter);
++	if (!dom)
++		return -EINVAL;
  
--	last_lmb = &drmem_info->lmbs[drmem_info->n_lmbs - 1];
--	if (end > last_lmb)
-+	limit = &drmem_info->lmbs[drmem_info->n_lmbs];
-+	if (end > limit)
+ 	domain->id = domain->iter;
+ 	domain->nr_signals = dom->nr_signals;
+ 	strncpy(domain->name, dom->name, sizeof(domain->name));
+ 
+ 	domain->iter++;
+-	if (domain->iter == meta->nr_domains)
++	if (domain->iter == nr_domains)
+ 		domain->iter = 0xff;
+ 
+ 	return 0;
+@@ -426,14 +470,16 @@ int etnaviv_pm_query_dom(struct etnaviv_
+ int etnaviv_pm_query_sig(struct etnaviv_gpu *gpu,
+ 	struct drm_etnaviv_pm_signal *signal)
+ {
+-	const struct etnaviv_pm_domain_meta *meta = &doms_meta[signal->pipe];
++	const unsigned int nr_domains = num_pm_domains(gpu);
+ 	const struct etnaviv_pm_domain *dom;
+ 	const struct etnaviv_pm_signal *sig;
+ 
+-	if (signal->domain >= meta->nr_domains)
++	if (signal->domain >= nr_domains)
  		return -EINVAL;
  
- 	*start_lmb = start;
+-	dom = meta->domains + signal->domain;
++	dom = pm_domain(gpu, signal->domain);
++	if (!dom)
++		return -EINVAL;
+ 
+ 	if (signal->iter >= dom->nr_signals)
+ 		return -EINVAL;
 
 
