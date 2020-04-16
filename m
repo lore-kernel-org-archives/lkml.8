@@ -2,58 +2,53 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D226EC2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:23:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 073B6C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:23:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A7A1F214D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:23:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB381214D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:23:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587050584;
-	bh=YoydgxVY04JUElx6pTX1WVnIwMMo7Gnp01oStplhfd0=;
+	s=default; t=1587050588;
+	bh=/QZYw7QTWqP41HlNZ8UmRopMV6mswugDKj2mQSlQ36w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rXwYLbPTHjJ07Wymfu2x0cpSm4LfLAOZOt4m7L+Jr/S53OjDZQ9T/PlPIwYKZ4RwQ
-	 NcM4XHPGAyOfs/jU/aR8WXwr1doSsl5V3dUCj2Nk/si6BMVyMUVMRxKT4mab9EKue4
-	 BZqOi7+M7u1MxfIo2BIsb1mIWJmdRBesGuw1V3rQ=
+	b=g4CMQnznmu2MI6cBPy5BWGXr4z1vQHdofheBziGBUxp6DYKo955+8r/08kqzeYlOJ
+	 vRYqKy13Fjt1JcBOXmMdQ02pMRRrgLnEUWhSAzgUm4Kke58rGKUEipM/hcfHLpwPyY
+	 DS62m4FYyWDY2USY3bSK5WodShgwRhRjqkg5VI+o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2898503AbgDPNpW (ORCPT
+        id S1733283AbgDPPXH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 09:45:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46040 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 11:23:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58878 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2896948AbgDPNec (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:34:32 -0400
+        id S2898508AbgDPNpZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:45:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AC26E208E4;
-        Thu, 16 Apr 2020 13:34:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0D97020732;
+        Thu, 16 Apr 2020 13:45:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044072;
-        bh=YoydgxVY04JUElx6pTX1WVnIwMMo7Gnp01oStplhfd0=;
+        s=default; t=1587044725;
+        bh=/QZYw7QTWqP41HlNZ8UmRopMV6mswugDKj2mQSlQ36w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uyNDI+yLHXrV8RS4VhvvSe02Dr8i1Z8hr2U3fmGFuFRUO9mlmG6U2v7tdUrFRfLsu
-         EsGFvXLCQRnbJlzB9j7cGXFycuPpYygr2RoBActuG92nw3NVdbzXKx+9Y3CQb3wPLm
-         /a07ANrbEYZyr9JDjuZT/oYu2g75dpm1spaKzijE=
+        b=rHYASLNR/dbEpm/gzENO4F3OVfEYXp0sYlDcvJWic3TjTwyAY2u/qpwp0LMndFBIM
+         Fy27AC0kx4nJZfMqM/Yr8Kb60+wMHFFhLuzQtsW+ua6SuKROFSbLWklvYy51sKUyQO
+         Kck5crW1CS46sw+fSPmNi/qiqiQimBPADe0yYIdE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Dafna Hirschfeld <dafna.hirschfeld@collabora.com>,
-        Helen Koike <helen.koike@collabora.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 032/257] media: vimc: streamer: fix memory leak in vimc subdevs if kthread_run fails
-Date:   Thu, 16 Apr 2020 15:21:23 +0200
-Message-Id: <20200416131329.976445830@linuxfoundation.org>
+        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 5.4 075/232] ALSA: usb-audio: Add mixer workaround for TRX40 and co
+Date:   Thu, 16 Apr 2020 15:22:49 +0200
+Message-Id: <20200416131324.631946621@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200416131325.891903893@linuxfoundation.org>
-References: <20200416131325.891903893@linuxfoundation.org>
+In-Reply-To: <20200416131316.640996080@linuxfoundation.org>
+References: <20200416131316.640996080@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -63,46 +58,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-[ Upstream commit ceeb2e6166dddf3c9757abbbf84032027e2fa2d2 ]
+commit 2a48218f8e23d47bd3e23cfdfb8aa9066f7dc3e6 upstream.
 
-In case kthread_run fails, the vimc subdevices
-should be notified that streaming stopped so they can
-release the memory for the streaming. Also, kthread should be
-set to NULL.
+Some recent boards (supposedly with a new AMD platform) contain the
+USB audio class 2 device that is often tied with HD-audio.  The device
+exposes an Input Gain Pad control (id=19, control=12) but this node
+doesn't behave correctly, returning an error for each inquiry of
+GET_MIN and GET_MAX that should have been mandatory.
 
-Signed-off-by: Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
-Acked-by: Helen Koike <helen.koike@collabora.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+As a workaround, simply ignore this node by adding a usbmix_name_map
+table entry.  The currently known devices are:
+* 0414:a002 - Gigabyte TRX40 Aorus Pro WiFi
+* 0b05:1916 - ASUS ROG Zenith II
+* 0b05:1917 - ASUS ROG Strix
+* 0db0:0d64 - MSI TRX40 Creator
+* 0db0:543d - MSI TRX40
+
+BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=206543
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200408140449.22319-1-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/media/platform/vimc/vimc-streamer.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ sound/usb/mixer_maps.c |   28 ++++++++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
 
-diff --git a/drivers/media/platform/vimc/vimc-streamer.c b/drivers/media/platform/vimc/vimc-streamer.c
-index cd6b55433c9ee..43e494df61d88 100644
---- a/drivers/media/platform/vimc/vimc-streamer.c
-+++ b/drivers/media/platform/vimc/vimc-streamer.c
-@@ -207,8 +207,13 @@ int vimc_streamer_s_stream(struct vimc_stream *stream,
- 		stream->kthread = kthread_run(vimc_streamer_thread, stream,
- 					      "vimc-streamer thread");
+--- a/sound/usb/mixer_maps.c
++++ b/sound/usb/mixer_maps.c
+@@ -349,6 +349,14 @@ static const struct usbmix_name_map dell
+ 	{ 0 }
+ };
  
--		if (IS_ERR(stream->kthread))
--			return PTR_ERR(stream->kthread);
-+		if (IS_ERR(stream->kthread)) {
-+			ret = PTR_ERR(stream->kthread);
-+			dev_err(ved->dev, "kthread_run failed with %d\n", ret);
-+			vimc_streamer_pipeline_terminate(stream);
-+			stream->kthread = NULL;
-+			return ret;
-+		}
++/* Some mobos shipped with a dummy HD-audio show the invalid GET_MIN/GET_MAX
++ * response for Input Gain Pad (id=19, control=12).  Skip it.
++ */
++static const struct usbmix_name_map asus_rog_map[] = {
++	{ 19, NULL, 12 }, /* FU, Input Gain Pad */
++	{}
++};
++
+ /*
+  * Control map entries
+  */
+@@ -468,6 +476,26 @@ static struct usbmix_ctl_map usbmix_ctl_
+ 		.id = USB_ID(0x05a7, 0x1020),
+ 		.map = bose_companion5_map,
+ 	},
++	{	/* Gigabyte TRX40 Aorus Pro WiFi */
++		.id = USB_ID(0x0414, 0xa002),
++		.map = asus_rog_map,
++	},
++	{	/* ASUS ROG Zenith II */
++		.id = USB_ID(0x0b05, 0x1916),
++		.map = asus_rog_map,
++	},
++	{	/* ASUS ROG Strix */
++		.id = USB_ID(0x0b05, 0x1917),
++		.map = asus_rog_map,
++	},
++	{	/* MSI TRX40 Creator */
++		.id = USB_ID(0x0db0, 0x0d64),
++		.map = asus_rog_map,
++	},
++	{	/* MSI TRX40 */
++		.id = USB_ID(0x0db0, 0x543d),
++		.map = asus_rog_map,
++	},
+ 	{ 0 } /* terminator */
+ };
  
- 	} else {
- 		if (!stream->kthread)
--- 
-2.20.1
-
 
 
