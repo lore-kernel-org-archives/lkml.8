@@ -4,50 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46C65C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:19:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7BC5C352BE
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:19:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1A59A2222D
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:19:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3FCC2223D
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:19:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587050357;
-	bh=zIhIZGj24O1o982in8b2nseAv+Soag+2J7fvks+6GeU=;
+	s=default; t=1587050366;
+	bh=P0Kbr+jaiAUTu7vRnV1VEh+m2Ui/C/b38dc6jJjmH4w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RYwt4KVa/SC52Op+ko/O47cTF31Z83e3U6qP1sevHrHjYGvrQpwqPcr/xtNMKyccz
-	 uovYMUz/fCwzn8IqFOlEcNZJGa4QabRcN3GRQjqtwD4bbi7lwZyg0y5eJSyqtBNE0b
-	 pm9agTdzR9AGQzDP8TmTgBhZQ4OThOK9q6HQWN1k=
+	b=cXaAX6bMX2vd1z7883hTYnXCg172o3Rb5GVuWnQR0Fg8+eY+zqy/Ce9l4kcxfGQhO
+	 2ocC/OZ/nBamWXCeHBJrGFtxmt93Ik5vJ/UYQpWRCxnVqkEcHTaIysscjvz+LDZHQx
+	 kl2X7r9pxB33sMZUWzoxIRq2iP6fZurhL/qMXlbA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395088AbgDPPTO (ORCPT
+        id S2504554AbgDPPTZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:19:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34114 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 11:19:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33982 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390133AbgDPNsC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:48:02 -0400
+        id S2898723AbgDPNrz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:47:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BC8C72222C;
-        Thu, 16 Apr 2020 13:48:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5D8C8208E4;
+        Thu, 16 Apr 2020 13:47:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044882;
-        bh=zIhIZGj24O1o982in8b2nseAv+Soag+2J7fvks+6GeU=;
+        s=default; t=1587044874;
+        bh=P0Kbr+jaiAUTu7vRnV1VEh+m2Ui/C/b38dc6jJjmH4w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xTUMgahuGmk2EneIrzIOwq4woo6zR/GXCsFfs8lM2+E6Tmx0mRb3QCE/hasMefqUo
-         xlvnM+m53V0BxssjiHp0yLHas1L5EhtODf0aKdqhL/XQbKdWUw72f955UCKE/aUSKN
-         PLFiwghXFxfXoQdYwiditmBwMUJXVw0JiWVWQ0zE=
+        b=U7K1vAMwvVl5gKWujdNMQVk+9koJk8biI1iuVWHQ0VkQFMZ2FzNnfcTzT+gSOwfvd
+         /7w8C0Sq44xO/kp2dBYyCoXOkIk2dp/sdmezNYATlgn65W568DGFRsrZIMzh4wKAg+
+         63mwySlgdEJpY3D2lN64GwVFnWtctcWZNFw3t4Vk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qu Wenruo <wqu@suse.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 5.4 141/232] btrfs: drop block from cache on error in relocation
-Date:   Thu, 16 Apr 2020 15:23:55 +0200
-Message-Id: <20200416131332.620071433@linuxfoundation.org>
+        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 5.4 086/232] ALSA: hda/realtek - Add quirk for MSI GL63
+Date:   Thu, 16 Apr 2020 15:23:00 +0200
+Message-Id: <20200416131325.778286538@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131316.640996080@linuxfoundation.org>
 References: <20200416131316.640996080@linuxfoundation.org>
@@ -60,41 +58,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josef Bacik <josef@toxicpanda.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-commit 8e19c9732ad1d127b5575a10f4fbcacf740500ff upstream.
+commit 1d3aa4a5516d2e4933fe3cca11d3349ef63bc547 upstream.
 
-If we have an error while building the backref tree in relocation we'll
-process all the pending edges and then free the node.  However if we
-integrated some edges into the cache we'll lose our link to those edges
-by simply freeing this node, which means we'll leak memory and
-references to any roots that we've found.
+MSI GL63 laptop requires the similar quirk like other MSI models,
+ALC1220_FIXUP_CLEVO_P950.  The board BIOS doesn't provide a PCI SSID
+for the device, hence we need to take the codec SSID (1462:1275)
+instead.
 
-Instead we need to use remove_backref_node(), which walks through all of
-the edges that are still linked to this node and free's them up and
-drops any root references we may be holding.
-
-CC: stable@vger.kernel.org # 4.9+
-Reviewed-by: Qu Wenruo <wqu@suse.com>
-Signed-off-by: Josef Bacik <josef@toxicpanda.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=207157
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200408135645.21896-1-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/relocation.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/pci/hda/patch_realtek.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/fs/btrfs/relocation.c
-+++ b/fs/btrfs/relocation.c
-@@ -1186,7 +1186,7 @@ out:
- 			free_backref_node(cache, lower);
- 		}
- 
--		free_backref_node(cache, node);
-+		remove_backref_node(cache, node);
- 		return ERR_PTR(err);
- 	}
- 	ASSERT(!node || !node->detached);
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -2447,6 +2447,7 @@ static const struct snd_pci_quirk alc882
+ 	SND_PCI_QUIRK(0x1458, 0xa0b8, "Gigabyte AZ370-Gaming", ALC1220_FIXUP_GB_DUAL_CODECS),
+ 	SND_PCI_QUIRK(0x1458, 0xa0cd, "Gigabyte X570 Aorus Master", ALC1220_FIXUP_CLEVO_P950),
+ 	SND_PCI_QUIRK(0x1462, 0x1228, "MSI-GP63", ALC1220_FIXUP_CLEVO_P950),
++	SND_PCI_QUIRK(0x1462, 0x1275, "MSI-GL63", ALC1220_FIXUP_CLEVO_P950),
+ 	SND_PCI_QUIRK(0x1462, 0x1276, "MSI-GL73", ALC1220_FIXUP_CLEVO_P950),
+ 	SND_PCI_QUIRK(0x1462, 0x1293, "MSI-GP65", ALC1220_FIXUP_CLEVO_P950),
+ 	SND_PCI_QUIRK(0x1462, 0x7350, "MSI-7350", ALC889_FIXUP_CD),
 
 
