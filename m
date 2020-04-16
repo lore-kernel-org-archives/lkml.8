@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 293CEC2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:20:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC6AFC2BB85
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:20:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 047D02222D
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:20:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80DEE2222D
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:20:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587050446;
-	bh=WtyTCRlFyMzJAkJbuvSlHht8TZrezfj5ottSM/w2hRY=;
+	s=default; t=1587050458;
+	bh=fiGMzYdcKj1wMdAjWB8tpXxgYUTFGPSDkacsRCk08pA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wEyu4X1aS22QLSjPtys4Ad6yLSu9rAUWiIrELJcnVdG8yVjsrclm5tMSShMzlPux4
-	 Jez5w9qWjkqKsB5zBwtMHDbL/V5CNpI3Jq/Y9J4v8YYMnpSkmdhjyYY80rG2BG4Wve
-	 KUlLoy+v+Kg+IyuNCOsxCVbnZhTMEH5Jrde7i6p8=
+	b=os28Cu8NKe+d4cvLQjlabXip+xnaLWfkzr6HwxWlduDr5guD2U460BIZIKfQYa0md
+	 RP1iSHkeI6JktKWU/C9KKCXX+Y1sfnELs4RujFdgSf7iUosFShRS4IP1KYSQIAQ+li
+	 /OJblYq8A/fJP9DVIghbWNWNOT6Iq8iGfWi2iG9Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2505224AbgDPPUl (ORCPT
+        id S2404330AbgDPPU5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:20:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33228 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 11:20:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33190 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2898648AbgDPNrL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:47:11 -0400
+        id S2898646AbgDPNrI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:47:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 79C962223D;
-        Thu, 16 Apr 2020 13:47:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 09A6E21974;
+        Thu, 16 Apr 2020 13:47:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044831;
-        bh=WtyTCRlFyMzJAkJbuvSlHht8TZrezfj5ottSM/w2hRY=;
+        s=default; t=1587044828;
+        bh=fiGMzYdcKj1wMdAjWB8tpXxgYUTFGPSDkacsRCk08pA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GD91+rmDcyWrFkzsphnMmQB5kmG3l2lvDgioQeY4g1ucZnUJau0vyWp47sEt52Av9
-         kZPjA6QSra2WM2FFGu87arMJv6KJMdHdKEBCbV/akcC6QNdzW4RGLqlGziSTK0uBB9
-         yP+JV3rpqoIL/zc7e1NX69a/Z8P4sjMfE1komwVo=
+        b=WLK8mUpeMsSiQs1i+Zki7isH5VjGgT+BkO+ztS4N6+GptfwTMuggcHmVKrv6gdP2B
+         LM8Ya2oS0gXvDAO9fQmqs+mXbtf4Cn+aUjqiuKgPD82TiG2+XqovN6P86wnDL9ERuT
+         6X/oUzWMzj/cD7b4qp8ZDNySs0EPV3NEqCxOlk2c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Remi Pommarel <repk@triplefau.lt>,
-        Kalle Valo <kvalo@codeaurora.org>
-Subject: [PATCH 5.4 118/232] ath9k: Handle txpower changes even when TPC is disabled
-Date:   Thu, 16 Apr 2020 15:23:32 +0200
-Message-Id: <20200416131329.875693597@linuxfoundation.org>
+        stable@vger.kernel.org, Neeraj Upadhyay <neeraju@codeaurora.org>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Subject: [PATCH 5.4 117/232] PM: sleep: wakeup: Skip wakeup_source_sysfs_remove() if device is not there
+Date:   Thu, 16 Apr 2020 15:23:31 +0200
+Message-Id: <20200416131329.749926451@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131316.640996080@linuxfoundation.org>
 References: <20200416131316.640996080@linuxfoundation.org>
@@ -59,57 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Remi Pommarel <repk@triplefau.lt>
+From: Neeraj Upadhyay <neeraju@codeaurora.org>
 
-commit 968ae2caad0782db5dbbabb560d3cdefd2945d38 upstream.
+commit 87de6594dc45dbf6819f3e0ef92f9331c5a9444c upstream.
 
-When TPC is disabled IEEE80211_CONF_CHANGE_POWER event can be handled to
-reconfigure HW's maximum txpower.
+Skip wakeup_source_sysfs_remove() to fix a NULL pinter dereference via
+ws->dev, if the wakeup source is unregistered before registering the
+wakeup class from device_add().
 
-This fixes 0dBm txpower setting when user attaches to an interface for
-the first time with the following scenario:
-
-ieee80211_do_open()
-    ath9k_add_interface()
-        ath9k_set_txpower() /* Set TX power with not yet initialized
-                               sc->hw->conf.power_level */
-
-    ieee80211_hw_config() /* Iniatilize sc->hw->conf.power_level and
-                             raise IEEE80211_CONF_CHANGE_POWER */
-
-    ath9k_config() /* IEEE80211_CONF_CHANGE_POWER is ignored */
-
-This issue can be reproduced with the following:
-
-  $ modprobe -r ath9k
-  $ modprobe ath9k
-  $ wpa_supplicant -i wlan0 -c /tmp/wpa.conf &
-  $ iw dev /* Here TX power is either 0 or 3 depending on RF chain */
-  $ killall wpa_supplicant
-  $ iw dev /* TX power goes back to calibrated value and subsequent
-              calls will be fine */
-
-Fixes: 283dd11994cde ("ath9k: add per-vif TX power capability")
-Cc: stable@vger.kernel.org
-Signed-off-by: Remi Pommarel <repk@triplefau.lt>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Fixes: 2ca3d1ecb8c4 ("PM / wakeup: Register wakeup class kobj after device is added")
+Signed-off-by: Neeraj Upadhyay <neeraju@codeaurora.org>
+Cc: 5.4+ <stable@vger.kernel.org> # 5.4+
+[ rjw: Subject & changelog, white space ]
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/wireless/ath/ath9k/main.c |    3 +++
- 1 file changed, 3 insertions(+)
+ drivers/base/power/wakeup.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/drivers/net/wireless/ath/ath9k/main.c
-+++ b/drivers/net/wireless/ath/ath9k/main.c
-@@ -1457,6 +1457,9 @@ static int ath9k_config(struct ieee80211
- 		ath_chanctx_set_channel(sc, ctx, &hw->conf.chandef);
- 	}
- 
-+	if (changed & IEEE80211_CONF_CHANGE_POWER)
-+		ath9k_set_txpower(sc, NULL);
+--- a/drivers/base/power/wakeup.c
++++ b/drivers/base/power/wakeup.c
+@@ -241,7 +241,9 @@ void wakeup_source_unregister(struct wak
+ {
+ 	if (ws) {
+ 		wakeup_source_remove(ws);
+-		wakeup_source_sysfs_remove(ws);
++		if (ws->dev)
++			wakeup_source_sysfs_remove(ws);
 +
- 	mutex_unlock(&sc->mutex);
- 	ath9k_ps_restore(sc);
- 
+ 		wakeup_source_destroy(ws);
+ 	}
+ }
 
 
