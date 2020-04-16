@@ -2,134 +2,78 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03DF5C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 11:20:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F3E0C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 11:20:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CA02821734
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 11:20:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pjd0p1TG"
+	by mail.kernel.org (Postfix) with ESMTP id 3A78C21BE5
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 11:20:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2632817AbgDPLUI (ORCPT
+        id S2632970AbgDPLUs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 07:20:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34856 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2632775AbgDPLOK (ORCPT
+        Thu, 16 Apr 2020 07:20:48 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:38774 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2506318AbgDPLTS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 07:14:10 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1CBEDC061A0C;
-        Thu, 16 Apr 2020 04:14:10 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id i10so4309631wrv.10;
-        Thu, 16 Apr 2020 04:14:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=cc:subject:to:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=yrEAo/Qlbfc9GeX5Dwif5D5gCiJZ0+6j0nBqBeNFgGI=;
-        b=pjd0p1TG20XK+VM3xpl2elbHjVE8BdV/MM3NVaDdeZ84c0vMPxIOgiExN8sG4Rbl/N
-         1J2GsvesXPUCjUkWiKuALhwm7M4E5YeabuXrWhCih8+zLmXArmEw3HUnjI4NcImef+Hv
-         T4dYMeFfSHccJQefBSDA+gy5VR/7P+/UprrQt/RmTixRftDa5RUpkqukwMaHbw0FxqYR
-         w4HhlT0/oae6x+Sr7gFfy+YwSzUOgFXhV6OBrOc7jdr3gwtctDvWfndGdjBY3RpDn6we
-         Sn41PQEgDBdWFTYTeTgah/R2IWBPUR1nUizhY+x6Dx725W9gi2NxwZLSENCkEota1qX6
-         ta8w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:cc:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=yrEAo/Qlbfc9GeX5Dwif5D5gCiJZ0+6j0nBqBeNFgGI=;
-        b=uiNtfnCTNnBh9p84T0mHHsTKkcKPeSBAqYQvDwf40cC2MxD6bXtez2Hvx1BCCc/Owt
-         bRK+vl3xPp5V7rYGarF2pTRE4d3zP+ebII0l3wz+FhFw8XiDvZb+Z20FrDGonrtwvFoS
-         gU8gZQXNiNQn4x361WtMCIhWwhBpzYsBdeL9neNSZC/uenxagJyzV4Y0RNFZlwqeB6dA
-         H5qVDlRkyOjYEL663zsrQRcvBNU9pooCdsL/T2Uvx65DqsN6s0Gzcv7wxhVBZxU3Xd6W
-         GU01GTjOkZU7uajXO8A5OiFP9budIyG8XqDmJoTwMowBXjQbNtLI0A/CaVyYot2oTFXz
-         BvWQ==
-X-Gm-Message-State: AGi0PuZviedjg1ne1FeyJ91aUuF0UwUuuGdXRZqowZOI6i6l8kQzqvzR
-        r4j0VH+6iMd0ggpzVMefi4BR//sO
-X-Google-Smtp-Source: APiQypKlpX5AGWI2ULeMFPLHN2hX3xxdXqKWj54FI3XYhx3TrUtU6ZlctXL11THJp2P6bmZfWiPxaQ==
-X-Received: by 2002:adf:eccb:: with SMTP id s11mr24435059wro.138.1587035648543;
-        Thu, 16 Apr 2020 04:14:08 -0700 (PDT)
-Received: from ?IPv6:2001:a61:2482:101:3351:6160:8173:cc31? ([2001:a61:2482:101:3351:6160:8173:cc31])
-        by smtp.gmail.com with ESMTPSA id y20sm27927051wra.79.2020.04.16.04.14.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 16 Apr 2020 04:14:08 -0700 (PDT)
-Cc:     mtk.manpages@gmail.com, linux-mips@vger.kernel.org,
-        linux-man@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] getauxval.3: MIPS, AT_BASE_PLATFORM passes ISA level
-To:     YunQiang Su <syq@debian.org>
-References: <20200322095527.397716-1-syq@debian.org>
-From:   "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
-Message-ID: <74dc42c8-d249-828e-7cc8-54e63d5e92a8@gmail.com>
-Date:   Thu, 16 Apr 2020 13:14:04 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Thu, 16 Apr 2020 07:19:18 -0400
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 263642A205D;
+        Thu, 16 Apr 2020 12:17:28 +0100 (BST)
+Date:   Thu, 16 Apr 2020 13:17:25 +0200
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     "Ramuthevar, Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Cc:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        anders.roxell@linaro.org, andriy.shevchenko@intel.com,
+        arnd@arndb.de, brendanhiggins@google.com, cheol.yong.kim@intel.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mtd@lists.infradead.org, masonccyang@mxic.com.tw,
+        miquel.raynal@bootlin.com, piotrs@cadence.com,
+        qi-ming.wu@intel.com, richard@nod.at, robh+dt@kernel.org,
+        tglx@linutronix.de, vigneshr@ti.com
+Subject: Re: [PATCH v1 2/2] mtd: rawnand: Add NAND controller support on
+ Intel LGM SoC
+Message-ID: <20200416131725.51259573@collabora.com>
+In-Reply-To: <d3e137fa-54a0-b4ec-eb24-3984eab2a247@linux.intel.com>
+References: <20200414022433.36622-3-vadivel.muruganx.ramuthevar@linux.intel.com>
+        <20200415220533.733834-1-martin.blumenstingl@googlemail.com>
+        <c33c8653-16a2-5bcd-97a9-511d958b755a@linux.intel.com>
+        <20200416113822.2ef326cb@collabora.com>
+        <18568cf6-2955-472e-7b68-eb35e654a906@linux.intel.com>
+        <20200416122619.2c481792@collabora.com>
+        <d3e137fa-54a0-b4ec-eb24-3984eab2a247@linux.intel.com>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20200322095527.397716-1-syq@debian.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/22/20 10:55 AM, YunQiang Su wrote:
-> Since Linux 5.7, on MIPS, we use AT_BASE_PLATFORM to pass ISA level.
-> The values may be:
->   mips2, mips3, mips4, mips5,
->   mips32, mips32r2, mips32r6,
->   mips64, mips64r2, mips64r6.
-> 
-> This behavior is different with PowerPC.
-> 
-> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?id=e585b768da111f2c2d413de6214e83bbdfee8f22
-> Signed-off-by: YunQiang Su <syq@debian.org>
+On Thu, 16 Apr 2020 18:40:53 +0800
+"Ramuthevar, Vadivel MuruganX"
+<vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
 
-Hello YunQiang Su,
+> >>> we'll be happy to have one more of the existing driver converted to  
+> >>> ->exec_op() ;-).  
+> >> I have completely adapted to ->exec_op() hook up to replace the legacy
+> >> call-back.  
+> > I suspect porting what you've done to the xway driver shouldn't be too
+> > complicated.  
+> Not ported from xway_nand.c driver , we have developed from the scratch 
+> to make it work on
+> Intel LGM SoC , it's new x86 ATOM based SoC, IP itself completely 
+> different and most of the registers won't match.
+> if we port then it would be ugly and also what are the problem may occur 
+> we do not know.
 
-Thank you. I've applied your patch.
-
-Cheers,
-
-Michael
-
-> 
-> ----
-> v1 -> v2: fix typo
-> ---
->  man3/getauxval.3 | 7 ++++---
->  1 file changed, 4 insertions(+), 3 deletions(-)
-> 
-> diff --git a/man3/getauxval.3 b/man3/getauxval.3
-> index 456371c6a..bcc116dd2 100644
-> --- a/man3/getauxval.3
-> +++ b/man3/getauxval.3
-> @@ -60,9 +60,10 @@ values are present on all architectures.
->  The base address of the program interpreter (usually, the dynamic linker).
->  .TP
->  .BR AT_BASE_PLATFORM
-> -A pointer to a string identifying the real platform; may differ from
-> -.BR AT_PLATFORM
-> -(PowerPC only).
-> +A pointer to a string (PowerPC and MIPS only).
-> +On PowerPC, this identifies the real platform; may differ from
-> +.BR AT_PLATFORM "."
-> +On MIPS, this identifies the ISA level (Since 5.7).
->  .TP
->  .BR AT_CLKTCK
->  The frequency with which
-> 
-
-
--- 
-Michael Kerrisk
-Linux man-pages maintainer; http://www.kernel.org/doc/man-pages/
-Linux/UNIX System Programming Training: http://man7.org/training/
+Sorry but IMO they look similar enough to try to merge them.
