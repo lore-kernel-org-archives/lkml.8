@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 664B0C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:54:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24AAEC2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:54:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 442B620786
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:54:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0409F217D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:54:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587045256;
-	bh=R8wM+RdBEmGGBgeRokphm76zWrNCKuGo6rJ2KLrBV2M=;
+	s=default; t=1587045275;
+	bh=Mnur4y7Z3DG/U51267RRZUuGvk/ACYGL1HqBmKdp/bo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tiSPY+2/Uio/pIOBb3vZQF95TwHGhBo768Vx3WiKhVYhXcoLTDAAMgadjSRmyssKT
-	 zfWzTYfxtpPlVv1sWapFciCO1xE8XqPGGZurUiyf1YOtWf+UKks8f4B071Yz6ttgwu
-	 IIS0lPmrpW2mwl3u3bFYKqC+ga/R5OFYQfHmOZwM=
+	b=dDPE6JYWBX65niiK43R8c6tdSfE8lJ9qUgAp/mzt8s3DAtmPBt1C/IyYYbLiMcAs0
+	 SVXy8UoBu/RrU3epUB1fzFYy1V8h2sCjIxG4WdLu9z+pkS4I1DgnJFmKxbKDEBGFqb
+	 e+AyPHEWhdhprMlKWWgHkqztNxkuznM3JBNWONcI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728213AbgDPNyO (ORCPT
+        id S1729187AbgDPNy3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 09:54:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50116 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 09:54:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50136 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2897531AbgDPNhq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:37:46 -0400
+        id S2897548AbgDPNhw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:37:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A2EF322202;
-        Thu, 16 Apr 2020 13:37:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 104FA20732;
+        Thu, 16 Apr 2020 13:37:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044264;
-        bh=R8wM+RdBEmGGBgeRokphm76zWrNCKuGo6rJ2KLrBV2M=;
+        s=default; t=1587044271;
+        bh=Mnur4y7Z3DG/U51267RRZUuGvk/ACYGL1HqBmKdp/bo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Kyyu1vVCaZqs5g8Prb2EkhxQP85UzsmioM1Om2Orj6zimvPiSqSkstYFasRZ9r5xQ
-         BKLBA6wWHG2DbxsHShFK4bXcuTcjWo0tkrfz6yHKBGdbmpNWDTEAtcicbaylr6IEYU
-         uhGSafbMbkdpA8/+WFABSJ5tb9Ji43D3xUNQFWw4=
+        b=oA6z+5XFKG+YSDOydFVk0B1eYAaTy6Dd5ZWxjYdEBDe8MhNmvV0OGoghc0vCeMrwk
+         bOdSHk2x3e5ktgkgVjaGBIFgiE9o5XHwCkyYH/QM/bszSL8rLKjbZPbbwkeAOKpMy2
+         5BfDbDIWWr5/+kB+JViCx/UlCI9spvJSwLswoRPY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
         Sean Christopherson <sean.j.christopherson@intel.com>,
-        Peter Xu <peterx@redhat.com>,
         Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 5.5 146/257] KVM: x86: Allocate new rmap and large page tracking when moving memslot
-Date:   Thu, 16 Apr 2020 15:23:17 +0200
-Message-Id: <20200416131344.706861909@linuxfoundation.org>
+Subject: [PATCH 5.5 149/257] KVM: VMX: Add a trampoline to fix VMREAD error handling
+Date:   Thu, 16 Apr 2020 15:23:20 +0200
+Message-Id: <20200416131345.116862483@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.891903893@linuxfoundation.org>
 References: <20200416131325.891903893@linuxfoundation.org>
@@ -63,100 +62,147 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Sean Christopherson <sean.j.christopherson@intel.com>
 
-commit edd4fa37baa6ee8e44dc65523b27bd6fe44c94de upstream.
+commit 842f4be95899df22b5843ba1a7c8cf37e831a6e8 upstream.
 
-Reallocate a rmap array and recalcuate large page compatibility when
-moving an existing memslot to correctly handle the alignment properties
-of the new memslot.  The number of rmap entries required at each level
-is dependent on the alignment of the memslot's base gfn with respect to
-that level, e.g. moving a large-page aligned memslot so that it becomes
-unaligned will increase the number of rmap entries needed at the now
-unaligned level.
+Add a hand coded assembly trampoline to preserve volatile registers
+across vmread_error(), and to handle the calling convention differences
+between 64-bit and 32-bit due to asmlinkage on vmread_error().  Pass
+@field and @fault on the stack when invoking the trampoline to avoid
+clobbering volatile registers in the context of the inline assembly.
 
-Not updating the rmap array is the most obvious bug, as KVM accesses
-garbage data beyond the end of the rmap.  KVM interprets the bad data as
-pointers, leading to non-canonical #GPs, unexpected #PFs, etc...
+Calling vmread_error() directly from inline assembly is partially broken
+on 64-bit, and completely broken on 32-bit.  On 64-bit, it will clobber
+%rdi and %rsi (used to pass @field and @fault) and any volatile regs
+written by vmread_error().  On 32-bit, asmlinkage means vmread_error()
+expects the parameters to be passed on the stack, not via regs.
 
-  general protection fault: 0000 [#1] SMP
-  CPU: 0 PID: 1909 Comm: move_memory_reg Not tainted 5.4.0-rc7+ #139
-  Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 0.0.0 02/06/2015
-  RIP: 0010:rmap_get_first+0x37/0x50 [kvm]
-  Code: <48> 8b 3b 48 85 ff 74 ec e8 6c f4 ff ff 85 c0 74 e3 48 89 d8 5b c3
-  RSP: 0018:ffffc9000021bbc8 EFLAGS: 00010246
-  RAX: ffff00617461642e RBX: ffff00617461642e RCX: 0000000000000012
-  RDX: ffff88827400f568 RSI: ffffc9000021bbe0 RDI: ffff88827400f570
-  RBP: 0010000000000000 R08: ffffc9000021bd00 R09: ffffc9000021bda8
-  R10: ffffc9000021bc48 R11: 0000000000000000 R12: 0030000000000000
-  R13: 0000000000000000 R14: ffff88827427d700 R15: ffffc9000021bce8
-  FS:  00007f7eda014700(0000) GS:ffff888277a00000(0000) knlGS:0000000000000000
-  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-  CR2: 00007f7ed9216ff8 CR3: 0000000274391003 CR4: 0000000000162eb0
-  Call Trace:
-   kvm_mmu_slot_set_dirty+0xa1/0x150 [kvm]
-   __kvm_set_memory_region.part.64+0x559/0x960 [kvm]
-   kvm_set_memory_region+0x45/0x60 [kvm]
-   kvm_vm_ioctl+0x30f/0x920 [kvm]
-   do_vfs_ioctl+0xa1/0x620
-   ksys_ioctl+0x66/0x70
-   __x64_sys_ioctl+0x16/0x20
-   do_syscall_64+0x4c/0x170
-   entry_SYSCALL_64_after_hwframe+0x44/0xa9
-  RIP: 0033:0x7f7ed9911f47
-  Code: <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 21 6f 2c 00 f7 d8 64 89 01 48
-  RSP: 002b:00007ffc00937498 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-  RAX: ffffffffffffffda RBX: 0000000001ab0010 RCX: 00007f7ed9911f47
-  RDX: 0000000001ab1350 RSI: 000000004020ae46 RDI: 0000000000000004
-  RBP: 000000000000000a R08: 0000000000000000 R09: 00007f7ed9214700
-  R10: 00007f7ed92149d0 R11: 0000000000000246 R12: 00000000bffff000
-  R13: 0000000000000003 R14: 00007f7ed9215000 R15: 0000000000000000
-  Modules linked in: kvm_intel kvm irqbypass
-  ---[ end trace 0c5f570b3358ca89 ]---
+Opportunistically zero out the result in the trampoline to save a few
+bytes of code for every VMREAD.  A happy side effect of the trampoline
+is that the inline code footprint is reduced by three bytes on 64-bit
+due to PUSH/POP being more efficent (in terms of opcode bytes) than MOV.
 
-The disallow_lpage tracking is more subtle.  Failure to update results
-in KVM creating large pages when it shouldn't, either due to stale data
-or again due to indexing beyond the end of the metadata arrays, which
-can lead to memory corruption and/or leaking data to guest/userspace.
-
-Note, the arrays for the old memslot are freed by the unconditional call
-to kvm_free_memslot() in __kvm_set_memory_region().
-
-Fixes: 05da45583de9b ("KVM: MMU: large page support")
+Fixes: 6e2020977e3e6 ("KVM: VMX: Add error handling to VMREAD helper")
 Cc: stable@vger.kernel.org
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Reviewed-by: Peter Xu <peterx@redhat.com>
+Message-Id: <20200326160712.28803-1-sean.j.christopherson@intel.com>
 Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kvm/x86.c |   11 +++++++++++
- 1 file changed, 11 insertions(+)
+ arch/x86/kvm/vmx/ops.h     |   28 ++++++++++++++++-----
+ arch/x86/kvm/vmx/vmenter.S |   58 +++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 79 insertions(+), 7 deletions(-)
 
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -9768,6 +9768,13 @@ int kvm_arch_create_memslot(struct kvm *
- {
- 	int i;
+--- a/arch/x86/kvm/vmx/ops.h
++++ b/arch/x86/kvm/vmx/ops.h
+@@ -12,7 +12,8 @@
  
-+	/*
-+	 * Clear out the previous array pointers for the KVM_MR_MOVE case.  The
-+	 * old arrays will be freed by __kvm_set_memory_region() if installing
-+	 * the new memslot is successful.
-+	 */
-+	memset(&slot->arch, 0, sizeof(slot->arch));
-+
- 	for (i = 0; i < KVM_NR_PAGE_SIZES; ++i) {
- 		struct kvm_lpage_info *linfo;
- 		unsigned long ugfn;
-@@ -9849,6 +9856,10 @@ int kvm_arch_prepare_memory_region(struc
- 				const struct kvm_userspace_memory_region *mem,
- 				enum kvm_mr_change change)
- {
-+	if (change == KVM_MR_MOVE)
-+		return kvm_arch_create_memslot(kvm, memslot,
-+					       mem->memory_size >> PAGE_SHIFT);
-+
- 	return 0;
- }
+ #define __ex(x) __kvm_handle_fault_on_reboot(x)
  
+-asmlinkage void vmread_error(unsigned long field, bool fault);
++__attribute__((regparm(0))) void vmread_error_trampoline(unsigned long field,
++							 bool fault);
+ void vmwrite_error(unsigned long field, unsigned long value);
+ void vmclear_error(struct vmcs *vmcs, u64 phys_addr);
+ void vmptrld_error(struct vmcs *vmcs, u64 phys_addr);
+@@ -70,15 +71,28 @@ static __always_inline unsigned long __v
+ 	asm volatile("1: vmread %2, %1\n\t"
+ 		     ".byte 0x3e\n\t" /* branch taken hint */
+ 		     "ja 3f\n\t"
+-		     "mov %2, %%" _ASM_ARG1 "\n\t"
+-		     "xor %%" _ASM_ARG2 ", %%" _ASM_ARG2 "\n\t"
+-		     "2: call vmread_error\n\t"
+-		     "xor %k1, %k1\n\t"
++
++		     /*
++		      * VMREAD failed.  Push '0' for @fault, push the failing
++		      * @field, and bounce through the trampoline to preserve
++		      * volatile registers.
++		      */
++		     "push $0\n\t"
++		     "push %2\n\t"
++		     "2:call vmread_error_trampoline\n\t"
++
++		     /*
++		      * Unwind the stack.  Note, the trampoline zeros out the
++		      * memory for @fault so that the result is '0' on error.
++		      */
++		     "pop %2\n\t"
++		     "pop %1\n\t"
+ 		     "3:\n\t"
+ 
++		     /* VMREAD faulted.  As above, except push '1' for @fault. */
+ 		     ".pushsection .fixup, \"ax\"\n\t"
+-		     "4: mov %2, %%" _ASM_ARG1 "\n\t"
+-		     "mov $1, %%" _ASM_ARG2 "\n\t"
++		     "4: push $1\n\t"
++		     "push %2\n\t"
+ 		     "jmp 2b\n\t"
+ 		     ".popsection\n\t"
+ 		     _ASM_EXTABLE(1b, 4b)
+--- a/arch/x86/kvm/vmx/vmenter.S
++++ b/arch/x86/kvm/vmx/vmenter.S
+@@ -234,3 +234,61 @@ SYM_FUNC_START(__vmx_vcpu_run)
+ 2:	mov $1, %eax
+ 	jmp 1b
+ SYM_FUNC_END(__vmx_vcpu_run)
++
++/**
++ * vmread_error_trampoline - Trampoline from inline asm to vmread_error()
++ * @field:	VMCS field encoding that failed
++ * @fault:	%true if the VMREAD faulted, %false if it failed
++
++ * Save and restore volatile registers across a call to vmread_error().  Note,
++ * all parameters are passed on the stack.
++ */
++SYM_FUNC_START(vmread_error_trampoline)
++	push %_ASM_BP
++	mov  %_ASM_SP, %_ASM_BP
++
++	push %_ASM_AX
++	push %_ASM_CX
++	push %_ASM_DX
++#ifdef CONFIG_X86_64
++	push %rdi
++	push %rsi
++	push %r8
++	push %r9
++	push %r10
++	push %r11
++#endif
++#ifdef CONFIG_X86_64
++	/* Load @field and @fault to arg1 and arg2 respectively. */
++	mov 3*WORD_SIZE(%rbp), %_ASM_ARG2
++	mov 2*WORD_SIZE(%rbp), %_ASM_ARG1
++#else
++	/* Parameters are passed on the stack for 32-bit (see asmlinkage). */
++	push 3*WORD_SIZE(%ebp)
++	push 2*WORD_SIZE(%ebp)
++#endif
++
++	call vmread_error
++
++#ifndef CONFIG_X86_64
++	add $8, %esp
++#endif
++
++	/* Zero out @fault, which will be popped into the result register. */
++	_ASM_MOV $0, 3*WORD_SIZE(%_ASM_BP)
++
++#ifdef CONFIG_X86_64
++	pop %r11
++	pop %r10
++	pop %r9
++	pop %r8
++	pop %rsi
++	pop %rdi
++#endif
++	pop %_ASM_DX
++	pop %_ASM_CX
++	pop %_ASM_AX
++	pop %_ASM_BP
++
++	ret
++SYM_FUNC_END(vmread_error_trampoline)
 
 
