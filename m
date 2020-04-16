@@ -4,61 +4,64 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B214C2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:24:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7875BC2BB85
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:24:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3D5AD21927
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:24:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42A4222241
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:24:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587050652;
-	bh=Je+2heqtyGCACjbnBaORL/Xoy6YXSNIeA0Bzvqh+r0I=;
+	s=default; t=1587050659;
+	bh=nlIoWzdqyk42cQzlK0nulsxbUgd+cIzM+bIMPUFDAlI=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=lRkXeEi+bVVpfDfh5WeZmybvU7nRCEGHWNWlsh1jLVleby7hNOehW554KO3Xy8dv2
-	 3yonnzTSHL5OpTDWh35qpvhIJi1b88SdEkLTe1jdoAoODP7foMyHc3rmweGE4ibvUK
-	 5jcNfj8VckngLVcMFYOMq8ST8GxJWNbAu+dQcToQ=
+	b=Om9f8oMgzz0ircUXaCBgklQReVVJP+dgZHGqMALCCUe5l2I76qEbvZoZ6XNj/FANq
+	 gUPZLTlQnOiaKgWMhr2pHfnt1fzb0ARLw3Fa7eZjzGbS5x7Si3BREbfV7jvnqcL90R
+	 mJ2TuwgQbDe2ZjlFxpw8arqXTKyI13fIJfpsO5eg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395172AbgDPPYJ (ORCPT
+        id S1730840AbgDPPYS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:24:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37504 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 11:24:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37542 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2395169AbgDPPXx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 11:23:53 -0400
+        id S2634250AbgDPPX6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 11:23:58 -0400
 Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 94D082223D;
-        Thu, 16 Apr 2020 15:23:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D26E1206D6;
+        Thu, 16 Apr 2020 15:23:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587050632;
-        bh=Je+2heqtyGCACjbnBaORL/Xoy6YXSNIeA0Bzvqh+r0I=;
+        s=default; t=1587050637;
+        bh=nlIoWzdqyk42cQzlK0nulsxbUgd+cIzM+bIMPUFDAlI=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=A1plrI0CiY7wygNk+xkLmg0J7xuhkzanqdyTTy13LCBwUjBgc1NflzkDgtopydN9N
-         9EcDMLvqW3jFHs95xOT2tdqptSMTyh8V0DBnkyFs6Ovh/+ofR14l8TrL0afEVocE8z
-         5sU5CmXqAlG+BFI9yWSzLNHcZ/PhbnIC6lJpx/go=
-Date:   Thu, 16 Apr 2020 16:23:49 +0100
+        b=uOtJtJnEn183jGTGYG+EuR/emZOrXK/ogMMo/XNy0JOsWHSAJ5tW5KTUG6hedzp2j
+         qWO8zL+YhcHXp6EA68wyEVJ0Ukx0xTR6xAM5hx+j7ejgm5h774ETbFEZ6N5Uxghi8r
+         lkMl1M8uSMYSxJvePH3gmJ38UCMYRrNA029J23uY=
+Date:   Thu, 16 Apr 2020 16:23:54 +0100
 From:   Mark Brown <broonie@kernel.org>
-To:     Matthias Blankertz <matthias.blankertz@cetitec.com>
-Cc:     alsa-devel@alsa-project.org,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+To:     Marc Gonzalez <marc.w.gonzalez@free.fr>
+Cc:     alsa-devel@alsa-project.org, Arnd Bergmann <arnd@arndb.de>,
+        Jaroslav Kysela <perex@perex.cz>,
         Liam Girdwood <lgirdwood@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        Mark Brown <broonie@kernel.org>, Takashi Iwai <tiwai@suse.com>
-Subject: Applied "ASoC: rsnd: Fix parent SSI start/stop in multi-SSI mode" to the asoc tree
-In-Reply-To:  <20200415141017.384017-2-matthias.blankertz@cetitec.com>
-Message-Id:  <applied-20200415141017.384017-2-matthias.blankertz@cetitec.com>
+        LKML <linux-kernel@vger.kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Takashi Iwai <tiwai@suse.com>
+Subject: Applied "ASoC: wcd9335: Fix missing regmap requirement" to the asoc tree
+In-Reply-To:  <8c0b22e2-2c67-8d45-a57d-dfc54043fbc9@free.fr>
+Message-Id: <applied-8c0b22e2-2c67-8d45-a57d-dfc54043fbc9@free.fr>
 X-Patchwork-Hint: ignore
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
+Message-ID: <20200416152354.lJpY_FbV5vQSnQiyUwNOePrDfSRAwF-Of2hn1_3Mezs@z>
 
 The patch
 
-   ASoC: rsnd: Fix parent SSI start/stop in multi-SSI mode
+   ASoC: wcd9335: Fix missing regmap requirement
 
 has been applied to the asoc tree at
 
@@ -83,65 +86,31 @@ to this mail.
 Thanks,
 Mark
 
-From a09fb3f28a60ba3e928a1fa94b0456780800299d Mon Sep 17 00:00:00 2001
-From: Matthias Blankertz <matthias.blankertz@cetitec.com>
-Date: Wed, 15 Apr 2020 16:10:16 +0200
-Subject: [PATCH] ASoC: rsnd: Fix parent SSI start/stop in multi-SSI mode
+From 741bfce676b765f01396e148862740caec91338c Mon Sep 17 00:00:00 2001
+From: Marc Gonzalez <marc.w.gonzalez@free.fr>
+Date: Wed, 10 Apr 2019 16:23:38 +0200
+Subject: [PATCH] ASoC: wcd9335: Fix missing regmap requirement
 
-The parent SSI of a multi-SSI setup must be fully setup, started and
-stopped since it is also part of the playback/capture setup. So only
-skip the SSI (as per commit 203cdf51f288 ("ASoC: rsnd: SSI parent cares
-SWSP bit") and commit 597b046f0d99 ("ASoC: rsnd: control SSICR::EN
-correctly")) if the SSI is parent outside of a multi-SSI setup.
+wcd9335.c: undefined reference to 'devm_regmap_add_irq_chip'
 
-Signed-off-by: Matthias Blankertz <matthias.blankertz@cetitec.com>
-Acked-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Link: https://lore.kernel.org/r/20200415141017.384017-2-matthias.blankertz@cetitec.com
+Signed-off-by: Marc Gonzalez <marc.w.gonzalez@free.fr>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- sound/soc/sh/rcar/ssi.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ sound/soc/codecs/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/sound/soc/sh/rcar/ssi.c b/sound/soc/sh/rcar/ssi.c
-index fc5d089868df..d51fb3a39448 100644
---- a/sound/soc/sh/rcar/ssi.c
-+++ b/sound/soc/sh/rcar/ssi.c
-@@ -407,7 +407,7 @@ static void rsnd_ssi_config_init(struct rsnd_mod *mod,
- 	 * We shouldn't exchange SWSP after running.
- 	 * This means, parent needs to care it.
- 	 */
--	if (rsnd_ssi_is_parent(mod, io))
-+	if (rsnd_ssi_is_parent(mod, io) && !rsnd_ssi_multi_slaves(io))
- 		goto init_end;
- 
- 	if (rsnd_io_is_play(io))
-@@ -559,7 +559,7 @@ static int rsnd_ssi_start(struct rsnd_mod *mod,
- 	 * EN is for data output.
- 	 * SSI parent EN is not needed.
- 	 */
--	if (rsnd_ssi_is_parent(mod, io))
-+	if (rsnd_ssi_is_parent(mod, io) && !rsnd_ssi_multi_slaves(io))
- 		return 0;
- 
- 	ssi->cr_en = EN;
-@@ -582,7 +582,7 @@ static int rsnd_ssi_stop(struct rsnd_mod *mod,
- 	if (!rsnd_ssi_is_run_mods(mod, io))
- 		return 0;
- 
--	if (rsnd_ssi_is_parent(mod, io))
-+	if (rsnd_ssi_is_parent(mod, io) && !rsnd_ssi_multi_slaves(io))
- 		return 0;
- 
- 	cr  =	ssi->cr_own	|
-@@ -620,7 +620,7 @@ static int rsnd_ssi_irq(struct rsnd_mod *mod,
- 	if (rsnd_is_gen1(priv))
- 		return 0;
- 
--	if (rsnd_ssi_is_parent(mod, io))
-+	if (rsnd_ssi_is_parent(mod, io) && !rsnd_ssi_multi_slaves(io))
- 		return 0;
- 
- 	if (!rsnd_ssi_is_run_mods(mod, io))
+diff --git a/sound/soc/codecs/Kconfig b/sound/soc/codecs/Kconfig
+index 419114edfd57..667fc1d59e18 100644
+--- a/sound/soc/codecs/Kconfig
++++ b/sound/soc/codecs/Kconfig
+@@ -1151,6 +1151,7 @@ config SND_SOC_WCD9335
+ 	tristate "WCD9335 Codec"
+ 	depends on SLIMBUS
+ 	select REGMAP_SLIMBUS
++	select REGMAP_IRQ
+ 	help
+ 	  The WCD9335 is a standalone Hi-Fi audio CODEC IC, supports
+ 	  Qualcomm Technologies, Inc. (QTI) multimedia solutions,
 -- 
 2.20.1
 
