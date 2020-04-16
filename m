@@ -2,129 +2,82 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6ECEC2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 10:29:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C7F7C2BB85
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 10:31:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BF1A021D91
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 10:29:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ryIu0QaK"
+	by mail.kernel.org (Postfix) with ESMTP id 6A05221973
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 10:31:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587033061;
+	bh=OssfVZy2Gtzt3T7P0reeqZMpIV9JxrCPL2xhmitTd9E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=aEIxVjl/KbEgmeIRqL7Xzn2OaHyB8dDeELNJ68K8xXF0SuJJwJX0MrZBo6Hmq4prv
+	 Uaroel74SzzlJoZib1qxT0D/rIPdbBFQAaUAWTf8zYspH/1FK9AWDS/9TShIU3Izm/
+	 e9qRTo66XZERwPeBLhksqiVxjJ1rjXXpvHQG7CI4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2505010AbgDPK3h (ORCPT
+        id S2505022AbgDPKaP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 06:29:37 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:50822 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2504943AbgDPK2s (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 06:28:48 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03GASCrM163539;
-        Thu, 16 Apr 2020 10:28:27 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- content-transfer-encoding : in-reply-to; s=corp-2020-01-29;
- bh=9GnHtY/DK7oYqI+ruPXthvzHvwuzbjixOeDMP1A3xwA=;
- b=ryIu0QaKo4LeO4bycJw+XOJ8VTN2Bit2GAL9x4zh0mW+wgPUUKYohMOjoeEJ7nFV8F+X
- UmHMEnkWRp5hi1SuX1ImTiIc6vODNq/tbZQ02lPH3y+tBHdzHL1LXdO5OF+lAAbYkApZ
- 3VcOub2stRuofE2WSJkHG2UQRaG5sZFxINw5Mis5Yh1ZHdTCeZNjpTQdN65ogH1B2hpT
- ZnWmHK+zs0k82NcoNmZCuJm/g5G3r6cAXwv5Dsxiq9LLykNhgE2etZlCwPgVUOEy6kZy
- nwss6PZbtEDxw0mRCZ7o6AUYYjTGr38iuuCCW/i1l4ijk0R417piCZ++wNatgXaIriIc vA== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2120.oracle.com with ESMTP id 30dn95rjtp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 16 Apr 2020 10:28:27 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03GAHsZJ099521;
-        Thu, 16 Apr 2020 10:26:26 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3030.oracle.com with ESMTP id 30dynya2y6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 16 Apr 2020 10:26:26 +0000
-Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 03GAQOEY025630;
-        Thu, 16 Apr 2020 10:26:24 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 16 Apr 2020 03:26:24 -0700
-Date:   Thu, 16 Apr 2020 13:26:12 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Andrii Nakryiko <andriin@fb.com>
-Cc:     Daniel Borkmann <daniel@iogearbox.net>,
-        syzbot <syzbot+8a5dadc5c0b1d7055945@syzkaller.appspotmail.com>,
-        ast@kernel.org, bpf@vger.kernel.org, john.fastabend@gmail.com,
-        kafai@fb.com, kpsingh@chromium.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, songliubraving@fb.com,
-        syzkaller-bugs@googlegroups.com, yhs@fb.com
-Subject: Re: WARNING in bpf_cgroup_link_release
-Message-ID: <20200416102612.GO1163@kadam>
-References: <000000000000500e6f05a34ecc01@google.com>
- <4ba5ee0c-ec81-8ce3-6681-465e34b98a93@iogearbox.net>
- <a9219326-c07c-1069-270c-4bef17ee7b88@fb.com>
+        Thu, 16 Apr 2020 06:30:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34010 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2504976AbgDPK3K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 06:29:10 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 265482192A;
+        Thu, 16 Apr 2020 10:29:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587032950;
+        bh=OssfVZy2Gtzt3T7P0reeqZMpIV9JxrCPL2xhmitTd9E=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=0azUCD7j9RcZZiV9fqaX3mrmQxuFB5X+uVyL8ub/d/3Jq5rCsvrD/6RQAKxkop2lS
+         j4FUnBxx+wMRujUOfJqV1bhPGXblv7c1o0DoGeu8Fr243fX6VxwL6R/Ign9lW35kSB
+         /FIInuhbq4/sC5RnrupM6QhJ5cvYAf99B4nQjIAE=
+Date:   Thu, 16 Apr 2020 12:29:08 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Carlos Guerrero =?iso-8859-1?Q?=C1lvarez?= 
+        <carlosteniswarrior@gmail.com>
+Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] Staging: Comedi: Drivers: das08: Fixed some coding style
+ issues
+Message-ID: <20200416102908.GC820251@kroah.com>
+References: <20200413080555.29267-1-carlosteniswarrior@gmail.com>
+ <20200413125140.GC3077651@kroah.com>
+ <CAB_Ssx7B13Lm-twHuEOzP4EODQ7kqd5jA0mxZS5SnpqxJ65XBg@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <a9219326-c07c-1069-270c-4bef17ee7b88@fb.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9592 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=896 suspectscore=0
- malwarescore=0 phishscore=0 spamscore=0 adultscore=0 mlxscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004160071
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9592 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 clxscore=1011
- malwarescore=0 bulkscore=0 priorityscore=1501 lowpriorityscore=0
- mlxscore=0 phishscore=0 spamscore=0 impostorscore=0 suspectscore=0
- mlxlogscore=965 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004160072
+In-Reply-To: <CAB_Ssx7B13Lm-twHuEOzP4EODQ7kqd5jA0mxZS5SnpqxJ65XBg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 15, 2020 at 09:51:40AM -0700, 'Andrii Nakryiko' via syzkaller-bugs wrote:
-> On 4/15/20 4:57 AM, Daniel Borkmann wrote:
-> > On 4/15/20 8:55 AM, syzbot wrote:
-> > > Hello,
-> > > 
-> > > syzbot found the following crash on:
-> > 
-> > Andrii, ptal.
-> > 
-> > > HEAD commit:    1a323ea5 x86: get rid of 'errret' argument to
-> > > __get_user_x..
-> > > git tree:       bpf-next
-> > > console output: https://urldefense.proofpoint.com/v2/url?u=https-3A__syzkaller.appspot.com_x_log.txt-3Fx-3D148ccb57e00000&d=DwICaQ&c=5VD0RTtNlTh3ycd41b3MUw&r=vxqvl81C2rT6GOGdPyz8iQ&m=T2Ez0XmyIpHmEa_MPTTUOh61jMDXqwETtTaTbSe-2M4&s=-6XBbsNV1O4X5flrx4Yssfjc56d0qeSHgwHhd92UPJc&e=
-> > > kernel config:  https://urldefense.proofpoint.com/v2/url?u=https-3A__syzkaller.appspot.com_x_.config-3Fx-3D8c1e98458335a7d1&d=DwICaQ&c=5VD0RTtNlTh3ycd41b3MUw&r=vxqvl81C2rT6GOGdPyz8iQ&m=T2Ez0XmyIpHmEa_MPTTUOh61jMDXqwETtTaTbSe-2M4&s=s5-1AlWtSiBvo66WN4_UXoXMGIGIqsoUCrmAnxNnfX0&e=
-> > > dashboard link: https://urldefense.proofpoint.com/v2/url?u=https-3A__syzkaller.appspot.com_bug-3Fextid-3D8a5dadc5c0b1d7055945&d=DwICaQ&c=5VD0RTtNlTh3ycd41b3MUw&r=vxqvl81C2rT6GOGdPyz8iQ&m=T2Ez0XmyIpHmEa_MPTTUOh61jMDXqwETtTaTbSe-2M4&s=hAA0702qJH5EwRwvG0RKmj8FwIRm1O8hvmoS7ne5Dls&e=
-> > > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> > > 
-> > > Unfortunately, I don't have any reproducer for this crash yet.
-> > > 
-> > > IMPORTANT: if you fix the bug, please add the following tag to the
-> > > commit:
-> > > Reported-by: syzbot+8a5dadc5c0b1d7055945@syzkaller.appspotmail.com
-> > > 
-> > > ------------[ cut here ]------------
-> > > WARNING: CPU: 0 PID: 25081 at kernel/bpf/cgroup.c:796
-> > > bpf_cgroup_link_release+0x260/0x3a0 kernel/bpf/cgroup.c:796
-> 
-> This warning is triggered due to __cgroup_bpf_detach returning an error. It
-> can do it only in two cases: either attached item is not found, which from
-> starting at code some moreI don't see how that can happen. The other reason
-> - kmalloc() failing to allocate memory for new effective prog array.
+A: http://en.wikipedia.org/wiki/Top_post
+Q: Were do I find info about this thing called top-posting?
+A: Because it messes up the order in which people normally read text.
+Q: Why is top-posting such a bad thing?
+A: Top-posting.
+Q: What is the most annoying thing in e-mail?
 
-If you look at the log file then this was allocation fault injection in
-bpf_prog_array_alloc().
+A: No.
+Q: Should I include quotations after my reply?
 
-https://syzkaller.appspot.com/x/log.txt?x=148ccb57e00000
+http://daringfireball.net/2007/07/on_top
 
-regards,
-dan carpenter
+On Mon, Apr 13, 2020 at 04:55:08PM +0200, Carlos Guerrero Álvarez wrote:
+> What do you mean with the From line?
 
+Look at the patch you sent, the "From:" line on your email does not have
+your name, only your email address.  Please fix that up when you resend
+any future patches.
+
+thanks,
+
+greg k-h
