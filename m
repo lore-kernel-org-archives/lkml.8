@@ -2,79 +2,101 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97CC3C2BA19
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 00:04:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBB90C2BA19
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 00:06:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 70CE12076C
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 00:04:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586995462;
-	bh=UIWDmQbB1UY5Ns14fq6mzzwec6zw/Zw3l4914qV/fHo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=rl+xyRW3HR/qd1Uptt5sGZs+g2goIQf0q4b4YGUhdsUqIUJ4h7jkvY4/5g9wgm5Lk
-	 uKpLVmvnIzX/ciymCT+hUjJMdhB0v+ntC/2Vsh3hltPtUVMuLLb2ByfO7ZoSePXv1s
-	 kSCY4PcAPvTNiPsSORi001NYgQfGzfJaPNfZrNio=
+	by mail.kernel.org (Postfix) with ESMTP id BDB772076C
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 00:06:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ocH153bK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391206AbgDPAES (ORCPT
+        id S2391223AbgDPAGs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 20:04:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47936 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729647AbgDPAEK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 20:04:10 -0400
-Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0DC162076A;
-        Thu, 16 Apr 2020 00:04:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586995450;
-        bh=UIWDmQbB1UY5Ns14fq6mzzwec6zw/Zw3l4914qV/fHo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=N6FhTFCIVRUDGmowtBbsBqzyL/zw65UXrB22QuaiIQd21guALgkiJCkwKUAWhghmt
-         Q1mMbiWn6PZnvkcQrorrx6ev5UidTk3KZ9kRos7UOUlfTiudG74A1l3Da74v5bLjtZ
-         BukyFvuKdDoEuI6p00g1okLiismXxbaJioJ0Nrec=
-Date:   Wed, 15 Apr 2020 20:04:09 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     Greg KH <greg@kroah.com>
-Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Richard Palethorpe <rpalethorpe@suse.com>,
-        Kees Cook <keescook@chromium.org>, linux-can@vger.kernel.org,
-        netdev@vger.kernel.org, security@kernel.org, wg@grandegger.com,
-        mkl@pengutronix.de, davem@davemloft.net
-Subject: Re: [PATCH AUTOSEL 5.6 068/129] slcan: Don't transmit uninitialized
- stack data in padding
-Message-ID: <20200416000409.GM1068@sasha-vm>
-References: <20200415113445.11881-1-sashal@kernel.org>
- <20200415113445.11881-68-sashal@kernel.org>
- <87h7xkisln.fsf@x220.int.ebiederm.org>
- <20200415172243.GA3661754@kroah.com>
+        Wed, 15 Apr 2020 20:06:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43888 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729647AbgDPAGi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 20:06:38 -0400
+Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA0F3C061A0C
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 17:06:36 -0700 (PDT)
+Received: by mail-ot1-x341.google.com with SMTP id b13so1644823oti.3
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 17:06:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=qos28LA3on13Mb6DCgYfi/34B7cwVyoTIvoHbG1lrjU=;
+        b=ocH153bKjZVEyX2nyrgcctLt6dl13sLTtiTH82ZvA8xrlqqL9ynNr0pLMx3RXnewnE
+         p23k+yuVm9QOYn36WZTuD+zirhHVi9EZIwmScB+yf9LftFA3ZFzEDP/idZgxxBWbiEJF
+         e1M11TNp1i2IgLZIdbeXtLz6Kv6qhqbk1LsQ8CzSTQmwzZJAvk1Ad1+VwyUf1PjY1Kem
+         gdu7brc6bYddxJWyA8LmgUz9OxW8JobDzQwjtczcLMOJ8speNyv8IydTwpMACHSGLEdL
+         r875OQZE/Pgni75dmTJnIHsGVYgH6XRJlisX/Sx+UgK2dHmlCeYe/nKV33gOb4a9wuKD
+         tpuw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=qos28LA3on13Mb6DCgYfi/34B7cwVyoTIvoHbG1lrjU=;
+        b=Bi3mcakkXCJ603ZUy3I7ejTfdOOB44Efb4PW1LsD+e3iSeYDLs4c1MAB1Br4fk3BUl
+         1lUUQvkUNrIScHiMF9av1a4eCFh3Mwoyo4Zy93Iid+xn2ar8jo7U2RGGfnHMTY9DJHGe
+         EDnmzyJbtILO0cQJ6k/edhyj0SkVGUeNAXE/4m8aIBucCst/cb0YxOTTt0z7Y/ecRVW/
+         Lf1cgReS6ojuf2iEUiJ7wq93nibMJKxIM/DXeVh+P6G8+yb3o4Oamt91w0f9GYZyRoKr
+         ni5aWR25LRdT52gp6+gS9SqFuY6yQScUBd+ZJnKhiRvVvkAFvm5fcP+DcQc7SFoP24sJ
+         EjKw==
+X-Gm-Message-State: AGi0PubSx+1WEl6hUsitX8Er1/fpuM8l/FUX1FTDXiAF5ckk/RNlCg3b
+        hjOulXEyhtTvv8o8dYRO/xnpjyAVw3zpFvBQwi8LDQ==
+X-Google-Smtp-Source: APiQypIJMrl4iVbSnTQs52d04zCKLLpXN3SgUoNWZHs/s0e7OkCr4T77ZnR9N40RqQwHv33zAnLFQkVOhqBJ6CegVx0=
+X-Received: by 2002:a9d:3988:: with SMTP id y8mr14712321otb.352.1586995596022;
+ Wed, 15 Apr 2020 17:06:36 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20200415172243.GA3661754@kroah.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <CALAqxLV4rM74wuzuZ+BkUi+keccxkAxv30N4vrFO7CVQ5vnT1A@mail.gmail.com>
+ <20200415085348.5511a5fe@gandalf.local.home> <CALAqxLV1A6sOC1GWpFYXeBoDff0+AJgoOYK7NktcTdvX3kvAeg@mail.gmail.com>
+ <20200415161424.584d07d3@gandalf.local.home> <CALAqxLU26PVFPSza5GceSF6gTVdzo_2D3G0dBp0KZXvAWFUktA@mail.gmail.com>
+ <20200415164116.40564f2c@gandalf.local.home> <CALAqxLW6jqr38bk8pp-Hom2=MLm3coTmzCP8MMfrDvMfx388=Q@mail.gmail.com>
+ <20200415174918.154a86d0@gandalf.local.home> <20200415220459.GE17661@paulmck-ThinkPad-P72>
+ <20200415185121.381a4bc3@gandalf.local.home>
+In-Reply-To: <20200415185121.381a4bc3@gandalf.local.home>
+From:   John Stultz <john.stultz@linaro.org>
+Date:   Wed, 15 Apr 2020 17:06:24 -0700
+Message-ID: <CALAqxLX2UDQ7=dvzMoP6g-rYzw9dBebrynMfo4Gnv=SzaqhE=g@mail.gmail.com>
+Subject: Re: On trace_*_rcuidle functions in modules
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     "Paul E. McKenney" <paulmck@kernel.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Saravana Kannan <saravanak@google.com>,
+        Todd Kjos <tkjos@google.com>, Stephen Boyd <sboyd@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 15, 2020 at 07:22:43PM +0200, Greg KH wrote:
->On Wed, Apr 15, 2020 at 12:09:08PM -0500, Eric W. Biederman wrote:
->>
->> How does this differ from Greg's backports of this patches?
+On Wed, Apr 15, 2020 at 3:51 PM Steven Rostedt <rostedt@goodmis.org> wrote:
+> I was about to suggest a patch, but that has already been written...
 >
->His tool didn't catch that they are already in a merged tree, it's a few
->steps later that this happens :)
+> 313c8c16ee62b ("PM / CPU: replace raw_notifier with atomic_notifier")
+>
+> Which surrounds the notifier callbacks with rcu_irq_enter_irqson()
+>
+> Which means that if John moves the code to use the notifier, then he could
+> also remove the _rcuidle(), because RCU will be watching.
 
-My process for doing these takes a day or two (or three) to build test,
-test, and send mails. Sometimes Greg beats me to it :)
+So you're saying the recent change to move to using trace_*_rcuidle()
+was unnecessary?
 
--- 
-Thanks,
-Sasha
+Or is there a different notifier then cpu_pm_register_notifier() that
+the driver should be using (that one seems to be using
+atomic_notifier_chain_register())?
+
+thanks
+-john
