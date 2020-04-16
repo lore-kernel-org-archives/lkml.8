@@ -2,157 +2,146 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FF3EC2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 11:32:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B0EBC2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 11:32:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6C3D8208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 11:32:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587036723;
-	bh=0bFacHSoUUyGSAb90iqsd3ao3s9+E+bswGCW0hty4Dk=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
-	b=UaplXzWX2h6U5Y3QacB39OVPgbprY5TbZV6a7q43IrLcz0wDmtKOpKQ10Ihx9enL+
-	 DKWVkvmQzHmh3GTml0dW+aFnLET3Hh1eQgcNraaXk7TE4W5UuRSaibOg1E5yZtsc5G
-	 Aj2kqPNv3tu59ja1M5C6AzjKizfZJmQVJWdzYbRY=
+	by mail.kernel.org (Postfix) with ESMTP id 51CFB208E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 11:32:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2633402AbgDPLcB (ORCPT
+        id S2633446AbgDPLcY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 07:32:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58728 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2632803AbgDPLbg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 07:31:36 -0400
-Received: from tleilax.poochiereds.net (68-20-15-154.lightspeed.rlghnc.sbcglobal.net [68.20.15.154])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7613C208E4;
-        Thu, 16 Apr 2020 11:31:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587036695;
-        bh=0bFacHSoUUyGSAb90iqsd3ao3s9+E+bswGCW0hty4Dk=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=LZ3A3LQICzetJVIe5HgLrwrtQgQBzqC62BleZfgySPZ43cBAXOlCVfL65qWkm4Ibe
-         0psmDcVqdGQR+qJoTcCgLfjXEHg6OuWO4vMBfXN1wAvy7WNEB1oivEPNia25G7lAH7
-         Fo/IGfK63OILqsnj/2TPopErE8drWJYGWyZ50MVo=
-Message-ID: <35d03979765b4351160086badcb59a512695493f.camel@kernel.org>
-Subject: Re: [PATCH v5 2/2] buffer: record blockdev write errors in
- super_block that it backs
-From:   Jeff Layton <jlayton@kernel.org>
-To:     Jan Kara <jack@suse.cz>
-Cc:     viro@zeniv.linux.org.uk, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-        andres@anarazel.de, willy@infradead.org, dhowells@redhat.com,
-        hch@infradead.org, akpm@linux-foundation.org, david@fromorbit.com
-Date:   Thu, 16 Apr 2020 07:31:33 -0400
-In-Reply-To: <20200416093528.GC23739@quack2.suse.cz>
-References: <20200415121300.228017-1-jlayton@kernel.org>
-         <20200415121300.228017-3-jlayton@kernel.org>
-         <20200415140642.GK6126@quack2.suse.cz>
-         <b4161f1df3436d7371ab7e88709169e9a391f15d.camel@kernel.org>
-         <20200416093528.GC23739@quack2.suse.cz>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+        Thu, 16 Apr 2020 07:32:24 -0400
+Received: from mail-il1-f200.google.com ([209.85.166.200]:50092 "EHLO
+        mail-il1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2506170AbgDPLJH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 07:09:07 -0400
+Received: by mail-il1-f200.google.com with SMTP id r17so8542332ila.16
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 04:08:14 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=eW5xO3rmmKlcyvNXxv8/k1vDrsALM6R8izzm/K7H98E=;
+        b=Z26rOEXykfCKkr7quNxILcNa6QLanQfnAO7eQkd/FYcQSDUN1ym7Lva/iaPOwXVHB1
+         bXvyIRnphztmEgXtOurqfIQs/6jQEVCU3uBPjk24yOjYKpGw3OUa0QotxZp4NuXNxXOQ
+         RGkDf59IMP6ATaTfvwE4LJih6nsL3OIk4CD6vXbY0UmQxOVNbr9tsAqA0exxonxcLWnA
+         Laa7gJUqlu5o2IM0dzCtVnB0jevGHUr+YHT3bstlnHnIU4F0yc4d2xZrsK9NJxMk/VjM
+         uDErpeqRc552JX9x2Y2W8cbNQva9z2nQrbKTlv+congXIwZHQcJAYMZMvs8D4rYTE2pr
+         YytA==
+X-Gm-Message-State: AGi0PuYGlQPlcq2EQ+J5DZpEevO81L8jbclN1N2GKichH+4hUZdM7855
+        lVjE9UC6w8/l0FzKA4UaK0e2HC020s2vC7f5d2DbAnTgO4F2
+X-Google-Smtp-Source: APiQypKHPmbdOV6a2pVkExQJNi44Xg7ki95J0szeZHGhoZ7RC+BcNxefu0IQpANQbcQ5Ldf6IPA6br93GCvwh2owOG5I2qQLc0aD
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a92:394d:: with SMTP id g74mr9911618ila.250.1587035293853;
+ Thu, 16 Apr 2020 04:08:13 -0700 (PDT)
+Date:   Thu, 16 Apr 2020 04:08:13 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000efafd205a366722c@google.com>
+Subject: general protection fault in macvlan_device_event
+From:   syzbot <syzbot+5035b1f9dc7ea4558d5a@syzkaller.appspotmail.com>
+To:     ap420073@gmail.com, davem@davemloft.net, edumazet@google.com,
+        gustavo@embeddedor.com, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, richardcochran@gmail.com,
+        syzkaller-bugs@googlegroups.com, tglx@linutronix.de
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2020-04-16 at 11:35 +0200, Jan Kara wrote:
-> On Wed 15-04-20 12:22:27, Jeff Layton wrote:
-> > On Wed, 2020-04-15 at 16:06 +0200, Jan Kara wrote:
-> > > On Wed 15-04-20 08:13:00, Jeff Layton wrote:
-> > > > From: Jeff Layton <jlayton@redhat.com>
-> > > > 
-> > > > When syncing out a block device (a'la __sync_blockdev), any error
-> > > > encountered will only be recorded in the bd_inode's mapping. When the
-> > > > blockdev contains a filesystem however, we'd like to also record the
-> > > > error in the super_block that's stored there.
-> > > > 
-> > > > Make mark_buffer_write_io_error also record the error in the
-> > > > corresponding super_block when a writeback error occurs and the block
-> > > > device contains a mounted superblock.
-> > > > 
-> > > > Since superblocks are RCU freed, hold the rcu_read_lock to ensure
-> > > > that the superblock doesn't go away while we're marking it.
-> > > > 
-> > > > Signed-off-by: Jeff Layton <jlayton@kernel.org>
-> > > > ---
-> > > >  fs/buffer.c | 7 +++++++
-> > > >  1 file changed, 7 insertions(+)
-> > > > 
-> > > > diff --git a/fs/buffer.c b/fs/buffer.c
-> > > > index f73276d746bb..2a4a5cc20418 100644
-> > > > --- a/fs/buffer.c
-> > > > +++ b/fs/buffer.c
-> > > > @@ -1154,12 +1154,19 @@ EXPORT_SYMBOL(mark_buffer_dirty);
-> > > >  
-> > > >  void mark_buffer_write_io_error(struct buffer_head *bh)
-> > > >  {
-> > > > +	struct super_block *sb;
-> > > > +
-> > > >  	set_buffer_write_io_error(bh);
-> > > >  	/* FIXME: do we need to set this in both places? */
-> > > >  	if (bh->b_page && bh->b_page->mapping)
-> > > >  		mapping_set_error(bh->b_page->mapping, -EIO);
-> > > >  	if (bh->b_assoc_map)
-> > > >  		mapping_set_error(bh->b_assoc_map, -EIO);
-> > > > +	rcu_read_lock();
-> > > > +	sb = bh->b_bdev->bd_super;
-> > > 
-> > > You still need READ_ONCE() here. Otherwise the dereference below can still
-> > > result in refetch and NULL ptr deref.
-> > > 
-> > > 								Honza
-> > > 
-> > 
-> > Huh? That seems like a really suspicious thing for the compiler/arch to
-> > do. We are checking that sb isn't NULL before we dereference it. Doesn't
-> > that imply a data dependency? How could the value of "sb" change after
-> > that?
-> 
-> Because the compiler is free to optimize the local variable away and
-> actually compile the dereference below as bh->b_bdev->bd_super->s_wb_err
-> (from C11 standard POV such code is equivalent since in C11 memory model
-> it is assumed there are no concurrent accesses). And READ_ONCE() is a way
-> to forbid compiler from doing such optimization - through 'volatile'
-> keyword it tells the compiler there may be concurrent accesses happening
-> and makes sure the value is really fetched into the local variable and used
-> from there. There are good articles about this on LWN - I'd give you a link
-> but LWN seems to be down today. But the latest article is about KCSAN and
-> from there are links to older articles about compiler optimizations.
-> 
-> > I'm also not sure I understand how using READ_ONCE really helps there if
-> > we can't count on the value of a local variable not changing.
-> 
-> I hope I've explained this above.
-> 
+Hello,
 
-Got it. Thanks for the explanation. Now I'll have nightmares about all
-of the race conditions I've created in the past by making this
-assumption!
+syzbot found the following crash on:
 
-I'll send a v6 set in a few mins.
+HEAD commit:    8f3d9f35 Linux 5.7-rc1
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=1377da00100000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=5d351a1019ed81a2
+dashboard link: https://syzkaller.appspot.com/bug?extid=5035b1f9dc7ea4558d5a
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
 
-> > > > +	if (sb)
-> > > > +		errseq_set(&sb->s_wb_err, -EIO);
-> > > > +	rcu_read_unlock();
-> > > >  }
-> > > >  EXPORT_SYMBOL(mark_buffer_write_io_error);
-> > > >  
-> > > > -- 
-> > > > 2.25.2
-> > > > 
-> > 
-> > -- 
-> > Jeff Layton <jlayton@kernel.org>
-> > 
+Unfortunately, I don't have any reproducer for this crash yet.
 
--- 
-Jeff Layton <jlayton@kernel.org>
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+5035b1f9dc7ea4558d5a@syzkaller.appspotmail.com
 
+device veth0_macvtap left promiscuous mode
+device veth1_vlan left promiscuous mode
+device veth0_vlan left promiscuous mode
+bond0 (unregistering): (slave macvlan4): Releasing backup interface
+general protection fault, probably for non-canonical address 0xdffffc0000000000: 0000 [#1] PREEMPT SMP KASAN
+KASAN: null-ptr-deref in range [0x0000000000000000-0x0000000000000007]
+CPU: 0 PID: 9087 Comm: kworker/u4:9 Not tainted 5.7.0-rc1-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Workqueue: netns cleanup_net
+RIP: 0010:macvlan_device_event+0x62c/0x930 drivers/net/macvlan.c:1707
+Code: df 48 89 fa 48 c1 ea 03 80 3c 02 00 0f 85 09 03 00 00 4c 89 e2 48 8b b3 50 03 00 00 48 b8 00 00 00 00 00 fc ff df 48 c1 ea 03 <80> 3c 02 00 0f 85 d2 02 00 00 49 8b 3c 24 41 bc 02 80 00 00 e8 5b
+RSP: 0018:ffffc90002407410 EFLAGS: 00010246
+RAX: dffffc0000000000 RBX: ffff88808e450000 RCX: ffffffff84b25ca5
+RDX: 0000000000000000 RSI: ffff88809eefbb90 RDI: ffff88808e450350
+RBP: 1ffff92000480e88 R08: ffff88804a7a8000 R09: fffffbfff14b0471
+R10: ffffffff8a582387 R11: fffffbfff14b0470 R12: 0000000000000000
+R13: ffff88804adfc808 R14: ffff88804adfc808 R15: ffff88804adfc000
+FS:  0000000000000000(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 000055e77ab909c0 CR3: 00000000936d3000 CR4: 00000000001426f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ notifier_call_chain+0xc0/0x230 kernel/notifier.c:83
+ call_netdevice_notifiers_info net/core/dev.c:1948 [inline]
+ call_netdevice_notifiers_info+0xb5/0x130 net/core/dev.c:1933
+ call_netdevice_notifiers_extack net/core/dev.c:1960 [inline]
+ call_netdevice_notifiers net/core/dev.c:1974 [inline]
+ dev_set_mac_address net/core/dev.c:8404 [inline]
+ dev_set_mac_address+0x2ef/0x3f0 net/core/dev.c:8385
+ macvlan_set_mac_address drivers/net/macvlan.c:747 [inline]
+ macvlan_set_mac_address+0x298/0x320 drivers/net/macvlan.c:733
+ dev_set_mac_address+0x283/0x3f0 net/core/dev.c:8400
+ __bond_release_one.cold+0xcb3/0xd11 drivers/net/bonding/bond_main.c:2055
+ bond_slave_netdev_event drivers/net/bonding/bond_main.c:3166 [inline]
+ bond_netdev_event+0x81c/0x930 drivers/net/bonding/bond_main.c:3277
+ notifier_call_chain+0xc0/0x230 kernel/notifier.c:83
+ call_netdevice_notifiers_info net/core/dev.c:1948 [inline]
+ call_netdevice_notifiers_info+0xb5/0x130 net/core/dev.c:1933
+ call_netdevice_notifiers_extack net/core/dev.c:1960 [inline]
+ call_netdevice_notifiers net/core/dev.c:1974 [inline]
+ rollback_registered_many+0x75c/0xe70 net/core/dev.c:8826
+ unregister_netdevice_many.part.0+0x16/0x1e0 net/core/dev.c:9986
+ unregister_netdevice_many net/core/dev.c:9985 [inline]
+ default_device_exit_batch+0x311/0x3d0 net/core/dev.c:10469
+ ops_exit_list.isra.0+0x103/0x150 net/core/net_namespace.c:189
+ cleanup_net+0x511/0xa50 net/core/net_namespace.c:603
+ process_one_work+0x965/0x16a0 kernel/workqueue.c:2268
+ worker_thread+0x96/0xe20 kernel/workqueue.c:2414
+ kthread+0x388/0x470 kernel/kthread.c:268
+ ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+Modules linked in:
+---[ end trace 91121f28d4d1c866 ]---
+RIP: 0010:macvlan_device_event+0x62c/0x930 drivers/net/macvlan.c:1707
+Code: df 48 89 fa 48 c1 ea 03 80 3c 02 00 0f 85 09 03 00 00 4c 89 e2 48 8b b3 50 03 00 00 48 b8 00 00 00 00 00 fc ff df 48 c1 ea 03 <80> 3c 02 00 0f 85 d2 02 00 00 49 8b 3c 24 41 bc 02 80 00 00 e8 5b
+RSP: 0018:ffffc90002407410 EFLAGS: 00010246
+RAX: dffffc0000000000 RBX: ffff88808e450000 RCX: ffffffff84b25ca5
+RDX: 0000000000000000 RSI: ffff88809eefbb90 RDI: ffff88808e450350
+RBP: 1ffff92000480e88 R08: ffff88804a7a8000 R09: fffffbfff14b0471
+R10: ffffffff8a582387 R11: fffffbfff14b0470 R12: 0000000000000000
+R13: ffff88804adfc808 R14: ffff88804adfc808 R15: ffff88804adfc000
+FS:  0000000000000000(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f7c22392008 CR3: 00000000936d3000 CR4: 00000000001426f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
