@@ -5,51 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A639C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:15:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82810C2BB85
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:15:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 676E0206B9
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:15:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 531D5206B9
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:15:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587046540;
-	bh=f2nfdowtFUPRJVr50sgXvSeHbCKeNi0Vh/piumCywyY=;
+	s=default; t=1587046545;
+	bh=OGZkcncoHPVJmL7cRIy9th8i3wkYCksTTNGUQW77P4g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0K3Ml3ombVTf/nZWmcbrLy0xpRRhQEwq2qdEamwHY8ENY9l+mDfD+Sb6BW4xMpNsZ
-	 DjTtNUcS69GB8Q0Z7+MkOAeArIt9jIKod8P4L8foWH+UZ3F12s5CZDwN9oKnpQ6auH
-	 qPrWGdlsVEKZ7k6BhM+U9hCvSd2p5vN1mq55JRSU=
+	b=thsnt0jxYO4fFDpiKcQFiWlIR9ytEubBZ0wsprDAil4WgHAgNpabg+mZOdHJ0bqOq
+	 q+En8woG4C5EF6aklBtpXf0zViqMHvnZ3Pi0aeX9VLznc1pzNLnS7X+cpxzqazHBR9
+	 bDPUYxdGJJC8uA7fxj8+IZVju2gPFBEdRNxnwKSM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393284AbgDPOPh (ORCPT
+        id S2393329AbgDPOPo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:15:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37564 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 10:15:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37812 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392375AbgDPNvc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:51:32 -0400
+        id S2392420AbgDPNvk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:51:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CB84C20786;
-        Thu, 16 Apr 2020 13:51:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4D20020786;
+        Thu, 16 Apr 2020 13:51:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587045092;
-        bh=f2nfdowtFUPRJVr50sgXvSeHbCKeNi0Vh/piumCywyY=;
+        s=default; t=1587045099;
+        bh=OGZkcncoHPVJmL7cRIy9th8i3wkYCksTTNGUQW77P4g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OGwtjSEYV6tGYb6rKYuPLrXgN1VSeEOt76BdesqIJLoXbszJAoaI2t7XebChCE/Rm
-         dxpoxrUWimQtK24sW0VIR+6uw3/uE6tcGJedTEqIVrxL9FSBRYnJTrUp8TBo//40kR
-         L7bCPYU7+elEL9TZadVTIvw+bLbSOcBrsC5LsBM0=
+        b=s+wHn/SJ2rwgaZYmW9mpjkobMx3vD/Ev4MsXfme2osRx3wwCXp8FMGC3LM2DYeADz
+         C1AI71nvnYLU0td1ymT8qo9NSbhBA6wHO/eZ9h8hM8SbyPVkRJzRbzrDIAzsq1/gBQ
+         hfWQyy5L5PupqJ9yTLx91kPRY+Sk7qmgO5fAhO7w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sean Paul <sean@poorly.run>,
-        Wayne Lin <Wayne.Lin@amd.com>,
-        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
-        <ville.syrjala@linux.intel.com>, Lyude Paul <lyude@redhat.com>,
+        stable@vger.kernel.org, Christophe Leroy <christophe.leroy@c-s.fr>,
+        Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 227/232] drm/dp_mst: Fix clearing payload state on topology disable
-Date:   Thu, 16 Apr 2020 15:25:21 +0200
-Message-Id: <20200416131343.911710209@linuxfoundation.org>
+Subject: [PATCH 5.4 230/232] powerpc/kasan: Fix kasan_remap_early_shadow_ro()
+Date:   Thu, 16 Apr 2020 15:25:24 +0200
+Message-Id: <20200416131344.321623895@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131316.640996080@linuxfoundation.org>
 References: <20200416131316.640996080@linuxfoundation.org>
@@ -62,89 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lyude Paul <lyude@redhat.com>
+From: Christophe Leroy <christophe.leroy@c-s.fr>
 
-[ Upstream commit 8732fe46b20c951493bfc4dba0ad08efdf41de81 ]
+[ Upstream commit af92bad615be75c6c0d1b1c5b48178360250a187 ]
 
-The issues caused by:
+At the moment kasan_remap_early_shadow_ro() does nothing, because
+k_end is 0 and k_cur < 0 is always true.
 
-commit 64e62bdf04ab ("drm/dp_mst: Remove VCPI while disabling topology
-mgr")
+Change the test to k_cur != k_end, as done in
+kasan_init_shadow_page_tables()
 
-Prompted me to take a closer look at how we clear the payload state in
-general when disabling the topology, and it turns out there's actually
-two subtle issues here.
-
-The first is that we're not grabbing &mgr.payload_lock when clearing the
-payloads in drm_dp_mst_topology_mgr_set_mst(). Seeing as the canonical
-lock order is &mgr.payload_lock -> &mgr.lock (because we always want
-&mgr.lock to be the inner-most lock so topology validation always
-works), this makes perfect sense. It also means that -technically- there
-could be racing between someone calling
-drm_dp_mst_topology_mgr_set_mst() to disable the topology, along with a
-modeset occurring that's modifying the payload state at the same time.
-
-The second is the more obvious issue that Wayne Lin discovered, that
-we're not clearing proposed_payloads when disabling the topology.
-
-I actually can't see any obvious places where the racing caused by the
-first issue would break something, and it could be that some of our
-higher-level locks already prevent this by happenstance, but better safe
-then sorry. So, let's make it so that drm_dp_mst_topology_mgr_set_mst()
-first grabs &mgr.payload_lock followed by &mgr.lock so that we never
-race when modifying the payload state. Then, we also clear
-proposed_payloads to fix the original issue of enabling a new topology
-with a dirty payload state. This doesn't clear any of the drm_dp_vcpi
-structures, but those are getting destroyed along with the ports anyway.
-
-Changes since v1:
-* Use sizeof(mgr->payloads[0])/sizeof(mgr->proposed_vcpis[0]) instead -
-  vsyrjala
-
-Cc: Sean Paul <sean@poorly.run>
-Cc: Wayne Lin <Wayne.Lin@amd.com>
-Cc: Ville Syrjälä <ville.syrjala@linux.intel.com>
-Cc: stable@vger.kernel.org # v4.4+
-Signed-off-by: Lyude Paul <lyude@redhat.com>
-Reviewed-by: Ville Syrjälä <ville.syrjala@linux.intel.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200122194321.14953-1-lyude@redhat.com
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Fixes: cbd18991e24f ("powerpc/mm: Fix an Oops in kasan_mmu_init()")
+Cc: stable@vger.kernel.org
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/4e7b56865e01569058914c991143f5961b5d4719.1583507333.git.christophe.leroy@c-s.fr
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/drm_dp_mst_topology.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ arch/powerpc/mm/kasan/kasan_init_32.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/drm_dp_mst_topology.c b/drivers/gpu/drm/drm_dp_mst_topology.c
-index a48a4c21b1b38..4b7aaad074233 100644
---- a/drivers/gpu/drm/drm_dp_mst_topology.c
-+++ b/drivers/gpu/drm/drm_dp_mst_topology.c
-@@ -2696,6 +2696,7 @@ int drm_dp_mst_topology_mgr_set_mst(struct drm_dp_mst_topology_mgr *mgr, bool ms
- 	int ret = 0;
- 	struct drm_dp_mst_branch *mstb = NULL;
+diff --git a/arch/powerpc/mm/kasan/kasan_init_32.c b/arch/powerpc/mm/kasan/kasan_init_32.c
+index 0e6ed4413eeac..1cfe57b51d7e3 100644
+--- a/arch/powerpc/mm/kasan/kasan_init_32.c
++++ b/arch/powerpc/mm/kasan/kasan_init_32.c
+@@ -117,7 +117,7 @@ static void __init kasan_remap_early_shadow_ro(void)
  
-+	mutex_lock(&mgr->payload_lock);
- 	mutex_lock(&mgr->lock);
- 	if (mst_state == mgr->mst_state)
- 		goto out_unlock;
-@@ -2754,7 +2755,10 @@ int drm_dp_mst_topology_mgr_set_mst(struct drm_dp_mst_topology_mgr *mgr, bool ms
- 		/* this can fail if the device is gone */
- 		drm_dp_dpcd_writeb(mgr->aux, DP_MSTM_CTRL, 0);
- 		ret = 0;
--		memset(mgr->payloads, 0, mgr->max_payloads * sizeof(struct drm_dp_payload));
-+		memset(mgr->payloads, 0,
-+		       mgr->max_payloads * sizeof(mgr->payloads[0]));
-+		memset(mgr->proposed_vcpis, 0,
-+		       mgr->max_payloads * sizeof(mgr->proposed_vcpis[0]));
- 		mgr->payload_mask = 0;
- 		set_bit(0, &mgr->payload_mask);
- 		mgr->vcpi_mask = 0;
-@@ -2762,6 +2766,7 @@ int drm_dp_mst_topology_mgr_set_mst(struct drm_dp_mst_topology_mgr *mgr, bool ms
+ 	kasan_populate_pte(kasan_early_shadow_pte, prot);
  
- out_unlock:
- 	mutex_unlock(&mgr->lock);
-+	mutex_unlock(&mgr->payload_lock);
- 	if (mstb)
- 		drm_dp_mst_topology_put_mstb(mstb);
- 	return ret;
+-	for (k_cur = k_start & PAGE_MASK; k_cur < k_end; k_cur += PAGE_SIZE) {
++	for (k_cur = k_start & PAGE_MASK; k_cur != k_end; k_cur += PAGE_SIZE) {
+ 		pmd_t *pmd = pmd_offset(pud_offset(pgd_offset_k(k_cur), k_cur), k_cur);
+ 		pte_t *ptep = pte_offset_kernel(pmd, k_cur);
+ 
 -- 
 2.20.1
 
