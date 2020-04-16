@@ -4,70 +4,70 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9444FC352BE
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 12:20:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E809DC2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 12:21:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7180B206B9
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 12:20:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B42C7206B9
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 12:21:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="ufQGGuWC"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="iSDX8K26"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2635418AbgDPMUp (ORCPT
+        id S2635444AbgDPMVH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 08:20:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45126 "EHLO
+        Thu, 16 Apr 2020 08:21:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45122 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2635284AbgDPMTb (ORCPT
+        by vger.kernel.org with ESMTP id S2635267AbgDPMTa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 08:19:31 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 490A5C03C1AB
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 05:19:26 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id g12so4610454wmh.3
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 05:19:26 -0700 (PDT)
+        Thu, 16 Apr 2020 08:19:30 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DBF2FC03C1A9
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 05:19:24 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id j2so4541487wrs.9
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 05:19:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=/+yRgmnGZVSZp6x2Og5KbLuzZTmkQMHFsn5IdENH0xo=;
-        b=ufQGGuWCPkMB7/EFw9Wt+LrJiz/21r7eAG+tmcYVR9eMCg8P0OCZnVVQZuEq9UBLz2
-         0ZTu66nzJfys5AaRDj0eaUpi0eheZIqByN/0xHHXRlAs6H75HBHlWPnv8oyyxFd6QPqC
-         jV9FAOycTx9/aPd6C1Li8IzL3ZdzdbTtOTBBB8j7iRQsCJdTV8ujXAE+LF0W0l0GO3V2
-         GEAVbsfwXMg9vuwPbYiVDzhTQ9N1fnpycEsYDXa0aNmD6J+/dIQPRFl4jnTY5+BFnUvF
-         jiapo7LovpME1UBMMlYyfBTE2pbjFLNp2OD4xOH9+tLAg/jkdj6sYopRsLINPX8KvLUe
-         vrEg==
+        bh=0T4e6l7kAQsVdQHzlm77vFvHvaFQgmwy8jkFziwVGh0=;
+        b=iSDX8K26E7ByX5n7jBb7SEQgbmFQ/rWCgYWIwy1u6PV2HYQMZHXhqS2DBcqGL2EgEX
+         f68bOeuzwlGZXqtaz40/jD/ruWzHJQ5jn/OhtR8XyeBTUoJ+rlmi3SBogNze1AoKYAKo
+         XOIy7ZYX3Nj6pb/Ysn08GAkJfwlC4S4FqtJrlMqqy0YU+sKz29Of0FOdtpomcuOejN0c
+         Sbdl2xxMrd25Xas62pdK2aD3ftjI1349+Iys85CG8ot2DtcNdevKHc5vVwqNz7lZmIyo
+         lYGXV2C1qR4U6Jpz0JuM2TWOR55TRyA1rTZyaPjBPyhxAx8Kjzkg8/WPHDvl60CXIB8k
+         3xkw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=/+yRgmnGZVSZp6x2Og5KbLuzZTmkQMHFsn5IdENH0xo=;
-        b=PU51nWJoqU2/T3AKN0GXlKldFTAj+omnn5qGd4Qr+bDBd4EbJT05TRgAloLs5a1cqx
-         yJffRQxD7/vgtIAGeJ9/yJtHftM79g8z8jDCy34mBBUUnfOZNPUICpYxoc/OoMia2CQ6
-         CWKS3wjf3h/6rQ9YTQQvcJ7dIcQfsY6BPkBv1IghPOkbDYOEqX+3EhZDuw8G3/leBmCL
-         LGeeiNi9TGqVYe7OGxOurBNqxeICpHvbXY7bf8jClkF84i3KkKRdJQuRDfVzfaEDI55C
-         JtuTCkogRshai8haSzoVqscrxpAI40o6IbUk4S/edFibDC0enH1ojw3RgcsY6bTiPEuf
-         eGjw==
-X-Gm-Message-State: AGi0PuYgrhyB/9tKQ+Gfq5JQ4GCvLtp/YSNScy/O0f1IvC7vaQex+5XZ
-        nVfCzuUCIBqvYl9W/e0GPvsrKw==
-X-Google-Smtp-Source: APiQypLhp1htfgHbb4+jVnEHHKkg4OXjNr7cHMLrpiuzz2MMYDxeajyVqpWhGLcg4U9FTsR0JQbIFw==
-X-Received: by 2002:a7b:cc88:: with SMTP id p8mr4471285wma.108.1587039564912;
-        Thu, 16 Apr 2020 05:19:24 -0700 (PDT)
+        bh=0T4e6l7kAQsVdQHzlm77vFvHvaFQgmwy8jkFziwVGh0=;
+        b=YWZkPPDB94DRQoOjdrEawfGc6RDJodcSdA3AqpmyXqmEfrOFEpybZ8OyYURnQQra+A
+         q2xXGIk7Q5CwtcXwqflsQERupSKBo4UH3KzqVnJ/Y/+iQQwQTXiQuqGDvmtWiQhYzhGo
+         Bo/G3+dZnskv9UECW6nBVSwxRBPmHOF2VO74tijILhIMCH9QHeWqymavXpnb21bm1NJD
+         CNkL51yWpEDUMy4Jg/RsDdXwWazcVqKnNbkAXXatEJp5LThEqyAmcVlakLHDQujJJIhr
+         Q/dHxsi9wRwXbpXbrnjl37ywRN5XzCTYXKZKwGEjO2agubSRtYhf1GEXnOo7PPrxHeLc
+         V0gw==
+X-Gm-Message-State: AGi0Pua48LYgrN7M3uy/H2qUQgMRlWdfrNyEk8M3/adkw4BG6eNUjeew
+        o2kMV5bbUOUuaumA/j1HIgvilg==
+X-Google-Smtp-Source: APiQypIxPszfM6LqUKKuk7WUz9VTRpnLJ2urTQ9lH+jnodE6Gvp11VklQbGhVOfB6l5l9/lkK8KDpA==
+X-Received: by 2002:adf:a18c:: with SMTP id u12mr30518457wru.325.1587039563385;
+        Thu, 16 Apr 2020 05:19:23 -0700 (PDT)
 Received: from localhost.localdomain ([2a01:e35:2ec0:82b0:39cc:a07:8b48:cc56])
-        by smtp.gmail.com with ESMTPSA id i13sm22035602wro.50.2020.04.16.05.19.23
+        by smtp.gmail.com with ESMTPSA id i13sm22035602wro.50.2020.04.16.05.19.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Apr 2020 05:19:24 -0700 (PDT)
+        Thu, 16 Apr 2020 05:19:22 -0700 (PDT)
 From:   Neil Armstrong <narmstrong@baylibre.com>
 To:     kishon@ti.com, balbi@kernel.org, khilman@baylibre.com,
         martin.blumenstingl@googlemail.com
 Cc:     linux-amlogic@lists.infradead.org, linux-usb@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH v3 6/8] usb: dwc3: of-simple: remove Amlogic GXL and AXG compatibles
-Date:   Thu, 16 Apr 2020 14:19:08 +0200
-Message-Id: <20200416121910.12723-7-narmstrong@baylibre.com>
+Subject: [PATCH v3 5/8] phy: amlogic: meson-gxl-usb3: remove code for non-existing PHY
+Date:   Thu, 16 Apr 2020 14:19:07 +0200
+Message-Id: <20200416121910.12723-6-narmstrong@baylibre.com>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20200416121910.12723-1-narmstrong@baylibre.com>
 References: <20200416121910.12723-1-narmstrong@baylibre.com>
@@ -80,98 +80,387 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 
-There is now a dedicated driver for these SoCs making the old compatible
-obsolete.
+The registers which are managed by the meson-gxl-usb3 PHY driver are
+actually "USB control" registers (which are "glue" registers which
+manage OTG detection and routing of the OTG capable port between the
+DWC2 peripheral-only controller and the DWC3 host-only controller).
+
+Drop the meson-gxl-usb3 PHY driver now that the dwc3-meson-g12a-usb
+driver supports the USB control registers on GXL and GXM SoCs (these
+were previously managed by the meson-gxl-usb3 PHY driver).
 
 Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
- drivers/usb/dwc3/dwc3-of-simple.c | 30 ++++++------------------------
- 1 file changed, 6 insertions(+), 24 deletions(-)
+ .../bindings/phy/meson-gxl-usb3-phy.txt       |  31 --
+ drivers/phy/amlogic/Kconfig                   |  12 -
+ drivers/phy/amlogic/Makefile                  |   1 -
+ drivers/phy/amlogic/phy-meson-gxl-usb3.c      | 283 ------------------
+ 4 files changed, 327 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/phy/meson-gxl-usb3-phy.txt
+ delete mode 100644 drivers/phy/amlogic/phy-meson-gxl-usb3.c
 
-diff --git a/drivers/usb/dwc3/dwc3-of-simple.c b/drivers/usb/dwc3/dwc3-of-simple.c
-index e64754be47b4..8852fbfdead4 100644
---- a/drivers/usb/dwc3/dwc3-of-simple.c
-+++ b/drivers/usb/dwc3/dwc3-of-simple.c
-@@ -27,7 +27,6 @@ struct dwc3_of_simple {
- 	struct clk_bulk_data	*clks;
- 	int			num_clocks;
- 	struct reset_control	*resets;
--	bool			pulse_resets;
- 	bool			need_reset;
- };
+diff --git a/Documentation/devicetree/bindings/phy/meson-gxl-usb3-phy.txt b/Documentation/devicetree/bindings/phy/meson-gxl-usb3-phy.txt
+deleted file mode 100644
+index 114947e1de3d..000000000000
+--- a/Documentation/devicetree/bindings/phy/meson-gxl-usb3-phy.txt
++++ /dev/null
+@@ -1,31 +0,0 @@
+-* Amlogic Meson GXL and GXM USB3 PHY and OTG detection binding
+-
+-Required properties:
+-- compatible:	Should be "amlogic,meson-gxl-usb3-phy"
+-- #phys-cells:	must be 0 (see phy-bindings.txt in this directory)
+-- reg:		The base address and length of the registers
+-- interrupts:	the interrupt specifier for the OTG detection
+-- clocks:	phandles to the clocks for
+-		- the USB3 PHY
+-		- and peripheral mode/OTG detection
+-- clock-names:	must contain "phy" and "peripheral"
+-- resets:	phandle to the reset lines for:
+-		- the USB3 PHY and
+-		- peripheral mode/OTG detection
+-- reset-names:	must contain "phy" and "peripheral"
+-
+-Optional properties:
+-- phy-supply:	see phy-bindings.txt in this directory
+-
+-
+-Example:
+-	usb3_phy0: phy@78080 {
+-		compatible = "amlogic,meson-gxl-usb3-phy";
+-		#phy-cells = <0>;
+-		reg = <0x0 0x78080 0x0 0x20>;
+-		interrupts = <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>;
+-		clocks = <&clkc CLKID_USB_OTG>, <&clkc_AO CLKID_AO_CEC_32K>;
+-		clock-names = "phy", "peripheral";
+-		resets = <&reset RESET_USB_OTG>, <&reset RESET_USB_OTG>;
+-		reset-names = "phy", "peripheral";
+-	};
+diff --git a/drivers/phy/amlogic/Kconfig b/drivers/phy/amlogic/Kconfig
+index 71801e30d601..df214ef008dc 100644
+--- a/drivers/phy/amlogic/Kconfig
++++ b/drivers/phy/amlogic/Kconfig
+@@ -26,18 +26,6 @@ config PHY_MESON_GXL_USB2
+ 	  GXL and GXM SoCs.
+ 	  If unsure, say N.
  
-@@ -38,7 +37,6 @@ static int dwc3_of_simple_probe(struct platform_device *pdev)
- 	struct device_node	*np = dev->of_node;
- 
- 	int			ret;
--	bool			shared_resets = false;
- 
- 	simple = devm_kzalloc(dev, sizeof(*simple), GFP_KERNEL);
- 	if (!simple)
-@@ -54,13 +52,7 @@ static int dwc3_of_simple_probe(struct platform_device *pdev)
- 	if (of_device_is_compatible(np, "rockchip,rk3399-dwc3"))
- 		simple->need_reset = true;
- 
--	if (of_device_is_compatible(np, "amlogic,meson-axg-dwc3") ||
--	    of_device_is_compatible(np, "amlogic,meson-gxl-dwc3")) {
--		shared_resets = true;
--		simple->pulse_resets = true;
+-config PHY_MESON_GXL_USB3
+-	tristate "Meson GXL and GXM USB3 PHY drivers"
+-	default ARCH_MESON
+-	depends on OF && (ARCH_MESON || COMPILE_TEST)
+-	depends on USB_SUPPORT
+-	select GENERIC_PHY
+-	select REGMAP_MMIO
+-	help
+-	  Enable this to support the Meson USB3 PHY and OTG detection
+-	  IP block found in Meson GXL and GXM SoCs.
+-	  If unsure, say N.
+-
+ config PHY_MESON_G12A_USB2
+ 	tristate "Meson G12A USB2 PHY driver"
+ 	default ARCH_MESON
+diff --git a/drivers/phy/amlogic/Makefile b/drivers/phy/amlogic/Makefile
+index e2baa133f7af..99702a45e9be 100644
+--- a/drivers/phy/amlogic/Makefile
++++ b/drivers/phy/amlogic/Makefile
+@@ -2,7 +2,6 @@
+ obj-$(CONFIG_PHY_MESON8B_USB2)			+= phy-meson8b-usb2.o
+ obj-$(CONFIG_PHY_MESON_GXL_USB2)		+= phy-meson-gxl-usb2.o
+ obj-$(CONFIG_PHY_MESON_G12A_USB2)		+= phy-meson-g12a-usb2.o
+-obj-$(CONFIG_PHY_MESON_GXL_USB3)		+= phy-meson-gxl-usb3.o
+ obj-$(CONFIG_PHY_MESON_G12A_USB3_PCIE)		+= phy-meson-g12a-usb3-pcie.o
+ obj-$(CONFIG_PHY_MESON_AXG_PCIE)		+= phy-meson-axg-pcie.o
+ obj-$(CONFIG_PHY_MESON_AXG_MIPI_PCIE_ANALOG)	+= phy-meson-axg-mipi-pcie-analog.o
+diff --git a/drivers/phy/amlogic/phy-meson-gxl-usb3.c b/drivers/phy/amlogic/phy-meson-gxl-usb3.c
+deleted file mode 100644
+index c0e9e4c16149..000000000000
+--- a/drivers/phy/amlogic/phy-meson-gxl-usb3.c
++++ /dev/null
+@@ -1,283 +0,0 @@
+-// SPDX-License-Identifier: GPL-2.0
+-/*
+- * Meson GXL USB3 PHY and OTG mode detection driver
+- *
+- * Copyright (C) 2018 Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+- */
+-
+-#include <linux/bitfield.h>
+-#include <linux/bitops.h>
+-#include <linux/clk.h>
+-#include <linux/module.h>
+-#include <linux/of_device.h>
+-#include <linux/phy/phy.h>
+-#include <linux/regmap.h>
+-#include <linux/reset.h>
+-#include <linux/platform_device.h>
+-
+-#define USB_R0							0x00
+-	#define USB_R0_P30_FSEL_MASK				GENMASK(5, 0)
+-	#define USB_R0_P30_PHY_RESET				BIT(6)
+-	#define USB_R0_P30_TEST_POWERDOWN_HSP			BIT(7)
+-	#define USB_R0_P30_TEST_POWERDOWN_SSP			BIT(8)
+-	#define USB_R0_P30_ACJT_LEVEL_MASK			GENMASK(13, 9)
+-	#define USB_R0_P30_TX_BOOST_LEVEL_MASK			GENMASK(16, 14)
+-	#define USB_R0_P30_LANE0_TX2RX_LOOPBACK			BIT(17)
+-	#define USB_R0_P30_LANE0_EXT_PCLK_REQ			BIT(18)
+-	#define USB_R0_P30_PCS_RX_LOS_MASK_VAL_MASK		GENMASK(28, 19)
+-	#define USB_R0_U2D_SS_SCALEDOWN_MODE_MASK		GENMASK(30, 29)
+-	#define USB_R0_U2D_ACT					BIT(31)
+-
+-#define USB_R1							0x04
+-	#define USB_R1_U3H_BIGENDIAN_GS				BIT(0)
+-	#define USB_R1_U3H_PME_ENABLE				BIT(1)
+-	#define USB_R1_U3H_HUB_PORT_OVERCURRENT_MASK		GENMASK(6, 2)
+-	#define USB_R1_U3H_HUB_PORT_PERM_ATTACH_MASK		GENMASK(11, 7)
+-	#define USB_R1_U3H_HOST_U2_PORT_DISABLE_MASK		GENMASK(15, 12)
+-	#define USB_R1_U3H_HOST_U3_PORT_DISABLE			BIT(16)
+-	#define USB_R1_U3H_HOST_PORT_POWER_CONTROL_PRESENT	BIT(17)
+-	#define USB_R1_U3H_HOST_MSI_ENABLE			BIT(18)
+-	#define USB_R1_U3H_FLADJ_30MHZ_REG_MASK			GENMASK(24, 19)
+-	#define USB_R1_P30_PCS_TX_SWING_FULL_MASK		GENMASK(31, 25)
+-
+-#define USB_R2							0x08
+-	#define USB_R2_P30_CR_DATA_IN_MASK			GENMASK(15, 0)
+-	#define USB_R2_P30_CR_READ				BIT(16)
+-	#define USB_R2_P30_CR_WRITE				BIT(17)
+-	#define USB_R2_P30_CR_CAP_ADDR				BIT(18)
+-	#define USB_R2_P30_CR_CAP_DATA				BIT(19)
+-	#define USB_R2_P30_PCS_TX_DEEMPH_3P5DB_MASK		GENMASK(25, 20)
+-	#define USB_R2_P30_PCS_TX_DEEMPH_6DB_MASK		GENMASK(31, 26)
+-
+-#define USB_R3							0x0c
+-	#define USB_R3_P30_SSC_ENABLE				BIT(0)
+-	#define USB_R3_P30_SSC_RANGE_MASK			GENMASK(3, 1)
+-	#define USB_R3_P30_SSC_REF_CLK_SEL_MASK			GENMASK(12, 4)
+-	#define USB_R3_P30_REF_SSP_EN				BIT(13)
+-	#define USB_R3_P30_LOS_BIAS_MASK			GENMASK(18, 16)
+-	#define USB_R3_P30_LOS_LEVEL_MASK			GENMASK(23, 19)
+-	#define USB_R3_P30_MPLL_MULTIPLIER_MASK			GENMASK(30, 24)
+-
+-#define USB_R4							0x10
+-	#define USB_R4_P21_PORT_RESET_0				BIT(0)
+-	#define USB_R4_P21_SLEEP_M0				BIT(1)
+-	#define USB_R4_MEM_PD_MASK				GENMASK(3, 2)
+-	#define USB_R4_P21_ONLY					BIT(4)
+-
+-#define USB_R5							0x14
+-	#define USB_R5_ID_DIG_SYNC				BIT(0)
+-	#define USB_R5_ID_DIG_REG				BIT(1)
+-	#define USB_R5_ID_DIG_CFG_MASK				GENMASK(3, 2)
+-	#define USB_R5_ID_DIG_EN_0				BIT(4)
+-	#define USB_R5_ID_DIG_EN_1				BIT(5)
+-	#define USB_R5_ID_DIG_CURR				BIT(6)
+-	#define USB_R5_ID_DIG_IRQ				BIT(7)
+-	#define USB_R5_ID_DIG_TH_MASK				GENMASK(15, 8)
+-	#define USB_R5_ID_DIG_CNT_MASK				GENMASK(23, 16)
+-
+-/* read-only register */
+-#define USB_R6							0x18
+-	#define USB_R6_P30_CR_DATA_OUT_MASK			GENMASK(15, 0)
+-	#define USB_R6_P30_CR_ACK				BIT(16)
+-
+-struct phy_meson_gxl_usb3_priv {
+-	struct regmap		*regmap;
+-	enum phy_mode		mode;
+-	struct clk		*clk_phy;
+-	struct clk		*clk_peripheral;
+-	struct reset_control	*reset;
+-};
+-
+-static const struct regmap_config phy_meson_gxl_usb3_regmap_conf = {
+-	.reg_bits = 8,
+-	.val_bits = 32,
+-	.reg_stride = 4,
+-	.max_register = USB_R6,
+-};
+-
+-static int phy_meson_gxl_usb3_power_on(struct phy *phy)
+-{
+-	struct phy_meson_gxl_usb3_priv *priv = phy_get_drvdata(phy);
+-
+-	regmap_update_bits(priv->regmap, USB_R5, USB_R5_ID_DIG_EN_0,
+-			   USB_R5_ID_DIG_EN_0);
+-	regmap_update_bits(priv->regmap, USB_R5, USB_R5_ID_DIG_EN_1,
+-			   USB_R5_ID_DIG_EN_1);
+-	regmap_update_bits(priv->regmap, USB_R5, USB_R5_ID_DIG_TH_MASK,
+-			   FIELD_PREP(USB_R5_ID_DIG_TH_MASK, 0xff));
+-
+-	return 0;
+-}
+-
+-static int phy_meson_gxl_usb3_power_off(struct phy *phy)
+-{
+-	struct phy_meson_gxl_usb3_priv *priv = phy_get_drvdata(phy);
+-
+-	regmap_update_bits(priv->regmap, USB_R5, USB_R5_ID_DIG_EN_0, 0);
+-	regmap_update_bits(priv->regmap, USB_R5, USB_R5_ID_DIG_EN_1, 0);
+-
+-	return 0;
+-}
+-
+-static int phy_meson_gxl_usb3_set_mode(struct phy *phy,
+-				       enum phy_mode mode, int submode)
+-{
+-	struct phy_meson_gxl_usb3_priv *priv = phy_get_drvdata(phy);
+-
+-	switch (mode) {
+-	case PHY_MODE_USB_HOST:
+-		regmap_update_bits(priv->regmap, USB_R0, USB_R0_U2D_ACT, 0);
+-		regmap_update_bits(priv->regmap, USB_R4, USB_R4_P21_SLEEP_M0,
+-				   0);
+-		break;
+-
+-	case PHY_MODE_USB_DEVICE:
+-		regmap_update_bits(priv->regmap, USB_R0, USB_R0_U2D_ACT,
+-				   USB_R0_U2D_ACT);
+-		regmap_update_bits(priv->regmap, USB_R4, USB_R4_P21_SLEEP_M0,
+-				   USB_R4_P21_SLEEP_M0);
+-		break;
+-
+-	default:
+-		dev_err(&phy->dev, "unsupported PHY mode %d\n", mode);
+-		return -EINVAL;
 -	}
 -
--	simple->resets = of_reset_control_array_get(np, shared_resets, true,
-+	simple->resets = of_reset_control_array_get(np, false, true,
- 						    true);
- 	if (IS_ERR(simple->resets)) {
- 		ret = PTR_ERR(simple->resets);
-@@ -68,15 +60,9 @@ static int dwc3_of_simple_probe(struct platform_device *pdev)
- 		return ret;
- 	}
- 
--	if (simple->pulse_resets) {
--		ret = reset_control_reset(simple->resets);
--		if (ret)
--			goto err_resetc_put;
--	} else {
--		ret = reset_control_deassert(simple->resets);
--		if (ret)
--			goto err_resetc_put;
+-	priv->mode = mode;
+-
+-	return 0;
+-}
+-
+-static int phy_meson_gxl_usb3_init(struct phy *phy)
+-{
+-	struct phy_meson_gxl_usb3_priv *priv = phy_get_drvdata(phy);
+-	int ret;
+-
+-	ret = reset_control_reset(priv->reset);
+-	if (ret)
+-		goto err;
+-
+-	ret = clk_prepare_enable(priv->clk_phy);
+-	if (ret)
+-		goto err;
+-
+-	ret = clk_prepare_enable(priv->clk_peripheral);
+-	if (ret)
+-		goto err_disable_clk_phy;
+-
+-	ret = phy_meson_gxl_usb3_set_mode(phy, priv->mode, 0);
+-	if (ret)
+-		goto err_disable_clk_peripheral;
+-
+-	regmap_update_bits(priv->regmap, USB_R1,
+-			   USB_R1_U3H_FLADJ_30MHZ_REG_MASK,
+-			   FIELD_PREP(USB_R1_U3H_FLADJ_30MHZ_REG_MASK, 0x20));
+-
+-	return 0;
+-
+-err_disable_clk_peripheral:
+-	clk_disable_unprepare(priv->clk_peripheral);
+-err_disable_clk_phy:
+-	clk_disable_unprepare(priv->clk_phy);
+-err:
+-	return ret;
+-}
+-
+-static int phy_meson_gxl_usb3_exit(struct phy *phy)
+-{
+-	struct phy_meson_gxl_usb3_priv *priv = phy_get_drvdata(phy);
+-
+-	clk_disable_unprepare(priv->clk_peripheral);
+-	clk_disable_unprepare(priv->clk_phy);
+-
+-	return 0;
+-}
+-
+-static const struct phy_ops phy_meson_gxl_usb3_ops = {
+-	.power_on	= phy_meson_gxl_usb3_power_on,
+-	.power_off	= phy_meson_gxl_usb3_power_off,
+-	.set_mode	= phy_meson_gxl_usb3_set_mode,
+-	.init		= phy_meson_gxl_usb3_init,
+-	.exit		= phy_meson_gxl_usb3_exit,
+-	.owner		= THIS_MODULE,
+-};
+-
+-static int phy_meson_gxl_usb3_probe(struct platform_device *pdev)
+-{
+-	struct device *dev = &pdev->dev;
+-	struct device_node *np = dev->of_node;
+-	struct phy_meson_gxl_usb3_priv *priv;
+-	struct resource *res;
+-	struct phy *phy;
+-	struct phy_provider *phy_provider;
+-	void __iomem *base;
+-	int ret;
+-
+-	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+-	if (!priv)
+-		return -ENOMEM;
+-
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	base = devm_ioremap_resource(dev, res);
+-	if (IS_ERR(base))
+-		return PTR_ERR(base);
+-
+-	priv->regmap = devm_regmap_init_mmio(dev, base,
+-					     &phy_meson_gxl_usb3_regmap_conf);
+-	if (IS_ERR(priv->regmap))
+-		return PTR_ERR(priv->regmap);
+-
+-	priv->clk_phy = devm_clk_get(dev, "phy");
+-	if (IS_ERR(priv->clk_phy))
+-		return PTR_ERR(priv->clk_phy);
+-
+-	priv->clk_peripheral = devm_clk_get(dev, "peripheral");
+-	if (IS_ERR(priv->clk_peripheral))
+-		return PTR_ERR(priv->clk_peripheral);
+-
+-	priv->reset = devm_reset_control_array_get_shared(dev);
+-	if (IS_ERR(priv->reset))
+-		return PTR_ERR(priv->reset);
+-
+-	/*
+-	 * default to host mode as hardware defaults and/or boot-loader
+-	 * behavior can result in this PHY starting up in device mode. this
+-	 * default and the initialization in phy_meson_gxl_usb3_init ensure
+-	 * that we reproducibly start in a known mode on all devices.
+-	 */
+-	priv->mode = PHY_MODE_USB_HOST;
+-
+-	phy = devm_phy_create(dev, np, &phy_meson_gxl_usb3_ops);
+-	if (IS_ERR(phy)) {
+-		ret = PTR_ERR(phy);
+-		if (ret != -EPROBE_DEFER)
+-			dev_err(dev, "failed to create PHY\n");
+-
+-		return ret;
 -	}
-+	ret = reset_control_deassert(simple->resets);
-+	if (ret)
-+		goto err_resetc_put;
- 
- 	ret = clk_bulk_get_all(simple->dev, &simple->clks);
- 	if (ret < 0)
-@@ -102,8 +88,7 @@ static int dwc3_of_simple_probe(struct platform_device *pdev)
- 	clk_bulk_put_all(simple->num_clocks, simple->clks);
- 
- err_resetc_assert:
--	if (!simple->pulse_resets)
--		reset_control_assert(simple->resets);
-+	reset_control_assert(simple->resets);
- 
- err_resetc_put:
- 	reset_control_put(simple->resets);
-@@ -118,8 +103,7 @@ static void __dwc3_of_simple_teardown(struct dwc3_of_simple *simple)
- 	clk_bulk_put_all(simple->num_clocks, simple->clks);
- 	simple->num_clocks = 0;
- 
--	if (!simple->pulse_resets)
--		reset_control_assert(simple->resets);
-+	reset_control_assert(simple->resets);
- 
- 	reset_control_put(simple->resets);
- 
-@@ -191,8 +175,6 @@ static const struct of_device_id of_dwc3_simple_match[] = {
- 	{ .compatible = "xlnx,zynqmp-dwc3" },
- 	{ .compatible = "cavium,octeon-7130-usb-uctl" },
- 	{ .compatible = "sprd,sc9860-dwc3" },
--	{ .compatible = "amlogic,meson-axg-dwc3" },
--	{ .compatible = "amlogic,meson-gxl-dwc3" },
- 	{ .compatible = "allwinner,sun50i-h6-dwc3" },
- 	{ /* Sentinel */ }
- };
+-
+-	phy_set_drvdata(phy, priv);
+-
+-	phy_provider = devm_of_phy_provider_register(dev, of_phy_simple_xlate);
+-
+-	return PTR_ERR_OR_ZERO(phy_provider);
+-}
+-
+-static const struct of_device_id phy_meson_gxl_usb3_of_match[] = {
+-	{ .compatible = "amlogic,meson-gxl-usb3-phy", },
+-	{ },
+-};
+-MODULE_DEVICE_TABLE(of, phy_meson_gxl_usb3_of_match);
+-
+-static struct platform_driver phy_meson_gxl_usb3_driver = {
+-	.probe	= phy_meson_gxl_usb3_probe,
+-	.driver	= {
+-		.name		= "phy-meson-gxl-usb3",
+-		.of_match_table	= phy_meson_gxl_usb3_of_match,
+-	},
+-};
+-module_platform_driver(phy_meson_gxl_usb3_driver);
+-
+-MODULE_AUTHOR("Martin Blumenstingl <martin.blumenstingl@googlemail.com>");
+-MODULE_DESCRIPTION("Meson GXL USB3 PHY and OTG detection driver");
+-MODULE_LICENSE("GPL v2");
 -- 
 2.22.0
 
