@@ -2,159 +2,95 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EDFFC2D0EF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 17:17:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32F6CC352BE
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 17:22:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 17E7B2076D
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 17:17:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 073D921924
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 17:22:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rvoatJrJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731987AbgDPRRk (ORCPT
+        id S1732562AbgDPRWD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 13:17:40 -0400
-Received: from foss.arm.com ([217.140.110.172]:38344 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728863AbgDPRRi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 13:17:38 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7287730E;
-        Thu, 16 Apr 2020 10:17:37 -0700 (PDT)
-Received: from [10.57.59.184] (unknown [10.57.59.184])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5CBA23F73D;
-        Thu, 16 Apr 2020 10:17:35 -0700 (PDT)
-Subject: Re: [PATCH 2/2] iommu/arm-smmu: Allow client devices to select direct
- mapping
-To:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Cc:     Will Deacon <will@kernel.org>, Joerg Roedel <joro@8bytes.org>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        Rob Clark <robdclark@gmail.com>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Stephen Boyd <swboyd@chromium.org>,
-        iommu@lists.linux-foundation.org,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        linux-arm-kernel@lists.infradead.org
-References: <cover.1579692800.git.saiprakash.ranjan@codeaurora.org>
- <813cc5b2da10c27db982254b274bf26008a9e6da.1579692800.git.saiprakash.ranjan@codeaurora.org>
- <3f12cefb-3887-859c-ddf5-c7a0fc755152@arm.com>
- <540fc55811d0a60a929ff1f694d6d271@codeaurora.org>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <fdc265e4-5a96-2def-df13-376249e16b49@arm.com>
-Date:   Thu, 16 Apr 2020 18:17:33 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Thu, 16 Apr 2020 13:22:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35990 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728101AbgDPRWA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 13:22:00 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16BA8C061A0C;
+        Thu, 16 Apr 2020 10:21:59 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id t14so5740735wrw.12;
+        Thu, 16 Apr 2020 10:21:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=6uF4y26rP9r8HAlp2szHdM9nzyjy6h8lehRa7ZcQjQo=;
+        b=rvoatJrJ7cVxIifL+iba64dkSdEHsH4D/LOIdjeOdY5bZVbkBklcxyfjsmFILpvQU/
+         RU4LgeSEmep+bMDElq3h8kLhrSmonGDkzj3RvudxVrCXoNFu+Lp9nAXUc/3hrEmh42w9
+         3L11cxWPRtvqPCYWbsNgg46edKR+dGDmOc2zQ3CTahPgWLjnawpZHYPEWPP7Isut89gY
+         n9huxIOVXIpRJ5YaxvjsR5NIc+wxhWjSPgs4ndB5PjgPfqjIjODqij0gRLZdyYSsUuTZ
+         d/Jd0+CfKxOitlN6TJorLDgsZHJQCHlH92qRKrDeLYZi9SiQg5QzCubY1uXy0IBzPAT5
+         UGow==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=6uF4y26rP9r8HAlp2szHdM9nzyjy6h8lehRa7ZcQjQo=;
+        b=iL2H+66of3dHUnN/zTtfd6RL4UDq2mR6dtLgZOFABR6PgLgi0YsHr7xwzKy8O33F7O
+         gpJQIMzzwtKxDxWVQVAR974H4FYzhotlkKBt8j2zyH20GYqHDsLp8ZcxAzzUtT5o1XU1
+         62nX26IYHjTa4isZUyj9MnP2nPFZK/LbMbeyw+bNtSF72Pnd75h55RQKTS8LxiXW4Sw7
+         IlTC2/VBbZncIdZexhixGSNMOHSpR5Tp5msXliV6rwGmJ1Nfg7u7jyJR4h4ESR9H4wZd
+         Fjefjdpd+FV2hBEYEM20MBijxGr1uH7HRo4+SAaYk0hgqlmHkgQHYxZrzZE7hzWw6sxY
+         h51Q==
+X-Gm-Message-State: AGi0PuZA8pBkbKAz23DeOqw8reXkj9vTGvR3XlVSyQkTCSe5cnajfMQE
+        pqLGjjpbi+wcKE0OG5izcAVEQc8=
+X-Google-Smtp-Source: APiQypJyaRjovGrgKBAedP0lHhuI2POEmDpa7WbfJQ+dSD087QtNDhdPvycgZDdOys8hYg+ObhvMuQ==
+X-Received: by 2002:adf:f2c5:: with SMTP id d5mr36395970wrp.409.1587057717698;
+        Thu, 16 Apr 2020 10:21:57 -0700 (PDT)
+Received: from avx2 ([46.53.249.183])
+        by smtp.gmail.com with ESMTPSA id b191sm4447928wmd.39.2020.04.16.10.21.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Apr 2020 10:21:57 -0700 (PDT)
+Date:   Thu, 16 Apr 2020 20:21:55 +0300
+From:   Alexey Dobriyan <adobriyan@gmail.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH] proc: rename "catch" function argument
+Message-ID: <20200416172155.GA2280@avx2>
+References: <20200331210905.GA31680@avx2>
+ <20200415210727.c0cf80b5a981292bb15d9858@linux-foundation.org>
 MIME-Version: 1.0
-In-Reply-To: <540fc55811d0a60a929ff1f694d6d271@codeaurora.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200415210727.c0cf80b5a981292bb15d9858@linux-foundation.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-04-16 5:23 pm, Sai Prakash Ranjan wrote:
-> Hi Robin,
+On Wed, Apr 15, 2020 at 09:07:27PM -0700, Andrew Morton wrote:
+> On Wed, 1 Apr 2020 00:09:05 +0300 Alexey Dobriyan <adobriyan@gmail.com> wrote:
 > 
-> On 2020-04-16 19:28, Robin Murphy wrote:
->> On 2020-01-22 11:48 am, Sai Prakash Ranjan wrote:
->>> From: Jordan Crouse <jcrouse@codeaurora.org>
->>>
->>> Some client devices want to directly map the IOMMU themselves instead
->>> of using the DMA domain. Allow those devices to opt in to direct
->>> mapping by way of a list of compatible strings.
->>>
->>> Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
->>> Co-developed-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
->>> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
->>> ---
->>>   drivers/iommu/arm-smmu-qcom.c | 39 +++++++++++++++++++++++++++++++++++
->>>   drivers/iommu/arm-smmu.c      |  3 +++
->>>   drivers/iommu/arm-smmu.h      |  5 +++++
->>>   3 files changed, 47 insertions(+)
->>>
->>> diff --git a/drivers/iommu/arm-smmu-qcom.c 
->>> b/drivers/iommu/arm-smmu-qcom.c
->>> index 64a4ab270ab7..ff746acd1c81 100644
->>> --- a/drivers/iommu/arm-smmu-qcom.c
->>> +++ b/drivers/iommu/arm-smmu-qcom.c
->>> @@ -3,6 +3,7 @@
->>>    * Copyright (c) 2019, The Linux Foundation. All rights reserved.
->>>    */
->>>   +#include <linux/of_device.h>
->>>   #include <linux/qcom_scm.h>
->>>     #include "arm-smmu.h"
->>> @@ -11,6 +12,43 @@ struct qcom_smmu {
->>>       struct arm_smmu_device smmu;
->>>   };
->>>   +static const struct arm_smmu_client_match_data qcom_adreno = {
->>> +    .direct_mapping = true,
->>> +};
->>> +
->>> +static const struct arm_smmu_client_match_data qcom_mdss = {
->>> +    .direct_mapping = true,
->>> +};
->>
->> Might it make sense to group these by the desired SMMU behaviour
->> rather than (apparently) what kind of device the client happens to be,
->> which seems like a completely arbitrary distinction from the SMMU
->> driver's PoV?
->>
+> > "catch" is reserved keyword in C++, rename it to something
+> > both gcc and g++ accept.
 > 
-> Sorry, I did not get the "grouping by the desired SMMU behaviour" thing.
-> Could you please give some more details?
+> Why? Is someone compiling the kernel with g++?
 
-I mean this pattern:
+I do!
+https://marc.info/?l=linux-acpi&m=158343373912366&w=4
 
-device_a_data {
-	.thing = this;
-}
+> > Rename "ign" for symmetry.
+> > 
+> > Signed-off-by: _Z6Alexeyv <adobriyan@gmail.com>
+> 
+> Was this intentional?
 
-device_b_data {
-	.thing = this;
-}
-
-device_c_data {
-	.thing = that;
-}
-
-match[] = {
-	{ .compatible = "A", .data = &device_a_data },
-	{ .compatible = "B", .data = &device_b_data },
-	{ .compatible = "C", .data = &device_c_data },
-};
-
-...vs. this pattern:
-
-do_this {
-	.thing = this;
-}
-
-do_that {
-	.thing = that;
-}
-
-match[] = {
-	{ .compatible = "A", .data = &do_this },
-	{ .compatible = "B", .data = &do_this },
-	{ .compatible = "C", .data = &do_that },
-};
-
- From the perspective of the thing doing the thing, grouping the data by 
-device is meaningless if all that matters is whether to do this or that. 
-The second pattern expresses that more naturally.
-
-Of course if every device turns out to need a unique combination of 
-several behaviours, then there ends up being no practical difference 
-except that it's probably easier to come up with nice names under the 
-first pattern. I guess it's up to how you see this developing in future; 
-whether you're likely to need fine-grained per-device control, or don't 
-expect it to go much beyond domain type.
-
-Robin.
+In Russia, C++ mangles you! :^)
