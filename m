@@ -2,112 +2,106 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77529C2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 11:16:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01828C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 11:19:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 626DD21D82
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 11:16:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBA0121D82
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 11:19:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Hh7rete3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2506125AbgDPLQc (ORCPT
+        id S2632883AbgDPLTD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 07:16:32 -0400
-Received: from mout.kundenserver.de ([212.227.126.187]:35707 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2506182AbgDPLNz (ORCPT
+        Thu, 16 Apr 2020 07:19:03 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:54847 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2506160AbgDPLOW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 07:13:55 -0400
-Received: from mail-qv1-f49.google.com ([209.85.219.49]) by
- mrelayeu.kundenserver.de (mreue009 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1MuDPh-1j6o4C3Hq9-00uaJK; Thu, 16 Apr 2020 13:12:01 +0200
-Received: by mail-qv1-f49.google.com with SMTP id y19so1575640qvv.4;
-        Thu, 16 Apr 2020 04:12:01 -0700 (PDT)
-X-Gm-Message-State: AGi0PubRT2SdYTkhIEjJSZmqyTc0qSMC/rqcVrbySVmMnMRFiBtUWHra
-        4u3zl+sq1SfKxlSNwIzblvmJJAtajZ24vv1trIg=
-X-Google-Smtp-Source: APiQypKUBOB6XQd2d+M75WuZ0DqJUTG/HnuwXa8550Av2Y6bO9ZONTvLBnhPRU7U+ROebImWwMBgxhHTnpmmhVTBibs=
-X-Received: by 2002:a0c:a602:: with SMTP id s2mr9756889qva.222.1587035520523;
- Thu, 16 Apr 2020 04:12:00 -0700 (PDT)
+        Thu, 16 Apr 2020 07:14:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587035661;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=uMhEZOoHAJnjG/UJiypTrpHYCbpZgvJbU4bT3L0FKI4=;
+        b=Hh7rete3ARXQJJ6CQij9vn+QxSdXsHjWC8oi8jSs6rzA1Bo6BZ2ApYJOMUvKM+MbCg6zAJ
+        QM8pYpo2Yg35TtcxOUkWUsF7G9xOwLfcpSMCTOZfjxUP3Is/OwTYYk3fcJRQd6GHaApqkn
+        0+F3K8P2RGAKHX3TT/n9s8s9UEPpSAg=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-28-IhQnZEqzOiyLqd_xHe7YTA-1; Thu, 16 Apr 2020 07:14:19 -0400
+X-MC-Unique: IhQnZEqzOiyLqd_xHe7YTA-1
+Received: by mail-wm1-f72.google.com with SMTP id h6so1252682wmi.7
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 04:14:19 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=uMhEZOoHAJnjG/UJiypTrpHYCbpZgvJbU4bT3L0FKI4=;
+        b=C1FPKOW6qETBQ/IcJ15Z5XCueXIQd0yG8/tFm6icMPM1ijhj6t7qv2C2QQSJpwIDt1
+         DzvpXhWeClDJ3TlL6qy3Y1553NOBg3j3QZwjAxurK4cgIxAIN4h0ZiYRcZXgEinECW9X
+         OBIzvqP3SDkezWjn/8grqfzoWMll7mnPgHiYBw3J7tOdfgMMTfqyQ2O5u/MFwHTJt4h6
+         44rOO5yIt2c35fkkZ2Y0WRvEsedRG9uxLk85fw9sdImN0b+ntzZwmgMbJ80hHa0oqyrG
+         L+OA7uFfcavsAJaYiHAcZHqkG7AtdoIhD58iMzU+ntTjksKI1LsgRjys63OTSImO1jIE
+         q1Uw==
+X-Gm-Message-State: AGi0PubcGOZUuzTwLgpFZuCXwwX/rstHfBWbqF3jLv+5lHrJ5FuHnemO
+        QGrHKfTmCWDnppZHLp3DIFsIpaH/27sEpnrWZQunN+2oVJynJMH/6mOltWEIi0896UfjT0eFZNe
+        m30r7fwQlge5XS4zK1F2Zfxso
+X-Received: by 2002:a5d:408a:: with SMTP id o10mr14651246wrp.163.1587035658170;
+        Thu, 16 Apr 2020 04:14:18 -0700 (PDT)
+X-Google-Smtp-Source: APiQypIhCbY4Z2dk2GyzeI5Yi3sRn1ddz4I0YHF5eNgOdzfpIeQMINfj7YSC5j77R84e3b7mkneo+w==
+X-Received: by 2002:a5d:408a:: with SMTP id o10mr14651234wrp.163.1587035657963;
+        Thu, 16 Apr 2020 04:14:17 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:399d:3ef7:647c:b12d? ([2001:b07:6468:f312:399d:3ef7:647c:b12d])
+        by smtp.gmail.com with ESMTPSA id h5sm8397012wrp.97.2020.04.16.04.14.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 16 Apr 2020 04:14:17 -0700 (PDT)
+Subject: Re: [PATCH] x86/kvm: make steal_time static
+To:     Jason Yan <yanaijie@huawei.com>, sean.j.christopherson@intel.com,
+        vkuznets@redhat.com, wanpengli@tencent.com, jmattson@google.com,
+        joro@8bytes.org, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, x86@kernel.org, hpa@zytor.com, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Hulk Robot <hulkci@huawei.com>
+References: <20200415084939.6367-1-yanaijie@huawei.com>
+ <d1700173-29c1-2e7c-46bd-471876d96762@redhat.com>
+ <35c3890e-0c45-0dac-e9f0-f2a9446a387d@huawei.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <bd77af4b-1e08-af7a-3167-eeb03dfbd1d6@redhat.com>
+Date:   Thu, 16 Apr 2020 13:14:17 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-References: <1586937773-5836-1-git-send-email-abel.vesa@nxp.com> <1586937773-5836-3-git-send-email-abel.vesa@nxp.com>
-In-Reply-To: <1586937773-5836-3-git-send-email-abel.vesa@nxp.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Thu, 16 Apr 2020 13:11:44 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a1Zd8Pctn9ra9dH7bTUSSMoTOwmDNOc6JwmKQA4fgdpWw@mail.gmail.com>
-Message-ID: <CAK8P3a1Zd8Pctn9ra9dH7bTUSSMoTOwmDNOc6JwmKQA4fgdpWw@mail.gmail.com>
-Subject: Re: [PATCH v3 02/13] Documentation: mfd: Add DT bindings for i.MX Mix
-To:     Abel Vesa <abel.vesa@nxp.com>
-Cc:     Lee Jones <lee.jones@linaro.org>, Shawn Guo <shawnguo@kernel.org>,
-        Peng Fan <peng.fan@nxp.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Anson Huang <anson.huang@nxp.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Jacky Bai <ping.bai@nxp.com>,
-        DTML <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:+sq+YMxtlC9OU/qKkZhu9BGJJ5gWuzZ4Ytnc0jfFhmWzcXtl8+M
- Q95Yh2SeJzbVsDYPxBAg+r4yfopOTdjV65qorKsHYDqfkavkuHc23AZjKcoTXN1ULekS/Rh
- gKZ/WDwKJkGbVkbIcexDMUqmPwWYE64i/VuZ/s7HV8H7v3g7stGbn9SBDKw46MmNCPp/Eej
- s6MydABCpcfdbZ9dV0LGA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:n3Rsk45AdaQ=:EaVzcBvIGXitKFCtnWj6Xf
- 0pLpWUsZtJIIoFMn78shvZX8VWdWAVeUIg9J4demjPjeKUODaW/CpIKBFB70iMVbf8InxR3I+
- +FfJkG4RiH6W+rMrpz8ZfphUc/VPGuHlkE+K1P3Hswct0XFAuToVa8Zfx2hq9801TjHbl7jyu
- H70lU8TmpXNKlnmK4MtwzYXBuOqRXhtaLHZHjO2qSne2tm8rs6TsTO5VrBk3tYNff3gC3fWw9
- lhGI5iKrWPxxPnz3ZTy2KtePbzhA+vb+YLX/X8QlIRAZKndk6RnSZ7Nx5apHFdNQ8EzBPg6h9
- rUNcNMioMDUXp7wrSQL6JIrQpsMOXllNXag16Ep6QxJ5HD3ox0iNARfM4b9Xu6c7YVmY1Xc0t
- Bme/cjR2hw5ovsObpAm2TcKOwBv9h3K0Pn/Ac6G46kM7y/Lf+Lb7CK+Nsj0poXx6JzLYsI0Tv
- ZEi6jCjvvsTkzsh+dTY8yhOtvRFx9uAGqWxd75ccy1vN0LJmUinyNwrPiSBmf3JZxZjdX+Pzt
- 4ZfxfHlKSpPJ8bJTsQOyrF6+3UjpZcXXnkPIeM8Z/0USfHQhJAeUgM2M1Rl0bWy2odwwgaalj
- 2sZLyanKooMUe76ztk7cLOM+m3AoxCgJge4M4mni6/Dn0F8Dy2B00u49wDa6WZmqbibd+vDTY
- GF0D6NLH6olyyTnBvZtuhaXNBnalSxkkuf83oIgKNbJmPbHW5XZgRq7Y/6Tb6WBq1sGIUwBBp
- 9he2vzD455wDPZDzqMlu34kghREwKYKjeBfz9dg3NQEpj+9s7DpQ0/QC2UjwU0BPaPrs0wMdB
- 0bxyJ3JKkH8L7c98Xejqk2YZoKDIWk7ILaB4M4d5+335vjKSSY=
+In-Reply-To: <35c3890e-0c45-0dac-e9f0-f2a9446a387d@huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 15, 2020 at 10:05 AM Abel Vesa <abel.vesa@nxp.com> wrote:
->
-> Documnent the i.MX Mix with its devicetree properties.
->
-> Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
-> ---
->  .../devicetree/bindings/mfd/fsl,imx-mix.yaml       | 34 ++++++++++++++++++++++
->  1 file changed, 34 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mfd/fsl,imx-mix.yaml
->
-> diff --git a/Documentation/devicetree/bindings/mfd/fsl,imx-mix.yaml b/Documentation/devicetree/bindings/mfd/fsl,imx-mix.yaml
-> new file mode 100644
-> index 00000000..8b1870e
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mfd/fsl,imx-mix.yaml
-> @@ -0,0 +1,34 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/mfd/fsl,imx-mix.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Freescale i.MX mix
-> +
-> +description: |
-> +  i.MX mix is a conglomerate of different GPRs that are
-> +  usually dedicated to one subsystem. These GPRs can be
-> +  further split between different types of drivers, once
-> +  the MFD populates all the devices based on its devicetree
-> +  subnodes.
+On 16/04/20 04:15, Jason Yan wrote:
+>>
+> 
+> Sorry that I found 14e581c381b9 ("x86/kvm: Make steal_time visible")
+> said that it is used by assembler code but I didn't find where.
+> Please drop this patch if it's true.
+> 
+> Sorry to make this trouble again.
 
-This does not describe the hardware but the implementation in Linux.
-Please rephrase it to not independent of the software that interprets
-the DT nodes.
+Here:
 
-       Arnd
+arch/x86/kernel/kvm.c:"cmpb	$0, " __stringify(KVM_STEAL_TIME_preempted) "+steal_time(%rax);"
+
+The __visible argument shouldn't be needed, __used should be enough.  I'll take a look.
+
+Paolo
+
