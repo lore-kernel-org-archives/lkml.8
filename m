@@ -7,51 +7,50 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A9BEC352BE
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:18:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12E0CC2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:19:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DF5F3214D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:18:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E773F2222D
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:19:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587050337;
-	bh=7optjhFEa+3PEcCmGs68rGHltQp375AoRvT4kjo1PUQ=;
+	s=default; t=1587050343;
+	bh=0CSh/3iuY/hLOBpsWWHw2RMNg5o9HoNcm5Ux17DNj/g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mmW4acKPI7/NpYI9V96s/lKZjDaugUt/MnxsUXnVfCO7Hw/0CSMTZv6rHiP/2ShAn
-	 auTV7cbKF/kr7AeYcutm8EhWe0eeyYBs4N8e1uv/PvlMDfm8TM/fSwDhZoLXjIpY8b
-	 FqdjUEZLRjGz/o1yKwrruSA2BKf99zDPbzlfXs9c=
+	b=HdDMAJLfCcVVitxI368Q4iQ0CWvvtGsSuJ7OEMv9OEbxMZ79luIDcSSxqqgRN7pv0
+	 d3nqSe3lpB/KZPyniEyhxy2Vn3CdlJ0jPN68DI7qRSnk6GZEJxb+YYxsahM88kba9F
+	 hwjx4cQIsgYBnERrZ3LNZZhE7H7X+U47/VPviXzU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389460AbgDPNsR (ORCPT
+        id S2442423AbgDPPTD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 09:48:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48066 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 11:19:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34134 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2896279AbgDPNf7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:35:59 -0400
+        id S2392304AbgDPNsG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:48:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 13E67208E4;
-        Thu, 16 Apr 2020 13:35:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 417E2208E4;
+        Thu, 16 Apr 2020 13:48:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044158;
-        bh=7optjhFEa+3PEcCmGs68rGHltQp375AoRvT4kjo1PUQ=;
+        s=default; t=1587044884;
+        bh=0CSh/3iuY/hLOBpsWWHw2RMNg5o9HoNcm5Ux17DNj/g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wUIBeUp3VK31/GTUNauamZET+MILtLuolDb2L1YGNOrb6JrlI1lz5QMBEQjSdu7ok
-         duYSArIST9U7GrwRx7DnbpTgMtbWYi357hV/8DaxV+bKLnOOa27XJ2eLcMzBwL52bz
-         2U6CZ79C64J1haPhygPi4DO2lbk24PZxcncRL3B0=
+        b=FIn3utZs4QmF1v7FLH6Iv6X5UQf7TZvOpGAYsfNGeXC72fdRRIeQ7Yg9vbPfFpSLR
+         LP2S5zkjRt2x4ooWnj3FekNbuBpJeWZpQSKvc2oaB/J+5sJjSmxw6g33oUcIfU3xA6
+         FCcBT42juApaTTtTt+UOfDWMshtCKvNdyJ8hbjSY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Benoit Parrot <bparrot@ti.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Subject: [PATCH 5.5 103/257] media: ti-vpe: cal: fix a kernel oops when unloading module
-Date:   Thu, 16 Apr 2020 15:22:34 +0200
-Message-Id: <20200416131339.006439948@linuxfoundation.org>
+        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
+        Filipe Manana <fdmanana@suse.com>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 5.4 142/232] btrfs: fix missing file extent item for hole after ranged fsync
+Date:   Thu, 16 Apr 2020 15:23:56 +0200
+Message-Id: <20200416131332.736666825@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200416131325.891903893@linuxfoundation.org>
-References: <20200416131325.891903893@linuxfoundation.org>
+In-Reply-To: <20200416131316.640996080@linuxfoundation.org>
+References: <20200416131316.640996080@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -61,82 +60,103 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Benoit Parrot <bparrot@ti.com>
+From: Filipe Manana <fdmanana@suse.com>
 
-commit 80264809ea0a3fd2ee8251f31a9eb85d2c3fc77e upstream.
+commit 95418ed1d10774cd9a49af6f39e216c1256f1eeb upstream.
 
-After the switch to use v4l2_async_notifier_add_subdev() and
-v4l2_async_notifier_cleanup(), unloading the ti_cal module would cause a
-kernel oops.
+When doing a fast fsync for a range that starts at an offset greater than
+zero, we can end up with a log that when replayed causes the respective
+inode miss a file extent item representing a hole if we are not using the
+NO_HOLES feature. This is because for fast fsyncs we don't log any extents
+that cover a range different from the one requested in the fsync.
 
-This was root cause to the fact that v4l2_async_notifier_cleanup() tries
-to kfree the asd pointer passed into v4l2_async_notifier_add_subdev().
+Example scenario to trigger it:
 
-In our case the asd reference was from a statically allocated struct.
-So in effect v4l2_async_notifier_cleanup() was trying to free a pointer
-that was not kalloc.
+  $ mkfs.btrfs -O ^no-holes -f /dev/sdd
+  $ mount /dev/sdd /mnt
 
-So here we switch to using a kzalloc struct instead of a static one.
-To achieve this we re-order some of the calls to prevent asd allocation
-from leaking.
+  # Create a file with a single 256K and fsync it to clear to full sync
+  # bit in the inode - we want the msync below to trigger a fast fsync.
+  $ xfs_io -f -c "pwrite -S 0xab 0 256K" -c "fsync" /mnt/foo
 
-Fixes: d079f94c9046 ("media: platform: Switch to v4l2_async_notifier_add_subdev")
-Cc: stable@vger.kernel.org
-Signed-off-by: Benoit Parrot <bparrot@ti.com>
-Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+  # Force a transaction commit and wipe out the log tree.
+  $ sync
+
+  # Dirty 768K of data, increasing the file size to 1Mb, and flush only
+  # the range from 256K to 512K without updating the log tree
+  # (sync_file_range() does not trigger fsync, it only starts writeback
+  # and waits for it to finish).
+
+  $ xfs_io -c "pwrite -S 0xcd 256K 768K" /mnt/foo
+  $ xfs_io -c "sync_range -abw 256K 256K" /mnt/foo
+
+  # Now dirty the range from 768K to 1M again and sync that range.
+  $ xfs_io -c "mmap -w 768K 256K"        \
+           -c "mwrite -S 0xef 768K 256K" \
+           -c "msync -s 768K 256K"       \
+           -c "munmap"                   \
+           /mnt/foo
+
+  <power fail>
+
+  # Mount to replay the log.
+  $ mount /dev/sdd /mnt
+  $ umount /mnt
+
+  $ btrfs check /dev/sdd
+  Opening filesystem to check...
+  Checking filesystem on /dev/sdd
+  UUID: 482fb574-b288-478e-a190-a9c44a78fca6
+  [1/7] checking root items
+  [2/7] checking extents
+  [3/7] checking free space cache
+  [4/7] checking fs roots
+  root 5 inode 257 errors 100, file extent discount
+  Found file extent holes:
+       start: 262144, len: 524288
+  ERROR: errors found in fs roots
+  found 720896 bytes used, error(s) found
+  total csum bytes: 512
+  total tree bytes: 131072
+  total fs tree bytes: 32768
+  total extent tree bytes: 16384
+  btree space waste bytes: 123514
+  file data blocks allocated: 589824
+    referenced 589824
+
+Fix this issue by setting the range to full (0 to LLONG_MAX) when the
+NO_HOLES feature is not enabled. This results in extra work being done
+but it gives the guarantee we don't end up with missing holes after
+replaying the log.
+
+CC: stable@vger.kernel.org # 4.19+
+Reviewed-by: Josef Bacik <josef@toxicpanda.com>
+Signed-off-by: Filipe Manana <fdmanana@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/media/platform/ti-vpe/cal.c |   13 ++++++++-----
- 1 file changed, 8 insertions(+), 5 deletions(-)
+ fs/btrfs/file.c |   10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
---- a/drivers/media/platform/ti-vpe/cal.c
-+++ b/drivers/media/platform/ti-vpe/cal.c
-@@ -266,8 +266,6 @@ struct cal_ctx {
- 	struct v4l2_subdev	*sensor;
- 	struct v4l2_fwnode_endpoint	endpoint;
+--- a/fs/btrfs/file.c
++++ b/fs/btrfs/file.c
+@@ -2074,6 +2074,16 @@ int btrfs_sync_file(struct file *file, l
+ 	btrfs_init_log_ctx(&ctx, inode);
  
--	struct v4l2_async_subdev asd;
--
- 	struct v4l2_fh		fh;
- 	struct cal_dev		*dev;
- 	struct cc_data		*cc;
-@@ -1648,7 +1646,6 @@ static int of_cal_create_instance(struct
- 
- 	parent = pdev->dev.of_node;
- 
--	asd = &ctx->asd;
- 	endpoint = &ctx->endpoint;
- 
- 	ep_node = NULL;
-@@ -1695,8 +1692,6 @@ static int of_cal_create_instance(struct
- 		ctx_dbg(3, ctx, "can't get remote parent\n");
- 		goto cleanup_exit;
- 	}
--	asd->match_type = V4L2_ASYNC_MATCH_FWNODE;
--	asd->match.fwnode = of_fwnode_handle(sensor_node);
- 
- 	v4l2_fwnode_endpoint_parse(of_fwnode_handle(ep_node), endpoint);
- 
-@@ -1726,9 +1721,17 @@ static int of_cal_create_instance(struct
- 
- 	v4l2_async_notifier_init(&ctx->notifier);
- 
-+	asd = kzalloc(sizeof(*asd), GFP_KERNEL);
-+	if (!asd)
-+		goto cleanup_exit;
+ 	/*
++	 * Set the range to full if the NO_HOLES feature is not enabled.
++	 * This is to avoid missing file extent items representing holes after
++	 * replaying the log.
++	 */
++	if (!btrfs_fs_incompat(fs_info, NO_HOLES)) {
++		start = 0;
++		end = LLONG_MAX;
++	}
 +
-+	asd->match_type = V4L2_ASYNC_MATCH_FWNODE;
-+	asd->match.fwnode = of_fwnode_handle(sensor_node);
-+
- 	ret = v4l2_async_notifier_add_subdev(&ctx->notifier, asd);
- 	if (ret) {
- 		ctx_err(ctx, "Error adding asd\n");
-+		kfree(asd);
- 		goto cleanup_exit;
- 	}
- 
++	/*
+ 	 * We write the dirty pages in the range and wait until they complete
+ 	 * out of the ->i_mutex. If so, we can flush the dirty pages by
+ 	 * multi-task, and make the performance up.  See
 
 
