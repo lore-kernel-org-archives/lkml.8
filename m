@@ -2,55 +2,55 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6327CC2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:51:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 977E0C2BB85
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:51:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 42C7720732
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:51:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7361021927
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:51:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587052294;
-	bh=XQEArXGItVvaQZkfpdMmLcNNI8l93bdzj2TABmVv/Ek=;
+	s=default; t=1587052307;
+	bh=OJB7ifqTpyz9Z9d17YM+NNYGXYpJLfrKjFl0+S1ikmE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dIm6cSJvq/5FQPSp2bjoydkl3vNowOFzBbyWdDNuXGhc8whV0V8xmGqoe/Q/Tj1UO
-	 InSOK9L0uudBDHrxlzLEOUG4OTkuoN0qWXxwl3XeAxGHy8kLmrJP1AxnlAmmx6i31D
-	 MRzv8wJH6AB8jhQ3hIiioyZiStNbgd3rKkBeEHLI=
+	b=vnsui+wUUsrQxqlP9ODb40pIyj9HSyvfk/TtlzxwyfLwZ0AR1bskiVyCquyQZ5uP/
+	 cMUwetz6OtLMBTo1MxdTuge9tiauFA+a0j9cBedLy4QtT0u1CqCG4u/0bHwb42kfLg
+	 q3ivs5N+93owx1P9qfS9EnUOqmpfw1cKXE4pxv/M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2442669AbgDPPtJ (ORCPT
+        id S2410649AbgDPPvp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:49:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44106 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 11:51:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44088 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2896680AbgDPNdD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:33:03 -0400
+        id S2896577AbgDPNc4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:32:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3D890208E4;
-        Thu, 16 Apr 2020 13:33:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 552C222201;
+        Thu, 16 Apr 2020 13:31:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587043983;
-        bh=XQEArXGItVvaQZkfpdMmLcNNI8l93bdzj2TABmVv/Ek=;
+        s=default; t=1587043917;
+        bh=OJB7ifqTpyz9Z9d17YM+NNYGXYpJLfrKjFl0+S1ikmE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SrwRWUFG1/OSYv0Uu2Snyj7TkM2eH8bVB9Mw6VdAh0neJf237gnin2HTR8FDZO2og
-         WIfdAg7t4d16JttMOQbDO3XCrbuehITc9rve6JW26dGTL1HJgMpidhu4r4WfQFfPVV
-         5h2aWtlQi7F53dJTEhDxkBLLRUoL4UQgm4UyU180=
+        b=Xw94aZ/IInk+SnZRoFGX+Nfn/zA1r4opztF0Fvm9BO4xeKFJ9sOfuQlvLFLoHrrjC
+         sIE4Uw+9/K+fBUeSPuoBc5a5TojYBu+zfiv1Fg8QBeI1jZvl6Fgv5+HbtIhVUdJDEL
+         MHfQpqWbBjwjHJcFRYcEebeztmW/dsCEFs2q+Yzk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Laurentiu Tudor <laurentiu.tudor@nxp.com>,
-        Grigore Popescu <grigore.popescu@nxp.com>,
-        Li Yang <leoyang.li@nxp.com>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 008/257] soc: fsl: dpio: register dpio irq handlers after dpio create
-Date:   Thu, 16 Apr 2020 15:20:59 +0200
-Message-Id: <20200416131326.909169117@linuxfoundation.org>
+        stable@vger.kernel.org, David Gibson <david@gibson.dropbear.id.au>,
+        =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg@kaod.org>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH 4.19 127/146] powerpc/xive: Use XIVE_BAD_IRQ instead of zero to catch non configured IPIs
+Date:   Thu, 16 Apr 2020 15:24:28 +0200
+Message-Id: <20200416131259.858718186@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200416131325.891903893@linuxfoundation.org>
-References: <20200416131325.891903893@linuxfoundation.org>
+In-Reply-To: <20200416131242.353444678@linuxfoundation.org>
+References: <20200416131242.353444678@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,152 +60,133 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Grigore Popescu <grigore.popescu@nxp.com>
+From: Cédric Le Goater <clg@kaod.org>
 
-[ Upstream commit fe8fe7723a3a824790bda681b40efd767e2251a7 ]
+commit b1a504a6500df50e83b701b7946b34fce27ad8a3 upstream.
 
-The dpio irqs must be registered when you can actually
-receive interrupts, ie when the dpios are created.
-Kernel goes through NULL pointer dereference errors
-followed by kernel panic [1] because the dpio irqs are
-enabled before the dpio is created.
+When a CPU is brought up, an IPI number is allocated and recorded
+under the XIVE CPU structure. Invalid IPI numbers are tracked with
+interrupt number 0x0.
 
-[1]
-Unable to handle kernel NULL pointer dereference at virtual address 0040
-fsl_mc_dpio dpio.14: probed
-fsl_mc_dpio dpio.13: Adding to iommu group 11
-  ISV = 0, ISS = 0x00000004
-Unable to handle kernel NULL pointer dereference at virtual address 0040
-Mem abort info:
-  ESR = 0x96000004
-  EC = 0x25: DABT (current EL), IL = 32 bits
-  SET = 0, FnV = 0
-  EA = 0, S1PTW = 0
-Data abort info:
-  ISV = 0, ISS = 0x00000004
-  CM = 0, WnR = 0
-[0000000000000040] user address but active_mm is swapper
-Internal error: Oops: 96000004 [#1] PREEMPT SMP
-Modules linked in:
-CPU: 2 PID: 151 Comm: kworker/2:1 Not tainted 5.6.0-rc4-next-20200304 #1
-Hardware name: NXP Layerscape LX2160ARDB (DT)
-Workqueue: events deferred_probe_work_func
-pstate: 00000085 (nzcv daIf -PAN -UAO)
-pc : dpaa2_io_irq+0x18/0xe0
-lr : dpio_irq_handler+0x1c/0x28
-sp : ffff800010013e20
-x29: ffff800010013e20 x28: ffff0026d9b4c140
-x27: ffffa1d38a142018 x26: ffff0026d2953400
-x25: ffffa1d38a142018 x24: ffffa1d38a7ba1d8
-x23: ffff800010013f24 x22: 0000000000000000
-x21: 0000000000000072 x20: ffff0026d2953400
-x19: ffff0026d2a68b80 x18: 0000000000000001
-x17: 000000002fb37f3d x16: 0000000035eafadd
-x15: ffff0026d9b4c5b8 x14: ffffffffffffffff
-x13: ff00000000000000 x12: 0000000000000038
-x11: 0101010101010101 x10: 0000000000000040
-x9 : ffffa1d388db11e4 x8 : ffffa1d38a7e40f0
-x7 : ffff0026da414f38 x6 : 0000000000000000
-x5 : ffff0026da414d80 x4 : ffff5e5353d0c000
-x3 : ffff800010013f60 x2 : ffffa1d388db11c8
-x1 : ffff0026d2a67c00 x0 : 0000000000000000
-Call trace:
- dpaa2_io_irq+0x18/0xe0
- dpio_irq_handler+0x1c/0x28
- __handle_irq_event_percpu+0x78/0x2c0
- handle_irq_event_percpu+0x38/0x90
- handle_irq_event+0x4c/0xd0
- handle_fasteoi_irq+0xbc/0x168
- generic_handle_irq+0x2c/0x40
- __handle_domain_irq+0x68/0xc0
- gic_handle_irq+0x64/0x150
- el1_irq+0xb8/0x180
- _raw_spin_unlock_irqrestore+0x14/0x48
- irq_set_affinity_hint+0x6c/0xa0
- dpaa2_dpio_probe+0x2a4/0x518
- fsl_mc_driver_probe+0x28/0x70
- really_probe+0xdc/0x320
- driver_probe_device+0x5c/0xf0
- __device_attach_driver+0x88/0xc0
- bus_for_each_drv+0x7c/0xc8
- __device_attach+0xe4/0x140
- device_initial_probe+0x18/0x20
- bus_probe_device+0x98/0xa0
- device_add+0x41c/0x758
- fsl_mc_device_add+0x184/0x530
- dprc_scan_objects+0x280/0x370
- dprc_probe+0x124/0x3b0
- fsl_mc_driver_probe+0x28/0x70
- really_probe+0xdc/0x320
- driver_probe_device+0x5c/0xf0
- __device_attach_driver+0x88/0xc0
- bus_for_each_drv+0x7c/0xc8
- __device_attach+0xe4/0x140
- device_initial_probe+0x18/0x20
- bus_probe_device+0x98/0xa0
- deferred_probe_work_func+0x74/0xa8
- process_one_work+0x1c8/0x470
- worker_thread+0x1f8/0x428
- kthread+0x124/0x128
- ret_from_fork+0x10/0x18
-Code: a9bc7bfd 910003fd a9025bf5 a90363f7 (f9402015)
----[ end trace 38298e1a29e7a570 ]---
-Kernel panic - not syncing: Fatal exception in interrupt
-SMP: stopping secondary CPUs
-Mem abort info:
-  ESR = 0x96000004
-  CM = 0, WnR = 0
-  EC = 0x25: DABT (current EL), IL = 32 bits
-[0000000000000040] user address but active_mm is swapper
-  SET = 0, FnV = 0
-  EA = 0, S1PTW = 0
-Data abort info:
-  ISV = 0, ISS = 0x00000004
-  CM = 0, WnR = 0
-[0000000000000040] user address but active_mm is swapper
-SMP: failed to stop secondary CPUs 0-2
-Kernel Offset: 0x21d378600000 from 0xffff800010000000
-PHYS_OFFSET: 0xffffe92180000000
-CPU features: 0x10002,21806008
-Memory Limit: none
----[ end Kernel panic - not syncing: Fatal exception in interrupt ]---
+On the PowerNV platform, the interrupt number space starts at 0x10 and
+this works fine. However, on the sPAPR platform, it is possible to
+allocate the interrupt number 0x0 and this raises an issue when CPU 0
+is unplugged. The XIVE spapr driver tracks allocated interrupt numbers
+in a bitmask and it is not correctly updated when interrupt number 0x0
+is freed. It stays allocated and it is then impossible to reallocate.
 
-Signed-off-by: Laurentiu Tudor <laurentiu.tudor@nxp.com>
-Signed-off-by: Grigore Popescu <grigore.popescu@nxp.com>
-Signed-off-by: Li Yang <leoyang.li@nxp.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fix by using the XIVE_BAD_IRQ value instead of zero on both platforms.
+
+Reported-by: David Gibson <david@gibson.dropbear.id.au>
+Fixes: eac1e731b59e ("powerpc/xive: guest exploitation of the XIVE interrupt controller")
+Cc: stable@vger.kernel.org # v4.14+
+Signed-off-by: Cédric Le Goater <clg@kaod.org>
+Reviewed-by: David Gibson <david@gibson.dropbear.id.au>
+Tested-by: David Gibson <david@gibson.dropbear.id.au>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20200306150143.5551-2-clg@kaod.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/soc/fsl/dpio/dpio-driver.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ arch/powerpc/sysdev/xive/common.c        |   12 +++---------
+ arch/powerpc/sysdev/xive/native.c        |    4 ++--
+ arch/powerpc/sysdev/xive/spapr.c         |    4 ++--
+ arch/powerpc/sysdev/xive/xive-internal.h |    7 +++++++
+ 4 files changed, 14 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/soc/fsl/dpio/dpio-driver.c b/drivers/soc/fsl/dpio/dpio-driver.c
-index 70014ecce2a7e..7b642c330977f 100644
---- a/drivers/soc/fsl/dpio/dpio-driver.c
-+++ b/drivers/soc/fsl/dpio/dpio-driver.c
-@@ -233,10 +233,6 @@ static int dpaa2_dpio_probe(struct fsl_mc_device *dpio_dev)
- 		goto err_allocate_irqs;
- 	}
+--- a/arch/powerpc/sysdev/xive/common.c
++++ b/arch/powerpc/sysdev/xive/common.c
+@@ -72,13 +72,6 @@ static u32 xive_ipi_irq;
+ /* Xive state for each CPU */
+ static DEFINE_PER_CPU(struct xive_cpu *, xive_cpu);
  
--	err = register_dpio_irq_handlers(dpio_dev, desc.cpu);
--	if (err)
--		goto err_register_dpio_irq;
+-/*
+- * A "disabled" interrupt should never fire, to catch problems
+- * we set its logical number to this
+- */
+-#define XIVE_BAD_IRQ		0x7fffffff
+-#define XIVE_MAX_IRQ		(XIVE_BAD_IRQ - 1)
 -
- 	priv->io = dpaa2_io_create(&desc, dev);
- 	if (!priv->io) {
- 		dev_err(dev, "dpaa2_io_create failed\n");
-@@ -244,6 +240,10 @@ static int dpaa2_dpio_probe(struct fsl_mc_device *dpio_dev)
- 		goto err_dpaa2_io_create;
- 	}
+ /* An invalid CPU target */
+ #define XIVE_INVALID_TARGET	(-1)
  
-+	err = register_dpio_irq_handlers(dpio_dev, desc.cpu);
-+	if (err)
-+		goto err_register_dpio_irq;
+@@ -1074,7 +1067,7 @@ static int xive_setup_cpu_ipi(unsigned i
+ 	xc = per_cpu(xive_cpu, cpu);
+ 
+ 	/* Check if we are already setup */
+-	if (xc->hw_ipi != 0)
++	if (xc->hw_ipi != XIVE_BAD_IRQ)
+ 		return 0;
+ 
+ 	/* Grab an IPI from the backend, this will populate xc->hw_ipi */
+@@ -1111,7 +1104,7 @@ static void xive_cleanup_cpu_ipi(unsigne
+ 	/* Disable the IPI and free the IRQ data */
+ 
+ 	/* Already cleaned up ? */
+-	if (xc->hw_ipi == 0)
++	if (xc->hw_ipi == XIVE_BAD_IRQ)
+ 		return;
+ 
+ 	/* Mask the IPI */
+@@ -1267,6 +1260,7 @@ static int xive_prepare_cpu(unsigned int
+ 		if (np)
+ 			xc->chip_id = of_get_ibm_chip_id(np);
+ 		of_node_put(np);
++		xc->hw_ipi = XIVE_BAD_IRQ;
+ 
+ 		per_cpu(xive_cpu, cpu) = xc;
+ 	}
+--- a/arch/powerpc/sysdev/xive/native.c
++++ b/arch/powerpc/sysdev/xive/native.c
+@@ -311,7 +311,7 @@ static void xive_native_put_ipi(unsigned
+ 	s64 rc;
+ 
+ 	/* Free the IPI */
+-	if (!xc->hw_ipi)
++	if (xc->hw_ipi == XIVE_BAD_IRQ)
+ 		return;
+ 	for (;;) {
+ 		rc = opal_xive_free_irq(xc->hw_ipi);
+@@ -319,7 +319,7 @@ static void xive_native_put_ipi(unsigned
+ 			msleep(OPAL_BUSY_DELAY_MS);
+ 			continue;
+ 		}
+-		xc->hw_ipi = 0;
++		xc->hw_ipi = XIVE_BAD_IRQ;
+ 		break;
+ 	}
+ }
+--- a/arch/powerpc/sysdev/xive/spapr.c
++++ b/arch/powerpc/sysdev/xive/spapr.c
+@@ -509,11 +509,11 @@ static int xive_spapr_get_ipi(unsigned i
+ 
+ static void xive_spapr_put_ipi(unsigned int cpu, struct xive_cpu *xc)
+ {
+-	if (!xc->hw_ipi)
++	if (xc->hw_ipi == XIVE_BAD_IRQ)
+ 		return;
+ 
+ 	xive_irq_bitmap_free(xc->hw_ipi);
+-	xc->hw_ipi = 0;
++	xc->hw_ipi = XIVE_BAD_IRQ;
+ }
+ #endif /* CONFIG_SMP */
+ 
+--- a/arch/powerpc/sysdev/xive/xive-internal.h
++++ b/arch/powerpc/sysdev/xive/xive-internal.h
+@@ -9,6 +9,13 @@
+ #ifndef __XIVE_INTERNAL_H
+ #define __XIVE_INTERNAL_H
+ 
++/*
++ * A "disabled" interrupt should never fire, to catch problems
++ * we set its logical number to this
++ */
++#define XIVE_BAD_IRQ		0x7fffffff
++#define XIVE_MAX_IRQ		(XIVE_BAD_IRQ - 1)
 +
- 	dev_info(dev, "probed\n");
- 	dev_dbg(dev, "   receives_notifications = %d\n",
- 		desc.receives_notifications);
--- 
-2.20.1
-
+ /* Each CPU carry one of these with various per-CPU state */
+ struct xive_cpu {
+ #ifdef CONFIG_SMP
 
 
