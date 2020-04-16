@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F6C2C2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:31:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 730C5C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:31:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F3EF821927
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:31:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DBA421927
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:31:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587047465;
-	bh=OcHSjCBVh8O+gSPSk498B8g0PPVsotxuMHRNfK3IrFY=;
+	s=default; t=1587047476;
+	bh=rqFVzbwEDDBh3sVKfG18cizcwwfzoSsUz6l/2RBkno4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fXiELq6oU5g8ZKkuBr+J4jK/HDFZmBc+oqnjo2YZMCZylyPo7M4lN00b/LbTbKoj4
-	 9KhnZceWUHkMFyDshHDPPWBZhitupJAElKguxH3QcxelCRxrfiwmwZ6aIMHZ/gUF1a
-	 IqckKVuqIJLkfACEVIuSFjya7bTRqn0XuGkJLovw=
+	b=Ezh+jUyGTudDsEOGacdk/3mlcpWhJCeWRcQsZk4KpSBtjBH4gNMWYIIawTsqiGjBh
+	 puXSe3oVBotRVbV5S/R0N0+TNDsXIAUvpf5BX8lfk3Sb7wlhHRCFHKwQDOCH8Y5auP
+	 i1qwiMZfJOSVe+iG2hPG56pWC+IaYZhArIIt5OsQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394286AbgDPObC (ORCPT
+        id S2405476AbgDPObN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:31:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49458 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 10:31:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49396 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405953AbgDPOCE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 10:02:04 -0400
+        id S2409575AbgDPOCC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 10:02:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9BB1F22246;
-        Thu, 16 Apr 2020 14:02:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 26F822078B;
+        Thu, 16 Apr 2020 14:02:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587045724;
-        bh=OcHSjCBVh8O+gSPSk498B8g0PPVsotxuMHRNfK3IrFY=;
+        s=default; t=1587045721;
+        bh=rqFVzbwEDDBh3sVKfG18cizcwwfzoSsUz6l/2RBkno4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ErmEf3Nozl+sKS6aFMWeN02PwO04YOpsIHJcOqA7LaX9zhzASCrvLZJJVfitkR1Tf
-         OndAOWIL75VqqqcsblboefKc+sQReUgxi2U83rhZlZNwPprpXGsaUwe66PZNbpHuBo
-         DoFTmtIsi5i+MpAbV6rytqlGZZEoOyg2H/Pxd+kg=
+        b=ygLGJ0iMhKEhnB5cWMQRIK9GY6lmjlB+YV2qu5okZi+8r0koYdserMDC3HyoxHu0q
+         HZxj6rgdfpm/wLqqfFeUOrWfTcYAO/MTHLUDplkJMU69Q5nCrPjjYpyTYQaXdqXJad
+         Xvc0uo/FERuSCQWYG0IeoRO20CTxbXdR6zSqiWi0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 251/254] perf/core: Unify {pinned,flexible}_sched_in()
-Date:   Thu, 16 Apr 2020 15:25:40 +0200
-Message-Id: <20200416131356.964812173@linuxfoundation.org>
+        stable@vger.kernel.org, Imre Deak <imre.deak@intel.com>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Matthew Auld <matthew.auld@intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.6 250/254] drm/i915/gt: Fill all the unused space in the GGTT
+Date:   Thu, 16 Apr 2020 15:25:39 +0200
+Message-Id: <20200416131356.872202159@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.804095985@linuxfoundation.org>
 References: <20200416131325.804095985@linuxfoundation.org>
@@ -60,136 +62,100 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Zijlstra <peterz@infradead.org>
+From: Chris Wilson <chris@chris-wilson.co.uk>
 
-[ Upstream commit ab6f824cfdf7363b5e529621cbc72ae6519c78d1 ]
+[ Upstream commit 0b72a251bf92ca2378530fa1f9b35a71830ab51c ]
 
-Less is more; unify the two very nearly identical function.
+When we allocate space in the GGTT we may have to allocate a larger
+region than will be populated by the object to accommodate fencing. Make
+sure that this space beyond the end of the buffer points safely into
+scratch space, in case the HW tries to access it anyway (e.g. fenced
+access to the last tile row).
 
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+v2: Preemptively / conservatively guard gen6 ggtt as well.
+
+Reported-by: Imre Deak <imre.deak@intel.com>
+Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
+Cc: Matthew Auld <matthew.auld@intel.com>
+Cc: Imre Deak <imre.deak@intel.com>
+Cc: stable@vger.kernel.org
+Reviewed-by: Matthew Auld <matthew.auld@intel.com>
+Reviewed-by: Imre Deak <imre.deak@intel.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200331152348.26946-1-chris@chris-wilson.co.uk
+(cherry picked from commit 4d6c18590870fbac1e65dde5e01e621c8e0ca096)
+Signed-off-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/events/core.c | 58 ++++++++++++++++----------------------------
- 1 file changed, 21 insertions(+), 37 deletions(-)
+ drivers/gpu/drm/i915/gt/intel_ggtt.c | 37 ++++++++++++++++++++--------
+ 1 file changed, 27 insertions(+), 10 deletions(-)
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index e453589da97ca..95860901949e7 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -1986,6 +1986,12 @@ static int perf_get_aux_event(struct perf_event *event,
- 	return 1;
- }
- 
-+static inline struct list_head *get_event_list(struct perf_event *event)
-+{
-+	struct perf_event_context *ctx = event->ctx;
-+	return event->attr.pinned ? &ctx->pinned_active : &ctx->flexible_active;
-+}
-+
- static void perf_group_detach(struct perf_event *event)
+diff --git a/drivers/gpu/drm/i915/gt/intel_ggtt.c b/drivers/gpu/drm/i915/gt/intel_ggtt.c
+index 5fd8b3e0cd19c..d0d35c55170f8 100644
+--- a/drivers/gpu/drm/i915/gt/intel_ggtt.c
++++ b/drivers/gpu/drm/i915/gt/intel_ggtt.c
+@@ -199,10 +199,11 @@ static void gen8_ggtt_insert_entries(struct i915_address_space *vm,
+ 				     enum i915_cache_level level,
+ 				     u32 flags)
  {
- 	struct perf_event *sibling, *tmp;
-@@ -2028,12 +2034,8 @@ static void perf_group_detach(struct perf_event *event)
- 		if (!RB_EMPTY_NODE(&event->group_node)) {
- 			add_event_to_groups(sibling, event->ctx);
+-	struct i915_ggtt *ggtt = i915_vm_to_ggtt(vm);
+-	struct sgt_iter sgt_iter;
+-	gen8_pte_t __iomem *gtt_entries;
+ 	const gen8_pte_t pte_encode = gen8_ggtt_pte_encode(0, level, 0);
++	struct i915_ggtt *ggtt = i915_vm_to_ggtt(vm);
++	gen8_pte_t __iomem *gte;
++	gen8_pte_t __iomem *end;
++	struct sgt_iter iter;
+ 	dma_addr_t addr;
  
--			if (sibling->state == PERF_EVENT_STATE_ACTIVE) {
--				struct list_head *list = sibling->attr.pinned ?
--					&ctx->pinned_active : &ctx->flexible_active;
--
--				list_add_tail(&sibling->active_list, list);
--			}
-+			if (sibling->state == PERF_EVENT_STATE_ACTIVE)
-+				list_add_tail(&sibling->active_list, get_event_list(sibling));
- 		}
+ 	/*
+@@ -210,10 +211,17 @@ static void gen8_ggtt_insert_entries(struct i915_address_space *vm,
+ 	 * not to allow the user to override access to a read only page.
+ 	 */
  
- 		WARN_ON_ONCE(sibling->ctx != event->ctx);
-@@ -2350,6 +2352,8 @@ event_sched_in(struct perf_event *event,
- {
- 	int ret = 0;
- 
-+	WARN_ON_ONCE(event->ctx != ctx);
+-	gtt_entries = (gen8_pte_t __iomem *)ggtt->gsm;
+-	gtt_entries += vma->node.start / I915_GTT_PAGE_SIZE;
+-	for_each_sgt_daddr(addr, sgt_iter, vma->pages)
+-		gen8_set_pte(gtt_entries++, pte_encode | addr);
++	gte = (gen8_pte_t __iomem *)ggtt->gsm;
++	gte += vma->node.start / I915_GTT_PAGE_SIZE;
++	end = gte + vma->node.size / I915_GTT_PAGE_SIZE;
 +
- 	lockdep_assert_held(&ctx->lock);
- 
- 	if (event->state <= PERF_EVENT_STATE_OFF)
-@@ -3425,10 +3429,12 @@ struct sched_in_data {
- 	int can_add_hw;
- };
- 
--static int pinned_sched_in(struct perf_event *event, void *data)
-+static int merge_sched_in(struct perf_event *event, void *data)
- {
- 	struct sched_in_data *sid = data;
- 
-+	WARN_ON_ONCE(event->ctx != sid->ctx);
++	for_each_sgt_daddr(addr, iter, vma->pages)
++		gen8_set_pte(gte++, pte_encode | addr);
++	GEM_BUG_ON(gte > end);
 +
- 	if (event->state <= PERF_EVENT_STATE_OFF)
- 		return 0;
++	/* Fill the allocated but "unused" space beyond the end of the buffer */
++	while (gte < end)
++		gen8_set_pte(gte++, vm->scratch[0].encode);
  
-@@ -3437,37 +3443,15 @@ static int pinned_sched_in(struct perf_event *event, void *data)
+ 	/*
+ 	 * We want to flush the TLBs only after we're certain all the PTE
+@@ -249,13 +257,22 @@ static void gen6_ggtt_insert_entries(struct i915_address_space *vm,
+ 				     u32 flags)
+ {
+ 	struct i915_ggtt *ggtt = i915_vm_to_ggtt(vm);
+-	gen6_pte_t __iomem *entries = (gen6_pte_t __iomem *)ggtt->gsm;
+-	unsigned int i = vma->node.start / I915_GTT_PAGE_SIZE;
++	gen6_pte_t __iomem *gte;
++	gen6_pte_t __iomem *end;
+ 	struct sgt_iter iter;
+ 	dma_addr_t addr;
  
- 	if (group_can_go_on(event, sid->cpuctx, sid->can_add_hw)) {
- 		if (!group_sched_in(event, sid->cpuctx, sid->ctx))
--			list_add_tail(&event->active_list, &sid->ctx->pinned_active);
-+			list_add_tail(&event->active_list, get_event_list(event));
- 	}
++	gte = (gen6_pte_t __iomem *)ggtt->gsm;
++	gte += vma->node.start / I915_GTT_PAGE_SIZE;
++	end = gte + vma->node.size / I915_GTT_PAGE_SIZE;
++
+ 	for_each_sgt_daddr(addr, iter, vma->pages)
+-		iowrite32(vm->pte_encode(addr, level, flags), &entries[i++]);
++		iowrite32(vm->pte_encode(addr, level, flags), gte++);
++	GEM_BUG_ON(gte > end);
++
++	/* Fill the allocated but "unused" space beyond the end of the buffer */
++	while (gte < end)
++		iowrite32(vm->scratch[0].encode, gte++);
  
--	/*
--	 * If this pinned group hasn't been scheduled,
--	 * put it in error state.
--	 */
--	if (event->state == PERF_EVENT_STATE_INACTIVE)
--		perf_event_set_state(event, PERF_EVENT_STATE_ERROR);
--
--	return 0;
--}
--
--static int flexible_sched_in(struct perf_event *event, void *data)
--{
--	struct sched_in_data *sid = data;
--
--	if (event->state <= PERF_EVENT_STATE_OFF)
--		return 0;
--
--	if (!event_filter_match(event))
--		return 0;
-+	if (event->state == PERF_EVENT_STATE_INACTIVE) {
-+		if (event->attr.pinned)
-+			perf_event_set_state(event, PERF_EVENT_STATE_ERROR);
- 
--	if (group_can_go_on(event, sid->cpuctx, sid->can_add_hw)) {
--		int ret = group_sched_in(event, sid->cpuctx, sid->ctx);
--		if (ret) {
--			sid->can_add_hw = 0;
--			sid->ctx->rotate_necessary = 1;
--			return 0;
--		}
--		list_add_tail(&event->active_list, &sid->ctx->flexible_active);
-+		sid->can_add_hw = 0;
-+		sid->ctx->rotate_necessary = 1;
- 	}
- 
- 	return 0;
-@@ -3485,7 +3469,7 @@ ctx_pinned_sched_in(struct perf_event_context *ctx,
- 
- 	visit_groups_merge(&ctx->pinned_groups,
- 			   smp_processor_id(),
--			   pinned_sched_in, &sid);
-+			   merge_sched_in, &sid);
- }
- 
- static void
-@@ -3500,7 +3484,7 @@ ctx_flexible_sched_in(struct perf_event_context *ctx,
- 
- 	visit_groups_merge(&ctx->flexible_groups,
- 			   smp_processor_id(),
--			   flexible_sched_in, &sid);
-+			   merge_sched_in, &sid);
- }
- 
- static void
+ 	/*
+ 	 * We want to flush the TLBs only after we're certain all the PTE
 -- 
 2.20.1
 
