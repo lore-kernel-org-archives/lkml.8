@@ -2,279 +2,187 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFFB9C352BE
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:55:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1EB3C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:56:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CA70B21927
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:55:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587052558;
-	bh=OvcmStbLmnj97gKqvuXXyUGGyexRIdSkkNNzrFaeqpU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cQucL21unQ9FLTPSHIhuwIeOrXtVxncyJg141aIkAuEfzzlChaf4fqkdadFkafPbG
-	 SUPf8NapS483FwF0W57rzwnoEJwauZe5LzpJnwfBY7xP4eg6ozh/evKXPI3yJXrNYP
-	 2oH9zsBI9LpxOi/7UufcEAQsPJrMfv2RR6jt4jZ4=
+	by mail.kernel.org (Postfix) with ESMTP id A92DB21D91
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:56:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ID5DZtvH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2442751AbgDPPzz (ORCPT
+        id S2442659AbgDPP4L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:55:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39072 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2895993AbgDPN3U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:29:20 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 89923221EB;
-        Thu, 16 Apr 2020 13:29:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587043759;
-        bh=OvcmStbLmnj97gKqvuXXyUGGyexRIdSkkNNzrFaeqpU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cOOGBmIxC6XPoE76lnLsRkRqHPhuUfw3kbelGwun81DNeFrtLG3Gwc+FSt4jOVY9I
-         +iIpZeCqK0ggx2q2FviiyBB2TJ2PgcWghDUXNiQAd+jdU/IoeG1aL1hfN2+Sen6MVx
-         Y33hqqqa0WQqzXHz77ryjKzBBlFquswD/bjhP79g=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Filipe Manana <fdmanana@suse.com>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 4.19 089/146] Btrfs: fix crash during unmount due to race with delayed inode workers
-Date:   Thu, 16 Apr 2020 15:23:50 +0200
-Message-Id: <20200416131254.951546926@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200416131242.353444678@linuxfoundation.org>
-References: <20200416131242.353444678@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Thu, 16 Apr 2020 11:56:11 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:59613 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2442746AbgDPP4D (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 11:56:03 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587052561;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=nvu+MW6oZUAc4Rt+d0KHMjWiSPVqXx7NpVhFclBCSuA=;
+        b=ID5DZtvH9sTXEpFaffj3HRg4lfpKkzt5Eql5S3WZluccUKLn/MODDhQWE18HIm5N2+o4W6
+        asQly0N2VAinsyOyxwMOkrAU2pfROdRYIjOTof9z9sYOK4B87LKnuPmwemuOcnsvGp8xcS
+        DnzXGw1KxO02JWd4zJwfczZdXbSCFPY=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-124-Zc0gFejYOlal_U7CHfHI0w-1; Thu, 16 Apr 2020 11:55:59 -0400
+X-MC-Unique: Zc0gFejYOlal_U7CHfHI0w-1
+Received: by mail-wr1-f70.google.com with SMTP id s11so1944920wru.6
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 08:55:59 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=nvu+MW6oZUAc4Rt+d0KHMjWiSPVqXx7NpVhFclBCSuA=;
+        b=bYdNGt/Nc8XstAMOxr+ITvh8rpAg7enoOBy5jeI3mNQbCJDe73fvh2hG05rmgp+iln
+         97xVPK5uNS62SbGMvJJic1LvmAEzrigp1R7fm/Inwuw95aYAR7UCvGhoxSV2sV5rPey2
+         E9NAPaWYU7TkXSniKUcla4/Zfk8C+/ou9RPb2m81sjDFsbj2A5FrFNNP0iH9LjbDgcOU
+         +vkAshsAqexLA0+9MZ3VsQnNzXNcq8cUT38d9f8QyjHfT9p5BTyOzNPHJfrlVC+Ndklk
+         /hJWeEOW1scg384s7YjKFD9DJNmm8tmXPH5JjOf4FzoMqrbadTBdcwUvLKPt//aalg42
+         5HEQ==
+X-Gm-Message-State: AGi0PuZR7wBQy9zzbiuvvNz3uhJ/Ph/A+VEDYk8CDKOKLxBDHmeYhroE
+        INW3UHzc1fbVbTGwuE4isSkFBskZII2Bydaeq0siodl64AMnpH7mW8CnBztAQEbFYvS0F/AkB0O
+        KULNaMS7/ONTs6KwmDyGmmXP9
+X-Received: by 2002:a5d:4442:: with SMTP id x2mr18151632wrr.101.1587052558411;
+        Thu, 16 Apr 2020 08:55:58 -0700 (PDT)
+X-Google-Smtp-Source: APiQypIL1Ng21KPZXq7/mqYvYnYksD3lb24Jyd1BsaIZ28zHv5VGpa6h6z5Fa+Khf5lPYqGvRQv9/g==
+X-Received: by 2002:a5d:4442:: with SMTP id x2mr18151609wrr.101.1587052558056;
+        Thu, 16 Apr 2020 08:55:58 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:399d:3ef7:647c:b12d? ([2001:b07:6468:f312:399d:3ef7:647c:b12d])
+        by smtp.gmail.com with ESMTPSA id 5sm4231405wmg.34.2020.04.16.08.55.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 16 Apr 2020 08:55:57 -0700 (PDT)
+Subject: Re: [PATCH v2] KVM/arm64: Support enabling dirty log gradually in
+ small chunks
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     Keqian Zhu <zhukeqian1@huawei.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kvmarm@lists.cs.columbia.edu, James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Will Deacon <will@kernel.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Jay Zhou <jianjay.zhou@huawei.com>, wanghaibin.wang@huawei.com
+References: <20200413122023.52583-1-zhukeqian1@huawei.com>
+ <be45ec89-2bdb-454b-d20a-c08898e26024@redhat.com>
+ <20200416160939.7e9c1621@why>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <442f288e-2934-120c-4994-5357e3e9216b@redhat.com>
+Date:   Thu, 16 Apr 2020 17:55:55 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200416160939.7e9c1621@why>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Filipe Manana <fdmanana@suse.com>
+On 16/04/20 17:09, Marc Zyngier wrote:
+> On Wed, 15 Apr 2020 18:13:56 +0200
+> Paolo Bonzini <pbonzini@redhat.com> wrote:
+> 
+>> On 13/04/20 14:20, Keqian Zhu wrote:
+>>> There is already support of enabling dirty log graually in small chunks
+>>> for x86 in commit 3c9bd4006bfc ("KVM: x86: enable dirty log gradually in
+>>> small chunks"). This adds support for arm64.
+>>>
+>>> x86 still writes protect all huge pages when DIRTY_LOG_INITIALLY_ALL_SET
+>>> is eanbled. However, for arm64, both huge pages and normal pages can be
+>>> write protected gradually by userspace.
+>>>
+>>> Under the Huawei Kunpeng 920 2.6GHz platform, I did some tests on 128G
+>>> Linux VMs with different page size. The memory pressure is 127G in each
+>>> case. The time taken of memory_global_dirty_log_start in QEMU is listed
+>>> below:
+>>>
+>>> Page Size      Before    After Optimization
+>>>   4K            650ms         1.8ms
+>>>   2M             4ms          1.8ms
+>>>   1G             2ms          1.8ms
+>>>
+>>> Besides the time reduction, the biggest income is that we will minimize
+>>> the performance side effect (because of dissloving huge pages and marking
+>>> memslots dirty) on guest after enabling dirty log.
+>>>
+>>> Signed-off-by: Keqian Zhu <zhukeqian1@huawei.com>
+>>> ---
+>>>  Documentation/virt/kvm/api.rst    |  2 +-
+>>>  arch/arm64/include/asm/kvm_host.h |  3 +++
+>>>  virt/kvm/arm/mmu.c                | 12 ++++++++++--
+>>>  3 files changed, 14 insertions(+), 3 deletions(-)
+>>>
+>>> diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
+>>> index efbbe570aa9b..0017f63fa44f 100644
+>>> --- a/Documentation/virt/kvm/api.rst
+>>> +++ b/Documentation/virt/kvm/api.rst
+>>> @@ -5777,7 +5777,7 @@ will be initialized to 1 when created.  This also improves performance because
+>>>  dirty logging can be enabled gradually in small chunks on the first call
+>>>  to KVM_CLEAR_DIRTY_LOG.  KVM_DIRTY_LOG_INITIALLY_SET depends on
+>>>  KVM_DIRTY_LOG_MANUAL_PROTECT_ENABLE (it is also only available on
+>>> -x86 for now).
+>>> +x86 and arm64 for now).
+>>>  
+>>>  KVM_CAP_MANUAL_DIRTY_LOG_PROTECT2 was previously available under the name
+>>>  KVM_CAP_MANUAL_DIRTY_LOG_PROTECT, but the implementation had bugs that make
+>>> diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/asm/kvm_host.h
+>>> index 32c8a675e5a4..a723f84fab83 100644
+>>> --- a/arch/arm64/include/asm/kvm_host.h
+>>> +++ b/arch/arm64/include/asm/kvm_host.h
+>>> @@ -46,6 +46,9 @@
+>>>  #define KVM_REQ_RECORD_STEAL	KVM_ARCH_REQ(3)
+>>>  #define KVM_REQ_RELOAD_GICv4	KVM_ARCH_REQ(4)
+>>>  
+>>> +#define KVM_DIRTY_LOG_MANUAL_CAPS   (KVM_DIRTY_LOG_MANUAL_PROTECT_ENABLE | \
+>>> +				     KVM_DIRTY_LOG_INITIALLY_SET)
+>>> +
+>>>  DECLARE_STATIC_KEY_FALSE(userspace_irqchip_in_use);
+>>>  
+>>>  extern unsigned int kvm_sve_max_vl;
+>>> diff --git a/virt/kvm/arm/mmu.c b/virt/kvm/arm/mmu.c
+>>> index e3b9ee268823..1077f653a611 100644
+>>> --- a/virt/kvm/arm/mmu.c
+>>> +++ b/virt/kvm/arm/mmu.c
+>>> @@ -2265,8 +2265,16 @@ void kvm_arch_commit_memory_region(struct kvm *kvm,
+>>>  	 * allocated dirty_bitmap[], dirty pages will be be tracked while the
+>>>  	 * memory slot is write protected.
+>>>  	 */
+>>> -	if (change != KVM_MR_DELETE && mem->flags & KVM_MEM_LOG_DIRTY_PAGES)
+>>> -		kvm_mmu_wp_memory_region(kvm, mem->slot);
+>>> +	if (change != KVM_MR_DELETE && mem->flags & KVM_MEM_LOG_DIRTY_PAGES) {
+>>> +		/*
+>>> +		 * If we're with initial-all-set, we don't need to write
+>>> +		 * protect any pages because they're all reported as dirty.
+>>> +		 * Huge pages and normal pages will be write protect gradually.
+>>> +		 */
+>>> +		if (!kvm_dirty_log_manual_protect_and_init_set(kvm)) {
+>>> +			kvm_mmu_wp_memory_region(kvm, mem->slot);
+>>> +		}
+>>> +	}
+>>>  }
+>>>  
+>>>  int kvm_arch_prepare_memory_region(struct kvm *kvm,
+>>>   
+>>
+>> Marc, what is the status of this patch?
+> 
+> I just had a look at it. Is there any urgency for merging it?
 
-commit f0cc2cd70164efe8f75c5d99560f0f69969c72e4 upstream.
+No, I thought I was still replying to the v1.
 
-During unmount we can have a job from the delayed inode items work queue
-still running, that can lead to at least two bad things:
-
-1) A crash, because the worker can try to create a transaction just
-   after the fs roots were freed;
-
-2) A transaction leak, because the worker can create a transaction
-   before the fs roots are freed and just after we committed the last
-   transaction and after we stopped the transaction kthread.
-
-A stack trace example of the crash:
-
- [79011.691214] kernel BUG at lib/radix-tree.c:982!
- [79011.692056] invalid opcode: 0000 [#1] PREEMPT SMP DEBUG_PAGEALLOC PTI
- [79011.693180] CPU: 3 PID: 1394 Comm: kworker/u8:2 Tainted: G        W         5.6.0-rc2-btrfs-next-54 #2
- (...)
- [79011.696789] Workqueue: btrfs-delayed-meta btrfs_work_helper [btrfs]
- [79011.697904] RIP: 0010:radix_tree_tag_set+0xe7/0x170
- (...)
- [79011.702014] RSP: 0018:ffffb3c84a317ca0 EFLAGS: 00010293
- [79011.702949] RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000000
- [79011.704202] RDX: ffffb3c84a317cb0 RSI: ffffb3c84a317ca8 RDI: ffff8db3931340a0
- [79011.705463] RBP: 0000000000000005 R08: 0000000000000005 R09: ffffffff974629d0
- [79011.706756] R10: ffffb3c84a317bc0 R11: 0000000000000001 R12: ffff8db393134000
- [79011.708010] R13: ffff8db3931340a0 R14: ffff8db393134068 R15: 0000000000000001
- [79011.709270] FS:  0000000000000000(0000) GS:ffff8db3b6a00000(0000) knlGS:0000000000000000
- [79011.710699] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
- [79011.711710] CR2: 00007f22c2a0a000 CR3: 0000000232ad4005 CR4: 00000000003606e0
- [79011.712958] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
- [79011.714205] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
- [79011.715448] Call Trace:
- [79011.715925]  record_root_in_trans+0x72/0xf0 [btrfs]
- [79011.716819]  btrfs_record_root_in_trans+0x4b/0x70 [btrfs]
- [79011.717925]  start_transaction+0xdd/0x5c0 [btrfs]
- [79011.718829]  btrfs_async_run_delayed_root+0x17e/0x2b0 [btrfs]
- [79011.719915]  btrfs_work_helper+0xaa/0x720 [btrfs]
- [79011.720773]  process_one_work+0x26d/0x6a0
- [79011.721497]  worker_thread+0x4f/0x3e0
- [79011.722153]  ? process_one_work+0x6a0/0x6a0
- [79011.722901]  kthread+0x103/0x140
- [79011.723481]  ? kthread_create_worker_on_cpu+0x70/0x70
- [79011.724379]  ret_from_fork+0x3a/0x50
- (...)
-
-The following diagram shows a sequence of steps that lead to the crash
-during ummount of the filesystem:
-
-        CPU 1                                             CPU 2                                CPU 3
-
- btrfs_punch_hole()
-   btrfs_btree_balance_dirty()
-     btrfs_balance_delayed_items()
-       --> sees
-           fs_info->delayed_root->items
-           with value 200, which is greater
-           than
-           BTRFS_DELAYED_BACKGROUND (128)
-           and smaller than
-           BTRFS_DELAYED_WRITEBACK (512)
-       btrfs_wq_run_delayed_node()
-         --> queues a job for
-             fs_info->delayed_workers to run
-             btrfs_async_run_delayed_root()
-
-                                                                                            btrfs_async_run_delayed_root()
-                                                                                              --> job queued by CPU 1
-
-                                                                                              --> starts picking and running
-                                                                                                  delayed nodes from the
-                                                                                                  prepare_list list
-
-                                                 close_ctree()
-
-                                                   btrfs_delete_unused_bgs()
-
-                                                   btrfs_commit_super()
-
-                                                     btrfs_join_transaction()
-                                                       --> gets transaction N
-
-                                                     btrfs_commit_transaction(N)
-                                                       --> set transaction state
-                                                        to TRANTS_STATE_COMMIT_START
-
-                                                                                             btrfs_first_prepared_delayed_node()
-                                                                                               --> picks delayed node X through
-                                                                                                   the prepared_list list
-
-                                                       btrfs_run_delayed_items()
-
-                                                         btrfs_first_delayed_node()
-                                                           --> also picks delayed node X
-                                                               but through the node_list
-                                                               list
-
-                                                         __btrfs_commit_inode_delayed_items()
-                                                            --> runs all delayed items from
-                                                                this node and drops the
-                                                                node's item count to 0
-                                                                through call to
-                                                                btrfs_release_delayed_inode()
-
-                                                         --> finishes running any remaining
-                                                             delayed nodes
-
-                                                       --> finishes transaction commit
-
-                                                   --> stops cleaner and transaction threads
-
-                                                   btrfs_free_fs_roots()
-                                                     --> frees all roots and removes them
-                                                         from the radix tree
-                                                         fs_info->fs_roots_radix
-
-                                                                                             btrfs_join_transaction()
-                                                                                               start_transaction()
-                                                                                                 btrfs_record_root_in_trans()
-                                                                                                   record_root_in_trans()
-                                                                                                     radix_tree_tag_set()
-                                                                                                       --> crashes because
-                                                                                                           the root is not in
-                                                                                                           the radix tree
-                                                                                                           anymore
-
-If the worker is able to call btrfs_join_transaction() before the unmount
-task frees the fs roots, we end up leaking a transaction and all its
-resources, since after the call to btrfs_commit_super() and stopping the
-transaction kthread, we don't expect to have any transaction open anymore.
-
-When this situation happens the worker has a delayed node that has no
-more items to run, since the task calling btrfs_run_delayed_items(),
-which is doing a transaction commit, picks the same node and runs all
-its items first.
-
-We can not wait for the worker to complete when running delayed items
-through btrfs_run_delayed_items(), because we call that function in
-several phases of a transaction commit, and that could cause a deadlock
-because the worker calls btrfs_join_transaction() and the task doing the
-transaction commit may have already set the transaction state to
-TRANS_STATE_COMMIT_DOING.
-
-Also it's not possible to get into a situation where only some of the
-items of a delayed node are added to the fs/subvolume tree in the current
-transaction and the remaining ones in the next transaction, because when
-running the items of a delayed inode we lock its mutex, effectively
-waiting for the worker if the worker is running the items of the delayed
-node already.
-
-Since this can only cause issues when unmounting a filesystem, fix it in
-a simple way by waiting for any jobs on the delayed workers queue before
-calling btrfs_commit_supper() at close_ctree(). This works because at this
-point no one can call btrfs_btree_balance_dirty() or
-btrfs_balance_delayed_items(), and if we end up waiting for any worker to
-complete, btrfs_commit_super() will commit the transaction created by the
-worker.
-
-CC: stable@vger.kernel.org # 4.4+
-Signed-off-by: Filipe Manana <fdmanana@suse.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- fs/btrfs/async-thread.c |    8 ++++++++
- fs/btrfs/async-thread.h |    1 +
- fs/btrfs/disk-io.c      |   13 +++++++++++++
- 3 files changed, 22 insertions(+)
-
---- a/fs/btrfs/async-thread.c
-+++ b/fs/btrfs/async-thread.c
-@@ -434,3 +434,11 @@ void btrfs_set_work_high_priority(struct
- {
- 	set_bit(WORK_HIGH_PRIO_BIT, &work->flags);
- }
-+
-+void btrfs_flush_workqueue(struct btrfs_workqueue *wq)
-+{
-+	if (wq->high)
-+		flush_workqueue(wq->high->normal_wq);
-+
-+	flush_workqueue(wq->normal->normal_wq);
-+}
---- a/fs/btrfs/async-thread.h
-+++ b/fs/btrfs/async-thread.h
-@@ -73,5 +73,6 @@ void btrfs_set_work_high_priority(struct
- struct btrfs_fs_info *btrfs_work_owner(const struct btrfs_work *work);
- struct btrfs_fs_info *btrfs_workqueue_owner(const struct __btrfs_workqueue *wq);
- bool btrfs_workqueue_normal_congested(const struct btrfs_workqueue *wq);
-+void btrfs_flush_workqueue(struct btrfs_workqueue *wq);
- 
- #endif
---- a/fs/btrfs/disk-io.c
-+++ b/fs/btrfs/disk-io.c
-@@ -3949,6 +3949,19 @@ void close_ctree(struct btrfs_fs_info *f
- 		 */
- 		btrfs_delete_unused_bgs(fs_info);
- 
-+		/*
-+		 * There might be existing delayed inode workers still running
-+		 * and holding an empty delayed inode item. We must wait for
-+		 * them to complete first because they can create a transaction.
-+		 * This happens when someone calls btrfs_balance_delayed_items()
-+		 * and then a transaction commit runs the same delayed nodes
-+		 * before any delayed worker has done something with the nodes.
-+		 * We must wait for any worker here and not at transaction
-+		 * commit time since that could cause a deadlock.
-+		 * This is a very rare case.
-+		 */
-+		btrfs_flush_workqueue(fs_info->delayed_workers);
-+
- 		ret = btrfs_commit_super(fs_info);
- 		if (ret)
- 			btrfs_err(fs_info, "commit super ret %d", ret);
-
+Paolo
 
