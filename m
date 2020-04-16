@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A59C1C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:31:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39088C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:32:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7C62022201
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:31:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 076842223E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:32:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587043912;
-	bh=klwZoOuNPCfhdbzMWgDKw96yntXOh3QGWA0AoC+8d5A=;
+	s=default; t=1587043922;
+	bh=8g4rtJKK7f7hAR4yH8/t0x0WZTPgRBWJXq9lOexgqK0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zH6VT2g0X1mj/3yCjGgZdB3uUuxRTpDvhSS+tuz8tW/NJG8eshmTHnNBo1HpbeSHN
-	 uzDiax47K+KuwU0ZsDP0sxys3sHMH3aRXlYwCF25Mvxig8lPvZhOcYf//zKYGV67GD
-	 xCpETt/jT/1rn+xSCVZZwyl+30L6Wh2pHVWO+bOk=
+	b=lurdZb4T2hz3gUfisu11Tvv7gvkUhl1H6YJUL1xCNWM1S8agKGNxSbehdIS0evUwR
+	 6s7/5oPOXuRcqWhVSgXeCOf28Jlc3qaA/2PjaP14vd1azRFr+8XIjEG2MiyrMOUG9K
+	 g9NNFHOEd6DLOyITs3XuS9159+btUUIm0FppbQXc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2895454AbgDPNa5 (ORCPT
+        id S2896500AbgDPNb5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 09:30:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36954 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 09:31:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37420 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2895679AbgDPN2I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:28:08 -0400
+        id S2895759AbgDPN21 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:28:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DE569206E9;
-        Thu, 16 Apr 2020 13:28:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F1D0021D82;
+        Thu, 16 Apr 2020 13:28:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587043688;
-        bh=klwZoOuNPCfhdbzMWgDKw96yntXOh3QGWA0AoC+8d5A=;
+        s=default; t=1587043705;
+        bh=8g4rtJKK7f7hAR4yH8/t0x0WZTPgRBWJXq9lOexgqK0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yE+XBKdY33HKOL0zTj/dtdIR3Oi9mfEhExQ3k37ISuodpO0HdM7fn3vdL/c6OIftf
-         9s3dB7zGBO8JaTQRg7jl76rFSYSWXuROf8p/m475qr/TdWQ2t95TJHoGt3XXl0tfdA
-         ac8+DjTFzyVjxFAv122AkwQiGvWf2tbuEoHRCtLg=
+        b=v6fNHGj3tKnKdZWYdG0ypjoilqkysCBi6i3oyDKDk/A/rOm09HLjQpFFlhf1qu5BU
+         r/P4aiKLefKEk6uHbW7ejNDzch8q8JTuqR+z82YleqqnVG8JunQkkqd5PFNd/jI160
+         3sS/BdSGi30DCMTKkszfcAQ+vxnzJ9/fjzFMBncA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Benoit Parrot <bparrot@ti.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Subject: [PATCH 4.19 059/146] media: ti-vpe: cal: fix disable_irqs to only the intended target
-Date:   Thu, 16 Apr 2020 15:23:20 +0200
-Message-Id: <20200416131250.971337378@linuxfoundation.org>
+        stable@vger.kernel.org, Yicong Yang <yangyicong@hisilicon.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: [PATCH 4.19 065/146] PCI/ASPM: Clear the correct bits when enabling L1 substates
+Date:   Thu, 16 Apr 2020 15:23:26 +0200
+Message-Id: <20200416131251.804144228@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131242.353444678@linuxfoundation.org>
 References: <20200416131242.353444678@linuxfoundation.org>
@@ -60,49 +59,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Benoit Parrot <bparrot@ti.com>
+From: Yicong Yang <yangyicong@hisilicon.com>
 
-commit 1db56284b9da9056093681f28db48a09a243274b upstream.
+commit 58a3862a10a317a81097ab0c78aecebabb1704f5 upstream.
 
-disable_irqs() was mistakenly disabling all interrupts when called.
-This cause all port stream to stop even if only stopping one of them.
+In pcie_config_aspm_l1ss(), we cleared the wrong bits when enabling ASPM L1
+Substates.  Instead of the L1.x enable bits (PCI_L1SS_CTL1_L1SS_MASK, 0xf), we
+cleared the Link Activation Interrupt Enable bit (PCI_L1SS_CAP_L1_PM_SS,
+0x10).
 
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Benoit Parrot <bparrot@ti.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Clear the L1.x enable bits before writing the new L1.x configuration.
+
+[bhelgaas: changelog]
+Fixes: aeda9adebab8 ("PCI/ASPM: Configure L1 substate settings")
+Link: https://lore.kernel.org/r/1584093227-1292-1-git-send-email-yangyicong@hisilicon.com
+Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+CC: stable@vger.kernel.org	# v4.11+
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/media/platform/ti-vpe/cal.c |   16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+ drivers/pci/pcie/aspm.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/media/platform/ti-vpe/cal.c
-+++ b/drivers/media/platform/ti-vpe/cal.c
-@@ -541,16 +541,16 @@ static void enable_irqs(struct cal_ctx *
+--- a/drivers/pci/pcie/aspm.c
++++ b/drivers/pci/pcie/aspm.c
+@@ -747,9 +747,9 @@ static void pcie_config_aspm_l1ss(struct
  
- static void disable_irqs(struct cal_ctx *ctx)
- {
-+	u32 val;
-+
- 	/* Disable IRQ_WDMA_END 0/1 */
--	reg_write_field(ctx->dev,
--			CAL_HL_IRQENABLE_CLR(2),
--			CAL_HL_IRQ_CLEAR,
--			CAL_HL_IRQ_MASK(ctx->csi2_port));
-+	val = 0;
-+	set_field(&val, CAL_HL_IRQ_CLEAR, CAL_HL_IRQ_MASK(ctx->csi2_port));
-+	reg_write(ctx->dev, CAL_HL_IRQENABLE_CLR(2), val);
- 	/* Disable IRQ_WDMA_START 0/1 */
--	reg_write_field(ctx->dev,
--			CAL_HL_IRQENABLE_CLR(3),
--			CAL_HL_IRQ_CLEAR,
--			CAL_HL_IRQ_MASK(ctx->csi2_port));
-+	val = 0;
-+	set_field(&val, CAL_HL_IRQ_CLEAR, CAL_HL_IRQ_MASK(ctx->csi2_port));
-+	reg_write(ctx->dev, CAL_HL_IRQENABLE_CLR(3), val);
- 	/* Todo: Add VC_IRQ and CSI2_COMPLEXIO_IRQ handling */
- 	reg_write(ctx->dev, CAL_CSI2_VC_IRQENABLE(1), 0);
+ 	/* Enable what we need to enable */
+ 	pci_clear_and_set_dword(parent, up_cap_ptr + PCI_L1SS_CTL1,
+-				PCI_L1SS_CAP_L1_PM_SS, val);
++				PCI_L1SS_CTL1_L1SS_MASK, val);
+ 	pci_clear_and_set_dword(child, dw_cap_ptr + PCI_L1SS_CTL1,
+-				PCI_L1SS_CAP_L1_PM_SS, val);
++				PCI_L1SS_CTL1_L1SS_MASK, val);
  }
+ 
+ static void pcie_config_aspm_dev(struct pci_dev *pdev, u32 val)
 
 
