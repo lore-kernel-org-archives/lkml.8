@@ -2,85 +2,153 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81AFAC2BA2B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 06:43:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F81EC2BA2B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 06:44:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4CC2D214D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 06:43:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587019435;
-	bh=BKmhwxbmr2z9YCdItTQJHwRjKGeTBBS+eQgot1INXhM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=TPmLr5Ylz5UDLf7+L4RM2VMJN43RiZJQvd28w2jcNaQM4N8dJZn5Aqr9pTMXk+QOh
-	 HimJkSSYw5xJAQQf2LQW5kMfeygSqNTVYyUmC0A5YvvRydfB3iRHoW49SNkr9bW71K
-	 3l211QUOG7CwyZoePNc/OJxr8paGYoagT6Y2fTQs=
+	by mail.kernel.org (Postfix) with ESMTP id EFE00206D6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 06:44:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="pG92PCpD";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Ybg5/gOx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408443AbgDPGnw (ORCPT
+        id S2408464AbgDPGoC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 02:43:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52738 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2408168AbgDPGnp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 02:43:45 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B4DA8206D6;
-        Thu, 16 Apr 2020 06:43:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587019423;
-        bh=BKmhwxbmr2z9YCdItTQJHwRjKGeTBBS+eQgot1INXhM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=mWchGAC+vAFFSp6qh9NsLKsGlU90wq24zkjqWRuJQDRzI7cr9AxDmicO2eD+IzJ3c
-         sGCzNz3JCiuBvIVBeRdXO2UQKyfJ3SXnfZbVTf7z3X6+UWo1V7dQ9GHa/KBptAxeB3
-         icdyyi0gEO6PLAhNJ9+K2CaqqrQu1Y95AIUwfP44=
-Date:   Thu, 16 Apr 2020 08:43:41 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Zhenyu Wang <zhenyuw@linux.intel.com>,
-        Zhi Wang <zhi.a.wang@intel.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>, Jens Axboe <axboe@kernel.dk>,
-        linux-kernel@vger.kernel.org, amd-gfx@lists.freedesktop.org,
-        intel-gvt-dev@lists.freedesktop.org,
-        intel-gfx@lists.freedesktop.org, linux-usb@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        linux-fsdevel@vger.kernel.org, io-uring@vger.kernel.org,
-        linux-mm@kvack.org
-Subject: Re: [PATCH 2/3] kernel: better document the use_mm/unuse_mm API
- contract
-Message-ID: <20200416064341.GB300290@kroah.com>
-References: <20200416053158.586887-1-hch@lst.de>
- <20200416053158.586887-3-hch@lst.de>
+        Thu, 16 Apr 2020 02:44:02 -0400
+Received: from wnew1-smtp.messagingengine.com ([64.147.123.26]:40991 "EHLO
+        wnew1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2408163AbgDPGnx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 02:43:53 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.west.internal (Postfix) with ESMTP id C15CD717;
+        Thu, 16 Apr 2020 02:43:34 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute4.internal (MEProxy); Thu, 16 Apr 2020 02:43:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm2; bh=eYZf6ks0Ag4vWkdY+FBeNSBOYxZ
+        kZ9RWoI7L/wXDw/Q=; b=pG92PCpDKEaySEE6b3KK5owRlyOg6omtcBJRh6H2P9g
+        A4+dSJ8ZhNWYumPEo8RSeGX3Y1ofqBKY5EwBKyaQ4uWCzw59hiXAUOxV0z1366xq
+        iuHHZUldbuzXYDjsaxnBz0RsGbyN9Oo/wuSRdS/D5gtGdR/DOID4nUO++5rp07K7
+        LG4gEmPTqHamlJRrP5V34H6lR2pNC4zXGMW/GSE2CyOUmLq5FhAQ7reYixyNSF9S
+        Sk3l1mb29qIgPDMYY0/5m7I+DShBoF71j+C3gAVSuV2Nq12oir1/bimsDQytaFI9
+        rw3mdDAsOxKY1bvJX6PjvfGpx+6c3IrKClpgJXpZ0wA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=eYZf6k
+        s0Ag4vWkdY+FBeNSBOYxZkZ9RWoI7L/wXDw/Q=; b=Ybg5/gOxzIy3RezsVgMA1k
+        TNS1SpWdG/vSznxDhwvoLrldOuulzJrzOesiyd4OdIPHp7Pvdeido6VN49AZFJjX
+        vpbJjlQnZcrl0XVEenAR8HUbxv1iPLz1X4h7y0gO3Y8YvGQ+Gxco5vWU8dTZpAOa
+        BZauQ/RaI9M2F28kXPygdaAyXtkuoiRko9nhnLAnG7Fj/vpriF3MX/GnDqw3vD54
+        E2nE7ygWUQnJK7D2pMU5A92RDAXmSDVWG2auXATUw58gux8Zcplt8XXxS8uZEPyq
+        dwoVwWzcbh8nau5x1J4Tli8kmRSzPV5DdHht5f7hGV1AlT9ldV7F13ym9Jw80idw
+        ==
+X-ME-Sender: <xms:lv6XXlbZsjXCgRSobpV_OahNA0F2bAh_xQnNz30ENtpJCk6C2O5pKw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrfeeggdduudduucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjsehgtderredttddvnecuhfhrohhmpeforgigihhm
+    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecukfhppeeltd
+    drkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgepvdenucfrrghrrghmpehmrghi
+    lhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
+X-ME-Proxy: <xmx:lv6XXtpOixejZqr7iO1LBzaErDc2trud85HnQReIvup6Nj_ECC1-ug>
+    <xmx:lv6XXtQpwDnG3Phz4jTAefVSpE0PDruqeQW4tMGm8dv07y5H0bXPXQ>
+    <xmx:lv6XXhnZDnOcsLKYGPwKo5ewvcFCHv464DpLD_f1alqPkiWElJ017g>
+    <xmx:lv6XXk2v6et9oVVZCGJreRdM-Z9u-aFhl26_bHzMhmr4x9e7prVi_X54wQY>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id D7E56306005F;
+        Thu, 16 Apr 2020 02:43:33 -0400 (EDT)
+Date:   Thu, 16 Apr 2020 08:43:32 +0200
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Rob Herring <robh@kernel.org>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>, Vinod Koul <vkoul@kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Heiko Stuebner <heiko@sntech.de>, Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Fabio Estevam <festevam@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Amit Kucheria <amit.kucheria@linaro.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-i2c@vger.kernel.org,
+        linux-hwmon@vger.kernel.org, linux-iio@vger.kernel.org,
+        linux-input@vger.kernel.org, linux-leds@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-mmc@vger.kernel.org,
+        linux-mtd@lists.infradead.org, linux-can@vger.kernel.org,
+        netdev@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org,
+        linux-remoteproc@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-rtc@vger.kernel.org, linux-serial@vger.kernel.org,
+        alsa-devel@alsa-project.org, linux-spi@vger.kernel.org
+Subject: Re: [PATCH 2/2] dt-bindings: Remove cases of 'allOf' containing a
+ '$ref'
+Message-ID: <20200416064332.cbtmgnbwjityninz@gilmour.lan>
+References: <20200416005549.9683-1-robh@kernel.org>
+ <20200416005549.9683-2-robh@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="wl56qmwukpbi7dfb"
 Content-Disposition: inline
-In-Reply-To: <20200416053158.586887-3-hch@lst.de>
+In-Reply-To: <20200416005549.9683-2-robh@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 16, 2020 at 07:31:57AM +0200, Christoph Hellwig wrote:
-> Switch the function documentation to kerneldoc comments, and add
-> WARN_ON_ONCE asserts that the calling thread is a kernel thread and
-> does not have ->mm set (or has ->mm set in the case of unuse_mm).
-> 
-> Also give the functions a kthread_ prefix to better document the
-> use case.
-> 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> Acked-by: Felix Kuehling <Felix.Kuehling@amd.com>
 
-Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org> [usb]
+--wl56qmwukpbi7dfb
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Wed, Apr 15, 2020 at 07:55:49PM -0500, Rob Herring wrote:
+> json-schema versions draft7 and earlier have a weird behavior in that
+> any keywords combined with a '$ref' are ignored (silently). The correct
+> form was to put a '$ref' under an 'allOf'. This behavior is now changed
+> in the 2019-09 json-schema spec and '$ref' can be mixed with other
+> keywords. The json-schema library doesn't yet support this, but the
+> tooling now does a fixup for this and either way works.
+>
+> This has been a constant source of review comments, so let's change this
+> treewide so everyone copies the simpler syntax.
+>
+> Signed-off-by: Rob Herring <robh@kernel.org>
+
+For allwinner,
+Acked-by: Maxime Ripard <mripard@kernel.org>
+
+Maxime
+
+--wl56qmwukpbi7dfb
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXpf+lAAKCRDj7w1vZxhR
+xfXZAP9GMb4mpNd2CMjZwk5BxMrLzEIpKJTiQ4orqceXOWVHrwEA79RK8mnQLFzA
+6mFAQXdPtJjk58zdTQSSSDo30M+OtQk=
+=foV0
+-----END PGP SIGNATURE-----
+
+--wl56qmwukpbi7dfb--
