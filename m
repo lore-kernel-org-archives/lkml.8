@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 707FEC2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:11:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06AE4C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:11:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 40BBC21D7E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:11:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D94F12222D
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:11:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587049877;
-	bh=0xsYi/11uzlyBJ4Trt/P+eIrlBBktqV/M2hg5BUuIQg=;
+	s=default; t=1587049883;
+	bh=lFhx4Pwgt/IIWG+kD1mKhR5l8kclKGuuGvtVWpV6au4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=U4CEMqNz2bTV+RiMJsp8Bj9sHJOHiFV+AYxrYTRgMIQiSq9lm33RxXfFVbN/YCJES
-	 8xr09rVpeI8SytqZBNeZ+8/bBEpA4IvIfJCy+sFyIXm5cIwFGB847Kgh3t1cuApcfW
-	 bt7ebObXgGGxqZSaEOhOr/oD/ahHJC19EnloZAu8=
+	b=gHOoB2NlHfErS7+x8wOMz0vpLpYt3j7tCQ0Mhm6S3XKyrDfWRYok0f4n3AZxe6lpz
+	 jVGuisTVkJMpLk/q+ahHvXydzjoAMGi0howSplHJLzCo7NbT0IvHiQbW3/Z0zqk8d5
+	 wYGdNSfq/Z4G9TYYtzQk6X6Q6s2HKJL97N5jO87M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729486AbgDPPLO (ORCPT
+        id S1731824AbgDPPLW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:11:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36442 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 11:11:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36278 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731454AbgDPNu3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:50:29 -0400
+        id S1729119AbgDPNuZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:50:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CEA8A2078B;
-        Thu, 16 Apr 2020 13:50:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8674620786;
+        Thu, 16 Apr 2020 13:50:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587045026;
-        bh=0xsYi/11uzlyBJ4Trt/P+eIrlBBktqV/M2hg5BUuIQg=;
+        s=default; t=1587045019;
+        bh=lFhx4Pwgt/IIWG+kD1mKhR5l8kclKGuuGvtVWpV6au4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JnM8Z+6pR2Hutbb6jFqAA+IeeiMaH0paV0mvhyQ93RfBMf/BkDRQ520L2/rA6qPOv
-         gBBZUwukxwah31tJcuGtvxUcDhDK8EotEu58RDJmc1IWIJn80YTKsg4OV7k9T2B/oL
-         x/hDx+fmzyt0TPr2iB95fKX9bvg5fZrEKODv9Xro=
+        b=zT0tQHVvR612Mk80UTb1cx3orxP7UiIi53uIIKVHx8pkbLjS+XoSJhQh5rQvtUpjV
+         76YMUE9jRTXr02y0Vo8H46YyM944MNzLm/YynqYY4ayV66vHZ0toa213Rlj7mMhAuV
+         /giyZluQKDwaq4vo5Son6wb8PRr8UqR9AIN33mtI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>,
-        kbuild test robot <lkp@intel.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Stephen Boyd <sboyd@kernel.org>
-Subject: [PATCH 5.4 199/232] clk: ingenic/jz4770: Exit with error if CGU init failed
-Date:   Thu, 16 Apr 2020 15:24:53 +0200
-Message-Id: <20200416131340.119884887@linuxfoundation.org>
+        stable@vger.kernel.org, Michael Mueller <mimu@linux.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>
+Subject: [PATCH 5.4 196/232] s390/diag: fix display of diagnose call statistics
+Date:   Thu, 16 Apr 2020 15:24:50 +0200
+Message-Id: <20200416131339.718575125@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131316.640996080@linuxfoundation.org>
 References: <20200416131316.640996080@linuxfoundation.org>
@@ -61,39 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paul Cercueil <paul@crapouillou.net>
+From: Michael Mueller <mimu@linux.ibm.com>
 
-commit c067b46d731a764fc46ecc466c2967088c97089e upstream.
+commit 6c7c851f1b666a8a455678a0b480b9162de86052 upstream.
 
-Exit jz4770_cgu_init() if the 'cgu' pointer we get is NULL, since the
-pointer is passed as argument to functions later on.
+Show the full diag statistic table and not just parts of it.
 
-Fixes: 7a01c19007ad ("clk: Add Ingenic jz4770 CGU driver")
+The issue surfaced in a KVM guest with a number of vcpus
+defined smaller than NR_DIAG_STAT.
+
+Fixes: 1ec2772e0c3c ("s390/diag: add a statistic for diagnose calls")
 Cc: stable@vger.kernel.org
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-Reported-by: kbuild test robot <lkp@intel.com>
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-Link: https://lkml.kernel.org/r/20200213161952.37460-1-paul@crapouillou.net
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+Signed-off-by: Michael Mueller <mimu@linux.ibm.com>
+Reviewed-by: Heiko Carstens <heiko.carstens@de.ibm.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/clk/ingenic/jz4770-cgu.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ arch/s390/kernel/diag.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/clk/ingenic/jz4770-cgu.c
-+++ b/drivers/clk/ingenic/jz4770-cgu.c
-@@ -432,8 +432,10 @@ static void __init jz4770_cgu_init(struc
+--- a/arch/s390/kernel/diag.c
++++ b/arch/s390/kernel/diag.c
+@@ -84,7 +84,7 @@ static int show_diag_stat(struct seq_fil
  
- 	cgu = ingenic_cgu_new(jz4770_cgu_clocks,
- 			      ARRAY_SIZE(jz4770_cgu_clocks), np);
--	if (!cgu)
-+	if (!cgu) {
- 		pr_err("%s: failed to initialise CGU\n", __func__);
-+		return;
-+	}
+ static void *show_diag_stat_start(struct seq_file *m, loff_t *pos)
+ {
+-	return *pos <= nr_cpu_ids ? (void *)((unsigned long) *pos + 1) : NULL;
++	return *pos <= NR_DIAG_STAT ? (void *)((unsigned long) *pos + 1) : NULL;
+ }
  
- 	retval = ingenic_cgu_register_clocks(cgu);
- 	if (retval)
+ static void *show_diag_stat_next(struct seq_file *m, void *v, loff_t *pos)
 
 
