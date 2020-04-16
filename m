@@ -2,122 +2,121 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 228CEC2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 10:08:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C99A3C2BB85
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 10:08:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 008EE21D92
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 10:08:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587031705;
-	bh=K0WP10TiIcLv27eDTOY6OMpM34tUS8V0xWTdgNc2fLU=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=2rZvifuI6aJd10PlNGrX1dnNFQxrMVRJOUq1x/R7B4QUO417JtFRuehuk7bdXwnUf
-	 ejo+EAAxsDQvY0HQmF7AB+0NjwDb90F0NNzGxDGWj+tBRfUI+zd4G3psxa6UXO9zxp
-	 n2Svtki+LKZYW6cQzHx7zpJcqelEqr6A+f/5u+Js=
+	by mail.kernel.org (Postfix) with ESMTP id B12BF21D92
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 10:08:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2504771AbgDPKIQ (ORCPT
+        id S2504809AbgDPKIj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 06:08:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35412 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2504761AbgDPKH4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 06:07:56 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A9B2A21D92;
-        Thu, 16 Apr 2020 10:07:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587031675;
-        bh=K0WP10TiIcLv27eDTOY6OMpM34tUS8V0xWTdgNc2fLU=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=cW536kFNR+lJ390TAjqmnns3zSb2Sh5McnMQQEIyxViOUSyHa8wZMP4EaYMDSHepJ
-         JJflAD42r0ahyWpHQJjmamC3yOF6SlZN5zxT7fwLPejwi3VwLufZwNyCCjB4SA5Vnl
-         GgkbeFFqwlke+dMMAE8IIANO9UktKIjxlZl7sMCE=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 7F12735227CC; Thu, 16 Apr 2020 03:07:55 -0700 (PDT)
-Date:   Thu, 16 Apr 2020 03:07:55 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Joe Perches <joe@perches.com>
-Cc:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        kernel-team@fb.com, mingo@kernel.org, stern@rowland.harvard.edu,
-        parri.andrea@gmail.com, will@kernel.org, peterz@infradead.org,
-        boqun.feng@gmail.com, npiggin@gmail.com, dhowells@redhat.com,
-        j.alglave@ucl.ac.uk, luc.maranget@inria.fr, akiyks@gmail.com,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>
-Subject: Re: [PATCH lkmm tip/core/rcu 06/10] MAINTAINERS: Update maintainers
- for new Documentaion/litmus-tests/
-Message-ID: <20200416100755.GP17661@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200415183343.GA12265@paulmck-ThinkPad-P72>
- <20200415184945.16487-6-paulmck@kernel.org>
- <1288d0e231eb61566fefc8a9c0510fc123528da2.camel@perches.com>
- <20200416001741.GJ17661@paulmck-ThinkPad-P72>
- <9cd5b3c0a9a0f55d799a3d3ebd68ba8ff5f907d8.camel@perches.com>
+        Thu, 16 Apr 2020 06:08:39 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:45727 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2504638AbgDPKIU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 06:08:20 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212])
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1jP1RN-0006R9-P1; Thu, 16 Apr 2020 10:08:13 +0000
+Subject: Re: [PATCH][next] drivers: hv: remove redundant assignment to pointer
+ primary_channel
+To:     Dan Carpenter <dan.carpenter@oracle.com>,
+        Wei Liu <wei.liu@kernel.org>
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "K . Y . Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        linux-hyperv@vger.kernel.org
+References: <20200414152343.243166-1-colin.king@canonical.com>
+ <87d08axb7k.fsf@vitty.brq.redhat.com>
+ <606c442c-1923-77d4-c350-e06878172c44@canonical.com>
+ <87wo6hvxkz.fsf@vitty.brq.redhat.com>
+ <20200415143752.cm3xbesiuksfdbzm@debian> <20200416100253.GN1163@kadam>
+From:   Colin Ian King <colin.king@canonical.com>
+Autocrypt: addr=colin.king@canonical.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <b59b9dab-fddc-8e50-cd0b-75eceab5d256@canonical.com>
+Date:   Thu, 16 Apr 2020 11:08:13 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9cd5b3c0a9a0f55d799a3d3ebd68ba8ff5f907d8.camel@perches.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200416100253.GN1163@kadam>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 15, 2020 at 06:46:21PM -0700, Joe Perches wrote:
-> On Wed, 2020-04-15 at 17:17 -0700, Paul E. McKenney wrote:
-> > On Wed, Apr 15, 2020 at 02:39:59PM -0700, Joe Perches wrote:
-> > > On Wed, 2020-04-15 at 11:49 -0700, paulmck@kernel.org wrote:
-> > > > Also add me as Reviewer for LKMM. Previously a patch to do this was
-> > > > Acked but somewhere along the line got lost. Add myself in this patch.
-> > > []
-> > > > diff --git a/MAINTAINERS b/MAINTAINERS
-> > > []
-> > > > @@ -9806,6 +9806,7 @@ M:	Luc Maranget <luc.maranget@inria.fr>
-> > > >  M:	"Paul E. McKenney" <paulmck@kernel.org>
-> > > >  R:	Akira Yokosawa <akiyks@gmail.com>
-> > > >  R:	Daniel Lustig <dlustig@nvidia.com>
-> > > > +R:	Joel Fernandes <joel@joelfernandes.org>
-> > > >  L:	linux-kernel@vger.kernel.org
-> > > >  L:	linux-arch@vger.kernel.org
-> > > >  S:	Supported
-> > > > @@ -9816,6 +9817,7 @@ F:	Documentation/core-api/atomic_ops.rst
-> > > >  F:	Documentation/core-api/refcount-vs-atomic.rst
-> > > >  F:	Documentation/memory-barriers.txt
-> > > >  F:	tools/memory-model/
-> > > > +F:	Documentation/litmus-tests/
-> > > 
-> > > trivia:
-> > > 
-> > > Alphabetic ordering of F: entries please.
-> > > This should be between core-api and memory-barriers.
-> > > 
-> > > >  LIS3LV02D ACCELEROMETER DRIVER
-> > > >  M:	Eric Piel <eric.piel@tremplin-utc.net>
-> > 
-> > New one on me, but it does make a lot of sense, especially for cases
-> > with lots of scattered paths.  How about the following?
+On 16/04/2020 11:02, Dan Carpenter wrote:
+> We have this discussion over and over.  I always say it helps to have
+> the commit mentioned in the commit message but it's not a Fixes tag.
+> So I think that the commit message should say something like
+> "commit 1234234 ("blah blah") removed some code so this variable isn't
+> used any more".  I think it helps the review process.  But then if we
+> mention the commit everyone says to use the Fixes tag.
 > 
-> Thanks Paul.
-> 
-> If the recent commits that Linus did just before v5.7-rc1:
-> 
-> 3b50142d8528 ("MAINTAINERS: sort field names for all entries")
-> 4400b7d68f6e ("MAINTAINERS: sort entries by entry name")
-> 
-> don't create too many problems I suppose
-> 
-> $ scripts/parse-maintainers.pl --order --input=MAINTAINERS --output=MAINTAINERS
-> 
-> could be run just before every -rc1 to keep all this stuff organized.
-> 
-> We'll see.
+> It turns out if you leave out the commit entirely then people still
+> complain but a lot less frequently.  It shouldn't work that way but
+> reviewers are illogical.
 
-Easier than me remembering, I suppose.  ;-)
+Yep, to my knowledge the policy for this kind of commit is not described
+in any documentation, so it's ambiguous. Either way, one can't win
+without it being properly codified.
 
-							Thanx, Paul
+Colin
+
+> 
+> regards,
+> dan carpenter
+> 
+
