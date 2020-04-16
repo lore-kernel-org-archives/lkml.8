@@ -2,53 +2,52 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3B50C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:07:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC1F6C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:07:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BF9F020774
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:07:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B648720774
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:07:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587049668;
-	bh=Tl/oh1lZ+Gp9rx75HeDyxdbaLetuQooaBMQefpYAtJY=;
+	s=default; t=1587049673;
+	bh=6+oJ7PTP3fBINPUhEl2O/+YvcOWV+wkkE4+IcT2lYTM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IFIgY/g/KaGIl49BGGIPgoPB1XwyqNuDYaLkHJMwY+VBqzNHbbwuhLPCNh2AE5b5q
-	 piaz/HPKZvSWYVvRrq2riF5zRDFaCzEcageCV2cxSNhTk4PXCqkLPvxwumgNvdQX41
-	 3IqxLxmunx/JMW1ss9ttiGaUAD4s8i8uAnB93GdI=
+	b=UJAiTlvSSQ2LeSJ7KylqhZdXf4Ym1+1ZkVU0rgYxL5tt6ZTWfKLMZFceOPm5td6Np
+	 R2Qht9sSOkrCLZ/kfW2cIGF05mg7kOV06o7ORTbVwpMHhhr6OzDpyzQ3wrk+o90eTY
+	 8Bxm42C7nBL2mUOxbv8omrWoYROywBst4s/1OI7I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732610AbgDPPHr (ORCPT
+        id S2442161AbgDPPHw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:07:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37600 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 11:07:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37532 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392371AbgDPNva (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:51:30 -0400
+        id S2388826AbgDPNvZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:51:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5439220732;
-        Thu, 16 Apr 2020 13:51:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 67B1E21734;
+        Thu, 16 Apr 2020 13:51:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587045089;
-        bh=Tl/oh1lZ+Gp9rx75HeDyxdbaLetuQooaBMQefpYAtJY=;
+        s=default; t=1587045084;
+        bh=6+oJ7PTP3fBINPUhEl2O/+YvcOWV+wkkE4+IcT2lYTM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cn5pkcAAD0CAZJDHW2WvphGIFZbmoczGpUTdTAHKKbkS2MBK7hvE0x7a0a7e5HHtr
-         C5gFdUXlOy7YUUJrI+bityxMR1b3Ayf/82hmuXc2OvDu3eGKRteQTIv3Ug1UnpJBsE
-         yClV1R1WT74ELR7lf3n3gpQR2FcQU5kZoc2lTBz4=
+        b=2LQPnl9S/uwVGgR24ukAkI/S8QN7MFSovC2k6YPPKvnr+QfHf0joqdmxxtlKJLxsU
+         +bp3QuN1AtduLoMlNjrdeaQAjWOYu39GSjPPdh0TYNRvzkf48Yj64Zs3MdanIHWHcE
+         +Z/D2/LRyxJH8in2y5tDGuXe7+PI559bOr18WNoU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Bob Liu <bob.liu@oracle.com>,
-        Damien Le Moal <damien.lemoal@wdc.com>,
-        Mike Snitzer <snitzer@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 218/232] dm zoned: remove duplicate nr_rnd_zones increase in dmz_init_zone()
-Date:   Thu, 16 Apr 2020 15:25:12 +0200
-Message-Id: <20200416131342.752816897@linuxfoundation.org>
+        stable@vger.kernel.org, Chris Wilson <chris@chris-wilson.co.uk>,
+        Matthew Auld <matthew.william.auld@gmail.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>
+Subject: [PATCH 5.4 183/232] drm/i915/gem: Flush all the reloc_gpu batch
+Date:   Thu, 16 Apr 2020 15:24:37 +0200
+Message-Id: <20200416131337.996434225@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131316.640996080@linuxfoundation.org>
 References: <20200416131316.640996080@linuxfoundation.org>
@@ -61,41 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bob Liu <bob.liu@oracle.com>
+From: Chris Wilson <chris@chris-wilson.co.uk>
 
-[ Upstream commit b8fdd090376a7a46d17db316638fe54b965c2fb0 ]
+commit 1aaea8476d9f014667d2cb24819f9bcaf3ebb7a4 upstream.
 
-zmd->nr_rnd_zones was increased twice by mistake. The other place it
-is increased in dmz_init_zone() is the only one needed:
+__i915_gem_object_flush_map() takes a byte range, so feed it the written
+bytes and do not mistake the u32 index as bytes!
 
-1131                 zmd->nr_useable_zones++;
-1132                 if (dmz_is_rnd(zone)) {
-1133                         zmd->nr_rnd_zones++;
-					^^^
-Fixes: 3b1a94c88b79 ("dm zoned: drive-managed zoned block device target")
-Cc: stable@vger.kernel.org
-Signed-off-by: Bob Liu <bob.liu@oracle.com>
-Reviewed-by: Damien Le Moal <damien.lemoal@wdc.com>
-Signed-off-by: Mike Snitzer <snitzer@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: a679f58d0510 ("drm/i915: Flush pages on acquisition")
+Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
+Cc: Matthew Auld <matthew.william.auld@gmail.com>
+Cc: <stable@vger.kernel.org> # v5.2+
+Reviewed-by: Matthew Auld <matthew.william.auld@gmail.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200406114821.10949-1-chris@chris-wilson.co.uk
+(cherry picked from commit 30c88a47f1abd5744908d3681f54dcf823fe2a12)
+Signed-off-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/md/dm-zoned-metadata.c | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/gpu/drm/i915/gem/i915_gem_execbuffer.c |    8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/md/dm-zoned-metadata.c b/drivers/md/dm-zoned-metadata.c
-index 5205cf9bbfd92..e0a6cf9239f1c 100644
---- a/drivers/md/dm-zoned-metadata.c
-+++ b/drivers/md/dm-zoned-metadata.c
-@@ -1107,7 +1107,6 @@ static int dmz_init_zone(struct dmz_metadata *zmd, struct dm_zone *zone,
+--- a/drivers/gpu/drm/i915/gem/i915_gem_execbuffer.c
++++ b/drivers/gpu/drm/i915/gem/i915_gem_execbuffer.c
+@@ -931,11 +931,13 @@ static inline struct i915_ggtt *cache_to
  
- 	if (blkz->type == BLK_ZONE_TYPE_CONVENTIONAL) {
- 		set_bit(DMZ_RND, &zone->flags);
--		zmd->nr_rnd_zones++;
- 	} else if (blkz->type == BLK_ZONE_TYPE_SEQWRITE_REQ ||
- 		   blkz->type == BLK_ZONE_TYPE_SEQWRITE_PREF) {
- 		set_bit(DMZ_SEQ, &zone->flags);
--- 
-2.20.1
-
+ static void reloc_gpu_flush(struct reloc_cache *cache)
+ {
+-	GEM_BUG_ON(cache->rq_size >= cache->rq->batch->obj->base.size / sizeof(u32));
++	struct drm_i915_gem_object *obj = cache->rq->batch->obj;
++
++	GEM_BUG_ON(cache->rq_size >= obj->base.size / sizeof(u32));
+ 	cache->rq_cmd[cache->rq_size] = MI_BATCH_BUFFER_END;
+ 
+-	__i915_gem_object_flush_map(cache->rq->batch->obj, 0, cache->rq_size);
+-	i915_gem_object_unpin_map(cache->rq->batch->obj);
++	__i915_gem_object_flush_map(obj, 0, sizeof(u32) * (cache->rq_size + 1));
++	i915_gem_object_unpin_map(obj);
+ 
+ 	intel_gt_chipset_flush(cache->rq->engine->gt);
+ 
 
 
