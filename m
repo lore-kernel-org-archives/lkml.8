@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7E3CC2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:12:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06665C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:12:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BEDF221D7E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:12:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3A98214AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:12:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587049930;
-	bh=iGAvezQIXpomV+U2h6LGXS5TodfnQCAsqZ5z6i5QdVU=;
+	s=default; t=1587049937;
+	bh=LkFSaWD8eK5fUBwVuEfFuYOdlmwas0uXDLBhIaHcx94=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ON75CkGO1UGBPgYI7evjL4mNT11Nkmxh/21hnKJm292EzwNPb4MIUp4jJtkOu3Lin
-	 U2nJver0pQigfgYDtoO6UnVsCNCWhJ3vI+nGbC1RwuTnDUTjbqgOLq4CTRQxBgcgQS
-	 J99qdGmV7l/UnUSI4/uaHZVPe/OwH1tf3PJjiSxA=
+	b=DNaSudL2m5EeItgQvtmxm7upyZAWBDnu48MaVRV7kPJMer1Ipq5VsFrnU6Sat3Nn+
+	 MHFd2tI3ZznZhVauQm/o1oAXbwRjRrMNqbos5b7nbLuKhu07+h37u7i4vF2eqnyxD+
+	 nq3vtgvD/YbrkiZC4v+QLN5k+6FS7p75F4xHljLY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395057AbgDPPME (ORCPT
+        id S2395063AbgDPPMP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:12:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35834 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 11:12:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35820 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2441659AbgDPNuL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2441661AbgDPNuL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 16 Apr 2020 09:50:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C43A32224E;
-        Thu, 16 Apr 2020 13:49:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7491C20732;
+        Thu, 16 Apr 2020 13:49:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044997;
-        bh=iGAvezQIXpomV+U2h6LGXS5TodfnQCAsqZ5z6i5QdVU=;
+        s=default; t=1587044989;
+        bh=LkFSaWD8eK5fUBwVuEfFuYOdlmwas0uXDLBhIaHcx94=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QM/P5UnC7Jo7LcTeoTLYe7mb6Wv+XwFwt7AjkJAJ7oxYWrSUFe/YSUvv6QvmYL1ua
-         MYE5aUFGBfjuQ2QmtFINzgWXkdTsZIUGnYUeMWF/lb1auGP6YQK5rlUzINGaLkcVN8
-         whpo0OOyoUmDxfYpagq0Ix4o/VeDYYZqRIL8ClF8=
+        b=HiPfATfUUUqiu4HAEpPeud7yRwKLFlkb9QwSOIZ5LMK3bKYQxWn3e5499E+oRIxy+
+         COMZVLQUxEqQ8dBh15LGl95eeGh+lG2vdxxlmZKEWSly026fOXjYtlKjs8kGQz5BsN
+         RYrDfDNoos0xeavPyuFWLWLVKUlE0EjU+p8yACu8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Libor Pechacek <lpechacek@suse.cz>,
-        Michal Suchanek <msuchanek@suse.de>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 5.4 188/232] powerpc/pseries: Avoid NULL pointer dereference when drmem is unavailable
-Date:   Thu, 16 Apr 2020 15:24:42 +0200
-Message-Id: <20200416131338.652737635@linuxfoundation.org>
+        stable@vger.kernel.org, Chris Wilson <chris@chris-wilson.co.uk>,
+        Alex Deucher <alexander.deucher@amd.com>
+Subject: [PATCH 5.4 185/232] drm: Remove PageReserved manipulation from drm_pci_alloc
+Date:   Thu, 16 Apr 2020 15:24:39 +0200
+Message-Id: <20200416131338.241102568@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131316.640996080@linuxfoundation.org>
 References: <20200416131316.640996080@linuxfoundation.org>
@@ -60,101 +59,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Libor Pechacek <lpechacek@suse.cz>
+From: Chris Wilson <chris@chris-wilson.co.uk>
 
-commit a83836dbc53e96f13fec248ecc201d18e1e3111d upstream.
+commit ea36ec8623f56791c6ff6738d0509b7920f85220 upstream.
 
-In guests without hotplugagble memory drmem structure is only zero
-initialized. Trying to manipulate DLPAR parameters results in a crash.
+drm_pci_alloc/drm_pci_free are very thin wrappers around the core dma
+facilities, and we have no special reason within the drm layer to behave
+differently. In particular, since
 
-  $ echo "memory add count 1" > /sys/kernel/dlpar
-  Oops: Kernel access of bad area, sig: 11 [#1]
-  LE PAGE_SIZE=64K MMU=Hash SMP NR_CPUS=2048 NUMA pSeries
-  ...
-  NIP:  c0000000000ff294 LR: c0000000000ff248 CTR: 0000000000000000
-  REGS: c0000000fb9d3880 TRAP: 0300   Tainted: G            E      (5.5.0-rc6-2-default)
-  MSR:  8000000000009033 <SF,EE,ME,IR,DR,RI,LE>  CR: 28242428  XER: 20000000
-  CFAR: c0000000009a6c10 DAR: 0000000000000010 DSISR: 40000000 IRQMASK: 0
-  ...
-  NIP dlpar_memory+0x6e4/0xd00
-  LR  dlpar_memory+0x698/0xd00
-  Call Trace:
-    dlpar_memory+0x698/0xd00 (unreliable)
-    handle_dlpar_errorlog+0xc0/0x190
-    dlpar_store+0x198/0x4a0
-    kobj_attr_store+0x30/0x50
-    sysfs_kf_write+0x64/0x90
-    kernfs_fop_write+0x1b0/0x290
-    __vfs_write+0x3c/0x70
-    vfs_write+0xd0/0x260
-    ksys_write+0xdc/0x130
-    system_call+0x5c/0x68
+commit de09d31dd38a50fdce106c15abd68432eebbd014
+Author: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+Date:   Fri Jan 15 16:51:42 2016 -0800
 
-Taking closer look at the code, I can see that for_each_drmem_lmb is a
-macro expanding into `for (lmb = &drmem_info->lmbs[0]; lmb <=
-&drmem_info->lmbs[drmem_info->n_lmbs - 1]; lmb++)`. When drmem_info->lmbs
-is NULL, the loop would iterate through the whole address range if it
-weren't stopped by the NULL pointer dereference on the next line.
+    page-flags: define PG_reserved behavior on compound pages
 
-This patch aligns for_each_drmem_lmb and for_each_drmem_lmb_in_range
-macro behavior with the common C semantics, where the end marker does
-not belong to the scanned range, and alters get_lmb_range() semantics.
-As a side effect, the wraparound observed in the crash is prevented.
+    As far as I can see there's no users of PG_reserved on compound pages.
+    Let's use PF_NO_COMPOUND here.
 
-Fixes: 6c6ea53725b3 ("powerpc/mm: Separate ibm, dynamic-memory data from DT format")
-Cc: stable@vger.kernel.org # v4.16+
-Signed-off-by: Libor Pechacek <lpechacek@suse.cz>
-Signed-off-by: Michal Suchanek <msuchanek@suse.de>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20200131132829.10281-1-msuchanek@suse.de
+it has been illegal to combine GFP_COMP with SetPageReserved, so lets
+stop doing both and leave the dma layer to its own devices.
+
+Reported-by: Taketo Kabe
+Bug: https://gitlab.freedesktop.org/drm/intel/issues/1027
+Fixes: de09d31dd38a ("page-flags: define PG_reserved behavior on compound pages")
+Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
+Cc: <stable@vger.kernel.org> # v4.5+
+Reviewed-by: Alex Deucher <alexander.deucher@amd.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200202171635.4039044-1-chris@chris-wilson.co.uk
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/powerpc/include/asm/drmem.h                |    4 ++--
- arch/powerpc/platforms/pseries/hotplug-memory.c |    8 ++++----
- 2 files changed, 6 insertions(+), 6 deletions(-)
+ drivers/gpu/drm/drm_pci.c |   23 ++---------------------
+ 1 file changed, 2 insertions(+), 21 deletions(-)
 
---- a/arch/powerpc/include/asm/drmem.h
-+++ b/arch/powerpc/include/asm/drmem.h
-@@ -27,12 +27,12 @@ struct drmem_lmb_info {
- extern struct drmem_lmb_info *drmem_info;
- 
- #define for_each_drmem_lmb_in_range(lmb, start, end)		\
--	for ((lmb) = (start); (lmb) <= (end); (lmb)++)
-+	for ((lmb) = (start); (lmb) < (end); (lmb)++)
- 
- #define for_each_drmem_lmb(lmb)					\
- 	for_each_drmem_lmb_in_range((lmb),			\
- 		&drmem_info->lmbs[0],				\
--		&drmem_info->lmbs[drmem_info->n_lmbs - 1])
-+		&drmem_info->lmbs[drmem_info->n_lmbs])
- 
- /*
-  * The of_drconf_cell_v1 struct defines the layout of the LMB data
---- a/arch/powerpc/platforms/pseries/hotplug-memory.c
-+++ b/arch/powerpc/platforms/pseries/hotplug-memory.c
-@@ -223,7 +223,7 @@ static int get_lmb_range(u32 drc_index,
- 			 struct drmem_lmb **end_lmb)
+--- a/drivers/gpu/drm/drm_pci.c
++++ b/drivers/gpu/drm/drm_pci.c
+@@ -51,8 +51,6 @@
+ drm_dma_handle_t *drm_pci_alloc(struct drm_device * dev, size_t size, size_t align)
  {
- 	struct drmem_lmb *lmb, *start, *end;
--	struct drmem_lmb *last_lmb;
-+	struct drmem_lmb *limit;
+ 	drm_dma_handle_t *dmah;
+-	unsigned long addr;
+-	size_t sz;
  
- 	start = NULL;
- 	for_each_drmem_lmb(lmb) {
-@@ -236,10 +236,10 @@ static int get_lmb_range(u32 drc_index,
- 	if (!start)
- 		return -EINVAL;
+ 	/* pci_alloc_consistent only guarantees alignment to the smallest
+ 	 * PAGE_SIZE order which is greater than or equal to the requested size.
+@@ -68,20 +66,13 @@ drm_dma_handle_t *drm_pci_alloc(struct d
+ 	dmah->size = size;
+ 	dmah->vaddr = dma_alloc_coherent(&dev->pdev->dev, size,
+ 					 &dmah->busaddr,
+-					 GFP_KERNEL | __GFP_COMP);
++					 GFP_KERNEL);
  
--	end = &start[n_lmbs - 1];
-+	end = &start[n_lmbs];
+ 	if (dmah->vaddr == NULL) {
+ 		kfree(dmah);
+ 		return NULL;
+ 	}
  
--	last_lmb = &drmem_info->lmbs[drmem_info->n_lmbs - 1];
--	if (end > last_lmb)
-+	limit = &drmem_info->lmbs[drmem_info->n_lmbs];
-+	if (end > limit)
- 		return -EINVAL;
+-	/* XXX - Is virt_to_page() legal for consistent mem? */
+-	/* Reserve */
+-	for (addr = (unsigned long)dmah->vaddr, sz = size;
+-	     sz > 0; addr += PAGE_SIZE, sz -= PAGE_SIZE) {
+-		SetPageReserved(virt_to_page((void *)addr));
+-	}
+-
+ 	return dmah;
+ }
  
- 	*start_lmb = start;
+@@ -94,19 +85,9 @@ EXPORT_SYMBOL(drm_pci_alloc);
+  */
+ void __drm_legacy_pci_free(struct drm_device * dev, drm_dma_handle_t * dmah)
+ {
+-	unsigned long addr;
+-	size_t sz;
+-
+-	if (dmah->vaddr) {
+-		/* XXX - Is virt_to_page() legal for consistent mem? */
+-		/* Unreserve */
+-		for (addr = (unsigned long)dmah->vaddr, sz = dmah->size;
+-		     sz > 0; addr += PAGE_SIZE, sz -= PAGE_SIZE) {
+-			ClearPageReserved(virt_to_page((void *)addr));
+-		}
++	if (dmah->vaddr)
+ 		dma_free_coherent(&dev->pdev->dev, dmah->size, dmah->vaddr,
+ 				  dmah->busaddr);
+-	}
+ }
+ 
+ /**
 
 
