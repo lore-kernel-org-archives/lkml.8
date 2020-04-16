@@ -2,98 +2,128 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E558DC2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:03:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5535BC2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:03:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC8352078B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:03:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587045810;
-	bh=tRXqSHZ8cQC+9aPAz8WM9CyiqdFKO7LOWNsUqFUbfmM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EJLcMJkc3c+E7fSxzjx7+ePulBPTIqV9r4Dcl52YX0nvzOHLv/ke+EzdDoIwZcF4L
-	 q/VIDvGSQjA/XXmg9Wt5g8Jb3B7VkJw5sVlSg2f1h3KE0leE6SkDsZ0/X5kf5wv2GY
-	 jLFklYh1PmBSv6ahBq9q6hSYzgS2MOevuI029tVE=
+	by mail.kernel.org (Postfix) with ESMTP id 32D76217D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:03:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TNY4ffNL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391989AbgDPOD3 (ORCPT
+        id S2389598AbgDPODf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:03:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54980 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726521AbgDPNmC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:42:02 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4148A20732;
-        Thu, 16 Apr 2020 13:42:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044522;
-        bh=tRXqSHZ8cQC+9aPAz8WM9CyiqdFKO7LOWNsUqFUbfmM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0kUPLg3V6op0UbpTWi78tCraM9y8FTJA2iIxbXsu0ffUbtVpMDBqVJGzE39+o04T9
-         FG63WjuX41ljRC/EcHWQURUp6z0HAI7i2zOI/0HXhGNdiQLp5kWy/fdb2r5TlMG5f5
-         vFsBihuPwkJgJymecnR3G/v6a3babmRxYVEey474=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michael Strauss <michael.strauss@amd.com>,
-        Eric Yang <eric.yang2@amd.com>,
-        Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>
-Subject: [PATCH 5.5 212/257] drm/amd/display: Check for null fclk voltage when parsing clock table
-Date:   Thu, 16 Apr 2020 15:24:23 +0200
-Message-Id: <20200416131352.553064905@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200416131325.891903893@linuxfoundation.org>
-References: <20200416131325.891903893@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Thu, 16 Apr 2020 10:03:35 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:50991 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726568AbgDPNmJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:42:09 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587044527;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=a/1ZzkqlTi7SRUYHpseP8/ZANbIohPVFGcK3piqF1OY=;
+        b=TNY4ffNL0dG78/Oo8KKxKXSg5lRMFyVuD6Ow81OkH+6C6vRnbF4D7xIKIw4Li9Ae4j+y/f
+        WHx0eWPRPe9bicthCdxcd2PaOMfW1OeXFiZ4gN8Yr5OR6ML07hbNLN6mbWh5huF1ZAfY9a
+        yUJqpFDrPvP28rbi7+NG73ifMkxuRtg=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-319-okW0YJh6OXmWSULMjcgr3Q-1; Thu, 16 Apr 2020 09:42:04 -0400
+X-MC-Unique: okW0YJh6OXmWSULMjcgr3Q-1
+Received: by mail-wr1-f70.google.com with SMTP id i10so1245102wrq.8
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 06:42:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=a/1ZzkqlTi7SRUYHpseP8/ZANbIohPVFGcK3piqF1OY=;
+        b=G5Ievk2Eca6lY7K+WGQ33hV5/NYsamhTkZ7Hadm8qiINJPdjZiPXLMG7Sl27GS3hj2
+         SekhmTY3q8e0QMztFiIgbgm3yMxDtIW1YiAJMK7qZDr+u1iqLdg8Rl0fZXi1G2ZTh4wB
+         jxNaXlDMVXlaF2g4NkLe4CjJ3wKsYXDbMS5aUsml8bnaFSdSimQZN1LV4cwNsqzWhksQ
+         hf1WSfn6erJ3/OzUEK5L0W5bSi+GgCBgpyMftZhAlzL211oaCxbuMKia+557dNEpWe6d
+         fkh7yS85v9yRILfSHmOV9Mc3yKkaqsmPvE5yGvjVShWLnkhXFOdFALWHCF2QUNWF6Y3S
+         1Oww==
+X-Gm-Message-State: AGi0PuZEyUP7j8SI+rttBJO+nqW2biYiB0if7z31/KUSl6hjxsCmDx25
+        hduXHSzI/4AEShOavcgfa5JqG6ZFJREZlDdTfmW8PLSbl6lPmjid8tNH1SbE9csafvu0ylM/sUm
+        i2VvVE05kiKFKLIYC0DD3AmI6
+X-Received: by 2002:a1c:32c7:: with SMTP id y190mr5217960wmy.13.1587044522784;
+        Thu, 16 Apr 2020 06:42:02 -0700 (PDT)
+X-Google-Smtp-Source: APiQypKzoEVKX7f3apWSf+0ABegyK+KCs7PTPeOkDlwys1PA0/OzOllgPpSCI941twQhqGT7eyIuCQ==
+X-Received: by 2002:a1c:32c7:: with SMTP id y190mr5217940wmy.13.1587044522536;
+        Thu, 16 Apr 2020 06:42:02 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:399d:3ef7:647c:b12d? ([2001:b07:6468:f312:399d:3ef7:647c:b12d])
+        by smtp.gmail.com with ESMTPSA id o16sm28082541wrs.44.2020.04.16.06.42.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 16 Apr 2020 06:42:02 -0700 (PDT)
+Subject: Re: [PATCH 0/5] KVM: VMX: Add caching of EXIT_QUAL and INTR_INFO
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200415203454.8296-1-sean.j.christopherson@intel.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <d449f6e3-ca28-2fac-e4ed-7dea2729d3b5@redhat.com>
+Date:   Thu, 16 Apr 2020 15:42:00 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200415203454.8296-1-sean.j.christopherson@intel.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Strauss <michael.strauss@amd.com>
+On 15/04/20 22:34, Sean Christopherson wrote:
+> Patches 4-5 are the focus of this series, adding caching of
+> vmcs.EXIT_QUALIFICATION and proper caching of vmcs.INTR_INFO (instead of
+> caching it with ad hoc rules about when it's available).  Patches 1-3
+> are prep work to clean up the register caching to ensure correctness when
+> switching between vmcs01 and vmcs02.
+> 
+> The idea for this came about when working on the "unionize exit_reason"
+> series.  The nested VM-Exit logic looks at both fields multiple times,
+> which is ok-ish when everything is crammed into one or two functions, but
+> incurs multiple VMREADs when split up.  I really didn't want to solve that
+> issue by piling on more cases where vmx->exit_intr_info would be valid, or
+> by duplicating that fragile pattern for exit_qualification.
+> 
+> Paolo, this will conflict with the "unionize exit_reason" series, though
+> the conflict resolution is all mechnical in nature.  Let me know if you
+> want me to respin one on top of the other, send a single series, etc...
 
-commit 72f5b5a308c744573fdbc6c78202c52196d2c162 upstream.
+Queued, I think I fixed the conflicts right.  We'll see if anything
+explodes when I test it. :)
 
-[WHY]
-In cases where a clock table is malformed such that fclk entries have
-frequencies but not voltages listed, we don't catch the error and set
-clocks to 0 instead of using hardcoded values as we should.
+Paolo
 
-[HOW]
-Add check for clock tables fclk entry's voltage as well
-
-Signed-off-by: Michael Strauss <michael.strauss@amd.com>
-Reviewed-by: Eric Yang <eric.yang2@amd.com>
-Acked-by: Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- drivers/gpu/drm/amd/display/dc/clk_mgr/dcn21/rn_clk_mgr.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
---- a/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn21/rn_clk_mgr.c
-+++ b/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn21/rn_clk_mgr.c
-@@ -641,7 +641,7 @@ static void rn_clk_mgr_helper_populate_b
- 	/* Find lowest DPM, FCLK is filled in reverse order*/
- 
- 	for (i = PP_SMU_NUM_FCLK_DPM_LEVELS - 1; i >= 0; i--) {
--		if (clock_table->FClocks[i].Freq != 0) {
-+		if (clock_table->FClocks[i].Freq != 0 && clock_table->FClocks[i].Vol != 0) {
- 			j = i;
- 			break;
- 		}
-
+> 
+> Sean Christopherson (5):
+>   KVM: nVMX: Invoke ept_save_pdptrs() if and only if PAE paging is
+>     enabled
+>   KVM: nVMX: Reset register cache (available and dirty masks) on VMCS
+>     switch
+>   KVM: nVMX: Drop manual clearing of segment cache on nested VMCS switch
+>   KVM: VMX: Cache vmcs.EXIT_QUALIFICATION using arch avail_reg flags
+>   KVM: VMX: Cache vmcs.EXIT_INTR_INFO using arch avail_reg flags
+> 
+>  arch/x86/include/asm/kvm_host.h |  2 +
+>  arch/x86/kvm/vmx/nested.c       | 29 +++++++------
+>  arch/x86/kvm/vmx/nested.h       |  4 +-
+>  arch/x86/kvm/vmx/vmx.c          | 73 ++++++++++++++++-----------------
+>  arch/x86/kvm/vmx/vmx.h          | 35 +++++++++++++++-
+>  5 files changed, 86 insertions(+), 57 deletions(-)
+> 
 
