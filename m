@@ -4,49 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4701DC2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:11:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A60D6C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:11:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 220E821D7E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:11:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 838202222D
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:11:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587049909;
-	bh=1LgyJrWaUKsLXxKer366RcaZTBpSVLJiuObAzj0R+4o=;
+	s=default; t=1587049914;
+	bh=35DQCoLhU4IACeOnSBXyrN4iKj6AcylTdXMZ0STztX4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hQoYttPTHZE4W/0JuMMBG9ZezqiExVPe9bPRy9/s0me5ua2K2mPHX3g41/SU7rIKA
-	 4l5sxjKplbVGBhcwAjBH4j4+sd+jDk5sA9iLsvIfqQlCsgmeKVA7KYUTsjTJOwy73e
-	 jDB3J2tIiVoSO1UjiXl3a5GCeazXn70M6G1j+SDg=
+	b=UUBe/k4iw4rbuKkGPqentkhL65KlI2IdVoB539kZt7mJM4eohBp3gsqnTDl6XMlqK
+	 dFutyEQEP9UF7rKC4yoKzDmsDcbcYLpy3yjC1Cw8btsj5i+fy3PBhNH4+PDzXlL+fM
+	 437B1q7p0C+sDsujjkivWrZbnj0pB5HAC1RkSW5s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394985AbgDPPLs (ORCPT
+        id S2395029AbgDPPLx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:11:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36110 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 11:11:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36116 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2441670AbgDPNuL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2441671AbgDPNuL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 16 Apr 2020 09:50:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A879C22252;
-        Thu, 16 Apr 2020 13:50:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ECE53217D8;
+        Thu, 16 Apr 2020 13:50:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587045007;
-        bh=1LgyJrWaUKsLXxKer366RcaZTBpSVLJiuObAzj0R+4o=;
+        s=default; t=1587045009;
+        bh=35DQCoLhU4IACeOnSBXyrN4iKj6AcylTdXMZ0STztX4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dP1YYe9PXHk4nsPO9loL1Wtjn/Xr+Ze3qLyVJLYjnVtkmrFEd6Pm5lsfvT2sD2UcE
-         H5/D82EAmMSsiOVFMevxpbLGZBP9A/Wy/BuReGcpnzmrq+DegfNKgwKpI6kaGkiimg
-         F0JK5QSikReVKd2Uvkunnd9O7vH7+H6l0Ygt8UE4=
+        b=pLz1A5Fp2SVTEkZ52U11Q3l4wWt7pjLgu1lTYqFxwsbEz3SDO6YjoMsRE5qAxrgf7
+         rA9qetYNVS7OVSXGRTyvybBo8JT1Puyzj+o2o5byWdh7yGMutmos/LZaWX9fdu5gAv
+         Cyc7FxLelaOyFWCTKOkqfSkmGTo81iC5Oq8xXftE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
-        Theodore Tso <tytso@mit.edu>, stable@kernel.org
-Subject: [PATCH 5.4 192/232] ext4: fix a data race at inode->i_blocks
-Date:   Thu, 16 Apr 2020 15:24:46 +0200
-Message-Id: <20200416131339.159108496@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Biggers <ebiggers@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jessica Yu <jeyu@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Jeff Vander Stoep <jeffv@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        NeilBrown <neilb@suse.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.4 193/232] fs/filesystems.c: downgrade user-reachable WARN_ONCE() to pr_warn_once()
+Date:   Thu, 16 Apr 2020 15:24:47 +0200
+Message-Id: <20200416131339.304534097@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131316.640996080@linuxfoundation.org>
 References: <20200416131316.640996080@linuxfoundation.org>
@@ -59,90 +66,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qian Cai <cai@lca.pw>
+From: Eric Biggers <ebiggers@google.com>
 
-commit 28936b62e71e41600bab319f262ea9f9b1027629 upstream.
+commit 26c5d78c976ca298e59a56f6101a97b618ba3539 upstream.
 
-inode->i_blocks could be accessed concurrently as noticed by KCSAN,
+After request_module(), nothing is stopping the module from being
+unloaded until someone takes a reference to it via try_get_module().
 
- BUG: KCSAN: data-race in ext4_do_update_inode [ext4] / inode_add_bytes
+The WARN_ONCE() in get_fs_type() is thus user-reachable, via userspace
+running 'rmmod' concurrently.
 
- write to 0xffff9a00d4b982d0 of 8 bytes by task 22100 on cpu 118:
-  inode_add_bytes+0x65/0xf0
-  __inode_add_bytes at fs/stat.c:689
-  (inlined by) inode_add_bytes at fs/stat.c:702
-  ext4_mb_new_blocks+0x418/0xca0 [ext4]
-  ext4_ext_map_blocks+0x1a6b/0x27b0 [ext4]
-  ext4_map_blocks+0x1a9/0x950 [ext4]
-  _ext4_get_block+0xfc/0x270 [ext4]
-  ext4_get_block_unwritten+0x33/0x50 [ext4]
-  __block_write_begin_int+0x22e/0xae0
-  __block_write_begin+0x39/0x50
-  ext4_write_begin+0x388/0xb50 [ext4]
-  ext4_da_write_begin+0x35f/0x8f0 [ext4]
-  generic_perform_write+0x15d/0x290
-  ext4_buffered_write_iter+0x11f/0x210 [ext4]
-  ext4_file_write_iter+0xce/0x9e0 [ext4]
-  new_sync_write+0x29c/0x3b0
-  __vfs_write+0x92/0xa0
-  vfs_write+0x103/0x260
-  ksys_write+0x9d/0x130
-  __x64_sys_write+0x4c/0x60
-  do_syscall_64+0x91/0xb05
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+Since WARN_ONCE() is for kernel bugs only, not for user-reachable
+situations, downgrade this warning to pr_warn_once().
 
- read to 0xffff9a00d4b982d0 of 8 bytes by task 8 on cpu 65:
-  ext4_do_update_inode+0x4a0/0xf60 [ext4]
-  ext4_inode_blocks_set at fs/ext4/inode.c:4815
-  ext4_mark_iloc_dirty+0xaf/0x160 [ext4]
-  ext4_mark_inode_dirty+0x129/0x3e0 [ext4]
-  ext4_convert_unwritten_extents+0x253/0x2d0 [ext4]
-  ext4_convert_unwritten_io_end_vec+0xc5/0x150 [ext4]
-  ext4_end_io_rsv_work+0x22c/0x350 [ext4]
-  process_one_work+0x54f/0xb90
-  worker_thread+0x80/0x5f0
-  kthread+0x1cd/0x1f0
-  ret_from_fork+0x27/0x50
+Keep it printed once only, since the intent of this warning is to detect
+a bug in modprobe at boot time.  Printing the warning more than once
+wouldn't really provide any useful extra information.
 
- 4 locks held by kworker/u256:0/8:
-  #0: ffff9a025abc4328 ((wq_completion)ext4-rsv-conversion){+.+.}, at: process_one_work+0x443/0xb90
-  #1: ffffab5a862dbe20 ((work_completion)(&ei->i_rsv_conversion_work)){+.+.}, at: process_one_work+0x443/0xb90
-  #2: ffff9a025a9d0f58 (jbd2_handle){++++}, at: start_this_handle+0x1c1/0x9d0 [jbd2]
-  #3: ffff9a00d4b985d8 (&(&ei->i_raw_lock)->rlock){+.+.}, at: ext4_do_update_inode+0xaa/0xf60 [ext4]
- irq event stamp: 3009267
- hardirqs last  enabled at (3009267): [<ffffffff980da9b7>] __find_get_block+0x107/0x790
- hardirqs last disabled at (3009266): [<ffffffff980da8f9>] __find_get_block+0x49/0x790
- softirqs last  enabled at (3009230): [<ffffffff98a0034c>] __do_softirq+0x34c/0x57c
- softirqs last disabled at (3009223): [<ffffffff97cc67a2>] irq_exit+0xa2/0xc0
-
- Reported by Kernel Concurrency Sanitizer on:
- CPU: 65 PID: 8 Comm: kworker/u256:0 Tainted: G L 5.6.0-rc2-next-20200221+ #7
- Hardware name: HPE ProLiant DL385 Gen10/ProLiant DL385 Gen10, BIOS A40 07/10/2019
- Workqueue: ext4-rsv-conversion ext4_end_io_rsv_work [ext4]
-
-The plain read is outside of inode->i_lock critical section which
-results in a data race. Fix it by adding READ_ONCE() there.
-
-Link: https://lore.kernel.org/r/20200222043258.2279-1-cai@lca.pw
-Signed-off-by: Qian Cai <cai@lca.pw>
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-Cc: stable@kernel.org
+Fixes: 41124db869b7 ("fs: warn in case userspace lied about modprobe return")
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Reviewed-by: Jessica Yu <jeyu@kernel.org>
+Cc: Alexei Starovoitov <ast@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Jeff Vander Stoep <jeffv@google.com>
+Cc: Jessica Yu <jeyu@kernel.org>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Luis Chamberlain <mcgrof@kernel.org>
+Cc: NeilBrown <neilb@suse.com>
+Cc: <stable@vger.kernel.org>		[4.13+]
+Link: http://lkml.kernel.org/r/20200312202552.241885-3-ebiggers@kernel.org
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/ext4/inode.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/filesystems.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/fs/ext4/inode.c
-+++ b/fs/ext4/inode.c
-@@ -5140,7 +5140,7 @@ static int ext4_inode_blocks_set(handle_
- 				struct ext4_inode_info *ei)
- {
- 	struct inode *inode = &(ei->vfs_inode);
--	u64 i_blocks = inode->i_blocks;
-+	u64 i_blocks = READ_ONCE(inode->i_blocks);
- 	struct super_block *sb = inode->i_sb;
+--- a/fs/filesystems.c
++++ b/fs/filesystems.c
+@@ -271,7 +271,9 @@ struct file_system_type *get_fs_type(con
+ 	fs = __get_fs_type(name, len);
+ 	if (!fs && (request_module("fs-%.*s", len, name) == 0)) {
+ 		fs = __get_fs_type(name, len);
+-		WARN_ONCE(!fs, "request_module fs-%.*s succeeded, but still no fs?\n", len, name);
++		if (!fs)
++			pr_warn_once("request_module fs-%.*s succeeded, but still no fs?\n",
++				     len, name);
+ 	}
  
- 	if (i_blocks <= ~0U) {
+ 	if (dot && fs && !(fs->fs_flags & FS_HAS_SUBTYPE)) {
 
 
