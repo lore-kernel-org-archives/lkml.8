@@ -8,61 +8,61 @@ X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E311AC2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 16:13:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB918C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 16:13:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA084206E9
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 16:13:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFE6420857
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 16:13:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sLxFQroY"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fKyFfLXO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2506912AbgDPQN3 (ORCPT
+        id S2506926AbgDPQNe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 12:13:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53350 "EHLO
+        Thu, 16 Apr 2020 12:13:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53376 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2506879AbgDPQNL (ORCPT
+        by vger.kernel.org with ESMTP id S2506901AbgDPQNT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 12:13:11 -0400
-Received: from mail-pf1-x449.google.com (mail-pf1-x449.google.com [IPv6:2607:f8b0:4864:20::449])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA372C061A0C
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 09:13:11 -0700 (PDT)
-Received: by mail-pf1-x449.google.com with SMTP id c62so3434776pfc.12
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 09:13:11 -0700 (PDT)
+        Thu, 16 Apr 2020 12:13:19 -0400
+Received: from mail-ua1-x949.google.com (mail-ua1-x949.google.com [IPv6:2607:f8b0:4864:20::949])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94658C061A10
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 09:13:19 -0700 (PDT)
+Received: by mail-ua1-x949.google.com with SMTP id n36so3759041uan.1
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 09:13:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=SV1DVkULqNa+FuGbiBRMBHT4OnEsBDpzGAv6cWsD5ng=;
-        b=sLxFQroYETeBwkC7GL2sYyxH2hNaeokGKsdeLtXjhCO6cOtPj2JOlGsmapVVPWTSK1
-         uZovYKEMjxeKiEqbJmm1N7h1ZuFNEWeqj4HZX6p71THvzQF8G9M+4JNKvHa1/tmuIfCm
-         6EVESi0OEnWDzNouoomBEUVi/Rq0z+KDY6RjRyGUB3tsfFtJuEFP+col35MQzcyIEv98
-         JSCbKVeCMC9JhoiaW1ka8ABAA/JedzZ9Vi0vS2OTLgQwsGeOmODa1mbGdE1L5+3CEz9R
-         c0a2TlVnEXnb/0S7j/hvoXDbtLEn1ydd7L+LiJbescqWyWwpPatKM4QMw31dYxQHQmR6
-         pJZg==
+        bh=0RQ1N542RT3QYdW6h+S0B1gn+F6MhyfTNdXGmDt/FSM=;
+        b=fKyFfLXOz5sVcsMLYKlGfkS9d2/UCV8LgsPAZpozE0APa/tBvBvuH72SAkskPwpulK
+         Q9xEycscm+hu03BJdYzx1SmxGohZ5WLC2Kp00QJoD/1v3vT77G97X59ssrg+rhyJkLt0
+         FIZhmLR8ROQHOMNhMyY0XOXWlBU9bwJvWf1mFMpV7bvXEXcTn+KsgXL1xWQ9YaJxsI3p
+         r5wBMm8vbJljvjWEKVD3VUjKdk7HSzBXS47lLsTkO0XDaM+rtLDkPFyAx4fJbEib9dsz
+         fBUPYaCtMV7+NrFyKOzLqdDoXj0u8w2J3DBLtUaWWXI1UwSZCihejvWj1Y1tkFy1U7G+
+         /Qng==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=SV1DVkULqNa+FuGbiBRMBHT4OnEsBDpzGAv6cWsD5ng=;
-        b=S0gvjPNr7hEPe4p4NNs2SAJDDe+hVaACnJmfOeq4UajM+WCE0OgGxceegaNSJFNubT
-         IRwybk+o2z0+8g2Y5D5YgsvvqHkIuw+XiPHjldGGqT1thBk3O5sqFh40VrvOyUfoHDex
-         Q/+sa0Tf7W2ometslhUy2LXD/g7f5VaRUJ6+oToljtkWPuO/AL2tCrKovv3g9KLTzQmg
-         O8qSBNvJEcvnigY1apwjT8/qtpF6rkNqnmpOmRetnKn+sLTTPBGRYJDseMceiQIV2K4/
-         0mIHGCNFyygnqjpBW8TGgU+CvmqFVLydRvdhXoAUr4PIWiXNKb83jWZB1YrTODomWJyi
-         0M4A==
-X-Gm-Message-State: AGi0PuajAIaRgVcvJNHcUGRDw9DCwPlfUEMAlZjFBM/1OZwFTeR7gD3V
-        8/5IFHczWGa+c9iPF3C7HBb5lSMm8G8RlhZ5n2g=
-X-Google-Smtp-Source: APiQypJNkpQBGKyIWPV2BtmwX/E/gHMUX9jAQmns+9eOAcaQtZAXVp0Bz90VtPtI2vifzdaZP44LMcdHl+FTfzmDINE=
-X-Received: by 2002:a63:ca41:: with SMTP id o1mr33386721pgi.419.1587053591236;
- Thu, 16 Apr 2020 09:13:11 -0700 (PDT)
-Date:   Thu, 16 Apr 2020 09:12:42 -0700
+        bh=0RQ1N542RT3QYdW6h+S0B1gn+F6MhyfTNdXGmDt/FSM=;
+        b=qSC5EFO2kTspbTWrhszdg38TCGhKBekQNrTdpWsZB5RzPFXIf9Tk6piuNgEH581eJs
+         0waNiCDA6gEWPMJADdufBGbPa6Yj9A+0Tj6lkbmoUKOC86Hsd50bvBAsejK+uXWjUV+b
+         3Pq1Y/fb9NmoZiJYiXIBtBjy+RCsnD1g0nRUWXu17PM6/NvsMlyKaono66d5XxqooiaL
+         9IUpLT2eEK20QIL33irJ3ty3xJCtwISgO4OX6sl9qH5lnCb4S6iM+ulzX9AQX4PXzfkA
+         GaiXFSOtYsiZFT2AUmLt5PLRuHiyx5VBo8mK6eZxq6WDbAiuY5KI3MRUW6IUMmIuqYxO
+         sESQ==
+X-Gm-Message-State: AGi0PubAIzvgavBR/oWkgV6ktcLgvy62OMKNW4QZ5kUsYSMpXvMmNYA8
+        nPk2y55jqv15zK6eVvhlQNWlkelNrSKDZ7dpUDg=
+X-Google-Smtp-Source: APiQypLcEVWlOSbUU7JM1b+dPKZalYkgI8XZ2RJRR7DguNAHXrP4Q+xtVussY8m1ZWA3xxy8DZYEgVb57sv3jHyS0G0=
+X-Received: by 2002:a1f:a703:: with SMTP id q3mr5645257vke.4.1587053598668;
+ Thu, 16 Apr 2020 09:13:18 -0700 (PDT)
+Date:   Thu, 16 Apr 2020 09:12:45 -0700
 In-Reply-To: <20200416161245.148813-1-samitolvanen@google.com>
-Message-Id: <20200416161245.148813-10-samitolvanen@google.com>
+Message-Id: <20200416161245.148813-13-samitolvanen@google.com>
 Mime-Version: 1.0
 References: <20191018161033.261971-1-samitolvanen@google.com> <20200416161245.148813-1-samitolvanen@google.com>
 X-Mailer: git-send-email 2.26.1.301.g55bc3eb7cb9-goog
-Subject: [PATCH v11 09/12] arm64: disable SCS for hypervisor code
+Subject: [PATCH v11 12/12] efi/libstub: disable SCS
 From:   Sami Tolvanen <samitolvanen@google.com>
 To:     Will Deacon <will@kernel.org>,
         Catalin Marinas <catalin.marinas@arm.com>,
@@ -87,37 +87,38 @@ Cc:     Dave Martin <Dave.Martin@arm.com>,
         clang-built-linux@googlegroups.com,
         kernel-hardening@lists.openwall.com,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Sami Tolvanen <samitolvanen@google.com>
+        Sami Tolvanen <samitolvanen@google.com>,
+        Ard Biesheuvel <ardb@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Disable SCS for code that runs at a different exception level by
-adding __noscs to __hyp_text.
+Shadow stacks are not available in the EFI stub, filter out SCS flags.
 
 Suggested-by: James Morse <james.morse@arm.com>
 Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
 Reviewed-by: Kees Cook <keescook@chromium.org>
-Acked-by: Marc Zyngier <maz@kernel.org>
+Acked-by: Ard Biesheuvel <ardb@kernel.org>
 ---
- arch/arm64/include/asm/kvm_hyp.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/firmware/efi/libstub/Makefile | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/arch/arm64/include/asm/kvm_hyp.h b/arch/arm64/include/asm/kvm_hyp.h
-index fe57f60f06a8..875b106c5d98 100644
---- a/arch/arm64/include/asm/kvm_hyp.h
-+++ b/arch/arm64/include/asm/kvm_hyp.h
-@@ -13,7 +13,7 @@
- #include <asm/kvm_mmu.h>
- #include <asm/sysreg.h>
+diff --git a/drivers/firmware/efi/libstub/Makefile b/drivers/firmware/efi/libstub/Makefile
+index 094eabdecfe6..b52ae8c29560 100644
+--- a/drivers/firmware/efi/libstub/Makefile
++++ b/drivers/firmware/efi/libstub/Makefile
+@@ -32,6 +32,9 @@ KBUILD_CFLAGS			:= $(cflags-y) -DDISABLE_BRANCH_PROFILING \
+ 				   $(call cc-option,-fno-stack-protector) \
+ 				   -D__DISABLE_EXPORTS
  
--#define __hyp_text __section(.hyp.text) notrace
-+#define __hyp_text __section(.hyp.text) notrace __noscs
- 
- #define read_sysreg_elx(r,nvh,vh)					\
- 	({								\
++# remove SCS flags from all objects in this directory
++KBUILD_CFLAGS := $(filter-out $(CC_FLAGS_SCS), $(KBUILD_CFLAGS))
++
+ GCOV_PROFILE			:= n
+ KASAN_SANITIZE			:= n
+ UBSAN_SANITIZE			:= n
 -- 
 2.26.1.301.g55bc3eb7cb9-goog
 
