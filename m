@@ -2,252 +2,190 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88ADEC2BA19
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 02:19:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E5BAC2BA19
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 02:20:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6977020737
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 02:19:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15B0720737
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 02:20:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kcq+6btH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387490AbgDPCTk (ORCPT
+        id S1732675AbgDPCUu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 22:19:40 -0400
-Received: from mga04.intel.com ([192.55.52.120]:1563 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731031AbgDPCTc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 22:19:32 -0400
-IronPort-SDR: XmMmOO/wfzJ+LllXY2Z4FbuwEv5J8u+r5t00Gf0LrAZuKBzyrO9tqpfKNlQ13gzx6ClFUEG0qs
- 6yXUygjT+S3A==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2020 19:19:32 -0700
-IronPort-SDR: pAQS6ld+epnMiGhFpY9ElpfTOX7Ui3KLVMJRz7ZmQtWlcK3N07TXi8bQ+WbsuKE1b2+M29F4FV
- bcE6avtw/lKA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,388,1580803200"; 
-   d="scan'208";a="245852114"
-Received: from blu2-mobl3.ccr.corp.intel.com (HELO [10.254.208.171]) ([10.254.208.171])
-  by fmsmga008.fm.intel.com with ESMTP; 15 Apr 2020 19:19:30 -0700
-Cc:     baolu.lu@linux.intel.com, "Raj, Ashok" <ashok.raj@intel.com>,
-        "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
-        "Liu, Yi L" <yi.l.liu@intel.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 6/7] iommu/vt-d: Add page request draining support
-To:     "Tian, Kevin" <kevin.tian@intel.com>,
-        Joerg Roedel <joro@8bytes.org>
-References: <20200415052542.30421-1-baolu.lu@linux.intel.com>
- <20200415052542.30421-7-baolu.lu@linux.intel.com>
- <AADFC41AFE54684AB9EE6CBC0274A5D19D8209CE@SHSMSX104.ccr.corp.intel.com>
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-Message-ID: <97bb69fe-4020-6487-6f1f-4454bcf0ba7a@linux.intel.com>
-Date:   Thu, 16 Apr 2020 10:19:29 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Wed, 15 Apr 2020 22:20:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36530 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1731550AbgDPCUo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 22:20:44 -0400
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4AC26C061A0C
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 19:20:44 -0700 (PDT)
+Received: by mail-ej1-x644.google.com with SMTP id j15so151284ejt.13
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 19:20:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Mgz6bbdQfDVz34mF8jJQbTz4t2DA1H3apdU+WrR+R7Y=;
+        b=kcq+6btHmb01cooZ1xUD/y9he2yoQ4t039E5mbUs2BkDlGwudOwJ46xfNOzh91fJrK
+         cnmTtdcKJzViFnX/YSyC9g9bK9fy8Z8mBpig5VPviP3O0Zu3fidj81rq0sr+yioLllzb
+         i0WBaroEoibasQOLasvyihivuvKavssL5fbCXotGXqFAhNSQebmrLYTKDEJhq1tFswer
+         bIju+QaB37x9zzyPDW3ziDpn6Vcjc+yqGwagc5mHDmumsjsCq2LWLOiHIGWCNJK/e9XN
+         HEhNHRDuqbY/gV1KmAvZ4hcdQ6vjgXO+BOPkJzxiUZWd34mkQULMsJZcLrOOQFUb8lj0
+         mqUw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Mgz6bbdQfDVz34mF8jJQbTz4t2DA1H3apdU+WrR+R7Y=;
+        b=G9TpeqDCygETTPMzADpIs11eN95EfcZnpMFjJwsl7WJAvprH5/fbxLuKWS6EUXzHcL
+         8domHfslwl802lGUwZ6KmbiA4cuESnrMBfD7VaHXwWm6gT/AaObeW6oaPNKJPO4g75Lt
+         58xprVb08WAPL3bUmQQppIKgcmk7xCg5ORtVScoqeCjtsAi/a2OtFTClchpFT32CXd0O
+         ccW+na6r/gHoWdvftwvOEEdrSZdQdsTSr3SY5ATRQa6+/iaC4mZIVa6bOaXzVuBMD+SP
+         ZhITNRlXHG3wfAkX9K1MW0bHCej3d1HGeiA5lxXVFwCykEp5tZAIXxBrzC8VKV9jqFVY
+         mkjQ==
+X-Gm-Message-State: AGi0PuY2EYT3ealHQsDGlKHd9/LdVoysYQgqqT87u6mhW1JF2EoiLtnN
+        EgaXdYg6Z5JN2rAu+pu2G9pHhXvSt2p8tflKg1U=
+X-Google-Smtp-Source: APiQypKpfYDVN5HQk19fsgn0mpfBch5zFFu+LfHUbVv1552Asb2QXRW/U8D7v+O1oz3x859kAMzRv1K1elyUAzZ6qy4=
+X-Received: by 2002:a17:906:374b:: with SMTP id e11mr8047637ejc.283.1587003642849;
+ Wed, 15 Apr 2020 19:20:42 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <AADFC41AFE54684AB9EE6CBC0274A5D19D8209CE@SHSMSX104.ccr.corp.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <000000000000e5838c05a3152f53@google.com> <CAHbLzkpJjpOjizxhG6oS1OsbdycwaRdLeA8nb1R4Y2C4F7nV+g@mail.gmail.com>
+ <alpine.LSU.2.11.2004151828350.12919@eggly.anvils>
+In-Reply-To: <alpine.LSU.2.11.2004151828350.12919@eggly.anvils>
+From:   Yang Shi <shy828301@gmail.com>
+Date:   Wed, 15 Apr 2020 19:20:30 -0700
+Message-ID: <CAHbLzko3sFuFC800Mv3b2BiKhaC56TpRri1VCEhKWZMwLBNd4Q@mail.gmail.com>
+Subject: Re: possible deadlock in shmem_uncharge
+To:     Hugh Dickins <hughd@google.com>
+Cc:     syzbot <syzbot+c8a8197c8852f566b9d9@syzkaller.appspotmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux MM <linux-mm@kvack.org>, syzkaller-bugs@googlegroups.com,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/4/15 19:10, Tian, Kevin wrote:
->> From: Lu Baolu <baolu.lu@linux.intel.com>
->> Sent: Wednesday, April 15, 2020 1:26 PM
->>
->> When a PASID is stopped or terminated, there can be pending
->> PRQs (requests that haven't received responses) in remapping
->> hardware. This adds the interface to drain page requests and
->> call it when a PASID is terminated.
->>
->> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
->> Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
->> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
->> ---
->>   drivers/iommu/intel-svm.c   | 90 ++++++++++++++++++++++++++++++++++---
->>   include/linux/intel-iommu.h |  1 +
->>   2 files changed, 86 insertions(+), 5 deletions(-)
->>
->> diff --git a/drivers/iommu/intel-svm.c b/drivers/iommu/intel-svm.c
->> index 05aeb8ea51c4..736dd39fb52b 100644
->> --- a/drivers/iommu/intel-svm.c
->> +++ b/drivers/iommu/intel-svm.c
->> @@ -23,6 +23,7 @@
->>   #include "intel-pasid.h"
->>
->>   static irqreturn_t prq_event_thread(int irq, void *d);
->> +static void intel_svm_drain_prq(struct device *dev, int pasid);
->>
->>   #define PRQ_ORDER 0
->>
->> @@ -210,6 +211,7 @@ static void intel_mm_release(struct mmu_notifier
->> *mn, struct mm_struct *mm)
->>   	rcu_read_lock();
->>   	list_for_each_entry_rcu(sdev, &svm->devs, list) {
->>   		intel_pasid_tear_down_entry(svm->iommu, sdev->dev, svm-
->>> pasid);
->> +		intel_svm_drain_prq(sdev->dev, svm->pasid);
-> 
-> I feel there is a problem here. If you clear the PASID entry before draining,
-> in-fly requests will hit unrecoverable fault instead, due to invalid PASID
-> entry.
+On Wed, Apr 15, 2020 at 7:04 PM Hugh Dickins <hughd@google.com> wrote:
+>
+> On Mon, 13 Apr 2020, Yang Shi wrote:
+> > On Sun, Apr 12, 2020 at 3:11 AM syzbot
+> > <syzbot+c8a8197c8852f566b9d9@syzkaller.appspotmail.com> wrote:
+> > >
+> > > Hello,
+> > >
+> > > syzbot found the following crash on:
+> > >
+> > > HEAD commit:    ae46d2aa mm/gup: Let __get_user_pages_locked() return -EIN..
+> > > git tree:       upstream
+> > > console output: https://syzkaller.appspot.com/x/log.txt?x=14a30a77e00000
+> > > kernel config:  https://syzkaller.appspot.com/x/.config?x=ca75979eeebf06c2
+> > > dashboard link: https://syzkaller.appspot.com/bug?extid=c8a8197c8852f566b9d9
+> > > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> > > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15f5632be00000
+> > > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=132ade57e00000
+> > >
+> > > The bug was bisected to:
+> > >
+> > > commit 71725ed10c40696dc6bdccf8e225815dcef24dba
+> > > Author: Hugh Dickins <hughd@google.com>
+> > > Date:   Tue Apr 7 03:07:57 2020 +0000
+> > >
+> > >     mm: huge tmpfs: try to split_huge_page() when punching hole
+> > >
+> > > bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=120a752be00000
+> > > final crash:    https://syzkaller.appspot.com/x/report.txt?x=110a752be00000
+> > > console output: https://syzkaller.appspot.com/x/log.txt?x=160a752be00000
+> > >
+> > > IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> > > Reported-by: syzbot+c8a8197c8852f566b9d9@syzkaller.appspotmail.com
+> > > Fixes: 71725ed10c40 ("mm: huge tmpfs: try to split_huge_page() when punching hole")
+>
+> No, that commit just gave syzkaller an easier way to reach old code.
+>
+> > >
+> > > =====================================================
+> > > WARNING: SOFTIRQ-safe -> SOFTIRQ-unsafe lock order detected
+> > > 5.6.0-syzkaller #0 Not tainted
+> > > -----------------------------------------------------
+> > > syz-executor428/8337 [HC0[0]:SC0[0]:HE0:SE1] is trying to acquire:
+> > > ffff8880a851c778 (&info->lock){....}-{2:2}, at: shmem_uncharge+0x24/0x270 mm/shmem.c:341
+> > >
+> > > and this task is already holding:
+> > > ffff8880a851cac8 (&xa->xa_lock#4){..-.}-{2:2}, at: spin_lock include/linux/spinlock.h:353 [inline]
+> > > ffff8880a851cac8 (&xa->xa_lock#4){..-.}-{2:2}, at: split_huge_page_to_list+0xad0/0x33b0 mm/huge_memory.c:2864
+> > > which would create a new lock dependency:
+> > >  (&xa->xa_lock#4){..-.}-{2:2} -> (&info->lock){....}-{2:2}
+> > >
+> > > but this new dependency connects a SOFTIRQ-irq-safe lock:
+> > >  (&xa->xa_lock#4){..-.}-{2:2}
+> >
+> > It looks shmem_uncharge() is just called by __split_huge_page() and
+> > collapse_file(). The collapse_file() has acquired xa_lock with irq
+> > disabled before acquiring info->lock, so it is safe.
+> > __split_huge_page() is called with holding xa_lock with irq enabled,
+> > but lru_lock is acquired with irq disabled before acquiring xa_lock.
+> >
+> > So, it is unnecessary to acquire info->lock with irq disabled in
+> > shmem_uncharge(). Can syzbot try the below patch?
+>
+> But I disagree with the patch below.  You're right that IRQ-disabling
+> here is unnecessary, given its two callers; but I'm not sure that we
+> want it to look different from shmem_charge() and all other info->lock
+> takers; and, more importantly, I don't see how removing the redundant
+> IRQ-saving below could make it any less liable to deadlock.
 
-The in-fly requests will be ignored by IOMMU if the pasid entry is
-empty. It won't result in an unrecoverable fault.
+Yes, I realized the patch can't suppress the lockdep splat. But,
+actually I didn't understand how this deadlock could happen because
+info_lock is acquired with IRQ disabled before acquiring
+user_shm_lock. So, interrupt can't come in at all if I didn't miss
+anything.
 
-> 
->>   		intel_flush_svm_range_dev(svm, sdev, 0, -1, 0);
->>   	}
->>   	rcu_read_unlock();
->> @@ -403,12 +405,8 @@ int intel_svm_unbind_gpasid(struct device *dev, int
->> pasid)
->>   		if (!sdev->users) {
->>   			list_del_rcu(&sdev->list);
->>   			intel_pasid_tear_down_entry(iommu, dev, svm-
->>> pasid);
->> +			intel_svm_drain_prq(dev, svm->pasid);
->>   			intel_flush_svm_range_dev(svm, sdev, 0, -1, 0);
->> -			/* TODO: Drain in flight PRQ for the PASID since it
->> -			 * may get reused soon, we don't want to
->> -			 * confuse with its previous life.
->> -			 * intel_svm_drain_prq(dev, pasid);
->> -			 */
->>   			kfree_rcu(sdev, rcu);
->>
->>   			if (list_empty(&svm->devs)) {
->> @@ -646,6 +644,7 @@ int intel_svm_unbind_mm(struct device *dev, int
->> pasid)
->>   			 * large and has to be physically contiguous. So it's
->>   			 * hard to be as defensive as we might like. */
->>   			intel_pasid_tear_down_entry(iommu, dev, svm-
->>> pasid);
->> +			intel_svm_drain_prq(dev, svm->pasid);
->>   			intel_flush_svm_range_dev(svm, sdev, 0, -1, 0);
->>   			kfree_rcu(sdev, rcu);
->>
->> @@ -703,6 +702,7 @@ struct page_req_dsc {
->>   struct page_req {
->>   	struct list_head list;
->>   	struct page_req_dsc desc;
->> +	struct completion complete;
->>   	unsigned int processing:1;
->>   	unsigned int drained:1;
->>   	unsigned int completed:1;
->> @@ -732,9 +732,83 @@ static bool is_canonical_address(u64 addr)
->>   	return (((saddr << shift) >> shift) == saddr);
->>   }
->>
->> +/**
->> + * intel_svm_drain_prq:
->> + *
->> + * Drain all pending page requests related to a specific pasid in both
->> + * software and hardware. The caller must guarantee that no more page
->> + * requests related to this pasid coming.
->> + */
->> +static void intel_svm_drain_prq(struct device *dev, int pasid)
->> +{
->> +	struct device_domain_info *info;
->> +	struct dmar_domain *domain;
->> +	struct intel_iommu *iommu;
->> +	struct qi_desc desc[3];
->> +	struct pci_dev *pdev;
->> +	struct page_req *req;
->> +	unsigned long flags;
->> +	u16 sid, did;
->> +	int qdep;
->> +
->> +	info = get_domain_info(dev);
->> +	if (WARN_ON(!info || !dev_is_pci(dev)))
->> +		return;
->> +
->> +	iommu = info->iommu;
->> +	domain = info->domain;
->> +	pdev = to_pci_dev(dev);
->> +
->> +	/* Mark all related pending requests drained. */
->> +	spin_lock_irqsave(&iommu->prq_lock, flags);
->> +	list_for_each_entry(req, &iommu->prq_list, list)
->> +		if (req->desc.pasid_present && req->desc.pasid == pasid)
->> +			req->drained = true;
->> +	spin_unlock_irqrestore(&iommu->prq_lock, flags);
->> +
->> +	/* Wait until all related pending requests complete. */
->> +retry:
->> +	spin_lock_irqsave(&iommu->prq_lock, flags);
->> +	list_for_each_entry(req, &iommu->prq_list, list) {
->> +		if (req->desc.pasid_present &&
->> +		    req->desc.pasid == pasid &&
->> +		    !req->completed) {
->> +			spin_unlock_irqrestore(&iommu->prq_lock, flags);
->> +			wait_for_completion_timeout(&req->complete, 5 *
->> HZ);
->> +			goto retry;
->> +		}
->> +	}
->> +	spin_unlock_irqrestore(&iommu->prq_lock, flags);
->> +
->> +	/*
->> +	 * Perform steps described in VT-d spec CH7.10 to drain page
->> +	 * request and responses in hardware.
->> +	 */
->> +	sid = PCI_DEVID(info->bus, info->devfn);
->> +	did = domain->iommu_did[iommu->seq_id];
->> +	qdep = pci_ats_queue_depth(pdev);
->> +
->> +	memset(desc, 0, sizeof(desc));
->> +	desc[0].qw0 = QI_IWD_STATUS_DATA(QI_DONE) |
->> +			QI_IWD_FENCE |
->> +			QI_IWD_TYPE;
->> +	desc[1].qw0 = QI_EIOTLB_PASID(pasid) |
->> +			QI_EIOTLB_DID(did) |
->> +			QI_EIOTLB_GRAN(QI_GRAN_NONG_PASID) |
->> +			QI_EIOTLB_TYPE;
->> +	desc[2].qw0 = QI_DEV_EIOTLB_PASID(pasid) |
->> +			QI_DEV_EIOTLB_SID(sid) |
->> +			QI_DEV_EIOTLB_QDEP(qdep) |
->> +			QI_DEIOTLB_TYPE |
->> +			QI_DEV_IOTLB_PFSID(info->pfsid);
->> +
->> +	qi_submit_sync(iommu, desc, 3, QI_OPT_WAIT_DRAIN);
-> 
-> the completion of above sequence ensures that previous queued
-> page group responses are sent out and received by the endpoint
-> and vice versa all in-fly page requests from the endpoint are queued
-> in iommu page request queue. Then comes a problem - you didn't
-> wait for completion of those newly-queued requests and their
-> responses.
-
-We have emptied the pasid entry and invalidate the related caches, IOMMU
-will ignore any new-coming page requests.
-
-> 
-> According to VT-d spec 7.10, step (d) mentions when queue overflow
-> happens, software needs to repeat the above draining sequence to
-> drain auto-responses.
-
-Page request queue overflow is not checked and handled in the prq
-interrupt thread. My plan is to add it in a separated patch set. Maybe I
-need to state this in the cover letter.
-
-> 
-> According to VT-d spec 7.11, the device driver must be notified to
-> revoke the PASID before this draining sequence happens. When
-> does that happen? Possibly can add some comment to explain such
-> background.
-
-Currently, page request drain only happens in unbind() operations. That
-ensures that the device driver and the endpoint device have revoked the
-pasid. As for how should kernel handle pasid termination before
-unbind(), it's still under discussion. For now, AFAICS, it seems that
-the acceptable solution is to delay the release of a pasid until ubind()
-happens.
-
-Best regards,
-baolu
+>
+> The crucial observation comes lower down
+> > > to a SOFTIRQ-irq-unsafe lock:
+> > >  (shmlock_user_lock){+.+.}-{2:2}
+> and there's another syzbot report that's come out on shmlock_user_lock,
+> "possible deadlock in user_shm_lock".
+>
+> I believe all that's needed to fix both reports is not to use info->lock
+> in shmem_lock() - I see now that we saw lockdep reports of this kind
+> internally, a long time ago, and fixed them in that way.
+>
+> (I haven't composed the patch and references yet, and not decided if
+> I'll add it here or there or separately. I'll put it together now.)
+>
+> Hugh
+>
+> >
+> > diff --git a/mm/shmem.c b/mm/shmem.c
+> > index d722eb8..100117b 100644
+> > --- a/mm/shmem.c
+> > +++ b/mm/shmem.c
+> > @@ -334,15 +334,14 @@ bool shmem_charge(struct inode *inode, long pages)
+> >  void shmem_uncharge(struct inode *inode, long pages)
+> >  {
+> >         struct shmem_inode_info *info = SHMEM_I(inode);
+> > -       unsigned long flags;
+> >
+> >         /* nrpages adjustment done by __delete_from_page_cache() or caller */
+> >
+> > -       spin_lock_irqsave(&info->lock, flags);
+> > +       spin_lock(&info->lock);
+> >         info->alloced -= pages;
+> >         inode->i_blocks -= pages * BLOCKS_PER_PAGE;
+> >         shmem_recalc_inode(inode);
+> > -       spin_unlock_irqrestore(&info->lock, flags);
+> > +       spin_unlock(&info->lock);
+> >
+> >         shmem_inode_unacct_blocks(inode, pages);
+> >  }
