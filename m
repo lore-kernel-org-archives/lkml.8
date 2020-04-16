@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA869C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:28:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C95A9C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:28:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B74CD207FC
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:28:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F86D21927
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:28:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587050918;
-	bh=3QmcZ+XzN2FY7ipu4OPbIdcpP94pwoaA917evhec7Xg=;
+	s=default; t=1587050927;
+	bh=7RdBcKbcSA8txvE3ou1/hXYhwhq2DHXO8rive13W17M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YtoEJPAVdhQm9KY5Tg60HkXeSFLCRFyCDfc1L5ZrJhsmrmF8CTZqrXms5qabzPcJ6
-	 9pXnSdTEVsyIh3WSj96FPCsnAeFfP60XO9JrBI3IOXtDbhSVrvxTyONvnNpwJ8Naew
-	 0T7KnmdIG1QuApHURSjt0RFrj089JfV5w9Tews24=
+	b=gIMHNQ8MRfzVBaW2xOtKi1Xwrw708Wd+eXWjmeW4/zlx7scynMjBouriQ6bQr1ZBH
+	 E72DYW/Z+n/0nRM40olXSWWdDnca79XK96wft+N3lIUurmrtC+90RwJdqx0WTIpe5s
+	 6TUZT9BYuOWBUSy0rxCEVERrYFAU+uo70V8loivI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2633525AbgDPP2h (ORCPT
+        id S2404185AbgDPP2p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:28:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57448 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 11:28:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57344 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2898427AbgDPNoJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:44:09 -0400
+        id S2898421AbgDPNoC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:44:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 679B3218AC;
-        Thu, 16 Apr 2020 13:44:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F1CDB2076D;
+        Thu, 16 Apr 2020 13:44:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044648;
-        bh=3QmcZ+XzN2FY7ipu4OPbIdcpP94pwoaA917evhec7Xg=;
+        s=default; t=1587044641;
+        bh=7RdBcKbcSA8txvE3ou1/hXYhwhq2DHXO8rive13W17M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=t4Mmpdu+hUjb1PMLjUltw6NHogxZh+VmKbAJEzQNCctK7T8LVvvhf8tfsPFvuD06y
-         eW2/2gJDcWtveMFgAS6sKnbbP83eL2D+FxPwk14NXWzKD58uQtYbLByT6ENrt1FBwM
-         gy4+8I8LxS67PrqOOFpsr0wO873F0Apeg5b85o1A=
+        b=KfxOS3sUxLoquHCNZ54SKnJ4yAGCHd9tTM3TYCBOGQMltF97kO7S2+Oz5AAkGMksX
+         U3aIF4xoRFhKp8mD0NqYJUz/HbvDh3X81EsEqQtbmMkSbgTU9BwM1w78I2Gq9MTWBY
+         vjkbUnwSJ3Ch5KD339GomVw+X+52Y7/ka/M5obHI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ilan Peer <ilan.peer@intel.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 005/232] iwlwifi: mvm: Fix rate scale NSS configuration
-Date:   Thu, 16 Apr 2020 15:21:39 +0200
-Message-Id: <20200416131317.218857205@linuxfoundation.org>
+        stable@vger.kernel.org, Sungbo Eo <mans0n@gorani.run>,
+        Marc Zyngier <maz@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 040/232] irqchip/versatile-fpga: Handle chained IRQs properly
+Date:   Thu, 16 Apr 2020 15:22:14 +0200
+Message-Id: <20200416131320.890660320@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131316.640996080@linuxfoundation.org>
 References: <20200416131316.640996080@linuxfoundation.org>
@@ -60,93 +59,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ilan Peer <ilan.peer@intel.com>
+From: Sungbo Eo <mans0n@gorani.run>
 
-[ Upstream commit ce19801ba75a902ab515dda03b57738c708d0781 ]
+[ Upstream commit 486562da598c59e9f835b551d7cf19507de2d681 ]
 
-The TLC configuration did not take into consideration the station's
-SMPS configuration, and thus configured rates for 2 NSS even if
-static SMPS was reported by the station. Fix this.
+Enclose the chained handler with chained_irq_{enter,exit}(), so that the
+muxed interrupts get properly acked.
 
-Signed-off-by: Ilan Peer <ilan.peer@intel.com>
-Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
-Link: https://lore.kernel.org/r/iwlwifi.20200306151129.b4f940d13eca.Ieebfa889d08205a3a961ae0138fb5832e8a0f9c1@changeid
+This patch also fixes a reboot bug on OX820 SoC, where the jiffies timer
+interrupt is never acked. The kernel waits a clock tick forever in
+calibrate_delay_converge(), which leads to a boot hang.
+
+Fixes: c41b16f8c9d9 ("ARM: integrator/versatile: consolidate FPGA IRQ handling code")
+Signed-off-by: Sungbo Eo <mans0n@gorani.run>
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+Link: https://lore.kernel.org/r/20200319023448.1479701-1-mans0n@gorani.run
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../net/wireless/intel/iwlwifi/mvm/rs-fw.c    | 29 ++++++++++++++-----
- 1 file changed, 21 insertions(+), 8 deletions(-)
+ drivers/irqchip/irq-versatile-fpga.c | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/rs-fw.c b/drivers/net/wireless/intel/iwlwifi/mvm/rs-fw.c
-index 24df3182ec9eb..5b2bd603febfc 100644
---- a/drivers/net/wireless/intel/iwlwifi/mvm/rs-fw.c
-+++ b/drivers/net/wireless/intel/iwlwifi/mvm/rs-fw.c
-@@ -6,7 +6,7 @@
-  * GPL LICENSE SUMMARY
-  *
-  * Copyright(c) 2017        Intel Deutschland GmbH
-- * Copyright(c) 2018 - 2019 Intel Corporation
-+ * Copyright(c) 2018 - 2020 Intel Corporation
-  *
-  * This program is free software; you can redistribute it and/or modify
-  * it under the terms of version 2 of the GNU General Public License as
-@@ -27,7 +27,7 @@
-  * BSD LICENSE
-  *
-  * Copyright(c) 2017        Intel Deutschland GmbH
-- * Copyright(c) 2018 - 2019 Intel Corporation
-+ * Copyright(c) 2018 - 2020 Intel Corporation
-  * All rights reserved.
-  *
-  * Redistribution and use in source and binary forms, with or without
-@@ -195,11 +195,13 @@ rs_fw_vht_set_enabled_rates(const struct ieee80211_sta *sta,
+diff --git a/drivers/irqchip/irq-versatile-fpga.c b/drivers/irqchip/irq-versatile-fpga.c
+index 928858dada756..70e2cfff8175f 100644
+--- a/drivers/irqchip/irq-versatile-fpga.c
++++ b/drivers/irqchip/irq-versatile-fpga.c
+@@ -6,6 +6,7 @@
+ #include <linux/irq.h>
+ #include <linux/io.h>
+ #include <linux/irqchip.h>
++#include <linux/irqchip/chained_irq.h>
+ #include <linux/irqchip/versatile-fpga.h>
+ #include <linux/irqdomain.h>
+ #include <linux/module.h>
+@@ -68,12 +69,16 @@ static void fpga_irq_unmask(struct irq_data *d)
+ 
+ static void fpga_irq_handle(struct irq_desc *desc)
  {
- 	u16 supp;
- 	int i, highest_mcs;
-+	u8 nss = sta->rx_nss;
- 
--	for (i = 0; i < sta->rx_nss; i++) {
--		if (i == IWL_TLC_NSS_MAX)
--			break;
-+	/* the station support only a single receive chain */
-+	if (sta->smps_mode == IEEE80211_SMPS_STATIC)
-+		nss = 1;
- 
-+	for (i = 0; i < nss && i < IWL_TLC_NSS_MAX; i++) {
- 		highest_mcs = rs_fw_vht_highest_rx_mcs_index(vht_cap, i + 1);
- 		if (!highest_mcs)
- 			continue;
-@@ -245,8 +247,13 @@ rs_fw_he_set_enabled_rates(const struct ieee80211_sta *sta,
- 	u16 tx_mcs_160 =
- 		le16_to_cpu(sband->iftype_data->he_cap.he_mcs_nss_supp.tx_mcs_160);
- 	int i;
-+	u8 nss = sta->rx_nss;
- 
--	for (i = 0; i < sta->rx_nss && i < IWL_TLC_NSS_MAX; i++) {
-+	/* the station support only a single receive chain */
-+	if (sta->smps_mode == IEEE80211_SMPS_STATIC)
-+		nss = 1;
++	struct irq_chip *chip = irq_desc_get_chip(desc);
+ 	struct fpga_irq_data *f = irq_desc_get_handler_data(desc);
+-	u32 status = readl(f->base + IRQ_STATUS);
++	u32 status;
 +
-+	for (i = 0; i < nss && i < IWL_TLC_NSS_MAX; i++) {
- 		u16 _mcs_160 = (mcs_160 >> (2 * i)) & 0x3;
- 		u16 _mcs_80 = (mcs_80 >> (2 * i)) & 0x3;
- 		u16 _tx_mcs_160 = (tx_mcs_160 >> (2 * i)) & 0x3;
-@@ -307,8 +314,14 @@ static void rs_fw_set_supp_rates(struct ieee80211_sta *sta,
- 		cmd->mode = IWL_TLC_MNG_MODE_HT;
- 		cmd->ht_rates[IWL_TLC_NSS_1][IWL_TLC_HT_BW_NONE_160] =
- 			cpu_to_le16(ht_cap->mcs.rx_mask[0]);
--		cmd->ht_rates[IWL_TLC_NSS_2][IWL_TLC_HT_BW_NONE_160] =
--			cpu_to_le16(ht_cap->mcs.rx_mask[1]);
-+
-+		/* the station support only a single receive chain */
-+		if (sta->smps_mode == IEEE80211_SMPS_STATIC)
-+			cmd->ht_rates[IWL_TLC_NSS_2][IWL_TLC_HT_BW_NONE_160] =
-+				0;
-+		else
-+			cmd->ht_rates[IWL_TLC_NSS_2][IWL_TLC_HT_BW_NONE_160] =
-+				cpu_to_le16(ht_cap->mcs.rx_mask[1]);
++	chained_irq_enter(chip, desc);
+ 
++	status = readl(f->base + IRQ_STATUS);
+ 	if (status == 0) {
+ 		do_bad_IRQ(desc);
+-		return;
++		goto out;
  	}
+ 
+ 	do {
+@@ -82,6 +87,9 @@ static void fpga_irq_handle(struct irq_desc *desc)
+ 		status &= ~(1 << irq);
+ 		generic_handle_irq(irq_find_mapping(f->domain, irq));
+ 	} while (status);
++
++out:
++	chained_irq_exit(chip, desc);
  }
  
+ /*
 -- 
 2.20.1
 
