@@ -4,48 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8990AC2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:33:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B69DC2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:33:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 62D0421927
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:33:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49D2C21927
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:33:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587051184;
-	bh=qmD2AabpT/gSApKTT7ytFVEBPKgxs9NvEOjVgOMFvy8=;
+	s=default; t=1587051188;
+	bh=S7FgOGEPXO+mwEgvwhgh8BwzMsUFhgiQCOTY+wSpslw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=r1PwFwL4b/E8cwMKb1dsY0V8tj7ELZ4MiKMTESE/yS8pSF9YeSwyacnO0b/v0+Fzd
-	 d3Z+33pP1kKPVa7xDeOYDvC675ysIs/lkwOZeIgL3vFINemsUwBLcs7oPn5lYqDwv5
-	 7n9TkC+ApLWMUgYs83jirZzzWlv1rEjyFmFWql5U=
+	b=V/28utiD/6JDimM48smYo0FnOYIFtL42a+nMUMHwwv8c/bdUCaWyNDDo/7HEEUnZ5
+	 tNiQAe3L8xR4aE66DR8j+qJ1CtSJxT0aL6FI54Fzl1SNOVji1v5GyiyIXWfygBr5Ta
+	 MA+KDH44vc7ItSVpSo3P7q4JSZ/SxkSDKicNUAO0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2442485AbgDPPdD (ORCPT
+        id S2442495AbgDPPdH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:33:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54666 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 11:33:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54728 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2897763AbgDPNlt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2898373AbgDPNlt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 16 Apr 2020 09:41:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 15ED22222D;
-        Thu, 16 Apr 2020 13:41:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8269A20732;
+        Thu, 16 Apr 2020 13:41:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044505;
-        bh=qmD2AabpT/gSApKTT7ytFVEBPKgxs9NvEOjVgOMFvy8=;
+        s=default; t=1587044508;
+        bh=S7FgOGEPXO+mwEgvwhgh8BwzMsUFhgiQCOTY+wSpslw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OJbS4hW+tk4dVwi8Ssd6IiQ5pPWWxw+MjgVmSeZZfeEeqrgaBZvR8LHflULn+1RBQ
-         qUqvCWagKt/jj7hDtSe4WauKYyTb5Zg9czi8C6QLSKXqg1ERdu2rmz6A88HJR91sM2
-         xkdbsAinMBm4TTtE9Y7NVvsSiEoCf53xkJEmVjug=
+        b=XFxnD3yQBEdEgPmFKilkew6aiie4FWcZytTOJ8Hhq/dF6Xf9M06WZDsd7EZT6m8Zv
+         jXW8USFcFhwakHBcmXcbH9tN9Yh77sAoYtXw5XHwqxIfNGUcUZXzUdewEKHsK9L4oS
+         Aw9xkjDlYMDGBcZ5zXJf4OHF7wHfRPaNfXK397rg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 5.5 243/257] powerpc/64: Prevent stack protection in early boot
-Date:   Thu, 16 Apr 2020 15:24:54 +0200
-Message-Id: <20200416131356.189312593@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Sreekanth Reddy <sreekanth.reddy@broadcom.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 5.5 244/257] scsi: mpt3sas: Fix kernel panic observed on soft HBA unplug
+Date:   Thu, 16 Apr 2020 15:24:55 +0200
+Message-Id: <20200416131356.268277949@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.891903893@linuxfoundation.org>
 References: <20200416131325.891903893@linuxfoundation.org>
@@ -58,96 +60,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Ellerman <mpe@ellerman.id.au>
+From: Sreekanth Reddy <sreekanth.reddy@broadcom.com>
 
-commit 7053f80d96967d8e72e9f2a724bbfc3906ce2b07 upstream.
+commit cc41f11a21a51d6869d71e525a7264c748d7c0d7 upstream.
 
-The previous commit reduced the amount of code that is run before we
-setup a paca. However there are still a few remaining functions that
-run with no paca, or worse, with an arbitrary value in r13 that will
-be used as a paca pointer.
+Generic protection fault type kernel panic is observed when user performs
+soft (ordered) HBA unplug operation while IOs are running on drives
+connected to HBA.
 
-In particular the stack protector canary is stored in the paca, so if
-stack protector is activated for any of these functions we will read
-the stack canary from wherever r13 points. If r13 happens to point
-outside of memory we will get a machine check / checkstop.
+When user performs ordered HBA removal operation, the kernel calls PCI
+device's .remove() call back function where driver is flushing out all the
+outstanding SCSI IO commands with DID_NO_CONNECT host byte and also unmaps
+sg buffers allocated for these IO commands.
 
-For example if we modify initialise_paca() to trigger stack
-protection, and then boot in the mambo simulator with r13 poisoned in
-skiboot before calling the kernel:
+However, in the ordered HBA removal case (unlike of real HBA hot removal),
+HBA device is still alive and hence HBA hardware is performing the DMA
+operations to those buffers on the system memory which are already unmapped
+while flushing out the outstanding SCSI IO commands and this leads to
+kernel panic.
 
-  DEBUG: 19952232: (19952232): INSTRUCTION: PC=0xC0000000191FC1E8: [0x3C4C006D]: addis   r2,r12,0x6D [fetch]
-  DEBUG: 19952236: (19952236): INSTRUCTION: PC=0xC00000001807EAD8: [0x7D8802A6]: mflr    r12 [fetch]
-  FATAL ERROR: 19952276: (19952276): Check Stop for 0:0: Machine Check with ME bit of MSR off
-  DEBUG: 19952276: (19952276): INSTRUCTION: PC=0xC0000000191FCA7C: [0xE90D0CF8]: ld      r8,0xCF8(r13) [Instruction Failed]
-  INFO: 19952276: (19952277): ** Execution stopped: Mambo Error, Machine Check Stop,  **
-  systemsim % bt
-  pc:                             0xC0000000191FCA7C      initialise_paca+0x54
-  lr:                             0xC0000000191FC22C      early_setup+0x44
-  stack:0x00000000198CBED0        0x0     +0x0
-  stack:0x00000000198CBF00        0xC0000000191FC22C      early_setup+0x44
-  stack:0x00000000198CBF90        0x1801C968      +0x1801C968
+Don't flush out the outstanding IOs from .remove() path in case of ordered
+removal since HBA will be still alive in this case and it can complete the
+outstanding IOs. Flush out the outstanding IOs only in case of 'physical
+HBA hot unplug' where there won't be any communication with the HBA.
 
-So annotate the relevant functions to ensure stack protection is never
-enabled for them.
+During shutdown also it is possible that HBA hardware can perform DMA
+operations on those outstanding IO buffers which are completed with
+DID_NO_CONNECT by the driver from .shutdown(). So same above fix is applied
+in shutdown path as well.
 
-Fixes: 06ec27aea9fc ("powerpc/64: add stack protector support")
-Cc: stable@vger.kernel.org # v4.20+
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20200320032116.1024773-2-mpe@ellerman.id.au
+It is safe to drop the outstanding commands when HBA is inaccessible such
+as when permanent PCI failure happens, when HBA is in non-operational
+state, or when someone does a real HBA hot unplug operation. Since driver
+knows that HBA is inaccessible during these cases, it is safe to drop the
+outstanding commands instead of waiting for SCSI error recovery to kick in
+and clear these outstanding commands.
+
+Link: https://lore.kernel.org/r/1585302763-23007-1-git-send-email-sreekanth.reddy@broadcom.com
+Fixes: c666d3be99c0 ("scsi: mpt3sas: wait for and flush running commands on shutdown/unload")
+Cc: stable@vger.kernel.org #v4.14.174+
+Signed-off-by: Sreekanth Reddy <sreekanth.reddy@broadcom.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
----
- arch/powerpc/kernel/paca.c     |    4 ++--
- arch/powerpc/kernel/setup.h    |    6 ++++++
- arch/powerpc/kernel/setup_64.c |    2 +-
- 3 files changed, 9 insertions(+), 3 deletions(-)
 
---- a/arch/powerpc/kernel/paca.c
-+++ b/arch/powerpc/kernel/paca.c
-@@ -176,7 +176,7 @@ static struct slb_shadow * __init new_sl
- struct paca_struct **paca_ptrs __read_mostly;
- EXPORT_SYMBOL(paca_ptrs);
+---
+ drivers/scsi/mpt3sas/mpt3sas_scsih.c |    8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+--- a/drivers/scsi/mpt3sas/mpt3sas_scsih.c
++++ b/drivers/scsi/mpt3sas/mpt3sas_scsih.c
+@@ -9747,8 +9747,8 @@ static void scsih_remove(struct pci_dev
  
--void __init initialise_paca(struct paca_struct *new_paca, int cpu)
-+void __init __nostackprotector initialise_paca(struct paca_struct *new_paca, int cpu)
- {
- #ifdef CONFIG_PPC_PSERIES
- 	new_paca->lppaca_ptr = NULL;
-@@ -205,7 +205,7 @@ void __init initialise_paca(struct paca_
- }
+ 	ioc->remove_host = 1;
  
- /* Put the paca pointer into r13 and SPRG_PACA */
--void setup_paca(struct paca_struct *new_paca)
-+void __nostackprotector setup_paca(struct paca_struct *new_paca)
- {
- 	/* Setup r13 */
- 	local_paca = new_paca;
---- a/arch/powerpc/kernel/setup.h
-+++ b/arch/powerpc/kernel/setup.h
-@@ -8,6 +8,12 @@
- #ifndef __ARCH_POWERPC_KERNEL_SETUP_H
- #define __ARCH_POWERPC_KERNEL_SETUP_H
+-	mpt3sas_wait_for_commands_to_complete(ioc);
+-	_scsih_flush_running_cmds(ioc);
++	if (!pci_device_is_present(pdev))
++		_scsih_flush_running_cmds(ioc);
  
-+#ifdef CONFIG_CC_IS_CLANG
-+#define __nostackprotector
-+#else
-+#define __nostackprotector __attribute__((__optimize__("no-stack-protector")))
-+#endif
-+
- void initialize_cache_info(void);
- void irqstack_early_init(void);
+ 	_scsih_fw_event_cleanup_queue(ioc);
  
---- a/arch/powerpc/kernel/setup_64.c
-+++ b/arch/powerpc/kernel/setup_64.c
-@@ -279,7 +279,7 @@ void __init record_spr_defaults(void)
-  * device-tree is not accessible via normal means at this point.
-  */
+@@ -9831,8 +9831,8 @@ scsih_shutdown(struct pci_dev *pdev)
  
--void __init early_setup(unsigned long dt_ptr)
-+void __init __nostackprotector early_setup(unsigned long dt_ptr)
- {
- 	static __initdata struct paca_struct boot_paca;
+ 	ioc->remove_host = 1;
+ 
+-	mpt3sas_wait_for_commands_to_complete(ioc);
+-	_scsih_flush_running_cmds(ioc);
++	if (!pci_device_is_present(pdev))
++		_scsih_flush_running_cmds(ioc);
+ 
+ 	_scsih_fw_event_cleanup_queue(ioc);
  
 
 
