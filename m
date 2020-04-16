@@ -7,62 +7,63 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBD78C2D0EF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 08:00:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17BF4C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 08:00:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C2A05206B9
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 08:00:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEC9A206B9
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 08:00:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HTAxsHI4"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bUozIsQs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2440280AbgDPIAQ (ORCPT
+        id S2440361AbgDPIAm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 04:00:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60920 "EHLO
+        Thu, 16 Apr 2020 04:00:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60988 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2440117AbgDPIAM (ORCPT
+        by vger.kernel.org with ESMTP id S2439837AbgDPIAe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 04:00:12 -0400
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 120AFC061A10
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 01:00:11 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id f8so4821725lfe.12
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 01:00:10 -0700 (PDT)
+        Thu, 16 Apr 2020 04:00:34 -0400
+Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77C59C061A0C
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 01:00:34 -0700 (PDT)
+Received: by mail-lf1-x144.google.com with SMTP id x23so4880085lfq.1
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 01:00:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=sSf8uFnlnhLwj095+FU8Hbn9FbYIuI6qLS2jyiMbwJQ=;
-        b=HTAxsHI4NFhxBaCaDB1DX0kXLNVIdVACrlSB7snYNia/S5Dxaduy0HAuEa14nLUnwh
-         NjZ4+XYPjdEbGPlQtY7xdMJfc4wJ/ln5C9TgyMxTXtHwoH/3GbMtvLTxpiYS9aqcmyYW
-         mbmmqyhMSBrFgMNqsZX+qMFEZjAGKsUeyE7JBzpLP+9Up/4SXYnUWGousajsyQ4e/gG/
-         tp7ZiTkE0B16NNSEFY2ltXz8lNF4pGmLiLTfLBUnAHZV/4xyXmd7/wSkdV3an3765q5j
-         BOERqjZVvDAeOKg/YdyD/hrlM9y2S5+Lf1xyea9woIZQAmW4/C6KW/yyDMkY+8oW3KCN
-         +2zw==
+        bh=tjVFjiLUKq2dceYjR/sUZuoN+VaM2KkSpDEryVFjJAM=;
+        b=bUozIsQsOLIKrmIe04JjO05g7JBKyqXq8AdHzoY9+98g1GkgDs3t0ZDClZymhjwkrp
+         MByC50ZFFHYsMPZGUI3oyH1zekRuiC/DmTVL+6fK2pnd31mlDaqeXshW2PrfW6TKGkh5
+         dBeBVQy2o/c8U3eusS+I18vX7fIsdLrap/MTuqke74f8h1sfJsA/vNI7QewuTkLGLfiX
+         LZDVWtncz77CnlPHYu7z1PwxOXGCgThpfqHN2sydIRa9pH9054gcPx/FnQbBWcbrFCu/
+         B2wJoM2zJjIqKJYQ4ZUYjeTBW3+l3o13HlulzKtS/fh5gGg9WHIISWPjKIz6H5cx0w9h
+         Nn6Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=sSf8uFnlnhLwj095+FU8Hbn9FbYIuI6qLS2jyiMbwJQ=;
-        b=Bos1auPYB73/NQMImdZVDpDBHmdPMpHlKtpm2A/MZ6yWZyQnjyeMDshfpkvLo2KmZl
-         aG51zlH9cg4dO06xRgf+LnwG/YD0pmM5ytv5ZrIQ75PNlbhbB9V6KmHn3tzIp0g77i6M
-         DAYEeoo6ZAkYX2eff0QQbbctphLLYszjRv3ANayVK7Btg1xQFG8M57t1coCtMkjn7CfF
-         S3SoEvcBAJah9BOA7SFdLEtntgPbJtxMWiogvtI2ADrG2y49sUXfzdr9a6sqVrlVhaev
-         1R0VygKjM91IMJsh9Aw7Dn92uzIYAmXsOULzyocijwew4LgepjYdtD3KMkMCHzBM9tFA
-         +rmA==
-X-Gm-Message-State: AGi0PuYGBSi9dPImLEpxEPd4UAvtpEdNh8cWq1BrU+WeSB0FI41ATCvo
-        buwP9nhYEnGHoyY+mVxOmVFgxUXRKNoKrsbkfR2gWA==
-X-Google-Smtp-Source: APiQypKLGba57Vds1+EwidDyrePfi8s/BtJ+tvZbYfVRkMJ5bQ1HEXGS3YVge49dJY0iO94c5gudWNVEvYyk1g0PZ68=
-X-Received: by 2002:ac2:4a9d:: with SMTP id l29mr5028454lfp.4.1587024009374;
- Thu, 16 Apr 2020 01:00:09 -0700 (PDT)
+        bh=tjVFjiLUKq2dceYjR/sUZuoN+VaM2KkSpDEryVFjJAM=;
+        b=bny+xWmTk61stVXZzrPwAAVAnJPqPJvp5DbxQbrhgSRIYkCrp2FOy06orG5hDS3rBY
+         yJAZKxxTBoeG52Gupj2F2eutT0FzDHhOTuKDE+9Woi2KvDNVo38ONeIn2AfG/qqlyzTJ
+         zxj9a/a1rUiJOt1VjkCm5tnU6xrfMFtfKxteNZ1PWyKV7P4qNDnRVumru7natlk9y2EW
+         K5D5tFy8c6LD+JVdfU0CTg8MQK24vrXTx+WyrZmj9bGH9Q9xT+vi564VPocp4dYTn7ma
+         c4GIKYPbbCU9e3kVC8REC4v4cp2gGRyfQwgmP8aWqvIkyEhbITtWDGZbT+F6qlJFAXEv
+         ETqw==
+X-Gm-Message-State: AGi0Pua5ejs28XTzY2djS3CqotMN22YGAgJBuTNlg7gyw5WZfk7hcU7s
+        F73qdSWzbTtgPTzt1xq6nfBhkjN0jVLlONmzitpEog==
+X-Google-Smtp-Source: APiQypLJmZ97wdSRNvt5K0Vot48JkDgvMOmnFHGu2O4iKZQqqK02fJBxbBO5EYfsbjVxASLotokCg8oMB6V5oELv+9k=
+X-Received: by 2002:a05:6512:685:: with SMTP id t5mr5198837lfe.47.1587024032955;
+ Thu, 16 Apr 2020 01:00:32 -0700 (PDT)
 MIME-Version: 1.0
 References: <9feeb04805e5a406fe22a92e3f280abda39ddda4.1586289920.git.sean.wang@mediatek.com>
-In-Reply-To: <9feeb04805e5a406fe22a92e3f280abda39ddda4.1586289920.git.sean.wang@mediatek.com>
+ <42100afe6f97d28447c153bea6b54ea556cf95ca.1586289920.git.sean.wang@mediatek.com>
+In-Reply-To: <42100afe6f97d28447c153bea6b54ea556cf95ca.1586289920.git.sean.wang@mediatek.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 16 Apr 2020 09:59:58 +0200
-Message-ID: <CACRpkdbUzwwcJqqPb=HVcDptMb1OqmRnYNzPuTMLz75LOsmSrQ@mail.gmail.com>
-Subject: Re: [PATCH v7 1/2] pinctrl: mediatek: make MediaTek pinctrl v2 driver
- ready for buidling loadable module
+Date:   Thu, 16 Apr 2020 10:00:22 +0200
+Message-ID: <CACRpkdbszsyw550SZHBx73SHhUeDsKYC7od4pQRvpH+OdorCHQ@mail.gmail.com>
+Subject: Re: [PATCH v7 2/2] pinctrl: mediatek: make MediaTek MT6765 pinctrl
+ ready for buiding loadable module
 To:     Sean Wang <sean.wang@mediatek.com>
 Cc:     "moderated list:ARM/Mediatek SoC support" 
         <linux-mediatek@lists.infradead.org>,
@@ -80,19 +81,14 @@ On Tue, Apr 7, 2020 at 10:08 PM <sean.wang@mediatek.com> wrote:
 
 > From: Light Hsieh <light.hsieh@mediatek.com>
 >
-> In the future we want to be able to build the MediaTek pinctrl driver,
-> based on paris, as kernel module. This patch allows pinctrl-paris.c, the
-> external interrupt controller mtk-eint.c, and pinctrl-mtk-common-v2.c to
-> be loadable as module.
+> This patch make pinctrl-mt6765 ready for building as loadable module.
 >
 > Signed-off-by: Sean Wang <sean.wang@mediatek.com>
 > Signed-off-by: Light Hsieh <light.hsieh@mediatek.com>
-> Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
 > ---
-> v6->v7: no change
+> v6->v7: remove change-id
 
-Managed to extract and apply the v7 version using the b4 tool,
-thanks!
+Patch applied.
 
 Yours,
 Linus Walleij
