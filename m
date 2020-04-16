@@ -2,92 +2,108 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97A14C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:07:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E9DDC2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:09:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7ED4821D79
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:07:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1377214AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:09:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="kKM3XCkJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2894786AbgDPNH3 (ORCPT
+        id S2894829AbgDPNJZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 09:07:29 -0400
-Received: from mout.kundenserver.de ([217.72.192.73]:34857 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2894692AbgDPNHT (ORCPT
+        Thu, 16 Apr 2020 09:09:25 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:41712 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2894692AbgDPNJP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:07:19 -0400
-Received: from mail-qk1-f172.google.com ([209.85.222.172]) by
- mrelayeu.kundenserver.de (mreue106 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1MXpM2-1jjuWG0tyO-00Y6IA; Thu, 16 Apr 2020 15:07:16 +0200
-Received: by mail-qk1-f172.google.com with SMTP id l25so21143204qkk.3;
-        Thu, 16 Apr 2020 06:07:15 -0700 (PDT)
-X-Gm-Message-State: AGi0PuaCuoECuJVy9gUNj8qegAWs4qh2KMh97Ge+nPrtZK7Uaz6HRTR5
-        0en66QtYnvkti9lLEDsYwTh0CX1CYrnBDQTerXs=
-X-Google-Smtp-Source: APiQypIhmxZomDyPI8hn1HA79vovNwkrPUqhu3fHt73HrirP0DJ/PgzDEYqgh4E4jJVMGFCKn/J8UzK64DqY6qWvfL4=
-X-Received: by 2002:a37:63d0:: with SMTP id x199mr15671947qkb.3.1587042435017;
- Thu, 16 Apr 2020 06:07:15 -0700 (PDT)
+        Thu, 16 Apr 2020 09:09:15 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03GD8Bhi030563;
+        Thu, 16 Apr 2020 13:09:03 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=JVRFfnFS+OgWj7u5UNa3ISrw5T9J6EGkJSXP5AV0oP4=;
+ b=kKM3XCkJV1xc4zUZKFip7MGr/drhgl31vuH/o+h5t35tdgm/gCgIaCAWFMs2H5nJEfrf
+ 5Eq+H9EQuNAVqB7LKcUcqK5e37QC/1iIiYGsKKDA4NBfOnhoO+116xwjwIHU9UEFbLTT
+ zY0z8Y425XQ4cJC2CpzsLuzafOBa49ie4JVWzzxmUixlNFQUHy9Vp/vtsOxHpL43RTQ+
+ 8Yz+lxUZ2q8bxADDxZslpeAsDjFJ8TrpKLcnlmOJry0MQZ2F8Gj9TI2E5l/Hc47IgJY/
+ J3fKyBgIw7DoBWzJN2JMeO7gA3gI7v774Tp9xsqLVkToKEQoGIJsHsKf6S1IkS/o61iW xg== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2120.oracle.com with ESMTP id 30dn95s9mp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 16 Apr 2020 13:09:03 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03GD7F8s117906;
+        Thu, 16 Apr 2020 13:09:02 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3020.oracle.com with ESMTP id 30emen0dbx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 16 Apr 2020 13:09:02 +0000
+Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 03GD8wWc001606;
+        Thu, 16 Apr 2020 13:08:58 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 16 Apr 2020 06:08:58 -0700
+Date:   Thu, 16 Apr 2020 16:08:47 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        selvin.xavier@broadcom.com, devesh.sharma@broadcom.com,
+        dledford@redhat.com, leon@kernel.org, colin.king@canonical.com,
+        roland@purestorage.com, linux-rdma@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] RDMA/ocrdma: Fix an off-by-one issue in 'ocrdma_add_stat'
+Message-ID: <20200416130847.GP1163@kadam>
+References: <20200328073040.24429-1-christophe.jaillet@wanadoo.fr>
+ <20200414183441.GA28870@ziepe.ca>
 MIME-Version: 1.0
-References: <20200416115658.20406-1-geert+renesas@glider.be> <20200416115658.20406-2-geert+renesas@glider.be>
-In-Reply-To: <20200416115658.20406-2-geert+renesas@glider.be>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Thu, 16 Apr 2020 15:06:55 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a14Vk1JKRYZkkAhC9fAV4CMQzvux_FWdNkn39OwsYn4mA@mail.gmail.com>
-Message-ID: <CAK8P3a14Vk1JKRYZkkAhC9fAV4CMQzvux_FWdNkn39OwsYn4mA@mail.gmail.com>
-Subject: Re: [PATCH 1/2] arm64: Sort vendor-specific errata
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Robert Richter <rrichter@marvell.com>,
-        Wei Xu <xuwei5@hisilicon.com>, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:cKIPdBDmganPCmYpbOwn6REz2pxkK+ju8nIo6xpIixo05eSCdjv
- NZmwsXQag4IUtUt1K0P1FfNCr2zQOpHdWaYF+8YEXebzINhM/smLRiw66PgOmrazZ9t1XBo
- r7Lw5VwMooGahJI5YU6auDNnq7qe1GOdc7Rs7O1RqDuASopEUkETC006ELx/Y45EXJOsFKh
- QeDTa92bQ2lZ+LNR6Wk1g==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:7KxYyPtqaCE=:AUmirVDEPpP6TKAiQBEiIU
- k2+gXvw/Gmmmvir8ZAzHXNkYJduUsW73x+H8Nr/TxC4xItfpJCIvmKSP2gYOasQioVBkHhonZ
- mSkIpv7pFSC+fIvo64LzBLfGo+vemfWw/iLF9YsVoqgIHqtCojwES0Mc02+lh/USSKeY8kDgu
- Ymg3WZkggQxJXFHk2pa7z5oV0eHIi46ob/yebby49YsXnBd9EkWFFcf4DuvmHT/UE3CdGosHf
- eABPBmrsWREmyE5uq+i5Odqor7yIJT9kE5yncHfwwQ8u4sNSsVxJw8b+CSUydyl2ToCrg1/Uv
- QwZDloGy0yNyMEr7KL55MQCNFFrzE+B9IDcSTU8B0IjIWOsBXd/T+CTemHu2bfdeg4MhTw22J
- PrGoKIWD2JrHnryF3gmhu9/XDZsW9wOncLMCGVBErMXveL+iI6Pemy+gSvmQO+Yk4Ket/EDZH
- AsNoeounvYI2cCgrTv+lOk7bqiKqEr9cq9lzts8qPdYpbMjz+vGDmLMRjHA/vP2bCAiF7yB+9
- 5OysB6ywHbIHHMrnWHmeGDi7LLk/Ml+a0ogY+3HKSgPLRnHryqYlfMraxbCX5zVY5cM4xFn+1
- bAzvdH/c/ErmjmJn4rgMTkkDoUZNvh9M2N/IiE9Xqh1etCLwwRMye6hmoms4+jwqselLqrY6t
- wzSC0T/uXrb7SFgFzSBhfik1WnyFFSN8v9PHkss2qedvV6XSqqPtTzSoOA0UmE5AekZ7Y0UQX
- HM+J/Ro7bMruBoCYrS1A1o4J/TKp9JRHCOf+/vNa33Bu8W1QA7UbMjBc3Ld3MNpf7Cz6kCgIV
- c6NqEK5RSZzs92x1H+lYQ4IVbGCtZxl+2lzd1+fejWcVgYwMEE=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200414183441.GA28870@ziepe.ca>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9592 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 mlxscore=0 suspectscore=0
+ mlxlogscore=999 phishscore=0 spamscore=0 bulkscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004160093
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9592 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 clxscore=1011
+ malwarescore=0 bulkscore=0 priorityscore=1501 lowpriorityscore=0
+ mlxscore=0 phishscore=0 spamscore=0 impostorscore=0 suspectscore=0
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004160093
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 16, 2020 at 1:57 PM Geert Uytterhoeven
-<geert+renesas@glider.be> wrote:
->
-> Sort configuration options for vendor-specific errata by vendor, to
-> increase uniformity.
-> Move ARM64_WORKAROUND_REPEAT_TLBI up, as it is also selected by
-> ARM64_ERRATUM_1286807.
->
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+On Tue, Apr 14, 2020 at 03:34:41PM -0300, Jason Gunthorpe wrote:
+> The memcpy is still kind of silly right? What about this:
+> 
+> static int ocrdma_add_stat(char *start, char *pcur, char *name, u64 count)
+> {
+> 	size_t len = (start + OCRDMA_MAX_DBGFS_MEM) - pcur;
+> 	int cpy_len;
+> 
+> 	cpy_len = snprintf(pcur, len, "%s: %llu\n", name, count);
+> 	if (cpy_len >= len || cpy_len < 0) {
 
-Looks fine to me, though I wonder if we should move the errata
-menu to a separate Kconfig file, given that it's already longer than the
-Kconfig.platforms and Kconfig.debug files at 500 lines.
+The kernel version of snprintf() doesn't and will never return
+negatives.  It would cause a huge security headache if it started
+returning negatives.
 
-Maybe a Kconfig.cpu with both the "ARMv8.x architectural features" and
-errata menus?
+> 		pr_err("%s: No space in stats buff\n", __func__);
+> 		return 0;
+> 	}
 
-Either way,
+regards,
+dan carpenter
 
-Acked-by: Arnd Bergmann <arnd@arndb.de
