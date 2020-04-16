@@ -2,98 +2,166 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06965C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 18:09:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 917CBC352BE
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 18:12:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D2EDE21924
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 18:09:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F2B8221EB
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 18:12:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587060734;
+	bh=dKS+MG0CSg/HtNkZGsr/L3wWaajOLzH1Y3yCvJSHGCc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=xaGg8amlxy+fU9+Y49DEJte0H39RWZTCjEed7JFL3BWlU1ST0TPomaB4qWdpnUQtg
+	 cnAMO8JUExonWxgzbX0f0oviFUwMcv+rbLaoq0EpCUyhDmX4hzjQqd/V2rG8SQr715
+	 mYR0CX6KjkPUqArpDAjo9r4wIxZhI46oraqm2FCg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389543AbgDPSJi (ORCPT
+        id S1732136AbgDPSMN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 14:09:38 -0400
-Received: from mx2.suse.de ([195.135.220.15]:43228 "EHLO mx2.suse.de"
+        Thu, 16 Apr 2020 14:12:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35828 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728383AbgDPSJh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 14:09:37 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 0055CAF57;
-        Thu, 16 Apr 2020 18:09:34 +0000 (UTC)
-Message-ID: <1587060573.32139.67.camel@suse.cz>
-Subject: Re: [PATCH] x86, smpboot: Disable frequency invariance when it's
- unsupported
-From:   Giovanni Gherdovich <ggherdovich@suse.cz>
-To:     Like Xu <like.xu@linux.intel.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Doug Smythies <dsmythies@telus.net>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Date:   Thu, 16 Apr 2020 20:09:33 +0200
-In-Reply-To: <a2a0dc7a-2b9c-1cb3-677d-1e9e77ad5f15@linux.intel.com>
-References: <20200416020700.167294-1-like.xu@linux.intel.com>
-         <1587017284.32139.20.camel@suse.cz>
-         <bf43772d-48e5-01d4-dd03-330110e487fa@linux.intel.com>
-         <1587026430.32139.29.camel@suse.cz>
-         <a2a0dc7a-2b9c-1cb3-677d-1e9e77ad5f15@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        id S1726129AbgDPSMK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 14:12:10 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C3ABA21924;
+        Thu, 16 Apr 2020 18:12:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587060728;
+        bh=dKS+MG0CSg/HtNkZGsr/L3wWaajOLzH1Y3yCvJSHGCc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=xUUF9lrCWR6yVbI1xTXNYLK0+Ii7L54BmGYZLumlSKYcxHZYf8JpjLlMCQHNwZ+OU
+         eOq0PU0fnjPkw6ZxU2hk5HoIZ05Ascu5Ju5BuZ66j+6k4NXJy1ScW1Xj0I2R0mun8p
+         wOEXfVb0pm+hDIVscbNID/It1oZgbhjKIOWY6vxQ=
+Date:   Thu, 16 Apr 2020 19:12:03 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Suzuki K Poulose <suzuki.poulose@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
+        linux-kernel@vger.kernel.org, mark.rutland@arm.com, maz@kernel.org,
+        anshuman.khandual@arm.com, catalin.marinas@arm.com,
+        saiprakash.ranjan@codeaurora.org, dianders@chromium.org,
+        kernel-team@android.com
+Subject: Re: [PATCH 8/8] arm64: cpufeature: Add an overview comment for the
+ cpufeature framework
+Message-ID: <20200416181202.GA3739@willie-the-truck>
+References: <20200414213114.2378-1-will@kernel.org>
+ <20200414213114.2378-9-will@kernel.org>
+ <96dd797d-ccfe-c867-0a70-65eccacde3cd@arm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <96dd797d-ccfe-c867-0a70-65eccacde3cd@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2020-04-16 at 20:54 +0800, Like Xu wrote:
-> On 2020/4/16 16:40, Giovanni Gherdovich wrote:
-> > [...]
-> > 1) Can you share the output of "turbostat --interval 1 sleep 0"? I'm
-> >     interested in the headers of the output, where all the various pm-related
-> >     MSRs are decoded.
+On Thu, Apr 16, 2020 at 03:59:39PM +0100, Suzuki K Poulose wrote:
+> On 04/14/2020 10:31 PM, Will Deacon wrote:
+> > Now that Suzuki isn't within throwing distance, I thought I'd better add
+> > a rough overview comment to cpufeature.c so that it doesn't take me days
+> > to remember how it works next time.
 > > 
-> 
-> I couldn't disclose more information about this.
-
-No worries, I understand.
-
-> 
-> > 2) Despite not being in the Intel SDM, I was under the assumption that all
-> >     Intel CPUs declare the "all-cores turbo" frequency, but it's not the case
-> >     for this one. Eg: if you have 24 cores, somewhere in your MSRs I'd expect
-> >     to find "24C turbo" (or even "30C turbo", anything greater or equal than 24).
-> >     My understanding from
-> >     https://ark.intel.com/content/www/us/en/ark/products/202682/intel-atom-processor-p5962b-27m-cache-2-20-ghz.html
-> >     is that this CPU doesn't support turbo boost at all; in other CPUs without
-> >     turbo I've seen MSRs saying the all-cores turbo freq is equal to the base
-> >     freq (for compatibility I suppose). Here MSR_TURBO_RATIO_LIMIT says that 1C
-> >     turbo is the same as base frequency (2.2GHz), but turbo for larger sets of
-> >     cores is declared as zero, which I find a little odd.
-> 
-> That's odd and we could only rely on the Intel specification
-> about the assumption "Intel CPUs declare the all-cores turbo frequency"
-> and I may report this issue if something does mismatch.
-
-Ok.
-
-> 
+> > Signed-off-by: Will Deacon <will@kernel.org>
+> > ---
+> >   arch/arm64/kernel/cpufeature.c | 43 ++++++++++++++++++++++++++++++++++
+> >   1 file changed, 43 insertions(+)
 > > 
-> > 3) The parsing of MSRs in the frequency invariance code is modeled after
-> >     turbostat, and classifies CPUs in 5 groups: Atom up to Goldmont, Atom from
-> >     Goldmont onwards, Xeon Phi, Xeon Scalable Processors onwards and "generic
-> >     Core". As you've already found out from where your panic happens, your Atom
-> >     falls into the "generic Core" category (function core_set_max_freq_ratio()),
-> >     but given that it's an Atom and it's been released this very quarter I'd
-> >     have guessed it to behave like a Goldmont. Something for me to keep in mind.
+> > diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
+> > index 680a453ca8c4..421ca99dc8fc 100644
+> > --- a/arch/arm64/kernel/cpufeature.c
+> > +++ b/arch/arm64/kernel/cpufeature.c
+> > @@ -3,6 +3,49 @@
+> >    * Contains CPU feature definitions
+> >    *
+> >    * Copyright (C) 2015 ARM Ltd.
+> > + *
+> > + * A note for the weary kernel hacker: the code here is confusing and hard to
+> > + * follow! That's partly because it's solving a nasty problem, but also because
+> > + * there's a little bit of over-abstraction that tends to obscure what's going
+> > + * on behind a maze of helper functions and macros.
 > 
-> It's INTEL_FAM6_ATOM_TREMONT or INTEL_FAM6_ATOM_TREMONT_D.
+> Thanks for writing this up !
+
+It's purely a selfish thing ;)
+
+> > + * The basic problem is that hardware folks have started gluing together CPUs
+> > + * with distinct architectural features; in some cases even creating SoCs where
+> > + * user-visible instructions are available only on a subset of the available
+> > + * cores. We try to address this by snapshotting the feature registers of the
+> > + * boot CPU and comparing these with the feature registers of each secondary
+> > + * CPU when bringing them up. If there is a mismatch, then we update the
+> > + * snapshot state to indicate the lowest-common denominator of the feature,
+> > + * known as the "safe" value. This snapshot state can be queried to view the
 > 
+> I am not sure if the following is implied above.
+> 
+>   1) Against the "snapshot" state, where mismatches triggers updating
+>      the "snapshot" state to reflect the "safe" value.
+> 
+>   2) Compared against the CPU feature registers of *the boot CPU* for
+>     "FTR_STRICT" fields and any mismatch triggers TAINT_CPU_OUT_OF_SPEC.
+>      This makes sure that warning is generated for each OUT_OF_SPEC
+>      secondary CPU.
 
-Thanks! The model name from intel-family.h is useful!
+I was trying to avoid talking about the consequences of a mismatch in that
+paragraph, and instead cover them below:
 
+> > + * The sanitised register values are used to decide which capabilities we
+> > + * have in the system. These may be in the form of traditional "hwcaps"
+> > + * advertised to userspace or internal "cpucaps" which are used to configure
+> > + * things like alternative patching and static keys. While a feature mismatch
+> > + * may result in a TAINT_CPU_OUT_OF_SPEC kernel taint, a capability mismatch
+> > + * may prevent a CPU from being onlined at all.
 
-Giovanni
+Do you think something is missing here?
+
+> > + *
+> > + * Some implementation details worth remembering:
+> > + *
+> > + * - Mismatched features are *always* sanitised to a "safe" value, which
+> > + *   usually indicates that the feature is not supported.
+> > + *
+> > + * - A mismatched feature marked with FTR_STRICT will cause a "SANITY CHECK"
+> > + *   warning when onlining an offending CPU and the kernel will be tainted
+> > + *   with TAINT_CPU_OUT_OF_SPEC.
+> 
+> As mentioned above, this check is against that of the "boot CPU"
+> register state, which may not be implicit from the statement.
+
+Hmm, I'm trying to figure out if this matters. I suppose this means you
+get a SANITY CHECK warning for every mismatching secondary CPU, but that's
+implied by the above. Is there something else I'm missing?
+
+> > + *
+> > + * - Features marked as FTR_VISIBLE have their sanitised value visible to
+> > + *   userspace. FTR_VISIBLE features in registers that are only visible
+> > + *   to EL0 by trapping *must* have a corresponding HWCAP so that late
+> > + *   onlining of CPUs cannot lead to features disappearing at runtime.
+> > + *
+> 
+> As you mentioned in the other response we could add information about
+> the guest view, something like :
+> 
+>       - KVM exposes the sanitised value of the feature registers to the
+> 	guests and is not affected by the FTR_VISIBLE. However,
+> 	depending on the individual feature support in the hypervisor,
+> 	some of the fields may be capped/limited.
+
+In light of Marc's comment, I'll add something here along the lines of:
+
+  "KVM exposes its own view of the feature registers to guest operating
+   systems regardless of FTR_VISIBLE. This is typically driven from the
+   sanitised register values to allow virtual CPUs to be migrated between
+   arbitrary physical CPUs, but some features not present on the host are
+   also advertised and emulated. Look at sys_reg_descs[] for the gory
+   details."
+
+Will
