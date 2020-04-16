@@ -2,106 +2,93 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14112C2BA19
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 01:48:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1291C2BA19
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 01:52:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E72962064A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 01:48:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7E5A206D6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 01:52:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388154AbgDPBsw (ORCPT
+        id S2388419AbgDPBw5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 21:48:52 -0400
-Received: from smtprelay0171.hostedemail.com ([216.40.44.171]:47966 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2387838AbgDPBsh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 21:48:37 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay02.hostedemail.com (Postfix) with ESMTP id A4AD86130;
-        Thu, 16 Apr 2020 01:48:34 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: vein82_67ab8ba175634
-X-Filterd-Recvd-Size: 3060
-Received: from XPS-9350.home (unknown [47.151.136.130])
-        (Authenticated sender: joe@perches.com)
-        by omf20.hostedemail.com (Postfix) with ESMTPA;
-        Thu, 16 Apr 2020 01:48:32 +0000 (UTC)
-Message-ID: <9cd5b3c0a9a0f55d799a3d3ebd68ba8ff5f907d8.camel@perches.com>
-Subject: Re: [PATCH lkmm tip/core/rcu 06/10] MAINTAINERS: Update maintainers
- for new Documentaion/litmus-tests/
-From:   Joe Perches <joe@perches.com>
-To:     paulmck@kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        kernel-team@fb.com, mingo@kernel.org, stern@rowland.harvard.edu,
-        parri.andrea@gmail.com, will@kernel.org, peterz@infradead.org,
-        boqun.feng@gmail.com, npiggin@gmail.com, dhowells@redhat.com,
-        j.alglave@ucl.ac.uk, luc.maranget@inria.fr, akiyks@gmail.com,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>
-Date:   Wed, 15 Apr 2020 18:46:21 -0700
-In-Reply-To: <20200416001741.GJ17661@paulmck-ThinkPad-P72>
-References: <20200415183343.GA12265@paulmck-ThinkPad-P72>
-         <20200415184945.16487-6-paulmck@kernel.org>
-         <1288d0e231eb61566fefc8a9c0510fc123528da2.camel@perches.com>
-         <20200416001741.GJ17661@paulmck-ThinkPad-P72>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.34.1-2 
+        Wed, 15 Apr 2020 21:52:57 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:2334 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729270AbgDPBwt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 21:52:49 -0400
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 5F1C1FC782B87A59B108;
+        Thu, 16 Apr 2020 09:52:47 +0800 (CST)
+Received: from [127.0.0.1] (10.166.215.235) by DGGEMS412-HUB.china.huawei.com
+ (10.3.19.212) with Microsoft SMTP Server id 14.3.487.0; Thu, 16 Apr 2020
+ 09:52:37 +0800
+Subject: Re: [PATCH] dcache: unlock inode->i_lock before goto restart tag in,
+ d_prune_aliases
+To:     Eric Biggers <ebiggers@kernel.org>
+CC:     <viro@zeniv.linux.org.uk>, <linux-fsdevel@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <npiggin@kernel.dk>,
+        <zyan@redhat.com>, <hartleys@visionengravers.com>,
+        Yanxiaodan <yanxiaodan@huawei.com>,
+        Mingfangsen <mingfangsen@huawei.com>,
+        "wubo (T)" <wubo40@huawei.com>
+References: <c3a3d3d2-dad4-a4fe-014f-3f5eb3561524@huawei.com>
+ <20200416014648.GB816@sol.localdomain>
+From:   Zhiqiang Liu <liuzhiqiang26@huawei.com>
+Message-ID: <e71e65a1-ab70-3ff0-6277-8d7d4db4dfc2@huawei.com>
+Date:   Thu, 16 Apr 2020 09:52:36 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20200416014648.GB816@sol.localdomain>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.166.215.235]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-04-15 at 17:17 -0700, Paul E. McKenney wrote:
-> On Wed, Apr 15, 2020 at 02:39:59PM -0700, Joe Perches wrote:
-> > On Wed, 2020-04-15 at 11:49 -0700, paulmck@kernel.org wrote:
-> > > Also add me as Reviewer for LKMM. Previously a patch to do this was
-> > > Acked but somewhere along the line got lost. Add myself in this patch.
-> > []
-> > > diff --git a/MAINTAINERS b/MAINTAINERS
-> > []
-> > > @@ -9806,6 +9806,7 @@ M:	Luc Maranget <luc.maranget@inria.fr>
-> > >  M:	"Paul E. McKenney" <paulmck@kernel.org>
-> > >  R:	Akira Yokosawa <akiyks@gmail.com>
-> > >  R:	Daniel Lustig <dlustig@nvidia.com>
-> > > +R:	Joel Fernandes <joel@joelfernandes.org>
-> > >  L:	linux-kernel@vger.kernel.org
-> > >  L:	linux-arch@vger.kernel.org
-> > >  S:	Supported
-> > > @@ -9816,6 +9817,7 @@ F:	Documentation/core-api/atomic_ops.rst
-> > >  F:	Documentation/core-api/refcount-vs-atomic.rst
-> > >  F:	Documentation/memory-barriers.txt
-> > >  F:	tools/memory-model/
-> > > +F:	Documentation/litmus-tests/
-> > 
-> > trivia:
-> > 
-> > Alphabetic ordering of F: entries please.
-> > This should be between core-api and memory-barriers.
-> > 
-> > >  LIS3LV02D ACCELEROMETER DRIVER
-> > >  M:	Eric Piel <eric.piel@tremplin-utc.net>
+On 2020/4/16 9:46, Eric Biggers wrote:
+> On Wed, Apr 15, 2020 at 09:20:33PM +0800, Zhiqiang Liu wrote:
+>> From: Zhiqiang Liu <liuzhiqiang26@huawei.com>
+>>
+>> coccicheck reports:
+>>   fs/dcache.c:1027:1-10: second lock on line 1027
+>>
+>> In d_prune_aliases, before goto restart we should unlock
+>> inode->i_lock.
+>>
+>> Fixes: 29355c3904e ("d_prune_alias(): just lock the parent and call __dentry_kill()")
+>> Signed-off-by: Zhiqiang Liu <liuzhiqiang26@huawei.com>
+>> Signed-off-by: Feilong Lin <linfeilong@huawei.com>
+>> ---
+>>  fs/dcache.c | 1 +
+>>  1 file changed, 1 insertion(+)
+>>
+>> diff --git a/fs/dcache.c b/fs/dcache.c
+>> index b280e07e162b..1532ebe9d9ca 100644
+>> --- a/fs/dcache.c
+>> +++ b/fs/dcache.c
+>> @@ -1030,6 +1030,7 @@ void d_prune_aliases(struct inode *inode)
+>>  		if (!dentry->d_lockref.count) {
+>>  			struct dentry *parent = lock_parent(dentry);
+>>  			if (likely(!dentry->d_lockref.count)) {
+>> +				spin_unlock(&inode->i_lock);
+>>  				__dentry_kill(dentry);
+>>  				dput(parent);
+>>  				goto restart;
+>> -- 
 > 
-> New one on me, but it does make a lot of sense, especially for cases
-> with lots of scattered paths.  How about the following?
-
-Thanks Paul.
-
-If the recent commits that Linus did just before v5.7-rc1:
-
-3b50142d8528 ("MAINTAINERS: sort field names for all entries")
-4400b7d68f6e ("MAINTAINERS: sort entries by entry name")
-
-don't create too many problems I suppose
-
-$ scripts/parse-maintainers.pl --order --input=MAINTAINERS --output=MAINTAINERS
-
-could be run just before every -rc1 to keep all this stuff organized.
-
-We'll see.
-
+> Doesn't __dentry_kill() already do the unlock, via dentry_unlink_inode()?
+> 
+> - Eric
+> 
+Yes, you are right. Sorry for that. Please ignore this patch.
+> .
+> 
 
