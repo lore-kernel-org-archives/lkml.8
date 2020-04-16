@@ -2,78 +2,169 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2137AC2BA2B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 07:44:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1600C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 07:45:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EB5042064A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 07:44:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD97021556
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 07:45:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587023113;
+	bh=hE1B/GqPyAwbhU6GurhlP98Cp3yFkzngF+v28Ae6CuY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=gHnwETxn4akWeOJgMvUKsHBLdHgckcKvGInHo5lcYvtSun0fjliq2uYsJOCq0Ljgk
+	 E0IZAQPOcIU2B2p2dr9rTU17vreh28m6nPKkTuHR+MHfy9yfYMk5plZljAyeaq57Nq
+	 z6AQizTN2Jrj0mxOfpTywmDuVKmC1bWvIluKUuiE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439619AbgDPHoH (ORCPT
+        id S2439628AbgDPHpK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 03:44:07 -0400
-Received: from mga14.intel.com ([192.55.52.115]:9208 "EHLO mga14.intel.com"
+        Thu, 16 Apr 2020 03:45:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48506 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2439534AbgDPHoA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 03:44:00 -0400
-IronPort-SDR: QSH5PHezF+hVDxhYpnQIP9HcnSLNQwroc034/KLkq34/fxlyKqlFthGc4TSDxTHLbHlQZe2Q+c
- qPLw0APu+hYA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2020 00:44:00 -0700
-IronPort-SDR: S2f9P+GnLGDfvB0ocHt6/lpFaCcT0MCt9Dw3b0nRU8GBGYosOuAV4bxZjmKggDLfmKhg8A7ZHJ
- YIuEbVcXhWbA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,390,1580803200"; 
-   d="scan'208";a="363907058"
-Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.87]) ([10.237.72.87])
-  by fmsmga001.fm.intel.com with ESMTP; 16 Apr 2020 00:43:58 -0700
-Subject: Re: [PATCH 4/7] mmc: sdhci: move SDHCI_QUIRK2_CLOCK_DIV_ZERO_BROKEN
- frequency limit
-To:     =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
-Cc:     Michal Simek <michal.simek@xilinx.com>,
-        Kevin Liu <kliu5@marvell.com>,
-        Suneel Garapati <suneel.garapati@xilinx.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org
-References: <cover.1585827904.git.mirq-linux@rere.qmqm.pl>
- <637b9bea4c28a0eeacf754d2930596b8e6673808.1585827904.git.mirq-linux@rere.qmqm.pl>
- <2b111407-0f35-3c5e-f7f0-4a05a281dce2@intel.com>
- <20200415161657.GC19897@qmqm.qmqm.pl>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Message-ID: <e038a984-2f6d-4940-8d28-e39e060b36c2@intel.com>
-Date:   Thu, 16 Apr 2020 10:43:08 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        id S2439413AbgDPHpB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 03:45:01 -0400
+Received: from mail-io1-f50.google.com (mail-io1-f50.google.com [209.85.166.50])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5269E21569;
+        Thu, 16 Apr 2020 07:45:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587023100;
+        bh=hE1B/GqPyAwbhU6GurhlP98Cp3yFkzngF+v28Ae6CuY=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=SefdfvWwUvkpCeZp632BCeHzCD1E+eBxMDa0onCAH2Tli/pzkNVZABj0lO3n08pjY
+         VmCQN2x6QO95MKY5BUqMKZ4c1AH4K5buh1gDeCK6qDQM8rcrHaQo2cDaCTUluNRYae
+         GB4jKKXt3Dw279ToHWFpWHh8k1UkuKegrxexBgm4=
+Received: by mail-io1-f50.google.com with SMTP id i19so20000090ioh.12;
+        Thu, 16 Apr 2020 00:45:00 -0700 (PDT)
+X-Gm-Message-State: AGi0PuYu8mYXck4Ea3/DjMk8hO07aHjn5WbDUDaJ3YgJauMCilQIJTDe
+        TdlvP9q/q7LALh98Db9sgWl2GFYjxoosntD85TE=
+X-Google-Smtp-Source: APiQypLeNbjPF2bsg5mHsKG6G7YQ+2nbEUjMovAnSywp2+B1+QAFYCPiz1sV8RVxrQ6TQUjDzT1dDy7DHtl2X6Sr8S8=
+X-Received: by 2002:a02:3341:: with SMTP id k1mr20976288jak.74.1587023099650;
+ Thu, 16 Apr 2020 00:44:59 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200415161657.GC19897@qmqm.qmqm.pl>
-Content-Type: text/plain; charset=iso-8859-2
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20200415195422.19866-1-atish.patra@wdc.com>
+In-Reply-To: <20200415195422.19866-1-atish.patra@wdc.com>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Thu, 16 Apr 2020 09:44:48 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXEJGED_uumBR3V-cVjmCpJZu9mwW42gc9hptw+YS-004w@mail.gmail.com>
+Message-ID: <CAMj1kXEJGED_uumBR3V-cVjmCpJZu9mwW42gc9hptw+YS-004w@mail.gmail.com>
+Subject: Re: [v3 PATCH 0/5] Add UEFI support for RISC-V
+To:     Atish Patra <atish.patra@wdc.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        linux-riscv@lists.infradead.org,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Will Deacon <will@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 15/04/20 7:16 pm, Micha³ Miros³aw wrote:
-> On Wed, Apr 15, 2020 at 04:16:04PM +0300, Adrian Hunter wrote:
->> On 2/04/20 2:54 pm, Micha³ Miros³aw wrote:
->>> Move clock frequency limit for SDHCI_QUIRK2_CLOCK_DIV_ZERO_BROKEN where
->>> it belongs.
->>
->> Did you consider getting rid of SDHCI_QUIRK2_CLOCK_DIV_ZERO_BROKEN and
->> handling it in sdhci-of-arasan instead?
-> 
-> I'm expecting to use this quirk for DDR mode support in other host drivers,
-> but I can't test this, yet.
+(+ Arvind)
 
-I didn't mean get rid of the functionality.  I meant implement it in
-sdhci-of-arasan.  In general we want to reduce the quirks in sdhci.c and
-implement them instead in vendor drivers.
+On Wed, 15 Apr 2020 at 21:54, Atish Patra <atish.patra@wdc.com> wrote:
+>
+> This series adds UEFI support for RISC-V. Currently, only boot time
+> services have been added. Runtime services will be added in a separate
+> series. This series depends on some core EFI patches
+> present in current in efi-next and following other patches.
+>
+> U-Boot: Adds the boot hartid under chosen node.
+> https://lists.denx.de/pipermail/u-boot/2020-April/405726.html
+>
+> Linux kernel: 5.7-rc1
+>
+> OpenSBI: master
+>
+> Patch 1 just moves arm-stub code to a generic code so that it can be used
+> across different architecture.
+>
+> Patch 3 adds fixmap bindings so that CONFIG_EFI can be compiled and we do not
+> have create separate config to enable boot time services.
+> As runtime services are not enabled at this time, full generic early ioremap
+> support is also not added in this series.
+>
+> Patch 4 and 5 adds the PE/COFF header and EFI stub code support for RISC-V
+> respectively.
+>
+> The patches can also be found in following git repo.
+>
+> https://github.com/atishp04/linux/tree/wip_uefi_riscv_v3
+>
+> The patches have been verified on Qemu using bootefi command in U-Boot.
+>
+> Changes from v2->v3:
+> 1. Rebased on top of latest efi patches.
+> 2. Improved handle_kernel_image().
+>
+> Changes from v1->v2:
+> 1. Rebased on 5.7-rc1.
+> 2. Fixed minor typos and removed redundant macros/comments.
+>
+> Changes from previous version:
+> 1. Renamed to the generic efi stub macro.
+> 2. Address all redundant comments.
+> 3. Supported EFI kernel image with normal booti command.
+> 4. Removed runtime service related macro defines.
+>
+> Atish Patra (5):
+> efi: Move arm-stub to a common file
+> include: pe.h: Add RISC-V related PE definition
+> RISC-V: Define fixmap bindings for generic early ioremap support
+> RISC-V: Add PE/COFF header for EFI stub
+> RISC-V: Add EFI stub support.
+>
 
+I had some comments regarding patch #5, but the other ones look fine.
+
+Given that there are two series in flight now that touch the same
+code, I am going to merge the patches #1 and #2 of this series into
+efi/next.
+
+Once the remaining changes are good to go, I can take them as well,
+but I'll need one of the RISC-V maintainers to ack them first.
+
+
+> arch/arm/Kconfig                              |   2 +-
+> arch/arm64/Kconfig                            |   2 +-
+> arch/riscv/Kconfig                            |  21 ++++
+> arch/riscv/Makefile                           |   1 +
+> arch/riscv/configs/defconfig                  |   1 +
+> arch/riscv/include/asm/Kbuild                 |   1 +
+> arch/riscv/include/asm/efi.h                  |  44 +++++++
+> arch/riscv/include/asm/fixmap.h               |  18 +++
+> arch/riscv/include/asm/io.h                   |   1 +
+> arch/riscv/include/asm/sections.h             |  13 ++
+> arch/riscv/kernel/Makefile                    |   4 +
+> arch/riscv/kernel/efi-header.S                |  99 ++++++++++++++++
+> arch/riscv/kernel/head.S                      |  16 +++
+> arch/riscv/kernel/image-vars.h                |  53 +++++++++
+> arch/riscv/kernel/vmlinux.lds.S               |  20 +++-
+> drivers/firmware/efi/Kconfig                  |   4 +-
+> drivers/firmware/efi/libstub/Makefile         |  19 ++-
+> .../efi/libstub/{arm-stub.c => efi-stub.c}    |   0
+> drivers/firmware/efi/libstub/riscv-stub.c     | 111 ++++++++++++++++++
+> include/linux/pe.h                            |   3 +
+> 20 files changed, 421 insertions(+), 12 deletions(-)
+> create mode 100644 arch/riscv/include/asm/efi.h
+> create mode 100644 arch/riscv/include/asm/sections.h
+> create mode 100644 arch/riscv/kernel/efi-header.S
+> create mode 100644 arch/riscv/kernel/image-vars.h
+> rename drivers/firmware/efi/libstub/{arm-stub.c => efi-stub.c} (100%)
+> create mode 100644 drivers/firmware/efi/libstub/riscv-stub.c
+>
+> --
+> 2.24.0
+>
