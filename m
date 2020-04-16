@@ -2,146 +2,85 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEFB3C2D0EF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 05:03:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8020C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 05:09:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A32122076D
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 05:03:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ozlabs.org header.i=@ozlabs.org header.b="CMjVIBuA"
+	by mail.kernel.org (Postfix) with ESMTP id 865F72076D
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 05:09:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405455AbgDPFDo (ORCPT
+        id S2405550AbgDPFJI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 01:03:44 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:59787 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404633AbgDPFDk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 01:03:40 -0400
-Received: by ozlabs.org (Postfix, from userid 1003)
-        id 492nDp3Rfhz9sSG; Thu, 16 Apr 2020 15:03:38 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ozlabs.org; s=201707;
-        t=1587013418; bh=ezMMwkByK2qZyRKxM4BFNkkLAWHC+jA69OSNgaQhgbc=;
-        h=Date:From:To:Cc:Subject:From;
-        b=CMjVIBuASwAcDOMMj7oJiM3jwgXLZge7hHE1uCcAlkF9v6v2mv20mbE8W5cKSaZV9
-         ouc+wKbBOOZuAtIhol8gUN6iROYWWiNFtkAILfyEXCJclcYVJ26fyUQMeSz8/8bzjF
-         HsrwEbMFAZTjuCI3urNFQTUaWIqBm0t9YZZTWP6LaN4/eAMrstp0pbEU7K9YhCjLez
-         nnSAJRdiX5njMqBAvkSHmr/Df3u7eFKEjDwsb3T1AW41iVgiCn9STeyQCdDb1gXT03
-         OxLpDiwb8mJPTxc6fMbZnmDuwaa96fKPA2DnLDq4uCINbQiIhP33idhnnwhaq+viwD
-         y7KRNUKE4cFXQ==
-Date:   Thu, 16 Apr 2020 15:03:35 +1000
-From:   Paul Mackerras <paulus@ozlabs.org>
-To:     kvm@vger.kernel.org, kvm-ppc@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        groug@kaod.org, clg@kaod.org,
-        David Gibson <david@gibson.dropbear.id.au>
-Subject: [PATCH] KVM: PPC: Book3S HV: Handle non-present PTEs in page fault
- functions
-Message-ID: <20200416050335.GB10545@blackberry>
+        Thu, 16 Apr 2020 01:09:08 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:49674 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404971AbgDPFJB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 01:09:01 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 3E3AB8030778;
+        Thu, 16 Apr 2020 05:08:49 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id surKt_FRKDek; Thu, 16 Apr 2020 08:08:48 +0300 (MSK)
+Date:   Thu, 16 Apr 2020 08:09:32 +0300
+From:   Sergey Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Linus Walleij <linus.walleij@linaro.org>
+CC:     Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>,
+        Vadim Vlasov <V.Vlasov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Hoan Tran <hoan@os.amperecomputing.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 0/4] gpio: dwapb: Fix reference clocks usage
+Message-ID: <20200416050932.25qbbheg43h5ijlw@ubsrv2.baikal.int>
+References: <20200306132505.8D3B88030795@mail.baikalelectronics.ru>
+ <CACRpkda3YpCxVii1r5F-q=b_Eh7ixbtprWykUH7xPDxPZR0gwQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <CACRpkda3YpCxVii1r5F-q=b_Eh7ixbtprWykUH7xPDxPZR0gwQ@mail.gmail.com>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since cd758a9b57ee "KVM: PPC: Book3S HV: Use __gfn_to_pfn_memslot in HPT
-page fault handler", it's been possible in fairly rare circumstances to
-load a non-present PTE in kvmppc_book3s_hv_page_fault() when running a
-guest on a POWER8 host.
+On Wed, Apr 15, 2020 at 11:27:49PM +0200, Linus Walleij wrote:
+> I have applied the v3 version of the patch set after some tinkering
+> with the b4 tool.
+> 
+> For some reason some patches are missing in my inbox and also
+> on som mailing lists, they are not in my spamfolder even.
+> 
+> Anyways with some help from Konstantin I managed to get the
+> series out using the b4 tool and applied it.
 
-Because that case wasn't checked for, we could misinterpret the non-present
-PTE as being a cache-inhibited PTE.  That could mismatch with the
-corresponding hash PTE, which would cause the function to fail with -EFAULT
-a little further down.  That would propagate up to the KVM_RUN ioctl()
-generally causing the KVM userspace (usually qemu) to fall over.
+Thanks Linus.
+Regarding missing the messages in your inbox. It's weird. I double checked.
+All messages were sent to your email. Regarding missing them in the devicetree
+mailing list. It's my mistake. Forgot to add it to Cc'es. Next time I'll
+keep in mind that this is necessary.
 
-This addresses the problem by catching that case and returning to the guest
-instead, letting it fault again, and retrying the whole page fault from
-the beginning.
+Regards,
+-Sergey
 
-For completeness, this fixes the radix page fault handler in the same
-way.  For radix this didn't cause any obvious misbehaviour, because we
-ended up putting the non-present PTE into the guest's partition-scoped
-page tables, leading immediately to another hypervisor data/instruction
-storage interrupt, which would go through the page fault path again
-and fix things up.
-
-Fixes: cd758a9b57ee "KVM: PPC: Book3S HV: Use __gfn_to_pfn_memslot in HPT page fault handler"
-Bugzilla: https://bugzilla.redhat.com/show_bug.cgi?id=1820402
-Reported-by: David Gibson <david@gibson.dropbear.id.au>
-Signed-off-by: Paul Mackerras <paulus@ozlabs.org>
----
-This is a reworked version of the patch David Gibson sent recently,
-with the fix applied to the radix case as well. The commit message
-is mostly stolen from David's patch.
-
- arch/powerpc/kvm/book3s_64_mmu_hv.c    | 9 +++++----
- arch/powerpc/kvm/book3s_64_mmu_radix.c | 9 +++++----
- 2 files changed, 10 insertions(+), 8 deletions(-)
-
-diff --git a/arch/powerpc/kvm/book3s_64_mmu_hv.c b/arch/powerpc/kvm/book3s_64_mmu_hv.c
-index 3aecec8..20b7dce 100644
---- a/arch/powerpc/kvm/book3s_64_mmu_hv.c
-+++ b/arch/powerpc/kvm/book3s_64_mmu_hv.c
-@@ -604,18 +604,19 @@ int kvmppc_book3s_hv_page_fault(struct kvm_run *run, struct kvm_vcpu *vcpu,
- 	 */
- 	local_irq_disable();
- 	ptep = __find_linux_pte(vcpu->arch.pgdir, hva, NULL, &shift);
-+	pte = __pte(0);
-+	if (ptep)
-+		pte = *ptep;
-+	local_irq_enable();
- 	/*
- 	 * If the PTE disappeared temporarily due to a THP
- 	 * collapse, just return and let the guest try again.
- 	 */
--	if (!ptep) {
--		local_irq_enable();
-+	if (!pte_present(pte)) {
- 		if (page)
- 			put_page(page);
- 		return RESUME_GUEST;
- 	}
--	pte = *ptep;
--	local_irq_enable();
- 	hpa = pte_pfn(pte) << PAGE_SHIFT;
- 	pte_size = PAGE_SIZE;
- 	if (shift)
-diff --git a/arch/powerpc/kvm/book3s_64_mmu_radix.c b/arch/powerpc/kvm/book3s_64_mmu_radix.c
-index 134fbc1..7bf94ba 100644
---- a/arch/powerpc/kvm/book3s_64_mmu_radix.c
-+++ b/arch/powerpc/kvm/book3s_64_mmu_radix.c
-@@ -815,18 +815,19 @@ int kvmppc_book3s_instantiate_page(struct kvm_vcpu *vcpu,
- 	 */
- 	local_irq_disable();
- 	ptep = __find_linux_pte(vcpu->arch.pgdir, hva, NULL, &shift);
-+	pte = __pte(0);
-+	if (ptep)
-+		pte = *ptep;
-+	local_irq_enable();
- 	/*
- 	 * If the PTE disappeared temporarily due to a THP
- 	 * collapse, just return and let the guest try again.
- 	 */
--	if (!ptep) {
--		local_irq_enable();
-+	if (!pte_present(pte)) {
- 		if (page)
- 			put_page(page);
- 		return RESUME_GUEST;
- 	}
--	pte = *ptep;
--	local_irq_enable();
- 
- 	/* If we're logging dirty pages, always map single pages */
- 	large_enable = !(memslot->flags & KVM_MEM_LOG_DIRTY_PAGES);
--- 
-2.7.4
-
+> 
+> Thanks!
+> Linus Walleij
