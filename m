@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33E5BC2BB55
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65254C38A2C
 	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:49:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 133312224F
+	by mail.kernel.org (Postfix) with ESMTP id 3147520732
 	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:49:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=default; t=1587044940;
-	bh=wiq00+a0rQKfRniK04x21me3Tx711ZcZNXnWvLov+ug=;
+	bh=WQ2GBdbncs0pgwwcbxwy8DH/t/mkVeV1o2bgg3dntvg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nPsVGGUk5Fy4aDRr7UoSYeIPkiIOb4VXz7sqJThAIlStNgPX6xh6zbwiEkcmT3vM2
-	 jtztsl4f528t+/MpuVjkcvMav8Ojvg+rr4T4Eqnl8W77xtITxgVE0u/sbeK2DbTMLr
-	 zBEYiUbwUEL6pFEy8F6IumW07nkIdM39AwQ/WicU=
+	b=QmbNz00+EVB1kB1H7X5wlOpqceNBhMPQszaxKMAyNwbX21GL7iOWZQQx46gpPlH5j
+	 c0hbqYQtUAFcCNGQtppxXusQ8opYqvwksO3kDpWi/Zc6HQqdici4k7beZE2opj4tMy
+	 R8eEFmzpN/tb5oq9ccvesP5pZFsq7225ZVXZYSwQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2898778AbgDPNs4 (ORCPT
+        id S2898798AbgDPNs6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 09:48:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48272 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 09:48:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48406 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2897277AbgDPNgN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:36:13 -0400
+        id S2897300AbgDPNgS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:36:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 474C521BE5;
-        Thu, 16 Apr 2020 13:36:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 98D9D221F7;
+        Thu, 16 Apr 2020 13:36:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044170;
-        bh=wiq00+a0rQKfRniK04x21me3Tx711ZcZNXnWvLov+ug=;
+        s=default; t=1587044178;
+        bh=WQ2GBdbncs0pgwwcbxwy8DH/t/mkVeV1o2bgg3dntvg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AhXfMhQbqH/4iMwnkclXmGcg1o7+SqLBMt7JN7Q9k9F1Ax5ku+kEpowRc/Lv0axio
-         w8bsYRH+iZXNz/ONJ5cY4eddMQ84nH5IZ5ZURBQ2xPJKyDS9DpGyByno8p8uMdUrPw
-         kTrtHEBAyZE8T4DUOeCBqE5kcWsqQbQXgEMt9UFE=
+        b=J5nZVDiK+58gquh/nwpqCAtfFmUtDUwwsLDLPHLwML5joS9fVQc29BPeD6nX0G1Ny
+         w4/4G/hJ/0a8RdmxTohhcJvF26xQ5U2Pxpddw6BFaR3CWQsjg0812HXQUjaokkPpN/
+         y7dEd9qkmcJsAPyoQSmk/624dpBi0w/2V9AhBlz4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Ond=C5=99ej=20Caletka?= <ondrej@caletka.cz>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Subject: [PATCH 5.5 108/257] ACPI: PM: s2idle: Refine active GPEs check
-Date:   Thu, 16 Apr 2020 15:22:39 +0200
-Message-Id: <20200416131339.689197762@linuxfoundation.org>
+        stable@vger.kernel.org, James Smart <jsmart2021@gmail.com>,
+        Himanshu Madhani <himanshu.madhani@oracle.com>,
+        Christoph Hellwig <hch@lst.de>
+Subject: [PATCH 5.5 111/257] nvme-fc: Revert "add module to ops template to allow module references"
+Date:   Thu, 16 Apr 2020 15:22:42 +0200
+Message-Id: <20200416131340.114502108@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.891903893@linuxfoundation.org>
 References: <20200416131325.891903893@linuxfoundation.org>
@@ -60,87 +60,136 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+From: James Smart <jsmart2021@gmail.com>
 
-commit d5406284ff803a578ca503373624312770319054 upstream.
+commit 8c5c660529209a0e324c1c1a35ce3f83d67a2aa5 upstream.
 
-The check for any active GPEs added by commit fdde0ff8590b ("ACPI:
-PM: s2idle: Prevent spurious SCIs from waking up the system") turns
-out to be insufficiently precise to prevent some systems from
-resuming prematurely due to a spurious EC wakeup, so refine it
-by first checking if any GPEs other than the EC GPE are active
-and skipping all of the SCIs coming from the EC that do not produce
-any genuine wakeup events after processing.
+The original patch was to resolve the lldd being able to be unloaded
+while being used to talk to the boot device of the system. However, the
+end result of the original patch is that any driver unload while a nvme
+controller is live via the lldd is now being prohibited. Given the module
+reference, the module teardown routine can't be called, thus there's no
+way, other than manual actions to terminate the controllers.
 
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=206629
-Fixes: fdde0ff8590b ("ACPI: PM: s2idle: Prevent spurious SCIs from waking up the system")
-Reported-by: Ondřej Caletka <ondrej@caletka.cz>
-Tested-by: Ondřej Caletka <ondrej@caletka.cz>
-Cc: 5.4+ <stable@vger.kernel.org> # 5.4+
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Fixes: 863fbae929c7 ("nvme_fc: add module to ops template to allow module references")
+Cc: <stable@vger.kernel.org> # v5.4+
+Signed-off-by: James Smart <jsmart2021@gmail.com>
+Reviewed-by: Himanshu Madhani <himanshu.madhani@oracle.com>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/acpi/ec.c       |    5 +++++
- drivers/acpi/internal.h |    1 +
- drivers/acpi/sleep.c    |   19 ++++++++++---------
- 3 files changed, 16 insertions(+), 9 deletions(-)
+ drivers/nvme/host/fc.c          |   14 ++------------
+ drivers/nvme/target/fcloop.c    |    1 -
+ drivers/scsi/lpfc/lpfc_nvme.c   |    2 --
+ drivers/scsi/qla2xxx/qla_nvme.c |    1 -
+ include/linux/nvme-fc-driver.h  |    4 ----
+ 5 files changed, 2 insertions(+), 20 deletions(-)
 
---- a/drivers/acpi/ec.c
-+++ b/drivers/acpi/ec.c
-@@ -2052,6 +2052,11 @@ void acpi_ec_set_gpe_wake_mask(u8 action
- 		acpi_set_gpe_wake_mask(NULL, first_ec->gpe, action);
+--- a/drivers/nvme/host/fc.c
++++ b/drivers/nvme/host/fc.c
+@@ -342,8 +342,7 @@ nvme_fc_register_localport(struct nvme_f
+ 	    !template->ls_req || !template->fcp_io ||
+ 	    !template->ls_abort || !template->fcp_abort ||
+ 	    !template->max_hw_queues || !template->max_sgl_segments ||
+-	    !template->max_dif_sgl_segments || !template->dma_boundary ||
+-	    !template->module) {
++	    !template->max_dif_sgl_segments || !template->dma_boundary) {
+ 		ret = -EINVAL;
+ 		goto out_reghost_failed;
+ 	}
+@@ -2016,7 +2015,6 @@ nvme_fc_ctrl_free(struct kref *ref)
+ {
+ 	struct nvme_fc_ctrl *ctrl =
+ 		container_of(ref, struct nvme_fc_ctrl, ref);
+-	struct nvme_fc_lport *lport = ctrl->lport;
+ 	unsigned long flags;
+ 
+ 	if (ctrl->ctrl.tagset) {
+@@ -2043,7 +2041,6 @@ nvme_fc_ctrl_free(struct kref *ref)
+ 	if (ctrl->ctrl.opts)
+ 		nvmf_free_options(ctrl->ctrl.opts);
+ 	kfree(ctrl);
+-	module_put(lport->ops->module);
  }
  
-+bool acpi_ec_other_gpes_active(void)
-+{
-+	return acpi_any_gpe_status_set(first_ec ? first_ec->gpe : U32_MAX);
-+}
-+
- bool acpi_ec_dispatch_gpe(void)
- {
- 	u32 ret;
---- a/drivers/acpi/internal.h
-+++ b/drivers/acpi/internal.h
-@@ -202,6 +202,7 @@ void acpi_ec_remove_query_handler(struct
+ static void
+@@ -3074,15 +3071,10 @@ nvme_fc_init_ctrl(struct device *dev, st
+ 		goto out_fail;
+ 	}
  
- #ifdef CONFIG_PM_SLEEP
- void acpi_ec_flush_work(void);
-+bool acpi_ec_other_gpes_active(void);
- bool acpi_ec_dispatch_gpe(void);
- #endif
+-	if (!try_module_get(lport->ops->module)) {
+-		ret = -EUNATCH;
+-		goto out_free_ctrl;
+-	}
+-
+ 	idx = ida_simple_get(&nvme_fc_ctrl_cnt, 0, 0, GFP_KERNEL);
+ 	if (idx < 0) {
+ 		ret = -ENOSPC;
+-		goto out_mod_put;
++		goto out_free_ctrl;
+ 	}
  
---- a/drivers/acpi/sleep.c
-+++ b/drivers/acpi/sleep.c
-@@ -1014,19 +1014,20 @@ static bool acpi_s2idle_wake(void)
- 			return true;
+ 	ctrl->ctrl.opts = opts;
+@@ -3235,8 +3227,6 @@ out_free_queues:
+ out_free_ida:
+ 	put_device(ctrl->dev);
+ 	ida_simple_remove(&nvme_fc_ctrl_cnt, ctrl->cnum);
+-out_mod_put:
+-	module_put(lport->ops->module);
+ out_free_ctrl:
+ 	kfree(ctrl);
+ out_fail:
+--- a/drivers/nvme/target/fcloop.c
++++ b/drivers/nvme/target/fcloop.c
+@@ -850,7 +850,6 @@ fcloop_targetport_delete(struct nvmet_fc
+ #define FCLOOP_DMABOUND_4G		0xFFFFFFFF
  
- 		/*
--		 * If there are no EC events to process and at least one of the
--		 * other enabled GPEs is active, the wakeup is regarded as a
--		 * genuine one.
--		 *
--		 * Note that the checks below must be carried out in this order
--		 * to avoid returning prematurely due to a change of the EC GPE
--		 * status bit from unset to set between the checks with the
--		 * status bits of all the other GPEs unset.
-+		 * If the status bit is set for any enabled GPE other than the
-+		 * EC one, the wakeup is regarded as a genuine one.
- 		 */
--		if (acpi_any_gpe_status_set(U32_MAX) && !acpi_ec_dispatch_gpe())
-+		if (acpi_ec_other_gpes_active())
- 			return true;
+ static struct nvme_fc_port_template fctemplate = {
+-	.module			= THIS_MODULE,
+ 	.localport_delete	= fcloop_localport_delete,
+ 	.remoteport_delete	= fcloop_remoteport_delete,
+ 	.create_queue		= fcloop_create_queue,
+--- a/drivers/scsi/lpfc/lpfc_nvme.c
++++ b/drivers/scsi/lpfc/lpfc_nvme.c
+@@ -1985,8 +1985,6 @@ out_unlock:
  
- 		/*
-+		 * If the EC GPE status bit has not been set, the wakeup is
-+		 * regarded as a spurious one.
-+		 */
-+		if (!acpi_ec_dispatch_gpe())
-+			return false;
-+
-+		/*
- 		 * Cancel the wakeup and process all pending events in case
- 		 * there are any wakeup ones in there.
- 		 *
+ /* Declare and initialization an instance of the FC NVME template. */
+ static struct nvme_fc_port_template lpfc_nvme_template = {
+-	.module	= THIS_MODULE,
+-
+ 	/* initiator-based functions */
+ 	.localport_delete  = lpfc_nvme_localport_delete,
+ 	.remoteport_delete = lpfc_nvme_remoteport_delete,
+--- a/drivers/scsi/qla2xxx/qla_nvme.c
++++ b/drivers/scsi/qla2xxx/qla_nvme.c
+@@ -610,7 +610,6 @@ static void qla_nvme_remoteport_delete(s
+ }
+ 
+ static struct nvme_fc_port_template qla_nvme_fc_transport = {
+-	.module	= THIS_MODULE,
+ 	.localport_delete = qla_nvme_localport_delete,
+ 	.remoteport_delete = qla_nvme_remoteport_delete,
+ 	.create_queue   = qla_nvme_alloc_queue,
+--- a/include/linux/nvme-fc-driver.h
++++ b/include/linux/nvme-fc-driver.h
+@@ -270,8 +270,6 @@ struct nvme_fc_remote_port {
+  *
+  * Host/Initiator Transport Entrypoints/Parameters:
+  *
+- * @module:  The LLDD module using the interface
+- *
+  * @localport_delete:  The LLDD initiates deletion of a localport via
+  *       nvme_fc_deregister_localport(). However, the teardown is
+  *       asynchronous. This routine is called upon the completion of the
+@@ -385,8 +383,6 @@ struct nvme_fc_remote_port {
+  *       Value is Mandatory. Allowed to be zero.
+  */
+ struct nvme_fc_port_template {
+-	struct module	*module;
+-
+ 	/* initiator-based functions */
+ 	void	(*localport_delete)(struct nvme_fc_local_port *);
+ 	void	(*remoteport_delete)(struct nvme_fc_remote_port *);
 
 
