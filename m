@@ -2,93 +2,162 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73415C2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 12:58:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32E63C2BB85
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 12:59:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4EC6C208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 12:58:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1285A20656
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 12:59:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=vanguardiasur-com-ar.20150623.gappssmtp.com header.i=@vanguardiasur-com-ar.20150623.gappssmtp.com header.b="NmuMt05w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2894654AbgDPM6a convert rfc822-to-8bit (ORCPT
+        id S2894684AbgDPM7b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 08:58:30 -0400
-Received: from zimbra2.kalray.eu ([92.103.151.219]:46790 "EHLO
-        zimbra2.kalray.eu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2894447AbgDPM61 (ORCPT
+        Thu, 16 Apr 2020 08:59:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51250 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2894656AbgDPM7Z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 08:58:27 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by zimbra2.kalray.eu (Postfix) with ESMTP id DB4B227E0DCF;
-        Thu, 16 Apr 2020 14:58:24 +0200 (CEST)
-Received: from zimbra2.kalray.eu ([127.0.0.1])
-        by localhost (zimbra2.kalray.eu [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id DHH_5V3HGF-F; Thu, 16 Apr 2020 14:58:24 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by zimbra2.kalray.eu (Postfix) with ESMTP id A277C27E0DD4;
-        Thu, 16 Apr 2020 14:58:24 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at zimbra2.kalray.eu
-Received: from zimbra2.kalray.eu ([127.0.0.1])
-        by localhost (zimbra2.kalray.eu [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id zT3WScpoRkvn; Thu, 16 Apr 2020 14:58:24 +0200 (CEST)
-Received: from zimbra2.kalray.eu (localhost [127.0.0.1])
-        by zimbra2.kalray.eu (Postfix) with ESMTP id 8F92327E0DD2;
-        Thu, 16 Apr 2020 14:58:24 +0200 (CEST)
-Date:   Thu, 16 Apr 2020 14:58:24 +0200 (CEST)
-From:   =?utf-8?Q?Cl=C3=A9ment?= Leger <cleger@kalrayinc.com>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     linux-spi <linux-spi@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Message-ID: <1262823717.15763605.1587041904410.JavaMail.zimbra@kalray.eu>
-In-Reply-To: <20200416124725.GI5354@sirena.org.uk>
-References: <20200416110823.22565-1-cleger@kalray.eu> <20200416110916.22633-1-cleger@kalray.eu> <20200416110916.22633-2-cleger@kalray.eu> <20200416113539.GG5354@sirena.org.uk> <622416308.15749883.1587037855167.JavaMail.zimbra@kalray.eu> <20200416124725.GI5354@sirena.org.uk>
-Subject: Re: [PATCH 2/2] spi: dw: remove cs_control and poll_mode members
- from chip_data
+        Thu, 16 Apr 2020 08:59:25 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A269AC061A0C
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 05:59:23 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id rh22so1205677ejb.12
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 05:59:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=vanguardiasur-com-ar.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Pqocv/eXd8agG6oQNiPQwe8tU9LueQq90txyZdBuL44=;
+        b=NmuMt05wm0nh5pDYjx6jFJ0hyrfOZRfh4rtC8/XsvZETXclm+D/BaNlRZO9BveAbGR
+         lXujA2tdsIMCv//33DS0v39tE/BzDr4ZuQktKV6XBouxm5jSWRR0MgXI5g0fLvBuM0kY
+         rL0gOwH+/35QQdDIXLEQ/WSZu7csyiz8qW56jw3APfWNuySnek1cPaq7Y3BVw8l48kLb
+         BSUDgOE0zeqFY3UBi6DU/xrARIijIXQTtneZdeRg3U1OSxDp+WUatnUACvILY5GawGPG
+         c1S9G8rt9VQaJGndxGxdtwhZ3i7RLa0UyrBd1u501/qqb8BCZNa/viQTVy9VHUq3Zz8M
+         P5xg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Pqocv/eXd8agG6oQNiPQwe8tU9LueQq90txyZdBuL44=;
+        b=WAX59NssNQmi0pGoYuwfTIcsnHaCRhvWkDCFbX4dJXPwWa0+iuO8YhgtSU/P0btRS/
+         MlXn+hRZtjCTtRJTPYMdWMGeqp1tmk8DOL+6oHOEELnbV5F9C+KUkcOxiMshMhBVlMIf
+         4FPDWQRkltfCb/1XhBuR5ZcQuwZLLvEt+YZRZUGNf4uqvdaUCfWljPkKid2G9JxLOxgg
+         LJijSXI9PjvvmNxFv3OKfV4KtkgMp87d2YtMPJXqkODT3ZeflvJhkTpB/fq8XaOVC4bI
+         sJwv9qKoFgI2MjB6cqusVuCzhOR2lIzCsvsMnvE27Q8LnH533ACsCExpisn+VmI3zkTN
+         o47w==
+X-Gm-Message-State: AGi0PuZJUPe/2kiAi36btmOOs73rUpj3yR4atDccnwm2pNYEeT6jJ4km
+        XZbYMDlTvu9hunu1dKnn5WOvAt9RE9mSyoG7J+21PA==
+X-Google-Smtp-Source: APiQypJZ8a9Xj0AcqhtwU+4h7TWpCu2z8o/G+gdZiRVW5tZY0fxY1YqboCEkjK1ptgUJPvQE71pdnqe4P0py81bICVY=
+X-Received: by 2002:a17:906:af6f:: with SMTP id os15mr9748919ejb.78.1587041962281;
+ Thu, 16 Apr 2020 05:59:22 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-X-Originating-IP: [192.168.40.202]
-X-Mailer: Zimbra 8.8.15_GA_3895 (ZimbraWebClient - FF68 (Linux)/8.8.15_GA_3895)
-Thread-Topic: remove cs_control and poll_mode members from chip_data
-Thread-Index: u6+BzXYec9ZWEUrvuKhpkEo14J92aA==
+References: <20200410103501.1083-1-sergey.senozhatsky@gmail.com>
+In-Reply-To: <20200410103501.1083-1-sergey.senozhatsky@gmail.com>
+From:   Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
+Date:   Thu, 16 Apr 2020 09:59:10 -0300
+Message-ID: <CAAEAJfCyWpNy-Ckn+6fdzUTFiDr5RqYD4V5BgUviRRBxr=ggBQ@mail.gmail.com>
+Subject: Re: [RFC][PATCH] media: v4l2-ctrls: add more NULL pointer checks
+To:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Tomasz Figa <tfiga@chromium.org>,
+        linux-media <linux-media@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Sergey,
 
+Thanks for the patch!
 
------ On 16 Apr, 2020, at 14:47, Mark Brown broonie@kernel.org wrote:
+On Fri, 10 Apr 2020 at 07:35, Sergey Senozhatsky
+<sergey.senozhatsky@gmail.com> wrote:
+>
+> A number of v4l2-ctrls functions gracefully handle NULL ctrl pointers,
+> for instance, v4l2_g_ctrl(), v4l2_ctrl_activate(), __v4l2_ctrl_grab()
 
-> On Thu, Apr 16, 2020 at 01:50:55PM +0200, Clément Leger wrote:
->> Hi Mark,
-> 
-> Please don't top post, reply in line with needed context.  This allows
-> readers to readily follow the flow of conversation and understand what
-> you are talking about and also helps ensure that everything in the
-> discussion is being addressed.
+Please note that v4l2_g_ctrl doesn't really handle
+a NULL ctrl parameter, because it doesn't have a ctrl
+parameter :-)
 
-Sorry, I'll take care of that.
+Checking the return of a function such as v4l2_ctrl_find,
+is not the same as defensive-style parameter checking.
 
-> 
->> Sorry, maybe the commit message was not clear enough but actually
->> these fields were not initialized so it does not break anything
->> (ie, the default values were always used).
-> 
-> When you remove the definition of the struct and declaration of the
-> variable pointing to it then the code won't compile.
+And the thing is, the kernel doesn't really do defensive checking
+like this on internal APIs, unless there are good reasons
+allowing a NULL parameter, such as kfree.
 
-Yes I know and I took care of that but there is probably a misunderstanding.
-There is actually two structs with the same members (dw_chip_info and
-chip_data). The first one (chip_info) if it exists, is copied into the
-second (chip_data). First patch [1/2] removes the part of code that did
-copy these fields. And then second patchs removes the usage of chip_data
-fields. Please let me know if I missed something. I tried to recompile it
-and there is no build breakage.
+Now, maybe this is the case, maybe it should be possible
+to add controls without checking the result, or to allow
+calling the control API with a NULL ctrl.
 
-Clément
+Quite frankly, I'm not convinced of this being the case,
+or just a quirk of the vivid driver.
 
-> 
-> > > This means that your first patch will break the build, to keep things
+In any case...
+
+> to name a few. But not all of them. It is relatively easy to crash the
+> kernel with the NULL pointer dereference:
+>
+>         # modprobe vivid node_types=0x60000
+>         $ v4l2-compliance
+>
+> BUG: kernel NULL pointer dereference, address: 0000000000000020
+> PF: supervisor read access in kernel mode
+> PF: error_code(0x0000) - not-present page
+> PGD 0 P4D 0
+> Oops: 0000 [#1] SMP PTI
+> RIP: 0010:v4l2_ctrl_s_ctrl.isra.0+0x4/0x30 [vivid]
+> Call Trace:
+>  vidioc_s_input.cold+0x1a8/0x38d [vivid]
+>  __video_do_ioctl+0x372/0x3a0 [videodev]
+>  ? v4l_enumstd+0x20/0x20 [videodev]
+>  ? v4l_enumstd+0x20/0x20 [videodev]
+>  video_usercopy+0x1cb/0x450 [videodev]
+>  v4l2_ioctl+0x3f/0x50 [videodev]
+>  ksys_ioctl+0x3f1/0x7e0
+>  ? vfs_write+0x1c4/0x1f0
+>  __x64_sys_ioctl+0x11/0x20
+>  do_syscall_64+0x49/0x2c0
+>  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+>
+> vivid driver crashes the kernel in various places, for instance,
+>
+>         v4l2_ctrl_modify_range(dev->brightness, ...);
+> or
+>         v4l2_ctrl_s_ctrl(dev->brightness, ...);
+>
+> because ->brightness (and quite likely some more controls) is NULL.
+> While we may fix the vivid driver, it would be safer to fix core
+> API. This patch adds more NULL pointer checks to ctrl API.
+>
+> Signed-off-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+> ---
+>  drivers/media/v4l2-core/v4l2-ctrls.c | 22 ++++++++++++++++-
+>  include/media/v4l2-ctrls.h           | 37 ++++++++++++++++++++++++++--
+>  2 files changed, 56 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/media/v4l2-core/v4l2-ctrls.c b/drivers/media/v4l2-core/v4l2-ctrls.c
+> index 93d33d1db4e8..02a60f67c2ee 100644
+> --- a/drivers/media/v4l2-core/v4l2-ctrls.c
+> +++ b/drivers/media/v4l2-core/v4l2-ctrls.c
+> @@ -2869,6 +2869,9 @@ EXPORT_SYMBOL(v4l2_ctrl_add_handler);
+>
+>  bool v4l2_ctrl_radio_filter(const struct v4l2_ctrl *ctrl)
+>  {
+> +       if (WARN_ON(!ctrl))
+> +               return false;
+> +
+
+.. don't think this is needed, as it's always called via v4l2_ctrl_add_handler
+which guarantess a non-NULL pointer.
+
+Thanks!
+Ezequiel
