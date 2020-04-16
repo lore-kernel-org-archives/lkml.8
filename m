@@ -2,52 +2,53 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDC75C2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:33:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DDF4C352BE
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:34:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B5E9C221F7
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:33:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CB2A221F9
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:34:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587044027;
-	bh=EK/Cuxjn3w46ZMpO2v2XOHxAZrlG7GWtQElkScPysAM=;
+	s=default; t=1587044052;
+	bh=0XSTBhX2zm6ioqTEpMmLcdqllM/RPn/aU26VIs+NCX4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tIv/IBhDOE6lwN9jwX9083ZEg+Es0geRf9+4QBAStTyH8C6si87IXr/lKkY2S8tyZ
-	 vptqTVSjQwqAa47rd3x7UX3HZxKcWINEf+uo5uN9umYGgEVgbUxNbb1P5vdXPAYiIQ
-	 KYp9wlr3ppW71c18Pks0bP4zr3vdz8znPjZeP1OI=
+	b=Ch/mfX+vjXXkjg91PiksJ3o9bh0+2bxElvTFxGQIbLKGrqkGFniR0UJ+qXSIda+kB
+	 xfAsO5gxqO0anLRbsCy/eFetNgnFSD+N3a6Q6/AcsWEgGIOAwBq5T4PMHMwsXPWlos
+	 qO3qBFHMqeF7qDltvV2m3QpqcIS+xSceBigHiUAs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2896778AbgDPNdp (ORCPT
+        id S2896854AbgDPNeH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 09:33:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37942 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 09:34:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38386 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2895845AbgDPN2p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:28:45 -0400
+        id S2895233AbgDPN3A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:29:00 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 76C92217D8;
-        Thu, 16 Apr 2020 13:28:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 12232217D8;
+        Thu, 16 Apr 2020 13:28:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587043724;
-        bh=EK/Cuxjn3w46ZMpO2v2XOHxAZrlG7GWtQElkScPysAM=;
+        s=default; t=1587043739;
+        bh=0XSTBhX2zm6ioqTEpMmLcdqllM/RPn/aU26VIs+NCX4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qr6KS+NvrPDNaSZCAPlZBuuq4FPmXjnFkDhd6KdDyHwkuE1aY56/M5Bv14MP3nEw4
-         /q0vyij04FyTESPL9BcKKW4XSuFmYlHPBzOjhunLlqjggo9/Ihj2cElByckj6eeVRx
-         EqkxVZE4b21SUfc35IWzogl8w+hUbDLx/b3rCSfM=
+        b=OT/pTNfSSzc8bH68LZLwZMvJf3F4TUxEncqmkhWk/at6+qeu30WbNkliR4CHpHpYn
+         k2rsJGy6ZmhzVYoybDDuYRzqtWub1yIjXxzoqVZl0iQucX6X6ptV3p8Tnu1Vz03Zi0
+         hDUOtTGk3KabDvKLxqIXFc0mp2M5ZkjWyHojrFMI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sungbo Eo <mans0n@gorani.run>,
-        Marc Zyngier <maz@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH 4.19 072/146] irqchip/versatile-fpga: Apply clear-mask earlier
-Date:   Thu, 16 Apr 2020 15:23:33 +0200
-Message-Id: <20200416131252.793253379@linuxfoundation.org>
+        stable@vger.kernel.org, Qu Wenruo <wqu@suse.com>,
+        Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 039/146] btrfs: remove a BUG_ON() from merge_reloc_roots()
+Date:   Thu, 16 Apr 2020 15:23:00 +0200
+Message-Id: <20200416131247.884032479@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131242.353444678@linuxfoundation.org>
 References: <20200416131242.353444678@linuxfoundation.org>
@@ -60,52 +61,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sungbo Eo <mans0n@gorani.run>
+From: Josef Bacik <josef@toxicpanda.com>
 
-commit 6a214a28132f19ace3d835a6d8f6422ec80ad200 upstream.
+[ Upstream commit 7b7b74315b24dc064bc1c683659061c3d48f8668 ]
 
-Clear its own IRQs before the parent IRQ get enabled, so that the
-remaining IRQs do not accidentally interrupt the parent IRQ controller.
+This was pretty subtle, we default to reloc roots having 0 root refs, so
+if we crash in the middle of the relocation they can just be deleted.
+If we successfully complete the relocation operations we'll set our root
+refs to 1 in prepare_to_merge() and then go on to merge_reloc_roots().
 
-This patch also fixes a reboot bug on OX820 SoC, where the remaining
-rps-timer IRQ raises a GIC interrupt that is left pending. After that,
-the rps-timer IRQ is cleared during driver initialization, and there's
-no IRQ left in rps-irq when local_irq_enable() is called, which evokes
-an error message "unexpected IRQ trap".
+At prepare_to_merge() time if any of the reloc roots have a 0 reference
+still, we will remove that reloc root from our reloc root rb tree, and
+then clean it up later.
 
-Fixes: bdd272cbb97a ("irqchip: versatile FPGA: support cascaded interrupts from DT")
-Signed-off-by: Sungbo Eo <mans0n@gorani.run>
-Signed-off-by: Marc Zyngier <maz@kernel.org>
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/20200321133842.2408823-1-mans0n@gorani.run
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+However this only happens if we successfully start a transaction.  If
+we've aborted previously we will skip this step completely, and only
+have reloc roots with a reference count of 0, but were never properly
+removed from the reloc control's rb tree.
 
+This isn't a problem per-se, our references are held by the list the
+reloc roots are on, and by the original root the reloc root belongs to.
+If we end up in this situation all the reloc roots will be added to the
+dirty_reloc_list, and then properly dropped at that point.  The reloc
+control will be free'd and the rb tree is no longer used.
+
+There were two options when fixing this, one was to remove the BUG_ON(),
+the other was to make prepare_to_merge() handle the case where we
+couldn't start a trans handle.
+
+IMO this is the cleaner solution.  I started with handling the error in
+prepare_to_merge(), but it turned out super ugly.  And in the end this
+BUG_ON() simply doesn't matter, the cleanup was happening properly, we
+were just panicing because this BUG_ON() only matters in the success
+case.  So I've opted to just remove it and add a comment where it was.
+
+Reviewed-by: Qu Wenruo <wqu@suse.com>
+Signed-off-by: Josef Bacik <josef@toxicpanda.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/irqchip/irq-versatile-fpga.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ fs/btrfs/relocation.c | 16 +++++++++++++++-
+ 1 file changed, 15 insertions(+), 1 deletion(-)
 
---- a/drivers/irqchip/irq-versatile-fpga.c
-+++ b/drivers/irqchip/irq-versatile-fpga.c
-@@ -212,6 +212,9 @@ int __init fpga_irq_of_init(struct devic
- 	if (of_property_read_u32(node, "valid-mask", &valid_mask))
- 		valid_mask = 0;
+diff --git a/fs/btrfs/relocation.c b/fs/btrfs/relocation.c
+index f98913061a40c..6f4cb2db3b1a0 100644
+--- a/fs/btrfs/relocation.c
++++ b/fs/btrfs/relocation.c
+@@ -2434,7 +2434,21 @@ out:
+ 			free_reloc_roots(&reloc_roots);
+ 	}
  
-+	writel(clear_mask, base + IRQ_ENABLE_CLEAR);
-+	writel(clear_mask, base + FIQ_ENABLE_CLEAR);
-+
- 	/* Some chips are cascaded from a parent IRQ */
- 	parent_irq = irq_of_parse_and_map(node, 0);
- 	if (!parent_irq) {
-@@ -221,9 +224,6 @@ int __init fpga_irq_of_init(struct devic
+-	BUG_ON(!RB_EMPTY_ROOT(&rc->reloc_root_tree.rb_root));
++	/*
++	 * We used to have
++	 *
++	 * BUG_ON(!RB_EMPTY_ROOT(&rc->reloc_root_tree.rb_root));
++	 *
++	 * here, but it's wrong.  If we fail to start the transaction in
++	 * prepare_to_merge() we will have only 0 ref reloc roots, none of which
++	 * have actually been removed from the reloc_root_tree rb tree.  This is
++	 * fine because we're bailing here, and we hold a reference on the root
++	 * for the list that holds it, so these roots will be cleaned up when we
++	 * do the reloc_dirty_list afterwards.  Meanwhile the root->reloc_root
++	 * will be cleaned up on unmount.
++	 *
++	 * The remaining nodes will be cleaned up by free_reloc_control.
++	 */
+ }
  
- 	fpga_irq_init(base, node->name, 0, parent_irq, valid_mask, node);
- 
--	writel(clear_mask, base + IRQ_ENABLE_CLEAR);
--	writel(clear_mask, base + FIQ_ENABLE_CLEAR);
--
- 	/*
- 	 * On Versatile AB/PB, some secondary interrupts have a direct
- 	 * pass-thru to the primary controller for IRQs 20 and 22-31 which need
+ static void free_block_list(struct rb_root *blocks)
+-- 
+2.20.1
+
 
 
