@@ -7,47 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B96A0C2BB85
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C176C2BB55
 	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:09:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 858E72223D
+	by mail.kernel.org (Postfix) with ESMTP id 66D47214AF
 	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:09:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=default; t=1587049740;
-	bh=P/0lskj5n+fVsZdBwi59YdaK/6ajOC5ljhBBmqt4dHw=;
+	bh=Sjs80iM7dlKK1UU6/VX9BBc0IvrYYHxbddJ1dweZHfU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FFo+HTPbuZzEIwAe7TeHA8NPJtWORDJAxotmVgeV8ecasCgSLLGS1T+kazrv8C0pQ
-	 WWLOKoMBHtqnt+y4q5C5eNOJFgp+Rr8mMjYulPy/wLk7jVI4rjJBMNYvIXn9j6jTnj
-	 V9DsXG4w5oYhsITnM7VAw3mQ84UQkIWw0E3ldqmc=
+	b=WkQ37mo088Zlck5NfOHOpVKJpRbZMx/8lOdjGdlTfNnAfjpq2QL720AkxdOBx5GKI
+	 dChbAu7rNW8OuUQEaPdLP5vtVaVO/7MMwa+AiQfRnbxgKO0l76xGq8B0vC21mnvNB7
+	 ksZhDDjn61m9VSTUiX1y3MMThPa25k+ovieTVkkI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394978AbgDPPIz (ORCPT
+        id S2394959AbgDPPIt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:08:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37198 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 11:08:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37252 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728769AbgDPNvG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:51:06 -0400
+        id S1729003AbgDPNvI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:51:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B7EA220732;
-        Thu, 16 Apr 2020 13:51:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3DA6621734;
+        Thu, 16 Apr 2020 13:51:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587045065;
-        bh=P/0lskj5n+fVsZdBwi59YdaK/6ajOC5ljhBBmqt4dHw=;
+        s=default; t=1587045067;
+        bh=Sjs80iM7dlKK1UU6/VX9BBc0IvrYYHxbddJ1dweZHfU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JQfVQcGJDPPA5uTPxoysT1FtXhrKzhpvMD3/JGx3H1AA2H4+IIocRoPYIqajE74Ws
-         VmQPd+aclKpDK+T5NpyaR9WgvF04oxu17vdbsrVbxBbn1apWisfQOIRPYUApIj+D1Q
-         99YR48Raa6JNfP3EZbQFcqb3IyVMWJyxVnXTxdVs=
+        b=FDyIgk/3oKwejTx2p0g09IXSHmT/EI9IHiMLjaP9Evz5U4LEZjmmjgZAx6XunRV6A
+         W/v4Bvg4Wcopwyi0zDKVgFqWnqeOASYo2RL405MHsUm7BvR6EjBU9rYb/Rnrm055lk
+         KbJb93wOTF7g++YuTu7j3vVtDjFZWdyKqk4oWTMk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Fredrik Strupe <fredrik@strupe.net>,
-        Catalin Marinas <catalin.marinas@arm.com>
-Subject: [PATCH 5.4 178/232] arm64: armv8_deprecated: Fix undef_hook mask for thumb setend
-Date:   Thu, 16 Apr 2020 15:24:32 +0200
-Message-Id: <20200416131337.303018510@linuxfoundation.org>
+        stable@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH 5.4 214/232] powerpc/64: Prevent stack protection in early boot
+Date:   Thu, 16 Apr 2020 15:25:08 +0200
+Message-Id: <20200416131342.244634436@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131316.640996080@linuxfoundation.org>
 References: <20200416131316.640996080@linuxfoundation.org>
@@ -60,53 +58,96 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Fredrik Strupe <fredrik@strupe.net>
+From: Michael Ellerman <mpe@ellerman.id.au>
 
-commit fc2266011accd5aeb8ebc335c381991f20e26e33 upstream.
+commit 7053f80d96967d8e72e9f2a724bbfc3906ce2b07 upstream.
 
-For thumb instructions, call_undef_hook() in traps.c first reads a u16,
-and if the u16 indicates a T32 instruction (u16 >= 0xe800), a second
-u16 is read, which then makes up the the lower half-word of a T32
-instruction. For T16 instructions, the second u16 is not read,
-which makes the resulting u32 opcode always have the upper half set to
-0.
+The previous commit reduced the amount of code that is run before we
+setup a paca. However there are still a few remaining functions that
+run with no paca, or worse, with an arbitrary value in r13 that will
+be used as a paca pointer.
 
-However, having the upper half of instr_mask in the undef_hook set to 0
-masks out the upper half of all thumb instructions - both T16 and T32.
-This results in trapped T32 instructions with the lower half-word equal
-to the T16 encoding of setend (b650) being matched, even though the upper
-half-word is not 0000 and thus indicates a T32 opcode.
+In particular the stack protector canary is stored in the paca, so if
+stack protector is activated for any of these functions we will read
+the stack canary from wherever r13 points. If r13 happens to point
+outside of memory we will get a machine check / checkstop.
 
-An example of such a T32 instruction is eaa0b650, which should raise a
-SIGILL since T32 instructions with an eaa prefix are unallocated as per
-Arm ARM, but instead works as a SETEND because the second half-word is set
-to b650.
+For example if we modify initialise_paca() to trigger stack
+protection, and then boot in the mambo simulator with r13 poisoned in
+skiboot before calling the kernel:
 
-This patch fixes the issue by extending instr_mask to include the
-upper u32 half, which will still match T16 instructions where the upper
-half is 0, but not T32 instructions.
+  DEBUG: 19952232: (19952232): INSTRUCTION: PC=0xC0000000191FC1E8: [0x3C4C006D]: addis   r2,r12,0x6D [fetch]
+  DEBUG: 19952236: (19952236): INSTRUCTION: PC=0xC00000001807EAD8: [0x7D8802A6]: mflr    r12 [fetch]
+  FATAL ERROR: 19952276: (19952276): Check Stop for 0:0: Machine Check with ME bit of MSR off
+  DEBUG: 19952276: (19952276): INSTRUCTION: PC=0xC0000000191FCA7C: [0xE90D0CF8]: ld      r8,0xCF8(r13) [Instruction Failed]
+  INFO: 19952276: (19952277): ** Execution stopped: Mambo Error, Machine Check Stop,  **
+  systemsim % bt
+  pc:                             0xC0000000191FCA7C      initialise_paca+0x54
+  lr:                             0xC0000000191FC22C      early_setup+0x44
+  stack:0x00000000198CBED0        0x0     +0x0
+  stack:0x00000000198CBF00        0xC0000000191FC22C      early_setup+0x44
+  stack:0x00000000198CBF90        0x1801C968      +0x1801C968
 
-Fixes: 2d888f48e056 ("arm64: Emulate SETEND for AArch32 tasks")
-Cc: <stable@vger.kernel.org> # 4.0.x-
-Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-Signed-off-by: Fredrik Strupe <fredrik@strupe.net>
-Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
+So annotate the relevant functions to ensure stack protection is never
+enabled for them.
+
+Fixes: 06ec27aea9fc ("powerpc/64: add stack protector support")
+Cc: stable@vger.kernel.org # v4.20+
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20200320032116.1024773-2-mpe@ellerman.id.au
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm64/kernel/armv8_deprecated.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/powerpc/kernel/paca.c     |    4 ++--
+ arch/powerpc/kernel/setup.h    |    6 ++++++
+ arch/powerpc/kernel/setup_64.c |    2 +-
+ 3 files changed, 9 insertions(+), 3 deletions(-)
 
---- a/arch/arm64/kernel/armv8_deprecated.c
-+++ b/arch/arm64/kernel/armv8_deprecated.c
-@@ -601,7 +601,7 @@ static struct undef_hook setend_hooks[]
- 	},
- 	{
- 		/* Thumb mode */
--		.instr_mask	= 0x0000fff7,
-+		.instr_mask	= 0xfffffff7,
- 		.instr_val	= 0x0000b650,
- 		.pstate_mask	= (PSR_AA32_T_BIT | PSR_AA32_MODE_MASK),
- 		.pstate_val	= (PSR_AA32_T_BIT | PSR_AA32_MODE_USR),
+--- a/arch/powerpc/kernel/paca.c
++++ b/arch/powerpc/kernel/paca.c
+@@ -176,7 +176,7 @@ static struct slb_shadow * __init new_sl
+ struct paca_struct **paca_ptrs __read_mostly;
+ EXPORT_SYMBOL(paca_ptrs);
+ 
+-void __init initialise_paca(struct paca_struct *new_paca, int cpu)
++void __init __nostackprotector initialise_paca(struct paca_struct *new_paca, int cpu)
+ {
+ #ifdef CONFIG_PPC_PSERIES
+ 	new_paca->lppaca_ptr = NULL;
+@@ -205,7 +205,7 @@ void __init initialise_paca(struct paca_
+ }
+ 
+ /* Put the paca pointer into r13 and SPRG_PACA */
+-void setup_paca(struct paca_struct *new_paca)
++void __nostackprotector setup_paca(struct paca_struct *new_paca)
+ {
+ 	/* Setup r13 */
+ 	local_paca = new_paca;
+--- a/arch/powerpc/kernel/setup.h
++++ b/arch/powerpc/kernel/setup.h
+@@ -8,6 +8,12 @@
+ #ifndef __ARCH_POWERPC_KERNEL_SETUP_H
+ #define __ARCH_POWERPC_KERNEL_SETUP_H
+ 
++#ifdef CONFIG_CC_IS_CLANG
++#define __nostackprotector
++#else
++#define __nostackprotector __attribute__((__optimize__("no-stack-protector")))
++#endif
++
+ void initialize_cache_info(void);
+ void irqstack_early_init(void);
+ 
+--- a/arch/powerpc/kernel/setup_64.c
++++ b/arch/powerpc/kernel/setup_64.c
+@@ -284,7 +284,7 @@ void __init record_spr_defaults(void)
+  * device-tree is not accessible via normal means at this point.
+  */
+ 
+-void __init early_setup(unsigned long dt_ptr)
++void __init __nostackprotector early_setup(unsigned long dt_ptr)
+ {
+ 	static __initdata struct paca_struct boot_paca;
+ 
 
 
