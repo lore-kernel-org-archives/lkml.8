@@ -2,151 +2,198 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F12C8C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 12:42:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2524C2BB85
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 12:43:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CD40521D79
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 12:42:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587040978;
-	bh=umyc9davKjGqXHYPYEvThedj9clicVOmBqruhPJYEFg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=te6vrYZoMhMM2qlmRNM9Hf6bKn6ND6I0riicfnpAzW0AoVhfTxZ/zhjFOYUKz45pm
-	 hrF3elvWC5XPMOYlnTC6okRgNiy/bO+qGcqj4LHGrpSgwLAVyXoB2TNyhTmSM+9FVf
-	 OT/yy4DHzbk9F5j7ggxzz3So7ybyaepMPcvqoy18=
+	by mail.kernel.org (Postfix) with ESMTP id CEAC721D79
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 12:43:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ha8SxzK+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2635980AbgDPMm4 (ORCPT
+        id S2636006AbgDPMnM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Thu, 16 Apr 2020 08:43:12 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:40392 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2635975AbgDPMm4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 16 Apr 2020 08:42:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47064 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2635873AbgDPMmo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 08:42:44 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587040975;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=LME8Y2qNaZg7VmXSTR943cLi5X9fQl71QY2mWj1pI9E=;
+        b=Ha8SxzK+rGcb3Wm7KpPZTYivnusdu/64e1tjoR+SsWLZTwkJ0vsCZoCO/9EobXlBvdLtfk
+        wUj9vpTjoWI0je8ez8Tql/bQ61ZYkTijKU/EU21APgEg8qAzSgg45Cs3jrx+qXXyb4r+VY
+        EPk7sgfiYPy8ldRHjjTOeRppGX55RCw=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-75-hM7QRMx5P1iP3uP3ubMk9g-1; Thu, 16 Apr 2020 08:42:51 -0400
+X-MC-Unique: hM7QRMx5P1iP3uP3ubMk9g-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 49352217D8;
-        Thu, 16 Apr 2020 12:42:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587040962;
-        bh=umyc9davKjGqXHYPYEvThedj9clicVOmBqruhPJYEFg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Zp7ebm6DopU7sArZWdGxQggJE37jsvDiwSqQhp2ZslVXLlsAtZP9PFkv7rVHZcf6p
-         K79sqKU/ej7aOzUyBp6HI0SOB71YVYluma2yTvrzfsOxWKMwUrigfDB21UNHHCqQAl
-         m1nMjTZ29M+hj/kIKx/HGl5MNrPVPeYUMrecer6U=
-Date:   Thu, 16 Apr 2020 13:42:39 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Sven Van Asbroeck <thesven73@gmail.com>
-Cc:     Rob Herring <robh+dt@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 2/2] ASoC: Add initial ZL38060 driver
-Message-ID: <20200416124239.GH5354@sirena.org.uk>
-References: <20200416001414.25746-1-TheSven73@gmail.com>
- <20200416001414.25746-2-TheSven73@gmail.com>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6CB611084424;
+        Thu, 16 Apr 2020 12:42:49 +0000 (UTC)
+Received: from [10.36.115.53] (ovpn-115-53.ams2.redhat.com [10.36.115.53])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id E96485C1C5;
+        Thu, 16 Apr 2020 12:42:39 +0000 (UTC)
+Subject: Re: [PATCH v1 7/8] vfio/type1: Add VFIO_IOMMU_CACHE_INVALIDATE
+To:     "Tian, Kevin" <kevin.tian@intel.com>,
+        "Liu, Yi L" <yi.l.liu@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>
+Cc:     "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Tian, Jun J" <jun.j.tian@intel.com>,
+        "Sun, Yi Y" <yi.y.sun@intel.com>,
+        "jean-philippe@linaro.org" <jean-philippe@linaro.org>,
+        "peterx@redhat.com" <peterx@redhat.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Wu, Hao" <hao.wu@intel.com>
+References: <1584880325-10561-1-git-send-email-yi.l.liu@intel.com>
+ <1584880325-10561-8-git-send-email-yi.l.liu@intel.com>
+ <20200402142428.2901432e@w520.home>
+ <AADFC41AFE54684AB9EE6CBC0274A5D19D807C4A@SHSMSX104.ccr.corp.intel.com>
+ <20200403093436.094b1928@w520.home>
+ <A2975661238FB949B60364EF0F2C25743A231BAA@SHSMSX104.ccr.corp.intel.com>
+ <AADFC41AFE54684AB9EE6CBC0274A5D19D82336C@SHSMSX104.ccr.corp.intel.com>
+From:   Auger Eric <eric.auger@redhat.com>
+Message-ID: <7d13bdbb-e972-c301-0970-90f63ecf69fc@redhat.com>
+Date:   Thu, 16 Apr 2020 14:42:38 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="l06SQqiZYCi8rTKz"
-Content-Disposition: inline
-In-Reply-To: <20200416001414.25746-2-TheSven73@gmail.com>
-X-Cookie: Tempt me with a spoon!
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <AADFC41AFE54684AB9EE6CBC0274A5D19D82336C@SHSMSX104.ccr.corp.intel.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Kevin,
+On 4/16/20 2:09 PM, Tian, Kevin wrote:
+>> From: Liu, Yi L <yi.l.liu@intel.com>
+>> Sent: Thursday, April 16, 2020 6:40 PM
+>>
+>> Hi Alex,
+>> Still have a direction question with you. Better get agreement with you
+>> before heading forward.
+>>
+>>> From: Alex Williamson <alex.williamson@redhat.com>
+>>> Sent: Friday, April 3, 2020 11:35 PM
+>> [...]
+>>>>>> + *
+>>>>>> + * returns: 0 on success, -errno on failure.
+>>>>>> + */
+>>>>>> +struct vfio_iommu_type1_cache_invalidate {
+>>>>>> +	__u32   argsz;
+>>>>>> +	__u32   flags;
+>>>>>> +	struct	iommu_cache_invalidate_info cache_info;
+>>>>>> +};
+>>>>>> +#define VFIO_IOMMU_CACHE_INVALIDATE      _IO(VFIO_TYPE,
+>>> VFIO_BASE
+>>>>> + 24)
+>>>>>
+>>>>> The future extension capabilities of this ioctl worry me, I wonder if
+>>>>> we should do another data[] with flag defining that data as
+>> CACHE_INFO.
+>>>>
+>>>> Can you elaborate? Does it mean with this way we don't rely on iommu
+>>>> driver to provide version_to_size conversion and instead we just pass
+>>>> data[] to iommu driver for further audit?
+>>>
+>>> No, my concern is that this ioctl has a single function, strictly tied
+>>> to the iommu uapi.  If we replace cache_info with data[] then we can
+>>> define a flag to specify that data[] is struct
+>>> iommu_cache_invalidate_info, and if we need to, a different flag to
+>>> identify data[] as something else.  For example if we get stuck
+>>> expanding cache_info to meet new demands and develop a new uapi to
+>>> solve that, how would we expand this ioctl to support it rather than
+>>> also create a new ioctl?  There's also a trade-off in making the ioctl
+>>> usage more difficult for the user.  I'd still expect the vfio layer to
+>>> check the flag and interpret data[] as indicated by the flag rather
+>>> than just passing a blob of opaque data to the iommu layer though.
+>>> Thanks,
+>>
+>> Based on your comments about defining a single ioctl and a unified
+>> vfio structure (with a @data[] field) for pasid_alloc/free, bind/
+>> unbind_gpasid, cache_inv. After some offline trying, I think it would
+>> be good for bind/unbind_gpasid and cache_inv as both of them use the
+>> iommu uapi definition. While the pasid alloc/free operation doesn't.
+>> It would be weird to put all of them together. So pasid alloc/free
+>> may have a separate ioctl. It would look as below. Does this direction
+>> look good per your opinion?
+>>
+>> ioctl #22: VFIO_IOMMU_PASID_REQUEST
+>> /**
+>>   * @pasid: used to return the pasid alloc result when flags == ALLOC_PASID
+>>   *         specify a pasid to be freed when flags == FREE_PASID
+>>   * @range: specify the allocation range when flags == ALLOC_PASID
+>>   */
+>> struct vfio_iommu_pasid_request {
+>> 	__u32	argsz;
+>> #define VFIO_IOMMU_ALLOC_PASID	(1 << 0)
+>> #define VFIO_IOMMU_FREE_PASID	(1 << 1)
+>> 	__u32	flags;
+>> 	__u32	pasid;
+>> 	struct {
+>> 		__u32	min;
+>> 		__u32	max;
+>> 	} range;
+>> };
+>>
+>> ioctl #23: VFIO_IOMMU_NESTING_OP
+>> struct vfio_iommu_type1_nesting_op {
+>> 	__u32	argsz;
+>> 	__u32	flags;
+>> 	__u32	op;
+>> 	__u8	data[];
+>> };
+>>
+>> /* Nesting Ops */
+>> #define VFIO_IOMMU_NESTING_OP_BIND_PGTBL        0
+>> #define VFIO_IOMMU_NESTING_OP_UNBIND_PGTBL      1
+>> #define VFIO_IOMMU_NESTING_OP_CACHE_INVLD       2
+>>
+> 
+> Then why cannot we just put PASID into the header since the
+> majority of nested usage is associated with a pasid? 
+> 
+> ioctl #23: VFIO_IOMMU_NESTING_OP
+> struct vfio_iommu_type1_nesting_op {
+> 	__u32	argsz;
+> 	__u32	flags;
+> 	__u32	op;
+> 	__u32   pasid;
+> 	__u8	data[];
+> };
+> 
+> In case of SMMUv2 which supports nested w/o PASID, this field can
+> be ignored for that specific case.
+On my side I would prefer keeping the pasid in the data[]. This is not
+always used.
 
---l06SQqiZYCi8rTKz
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+For instance, in iommu_cache_invalidate_info/iommu_inv_pasid_info we
+devised flags to tell whether the PASID is used.
 
-On Wed, Apr 15, 2020 at 08:14:14PM -0400, Sven Van Asbroeck wrote:
+Thanks
 
-> +++ b/sound/soc/codecs/zl38060.c
-> @@ -0,0 +1,643 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * Codec driver for Microsemi ZL38060 Connected Home Audio Processor.
-> + *
+Eric
+> 
+> Thanks
+> Kevin
+> 
 
-Please make the entire comment a C++ one so things look more
-intentional.
-
-> +			err = zl38_fw_send_data(regmap, addr, rec->data, len);
-> +		} else if (len == 4) {
-> +			/* execution address ihex record */
-> +			err = zl38_fw_send_xaddr(regmap, rec->data);
-> +		} else
-> +			err = -EINVAL;
-> +		if (err)
-
-If any part of an if/else has { } then all of them should.
-
-> +skip_setup:
-> +	if (priv->amp_en_gpio && tx) {
-> +		/* enable the external amplifier before playback starts */
-> +		gpiod_set_value_cansleep(priv->amp_en_gpio, 1);
-> +		if (priv->amp_startup_delay_ms)
-> +			msleep(priv->amp_startup_delay_ms);
-> +	}
-
-This external amplifier support shouldn't be here, if there's other
-devices in the system then they will have their own drivers and the
-machine driver will take care of linking things together.
-
-> +	/* take chip out of reset, if a reset gpio is provided */
-> +	reset_gpio = devm_gpiod_get_optional(dev, "reset", GPIOD_OUT_LOW);
-> +	if (IS_ERR(reset_gpio))
-> +		return PTR_ERR(reset_gpio);
-> +	if (reset_gpio) {
-> +		/* according to the datasheet, chip needs 3ms for its digital
-> +		 * section to become stable.
-> +		 */
-> +		usleep_range(3000, 10000);
-> +	}
-
-It would be better to explicitly put the chip into reset and then bring
-it out of reset if there's a GPIO, that way the chip is in a known
-state.
-
-> +	priv->regmap = devm_regmap_init(dev, &zl38_regmap_bus, spi,
-> +					&zl38_regmap_conf);
-> +	if (IS_ERR(priv->regmap))
-> +		return PTR_ERR(priv->regmap);
-
-devm_regmap_init_spi()
-
-> +	if (device_property_present(dev, "mscc,load-firmware")) {
-> +		err = zl38_load_firmware(dev, priv->regmap);
-> +		if (err)
-> +			return err;
-> +	}
-
-I'm assuming this is for the case where the device has a flash attached
-to the master SPI port I can see described on the web site and can boot
-off it - if that's the case I think it'd be clearer for the DT to
-explicitly say that rather than this indirected property.
-
---l06SQqiZYCi8rTKz
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl6YUr8ACgkQJNaLcl1U
-h9ABcgf/Tj/IGLfLFKTvEn5EJsyFi3tGt5Xy/ZQ29ZIbyGZC+8Gj/85vqttsDvSg
-zP2RRJg+LiI2SiuvcT0tXKqZiDJxYTdFWHtfNtQa27h5WWeQUsaaRXBAvhqsO7ST
-dkwkYy4HrPqUgCS3C1rZTeWIQpW/T4YvOoWxFdfnlvx71gWeTH+i3KFo6hL3XaxK
-meKVm+++KWEaj1Xs+XXyN4mSM3qFOkX0zEvuoGa70UntYXKLMiXKL4F2mXJ0alg9
-odPSEnzCtSfguo1tQuoh2h1/zN4kHJ93hJ3i2VciLegnOEom4FOBG+TuNnY6fLfp
-Kw/npw1Cv0onjL4GrMLF6DBBC4PtCw==
-=0cFL
------END PGP SIGNATURE-----
-
---l06SQqiZYCi8rTKz--
