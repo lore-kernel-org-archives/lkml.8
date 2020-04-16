@@ -2,51 +2,56 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAA2BC3815B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:45:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E801BC2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:45:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 95FE120732
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:45:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6952214AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:45:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587051951;
-	bh=1c08XC1B6rSTFGUlvN4qhU6O/IY9IRqHTGMA58kStOk=;
+	s=default; t=1587051953;
+	bh=DqaW5hpBioxSIRdYkknffzdq1MpTSMcyf9IlDzmc9h8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lvqXWtksp4tdb5nefzRAPqrrqFnIdbbtP/B4qp/aBdUNGrfl9wRHOfIUrFxAXHIQw
-	 fcMljm7Fe5ith9BLpRLDjHF1wICCGAvUZ53e3vMNsmUHoZuxQl0IKU8ltSkW6q2U3K
-	 iivVHe+hRZZM6AMpaGqzD1g3a0TiPQka7rvbnrhw=
+	b=1afkm4bbXMuNSm+lz8XzCMM6ty6yCV+TsNZ6hCJKgB8G5ah/HoF/EzMQ/cLdNHSsI
+	 DQEnbHKgu5l1U12KsssHPGS+r2DssjKfHrqc+G/NOkTyJOvDDnLlBBwDt1Wf9zFkxY
+	 uvb8C7+D0fMoyvZdnE4Tfs3ay9ahv7JpcEXVxpFo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2635052AbgDPPpu (ORCPT
+        id S2895405AbgDPPpw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:45:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46810 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 11:45:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46628 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2897050AbgDPNfC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:35:02 -0400
+        id S2897013AbgDPNey (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:34:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 20328208E4;
-        Thu, 16 Apr 2020 13:35:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A1D8920732;
+        Thu, 16 Apr 2020 13:34:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044101;
-        bh=1c08XC1B6rSTFGUlvN4qhU6O/IY9IRqHTGMA58kStOk=;
+        s=default; t=1587044094;
+        bh=DqaW5hpBioxSIRdYkknffzdq1MpTSMcyf9IlDzmc9h8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vh3G5Dzt78DsU45Wv2O+t3PyCbrD/rOsXv5clem2E3TAGfGwC4AtcP7xvZZ84NmuR
-         7mR8caH/+U9HghuQu//Hon42G/iDQP/CbKfxMQ/rS7B+rwMlFp4wtgZl6yWCOYZqsz
-         Jc6tvJ26Z47piW1MtVRfympzIHBpnqNGEuIhVuu8=
+        b=TTKyNs2oJU2QTyZmTcp5hTN7Xg2KFHOCbndif3uP0z39fh4iYZsZAj8UQd5Uyy3a9
+         kY1BKQs7XwypRMYMec1PNOlPBBzser99gIw5xs34Zh7pkdNdqh5dRX33j8Z/NHg9XG
+         0za3jcdQ6/IXtelULZhkAcgqJRI1lt+OvVKeuSjE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Gyeongtaek Lee <gt82.lee@samsung.com>,
-        Mark Brown <broonie@kernel.org>
-Subject: [PATCH 5.5 082/257] ASoC: dapm: connect virtual mux with default value
-Date:   Thu, 16 Apr 2020 15:22:13 +0200
-Message-Id: <20200416131336.200776073@linuxfoundation.org>
+        stable@vger.kernel.org, Bart Van Assche <bvanassche@acm.org>,
+        Ming Lei <ming.lei@redhat.com>,
+        Keith Busch <kbusch@kernel.org>,
+        Johannes Thumshirn <jth@kernel.org>,
+        Hannes Reinecke <hare@suse.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.5 037/257] blk-mq: Fix a recently introduced regression in blk_mq_realloc_hw_ctxs()
+Date:   Thu, 16 Apr 2020 15:21:28 +0200
+Message-Id: <20200416131330.581319948@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.891903893@linuxfoundation.org>
 References: <20200416131325.891903893@linuxfoundation.org>
@@ -59,44 +64,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: 이경택 <gt82.lee@samsung.com>
+From: Bart Van Assche <bvanassche@acm.org>
 
-commit 3bbbb7728fc853d71dbce4073fef9f281fbfb4dd upstream.
+[ Upstream commit d0930bb8f46b8fb4a7d429c0bf1c91b3ed00a7cf ]
 
-Since a virtual mixer has no backing registers
-to decide which path to connect,
-it will try to match with initial state.
-This is to ensure that the default mixer choice will be
-correctly powered up during initialization.
-Invert flag is used to select initial state of the virtual switch.
-Since actual hardware can't be disconnected by virtual switch,
-connected is better choice as initial state in many cases.
+q->nr_hw_queues must only be updated once it is known that
+blk_mq_realloc_hw_ctxs() has succeeded. Otherwise it can happen that
+reallocation fails and that q->nr_hw_queues is larger than the number of
+allocated hardware queues. This patch fixes the following crash if
+increasing the number of hardware queues fails:
 
-Signed-off-by: Gyeongtaek Lee <gt82.lee@samsung.com>
-Link: https://lore.kernel.org/r/01a301d60731$b724ea10$256ebe30$@samsung.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+BUG: KASAN: null-ptr-deref in blk_mq_map_swqueue+0x775/0x810
+Write of size 8 at addr 0000000000000118 by task check/977
 
+CPU: 3 PID: 977 Comm: check Not tainted 5.6.0-rc1-dbg+ #8
+Hardware name: Bochs Bochs, BIOS Bochs 01/01/2011
+Call Trace:
+ dump_stack+0xa5/0xe6
+ __kasan_report.cold+0x65/0x99
+ kasan_report+0x16/0x20
+ check_memory_region+0x140/0x1b0
+ memset+0x28/0x40
+ blk_mq_map_swqueue+0x775/0x810
+ blk_mq_update_nr_hw_queues+0x468/0x710
+ nullb_device_submit_queues_store+0xf7/0x1a0 [null_blk]
+ configfs_write_file+0x1c4/0x250 [configfs]
+ __vfs_write+0x4c/0x90
+ vfs_write+0x145/0x2c0
+ ksys_write+0xd7/0x180
+ __x64_sys_write+0x47/0x50
+ do_syscall_64+0x6f/0x2f0
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+Fixes: ac0d6b926e74 ("block: Reduce the amount of memory required per request queue")
+Signed-off-by: Bart Van Assche <bvanassche@acm.org>
+Reviewed-by: Ming Lei <ming.lei@redhat.com>
+Cc: Keith Busch <kbusch@kernel.org>
+Cc: Johannes Thumshirn <jth@kernel.org>
+Cc: Hannes Reinecke <hare@suse.com>
+Cc: Christoph Hellwig <hch@infradead.org>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/soc-dapm.c |    8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ block/blk-mq.c | 1 -
+ 1 file changed, 1 deletion(-)
 
---- a/sound/soc/soc-dapm.c
-+++ b/sound/soc/soc-dapm.c
-@@ -802,7 +802,13 @@ static void dapm_set_mixer_path_status(s
- 			val = max - val;
- 		p->connect = !!val;
- 	} else {
--		p->connect = 0;
-+		/* since a virtual mixer has no backing registers to
-+		 * decide which path to connect, it will try to match
-+		 * with initial state.  This is to ensure
-+		 * that the default mixer choice will be
-+		 * correctly powered up during initialization.
-+		 */
-+		p->connect = invert;
+diff --git a/block/blk-mq.c b/block/blk-mq.c
+index 7d7800e958952..8391e8e2a5044 100644
+--- a/block/blk-mq.c
++++ b/block/blk-mq.c
+@@ -2766,7 +2766,6 @@ static void blk_mq_realloc_hw_ctxs(struct blk_mq_tag_set *set,
+ 			memcpy(new_hctxs, hctxs, q->nr_hw_queues *
+ 			       sizeof(*hctxs));
+ 		q->queue_hw_ctx = new_hctxs;
+-		q->nr_hw_queues = set->nr_hw_queues;
+ 		kfree(hctxs);
+ 		hctxs = new_hctxs;
  	}
- }
- 
+-- 
+2.20.1
+
 
 
