@@ -2,151 +2,148 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD738C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:53:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CB37C2BB85
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:53:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 85CA4214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:53:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2852A20732
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:53:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587052427;
-	bh=LoemScDtwq3mKzvNIvuf4pkxIjr/iGO4pf7UOgojR8A=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=j8yL/h340/LawVItfFhRApjN0t6sHJQ4J0wOEBYP0j8/SinEJfYM2JDOPJAeZQaHR
-	 no7AXMFqLgOC7Kewdind+2Q+iTQ71EapHoBHwFKtLodIP1ljrA0ras46Rkhll8M8zX
-	 BPHryAW7Q+oRB82xq/Vv2mKwPZ14cwhwN6pkk6gY=
+	s=default; t=1587052429;
+	bh=DdzbVjTRUW4ggbysAm3Gb28QPBiYdqBp9xlb36d0Im4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ziQHoQkiQ/jWQg8geQyDDzqFgTuEQvuMIJcdGWblc4o3yVR49o8dKcwHnLMUF3Gvc
+	 diCgksqqwWYZKJ6XBLgEGzYXs1ZjZBseYR/iROAVLPg9BcF4yjZgWmjCNeBx/tBxJL
+	 2Oi6OL42pXBhK1N3vyo6eLHzdkK7VqE8p9OcBMDA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2896794AbgDPPxq (ORCPT
+        id S2896725AbgDPPxm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:53:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43730 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2896402AbgDPNcs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:32:48 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 09001221EB;
-        Thu, 16 Apr 2020 13:31:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587043888;
-        bh=LoemScDtwq3mKzvNIvuf4pkxIjr/iGO4pf7UOgojR8A=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=U06ecuROZpseln+qta9b2DmSBw9LZKEgN+hpLhJN8ezlQCiwZnjijj7Oepipkuipp
-         XDVmsnkWWJNd/8VVEytoOE+LfE4ZPLFJNmOLmcle1SCuCki23VsETHMhZ6Bzqvq01r
-         LC8dTUdOQxREGg7rgWkDOwrPxO70aipmwd2nfkIk=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sean Paul <sean@poorly.run>,
-        Wayne Lin <Wayne.Lin@amd.com>,
-        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
-        <ville.syrjala@linux.intel.com>, Lyude Paul <lyude@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 141/146] drm/dp_mst: Fix clearing payload state on topology disable
-Date:   Thu, 16 Apr 2020 15:24:42 +0200
-Message-Id: <20200416131301.651728040@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200416131242.353444678@linuxfoundation.org>
-References: <20200416131242.353444678@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Thu, 16 Apr 2020 11:53:42 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:38447 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2896648AbgDPPxa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 11:53:30 -0400
+Received: by mail-pf1-f196.google.com with SMTP id y25so1846445pfn.5;
+        Thu, 16 Apr 2020 08:53:30 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=OJ1LhAU7febKN7iQIuormh5NmKS7oObKFw3LJa4CTas=;
+        b=UmEch370OxfQKZ1j2M+YEmaOSVU5ijnuRMPx05LO4GsAbkgX1kUSNPA6Wll7hds9uM
+         Alu2YWMq/ER2bPEa3scmPgH4kg4xOly4znoR7wHjB1gtfBlLaWJoFkN/LDD2u3CI0TNM
+         IuZpWEWeZW0scf3KNbTs3sUOsBTuFTASh+6Cl3ixKwsWboKLS/cWXbKE1WDaugjpG16U
+         TRRKNGWGqdytEP8jzTGpN/3WVMIzQO7Rxabk7dGXnsl12gpPg6z+hBZKQDO8uMZbR+bM
+         6C1pkudm3uVpVzOGrhxpvwgLpBO9aLm1fj8QDU3TOHoG3OPrmmW6QNc9kc3vg8BuQBrO
+         HqXA==
+X-Gm-Message-State: AGi0PuYcrIRYmLo/A2GQIHsTn3LHss452idX7NAW8rlaRFfwst4AaV2x
+        +wIqQvi//v2fuWE+DujYeJQ=
+X-Google-Smtp-Source: APiQypL0bCBep50MvO+I1irfI6M146DVq6XZM9/sttMzKb5K92PS7O9TaiV4Z2X9iDlZuALlgjDLLQ==
+X-Received: by 2002:a63:894a:: with SMTP id v71mr33642388pgd.314.1587052409606;
+        Thu, 16 Apr 2020 08:53:29 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id o15sm15680232pgj.60.2020.04.16.08.53.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Apr 2020 08:53:28 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id 9C1A440277; Thu, 16 Apr 2020 15:53:27 +0000 (UTC)
+Date:   Thu, 16 Apr 2020 15:53:27 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     Vlastimil Babka <vbabka@suse.cz>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+        linux-mm@kvack.org, Ivan Teterevkov <ivan.teterevkov@nutanix.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        "Guilherme G . Piccoli" <gpiccoli@canonical.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Christian Brauner <christian.brauner@ubuntu.com>
+Subject: Re: [PATCH v2 1/3] kernel/sysctl: support setting sysctl parameters
+ from kernel command line
+Message-ID: <20200416155327.GT11244@42.do-not-panic.com>
+References: <20200414113222.16959-1-vbabka@suse.cz>
+ <20200414113222.16959-2-vbabka@suse.cz>
+ <20200415180355.00bc828ea726c421638db871@kernel.org>
+ <20200416012931.GE11244@42.do-not-panic.com>
+ <20200416194955.3448c8526ea3f59e95c506da@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200416194955.3448c8526ea3f59e95c506da@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lyude Paul <lyude@redhat.com>
+On Thu, Apr 16, 2020 at 07:49:55PM +0900, Masami Hiramatsu wrote:
+> Hi Luis,
+> 
+> On Thu, 16 Apr 2020 01:29:31 +0000
+> Luis Chamberlain <mcgrof@kernel.org> wrote:
+> 
+> > On Wed, Apr 15, 2020 at 06:03:55PM +0900, Masami Hiramatsu wrote:
+> > > On Tue, 14 Apr 2020 13:32:20 +0200
+> > > Vlastimil Babka <vbabka@suse.cz> wrote:
+> > > > diff --git a/init/main.c b/init/main.c
+> > > > index a48617f2e5e5..7b43118215d6 100644
+> > > > --- a/init/main.c
+> > > > +++ b/init/main.c
+> > > > @@ -1372,6 +1372,8 @@ static int __ref kernel_init(void *unused)
+> > > >  
+> > > >  	rcu_end_inkernel_boot();
+> > > >  
+> > > > +	do_sysctl_args();
+> > > > +
+> > > 
+> > > Ah, I see. Since the sysctl is designed to be called after all __init calls were
+> > > done, it shouldn't use bootconfig directly because bootconfig is full of __init
+> > > call.
+> > 
+> > The idea is bootconfig would be useful in the sense of a library set of
+> > helpers which could be modified to remove __init, and then used to
+> > instrument the cmdline depending on certain debugging kconfig entries.
+> 
+> Would you mean making bootconfig (parser and APIs) be more generic so that
+> other subsystem can reuse it with their data?
+> Or just make it available after boot? (I think this latter one will be
+> useful for module initialization)
 
-[ Upstream commit 8732fe46b20c951493bfc4dba0ad08efdf41de81 ]
+The later. First use case that comes to mind is debugging cmdline, so
+to see if what one adds is what ends up happening at run time after
+boot.
 
-The issues caused by:
+> > We currently have no way to purposely extend / break the cmdline for
+> > debugging purposes, so, bootconfig's parsers, since it already has a
+> > way to extend the cmdlineline, might make it much easier to do this
+> > later.
+> > 
+> > Without bootconfig, if we wanted to add new kconfig to, for example,
+> > add new funny cmdline arguments to test they worked or not, we'd have
+> > to devise our own set of helpers now. ie, new functionality. bootconfig
+> > however already has existing functionality to tweak the cmdline, and so
+> > some code could be leveraged there for this purpose.
+> 
+> Hmm, you can use the bootconfig as a "supplemental" kernel command line,
+> but not tweak (like modify/replace) it. Would you like to change the
+> kernel command line parameter on-line?
 
-commit 64e62bdf04ab ("drm/dp_mst: Remove VCPI while disabling topology
-mgr")
+It would be during boot. To augment it as if the user had used certain
+parameters on boot. But if only a new path is tested, and we can't
+reproduce as if the user had *not* used bootconfig, this idea would
+only be useful to test bootconfig parsing, nothing else. The hope was
+to do both.
 
-Prompted me to take a closer look at how we clear the payload state in
-general when disabling the topology, and it turns out there's actually
-two subtle issues here.
-
-The first is that we're not grabbing &mgr.payload_lock when clearing the
-payloads in drm_dp_mst_topology_mgr_set_mst(). Seeing as the canonical
-lock order is &mgr.payload_lock -> &mgr.lock (because we always want
-&mgr.lock to be the inner-most lock so topology validation always
-works), this makes perfect sense. It also means that -technically- there
-could be racing between someone calling
-drm_dp_mst_topology_mgr_set_mst() to disable the topology, along with a
-modeset occurring that's modifying the payload state at the same time.
-
-The second is the more obvious issue that Wayne Lin discovered, that
-we're not clearing proposed_payloads when disabling the topology.
-
-I actually can't see any obvious places where the racing caused by the
-first issue would break something, and it could be that some of our
-higher-level locks already prevent this by happenstance, but better safe
-then sorry. So, let's make it so that drm_dp_mst_topology_mgr_set_mst()
-first grabs &mgr.payload_lock followed by &mgr.lock so that we never
-race when modifying the payload state. Then, we also clear
-proposed_payloads to fix the original issue of enabling a new topology
-with a dirty payload state. This doesn't clear any of the drm_dp_vcpi
-structures, but those are getting destroyed along with the ports anyway.
-
-Changes since v1:
-* Use sizeof(mgr->payloads[0])/sizeof(mgr->proposed_vcpis[0]) instead -
-  vsyrjala
-
-Cc: Sean Paul <sean@poorly.run>
-Cc: Wayne Lin <Wayne.Lin@amd.com>
-Cc: Ville Syrjälä <ville.syrjala@linux.intel.com>
-Cc: stable@vger.kernel.org # v4.4+
-Signed-off-by: Lyude Paul <lyude@redhat.com>
-Reviewed-by: Ville Syrjälä <ville.syrjala@linux.intel.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200122194321.14953-1-lyude@redhat.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/gpu/drm/drm_dp_mst_topology.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/gpu/drm/drm_dp_mst_topology.c b/drivers/gpu/drm/drm_dp_mst_topology.c
-index b4fd20062bb80..5f508ec321fef 100644
---- a/drivers/gpu/drm/drm_dp_mst_topology.c
-+++ b/drivers/gpu/drm/drm_dp_mst_topology.c
-@@ -2117,6 +2117,7 @@ int drm_dp_mst_topology_mgr_set_mst(struct drm_dp_mst_topology_mgr *mgr, bool ms
- 	int ret = 0;
- 	struct drm_dp_mst_branch *mstb = NULL;
- 
-+	mutex_lock(&mgr->payload_lock);
- 	mutex_lock(&mgr->lock);
- 	if (mst_state == mgr->mst_state)
- 		goto out_unlock;
-@@ -2175,7 +2176,10 @@ int drm_dp_mst_topology_mgr_set_mst(struct drm_dp_mst_topology_mgr *mgr, bool ms
- 		/* this can fail if the device is gone */
- 		drm_dp_dpcd_writeb(mgr->aux, DP_MSTM_CTRL, 0);
- 		ret = 0;
--		memset(mgr->payloads, 0, mgr->max_payloads * sizeof(struct drm_dp_payload));
-+		memset(mgr->payloads, 0,
-+		       mgr->max_payloads * sizeof(mgr->payloads[0]));
-+		memset(mgr->proposed_vcpis, 0,
-+		       mgr->max_payloads * sizeof(mgr->proposed_vcpis[0]));
- 		mgr->payload_mask = 0;
- 		set_bit(0, &mgr->payload_mask);
- 		mgr->vcpi_mask = 0;
-@@ -2183,6 +2187,7 @@ int drm_dp_mst_topology_mgr_set_mst(struct drm_dp_mst_topology_mgr *mgr, bool ms
- 
- out_unlock:
- 	mutex_unlock(&mgr->lock);
-+	mutex_unlock(&mgr->payload_lock);
- 	if (mstb)
- 		drm_dp_put_mst_branch_device(mstb);
- 	return ret;
--- 
-2.20.1
-
-
-
+  Luis
