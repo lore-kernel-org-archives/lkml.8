@@ -5,51 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8876AC2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:32:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE575C2BB85
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:32:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 64C2021927
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:32:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A5E4214AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:32:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587051148;
-	bh=K9lFfffFugUy+h1cvQ1mHkNgiJTJE5NKNzyDaEc4UG4=;
+	s=default; t=1587051152;
+	bh=tmMhdRm1zeV2HIH7q7LunDiqIpUWh/7aYo8fmRoyCdg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VZuRgieRxeGACAB3bnp0L4+PB7LU3UnpUrJvdhffgXERO5lRdhOMDda6QaSgchid7
-	 fHpmMN1Dt9cmTZKxm03Q6BCSo83PH/piUjZ1XhJXBZD1SBMQxaGPoCdw+/YSo7HTkr
-	 kjEeFnX50wm/ix2+vW0GeRkM2usVZOY9VHGcZN7g=
+	b=ta14P1Lu2TrDjzbeQ2FShG0iKmW96106M4XxOFryTgThwHhAIPxOJAeua0IpzUzj3
+	 f4/nsKXQo+s29cC9yb4XI89sv4yN7Np3DqAXccnV0jnhSOdPCKsCu4OfregMGC7Z9H
+	 QNv/62/jm2LB2NdfTgFE8bHSzciFtPajcnPeJqR4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2410471AbgDPPc1 (ORCPT
+        id S2410434AbgDPPcb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:32:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55196 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 11:32:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55158 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726599AbgDPNmP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:42:15 -0400
+        id S1726593AbgDPNmN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:42:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 98C70218AC;
-        Thu, 16 Apr 2020 13:42:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2D89120732;
+        Thu, 16 Apr 2020 13:42:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044535;
-        bh=K9lFfffFugUy+h1cvQ1mHkNgiJTJE5NKNzyDaEc4UG4=;
+        s=default; t=1587044532;
+        bh=tmMhdRm1zeV2HIH7q7LunDiqIpUWh/7aYo8fmRoyCdg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dA4w+rqnC65WTS1y2oKSQrtsSzklK2uOH8wU635zj6nsXGnXU3NP2tSx1cyR2e6g7
-         xXB+rIJwU794/4oB6Ym2YNdM1qX9+0cuFRzF+4pcHEvIzHj8EyObBhzgsx7J8RIz1C
-         4FR1sbOmr2IYpv7DSRRMLw4DVfb3o6dE6JEjyTF4=
+        b=IlIQm8vwzTcAnH4b2Sv7x2Fiqnxfo8fkgnG2xmsEOXLatKszLUnx+Eh2yP+7W5ZrW
+         mSgUvDUm5vkAuXAraVZmSX8TjWzgEMj5iaeYzHLLLU6b5BC5hRALD3l+scFBfpcdws
+         G2SZF5rXv3zgx+bWdKwgV/7O6DDX+Af1Uyq5Upu0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sean Paul <sean@poorly.run>,
-        Wayne Lin <Wayne.Lin@amd.com>,
-        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
-        <ville.syrjala@linux.intel.com>, Lyude Paul <lyude@redhat.com>,
+        stable@vger.kernel.org, Faiz Abbas <faiz_abbas@ti.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 248/257] drm/dp_mst: Fix clearing payload state on topology disable
-Date:   Thu, 16 Apr 2020 15:24:59 +0200
-Message-Id: <20200416131356.646429535@linuxfoundation.org>
+Subject: [PATCH 5.5 257/257] mmc: sdhci: Refactor sdhci_set_timeout()
+Date:   Thu, 16 Apr 2020 15:25:08 +0200
+Message-Id: <20200416131357.587820476@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.891903893@linuxfoundation.org>
 References: <20200416131325.891903893@linuxfoundation.org>
@@ -62,89 +61,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lyude Paul <lyude@redhat.com>
+From: Faiz Abbas <faiz_abbas@ti.com>
 
-[ Upstream commit 8732fe46b20c951493bfc4dba0ad08efdf41de81 ]
+[ Upstream commit 7d76ed77cfbd39468ae58d419f537d35ca892d83 ]
 
-The issues caused by:
+Refactor sdhci_set_timeout() such that platform drivers can do some
+functionality in a set_timeout() callback and then call
+__sdhci_set_timeout() to complete the operation.
 
-commit 64e62bdf04ab ("drm/dp_mst: Remove VCPI while disabling topology
-mgr")
-
-Prompted me to take a closer look at how we clear the payload state in
-general when disabling the topology, and it turns out there's actually
-two subtle issues here.
-
-The first is that we're not grabbing &mgr.payload_lock when clearing the
-payloads in drm_dp_mst_topology_mgr_set_mst(). Seeing as the canonical
-lock order is &mgr.payload_lock -> &mgr.lock (because we always want
-&mgr.lock to be the inner-most lock so topology validation always
-works), this makes perfect sense. It also means that -technically- there
-could be racing between someone calling
-drm_dp_mst_topology_mgr_set_mst() to disable the topology, along with a
-modeset occurring that's modifying the payload state at the same time.
-
-The second is the more obvious issue that Wayne Lin discovered, that
-we're not clearing proposed_payloads when disabling the topology.
-
-I actually can't see any obvious places where the racing caused by the
-first issue would break something, and it could be that some of our
-higher-level locks already prevent this by happenstance, but better safe
-then sorry. So, let's make it so that drm_dp_mst_topology_mgr_set_mst()
-first grabs &mgr.payload_lock followed by &mgr.lock so that we never
-race when modifying the payload state. Then, we also clear
-proposed_payloads to fix the original issue of enabling a new topology
-with a dirty payload state. This doesn't clear any of the drm_dp_vcpi
-structures, but those are getting destroyed along with the ports anyway.
-
-Changes since v1:
-* Use sizeof(mgr->payloads[0])/sizeof(mgr->proposed_vcpis[0]) instead -
-  vsyrjala
-
-Cc: Sean Paul <sean@poorly.run>
-Cc: Wayne Lin <Wayne.Lin@amd.com>
-Cc: Ville Syrjälä <ville.syrjala@linux.intel.com>
-Cc: stable@vger.kernel.org # v4.4+
-Signed-off-by: Lyude Paul <lyude@redhat.com>
-Reviewed-by: Ville Syrjälä <ville.syrjala@linux.intel.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200122194321.14953-1-lyude@redhat.com
+Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+Link: https://lore.kernel.org/r/20200116105154.7685-7-faiz_abbas@ti.com
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/drm_dp_mst_topology.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ drivers/mmc/host/sdhci.c | 38 ++++++++++++++++++++------------------
+ drivers/mmc/host/sdhci.h |  1 +
+ 2 files changed, 21 insertions(+), 18 deletions(-)
 
-diff --git a/drivers/gpu/drm/drm_dp_mst_topology.c b/drivers/gpu/drm/drm_dp_mst_topology.c
-index c4b692dff5956..c9dd41175853e 100644
---- a/drivers/gpu/drm/drm_dp_mst_topology.c
-+++ b/drivers/gpu/drm/drm_dp_mst_topology.c
-@@ -3439,6 +3439,7 @@ int drm_dp_mst_topology_mgr_set_mst(struct drm_dp_mst_topology_mgr *mgr, bool ms
- 	int ret = 0;
- 	struct drm_dp_mst_branch *mstb = NULL;
+diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
+index 29c854e48bc69..1c9ca6864be36 100644
+--- a/drivers/mmc/host/sdhci.c
++++ b/drivers/mmc/host/sdhci.c
+@@ -1003,27 +1003,29 @@ void sdhci_set_data_timeout_irq(struct sdhci_host *host, bool enable)
+ }
+ EXPORT_SYMBOL_GPL(sdhci_set_data_timeout_irq);
  
-+	mutex_lock(&mgr->payload_lock);
- 	mutex_lock(&mgr->lock);
- 	if (mst_state == mgr->mst_state)
- 		goto out_unlock;
-@@ -3497,7 +3498,10 @@ int drm_dp_mst_topology_mgr_set_mst(struct drm_dp_mst_topology_mgr *mgr, bool ms
- 		/* this can fail if the device is gone */
- 		drm_dp_dpcd_writeb(mgr->aux, DP_MSTM_CTRL, 0);
- 		ret = 0;
--		memset(mgr->payloads, 0, mgr->max_payloads * sizeof(struct drm_dp_payload));
-+		memset(mgr->payloads, 0,
-+		       mgr->max_payloads * sizeof(mgr->payloads[0]));
-+		memset(mgr->proposed_vcpis, 0,
-+		       mgr->max_payloads * sizeof(mgr->proposed_vcpis[0]));
- 		mgr->payload_mask = 0;
- 		set_bit(0, &mgr->payload_mask);
- 		mgr->vcpi_mask = 0;
-@@ -3505,6 +3509,7 @@ int drm_dp_mst_topology_mgr_set_mst(struct drm_dp_mst_topology_mgr *mgr, bool ms
+-static void sdhci_set_timeout(struct sdhci_host *host, struct mmc_command *cmd)
++void __sdhci_set_timeout(struct sdhci_host *host, struct mmc_command *cmd)
+ {
+-	u8 count;
+-
+-	if (host->ops->set_timeout) {
+-		host->ops->set_timeout(host, cmd);
+-	} else {
+-		bool too_big = false;
+-
+-		count = sdhci_calc_timeout(host, cmd, &too_big);
++	bool too_big = false;
++	u8 count = sdhci_calc_timeout(host, cmd, &too_big);
++
++	if (too_big &&
++	    host->quirks2 & SDHCI_QUIRK2_DISABLE_HW_TIMEOUT) {
++		sdhci_calc_sw_timeout(host, cmd);
++		sdhci_set_data_timeout_irq(host, false);
++	} else if (!(host->ier & SDHCI_INT_DATA_TIMEOUT)) {
++		sdhci_set_data_timeout_irq(host, true);
++	}
  
- out_unlock:
- 	mutex_unlock(&mgr->lock);
-+	mutex_unlock(&mgr->payload_lock);
- 	if (mstb)
- 		drm_dp_mst_topology_put_mstb(mstb);
- 	return ret;
+-		if (too_big &&
+-		    host->quirks2 & SDHCI_QUIRK2_DISABLE_HW_TIMEOUT) {
+-			sdhci_calc_sw_timeout(host, cmd);
+-			sdhci_set_data_timeout_irq(host, false);
+-		} else if (!(host->ier & SDHCI_INT_DATA_TIMEOUT)) {
+-			sdhci_set_data_timeout_irq(host, true);
+-		}
++	sdhci_writeb(host, count, SDHCI_TIMEOUT_CONTROL);
++}
++EXPORT_SYMBOL_GPL(__sdhci_set_timeout);
+ 
+-		sdhci_writeb(host, count, SDHCI_TIMEOUT_CONTROL);
+-	}
++static void sdhci_set_timeout(struct sdhci_host *host, struct mmc_command *cmd)
++{
++	if (host->ops->set_timeout)
++		host->ops->set_timeout(host, cmd);
++	else
++		__sdhci_set_timeout(host, cmd);
+ }
+ 
+ static void sdhci_prepare_data(struct sdhci_host *host, struct mmc_command *cmd)
+diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
+index 4613d71b3cd6e..76e69288632db 100644
+--- a/drivers/mmc/host/sdhci.h
++++ b/drivers/mmc/host/sdhci.h
+@@ -796,5 +796,6 @@ void sdhci_reset_tuning(struct sdhci_host *host);
+ void sdhci_send_tuning(struct sdhci_host *host, u32 opcode);
+ void sdhci_abort_tuning(struct sdhci_host *host, u32 opcode);
+ void sdhci_set_data_timeout_irq(struct sdhci_host *host, bool enable);
++void __sdhci_set_timeout(struct sdhci_host *host, struct mmc_command *cmd);
+ 
+ #endif /* __SDHCI_HW_H */
 -- 
 2.20.1
 
