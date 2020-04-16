@@ -2,88 +2,92 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAD0DC2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:36:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 912E1C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:36:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 94A6A2223D
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:36:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76C402223D
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:36:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2410483AbgDPPgF (ORCPT
+        id S2634981AbgDPPgK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:36:05 -0400
-Received: from mail-m127101.qiye.163.com ([115.236.127.101]:3706 "EHLO
+        Thu, 16 Apr 2020 11:36:10 -0400
+Received: from mail-m127101.qiye.163.com ([115.236.127.101]:3902 "EHLO
         mail-m127101.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2407626AbgDPPfz (ORCPT
+        with ESMTP id S2410349AbgDPPgA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 11:35:55 -0400
+        Thu, 16 Apr 2020 11:36:00 -0400
 Received: from ubuntu.localdomain (unknown [58.251.74.226])
-        by mail-m127101.qiye.163.com (Hmail) with ESMTPA id B2D3747589;
-        Thu, 16 Apr 2020 23:35:48 +0800 (CST)
+        by mail-m127101.qiye.163.com (Hmail) with ESMTPA id 4FA7E47833;
+        Thu, 16 Apr 2020 23:35:57 +0800 (CST)
 From:   Wang Wenhu <wenhu.wang@vivo.com>
 To:     gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
         oss@buserror.net, christophe.leroy@c-s.fr,
         linuxppc-dev@lists.ozlabs.org
-Cc:     kernel@vivo.com, Wang Wenhu <wenhu.wang@vivo.com>
-Subject: [PATCH v4,0/4] drivers: uio: new driver uio_fsl_85xx_cache_sram
-Date:   Thu, 16 Apr 2020 08:35:33 -0700
-Message-Id: <20200416153537.23736-1-wenhu.wang@vivo.com>
+Cc:     kernel@vivo.com, Wang Wenhu <wenhu.wang@vivo.com>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH v4,3/4] powerpc: sysdev: fix compile warning for fsl_85xx_cache_sram
+Date:   Thu, 16 Apr 2020 08:35:36 -0700
+Message-Id: <20200416153537.23736-4-wenhu.wang@vivo.com>
 X-Mailer: git-send-email 2.17.1
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgYFAkeWUFZTlVOQk1LS0tKQk9OT0JOTVlXWShZQU
+In-Reply-To: <20200416153537.23736-1-wenhu.wang@vivo.com>
+References: <20200416153537.23736-1-wenhu.wang@vivo.com>
+X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgYFAkeWUFZSlVCQ0tCQkJCT01OQk9JT1lXWShZQU
         hPN1dZLVlBSVdZCQ4XHghZQVk1NCk2OjckKS43PlkG
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6MxQ6Vio6QzgwEg8hF00rTkMw
-        LQMaCRNVSlVKTkNMS05KSE5KS0JCVTMWGhIXVQweFRMOVQwaFRw7DRINFFUYFBZFWVdZEgtZQVlO
-        Q1VJTkpVTE9VSUlNWVdZCAFZQUlNTk83Bg++
-X-HM-Tid: 0a7183a1c3ec9865kuuub2d3747589
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6ME06TSo6IjgrGg8MFj85KS8s
+        EgsKFA5VSlVKTkNMS05KSE5MTU1DVTMWGhIXVQweFRMOVQwaFRw7DRINFFUYFBZFWVdZEgtZQVlO
+        Q1VJTkpVTE9VSUlNWVdZCAFZQUlMTUw3Bg++
+X-HM-Tid: 0a7183a1e5979865kuuu4fa7e47833
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Function instantiate_cache_sram should not be linked into the init
+section for its caller mpc85xx_l2ctlr_of_probe is none-__init.
 
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Christophe Leroy <christophe.leroy@c-s.fr>
+Cc: Scott Wood <oss@buserror.net>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: linuxppc-dev@lists.ozlabs.org
+Fixes: 6db92cc9d07d ("powerpc/85xx: add cache-sram support")
+Signed-off-by: Wang Wenhu <wenhu.wang@vivo.com>
+
+Warning information:
+  MODPOST vmlinux.o
+WARNING: modpost: vmlinux.o(.text+0x1e540): Section mismatch in reference from the function mpc85xx_l2ctlr_of_probe() to the function .init.text:instantiate_cache_sram()
+The function mpc85xx_l2ctlr_of_probe() references
+the function __init instantiate_cache_sram().
+This is often because mpc85xx_l2ctlr_of_probe lacks a __init
+annotation or the annotation of instantiate_cache_sram is wrong.
+---
 Changes since v1:
- * Addressed comments from Greg K-H
- * Moved kfree(info->name) into uio_info_free_internal()
-
+ * None
 Changes since v2:
- * Drop the patch that modifies Kconfigs of arch/powerpc/platforms
-   and modified the sequence of patches:
-    01:dropped, 02->03, 03->02, 04->01, 05->04
- * Addressed comments from Greg, Scott and Christophe
- * Use "uiomem->internal_addr" as if condition for sram memory free,
-   and memset the uiomem entry
- * Modified of_match_table make the driver apart from Cache-Sram HW info
-   which belong to the HW level driver fsl_85xx_cache_sram to match
- * Use roundup_pow_of_two for align calc(really learned a lot from Christophe)
- * Remove useless clear block of uiomem entries.
- * Use UIO_INFO_VER micro for info->version, and define it as
-   "devicetree,pseudo", meaning this is pseudo device and probed from
-   device tree configuration
- * Select FSL_85XX_CACHE_SRAM rather than depends on it
-
+ * None
 Changes since v3:
- * Addressed comments from Christophe(use devm_xxx memory alloc interfaces)
+ * None
+---
+ arch/powerpc/sysdev/fsl_85xx_cache_sram.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Wang Wenhu (4):
-  powerpc: sysdev: fix compile error for fsl_85xx_l2ctlr
-  powerpc: sysdev: fix compile error for fsl_85xx_cache_sram
-  powerpc: sysdev: fix compile warning for fsl_85xx_cache_sram
-  drivers: uio: new driver for fsl_85xx_cache_sram
-
- arch/powerpc/sysdev/fsl_85xx_cache_sram.c |   3 +-
- arch/powerpc/sysdev/fsl_85xx_l2ctlr.c     |   1 +
- drivers/uio/Kconfig                       |   9 ++
- drivers/uio/Makefile                      |   1 +
- drivers/uio/uio_fsl_85xx_cache_sram.c     | 148 ++++++++++++++++++++++
- 5 files changed, 161 insertions(+), 1 deletion(-)
- create mode 100644 drivers/uio/uio_fsl_85xx_cache_sram.c
-
+diff --git a/arch/powerpc/sysdev/fsl_85xx_cache_sram.c b/arch/powerpc/sysdev/fsl_85xx_cache_sram.c
+index be3aef4229d7..3de5ac8382c0 100644
+--- a/arch/powerpc/sysdev/fsl_85xx_cache_sram.c
++++ b/arch/powerpc/sysdev/fsl_85xx_cache_sram.c
+@@ -68,7 +68,7 @@ void mpc85xx_cache_sram_free(void *ptr)
+ }
+ EXPORT_SYMBOL(mpc85xx_cache_sram_free);
+ 
+-int __init instantiate_cache_sram(struct platform_device *dev,
++int instantiate_cache_sram(struct platform_device *dev,
+ 		struct sram_parameters sram_params)
+ {
+ 	int ret = 0;
 -- 
 2.17.1
 
