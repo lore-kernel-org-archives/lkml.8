@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50CCCC352BE
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:30:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 299C3C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:30:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2DE8921D79
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:30:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0022921D91
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:30:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587043831;
-	bh=4m1dUXBUV9k6o18wlvbkSZoGbZqakAwYAzHfc90hGU0=;
+	s=default; t=1587043838;
+	bh=ZoXdcEmcQ1RwgthyQjDT9hIpwmYyb5aoD+aUunKYaxE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vIzVLBi+Qi2B2VfQcrYOQ/geY3mw4xgWMgX6lmVwcqoIoPQjV27rTdrFMDT1fMPQi
-	 pb56iWbXSayJTcxNIlefbC4wF66o0jDOXn2lrGGTjxfznY38199ffhT3HkREsFlmeM
-	 SwZZuPR3zVbVwEqI+OQGbRGBcCPxi9DhE1SwuWXo=
+	b=FaQ3tcWkVteWtmsoE6lpKNV7acnqKYg2btx+IkGbxSQuqApgLm4MWZ9HbyqC6xvUn
+	 M4KxMWv65bqy2ogGBPNUd63pAY7QCuS81BRulgZV9Eeub+hwwE86Fw0+KlRuIljKop
+	 ysh1CvgiTe1bKFvJqgMwf0Sng0HuzJbbYUdn1kMg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2896248AbgDPNa2 (ORCPT
+        id S2896265AbgDPNag (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 09:30:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36598 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 09:30:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36806 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2895633AbgDPN15 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:27:57 -0400
+        id S2895662AbgDPN2C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:28:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C3FE821BE5;
-        Thu, 16 Apr 2020 13:27:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 99C1221BE5;
+        Thu, 16 Apr 2020 13:28:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587043676;
-        bh=4m1dUXBUV9k6o18wlvbkSZoGbZqakAwYAzHfc90hGU0=;
+        s=default; t=1587043681;
+        bh=ZoXdcEmcQ1RwgthyQjDT9hIpwmYyb5aoD+aUunKYaxE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KHCLCkQaWvVUM9AvMY5qxDTlE+gOZDLikeWL1eLA9IZde4oGusr1JyaD3fV3zK/D0
-         qx7eAcfDDXO55HbX7Ztfr+T497Q2YcjrhlDIi9c5zFndmhoaTHcCvp0Ul6VoZh/asc
-         bEocfvA4LCv5tkbVlly5D00RETCfg2K8e0LD+DOw=
+        b=K0kTEB9kXdLAWBIxcJ3AX3GzP0HMYZ0oDRGon+rLDdXFXkTzaqMQpVs/4XlRRKK3H
+         ZvXr3KnV3B+beIjlA9BzeFQ3cuYzNdkpvOLnthni6bV2RvrZvIk+um97S6Ibv4Sgck
+         WDE0Er43Tk3SsHZTJ7cCq+lrwByc9oN/a73LRBJk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>,
-        Jari Ruusu <jari.ruusu@gmail.com>
-Subject: [PATCH 4.19 054/146] ALSA: pcm: oss: Fix regression by buffer overflow fix
-Date:   Thu, 16 Apr 2020 15:23:15 +0200
-Message-Id: <20200416131250.292527083@linuxfoundation.org>
+        stable@vger.kernel.org, Thomas Hebb <tommyhebb@gmail.com>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.19 056/146] ALSA: hda/realtek - Set principled PC Beep configuration for ALC256
+Date:   Thu, 16 Apr 2020 15:23:17 +0200
+Message-Id: <20200416131250.559681370@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131242.353444678@linuxfoundation.org>
 References: <20200416131242.353444678@linuxfoundation.org>
@@ -59,126 +59,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Thomas Hebb <tommyhebb@gmail.com>
 
-commit ae769d3556644888c964635179ef192995f40793 upstream.
+commit c44737449468a0bdc50e09ec75e530f208391561 upstream.
 
-The recent fix for the OOB access in PCM OSS plugins (commit
-f2ecf903ef06: "ALSA: pcm: oss: Avoid plugin buffer overflow") caused a
-regression on OSS applications.  The patch introduced the size check
-in client and slave size calculations to limit to each plugin's buffer
-size, but I overlooked that some code paths call those without
-allocating the buffer but just for estimation.
+The Realtek PC Beep Hidden Register[1] is currently set by
+patch_realtek.c in two different places:
 
-This patch fixes the bug by skipping the size check for those code
-paths while keeping checking in the actual transfer calls.
+In alc_fill_eapd_coef(), it's set to the value 0x5757, corresponding to
+non-beep input on 1Ah and no 1Ah loopback to either headphones or
+speakers. (Although, curiously, the loopback amp is still enabled.) This
+write was added fairly recently by commit e3743f431143 ("ALSA:
+hda/realtek - Dell headphone has noise on unmute for ALC236") and is a
+safe default. However, it happens in the wrong place:
+alc_fill_eapd_coef() runs on module load and cold boot but not on S3
+resume, meaning the register loses its value after suspend.
 
-Fixes: f2ecf903ef06 ("ALSA: pcm: oss: Avoid plugin buffer overflow")
-Tested-and-reported-by: Jari Ruusu <jari.ruusu@gmail.com>
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200403072515.25539-1-tiwai@suse.de
+Conversely, in alc256_init(), the register is updated to unset bit 13
+(disable speaker loopback) and set bit 5 (set non-beep input on 1Ah).
+Although this write does run on S3 resume, it's not quite enough to fix
+up the register's default value of 0x3717. What's missing is a set of
+bit 14 to disable headphone loopback. Without that, we end up with a
+feedback loop where the headphone jack is being driven by amplified
+samples of itself[2].
+
+This change eliminates the update in alc256_init() and replaces it with
+the 0x5757 write from alc_fill_eapd_coef(). Kailang says that 0x5757 is
+supposed to be the codec's default value, so using it will make
+debugging easier for Realtek.
+
+Affects the ALC255, ALC256, ALC257, ALC235, and ALC236 codecs.
+
+[1] Newly documented in Documentation/sound/hd-audio/realtek-pc-beep.rst
+
+[2] Setting the "Headphone Mic Boost" control from userspace changes
+this feedback loop and has been a widely-shared workaround for headphone
+noise on laptops like the Dell XPS 13 9350. This commit eliminates the
+feedback loop and makes the workaround unnecessary.
+
+Fixes: e1e8c1fdce8b ("ALSA: hda/realtek - Dell headphone has noise on unmute for ALC236")
+Cc: stable@vger.kernel.org
+Signed-off-by: Thomas Hebb <tommyhebb@gmail.com>
+Link: https://lore.kernel.org/r/bf22b417d1f2474b12011c2a39ed6cf8b06d3bf5.1585584498.git.tommyhebb@gmail.com
 Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/core/oss/pcm_plugin.c |   32 ++++++++++++++++++++++++--------
- 1 file changed, 24 insertions(+), 8 deletions(-)
+ sound/pci/hda/patch_realtek.c |   15 +++++++++------
+ 1 file changed, 9 insertions(+), 6 deletions(-)
 
---- a/sound/core/oss/pcm_plugin.c
-+++ b/sound/core/oss/pcm_plugin.c
-@@ -196,7 +196,9 @@ int snd_pcm_plugin_free(struct snd_pcm_p
- 	return 0;
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -379,7 +379,9 @@ static void alc_fill_eapd_coef(struct hd
+ 	case 0x10ec0215:
+ 	case 0x10ec0233:
+ 	case 0x10ec0235:
++	case 0x10ec0236:
+ 	case 0x10ec0255:
++	case 0x10ec0256:
+ 	case 0x10ec0257:
+ 	case 0x10ec0282:
+ 	case 0x10ec0283:
+@@ -391,11 +393,6 @@ static void alc_fill_eapd_coef(struct hd
+ 	case 0x10ec0300:
+ 		alc_update_coef_idx(codec, 0x10, 1<<9, 0);
+ 		break;
+-	case 0x10ec0236:
+-	case 0x10ec0256:
+-		alc_write_coef_idx(codec, 0x36, 0x5757);
+-		alc_update_coef_idx(codec, 0x10, 1<<9, 0);
+-		break;
+ 	case 0x10ec0275:
+ 		alc_update_coef_idx(codec, 0xe, 0, 1<<0);
+ 		break;
+@@ -3249,7 +3246,13 @@ static void alc256_init(struct hda_codec
+ 	alc_update_coefex_idx(codec, 0x57, 0x04, 0x0007, 0x4); /* Hight power */
+ 	alc_update_coefex_idx(codec, 0x53, 0x02, 0x8000, 1 << 15); /* Clear bit */
+ 	alc_update_coefex_idx(codec, 0x53, 0x02, 0x8000, 0 << 15);
+-	alc_update_coef_idx(codec, 0x36, 1 << 13, 1 << 5); /* Switch pcbeep path to Line in path*/
++	/*
++	 * Expose headphone mic (or possibly Line In on some machines) instead
++	 * of PC Beep on 1Ah, and disable 1Ah loopback for all outputs. See
++	 * Documentation/sound/hd-audio/realtek-pc-beep.rst for details of
++	 * this register.
++	 */
++	alc_write_coef_idx(codec, 0x36, 0x5757);
  }
  
--snd_pcm_sframes_t snd_pcm_plug_client_size(struct snd_pcm_substream *plug, snd_pcm_uframes_t drv_frames)
-+static snd_pcm_sframes_t plug_client_size(struct snd_pcm_substream *plug,
-+					  snd_pcm_uframes_t drv_frames,
-+					  bool check_size)
- {
- 	struct snd_pcm_plugin *plugin, *plugin_prev, *plugin_next;
- 	int stream;
-@@ -209,7 +211,7 @@ snd_pcm_sframes_t snd_pcm_plug_client_si
- 	if (stream == SNDRV_PCM_STREAM_PLAYBACK) {
- 		plugin = snd_pcm_plug_last(plug);
- 		while (plugin && drv_frames > 0) {
--			if (drv_frames > plugin->buf_frames)
-+			if (check_size && drv_frames > plugin->buf_frames)
- 				drv_frames = plugin->buf_frames;
- 			plugin_prev = plugin->prev;
- 			if (plugin->src_frames)
-@@ -222,7 +224,7 @@ snd_pcm_sframes_t snd_pcm_plug_client_si
- 			plugin_next = plugin->next;
- 			if (plugin->dst_frames)
- 				drv_frames = plugin->dst_frames(plugin, drv_frames);
--			if (drv_frames > plugin->buf_frames)
-+			if (check_size && drv_frames > plugin->buf_frames)
- 				drv_frames = plugin->buf_frames;
- 			plugin = plugin_next;
- 		}
-@@ -231,7 +233,9 @@ snd_pcm_sframes_t snd_pcm_plug_client_si
- 	return drv_frames;
- }
- 
--snd_pcm_sframes_t snd_pcm_plug_slave_size(struct snd_pcm_substream *plug, snd_pcm_uframes_t clt_frames)
-+static snd_pcm_sframes_t plug_slave_size(struct snd_pcm_substream *plug,
-+					 snd_pcm_uframes_t clt_frames,
-+					 bool check_size)
- {
- 	struct snd_pcm_plugin *plugin, *plugin_prev, *plugin_next;
- 	snd_pcm_sframes_t frames;
-@@ -252,14 +256,14 @@ snd_pcm_sframes_t snd_pcm_plug_slave_siz
- 				if (frames < 0)
- 					return frames;
- 			}
--			if (frames > plugin->buf_frames)
-+			if (check_size && frames > plugin->buf_frames)
- 				frames = plugin->buf_frames;
- 			plugin = plugin_next;
- 		}
- 	} else if (stream == SNDRV_PCM_STREAM_CAPTURE) {
- 		plugin = snd_pcm_plug_last(plug);
- 		while (plugin) {
--			if (frames > plugin->buf_frames)
-+			if (check_size && frames > plugin->buf_frames)
- 				frames = plugin->buf_frames;
- 			plugin_prev = plugin->prev;
- 			if (plugin->src_frames) {
-@@ -274,6 +278,18 @@ snd_pcm_sframes_t snd_pcm_plug_slave_siz
- 	return frames;
- }
- 
-+snd_pcm_sframes_t snd_pcm_plug_client_size(struct snd_pcm_substream *plug,
-+					   snd_pcm_uframes_t drv_frames)
-+{
-+	return plug_client_size(plug, drv_frames, false);
-+}
-+
-+snd_pcm_sframes_t snd_pcm_plug_slave_size(struct snd_pcm_substream *plug,
-+					  snd_pcm_uframes_t clt_frames)
-+{
-+	return plug_slave_size(plug, clt_frames, false);
-+}
-+
- static int snd_pcm_plug_formats(const struct snd_mask *mask,
- 				snd_pcm_format_t format)
- {
-@@ -630,7 +646,7 @@ snd_pcm_sframes_t snd_pcm_plug_write_tra
- 		src_channels = dst_channels;
- 		plugin = next;
- 	}
--	return snd_pcm_plug_client_size(plug, frames);
-+	return plug_client_size(plug, frames, true);
- }
- 
- snd_pcm_sframes_t snd_pcm_plug_read_transfer(struct snd_pcm_substream *plug, struct snd_pcm_plugin_channel *dst_channels_final, snd_pcm_uframes_t size)
-@@ -640,7 +656,7 @@ snd_pcm_sframes_t snd_pcm_plug_read_tran
- 	snd_pcm_sframes_t frames = size;
- 	int err;
- 
--	frames = snd_pcm_plug_slave_size(plug, frames);
-+	frames = plug_slave_size(plug, frames, true);
- 	if (frames < 0)
- 		return frames;
- 
+ static void alc256_shutup(struct hda_codec *codec)
 
 
