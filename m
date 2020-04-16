@@ -2,149 +2,93 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B6C6C2BA19
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 01:45:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A6C9C2BA19
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 01:46:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E6ED92064A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 01:45:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aurabindo.in header.i=@aurabindo.in header.b="BIA7OQsR"
+	by mail.kernel.org (Postfix) with ESMTP id 635062064A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 01:46:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729620AbgDPBpZ (ORCPT
+        id S1732910AbgDPBqf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 21:45:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59232 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726201AbgDPBpM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 21:45:12 -0400
-Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00123C061A0C
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 18:45:10 -0700 (PDT)
-Received: by mail-io1-xd41.google.com with SMTP id n10so19366996iom.3
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 18:45:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=aurabindo.in; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=i6cDJ9/jxc7iWgnjOZRxOI5nNKzNheaz7rQ3Dx98dlo=;
-        b=BIA7OQsRl1ROJNQ1YvmltTTLBm+XKtsyULQj/bnfCx+MwjCnhqs4UgXDyIpe18RtN0
-         xJbDEY8he8SaslRGlOVBNZrRQXwJqnHEQmp7z0bG1mwwFPreLEOzxmdH8ykozZ7G2VTp
-         nBuHp+txb8V/7fq9OEWipEVRiBC/F8YuBVYKozGdfNremYW3lOM4QyVKK3ij9CgQPHAF
-         UrKu9iLqgmtLrANGhRVdIq3HERcBDQBMHurShfxmKZAnFo24BpcvwjZct8CBP6x1Q+uB
-         ydsxDCtFcHXzlMAGT6uflDBOzDhnx72fkyMAGhT8mEk4FSonrZQVSScEIs41w4S93NPW
-         o1Yw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=i6cDJ9/jxc7iWgnjOZRxOI5nNKzNheaz7rQ3Dx98dlo=;
-        b=fzCJs69ECIj0LpcEXXmCfeBDbK9T1WL6BpxMfGVpmJNi9RPLfHtwoQEGl2LUEwUH5n
-         uuN+HzC5w7QQuCt7RPpTNm6YoC2FRiL8zauCyUFvin/5OBuZjV69fkamnRhK2K6DUHv+
-         TSL0Di8dT2o7YvtND6mDW8agGtsOj6GsW8wjXq0dUB3NsbjZAl4G+8m22GYVNM6D8kAx
-         UiXkypYYQp1W2WAZkRTRTFOIelyHvNv/hgtEsbb7Btc/lTseXki5hbpfrSUmSb3wu655
-         ozTDo7lxScsE1qvp/EZRh3Rq4n39nfL/labVLZDuxc5LGfTHF0KTDmUC8QLa187FnIzV
-         uNfw==
-X-Gm-Message-State: AGi0PuaC7aLXOEkD+D6hQI2FIKx0tvz5JCIXsBCM0SnL1Z++jvPwpbkA
-        +SgODziA8rlKbQM4ckPVWtL5SjPeJSxtX7su+PiYXw==
-X-Google-Smtp-Source: APiQypIZ8aw2BkFEI+uktQ5J/eBDiyByluk9OxNU0vFx2+RT36b49rAsrvrBVCo21epUnhqnV05MZQGuAUKXZsuq2MM=
-X-Received: by 2002:a02:5249:: with SMTP id d70mr29141487jab.121.1587001510217;
- Wed, 15 Apr 2020 18:45:10 -0700 (PDT)
+        Wed, 15 Apr 2020 21:46:35 -0400
+Received: from mga03.intel.com ([134.134.136.65]:13648 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730833AbgDPBq1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 21:46:27 -0400
+IronPort-SDR: rh4PMB+u2via/grgLW28WwEHtfYCVKBYUM7Kp1DL5UcEruUjJ56tHqMHbKAumYSyL8EQqI09Kq
+ AwXqLyNlX7QQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2020 18:46:24 -0700
+IronPort-SDR: 4ir7BZso7cfJHuzUa1A+4Z7QoZGNfojvIlXnYMd/siRdmlT3Tu+gzm64EBH0YxTbdZN7y6Gu8/
+ nMmEFt/mjn5Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,388,1580803200"; 
+   d="scan'208";a="245845976"
+Received: from blu2-mobl3.ccr.corp.intel.com (HELO [10.254.208.171]) ([10.254.208.171])
+  by fmsmga008.fm.intel.com with ESMTP; 15 Apr 2020 18:46:22 -0700
+Cc:     baolu.lu@linux.intel.com, "Raj, Ashok" <ashok.raj@intel.com>,
+        "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
+        "Liu, Yi L" <yi.l.liu@intel.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 5/7] iommu/vt-d: Save prq descriptors in an internal
+ list
+To:     "Tian, Kevin" <kevin.tian@intel.com>,
+        Joerg Roedel <joro@8bytes.org>
+References: <20200415052542.30421-1-baolu.lu@linux.intel.com>
+ <20200415052542.30421-6-baolu.lu@linux.intel.com>
+ <AADFC41AFE54684AB9EE6CBC0274A5D19D8207B2@SHSMSX104.ccr.corp.intel.com>
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+Message-ID: <399dd037-b32e-30a7-013c-b68e9a3bbc7a@linux.intel.com>
+Date:   Thu, 16 Apr 2020 09:46:21 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <20200409195200.5483-1-mail@aurabindo.in> <87o8rumiqu.fsf@intel.com>
-In-Reply-To: <87o8rumiqu.fsf@intel.com>
-From:   Aurabindo Pillai <mail@aurabindo.in>
-Date:   Wed, 15 Apr 2020 21:44:58 -0400
-Message-ID: <CAMu4TMtb9f_zusEkUkDWzJMJ-uu8yciUUWxGybv2f4a+ER7B+Q@mail.gmail.com>
-Subject: Re: [PATCH] drm: dpcd: Print more useful information during error
-To:     Jani Nikula <jani.nikula@linux.intel.com>
-Cc:     maarten.lankhorst@linux.intel.com, mripard@kernel.org,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <AADFC41AFE54684AB9EE6CBC0274A5D19D8207B2@SHSMSX104.ccr.corp.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When DPCD access errors occur, knowing the register and request
-associated with the error helps debugging, so print the
-details in the debug message.
+On 2020/4/15 17:30, Tian, Kevin wrote:
+>> From: Lu Baolu<baolu.lu@linux.intel.com>
+>> Sent: Wednesday, April 15, 2020 1:26 PM
+>>
+>> Currently, the page request interrupt thread handles the page
+>> requests in the queue in this way:
+>>
+>> - Clear PPR bit to ensure new interrupt could come in;
+>> - Read and record the head and tail registers;
+>> - Handle all descriptors between head and tail;
+>> - Write tail to head register.
+>>
+>> This might cause some descriptors to be handles multiple times.
+>> An example sequence:
+>>
+>> - Thread A got scheduled with PRQ_1 and PRQ_2 in the queue;
+>> - Thread A clear the PPR bit and record the head and tail;
+>> - A new PRQ_3 comes and Thread B gets scheduled;
+>> - Thread B record the head and tail which includes PRQ_1
+>>    and PRQ_2.
+> I may overlook something but isn't the prq interrupt thread
+> per iommu then why would two prq threads contend here?
 
-Signed-off-by: Aurabindo Pillai <mail@aurabindo.in>
----
- drivers/gpu/drm/drm_dp_helper.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+The prq interrupt could be masked by the PPR (Pending Page Request) bit
+in Page Request Status Register. In the interrupt handling thread once
+this bit is clear, new prq interrupts are allowed to be generated.
 
-diff --git a/drivers/gpu/drm/drm_dp_helper.c b/drivers/gpu/drm/drm_dp_helper.c
-index c6fbe6e6b..8aafc01f5 100644
---- a/drivers/gpu/drm/drm_dp_helper.c
-+++ b/drivers/gpu/drm/drm_dp_helper.c
-@@ -257,7 +257,9 @@ static int drm_dp_dpcd_access(struct drm_dp_aux
-*aux, u8 request,
-                        err = ret;
-        }
+So, if a page request is in process and the PPR bit is cleared, another
+page request from any devices under the same iommu could trigger another
+interrupt thread.
 
--       DRM_DEBUG_KMS("Too many retries, giving up. First error: %d\n", err);
-+       DRM_DEBUG_KMS("dpcd: Too many retries, giving up. First error: %d,"
-+                     " address: 0x%x, request: 0x%x, size:%zu\n",
-+                     err, msg.address, msg.request, msg.size);
-        ret = err;
-
- unlock:
---
-2.26.0
-
-On Tue, Apr 14, 2020 at 7:04 AM Jani Nikula <jani.nikula@linux.intel.com> wrote:
->
-> On Thu, 09 Apr 2020, Aurabindo Pillai <mail@aurabindo.in> wrote:
-> > When DPCD access errors occur, knowing the register and request
-> > associated with the error helps debugging, so print the
-> > details in the debug message.
-> >
-> > Signed-off-by: Aurabindo Pillai <mail@aurabindo.in>
-> > ---
-> >  drivers/gpu/drm/drm_dp_helper.c | 4 +++-
-> >  1 file changed, 3 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/gpu/drm/drm_dp_helper.c b/drivers/gpu/drm/drm_dp_helper.c
-> > index a5364b519..545606aac 100644
-> > --- a/drivers/gpu/drm/drm_dp_helper.c
-> > +++ b/drivers/gpu/drm/drm_dp_helper.c
-> > @@ -257,7 +257,9 @@ static int drm_dp_dpcd_access(struct drm_dp_aux *aux, u8 request,
-> >                       err = ret;
-> >       }
-> >
-> > -     DRM_DEBUG_KMS("Too many retries, giving up. First error: %d\n", err);
-> > +     DRM_DEBUG_KMS("dpcd: Too many retries, giving up. First error: %d\t"
-> > +                   "address: %x\trequest: %x\t size:%zu\n",
-> > +                   err, msg.address, msg.request, msg.size);
->
-> Nitpicks, please don't add tabs, maybe use commas instead, and please
-> add 0x in front of hex.
->
-> BR,
-> Jani.
->
->
-> >       ret = err;
-> >
-> >  unlock:
->
-> --
-> Jani Nikula, Intel Open Source Graphics Center
-
-
-
--- 
-
-Thanks and Regards,
-
-Aurabindo J Pillai
-https://aurabindo.in
+Best regards,
+baolu
