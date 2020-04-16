@@ -2,111 +2,133 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A617C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 12:04:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AADFAC2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 12:06:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 61D7220767
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 12:04:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90DA820767
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 12:06:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2634914AbgDPMEZ (ORCPT
+        id S2634935AbgDPMF4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 08:04:25 -0400
-Received: from skedge03.snt-world.com ([91.208.41.68]:47088 "EHLO
-        skedge03.snt-world.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2634884AbgDPMEI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 08:04:08 -0400
-Received: from sntmail12r.snt-is.com (unknown [10.203.32.182])
-        by skedge03.snt-world.com (Postfix) with ESMTP id 532A267A7C0;
-        Thu, 16 Apr 2020 14:04:04 +0200 (CEST)
-Received: from sntmail12r.snt-is.com (10.203.32.182) by sntmail12r.snt-is.com
- (10.203.32.182) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Thu, 16 Apr
- 2020 14:04:03 +0200
-Received: from sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305]) by
- sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305%3]) with mapi id
- 15.01.1913.007; Thu, 16 Apr 2020 14:04:03 +0200
-From:   Schrempf Frieder <frieder.schrempf@kontron.de>
-To:     Ashish Kumar <Ashish.Kumar@nxp.com>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "boris.brezillon@collabora.com" <boris.brezillon@collabora.com>
-CC:     "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Kuldeep Singh <kuldeep.singh@nxp.com>
-Subject: Re: [PATCH v3] spi: spi-fsl-qspi: Reduce devm_ioremap size to 4 times
- AHB buffer size
-Thread-Topic: [PATCH v3] spi: spi-fsl-qspi: Reduce devm_ioremap size to 4
- times AHB buffer size
-Thread-Index: AQHWE+RA0RHIVaBwxUiIiH6VCp6sU6h7hO6A
-Date:   Thu, 16 Apr 2020 12:04:03 +0000
-Message-ID: <1e61b277-b690-ed54-95ea-59a976773050@kontron.de>
-References: <1587037399-18672-1-git-send-email-Ashish.Kumar@nxp.com>
-In-Reply-To: <1587037399-18672-1-git-send-email-Ashish.Kumar@nxp.com>
-Accept-Language: de-DE, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [172.25.9.193]
-x-c2processedorg: 51b406b7-48a2-4d03-b652-521f56ac89f3
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <FC63ED8397EC904E8F72C1FE7BB4F27F@snt-world.com>
-Content-Transfer-Encoding: base64
+        Thu, 16 Apr 2020 08:05:56 -0400
+Received: from mx2.suse.de ([195.135.220.15]:39968 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2634179AbgDPMFY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 08:05:24 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 82776AB7F;
+        Thu, 16 Apr 2020 12:05:20 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 201CF1E1250; Thu, 16 Apr 2020 14:05:20 +0200 (CEST)
+Date:   Thu, 16 Apr 2020 14:05:20 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     axboe@kernel.dk, yuyufen@huawei.com, tj@kernel.org, jack@suse.cz,
+        bvanassche@acm.org, tytso@mit.edu, gregkh@linuxfoundation.org,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 6/8] bdi: remove bdi_register_owner
+Message-ID: <20200416120520.GK23739@quack2.suse.cz>
+References: <20200416071519.807660-1-hch@lst.de>
+ <20200416071519.807660-7-hch@lst.de>
 MIME-Version: 1.0
-X-SnT-MailScanner-Information: Please contact the ISP for more information
-X-SnT-MailScanner-ID: 532A267A7C0.AEBA0
-X-SnT-MailScanner: Not scanned: please contact your Internet E-Mail Service Provider for details
-X-SnT-MailScanner-SpamCheck: 
-X-SnT-MailScanner-From: frieder.schrempf@kontron.de
-X-SnT-MailScanner-To: ashish.kumar@nxp.com, boris.brezillon@collabora.com,
-        broonie@kernel.org, kuldeep.singh@nxp.com,
-        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200416071519.807660-7-hch@lst.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gMTYuMDQuMjAgMTM6NDMsIEFzaGlzaCBLdW1hciB3cm90ZToNCj4gUmVkdWNlIGRldm1faW9y
-ZW1hcCBzaXplIHRvICg0ICogQUhCX0JVRkVSX1NJWkUpIHJhdGhlciB0aGFuIG1hcHBpbmcNCj4g
-Y29tcGxldGUgUVNQSS1NZW1tb3J5IGFzIGRyaXZlciBpcyBub3cgaW5kZXBlbmRlbnQgb2YgZmxh
-c2ggc2l6ZS4NCj4gRmxhc2ggb2YgYW55IHNpemUgY2FuIGJlIGFjY2Vzc2VkLg0KPiANCj4gSXNz
-dWUgd2FzIHJlcG9ydGVkIG9uIHBsYXRmb3JtIHdoZXJlIGRldm1faW9yZW1hcCBmYWlsdXJlIGlz
-IG9ic2VydmVkDQo+IHdpdGggc2l6ZSA+IDI1Nk0uDQo+IEVycm9yIGxvZyBvbiBMUzEwMjFBVFdS
-IDoNCj4gICBmc2wtcXVhZHNwaSAxNTUwMDAwLnNwaTogaW9yZW1hcCBmYWlsZWQgZm9yIHJlc291
-cmNlIFttZW0gMHg0MDAwMDAwMC0weDdmZmZmZmZmXQ0KPiAgIGZzbC1xdWFkc3BpIDE1NTAwMDAu
-c3BpOiBGcmVlc2NhbGUgUXVhZFNQSSBwcm9iZSBmYWlsZWQNCj4gICBmc2wtcXVhZHNwaTogcHJv
-YmUgb2YgMTU1MDAwMC5zcGkgZmFpbGVkIHdpdGggZXJyb3IgLTEyDQo+IA0KPiBUaGlzIGNoYW5n
-ZSB3YXMgYWxzbyBzdWdnZXN0ZWQgcHJldmlvdXNseToNCj4gaHR0cHM6Ly9ldXIwNC5zYWZlbGlu
-a3MucHJvdGVjdGlvbi5vdXRsb29rLmNvbS8/dXJsPWh0dHBzJTNBJTJGJTJGcGF0Y2h3b3JrLmtl
-cm5lbC5vcmclMkZwYXRjaCUyRjEwNTA4NzUzJTJGJTIzMjIxNjYzODUmYW1wO2RhdGE9MDIlN0Mw
-MSU3Q2ZyaWVkZXIuc2NocmVtcGYlNDBrb250cm9uLmRlJTdDZjJjMjQ1NTkwODg4NDE5ODI3Nzcw
-OGQ3ZTFmYjYxNDYlN0M4YzlkM2M5NzNmZDk0MWM4YTJiMTY0NmYzOTQyZGFmMSU3QzAlN0MwJTdD
-NjM3MjI2MzQyMDk0Nzc3MDMxJmFtcDtzZGF0YT1RZUFwR2d1cEM0UndmYlNuUUxJWHM0MW83VllL
-Szc0N05Dclp6biUyRlJaS1ElM0QmYW1wO3Jlc2VydmVkPTANCj4gDQo+IFN1Z2dlc3RlZC1ieTog
-Qm9yaXMgQnJlemlsbG9uIDxib3Jpcy5icmV6aWxsb25AY29sbGFib3JhLmNvbT4NCj4gU2lnbmVk
-LW9mZi1ieTogS3VsZGVlcCBTaW5naCA8a3VsZGVlcC5zaW5naEBueHAuY29tPg0KPiBTaWduZWQt
-b2ZmLWJ5OiBBc2hpc2ggS3VtYXIgPEFzaGlzaC5rdW1hckBueHAuY29tPg0KDQpSZXZpZXdlZC1i
-eTogRnJpZWRlciBTY2hyZW1wZiA8ZnJpZWRlci5zY2hyZW1wZkBrb250cm9uLmRlPg0KDQo+IC0t
-LQ0KPiB2MzoNCj4gVXBkYXRlIGNvbW1lbnQNCj4gdjI6DQo+IEFkZCBTdWdnZXN0ZWQtYnk6IEJv
-cmlzIEJyZXppbGxvbiA8Ym9yaXMuYnJlemlsbG9uQGNvbGxhYm9yYS5jb20+DQo+IEluY29ycnBv
-cmF0ZSByZXZpZXcgY29tbWVudHMgZnJvbSBGcmllZGVyDQo+ICAgZHJpdmVycy9zcGkvc3BpLWZz
-bC1xc3BpLmMgfCA3ICsrKystLS0NCj4gICAxIGZpbGUgY2hhbmdlZCwgNCBpbnNlcnRpb25zKCsp
-LCAzIGRlbGV0aW9ucygtKQ0KPiANCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvc3BpL3NwaS1mc2wt
-cXNwaS5jIGIvZHJpdmVycy9zcGkvc3BpLWZzbC1xc3BpLmMNCj4gaW5kZXggNjNjOWY3ZS4uOGI5
-NWUyZiAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9zcGkvc3BpLWZzbC1xc3BpLmMNCj4gKysrIGIv
-ZHJpdmVycy9zcGkvc3BpLWZzbC1xc3BpLmMNCj4gQEAgLTg1OSwxNCArODU5LDE1IEBAIHN0YXRp
-YyBpbnQgZnNsX3FzcGlfcHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikNCj4gICAN
-Cj4gICAJcmVzID0gcGxhdGZvcm1fZ2V0X3Jlc291cmNlX2J5bmFtZShwZGV2LCBJT1JFU09VUkNF
-X01FTSwNCj4gICAJCQkJCSJRdWFkU1BJLW1lbW9yeSIpOw0KPiAtCXEtPmFoYl9hZGRyID0gZGV2
-bV9pb3JlbWFwX3Jlc291cmNlKGRldiwgcmVzKTsNCj4gKwlxLT5tZW1tYXBfcGh5ID0gcmVzLT5z
-dGFydDsNCj4gKwkvKiBTaW5jZSB0aGVyZSBhcmUgNCBjcywgbWFwIHNpemUgcmVxdWlyZWQgaXMg
-NCB0aW1lcyBhaGJfYnVmX3NpemUgKi8NCj4gKwlxLT5haGJfYWRkciA9IGRldm1faW9yZW1hcChk
-ZXYsIHEtPm1lbW1hcF9waHksDQo+ICsJCQkJICAgKHEtPmRldnR5cGVfZGF0YS0+YWhiX2J1Zl9z
-aXplICogNCkpOw0KPiAgIAlpZiAoSVNfRVJSKHEtPmFoYl9hZGRyKSkgew0KPiAgIAkJcmV0ID0g
-UFRSX0VSUihxLT5haGJfYWRkcik7DQo+ICAgCQlnb3RvIGVycl9wdXRfY3RybDsNCj4gICAJfQ0K
-PiAgIA0KPiAtCXEtPm1lbW1hcF9waHkgPSByZXMtPnN0YXJ0Ow0KPiAtDQo+ICAgCS8qIGZpbmQg
-dGhlIGNsb2NrcyAqLw0KPiAgIAlxLT5jbGtfZW4gPSBkZXZtX2Nsa19nZXQoZGV2LCAicXNwaV9l
-biIpOw0KPiAgIAlpZiAoSVNfRVJSKHEtPmNsa19lbikpIHsNCj4g
+On Thu 16-04-20 09:15:17, Christoph Hellwig wrote:
+> Split out a new bdi_set_owner helper to set the owner, and move the policy
+> for creating the bdi name back into genhd.c, where it belongs.
+> 
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+
+Fine by me. You can add:
+
+Reviewed-by: Jan Kara <jack@suse.cz>
+
+								Honza
+
+> ---
+>  block/genhd.c               |  8 +++++---
+>  include/linux/backing-dev.h |  2 +-
+>  mm/backing-dev.c            | 12 ++----------
+>  3 files changed, 8 insertions(+), 14 deletions(-)
+> 
+> diff --git a/block/genhd.c b/block/genhd.c
+> index 06b642b23a07..7d10cfc38c70 100644
+> --- a/block/genhd.c
+> +++ b/block/genhd.c
+> @@ -840,13 +840,15 @@ static void __device_add_disk(struct device *parent, struct gendisk *disk,
+>  		disk->flags |= GENHD_FL_SUPPRESS_PARTITION_INFO;
+>  		disk->flags |= GENHD_FL_NO_PART_SCAN;
+>  	} else {
+> +		struct backing_dev_info *bdi = disk->queue->backing_dev_info;
+> +		struct device *dev = disk_to_dev(disk);
+>  		int ret;
+>  
+>  		/* Register BDI before referencing it from bdev */
+> -		disk_to_dev(disk)->devt = devt;
+> -		ret = bdi_register_owner(disk->queue->backing_dev_info,
+> -						disk_to_dev(disk));
+> +		dev->devt = devt;
+> +		ret = bdi_register(bdi, "%u:%u", MAJOR(devt), MINOR(devt));
+>  		WARN_ON(ret);
+> +		bdi_set_owner(bdi, dev);
+>  		blk_register_region(disk_devt(disk), disk->minors, NULL,
+>  				    exact_match, exact_lock, disk);
+>  	}
+> diff --git a/include/linux/backing-dev.h b/include/linux/backing-dev.h
+> index c9ad5c3b7b4b..4098ed6ba6b4 100644
+> --- a/include/linux/backing-dev.h
+> +++ b/include/linux/backing-dev.h
+> @@ -33,7 +33,7 @@ int bdi_register(struct backing_dev_info *bdi, const char *fmt, ...);
+>  __printf(2, 0)
+>  int bdi_register_va(struct backing_dev_info *bdi, const char *fmt,
+>  		    va_list args);
+> -int bdi_register_owner(struct backing_dev_info *bdi, struct device *owner);
+> +void bdi_set_owner(struct backing_dev_info *bdi, struct device *owner);
+>  void bdi_unregister(struct backing_dev_info *bdi);
+>  
+>  struct backing_dev_info *bdi_alloc_node(gfp_t gfp_mask, int node_id);
+> diff --git a/mm/backing-dev.c b/mm/backing-dev.c
+> index a7eb91146c9c..1ba9a7b30933 100644
+> --- a/mm/backing-dev.c
+> +++ b/mm/backing-dev.c
+> @@ -982,20 +982,12 @@ int bdi_register(struct backing_dev_info *bdi, const char *fmt, ...)
+>  }
+>  EXPORT_SYMBOL(bdi_register);
+>  
+> -int bdi_register_owner(struct backing_dev_info *bdi, struct device *owner)
+> +void bdi_set_owner(struct backing_dev_info *bdi, struct device *owner)
+>  {
+> -	int rc;
+> -
+> -	rc = bdi_register(bdi, "%u:%u", MAJOR(owner->devt), MINOR(owner->devt));
+> -	if (rc)
+> -		return rc;
+> -	/* Leaking owner reference... */
+> -	WARN_ON(bdi->owner);
+> +	WARN_ON_ONCE(bdi->owner);
+>  	bdi->owner = owner;
+>  	get_device(owner);
+> -	return 0;
+>  }
+> -EXPORT_SYMBOL(bdi_register_owner);
+>  
+>  /*
+>   * Remove bdi from bdi_list, and ensure that it is no longer visible
+> -- 
+> 2.25.1
+> 
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
