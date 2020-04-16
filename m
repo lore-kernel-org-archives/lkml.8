@@ -7,50 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BA63C352BE
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:43:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F30EEC2BB85
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:43:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D8A66214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:43:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8A2B20732
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:43:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587051821;
-	bh=XjmrEhuophM687LSAaFi/HfiN1o+mJnwbGhVRoqqK60=;
+	s=default; t=1587051830;
+	bh=GC7P3y7Dy+E6t3Dg2e24lsZ2vsRQWKY2LNgLclPIFq8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=i6vaJUKhZQBFlfnMUWlhx44fO15zz/os2OIn+Y5BTxbSuUkWfIVPcwuL+Ay3k0nlm
-	 xCTiLH4vfugRwgpCU9jruNVI4rn6cMJuD3Vgupf3DcZTxdrCNfqKnkL8q/iOxunUaX
-	 zKdVCrRDjH3tCHguOKNpTqVPGpbt/JY/vqu6DQig=
+	b=e9Bt0mDLl58QILIctUuDPjLcKGzXSGCg5pOX8B2dd1SSeIUCsemufOEppfmRdMvi8
+	 b1zwbzfhjD1mDk99Wfzj/YsW0g8Fzc8D54dK43OR3rCtYrgzGpHOzXXMOajLwiOaYQ
+	 mRokk44YbbMA2OlqJml6ITPOVT0p59ZGTsi0utJ4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2897182AbgDPNfl (ORCPT
+        id S2635756AbgDPPnt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 09:35:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39412 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 11:43:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47658 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2896025AbgDPN3b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:29:31 -0400
+        id S2896490AbgDPNfj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:35:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B872D217D8;
-        Thu, 16 Apr 2020 13:29:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 248DC21BE5;
+        Thu, 16 Apr 2020 13:35:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587043771;
-        bh=XjmrEhuophM687LSAaFi/HfiN1o+mJnwbGhVRoqqK60=;
+        s=default; t=1587044138;
+        bh=GC7P3y7Dy+E6t3Dg2e24lsZ2vsRQWKY2LNgLclPIFq8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ynKOSd54krTP+lksKeb9H9v63foucAMxCJf01ZyIdVpxScWfg8X4+9ruqrKG1nZdy
-         FM8FJGxoWBY3uDRijXEE78xJN8rmR+vE2juxNrWpuS6wPcv90XKiXz6dgL6r13TpjX
-         AezSxTri9eLOSBgmL9QcoeVus6S/+IN6NPpFN5kk=
+        b=vIofW9ZkaF/zGzVdbPgNytzugyno/bWzysICzyYNcpNj75xRVSuTBBBTWm/cpkQ/O
+         bc38pHDLB/PaTUlcSMFn/LlQNFVmtRjI9xqs76rWJvaTnYN1EzqS9iCOWifEHWA5iM
+         jIT++WX0P6OiTknGEFCC0zkJWNdZ0iRSHnxMR9w0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Rosioru Dragos <dragos.rosioru@nxp.com>,
-        =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 4.19 094/146] crypto: mxs-dcp - fix scatterlist linearization for hash
-Date:   Thu, 16 Apr 2020 15:23:55 +0200
-Message-Id: <20200416131255.640682897@linuxfoundation.org>
+        stable@vger.kernel.org, Thomas Hebb <tommyhebb@gmail.com>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 5.5 096/257] ALSA: hda/realtek - Remove now-unnecessary XPS 13 headphone noise fixups
+Date:   Thu, 16 Apr 2020 15:22:27 +0200
+Message-Id: <20200416131338.059410325@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200416131242.353444678@linuxfoundation.org>
-References: <20200416131242.353444678@linuxfoundation.org>
+In-Reply-To: <20200416131325.891903893@linuxfoundation.org>
+References: <20200416131325.891903893@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,110 +59,142 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rosioru Dragos <dragos.rosioru@nxp.com>
+From: Thomas Hebb <tommyhebb@gmail.com>
 
-commit fa03481b6e2e82355c46644147b614f18c7a8161 upstream.
+commit f36938aa7440f46a0a365f1cfde5f5985af2bef3 upstream.
 
-The incorrect traversal of the scatterlist, during the linearization phase
-lead to computing the hash value of the wrong input buffer.
-New implementation uses scatterwalk_map_and_copy()
-to address this issue.
+patch_realtek.c has historically failed to properly configure the PC
+Beep Hidden Register for the ALC256 codec (among others). Depending on
+your kernel version, symptoms of this misconfiguration can range from
+chassis noise, picked up by a poorly-shielded PCBEEP trace, getting
+amplified and played on your internal speaker and/or headphones to loud
+feedback, which responds to the "Headphone Mic Boost" ALSA control,
+getting played through your headphones. For details of the problem, see
+the patch in this series titled "ALSA: hda/realtek - Set principled PC
+Beep configuration for ALC256", which fixes the configuration.
 
-Cc: <stable@vger.kernel.org>
-Fixes: 15b59e7c3733 ("crypto: mxs - Add Freescale MXS DCP driver")
-Signed-off-by: Rosioru Dragos <dragos.rosioru@nxp.com>
-Reviewed-by: Horia Geantă <horia.geanta@nxp.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+These symptoms have been most noticed on the Dell XPS 13 9350 and 9360,
+popular laptops that use the ALC256. As a result, several model-specific
+fixups have been introduced to try and fix the problem, the most
+egregious of which locks the "Headphone Mic Boost" control as a hack to
+minimize noise from a feedback loop that shouldn't have been there in
+the first place.
+
+Now that the underlying issue has been fixed, remove all these fixups.
+Remaining fixups needed by the XPS 13 are all picked up by existing pin
+quirks.
+
+This change should, for the XPS 13 9350/9360
+
+ - Significantly increase volume and audio quality on headphones
+ - Eliminate headphone popping on suspend/resume
+ - Allow "Headphone Mic Boost" to be set again, making the headphone
+   jack fully usable as a microphone jack too.
+
+Fixes: 8c69729b4439 ("ALSA: hda - Fix headphone noise after Dell XPS 13 resume back from S3")
+Fixes: 423cd785619a ("ALSA: hda - Fix headphone noise on Dell XPS 13 9360")
+Fixes: e4c9fd10eb21 ("ALSA: hda - Apply headphone noise quirk for another Dell XPS 13 variant")
+Fixes: 1099f48457d0 ("ALSA: hda/realtek: Reduce the Headphone static noise on XPS 9350/9360")
+Cc: stable@vger.kernel.org
+Signed-off-by: Thomas Hebb <tommyhebb@gmail.com>
+Link: https://lore.kernel.org/r/b649a00edfde150cf6eebbb4390e15e0c2deb39a.1585584498.git.tommyhebb@gmail.com
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/crypto/mxs-dcp.c |   54 ++++++++++++++++++++++-------------------------
- 1 file changed, 26 insertions(+), 28 deletions(-)
+ Documentation/sound/hd-audio/models.rst |    2 -
+ sound/pci/hda/patch_realtek.c           |   34 --------------------------------
+ 2 files changed, 36 deletions(-)
 
---- a/drivers/crypto/mxs-dcp.c
-+++ b/drivers/crypto/mxs-dcp.c
-@@ -25,6 +25,7 @@
- #include <crypto/sha.h>
- #include <crypto/internal/hash.h>
- #include <crypto/internal/skcipher.h>
-+#include <crypto/scatterwalk.h>
- 
- #define DCP_MAX_CHANS	4
- #define DCP_BUF_SZ	PAGE_SIZE
-@@ -621,49 +622,46 @@ static int dcp_sha_req_to_buf(struct cry
- 	struct dcp_async_ctx *actx = crypto_ahash_ctx(tfm);
- 	struct dcp_sha_req_ctx *rctx = ahash_request_ctx(req);
- 	struct hash_alg_common *halg = crypto_hash_alg_common(tfm);
--	const int nents = sg_nents(req->src);
- 
- 	uint8_t *in_buf = sdcp->coh->sha_in_buf;
- 	uint8_t *out_buf = sdcp->coh->sha_out_buf;
- 
--	uint8_t *src_buf;
--
- 	struct scatterlist *src;
- 
--	unsigned int i, len, clen;
-+	unsigned int i, len, clen, oft = 0;
- 	int ret;
- 
- 	int fin = rctx->fini;
- 	if (fin)
- 		rctx->fini = 0;
- 
--	for_each_sg(req->src, src, nents, i) {
--		src_buf = sg_virt(src);
--		len = sg_dma_len(src);
-+	src = req->src;
-+	len = req->nbytes;
- 
--		do {
--			if (actx->fill + len > DCP_BUF_SZ)
--				clen = DCP_BUF_SZ - actx->fill;
--			else
--				clen = len;
-+	while (len) {
-+		if (actx->fill + len > DCP_BUF_SZ)
-+			clen = DCP_BUF_SZ - actx->fill;
-+		else
-+			clen = len;
- 
--			memcpy(in_buf + actx->fill, src_buf, clen);
--			len -= clen;
--			src_buf += clen;
--			actx->fill += clen;
-+		scatterwalk_map_and_copy(in_buf + actx->fill, src, oft, clen,
-+					 0);
- 
--			/*
--			 * If we filled the buffer and still have some
--			 * more data, submit the buffer.
--			 */
--			if (len && actx->fill == DCP_BUF_SZ) {
--				ret = mxs_dcp_run_sha(req);
--				if (ret)
--					return ret;
--				actx->fill = 0;
--				rctx->init = 0;
--			}
--		} while (len);
-+		len -= clen;
-+		oft += clen;
-+		actx->fill += clen;
-+
-+		/*
-+		 * If we filled the buffer and still have some
-+		 * more data, submit the buffer.
-+		 */
-+		if (len && actx->fill == DCP_BUF_SZ) {
-+			ret = mxs_dcp_run_sha(req);
-+			if (ret)
-+				return ret;
-+			actx->fill = 0;
-+			rctx->init = 0;
-+		}
+--- a/Documentation/sound/hd-audio/models.rst
++++ b/Documentation/sound/hd-audio/models.rst
+@@ -216,8 +216,6 @@ alc298-dell-aio
+     ALC298 fixups on Dell AIO machines
+ alc275-dell-xps
+     ALC275 fixups on Dell XPS models
+-alc256-dell-xps13
+-    ALC256 fixups on Dell XPS13
+ lenovo-spk-noise
+     Workaround for speaker noise on Lenovo machines
+ lenovo-hotkey
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -5491,17 +5491,6 @@ static void alc271_hp_gate_mic_jack(stru
  	}
+ }
  
- 	if (fin) {
+-static void alc256_fixup_dell_xps_13_headphone_noise2(struct hda_codec *codec,
+-						      const struct hda_fixup *fix,
+-						      int action)
+-{
+-	if (action != HDA_FIXUP_ACT_PRE_PROBE)
+-		return;
+-
+-	snd_hda_codec_amp_stereo(codec, 0x1a, HDA_INPUT, 0, HDA_AMP_VOLMASK, 1);
+-	snd_hda_override_wcaps(codec, 0x1a, get_wcaps(codec, 0x1a) & ~AC_WCAP_IN_AMP);
+-}
+-
+ static void alc269_fixup_limit_int_mic_boost(struct hda_codec *codec,
+ 					     const struct hda_fixup *fix,
+ 					     int action)
+@@ -5916,8 +5905,6 @@ enum {
+ 	ALC298_FIXUP_DELL1_MIC_NO_PRESENCE,
+ 	ALC298_FIXUP_DELL_AIO_MIC_NO_PRESENCE,
+ 	ALC275_FIXUP_DELL_XPS,
+-	ALC256_FIXUP_DELL_XPS_13_HEADPHONE_NOISE,
+-	ALC256_FIXUP_DELL_XPS_13_HEADPHONE_NOISE2,
+ 	ALC293_FIXUP_LENOVO_SPK_NOISE,
+ 	ALC233_FIXUP_LENOVO_LINE2_MIC_HOTKEY,
+ 	ALC255_FIXUP_DELL_SPK_NOISE,
+@@ -6658,23 +6645,6 @@ static const struct hda_fixup alc269_fix
+ 			{}
+ 		}
+ 	},
+-	[ALC256_FIXUP_DELL_XPS_13_HEADPHONE_NOISE] = {
+-		.type = HDA_FIXUP_VERBS,
+-		.v.verbs = (const struct hda_verb[]) {
+-			/* Disable pass-through path for FRONT 14h */
+-			{0x20, AC_VERB_SET_COEF_INDEX, 0x36},
+-			{0x20, AC_VERB_SET_PROC_COEF, 0x1737},
+-			{}
+-		},
+-		.chained = true,
+-		.chain_id = ALC255_FIXUP_DELL1_MIC_NO_PRESENCE
+-	},
+-	[ALC256_FIXUP_DELL_XPS_13_HEADPHONE_NOISE2] = {
+-		.type = HDA_FIXUP_FUNC,
+-		.v.func = alc256_fixup_dell_xps_13_headphone_noise2,
+-		.chained = true,
+-		.chain_id = ALC256_FIXUP_DELL_XPS_13_HEADPHONE_NOISE
+-	},
+ 	[ALC293_FIXUP_LENOVO_SPK_NOISE] = {
+ 		.type = HDA_FIXUP_FUNC,
+ 		.v.func = alc_fixup_disable_aamix,
+@@ -7172,17 +7142,14 @@ static const struct snd_pci_quirk alc269
+ 	SND_PCI_QUIRK(0x1028, 0x06de, "Dell", ALC293_FIXUP_DISABLE_AAMIX_MULTIJACK),
+ 	SND_PCI_QUIRK(0x1028, 0x06df, "Dell", ALC293_FIXUP_DISABLE_AAMIX_MULTIJACK),
+ 	SND_PCI_QUIRK(0x1028, 0x06e0, "Dell", ALC293_FIXUP_DISABLE_AAMIX_MULTIJACK),
+-	SND_PCI_QUIRK(0x1028, 0x0704, "Dell XPS 13 9350", ALC256_FIXUP_DELL_XPS_13_HEADPHONE_NOISE2),
+ 	SND_PCI_QUIRK(0x1028, 0x0706, "Dell Inspiron 7559", ALC256_FIXUP_DELL_INSPIRON_7559_SUBWOOFER),
+ 	SND_PCI_QUIRK(0x1028, 0x0725, "Dell Inspiron 3162", ALC255_FIXUP_DELL_SPK_NOISE),
+ 	SND_PCI_QUIRK(0x1028, 0x0738, "Dell Precision 5820", ALC269_FIXUP_NO_SHUTUP),
+-	SND_PCI_QUIRK(0x1028, 0x075b, "Dell XPS 13 9360", ALC256_FIXUP_DELL_XPS_13_HEADPHONE_NOISE2),
+ 	SND_PCI_QUIRK(0x1028, 0x075c, "Dell XPS 27 7760", ALC298_FIXUP_SPK_VOLUME),
+ 	SND_PCI_QUIRK(0x1028, 0x075d, "Dell AIO", ALC298_FIXUP_SPK_VOLUME),
+ 	SND_PCI_QUIRK(0x1028, 0x07b0, "Dell Precision 7520", ALC295_FIXUP_DISABLE_DAC3),
+ 	SND_PCI_QUIRK(0x1028, 0x0798, "Dell Inspiron 17 7000 Gaming", ALC256_FIXUP_DELL_INSPIRON_7559_SUBWOOFER),
+ 	SND_PCI_QUIRK(0x1028, 0x080c, "Dell WYSE", ALC225_FIXUP_DELL_WYSE_MIC_NO_PRESENCE),
+-	SND_PCI_QUIRK(0x1028, 0x082a, "Dell XPS 13 9360", ALC256_FIXUP_DELL_XPS_13_HEADPHONE_NOISE2),
+ 	SND_PCI_QUIRK(0x1028, 0x084b, "Dell", ALC274_FIXUP_DELL_AIO_LINEOUT_VERB),
+ 	SND_PCI_QUIRK(0x1028, 0x084e, "Dell", ALC274_FIXUP_DELL_AIO_LINEOUT_VERB),
+ 	SND_PCI_QUIRK(0x1028, 0x0871, "Dell Precision 3630", ALC255_FIXUP_DELL_HEADSET_MIC),
+@@ -7536,7 +7503,6 @@ static const struct hda_model_fixup alc2
+ 	{.id = ALC298_FIXUP_DELL1_MIC_NO_PRESENCE, .name = "alc298-dell1"},
+ 	{.id = ALC298_FIXUP_DELL_AIO_MIC_NO_PRESENCE, .name = "alc298-dell-aio"},
+ 	{.id = ALC275_FIXUP_DELL_XPS, .name = "alc275-dell-xps"},
+-	{.id = ALC256_FIXUP_DELL_XPS_13_HEADPHONE_NOISE, .name = "alc256-dell-xps13"},
+ 	{.id = ALC293_FIXUP_LENOVO_SPK_NOISE, .name = "lenovo-spk-noise"},
+ 	{.id = ALC233_FIXUP_LENOVO_LINE2_MIC_HOTKEY, .name = "lenovo-hotkey"},
+ 	{.id = ALC255_FIXUP_DELL_SPK_NOISE, .name = "dell-spk-noise"},
 
 
