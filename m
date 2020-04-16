@@ -2,101 +2,347 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8E48C2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 08:57:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7D39C2BB85
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 08:57:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6D29D2078B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 08:57:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A67D720784
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 08:57:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ANgZo75l"
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="SEl8P7G0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2503065AbgDPI5B (ORCPT
+        id S2503007AbgDPI51 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 04:57:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41196 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2502975AbgDPIyR (ORCPT
+        Thu, 16 Apr 2020 04:57:27 -0400
+Received: from lb1-smtp-cloud8.xs4all.net ([194.109.24.21]:33739 "EHLO
+        lb1-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2502539AbgDPIxh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 04:54:17 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 116C7C061A0C
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 01:54:11 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id a25so3913221wrd.0
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 01:54:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=6Gn7oXfoGCRvoMbfplo6Pb14LOH1Awil1DJDkiOGVDA=;
-        b=ANgZo75lCcjV734wSTxcu1rem1hvUQY9dUge/mBQetsuentv23rJlSRrGoYm+gKbnW
-         +1ppqgKe+wI7w8MMAm4UsgjLC7Sq5gRO5PbuQ/ZHGNzQVtiSA+gaLzKB3xv8oFPlXNGi
-         vZK82B9+TPzJtwaWEeoekqDyPy58ly5rewSxozAE11rbNCYy1e5f0p24l/167A75P8oQ
-         nSxd2un7HnOLt5z1GzMONG7FYv7GNpuHcgVXDmV4UZi8YeomQ6BQQvo81aMN0DPGG5EA
-         SVce1GKH/R6nfaaBJ/0psVsb+eOWca16adx0PRM2FiyuFteCkCiB8Hb/N9LYVsVixM8m
-         cyaQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=6Gn7oXfoGCRvoMbfplo6Pb14LOH1Awil1DJDkiOGVDA=;
-        b=rC1Y58929ISVsjbXWU1ajpBAc2Agl5lRbPr4IlYtVl8z/t9BkGLuDWVGqq84IkMPPU
-         BYVGqnKlGRw5flm6xgnq0R5oOi447E6cZDAWY7+vwbmww2hKGO7KaYmbxgz3YzRdTxiL
-         vnxXBQAiwa+CBwcXMEu2j/Re1q1froO1xrw0PsxpPQZgJyBIHY9sWMuT30NZnvyYM6IW
-         PzQXSIp6uAB/epH5uio2bzNHMdd9YnaVdU3By7NceUQ9yNZZSG9l4O1WGkufmfjseKf6
-         fs8+2zRpUclvdKjE5wWddabfF81BoFoqA2Al+/OLbyslGDVjmFIz8xHXTg3KJlGQpiD6
-         /NbA==
-X-Gm-Message-State: AGi0PubcmG/efMoB8fln5yfIlGxTwhTFxbdwOC2OZnwq8j/VcHV7NZ4q
-        xxibG6wWcUY1baEGAqjGpX4i2g==
-X-Google-Smtp-Source: APiQypK49a7tE2PU7rlG+OoBz58EGTIHngL7sj2g3M9u+J/luNQNGQV9Ak1+2qtK4eqbh7Dz8O6WwQ==
-X-Received: by 2002:a5d:60ca:: with SMTP id x10mr10505214wrt.407.1587027249479;
-        Thu, 16 Apr 2020 01:54:09 -0700 (PDT)
-Received: from google.com ([2a00:79e0:d:110:d6cc:2030:37c1:9964])
-        by smtp.gmail.com with ESMTPSA id k184sm2776749wmf.9.2020.04.16.01.54.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Apr 2020 01:54:08 -0700 (PDT)
-Date:   Thu, 16 Apr 2020 09:54:05 +0100
-From:   Quentin Perret <qperret@google.com>
-To:     Patrick Bellasi <patrick.bellasi@matbug.net>
-Cc:     Doug Anderson <dianders@chromium.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>, juri.lelli@redhat.com,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        dietmar.eggemann@arm.com, Steven Rostedt <rostedt@goodmis.org>,
-        Benjamin Segall <bsegall@google.com>, mgorman@suse.de,
-        ctheegal@codeaurora.org, valentin.schneider@arm.com,
-        qais.yousef@arm.com, LKML <linux-kernel@vger.kernel.org>,
-        kernel-team@android.com
-Subject: Re: [PATCH] sched/core: Fix reset-on-fork from RT with uclamp
-Message-ID: <20200416085405.GA215493@google.com>
-References: <20200414161320.251897-1-qperret@google.com>
- <CAD=FV=Vo4h43vS1K1+ziAJhQ3UG+Zrx8JN8Q1tkMWU1Oh6OavA@mail.gmail.com>
- <20200415082001.GA256573@google.com>
- <CAD=FV=UB7OZzQO46dV7KOHGqRkgbtaSgLfq55yddyx0L_e37Fg@mail.gmail.com>
- <20200415174718.GA30565@darkstar>
+        Thu, 16 Apr 2020 04:53:37 -0400
+Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
+        by smtp-cloud8.xs4all.net with ESMTPA
+        id P0H4jxyAClKa1P0H8jRAHU; Thu, 16 Apr 2020 10:53:34 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1587027214; bh=9WOEBGbhNWTWcb5wWzuotRMRLjvovmKy5rtSmeTedTE=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=SEl8P7G0mwLjPn9eWvjTiuFGw9iZ9bwnWPqwuuazeuv3r43hYnswxzm41g9wNxa+U
+         e4IUhAzkpkS66FA/oMPQLwd6ulJu0gQrVNuDwuKnXZpxKi6pKgQKLDVxdVlW5VRptK
+         GgjuG6WfoFAl+7fC0d8FkVoehar11oQ7rkKLj6oKFYJ+8UifmnS5vksGi76DjBCit6
+         cDsmB9DzHs9fsJCPsXEZgfzEblGtfIclWnliZuE4mylLk5Fa40aqW3vltCBLo1JOZB
+         EVMJc0P3GhX09ZY0eXIdLatoUJ8WbCLsmtHhtWZrriZckxav7p9OmZj8ZB9OmGJekx
+         k057i3p4wqpag==
+Subject: Re: [RFC][PATCH] media: v4l2-ctrls: add more NULL pointer checks
+To:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc:     Tomasz Figa <tfiga@chromium.org>, linux-media@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200410103501.1083-1-sergey.senozhatsky@gmail.com>
+From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Message-ID: <c83c137b-b801-a06b-e324-09dd3bbc9daf@xs4all.nl>
+Date:   Thu, 16 Apr 2020 10:53:30 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200415174718.GA30565@darkstar>
+In-Reply-To: <20200410103501.1083-1-sergey.senozhatsky@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfItyTbJnDaB/ZbLYq9psKWKGdq8VZJMWZrpzkMWGM3MDByU7HQUSBJPT+xx9RsksERX5vxKaNk8MaySiZ4I25tEZPj+5I8bLyDs59SPC0tQPCc1MZMDc
+ L8ZzLkp6GqUPRsqTPxhtL9doDwFst25nWB54a+CXavr2AqJXAknHGz/RxiP8lKdacuAx+zw54ZY3qMKXtmz4JLVav8CESRbZws/2pax5mNmF966wPIw7Nw/m
+ mcuy54Gp82EgRhJLdd/mtfSeHSZ/wsw+Yez7T2zKWdnX8yrn8SSSmuGnoQ373i6VwCJjIsLUDNCLj+llpEqsTMwEalry8tqy1fJGiOmyAO8=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wednesday 15 Apr 2020 at 19:47:18 (+0200), Patrick Bellasi wrote:
-> Honestly I was almost there to ask for the same cleanup. :)
+On 10/04/2020 12:35, Sergey Senozhatsky wrote:
+> A number of v4l2-ctrls functions gracefully handle NULL ctrl pointers,
+> for instance, v4l2_g_ctrl(), v4l2_ctrl_activate(), __v4l2_ctrl_grab()
+> to name a few. But not all of them. It is relatively easy to crash the
+> kernel with the NULL pointer dereference:
 > 
-> If you get rid of the useless variable we can go back to the exact
-> same code modified by the commit we are fixing, i.e. 1a00d999971c.
+> 	# modprobe vivid node_types=0x60000
+> 	$ v4l2-compliance
 > 
-> So, not strong opinions here too, but if it's not a big problem I
-> would post a cleaned up v2.
+> BUG: kernel NULL pointer dereference, address: 0000000000000020
+> PF: supervisor read access in kernel mode
+> PF: error_code(0x0000) - not-present page
+> PGD 0 P4D 0
+> Oops: 0000 [#1] SMP PTI
+> RIP: 0010:v4l2_ctrl_s_ctrl.isra.0+0x4/0x30 [vivid]
+> Call Trace:
+>  vidioc_s_input.cold+0x1a8/0x38d [vivid]
+>  __video_do_ioctl+0x372/0x3a0 [videodev]
+>  ? v4l_enumstd+0x20/0x20 [videodev]
+>  ? v4l_enumstd+0x20/0x20 [videodev]
+>  video_usercopy+0x1cb/0x450 [videodev]
+>  v4l2_ioctl+0x3f/0x50 [videodev]
+>  ksys_ioctl+0x3f1/0x7e0
+>  ? vfs_write+0x1c4/0x1f0
+>  __x64_sys_ioctl+0x11/0x20
+>  do_syscall_64+0x49/0x2c0
+>  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> 
+> vivid driver crashes the kernel in various places, for instance,
+> 
+> 	v4l2_ctrl_modify_range(dev->brightness, ...);
+> or
+> 	v4l2_ctrl_s_ctrl(dev->brightness, ...);
+> 
+> because ->brightness (and quite likely some more controls) is NULL.
+> While we may fix the vivid driver, it would be safer to fix core
+> API. This patch adds more NULL pointer checks to ctrl API.
+> 
+> Signed-off-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+> ---
+>  drivers/media/v4l2-core/v4l2-ctrls.c | 22 ++++++++++++++++-
+>  include/media/v4l2-ctrls.h           | 37 ++++++++++++++++++++++++++--
+>  2 files changed, 56 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/media/v4l2-core/v4l2-ctrls.c b/drivers/media/v4l2-core/v4l2-ctrls.c
+> index 93d33d1db4e8..02a60f67c2ee 100644
+> --- a/drivers/media/v4l2-core/v4l2-ctrls.c
+> +++ b/drivers/media/v4l2-core/v4l2-ctrls.c
+> @@ -2869,6 +2869,9 @@ EXPORT_SYMBOL(v4l2_ctrl_add_handler);
+>  
+>  bool v4l2_ctrl_radio_filter(const struct v4l2_ctrl *ctrl)
+>  {
+> +	if (WARN_ON(!ctrl))
+> +		return false;
+> +
+>  	if (V4L2_CTRL_ID2WHICH(ctrl->id) == V4L2_CTRL_CLASS_FM_TX)
+>  		return true;
+>  	if (V4L2_CTRL_ID2WHICH(ctrl->id) == V4L2_CTRL_CLASS_FM_RX)
+> @@ -3794,7 +3797,9 @@ s32 v4l2_ctrl_g_ctrl(struct v4l2_ctrl *ctrl)
+>  	struct v4l2_ext_control c;
+>  
+>  	/* It's a driver bug if this happens. */
+> -	WARN_ON(!ctrl->is_int);
+> +	if (WARN_ON(!ctrl || !ctrl->is_int))
+> +		return -EINVAL;
 
-Alright, that works for me. I'll send a v2 shortly.
+Just return 0 here. The return value is the control's value, not an error code.
+So all you can do here is return 0 in the absence of anything better.
 
-Thanks!
-Quentin
+> +
+>  	c.value = 0;
+>  	get_ctrl(ctrl, &c);
+>  	return c.value;
+> @@ -4212,6 +4217,9 @@ EXPORT_SYMBOL(v4l2_s_ctrl);
+>  
+>  int __v4l2_ctrl_s_ctrl(struct v4l2_ctrl *ctrl, s32 val)
+>  {
+> +	if (!ctrl)
+
+Change this to 'if (WARN_ON(!ctrl))'
+
+I don't think NULL pointers should be silently ignored: it really
+indicates a driver bug. It it certainly a good idea to WARN instead.
+
+The same is true for the functions below.
+
+That means that vivid should be fixed as well, but at least it should
+just WARN instead of crashing, that's certainly a good improvement.
+
+Regards,
+
+	Hans
+
+> +		return -EINVAL;
+> +
+>  	lockdep_assert_held(ctrl->handler->lock);
+>  
+>  	/* It's a driver bug if this happens. */
+> @@ -4223,6 +4231,9 @@ EXPORT_SYMBOL(__v4l2_ctrl_s_ctrl);
+>  
+>  int __v4l2_ctrl_s_ctrl_int64(struct v4l2_ctrl *ctrl, s64 val)
+>  {
+> +	if (!ctrl)
+> +		return -EINVAL;
+> +
+>  	lockdep_assert_held(ctrl->handler->lock);
+>  
+>  	/* It's a driver bug if this happens. */
+> @@ -4234,6 +4245,9 @@ EXPORT_SYMBOL(__v4l2_ctrl_s_ctrl_int64);
+>  
+>  int __v4l2_ctrl_s_ctrl_string(struct v4l2_ctrl *ctrl, const char *s)
+>  {
+> +	if (!ctrl)
+> +		return -EINVAL;
+> +
+>  	lockdep_assert_held(ctrl->handler->lock);
+>  
+>  	/* It's a driver bug if this happens. */
+> @@ -4246,6 +4260,9 @@ EXPORT_SYMBOL(__v4l2_ctrl_s_ctrl_string);
+>  int __v4l2_ctrl_s_ctrl_area(struct v4l2_ctrl *ctrl,
+>  			    const struct v4l2_area *area)
+>  {
+> +	if (!ctrl)
+> +		return -EINVAL;
+> +
+>  	lockdep_assert_held(ctrl->handler->lock);
+>  
+>  	/* It's a driver bug if this happens. */
+> @@ -4447,6 +4464,9 @@ int __v4l2_ctrl_modify_range(struct v4l2_ctrl *ctrl,
+>  	bool range_changed = false;
+>  	int ret;
+>  
+> +	if (!ctrl)
+> +		return -EINVAL;
+> +
+>  	lockdep_assert_held(ctrl->handler->lock);
+>  
+>  	switch (ctrl->type) {
+> diff --git a/include/media/v4l2-ctrls.h b/include/media/v4l2-ctrls.h
+> index 7db9e719a583..22d7ea500f96 100644
+> --- a/include/media/v4l2-ctrls.h
+> +++ b/include/media/v4l2-ctrls.h
+> @@ -755,6 +755,8 @@ int v4l2_ctrl_add_handler(struct v4l2_ctrl_handler *hdl,
+>   * transmitter class controls.
+>   *
+>   * This function is to be used with v4l2_ctrl_add_handler().
+> + *
+> + * Returns false if ctrl == NULL.
+>   */
+>  bool v4l2_ctrl_radio_filter(const struct v4l2_ctrl *ctrl);
+>  
+> @@ -884,7 +886,7 @@ static inline void v4l2_ctrl_grab(struct v4l2_ctrl *ctrl, bool grabbed)
+>   * @step value is interpreted as a menu_skip_mask.
+>   *
+>   * An error is returned if one of the range arguments is invalid for this
+> - * control type.
+> + * control type. Returns -EINVAL if ctrl == NULL.
+>   *
+>   * The caller is responsible for acquiring the control handler mutex on behalf
+>   * of __v4l2_ctrl_modify_range().
+> @@ -906,7 +908,7 @@ int __v4l2_ctrl_modify_range(struct v4l2_ctrl *ctrl,
+>   * @step value is interpreted as a menu_skip_mask.
+>   *
+>   * An error is returned if one of the range arguments is invalid for this
+> - * control type.
+> + * control type. Returns -EINVAL if ctrl == NULL.
+>   *
+>   * This function assumes that the control handler is not locked and will
+>   * take the lock itself.
+> @@ -916,6 +918,9 @@ static inline int v4l2_ctrl_modify_range(struct v4l2_ctrl *ctrl,
+>  {
+>  	int rval;
+>  
+> +	if (!ctrl)
+> +		return -EINVAL;
+> +
+>  	v4l2_ctrl_lock(ctrl);
+>  	rval = __v4l2_ctrl_modify_range(ctrl, min, max, step, def);
+>  	v4l2_ctrl_unlock(ctrl);
+> @@ -982,6 +987,8 @@ const s64 *v4l2_ctrl_get_int_menu(u32 id, u32 *len);
+>   * used from within the &v4l2_ctrl_ops functions.
+>   *
+>   * This function is for integer type controls only.
+> + *
+> + * Returns -EINVAL if ctrl == NULL.
+>   */
+>  s32 v4l2_ctrl_g_ctrl(struct v4l2_ctrl *ctrl);
+>  
+> @@ -996,6 +1003,8 @@ s32 v4l2_ctrl_g_ctrl(struct v4l2_ctrl *ctrl);
+>   * allowing it to be used from within the &v4l2_ctrl_ops functions.
+>   *
+>   * This function is for integer type controls only.
+> + *
+> + * Returns -EINVAL is ctrl == NULL.
+>   */
+>  int __v4l2_ctrl_s_ctrl(struct v4l2_ctrl *ctrl, s32 val);
+>  
+> @@ -1010,11 +1019,16 @@ int __v4l2_ctrl_s_ctrl(struct v4l2_ctrl *ctrl, s32 val);
+>   * used from within the &v4l2_ctrl_ops functions.
+>   *
+>   * This function is for integer type controls only.
+> + *
+> + * Return -EINVAL is ctrl == NULL.
+>   */
+>  static inline int v4l2_ctrl_s_ctrl(struct v4l2_ctrl *ctrl, s32 val)
+>  {
+>  	int rval;
+>  
+> +	if (!ctrl)
+> +		return -EINVAL;
+> +
+>  	v4l2_ctrl_lock(ctrl);
+>  	rval = __v4l2_ctrl_s_ctrl(ctrl, val);
+>  	v4l2_ctrl_unlock(ctrl);
+> @@ -1062,11 +1076,16 @@ int __v4l2_ctrl_s_ctrl_int64(struct v4l2_ctrl *ctrl, s64 val);
+>   * used from within the &v4l2_ctrl_ops functions.
+>   *
+>   * This function is for 64-bit integer type controls only.
+> + *
+> + * Returns -EINVAL if ctrl == NULL.
+>   */
+>  static inline int v4l2_ctrl_s_ctrl_int64(struct v4l2_ctrl *ctrl, s64 val)
+>  {
+>  	int rval;
+>  
+> +	if (!ctrl)
+> +		return -EINVAL;
+> +
+>  	v4l2_ctrl_lock(ctrl);
+>  	rval = __v4l2_ctrl_s_ctrl_int64(ctrl, val);
+>  	v4l2_ctrl_unlock(ctrl);
+> @@ -1085,6 +1104,8 @@ static inline int v4l2_ctrl_s_ctrl_int64(struct v4l2_ctrl *ctrl, s64 val)
+>   * allowing it to be used from within the &v4l2_ctrl_ops functions.
+>   *
+>   * This function is for string type controls only.
+> + *
+> + * Returns -EINVAL if ctrl == NULL.
+>   */
+>  int __v4l2_ctrl_s_ctrl_string(struct v4l2_ctrl *ctrl, const char *s);
+>  
+> @@ -1100,11 +1121,16 @@ int __v4l2_ctrl_s_ctrl_string(struct v4l2_ctrl *ctrl, const char *s);
+>   * used from within the &v4l2_ctrl_ops functions.
+>   *
+>   * This function is for string type controls only.
+> + *
+> + * Returns -EINVAL if ctrl == NULL.
+>   */
+>  static inline int v4l2_ctrl_s_ctrl_string(struct v4l2_ctrl *ctrl, const char *s)
+>  {
+>  	int rval;
+>  
+> +	if (!ctrl)
+> +		return -EINVAL;
+> +
+>  	v4l2_ctrl_lock(ctrl);
+>  	rval = __v4l2_ctrl_s_ctrl_string(ctrl, s);
+>  	v4l2_ctrl_unlock(ctrl);
+> @@ -1123,6 +1149,8 @@ static inline int v4l2_ctrl_s_ctrl_string(struct v4l2_ctrl *ctrl, const char *s)
+>   * allowing it to be used from within the &v4l2_ctrl_ops functions.
+>   *
+>   * This function is for area type controls only.
+> + *
+> + * Returns -EINVAL if ctrl == NULL.
+>   */
+>  int __v4l2_ctrl_s_ctrl_area(struct v4l2_ctrl *ctrl,
+>  			    const struct v4l2_area *area);
+> @@ -1139,12 +1167,17 @@ int __v4l2_ctrl_s_ctrl_area(struct v4l2_ctrl *ctrl,
+>   * used from within the &v4l2_ctrl_ops functions.
+>   *
+>   * This function is for area type controls only.
+> + *
+> + * Returns -EINVAL if ctrl == NULL.
+>   */
+>  static inline int v4l2_ctrl_s_ctrl_area(struct v4l2_ctrl *ctrl,
+>  					const struct v4l2_area *area)
+>  {
+>  	int rval;
+>  
+> +	if (!ctrl)
+> +		return -EINVAL;
+> +
+>  	v4l2_ctrl_lock(ctrl);
+>  	rval = __v4l2_ctrl_s_ctrl_area(ctrl, area);
+>  	v4l2_ctrl_unlock(ctrl);
+> 
+
