@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68E4DC2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:48:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31814C2BB85
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:48:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2871920732
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:48:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0941A214AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:48:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587052097;
-	bh=Gs1eguIB+STlCGpdeVeI2MCI/YDexRL4AJkRKfer9Ao=;
+	s=default; t=1587052102;
+	bh=aj+C3qty4HdDe8GL8geUEloqbIzbEgqKD6KeLaYq//Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LyPP0kro7soz34z+FylIEmr2tRNqvEthUvSvx1l0PaEkwbRQYRxCaG0+6yVdCEQWA
-	 9V9QJLE4MfJJy2afYGRgGfFVRyMu8Hr6bpLMqEUg9eb246MVnzHH1ETC8gW8Qw+5Nt
-	 jXhGIObcmuukQIbbqgxTYT2OIt8SiSBWYtJaAoH8=
+	b=xWkUZlGnz8Ypz7VtFO+5OO7OAq/omAcqIJ+REJLajcRDpaCFibBSKxgNwiH1WrUm1
+	 stoqeQJXacw8YJfsUX7MBmQQN/FbPQB4PUu7oAf62qwutsO7SBkXgvdWBHQXbLtoFq
+	 qQg4AaVBqMk9X0oFKgRlo5aao+ROFhUAe/mSifyc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2410587AbgDPPsP (ORCPT
+        id S2442555AbgDPPsT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:48:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44656 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 11:48:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44618 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2896712AbgDPNd1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:33:27 -0400
+        id S2896705AbgDPNdY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:33:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 567AE21D91;
-        Thu, 16 Apr 2020 13:33:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EB6B2221F4;
+        Thu, 16 Apr 2020 13:33:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044005;
-        bh=Gs1eguIB+STlCGpdeVeI2MCI/YDexRL4AJkRKfer9Ao=;
+        s=default; t=1587044003;
+        bh=aj+C3qty4HdDe8GL8geUEloqbIzbEgqKD6KeLaYq//Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PeeKLvCM1D7qsEeOVkprgOV5qaZzJuVT+vrBRUkU18E8OMVS+lFeRhjk8mTVcVkdw
-         K5cNyCFFLpVYzqy5gDqBqY5dpueR+uKA5bbX1fi/kTrTBlwCb728u+Mfz32ExLjvrJ
-         UFbScpuuPrF21MPk7Fr4FUImCDB8NG7aoS9tttrU=
+        b=F6U7pDi+wQ1qISrUK0D2oFVALag4ePJm0DY5H98aKs3O66VnRbxzsmX+1g3UAIm5h
+         u6PCFUGVFmmRHqBSOhQKG1e8NpZPAY04SeRPbd78TzClOpravzvRCr2kbTJoPOoXlq
+         FiXX0AjPlZRgtoNs8rUmR+9Ic166OQcvX38xicqU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Mathias Nyman <mathias.nyman@linux.intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 043/257] ACPI: EC: Do not clear boot_ec_is_ecdt in acpi_ec_add()
-Date:   Thu, 16 Apr 2020 15:21:34 +0200
-Message-Id: <20200416131331.318536376@linuxfoundation.org>
+Subject: [PATCH 5.5 042/257] xhci: bail out early if driver cant accress host in resume
+Date:   Thu, 16 Apr 2020 15:21:33 +0200
+Message-Id: <20200416131331.200370170@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.891903893@linuxfoundation.org>
 References: <20200416131325.891903893@linuxfoundation.org>
@@ -60,56 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+From: Mathias Nyman <mathias.nyman@linux.intel.com>
 
-[ Upstream commit 65a691f5f8f0bb63d6a82eec7b0ffd193d8d8a5f ]
+[ Upstream commit 72ae194704da212e2ec312ab182a96799d070755 ]
 
-The reason for clearing boot_ec_is_ecdt in acpi_ec_add() (if a
-PNP0C09 device object matching the ECDT boot EC had been found in
-the namespace) was to cause acpi_ec_ecdt_start() to return early,
-but since the latter does not look at boot_ec_is_ecdt any more,
-acpi_ec_add() need not clear it.
+Bail out early if the xHC host needs to be reset at resume
+but driver can't access xHC PCI registers.
 
-Moreover, doing that may be confusing as it may cause "DSDT" to be
-printed instead of "ECDT" in the EC initialization completion
-message, so stop doing it.
+If xhci driver already fails to reset the controller then there
+is no point in attempting to free, re-initialize, re-allocate and
+re-start the host. If failure to access the host is detected later,
+failing the resume, xhci interrupts will be double freed
+when remove is called.
 
-While at it, split the EC initialization completion message into
-two messages, one regarding the boot EC and another one printed
-regardless of whether or not the EC at hand is the boot one.
-
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
+Link: https://lore.kernel.org/r/20200312144517.1593-2-mathias.nyman@linux.intel.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/acpi/ec.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/usb/host/xhci.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/acpi/ec.c b/drivers/acpi/ec.c
-index bd74c78366759..f351d0711e495 100644
---- a/drivers/acpi/ec.c
-+++ b/drivers/acpi/ec.c
-@@ -1649,7 +1649,6 @@ static int acpi_ec_add(struct acpi_device *device)
+diff --git a/drivers/usb/host/xhci.c b/drivers/usb/host/xhci.c
+index dbac0fa9748d5..fe38275363e0f 100644
+--- a/drivers/usb/host/xhci.c
++++ b/drivers/usb/host/xhci.c
+@@ -1157,8 +1157,10 @@ int xhci_resume(struct xhci_hcd *xhci, bool hibernated)
+ 		xhci_dbg(xhci, "Stop HCD\n");
+ 		xhci_halt(xhci);
+ 		xhci_zero_64b_regs(xhci);
+-		xhci_reset(xhci);
++		retval = xhci_reset(xhci);
+ 		spin_unlock_irq(&xhci->lock);
++		if (retval)
++			return retval;
+ 		xhci_cleanup_msix(xhci);
  
- 		if (boot_ec && ec->command_addr == boot_ec->command_addr &&
- 		    ec->data_addr == boot_ec->data_addr) {
--			boot_ec_is_ecdt = false;
- 			/*
- 			 * Trust PNP0C09 namespace location rather than
- 			 * ECDT ID. But trust ECDT GPE rather than _GPE
-@@ -1669,9 +1668,12 @@ static int acpi_ec_add(struct acpi_device *device)
- 
- 	if (ec == boot_ec)
- 		acpi_handle_info(boot_ec->handle,
--				 "Boot %s EC used to handle transactions and events\n",
-+				 "Boot %s EC initialization complete\n",
- 				 boot_ec_is_ecdt ? "ECDT" : "DSDT");
- 
-+	acpi_handle_info(ec->handle,
-+			 "EC: Used to handle transactions and events\n");
-+
- 	device->driver_data = ec;
- 
- 	ret = !!request_region(ec->data_addr, 1, "EC data");
+ 		xhci_dbg(xhci, "// Disabling event ring interrupts\n");
 -- 
 2.20.1
 
