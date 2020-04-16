@@ -2,54 +2,54 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 714CEC2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:46:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B07AC38A2B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:46:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 485C1214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:46:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B02222244
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:46:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587051973;
-	bh=2HQMgSD8zk24QsegPUAFIIO7A20ZhErArpd+prKe6pY=;
+	s=default; t=1587051982;
+	bh=WtyTCRlFyMzJAkJbuvSlHht8TZrezfj5ottSM/w2hRY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dj/u+25oTaTrFKkFt7zr30XU14//xJRK0uzHBV63FhJmR8mgCuyTX7+xC+A81V3fq
-	 PMKwdvKIdJypMvllohttzfRxjD5FNbznff7mpK0ydA5H6vz/qUFMnBsqrtBMSbTNi9
-	 aMVo4SL4XAREyvG97DI46eljLlxK8fHuLnmcrdDg=
+	b=Ah4f7Aw6uGIM5aEo5Z0zx4rWK2iR/m23dhh16wB8O+pR4Tyd9VViojKy8vpT2vgDs
+	 mOCVOysRvKAIRyEZWEzzKjmmIJXPhy89/meTSyEJV6hFRy828Pm68Bm+D9m65ZkcaH
+	 6F/HdxzjEF3FjZOBfXgvB4bA781f0aIXgndObwgk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2441931AbgDPPqM (ORCPT
+        id S2896451AbgDPNeh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:46:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46270 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 09:34:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38674 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2896980AbgDPNem (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:34:42 -0400
+        id S2895946AbgDPN3H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:29:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 78E5C208E4;
-        Thu, 16 Apr 2020 13:34:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4F2F1217D8;
+        Thu, 16 Apr 2020 13:29:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044081;
-        bh=2HQMgSD8zk24QsegPUAFIIO7A20ZhErArpd+prKe6pY=;
+        s=default; t=1587043746;
+        bh=WtyTCRlFyMzJAkJbuvSlHht8TZrezfj5ottSM/w2hRY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=z5k1p0OdvrbrBbtA2jX5fv5hHRsaM6JZeDnFhEqSge0gRg+C8P5PEugPuc+AiOltY
-         2wgeb7gTslDmxsnUi/V6o2of5CUAhrVqgWivYXIYKgtRK2gUT6cL3wPoFV60nk0uy4
-         YvzECKjyXd23k07P+pyISTPr7hxGeFX3jwDHhpCg=
+        b=sU3Un7XsYcIDGlz/TEcJ+RC5Kl1IFUUfidUIeo0X3EkHE5X/me+0aWA4DJkhMp85U
+         5p8lJCesLgLZPMEc/JlEkz+bEilKXoGyGYQr75R6qh6Hi1jOfgkhlIUQLxuF/K3eP6
+         tstpR170yZRnQzDIZcegxgV7W+Jw3lcCEetnsudE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 071/257] irqchip/gic-v4: Provide irq_retrigger to avoid circular locking dependency
-Date:   Thu, 16 Apr 2020 15:22:02 +0200
-Message-Id: <20200416131334.801562236@linuxfoundation.org>
+        stable@vger.kernel.org, Remi Pommarel <repk@triplefau.lt>,
+        Kalle Valo <kvalo@codeaurora.org>
+Subject: [PATCH 4.19 076/146] ath9k: Handle txpower changes even when TPC is disabled
+Date:   Thu, 16 Apr 2020 15:23:37 +0200
+Message-Id: <20200416131253.328364379@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200416131325.891903893@linuxfoundation.org>
-References: <20200416131325.891903893@linuxfoundation.org>
+In-Reply-To: <20200416131242.353444678@linuxfoundation.org>
+References: <20200416131242.353444678@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -59,145 +59,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marc Zyngier <maz@kernel.org>
+From: Remi Pommarel <repk@triplefau.lt>
 
-[ Upstream commit 7809f7011c3bce650e502a98afeb05961470d865 ]
+commit 968ae2caad0782db5dbbabb560d3cdefd2945d38 upstream.
 
-On a very heavily loaded D05 with GICv4, I managed to trigger the
-following lockdep splat:
+When TPC is disabled IEEE80211_CONF_CHANGE_POWER event can be handled to
+reconfigure HW's maximum txpower.
 
-[ 6022.598864] ======================================================
-[ 6022.605031] WARNING: possible circular locking dependency detected
-[ 6022.611200] 5.6.0-rc4-00026-geee7c7b0f498 #680 Tainted: G            E
-[ 6022.618061] ------------------------------------------------------
-[ 6022.624227] qemu-system-aar/7569 is trying to acquire lock:
-[ 6022.629789] ffff042f97606808 (&p->pi_lock){-.-.}, at: try_to_wake_up+0x54/0x7a0
-[ 6022.637102]
-[ 6022.637102] but task is already holding lock:
-[ 6022.642921] ffff002fae424cf0 (&irq_desc_lock_class){-.-.}, at: __irq_get_desc_lock+0x5c/0x98
-[ 6022.651350]
-[ 6022.651350] which lock already depends on the new lock.
-[ 6022.651350]
-[ 6022.659512]
-[ 6022.659512] the existing dependency chain (in reverse order) is:
-[ 6022.666980]
-[ 6022.666980] -> #2 (&irq_desc_lock_class){-.-.}:
-[ 6022.672983]        _raw_spin_lock_irqsave+0x50/0x78
-[ 6022.677848]        __irq_get_desc_lock+0x5c/0x98
-[ 6022.682453]        irq_set_vcpu_affinity+0x40/0xc0
-[ 6022.687236]        its_make_vpe_non_resident+0x6c/0xb8
-[ 6022.692364]        vgic_v4_put+0x54/0x70
-[ 6022.696273]        vgic_v3_put+0x20/0xd8
-[ 6022.700183]        kvm_vgic_put+0x30/0x48
-[ 6022.704182]        kvm_arch_vcpu_put+0x34/0x50
-[ 6022.708614]        kvm_sched_out+0x34/0x50
-[ 6022.712700]        __schedule+0x4bc/0x7f8
-[ 6022.716697]        schedule+0x50/0xd8
-[ 6022.720347]        kvm_arch_vcpu_ioctl_run+0x5f0/0x978
-[ 6022.725473]        kvm_vcpu_ioctl+0x3d4/0x8f8
-[ 6022.729820]        ksys_ioctl+0x90/0xd0
-[ 6022.733642]        __arm64_sys_ioctl+0x24/0x30
-[ 6022.738074]        el0_svc_common.constprop.3+0xa8/0x1e8
-[ 6022.743373]        do_el0_svc+0x28/0x88
-[ 6022.747198]        el0_svc+0x14/0x40
-[ 6022.750761]        el0_sync_handler+0x124/0x2b8
-[ 6022.755278]        el0_sync+0x140/0x180
-[ 6022.759100]
-[ 6022.759100] -> #1 (&rq->lock){-.-.}:
-[ 6022.764143]        _raw_spin_lock+0x38/0x50
-[ 6022.768314]        task_fork_fair+0x40/0x128
-[ 6022.772572]        sched_fork+0xe0/0x210
-[ 6022.776484]        copy_process+0x8c4/0x18d8
-[ 6022.780742]        _do_fork+0x88/0x6d8
-[ 6022.784478]        kernel_thread+0x64/0x88
-[ 6022.788563]        rest_init+0x30/0x270
-[ 6022.792390]        arch_call_rest_init+0x14/0x1c
-[ 6022.796995]        start_kernel+0x498/0x4c4
-[ 6022.801164]
-[ 6022.801164] -> #0 (&p->pi_lock){-.-.}:
-[ 6022.806382]        __lock_acquire+0xdd8/0x15c8
-[ 6022.810813]        lock_acquire+0xd0/0x218
-[ 6022.814896]        _raw_spin_lock_irqsave+0x50/0x78
-[ 6022.819761]        try_to_wake_up+0x54/0x7a0
-[ 6022.824018]        wake_up_process+0x1c/0x28
-[ 6022.828276]        wakeup_softirqd+0x38/0x40
-[ 6022.832533]        __tasklet_schedule_common+0xc4/0xf0
-[ 6022.837658]        __tasklet_schedule+0x24/0x30
-[ 6022.842176]        check_irq_resend+0xc8/0x158
-[ 6022.846609]        irq_startup+0x74/0x128
-[ 6022.850606]        __enable_irq+0x6c/0x78
-[ 6022.854602]        enable_irq+0x54/0xa0
-[ 6022.858431]        its_make_vpe_non_resident+0xa4/0xb8
-[ 6022.863557]        vgic_v4_put+0x54/0x70
-[ 6022.867469]        kvm_arch_vcpu_blocking+0x28/0x38
-[ 6022.872336]        kvm_vcpu_block+0x48/0x490
-[ 6022.876594]        kvm_handle_wfx+0x18c/0x310
-[ 6022.880938]        handle_exit+0x138/0x198
-[ 6022.885022]        kvm_arch_vcpu_ioctl_run+0x4d4/0x978
-[ 6022.890148]        kvm_vcpu_ioctl+0x3d4/0x8f8
-[ 6022.894494]        ksys_ioctl+0x90/0xd0
-[ 6022.898317]        __arm64_sys_ioctl+0x24/0x30
-[ 6022.902748]        el0_svc_common.constprop.3+0xa8/0x1e8
-[ 6022.908046]        do_el0_svc+0x28/0x88
-[ 6022.911871]        el0_svc+0x14/0x40
-[ 6022.915434]        el0_sync_handler+0x124/0x2b8
-[ 6022.919951]        el0_sync+0x140/0x180
-[ 6022.923773]
-[ 6022.923773] other info that might help us debug this:
-[ 6022.923773]
-[ 6022.931762] Chain exists of:
-[ 6022.931762]   &p->pi_lock --> &rq->lock --> &irq_desc_lock_class
-[ 6022.931762]
-[ 6022.942101]  Possible unsafe locking scenario:
-[ 6022.942101]
-[ 6022.948007]        CPU0                    CPU1
-[ 6022.952523]        ----                    ----
-[ 6022.957039]   lock(&irq_desc_lock_class);
-[ 6022.961036]                                lock(&rq->lock);
-[ 6022.966595]                                lock(&irq_desc_lock_class);
-[ 6022.973109]   lock(&p->pi_lock);
-[ 6022.976324]
-[ 6022.976324]  *** DEADLOCK ***
+This fixes 0dBm txpower setting when user attaches to an interface for
+the first time with the following scenario:
 
-This is happening because we have a pending doorbell that requires
-retrigger. As SW retriggering is done in a tasklet, we trigger the
-circular dependency above.
+ieee80211_do_open()
+    ath9k_add_interface()
+        ath9k_set_txpower() /* Set TX power with not yet initialized
+                               sc->hw->conf.power_level */
 
-The easy cop-out is to provide a retrigger callback that doesn't
-require acquiring any extra lock.
+    ieee80211_hw_config() /* Iniatilize sc->hw->conf.power_level and
+                             raise IEEE80211_CONF_CHANGE_POWER */
 
-Signed-off-by: Marc Zyngier <maz@kernel.org>
-Link: https://lore.kernel.org/r/20200310184921.23552-5-maz@kernel.org
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+    ath9k_config() /* IEEE80211_CONF_CHANGE_POWER is ignored */
+
+This issue can be reproduced with the following:
+
+  $ modprobe -r ath9k
+  $ modprobe ath9k
+  $ wpa_supplicant -i wlan0 -c /tmp/wpa.conf &
+  $ iw dev /* Here TX power is either 0 or 3 depending on RF chain */
+  $ killall wpa_supplicant
+  $ iw dev /* TX power goes back to calibrated value and subsequent
+              calls will be fine */
+
+Fixes: 283dd11994cde ("ath9k: add per-vif TX power capability")
+Cc: stable@vger.kernel.org
+Signed-off-by: Remi Pommarel <repk@triplefau.lt>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/irqchip/irq-gic-v3-its.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/net/wireless/ath/ath9k/main.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
-index 50f89056c16bb..8c757a125a55d 100644
---- a/drivers/irqchip/irq-gic-v3-its.c
-+++ b/drivers/irqchip/irq-gic-v3-its.c
-@@ -3142,12 +3142,18 @@ static int its_vpe_set_irqchip_state(struct irq_data *d,
- 	return 0;
- }
+--- a/drivers/net/wireless/ath/ath9k/main.c
++++ b/drivers/net/wireless/ath/ath9k/main.c
+@@ -1457,6 +1457,9 @@ static int ath9k_config(struct ieee80211
+ 		ath_chanctx_set_channel(sc, ctx, &hw->conf.chandef);
+ 	}
  
-+static int its_vpe_retrigger(struct irq_data *d)
-+{
-+	return !its_vpe_set_irqchip_state(d, IRQCHIP_STATE_PENDING, true);
-+}
++	if (changed & IEEE80211_CONF_CHANGE_POWER)
++		ath9k_set_txpower(sc, NULL);
 +
- static struct irq_chip its_vpe_irq_chip = {
- 	.name			= "GICv4-vpe",
- 	.irq_mask		= its_vpe_mask_irq,
- 	.irq_unmask		= its_vpe_unmask_irq,
- 	.irq_eoi		= irq_chip_eoi_parent,
- 	.irq_set_affinity	= its_vpe_set_affinity,
-+	.irq_retrigger		= its_vpe_retrigger,
- 	.irq_set_irqchip_state	= its_vpe_set_irqchip_state,
- 	.irq_set_vcpu_affinity	= its_vpe_set_vcpu_affinity,
- };
--- 
-2.20.1
-
+ 	mutex_unlock(&sc->mutex);
+ 	ath9k_ps_restore(sc);
+ 
 
 
