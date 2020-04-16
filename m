@@ -2,94 +2,181 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1619C3815B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:59:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 650C9C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:59:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC66F22245
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:59:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587052753;
-	bh=8PpGL1xkqmeHJ2Vira44+EEkc2xrM5AF6XsNGJQaXU4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OfxI/+3AnxFBBbNeQWa+cps7KvPuxB+spSQCMAI1Lhs8QT6+IYMwcxn6z5ttaFfxK
-	 7euZ3F0Bwx4/SVsum3YLVqp3rpuYrwJ4KvwJbaya/CQKbO6iByLTocWvQAVBbsJohY
-	 0fSU4eMBV6fqYgNHBce9FwRInT7KUEJ3aRowW790=
+	by mail.kernel.org (Postfix) with ESMTP id 44FA4214AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:59:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MGeTnGvI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2895702AbgDPN2N (ORCPT
+        id S2896590AbgDPP7U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 09:28:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35370 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2895347AbgDPN1F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:27:05 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B2687206E9;
-        Thu, 16 Apr 2020 13:27:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587043625;
-        bh=8PpGL1xkqmeHJ2Vira44+EEkc2xrM5AF6XsNGJQaXU4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EHsY3ZgYbacBT58OVUeQTP/5PI+73WXJp7u3i82LAq/qIqJQyHq8LsP1z/p08zQEs
-         0sNJUgobenWBcy6KfPrPBB9XSRqfLmo8TLajnXvxVMD5F83onBM9JkFlyNITBz9hiK
-         lWs9gHQyiUndNaOzW1qri+9oITszwPpAnh5TCchg=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Raju Rangoju <rajur@chelsio.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 007/146] cxgb4/ptp: pass the sign of offset delta in FW CMD
-Date:   Thu, 16 Apr 2020 15:22:28 +0200
-Message-Id: <20200416131243.507556526@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200416131242.353444678@linuxfoundation.org>
-References: <20200416131242.353444678@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Thu, 16 Apr 2020 11:59:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51062 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2896089AbgDPP7A (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 11:59:00 -0400
+Received: from mail-oi1-x241.google.com (mail-oi1-x241.google.com [IPv6:2607:f8b0:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23B5FC061A0C
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 08:59:00 -0700 (PDT)
+Received: by mail-oi1-x241.google.com with SMTP id t199so13578171oif.7
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 08:59:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=RKkzesvk5cYfKkW+cuVfyJJ4B3TfqgCX4qySMMGKGlg=;
+        b=MGeTnGvI/2k6bxRBviIyd1LSkMZNOawQBC63cTOw3eNT0E2cqiGkqP5WM1LyY9cMCd
+         O8yJOXkdTY9vlwgcQZEdCBZkjsiMs3JQEKv/w07/loPznlTIv0qQfB+83EaslJL1jHkk
+         QH0H/Oka1VIrsQPXERMd/sv/kAn1gX1q4CJAHf8eRMVOIBks6PtE+Pks7rIMGXpx+kdr
+         gm+GETzmhGS5ichB041ZwaGZFAxNB4gCONZf2UN1wWrfDm+u6Jo6rrQ3HgGJaQNta4yz
+         Oyg+mE8xJ43OI3nc5YKILs3NLr2uH1ld2+XpCXKn0sHlE3V5pdNa7vaex7HxtTiNbdU5
+         YI8w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=RKkzesvk5cYfKkW+cuVfyJJ4B3TfqgCX4qySMMGKGlg=;
+        b=KjcAGPdSFXh9/fKvaNf/GSsgsVjpp9tOTEJDXTRhFn6R1WcEYEqBW+ulTDbVAYbTve
+         +9AYP1o4/MChVukN36+iNErV6EcTC/Uc71r3S9qvVgj3oVgAzaeu+9lOvfbk3bLlUzD5
+         6wGT8TmBEZTNVM+YTLvIB7qC615fHh7VqoKIV7Ar700VC6JyUtrdvMj6Ytgh1IxTAbaG
+         52Lq/fdMxwcoe2wkuGaTpwTb63OzbViwAMaVUg7a3FpzMzXhV/pGzO3H0vv6rHOslwhA
+         LjUW8NGB11Z6Fe4nS5DbPjSXKtaf5UKRx/IFqh+YIP9kZJY7XLBWukZ60QitCIggz1M8
+         KTug==
+X-Gm-Message-State: AGi0PuaV1QQ8u/s11wneXWJLHhhjCSJ7qFjWu2t1Ud7jAU6DDRPBgyQS
+        7Mv7HpahKh1xKLIBSIUWEAhn3YD2AXUI+6mGaNmaLQ==
+X-Google-Smtp-Source: APiQypL37Ygn1cZS2h8rp5duKkw4wQjuaqjVXMf73uWNup7h9A6Akm1TUOoiCtGtBN76Q4Q8+Bnc9jARMpQqUlQlZIA=
+X-Received: by 2002:aca:56c2:: with SMTP id k185mr3169314oib.141.1587052739351;
+ Thu, 16 Apr 2020 08:58:59 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20200415210512.805-1-valentin.schneider@arm.com>
+ <20200415210512.805-10-valentin.schneider@arm.com> <CAKfTPtBDGzrvG=YhjBZBEgfx5EtM-rTC-dWX5phqh4bOY5XqgA@mail.gmail.com>
+ <jhj4ktjpw2z.mognet@arm.com> <d508a6a5-c04f-087f-8767-6fb397b70055@arm.com>
+ <CAKfTPtD5x_NQ1KfHhTiAR3eNA85+k13nfSR-9_PKLp6FgVu08A@mail.gmail.com> <jhjv9lz78nv.mognet@arm.com>
+In-Reply-To: <jhjv9lz78nv.mognet@arm.com>
+From:   Vincent Guittot <vincent.guittot@linaro.org>
+Date:   Thu, 16 Apr 2020 17:58:47 +0200
+Message-ID: <CAKfTPtDFD7KMcSK-2_LP-_APN2m05pWVhzKvJOVnD+Nacn846w@mail.gmail.com>
+Subject: Re: [PATCH v3 9/9] sched/topology: Define and use shortcut pointers
+ for wakeup sd_flag scan
+To:     Valentin Schneider <valentin.schneider@arm.com>
+Cc:     Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Raju Rangoju <rajur@chelsio.com>
+On Thu, 16 Apr 2020 at 17:27, Valentin Schneider
+<valentin.schneider@arm.com> wrote:
+>
+>
+> On 16/04/20 14:36, Vincent Guittot wrote:
+> >> Coming back to the v2 discussion on this patch
+> >>
+> >> https://lore.kernel.org/r/20200311181601.18314-10-valentin.schneider@arm.com
+> >>
+> >> SD_BALANCE_WAKE is not used in mainline anymore, so wakeups are always
+> >> fast today.
+> >>
+> >> I.e. you wouldn't need a per_cpu(sd_balance_wake, cpu) since it's always
+> >> NULL.
+> >>
+> >> I.e. want_affine logic and the 'for_each_domain(cpu, tmp)' isn't needed
+> >> anymore.
+> >>
+> >> This will dramatically simplify the code in select_task_rq_fair().
+> >>
+> >> But I guess Vincent wants to keep the functionality so we're able to
+> >> enable SD_BALANCE_WAKE on certain sd's?
+> >
+> > I looked too quickly what was done by this patch. I thought that it
+> > was adding a per_cpu pointer for all cases including the fast path
+> > with wake affine but it only skips the for_each_domain loop for the
+> > slow paths which don't need it because they are already slow.
+> >
+> > It would be better to keep the for_each_domain loop for slow paths and
+> > to use a per_cpu pointer for fast_path/wake affine. Regarding the
+> > wake_affine path, we don't really care about looping all domains and
+> > we could directly use the highest domain because wake_affine() that is
+> > used in the loop, only uses the imbalance_pct of the sched domain for
+> > wake_affine_weight() and it should not harm to use only the highest
+> > domain and then select_idle_sibling doesn't use it but the llc or
+> > asym_capacity pointer instead.
+>
+> So Dietmar's pointing out that sd will always be NULL for want_affine,
+> because want_affine can only be true at wakeups and we don't have any
+> topologies with SD_BALANCE_WAKE anymore. We would still want to call
+> wake_affine() though, because that can change new_cpu.
+>
+> What you are adding on top is that the only sd field used in wake_affine()
+> is the imbalance_pct, so we could take a shortcut and just go for the
+> highest domain with SD_WAKE_AFFINE; i.e. something like this:
+>
+> ---
+> if (want_affine) {
+>         // We can cache that at topology buildup
+>         sd = highest_flag_domain(cpu, SD_WAKE_AFFINE);
 
-[ Upstream commit 50e0d28d3808146cc19b0d5564ef4ba9e5bf3846 ]
+Yes and this one should be cached at topology buildup
 
-cxgb4_ptp_fineadjtime() doesn't pass the signedness of offset delta
-in FW_PTP_CMD. Fix it by passing correct sign.
+>
+>         if (cpumask_test_cpu(prev_cpu, sched_domain_span(sd) &&
+>             cpu != prev_cpu)
+>                 new_cpu = wake_affine();
+>
+>         // Directly go to select_idle_sibling()
+>         goto sis;
+> }
+>
+> // !want_affine logic here
+> ---
+>
+> As for the !want_affine part, we could either keep the current domain walk
+> (IIUC this is what you are suggesting) or go for the extra cached pointers
+> I'm introducing.
+>
+> Now if we are a bit bolder than that, because there are no more
+> (mainline) topologies w/ SD_BALANCE_WAKE, we could even turn the above
+> into:
+>
+> ---
+> if (wake_flags & WF_TTWU) {
+>         if (want_affine) {
+>                 // We can cache that at topology buildup
+>                 sd = highest_flag_domain(cpu, SD_WAKE_AFFINE);
+>
+>                 if (cpumask_test_cpu(prev_cpu, sched_domain_span(sd) &&
+>                     cpu != prev_cpu)
+>                         new_cpu = wake_affine();
+>
+>         }
+>         // Directly go to select_idle_sibling()
+>         goto sis;
+> }
+>
+> // !want_affine logic here
+> ---
+>
+> This in turns mean we could get rid of SD_BALANCE_WAKE entirely... I'm a
+> bit more reluctant to that only because the last SD_BALANCE_WAKE setter was
 
-Signed-off-by: Raju Rangoju <rajur@chelsio.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/net/ethernet/chelsio/cxgb4/cxgb4_ptp.c | 3 +++
- 1 file changed, 3 insertions(+)
+For now, we should probably skip the additional test above: "if
+(wake_flags & WF_TTWU) {" and keep SD_BALANCE_WAKE so we will continue
+to loop in case of !want_affine.
 
-diff --git a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_ptp.c b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_ptp.c
-index 9f9d6cae39d55..758f2b8363282 100644
---- a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_ptp.c
-+++ b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_ptp.c
-@@ -246,6 +246,9 @@ static int  cxgb4_ptp_fineadjtime(struct adapter *adapter, s64 delta)
- 			     FW_PTP_CMD_PORTID_V(0));
- 	c.retval_len16 = cpu_to_be32(FW_CMD_LEN16_V(sizeof(c) / 16));
- 	c.u.ts.sc = FW_PTP_SC_ADJ_FTIME;
-+	c.u.ts.sign = (delta < 0) ? 1 : 0;
-+	if (delta < 0)
-+		delta = -delta;
- 	c.u.ts.tm = cpu_to_be64(delta);
- 
- 	err = t4_wr_mbox(adapter, adapter->mbox, &c, sizeof(c), NULL);
--- 
-2.20.1
+We can imagine that we might want at the end to be a bit more smart
+for SD_BALANCE_WAKE and the slow path... like with the latency nice
+proposal and latency-nice=19 as a example
 
-
-
+> removed fairly recently, see
+>   a526d466798d ("sched/topology: Remove SD_BALANCE_WAKE on asymmetric capacity systems")
