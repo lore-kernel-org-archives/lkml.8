@@ -2,175 +2,143 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78CACC2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:36:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69307C2BB85
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:36:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5C21C21D7E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:36:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47B7021D94
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:36:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fE2lTEaq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391498AbgDPOgX (ORCPT
+        id S2393800AbgDPOgk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:36:23 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:41976 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728386AbgDPOgN (ORCPT
+        Thu, 16 Apr 2020 10:36:40 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:24085 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390697AbgDPOOM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 10:36:13 -0400
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03GEY9Ow119503;
-        Thu, 16 Apr 2020 10:35:51 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30er1uat0n-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 16 Apr 2020 10:35:51 -0400
-Received: from m0098417.ppops.net (m0098417.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 03GEYInN120080;
-        Thu, 16 Apr 2020 10:35:51 -0400
-Received: from ppma03wdc.us.ibm.com (ba.79.3fa9.ip4.static.sl-reverse.com [169.63.121.186])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30er1uat09-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 16 Apr 2020 10:35:51 -0400
-Received: from pps.filterd (ppma03wdc.us.ibm.com [127.0.0.1])
-        by ppma03wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 03GEZ9R6014158;
-        Thu, 16 Apr 2020 14:35:50 GMT
-Received: from b01cxnp23034.gho.pok.ibm.com (b01cxnp23034.gho.pok.ibm.com [9.57.198.29])
-        by ppma03wdc.us.ibm.com with ESMTP id 30b5h6tv09-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 16 Apr 2020 14:35:50 +0000
-Received: from b01ledav004.gho.pok.ibm.com (b01ledav004.gho.pok.ibm.com [9.57.199.109])
-        by b01cxnp23034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03GEZniB44827120
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 16 Apr 2020 14:35:49 GMT
-Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 506E6112061;
-        Thu, 16 Apr 2020 14:35:48 +0000 (GMT)
-Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id DBF8A112062;
-        Thu, 16 Apr 2020 14:35:47 +0000 (GMT)
-Received: from cpe-172-100-172-46.stny.res.rr.com (unknown [9.85.128.208])
-        by b01ledav004.gho.pok.ibm.com (Postfix) with ESMTP;
-        Thu, 16 Apr 2020 14:35:47 +0000 (GMT)
-Subject: Re: [PATCH v7 03/15] s390/zcrypt: driver callback to indicate
- resource in use
-To:     Cornelia Huck <cohuck@redhat.com>
-Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, freude@linux.ibm.com, borntraeger@de.ibm.com,
-        mjrosato@linux.ibm.com, pmorel@linux.ibm.com, pasic@linux.ibm.com,
-        alex.williamson@redhat.com, kwankhede@nvidia.com,
-        jjherne@linux.ibm.com, fiuczy@linux.ibm.com
-References: <20200407192015.19887-1-akrowiak@linux.ibm.com>
- <20200407192015.19887-4-akrowiak@linux.ibm.com>
- <20200414140838.54f777b8.cohuck@redhat.com>
- <0f193571-1ff6-08f3-d02d-b4f40d2930c8@linux.ibm.com>
- <20200416120544.053b38d8.cohuck@redhat.com>
-From:   Tony Krowiak <akrowiak@linux.ibm.com>
-Message-ID: <78116a88-7571-1ac9-40e1-6c1081c81467@linux.ibm.com>
-Date:   Thu, 16 Apr 2020 10:35:48 -0400
+        Thu, 16 Apr 2020 10:14:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587046451;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=ZwfafyNJV35A9XzjzoUpov1lD8f8Bo7599mF7Sou/xg=;
+        b=fE2lTEaqz8zhmfu90wq7qSv1ZUI60vc6URs/I0F6CH/KwjmfULnVG5ZmD6QK4o/kiMSvdP
+        UVZRWhGcYlOsTaeJzaM58UN/NvLVGF/kX6Xa152BDU/5yLN4iXvAiUgLiSHJncYNZGaKS6
+        CIZakVAR/dQKpBW2h7ZefUN81rmRPkY=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-20-D5ew2p0iMEOGkNcz7RvQ9A-1; Thu, 16 Apr 2020 10:14:10 -0400
+X-MC-Unique: D5ew2p0iMEOGkNcz7RvQ9A-1
+Received: by mail-wm1-f72.google.com with SMTP id c196so1245311wmd.3
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 07:14:09 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ZwfafyNJV35A9XzjzoUpov1lD8f8Bo7599mF7Sou/xg=;
+        b=gGqSROjDlvljXLg/qPI1F6yvzyYJQla9E50oNUukmdTNy0d0yLbV2OITX0SZdVmrBw
+         yN1AaXXRl2ehnSbsCIW6WjSeqidlK3H8CjX1L3LcSnnQkvRw779RTqoAcFww7k/KeEDn
+         N0O4imoSJIYzTfGCfEoYQsArii8D8V9GU+NTgCNjWE1ohoBjNMVCsLhswKrSkfYYDenH
+         mgSWv//stLW+bm1IcyisHHAbo71UEDanJj8Ojhv8Z3h5JjPIEvqPhLSWqBY4KE1+rAfM
+         usB289UvM5//Tw8tdOaph/sgHGaBvl0rF3qL2Afpmv+CidV4hOQgKXmmf+XIrXYECqWz
+         PGUA==
+X-Gm-Message-State: AGi0PuZavsDkfNCVGGUT5aeRGambvGHjShAT2Ka681mYt/mdybXioabs
+        py1a+ryQ4KFGtvkjSpnlgjaM5ywKYihlrNhrULlMDN6JYu91KL0UmFIXWz/CUE+SYp1HKfVV7+Y
+        A+CmhFcMaQA/KC/y8X4I3Qj+2
+X-Received: by 2002:a7b:c941:: with SMTP id i1mr4761807wml.132.1587046446917;
+        Thu, 16 Apr 2020 07:14:06 -0700 (PDT)
+X-Google-Smtp-Source: APiQypJ5Hb6SR8Fvh2FXPLrhFm6KxJHb0F0gaOopm4Hzze+cRXgN3/biIfKsxemtqaSiStUFpWNlMQ==
+X-Received: by 2002:a7b:c941:: with SMTP id i1mr4761786wml.132.1587046446638;
+        Thu, 16 Apr 2020 07:14:06 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:399d:3ef7:647c:b12d? ([2001:b07:6468:f312:399d:3ef7:647c:b12d])
+        by smtp.gmail.com with ESMTPSA id l16sm12705971wrp.91.2020.04.16.07.14.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 16 Apr 2020 07:14:06 -0700 (PDT)
+Subject: Re: [PATCH] KVM: VMX: Disable Intel PT before VM-entry
+To:     "Kang, Luwei" <luwei.kang@intel.com>,
+        "Christopherson, Sean J" <sean.j.christopherson@intel.com>
+Cc:     "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "vkuznets@redhat.com" <vkuznets@redhat.com>,
+        "wanpengli@tencent.com" <wanpengli@tencent.com>,
+        "jmattson@google.com" <jmattson@google.com>,
+        "joro@8bytes.org" <joro@8bytes.org>
+References: <1584503298-18731-1-git-send-email-luwei.kang@intel.com>
+ <20200318154826.GC24357@linux.intel.com>
+ <82D7661F83C1A047AF7DC287873BF1E1738A9724@SHSMSX104.ccr.corp.intel.com>
+ <20200330172152.GE24988@linux.intel.com>
+ <82D7661F83C1A047AF7DC287873BF1E1738B1A1C@SHSMSX104.ccr.corp.intel.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <21fa3505-8198-5f32-9dfd-3c9d9cc5ef7e@redhat.com>
+Date:   Thu, 16 Apr 2020 16:14:04 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <20200416120544.053b38d8.cohuck@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <82D7661F83C1A047AF7DC287873BF1E1738B1A1C@SHSMSX104.ccr.corp.intel.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-16_05:2020-04-14,2020-04-16 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 phishscore=0
- suspectscore=11 spamscore=0 mlxlogscore=999 impostorscore=0 adultscore=0
- bulkscore=0 priorityscore=1501 lowpriorityscore=0 mlxscore=0 clxscore=1015
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004160101
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 4/16/20 6:05 AM, Cornelia Huck wrote:
-> On Wed, 15 Apr 2020 13:10:18 -0400
-> Tony Krowiak <akrowiak@linux.ibm.com> wrote:
+On 31/03/20 05:29, Kang, Luwei wrote:
+>> Ah, right.  What about enhancing intel_pt_handle_vmx() and 'struct
+>> pt' to replace vmx_on with a field that incorporates the KVM mode?
 >
->> On 4/14/20 8:08 AM, Cornelia Huck wrote:
->>> On Tue,  7 Apr 2020 15:20:03 -0400
->>> Tony Krowiak <akrowiak@linux.ibm.com> wrote:
->>>> @@ -995,9 +996,11 @@ int ap_parse_mask_str(const char *str,
->>>>    	newmap = kmalloc(size, GFP_KERNEL);
->>>>    	if (!newmap)
->>>>    		return -ENOMEM;
->>>> -	if (mutex_lock_interruptible(lock)) {
->>>> -		kfree(newmap);
->>>> -		return -ERESTARTSYS;
->>>> +	if (lock) {
->>>> +		if (mutex_lock_interruptible(lock)) {
->>>> +			kfree(newmap);
->>>> +			return -ERESTARTSYS;
->>>> +		}
->>> This whole function is a bit odd. It seems all masks we want to
->>> manipulate are always guarded by the ap_perms_mutex, and the need for
->>> allowing lock == NULL comes from wanting to call this function with the
->>> ap_perms_mutex already held.
->>>
->>> That would argue for a locked/unlocked version of this function... but
->>> looking at it, why do we lock the way we do? The one thing this
->>> function (prior to this patch) does outside of the holding of the mutex
->>> is the allocation and freeing of newmap. But with this patch, we do the
->>> allocation and freeing of newmap while holding the mutex. Something
->>> seems a bit weird here.
->> Note that the ap_parse_mask function copies the newmap
->> to the bitmap passed in as a parameter to the function.
->> Prior to the introduction of this patch, the calling functions - i.e.,
->> apmask_store(), aqmask_store() and ap_perms_init() - passed
->> in the actual bitmap (i.e., ap_perms.apm or ap_perms aqm),
->> so the ap_perms were changed directly by this function.
->>
->> With this patch, the apmask_store() and aqmask_store()
->> functions now pass in a copy of those bitmaps. This is so
->> we can verify that any APQNs being removed are not
->> in use by the vfio_ap device driver before committing the
->> change to ap_perms. Consequently, it is now necessary
->> to take the lock for the until the changes are committed.
-> Yes, but every caller actually takes the mutex before calling this
-> function already :)
+> Some history is the host perf didn't fully agree with introducing
+> HOST_GUEST mode for PT in KVM.
 
-That is not a true statement, the ap_perms_init() function
-does not take the mutex prior to calling this function. Keep in
-mind, the ap_parse_mask function is not static and is exported,
-I was precluded from removing the lock parameter from the function
-definition.
+I don't think this is accurate.  IIRC the maintainers wanted packets in 
+the host-side trace to signal where the trace was interrupted.  In the 
+end we solved the issue by 1) dropping host-only mode since it can be 
+achieved in userspace 2) making host-guest an opt in feature.
 
->
->> Having explained that, you make a valid argument that
->> this calls for a locked/unlocked version of this function, so
->> I will modify this patch to that effect.
-> Ok.
->
-> The other thing I found weird is that the function does
-> alloc newmap -> grab mutex -> do manipulation -> release mutex -> free newmap
-> while the new callers do
-> (mutex already held) -> alloc newmap
->
-> so why grab/release the mutex the way the function does now? IOW, why
-> not have an unlocked __ap_parse_mask_string() and do
+I think it would make sense to rename vmx_on into vmx_state and make it an
 
-In my last comment above, I agreed to create an unlocked version
-of this function. Your example below is similar to what I
-implemented after responding to your comment yesterday.
+enum pt_vmx_state {
+	PT_VMX_OFF,
+	PT_VMX_ON_DISABLED,
+	PT_VMX_ON_SYSTEM,
+	PT_VMX_ON_HOST_GUEST
+};
 
->
-> int ap_parse_mask_string(...)
-> {
-> 	int rc;
->
-> 	if (mutex_lock_interruptible(&ap_perms_mutex))
-> 		return -ERESTARTSYS;
-> 	rc = __ap_parse_mask_string(...);
->          mutex_unlock(&ap_perms_mutex);
-> 	return rc;
-> }
+KVM would pass the enum to intel_pt_handle_vmx (one of PT_VMX_OFF, 
+PT_VMX_ON_SYSTEM, PT_VMX_ON_HOST_GUEST).  Inside intel_pt_handle_vmx you 
+can do
+
+	if (pt_pmu.vmx) {
+		WRITE_ONCE(pt->vmx_state, state);
+		return;
+	}
+
+	local_irq_save(flags);
+	WRITE_ONCE(pt->vmx_state,
+		   state == PT_VMX_OFF ? PT_VMX_OFF : PT_VMX_ON_DISABLED);
+	...
+
+and in pt_config_start:
+
+	...
+	vmx = READ_ONCE(pt->vmx_start);
+	if (vmx == PT_VMX_ON_DISABLED)
+                perf_aux_output_flag(&pt->handle, PERF_AUX_FLAG_PARTIAL);
+        else if (vmx == PT_VMX_ON_SYSTEM ||
+		 !(current->flags & PF_VCPU))
+                wrmsrl(MSR_IA32_RTIT_CTL, ctl);
+	...
+
+Thanks,
+
+Paolo
 
