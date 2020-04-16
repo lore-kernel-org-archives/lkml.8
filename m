@@ -2,234 +2,98 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFA40C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:32:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 852A8C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:32:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 953A321D7E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:32:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61B8321927
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:32:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YVgF2099"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394337AbgDPOcl (ORCPT
+        id S2394347AbgDPOcp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:32:41 -0400
-Received: from relay5-d.mail.gandi.net ([217.70.183.197]:46015 "EHLO
-        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2407224AbgDPOML (ORCPT
+        Thu, 16 Apr 2020 10:32:45 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:21539 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2441617AbgDPONF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 10:12:11 -0400
-X-Originating-IP: 93.29.109.196
-Received: from aptenodytes (196.109.29.93.rev.sfr.net [93.29.109.196])
-        (Authenticated sender: paul.kocialkowski@bootlin.com)
-        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id 7DB971C001E;
-        Thu, 16 Apr 2020 14:12:05 +0000 (UTC)
-Date:   Thu, 16 Apr 2020 16:12:05 +0200
-From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-To:     Johan Jonker <jbx6244@gmail.com>
-Cc:     linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Jacob Chen <jacob-chen@iotwrt.com>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Hans Verkuil <hansverk@cisco.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH 2/4] arm64: dts: rockchip: Add RGA support to the PX30
-Message-ID: <20200416141205.GK125838@aptenodytes>
-References: <20200416115047.233720-1-paul.kocialkowski@bootlin.com>
- <20200416115047.233720-3-paul.kocialkowski@bootlin.com>
- <478f0a8b-f819-62f4-83b8-27918c4c2431@gmail.com>
- <20200416132442.GI125838@aptenodytes>
- <f4ad8ea4-7904-1458-e564-2d20c87ed417@gmail.com>
- <20200416135519.GJ125838@aptenodytes>
- <f97d7661-834d-3fbf-2cd9-0b37c487e8f7@gmail.com>
+        Thu, 16 Apr 2020 10:13:05 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587046384;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=qNntSaDxiqQE0nc9G3mcZOQc9KN1Sy1W+eODELlogRA=;
+        b=YVgF20992ef0i1TZkmhzY+BZ+2qOGFHnYFRKk1WR1xOGEzazpoEJwsmHFxV3lIfvHzQ2R6
+        PjiscgijANUDfmWKJsn58ylcguDt8vSgISi1FX5j55qodM0IJyvgvlCOcth+g3g2sdAu4M
+        GXi7pN3mdQwcwix50KUWJHi9e2sJtdQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-323-Pehw_FgROHeDUDYGKd5YHw-1; Thu, 16 Apr 2020 10:12:57 -0400
+X-MC-Unique: Pehw_FgROHeDUDYGKd5YHw-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B9613107ACCD;
+        Thu, 16 Apr 2020 14:12:26 +0000 (UTC)
+Received: from T590 (ovpn-8-25.pek2.redhat.com [10.72.8.25])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 8B3B95D9E2;
+        Thu, 16 Apr 2020 14:12:21 +0000 (UTC)
+Date:   Thu, 16 Apr 2020 22:12:16 +0800
+From:   Ming Lei <ming.lei@redhat.com>
+To:     John Garry <john.garry@huawei.com>
+Cc:     axboe@kernel.dk, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] blk-mq: Put driver tag in blk_mq_dispatch_rq_list() when
+ no budget
+Message-ID: <20200416141216.GA2907988@T590>
+References: <1587035931-125028-1-git-send-email-john.garry@huawei.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="IA03tywDYuoVKXrw"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <f97d7661-834d-3fbf-2cd9-0b37c487e8f7@gmail.com>
+In-Reply-To: <1587035931-125028-1-git-send-email-john.garry@huawei.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Apr 16, 2020 at 07:18:51PM +0800, John Garry wrote:
+> If in blk_mq_dispatch_rq_list() we find no budget, then we break of the
+> dispatch loop, but the request may keep the driver tag, evaulated
+> in 'nxt' in the previous loop iteration.
+> 
+> Fix by putting the driver tag for that request.
+> 
+> Signed-off-by: John Garry <john.garry@huawei.com>
+> 
+> diff --git a/block/blk-mq.c b/block/blk-mq.c
+> index 8e56884fd2e9..a7785df2c944 100644
+> --- a/block/blk-mq.c
+> +++ b/block/blk-mq.c
+> @@ -1222,8 +1222,10 @@ bool blk_mq_dispatch_rq_list(struct request_queue *q, struct list_head *list,
+>  		rq = list_first_entry(list, struct request, queuelist);
+>  
+>  		hctx = rq->mq_hctx;
+> -		if (!got_budget && !blk_mq_get_dispatch_budget(hctx))
+> +		if (!got_budget && !blk_mq_get_dispatch_budget(hctx)) {
+> +			blk_mq_put_driver_tag(rq);
+>  			break;
+> +		}
+>  
+>  		if (!blk_mq_get_driver_tag(rq)) {
+>  			/*
+> -- 
+> 2.16.4
+> 
 
---IA03tywDYuoVKXrw
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Reviewed-by: Ming Lei <ming.lei@redhat.com>
 
-On Thu 16 Apr 20, 16:02, Johan Jonker wrote:
-> On 4/16/20 3:55 PM, Paul Kocialkowski wrote:
-> > Hi,
-> >=20
-> > On Thu 16 Apr 20, 15:44, Johan Jonker wrote:
-> >> On 4/16/20 3:24 PM, Paul Kocialkowski wrote:
-> >>> Hi,
-> >>>
-> >>> On Thu 16 Apr 20, 15:02, Johan Jonker wrote:
-> >>>> Hi Paul,
-> >>>>
-> >>>> The conversion of rockchip-rga.txt to rockchip-rga.yaml by myself ju=
-st
-> >>>> has been approved by robh.
-> >>>
-> >>> Huh, I looked around for ongoing related work but missed it.
-> >>> I'll definitely rebase on top of your series and use the yaml descrip=
-tion
-> >>> instead. Thanks!
-> >>>
-> >>>> Maybe place dts patches at the end of a patch serie.
-> >>>> Could you include a &rga patch if your device is supported in mainli=
-ne,
-> >>>> so we can test with:
-> >>>> make ARCH=3Darm64 dtbs_check
-> >>>> DT_SCHEMA_FILES=3DDocumentation/devicetree/bindings/media/rockchip-r=
-ga.yaml
-> >>>
-> >>> I tested with the PX30 EVB so I can surely add a node there if that t=
-urns
-> >>> out necessary (see below).
-> >>>
-> >>>> Johan
-> >>>>
-> >>>> On 4/16/20 1:50 PM, Paul Kocialkowski wrote:
-> >>>>> The PX30 features a RGA block: add the necessary node to support it.
-> >>>>>
-> >>>>> Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-> >>>>> ---
-> >>>>>  arch/arm64/boot/dts/rockchip/px30.dtsi | 11 +++++++++++
-> >>>>>  1 file changed, 11 insertions(+)
-> >>>>>
-> >>>>> diff --git a/arch/arm64/boot/dts/rockchip/px30.dtsi b/arch/arm64/bo=
-ot/dts/rockchip/px30.dtsi
-> >>>>> index 75908c587511..4bfbee9d4123 100644
-> >>>>> --- a/arch/arm64/boot/dts/rockchip/px30.dtsi
-> >>>>> +++ b/arch/arm64/boot/dts/rockchip/px30.dtsi
-> >>>>> @@ -1104,6 +1104,17 @@ vopl_mmu: iommu@ff470f00 {
-> >>>>>  		status =3D "disabled";
-> >>>>>  	};
-> >>>>> =20
-> >>>>> +	rga: rga@ff480000 {
-> >>>>> +		compatible =3D "rockchip,px30-rga";
-> >>>>> +		reg =3D <0x0 0xff480000 0x0 0x10000>;
-> >>>>> +		interrupts =3D <GIC_SPI 76 IRQ_TYPE_LEVEL_HIGH 0>;
-> >>>>> +		clocks =3D <&cru ACLK_RGA>, <&cru HCLK_RGA>, <&cru SCLK_RGA_CORE=
->;
-> >>>>> +		clock-names =3D "aclk", "hclk", "sclk";
-> >>>>> +		resets =3D <&cru SRST_RGA>, <&cru SRST_RGA_A>, <&cru SRST_RGA_H>;
-> >>>>> +		reset-names =3D "core", "axi", "ahb";
-> >>>>> +		power-domains =3D <&power PX30_PD_VO>;
-> >>>>
-> >>>> 		status =3D "disabled";
-> >>>
-> >>> As of 5.6, the rk3399 has the node enabled by default. Did that chang=
-e?
-> >>
-> >> 'status' disappeared during review for rk3399 between v2 and v3, but
-> >> doesn't mention the reason. If someone can give more info here?
-> >>
-> >> https://lore.kernel.org/lkml/1500101920-24039-5-git-send-email-jacob-c=
-hen@iotwrt.com/
-> >>
-> >> https://lore.kernel.org/lkml/1501470460-12014-5-git-send-email-jacob-c=
-hen@iotwrt.com/
-> >>
-> >>>
-> >>> Since it's a standalone block that has no I/O dependency, I don't rea=
-lly see
-> >>> the point of disabling it by default.
-> >>
-> >> Vop, hdmi and other video devices are also disabled.
-> >> Follow the rest I think...
-> >=20
-> > Well, these blocks do have related I/O ports so it makes sense not to e=
-nable
-> > them by default because of pinmux, or because there might be no connect=
-or
-> > populated/routed.
-> >=20
-> > For a memory to memory internal block, I don't see any reason why.
-> > It's definitely not board-specific and having to add these nodes for ev=
-ery board
-> > that has them is kind of a pain and might be overlooked. This will easi=
-ly result
-> > in the feature not being available for end users without having to chan=
-ge the
-> > dt.
-> >=20
-> > Also, the vpu node is always enabled on rockchip (and sunxi) platforms.
-> > I think these are better examples to follow.
->=20
-> From PX30 TRM-Part1:
->=20
-> Power domain is shared by vop and dsi.
-> It's up to the user what blocks he/she enables and what power it uses.
->=20
-> PD_VO: VOP_M, VOP_S, RGA and DSI
+-- 
+Ming
 
-Hum, there is no direct correlation between "node is enabled in dt" and "re=
-lated
-hardware block consumes power". And removing nodes from dt is certainly not=
- an
-appropriate way to do power management! Device-tree is a way to represent t=
-he
-hardware, not a configuration interface (well, besides the /chosen node).
-
-Besides, the RGA driver seems to have good runtime pm support, so be assured
-that its clocks will be off when unused.
-
-Cheers,
-
-Paul
-
-> >=20
-> > Cheers,
-> >=20
-> > Paul
-> >=20
-> >>>
-> >>> What do you think?
-> >>>
-> >>> Cheers,
-> >>>
-> >>> Paul
-> >>>
-> >>>>> +	};
-> >>>>> +
-> >>>>>  	qos_gmac: qos@ff518000 {
-> >>>>>  		compatible =3D "syscon";
-> >>>>>  		reg =3D <0x0 0xff518000 0x0 0x20>;
-> >>>>>
-> >>>>
-> >>>
-> >>
-> >=20
->=20
-
---=20
-Paul Kocialkowski, Bootlin
-Embedded Linux and kernel engineering
-https://bootlin.com
-
---IA03tywDYuoVKXrw
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEJZpWjZeIetVBefti3cLmz3+fv9EFAl6YZ7UACgkQ3cLmz3+f
-v9H7Bwf/dxe/z672mfjqt4PR187hrwSZUxb8QrJrY0H31hOL2NOEFEufOKHPlA8y
-U+xPF95tT1SWwB+/6cjzhYGy9CF8EvmR0FDkBf2RVSXxbNvWSUMOFAVCA6bchQ5R
-7iuxNcsjeQuEBGu6ljByelGcBFBTrk6MUQEmEKuAaH7F22lfnKTW53SlSXPvsnpD
-CAexlBFsLxN9VKECnc2QZ5qUjpNqRozzOexjDewJWm3BlPg4buAAkSKOQKlwd7q0
-h7hYNx79PY6aFfp2EpdVy7XnbJOGRyRvwWbWsMFnKQo4wSYNtKWD3vMO3y6rX8ag
-JSRQ0iYXDgYz2uvtpi37rQb4y5Z0pg==
-=u/wC
------END PGP SIGNATURE-----
-
---IA03tywDYuoVKXrw--
