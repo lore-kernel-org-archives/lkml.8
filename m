@@ -8,57 +8,57 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E415C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 21:44:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1CFDC352BE
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 21:44:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2E4ED221F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 21:44:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A548C221F9
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 21:44:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U/wZmwFF"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UUYuWzec"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728307AbgDPVox (ORCPT
+        id S1728329AbgDPVoy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 17:44:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48584 "EHLO
+        Thu, 16 Apr 2020 17:44:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48588 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725843AbgDPVos (ORCPT
+        by vger.kernel.org with ESMTP id S1727972AbgDPVou (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 17:44:48 -0400
+        Thu, 16 Apr 2020 17:44:50 -0400
 Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE45AC061A0C;
-        Thu, 16 Apr 2020 14:44:48 -0700 (PDT)
-Received: by mail-qt1-x844.google.com with SMTP id b10so250842qtt.9;
-        Thu, 16 Apr 2020 14:44:48 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4636C061A0C;
+        Thu, 16 Apr 2020 14:44:49 -0700 (PDT)
+Received: by mail-qt1-x844.google.com with SMTP id w29so288665qtv.3;
+        Thu, 16 Apr 2020 14:44:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=sthAapj68aXnXI+RTvpMX6Wnzn0JdQZcGOOuG2S5PBw=;
-        b=U/wZmwFFE2+EDMGQltvGpyA0vQDc9HEPWleqF6o//HJIleVvCBxrzqyG8LoupuNO6X
-         aK/0TxVGE8qCSwwlHYSXVUe03ikiIy/WYtYMuRQN0SNUHHXj242GqrATPys++GD7vV4Y
-         3TOeUeyKOBBP8lrwyQ+bq2nglijA6+nm37+HefH/rH19DlNoAq78X/x7reN0X7MCfH0W
-         qoD88FNNzlr/PM5xwW6EFMOZHjxOEkpgmDxIgYvORkRbzFGhXSENirIg9F4DBskJuopx
-         rvza9knEBZd0+ThVTdcpykEXSu2Dmwtx/XZhgFAsBRwRWhZSUMWX4y5DILLEeZRMP/m7
-         5mBg==
+        bh=MYVHgBJ2a4Fh0aMV9sOUIW9OVLp13RPJaMgaav9Q49g=;
+        b=UUYuWzectBQsk+Z9yUFV9CHjU7Cg+H0oICqf8+epFYuFp3sOu/xQczQTreYZ83Z9Nq
+         OR/yNX84JQkdFLtOvcYzLZNqvGHCYvQZgiCEUBSBMAON97pUXVG6AnWr8c+PUCZXVfuZ
+         GxYvGse93U1OiNdPHj2X8+7rINr25eb0tfwTOqcMwZBs6Mj4hbivQv21rqfmz4z69Y4e
+         QZNCIEgWcKZL4E2MrQp56NfJyFTT1miPW627fqPLX9XjB14AdWuArDA4tcD4zJx4UWdn
+         3GDNK6K6rLB85pYKxnHlB3DWvYZA1k19kORAbyEZbf4PGOeHEU3Ph9l/VUvC0UMy9LvL
+         9Z1A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=sthAapj68aXnXI+RTvpMX6Wnzn0JdQZcGOOuG2S5PBw=;
-        b=mv6P2aO3IzAQOt453cHtAfu8x2R0aRTbLdY7QcQwcq7omhvsb+Um9gyBOgqVfpvSVB
-         G3JXx0EJUqW1Kk9BglKhDPrjLIvnV9T19lN1lNmBqgvnFejxGpkyCU9x1Qm6eYvVTFnK
-         78W88oJGc/1Ani3Rj7mTlwN/7Ccwhdrcw+2TFTxrVxYq5jxUS93vn4qKsu0WV8Lo5Q9L
-         ThTMoKj16+9OXE/0GpdxKnPob9Cvd4jaduCqWyOInewgWodIVZCLluCcr7fKkfWRoXr/
-         lwkA1iamQhu9dUvkmjL1YdA5tCTFXQBEOMmHswve82bOgIpMz4h8ZECv5z7tG3kTrzEi
-         /5ew==
-X-Gm-Message-State: AGi0PuZ6e9DE1JbsSOQGmuGvO276EB1A/ajtVICWtYxe9rAv9wHvFmbn
-        qZN6u/ukz2FXZbtkAFCMTO0=
-X-Google-Smtp-Source: APiQypL6FrzR3vybWwRzyKZ+ZYw6voEB2hXvgpwAE4GXnyw43EMvCotfFZFjd2NKKnKJOQcqrGakHQ==
-X-Received: by 2002:ac8:71c1:: with SMTP id i1mr26103907qtp.280.1587073487971;
-        Thu, 16 Apr 2020 14:44:47 -0700 (PDT)
+        bh=MYVHgBJ2a4Fh0aMV9sOUIW9OVLp13RPJaMgaav9Q49g=;
+        b=bQiZ+JY5oAZkC6Ox/hiRVMAh3MMG6Trh06TUnuFrYQU0/ltRJ3JzkhsclbUHiZ8yzn
+         ee6ogaTmCNFo+LY8EpoQ0JtoXEaBQz81YODvy7zfyOfpCMo4WwbMeF6YvrPdzXdx/sUe
+         iQa7sm/3BW0vu97coaj4S105TQi8y5O8oOwzIk/YIHxXo+THRph9jMX145eittIMbUq2
+         FOKscC9aOACyPXWa0eCE2KIuXVzCWVqfGF/+GpAhqDFJyJkOTKpskvwqnem5vM/9OxCZ
+         ZbS3vwENM+pC00e4Y9YL0ScxkB5BEKrgxAKKVCMTnIn7HIdD7LmTKDYu+psfVkG8xgGK
+         FAaQ==
+X-Gm-Message-State: AGi0PuacAnXdtgyn4uEv2rsuBFGQ7lEG325Xm1ddvTr5hamaf76U15DB
+        uvGIDSDjnLyHX/0SuFLY56U=
+X-Google-Smtp-Source: APiQypJVOzhFICVzZVa4rS6wAgiym0oNB6opYdISWa+xexCScBmAtfXMU4P83LO7BfjZlW7XpqX8aw==
+X-Received: by 2002:ac8:6c23:: with SMTP id k3mr28850568qtu.107.1587073489034;
+        Thu, 16 Apr 2020 14:44:49 -0700 (PDT)
 Received: from localhost.localdomain (c-73-88-245-53.hsd1.tn.comcast.net. [73.88.245.53])
-        by smtp.gmail.com with ESMTPSA id z34sm3164141qth.43.2020.04.16.14.44.46
+        by smtp.gmail.com with ESMTPSA id z34sm3164141qth.43.2020.04.16.14.44.48
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 16 Apr 2020 14:44:47 -0700 (PDT)
+        Thu, 16 Apr 2020 14:44:48 -0700 (PDT)
 From:   frowand.list@gmail.com
 To:     Rob Herring <robh+dt@kernel.org>, pantelis.antoniou@konsulko.com
 Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
@@ -66,9 +66,9 @@ Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         "Erhard F." <erhard_f@mailbox.org>,
         Geert Uytterhoeven <geert+renesas@glider.be>,
         Alan Tull <atull@kernel.org>
-Subject: [PATCH 4/5] of: overlay: kmemleak in dup_and_fixup_symbol_prop()
-Date:   Thu, 16 Apr 2020 16:42:49 -0500
-Message-Id: <1587073370-25963-5-git-send-email-frowand.list@gmail.com>
+Subject: [PATCH 5/5] of: unittest: kmemleak in duplicate property update
+Date:   Thu, 16 Apr 2020 16:42:50 -0500
+Message-Id: <1587073370-25963-6-git-send-email-frowand.list@gmail.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1587073370-25963-1-git-send-email-frowand.list@gmail.com>
 References: <1587073370-25963-1-git-send-email-frowand.list@gmail.com>
@@ -80,30 +80,116 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 From: Frank Rowand <frank.rowand@sony.com>
 
 kmemleak reports several memory leaks from devicetree unittest.
-This is the fix for problem 4 of 5.
+This is the fix for problem 5 of 5.
 
-target_path was not freed in the non-error path.
+When overlay 'overlay_bad_add_dup_prop' is applied, the apply code
+properly detects that a memory leak will occur if the overlay is removed
+since the duplicate property is located in a base devicetree node and
+reports via printk():
 
-Fixes: e0a58f3e08d4 ("of: overlay: remove a dependency on device node full_name")
+  OF: overlay: WARNING: memory leak will occur if overlay removed, property: /testcase-data-2/substation@100/motor-1/rpm_avail
+  OF: overlay: WARNING: memory leak will occur if overlay removed, property: /testcase-data-2/substation@100/motor-1/rpm_avail
+
+The overlay is removed when the apply code detects multiple changesets
+modifying the same property.  This is reported via printk():
+
+  OF: overlay: ERROR: multiple fragments add, update, and/or delete property /testcase-data-2/substation@100/motor-1/rpm_avail
+
+As a result of this error, the overlay is removed resulting in the
+expected memory leak.
+
+Add another device node level to the overlay so that the duplicate
+property is located in a node added by the overlay, thus no memory
+leak will occur when the overlay is removed.
+
+Thus users of kmemleak will not have to debug this leak in the future.
+
+Fixes: 2fe0e8769df9 ("of: overlay: check prevents multiple fragments touching same property")
 Reported-by: Erhard F. <erhard_f@mailbox.org>
 Signed-off-by: Frank Rowand <frank.rowand@sony.com>
 ---
- drivers/of/overlay.c | 2 ++
- 1 file changed, 2 insertions(+)
+ .../of/unittest-data/overlay_bad_add_dup_prop.dts  | 23 ++++++++++++++++++----
+ drivers/of/unittest.c                              | 12 +++++------
+ 2 files changed, 25 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
-index c9219fddf44b..50bbe0edf538 100644
---- a/drivers/of/overlay.c
-+++ b/drivers/of/overlay.c
-@@ -261,6 +261,8 @@ static struct property *dup_and_fixup_symbol_prop(
+diff --git a/drivers/of/unittest-data/overlay_bad_add_dup_prop.dts b/drivers/of/unittest-data/overlay_bad_add_dup_prop.dts
+index c190da54f175..6327d1ffb963 100644
+--- a/drivers/of/unittest-data/overlay_bad_add_dup_prop.dts
++++ b/drivers/of/unittest-data/overlay_bad_add_dup_prop.dts
+@@ -3,22 +3,37 @@
+ /plugin/;
  
- 	of_property_set_flag(new_prop, OF_DYNAMIC);
+ /*
+- * &electric_1/motor-1 and &spin_ctrl_1 are the same node:
+- *   /testcase-data-2/substation@100/motor-1
++ * &electric_1/motor-1/electric and &spin_ctrl_1/electric are the same node:
++ *   /testcase-data-2/substation@100/motor-1/electric
+  *
+  * Thus the property "rpm_avail" in each fragment will
+  * result in an attempt to update the same property twice.
+  * This will result in an error and the overlay apply
+  * will fail.
++ *
++ * The previous version of this test did not include the extra
++ * level of node 'electric'.  That resulted in the 'rpm_avail'
++ * property being located in the pre-existing node 'motor-1'.
++ * Modifying a property results in a WARNING that a memory leak
++ * will occur if the overlay is removed.  Since the overlay apply
++ * fails, the memory leak does actually occur, and kmemleak will
++ * further report the memory leak if CONFIG_DEBUG_KMEMLEAK is
++ * enabled.  Adding the overlay node 'electric' avoids the
++ * memory leak and thus people who use kmemleak will not
++ * have to debug this non-problem again.
+  */
  
-+	kfree(target_path);
-+
- 	return new_prop;
+ &electric_1 {
  
- err_free_new_prop:
+ 	motor-1 {
+-		rpm_avail = < 100 >;
++		electric {
++			rpm_avail = < 100 >;
++		};
+ 	};
+ };
+ 
+ &spin_ctrl_1 {
+-		rpm_avail = < 100 200 >;
++		electric {
++			rpm_avail = < 100 200 >;
++		};
+ };
+diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
+index f238b7a3865d..398de04fd19c 100644
+--- a/drivers/of/unittest.c
++++ b/drivers/of/unittest.c
+@@ -3181,21 +3181,21 @@ static __init void of_unittest_overlay_high_level(void)
+ 		   "OF: overlay: ERROR: multiple fragments add and/or delete node /testcase-data-2/substation@100/motor-1/controller");
+ 
+ 	EXPECT_BEGIN(KERN_ERR,
+-		     "OF: overlay: WARNING: memory leak will occur if overlay removed, property: /testcase-data-2/substation@100/motor-1/rpm_avail");
++		     "OF: overlay: ERROR: multiple fragments add and/or delete node /testcase-data-2/substation@100/motor-1/electric");
+ 	EXPECT_BEGIN(KERN_ERR,
+-		     "OF: overlay: WARNING: memory leak will occur if overlay removed, property: /testcase-data-2/substation@100/motor-1/rpm_avail");
++		     "OF: overlay: ERROR: multiple fragments add, update, and/or delete property /testcase-data-2/substation@100/motor-1/electric/rpm_avail");
+ 	EXPECT_BEGIN(KERN_ERR,
+-		     "OF: overlay: ERROR: multiple fragments add, update, and/or delete property /testcase-data-2/substation@100/motor-1/rpm_avail");
++		     "OF: overlay: ERROR: multiple fragments add, update, and/or delete property /testcase-data-2/substation@100/motor-1/electric/name");
+ 
+ 	unittest(overlay_data_apply("overlay_bad_add_dup_prop", NULL),
+ 		 "Adding overlay 'overlay_bad_add_dup_prop' failed\n");
+ 
+ 	EXPECT_END(KERN_ERR,
+-		   "OF: overlay: ERROR: multiple fragments add, update, and/or delete property /testcase-data-2/substation@100/motor-1/rpm_avail");
++		     "OF: overlay: ERROR: multiple fragments add, update, and/or delete property /testcase-data-2/substation@100/motor-1/electric/name");
+ 	EXPECT_END(KERN_ERR,
+-		   "OF: overlay: WARNING: memory leak will occur if overlay removed, property: /testcase-data-2/substation@100/motor-1/rpm_avail");
++		     "OF: overlay: ERROR: multiple fragments add, update, and/or delete property /testcase-data-2/substation@100/motor-1/electric/rpm_avail");
+ 	EXPECT_END(KERN_ERR,
+-		   "OF: overlay: WARNING: memory leak will occur if overlay removed, property: /testcase-data-2/substation@100/motor-1/rpm_avail");
++		     "OF: overlay: ERROR: multiple fragments add and/or delete node /testcase-data-2/substation@100/motor-1/electric");
+ 
+ 	unittest(overlay_data_apply("overlay_bad_phandle", NULL),
+ 		 "Adding overlay 'overlay_bad_phandle' failed\n");
 -- 
 Frank Rowand <frank.rowand@sony.com>
 
