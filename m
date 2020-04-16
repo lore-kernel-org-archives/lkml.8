@@ -6,54 +6,54 @@ X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0BDBC2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 11:53:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6664C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 11:53:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 98AF421D95
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 11:53:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8ED7A21D7F
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 11:53:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="SYcO6hCR"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="W2deN1OU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2634028AbgDPLxW (ORCPT
+        id S2634058AbgDPLxa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 07:53:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40870 "EHLO
+        Thu, 16 Apr 2020 07:53:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40868 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2506709AbgDPLwj (ORCPT
+        with ESMTP id S2506707AbgDPLwj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 16 Apr 2020 07:52:39 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66BF5C03C1A7
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B7F1C03C1A6
         for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 04:52:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Type:MIME-Version:References:
         Subject:Cc:To:From:Date:Message-Id:Sender:Reply-To:Content-Transfer-Encoding:
         Content-ID:Content-Description:In-Reply-To;
-        bh=vZGTNFI1qsH9Qyn4to0UBz3pVYWZFo5oK0ajBpNGby8=; b=SYcO6hCRpN60137RNzIYZzd3Yz
-        LwVh5/8GwrvIg4W/IqkKSgoVLtaflgHzXpGKAUbT9181HRKiB3zzgipEgn/giThD/GhLpv00DLcaU
-        FGlHzZtDwcxqeshgNZRPGsOdIqJX7kOjG9QGP/HUr2uGwTeh34ehj+QDYm9i7dRlsZvZAngqTi2It
-        QTso4j430t3jGQdcZNdhrS8qdWHrRzUNo2vxRU5LR8V1Drj9Gn5jJUXE6klpl0y8MbXBT+nLU79cc
-        ospaVwMGpm8pwv8lyO2bt8bBZK1sxKt0io7ixkshbHbwvx6hp1EIYPujG09YR31pMPnWbnlnbwdDD
-        MOrypUbw==;
+        bh=+/Xl9QZxuCUp81LzYaZ7P1/ZN4KYWh4fZr7Ht4W81L4=; b=W2deN1OUs+OKjS4F/w/VFS9Za2
+        RZjIUtGQjKxjZhL7a+CbdH4fn0jttN+rkzHGhRZqR3oMDgNnWa4OQwf1DLz4HCG/6f3YZv2K+nwZj
+        KBJRvu9ioEe09xEhpeTR1YLupkDUlCeaMfJNeMy9MZigy7YfzykeB59sQ8cwbbR0gGyT+a5iOnSpg
+        nA5utnBj7GJObaf4Xm1OJdiP/6kz2BI22p55d4maYBUvPtkFc4WoJd19/ggBKBLb3cv95I9IgTOwv
+        lM+ki2tVBb9zsxO9vfWDUeYP2y1U6V+rA1bz24F1QtgIq2wIakRAFrE6sNm89DZb/n8ZX0godwbJJ
+        ExCecrog==;
 Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
         by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jP34F-0004sH-Ql; Thu, 16 Apr 2020 11:52:28 +0000
+        id 1jP34F-0004sD-NQ; Thu, 16 Apr 2020 11:52:27 +0000
 Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 63BDB30786C;
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 590F2307479;
         Thu, 16 Apr 2020 13:52:24 +0200 (CEST)
 Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-        id 48E682B0DE4CC; Thu, 16 Apr 2020 13:52:24 +0200 (CEST)
-Message-Id: <20200416115119.167588731@infradead.org>
+        id 39F0D2B0DE4C8; Thu, 16 Apr 2020 13:52:24 +0200 (CEST)
+Message-Id: <20200416115118.986441913@infradead.org>
 User-Agent: quilt/0.65
-Date:   Thu, 16 Apr 2020 13:47:17 +0200
+Date:   Thu, 16 Apr 2020 13:47:14 +0200
 From:   Peter Zijlstra <peterz@infradead.org>
 To:     tglx@linutronix.de, jpoimboe@redhat.com
 Cc:     linux-kernel@vger.kernel.org, x86@kernel.org, peterz@infradead.org,
         mhiramat@kernel.org, mbenes@suse.cz, jthierry@redhat.com,
         alexandre.chartre@oracle.com
-Subject: [PATCH v5 11/17] objtool: Optimize !vmlinux.o again
+Subject: [PATCH v5 08/17] objtool: Rename struct cfi_state
 References: <20200416114706.625340212@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -62,231 +62,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When doing kbuild tests to see if the objtool changes affected those I
-found that there was a measurable regression:
-
-          pre		  post
-
-  real    1m13.594        1m16.488s
-  user    34m58.246s      35m23.947s
-  sys     4m0.393s        4m27.312s
-
-Perf showed that for small files the increased hash-table sizes were a
-measurable difference. Since we already have -l "vmlinux" to
-distinguish between the modes, make it also use a smaller portion of
-the hash-tables.
-
-This flips it into a small win:
-
-  real    1m14.143s
-  user    34m49.292s
-  sys     3m44.746s
+There's going to be a new struct cfi_state, rename this one to make
+place.
 
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 Acked-by: Josh Poimboeuf <jpoimboe@redhat.com>
 ---
- tools/objtool/elf.c     |   62 +++++++++++++++++++++++++++++++++---------------
- tools/objtool/elf.h     |   13 ++++++----
- tools/objtool/orc_gen.c |    3 --
- 3 files changed, 52 insertions(+), 26 deletions(-)
+ tools/objtool/arch.h            |    2 +-
+ tools/objtool/arch/x86/decode.c |    2 +-
+ tools/objtool/cfi.h             |    2 +-
+ tools/objtool/check.c           |    2 +-
+ 4 files changed, 4 insertions(+), 4 deletions(-)
 
---- a/tools/objtool/elf.c
-+++ b/tools/objtool/elf.c
-@@ -27,6 +27,22 @@ static inline u32 str_hash(const char *s
- 	return jhash(str, strlen(str), 0);
- }
- 
-+static inline int elf_hash_bits(void)
-+{
-+	return vmlinux ? ELF_HASH_BITS : 16;
-+}
-+
-+#define elf_hash_add(hashtable, node, key) \
-+	hlist_add_head(node, &hashtable[hash_min(key, elf_hash_bits())])
-+
-+static void elf_hash_init(struct hlist_head *table)
-+{
-+	__hash_init(table, 1U << elf_hash_bits());
-+}
-+
-+#define elf_hash_for_each_possible(name, obj, member, key)			\
-+	hlist_for_each_entry(obj, &name[hash_min(key, elf_hash_bits())], member)
-+
- static void rb_add(struct rb_root *tree, struct rb_node *node,
- 		   int (*cmp)(struct rb_node *, const struct rb_node *))
- {
-@@ -115,7 +131,7 @@ struct section *find_section_by_name(str
- {
- 	struct section *sec;
- 
--	hash_for_each_possible(elf->section_name_hash, sec, name_hash, str_hash(name))
-+	elf_hash_for_each_possible(elf->section_name_hash, sec, name_hash, str_hash(name))
- 		if (!strcmp(sec->name, name))
- 			return sec;
- 
-@@ -127,7 +143,7 @@ static struct section *find_section_by_i
- {
- 	struct section *sec;
- 
--	hash_for_each_possible(elf->section_hash, sec, hash, idx)
-+	elf_hash_for_each_possible(elf->section_hash, sec, hash, idx)
- 		if (sec->idx == idx)
- 			return sec;
- 
-@@ -138,7 +154,7 @@ static struct symbol *find_symbol_by_ind
- {
- 	struct symbol *sym;
- 
--	hash_for_each_possible(elf->symbol_hash, sym, hash, idx)
-+	elf_hash_for_each_possible(elf->symbol_hash, sym, hash, idx)
- 		if (sym->idx == idx)
- 			return sym;
- 
-@@ -205,7 +221,7 @@ struct symbol *find_symbol_by_name(struc
- {
- 	struct symbol *sym;
- 
--	hash_for_each_possible(elf->symbol_name_hash, sym, name_hash, str_hash(name))
-+	elf_hash_for_each_possible(elf->symbol_name_hash, sym, name_hash, str_hash(name))
- 		if (!strcmp(sym->name, name))
- 			return sym;
- 
-@@ -224,7 +240,7 @@ struct rela *find_rela_by_dest_range(str
- 	sec = sec->rela;
- 
- 	for_offset_range(o, offset, offset + len) {
--		hash_for_each_possible(elf->rela_hash, rela, hash,
-+		elf_hash_for_each_possible(elf->rela_hash, rela, hash,
- 				       sec_offset_hash(sec, o)) {
- 			if (rela->sec != sec)
- 				continue;
-@@ -309,8 +325,8 @@ static int read_sections(struct elf *elf
- 		sec->len = sec->sh.sh_size;
- 
- 		list_add_tail(&sec->list, &elf->sections);
--		hash_add(elf->section_hash, &sec->hash, sec->idx);
--		hash_add(elf->section_name_hash, &sec->name_hash, str_hash(sec->name));
-+		elf_hash_add(elf->section_hash, &sec->hash, sec->idx);
-+		elf_hash_add(elf->section_name_hash, &sec->name_hash, str_hash(sec->name));
- 	}
- 
- 	if (stats)
-@@ -394,8 +410,8 @@ static int read_symbols(struct elf *elf)
- 		else
- 			entry = &sym->sec->symbol_list;
- 		list_add(&sym->list, entry);
--		hash_add(elf->symbol_hash, &sym->hash, sym->idx);
--		hash_add(elf->symbol_name_hash, &sym->name_hash, str_hash(sym->name));
-+		elf_hash_add(elf->symbol_hash, &sym->hash, sym->idx);
-+		elf_hash_add(elf->symbol_name_hash, &sym->name_hash, str_hash(sym->name));
- 	}
- 
- 	if (stats)
-@@ -456,6 +472,14 @@ static int read_symbols(struct elf *elf)
- 	return -1;
- }
- 
-+void elf_add_rela(struct elf *elf, struct rela *rela)
-+{
-+	struct section *sec = rela->sec;
-+
-+	list_add_tail(&rela->list, &sec->rela_list);
-+	elf_hash_add(elf->rela_hash, &rela->hash, rela_hash(rela));
-+}
-+
- static int read_relas(struct elf *elf)
- {
- 	struct section *sec;
-@@ -503,8 +527,7 @@ static int read_relas(struct elf *elf)
- 				return -1;
- 			}
- 
--			list_add_tail(&rela->list, &sec->rela_list);
--			hash_add(elf->rela_hash, &rela->hash, rela_hash(rela));
-+			elf_add_rela(elf, rela);
- 			nr_rela++;
- 		}
- 		max_rela = max(max_rela, nr_rela);
-@@ -531,15 +554,16 @@ struct elf *elf_read(const char *name, i
- 		perror("malloc");
- 		return NULL;
- 	}
--	memset(elf, 0, sizeof(*elf));
-+	memset(elf, 0, offsetof(struct elf, sections));
- 
--	hash_init(elf->symbol_hash);
--	hash_init(elf->symbol_name_hash);
--	hash_init(elf->section_hash);
--	hash_init(elf->section_name_hash);
--	hash_init(elf->rela_hash);
- 	INIT_LIST_HEAD(&elf->sections);
- 
-+	elf_hash_init(elf->symbol_hash);
-+	elf_hash_init(elf->symbol_name_hash);
-+	elf_hash_init(elf->section_hash);
-+	elf_hash_init(elf->section_name_hash);
-+	elf_hash_init(elf->rela_hash);
-+
- 	elf->fd = open(name, flags);
- 	if (elf->fd == -1) {
- 		fprintf(stderr, "objtool: Can't open '%s': %s\n",
-@@ -676,8 +700,8 @@ struct section *elf_create_section(struc
- 	shstrtab->changed = true;
- 
- 	list_add_tail(&sec->list, &elf->sections);
--	hash_add(elf->section_hash, &sec->hash, sec->idx);
--	hash_add(elf->section_name_hash, &sec->name_hash, str_hash(sec->name));
-+	elf_hash_add(elf->section_hash, &sec->hash, sec->idx);
-+	elf_hash_add(elf->section_name_hash, &sec->name_hash, str_hash(sec->name));
- 
- 	return sec;
- }
---- a/tools/objtool/elf.h
-+++ b/tools/objtool/elf.h
-@@ -70,17 +70,19 @@ struct rela {
- 	bool jump_table_start;
+--- a/tools/objtool/arch.h
++++ b/tools/objtool/arch.h
+@@ -68,7 +68,7 @@ struct stack_op {
+ 	struct list_head list;
  };
  
-+#define ELF_HASH_BITS	20
-+
- struct elf {
- 	Elf *elf;
- 	GElf_Ehdr ehdr;
- 	int fd;
- 	char *name;
- 	struct list_head sections;
--	DECLARE_HASHTABLE(symbol_hash, 20);
--	DECLARE_HASHTABLE(symbol_name_hash, 20);
--	DECLARE_HASHTABLE(section_hash, 16);
--	DECLARE_HASHTABLE(section_name_hash, 16);
--	DECLARE_HASHTABLE(rela_hash, 20);
-+	DECLARE_HASHTABLE(symbol_hash, ELF_HASH_BITS);
-+	DECLARE_HASHTABLE(symbol_name_hash, ELF_HASH_BITS);
-+	DECLARE_HASHTABLE(section_hash, ELF_HASH_BITS);
-+	DECLARE_HASHTABLE(section_name_hash, ELF_HASH_BITS);
-+	DECLARE_HASHTABLE(rela_hash, ELF_HASH_BITS);
- };
+-void arch_initial_func_cfi_state(struct cfi_state *state);
++void arch_initial_func_cfi_state(struct cfi_init_state *state);
  
- #define OFFSET_STRIDE_BITS	4
-@@ -127,6 +129,7 @@ struct section *elf_create_rela_section(
- int elf_rebuild_rela_section(struct section *sec);
- int elf_write(struct elf *elf);
- void elf_close(struct elf *elf);
-+void elf_add_rela(struct elf *elf, struct rela *rela);
- 
- #define for_each_sec(file, sec)						\
- 	list_for_each_entry(sec, &file->elf->sections, list)
---- a/tools/objtool/orc_gen.c
-+++ b/tools/objtool/orc_gen.c
-@@ -111,8 +111,7 @@ static int create_orc_entry(struct elf *
- 	rela->offset = idx * sizeof(int);
- 	rela->sec = ip_relasec;
- 
--	list_add_tail(&rela->list, &ip_relasec->rela_list);
--	hash_add(elf->rela_hash, &rela->hash, rela_hash(rela));
-+	elf_add_rela(elf, rela);
- 
+ int arch_decode_instruction(struct elf *elf, struct section *sec,
+ 			    unsigned long offset, unsigned int maxlen,
+--- a/tools/objtool/arch/x86/decode.c
++++ b/tools/objtool/arch/x86/decode.c
+@@ -501,7 +501,7 @@ int arch_decode_instruction(struct elf *
  	return 0;
  }
+ 
+-void arch_initial_func_cfi_state(struct cfi_state *state)
++void arch_initial_func_cfi_state(struct cfi_init_state *state)
+ {
+ 	int i;
+ 
+--- a/tools/objtool/cfi.h
++++ b/tools/objtool/cfi.h
+@@ -35,7 +35,7 @@ struct cfi_reg {
+ 	int offset;
+ };
+ 
+-struct cfi_state {
++struct cfi_init_state {
+ 	struct cfi_reg cfa;
+ 	struct cfi_reg regs[CFI_NUM_REGS];
+ };
+--- a/tools/objtool/check.c
++++ b/tools/objtool/check.c
+@@ -27,7 +27,7 @@ struct alternative {
+ };
+ 
+ const char *objname;
+-struct cfi_state initial_func_cfi;
++struct cfi_init_state initial_func_cfi;
+ 
+ struct instruction *find_insn(struct objtool_file *file,
+ 			      struct section *sec, unsigned long offset)
 
 
