@@ -5,51 +5,53 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A35ABC2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:42:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ED0AC2BB85
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:42:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7BB7B2222C
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:42:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EC292222C
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:42:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587044549;
-	bh=TBa/gNjvjTHN3djEFnEHH8oe/fBri/XKmyoBAZzUjjY=;
+	s=default; t=1587044562;
+	bh=4FfjHUzoXOQuHsFmCwjdJHNFyyAOjk/AM8IR/EFRMnM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zOSylILqxCnecyhBSJaPCXBX4nLOKbrmIvV8JvJ7SBPjL7ob4JAodaJGzxvm9hIh4
-	 vD8ubMEhKR7JuLn+42kqVcJjRdT0wSQVhebBTUkq/I1mCpBnCRasbHOVjMsstz3AW0
-	 ah9qNFbOt+abQzl4WtmPLJeCZcTgNVXdNKXdrtcg=
+	b=IWIY2nGmROI/X1mX6GcRQtx0EKQHRRtVjPW1BEaZBwL6Y99KmeEvEjO9D+xkrE43t
+	 KbgJ1TuVTJ0SBR46EnjBcliPDXp3CNzFg1JcgPF/z7KvvxO8sjz1fy+gseFJRFQB5k
+	 oSUXIUgNULKoSJSJQFOQdiPZP/XxmTkRkBbUVP8E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407344AbgDPNm0 (ORCPT
+        id S2441554AbgDPNmk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 09:42:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44086 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 09:42:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44106 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2896672AbgDPNdC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:33:02 -0400
+        id S2896693AbgDPNdN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:33:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 952A722284;
-        Thu, 16 Apr 2020 13:32:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 28838208E4;
+        Thu, 16 Apr 2020 13:33:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587043969;
-        bh=TBa/gNjvjTHN3djEFnEHH8oe/fBri/XKmyoBAZzUjjY=;
+        s=default; t=1587043993;
+        bh=4FfjHUzoXOQuHsFmCwjdJHNFyyAOjk/AM8IR/EFRMnM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lYFTpizNIiWNHUz0EkVetgNmp3YzBfyazL63udZNQe/qPmLtRpJ+z5qYykpqWU06y
-         nvfmgNSksyrxvZT1clQvFJhPaUQ1U/RwaoVaGIotCIoBwH06dzZ0Azx6Dznu9i4m3g
-         W1zBQfHKESt2inPwg+YmKYCJZdfrv02hI1jJ8Bgo=
+        b=o9Ddqge7LXPj3+I0Xjsq0u+Kr4FCf4fILyg5YhL/bcCg109yUmxFcrMhpSaZIq7XI
+         3txsxHA6pvzeZ7lknfNy1a4+F5nth55gos4UGPI4Xi2SPW8Jp+5cS6vyZGK8f42bQc
+         DE/UANEY5K3EKVqwpl7uh+VGpZ+Jpc4bAz4VsJNk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Mohammad Rasim <mohammad.rasim96@gmail.com>,
-        Sean Young <sean@mess.org>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 027/257] media: rc: add keymap for Videostrong KII Pro
-Date:   Thu, 16 Apr 2020 15:21:18 +0200
-Message-Id: <20200416131329.341904651@linuxfoundation.org>
+        stable@vger.kernel.org, Bart Van Assche <bvanassche@acm.org>,
+        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
+        Johannes Thumshirn <jth@kernel.org>,
+        Hannes Reinecke <hare@suse.com>,
+        Ming Lei <ming.lei@redhat.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.5 038/257] null_blk: Handle null_add_dev() failures properly
+Date:   Thu, 16 Apr 2020 15:21:29 +0200
+Message-Id: <20200416131330.705406807@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.891903893@linuxfoundation.org>
 References: <20200416131325.891903893@linuxfoundation.org>
@@ -62,137 +64,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mohammad Rasim <mohammad.rasim96@gmail.com>
+From: Bart Van Assche <bvanassche@acm.org>
 
-[ Upstream commit 30defecb98400575349a7d32f0526e1dc42ea83e ]
+[ Upstream commit 9b03b713082a31a5b90e0a893c72aa620e255c26 ]
 
-This is an NEC remote control device shipped with the Videostrong KII Pro
-tv box as well as other devices from videostrong.
+If null_add_dev() fails then null_del_dev() is called with a NULL argument.
+Make null_del_dev() handle this scenario correctly. This patch fixes the
+following KASAN complaint:
 
-Signed-off-by: Mohammad Rasim <mohammad.rasim96@gmail.com>
-Signed-off-by: Sean Young <sean@mess.org>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+null-ptr-deref in null_del_dev+0x28/0x280 [null_blk]
+Read of size 8 at addr 0000000000000000 by task find/1062
+
+Call Trace:
+ dump_stack+0xa5/0xe6
+ __kasan_report.cold+0x65/0x99
+ kasan_report+0x16/0x20
+ __asan_load8+0x58/0x90
+ null_del_dev+0x28/0x280 [null_blk]
+ nullb_group_drop_item+0x7e/0xa0 [null_blk]
+ client_drop_item+0x53/0x80 [configfs]
+ configfs_rmdir+0x395/0x4e0 [configfs]
+ vfs_rmdir+0xb6/0x220
+ do_rmdir+0x238/0x2c0
+ __x64_sys_unlinkat+0x75/0x90
+ do_syscall_64+0x6f/0x2f0
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+Signed-off-by: Bart Van Assche <bvanassche@acm.org>
+Reviewed-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
+Cc: Johannes Thumshirn <jth@kernel.org>
+Cc: Hannes Reinecke <hare@suse.com>
+Cc: Ming Lei <ming.lei@redhat.com>
+Cc: Christoph Hellwig <hch@infradead.org>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/rc/keymaps/Makefile             |  1 +
- .../media/rc/keymaps/rc-videostrong-kii-pro.c | 83 +++++++++++++++++++
- include/media/rc-map.h                        |  1 +
- 3 files changed, 85 insertions(+)
- create mode 100644 drivers/media/rc/keymaps/rc-videostrong-kii-pro.c
+ drivers/block/null_blk_main.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/media/rc/keymaps/Makefile b/drivers/media/rc/keymaps/Makefile
-index 63261ef6380a9..aaa1bf81d00d4 100644
---- a/drivers/media/rc/keymaps/Makefile
-+++ b/drivers/media/rc/keymaps/Makefile
-@@ -119,6 +119,7 @@ obj-$(CONFIG_RC_MAP) += rc-adstech-dvb-t-pci.o \
- 			rc-videomate-m1f.o \
- 			rc-videomate-s350.o \
- 			rc-videomate-tv-pvr.o \
-+			rc-videostrong-kii-pro.o \
- 			rc-wetek-hub.o \
- 			rc-wetek-play2.o \
- 			rc-winfast.o \
-diff --git a/drivers/media/rc/keymaps/rc-videostrong-kii-pro.c b/drivers/media/rc/keymaps/rc-videostrong-kii-pro.c
-new file mode 100644
-index 0000000000000..414d4d231e7ed
---- /dev/null
-+++ b/drivers/media/rc/keymaps/rc-videostrong-kii-pro.c
-@@ -0,0 +1,83 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+//
-+// Copyright (C) 2019 Mohammad Rasim <mohammad.rasim96@gmail.com>
+diff --git a/drivers/block/null_blk_main.c b/drivers/block/null_blk_main.c
+index 97bb53d7fa348..635904bfcf777 100644
+--- a/drivers/block/null_blk_main.c
++++ b/drivers/block/null_blk_main.c
+@@ -1432,7 +1432,12 @@ static void cleanup_queues(struct nullb *nullb)
+ 
+ static void null_del_dev(struct nullb *nullb)
+ {
+-	struct nullb_device *dev = nullb->dev;
++	struct nullb_device *dev;
 +
-+#include <media/rc-map.h>
-+#include <linux/module.h>
++	if (!nullb)
++		return;
 +
-+//
-+// Keytable for the Videostrong KII Pro STB remote control
-+//
-+
-+static struct rc_map_table kii_pro[] = {
-+	{ 0x59, KEY_POWER },
-+	{ 0x19, KEY_MUTE },
-+	{ 0x42, KEY_RED },
-+	{ 0x40, KEY_GREEN },
-+	{ 0x00, KEY_YELLOW },
-+	{ 0x03, KEY_BLUE },
-+	{ 0x4a, KEY_BACK },
-+	{ 0x48, KEY_FORWARD },
-+	{ 0x08, KEY_PREVIOUSSONG},
-+	{ 0x0b, KEY_NEXTSONG},
-+	{ 0x46, KEY_PLAYPAUSE },
-+	{ 0x44, KEY_STOP },
-+	{ 0x1f, KEY_FAVORITES},	//KEY_F5?
-+	{ 0x04, KEY_PVR },
-+	{ 0x4d, KEY_EPG },
-+	{ 0x02, KEY_INFO },
-+	{ 0x09, KEY_SUBTITLE },
-+	{ 0x01, KEY_AUDIO },
-+	{ 0x0d, KEY_HOMEPAGE },
-+	{ 0x11, KEY_TV },	// DTV ?
-+	{ 0x06, KEY_UP },
-+	{ 0x5a, KEY_LEFT },
-+	{ 0x1a, KEY_ENTER },	// KEY_OK ?
-+	{ 0x1b, KEY_RIGHT },
-+	{ 0x16, KEY_DOWN },
-+	{ 0x45, KEY_MENU },
-+	{ 0x05, KEY_ESC },
-+	{ 0x13, KEY_VOLUMEUP },
-+	{ 0x17, KEY_VOLUMEDOWN },
-+	{ 0x58, KEY_APPSELECT },
-+	{ 0x12, KEY_VENDOR },	// mouse
-+	{ 0x55, KEY_PAGEUP },	// KEY_CHANNELUP ?
-+	{ 0x15, KEY_PAGEDOWN },	// KEY_CHANNELDOWN ?
-+	{ 0x52, KEY_1 },
-+	{ 0x50, KEY_2 },
-+	{ 0x10, KEY_3 },
-+	{ 0x56, KEY_4 },
-+	{ 0x54, KEY_5 },
-+	{ 0x14, KEY_6 },
-+	{ 0x4e, KEY_7 },
-+	{ 0x4c, KEY_8 },
-+	{ 0x0c, KEY_9 },
-+	{ 0x18, KEY_WWW },	// KEY_F7
-+	{ 0x0f, KEY_0 },
-+	{ 0x51, KEY_BACKSPACE },
-+};
-+
-+static struct rc_map_list kii_pro_map = {
-+	.map = {
-+		.scan     = kii_pro,
-+		.size     = ARRAY_SIZE(kii_pro),
-+		.rc_proto = RC_PROTO_NEC,
-+		.name     = RC_MAP_KII_PRO,
-+	}
-+};
-+
-+static int __init init_rc_map_kii_pro(void)
-+{
-+	return rc_map_register(&kii_pro_map);
-+}
-+
-+static void __exit exit_rc_map_kii_pro(void)
-+{
-+	rc_map_unregister(&kii_pro_map);
-+}
-+
-+module_init(init_rc_map_kii_pro)
-+module_exit(exit_rc_map_kii_pro)
-+
-+MODULE_LICENSE("GPL");
-+MODULE_AUTHOR("Mohammad Rasim <mohammad.rasim96@gmail.com>");
-diff --git a/include/media/rc-map.h b/include/media/rc-map.h
-index f99575a0d29c8..d22810dcd85c6 100644
---- a/include/media/rc-map.h
-+++ b/include/media/rc-map.h
-@@ -274,6 +274,7 @@ struct rc_map *rc_map_get(const char *name);
- #define RC_MAP_VIDEOMATE_K100            "rc-videomate-k100"
- #define RC_MAP_VIDEOMATE_S350            "rc-videomate-s350"
- #define RC_MAP_VIDEOMATE_TV_PVR          "rc-videomate-tv-pvr"
-+#define RC_MAP_KII_PRO                   "rc-videostrong-kii-pro"
- #define RC_MAP_WETEK_HUB                 "rc-wetek-hub"
- #define RC_MAP_WETEK_PLAY2               "rc-wetek-play2"
- #define RC_MAP_WINFAST                   "rc-winfast"
++	dev = nullb->dev;
+ 
+ 	ida_simple_remove(&nullb_indexes, nullb->index);
+ 
 -- 
 2.20.1
 
