@@ -2,125 +2,89 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C81CC2BA19
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 01:29:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D846C2BA19
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 01:29:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6A55020725
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 01:29:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587000563;
-	bh=hq/+bVXnleESn8mSlWiIeOiFdqP5VlQ1XkbPhFhBPAQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=bwv5JU5MMXkZFqOGDDkyeGTKM09Tw6vmoTyDhbZ9rMxU8/kB7vqlCv0xzIt6of5f/
-	 2NruSO5Rv1A4NpdRZQFakR7U6edCdS0R5tH9bnnto377Dxb2G20Fp0qDQ1ew31pfh1
-	 FX4wT/1Cyz6Nnbh5H5vgGlz4u6UjK3TYgoA55j/k=
+	by mail.kernel.org (Postfix) with ESMTP id 41F1620737
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 01:29:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732252AbgDPB3T (ORCPT
+        id S1731646AbgDPB3H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 21:29:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40696 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732522AbgDPB3E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 21:29:04 -0400
-Received: from sol.localdomain (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1CBC7208E0;
-        Thu, 16 Apr 2020 01:29:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587000543;
-        bh=hq/+bVXnleESn8mSlWiIeOiFdqP5VlQ1XkbPhFhBPAQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=U7Apg3PrInj1bZ5S36DCxeG04p3aKJHJiJwrLO/6Ve1tvjwUnZziTJm8y1phI+4Gq
-         qj09WXqwTPZmoyuQl/UvHjdW2KG4XibW7wv0YzFOJQw378Na5/IhOsJJS4CJTq+Shr
-         P3ndXnQ/1SyJbLjFawUAT8sTOdLs7Go1HtB9nKKE=
-Date:   Wed, 15 Apr 2020 18:29:01 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Ira Weiny <ira.weiny@intel.com>
-Cc:     Jan Kara <jack@suse.cz>, linux-kernel@vger.kernel.org,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jeff Moyer <jmoyer@redhat.com>,
-        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH RFC 2/8] fs/ext4: Disallow verity if inode is DAX
-Message-ID: <20200416012901.GA816@sol.localdomain>
-References: <20200414040030.1802884-1-ira.weiny@intel.com>
- <20200414040030.1802884-3-ira.weiny@intel.com>
- <20200415120002.GE6126@quack2.suse.cz>
- <20200415191451.GA2305801@iweiny-DESK2.sc.intel.com>
+        Wed, 15 Apr 2020 21:29:07 -0400
+Received: from cmccmta1.chinamobile.com ([221.176.66.79]:3501 "EHLO
+        cmccmta1.chinamobile.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731316AbgDPB2p (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 21:28:45 -0400
+Received: from spf.mail.chinamobile.com (unknown[172.16.121.9]) by rmmx-syy-dmz-app01-12001 (RichMail) with SMTP id 2ee15e97b4bafac-73fd9; Thu, 16 Apr 2020 09:28:26 +0800 (CST)
+X-RM-TRANSID: 2ee15e97b4bafac-73fd9
+X-RM-TagInfo: emlType=0                                       
+X-RM-SPAM-FLAG: 00000000
+Received: from [172.20.146.139] (unknown[112.25.154.146])
+        by rmsmtp-syy-appsvr05-12005 (RichMail) with SMTP id 2ee55e97b4b9bad-0444d;
+        Thu, 16 Apr 2020 09:28:26 +0800 (CST)
+X-RM-TRANSID: 2ee55e97b4b9bad-0444d
+Subject: Re: [PATCH] i2c: drivers: Avoid unnecessary check inefm32_i2c_probe()
+To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
+Cc:     wsa@the-dreams.de, o.rempel@pengutronix.de, ardb@kernel.org,
+        linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+References: <20200415140640.19948-1-tangbin@cmss.chinamobile.com>
+ <20200415143133.qwbes5whbqx5jf2j@pengutronix.de>
+From:   Tang Bin <tangbin@cmss.chinamobile.com>
+Message-ID: <20cc01b8-2661-7b3e-3dbc-38f7e282679b@cmss.chinamobile.com>
+Date:   Thu, 16 Apr 2020 09:30:22 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200415191451.GA2305801@iweiny-DESK2.sc.intel.com>
+In-Reply-To: <20200415143133.qwbes5whbqx5jf2j@pengutronix.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 15, 2020 at 12:14:52PM -0700, Ira Weiny wrote:
-> On Wed, Apr 15, 2020 at 02:00:02PM +0200, Jan Kara wrote:
-> > On Mon 13-04-20 21:00:24, ira.weiny@intel.com wrote:
-> > > From: Ira Weiny <ira.weiny@intel.com>
-> > > 
-> > > Verity and DAX are incompatible.  Changing the DAX mode due to a verity
-> > > flag change is wrong without a corresponding address_space_operations
-> > > update.
-> > > 
-> > > Make the 2 options mutually exclusive by returning an error if DAX was
-> > > set first.
-> > > 
-> > > (Setting DAX is already disabled if Verity is set first.)
-> > > 
-> > > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-> > > ---
-> > >  fs/ext4/verity.c | 3 +++
-> > >  1 file changed, 3 insertions(+)
-> > > 
-> > > diff --git a/fs/ext4/verity.c b/fs/ext4/verity.c
-> > > index dc5ec724d889..ce3f9a198d3b 100644
-> > > --- a/fs/ext4/verity.c
-> > > +++ b/fs/ext4/verity.c
-> > > @@ -113,6 +113,9 @@ static int ext4_begin_enable_verity(struct file *filp)
-> > >  	handle_t *handle;
-> > >  	int err;
-> > >  
-> > > +	if (WARN_ON_ONCE(IS_DAX(inode)))
-> > > +		return -EINVAL;
-> > > +
-> > 
-> > Hum, one question, is there a reason for WARN_ON_ONCE()? If I understand
-> > correctly, user could normally trigger this, couldn't he?
-> 
-> Ok.  I did not think this through but I did think about this.  I was following
-> the code from the encryption side which issues a warning and was thinking that
-> would be a good way to alert the user they are doing something wrong...
-> 
-> I think you are right about both of them but we also need to put something in
-> the verity, dax, and ...  (I can't find a file in Documentation which talks
-> about encryption right off) documentation files....  For verity something like.
-> 
-> <quote>
-> Verity and DAX
-> --------------
-> 
-> Verity and DAX are not compatible and attempts to set both of these flags on a
-> file will fail.
-> </quote>
-> 
-> And the same thing in the DAX doc?
-> 
-> And where would be appropriate for the encrypt doc?
-> 
+Hi Uwe:
 
-Documentation/filesystems/fscrypt.rst mentions that DAX isn't supported on
-encrypted files, but it doesn't say what happens if someone tries to do it
-anyway.  Feel free to improve the documentation.
+On 2020/4/15 22:31, Uwe Kleine-König wrote:
+> Same things apply as in the previous patch. (space after punctuation,
+> Sob of sender should be last)
+I will notice this problem next time, thanks.
+>> ---
+>>   drivers/i2c/busses/i2c-efm32.c | 3 ---
+>>   1 file changed, 3 deletions(-)
+>>
+>> diff --git a/drivers/i2c/busses/i2c-efm32.c b/drivers/i2c/busses/i2c-efm32.c
+>> index 4de31fae7..4786ef6b2 100644
+>> --- a/drivers/i2c/busses/i2c-efm32.c
+>> +++ b/drivers/i2c/busses/i2c-efm32.c
+>> @@ -312,9 +312,6 @@ static int efm32_i2c_probe(struct platform_device *pdev)
+>>   	int ret;
+>>   	u32 clkdiv;
+>>   
+>> -	if (!np)
+>> -		return -EINVAL;
+>> -
+> I don't care much about this change. While the statement that this
+> driver is only instantiated on dt platforms is probably right,
+> explicitly checking for it might still prevent surprises later, serves
+> as explicit statement for the driver reader that non-dt isn't supposed
+> to work and given that the check is cheap I tend slightly to just keep
+> it.
+>
+In this driver, the function efm32_i2c_probe() can be triggered only if 
+the platform_device and platform_driver matches,  and the matching 
+condition is DTS. It's my opinion.
 
-- Eric
+Tnanks,
+
+Tang Bin
+
+
+
