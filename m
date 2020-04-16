@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29BA7C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:17:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D2C8C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:18:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 020F2214D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:17:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B86C214D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:18:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587050278;
-	bh=wfXgQROazFBxrkbDeVJO+X/lLtDftS0z146jAskHZgo=;
+	s=default; t=1587050283;
+	bh=17Azc/50V9kor3Bv5Su4JnoYQl5Ar9qKw0dpbNAFj3I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Rukp1I05tRjctTRevM0Rr1j9EFXVssVoQP7ECd1vGTcci+s6DQKhezxMLK18c2Xf8
-	 eBK1afTTDCveupi0k2vTol8n0JNbyBWWisTCuFZIJ+Gw9PkZCANNeh/y69EZPGNp32
-	 xLHCW7Wfa38FBqgMOfxAboE3YadWzXQx33ysWHuE=
+	b=J2mpshkz20uZfYGSSQ6fomSOpp1vJPh4yhS6vnq595cAHL1nWJbaUZxR37I7Fx9Je
+	 ivhJBlkqQHbKuvZu8HGmGQVpbCt4UIpmpd5dUJKpDH3K9gHBvCpzDckuF/6uD+7Ax4
+	 MCnzNuGwGWzL9/p/OriU6yg0GO4fh/Fy31cK1shY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2442287AbgDPPR4 (ORCPT
+        id S2442370AbgDPPSB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:17:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34548 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 11:18:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34588 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2898750AbgDPNsi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2898753AbgDPNsi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 16 Apr 2020 09:48:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A70B621974;
-        Thu, 16 Apr 2020 13:48:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1C68520732;
+        Thu, 16 Apr 2020 13:48:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044914;
-        bh=wfXgQROazFBxrkbDeVJO+X/lLtDftS0z146jAskHZgo=;
+        s=default; t=1587044916;
+        bh=17Azc/50V9kor3Bv5Su4JnoYQl5Ar9qKw0dpbNAFj3I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Sz3birDbrk/vbUXhPw33ylEZQ+yDnpR3ErXloE2DrBvg9cXMZ6aAoVzmd9GEUaYiq
-         TSjbVkbGyN/s8YK4Ancfcs7Pq98YmZ311ZDOdN37Qx7I47ThFDFt2s0RD8eNZkGNRW
-         EcB/L7CNUVwW68KK/kvyHPBSpRxRCIEok1/bP0cE=
+        b=vXmYyVPUlsF6gqcY5o92c2Xz/+qu3yWzCuLByh8WizI8UxLtTDYvOkPOmauyG9so+
+         MTxU5/ULVRCiJZIwWU7E2H5AYK3VlhVxevg6tviTpzxNz23+EOsLpBD/UJnpFPE6Xt
+         uluqu9BHzPoSB9eq5pQNWuhwZVtLQCttCOXIqNYg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yangbo Lu <yangbo.lu@nxp.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH 5.4 153/232] mmc: sdhci-of-esdhc: fix esdhc_reset() for different controller versions
-Date:   Thu, 16 Apr 2020 15:24:07 +0200
-Message-Id: <20200416131334.133946063@linuxfoundation.org>
+        stable@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>,
+        Daniel Axtens <dja@axtens.net>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Guenter Roeck <linux@roeck-us.net>
+Subject: [PATCH 5.4 154/232] powerpc/pseries: Drop pointless static qualifier in vpa_debugfs_init()
+Date:   Thu, 16 Apr 2020 15:24:08 +0200
+Message-Id: <20200416131334.282926388@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131316.640996080@linuxfoundation.org>
 References: <20200416131316.640996080@linuxfoundation.org>
@@ -60,90 +61,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yangbo Lu <yangbo.lu@nxp.com>
+From: YueHaibing <yuehaibing@huawei.com>
 
-commit 2aa3d826adb578b26629a79b775a552cfe3fedf7 upstream.
+commit 11dd34f3eae5a468013bb161a1dcf1fecd2ca321 upstream.
 
-This patch is to fix operating in esdhc_reset() for different
-controller versions, and to add bus-width restoring after data
-reset for eSDHC (verdor version <= 2.2).
+There is no need to have the 'struct dentry *vpa_dir' variable static
+since new value always be assigned before use it.
 
-Also add annotation for understanding.
-
-Signed-off-by: Yangbo Lu <yangbo.lu@nxp.com>
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
-Link: https://lore.kernel.org/r/20200108040713.38888-1-yangbo.lu@nxp.com
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Fixes: c6c26fb55e8e ("powerpc/pseries: Export raw per-CPU VPA data via debugfs")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Reviewed-by: Daniel Axtens <dja@axtens.net>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20190218125644.87448-1-yuehaibing@huawei.com
+Cc: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/mmc/host/sdhci-of-esdhc.c |   43 ++++++++++++++++++++++++++++++++++----
- 1 file changed, 39 insertions(+), 4 deletions(-)
+ arch/powerpc/platforms/pseries/lpar.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/mmc/host/sdhci-of-esdhc.c
-+++ b/drivers/mmc/host/sdhci-of-esdhc.c
-@@ -734,23 +734,58 @@ static void esdhc_reset(struct sdhci_hos
+--- a/arch/powerpc/platforms/pseries/lpar.c
++++ b/arch/powerpc/platforms/pseries/lpar.c
+@@ -1992,7 +1992,7 @@ static int __init vpa_debugfs_init(void)
  {
- 	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
- 	struct sdhci_esdhc *esdhc = sdhci_pltfm_priv(pltfm_host);
--	u32 val;
-+	u32 val, bus_width = 0;
+ 	char name[16];
+ 	long i;
+-	static struct dentry *vpa_dir;
++	struct dentry *vpa_dir;
  
-+	/*
-+	 * Add delay to make sure all the DMA transfers are finished
-+	 * for quirk.
-+	 */
- 	if (esdhc->quirk_delay_before_data_reset &&
- 	    (mask & SDHCI_RESET_DATA) &&
- 	    (host->flags & SDHCI_REQ_USE_DMA))
- 		mdelay(5);
- 
-+	/*
-+	 * Save bus-width for eSDHC whose vendor version is 2.2
-+	 * or lower for data reset.
-+	 */
-+	if ((mask & SDHCI_RESET_DATA) &&
-+	    (esdhc->vendor_ver <= VENDOR_V_22)) {
-+		val = sdhci_readl(host, ESDHC_PROCTL);
-+		bus_width = val & ESDHC_CTRL_BUSWIDTH_MASK;
-+	}
-+
- 	sdhci_reset(host, mask);
- 
--	sdhci_writel(host, host->ier, SDHCI_INT_ENABLE);
--	sdhci_writel(host, host->ier, SDHCI_SIGNAL_ENABLE);
-+	/*
-+	 * Restore bus-width setting and interrupt registers for eSDHC
-+	 * whose vendor version is 2.2 or lower for data reset.
-+	 */
-+	if ((mask & SDHCI_RESET_DATA) &&
-+	    (esdhc->vendor_ver <= VENDOR_V_22)) {
-+		val = sdhci_readl(host, ESDHC_PROCTL);
-+		val &= ~ESDHC_CTRL_BUSWIDTH_MASK;
-+		val |= bus_width;
-+		sdhci_writel(host, val, ESDHC_PROCTL);
-+
-+		sdhci_writel(host, host->ier, SDHCI_INT_ENABLE);
-+		sdhci_writel(host, host->ier, SDHCI_SIGNAL_ENABLE);
-+	}
- 
--	if (mask & SDHCI_RESET_ALL) {
-+	/*
-+	 * Some bits have to be cleaned manually for eSDHC whose spec
-+	 * version is higher than 3.0 for all reset.
-+	 */
-+	if ((mask & SDHCI_RESET_ALL) &&
-+	    (esdhc->spec_ver >= SDHCI_SPEC_300)) {
- 		val = sdhci_readl(host, ESDHC_TBCTL);
- 		val &= ~ESDHC_TB_EN;
- 		sdhci_writel(host, val, ESDHC_TBCTL);
- 
-+		/*
-+		 * Initialize eSDHC_DLLCFG1[DLL_PD_PULSE_STRETCH_SEL] to
-+		 * 0 for quirk.
-+		 */
- 		if (esdhc->quirk_unreliable_pulse_detection) {
- 			val = sdhci_readl(host, ESDHC_DLLCFG1);
- 			val &= ~ESDHC_DLL_PD_PULSE_STRETCH_SEL;
+ 	if (!firmware_has_feature(FW_FEATURE_SPLPAR))
+ 		return 0;
 
 
