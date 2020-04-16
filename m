@@ -2,53 +2,56 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53928C352BE
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:06:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72117C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:06:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 31B1C206D9
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:06:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51686206D9
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:06:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587049608;
-	bh=WEjbj32u1Jb4ntTAzOpTsIfb0FsieTcI5zbiUUeeuy4=;
+	s=default; t=1587049617;
+	bh=hDL60ZE/KPb1rBhVBfw2gW9qxX0LLGCOEybMnmAnzYM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QLCMBCwWeaUcNizGr48WTGeBvG8t3c7nVWCK3Wg9M8wl9YV2LvgdxqL7kfC7RsUoM
-	 Y2KYTQbb+ZaNq62PIp7t1uUiQdUS+jytZhj1rcDsH1tBC/Uri2jlD87GBdSdHRQ3G3
-	 IxFGRpadp/eRFSpgi9v8UatUmwu6g+iKZwprFrUM=
+	b=pSrxlL/3bBin2PTgZsGoz2xb/sd/NW7YQMA2QlSODBq9fMZUoGo90xvzeUD7qOQrB
+	 7AH6mcTbiRSBaL0x45KAoIwI+KChVkz5toKSjBUjRSPCEipXDSuH2CPKxi6eQn2s4B
+	 ioeSBu+4MSO7yRUuYy0Zfpc9XplbGdiTNim7ze7E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408805AbgDPNwB (ORCPT
+        id S2392342AbgDPPGx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 09:52:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48870 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 11:06:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38274 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2896445AbgDPNgr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:36:47 -0400
+        id S2408817AbgDPNwC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:52:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 142B7208E4;
-        Thu, 16 Apr 2020 13:36:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 563882063A;
+        Thu, 16 Apr 2020 13:52:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044207;
-        bh=WEjbj32u1Jb4ntTAzOpTsIfb0FsieTcI5zbiUUeeuy4=;
+        s=default; t=1587045121;
+        bh=hDL60ZE/KPb1rBhVBfw2gW9qxX0LLGCOEybMnmAnzYM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KMRjSWHEbi/Io/qN2QPDO3Mkc5WB5Ro2Hjb5cdzn5ws39XR9PU3CrfCfCe0Oy4Bgp
-         q01EwlbcXyOhC2RV5peFyD/Vpa9e3VauWi688MYtXRD/7v2e6UL7i/zXoBULyKXLPJ
-         RE37Fn4M9J5Q3Etjizu/DGA/O6yfAl/CDcpEnrGw=
+        b=cl/Gf4uk4I9ODaau6hXmX1HWwKSz1ZRz5M6DzCPgmliIasuZHtBAwCYibVMRe1Ivo
+         T8z4Vk6ZFlJ6CUEaNV8H3bdT7gavWaI/wA6UZWV6CjqU5NrG7fJTik+H8kr/DeFNs2
+         94Tmt0ue+I+fUAR0T+sHtG+0DO97aEqK84/f3f00=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Paul E. McKenney" <paulmck@kernel.org>
-Subject: [PATCH 5.5 125/257] rcu: Make rcu_barrier() account for offline no-CBs CPUs
-Date:   Thu, 16 Apr 2020 15:22:56 +0200
-Message-Id: <20200416131341.998176100@linuxfoundation.org>
+        stable@vger.kernel.org, Dick Kennedy <dick.kennedy@broadcom.com>,
+        James Smart <jsmart2021@gmail.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 225/232] scsi: lpfc: Fix broken Credit Recovery after driver load
+Date:   Thu, 16 Apr 2020 15:25:19 +0200
+Message-Id: <20200416131343.655236486@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200416131325.891903893@linuxfoundation.org>
-References: <20200416131325.891903893@linuxfoundation.org>
+In-Reply-To: <20200416131316.640996080@linuxfoundation.org>
+References: <20200416131316.640996080@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -58,122 +61,152 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paul E. McKenney <paulmck@kernel.org>
+From: James Smart <jsmart2021@gmail.com>
 
-commit 127e29815b4b2206c0a97ac1d83f92ffc0e25c34 upstream.
+[ Upstream commit 835214f5d5f516a38069bc077c879c7da00d6108 ]
 
-Currently, rcu_barrier() ignores offline CPUs,  However, it is possible
-for an offline no-CBs CPU to have callbacks queued, and rcu_barrier()
-must wait for those callbacks.  This commit therefore makes rcu_barrier()
-directly invoke the rcu_barrier_func() with interrupts disabled for such
-CPUs.  This requires passing the CPU number into this function so that
-it can entrain the rcu_barrier() callback onto the correct CPU's callback
-list, given that the code must instead execute on the current CPU.
+When driver is set to enable bb credit recovery, the switch displayed the
+setting as inactive.  If the link bounces, it switches to Active.
 
-While in the area, this commit fixes a bug where the first CPU's callback
-might have been invoked before rcu_segcblist_entrain() returned, which
-would also result in an early wakeup.
+During link up processing, the driver currently does a MBX_READ_SPARAM
+followed by a MBX_CONFIG_LINK. These mbox commands are queued to be
+executed, one at a time and the completion is processed by the worker
+thread.  Since the MBX_READ_SPARAM is done BEFORE the MBX_CONFIG_LINK, the
+BB_SC_N bit is never set the the returned values. BB Credit recovery status
+only gets set after the driver requests the feature in CONFIG_LINK, which
+is done after the link up. Thus the ordering of READ_SPARAM needs to follow
+the CONFIG_LINK.
 
-Fixes: 5d6742b37727 ("rcu/nocb: Use rcu_segcblist for no-CBs CPUs")
-Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-[ paulmck: Apply optimization feedback from Boqun Feng. ]
-Cc: <stable@vger.kernel.org> # 5.5.x
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fix by reordering so that READ_SPARAM is done after CONFIG_LINK.  Added a
+HBA_DEFER_FLOGI flag so that any FLOGI handling waits until after the
+READ_SPARAM is done so that the proper BB credit value is set in the FLOGI
+payload.
 
+Fixes: 6bfb16208298 ("scsi: lpfc: Fix configuration of BB credit recovery in service parameters")
+Cc: <stable@vger.kernel.org> # v5.4+
+Link: https://lore.kernel.org/r/20200128002312.16346-4-jsmart2021@gmail.com
+Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
+Signed-off-by: James Smart <jsmart2021@gmail.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/trace/events/rcu.h |    1 +
- kernel/rcu/tree.c          |   36 ++++++++++++++++++++++++------------
- 2 files changed, 25 insertions(+), 12 deletions(-)
+ drivers/scsi/lpfc/lpfc.h         |  1 +
+ drivers/scsi/lpfc/lpfc_hbadisc.c | 59 +++++++++++++++++++++-----------
+ 2 files changed, 40 insertions(+), 20 deletions(-)
 
---- a/include/trace/events/rcu.h
-+++ b/include/trace/events/rcu.h
-@@ -720,6 +720,7 @@ TRACE_EVENT_RCU(rcu_torture_read,
-  *	"Begin": rcu_barrier() started.
-  *	"EarlyExit": rcu_barrier() piggybacked, thus early exit.
-  *	"Inc1": rcu_barrier() piggyback check counter incremented.
-+ *	"OfflineNoCBQ": rcu_barrier() found offline no-CBs CPU with callbacks.
-  *	"OnlineQ": rcu_barrier() found online CPU with callbacks.
-  *	"OnlineNQ": rcu_barrier() found online CPU, no callbacks.
-  *	"IRQ": An rcu_barrier_callback() callback posted on remote CPU.
---- a/kernel/rcu/tree.c
-+++ b/kernel/rcu/tree.c
-@@ -2888,9 +2888,10 @@ static void rcu_barrier_callback(struct
- /*
-  * Called with preemption disabled, and from cross-cpu IRQ context.
-  */
--static void rcu_barrier_func(void *unused)
-+static void rcu_barrier_func(void *cpu_in)
- {
--	struct rcu_data *rdp = raw_cpu_ptr(&rcu_data);
-+	uintptr_t cpu = (uintptr_t)cpu_in;
-+	struct rcu_data *rdp = per_cpu_ptr(&rcu_data, cpu);
+diff --git a/drivers/scsi/lpfc/lpfc.h b/drivers/scsi/lpfc/lpfc.h
+index e492ca2d0b8be..8943d42fc406e 100644
+--- a/drivers/scsi/lpfc/lpfc.h
++++ b/drivers/scsi/lpfc/lpfc.h
+@@ -742,6 +742,7 @@ struct lpfc_hba {
+ 					 * capability
+ 					 */
+ #define HBA_FLOGI_ISSUED	0x100000 /* FLOGI was issued */
++#define HBA_DEFER_FLOGI		0x800000 /* Defer FLOGI till read_sparm cmpl */
  
- 	rcu_barrier_trace(TPS("IRQ"), -1, rcu_state.barrier_sequence);
- 	rdp->barrier_head.func = rcu_barrier_callback;
-@@ -2917,7 +2918,7 @@ static void rcu_barrier_func(void *unuse
-  */
- void rcu_barrier(void)
- {
--	int cpu;
-+	uintptr_t cpu;
- 	struct rcu_data *rdp;
- 	unsigned long s = rcu_seq_snap(&rcu_state.barrier_sequence);
+ 	uint32_t fcp_ring_in_use; /* When polling test if intr-hndlr active*/
+ 	struct lpfc_dmabuf slim2p;
+diff --git a/drivers/scsi/lpfc/lpfc_hbadisc.c b/drivers/scsi/lpfc/lpfc_hbadisc.c
+index 3f7df471106e9..799db8a785c21 100644
+--- a/drivers/scsi/lpfc/lpfc_hbadisc.c
++++ b/drivers/scsi/lpfc/lpfc_hbadisc.c
+@@ -1163,13 +1163,16 @@ lpfc_mbx_cmpl_local_config_link(struct lpfc_hba *phba, LPFC_MBOXQ_t *pmb)
+ 	}
  
-@@ -2940,13 +2941,14 @@ void rcu_barrier(void)
- 	rcu_barrier_trace(TPS("Inc1"), -1, rcu_state.barrier_sequence);
- 
- 	/*
--	 * Initialize the count to one rather than to zero in order to
--	 * avoid a too-soon return to zero in case of a short grace period
--	 * (or preemption of this task).  Exclude CPU-hotplug operations
--	 * to ensure that no offline CPU has callbacks queued.
-+	 * Initialize the count to two rather than to zero in order
-+	 * to avoid a too-soon return to zero in case of an immediate
-+	 * invocation of the just-enqueued callback (or preemption of
-+	 * this task).  Exclude CPU-hotplug operations to ensure that no
-+	 * offline non-offloaded CPU has callbacks queued.
+ 	/* Start discovery by sending a FLOGI. port_state is identically
+-	 * LPFC_FLOGI while waiting for FLOGI cmpl
++	 * LPFC_FLOGI while waiting for FLOGI cmpl. Check if sending
++	 * the FLOGI is being deferred till after MBX_READ_SPARAM completes.
  	 */
- 	init_completion(&rcu_state.barrier_completion);
--	atomic_set(&rcu_state.barrier_cpu_count, 1);
-+	atomic_set(&rcu_state.barrier_cpu_count, 2);
- 	get_online_cpus();
+-	if (vport->port_state != LPFC_FLOGI)
+-		lpfc_initial_flogi(vport);
+-	else if (vport->fc_flag & FC_PT2PT)
+-		lpfc_disc_start(vport);
+-
++	if (vport->port_state != LPFC_FLOGI) {
++		if (!(phba->hba_flag & HBA_DEFER_FLOGI))
++			lpfc_initial_flogi(vport);
++	} else {
++		if (vport->fc_flag & FC_PT2PT)
++			lpfc_disc_start(vport);
++	}
+ 	return;
  
- 	/*
-@@ -2956,13 +2958,23 @@ void rcu_barrier(void)
- 	 */
- 	for_each_possible_cpu(cpu) {
- 		rdp = per_cpu_ptr(&rcu_data, cpu);
--		if (!cpu_online(cpu) &&
-+		if (cpu_is_offline(cpu) &&
- 		    !rcu_segcblist_is_offloaded(&rdp->cblist))
- 			continue;
--		if (rcu_segcblist_n_cbs(&rdp->cblist)) {
-+		if (rcu_segcblist_n_cbs(&rdp->cblist) && cpu_online(cpu)) {
- 			rcu_barrier_trace(TPS("OnlineQ"), cpu,
- 					  rcu_state.barrier_sequence);
--			smp_call_function_single(cpu, rcu_barrier_func, NULL, 1);
-+			smp_call_function_single(cpu, rcu_barrier_func, (void *)cpu, 1);
-+		} else if (rcu_segcblist_n_cbs(&rdp->cblist) &&
-+			   cpu_is_offline(cpu)) {
-+			rcu_barrier_trace(TPS("OfflineNoCBQ"), cpu,
-+					  rcu_state.barrier_sequence);
-+			local_irq_disable();
-+			rcu_barrier_func((void *)cpu);
-+			local_irq_enable();
-+		} else if (cpu_is_offline(cpu)) {
-+			rcu_barrier_trace(TPS("OfflineNoCBNoQ"), cpu,
-+					  rcu_state.barrier_sequence);
- 		} else {
- 			rcu_barrier_trace(TPS("OnlineNQ"), cpu,
- 					  rcu_state.barrier_sequence);
-@@ -2974,7 +2986,7 @@ void rcu_barrier(void)
- 	 * Now that we have an rcu_barrier_callback() callback on each
- 	 * CPU, and thus each counted, remove the initial count.
- 	 */
--	if (atomic_dec_and_test(&rcu_state.barrier_cpu_count))
-+	if (atomic_sub_and_test(2, &rcu_state.barrier_cpu_count))
- 		complete(&rcu_state.barrier_completion);
+ out:
+@@ -3094,6 +3097,14 @@ lpfc_mbx_cmpl_read_sparam(struct lpfc_hba *phba, LPFC_MBOXQ_t *pmb)
+ 	lpfc_mbuf_free(phba, mp->virt, mp->phys);
+ 	kfree(mp);
+ 	mempool_free(pmb, phba->mbox_mem_pool);
++
++	/* Check if sending the FLOGI is being deferred to after we get
++	 * up to date CSPs from MBX_READ_SPARAM.
++	 */
++	if (phba->hba_flag & HBA_DEFER_FLOGI) {
++		lpfc_initial_flogi(vport);
++		phba->hba_flag &= ~HBA_DEFER_FLOGI;
++	}
+ 	return;
  
- 	/* Wait for all rcu_barrier_callback() callbacks to be invoked. */
+ out:
+@@ -3224,6 +3235,23 @@ lpfc_mbx_process_link_up(struct lpfc_hba *phba, struct lpfc_mbx_read_top *la)
+ 	}
+ 
+ 	lpfc_linkup(phba);
++	sparam_mbox = NULL;
++
++	if (!(phba->hba_flag & HBA_FCOE_MODE)) {
++		cfglink_mbox = mempool_alloc(phba->mbox_mem_pool, GFP_KERNEL);
++		if (!cfglink_mbox)
++			goto out;
++		vport->port_state = LPFC_LOCAL_CFG_LINK;
++		lpfc_config_link(phba, cfglink_mbox);
++		cfglink_mbox->vport = vport;
++		cfglink_mbox->mbox_cmpl = lpfc_mbx_cmpl_local_config_link;
++		rc = lpfc_sli_issue_mbox(phba, cfglink_mbox, MBX_NOWAIT);
++		if (rc == MBX_NOT_FINISHED) {
++			mempool_free(cfglink_mbox, phba->mbox_mem_pool);
++			goto out;
++		}
++	}
++
+ 	sparam_mbox = mempool_alloc(phba->mbox_mem_pool, GFP_KERNEL);
+ 	if (!sparam_mbox)
+ 		goto out;
+@@ -3244,20 +3272,7 @@ lpfc_mbx_process_link_up(struct lpfc_hba *phba, struct lpfc_mbx_read_top *la)
+ 		goto out;
+ 	}
+ 
+-	if (!(phba->hba_flag & HBA_FCOE_MODE)) {
+-		cfglink_mbox = mempool_alloc(phba->mbox_mem_pool, GFP_KERNEL);
+-		if (!cfglink_mbox)
+-			goto out;
+-		vport->port_state = LPFC_LOCAL_CFG_LINK;
+-		lpfc_config_link(phba, cfglink_mbox);
+-		cfglink_mbox->vport = vport;
+-		cfglink_mbox->mbox_cmpl = lpfc_mbx_cmpl_local_config_link;
+-		rc = lpfc_sli_issue_mbox(phba, cfglink_mbox, MBX_NOWAIT);
+-		if (rc == MBX_NOT_FINISHED) {
+-			mempool_free(cfglink_mbox, phba->mbox_mem_pool);
+-			goto out;
+-		}
+-	} else {
++	if (phba->hba_flag & HBA_FCOE_MODE) {
+ 		vport->port_state = LPFC_VPORT_UNKNOWN;
+ 		/*
+ 		 * Add the driver's default FCF record at FCF index 0 now. This
+@@ -3314,6 +3329,10 @@ lpfc_mbx_process_link_up(struct lpfc_hba *phba, struct lpfc_mbx_read_top *la)
+ 		}
+ 		/* Reset FCF roundrobin bmask for new discovery */
+ 		lpfc_sli4_clear_fcf_rr_bmask(phba);
++	} else {
++		if (phba->bbcredit_support && phba->cfg_enable_bbcr &&
++		    !(phba->link_flag & LS_LOOPBACK_MODE))
++			phba->hba_flag |= HBA_DEFER_FLOGI;
+ 	}
+ 
+ 	/* Prepare for LINK up registrations */
+-- 
+2.20.1
+
 
 
