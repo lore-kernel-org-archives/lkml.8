@@ -2,178 +2,150 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64AA8C3815B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:52:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30E91C352BE
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:53:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3D20E21D93
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:52:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587048769;
-	bh=3ScBCzDGVqDqZeQ7247CTqy5NBsjjC2WXKUdOEqo8bM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AXD+raFRtW1aYxG51/RO5awJDp3MFwYDTLU9Fv/P9zrA6lKNOeiuiGSZT48IwrlVZ
-	 KmQuHwJCAgj+G9ILrTtlVuaKx2sQpOTjueVOpxb7qjpn69U55iSF7qBHIW/LsvKcgu
-	 Id5VMfhSEXSYOXhOiIGtTsoUTZHe0u5TRkvpP+6k=
+	by mail.kernel.org (Postfix) with ESMTP id 0E8362223D
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:53:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="D6q+HnWV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390806AbgDPOwq (ORCPT
+        id S2394810AbgDPOw5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:52:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44424 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731495AbgDPN5X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:57:23 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A99832076D;
-        Thu, 16 Apr 2020 13:57:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587045442;
-        bh=3ScBCzDGVqDqZeQ7247CTqy5NBsjjC2WXKUdOEqo8bM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nXeQSY1ZeOg7i9Cyyi35P/4n4XVaWWDzMFS6ok5Xauh84l8N1AFmJPBGOtKW5rkwk
-         T3hFE/bG54KE+TpVDb67HO0Mux6iSp5m3Q0J8WYzj1O3mgw8z4Row5iyTahll1IxVJ
-         i5FH3xFtvdFjT+6ndNtvGRmQdnEuUDeHXfHrZpPk=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Hoyer <David.Hoyer@netapp.com>,
-        Lukas Wunner <lukas@wunner.de>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Keith Busch <kbusch@kernel.org>
-Subject: [PATCH 5.6 099/254] PCI: pciehp: Fix indefinite wait on sysfs requests
-Date:   Thu, 16 Apr 2020 15:23:08 +0200
-Message-Id: <20200416131338.404165180@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200416131325.804095985@linuxfoundation.org>
-References: <20200416131325.804095985@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Thu, 16 Apr 2020 10:52:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40586 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2393214AbgDPOwh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 10:52:37 -0400
+Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 673B9C061A10
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 07:52:37 -0700 (PDT)
+Received: by mail-qk1-x741.google.com with SMTP id 20so13473080qkl.10
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 07:52:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=HCXSa5JOI0JuZixlWcSp9z9oFtd4hHMjntnKd7qnQdg=;
+        b=D6q+HnWVLikot324F3seZu21QdKF1g0V5vDIQC90dGvb8GyvIIY9zhU6NqmwvyAEk0
+         FckWdwe17Do6/HDwHmKwADXS4xTWcxpaA0Jh2Tn/hrGasbJXGfNc9DRt9UC2Wx9Bf18w
+         jhcJi9wsgjNNJqTohK2bxvwrFZXcttFNaJAQrTkildLM0oDkbtoz26OkVcfRbU3WWOlj
+         BqcdeBgCqxJWp7BIXvuN/RwKLCtTvkIS6uxA0GcuFdIsXlUTAzYbU7GYa6nj2eVzx8aH
+         yGAukV9zW4gevdDx7bcEfam4rO8/sxjDT96zs8GY1Ew1HYpBT9WXTPh5e1xdiKqQubP1
+         qvfQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=HCXSa5JOI0JuZixlWcSp9z9oFtd4hHMjntnKd7qnQdg=;
+        b=cYCicKHQ2/oCR7buwKLouHNjP/u7xNnBy54TbvWQbYqrQkss+UPfjjRD5sF5Tkux7E
+         rvBpTlg3s+u6eom4w52Kze5XxZGDdBlK2dfm/toWRjJYsGBr8xcmwOcwV0VY1O0GTeWI
+         SlJA/YKK25PCuhDXaDZiU8m2SdZIovUaaSYavPCs+9dqwp0X06zMF4G5NavEu425z7j7
+         a3YQMuDucQM/QDOBqKVS8xjHqe4NWCDpt2jFpOlCiC0d0oBRzQiYXcQ5f0TtXD3NXEct
+         r5vKZu5wF8I8CaBxiXnZC75yZ2aVBzKfvjVMqgbILkIlYJjbZGkN8WEyvIhI50R2r1Vm
+         DhiA==
+X-Gm-Message-State: AGi0PuYPu1fxJIGBvWDfRd8c2IoeST2PQw35GoNtD4YaYtCSQHWPRd3S
+        sHUtZ/KDrvmTdP6dCV8xy2o+FQ==
+X-Google-Smtp-Source: APiQypLQA2/bBUlk05pIMttoOYkQG4MHIWDLVjipXM3ESI2Uz2kPuVtpZdrkk1rBc69aWjfHtIAwKw==
+X-Received: by 2002:a05:620a:1289:: with SMTP id w9mr15971965qki.263.1587048756521;
+        Thu, 16 Apr 2020 07:52:36 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
+        by smtp.gmail.com with ESMTPSA id d85sm8046890qkc.99.2020.04.16.07.52.35
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 16 Apr 2020 07:52:35 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1jP5sZ-0003xG-6O; Thu, 16 Apr 2020 11:52:35 -0300
+Date:   Thu, 16 Apr 2020 11:52:35 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Jani Nikula <jani.nikula@linux.intel.com>,
+        Saeed Mahameed <saeedm@mellanox.com>,
+        "narmstrong@baylibre.com" <narmstrong@baylibre.com>,
+        "masahiroy@kernel.org" <masahiroy@kernel.org>,
+        "Laurent.pinchart@ideasonboard.com" 
+        <Laurent.pinchart@ideasonboard.com>,
+        "leon@kernel.org" <leon@kernel.org>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "nico@fluxnic.net" <nico@fluxnic.net>,
+        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "kieran.bingham+renesas@ideasonboard.com" 
+        <kieran.bingham+renesas@ideasonboard.com>,
+        "a.hajda@samsung.com" <a.hajda@samsung.com>,
+        "jonas@kwiboo.se" <jonas@kwiboo.se>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        "jernej.skrabec@siol.net" <jernej.skrabec@siol.net>
+Subject: Re: [RFC 0/6] Regressions for "imply" behavior change
+Message-ID: <20200416145235.GR5100@ziepe.ca>
+References: <20200414132900.GD5100@ziepe.ca>
+ <CAK8P3a0aFQ7h4zRDW=QLogXWc88JkJJXEOK0_CpWwsRjq6+T+w@mail.gmail.com>
+ <20200414152312.GF5100@ziepe.ca>
+ <CAK8P3a1PjP9_b5NdmqTLeGN4y+3JXx_yyTE8YAf1u5rYHWPA9g@mail.gmail.com>
+ <f6d83b08fc0bc171b5ba5b2a0bc138727d92e2c0.camel@mellanox.com>
+ <CAK8P3a1-J=4EAxh7TtQxugxwXk239u8ffgxZNRdw_WWy8ExFoQ@mail.gmail.com>
+ <834c7606743424c64951dd2193ca15e29799bf18.camel@mellanox.com>
+ <CAK8P3a3Wx5_bUOKnN3_hG5nLOqv3WCUtMSq6vOkJzWZgsmAz+A@mail.gmail.com>
+ <874ktj4tvn.fsf@intel.com>
+ <CAK8P3a1S2x1jnx9Q5B22vX8gBHs0Ztu-znA9hqZ5xp5tRAykGg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAK8P3a1S2x1jnx9Q5B22vX8gBHs0Ztu-znA9hqZ5xp5tRAykGg@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lukas Wunner <lukas@wunner.de>
+On Thu, Apr 16, 2020 at 02:38:50PM +0200, Arnd Bergmann wrote:
+> On Thu, Apr 16, 2020 at 12:17 PM Jani Nikula
+> <jani.nikula@linux.intel.com> wrote:
+> >
+> > On Thu, 16 Apr 2020, Arnd Bergmann <arnd@arndb.de> wrote:
+> > > On Thu, Apr 16, 2020 at 5:25 AM Saeed Mahameed <saeedm@mellanox.com> wrote:
+> > >> BTW how about adding a new Kconfig option to hide the details of
+> > >> ( BAR || !BAR) ? as Jason already explained and suggested, this will
+> > >> make it easier for the users and developers to understand the actual
+> > >> meaning behind this tristate weird condition.
+> > >>
+> > >> e.g have a new keyword:
+> > >>      reach VXLAN
+> > >> which will be equivalent to:
+> > >>      depends on VXLAN && !VXLAN
+> > >
+> > > I'd love to see that, but I'm not sure what keyword is best. For your
+> > > suggestion of "reach", that would probably do the job, but I'm not
+> > > sure if this ends up being more or less confusing than what we have
+> > > today.
+> >
+> > Ah, perfect bikeshedding topic!
+> >
+> > Perhaps "uses"? If the dependency is enabled it gets used as a
+> > dependency.
+> 
+> That seems to be the best naming suggestion so far
 
-commit 3e487d2e4aa466decd226353755c9d423e8fbacc upstream.
+Uses also  makes sense to me.
 
-David Hoyer reports that powering pciehp slots up or down via sysfs may
-hang:  The call to wait_event() in pciehp_sysfs_enable_slot() and
-_disable_slot() does not return because ctrl->ist_running remains true.
+> > Of course, this is all just talk until someone(tm) posts a patch
+> > actually making the change. I've looked at the kconfig tool sources
+> > before; not going to make the same mistake again.
+> 
+> Right. OTOH whoever implements it gets to pick the color of the
+> bikeshed. ;-)
 
-This flag, which was introduced by commit 157c1062fcd8 ("PCI: pciehp: Avoid
-returning prematurely from sysfs requests"), signifies that the IRQ thread
-pciehp_ist() is running.  It is set to true at the top of pciehp_ist() and
-reset to false at the end.  However there are two additional return
-statements in pciehp_ist() before which the commit neglected to reset the
-flag to false and wake up waiters for the flag.
+I hope someone takes it up, especially now that imply, which
+apparently used to do this, doesn't any more :)
 
-That omission opens up the following race when powering up the slot:
-
-* pciehp_ist() runs because a PCI_EXP_SLTSTA_PDC event was requested
-  by pciehp_sysfs_enable_slot()
-
-* pciehp_ist() turns on slot power via the following call stack:
-  pciehp_handle_presence_or_link_change() -> pciehp_enable_slot() ->
-  __pciehp_enable_slot() -> board_added() -> pciehp_power_on_slot()
-
-* after slot power is turned on, the link comes up, resulting in a
-  PCI_EXP_SLTSTA_DLLSC event
-
-* the IRQ handler pciehp_isr() stores the event in ctrl->pending_events
-  and returns IRQ_WAKE_THREAD
-
-* the IRQ thread is already woken (it's bringing up the slot), but the
-  genirq code remembers to re-run the IRQ thread after it has finished
-  (such that it can deal with the new event) by setting IRQTF_RUNTHREAD
-  via __handle_irq_event_percpu() -> __irq_wake_thread()
-
-* the IRQ thread removes PCI_EXP_SLTSTA_DLLSC from ctrl->pending_events
-  via board_added() -> pciehp_check_link_status() in order to deal with
-  presence and link flaps per commit 6c35a1ac3da6 ("PCI: pciehp:
-  Tolerate initially unstable link")
-
-* after pciehp_ist() has successfully brought up the slot, it resets
-  ctrl->ist_running to false and wakes up the sysfs requester
-
-* the genirq code re-runs pciehp_ist(), which sets ctrl->ist_running
-  to true but then returns with IRQ_NONE because ctrl->pending_events
-  is empty
-
-* pciehp_sysfs_enable_slot() is finally woken but notices that
-  ctrl->ist_running is true, hence continues waiting
-
-The only way to get the hung task going again is to trigger a hotplug
-event which brings down the slot, e.g. by yanking out the card.
-
-The same race exists when powering down the slot because remove_board()
-likewise clears link or presence changes in ctrl->pending_events per commit
-3943af9d01e9 ("PCI: pciehp: Ignore Link State Changes after powering off a
-slot") and thereby may cause a re-run of pciehp_ist() which returns with
-IRQ_NONE without resetting ctrl->ist_running to false.
-
-Fix by adding a goto label before the teardown steps at the end of
-pciehp_ist() and jumping to that label from the two return statements which
-currently neglect to reset the ctrl->ist_running flag.
-
-Fixes: 157c1062fcd8 ("PCI: pciehp: Avoid returning prematurely from sysfs requests")
-Link: https://lore.kernel.org/r/cca1effa488065cb055120aa01b65719094bdcb5.1584530321.git.lukas@wunner.de
-Reported-by: David Hoyer <David.Hoyer@netapp.com>
-Signed-off-by: Lukas Wunner <lukas@wunner.de>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Reviewed-by: Keith Busch <kbusch@kernel.org>
-Cc: stable@vger.kernel.org	# v4.19+
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- drivers/pci/hotplug/pciehp_hpc.c |   14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
-
---- a/drivers/pci/hotplug/pciehp_hpc.c
-+++ b/drivers/pci/hotplug/pciehp_hpc.c
-@@ -625,17 +625,15 @@ static irqreturn_t pciehp_ist(int irq, v
- 	if (atomic_fetch_and(~RERUN_ISR, &ctrl->pending_events) & RERUN_ISR) {
- 		ret = pciehp_isr(irq, dev_id);
- 		enable_irq(irq);
--		if (ret != IRQ_WAKE_THREAD) {
--			pci_config_pm_runtime_put(pdev);
--			return ret;
--		}
-+		if (ret != IRQ_WAKE_THREAD)
-+			goto out;
- 	}
- 
- 	synchronize_hardirq(irq);
- 	events = atomic_xchg(&ctrl->pending_events, 0);
- 	if (!events) {
--		pci_config_pm_runtime_put(pdev);
--		return IRQ_NONE;
-+		ret = IRQ_NONE;
-+		goto out;
- 	}
- 
- 	/* Check Attention Button Pressed */
-@@ -664,10 +662,12 @@ static irqreturn_t pciehp_ist(int irq, v
- 		pciehp_handle_presence_or_link_change(ctrl, events);
- 	up_read(&ctrl->reset_lock);
- 
-+	ret = IRQ_HANDLED;
-+out:
- 	pci_config_pm_runtime_put(pdev);
- 	ctrl->ist_running = false;
- 	wake_up(&ctrl->requester);
--	return IRQ_HANDLED;
-+	return ret;
- }
- 
- static int pciehp_poll(void *data)
-
-
+Jason
