@@ -2,97 +2,164 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3733FC2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 11:57:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76333C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 11:57:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1A85921D91
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 11:57:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 594D221D7F
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 11:57:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2634525AbgDPL5F (ORCPT
+        id S2634538AbgDPL5Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 07:57:05 -0400
-Received: from relay3-d.mail.gandi.net ([217.70.183.195]:37353 "EHLO
-        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2634471AbgDPL4N (ORCPT
+        Thu, 16 Apr 2020 07:57:24 -0400
+Received: from 5.mo69.mail-out.ovh.net ([46.105.43.105]:51481 "EHLO
+        5.mo69.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2634512AbgDPL45 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 07:56:13 -0400
-X-Originating-IP: 93.29.109.196
-Received: from localhost.localdomain (196.109.29.93.rev.sfr.net [93.29.109.196])
-        (Authenticated sender: paul.kocialkowski@bootlin.com)
-        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id A53EA60015;
-        Thu, 16 Apr 2020 11:55:15 +0000 (UTC)
-From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-To:     linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Jacob Chen <jacob-chen@iotwrt.com>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Hans Verkuil <hansverk@cisco.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Subject: [PATCH 4/4] media: rockchip: rga: Only set output CSC mode for RGB input
-Date:   Thu, 16 Apr 2020 13:50:47 +0200
-Message-Id: <20200416115047.233720-5-paul.kocialkowski@bootlin.com>
-X-Mailer: git-send-email 2.26.0
-In-Reply-To: <20200416115047.233720-1-paul.kocialkowski@bootlin.com>
-References: <20200416115047.233720-1-paul.kocialkowski@bootlin.com>
+        Thu, 16 Apr 2020 07:56:57 -0400
+Received: from player699.ha.ovh.net (unknown [10.110.208.144])
+        by mo69.mail-out.ovh.net (Postfix) with ESMTP id F1C938B908
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 10:07:56 +0200 (CEST)
+Received: from kaod.org (82-64-250-170.subs.proxad.net [82.64.250.170])
+        (Authenticated sender: clg@kaod.org)
+        by player699.ha.ovh.net (Postfix) with ESMTPSA id 5E029116DD815;
+        Thu, 16 Apr 2020 08:07:49 +0000 (UTC)
+Subject: Re: [PATCH] KVM: PPC: Book3S HV: Handle non-present PTEs in page
+ fault functions
+To:     Paul Mackerras <paulus@ozlabs.org>, kvm@vger.kernel.org,
+        kvm-ppc@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        groug@kaod.org, David Gibson <david@gibson.dropbear.id.au>
+References: <20200416050335.GB10545@blackberry>
+From:   =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg@kaod.org>
+Message-ID: <a4e1bf29-af52-232e-d0d2-06206fa05fbe@kaod.org>
+Date:   Thu, 16 Apr 2020 10:07:49 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
+In-Reply-To: <20200416050335.GB10545@blackberry>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-Ovh-Tracer-Id: 1322932392823262182
+X-VR-SPAMSTATE: OK
+X-VR-SPAMSCORE: -100
+X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeduhedrfeehucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepuffvfhfhkffffgggjggtgfesthekredttdefjeenucfhrhhomhepveorughrihgtpgfnvggpifhorghtvghruceotghlgheskhgrohgurdhorhhgqeenucffohhmrghinheprhgvughhrghtrdgtohhmnecukfhppedtrddtrddtrddtpdekvddrieegrddvhedtrddujedtnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmohguvgepshhmthhpqdhouhhtpdhhvghlohepphhlrgihvghrieelledrhhgrrdhovhhhrdhnvghtpdhinhgvtheptddrtddrtddrtddpmhgrihhlfhhrohhmpegtlhhgsehkrghougdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Setting the output CSC mode is required for a YUV output, but must not
-be set when the input is also YUV. Doing this (as tested with a YUV420P
-to YUV420P conversion) results in wrong colors.
+On 4/16/20 7:03 AM, Paul Mackerras wrote:
+> Since cd758a9b57ee "KVM: PPC: Book3S HV: Use __gfn_to_pfn_memslot in HPT
+> page fault handler", it's been possible in fairly rare circumstances to
+> load a non-present PTE in kvmppc_book3s_hv_page_fault() when running a
+> guest on a POWER8 host.
+> 
+> Because that case wasn't checked for, we could misinterpret the non-present
+> PTE as being a cache-inhibited PTE.  That could mismatch with the
+> corresponding hash PTE, which would cause the function to fail with -EFAULT
+> a little further down.  That would propagate up to the KVM_RUN ioctl()
+> generally causing the KVM userspace (usually qemu) to fall over.
+> 
+> This addresses the problem by catching that case and returning to the guest
+> instead, letting it fault again, and retrying the whole page fault from
+> the beginning.
+> 
+> For completeness, this fixes the radix page fault handler in the same
+> way.  For radix this didn't cause any obvious misbehaviour, because we
+> ended up putting the non-present PTE into the guest's partition-scoped
+> page tables, leading immediately to another hypervisor data/instruction
+> storage interrupt, which would go through the page fault path again
+> and fix things up.
+> 
+> Fixes: cd758a9b57ee "KVM: PPC: Book3S HV: Use __gfn_to_pfn_memslot in HPT page fault handler"
+> Bugzilla: https://bugzilla.redhat.com/show_bug.cgi?id=1820402
+> Reported-by: David Gibson <david@gibson.dropbear.id.au>
+> Signed-off-by: Paul Mackerras <paulus@ozlabs.org>
 
-Adapt the logic to only set the CSC mode when the output is YUV and the
-input is RGB.
+I didn't see the reported issue with the current 5.7-rc1. Anyhow I gave
+this patch a try on a P8 host and a P9 host with a radix guest and a hash 
+guest (using rhel6). Passthrough is fine also.
 
-Fixes: f7e7b48e6d79 ("[media] rockchip/rga: v4l2 m2m support")
-Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
----
- drivers/media/platform/rockchip/rga/rga-hw.c | 18 +++++++++++-------
- 1 file changed, 11 insertions(+), 7 deletions(-)
+Tested-by: Cédric Le Goater <clg@kaod.org>
 
-diff --git a/drivers/media/platform/rockchip/rga/rga-hw.c b/drivers/media/platform/rockchip/rga/rga-hw.c
-index 4be6dcf292ff..cbffcf986ccf 100644
---- a/drivers/media/platform/rockchip/rga/rga-hw.c
-+++ b/drivers/media/platform/rockchip/rga/rga-hw.c
-@@ -216,13 +216,17 @@ static void rga_cmd_set_trans_info(struct rga_ctx *ctx)
- 	}
- 
- 	if (ctx->out.fmt->hw_format >= RGA_COLOR_FMT_YUV422SP) {
--		switch (ctx->out.colorspace) {
--		case V4L2_COLORSPACE_REC709:
--			dst_info.data.csc_mode = RGA_SRC_CSC_MODE_BT709_R0;
--			break;
--		default:
--			dst_info.data.csc_mode = RGA_DST_CSC_MODE_BT601_R0;
--			break;
-+		if (ctx->in.fmt->hw_format < RGA_COLOR_FMT_YUV422SP) {
-+			switch (ctx->out.colorspace) {
-+			case V4L2_COLORSPACE_REC709:
-+				dst_info.data.csc_mode =
-+					RGA_SRC_CSC_MODE_BT709_R0;
-+				break;
-+			default:
-+				dst_info.data.csc_mode =
-+					RGA_DST_CSC_MODE_BT601_R0;
-+				break;
-+			}
- 		}
- 	}
- 
--- 
-2.26.0
+The code looks correct,
+
+Reviewed-by: Cédric Le Goater <clg@kaod.org>
+
+Thanks,
+
+C. 
+
+
+> ---
+> This is a reworked version of the patch David Gibson sent recently,
+> with the fix applied to the radix case as well. The commit message
+> is mostly stolen from David's patch.
+> 
+>  arch/powerpc/kvm/book3s_64_mmu_hv.c    | 9 +++++----
+>  arch/powerpc/kvm/book3s_64_mmu_radix.c | 9 +++++----
+>  2 files changed, 10 insertions(+), 8 deletions(-)
+> 
+> diff --git a/arch/powerpc/kvm/book3s_64_mmu_hv.c b/arch/powerpc/kvm/book3s_64_mmu_hv.c
+> index 3aecec8..20b7dce 100644
+> --- a/arch/powerpc/kvm/book3s_64_mmu_hv.c
+> +++ b/arch/powerpc/kvm/book3s_64_mmu_hv.c
+> @@ -604,18 +604,19 @@ int kvmppc_book3s_hv_page_fault(struct kvm_run *run, struct kvm_vcpu *vcpu,
+>  	 */
+>  	local_irq_disable();
+>  	ptep = __find_linux_pte(vcpu->arch.pgdir, hva, NULL, &shift);
+> +	pte = __pte(0);
+> +	if (ptep)
+> +		pte = *ptep;
+> +	local_irq_enable();
+>  	/*
+>  	 * If the PTE disappeared temporarily due to a THP
+>  	 * collapse, just return and let the guest try again.
+>  	 */
+> -	if (!ptep) {
+> -		local_irq_enable();
+> +	if (!pte_present(pte)) {
+>  		if (page)
+>  			put_page(page);
+>  		return RESUME_GUEST;
+>  	}
+> -	pte = *ptep;
+> -	local_irq_enable();
+>  	hpa = pte_pfn(pte) << PAGE_SHIFT;
+>  	pte_size = PAGE_SIZE;
+>  	if (shift)
+> diff --git a/arch/powerpc/kvm/book3s_64_mmu_radix.c b/arch/powerpc/kvm/book3s_64_mmu_radix.c
+> index 134fbc1..7bf94ba 100644
+> --- a/arch/powerpc/kvm/book3s_64_mmu_radix.c
+> +++ b/arch/powerpc/kvm/book3s_64_mmu_radix.c
+> @@ -815,18 +815,19 @@ int kvmppc_book3s_instantiate_page(struct kvm_vcpu *vcpu,
+>  	 */
+>  	local_irq_disable();
+>  	ptep = __find_linux_pte(vcpu->arch.pgdir, hva, NULL, &shift);
+> +	pte = __pte(0);
+> +	if (ptep)
+> +		pte = *ptep;
+> +	local_irq_enable();
+>  	/*
+>  	 * If the PTE disappeared temporarily due to a THP
+>  	 * collapse, just return and let the guest try again.
+>  	 */
+> -	if (!ptep) {
+> -		local_irq_enable();
+> +	if (!pte_present(pte)) {
+>  		if (page)
+>  			put_page(page);
+>  		return RESUME_GUEST;
+>  	}
+> -	pte = *ptep;
+> -	local_irq_enable();
+>  
+>  	/* If we're logging dirty pages, always map single pages */
+>  	large_enable = !(memslot->flags & KVM_MEM_LOG_DIRTY_PAGES);
+> 
 
