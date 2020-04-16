@@ -4,25 +4,26 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09ABDC2BA2B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 05:48:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CE53C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 05:48:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E12A32076D
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 05:48:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55F74214AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 05:48:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407196AbgDPFs1 (ORCPT
+        id S2407213AbgDPFsf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 01:48:27 -0400
-Received: from mx2.suse.de ([195.135.220.15]:38484 "EHLO mx2.suse.de"
+        Thu, 16 Apr 2020 01:48:35 -0400
+Received: from mx2.suse.de ([195.135.220.15]:38428 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406845AbgDPFsN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 01:48:13 -0400
+        id S2406790AbgDPFsM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 01:48:12 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 6AC73AEF5;
-        Thu, 16 Apr 2020 05:48:10 +0000 (UTC)
+        by mx2.suse.de (Postfix) with ESMTP id A9744AD66;
+        Thu, 16 Apr 2020 05:48:08 +0000 (UTC)
 From:   Giovanni Gherdovich <ggherdovich@suse.cz>
 To:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
         Thomas Gleixner <tglx@linutronix.de>,
@@ -38,9 +39,9 @@ Cc:     x86@kernel.org, linux-pm@vger.kernel.org,
         Neil Rickert <nwr10cst-oslnx@yahoo.com>,
         Chris Wilson <chris@chris-wilson.co.uk>,
         Giovanni Gherdovich <ggherdovich@suse.cz>
-Subject: [PATCH 4/4] x86, sched: Move check for CPU type to caller function
-Date:   Thu, 16 Apr 2020 07:47:45 +0200
-Message-Id: <20200416054745.740-5-ggherdovich@suse.cz>
+Subject: [PATCH 2/4] x86, sched: Account for CPUs with less than 4 cores in freq. invariance
+Date:   Thu, 16 Apr 2020 07:47:43 +0200
+Message-Id: <20200416054745.740-3-ggherdovich@suse.cz>
 X-Mailer: git-send-email 2.16.4
 In-Reply-To: <20200416054745.740-1-ggherdovich@suse.cz>
 References: <20200416054745.740-1-ggherdovich@suse.cz>
@@ -49,38 +50,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Improve readability of the function intel_set_max_freq_ratio() by moving
-the check for KNL CPUs there, together with checks for GLM and SKX.
+If a CPU has less than 4 physical cores, MSR_TURBO_RATIO_LIMIT will
+rightfully report that the 4C turbo ratio is zero. In such cases, use the
+1C turbo ratio instead for frequency invariance calculations.
 
+Reported-by: Neil Rickert <nwr10cst-oslnx@yahoo.com>
+Reported-by: Like Xu <like.xu@linux.intel.com>
 Signed-off-by: Giovanni Gherdovich <ggherdovich@suse.cz>
+Fixes: 1567c3e3467c ("x86, sched: Add support for frequency invariance")
 ---
- arch/x86/kernel/smpboot.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ arch/x86/kernel/smpboot.c | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
 
 diff --git a/arch/x86/kernel/smpboot.c b/arch/x86/kernel/smpboot.c
-index dd8e15f648bc..8c89e4d9ad28 100644
+index 3a318ec9bc17..5d346b70844b 100644
 --- a/arch/x86/kernel/smpboot.c
 +++ b/arch/x86/kernel/smpboot.c
-@@ -1877,9 +1877,6 @@ static bool knl_set_max_freq_ratio(u64 *base_freq, u64 *turbo_freq,
- 	int err, i;
- 	u64 msr;
+@@ -1945,18 +1945,23 @@ static bool skx_set_max_freq_ratio(u64 *base_freq, u64 *turbo_freq, int size)
  
--	if (!x86_match_cpu(has_knl_turbo_ratio_limits))
--		return false;
--
+ static bool core_set_max_freq_ratio(u64 *base_freq, u64 *turbo_freq)
+ {
++	u64 msr;
+ 	int err;
+ 
  	err = rdmsrl_safe(MSR_PLATFORM_INFO, base_freq);
  	if (err)
  		return false;
-@@ -1977,7 +1974,8 @@ static bool intel_set_max_freq_ratio(void)
- 	    skx_set_max_freq_ratio(&base_freq, &turbo_freq, 1))
- 		goto out;
  
--	if (knl_set_max_freq_ratio(&base_freq, &turbo_freq, 1))
-+	if (x86_match_cpu(has_knl_turbo_ratio_limits) &&
-+	    knl_set_max_freq_ratio(&base_freq, &turbo_freq, 1))
- 		goto out;
+-	err = rdmsrl_safe(MSR_TURBO_RATIO_LIMIT, turbo_freq);
++	err = rdmsrl_safe(MSR_TURBO_RATIO_LIMIT, &msr);
+ 	if (err)
+ 		return false;
  
- 	if (x86_match_cpu(has_skx_turbo_ratio_limits) &&
+-	*base_freq = (*base_freq >> 8) & 0xFF;      /* max P state */
+-	*turbo_freq = (*turbo_freq >> 24) & 0xFF;   /* 4C turbo    */
++	*base_freq = (*base_freq >> 8) & 0xFF;    /* max P state */
++	*turbo_freq = (msr >> 24) & 0xFF;         /* 4C turbo    */
++
++	/* The CPU may have less than 4 cores */
++	if (!*turbo_freq)
++		*turbo_freq = msr & 0xFF;         /* 1C turbo    */
+ 
+ 	return true;
+ }
 -- 
 2.16.4
 
