@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9A84C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:31:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF9C3C2BB85
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:31:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C8ACE2223D
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:31:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FB9121927
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:31:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587051098;
-	bh=iryEKzf2hO9H4jsbyGgbgdA/v/MMTMlVjJvsGOanEFs=;
+	s=default; t=1587051103;
+	bh=uCDUcXmEwX5SSUfpabvQs8S1gdekkxZT6ihr0BNLMug=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=C8FFRUWZEpRJLlCUYAnT0ZquKg/+xNrNXHzceww/yh2F+HcFmh015BG9FbM6dCumx
-	 WpdwnqE7XCSEKTqiGJujZZF56ldAfgvC5DYGRwFPD98kaYQlpQAyHKkPFJoy4xG2Ds
-	 1x8g5kJVh5YO7KK9qgGjg00uFf/oxXvo4ZTLH824=
+	b=uNtGFsER1IeT4Ut1hgtuhG6rR1xnYMSNX3KI5aYbqy2EZ9+o8jPOQ/xS6NICdgCDc
+	 L9dag+lsPkm+F1o3+T4TVUSgxdMd7gQbBvMGLaWetT73E/zM0oSSym97dKOvB3xs/q
+	 mr9yNtAwlcFYq9G7CfSJ8rG8Uj+ELnism99oZmGA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2505954AbgDPPbh (ORCPT
+        id S2633975AbgDPPbm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:31:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56058 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 11:31:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55862 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392152AbgDPNmz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:42:55 -0400
+        id S2441564AbgDPNmp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:42:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 43033214D8;
-        Thu, 16 Apr 2020 13:42:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6479D218AC;
+        Thu, 16 Apr 2020 13:42:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044574;
-        bh=iryEKzf2hO9H4jsbyGgbgdA/v/MMTMlVjJvsGOanEFs=;
+        s=default; t=1587044564;
+        bh=uCDUcXmEwX5SSUfpabvQs8S1gdekkxZT6ihr0BNLMug=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TX8iHy9BvEHXfB9fu9fITcic5DWdD9vprV8M0TKnzQM0N8UY10QFK2M7Gme59IlCn
-         HlZjtjo04MvPmdJw4xiwPGuZ5zgtkxyYjdTVKKNrgKbQ4uhUHy7CpcjHrZGqsK8ori
-         4oCXCOviSqJBp4F3KqKKOo66Clq4mT07+e4Xolmo=
+        b=slN9vmpOhHpCeV3fINcEZKNSoCojIbLACAe5snWkP65CfkStwyxUnTNNfjbnBYaK8
+         hSrU15pMUnZ5UugxWKVK733dMWh7IPNF0fkwn6OP7pnz91lsoLm0Eu+IGrShaUYbS7
+         OcrPPqNg7HadKZd5Anipk9Gs2eyNE8FRgoQwodd4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Luo bin <luobin9@huawei.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 016/232] hinic: fix wrong value of MIN_SKB_LEN
-Date:   Thu, 16 Apr 2020 15:21:50 +0200
-Message-Id: <20200416131318.392451766@linuxfoundation.org>
+Subject: [PATCH 5.4 012/232] hinic: fix a bug of waitting for IO stopped
+Date:   Thu, 16 Apr 2020 15:21:46 +0200
+Message-Id: <20200416131317.942485260@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131316.640996080@linuxfoundation.org>
 References: <20200416131316.640996080@linuxfoundation.org>
@@ -62,30 +62,88 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Luo bin <luobin9@huawei.com>
 
-[ Upstream commit 7296695fc16dd1761dbba8b68a9181c71cef0633 ]
+[ Upstream commit 96758117dc528e6d84bd23d205e8cf7f31eda029 ]
 
-the minimum value of skb len that hw supports is 32 rather than 17
+it's unreliable for fw to check whether IO is stopped, so driver
+wait for enough time to ensure IO process is done in hw before
+freeing resources
 
 Signed-off-by: Luo bin <luobin9@huawei.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/huawei/hinic/hinic_tx.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ .../net/ethernet/huawei/hinic/hinic_hw_dev.c  | 51 +------------------
+ 1 file changed, 2 insertions(+), 49 deletions(-)
 
-diff --git a/drivers/net/ethernet/huawei/hinic/hinic_tx.c b/drivers/net/ethernet/huawei/hinic/hinic_tx.c
-index 375d81d03e866..365016450bdbe 100644
---- a/drivers/net/ethernet/huawei/hinic/hinic_tx.c
-+++ b/drivers/net/ethernet/huawei/hinic/hinic_tx.c
-@@ -45,7 +45,7 @@
+diff --git a/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.c b/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.c
+index 79b3d53f2fbfa..c7c75b772a866 100644
+--- a/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.c
++++ b/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.c
+@@ -360,50 +360,6 @@ static int wait_for_db_state(struct hinic_hwdev *hwdev)
+ 	return -EFAULT;
+ }
  
- #define HW_CONS_IDX(sq)                 be16_to_cpu(*(u16 *)((sq)->hw_ci_addr))
+-static int wait_for_io_stopped(struct hinic_hwdev *hwdev)
+-{
+-	struct hinic_cmd_io_status cmd_io_status;
+-	struct hinic_hwif *hwif = hwdev->hwif;
+-	struct pci_dev *pdev = hwif->pdev;
+-	struct hinic_pfhwdev *pfhwdev;
+-	unsigned long end;
+-	u16 out_size;
+-	int err;
+-
+-	if (!HINIC_IS_PF(hwif) && !HINIC_IS_PPF(hwif)) {
+-		dev_err(&pdev->dev, "Unsupported PCI Function type\n");
+-		return -EINVAL;
+-	}
+-
+-	pfhwdev = container_of(hwdev, struct hinic_pfhwdev, hwdev);
+-
+-	cmd_io_status.func_idx = HINIC_HWIF_FUNC_IDX(hwif);
+-
+-	end = jiffies + msecs_to_jiffies(IO_STATUS_TIMEOUT);
+-	do {
+-		err = hinic_msg_to_mgmt(&pfhwdev->pf_to_mgmt, HINIC_MOD_COMM,
+-					HINIC_COMM_CMD_IO_STATUS_GET,
+-					&cmd_io_status, sizeof(cmd_io_status),
+-					&cmd_io_status, &out_size,
+-					HINIC_MGMT_MSG_SYNC);
+-		if ((err) || (out_size != sizeof(cmd_io_status))) {
+-			dev_err(&pdev->dev, "Failed to get IO status, ret = %d\n",
+-				err);
+-			return err;
+-		}
+-
+-		if (cmd_io_status.status == IO_STOPPED) {
+-			dev_info(&pdev->dev, "IO stopped\n");
+-			return 0;
+-		}
+-
+-		msleep(20);
+-	} while (time_before(jiffies, end));
+-
+-	dev_err(&pdev->dev, "Wait for IO stopped - Timeout\n");
+-	return -ETIMEDOUT;
+-}
+-
+ /**
+  * clear_io_resource - set the IO resources as not active in the NIC
+  * @hwdev: the NIC HW device
+@@ -423,11 +379,8 @@ static int clear_io_resources(struct hinic_hwdev *hwdev)
+ 		return -EINVAL;
+ 	}
  
--#define MIN_SKB_LEN                     17
-+#define MIN_SKB_LEN			32
+-	err = wait_for_io_stopped(hwdev);
+-	if (err) {
+-		dev_err(&pdev->dev, "IO has not stopped yet\n");
+-		return err;
+-	}
++	/* sleep 100ms to wait for firmware stopping I/O */
++	msleep(100);
  
- #define	MAX_PAYLOAD_OFFSET	        221
- #define TRANSPORT_OFFSET(l4_hdr, skb)	((u32)((l4_hdr) - (skb)->data))
+ 	cmd_clear_io_res.func_idx = HINIC_HWIF_FUNC_IDX(hwif);
+ 
 -- 
 2.20.1
 
