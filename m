@@ -2,52 +2,52 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90869C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 16:02:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0029AC2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 16:02:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 62F6A217D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 16:02:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0360217D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 16:02:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587052943;
-	bh=JVBQ4mJiai4SFGqM9hpLiYzHjPgT+kxE4i+UwDn0DQY=;
+	s=default; t=1587052953;
+	bh=vdgwYlSOFs28XcipsvxT05S44fVtgoTHlfCzcQhrxhE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Fg7fxSQhlW14k2zGhT1QsSYMJ7WLo5E7sRI4sRcdmTTNYdkvi6q4hVuuXej7IcL0Z
-	 mJPDb8YQLclajUfHwKtsyCYlKEx1VjoGTMDfc+ApodaVpxqAbVIPg090HW2EYSEIJS
-	 4mex5KFjg8OtYgCAqCXObT6j9mnGG0G65fDBG7o0=
+	b=qUjsAbtv5hoDgv58DY55G0OvrYfr0OwK77ONKBC8YBkBHI45sdyFyONZv1qy8Ucdc
+	 cZp1B57OEebcY//EJQFS8avYr6NXb66aY7n4v/ZuDovj0DJzwEkM0LVYAX5XA39Pam
+	 pPB1j7bsVFHNaqF5/yk1ivkN2YghDtwuX36jS0aY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2410709AbgDPQCW (ORCPT
+        id S2636624AbgDPQCa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 12:02:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35036 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 12:02:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34838 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2895308AbgDPN0s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:26:48 -0400
+        id S2895272AbgDPN0g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:26:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 914DA217D8;
-        Thu, 16 Apr 2020 13:26:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6FDFF206E9;
+        Thu, 16 Apr 2020 13:26:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587043608;
-        bh=JVBQ4mJiai4SFGqM9hpLiYzHjPgT+kxE4i+UwDn0DQY=;
+        s=default; t=1587043595;
+        bh=vdgwYlSOFs28XcipsvxT05S44fVtgoTHlfCzcQhrxhE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fRgvZBD+SZMr8T9OcR7ZFwH47w0Iq1vHVKOSYOSwo+y7LlqGncXSQkq3s/wkyh8gw
-         eSOmyw4OPXsdMxm3nWbJ0F9S+6PB2czQoV99gQG1kd/s8hEkrO4UfoiFs3RaOQgTcr
-         W7fBp8B6qqb5l+Vro+NqgambpRf20tLqxO79wJUs=
+        b=eLATGqNnpJs+8EUGruZUwwkcQgwyQg5rrKG/cLht2yXFZX5EYx9AmO+rWf3qaA5hD
+         yJxhqP432QF3d/l6reJCCzkMLAM6Zk1H4BqiqB+WJ0jByk9vEQCa+Sm2Af+RgM/NOC
+         Br2s5LDex2pjAsq4SJL7irK9QzvzgKEH0lQ8rP/8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Bob Peterson <rpeterso@redhat.com>,
-        Andreas Gruenbacher <agruenba@redhat.com>,
+        stable@vger.kernel.org, Zheng Wei <wei.zheng@vivo.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 026/146] gfs2: Dont demote a glock until its revokes are written
-Date:   Thu, 16 Apr 2020 15:22:47 +0200
-Message-Id: <20200416131246.024198134@linuxfoundation.org>
+Subject: [PATCH 4.19 004/146] net: vxge: fix wrong __VA_ARGS__ usage
+Date:   Thu, 16 Apr 2020 15:22:25 +0200
+Message-Id: <20200416131243.051096619@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131242.353444678@linuxfoundation.org>
 References: <20200416131242.353444678@linuxfoundation.org>
@@ -60,44 +60,96 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bob Peterson <rpeterso@redhat.com>
+From: Zheng Wei <wei.zheng@vivo.com>
 
-[ Upstream commit df5db5f9ee112e76b5202fbc331f990a0fc316d6 ]
+[ Upstream commit b317538c47943f9903860d83cc0060409e12d2ff ]
 
-Before this patch, run_queue would demote glocks based on whether
-there are any more holders. But if the glock has pending revokes that
-haven't been written to the media, giving up the glock might end in
-file system corruption if the revokes never get written due to
-io errors, node crashes and fences, etc. In that case, another node
-will replay the metadata blocks associated with the glock, but
-because the revoke was never written, it could replay that block
-even though the glock had since been granted to another node who
-might have made changes.
+printk in macro vxge_debug_ll uses __VA_ARGS__ without "##" prefix,
+it causes a build error when there is no variable
+arguments(e.g. only fmt is specified.).
 
-This patch changes the logic in run_queue so that it never demotes
-a glock until its count of pending revokes reaches zero.
-
-Signed-off-by: Bob Peterson <rpeterso@redhat.com>
-Reviewed-by: Andreas Gruenbacher <agruenba@redhat.com>
+Signed-off-by: Zheng Wei <wei.zheng@vivo.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/gfs2/glock.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/net/ethernet/neterion/vxge/vxge-config.h |  2 +-
+ drivers/net/ethernet/neterion/vxge/vxge-main.h   | 14 +++++++-------
+ 2 files changed, 8 insertions(+), 8 deletions(-)
 
-diff --git a/fs/gfs2/glock.c b/fs/gfs2/glock.c
-index ccdd8c821abd7..f8a5eef3d014b 100644
---- a/fs/gfs2/glock.c
-+++ b/fs/gfs2/glock.c
-@@ -636,6 +636,9 @@ __acquires(&gl->gl_lockref.lock)
- 			goto out_unlock;
- 		if (nonblock)
- 			goto out_sched;
-+		smp_mb();
-+		if (atomic_read(&gl->gl_revokes) != 0)
-+			goto out_sched;
- 		set_bit(GLF_DEMOTE_IN_PROGRESS, &gl->gl_flags);
- 		GLOCK_BUG_ON(gl, gl->gl_demote_state == LM_ST_EXCLUSIVE);
- 		gl->gl_target = gl->gl_demote_state;
+diff --git a/drivers/net/ethernet/neterion/vxge/vxge-config.h b/drivers/net/ethernet/neterion/vxge/vxge-config.h
+index d743a37a3cee8..e5dda2c27f187 100644
+--- a/drivers/net/ethernet/neterion/vxge/vxge-config.h
++++ b/drivers/net/ethernet/neterion/vxge/vxge-config.h
+@@ -2065,7 +2065,7 @@ vxge_hw_vpath_strip_fcs_check(struct __vxge_hw_device *hldev, u64 vpath_mask);
+ 	if ((level >= VXGE_ERR && VXGE_COMPONENT_LL & VXGE_DEBUG_ERR_MASK) ||  \
+ 	    (level >= VXGE_TRACE && VXGE_COMPONENT_LL & VXGE_DEBUG_TRACE_MASK))\
+ 		if ((mask & VXGE_DEBUG_MASK) == mask)			       \
+-			printk(fmt "\n", __VA_ARGS__);			       \
++			printk(fmt "\n", ##__VA_ARGS__);		       \
+ } while (0)
+ #else
+ #define vxge_debug_ll(level, mask, fmt, ...)
+diff --git a/drivers/net/ethernet/neterion/vxge/vxge-main.h b/drivers/net/ethernet/neterion/vxge/vxge-main.h
+index 59a57ff5e96af..9c86f4f9cd424 100644
+--- a/drivers/net/ethernet/neterion/vxge/vxge-main.h
++++ b/drivers/net/ethernet/neterion/vxge/vxge-main.h
+@@ -452,49 +452,49 @@ int vxge_fw_upgrade(struct vxgedev *vdev, char *fw_name, int override);
+ 
+ #if (VXGE_DEBUG_LL_CONFIG & VXGE_DEBUG_MASK)
+ #define vxge_debug_ll_config(level, fmt, ...) \
+-	vxge_debug_ll(level, VXGE_DEBUG_LL_CONFIG, fmt, __VA_ARGS__)
++	vxge_debug_ll(level, VXGE_DEBUG_LL_CONFIG, fmt, ##__VA_ARGS__)
+ #else
+ #define vxge_debug_ll_config(level, fmt, ...)
+ #endif
+ 
+ #if (VXGE_DEBUG_INIT & VXGE_DEBUG_MASK)
+ #define vxge_debug_init(level, fmt, ...) \
+-	vxge_debug_ll(level, VXGE_DEBUG_INIT, fmt, __VA_ARGS__)
++	vxge_debug_ll(level, VXGE_DEBUG_INIT, fmt, ##__VA_ARGS__)
+ #else
+ #define vxge_debug_init(level, fmt, ...)
+ #endif
+ 
+ #if (VXGE_DEBUG_TX & VXGE_DEBUG_MASK)
+ #define vxge_debug_tx(level, fmt, ...) \
+-	vxge_debug_ll(level, VXGE_DEBUG_TX, fmt, __VA_ARGS__)
++	vxge_debug_ll(level, VXGE_DEBUG_TX, fmt, ##__VA_ARGS__)
+ #else
+ #define vxge_debug_tx(level, fmt, ...)
+ #endif
+ 
+ #if (VXGE_DEBUG_RX & VXGE_DEBUG_MASK)
+ #define vxge_debug_rx(level, fmt, ...) \
+-	vxge_debug_ll(level, VXGE_DEBUG_RX, fmt, __VA_ARGS__)
++	vxge_debug_ll(level, VXGE_DEBUG_RX, fmt, ##__VA_ARGS__)
+ #else
+ #define vxge_debug_rx(level, fmt, ...)
+ #endif
+ 
+ #if (VXGE_DEBUG_MEM & VXGE_DEBUG_MASK)
+ #define vxge_debug_mem(level, fmt, ...) \
+-	vxge_debug_ll(level, VXGE_DEBUG_MEM, fmt, __VA_ARGS__)
++	vxge_debug_ll(level, VXGE_DEBUG_MEM, fmt, ##__VA_ARGS__)
+ #else
+ #define vxge_debug_mem(level, fmt, ...)
+ #endif
+ 
+ #if (VXGE_DEBUG_ENTRYEXIT & VXGE_DEBUG_MASK)
+ #define vxge_debug_entryexit(level, fmt, ...) \
+-	vxge_debug_ll(level, VXGE_DEBUG_ENTRYEXIT, fmt, __VA_ARGS__)
++	vxge_debug_ll(level, VXGE_DEBUG_ENTRYEXIT, fmt, ##__VA_ARGS__)
+ #else
+ #define vxge_debug_entryexit(level, fmt, ...)
+ #endif
+ 
+ #if (VXGE_DEBUG_INTR & VXGE_DEBUG_MASK)
+ #define vxge_debug_intr(level, fmt, ...) \
+-	vxge_debug_ll(level, VXGE_DEBUG_INTR, fmt, __VA_ARGS__)
++	vxge_debug_ll(level, VXGE_DEBUG_INTR, fmt, ##__VA_ARGS__)
+ #else
+ #define vxge_debug_intr(level, fmt, ...)
+ #endif
 -- 
 2.20.1
 
