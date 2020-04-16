@@ -2,97 +2,75 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1355BC3815B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 20:12:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81E9CC352BE
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 20:13:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E784521841
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 20:12:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6003821841
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 20:13:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587068016;
+	bh=LyH9cHiVsHhYNaY8doBcGxuSdbtSiTmUFJcreEJc7dI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=sSl8TFuX5jR+5CxDlv0jXfluh9A++CQ/cld0v0WdJlu7q3oURkl4IMR4sJIThLczI
+	 WMOtL/zJGL9JBfEXKFaKwCnhBNhPLczw7oh+VUJ5g1W3Y14322a4FWt52l+00H5o29
+	 1IUSv9OICjmLk8oWXz8Ywu3JnwM9yeqEKeOrbvOE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729944AbgDPUMk (ORCPT
+        id S1728205AbgDPUNc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 16:12:40 -0400
-Received: from mga02.intel.com ([134.134.136.20]:9825 "EHLO mga02.intel.com"
+        Thu, 16 Apr 2020 16:13:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40230 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726523AbgDPUMj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 16:12:39 -0400
-IronPort-SDR: 6ZMKpcZC414a1BKAgO2Y1kEStRKkdheTB2pyluIjuy9/Wsq9vIwO4HtZd80EqTDcrcCQbwLyuP
- 3rotnZAB3NGQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2020 13:12:39 -0700
-IronPort-SDR: r7Og5Oq2XCEbwNdn2DsqVN0NlTMRI+7z5XW0KToc2Tr/tmkoUXOe5tkG+DfeBCdZdzt5gajFsu
- V5/GechOGFhg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,392,1580803200"; 
-   d="scan'208";a="257345226"
-Received: from unknown (HELO nsgsw-wilsonpoint.lm.intel.com) ([10.232.116.102])
-  by orsmga006.jf.intel.com with ESMTP; 16 Apr 2020 13:12:38 -0700
-From:   Jon Derrick <jonathan.derrick@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Jon Derrick <jonathan.derrick@intel.com>,
-        Russell Currey <ruscur@russell.cc>,
-        Sam Bobroff <sbobroff@linux.ibm.com>,
-        "Oliver O'Halloran" <oohall@gmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Olof Johansson <olof@lixom.net>,
-        Keith Busch <keith.busch@intel.com>,
-        Frederick Lawler <fred@fredlawl.com>,
-        linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] PCI/DPC: Allow Non-ACPI Native ports to use DPC
-Date:   Thu, 16 Apr 2020 13:59:15 -0600
-Message-Id: <1587067157-2291-1-git-send-email-jonathan.derrick@intel.com>
-X-Mailer: git-send-email 1.8.3.1
+        id S1726523AbgDPUNa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 16:13:30 -0400
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E20F321841;
+        Thu, 16 Apr 2020 20:13:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587068010;
+        bh=LyH9cHiVsHhYNaY8doBcGxuSdbtSiTmUFJcreEJc7dI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=he9cyi9U6qNaI++P4yCtou68OtfJj0xa0yu9eO1qYXQ1+RZUP6SNUIDA8c4tpI1x7
+         ROTa+l+WyFq7FbIeME4zKIxrIRqh0spV4dXEZBEQxFGhVQEHQkW0/VgGE8tx85M39A
+         BjqBeLISgOkfBcSVeZ8aj67Hq/kN1LV4SVppD++k=
+Date:   Thu, 16 Apr 2020 16:13:28 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     Pavel Machek <pavel@denx.de>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        David Howells <dhowells@redhat.com>
+Subject: Re: [PATCH 4.19 003/146] rxrpc: Abstract out the calculation of
+ whether theres Tx space
+Message-ID: <20200416201328.GQ1068@sasha-vm>
+References: <20200416131242.353444678@linuxfoundation.org>
+ <20200416131242.886803103@linuxfoundation.org>
+ <20200416170515.GA29803@duo.ucw.cz>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20200416170515.GA29803@duo.ucw.cz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some platforms have a mix of ports whose capabilities can be negotiated
-by _OSC, and some ports which are not described by ACPI and instead
-managed by Native drivers. The existing Firmware-First HEST model can
-incorrectly tag these Native, Non-ACPI ports as Firmware-First capable
-ports by advertising the HEST Global flag and specifying the type and
-class (aer_hest_parse).
+On Thu, Apr 16, 2020 at 07:05:15PM +0200, Pavel Machek wrote:
+>Hi!
+>
+>> Abstract out the calculation of there being sufficient Tx buffer space.
+>> This is reproduced several times in the rxrpc sendmsg code.
+>
+>I don't think this is suitable for stable. It does not fix anything.
 
-This ultimately can lead to bad situations if the BIOS or port firmware
-leaves DPC preconfigured and the Linux DPC driver is unable to bind to
-the port to handle DPC events.
+You're right - I've grabbed it so that I could also take e138aa7d3271
+("rxrpc: Fix call interruptibility handling").
 
-This patch adds the check for Native DPC in the port's host bridge in
-order to allow DPC services to bind to the port.
-
-Signed-off-by: Jon Derrick <jonathan.derrick@intel.com>
----
- drivers/pci/pcie/dpc.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
-index 7621704..a1e355d 100644
---- a/drivers/pci/pcie/dpc.c
-+++ b/drivers/pci/pcie/dpc.c
-@@ -281,10 +281,12 @@ static int dpc_probe(struct pcie_device *dev)
- {
- 	struct pci_dev *pdev = dev->port;
- 	struct device *device = &dev->device;
-+	struct pci_host_bridge *host = pci_find_host_bridge(pdev->bus);
- 	int status;
- 	u16 ctl, cap;
- 
--	if (pcie_aer_get_firmware_first(pdev) && !pcie_ports_dpc_native)
-+	if (pcie_aer_get_firmware_first(pdev) && !pcie_ports_dpc_native &&
-+	    !host->native_dpc)
- 		return -ENOTSUPP;
- 
- 	status = devm_request_threaded_irq(device, dev->irq, dpc_irq,
 -- 
-1.8.3.1
-
+Thanks,
+Sasha
