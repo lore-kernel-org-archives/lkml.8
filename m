@@ -6,60 +6,86 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C345C2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 09:45:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC495C2BB85
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 09:45:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 16FB9208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 09:45:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAD68208E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 09:45:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2504122AbgDPJpI (ORCPT
+        id S2504143AbgDPJpP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 05:45:08 -0400
-Received: from foss.arm.com ([217.140.110.172]:58106 "EHLO foss.arm.com"
+        Thu, 16 Apr 2020 05:45:15 -0400
+Received: from mx2.suse.de ([195.135.220.15]:41080 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2503597AbgDPJpF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 05:45:05 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A8E0FC14;
-        Thu, 16 Apr 2020 02:45:03 -0700 (PDT)
-Received: from [10.57.59.184] (unknown [10.57.59.184])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6C3573F73D;
-        Thu, 16 Apr 2020 02:45:02 -0700 (PDT)
-Subject: Re: [PATCH v3 2/2] arm64: dts: realtek: Add RTD1319 SoC and Realtek
- PymParticle EVB
-To:     James Tai <james.tai@realtek.com>,
-        linux-realtek-soc@lists.infradead.org
-Cc:     Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>,
-        linux-arm-kernel@lists.infradead.org
-References: <20200204145207.28622-1-james.tai@realtek.com>
- <20200204145207.28622-3-james.tai@realtek.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <05b02ba8-2959-48d8-be3f-c4a1a0bc88a4@arm.com>
-Date:   Thu, 16 Apr 2020 10:45:01 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        id S2503578AbgDPJpI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 05:45:08 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 08D91AE19;
+        Thu, 16 Apr 2020 09:45:06 +0000 (UTC)
+Date:   Thu, 16 Apr 2020 11:45:05 +0200 (CEST)
+From:   Miroslav Benes <mbenes@suse.cz>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+cc:     Peter Zijlstra <peterz@infradead.org>,
+        live-patching@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jessica Yu <jeyu@kernel.org>
+Subject: Re: [PATCH 0/7] livepatch,module: Remove .klp.arch and
+ module_disable_ro()
+In-Reply-To: <20200414190814.glra2gceqgy34iyx@treble>
+Message-ID: <alpine.LSU.2.21.2004161136340.10475@pobox.suse.cz>
+References: <cover.1586881704.git.jpoimboe@redhat.com> <20200414182726.GF2483@worktop.programming.kicks-ass.net> <20200414190814.glra2gceqgy34iyx@treble>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 MIME-Version: 1.0
-In-Reply-To: <20200204145207.28622-3-james.tai@realtek.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-02-04 2:52 pm, James Tai wrote:
-[...]
-> +	arm_pmu: pmu {
-> +		compatible = "arm,armv8-pmuv3";
+On Tue, 14 Apr 2020, Josh Poimboeuf wrote:
 
-The binding updates have landed now, so you can use "arm,cortex-a55-pmu" 
-here.
+> On Tue, Apr 14, 2020 at 08:27:26PM +0200, Peter Zijlstra wrote:
+> > On Tue, Apr 14, 2020 at 11:28:36AM -0500, Josh Poimboeuf wrote:
+> > > Better late than never, these patches add simplifications and
+> > > improvements for some issues Peter found six months ago, as part of his
+> > > non-writable text code (W^X) cleanups.
+> > 
+> > Excellent stuff, thanks!!
+> >
+> > I'll go brush up these two patches then:
+> > 
+> >   https://lkml.kernel.org/r/20191018074634.801435443@infradead.org
+> >   https://lkml.kernel.org/r/20191018074634.858645375@infradead.org
+> 
+> Ah right, I meant to bring that up.  I actually played around with those
+> patches.  While it would be nice to figure out a way to converge the
+> ftrace module init, I didn't really like the first patch.
+> 
+> It bothers me that both the notifiers and the module init() both see the
+> same MODULE_STATE_COMING state, but only in the former case is the text
+> writable.
+> 
+> I think it's cognitively simpler if MODULE_STATE_COMING always means the
+> same thing, like the comments imply, "fully formed" and thus
+> not-writable:
+> 
+> enum module_state {
+> 	MODULE_STATE_LIVE,	/* Normal state. */
+> 	MODULE_STATE_COMING,	/* Full formed, running module_init. */
+> 	MODULE_STATE_GOING,	/* Going away. */
+> 	MODULE_STATE_UNFORMED,	/* Still setting it up. */
+> };
+> 
+> And, it keeps tighter constraints on what a notifier can do, which is a
+> good thing if we can get away with it.
 
-Robin.
+Agreed.
 
-> +		interrupts = <GIC_PPI 7 IRQ_TYPE_LEVEL_LOW>;
-> +		interrupt-affinity = <&cpu0>, <&cpu1>, <&cpu2>, <&cpu3>;
-> +	};
+On the other hand, the first patch would remove the tiny race window when 
+a module state is still UNFORMED, but the protections are (being) set up. 
+Patches 4/7 and 5/7 allow to use memcpy in that case, because it is early. 
+But it is in fact not already. I haven't checked yet if it really matters 
+somewhere (a race with livepatch running klp_module_coming while another 
+module is being loaded or anything like that).
+
+Miroslav
