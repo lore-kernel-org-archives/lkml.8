@@ -2,146 +2,264 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3B38C2D0EF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 04:55:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 926C2C2D0EF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 04:56:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D70ED20767
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 04:55:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6406D20771
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 04:56:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l9ukk57M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404726AbgDPEzS (ORCPT
+        id S2404857AbgDPE4f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 00:55:18 -0400
-Received: from mga05.intel.com ([192.55.52.43]:5444 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392050AbgDPEzN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 00:55:13 -0400
-IronPort-SDR: Xe/Yh5tA/rdPb13tcbu9p8/t4nh7R4q7k0FoQOwsYA1ikqg3bOLxe9OgxLCLzQ1ViFPjoobkq9
- 8doApZkQwBqA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2020 21:55:12 -0700
-IronPort-SDR: pZtd7vRp+1wAfFFUc4dYQhNxwL7ML1BPxtXVmt14bXI9MjzxEXGDgb6vWxttxE6aJuQpPdluMT
- MpBvmjg1273Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,388,1580803200"; 
-   d="scan'208";a="257087980"
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.147])
-  by orsmga006.jf.intel.com with ESMTP; 15 Apr 2020 21:55:11 -0700
-Date:   Wed, 15 Apr 2020 21:55:11 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     Jan Kara <jack@suse.cz>
-Cc:     linux-kernel@vger.kernel.org,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jeff Moyer <jmoyer@redhat.com>,
-        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH V8 09/11] fs: Introduce DCACHE_DONTCACHE
-Message-ID: <20200416045511.GI2309605@iweiny-DESK2.sc.intel.com>
-References: <20200415064523.2244712-1-ira.weiny@intel.com>
- <20200415064523.2244712-10-ira.weiny@intel.com>
- <20200415090153.GF501@quack2.suse.cz>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200415090153.GF501@quack2.suse.cz>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+        Thu, 16 Apr 2020 00:56:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60586 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404729AbgDPE4a (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 00:56:30 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25DD7C061A0C;
+        Wed, 15 Apr 2020 21:56:30 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id u65so1131858pfb.4;
+        Wed, 15 Apr 2020 21:56:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=SzP7bHD5Hc4jVvputS81h7AwLyVMTVzgcy2Av2iBbno=;
+        b=l9ukk57MXClJMRH+oZYY1IMPAWfCKffwTD/MRHif0/vKJsYekb3MIVZgfvcgkEHoYa
+         4sMiA4FxoPD/1hgm9NXfi3Lluo/tYMsdUiul3pPyUeQxLQ7v9ntrttcNADiP4u9rARgB
+         HZWncVdEYBU8T3Jyq9egkIVT7SJ3kaBznGu2t0k1Uh9ZBcXJY/OQrFdM18Z2Yausafrq
+         qB67/H1wyWEqeasZs6jHiBnly5SGVtnKvHxyD+Uu+xU+lAhmt7y+s89mzhMeXxL3Dla8
+         SBSxEV8WYkh8j93pGCSUvcDMtS6NJyBO/FQZ0Nl0JsIoSYxDBAdfxG4pGFkEcp12Mky+
+         9jqA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=SzP7bHD5Hc4jVvputS81h7AwLyVMTVzgcy2Av2iBbno=;
+        b=FolfxKY8xP183t8qmeVu2ZSBHrntfq/TwUNfW8GvNnmYEzkSgs1Xf6C342IjGshWlg
+         FAgsq3Ev3jV9HUyt74B+Z73eS5tF9yfd965hZUf8FTBBJGpHKa+6rv02DrugoJe9ec7S
+         gBImCiYHzsvZBGMKiYOBhdOCjZYm9S4npYClDGR5mA8/WbJG0lNzPZA6p86Txxvdr1eK
+         v0rOCyFqaR6sApOkRqvtFpP2EiOOWql8+3YABiK08zYiHumz2HyQD/xrjg4EAq/L0WFg
+         m9Vs5UAkLUoAwaf66kykOUsfYGf3v1OOYKV37pVspeb5q1pDQIyM20rS7ZbybP8qsAjY
+         CJ3w==
+X-Gm-Message-State: AGi0PuaewoDe47H60DQm8QYZW1EiQOG+zPrM/cL5VPUQvVTMtkrJ5as+
+        nHlVEpbXyeC1nvGMH/i2S6h592aTiNY=
+X-Google-Smtp-Source: APiQypJa7VvdT4JFQmvU9sh/Orly6zGOEZqw9Ndxdm2WZL5BeFtsHXB+ih3k/RAX44DLyazVdVVF4Q==
+X-Received: by 2002:a63:c149:: with SMTP id p9mr29292799pgi.389.1587012989254;
+        Wed, 15 Apr 2020 21:56:29 -0700 (PDT)
+Received: from localhost.localdomain ([183.82.182.213])
+        by smtp.gmail.com with ESMTPSA id 3sm4749198pgh.75.2020.04.15.21.56.26
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 15 Apr 2020 21:56:28 -0700 (PDT)
+From:   Rishi Gupta <gupt21@gmail.com>
+To:     gregkh@linuxfoundation.org, jslaby@suse.com, robh+dt@kernel.org,
+        corbet@lwn.net, andriy.shevchenko@linux.intel.com
+Cc:     devicetree@vger.kernel.org, linux-serial@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        Rishi Gupta <gupt21@gmail.com>
+Subject: [PATCH v3 1/4] dt-bindings: ttyvs: document serial null modem driver bindings
+Date:   Thu, 16 Apr 2020 10:26:11 +0530
+Message-Id: <1587012974-21219-1-git-send-email-gupt21@gmail.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 15, 2020 at 11:01:53AM +0200, Jan Kara wrote:
-> On Tue 14-04-20 23:45:21, ira.weiny@intel.com wrote:
-> > From: Ira Weiny <ira.weiny@intel.com>
-> > 
-> > DCACHE_DONTCACHE indicates a dentry should not be cached on final
-> > dput().
-> > 
-> > Also add a helper function which will flag I_DONTCACHE as well ad
-> > DCACHE_DONTCACHE on all dentries point to a specified inode.
-> 
-> I think this sentence needs more work :). Like: Also add a helper function
-> which will mark the inode with I_DONTCACHE flag and also mark all dentries
-> pointing to a specified inode as DCACHE_DONTCACHE.
-> 
-> > 
-> > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-> > 
-> > ---
-> > Changes from V7:
-> > 	new patch
-> > ---
-> >  fs/dcache.c            |  4 ++++
-> >  fs/inode.c             | 15 +++++++++++++++
-> >  include/linux/dcache.h |  2 ++
-> >  include/linux/fs.h     |  1 +
-> >  4 files changed, 22 insertions(+)
-> 
-> ...
-> 
-> > diff --git a/fs/inode.c b/fs/inode.c
-> > index 93d9252a00ab..b8b1917a324e 100644
-> > --- a/fs/inode.c
-> > +++ b/fs/inode.c
-> > @@ -1526,6 +1526,21 @@ int generic_delete_inode(struct inode *inode)
-> >  }
-> >  EXPORT_SYMBOL(generic_delete_inode);
-> >  
-> > +void flag_inode_dontcache(struct inode *inode)
-> 
-> mark_inode_dontcache?
+The ttyvs driver creates virtual tty devices. These devices can
+also be created through device tree. This commit document this.
 
-That works.
+Signed-off-by: Rishi Gupta <gupt21@gmail.com>
+---
+Changes in v3:
+- Rebased on top of v5.7-rc1
 
-> 
-> > +{
-> > +	struct dentry *dent;
-> 
-> This is really nitpicking but dentry variables are usually called 'de' or
-> 'dentry' :)
+Changes in v2:
+- Made dev-num property mandatory
+- Removed descriptions not needed due to driver changes
 
-Easy change.  done.
+ .../devicetree/bindings/serial/ttyvs.yaml          | 165 +++++++++++++++++++++
+ 1 file changed, 165 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/serial/ttyvs.yaml
 
-> 
-> > +
-> > +	rcu_read_lock();
-> 
-> I don't think this list is safe to traverse under RCU. E.g.
-> dentry_unlink_inode() does hlist_del_init(&dentry->d_u.d_alias). Usually,
-> we traverse this list under inode->i_lock protection AFAICS.
+diff --git a/Documentation/devicetree/bindings/serial/ttyvs.yaml b/Documentation/devicetree/bindings/serial/ttyvs.yaml
+new file mode 100644
+index 0000000..c919424
+--- /dev/null
++++ b/Documentation/devicetree/bindings/serial/ttyvs.yaml
+@@ -0,0 +1,165 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/serial/ttyvs.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Virtual multi-port serial card DT bindings
++
++maintainers:
++  - Rishi Gupta <gupt21@gmail.com>
++
++description: |
++  The ttyvs driver creates a virtual card which can have 0 to 65535
++  virtual tty devices. The card is modelled as a node with zero or more
++  child nodes each representing a virtual tty device. These devices
++  can be configured to be a loop-back type device or it can be part of
++  a null-modem pair.
++
++  Devices can be created by defining properties required to instantiate
++  a device (see examples Ex1/2/3 at the end). More information about
++  how to use this driver is here Documentation/virtual/tty-ttyvs.rst
++
++properties:
++  compatible:
++    const: ttyvs,virtual-uart-card
++
++  max-num-vs-devs:
++    allOf:
++      - $ref: /schemas/types.yaml#/definitions/uint32
++      - minimum: 0
++      - maximum: 0xffff
++    maxItems: 1
++    description:
++      By default, the driver can create upto 64 devices. This number can
++      be changed by passing 'max_num_vs_devs' module parameter to the driver
++      or by defining 'max-num-vs-devs' DT property. If both are used then
++      driver updates itself to support total number of devices as defined
++      by max-num-vs-devs property.
++
++patternProperties:
++  "^ttyvs@[0-9]+$":
++    type: object
++    description:
++      Node representing one virtual tty device. This describes, device
++      number and its configuration.
++
++    properties:
++      dev-num:
++        allOf:
++          - $ref: /schemas/types.yaml#/definitions/uint32
++          - minimum: 0
++          - maximum: 65534
++        maxItems: 1
++        description:
++          Specifies index (N in /dev/ttyvsN) to use for creating device.
++          Valid value for dev-num is from 0 to 65534.
++
++      rtsmap:
++        allOf:
++          - $ref: /schemas/types.yaml#/definitions/uint32-array
++        items:
++          - enum: [1, 6, 8, 9]
++        maxItems: 1
++        description:
++          Specifies to which pin(s) RTS pin of this device should be
++          connected. Valid values are pin 1 (DCD), pin 6 (DSR), pin 8
++          (CTS) and pin 9 (RI). If this is not used then RTS pin is
++          left unconnected.
++
++      dtrmap:
++        allOf:
++          - $ref: /schemas/types.yaml#/definitions/uint32-array
++        items:
++          - enum: [1, 6, 8, 9]
++        maxItems: 1
++        description:
++          Specifies to which pin(s) DTR pin of this device should be
++          connected. Valid values are pin 1 (DCD), pin 6 (DSR), pin 8
++          (CTS) and pin 9 (RI). If this is not used then DTR pin is
++          left unconnected.
++
++      set-dtr-at-open:
++        type: boolean
++        description:
++          If used, DTR signal will be asserted by driver when device
++          node is opened by user space application.
++
++      peer-dev:
++        $ref: /schemas/types.yaml#definitions/phandle
++        description:
++          Phandle to the peer DT node if this node is part of a null
++          modem pair.
++
++required:
++  - compatible
++  - dev-num
++
++examples:
++  - |
++    # Ex1; Null-modem pair only TX/RX connected
++    # /dev/ttvs0  <---> /dev/ttyvs1
++    #      TX (3) ----> (2) RX
++    #      RX (2) <---- (3) TX
++
++    ttyvs-card@0 {
++        compatible = "ttyvs,virtual-uart-card";
++
++        ttyvs0: ttyvs0 {
++            dev-num = <0>;
++            peer-dev = <&ttyvs1>;
++        };
++
++        ttyvs1: ttyvs1 {
++            dev-num = <1>;
++            peer-dev = <&ttyvs0>;
++        };
++    };
++
++  - |
++    # Ex2; Standard loop-back device
++    # TX (3) -->|
++    # RX (2) <--|
++
++    ttyvs-card@0 {
++        compatible = "ttyvs,virtual-uart-card";
++        ttyvs2 {
++            dev-num = <2>;
++            rtsmap = <8>;
++            dtrmap = <1 6>;
++            set-dtr-at-open;
++        };
++    };
++
++  - |
++    # Ex3; Standard null-modem pair for hardware flow control
++    # TX  (3) ----> (2) RX
++    # RX  (2) <---- (3) TX
++    # RTS (7) ----> (8) CTS
++    # DTR (4) --+-> (1) DCD
++    #           +-> (6) DSR
++    # CTS (8) <---- (7) RTS
++    # DCD (1) <-+-- (4) DTR
++    # DSR (6) <-+
++
++    ttyvs-card@0 {
++        compatible = "ttyvs,virtual-uart-card";
++        max-num-vs-devs = <128>;
++
++        ttyvs3: ttyvs3 {
++            dev-num = <3>;
++            rtsmap = <8>;
++            dtrmap = <1 6>;
++            set-dtr-at-open;
++            peer-dev = <&ttyvs4>;
++        };
++
++        ttyvs4: ttyvs4 {
++            dev-num = <4>;
++            rtsmap = <8>;
++            dtrmap = <1 6>;
++            set-dtr-at-open;
++            peer-dev = <&ttyvs3>;
++        };
++    };
++...
+-- 
+2.7.4
 
-Ah...  not sure where I got that.  I thought I found this locked with rcu
-somewhere but I obviously got confused.  And I did not even use the rcu version
-of the list iterator...  :-(
-
-I'll clean it up, thanks for the review,
-Ira
-
-> 
-> 								Honza
-> 
-> > +	hlist_for_each_entry(dent, &inode->i_dentry, d_u.d_alias) {
-> > +		spin_lock(&dent->d_lock);
-> > +		dent->d_flags |= DCACHE_DONTCACHE;
-> > +		spin_unlock(&dent->d_lock);
-> > +	}
-> > +	rcu_read_unlock();
-> > +	inode->i_state |= I_DONTCACHE;
-> > +}
-> > +EXPORT_SYMBOL(flag_inode_dontcache);
-> > +
-> >  /*
-> >   * Called when we're dropping the last reference
-> >   * to an inode.
-> -- 
-> Jan Kara <jack@suse.com>
-> SUSE Labs, CR
