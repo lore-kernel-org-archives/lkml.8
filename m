@@ -2,85 +2,227 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8020C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 05:09:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99F45C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 05:11:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 865F72076D
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 05:09:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83C852076D
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 05:11:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405550AbgDPFJI (ORCPT
+        id S2406009AbgDPFLP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 01:09:08 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:49674 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404971AbgDPFJB (ORCPT
+        Thu, 16 Apr 2020 01:11:15 -0400
+Received: from out30-54.freemail.mail.aliyun.com ([115.124.30.54]:56110 "EHLO
+        out30-54.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2404971AbgDPFLJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 01:09:01 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 3E3AB8030778;
-        Thu, 16 Apr 2020 05:08:49 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id surKt_FRKDek; Thu, 16 Apr 2020 08:08:48 +0300 (MSK)
-Date:   Thu, 16 Apr 2020 08:09:32 +0300
-From:   Sergey Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Linus Walleij <linus.walleij@linaro.org>
-CC:     Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>,
-        Vadim Vlasov <V.Vlasov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Hoan Tran <hoan@os.amperecomputing.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 0/4] gpio: dwapb: Fix reference clocks usage
-Message-ID: <20200416050932.25qbbheg43h5ijlw@ubsrv2.baikal.int>
-References: <20200306132505.8D3B88030795@mail.baikalelectronics.ru>
- <CACRpkda3YpCxVii1r5F-q=b_Eh7ixbtprWykUH7xPDxPZR0gwQ@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <CACRpkda3YpCxVii1r5F-q=b_Eh7ixbtprWykUH7xPDxPZR0gwQ@mail.gmail.com>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+        Thu, 16 Apr 2020 01:11:09 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R141e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04428;MF=tianjia.zhang@linux.alibaba.com;NM=1;PH=DS;RN=37;SR=0;TI=SMTPD_---0Tvg4OPB_1587013858;
+Received: from localhost(mailfrom:tianjia.zhang@linux.alibaba.com fp:SMTPD_---0Tvg4OPB_1587013858)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Thu, 16 Apr 2020 13:10:58 +0800
+From:   Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
+To:     pbonzini@redhat.com, tsbogend@alpha.franken.de, paulus@ozlabs.org,
+        mpe@ellerman.id.au, benh@kernel.crashing.org,
+        borntraeger@de.ibm.com, frankja@linux.ibm.com, david@redhat.com,
+        cohuck@redhat.com, heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        sean.j.christopherson@intel.com, vkuznets@redhat.com,
+        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
+        hpa@zytor.com, maz@kernel.org, james.morse@arm.com,
+        julien.thierry.kdev@gmail.com, suzuki.poulose@arm.com,
+        christoffer.dall@arm.com, peterx@redhat.com, thuth@redhat.com
+Cc:     kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kvmarm@lists.cs.columbia.edu, linux-mips@vger.kernel.org,
+        kvm-ppc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        tianjia.zhang@linux.alibaba.com
+Subject: [PATCH v2] KVM: Optimize kvm_arch_vcpu_ioctl_run function
+Date:   Thu, 16 Apr 2020 13:10:57 +0800
+Message-Id: <20200416051057.26526-1-tianjia.zhang@linux.alibaba.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 15, 2020 at 11:27:49PM +0200, Linus Walleij wrote:
-> I have applied the v3 version of the patch set after some tinkering
-> with the b4 tool.
-> 
-> For some reason some patches are missing in my inbox and also
-> on som mailing lists, they are not in my spamfolder even.
-> 
-> Anyways with some help from Konstantin I managed to get the
-> series out using the b4 tool and applied it.
+In earlier versions of kvm, 'kvm_run' is an independent structure
+and is not included in the vcpu structure. At present, 'kvm_run'
+is already included in the vcpu structure, so the parameter
+'kvm_run' is redundant.
 
-Thanks Linus.
-Regarding missing the messages in your inbox. It's weird. I double checked.
-All messages were sent to your email. Regarding missing them in the devicetree
-mailing list. It's my mistake. Forgot to add it to Cc'es. Next time I'll
-keep in mind that this is necessary.
+This patch simplify the function definition, removes the extra
+'kvm_run' parameter, and extract it from the 'kvm_vcpu' structure
+if necessary.
 
-Regards,
--Sergey
+Signed-off-by: Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
+---
 
-> 
-> Thanks!
-> Linus Walleij
+v2 change:
+  remove 'kvm_run' parameter and extract it from 'kvm_vcpu'
+
+ arch/mips/kvm/mips.c       |  3 ++-
+ arch/powerpc/kvm/powerpc.c |  3 ++-
+ arch/s390/kvm/kvm-s390.c   |  3 ++-
+ arch/x86/kvm/x86.c         | 11 ++++++-----
+ include/linux/kvm_host.h   |  2 +-
+ virt/kvm/arm/arm.c         |  6 +++---
+ virt/kvm/kvm_main.c        |  2 +-
+ 7 files changed, 17 insertions(+), 13 deletions(-)
+
+diff --git a/arch/mips/kvm/mips.c b/arch/mips/kvm/mips.c
+index 8f05dd0a0f4e..ec24adf4857e 100644
+--- a/arch/mips/kvm/mips.c
++++ b/arch/mips/kvm/mips.c
+@@ -439,8 +439,9 @@ int kvm_arch_vcpu_ioctl_set_guest_debug(struct kvm_vcpu *vcpu,
+ 	return -ENOIOCTLCMD;
+ }
+ 
+-int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu, struct kvm_run *run)
++int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu)
+ {
++	struct kvm_run *run = vcpu->run;
+ 	int r = -EINTR;
+ 
+ 	vcpu_load(vcpu);
+diff --git a/arch/powerpc/kvm/powerpc.c b/arch/powerpc/kvm/powerpc.c
+index e15166b0a16d..7e24691e138a 100644
+--- a/arch/powerpc/kvm/powerpc.c
++++ b/arch/powerpc/kvm/powerpc.c
+@@ -1764,8 +1764,9 @@ int kvm_vcpu_ioctl_set_one_reg(struct kvm_vcpu *vcpu, struct kvm_one_reg *reg)
+ 	return r;
+ }
+ 
+-int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu, struct kvm_run *run)
++int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu)
+ {
++	struct kvm_run *run = vcpu->run;
+ 	int r;
+ 
+ 	vcpu_load(vcpu);
+diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
+index 19a81024fe16..443af3ead739 100644
+--- a/arch/s390/kvm/kvm-s390.c
++++ b/arch/s390/kvm/kvm-s390.c
+@@ -4333,8 +4333,9 @@ static void store_regs(struct kvm_vcpu *vcpu, struct kvm_run *kvm_run)
+ 		store_regs_fmt2(vcpu, kvm_run);
+ }
+ 
+-int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu, struct kvm_run *kvm_run)
++int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu)
+ {
++	struct kvm_run *kvm_run = vcpu->run;
+ 	int rc;
+ 
+ 	if (kvm_run->immediate_exit)
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 3bf2ecafd027..a0338e86c90f 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -8707,8 +8707,9 @@ static void kvm_put_guest_fpu(struct kvm_vcpu *vcpu)
+ 	trace_kvm_fpu(0);
+ }
+ 
+-int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu, struct kvm_run *kvm_run)
++int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu)
+ {
++	struct kvm_run *kvm_run = vcpu->run;
+ 	int r;
+ 
+ 	vcpu_load(vcpu);
+@@ -8726,18 +8727,18 @@ int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu, struct kvm_run *kvm_run)
+ 		r = -EAGAIN;
+ 		if (signal_pending(current)) {
+ 			r = -EINTR;
+-			vcpu->run->exit_reason = KVM_EXIT_INTR;
++			kvm_run->exit_reason = KVM_EXIT_INTR;
+ 			++vcpu->stat.signal_exits;
+ 		}
+ 		goto out;
+ 	}
+ 
+-	if (vcpu->run->kvm_valid_regs & ~KVM_SYNC_X86_VALID_FIELDS) {
++	if (kvm_run->kvm_valid_regs & ~KVM_SYNC_X86_VALID_FIELDS) {
+ 		r = -EINVAL;
+ 		goto out;
+ 	}
+ 
+-	if (vcpu->run->kvm_dirty_regs) {
++	if (kvm_run->kvm_dirty_regs) {
+ 		r = sync_regs(vcpu);
+ 		if (r != 0)
+ 			goto out;
+@@ -8767,7 +8768,7 @@ int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu, struct kvm_run *kvm_run)
+ 
+ out:
+ 	kvm_put_guest_fpu(vcpu);
+-	if (vcpu->run->kvm_valid_regs)
++	if (kvm_run->kvm_valid_regs)
+ 		store_regs(vcpu);
+ 	post_kvm_run_save(vcpu);
+ 	kvm_sigset_deactivate(vcpu);
+diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
+index 6d58beb65454..1e17ef719595 100644
+--- a/include/linux/kvm_host.h
++++ b/include/linux/kvm_host.h
+@@ -866,7 +866,7 @@ int kvm_arch_vcpu_ioctl_set_mpstate(struct kvm_vcpu *vcpu,
+ 				    struct kvm_mp_state *mp_state);
+ int kvm_arch_vcpu_ioctl_set_guest_debug(struct kvm_vcpu *vcpu,
+ 					struct kvm_guest_debug *dbg);
+-int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu, struct kvm_run *kvm_run);
++int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu);
+ 
+ int kvm_arch_init(void *opaque);
+ void kvm_arch_exit(void);
+diff --git a/virt/kvm/arm/arm.c b/virt/kvm/arm/arm.c
+index 48d0ec44ad77..f5390ac2165b 100644
+--- a/virt/kvm/arm/arm.c
++++ b/virt/kvm/arm/arm.c
+@@ -639,7 +639,6 @@ static void check_vcpu_requests(struct kvm_vcpu *vcpu)
+ /**
+  * kvm_arch_vcpu_ioctl_run - the main VCPU run function to execute guest code
+  * @vcpu:	The VCPU pointer
+- * @run:	The kvm_run structure pointer used for userspace state exchange
+  *
+  * This function is called through the VCPU_RUN ioctl called from user space. It
+  * will execute VM code in a loop until the time slice for the process is used
+@@ -647,8 +646,9 @@ static void check_vcpu_requests(struct kvm_vcpu *vcpu)
+  * return with return value 0 and with the kvm_run structure filled in with the
+  * required data for the requested emulation.
+  */
+-int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu, struct kvm_run *run)
++int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu)
+ {
++	struct kvm_run *run = vcpu->run;
+ 	int ret;
+ 
+ 	if (unlikely(!kvm_vcpu_initialized(vcpu)))
+@@ -659,7 +659,7 @@ int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu, struct kvm_run *run)
+ 		return ret;
+ 
+ 	if (run->exit_reason == KVM_EXIT_MMIO) {
+-		ret = kvm_handle_mmio_return(vcpu, vcpu->run);
++		ret = kvm_handle_mmio_return(vcpu, run);
+ 		if (ret)
+ 			return ret;
+ 	}
+diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+index 74bdb7bf3295..e18faea89146 100644
+--- a/virt/kvm/kvm_main.c
++++ b/virt/kvm/kvm_main.c
+@@ -3135,7 +3135,7 @@ static long kvm_vcpu_ioctl(struct file *filp,
+ 				synchronize_rcu();
+ 			put_pid(oldpid);
+ 		}
+-		r = kvm_arch_vcpu_ioctl_run(vcpu, vcpu->run);
++		r = kvm_arch_vcpu_ioctl_run(vcpu);
+ 		trace_kvm_userspace_exit(vcpu->run->exit_reason, r);
+ 		break;
+ 	}
+-- 
+2.17.1
+
