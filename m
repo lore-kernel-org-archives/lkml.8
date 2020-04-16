@@ -2,62 +2,89 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DB33C2BA19
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 03:14:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A4D8C2BA19
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 03:14:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 14AA82076D
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 03:14:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7ECEF2076D
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 03:14:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389910AbgDPDOx (ORCPT
+        id S2390574AbgDPDO6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 23:14:53 -0400
+        Wed, 15 Apr 2020 23:14:58 -0400
 Received: from mga09.intel.com ([134.134.136.24]:45062 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388679AbgDPDOv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 23:14:51 -0400
-IronPort-SDR: F06HSfcxpCFziuiOXigMC8AN3C+UBXwX5BkCRORk2pxEr7Wm19dexJ+TfM+O9HwJnj3ikIvM0y
- mghUC/qpKjDg==
+        id S2389912AbgDPDOx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 23:14:53 -0400
+IronPort-SDR: d5dHlkifhnTjJsAgs7Q+lkOfDb7BEzhxhNgz+hYeUojNVXZ08gRFQyl11a65sbn7YkOV/nY1H0
+ FWsX17WTJFyg==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2020 20:14:50 -0700
-IronPort-SDR: jfqe3rJ67J0FjNStNU/0AsNiQBGadcTk2qyNyUL/1vNXdV1kicHh2Twt3FNnleGEVwT1OgQDfI
- 8ntQbVjC+LUw==
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2020 20:14:53 -0700
+IronPort-SDR: uDnLVJKv88DpbSZzFNJz4QBuz4G1YKI3QyZK4Z5+UWCOE0RNk4p8np7ypZKqwzCBTY/T6QfZy1
+ e1iA+IfKKdfA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.72,388,1580803200"; 
-   d="scan'208";a="454164515"
+   d="scan'208";a="454164527"
 Received: from yilunxu-optiplex-7050.sh.intel.com ([10.239.159.141])
-  by fmsmga005.fm.intel.com with ESMTP; 15 Apr 2020 20:14:48 -0700
+  by fmsmga005.fm.intel.com with ESMTP; 15 Apr 2020 20:14:51 -0700
 From:   Xu Yilun <yilun.xu@intel.com>
 To:     mdf@kernel.org, linux-fpga@vger.kernel.org,
         linux-kernel@vger.kernel.org
 Cc:     trix@redhat.com, bhu@redhat.com, Xu Yilun <yilun.xu@intel.com>
-Subject: [PATCH 0/2] Bug fixes for FPGA DFL
-Date:   Thu, 16 Apr 2020 11:11:50 +0800
-Message-Id: <1587006712-22696-1-git-send-email-yilun.xu@intel.com>
+Subject: [PATCH 1/2] fpga: dfl: pci: reduce the scope of variable 'ret'
+Date:   Thu, 16 Apr 2020 11:11:51 +0800
+Message-Id: <1587006712-22696-2-git-send-email-yilun.xu@intel.com>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1587006712-22696-1-git-send-email-yilun.xu@intel.com>
+References: <1587006712-22696-1-git-send-email-yilun.xu@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Patch #1 fixes lkp cppcheck warnings in dfl-pci.c
-Patch #2 fixes bug in dfl port reset handshake
+This is to fix lkp cppcheck warnings:
 
-Matthew Gerlach (1):
-  fpga: dfl: fix bug in port reset handshake
+ drivers/fpga/dfl-pci.c:230:6: warning: The scope of the variable 'ret' can be reduced. [variableScope]
+    int ret = 0;
+        ^
 
-Xu Yilun (1):
-  fpga: dfl: pci: reduce the scope of variable 'ret'
+ drivers/fpga/dfl-pci.c:230:10: warning: Variable 'ret' is assigned a value that is never used. [unreadVariable]
+    int ret = 0;
+            ^
 
- drivers/fpga/dfl-afu-main.c | 3 ++-
- drivers/fpga/dfl-pci.c      | 3 ++-
- 2 files changed, 4 insertions(+), 2 deletions(-)
+Fixes: 3c2760b78f90 ("fpga: dfl: pci: fix return value of cci_pci_sriov_configure")
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Xu Yilun <yilun.xu@intel.com>
+---
+ drivers/fpga/dfl-pci.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
+diff --git a/drivers/fpga/dfl-pci.c b/drivers/fpga/dfl-pci.c
+index 5387550..a78c409 100644
+--- a/drivers/fpga/dfl-pci.c
++++ b/drivers/fpga/dfl-pci.c
+@@ -227,7 +227,6 @@ static int cci_pci_sriov_configure(struct pci_dev *pcidev, int num_vfs)
+ {
+ 	struct cci_drvdata *drvdata = pci_get_drvdata(pcidev);
+ 	struct dfl_fpga_cdev *cdev = drvdata->cdev;
+-	int ret = 0;
+ 
+ 	if (!num_vfs) {
+ 		/*
+@@ -239,6 +238,8 @@ static int cci_pci_sriov_configure(struct pci_dev *pcidev, int num_vfs)
+ 		dfl_fpga_cdev_config_ports_pf(cdev);
+ 
+ 	} else {
++		int ret;
++
+ 		/*
+ 		 * before enable SRIOV, put released ports into VF access mode
+ 		 * first of all.
 -- 
 2.7.4
 
