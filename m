@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6279FC2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:58:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F00AFC2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:58:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3E2B2206A2
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:58:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE806214AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:58:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587049129;
-	bh=LGYD6nF+jAY2y5u0s809J0M2sYuL/telrnLiHSscRN0=;
+	s=default; t=1587049137;
+	bh=GC7P3y7Dy+E6t3Dg2e24lsZ2vsRQWKY2LNgLclPIFq8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qPN4/7UmnNQ//q8kvgsrVfLIvxCfbq3ciKzK5jzm3KOZAzUCahqo+0S8tNS/aYCwr
-	 0CX/QvwqwprEgbuELKNK89ua4Xuq60DnnOea2mrDUktFBfjOl7iLArUB7qq7CFnVvP
-	 ++nHh1p2ea2nwqbV8VKCHO62Dosc0iu413mZofHU=
+	b=W//gnOiiUp9nazK+thvaLTg1ay7wV83AYNfpl6UPnyhSjlN5/vGv6V9w8P9xvuoCa
+	 lXPw0/50Phijh61bZECuDf0gsG7vFhfZYtefbX4MAhZlgBB1omKBG/HRZtl5iltbwi
+	 Y8KX4WzKiDU5JMedR6S8ZjGzmKFnhZvOq69jCSFY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437601AbgDPO6q (ORCPT
+        id S2438024AbgDPO6y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:58:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41818 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 10:58:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41726 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392469AbgDPNzS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:55:18 -0400
+        id S2409114AbgDPNzI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:55:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3B68220732;
-        Thu, 16 Apr 2020 13:55:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 618E721734;
+        Thu, 16 Apr 2020 13:55:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587045317;
-        bh=LGYD6nF+jAY2y5u0s809J0M2sYuL/telrnLiHSscRN0=;
+        s=default; t=1587045307;
+        bh=GC7P3y7Dy+E6t3Dg2e24lsZ2vsRQWKY2LNgLclPIFq8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OnbV3X8kGoRUDiCfXcVy0SL9qTX+E/x9Kz3MHFgrZvaZEt4q66d5IHUy6UBsRgmN2
-         2xQI87rfZW2FmabJ0VTcUUMPBsduprLjkQ/A1CCsia+O20YzzY0H13o1NabMEjb2jt
-         1JFtvSlU/mJscPrKr8LRBxYe4LQwwxJ1wQsoZsJw=
+        b=zl1gqymUE2Hv9ZCW4669RcJVnRtksQQue1gBFuO4AE/t9adkPGchEG1gkVSH9AJ2P
+         LI1xD//Asdg8wBwZqkWGnynQStv4cay1qFoi9EXi5COWAMlEivnD1aqsanb0B+hbnb
+         rmQifij8NBuRlZIjmk/3Arcaq+8589tEfKtwKE2Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Stanimir Varbanov <stanimir.varbanov@linaro.org>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Subject: [PATCH 5.6 084/254] media: venus: cache vb payload to be used by clock scaling
-Date:   Thu, 16 Apr 2020 15:22:53 +0200
-Message-Id: <20200416131336.418217827@linuxfoundation.org>
+        stable@vger.kernel.org, Thomas Hebb <tommyhebb@gmail.com>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 5.6 081/254] ALSA: hda/realtek - Remove now-unnecessary XPS 13 headphone noise fixups
+Date:   Thu, 16 Apr 2020 15:22:50 +0200
+Message-Id: <20200416131336.021271851@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.804095985@linuxfoundation.org>
 References: <20200416131325.804095985@linuxfoundation.org>
@@ -60,143 +59,142 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+From: Thomas Hebb <tommyhebb@gmail.com>
 
-commit fd1ee315dcd4a0f913a74939eb88f6d9b0bd9250 upstream.
+commit f36938aa7440f46a0a365f1cfde5f5985af2bef3 upstream.
 
-Instead of iterate over previously queued buffers in clock
-scaling code do cache the payload in instance context structure
-for later use when calculating new clock rate.
+patch_realtek.c has historically failed to properly configure the PC
+Beep Hidden Register for the ALC256 codec (among others). Depending on
+your kernel version, symptoms of this misconfiguration can range from
+chassis noise, picked up by a poorly-shielded PCBEEP trace, getting
+amplified and played on your internal speaker and/or headphones to loud
+feedback, which responds to the "Headphone Mic Boost" ALSA control,
+getting played through your headphones. For details of the problem, see
+the patch in this series titled "ALSA: hda/realtek - Set principled PC
+Beep configuration for ALC256", which fixes the configuration.
 
-This will avoid to use spin locks during buffer list iteration
-in clock_scaling.
+These symptoms have been most noticed on the Dell XPS 13 9350 and 9360,
+popular laptops that use the ALC256. As a result, several model-specific
+fixups have been introduced to try and fix the problem, the most
+egregious of which locks the "Headphone Mic Boost" control as a hack to
+minimize noise from a feedback loop that shouldn't have been there in
+the first place.
 
-This fixes following kernel Oops:
+Now that the underlying issue has been fixed, remove all these fixups.
+Remaining fixups needed by the XPS 13 are all picked up by existing pin
+quirks.
 
- Unable to handle kernel paging request at virtual address deacfffffffffd6c
- Mem abort info:
-   ESR = 0x96000004
-   EC = 0x25: DABT (current EL), IL = 32 bits
-   SET = 0, FnV = 0
-   EA = 0, S1PTW = 0
- Data abort info:
-   ISV = 0, ISS = 0x00000004
-   CM = 0, WnR = 0
- [deacfffffffffd6c] address between user and kernel address ranges
- Internal error: Oops: 96000004 [#1] PREEMPT SMP
- CPU: 7 PID: 5763 Comm: V4L2DecoderThre Tainted: G S      W         5.4.11 #8
- pstate: 20400009 (nzCv daif +PAN -UAO)
- pc : load_scale_v4+0x4c/0x2bc [venus_core]
- lr : session_process_buf+0x18c/0x1c0 [venus_core]
- sp : ffffffc01376b8d0
- x29: ffffffc01376b8d0 x28: ffffff80cf1b0220
- x27: ffffffc01376bba0 x26: ffffffd8f562b2d8
- x25: ffffff80cf1b0220 x24: 0000000000000005
- x23: ffffffd8f5620d98 x22: ffffff80ca01c800
- x21: ffffff80cf1b0000 x20: ffffff8149490080
- x19: ffffff8174b2c010 x18: 0000000000000000
- x17: 0000000000000000 x16: ffffffd96ee3a0dc
- x15: 0000000000000026 x14: 0000000000000026
- x13: 00000000000055ac x12: 0000000000000001
- x11: deacfffffffffd6c x10: dead000000000100
- x9 : ffffff80ca01cf28 x8 : 0000000000000026
- x7 : 0000000000000000 x6 : ffffff80cdd899c0
- x5 : ffffff80cdd899c0 x4 : 0000000000000008
- x3 : ffffff80ca01cf28 x2 : ffffff80ca01cf28
- x1 : ffffff80d47ffc00 x0 : ffffff80cf1b0000
- Call trace:
-  load_scale_v4+0x4c/0x2bc [venus_core]
-  session_process_buf+0x18c/0x1c0 [venus_core]
-  venus_helper_vb2_buf_queue+0x7c/0xf0 [venus_core]
-  __enqueue_in_driver+0xe4/0xfc [videobuf2_common]
-  vb2_core_qbuf+0x15c/0x338 [videobuf2_common]
-  vb2_qbuf+0x78/0xb8 [videobuf2_v4l2]
-  v4l2_m2m_qbuf+0x80/0xf8 [v4l2_mem2mem]
-  v4l2_m2m_ioctl_qbuf+0x2c/0x38 [v4l2_mem2mem]
-  v4l_qbuf+0x48/0x58
-  __video_do_ioctl+0x2b0/0x39c
-  video_usercopy+0x394/0x710
-  video_ioctl2+0x38/0x48
-  v4l2_ioctl+0x6c/0x80
-  do_video_ioctl+0xb00/0x2874
-  v4l2_compat_ioctl32+0x5c/0xcc
-  __se_compat_sys_ioctl+0x100/0x2074
-  __arm64_compat_sys_ioctl+0x20/0x2c
-  el0_svc_common+0xa4/0x154
-  el0_svc_compat_handler+0x2c/0x38
-  el0_svc_compat+0x8/0x10
- Code: eb0a013f 54000200 aa1f03e8 d10e514b (b940016c)
- ---[ end trace e11304b46552e0b9 ]---
+This change should, for the XPS 13 9350/9360
 
-Fixes: c0e284ccfeda ("media: venus: Update clock scaling")
+ - Significantly increase volume and audio quality on headphones
+ - Eliminate headphone popping on suspend/resume
+ - Allow "Headphone Mic Boost" to be set again, making the headphone
+   jack fully usable as a microphone jack too.
 
-Cc: stable@vger.kernel.org # v5.5+
-Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Fixes: 8c69729b4439 ("ALSA: hda - Fix headphone noise after Dell XPS 13 resume back from S3")
+Fixes: 423cd785619a ("ALSA: hda - Fix headphone noise on Dell XPS 13 9360")
+Fixes: e4c9fd10eb21 ("ALSA: hda - Apply headphone noise quirk for another Dell XPS 13 variant")
+Fixes: 1099f48457d0 ("ALSA: hda/realtek: Reduce the Headphone static noise on XPS 9350/9360")
+Cc: stable@vger.kernel.org
+Signed-off-by: Thomas Hebb <tommyhebb@gmail.com>
+Link: https://lore.kernel.org/r/b649a00edfde150cf6eebbb4390e15e0c2deb39a.1585584498.git.tommyhebb@gmail.com
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/media/platform/qcom/venus/core.h    |    1 +
- drivers/media/platform/qcom/venus/helpers.c |   20 +++++++++++++-------
- 2 files changed, 14 insertions(+), 7 deletions(-)
+ Documentation/sound/hd-audio/models.rst |    2 -
+ sound/pci/hda/patch_realtek.c           |   34 --------------------------------
+ 2 files changed, 36 deletions(-)
 
---- a/drivers/media/platform/qcom/venus/core.h
-+++ b/drivers/media/platform/qcom/venus/core.h
-@@ -344,6 +344,7 @@ struct venus_inst {
- 	unsigned int subscriptions;
- 	int buf_count;
- 	struct venus_ts_metadata tss[VIDEO_MAX_FRAME];
-+	unsigned long payloads[VIDEO_MAX_FRAME];
- 	u64 fps;
- 	struct v4l2_fract timeperframe;
- 	const struct venus_format *fmt_out;
---- a/drivers/media/platform/qcom/venus/helpers.c
-+++ b/drivers/media/platform/qcom/venus/helpers.c
-@@ -544,18 +544,13 @@ static int scale_clocks_v4(struct venus_
- 	struct venus_core *core = inst->core;
- 	const struct freq_tbl *table = core->res->freq_tbl;
- 	unsigned int num_rows = core->res->freq_tbl_size;
--	struct v4l2_m2m_ctx *m2m_ctx = inst->m2m_ctx;
- 	struct device *dev = core->dev;
- 	unsigned long freq = 0, freq_core1 = 0, freq_core2 = 0;
- 	unsigned long filled_len = 0;
--	struct venus_buffer *buf, *n;
--	struct vb2_buffer *vb;
- 	int i, ret;
- 
--	v4l2_m2m_for_each_src_buf_safe(m2m_ctx, buf, n) {
--		vb = &buf->vb.vb2_buf;
--		filled_len = max(filled_len, vb2_get_plane_payload(vb, 0));
--	}
-+	for (i = 0; i < inst->num_input_bufs; i++)
-+		filled_len = max(filled_len, inst->payloads[i]);
- 
- 	if (inst->session_type == VIDC_SESSION_TYPE_DEC && !filled_len)
- 		return 0;
-@@ -1289,6 +1284,15 @@ int venus_helper_vb2_buf_prepare(struct
+--- a/Documentation/sound/hd-audio/models.rst
++++ b/Documentation/sound/hd-audio/models.rst
+@@ -216,8 +216,6 @@ alc298-dell-aio
+     ALC298 fixups on Dell AIO machines
+ alc275-dell-xps
+     ALC275 fixups on Dell XPS models
+-alc256-dell-xps13
+-    ALC256 fixups on Dell XPS13
+ lenovo-spk-noise
+     Workaround for speaker noise on Lenovo machines
+ lenovo-hotkey
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -5491,17 +5491,6 @@ static void alc271_hp_gate_mic_jack(stru
+ 	}
  }
- EXPORT_SYMBOL_GPL(venus_helper_vb2_buf_prepare);
  
-+static void cache_payload(struct venus_inst *inst, struct vb2_buffer *vb)
-+{
-+	struct vb2_v4l2_buffer *vbuf = to_vb2_v4l2_buffer(vb);
-+	unsigned int idx = vbuf->vb2_buf.index;
-+
-+	if (vbuf->vb2_buf.type == V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE)
-+		inst->payloads[idx] = vb2_get_plane_payload(vb, 0);
-+}
-+
- void venus_helper_vb2_buf_queue(struct vb2_buffer *vb)
- {
- 	struct vb2_v4l2_buffer *vbuf = to_vb2_v4l2_buffer(vb);
-@@ -1300,6 +1304,8 @@ void venus_helper_vb2_buf_queue(struct v
- 
- 	v4l2_m2m_buf_queue(m2m_ctx, vbuf);
- 
-+	cache_payload(inst, vb);
-+
- 	if (inst->session_type == VIDC_SESSION_TYPE_ENC &&
- 	    !(inst->streamon_out && inst->streamon_cap))
- 		goto unlock;
+-static void alc256_fixup_dell_xps_13_headphone_noise2(struct hda_codec *codec,
+-						      const struct hda_fixup *fix,
+-						      int action)
+-{
+-	if (action != HDA_FIXUP_ACT_PRE_PROBE)
+-		return;
+-
+-	snd_hda_codec_amp_stereo(codec, 0x1a, HDA_INPUT, 0, HDA_AMP_VOLMASK, 1);
+-	snd_hda_override_wcaps(codec, 0x1a, get_wcaps(codec, 0x1a) & ~AC_WCAP_IN_AMP);
+-}
+-
+ static void alc269_fixup_limit_int_mic_boost(struct hda_codec *codec,
+ 					     const struct hda_fixup *fix,
+ 					     int action)
+@@ -5916,8 +5905,6 @@ enum {
+ 	ALC298_FIXUP_DELL1_MIC_NO_PRESENCE,
+ 	ALC298_FIXUP_DELL_AIO_MIC_NO_PRESENCE,
+ 	ALC275_FIXUP_DELL_XPS,
+-	ALC256_FIXUP_DELL_XPS_13_HEADPHONE_NOISE,
+-	ALC256_FIXUP_DELL_XPS_13_HEADPHONE_NOISE2,
+ 	ALC293_FIXUP_LENOVO_SPK_NOISE,
+ 	ALC233_FIXUP_LENOVO_LINE2_MIC_HOTKEY,
+ 	ALC255_FIXUP_DELL_SPK_NOISE,
+@@ -6658,23 +6645,6 @@ static const struct hda_fixup alc269_fix
+ 			{}
+ 		}
+ 	},
+-	[ALC256_FIXUP_DELL_XPS_13_HEADPHONE_NOISE] = {
+-		.type = HDA_FIXUP_VERBS,
+-		.v.verbs = (const struct hda_verb[]) {
+-			/* Disable pass-through path for FRONT 14h */
+-			{0x20, AC_VERB_SET_COEF_INDEX, 0x36},
+-			{0x20, AC_VERB_SET_PROC_COEF, 0x1737},
+-			{}
+-		},
+-		.chained = true,
+-		.chain_id = ALC255_FIXUP_DELL1_MIC_NO_PRESENCE
+-	},
+-	[ALC256_FIXUP_DELL_XPS_13_HEADPHONE_NOISE2] = {
+-		.type = HDA_FIXUP_FUNC,
+-		.v.func = alc256_fixup_dell_xps_13_headphone_noise2,
+-		.chained = true,
+-		.chain_id = ALC256_FIXUP_DELL_XPS_13_HEADPHONE_NOISE
+-	},
+ 	[ALC293_FIXUP_LENOVO_SPK_NOISE] = {
+ 		.type = HDA_FIXUP_FUNC,
+ 		.v.func = alc_fixup_disable_aamix,
+@@ -7172,17 +7142,14 @@ static const struct snd_pci_quirk alc269
+ 	SND_PCI_QUIRK(0x1028, 0x06de, "Dell", ALC293_FIXUP_DISABLE_AAMIX_MULTIJACK),
+ 	SND_PCI_QUIRK(0x1028, 0x06df, "Dell", ALC293_FIXUP_DISABLE_AAMIX_MULTIJACK),
+ 	SND_PCI_QUIRK(0x1028, 0x06e0, "Dell", ALC293_FIXUP_DISABLE_AAMIX_MULTIJACK),
+-	SND_PCI_QUIRK(0x1028, 0x0704, "Dell XPS 13 9350", ALC256_FIXUP_DELL_XPS_13_HEADPHONE_NOISE2),
+ 	SND_PCI_QUIRK(0x1028, 0x0706, "Dell Inspiron 7559", ALC256_FIXUP_DELL_INSPIRON_7559_SUBWOOFER),
+ 	SND_PCI_QUIRK(0x1028, 0x0725, "Dell Inspiron 3162", ALC255_FIXUP_DELL_SPK_NOISE),
+ 	SND_PCI_QUIRK(0x1028, 0x0738, "Dell Precision 5820", ALC269_FIXUP_NO_SHUTUP),
+-	SND_PCI_QUIRK(0x1028, 0x075b, "Dell XPS 13 9360", ALC256_FIXUP_DELL_XPS_13_HEADPHONE_NOISE2),
+ 	SND_PCI_QUIRK(0x1028, 0x075c, "Dell XPS 27 7760", ALC298_FIXUP_SPK_VOLUME),
+ 	SND_PCI_QUIRK(0x1028, 0x075d, "Dell AIO", ALC298_FIXUP_SPK_VOLUME),
+ 	SND_PCI_QUIRK(0x1028, 0x07b0, "Dell Precision 7520", ALC295_FIXUP_DISABLE_DAC3),
+ 	SND_PCI_QUIRK(0x1028, 0x0798, "Dell Inspiron 17 7000 Gaming", ALC256_FIXUP_DELL_INSPIRON_7559_SUBWOOFER),
+ 	SND_PCI_QUIRK(0x1028, 0x080c, "Dell WYSE", ALC225_FIXUP_DELL_WYSE_MIC_NO_PRESENCE),
+-	SND_PCI_QUIRK(0x1028, 0x082a, "Dell XPS 13 9360", ALC256_FIXUP_DELL_XPS_13_HEADPHONE_NOISE2),
+ 	SND_PCI_QUIRK(0x1028, 0x084b, "Dell", ALC274_FIXUP_DELL_AIO_LINEOUT_VERB),
+ 	SND_PCI_QUIRK(0x1028, 0x084e, "Dell", ALC274_FIXUP_DELL_AIO_LINEOUT_VERB),
+ 	SND_PCI_QUIRK(0x1028, 0x0871, "Dell Precision 3630", ALC255_FIXUP_DELL_HEADSET_MIC),
+@@ -7536,7 +7503,6 @@ static const struct hda_model_fixup alc2
+ 	{.id = ALC298_FIXUP_DELL1_MIC_NO_PRESENCE, .name = "alc298-dell1"},
+ 	{.id = ALC298_FIXUP_DELL_AIO_MIC_NO_PRESENCE, .name = "alc298-dell-aio"},
+ 	{.id = ALC275_FIXUP_DELL_XPS, .name = "alc275-dell-xps"},
+-	{.id = ALC256_FIXUP_DELL_XPS_13_HEADPHONE_NOISE, .name = "alc256-dell-xps13"},
+ 	{.id = ALC293_FIXUP_LENOVO_SPK_NOISE, .name = "lenovo-spk-noise"},
+ 	{.id = ALC233_FIXUP_LENOVO_LINE2_MIC_HOTKEY, .name = "lenovo-hotkey"},
+ 	{.id = ALC255_FIXUP_DELL_SPK_NOISE, .name = "dell-spk-noise"},
 
 
