@@ -2,120 +2,92 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF234C2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:31:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9A84C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:31:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CC3DC21D91
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:31:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8ACE2223D
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:31:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587051095;
-	bh=pKr2ODiezIbXVsIZUlYbDhELk4vhbLO4dwd5JanhVDs=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=KMDmA6Zgmhr7gLF5bQX3N4flqjkuGXNA01omfr4ePSFEJQL+muomsiL44osqvevNN
-	 wKzJZcCakBh7PNlGqQTLNA+/JMxVudabUSNq5LgGjkoTPLaDum1MAf5VRpSimNoEve
-	 XleoLNTpcoRptpw4uRu1NGZB0qobMMZXwlyc6Q5E=
+	s=default; t=1587051098;
+	bh=iryEKzf2hO9H4jsbyGgbgdA/v/MMTMlVjJvsGOanEFs=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=C8FFRUWZEpRJLlCUYAnT0ZquKg/+xNrNXHzceww/yh2F+HcFmh015BG9FbM6dCumx
+	 WpdwnqE7XCSEKTqiGJujZZF56ldAfgvC5DYGRwFPD98kaYQlpQAyHKkPFJoy4xG2Ds
+	 1x8g5kJVh5YO7KK9qgGjg00uFf/oxXvo4ZTLH824=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2505882AbgDPPbf (ORCPT
+        id S2505954AbgDPPbh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:31:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56116 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 11:31:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56058 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392171AbgDPNm4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:42:56 -0400
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        id S2392152AbgDPNmz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:42:55 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5779720732;
-        Thu, 16 Apr 2020 13:42:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 43033214D8;
+        Thu, 16 Apr 2020 13:42:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044576;
-        bh=pKr2ODiezIbXVsIZUlYbDhELk4vhbLO4dwd5JanhVDs=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=DYDoeT+4hlWnZScNJWKzbPVJP6AmaxiEBcN9QaCMwpYR+ioBzx5PL3FhzIHC2+c/+
-         RtXULmJ+QUoHFlldeF7OO8+NpY0b6xRd4MEh28kb8NOorpCxOltXVb4oSb79+AIqvn
-         UMDWYBszSdyr4a5FPV5Dcb7rjUAOmOj9YorEfYTo=
-Date:   Thu, 16 Apr 2020 22:42:50 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Jiri Olsa <jolsa@kernel.org>,
-        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+        s=default; t=1587044574;
+        bh=iryEKzf2hO9H4jsbyGgbgdA/v/MMTMlVjJvsGOanEFs=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=TX8iHy9BvEHXfB9fu9fITcic5DWdD9vprV8M0TKnzQM0N8UY10QFK2M7Gme59IlCn
+         HlZjtjo04MvPmdJw4xiwPGuZ5zgtkxyYjdTVKKNrgKbQ4uhUHy7CpcjHrZGqsK8ori
+         4oCXCOviSqJBp4F3KqKKOo66Clq4mT07+e4Xolmo=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Luo bin <luobin9@huawei.com>,
         "David S. Miller" <davem@davemloft.net>,
-        Peter Zijlstra <peterz@infradead.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        "bibo,mao" <bibo.mao@intel.com>,
-        "Ziqian SUN (Zamir)" <zsun@redhat.com>, stable@vger.kernel.org
-Subject: Re: [PATCH] kretprobe: Prevent triggering kretprobe from within
- kprobe_flush_task
-Message-Id: <20200416224250.7a53fb581e50aa32df75a0cf@kernel.org>
-In-Reply-To: <20200416091320.GA322899@krava>
-References: <20200408164641.3299633-1-jolsa@kernel.org>
-        <20200409234101.8814f3cbead69337ac5a33fa@kernel.org>
-        <20200409184451.GG3309111@krava>
-        <20200409201336.GH3309111@krava>
-        <20200410093159.0d7000a08fd76c2eaf1398f8@kernel.org>
-        <20200414160338.GE208694@krava>
-        <20200415090507.GG208694@krava>
-        <20200416105506.904b7847a1b621b75463076d@kernel.org>
-        <20200416091320.GA322899@krava>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 016/232] hinic: fix wrong value of MIN_SKB_LEN
+Date:   Thu, 16 Apr 2020 15:21:50 +0200
+Message-Id: <20200416131318.392451766@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.1
+In-Reply-To: <20200416131316.640996080@linuxfoundation.org>
+References: <20200416131316.640996080@linuxfoundation.org>
+User-Agent: quilt/0.66
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jiri,
+From: Luo bin <luobin9@huawei.com>
 
-On Thu, 16 Apr 2020 11:13:20 +0200
-Jiri Olsa <jolsa@redhat.com> wrote:
+[ Upstream commit 7296695fc16dd1761dbba8b68a9181c71cef0633 ]
 
-> On Thu, Apr 16, 2020 at 10:55:06AM +0900, Masami Hiramatsu wrote:
-> 
-> SNIP
-> 
-> > >           trampoline_handler
-> > >             kretprobe_hash_lock(current, &head, &flags);  <--- deadlock
-> > > 
-> > > Adding kprobe_busy_begin/end helpers that mark code with fake
-> > > probe installed to prevent triggering of another kprobe within
-> > > this code.
-> > > 
-> > > Using these helpers in kprobe_flush_task, so the probe recursion
-> > > protection check is hit and the probe is never set to prevent
-> > > above lockup.
-> > > 
-> > > Reported-by: "Ziqian SUN (Zamir)" <zsun@redhat.com>
-> > > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-> > 
-> > Thanks Jiri and Ziqian!
-> > 
-> > Looks good to me.
-> > 
-> > Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
-> > 
-> > BTW, this is a kind of bugfix. So should it add a Fixes tag?
-> > 
-> > Fixes: ef53d9c5e4da ('kprobes: improve kretprobe scalability with hashed locking')
-> > Cc: stable@vger.kernel.org
-> 
-> ah right, do you want me to repost with those?
+the minimum value of skb len that hw supports is 32 rather than 17
 
-Yeah, if you don't mind.
+Signed-off-by: Luo bin <luobin9@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/net/ethernet/huawei/hinic/hinic_tx.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Thank you,
-
-> 
-> thanks,
-> jirka
-> 
-
-
+diff --git a/drivers/net/ethernet/huawei/hinic/hinic_tx.c b/drivers/net/ethernet/huawei/hinic/hinic_tx.c
+index 375d81d03e866..365016450bdbe 100644
+--- a/drivers/net/ethernet/huawei/hinic/hinic_tx.c
++++ b/drivers/net/ethernet/huawei/hinic/hinic_tx.c
+@@ -45,7 +45,7 @@
+ 
+ #define HW_CONS_IDX(sq)                 be16_to_cpu(*(u16 *)((sq)->hw_ci_addr))
+ 
+-#define MIN_SKB_LEN                     17
++#define MIN_SKB_LEN			32
+ 
+ #define	MAX_PAYLOAD_OFFSET	        221
+ #define TRANSPORT_OFFSET(l4_hdr, skb)	((u32)((l4_hdr) - (skb)->data))
 -- 
-Masami Hiramatsu <mhiramat@kernel.org>
+2.20.1
+
+
+
