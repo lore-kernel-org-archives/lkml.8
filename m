@@ -4,53 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC976C2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:34:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3911C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:34:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8FE582224E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:34:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D148B214AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:34:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587051243;
-	bh=GbDv3a7/1FbNOK173eHUYHJepKQMY6hbBcwhP4bTIrs=;
+	s=default; t=1587051247;
+	bh=OX08Yy+S0/dVbFy6XcBFg78t8CZ/ZdRHwjDiG4BWfVM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=n6sfzcQORa/Gws3L6BnPIBnmJsTmIm4n2G8gnftW6/sEtV5ppUraStXXjPFG4+bNJ
-	 phTgC13txr0KsEG406qheraqcGNwZCExUbBvqO21fUhXUeJdp2rF4TWNmOFVVNl2e0
-	 mkO8pu30mSmkzhLdHmrHv+VXGJyAXil79rajoL00=
+	b=x+6hRE6z7ONqTu8e3rPX2DHFWsFPBjyAEycBPlvA1qXjYHJeeRRrq2UWQGVFl3O0l
+	 T7jKSV82MSER1uTmuFIJyLVxY+SWUZTWhuDRezNJPmhGUxXw5ynuOkRQ94Pst9A6c/
+	 rbifIh3b2RWfgLp4583jPdNvmBNpv2LeBVpev7cE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2898196AbgDPNkr (ORCPT
+        id S2442580AbgDPPeG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 09:40:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40930 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 11:34:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53590 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2896280AbgDPNaj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:30:39 -0400
+        id S2898216AbgDPNkw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:40:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D9C2421D91;
-        Thu, 16 Apr 2020 13:30:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2DD9A214D8;
+        Thu, 16 Apr 2020 13:40:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587043839;
-        bh=GbDv3a7/1FbNOK173eHUYHJepKQMY6hbBcwhP4bTIrs=;
+        s=default; t=1587044451;
+        bh=OX08Yy+S0/dVbFy6XcBFg78t8CZ/ZdRHwjDiG4BWfVM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zAUlClRIcl4VQWj8H9ZdM3vBE5ZZQLkqaapWxIMLLxj95yNZa9MO9vu6+anRym0NL
-         W0FH02ShGy1NwQIuGcdoENCsF+Q3X4VVK5A2Rwn8o+NL9Of5QsQRAZbOSs2d89xk54
-         nLP/R7c3q1pwCzkthvDppk13Qpa3JdnhWJ+XraQ8=
+        b=paMwxTuxFiR9xBF990B35BAzHlVPcbmLOJcVtF8FKBY5DMPtlp7Jm1kkoo1PRve+U
+         hjqpDJmXCTPG2HwRjAA6Ar72MTdDQA7Z/ebks3eetL6paETB9blpdtETRedc+Q56M3
+         GIS8lU3m2qQe3EHWB/kNZtAYT7BwL/jRd3RtW2rg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Hildenbrand <david@redhat.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>
-Subject: [PATCH 4.19 081/146] KVM: s390: vsie: Fix delivery of addressing exceptions
-Date:   Thu, 16 Apr 2020 15:23:42 +0200
-Message-Id: <20200416131253.942802768@linuxfoundation.org>
+        stable@vger.kernel.org, Sam Lunt <samuel.j.lunt@gmail.com>,
+        He Zhe <zhe.he@windriver.com>, Jiri Olsa <jolsa@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>, trivial@kernel.org,
+        stable@kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [PATCH 5.5 223/257] perf tools: Support Python 3.8+ in Makefile
+Date:   Thu, 16 Apr 2020 15:24:34 +0200
+Message-Id: <20200416131353.772880178@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200416131242.353444678@linuxfoundation.org>
-References: <20200416131242.353444678@linuxfoundation.org>
+In-Reply-To: <20200416131325.891903893@linuxfoundation.org>
+References: <20200416131325.891903893@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,50 +64,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Hildenbrand <david@redhat.com>
+From: Sam Lunt <samueljlunt@gmail.com>
 
-commit 4d4cee96fb7a3cc53702a9be8299bf525be4ee98 upstream.
+commit b9c9ce4e598e012ca7c1813fae2f4d02395807de upstream.
 
-Whenever we get an -EFAULT, we failed to read in guest 2 physical
-address space. Such addressing exceptions are reported via a program
-intercept to the nested hypervisor.
+Python 3.8 changed the output of 'python-config --ldflags' to no longer
+include the '-lpythonX.Y' flag (this apparently fixed an issue loading
+modules with a statically linked Python executable).  The libpython
+feature check in linux/build/feature fails if the Python library is not
+included in FEATURE_CHECK_LDFLAGS-libpython variable.
 
-We faked the intercept, we have to return to guest 2. Instead, right
-now we would be returning -EFAULT from the intercept handler, eventually
-crashing the VM.
-the correct thing to do is to return 1 as rc == 1 is the internal
-representation of "we have to go back into g2".
+This adds a check in the Makefile to determine if PYTHON_CONFIG accepts
+the '--embed' flag and passes that flag alongside '--ldflags' if so.
 
-Addressing exceptions can only happen if the g2->g3 page tables
-reference invalid g2 addresses (say, either a table or the final page is
-not accessible - so something that basically never happens in sane
-environments.
+tools/perf is the only place the libpython feature check is used.
 
-Identified by manual code inspection.
-
-Fixes: a3508fbe9dc6 ("KVM: s390: vsie: initial support for nested virtualization")
-Cc: <stable@vger.kernel.org> # v4.8+
-Signed-off-by: David Hildenbrand <david@redhat.com>
-Link: https://lore.kernel.org/r/20200403153050.20569-3-david@redhat.com
-Reviewed-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
-Reviewed-by: Christian Borntraeger <borntraeger@de.ibm.com>
-[borntraeger@de.ibm.com: fix patch description]
-Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
+Signed-off-by: Sam Lunt <samuel.j.lunt@gmail.com>
+Tested-by: He Zhe <zhe.he@windriver.com>
+Link: http://lore.kernel.org/lkml/c56be2e1-8111-9dfe-8298-f7d0f9ab7431@windriver.com
+Acked-by: Jiri Olsa <jolsa@redhat.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: trivial@kernel.org
+Cc: stable@kernel.org
+Link: http://lore.kernel.org/lkml/20200131181123.tmamivhq4b7uqasr@gmail.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/s390/kvm/vsie.c |    1 +
- 1 file changed, 1 insertion(+)
+ tools/perf/Makefile.config |   11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
 
---- a/arch/s390/kvm/vsie.c
-+++ b/arch/s390/kvm/vsie.c
-@@ -1024,6 +1024,7 @@ static int vsie_run(struct kvm_vcpu *vcp
- 		scb_s->iprcc = PGM_ADDRESSING;
- 		scb_s->pgmilc = 4;
- 		scb_s->gpsw.addr = __rewind_psw(scb_s->gpsw, 4);
-+		rc = 1;
- 	}
- 	return rc;
- }
+--- a/tools/perf/Makefile.config
++++ b/tools/perf/Makefile.config
+@@ -228,8 +228,17 @@ strip-libs  = $(filter-out -l%,$(1))
+ 
+ PYTHON_CONFIG_SQ := $(call shell-sq,$(PYTHON_CONFIG))
+ 
++# Python 3.8 changed the output of `python-config --ldflags` to not include the
++# '-lpythonX.Y' flag unless '--embed' is also passed. The feature check for
++# libpython fails if that flag is not included in LDFLAGS
++ifeq ($(shell $(PYTHON_CONFIG_SQ) --ldflags --embed 2>&1 1>/dev/null; echo $$?), 0)
++  PYTHON_CONFIG_LDFLAGS := --ldflags --embed
++else
++  PYTHON_CONFIG_LDFLAGS := --ldflags
++endif
++
+ ifdef PYTHON_CONFIG
+-  PYTHON_EMBED_LDOPTS := $(shell $(PYTHON_CONFIG_SQ) --ldflags 2>/dev/null)
++  PYTHON_EMBED_LDOPTS := $(shell $(PYTHON_CONFIG_SQ) $(PYTHON_CONFIG_LDFLAGS) 2>/dev/null)
+   PYTHON_EMBED_LDFLAGS := $(call strip-libs,$(PYTHON_EMBED_LDOPTS))
+   PYTHON_EMBED_LIBADD := $(call grep-libs,$(PYTHON_EMBED_LDOPTS)) -lutil
+   PYTHON_EMBED_CCOPTS := $(shell $(PYTHON_CONFIG_SQ) --includes 2>/dev/null)
 
 
