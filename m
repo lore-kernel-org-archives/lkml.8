@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45191C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 16:03:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A72E6C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 16:03:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 08CE0221EB
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 16:03:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81CA9217D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 16:03:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587052987;
-	bh=NxJmxBFM/dLNxv4o9zmDD2dXHVxsxW8x7R2phYHfe1c=;
+	s=default; t=1587052993;
+	bh=PXrkADFv12t8UZBaCWrs9R+DIGCp7wCLJEazXGjXw0E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NWOxE956mZ1YI93FmClOtx24djJMSPLO5wE/+gvwdY6v8U74GzSyQa3T58gsYf6qV
-	 tVAkl1WH9DAmgDWVJbbH5Uy2nlA0QB1s3R6pHXIWDvAgfyI8NmgQI4P6dKQGayK/Lk
-	 7t9Pp+bDBJTcTnytxIW/h6Lv4N8T9k2N0tVnwTSo=
+	b=ker3kwVVWHPmDBVzJ4GjLORg0wGOV0CY0MTjws+KEo7neldqx0HIJFd0YdTtJ2uT/
+	 cQw6lfhKloIy5bFa5f9lpXQt9/X9mpb41hVdsxr9SIv1L3OSvnoE8mwEAz363e1M7y
+	 J9oILFIAiQyqccAM+/jjlAfyXCs9acKOEF7VrjPc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2636694AbgDPQDE (ORCPT
+        id S2506825AbgDPQDL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 12:03:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34526 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 12:03:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34476 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2895255AbgDPN0R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:26:17 -0400
+        id S2895251AbgDPN0O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:26:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 142E121D7F;
-        Thu, 16 Apr 2020 13:26:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9BD4A21D79;
+        Thu, 16 Apr 2020 13:26:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587043576;
-        bh=NxJmxBFM/dLNxv4o9zmDD2dXHVxsxW8x7R2phYHfe1c=;
+        s=default; t=1587043574;
+        bh=PXrkADFv12t8UZBaCWrs9R+DIGCp7wCLJEazXGjXw0E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fV8ukBByT0gZxeK4gIaLXCsXprcGFsv3BwPOXQ5PdhscsCIjmxLLXjT6GoDUFHpiN
-         CtElQK4KKyH2+aMLfvcBHErgKa3tne+lbxsJR70nKmplkuDRFrLZE/t334yZRgUECB
-         MLj78Fd/UkIAc+3JApzyoUGZ6bKxOk0bCOcO6MsM=
+        b=VEXL15apnfGMBxGQZEgE0FBfoRoUbYJBMtEXHDW4UHYZdESE4PKLEE810CSxw+nES
+         Soo6JJy+/PQWzinNzSsxcLhSwx12/wjKnG+P1jaTmAsWRF/9qTP8o+AnlWrIilmnax
+         ZGRvNjgEddwlzk3cEpXgVaxGXz2BLUiwZQD/bQDc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -49,9 +49,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Ming Lei <ming.lei@redhat.com>,
         Christoph Hellwig <hch@infradead.org>,
         Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 014/146] null_blk: Handle null_add_dev() failures properly
-Date:   Thu, 16 Apr 2020 15:22:35 +0200
-Message-Id: <20200416131244.463107215@linuxfoundation.org>
+Subject: [PATCH 4.19 013/146] null_blk: Fix the null_add_dev() error path
+Date:   Thu, 16 Apr 2020 15:22:34 +0200
+Message-Id: <20200416131244.340747602@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131242.353444678@linuxfoundation.org>
 References: <20200416131242.353444678@linuxfoundation.org>
@@ -66,30 +66,69 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Bart Van Assche <bvanassche@acm.org>
 
-[ Upstream commit 9b03b713082a31a5b90e0a893c72aa620e255c26 ]
+[ Upstream commit 2004bfdef945fe55196db6b9cdf321fbc75bb0de ]
 
-If null_add_dev() fails then null_del_dev() is called with a NULL argument.
-Make null_del_dev() handle this scenario correctly. This patch fixes the
-following KASAN complaint:
+If null_add_dev() fails, clear dev->nullb.
 
-null-ptr-deref in null_del_dev+0x28/0x280 [null_blk]
-Read of size 8 at addr 0000000000000000 by task find/1062
+This patch fixes the following KASAN complaint:
+
+BUG: KASAN: use-after-free in nullb_device_submit_queues_store+0xcf/0x160 [null_blk]
+Read of size 8 at addr ffff88803280fc30 by task check/8409
 
 Call Trace:
  dump_stack+0xa5/0xe6
- __kasan_report.cold+0x65/0x99
+ print_address_description.constprop.0+0x26/0x260
+ __kasan_report.cold+0x7b/0x99
  kasan_report+0x16/0x20
  __asan_load8+0x58/0x90
- null_del_dev+0x28/0x280 [null_blk]
- nullb_group_drop_item+0x7e/0xa0 [null_blk]
- client_drop_item+0x53/0x80 [configfs]
- configfs_rmdir+0x395/0x4e0 [configfs]
- vfs_rmdir+0xb6/0x220
- do_rmdir+0x238/0x2c0
- __x64_sys_unlinkat+0x75/0x90
+ nullb_device_submit_queues_store+0xcf/0x160 [null_blk]
+ configfs_write_file+0x1c4/0x250 [configfs]
+ __vfs_write+0x4c/0x90
+ vfs_write+0x145/0x2c0
+ ksys_write+0xd7/0x180
+ __x64_sys_write+0x47/0x50
+ do_syscall_64+0x6f/0x2f0
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x7ff370926317
+Code: 64 89 02 48 c7 c0 ff ff ff ff eb bb 0f 1f 80 00 00 00 00 f3 0f 1e fa 64 8b 04 25 18 00 00 00 85 c0 75 10 b8 01 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 51 c3 48 83 ec 28 48 89 54 24 18 48 89 74 24
+RSP: 002b:00007fff2dd2da48 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+RAX: ffffffffffffffda RBX: 0000000000000002 RCX: 00007ff370926317
+RDX: 0000000000000002 RSI: 0000559437ef23f0 RDI: 0000000000000001
+RBP: 0000559437ef23f0 R08: 000000000000000a R09: 0000000000000001
+R10: 0000559436703471 R11: 0000000000000246 R12: 0000000000000002
+R13: 00007ff370a006a0 R14: 00007ff370a014a0 R15: 00007ff370a008a0
+
+Allocated by task 8409:
+ save_stack+0x23/0x90
+ __kasan_kmalloc.constprop.0+0xcf/0xe0
+ kasan_kmalloc+0xd/0x10
+ kmem_cache_alloc_node_trace+0x129/0x4c0
+ null_add_dev+0x24a/0xe90 [null_blk]
+ nullb_device_power_store+0x1b6/0x270 [null_blk]
+ configfs_write_file+0x1c4/0x250 [configfs]
+ __vfs_write+0x4c/0x90
+ vfs_write+0x145/0x2c0
+ ksys_write+0xd7/0x180
+ __x64_sys_write+0x47/0x50
  do_syscall_64+0x6f/0x2f0
  entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
+Freed by task 8409:
+ save_stack+0x23/0x90
+ __kasan_slab_free+0x112/0x160
+ kasan_slab_free+0x12/0x20
+ kfree+0xdf/0x250
+ null_add_dev+0xaf3/0xe90 [null_blk]
+ nullb_device_power_store+0x1b6/0x270 [null_blk]
+ configfs_write_file+0x1c4/0x250 [configfs]
+ __vfs_write+0x4c/0x90
+ vfs_write+0x145/0x2c0
+ ksys_write+0xd7/0x180
+ __x64_sys_write+0x47/0x50
+ do_syscall_64+0x6f/0x2f0
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+Fixes: 2984c8684f96 ("nullb: factor disk parameters")
 Signed-off-by: Bart Van Assche <bvanassche@acm.org>
 Reviewed-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
 Cc: Johannes Thumshirn <jth@kernel.org>
@@ -99,27 +138,21 @@ Cc: Christoph Hellwig <hch@infradead.org>
 Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/block/null_blk_main.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ drivers/block/null_blk_main.c | 1 +
+ 1 file changed, 1 insertion(+)
 
 diff --git a/drivers/block/null_blk_main.c b/drivers/block/null_blk_main.c
-index 002072429290e..78355a0e61db6 100644
+index c5c0b7c894815..002072429290e 100644
 --- a/drivers/block/null_blk_main.c
 +++ b/drivers/block/null_blk_main.c
-@@ -1480,7 +1480,12 @@ static void cleanup_queues(struct nullb *nullb)
- 
- static void null_del_dev(struct nullb *nullb)
- {
--	struct nullb_device *dev = nullb->dev;
-+	struct nullb_device *dev;
-+
-+	if (!nullb)
-+		return;
-+
-+	dev = nullb->dev;
- 
- 	ida_simple_remove(&nullb_indexes, nullb->index);
- 
+@@ -1844,6 +1844,7 @@ out_cleanup_queues:
+ 	cleanup_queues(nullb);
+ out_free_nullb:
+ 	kfree(nullb);
++	dev->nullb = NULL;
+ out:
+ 	return rv;
+ }
 -- 
 2.20.1
 
