@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00A8FC2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:14:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BDF2C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:15:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D19C32063A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:14:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB6832063A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:15:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587046497;
-	bh=28OW14Pg6V+cY9SZW+S9pbIyd0BluxIjxSwJPQi4yws=;
+	s=default; t=1587046502;
+	bh=n1bLVtJgCFDyQmkPMBtUcl4icWO08qCoipDnEmRv7Js=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ma4k3JkSncc4F87Gsgvw3K93KkYteksK+f/dJXxAK30UI+inwOFN59r0h7yQ9wEka
-	 Y8NQ0EupyvNGjP8H4CdNAAgtWW4Kw4PG0hIpYH38PSyYCPAYtO/rrM9pvChy5jVDm8
-	 D5sT50xkqPs/3MwpNbpyZtkUdjJA8ypJWrlTW1CE=
+	b=tPOPlhOwB7BzpgAz4FcYhSn7sUayqgJRQsu5yP/zyklDSOiWkSnOevhFWmlOFgPWu
+	 h6fSFeiCqSHZV8y7E51rHSLlWfI61yzOZw5yrlpD6UIDD0zVQyEjycRXN7hJPPX1Cq
+	 c/CPm99xep1ViykBaOo2umohKa4cx1JiR3xh3gZs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2442262AbgDPOO4 (ORCPT
+        id S2405008AbgDPOPB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:14:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36976 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 10:15:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37024 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2408654AbgDPNu4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:50:56 -0400
+        id S2408679AbgDPNu6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:50:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0080C20732;
-        Thu, 16 Apr 2020 13:50:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6831D2063A;
+        Thu, 16 Apr 2020 13:50:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587045055;
-        bh=28OW14Pg6V+cY9SZW+S9pbIyd0BluxIjxSwJPQi4yws=;
+        s=default; t=1587045057;
+        bh=n1bLVtJgCFDyQmkPMBtUcl4icWO08qCoipDnEmRv7Js=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ODd6m2TouwRuCMBP8mW6aYoStp3vRiXlIGy2eOZxfq44J7YxqMKh6Qg1RxXPU75bw
-         Eux1/RuOrlQj5KzWaELNG2DwzY4xh/CY3+oEhIYwV17RhuvKC452lHiHXVehFaQQFJ
-         h6v7QQ8Q/PgXinYpT7lhEyKgqQZJMwynE1wmyCh0=
+        b=CV1GGENQbjvuMSDRuWDLwUM7GfCcW2GzdgtrFKkfEA1EJ/3T/WWIZyvtkSMK4RUkp
+         /1514FR+GcON6XXZbkjQM/IZAbGpqq73u26fOnpqpWaBG4JE0nPKPmMjwiNriEN1D0
+         AyZeD3GCqh4AbqqUC2s1ps7jAhOmpYfnGKA8z/cQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Gibson <david@gibson.dropbear.id.au>,
-        =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg@kaod.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 5.4 210/232] powerpc/xive: Use XIVE_BAD_IRQ instead of zero to catch non configured IPIs
-Date:   Thu, 16 Apr 2020 15:25:04 +0200
-Message-Id: <20200416131341.685209048@linuxfoundation.org>
+        stable@vger.kernel.org, Andrew Donnellan <ajd@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Daniel Axtens <dja@axtens.net>
+Subject: [PATCH 5.4 211/232] powerpc/64: Setup a paca before parsing device tree etc.
+Date:   Thu, 16 Apr 2020 15:25:05 +0200
+Message-Id: <20200416131341.816473508@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131316.640996080@linuxfoundation.org>
 References: <20200416131316.640996080@linuxfoundation.org>
@@ -60,133 +60,132 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Cédric Le Goater <clg@kaod.org>
+From: Daniel Axtens <dja@axtens.net>
 
-commit b1a504a6500df50e83b701b7946b34fce27ad8a3 upstream.
+commit d4a8e98621543d5798421eed177978bf2b3cdd11 upstream.
 
-When a CPU is brought up, an IPI number is allocated and recorded
-under the XIVE CPU structure. Invalid IPI numbers are tracked with
-interrupt number 0x0.
+Currently we set up the paca after parsing the device tree for CPU
+features. Prior to that, r13 contains random data, which means there
+is random data in r13 while we're running the generic dt parsing code.
 
-On the PowerNV platform, the interrupt number space starts at 0x10 and
-this works fine. However, on the sPAPR platform, it is possible to
-allocate the interrupt number 0x0 and this raises an issue when CPU 0
-is unplugged. The XIVE spapr driver tracks allocated interrupt numbers
-in a bitmask and it is not correctly updated when interrupt number 0x0
-is freed. It stays allocated and it is then impossible to reallocate.
+This random data varies depending on whether we boot through a vmlinux
+or a zImage: for the vmlinux case it's usually around zero, but for
+zImages we see random values like 912a72603d420015.
 
-Fix by using the XIVE_BAD_IRQ value instead of zero on both platforms.
+This is poor practice, and can also lead to difficult-to-debug
+crashes. For example, when kcov is enabled, the kcov instrumentation
+attempts to read preempt_count out of the current task, which goes via
+the paca. This then crashes in the zImage case.
 
-Reported-by: David Gibson <david@gibson.dropbear.id.au>
-Fixes: eac1e731b59e ("powerpc/xive: guest exploitation of the XIVE interrupt controller")
-Cc: stable@vger.kernel.org # v4.14+
-Signed-off-by: Cédric Le Goater <clg@kaod.org>
-Reviewed-by: David Gibson <david@gibson.dropbear.id.au>
-Tested-by: David Gibson <david@gibson.dropbear.id.au>
+Similarly stack protector can cause crashes if r13 is bogus, by
+reading from the stack canary in the paca.
+
+To resolve this:
+
+ - move the paca setup to before the CPU feature parsing.
+
+ - because we no longer have access to CPU feature flags in paca
+ setup, change the HV feature test in the paca setup path to consider
+ the actual value of the MSR rather than the CPU feature.
+
+Translations get switched on once we leave early_setup, so I think
+we'd already catch any other cases where the paca or task aren't set
+up.
+
+Boot tested on a P9 guest and host.
+
+Fixes: fb0b0a73b223 ("powerpc: Enable kcov")
+Fixes: 06ec27aea9fc ("powerpc/64: add stack protector support")
+Cc: stable@vger.kernel.org # v4.20+
+Reviewed-by: Andrew Donnellan <ajd@linux.ibm.com>
+Suggested-by: Michael Ellerman <mpe@ellerman.id.au>
+Signed-off-by: Daniel Axtens <dja@axtens.net>
+[mpe: Reword comments & change log a bit to mention stack protector]
 Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20200306150143.5551-2-clg@kaod.org
+Link: https://lore.kernel.org/r/20200320032116.1024773-1-mpe@ellerman.id.au
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/powerpc/sysdev/xive/common.c        |   12 +++---------
- arch/powerpc/sysdev/xive/native.c        |    4 ++--
- arch/powerpc/sysdev/xive/spapr.c         |    4 ++--
- arch/powerpc/sysdev/xive/xive-internal.h |    7 +++++++
- 4 files changed, 14 insertions(+), 13 deletions(-)
+ arch/powerpc/kernel/dt_cpu_ftrs.c |    1 -
+ arch/powerpc/kernel/paca.c        |   10 +++++++---
+ arch/powerpc/kernel/setup_64.c    |   30 ++++++++++++++++++++++++------
+ 3 files changed, 31 insertions(+), 10 deletions(-)
 
---- a/arch/powerpc/sysdev/xive/common.c
-+++ b/arch/powerpc/sysdev/xive/common.c
-@@ -68,13 +68,6 @@ static u32 xive_ipi_irq;
- /* Xive state for each CPU */
- static DEFINE_PER_CPU(struct xive_cpu *, xive_cpu);
+--- a/arch/powerpc/kernel/dt_cpu_ftrs.c
++++ b/arch/powerpc/kernel/dt_cpu_ftrs.c
+@@ -139,7 +139,6 @@ static void __init cpufeatures_setup_cpu
+ 	/* Initialize the base environment -- clear FSCR/HFSCR.  */
+ 	hv_mode = !!(mfmsr() & MSR_HV);
+ 	if (hv_mode) {
+-		/* CPU_FTR_HVMODE is used early in PACA setup */
+ 		cur_cpu_spec->cpu_features |= CPU_FTR_HVMODE;
+ 		mtspr(SPRN_HFSCR, 0);
+ 	}
+--- a/arch/powerpc/kernel/paca.c
++++ b/arch/powerpc/kernel/paca.c
+@@ -214,11 +214,15 @@ void setup_paca(struct paca_struct *new_
+ 	/* On Book3E, initialize the TLB miss exception frames */
+ 	mtspr(SPRN_SPRG_TLB_EXFRAME, local_paca->extlb);
+ #else
+-	/* In HV mode, we setup both HPACA and PACA to avoid problems
++	/*
++	 * In HV mode, we setup both HPACA and PACA to avoid problems
+ 	 * if we do a GET_PACA() before the feature fixups have been
+-	 * applied
++	 * applied.
++	 *
++	 * Normally you should test against CPU_FTR_HVMODE, but CPU features
++	 * are not yet set up when we first reach here.
+ 	 */
+-	if (early_cpu_has_feature(CPU_FTR_HVMODE))
++	if (mfmsr() & MSR_HV)
+ 		mtspr(SPRN_SPRG_HPACA, local_paca);
+ #endif
+ 	mtspr(SPRN_SPRG_PACA, local_paca);
+--- a/arch/powerpc/kernel/setup_64.c
++++ b/arch/powerpc/kernel/setup_64.c
+@@ -290,18 +290,36 @@ void __init early_setup(unsigned long dt
  
--/*
-- * A "disabled" interrupt should never fire, to catch problems
-- * we set its logical number to this
-- */
--#define XIVE_BAD_IRQ		0x7fffffff
--#define XIVE_MAX_IRQ		(XIVE_BAD_IRQ - 1)
+ 	/* -------- printk is _NOT_ safe to use here ! ------- */
+ 
+-	/* Try new device tree based feature discovery ... */
+-	if (!dt_cpu_ftrs_init(__va(dt_ptr)))
+-		/* Otherwise use the old style CPU table */
+-		identify_cpu(0, mfspr(SPRN_PVR));
 -
- /* An invalid CPU target */
- #define XIVE_INVALID_TARGET	(-1)
+-	/* Assume we're on cpu 0 for now. Don't write to the paca yet! */
++	/*
++	 * Assume we're on cpu 0 for now.
++	 *
++	 * We need to load a PACA very early for a few reasons.
++	 *
++	 * The stack protector canary is stored in the paca, so as soon as we
++	 * call any stack protected code we need r13 pointing somewhere valid.
++	 *
++	 * If we are using kcov it will call in_task() in its instrumentation,
++	 * which relies on the current task from the PACA.
++	 *
++	 * dt_cpu_ftrs_init() calls into generic OF/fdt code, as well as
++	 * printk(), which can trigger both stack protector and kcov.
++	 *
++	 * percpu variables and spin locks also use the paca.
++	 *
++	 * So set up a temporary paca. It will be replaced below once we know
++	 * what CPU we are on.
++	 */
+ 	initialise_paca(&boot_paca, 0);
+ 	setup_paca(&boot_paca);
+ 	fixup_boot_paca();
  
-@@ -1150,7 +1143,7 @@ static int xive_setup_cpu_ipi(unsigned i
- 	xc = per_cpu(xive_cpu, cpu);
+ 	/* -------- printk is now safe to use ------- */
  
- 	/* Check if we are already setup */
--	if (xc->hw_ipi != 0)
-+	if (xc->hw_ipi != XIVE_BAD_IRQ)
- 		return 0;
- 
- 	/* Grab an IPI from the backend, this will populate xc->hw_ipi */
-@@ -1187,7 +1180,7 @@ static void xive_cleanup_cpu_ipi(unsigne
- 	/* Disable the IPI and free the IRQ data */
- 
- 	/* Already cleaned up ? */
--	if (xc->hw_ipi == 0)
-+	if (xc->hw_ipi == XIVE_BAD_IRQ)
- 		return;
- 
- 	/* Mask the IPI */
-@@ -1343,6 +1336,7 @@ static int xive_prepare_cpu(unsigned int
- 		if (np)
- 			xc->chip_id = of_get_ibm_chip_id(np);
- 		of_node_put(np);
-+		xc->hw_ipi = XIVE_BAD_IRQ;
- 
- 		per_cpu(xive_cpu, cpu) = xc;
- 	}
---- a/arch/powerpc/sysdev/xive/native.c
-+++ b/arch/powerpc/sysdev/xive/native.c
-@@ -312,7 +312,7 @@ static void xive_native_put_ipi(unsigned
- 	s64 rc;
- 
- 	/* Free the IPI */
--	if (!xc->hw_ipi)
-+	if (xc->hw_ipi == XIVE_BAD_IRQ)
- 		return;
- 	for (;;) {
- 		rc = opal_xive_free_irq(xc->hw_ipi);
-@@ -320,7 +320,7 @@ static void xive_native_put_ipi(unsigned
- 			msleep(OPAL_BUSY_DELAY_MS);
- 			continue;
- 		}
--		xc->hw_ipi = 0;
-+		xc->hw_ipi = XIVE_BAD_IRQ;
- 		break;
- 	}
- }
---- a/arch/powerpc/sysdev/xive/spapr.c
-+++ b/arch/powerpc/sysdev/xive/spapr.c
-@@ -560,11 +560,11 @@ static int xive_spapr_get_ipi(unsigned i
- 
- static void xive_spapr_put_ipi(unsigned int cpu, struct xive_cpu *xc)
- {
--	if (!xc->hw_ipi)
-+	if (xc->hw_ipi == XIVE_BAD_IRQ)
- 		return;
- 
- 	xive_irq_bitmap_free(xc->hw_ipi);
--	xc->hw_ipi = 0;
-+	xc->hw_ipi = XIVE_BAD_IRQ;
- }
- #endif /* CONFIG_SMP */
- 
---- a/arch/powerpc/sysdev/xive/xive-internal.h
-+++ b/arch/powerpc/sysdev/xive/xive-internal.h
-@@ -5,6 +5,13 @@
- #ifndef __XIVE_INTERNAL_H
- #define __XIVE_INTERNAL_H
- 
-+/*
-+ * A "disabled" interrupt should never fire, to catch problems
-+ * we set its logical number to this
-+ */
-+#define XIVE_BAD_IRQ		0x7fffffff
-+#define XIVE_MAX_IRQ		(XIVE_BAD_IRQ - 1)
++	/* Try new device tree based feature discovery ... */
++	if (!dt_cpu_ftrs_init(__va(dt_ptr)))
++		/* Otherwise use the old style CPU table */
++		identify_cpu(0, mfspr(SPRN_PVR));
 +
- /* Each CPU carry one of these with various per-CPU state */
- struct xive_cpu {
- #ifdef CONFIG_SMP
+ 	/* Enable early debugging if any specified (see udbg.h) */
+ 	udbg_early_init();
+ 
 
 
