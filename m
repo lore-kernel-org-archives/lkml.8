@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75A60C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:56:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8B00C352BE
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:57:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 52B27214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:56:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D3A1214AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:57:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587052613;
-	bh=FISnIMAk538PrUDM5Z16u1+l0BTcLxHxMzOCkMtfLFY=;
+	s=default; t=1587052629;
+	bh=IXc2+E9hVVLIpvFapORhoJC08y/a0HDb+C+wTixsHN4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Nhpv5KvJ9K5eqcOePW+lMZs+N2cmWmoMH22j+hjjfRmY6sinpc0dYaXB95qOUku0E
-	 y1OgxzaEHhY5bNTqKc9flnawKudSgq4lvy7dvklYDFeM2XQup1YK6vRa/GIkc9oyIl
-	 EUZ80PQWZzh0zMv+E/MiLUScF7o27x8Rz0FLUlmo=
+	b=LgTX+nHFCGGy9AVEAfLzMavjM+W2sfibfXuQDG/yyZIjT93qsT8wBTeqPZhsvPrn/
+	 AidMrtymOiowHGcQ0TcEf/EKw+YZZldWZW7+xfzDDLGTu2QcJ+6toRV8ah0kN+JfLf
+	 +bEaeGr/yQsVdh/ut9djjSUTgv/Z0WNbz/IPw7gk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2410673AbgDPP4v (ORCPT
+        id S2442850AbgDPP5G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:56:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38036 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 11:57:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37712 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2895858AbgDPN2s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:28:48 -0400
+        id S2895792AbgDPN2i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:28:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E810321D93;
-        Thu, 16 Apr 2020 13:28:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2407221D82;
+        Thu, 16 Apr 2020 13:28:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587043727;
-        bh=FISnIMAk538PrUDM5Z16u1+l0BTcLxHxMzOCkMtfLFY=;
+        s=default; t=1587043717;
+        bh=IXc2+E9hVVLIpvFapORhoJC08y/a0HDb+C+wTixsHN4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=P45VwAx2viX0BBMQl/Ntx7aJJ+vfJK0zpwVA3S+qLvoQqlcbbpFq+foJnA6DnbXu/
-         uLBaQXrTvQjbDutzfQ/LCC4AwHwC32cizq54Qc3Lt+uO2fC7pnAtE+k9pZx4Ps8BMB
-         bPRncjP3w9d2o0QS+Vrg/zzwCQOvFISQ/YBBuhAQ=
+        b=hK29YDlSkkaXGBtEMD1kEZVZcz4pPWBv+cy/1r2iRyGYdphIYmROnJqu2P7sHl/mt
+         mfSThRX7r3Tf6c+ipZXycNGMU9eDZwtCc7I5zcfgCkBYlrZlJLy58vRUxlNRFu03Kg
+         WfKSrTOunhU+epRvRSzsq8EQGpV3HWa4Ylta0bl0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Vasily Averin <vvs@virtuozzo.com>,
-        Kees Cook <keescook@chromium.org>
-Subject: [PATCH 4.19 073/146] pstore: pstore_ftrace_seq_next should increase position index
-Date:   Thu, 16 Apr 2020 15:23:34 +0200
-Message-Id: <20200416131252.938450061@linuxfoundation.org>
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Subject: [PATCH 4.19 070/146] tpm: tpm2_bios_measurements_next should increase position index
+Date:   Thu, 16 Apr 2020 15:23:31 +0200
+Message-Id: <20200416131252.532858013@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131242.353444678@linuxfoundation.org>
 References: <20200416131242.353444678@linuxfoundation.org>
@@ -61,79 +61,46 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Vasily Averin <vvs@virtuozzo.com>
 
-commit 6c871b7314dde9ab64f20de8f5aa3d01be4518e8 upstream.
+commit f9bf8adb55cd5a357b247a16aafddf8c97b276e0 upstream.
 
-In Aug 2018 NeilBrown noticed
-commit 1f4aace60b0e ("fs/seq_file.c: simplify seq_file iteration code and interface")
-"Some ->next functions do not increment *pos when they return NULL...
-Note that such ->next functions are buggy and should be fixed.
-A simple demonstration is
+If .next function does not change position index,
+following .show function will repeat output related
+to current position index.
 
- dd if=/proc/swaps bs=1000 skip=1
+For /sys/kernel/security/tpm0/binary_bios_measurements:
+1) read after lseek beyound end of file generates whole last line.
+2) read after lseek to middle of last line generates
+expected end of last line and unexpected whole last line once again.
 
-Choose any block size larger than the size of /proc/swaps. This will
-always show the whole last line of /proc/swaps"
-
-/proc/swaps output was fixed recently, however there are lot of other
-affected files, and one of them is related to pstore subsystem.
-
-If .next function does not change position index, following .show function
-will repeat output related to current position index.
-
-There are at least 2 related problems:
-- read after lseek beyond end of file, described above by NeilBrown
-  "dd if=<AFFECTED_FILE> bs=1000 skip=1" will generate whole last list
-- read after lseek on in middle of last line will output expected rest of
-  last line but then repeat whole last line once again.
-
-If .show() function generates multy-line output (like
-pstore_ftrace_seq_show() does ?) following bash script cycles endlessly
-
- $ q=;while read -r r;do echo "$((++q)) $r";done < AFFECTED_FILE
-
-Unfortunately I'm not familiar enough to pstore subsystem and was unable
-to find affected pstore-related file on my test node.
-
-If .next function does not change position index, following .show function
-will repeat output related to current position index.
-
-Cc: stable@vger.kernel.org
+Cc: stable@vger.kernel.org # 4.19.x
 Fixes: 1f4aace60b0e ("fs/seq_file.c: simplify seq_file iteration code ...")
 Link: https://bugzilla.kernel.org/show_bug.cgi?id=206283
 Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
-Link: https://lore.kernel.org/r/4e49830d-4c88-0171-ee24-1ee540028dad@virtuozzo.com
-[kees: with robustness tweak from Joel Fernandes <joelaf@google.com>]
-Signed-off-by: Kees Cook <keescook@chromium.org>
+Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/pstore/inode.c |    5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/char/tpm/eventlog/tpm2.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/fs/pstore/inode.c
-+++ b/fs/pstore/inode.c
-@@ -99,11 +99,11 @@ static void *pstore_ftrace_seq_next(stru
- 	struct pstore_private *ps = s->private;
- 	struct pstore_ftrace_seq_data *data = v;
+--- a/drivers/char/tpm/eventlog/tpm2.c
++++ b/drivers/char/tpm/eventlog/tpm2.c
+@@ -143,6 +143,7 @@ static void *tpm2_bios_measurements_next
+ 	size_t event_size;
+ 	void *marker;
  
 +	(*pos)++;
- 	data->off += REC_SIZE;
- 	if (data->off + REC_SIZE > ps->total_size)
+ 	event_header = log->bios_event_log;
+ 
+ 	if (v == SEQ_START_TOKEN) {
+@@ -167,7 +168,6 @@ static void *tpm2_bios_measurements_next
+ 	if (((v + event_size) >= limit) || (event_size == 0))
  		return NULL;
  
 -	(*pos)++;
- 	return data;
+ 	return v;
  }
  
-@@ -113,6 +113,9 @@ static int pstore_ftrace_seq_show(struct
- 	struct pstore_ftrace_seq_data *data = v;
- 	struct pstore_ftrace_record *rec;
- 
-+	if (!data)
-+		return 0;
-+
- 	rec = (struct pstore_ftrace_record *)(ps->record->buf + data->off);
- 
- 	seq_printf(s, "CPU:%d ts:%llu %08lx  %08lx  %pf <- %pF\n",
 
 
