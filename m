@@ -2,96 +2,115 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E9AAC2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:34:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 159F9C352BE
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:34:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 06073214AF
+	by mail.kernel.org (Postfix) with ESMTP id E77F1214AF
 	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:34:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587051271;
-	bh=QbwX/cYzHyWzd67ry82iq9jNyfuA+lBj+qA600TsiTs=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=q9uNi9PNCmaz7JpaO+u1KX8Zplm/O+9YY5IeD4h84StImTkJYVzwV/hOz6inzywSF
-	 E3KZZ9FEjUrCGmMKsl1zgjaQ7ZjljDR8j2/1/0uGbIiim5+qMxGyaku9z31n5bGFRH
-	 M/U3BtYjJhsg+6KHig8DTmNKW0yJrjUwJvNJRQ/A=
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XECzl8bn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2634972AbgDPPe2 (ORCPT
+        id S2634956AbgDPPeW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:34:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53694 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2898238AbgDPNk7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:40:59 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7F8DC218AC;
-        Thu, 16 Apr 2020 13:40:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044459;
-        bh=QbwX/cYzHyWzd67ry82iq9jNyfuA+lBj+qA600TsiTs=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=s/fnn7pcRduf6otexAv+VM498/y2wwNIhoJdolhDw+MncTyvSqqhqZFscO8rwZZ78
-         4tOjUkMkEJIPPK7v9sW9u+JRR9zSJm4qC46JZ44/J6CbLs0mAeJKgSD5HOdBLeYjoM
-         URNSNwx3ToUxQ2DC1egpUN/Dcbog5LieFR6iF3Rw=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Taeung Song <treeze.taeung@gmail.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
-Subject: [PATCH 5.5 226/257] ftrace/kprobe: Show the maxactive number on kprobe_events
-Date:   Thu, 16 Apr 2020 15:24:37 +0200
-Message-Id: <20200416131354.086051025@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200416131325.891903893@linuxfoundation.org>
-References: <20200416131325.891903893@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Thu, 16 Apr 2020 11:34:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57714 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2898232AbgDPNk6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:40:58 -0400
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2AEDC061A0C;
+        Thu, 16 Apr 2020 06:40:57 -0700 (PDT)
+Received: by mail-lf1-x142.google.com with SMTP id f8so5574259lfe.12;
+        Thu, 16 Apr 2020 06:40:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=ZLzws5i5Y18vpPpWQKpd4tf4rrBI/U3CKui/Sn/uhyY=;
+        b=XECzl8bnoYHa7JBihaNpNho0X+TXnG6VeYsCQPhuEXHf9Iehd/9SIW1/J9mcuEEe0b
+         WRwVX/i41aBzEhsORfM4ZC2TbVxNVMolHRAjUfke0s+RGZmitBw/DnJUZHiKqHqmrYT9
+         I9LXFKpBWBqhTZZXXair5qVTLlU/jJbsjPoWIwsJBBo0mTlFrj9HgsYRzAG31YSPElY4
+         QhYDKuMQA7falqvgwPR4X+Mt7f/W7ZeP/+/HYIh3CRJ+JsZlwpc6xEeVn3/TGziToDl9
+         VblLgngigFTr2b8o136x/G69URCT7TQHa/jhmCrUF857d5kXKZ74Z1HEVMSgcSz3RKnR
+         Ss3A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=ZLzws5i5Y18vpPpWQKpd4tf4rrBI/U3CKui/Sn/uhyY=;
+        b=NbGit8VHchrgxfyZz/SMcGF8EXrjpZ/Fmr7frzB973H/WfmaPkkAXbxvGNS9htcR0/
+         L74iv6RJYfzNlyp9UimvTdUPvgTkOurxlmHFmR6DLGrMdDUv+llFXYj/ZOGVwYnhiIbg
+         aoCxr7sdIjQX+RZgnpWhwzp33fwaz/mKESkeIIzrih6K7ZE3MJj5S4+3YhC+NvieCrhs
+         15dBvWKJUq07oU2BgcE3cOD9+LRYCokG1/yICMgZwHZm2orN4Bt8oBr69cJsjfL5oFiS
+         +Nvr5rn1DMOuYRbOKNfo417tsSsmp3/RhPYVndqjlOMOeEU8dgLQDtRzsBpbrH+c/Hgk
+         dDWQ==
+X-Gm-Message-State: AGi0PubpMTX1O6rsMQFWR2Ide2kVGp1Poe7NKgrycDPIVwF1BGVUQhXd
+        atm2nfOuI1P1nMBRO/fQpCSrZamP3wKrNCQv5iA=
+X-Google-Smtp-Source: APiQypIWud1D1EiOfs9YtVdVtAQk8rF/e+TJLy4nQSWV2/scuMvXiD9YGPWzt7VIZM5qqDNDgcds4hTD9Rab+a60/+0=
+X-Received: by 2002:a19:88a:: with SMTP id 132mr6153501lfi.130.1587044456209;
+ Thu, 16 Apr 2020 06:40:56 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20200414152843.32129-1-pthomas8589@gmail.com> <CACRpkdaPc-rxNmdq7KFKZ-Qi7Tqy2RJ5Lkcv-8bTAh0GX7VygQ@mail.gmail.com>
+ <CAMpxmJWZEhKho0+6zf=Ca8tif=Z7PcdNv2=tAsDnOUzeZLYqLg@mail.gmail.com>
+In-Reply-To: <CAMpxmJWZEhKho0+6zf=Ca8tif=Z7PcdNv2=tAsDnOUzeZLYqLg@mail.gmail.com>
+From:   Paul Thomas <pthomas8589@gmail.com>
+Date:   Thu, 16 Apr 2020 09:40:44 -0400
+Message-ID: <CAD56B7ezM5ewaFySr8zeybHvkLmLpcZQzMgYUnVNEvdJnvgGZw@mail.gmail.com>
+Subject: Re: [PATCH v2] gpio: gpio-pca953x, Add get_multiple function
+To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masami Hiramatsu <mhiramat@kernel.org>
+On Thu, Apr 16, 2020 at 9:21 AM Bartosz Golaszewski
+<bgolaszewski@baylibre.com> wrote:
+>
+> czw., 16 kwi 2020 o 13:22 Linus Walleij <linus.walleij@linaro.org> napisa=
+=C5=82(a):
+> >
+> > On Tue, Apr 14, 2020 at 5:30 PM Paul Thomas <pthomas8589@gmail.com> wro=
+te:
+> >
+> > > Implement a get_multiple function for gpio-pca953x. If a driver
+> > > leaves get_multiple unimplemented then gpio_chip_get_multiple()
+> > > in gpiolib.c takes care of it by calling chip->get() as needed.
+> > > For i2c chips this is very inefficient. For example if you do an
+> > > 8-bit read then instead of a single i2c transaction there are
+> > > 8 transactions reading the same byte!
+> > >
+> > > This has been tested with max7312 chips on a 5.2 kernel.
+> > >
+> > > Signed-off-by: Paul Thomas <pthomas8589@gmail.com>
+> > > ---
+> > >  changes from v1: rebased to 5.7-rc1
+> >
+> > Acked-by: Linus Walleij <linus.walleij@linaro.org>
+> >
+> > Since I know Bartosz is queueing other patches for this driver I
+> > let him pick it up.
+> >
+> > Yours,
+> > Linus Walleij
+>
+> Patch applied. I removed the last line of the commit message since I
+> guess you did test it on v5.7-rc1 after all?
+I applied the patch and compiled the kernel, but I didn't test on our
+embedded board with the actual max7312 chips, that board has a whole
+series of special commits.
 
-commit 6a13a0d7b4d1171ef9b80ad69abc37e1daa941b3 upstream.
+-Paul
 
-Show maxactive parameter on kprobe_events.
-This allows user to save the current configuration and
-restore it without losing maxactive parameter.
-
-Link: http://lkml.kernel.org/r/4762764a-6df7-bc93-ed60-e336146dce1f@gmail.com
-Link: http://lkml.kernel.org/r/158503528846.22706.5549974121212526020.stgit@devnote2
-
-Cc: stable@vger.kernel.org
-Fixes: 696ced4fb1d76 ("tracing/kprobes: expose maxactive for kretprobe in kprobe_events")
-Reported-by: Taeung Song <treeze.taeung@gmail.com>
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- kernel/trace/trace_kprobe.c |    2 ++
- 1 file changed, 2 insertions(+)
-
---- a/kernel/trace/trace_kprobe.c
-+++ b/kernel/trace/trace_kprobe.c
-@@ -918,6 +918,8 @@ static int trace_kprobe_show(struct seq_
- 	int i;
- 
- 	seq_putc(m, trace_kprobe_is_return(tk) ? 'r' : 'p');
-+	if (trace_kprobe_is_return(tk) && tk->rp.maxactive)
-+		seq_printf(m, "%d", tk->rp.maxactive);
- 	seq_printf(m, ":%s/%s", trace_probe_group_name(&tk->tp),
- 				trace_probe_name(&tk->tp));
- 
-
-
+>
+> Bart
