@@ -2,204 +2,116 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 351F1C38A29
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 22:34:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D095C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 22:38:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0FA0C2078B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 22:34:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LqdSbedC"
+	by mail.kernel.org (Postfix) with ESMTP id 15B39206B9
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 22:38:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729248AbgDPWeM (ORCPT
+        id S1728975AbgDPWik (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 18:34:12 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:51734 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729216AbgDPWeK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 18:34:10 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587076448;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=A1bma2gluq3HGOu3CaCHez8AlHNyzwOb99nKMYoTBrs=;
-        b=LqdSbedCp/0YynWKHxlhczr5h21f31WfT2INVXXoRCa/oYZK8XMZiT/PMwdN4vWbcQ3l/1
-        6FwlLl3oV+fwTFlgFobjtPCzy+QYKYvwdzdgTyw3PVuChTIcAbH5c/eXRKMAhN55MUQ9Dc
-        XeA7J3qwt50DQOBJdXTCbLwPH8VJvm8=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-290-MYUlhjBbPaiZuf79XfUEUA-1; Thu, 16 Apr 2020 18:34:04 -0400
-X-MC-Unique: MYUlhjBbPaiZuf79XfUEUA-1
-Received: by mail-wr1-f70.google.com with SMTP id a3so7797wro.1
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 15:34:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=A1bma2gluq3HGOu3CaCHez8AlHNyzwOb99nKMYoTBrs=;
-        b=hzZNADA0ZCX7YqJVGILDeOMuICQ3/P4qrBARxpdTIEFe8oWcypoA16RWVuJ4ua+ECe
-         UZOQF5iyjIHXHHc/QIM4QGQ/yuvxhoFXHZjmOdntAVchda4r0SZplCOEMjpuYc/NdjHc
-         eQ3uaP3p5eLjLJnNUd8sV3X471/+W+WbUoh/qjzpWa2+UTODo00XXyjmNkb6+v/cNiyS
-         +lClVyAUCjw3PEyMyFK6YqljJ5oUvykGmj/rO/czqlvCiX5WHG5ZxQP5qjr/NHIGEry6
-         zOlM14uJhipIogbG/trX8L5rz9ANRAA+PV0Rn0UHll/QXRS55B9h44CWGOHqblwL3078
-         YAHw==
-X-Gm-Message-State: AGi0PuZPpZIxVwfqh6I5PN7YsyKbx1RBkDwXAuarIIGLlhDKzhOCkrtz
-        HXMDJDXgJPqu2b7RsjC9DGqB6rvc++gCW8yeo3SFitJ9AijIGsBGw+J5lUnEoeO4mqQA3x+XGwz
-        LwbR11l6kvmF/rwLEngmQMkhM
-X-Received: by 2002:a1c:4346:: with SMTP id q67mr98422wma.162.1587076442803;
-        Thu, 16 Apr 2020 15:34:02 -0700 (PDT)
-X-Google-Smtp-Source: APiQypKXN83gnjbKOoJt6yPtsWQIwZwD4bOGlfUuqfOI5ajKzWnkQM8hnZuZwWeeXGxrvKUUk0sKdg==
-X-Received: by 2002:a1c:4346:: with SMTP id q67mr98410wma.162.1587076442597;
-        Thu, 16 Apr 2020 15:34:02 -0700 (PDT)
-Received: from redhat.com (bzq-79-183-51-3.red.bezeqint.net. [79.183.51.3])
-        by smtp.gmail.com with ESMTPSA id m15sm5010453wmc.35.2020.04.16.15.34.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Apr 2020 15:34:02 -0700 (PDT)
-Date:   Thu, 16 Apr 2020 18:33:59 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Eugenio =?iso-8859-1?Q?P=E9rez?= <eperezma@redhat.com>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        kvm list <kvm@vger.kernel.org>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Halil Pasic <pasic@linux.ibm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 7/8] tools/virtio: Reset index in virtio_test --reset.
-Message-ID: <20200416183324-mutt-send-email-mst@kernel.org>
-References: <20200416075643.27330-1-eperezma@redhat.com>
- <20200416075643.27330-8-eperezma@redhat.com>
+        Thu, 16 Apr 2020 18:38:40 -0400
+Received: from mga05.intel.com ([192.55.52.43]:7423 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727910AbgDPWij (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 18:38:39 -0400
+IronPort-SDR: UXzYDfW1b1guq+RjSji5tWwv09rKstPCy0lLPs956y0/VXic7yY1k1SRjPBg2KTuE7YQIp8GJQ
+ MGVSZb96W90A==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2020 15:38:38 -0700
+IronPort-SDR: TO4B+VLgyNRQ2Fizqod7x7k3vRJ5tlg08Pw1Fd44aa81hvnwA4GNkyQtIJJPty/uxyZpNJK6Mj
+ znPYxDB3tbRw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,392,1580803200"; 
+   d="scan'208";a="257381079"
+Received: from unknown (HELO [10.254.73.107]) ([10.254.73.107])
+  by orsmga006.jf.intel.com with ESMTP; 16 Apr 2020 15:38:38 -0700
+Subject: Re: [PATCH, RFC] x86/mm/pat: Restore large pages after fragmentation
+To:     "Kirill A. Shutemov" <kirill@shutemov.name>
+Cc:     "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <20200416213229.19174-1-kirill.shutemov@linux.intel.com>
+ <bf3e6e77-b812-992c-9916-76f19ae5c94a@intel.com>
+ <20200416221238.qrkaajbe3m6ca2h2@box>
+From:   Dave Hansen <dave.hansen@intel.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+Message-ID: <fb793919-df5d-42cc-6b2e-d387e0faa42e@intel.com>
+Date:   Thu, 16 Apr 2020 15:38:38 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+In-Reply-To: <20200416221238.qrkaajbe3m6ca2h2@box>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200416075643.27330-8-eperezma@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 16, 2020 at 09:56:42AM +0200, Eugenio Pérez wrote:
-> This way behavior for vhost is more like a VM.
-> 
-> Signed-off-by: Eugenio Pérez <eperezma@redhat.com>
+On 4/16/20 3:12 PM, Kirill A. Shutemov wrote:
+> We already have it in kernel: CONFIG_CPA_DEBUG. It messes up with the
+> mapping every 30 seconds. It is pretty good for the change too. It
+> produces a lot of 2M/1G pages to be restored. I run it over night in my
+> setup and it survives.
 
-I dropped --reset from 5.7 since Linus felt it's unappropriate.
-I guess I should squash this in with --reset?
+That's good for stability, and thanks for running it!  (and please add
+that nugget to the changelog)
 
-> ---
->  tools/virtio/virtio_test.c | 33 ++++++++++++++++++++++++++-------
->  1 file changed, 26 insertions(+), 7 deletions(-)
-> 
-> diff --git a/tools/virtio/virtio_test.c b/tools/virtio/virtio_test.c
-> index 18d5347003eb..dca64d36a882 100644
-> --- a/tools/virtio/virtio_test.c
-> +++ b/tools/virtio/virtio_test.c
-> @@ -20,7 +20,6 @@
->  #include "../../drivers/vhost/test.h"
->  
->  #define RANDOM_BATCH -1
-> -#define RANDOM_RESET -1
->  
->  /* Unused */
->  void *__kmalloc_fake, *__kfree_ignore_start, *__kfree_ignore_end;
-> @@ -49,6 +48,7 @@ struct vdev_info {
->  
->  static const struct vhost_vring_file no_backend = { .fd = -1 },
->  				     backend = { .fd = 1 };
-> +static const struct vhost_vring_state null_state = {};
->  
->  bool vq_notify(struct virtqueue *vq)
->  {
-> @@ -174,14 +174,19 @@ static void run_test(struct vdev_info *dev, struct vq_info *vq,
->  	unsigned len;
->  	long long spurious = 0;
->  	const bool random_batch = batch == RANDOM_BATCH;
-> +
->  	r = ioctl(dev->control, VHOST_TEST_RUN, &test);
->  	assert(r >= 0);
-> +	if (!reset_n) {
-> +		next_reset = INT_MAX;
-> +	}
-> +
->  	for (;;) {
->  		virtqueue_disable_cb(vq->vq);
->  		completed_before = completed;
->  		started_before = started;
->  		do {
-> -			const bool reset = reset_n && completed > next_reset;
-> +			const bool reset = completed > next_reset;
->  			if (random_batch)
->  				batch = (random() % vq->vring.num) + 1;
->  
-> @@ -224,10 +229,24 @@ static void run_test(struct vdev_info *dev, struct vq_info *vq,
->  			}
->  
->  			if (reset) {
-> +				struct vhost_vring_state s = { .index = 0 };
-> +
-> +				vq_reset(vq, vq->vring.num, &dev->vdev);
-> +
-> +				r = ioctl(dev->control, VHOST_GET_VRING_BASE,
-> +					  &s);
-> +				assert(!r);
-> +
-> +				s.num = 0;
-> +				r = ioctl(dev->control, VHOST_SET_VRING_BASE,
-> +					  &null_state);
-> +				assert(!r);
-> +
->  				r = ioctl(dev->control, VHOST_TEST_SET_BACKEND,
->  					  &backend);
->  				assert(!r);
->  
-> +				started = completed;
->  				while (completed > next_reset)
->  					next_reset += completed;
->  			}
-> @@ -249,7 +268,9 @@ static void run_test(struct vdev_info *dev, struct vq_info *vq,
->  	test = 0;
->  	r = ioctl(dev->control, VHOST_TEST_RUN, &test);
->  	assert(r >= 0);
-> -	fprintf(stderr, "spurious wakeups: 0x%llx\n", spurious);
-> +	fprintf(stderr,
-> +		"spurious wakeups: 0x%llx started=0x%lx completed=0x%lx\n",
-> +		spurious, started, completed);
->  }
->  
->  const char optstring[] = "h";
-> @@ -312,7 +333,7 @@ static void help(void)
->  		" [--no-virtio-1]"
->  		" [--delayed-interrupt]"
->  		" [--batch=random/N]"
-> -		" [--reset=random/N]"
-> +		" [--reset=N]"
->  		"\n");
->  }
->  
-> @@ -360,11 +381,9 @@ int main(int argc, char **argv)
->  		case 'r':
->  			if (!optarg) {
->  				reset = 1;
-> -			} else if (0 == strcmp(optarg, "random")) {
-> -				reset = RANDOM_RESET;
->  			} else {
->  				reset = strtol(optarg, NULL, 10);
-> -				assert(reset >= 0);
-> +				assert(reset > 0);
->  				assert(reset < (long)INT_MAX + 1);
->  			}
->  			break;
-> -- 
-> 2.18.1
-
+It's good that you see it restoring some mappings, but, does it restore
+*all* the 1G/2M pages that it started with (minus the ones that were
+fractured for other reasons)?  That should be pretty easy to check for.
