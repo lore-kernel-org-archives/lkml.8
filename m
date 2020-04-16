@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8969CC2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 16:14:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD45EC2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 16:14:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6369720771
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 16:14:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABB9720857
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 16:14:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="RToF/KLF"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="AMoIFXo6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2636672AbgDPQOm (ORCPT
+        id S2636701AbgDPQOr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 12:14:42 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:46907 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2636317AbgDPQOV (ORCPT
+        Thu, 16 Apr 2020 12:14:47 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:4082 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2636348AbgDPQOW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 12:14:21 -0400
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03GGCFET010375;
-        Thu, 16 Apr 2020 18:14:17 +0200
+        Thu, 16 Apr 2020 12:14:22 -0400
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03GGDTaa026465;
+        Thu, 16 Apr 2020 18:14:19 +0200
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
  : date : message-id : in-reply-to : references : mime-version :
  content-type; s=STMicroelectronics;
- bh=HSxCJna+r5+8UesgNfnHzloc46YrqYjXP5KDUxOljAY=;
- b=RToF/KLFRTZwOODwY0YFkp6PU/uVLUwzjIT/u1mhdzeeOjmZe16DAIuogtvAxUR6MM+L
- D4zJ2fLpyHChxRI6Pie4fI4YExEGmnVWMjKwYWAIZaRab2sgZUktMVHxiLnsuZbhc0X+
- wCIh8D9W9KvCs1coz6G8J6HWFC2w17PoOraFTnv9sANOFWjGZRe0Fgh7Zb+PxAkEX19c
- G+905Q4DlkQ6QP0OV1HODDTbIKfbgfwnLHpQRR60c9YdnHj4lzHd7pSTylHn6+fMBwJ9
- 9oo/Op+t+QVwxAOi//OMP81JgbrhfNA/ASaDN6/bzPohuoPPEqlLQMv7COPPAHOU3P5d Pg== 
+ bh=rdlFbvTHYiRhQAGAdaBWjnrQBxVGbSk8UU7HWs673BI=;
+ b=AMoIFXo6eDSYO+z/GA7/VaaG8IzjMVl6iucdpL+KIj9VRm1gTVNgbMCfqBOVdIXUQ5A7
+ nLKRy7DhZOWFlTkMTYdCfXB2MYL2L/hvqVk8Ow2UkpKPYxXNZyzWt4WavEhRG5meyod6
+ xHLdYHzMuVzV34MlohhEGYncVwgtGh9T4TMw/NsEnsjXv/r8kpPmOJ3+Hjpg8HavRkoK
+ HwVxYU2Ef1wu01BiVfUxVsPeGVRbWT7LjiYNPJYVRtLei9DzgOg+NUwdkCjtru+QgXA4
+ gUz7Ahrz2rNyh8eMCykqyEH9qpLS7yvCQvUUiUorsCwseQ6tYgf6qPJmWBfd3gAwA5JB Pw== 
 Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 30dn94kmvm-1
+        by mx07-00178001.pphosted.com with ESMTP id 30dn8s3kn1-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 16 Apr 2020 18:14:17 +0200
+        Thu, 16 Apr 2020 18:14:18 +0200
 Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 9890C100034;
-        Thu, 16 Apr 2020 18:14:16 +0200 (CEST)
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 751AA10002A;
+        Thu, 16 Apr 2020 18:14:18 +0200 (CEST)
 Received: from Webmail-eu.st.com (sfhdag3node1.st.com [10.75.127.7])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 8C9202B2D2A;
-        Thu, 16 Apr 2020 18:14:16 +0200 (CEST)
-Received: from localhost (10.75.127.47) by SFHDAG3NODE1.st.com (10.75.127.7)
- with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 16 Apr 2020 18:14:16
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 686E62B2D2A;
+        Thu, 16 Apr 2020 18:14:18 +0200 (CEST)
+Received: from localhost (10.75.127.44) by SFHDAG3NODE1.st.com (10.75.127.7)
+ with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 16 Apr 2020 18:14:17
  +0200
 From:   Arnaud Pouliquen <arnaud.pouliquen@st.com>
 To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
@@ -55,16 +55,16 @@ To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
 CC:     <linux-remoteproc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <linux-stm32@st-md-mailman.stormreply.com>,
         <arnaud.pouliquen@st.com>
-Subject: [RFC 07/18] remoteproc: Add component bind/unbind for virtio platform
-Date:   Thu, 16 Apr 2020 18:13:20 +0200
-Message-ID: <20200416161331.7606-8-arnaud.pouliquen@st.com>
+Subject: [RFC 08/18] remoteproc: Externalize carveout functions
+Date:   Thu, 16 Apr 2020 18:13:21 +0200
+Message-ID: <20200416161331.7606-9-arnaud.pouliquen@st.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200416161331.7606-1-arnaud.pouliquen@st.com>
 References: <20200416161331.7606-1-arnaud.pouliquen@st.com>
 MIME-Version: 1.0
 Content-Type: text/plain
-X-Originating-IP: [10.75.127.47]
-X-ClientProxiedBy: SFHDAG2NODE2.st.com (10.75.127.5) To SFHDAG3NODE1.st.com
+X-Originating-IP: [10.75.127.44]
+X-ClientProxiedBy: SFHDAG5NODE3.st.com (10.75.127.15) To SFHDAG3NODE1.st.com
  (10.75.127.7)
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
  definitions=2020-04-16_06:2020-04-14,2020-04-16 signatures=0
@@ -73,84 +73,102 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add component to declare bind and unbind functions. Theses functions
-are used to ensure that the remoteproc virtio device is probed
-and registered as a subdev of the rproc device before rproc
-request the the prepare and start of the subdevice.
+The carveout functions are also used for the vring memories.
+Externalize related functions to prepare migration of
+the vring management in rproc virtio.
 
 Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
 ---
- drivers/remoteproc/remoteproc_virtio.c | 23 +++++++++++++++++++----
- 1 file changed, 19 insertions(+), 4 deletions(-)
+ drivers/remoteproc/remoteproc_core.c     | 18 +++++++-----------
+ drivers/remoteproc/remoteproc_internal.h |  4 ++++
+ 2 files changed, 11 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/remoteproc/remoteproc_virtio.c b/drivers/remoteproc/remoteproc_virtio.c
-index 2a0f33ccd929..e1d7371d2d64 100644
---- a/drivers/remoteproc/remoteproc_virtio.c
-+++ b/drivers/remoteproc/remoteproc_virtio.c
-@@ -10,6 +10,7 @@
-  * Brian Swetland <swetland@google.com>
+diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
+index cb40aae12b98..ac57cd8016be 100644
+--- a/drivers/remoteproc/remoteproc_core.c
++++ b/drivers/remoteproc/remoteproc_core.c
+@@ -51,11 +51,6 @@ static LIST_HEAD(rproc_list);
+ typedef int (*rproc_handle_resource_t)(struct rproc *rproc,
+ 				 void *, int offset, int avail);
+ 
+-static int rproc_alloc_carveout(struct rproc *rproc,
+-				struct rproc_mem_entry *mem);
+-static int rproc_release_carveout(struct rproc *rproc,
+-				  struct rproc_mem_entry *mem);
+-
+ /* Unique indices for remoteproc devices */
+ static DEFINE_IDA(rproc_dev_index);
+ 
+@@ -281,8 +276,8 @@ rproc_find_carveout_by_name(struct rproc *rproc, const char *name, ...)
+  *
+  * Return: 0 if carveout matches request else error
   */
- 
-+#include <linux/component.h>
- #include <linux/dma-mapping.h>
- #include <linux/export.h>
- #include <linux/module.h>
-@@ -426,7 +427,8 @@ static const struct rproc_subdev rproc_virtio_subdev = {
- 	.stop		= rproc_vitio_stop
- };
- 
--static int rproc_virtio_bind(struct device *dev)
-+static int rproc_virtio_bind(struct device *dev, struct device *master,
-+			     void *data)
+-static int rproc_check_carveout_da(struct rproc *rproc,
+-				   struct rproc_mem_entry *mem, u32 da, u32 len)
++int rproc_check_carveout_da(struct rproc *rproc,
++			    struct rproc_mem_entry *mem, u32 da, u32 len)
  {
- 	struct rproc_vdev *rvdev = dev_get_drvdata(dev);
- 	struct rproc *rproc = rvdev->rproc;
-@@ -483,7 +485,8 @@ static int rproc_virtio_bind(struct device *dev)
- 	return ret;
- }
- 
--static void rproc_virtio_unbind(struct device *dev)
-+static void rproc_virtio_unbind(struct device *dev, struct device *master,
-+				void *data)
- {
- 	struct rproc_vdev *rvdev = dev_get_drvdata(dev);
- 	struct rproc *rproc = rvdev->rproc;
-@@ -504,6 +507,11 @@ static void rproc_virtio_unbind(struct device *dev)
- 	dev_dbg(dev, "virtio dev %d unbound\n",  rvdev->index);
- }
- 
-+static const struct component_ops rproc_virtio_ops = {
-+	.bind = rproc_virtio_bind,
-+	.unbind = rproc_virtio_unbind,
-+};
-+
- static int rproc_virtio_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
-@@ -548,14 +556,21 @@ static int rproc_virtio_probe(struct platform_device *pdev)
- 
- 	platform_set_drvdata(pdev, rvdev);
- 
-+	ret = component_add(&pdev->dev, &rproc_virtio_ops);
-+	if (ret)
-+		return ret;
-+
- 	rproc_register_rvdev(rproc, rvdev);
- 
--	return rproc_virtio_bind(dev);
-+	return 0;
- }
- 
- static int rproc_virtio_remove(struct platform_device *pdev)
- {
--	rproc_virtio_unbind(&pdev->dev);
-+	struct rproc_vdev *rvdev = dev_get_drvdata(&pdev->dev);
-+
-+	component_del(&pdev->dev, &rproc_virtio_ops);
-+	rproc_unregister_rvdev(rvdev);
+ 	struct device *dev = &rproc->dev;
+ 	int delta;
+@@ -315,6 +310,7 @@ static int rproc_check_carveout_da(struct rproc *rproc,
  
  	return 0;
  }
++EXPORT_SYMBOL(rproc_check_carveout_da);
+ 
+ int rproc_alloc_vring(struct rproc_vdev *rvdev, int i)
+ {
+@@ -695,8 +691,7 @@ static int rproc_handle_devmem(struct rproc *rproc, struct fw_rsc_devmem *rsc,
+  * This function allocate specified memory entry @mem using
+  * dma_alloc_coherent() as default allocator
+  */
+-static int rproc_alloc_carveout(struct rproc *rproc,
+-				struct rproc_mem_entry *mem)
++int rproc_alloc_carveout(struct rproc *rproc, struct rproc_mem_entry *mem)
+ {
+ 	struct rproc_mem_entry *mapping = NULL;
+ 	struct device *dev = &rproc->dev;
+@@ -791,6 +786,7 @@ static int rproc_alloc_carveout(struct rproc *rproc,
+ 	dma_free_coherent(dev->parent, mem->len, va, dma);
+ 	return ret;
+ }
++EXPORT_SYMBOL(rproc_alloc_carveout);
+ 
+ /**
+  * rproc_release_carveout() - release acquired carveout
+@@ -800,8 +796,7 @@ static int rproc_alloc_carveout(struct rproc *rproc,
+  * This function releases specified memory entry @mem allocated via
+  * rproc_alloc_carveout() function by @rproc.
+  */
+-static int rproc_release_carveout(struct rproc *rproc,
+-				  struct rproc_mem_entry *mem)
++int rproc_release_carveout(struct rproc *rproc, struct rproc_mem_entry *mem)
+ {
+ 	struct device *dev = &rproc->dev;
+ 
+@@ -809,6 +804,7 @@ static int rproc_release_carveout(struct rproc *rproc,
+ 	dma_free_coherent(dev->parent, mem->len, mem->va, mem->dma);
+ 	return 0;
+ }
++EXPORT_SYMBOL(rproc_release_carveout);
+ 
+ /**
+  * rproc_handle_carveout() - handle phys contig memory allocation requests
+diff --git a/drivers/remoteproc/remoteproc_internal.h b/drivers/remoteproc/remoteproc_internal.h
+index f5eaffac2fcd..f230296908ac 100644
+--- a/drivers/remoteproc/remoteproc_internal.h
++++ b/drivers/remoteproc/remoteproc_internal.h
+@@ -71,6 +71,10 @@ struct resource_table *rproc_elf_find_loaded_rsc_table(struct rproc *rproc,
+ 						       const struct firmware *fw);
+ struct rproc_mem_entry *
+ rproc_find_carveout_by_name(struct rproc *rproc, const char *name, ...);
++int rproc_check_carveout_da(struct rproc *rproc, struct rproc_mem_entry *mem,
++			    u32 da, u32 len);
++int rproc_alloc_carveout(struct rproc *rproc, struct rproc_mem_entry *mem);
++int rproc_release_carveout(struct rproc *rproc, struct rproc_mem_entry *mem);
+ 
+ static inline
+ int rproc_fw_sanity_check(struct rproc *rproc, const struct firmware *fw)
 -- 
 2.17.1
 
