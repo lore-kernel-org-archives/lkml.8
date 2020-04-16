@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44A9CC2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 16:15:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59DA2C2BB85
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 16:15:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1DDD920771
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 16:15:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3600020771
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 16:15:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="SoBzXXW/"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="ctuniGyV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2896164AbgDPQPV (ORCPT
+        id S2442892AbgDPQPZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 12:15:21 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:46915 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2440769AbgDPQOe (ORCPT
+        Thu, 16 Apr 2020 12:15:25 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:45362 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2441904AbgDPQOe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 16 Apr 2020 12:14:34 -0400
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03GGCFEW010375;
-        Thu, 16 Apr 2020 18:14:30 +0200
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03GGBred014920;
+        Thu, 16 Apr 2020 18:14:31 +0200
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
  : date : message-id : in-reply-to : references : mime-version :
  content-type; s=STMicroelectronics;
- bh=vcBb3r+viNdyKV64k5Eo4jYHRVkTS6JjhvXLvx/2TH8=;
- b=SoBzXXW/u/aE2SWP3JwtzkUOQ+sPDRadWKLF9Gz5UhHA4quSzVHdetdyKoeHnUarJVdQ
- peJEEcO32DQ9TwMqgC7hHYB7NIe4fUpu/E6jJiGfzBQvefesaVG9CJmY6tsHdlf9wePv
- l9L+P4LLpZZlWKpOmuU/tc7sja6caj1xmrd6RZxktms6ZVaX6v7TNTL9mUAIVpQ/vU6T
- vJiMj8ZSGwXK9fIvIr2EhUyEYrREIDNFTDwD/+ng0u4HaKmg9EQrizq4UL9bpUn5hXn2
- y/st/+DLF8CmmS0G9uzQFg67yAV1nrl82rjz1GFrVPisLsAMJEF9j7GlvodnrVJZiwEQ Aw== 
+ bh=pa2XKTGGGIC2Vn05mbBcixvwehzmq3xfK9D+yvR8aDA=;
+ b=ctuniGyVBb/CSSktXIwtrf4cIzhh/SE4J02vC1c/q9ms5aJ6vP7UBwNolnOT8dq/bEMZ
+ pSY2sXRCQPSANeKInNiuFO+kyKz5n/cMlNQPIMWW2l2pxmMeGpBkvBwzv2fCra9LtuUU
+ WXWzJwMiWg1PgQFX9/l9o7SCBsZkHQkq1G7IME90wqf1xuCH2ZEBn64WcAea0XBa7IhK
+ DPu1kd/TpeUkowvpdBz1sDwZZSIe0eKSCA5Y1XWB6nARkLxbXZsGVEGhK3ZXtKc5mTru
+ QkyeiztmT1jTLfNGeQ7kzYQ7/FlL5ohT/DZ3D+RThuxhEr5lb33AOneELH59ROkcE2or bA== 
 Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 30dn94kmx3-1
+        by mx07-00178001.pphosted.com with ESMTP id 30dn75umfc-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 16 Apr 2020 18:14:30 +0200
+        Thu, 16 Apr 2020 18:14:31 +0200
 Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 37B8010002A;
-        Thu, 16 Apr 2020 18:14:30 +0200 (CEST)
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 4D23610002A;
+        Thu, 16 Apr 2020 18:14:31 +0200 (CEST)
 Received: from Webmail-eu.st.com (sfhdag3node1.st.com [10.75.127.7])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 206082B2D2C;
-        Thu, 16 Apr 2020 18:14:30 +0200 (CEST)
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 40D832B2D2C;
+        Thu, 16 Apr 2020 18:14:31 +0200 (CEST)
 Received: from localhost (10.75.127.47) by SFHDAG3NODE1.st.com (10.75.127.7)
- with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 16 Apr 2020 18:14:29
+ with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 16 Apr 2020 18:14:30
  +0200
 From:   Arnaud Pouliquen <arnaud.pouliquen@st.com>
 To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
@@ -55,16 +55,16 @@ To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
 CC:     <linux-remoteproc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <linux-stm32@st-md-mailman.stormreply.com>,
         <arnaud.pouliquen@st.com>
-Subject: [RFC 15/18] remoteproc: associate memory entry to a device
-Date:   Thu, 16 Apr 2020 18:13:28 +0200
-Message-ID: <20200416161331.7606-16-arnaud.pouliquen@st.com>
+Subject: [RFC 16/18] remoteproc: Parse virtio node for memory region
+Date:   Thu, 16 Apr 2020 18:13:29 +0200
+Message-ID: <20200416161331.7606-17-arnaud.pouliquen@st.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200416161331.7606-1-arnaud.pouliquen@st.com>
 References: <20200416161331.7606-1-arnaud.pouliquen@st.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Originating-IP: [10.75.127.47]
-X-ClientProxiedBy: SFHDAG8NODE2.st.com (10.75.127.23) To SFHDAG3NODE1.st.com
+X-ClientProxiedBy: SFHDAG5NODE1.st.com (10.75.127.13) To SFHDAG3NODE1.st.com
  (10.75.127.7)
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
  definitions=2020-04-16_06:2020-04-14,2020-04-16 signatures=0
@@ -73,63 +73,135 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-mem entry could be registered at different levels, platform driver
-or virtio device itself.
-Add device information in rproc_mem_entry struct to retrieve a memory
-region registered by another device.
+Add the possibility to declare memories associated to the virtio paltform
+in the device tree.
 
 Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
 ---
- drivers/remoteproc/remoteproc_core.c   | 2 ++
- drivers/remoteproc/remoteproc_virtio.c | 2 +-
- include/linux/remoteproc.h             | 1 +
- 3 files changed, 4 insertions(+), 1 deletion(-)
+ drivers/remoteproc/remoteproc_virtio.c | 77 +++++++++++++++++++++++---
+ 1 file changed, 68 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
-index 72fb97f28048..e72d681033d3 100644
---- a/drivers/remoteproc/remoteproc_core.c
-+++ b/drivers/remoteproc/remoteproc_core.c
-@@ -892,6 +892,7 @@ rproc_mem_entry_init(struct device *dev,
- 	if (!mem)
- 		return mem;
- 
-+	mem->dev = dev;
- 	mem->va = va;
- 	mem->dma = dma;
- 	mem->da = da;
-@@ -932,6 +933,7 @@ rproc_of_resm_mem_entry_init(struct device *dev, u32 of_resm_idx, int len,
- 	if (!mem)
- 		return mem;
- 
-+	mem->dev = dev;
- 	mem->da = da;
- 	mem->len = len;
- 	mem->rsc_offset = FW_RSC_ADDR_ANY;
 diff --git a/drivers/remoteproc/remoteproc_virtio.c b/drivers/remoteproc/remoteproc_virtio.c
-index 4634cd63d547..0fd938afd146 100644
+index 0fd938afd146..3302ee7d6c14 100644
 --- a/drivers/remoteproc/remoteproc_virtio.c
 +++ b/drivers/remoteproc/remoteproc_virtio.c
-@@ -439,7 +439,7 @@ static int rproc_vitio_start(struct rproc_subdev *subdev)
- 		phys_addr_t pa;
+@@ -610,12 +610,71 @@ static const struct component_ops rproc_virtio_ops = {
+ 	.unbind = rproc_virtio_unbind,
+ };
  
- 		if (mem->of_resm_idx != -1) {
--			struct device_node *np = rproc->dev.parent->of_node;
-+			struct device_node *np = mem->dev->of_node;
++static int rproc_virtio_of_parse(struct device *dev, struct rproc_vdev *rvdev)
++{
++	struct device_node *np = dev->of_node;
++	struct rproc *rproc = rvdev->rproc;
++	struct of_phandle_iterator it;
++	struct rproc_mem_entry *mem;
++	struct reserved_mem *rmem;
++	char name[32];
++	u64 da;
++	int index = 0;
++
++	/* the reg is used to specify the vdev index */
++	if (of_property_read_u32(np, "reg", &rvdev->index))
++		return -EINVAL;
++	/* Register associated reserved memory regions */
++	of_phandle_iterator_init(&it, np, "memory-region", NULL, 0);
++
++	while (of_phandle_iterator_next(&it) == 0) {
++		rmem = of_reserved_mem_lookup(it.node);
++		if (!rmem) {
++			dev_err(dev, "unable to acquire memory-region\n");
++			return -EINVAL;
++		}
++
++		if (rproc_pa_to_da(rproc, rmem->base, &da) < 0) {
++			dev_err(dev, "memory region not valid %pa\n",
++				&rmem->base);
++			return -EINVAL;
++		}
++
++		snprintf(name, sizeof(name), "vdev%dbuffer", rvdev->index);
++		if (strcmp(it.node->name, name)) {
++			/* Register memory region */
++			mem = rproc_mem_entry_init(dev, NULL,
++						   (dma_addr_t)rmem->base,
++						   rmem->size, da,
++						   rproc_default_mem_alloc,
++						   rproc_default_mem_release,
++						   it.node->name);
++
++			if (mem)
++				rproc_coredump_add_segment(rproc, da,
++							   rmem->size);
++		} else {
++			/* Register reserved memory for vdev buffer alloc */
++			mem = rproc_of_resm_mem_entry_init(dev, index,
++							   rmem->size,
++							   rmem->base,
++							   it.node->name);
++		}
++
++		if (!mem)
++			return -ENOMEM;
++
++		rproc_add_carveout(rproc, mem);
++		index++;
++	}
++
++	return 0;
++}
++
+ static int rproc_virtio_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
+-	struct device_node *np = dev->of_node;
+ 	struct rproc_vdev *rvdev;
+-	struct rproc *rproc;
+ 	int ret;
  
- 			/* Associate reserved memory to vdev device */
- 			ret = of_reserved_mem_device_init_by_idx(dev, np,
-diff --git a/include/linux/remoteproc.h b/include/linux/remoteproc.h
-index 7b8a6c3ef519..36abc9bc4def 100644
---- a/include/linux/remoteproc.h
-+++ b/include/linux/remoteproc.h
-@@ -331,6 +331,7 @@ struct rproc_mem_entry {
- 	dma_addr_t dma;
- 	int len;
- 	u32 da;
-+	struct device *dev;
- 	void *priv;
- 	char name[32];
- 	struct list_head node;
+ 	rvdev = devm_kzalloc(&pdev->dev, sizeof(*rvdev), GFP_KERNEL);
+@@ -627,18 +686,16 @@ static int rproc_virtio_probe(struct platform_device *pdev)
+ 		 * The platform device is declared in the device tree
+ 		 * retrieve rproc struct through the remoteproc platform
+ 		 */
+-		rproc = rproc_get_by_node(dev->parent->of_node);
++		rvdev->rproc = rproc_get_by_node(dev->parent->of_node);
+ 
+-		/* the reg is used to specify the vdev index */
+-		if (of_property_read_u32(np, "reg", &rvdev->index))
+-			return -EINVAL;
++		ret = rproc_virtio_of_parse(dev, rvdev);
+ 	} else {
+ 		struct rproc_vdev_data *vdev_data = pdev->dev.platform_data;
+ 
+ 		if (!vdev_data)
+ 			return -EINVAL;
+ 
+-		rproc = container_of(dev->parent, struct rproc, dev);
++		rvdev->rproc = container_of(dev->parent, struct rproc, dev);
+ 
+ 		rvdev->rsc_offset = vdev_data->rsc_offset;
+ 		rvdev->rsc = vdev_data->rsc;
+@@ -649,8 +706,10 @@ static int rproc_virtio_probe(struct platform_device *pdev)
+ 		if (ret)
+ 			return ret;
+ 	}
++	if (ret)
++		return ret;
++
+ 	rvdev->pdev = pdev;
+-	rvdev->rproc = rproc;
+ 
+ 	platform_set_drvdata(pdev, rvdev);
+ 
+@@ -658,7 +717,7 @@ static int rproc_virtio_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		return ret;
+ 
+-	rproc_register_rvdev(rproc, rvdev);
++	rproc_register_rvdev(rvdev->rproc, rvdev);
+ 
+ 	return 0;
+ }
 -- 
 2.17.1
 
