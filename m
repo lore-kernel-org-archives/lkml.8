@@ -7,63 +7,64 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E7B4C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 07:52:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77FF3C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 07:52:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3EAE32076A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 07:52:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58F3320784
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 07:52:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587023561;
-	bh=JEI7hlja06NOFImIQuSsZHBcvtS98Jsr6MWULdUk5gE=;
+	s=default; t=1587023571;
+	bh=8dSskBGG89yYYoNeDiNuETPE7qY9p5mkWbUWskYbeQ8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=lS+Lr4FNuXa0PQWtn+2S9RUxRjhMnU4e7JHxdKTGX/UCRj68XJkT8Pcw2x7xBRmEo
-	 C+8AvQPv/hUBXg15n5zHJGFZ8xuetCb7hX9dWyHvAw7N+RWPiFd16Y26kLpV/oMZPx
-	 8zq2BnIYA9ivLpucU8vQdljt9HyfZIP22fw8RWU4=
+	b=GvDdxcdYXE1Lp0iGu8M44d0Cc5sz6S48+/yaRhRcJlKvXw9AfUf1nEIghjhXcirvi
+	 hDyMGYEUsr/uEJ3et5jQCtkq4sNTFpF4a31XUs1ey25g1YuBgMk6flU/dtbQHzUioM
+	 om2ZwUxnbhhWmgRoWojyZ2ZSxwARXdwFIxhbNFWA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439861AbgDPHwk (ORCPT
+        id S2439925AbgDPHws (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 03:52:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60156 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 03:52:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60772 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2439830AbgDPHwd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 03:52:33 -0400
+        id S2439830AbgDPHwn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 03:52:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 682452076A;
-        Thu, 16 Apr 2020 07:52:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0DA392076A;
+        Thu, 16 Apr 2020 07:52:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587023549;
-        bh=JEI7hlja06NOFImIQuSsZHBcvtS98Jsr6MWULdUk5gE=;
+        s=default; t=1587023563;
+        bh=8dSskBGG89yYYoNeDiNuETPE7qY9p5mkWbUWskYbeQ8=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=D4DZWvP5S5gQiFiCH/1IT5xKYhHmaLwun0F+NDFIqSckUTQXb3s0g05I6Y95SZSBq
-         vEtxvcN2PLUbuOOq7RONRvNtGZfFYex6u2lcl/Q7Z+1/NHfwPBSDjdcSAmPv9VBzr1
-         ksgbFxWvNyMTDcCas/1l7M72lETUsoJyyvGjHk5M=
-Date:   Thu, 16 Apr 2020 09:52:27 +0200
+        b=RtTBGfoHQWfRyJB964dT0UHDVXMNRkRyXuBOJJLx/NoYc1hZOdbSO3WHPmFAXAxRL
+         RrowYNUi+lDr8dJlu88rNcOd3qg4+/q+lN29ZryYudARmz08zEAJejMUfkk8XCtGC2
+         9TwWjl+jjlbNSphcK3ZYht6kkThkIJPLk3qMXDsU=
+Date:   Thu, 16 Apr 2020 09:52:41 +0200
 From:   Greg KH <gregkh@linuxfoundation.org>
 To:     Christoph Hellwig <hch@lst.de>
 Cc:     axboe@kernel.dk, yuyufen@huawei.com, tj@kernel.org, jack@suse.cz,
         bvanassche@acm.org, tytso@mit.edu, linux-block@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 4/8] driver core: remove device_create_vargs
-Message-ID: <20200416075227.GA376871@kroah.com>
+Subject: Re: [PATCH 3/8] bdi: add a ->dev_name field to struct
+ backing_dev_info
+Message-ID: <20200416075241.GB376871@kroah.com>
 References: <20200416071519.807660-1-hch@lst.de>
- <20200416071519.807660-5-hch@lst.de>
+ <20200416071519.807660-4-hch@lst.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200416071519.807660-5-hch@lst.de>
+In-Reply-To: <20200416071519.807660-4-hch@lst.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 16, 2020 at 09:15:15AM +0200, Christoph Hellwig wrote:
-> All external users of device_create_vargs are gone, so remove it and
-> open code it in the only caller.
+On Thu, Apr 16, 2020 at 09:15:14AM +0200, Christoph Hellwig wrote:
+> Cache a copy of the name for the life time of the backing_dev_info
+> structure so that we can reference it even after unregistering.
 > 
+> Fixes: 68f23b89067f ("memcg: fix a crash in wb_workfn when a device disappears")
+> Reported-by: Yufen Yu <yuyufen@huawei.com>
 > Signed-off-by: Christoph Hellwig <hch@lst.de>
-
-Yes!
 
 Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
