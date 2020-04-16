@@ -2,114 +2,138 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB003C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:52:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E4F9C2BB85
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:52:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B43B721927
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:52:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0CB321D91
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:52:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587052325;
-	bh=lCpe+4Dnaharjk9WK99w2h7l5Sscy3orPRfo6OQyoYA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xALl3S5j2cjvZT2NNiOETGP0vYMVkz4qjXqy0wmRPW51D5XQHX5sk6rLVyr7BiI/d
-	 QakUeaV7htcYRojb6Z6tZ04HFfwz5+MR2+dYwYySJX2h6MoLjMfDuoNMHu7TZhVjO1
-	 ide6dhAEb+jccHNy6JKEZ46cpHq4Jrk6hc5XEtPo=
+	s=default; t=1587052331;
+	bh=f+v0/f94whq+RFELRQRok+Qo9U6CspwMX5WgTcLbQ9M=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=gkwr5cY8MBrpWAE0JcAoid6ea2ikgO9qXADhHm3z3bqyCpDsyzTDSyeElQthzARw2
+	 85+lxfwMh7uDvb2HvBBq3vrH5g5t/wJSQqcaZcWKD1pHNtFqRrAjMhnZsXvmT5hED6
+	 TAL+4rr7yVJbqJUTpQnbcftYmjQLOj5J1B5SnifA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2410660AbgDPPwE (ORCPT
+        id S2442807AbgDPPwI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:52:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44060 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 11:52:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58760 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2896583AbgDPNc4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:32:56 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        id S2437198AbgDPPvr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 11:51:47 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EBF962222E;
-        Thu, 16 Apr 2020 13:32:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4BACC20732;
+        Thu, 16 Apr 2020 15:51:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587043927;
-        bh=lCpe+4Dnaharjk9WK99w2h7l5Sscy3orPRfo6OQyoYA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GP0PgHmVO71r2d+SH7S2Z7f54rfDhsITwZ7d9jrFjFEnHI2zH7CweUL+VAVfMuumE
-         t6AbyMRSanMcyVMZQlJ16cP5vVCMo6sOd6xrCe5YXTzehUeyht/Wdwbx+h6NX6PA9W
-         eDXmWDP2Tti2BFEARIXA3G+UQ9xeu4Qg7j9pHDP0=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Markus Fuchs <mklntf@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 011/257] net: stmmac: platform: Fix misleading interrupt error msg
-Date:   Thu, 16 Apr 2020 15:21:02 +0200
-Message-Id: <20200416131327.268005246@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200416131325.891903893@linuxfoundation.org>
-References: <20200416131325.891903893@linuxfoundation.org>
-User-Agent: quilt/0.66
+        s=default; t=1587052306;
+        bh=f+v0/f94whq+RFELRQRok+Qo9U6CspwMX5WgTcLbQ9M=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=U5nPloWnP86QJZDjWomAThBMqB3yOl2Uupk0oXRpWZqiHwU84G5P6UDuFfyerwmrz
+         47p/J30AwMTeW5zSJTvdUs7hXGwYBfQGAj2trgrejwc1aA/IzLb+mqNVbVQm7SC6WA
+         CRQ+7UmPmju+ujZ7vz10IPvok54pLnhEoa+V498U=
+Date:   Thu, 16 Apr 2020 16:51:44 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Sven Van Asbroeck <thesven73@gmail.com>
+Cc:     Rob Herring <robh+dt@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        alsa-devel@alsa-project.org,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v1 2/2] ASoC: Add initial ZL38060 driver
+Message-ID: <20200416155144.GM5354@sirena.org.uk>
+References: <20200416001414.25746-1-TheSven73@gmail.com>
+ <20200416001414.25746-2-TheSven73@gmail.com>
+ <20200416124239.GH5354@sirena.org.uk>
+ <CAGngYiVXk+1Qzs3yLwyne3X567_yvbuRfXkjihmGc0EigHo50A@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="VLAOICcq5m4DWEYr"
+Content-Disposition: inline
+In-Reply-To: <CAGngYiVXk+1Qzs3yLwyne3X567_yvbuRfXkjihmGc0EigHo50A@mail.gmail.com>
+X-Cookie: Tempt me with a spoon!
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Markus Fuchs <mklntf@gmail.com>
 
-[ Upstream commit fc191af1bb0d069dc7e981076e8b80af21f1e61d ]
+--VLAOICcq5m4DWEYr
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Not every stmmac based platform makes use of the eth_wake_irq or eth_lpi
-interrupts. Use the platform_get_irq_byname_optional variant for these
-interrupts, so no error message is displayed, if they can't be found.
-Rather print an information to hint something might be wrong to assist
-debugging on platforms which use these interrupts.
+On Thu, Apr 16, 2020 at 11:23:14AM -0400, Sven Van Asbroeck wrote:
+> On Thu, Apr 16, 2020 at 8:42 AM Mark Brown <broonie@kernel.org> wrote:
 
-Signed-off-by: Markus Fuchs <mklntf@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- .../net/ethernet/stmicro/stmmac/stmmac_platform.c  | 14 ++++++++++----
- 1 file changed, 10 insertions(+), 4 deletions(-)
+> > > @@ -0,0 +1,643 @@
+> > > +// SPDX-License-Identifier: GPL-2.0-only
+> > > +/*
+> > > + * Codec driver for Microsemi ZL38060 Connected Home Audio Processor.
+> > > + *
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
-index d10ac54bf385a..13fafd905db87 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
-@@ -663,16 +663,22 @@ int stmmac_get_platform_resources(struct platform_device *pdev,
- 	 * In case the wake up interrupt is not passed from the platform
- 	 * so the driver will continue to use the mac irq (ndev->irq)
- 	 */
--	stmmac_res->wol_irq = platform_get_irq_byname(pdev, "eth_wake_irq");
-+	stmmac_res->wol_irq =
-+		platform_get_irq_byname_optional(pdev, "eth_wake_irq");
- 	if (stmmac_res->wol_irq < 0) {
- 		if (stmmac_res->wol_irq == -EPROBE_DEFER)
- 			return -EPROBE_DEFER;
-+		dev_info(&pdev->dev, "IRQ eth_wake_irq not found\n");
- 		stmmac_res->wol_irq = stmmac_res->irq;
- 	}
- 
--	stmmac_res->lpi_irq = platform_get_irq_byname(pdev, "eth_lpi");
--	if (stmmac_res->lpi_irq == -EPROBE_DEFER)
--		return -EPROBE_DEFER;
-+	stmmac_res->lpi_irq =
-+		platform_get_irq_byname_optional(pdev, "eth_lpi");
-+	if (stmmac_res->lpi_irq < 0) {
-+		if (stmmac_res->lpi_irq == -EPROBE_DEFER)
-+			return -EPROBE_DEFER;
-+		dev_info(&pdev->dev, "IRQ eth_lpi not found\n");
-+	}
- 
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	stmmac_res->addr = devm_ioremap_resource(&pdev->dev, res);
--- 
-2.20.1
+> > Please make the entire comment a C++ one so things look more
+> > intentional.
 
+> The 'weird' combination of // SPDX and /* Description/copyright */ seems to
+> be a kernel-wide standard (for C files, at least) ?
 
+> E.g.:
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/sound/soc/codecs/wm9090.c?h=v5.7-rc1#n2
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/sound/soc/codecs/wm8904.c?h=v5.7-rc1#n2
 
+> Ok to keep?
+
+Those were all automatically converted, one of these days I might get
+round to updating them :/
+
+> > This external amplifier support shouldn't be here, if there's other
+> > devices in the system then they will have their own drivers and the
+> > machine driver will take care of linking things together.
+
+> In our application, the amp is a "dumb" class-D amp with a single enable line:
+> https://www.onsemi.com/pub/Collateral/FAB3103-D.pdf
+
+> I am not sure how I could make this more general. Could you point me to an
+> example somewhere in the tree?
+
+Look for GPIOs in machine drivers, there's quite a lot of examples (eg,
+rx51 has a speaker amp although it's not the most modern).
+
+> > > +     priv->regmap = devm_regmap_init(dev, &zl38_regmap_bus, spi,
+> > > +                                     &zl38_regmap_conf);
+> > > +     if (IS_ERR(priv->regmap))
+> > > +             return PTR_ERR(priv->regmap);
+
+> > devm_regmap_init_spi()
+
+> I wish !! This chip has complex SPI addressing, using an "address" which:
+> - is variable length, depending on the page of the register being accessed;
+> - contains a field with the length of the data to follow.
+
+OK.
+
+--VLAOICcq5m4DWEYr
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl6Yfw8ACgkQJNaLcl1U
+h9BSVwf+P2xC6Q4mb+FyMvkNgT3QFu0YqF4YMuC6akEHl+Ne/WqRC6TSls52JJD1
+sLwGV585mfFcdmevXFp/glhZ3sJTIX6kpDGlfBIetsG+bBXZgZ5rwIFdPYPRX94X
+OG/2E75aoQzo/RXv7F+7eXEVZHOrwbW1SDy/AF9EOtrr1CvEj9/kiWTdqVLIj/Rm
+wfWlFaBraepLOKowIpg/eu5JGvmWbHPZwqYu98FloE20jV6RAaCA231IJoMVSK+d
+v4i2SyGZtF7cuG8S6XkBuFPHAwFxTanxxfBs81FazAXLty8VaOfp5GngIYlst1iI
+ivYzjobJUeAsZ1PASHds1ris+woLzw==
+=9et2
+-----END PGP SIGNATURE-----
+
+--VLAOICcq5m4DWEYr--
