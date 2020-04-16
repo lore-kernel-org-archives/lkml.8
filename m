@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C3BFC2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:47:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ED07C352BE
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:47:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D4EF3206B9
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:47:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0F1D22243
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:47:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587048425;
-	bh=1W5KIwf4IEZ/S6UWBR0GAJ66klrhUvvnU62RubpXa4Q=;
+	s=default; t=1587048434;
+	bh=TFXnfxHugoSP3Q7WZCuT3ZsZo+7q/qP8JgVFHiV9l8U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Wyu+ao6qQnR1q8U/vzXffQ/IX/fChTmDq9VPkbcKNT6AbGlCrO222YxZpHatPrq7a
-	 2XCQHGS6SQqCoZI7zHzvJGBh6NFXwaAvGhdX/vkuZkSHT9sez6d3ewmpbed4u4Ni0Q
-	 WUi6gdQm1GlODReS2TVb+5AbqzC/eX5etu1Ir0SU=
+	b=J/v85xAQOfycVJAo7cKuFXV46lIfGYv9a+UI+iSxgbNHOdV+Uum2/LZ1dVw7hbWbg
+	 v9V+39e8HA6AKrDWxkz8bXl8ib0fUmsEP5kNWsNLGtbM+bLGZ1UdLTJ7ks4hpQY3pQ
+	 +LNoWxCVpB96uRZWMnk9n6Qkb8ijfzXBFosdxWMQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394467AbgDPOrD (ORCPT
+        id S2394672AbgDPOrN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:47:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46392 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 10:47:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46150 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2897854AbgDPN7W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:59:22 -0400
+        id S2898671AbgDPN7H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:59:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5642621734;
-        Thu, 16 Apr 2020 13:59:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A3BFF21927;
+        Thu, 16 Apr 2020 13:59:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587045561;
-        bh=1W5KIwf4IEZ/S6UWBR0GAJ66klrhUvvnU62RubpXa4Q=;
+        s=default; t=1587045547;
+        bh=TFXnfxHugoSP3Q7WZCuT3ZsZo+7q/qP8JgVFHiV9l8U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2KnH47CbnC7z8Q5DZwMJcB0/7H4oWk+UKqBUezih6l6jdNkj9wlPAm1pg3seuUt4r
-         9E+Z/r+zp4GnulGV6ZGfKIOfSqgfMaID2VPunQ4biYtiEcxn+JavKtsKU5Qq26V2n+
-         NM/n9r8DpP0Vw9UmCDQmqcyf7E9SHPjcbqr8LR64=
+        b=dvEuRFzpETxoV8ngsQajSwBLUA+KYTCwmWSuW9+BWzXR7Azqv0Ngp1mJeemJDssDj
+         z9Ym4ybUer3FDVzMgd2ora/lbaMUC1EvhFsndqVPSiuhxJAlLRzbCmfM4j6hZmTDpl
+         o0l1grTvEAUyzvJURr37IYlE0lpfepcu9vH1zIyo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Piotr Sroka <piotrs@cadence.com>,
+        stable@vger.kernel.org,
+        Frieder Schrempf <frieder.schrempf@kontron.de>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
         Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH 5.6 144/254] mtd: rawnand: cadence: fix the calculation of the avaialble OOB size
-Date:   Thu, 16 Apr 2020 15:23:53 +0200
-Message-Id: <20200416131344.526712698@linuxfoundation.org>
+Subject: [PATCH 5.6 142/254] mtd: spinand: Stop using spinand->oobbuf for buffering bad block markers
+Date:   Thu, 16 Apr 2020 15:23:51 +0200
+Message-Id: <20200416131344.257402592@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.804095985@linuxfoundation.org>
 References: <20200416131325.804095985@linuxfoundation.org>
@@ -59,43 +61,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Piotr Sroka <piotrs@cadence.com>
+From: Frieder Schrempf <frieder.schrempf@kontron.de>
 
-commit e4578af0354176ff6b4ae78b9998b4f479f7c31c upstream.
+commit 2148937501ee3d663e0010e519a553fea67ad103 upstream.
 
-The value of cdns_chip->sector_count is not known at the moment
-of the derivation of ecc_size, leading to a zero value. Fix
-this by assigning ecc_size later in the code.
+For reading and writing the bad block markers, spinand->oobbuf is
+currently used as a buffer for the marker bytes. During the
+underlying read and write operations to actually get/set the content
+of the OOB area, the content of spinand->oobbuf is reused and changed
+by accessing it through spinand->oobbuf and/or spinand->databuf.
 
-Fixes: ec4ba01e894d ("mtd: rawnand: Add new Cadence NAND driver to MTD subsystem")
+This is a flaw in the original design of the SPI NAND core and at the
+latest from 13c15e07eedf ("mtd: spinand: Handle the case where
+PROGRAM LOAD does not reset the cache") on, it results in not having
+the bad block marker written at all, as the spinand->oobbuf is
+cleared to 0xff after setting the marker bytes to zero.
+
+To fix it, we now just store the two bytes for the marker on the
+stack and let the read/write operations copy it from/to the page
+buffer later.
+
+Fixes: 7529df465248 ("mtd: nand: Add core infrastructure to support SPI NANDs")
 Cc: stable@vger.kernel.org
-Signed-off-by: Piotr Sroka <piotrs@cadence.com>
+Signed-off-by: Frieder Schrempf <frieder.schrempf@kontron.de>
+Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
 Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-Link: https://lore.kernel.org/linux-mtd/1581328530-29966-2-git-send-email-piotrs@cadence.com
+Link: https://lore.kernel.org/linux-mtd/20200218100432.32433-2-frieder.schrempf@kontron.de
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/mtd/nand/raw/cadence-nand-controller.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/mtd/nand/spi/core.c |   14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
---- a/drivers/mtd/nand/raw/cadence-nand-controller.c
-+++ b/drivers/mtd/nand/raw/cadence-nand-controller.c
-@@ -2585,7 +2585,7 @@ int cadence_nand_attach_chip(struct nand
+--- a/drivers/mtd/nand/spi/core.c
++++ b/drivers/mtd/nand/spi/core.c
+@@ -568,18 +568,18 @@ static int spinand_mtd_write(struct mtd_
+ static bool spinand_isbad(struct nand_device *nand, const struct nand_pos *pos)
  {
- 	struct cdns_nand_ctrl *cdns_ctrl = to_cdns_nand_ctrl(chip->controller);
- 	struct cdns_nand_chip *cdns_chip = to_cdns_nand_chip(chip);
--	u32 ecc_size = cdns_chip->sector_count * chip->ecc.bytes;
-+	u32 ecc_size;
- 	struct mtd_info *mtd = nand_to_mtd(chip);
- 	u32 max_oob_data_size;
- 	int ret;
-@@ -2625,6 +2625,7 @@ int cadence_nand_attach_chip(struct nand
- 	/* Error correction configuration. */
- 	cdns_chip->sector_size = chip->ecc.size;
- 	cdns_chip->sector_count = mtd->writesize / cdns_chip->sector_size;
-+	ecc_size = cdns_chip->sector_count * chip->ecc.bytes;
+ 	struct spinand_device *spinand = nand_to_spinand(nand);
++	u8 marker[2] = { };
+ 	struct nand_page_io_req req = {
+ 		.pos = *pos,
+-		.ooblen = 2,
++		.ooblen = sizeof(marker),
+ 		.ooboffs = 0,
+-		.oobbuf.in = spinand->oobbuf,
++		.oobbuf.in = marker,
+ 		.mode = MTD_OPS_RAW,
+ 	};
  
- 	cdns_chip->avail_oob_size = mtd->oobsize - ecc_size;
+-	memset(spinand->oobbuf, 0, 2);
+ 	spinand_select_target(spinand, pos->target);
+ 	spinand_read_page(spinand, &req, false);
+-	if (spinand->oobbuf[0] != 0xff || spinand->oobbuf[1] != 0xff)
++	if (marker[0] != 0xff || marker[1] != 0xff)
+ 		return true;
+ 
+ 	return false;
+@@ -603,11 +603,12 @@ static int spinand_mtd_block_isbad(struc
+ static int spinand_markbad(struct nand_device *nand, const struct nand_pos *pos)
+ {
+ 	struct spinand_device *spinand = nand_to_spinand(nand);
++	u8 marker[2] = { };
+ 	struct nand_page_io_req req = {
+ 		.pos = *pos,
+ 		.ooboffs = 0,
+-		.ooblen = 2,
+-		.oobbuf.out = spinand->oobbuf,
++		.ooblen = sizeof(marker),
++		.oobbuf.out = marker,
+ 	};
+ 	int ret;
+ 
+@@ -622,7 +623,6 @@ static int spinand_markbad(struct nand_d
+ 
+ 	spinand_erase_op(spinand, pos);
+ 
+-	memset(spinand->oobbuf, 0, 2);
+ 	return spinand_write_page(spinand, &req);
+ }
  
 
 
