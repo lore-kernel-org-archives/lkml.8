@@ -2,238 +2,337 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2A69C2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:18:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2EC2C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:18:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8861E217D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:18:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2C56206E9
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:18:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="jJ87Z/5L"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="rpIPcafZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2895028AbgDPNSG (ORCPT
+        id S2895072AbgDPNSM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 09:18:06 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:36620 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2895031AbgDPNQ7 (ORCPT
+        Thu, 16 Apr 2020 09:18:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54108 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2895047AbgDPNSC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:16:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587043003;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=walCYN4WkDNtTgYLVIJ9g+ufVPDd3WAeg5aHW/gs+FQ=;
-        b=jJ87Z/5LcS75H/I38TWzsGTZ5PwZmgCabAq/eHWi0wXdgBu3rH7+jF4qF5QJoPy0nwKnxI
-        0APtEVPNOwd0IQXGOsiH4kVv94hVSFymUDzG8kSRl0qWc1B41yzsDyyTvX1N8vvowk7+vj
-        cgZP9jdk/n44sfVhZtV80iTY1TByQzI=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-26-AUkX1xh4N-G2HhfxHPoJ2Q-1; Thu, 16 Apr 2020 09:16:40 -0400
-X-MC-Unique: AUkX1xh4N-G2HhfxHPoJ2Q-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 72B4980256B;
-        Thu, 16 Apr 2020 13:16:38 +0000 (UTC)
-Received: from treble (ovpn-116-146.rdu2.redhat.com [10.10.116.146])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 7945C10372C0;
-        Thu, 16 Apr 2020 13:16:37 +0000 (UTC)
-Date:   Thu, 16 Apr 2020 08:16:35 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Miroslav Benes <mbenes@suse.cz>
-Cc:     live-patching@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jessica Yu <jeyu@kernel.org>, linux-s390@vger.kernel.org,
-        heiko.carstens@de.ibm.com
-Subject: Re: [PATCH 4/7] s390/module: Use s390_kernel_write() for relocations
-Message-ID: <20200416131635.scbpuued6l4xb6qq@treble>
-References: <cover.1586881704.git.jpoimboe@redhat.com>
- <e7f2ad87cf83dcdaa7b69b4e37c11fa355bdfe78.1586881704.git.jpoimboe@redhat.com>
- <alpine.LSU.2.21.2004161047410.10475@pobox.suse.cz>
- <20200416120651.wqmoaa35jft4prox@treble>
+        Thu, 16 Apr 2020 09:18:02 -0400
+Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5738EC061A0C
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 06:17:47 -0700 (PDT)
+Received: by mail-qk1-x744.google.com with SMTP id b62so21170007qkf.6
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 06:17:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=eR5I4E4T4/4IxSicnYUr1AFVo0A/LtIPYrGBPrB2/04=;
+        b=rpIPcafZ4VdWvQi/EUbIUk6OPIpu2cqkTR9znN28OoXOPxV9dh2le9vWUaRTFHECXB
+         51vgWhOIGhCHWh/CoORjkuU9gkv9Q1OlEaCSdZvoTwVNFjQD9kPDqTxTCtyeOVQG8jqo
+         gTWskFIfjD1u928/59/2fQyK8n996XcKgPPjw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=eR5I4E4T4/4IxSicnYUr1AFVo0A/LtIPYrGBPrB2/04=;
+        b=ItWKLEjHxzxKJ/FwBNv2XfYiicPfQSFHLqL2o75TXI7dYX+rBrQM6PSMx9GtOETWo0
+         xoOL38xzA663a/8zxvUOMOFOhwueaKZD114CQkcozM3G7973m3sFdym9k4u1FwZeBtcU
+         f1cDln2AfZkIvZTZdwC3doUsRZb6OJzpkqCbR4AUyitpTwpu7BUJeX+rhPUU7lPt2vYV
+         KuL2wlJL60eOEtV6IfOGIi25YeELnySlg21q4AD6njVs+skUB8w9niLGNQ8icR/edMiz
+         SgxOS6bJw0F0M5NT76ma1iLEq+5JAvrTu0IiyScgzD5EzUxe/RYz3jwdezD2w0NcHKwp
+         ln/A==
+X-Gm-Message-State: AGi0PuYGvbqXtHms8CBYuVMA2nCw7oC4NCIn9P7wCtyyHvX2cSxnvT6y
+        zX9UL92iGwcRSt0w64Td4T5wNw==
+X-Google-Smtp-Source: APiQypJZHeSuH696w1N1+pBEt6HXR6rAeDmFv3fXRVtzpa2ny4Lxkx2vFr4DA0DZtPyLNE/ijMI+5g==
+X-Received: by 2002:a05:620a:2054:: with SMTP id d20mr18143094qka.496.1587043066238;
+        Thu, 16 Apr 2020 06:17:46 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id j90sm15174409qte.20.2020.04.16.06.17.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Apr 2020 06:17:45 -0700 (PDT)
+Date:   Thu, 16 Apr 2020 09:17:45 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     Uladzislau Rezki <urezki@gmail.com>
+Cc:     "Paul E. McKenney" <paulmck@kernel.org>,
+        linux-kernel@vger.kernel.org,
+        Josh Triplett <josh@joshtriplett.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        rcu@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
+        Johannes Weiner <hannes@cmpxchg.org>
+Subject: Re: [PATCH RFC] rcu/tree: Refactor object allocation and try harder
+ for array allocation
+Message-ID: <20200416131745.GA90777@google.com>
+References: <20200413211504.108086-1-joel@joelfernandes.org>
+ <20200414194353.GQ17661@paulmck-ThinkPad-P72>
+ <20200416103007.GA3925@pc636>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200416120651.wqmoaa35jft4prox@treble>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+In-Reply-To: <20200416103007.GA3925@pc636>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 16, 2020 at 07:06:51AM -0500, Josh Poimboeuf wrote:
-> On Thu, Apr 16, 2020 at 10:56:02AM +0200, Miroslav Benes wrote:
-> > > +	bool early = me->state == MODULE_STATE_UNFORMED;
+On Thu, Apr 16, 2020 at 12:30:07PM +0200, Uladzislau Rezki wrote:
+> Hello, Paul, Joel.
+> 
+> See my comments below. They are for better understanding a
+> whole strategy and the best way how to drive headless objects :)
+
+Thanks for the comments on the RFC patch :) I am on the same page and Ok with
+being more conservative on memory allocation.
+
+> > > This is a small code refactor and also removes the restriction that
+> > > headless kfree_rcu() users cannot sleep for allocation of the per-cpu
+> > > array where their pointers will be placed . Since they are always called
+> > > in a sleepable context, we can use this information to try harder during
+> > > the array allocation stage to allocate the per-cpu array.
+> > 
+> > In kernels, needing to do allocations in order to free memory must be
+> > regarded with great suspicion.  It -might- be kind-of sort-of OK here,
+> > but only if we never impede reclaim, I/O, or OOM handling.  Even then,
+> > this can be made to work only given that it is possible to fall back
+> > on a direct call to synchronize_rcu() in the case where absolutely no
+> > memory is available.
+> > 
+> I see your point and agree. So, the idea is to do progress instead of
+> doing OOM, I/O or direct reclaiming. It means that we should avoid of
+> using any allocations flags which will trigger such effects, directly
+> or indirectly. I think we are on the same base now.
+
+Right.
+ 
+> > > Also there is a possible bug-fix for a migration scenario where a
+> > > kfree_rcu() headless user can get migrated during the
+> > > sleepable-allocation and end up on another CPU and restoring the wrong
+> > > CPU's flags. To remedy this, we store only the IRQ state on the stack
+> > > and save/restore IRQ state from there. Sure, for the headless case we
+> > > don't need to restore flags. But the code saving/restoring state is
+> > > common between headless and with-head kfree_rcu() variants, so it
+> > > handles all scenarios sampling/restoring just the IRQ state and not
+> > > saving/restoring all the flags.
+> > 
+> > I will suspend disbelief while I look at the patch, but this indirect flag
+> > handling sounds like an accident waiting to happen.  So in the meantime,
+> > is there a way to structure the code to make the flag handling more
+> > explicitly visible at the top level?
+> > 
+> > In addition, the usual way to conditionally disable interrupts
+> > is local_irq_save(flags) rather than conditionally invoking
+> > local_irq_disable().
+
+I agree with the below suggestions and that would remove the need for the
+conditional disabling of interrupts.
+
+> > 
+> > > Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+> > > ---
+> > > 
+> > > This is just RFC and is based on top of Vlad's latest patches:
+> > > https://lkml.org/lkml/2020/4/2/383
+> > > 
+> > > The git tree containing this patch is at:
+> > > https://git.kernel.org/pub/scm/linux/kernel/git/jfern/linux.git/log/?h=rcu/dev
+> > > 
+> > > (This patch will be a part of a much large series in the future).
+> > > 
+> > > 
+> > >  kernel/rcu/tree.c | 150 +++++++++++++++++++++++++++++++---------------
+> > >  1 file changed, 103 insertions(+), 47 deletions(-)
+> > > 
+> > > diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+> > > index 744d04d8b7724..2e0eaec929059 100644
+> > > --- a/kernel/rcu/tree.c
+> > > +++ b/kernel/rcu/tree.c
+> > > @@ -3104,11 +3104,95 @@ static void kfree_rcu_monitor(struct work_struct *work)
+> > >  		spin_unlock_irqrestore(&krcp->lock, flags);
+> > >  }
+> > >  
+> > > +static inline struct kfree_rcu_cpu *krc_this_cpu_lock(bool irqs_disabled)
+> > > +{
+> > > +	struct kfree_rcu_cpu *krcp;
 > > > +
-> > > +	return __apply_relocate_add(sechdrs, strtab, symindex, relsec, me,
-> > > +				    early ? memcpy : s390_kernel_write);
+> > > +	// For safely calling this_cpu_ptr().
+> > > +	if (!irqs_disabled)
+> > > +		local_irq_disable();
 > > 
-> > The compiler warns about
+> > Again, local_irq_save() is the usual approach here.  And local_irq_restore()
+> > in krc_this_cpu_unlock() below.
 > > 
-> > arch/s390/kernel/module.c: In function 'apply_relocate_add':
-> > arch/s390/kernel/module.c:453:24: warning: pointer type mismatch in conditional expression
-> >          early ? memcpy : s390_kernel_write);
+> We discussed that with Joel and i also think that keeping previous
+> variant of the krc_this_cpu_lock()/krc_this_cpu_unlock() is better
+> and what is more important is easy, i.e. we do not really need to
+> understand whether IRQs are disabled or not, instead just save flags
+> and restore and that is it.
+
+Sounds good, if we are avoiding any possiblity of direct-reclaim, then that
+removes the need for dropping the lock and thus removes the chance of
+migrations that I was concerned about.
+
+> > > +	krcp = this_cpu_ptr(&krc);
+> > > +	if (likely(krcp->initialized))
+> > > +		spin_lock(&krcp->lock);
+> > > +
+> > > +	return krcp;
+> > > +}
+> > > +
+> > > +static inline void
+> > > +krc_this_cpu_unlock(struct kfree_rcu_cpu *krcp, bool irqs_disabled)
+> > > +{
+> > > +	if (likely(krcp->initialized))
+> > > +		spin_unlock(&krcp->lock);
+> > > +
+> > > +	if (!irqs_disabled)
+> > > +		local_irq_enable();
+> > > +}
+> > > +
+> > > +// alloc_object_locked - Try to allocate an object of size while dropping the lock.
+> > > +//
+> > > +// @size: Size of the object to internally allocate for kfree_rcu().
+> > > +// @slab: Do we allocate on slab or using buddy.
+> > > +// @can_sleep: Was kfree_rcu() called in sleepable context?
+> > > +// @krcp: The pointer to krcp. Needed if when relocking, we got migrated.
+> > > +//
+> > > +// Caveats:
+> > > +//
+> > > +// 1. Per-cpu krc's lock must be held with interrupts disabled.
+> > > +//
+> > > +// 2. Failure to allocate returns NULL and does not cause a warning.
+> > > +//
+> > > +// 3. Caller is responsible for using the correct free() APIs. If size == PAGE_SIZE,
+> > > +//    then free_page() should be called for freeing. Otherwise kfree().
+> > > +//
+> > > +static inline void *alloc_object_locked(size_t size, bool slab, bool can_sleep,
+> > > +					struct kfree_rcu_cpu **krcpp)
+> > > +{
+> > > +	void *ptr;
+> > > +	gfp_t gfp_flags, wmark_flags, reclaim_flags;
+> > > +	struct kfree_rcu_cpu *krcp = *krcpp;
+> > > +
+> > > +	WARN_ON_ONCE(size == PAGE_SIZE && slab);
+> > > +
+> > > +	// Decompose the flags:
+> > > +	// wmark_flags   - affect the watermark to control reserve access.
+> > > +	// reclaim_flags - these effect how reclaim works but would
+> > > +	//                 have no-affect in atomic or nowait context.
+> > > +	wmark_flags = (__GFP_HIGH | __GFP_ATOMIC);
+> > > +	reclaim_flags = (__GFP_RETRY_MAYFAIL);
+> > 
+> > You have a __GFP_RETRY_MAYFAIL here, which is good.  However, if
+> > this CPU has quite a few 4K blocks of memory already allocated for
+> > kfree_rcu(), at some point __GFP_NORETRY becomes necessary.  Again,
+> > single-argument kfree_rcu() has the option of invoking synchronize_rcu()
+> > and most other memory allocators do not.  And double-argument kfree_rcu()
+> > has a pre-allocated rcu_head in the structure that it can fall back on.
+> > 
+> > So let's please not get too memory-greedy here!
+> > 
+> As i see, your point is to use "light" allocations flags which will
+> not initiate direct reclaim, OOM, I/O waiting and so on. Please correct
+> me if i miss something.
+
+I agree. One thing I want to add is any allocation however small has an
+effect either directly or indirectly, but I agree trying too hard may further
+avoid another unrelated needy user getting the memory they may need.
+
+> > Note also that most systems will normally invoke an RCU callback on the
+> > same CPU that registered it.  This allows easy maintenance of an
+> > emergency cache for these situations.
+> > 
+> I have a patch that specifies number of pages to be cached, but i will
+> send out it later when we sort things like that out.
+
+Sounds good. I am assuming that you are going to make it such that there are
+2 pages per-cpu by default which can be used for either vfree or kfree
+arrays and further caching being made user-configurable. But either way
+looking forward to the patch.
+
+> > Exceptions include systems doing frequent CPU-hotplug operations and
+> > rcu_nocbs CPUs.
+
+Per my understanding, the CPU hotplug has an effect on migrating callbacks so
+that's why CPU hotplug has an effect of not invoking callbacks on the same
+CPU that they were queued on, but please let me know if my understanding is
+not correct.
+
+> > > +
+> > > +	// These flags will be common to all allocations, whether we want to
+> > > +	// wait or sleep or reclaim will be controlled with additional flags
+> > > +	// later during the actual allocation.
+> > > +	gfp_flags = (wmark_flags | reclaim_flags | __GFP_NOWARN);
+> > > +
+> > > +	// First, do an allocation without waiting.
+> > > +	ptr = (size == PAGE_SIZE) ? (void *)__get_free_page(gfp_flags | GFP_NOWAIT)
+> > > +				  : (void *)kmalloc(size, gfp_flags | GFP_NOWAIT);
+> > > +	// If we cannot sleep, we are done.
+> > > +	if (ptr || !can_sleep)
+> > > +		return ptr;
+> > > +
+> > > +	// Now try to do it with more relaxed flags, we may enter direct-reclaim.
+> > > +	//
+> > > +	// IRQs were not enabled since can_sleep == true. So there's no need to
+> > > +	// save/restore flags.
+> > > +	krc_this_cpu_unlock(krcp, false);
+> > > +	ptr = (size == PAGE_SIZE) ? (void *)__get_free_page(gfp_flags | GFP_KERNEL)
+> > > +				  : (void *)kmalloc(size, gfp_flags | GFP_KERNEL);
+> > 
+> > Dropping the possibility of small allocations also simplifies this code,
+> > and also simplifies a fair amount of code elsewhere.
+> > 
+> I have a question about dynamic attaching of the rcu_head. Do you think
+> that we should drop it? We have it because of it requires 8 + syzeof(struct rcu_head)
+> bytes and is used when we can not allocate 1 page what is much more for array purpose.
+> Therefore, dynamic attaching can succeed because of using SLAB and requesting much
+> less memory then one page. There will be higher chance of bypassing synchronize_rcu()
+> and inlining freeing on a stack.
 > 
-> Thanks, I'll get all that cleaned up.
+> I agree that we should not use GFP_* flags instead we could go with GFP_NOWAIT |
+> __GFP_NOWARN when head attaching only. Also dropping GFP_ATOMIC to keep
+> atomic reserved memory for others.
+
+I also have same question. Just to add here, previous patches added a warning
+to synchronize_rcu(). Should that warning be dropped then if it is more
+normal for kfree_rcu() to enter the synchronous path when the user had not
+passed in an rcu_head?
+
+> > >  			if (head == NULL)
+> > > -				goto inline_return;
+> > > -
+> > > -			/* Take it back. */
+> > > -			krcp = krc_this_cpu_lock(&flags);
+> > > +				goto unlock_return;
+> > >  
+> > >  			/*
+> > >  			 * Tag the headless object. Such objects have a back-pointer
+> > > @@ -3280,9 +3337,8 @@ void kvfree_call_rcu(struct rcu_head *head, rcu_callback_t func)
+> > >  	}
+> > >  
+> > >  unlock_return:
+> > > -	krc_this_cpu_unlock(krcp, flags);
+> > > +	krc_this_cpu_unlock(krcp, irqs_disabled);
+> > >  
+> > > -inline_return:
+> > >  	/*
+> > >  	 * High memory pressure, so inline kvfree() after
+> > >  	 * synchronize_rcu(). We can do it from might_sleep()
+> > > -- 
+> > > 2.26.0.110.g2183baf09c-goog
 > 
-> I could have sworn I got a SUCCESS message from the kbuild bot.  Does it
-> ignore warnings nowadays?
+> I know Joel will also write some comments because we has discussed it
+> via IRC. The idea is to find common view, and do it
+> as best as we can :)
+> 
+> Thanks Paul for good comments!
 
-Here's a fix on top of the original patch.
+Thanks a lot for all the comments to both of you :)
 
-I changed s390_kernel_write() to return "void *" to match memcpy()
-(probably a separate patch).
-
-I also grabbed the text_mutex for the !early case in
-apply_relocate_add() -- will do something similar for x86.
-
-Will try to test this on a 390 box.
-
-
-diff --git a/arch/s390/include/asm/uaccess.h b/arch/s390/include/asm/uaccess.h
-index a470f1fa9f2a..324438889fe1 100644
---- a/arch/s390/include/asm/uaccess.h
-+++ b/arch/s390/include/asm/uaccess.h
-@@ -276,6 +276,6 @@ static inline unsigned long __must_check clear_user(void __user *to, unsigned lo
- }
- 
- int copy_to_user_real(void __user *dest, void *src, unsigned long count);
--void s390_kernel_write(void *dst, const void *src, size_t size);
-+void *s390_kernel_write(void *dst, const void *src, size_t size);
- 
- #endif /* __S390_UACCESS_H */
-diff --git a/arch/s390/kernel/module.c b/arch/s390/kernel/module.c
-index e85e378f876e..2b30ed0ce14f 100644
---- a/arch/s390/kernel/module.c
-+++ b/arch/s390/kernel/module.c
-@@ -19,6 +19,7 @@
- #include <linux/kasan.h>
- #include <linux/moduleloader.h>
- #include <linux/bug.h>
-+#include <linux/memory.h>
- #include <asm/alternative.h>
- #include <asm/nospec-branch.h>
- #include <asm/facility.h>
-@@ -175,10 +176,11 @@ int module_frob_arch_sections(Elf_Ehdr *hdr, Elf_Shdr *sechdrs,
- 
- static int apply_rela_bits(Elf_Addr loc, Elf_Addr val,
- 			   int sign, int bits, int shift,
--			   void (*write)(void *dest, const void *src, size_t len))
-+			   void *(*write)(void *dest, const void *src, size_t len))
- {
- 	unsigned long umax;
- 	long min, max;
-+	void *dest = (void *)loc;
- 
- 	if (val & ((1UL << shift) - 1))
- 		return -ENOEXEC;
-@@ -196,28 +198,28 @@ static int apply_rela_bits(Elf_Addr loc, Elf_Addr val,
- 	}
- 
- 	if (bits == 8) {
--		write(loc, &val, 1);
-+		write(dest, &val, 1);
- 	} else if (bits == 12) {
- 		unsigned short tmp = (val & 0xfff) |
- 			(*(unsigned short *) loc & 0xf000);
--		write(loc, &tmp, 2);
-+		write(dest, &tmp, 2);
- 	} else if (bits == 16) {
--		write(loc, &val, 2);
-+		write(dest, &val, 2);
- 	} else if (bits == 20) {
- 		unsigned int tmp = (val & 0xfff) << 16 |
- 			(val & 0xff000) >> 4 | (*(unsigned int *) loc & 0xf00000ff);
--		write(loc, &tmp, 4);
-+		write(dest, &tmp, 4);
- 	} else if (bits == 32) {
--		write(loc, &val, 4);
-+		write(dest, &val, 4);
- 	} else if (bits == 64) {
--		write(loc, &val, 8);
-+		write(dest, &val, 8);
- 	}
- 	return 0;
- }
- 
- static int apply_rela(Elf_Rela *rela, Elf_Addr base, Elf_Sym *symtab,
- 		      const char *strtab, struct module *me,
--		      void (*write)(void *dest, const void *src, size_t len))
-+		      void *(*write)(void *dest, const void *src, size_t len))
- {
- 	struct mod_arch_syminfo *info;
- 	Elf_Addr loc, val;
-@@ -419,7 +421,7 @@ static int apply_rela(Elf_Rela *rela, Elf_Addr base, Elf_Sym *symtab,
- static int __apply_relocate_add(Elf_Shdr *sechdrs, const char *strtab,
- 		       unsigned int symindex, unsigned int relsec,
- 		       struct module *me,
--		       void (*write)(void *dest, const void *src, size_t len))
-+		       void *(*write)(void *dest, const void *src, size_t len))
- {
- 	Elf_Addr base;
- 	Elf_Sym *symtab;
-@@ -435,7 +437,7 @@ static int __apply_relocate_add(Elf_Shdr *sechdrs, const char *strtab,
- 	n = sechdrs[relsec].sh_size / sizeof(Elf_Rela);
- 
- 	for (i = 0; i < n; i++, rela++) {
--		rc = apply_rela(rela, base, symtab, strtab, me);
-+		rc = apply_rela(rela, base, symtab, strtab, me, write);
- 		if (rc)
- 			return rc;
- 	}
-@@ -449,8 +451,16 @@ int apply_relocate_add(Elf_Shdr *sechdrs, const char *strtab,
- 	int ret;
- 	bool early = me->state == MODULE_STATE_UNFORMED;
- 
--	return __apply_relocate_add(sechdrs, strtab, symindex, relsec, me,
--				    early ? memcpy : s390_kernel_write);
-+	if (!early)
-+		mutex_lock(&text_mutex);
-+
-+	ret = __apply_relocate_add(sechdrs, strtab, symindex, relsec, me,
-+				   early ? memcpy : s390_kernel_write);
-+
-+	if (!early)
-+		mutex_unlock(&text_mutex);
-+
-+	return ret;
- }
- 
- int module_finalize(const Elf_Ehdr *hdr,
-diff --git a/arch/s390/mm/maccess.c b/arch/s390/mm/maccess.c
-index de7ca4b6718f..22a0be655f27 100644
---- a/arch/s390/mm/maccess.c
-+++ b/arch/s390/mm/maccess.c
-@@ -55,19 +55,22 @@ static notrace long s390_kernel_write_odd(void *dst, const void *src, size_t siz
-  */
- static DEFINE_SPINLOCK(s390_kernel_write_lock);
- 
--void notrace s390_kernel_write(void *dst, const void *src, size_t size)
-+notrace void *s390_kernel_write(void *dst, const void *src, size_t size)
- {
-+	void *tmp = dst;
- 	unsigned long flags;
- 	long copied;
- 
- 	spin_lock_irqsave(&s390_kernel_write_lock, flags);
- 	while (size) {
--		copied = s390_kernel_write_odd(dst, src, size);
--		dst += copied;
-+		copied = s390_kernel_write_odd(tmp, src, size);
-+		tmp += copied;
- 		src += copied;
- 		size -= copied;
- 	}
- 	spin_unlock_irqrestore(&s390_kernel_write_lock, flags);
-+
-+	return dst;
- }
- 
- static int __no_sanitize_address __memcpy_real(void *dest, void *src, size_t count)
+ - Joel
 
