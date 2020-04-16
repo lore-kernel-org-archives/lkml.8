@@ -2,303 +2,106 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4084DC2BA2B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 06:01:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57D7EC2BA2B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 06:02:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 10BA021569
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 06:01:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3569F20857
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 06:02:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587016945;
+	bh=H95Q/syDnIOT80mK9pLWTpk+EblpARC2OaGNoxyxAiw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=TLtU3bF5K46UCcOsKx7pyTOZb01CH799XSf6Nr39XkBahOn1pKVI0iQBq7/UC3qXL
+	 kwky+5tu678HENi4ADRICAJ2XlvKQjoKidt0G2Fw46AaRyw1eHtxnPuP7tzeBCyA1I
+	 AdnJUZumru5+lMl5xKHiVSQjA1E0PVMc63GRCL/Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407410AbgDPGBu (ORCPT
+        id S2407424AbgDPGCX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 02:01:50 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:57072 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2407165AbgDPGBo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 02:01:44 -0400
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03G5XMMU031991;
-        Thu, 16 Apr 2020 02:01:19 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 30eh1hry0u-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 16 Apr 2020 02:01:18 -0400
-Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 03G5YJY0035125;
-        Thu, 16 Apr 2020 02:01:18 -0400
-Received: from ppma03wdc.us.ibm.com (ba.79.3fa9.ip4.static.sl-reverse.com [169.63.121.186])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 30eh1hrxx9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 16 Apr 2020 02:01:17 -0400
-Received: from pps.filterd (ppma03wdc.us.ibm.com [127.0.0.1])
-        by ppma03wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 03G607Do013102;
-        Thu, 16 Apr 2020 06:01:13 GMT
-Received: from b03cxnp08027.gho.boulder.ibm.com (b03cxnp08027.gho.boulder.ibm.com [9.17.130.19])
-        by ppma03wdc.us.ibm.com with ESMTP id 30b5h6qyjg-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 16 Apr 2020 06:01:13 +0000
-Received: from b03ledav002.gho.boulder.ibm.com (b03ledav002.gho.boulder.ibm.com [9.17.130.233])
-        by b03cxnp08027.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03G61C9b16450174
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 16 Apr 2020 06:01:12 GMT
-Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 498E913604F;
-        Thu, 16 Apr 2020 06:01:12 +0000 (GMT)
-Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 74A4313605E;
-        Thu, 16 Apr 2020 06:01:11 +0000 (GMT)
-Received: from [9.70.82.143] (unknown [9.70.82.143])
-        by b03ledav002.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Thu, 16 Apr 2020 06:01:11 +0000 (GMT)
-Subject: [PATCH v11 04/14] powerpc/vas: Setup fault window per VAS instance
-From:   Haren Myneni <haren@linux.ibm.com>
-To:     mpe@ellerman.id.au
-Cc:     mikey@neuling.org, srikar@linux.vnet.ibm.com,
-        frederic.barrat@fr.ibm.com, linux-kernel@vger.kernel.org,
-        npiggin@gmail.com, hch@infradead.org, oohall@gmail.com,
-        clg@kaod.org, herbert@gondor.apana.org.au,
-        sukadev@linux.vnet.ibm.com, linuxppc-dev@lists.ozlabs.org,
-        ajd@linux.ibm.com
-In-Reply-To: <1587016214.2275.1036.camel@hbabu-laptop>
-References: <1587016214.2275.1036.camel@hbabu-laptop>
-Content-Type: text/plain; charset="UTF-8"
-Date:   Wed, 15 Apr 2020 23:00:46 -0700
-Message-ID: <1587016846.2275.1053.camel@hbabu-laptop>
+        Thu, 16 Apr 2020 02:02:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56238 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2407165AbgDPGCN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 02:02:13 -0400
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 94EEA2076A;
+        Thu, 16 Apr 2020 06:02:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587016932;
+        bh=H95Q/syDnIOT80mK9pLWTpk+EblpARC2OaGNoxyxAiw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=oAet7vuPUBRUElKdTjJcmSJ6ELXSNTpWsbnm60yn9+4UnifDG+l8n2NPbSf5FPtZ9
+         1U6C6/MVqik5+/djGWSe2Gf8hwEr3OSdXNxzP4vdiAMdlgq8bCnXuMOQOsVn9YKbXY
+         JgtPw4hu85/iVYpCPrhhtkGX5tA//9IcGEWs4BTw=
+Date:   Thu, 16 Apr 2020 15:02:06 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Luis Chamberlain <mcgrof@kernel.org>
+Cc:     Vlastimil Babka <vbabka@suse.cz>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+        linux-mm@kvack.org, Ivan Teterevkov <ivan.teterevkov@nutanix.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        "Guilherme G . Piccoli" <gpiccoli@canonical.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Christian Brauner <christian.brauner@ubuntu.com>
+Subject: Re: [PATCH v2 0/3] support setting sysctl parameters from kernel
+ command line
+Message-Id: <20200416150206.d3e103a1a5497b3518d4359c@kernel.org>
+In-Reply-To: <20200415063041.GT11244@42.do-not-panic.com>
+References: <20200414113222.16959-1-vbabka@suse.cz>
+        <20200415122359.939364e2c54c389c6b3f6457@kernel.org>
+        <20200415063041.GT11244@42.do-not-panic.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 Mime-Version: 1.0
-X-Mailer: Evolution 2.28.3 
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-16_01:2020-04-14,2020-04-16 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 bulkscore=0
- lowpriorityscore=0 spamscore=0 mlxlogscore=999 impostorscore=0
- suspectscore=3 mlxscore=0 adultscore=0 malwarescore=0 priorityscore=1501
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004160029
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Luis,
 
-Setup fault window for each VAS instance. When NX gets a fault on
-request buffer, pastes fault CRB in the corresponding fault FIFO and
-then raises an interrupt to the OS. The kernel handles this fault
-and process faults CRB from this FIFO.
+On Wed, 15 Apr 2020 06:30:41 +0000
+Luis Chamberlain <mcgrof@kernel.org> wrote:
+> Currently the maximum config size size is 32KB and the total key-words
+> (not     key-value entries) must be under 1024 nodes.  Note: this is not
+> the number of entries but nodes, an entry must consume more than 2 nodes
+> (a key-word and a value). So theoretically, it will be up to 512
+> key-value pairs. If keys contains 3 words in average, it can contain 256
+> key-value pairs. In most cases, the number of config items will be under
+> 100 entries and smaller than 8KB, so it would be enough.  If the node
+> number exceeds 1024, parser returns an error even if the file       size
+> is smaller than 32KB.  Anyway, since bootconfig command verifies it when
+> appending a boot config       to initrd image, user can notice it before
+> boot.  
+> ```
+> *recommending* bootconfig due to the limitation of cmdline seems
+> sensible, however if we advise that.. wouldn't the space for 512
+> theoretical entries full up rather fast?
 
-Signed-off-by: Sukadev Bhattiprolu <sukadev@linux.vnet.ibm.com>
-Signed-off-by: Haren Myneni <haren@linux.ibm.com>
----
- arch/powerpc/platforms/powernv/Makefile     |  2 +-
- arch/powerpc/platforms/powernv/vas-fault.c  | 77 +++++++++++++++++++++++++++++
- arch/powerpc/platforms/powernv/vas-window.c |  4 +-
- arch/powerpc/platforms/powernv/vas.c        | 20 ++++++++
- arch/powerpc/platforms/powernv/vas.h        | 21 ++++++++
- 5 files changed, 121 insertions(+), 3 deletions(-)
- create mode 100644 arch/powerpc/platforms/powernv/vas-fault.c
+Yeah, I think it is easier to hit the node number limitation rather
+than fill up the space. However, since the bootconfig supports comments,
+if user writes enough readable config file, I think it's probably the
+right balance :)
+If you think the 512 entries is too small, it is easy to expand it
+upto 32K (64K nodes). But it may consume 512KB memory only for the
+node (meta) data. Current 1024 nodes consumes 8KB (8bytes/node), so
+compared with the max data size (32KB), I think it is a better balance.
 
-diff --git a/arch/powerpc/platforms/powernv/Makefile b/arch/powerpc/platforms/powernv/Makefile
-index c0f8120..395789f 100644
---- a/arch/powerpc/platforms/powernv/Makefile
-+++ b/arch/powerpc/platforms/powernv/Makefile
-@@ -17,7 +17,7 @@ obj-$(CONFIG_MEMORY_FAILURE)	+= opal-memory-errors.o
- obj-$(CONFIG_OPAL_PRD)	+= opal-prd.o
- obj-$(CONFIG_PERF_EVENTS) += opal-imc.o
- obj-$(CONFIG_PPC_MEMTRACE)	+= memtrace.o
--obj-$(CONFIG_PPC_VAS)	+= vas.o vas-window.o vas-debug.o
-+obj-$(CONFIG_PPC_VAS)	+= vas.o vas-window.o vas-debug.o vas-fault.o
- obj-$(CONFIG_OCXL_BASE)	+= ocxl.o
- obj-$(CONFIG_SCOM_DEBUGFS) += opal-xscom.o
- obj-$(CONFIG_PPC_SECURE_BOOT) += opal-secvar.o
-diff --git a/arch/powerpc/platforms/powernv/vas-fault.c b/arch/powerpc/platforms/powernv/vas-fault.c
-new file mode 100644
-index 0000000..4044998
---- /dev/null
-+++ b/arch/powerpc/platforms/powernv/vas-fault.c
-@@ -0,0 +1,77 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * VAS Fault handling.
-+ * Copyright 2019, IBM Corporation
-+ */
-+
-+#define pr_fmt(fmt) "vas: " fmt
-+
-+#include <linux/kernel.h>
-+#include <linux/types.h>
-+#include <linux/slab.h>
-+#include <linux/uaccess.h>
-+#include <linux/kthread.h>
-+#include <asm/icswx.h>
-+
-+#include "vas.h"
-+
-+/*
-+ * The maximum FIFO size for fault window can be 8MB
-+ * (VAS_RX_FIFO_SIZE_MAX). Using 4MB FIFO since each VAS
-+ * instance will be having fault window.
-+ * 8MB FIFO can be used if expects more faults for each VAS
-+ * instance.
-+ */
-+#define VAS_FAULT_WIN_FIFO_SIZE	(4 << 20)
-+
-+/*
-+ * Fault window is opened per VAS instance. NX pastes fault CRB in fault
-+ * FIFO upon page faults.
-+ */
-+int vas_setup_fault_window(struct vas_instance *vinst)
-+{
-+	struct vas_rx_win_attr attr;
-+
-+	vinst->fault_fifo_size = VAS_FAULT_WIN_FIFO_SIZE;
-+	vinst->fault_fifo = kzalloc(vinst->fault_fifo_size, GFP_KERNEL);
-+	if (!vinst->fault_fifo) {
-+		pr_err("Unable to alloc %d bytes for fault_fifo\n",
-+				vinst->fault_fifo_size);
-+		return -ENOMEM;
-+	}
-+
-+	/*
-+	 * Invalidate all CRB entries. NX pastes valid entry for each fault.
-+	 */
-+	memset(vinst->fault_fifo, FIFO_INVALID_ENTRY, vinst->fault_fifo_size);
-+	vas_init_rx_win_attr(&attr, VAS_COP_TYPE_FAULT);
-+
-+	attr.rx_fifo_size = vinst->fault_fifo_size;
-+	attr.rx_fifo = vinst->fault_fifo;
-+
-+	/*
-+	 * Max creds is based on number of CRBs can fit in the FIFO.
-+	 * (fault_fifo_size/CRB_SIZE). If 8MB FIFO is used, max creds
-+	 * will be 0xffff since the receive creds field is 16bits wide.
-+	 */
-+	attr.wcreds_max = vinst->fault_fifo_size / CRB_SIZE;
-+	attr.lnotify_lpid = 0;
-+	attr.lnotify_pid = mfspr(SPRN_PID);
-+	attr.lnotify_tid = mfspr(SPRN_PID);
-+
-+	vinst->fault_win = vas_rx_win_open(vinst->vas_id, VAS_COP_TYPE_FAULT,
-+					&attr);
-+
-+	if (IS_ERR(vinst->fault_win)) {
-+		pr_err("VAS: Error %ld opening FaultWin\n",
-+			PTR_ERR(vinst->fault_win));
-+		kfree(vinst->fault_fifo);
-+		return PTR_ERR(vinst->fault_win);
-+	}
-+
-+	pr_devel("VAS: Created FaultWin %d, LPID/PID/TID [%d/%d/%d]\n",
-+			vinst->fault_win->winid, attr.lnotify_lpid,
-+			attr.lnotify_pid, attr.lnotify_tid);
-+
-+	return 0;
-+}
-diff --git a/arch/powerpc/platforms/powernv/vas-window.c b/arch/powerpc/platforms/powernv/vas-window.c
-index 0c0d27d..1783fa9 100644
---- a/arch/powerpc/platforms/powernv/vas-window.c
-+++ b/arch/powerpc/platforms/powernv/vas-window.c
-@@ -827,9 +827,9 @@ void vas_init_rx_win_attr(struct vas_rx_win_attr *rxattr, enum vas_cop_type cop)
- 		rxattr->fault_win = true;
- 		rxattr->notify_disable = true;
- 		rxattr->rx_wcred_mode = true;
--		rxattr->tx_wcred_mode = true;
- 		rxattr->rx_win_ord_mode = true;
--		rxattr->tx_win_ord_mode = true;
-+		rxattr->rej_no_credit = true;
-+		rxattr->tc_mode = VAS_THRESH_DISABLED;
- 	} else if (cop == VAS_COP_TYPE_FTW) {
- 		rxattr->user_win = true;
- 		rxattr->intr_disable = true;
-diff --git a/arch/powerpc/platforms/powernv/vas.c b/arch/powerpc/platforms/powernv/vas.c
-index 3303cfe..9013a63 100644
---- a/arch/powerpc/platforms/powernv/vas.c
-+++ b/arch/powerpc/platforms/powernv/vas.c
-@@ -24,6 +24,11 @@
- 
- static DEFINE_PER_CPU(int, cpu_vas_id);
- 
-+static int vas_irq_fault_window_setup(struct vas_instance *vinst)
-+{
-+	return vas_setup_fault_window(vinst);
-+}
-+
- static int init_vas_instance(struct platform_device *pdev)
- {
- 	struct device_node *dn = pdev->dev.of_node;
-@@ -114,6 +119,21 @@ static int init_vas_instance(struct platform_device *pdev)
- 	list_add(&vinst->node, &vas_instances);
- 	mutex_unlock(&vas_mutex);
- 
-+	/*
-+	 * IRQ and fault handling setup is needed only for user space
-+	 * send windows.
-+	 */
-+	if (vinst->virq) {
-+		rc = vas_irq_fault_window_setup(vinst);
-+		/*
-+		 * Fault window is used only for user space send windows.
-+		 * So if vinst->virq is NULL, tx_win_open returns -ENODEV
-+		 * for user space.
-+		 */
-+		if (rc)
-+			vinst->virq = 0;
-+	}
-+
- 	vas_instance_init_dbgdir(vinst);
- 
- 	dev_set_drvdata(&pdev->dev, vinst);
-diff --git a/arch/powerpc/platforms/powernv/vas.h b/arch/powerpc/platforms/powernv/vas.h
-index 598608b..9c8e3f5 100644
---- a/arch/powerpc/platforms/powernv/vas.h
-+++ b/arch/powerpc/platforms/powernv/vas.h
-@@ -296,6 +296,22 @@ enum vas_notify_after_count {
- };
- 
- /*
-+ * NX can generate an interrupt for multiple faults and expects kernel
-+ * to process all of them. So read all valid CRB entries until find the
-+ * invalid one. So use pswid which is pasted by NX and ccw[0] (reserved
-+ * bit in BE) to check valid CRB. CCW[0] will not be touched by user
-+ * space. Application gets CRB formt error if it updates this bit.
-+ *
-+ * Invalidate FIFO during allocation and process all entries from last
-+ * successful read until finds invalid pswid and ccw[0] values.
-+ * After reading each CRB entry from fault FIFO, the kernel invalidate
-+ * it by updating pswid with FIFO_INVALID_ENTRY and CCW[0] with
-+ * CCW0_INVALID.
-+ */
-+#define FIFO_INVALID_ENTRY	0xffffffff
-+#define CCW0_INVALID		1
-+
-+/*
-  * One per instance of VAS. Each instance will have a separate set of
-  * receive windows, one per coprocessor type.
-  *
-@@ -315,6 +331,10 @@ struct vas_instance {
- 
- 	u64 irq_port;
- 	int virq;
-+	int fault_fifo_size;
-+	void *fault_fifo;
-+	struct vas_window *fault_win; /* Fault window */
-+
- 	struct mutex mutex;
- 	struct vas_window *rxwin[VAS_COP_TYPE_MAX];
- 	struct vas_window *windows[VAS_WINDOWS_PER_CHIP];
-@@ -408,6 +428,7 @@ struct vas_winctx {
- extern void vas_instance_init_dbgdir(struct vas_instance *vinst);
- extern void vas_window_init_dbgdir(struct vas_window *win);
- extern void vas_window_free_dbgdir(struct vas_window *win);
-+extern int vas_setup_fault_window(struct vas_instance *vinst);
- 
- static inline void vas_log_write(struct vas_window *win, char *name,
- 			void *regptr, u64 val)
+Thank you,
+
 -- 
-1.8.3.1
-
-
-
+Masami Hiramatsu <mhiramat@kernel.org>
