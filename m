@@ -2,124 +2,109 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D39E4C352BE
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 07:06:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F490C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 07:07:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A980F20771
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 07:06:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D0A320771
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 07:07:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Ym1Zof5k"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IYjoP/t+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438491AbgDPHG1 (ORCPT
+        id S2438243AbgDPHHR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 03:06:27 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:4641 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2437186AbgDPHGU (ORCPT
+        Thu, 16 Apr 2020 03:07:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52558 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2437060AbgDPHHK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 03:06:20 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e9803af0000>; Thu, 16 Apr 2020 00:05:19 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Thu, 16 Apr 2020 00:06:18 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Thu, 16 Apr 2020 00:06:18 -0700
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 16 Apr
- 2020 07:06:18 +0000
-Received: from [10.24.37.103] (10.124.1.5) by DRHQMAIL107.nvidia.com
- (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 16 Apr
- 2020 07:06:14 +0000
-Subject: Re: [TEGRA194_CPUFREQ Patch 2/3] cpufreq: Add Tegra194 cpufreq driver
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-CC:     <rjw@rjwysocki.net>, <catalin.marinas@arm.com>, <will@kernel.org>,
-        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
-        <talho@nvidia.com>, <linux-pm@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <bbasu@nvidia.com>,
-        <mperttunen@nvidia.com>, Sumit Gupta <sumitg@nvidia.com>
-References: <20200406025549.qfwzlk3745y3r274@vireshk-i7>
- <3ab4136c-8cca-c2f9-d286-b82dac23e720@nvidia.com>
- <20200408055301.jhvu5bc2luu3b5qr@vireshk-i7>
- <08307e54-0e14-14a3-7d6a-d59e1e04a683@nvidia.com>
- <20200409074415.twpzu2n4frqlde7b@vireshk-i7>
- <00390070-38a1-19aa-ca59-42c4658bee7e@nvidia.com>
- <20200413062141.a6hmwipexhv3sctq@vireshk-i7>
- <64b609f1-efb1-425f-a91a-27a492bd3ec4@nvidia.com>
- <20200414054504.e3qn2cnxqur4sclw@vireshk-i7>
- <d6e0eed6-4267-fca9-59e1-02d16e17ff34@nvidia.com>
- <20200416033715.hscztwkxie2o5i3r@vireshk-i7>
-From:   Sumit Gupta <sumitg@nvidia.com>
-Message-ID: <8ea80551-b47c-3dd5-4efa-6befecc279e1@nvidia.com>
-Date:   Thu, 16 Apr 2020 12:36:30 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 16 Apr 2020 03:07:10 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57F10C061A0C
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 00:07:09 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id x25so3407926wmc.0
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 00:07:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=A6wKLGtd50OKgYXcdDZZHFJ4Jbv+Z5+XK/O56sFh+Ks=;
+        b=IYjoP/t+QDQrS7LpjoPocIxI4DZlQTIFJmQku0alpWKJHE4maTnXkL+Vye6RnHia0K
+         QO/0lknv6vOtiObqLGYLdbmoA6kDB+eFsZXBUE96k8W74Ha1KezKqT5Edo6qREojmuMq
+         vgp5MTdxJ9zIlOARse3f511urB5QkeAV2OoSGyweIpJLlUfwM8jDXK0gOndP1K5l15nv
+         GJjq07p2h7ftV0Atgqih7B7uLjs4mjJgg5t+ZJrr5TCzHjACu8yK2nU6BrQ3MRpX8wj0
+         bmF2B9HVDGgpsn+54qihf3CGtqLw2uvzPeZ+AIAGlgtMk0uDqy3h78yGcpb3ePqsNfra
+         VqKQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=A6wKLGtd50OKgYXcdDZZHFJ4Jbv+Z5+XK/O56sFh+Ks=;
+        b=tqZxWoFDSCZr2A+rVC7IUpIkxwuwzCzQf5H4qKkFd99P3s2vKej2a5hgCtiOTh4Y3o
+         zSKP8DY5Pa9O+iyi+QtyRRG+0pvUkWyxdW6DUJHI4887xGTh/7hlnP1tdHwWYco+gdX2
+         vH9nsIbJPtX4RwZk+P7iZVMB9TijRGVr+F7/bQnUQeoVnrdvdb3h91LIH0zIF/Havm+q
+         k44CEWH4OVs/c+HB7rLBQA8/qb5hYuNxdCLfLke8wXehE6roTelE9UPvKrbicecSp4Dq
+         VxRrO3T03pStFIC7xHPZsIH09wOINkX9okKcl4z9XxsfmQTfAO7KYHw03v7KJZKWeLMC
+         rsmQ==
+X-Gm-Message-State: AGi0Puakmnpx+zGdpU/PxdE6hEcUPow/hknMPsT/8KANvK64gLqwdUs7
+        Yyelh7SJTnKD9P8f8m7u6QnyhhRud9Q=
+X-Google-Smtp-Source: APiQypL5oE/VED78mXQNK2lpCPpXbsTvzU8LZEhJOekVFjrizDQlM7ZOW5kcY74RYyS9Cw06C3N9TQ==
+X-Received: by 2002:a1c:2007:: with SMTP id g7mr3268181wmg.70.1587020827961;
+        Thu, 16 Apr 2020 00:07:07 -0700 (PDT)
+Received: from dell ([95.149.164.124])
+        by smtp.gmail.com with ESMTPSA id r5sm2429200wmr.15.2020.04.16.00.07.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Apr 2020 00:07:07 -0700 (PDT)
+Date:   Thu, 16 Apr 2020 08:08:02 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Tang Bin <tangbin@cmss.chinamobile.com>
+Cc:     linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mfd:asic3:Delete redundant variable definition
+Message-ID: <20200416070802.GQ2167633@dell>
+References: <20200403042020.17452-1-tangbin@cmss.chinamobile.com>
 MIME-Version: 1.0
-In-Reply-To: <20200416033715.hscztwkxie2o5i3r@vireshk-i7>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- DRHQMAIL107.nvidia.com (10.27.9.16)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1587020719; bh=MEcFP8G3VxgwBAt3A1oRVQWL07CnwPJfWLc3Wywyjpg=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=Ym1Zof5kV4ZzNBXuhXOY6pCMuNXLHXbISr+b04QIKvNWYzdvddezwVuXMpid2BF5/
-         dPfkdQNOTOxwvEjv0+wd7hCnNKkb8FlFD8nTuS66Zsv/E+tYrpbTFQtsnTyCM0IHed
-         QJxsYrwBMxHjeNsU7m177c0g4VNPYU5YLdeyBsjHvmbkdksZ0xTbWVzZeIvZXdJgj7
-         qnnuPfvuQoOA+S/MvnDcKQZN5bkim4KueK5S7THIGk9WB1KWKuJPst/htuBdxTdd78
-         SsokaJxGXH+ZdN77GNGGGQ9I3cwDBWGmBrY6dMiePRVUIu9mpDj4o3swCIo5ZHNWFH
-         nsLq+/ogcmUUg==
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200403042020.17452-1-tangbin@cmss.chinamobile.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, 03 Apr 2020, Tang Bin wrote:
 
+> In this function, 'ret' is always assigned, even if 'pdata->leds'
+> don't carry out,it has already been assigned a value in the above
+> code, including '0',so it's redundant.
 
-On 16/04/20 9:07 AM, Viresh Kumar wrote:
-> External email: Use caution opening links or attachments
-> 
-> 
-> On 15-04-20, 16:55, Sumit Gupta wrote:
->>
->>
->> On 14/04/20 11:15 AM, Viresh Kumar wrote:
->>> External email: Use caution opening links or attachments
->>>
->>>
->>> On 13-04-20, 17:50, Sumit Gupta wrote:
->>>> This was done considering long delay value as explained previously.
->>>> Do you think that smp_call_function_single() would be better than work queue
->>>> here?
->>>
->>> Don't work with assumptions, you should test both and see which one
->>> works better. Workqueue should never be faster than
->>> smp_call_function_single() with my understanding.
->> Checked the time taken and its almost same in both cases.
->> Earlier we used smp_call_function_single(), but delay time period was small
->> in that SOC. In T194, the time period was more. So, this is an optimization
->> done because using work queue has advantage as interrupts will not be
->> disabled for that period.
-> 
-> Hmm, okay, keep the workqueue and mention the required details in a
-> comment for everyone to understand why the implementation is done that
-> way.
-> 
+Which line initialises/assigns 'ret' before this one?
 
-sure, thank you!
-
-> --
-> viresh
+> Signed-off-by: Tang Bin <tangbin@cmss.chinamobile.com>
+> ---
+>  drivers/mfd/asic3.c | 1 -
+>  1 file changed, 1 deletion(-)
 > 
+> diff --git a/drivers/mfd/asic3.c b/drivers/mfd/asic3.c
+> index a6bd2134c..cee7454b3 100644
+> --- a/drivers/mfd/asic3.c
+> +++ b/drivers/mfd/asic3.c
+> @@ -924,7 +924,6 @@ static int __init asic3_mfd_probe(struct platform_device *pdev,
+>  			goto out;
+>  	}
+>  
+> -	ret = 0;
+>  	if (pdata->leds) {
+>  		int i;
+>  
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
