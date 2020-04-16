@@ -2,234 +2,191 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D306AC2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:40:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADB25C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:40:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B7B4F21D93
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:40:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8882C21D7E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:40:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587048057;
+	bh=28OW14Pg6V+cY9SZW+S9pbIyd0BluxIjxSwJPQi4yws=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=B6SiOOihKjJNsyRv7MlPqZeD52woFALva5oN03HBfaf+XnWJwhbdGkJwgdJYzTXdk
+	 TsAkMPRqrQ7QDpnQQ0CQuZWMAdlRC7a/eliPEtMkx8UhH9mrFdp+pljz0cMxUEHEEZ
+	 yANcZWLmYxoLBMkzj1aApmdjqVxNa71TTcKSz2Hw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728083AbgDPOkw (ORCPT
+        id S2393384AbgDPOkl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:40:52 -0400
-Received: from mga03.intel.com ([134.134.136.65]:50382 "EHLO mga03.intel.com"
+        Thu, 16 Apr 2020 10:40:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48890 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2394351AbgDPOkj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 10:40:39 -0400
-IronPort-SDR: 5ZwiseOLGGV7W6Xrx/u+UqMxZwFgbKjo5HnNoIVwhjMp7fqEC+ve2VW5D6CfPNTRqoxSUthA/h
- boBs2gur9zAg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2020 07:40:38 -0700
-IronPort-SDR: JlyUbcayvN+Dj+yHk3BwZbC7Z2ryIM8yYu4rP6QhWbWfaF5YBMD2Lr5znLtlb70WzbL61zGkdr
- /V2Q4Gh+5E+w==
-X-IronPort-AV: E=Sophos;i="5.72,391,1580803200"; 
-   d="scan'208";a="427852526"
-Received: from likexu-mobl1.ccr.corp.intel.com (HELO [10.249.170.42]) ([10.249.170.42])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2020 07:40:36 -0700
-Subject: Re: [PATCH] KVM: x86/pmu: Support full width counting
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Andi Kleen <ak@linux.intel.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200408135325.3160-1-like.xu@linux.intel.com>
-From:   Like Xu <like.xu@linux.intel.com>
-Organization: Intel OTC
-Message-ID: <89f5464e-3bff-898f-f407-28dbba36aa60@linux.intel.com>
-Date:   Thu, 16 Apr 2020 22:40:34 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        id S2409468AbgDPOBf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 10:01:35 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 03EEC20786;
+        Thu, 16 Apr 2020 14:01:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587045694;
+        bh=28OW14Pg6V+cY9SZW+S9pbIyd0BluxIjxSwJPQi4yws=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=dYK+C+uXEjLmMFyzUemRLiKUK3xaThSc51KIE2VZlo1ZnHCXxcnVkSPpOzqbdZOCX
+         zFSZ8FkOyQ7bFsaBIJa7Marza7sFHHzy5/EZ7nVe3vNjHe4l8dXptBdcaymo8Qpxyq
+         CCIy8wdFzKmWNsIPPD92BGeNa92SC0nzPCyqNk18=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, David Gibson <david@gibson.dropbear.id.au>,
+        =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg@kaod.org>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH 5.6 240/254] powerpc/xive: Use XIVE_BAD_IRQ instead of zero to catch non configured IPIs
+Date:   Thu, 16 Apr 2020 15:25:29 +0200
+Message-Id: <20200416131355.484276649@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.1
+In-Reply-To: <20200416131325.804095985@linuxfoundation.org>
+References: <20200416131325.804095985@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <20200408135325.3160-1-like.xu@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Paolo,
+From: Cédric Le Goater <clg@kaod.org>
 
-If there is anything needs to be improved for this patch,
-please let me know.
+commit b1a504a6500df50e83b701b7946b34fce27ad8a3 upstream.
 
-Thanks,
-Like Xu
+When a CPU is brought up, an IPI number is allocated and recorded
+under the XIVE CPU structure. Invalid IPI numbers are tracked with
+interrupt number 0x0.
 
-On 2020/4/8 21:53, Like Xu wrote:
-> Intel CPUs have a new alternative MSR range (starting from MSR_IA32_PMC0)
-> for GP counters that allows writing the full counter width. Enable this
-> range from a new capability bit (IA32_PERF_CAPABILITIES.FW_WRITE[bit 13]).
-> 
-> The perf driver queries CPUID to get the counter width, and sign extends
-> the counter values as needed. The traditional MSRs always limit to 32bit,
-> even though the counter internally is larger (usually 48 bits).
-> 
-> When the new capability is set, use the alternative range which do not
-> have these restrictions. This lowers the overhead of perf stat slightly
-> because it has to do less interrupts to accumulate the counter value.
-> 
-> Signed-off-by: Like Xu <like.xu@linux.intel.com>
-> ---
->   arch/x86/include/asm/kvm_host.h |  1 +
->   arch/x86/kvm/vmx/capabilities.h | 15 +++++++++++++
->   arch/x86/kvm/vmx/pmu_intel.c    | 38 +++++++++++++++++++++++++++------
->   arch/x86/kvm/vmx/vmx.c          |  2 ++
->   4 files changed, 50 insertions(+), 6 deletions(-)
-> 
-> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-> index 42a2d0d3984a..1c2e3e79490b 100644
-> --- a/arch/x86/include/asm/kvm_host.h
-> +++ b/arch/x86/include/asm/kvm_host.h
-> @@ -481,6 +481,7 @@ struct kvm_pmu {
->   	u64 counter_bitmask[2];
->   	u64 global_ctrl_mask;
->   	u64 global_ovf_ctrl_mask;
-> +	u64 perf_capabilities;
->   	u64 reserved_bits;
->   	u8 version;
->   	struct kvm_pmc gp_counters[INTEL_PMC_MAX_GENERIC];
-> diff --git a/arch/x86/kvm/vmx/capabilities.h b/arch/x86/kvm/vmx/capabilities.h
-> index 8903475f751e..3624568633bd 100644
-> --- a/arch/x86/kvm/vmx/capabilities.h
-> +++ b/arch/x86/kvm/vmx/capabilities.h
-> @@ -367,4 +367,19 @@ static inline bool vmx_pt_mode_is_host_guest(void)
->   	return pt_mode == PT_MODE_HOST_GUEST;
->   }
->   
-> +#define PMU_CAP_FW_WRITE	(1ULL << 13)
-> +
-> +static inline u64 vmx_supported_perf_capabilities(void)
-> +{
-> +	u64 perf_cap = 0;
-> +
-> +	if (boot_cpu_has(X86_FEATURE_PDCM))
-> +		rdmsrl(MSR_IA32_PERF_CAPABILITIES, perf_cap);
-> +
-> +	/* Currently, KVM only support Full-Width Writes. */
-> +	perf_cap &= PMU_CAP_FW_WRITE;
-> +
-> +	return perf_cap;
-> +}
-> +
->   #endif /* __KVM_X86_VMX_CAPS_H */
-> diff --git a/arch/x86/kvm/vmx/pmu_intel.c b/arch/x86/kvm/vmx/pmu_intel.c
-> index 7c857737b438..99563d1ec854 100644
-> --- a/arch/x86/kvm/vmx/pmu_intel.c
-> +++ b/arch/x86/kvm/vmx/pmu_intel.c
-> @@ -150,6 +150,12 @@ static struct kvm_pmc *intel_rdpmc_ecx_to_pmc(struct kvm_vcpu *vcpu,
->   	return &counters[array_index_nospec(idx, num_counters)];
->   }
->   
-> +static inline bool full_width_writes_is_enabled(struct kvm_pmu *pmu)
-> +{
-> +	return (vmx_supported_perf_capabilities() & PMU_CAP_FW_WRITE) &&
-> +		(pmu->perf_capabilities & PMU_CAP_FW_WRITE);
-> +}
-> +
->   static bool intel_is_valid_msr(struct kvm_vcpu *vcpu, u32 msr)
->   {
->   	struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
-> @@ -162,10 +168,15 @@ static bool intel_is_valid_msr(struct kvm_vcpu *vcpu, u32 msr)
->   	case MSR_CORE_PERF_GLOBAL_OVF_CTRL:
->   		ret = pmu->version > 1;
->   		break;
-> +	case MSR_IA32_PERF_CAPABILITIES:
-> +		ret = guest_cpuid_has(vcpu, X86_FEATURE_PDCM);
-> +		break;
->   	default:
->   		ret = get_gp_pmc(pmu, msr, MSR_IA32_PERFCTR0) ||
->   			get_gp_pmc(pmu, msr, MSR_P6_EVNTSEL0) ||
-> -			get_fixed_pmc(pmu, msr);
-> +			get_fixed_pmc(pmu, msr) ||
-> +			(get_gp_pmc(pmu, msr, MSR_IA32_PMC0) &&
-> +				full_width_writes_is_enabled(pmu));
->   		break;
->   	}
->   
-> @@ -202,8 +213,12 @@ static int intel_pmu_get_msr(struct kvm_vcpu *vcpu, u32 msr, u64 *data)
->   	case MSR_CORE_PERF_GLOBAL_OVF_CTRL:
->   		*data = pmu->global_ovf_ctrl;
->   		return 0;
-> +	case MSR_IA32_PERF_CAPABILITIES:
-> +		*data = pmu->perf_capabilities;
-> +		return 0;
->   	default:
-> -		if ((pmc = get_gp_pmc(pmu, msr, MSR_IA32_PERFCTR0))) {
-> +		if ((pmc = get_gp_pmc(pmu, msr, MSR_IA32_PERFCTR0))
-> +			|| (pmc = get_gp_pmc(pmu, msr, MSR_IA32_PMC0))) {
->   			u64 val = pmc_read_counter(pmc);
->   			*data = val & pmu->counter_bitmask[KVM_PMC_GP];
->   			return 0;
-> @@ -258,9 +273,13 @@ static int intel_pmu_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
->   			return 0;
->   		}
->   		break;
-> +	case MSR_IA32_PERF_CAPABILITIES:
-> +		return 1; /* RO MSR */
->   	default:
-> -		if ((pmc = get_gp_pmc(pmu, msr, MSR_IA32_PERFCTR0))) {
-> -			if (!msr_info->host_initiated)
-> +		if ((pmc = get_gp_pmc(pmu, msr, MSR_IA32_PERFCTR0))
-> +			|| (pmc = get_gp_pmc(pmu, msr, MSR_IA32_PMC0))) {
-> +			if (!msr_info->host_initiated &&
-> +				!full_width_writes_is_enabled(pmu))
->   				data = (s64)(s32)data;
->   			pmc->counter += data - pmc_read_counter(pmc);
->   			if (pmc->perf_event)
-> @@ -303,15 +322,18 @@ static void intel_pmu_refresh(struct kvm_vcpu *vcpu)
->   
->   	entry = kvm_find_cpuid_entry(vcpu, 0xa, 0);
->   	if (!entry)
-> -		return;
-> +		goto end;
->   	eax.full = entry->eax;
->   	edx.full = entry->edx;
->   
->   	pmu->version = eax.split.version_id;
->   	if (!pmu->version)
-> -		return;
-> +		goto end;
->   
->   	perf_get_x86_pmu_capability(&x86_pmu);
-> +	pmu->perf_capabilities = vmx_supported_perf_capabilities();
-> +	if (!pmu->perf_capabilities)
-> +		guest_cpuid_clear(vcpu, X86_FEATURE_PDCM);
->   
->   	pmu->nr_arch_gp_counters = min_t(int, eax.split.num_counters,
->   					 x86_pmu.num_counters_gp);
-> @@ -351,6 +373,10 @@ static void intel_pmu_refresh(struct kvm_vcpu *vcpu)
->   		INTEL_PMC_MAX_GENERIC, pmu->nr_arch_fixed_counters);
->   
->   	nested_vmx_pmu_entry_exit_ctls_update(vcpu);
-> +	return;
-> +
-> +end:
-> +	guest_cpuid_clear(vcpu, X86_FEATURE_PDCM);
->   }
->   
->   static void intel_pmu_init(struct kvm_vcpu *vcpu)
-> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> index 4f844257a72d..abc0f15a4de5 100644
-> --- a/arch/x86/kvm/vmx/vmx.c
-> +++ b/arch/x86/kvm/vmx/vmx.c
-> @@ -7112,6 +7112,8 @@ static __init void vmx_set_cpu_caps(void)
->   		kvm_cpu_cap_check_and_set(X86_FEATURE_INVPCID);
->   	if (vmx_pt_mode_is_host_guest())
->   		kvm_cpu_cap_check_and_set(X86_FEATURE_INTEL_PT);
-> +	if (vmx_supported_perf_capabilities())
-> +		kvm_cpu_cap_check_and_set(X86_FEATURE_PDCM);
->   
->   	/* PKU is not yet implemented for shadow paging. */
->   	if (enable_ept && boot_cpu_has(X86_FEATURE_OSPKE))
-> 
+On the PowerNV platform, the interrupt number space starts at 0x10 and
+this works fine. However, on the sPAPR platform, it is possible to
+allocate the interrupt number 0x0 and this raises an issue when CPU 0
+is unplugged. The XIVE spapr driver tracks allocated interrupt numbers
+in a bitmask and it is not correctly updated when interrupt number 0x0
+is freed. It stays allocated and it is then impossible to reallocate.
+
+Fix by using the XIVE_BAD_IRQ value instead of zero on both platforms.
+
+Reported-by: David Gibson <david@gibson.dropbear.id.au>
+Fixes: eac1e731b59e ("powerpc/xive: guest exploitation of the XIVE interrupt controller")
+Cc: stable@vger.kernel.org # v4.14+
+Signed-off-by: Cédric Le Goater <clg@kaod.org>
+Reviewed-by: David Gibson <david@gibson.dropbear.id.au>
+Tested-by: David Gibson <david@gibson.dropbear.id.au>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20200306150143.5551-2-clg@kaod.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ arch/powerpc/sysdev/xive/common.c        |   12 +++---------
+ arch/powerpc/sysdev/xive/native.c        |    4 ++--
+ arch/powerpc/sysdev/xive/spapr.c         |    4 ++--
+ arch/powerpc/sysdev/xive/xive-internal.h |    7 +++++++
+ 4 files changed, 14 insertions(+), 13 deletions(-)
+
+--- a/arch/powerpc/sysdev/xive/common.c
++++ b/arch/powerpc/sysdev/xive/common.c
+@@ -68,13 +68,6 @@ static u32 xive_ipi_irq;
+ /* Xive state for each CPU */
+ static DEFINE_PER_CPU(struct xive_cpu *, xive_cpu);
+ 
+-/*
+- * A "disabled" interrupt should never fire, to catch problems
+- * we set its logical number to this
+- */
+-#define XIVE_BAD_IRQ		0x7fffffff
+-#define XIVE_MAX_IRQ		(XIVE_BAD_IRQ - 1)
+-
+ /* An invalid CPU target */
+ #define XIVE_INVALID_TARGET	(-1)
+ 
+@@ -1150,7 +1143,7 @@ static int xive_setup_cpu_ipi(unsigned i
+ 	xc = per_cpu(xive_cpu, cpu);
+ 
+ 	/* Check if we are already setup */
+-	if (xc->hw_ipi != 0)
++	if (xc->hw_ipi != XIVE_BAD_IRQ)
+ 		return 0;
+ 
+ 	/* Grab an IPI from the backend, this will populate xc->hw_ipi */
+@@ -1187,7 +1180,7 @@ static void xive_cleanup_cpu_ipi(unsigne
+ 	/* Disable the IPI and free the IRQ data */
+ 
+ 	/* Already cleaned up ? */
+-	if (xc->hw_ipi == 0)
++	if (xc->hw_ipi == XIVE_BAD_IRQ)
+ 		return;
+ 
+ 	/* Mask the IPI */
+@@ -1343,6 +1336,7 @@ static int xive_prepare_cpu(unsigned int
+ 		if (np)
+ 			xc->chip_id = of_get_ibm_chip_id(np);
+ 		of_node_put(np);
++		xc->hw_ipi = XIVE_BAD_IRQ;
+ 
+ 		per_cpu(xive_cpu, cpu) = xc;
+ 	}
+--- a/arch/powerpc/sysdev/xive/native.c
++++ b/arch/powerpc/sysdev/xive/native.c
+@@ -312,7 +312,7 @@ static void xive_native_put_ipi(unsigned
+ 	s64 rc;
+ 
+ 	/* Free the IPI */
+-	if (!xc->hw_ipi)
++	if (xc->hw_ipi == XIVE_BAD_IRQ)
+ 		return;
+ 	for (;;) {
+ 		rc = opal_xive_free_irq(xc->hw_ipi);
+@@ -320,7 +320,7 @@ static void xive_native_put_ipi(unsigned
+ 			msleep(OPAL_BUSY_DELAY_MS);
+ 			continue;
+ 		}
+-		xc->hw_ipi = 0;
++		xc->hw_ipi = XIVE_BAD_IRQ;
+ 		break;
+ 	}
+ }
+--- a/arch/powerpc/sysdev/xive/spapr.c
++++ b/arch/powerpc/sysdev/xive/spapr.c
+@@ -560,11 +560,11 @@ static int xive_spapr_get_ipi(unsigned i
+ 
+ static void xive_spapr_put_ipi(unsigned int cpu, struct xive_cpu *xc)
+ {
+-	if (!xc->hw_ipi)
++	if (xc->hw_ipi == XIVE_BAD_IRQ)
+ 		return;
+ 
+ 	xive_irq_bitmap_free(xc->hw_ipi);
+-	xc->hw_ipi = 0;
++	xc->hw_ipi = XIVE_BAD_IRQ;
+ }
+ #endif /* CONFIG_SMP */
+ 
+--- a/arch/powerpc/sysdev/xive/xive-internal.h
++++ b/arch/powerpc/sysdev/xive/xive-internal.h
+@@ -5,6 +5,13 @@
+ #ifndef __XIVE_INTERNAL_H
+ #define __XIVE_INTERNAL_H
+ 
++/*
++ * A "disabled" interrupt should never fire, to catch problems
++ * we set its logical number to this
++ */
++#define XIVE_BAD_IRQ		0x7fffffff
++#define XIVE_MAX_IRQ		(XIVE_BAD_IRQ - 1)
++
+ /* Each CPU carry one of these with various per-CPU state */
+ struct xive_cpu {
+ #ifdef CONFIG_SMP
+
 
