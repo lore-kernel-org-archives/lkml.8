@@ -5,50 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63A1BC2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:41:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D854C2BB85
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:42:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 40A462076D
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:41:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED9F5214D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:42:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587044516;
-	bh=Tn71Trm0DME8p2CUNER4Dh2CEke6Q6TIQHnRwW+It9Q=;
+	s=default; t=1587044524;
+	bh=3Vs63+aEjIvgdM5+/6W7uU0ycfp6fA/ZX0hVu/dRn94=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CSjxUl+9/JZiIAEQsAx31p40/AZMoox+aNCMnHDtGWgf4buWt4yi69HqxxKx6EP8j
-	 w2fxHRXsdm9e9I2guCs9U2SHLDPzGNrw8C1/wPVs/J0biZpMllkZVc3lFrXTeOIEA3
-	 jzu7xQlAQf1Xc63lTt0gXqG7+qRt1fsOP0PVDLxM=
+	b=2b7EEdgdnham7OgGuDhIw3y2W1OeTaXIKPLvqg/melf8r1Bg4SMyxW+Tc92zLxv1X
+	 Mh6dQJ2nGnBmvPW2NY/CcCg+NgPQhxxxyGMWNP9LwsAELmJEdxHjNCjG4tO/HnsvOU
+	 CVrEqZ5MlUku3G7GIymLXGGdKLh2MNoD06ed3G3U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2898380AbgDPNly (ORCPT
+        id S1726386AbgDPNmB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 09:41:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44146 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 09:42:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43732 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2896611AbgDPNc6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2896596AbgDPNc6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 16 Apr 2020 09:32:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 409122227F;
-        Thu, 16 Apr 2020 13:32:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 51CF822245;
+        Thu, 16 Apr 2020 13:32:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587043956;
-        bh=Tn71Trm0DME8p2CUNER4Dh2CEke6Q6TIQHnRwW+It9Q=;
+        s=default; t=1587043934;
+        bh=3Vs63+aEjIvgdM5+/6W7uU0ycfp6fA/ZX0hVu/dRn94=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mBN8hHQszbeF+AD3eRilKn20y0qT94FUNegQ4HpL2ctrHjv14GmWBJR+5BzEbzDr2
-         SeX4yHnfCcShd0Q5bakTIMnrdpqPnsHl2O6hglb2LTJH6dDi1zbyneYZeurxp/C0Sz
-         QnMqT01fWNJeSmVfr2YK1XigbLr1EpUtv1dbXmiw=
+        b=fIWDnKr2GEIUF0kjH8HPcq8vJ5xGlQZgZ2ks/ABfUBZEfJH/75CCfFgKklMk7pfZQ
+         8JwBItdX1yVbP5c60OBBizzWtpqEQJyhrWcqOjsltzjST6ywy0DtvNRW3ANrTkVNb0
+         a3MDOlArby/ikA6USAFVcscCAYW/WKhAgg2aEj2o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yintian Tao <yttao@amd.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
+        stable@vger.kernel.org, Greentime Hu <greentime.hu@sifive.com>,
+        Palmer Dabbelt <palmerdabbelt@google.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 022/257] drm/scheduler: fix rare NULL ptr race
-Date:   Thu, 16 Apr 2020 15:21:13 +0200
-Message-Id: <20200416131328.715507620@linuxfoundation.org>
+Subject: [PATCH 5.5 014/257] riscv: uaccess should be used in nommu mode
+Date:   Thu, 16 Apr 2020 15:21:05 +0200
+Message-Id: <20200416131327.638396149@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.891903893@linuxfoundation.org>
 References: <20200416131325.891903893@linuxfoundation.org>
@@ -61,72 +60,132 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yintian Tao <yttao@amd.com>
+From: Greentime Hu <greentime.hu@sifive.com>
 
-[ Upstream commit 3c0fdf3302cb4f186c871684eac5c407a107e480 ]
+[ Upstream commit adccfb1a805ea84d2db38eb53032533279bdaa97 ]
 
-There is one one corner case at dma_fence_signal_locked
-which will raise the NULL pointer problem just like below.
-->dma_fence_signal
-    ->dma_fence_signal_locked
-	->test_and_set_bit
-here trigger dma_fence_release happen due to the zero of fence refcount.
+It might have the unaligned access exception when trying to exchange data
+with user space program. In this case, it failed in tty_ioctl(). Therefore
+we should enable uaccess.S for NOMMU mode since the generic code doesn't
+handle the unaligned access cases.
 
-->dma_fence_put
-    ->dma_fence_release
-	->drm_sched_fence_release_scheduled
-	    ->call_rcu
-here make the union fled “cb_list” at finished fence
-to NULL because struct rcu_head contains two pointer
-which is same as struct list_head cb_list
+   0x8013a212 <tty_ioctl+462>:  ld      a5,460(s1)
 
-Therefore, to hold the reference of finished fence at drm_sched_process_job
-to prevent the null pointer during finished fence dma_fence_signal
+[    0.115279] Oops - load address misaligned [#1]
+[    0.115284] CPU: 0 PID: 29 Comm: sh Not tainted 5.4.0-rc5-00020-gb4c27160d562-dirty #36
+[    0.115294] epc: 000000008013a212 ra : 000000008013a212 sp : 000000008f48dd50
+[    0.115303]  gp : 00000000801cac28 tp : 000000008fb80000 t0 : 00000000000000e8
+[    0.115312]  t1 : 000000008f58f108 t2 : 0000000000000009 s0 : 000000008f48ddf0
+[    0.115321]  s1 : 000000008f8c6220 a0 : 0000000000000001 a1 : 000000008f48dd28
+[    0.115330]  a2 : 000000008fb80000 a3 : 00000000801a7398 a4 : 0000000000000000
+[    0.115339]  a5 : 0000000000000000 a6 : 000000008f58f0c6 a7 : 000000000000001d
+[    0.115348]  s2 : 000000008f8c6308 s3 : 000000008f78b7c8 s4 : 000000008fb834c0
+[    0.115357]  s5 : 0000000000005413 s6 : 0000000000000000 s7 : 000000008f58f2b0
+[    0.115366]  s8 : 000000008f858008 s9 : 000000008f776818 s10: 000000008f776830
+[    0.115375]  s11: 000000008fb840a8 t3 : 1999999999999999 t4 : 000000008f78704c
+[    0.115384]  t5 : 0000000000000005 t6 : 0000000000000002
+[    0.115391] status: 0000000200001880 badaddr: 000000008f8c63ec cause: 0000000000000004
+[    0.115401] ---[ end trace 00d490c6a8b6c9ac ]---
 
-[  732.912867] BUG: kernel NULL pointer dereference, address: 0000000000000008
-[  732.914815] #PF: supervisor write access in kernel mode
-[  732.915731] #PF: error_code(0x0002) - not-present page
-[  732.916621] PGD 0 P4D 0
-[  732.917072] Oops: 0002 [#1] SMP PTI
-[  732.917682] CPU: 7 PID: 0 Comm: swapper/7 Tainted: G           OE     5.4.0-rc7 #1
-[  732.918980] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.8.2-0-g33fbe13 by qemu-project.org 04/01/2014
-[  732.920906] RIP: 0010:dma_fence_signal_locked+0x3e/0x100
-[  732.938569] Call Trace:
-[  732.939003]  <IRQ>
-[  732.939364]  dma_fence_signal+0x29/0x50
-[  732.940036]  drm_sched_fence_finished+0x12/0x20 [gpu_sched]
-[  732.940996]  drm_sched_process_job+0x34/0xa0 [gpu_sched]
-[  732.941910]  dma_fence_signal_locked+0x85/0x100
-[  732.942692]  dma_fence_signal+0x29/0x50
-[  732.943457]  amdgpu_fence_process+0x99/0x120 [amdgpu]
-[  732.944393]  sdma_v4_0_process_trap_irq+0x81/0xa0 [amdgpu]
+This failure could be fixed after this patch applied.
 
-v2: hold the finished fence at drm_sched_process_job instead of
-    amdgpu_fence_process
-v3: resume the blank line
+[    0.002282] Run /init as init process
+Initializing random number generator... [    0.005573] random: dd: uninitialized urandom read (512 bytes read)
+done.
 
-Signed-off-by: Yintian Tao <yttao@amd.com>
-Reviewed-by: Christian König <christian.koenig@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Welcome to Buildroot
+buildroot login: root
+Password:
+Jan  1 00:00:00 login[62]: root login on 'ttySIF0'
+~ #
+
+Signed-off-by: Greentime Hu <greentime.hu@sifive.com>
+Reviewed-by: Palmer Dabbelt <palmerdabbelt@google.com>
+Signed-off-by: Palmer Dabbelt <palmerdabbelt@google.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/scheduler/sched_main.c | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/riscv/Kconfig               |  1 -
+ arch/riscv/include/asm/uaccess.h | 36 ++++++++++++++++----------------
+ arch/riscv/lib/Makefile          |  2 +-
+ 3 files changed, 19 insertions(+), 20 deletions(-)
 
-diff --git a/drivers/gpu/drm/scheduler/sched_main.c b/drivers/gpu/drm/scheduler/sched_main.c
-index 3c57e84222ca9..5bb9feddbfd6b 100644
---- a/drivers/gpu/drm/scheduler/sched_main.c
-+++ b/drivers/gpu/drm/scheduler/sched_main.c
-@@ -632,7 +632,9 @@ static void drm_sched_process_job(struct dma_fence *f, struct dma_fence_cb *cb)
+diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+index 1be11c23fa335..50cfa272f9e3d 100644
+--- a/arch/riscv/Kconfig
++++ b/arch/riscv/Kconfig
+@@ -52,7 +52,6 @@ config RISCV
+ 	select PCI_DOMAINS_GENERIC if PCI
+ 	select PCI_MSI if PCI
+ 	select RISCV_TIMER
+-	select UACCESS_MEMCPY if !MMU
+ 	select GENERIC_IRQ_MULTI_HANDLER
+ 	select GENERIC_ARCH_TOPOLOGY if SMP
+ 	select ARCH_HAS_PTE_SPECIAL
+diff --git a/arch/riscv/include/asm/uaccess.h b/arch/riscv/include/asm/uaccess.h
+index f462a183a9c23..8ce9d607b53dc 100644
+--- a/arch/riscv/include/asm/uaccess.h
++++ b/arch/riscv/include/asm/uaccess.h
+@@ -11,6 +11,24 @@
+ /*
+  * User space memory access functions
+  */
++
++extern unsigned long __must_check __asm_copy_to_user(void __user *to,
++	const void *from, unsigned long n);
++extern unsigned long __must_check __asm_copy_from_user(void *to,
++	const void __user *from, unsigned long n);
++
++static inline unsigned long
++raw_copy_from_user(void *to, const void __user *from, unsigned long n)
++{
++	return __asm_copy_from_user(to, from, n);
++}
++
++static inline unsigned long
++raw_copy_to_user(void __user *to, const void *from, unsigned long n)
++{
++	return __asm_copy_to_user(to, from, n);
++}
++
+ #ifdef CONFIG_MMU
+ #include <linux/errno.h>
+ #include <linux/compiler.h>
+@@ -367,24 +385,6 @@ do {								\
+ 		-EFAULT;					\
+ })
  
- 	trace_drm_sched_process_job(s_fence);
+-
+-extern unsigned long __must_check __asm_copy_to_user(void __user *to,
+-	const void *from, unsigned long n);
+-extern unsigned long __must_check __asm_copy_from_user(void *to,
+-	const void __user *from, unsigned long n);
+-
+-static inline unsigned long
+-raw_copy_from_user(void *to, const void __user *from, unsigned long n)
+-{
+-	return __asm_copy_from_user(to, from, n);
+-}
+-
+-static inline unsigned long
+-raw_copy_to_user(void __user *to, const void *from, unsigned long n)
+-{
+-	return __asm_copy_to_user(to, from, n);
+-}
+-
+ extern long strncpy_from_user(char *dest, const char __user *src, long count);
  
-+	dma_fence_get(&s_fence->finished);
- 	drm_sched_fence_finished(s_fence);
-+	dma_fence_put(&s_fence->finished);
- 	wake_up_interruptible(&sched->wake_up_worker);
- }
- 
+ extern long __must_check strlen_user(const char __user *str);
+diff --git a/arch/riscv/lib/Makefile b/arch/riscv/lib/Makefile
+index 47e7a82044608..0d0db80800c4e 100644
+--- a/arch/riscv/lib/Makefile
++++ b/arch/riscv/lib/Makefile
+@@ -2,5 +2,5 @@
+ lib-y			+= delay.o
+ lib-y			+= memcpy.o
+ lib-y			+= memset.o
+-lib-$(CONFIG_MMU)	+= uaccess.o
++lib-y			+= uaccess.o
+ lib-$(CONFIG_64BIT)	+= tishift.o
 -- 
 2.20.1
 
