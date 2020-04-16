@@ -2,198 +2,128 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED04BC2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:24:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1B1AC352BE
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:24:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C56CB206D6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:24:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9051522244
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:24:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587050641;
-	bh=OUkSnEZhEGuu1K9o5YcKxKzW0scZgqC1euBVD3hJwOg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=V5grrGKA+IjVRiVo2/LEdVVEaJT0sZi5p0ev59Bz+O9YVZDxPzzLiWaUjhIl0XxNa
-	 4X62EwiKgxTO3EIjVEOkRjIAVUDgB6i0H20ETRdctD4hzErCXv39YHkipEET60QH7K
-	 TAXeLhgFAt+nhp9Pi0hvsVIojyppvcln6iPSnfMI=
+	s=default; t=1587050642;
+	bh=NZWRfbKCU3e1vKz9ksF25BpNuwFMYPJivYt57TEZYUM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=e3fyCZNeeuk9cy9zmRuz5WHeBcpxxcMisXdDZSMzy6fE4LblDjYwhLOcTbrZzzdjf
+	 1HmjEV/iQKcU496y1f1To0j3mz+gxOBsimMZxT6TPUgP35EDCP9xE1aJVaZYyvM2wD
+	 eB+KLdNwy4OTAElsn1HPw/35tgQ0TiA3gzn5c3Ik=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2633591AbgDPPXz (ORCPT
+        id S2634215AbgDPPX5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:23:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58194 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 11:23:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37410 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2898470AbgDPNo7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:44:59 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        id S2395166AbgDPPXr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 11:23:47 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 434D020732;
-        Thu, 16 Apr 2020 13:44:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6B1A7206D6;
+        Thu, 16 Apr 2020 15:23:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044698;
-        bh=OUkSnEZhEGuu1K9o5YcKxKzW0scZgqC1euBVD3hJwOg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VaKLlDwIxhUI2TX4cQyqwyV2ynEV9A0Ze+J54t7g7Isip+AbQ4YrSJAdr1oQySMiH
-         jgImE3fbuDPuq4dk8faPkex4w/K8jIHFvztAo0vdE0FkUm1lQxi+lETZHFpnUajFsU
-         Ey4zRlsAdu3umNf9P0xQYJl+nUInmCVA+qC904/c=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jeff Mahoney <jeffm@suse.com>,
-        Qu Wenruo <wqu@suse.com>, David Sterba <dsterba@suse.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 065/232] btrfs: qgroup: ensure qgroup_rescan_running is only set when the worker is at least queued
-Date:   Thu, 16 Apr 2020 15:22:39 +0200
-Message-Id: <20200416131323.494179904@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200416131316.640996080@linuxfoundation.org>
-References: <20200416131316.640996080@linuxfoundation.org>
-User-Agent: quilt/0.66
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        s=default; t=1587050627;
+        bh=NZWRfbKCU3e1vKz9ksF25BpNuwFMYPJivYt57TEZYUM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=Ivxj3U7WYuce2CfCor9Ix8Kd4Azv+1Cs6CbH5sq7vsrsKStmg6SwG679WHI+sa1rX
+         wdUqoVuEbQq2dkKifgpk2AGxmBXpl6oEZx9KZGtoOKHr+zG+7xtMNroa6c4cPoig7J
+         KbqoEwfwBgTO1bBD3w1FQhgZ9B5XYpYzuZmQQtiA=
+Date:   Thu, 16 Apr 2020 16:23:44 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Matthias Blankertz <matthias.blankertz@cetitec.com>
+Cc:     alsa-devel@alsa-project.org,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>, Takashi Iwai <tiwai@suse.com>
+Subject: Applied "ASoC: rsnd: Fix HDMI channel mapping for multi-SSI mode" to the asoc tree
+In-Reply-To:  <20200415141017.384017-3-matthias.blankertz@cetitec.com>
+Message-Id:  <applied-20200415141017.384017-3-matthias.blankertz@cetitec.com>
+X-Patchwork-Hint: ignore
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qu Wenruo <wqu@suse.com>
+The patch
 
-[ Upstream commit d61acbbf54c612ea9bf67eed609494cda0857b3a ]
+   ASoC: rsnd: Fix HDMI channel mapping for multi-SSI mode
 
-[BUG]
-There are some reports about btrfs wait forever to unmount itself, with
-the following call trace:
+has been applied to the asoc tree at
 
-  INFO: task umount:4631 blocked for more than 491 seconds.
-        Tainted: G               X  5.3.8-2-default #1
-  "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-  umount          D    0  4631   3337 0x00000000
-  Call Trace:
-  ([<00000000174adf7a>] __schedule+0x342/0x748)
-   [<00000000174ae3ca>] schedule+0x4a/0xd8
-   [<00000000174b1f08>] schedule_timeout+0x218/0x420
-   [<00000000174af10c>] wait_for_common+0x104/0x1d8
-   [<000003ff804d6994>] btrfs_qgroup_wait_for_completion+0x84/0xb0 [btrfs]
-   [<000003ff8044a616>] close_ctree+0x4e/0x380 [btrfs]
-   [<0000000016fa3136>] generic_shutdown_super+0x8e/0x158
-   [<0000000016fa34d6>] kill_anon_super+0x26/0x40
-   [<000003ff8041ba88>] btrfs_kill_super+0x28/0xc8 [btrfs]
-   [<0000000016fa39f8>] deactivate_locked_super+0x68/0x98
-   [<0000000016fcb198>] cleanup_mnt+0xc0/0x140
-   [<0000000016d6a846>] task_work_run+0xc6/0x110
-   [<0000000016d04f76>] do_notify_resume+0xae/0xb8
-   [<00000000174b30ae>] system_call+0xe2/0x2c8
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
 
-[CAUSE]
-The problem happens when we have called qgroup_rescan_init(), but
-not queued the worker. It can be caused mostly by error handling.
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
 
-	Qgroup ioctl thread		|	Unmount thread
-----------------------------------------+-----------------------------------
-					|
-btrfs_qgroup_rescan()			|
-|- qgroup_rescan_init()			|
-|  |- qgroup_rescan_running = true;	|
-|					|
-|- trans = btrfs_join_transaction()	|
-|  Some error happened			|
-|					|
-|- btrfs_qgroup_rescan() returns error	|
-   But qgroup_rescan_running == true;	|
-					| close_ctree()
-					| |- btrfs_qgroup_wait_for_completion()
-					|    |- running == true;
-					|    |- wait_for_completion();
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
-btrfs_qgroup_rescan_worker is never queued, thus no one is going to wake
-up close_ctree() and we get a deadlock.
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
-All involved qgroup_rescan_init() callers are:
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
-- btrfs_qgroup_rescan()
-  The example above. It's possible to trigger the deadlock when error
-  happened.
+Thanks,
+Mark
 
-- btrfs_quota_enable()
-  Not possible. Just after qgroup_rescan_init() we queue the work.
+From b94e164759b82d0c1c80d4b1c8f12c9bee83f11d Mon Sep 17 00:00:00 2001
+From: Matthias Blankertz <matthias.blankertz@cetitec.com>
+Date: Wed, 15 Apr 2020 16:10:17 +0200
+Subject: [PATCH] ASoC: rsnd: Fix HDMI channel mapping for multi-SSI mode
 
-- btrfs_read_qgroup_config()
-  It's possible to trigger the deadlock. It only init the work, the
-  work queueing happens in btrfs_qgroup_rescan_resume().
-  Thus if error happened in between, deadlock is possible.
+The HDMI?_SEL register maps up to four stereo SSI data lanes onto the
+sdata[0..3] inputs of the HDMI output block. The upper half of the
+register contains four blocks of 4 bits, with the most significant
+controlling the sdata3 line and the least significant the sdata0 line.
 
-We shouldn't set fs_info->qgroup_rescan_running just in
-qgroup_rescan_init(), as at that stage we haven't yet queued qgroup
-rescan worker to run.
+The shift calculation has an off-by-one error, causing the parent SSI to
+be mapped to sdata3, the first multi-SSI child to sdata0 and so forth.
+As the parent SSI transmits the stereo L/R channels, and the HDMI core
+expects it on the sdata0 line, this causes no audio to be output when
+playing stereo audio on a multichannel capable HDMI out, and
+multichannel audio has permutated channels.
 
-[FIX]
-Set qgroup_rescan_running before queueing the work, so that we ensure
-the rescan work is queued when we wait for it.
+Fix the shift calculation to map the parent SSI to sdata0, the first
+child to sdata1 etc.
 
-Fixes: 8d9eddad1946 ("Btrfs: fix qgroup rescan worker initialization")
-Signed-off-by: Jeff Mahoney <jeffm@suse.com>
-[ Change subject and cause analyse, use a smaller fix ]
-Signed-off-by: Qu Wenruo <wqu@suse.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Matthias Blankertz <matthias.blankertz@cetitec.com>
+Acked-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Link: https://lore.kernel.org/r/20200415141017.384017-3-matthias.blankertz@cetitec.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- fs/btrfs/qgroup.c | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+ sound/soc/sh/rcar/ssiu.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/btrfs/qgroup.c b/fs/btrfs/qgroup.c
-index 286c8c11c8d32..590defdf88609 100644
---- a/fs/btrfs/qgroup.c
-+++ b/fs/btrfs/qgroup.c
-@@ -1030,6 +1030,7 @@ out_add_root:
- 	ret = qgroup_rescan_init(fs_info, 0, 1);
- 	if (!ret) {
- 	        qgroup_rescan_zero_tracking(fs_info);
-+		fs_info->qgroup_rescan_running = true;
- 	        btrfs_queue_work(fs_info->qgroup_rescan_workers,
- 	                         &fs_info->qgroup_rescan_work);
- 	}
-@@ -3276,7 +3277,6 @@ qgroup_rescan_init(struct btrfs_fs_info *fs_info, u64 progress_objectid,
- 		sizeof(fs_info->qgroup_rescan_progress));
- 	fs_info->qgroup_rescan_progress.objectid = progress_objectid;
- 	init_completion(&fs_info->qgroup_rescan_completion);
--	fs_info->qgroup_rescan_running = true;
+diff --git a/sound/soc/sh/rcar/ssiu.c b/sound/soc/sh/rcar/ssiu.c
+index f35d88211887..9c7c3e7539c9 100644
+--- a/sound/soc/sh/rcar/ssiu.c
++++ b/sound/soc/sh/rcar/ssiu.c
+@@ -221,7 +221,7 @@ static int rsnd_ssiu_init_gen2(struct rsnd_mod *mod,
+ 			i;
  
- 	spin_unlock(&fs_info->qgroup_lock);
- 	mutex_unlock(&fs_info->qgroup_rescan_lock);
-@@ -3341,8 +3341,11 @@ btrfs_qgroup_rescan(struct btrfs_fs_info *fs_info)
- 
- 	qgroup_rescan_zero_tracking(fs_info);
- 
-+	mutex_lock(&fs_info->qgroup_rescan_lock);
-+	fs_info->qgroup_rescan_running = true;
- 	btrfs_queue_work(fs_info->qgroup_rescan_workers,
- 			 &fs_info->qgroup_rescan_work);
-+	mutex_unlock(&fs_info->qgroup_rescan_lock);
- 
- 	return 0;
- }
-@@ -3378,9 +3381,13 @@ int btrfs_qgroup_wait_for_completion(struct btrfs_fs_info *fs_info,
- void
- btrfs_qgroup_rescan_resume(struct btrfs_fs_info *fs_info)
- {
--	if (fs_info->qgroup_flags & BTRFS_QGROUP_STATUS_FLAG_RESCAN)
-+	if (fs_info->qgroup_flags & BTRFS_QGROUP_STATUS_FLAG_RESCAN) {
-+		mutex_lock(&fs_info->qgroup_rescan_lock);
-+		fs_info->qgroup_rescan_running = true;
- 		btrfs_queue_work(fs_info->qgroup_rescan_workers,
- 				 &fs_info->qgroup_rescan_work);
-+		mutex_unlock(&fs_info->qgroup_rescan_lock);
-+	}
- }
- 
- /*
+ 		for_each_rsnd_mod_array(i, pos, io, rsnd_ssi_array) {
+-			shift	= (i * 4) + 16;
++			shift	= (i * 4) + 20;
+ 			val	= (val & ~(0xF << shift)) |
+ 				rsnd_mod_id(pos) << shift;
+ 		}
 -- 
 2.20.1
-
-
 
