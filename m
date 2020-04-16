@@ -2,74 +2,108 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28063C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 20:48:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 960FAC352BE
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 20:50:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F41BB2054F
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 20:48:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F73A22209
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 20:50:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727994AbgDPUs5 (ORCPT
+        id S1728033AbgDPUuJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 16:48:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39864 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725894AbgDPUs4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 16:48:56 -0400
-Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9802AC061A0C;
-        Thu, 16 Apr 2020 13:48:56 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 627C412757E6A;
-        Thu, 16 Apr 2020 13:48:55 -0700 (PDT)
-Date:   Thu, 16 Apr 2020 13:48:54 -0700 (PDT)
-Message-Id: <20200416.134854.89754180705215688.davem@davemloft.net>
-To:     f.fainelli@gmail.com
-Cc:     netdev@vger.kernel.org, olteanv@gmail.com, peppe.cavallaro@st.com,
-        alexandre.torgue@st.com, joabreu@synopsys.com, mripard@kernel.org,
-        wens@csie.org, mcoquelin.stm32@gmail.com,
-        linux-arm-kernel@lists.infradead.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net] net: stmmac: dwmac-sunxi: Provide TX and RX fifo
- sizes
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200414223952.5886-1-f.fainelli@gmail.com>
-References: <20200414223952.5886-1-f.fainelli@gmail.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 16 Apr 2020 13:48:56 -0700 (PDT)
+        Thu, 16 Apr 2020 16:50:09 -0400
+Received: from mga03.intel.com ([134.134.136.65]:8503 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725894AbgDPUuJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 16:50:09 -0400
+IronPort-SDR: E5mqK2WsVS/QOzxswCbW9IJJB4W7nG03D8zEo5UdJ7zoPhPf3gaXTJSn8kjqgdTAJ+JLWEZH3k
+ JR1YeTCBlKGQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2020 13:50:08 -0700
+IronPort-SDR: tsbdtrwfkw7tAIEmfJ7QQq9Y8UJvaBOkEdHc7PiHXgj3Z453E22m+g3EVTagYeF+1joRL63P1b
+ +8AJB7h+m1+g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,392,1580803200"; 
+   d="scan'208";a="253990956"
+Received: from orsmsx109.amr.corp.intel.com ([10.22.240.7])
+  by orsmga003.jf.intel.com with ESMTP; 16 Apr 2020 13:50:08 -0700
+Received: from orsmsx101.amr.corp.intel.com ([169.254.8.204]) by
+ ORSMSX109.amr.corp.intel.com ([169.254.11.20]) with mapi id 14.03.0439.000;
+ Thu, 16 Apr 2020 13:50:07 -0700
+From:   "Derrick, Jonathan" <jonathan.derrick@intel.com>
+To:     "sathyanarayanan.kuppuswamy@linux.intel.com" 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        "helgaas@kernel.org" <helgaas@kernel.org>
+CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "sbobroff@linux.ibm.com" <sbobroff@linux.ibm.com>,
+        "olof@lixom.net" <olof@lixom.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "ruscur@russell.cc" <ruscur@russell.cc>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "kbusch@kernel.org" <kbusch@kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "oohall@gmail.com" <oohall@gmail.com>,
+        "fred@fredlawl.com" <fred@fredlawl.com>
+Subject: Re: [PATCH] PCI/DPC: Allow Non-ACPI Native ports to use DPC
+Thread-Topic: [PATCH] PCI/DPC: Allow Non-ACPI Native ports to use DPC
+Thread-Index: AQHWFCtm3704heDSeUKO5orBCIsVJKh8qWeAgAAE0YA=
+Date:   Thu, 16 Apr 2020 20:50:06 +0000
+Message-ID: <94fcbe2c950f9cff45c759b8598af985235ab932.camel@intel.com>
+References: <1587067157-2291-1-git-send-email-jonathan.derrick@intel.com>
+         <4c2bf639-5510-fb17-2f02-73e7016d8f70@linux.intel.com>
+In-Reply-To: <4c2bf639-5510-fb17-2f02-73e7016d8f70@linux.intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.255.0.232]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <44EB88A81E54FA42BD81D638AD184FCD@intel.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Fainelli <f.fainelli@gmail.com>
-Date: Tue, 14 Apr 2020 15:39:52 -0700
-
-> After commit bfcb813203e619a8960a819bf533ad2a108d8105 ("net: dsa:
-> configure the MTU for switch ports") my Lamobo R1 platform which uses
-> an allwinner,sun7i-a20-gmac compatible Ethernet MAC started to fail
-> by rejecting a MTU of 1536. The reason for that is that the DMA
-> capabilities are not readable on this version of the IP, and there
-> is also no 'tx-fifo-depth' property being provided in Device Tree. The
-> property is documented as optional, and is not provided.
-> 
-> Chen-Yu indicated that the FIFO sizes are 4KB for TX and 16KB for RX, so
-> provide these values through platform data as an immediate fix until
-> various Device Tree sources get updated accordingly.
-> 
-> Fixes: eaf4fac47807 ("net: stmmac: Do not accept invalid MTU values")
-> Suggested-by: Chen-Yu Tsai <wens@csie.org>
-> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-
-Applied and queued up for -stable, thanks.
+T24gVGh1LCAyMDIwLTA0LTE2IGF0IDEzOjMyIC0wNzAwLCBLdXBwdXN3YW15LCBTYXRoeWFuYXJh
+eWFuYW4gd3JvdGU6DQo+IEhpLA0KPiANCj4gT24gNC8xNi8yMCAxMjo1OSBQTSwgSm9uIERlcnJp
+Y2sgd3JvdGU6DQo+ID4gU29tZSBwbGF0Zm9ybXMgaGF2ZSBhIG1peCBvZiBwb3J0cyB3aG9zZSBj
+YXBhYmlsaXRpZXMgY2FuIGJlIG5lZ290aWF0ZWQNCj4gPiBieSBfT1NDLCBhbmQgc29tZSBwb3J0
+cyB3aGljaCBhcmUgbm90IGRlc2NyaWJlZCBieSBBQ1BJIGFuZCBpbnN0ZWFkDQo+ID4gbWFuYWdl
+ZCBieSBOYXRpdmUgZHJpdmVycy4gVGhlIGV4aXN0aW5nIEZpcm13YXJlLUZpcnN0IEhFU1QgbW9k
+ZWwgY2FuDQo+ID4gaW5jb3JyZWN0bHkgdGFnIHRoZXNlIE5hdGl2ZSwgTm9uLUFDUEkgcG9ydHMg
+YXMgRmlybXdhcmUtRmlyc3QgY2FwYWJsZQ0KPiA+IHBvcnRzIGJ5IGFkdmVydGlzaW5nIHRoZSBI
+RVNUIEdsb2JhbCBmbGFnIGFuZCBzcGVjaWZ5aW5nIHRoZSB0eXBlIGFuZA0KPiA+IGNsYXNzIChh
+ZXJfaGVzdF9wYXJzZSkuDQo+ID4gDQo+ID4gVGhpcyB1bHRpbWF0ZWx5IGNhbiBsZWFkIHRvIGJh
+ZCBzaXR1YXRpb25zIGlmIHRoZSBCSU9TIG9yIHBvcnQgZmlybXdhcmUNCj4gPiBsZWF2ZXMgRFBD
+IHByZWNvbmZpZ3VyZWQgYW5kIHRoZSBMaW51eCBEUEMgZHJpdmVyIGlzIHVuYWJsZSB0byBiaW5k
+IHRvDQo+ID4gdGhlIHBvcnQgdG8gaGFuZGxlIERQQyBldmVudHMuDQo+ID4gDQo+ID4gVGhpcyBw
+YXRjaCBhZGRzIHRoZSBjaGVjayBmb3IgTmF0aXZlIERQQyBpbiB0aGUgcG9ydCdzIGhvc3QgYnJp
+ZGdlIGluDQo+ID4gb3JkZXIgdG8gYWxsb3cgRFBDIHNlcnZpY2VzIHRvIGJpbmQgdG8gdGhlIHBv
+cnQuDQo+ID4gDQo+ID4gU2lnbmVkLW9mZi1ieTogSm9uIERlcnJpY2sgPGpvbmF0aGFuLmRlcnJp
+Y2tAaW50ZWwuY29tPg0KPiA+IC0tLQ0KPiA+ICAgZHJpdmVycy9wY2kvcGNpZS9kcGMuYyB8IDQg
+KysrLQ0KPiA+ICAgMSBmaWxlIGNoYW5nZWQsIDMgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigt
+KQ0KPiA+IA0KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3BjaS9wY2llL2RwYy5jIGIvZHJpdmVy
+cy9wY2kvcGNpZS9kcGMuYw0KPiA+IGluZGV4IDc2MjE3MDQuLmExZTM1NWQgMTAwNjQ0DQo+ID4g
+LS0tIGEvZHJpdmVycy9wY2kvcGNpZS9kcGMuYw0KPiA+ICsrKyBiL2RyaXZlcnMvcGNpL3BjaWUv
+ZHBjLmMNCj4gPiBAQCAtMjgxLDEwICsyODEsMTIgQEAgc3RhdGljIGludCBkcGNfcHJvYmUoc3Ry
+dWN0IHBjaWVfZGV2aWNlICpkZXYpDQo+ID4gICB7DQo+ID4gICAJc3RydWN0IHBjaV9kZXYgKnBk
+ZXYgPSBkZXYtPnBvcnQ7DQo+ID4gICAJc3RydWN0IGRldmljZSAqZGV2aWNlID0gJmRldi0+ZGV2
+aWNlOw0KPiA+ICsJc3RydWN0IHBjaV9ob3N0X2JyaWRnZSAqaG9zdCA9IHBjaV9maW5kX2hvc3Rf
+YnJpZGdlKHBkZXYtPmJ1cyk7DQo+ID4gICAJaW50IHN0YXR1czsNCj4gPiAgIAl1MTYgY3RsLCBj
+YXA7DQo+ID4gICANCj4gPiAtCWlmIChwY2llX2Flcl9nZXRfZmlybXdhcmVfZmlyc3QocGRldikg
+JiYgIXBjaWVfcG9ydHNfZHBjX25hdGl2ZSkNCj4gPiArCWlmIChwY2llX2Flcl9nZXRfZmlybXdh
+cmVfZmlyc3QocGRldikgJiYgIXBjaWVfcG9ydHNfZHBjX25hdGl2ZSAmJg0KPiBGb3Igb3RoZXIg
+UENJZSBzZXJ2aWNlcywgdGhpcyBjaGVjayBpcyBhZGRlZCBpbiANCj4gZ2V0X3BvcnRfZGV2aWNl
+X2NhcGFiaWxpdHkoKS4NCj4gV2h5IG5vdCBhZGQgaXQgdGhlcmUgZm9yIERQQyBhcyB3ZWxsID8N
+Cg0KU3VyZS4gTG9va2luZyBhdCB0aGlzLCBpdCBzZWVtcyBsaWtlIGl0IG5lZWRzIHNvbWUgbW9y
+ZSBkZS10YW5nbGluZyB0bw0KZml0IGludG8gbXkgbW9kZWwuDQoNCj4gPiArCSAgICAhaG9zdC0+
+bmF0aXZlX2RwYykNCj4gPiAgIAkJcmV0dXJuIC1FTk9UU1VQUDsNCj4gPiAgIA0KPiA+ICAgCXN0
+YXR1cyA9IGRldm1fcmVxdWVzdF90aHJlYWRlZF9pcnEoZGV2aWNlLCBkZXYtPmlycSwgZHBjX2ly
+cSwNCj4gPiANCg==
