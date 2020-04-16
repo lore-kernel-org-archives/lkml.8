@@ -2,82 +2,99 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8AB1C2D0EF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 10:17:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ED63C2D0EF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 10:18:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9858C206B9
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 10:17:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TuXyyx+e"
+	by mail.kernel.org (Postfix) with ESMTP id E78D7206B9
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 10:18:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2441541AbgDPKRp (ORCPT
+        id S2504761AbgDPKSu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 06:17:45 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:28757 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2441262AbgDPKP0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 06:15:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587032125;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=duQdUsOOdHGiX8X+SSFFtnhQDtBYHM0gSY3ojiBRAto=;
-        b=TuXyyx+ekI/WaMjlYcHQVVMCe/hcxDlB5MqMHB1GdZnCjLdDwvHuYuQgn4Vp2lu1w24MhZ
-        cA+6SNtQagk0KFYIjrwFr6CcEm/ntuq5KWO4WktgNPupSWlJut92trUyILxUmckGF8Msi7
-        hTsODdreetkUkMOPCbdq8a2vhZVlZmc=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-341-lvRNdSpjMxOevcxPakXQlg-1; Thu, 16 Apr 2020 06:15:23 -0400
-X-MC-Unique: lvRNdSpjMxOevcxPakXQlg-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3A21218C8C02;
-        Thu, 16 Apr 2020 10:15:22 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-113-129.rdu2.redhat.com [10.10.113.129])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 7175E5C1D6;
-        Thu, 16 Apr 2020 10:15:20 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <CAH2r5mvj7GF3i8AE6E=+5f_Vigtb3uw=665F2uuBOgGzUhHObQ@mail.gmail.com>
-References: <CAH2r5mvj7GF3i8AE6E=+5f_Vigtb3uw=665F2uuBOgGzUhHObQ@mail.gmail.com> <3865908.1586874010@warthog.procyon.org.uk> <e751977dac616d93806d98f4ad3ce144bb1eb244.camel@kernel.org>
-To:     Steve French <smfrench@gmail.com>
-Cc:     dhowells@redhat.com, Jeff Layton <jlayton@kernel.org>,
-        linux-nfs <linux-nfs@vger.kernel.org>,
-        CIFS <linux-cifs@vger.kernel.org>, linux-afs@lists.infradead.org,
-        ceph-devel@vger.kernel.org, keyrings@vger.kernel.org,
-        Network Development <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, fweimer@redhat.com
-Subject: Re: What's a good default TTL for DNS keys in the kernel
+        Thu, 16 Apr 2020 06:18:50 -0400
+Received: from mga01.intel.com ([192.55.52.88]:45834 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2441495AbgDPKRx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 06:17:53 -0400
+IronPort-SDR: AwA41n4JgjKZuuNgZRCP6UHT3UZ1/Za8i4jvp+2iuw24g9JtB0A34lTmesKM6GH21CTwW6R8I8
+ 0TXBR3vVAKnA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2020 03:17:42 -0700
+IronPort-SDR: PabvyhK/GDPyBjaf0paWWd5oAAbGpqHHyicWhdVU0osJ1cJkrEV/y2jitUhatIDlUFj03yE+KQ
+ +MY52IYzL9ng==
+X-IronPort-AV: E=Sophos;i="5.72,390,1580803200"; 
+   d="scan'208";a="400622555"
+Received: from ellenfax-mobl2.ger.corp.intel.com (HELO localhost) ([10.249.44.122])
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2020 03:17:34 -0700
+From:   Jani Nikula <jani.nikula@linux.intel.com>
+To:     Arnd Bergmann <arnd@arndb.de>, Saeed Mahameed <saeedm@mellanox.com>
+Cc:     "narmstrong\@baylibre.com" <narmstrong@baylibre.com>,
+        "masahiroy\@kernel.org" <masahiroy@kernel.org>,
+        "Laurent.pinchart\@ideasonboard.com" 
+        <Laurent.pinchart@ideasonboard.com>,
+        "leon\@kernel.org" <leon@kernel.org>,
+        "davem\@davemloft.net" <davem@davemloft.net>,
+        "linux-renesas-soc\@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>,
+        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "nico\@fluxnic.net" <nico@fluxnic.net>,
+        "linux-rdma\@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+        "dri-devel\@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "kieran.bingham+renesas\@ideasonboard.com" 
+        <kieran.bingham+renesas@ideasonboard.com>,
+        "a.hajda\@samsung.com" <a.hajda@samsung.com>,
+        "jonas\@kwiboo.se" <jonas@kwiboo.se>,
+        "netdev\@vger.kernel.org" <netdev@vger.kernel.org>,
+        "airlied\@linux.ie" <airlied@linux.ie>,
+        "jgg\@ziepe.ca" <jgg@ziepe.ca>,
+        "jernej.skrabec\@siol.net" <jernej.skrabec@siol.net>
+Subject: Re: [RFC 0/6] Regressions for "imply" behavior change
+In-Reply-To: <CAK8P3a3Wx5_bUOKnN3_hG5nLOqv3WCUtMSq6vOkJzWZgsmAz+A@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20200408202711.1198966-1-arnd@arndb.de> <nycvar.YSQ.7.76.2004081633260.2671@knanqh.ubzr> <CAK8P3a2frDf4BzEpEF0uwPTV2dv6Jve+6N97z1sSuSBUAPJquA@mail.gmail.com> <20200408224224.GD11886@ziepe.ca> <87k12pgifv.fsf@intel.com> <7d9410a4b7d0ef975f7cbd8f0b6762df114df539.camel@mellanox.com> <20200410171320.GN11886@ziepe.ca> <16441479b793077cdef9658f35773739038c39dc.camel@mellanox.com> <20200414132900.GD5100@ziepe.ca> <CAK8P3a0aFQ7h4zRDW=QLogXWc88JkJJXEOK0_CpWwsRjq6+T+w@mail.gmail.com> <20200414152312.GF5100@ziepe.ca> <CAK8P3a1PjP9_b5NdmqTLeGN4y+3JXx_yyTE8YAf1u5rYHWPA9g@mail.gmail.com> <f6d83b08fc0bc171b5ba5b2a0bc138727d92e2c0.camel@mellanox.com> <CAK8P3a1-J=4EAxh7TtQxugxwXk239u8ffgxZNRdw_WWy8ExFoQ@mail.gmail.com> <834c7606743424c64951dd2193ca15e29799bf18.camel@mellanox.com> <CAK8P3a3Wx5_bUOKnN3_hG5nLOqv3WCUtMSq6vOkJzWZgsmAz+A@mail.gmail.com>
+Date:   Thu, 16 Apr 2020 13:17:32 +0300
+Message-ID: <874ktj4tvn.fsf@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <127742.1587032119.1@warthog.procyon.org.uk>
-Date:   Thu, 16 Apr 2020 11:15:19 +0100
-Message-ID: <127743.1587032119@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Steve French <smfrench@gmail.com> wrote:
+On Thu, 16 Apr 2020, Arnd Bergmann <arnd@arndb.de> wrote:
+> On Thu, Apr 16, 2020 at 5:25 AM Saeed Mahameed <saeedm@mellanox.com> wrote:
+>> BTW how about adding a new Kconfig option to hide the details of
+>> ( BAR || !BAR) ? as Jason already explained and suggested, this will
+>> make it easier for the users and developers to understand the actual
+>> meaning behind this tristate weird condition.
+>>
+>> e.g have a new keyword:
+>>      reach VXLAN
+>> which will be equivalent to:
+>>      depends on VXLAN && !VXLAN
+>
+> I'd love to see that, but I'm not sure what keyword is best. For your
+> suggestion of "reach", that would probably do the job, but I'm not
+> sure if this ends up being more or less confusing than what we have
+> today.
 
-> > 10 mins sounds like a reasonable default to me.
-> 
-> I would lean toward slightly longer (20 minutes?) but aren't there
-> usually different timeouts for 'static' vs. 'dynamic' DNS records (so
-> static records would have longer timeouts)?
+Ah, perfect bikeshedding topic!
 
-Unfortunately, getaddrinfo() doesn't give me that information.
+Perhaps "uses"? If the dependency is enabled it gets used as a
+dependency.
 
-David
+Of course, this is all just talk until someone(tm) posts a patch
+actually making the change. I've looked at the kconfig tool sources
+before; not going to make the same mistake again.
 
+BR,
+Jani.
+
+
+-- 
+Jani Nikula, Intel Open Source Graphics Center
