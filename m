@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71043C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:35:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F0B3C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:35:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 50F44214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:35:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE15B2223D
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:35:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587051325;
-	bh=7TCSdWKuzTv+3biIWXj1nC1I9NWCKG66xkzKdYXC158=;
+	s=default; t=1587051330;
+	bh=iGAvezQIXpomV+U2h6LGXS5TodfnQCAsqZ5z6i5QdVU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gpWc7urz9xiU6W7TScqSMwfLHNlBuNdKn4yTlbiuYq2iElkukDvOH/z7ysE48tE4C
-	 5cfeul93DdvEViZ7yPhTr32GE9iQekK5uDRfg6pkZqaQPw1T138AcJqodk33BQ8Uj0
-	 1QlxjratXOc9xzcjTdUfCDrDyGRuiuHXoCEPfGXo=
+	b=pQBoztWYkoJqv+A8AEbQ7QMagQNYlGFPfvUF+yhfmyItZM5d7NhXs/wvOWUlIiiks
+	 YBjQedlRk9vqY+29TvZgfDYmqHbtvLd3738+GzB4fiDJyxaPxwUJ29K6PIW9uXBC7/
+	 ECMNQ+u9n1fI++VeX+GvpvubyKRKjZqD3k4ehhYk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2442529AbgDPPfY (ORCPT
+        id S2506268AbgDPPf3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:35:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53198 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 11:35:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53048 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2898137AbgDPNkf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:40:35 -0400
+        id S2897379AbgDPNk2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:40:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5851020732;
-        Thu, 16 Apr 2020 13:40:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0623D20732;
+        Thu, 16 Apr 2020 13:40:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044434;
-        bh=7TCSdWKuzTv+3biIWXj1nC1I9NWCKG66xkzKdYXC158=;
+        s=default; t=1587044427;
+        bh=iGAvezQIXpomV+U2h6LGXS5TodfnQCAsqZ5z6i5QdVU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KUkXeRLCEvr5b/rIeP4aqcFMV3TGdW68dkaPblQ+J/Ut17aVUo2lrRbQOHfJcd54y
-         XnStYaUhJUwAkfD9bZBre40IISFCdss11PxB2bC0nOW/erjzg2qNVyEUNiLruPNdi5
-         MjQA5mlZvT8ImRNxhEnE2XODE2rBm60OBrRKj9G0=
+        b=AIF5VgD6s0iUghEfTSXpb85szNDXKN5P7+s3naHo33rNdDoE2eKr2pZxd1JFUw/Z1
+         +D9Bbwykcd0TCqMlNPCVNmp/PadiAE6AVqvclGl+fbnG85BuqqF9mQOd3DSkxrUzYU
+         6YMLqXJbqlhWUpjqp0YyOcRBC/OdojFnN0NVJLYc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Trond Myklebust <trond.myklebust@hammerspace.com>
-Subject: [PATCH 5.5 217/257] NFS: Fix use-after-free issues in nfs_pageio_add_request()
-Date:   Thu, 16 Apr 2020 15:24:28 +0200
-Message-Id: <20200416131353.126075880@linuxfoundation.org>
+        stable@vger.kernel.org, Libor Pechacek <lpechacek@suse.cz>,
+        Michal Suchanek <msuchanek@suse.de>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH 5.5 214/257] powerpc/pseries: Avoid NULL pointer dereference when drmem is unavailable
+Date:   Thu, 16 Apr 2020 15:24:25 +0200
+Message-Id: <20200416131352.769866052@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.891903893@linuxfoundation.org>
 References: <20200416131325.891903893@linuxfoundation.org>
@@ -59,88 +60,101 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Trond Myklebust <trond.myklebust@hammerspace.com>
+From: Libor Pechacek <lpechacek@suse.cz>
 
-commit dc9dc2febb17f72e9878eb540ad3996f7984239a upstream.
+commit a83836dbc53e96f13fec248ecc201d18e1e3111d upstream.
 
-We need to ensure that we create the mirror requests before calling
-nfs_pageio_add_request_mirror() on the request we are adding.
-Otherwise, we can end up with a use-after-free if the call to
-nfs_pageio_add_request_mirror() triggers I/O.
+In guests without hotplugagble memory drmem structure is only zero
+initialized. Trying to manipulate DLPAR parameters results in a crash.
 
-Fixes: c917cfaf9bbe ("NFS: Fix up NFS I/O subrequest creation")
-Cc: stable@vger.kernel.org
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+  $ echo "memory add count 1" > /sys/kernel/dlpar
+  Oops: Kernel access of bad area, sig: 11 [#1]
+  LE PAGE_SIZE=64K MMU=Hash SMP NR_CPUS=2048 NUMA pSeries
+  ...
+  NIP:  c0000000000ff294 LR: c0000000000ff248 CTR: 0000000000000000
+  REGS: c0000000fb9d3880 TRAP: 0300   Tainted: G            E      (5.5.0-rc6-2-default)
+  MSR:  8000000000009033 <SF,EE,ME,IR,DR,RI,LE>  CR: 28242428  XER: 20000000
+  CFAR: c0000000009a6c10 DAR: 0000000000000010 DSISR: 40000000 IRQMASK: 0
+  ...
+  NIP dlpar_memory+0x6e4/0xd00
+  LR  dlpar_memory+0x698/0xd00
+  Call Trace:
+    dlpar_memory+0x698/0xd00 (unreliable)
+    handle_dlpar_errorlog+0xc0/0x190
+    dlpar_store+0x198/0x4a0
+    kobj_attr_store+0x30/0x50
+    sysfs_kf_write+0x64/0x90
+    kernfs_fop_write+0x1b0/0x290
+    __vfs_write+0x3c/0x70
+    vfs_write+0xd0/0x260
+    ksys_write+0xdc/0x130
+    system_call+0x5c/0x68
+
+Taking closer look at the code, I can see that for_each_drmem_lmb is a
+macro expanding into `for (lmb = &drmem_info->lmbs[0]; lmb <=
+&drmem_info->lmbs[drmem_info->n_lmbs - 1]; lmb++)`. When drmem_info->lmbs
+is NULL, the loop would iterate through the whole address range if it
+weren't stopped by the NULL pointer dereference on the next line.
+
+This patch aligns for_each_drmem_lmb and for_each_drmem_lmb_in_range
+macro behavior with the common C semantics, where the end marker does
+not belong to the scanned range, and alters get_lmb_range() semantics.
+As a side effect, the wraparound observed in the crash is prevented.
+
+Fixes: 6c6ea53725b3 ("powerpc/mm: Separate ibm, dynamic-memory data from DT format")
+Cc: stable@vger.kernel.org # v4.16+
+Signed-off-by: Libor Pechacek <lpechacek@suse.cz>
+Signed-off-by: Michal Suchanek <msuchanek@suse.de>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20200131132829.10281-1-msuchanek@suse.de
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/nfs/pagelist.c |   48 ++++++++++++++++++++++++------------------------
- 1 file changed, 24 insertions(+), 24 deletions(-)
+ arch/powerpc/include/asm/drmem.h                |    4 ++--
+ arch/powerpc/platforms/pseries/hotplug-memory.c |    8 ++++----
+ 2 files changed, 6 insertions(+), 6 deletions(-)
 
---- a/fs/nfs/pagelist.c
-+++ b/fs/nfs/pagelist.c
-@@ -1177,38 +1177,38 @@ int nfs_pageio_add_request(struct nfs_pa
- 	if (desc->pg_error < 0)
- 		goto out_failed;
+--- a/arch/powerpc/include/asm/drmem.h
++++ b/arch/powerpc/include/asm/drmem.h
+@@ -27,12 +27,12 @@ struct drmem_lmb_info {
+ extern struct drmem_lmb_info *drmem_info;
  
--	for (midx = 0; midx < desc->pg_mirror_count; midx++) {
--		if (midx) {
--			nfs_page_group_lock(req);
--
--			/* find the last request */
--			for (lastreq = req->wb_head;
--			     lastreq->wb_this_page != req->wb_head;
--			     lastreq = lastreq->wb_this_page)
--				;
--
--			dupreq = nfs_create_subreq(req, lastreq,
--					pgbase, offset, bytes);
--
--			nfs_page_group_unlock(req);
--			if (IS_ERR(dupreq)) {
--				desc->pg_error = PTR_ERR(dupreq);
--				goto out_failed;
--			}
--		} else
--			dupreq = req;
-+	/* Create the mirror instances first, and fire them off */
-+	for (midx = 1; midx < desc->pg_mirror_count; midx++) {
-+		nfs_page_group_lock(req);
-+
-+		/* find the last request */
-+		for (lastreq = req->wb_head;
-+		     lastreq->wb_this_page != req->wb_head;
-+		     lastreq = lastreq->wb_this_page)
-+			;
-+
-+		dupreq = nfs_create_subreq(req, lastreq,
-+				pgbase, offset, bytes);
-+
-+		nfs_page_group_unlock(req);
-+		if (IS_ERR(dupreq)) {
-+			desc->pg_error = PTR_ERR(dupreq);
-+			goto out_failed;
-+		}
+ #define for_each_drmem_lmb_in_range(lmb, start, end)		\
+-	for ((lmb) = (start); (lmb) <= (end); (lmb)++)
++	for ((lmb) = (start); (lmb) < (end); (lmb)++)
  
--		if (nfs_pgio_has_mirroring(desc))
--			desc->pg_mirror_idx = midx;
-+		desc->pg_mirror_idx = midx;
- 		if (!nfs_pageio_add_request_mirror(desc, dupreq))
- 			goto out_cleanup_subreq;
- 	}
+ #define for_each_drmem_lmb(lmb)					\
+ 	for_each_drmem_lmb_in_range((lmb),			\
+ 		&drmem_info->lmbs[0],				\
+-		&drmem_info->lmbs[drmem_info->n_lmbs - 1])
++		&drmem_info->lmbs[drmem_info->n_lmbs])
  
-+	desc->pg_mirror_idx = 0;
-+	if (!nfs_pageio_add_request_mirror(desc, req))
-+		goto out_failed;
-+
- 	return 1;
+ /*
+  * The of_drconf_cell_v1 struct defines the layout of the LMB data
+--- a/arch/powerpc/platforms/pseries/hotplug-memory.c
++++ b/arch/powerpc/platforms/pseries/hotplug-memory.c
+@@ -223,7 +223,7 @@ static int get_lmb_range(u32 drc_index,
+ 			 struct drmem_lmb **end_lmb)
+ {
+ 	struct drmem_lmb *lmb, *start, *end;
+-	struct drmem_lmb *last_lmb;
++	struct drmem_lmb *limit;
  
- out_cleanup_subreq:
--	if (req != dupreq)
--		nfs_pageio_cleanup_request(desc, dupreq);
-+	nfs_pageio_cleanup_request(desc, dupreq);
- out_failed:
- 	nfs_pageio_error_cleanup(desc);
- 	return 0;
+ 	start = NULL;
+ 	for_each_drmem_lmb(lmb) {
+@@ -236,10 +236,10 @@ static int get_lmb_range(u32 drc_index,
+ 	if (!start)
+ 		return -EINVAL;
+ 
+-	end = &start[n_lmbs - 1];
++	end = &start[n_lmbs];
+ 
+-	last_lmb = &drmem_info->lmbs[drmem_info->n_lmbs - 1];
+-	if (end > last_lmb)
++	limit = &drmem_info->lmbs[drmem_info->n_lmbs];
++	if (end > limit)
+ 		return -EINVAL;
+ 
+ 	*start_lmb = start;
 
 
