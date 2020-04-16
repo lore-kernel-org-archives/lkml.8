@@ -2,97 +2,102 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0241FC352BE
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 20:05:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EA83C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 20:05:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DD90221744
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 20:05:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3781E21BE5
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 20:05:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="JA1Fobiy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725294AbgDPUFv (ORCPT
+        id S1731762AbgDPUFz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 16:05:51 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:24554 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730809AbgDPUEB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 16:04:01 -0400
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03GK3n8P038609;
-        Thu, 16 Apr 2020 16:03:56 -0400
-Received: from ppma05wdc.us.ibm.com (1b.90.2fa9.ip4.static.sl-reverse.com [169.47.144.27])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30ewfqrx95-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 16 Apr 2020 16:03:56 -0400
-Received: from pps.filterd (ppma05wdc.us.ibm.com [127.0.0.1])
-        by ppma05wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 03GK0vah028957;
-        Thu, 16 Apr 2020 20:03:55 GMT
-Received: from b01cxnp22035.gho.pok.ibm.com (b01cxnp22035.gho.pok.ibm.com [9.57.198.25])
-        by ppma05wdc.us.ibm.com with ESMTP id 30b5h7crqx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 16 Apr 2020 20:03:55 +0000
-Received: from b01ledav006.gho.pok.ibm.com (b01ledav006.gho.pok.ibm.com [9.57.199.111])
-        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03GK3sjH52167158
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 16 Apr 2020 20:03:54 GMT
-Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8414CAC05B;
-        Thu, 16 Apr 2020 20:03:54 +0000 (GMT)
-Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BD5FBAC059;
-        Thu, 16 Apr 2020 20:03:52 +0000 (GMT)
-Received: from talon7.ibm.com (unknown [9.163.81.122])
-        by b01ledav006.gho.pok.ibm.com (Postfix) with ESMTP;
-        Thu, 16 Apr 2020 20:03:52 +0000 (GMT)
-From:   Eddie James <eajames@linux.ibm.com>
-To:     linux-aspeed@lists.ozlabs.org
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        robh+dt@kernel.org, joel@jms.id.au, andrew@aj.id.au,
-        eajames@linux.ibm.com
-Subject: [PATCH v9 5/5] ARM: dts: Aspeed: AST2600: Add XDMA PCI-E root control reset
-Date:   Thu, 16 Apr 2020 15:03:39 -0500
-Message-Id: <1587067419-5107-6-git-send-email-eajames@linux.ibm.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1587067419-5107-1-git-send-email-eajames@linux.ibm.com>
-References: <1587067419-5107-1-git-send-email-eajames@linux.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-16_08:2020-04-14,2020-04-16 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- bulkscore=0 mlxscore=0 suspectscore=1 phishscore=0 clxscore=1015
- adultscore=0 mlxlogscore=868 priorityscore=1501 spamscore=0 malwarescore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004160137
+        Thu, 16 Apr 2020 16:05:55 -0400
+Received: from mail.andi.de1.cc ([85.214.55.253]:52006 "EHLO mail.andi.de1.cc"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731039AbgDPUFE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 16:05:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=kemnade.info; s=20180802; h=Content-Transfer-Encoding:Content-Type:
+        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=WPcxZfskR9kje2uaZAuiIJWgpilMt31fAbM7WDX99nk=; b=JA1Fobiyan2L1x5gFZ35udquH4
+        FuuotpbvLruO73P+vRN3KxQ6gFAFhtmV8yMk1csiDVtkAG51rJEFRkpZmKI24Ijuch/ILS2ZmMQuX
+        h6pvs9U9e25QZwS895ejKjMikVaeQnOlWMSQSlpavlifAgV/UqwSzGmCW+95Q1nWiZv4=;
+Received: from p200300ccff0965001a3da2fffebfd33a.dip0.t-ipconnect.de ([2003:cc:ff09:6500:1a3d:a2ff:febf:d33a] helo=aktux)
+        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <andreas@kemnade.info>)
+        id 1jPAkk-0002Em-IT; Thu, 16 Apr 2020 22:04:51 +0200
+Date:   Thu, 16 Apr 2020 22:04:49 +0200
+From:   Andreas Kemnade <andreas@kemnade.info>
+To:     Tony Lindgren <tony@atomide.com>
+Cc:     "H. Nikolaus Schaller" <hns@goldelico.com>,
+        Evgeniy Polyakov <zbr@ioremap.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
+        Adam Ford <aford173@gmail.com>,
+        "Andrew F . Davis" <afd@ti.com>, Vignesh R <vigneshr@ti.com>
+Subject: Re: [PATCHv3] w1: omap-hdq: Simplify driver with PM runtime
+ autosuspend
+Message-ID: <20200416220449.17068b21@aktux>
+In-Reply-To: <20200416184638.GI37466@atomide.com>
+References: <20191217004048.46298-1-tony@atomide.com>
+        <7B8C7DD9-095B-48FC-9642-695D07B79E97@goldelico.com>
+        <20200416184638.GI37466@atomide.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The AST2600 XDMA engine requires the PCI-E root control reset be cleared
-as well, so add a phandle to that syscon reset.
+On Thu, 16 Apr 2020 11:46:38 -0700
+Tony Lindgren <tony@atomide.com> wrote:
 
-Signed-off-by: Eddie James <eajames@linux.ibm.com>
----
- arch/arm/boot/dts/aspeed-g6.dtsi | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+> * H. Nikolaus Schaller <hns@goldelico.com> [200416 15:04]:
+> > Hi Tony,
+> > it looks as if something with this patch is broken on GTA04. For v5.6 a=
+nd v5.7-rc1.
+> >=20
+> > HDQ battery access times out after ca. 15 seconds and I get temperature=
+ of -273.1=C2=B0C...
+> >=20
+> > Reverting this patch and everything is ok again. =20
+>=20
+> Hmm OK interesting.
+>=20
+> > What is "ti,mode" about? Do we have that (indirectly) in gta04.dtsi?
+> > Or does this patch need some CONFIGs we do not happen to have? =20
+>=20
+> Sounds like you have things working though so there should be no
+> need for having ti,mode =3D "1w" in the dts.
+>=20
+> > > 	pm_runtime_enable(&pdev->dev);
+> > > +	pm_runtime_use_autosuspend(&pdev->dev);
+> > > +	pm_runtime_set_autosuspend_delay(&pdev->dev, 300); =20
+>=20
+> Care to check if changing pm_runtime_set_autosuspend_delay value
+> to -1 in probe makes the issue go away? Or change it manually
+> to -1 via sysfs.
+>=20
+> If that helps, likely we have a missing pm_runtime_get_sync()
+> somewhere in the driver.
+>=20
+I have not tested yet with v5.7-rc1 (it is compiling right now),
+but I have not seen any problems with init=3D/bin/bash on v5.6
+and only a minimal set of modules loaded on gta04. I have seen that
+42 for IDLEST
 
-diff --git a/arch/arm/boot/dts/aspeed-g6.dtsi b/arch/arm/boot/dts/aspeed-g6.dtsi
-index 1ffc1517..19f3287 100644
---- a/arch/arm/boot/dts/aspeed-g6.dtsi
-+++ b/arch/arm/boot/dts/aspeed-g6.dtsi
-@@ -342,7 +342,8 @@
- 				compatible = "aspeed,ast2600-xdma";
- 				reg = <0x1e6e7000 0x100>;
- 				clocks = <&syscon ASPEED_CLK_GATE_BCLK>;
--				resets = <&syscon ASPEED_RESET_DEV_XDMA>;
-+				resets = <&syscon ASPEED_RESET_DEV_XDMA>, <&syscon ASPEED_RESET_RC_XDMA>;
-+				reset-names = "device", "root-complex";
- 				interrupts-extended = <&gic GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>,
- 						      <&scu_ic0 2>;
- 				pcie-device = "bmc";
--- 
-1.8.3.1
+So might be something a bit more weird.
 
+Regards,
+Andreas
