@@ -2,122 +2,111 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB2AAC2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 09:14:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27ED1C2BB85
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 09:15:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AA624214D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 09:14:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0045020771
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 09:15:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k41C2LWc"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Hnp1g1bi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502487AbgDPJOy (ORCPT
+        id S2503355AbgDPJPE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 05:14:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37286 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2440886AbgDPIbL (ORCPT
+        Thu, 16 Apr 2020 05:15:04 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:52242 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2503666AbgDPJNb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 04:31:11 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 410A8C0610D6;
-        Thu, 16 Apr 2020 01:21:59 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id o81so3598184wmo.2;
-        Thu, 16 Apr 2020 01:21:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
-         :subject:to:cc;
-        bh=GRj1bNy3dNdnoBw7MW0MU1ceAiClIxWnQUWY2HqaiC4=;
-        b=k41C2LWc6nojxtzqzWo3WaCxaD7Aryp295keNJJ2Jk42EYRvMnSfnjVuI5lcveaaDD
-         5mHdEaxw4+7YoKU0Hew0DLmD0u83Ar4Pc1ShFanWuphFrixVPnHG3dUExE6eEB65jrtT
-         rFJWosWqr7z0RfYzulAARF/0Mk/KwYNea4RDRfKDvuFCmreV07f+gxxXVvIBOfZCLTJV
-         HHG9DKn7lpcXf7a/3+jNZ4v/eGXffZ8BvXBc04B2TdO9M/vKRuHqhqipJUnLevjYMfCc
-         Af92F9WR3LBzL0H4lv5IyqiZugwVhbZpHKItb3tFs1NdnI1E3QvumYO7PgiFAlXL5TSg
-         DJSQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
-         :from:date:message-id:subject:to:cc;
-        bh=GRj1bNy3dNdnoBw7MW0MU1ceAiClIxWnQUWY2HqaiC4=;
-        b=d4e6afHZsKHG9+fn2rmmF/BAl23x6DlzSTKfL7BCeSbogafnrURYyoY29Y/1Xo0OVS
-         vz0Uo9DQzPd+XbSucm895KbY5pu0+t3IdirB731RPn2ON4bSca2lZPcnyOL6N9elH7AL
-         cIqa5xK9bSojCi2D/cIbcS3Q6s86Jpx8CsWd6Nip32QuuPWL/F128dnk3jFRJud/wfxX
-         xnAvhfA8FflJ6kl5CBHD7h/LL1iQLUc4iHO4ci/PFQCl84h0F+Ust7hszMc+eCNkt9FE
-         jcXhO2j5jxBsfO5wZzsvJf5gheZHi1fhJW/PY7+9baTO8U+v+DqiW9waeEQqFfURxCAt
-         RkXQ==
-X-Gm-Message-State: AGi0PuZgHhmTDLzJAzLuFhLzr7GcF8yzmFncq1XAGPOw1SXqWQsDx6L/
-        CFm/H0IYQnzwG0fwfb+DWSEpsf1Yg54ozRuNo8dewm9tFQI=
-X-Google-Smtp-Source: APiQypIbfCHMM32E+0tY30kGGW/TB28wDgfj2YKPbSVdr0/gZ6TK3K+HlsrYqb1AMsn8gUes95YxM5cZWFK0VFhSHrw=
-X-Received: by 2002:a1c:4085:: with SMTP id n127mr3808059wma.163.1587025317838;
- Thu, 16 Apr 2020 01:21:57 -0700 (PDT)
+        Thu, 16 Apr 2020 05:13:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587028409;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=kDbMwf4T7fz2iy2x4sZthu5JgBi4KMPTfc1UBx0b968=;
+        b=Hnp1g1biIF3moUQ4hmlvaDRiMWae/JNlCnHQxdzmcbARHA7Z23YM7BPkQvmZdzvG5KnEAi
+        rq+y6eCBxjsiQRBZIbg5VaqGjDLyqJGPXBtkmvGmZvG+PltNKCEbwuInERKUUPPmJCEppO
+        GD8U2Ab2GNkFW9X5mrH0UhK3QfSUflM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-311-pSsGjVneONSQGO4bbt2LdA-1; Thu, 16 Apr 2020 05:13:28 -0400
+X-MC-Unique: pSsGjVneONSQGO4bbt2LdA-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 60E491005513;
+        Thu, 16 Apr 2020 09:13:26 +0000 (UTC)
+Received: from krava (unknown [10.40.195.119])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id C5CF87E7C4;
+        Thu, 16 Apr 2020 09:13:23 +0000 (UTC)
+Date:   Thu, 16 Apr 2020 11:13:20 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     Jiri Olsa <jolsa@kernel.org>,
+        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Peter Zijlstra <peterz@infradead.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        "bibo,mao" <bibo.mao@intel.com>,
+        "Ziqian SUN (Zamir)" <zsun@redhat.com>, stable@vger.kernel.org
+Subject: Re: [PATCH] kretprobe: Prevent triggering kretprobe from within
+ kprobe_flush_task
+Message-ID: <20200416091320.GA322899@krava>
+References: <20200408164641.3299633-1-jolsa@kernel.org>
+ <20200409234101.8814f3cbead69337ac5a33fa@kernel.org>
+ <20200409184451.GG3309111@krava>
+ <20200409201336.GH3309111@krava>
+ <20200410093159.0d7000a08fd76c2eaf1398f8@kernel.org>
+ <20200414160338.GE208694@krava>
+ <20200415090507.GG208694@krava>
+ <20200416105506.904b7847a1b621b75463076d@kernel.org>
 MIME-Version: 1.0
-References: <CGME20200409015934epcas1p442d68b06ec7c5f3ca125c197687c2295@epcas1p4.samsung.com>
- <001201d60e12$8454abb0$8cfe0310$@samsung.com> <20200415164702.xf3t2stjpkjl6das@fiona>
- <000001d6137e$95efb510$c1cf1f30$@samsung.com>
-In-Reply-To: <000001d6137e$95efb510$c1cf1f30$@samsung.com>
-Reply-To: sedat.dilek@gmail.com
-From:   Sedat Dilek <sedat.dilek@gmail.com>
-Date:   Thu, 16 Apr 2020 10:21:46 +0200
-Message-ID: <CA+icZUVXEnrc2WXkS=TPXhmOm9rYTyAOZq9Z+f+fauvGp2oofg@mail.gmail.com>
-Subject: Re: [ANNOUNCE] exfat-utils-1.0.1 initial version released
-To:     Namjae Jeon <namjae.jeon@samsung.com>
-Cc:     Goldwyn Rodrigues <rgoldwyn@suse.de>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Hyunchul Lee <hyc.lee@gmail.com>,
-        Eric Sandeen <sandeen@sandeen.net>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200416105506.904b7847a1b621b75463076d@kernel.org>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 16, 2020 at 3:15 AM Namjae Jeon <namjae.jeon@samsung.com> wrote:
->
-> > Hi,
-> Hi Goldwyn,
->
-> >
-> > On 10:59 09/04, Namjae Jeon wrote:
-> > > The initial version(1.0.1) of exfat-utils is now available.
-> > > This is the official userspace utilities for exfat filesystem of
-> > > linux-kernel.
-> >
-> > For the sake of sanity of the distributions which already carry exfat-
-> > utils based on fuse (https://protect2.fireeye.com/url?k=20c6da2a-7d5874b0-
-> > 20c75165-0cc47a336fae-
-> > 6943064efcd15854&q=1&u=https%3A%2F%2Fgithub.com%2Frelan%2Fexfat), would it
-> > be possible to either change the name of the project to say exfat-progs or
-> > increase the version number to beyond 1.4?
-> >
-> > exfat-progs is more in line with xfsprogs, btrfsprogs or e2fsprogs :)
-> Oh, I see. I agree to rename to exfat-progs. I will work to release version
-> 1.0.2 with that name.
-> Thank you for your opinion!
->
+On Thu, Apr 16, 2020 at 10:55:06AM +0900, Masami Hiramatsu wrote:
 
-Hi,
+SNIP
 
-this Monday I started testing Linux v5.7-rc1 with CONFIG_EXFAT_FS=m
-together with LLVM/Clang v10.
+> >           trampoline_handler
+> >             kretprobe_hash_lock(current, &head, &flags);  <--- deadlock
+> > 
+> > Adding kprobe_busy_begin/end helpers that mark code with fake
+> > probe installed to prevent triggering of another kprobe within
+> > this code.
+> > 
+> > Using these helpers in kprobe_flush_task, so the probe recursion
+> > protection check is hit and the probe is never set to prevent
+> > above lockup.
+> > 
+> > Reported-by: "Ziqian SUN (Zamir)" <zsun@redhat.com>
+> > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> 
+> Thanks Jiri and Ziqian!
+> 
+> Looks good to me.
+> 
+> Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
+> 
+> BTW, this is a kind of bugfix. So should it add a Fixes tag?
+> 
+> Fixes: ef53d9c5e4da ('kprobes: improve kretprobe scalability with hashed locking')
+> Cc: stable@vger.kernel.org
 
-Here I am on Debian/testing AMD64 and wondered how I can do some testing.
+ah right, do you want me to repost with those?
 
-In the Debian repositories I found exfat-utils 1.3.0-1.
+thanks,
+jirka
 
-So good to know this is the wrong user-space tools :-).
-
-+1 for renaming to exfat-progs.
-
-How does someone test EXFAT filesystem with Linux v5.7-rc1?
-I know that xfs-progs ships tests also for EXT4 filesystem.
-
-Thanks in advance.
-
-Regards,
-- Sedat -
