@@ -2,52 +2,52 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73C4EC2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:54:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 137E9C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:54:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 51088214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:54:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E755B214AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:54:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587052494;
-	bh=n4gMo6AOjihmI1Q+oarcYaDlhVYqFweCvZItTBIEFX4=;
+	s=default; t=1587052497;
+	bh=WkXY0LvbZ6B5eSUJfLAJMi3CfuZU3QVoW7/wf+YKG74=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dj2Vln1isH7RkG78nBKQwS8xr4vdgZmQuTd+SsgHv85gPjcAQY/aFm4SBG04pGgsq
-	 w2Vi5DKTOdleIJgFsGvRXko88VQ+UA4hDkp+A9DwLp+EahElk+IBQuFiiNzBNDFtOn
-	 jklQHZVr9lghNY9OlIkR5a+5PVLquB8l51tFW/2c=
+	b=g8jIBIV/kfE7zNaZ60Gfy8uuPsxdpA/z+ztucuBDS2OyCVS/htZR+gjGtN+AH6R5Z
+	 LQcvMbvbGIV4czQjkZKa0NXA/STfnbESk9aBWxE5OXIj6GNev0uXDKagGeRs5WUmvI
+	 rmnLEvHSEXNtVwJSQ+Z9E+zZiqQ/PWx8RbKQ30XI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2896877AbgDPPyw (ORCPT
+        id S2896954AbgDPPy4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:54:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40346 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 11:54:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40304 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2896175AbgDPNaL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:30:11 -0400
+        id S2896173AbgDPNaI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:30:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B1E26206E9;
-        Thu, 16 Apr 2020 13:30:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 47AC520767;
+        Thu, 16 Apr 2020 13:30:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587043810;
-        bh=n4gMo6AOjihmI1Q+oarcYaDlhVYqFweCvZItTBIEFX4=;
+        s=default; t=1587043807;
+        bh=WkXY0LvbZ6B5eSUJfLAJMi3CfuZU3QVoW7/wf+YKG74=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iRMxyDQt7EcknNYEWyeOYSssyZ8daWQKBMjHvzftBcuv10qBXkfSiosPN/SfMPfSG
-         bU6fVNi/pa7YR0c6uKhpsoGuKIQZ3in9babEk4lRQ/p8ekGmrQosiBjFTickagO4lA
-         D5UDe4/5fAbuSLO1gJ1oR7fLMqR5kpUC4UYSmTK0=
+        b=X1c2LXcp1Ng7mV9vzz3cVz8k9hkgww1cwksoqBLVpCRLS8D7SZ7qVvv/arBP5rJx6
+         bRFV1UB9y45PRu34+IZxHfNNbEaEGdH0OsyLNLoswZen9vTNEro6EftQgBfZa6iYcR
+         8TKAtZuY6PRdAUUyVghIVMPipPTcN7L/c/4BFm5U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Christian Gmeiner <christian.gmeiner@gmail.com>,
-        Lucas Stach <l.stach@pengutronix.de>
-Subject: [PATCH 4.19 108/146] drm/etnaviv: rework perfmon query infrastructure
-Date:   Thu, 16 Apr 2020 15:24:09 +0200
-Message-Id: <20200416131257.469946725@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: [PATCH 4.19 107/146] rtc: omap: Use define directive for PIN_CONFIG_ACTIVE_HIGH
+Date:   Thu, 16 Apr 2020 15:24:08 +0200
+Message-Id: <20200416131257.326103788@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131242.353444678@linuxfoundation.org>
 References: <20200416131242.353444678@linuxfoundation.org>
@@ -60,144 +60,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christian Gmeiner <christian.gmeiner@gmail.com>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-commit ed1dd899baa32d47d9a93d98336472da50564346 upstream.
+commit c50156526a2f7176b50134e3e5fb108ba09791b2 upstream.
 
-Report the correct perfmon domains and signals depending
-on the supported feature flags.
+Clang warns when one enumerated type is implicitly converted to another:
 
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-Fixes: 9e2c2e273012 ("drm/etnaviv: add infrastructure to query perf counter")
-Cc: stable@vger.kernel.org
-Signed-off-by: Christian Gmeiner <christian.gmeiner@gmail.com>
-Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
+drivers/rtc/rtc-omap.c:574:21: warning: implicit conversion from
+enumeration type 'enum rtc_pin_config_param' to different enumeration
+type 'enum pin_config_param' [-Wenum-conversion]
+        {"ti,active-high", PIN_CONFIG_ACTIVE_HIGH, 0},
+        ~                  ^~~~~~~~~~~~~~~~~~~~~~
+drivers/rtc/rtc-omap.c:579:12: warning: implicit conversion from
+enumeration type 'enum rtc_pin_config_param' to different enumeration
+type 'enum pin_config_param' [-Wenum-conversion]
+        PCONFDUMP(PIN_CONFIG_ACTIVE_HIGH, "input active high", NULL, false),
+        ~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+./include/linux/pinctrl/pinconf-generic.h:163:11: note: expanded from
+macro 'PCONFDUMP'
+        .param = a, .display = b, .format = c, .has_arg = d     \
+                 ^
+2 warnings generated.
+
+It is expected that pinctrl drivers can extend pin_config_param because
+of the gap between PIN_CONFIG_END and PIN_CONFIG_MAX so this conversion
+isn't an issue. Most drivers that take advantage of this define the
+PIN_CONFIG variables as constants, rather than enumerated values. Do the
+same thing here so that Clang no longer warns.
+
+Link: https://github.com/ClangBuiltLinux/linux/issues/144
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/etnaviv/etnaviv_perfmon.c |   60 ++++++++++++++++++++++++++----
- 1 file changed, 53 insertions(+), 7 deletions(-)
+ drivers/rtc/rtc-omap.c |    4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
---- a/drivers/gpu/drm/etnaviv/etnaviv_perfmon.c
-+++ b/drivers/gpu/drm/etnaviv/etnaviv_perfmon.c
-@@ -4,6 +4,7 @@
-  * Copyright (C) 2017 Zodiac Inflight Innovations
-  */
- 
-+#include "common.xml.h"
- #include "etnaviv_gpu.h"
- #include "etnaviv_perfmon.h"
- #include "state_hi.xml.h"
-@@ -31,6 +32,7 @@ struct etnaviv_pm_domain {
+--- a/drivers/rtc/rtc-omap.c
++++ b/drivers/rtc/rtc-omap.c
+@@ -561,9 +561,7 @@ static const struct pinctrl_ops rtc_pinc
+ 	.dt_free_map = pinconf_generic_dt_free_map,
  };
  
- struct etnaviv_pm_domain_meta {
-+	unsigned int feature;
- 	const struct etnaviv_pm_domain *domains;
- 	u32 nr_domains;
- };
-@@ -388,36 +390,78 @@ static const struct etnaviv_pm_domain do
+-enum rtc_pin_config_param {
+-	PIN_CONFIG_ACTIVE_HIGH = PIN_CONFIG_END + 1,
+-};
++#define PIN_CONFIG_ACTIVE_HIGH		(PIN_CONFIG_END + 1)
  
- static const struct etnaviv_pm_domain_meta doms_meta[] = {
- 	{
-+		.feature = chipFeatures_PIPE_3D,
- 		.nr_domains = ARRAY_SIZE(doms_3d),
- 		.domains = &doms_3d[0]
- 	},
- 	{
-+		.feature = chipFeatures_PIPE_2D,
- 		.nr_domains = ARRAY_SIZE(doms_2d),
- 		.domains = &doms_2d[0]
- 	},
- 	{
-+		.feature = chipFeatures_PIPE_VG,
- 		.nr_domains = ARRAY_SIZE(doms_vg),
- 		.domains = &doms_vg[0]
- 	}
- };
- 
-+static unsigned int num_pm_domains(const struct etnaviv_gpu *gpu)
-+{
-+	unsigned int num = 0, i;
-+
-+	for (i = 0; i < ARRAY_SIZE(doms_meta); i++) {
-+		const struct etnaviv_pm_domain_meta *meta = &doms_meta[i];
-+
-+		if (gpu->identity.features & meta->feature)
-+			num += meta->nr_domains;
-+	}
-+
-+	return num;
-+}
-+
-+static const struct etnaviv_pm_domain *pm_domain(const struct etnaviv_gpu *gpu,
-+	unsigned int index)
-+{
-+	const struct etnaviv_pm_domain *domain = NULL;
-+	unsigned int offset = 0, i;
-+
-+	for (i = 0; i < ARRAY_SIZE(doms_meta); i++) {
-+		const struct etnaviv_pm_domain_meta *meta = &doms_meta[i];
-+
-+		if (!(gpu->identity.features & meta->feature))
-+			continue;
-+
-+		if (meta->nr_domains < (index - offset)) {
-+			offset += meta->nr_domains;
-+			continue;
-+		}
-+
-+		domain = meta->domains + (index - offset);
-+	}
-+
-+	return domain;
-+}
-+
- int etnaviv_pm_query_dom(struct etnaviv_gpu *gpu,
- 	struct drm_etnaviv_pm_domain *domain)
- {
--	const struct etnaviv_pm_domain_meta *meta = &doms_meta[domain->pipe];
-+	const unsigned int nr_domains = num_pm_domains(gpu);
- 	const struct etnaviv_pm_domain *dom;
- 
--	if (domain->iter >= meta->nr_domains)
-+	if (domain->iter >= nr_domains)
- 		return -EINVAL;
- 
--	dom = meta->domains + domain->iter;
-+	dom = pm_domain(gpu, domain->iter);
-+	if (!dom)
-+		return -EINVAL;
- 
- 	domain->id = domain->iter;
- 	domain->nr_signals = dom->nr_signals;
- 	strncpy(domain->name, dom->name, sizeof(domain->name));
- 
- 	domain->iter++;
--	if (domain->iter == meta->nr_domains)
-+	if (domain->iter == nr_domains)
- 		domain->iter = 0xff;
- 
- 	return 0;
-@@ -426,14 +470,16 @@ int etnaviv_pm_query_dom(struct etnaviv_
- int etnaviv_pm_query_sig(struct etnaviv_gpu *gpu,
- 	struct drm_etnaviv_pm_signal *signal)
- {
--	const struct etnaviv_pm_domain_meta *meta = &doms_meta[signal->pipe];
-+	const unsigned int nr_domains = num_pm_domains(gpu);
- 	const struct etnaviv_pm_domain *dom;
- 	const struct etnaviv_pm_signal *sig;
- 
--	if (signal->domain >= meta->nr_domains)
-+	if (signal->domain >= nr_domains)
- 		return -EINVAL;
- 
--	dom = meta->domains + signal->domain;
-+	dom = pm_domain(gpu, signal->domain);
-+	if (!dom)
-+		return -EINVAL;
- 
- 	if (signal->iter >= dom->nr_signals)
- 		return -EINVAL;
+ static const struct pinconf_generic_params rtc_params[] = {
+ 	{"ti,active-high", PIN_CONFIG_ACTIVE_HIGH, 0},
 
 
