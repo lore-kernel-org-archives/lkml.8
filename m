@@ -2,52 +2,51 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7F28C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:07:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FBE3C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:07:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 96BAB206D6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:07:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 633D32076D
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:07:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587046064;
-	bh=P+DhAni+7LywfXEEAFqkoXCLsAjx8/apO7sX3BOt4qQ=;
+	s=default; t=1587046070;
+	bh=1c08XC1B6rSTFGUlvN4qhU6O/IY9IRqHTGMA58kStOk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=m7l/iiX7bLfa+UBkkf2t+ikzPFVZTIGd7NXgPyOzWx7tom3XCvQ6u+amGgibNyL4d
-	 tWQ8bq7ydwI99Ga5A1gCMk1olk9kLjp5n0ml3aLqL0g02He30nZchG6I4GN+z7z3pz
-	 YgGqDOmh3MI+CzcAWeqsDKlnDIUhPRgYGHj1cow4=
+	b=DYVM5mpmI+VBC4oydxSWF5iYA5MxksLo584voCK1Ixw2+qGzgri3bqC1e3ePEOQsD
+	 QujeKNlkR9wvQr0gRtCNVNGwLZGudFIEszw4jvwFeaUsQ504eAY+iaIgDtNiVOP0yT
+	 k6mRjCi6bYQB+ceZpvf6kNvTDqIzKbOr/9lNqDxk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409794AbgDPOHl (ORCPT
+        id S1731859AbgDPOHs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:07:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58474 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 10:07:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58600 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2898476AbgDPNpE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:45:04 -0400
+        id S2898484AbgDPNpL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:45:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 19F902076D;
-        Thu, 16 Apr 2020 13:45:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 602C720732;
+        Thu, 16 Apr 2020 13:45:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044703;
-        bh=P+DhAni+7LywfXEEAFqkoXCLsAjx8/apO7sX3BOt4qQ=;
+        s=default; t=1587044710;
+        bh=1c08XC1B6rSTFGUlvN4qhU6O/IY9IRqHTGMA58kStOk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KPiluiX4tMaCIbKs/OeYK9mNbXo/AUfIVTIqAAZbNFCqbDrHWF16w12Rjo4L9eAmG
-         WqCVWRhv+5i/gXZca6s0wnxfi54lOCwZC3MTzx4VtD0ULSwGawA9muNQqJvjNHOyHg
-         Rp+Rv8NYuYn6s5Fveh35tHQZA/bR6csSJQ6TGEgs=
+        b=Ohie3RPSQ61ivJx85zBI8rutV/fJsA+WcqYevpnDjaSoAY6DV1BH0zPFtFtAmkk6/
+         GGlbeHKYkA8CYIIg7iVu8omqHHVphZSn/YdF/ktLqC3CkMuF+/WwjEzstth0vBnU+A
+         Kx3LIhl4w7wE8izg2vBh/oUkTcS4LWd2F48abNQA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 067/232] btrfs: restart relocate_tree_blocks properly
-Date:   Thu, 16 Apr 2020 15:22:41 +0200
-Message-Id: <20200416131323.700357960@linuxfoundation.org>
+        stable@vger.kernel.org, Gyeongtaek Lee <gt82.lee@samsung.com>,
+        Mark Brown <broonie@kernel.org>
+Subject: [PATCH 5.4 070/232] ASoC: dapm: connect virtual mux with default value
+Date:   Thu, 16 Apr 2020 15:22:44 +0200
+Message-Id: <20200416131324.125466105@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131316.640996080@linuxfoundation.org>
 References: <20200416131316.640996080@linuxfoundation.org>
@@ -60,70 +59,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josef Bacik <josef@toxicpanda.com>
+From: 이경택 <gt82.lee@samsung.com>
 
-[ Upstream commit 50dbbb71c79df89532ec41d118d59386e5a877e3 ]
+commit 3bbbb7728fc853d71dbce4073fef9f281fbfb4dd upstream.
 
-There are two bugs here, but fixing them independently would just result
-in pain if you happened to bisect between the two patches.
+Since a virtual mixer has no backing registers
+to decide which path to connect,
+it will try to match with initial state.
+This is to ensure that the default mixer choice will be
+correctly powered up during initialization.
+Invert flag is used to select initial state of the virtual switch.
+Since actual hardware can't be disconnected by virtual switch,
+connected is better choice as initial state in many cases.
 
-First is how we handle the -EAGAIN from relocate_tree_block().  We don't
-set error, unless we happen to be the first node, which makes no sense,
-I have no idea what the code was trying to accomplish here.
+Signed-off-by: Gyeongtaek Lee <gt82.lee@samsung.com>
+Link: https://lore.kernel.org/r/01a301d60731$b724ea10$256ebe30$@samsung.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-We in fact _do_ want err set here so that we know we need to restart in
-relocate_block_group().  Also we need finish_pending_nodes() to not
-actually call link_to_upper(), because we didn't actually relocate the
-block.
-
-And then if we do get -EAGAIN we do not want to set our backref cache
-last_trans to the one before ours.  This would force us to update our
-backref cache if we didn't cross transaction ids, which would mean we'd
-have some nodes updated to their new_bytenr, but still able to find
-their old bytenr because we're searching the same commit root as the
-last time we went through relocate_tree_blocks.
-
-Fixing these two things keeps us from panicing when we start breaking
-out of relocate_tree_blocks() either for delayed ref flushing or enospc.
-
-Signed-off-by: Josef Bacik <josef@toxicpanda.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/relocation.c | 11 ++---------
- 1 file changed, 2 insertions(+), 9 deletions(-)
+ sound/soc/soc-dapm.c |    8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/fs/btrfs/relocation.c b/fs/btrfs/relocation.c
-index 7ce48f1364f76..c4ed7015cc7d9 100644
---- a/fs/btrfs/relocation.c
-+++ b/fs/btrfs/relocation.c
-@@ -3176,9 +3176,8 @@ int relocate_tree_blocks(struct btrfs_trans_handle *trans,
- 		ret = relocate_tree_block(trans, rc, node, &block->key,
- 					  path);
- 		if (ret < 0) {
--			if (ret != -EAGAIN || &block->rb_node == rb_first(blocks))
--				err = ret;
--			goto out;
-+			err = ret;
-+			break;
- 		}
+--- a/sound/soc/soc-dapm.c
++++ b/sound/soc/soc-dapm.c
+@@ -802,7 +802,13 @@ static void dapm_set_mixer_path_status(s
+ 			val = max - val;
+ 		p->connect = !!val;
+ 	} else {
+-		p->connect = 0;
++		/* since a virtual mixer has no backing registers to
++		 * decide which path to connect, it will try to match
++		 * with initial state.  This is to ensure
++		 * that the default mixer choice will be
++		 * correctly powered up during initialization.
++		 */
++		p->connect = invert;
  	}
- out:
-@@ -4154,12 +4153,6 @@ restart:
- 		if (!RB_EMPTY_ROOT(&blocks)) {
- 			ret = relocate_tree_blocks(trans, rc, &blocks);
- 			if (ret < 0) {
--				/*
--				 * if we fail to relocate tree blocks, force to update
--				 * backref cache when committing transaction.
--				 */
--				rc->backref_cache.last_trans = trans->transid - 1;
--
- 				if (ret != -EAGAIN) {
- 					err = ret;
- 					break;
--- 
-2.20.1
-
+ }
+ 
 
 
