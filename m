@@ -4,49 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 299C3C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:30:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62145C2BB85
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:30:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0022921D91
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:30:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3262A208E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:30:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587043838;
-	bh=ZoXdcEmcQ1RwgthyQjDT9hIpwmYyb5aoD+aUunKYaxE=;
+	s=default; t=1587043848;
+	bh=IO9sfJh1ECQjFYciwaez13SC3S2Brz/c3XRKHxCtHkw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FaQ3tcWkVteWtmsoE6lpKNV7acnqKYg2btx+IkGbxSQuqApgLm4MWZ9HbyqC6xvUn
-	 M4KxMWv65bqy2ogGBPNUd63pAY7QCuS81BRulgZV9Eeub+hwwE86Fw0+KlRuIljKop
-	 ysh1CvgiTe1bKFvJqgMwf0Sng0HuzJbbYUdn1kMg=
+	b=erBbPJCohxVf0Naxh7KVHPlBEW33bvnHB9m3kNMcspfnZvcvIwFZ10K7NgHZqJsUF
+	 jD+4tJUa0TYAxVC+yTcRHNz+hAUsPbJbtXjjIF5Hc95Thjn/zfl1AhT4umlQ/R3isT
+	 jdHQUf9um3/9m9AUo2VNbzNXK6TiMaXBMddWPZdw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2896265AbgDPNag (ORCPT
+        id S2896297AbgDPNao (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 09:30:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36806 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 09:30:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36910 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2895662AbgDPN2C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:28:02 -0400
+        id S2895672AbgDPN2G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:28:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 99C1221BE5;
-        Thu, 16 Apr 2020 13:28:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 69F8D21D79;
+        Thu, 16 Apr 2020 13:28:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587043681;
-        bh=ZoXdcEmcQ1RwgthyQjDT9hIpwmYyb5aoD+aUunKYaxE=;
+        s=default; t=1587043685;
+        bh=IO9sfJh1ECQjFYciwaez13SC3S2Brz/c3XRKHxCtHkw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=K0kTEB9kXdLAWBIxcJ3AX3GzP0HMYZ0oDRGon+rLDdXFXkTzaqMQpVs/4XlRRKK3H
-         ZvXr3KnV3B+beIjlA9BzeFQ3cuYzNdkpvOLnthni6bV2RvrZvIk+um97S6Ibv4Sgck
-         WDE0Er43Tk3SsHZTJ7cCq+lrwByc9oN/a73LRBJk=
+        b=Yf63naVU7rStPAm4pg+i32vXDf0uJk5xn8/w6cV9PtqVfXrpKaS2WfSh6gJlV8aTQ
+         pSV0wsugDFNK2RTtOTtf+silgFa/wJGhudEUAAsm+kEcwVYw8Qky1RgvtamhDrOcIi
+         OC9PlOH25lZorad76+nH1q95+9aip9zFZCxiWhE0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Thomas Hebb <tommyhebb@gmail.com>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.19 056/146] ALSA: hda/realtek - Set principled PC Beep configuration for ALC256
-Date:   Thu, 16 Apr 2020 15:23:17 +0200
-Message-Id: <20200416131250.559681370@linuxfoundation.org>
+        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.19 058/146] ALSA: hda/realtek - Add quirk for MSI GL63
+Date:   Thu, 16 Apr 2020 15:23:19 +0200
+Message-Id: <20200416131250.822265021@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131242.353444678@linuxfoundation.org>
 References: <20200416131242.353444678@linuxfoundation.org>
@@ -59,93 +58,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Hebb <tommyhebb@gmail.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-commit c44737449468a0bdc50e09ec75e530f208391561 upstream.
+commit 1d3aa4a5516d2e4933fe3cca11d3349ef63bc547 upstream.
 
-The Realtek PC Beep Hidden Register[1] is currently set by
-patch_realtek.c in two different places:
+MSI GL63 laptop requires the similar quirk like other MSI models,
+ALC1220_FIXUP_CLEVO_P950.  The board BIOS doesn't provide a PCI SSID
+for the device, hence we need to take the codec SSID (1462:1275)
+instead.
 
-In alc_fill_eapd_coef(), it's set to the value 0x5757, corresponding to
-non-beep input on 1Ah and no 1Ah loopback to either headphones or
-speakers. (Although, curiously, the loopback amp is still enabled.) This
-write was added fairly recently by commit e3743f431143 ("ALSA:
-hda/realtek - Dell headphone has noise on unmute for ALC236") and is a
-safe default. However, it happens in the wrong place:
-alc_fill_eapd_coef() runs on module load and cold boot but not on S3
-resume, meaning the register loses its value after suspend.
-
-Conversely, in alc256_init(), the register is updated to unset bit 13
-(disable speaker loopback) and set bit 5 (set non-beep input on 1Ah).
-Although this write does run on S3 resume, it's not quite enough to fix
-up the register's default value of 0x3717. What's missing is a set of
-bit 14 to disable headphone loopback. Without that, we end up with a
-feedback loop where the headphone jack is being driven by amplified
-samples of itself[2].
-
-This change eliminates the update in alc256_init() and replaces it with
-the 0x5757 write from alc_fill_eapd_coef(). Kailang says that 0x5757 is
-supposed to be the codec's default value, so using it will make
-debugging easier for Realtek.
-
-Affects the ALC255, ALC256, ALC257, ALC235, and ALC236 codecs.
-
-[1] Newly documented in Documentation/sound/hd-audio/realtek-pc-beep.rst
-
-[2] Setting the "Headphone Mic Boost" control from userspace changes
-this feedback loop and has been a widely-shared workaround for headphone
-noise on laptops like the Dell XPS 13 9350. This commit eliminates the
-feedback loop and makes the workaround unnecessary.
-
-Fixes: e1e8c1fdce8b ("ALSA: hda/realtek - Dell headphone has noise on unmute for ALC236")
-Cc: stable@vger.kernel.org
-Signed-off-by: Thomas Hebb <tommyhebb@gmail.com>
-Link: https://lore.kernel.org/r/bf22b417d1f2474b12011c2a39ed6cf8b06d3bf5.1585584498.git.tommyhebb@gmail.com
+BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=207157
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200408135645.21896-1-tiwai@suse.de
 Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/pci/hda/patch_realtek.c |   15 +++++++++------
- 1 file changed, 9 insertions(+), 6 deletions(-)
+ sound/pci/hda/patch_realtek.c |    1 +
+ 1 file changed, 1 insertion(+)
 
 --- a/sound/pci/hda/patch_realtek.c
 +++ b/sound/pci/hda/patch_realtek.c
-@@ -379,7 +379,9 @@ static void alc_fill_eapd_coef(struct hd
- 	case 0x10ec0215:
- 	case 0x10ec0233:
- 	case 0x10ec0235:
-+	case 0x10ec0236:
- 	case 0x10ec0255:
-+	case 0x10ec0256:
- 	case 0x10ec0257:
- 	case 0x10ec0282:
- 	case 0x10ec0283:
-@@ -391,11 +393,6 @@ static void alc_fill_eapd_coef(struct hd
- 	case 0x10ec0300:
- 		alc_update_coef_idx(codec, 0x10, 1<<9, 0);
- 		break;
--	case 0x10ec0236:
--	case 0x10ec0256:
--		alc_write_coef_idx(codec, 0x36, 0x5757);
--		alc_update_coef_idx(codec, 0x10, 1<<9, 0);
--		break;
- 	case 0x10ec0275:
- 		alc_update_coef_idx(codec, 0xe, 0, 1<<0);
- 		break;
-@@ -3249,7 +3246,13 @@ static void alc256_init(struct hda_codec
- 	alc_update_coefex_idx(codec, 0x57, 0x04, 0x0007, 0x4); /* Hight power */
- 	alc_update_coefex_idx(codec, 0x53, 0x02, 0x8000, 1 << 15); /* Clear bit */
- 	alc_update_coefex_idx(codec, 0x53, 0x02, 0x8000, 0 << 15);
--	alc_update_coef_idx(codec, 0x36, 1 << 13, 1 << 5); /* Switch pcbeep path to Line in path*/
-+	/*
-+	 * Expose headphone mic (or possibly Line In on some machines) instead
-+	 * of PC Beep on 1Ah, and disable 1Ah loopback for all outputs. See
-+	 * Documentation/sound/hd-audio/realtek-pc-beep.rst for details of
-+	 * this register.
-+	 */
-+	alc_write_coef_idx(codec, 0x36, 0x5757);
- }
- 
- static void alc256_shutup(struct hda_codec *codec)
+@@ -2441,6 +2441,7 @@ static const struct snd_pci_quirk alc882
+ 	SND_PCI_QUIRK(0x1458, 0xa0b8, "Gigabyte AZ370-Gaming", ALC1220_FIXUP_GB_DUAL_CODECS),
+ 	SND_PCI_QUIRK(0x1458, 0xa0cd, "Gigabyte X570 Aorus Master", ALC1220_FIXUP_CLEVO_P950),
+ 	SND_PCI_QUIRK(0x1462, 0x1228, "MSI-GP63", ALC1220_FIXUP_CLEVO_P950),
++	SND_PCI_QUIRK(0x1462, 0x1275, "MSI-GL63", ALC1220_FIXUP_CLEVO_P950),
+ 	SND_PCI_QUIRK(0x1462, 0x1276, "MSI-GL73", ALC1220_FIXUP_CLEVO_P950),
+ 	SND_PCI_QUIRK(0x1462, 0x1293, "MSI-GP65", ALC1220_FIXUP_CLEVO_P950),
+ 	SND_PCI_QUIRK(0x1462, 0x7350, "MSI-7350", ALC889_FIXUP_CD),
 
 
