@@ -2,220 +2,78 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12141C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:00:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C368BC2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:01:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DFB5D20771
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:00:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Usb+FvXd"
+	by mail.kernel.org (Postfix) with ESMTP id 9A16E206D9
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:01:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439233AbgDPPAx (ORCPT
+        id S2501991AbgDPPBA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:00:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41840 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2438837AbgDPPAd (ORCPT
+        Thu, 16 Apr 2020 11:01:00 -0400
+Received: from rtits2.realtek.com ([211.75.126.72]:50392 "EHLO
+        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2439182AbgDPPAs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 11:00:33 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7160AC061A10;
-        Thu, 16 Apr 2020 08:00:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=yyuJrtfVyD3fUEUFSeqLWA3IrF2yJjSqrC/bf4Fe8oE=; b=Usb+FvXdnqXan+JxkQBhdGOZlg
-        wA8UpejFK3n0fE9XGKnHea/t+aVmCLNRdL7zyLOKMHR/dWmt8G+Uti19C3t90dgjsk4S7ZmmczWW/
-        Ez3AKbTKg6yUn6tUW5+u4MpklOAJAQnTCpStyLhkGLJDPCmD0JQX8BrT1uo7sHkztqwtq1fc9ZM2b
-        o78zCaIVcICZg6b86ord1mHoE9JLaN/VgoJYMDdw8Sgqo+kfaEwvvg/+opdzznV32stUMmPSO0mvj
-        LXNeSO8BGPnOt71kyP+5iI5jquMiHZDOCO0MSCezo82fW/woNvE7xDCV4KBMauuhWx5/PsaqHRErw
-        2IXgzbiQ==;
-Received: from [2001:4bb8:184:4aa1:c70:4a89:bc61:2] (helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jP60F-00037B-JH; Thu, 16 Apr 2020 15:00:31 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org
-Subject: [PATCH 7/7] MIPS: use ioremap_page_range
-Date:   Thu, 16 Apr 2020 17:00:11 +0200
-Message-Id: <20200416150011.820984-8-hch@lst.de>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200416150011.820984-1-hch@lst.de>
-References: <20200416150011.820984-1-hch@lst.de>
+        Thu, 16 Apr 2020 11:00:48 -0400
+Authenticated-By: 
+X-SpamFilter-By: ArmorX SpamTrap 5.69 with qID 03GF0KAp8000998, This message is accepted by code: ctloc85258
+Received: from mail.realtek.com (rtexmb06.realtek.com.tw[172.21.6.99])
+        by rtits2.realtek.com.tw (8.15.2/2.66/5.86) with ESMTPS id 03GF0KAp8000998
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Thu, 16 Apr 2020 23:00:20 +0800
+Received: from RTEXMB01.realtek.com.tw (172.21.6.94) by
+ RTEXMB06.realtek.com.tw (172.21.6.99) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Thu, 16 Apr 2020 23:00:20 +0800
+Received: from RTEXMB03.realtek.com.tw (172.21.6.96) by
+ RTEXMB01.realtek.com.tw (172.21.6.94) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Thu, 16 Apr 2020 23:00:20 +0800
+Received: from RTEXMB03.realtek.com.tw ([fe80::71dc:5fb1:bef0:757d]) by
+ RTEXMB03.realtek.com.tw ([fe80::71dc:5fb1:bef0:757d%8]) with mapi id
+ 15.01.1779.005; Thu, 16 Apr 2020 23:00:20 +0800
+From:   =?utf-8?B?SmFtZXMgVGFpIFvmiLTlv5fls7Bd?= <james.tai@realtek.com>
+To:     Robin Murphy <robin.murphy@arm.com>,
+        "linux-realtek-soc@lists.infradead.org" 
+        <linux-realtek-soc@lists.infradead.org>
+CC:     Mark Rutland <mark.rutland@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        =?utf-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: RE: [PATCH v3 2/2] arm64: dts: realtek: Add RTD1319 SoC and Realtek PymParticle EVB
+Thread-Topic: [PATCH v3 2/2] arm64: dts: realtek: Add RTD1319 SoC and Realtek
+ PymParticle EVB
+Thread-Index: AQHV22rI+NjHXMOCKE2GotJYQnIOL6h7anOAgADaMIA=
+Date:   Thu, 16 Apr 2020 15:00:19 +0000
+Message-ID: <635ba17aaf444d0c8f8f44af3e905c8e@realtek.com>
+References: <20200204145207.28622-1-james.tai@realtek.com>
+ <20200204145207.28622-3-james.tai@realtek.com>
+ <05b02ba8-2959-48d8-be3f-c4a1a0bc88a4@arm.com>
+In-Reply-To: <05b02ba8-2959-48d8-be3f-c4a1a0bc88a4@arm.com>
+Accept-Language: zh-TW, en-US
+Content-Language: zh-TW
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [114.37.175.2]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use the generic ioremap_page_range helper instead of reimplementing it.
-
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- arch/mips/mm/ioremap.c | 112 ++++-------------------------------------
- 1 file changed, 11 insertions(+), 101 deletions(-)
-
-diff --git a/arch/mips/mm/ioremap.c b/arch/mips/mm/ioremap.c
-index c5b5181c7cd0..b6dad2fd5575 100644
---- a/arch/mips/mm/ioremap.c
-+++ b/arch/mips/mm/ioremap.c
-@@ -14,99 +14,14 @@
- #include <linux/slab.h>
- #include <linux/vmalloc.h>
- #include <linux/mm_types.h>
-+#include <linux/io.h>
- #include <asm/cacheflush.h>
--#include <asm/io.h>
- #include <asm/tlbflush.h>
- #include <ioremap.h>
- 
- #define IS_LOW512(addr) (!((phys_addr_t)(addr) & (phys_addr_t) ~0x1fffffffULL))
- #define IS_KSEG1(addr) (((unsigned long)(addr) & ~0x1fffffffUL) == CKSEG1)
- 
--static inline void remap_area_pte(pte_t * pte, unsigned long address,
--	phys_addr_t size, phys_addr_t phys_addr, unsigned long flags)
--{
--	phys_addr_t end;
--	unsigned long pfn;
--	pgprot_t pgprot = __pgprot(_PAGE_GLOBAL | _PAGE_PRESENT | __READABLE
--				   | __WRITEABLE | flags);
--
--	address &= ~PMD_MASK;
--	end = address + size;
--	if (end > PMD_SIZE)
--		end = PMD_SIZE;
--	BUG_ON(address >= end);
--	pfn = phys_addr >> PAGE_SHIFT;
--	do {
--		if (!pte_none(*pte)) {
--			printk("remap_area_pte: page already exists\n");
--			BUG();
--		}
--		set_pte(pte, pfn_pte(pfn, pgprot));
--		address += PAGE_SIZE;
--		pfn++;
--		pte++;
--	} while (address && (address < end));
--}
--
--static inline int remap_area_pmd(pmd_t * pmd, unsigned long address,
--	phys_addr_t size, phys_addr_t phys_addr, unsigned long flags)
--{
--	phys_addr_t end;
--
--	address &= ~PGDIR_MASK;
--	end = address + size;
--	if (end > PGDIR_SIZE)
--		end = PGDIR_SIZE;
--	phys_addr -= address;
--	BUG_ON(address >= end);
--	do {
--		pte_t * pte = pte_alloc_kernel(pmd, address);
--		if (!pte)
--			return -ENOMEM;
--		remap_area_pte(pte, address, end - address, address + phys_addr, flags);
--		address = (address + PMD_SIZE) & PMD_MASK;
--		pmd++;
--	} while (address && (address < end));
--	return 0;
--}
--
--static int remap_area_pages(unsigned long address, phys_addr_t phys_addr,
--	phys_addr_t size, unsigned long flags)
--{
--	int error;
--	pgd_t * dir;
--	unsigned long end = address + size;
--
--	phys_addr -= address;
--	dir = pgd_offset(&init_mm, address);
--	flush_cache_all();
--	BUG_ON(address >= end);
--	do {
--		p4d_t *p4d;
--		pud_t *pud;
--		pmd_t *pmd;
--
--		error = -ENOMEM;
--		p4d = p4d_alloc(&init_mm, dir, address);
--		if (!p4d)
--			break;
--		pud = pud_alloc(&init_mm, p4d, address);
--		if (!pud)
--			break;
--		pmd = pmd_alloc(&init_mm, pud, address);
--		if (!pmd)
--			break;
--		if (remap_area_pmd(pmd, address, end - address,
--					 phys_addr + address, flags))
--			break;
--		error = 0;
--		address = (address + PGDIR_SIZE) & PGDIR_MASK;
--		dir++;
--	} while (address && (address < end));
--	flush_tlb_all();
--	return error;
--}
--
- static int __ioremap_check_ram(unsigned long start_pfn, unsigned long nr_pages,
- 			       void *arg)
- {
-@@ -135,7 +50,7 @@ void __iomem *ioremap_prot(phys_addr_t phys_addr, unsigned long size,
- 	unsigned long offset, pfn, last_pfn;
- 	struct vm_struct *area;
- 	phys_addr_t last_addr;
--	void *addr;
-+	unsigned long vaddr;
- 	void __iomem *cpu_addr;
- 
- 	cpu_addr = plat_ioremap(phys_addr, size, flags);
-@@ -183,27 +98,22 @@ void __iomem *ioremap_prot(phys_addr_t phys_addr, unsigned long size,
- 	area = get_vm_area(size, VM_IOREMAP);
- 	if (!area)
- 		return NULL;
--	addr = area->addr;
--	if (remap_area_pages((unsigned long) addr, phys_addr, size, flags)) {
--		vunmap(addr);
-+	vaddr = (unsigned long)area->addr;
-+
-+	flags |= _PAGE_GLOBAL | _PAGE_PRESENT | __READABLE | __WRITEABLE;
-+	if (ioremap_page_range(vaddr, vaddr + size, phys_addr,
-+			__pgprot(flags))) {
-+		free_vm_area(area);
- 		return NULL;
- 	}
- 
--	return (void __iomem *) (offset + (char *)addr);
-+	return (void __iomem *)(vaddr + offset);
- }
- EXPORT_SYMBOL(ioremap_prot);
- 
- void iounmap(const volatile void __iomem *addr)
- {
--	struct vm_struct *p;
--
--	if (plat_iounmap(addr) || IS_KSEG1(addr))
--		return;
--
--	p = remove_vm_area((void *) (PAGE_MASK & (unsigned long __force) addr));
--	if (!p)
--		printk(KERN_ERR "iounmap: bad address %p\n", addr);
--
--	kfree(p);
-+	if (!plat_iounmap(addr) && !IS_KSEG1(addr))
-+		vunmap((void *)((unsigned long)addr & PAGE_MASK));
- }
- EXPORT_SYMBOL(iounmap);
--- 
-2.25.1
-
+SGkgUm9iaW4sDQoNCj4gT24gMjAyMC0wMi0wNCAyOjUyIHBtLCBKYW1lcyBUYWkgd3JvdGU6DQo+
+IFsuLi5dDQo+ID4gKwlhcm1fcG11OiBwbXUgew0KPiA+ICsJCWNvbXBhdGlibGUgPSAiYXJtLGFy
+bXY4LXBtdXYzIjsNCj4gDQo+IFRoZSBiaW5kaW5nIHVwZGF0ZXMgaGF2ZSBsYW5kZWQgbm93LCBz
+byB5b3UgY2FuIHVzZSAiYXJtLGNvcnRleC1hNTUtcG11Ig0KPiBoZXJlLg0KPiANCk9rYXkuIEkn
+bGwgbW9kaWZ5IGl0IGluIHY0Lg0KDQpUaGFuayB5b3UuDQoNClJlZ2FyZHMsDQpKYW1lcw0KDQoN
+Cg==
