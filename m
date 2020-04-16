@@ -2,130 +2,88 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C6CDC2BA2B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 22:15:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4EB0C352BE
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 22:17:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EC419218AC
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 22:15:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9ADA221F9
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 22:17:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ij9XEvT3"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Tc8b5F8F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728738AbgDPWPy (ORCPT
+        id S1728912AbgDPWRM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 18:15:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53320 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729216AbgDPWPI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 18:15:08 -0400
-Received: from mail-pj1-x1049.google.com (mail-pj1-x1049.google.com [IPv6:2607:f8b0:4864:20::1049])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8AF4C061A41
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 15:15:07 -0700 (PDT)
-Received: by mail-pj1-x1049.google.com with SMTP id y21so325135pjn.5
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 15:15:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=k3QSq09zanfq5knFKJrjyOnoqvaU4fvmN7ei3XY39p0=;
-        b=ij9XEvT3aXr6l5eyUvBkNPOYhjEfzqKviY5SwFPCtHDKHZrLLA6FVEkPFGhwlTos4g
-         uWFWTbM0hDJv3km7dJ8bnRS8pWWxqvKkcQT1ssYjFn6WIFUXWTqOcHbdxKI4JlSN9s+b
-         8hPVKXQwgj0OeGLepYScqYQdGiwPFpem1ZpyBbqs+IckK2Svkvw7xXkYAtLbn/9ek+PS
-         VRiPOYxWQdsEDYCanWZWyZBgT/f3hnSsyksguMuDPV/PHpPpN90SsCjnqbh9kIp7yYV9
-         2p20StG8AkCebRvVKg1T3c2XuirtxWIKDUwpTSxjUOYk38CrF/YBMfNAZWDcUVh3PxxJ
-         ITGg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=k3QSq09zanfq5knFKJrjyOnoqvaU4fvmN7ei3XY39p0=;
-        b=F9oR0xYYmF9k1xzbe/kYV7eyBQCDQalI7PNj07rGu5axQCYgjgbXFZtBWYeEpNzU4S
-         YmB2A/TPgha95j3SkyBESWUIR7ILPvP5ghstWP6B7V/K4Kggl1Y93ArcaY4FUjpI0gEC
-         mKXJ49RGwbv4RIeX04a2tN5YGBg4ZbJRfW1tmb2vxSSUW+8MpWizUBRBKk1hwcLqtMUe
-         K/TPvnxeLYSOErHa4ITTaGiuIxblO3q0QU8DCtf8yCAQ9oQBczaKKNoull/BX0baZLxl
-         SwV/PJQAdxF8yFpSFCMJT6GRk1LTdgHRLVzZRSkS0GNH6bTrUFSVpB37buhdJVZ/xaAh
-         i9Gg==
-X-Gm-Message-State: AGi0PuZTv9t7hItYjwtRQYjeNr59PN6ZuPx6eBcDvqe8kmA92G1Hfw7M
-        DrFJqNwucaTknyw4evBXid1RbfGrAQY/
-X-Google-Smtp-Source: APiQypIbzfPbmBqTxVmavYGmc61I3o/ZWDrXaFgye3NwXk4/QJrwHtqk6G6vmzEXg1H/MjcQgaIguXjCfNCN
-X-Received: by 2002:a17:90a:a796:: with SMTP id f22mr593806pjq.134.1587075307009;
- Thu, 16 Apr 2020 15:15:07 -0700 (PDT)
-Date:   Thu, 16 Apr 2020 15:14:54 -0700
-In-Reply-To: <20200416221457.46710-1-irogers@google.com>
-Message-Id: <20200416221457.46710-2-irogers@google.com>
-Mime-Version: 1.0
-References: <20200416221457.46710-1-irogers@google.com>
-X-Mailer: git-send-email 2.26.1.301.g55bc3eb7cb9-goog
-Subject: [PATCH v11 1/4] perf doc: allow ASCIIDOC_EXTRA to be an argument
-From:   Ian Rogers <irogers@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Igor Lubashev <ilubashe@akamai.com>,
-        Alexey Budankov <alexey.budankov@linux.intel.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Jiwei Sun <jiwei.sun@windriver.com>,
-        yuzhoujian <yuzhoujian@didichuxing.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Leo Yan <leo.yan@linaro.org>,
-        John Garry <john.garry@huawei.com>,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, linux-perf-users@vger.kernel.org
-Cc:     Stephane Eranian <eranian@google.com>,
-        Ian Rogers <irogers@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 16 Apr 2020 18:17:12 -0400
+Received: from ozlabs.org ([203.11.71.1]:60595 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728251AbgDPWRM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 18:17:12 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 493D9K6bR9z9sRN;
+        Fri, 17 Apr 2020 08:17:09 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1587075430;
+        bh=SN53g5J2zyelH6wbBo51OeHNv9f5qzmMVigBqCC5AJ8=;
+        h=Date:From:To:Cc:Subject:From;
+        b=Tc8b5F8FzfMVZp3rW0+lI4ALSMEkmIixt3Q5W+LxV4QBNbBOkHg4jWVQDJTg/PDei
+         E66fTLNyqNNuNJh+2zKNxLE4KRJDXR+HIY1kMcVOo+2yUNDkg4tQuFr2dxB0nUY+MT
+         d0F7w9r9nDo4CvChF0mRz3ZhmToQA8kyldZIet5sWwhov5S7wv0pEoTryHy08MlreQ
+         Aic9Ah6TDuqQdgJO5LFuIRaQLeY2KO/3MbIDzyoaK3I8iLX2Kc0dzcPIz8Zht5zNt4
+         7QZfpL8iDfZzazyvXPEeZDRenOsveDAPvRSh9ij0uKzyWIp0H0Tqof4jSxRs38FY8p
+         o9W0ui/3urFPA==
+Date:   Fri, 17 Apr 2020 08:17:07 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Jaegeuk Kim <jaegeuk@kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: Signed-off-by missing for commit in the f2fs tree
+Message-ID: <20200417081707.0c7c84f3@canb.auug.org.au>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/3CH4vjpkEJ14b3ZfBS1E5T.";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This will allow parent makefiles to pass values to asciidoc.
+--Sig_/3CH4vjpkEJ14b3ZfBS1E5T.
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/Documentation/Makefile | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Hi all,
 
-diff --git a/tools/perf/Documentation/Makefile b/tools/perf/Documentation/Makefile
-index 31824d5269cc..6e54979c2124 100644
---- a/tools/perf/Documentation/Makefile
-+++ b/tools/perf/Documentation/Makefile
-@@ -48,7 +48,7 @@ man5dir=$(mandir)/man5
- man7dir=$(mandir)/man7
- 
- ASCIIDOC=asciidoc
--ASCIIDOC_EXTRA = --unsafe -f asciidoc.conf
-+ASCIIDOC_EXTRA += --unsafe -f asciidoc.conf
- ASCIIDOC_HTML = xhtml11
- MANPAGE_XSL = manpage-normal.xsl
- XMLTO_EXTRA =
-@@ -59,7 +59,7 @@ HTML_REF = origin/html
- 
- ifdef USE_ASCIIDOCTOR
- ASCIIDOC = asciidoctor
--ASCIIDOC_EXTRA = -a compat-mode
-+ASCIIDOC_EXTRA += -a compat-mode
- ASCIIDOC_EXTRA += -I. -rasciidoctor-extensions
- ASCIIDOC_EXTRA += -a mansource="perf" -a manmanual="perf Manual"
- ASCIIDOC_HTML = xhtml5
--- 
-2.26.1.301.g55bc3eb7cb9-goog
+Commit
 
+  46471a1f6e97 ("f2fs: add tracepoint for f2fs iostat")
+
+is missing a Signed-off-by from its committer.
+
+Looks like the SOB line was lost in the rebase :-(
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/3CH4vjpkEJ14b3ZfBS1E5T.
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6Y2WMACgkQAVBC80lX
+0GyAMAf+J/LIQeUMu4m6DboZ5BjqrKCoa3mJi2xujSbg7aspYldV2a/CrnXT170j
+dsNuvxDdkRdf3awWfGlhtCKXBHa/VnE1qJ3H9XpttI8oULNkmWeqvRHeEMslai6T
+1/nPjBAjv+uqCNsH1kjBJmZPNk/WAoLPQw2PEFdmzTm9pFYRIF9/Wt/I+ir/QbPW
+99BL3UvorMAGRZ9Bmb+WOQbMLkj91EAWs2ZOFpNu5Hc8HQN+nN9MNWdxSOkC2ud0
+fH0aYIwaGdcv21vo0PBc7N3WLPKj/qGONu07CUEU23Sl3emRrcHN4AAYT0pXlqGA
+m1PfOdWcK/4+WedMQW/Ztlwg7jYrjg==
+=mmzg
+-----END PGP SIGNATURE-----
+
+--Sig_/3CH4vjpkEJ14b3ZfBS1E5T.--
