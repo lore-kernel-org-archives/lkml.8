@@ -2,141 +2,123 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F092C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 07:17:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 782FEC2BA2B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 07:17:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 384F0206D5
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 07:17:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52322206D5
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 07:17:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="OYY04eMY"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LJXSpv4K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439066AbgDPHRP (ORCPT
+        id S2439097AbgDPHRt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 03:17:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53866 "EHLO
+        Thu, 16 Apr 2020 03:17:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54174 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2437060AbgDPHPi (ORCPT
+        by vger.kernel.org with ESMTP id S2438104AbgDPHRi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 03:15:38 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 513A0C0610D6;
-        Thu, 16 Apr 2020 00:15:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=zpL7FpE4PaviMcjaRA9jfPOKzNcQZB//+dLwPm5IZ5k=; b=OYY04eMYExemHzqrM5v3kIOJ6O
-        PYhSB51usWU2nwTX3DBwMJse/AqyDdMNJEcSCZvK0LhyMfrKuMEb3f72k3aE7PoqWWOU2zUEpmeSm
-        iVc7raJB+QtBJGpFxgrEnAzH01KAYTejI+Mu0UBHQJxz2R/V9pB6RhlCCeQKvWJwLMk7+WhwgiUmu
-        jNmN8zUXMcragJYuL1yCW46CSnEscTj7oig+6CwchI9thRJ16dr7u+HUtePOVxk3nU2OBs+b1FP2q
-        NCLIZ6v0SP7spd2FyV4DFAUQAamdVvoHOzrw/5jPH3cOXELJnY6zyNhyTQ4s9oYO7SRKQZ73Qllee
-        qGKVIH8Q==;
-Received: from [2001:4bb8:184:4aa1:c70:4a89:bc61:2] (helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jOykH-0003J4-BB; Thu, 16 Apr 2020 07:15:33 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     axboe@kernel.dk
-Cc:     yuyufen@huawei.com, tj@kernel.org, jack@suse.cz,
-        bvanassche@acm.org, tytso@mit.edu, gregkh@linuxfoundation.org,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 4/8] driver core: remove device_create_vargs
-Date:   Thu, 16 Apr 2020 09:15:15 +0200
-Message-Id: <20200416071519.807660-5-hch@lst.de>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200416071519.807660-1-hch@lst.de>
-References: <20200416071519.807660-1-hch@lst.de>
+        Thu, 16 Apr 2020 03:17:38 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5B0DC061A10
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 00:17:36 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id f13so3484679wrm.13
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 00:17:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=wxbpA+gkMQzP49NMDgYKzmcFDKrFFfhXbq9DHHrnuNU=;
+        b=LJXSpv4KpEVnkUH8WFCBWBaib2J9uL1w43yQ2BA7ThHLLvSV9NKeh+SoX9WTHLiwa5
+         1sM9bpENrVAgMyEhNzNSWe7bv2T6VIXjXtdYhTWj+pnD2UauH6Sb9D8y3bGXpUGP6Adr
+         611auVtBf5IclwqCjtLvu+19UUYwIl25KMATsGFHrae8OzX7tsUtofGOt6Mxa2Y8QGSb
+         jXPsXYtGRIpObdQMxjwBmi/XSQWjfsBiOnRJbDxONdfeEnSoEEIYCIiXObkBNtrZ+80D
+         ddVaftTGpbpJpfqCEq8P5gjYLFFSUW6PkWzaeyBKQFplWqRAzX45rXPwTv4Be3UNu4Bc
+         Whag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=wxbpA+gkMQzP49NMDgYKzmcFDKrFFfhXbq9DHHrnuNU=;
+        b=un6lb6jzkjcBz00/EjRaGzwilqCXPxhI24xx94k2CtmDSXwDKdWTjvSFrFzfluRfb0
+         ZMDPbVU2RInQDIcVsqx/3RF3PtbX2xm9RTud6eor/pXQifKBEvzZUi1Gdkn71b2gUEqG
+         yvicPvpcwTyY2hnWDn62/yLIl4dGsl2Svrt6Vv5CHMvp6cp9yFmaHK2cE6sq8u7eixdn
+         4xpYwysu3skzQDu1qlbH2VmY+XjYmpbv89jNP7LpTHAX8Nj5KUfGDys8etw/ROLvMUp7
+         a3vB1pvozEP59dVLyAogrD88B/fsGX5qHrN52CdN29Uk/dDmepAd9NUSpqMqElRCyk57
+         wh7A==
+X-Gm-Message-State: AGi0PuZvL05Xm5YJJIRJc1gjBQNAhN1nSxLZHwuAbA+FNlf2Jdm6EHZ8
+        8Sfr391WKdOtINDIH5As63o9hQ==
+X-Google-Smtp-Source: APiQypJZ6oLLqIKvsbJo/X2R5PGU1Kjo53h8hr94MPus2CWNL1NzO6VzQpwajJvKPdifJbTZsraJOg==
+X-Received: by 2002:a05:6000:192:: with SMTP id p18mr34168071wrx.398.1587021455171;
+        Thu, 16 Apr 2020 00:17:35 -0700 (PDT)
+Received: from dell ([95.149.164.124])
+        by smtp.gmail.com with ESMTPSA id h1sm2565341wme.42.2020.04.16.00.17.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Apr 2020 00:17:34 -0700 (PDT)
+Date:   Thu, 16 Apr 2020 08:18:35 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Dilip Kota <eswara.kota@linux.intel.com>
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        kishon@ti.com, robh@kernel.org, andriy.shevchenko@intel.com,
+        cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com,
+        qi-ming.wu@intel.com, yixin.zhu@intel.com
+Subject: Re: [PATCH v5 1/4] mfd: syscon: Add fwnode_to_regmap
+Message-ID: <20200416071835.GR2167633@dell>
+References: <cover.1585103753.git.eswara.kota@linux.intel.com>
+ <9953bb25281397553cb87b09d641c968d8432dd9.1585103753.git.eswara.kota@linux.intel.com>
+ <20200415093116.GH2167633@dell>
+ <0adafade-7228-58d3-3db0-b06325712468@linux.intel.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <0adafade-7228-58d3-3db0-b06325712468@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-All external users of device_create_vargs are gone, so remove it and
-open code it in the only caller.
+On Thu, 16 Apr 2020, Dilip Kota wrote:
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- drivers/base/core.c    | 37 ++-----------------------------------
- include/linux/device.h |  4 ----
- 2 files changed, 2 insertions(+), 39 deletions(-)
+> 
+> On 4/15/2020 5:31 PM, Lee Jones wrote:
+> > On Wed, 25 Mar 2020, Dilip Kota wrote:
+> > 
+> > > Traverse regmap handle entry from firmware node handle.
+> > > 
+> > > Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
+> > > ---
+> > > Changes on v5:
+> > >    No changes
+> > > 
+> > > Changes on v4:
+> > >    No changes
+> > > 
+> > >   drivers/mfd/syscon.c       | 8 ++++++++
+> > >   include/linux/mfd/syscon.h | 6 ++++++
+> > >   2 files changed, 14 insertions(+)
+> > I think you'll find it very difficult to have a patch merged if you do
+> > not send it to any Maintainers of the associated subsystem(s).
+> Sorry, i completely missed adding the system configuration Maintainers. I
+> was completely thinking about the PHY driver( in doing changes and upgrades)
+> while sending the patches.
+> I have noticed it, and already sent v6 patch series by adding you and
+> arnd@arndb.de
+> 
+> "[RESEND PATCH v6 0/4] Add Intel ComboPhy driver"
+> Snippet from the mail.
+> 
+> "Re-sending the patches v6 by adding the system configuration Maintainers,
+> which i missed to add them."
 
-diff --git a/drivers/base/core.c b/drivers/base/core.c
-index 139cdf7e7327..fb8ae248e5aa 100644
---- a/drivers/base/core.c
-+++ b/drivers/base/core.c
-@@ -3188,40 +3188,6 @@ device_create_groups_vargs(struct class *class, struct device *parent,
- 	return ERR_PTR(retval);
- }
- 
--/**
-- * device_create_vargs - creates a device and registers it with sysfs
-- * @class: pointer to the struct class that this device should be registered to
-- * @parent: pointer to the parent struct device of this new device, if any
-- * @devt: the dev_t for the char device to be added
-- * @drvdata: the data to be added to the device for callbacks
-- * @fmt: string for the device's name
-- * @args: va_list for the device's name
-- *
-- * This function can be used by char device classes.  A struct device
-- * will be created in sysfs, registered to the specified class.
-- *
-- * A "dev" file will be created, showing the dev_t for the device, if
-- * the dev_t is not 0,0.
-- * If a pointer to a parent struct device is passed in, the newly created
-- * struct device will be a child of that device in sysfs.
-- * The pointer to the struct device will be returned from the call.
-- * Any further sysfs files that might be required can be created using this
-- * pointer.
-- *
-- * Returns &struct device pointer on success, or ERR_PTR() on error.
-- *
-- * Note: the struct class passed to this function must have previously
-- * been created with a call to class_create().
-- */
--struct device *device_create_vargs(struct class *class, struct device *parent,
--				   dev_t devt, void *drvdata, const char *fmt,
--				   va_list args)
--{
--	return device_create_groups_vargs(class, parent, devt, drvdata, NULL,
--					  fmt, args);
--}
--EXPORT_SYMBOL_GPL(device_create_vargs);
--
- /**
-  * device_create - creates a device and registers it with sysfs
-  * @class: pointer to the struct class that this device should be registered to
-@@ -3253,7 +3219,8 @@ struct device *device_create(struct class *class, struct device *parent,
- 	struct device *dev;
- 
- 	va_start(vargs, fmt);
--	dev = device_create_vargs(class, parent, devt, drvdata, fmt, vargs);
-+	dev = device_create_groups_vargs(class, parent, devt, drvdata, NULL,
-+					  fmt, vargs);
- 	va_end(vargs);
- 	return dev;
- }
-diff --git a/include/linux/device.h b/include/linux/device.h
-index ac8e37cd716a..15460a5ac024 100644
---- a/include/linux/device.h
-+++ b/include/linux/device.h
-@@ -884,10 +884,6 @@ extern bool device_is_bound(struct device *dev);
- /*
-  * Easy functions for dynamically creating devices on the fly
-  */
--extern __printf(5, 0)
--struct device *device_create_vargs(struct class *cls, struct device *parent,
--				   dev_t devt, void *drvdata,
--				   const char *fmt, va_list vargs);
- extern __printf(5, 6)
- struct device *device_create(struct class *cls, struct device *parent,
- 			     dev_t devt, void *drvdata,
+I have it now.  Thanks.
+
 -- 
-2.25.1
-
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
