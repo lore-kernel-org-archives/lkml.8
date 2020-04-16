@@ -7,53 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A60D6C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:11:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7E3CC2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:12:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 838202222D
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:11:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEDF221D7E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:12:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587049914;
-	bh=35DQCoLhU4IACeOnSBXyrN4iKj6AcylTdXMZ0STztX4=;
+	s=default; t=1587049930;
+	bh=iGAvezQIXpomV+U2h6LGXS5TodfnQCAsqZ5z6i5QdVU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UUBe/k4iw4rbuKkGPqentkhL65KlI2IdVoB539kZt7mJM4eohBp3gsqnTDl6XMlqK
-	 dFutyEQEP9UF7rKC4yoKzDmsDcbcYLpy3yjC1Cw8btsj5i+fy3PBhNH4+PDzXlL+fM
-	 437B1q7p0C+sDsujjkivWrZbnj0pB5HAC1RkSW5s=
+	b=ON75CkGO1UGBPgYI7evjL4mNT11Nkmxh/21hnKJm292EzwNPb4MIUp4jJtkOu3Lin
+	 U2nJver0pQigfgYDtoO6UnVsCNCWhJ3vI+nGbC1RwuTnDUTjbqgOLq4CTRQxBgcgQS
+	 J99qdGmV7l/UnUSI4/uaHZVPe/OwH1tf3PJjiSxA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395029AbgDPPLx (ORCPT
+        id S2395057AbgDPPME (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:11:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36116 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 11:12:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35834 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2441671AbgDPNuL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2441659AbgDPNuL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 16 Apr 2020 09:50:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ECE53217D8;
-        Thu, 16 Apr 2020 13:50:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C43A32224E;
+        Thu, 16 Apr 2020 13:49:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587045009;
-        bh=35DQCoLhU4IACeOnSBXyrN4iKj6AcylTdXMZ0STztX4=;
+        s=default; t=1587044997;
+        bh=iGAvezQIXpomV+U2h6LGXS5TodfnQCAsqZ5z6i5QdVU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pLz1A5Fp2SVTEkZ52U11Q3l4wWt7pjLgu1lTYqFxwsbEz3SDO6YjoMsRE5qAxrgf7
-         rA9qetYNVS7OVSXGRTyvybBo8JT1Puyzj+o2o5byWdh7yGMutmos/LZaWX9fdu5gAv
-         Cyc7FxLelaOyFWCTKOkqfSkmGTo81iC5Oq8xXftE=
+        b=QM/P5UnC7Jo7LcTeoTLYe7mb6Wv+XwFwt7AjkJAJ7oxYWrSUFe/YSUvv6QvmYL1ua
+         MYE5aUFGBfjuQ2QmtFINzgWXkdTsZIUGnYUeMWF/lb1auGP6YQK5rlUzINGaLkcVN8
+         whpo0OOyoUmDxfYpagq0Ix4o/VeDYYZqRIL8ClF8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Biggers <ebiggers@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jessica Yu <jeyu@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Jeff Vander Stoep <jeffv@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        NeilBrown <neilb@suse.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.4 193/232] fs/filesystems.c: downgrade user-reachable WARN_ONCE() to pr_warn_once()
-Date:   Thu, 16 Apr 2020 15:24:47 +0200
-Message-Id: <20200416131339.304534097@linuxfoundation.org>
+        stable@vger.kernel.org, Libor Pechacek <lpechacek@suse.cz>,
+        Michal Suchanek <msuchanek@suse.de>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH 5.4 188/232] powerpc/pseries: Avoid NULL pointer dereference when drmem is unavailable
+Date:   Thu, 16 Apr 2020 15:24:42 +0200
+Message-Id: <20200416131338.652737635@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131316.640996080@linuxfoundation.org>
 References: <20200416131316.640996080@linuxfoundation.org>
@@ -66,55 +60,101 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+From: Libor Pechacek <lpechacek@suse.cz>
 
-commit 26c5d78c976ca298e59a56f6101a97b618ba3539 upstream.
+commit a83836dbc53e96f13fec248ecc201d18e1e3111d upstream.
 
-After request_module(), nothing is stopping the module from being
-unloaded until someone takes a reference to it via try_get_module().
+In guests without hotplugagble memory drmem structure is only zero
+initialized. Trying to manipulate DLPAR parameters results in a crash.
 
-The WARN_ONCE() in get_fs_type() is thus user-reachable, via userspace
-running 'rmmod' concurrently.
+  $ echo "memory add count 1" > /sys/kernel/dlpar
+  Oops: Kernel access of bad area, sig: 11 [#1]
+  LE PAGE_SIZE=64K MMU=Hash SMP NR_CPUS=2048 NUMA pSeries
+  ...
+  NIP:  c0000000000ff294 LR: c0000000000ff248 CTR: 0000000000000000
+  REGS: c0000000fb9d3880 TRAP: 0300   Tainted: G            E      (5.5.0-rc6-2-default)
+  MSR:  8000000000009033 <SF,EE,ME,IR,DR,RI,LE>  CR: 28242428  XER: 20000000
+  CFAR: c0000000009a6c10 DAR: 0000000000000010 DSISR: 40000000 IRQMASK: 0
+  ...
+  NIP dlpar_memory+0x6e4/0xd00
+  LR  dlpar_memory+0x698/0xd00
+  Call Trace:
+    dlpar_memory+0x698/0xd00 (unreliable)
+    handle_dlpar_errorlog+0xc0/0x190
+    dlpar_store+0x198/0x4a0
+    kobj_attr_store+0x30/0x50
+    sysfs_kf_write+0x64/0x90
+    kernfs_fop_write+0x1b0/0x290
+    __vfs_write+0x3c/0x70
+    vfs_write+0xd0/0x260
+    ksys_write+0xdc/0x130
+    system_call+0x5c/0x68
 
-Since WARN_ONCE() is for kernel bugs only, not for user-reachable
-situations, downgrade this warning to pr_warn_once().
+Taking closer look at the code, I can see that for_each_drmem_lmb is a
+macro expanding into `for (lmb = &drmem_info->lmbs[0]; lmb <=
+&drmem_info->lmbs[drmem_info->n_lmbs - 1]; lmb++)`. When drmem_info->lmbs
+is NULL, the loop would iterate through the whole address range if it
+weren't stopped by the NULL pointer dereference on the next line.
 
-Keep it printed once only, since the intent of this warning is to detect
-a bug in modprobe at boot time.  Printing the warning more than once
-wouldn't really provide any useful extra information.
+This patch aligns for_each_drmem_lmb and for_each_drmem_lmb_in_range
+macro behavior with the common C semantics, where the end marker does
+not belong to the scanned range, and alters get_lmb_range() semantics.
+As a side effect, the wraparound observed in the crash is prevented.
 
-Fixes: 41124db869b7 ("fs: warn in case userspace lied about modprobe return")
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Reviewed-by: Jessica Yu <jeyu@kernel.org>
-Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Jeff Vander Stoep <jeffv@google.com>
-Cc: Jessica Yu <jeyu@kernel.org>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Luis Chamberlain <mcgrof@kernel.org>
-Cc: NeilBrown <neilb@suse.com>
-Cc: <stable@vger.kernel.org>		[4.13+]
-Link: http://lkml.kernel.org/r/20200312202552.241885-3-ebiggers@kernel.org
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: 6c6ea53725b3 ("powerpc/mm: Separate ibm, dynamic-memory data from DT format")
+Cc: stable@vger.kernel.org # v4.16+
+Signed-off-by: Libor Pechacek <lpechacek@suse.cz>
+Signed-off-by: Michal Suchanek <msuchanek@suse.de>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20200131132829.10281-1-msuchanek@suse.de
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/filesystems.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ arch/powerpc/include/asm/drmem.h                |    4 ++--
+ arch/powerpc/platforms/pseries/hotplug-memory.c |    8 ++++----
+ 2 files changed, 6 insertions(+), 6 deletions(-)
 
---- a/fs/filesystems.c
-+++ b/fs/filesystems.c
-@@ -271,7 +271,9 @@ struct file_system_type *get_fs_type(con
- 	fs = __get_fs_type(name, len);
- 	if (!fs && (request_module("fs-%.*s", len, name) == 0)) {
- 		fs = __get_fs_type(name, len);
--		WARN_ONCE(!fs, "request_module fs-%.*s succeeded, but still no fs?\n", len, name);
-+		if (!fs)
-+			pr_warn_once("request_module fs-%.*s succeeded, but still no fs?\n",
-+				     len, name);
- 	}
+--- a/arch/powerpc/include/asm/drmem.h
++++ b/arch/powerpc/include/asm/drmem.h
+@@ -27,12 +27,12 @@ struct drmem_lmb_info {
+ extern struct drmem_lmb_info *drmem_info;
  
- 	if (dot && fs && !(fs->fs_flags & FS_HAS_SUBTYPE)) {
+ #define for_each_drmem_lmb_in_range(lmb, start, end)		\
+-	for ((lmb) = (start); (lmb) <= (end); (lmb)++)
++	for ((lmb) = (start); (lmb) < (end); (lmb)++)
+ 
+ #define for_each_drmem_lmb(lmb)					\
+ 	for_each_drmem_lmb_in_range((lmb),			\
+ 		&drmem_info->lmbs[0],				\
+-		&drmem_info->lmbs[drmem_info->n_lmbs - 1])
++		&drmem_info->lmbs[drmem_info->n_lmbs])
+ 
+ /*
+  * The of_drconf_cell_v1 struct defines the layout of the LMB data
+--- a/arch/powerpc/platforms/pseries/hotplug-memory.c
++++ b/arch/powerpc/platforms/pseries/hotplug-memory.c
+@@ -223,7 +223,7 @@ static int get_lmb_range(u32 drc_index,
+ 			 struct drmem_lmb **end_lmb)
+ {
+ 	struct drmem_lmb *lmb, *start, *end;
+-	struct drmem_lmb *last_lmb;
++	struct drmem_lmb *limit;
+ 
+ 	start = NULL;
+ 	for_each_drmem_lmb(lmb) {
+@@ -236,10 +236,10 @@ static int get_lmb_range(u32 drc_index,
+ 	if (!start)
+ 		return -EINVAL;
+ 
+-	end = &start[n_lmbs - 1];
++	end = &start[n_lmbs];
+ 
+-	last_lmb = &drmem_info->lmbs[drmem_info->n_lmbs - 1];
+-	if (end > last_lmb)
++	limit = &drmem_info->lmbs[drmem_info->n_lmbs];
++	if (end > limit)
+ 		return -EINVAL;
+ 
+ 	*start_lmb = start;
 
 
