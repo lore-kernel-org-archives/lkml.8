@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB087C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:52:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B12DC2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:52:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BAAC920732
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:52:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3652320732
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:52:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587052368;
-	bh=vAfpia3+3SoFhwgFhHVn8pNS77US4Paef5mt5mvn45E=;
+	s=default; t=1587052375;
+	bh=bFUCpEEVzOrm1acvZr3Ly3iJYoGVkZhsua8izAbxhqI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0LkdmXxx7TmmNCVbv/0SWI5BfvZHpmMaB8Z+NNwwSbySxdl/LpXYdcAC0l+zXV4Pk
-	 okYTHIvGIqu3Xk5vdXnhdrsnd/vUrYcPMhRSCRuvqAPexwQeOa+VfHScp1J0l87RvE
-	 H3+4MJ5PejCsZa8gqlsoabUV8iHH6ucWIPIPtjiI=
+	b=JMTjHXyZUmbBG0UqRG1Wn/fWo7Mv90rtMe8T0snltqiIRN/OqjRhLAwo76PiyIj+z
+	 P4ns7zo7qcSrN9nK5e39uvi1LdhQbsmpb89h77fsPGZunOdFzcTqHHqXa5n0g4GxOM
+	 7bbUk/VXs5MhhVYsENNdLFXNOQfe8RMPzLZDEkFg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2894662AbgDPPwr (ORCPT
+        id S2895090AbgDPPwy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:52:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44086 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 11:52:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43732 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2896560AbgDPNcz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2896559AbgDPNcz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 16 Apr 2020 09:32:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E619F22261;
-        Thu, 16 Apr 2020 13:31:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0DA5D22251;
+        Thu, 16 Apr 2020 13:31:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587043915;
-        bh=vAfpia3+3SoFhwgFhHVn8pNS77US4Paef5mt5mvn45E=;
+        s=default; t=1587043910;
+        bh=bFUCpEEVzOrm1acvZr3Ly3iJYoGVkZhsua8izAbxhqI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xG5ZiJLaxcoKNcG/1LY8u9wshAkBuxYPB5i8G8HSFgScCKUdBhBWzd7V3es96iNn+
-         eRw+HM2khU3uDrs5hgTPYlGunmN7t1hI11CTda0xi55WajpLCkpC4kS9WIuV4tPRmJ
-         w/XqMLcwl/cgfpPefDhgMmF9yyNqWehlce9+9d/k=
+        b=OQK0sZiaaGjJm8v7zU2SHzD46mUleB2cYhSbzGdvqhJZeVTyC7ODHaKmG6IG/vzxJ
+         8De/WKGIaL3hlIp9lwgklYDONueT2rQSVr5m3yUg0f6oPeeI6KW+xEF8uP176vcTG3
+         rJJzocePKiI34CRl+mpOE21qlhezulitNvPILn48=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 4.19 126/146] powerpc/hash64/devmap: Use H_PAGE_THP_HUGE when setting up huge devmap PTE entries
-Date:   Thu, 16 Apr 2020 15:24:27 +0200
-Message-Id: <20200416131259.748650096@linuxfoundation.org>
+        stable@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
+        Andrew Donnellan <ajd@linux.ibm.com>
+Subject: [PATCH 4.19 124/146] powerpc/powernv/idle: Restore AMR/UAMOR/AMOR after idle
+Date:   Thu, 16 Apr 2020 15:24:25 +0200
+Message-Id: <20200416131259.520587819@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131242.353444678@linuxfoundation.org>
 References: <20200416131242.353444678@linuxfoundation.org>
@@ -60,136 +59,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+From: Michael Ellerman <mpe@ellerman.id.au>
 
-commit 36b78402d97a3b9aeab136feb9b00d8647ec2c20 upstream.
+commit 53a712bae5dd919521a58d7bad773b949358add0 upstream.
 
-H_PAGE_THP_HUGE is used to differentiate between a THP hugepage and
-hugetlb hugepage entries. The difference is WRT how we handle hash
-fault on these address. THP address enables MPSS in segments. We want
-to manage devmap hugepage entries similar to THP pt entries. Hence use
-H_PAGE_THP_HUGE for devmap huge PTE entries.
+In order to implement KUAP (Kernel Userspace Access Protection) on
+Power9 we will be using the AMR, and therefore indirectly the
+UAMOR/AMOR.
 
-With current code while handling hash PTE fault, we do set is_thp =
-true when finding devmap PTE huge PTE entries.
+So save/restore these regs in the idle code.
 
-Current code also does the below sequence we setting up huge devmap
-entries.
-
-	entry = pmd_mkhuge(pfn_t_pmd(pfn, prot));
-	if (pfn_t_devmap(pfn))
-		entry = pmd_mkdevmap(entry);
-
-In that case we would find both H_PAGE_THP_HUGE and PAGE_DEVMAP set
-for huge devmap PTE entries. This results in false positive error like
-below.
-
-  kernel BUG at /home/kvaneesh/src/linux/mm/memory.c:4321!
-  Oops: Exception in kernel mode, sig: 5 [#1]
-  LE PAGE_SIZE=64K MMU=Hash SMP NR_CPUS=2048 NUMA pSeries
-  Modules linked in:
-  CPU: 56 PID: 67996 Comm: t_mmap_dio Not tainted 5.6.0-rc4-59640-g371c804dedbc #128
-  ....
-  NIP [c00000000044c9e4] __follow_pte_pmd+0x264/0x900
-  LR [c0000000005d45f8] dax_writeback_one+0x1a8/0x740
-  Call Trace:
-    str_spec.74809+0x22ffb4/0x2d116c (unreliable)
-    dax_writeback_one+0x1a8/0x740
-    dax_writeback_mapping_range+0x26c/0x700
-    ext4_dax_writepages+0x150/0x5a0
-    do_writepages+0x68/0x180
-    __filemap_fdatawrite_range+0x138/0x180
-    file_write_and_wait_range+0xa4/0x110
-    ext4_sync_file+0x370/0x6e0
-    vfs_fsync_range+0x70/0xf0
-    sys_msync+0x220/0x2e0
-    system_call+0x5c/0x68
-
-This is because our pmd_trans_huge check doesn't exclude _PAGE_DEVMAP.
-
-To make this all consistent, update pmd_mkdevmap to set
-H_PAGE_THP_HUGE and pmd_trans_huge check now excludes _PAGE_DEVMAP
-correctly.
-
-Fixes: ebd31197931d ("powerpc/mm: Add devmap support for ppc64")
-Cc: stable@vger.kernel.org # v4.13+
-Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
 Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20200313094842.351830-1-aneesh.kumar@linux.ibm.com
+[ajd: Backport to 4.19 tree, CVE-2020-11669]
+Signed-off-by: Andrew Donnellan <ajd@linux.ibm.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- arch/powerpc/include/asm/book3s/64/hash-4k.h  |    6 ++++++
- arch/powerpc/include/asm/book3s/64/hash-64k.h |    8 +++++++-
- arch/powerpc/include/asm/book3s/64/pgtable.h  |    4 +++-
- arch/powerpc/include/asm/book3s/64/radix.h    |    5 +++++
- 4 files changed, 21 insertions(+), 2 deletions(-)
+ arch/powerpc/kernel/idle_book3s.S |   27 +++++++++++++++++++++++----
+ 1 file changed, 23 insertions(+), 4 deletions(-)
 
---- a/arch/powerpc/include/asm/book3s/64/hash-4k.h
-+++ b/arch/powerpc/include/asm/book3s/64/hash-4k.h
-@@ -145,6 +145,12 @@ extern pmd_t hash__pmdp_huge_get_and_cle
- extern int hash__has_transparent_hugepage(void);
- #endif
+--- a/arch/powerpc/kernel/idle_book3s.S
++++ b/arch/powerpc/kernel/idle_book3s.S
+@@ -170,8 +170,11 @@ core_idle_lock_held:
+ 	bne-	core_idle_lock_held
+ 	blr
  
-+static inline pmd_t hash__pmd_mkdevmap(pmd_t pmd)
-+{
-+	BUG();
-+	return pmd;
-+}
-+
- #endif /* !__ASSEMBLY__ */
+-/* Reuse an unused pt_regs slot for IAMR */
++/* Reuse some unused pt_regs slots for AMR/IAMR/UAMOR/UAMOR */
++#define PNV_POWERSAVE_AMR	_TRAP
+ #define PNV_POWERSAVE_IAMR	_DAR
++#define PNV_POWERSAVE_UAMOR	_DSISR
++#define PNV_POWERSAVE_AMOR	RESULT
  
- #endif /* _ASM_POWERPC_BOOK3S_64_HASH_4K_H */
---- a/arch/powerpc/include/asm/book3s/64/hash-64k.h
-+++ b/arch/powerpc/include/asm/book3s/64/hash-64k.h
-@@ -233,7 +233,7 @@ static inline void mark_hpte_slot_valid(
-  */
- static inline int hash__pmd_trans_huge(pmd_t pmd)
- {
--	return !!((pmd_val(pmd) & (_PAGE_PTE | H_PAGE_THP_HUGE)) ==
-+	return !!((pmd_val(pmd) & (_PAGE_PTE | H_PAGE_THP_HUGE | _PAGE_DEVMAP)) ==
- 		  (_PAGE_PTE | H_PAGE_THP_HUGE));
- }
+ /*
+  * Pass requested state in r3:
+@@ -205,8 +208,16 @@ pnv_powersave_common:
+ 	SAVE_NVGPRS(r1)
  
-@@ -259,6 +259,12 @@ extern pmd_t hash__pmdp_huge_get_and_cle
- 				       unsigned long addr, pmd_t *pmdp);
- extern int hash__has_transparent_hugepage(void);
- #endif /*  CONFIG_TRANSPARENT_HUGEPAGE */
-+
-+static inline pmd_t hash__pmd_mkdevmap(pmd_t pmd)
-+{
-+	return __pmd(pmd_val(pmd) | (_PAGE_PTE | H_PAGE_THP_HUGE | _PAGE_DEVMAP));
-+}
-+
- #endif	/* __ASSEMBLY__ */
+ BEGIN_FTR_SECTION
++	mfspr	r4, SPRN_AMR
+ 	mfspr	r5, SPRN_IAMR
++	mfspr	r6, SPRN_UAMOR
++	std	r4, PNV_POWERSAVE_AMR(r1)
+ 	std	r5, PNV_POWERSAVE_IAMR(r1)
++	std	r6, PNV_POWERSAVE_UAMOR(r1)
++BEGIN_FTR_SECTION_NESTED(42)
++	mfspr	r7, SPRN_AMOR
++	std	r7, PNV_POWERSAVE_AMOR(r1)
++END_FTR_SECTION_NESTED_IFSET(CPU_FTR_HVMODE, 42)
+ END_FTR_SECTION_IFSET(CPU_FTR_ARCH_207S)
  
- #endif /* _ASM_POWERPC_BOOK3S_64_HASH_64K_H */
---- a/arch/powerpc/include/asm/book3s/64/pgtable.h
-+++ b/arch/powerpc/include/asm/book3s/64/pgtable.h
-@@ -1253,7 +1253,9 @@ extern void serialize_against_pte_lookup
+ 	mfcr	r5
+@@ -935,12 +946,20 @@ END_FTR_SECTION_IFSET(CPU_FTR_HVMODE)
+ 	REST_GPR(2, r1)
  
- static inline pmd_t pmd_mkdevmap(pmd_t pmd)
- {
--	return __pmd(pmd_val(pmd) | (_PAGE_PTE | _PAGE_DEVMAP));
-+	if (radix_enabled())
-+		return radix__pmd_mkdevmap(pmd);
-+	return hash__pmd_mkdevmap(pmd);
- }
+ BEGIN_FTR_SECTION
+-	/* IAMR was saved in pnv_powersave_common() */
++	/* These regs were saved in pnv_powersave_common() */
++	ld	r4, PNV_POWERSAVE_AMR(r1)
+ 	ld	r5, PNV_POWERSAVE_IAMR(r1)
++	ld	r6, PNV_POWERSAVE_UAMOR(r1)
++	mtspr	SPRN_AMR, r4
+ 	mtspr	SPRN_IAMR, r5
++	mtspr	SPRN_UAMOR, r6
++BEGIN_FTR_SECTION_NESTED(42)
++	ld	r7, PNV_POWERSAVE_AMOR(r1)
++	mtspr	SPRN_AMOR, r7
++END_FTR_SECTION_NESTED_IFSET(CPU_FTR_HVMODE, 42)
+ 	/*
+-	 * We don't need an isync here because the upcoming mtmsrd is
+-	 * execution synchronizing.
++	 * We don't need an isync here after restoring IAMR because the upcoming
++	 * mtmsrd is execution synchronizing.
+ 	 */
+ END_FTR_SECTION_IFSET(CPU_FTR_ARCH_207S)
  
- static inline int pmd_devmap(pmd_t pmd)
---- a/arch/powerpc/include/asm/book3s/64/radix.h
-+++ b/arch/powerpc/include/asm/book3s/64/radix.h
-@@ -255,6 +255,11 @@ extern pmd_t radix__pmdp_huge_get_and_cl
- extern int radix__has_transparent_hugepage(void);
- #endif
- 
-+static inline pmd_t radix__pmd_mkdevmap(pmd_t pmd)
-+{
-+	return __pmd(pmd_val(pmd) | (_PAGE_PTE | _PAGE_DEVMAP));
-+}
-+
- extern int __meminit radix__vmemmap_create_mapping(unsigned long start,
- 					     unsigned long page_size,
- 					     unsigned long phys);
 
 
