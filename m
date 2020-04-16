@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC53EC2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:29:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FCF4C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:30:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A456B21927
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:29:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7964221927
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:30:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587047393;
-	bh=NIfD1hK5pPn8ZzH1+MpzrsVPbWvO7PPVI91BpOhzswU=;
+	s=default; t=1587047405;
+	bh=k7+F2+dZbLUXEVNzfB8DK7Rq3o1/WbEpoaovpbzJBtQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dNSgVNC7FMPlti10hw5ITJKoxuWKE3yB00rekZwKRLS3HQ+fwklmSz5Fz8OYmrwfS
-	 UmdOVArAr7vqXFf4pDFS5/lrDP1mqT8oDOssH26x7cXJr4/IJn88kPfGwWXyKY7byt
-	 yQUYf8Roz6uGRzU1MIb7z+vK9N9wWY2GD5Jl/rqE=
+	b=urvJ+ysz6dd1Vqg2paPD8NWQSJfNgHlp4NEhcFIMjKK6LznpXuWKzgzYqz835mTO+
+	 G/l0MCqGUJ8DGIq2Yn7A7W2ITI7nugd+oEZAML5vB/tBJqTVCVekuyIVOyd06jpaL/
+	 mKA4gt00XSdsnywU/IVV55QBapOcBRlUtFqNLcVo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394248AbgDPO3r (ORCPT
+        id S2390590AbgDPOaC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:29:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48488 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 10:30:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48528 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392753AbgDPOBR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 10:01:17 -0400
+        id S2392766AbgDPOBV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 10:01:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A3EA220786;
-        Thu, 16 Apr 2020 14:01:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 21B0820732;
+        Thu, 16 Apr 2020 14:01:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587045677;
-        bh=NIfD1hK5pPn8ZzH1+MpzrsVPbWvO7PPVI91BpOhzswU=;
+        s=default; t=1587045679;
+        bh=k7+F2+dZbLUXEVNzfB8DK7Rq3o1/WbEpoaovpbzJBtQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ItxR51cSIIVj0kUQF8XZ4xTRTSE37IoZHdQsQjCcaTSUrzVszndAfXyfhJCsyVNOg
-         1b88j6cMRGVml9DMCqEsyk25dG+UNDMtQc5C4whcAVCuPBD1WjlSQqypl970GUYEw8
-         0iAmotmbmYQtCkrrv6O7Yhj/7oyfjb97Mc1Ya5Lw=
+        b=y3rhtds5ytU7kYPdovv0uMlDZRtVMRI4oZJCqtJGJurnUKDf8apPWWALBs7OYkq1L
+         c2OK472cQfgKnkF6Nc3CwPGAu9kVQvJ8FK9EybjsikXLYNvbJ+0r0aXPOwsMOUavlZ
+         oWZm3wnaBkAXKa/LYVQUo/ew9k6QaFqHG8wT7Wsw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Taeung Song <treeze.taeung@gmail.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
-Subject: [PATCH 5.6 225/254] ftrace/kprobe: Show the maxactive number on kprobe_events
-Date:   Thu, 16 Apr 2020 15:25:14 +0200
-Message-Id: <20200416131353.946996077@linuxfoundation.org>
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Merlijn Wajer <merlijn@archive.org>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 5.6 234/254] scsi: sr: get rid of sr global mutex
+Date:   Thu, 16 Apr 2020 15:25:23 +0200
+Message-Id: <20200416131354.857149679@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.804095985@linuxfoundation.org>
 References: <20200416131325.804095985@linuxfoundation.org>
@@ -60,38 +60,147 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masami Hiramatsu <mhiramat@kernel.org>
+From: Merlijn Wajer <merlijn@archive.org>
 
-commit 6a13a0d7b4d1171ef9b80ad69abc37e1daa941b3 upstream.
+commit 51a858817dcdbbdee22cb54b0b2b26eb145ca5b6 upstream.
 
-Show maxactive parameter on kprobe_events.
-This allows user to save the current configuration and
-restore it without losing maxactive parameter.
+When replacing the Big Kernel Lock in commit 2a48fc0ab242 ("block:
+autoconvert trivial BKL users to private mutex"), the lock was replaced
+with a sr-wide lock.
 
-Link: http://lkml.kernel.org/r/4762764a-6df7-bc93-ed60-e336146dce1f@gmail.com
-Link: http://lkml.kernel.org/r/158503528846.22706.5549974121212526020.stgit@devnote2
+This causes very poor performance when using multiple sr devices, as the sr
+driver was not able to execute more than one command to one drive at any
+given time, even when there were many CD drives available.
 
-Cc: stable@vger.kernel.org
-Fixes: 696ced4fb1d76 ("tracing/kprobes: expose maxactive for kretprobe in kprobe_events")
-Reported-by: Taeung Song <treeze.taeung@gmail.com>
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Replace the global mutex with per-sr-device mutex.
+
+Someone tried this patch at the time, but it never made it upstream, due to
+possible concerns with race conditions, but it's not clear the patch
+actually caused those:
+
+https://www.spinics.net/lists/linux-scsi/msg63706.html
+https://www.spinics.net/lists/linux-scsi/msg63750.html
+
+Also see
+
+http://lists.xiph.org/pipermail/paranoia/2019-December/001647.html
+
+Link: https://lore.kernel.org/r/20200218143918.30267-1-merlijn@archive.org
+Acked-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Merlijn Wajer <merlijn@archive.org>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/trace/trace_kprobe.c |    2 ++
- 1 file changed, 2 insertions(+)
+ drivers/scsi/sr.c |   20 +++++++++++---------
+ drivers/scsi/sr.h |    2 ++
+ 2 files changed, 13 insertions(+), 9 deletions(-)
 
---- a/kernel/trace/trace_kprobe.c
-+++ b/kernel/trace/trace_kprobe.c
-@@ -1078,6 +1078,8 @@ static int trace_kprobe_show(struct seq_
- 	int i;
+--- a/drivers/scsi/sr.c
++++ b/drivers/scsi/sr.c
+@@ -79,7 +79,6 @@ MODULE_ALIAS_SCSI_DEVICE(TYPE_WORM);
+ 	 CDC_CD_R|CDC_CD_RW|CDC_DVD|CDC_DVD_R|CDC_DVD_RAM|CDC_GENERIC_PACKET| \
+ 	 CDC_MRW|CDC_MRW_W|CDC_RAM)
  
- 	seq_putc(m, trace_kprobe_is_return(tk) ? 'r' : 'p');
-+	if (trace_kprobe_is_return(tk) && tk->rp.maxactive)
-+		seq_printf(m, "%d", tk->rp.maxactive);
- 	seq_printf(m, ":%s/%s", trace_probe_group_name(&tk->tp),
- 				trace_probe_name(&tk->tp));
+-static DEFINE_MUTEX(sr_mutex);
+ static int sr_probe(struct device *);
+ static int sr_remove(struct device *);
+ static blk_status_t sr_init_command(struct scsi_cmnd *SCpnt);
+@@ -536,9 +535,9 @@ static int sr_block_open(struct block_de
+ 	scsi_autopm_get_device(sdev);
+ 	check_disk_change(bdev);
  
+-	mutex_lock(&sr_mutex);
++	mutex_lock(&cd->lock);
+ 	ret = cdrom_open(&cd->cdi, bdev, mode);
+-	mutex_unlock(&sr_mutex);
++	mutex_unlock(&cd->lock);
+ 
+ 	scsi_autopm_put_device(sdev);
+ 	if (ret)
+@@ -551,10 +550,10 @@ out:
+ static void sr_block_release(struct gendisk *disk, fmode_t mode)
+ {
+ 	struct scsi_cd *cd = scsi_cd(disk);
+-	mutex_lock(&sr_mutex);
++	mutex_lock(&cd->lock);
+ 	cdrom_release(&cd->cdi, mode);
+ 	scsi_cd_put(cd);
+-	mutex_unlock(&sr_mutex);
++	mutex_unlock(&cd->lock);
+ }
+ 
+ static int sr_block_ioctl(struct block_device *bdev, fmode_t mode, unsigned cmd,
+@@ -565,7 +564,7 @@ static int sr_block_ioctl(struct block_d
+ 	void __user *argp = (void __user *)arg;
+ 	int ret;
+ 
+-	mutex_lock(&sr_mutex);
++	mutex_lock(&cd->lock);
+ 
+ 	ret = scsi_ioctl_block_when_processing_errors(sdev, cmd,
+ 			(mode & FMODE_NDELAY) != 0);
+@@ -595,7 +594,7 @@ put:
+ 	scsi_autopm_put_device(sdev);
+ 
+ out:
+-	mutex_unlock(&sr_mutex);
++	mutex_unlock(&cd->lock);
+ 	return ret;
+ }
+ 
+@@ -608,7 +607,7 @@ static int sr_block_compat_ioctl(struct
+ 	void __user *argp = compat_ptr(arg);
+ 	int ret;
+ 
+-	mutex_lock(&sr_mutex);
++	mutex_lock(&cd->lock);
+ 
+ 	ret = scsi_ioctl_block_when_processing_errors(sdev, cmd,
+ 			(mode & FMODE_NDELAY) != 0);
+@@ -638,7 +637,7 @@ put:
+ 	scsi_autopm_put_device(sdev);
+ 
+ out:
+-	mutex_unlock(&sr_mutex);
++	mutex_unlock(&cd->lock);
+ 	return ret;
+ 
+ }
+@@ -745,6 +744,7 @@ static int sr_probe(struct device *dev)
+ 	disk = alloc_disk(1);
+ 	if (!disk)
+ 		goto fail_free;
++	mutex_init(&cd->lock);
+ 
+ 	spin_lock(&sr_index_lock);
+ 	minor = find_first_zero_bit(sr_index_bits, SR_DISKS);
+@@ -1055,6 +1055,8 @@ static void sr_kref_release(struct kref
+ 
+ 	put_disk(disk);
+ 
++	mutex_destroy(&cd->lock);
++
+ 	kfree(cd);
+ }
+ 
+--- a/drivers/scsi/sr.h
++++ b/drivers/scsi/sr.h
+@@ -20,6 +20,7 @@
+ 
+ #include <linux/genhd.h>
+ #include <linux/kref.h>
++#include <linux/mutex.h>
+ 
+ #define MAX_RETRIES	3
+ #define SR_TIMEOUT	(30 * HZ)
+@@ -51,6 +52,7 @@ typedef struct scsi_cd {
+ 	bool ignore_get_event:1;	/* GET_EVENT is unreliable, use TUR */
+ 
+ 	struct cdrom_device_info cdi;
++	struct mutex lock;
+ 	/* We hold gendisk and scsi_device references on probe and use
+ 	 * the refs on this kref to decide when to release them */
+ 	struct kref kref;
 
 
