@@ -2,102 +2,97 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A9E0C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 11:43:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87ED7C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 11:44:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0EB7620656
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 11:43:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="F6msH8q4"
+	by mail.kernel.org (Postfix) with ESMTP id 5773021D7F
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 11:44:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2633984AbgDPLnb (ORCPT
+        id S2634014AbgDPLny (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 07:43:31 -0400
-Received: from ozlabs.org ([203.11.71.1]:34513 "EHLO ozlabs.org"
+        Thu, 16 Apr 2020 07:43:54 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:53970 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2505947AbgDPLm6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 07:42:58 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 492y5V2GZKz9sR4;
-        Thu, 16 Apr 2020 21:42:53 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1587037375;
-        bh=t4CnpKi/1cWNveFL503UiUpa0nOioFN2uGWTVXoAKYo=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=F6msH8q4pMopBVokSfSDN6OBQ2S/Eb32uVgHlQ0T511IzSGtYtiaPIYwl/WVqwAzB
-         pl3QBuU5QbsXoXyFXmZ21FGYq7sWMmuonMX+4+FRxfwvwDpTakIsA64FlIELXls/Fk
-         iBWCoCwbM3fY2tIz6olJLuRfOd3prB0QUwORjf0UHyg5D0cXZN1n2479owrKo8mb2H
-         4Z9qCObz2+YH64TdrgA0v1on7J/TO5im0Sp37K7tv9tXlYJHD2zvBgJiPJGgTe5v36
-         ucqbz3InfjaVmg95tQi4nJj8dJYQ4sEzmpGlNqQ4eO6FheHkpmQ39ZsOyKv/JzFSDC
-         IOvVLxgMc6YPA==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Chris Packham <Chris.Packham@alliedtelesis.co.nz>,
-        "christophe.leroy\@c-s.fr" <christophe.leroy@c-s.fr>,
-        "paulus\@samba.org" <paulus@samba.org>,
-        "benh\@kernel.crashing.org" <benh@kernel.crashing.org>,
-        "oss\@buserror.net" <oss@buserror.net>,
-        "tglx\@linutronix.de" <tglx@linutronix.de>
-Cc:     "linuxppc-dev\@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Hamish Martin <Hamish.Martin@alliedtelesis.co.nz>
-Subject: Re: [PATCH v2] powerpc/setup_64: Set cache-line-size based on cache-block-size
-In-Reply-To: <343c0e8b01ab74481e0b8dfbe588b1c84127a487.camel@alliedtelesis.co.nz>
-References: <dd342c71e03e654a8786302d82f9662004418c6e.camel@alliedtelesis.co.nz> <20200325031854.7625-1-chris.packham@alliedtelesis.co.nz> <343c0e8b01ab74481e0b8dfbe588b1c84127a487.camel@alliedtelesis.co.nz>
-Date:   Thu, 16 Apr 2020 21:43:04 +1000
-Message-ID: <87tv1jirlj.fsf@mpe.ellerman.id.au>
-MIME-Version: 1.0
-Content-Type: text/plain
+        id S2633981AbgDPLn3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 07:43:29 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id C6AF6200C9A;
+        Thu, 16 Apr 2020 13:43:27 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id AAE83200306;
+        Thu, 16 Apr 2020 13:43:24 +0200 (CEST)
+Received: from lsv03124.swis.in-blr01.nxp.com (lsv03124.swis.in-blr01.nxp.com [92.120.146.121])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 5DDF3402FB;
+        Thu, 16 Apr 2020 19:43:20 +0800 (SGT)
+From:   Ashish Kumar <Ashish.Kumar@nxp.com>
+To:     broonie@kernel.org, boris.brezillon@collabora.com,
+        frieder.schrempf@kontron.de
+Cc:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Kuldeep Singh <kuldeep.singh@nxp.com>,
+        Ashish Kumar <Ashish.kumar@nxp.com>
+Subject: [PATCH v3] spi: spi-fsl-qspi: Reduce devm_ioremap size to 4 times AHB buffer size
+Date:   Thu, 16 Apr 2020 17:13:19 +0530
+Message-Id: <1587037399-18672-1-git-send-email-Ashish.Kumar@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Chris Packham <Chris.Packham@alliedtelesis.co.nz> writes:
-> Hi All,
->
-> On Wed, 2020-03-25 at 16:18 +1300, Chris Packham wrote:
->> If {i,d}-cache-block-size is set and {i,d}-cache-line-size is not,
->> use
->> the block-size value for both. Per the devicetree spec cache-line-
->> size
->> is only needed if it differs from the block size.
->> 
->> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
->> ---
->> It looks as though the bsizep = lsizep is not required per the spec
->> but it's
->> probably safer to retain it.
->> 
->> Changes in v2:
->> - Scott pointed out that u-boot should be filling in the cache
->> properties
->>   (which it does). But it does not specify a cache-line-size because
->> it
->>   provides a cache-block-size and the spec says you don't have to if
->> they are
->>   the same. So the error is in the parsing not in the devicetree
->> itself.
->> 
->
-> Ping? This thread went kind of quiet.
+Reduce devm_ioremap size to (4 * AHB_BUFER_SIZE) rather than mapping
+complete QSPI-Memmory as driver is now independent of flash size.
+Flash of any size can be accessed.
 
-I replied in the other thread:
+Issue was reported on platform where devm_ioremap failure is observed
+with size > 256M.
+Error log on LS1021ATWR :
+ fsl-quadspi 1550000.spi: ioremap failed for resource [mem 0x40000000-0x7fffffff]
+ fsl-quadspi 1550000.spi: Freescale QuadSPI probe failed
+ fsl-quadspi: probe of 1550000.spi failed with error -12
 
-  https://lore.kernel.org/linuxppc-dev/87369xx99u.fsf@mpe.ellerman.id.au/
+This change was also suggested previously:
+https://patchwork.kernel.org/patch/10508753/#22166385
 
-But then the merge window happened which is a busy time.
+Suggested-by: Boris Brezillon <boris.brezillon@collabora.com>
+Signed-off-by: Kuldeep Singh <kuldeep.singh@nxp.com>
+Signed-off-by: Ashish Kumar <Ashish.kumar@nxp.com>
+---
+v3: 
+Update comment
+v2:
+Add Suggested-by: Boris Brezillon <boris.brezillon@collabora.com>
+Incorrporate review comments from Frieder
+ drivers/spi/spi-fsl-qspi.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-What I'd really like is a v3 that incorporates the info I wrote in the
-other thread and a Fixes tag.
+diff --git a/drivers/spi/spi-fsl-qspi.c b/drivers/spi/spi-fsl-qspi.c
+index 63c9f7e..8b95e2f 100644
+--- a/drivers/spi/spi-fsl-qspi.c
++++ b/drivers/spi/spi-fsl-qspi.c
+@@ -859,14 +859,15 @@ static int fsl_qspi_probe(struct platform_device *pdev)
+ 
+ 	res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
+ 					"QuadSPI-memory");
+-	q->ahb_addr = devm_ioremap_resource(dev, res);
++	q->memmap_phy = res->start;
++	/* Since there are 4 cs, map size required is 4 times ahb_buf_size */
++	q->ahb_addr = devm_ioremap(dev, q->memmap_phy,
++				   (q->devtype_data->ahb_buf_size * 4));
+ 	if (IS_ERR(q->ahb_addr)) {
+ 		ret = PTR_ERR(q->ahb_addr);
+ 		goto err_put_ctrl;
+ 	}
+ 
+-	q->memmap_phy = res->start;
+-
+ 	/* find the clocks */
+ 	q->clk_en = devm_clk_get(dev, "qspi_en");
+ 	if (IS_ERR(q->clk_en)) {
+-- 
+2.7.4
 
-If you feel like doing that, that would be great. Otherwise I'll do it
-tomorrow.
-
-cheers
