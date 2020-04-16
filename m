@@ -2,53 +2,53 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0121CC2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:53:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89B50C2BB85
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:53:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D70AB20732
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:53:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5644A20732
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:53:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587052386;
-	bh=M+5zH2hdYE1SFCdCfW6nfxHibGgFpi/+Dvdz/3pLESQ=;
+	s=default; t=1587052395;
+	bh=SoVqO3bK3jHNnFnqoHbBV+IZFxZYUJeXCaLy+Ihncvo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=U9vflSR9TNDBPwm2zcrIG3MoCZleoLeBYEPWTKSvJYPmLpMqfVPa7XuOPSDXSAIfa
-	 XWdifkQsqTbeHjZ1pHXqeTSsYolIlLHZprxGyVDk9O8qtqgrp4ffwkaat9wlM1koYR
-	 m5cLLXw0kYlpdNgTQqY6oYhQc9QoDfGFC1p+Gln0=
+	b=C4D1kkQh6RHTRTGuROmeMf9wt99U7R77sG5/ecJPMBi3V/QyRkhZ9Fz9XmhLVgcRQ
+	 r7Q6+ZJyb3U7f012k7bjvBagoXNmd8/78ERWXBY8t3Y3YXbthRa7aOtQYsCJjvn/jY
+	 hharvgx4JScu9x5aJt6SpS/a2jhGwZTgAogbD0Hc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2896572AbgDPPxF (ORCPT
+        id S2896169AbgDPPxO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:53:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44060 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 11:53:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41800 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2896555AbgDPNcy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:32:54 -0400
+        id S2896523AbgDPNct (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:32:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EBD4C22202;
-        Thu, 16 Apr 2020 13:31:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 307E121D91;
+        Thu, 16 Apr 2020 13:31:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587043893;
-        bh=M+5zH2hdYE1SFCdCfW6nfxHibGgFpi/+Dvdz/3pLESQ=;
+        s=default; t=1587043878;
+        bh=SoVqO3bK3jHNnFnqoHbBV+IZFxZYUJeXCaLy+Ihncvo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IsPVkOlN80zjRyowRTCQRkDwoC+6r4iMp4ogehNQSdJvSH2i9ibXO09o6Yny4Rbh4
-         hZD2ky2wOd33970KF+gf043cBi5CwOCEPuKTWbBDYFcNhJbgwt9H7itwoVe9THQ92V
-         5Qhqw1h447hxF6ccNUobHQya+FPrazUSJu9MLvUU=
+        b=jN3VAjDzH8F0UsUrWpw8fcaSzvJK+esIHjQbg+fLwOcfztew3emJaq77S978kTbzt
+         U3ExXcJGYSCkZlaJqDSPXKZHSfeILLer5c5RBFnRp66jQmNtvWvvvBvbc+HVcNw8Mo
+         YJBoD/SzhsPE/qTVpNR/MdKIllWT6CXd+H2fY28o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Taeung Song <treeze.taeung@gmail.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 143/146] ftrace/kprobe: Show the maxactive number on kprobe_events
-Date:   Thu, 16 Apr 2020 15:24:44 +0200
-Message-Id: <20200416131301.931565735@linuxfoundation.org>
+        stable@vger.kernel.org, Simon Gander <simon@tuxera.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Anton Altaparmakov <anton@tuxera.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.19 120/146] hfsplus: fix crash and filesystem corruption when deleting files
+Date:   Thu, 16 Apr 2020 15:24:21 +0200
+Message-Id: <20200416131258.994253750@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131242.353444678@linuxfoundation.org>
 References: <20200416131242.353444678@linuxfoundation.org>
@@ -61,42 +61,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masami Hiramatsu <mhiramat@kernel.org>
+From: Simon Gander <simon@tuxera.com>
 
-[ Upstream commit 6a13a0d7b4d1171ef9b80ad69abc37e1daa941b3 ]
+commit 25efb2ffdf991177e740b2f63e92b4ec7d310a92 upstream.
 
-Show maxactive parameter on kprobe_events.
-This allows user to save the current configuration and
-restore it without losing maxactive parameter.
+When removing files containing extended attributes, the hfsplus driver may
+remove the wrong entries from the attributes b-tree, causing major
+filesystem damage and in some cases even kernel crashes.
 
-Link: http://lkml.kernel.org/r/4762764a-6df7-bc93-ed60-e336146dce1f@gmail.com
-Link: http://lkml.kernel.org/r/158503528846.22706.5549974121212526020.stgit@devnote2
+To remove a file, all its extended attributes have to be removed as well.
+The driver does this by looking up all keys in the attributes b-tree with
+the cnid of the file.  Each of these entries then gets deleted using the
+key used for searching, which doesn't contain the attribute's name when it
+should.  Since the key doesn't contain the name, the deletion routine will
+not find the correct entry and instead remove the one in front of it.  If
+parent nodes have to be modified, these become corrupt as well.  This
+causes invalid links and unsorted entries that not even macOS's fsck_hfs
+is able to fix.
 
-Cc: stable@vger.kernel.org
-Fixes: 696ced4fb1d76 ("tracing/kprobes: expose maxactive for kretprobe in kprobe_events")
-Reported-by: Taeung Song <treeze.taeung@gmail.com>
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+To fix this, modify the search key before an entry is deleted from the
+attributes b-tree by copying the found entry's key into the search key,
+therefore ensuring that the correct entry gets removed from the tree.
+
+Signed-off-by: Simon Gander <simon@tuxera.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Reviewed-by: Anton Altaparmakov <anton@tuxera.com>
+Cc: <stable@vger.kernel.org>
+Link: http://lkml.kernel.org/r/20200327155541.1521-1-simon@tuxera.com
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- kernel/trace/trace_kprobe.c | 2 ++
- 1 file changed, 2 insertions(+)
+ fs/hfsplus/attributes.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
-index c61b2b0a99e9c..65b4e28ff425f 100644
---- a/kernel/trace/trace_kprobe.c
-+++ b/kernel/trace/trace_kprobe.c
-@@ -975,6 +975,8 @@ static int probes_seq_show(struct seq_file *m, void *v)
- 	int i;
+--- a/fs/hfsplus/attributes.c
++++ b/fs/hfsplus/attributes.c
+@@ -292,6 +292,10 @@ static int __hfsplus_delete_attr(struct
+ 		return -ENOENT;
+ 	}
  
- 	seq_putc(m, trace_kprobe_is_return(tk) ? 'r' : 'p');
-+	if (trace_kprobe_is_return(tk) && tk->rp.maxactive)
-+		seq_printf(m, "%d", tk->rp.maxactive);
- 	seq_printf(m, ":%s/%s", tk->tp.call.class->system,
- 			trace_event_name(&tk->tp.call));
- 
--- 
-2.20.1
-
++	/* Avoid btree corruption */
++	hfs_bnode_read(fd->bnode, fd->search_key,
++			fd->keyoffset, fd->keylength);
++
+ 	err = hfs_brec_remove(fd);
+ 	if (err)
+ 		return err;
 
 
