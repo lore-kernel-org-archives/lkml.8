@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 345F4C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:11:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4AF9C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:11:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 10546206D6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:11:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C06A62076D
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:11:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587046273;
-	bh=LVIw4RglqMHO9GLqQAM4ex7xZERbrnRufJ49tt/+4Ic=;
+	s=default; t=1587046277;
+	bh=wttoton6TEU7iHeRKVPjij7bCAVwDWT6iBkWVBDZgs8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CxtkuWPQPhH2rppPX7fCKtJoJ0gkQSD/XElYVJKUK+cMi2UD7HT0YWpPsvSrjLns+
-	 Zibqmibyn34E+WniY473QRnhdDe+bxVnm1pUehDEO9VwWKlmxW1Ht4vRt4sSkAaKpg
-	 E1YG+yrg5i5KLNBfQyaOsmfnd1oFPcEF30mQ+JQ4=
+	b=s5jTHeZr9FOrBw9HEZjvXp1PTROu3iSjlV4TOapM2fL+55DTAGQamn6sXuK3wQ8eO
+	 GvNscav1VDXZoaz6hpMUf+QKO5WqexGNoJ5TwJ9HLBQ9n+1/RocmzUBu28lFQ0P6qQ
+	 LU8uzDeucwl+7VfoIngzuCPby0yMsOxDCS46oeeA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393595AbgDPOLK (ORCPT
+        id S2393559AbgDPOLQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:11:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33072 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 10:11:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32988 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731780AbgDPNrE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:47:04 -0400
+        id S2898641AbgDPNq7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:46:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1BBC7208E4;
-        Thu, 16 Apr 2020 13:47:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4701521974;
+        Thu, 16 Apr 2020 13:46:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044823;
-        bh=LVIw4RglqMHO9GLqQAM4ex7xZERbrnRufJ49tt/+4Ic=;
+        s=default; t=1587044818;
+        bh=wttoton6TEU7iHeRKVPjij7bCAVwDWT6iBkWVBDZgs8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=M81L0eq6ux8kFQyGS+1NMWNtW/+Gj3iJyi9BS0yOq6kb/Vk6ubf9Ays/4IK2zRxv5
-         bvHMCDbmnwQAwUEy9YPjeFFxXmzR0eEnezSjUhKySztJIhrniatU8t8Ovt6BENb6TT
-         6Ne1n8QgUgSv/oOhxmGHYnEkqwwAcPuWw3GBzeck=
+        b=UsBVNTazxCiOfyRKwPgUiS0pmylwg47ggYqZw8+rDo/iy8vDOWEMwyueigPL4sdDx
+         UBSyu5zJ40f4a4hCGzj+gef6HnJmp/22TvcbhENs0Ax5xj9s+5S0m+ZIhessDLRl3c
+         HWTi0rE1a3yme/oI547yMM/Lom6Fjy4v9rqoqEd4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Benoit Parrot <bparrot@ti.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Subject: [PATCH 5.4 089/232] media: ti-vpe: cal: fix disable_irqs to only the intended target
-Date:   Thu, 16 Apr 2020 15:23:03 +0200
-Message-Id: <20200416131326.124301479@linuxfoundation.org>
+        stable@vger.kernel.org, Pei Huang <huangpei@loongson.cn>,
+        Huacai Chen <chenhc@lemote.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Subject: [PATCH 5.4 114/232] MIPS/tlbex: Fix LDDIR usage in setup_pw() for Loongson-3
+Date:   Thu, 16 Apr 2020 15:23:28 +0200
+Message-Id: <20200416131329.401367116@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131316.640996080@linuxfoundation.org>
 References: <20200416131316.640996080@linuxfoundation.org>
@@ -60,49 +60,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Benoit Parrot <bparrot@ti.com>
+From: Huacai Chen <chenhc@lemote.com>
 
-commit 1db56284b9da9056093681f28db48a09a243274b upstream.
+commit d191aaffe3687d1e73e644c185f5f0550ec242b5 upstream.
 
-disable_irqs() was mistakenly disabling all interrupts when called.
-This cause all port stream to stop even if only stopping one of them.
+LDDIR/LDPTE is Loongson-3's acceleration for Page Table Walking. If BD
+(Base Directory, the 4th page directory) is not enabled, then GDOffset
+is biased by BadVAddr[63:62]. So, if GDOffset (aka. BadVAddr[47:36] for
+Loongson-3) is big enough, "0b11(BadVAddr[63:62])|BadVAddr[47:36]|...."
+can far beyond pg_swapper_dir. This means the pg_swapper_dir may NOT be
+accessed by LDDIR correctly, so fix it by set PWDirExt in CP0_PWCtl.
 
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Benoit Parrot <bparrot@ti.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Pei Huang <huangpei@loongson.cn>
+Signed-off-by: Huacai Chen <chenhc@lemote.com>
+Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/media/platform/ti-vpe/cal.c |   16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+ arch/mips/mm/tlbex.c |    5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
---- a/drivers/media/platform/ti-vpe/cal.c
-+++ b/drivers/media/platform/ti-vpe/cal.c
-@@ -537,16 +537,16 @@ static void enable_irqs(struct cal_ctx *
+--- a/arch/mips/mm/tlbex.c
++++ b/arch/mips/mm/tlbex.c
+@@ -1480,6 +1480,7 @@ static void build_r4000_tlb_refill_handl
  
- static void disable_irqs(struct cal_ctx *ctx)
+ static void setup_pw(void)
  {
-+	u32 val;
-+
- 	/* Disable IRQ_WDMA_END 0/1 */
--	reg_write_field(ctx->dev,
--			CAL_HL_IRQENABLE_CLR(2),
--			CAL_HL_IRQ_CLEAR,
--			CAL_HL_IRQ_MASK(ctx->csi2_port));
-+	val = 0;
-+	set_field(&val, CAL_HL_IRQ_CLEAR, CAL_HL_IRQ_MASK(ctx->csi2_port));
-+	reg_write(ctx->dev, CAL_HL_IRQENABLE_CLR(2), val);
- 	/* Disable IRQ_WDMA_START 0/1 */
--	reg_write_field(ctx->dev,
--			CAL_HL_IRQENABLE_CLR(3),
--			CAL_HL_IRQ_CLEAR,
--			CAL_HL_IRQ_MASK(ctx->csi2_port));
-+	val = 0;
-+	set_field(&val, CAL_HL_IRQ_CLEAR, CAL_HL_IRQ_MASK(ctx->csi2_port));
-+	reg_write(ctx->dev, CAL_HL_IRQENABLE_CLR(3), val);
- 	/* Todo: Add VC_IRQ and CSI2_COMPLEXIO_IRQ handling */
- 	reg_write(ctx->dev, CAL_CSI2_VC_IRQENABLE(1), 0);
++	unsigned int pwctl;
+ 	unsigned long pgd_i, pgd_w;
+ #ifndef __PAGETABLE_PMD_FOLDED
+ 	unsigned long pmd_i, pmd_w;
+@@ -1506,6 +1507,7 @@ static void setup_pw(void)
+ 
+ 	pte_i = ilog2(_PAGE_GLOBAL);
+ 	pte_w = 0;
++	pwctl = 1 << 30; /* Set PWDirExt */
+ 
+ #ifndef __PAGETABLE_PMD_FOLDED
+ 	write_c0_pwfield(pgd_i << 24 | pmd_i << 12 | pt_i << 6 | pte_i);
+@@ -1516,8 +1518,9 @@ static void setup_pw(void)
+ #endif
+ 
+ #ifdef CONFIG_MIPS_HUGE_TLB_SUPPORT
+-	write_c0_pwctl(1 << 6 | psn);
++	pwctl |= (1 << 6 | psn);
+ #endif
++	write_c0_pwctl(pwctl);
+ 	write_c0_kpgd((long)swapper_pg_dir);
+ 	kscratch_used_mask |= (1 << 7); /* KScratch6 is used for KPGD */
  }
 
 
