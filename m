@@ -2,129 +2,99 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34476C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:34:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C6B0C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:35:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1495A21927
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:34:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587047694;
-	bh=n7v2HN+R77M8aFGgkQ53MMg0xkofRKRbrUoHPVYUCHU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=i2ZY7A0Pe1DPfRgUYCkviPOVX/8eJzIFDi1XckStzYZL+uPcuWNmHqZ/KsPsGzfTm
-	 Yn/+fYe4kz5sp3gZeHkN2j745XXf61SIeP8gx9RyU3QKNghweAZdCxUnDRC5PzZvfe
-	 3pMZSEFiwIa5px/BOG4wdqGQavE1VOWzEgdiLa+w=
+	by mail.kernel.org (Postfix) with ESMTP id 2FCEC21D7E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:35:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409081AbgDPOYB (ORCPT
+        id S2394322AbgDPOfT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:24:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44214 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 10:35:19 -0400
+Received: from mga05.intel.com ([192.55.52.43]:37704 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2409266AbgDPN5K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:57:10 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8E04B2078B;
-        Thu, 16 Apr 2020 13:57:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587045430;
-        bh=n7v2HN+R77M8aFGgkQ53MMg0xkofRKRbrUoHPVYUCHU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1L9/BODm46T29DB356XLxWuRPBDNCM/aNJ/9g+li+WCBvcF2xBPBJf4g7UxdBNJI7
-         jQdPKvMGmsTorQAbA+11jI4JLTPhA6Me6VJpg8Fd/HiW6iGOe4ZySALpNoyImrSLYx
-         13fHKyRYROj177MFUowIsVmiGKx0Y/005SpBcTmI=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Greg Kurz <groug@kaod.org>,
-        Fabiano Rosas <farosas@linux.ibm.com>,
-        Paul Mackerras <paulus@ozlabs.org>
-Subject: [PATCH 5.6 130/254] KVM: PPC: Book3S HV: Skip kvmppc_uvmem_free if Ultravisor is not supported
-Date:   Thu, 16 Apr 2020 15:23:39 +0200
-Message-Id: <20200416131342.740245351@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200416131325.804095985@linuxfoundation.org>
-References: <20200416131325.804095985@linuxfoundation.org>
-User-Agent: quilt/0.66
+        id S2442013AbgDPORb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 10:17:31 -0400
+IronPort-SDR: ctvYkLTXhpWe68q4mB7rj1epUrhjj/6CIdUeXSu688ytYdRaW4k587JjMQ+W2LTUX5vREAx49g
+ eK9PFSNk5ZDg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2020 07:17:30 -0700
+IronPort-SDR: nNhPh8yY5LWX0JiAFW/fjHon2zQMrTXSaBa/C9M33JWkvjotn9dguAJItmREhpyILssKg6pSTu
+ IrXb49j4tEnQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,391,1580803200"; 
+   d="scan'208";a="288910450"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga002.fm.intel.com with ESMTP; 16 Apr 2020 07:17:28 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jP5Kc-0012r5-Pn; Thu, 16 Apr 2020 17:17:30 +0300
+Date:   Thu, 16 Apr 2020 17:17:30 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        linux-acpi@vger.kernel.org,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        platform-driver-x86@vger.kernel.org,
+        Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH v1 0/6] platform/x86: intel_cht_int33fe: clean up series
+Message-ID: <20200416141730.GE185537@smile.fi.intel.com>
+References: <20200408160905.12101-1-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200408160905.12101-1-andriy.shevchenko@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Fabiano Rosas <farosas@linux.ibm.com>
+On Wed, Apr 08, 2020 at 07:09:00PM +0300, Andy Shevchenko wrote:
+> When I started looking into the intel_cht_int33fe driver for an example of use
+> software node API, I have noticed that it's hard to get and code a bit messy.
+> Here is a clean up, main part of which is to introduce node groups and API to
+> register and unregister them. This and some pre-existing APIs can be used in
+> the driver.
+> 
+> So, because of cross-subsystem nature of this series, I may recommend to create
+> myself the immutable branch which can be pulled to Rafael's and Greg's trees
+> respectively. I'm also open for other proposals how to proceed.
 
-commit 9bee484b280a059c1faa10ae174af4f4af02c805 upstream.
+Greg, Rafael,
+any suggestion how to proceed with this series?
 
-kvmppc_uvmem_init checks for Ultravisor support and returns early if
-it is not present. Calling kvmppc_uvmem_free at module exit will cause
-an Oops:
+(It has been reviewed and tested).
 
-$ modprobe -r kvm-hv
+> Andy Shevchenko (6):
+>   device property: export set_secondary_fwnode() to modules
+>   software node: Allow register and unregister software node groups
+>   platform/x86: intel_cht_int33fe: Convert software node array to group
+>   platform/x86: intel_cht_int33fe: Convert to use set_secondary_fwnode()
+>   platform/x86: intel_cht_int33fe: Switch to use
+>     acpi_dev_hid_uid_match()
+>   platform/x86: intel_cht_int33fe: Fix spelling issues
+> 
+>  drivers/base/core.c                           |   1 +
+>  drivers/base/swnode.c                         |  48 ++++++++
+>  .../platform/x86/intel_cht_int33fe_typec.c    | 106 +++++++++---------
+>  include/linux/property.h                      |   3 +
+>  4 files changed, 108 insertions(+), 50 deletions(-)
+> 
+> -- 
+> 2.25.1
+> 
 
-  Oops: Kernel access of bad area, sig: 11 [#1]
-  <snip>
-  NIP:  c000000000789e90 LR: c000000000789e8c CTR: c000000000401030
-  REGS: c000003fa7bab9a0 TRAP: 0300   Not tainted  (5.6.0-rc6-00033-g6c90b86a745a-dirty)
-  MSR:  9000000000009033 <SF,HV,EE,ME,IR,DR,RI,LE>  CR: 24002282  XER: 00000000
-  CFAR: c000000000dae880 DAR: 0000000000000008 DSISR: 40000000 IRQMASK: 1
-  GPR00: c000000000789e8c c000003fa7babc30 c0000000016fe500 0000000000000000
-  GPR04: 0000000000000000 0000000000000006 0000000000000000 c000003faf205c00
-  GPR08: 0000000000000000 0000000000000001 000000008000002d c00800000ddde140
-  GPR12: c000000000401030 c000003ffffd9080 0000000000000001 0000000000000000
-  GPR16: 0000000000000000 0000000000000000 000000013aad0074 000000013aaac978
-  GPR20: 000000013aad0070 0000000000000000 00007fffd1b37158 0000000000000000
-  GPR24: 000000014fef0d58 0000000000000000 000000014fef0cf0 0000000000000001
-  GPR28: 0000000000000000 0000000000000000 c0000000018b2a60 0000000000000000
-  NIP [c000000000789e90] percpu_ref_kill_and_confirm+0x40/0x170
-  LR [c000000000789e8c] percpu_ref_kill_and_confirm+0x3c/0x170
-  Call Trace:
-  [c000003fa7babc30] [c000003faf2064d4] 0xc000003faf2064d4 (unreliable)
-  [c000003fa7babcb0] [c000000000400e8c] dev_pagemap_kill+0x6c/0x80
-  [c000003fa7babcd0] [c000000000401064] memunmap_pages+0x34/0x2f0
-  [c000003fa7babd50] [c00800000dddd548] kvmppc_uvmem_free+0x30/0x80 [kvm_hv]
-  [c000003fa7babd80] [c00800000ddcef18] kvmppc_book3s_exit_hv+0x20/0x78 [kvm_hv]
-  [c000003fa7babda0] [c0000000002084d0] sys_delete_module+0x1d0/0x2c0
-  [c000003fa7babe20] [c00000000000b9d0] system_call+0x5c/0x68
-  Instruction dump:
-  3fc2001b fb81ffe0 fba1ffe8 fbe1fff8 7c7f1b78 7c9c2378 3bde4560 7fc3f378
-  f8010010 f821ff81 486249a1 60000000 <e93f0008> 7c7d1b78 712a0002 40820084
-  ---[ end trace 5774ef4dc2c98279 ]---
-
-So this patch checks if kvmppc_uvmem_init actually allocated anything
-before running kvmppc_uvmem_free.
-
-Fixes: ca9f4942670c ("KVM: PPC: Book3S HV: Support for running secure guests")
-Cc: stable@vger.kernel.org # v5.5+
-Reported-by: Greg Kurz <groug@kaod.org>
-Signed-off-by: Fabiano Rosas <farosas@linux.ibm.com>
-Tested-by: Greg Kurz <groug@kaod.org>
-Signed-off-by: Paul Mackerras <paulus@ozlabs.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- arch/powerpc/kvm/book3s_hv_uvmem.c |    3 +++
- 1 file changed, 3 insertions(+)
-
---- a/arch/powerpc/kvm/book3s_hv_uvmem.c
-+++ b/arch/powerpc/kvm/book3s_hv_uvmem.c
-@@ -806,6 +806,9 @@ out:
- 
- void kvmppc_uvmem_free(void)
- {
-+	if (!kvmppc_uvmem_bitmap)
-+		return;
-+
- 	memunmap_pages(&kvmppc_uvmem_pgmap);
- 	release_mem_region(kvmppc_uvmem_pgmap.res.start,
- 			   resource_size(&kvmppc_uvmem_pgmap.res));
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
