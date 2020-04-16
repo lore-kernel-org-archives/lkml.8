@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39088C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:32:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4791C352BE
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:32:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 076842223E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:32:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1B9622264
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:32:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587043922;
-	bh=8g4rtJKK7f7hAR4yH8/t0x0WZTPgRBWJXq9lOexgqK0=;
+	s=default; t=1587043931;
+	bh=O7V0h3Pp//Pa004XuacvG1SJV34cloXKEn9Xo9N6PpM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lurdZb4T2hz3gUfisu11Tvv7gvkUhl1H6YJUL1xCNWM1S8agKGNxSbehdIS0evUwR
-	 6s7/5oPOXuRcqWhVSgXeCOf28Jlc3qaA/2PjaP14vd1azRFr+8XIjEG2MiyrMOUG9K
-	 g9NNFHOEd6DLOyITs3XuS9159+btUUIm0FppbQXc=
+	b=sjBoXXp+3hGCjPFV5e7BpGQmdz4LIJT5bSwJelOg6o16jxCUVw4MVaTFqckCO/m8g
+	 kt3MfEH+f9ha3iMoaLpmwCujztj3iU+Z7gCQ9FnBoXOyN8XSDSgrkdMLcQtQ28yXKx
+	 37JYYFhIdh9uN1y6p4j+VxA2GSzssv6XfFrL1DPo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2896500AbgDPNb5 (ORCPT
+        id S2896517AbgDPNcJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 09:31:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37420 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 09:32:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37512 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2895759AbgDPN21 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:28:27 -0400
+        id S2895770AbgDPN2b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:28:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F1D0021D82;
-        Thu, 16 Apr 2020 13:28:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D41EF206E9;
+        Thu, 16 Apr 2020 13:28:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587043705;
-        bh=8g4rtJKK7f7hAR4yH8/t0x0WZTPgRBWJXq9lOexgqK0=;
+        s=default; t=1587043710;
+        bh=O7V0h3Pp//Pa004XuacvG1SJV34cloXKEn9Xo9N6PpM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=v6fNHGj3tKnKdZWYdG0ypjoilqkysCBi6i3oyDKDk/A/rOm09HLjQpFFlhf1qu5BU
-         r/P4aiKLefKEk6uHbW7ejNDzch8q8JTuqR+z82YleqqnVG8JunQkkqd5PFNd/jI160
-         3sS/BdSGi30DCMTKkszfcAQ+vxnzJ9/fjzFMBncA=
+        b=Fr5NxINFZ7gZCMP2fiqG0bvugiH+MqLuJxutpB0jU0plK1GUdYygFbNEf14bcwixe
+         A9kMH2IsRapo1yX2zhqOXpgQjFOdjtVkM1NhpPQEZMBP8k0yu8Wg4xYGRmlz+yyhsL
+         /AYpYz6Av/qkzCwGQQ9e9VDsJgnx4pnwXP+D+flY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yicong Yang <yangyicong@hisilicon.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH 4.19 065/146] PCI/ASPM: Clear the correct bits when enabling L1 substates
-Date:   Thu, 16 Apr 2020 15:23:26 +0200
-Message-Id: <20200416131251.804144228@linuxfoundation.org>
+        stable@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: [PATCH 4.19 067/146] PCI: endpoint: Fix for concurrent memory allocation in OB address region
+Date:   Thu, 16 Apr 2020 15:23:28 +0200
+Message-Id: <20200416131252.072173927@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131242.353444678@linuxfoundation.org>
 References: <20200416131242.353444678@linuxfoundation.org>
@@ -59,42 +59,95 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yicong Yang <yangyicong@hisilicon.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
 
-commit 58a3862a10a317a81097ab0c78aecebabb1704f5 upstream.
+commit 04e046ca57ebed3943422dee10eec9e73aec081e upstream.
 
-In pcie_config_aspm_l1ss(), we cleared the wrong bits when enabling ASPM L1
-Substates.  Instead of the L1.x enable bits (PCI_L1SS_CTL1_L1SS_MASK, 0xf), we
-cleared the Link Activation Interrupt Enable bit (PCI_L1SS_CAP_L1_PM_SS,
-0x10).
+pci-epc-mem uses a bitmap to manage the Endpoint outbound (OB) address
+region. This address region will be shared by multiple endpoint
+functions (in the case of multi function endpoint) and it has to be
+protected from concurrent access to avoid updating an inconsistent state.
 
-Clear the L1.x enable bits before writing the new L1.x configuration.
+Use a mutex to protect bitmap updates to prevent the memory
+allocation API from returning incorrect addresses.
 
-[bhelgaas: changelog]
-Fixes: aeda9adebab8 ("PCI/ASPM: Configure L1 substate settings")
-Link: https://lore.kernel.org/r/1584093227-1292-1-git-send-email-yangyicong@hisilicon.com
-Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-CC: stable@vger.kernel.org	# v4.11+
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: stable@vger.kernel.org # v4.14+
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/pci/pcie/aspm.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/pci/endpoint/pci-epc-mem.c |   10 ++++++++--
+ include/linux/pci-epc.h            |    3 +++
+ 2 files changed, 11 insertions(+), 2 deletions(-)
 
---- a/drivers/pci/pcie/aspm.c
-+++ b/drivers/pci/pcie/aspm.c
-@@ -747,9 +747,9 @@ static void pcie_config_aspm_l1ss(struct
+--- a/drivers/pci/endpoint/pci-epc-mem.c
++++ b/drivers/pci/endpoint/pci-epc-mem.c
+@@ -79,6 +79,7 @@ int __pci_epc_mem_init(struct pci_epc *e
+ 	mem->page_size = page_size;
+ 	mem->pages = pages;
+ 	mem->size = size;
++	mutex_init(&mem->lock);
  
- 	/* Enable what we need to enable */
- 	pci_clear_and_set_dword(parent, up_cap_ptr + PCI_L1SS_CTL1,
--				PCI_L1SS_CAP_L1_PM_SS, val);
-+				PCI_L1SS_CTL1_L1SS_MASK, val);
- 	pci_clear_and_set_dword(child, dw_cap_ptr + PCI_L1SS_CTL1,
--				PCI_L1SS_CAP_L1_PM_SS, val);
-+				PCI_L1SS_CTL1_L1SS_MASK, val);
+ 	epc->mem = mem;
+ 
+@@ -122,7 +123,7 @@ void __iomem *pci_epc_mem_alloc_addr(str
+ 				     phys_addr_t *phys_addr, size_t size)
+ {
+ 	int pageno;
+-	void __iomem *virt_addr;
++	void __iomem *virt_addr = NULL;
+ 	struct pci_epc_mem *mem = epc->mem;
+ 	unsigned int page_shift = ilog2(mem->page_size);
+ 	int order;
+@@ -130,15 +131,18 @@ void __iomem *pci_epc_mem_alloc_addr(str
+ 	size = ALIGN(size, mem->page_size);
+ 	order = pci_epc_mem_get_order(mem, size);
+ 
++	mutex_lock(&mem->lock);
+ 	pageno = bitmap_find_free_region(mem->bitmap, mem->pages, order);
+ 	if (pageno < 0)
+-		return NULL;
++		goto ret;
+ 
+ 	*phys_addr = mem->phys_base + (pageno << page_shift);
+ 	virt_addr = ioremap(*phys_addr, size);
+ 	if (!virt_addr)
+ 		bitmap_release_region(mem->bitmap, pageno, order);
+ 
++ret:
++	mutex_unlock(&mem->lock);
+ 	return virt_addr;
  }
+ EXPORT_SYMBOL_GPL(pci_epc_mem_alloc_addr);
+@@ -164,7 +168,9 @@ void pci_epc_mem_free_addr(struct pci_ep
+ 	pageno = (phys_addr - mem->phys_base) >> page_shift;
+ 	size = ALIGN(size, mem->page_size);
+ 	order = pci_epc_mem_get_order(mem, size);
++	mutex_lock(&mem->lock);
+ 	bitmap_release_region(mem->bitmap, pageno, order);
++	mutex_unlock(&mem->lock);
+ }
+ EXPORT_SYMBOL_GPL(pci_epc_mem_free_addr);
  
- static void pcie_config_aspm_dev(struct pci_dev *pdev, u32 val)
+--- a/include/linux/pci-epc.h
++++ b/include/linux/pci-epc.h
+@@ -69,6 +69,7 @@ struct pci_epc_ops {
+  * @bitmap: bitmap to manage the PCI address space
+  * @pages: number of bits representing the address region
+  * @page_size: size of each page
++ * @lock: mutex to protect bitmap
+  */
+ struct pci_epc_mem {
+ 	phys_addr_t	phys_base;
+@@ -76,6 +77,8 @@ struct pci_epc_mem {
+ 	unsigned long	*bitmap;
+ 	size_t		page_size;
+ 	int		pages;
++	/* mutex to protect against concurrent access for memory allocation*/
++	struct mutex	lock;
+ };
+ 
+ /**
 
 
