@@ -2,187 +2,198 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1EB3C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:56:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B93C5C2BB85
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:56:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A92DB21D91
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:56:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ID5DZtvH"
+	by mail.kernel.org (Postfix) with ESMTP id 98F56214AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:56:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587052587;
+	bh=19QKTddurbi672AhDIJRCyJpWZUsSF5911PoHUXsXDM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=WT1gYazkDoZfqo0Oj+quRvTZ3oea1epYEzzR2Si7SLdLVhQEU016IC/qFyPY/KvaN
+	 0sHlXc7dQ0fW3fY77+17dGSosRlVyN6G+os65a1XNOzutSQuazsyOkgiUNimZLuR/q
+	 gbVwT+aPCtt8+I9nZLcYNutTVlBYBAY1ZVZbWz6E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2442659AbgDPP4L (ORCPT
+        id S2442818AbgDPP4Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:56:11 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:59613 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2442746AbgDPP4D (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 11:56:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587052561;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=nvu+MW6oZUAc4Rt+d0KHMjWiSPVqXx7NpVhFclBCSuA=;
-        b=ID5DZtvH9sTXEpFaffj3HRg4lfpKkzt5Eql5S3WZluccUKLn/MODDhQWE18HIm5N2+o4W6
-        asQly0N2VAinsyOyxwMOkrAU2pfROdRYIjOTof9z9sYOK4B87LKnuPmwemuOcnsvGp8xcS
-        DnzXGw1KxO02JWd4zJwfczZdXbSCFPY=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-124-Zc0gFejYOlal_U7CHfHI0w-1; Thu, 16 Apr 2020 11:55:59 -0400
-X-MC-Unique: Zc0gFejYOlal_U7CHfHI0w-1
-Received: by mail-wr1-f70.google.com with SMTP id s11so1944920wru.6
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 08:55:59 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=nvu+MW6oZUAc4Rt+d0KHMjWiSPVqXx7NpVhFclBCSuA=;
-        b=bYdNGt/Nc8XstAMOxr+ITvh8rpAg7enoOBy5jeI3mNQbCJDe73fvh2hG05rmgp+iln
-         97xVPK5uNS62SbGMvJJic1LvmAEzrigp1R7fm/Inwuw95aYAR7UCvGhoxSV2sV5rPey2
-         E9NAPaWYU7TkXSniKUcla4/Zfk8C+/ou9RPb2m81sjDFsbj2A5FrFNNP0iH9LjbDgcOU
-         +vkAshsAqexLA0+9MZ3VsQnNzXNcq8cUT38d9f8QyjHfT9p5BTyOzNPHJfrlVC+Ndklk
-         /hJWeEOW1scg384s7YjKFD9DJNmm8tmXPH5JjOf4FzoMqrbadTBdcwUvLKPt//aalg42
-         5HEQ==
-X-Gm-Message-State: AGi0PuZR7wBQy9zzbiuvvNz3uhJ/Ph/A+VEDYk8CDKOKLxBDHmeYhroE
-        INW3UHzc1fbVbTGwuE4isSkFBskZII2Bydaeq0siodl64AMnpH7mW8CnBztAQEbFYvS0F/AkB0O
-        KULNaMS7/ONTs6KwmDyGmmXP9
-X-Received: by 2002:a5d:4442:: with SMTP id x2mr18151632wrr.101.1587052558411;
-        Thu, 16 Apr 2020 08:55:58 -0700 (PDT)
-X-Google-Smtp-Source: APiQypIL1Ng21KPZXq7/mqYvYnYksD3lb24Jyd1BsaIZ28zHv5VGpa6h6z5Fa+Khf5lPYqGvRQv9/g==
-X-Received: by 2002:a5d:4442:: with SMTP id x2mr18151609wrr.101.1587052558056;
-        Thu, 16 Apr 2020 08:55:58 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:399d:3ef7:647c:b12d? ([2001:b07:6468:f312:399d:3ef7:647c:b12d])
-        by smtp.gmail.com with ESMTPSA id 5sm4231405wmg.34.2020.04.16.08.55.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 16 Apr 2020 08:55:57 -0700 (PDT)
-Subject: Re: [PATCH v2] KVM/arm64: Support enabling dirty log gradually in
- small chunks
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     Keqian Zhu <zhukeqian1@huawei.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kvmarm@lists.cs.columbia.edu, James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Will Deacon <will@kernel.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Jay Zhou <jianjay.zhou@huawei.com>, wanghaibin.wang@huawei.com
-References: <20200413122023.52583-1-zhukeqian1@huawei.com>
- <be45ec89-2bdb-454b-d20a-c08898e26024@redhat.com>
- <20200416160939.7e9c1621@why>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <442f288e-2934-120c-4994-5357e3e9216b@redhat.com>
-Date:   Thu, 16 Apr 2020 17:55:55 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Thu, 16 Apr 2020 11:56:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38298 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2895916AbgDPN25 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:28:57 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A2B9621D82;
+        Thu, 16 Apr 2020 13:28:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587043737;
+        bh=19QKTddurbi672AhDIJRCyJpWZUsSF5911PoHUXsXDM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=jk73RtChGy3K/xqFJJXSIIvXnWZ3ErviGq8sJtEvjb9kAtEUYXhS4oYo5Vp7Hiact
+         N6w7J4lfe4mDM0rEoKUtngKX3tQovWfRyX/A7ZH2z8/Wx2eOaLrheHpTEEjhw+/WeZ
+         71R3nzH2AIN+0TJ36hQ2PWPxZK9TDVVo2LVNvccQ=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Jeff Mahoney <jeffm@suse.com>,
+        Qu Wenruo <wqu@suse.com>, David Sterba <dsterba@suse.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 038/146] btrfs: qgroup: ensure qgroup_rescan_running is only set when the worker is at least queued
+Date:   Thu, 16 Apr 2020 15:22:59 +0200
+Message-Id: <20200416131247.710411283@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.1
+In-Reply-To: <20200416131242.353444678@linuxfoundation.org>
+References: <20200416131242.353444678@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <20200416160939.7e9c1621@why>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 16/04/20 17:09, Marc Zyngier wrote:
-> On Wed, 15 Apr 2020 18:13:56 +0200
-> Paolo Bonzini <pbonzini@redhat.com> wrote:
-> 
->> On 13/04/20 14:20, Keqian Zhu wrote:
->>> There is already support of enabling dirty log graually in small chunks
->>> for x86 in commit 3c9bd4006bfc ("KVM: x86: enable dirty log gradually in
->>> small chunks"). This adds support for arm64.
->>>
->>> x86 still writes protect all huge pages when DIRTY_LOG_INITIALLY_ALL_SET
->>> is eanbled. However, for arm64, both huge pages and normal pages can be
->>> write protected gradually by userspace.
->>>
->>> Under the Huawei Kunpeng 920 2.6GHz platform, I did some tests on 128G
->>> Linux VMs with different page size. The memory pressure is 127G in each
->>> case. The time taken of memory_global_dirty_log_start in QEMU is listed
->>> below:
->>>
->>> Page Size      Before    After Optimization
->>>   4K            650ms         1.8ms
->>>   2M             4ms          1.8ms
->>>   1G             2ms          1.8ms
->>>
->>> Besides the time reduction, the biggest income is that we will minimize
->>> the performance side effect (because of dissloving huge pages and marking
->>> memslots dirty) on guest after enabling dirty log.
->>>
->>> Signed-off-by: Keqian Zhu <zhukeqian1@huawei.com>
->>> ---
->>>  Documentation/virt/kvm/api.rst    |  2 +-
->>>  arch/arm64/include/asm/kvm_host.h |  3 +++
->>>  virt/kvm/arm/mmu.c                | 12 ++++++++++--
->>>  3 files changed, 14 insertions(+), 3 deletions(-)
->>>
->>> diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
->>> index efbbe570aa9b..0017f63fa44f 100644
->>> --- a/Documentation/virt/kvm/api.rst
->>> +++ b/Documentation/virt/kvm/api.rst
->>> @@ -5777,7 +5777,7 @@ will be initialized to 1 when created.  This also improves performance because
->>>  dirty logging can be enabled gradually in small chunks on the first call
->>>  to KVM_CLEAR_DIRTY_LOG.  KVM_DIRTY_LOG_INITIALLY_SET depends on
->>>  KVM_DIRTY_LOG_MANUAL_PROTECT_ENABLE (it is also only available on
->>> -x86 for now).
->>> +x86 and arm64 for now).
->>>  
->>>  KVM_CAP_MANUAL_DIRTY_LOG_PROTECT2 was previously available under the name
->>>  KVM_CAP_MANUAL_DIRTY_LOG_PROTECT, but the implementation had bugs that make
->>> diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/asm/kvm_host.h
->>> index 32c8a675e5a4..a723f84fab83 100644
->>> --- a/arch/arm64/include/asm/kvm_host.h
->>> +++ b/arch/arm64/include/asm/kvm_host.h
->>> @@ -46,6 +46,9 @@
->>>  #define KVM_REQ_RECORD_STEAL	KVM_ARCH_REQ(3)
->>>  #define KVM_REQ_RELOAD_GICv4	KVM_ARCH_REQ(4)
->>>  
->>> +#define KVM_DIRTY_LOG_MANUAL_CAPS   (KVM_DIRTY_LOG_MANUAL_PROTECT_ENABLE | \
->>> +				     KVM_DIRTY_LOG_INITIALLY_SET)
->>> +
->>>  DECLARE_STATIC_KEY_FALSE(userspace_irqchip_in_use);
->>>  
->>>  extern unsigned int kvm_sve_max_vl;
->>> diff --git a/virt/kvm/arm/mmu.c b/virt/kvm/arm/mmu.c
->>> index e3b9ee268823..1077f653a611 100644
->>> --- a/virt/kvm/arm/mmu.c
->>> +++ b/virt/kvm/arm/mmu.c
->>> @@ -2265,8 +2265,16 @@ void kvm_arch_commit_memory_region(struct kvm *kvm,
->>>  	 * allocated dirty_bitmap[], dirty pages will be be tracked while the
->>>  	 * memory slot is write protected.
->>>  	 */
->>> -	if (change != KVM_MR_DELETE && mem->flags & KVM_MEM_LOG_DIRTY_PAGES)
->>> -		kvm_mmu_wp_memory_region(kvm, mem->slot);
->>> +	if (change != KVM_MR_DELETE && mem->flags & KVM_MEM_LOG_DIRTY_PAGES) {
->>> +		/*
->>> +		 * If we're with initial-all-set, we don't need to write
->>> +		 * protect any pages because they're all reported as dirty.
->>> +		 * Huge pages and normal pages will be write protect gradually.
->>> +		 */
->>> +		if (!kvm_dirty_log_manual_protect_and_init_set(kvm)) {
->>> +			kvm_mmu_wp_memory_region(kvm, mem->slot);
->>> +		}
->>> +	}
->>>  }
->>>  
->>>  int kvm_arch_prepare_memory_region(struct kvm *kvm,
->>>   
->>
->> Marc, what is the status of this patch?
-> 
-> I just had a look at it. Is there any urgency for merging it?
+From: Qu Wenruo <wqu@suse.com>
 
-No, I thought I was still replying to the v1.
+[ Upstream commit d61acbbf54c612ea9bf67eed609494cda0857b3a ]
 
-Paolo
+[BUG]
+There are some reports about btrfs wait forever to unmount itself, with
+the following call trace:
+
+  INFO: task umount:4631 blocked for more than 491 seconds.
+        Tainted: G               X  5.3.8-2-default #1
+  "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+  umount          D    0  4631   3337 0x00000000
+  Call Trace:
+  ([<00000000174adf7a>] __schedule+0x342/0x748)
+   [<00000000174ae3ca>] schedule+0x4a/0xd8
+   [<00000000174b1f08>] schedule_timeout+0x218/0x420
+   [<00000000174af10c>] wait_for_common+0x104/0x1d8
+   [<000003ff804d6994>] btrfs_qgroup_wait_for_completion+0x84/0xb0 [btrfs]
+   [<000003ff8044a616>] close_ctree+0x4e/0x380 [btrfs]
+   [<0000000016fa3136>] generic_shutdown_super+0x8e/0x158
+   [<0000000016fa34d6>] kill_anon_super+0x26/0x40
+   [<000003ff8041ba88>] btrfs_kill_super+0x28/0xc8 [btrfs]
+   [<0000000016fa39f8>] deactivate_locked_super+0x68/0x98
+   [<0000000016fcb198>] cleanup_mnt+0xc0/0x140
+   [<0000000016d6a846>] task_work_run+0xc6/0x110
+   [<0000000016d04f76>] do_notify_resume+0xae/0xb8
+   [<00000000174b30ae>] system_call+0xe2/0x2c8
+
+[CAUSE]
+The problem happens when we have called qgroup_rescan_init(), but
+not queued the worker. It can be caused mostly by error handling.
+
+	Qgroup ioctl thread		|	Unmount thread
+----------------------------------------+-----------------------------------
+					|
+btrfs_qgroup_rescan()			|
+|- qgroup_rescan_init()			|
+|  |- qgroup_rescan_running = true;	|
+|					|
+|- trans = btrfs_join_transaction()	|
+|  Some error happened			|
+|					|
+|- btrfs_qgroup_rescan() returns error	|
+   But qgroup_rescan_running == true;	|
+					| close_ctree()
+					| |- btrfs_qgroup_wait_for_completion()
+					|    |- running == true;
+					|    |- wait_for_completion();
+
+btrfs_qgroup_rescan_worker is never queued, thus no one is going to wake
+up close_ctree() and we get a deadlock.
+
+All involved qgroup_rescan_init() callers are:
+
+- btrfs_qgroup_rescan()
+  The example above. It's possible to trigger the deadlock when error
+  happened.
+
+- btrfs_quota_enable()
+  Not possible. Just after qgroup_rescan_init() we queue the work.
+
+- btrfs_read_qgroup_config()
+  It's possible to trigger the deadlock. It only init the work, the
+  work queueing happens in btrfs_qgroup_rescan_resume().
+  Thus if error happened in between, deadlock is possible.
+
+We shouldn't set fs_info->qgroup_rescan_running just in
+qgroup_rescan_init(), as at that stage we haven't yet queued qgroup
+rescan worker to run.
+
+[FIX]
+Set qgroup_rescan_running before queueing the work, so that we ensure
+the rescan work is queued when we wait for it.
+
+Fixes: 8d9eddad1946 ("Btrfs: fix qgroup rescan worker initialization")
+Signed-off-by: Jeff Mahoney <jeffm@suse.com>
+[ Change subject and cause analyse, use a smaller fix ]
+Signed-off-by: Qu Wenruo <wqu@suse.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ fs/btrfs/qgroup.c | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
+
+diff --git a/fs/btrfs/qgroup.c b/fs/btrfs/qgroup.c
+index 0cd043f03081e..cbd40826f5dcf 100644
+--- a/fs/btrfs/qgroup.c
++++ b/fs/btrfs/qgroup.c
+@@ -1032,6 +1032,7 @@ out_add_root:
+ 	ret = qgroup_rescan_init(fs_info, 0, 1);
+ 	if (!ret) {
+ 	        qgroup_rescan_zero_tracking(fs_info);
++		fs_info->qgroup_rescan_running = true;
+ 	        btrfs_queue_work(fs_info->qgroup_rescan_workers,
+ 	                         &fs_info->qgroup_rescan_work);
+ 	}
+@@ -2906,7 +2907,6 @@ qgroup_rescan_init(struct btrfs_fs_info *fs_info, u64 progress_objectid,
+ 		sizeof(fs_info->qgroup_rescan_progress));
+ 	fs_info->qgroup_rescan_progress.objectid = progress_objectid;
+ 	init_completion(&fs_info->qgroup_rescan_completion);
+-	fs_info->qgroup_rescan_running = true;
+ 
+ 	spin_unlock(&fs_info->qgroup_lock);
+ 	mutex_unlock(&fs_info->qgroup_rescan_lock);
+@@ -2972,8 +2972,11 @@ btrfs_qgroup_rescan(struct btrfs_fs_info *fs_info)
+ 
+ 	qgroup_rescan_zero_tracking(fs_info);
+ 
++	mutex_lock(&fs_info->qgroup_rescan_lock);
++	fs_info->qgroup_rescan_running = true;
+ 	btrfs_queue_work(fs_info->qgroup_rescan_workers,
+ 			 &fs_info->qgroup_rescan_work);
++	mutex_unlock(&fs_info->qgroup_rescan_lock);
+ 
+ 	return 0;
+ }
+@@ -3009,9 +3012,13 @@ int btrfs_qgroup_wait_for_completion(struct btrfs_fs_info *fs_info,
+ void
+ btrfs_qgroup_rescan_resume(struct btrfs_fs_info *fs_info)
+ {
+-	if (fs_info->qgroup_flags & BTRFS_QGROUP_STATUS_FLAG_RESCAN)
++	if (fs_info->qgroup_flags & BTRFS_QGROUP_STATUS_FLAG_RESCAN) {
++		mutex_lock(&fs_info->qgroup_rescan_lock);
++		fs_info->qgroup_rescan_running = true;
+ 		btrfs_queue_work(fs_info->qgroup_rescan_workers,
+ 				 &fs_info->qgroup_rescan_work);
++		mutex_unlock(&fs_info->qgroup_rescan_lock);
++	}
+ }
+ 
+ /*
+-- 
+2.20.1
+
+
 
