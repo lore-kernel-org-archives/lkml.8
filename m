@@ -2,143 +2,84 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69307C2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:36:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ED00C2BB85
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:36:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 47B7021D94
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:36:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fE2lTEaq"
+	by mail.kernel.org (Postfix) with ESMTP id 0638921D94
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:36:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587047815;
+	bh=PYTwFrTrtoxecR9b9yLkbn2rNqR1ub19DHPDT5x72ME=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=NXhQ3getDWaZoeLGuFB3Q+zgHoWpWR6hwCRmbFG4uGIc+czpZceS94xBJUBMfjoxd
+	 h6sycBJgNSiC/GQYL+ixKsVjepQrqwiHaWTn/hy70X1S77LZQh0kxjKK67eufJu7gA
+	 N9fqpP+dpCK+WLSmePUrZif0wG30g3yyPiHTEc6I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393800AbgDPOgk (ORCPT
+        id S1728097AbgDPOgy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:36:40 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:24085 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390697AbgDPOOM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 10:14:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587046451;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=ZwfafyNJV35A9XzjzoUpov1lD8f8Bo7599mF7Sou/xg=;
-        b=fE2lTEaqz8zhmfu90wq7qSv1ZUI60vc6URs/I0F6CH/KwjmfULnVG5ZmD6QK4o/kiMSvdP
-        UVZRWhGcYlOsTaeJzaM58UN/NvLVGF/kX6Xa152BDU/5yLN4iXvAiUgLiSHJncYNZGaKS6
-        CIZakVAR/dQKpBW2h7ZefUN81rmRPkY=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-20-D5ew2p0iMEOGkNcz7RvQ9A-1; Thu, 16 Apr 2020 10:14:10 -0400
-X-MC-Unique: D5ew2p0iMEOGkNcz7RvQ9A-1
-Received: by mail-wm1-f72.google.com with SMTP id c196so1245311wmd.3
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 07:14:09 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ZwfafyNJV35A9XzjzoUpov1lD8f8Bo7599mF7Sou/xg=;
-        b=gGqSROjDlvljXLg/qPI1F6yvzyYJQla9E50oNUukmdTNy0d0yLbV2OITX0SZdVmrBw
-         yN1AaXXRl2ehnSbsCIW6WjSeqidlK3H8CjX1L3LcSnnQkvRw779RTqoAcFww7k/KeEDn
-         N0O4imoSJIYzTfGCfEoYQsArii8D8V9GU+NTgCNjWE1ohoBjNMVCsLhswKrSkfYYDenH
-         mgSWv//stLW+bm1IcyisHHAbo71UEDanJj8Ojhv8Z3h5JjPIEvqPhLSWqBY4KE1+rAfM
-         usB289UvM5//Tw8tdOaph/sgHGaBvl0rF3qL2Afpmv+CidV4hOQgKXmmf+XIrXYECqWz
-         PGUA==
-X-Gm-Message-State: AGi0PuZavsDkfNCVGGUT5aeRGambvGHjShAT2Ka681mYt/mdybXioabs
-        py1a+ryQ4KFGtvkjSpnlgjaM5ywKYihlrNhrULlMDN6JYu91KL0UmFIXWz/CUE+SYp1HKfVV7+Y
-        A+CmhFcMaQA/KC/y8X4I3Qj+2
-X-Received: by 2002:a7b:c941:: with SMTP id i1mr4761807wml.132.1587046446917;
-        Thu, 16 Apr 2020 07:14:06 -0700 (PDT)
-X-Google-Smtp-Source: APiQypJ5Hb6SR8Fvh2FXPLrhFm6KxJHb0F0gaOopm4Hzze+cRXgN3/biIfKsxemtqaSiStUFpWNlMQ==
-X-Received: by 2002:a7b:c941:: with SMTP id i1mr4761786wml.132.1587046446638;
-        Thu, 16 Apr 2020 07:14:06 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:399d:3ef7:647c:b12d? ([2001:b07:6468:f312:399d:3ef7:647c:b12d])
-        by smtp.gmail.com with ESMTPSA id l16sm12705971wrp.91.2020.04.16.07.14.05
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 16 Apr 2020 07:14:06 -0700 (PDT)
-Subject: Re: [PATCH] KVM: VMX: Disable Intel PT before VM-entry
-To:     "Kang, Luwei" <luwei.kang@intel.com>,
-        "Christopherson, Sean J" <sean.j.christopherson@intel.com>
-Cc:     "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "vkuznets@redhat.com" <vkuznets@redhat.com>,
-        "wanpengli@tencent.com" <wanpengli@tencent.com>,
-        "jmattson@google.com" <jmattson@google.com>,
-        "joro@8bytes.org" <joro@8bytes.org>
-References: <1584503298-18731-1-git-send-email-luwei.kang@intel.com>
- <20200318154826.GC24357@linux.intel.com>
- <82D7661F83C1A047AF7DC287873BF1E1738A9724@SHSMSX104.ccr.corp.intel.com>
- <20200330172152.GE24988@linux.intel.com>
- <82D7661F83C1A047AF7DC287873BF1E1738B1A1C@SHSMSX104.ccr.corp.intel.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <21fa3505-8198-5f32-9dfd-3c9d9cc5ef7e@redhat.com>
-Date:   Thu, 16 Apr 2020 16:14:04 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Thu, 16 Apr 2020 10:36:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41422 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732436AbgDPOgi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 10:36:38 -0400
+Received: from mail-io1-f43.google.com (mail-io1-f43.google.com [209.85.166.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DCC712220A;
+        Thu, 16 Apr 2020 14:36:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587047798;
+        bh=PYTwFrTrtoxecR9b9yLkbn2rNqR1ub19DHPDT5x72ME=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=CRJDhvzdFLmI1uoXUxDuFr2eV6PI9NP0xP+7Uszi9UdUwIotblemb2vQd/iYubdgJ
+         nd6C26pFAwiDhMqxUuL+NTdehy+Bwz+t6f6OqYg777IjU0CBfVX1RtxQVRGpgCr/EE
+         3jaVKuiYBkcBH7TGHTGHYbLSoyvwq26mdYu/eNzc=
+Received: by mail-io1-f43.google.com with SMTP id f3so21298190ioj.1;
+        Thu, 16 Apr 2020 07:36:37 -0700 (PDT)
+X-Gm-Message-State: AGi0PuZED3M963PLCOlB/QDxOf3kzG+xG/pft5K4bfxGa6pnZ2AGLDQr
+        PVlJsolS8fnG+y76pzGRoYq9eeeEqdkY5khhEks=
+X-Google-Smtp-Source: APiQypJP93oCECQtutJ31AuOSoB19HwPbIbakrt9SmlbEm/P8Y1a2FMHgiNs5L9YeZ+2lg0fv9WrETeA4RdQ4WRIliY=
+X-Received: by 2002:a02:6a1e:: with SMTP id l30mr29737450jac.98.1587047797309;
+ Thu, 16 Apr 2020 07:36:37 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <82D7661F83C1A047AF7DC287873BF1E1738B1A1C@SHSMSX104.ccr.corp.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <eb0d88d0-879e-c500-261e-69c76fb68a89@linux.intel.com>
+In-Reply-To: <eb0d88d0-879e-c500-261e-69c76fb68a89@linux.intel.com>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Thu, 16 Apr 2020 16:36:25 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXGGdwuP6X5jvbqmjsP2+bZ7CoJKZ5-WVoPYEjq9HTjuDA@mail.gmail.com>
+Message-ID: <CAMj1kXGGdwuP6X5jvbqmjsP2+bZ7CoJKZ5-WVoPYEjq9HTjuDA@mail.gmail.com>
+Subject: Re: Regression with commit 0a67361dcdaa
+To:     Jarkko Nikula <jarkko.nikula@linux.intel.com>
+Cc:     linux-efi <linux-efi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 31/03/20 05:29, Kang, Luwei wrote:
->> Ah, right.  What about enhancing intel_pt_handle_vmx() and 'struct
->> pt' to replace vmx_on with a field that incorporates the KVM mode?
+On Thu, 16 Apr 2020 at 16:35, Jarkko Nikula
+<jarkko.nikula@linux.intel.com> wrote:
 >
-> Some history is the host perf didn't fully agree with introducing
-> HOST_GUEST mode for PT in KVM.
+> Hi
+>
+> v5.7-rc1 hangs in early boot on an Intel Atom based prototype hardware
+> while v5.6 boots fine. I bisected the regression into 0a67361dcdaa
+> ("efi/x86: Remove runtime table address from kexec EFI setup data").
+>
+> v5.7-rc1 caused a reboot loop on another Intel Core based prototype HW.
+> Reboots also on top of 0a67361dcdaa but boots fine with that commit
+> reverted.
+>
+> Our test system uses kexec to boot the test kernel. These two machines
+> got regression with v5.7-rc1. We have also others that boot fine.
+>
 
-I don't think this is accurate.  IIRC the maintainers wanted packets in 
-the host-side trace to signal where the trace was interrupted.  In the 
-end we solved the issue by 1) dropping host-only mode since it can be 
-achieved in userspace 2) making host-guest an opt in feature.
-
-I think it would make sense to rename vmx_on into vmx_state and make it an
-
-enum pt_vmx_state {
-	PT_VMX_OFF,
-	PT_VMX_ON_DISABLED,
-	PT_VMX_ON_SYSTEM,
-	PT_VMX_ON_HOST_GUEST
-};
-
-KVM would pass the enum to intel_pt_handle_vmx (one of PT_VMX_OFF, 
-PT_VMX_ON_SYSTEM, PT_VMX_ON_HOST_GUEST).  Inside intel_pt_handle_vmx you 
-can do
-
-	if (pt_pmu.vmx) {
-		WRITE_ONCE(pt->vmx_state, state);
-		return;
-	}
-
-	local_irq_save(flags);
-	WRITE_ONCE(pt->vmx_state,
-		   state == PT_VMX_OFF ? PT_VMX_OFF : PT_VMX_ON_DISABLED);
-	...
-
-and in pt_config_start:
-
-	...
-	vmx = READ_ONCE(pt->vmx_start);
-	if (vmx == PT_VMX_ON_DISABLED)
-                perf_aux_output_flag(&pt->handle, PERF_AUX_FLAG_PARTIAL);
-        else if (vmx == PT_VMX_ON_SYSTEM ||
-		 !(current->flags & PF_VCPU))
-                wrmsrl(MSR_IA32_RTIT_CTL, ctl);
-	...
-
-Thanks,
-
-Paolo
-
+This should already be fixed in Linus's tree. Please report back
+whether that solves your problem or not.
