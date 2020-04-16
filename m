@@ -2,337 +2,146 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2EC2C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:18:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63DE0C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:19:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B2C56206E9
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:18:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E9BB217D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:19:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="rpIPcafZ"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="b/4D2sVY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2895072AbgDPNSM (ORCPT
+        id S2895128AbgDPNTy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 09:18:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54108 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2895047AbgDPNSC (ORCPT
+        Thu, 16 Apr 2020 09:19:54 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:37247 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2895029AbgDPNTq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:18:02 -0400
-Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5738EC061A0C
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 06:17:47 -0700 (PDT)
-Received: by mail-qk1-x744.google.com with SMTP id b62so21170007qkf.6
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 06:17:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=eR5I4E4T4/4IxSicnYUr1AFVo0A/LtIPYrGBPrB2/04=;
-        b=rpIPcafZ4VdWvQi/EUbIUk6OPIpu2cqkTR9znN28OoXOPxV9dh2le9vWUaRTFHECXB
-         51vgWhOIGhCHWh/CoORjkuU9gkv9Q1OlEaCSdZvoTwVNFjQD9kPDqTxTCtyeOVQG8jqo
-         gTWskFIfjD1u928/59/2fQyK8n996XcKgPPjw=
+        Thu, 16 Apr 2020 09:19:46 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587043184;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=Rtsrb+mX+YQpZoHIv9A5wAzihBkDRNbltom382I4FVo=;
+        b=b/4D2sVYvaBHjfhi9cDI55/+O7BHHFKEy2S4Ui+hPBRKGtn8kqdDYZgeIE4sm4L1t8BqRM
+        9/D3UTVXlLHEi/d2ItHuDgfoeY3KTh2Pvc/JHoDb6zSW9ZCTB2k94Tg90sZvu2BdmgwaB5
+        2V4OpiygFsadZ2+MLzczXWomRCg1oyY=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-410-kK-LLeTzNYWmW-uqBJS6Ng-1; Thu, 16 Apr 2020 09:19:43 -0400
+X-MC-Unique: kK-LLeTzNYWmW-uqBJS6Ng-1
+Received: by mail-wm1-f70.google.com with SMTP id b203so1169990wmd.6
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 06:19:42 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=eR5I4E4T4/4IxSicnYUr1AFVo0A/LtIPYrGBPrB2/04=;
-        b=ItWKLEjHxzxKJ/FwBNv2XfYiicPfQSFHLqL2o75TXI7dYX+rBrQM6PSMx9GtOETWo0
-         xoOL38xzA663a/8zxvUOMOFOhwueaKZD114CQkcozM3G7973m3sFdym9k4u1FwZeBtcU
-         f1cDln2AfZkIvZTZdwC3doUsRZb6OJzpkqCbR4AUyitpTwpu7BUJeX+rhPUU7lPt2vYV
-         KuL2wlJL60eOEtV6IfOGIi25YeELnySlg21q4AD6njVs+skUB8w9niLGNQ8icR/edMiz
-         SgxOS6bJw0F0M5NT76ma1iLEq+5JAvrTu0IiyScgzD5EzUxe/RYz3jwdezD2w0NcHKwp
-         ln/A==
-X-Gm-Message-State: AGi0PuYGvbqXtHms8CBYuVMA2nCw7oC4NCIn9P7wCtyyHvX2cSxnvT6y
-        zX9UL92iGwcRSt0w64Td4T5wNw==
-X-Google-Smtp-Source: APiQypJZHeSuH696w1N1+pBEt6HXR6rAeDmFv3fXRVtzpa2ny4Lxkx2vFr4DA0DZtPyLNE/ijMI+5g==
-X-Received: by 2002:a05:620a:2054:: with SMTP id d20mr18143094qka.496.1587043066238;
-        Thu, 16 Apr 2020 06:17:46 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id j90sm15174409qte.20.2020.04.16.06.17.45
+        bh=Rtsrb+mX+YQpZoHIv9A5wAzihBkDRNbltom382I4FVo=;
+        b=hzmWFu4TeBdA6SS8maIxlj5fNY1ooKhCVisCbS4uMiMjYhhPEetgP29PseenPUklIt
+         KgabnDuWk2dyD8FbC29+Eb+gcQWxaU0oCKDqVzNqfITL62SDsctV3kIWNiXq8Cf6Cdrq
+         dwI2TTDZKcNt1bK8BlKI7LVEuqWmjsmYVrVI1rMxRAsNqtcivYUzSiXuMj3+cYBL6kQa
+         CSjoaKnI15ZzPK5JKUwxiLmEjSv8317+6DPRq7NY7ZBuyak26WKx96QXpyGHZw3W63mh
+         HHihE1OaOtif8oVbhP0tvN2pU89K8m0h26onTRlG381XfaWv291p0Da+6nOkIkso73l2
+         HGiQ==
+X-Gm-Message-State: AGi0Pub2e/e5xaxJlvGTPLig1l47YE3OF8q8/p5vyTIoYAEvfqVkzf1x
+        Kn0JCBSiyJbDqO8+HcQYqNh4DJNUumdrAq4qyRW907f73MlNzfkkDi20bfy4fY2Az8K8o70nLD4
+        wyWEIB17OazqtNonaCpQFoQmJ
+X-Received: by 2002:a5d:6a92:: with SMTP id s18mr32571175wru.50.1587043181734;
+        Thu, 16 Apr 2020 06:19:41 -0700 (PDT)
+X-Google-Smtp-Source: APiQypInMTm0ADcKGayHy0kpPUJt4fUN6vRuVG+L1mF2beKaIwUX3YBq6e3HBy2ozeJggoxMt8Uf+A==
+X-Received: by 2002:a5d:6a92:: with SMTP id s18mr32571156wru.50.1587043181443;
+        Thu, 16 Apr 2020 06:19:41 -0700 (PDT)
+Received: from localhost.localdomain ([151.29.194.179])
+        by smtp.gmail.com with ESMTPSA id l15sm3543650wmi.48.2020.04.16.06.19.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Apr 2020 06:17:45 -0700 (PDT)
-Date:   Thu, 16 Apr 2020 09:17:45 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Uladzislau Rezki <urezki@gmail.com>
-Cc:     "Paul E. McKenney" <paulmck@kernel.org>,
-        linux-kernel@vger.kernel.org,
-        Josh Triplett <josh@joshtriplett.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        rcu@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
-        Johannes Weiner <hannes@cmpxchg.org>
-Subject: Re: [PATCH RFC] rcu/tree: Refactor object allocation and try harder
- for array allocation
-Message-ID: <20200416131745.GA90777@google.com>
-References: <20200413211504.108086-1-joel@joelfernandes.org>
- <20200414194353.GQ17661@paulmck-ThinkPad-P72>
- <20200416103007.GA3925@pc636>
+        Thu, 16 Apr 2020 06:19:40 -0700 (PDT)
+Date:   Thu, 16 Apr 2020 15:19:38 +0200
+From:   Juri Lelli <juri.lelli@redhat.com>
+To:     luca abeni <luca.abeni@santannapisa.it>
+Cc:     Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        Wei Wang <wvw@google.com>, Quentin Perret <qperret@google.com>,
+        Alessio Balsini <balsini@google.com>,
+        Pavan Kondeti <pkondeti@codeaurora.org>,
+        Patrick Bellasi <patrick.bellasi@matbug.net>,
+        Morten Rasmussen <morten.rasmussen@arm.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Qais Yousef <qais.yousef@arm.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/4] sched/deadline: Make DL capacity-aware
+Message-ID: <20200416131938.GI9767@localhost.localdomain>
+References: <20200408095012.3819-1-dietmar.eggemann@arm.com>
+ <20200408095012.3819-4-dietmar.eggemann@arm.com>
+ <20200410125253.GE14300@localhost.localdomain>
+ <f0e74500-77d7-a42c-410e-bc5d4d2ecdfb@arm.com>
+ <20200415132004.GF9767@localhost.localdomain>
+ <20200415184203.50862783@sweethome>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200416103007.GA3925@pc636>
+In-Reply-To: <20200415184203.50862783@sweethome>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 16, 2020 at 12:30:07PM +0200, Uladzislau Rezki wrote:
-> Hello, Paul, Joel.
+On 15/04/20 18:42, luca abeni wrote:
+> Hi Juri,
 > 
-> See my comments below. They are for better understanding a
-> whole strategy and the best way how to drive headless objects :)
-
-Thanks for the comments on the RFC patch :) I am on the same page and Ok with
-being more conservative on memory allocation.
-
-> > > This is a small code refactor and also removes the restriction that
-> > > headless kfree_rcu() users cannot sleep for allocation of the per-cpu
-> > > array where their pointers will be placed . Since they are always called
-> > > in a sleepable context, we can use this information to try harder during
-> > > the array allocation stage to allocate the per-cpu array.
-> > 
-> > In kernels, needing to do allocations in order to free memory must be
-> > regarded with great suspicion.  It -might- be kind-of sort-of OK here,
-> > but only if we never impede reclaim, I/O, or OOM handling.  Even then,
-> > this can be made to work only given that it is possible to fall back
-> > on a direct call to synchronize_rcu() in the case where absolutely no
-> > memory is available.
-> > 
-> I see your point and agree. So, the idea is to do progress instead of
-> doing OOM, I/O or direct reclaiming. It means that we should avoid of
-> using any allocations flags which will trigger such effects, directly
-> or indirectly. I think we are on the same base now.
-
-Right.
- 
-> > > Also there is a possible bug-fix for a migration scenario where a
-> > > kfree_rcu() headless user can get migrated during the
-> > > sleepable-allocation and end up on another CPU and restoring the wrong
-> > > CPU's flags. To remedy this, we store only the IRQ state on the stack
-> > > and save/restore IRQ state from there. Sure, for the headless case we
-> > > don't need to restore flags. But the code saving/restoring state is
-> > > common between headless and with-head kfree_rcu() variants, so it
-> > > handles all scenarios sampling/restoring just the IRQ state and not
-> > > saving/restoring all the flags.
-> > 
-> > I will suspend disbelief while I look at the patch, but this indirect flag
-> > handling sounds like an accident waiting to happen.  So in the meantime,
-> > is there a way to structure the code to make the flag handling more
-> > explicitly visible at the top level?
-> > 
-> > In addition, the usual way to conditionally disable interrupts
-> > is local_irq_save(flags) rather than conditionally invoking
-> > local_irq_disable().
-
-I agree with the below suggestions and that would remove the need for the
-conditional disabling of interrupts.
-
-> > 
-> > > Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> > > ---
+> On Wed, 15 Apr 2020 15:20:04 +0200
+> Juri Lelli <juri.lelli@redhat.com> wrote:
+> [...]
+> > > > I'm thinking that, while dl_task_fits_capacity() works well when
+> > > > selecting idle cpus, in this case we should consider the fact
+> > > > that curr might be deadline as well and already consuming some of
+> > > > the rq capacity.
+> > > > 
+> > > > Do you think we should try to take that into account, maybe using
+> > > > dl_rq->this_bw ?  
 > > > 
-> > > This is just RFC and is based on top of Vlad's latest patches:
-> > > https://lkml.org/lkml/2020/4/2/383
+> > > So you're saying that cpudl_find(..., later_mask) could return 1 (w/
+> > > best_cpu (cp->elements[0].cpu) in later_mask).
 > > > 
-> > > The git tree containing this patch is at:
-> > > https://git.kernel.org/pub/scm/linux/kernel/git/jfern/linux.git/log/?h=rcu/dev
+> > > And that this best_cpu could be a non-fitting CPU for p.
 > > > 
-> > > (This patch will be a part of a much large series in the future).
+> > > This could happen if cp->free_cpus is empty (no idle CPUs) so we
+> > > take cpudl_find()'s else path and in case p's deadline <
+> > > cp->elements[0] deadline.
 > > > 
+> > > We could condition the 'return 1' on best_cpu fitting p.
 > > > 
-> > >  kernel/rcu/tree.c | 150 +++++++++++++++++++++++++++++++---------------
-> > >  1 file changed, 103 insertions(+), 47 deletions(-)
-> > > 
-> > > diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-> > > index 744d04d8b7724..2e0eaec929059 100644
-> > > --- a/kernel/rcu/tree.c
-> > > +++ b/kernel/rcu/tree.c
-> > > @@ -3104,11 +3104,95 @@ static void kfree_rcu_monitor(struct work_struct *work)
-> > >  		spin_unlock_irqrestore(&krcp->lock, flags);
-> > >  }
-> > >  
-> > > +static inline struct kfree_rcu_cpu *krc_this_cpu_lock(bool irqs_disabled)
-> > > +{
-> > > +	struct kfree_rcu_cpu *krcp;
-> > > +
-> > > +	// For safely calling this_cpu_ptr().
-> > > +	if (!irqs_disabled)
-> > > +		local_irq_disable();
+> > > But should we do this for cpudl_find(..., NULL) calls from
+> > > check_preempt_equal_dl() as well or will this break GEDF?  
 > > 
-> > Again, local_irq_save() is the usual approach here.  And local_irq_restore()
-> > in krc_this_cpu_unlock() below.
-> > 
-> We discussed that with Joel and i also think that keeping previous
-> variant of the krc_this_cpu_lock()/krc_this_cpu_unlock() is better
-> and what is more important is easy, i.e. we do not really need to
-> understand whether IRQs are disabled or not, instead just save flags
-> and restore and that is it.
-
-Sounds good, if we are avoiding any possiblity of direct-reclaim, then that
-removes the need for dropping the lock and thus removes the chance of
-migrations that I was concerned about.
-
-> > > +	krcp = this_cpu_ptr(&krc);
-> > > +	if (likely(krcp->initialized))
-> > > +		spin_lock(&krcp->lock);
-> > > +
-> > > +	return krcp;
-> > > +}
-> > > +
-> > > +static inline void
-> > > +krc_this_cpu_unlock(struct kfree_rcu_cpu *krcp, bool irqs_disabled)
-> > > +{
-> > > +	if (likely(krcp->initialized))
-> > > +		spin_unlock(&krcp->lock);
-> > > +
-> > > +	if (!irqs_disabled)
-> > > +		local_irq_enable();
-> > > +}
-> > > +
-> > > +// alloc_object_locked - Try to allocate an object of size while dropping the lock.
-> > > +//
-> > > +// @size: Size of the object to internally allocate for kfree_rcu().
-> > > +// @slab: Do we allocate on slab or using buddy.
-> > > +// @can_sleep: Was kfree_rcu() called in sleepable context?
-> > > +// @krcp: The pointer to krcp. Needed if when relocking, we got migrated.
-> > > +//
-> > > +// Caveats:
-> > > +//
-> > > +// 1. Per-cpu krc's lock must be held with interrupts disabled.
-> > > +//
-> > > +// 2. Failure to allocate returns NULL and does not cause a warning.
-> > > +//
-> > > +// 3. Caller is responsible for using the correct free() APIs. If size == PAGE_SIZE,
-> > > +//    then free_page() should be called for freeing. Otherwise kfree().
-> > > +//
-> > > +static inline void *alloc_object_locked(size_t size, bool slab, bool can_sleep,
-> > > +					struct kfree_rcu_cpu **krcpp)
-> > > +{
-> > > +	void *ptr;
-> > > +	gfp_t gfp_flags, wmark_flags, reclaim_flags;
-> > > +	struct kfree_rcu_cpu *krcp = *krcpp;
-> > > +
-> > > +	WARN_ON_ONCE(size == PAGE_SIZE && slab);
-> > > +
-> > > +	// Decompose the flags:
-> > > +	// wmark_flags   - affect the watermark to control reserve access.
-> > > +	// reclaim_flags - these effect how reclaim works but would
-> > > +	//                 have no-affect in atomic or nowait context.
-> > > +	wmark_flags = (__GFP_HIGH | __GFP_ATOMIC);
-> > > +	reclaim_flags = (__GFP_RETRY_MAYFAIL);
-> > 
-> > You have a __GFP_RETRY_MAYFAIL here, which is good.  However, if
-> > this CPU has quite a few 4K blocks of memory already allocated for
-> > kfree_rcu(), at some point __GFP_NORETRY becomes necessary.  Again,
-> > single-argument kfree_rcu() has the option of invoking synchronize_rcu()
-> > and most other memory allocators do not.  And double-argument kfree_rcu()
-> > has a pre-allocated rcu_head in the structure that it can fall back on.
-> > 
-> > So let's please not get too memory-greedy here!
-> > 
-> As i see, your point is to use "light" allocations flags which will
-> not initiate direct reclaim, OOM, I/O waiting and so on. Please correct
-> me if i miss something.
-
-I agree. One thing I want to add is any allocation however small has an
-effect either directly or indirectly, but I agree trying too hard may further
-avoid another unrelated needy user getting the memory they may need.
-
-> > Note also that most systems will normally invoke an RCU callback on the
-> > same CPU that registered it.  This allows easy maintenance of an
-> > emergency cache for these situations.
-> > 
-> I have a patch that specifies number of pages to be cached, but i will
-> send out it later when we sort things like that out.
-
-Sounds good. I am assuming that you are going to make it such that there are
-2 pages per-cpu by default which can be used for either vfree or kfree
-arrays and further caching being made user-configurable. But either way
-looking forward to the patch.
-
-> > Exceptions include systems doing frequent CPU-hotplug operations and
-> > rcu_nocbs CPUs.
-
-Per my understanding, the CPU hotplug has an effect on migrating callbacks so
-that's why CPU hotplug has an effect of not invoking callbacks on the same
-CPU that they were queued on, but please let me know if my understanding is
-not correct.
-
-> > > +
-> > > +	// These flags will be common to all allocations, whether we want to
-> > > +	// wait or sleep or reclaim will be controlled with additional flags
-> > > +	// later during the actual allocation.
-> > > +	gfp_flags = (wmark_flags | reclaim_flags | __GFP_NOWARN);
-> > > +
-> > > +	// First, do an allocation without waiting.
-> > > +	ptr = (size == PAGE_SIZE) ? (void *)__get_free_page(gfp_flags | GFP_NOWAIT)
-> > > +				  : (void *)kmalloc(size, gfp_flags | GFP_NOWAIT);
-> > > +	// If we cannot sleep, we are done.
-> > > +	if (ptr || !can_sleep)
-> > > +		return ptr;
-> > > +
-> > > +	// Now try to do it with more relaxed flags, we may enter direct-reclaim.
-> > > +	//
-> > > +	// IRQs were not enabled since can_sleep == true. So there's no need to
-> > > +	// save/restore flags.
-> > > +	krc_this_cpu_unlock(krcp, false);
-> > > +	ptr = (size == PAGE_SIZE) ? (void *)__get_free_page(gfp_flags | GFP_KERNEL)
-> > > +				  : (void *)kmalloc(size, gfp_flags | GFP_KERNEL);
-> > 
-> > Dropping the possibility of small allocations also simplifies this code,
-> > and also simplifies a fair amount of code elsewhere.
-> > 
-> I have a question about dynamic attaching of the rcu_head. Do you think
-> that we should drop it? We have it because of it requires 8 + syzeof(struct rcu_head)
-> bytes and is used when we can not allocate 1 page what is much more for array purpose.
-> Therefore, dynamic attaching can succeed because of using SLAB and requesting much
-> less memory then one page. There will be higher chance of bypassing synchronize_rcu()
-> and inlining freeing on a stack.
+> > So, even by not returning best_cpu, as above, if it doesn't fit p's bw
+> > requirement, I think we would be breaking GEDF, which however doesn't
+> > take asym capacities into account.
 > 
-> I agree that we should not use GFP_* flags instead we could go with GFP_NOWAIT |
-> __GFP_NOWARN when head attaching only. Also dropping GFP_ATOMIC to keep
-> atomic reserved memory for others.
-
-I also have same question. Just to add here, previous patches added a warning
-to synchronize_rcu(). Should that warning be dropped then if it is more
-normal for kfree_rcu() to enter the synchronous path when the user had not
-passed in an rcu_head?
-
-> > >  			if (head == NULL)
-> > > -				goto inline_return;
-> > > -
-> > > -			/* Take it back. */
-> > > -			krcp = krc_this_cpu_lock(&flags);
-> > > +				goto unlock_return;
-> > >  
-> > >  			/*
-> > >  			 * Tag the headless object. Such objects have a back-pointer
-> > > @@ -3280,9 +3337,8 @@ void kvfree_call_rcu(struct rcu_head *head, rcu_callback_t func)
-> > >  	}
-> > >  
-> > >  unlock_return:
-> > > -	krc_this_cpu_unlock(krcp, flags);
-> > > +	krc_this_cpu_unlock(krcp, irqs_disabled);
-> > >  
-> > > -inline_return:
-> > >  	/*
-> > >  	 * High memory pressure, so inline kvfree() after
-> > >  	 * synchronize_rcu(). We can do it from might_sleep()
-> > > -- 
-> > > 2.26.0.110.g2183baf09c-goog
+> Well, gEDF could take asymmetric capacities into account by scheduling
+> the earliest deadline task on the fastest CPU (and the task with the
+> second earliest deadline on the second fastest CPU, and so on...)
 > 
-> I know Joel will also write some comments because we has discussed it
-> via IRC. The idea is to find common view, and do it
-> as best as we can :)
-> 
-> Thanks Paul for good comments!
+> But this could cause a lot of unneeded migrations (I tried to discuss
+> this issue in a previous OSPM presentation). My original approach to
+> work around this issue was to schedule a task on the slowest core on
+> which the task can fit (some experiments revealed that this heuristic
+> can approximate the gEDF behaviour without causing too many
+> migrations)... But this patch is not included on the current patchset,
+> and will be proposed later, after the most important patches have been
+> merged.
 
-Thanks a lot for all the comments to both of you :)
+OK, makes sense to me. And I'm ok also with a 2 steps approach. Asym
+idle now and asym busy with a later series.
 
- - Joel
+Best,
+
+Juri
 
