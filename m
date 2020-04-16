@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B078C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:27:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37869C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:27:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EA5222076D
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:27:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14B3721D7E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:27:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587047270;
-	bh=HgRYTwaT0K3i6R4yyE0ffxtTm8sNUE/pRjIWBN7QiJ0=;
+	s=default; t=1587047277;
+	bh=gCFa4uuwm4XERH0jUZR1oplIf17Y25xXY4RyOKeKdfY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qkOYeyzkZOnHdLCGb33sQBMukz/DXQShzUO4OFjdItiZ+qdDKjJGJfvc5wpS0oBE2
-	 nAgdK1G5dhWuWWF8uBSf6/ARkG6cQ/l5ALIv+S+ypp+rqkH0u4XyOZB+0Z2g6z5mwZ
-	 97KQuhAvx+IMce/lUgWgEhslaZSHnTSIf61WDi8I=
+	b=GDADxRP0Gg9Obio83w5o5C62QWAqVSxDhmjzmlxr0Zo5wwKbKKBzfYU3PwXFwhKtY
+	 GF57R4YLAxIzAzZuhYfG00KVtg3dGKyBCIH2bjPlIskOGLFZ8GPcrh9Ljw4bNxS6VW
+	 PTbzNhu12ltaepfEIfab1Rn1ln7G9DQKv06aUoOU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409266AbgDPO1s (ORCPT
+        id S2409859AbgDPO1y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:27:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46570 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 10:27:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46898 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392583AbgDPN7f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:59:35 -0400
+        id S2409043AbgDPN7t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:59:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7CCF920732;
-        Thu, 16 Apr 2020 13:59:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6A7F62078B;
+        Thu, 16 Apr 2020 13:59:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587045574;
-        bh=HgRYTwaT0K3i6R4yyE0ffxtTm8sNUE/pRjIWBN7QiJ0=;
+        s=default; t=1587045588;
+        bh=gCFa4uuwm4XERH0jUZR1oplIf17Y25xXY4RyOKeKdfY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WRKkNoXM/YRn2kSv3T2KtVyacFpEg9upGfx5rQMnx70DIImUTUWtFnXSYgHyhvst+
-         Ak0wdgXUMGmBxtc3S2p9unma4rTr+K2EDpNhu0HPGhnXFFQPe/BktJmUlpDxbmBvZb
-         cb99vryv1snxo+jneowZIaIRP2yly3mVv6nEhkdA=
+        b=LJdOH8Skh/valhlFFREfGbz+o+ah2bz8K7Be8n9aBF8HjajvEgbKDeEm4fHxskMb3
+         UFt9uw2gYD2j8YQmT3bft4dlGg943XJMMKP8n0B5BdSi8gQKc0uPlesvA3xh7vomJb
+         9QlzzgTx4KlE7Q/tCr8pRb2jGOYWkWLXIcOZXNco=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>,
-        Valentin Ciocoi Radulescu <valentin.ciocoi@nxp.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 5.6 183/254] crypto: caam/qi2 - fix chacha20 data size error
-Date:   Thu, 16 Apr 2020 15:24:32 +0200
-Message-Id: <20200416131349.265927802@linuxfoundation.org>
+        stable@vger.kernel.org, Christophe Leroy <christophe.leroy@c-s.fr>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH 5.6 197/254] selftests/powerpc: Add tlbie_test in .gitignore
+Date:   Thu, 16 Apr 2020 15:24:46 +0200
+Message-Id: <20200416131350.820126586@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.804095985@linuxfoundation.org>
 References: <20200416131325.804095985@linuxfoundation.org>
@@ -61,84 +59,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Horia Geantă <horia.geanta@nxp.com>
+From: Christophe Leroy <christophe.leroy@c-s.fr>
 
-commit 3a5a9e1ef37b030b836d92df8264f840988f4a38 upstream.
+commit 47bf235f324c696395c30541fe4fcf99fcd24188 upstream.
 
-HW generates a Data Size error for chacha20 requests that are not
-a multiple of 64B, since algorithm state (AS) does not have
-the FINAL bit set.
+The commit identified below added tlbie_test but forgot to add it in
+.gitignore.
 
-Since updating req->iv (for chaining) is not required,
-modify skcipher descriptors to set the FINAL bit for chacha20.
-
-[Note that for skcipher decryption we know that ctx1_iv_off is 0,
-which allows for an optimization by not checking algorithm type,
-since append_dec_op1() sets FINAL bit for all algorithms except AES.]
-
-Also drop the descriptor operations that save the IV.
-However, in order to keep code logic simple, things like
-S/G tables generation etc. are not touched.
-
-Cc: <stable@vger.kernel.org> # v5.3+
-Fixes: 334d37c9e263 ("crypto: caam - update IV using HW support")
-Signed-off-by: Horia Geantă <horia.geanta@nxp.com>
-Tested-by: Valentin Ciocoi Radulescu <valentin.ciocoi@nxp.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Fixes: 93cad5f78995 ("selftests/powerpc: Add test case for tlbie vs mtpidr ordering issue")
+Cc: stable@vger.kernel.org # v5.4+
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/259f9c06ed4563c4fa4fa8ffa652347278d769e7.1582847784.git.christophe.leroy@c-s.fr
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/crypto/caam/caamalg_desc.c |   14 ++++++++++----
- 1 file changed, 10 insertions(+), 4 deletions(-)
+ tools/testing/selftests/powerpc/mm/.gitignore |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/crypto/caam/caamalg_desc.c
-+++ b/drivers/crypto/caam/caamalg_desc.c
-@@ -1379,6 +1379,9 @@ void cnstr_shdsc_skcipher_encap(u32 * co
- 				const u32 ctx1_iv_off)
- {
- 	u32 *key_jump_cmd;
-+	u32 options = cdata->algtype | OP_ALG_AS_INIT | OP_ALG_ENCRYPT;
-+	bool is_chacha20 = ((cdata->algtype & OP_ALG_ALGSEL_MASK) ==
-+			    OP_ALG_ALGSEL_CHACHA20);
- 
- 	init_sh_desc(desc, HDR_SHARE_SERIAL | HDR_SAVECTX);
- 	/* Skip if already shared */
-@@ -1417,14 +1420,15 @@ void cnstr_shdsc_skcipher_encap(u32 * co
- 				      LDST_OFFSET_SHIFT));
- 
- 	/* Load operation */
--	append_operation(desc, cdata->algtype | OP_ALG_AS_INIT |
--			 OP_ALG_ENCRYPT);
-+	if (is_chacha20)
-+		options |= OP_ALG_AS_FINALIZE;
-+	append_operation(desc, options);
- 
- 	/* Perform operation */
- 	skcipher_append_src_dst(desc);
- 
- 	/* Store IV */
--	if (ivsize)
-+	if (!is_chacha20 && ivsize)
- 		append_seq_store(desc, ivsize, LDST_SRCDST_BYTE_CONTEXT |
- 				 LDST_CLASS_1_CCB | (ctx1_iv_off <<
- 				 LDST_OFFSET_SHIFT));
-@@ -1451,6 +1455,8 @@ void cnstr_shdsc_skcipher_decap(u32 * co
- 				const u32 ctx1_iv_off)
- {
- 	u32 *key_jump_cmd;
-+	bool is_chacha20 = ((cdata->algtype & OP_ALG_ALGSEL_MASK) ==
-+			    OP_ALG_ALGSEL_CHACHA20);
- 
- 	init_sh_desc(desc, HDR_SHARE_SERIAL | HDR_SAVECTX);
- 	/* Skip if already shared */
-@@ -1499,7 +1505,7 @@ void cnstr_shdsc_skcipher_decap(u32 * co
- 	skcipher_append_src_dst(desc);
- 
- 	/* Store IV */
--	if (ivsize)
-+	if (!is_chacha20 && ivsize)
- 		append_seq_store(desc, ivsize, LDST_SRCDST_BYTE_CONTEXT |
- 				 LDST_CLASS_1_CCB | (ctx1_iv_off <<
- 				 LDST_OFFSET_SHIFT));
+--- a/tools/testing/selftests/powerpc/mm/.gitignore
++++ b/tools/testing/selftests/powerpc/mm/.gitignore
+@@ -6,3 +6,4 @@ segv_errors
+ wild_bctr
+ large_vm_fork_separation
+ bad_accesses
++tlbie_test
 
 
