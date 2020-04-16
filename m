@@ -2,127 +2,109 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54ADDC2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 12:33:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2A3FC352BE
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 12:34:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3726821974
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 12:33:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAAA021973
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 12:34:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2635669AbgDPMdK (ORCPT
+        id S2635717AbgDPMeH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 08:33:10 -0400
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:44444 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2635625AbgDPMc4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 08:32:56 -0400
-Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03GCIhFB001327;
-        Thu, 16 Apr 2020 08:32:54 -0400
-Received: from nwd2mta4.analog.com ([137.71.173.58])
-        by mx0a-00128a01.pphosted.com with ESMTP id 30dn9adkdp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 16 Apr 2020 08:32:54 -0400
-Received: from SCSQMBX11.ad.analog.com (scsqmbx11.ad.analog.com [10.77.17.10])
-        by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 03GCWqfi024890
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
-        Thu, 16 Apr 2020 08:32:53 -0400
-Received: from SCSQCASHYB6.ad.analog.com (10.77.17.132) by
- SCSQMBX11.ad.analog.com (10.77.17.10) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Thu, 16 Apr 2020 05:32:51 -0700
-Received: from SCSQMBX10.ad.analog.com (10.77.17.5) by
- SCSQCASHYB6.ad.analog.com (10.77.17.132) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Thu, 16 Apr 2020 05:32:44 -0700
-Received: from zeus.spd.analog.com (10.64.82.11) by SCSQMBX10.ad.analog.com
- (10.77.17.5) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
- Transport; Thu, 16 Apr 2020 05:32:50 -0700
-Received: from localhost.localdomain ([10.48.65.12])
-        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 03GCWnWI007655;
-        Thu, 16 Apr 2020 08:32:49 -0400
-From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
-To:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     <jic23@kernel.org>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: [PATCH] iio: core: fail early in iio_device_alloc() if we can't get a device id
-Date:   Thu, 16 Apr 2020 15:33:31 +0300
-Message-ID: <20200416123331.68790-1-alexandru.ardelean@analog.com>
-X-Mailer: git-send-email 2.17.1
-MIME-Version: 1.0
-Content-Type: text/plain
-X-ADIRoutedOnPrem: True
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-16_03:2020-04-14,2020-04-16 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 phishscore=0
- impostorscore=0 bulkscore=0 malwarescore=0 mlxlogscore=999 clxscore=1015
- mlxscore=0 priorityscore=1501 suspectscore=0 adultscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004160088
+        Thu, 16 Apr 2020 08:34:07 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:52802 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2635543AbgDPMd5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 08:33:57 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id A8BE51A0D60;
+        Thu, 16 Apr 2020 14:33:54 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 0DD9E1A0D44;
+        Thu, 16 Apr 2020 14:33:49 +0200 (CEST)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 003BB402C4;
+        Thu, 16 Apr 2020 20:33:41 +0800 (SGT)
+From:   Shengjiu Wang <shengjiu.wang@nxp.com>
+To:     timur@kernel.org, nicoleotsuka@gmail.com, Xiubo.Lee@gmail.com,
+        festevam@gmail.com, broonie@kernel.org,
+        alsa-devel@alsa-project.org, lgirdwood@gmail.com, perex@perex.cz,
+        tiwai@suse.com, robh+dt@kernel.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v9 0/7] ASoC: Add new module driver for new ASRC
+Date:   Thu, 16 Apr 2020 20:25:30 +0800
+Message-Id: <cover.1587038908.git.shengjiu.wang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This change moves the 'ida_simple_get()' call to be the first one in
-iio_device_alloc(). It cleans up the error path a bit as we don't need to
-call any kfree(dev) anymore. We allocate an IIO device only if we have
-managed to obtain a device ID.
+Add new module driver for new ASRC in i.MX8MN, several commits
+are added for new property fsl,asrc-format
 
-Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
----
- drivers/iio/industrialio-core.c | 19 ++++++++++---------
- 1 file changed, 10 insertions(+), 9 deletions(-)
+Shengjiu Wang (7):
+  ASoC: fsl_asrc: rename asrc_priv to asrc
+  ASoC: dt-bindings: fsl_asrc: Add new property fsl,asrc-format
+  ASoC: fsl-asoc-card: Support new property fsl,asrc-format
+  ASoC: fsl_asrc: Support new property fsl,asrc-format
+  ASoC: fsl_asrc: Move common definition to fsl_asrc_common
+  ASoC: dt-bindings: fsl_easrc: Add document for EASRC
+  ASoC: fsl_easrc: Add EASRC ASoC CPU DAI drivers
 
-diff --git a/drivers/iio/industrialio-core.c b/drivers/iio/industrialio-core.c
-index f4daf19f2a3b..7c1d8a3ab2f3 100644
---- a/drivers/iio/industrialio-core.c
-+++ b/drivers/iio/industrialio-core.c
-@@ -1494,6 +1494,14 @@ struct iio_dev *iio_device_alloc(int sizeof_priv)
- {
- 	struct iio_dev *dev;
- 	size_t alloc_size;
-+	int id;
-+
-+	id = ida_simple_get(&iio_ida, 0, 0, GFP_KERNEL);
-+	if (id < 0) {
-+		/* cannot use a dev_err as the name isn't available */
-+		pr_err("failed to get device id\n");
-+		return NULL;
-+	}
- 
- 	alloc_size = sizeof(struct iio_dev);
- 	if (sizeof_priv) {
-@@ -1506,6 +1514,8 @@ struct iio_dev *iio_device_alloc(int sizeof_priv)
- 	dev = kzalloc(alloc_size, GFP_KERNEL);
- 
- 	if (dev) {
-+		dev->id = id;
-+		dev_set_name(&dev->dev, "iio:device%d", dev->id);
- 		dev->dev.groups = dev->groups;
- 		dev->dev.type = &iio_device_type;
- 		dev->dev.bus = &iio_bus_type;
-@@ -1514,15 +1524,6 @@ struct iio_dev *iio_device_alloc(int sizeof_priv)
- 		mutex_init(&dev->mlock);
- 		mutex_init(&dev->info_exist_lock);
- 		INIT_LIST_HEAD(&dev->channel_attr_list);
--
--		dev->id = ida_simple_get(&iio_ida, 0, 0, GFP_KERNEL);
--		if (dev->id < 0) {
--			/* cannot use a dev_err as the name isn't available */
--			pr_err("failed to get device id\n");
--			kfree(dev);
--			return NULL;
--		}
--		dev_set_name(&dev->dev, "iio:device%d", dev->id);
- 		INIT_LIST_HEAD(&dev->buffer_list);
- 	}
- 
+changes in v9
+- use lowercase for dt example.
+
+changes in v8
+- change get_pair_priv_size to pair_priv_size variable
+
+changes in v7
+- updated according to Nicoin's comments.
+- add get_pair_priv_size to replace PAIR_PRIVATE_SIZE
+
+changes in v6
+- updated according to Nicoin's and Rob's comments.
+
+changes in v5
+- Add new property fsl,asrc-format, rather than change fsl,asrc-width
+  to fsl,asrc-formt.
+- code change for above change.
+
+changes in v4
+- Add several commit for changing DT binding asrc-width to asrc-format
+- rename asrc_priv to asrc
+
+changes in v3
+- add new commit "ASoC: fsl_asrc: Change asrc_width to asrc_format"
+- modify binding doc to yaml format
+- remove fsl_easrc_dma.c, make fsl_asrc_dma.c useable for easrc.
+
+changes in v2
+- change i.MX815 to i.MX8MN
+- Add changes in Kconfig and Makefile
+
+ .../devicetree/bindings/sound/fsl,asrc.txt    |    4 +
+ .../devicetree/bindings/sound/fsl,easrc.yaml  |  101 +
+ sound/soc/fsl/Kconfig                         |   11 +
+ sound/soc/fsl/Makefile                        |    2 +
+ sound/soc/fsl/fsl-asoc-card.c                 |   24 +-
+ sound/soc/fsl/fsl_asrc.c                      |  305 +--
+ sound/soc/fsl/fsl_asrc.h                      |   74 +-
+ sound/soc/fsl/fsl_asrc_common.h               |  106 +
+ sound/soc/fsl/fsl_asrc_dma.c                  |   54 +-
+ sound/soc/fsl/fsl_easrc.c                     | 2114 +++++++++++++++++
+ sound/soc/fsl/fsl_easrc.h                     |  651 +++++
+ 11 files changed, 3212 insertions(+), 234 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/sound/fsl,easrc.yaml
+ create mode 100644 sound/soc/fsl/fsl_asrc_common.h
+ create mode 100644 sound/soc/fsl/fsl_easrc.c
+ create mode 100644 sound/soc/fsl/fsl_easrc.h
+
 -- 
-2.17.1
+2.21.0
 
