@@ -2,165 +2,172 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DC3AC2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 09:47:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9C8DC2BB85
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 09:48:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DC060208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 09:47:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76552208E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 09:48:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="TUA+uAkn"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="gcd8ZiDn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2504202AbgDPJre (ORCPT
+        id S2504208AbgDPJsg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 05:47:34 -0400
-Received: from mout.web.de ([212.227.17.11]:53001 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2503681AbgDPJrX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 05:47:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1587030407;
-        bh=W6Q51/NlWIpeKBgEWUnDBil03bI8pW/k0GwiuNlbhNU=;
-        h=X-UI-Sender-Class:Subject:From:To:Cc:References:Date:In-Reply-To;
-        b=TUA+uAkn0e/+fOsgBqkkIXdT+rMNx8IN4SXpK7w3krrAgC28nsnZkPLPgJsjn3XIK
-         cx42ktABJjq7fDgRYaMBqPqj17SB8mObAZfP8LeTs7pbP5WCfobMx7CD5d0ibmLbkF
-         YsWc2NA6YSjuY8FyRRT10rWi/HFHWLoGRWrF71Ak=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.3] ([2.243.109.113]) by smtp.web.de (mrweb102
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0MA5v3-1jVqbm1nIH-00BHVN; Thu, 16
- Apr 2020 11:46:47 +0200
-Subject: Re: i2c: img-scb: remove duplicate dev_err()
-From:   Markus Elfring <Markus.Elfring@web.de>
-To:     Dejin Zheng <zhengdejin5@gmail.com>, linux-i2c@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Allison Randal <allison@lohutok.net>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Patrice Chotard <patrice.chotard@st.com>,
-        Shah Nehal-Bakulchandra <Nehal-bakulchandra.Shah@amd.com>,
-        Tang Bin <tangbin@cmss.chinamobile.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Thor Thayer <thor.thayer@linux.intel.com>,
-        Robert Richter <rrichter@marvell.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Barry Song <baohua@kernel.org>, kernel-janitors@vger.kernel.org
-References: <08564c03-3bbd-5518-1a9d-a40b8ca09f48@web.de>
- <20200415025426.GB14300@nuc8i5> <b5db65f5-f236-9e22-98df-07629a827738@web.de>
- <20200415152115.GA17519@nuc8i5> <668fe4da-56f2-8abe-1113-fa180f307524@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <73cc5a7c-787c-b263-7679-0f1fa58a70f8@web.de>
-Date:   Thu, 16 Apr 2020 11:46:45 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-MIME-Version: 1.0
-In-Reply-To: <668fe4da-56f2-8abe-1113-fa180f307524@web.de>
-Content-Type: text/plain; charset=utf-8
+        Thu, 16 Apr 2020 05:48:36 -0400
+Received: from mail-am6eur05on2049.outbound.protection.outlook.com ([40.107.22.49]:6093
+        "EHLO EUR05-AM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2503681AbgDPJsM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 05:48:12 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=KQeeI7eZBkfa1ZQuJX+L59uLVHRriYug/9Mzb8/euEUxSHw2jOzaaWjeSZGj2LRTtjsymEQ5hmiQnUNMsPkv7CD1LlIdbbFLFi9X8OVqV5OD+qYHu/gImS3EW+W1263EoA+l99m2GLUBFn9RFw/O3Q6S7XriGLvx5hm6DI2vLWpToJ6gO4HIbkLsnz2eC1XMpHvYAPhxMzJZnjhi+ckE+ZsnvvawJTZ5StIvxvt244BykbMwmLOPgVN6+o8GFgW37ftFB/o+lxEgy9co5ipDoTcSiVQFuckc7nDOSlWobgaIDVyNP0Faf4NPkp1FQfuRljkXEitWKqum0PD4MXvBvQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=iFfEtUxSBPOydsEfgtacQJUVTWrwXzNvpGFy+kBIHQ0=;
+ b=l1bjRyJpie2TWgiVJdpSpmD5spgBEK+rYY4mdTBfqmhvQOiGylMy7DCpzZsZitFsloDXr22R5ON8yWM8SkgK5tUtFq/yC4bONbdHYLH++n6WixqSPke9Ni3Dcj5ELkvuzA0FgfGbeNoqXYnW2da05qXtlztkNKWnLg7zlks8DYwvwFu0ExNAH+85xKg5PXj4Hur+QMbSYdF98wI4zVXnb+DkdyqvlHdHcpjiezUVetN3yEgdAvnCMafNPkrkW2Icm8I6FqbWIdFMVIN9KH8csEgKBTPjWMBZlZI41m2HwYsGd9KVv9Ym3PbrA7WnhpYQMYs/WZ8eC5BY/nrfVZeV5Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=iFfEtUxSBPOydsEfgtacQJUVTWrwXzNvpGFy+kBIHQ0=;
+ b=gcd8ZiDnW05jnUctg55DlQUbddOGz2aFyI97X+nNTYl3l/nnnVHSGyBfVAwEg7QJEoI2F4V/S4lAFHt5Y67qgnHDGJ0tgBdE3SGZIsJb83ZduLLRm9hlpxf4ZD+n12fp5N4nG4rWV1/O1tFbeokrV8pUJeUEqtfQI87LAaMr5Hw=
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (2603:10a6:8:10::18)
+ by DB3PR0402MB3835.eurprd04.prod.outlook.com (2603:10a6:8:3::30) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.26; Thu, 16 Apr
+ 2020 09:48:08 +0000
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::3143:c46:62e4:8a8b]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::3143:c46:62e4:8a8b%7]) with mapi id 15.20.2900.028; Thu, 16 Apr 2020
+ 09:48:08 +0000
+From:   Anson Huang <anson.huang@nxp.com>
+To:     Marco Felsch <m.felsch@pengutronix.de>
+CC:     "mturquette@baylibre.com" <mturquette@baylibre.com>,
+        "sboyd@kernel.org" <sboyd@kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: RE: [PATCH V2 1/5] dt-bindings: clock: Convert i.MX6Q clock to
+ json-schema
+Thread-Topic: [PATCH V2 1/5] dt-bindings: clock: Convert i.MX6Q clock to
+ json-schema
+Thread-Index: AQHWE7rnIXhaMxmp60Ko8ImmCqNkpah7fmcAgAABvHA=
+Date:   Thu, 16 Apr 2020 09:48:08 +0000
+Message-ID: <DB3PR0402MB391613C2B53CEE067E1C7EC7F5D80@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+References: <1587019158-12143-1-git-send-email-Anson.Huang@nxp.com>
+ <20200416093932.2mkcyv4rs6v6a24a@pengutronix.de>
+In-Reply-To: <20200416093932.2mkcyv4rs6v6a24a@pengutronix.de>
+Accept-Language: en-US
 Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=anson.huang@nxp.com; 
+x-originating-ip: [183.192.13.100]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 0ffe423e-96f6-4af8-9fa4-08d7e1eb44c2
+x-ms-traffictypediagnostic: DB3PR0402MB3835:|DB3PR0402MB3835:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DB3PR0402MB38359FDD559D28C5B83269C8F5D80@DB3PR0402MB3835.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6790;
+x-forefront-prvs: 0375972289
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(346002)(376002)(366004)(136003)(39860400002)(396003)(66946007)(55016002)(478600001)(8676002)(6506007)(81156014)(52536014)(44832011)(2906002)(316002)(966005)(66476007)(64756008)(71200400001)(6916009)(76116006)(9686003)(33656002)(7696005)(86362001)(66446008)(66556008)(4326008)(26005)(8936002)(7416002)(53546011)(54906003)(5660300002)(186003)(45080400002);DIR:OUT;SFP:1101;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: hFC3t3xPdJIqatY5bWbHkmeUhvJr2J91SIX2/q+iF3DtpBpe2jdJyW4IQzglHJv234f4D0OSaCJ1Lu3Bd/TIg0Vfk7YgTeb5BsZRauGu5ihRUrE0MzcMA3ivvqlii3+lpeDXx+fAMlcfflYYfH8O1xaLXYy7hElA0aw0MnY8e4XIDaDwJ3j4g6UO1A+kVntW/0lOGCFSnFtRhg+yL/XSSF5GI/CdQV2/eSKRB6j7qkjqsHmN208sVo7VECCTDi+we27HcrWN6rUwTCStyTm6RI9a4A0bR6MKln16VZZzV9DgvLSJbAB9M19+IZxefapKzgPzPKfaZMvVjl237Up8LRNQfAa/fRj8Ulbtjup1nqriEix3qn6eUHL3WVz51bxtuQzZB0ePjEsQFwQ6EpltndvslHLF7eg04NVADVV9nXRuCQq6pK4/P4N5JU0ncxAt+j5uHM3WFHXECEFjBKDpm2cO93ShfXNFO9SRbxuje84=
+x-ms-exchange-antispam-messagedata: DREShWuCI91PlTnjNctWATwdxgbeRRN9F4iTcFNVkNfFsPPAVVCO1A2qUszjsGFDAbHDqugZ6Fzbv/e4zRe9AytnbqDpeBJj5Ej3bqqddS0B+FqsDwZbKp2nigvFSQxSONMtAA0o2ejPb9kyMrvXkA==
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:AiYgFY9UTSVKOEH/5tKx1okowyBy10eZO96km7yW3j3VhiI7TBT
- z2MpcOfq278PqIDVlV8nHwYEn1WkholtN/7lPl9jeOrshsqBjP+IsIE8SeG5uUZnaATD7BV
- 5F03JJWZzHWJHK6/i0wb2F7NOA7t7RxUhg2OExSrSiT4G1w3DWl4V5y2cuwD7w96oz4ymx5
- Kic5NB6DDd7miIsd84spA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:dUphwKjnKnc=:C3s07ABfGQ/id+upkfhxfG
- fSuDnBJZoHpZbg3/s5PpN1NS7+G/uDzN7h1YZm1KcjYd5I0A/Vy/h4PDo+19eBNaHydABsx8o
- qKFiTFScV7OhCErJ53zEd0F8ZW3i/C+IGSyI39HyakqlOZzwFUNRSKi9Pk9lnA7hKJ8Ei/h+L
- r1wunarL0KiRKOLeYns75LDpOXc3SzT4Il0aaDrZBZikVT/U/q4l0BQvgTmqrY0K3WXdmzpz+
- W9u0GEP8vXZd3Hv62PTBEOJ2L3du/YG+MMrhTIYsWLZ8xC8g43B2Etorz4SjczCGuw2TydKSJ
- TEy4KJdGplxDtIC191d7zDiNz/Y+SJt4YfMHmUfBU5HrZFMf7TSbfEKZ4wcHhN2+3zN/1QhIF
- oJepdF4Zkldkrs5Rjebi/zkrI2jMbH8CWqP4Qkzg5BFGQM28QRqlPRq+2vkPf9EmxT3oqdjJz
- oAMYMTpSiDRFDJJtOoz8dMvVoqhc/AovrAvoKbhKf18o2VHQAMnudnb/x/4KL7dSJjSaG+ZqB
- xBJHPKyBlqXMoecmN5pfYxF70gr/JuBTHi8o9938S0QPGcJJNGRNNX6b/g4n5uN4SoJQvJsxj
- wIOXhg/VChjdnFGHn+4Pxnrgju1QuZu+r8Aq03YG49Yo8DzBD2JTDRiusGCdx5om9gDro80m0
- zZxZU6BGlzXlATVcq6w0njxo0YBXiT0M5Fll6RqWOxRv2hOI0aVwsKkjmbJVfu1Toi7Zzj4Ws
- iavUw4LNJzwcSls/QwyzgLfIy1dRIf6LdJJ+zrq0BLUlxgfVGCk/3hXLx/d87vtBJPGsr0/z7
- Ov4schpOURWmTn+UTViC3JbyLcTdz9HL1CZJ6u93N+eYpZHAARdzz0IYtMDo58wjZsZvqohx2
- sK8CbOk0+38RC9siiDQmPU/F2O9j0ecFLoic8L+FzrJRUabpSw07N9VE7yuiLzzW7h1y1qbdl
- 8BDKnCLdCt5xnvC6U/4WQH3gD8OmJF1CUtq+TTldcOhSrXj2vnZzKuWHsToqAEFYdCZ+G1kJO
- eJI+QvE+W/XqfwgluGmoOkhLGUX5ldmKgX6CLe5dbZ8IawJDff5pFl8WXkpxT/eZXkoGcu7Pc
- DX0K2nek3ltsWSP9duQ3a4vbYFB6Vy/1K5FZXd9NLKDHUpyZxqAnHScrIUhhPLbR9qzqa3fP8
- S9JHwgIyqL+J55/UfSI50l6JB8pE7cNqC8+mxFk3NnopJHiGHnFN35ebeS7rKgNp85lZ5jkmG
- gtTF0wZ9Rlqj9Xn2L
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0ffe423e-96f6-4af8-9fa4-08d7e1eb44c2
+X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Apr 2020 09:48:08.2774
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: x/ajJoEvi6ABGG05EKfLaGqksNVnPoeySRdFyf5nkZERwQIzEWcAOuj9pgKtoaSmrCsUhihatert3OUU9jHmBA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3835
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->>> Would you like to take another look at corresponding change possibilit=
-ies?
->>>
->> yes, I want to do it and thanks for your info.
+Hi, Marco
 
-How do you think about to improve the clarification around potentially
-=E2=80=9Codd fixes=E2=80=9D (because of collateral evolution)?
+> Subject: Re: [PATCH V2 1/5] dt-bindings: clock: Convert i.MX6Q clock to
+> json-schema
+>=20
+> Hi Anson,
+>=20
+> On 20-04-16 14:39, Anson Huang wrote:
+>=20
+> ...
+>=20
+> > diff --git a/Documentation/devicetree/bindings/clock/imx6q-clock.yaml
+> b/Documentation/devicetree/bindings/clock/imx6q-clock.yaml
+> > new file mode 100644
+> > index 0000000..1c6e600
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/clock/imx6q-clock.yaml
+> > @@ -0,0 +1,66 @@
+> > +# SPDX-License-Identifier: GPL-2.0
+> > +%YAML 1.2
+> > +---
+> > +$id:
+> https://eur01.safelinks.protection.outlook.com/?url=3Dhttp%3A%2F%2Fdevice=
+tr
+> ee.org%2Fschemas%2Fclock%2Fimx6q-clock.yaml%23&amp;data=3D02%7C01%
+> 7Canson.huang%40nxp.com%7Ca840fd5be8c94d4d950608d7e1ea16a2%7C6
+> 86ea1d3bc2b4c6fa92cd99c5c301635%7C0%7C1%7C637226267845578228&
+> amp;sdata=3DIw1CkVBMqw3m6sox6C3khcMy0BHNCQ9v2k72q3CM6Xs%3D&a
+> mp;reserved=3D0
+> > +$schema:
+> https://eur01.safelinks.protection.outlook.com/?url=3Dhttp%3A%2F%2Fdevice=
+tr
+> ee.org%2Fmeta-schemas%2Fcore.yaml%23&amp;data=3D02%7C01%7Canson.hu
+> ang%40nxp.com%7Ca840fd5be8c94d4d950608d7e1ea16a2%7C686ea1d3bc2
+> b4c6fa92cd99c5c301635%7C0%7C1%7C637226267845578228&amp;sdata=3DP
+> Be2CEoDdMo9I1m3DHbITCyYxB4GF%2FigP%2FNd7YCopCQ%3D&amp;reserve
+> d=3D0
+> > +
+> > +title: Clock bindings for Freescale i.MX6 Quad
+> > +
+> > +maintainers:
+> > +  - Anson Huang <Anson.Huang@nxp.com>
+> > +
+> > +properties:
+> > +  compatible:
+> > +    const: fsl,imx6q-ccm
+> > +
+> > +  reg:
+> > +    maxItems: 1
+> > +
+> > +  interrupts:
+> > +    maxItems: 2
+>=20
+> IMHO I would force them to have exactly two so we need
+> minItems: 2 too here.
 
+Actually, those 2 interrupts are NOT necessary for some platforms, such as =
+i.MX platforms
+do NOT enable them at all, so is it OK to force them to be '2' here?
 
-I noticed your update suggestion =E2=80=9Ci2c: busses: convert to devm_pla=
-tform_ioremap_resource=E2=80=9D.
-https://lore.kernel.org/linux-i2c/20200409135224.7426-1-zhengdejin5@gmail.=
-com/
-https://lore.kernel.org/patchwork/patch/1222122/
-https://lkml.org/lkml/2020/4/9/431
-
-It seems that you got encouraged to contribute changes according to anothe=
-r
-transformation approach by a single patch for a directory hierarchy.
-How likely is it that such adjustments touch source code places
-where related error messages would be found for further software
-development considerations?
-Would you like to wait until the integration of this update succeeded?
-
-Will it be interesting in the meantime to become more familiar with
-applications around scripts for the semantic patch language?
-Can the Coccinelle software make the discussed transformations more conven=
-ient
-also for your needs?
-
-Regards,
-Markus
+Thanks,
+Anson
