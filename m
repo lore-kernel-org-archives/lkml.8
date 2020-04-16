@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 775AFC2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:43:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 935BFC2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:43:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 53B1621D94
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:43:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7147C221F7
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:43:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587048186;
-	bh=ygU9BkGDwJIXHQsZvVk6IGaoJ3aXbQhEhnAt6XhPtlg=;
+	s=default; t=1587048191;
+	bh=20+WhrVt6rOuqY2+VFAix3C62pXVZPh2cqoTL8DX7PE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TARyUi5SQRxtMc0gB+NpdHTRaz4g4yeREw7yd5drAF+Y8WuwPnBgZvHZayNR09xXS
-	 BiXDHq/vK45OAcoyoM215D+RGeD8TRo4zjs6LG1vk3HdHNS8yX72oIVK0N20POIaTI
-	 5fxokPpIBsgyFPOezI7GUV3/YtDW3n5uKumTg/UE=
+	b=WMrhu2Rr13Rd1/jj0BnsZoxHu886vub8WwKweWeH8NymMM5zaXEG6VXVuMyj+XdPO
+	 oVBNAVh4IbZ4b01b2h2A+Gq1pcn908mSAAJ/6+H0vBic67pz3n0zir+urcdfPXIEjY
+	 Zx6Bs2iieH4SYVU3ucSK8LulD6EKRUZpTNoYEvjo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405372AbgDPOnE (ORCPT
+        id S2407788AbgDPOnK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:43:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47782 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 10:43:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47692 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2506707AbgDPOAn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 10:00:43 -0400
+        id S2392640AbgDPOAm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 10:00:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 57DCA21734;
-        Thu, 16 Apr 2020 14:00:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6B6A120732;
+        Thu, 16 Apr 2020 14:00:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587045642;
-        bh=ygU9BkGDwJIXHQsZvVk6IGaoJ3aXbQhEhnAt6XhPtlg=;
+        s=default; t=1587045637;
+        bh=20+WhrVt6rOuqY2+VFAix3C62pXVZPh2cqoTL8DX7PE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HG9sWlcjzROeNS+2k4FL9HCCJc89Fm3opwph9o2wgVNNdO15iP5QbD4Qt+OE13420
-         AjU2dd+Z6TAFKX2pWY8BZSlIOrrJ1tUee+Qwqnd3XuT4HxM5CMyMjHOpUU6frnj/g8
-         YSVsO5l5HDEZQLPxrVlEVhKaVbHYlCTEb+YWANfU=
+        b=Rxsf3KDcfC4bpYQ3ncFQ1IXTB9mJd4iAsxMYtptbpOt8THSAe6RackN37G+5nfKic
+         SnbF5705oHU4LyNv0O57W9sG++7sFqeMxJbv8sjRkzmr/gYDTGibStKQ28Ng0TVxa3
+         R9ESayLm68vRhLKziEfTymnVv0Uo3XkFi9FjLzQM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
-        Theodore Tso <tytso@mit.edu>, stable@kernel.org
-Subject: [PATCH 5.6 217/254] ext4: fix a data race at inode->i_blocks
-Date:   Thu, 16 Apr 2020 15:25:06 +0200
-Message-Id: <20200416131353.138234115@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Trond Myklebust <trond.myklebust@hammerspace.com>
+Subject: [PATCH 5.6 215/254] NFS: finish_automount() requires us to hold 2 refs to the mount record
+Date:   Thu, 16 Apr 2020 15:25:04 +0200
+Message-Id: <20200416131352.894907687@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.804095985@linuxfoundation.org>
 References: <20200416131325.804095985@linuxfoundation.org>
@@ -59,90 +59,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qian Cai <cai@lca.pw>
+From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-commit 28936b62e71e41600bab319f262ea9f9b1027629 upstream.
+commit 75da98586af75eb80664714a67a9895bf0a5517e upstream.
 
-inode->i_blocks could be accessed concurrently as noticed by KCSAN,
+We must not return from nfs_d_automount() without holding 2 references
+to the mount record. Doing so, will trigger the BUG() in finish_automount().
+Also ensure that we don't try to reschedule the automount timer with
+a negative or zero timeout value.
 
- BUG: KCSAN: data-race in ext4_do_update_inode [ext4] / inode_add_bytes
-
- write to 0xffff9a00d4b982d0 of 8 bytes by task 22100 on cpu 118:
-  inode_add_bytes+0x65/0xf0
-  __inode_add_bytes at fs/stat.c:689
-  (inlined by) inode_add_bytes at fs/stat.c:702
-  ext4_mb_new_blocks+0x418/0xca0 [ext4]
-  ext4_ext_map_blocks+0x1a6b/0x27b0 [ext4]
-  ext4_map_blocks+0x1a9/0x950 [ext4]
-  _ext4_get_block+0xfc/0x270 [ext4]
-  ext4_get_block_unwritten+0x33/0x50 [ext4]
-  __block_write_begin_int+0x22e/0xae0
-  __block_write_begin+0x39/0x50
-  ext4_write_begin+0x388/0xb50 [ext4]
-  ext4_da_write_begin+0x35f/0x8f0 [ext4]
-  generic_perform_write+0x15d/0x290
-  ext4_buffered_write_iter+0x11f/0x210 [ext4]
-  ext4_file_write_iter+0xce/0x9e0 [ext4]
-  new_sync_write+0x29c/0x3b0
-  __vfs_write+0x92/0xa0
-  vfs_write+0x103/0x260
-  ksys_write+0x9d/0x130
-  __x64_sys_write+0x4c/0x60
-  do_syscall_64+0x91/0xb05
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
- read to 0xffff9a00d4b982d0 of 8 bytes by task 8 on cpu 65:
-  ext4_do_update_inode+0x4a0/0xf60 [ext4]
-  ext4_inode_blocks_set at fs/ext4/inode.c:4815
-  ext4_mark_iloc_dirty+0xaf/0x160 [ext4]
-  ext4_mark_inode_dirty+0x129/0x3e0 [ext4]
-  ext4_convert_unwritten_extents+0x253/0x2d0 [ext4]
-  ext4_convert_unwritten_io_end_vec+0xc5/0x150 [ext4]
-  ext4_end_io_rsv_work+0x22c/0x350 [ext4]
-  process_one_work+0x54f/0xb90
-  worker_thread+0x80/0x5f0
-  kthread+0x1cd/0x1f0
-  ret_from_fork+0x27/0x50
-
- 4 locks held by kworker/u256:0/8:
-  #0: ffff9a025abc4328 ((wq_completion)ext4-rsv-conversion){+.+.}, at: process_one_work+0x443/0xb90
-  #1: ffffab5a862dbe20 ((work_completion)(&ei->i_rsv_conversion_work)){+.+.}, at: process_one_work+0x443/0xb90
-  #2: ffff9a025a9d0f58 (jbd2_handle){++++}, at: start_this_handle+0x1c1/0x9d0 [jbd2]
-  #3: ffff9a00d4b985d8 (&(&ei->i_raw_lock)->rlock){+.+.}, at: ext4_do_update_inode+0xaa/0xf60 [ext4]
- irq event stamp: 3009267
- hardirqs last  enabled at (3009267): [<ffffffff980da9b7>] __find_get_block+0x107/0x790
- hardirqs last disabled at (3009266): [<ffffffff980da8f9>] __find_get_block+0x49/0x790
- softirqs last  enabled at (3009230): [<ffffffff98a0034c>] __do_softirq+0x34c/0x57c
- softirqs last disabled at (3009223): [<ffffffff97cc67a2>] irq_exit+0xa2/0xc0
-
- Reported by Kernel Concurrency Sanitizer on:
- CPU: 65 PID: 8 Comm: kworker/u256:0 Tainted: G L 5.6.0-rc2-next-20200221+ #7
- Hardware name: HPE ProLiant DL385 Gen10/ProLiant DL385 Gen10, BIOS A40 07/10/2019
- Workqueue: ext4-rsv-conversion ext4_end_io_rsv_work [ext4]
-
-The plain read is outside of inode->i_lock critical section which
-results in a data race. Fix it by adding READ_ONCE() there.
-
-Link: https://lore.kernel.org/r/20200222043258.2279-1-cai@lca.pw
-Signed-off-by: Qian Cai <cai@lca.pw>
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-Cc: stable@kernel.org
+Fixes: 22a1ae9a93fb ("NFS: If nfs_mountpoint_expiry_timeout < 0, do not expire submounts")
+Cc: stable@vger.kernel.org # v5.5+
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/ext4/inode.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/nfs/namespace.c |   12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
 
---- a/fs/ext4/inode.c
-+++ b/fs/ext4/inode.c
-@@ -4812,7 +4812,7 @@ static int ext4_inode_blocks_set(handle_
- 				struct ext4_inode_info *ei)
- {
- 	struct inode *inode = &(ei->vfs_inode);
--	u64 i_blocks = inode->i_blocks;
-+	u64 i_blocks = READ_ONCE(inode->i_blocks);
- 	struct super_block *sb = inode->i_sb;
+--- a/fs/nfs/namespace.c
++++ b/fs/nfs/namespace.c
+@@ -145,6 +145,7 @@ struct vfsmount *nfs_d_automount(struct
+ 	struct vfsmount *mnt = ERR_PTR(-ENOMEM);
+ 	struct nfs_server *server = NFS_SERVER(d_inode(path->dentry));
+ 	struct nfs_client *client = server->nfs_client;
++	int timeout = READ_ONCE(nfs_mountpoint_expiry_timeout);
+ 	int ret;
  
- 	if (i_blocks <= ~0U) {
+ 	if (IS_ROOT(path->dentry))
+@@ -190,12 +191,12 @@ struct vfsmount *nfs_d_automount(struct
+ 	if (IS_ERR(mnt))
+ 		goto out_fc;
+ 
+-	if (nfs_mountpoint_expiry_timeout < 0)
++	mntget(mnt); /* prevent immediate expiration */
++	if (timeout <= 0)
+ 		goto out_fc;
+ 
+-	mntget(mnt); /* prevent immediate expiration */
+ 	mnt_set_expiry(mnt, &nfs_automount_list);
+-	schedule_delayed_work(&nfs_automount_task, nfs_mountpoint_expiry_timeout);
++	schedule_delayed_work(&nfs_automount_task, timeout);
+ 
+ out_fc:
+ 	put_fs_context(fc);
+@@ -233,10 +234,11 @@ const struct inode_operations nfs_referr
+ static void nfs_expire_automounts(struct work_struct *work)
+ {
+ 	struct list_head *list = &nfs_automount_list;
++	int timeout = READ_ONCE(nfs_mountpoint_expiry_timeout);
+ 
+ 	mark_mounts_for_expiry(list);
+-	if (!list_empty(list))
+-		schedule_delayed_work(&nfs_automount_task, nfs_mountpoint_expiry_timeout);
++	if (!list_empty(list) && timeout > 0)
++		schedule_delayed_work(&nfs_automount_task, timeout);
+ }
+ 
+ void nfs_release_automount_timer(void)
 
 
