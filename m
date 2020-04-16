@@ -2,121 +2,88 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C6E8C2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 08:03:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32BA6C2D0EF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 08:05:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 01A1E206B9
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 08:03:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0891F206B9
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 08:05:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vfo0PPID"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2440278AbgDPIDe (ORCPT
+        id S2440378AbgDPIEN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 04:03:34 -0400
-Received: from out30-130.freemail.mail.aliyun.com ([115.124.30.130]:32793 "EHLO
-        out30-130.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2439971AbgDPICR (ORCPT
+        Thu, 16 Apr 2020 04:04:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33052 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2440155AbgDPICb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 04:02:17 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R271e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07488;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=39;SR=0;TI=SMTPD_---0TvgXXNk_1587024122;
-Received: from IT-FVFX43SYHV2H.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0TvgXXNk_1587024122)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Thu, 16 Apr 2020 16:02:03 +0800
-Subject: Re: [PATCH v8 03/10] mm/lru: replace pgdat lru_lock with lruvec lock
-From:   Alex Shi <alex.shi@linux.alibaba.com>
-To:     Johannes Weiner <hannes@cmpxchg.org>, akpm@linux-foundation.org
-Cc:     cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, mgorman@techsingularity.net, tj@kernel.org,
-        hughd@google.com, khlebnikov@yandex-team.ru,
-        daniel.m.jordan@oracle.com, yang.shi@linux.alibaba.com,
-        willy@infradead.org, shakeelb@google.com,
-        Michal Hocko <mhocko@kernel.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Roman Gushchin <guro@fb.com>,
-        Chris Down <chris@chrisdown.name>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vlastimil Babka <vbabka@suse.cz>, Qian Cai <cai@lca.pw>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        David Rientjes <rientjes@google.com>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        swkhack <swkhack@gmail.com>,
-        "Potyra, Stefan" <Stefan.Potyra@elektrobit.com>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Colin Ian King <colin.king@canonical.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Peng Fan <peng.fan@nxp.com>,
-        Nikolay Borisov <nborisov@suse.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>,
-        Yafang Shao <laoar.shao@gmail.com>,
-        Wei Yang <richard.weiyang@gmail.com>
-References: <1579143909-156105-1-git-send-email-alex.shi@linux.alibaba.com>
- <1579143909-156105-4-git-send-email-alex.shi@linux.alibaba.com>
- <20200116215222.GA64230@cmpxchg.org>
- <cdcdb710-1d78-6fac-48d7-35519ddcdc6a@linux.alibaba.com>
- <20200413180725.GA99267@cmpxchg.org>
- <8e7bf170-2bb5-f862-c12b-809f7f7d96cb@linux.alibaba.com>
- <20200414163114.GA136578@cmpxchg.org>
- <54af0662-cbb4-88c7-7eae-f969684025dd@linux.alibaba.com>
-Message-ID: <0bed9f1a-400d-d9a9-aeb4-de1dd9ccbb45@linux.alibaba.com>
-Date:   Thu, 16 Apr 2020 16:01:20 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.6.0
+        Thu, 16 Apr 2020 04:02:31 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DFCFC061A10
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 01:02:31 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id u10so4864797lfo.8
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 01:02:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=HS3wh14onxfnVAAnelvXE++p13ZTdiNaT9jQji2UHzs=;
+        b=vfo0PPID97JrT5WKWP575QXEQfMje8Y80j1J2y4VsCaINnaxBRBOwbphMCECPp2dp4
+         B0B/RHjLCRYxZCwT3VKOk8T9rFGCrA9byaN8YYhGfODjonk63PPGpAkGlYgE5JJCG6t3
+         brqYJkXoEUYfkA2gQEkVoUNveryy41bFDIecBXeQ8/6eLwP15B4SY1OZRlcAxaYoIirR
+         NHB9W5QNDgUKLULGcDhmopaU6Oc18sPdfhqCsauY04aSSGj8PQ6dFzKaZ3FBM58TcTiX
+         7Pm5np1XyoMAf9/uJ3q+fbexj3Ioq34+53S/J8DKepGd08s7ORCyG4xQJT/TryowzFmv
+         +flw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=HS3wh14onxfnVAAnelvXE++p13ZTdiNaT9jQji2UHzs=;
+        b=F/kOuIKDgxqmSVzNJD5tL7GWb7OpRxBU5asuFfdF7Auc3SeiIDHf6VaVoQEAjYTBg3
+         4lnesz7F9ujvCKEElu1HZcF4E6WK2ZafoAp9rAa2tlFig28svg/3hvS8AbL/cElgMAhZ
+         LDKPsC1ROgANnLYFfoAaheRZfV8Zc3Egjiy15dPoonZBa8HvkXLA2qefvIwkL1v7PVJq
+         lRUqoROabkugkp2sGvuJf2i29u8y8B1jlBpHGuPzpQxA0oVpuEAwkv3dDqBWPaKu1iYZ
+         P0OQ4qE560j2bLxhEOXqddteqsrpD/88EoNzTqZmv+zRmEc08bObhO0YNkOFFwa2BAIU
+         yu6Q==
+X-Gm-Message-State: AGi0PuZdfDuCsvs6kYLEIeLVheq6cp6DDcA4BDOxzsha+XgC929dX+cp
+        rGrQ6Kr8hYcMEeaa9H9gRKIFG6q9icEr5Ddfbu2oAw==
+X-Google-Smtp-Source: APiQypLuIixLf5ucqE301E0Pfpc6UIvL9GPllhUYp731XovnEOOMBJ2YWNaowR5LKg0u97weWLvK2TO24s4t9c/jatU=
+X-Received: by 2002:ac2:5c4e:: with SMTP id s14mr5389181lfp.77.1587024149690;
+ Thu, 16 Apr 2020 01:02:29 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <54af0662-cbb4-88c7-7eae-f969684025dd@linux.alibaba.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+References: <1586255632-27528-1-git-send-email-light.hsieh@mediatek.com>
+In-Reply-To: <1586255632-27528-1-git-send-email-light.hsieh@mediatek.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 16 Apr 2020 10:02:18 +0200
+Message-ID: <CACRpkdY_86VK2Acjk3MoJi4K_F2RP-2YW7nfEDN9Bg=TB9nr6w@mail.gmail.com>
+Subject: Re: [PATCH v1 1/1] pinctrl: mediatek: remove shadow variable declaration
+To:     Light Hsieh <light.hsieh@mediatek.com>
+Cc:     "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Sean Wang <sean.wang@kernel.org>,
+        Kuohong Wang <kuohong.wang@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Apr 7, 2020 at 12:34 PM <light.hsieh@mediatek.com> wrote:
 
+> From: Light Hsieh <light.hsieh@mediatek.com>
+>
+> Remove shadow declaration of variable 'pullup' in mtk_pinconf_get()
+>
+> Signed-off-by: Light Hsieh <light.hsieh@mediatek.com>
 
-在 2020/4/15 下午9:42, Alex Shi 写道:
-> Hi Johannes,
-> 
-> Thanks a lot for point out!
-> 
-> Charging in __read_swap_cache_async would ask for 3 layers function arguments
-> pass, that would be a bit ugly. Compare to this, could we move out the
-> lru_cache add after commit_charge, like ksm copied pages?
-> 
-> That give a bit extra non lru list time, but the page just only be used only
-> after add_anon_rmap setting. Could it cause troubles?
+Patch applied for fixes, thanks for fixing this!
 
-Hi Johannes & Andrew,
-
-Doing lru_cache_add_anon during swapin_readahead can give a very short timing 
-for possible page reclaiming for these few pages.
-
-If we delay these few pages lru adding till after the vm_fault target page 
-get memcg charging(mem_cgroup_commit_charge) and activate, we could skip the 
-mem_cgroup_try_charge/commit_charge/cancel_charge process in __read_swap_cache_async().
-But the cost is maximum SWAP_RA_ORDER_CEILING number pages on each cpu miss
-page reclaiming in a short time. On the other hand, save the target vm_fault
-page from reclaiming before activate it during that time.
-
-Judging the lose and gain, and the example of shmem/ksm copied pages, I believe 
-it's fine to delay lru list adding till activate the target swapin page.
-
-Any comments are appreciated! 
-
-Thanks
-Alex
-
-
-> 
-> I tried to track down the reason of lru_cache_add here, but no explanation
-> till first git kernel commit.
-> 
-> Thanks
-> Alex 
-> 
+Yours,
+Linus Walleij
