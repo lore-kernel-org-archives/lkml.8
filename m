@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20CAEC2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:51:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F860C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:51:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F07552223D
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:51:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FC6121D93
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:51:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587048693;
-	bh=zIhIZGj24O1o982in8b2nseAv+Soag+2J7fvks+6GeU=;
+	s=default; t=1587048702;
+	bh=i+rAA1gQkcgahXrj2gNEKDk7ebI5BrKrngPXcSTcONM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dxcT2OPhtxlmGbyhYQU+ePxuYPOrjmr4uYA8tCTkFVinej65d+AufkMJhtUevfCDA
-	 6Fw1pwRmR8j10flUVWO4iDP/eXuKvvvw66+2aM0iokPeUh4VDcFvfhgZYY0FSXFFrA
-	 yua18MpTm7CJh2NG92bMN1NVP6Q5BOKhT5X1LPHs=
+	b=FzkGarn/bF5plqRBqIg+PDwx80J05gGaTNdrQlkx1txQyvpj+fKtCygM0cPYXLSKf
+	 A1FkVfeWyLpVd2Uim3MhjIqhbX1JecwipowvBPLe8M2bfP+CF6Q35Pi5CManQFunZn
+	 yaMbgruhMI7wr+A2/plMSZ5OzWCjRJlsBHKNY0IA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394677AbgDPOv3 (ORCPT
+        id S2394818AbgDPOvl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:51:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45074 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 10:51:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45046 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2633214AbgDPN6B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:58:01 -0400
+        id S2506778AbgDPN6A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:58:00 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A739520732;
-        Thu, 16 Apr 2020 13:58:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 434BD2078B;
+        Thu, 16 Apr 2020 13:57:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587045481;
-        bh=zIhIZGj24O1o982in8b2nseAv+Soag+2J7fvks+6GeU=;
+        s=default; t=1587045478;
+        bh=i+rAA1gQkcgahXrj2gNEKDk7ebI5BrKrngPXcSTcONM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nwBlYvk4BEE4qcp++xKHATHa92543dAaBXF/EfRaI/qDdSFCRpUp+Y+EpT89HKuNp
-         A847QA6/sq70yzB0IUuHyj11h+e9voEDCO1TF+weWOz9gX/Y7n+r1HYvuiXR8JFJD8
-         e+xUTI443yo8XjU1xcH4crqfQfWwkZ5IB7auJBbE=
+        b=vxK84G+JSEOQPefoh9NMKjh83lulCEVfLEPW5KsI+F1mmaY9+bgBkZn1WMr7zK38b
+         Eq857VKkFE8UCGsDOqBNkCs6ZkSkiToC+viK+dHZDtIeFA5xrQp+LSCCazVMHD14wZ
+         /Wvg1ivEiHUN2valgPoJGi8gSmVpE8/dqnEoftzA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qu Wenruo <wqu@suse.com>,
-        Josef Bacik <josef@toxicpanda.com>,
+        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
         David Sterba <dsterba@suse.com>
-Subject: [PATCH 5.6 153/254] btrfs: drop block from cache on error in relocation
-Date:   Thu, 16 Apr 2020 15:24:02 +0200
-Message-Id: <20200416131345.744802375@linuxfoundation.org>
+Subject: [PATCH 5.6 152/254] btrfs: set update the uuid generation as soon as possible
+Date:   Thu, 16 Apr 2020 15:24:01 +0200
+Message-Id: <20200416131345.617564264@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.804095985@linuxfoundation.org>
 References: <20200416131325.804095985@linuxfoundation.org>
@@ -62,39 +61,62 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Josef Bacik <josef@toxicpanda.com>
 
-commit 8e19c9732ad1d127b5575a10f4fbcacf740500ff upstream.
+commit 75ec1db8717a8f0a9d9c8d033e542fdaa7b73898 upstream.
 
-If we have an error while building the backref tree in relocation we'll
-process all the pending edges and then free the node.  However if we
-integrated some edges into the cache we'll lose our link to those edges
-by simply freeing this node, which means we'll leak memory and
-references to any roots that we've found.
+In my EIO stress testing I noticed I was getting forced to rescan the
+uuid tree pretty often, which was weird.  This is because my error
+injection stuff would sometimes inject an error after log replay but
+before we loaded the UUID tree.  If log replay committed the transaction
+it wouldn't have updated the uuid tree generation, but the tree was
+valid and didn't change, so there's no reason to not update the
+generation here.
 
-Instead we need to use remove_backref_node(), which walks through all of
-the edges that are still linked to this node and free's them up and
-drops any root references we may be holding.
+Fix this by setting the BTRFS_FS_UPDATE_UUID_TREE_GEN bit immediately
+after reading all the fs roots if the uuid tree generation matches the
+fs generation.  Then any transaction commits that happen during mount
+won't screw up our uuid tree state, forcing us to do needless uuid
+rescans.
 
-CC: stable@vger.kernel.org # 4.9+
-Reviewed-by: Qu Wenruo <wqu@suse.com>
+Fixes: 70f801754728 ("Btrfs: check UUID tree during mount if required")
+CC: stable@vger.kernel.org # 4.19+
 Signed-off-by: Josef Bacik <josef@toxicpanda.com>
 Reviewed-by: David Sterba <dsterba@suse.com>
 Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/relocation.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/btrfs/disk-io.c |   14 ++++++++++++--
+ 1 file changed, 12 insertions(+), 2 deletions(-)
 
---- a/fs/btrfs/relocation.c
-+++ b/fs/btrfs/relocation.c
-@@ -1186,7 +1186,7 @@ out:
- 			free_backref_node(cache, lower);
- 		}
+--- a/fs/btrfs/disk-io.c
++++ b/fs/btrfs/disk-io.c
+@@ -3061,6 +3061,18 @@ int __cold open_ctree(struct super_block
+ 	if (ret)
+ 		goto fail_tree_roots;
  
--		free_backref_node(cache, node);
-+		remove_backref_node(cache, node);
- 		return ERR_PTR(err);
++	/*
++	 * If we have a uuid root and we're not being told to rescan we need to
++	 * check the generation here so we can set the
++	 * BTRFS_FS_UPDATE_UUID_TREE_GEN bit.  Otherwise we could commit the
++	 * transaction during a balance or the log replay without updating the
++	 * uuid generation, and then if we crash we would rescan the uuid tree,
++	 * even though it was perfectly fine.
++	 */
++	if (fs_info->uuid_root && !btrfs_test_opt(fs_info, RESCAN_UUID_TREE) &&
++	    fs_info->generation == btrfs_super_uuid_tree_generation(disk_super))
++		set_bit(BTRFS_FS_UPDATE_UUID_TREE_GEN, &fs_info->flags);
++
+ 	ret = btrfs_verify_dev_extents(fs_info);
+ 	if (ret) {
+ 		btrfs_err(fs_info,
+@@ -3285,8 +3297,6 @@ int __cold open_ctree(struct super_block
+ 			close_ctree(fs_info);
+ 			return ret;
+ 		}
+-	} else {
+-		set_bit(BTRFS_FS_UPDATE_UUID_TREE_GEN, &fs_info->flags);
  	}
- 	ASSERT(!node || !node->detached);
+ 	set_bit(BTRFS_FS_OPEN, &fs_info->flags);
+ 
 
 
