@@ -2,53 +2,53 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89968C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:05:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1BA3C352BE
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:05:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5E5AE2063A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:05:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD822206D6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:05:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587045951;
-	bh=A5nwW0OdeCp53ZufXzYawDW4i/yshFw8OJwKq5AarJQ=;
+	s=default; t=1587045954;
+	bh=58Vk06b0j3aXbBGmy0Io28RxmfmRhNpj7yF6V6krN1w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nbcG+IBHAi13NfClvAP/DENgaTKbf6bhQ6Oo+tYcJLZ2rgz99AQ+Jj5mxwXZLFl+9
-	 KL0rRnAHKTcnoDEEMThQ+KkotpjelP27KzcZX3OHtubtaq/X1nxGpOR45YhWFznr4E
-	 6UHISAN5QBm2Uz6LEe5f5ljqZLtzH4eBvekn3aQM=
+	b=a5N3tTLqpLfufOqptOkvT58ghbKwD/ysCo9ZHdlx5ujnhnGpaRbxpOlb5Qs0NkfcX
+	 x832A9fp45KzAMw5bubqpSVQ8c0vEwK44/ZSataflIb4ICfH+NxI6hluTzwZjvxDrh
+	 PFaWLO0Hgo8Fj/WMAuY3KucbrCgE14MvpDao80pA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2896787AbgDPOFs (ORCPT
+        id S2897797AbgDPOFw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:05:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57298 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 10:05:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57368 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2896806AbgDPNn7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:43:59 -0400
+        id S2898422AbgDPNoE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:44:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 81B0120732;
-        Thu, 16 Apr 2020 13:43:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 73A1D20732;
+        Thu, 16 Apr 2020 13:44:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044639;
-        bh=A5nwW0OdeCp53ZufXzYawDW4i/yshFw8OJwKq5AarJQ=;
+        s=default; t=1587044643;
+        bh=58Vk06b0j3aXbBGmy0Io28RxmfmRhNpj7yF6V6krN1w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tc7VMXkcUM371BCDM8Xxafo3FYeAOQcogalKzq+sKJhm9gvWPsaIaiheRESqUG+vv
-         cblcXZ1OdSYlofaqSwQHwu9SCZ69ewVGuUcw6bbU6xZFya+FZ5QzY+tczZCyvcG1Zc
-         qOZurveu5uGCukumMNsycNqvPH34gA6Wff291iBs=
+        b=0pJv9T8MHUnGvfBH0dABaQ08ATrynJGu/Okj6yDpSNWyKBmMkHLihAVEEWRnjj87d
+         3r9LY0ToEKdidRqiGpIdQElvEF0vGdxusu/JO79Qd30YXAT+FC2y16fvVGesEpssil
+         pnzom8Q8B1DzHspV9/9Ph3u5g63qZXwg6HhljgSs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yonghong Song <yhs@fb.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Song Liu <songliubraving@fb.com>,
+        stable@vger.kernel.org,
+        "Ahmed S. Darwish" <a.darwish@linutronix.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 004/232] bpf: Fix deadlock with rq_lock in bpf_send_signal()
-Date:   Thu, 16 Apr 2020 15:21:38 +0200
-Message-Id: <20200416131317.122684915@linuxfoundation.org>
+Subject: [PATCH 5.4 041/232] time/sched_clock: Expire timer in hardirq context
+Date:   Thu, 16 Apr 2020 15:22:15 +0200
+Message-Id: <20200416131320.988812352@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131316.640996080@linuxfoundation.org>
 References: <20200416131316.640996080@linuxfoundation.org>
@@ -61,196 +61,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yonghong Song <yhs@fb.com>
+From: Ahmed S. Darwish <a.darwish@linutronix.de>
 
-[ Upstream commit 1bc7896e9ef44fd77858b3ef0b8a6840be3a4494 ]
+[ Upstream commit 2c8bd58812ee3dbf0d78b566822f7eacd34bdd7b ]
 
-When experimenting with bpf_send_signal() helper in our production
-environment (5.2 based), we experienced a deadlock in NMI mode:
-   #5 [ffffc9002219f770] queued_spin_lock_slowpath at ffffffff8110be24
-   #6 [ffffc9002219f770] _raw_spin_lock_irqsave at ffffffff81a43012
-   #7 [ffffc9002219f780] try_to_wake_up at ffffffff810e7ecd
-   #8 [ffffc9002219f7e0] signal_wake_up_state at ffffffff810c7b55
-   #9 [ffffc9002219f7f0] __send_signal at ffffffff810c8602
-  #10 [ffffc9002219f830] do_send_sig_info at ffffffff810ca31a
-  #11 [ffffc9002219f868] bpf_send_signal at ffffffff8119d227
-  #12 [ffffc9002219f988] bpf_overflow_handler at ffffffff811d4140
-  #13 [ffffc9002219f9e0] __perf_event_overflow at ffffffff811d68cf
-  #14 [ffffc9002219fa10] perf_swevent_overflow at ffffffff811d6a09
-  #15 [ffffc9002219fa38] ___perf_sw_event at ffffffff811e0f47
-  #16 [ffffc9002219fc30] __schedule at ffffffff81a3e04d
-  #17 [ffffc9002219fc90] schedule at ffffffff81a3e219
-  #18 [ffffc9002219fca0] futex_wait_queue_me at ffffffff8113d1b9
-  #19 [ffffc9002219fcd8] futex_wait at ffffffff8113e529
-  #20 [ffffc9002219fdf0] do_futex at ffffffff8113ffbc
-  #21 [ffffc9002219fec0] __x64_sys_futex at ffffffff81140d1c
-  #22 [ffffc9002219ff38] do_syscall_64 at ffffffff81002602
-  #23 [ffffc9002219ff50] entry_SYSCALL_64_after_hwframe at ffffffff81c00068
+To minimize latency, PREEMPT_RT kernels expires hrtimers in preemptible
+softirq context by default. This can be overriden by marking the timer's
+expiry with HRTIMER_MODE_HARD.
 
-The above call stack is actually very similar to an issue
-reported by Commit eac9153f2b58 ("bpf/stackmap: Fix deadlock with
-rq_lock in bpf_get_stack()") by Song Liu. The only difference is
-bpf_send_signal() helper instead of bpf_get_stack() helper.
+sched_clock_timer is missing this annotation: if its callback is preempted
+and the duration of the preemption exceeds the wrap around time of the
+underlying clocksource, sched clock will get out of sync.
 
-The above deadlock is triggered with a perf_sw_event.
-Similar to Commit eac9153f2b58, the below almost identical reproducer
-used tracepoint point sched/sched_switch so the issue can be easily caught.
-  /* stress_test.c */
-  #include <stdio.h>
-  #include <stdlib.h>
-  #include <sys/mman.h>
-  #include <pthread.h>
-  #include <sys/types.h>
-  #include <sys/stat.h>
-  #include <fcntl.h>
+Mark the sched_clock_timer for expiry in hard interrupt context.
 
-  #define THREAD_COUNT 1000
-  char *filename;
-  void *worker(void *p)
-  {
-        void *ptr;
-        int fd;
-        char *pptr;
-
-        fd = open(filename, O_RDONLY);
-        if (fd < 0)
-                return NULL;
-        while (1) {
-                struct timespec ts = {0, 1000 + rand() % 2000};
-
-                ptr = mmap(NULL, 4096 * 64, PROT_READ, MAP_PRIVATE, fd, 0);
-                usleep(1);
-                if (ptr == MAP_FAILED) {
-                        printf("failed to mmap\n");
-                        break;
-                }
-                munmap(ptr, 4096 * 64);
-                usleep(1);
-                pptr = malloc(1);
-                usleep(1);
-                pptr[0] = 1;
-                usleep(1);
-                free(pptr);
-                usleep(1);
-                nanosleep(&ts, NULL);
-        }
-        close(fd);
-        return NULL;
-  }
-
-  int main(int argc, char *argv[])
-  {
-        void *ptr;
-        int i;
-        pthread_t threads[THREAD_COUNT];
-
-        if (argc < 2)
-                return 0;
-
-        filename = argv[1];
-
-        for (i = 0; i < THREAD_COUNT; i++) {
-                if (pthread_create(threads + i, NULL, worker, NULL)) {
-                        fprintf(stderr, "Error creating thread\n");
-                        return 0;
-                }
-        }
-
-        for (i = 0; i < THREAD_COUNT; i++)
-                pthread_join(threads[i], NULL);
-        return 0;
-  }
-and the following command:
-  1. run `stress_test /bin/ls` in one windown
-  2. hack bcc trace.py with the following change:
-#     --- a/tools/trace.py
-#     +++ b/tools/trace.py
-     @@ -513,6 +513,7 @@ BPF_PERF_OUTPUT(%s);
-              __data.tgid = __tgid;
-              __data.pid = __pid;
-              bpf_get_current_comm(&__data.comm, sizeof(__data.comm));
-     +        bpf_send_signal(10);
-      %s
-      %s
-              %s.perf_submit(%s, &__data, sizeof(__data));
-  3. in a different window run
-     ./trace.py -p $(pidof stress_test) t:sched:sched_switch
-
-The deadlock can be reproduced in our production system.
-
-Similar to Song's fix, the fix is to delay sending signal if
-irqs is disabled to avoid deadlocks involving with rq_lock.
-With this change, my above stress-test in our production system
-won't cause deadlock any more.
-
-I also implemented a scale-down version of reproducer in the
-selftest (a subsequent commit). With latest bpf-next,
-it complains for the following potential deadlock.
-  [   32.832450] -> #1 (&p->pi_lock){-.-.}:
-  [   32.833100]        _raw_spin_lock_irqsave+0x44/0x80
-  [   32.833696]        task_rq_lock+0x2c/0xa0
-  [   32.834182]        task_sched_runtime+0x59/0xd0
-  [   32.834721]        thread_group_cputime+0x250/0x270
-  [   32.835304]        thread_group_cputime_adjusted+0x2e/0x70
-  [   32.835959]        do_task_stat+0x8a7/0xb80
-  [   32.836461]        proc_single_show+0x51/0xb0
-  ...
-  [   32.839512] -> #0 (&(&sighand->siglock)->rlock){....}:
-  [   32.840275]        __lock_acquire+0x1358/0x1a20
-  [   32.840826]        lock_acquire+0xc7/0x1d0
-  [   32.841309]        _raw_spin_lock_irqsave+0x44/0x80
-  [   32.841916]        __lock_task_sighand+0x79/0x160
-  [   32.842465]        do_send_sig_info+0x35/0x90
-  [   32.842977]        bpf_send_signal+0xa/0x10
-  [   32.843464]        bpf_prog_bc13ed9e4d3163e3_send_signal_tp_sched+0x465/0x1000
-  [   32.844301]        trace_call_bpf+0x115/0x270
-  [   32.844809]        perf_trace_run_bpf_submit+0x4a/0xc0
-  [   32.845411]        perf_trace_sched_switch+0x10f/0x180
-  [   32.846014]        __schedule+0x45d/0x880
-  [   32.846483]        schedule+0x5f/0xd0
-  ...
-
-  [   32.853148] Chain exists of:
-  [   32.853148]   &(&sighand->siglock)->rlock --> &p->pi_lock --> &rq->lock
-  [   32.853148]
-  [   32.854451]  Possible unsafe locking scenario:
-  [   32.854451]
-  [   32.855173]        CPU0                    CPU1
-  [   32.855745]        ----                    ----
-  [   32.856278]   lock(&rq->lock);
-  [   32.856671]                                lock(&p->pi_lock);
-  [   32.857332]                                lock(&rq->lock);
-  [   32.857999]   lock(&(&sighand->siglock)->rlock);
-
-  Deadlock happens on CPU0 when it tries to acquire &sighand->siglock
-  but it has been held by CPU1 and CPU1 tries to grab &rq->lock
-  and cannot get it.
-
-  This is not exactly the callstack in our production environment,
-  but sympotom is similar and both locks are using spin_lock_irqsave()
-  to acquire the lock, and both involves rq_lock. The fix to delay
-  sending signal when irq is disabled also fixed this issue.
-
-Signed-off-by: Yonghong Song <yhs@fb.com>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-Cc: Song Liu <songliubraving@fb.com>
-Link: https://lore.kernel.org/bpf/20200304191104.2796501-1-yhs@fb.com
+Signed-off-by: Ahmed S. Darwish <a.darwish@linutronix.de>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/20200309181529.26558-1-a.darwish@linutronix.de
 Signed-off-by: Sasha Levin <sashal@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- kernel/trace/bpf_trace.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/time/sched_clock.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
---- a/kernel/trace/bpf_trace.c
-+++ b/kernel/trace/bpf_trace.c
-@@ -650,7 +650,7 @@ BPF_CALL_1(bpf_send_signal, u32, sig)
- 	if (unlikely(!nmi_uaccess_okay()))
- 		return -EPERM;
+diff --git a/kernel/time/sched_clock.c b/kernel/time/sched_clock.c
+index dbd69052eaa66..a5538dd76a819 100644
+--- a/kernel/time/sched_clock.c
++++ b/kernel/time/sched_clock.c
+@@ -207,7 +207,8 @@ sched_clock_register(u64 (*read)(void), int bits, unsigned long rate)
  
--	if (in_nmi()) {
-+	if (irqs_disabled()) {
- 		/* Do an early check on signal validity. Otherwise,
- 		 * the error is lost in deferred irq_work.
- 		 */
+ 	if (sched_clock_timer.function != NULL) {
+ 		/* update timeout for clock wrap */
+-		hrtimer_start(&sched_clock_timer, cd.wrap_kt, HRTIMER_MODE_REL);
++		hrtimer_start(&sched_clock_timer, cd.wrap_kt,
++			      HRTIMER_MODE_REL_HARD);
+ 	}
+ 
+ 	r = rate;
+@@ -251,9 +252,9 @@ void __init generic_sched_clock_init(void)
+ 	 * Start the timer to keep sched_clock() properly updated and
+ 	 * sets the initial epoch.
+ 	 */
+-	hrtimer_init(&sched_clock_timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
++	hrtimer_init(&sched_clock_timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL_HARD);
+ 	sched_clock_timer.function = sched_clock_poll;
+-	hrtimer_start(&sched_clock_timer, cd.wrap_kt, HRTIMER_MODE_REL);
++	hrtimer_start(&sched_clock_timer, cd.wrap_kt, HRTIMER_MODE_REL_HARD);
+ }
+ 
+ /*
+@@ -290,7 +291,7 @@ void sched_clock_resume(void)
+ 	struct clock_read_data *rd = &cd.read_data[0];
+ 
+ 	rd->epoch_cyc = cd.actual_read_sched_clock();
+-	hrtimer_start(&sched_clock_timer, cd.wrap_kt, HRTIMER_MODE_REL);
++	hrtimer_start(&sched_clock_timer, cd.wrap_kt, HRTIMER_MODE_REL_HARD);
+ 	rd->read_sched_clock = cd.actual_read_sched_clock;
+ }
+ 
+-- 
+2.20.1
+
 
 
