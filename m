@@ -2,178 +2,138 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25E07C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:07:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FDF9C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:07:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EA89C2076D
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:07:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NKaFl00p"
+	by mail.kernel.org (Postfix) with ESMTP id 19D202076D
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:07:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587046041;
+	bh=r82tKIi8mDH0MV9ri2qt6LEF7mgjBkWhy3KjXEKilYc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=DStEoaCXPx5/1+PNJhowW40PpdaFQ5eBEJo/sfB05NrK6ea+qBoMzfpdIs92F+rLI
+	 BBP1t7m7IIGInBZc2VwmdRXhSPxO8i5L1VDR4iBD66kBKA4mNPAVLlRTGppkPjWwah
+	 ye+Y1JEY7kANzjL0biFWjfF5amRP6htMJDE81/A8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2441885AbgDPOHP (ORCPT
+        id S2409744AbgDPOHT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:07:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58252 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2898433AbgDPNoa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:44:30 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B064C061A0C;
-        Thu, 16 Apr 2020 06:44:30 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id v8so2574131wma.0;
-        Thu, 16 Apr 2020 06:44:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=WnOLlJGWjKKU4l6KU86petvNf/KeuBQfP8LASQRqnt8=;
-        b=NKaFl00peRLsJRd1TCpOYzHetW8sbRA+/HJn6nXHcphRgYoHcE2As4Skpd/c5OOtl3
-         aAJP6GhSIoz0w4NCFbSZJ6HKcTBmEX7IXKjNWRGHscVFHFO40s7l2Oij2g2owDoID0a5
-         7/75cQ6pZ1aQ52kQoT65AaH1sagq0kwsSQQsKV6iAsy2BwSQXEQu+AZUDJEATTyjsEvW
-         /dQmoQ710BctBOzQRsQWEq7qIyYJgrGIrl24rfwI89EL6oev6W3DzRYRUHoGWtgMTglM
-         5DlQjWI5n+jybhbO+jO01+JAbMYihB8YdAnzppfOgx7wop42LLUkMnTRf0PV4zxzyq5i
-         zrVA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=WnOLlJGWjKKU4l6KU86petvNf/KeuBQfP8LASQRqnt8=;
-        b=lEubnyQ/cp6fLEeDfiOQMbHMzZiBd3aDNoa+AcT1Fi9XTQjA+d3zE0t/guRpbmmNTx
-         kSXsmk8Kx7bqIYOjbFROmQ7OPLW2BBRpLkOYLJ8Wqmcfhxv4cG5NKieOqYZ92cj2ikpJ
-         RDzdKktUhiLFywVL4st851X2HA+5/ao6KcioXMDfoXyFYmo7ZM5fHDuy73sjmNPLM6KP
-         VF8EV6p7p8nic8l0X9Qn1S2GrUIZfXadFv0wXjONHLNcmsdIt8sjT0rUv1b1LcalBWrK
-         l6ptRSPUQhERa6rPCoiM3+2MgygRR8Ojjau05E7PN1oHLx+cuHNsrsRTDJlP7dhV/QZ0
-         sIBA==
-X-Gm-Message-State: AGi0PuYh6giViBV7jL1UZxPwjcpeMX3S/xDX6bqsMWEOdI+qWbLzcQQl
-        dTyjG5FaeklVpRtO63ZRcHs=
-X-Google-Smtp-Source: APiQypKHstkks+d7QKXlK1Kx2K4FOqpUNOov9QzJnGobXCUEc76Hs0tyB7U8aK6EB9CSGnwIDUH4vw==
-X-Received: by 2002:a7b:cd10:: with SMTP id f16mr5171636wmj.21.1587044668689;
-        Thu, 16 Apr 2020 06:44:28 -0700 (PDT)
-Received: from [192.168.2.1] (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id z18sm21457242wrw.41.2020.04.16.06.44.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 16 Apr 2020 06:44:27 -0700 (PDT)
-Subject: Re: [PATCH 2/4] arm64: dts: rockchip: Add RGA support to the PX30
-To:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Cc:     linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Jacob Chen <jacob-chen@iotwrt.com>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Hans Verkuil <hansverk@cisco.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-References: <20200416115047.233720-1-paul.kocialkowski@bootlin.com>
- <20200416115047.233720-3-paul.kocialkowski@bootlin.com>
- <478f0a8b-f819-62f4-83b8-27918c4c2431@gmail.com>
- <20200416132442.GI125838@aptenodytes>
-From:   Johan Jonker <jbx6244@gmail.com>
-Message-ID: <f4ad8ea4-7904-1458-e564-2d20c87ed417@gmail.com>
-Date:   Thu, 16 Apr 2020 15:44:25 +0200
-User-Agent: Mozilla/5.0 (X11; Linux i686; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Thu, 16 Apr 2020 10:07:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58212 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2896924AbgDPNoz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:44:55 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5984A2076D;
+        Thu, 16 Apr 2020 13:44:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587044693;
+        bh=r82tKIi8mDH0MV9ri2qt6LEF7mgjBkWhy3KjXEKilYc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=hxehtmeHMIuUSEeffCPTGeOX23pro1zASACd5ITzrf2M4VNjMb24hJTaCx6WDtGLV
+         DViqitGpHS0yb4vRJIqq2Vbd7PlgT94s+sRFqkhYiz08ZKVrIANK3ins/vcl3PEntn
+         WgUNL9zxpqln1JyZbNxJ+ANbMYwPWO2njrlYmhHo=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 063/232] locking/lockdep: Avoid recursion in lockdep_count_{for,back}ward_deps()
+Date:   Thu, 16 Apr 2020 15:22:37 +0200
+Message-Id: <20200416131323.295885799@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.1
+In-Reply-To: <20200416131316.640996080@linuxfoundation.org>
+References: <20200416131316.640996080@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <20200416132442.GI125838@aptenodytes>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/16/20 3:24 PM, Paul Kocialkowski wrote:
-> Hi,
-> 
-> On Thu 16 Apr 20, 15:02, Johan Jonker wrote:
->> Hi Paul,
->>
->> The conversion of rockchip-rga.txt to rockchip-rga.yaml by myself just
->> has been approved by robh.
-> 
-> Huh, I looked around for ongoing related work but missed it.
-> I'll definitely rebase on top of your series and use the yaml description
-> instead. Thanks!
-> 
->> Maybe place dts patches at the end of a patch serie.
->> Could you include a &rga patch if your device is supported in mainline,
->> so we can test with:
->> make ARCH=arm64 dtbs_check
->> DT_SCHEMA_FILES=Documentation/devicetree/bindings/media/rockchip-rga.yaml
-> 
-> I tested with the PX30 EVB so I can surely add a node there if that turns
-> out necessary (see below).
-> 
->> Johan
->>
->> On 4/16/20 1:50 PM, Paul Kocialkowski wrote:
->>> The PX30 features a RGA block: add the necessary node to support it.
->>>
->>> Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
->>> ---
->>>  arch/arm64/boot/dts/rockchip/px30.dtsi | 11 +++++++++++
->>>  1 file changed, 11 insertions(+)
->>>
->>> diff --git a/arch/arm64/boot/dts/rockchip/px30.dtsi b/arch/arm64/boot/dts/rockchip/px30.dtsi
->>> index 75908c587511..4bfbee9d4123 100644
->>> --- a/arch/arm64/boot/dts/rockchip/px30.dtsi
->>> +++ b/arch/arm64/boot/dts/rockchip/px30.dtsi
->>> @@ -1104,6 +1104,17 @@ vopl_mmu: iommu@ff470f00 {
->>>  		status = "disabled";
->>>  	};
->>>  
->>> +	rga: rga@ff480000 {
->>> +		compatible = "rockchip,px30-rga";
->>> +		reg = <0x0 0xff480000 0x0 0x10000>;
->>> +		interrupts = <GIC_SPI 76 IRQ_TYPE_LEVEL_HIGH 0>;
->>> +		clocks = <&cru ACLK_RGA>, <&cru HCLK_RGA>, <&cru SCLK_RGA_CORE>;
->>> +		clock-names = "aclk", "hclk", "sclk";
->>> +		resets = <&cru SRST_RGA>, <&cru SRST_RGA_A>, <&cru SRST_RGA_H>;
->>> +		reset-names = "core", "axi", "ahb";
->>> +		power-domains = <&power PX30_PD_VO>;
->>
->> 		status = "disabled";
-> 
-> As of 5.6, the rk3399 has the node enabled by default. Did that change?
+From: Boqun Feng <boqun.feng@gmail.com>
 
-'status' disappeared during review for rk3399 between v2 and v3, but
-doesn't mention the reason. If someone can give more info here?
+[ Upstream commit 25016bd7f4caf5fc983bbab7403d08e64cba3004 ]
 
-https://lore.kernel.org/lkml/1500101920-24039-5-git-send-email-jacob-chen@iotwrt.com/
+Qian Cai reported a bug when PROVE_RCU_LIST=y, and read on /proc/lockdep
+triggered a warning:
 
-https://lore.kernel.org/lkml/1501470460-12014-5-git-send-email-jacob-chen@iotwrt.com/
+  [ ] DEBUG_LOCKS_WARN_ON(current->hardirqs_enabled)
+  ...
+  [ ] Call Trace:
+  [ ]  lock_is_held_type+0x5d/0x150
+  [ ]  ? rcu_lockdep_current_cpu_online+0x64/0x80
+  [ ]  rcu_read_lock_any_held+0xac/0x100
+  [ ]  ? rcu_read_lock_held+0xc0/0xc0
+  [ ]  ? __slab_free+0x421/0x540
+  [ ]  ? kasan_kmalloc+0x9/0x10
+  [ ]  ? __kmalloc_node+0x1d7/0x320
+  [ ]  ? kvmalloc_node+0x6f/0x80
+  [ ]  __bfs+0x28a/0x3c0
+  [ ]  ? class_equal+0x30/0x30
+  [ ]  lockdep_count_forward_deps+0x11a/0x1a0
 
-> 
-> Since it's a standalone block that has no I/O dependency, I don't really see
-> the point of disabling it by default.
+The warning got triggered because lockdep_count_forward_deps() call
+__bfs() without current->lockdep_recursion being set, as a result
+a lockdep internal function (__bfs()) is checked by lockdep, which is
+unexpected, and the inconsistency between the irq-off state and the
+state traced by lockdep caused the warning.
 
-Vop, hdmi and other video devices are also disabled.
-Follow the rest I think...
+Apart from this warning, lockdep internal functions like __bfs() should
+always be protected by current->lockdep_recursion to avoid potential
+deadlocks and data inconsistency, therefore add the
+current->lockdep_recursion on-and-off section to protect __bfs() in both
+lockdep_count_forward_deps() and lockdep_count_backward_deps()
 
-> 
-> What do you think?
-> 
-> Cheers,
-> 
-> Paul
-> 
->>> +	};
->>> +
->>>  	qos_gmac: qos@ff518000 {
->>>  		compatible = "syscon";
->>>  		reg = <0x0 0xff518000 0x0 0x20>;
->>>
->>
-> 
+Reported-by: Qian Cai <cai@lca.pw>
+Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Link: https://lkml.kernel.org/r/20200312151258.128036-1-boqun.feng@gmail.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ kernel/locking/lockdep.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
+index 35d3b6925b1ee..9ab1a965c3b92 100644
+--- a/kernel/locking/lockdep.c
++++ b/kernel/locking/lockdep.c
+@@ -1719,9 +1719,11 @@ unsigned long lockdep_count_forward_deps(struct lock_class *class)
+ 	this.class = class;
+ 
+ 	raw_local_irq_save(flags);
++	current->lockdep_recursion = 1;
+ 	arch_spin_lock(&lockdep_lock);
+ 	ret = __lockdep_count_forward_deps(&this);
+ 	arch_spin_unlock(&lockdep_lock);
++	current->lockdep_recursion = 0;
+ 	raw_local_irq_restore(flags);
+ 
+ 	return ret;
+@@ -1746,9 +1748,11 @@ unsigned long lockdep_count_backward_deps(struct lock_class *class)
+ 	this.class = class;
+ 
+ 	raw_local_irq_save(flags);
++	current->lockdep_recursion = 1;
+ 	arch_spin_lock(&lockdep_lock);
+ 	ret = __lockdep_count_backward_deps(&this);
+ 	arch_spin_unlock(&lockdep_lock);
++	current->lockdep_recursion = 0;
+ 	raw_local_irq_restore(flags);
+ 
+ 	return ret;
+-- 
+2.20.1
+
+
 
