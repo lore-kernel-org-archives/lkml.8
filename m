@@ -2,75 +2,93 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81E9CC352BE
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 20:13:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCB6DC352BE
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 20:15:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6003821841
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 20:13:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFCE52076D
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 20:15:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587068016;
-	bh=LyH9cHiVsHhYNaY8doBcGxuSdbtSiTmUFJcreEJc7dI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=sSl8TFuX5jR+5CxDlv0jXfluh9A++CQ/cld0v0WdJlu7q3oURkl4IMR4sJIThLczI
-	 WMOtL/zJGL9JBfEXKFaKwCnhBNhPLczw7oh+VUJ5g1W3Y14322a4FWt52l+00H5o29
-	 1IUSv9OICjmLk8oWXz8Ywu3JnwM9yeqEKeOrbvOE=
+	s=default; t=1587068146;
+	bh=D1k4FGZwtqhoI1ElVs5JDDEH95csH4x4jdsRBKIrsUI=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
+	b=jEOfbrm+YgXi4usUM2daCqVi4BkCWBhRM6bMt0odbtfGZpUzM0vyNkyW6T0xF8Ezh
+	 XJSboe6rCUUDNsKi1RJTbjtu3ltPVyspZDx7Py6G08GOpA9Dh2Ysu8GngTQaAeUd3s
+	 LU9A0ccgV0aZrCG3r/64VzS/Vx8qYCBGC3KHfX9k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728205AbgDPUNc (ORCPT
+        id S1728727AbgDPUPp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 16:13:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40230 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 16:15:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42250 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726523AbgDPUNa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 16:13:30 -0400
-Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        id S1726523AbgDPUPb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 16:15:31 -0400
+Received: from pobox.suse.cz (prg-ext-pat.suse.com [213.151.95.130])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E20F321841;
-        Thu, 16 Apr 2020 20:13:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7DBCE2076D;
+        Thu, 16 Apr 2020 20:15:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587068010;
-        bh=LyH9cHiVsHhYNaY8doBcGxuSdbtSiTmUFJcreEJc7dI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=he9cyi9U6qNaI++P4yCtou68OtfJj0xa0yu9eO1qYXQ1+RZUP6SNUIDA8c4tpI1x7
-         ROTa+l+WyFq7FbIeME4zKIxrIRqh0spV4dXEZBEQxFGhVQEHQkW0/VgGE8tx85M39A
-         BjqBeLISgOkfBcSVeZ8aj67Hq/kN1LV4SVppD++k=
-Date:   Thu, 16 Apr 2020 16:13:28 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     Pavel Machek <pavel@denx.de>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        David Howells <dhowells@redhat.com>
-Subject: Re: [PATCH 4.19 003/146] rxrpc: Abstract out the calculation of
- whether theres Tx space
-Message-ID: <20200416201328.GQ1068@sasha-vm>
-References: <20200416131242.353444678@linuxfoundation.org>
- <20200416131242.886803103@linuxfoundation.org>
- <20200416170515.GA29803@duo.ucw.cz>
+        s=default; t=1587068130;
+        bh=D1k4FGZwtqhoI1ElVs5JDDEH95csH4x4jdsRBKIrsUI=;
+        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+        b=pb1Aidbcr89YNzTHVpk+AyNMZbTkFc8vyI3afURRbjXDvFwV15/ymxbzA+qyRv2Yz
+         zkt3XEVweYahiTnIo3Fe5Z27TgbaQy1wyQI+t7pmfTd25UUanPeCULpZddV5Ht6h6E
+         mnFBpqnuRzUXcgTpoCGGyvNva9RmPVcpUddIvrBM=
+Date:   Thu, 16 Apr 2020 22:15:27 +0200 (CEST)
+From:   Jiri Kosina <jikos@kernel.org>
+To:     Rishi Gupta <gupt21@gmail.com>
+cc:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
+        benjamin.tissoires@redhat.com, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
+Subject: Re: [PATCH 1/1] HID: mcp2221: add GPIO functionality support
+In-Reply-To: <1586882894-19905-1-git-send-email-gupt21@gmail.com>
+Message-ID: <nycvar.YFH.7.76.2004162212080.19713@cbobk.fhfr.pm>
+References: <1586882894-19905-1-git-send-email-gupt21@gmail.com>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20200416170515.GA29803@duo.ucw.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 16, 2020 at 07:05:15PM +0200, Pavel Machek wrote:
->Hi!
->
->> Abstract out the calculation of there being sufficient Tx buffer space.
->> This is reproduced several times in the rxrpc sendmsg code.
->
->I don't think this is suitable for stable. It does not fix anything.
+On Tue, 14 Apr 2020, Rishi Gupta wrote:
 
-You're right - I've grabbed it so that I could also take e138aa7d3271
-("rxrpc: Fix call interruptibility handling").
+> MCP2221 has 4 pins that can be used as GPIO or configured
+> for alternate functionality such as clock generation and
+> IRQ detection. This patch adds support for GPIO functionality.
+> 
+> To set direction of a pin or to toggle its state after it
+> has been configured as GPIO, driver sends command to mcp2221
+> and parses response received from mcp2221. Based on this
+> response either 0 or appropriate error code is returned to
+> GPIO framework.
+> 
+> To get the direction or current state of a pin, driver
+> sends command and read response from the device. Based on
+> the response received from device direction or value
+> is sent to the GPIO framework.
+> 
+> Command from driver to mcp2221 device are output report.
+> Response received from mcp2221 is input report.
+> 
+> Datasheet (page 45-48) contains details about how to decode
+> the response received from device:
+> http://ww1.microchip.com/downloads/en/DeviceDoc/20005565B.pdf
+> 
+> Signed-off-by: Rishi Gupta <gupt21@gmail.com>
+> ---
+>  drivers/hid/hid-mcp2221.c | 169 ++++++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 169 insertions(+)
+
+Applied, thanks.
 
 -- 
-Thanks,
-Sasha
+Jiri Kosina
+SUSE Labs
+
