@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33D3DC352BE
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:13:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06A37C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:14:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0CEAC21927
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:13:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D08302076D
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:14:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587046435;
-	bh=apSV7BQeBMHs9uj1fYCfgNfinODkrv0X4X/MdOfXP7I=;
+	s=default; t=1587046450;
+	bh=IFWJtKO8b6hb9xBju8DtQHaiyO8+G0f/3xvR3wpJ/4I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mJr5jC+SCZsYqL2pMbZVveS9yLpl1BKSvWmGG5b7yAdLi5/7hPUzhlMAmgrvPVvbg
-	 7M7DgBgC9miukzLjkhqO8i6/2c+W/b6tqeq5m4OUeWJx71Gg130SSgVewNHO37BdQj
-	 cqSu9EHCqXRBTK7wTrVzaeYzrnm08OmYhZ0+oq6A=
+	b=QZ9xaTo4ekGKaAV9d1ThKSwvRfHmGRM85TApJ/27V3dbzFdGOOympfwg083VO4Cds
+	 u78KmSheCXDazHjNCQqkplX3GItllqFEOhtwgLr5s+q/MQCA4GlOiVXv7ypb1Dfa7Q
+	 6NhHj7qwdPF5r0WjOoqfpn9ZKsoBDMjUVkj9Zw1I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437849AbgDPOMN (ORCPT
+        id S2442083AbgDPOOG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:12:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33868 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 10:14:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36154 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2898670AbgDPNru (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:47:50 -0400
+        id S1732651AbgDPNuM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:50:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 63B1C21734;
-        Thu, 16 Apr 2020 13:47:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6304220786;
+        Thu, 16 Apr 2020 13:50:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044869;
-        bh=apSV7BQeBMHs9uj1fYCfgNfinODkrv0X4X/MdOfXP7I=;
+        s=default; t=1587045011;
+        bh=IFWJtKO8b6hb9xBju8DtQHaiyO8+G0f/3xvR3wpJ/4I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=e4l2cl2djCAh6/ZAV0cWM//cNkgg4wpK4bx0saJQHgEWIgXC65noZ7RvkLrmviyR1
-         RLCpiVS3dvpJnVprycOjps8OaPlU7FKmZrOs4iuiPVTe/ZtVX4aQDrOE+qgiXRCFy7
-         c4IIiK5hsD2mMaP9IU6DR19HGb8QmKmWZl2LJxkY=
+        b=IjeNy5rUhRU5aALrX0SngQrFj9FO4vFJjZIpUXRJR8D3qNmwDPDoogRQV0ODsbQFE
+         PBKuC1jn4TOiq1t2yOCaAh9WBXaORWvRh/G+MWBdLhyMRPq1rNwcjxBLYRCpeoEsp+
+         mDjaJrGpaPc9E/U+j+gvZBN8vOZ/tf9WcUVbC2bI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        =?UTF-8?q?Ond=C5=99ej=20Caletka?= <ondrej@caletka.cz>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Subject: [PATCH 5.4 094/232] ACPI: PM: s2idle: Refine active GPEs check
-Date:   Thu, 16 Apr 2020 15:23:08 +0200
-Message-Id: <20200416131326.747906266@linuxfoundation.org>
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH 5.4 176/232] ARM: dts: exynos: Fix polarity of the LCD SPI bus on UniversalC210 board
+Date:   Thu, 16 Apr 2020 15:24:30 +0200
+Message-Id: <20200416131337.049796282@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131316.640996080@linuxfoundation.org>
 References: <20200416131316.640996080@linuxfoundation.org>
@@ -60,87 +61,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+From: Marek Szyprowski <m.szyprowski@samsung.com>
 
-commit d5406284ff803a578ca503373624312770319054 upstream.
+commit 32a1671ff8e84f0dfff3a50d4b2091d25e91f5e2 upstream.
 
-The check for any active GPEs added by commit fdde0ff8590b ("ACPI:
-PM: s2idle: Prevent spurious SCIs from waking up the system") turns
-out to be insufficiently precise to prevent some systems from
-resuming prematurely due to a spurious EC wakeup, so refine it
-by first checking if any GPEs other than the EC GPE are active
-and skipping all of the SCIs coming from the EC that do not produce
-any genuine wakeup events after processing.
+Recent changes in the SPI core and the SPI-GPIO driver revealed that the
+GPIO lines for the LD9040 LCD controller on the UniversalC210 board are
+defined incorrectly. Fix the polarity for those lines to match the old
+behavior and hardware requirements to fix LCD panel operation with
+recent kernels.
 
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=206629
-Fixes: fdde0ff8590b ("ACPI: PM: s2idle: Prevent spurious SCIs from waking up the system")
-Reported-by: Ondřej Caletka <ondrej@caletka.cz>
-Tested-by: Ondřej Caletka <ondrej@caletka.cz>
-Cc: 5.4+ <stable@vger.kernel.org> # 5.4+
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Cc: <stable@vger.kernel.org> # 5.0.x
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Reviewed-by: Andrzej Hajda <a.hajda@samsung.com>
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/acpi/ec.c       |    5 +++++
- drivers/acpi/internal.h |    1 +
- drivers/acpi/sleep.c    |   19 ++++++++++---------
- 3 files changed, 16 insertions(+), 9 deletions(-)
+ arch/arm/boot/dts/exynos4210-universal_c210.dts |    4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
---- a/drivers/acpi/ec.c
-+++ b/drivers/acpi/ec.c
-@@ -1964,6 +1964,11 @@ void acpi_ec_set_gpe_wake_mask(u8 action
- 		acpi_set_gpe_wake_mask(NULL, first_ec->gpe, action);
- }
+--- a/arch/arm/boot/dts/exynos4210-universal_c210.dts
++++ b/arch/arm/boot/dts/exynos4210-universal_c210.dts
+@@ -115,7 +115,7 @@
+ 		gpio-sck = <&gpy3 1 GPIO_ACTIVE_HIGH>;
+ 		gpio-mosi = <&gpy3 3 GPIO_ACTIVE_HIGH>;
+ 		num-chipselects = <1>;
+-		cs-gpios = <&gpy4 3 GPIO_ACTIVE_HIGH>;
++		cs-gpios = <&gpy4 3 GPIO_ACTIVE_LOW>;
  
-+bool acpi_ec_other_gpes_active(void)
-+{
-+	return acpi_any_gpe_status_set(first_ec ? first_ec->gpe : U32_MAX);
-+}
-+
- bool acpi_ec_dispatch_gpe(void)
- {
- 	u32 ret;
---- a/drivers/acpi/internal.h
-+++ b/drivers/acpi/internal.h
-@@ -201,6 +201,7 @@ void acpi_ec_remove_query_handler(struct
- 
- #ifdef CONFIG_PM_SLEEP
- void acpi_ec_flush_work(void);
-+bool acpi_ec_other_gpes_active(void);
- bool acpi_ec_dispatch_gpe(void);
- #endif
- 
---- a/drivers/acpi/sleep.c
-+++ b/drivers/acpi/sleep.c
-@@ -1014,19 +1014,20 @@ static bool acpi_s2idle_wake(void)
- 			return true;
- 
- 		/*
--		 * If there are no EC events to process and at least one of the
--		 * other enabled GPEs is active, the wakeup is regarded as a
--		 * genuine one.
--		 *
--		 * Note that the checks below must be carried out in this order
--		 * to avoid returning prematurely due to a change of the EC GPE
--		 * status bit from unset to set between the checks with the
--		 * status bits of all the other GPEs unset.
-+		 * If the status bit is set for any enabled GPE other than the
-+		 * EC one, the wakeup is regarded as a genuine one.
- 		 */
--		if (acpi_any_gpe_status_set(U32_MAX) && !acpi_ec_dispatch_gpe())
-+		if (acpi_ec_other_gpes_active())
- 			return true;
- 
- 		/*
-+		 * If the EC GPE status bit has not been set, the wakeup is
-+		 * regarded as a spurious one.
-+		 */
-+		if (!acpi_ec_dispatch_gpe())
-+			return false;
-+
-+		/*
- 		 * Cancel the wakeup and process all pending events in case
- 		 * there are any wakeup ones in there.
- 		 *
+ 		lcd@0 {
+ 			compatible = "samsung,ld9040";
+@@ -124,8 +124,6 @@
+ 			vci-supply = <&ldo17_reg>;
+ 			reset-gpios = <&gpy4 5 GPIO_ACTIVE_HIGH>;
+ 			spi-max-frequency = <1200000>;
+-			spi-cpol;
+-			spi-cpha;
+ 			power-on-delay = <10>;
+ 			reset-delay = <10>;
+ 			panel-width-mm = <90>;
 
 
