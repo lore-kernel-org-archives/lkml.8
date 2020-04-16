@@ -2,99 +2,110 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ED63C2D0EF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 10:18:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D61DC2BB85
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 10:28:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E78D7206B9
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 10:18:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 621C52192A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 10:28:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2504761AbgDPKSu (ORCPT
+        id S2504834AbgDPK2K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 06:18:50 -0400
-Received: from mga01.intel.com ([192.55.52.88]:45834 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2441495AbgDPKRx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 06:17:53 -0400
-IronPort-SDR: AwA41n4JgjKZuuNgZRCP6UHT3UZ1/Za8i4jvp+2iuw24g9JtB0A34lTmesKM6GH21CTwW6R8I8
- 0TXBR3vVAKnA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2020 03:17:42 -0700
-IronPort-SDR: PabvyhK/GDPyBjaf0paWWd5oAAbGpqHHyicWhdVU0osJ1cJkrEV/y2jitUhatIDlUFj03yE+KQ
- +MY52IYzL9ng==
-X-IronPort-AV: E=Sophos;i="5.72,390,1580803200"; 
-   d="scan'208";a="400622555"
-Received: from ellenfax-mobl2.ger.corp.intel.com (HELO localhost) ([10.249.44.122])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2020 03:17:34 -0700
-From:   Jani Nikula <jani.nikula@linux.intel.com>
-To:     Arnd Bergmann <arnd@arndb.de>, Saeed Mahameed <saeedm@mellanox.com>
-Cc:     "narmstrong\@baylibre.com" <narmstrong@baylibre.com>,
-        "masahiroy\@kernel.org" <masahiroy@kernel.org>,
-        "Laurent.pinchart\@ideasonboard.com" 
-        <Laurent.pinchart@ideasonboard.com>,
-        "leon\@kernel.org" <leon@kernel.org>,
-        "davem\@davemloft.net" <davem@davemloft.net>,
-        "linux-renesas-soc\@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>,
-        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "nico\@fluxnic.net" <nico@fluxnic.net>,
-        "linux-rdma\@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        "dri-devel\@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "kieran.bingham+renesas\@ideasonboard.com" 
-        <kieran.bingham+renesas@ideasonboard.com>,
-        "a.hajda\@samsung.com" <a.hajda@samsung.com>,
-        "jonas\@kwiboo.se" <jonas@kwiboo.se>,
-        "netdev\@vger.kernel.org" <netdev@vger.kernel.org>,
-        "airlied\@linux.ie" <airlied@linux.ie>,
-        "jgg\@ziepe.ca" <jgg@ziepe.ca>,
-        "jernej.skrabec\@siol.net" <jernej.skrabec@siol.net>
-Subject: Re: [RFC 0/6] Regressions for "imply" behavior change
-In-Reply-To: <CAK8P3a3Wx5_bUOKnN3_hG5nLOqv3WCUtMSq6vOkJzWZgsmAz+A@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <20200408202711.1198966-1-arnd@arndb.de> <nycvar.YSQ.7.76.2004081633260.2671@knanqh.ubzr> <CAK8P3a2frDf4BzEpEF0uwPTV2dv6Jve+6N97z1sSuSBUAPJquA@mail.gmail.com> <20200408224224.GD11886@ziepe.ca> <87k12pgifv.fsf@intel.com> <7d9410a4b7d0ef975f7cbd8f0b6762df114df539.camel@mellanox.com> <20200410171320.GN11886@ziepe.ca> <16441479b793077cdef9658f35773739038c39dc.camel@mellanox.com> <20200414132900.GD5100@ziepe.ca> <CAK8P3a0aFQ7h4zRDW=QLogXWc88JkJJXEOK0_CpWwsRjq6+T+w@mail.gmail.com> <20200414152312.GF5100@ziepe.ca> <CAK8P3a1PjP9_b5NdmqTLeGN4y+3JXx_yyTE8YAf1u5rYHWPA9g@mail.gmail.com> <f6d83b08fc0bc171b5ba5b2a0bc138727d92e2c0.camel@mellanox.com> <CAK8P3a1-J=4EAxh7TtQxugxwXk239u8ffgxZNRdw_WWy8ExFoQ@mail.gmail.com> <834c7606743424c64951dd2193ca15e29799bf18.camel@mellanox.com> <CAK8P3a3Wx5_bUOKnN3_hG5nLOqv3WCUtMSq6vOkJzWZgsmAz+A@mail.gmail.com>
-Date:   Thu, 16 Apr 2020 13:17:32 +0300
-Message-ID: <874ktj4tvn.fsf@intel.com>
+        Thu, 16 Apr 2020 06:28:10 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:38016 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2504681AbgDPK00 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 06:26:26 -0400
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 7C98B2A1375;
+        Thu, 16 Apr 2020 11:26:23 +0100 (BST)
+Date:   Thu, 16 Apr 2020 12:26:19 +0200
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     "Ramuthevar, Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Cc:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        anders.roxell@linaro.org, andriy.shevchenko@intel.com,
+        arnd@arndb.de, brendanhiggins@google.com, cheol.yong.kim@intel.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mtd@lists.infradead.org, masonccyang@mxic.com.tw,
+        miquel.raynal@bootlin.com, piotrs@cadence.com,
+        qi-ming.wu@intel.com, richard@nod.at, robh+dt@kernel.org,
+        tglx@linutronix.de, vigneshr@ti.com
+Subject: Re: [PATCH v1 2/2] mtd: rawnand: Add NAND controller support on
+ Intel LGM SoC
+Message-ID: <20200416122619.2c481792@collabora.com>
+In-Reply-To: <18568cf6-2955-472e-7b68-eb35e654a906@linux.intel.com>
+References: <20200414022433.36622-3-vadivel.muruganx.ramuthevar@linux.intel.com>
+        <20200415220533.733834-1-martin.blumenstingl@googlemail.com>
+        <c33c8653-16a2-5bcd-97a9-511d958b755a@linux.intel.com>
+        <20200416113822.2ef326cb@collabora.com>
+        <18568cf6-2955-472e-7b68-eb35e654a906@linux.intel.com>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 16 Apr 2020, Arnd Bergmann <arnd@arndb.de> wrote:
-> On Thu, Apr 16, 2020 at 5:25 AM Saeed Mahameed <saeedm@mellanox.com> wrote:
->> BTW how about adding a new Kconfig option to hide the details of
->> ( BAR || !BAR) ? as Jason already explained and suggested, this will
->> make it easier for the users and developers to understand the actual
->> meaning behind this tristate weird condition.
->>
->> e.g have a new keyword:
->>      reach VXLAN
->> which will be equivalent to:
->>      depends on VXLAN && !VXLAN
->
-> I'd love to see that, but I'm not sure what keyword is best. For your
-> suggestion of "reach", that would probably do the job, but I'm not
-> sure if this ends up being more or less confusing than what we have
-> today.
+On Thu, 16 Apr 2020 17:45:49 +0800
+"Ramuthevar, Vadivel MuruganX"
+<vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
 
-Ah, perfect bikeshedding topic!
+> >>>> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+> >>>>
+> >>>> This patch adds the new IP of Nand Flash Controller(NFC) support
+> >>>> on Intel's Lightning Mountain(LGM) SoC.
+> >>>>
+> >>>> DMA is used for burst data transfer operation, also DMA HW supports
+> >>>> aligned 32bit memory address and aligned data access by default.
+> >>>> DMA burst of 8 supported. Data register used to support the read/write
+> >>>> operation from/to device.  
+> >>> I am wondering how this new hardware is different from the Lantiq NAND
+> >>> controller IP - for which there is already a driver in mainline (it's
+> >>> in drivers/mtd/nand/raw/xway_nand.c).
+> >>> The CON and WAIT registers look suspiciously similar.
+> >>>
+> >>> As far as I understand the "old" SoCs (VRX200 and earlier) don't have
+> >>> a built-in ECC engine. This seems to have changed with ARX300 though
+> >>> (again, AFAIK).
+> >>>
+> >>> A bit of lineage on these SoCs (initially these were developed by
+> >>> Infineon. Lantiq then started as an Infineon spin-off in 2009 and
+> >>> was then acquired by Intel in 2015):
+> >>> - Danube
+> >>> - ARX100 from 2008/2009
+> >>> - VRX200 from 2009/2010
+> >>> - ARX300 from 2014
+> >>> - GRX350 from 2015/2016
+> >>> - GRX550 from 2017
+> >>> - and now finally: LGM from 2020 (est.)
+> >>>
+> >>> The existing xway_nand driver supports the Danube, ARX100 and VRX200
+> >>> SoCs.  
+> >> Lantiq upstreamed a driver for an older version of this IP core 8 years
+> >> ago, see here:
+> >> https://elixir.bootlin.com/linux/v5.5.6/source/drivers/mtd/nand/raw/xway_nand.c
+> >> It does not support DMA and ECC.  
+> > Then let's just extend this driver to support the new features. Plus,  
+> We do not have the platform to test also it's very old legacy driver .
 
-Perhaps "uses"? If the dependency is enabled it gets used as a
-dependency.
+Well, if it's similar enough, we want to have one driver.
 
-Of course, this is all just talk until someone(tm) posts a patch
-actually making the change. I've looked at the kconfig tool sources
-before; not going to make the same mistake again.
+> > we'll be happy to have one more of the existing driver converted to  
+> > ->exec_op() ;-).  
+> 
+> I have completely adapted to ->exec_op() hook up to replace the legacy 
+> call-back.
 
-BR,
-Jani.
-
-
--- 
-Jani Nikula, Intel Open Source Graphics Center
+I suspect porting what you've done to the xway driver shouldn't be too
+complicated.
