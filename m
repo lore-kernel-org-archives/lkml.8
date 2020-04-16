@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77BE3C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:52:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 805E3C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:53:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 526B82063A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:52:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 557FB20732
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:53:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587045179;
-	bh=/BTERr8ntuoVM+oROY3RpI5yVZsGtjKuXRPEP0DY5B8=;
+	s=default; t=1587045195;
+	bh=wttoton6TEU7iHeRKVPjij7bCAVwDWT6iBkWVBDZgs8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sSEwGtWP/X2B+J759wHvD6mrB2GQlaOAOERt9Nx7vudXXOe+KaBiDv+Tn7TG34B7j
-	 aw/bRWtV6iiqG8ZrIfLcC1Wzh/ENr3pCZZkz/SGckIuer3mxVJtwOj/tLAG97I8t+X
-	 1KV1d2KQmKYkpSXl3fwdLB/PTkZC1hUyR+31tMms=
+	b=Qs42mrxyepv3MDXrT06VBGaEK/0iQoWLd6AdseKERH7oJB4+D6+aNlsCN4GqNcyjm
+	 EEFURqVFae5SRmQzaRn2jwrHlDVeA7a7LVNFLr+was5aEinZPkDj9iWBB7mJ1SZvYH
+	 GWnIFwkWZAULlbkHd9h5e3Jhck3SkyX15WZE6zsg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408920AbgDPNw5 (ORCPT
+        id S2441715AbgDPNxF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 09:52:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49148 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 09:53:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49188 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2897397AbgDPNhA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:37:00 -0400
+        id S2896190AbgDPNhE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:37:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6E19321BE5;
-        Thu, 16 Apr 2020 13:36:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E28A7208E4;
+        Thu, 16 Apr 2020 13:37:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044219;
-        bh=/BTERr8ntuoVM+oROY3RpI5yVZsGtjKuXRPEP0DY5B8=;
+        s=default; t=1587044222;
+        bh=wttoton6TEU7iHeRKVPjij7bCAVwDWT6iBkWVBDZgs8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rmv2zcOwZhObRGnzgDYEqpGza+Xx5zH75Y5gtEHLiTGyJkx27uhiXHriEw6bk1Df5
-         62PYxle9DQLOZtJskHx/imRDj/H6/xhPTFMrAngm3NpUAjGf0etwNb99fzYIq07K7Q
-         2S7lyUsPBC4k1JNgUy3gmsiRn9sLXZMYfEAOSxPw=
+        b=zCdGBgxRhPo17UVo9PmKgFCjwkgOJpZUaHylt4pzbfEJr1GCXr2oi/pdcCZS6qSwO
+         4uLQWr31yzYCoMgMY8bgL1+jpJfdRY6b9PmLLarxD3j3OBSC0JAWgsr6wFpyj2p9Oj
+         VP7DVNrer8vOEZw/ZcPavXCmfbHk8nDqArkqhFE0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vasily Averin <vvs@virtuozzo.com>,
-        Kees Cook <keescook@chromium.org>
-Subject: [PATCH 5.5 130/257] pstore: pstore_ftrace_seq_next should increase position index
-Date:   Thu, 16 Apr 2020 15:23:01 +0200
-Message-Id: <20200416131342.666222972@linuxfoundation.org>
+        stable@vger.kernel.org, Pei Huang <huangpei@loongson.cn>,
+        Huacai Chen <chenhc@lemote.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Subject: [PATCH 5.5 131/257] MIPS/tlbex: Fix LDDIR usage in setup_pw() for Loongson-3
+Date:   Thu, 16 Apr 2020 15:23:02 +0200
+Message-Id: <20200416131342.796318254@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.891903893@linuxfoundation.org>
 References: <20200416131325.891903893@linuxfoundation.org>
@@ -59,81 +60,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vasily Averin <vvs@virtuozzo.com>
+From: Huacai Chen <chenhc@lemote.com>
 
-commit 6c871b7314dde9ab64f20de8f5aa3d01be4518e8 upstream.
+commit d191aaffe3687d1e73e644c185f5f0550ec242b5 upstream.
 
-In Aug 2018 NeilBrown noticed
-commit 1f4aace60b0e ("fs/seq_file.c: simplify seq_file iteration code and interface")
-"Some ->next functions do not increment *pos when they return NULL...
-Note that such ->next functions are buggy and should be fixed.
-A simple demonstration is
+LDDIR/LDPTE is Loongson-3's acceleration for Page Table Walking. If BD
+(Base Directory, the 4th page directory) is not enabled, then GDOffset
+is biased by BadVAddr[63:62]. So, if GDOffset (aka. BadVAddr[47:36] for
+Loongson-3) is big enough, "0b11(BadVAddr[63:62])|BadVAddr[47:36]|...."
+can far beyond pg_swapper_dir. This means the pg_swapper_dir may NOT be
+accessed by LDDIR correctly, so fix it by set PWDirExt in CP0_PWCtl.
 
- dd if=/proc/swaps bs=1000 skip=1
-
-Choose any block size larger than the size of /proc/swaps. This will
-always show the whole last line of /proc/swaps"
-
-/proc/swaps output was fixed recently, however there are lot of other
-affected files, and one of them is related to pstore subsystem.
-
-If .next function does not change position index, following .show function
-will repeat output related to current position index.
-
-There are at least 2 related problems:
-- read after lseek beyond end of file, described above by NeilBrown
-  "dd if=<AFFECTED_FILE> bs=1000 skip=1" will generate whole last list
-- read after lseek on in middle of last line will output expected rest of
-  last line but then repeat whole last line once again.
-
-If .show() function generates multy-line output (like
-pstore_ftrace_seq_show() does ?) following bash script cycles endlessly
-
- $ q=;while read -r r;do echo "$((++q)) $r";done < AFFECTED_FILE
-
-Unfortunately I'm not familiar enough to pstore subsystem and was unable
-to find affected pstore-related file on my test node.
-
-If .next function does not change position index, following .show function
-will repeat output related to current position index.
-
-Cc: stable@vger.kernel.org
-Fixes: 1f4aace60b0e ("fs/seq_file.c: simplify seq_file iteration code ...")
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=206283
-Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
-Link: https://lore.kernel.org/r/4e49830d-4c88-0171-ee24-1ee540028dad@virtuozzo.com
-[kees: with robustness tweak from Joel Fernandes <joelaf@google.com>]
-Signed-off-by: Kees Cook <keescook@chromium.org>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Pei Huang <huangpei@loongson.cn>
+Signed-off-by: Huacai Chen <chenhc@lemote.com>
+Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/pstore/inode.c |    5 ++++-
+ arch/mips/mm/tlbex.c |    5 ++++-
  1 file changed, 4 insertions(+), 1 deletion(-)
 
---- a/fs/pstore/inode.c
-+++ b/fs/pstore/inode.c
-@@ -87,11 +87,11 @@ static void *pstore_ftrace_seq_next(stru
- 	struct pstore_private *ps = s->private;
- 	struct pstore_ftrace_seq_data *data = v;
+--- a/arch/mips/mm/tlbex.c
++++ b/arch/mips/mm/tlbex.c
+@@ -1480,6 +1480,7 @@ static void build_r4000_tlb_refill_handl
  
-+	(*pos)++;
- 	data->off += REC_SIZE;
- 	if (data->off + REC_SIZE > ps->total_size)
- 		return NULL;
+ static void setup_pw(void)
+ {
++	unsigned int pwctl;
+ 	unsigned long pgd_i, pgd_w;
+ #ifndef __PAGETABLE_PMD_FOLDED
+ 	unsigned long pmd_i, pmd_w;
+@@ -1506,6 +1507,7 @@ static void setup_pw(void)
  
--	(*pos)++;
- 	return data;
+ 	pte_i = ilog2(_PAGE_GLOBAL);
+ 	pte_w = 0;
++	pwctl = 1 << 30; /* Set PWDirExt */
+ 
+ #ifndef __PAGETABLE_PMD_FOLDED
+ 	write_c0_pwfield(pgd_i << 24 | pmd_i << 12 | pt_i << 6 | pte_i);
+@@ -1516,8 +1518,9 @@ static void setup_pw(void)
+ #endif
+ 
+ #ifdef CONFIG_MIPS_HUGE_TLB_SUPPORT
+-	write_c0_pwctl(1 << 6 | psn);
++	pwctl |= (1 << 6 | psn);
+ #endif
++	write_c0_pwctl(pwctl);
+ 	write_c0_kpgd((long)swapper_pg_dir);
+ 	kscratch_used_mask |= (1 << 7); /* KScratch6 is used for KPGD */
  }
- 
-@@ -101,6 +101,9 @@ static int pstore_ftrace_seq_show(struct
- 	struct pstore_ftrace_seq_data *data = v;
- 	struct pstore_ftrace_record *rec;
- 
-+	if (!data)
-+		return 0;
-+
- 	rec = (struct pstore_ftrace_record *)(ps->record->buf + data->off);
- 
- 	seq_printf(s, "CPU:%d ts:%llu %08lx  %08lx  %ps <- %pS\n",
 
 
