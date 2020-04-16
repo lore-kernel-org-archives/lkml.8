@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CAC1C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:29:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5E4EC352BE
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:29:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 104E221927
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:29:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA4E321927
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:29:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587047347;
-	bh=VmVN60V25JspsZ14eGwB7Xo4/VC6TrWzh+uz3z2ASuA=;
+	s=default; t=1587047348;
+	bh=xl7673xMCxZLA8+BCaQwHav7o+Wj5R0wofxcq25bs3Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wJvqvM5ax6oiVywVcJ3tWgFpIRz7QugKRcy/5EL8rNoCHDb7JNW3yl+sF0mWFRLy/
-	 MRsdO8LOoUAIANn2ZSO6yHpVciSi6pD5moC/Ksy3lsskur6V7FJ1aYZoTd6g2BEg4K
-	 dApuPNecb+L276rKM/Xfs8X6ZUZgY+KsCWCFPP+8=
+	b=q/yQ4Jp9Bj0NyxQjwGygUIgoCjTEIyp7ItxcTsvZabyaIBdSnCjDCEqdoPUBDIWQf
+	 MoHZSCzOeC4S4tS7UKdw8+W3r+uc7C2710yVyvvETC9BxCVncR1KWgPV8hbWZPyfPz
+	 Ros7HAbI4tDK9Xk869o3cDCHB76EXwaxeJ9AvCL8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2410139AbgDPO2y (ORCPT
+        id S2436912AbgDPO3B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:28:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47550 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 10:29:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47720 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392618AbgDPOA2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 10:00:28 -0400
+        id S2392645AbgDPOAm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 10:00:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 88DC520732;
-        Thu, 16 Apr 2020 14:00:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DD1182078B;
+        Thu, 16 Apr 2020 14:00:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587045628;
-        bh=VmVN60V25JspsZ14eGwB7Xo4/VC6TrWzh+uz3z2ASuA=;
+        s=default; t=1587045640;
+        bh=xl7673xMCxZLA8+BCaQwHav7o+Wj5R0wofxcq25bs3Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PNzGDGNQcf3QeoGbE429uNxZot6UMpwlgGNhbBGcqyC6d9UBMqnRe3MxJ9AzCYktf
-         1ZYt+ZgnmN/TtMz5qxXk0jqupP+zU8IORqGf35pYjaW5KPMmcl72GHLJn62HG/LSee
-         N9dKvcNnmwSCR/rqqfz9cWcyU5O5g6AcjFKaqkgE=
+        b=SBw/4/YTzK8eBjWyN6VyNKZVBn/DniuZTsWMwWibtA0Bjp0f/nRs3gjT162b3/4r0
+         JO2hN3sE6PlHdarbDyDiEwYhr8r12z6NYuQZZHpea3KIgegH69ytWzIiOsN1BuxAI1
+         LrGYSRNv6ta0IBcK/FMjC9YzORFfwpwdkEn/tUtY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Gilad Ben-Yossef <gilad@benyossef.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 5.6 185/254] crypto: ccree - protect against empty or NULL scatterlists
-Date:   Thu, 16 Apr 2020 15:24:34 +0200
-Message-Id: <20200416131349.493360669@linuxfoundation.org>
+        stable@vger.kernel.org, Olga Kornievskaia <aglo@umich.edu>,
+        Scott Mayhew <smayhew@redhat.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>
+Subject: [PATCH 5.6 216/254] NFS: Fix a few constant_table array definitions
+Date:   Thu, 16 Apr 2020 15:25:05 +0200
+Message-Id: <20200416131353.023090263@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.804095985@linuxfoundation.org>
 References: <20200416131325.804095985@linuxfoundation.org>
@@ -61,163 +60,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gilad Ben-Yossef <gilad@benyossef.com>
+From: Scott Mayhew <smayhew@redhat.com>
 
-commit ce0fc6db38decf0d2919bfe783de6d6b76e421a9 upstream.
+commit 529af90576cfa44aa107e9876e2ebaa053983986 upstream.
 
-Deal gracefully with a NULL or empty scatterlist which can happen
-if both cryptlen and assoclen are zero and we're doing in-place
-AEAD encryption.
+nfs_vers_tokens, nfs_xprt_protocol_tokens, and nfs_secflavor_tokens were
+all missing an empty item at the end of the array, allowing
+lookup_constant() to potentially walk off the end and trigger and oops.
 
-This fixes a crash when this causes us to try and map a NULL page,
-at least with some platforms / DMA mapping configs.
-
-Cc: stable@vger.kernel.org # v4.19+
-Reported-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Signed-off-by: Gilad Ben-Yossef <gilad@benyossef.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Reported-by: Olga Kornievskaia <aglo@umich.edu>
+Signed-off-by: Scott Mayhew <smayhew@redhat.com>
+Fixes: e38bb238ed8c ("NFS: Convert mount option parsing to use functionality from fs_parser.h")
+Cc: stable@vger.kernel.org # v5.6
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/crypto/ccree/cc_buffer_mgr.c |   62 +++++++++++++++--------------------
- drivers/crypto/ccree/cc_buffer_mgr.h |    1 
- 2 files changed, 28 insertions(+), 35 deletions(-)
+ fs/nfs/fs_context.c |    5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
---- a/drivers/crypto/ccree/cc_buffer_mgr.c
-+++ b/drivers/crypto/ccree/cc_buffer_mgr.c
-@@ -87,6 +87,8 @@ static unsigned int cc_get_sgl_nents(str
- {
- 	unsigned int nents = 0;
- 
-+	*lbytes = 0;
-+
- 	while (nbytes && sg_list) {
- 		nents++;
- 		/* get the number of bytes in the last entry */
-@@ -95,6 +97,7 @@ static unsigned int cc_get_sgl_nents(str
- 				nbytes : sg_list->length;
- 		sg_list = sg_next(sg_list);
- 	}
-+
- 	dev_dbg(dev, "nents %d last bytes %d\n", nents, *lbytes);
- 	return nents;
- }
-@@ -290,37 +293,25 @@ static int cc_map_sg(struct device *dev,
- 		     unsigned int nbytes, int direction, u32 *nents,
- 		     u32 max_sg_nents, u32 *lbytes, u32 *mapped_nents)
- {
--	if (sg_is_last(sg)) {
--		/* One entry only case -set to DLLI */
--		if (dma_map_sg(dev, sg, 1, direction) != 1) {
--			dev_err(dev, "dma_map_sg() single buffer failed\n");
--			return -ENOMEM;
--		}
--		dev_dbg(dev, "Mapped sg: dma_address=%pad page=%p addr=%pK offset=%u length=%u\n",
--			&sg_dma_address(sg), sg_page(sg), sg_virt(sg),
--			sg->offset, sg->length);
--		*lbytes = nbytes;
--		*nents = 1;
--		*mapped_nents = 1;
--	} else {  /*sg_is_last*/
--		*nents = cc_get_sgl_nents(dev, sg, nbytes, lbytes);
--		if (*nents > max_sg_nents) {
--			*nents = 0;
--			dev_err(dev, "Too many fragments. current %d max %d\n",
--				*nents, max_sg_nents);
--			return -ENOMEM;
--		}
--		/* In case of mmu the number of mapped nents might
--		 * be changed from the original sgl nents
--		 */
--		*mapped_nents = dma_map_sg(dev, sg, *nents, direction);
--		if (*mapped_nents == 0) {
--			*nents = 0;
--			dev_err(dev, "dma_map_sg() sg buffer failed\n");
--			return -ENOMEM;
--		}
-+	int ret = 0;
-+
-+	*nents = cc_get_sgl_nents(dev, sg, nbytes, lbytes);
-+	if (*nents > max_sg_nents) {
-+		*nents = 0;
-+		dev_err(dev, "Too many fragments. current %d max %d\n",
-+			*nents, max_sg_nents);
-+		return -ENOMEM;
- 	}
- 
-+	ret = dma_map_sg(dev, sg, *nents, direction);
-+	if (dma_mapping_error(dev, ret)) {
-+		*nents = 0;
-+		dev_err(dev, "dma_map_sg() sg buffer failed %d\n", ret);
-+		return -ENOMEM;
-+	}
-+
-+	*mapped_nents = ret;
-+
- 	return 0;
- }
- 
-@@ -555,11 +546,12 @@ void cc_unmap_aead_request(struct device
- 		sg_virt(req->src), areq_ctx->src.nents, areq_ctx->assoc.nents,
- 		areq_ctx->assoclen, req->cryptlen);
- 
--	dma_unmap_sg(dev, req->src, sg_nents(req->src), DMA_BIDIRECTIONAL);
-+	dma_unmap_sg(dev, req->src, areq_ctx->src.mapped_nents,
-+		     DMA_BIDIRECTIONAL);
- 	if (req->src != req->dst) {
- 		dev_dbg(dev, "Unmapping dst sgl: req->dst=%pK\n",
- 			sg_virt(req->dst));
--		dma_unmap_sg(dev, req->dst, sg_nents(req->dst),
-+		dma_unmap_sg(dev, req->dst, areq_ctx->dst.mapped_nents,
- 			     DMA_BIDIRECTIONAL);
- 	}
- 	if (drvdata->coherent &&
-@@ -881,7 +873,7 @@ static int cc_aead_chain_data(struct cc_
- 					    &src_last_bytes);
- 	sg_index = areq_ctx->src_sgl->length;
- 	//check where the data starts
--	while (sg_index <= size_to_skip) {
-+	while (src_mapped_nents && (sg_index <= size_to_skip)) {
- 		src_mapped_nents--;
- 		offset -= areq_ctx->src_sgl->length;
- 		sgl = sg_next(areq_ctx->src_sgl);
-@@ -908,7 +900,7 @@ static int cc_aead_chain_data(struct cc_
- 			size_for_map += crypto_aead_ivsize(tfm);
- 
- 		rc = cc_map_sg(dev, req->dst, size_for_map, DMA_BIDIRECTIONAL,
--			       &areq_ctx->dst.nents,
-+			       &areq_ctx->dst.mapped_nents,
- 			       LLI_MAX_NUM_OF_DATA_ENTRIES, &dst_last_bytes,
- 			       &dst_mapped_nents);
- 		if (rc)
-@@ -921,7 +913,7 @@ static int cc_aead_chain_data(struct cc_
- 	offset = size_to_skip;
- 
- 	//check where the data starts
--	while (sg_index <= size_to_skip) {
-+	while (dst_mapped_nents && sg_index <= size_to_skip) {
- 		dst_mapped_nents--;
- 		offset -= areq_ctx->dst_sgl->length;
- 		sgl = sg_next(areq_ctx->dst_sgl);
-@@ -1123,7 +1115,7 @@ int cc_map_aead_request(struct cc_drvdat
- 	if (is_gcm4543)
- 		size_to_map += crypto_aead_ivsize(tfm);
- 	rc = cc_map_sg(dev, req->src, size_to_map, DMA_BIDIRECTIONAL,
--		       &areq_ctx->src.nents,
-+		       &areq_ctx->src.mapped_nents,
- 		       (LLI_MAX_NUM_OF_ASSOC_DATA_ENTRIES +
- 			LLI_MAX_NUM_OF_DATA_ENTRIES),
- 		       &dummy, &mapped_nents);
---- a/drivers/crypto/ccree/cc_buffer_mgr.h
-+++ b/drivers/crypto/ccree/cc_buffer_mgr.h
-@@ -25,6 +25,7 @@ enum cc_sg_cpy_direct {
- 
- struct cc_mlli {
- 	cc_sram_addr_t sram_addr;
-+	unsigned int mapped_nents;
- 	unsigned int nents; //sg nents
- 	unsigned int mlli_nents; //mlli nents might be different than the above
+--- a/fs/nfs/fs_context.c
++++ b/fs/nfs/fs_context.c
+@@ -190,6 +190,7 @@ static const struct constant_table nfs_v
+ 	{ "4.0",	Opt_vers_4_0 },
+ 	{ "4.1",	Opt_vers_4_1 },
+ 	{ "4.2",	Opt_vers_4_2 },
++	{}
  };
+ 
+ enum {
+@@ -202,13 +203,14 @@ enum {
+ 	nr__Opt_xprt
+ };
+ 
+-static const struct constant_table nfs_xprt_protocol_tokens[nr__Opt_xprt] = {
++static const struct constant_table nfs_xprt_protocol_tokens[] = {
+ 	{ "rdma",	Opt_xprt_rdma },
+ 	{ "rdma6",	Opt_xprt_rdma6 },
+ 	{ "tcp",	Opt_xprt_tcp },
+ 	{ "tcp6",	Opt_xprt_tcp6 },
+ 	{ "udp",	Opt_xprt_udp },
+ 	{ "udp6",	Opt_xprt_udp6 },
++	{}
+ };
+ 
+ enum {
+@@ -239,6 +241,7 @@ static const struct constant_table nfs_s
+ 	{ "spkm3i",	Opt_sec_spkmi },
+ 	{ "spkm3p",	Opt_sec_spkmp },
+ 	{ "sys",	Opt_sec_sys },
++	{}
+ };
+ 
+ /*
 
 
