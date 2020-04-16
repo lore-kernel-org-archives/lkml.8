@@ -2,54 +2,51 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EFFCC2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:29:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFE1EC2BB85
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:29:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3BB54217D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:29:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B56F9217D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:29:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587043743;
-	bh=EDZijLC4iuETedGGgdPdQnKNmuvWxlmqPR9OjA7VQRU=;
+	s=default; t=1587043750;
+	bh=cWNjo3ufoi2L8D9rzD7+OpFBpQLefCSdKcauXILmL3E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=T87zV5HKVsseeP/YaeC/HxkUmsPka+frVcvRWNfWwKXzyCwbVlTrtVuXe/9ehICJp
-	 HGcPtvOneplgVk9TkPdDjIz2YF908DsBZbwlryAS/VzDq0xvgfBMBuHYlbNZkfFlNc
-	 OaewAJOlM1DoJqhvVnIHbiFsz+IjltH5edmOJwno=
+	b=xElGZvFnia3atnNhuU0ZTGiHSvj5qH+/OGT3qbdiwJJDNxoQOva9k/pddt/WXNpZ8
+	 xtcwTCmKfGKXXkULmDNAmiBImfRdKuHcwr8yZkDbwbA1KNAwgQ7IpMn/FGDtsdka4Z
+	 t5X79WaLebiOmYRGYkbIQwS83Se7mGVnKFSXYgBY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2895930AbgDPN3A (ORCPT
+        id S2895951AbgDPN3J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 09:29:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35740 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 09:29:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35924 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2895477AbgDPN1W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:27:22 -0400
+        id S2895500AbgDPN13 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:27:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A5189217D8;
-        Thu, 16 Apr 2020 13:27:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0D128217D8;
+        Thu, 16 Apr 2020 13:27:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587043642;
-        bh=EDZijLC4iuETedGGgdPdQnKNmuvWxlmqPR9OjA7VQRU=;
+        s=default; t=1587043649;
+        bh=cWNjo3ufoi2L8D9rzD7+OpFBpQLefCSdKcauXILmL3E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AgMyWpPuP/7qn1VH3ZYl2DOg6VThABGZa54Fxh9rfF8duBDrWwp2HyeYtiz0jLjOK
-         3laQyLPSqS1FnR39HowZRI00rfdNJ50aI/rPByxSdXP8BcUANmRtfHYT/81u/l9DYu
-         Or+pnBXLWMDw8+jC9AlNnublTsk/h5KECrpJVeQU=
+        b=B5gCzzqdTLIOmcxcignjqTUh+931NX34ZtRqi/wzcHM7SDY6SzuQdTn5Ei8i+HkkL
+         eVcrOP4nBgiCO30HVQueAZWC2Y72DzxVZDtH8nC11PUqLKyaxx6d4zhKrcz48bvFe2
+         kOhIzYd97dF+NXt1MZoOMyGLS4CEN6RlaUGB81VM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alex Vesker <valex@mellanox.com>,
-        Ariel Levkovich <lariel@mellanox.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 041/146] IB/mlx5: Replace tunnel mpls capability bits for tunnel_offloads
-Date:   Thu, 16 Apr 2020 15:23:02 +0200
-Message-Id: <20200416131248.201957253@linuxfoundation.org>
+        stable@vger.kernel.org, Gyeongtaek Lee <gt82.lee@samsung.com>,
+        Mark Brown <broonie@kernel.org>
+Subject: [PATCH 4.19 044/146] ASoC: fix regwmask
+Date:   Thu, 16 Apr 2020 15:23:05 +0200
+Message-Id: <20200416131248.745154993@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131242.353444678@linuxfoundation.org>
 References: <20200416131242.353444678@linuxfoundation.org>
@@ -62,77 +59,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alex Vesker <valex@mellanox.com>
+From: 이경택 <gt82.lee@samsung.com>
 
-[ Upstream commit 41e684ef3f37ce6e5eac3fb5b9c7c1853f4b0447 ]
+commit 0ab070917afdc93670c2d0ea02ab6defb6246a7c upstream.
 
-Until now the flex parser capability was used in ib_query_device() to
-indicate tunnel_offloads_caps support for mpls_over_gre/mpls_over_udp.
+If regwshift is 32 and the selected architecture compiles '<<' operator
+for signed int literal into rotating shift, '1<<regwshift' became 1 and
+it makes regwmask to 0x0.
+The literal is set to unsigned long to get intended regwmask.
 
-Newer devices and firmware will have configurations with the flexparser
-but without mpls support.
+Signed-off-by: Gyeongtaek Lee <gt82.lee@samsung.com>
+Link: https://lore.kernel.org/r/001001d60665$db7af3e0$9270dba0$@samsung.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Testing for the flex parser capability was a mistake, the tunnel_stateless
-capability was intended for detecting mpls and was introduced at the same
-time as the flex parser capability.
-
-Otherwise userspace will be incorrectly informed that a future device
-supports MPLS when it does not.
-
-Link: https://lore.kernel.org/r/20200305123841.196086-1-leon@kernel.org
-Cc: <stable@vger.kernel.org> # 4.17
-Fixes: e818e255a58d ("IB/mlx5: Expose MPLS related tunneling offloads")
-Signed-off-by: Alex Vesker <valex@mellanox.com>
-Reviewed-by: Ariel Levkovich <lariel@mellanox.com>
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/mlx5/main.c | 6 ++----
- include/linux/mlx5/mlx5_ifc.h     | 9 ++++++++-
- 2 files changed, 10 insertions(+), 5 deletions(-)
+ sound/soc/soc-ops.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/infiniband/hw/mlx5/main.c b/drivers/infiniband/hw/mlx5/main.c
-index 2db34f7b5ced1..f41f3ff689c55 100644
---- a/drivers/infiniband/hw/mlx5/main.c
-+++ b/drivers/infiniband/hw/mlx5/main.c
-@@ -1070,12 +1070,10 @@ static int mlx5_ib_query_device(struct ib_device *ibdev,
- 		if (MLX5_CAP_ETH(mdev, tunnel_stateless_gre))
- 			resp.tunnel_offloads_caps |=
- 				MLX5_IB_TUNNELED_OFFLOADS_GRE;
--		if (MLX5_CAP_GEN(mdev, flex_parser_protocols) &
--		    MLX5_FLEX_PROTO_CW_MPLS_GRE)
-+		if (MLX5_CAP_ETH(mdev, tunnel_stateless_mpls_over_gre))
- 			resp.tunnel_offloads_caps |=
- 				MLX5_IB_TUNNELED_OFFLOADS_MPLS_GRE;
--		if (MLX5_CAP_GEN(mdev, flex_parser_protocols) &
--		    MLX5_FLEX_PROTO_CW_MPLS_UDP)
-+		if (MLX5_CAP_ETH(mdev, tunnel_stateless_mpls_over_udp))
- 			resp.tunnel_offloads_caps |=
- 				MLX5_IB_TUNNELED_OFFLOADS_MPLS_UDP;
- 	}
-diff --git a/include/linux/mlx5/mlx5_ifc.h b/include/linux/mlx5/mlx5_ifc.h
-index 76b76b6aa83d0..b87b1569d15b5 100644
---- a/include/linux/mlx5/mlx5_ifc.h
-+++ b/include/linux/mlx5/mlx5_ifc.h
-@@ -672,7 +672,14 @@ struct mlx5_ifc_per_protocol_networking_offload_caps_bits {
- 	u8         swp[0x1];
- 	u8         swp_csum[0x1];
- 	u8         swp_lso[0x1];
--	u8         reserved_at_23[0xd];
-+	u8         cqe_checksum_full[0x1];
-+	u8         tunnel_stateless_geneve_tx[0x1];
-+	u8         tunnel_stateless_mpls_over_udp[0x1];
-+	u8         tunnel_stateless_mpls_over_gre[0x1];
-+	u8         tunnel_stateless_vxlan_gpe[0x1];
-+	u8         tunnel_stateless_ipv4_over_vxlan[0x1];
-+	u8         tunnel_stateless_ip_over_ip[0x1];
-+	u8         reserved_at_2a[0x6];
- 	u8         max_vxlan_udp_ports[0x8];
- 	u8         reserved_at_38[0x6];
- 	u8         max_geneve_opt_len[0x1];
--- 
-2.20.1
-
+--- a/sound/soc/soc-ops.c
++++ b/sound/soc/soc-ops.c
+@@ -832,7 +832,7 @@ int snd_soc_get_xr_sx(struct snd_kcontro
+ 	unsigned int regbase = mc->regbase;
+ 	unsigned int regcount = mc->regcount;
+ 	unsigned int regwshift = component->val_bytes * BITS_PER_BYTE;
+-	unsigned int regwmask = (1<<regwshift)-1;
++	unsigned int regwmask = (1UL<<regwshift)-1;
+ 	unsigned int invert = mc->invert;
+ 	unsigned long mask = (1UL<<mc->nbits)-1;
+ 	long min = mc->min;
+@@ -881,7 +881,7 @@ int snd_soc_put_xr_sx(struct snd_kcontro
+ 	unsigned int regbase = mc->regbase;
+ 	unsigned int regcount = mc->regcount;
+ 	unsigned int regwshift = component->val_bytes * BITS_PER_BYTE;
+-	unsigned int regwmask = (1<<regwshift)-1;
++	unsigned int regwmask = (1UL<<regwshift)-1;
+ 	unsigned int invert = mc->invert;
+ 	unsigned long mask = (1UL<<mc->nbits)-1;
+ 	long max = mc->max;
 
 
