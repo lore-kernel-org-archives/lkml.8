@@ -2,116 +2,91 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99A17C352BE
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 21:58:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0601AC2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 22:00:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 75429221F7
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 21:58:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EjmCqUQU"
+	by mail.kernel.org (Postfix) with ESMTP id CF805221F7
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 22:00:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587074445;
+	bh=hhZzPa5SgV+v9yYiCoJdl3XyVSJ7T8c2QGwaUu3C+tY=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=T9votUiE3/QKD9naUmi33BI8D/lKo3EhC9bge/qCwKbrhXPg6e2ec+gtIX4CuBw8A
+	 vnP1nDCAZh+Gn8IQIE4Bh75M67rscvnz6vrbCa2qD1eSruyfS9myYGwWVWSIp7fmnb
+	 sT5sjGIdG53YbOSHqzsm86vL3dL6km2k9ukQs08Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728615AbgDPV6u (ORCPT
+        id S1728638AbgDPWAo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 17:58:50 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:44406 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726460AbgDPV6t (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 17:58:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587074328;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=M6rrlZafhN6r+ubaAk51QbjlJxlyC5zfccAUUw8zuIQ=;
-        b=EjmCqUQUNepT3q3TW1CAHlKf2tMfLu4nMJKIy1zPpfGVeqUj+ElCpAo4zLQPZhwCXpBVu1
-        9Rp/DQbzQCdVt2o0QbZ/Q6GOS5dmqCyND45j3kuW1wwS50PuIchk4gxnv3LdCjT2AMUQei
-        22JbU079yHy5dxanIpDwXN6/Z7bLTWE=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-116-Rl-7r6BlOtebRzhYtGRGLA-1; Thu, 16 Apr 2020 17:58:47 -0400
-X-MC-Unique: Rl-7r6BlOtebRzhYtGRGLA-1
-Received: by mail-wr1-f71.google.com with SMTP id f15so2466323wrj.2
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 14:58:46 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=M6rrlZafhN6r+ubaAk51QbjlJxlyC5zfccAUUw8zuIQ=;
-        b=WZ2jfEypBzxQJy09EY+UP2umBm+PGW6pJoujMTuNQfItJo1kaXx3GqUgMP/K0AZIf+
-         CEDWOLvHcRdAHdcCGT4LrYV8r371vDNDOuPGxslLjy0A6ODf/sjhF8q9OfLh039OVDZy
-         UfE7uBnQAjdahvPYl8g8QfRa4DDtx5fNC3IqtMp4/tloQ487Y/sWDFzVQVjTUBuhZ8Aw
-         X+/YAbDIkU7ybgkqdVYuJ5Lj8Okc5wV3UQbIgOLq2Dv9IJRQe9TzHk30yFmS9a6mtrRY
-         zlZk//a/FgzbTh32WkMGtTSLJQUmVBeMkBktajAgBTnarjZWF9hUcfcPDw8dy4gUEW9f
-         95eg==
-X-Gm-Message-State: AGi0PuZnfoqaLPYOwEi9GEbEVhER08LwqjLgBWHUmOM6qBUR9aYCJqfO
-        0ewMSZIz+KDmGq5ekDU2lauVaK+iyjrJ81Nt7IRvw5mdTHyNtX2AS14lSnrEvPQdf5WQL85ePOT
-        DATleZqDOFCTKWOomgNt3Fkb3
-X-Received: by 2002:a05:600c:2f17:: with SMTP id r23mr6583328wmn.81.1587074325890;
-        Thu, 16 Apr 2020 14:58:45 -0700 (PDT)
-X-Google-Smtp-Source: APiQypJuACRXU/ZXNyriL39YVRQFFxgHb4YC1TCpFzp0oXAv3mKwmNTGsmU40akcPlLbxfOx28D8Wg==
-X-Received: by 2002:a05:600c:2f17:: with SMTP id r23mr6583297wmn.81.1587074325695;
-        Thu, 16 Apr 2020 14:58:45 -0700 (PDT)
-Received: from redhat.com (bzq-79-183-51-3.red.bezeqint.net. [79.183.51.3])
-        by smtp.gmail.com with ESMTPSA id f79sm5629022wme.32.2020.04.16.14.58.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Apr 2020 14:58:45 -0700 (PDT)
-Date:   Thu, 16 Apr 2020 17:58:42 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     KVM list <kvm@vger.kernel.org>,
-        virtualization@lists.linux-foundation.org,
-        Netdev <netdev@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>, ashutosh.dixit@intel.com,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Markus Elfring <elfring@users.sourceforge.net>,
-        eli@mellanox.com, eperezma@redhat.com,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>, hulkci@huawei.com,
-        "Cc: stable@vger.kernel.org, david@redhat.com, dverkamp@chromium.org,
-        hch@lst.de, jasowang@redhat.com, liang.z.li@intel.com, mst@redhat.com,
-        tiny.windzz@gmail.com," <jasowang@redhat.com>,
-        matej.genci@nutanix.com, Stephen Rothwell <sfr@canb.auug.org.au>,
-        yanaijie@huawei.com, YueHaibing <yuehaibing@huawei.com>
-Subject: Re: [GIT PULL] vhost: cleanups and fixes
-Message-ID: <20200416175644-mutt-send-email-mst@kernel.org>
-References: <20200414123606-mutt-send-email-mst@kernel.org>
- <CAHk-=wgVQcD=JJVmowEorHHQSVmSw+vG+Ddc4FATZoTp9mfUmw@mail.gmail.com>
- <20200416081330-mutt-send-email-mst@kernel.org>
- <CAHk-=wjduPCAE-sr_XLUdExupiL0bOU5GBfpMd32cqMC-VVxeg@mail.gmail.com>
+        Thu, 16 Apr 2020 18:00:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43302 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727998AbgDPWAo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 18:00:44 -0400
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6BC6D21973;
+        Thu, 16 Apr 2020 22:00:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587074443;
+        bh=hhZzPa5SgV+v9yYiCoJdl3XyVSJ7T8c2QGwaUu3C+tY=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=nFg03IkaTrLcq0oRL015ekp2nsNQXvgDuXHDbJYkNFCqU0w6Kz9FzAjGZQz/v73/X
+         1HhUmEcZy3o+aSLLwrZAQzsrNGk4qy5Qog7ZfFQgxTKFVRRJX0VkVTcg/zN506QLrh
+         PyhiFgT6iFPLCqxc+ILTHiGA1d5VTy2ZaLsUYI9k=
+Subject: Re: [PATCH 5.5 000/257] 5.5.18-rc1 review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org, shuah <shuah@kernel.org>
+References: <20200416131325.891903893@linuxfoundation.org>
+From:   shuah <shuah@kernel.org>
+Message-ID: <d0509d69-7531-052f-6ec7-72dda555e321@kernel.org>
+Date:   Thu, 16 Apr 2020 16:00:42 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wjduPCAE-sr_XLUdExupiL0bOU5GBfpMd32cqMC-VVxeg@mail.gmail.com>
+In-Reply-To: <20200416131325.891903893@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 16, 2020 at 10:01:51AM -0700, Linus Torvalds wrote:
-> On Thu, Apr 16, 2020 at 5:20 AM Michael S. Tsirkin <mst@redhat.com> wrote:
-> > Well it's all just fallout from
+On 4/16/20 7:20 AM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.5.18 release.
+> There are 257 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
-> What? No. Half of it seems to be the moving of "struct vring" around
-> to other headers and stuff.
+> Responses should be made by Sat, 18 Apr 2020 13:11:20 +0000.
+> Anything received after that time might be too late.
 > 
-> And then that is done very confusingly too, using two different
-> structures both called "struct vring".
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.5.18-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.5.y
+> and the diffstat can be found below.
 > 
-> No way can I pull that kind of craziness as a "fix".
+> thanks,
 > 
->                 Linus
+> greg k-h
+> 
 
-OK, I'll just disable vhost on that config for now - it was
-suggested previously. Thanks for the comment and sorry about geeting it
-wrong!
+Compiled and booted on my test system. No dmesg regressions.
+reboot and poweroff hang forever. The same problem I am seeing
+on Linux 5.7-rc1 and Linux 5.6.5-rc1.
 
+I am starting bisect on 5.6.5.
 
--- 
-MST
-
+thanks,
+-- Shuah
