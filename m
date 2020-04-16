@@ -2,56 +2,60 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18131C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:16:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 249D5C2BB85
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:17:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EAAB6206B9
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:16:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01D812063A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:17:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587046614;
-	bh=mDp69Lb0S9CHcaaZ0egFJJ01Dml5CiR2KtDUpVg1cCs=;
+	s=default; t=1587046622;
+	bh=TBa/gNjvjTHN3djEFnEHH8oe/fBri/XKmyoBAZzUjjY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dNLD9cwfcykZoNJFhjiMQpopnMYQ8U/Jx72NKTd8KB+8UUKonMT54vPnzQw3Sq+LX
-	 cIvlU3iKY3K9oBGq0x3WeOch8OSqMoLDsapkIRro/6gN4pqt9c3r7kDJHVidEH/nfD
-	 P2VXdD3buqgrEHBpb44k6Eg8gnNHD9UTSGqBx4jM=
+	b=Q3IFlGZcnhhmi5ZUmrEAVJ9WoWvs2Jt9cD32EL5hM4Zo8caX6vpHeuBS/IzXMPpS7
+	 m4A2nFk9J0tX5Np/C7ZAzNgih4lOIObrElZgwJedIjukOnknUShhEzspz6yRvoncY4
+	 DtyGskGuQW12CVP8kanDMEv/jipMhbOTaX93C1kA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393846AbgDPOQw (ORCPT
+        id S2393901AbgDPORA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:16:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38372 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 10:17:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38404 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389235AbgDPNwH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:52:07 -0400
+        id S2392439AbgDPNwK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:52:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 27AF42063A;
-        Thu, 16 Apr 2020 13:52:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8FF7F20732;
+        Thu, 16 Apr 2020 13:52:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587045126;
-        bh=mDp69Lb0S9CHcaaZ0egFJJ01Dml5CiR2KtDUpVg1cCs=;
+        s=default; t=1587045129;
+        bh=TBa/gNjvjTHN3djEFnEHH8oe/fBri/XKmyoBAZzUjjY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=S7D8lJzEax4zjAAC4X6zbF5+yHZc2seRtQhcv4qO4t2xqL0rKtk2UuGinfssbGp/h
-         8I9us/6Kc4WPj1f96z1wZ9OQzSEfUmdhr93oaElrtztF9zcKxRn4OGFVIBl0n+oa9M
-         TIMmAebpOQSlfb3SYO1yQNq+LHQ6H3yeA65US7Jk=
+        b=stFPPPMKLW0scbtwXJ86y61OLZv0Hky/M6BSc9qn6LhLYbJpOnYepkdAeQQMqv6Mp
+         6emlFEbvqeOktmnAo8SfReun2QhntgYhy4PqM+BGuV3oaxyIo2E8thRmyEMX4pTI1b
+         oO70PdnUf0Y4sWwGLCXmZMjOxMQsj6blZ4R7TFhQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Szabolcs Nagy <szabolcs.nagy@arm.com>,
-        Mark Brown <broonie@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>
-Subject: [PATCH 5.4 217/232] arm64: Always force a branch protection mode when the compiler has one
-Date:   Thu, 16 Apr 2020 15:25:11 +0200
-Message-Id: <20200416131342.629504096@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Mohammad Rasim <mohammad.rasim96@gmail.com>,
+        Sean Young <sean@mess.org>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.6 001/254] media: rc: add keymap for Videostrong KII Pro
+Date:   Thu, 16 Apr 2020 15:21:30 +0200
+Message-Id: <20200416131325.959861647@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200416131316.640996080@linuxfoundation.org>
-References: <20200416131316.640996080@linuxfoundation.org>
+In-Reply-To: <20200416131325.804095985@linuxfoundation.org>
+References: <20200416131325.804095985@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -60,54 +64,139 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mark Brown <broonie@kernel.org>
+From: Mohammad Rasim <mohammad.rasim96@gmail.com>
 
-commit b8fdef311a0bd9223f10754f94fdcf1a594a3457 upstream.
+[ Upstream commit 30defecb98400575349a7d32f0526e1dc42ea83e ]
 
-Compilers with branch protection support can be configured to enable it by
-default, it is likely that distributions will do this as part of deploying
-branch protection system wide. As well as the slight overhead from having
-some extra NOPs for unused branch protection features this can cause more
-serious problems when the kernel is providing pointer authentication to
-userspace but not built for pointer authentication itself. In that case our
-switching of keys for userspace can affect the kernel unexpectedly, causing
-pointer authentication instructions in the kernel to corrupt addresses.
+This is an NEC remote control device shipped with the Videostrong KII Pro
+tv box as well as other devices from videostrong.
 
-To ensure that we get consistent and reliable behaviour always explicitly
-initialise the branch protection mode, ensuring that the kernel is built
-the same way regardless of the compiler defaults.
-
-[This is a reworked version of b8fdef311a0bd9223f1075 ("arm64: Always
-force a branch protection mode when the compiler has one") for backport.
-Kernels prior to 74afda4016a7 ("arm64: compile the kernel with ptrauth
-return address signing") don't have any Makefile machinery for forcing
-on pointer auth but still have issues if the compiler defaults it on so
-need this reworked version. -- broonie]
-
-Fixes: 7503197562567 (arm64: add basic pointer authentication support)
-Reported-by: Szabolcs Nagy <szabolcs.nagy@arm.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Cc: stable@vger.kernel.org
-[catalin.marinas@arm.com: remove Kconfig option in favour of Makefile check]
-Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Mohammad Rasim <mohammad.rasim96@gmail.com>
+Signed-off-by: Sean Young <sean@mess.org>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/Makefile |    4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/media/rc/keymaps/Makefile             |  1 +
+ .../media/rc/keymaps/rc-videostrong-kii-pro.c | 83 +++++++++++++++++++
+ include/media/rc-map.h                        |  1 +
+ 3 files changed, 85 insertions(+)
+ create mode 100644 drivers/media/rc/keymaps/rc-videostrong-kii-pro.c
 
---- a/arch/arm64/Makefile
-+++ b/arch/arm64/Makefile
-@@ -72,6 +72,10 @@ stack_protector_prepare: prepare0
- 					include/generated/asm-offsets.h))
- endif
- 
-+# Ensure that if the compiler supports branch protection we default it
-+# off.
-+KBUILD_CFLAGS += $(call cc-option,-mbranch-protection=none)
+diff --git a/drivers/media/rc/keymaps/Makefile b/drivers/media/rc/keymaps/Makefile
+index 63261ef6380a9..aaa1bf81d00d4 100644
+--- a/drivers/media/rc/keymaps/Makefile
++++ b/drivers/media/rc/keymaps/Makefile
+@@ -119,6 +119,7 @@ obj-$(CONFIG_RC_MAP) += rc-adstech-dvb-t-pci.o \
+ 			rc-videomate-m1f.o \
+ 			rc-videomate-s350.o \
+ 			rc-videomate-tv-pvr.o \
++			rc-videostrong-kii-pro.o \
+ 			rc-wetek-hub.o \
+ 			rc-wetek-play2.o \
+ 			rc-winfast.o \
+diff --git a/drivers/media/rc/keymaps/rc-videostrong-kii-pro.c b/drivers/media/rc/keymaps/rc-videostrong-kii-pro.c
+new file mode 100644
+index 0000000000000..414d4d231e7ed
+--- /dev/null
++++ b/drivers/media/rc/keymaps/rc-videostrong-kii-pro.c
+@@ -0,0 +1,83 @@
++// SPDX-License-Identifier: GPL-2.0+
++//
++// Copyright (C) 2019 Mohammad Rasim <mohammad.rasim96@gmail.com>
 +
- ifeq ($(CONFIG_CPU_BIG_ENDIAN), y)
- KBUILD_CPPFLAGS	+= -mbig-endian
- CHECKFLAGS	+= -D__AARCH64EB__
++#include <media/rc-map.h>
++#include <linux/module.h>
++
++//
++// Keytable for the Videostrong KII Pro STB remote control
++//
++
++static struct rc_map_table kii_pro[] = {
++	{ 0x59, KEY_POWER },
++	{ 0x19, KEY_MUTE },
++	{ 0x42, KEY_RED },
++	{ 0x40, KEY_GREEN },
++	{ 0x00, KEY_YELLOW },
++	{ 0x03, KEY_BLUE },
++	{ 0x4a, KEY_BACK },
++	{ 0x48, KEY_FORWARD },
++	{ 0x08, KEY_PREVIOUSSONG},
++	{ 0x0b, KEY_NEXTSONG},
++	{ 0x46, KEY_PLAYPAUSE },
++	{ 0x44, KEY_STOP },
++	{ 0x1f, KEY_FAVORITES},	//KEY_F5?
++	{ 0x04, KEY_PVR },
++	{ 0x4d, KEY_EPG },
++	{ 0x02, KEY_INFO },
++	{ 0x09, KEY_SUBTITLE },
++	{ 0x01, KEY_AUDIO },
++	{ 0x0d, KEY_HOMEPAGE },
++	{ 0x11, KEY_TV },	// DTV ?
++	{ 0x06, KEY_UP },
++	{ 0x5a, KEY_LEFT },
++	{ 0x1a, KEY_ENTER },	// KEY_OK ?
++	{ 0x1b, KEY_RIGHT },
++	{ 0x16, KEY_DOWN },
++	{ 0x45, KEY_MENU },
++	{ 0x05, KEY_ESC },
++	{ 0x13, KEY_VOLUMEUP },
++	{ 0x17, KEY_VOLUMEDOWN },
++	{ 0x58, KEY_APPSELECT },
++	{ 0x12, KEY_VENDOR },	// mouse
++	{ 0x55, KEY_PAGEUP },	// KEY_CHANNELUP ?
++	{ 0x15, KEY_PAGEDOWN },	// KEY_CHANNELDOWN ?
++	{ 0x52, KEY_1 },
++	{ 0x50, KEY_2 },
++	{ 0x10, KEY_3 },
++	{ 0x56, KEY_4 },
++	{ 0x54, KEY_5 },
++	{ 0x14, KEY_6 },
++	{ 0x4e, KEY_7 },
++	{ 0x4c, KEY_8 },
++	{ 0x0c, KEY_9 },
++	{ 0x18, KEY_WWW },	// KEY_F7
++	{ 0x0f, KEY_0 },
++	{ 0x51, KEY_BACKSPACE },
++};
++
++static struct rc_map_list kii_pro_map = {
++	.map = {
++		.scan     = kii_pro,
++		.size     = ARRAY_SIZE(kii_pro),
++		.rc_proto = RC_PROTO_NEC,
++		.name     = RC_MAP_KII_PRO,
++	}
++};
++
++static int __init init_rc_map_kii_pro(void)
++{
++	return rc_map_register(&kii_pro_map);
++}
++
++static void __exit exit_rc_map_kii_pro(void)
++{
++	rc_map_unregister(&kii_pro_map);
++}
++
++module_init(init_rc_map_kii_pro)
++module_exit(exit_rc_map_kii_pro)
++
++MODULE_LICENSE("GPL");
++MODULE_AUTHOR("Mohammad Rasim <mohammad.rasim96@gmail.com>");
+diff --git a/include/media/rc-map.h b/include/media/rc-map.h
+index f99575a0d29c8..d22810dcd85c6 100644
+--- a/include/media/rc-map.h
++++ b/include/media/rc-map.h
+@@ -274,6 +274,7 @@ struct rc_map *rc_map_get(const char *name);
+ #define RC_MAP_VIDEOMATE_K100            "rc-videomate-k100"
+ #define RC_MAP_VIDEOMATE_S350            "rc-videomate-s350"
+ #define RC_MAP_VIDEOMATE_TV_PVR          "rc-videomate-tv-pvr"
++#define RC_MAP_KII_PRO                   "rc-videostrong-kii-pro"
+ #define RC_MAP_WETEK_HUB                 "rc-wetek-hub"
+ #define RC_MAP_WETEK_PLAY2               "rc-wetek-play2"
+ #define RC_MAP_WINFAST                   "rc-winfast"
+-- 
+2.20.1
+
 
 
