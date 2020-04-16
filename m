@@ -2,187 +2,543 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14D65C2BA19
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 02:04:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CB38C3815B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 02:11:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E080020725
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 02:04:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0871020737
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 02:11:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dFuhPIKF"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Y/hvRj88"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729967AbgDPCEF (ORCPT
+        id S1731146AbgDPCLR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 22:04:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33878 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728397AbgDPCEA (ORCPT
+        Wed, 15 Apr 2020 22:11:17 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:56292 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728940AbgDPCLJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 22:04:00 -0400
-Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C209C061A0C
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 19:04:00 -0700 (PDT)
-Received: by mail-ot1-x342.google.com with SMTP id j4so1783268otr.11
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 19:04:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=WUOdBHVjTYSAdHEkzTfIK+cQNyJIvAhfkkqze9Y3vHY=;
-        b=dFuhPIKF68NNEtuqTBL5h6FNtryPc7t+6DAdUlHMtza7uJ0lRStsOHpmMu2bth4kbg
-         EoLKBlW00QfAXI9xwv5Uba5MgnBSFpa2S12qa3l5NWosBUseQPZ4CMntQhK8OZpDnpjR
-         xC6WFPWIVmL9FYv1TmGjK99eXmZOYJgFoGzVl2CkW3VtnvHf09jWjFE3x+q84wf0xkKb
-         Cdc4s1FVZGiKG/ePW971uFULtyONT0W5mZKaEvAa3YfXg09Aw2nr2y+kQAjd6uz8Xmwu
-         h+AaE0g4c9LYi3y29ho6N/YgqTrMrDU82FapTLDMsqqEQh/2WDj/HK9IAhsa3Ny7hgvl
-         b9gA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=WUOdBHVjTYSAdHEkzTfIK+cQNyJIvAhfkkqze9Y3vHY=;
-        b=QOn6PYqX+KBZU/qhBpwJ7dR3zIci+K421O+GJiSCSBC7/XI8xJPRopELx4HvSzhQET
-         GrrO4dcEOKCcNALL5b6AZb+evLf2UUHj3Mx2VWAgyc8hTe2xP2frMUPOhGlLvjCeSqf5
-         fMfKmSxRQJK8opjL3Hw3oJO+oWM/t0xXkC1GBuYOCN8r7tN+WpzMCIKYJ94RTJBWo6/7
-         B3r2cj9nmIB/idy5jaRS8urR7ITKEcjpp8Z6yr5vMABU/argUHlntsYc+PTracoWA3hr
-         hknlvasbSscz5R0Zs1V3fazdvAJPCExEfutOc4TLSWQRDtY6bYyf1STOP+4K1gwaA2I/
-         7bqw==
-X-Gm-Message-State: AGi0PuZq/IWtUWkjzOtj7xB0arZAHS6c6ECNefPRFbpS1irp+Z0ItCzD
-        AQHyG7cSop4q0Me6IXisDdZEhA==
-X-Google-Smtp-Source: APiQypI5I024fVI+5QUPWnaypCmcRINpmltlMJymdc1sEELchumFcKCJnzObCJmn4NWDBztKx9JyXQ==
-X-Received: by 2002:a9d:620c:: with SMTP id g12mr30601otj.158.1587002639307;
-        Wed, 15 Apr 2020 19:03:59 -0700 (PDT)
-Received: from eggly.attlocal.net (172-10-233-147.lightspeed.sntcca.sbcglobal.net. [172.10.233.147])
-        by smtp.gmail.com with ESMTPSA id v15sm7492966ook.37.2020.04.15.19.03.58
-        (version=TLS1 cipher=ECDHE-ECDSA-AES128-SHA bits=128/128);
-        Wed, 15 Apr 2020 19:03:58 -0700 (PDT)
-Date:   Wed, 15 Apr 2020 19:03:56 -0700 (PDT)
-From:   Hugh Dickins <hughd@google.com>
-X-X-Sender: hugh@eggly.anvils
-To:     Yang Shi <shy828301@gmail.com>
-cc:     syzbot <syzbot+c8a8197c8852f566b9d9@syzkaller.appspotmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Hugh Dickins <hughd@google.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux MM <linux-mm@kvack.org>, syzkaller-bugs@googlegroups.com,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: possible deadlock in shmem_uncharge
-In-Reply-To: <CAHbLzkpJjpOjizxhG6oS1OsbdycwaRdLeA8nb1R4Y2C4F7nV+g@mail.gmail.com>
-Message-ID: <alpine.LSU.2.11.2004151828350.12919@eggly.anvils>
-References: <000000000000e5838c05a3152f53@google.com> <CAHbLzkpJjpOjizxhG6oS1OsbdycwaRdLeA8nb1R4Y2C4F7nV+g@mail.gmail.com>
-User-Agent: Alpine 2.11 (LSU 23 2013-08-11)
+        Wed, 15 Apr 2020 22:11:09 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587003066;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=G1NegoNxE6JvLREOxpKh5FlgmbDIYE0dxDrI4KAUIq8=;
+        b=Y/hvRj88QstjZmWGmPh/vjpp8SJ5xNFC2krg/4Dm9CMXmus25132Fm2+zW9Mjq7nk8/P9B
+        yRrXwoEtlVGo/X4y7/I/dOSlejeA3VbHPFaJZaeVjTf4Rlw/UVmyV+Tew/J6LfFLt6uipt
+        YDqGBedof4Z5XYaFR7l1XBZP5+bcvEs=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-113-oxqIXGpSPpmQG82z3Tmanw-1; Wed, 15 Apr 2020 22:10:56 -0400
+X-MC-Unique: oxqIXGpSPpmQG82z3Tmanw-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D9629107ACCA;
+        Thu, 16 Apr 2020 02:10:53 +0000 (UTC)
+Received: from T590 (ovpn-8-29.pek2.redhat.com [10.72.8.29])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id B47A85DA66;
+        Thu, 16 Apr 2020 02:10:40 +0000 (UTC)
+Date:   Thu, 16 Apr 2020 10:10:36 +0800
+From:   Ming Lei <ming.lei@redhat.com>
+To:     Luis Chamberlain <mcgrof@kernel.org>
+Cc:     axboe@kernel.dk, viro@zeniv.linux.org.uk, bvanassche@acm.org,
+        gregkh@linuxfoundation.org, rostedt@goodmis.org, mingo@redhat.com,
+        jack@suse.cz, nstange@suse.de, akpm@linux-foundation.org,
+        mhocko@suse.com, yukuai3@huawei.com, linux-block@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Omar Sandoval <osandov@fb.com>,
+        Hannes Reinecke <hare@suse.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        syzbot+603294af2d01acfdd6da@syzkaller.appspotmail.com
+Subject: Re: [PATCH 2/5] blktrace: fix debugfs use after free
+Message-ID: <20200416021036.GA2717677@T590>
+References: <20200414041902.16769-1-mcgrof@kernel.org>
+ <20200414041902.16769-3-mcgrof@kernel.org>
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200414041902.16769-3-mcgrof@kernel.org>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 13 Apr 2020, Yang Shi wrote:
-> On Sun, Apr 12, 2020 at 3:11 AM syzbot
-> <syzbot+c8a8197c8852f566b9d9@syzkaller.appspotmail.com> wrote:
-> >
-> > Hello,
-> >
-> > syzbot found the following crash on:
-> >
-> > HEAD commit:    ae46d2aa mm/gup: Let __get_user_pages_locked() return -EIN..
-> > git tree:       upstream
-> > console output: https://syzkaller.appspot.com/x/log.txt?x=14a30a77e00000
-> > kernel config:  https://syzkaller.appspot.com/x/.config?x=ca75979eeebf06c2
-> > dashboard link: https://syzkaller.appspot.com/bug?extid=c8a8197c8852f566b9d9
-> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15f5632be00000
-> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=132ade57e00000
-> >
-> > The bug was bisected to:
-> >
-> > commit 71725ed10c40696dc6bdccf8e225815dcef24dba
-> > Author: Hugh Dickins <hughd@google.com>
-> > Date:   Tue Apr 7 03:07:57 2020 +0000
-> >
-> >     mm: huge tmpfs: try to split_huge_page() when punching hole
-> >
-> > bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=120a752be00000
-> > final crash:    https://syzkaller.appspot.com/x/report.txt?x=110a752be00000
-> > console output: https://syzkaller.appspot.com/x/log.txt?x=160a752be00000
-> >
-> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> > Reported-by: syzbot+c8a8197c8852f566b9d9@syzkaller.appspotmail.com
-> > Fixes: 71725ed10c40 ("mm: huge tmpfs: try to split_huge_page() when punching hole")
-
-No, that commit just gave syzkaller an easier way to reach old code.
-
-> >
-> > =====================================================
-> > WARNING: SOFTIRQ-safe -> SOFTIRQ-unsafe lock order detected
-> > 5.6.0-syzkaller #0 Not tainted
-> > -----------------------------------------------------
-> > syz-executor428/8337 [HC0[0]:SC0[0]:HE0:SE1] is trying to acquire:
-> > ffff8880a851c778 (&info->lock){....}-{2:2}, at: shmem_uncharge+0x24/0x270 mm/shmem.c:341
-> >
-> > and this task is already holding:
-> > ffff8880a851cac8 (&xa->xa_lock#4){..-.}-{2:2}, at: spin_lock include/linux/spinlock.h:353 [inline]
-> > ffff8880a851cac8 (&xa->xa_lock#4){..-.}-{2:2}, at: split_huge_page_to_list+0xad0/0x33b0 mm/huge_memory.c:2864
-> > which would create a new lock dependency:
-> >  (&xa->xa_lock#4){..-.}-{2:2} -> (&info->lock){....}-{2:2}
-> >
-> > but this new dependency connects a SOFTIRQ-irq-safe lock:
-> >  (&xa->xa_lock#4){..-.}-{2:2}
+On Tue, Apr 14, 2020 at 04:18:59AM +0000, Luis Chamberlain wrote:
+> On commit 6ac93117ab00 ("blktrace: use existing disk debugfs directory")
+> merged on v4.12 Omar fixed the original blktrace code for request-based
+> drivers (multiqueue). This however left in place a possible crash, if you
+> happen to abuse blktrace in a way it was not intended.
 > 
-> It looks shmem_uncharge() is just called by __split_huge_page() and
-> collapse_file(). The collapse_file() has acquired xa_lock with irq
-> disabled before acquiring info->lock, so it is safe.
-> __split_huge_page() is called with holding xa_lock with irq enabled,
-> but lru_lock is acquired with irq disabled before acquiring xa_lock.
+> Namely, if you loop adding a device, setup the blktrace with BLKTRACESETUP,
+> forget to BLKTRACETEARDOWN, and then just remove the device you end up
+> with a panic:
 > 
-> So, it is unnecessary to acquire info->lock with irq disabled in
-> shmem_uncharge(). Can syzbot try the below patch?
+> [  107.193134] debugfs: Directory 'loop0' with parent 'block' already present!
+> [  107.254615] BUG: kernel NULL pointer dereference, address: 00000000000000a0
+> [  107.258785] #PF: supervisor write access in kernel mode
+> [  107.262035] #PF: error_code(0x0002) - not-present page
+> [  107.264106] PGD 0 P4D 0
+> [  107.264404] Oops: 0002 [#1] SMP NOPTI
+> [  107.264803] CPU: 8 PID: 674 Comm: kworker/8:2 Tainted: G            E 5.6.0-rc7-next-20200327 #1
+> [  107.265712] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.13.0-1 04/01/2014
+> [  107.266553] Workqueue: events __blk_release_queue
+> [  107.267051] RIP: 0010:down_write+0x15/0x40
+> [  107.267488] Code: eb ca e8 ee a5 8d ff cc cc cc cc cc cc cc cc cc cc cc cc cc cc 0f 1f 44 00 00 55 48 89 fd e8 52 db ff ff 31 c0 ba 01 00 00 00 <f0> 48 0f b1 55 00 75 0f  65 48 8b 04 25 c0 8b 01 00 48 89 45 08 5d
+> [  107.269300] RSP: 0018:ffff9927c06efda8 EFLAGS: 00010246
+> [  107.269841] RAX: 0000000000000000 RBX: ffff8be7e73b0600 RCX: ffffff8100000000
+> [  107.270559] RDX: 0000000000000001 RSI: ffffff8100000000 RDI: 00000000000000a0
+> [  107.271281] RBP: 00000000000000a0 R08: ffff8be7ebc80fa8 R09: ffff8be7ebc80fa8
+> [  107.272001] R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
+> [  107.272722] R13: ffff8be7efc30400 R14: ffff8be7e0571200 R15: 00000000000000a0
+> [  107.273475] FS:  0000000000000000(0000) GS:ffff8be7efc00000(0000) knlGS:0000000000000000
+> [  107.274346] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [  107.274968] CR2: 00000000000000a0 CR3: 000000042abee003 CR4: 0000000000360ee0
+> [  107.275710] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> [  107.276465] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> [  107.277214] Call Trace:
+> [  107.277532]  simple_recursive_removal+0x4e/0x2e0
+> [  107.278049]  ? debugfs_remove+0x60/0x60
+> [  107.278493]  debugfs_remove+0x40/0x60
+> [  107.278922]  blk_trace_free+0xd/0x50
+> [  107.279339]  __blk_trace_remove+0x27/0x40
+> [  107.279797]  blk_trace_shutdown+0x30/0x40
+> [  107.280256]  __blk_release_queue+0xab/0x110
+> [  107.280734]  process_one_work+0x1b4/0x380
+> [  107.281194]  worker_thread+0x50/0x3c0
+> [  107.281622]  kthread+0xf9/0x130
+> [  107.281994]  ? process_one_work+0x380/0x380
+> [  107.282467]  ? kthread_park+0x90/0x90
+> [  107.282895]  ret_from_fork+0x1f/0x40
+> [  107.283316] Modules linked in: loop(E) <etc>
+> [  107.288562] CR2: 00000000000000a0
+> [  107.288957] ---[ end trace b885d243d441bbce ]---
+> 
+> This splat happens to be very similar to the one reported via
+> kernel.org korg#205713, only that korg#205713 was for v4.19.83
+> and the above now includes the simple_recursive_removal() introduced
+> via commit a3d1e7eb5abe ("simple_recursive_removal(): kernel-side rm
+> -rf for ramfs-style filesystems") merged on v5.6.
+> 
+> korg#205713 then was used to create CVE-2019-19770 and claims that
+> the bug is in a use-after-free in the debugfs core code. The
+> implications of this being a generic UAF on debugfs would be
+> much more severe, as it would imply parent dentries can sometimes
+> not be positive, which we hold by design is just not possible.
+> 
+> Below is the splat explained with a bit more details, explaining
+> what is happening in userspace, kernel, and a print of the CPU on,
+> which the code runs on:
+> 
+> load loopback module
+> [   13.603371] == blk_mq_debugfs_register(12) start
+> [   13.604040] == blk_mq_debugfs_register(12) q->debugfs_dir created
+> [   13.604934] == blk_mq_debugfs_register(12) end
+> [   13.627382] == blk_mq_debugfs_register(12) start
+> [   13.628041] == blk_mq_debugfs_register(12) q->debugfs_dir created
+> [   13.629240] == blk_mq_debugfs_register(12) end
+> [   13.651667] == blk_mq_debugfs_register(12) start
+> [   13.652836] == blk_mq_debugfs_register(12) q->debugfs_dir created
+> [   13.655107] == blk_mq_debugfs_register(12) end
+> [   13.684917] == blk_mq_debugfs_register(12) start
+> [   13.687876] == blk_mq_debugfs_register(12) q->debugfs_dir created
+> [   13.691588] == blk_mq_debugfs_register(13) end
+> [   13.707320] == blk_mq_debugfs_register(13) start
+> [   13.707863] == blk_mq_debugfs_register(13) q->debugfs_dir created
+> [   13.708856] == blk_mq_debugfs_register(13) end
+> [   13.735623] == blk_mq_debugfs_register(13) start
+> [   13.736656] == blk_mq_debugfs_register(13) q->debugfs_dir created
+> [   13.738411] == blk_mq_debugfs_register(13) end
+> [   13.763326] == blk_mq_debugfs_register(13) start
+> [   13.763972] == blk_mq_debugfs_register(13) q->debugfs_dir created
+> [   13.765167] == blk_mq_debugfs_register(13) end
+> [   13.779510] == blk_mq_debugfs_register(13) start
+> [   13.780522] == blk_mq_debugfs_register(13) q->debugfs_dir created
+> [   13.782338] == blk_mq_debugfs_register(13) end
+> [   13.783521] loop: module loaded
+> 
+> LOOP_CTL_DEL(loop0) #1
+> [   13.803550] = __blk_release_queue(4) start
+> [   13.807772] == blk_trace_shutdown(4) start
+> [   13.810749] == blk_trace_shutdown(4) end
+> [   13.813437] = __blk_release_queue(4) calling blk_mq_debugfs_unregister()
+> [   13.817593] ==== blk_mq_debugfs_unregister(4) begin
+> [   13.817621] ==== blk_mq_debugfs_unregister(4) debugfs_remove_recursive(q->debugfs_dir)
+> [   13.821203] ==== blk_mq_debugfs_unregister(4) end q->debugfs_dir is NULL
+> [   13.826166] = __blk_release_queue(4) blk_mq_debugfs_unregister() end
+> [   13.832992] = __blk_release_queue(4) end
+> 
+> LOOP_CTL_ADD(loop0) #1
+> [   13.843742] == blk_mq_debugfs_register(7) start
+> [   13.845569] == blk_mq_debugfs_register(7) q->debugfs_dir created
+> [   13.848628] == blk_mq_debugfs_register(7) end
+> 
+> BLKTRACE_SETUP(loop0) #1
+> [   13.850924] == blk_trace_ioctl(7, BLKTRACESETUP) start
+> [   13.852852] === do_blk_trace_setup(7) start
+> [   13.854580] === do_blk_trace_setup(7) creating directory
+> [   13.856620] === do_blk_trace_setup(7) using what debugfs_lookup() gave
+> [   13.860635] === do_blk_trace_setup(7) end with ret: 0
+> [   13.862615] == blk_trace_ioctl(7, BLKTRACESETUP) end
+> 
+> LOOP_CTL_DEL(loop0) #2
+> [   13.883304] = __blk_release_queue(7) start
+> [   13.885324] == blk_trace_shutdown(7) start
+> [   13.887197] == blk_trace_shutdown(7) calling __blk_trace_remove()
+> [   13.889807] == __blk_trace_remove(7) start
+> [   13.891669] === blk_trace_cleanup(7) start
+> [   13.911656] ====== blk_trace_free(7) start
+> 
+> LOOP_CTL_ADD(loop0) #2
+> [   13.912709] == blk_mq_debugfs_register(2) start
+> 
+> ---> From LOOP_CTL_DEL(loop0) #2
+> [   13.915887] ====== blk_trace_free(7) end
+> 
+> ---> From LOOP_CTL_ADD(loop0) #2
+> [   13.918359] debugfs: Directory 'loop0' with parent 'block' already present!
+> [   13.926433] == blk_mq_debugfs_register(2) q->debugfs_dir created
+> [   13.930373] == blk_mq_debugfs_register(2) end
+> 
+> BLKTRACE_SETUP(loop0) #2
+> [   13.933961] == blk_trace_ioctl(2, BLKTRACESETUP) start
+> [   13.936758] === do_blk_trace_setup(2) start
+> [   13.938944] === do_blk_trace_setup(2) creating directory
+> [   13.941029] === do_blk_trace_setup(2) using what debugfs_lookup() gave
+> 
+> ---> From LOOP_CTL_DEL(loop0) #2
+> [   13.971046] === blk_trace_cleanup(7) end
+> [   13.973175] == __blk_trace_remove(7) end
+> [   13.975352] == blk_trace_shutdown(7) end
+> [   13.977415] = __blk_release_queue(7) calling blk_mq_debugfs_unregister()
+> [   13.980645] ==== blk_mq_debugfs_unregister(7) begin
+> [   13.980696] ==== blk_mq_debugfs_unregister(7) debugfs_remove_recursive(q->debugfs_dir)
+> [   13.983118] ==== blk_mq_debugfs_unregister(7) end q->debugfs_dir is NULL
+> [   13.986945] = __blk_release_queue(7) blk_mq_debugfs_unregister() end
+> [   13.993155] = __blk_release_queue(7) end
+> 
+> ---> From BLKTRACE_SETUP(loop0) #2
+> [   13.995928] === do_blk_trace_setup(2) end with ret: 0
+> [   13.997623] == blk_trace_ioctl(2, BLKTRACESETUP) end
+> 
+> LOOP_CTL_DEL(loop0) #3
+> [   14.035119] = __blk_release_queue(2) start
+> [   14.036925] == blk_trace_shutdown(2) start
+> [   14.038518] == blk_trace_shutdown(2) calling __blk_trace_remove()
+> [   14.040829] == __blk_trace_remove(2) start
+> [   14.042413] === blk_trace_cleanup(2) start
+> 
+> LOOP_CTL_ADD(loop0) #3
+> [   14.072522] == blk_mq_debugfs_register(6) start
+> 
+> ---> From LOOP_CTL_DEL(loop0) #3
+> [   14.075151] ====== blk_trace_free(2) start
+> 
+> ---> From LOOP_CTL_ADD(loop0) #3
+> [   14.075882] == blk_mq_debugfs_register(6) q->debugfs_dir created
+> 
+> ---> From LOOP_CTL_DEL(loop0) #3
+> [   14.078624] BUG: kernel NULL pointer dereference, address: 00000000000000a0
+> [   14.084332] == blk_mq_debugfs_register(6) end
+> [   14.086971] #PF: supervisor write access in kernel mode
+> [   14.086974] #PF: error_code(0x0002) - not-present page
+> [   14.086977] PGD 0 P4D 0
+> [   14.086984] Oops: 0002 [#1] SMP NOPTI
+> [   14.086990] CPU: 2 PID: 287 Comm: kworker/2:2 Tainted: G            E 5.6.0-next-20200403+ #54
+> [   14.086991] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.13.0-1 04/01/2014
+> [   14.087002] Workqueue: events __blk_release_queue
+> [   14.087011] RIP: 0010:down_write+0x15/0x40
+> [   14.090300] == blk_trace_ioctl(6, BLKTRACESETUP) start
+> [   14.093277] Code: eb ca e8 3e 34 8d ff cc cc cc cc cc cc cc cc cc cc
+> cc cc cc cc 0f 1f 44 00 00 55 48 89 fd e8 52 db ff ff 31 c0 ba 01 00 00
+> 00 <f0> 48 0f b1 55 00 75 0f 65 48 8b 04 25 c0 8b 01 00 48 89 45 08 5d
+> [   14.093280] RSP: 0018:ffffc28a00533da8 EFLAGS: 00010246
+> [   14.093284] RAX: 0000000000000000 RBX: ffff9f7a24d07980 RCX: ffffff8100000000
+> [   14.093286] RDX: 0000000000000001 RSI: ffffff8100000000 RDI: 00000000000000a0
+> [   14.093287] RBP: 00000000000000a0 R08: 0000000000000000 R09: 0000000000000019
+> [   14.093289] R10: 0000000000000774 R11: 0000000000000000 R12: 0000000000000000
+> [   14.093291] R13: ffff9f7a2fab0400 R14: ffff9f7a21dd1140 R15: 00000000000000a0
+> [   14.093294] FS:  0000000000000000(0000) GS:ffff9f7a2fa80000(0000) knlGS:0000000000000000
+> [   14.093296] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [   14.093298] CR2: 00000000000000a0 CR3: 00000004293d2003 CR4: 0000000000360ee0
+> [   14.093307] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> [   14.093308] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> [   14.093310] Call Trace:
+> [   14.093324]  simple_recursive_removal+0x4e/0x2e0
+> [   14.093330]  ? debugfs_remove+0x60/0x60
+> [   14.093334]  debugfs_remove+0x40/0x60
+> [   14.093339]  blk_trace_free+0x20/0x70
+> [   14.093346]  __blk_trace_remove+0x54/0x90
+> [   14.096704] === do_blk_trace_setup(6) start
+> [   14.098534]  blk_trace_shutdown+0x74/0x80
+> [   14.100958] === do_blk_trace_setup(6) creating directory
+> [   14.104575]  __blk_release_queue+0xbe/0x160
+> [   14.104580]  process_one_work+0x1b4/0x380
+> [   14.104585]  worker_thread+0x50/0x3c0
+> [   14.104589]  kthread+0xf9/0x130
+> [   14.104593]  ? process_one_work+0x380/0x380
+> [   14.104596]  ? kthread_park+0x90/0x90
+> [   14.104599]  ret_from_fork+0x1f/0x40
+> [   14.104603] Modules linked in: loop(E) xfs(E) libcrc32c(E)
+> crct10dif_pclmul(E) crc32_pclmul(E) ghash_clmulni_intel(E) joydev(E)
+> serio_raw(E) aesni_intel(E) glue_helper(E) virtio_balloon(E) evdev(E)
+> crypto_simd(E) pcspkr(E) cryptd(E) i6300esb(E) button(E) ip_tables(E)
+> x_tables(E) autofs4(E) ext4(E) crc32c_generic(E) crc16(E) mbcache(E)
+> jbd2(E) virtio_net(E) net_failover(E) failover(E) virtio_blk(E)
+> ata_generic(E) uhci_hcd(E) ata_piix(E) ehci_hcd(E) nvme(E) libata(E)
+> crc32c_intel(E) usbcore(E) psmouse(E) nvme_core(E) virtio_pci(E)
+> scsi_mod(E) virtio_ring(E) t10_pi(E) virtio(E) i2c_piix4(E) floppy(E)
+> [   14.107400] === do_blk_trace_setup(6) using what debugfs_lookup() gave
+> [   14.108939] CR2: 00000000000000a0
+> [   14.110589] === do_blk_trace_setup(6) end with ret: 0
+> [   14.111592] ---[ end trace 7a783b33b9614db9 ]---
+> 
+> The root cause to this issue is that debugfs_lookup() can find a
+> previous incarnation's dir of the same name which is about to get
+> removed from a not yet schedule work.
+> 
+> We can fix the UAF by simply using a debugfs directory which moving
+> forward will always be accessible if debugfs is enabled, this way,
+> its allocated and avaialble always for both request-based block
+> drivers or make_request drivers (multiqueue) block drivers.
+> 
+> This simplifies the code considerably, with the only penalty now being
+> that we're always creating the request queue debugfs directory for the
+> request-based block device drivers.
 
-But I disagree with the patch below.  You're right that IRQ-disabling
-here is unnecessary, given its two callers; but I'm not sure that we
-want it to look different from shmem_charge() and all other info->lock
-takers; and, more importantly, I don't see how removing the redundant
-IRQ-saving below could make it any less liable to deadlock.
-
-The crucial observation comes lower down
-> > to a SOFTIRQ-irq-unsafe lock:
-> >  (shmlock_user_lock){+.+.}-{2:2}
-and there's another syzbot report that's come out on shmlock_user_lock,
-"possible deadlock in user_shm_lock".
-
-I believe all that's needed to fix both reports is not to use info->lock
-in shmem_lock() - I see now that we saw lockdep reports of this kind
-internally, a long time ago, and fixed them in that way.
-
-(I haven't composed the patch and references yet, and not decided if
-I'll add it here or there or separately. I'll put it together now.)
-
-Hugh
+This patch is indeed a big simplification, just a minor comment.
 
 > 
-> diff --git a/mm/shmem.c b/mm/shmem.c
-> index d722eb8..100117b 100644
-> --- a/mm/shmem.c
-> +++ b/mm/shmem.c
-> @@ -334,15 +334,14 @@ bool shmem_charge(struct inode *inode, long pages)
->  void shmem_uncharge(struct inode *inode, long pages)
+> The UAF then is not a core debugfs issue, but instead a misuse of
+> debugfs, and this issue can only be triggered if you are root, and
+> misuse blktrace.
+> 
+> This issue can be reproduced with break-blktrace [2] using:
+> 
+>   break-blktrace -c 10 -d -s
+> 
+> This patch fixes this issue. Note that there is also another
+> respective UAF but from the ioctl path [3], this should also fix
+> that issue.
+> 
+> This patch then also disputes the severity of CVE-2019-19770 as
+> this issue is only possible by being root and using blktrace.
+> 
+> It is not a core debugfs issue.
+> 
+> [0] https://bugzilla.kernel.org/show_bug.cgi?id=205713
+> [1] https://nvd.nist.gov/vuln/detail/CVE-2019-19770
+> [2] https://github.com/mcgrof/break-blktrace
+> [3] https://lore.kernel.org/lkml/000000000000ec635b059f752700@google.com/
+> 
+> Cc: Bart Van Assche <bvanassche@acm.org>
+> Cc: Omar Sandoval <osandov@fb.com>
+> Cc: Hannes Reinecke <hare@suse.com>
+> Cc: Nicolai Stange <nstange@suse.de>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Michal Hocko <mhocko@kernel.org>
+> Cc: yu kuai <yukuai3@huawei.com>
+> Reported-by: syzbot+603294af2d01acfdd6da@syzkaller.appspotmail.com
+> Fixes: 6ac93117ab00 ("blktrace: use existing disk debugfs directory")
+> Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
+> ---
+>  block/blk-debugfs.c          | 12 ++++++++++++
+>  block/blk-mq-debugfs.c       |  5 -----
+>  block/blk-sysfs.c            |  3 +++
+>  block/blk.h                  | 10 ++++++++++
+>  include/linux/blkdev.h       |  5 ++++-
+>  include/linux/blktrace_api.h |  1 -
+>  kernel/trace/blktrace.c      | 19 ++++++++-----------
+>  7 files changed, 37 insertions(+), 18 deletions(-)
+> 
+> diff --git a/block/blk-debugfs.c b/block/blk-debugfs.c
+> index 19091e1effc0..db982688cf46 100644
+> --- a/block/blk-debugfs.c
+> +++ b/block/blk-debugfs.c
+> @@ -13,3 +13,15 @@ void blk_debugfs_register(void)
 >  {
->         struct shmem_inode_info *info = SHMEM_I(inode);
-> -       unsigned long flags;
-> 
->         /* nrpages adjustment done by __delete_from_page_cache() or caller */
-> 
-> -       spin_lock_irqsave(&info->lock, flags);
-> +       spin_lock(&info->lock);
->         info->alloced -= pages;
->         inode->i_blocks -= pages * BLOCKS_PER_PAGE;
->         shmem_recalc_inode(inode);
-> -       spin_unlock_irqrestore(&info->lock, flags);
-> +       spin_unlock(&info->lock);
-> 
->         shmem_inode_unacct_blocks(inode, pages);
+>  	blk_debugfs_root = debugfs_create_dir("block", NULL);
 >  }
+> +
+> +void blk_queue_debugfs_register(struct request_queue *q)
+> +{
+> +	q->debugfs_dir = debugfs_create_dir(kobject_name(q->kobj.parent),
+> +					    blk_debugfs_root);
+> +}
+> +
+> +void blk_queue_debugfs_unregister(struct request_queue *q)
+> +{
+> +	debugfs_remove_recursive(q->debugfs_dir);
+> +	q->debugfs_dir = NULL;
+> +}
+> diff --git a/block/blk-mq-debugfs.c b/block/blk-mq-debugfs.c
+> index b3f2ba483992..bda9378eab90 100644
+> --- a/block/blk-mq-debugfs.c
+> +++ b/block/blk-mq-debugfs.c
+> @@ -823,9 +823,6 @@ void blk_mq_debugfs_register(struct request_queue *q)
+>  	struct blk_mq_hw_ctx *hctx;
+>  	int i;
+>  
+> -	q->debugfs_dir = debugfs_create_dir(kobject_name(q->kobj.parent),
+> -					    blk_debugfs_root);
+> -
+>  	debugfs_create_files(q->debugfs_dir, q, blk_mq_debugfs_queue_attrs);
+>  
+>  	/*
+> @@ -856,9 +853,7 @@ void blk_mq_debugfs_register(struct request_queue *q)
+>  
+>  void blk_mq_debugfs_unregister(struct request_queue *q)
+>  {
+> -	debugfs_remove_recursive(q->debugfs_dir);
+>  	q->sched_debugfs_dir = NULL;
+> -	q->debugfs_dir = NULL;
+>  }
+>  
+>  static void blk_mq_debugfs_register_ctx(struct blk_mq_hw_ctx *hctx,
+> diff --git a/block/blk-sysfs.c b/block/blk-sysfs.c
+> index fca9b158f4a0..0285d67e1e4c 100644
+> --- a/block/blk-sysfs.c
+> +++ b/block/blk-sysfs.c
+> @@ -895,6 +895,7 @@ static void __blk_release_queue(struct work_struct *work)
+>  
+>  	blk_trace_shutdown(q);
+>  
+> +	blk_queue_debugfs_unregister(q);
+>  	if (queue_is_mq(q))
+>  		blk_mq_debugfs_unregister(q);
+>  
+> @@ -975,6 +976,8 @@ int blk_register_queue(struct gendisk *disk)
+>  		goto unlock;
+>  	}
+>  
+> +	blk_queue_debugfs_register(q);
+> +
+>  	if (queue_is_mq(q)) {
+>  		__blk_mq_register_dev(dev, q);
+>  		blk_mq_debugfs_register(q);
+> diff --git a/block/blk.h b/block/blk.h
+> index 86a66b614f08..813b8513fc1a 100644
+> --- a/block/blk.h
+> +++ b/block/blk.h
+> @@ -489,10 +489,20 @@ int __bio_add_pc_page(struct request_queue *q, struct bio *bio,
+>  		bool *same_page);
+>  #ifdef CONFIG_DEBUG_FS
+>  void blk_debugfs_register(void);
+> +void blk_queue_debugfs_register(struct request_queue *q);
+> +void blk_queue_debugfs_unregister(struct request_queue *q);
+>  #else
+>  static inline void blk_debugfs_register(void)
+>  {
+>  }
+> +
+> +static inline void blk_queue_debugfs_register(struct request_queue *q)
+> +{
+> +}
+> +
+> +static inline void blk_queue_debugfs_unregister(struct request_queue *q)
+> +{
+> +}
+>  #endif /* CONFIG_DEBUG_FS */
+>  
+>  #endif /* BLK_INTERNAL_H */
+> diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
+> index 32868fbedc9e..cc43c8e6516c 100644
+> --- a/include/linux/blkdev.h
+> +++ b/include/linux/blkdev.h
+> @@ -569,8 +569,11 @@ struct request_queue {
+>  	struct list_head	tag_set_list;
+>  	struct bio_set		bio_split;
+>  
+> -#ifdef CONFIG_BLK_DEBUG_FS
+> +#ifdef CONFIG_DEBUG_FS
+> +	/* Used by block/blk-*debugfs.c and kernel/trace/blktrace.c */
+>  	struct dentry		*debugfs_dir;
+> +#endif
+> +#ifdef CONFIG_BLK_DEBUG_FS
+>  	struct dentry		*sched_debugfs_dir;
+>  	struct dentry		*rqos_debugfs_dir;
+>  #endif
+> diff --git a/include/linux/blktrace_api.h b/include/linux/blktrace_api.h
+> index 3b6ff5902edc..eb6db276e293 100644
+> --- a/include/linux/blktrace_api.h
+> +++ b/include/linux/blktrace_api.h
+> @@ -22,7 +22,6 @@ struct blk_trace {
+>  	u64 end_lba;
+>  	u32 pid;
+>  	u32 dev;
+> -	struct dentry *dir;
+>  	struct dentry *dropped_file;
+>  	struct dentry *msg_file;
+>  	struct list_head running_list;
+> diff --git a/kernel/trace/blktrace.c b/kernel/trace/blktrace.c
+> index ca39dc3230cb..15086227592f 100644
+> --- a/kernel/trace/blktrace.c
+> +++ b/kernel/trace/blktrace.c
+> @@ -311,7 +311,6 @@ static void blk_trace_free(struct blk_trace *bt)
+>  	debugfs_remove(bt->msg_file);
+>  	debugfs_remove(bt->dropped_file);
+>  	relay_close(bt->rchan);
+> -	debugfs_remove(bt->dir);
+>  	free_percpu(bt->sequence);
+>  	free_percpu(bt->msg_data);
+>  	kfree(bt);
+> @@ -476,7 +475,6 @@ static int do_blk_trace_setup(struct request_queue *q, char *name, dev_t dev,
+>  			      struct blk_user_trace_setup *buts)
+>  {
+>  	struct blk_trace *bt = NULL;
+> -	struct dentry *dir = NULL;
+>  	int ret;
+>  
+>  	if (!buts->buf_size || !buts->buf_nr)
+> @@ -485,6 +483,9 @@ static int do_blk_trace_setup(struct request_queue *q, char *name, dev_t dev,
+>  	if (!blk_debugfs_root)
+>  		return -ENOENT;
+>  
+> +	if (!q->debugfs_dir)
+> +		return -ENOENT;
+> +
+>  	strncpy(buts->name, name, BLKTRACE_BDEV_SIZE);
+>  	buts->name[BLKTRACE_BDEV_SIZE - 1] = '\0';
+>  
+> @@ -509,21 +510,19 @@ static int do_blk_trace_setup(struct request_queue *q, char *name, dev_t dev,
+>  
+>  	ret = -ENOENT;
+>  
+> -	dir = debugfs_lookup(buts->name, blk_debugfs_root);
+> -	if (!dir)
+> -		bt->dir = dir = debugfs_create_dir(buts->name, blk_debugfs_root);
+> -
+>  	bt->dev = dev;
+>  	atomic_set(&bt->dropped, 0);
+>  	INIT_LIST_HEAD(&bt->running_list);
+>  
+>  	ret = -EIO;
+> -	bt->dropped_file = debugfs_create_file("dropped", 0444, dir, bt,
+> +	bt->dropped_file = debugfs_create_file("dropped", 0444,
+> +					       q->debugfs_dir, bt,
+>  					       &blk_dropped_fops);
+>  
+> -	bt->msg_file = debugfs_create_file("msg", 0222, dir, bt, &blk_msg_fops);
+> +	bt->msg_file = debugfs_create_file("msg", 0222, q->debugfs_dir,
+> +					   bt, &blk_msg_fops);
+>  
+> -	bt->rchan = relay_open("trace", dir, buts->buf_size,
+> +	bt->rchan = relay_open("trace", q->debugfs_dir, buts->buf_size,
+>  				buts->buf_nr, &blk_relay_callbacks, bt);
+
+In theory, multiple partitions can be traced concurrently, but looks
+it never works, so it won't cause trouble for multiple partition trace.
+
+One userspace visible change is that blktrace debugfs dir name is switched 
+to disk name from partition name in case of partition trace, will it
+break some utilities?
+
+Thanks,
+Ming
+
