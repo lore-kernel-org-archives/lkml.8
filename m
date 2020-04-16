@@ -2,139 +2,159 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A188C2BA19
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 00:49:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B6EEC2BA19
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 00:54:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0F5142054F
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 00:49:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5ED48206E9
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 00:54:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="locygWHL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405105AbgDPAtQ (ORCPT
+        id S2405354AbgDPAyi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 20:49:16 -0400
-Received: from www262.sakura.ne.jp ([202.181.97.72]:63420 "EHLO
-        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405058AbgDPAtD (ORCPT
+        Wed, 15 Apr 2020 20:54:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51326 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405170AbgDPAy0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 20:49:03 -0400
-Received: from fsav401.sakura.ne.jp (fsav401.sakura.ne.jp [133.242.250.100])
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 03G0lT8E089337;
-        Thu, 16 Apr 2020 09:47:29 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav401.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav401.sakura.ne.jp);
- Thu, 16 Apr 2020 09:47:29 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav401.sakura.ne.jp)
-Received: from [192.168.1.9] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
-        (authenticated bits=0)
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 03G0lSiB089331
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
-        Thu, 16 Apr 2020 09:47:28 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Subject: Re: [PATCH v3] Add kernel config option for tweaking kernel behavior.
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Matthew Garrett <mjg59@google.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>, Jiri Slaby <jslaby@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>
-References: <20200413063317.7164-1-penguin-kernel@I-love.SAKURA.ne.jp>
- <CAHk-=wgbMi2+VBN0SCEw9GeoiWgui034AOBwbt_dW9tdCa3Nig@mail.gmail.com>
-From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Message-ID: <5a72a7e8-f7fe-4560-0145-02d5570efa34@i-love.sakura.ne.jp>
-Date:   Thu, 16 Apr 2020 09:47:24 +0900
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Wed, 15 Apr 2020 20:54:26 -0400
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 900CFC061A0C;
+        Wed, 15 Apr 2020 17:54:25 -0700 (PDT)
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 1FE639CE;
+        Thu, 16 Apr 2020 02:54:22 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1586998462;
+        bh=dZMu091chEyqroFKiISuS3a3zyFSmf1eCaPuRd8WZVY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=locygWHL2WF1Ca6qoSa6yVUf3P0xH4QJioRzvG/rX2BlbeKwenhKLMB6syGrJAIYh
+         561P+rcQu4eJrG8FDeUW3A5XHYuOw3K+vfGhLgI0/MoeWeABHwQFwPTIZu4+Fg694D
+         hlbQ9RnS3NKvnX8hMsjovvOtfdJ34+YTwwOogorU=
+Date:   Thu, 16 Apr 2020 03:54:09 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     Stephen Boyd <swboyd@chromium.org>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Sandeep Panda <spanda@codeaurora.org>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Rob Clark <robdclark@chromium.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/3] dt-bindings: drm/bridge: ti-sn65dsi86: Add hpd-gpios
+ to the bindings
+Message-ID: <20200416005409.GR4758@pendragon.ideasonboard.com>
+References: <20200415084758.1.Ifcdc4ecb12742a27862744ee1e8753cb95a38a7f@changeid>
+ <20200415084758.2.Ic98f6622c60a1aa547ed85781f2c3b9d3e56b734@changeid>
+ <158698038289.105027.2860892334897893887@swboyd.mtv.corp.google.com>
+ <20200415203256.GP4758@pendragon.ideasonboard.com>
+ <CAD=FV=U1U7y_U4+zySzA9e_uYE0ECdM1Bd-ew0OxG3ciqjRVSA@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <CAHk-=wgbMi2+VBN0SCEw9GeoiWgui034AOBwbt_dW9tdCa3Nig@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <CAD=FV=U1U7y_U4+zySzA9e_uYE0ECdM1Bd-ew0OxG3ciqjRVSA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/04/14 3:13, Linus Torvalds wrote:
-> On Sun, Apr 12, 2020 at 11:34 PM Tetsuo Handa
-> <penguin-kernel@i-love.sakura.ne.jp> wrote:
->>
->> Existing kernel config options are defined based on "whether you want to
->> enable this module/feature or not". And such granularity is sometimes
->> too rough-grained for fuzzing tools which try to find bugs inside each
->> module/feature.
+Hi Doug,
+
+On Wed, Apr 15, 2020 at 04:49:00PM -0700, Doug Anderson wrote:
+> On Wed, Apr 15, 2020 at 1:33 PM Laurent Pinchart wrote:
+> > On Wed, Apr 15, 2020 at 12:53:02PM -0700, Stephen Boyd wrote:
+> > > Quoting Douglas Anderson (2020-04-15 08:48:40)
+> > > > Allow people to specify to use a GPIO for hot-plug-detect.  Add an
+> > > > example.
+> > > >
+> > > > NOTE: The current patch adding support for hpd-gpios to the Linux
+> > > > driver for hpd-gpios only adds enough support to the driver so that
+> > > > the bridge can use one of its own GPIOs.  The bindings, however, are
+> > > > written generically.
+> > > >
+> > > > Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> > > > ---
+> > > >
+> > > >  .../bindings/display/bridge/ti,sn65dsi86.yaml          | 10 +++++++++-
+> > > >  1 file changed, 9 insertions(+), 1 deletion(-)
+> > > >
+> > > > diff --git a/Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.yaml b/Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.yaml
+> > > > index 8cacc6db33a9..554bfd003000 100644
+> > > > --- a/Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.yaml
+> > > > +++ b/Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.yaml
+> > > > @@ -60,6 +60,10 @@ properties:
+> > > >      const: 1
+> > > >      description: See ../../pwm/pwm.yaml for description of the cell formats.
+> > > >
+> > > > +  hpd-gpios:
+> > > > +    maxItems: 1
+> > > > +    description: If present use the given GPIO for hot-plug-detect.
+> > >
+> > > Shouldn't this go in the panel node? And the panel driver should get the
+> > > gpio and poll it after powering up the panel? Presumably that's why we
+> > > have the no-hpd property in the simple panel binding vs. putting it here
+> > > in the bridge.
+> >
+> > Same question really, I think this belongs to the panel (or connector)
+> > node indeed.
 > 
-> I still detest making this a hardcoded build-time config option.
-
-But I think that starting from build-time config option is the better.
-
+> Hrm.
 > 
-> A kernel parameter that sets a flag seems much simpler. More
-> importantly, having it be something sanely named, and something you
-> can set independently some other way, would allow a regular kernel to
-> then run a fuzzer as root.
-
-We can't beforehand determine how many kernel parameters will be needed.
-
-I don't think the number of kernel parameters is "one". You said "I'd *much*
-rather see some way to just lock down certain things individually.". Also,
-different fuzzing mechanisms may want different set of things (e.g.
-current->do_not_emit_warning_string for syzkaller described bottom).
-
-But will the number of kernel parameters be "a few" ? "a dozen" ?
-"some dozen" ? "some hundreds" ? "one thousand" ?
-
-Of course, I'm not expecting "one thousand". But I can't say how many kernel
-parameters will be needed. The number of kernel parameters can be determined
-only after we identify what "things" we need to tweak. The first step is to
-identify which operation should be tweaked, and it will take *very long time*.
-I don't think that it is realistic to update userspace programs to support that
-flag whenever a new flag was added (with sane name and explanation for users
-who are not interested in running fuzzers on their kernels) in the kernel side.
-
+> To me "no-hpd" feels OK in the panel because the lack of a connection
+> is somewhat symmetric.  Thus it's OK to say either "HPD isn't hooked
+> up to the panel in this system" or "HPD isn't hooked up to the bridge
+> in this system" and both express the same thing (AKA that there is no
+> HPD connection between the bridge and the panel).  In the case of
+> "no-hpd" it's more convenient to express it on the panel side because
+> the panel driver is the one whose behavior has to change if HPD isn't
+> hooked up.  The panel datasheet is the one that says how long of a
+> delay we need if HPD isn't hooked up.
 > 
-> Some kind of "not even root" flag, which might be per-process and not
-> possible to clear once set (so that your _normal_ system binaries
-> could still do the root-only stuff, but then you could start a fuzzing
-> process with that flag set, knowing that the fuzzing process - and
-> it's children - are not able to do things).
+> ...but when you're talking about where the bridge driver should look
+> to find the HPD signal that it needs, that really feels like it should
+> be described as part of the bridge.  Specifically imagine we were
+> using our bridge for DP, not for eDP.  In that case simple-panel
+> wouldn't be involved because we could get any type of display plugged
+> in.  Thus it couldn't go in the panel node.  Here it feels clearer
+> that hpd-gpio needs to be a property of the bridge driver.
 
-I don't think that fuzzing mechanisms is clever enough to distinguish which
-process (fuzz tests or _normal_ system binaries) is causing the unwanted
-result (e.g. shutting down the system). If administrator's proper operation
-(e.g. freezing a filesystem for maintenance purpose) caused a warning (e.g.
-khungtaskd complains that file write operation cannot be completed), fuzzing
-mechanisms (e.g. monitoring kernel messages printed to consoles) will consider
-it as "crash". Since who did "dangerous operation" is irrelevant, who can do
-"dangerous operation" (e.g. use of per-process flags) is irrelevant. Doing
+If you were using it for DP, you would need a DT node for the DP
+connector (with bindings to be added to
+Documentation/devicetree/bindings/display/connector/, similar to the
+ones we already have for other connectors). That DT node should
+reference the HPD pin GPIO. The bridge driver for the connector
+(drivers/gpu/drm/bridge/display-connector.c) would then handle HPD. The
+good news is that it already does :-)
 
---- a/security/tomoyo/util.c
-+++ b/security/tomoyo/util.c
-@@ -1078,10 +1078,9 @@ bool tomoyo_domain_quota_is_ok(struct tomoyo_request_info *r)
-                domain->flags[TOMOYO_DIF_QUOTA_WARNED] = true;
-                /* r->granted = false; */
-                tomoyo_write_log(r, "%s", tomoyo_dif[TOMOYO_DIF_QUOTA_WARNED]);
--#ifndef CONFIG_SECURITY_TOMOYO_INSECURE_BUILTIN_SETTING
--               pr_warn("WARNING: Domain '%s' has too many ACLs to hold. Stopped learning mode.\n",
--                       domain->domainname->name);
--#endif
-+               if (current->do_not_emit_warning_string)
-+                       pr_warn("WARNING: Domain '%s' has too many ACLs to hold. Stopped learning mode.\n",
-+                               domain->domainname->name);
-        }
-        return false;
- }
+> Looking at other usages of "hpd-gpio" in the kernel, it seems like the
+> usage I'm proposing is also common.  Grepping for "hpd-gpios" shows
+> numerous examples of "hpd-gpios" being defined at the display
+> controller level and (effectively) I believe the bridge is at the
+> equivalent level.
 
-is pointless for syzkaller; syzkaller will treat as "crash" as soon as _normal_
-system binaries hit this path. Use of build-time config option is simpler.
+Bridge drivers should only implement support for features available from
+the corresponding hardware. If an HPD signal is connected to a dedicated
+pin of the bridge, and the bridge can generate an interrupt and expose
+the HPD status through I2C, then it should implement HPD-related
+operations. If the HPD pin from the connector is hooked up to a GPIO of
+the SoC, it should be handled by the connector bridge driver.
+
+-- 
+Regards,
+
+Laurent Pinchart
