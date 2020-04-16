@@ -7,48 +7,52 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57121C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:28:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35809C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:28:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3861E21D82
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:28:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07EAE206E9
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:28:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587043726;
-	bh=idCS/o2KJWKLuG5YYj/PRV53FPx4L/x7Hh2m9+2AenI=;
+	s=default; t=1587043739;
+	bh=yWJuEw3skjdqBCHT7KkfyU/k5u58pHckm/0x3VrLbVY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EyGPqdAKEGORWmufT2SLcfYW40lJj7oDoj0h1IdSCBFPCvChRrTeDZ+b9FDu+EKtx
-	 /F9g9/JpnyALt0P46AEK8jEdP33XcxYOCK3m7OCSFjmSPnIBrlzhxBfz/whh+oqCdf
-	 fKbx6YlPHew8TlL5HWTtq8y160CjlTcfRmjC/huM=
+	b=1/lWR2BTN43G9UL2FXIPCE5hOeSv5lW/5sHXdDvPgKR0fZnnunuS06naZTHY0w+Se
+	 DGwcSwp0v/4BEqcXGGd6YwX+ZuGwN64keAQ1oJbMB/Jr0muTuQ37JGuEWAaOfkEum5
+	 IeHCnVCrP5cQq2EreCEsDnbJgU0rC2mFn3liSBTw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2895829AbgDPN2n (ORCPT
+        id S2895904AbgDPN2x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 09:28:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35560 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 09:28:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35788 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2895440AbgDPN1P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:27:15 -0400
+        id S2895478AbgDPN1Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:27:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 69E71206E9;
-        Thu, 16 Apr 2020 13:27:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 22C6F21D93;
+        Thu, 16 Apr 2020 13:27:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587043634;
-        bh=idCS/o2KJWKLuG5YYj/PRV53FPx4L/x7Hh2m9+2AenI=;
+        s=default; t=1587043644;
+        bh=yWJuEw3skjdqBCHT7KkfyU/k5u58pHckm/0x3VrLbVY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=p85tcrtaa5D0ryuxvfCQOVOrKIMAmKoPf7bO6RUeM1+cdjNVu8INolXFmPnp+tgY5
-         W2ZROZktrLmyMCVuwnOQR3Ix9/3eyZ4hTcECqw7oG77T3NYg5PQB1ZblXcXN3IMbbB
-         xw06d67vFAA9q0ENK2XpMnHFfqp3ifDmC9kA8wg8=
+        b=h1XxdjffPSEAmwzUg7T2EOBm22v0i0qJIMcSqDtKD0m+koWV1oVvE8RU1uHe5efIl
+         G7bPnYtwHyEFYypTMOzu1XBjlTUZW80/DkCRRpAiqqE/V3OfJcaKIq4uiZwspNau9k
+         oUrEoJ/Yuav0g9Zoi29ykdUoQnY8YiGLgIOKAH14=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stephan Gerhold <stephan@gerhold.net>,
-        Stanimir Varbanov <stanimir.varbanov@linaro.org>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        stable@vger.kernel.org, Yury Norov <yury.norov@gmail.com>,
+        Allison Randal <allison@lohutok.net>,
+        Joe Perches <joe@perches.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        William Breathitt Gray <vilhelm.gray@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 011/146] media: venus: hfi_parser: Ignore HEVC encoding for V1
-Date:   Thu, 16 Apr 2020 15:22:32 +0200
-Message-Id: <20200416131244.086038845@linuxfoundation.org>
+Subject: [PATCH 4.19 042/146] uapi: rename ext2_swab() to swab() and share globally in swab.h
+Date:   Thu, 16 Apr 2020 15:23:03 +0200
+Message-Id: <20200416131248.395714575@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131242.353444678@linuxfoundation.org>
 References: <20200416131242.353444678@linuxfoundation.org>
@@ -61,37 +65,114 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stephan Gerhold <stephan@gerhold.net>
+From: Yury Norov <yury.norov@gmail.com>
 
-[ Upstream commit c50cc6dc6c48300af63a6fbc71b647053c15fc80 ]
+[ Upstream commit d5767057c9a76a29f073dad66b7fa12a90e8c748 ]
 
-Some older MSM8916 Venus firmware versions also seem to indicate
-support for encoding HEVC, even though they really can't.
-This will lead to errors later because hfi_session_init() fails
-in this case.
+ext2_swab() is defined locally in lib/find_bit.c However it is not
+specific to ext2, neither to bitmaps.
 
-HEVC is already ignored for "dec_codecs", so add the same for
-"enc_codecs" to make these old firmware versions work correctly.
+There are many potential users of it, so rename it to just swab() and
+move to include/uapi/linux/swab.h
 
-Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
-Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+ABI guarantees that size of unsigned long corresponds to BITS_PER_LONG,
+therefore drop unneeded cast.
+
+Link: http://lkml.kernel.org/r/20200103202846.21616-1-yury.norov@gmail.com
+Signed-off-by: Yury Norov <yury.norov@gmail.com>
+Cc: Allison Randal <allison@lohutok.net>
+Cc: Joe Perches <joe@perches.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: William Breathitt Gray <vilhelm.gray@gmail.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/qcom/venus/hfi_parser.c | 1 +
- 1 file changed, 1 insertion(+)
+ include/linux/swab.h      |  1 +
+ include/uapi/linux/swab.h | 10 ++++++++++
+ lib/find_bit.c            | 16 ++--------------
+ 3 files changed, 13 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/media/platform/qcom/venus/hfi_parser.c b/drivers/media/platform/qcom/venus/hfi_parser.c
-index 2293d936e49ca..7f515a4b9bd12 100644
---- a/drivers/media/platform/qcom/venus/hfi_parser.c
-+++ b/drivers/media/platform/qcom/venus/hfi_parser.c
-@@ -181,6 +181,7 @@ static void parse_codecs(struct venus_core *core, void *data)
- 	if (IS_V1(core)) {
- 		core->dec_codecs &= ~HFI_VIDEO_CODEC_HEVC;
- 		core->dec_codecs &= ~HFI_VIDEO_CODEC_SPARK;
-+		core->enc_codecs &= ~HFI_VIDEO_CODEC_HEVC;
+diff --git a/include/linux/swab.h b/include/linux/swab.h
+index e466fd159c857..bcff5149861a9 100644
+--- a/include/linux/swab.h
++++ b/include/linux/swab.h
+@@ -7,6 +7,7 @@
+ # define swab16 __swab16
+ # define swab32 __swab32
+ # define swab64 __swab64
++# define swab __swab
+ # define swahw32 __swahw32
+ # define swahb32 __swahb32
+ # define swab16p __swab16p
+diff --git a/include/uapi/linux/swab.h b/include/uapi/linux/swab.h
+index 23cd84868cc3b..fa7f97da5b768 100644
+--- a/include/uapi/linux/swab.h
++++ b/include/uapi/linux/swab.h
+@@ -4,6 +4,7 @@
+ 
+ #include <linux/types.h>
+ #include <linux/compiler.h>
++#include <asm/bitsperlong.h>
+ #include <asm/swab.h>
+ 
+ /*
+@@ -132,6 +133,15 @@ static inline __attribute_const__ __u32 __fswahb32(__u32 val)
+ 	__fswab64(x))
+ #endif
+ 
++static __always_inline unsigned long __swab(const unsigned long y)
++{
++#if BITS_PER_LONG == 64
++	return __swab64(y);
++#else /* BITS_PER_LONG == 32 */
++	return __swab32(y);
++#endif
++}
++
+ /**
+  * __swahw32 - return a word-swapped 32-bit value
+  * @x: value to wordswap
+diff --git a/lib/find_bit.c b/lib/find_bit.c
+index ee3df93ba69af..8a5492173267d 100644
+--- a/lib/find_bit.c
++++ b/lib/find_bit.c
+@@ -153,18 +153,6 @@ EXPORT_SYMBOL(find_last_bit);
+ 
+ #ifdef __BIG_ENDIAN
+ 
+-/* include/linux/byteorder does not support "unsigned long" type */
+-static inline unsigned long ext2_swab(const unsigned long y)
+-{
+-#if BITS_PER_LONG == 64
+-	return (unsigned long) __swab64((u64) y);
+-#elif BITS_PER_LONG == 32
+-	return (unsigned long) __swab32((u32) y);
+-#else
+-#error BITS_PER_LONG not defined
+-#endif
+-}
+-
+ #if !defined(find_next_bit_le) || !defined(find_next_zero_bit_le)
+ static inline unsigned long _find_next_bit_le(const unsigned long *addr1,
+ 		const unsigned long *addr2, unsigned long nbits,
+@@ -181,7 +169,7 @@ static inline unsigned long _find_next_bit_le(const unsigned long *addr1,
+ 	tmp ^= invert;
+ 
+ 	/* Handle 1st word. */
+-	tmp &= ext2_swab(BITMAP_FIRST_WORD_MASK(start));
++	tmp &= swab(BITMAP_FIRST_WORD_MASK(start));
+ 	start = round_down(start, BITS_PER_LONG);
+ 
+ 	while (!tmp) {
+@@ -195,7 +183,7 @@ static inline unsigned long _find_next_bit_le(const unsigned long *addr1,
+ 		tmp ^= invert;
  	}
+ 
+-	return min(start + __ffs(ext2_swab(tmp)), nbits);
++	return min(start + __ffs(swab(tmp)), nbits);
  }
+ #endif
  
 -- 
 2.20.1
