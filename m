@@ -6,50 +6,59 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B20CC2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 02:58:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 571E2C2BA19
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 03:02:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4B330206F9
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 02:58:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28BB72076C
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 03:02:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587005929;
-	bh=rQigxixSDs+dCK5RAkj+qC1sYZkMkckPug+3KMi9k5g=;
+	s=default; t=1587006127;
+	bh=2t4Q8FK2jSZL06mZSGlcjj3XmYPygHQoJwm5GyWQCHE=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=KIn+RJ/Sh7EXX98KgW752o5TIICC4ZjWhRA3IC8nwcQZ9pkvNTdnHGDZoQPHQaLDt
-	 iLGTj+JiajhrJbOeb7Si/clinVfpVvepcjZixrj+bMNEhkCd4o4bUMSMjrQlIXslkk
-	 l2NXu7vUzpFVFZYaWOn1ML1pknZCZvkIgJP0A/RI=
+	b=eggkNFxqAVx+ucJuD6REWeDQfGZOiqYaZww0ig4LWfVcC3wRHwAKvCULEbEdT4XRf
+	 dTbpOATMNT1bJu+r+w50pYnXKeazMpyWvSIMv13K+4Tw5PKVo+kornMt53FIxRsJJp
+	 KKmunoUC+izBo56uhxQtzX2Gdnpufi/+sEFQo1hc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389298AbgDPC6s (ORCPT
+        id S2389384AbgDPDCF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 22:58:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39350 "EHLO mail.kernel.org"
+        Wed, 15 Apr 2020 23:02:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39912 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388679AbgDPC6n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 22:58:43 -0400
+        id S2388679AbgDPDCC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 23:02:02 -0400
 Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6F437206F9;
-        Thu, 16 Apr 2020 02:58:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C77232072D;
+        Thu, 16 Apr 2020 03:02:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587005922;
-        bh=rQigxixSDs+dCK5RAkj+qC1sYZkMkckPug+3KMi9k5g=;
+        s=default; t=1587006122;
+        bh=2t4Q8FK2jSZL06mZSGlcjj3XmYPygHQoJwm5GyWQCHE=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=VTCGhOdWESWZMgOFOGaBWb3FHZxCpiNo9+5o5kxwbGkx+eBkDICfzwW6Iug+9iS5u
-         yGiF0lXPMvcgVRAMXp70oDXjoMNZD2GK59tSbCfdnR/lgqPZZqrtbDwkgob0Kqa+Te
-         xdp/WemLu7/GJ0Oef8yiRYhLk/Lm+pY0fgC89Wyc=
-Date:   Wed, 15 Apr 2020 19:58:41 -0700
+        b=Ssu6Vz9cf844VcyhwetKFKAsXDYGb0SMV3LdkTOeji67arGy2AJa4DW1vUSZqjayC
+         sIBfvY07IIm1CDZVFS5zn49poEUxUHfAnlV9lE+7mXpvYoBhPZcwgAmBw3I8FpuhwB
+         pmJhc7KnDBeR8LnJObRsDxGZFeGuHVTdFvP1LVPk=
+Date:   Wed, 15 Apr 2020 20:02:01 -0700
 From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Muchun Song <songmuchun@bytedance.com>
-Cc:     Markus.Elfring@web.de, david@redhat.com, ktkhai@virtuozzo.com,
-        yang.shi@linux.alibaba.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org,
-        Xiongchun Duan <duanxiongchun@bytedance.com>
-Subject: Re: [PATCH v4] mm/ksm: Fix NULL pointer dereference when KSM zero
- page is enabled
-Message-Id: <20200415195841.da4361916f662a0136a271a5@linux-foundation.org>
-In-Reply-To: <20200416025034.29780-1-songmuchun@bytedance.com>
-References: <20200416025034.29780-1-songmuchun@bytedance.com>
+To:     Joseph Qi <joseph.qi@linux.alibaba.com>
+Cc:     Jules Irenge <jbi.octave@gmail.com>, linux-kernel@vger.kernel.org,
+        boqun.feng@gmail.com, Mark Fasheh <mark@fasheh.com>,
+        Joel Becker <jlbec@evilplan.org>, Gang He <ghe@suse.com>,
+        Richard Fontana <rfontana@redhat.com>,
+        Allison Randal <allison@lohutok.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Aditya Pakki <pakki001@umn.edu>, ChenGang <cg.chen@huawei.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        "moderated list:ORACLE CLUSTER FILESYSTEM 2 (OCFS2)" 
+        <ocfs2-devel@oss.oracle.com>
+Subject: Re: [PATCH 3/5] ocfs2: Add missing annotation for
+ dlm_empty_lockres()
+Message-Id: <20200415200201.2efbbbd338a43a2f57988e2d@linux-foundation.org>
+In-Reply-To: <5408edd7-87a9-ac56-5c52-c2a19c308311@linux.alibaba.com>
+References: <0/5>
+        <20200403160505.2832-1-jbi.octave@gmail.com>
+        <20200403160505.2832-4-jbi.octave@gmail.com>
+        <5408edd7-87a9-ac56-5c52-c2a19c308311@linux.alibaba.com>
 X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
 Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -59,69 +68,19 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 16 Apr 2020 10:50:34 +0800 Muchun Song <songmuchun@bytedance.com> wrote:
+On Sat, 4 Apr 2020 07:45:49 +0800 Joseph Qi <joseph.qi@linux.alibaba.com> wrote:
 
-> The find_mergeable_vma can return NULL. In this case, it leads
-> to a crash when we access vm_mm(its offset is 0x40) later in
-> write_protect_page. And this case did happen on our server. The
-> following call trace is captured in kernel 4.19 with the following
-> patch applied and KSM zero page enabled on our server.
-> 
->   commit e86c59b1b12d ("mm/ksm: improve deduplication of zero pages with colouring")
-> 
-> So add a vma check to fix it.
->
-> ...
->
-> --- a/mm/ksm.c
-> +++ b/mm/ksm.c
-> @@ -2112,8 +2112,15 @@ static void cmp_and_merge_page(struct page *page, struct rmap_item *rmap_item)
-> 
->  		down_read(&mm->mmap_sem);
->  		vma = find_mergeable_vma(mm, rmap_item->address);
-> -		err = try_to_merge_one_page(vma, page,
-> -					    ZERO_PAGE(rmap_item->address));
-> +		if (vma)
-> +			err = try_to_merge_one_page(vma, page,
-> +					ZERO_PAGE(rmap_item->address));
-> +		else
-> +			/**
-> +			 * If the vma is out of date, we do not need to
-> +			 * continue.
-> +			 */
-> +			err = 0;
->  		up_read(&mm->mmap_sem);
->  		/*
->  		 * In case of failure, the page was not really empty, so we
+> On 2020/4/4 00:05, Jules Irenge wrote:
+> > Sparse reports a warning at dlm_empty_lockres()
+> > 
+> > warning: context imbalance in dlm_purge_lockres() - unexpected unlock
+> > 
+> > The root cause is the missing annotation at dlm_purge_lockres()
+> > 
+> > Add the missing __must_hold(&dlm->spinlock)
+> > 
+> Seems this is duplicate with assert_spin_locked()?
 
-Thanks.
-
-It's conventional to put braces around multi-line blocks such as this.
-
-Also, /** is specifically used to introduce kerneldoc comments.  This
-comment is not a kerneldoc one so use /*.
-
---- a/mm/ksm.c~mm-ksm-fix-null-pointer-dereference-when-ksm-zero-page-is-enabled-v4-fix
-+++ a/mm/ksm.c
-@@ -2112,15 +2112,16 @@ static void cmp_and_merge_page(struct pa
- 
- 		down_read(&mm->mmap_sem);
- 		vma = find_mergeable_vma(mm, rmap_item->address);
--		if (vma)
-+		if (vma) {
- 			err = try_to_merge_one_page(vma, page,
- 					ZERO_PAGE(rmap_item->address));
--		else
--			/**
-+		} else {
-+			/*
- 			 * If the vma is out of date, we do not need to
- 			 * continue.
- 			 */
- 			err = 0;
-+		}
- 		up_read(&mm->mmap_sem);
- 		/*
- 		 * In case of failure, the page was not really empty, so we
-_
+I doubt is sparse is smart enough to treat assert_spin_locked() as
+equivalent to __must_hold().  It would be neat though.
 
