@@ -4,56 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 463DFC2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:44:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06EB8C2BB85
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:44:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1C0AC21D93
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:44:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D59E021D82
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:44:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587048280;
-	bh=sVgUpE+KXFReodqryZSohrN8a0+20YziaW0oXuufrPY=;
+	s=default; t=1587048284;
+	bh=R1qOEZEcahNuX1xx6660KQkNmnV8rG9Y5gYQ8dk1pVw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gKNsqYI37B0E/A3VLrKUJgl5sgstJnrZHE0oYDp49J4eqCMSSayosegiaFUemsz6H
-	 qr6B8uRG20SV2NHWU1doxYoRYfXSdrWA8TVxmO03fqX0UJdM5Gjnfhe0PzoeMc4SVW
-	 pKH2k+pE6bs/tMnzgZD6L5q/6Tx/9AC/X8q4XyqY=
+	b=af+t9r/LP6C8hG4zJGfcB7hI/J/eIqPSICFjOduxNQdghGfG/36nNQqNp+URUE5kL
+	 rYsKOLL2U5/ric9csfudJ/oXyLYPgJQ7xzzDtMB6p08/F7CZuKuifRZ3u3IWGG+xvt
+	 FGFRLGd4sXOfbsakSuvQfXEBda0nkXROo51UhdcM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394607AbgDPOoi (ORCPT
+        id S2394583AbgDPOon (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:44:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47024 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 10:44:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46994 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728624AbgDPN77 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:59:59 -0400
+        id S2898884AbgDPN74 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:59:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 11E4C2078B;
-        Thu, 16 Apr 2020 13:59:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C4C8820786;
+        Thu, 16 Apr 2020 13:59:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587045598;
-        bh=sVgUpE+KXFReodqryZSohrN8a0+20YziaW0oXuufrPY=;
+        s=default; t=1587045596;
+        bh=R1qOEZEcahNuX1xx6660KQkNmnV8rG9Y5gYQ8dk1pVw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZvJsUel2JGl1+yqz2L4i98ZUI91iMLKh5PmByf9gLJZuc59pZdpnnDiAW4MiZuvO4
-         YYw64wLyC3vWA1Fcpe0bm2m+dzeEE3dMsAxz4mzRHNkmlcLJqjzDU/ZA/DAWC8z9ze
-         hI7nVhxNcmiAU4TuK4CZoWDogVaMOMFAbx3ybYVs=
+        b=bZ4i6654Fia6tyd+hjftZv9E/XP0jZ4WrxXGkKrMLdOk3KtW78Fl/tu2uEVR/9zkY
+         +pR5a2y5EI4cjaDTa8IJQcl5x11Yn2bAigSQrqz9P8A2s42kVBDwkqHR0uX+pj2b7o
+         CsaJuqJ93x537EsC3jH7sINVwvfAbFT/QvYb+GMA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Torsten Duwe <duwe@lst.de>,
-        Thierry Reding <treding@nvidia.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Thomas Zimmermann <tzimmermann@suse.de>
-Subject: [PATCH 5.6 201/254] drm/bridge: analogix-anx78xx: Fix drm_dp_link helper removal
-Date:   Thu, 16 Apr 2020 15:24:50 +0200
-Message-Id: <20200416131351.246133741@linuxfoundation.org>
+        stable@vger.kernel.org, Chris Wilson <chris@chris-wilson.co.uk>,
+        Matthew Auld <matthew.william.auld@gmail.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>
+Subject: [PATCH 5.6 200/254] drm/i915/gem: Flush all the reloc_gpu batch
+Date:   Thu, 16 Apr 2020 15:24:49 +0200
+Message-Id: <20200416131351.136348874@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.804095985@linuxfoundation.org>
 References: <20200416131325.804095985@linuxfoundation.org>
@@ -66,47 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Torsten Duwe <duwe@lst.de>
+From: Chris Wilson <chris@chris-wilson.co.uk>
 
-commit 3e138a63d6674a4567a018a31e467567c40b14d5 upstream.
+commit 1aaea8476d9f014667d2cb24819f9bcaf3ebb7a4 upstream.
 
-drm_dp_link_rate_to_bw_code and ...bw_code_to_link_rate simply divide by
-and multiply with 27000, respectively. Avoid an overflow in the u8 dpcd[0]
-and the multiply+divide alltogether.
+__i915_gem_object_flush_map() takes a byte range, so feed it the written
+bytes and do not mistake the u32 index as bytes!
 
-Signed-off-by: Torsten Duwe <duwe@lst.de>
-Fixes: ff1e8fb68ea0 ("drm/bridge: analogix-anx78xx: Avoid drm_dp_link helpers")
-Cc: Thierry Reding <treding@nvidia.com>
-Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
-Cc: Andrzej Hajda <a.hajda@samsung.com>
-Cc: Neil Armstrong <narmstrong@baylibre.com>
-Cc: Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
-Cc: Jonas Karlman <jonas@kwiboo.se>
-Cc: Jernej Skrabec <jernej.skrabec@siol.net>
-Cc: <stable@vger.kernel.org> # v5.5+
-Reviewed-by: Thierry Reding <treding@nvidia.com>
-Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200218155744.9675368BE1@verein.lst.de
+Fixes: a679f58d0510 ("drm/i915: Flush pages on acquisition")
+Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
+Cc: Matthew Auld <matthew.william.auld@gmail.com>
+Cc: <stable@vger.kernel.org> # v5.2+
+Reviewed-by: Matthew Auld <matthew.william.auld@gmail.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200406114821.10949-1-chris@chris-wilson.co.uk
+(cherry picked from commit 30c88a47f1abd5744908d3681f54dcf823fe2a12)
+Signed-off-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/bridge/analogix/analogix-anx78xx.c |    5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ drivers/gpu/drm/i915/gem/i915_gem_execbuffer.c |    8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
---- a/drivers/gpu/drm/bridge/analogix/analogix-anx78xx.c
-+++ b/drivers/gpu/drm/bridge/analogix/analogix-anx78xx.c
-@@ -722,10 +722,9 @@ static int anx78xx_dp_link_training(stru
- 	if (err)
- 		return err;
+--- a/drivers/gpu/drm/i915/gem/i915_gem_execbuffer.c
++++ b/drivers/gpu/drm/i915/gem/i915_gem_execbuffer.c
+@@ -914,11 +914,13 @@ static inline struct i915_ggtt *cache_to
  
--	dpcd[0] = drm_dp_max_link_rate(anx78xx->dpcd);
--	dpcd[0] = drm_dp_link_rate_to_bw_code(dpcd[0]);
- 	err = regmap_write(anx78xx->map[I2C_IDX_TX_P0],
--			   SP_DP_MAIN_LINK_BW_SET_REG, dpcd[0]);
-+			   SP_DP_MAIN_LINK_BW_SET_REG,
-+			   anx78xx->dpcd[DP_MAX_LINK_RATE]);
- 	if (err)
- 		return err;
+ static void reloc_gpu_flush(struct reloc_cache *cache)
+ {
+-	GEM_BUG_ON(cache->rq_size >= cache->rq->batch->obj->base.size / sizeof(u32));
++	struct drm_i915_gem_object *obj = cache->rq->batch->obj;
++
++	GEM_BUG_ON(cache->rq_size >= obj->base.size / sizeof(u32));
+ 	cache->rq_cmd[cache->rq_size] = MI_BATCH_BUFFER_END;
+ 
+-	__i915_gem_object_flush_map(cache->rq->batch->obj, 0, cache->rq_size);
+-	i915_gem_object_unpin_map(cache->rq->batch->obj);
++	__i915_gem_object_flush_map(obj, 0, sizeof(u32) * (cache->rq_size + 1));
++	i915_gem_object_unpin_map(obj);
+ 
+ 	intel_gt_chipset_flush(cache->rq->engine->gt);
  
 
 
