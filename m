@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ABCFC2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:55:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8275CC352BE
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:56:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 79A9320732
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:55:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5918421734
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:56:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587045347;
-	bh=ESA2Q8qNEyYMT9qiYnzTb8YCAnx8roVpY6pxsaqV8pw=;
+	s=default; t=1587045360;
+	bh=ZlFdhpBTO9U41EWXRCCid5BnZgyzC6sNTdyFY5aPz4s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yRMab9/GmrhKjxmQF4kgrTkqdBXVrZs+fCAvCP5dJNQ39+lgj4TuTHVhkmPg5Vg2Y
-	 aVTHyuS8TFfw4KZq+Dli5f+//CryMWg0AV7Qc8llpHc/8Bxbe495kILwe2V3qdoBfn
-	 U0rT29nuv2F+rFiQ47xd4wCe7RYOxu7eoybtcIeI=
+	b=OxjxBpTqIK1lS2GpGQK2FO1LqIo6TU4SeK/RL46hIA3wktbbVhO96YMBsy23Ks57k
+	 g35cR2Hv/k7c/pDFc1OSh41bcRn/NUf7+dVuOBDt48CwFPJwRS+WFmZT3vg0wl3zn0
+	 2rr6L+EhZI1ue4t4HNA/Lio3pILpjpxKFhprSi+A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2441728AbgDPNzo (ORCPT
+        id S1728427AbgDPNzz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 09:55:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50884 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 09:55:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51010 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2897693AbgDPNi1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:38:27 -0400
+        id S2897704AbgDPNie (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:38:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CD1A920732;
-        Thu, 16 Apr 2020 13:38:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 49380221F4;
+        Thu, 16 Apr 2020 13:38:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044306;
-        bh=ESA2Q8qNEyYMT9qiYnzTb8YCAnx8roVpY6pxsaqV8pw=;
+        s=default; t=1587044313;
+        bh=ZlFdhpBTO9U41EWXRCCid5BnZgyzC6sNTdyFY5aPz4s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ITNuYaKTM9xsP2Q85qa0GZK5pa6Gs2sEN9q5vjg7jiWXPuSJyx2WIMuW05uK2AQIG
-         EbXflS1hNoJCdm6ZvP3bujUonnZAVPb8Xlw5TXW09BhgODOv/POqhJH42xbAbD/tBD
-         htBqVUcicjybsuSr6jSNcK0dIbTVAd5I2tLvPESc=
+        b=TNchaN3QyuOQfCQ5Z9xgTGMb1neZ/KeyJ79IX/rzQ4MgeZHbSDTGH+0E/I0IiVxKG
+         Talgwvxq3530NHK/mOH504TMajdSp9kXuwMKFBW6G1JQZk2PyO+aOtM5+V9b2YQr3/
+         aDQy3NN9HRkjI+xS52qC7hJu1DD4O6Dr82KPS0ys=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Biggers <ebiggers@google.com>,
-        Yang Xu <xuyang2018.jy@cn.fujitsu.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Subject: [PATCH 5.5 123/257] KEYS: reaching the keys quotas correctly
-Date:   Thu, 16 Apr 2020 15:22:54 +0200
-Message-Id: <20200416131341.705090440@linuxfoundation.org>
+        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 5.5 160/257] btrfs: reloc: clean dirty subvols if we fail to start a transaction
+Date:   Thu, 16 Apr 2020 15:23:31 +0200
+Message-Id: <20200416131346.581418690@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.891903893@linuxfoundation.org>
 References: <20200416131325.891903893@linuxfoundation.org>
@@ -60,67 +59,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yang Xu <xuyang2018.jy@cn.fujitsu.com>
+From: Josef Bacik <josef@toxicpanda.com>
 
-commit 2e356101e72ab1361821b3af024d64877d9a798d upstream.
+commit 6217b0fadd4473a16fabc6aecd7527a9f71af534 upstream.
 
-Currently, when we add a new user key, the calltrace as below:
+If we do merge_reloc_roots() we could insert a few roots onto the dirty
+subvol roots list, where we hold a ref on them.  If we fail to start the
+transaction we need to run clean_dirty_subvols() in order to cleanup the
+refs.
 
-add_key()
-  key_create_or_update()
-    key_alloc()
-    __key_instantiate_and_link
-      generic_key_instantiate
-        key_payload_reserve
-          ......
-
-Since commit a08bf91ce28e ("KEYS: allow reaching the keys quotas exactly"),
-we can reach max bytes/keys in key_alloc, but we forget to remove this
-limit when we reserver space for payload in key_payload_reserve. So we
-can only reach max keys but not max bytes when having delta between plen
-and type->def_datalen. Remove this limit when instantiating the key, so we
-can keep consistent with key_alloc.
-
-Also, fix the similar problem in keyctl_chown_key().
-
-Fixes: 0b77f5bfb45c ("keys: make the keyring quotas controllable through /proc/sys")
-Fixes: a08bf91ce28e ("KEYS: allow reaching the keys quotas exactly")
-Cc: stable@vger.kernel.org # 5.0.x
-Cc: Eric Biggers <ebiggers@google.com>
-Signed-off-by: Yang Xu <xuyang2018.jy@cn.fujitsu.com>
-Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Reviewed-by: Eric Biggers <ebiggers@google.com>
-Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+CC: stable@vger.kernel.org # 5.4+
+Signed-off-by: Josef Bacik <josef@toxicpanda.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- security/keys/key.c    |    2 +-
- security/keys/keyctl.c |    4 ++--
- 2 files changed, 3 insertions(+), 3 deletions(-)
+ fs/btrfs/relocation.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/security/keys/key.c
-+++ b/security/keys/key.c
-@@ -381,7 +381,7 @@ int key_payload_reserve(struct key *key,
- 		spin_lock(&key->user->lock);
- 
- 		if (delta > 0 &&
--		    (key->user->qnbytes + delta >= maxbytes ||
-+		    (key->user->qnbytes + delta > maxbytes ||
- 		     key->user->qnbytes + delta < key->user->qnbytes)) {
- 			ret = -EDQUOT;
- 		}
---- a/security/keys/keyctl.c
-+++ b/security/keys/keyctl.c
-@@ -937,8 +937,8 @@ long keyctl_chown_key(key_serial_t id, u
- 				key_quota_root_maxbytes : key_quota_maxbytes;
- 
- 			spin_lock(&newowner->lock);
--			if (newowner->qnkeys + 1 >= maxkeys ||
--			    newowner->qnbytes + key->quotalen >= maxbytes ||
-+			if (newowner->qnkeys + 1 > maxkeys ||
-+			    newowner->qnbytes + key->quotalen > maxbytes ||
- 			    newowner->qnbytes + key->quotalen <
- 			    newowner->qnbytes)
- 				goto quota_overrun;
+--- a/fs/btrfs/relocation.c
++++ b/fs/btrfs/relocation.c
+@@ -4221,10 +4221,10 @@ restart:
+ 		goto out_free;
+ 	}
+ 	btrfs_commit_transaction(trans);
++out_free:
+ 	ret = clean_dirty_subvols(rc);
+ 	if (ret < 0 && !err)
+ 		err = ret;
+-out_free:
+ 	btrfs_free_block_rsv(fs_info, rc->block_rsv);
+ 	btrfs_free_path(path);
+ 	return err;
+@@ -4622,10 +4622,10 @@ int btrfs_recover_relocation(struct btrf
+ 	trans = btrfs_join_transaction(rc->extent_root);
+ 	if (IS_ERR(trans)) {
+ 		err = PTR_ERR(trans);
+-		goto out_free;
++		goto out_clean;
+ 	}
+ 	err = btrfs_commit_transaction(trans);
+-
++out_clean:
+ 	ret = clean_dirty_subvols(rc);
+ 	if (ret < 0 && !err)
+ 		err = ret;
 
 
