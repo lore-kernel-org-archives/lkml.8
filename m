@@ -2,128 +2,118 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 177C5C2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 08:37:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14F6DC2BB85
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 08:37:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F01A32063A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 08:37:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D691521707
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 08:37:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CFbFjllO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2441436AbgDPIhX (ORCPT
+        id S2502522AbgDPIfc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 04:37:23 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:2381 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2502445AbgDPIe2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 04:34:28 -0400
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id D4369D718DC70E64E64B;
-        Thu, 16 Apr 2020 16:34:17 +0800 (CST)
-Received: from [10.166.215.172] (10.166.215.172) by
- DGGEMS404-HUB.china.huawei.com (10.3.19.204) with Microsoft SMTP Server id
- 14.3.487.0; Thu, 16 Apr 2020 16:34:14 +0800
-Subject: Re: [PATCH 3/8] bdi: add a ->dev_name field to struct
- backing_dev_info
-To:     Christoph Hellwig <hch@lst.de>, <axboe@kernel.dk>
-CC:     <tj@kernel.org>, <jack@suse.cz>, <bvanassche@acm.org>,
-        <tytso@mit.edu>, <gregkh@linuxfoundation.org>,
-        <linux-block@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20200416071519.807660-1-hch@lst.de>
- <20200416071519.807660-4-hch@lst.de>
-From:   Yufen Yu <yuyufen@huawei.com>
-Message-ID: <5bfcd35a-2463-3769-be93-911c4e3c38bb@huawei.com>
-Date:   Thu, 16 Apr 2020 16:34:13 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+        Thu, 16 Apr 2020 04:35:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37524 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2502242AbgDPIbY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 04:31:24 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 355CAC03C1AB;
+        Thu, 16 Apr 2020 01:31:08 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id a81so3813139wmf.5;
+        Thu, 16 Apr 2020 01:31:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=jfrt17q5M4S5SAVVkdakw83Rj5cTfkomq3bpc03Lu9E=;
+        b=CFbFjllOBhKoFmAVsXkBQzBuRQAfDrmhFAfVIGB11rbD3zAjEQppK74PC9fnxFnMrl
+         sp2/EeMkEMZEPkJaKAPezTCzWxvNVCQxytUa+QkC+1t59d7i5I3Ft4/ciYIUyoPgOMmx
+         UiPK1SyxvMiF5/fQuHdgpj6dJ/kxBF7pqlJnwenUbEeoXzoXQDDOkD79QMrnqwADC91X
+         mAbhAkAD8NXfaYxauQUMXrLjqT8CjpZdwFVOxMjLk33tqqc1vixpmPBfeaEJadSe1cYi
+         RAtQlg/x50nnmchxxtr0K+qNEsQkfkEUxgrnt/DkUknFzWr3iZARx7zlhyFNK0Y/EZyB
+         KDIg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=jfrt17q5M4S5SAVVkdakw83Rj5cTfkomq3bpc03Lu9E=;
+        b=TMKknxl0MUt8yAzI4Yj7SWsQOBt2760gCbZx3zime8sxteJ7ta+PVKDfFXgC6SSx0A
+         ihRY+rw5SrL7dtp7j7oLMhqDE6ZXQGTRExcXpXdBp/Zp6vh4LMZ4GAO3MgIqyVco8EhV
+         a0RpMrhAU0oQEzQ5pc/HPT4HXsuBP9sJF+tOWc36jQxyw8NRSfAclqG2IP+IskWyGgNk
+         kt+//SgoMkqpo9en2dxKjN35woWRIwRSS3IYx1tMQyYJZ3MzfHch+NYQKWezOCpY53tj
+         KKBFlzdH5Br8j4zTKbXH12h0BZQIMD+b+TMebzZB8UIPvJ1wj+CQX3y7GUxG8FS68gRm
+         JAIw==
+X-Gm-Message-State: AGi0PubsfTdJN36ve3YLYFf9dh7Enk0Sw4z3zitBVPpXHzCYG4+nYyFE
+        cdyFgvrKGj8kYeBdlZgw+4o=
+X-Google-Smtp-Source: APiQypKSKsq45oAa/3mvfDvpWfY2V+jAcrUeSZODmwOpRthGJy4sv8r2h7IKlE30zB7Jtv03++ti6Q==
+X-Received: by 2002:a05:600c:24cf:: with SMTP id 15mr3541839wmu.94.1587025866950;
+        Thu, 16 Apr 2020 01:31:06 -0700 (PDT)
+Received: from Red ([2a01:cb1d:3d5:a100:2e56:dcff:fed2:c6d6])
+        by smtp.googlemail.com with ESMTPSA id a9sm2611917wmm.38.2020.04.16.01.31.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Apr 2020 01:31:06 -0700 (PDT)
+Date:   Thu, 16 Apr 2020 10:31:04 +0200
+From:   Corentin Labbe <clabbe.montjoie@gmail.com>
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>, kvm@vger.kernel.org,
+        linux-crypto@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2 10/33] docs: fix broken references for ReST files that
+ moved around
+Message-ID: <20200416083104.GA29148@Red>
+References: <cover.1586881715.git.mchehab+huawei@kernel.org>
+ <64773a12b4410aaf3e3be89e3ec7e34de2484eea.1586881715.git.mchehab+huawei@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20200416071519.807660-4-hch@lst.de>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.166.215.172]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <64773a12b4410aaf3e3be89e3ec7e34de2484eea.1586881715.git.mchehab+huawei@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On 2020/4/16 15:15, Christoph Hellwig wrote:
-> Cache a copy of the name for the life time of the backing_dev_info
-> structure so that we can reference it even after unregistering.
+On Tue, Apr 14, 2020 at 06:48:36PM +0200, Mauro Carvalho Chehab wrote:
+> Some broken references happened due to shifting files around
+> and ReST renames. Those can't be auto-fixed by the script,
+> so let's fix them manually.
 > 
-> Fixes: 68f23b89067f ("memcg: fix a crash in wb_workfn when a device disappears")
-> Reported-by: Yufen Yu <yuyufen@huawei.com>
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 > ---
->   include/linux/backing-dev-defs.h |  1 +
->   mm/backing-dev.c                 | 13 ++++++++++---
->   2 files changed, 11 insertions(+), 3 deletions(-)
+>  Documentation/doc-guide/maintainer-profile.rst      | 2 +-
+>  Documentation/virt/kvm/mmu.rst                      | 2 +-
+>  Documentation/virt/kvm/review-checklist.rst         | 2 +-
+>  arch/x86/kvm/mmu/mmu.c                              | 2 +-
+>  drivers/crypto/allwinner/sun8i-ce/sun8i-ce-cipher.c | 2 +-
+>  drivers/crypto/allwinner/sun8i-ce/sun8i-ce-core.c   | 2 +-
+>  drivers/crypto/allwinner/sun8i-ss/sun8i-ss-cipher.c | 2 +-
+>  drivers/crypto/allwinner/sun8i-ss/sun8i-ss-core.c   | 2 +-
+>  drivers/media/v4l2-core/v4l2-fwnode.c               | 2 +-
+>  include/uapi/linux/kvm.h                            | 4 ++--
+>  tools/include/uapi/linux/kvm.h                      | 4 ++--
+>  11 files changed, 13 insertions(+), 13 deletions(-)
 > 
-> diff --git a/include/linux/backing-dev-defs.h b/include/linux/backing-dev-defs.h
-> index 4fc87dee005a..249590bcccf7 100644
-> --- a/include/linux/backing-dev-defs.h
-> +++ b/include/linux/backing-dev-defs.h
-> @@ -220,6 +220,7 @@ struct backing_dev_info {
->   	wait_queue_head_t wb_waitq;
->   
->   	struct device *dev;
-> +	const char *dev_name;
->   	struct device *owner;
->   
->   	struct timer_list laptop_mode_wb_timer;
-> diff --git a/mm/backing-dev.c b/mm/backing-dev.c
-> index c2c44c89ee5d..4f6c05df72f9 100644
-> --- a/mm/backing-dev.c
-> +++ b/mm/backing-dev.c
-> @@ -938,9 +938,15 @@ int bdi_register_va(struct backing_dev_info *bdi, const char *fmt, va_list args)
->   	if (bdi->dev)	/* The driver needs to use separate queues per device */
->   		return 0;
->   
-> -	dev = device_create_vargs(bdi_class, NULL, MKDEV(0, 0), bdi, fmt, args);
-> -	if (IS_ERR(dev))
-> +	bdi->dev_name = kvasprintf(GFP_KERNEL, fmt, args);
-> +	if (!bdi->dev_name)
-> +		return -ENOMEM;
-> +
-> +	dev = device_create(bdi_class, NULL, MKDEV(0, 0), bdi, bdi->dev_name);
-> +	if (IS_ERR(dev)) {
-> +		kfree(bdi->dev_name);
->   		return PTR_ERR(dev);
-> +	}
->   
->   	cgwb_bdi_register(bdi);
->   	bdi->dev = dev;
-> @@ -1034,6 +1040,7 @@ static void release_bdi(struct kref *ref)
->   	WARN_ON_ONCE(bdi->dev);
->   	wb_exit(&bdi->wb);
->   	cgwb_bdi_exit(bdi);
-> +	kfree(bdi->dev_name);
->   	kfree(bdi);
->   }
 
+For sun8i-ce
+Acked-by: Corentin Labbe <clabbe.montjoie@gmail.com>
 
-When driver try to to re-register bdi but without release_bdi(), the old dev_name
-will be cover directly by the newer in bdi_register_va(). So, I am not sure whether
-it can cause memory leak for bdi->dev_name.
-
-Thanks,
-Yufen
-
->   
-> @@ -1047,7 +1054,7 @@ const char *bdi_dev_name(struct backing_dev_info *bdi)
->   {
->   	if (!bdi || !bdi->dev)
->   		return bdi_unknown_name;
-> -	return dev_name(bdi->dev);
-> +	return bdi->dev_name;
->   }
->   EXPORT_SYMBOL_GPL(bdi_dev_name);
-
-
-
-
+Thanks
