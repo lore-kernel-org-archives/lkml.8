@@ -2,112 +2,115 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 800AFC2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 10:36:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18B9AC2BB85
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 10:37:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5DA4221D91
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 10:36:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DuAiR70A"
+	by mail.kernel.org (Postfix) with ESMTP id E8EE721973
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 10:37:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2505179AbgDPKgJ (ORCPT
+        id S2505284AbgDPKhK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 06:36:09 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:42849 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2505072AbgDPKdm (ORCPT
+        Thu, 16 Apr 2020 06:37:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57080 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2505195AbgDPKgP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 06:33:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587033221;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=wSOHFT9tJQ3WMUJpzqJBLiS8QZ3BM+HLY6292xvXFZM=;
-        b=DuAiR70AkTLxvA/rK7PsFcNZGWdjqBd8BtZy5tk7QANjZlp3r28/2gyWuprA/f5aV3HfCi
-        bJAeN3BvIl7SWiZjkLiY29dCK/pc0Z6fY5oDPvRB/3LGLcOECjcrWNqw9e7FPfJbqGUkkr
-        lDDNfmSN2tqkSJgn0o2GCBeUG9b9fBQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-451-mRLDz9gnN72cnltf895Q4Q-1; Thu, 16 Apr 2020 06:33:39 -0400
-X-MC-Unique: mRLDz9gnN72cnltf895Q4Q-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 26B2513F9;
-        Thu, 16 Apr 2020 10:33:38 +0000 (UTC)
-Received: from oldenburg2.str.redhat.com (ovpn-114-61.ams2.redhat.com [10.36.114.61])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 178D194B40;
-        Thu, 16 Apr 2020 10:33:35 +0000 (UTC)
-From:   Florian Weimer <fweimer@redhat.com>
-To:     David Howells <dhowells@redhat.com>
-Cc:     linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org,
-        linux-afs@lists.infradead.org, ceph-devel@vger.kernel.org,
-        keyrings@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: What's a good default TTL for DNS keys in the kernel
-References: <874ktl2ide.fsf@oldenburg2.str.redhat.com>
-        <3865908.1586874010@warthog.procyon.org.uk>
-        <128769.1587032833@warthog.procyon.org.uk>
-Date:   Thu, 16 Apr 2020 12:33:34 +0200
-In-Reply-To: <128769.1587032833@warthog.procyon.org.uk> (David Howells's
-        message of "Thu, 16 Apr 2020 11:27:13 +0100")
-Message-ID: <87v9lzu3cx.fsf@oldenburg2.str.redhat.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.3 (gnu/linux)
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+        Thu, 16 Apr 2020 06:36:15 -0400
+Received: from baptiste.telenet-ops.be (baptiste.telenet-ops.be [IPv6:2a02:1800:120:4::f00:13])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43357C0610D6
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 03:36:14 -0700 (PDT)
+Received: from ramsan ([IPv6:2a02:1810:ac12:ed60:fd83:81bb:c1d7:433d])
+        by baptiste.telenet-ops.be with bizsmtp
+        id TNWz2200j4dKHqf01NWzN6; Thu, 16 Apr 2020 12:31:11 +0200
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan with esmtp (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1jP1nP-0001cz-Q0; Thu, 16 Apr 2020 12:30:59 +0200
+Received: from geert by rox.of.borg with local (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1jP1nP-0003zO-OP; Thu, 16 Apr 2020 12:30:59 +0200
+From:   Geert Uytterhoeven <geert+renesas@glider.be>
+To:     Rob Herring <robh+dt@kernel.org>, Vinod Koul <vkoul@kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Michael Hennerich <Michael.Hennerich@analog.com>,
+        Stefan Popa <stefan.popa@analog.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        =?UTF-8?q?Nuno=20S=C3=A1?= <nuno.sa@analog.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jiri Kosina <trivial@kernel.org>
+Cc:     devicetree@vger.kernel.org, dmaengine@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-iio@vger.kernel.org,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH trivial 6/6] ASoC: Fix misspellings of "Analog Devices"
+Date:   Thu, 16 Apr 2020 12:30:58 +0200
+Message-Id: <20200416103058.15269-7-geert+renesas@glider.be>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200416103058.15269-1-geert+renesas@glider.be>
+References: <20200416103058.15269-1-geert+renesas@glider.be>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* David Howells:
+According to https://www.analog.com/, the company name is spelled
+"Analog Devices".
 
-> Florian Weimer <fweimer@redhat.com> wrote:
->
->> You can get the real TTL if you do a DNS resolution on the name and
->> match the addresses against what you get out of the NSS functions.  If
->> they match, you can use the TTL from DNS.  Hackish, but it does give you
->> *some* TTL value.
->
-> I guess I'd have to do that in parallel.
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+ sound/soc/codecs/ad1980.c  | 2 +-
+ sound/soc/codecs/ad73311.c | 2 +-
+ sound/soc/codecs/wm8782.c  | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
 
-Not necessary.  You can do the getaddrinfo lookup first and then perform
-the query.
-
-> Would calling something like res_mkquery() use local DNS caching?
-
-Yes (but res_mkquery builds a packet, it does not send it).
-
->> The question remains what the expected impact of TTL expiry is.  Will
->> the kernel just perform a new DNS query if it needs one?  Or would you
->> expect that (say) the NFS client rechecks the addresses after TTL expiry
->> and if they change, reconnect to a new NFS server?
->
-> It depends on the filesystem.
->
-> AFS keeps track of the expiration on the record and will issue a new lookup
-> when the data expires, but NFS doesn't make use of this information.
-
-And it will switch servers at that point?  Or only if the existing
-server association fails/times out?
-
-> The keyring subsystem will itself dispose of dns_resolver keys that
-> expire and request_key() will only upcall again if the key has
-> expired.
-
-What's are higher-level effects of that?
-
-I'm still not convinced that the kernel *needs* accurate TTL
-information.  The benefit from upcall avoidance likely vanishes quickly
-after the in-kernel TTL increases beyond 5 or so.  That's just my guess,
-though.
-
-Thanks,
-Florian
+diff --git a/sound/soc/codecs/ad1980.c b/sound/soc/codecs/ad1980.c
+index c4414c725c1f945a..43b1337bac37f70f 100644
+--- a/sound/soc/codecs/ad1980.c
++++ b/sound/soc/codecs/ad1980.c
+@@ -2,7 +2,7 @@
+ /*
+  * ad1980.c  --  ALSA Soc AD1980 codec support
+  *
+- * Copyright:	Analog Device Inc.
++ * Copyright:	Analog Devices Inc.
+  * Author:	Roy Huang <roy.huang@analog.com>
+  * 		Cliff Cai <cliff.cai@analog.com>
+  */
+diff --git a/sound/soc/codecs/ad73311.c b/sound/soc/codecs/ad73311.c
+index 10daf61f02940b46..b98bf19f594e097f 100644
+--- a/sound/soc/codecs/ad73311.c
++++ b/sound/soc/codecs/ad73311.c
+@@ -2,7 +2,7 @@
+ /*
+  * ad73311.c  --  ALSA Soc AD73311 codec support
+  *
+- * Copyright:	Analog Device Inc.
++ * Copyright:	Analog Devices Inc.
+  * Author:	Cliff Cai <cliff.cai@analog.com>
+  */
+ 
+diff --git a/sound/soc/codecs/wm8782.c b/sound/soc/codecs/wm8782.c
+index aa5577e364d01360..f89855c616ebe6e6 100644
+--- a/sound/soc/codecs/wm8782.c
++++ b/sound/soc/codecs/wm8782.c
+@@ -7,7 +7,7 @@
+  * Author: Johannes Stezenbach <js@sig21.net>
+  *
+  * based on ad73311.c
+- * Copyright:	Analog Device Inc.
++ * Copyright:	Analog Devices Inc.
+  * Author:	Cliff Cai <cliff.cai@analog.com>
+  */
+ 
+-- 
+2.17.1
 
