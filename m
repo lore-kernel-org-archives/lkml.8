@@ -2,120 +2,90 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16BF5C2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 09:54:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8F0BC2BB85
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 09:54:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E56C72063A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 09:54:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C680E2063A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 09:54:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="X0FwYuN8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2504254AbgDPJyQ (ORCPT
+        id S2504399AbgDPJya (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 05:54:16 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:51350 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2504124AbgDPJyG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 05:54:06 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id A7BB4200C79;
-        Thu, 16 Apr 2020 11:54:01 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id E42CA200C66;
-        Thu, 16 Apr 2020 11:53:58 +0200 (CEST)
-Received: from titan.ap.freescale.net (titan.ap.freescale.net [10.192.208.233])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 295EC402A8;
-        Thu, 16 Apr 2020 17:53:55 +0800 (SGT)
-From:   Yuantian Tang <andy.tang@nxp.com>
-To:     rui.zhang@intel.com, edubezval@gmail.com, daniel.lezcano@linaro.org
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Yuantian Tang <andy.tang@nxp.com>
-Subject: [PATCH v2] thermal: qoriq: Update the settings for TMUv2
-Date:   Thu, 16 Apr 2020 17:39:40 +0800
-Message-Id: <20200416093940.34371-1-andy.tang@nxp.com>
-X-Mailer: git-send-email 2.9.5
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Thu, 16 Apr 2020 05:54:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50542 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2504354AbgDPJyF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 05:54:05 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD3F7C061A0C
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 02:54:04 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id h25so7094488lja.10
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 02:54:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=vmbTM85pXtLEnvZz1CqQLZJasM9rtSlADHL+rW8xlrw=;
+        b=X0FwYuN8PxbnKfdFk1WRENwOJ5S/hI0XCnA9Oy2Lu3WB2kR3kCTK75cPlxqCiZPtnk
+         pOJu6ikqPqEygo03Gt1k39EsS5FzXAJpr82cqxvwcBqyrH5vIHSvPQTUq42xRpUH2RUC
+         YekYxdSDnrHHYqGcVZfUjFKNQlUTcNXbRacq63XWG8TuP24SpCcMEGzaPJrX5SzeGriR
+         fHQz1tryaVkTKNDBK180Uj4sS488b35fMebmxJYsRTkxRqyP28iS4vxqvDNreb4pOdWx
+         xCD4ThUu2HVHfLv1Aw6q0jX+0ZpybtQngclP5WG6YNMtX+c3Kf2NDLcVpB7qC6y4fPNU
+         ATFg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=vmbTM85pXtLEnvZz1CqQLZJasM9rtSlADHL+rW8xlrw=;
+        b=Acw1gYLGxHs1skY452lnB0c52RcEQ5AJX1XvwrL4yhzjTGk4YAstctAYZ/XPioI4ru
+         I8ZFzsyZ/BD2MCNZgvuY3QAM8kCC0SGftCYYir/iX14Rs+4rAe/my8srI211SBvICk7n
+         zg6pSE9hhHqBYqYVX4x8eYV6eVbfKjYup7QVdhKXhyzZJHM/GAypbL39mdMCReWCP5/t
+         TrocN9JTeOw+YZsgwEx8Z8SPixLau6HBv7sLH0h1d5DJh+rNWCYUrdN2wkUiZ5C/yNYF
+         NypUHa4wuifksr9yusxaVA6h7ZyIxxPNG0Nuk/HYOWBcoLHAD5LbaPwb7yCDzUzf6wO3
+         Ty5A==
+X-Gm-Message-State: AGi0PuZM3RJcXjZZLpnPhkYLZujFV45QXoSkpgexrQDKAwwjhMFv28FF
+        cqUlztgrsyahmwNbl+W6dGUjFBO2WzS0UPaOv+KW6g==
+X-Google-Smtp-Source: APiQypLayQLGT/Ao9sW1llsHHkRFIz0OeK7rOpmFlYZ4pDnuYKa6o7Y6T15Uy20O8h92MJhp/gGAXS8WRrqWYC06AGs=
+X-Received: by 2002:a2e:9605:: with SMTP id v5mr5752886ljh.258.1587030843273;
+ Thu, 16 Apr 2020 02:54:03 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200407154245.2548-1-brgl@bgdev.pl>
+In-Reply-To: <20200407154245.2548-1-brgl@bgdev.pl>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 16 Apr 2020 11:53:52 +0200
+Message-ID: <CACRpkdYUdRn7=ASQ0xkZ06sAzt4umA_ajg=pbcT5Hm3Tt7JjFA@mail.gmail.com>
+Subject: Re: [PATCH] gpio: pca953x: disable regmap locking
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Marek Vasut <marek.vasut@gmail.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-For TMU v2, TMSAR registers need to be set properly to get the
-accurate temperature values.
-Also temperature reading needs to convert to degree Celsius
-since it is in degrees Kelvin.
+On Tue, Apr 7, 2020 at 5:42 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
 
-Signed-off-by: Yuantian Tang <andy.tang@nxp.com>
----
-v2:
-	- change the temp in millicelsius
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+>
+> This driver uses its own locking but regmap silently uses a mutex for
+> all operations too. Add the option to disable locking to the regmap
+> config struct.
+>
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
- drivers/thermal/qoriq_thermal.c | 15 ++++++++++++++-
- 1 file changed, 14 insertions(+), 1 deletion(-)
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
 
-diff --git a/drivers/thermal/qoriq_thermal.c b/drivers/thermal/qoriq_thermal.c
-index 028a6bbf75dc..f6371127f707 100644
---- a/drivers/thermal/qoriq_thermal.c
-+++ b/drivers/thermal/qoriq_thermal.c
-@@ -23,6 +23,7 @@
- #define TMTMIR_DEFAULT	0x0000000f
- #define TIER_DISABLE	0x0
- #define TEUMR0_V2		0x51009c00
-+#define TMSARA_V2		0xe
- #define TMU_VER1		0x1
- #define TMU_VER2		0x2
- 
-@@ -50,6 +51,9 @@
- 					    * Site Register
- 					    */
- #define TRITSR_V	BIT(31)
-+#define REGS_V2_TMSAR(n)	(0x304 + 16 * (n))	/* TMU monitoring
-+						* site adjustment register
-+						*/
- #define REGS_TTRnCR(n)	(0xf10 + 4 * (n)) /* Temperature Range n
- 					   * Control Register
- 					   */
-@@ -100,7 +104,11 @@ static int tmu_get_temp(void *p, int *temp)
- 				     10 * USEC_PER_MSEC))
- 		return -ENODATA;
- 
--	*temp = (val & 0xff) * 1000;
-+	/* For TMUv2, temperature reading in degrees Kelvin */
-+	if (qdata->ver == TMU_VER1)
-+		*temp = (val & 0xff) * 1000;
-+	else
-+		*temp = ((val & 0x1ff) - 273) * 1000;
- 
- 	return 0;
- }
-@@ -192,6 +200,8 @@ static int qoriq_tmu_calibration(struct device *dev,
- 
- static void qoriq_tmu_init_device(struct qoriq_tmu_data *data)
- {
-+	int i;
-+
- 	/* Disable interrupt, using polling instead */
- 	regmap_write(data->regmap, REGS_TIER, TIER_DISABLE);
- 
-@@ -202,6 +212,8 @@ static void qoriq_tmu_init_device(struct qoriq_tmu_data *data)
- 	} else {
- 		regmap_write(data->regmap, REGS_V2_TMTMIR, TMTMIR_DEFAULT);
- 		regmap_write(data->regmap, REGS_V2_TEUMR(0), TEUMR0_V2);
-+		for (i = 0; i < 7; i++)
-+			regmap_write(data->regmap, REGS_V2_TMSAR(i), TMSARA_V2);
- 	}
- 
- 	/* Disable monitoring */
-@@ -212,6 +224,7 @@ static const struct regmap_range qoriq_yes_ranges[] = {
- 	regmap_reg_range(REGS_TMR, REGS_TSCFGR),
- 	regmap_reg_range(REGS_TTRnCR(0), REGS_TTRnCR(3)),
- 	regmap_reg_range(REGS_V2_TEUMR(0), REGS_V2_TEUMR(2)),
-+	regmap_reg_range(REGS_V2_TMSAR(0), REGS_V2_TMSAR(15)),
- 	regmap_reg_range(REGS_IPBRR(0), REGS_IPBRR(1)),
- 	/* Read only registers below */
- 	regmap_reg_range(REGS_TRITSR(0), REGS_TRITSR(15)),
--- 
-2.17.1
+Please queued this in your next devel pull request for me, thanks!
 
+Yours,
+Linus Walleij
