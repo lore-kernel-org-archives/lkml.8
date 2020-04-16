@@ -2,118 +2,115 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC293C2BA19
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 00:47:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33195C2BA19
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 00:48:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A6C96206A2
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 00:47:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DOxWjyuC"
+	by mail.kernel.org (Postfix) with ESMTP id 0919C206A2
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 00:48:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404999AbgDPAre (ORCPT
+        id S2405051AbgDPAso convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 20:47:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50220 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2404980AbgDPArS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 20:47:18 -0400
-Received: from mail-pg1-x549.google.com (mail-pg1-x549.google.com [IPv6:2607:f8b0:4864:20::549])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 822AAC061A0C
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 17:47:17 -0700 (PDT)
-Received: by mail-pg1-x549.google.com with SMTP id 189so1675934pgb.10
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 17:47:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=3iLPFWDwfHpQyIY5ddsVnQshlx7XFvcsLeTqTSfkz/8=;
-        b=DOxWjyuCdatNOyA10KQsP9rVDkAeHg4yRlxw1JHHdd8LlS3MjoPjW4KlPiV5HBveEW
-         XDXX2XIMRD1f4180KGWvIgtih5lCdBs7e6QpaT3vfTlrUGRiB9zDQ7iZTDQSmxCBcUeg
-         t9o1nh7YOm+/2W5KKxYVGFbqqGbVSquaOqmdeEIU/D08lvXM/c3wKlpPU09tFMu24kpn
-         93lz6sICS6dHBuF6+hfLvHjqSuNAuo+GVJKvXEUpFSzKpwdjBtcQxum2WjAahJtUYEkY
-         hdwpVIFzodssxMpS8kqaVxWI2le2nHUtbGgOMKDv+zcBY+YZpAL1pYXGgQIAMlv1l1SY
-         6iuA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=3iLPFWDwfHpQyIY5ddsVnQshlx7XFvcsLeTqTSfkz/8=;
-        b=TbWeSossclJe2Hgu/5/qNkYy0c8A9ctapJaaG/s2AKYR2r62xIqikaUyvOO2uKFELN
-         cnp9alcB8b7kHJfeXGKFqyHfnkItQbepKDvmnvheVTZr9Qe3wHT2pTBadboxLXrsaSyn
-         HHLSZZdUMOR2wExYuwRogJHdYrVxiFYCxmrugxYXD/IzcNJaKfA4MGZlCjMvOYU1qx6g
-         aOpg6s1P31nOuymsNPzcez+vMueh/Iabjsmyx15DNnfR4YrChJgHg1l5ti9FCfZLedf+
-         j4AYBPPArU8cWSlSD4ezKz4qlZQFZE7jCgzaAk3CMnhs+kez9dCCaHnchDzHCurBy+5l
-         ipcQ==
-X-Gm-Message-State: AGi0PuY5r1Hi8qWJmX2MIWrO2Ty7gObpRFkwnzxsxCzQ4sFBGHGe6icD
-        BqF9CuHTDELvVEn7Tt2oY+5zTOlm1Dk7
-X-Google-Smtp-Source: APiQypIXRwA2bUW5DAH76iANV6m2IGO0UtkMue6ylbcL7SvlwEz9QDTQZW3DJRyoZEPCYsxae41t1VPWRCer
-X-Received: by 2002:a17:90a:a40b:: with SMTP id y11mr2141264pjp.130.1586998037062;
- Wed, 15 Apr 2020 17:47:17 -0700 (PDT)
-Date:   Wed, 15 Apr 2020 17:47:13 -0700
-Message-Id: <20200416004713.192740-1-irogers@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.26.0.110.g2183baf09c-goog
-Subject: [PATCH] perf record: add dummy event during system wide synthesis
-From:   Ian Rogers <irogers@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Cc:     Stephane Eranian <eranian@google.com>,
-        Ian Rogers <irogers@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 15 Apr 2020 20:48:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39854 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2404980AbgDPAsb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 20:48:31 -0400
+Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A0960206A2;
+        Thu, 16 Apr 2020 00:48:29 +0000 (UTC)
+Date:   Wed, 15 Apr 2020 20:48:27 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     John Stultz <john.stultz@linaro.org>
+Cc:     "Paul E. McKenney" <paulmck@kernel.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Saravana Kannan <saravanak@google.com>,
+        Todd Kjos <tkjos@google.com>, Stephen Boyd <sboyd@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: On trace_*_rcuidle functions in modules
+Message-ID: <20200415204827.24f2c548@oasis.local.home>
+In-Reply-To: <CALAqxLX2UDQ7=dvzMoP6g-rYzw9dBebrynMfo4Gnv=SzaqhE=g@mail.gmail.com>
+References: <CALAqxLV4rM74wuzuZ+BkUi+keccxkAxv30N4vrFO7CVQ5vnT1A@mail.gmail.com>
+        <20200415085348.5511a5fe@gandalf.local.home>
+        <CALAqxLV1A6sOC1GWpFYXeBoDff0+AJgoOYK7NktcTdvX3kvAeg@mail.gmail.com>
+        <20200415161424.584d07d3@gandalf.local.home>
+        <CALAqxLU26PVFPSza5GceSF6gTVdzo_2D3G0dBp0KZXvAWFUktA@mail.gmail.com>
+        <20200415164116.40564f2c@gandalf.local.home>
+        <CALAqxLW6jqr38bk8pp-Hom2=MLm3coTmzCP8MMfrDvMfx388=Q@mail.gmail.com>
+        <20200415174918.154a86d0@gandalf.local.home>
+        <20200415220459.GE17661@paulmck-ThinkPad-P72>
+        <20200415185121.381a4bc3@gandalf.local.home>
+        <CALAqxLX2UDQ7=dvzMoP6g-rYzw9dBebrynMfo4Gnv=SzaqhE=g@mail.gmail.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-During the processing of /proc during event synthesis new processes may
-start. Add a dummy event if /proc is to be processed, to capture mmaps
-for starting processes. This reuses the existing logic for
-initial-delay.
+On Wed, 15 Apr 2020 17:06:24 -0700
+John Stultz <john.stultz@linaro.org> wrote:
 
-Suggested-by: Stephane Eranian <eranian@google.com>
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/builtin-record.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+> So you're saying the recent change to move to using trace_*_rcuidle()
+> was unnecessary?
+> 
+> Or is there a different notifier then cpu_pm_register_notifier() that
+> the driver should be using (that one seems to be using
+> atomic_notifier_chain_register())?
 
-diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index 1ab349abe904..bab4fc8568d1 100644
---- a/tools/perf/builtin-record.c
-+++ b/tools/perf/builtin-record.c
-@@ -805,16 +805,18 @@ static int record__open(struct record *rec)
- 	int rc = 0;
- 
- 	/*
--	 * For initial_delay we need to add a dummy event so that we can track
--	 * PERF_RECORD_MMAP while we wait for the initial delay to enable the
--	 * real events, the ones asked by the user.
-+	 * For initial_delay or system wide, we need to add a dummy event so
-+	 * that we can track PERF_RECORD_MMAP to cover the delay (of waiting or
-+	 * synthesis) prior to the real user events being enabled.
- 	 */
--	if (opts->initial_delay) {
-+	if (opts->initial_delay || target__has_cpu(&opts->target)) {
- 		if (perf_evlist__add_dummy(evlist))
- 			return -ENOMEM;
- 
-+		/* Disable tracking of mmaps on lead event. */
- 		pos = evlist__first(evlist);
- 		pos->tracking = 0;
-+		/* Activate dummy event immediately. */
- 		pos = evlist__last(evlist);
- 		pos->tracking = 1;
- 		pos->core.attr.enable_on_exec = 1;
--- 
-2.26.0.110.g2183baf09c-goog
+From looking at the trace event in __tcs_buffer_write() in
+drivers/soc/qcom/rpmh-rsc.c, the _rcuidle() was added by:
+
+efde2659b0fe8 ("drivers: qcom: rpmh-rsc: Use rcuidle tracepoints for rpmh")
+
+Which shows a backtrace dump of:
+
+     Call trace:
+      dump_backtrace+0x0/0x174
+      show_stack+0x20/0x2c
+      dump_stack+0xc8/0x124
+      lockdep_rcu_suspicious+0xe4/0x104
+      __tcs_buffer_write+0x230/0x2d0
+      rpmh_rsc_write_ctrl_data+0x210/0x270
+      rpmh_flush+0x84/0x24c
+      rpmh_domain_power_off+0x78/0x98
+      _genpd_power_off+0x40/0xc0
+      genpd_power_off+0x168/0x208
+      genpd_power_off+0x1e0/0x208
+      genpd_power_off+0x1e0/0x208
+      genpd_runtime_suspend+0x1ac/0x220
+      __rpm_callback+0x70/0xfc
+      rpm_callback+0x34/0x8c
+      rpm_suspend+0x218/0x4a4
+      __pm_runtime_suspend+0x88/0xac
+      psci_enter_domain_idle_state+0x3c/0xb4
+      cpuidle_enter_state+0xb8/0x284
+      cpuidle_enter+0x38/0x4c
+      call_cpuidle+0x3c/0x68
+      do_idle+0x194/0x260
+      cpu_startup_entry+0x24/0x28
+      secondary_start_kernel+0x150/0x15c
+
+
+There's no notifier that calls this. This is called by the rpm_callback
+logic. Perhaps that callback will require a call to rcu_irq_enter()
+before calling the callback.
+
+In any case, I think it is wrong that these callbacks are called
+without RCU watching. The _rcuidle() on that tracepoint should be
+removed, and we fix the code that gets there to ensure that RCU is
+enabled. I agree with Peter, that no module code should be executed
+without RCU watching.
+
+-- Steve
 
