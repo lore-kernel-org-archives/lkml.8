@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C043C2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:03:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14617C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:03:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF2D921D7E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:03:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC60720771
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:03:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587049389;
-	bh=ILaFXLncLtlLJvpqxOT469RMpi89TpLFQOQJW2lRpX8=;
+	s=default; t=1587049395;
+	bh=otK5x4Ls3x9usVl63svp8ToBMJhcukjNtYux7ORX/Ps=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QWO4hVIT0Ph01Z4jrSJ+6mMG4xNQ0iyh6iXL5i7ioUfqnqg2XViWLBImgIj9SLL40
-	 9+mW/Ton5Q/FOcIPsDM3OahT97Fi/zLAvRZwJDVZFaIb0JS7p+KVjWZrrT9AHwySHU
-	 fyOSaxDCNTb1kF7kQKMXCRDYPIO6D4l+HKuk83as=
+	b=s8VMKRmzBfy2RnWkdFC43yQWhfl38MrVqEaAqWlK5G8Sj+fInI/UMMMgwvjg+gxOH
+	 Zw6k0xuz+cbpe23BjOJ1EIBr4f8ip7fRH2NZT7wPw9dQvgCxMZfGZ/zhEf0wTvTbgS
+	 9uPkBgHsvY8NWJsm5+/2g8S8NZefq7z596ym2CAo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394882AbgDPPDG (ORCPT
+        id S2408576AbgDPPDP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:03:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40170 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 11:03:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40090 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2438815AbgDPNxk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:53:40 -0400
+        id S2636240AbgDPNxi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:53:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6CF5D2076D;
-        Thu, 16 Apr 2020 13:53:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0394320732;
+        Thu, 16 Apr 2020 13:53:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587045219;
-        bh=ILaFXLncLtlLJvpqxOT469RMpi89TpLFQOQJW2lRpX8=;
+        s=default; t=1587045217;
+        bh=otK5x4Ls3x9usVl63svp8ToBMJhcukjNtYux7ORX/Ps=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ybV/LIlddqhD5qf0sbJeiCc0X+bHShem2q69lqMtUJYryHFXG5bAkjogOBfTcrZ+U
-         av2r1t7gzFpOPUEnjQWDJpPOAw6OVoQOxcd+T5ybwNjN0co9GbvPSZeT/Jxy7fmlWE
-         RTe+hkcB5ISw+eGM+fZo8AiRGsdufaUHC9WC3mg4=
+        b=WXvLj2p62U9GT/9nhMLM2FFxGL9C3sp9GfqpR7DNB6pIVIun1SxwCdMsVBpmcrcNK
+         oRyGDORidU4B5+8YIALngH6drucfUlzQnLRQWMgRkfjvT1GwcPry0SgOGy3IUOpiVp
+         UGN9+kG4csMnmSFZ8f4i4ot20smS76fRMfDXf48A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Bob Peterson <rpeterso@redhat.com>,
-        Andreas Gruenbacher <agruenba@redhat.com>,
+        stable@vger.kernel.org, chenqiwu <chenqiwu@xiaomi.com>,
+        Kees Cook <keescook@chromium.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 044/254] gfs2: Do log_flush in gfs2_ail_empty_gl even if ail list is empty
-Date:   Thu, 16 Apr 2020 15:22:13 +0200
-Message-Id: <20200416131331.401389752@linuxfoundation.org>
+Subject: [PATCH 5.6 043/254] pstore/platform: fix potential mem leak if pstore_init_fs failed
+Date:   Thu, 16 Apr 2020 15:22:12 +0200
+Message-Id: <20200416131331.267012318@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.804095985@linuxfoundation.org>
 References: <20200416131325.804095985@linuxfoundation.org>
@@ -60,107 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bob Peterson <rpeterso@redhat.com>
+From: chenqiwu <chenqiwu@xiaomi.com>
 
-[ Upstream commit 9ff78289356af640941bbb0dd3f46af2063f0046 ]
+[ Upstream commit 8a57d6d4ddfa41c49014e20493152c41a38fcbf8 ]
 
-Before this patch, if gfs2_ail_empty_gl saw there was nothing on
-the ail list, it would return and not flush the log. The problem
-is that there could still be a revoke for the rgrp sitting on the
-sd_log_le_revoke list that's been recently taken off the ail list.
-But that revoke still needs to be written, and the rgrp_go_inval
-still needs to call log_flush_wait to ensure the revokes are all
-properly written to the journal before we relinquish control of
-the glock to another node. If we give the glock to another node
-before we have this knowledge, the node might crash and its journal
-replayed, in which case the missing revoke would allow the journal
-replay to replay the rgrp over top of the rgrp we already gave to
-another node, thus overwriting its changes and corrupting the
-file system.
+There is a potential mem leak when pstore_init_fs failed,
+since the pstore compression maybe unlikey to initialized
+successfully. We must clean up the allocation once this
+unlikey issue happens.
 
-This patch makes gfs2_ail_empty_gl still call gfs2_log_flush rather
-than returning.
-
-Signed-off-by: Bob Peterson <rpeterso@redhat.com>
-Reviewed-by: Andreas Gruenbacher <agruenba@redhat.com>
+Signed-off-by: chenqiwu <chenqiwu@xiaomi.com>
+Link: https://lore.kernel.org/r/1581068800-13817-1-git-send-email-qiwuchen55@gmail.com
+Signed-off-by: Kees Cook <keescook@chromium.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/gfs2/glops.c | 27 ++++++++++++++++++++++++++-
- fs/gfs2/log.c   |  2 +-
- fs/gfs2/log.h   |  1 +
- 3 files changed, 28 insertions(+), 2 deletions(-)
+ fs/pstore/platform.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/fs/gfs2/glops.c b/fs/gfs2/glops.c
-index 061d22e1ceb6e..efc899a3876b4 100644
---- a/fs/gfs2/glops.c
-+++ b/fs/gfs2/glops.c
-@@ -89,8 +89,32 @@ static void gfs2_ail_empty_gl(struct gfs2_glock *gl)
- 	INIT_LIST_HEAD(&tr.tr_databuf);
- 	tr.tr_revokes = atomic_read(&gl->gl_ail_count);
+diff --git a/fs/pstore/platform.c b/fs/pstore/platform.c
+index d896457e7c117..408277ee3cdb9 100644
+--- a/fs/pstore/platform.c
++++ b/fs/pstore/platform.c
+@@ -823,9 +823,9 @@ static int __init pstore_init(void)
  
--	if (!tr.tr_revokes)
-+	if (!tr.tr_revokes) {
-+		bool have_revokes;
-+		bool log_in_flight;
-+
-+		/*
-+		 * We have nothing on the ail, but there could be revokes on
-+		 * the sdp revoke queue, in which case, we still want to flush
-+		 * the log and wait for it to finish.
-+		 *
-+		 * If the sdp revoke list is empty too, we might still have an
-+		 * io outstanding for writing revokes, so we should wait for
-+		 * it before returning.
-+		 *
-+		 * If none of these conditions are true, our revokes are all
-+		 * flushed and we can return.
-+		 */
-+		gfs2_log_lock(sdp);
-+		have_revokes = !list_empty(&sdp->sd_log_revokes);
-+		log_in_flight = atomic_read(&sdp->sd_log_in_flight);
-+		gfs2_log_unlock(sdp);
-+		if (have_revokes)
-+			goto flush;
-+		if (log_in_flight)
-+			log_flush_wait(sdp);
- 		return;
-+	}
+ 	ret = pstore_init_fs();
+ 	if (ret)
+-		return ret;
++		free_buf_for_compression();
  
- 	/* A shortened, inline version of gfs2_trans_begin()
-          * tr->alloced is not set since the transaction structure is
-@@ -105,6 +129,7 @@ static void gfs2_ail_empty_gl(struct gfs2_glock *gl)
- 	__gfs2_ail_flush(gl, 0, tr.tr_revokes);
- 
- 	gfs2_trans_end(sdp);
-+flush:
- 	gfs2_log_flush(sdp, NULL, GFS2_LOG_HEAD_FLUSH_NORMAL |
- 		       GFS2_LFC_AIL_EMPTY_GL);
+-	return 0;
++	return ret;
  }
-diff --git a/fs/gfs2/log.c b/fs/gfs2/log.c
-index 00a2e721a374f..08dd6a4302344 100644
---- a/fs/gfs2/log.c
-+++ b/fs/gfs2/log.c
-@@ -512,7 +512,7 @@ static void log_pull_tail(struct gfs2_sbd *sdp, unsigned int new_tail)
- }
+ late_initcall(pstore_init);
  
- 
--static void log_flush_wait(struct gfs2_sbd *sdp)
-+void log_flush_wait(struct gfs2_sbd *sdp)
- {
- 	DEFINE_WAIT(wait);
- 
-diff --git a/fs/gfs2/log.h b/fs/gfs2/log.h
-index c0a65e5a126b6..c1cd6ae176597 100644
---- a/fs/gfs2/log.h
-+++ b/fs/gfs2/log.h
-@@ -73,6 +73,7 @@ extern void gfs2_log_flush(struct gfs2_sbd *sdp, struct gfs2_glock *gl,
- 			   u32 type);
- extern void gfs2_log_commit(struct gfs2_sbd *sdp, struct gfs2_trans *trans);
- extern void gfs2_ail1_flush(struct gfs2_sbd *sdp, struct writeback_control *wbc);
-+extern void log_flush_wait(struct gfs2_sbd *sdp);
- 
- extern int gfs2_logd(void *data);
- extern void gfs2_add_revoke(struct gfs2_sbd *sdp, struct gfs2_bufdata *bd);
 -- 
 2.20.1
 
