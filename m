@@ -2,51 +2,52 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23AEBC352BE
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:31:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D85D3C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:31:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EEBB521927
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:31:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A901321D7E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:31:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587047489;
-	bh=xwwvXdkTLkHv6AGvthi0kajQIzbM5WF2VxClMmRruQw=;
+	s=default; t=1587047495;
+	bh=/4fjXLYYFpryhyy3/f53lTW43Fu6Dn3ctaxf5l5Wdlw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0FtBL3clIsgcvmcsCVxU48mV8q/MwyqfWdGojQSL+f8ryVt5/eQkD8ECcPShFxL7n
-	 dE/g5BYN9uN9ilmIRtLSS/G3H2Mb9K01xdjsynSTXp8ciVk1ugJ9m422K7IMrKsqHP
-	 z1tYAWpfjMgP7mVdzASTrhyQduJnxZmx2HEcQkqE=
+	b=p16pdLv1WUHchZufNCA5KJiqaGl1IPpEJwOEaB1AJT1GvtLFGrpivO4GZ3jppoeXh
+	 29H2cmDENm1uXlkkvGZ3UI9KvV5WNq+L8JcbHV1PgfwfK0UHC+1BuzzYp0K65dgyMD
+	 kQHTVhSaDZwlnKPwvDO+eiiXIeKe/ay4rWShzYOo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409399AbgDPOb0 (ORCPT
+        id S2409931AbgDPObe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:31:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49630 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 10:31:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49652 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2409612AbgDPOCM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 10:02:12 -0400
+        id S1728661AbgDPOCO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 10:02:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 066F7217D8;
-        Thu, 16 Apr 2020 14:02:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 73B1D22201;
+        Thu, 16 Apr 2020 14:02:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587045731;
-        bh=xwwvXdkTLkHv6AGvthi0kajQIzbM5WF2VxClMmRruQw=;
+        s=default; t=1587045733;
+        bh=/4fjXLYYFpryhyy3/f53lTW43Fu6Dn3ctaxf5l5Wdlw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TwGyR0prAc+ugjSfi7Ivq5Ym5PVrycFSmjv9w5V+Dgc6KUbb6RdYlsCZFcmfVWCdA
-         KCxGmztZvE/VZL7kBiVdb9036f2EXEYTbJK+Js70hKbicgPp6+vzaKqfdgVsz+nR24
-         QvZoRsDvwZMY7YC1jEhIPvYU1vgj/xRMQObLLaQk=
+        b=ChA2m/rZkm2QbLJrrptEcYNzRNyb+9ElRW+TqJ7ewWyq8WPt4BTrdKXgg7Dzjg27/
+         UdcrhiLoguNSF8IcUxM55tYa+QBgb4hI1aKoLtqu7qzCL7YJzPQla/mNJJsv9NDcOa
+         88+Q+AYN9sCCouAyBbIt5xDsxXtqMIYKhOKJSzEw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>,
-        Stephen Boyd <sboyd@kernel.org>
-Subject: [PATCH 5.6 227/254] clk: ingenic/TCU: Fix round_rate returning error
-Date:   Thu, 16 Apr 2020 15:25:16 +0200
-Message-Id: <20200416131354.136094206@linuxfoundation.org>
+        stable@vger.kernel.org, Christophe Leroy <christophe.leroy@c-s.fr>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.6 254/254] powerpc/kasan: Fix kasan_remap_early_shadow_ro()
+Date:   Thu, 16 Apr 2020 15:25:43 +0200
+Message-Id: <20200416131357.299918052@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.804095985@linuxfoundation.org>
 References: <20200416131325.804095985@linuxfoundation.org>
@@ -59,34 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paul Cercueil <paul@crapouillou.net>
+From: Christophe Leroy <christophe.leroy@c-s.fr>
 
-commit edcc42945dee85e9dec3737f3dbf59d917ae5418 upstream.
+[ Upstream commit af92bad615be75c6c0d1b1c5b48178360250a187 ]
 
-When requesting a rate superior to the parent's rate, it would return
--EINVAL instead of simply returning the parent's rate like it should.
+At the moment kasan_remap_early_shadow_ro() does nothing, because
+k_end is 0 and k_cur < 0 is always true.
 
-Fixes: 4f89e4b8f121 ("clk: ingenic: Add driver for the TCU clocks")
+Change the test to k_cur != k_end, as done in
+kasan_init_shadow_page_tables()
+
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Fixes: cbd18991e24f ("powerpc/mm: Fix an Oops in kasan_mmu_init()")
 Cc: stable@vger.kernel.org
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-Link: https://lkml.kernel.org/r/20200213161952.37460-2-paul@crapouillou.net
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/4e7b56865e01569058914c991143f5961b5d4719.1583507333.git.christophe.leroy@c-s.fr
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/ingenic/tcu.c |    2 +-
+ arch/powerpc/mm/kasan/kasan_init_32.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/clk/ingenic/tcu.c
-+++ b/drivers/clk/ingenic/tcu.c
-@@ -189,7 +189,7 @@ static long ingenic_tcu_round_rate(struc
- 	u8 prescale;
+diff --git a/arch/powerpc/mm/kasan/kasan_init_32.c b/arch/powerpc/mm/kasan/kasan_init_32.c
+index d2bed3fcb7194..1169ad1b6730a 100644
+--- a/arch/powerpc/mm/kasan/kasan_init_32.c
++++ b/arch/powerpc/mm/kasan/kasan_init_32.c
+@@ -101,7 +101,7 @@ static void __init kasan_remap_early_shadow_ro(void)
  
- 	if (req_rate > rate)
--		return -EINVAL;
-+		return rate;
+ 	kasan_populate_pte(kasan_early_shadow_pte, prot);
  
- 	prescale = ingenic_tcu_get_prescale(rate, req_rate);
+-	for (k_cur = k_start & PAGE_MASK; k_cur < k_end; k_cur += PAGE_SIZE) {
++	for (k_cur = k_start & PAGE_MASK; k_cur != k_end; k_cur += PAGE_SIZE) {
+ 		pmd_t *pmd = pmd_offset(pud_offset(pgd_offset_k(k_cur), k_cur), k_cur);
+ 		pte_t *ptep = pte_offset_kernel(pmd, k_cur);
  
+-- 
+2.20.1
+
 
 
