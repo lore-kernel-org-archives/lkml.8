@@ -2,55 +2,55 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 977E0C2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:51:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2AA8C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:51:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7361021927
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:51:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A214A214AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:51:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587052307;
-	bh=OJB7ifqTpyz9Z9d17YM+NNYGXYpJLfrKjFl0+S1ikmE=;
+	s=default; t=1587052312;
+	bh=aJGDApDJxafW+Vlm41KJkKg+iMU290np3OMqekDT3+0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vnsui+wUUsrQxqlP9ODb40pIyj9HSyvfk/TtlzxwyfLwZ0AR1bskiVyCquyQZ5uP/
-	 cMUwetz6OtLMBTo1MxdTuge9tiauFA+a0j9cBedLy4QtT0u1CqCG4u/0bHwb42kfLg
-	 q3ivs5N+93owx1P9qfS9EnUOqmpfw1cKXE4pxv/M=
+	b=eGTuFje7i2l6wqZAXsO0WFxu1Ke6XwP3N13hufClLH13EBNskwqv0zW9VWTy7WZPX
+	 dA2bKF87f9B9v5jE9KuEAmrVBkZBZKQhBAU/OYRPPAJAgt7MtiaGEF8uHMZBRSVoFF
+	 XLG84C0oahpmenWykLyP6APiXY9tAovd3dA3bcmc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2410649AbgDPPvp (ORCPT
+        id S2442650AbgDPPvu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:51:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44088 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 11:51:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44106 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2896577AbgDPNc4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2896590AbgDPNc4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 16 Apr 2020 09:32:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 552C222201;
-        Thu, 16 Apr 2020 13:31:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6147B22263;
+        Thu, 16 Apr 2020 13:32:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587043917;
-        bh=OJB7ifqTpyz9Z9d17YM+NNYGXYpJLfrKjFl0+S1ikmE=;
+        s=default; t=1587043929;
+        bh=aJGDApDJxafW+Vlm41KJkKg+iMU290np3OMqekDT3+0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Xw94aZ/IInk+SnZRoFGX+Nfn/zA1r4opztF0Fvm9BO4xeKFJ9sOfuQlvLFLoHrrjC
-         sIE4Uw+9/K+fBUeSPuoBc5a5TojYBu+zfiv1Fg8QBeI1jZvl6Fgv5+HbtIhVUdJDEL
-         MHfQpqWbBjwjHJcFRYcEebeztmW/dsCEFs2q+Yzk=
+        b=Z4PHE1OMDjaJwIpNhIrWFBcPJa8Fqn1QMev1eGp3LZw4vUZk9b4t0Hh/f8DauYdqf
+         i5U/kANFe4lETa5ASFCP9tBtipdakQ+1WxCXm/PxvdSrXmSo6m4j8UKVKTWusGuanD
+         0BT8VlAmrMYxVYT4CN4hDMBySpfo4plX/LSP2PIY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Gibson <david@gibson.dropbear.id.au>,
-        =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg@kaod.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 4.19 127/146] powerpc/xive: Use XIVE_BAD_IRQ instead of zero to catch non configured IPIs
-Date:   Thu, 16 Apr 2020 15:24:28 +0200
-Message-Id: <20200416131259.858718186@linuxfoundation.org>
+        stable@vger.kernel.org, Zheng Wei <wei.zheng@vivo.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.5 012/257] net: vxge: fix wrong __VA_ARGS__ usage
+Date:   Thu, 16 Apr 2020 15:21:03 +0200
+Message-Id: <20200416131327.383753700@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200416131242.353444678@linuxfoundation.org>
-References: <20200416131242.353444678@linuxfoundation.org>
+In-Reply-To: <20200416131325.891903893@linuxfoundation.org>
+References: <20200416131325.891903893@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,133 +60,98 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Cédric Le Goater <clg@kaod.org>
+From: Zheng Wei <wei.zheng@vivo.com>
 
-commit b1a504a6500df50e83b701b7946b34fce27ad8a3 upstream.
+[ Upstream commit b317538c47943f9903860d83cc0060409e12d2ff ]
 
-When a CPU is brought up, an IPI number is allocated and recorded
-under the XIVE CPU structure. Invalid IPI numbers are tracked with
-interrupt number 0x0.
+printk in macro vxge_debug_ll uses __VA_ARGS__ without "##" prefix,
+it causes a build error when there is no variable
+arguments(e.g. only fmt is specified.).
 
-On the PowerNV platform, the interrupt number space starts at 0x10 and
-this works fine. However, on the sPAPR platform, it is possible to
-allocate the interrupt number 0x0 and this raises an issue when CPU 0
-is unplugged. The XIVE spapr driver tracks allocated interrupt numbers
-in a bitmask and it is not correctly updated when interrupt number 0x0
-is freed. It stays allocated and it is then impossible to reallocate.
-
-Fix by using the XIVE_BAD_IRQ value instead of zero on both platforms.
-
-Reported-by: David Gibson <david@gibson.dropbear.id.au>
-Fixes: eac1e731b59e ("powerpc/xive: guest exploitation of the XIVE interrupt controller")
-Cc: stable@vger.kernel.org # v4.14+
-Signed-off-by: Cédric Le Goater <clg@kaod.org>
-Reviewed-by: David Gibson <david@gibson.dropbear.id.au>
-Tested-by: David Gibson <david@gibson.dropbear.id.au>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20200306150143.5551-2-clg@kaod.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Zheng Wei <wei.zheng@vivo.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/sysdev/xive/common.c        |   12 +++---------
- arch/powerpc/sysdev/xive/native.c        |    4 ++--
- arch/powerpc/sysdev/xive/spapr.c         |    4 ++--
- arch/powerpc/sysdev/xive/xive-internal.h |    7 +++++++
- 4 files changed, 14 insertions(+), 13 deletions(-)
+ drivers/net/ethernet/neterion/vxge/vxge-config.h |  2 +-
+ drivers/net/ethernet/neterion/vxge/vxge-main.h   | 14 +++++++-------
+ 2 files changed, 8 insertions(+), 8 deletions(-)
 
---- a/arch/powerpc/sysdev/xive/common.c
-+++ b/arch/powerpc/sysdev/xive/common.c
-@@ -72,13 +72,6 @@ static u32 xive_ipi_irq;
- /* Xive state for each CPU */
- static DEFINE_PER_CPU(struct xive_cpu *, xive_cpu);
+diff --git a/drivers/net/ethernet/neterion/vxge/vxge-config.h b/drivers/net/ethernet/neterion/vxge/vxge-config.h
+index e678ba379598e..628fa9b2f7416 100644
+--- a/drivers/net/ethernet/neterion/vxge/vxge-config.h
++++ b/drivers/net/ethernet/neterion/vxge/vxge-config.h
+@@ -2045,7 +2045,7 @@ vxge_hw_vpath_strip_fcs_check(struct __vxge_hw_device *hldev, u64 vpath_mask);
+ 	if ((level >= VXGE_ERR && VXGE_COMPONENT_LL & VXGE_DEBUG_ERR_MASK) ||  \
+ 	    (level >= VXGE_TRACE && VXGE_COMPONENT_LL & VXGE_DEBUG_TRACE_MASK))\
+ 		if ((mask & VXGE_DEBUG_MASK) == mask)			       \
+-			printk(fmt "\n", __VA_ARGS__);			       \
++			printk(fmt "\n", ##__VA_ARGS__);		       \
+ } while (0)
+ #else
+ #define vxge_debug_ll(level, mask, fmt, ...)
+diff --git a/drivers/net/ethernet/neterion/vxge/vxge-main.h b/drivers/net/ethernet/neterion/vxge/vxge-main.h
+index 59a57ff5e96af..9c86f4f9cd424 100644
+--- a/drivers/net/ethernet/neterion/vxge/vxge-main.h
++++ b/drivers/net/ethernet/neterion/vxge/vxge-main.h
+@@ -452,49 +452,49 @@ int vxge_fw_upgrade(struct vxgedev *vdev, char *fw_name, int override);
  
--/*
-- * A "disabled" interrupt should never fire, to catch problems
-- * we set its logical number to this
-- */
--#define XIVE_BAD_IRQ		0x7fffffff
--#define XIVE_MAX_IRQ		(XIVE_BAD_IRQ - 1)
--
- /* An invalid CPU target */
- #define XIVE_INVALID_TARGET	(-1)
+ #if (VXGE_DEBUG_LL_CONFIG & VXGE_DEBUG_MASK)
+ #define vxge_debug_ll_config(level, fmt, ...) \
+-	vxge_debug_ll(level, VXGE_DEBUG_LL_CONFIG, fmt, __VA_ARGS__)
++	vxge_debug_ll(level, VXGE_DEBUG_LL_CONFIG, fmt, ##__VA_ARGS__)
+ #else
+ #define vxge_debug_ll_config(level, fmt, ...)
+ #endif
  
-@@ -1074,7 +1067,7 @@ static int xive_setup_cpu_ipi(unsigned i
- 	xc = per_cpu(xive_cpu, cpu);
+ #if (VXGE_DEBUG_INIT & VXGE_DEBUG_MASK)
+ #define vxge_debug_init(level, fmt, ...) \
+-	vxge_debug_ll(level, VXGE_DEBUG_INIT, fmt, __VA_ARGS__)
++	vxge_debug_ll(level, VXGE_DEBUG_INIT, fmt, ##__VA_ARGS__)
+ #else
+ #define vxge_debug_init(level, fmt, ...)
+ #endif
  
- 	/* Check if we are already setup */
--	if (xc->hw_ipi != 0)
-+	if (xc->hw_ipi != XIVE_BAD_IRQ)
- 		return 0;
+ #if (VXGE_DEBUG_TX & VXGE_DEBUG_MASK)
+ #define vxge_debug_tx(level, fmt, ...) \
+-	vxge_debug_ll(level, VXGE_DEBUG_TX, fmt, __VA_ARGS__)
++	vxge_debug_ll(level, VXGE_DEBUG_TX, fmt, ##__VA_ARGS__)
+ #else
+ #define vxge_debug_tx(level, fmt, ...)
+ #endif
  
- 	/* Grab an IPI from the backend, this will populate xc->hw_ipi */
-@@ -1111,7 +1104,7 @@ static void xive_cleanup_cpu_ipi(unsigne
- 	/* Disable the IPI and free the IRQ data */
+ #if (VXGE_DEBUG_RX & VXGE_DEBUG_MASK)
+ #define vxge_debug_rx(level, fmt, ...) \
+-	vxge_debug_ll(level, VXGE_DEBUG_RX, fmt, __VA_ARGS__)
++	vxge_debug_ll(level, VXGE_DEBUG_RX, fmt, ##__VA_ARGS__)
+ #else
+ #define vxge_debug_rx(level, fmt, ...)
+ #endif
  
- 	/* Already cleaned up ? */
--	if (xc->hw_ipi == 0)
-+	if (xc->hw_ipi == XIVE_BAD_IRQ)
- 		return;
+ #if (VXGE_DEBUG_MEM & VXGE_DEBUG_MASK)
+ #define vxge_debug_mem(level, fmt, ...) \
+-	vxge_debug_ll(level, VXGE_DEBUG_MEM, fmt, __VA_ARGS__)
++	vxge_debug_ll(level, VXGE_DEBUG_MEM, fmt, ##__VA_ARGS__)
+ #else
+ #define vxge_debug_mem(level, fmt, ...)
+ #endif
  
- 	/* Mask the IPI */
-@@ -1267,6 +1260,7 @@ static int xive_prepare_cpu(unsigned int
- 		if (np)
- 			xc->chip_id = of_get_ibm_chip_id(np);
- 		of_node_put(np);
-+		xc->hw_ipi = XIVE_BAD_IRQ;
+ #if (VXGE_DEBUG_ENTRYEXIT & VXGE_DEBUG_MASK)
+ #define vxge_debug_entryexit(level, fmt, ...) \
+-	vxge_debug_ll(level, VXGE_DEBUG_ENTRYEXIT, fmt, __VA_ARGS__)
++	vxge_debug_ll(level, VXGE_DEBUG_ENTRYEXIT, fmt, ##__VA_ARGS__)
+ #else
+ #define vxge_debug_entryexit(level, fmt, ...)
+ #endif
  
- 		per_cpu(xive_cpu, cpu) = xc;
- 	}
---- a/arch/powerpc/sysdev/xive/native.c
-+++ b/arch/powerpc/sysdev/xive/native.c
-@@ -311,7 +311,7 @@ static void xive_native_put_ipi(unsigned
- 	s64 rc;
- 
- 	/* Free the IPI */
--	if (!xc->hw_ipi)
-+	if (xc->hw_ipi == XIVE_BAD_IRQ)
- 		return;
- 	for (;;) {
- 		rc = opal_xive_free_irq(xc->hw_ipi);
-@@ -319,7 +319,7 @@ static void xive_native_put_ipi(unsigned
- 			msleep(OPAL_BUSY_DELAY_MS);
- 			continue;
- 		}
--		xc->hw_ipi = 0;
-+		xc->hw_ipi = XIVE_BAD_IRQ;
- 		break;
- 	}
- }
---- a/arch/powerpc/sysdev/xive/spapr.c
-+++ b/arch/powerpc/sysdev/xive/spapr.c
-@@ -509,11 +509,11 @@ static int xive_spapr_get_ipi(unsigned i
- 
- static void xive_spapr_put_ipi(unsigned int cpu, struct xive_cpu *xc)
- {
--	if (!xc->hw_ipi)
-+	if (xc->hw_ipi == XIVE_BAD_IRQ)
- 		return;
- 
- 	xive_irq_bitmap_free(xc->hw_ipi);
--	xc->hw_ipi = 0;
-+	xc->hw_ipi = XIVE_BAD_IRQ;
- }
- #endif /* CONFIG_SMP */
- 
---- a/arch/powerpc/sysdev/xive/xive-internal.h
-+++ b/arch/powerpc/sysdev/xive/xive-internal.h
-@@ -9,6 +9,13 @@
- #ifndef __XIVE_INTERNAL_H
- #define __XIVE_INTERNAL_H
- 
-+/*
-+ * A "disabled" interrupt should never fire, to catch problems
-+ * we set its logical number to this
-+ */
-+#define XIVE_BAD_IRQ		0x7fffffff
-+#define XIVE_MAX_IRQ		(XIVE_BAD_IRQ - 1)
-+
- /* Each CPU carry one of these with various per-CPU state */
- struct xive_cpu {
- #ifdef CONFIG_SMP
+ #if (VXGE_DEBUG_INTR & VXGE_DEBUG_MASK)
+ #define vxge_debug_intr(level, fmt, ...) \
+-	vxge_debug_ll(level, VXGE_DEBUG_INTR, fmt, __VA_ARGS__)
++	vxge_debug_ll(level, VXGE_DEBUG_INTR, fmt, ##__VA_ARGS__)
+ #else
+ #define vxge_debug_intr(level, fmt, ...)
+ #endif
+-- 
+2.20.1
+
 
 
