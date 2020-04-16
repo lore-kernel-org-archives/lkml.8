@@ -2,109 +2,157 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 311C9C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 11:31:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FF3EC2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 11:32:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 17E16208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 11:31:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C3D8208E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 11:32:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587036723;
+	bh=0bFacHSoUUyGSAb90iqsd3ao3s9+E+bswGCW0hty4Dk=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
+	b=UaplXzWX2h6U5Y3QacB39OVPgbprY5TbZV6a7q43IrLcz0wDmtKOpKQ10Ihx9enL+
+	 DKWVkvmQzHmh3GTml0dW+aFnLET3Hh1eQgcNraaXk7TE4W5UuRSaibOg1E5yZtsc5G
+	 Aj2kqPNv3tu59ja1M5C6AzjKizfZJmQVJWdzYbRY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2633376AbgDPLbz (ORCPT
+        id S2633402AbgDPLcB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 07:31:55 -0400
-Received: from mout.kundenserver.de ([212.227.126.187]:57457 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2633137AbgDPLaE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 07:30:04 -0400
-Received: from mail-qk1-f174.google.com ([209.85.222.174]) by
- mrelayeu.kundenserver.de (mreue010 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1N4A1h-1jGgZn1t8T-0103T1; Thu, 16 Apr 2020 13:07:14 +0200
-Received: by mail-qk1-f174.google.com with SMTP id y3so20748368qky.8;
-        Thu, 16 Apr 2020 04:07:14 -0700 (PDT)
-X-Gm-Message-State: AGi0PuZ0HtBnhGYMaYQOLJpCyPgjWJpQF/FPXuoNeABZ+xQ43q/4+0e/
-        iwuzvD7bQRjpZ9z2IuUym61FN3Sx5xYhi/YAW/c=
-X-Google-Smtp-Source: APiQypK4+pWIjTlcQKHWs83hDUiq9HrROe6p4sKwqSeztDfxIRma7taMpjWbk4MOI+E9EtZHMoCq/s3VDhbpWUliCGE=
-X-Received: by 2002:a37:851:: with SMTP id 78mr31161821qki.352.1587035233142;
- Thu, 16 Apr 2020 04:07:13 -0700 (PDT)
-MIME-Version: 1.0
-References: <1583226206-19758-1-git-send-email-abel.vesa@nxp.com> <CAK8P3a3FLRotVmMnBAyBKFMbXeEx760S-Cvqr19VPMi81PKJgw@mail.gmail.com>
-In-Reply-To: <CAK8P3a3FLRotVmMnBAyBKFMbXeEx760S-Cvqr19VPMi81PKJgw@mail.gmail.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Thu, 16 Apr 2020 13:06:57 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a26JS4FVt5wiaRQahF+OJZp9Ot84o8GSth9Rk2skkEMSQ@mail.gmail.com>
-Message-ID: <CAK8P3a26JS4FVt5wiaRQahF+OJZp9Ot84o8GSth9Rk2skkEMSQ@mail.gmail.com>
-Subject: Re: [RFC 00/11] Add generic MFD i.MX mix and audiomix support
-To:     Abel Vesa <abel.vesa@nxp.com>
-Cc:     Rob Herring <robh@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Fabio Estevam <fabio.estevam@nxp.com>,
-        Mike Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Anson Huang <anson.huang@nxp.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Peng Fan <peng.fan@nxp.com>, Jacky Bai <ping.bai@nxp.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        DTML <devicetree@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>
+        Thu, 16 Apr 2020 07:32:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58728 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2632803AbgDPLbg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 07:31:36 -0400
+Received: from tleilax.poochiereds.net (68-20-15-154.lightspeed.rlghnc.sbcglobal.net [68.20.15.154])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7613C208E4;
+        Thu, 16 Apr 2020 11:31:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587036695;
+        bh=0bFacHSoUUyGSAb90iqsd3ao3s9+E+bswGCW0hty4Dk=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=LZ3A3LQICzetJVIe5HgLrwrtQgQBzqC62BleZfgySPZ43cBAXOlCVfL65qWkm4Ibe
+         0psmDcVqdGQR+qJoTcCgLfjXEHg6OuWO4vMBfXN1wAvy7WNEB1oivEPNia25G7lAH7
+         Fo/IGfK63OILqsnj/2TPopErE8drWJYGWyZ50MVo=
+Message-ID: <35d03979765b4351160086badcb59a512695493f.camel@kernel.org>
+Subject: Re: [PATCH v5 2/2] buffer: record blockdev write errors in
+ super_block that it backs
+From:   Jeff Layton <jlayton@kernel.org>
+To:     Jan Kara <jack@suse.cz>
+Cc:     viro@zeniv.linux.org.uk, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+        andres@anarazel.de, willy@infradead.org, dhowells@redhat.com,
+        hch@infradead.org, akpm@linux-foundation.org, david@fromorbit.com
+Date:   Thu, 16 Apr 2020 07:31:33 -0400
+In-Reply-To: <20200416093528.GC23739@quack2.suse.cz>
+References: <20200415121300.228017-1-jlayton@kernel.org>
+         <20200415121300.228017-3-jlayton@kernel.org>
+         <20200415140642.GK6126@quack2.suse.cz>
+         <b4161f1df3436d7371ab7e88709169e9a391f15d.camel@kernel.org>
+         <20200416093528.GC23739@quack2.suse.cz>
 Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:XDrsoNce09dQF4v/GnqEBmnqKLXmtj6TBeZwkb0Q1p/Uh3G4zU2
- 0k3IovXzNymJfDpYP+paFT5/eWoSFAeiBFdDU4Rni9XRQeX3O1+NLIdTwj2Pjh0XkF+TDll
- 1IlwD9gwjHnD+odPwajh6GbLWG891MKN9Rx98amEyN7OMvBE52hiFWSTxA3GU6fNMtSEwOp
- pw5aRLFhsd4iHpP797jPg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:t3ySx5qoRa0=:2HgHQY70QGwlkgI3fd/eDa
- AviZf6zFsbZjh8abcajtOMUIU8ec4suLeE1tLGe1qNYlXJjFgH5yLiRkbv7Jv119q4cGRI47k
- ulcWRrKrIn8q8Szo9gLmvZT4PDEti7XWh2lIKhsPVK5wmG8omJGghWLYr3FrrWBS7jWdVQepY
- RDOnpoo9NE0PI5Ve4r4zw6ULw/tOxe86wsQ3OABlinqTQsPMV0ExIVXaOtCgw2kasQClBKje4
- pPFNcqJYOt6zpuK2oxsd5DfMBpEM22SH5Aaiq5Zb7VyhwuHattW5vlvGQKCElDh3tcEnWV6bw
- bUnM/ZPAQNEGPR8g7m5ruTSsiozjsGUI9rSCCaCAYQHHaqjosbKgpmODs4hTwrriiOHqN60qC
- GzAEGwTGc7iZXl5EiGJEZ6JfWzW8TGY8YODikiaWEHoTd0V/hTcnn4Y4mLLWTDl0qWfpCiwXH
- PrL9XK2ktcwFXv7Kx0KD2C6hIkUnIfu5+Dz7LnCxt4YnAMiHhl/CMnJYOrzb9FCyKxslxC/wl
- ZQp5iS6c8hU+mRYOQofWdd0K8TAhHKYmCsWES7Y20KdqJxcKsNookgsSleDlMf1jBwS2EIm9L
- pJC9KqSsd+1ctOcIlpyd2KIt8ETnzuJGNRqHMF2e8wDydFqPyUHdLerbSmyn4yY1Z8EdxBxgr
- TLqzdSLmTGN8l6/aohZ8OPuWJd8wnq4CtJ3xqK6t3w4WE+lgdiZXU6mKJFmjY4x3LFvxVa7B3
- 2ZZnNAzumTPVrYA2zjIF4B4eCJU6EOd24Kre/LagaFV/taRh1jkk8CT6ar3kW8A8b0W3mTrhP
- fJ0ga0Iw/mJ2kAVxV8cvOB/IdmS+TRWr3t9wjlxxb8QGyTa/YY=
+User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 16, 2020 at 1:06 PM Arnd Bergmann <arnd@arndb.de> wrote:
->
-> On Tue, Mar 3, 2020 at 10:04 AM Abel Vesa <abel.vesa@nxp.com> wrote:
-> >
-> > The i.MX8MP has some new IPs called mixes. They are formed usually by some
-> > GPRs that can be split into different functionalities. The first example
-> > here is the audiomix which has dedicated registers that can be registered
-> > as a clock controller and some other registers that can be registered as
-> > a reset controller, plus some dedicated ones that will be registered as
-> > syscon and used by each dedicated audio IP.
-> >
-> > More mixes to be following the same structure are to come, like hdmimix,
-> > dispmix and mediamix. They will all be populated and registered by the MFD
-> > imx-mix generic driver.
->
-> Can you enumerate what functionality is in each one?
->
-> I'm not convinced that using an MFD driver is the best solution here,
-> compared to e.g. a clk driver with a few extra bits in it, if most of the
-> code for the child drivers ends up being for the clk subsystem.
->
-> Lee suggested maybe having a generic (platform independent) driver
-> for it, which may help here, as it would let others share the trivial
-> mfd portion.
->
-> Another option that we are using on several platforms today is to
-> have a single syscon node and have other drivers that reference
-> that one using a phandle to get at the regmap.
+On Thu, 2020-04-16 at 11:35 +0200, Jan Kara wrote:
+> On Wed 15-04-20 12:22:27, Jeff Layton wrote:
+> > On Wed, 2020-04-15 at 16:06 +0200, Jan Kara wrote:
+> > > On Wed 15-04-20 08:13:00, Jeff Layton wrote:
+> > > > From: Jeff Layton <jlayton@redhat.com>
+> > > > 
+> > > > When syncing out a block device (a'la __sync_blockdev), any error
+> > > > encountered will only be recorded in the bd_inode's mapping. When the
+> > > > blockdev contains a filesystem however, we'd like to also record the
+> > > > error in the super_block that's stored there.
+> > > > 
+> > > > Make mark_buffer_write_io_error also record the error in the
+> > > > corresponding super_block when a writeback error occurs and the block
+> > > > device contains a mounted superblock.
+> > > > 
+> > > > Since superblocks are RCU freed, hold the rcu_read_lock to ensure
+> > > > that the superblock doesn't go away while we're marking it.
+> > > > 
+> > > > Signed-off-by: Jeff Layton <jlayton@kernel.org>
+> > > > ---
+> > > >  fs/buffer.c | 7 +++++++
+> > > >  1 file changed, 7 insertions(+)
+> > > > 
+> > > > diff --git a/fs/buffer.c b/fs/buffer.c
+> > > > index f73276d746bb..2a4a5cc20418 100644
+> > > > --- a/fs/buffer.c
+> > > > +++ b/fs/buffer.c
+> > > > @@ -1154,12 +1154,19 @@ EXPORT_SYMBOL(mark_buffer_dirty);
+> > > >  
+> > > >  void mark_buffer_write_io_error(struct buffer_head *bh)
+> > > >  {
+> > > > +	struct super_block *sb;
+> > > > +
+> > > >  	set_buffer_write_io_error(bh);
+> > > >  	/* FIXME: do we need to set this in both places? */
+> > > >  	if (bh->b_page && bh->b_page->mapping)
+> > > >  		mapping_set_error(bh->b_page->mapping, -EIO);
+> > > >  	if (bh->b_assoc_map)
+> > > >  		mapping_set_error(bh->b_assoc_map, -EIO);
+> > > > +	rcu_read_lock();
+> > > > +	sb = bh->b_bdev->bd_super;
+> > > 
+> > > You still need READ_ONCE() here. Otherwise the dereference below can still
+> > > result in refetch and NULL ptr deref.
+> > > 
+> > > 								Honza
+> > > 
+> > 
+> > Huh? That seems like a really suspicious thing for the compiler/arch to
+> > do. We are checking that sb isn't NULL before we dereference it. Doesn't
+> > that imply a data dependency? How could the value of "sb" change after
+> > that?
+> 
+> Because the compiler is free to optimize the local variable away and
+> actually compile the dereference below as bh->b_bdev->bd_super->s_wb_err
+> (from C11 standard POV such code is equivalent since in C11 memory model
+> it is assumed there are no concurrent accesses). And READ_ONCE() is a way
+> to forbid compiler from doing such optimization - through 'volatile'
+> keyword it tells the compiler there may be concurrent accesses happening
+> and makes sure the value is really fetched into the local variable and used
+> from there. There are good articles about this on LWN - I'd give you a link
+> but LWN seems to be down today. But the latest article is about KCSAN and
+> from there are links to older articles about compiler optimizations.
+> 
+> > I'm also not sure I understand how using READ_ONCE really helps there if
+> > we can't count on the value of a local variable not changing.
+> 
+> I hope I've explained this above.
+> 
 
-Sorry I replied to the wrong thread, I meant to reply to the v3 version.
+Got it. Thanks for the explanation. Now I'll have nightmares about all
+of the race conditions I've created in the past by making this
+assumption!
 
-       Arnd
+I'll send a v6 set in a few mins.
+
+> > > > +	if (sb)
+> > > > +		errseq_set(&sb->s_wb_err, -EIO);
+> > > > +	rcu_read_unlock();
+> > > >  }
+> > > >  EXPORT_SYMBOL(mark_buffer_write_io_error);
+> > > >  
+> > > > -- 
+> > > > 2.25.2
+> > > > 
+> > 
+> > -- 
+> > Jeff Layton <jlayton@kernel.org>
+> > 
+
+-- 
+Jeff Layton <jlayton@kernel.org>
+
