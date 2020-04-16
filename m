@@ -2,293 +2,165 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F189C2D0EF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 07:28:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A063C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 07:33:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 01F06206D5
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 07:28:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587022092;
-	bh=w+nPkuKj2fNBoyAqj0+LVj5YRJnCBFYLxnu4z9r5o3Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=CEajww/m+IjYoDF50oT+5RISvTzM5lhycoz2cGMKHFlV8qqLHmywxjsmntcRPoE7U
-	 t1GRg/NWO/1miNbeqYXHqU0dnwHX0u2d+z3o2IeCJhIaFFU4bW8xtugPny5ViY2BRF
-	 DH4221lTIWysyu9WvnTVD0dpIbVf7SxgYVIUpq1U=
+	by mail.kernel.org (Postfix) with ESMTP id 068A22078B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 07:33:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=qnap.com header.i=@qnap.com header.b="hAAkkXoJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439295AbgDPH2K (ORCPT
+        id S2439299AbgDPHdf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 03:28:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57574 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2439264AbgDPH2F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 03:28:05 -0400
-Received: from localhost (unknown [213.57.247.131])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EF201206D5;
-        Thu, 16 Apr 2020 07:28:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587022084;
-        bh=w+nPkuKj2fNBoyAqj0+LVj5YRJnCBFYLxnu4z9r5o3Y=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=p/+FaYsXXVpQvawW/bB5pBeFg94y8wvi68MZpusiUD9zf/VTvB/hqDWPT24gpNdlC
-         XDOTiQSFGQKDR4FJnfTeqH9jU6xA5AfbuZM10qjcO4GVgrJFZrTPoxnBiaVw8VyHKK
-         AUbK3qm9zutGjGBq1rIFNYoERjXWo70jPkwEChWo=
-Date:   Thu, 16 Apr 2020 10:28:01 +0300
-From:   Leon Romanovsky <leon@kernel.org>
-To:     Robert Marko <robert.marko@sartura.hr>
-Cc:     andrew@lunn.ch, f.fainelli@gmail.com, hkallweit1@gmail.com,
-        linux@armlinux.org.uk, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, agross@kernel.org,
-        bjorn.andersson@linaro.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        Christian Lamparter <chunkeey@gmail.com>,
-        Luka Perkov <luka.perkov@sartura.hr>
-Subject: Re: [PATCH v3 1/3] net: phy: mdio: add IPQ40xx MDIO driver
-Message-ID: <20200416072801.GG1309273@unreal>
-References: <20200415150244.2737206-1-robert.marko@sartura.hr>
+        Thu, 16 Apr 2020 03:33:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56774 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2438944AbgDPHd3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 03:33:29 -0400
+Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ACEC8C061A10
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 00:33:29 -0700 (PDT)
+Received: by mail-qk1-x744.google.com with SMTP id b62so20327971qkf.6
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 00:33:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=qnap.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=UUNY3ShQiEMlKdA2OtEmjXgSE2HQo1VpKsXAZEAB++8=;
+        b=hAAkkXoJSeTZMtgLyumWdDpGnE/XBC+aHvFhGPPys8ToYyqHksL4ZpwqW5T+JaRcXl
+         o43Nn1KGZaVBKhFR5FOvCjbaxWqLrHV8OuMXkvtnh//zZQZGZaqTPXCj5qByMUT5RFbh
+         SJPoK/fhkM3ssd3iqshhMe81Lr0zwvKA7RXU0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=UUNY3ShQiEMlKdA2OtEmjXgSE2HQo1VpKsXAZEAB++8=;
+        b=te7NaiGbIpNyIzz4bbuNq0JUyxzwZnZ4VdcyPSqgzm3WK/cZECLDrxSV+l4NBGm5cx
+         y6anWvZ4hgEnICUnH1i2Kyv5ewLB79a30p9/6ntmzMbzIchZNT0i+BwCVNdA1SX9t6LE
+         2E9XHm/ELniEbWNF7vS8uv09w1Y+XT5TGtMZFt87ndWXj05E4tJ8YDyXVWskR7I3UAm+
+         U3R6qZowLhjzOJUplIhIE2QIWOv2prtAFe4Y40XoK+PZBVcj5YEu4+Q+r5wNyP3qZql+
+         r6a6z6HAblehBBFDt1g2DyH4iepJlW35ipVrxrIBlnS6tNYKDnVvsIIhsrZcQY8t+cls
+         yZKw==
+X-Gm-Message-State: AGi0PuYQv9XT6xqXu92HTHV3nBq7lAZx8gYqrsiG6wDDb3lKUCWTET6D
+        GUYV/Vw73q75XohYfB5UefjSaIZpvwoYUjleGQge3Q==
+X-Google-Smtp-Source: APiQypLjMQQF6xFJgGIcXivLrWGvnotQ+D6p4pL53qIa6tvjRUBiKhdEepCEpb+H3UzPYGRtQEGOvPOSLCAH19n/LJg=
+X-Received: by 2002:a37:8b04:: with SMTP id n4mr30253412qkd.222.1587022408701;
+ Thu, 16 Apr 2020 00:33:28 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200415150244.2737206-1-robert.marko@sartura.hr>
+References: <CAEUGjKiLPQP9wp0AgLUvHgKBOe9We2a-RQaZ7cd7CvhnarwWiw@mail.gmail.com>
+ <CAKywueT0Q9WkANNsg8cEDwGZSMaaE5c4LHuEeMhVDzJAzycroQ@mail.gmail.com>
+ <CAEUGjKhSBNQboKOMFMgos9OQfxcLQZsXp8aBrUSFcaSe1saH2Q@mail.gmail.com>
+ <CAH2r5mt1k5t8rSH1KizeSrcLaN1Fn3GWeMvDPwT2Kfq43UAWaQ@mail.gmail.com> <CAEUGjKhpgmhj9RzcGQXPuFUyoqsUnk2d3oCpOYBdR=EwCO21YQ@mail.gmail.com>
+In-Reply-To: <CAEUGjKhpgmhj9RzcGQXPuFUyoqsUnk2d3oCpOYBdR=EwCO21YQ@mail.gmail.com>
+From:   Jones Syue <jonessyue@qnap.com>
+Date:   Thu, 16 Apr 2020 15:33:18 +0800
+Message-ID: <CAEUGjKh5mj0rFUZPoguFh4G-_YfwACV+_jVK7TNi+jK_fE1dgQ@mail.gmail.com>
+Subject: Re: [PATCH] cifs: improve read performance for page size 64KB &
+ cache=strict & vers=2.1+
+To:     Steve French <smfrench@gmail.com>
+Cc:     Pavel Shilovsky <piastryyy@gmail.com>,
+        linux-cifs <linux-cifs@vger.kernel.org>,
+        Samba Technical <samba-technical@lists.samba.org>,
+        Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 15, 2020 at 05:02:43PM +0200, Robert Marko wrote:
-> This patch adds the driver for the MDIO interface
-> inside of Qualcomm IPQ40xx series SoC-s.
->
-> Signed-off-by: Christian Lamparter <chunkeey@gmail.com>
-> Signed-off-by: Robert Marko <robert.marko@sartura.hr>
-> Cc: Luka Perkov <luka.perkov@sartura.hr>
-> ---
-> Changes from v2 to v3:
-> * Rename registers
-> * Remove unnecessary variable initialisations
-> * Switch to readl_poll_timeout() instead of custom solution
-> * Drop unused header
->
-> Changes from v1 to v2:
-> * Remove magic default value
-> * Remove lockdep_assert_held
-> * Add C45 check
-> * Simplify the driver
-> * Drop device and mii_bus structs from private struct
-> * Use devm_mdiobus_alloc_size()
->
->  drivers/net/phy/Kconfig        |   7 ++
->  drivers/net/phy/Makefile       |   1 +
->  drivers/net/phy/mdio-ipq40xx.c | 160 +++++++++++++++++++++++++++++++++
->  3 files changed, 168 insertions(+)
->  create mode 100644 drivers/net/phy/mdio-ipq40xx.c
->
-> diff --git a/drivers/net/phy/Kconfig b/drivers/net/phy/Kconfig
-> index 3fa33d27eeba..23bb5db033e3 100644
-> --- a/drivers/net/phy/Kconfig
-> +++ b/drivers/net/phy/Kconfig
-> @@ -157,6 +157,13 @@ config MDIO_I2C
->
->  	  This is library mode.
->
-> +config MDIO_IPQ40XX
-> +	tristate "Qualcomm IPQ40xx MDIO interface"
-> +	depends on HAS_IOMEM && OF_MDIO
-> +	help
-> +	  This driver supports the MDIO interface found in Qualcomm
-> +	  IPQ40xx series Soc-s.
-> +
->  config MDIO_IPQ8064
->  	tristate "Qualcomm IPQ8064 MDIO interface support"
->  	depends on HAS_IOMEM && OF_MDIO
-> diff --git a/drivers/net/phy/Makefile b/drivers/net/phy/Makefile
-> index 2f5c7093a65b..36aafc6128c4 100644
-> --- a/drivers/net/phy/Makefile
-> +++ b/drivers/net/phy/Makefile
-> @@ -37,6 +37,7 @@ obj-$(CONFIG_MDIO_CAVIUM)	+= mdio-cavium.o
->  obj-$(CONFIG_MDIO_GPIO)		+= mdio-gpio.o
->  obj-$(CONFIG_MDIO_HISI_FEMAC)	+= mdio-hisi-femac.o
->  obj-$(CONFIG_MDIO_I2C)		+= mdio-i2c.o
-> +obj-$(CONFIG_MDIO_IPQ40XX)	+= mdio-ipq40xx.o
->  obj-$(CONFIG_MDIO_IPQ8064)	+= mdio-ipq8064.o
->  obj-$(CONFIG_MDIO_MOXART)	+= mdio-moxart.o
->  obj-$(CONFIG_MDIO_MSCC_MIIM)	+= mdio-mscc-miim.o
-> diff --git a/drivers/net/phy/mdio-ipq40xx.c b/drivers/net/phy/mdio-ipq40xx.c
-> new file mode 100644
-> index 000000000000..acf1230341bd
-> --- /dev/null
-> +++ b/drivers/net/phy/mdio-ipq40xx.c
-> @@ -0,0 +1,160 @@
-> +// SPDX-License-Identifier: GPL-2.0 OR BSD-3-Clause
-> +/* Copyright (c) 2015, The Linux Foundation. All rights reserved. */
-> +/* Copyright (c) 2020 Sartura Ltd. */
-> +
-> +#include <linux/delay.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/io.h>
-> +#include <linux/iopoll.h>
-> +#include <linux/of_address.h>
-> +#include <linux/of_mdio.h>
-> +#include <linux/phy.h>
-> +#include <linux/platform_device.h>
-> +
-> +#define MDIO_ADDR_REG				0x44
-> +#define MDIO_DATA_WRITE_REG			0x48
-> +#define MDIO_DATA_READ_REG			0x4c
-> +#define MDIO_CMD_REG				0x50
-> +#define MDIO_CMD_ACCESS_BUSY		BIT(16)
-> +#define MDIO_CMD_ACCESS_START		BIT(8)
-> +#define MDIO_CMD_ACCESS_CODE_READ	0
-> +#define MDIO_CMD_ACCESS_CODE_WRITE	1
-> +
-> +#define IPQ40XX_MDIO_TIMEOUT	10000
-> +#define IPQ40XX_MDIO_SLEEP		10
-> +
-> +struct ipq40xx_mdio_data {
-> +	void __iomem	*membase;
-> +};
-> +
-> +static int ipq40xx_mdio_wait_busy(struct mii_bus *bus)
-> +{
-> +	struct ipq40xx_mdio_data *priv = bus->priv;
-> +	unsigned int busy;
-> +
-> +	return readl_poll_timeout(priv->membase + MDIO_CMD_REG, busy,
-> +				  (busy & MDIO_CMD_ACCESS_BUSY) == 0,
-> +				  IPQ40XX_MDIO_SLEEP, IPQ40XX_MDIO_TIMEOUT);
-> +}
-> +
-> +static int ipq40xx_mdio_read(struct mii_bus *bus, int mii_id, int regnum)
-> +{
-> +	struct ipq40xx_mdio_data *priv = bus->priv;
-> +	unsigned int cmd;
-> +
-> +	/* Reject clause 45 */
-> +	if (regnum & MII_ADDR_C45)
-> +		return -EOPNOTSUPP;
-> +
-> +	if (ipq40xx_mdio_wait_busy(bus))
-> +		return -ETIMEDOUT;
-> +
-> +	/* issue the phy address and reg */
-> +	writel((mii_id << 8) | regnum, priv->membase + MDIO_ADDR_REG);
-> +
-> +	cmd = MDIO_CMD_ACCESS_START | MDIO_CMD_ACCESS_CODE_READ;
-> +
-> +	/* issue read command */
-> +	writel(cmd, priv->membase + MDIO_CMD_REG);
-> +
-> +	/* Wait read complete */
-> +	if (ipq40xx_mdio_wait_busy(bus))
-> +		return -ETIMEDOUT;
-> +
-> +	/* Read and return data */
-> +	return readl(priv->membase + MDIO_DATA_READ_REG);
-> +}
-> +
-> +static int ipq40xx_mdio_write(struct mii_bus *bus, int mii_id, int regnum,
-> +							 u16 value)
-> +{
-> +	struct ipq40xx_mdio_data *priv = bus->priv;
-> +	unsigned int cmd;
-> +
-> +	/* Reject clause 45 */
-> +	if (regnum & MII_ADDR_C45)
-> +		return -EOPNOTSUPP;
-> +
-> +	if (ipq40xx_mdio_wait_busy(bus))
-> +		return -ETIMEDOUT;
-> +
-> +	/* issue the phy address and reg */
-> +	writel((mii_id << 8) | regnum, priv->membase + MDIO_ADDR_REG);
-> +
-> +	/* issue write data */
-> +	writel(value, priv->membase + MDIO_DATA_WRITE_REG);
-> +
-> +	cmd = MDIO_CMD_ACCESS_START | MDIO_CMD_ACCESS_CODE_WRITE;
-> +	/* issue write command */
-> +	writel(cmd, priv->membase + MDIO_CMD_REG);
-> +
-> +	/* Wait write complete */
-> +	if (ipq40xx_mdio_wait_busy(bus))
-> +		return -ETIMEDOUT;
-> +
-> +	return 0;
-> +}
-> +
-> +static int ipq40xx_mdio_probe(struct platform_device *pdev)
-> +{
-> +	struct ipq40xx_mdio_data *priv;
-> +	struct mii_bus *bus;
-> +	int ret;
-> +
-> +	bus = devm_mdiobus_alloc_size(&pdev->dev, sizeof(*priv));
-> +	if (!bus)
-> +		return -ENOMEM;
-> +
-> +	priv = bus->priv;
-> +
-> +	priv->membase = devm_platform_ioremap_resource(pdev, 0);
-> +	if (IS_ERR(priv->membase))
-> +		return PTR_ERR(priv->membase);
-> +
-> +	bus->name = "ipq40xx_mdio";
-> +	bus->read = ipq40xx_mdio_read;
-> +	bus->write = ipq40xx_mdio_write;
-> +	bus->parent = &pdev->dev;
-> +	snprintf(bus->id, MII_BUS_ID_SIZE, "%s%d", pdev->name, pdev->id);
-> +
-> +	ret = of_mdiobus_register(bus, pdev->dev.of_node);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "Cannot register MDIO bus!\n");
-> +		return ret;
-> +	}
-> +
-> +	platform_set_drvdata(pdev, bus);
-> +
-> +	return 0;
-> +}
-> +
-> +static int ipq40xx_mdio_remove(struct platform_device *pdev)
-> +{
-> +	struct mii_bus *bus = platform_get_drvdata(pdev);
-> +
-> +	mdiobus_unregister(bus);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id ipq40xx_mdio_dt_ids[] = {
-> +	{ .compatible = "qcom,ipq40xx-mdio" },
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(of, ipq40xx_mdio_dt_ids);
-> +
-> +static struct platform_driver ipq40xx_mdio_driver = {
-> +	.probe = ipq40xx_mdio_probe,
-> +	.remove = ipq40xx_mdio_remove,
-> +	.driver = {
-> +		.name = "ipq40xx-mdio",
-> +		.of_match_table = ipq40xx_mdio_dt_ids,
-> +	},
-> +};
-> +
-> +module_platform_driver(ipq40xx_mdio_driver);
-> +
-> +MODULE_DESCRIPTION("IPQ40XX MDIO interface driver");
-> +MODULE_AUTHOR("Qualcomm Atheros");
+Hello Steve
 
-Strictly saying, but author can't be company.
+> Test read performance over 1GbE network with command:
+Also test read performance over 10GbE network,
+vers=3D2.1+ can reach over 600 MB/s with v2.patch.
 
-> +MODULE_LICENSE("Dual BSD/GPL");
+aarch64, page size 64KB (CONFIG_ARM64_64K_PAGES=3Dy), linux-4.2.8,
+cpu Annapurna Labs Alpine AL324 Quad-core ARM Cortex-A57 CPU @ 1.70GHz,
+ram 8GB,
+with patch,
+vers=3D1.0,cache=3Dstrict: read throughput 110MB/s, max read IO size 16KB
+vers=3D2.0,cache=3Dstrict: read throughput 106MB/s, max read IO size 16KB
+vers=3D2.1,cache=3Dstrict: read throughput 667MB/s, max read IO size 1MB
+vers=3D3.0,cache=3Dstrict: read throughput 639MB/s, max read IO size 1MB
+without patch,
+vers=3D1.0,cache=3Dstrict: read throughput 107MB/s, max read IO size 16KB
+vers=3D2.0,cache=3Dstrict: read throughput 107MB/s, max read IO size 16KB
+vers=3D2.1,cache=3Dstrict: read throughput 106MB/s, max read IO size 16KB
+vers=3D3.0,cache=3Dstrict: read throughput 106MB/s, max read IO size 16KB
+
+command:
+mount -tcifs //<server_ip>/<share> /remote_strict
+-overs=3D<x.y>,cache=3Dstrict,username=3D<uu>,password=3D<pp>
+dd if=3D/remote_strict/10G.img of=3D/dev/null bs=3D1M count=3D10240
+
+--
+Regards,
+Jones Syue | =E8=96=9B=E6=87=B7=E5=AE=97
+QNAP Systems, Inc.
+
+On Thu, Apr 16, 2020 at 11:46 AM Jones Syue <jonessyue@qnap.com> wrote:
+>
+> Hello Steve
+>
+> > Did you also test (at least briefly) with vers=3D1.0 since some of your
+> > code affects that code path too?
+>
+> Yes test v2.patch on 2 platforms aarch64 (page size 64KB) and x86_64
+> (page size 4KB), vers=3D1.0 read function works fine on both.
+>
+> Test read performance over 1GbE network with command:
+> 'dd if=3D/remote_strict/10G.img of=3D/dev/null bs=3D1M count=3D10240'
+>
+> For read performance on aarch64 (page size 64KB), vers=3D[1.0|2.0] is not=
+ as
+> fast as vers=3D2.1+, max_read on both SMB 1 (16KB) and SMB 2.0 (64KB) are
+> still smaller then page size 64KB plus packet header size, hence do not
+> support readpages.
+> aarch64, page size 64KB (CONFIG_ARM64_64K_PAGES=3Dy), linux-4.2.8,
+> cpu Annapurna Labs Alpine AL324 Quad-core ARM Cortex-A57 CPU @ 1.70GHz,
+> ram 8GB,
+> with patch,
+> vers=3D1.0,cache=3Dstrict: read throughput 40MB/s, max read IO size 16KB
+> vers=3D2.0,cache=3Dstrict: read throughput 40MB/s, max read IO size 16KB
+> vers=3D2.1,cache=3Dstrict: read throughput 115MB/s, max read IO size 1MB
+> vers=3D3.0,cache=3Dstrict: read throughput 115MB/s, max read IO size 1MB
+> without patch,
+> vers=3D1.0,cache=3Dstrict: read throughput 40MB/s, max read IO size 16KB
+> vers=3D2.0,cache=3Dstrict: read throughput 40MB/s, max read IO size 16KB
+> vers=3D2.1,cache=3Dstrict: read throughput 40MB/s, max read IO size 16KB
+> vers=3D3.0,cache=3Dstrict: read throughput 40MB/s, max read IO size 16KB
+>
+> For read performance on x86_64 (page size 4KB), all vers can support
+> readpages because max_read is bigger than page size 4KB plus packet heade=
+r
+> size.
+> x86_64, page size 4KB, linux-4.2.8,
+> cpu AMD Embedded R-Series RX-421ND 2.10GHz,
+> ram 4GB,
+> without patch,
+> vers=3D1.0,cache=3Dstrict: read throughput 109MB/s, read IO size 60KB
+> vers=3D2.0,cache=3Dstrict: read throughput 115MB/s, read IO size 64KB
+> vers=3D2.1,cache=3Dstrict: read throughput 117MB/s, read IO size 1MB
+> vers=3D3.0,cache=3Dstrict: read throughput 117MB/s, read IO size 1MB
+> with patch,
+> vers=3D1.0,cache=3Dstrict: read throughput 110MB/s, read IO size 60KB
+> vers=3D2.0,cache=3Dstrict: read throughput 115MB/s, read IO size 64KB
+> vers=3D2.1,cache=3Dstrict: read throughput 117MB/s, read IO size 1MB
+> vers=3D3.0,cache=3Dstrict: read throughput 117MB/s, read IO size 1MB
+>
+> > And if anyone figures out how to configure an x86_64 Linux to use
+> > PAGE_SIZE of 64K or larger let me know...
+> I am using physical platform with arm cpu and aarch64 toolchain,
+> perhaps try qemu-system-aarch64 later.
+>
 > --
-> 2.26.0
->
+> Regards,
+> Jones Syue | =E8=96=9B=E6=87=B7=E5=AE=97
+> QNAP Systems, Inc.
