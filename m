@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5AD1C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:44:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46AD4C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:44:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A09420732
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:44:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1AACF20732
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:44:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587044679;
-	bh=QSSGrsx/jMeT0/9tWBypb7x/p6plGQ0B+Kwg+JKNt14=;
+	s=default; t=1587044695;
+	bh=skWxrDeaTk6+jv+cXjW6TzCDWVjh/oty9QB9S9uiJkE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JJIDVZ3fqqMj8DHeQTVAiAevsYp3AOl13nbUS+Nh26zDq3kokOjBFWkBX5MlvTZFj
-	 dtuIkW8Z8HpwgLsYpYgJUEWCgjc4iUeGQuK8ZOFo8qH54UoQ1pBXN5H7Fs6nIAPpKz
-	 asLHffEBU28aUEk6qV1lDgqWv5U/ea4Xg5+ZpggQ=
+	b=XJnfiiVYJ7KOAWWUxuK0ntD/limDScq2aj2DBVM/MklalgygfZDUlmcyozxfDiyiJ
+	 KL2nifGvVG+SKQOcAj3cK0dCHsNv0RHKzlJv4jd0LGrZI0WFH1L4XV9ChurarKJPbC
+	 lEuHBppvSoscBrzDD6SKt/Yxlh71paHCBTtPjo/A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2898306AbgDPNoi (ORCPT
+        id S2387779AbgDPNot (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 09:44:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45548 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 09:44:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45942 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2896865AbgDPNeI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:34:08 -0400
+        id S2896924AbgDPNeZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:34:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EE51D208E4;
-        Thu, 16 Apr 2020 13:34:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 51C1821D91;
+        Thu, 16 Apr 2020 13:34:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044047;
-        bh=QSSGrsx/jMeT0/9tWBypb7x/p6plGQ0B+Kwg+JKNt14=;
+        s=default; t=1587044064;
+        bh=skWxrDeaTk6+jv+cXjW6TzCDWVjh/oty9QB9S9uiJkE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0ZFfuSRYkvQutT459cd43SB8VRLvaFFdsHQlpKzENI6wsZabwAWjZLnREiHXa9Dje
-         I2G9Z005O6DA+ziQub4E3L6v+Kd/gePQd6+fkPtq7YKWeY0iVqgk4yauH1llN9w7Bu
-         gahIYnoc/LZuAV91wT+537GucEqpKG3wMeL7uyug=
+        b=CXZnwtaS1Wb5BsU9G5E1jkS/MrXapoVv67+YiKgr7mwjV8qU3w1bHkLveyD8sfhlE
+         h6BYfOUAxlyDG03aGlFM/0i9wW/jJqOMYJTiCobVbcwrUOO1QlwZrfmHjBSsWOsttt
+         2R1uhZKg7x6VOaUd6CwbwLMcprelK7DPi+GR99dQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, John Garry <john.garry@huawei.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 058/257] libata: Remove extra scsi_host_put() in ata_scsi_add_hosts()
-Date:   Thu, 16 Apr 2020 15:21:49 +0200
-Message-Id: <20200416131333.227770440@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Alexander Sverdlin <alexander.sverdlin@nokia.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.5 065/257] genirq/irqdomain: Check pointer in irq_domain_alloc_irqs_hierarchy()
+Date:   Thu, 16 Apr 2020 15:21:56 +0200
+Message-Id: <20200416131334.081804238@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.891903893@linuxfoundation.org>
 References: <20200416131325.891903893@linuxfoundation.org>
@@ -59,156 +61,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: John Garry <john.garry@huawei.com>
+From: Alexander Sverdlin <alexander.sverdlin@nokia.com>
 
-[ Upstream commit 1d72f7aec3595249dbb83291ccac041a2d676c57 ]
+[ Upstream commit 87f2d1c662fa1761359fdf558246f97e484d177a ]
 
-If the call to scsi_add_host_with_dma() in ata_scsi_add_hosts() fails,
-then we may get use-after-free KASAN warns:
+irq_domain_alloc_irqs_hierarchy() has 3 call sites in the compilation unit
+but only one of them checks for the pointer which is being dereferenced
+inside the called function. Move the check into the function. This allows
+for catching the error instead of the following crash:
 
-==================================================================
-BUG: KASAN: use-after-free in kobject_put+0x24/0x180
-Read of size 1 at addr ffff0026b8c80364 by task swapper/0/1
-CPU: 1 PID: 1 Comm: swapper/0 Tainted: G        W         5.6.0-rc3-00004-g5a71b206ea82-dirty #1765
-Hardware name: Huawei TaiShan 200 (Model 2280)/BC82AMDD, BIOS 2280-V2 CS V3.B160.01 02/24/2020
-Call trace:
-dump_backtrace+0x0/0x298
-show_stack+0x14/0x20
-dump_stack+0x118/0x190
-print_address_description.isra.9+0x6c/0x3b8
-__kasan_report+0x134/0x23c
-kasan_report+0xc/0x18
-__asan_load1+0x5c/0x68
-kobject_put+0x24/0x180
-put_device+0x10/0x20
-scsi_host_put+0x10/0x18
-ata_devres_release+0x74/0xb0
-release_nodes+0x2d0/0x470
-devres_release_all+0x50/0x78
-really_probe+0x2d4/0x560
-driver_probe_device+0x7c/0x148
-device_driver_attach+0x94/0xa0
-__driver_attach+0xa8/0x110
-bus_for_each_dev+0xe8/0x158
-driver_attach+0x30/0x40
-bus_add_driver+0x220/0x2e0
-driver_register+0xbc/0x1d0
-__pci_register_driver+0xbc/0xd0
-ahci_pci_driver_init+0x20/0x28
-do_one_initcall+0xf0/0x608
-kernel_init_freeable+0x31c/0x384
-kernel_init+0x10/0x118
-ret_from_fork+0x10/0x18
+Unable to handle kernel NULL pointer dereference at virtual address 00000000
+PC is at 0x0
+LR is at gpiochip_hierarchy_irq_domain_alloc+0x11f/0x140
+...
+[<c06c23ff>] (gpiochip_hierarchy_irq_domain_alloc)
+[<c0462a89>] (__irq_domain_alloc_irqs)
+[<c0462dad>] (irq_create_fwspec_mapping)
+[<c06c2251>] (gpiochip_to_irq)
+[<c06c1c9b>] (gpiod_to_irq)
+[<bf973073>] (gpio_irqs_init [gpio_irqs])
+[<bf974048>] (gpio_irqs_exit+0xecc/0xe84 [gpio_irqs])
+Code: bad PC value
 
-Allocated by task 5:
-save_stack+0x28/0xc8
-__kasan_kmalloc.isra.8+0xbc/0xd8
-kasan_kmalloc+0xc/0x18
-__kmalloc+0x1a8/0x280
-scsi_host_alloc+0x44/0x678
-ata_scsi_add_hosts+0x74/0x268
-ata_host_register+0x228/0x488
-ahci_host_activate+0x1c4/0x2a8
-ahci_init_one+0xd18/0x1298
-local_pci_probe+0x74/0xf0
-work_for_cpu_fn+0x2c/0x48
-process_one_work+0x488/0xc08
-worker_thread+0x330/0x5d0
-kthread+0x1c8/0x1d0
-ret_from_fork+0x10/0x18
-
-Freed by task 5:
-save_stack+0x28/0xc8
-__kasan_slab_free+0x118/0x180
-kasan_slab_free+0x10/0x18
-slab_free_freelist_hook+0xa4/0x1a0
-kfree+0xd4/0x3a0
-scsi_host_dev_release+0x100/0x148
-device_release+0x7c/0xe0
-kobject_put+0xb0/0x180
-put_device+0x10/0x20
-scsi_host_put+0x10/0x18
-ata_scsi_add_hosts+0x210/0x268
-ata_host_register+0x228/0x488
-ahci_host_activate+0x1c4/0x2a8
-ahci_init_one+0xd18/0x1298
-local_pci_probe+0x74/0xf0
-work_for_cpu_fn+0x2c/0x48
-process_one_work+0x488/0xc08
-worker_thread+0x330/0x5d0
-kthread+0x1c8/0x1d0
-ret_from_fork+0x10/0x18
-
-There is also refcount issue, as well:
-WARNING: CPU: 1 PID: 1 at lib/refcount.c:28 refcount_warn_saturate+0xf8/0x170
-
-The issue is that we make an erroneous extra call to scsi_host_put()
-for that host:
-
-So in ahci_init_one()->ata_host_alloc_pinfo()->ata_host_alloc(), we setup
-a device release method - ata_devres_release() - which intends to release
-the SCSI hosts:
-
-static void ata_devres_release(struct device *gendev, void *res)
-{
-	...
-	for (i = 0; i < host->n_ports; i++) {
-		struct ata_port *ap = host->ports[i];
-
-		if (!ap)
-			continue;
-
-		if (ap->scsi_host)
-			scsi_host_put(ap->scsi_host);
-
-	}
-	...
-}
-
-However in the ata_scsi_add_hosts() error path, we also call
-scsi_host_put() for the SCSI hosts.
-
-Fix by removing the the scsi_host_put() calls in ata_scsi_add_hosts() and
-leave this to ata_devres_release().
-
-Fixes: f31871951b38 ("libata: separate out ata_host_alloc() and ata_host_register()")
-Signed-off-by: John Garry <john.garry@huawei.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Alexander Sverdlin <alexander.sverdlin@nokia.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/20200306174720.82604-1-alexander.sverdlin@nokia.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/ata/libata-scsi.c | 9 +++------
- 1 file changed, 3 insertions(+), 6 deletions(-)
+ kernel/irq/irqdomain.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/ata/libata-scsi.c b/drivers/ata/libata-scsi.c
-index 58e09ffe8b9cb..5af34a3201ed2 100644
---- a/drivers/ata/libata-scsi.c
-+++ b/drivers/ata/libata-scsi.c
-@@ -4553,22 +4553,19 @@ int ata_scsi_add_hosts(struct ata_host *host, struct scsi_host_template *sht)
- 		 */
- 		shost->max_host_blocked = 1;
- 
--		rc = scsi_add_host_with_dma(ap->scsi_host,
--						&ap->tdev, ap->host->dev);
-+		rc = scsi_add_host_with_dma(shost, &ap->tdev, ap->host->dev);
- 		if (rc)
--			goto err_add;
-+			goto err_alloc;
- 	}
- 
- 	return 0;
- 
-- err_add:
--	scsi_host_put(host->ports[i]->scsi_host);
-  err_alloc:
- 	while (--i >= 0) {
- 		struct Scsi_Host *shost = host->ports[i]->scsi_host;
- 
-+		/* scsi_host_put() is in ata_devres_release() */
- 		scsi_remove_host(shost);
--		scsi_host_put(shost);
- 	}
- 	return rc;
+diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
+index 480df36597206..c776b8e86fbcc 100644
+--- a/kernel/irq/irqdomain.c
++++ b/kernel/irq/irqdomain.c
+@@ -1293,6 +1293,11 @@ int irq_domain_alloc_irqs_hierarchy(struct irq_domain *domain,
+ 				    unsigned int irq_base,
+ 				    unsigned int nr_irqs, void *arg)
+ {
++	if (!domain->ops->alloc) {
++		pr_debug("domain->ops->alloc() is NULL\n");
++		return -ENOSYS;
++	}
++
+ 	return domain->ops->alloc(domain, irq_base, nr_irqs, arg);
  }
+ 
+@@ -1330,11 +1335,6 @@ int __irq_domain_alloc_irqs(struct irq_domain *domain, int irq_base,
+ 			return -EINVAL;
+ 	}
+ 
+-	if (!domain->ops->alloc) {
+-		pr_debug("domain->ops->alloc() is NULL\n");
+-		return -ENOSYS;
+-	}
+-
+ 	if (realloc && irq_base >= 0) {
+ 		virq = irq_base;
+ 	} else {
 -- 
 2.20.1
 
