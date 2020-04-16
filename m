@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8D56C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:49:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA74FC2BB85
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:49:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AD75721D91
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:49:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 926C720732
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:49:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587052144;
-	bh=fqeJmVTdoGHm1HHYG+d9fHROCfoULoMgGvS4TMcfAH4=;
+	s=default; t=1587052155;
+	bh=lmDFwSRJINaEuNcm0imgBOH7qPo597f26/3MDbu0cUE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1ghmjoUxwCuDBrCYp7CeWcxKJW9c3F2wnrAai0Ooe5Gf4Mzgn0sqRTC6ai/DgKWBQ
-	 mDFLKZRJdYtc4g0esvn/C344xgaX6qsLjExa1+rhcUPR2oGuVWGqhQJIP6sVh9uQfS
-	 0fGvQ0T8nnPiiNoAF9VSx2qBP1JYzE9Mbi9vLGWk=
+	b=LC0dhkpZ/O6yMDfqeTRtJ6o0TyUomG7mG3KTtC9dyPLd91fKy3SLpMD5FUx4mP7YM
+	 Sk1BgPCNBkalblo8QC5catGIlnF7GsnGo4C4CvY1Oic8dPavWFX3zLCAPOTbGq6sqm
+	 S2DczQzEEfQKriRfXdIWjWYuDKHCW5OELHTBuDkk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2442615AbgDPPs6 (ORCPT
+        id S2395405AbgDPPtN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:48:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44302 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 11:49:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44062 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2896685AbgDPNdH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:33:07 -0400
+        id S2896678AbgDPNdE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:33:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A2349221F9;
-        Thu, 16 Apr 2020 13:33:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CB262221F4;
+        Thu, 16 Apr 2020 13:33:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587043986;
-        bh=fqeJmVTdoGHm1HHYG+d9fHROCfoULoMgGvS4TMcfAH4=;
+        s=default; t=1587043981;
+        bh=lmDFwSRJINaEuNcm0imgBOH7qPo597f26/3MDbu0cUE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ufQCAFJTac7YS7SHSmqZqWrfqjienMpFqumUXXt2gO4UtmwWvEQSYzGNz4z0puYoU
-         SIP+pM8gR9Ad9evNMKHnXSNKm59ayheRWBbVoxIh5Be4YTSBALAjh1ith173io/nMi
-         DcbgaSwIZwfL1thBvLeGYWVXMdGXJ1L/J5tJBANM=
+        b=oTTVzYRv6DFDVpBup/fHKdqLigA1gyT8vtLO7CrIdj9O2GwlSKRNYo1rrTsM82RTo
+         3IJgDF8gP+ASMQNQLdIaoZ4vAgObkpEXePo5O4sj79yvQdDRhaRIPlPHzvVYJCWVsI
+         8u1xiMyO6+PBo+tLTFYdyr2mifUyaAv4r+it4cAk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Howells <dhowells@redhat.com>,
+        stable@vger.kernel.org, Nick Reitemeyer <nick.reitemeyer@web.de>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 009/257] rxrpc: Abstract out the calculation of whether theres Tx space
-Date:   Thu, 16 Apr 2020 15:21:00 +0200
-Message-Id: <20200416131327.035150379@linuxfoundation.org>
+Subject: [PATCH 5.5 007/257] Input: tm2-touchkey - add support for Coreriver TC360 variant
+Date:   Thu, 16 Apr 2020 15:20:58 +0200
+Message-Id: <20200416131326.775263712@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.891903893@linuxfoundation.org>
 References: <20200416131325.891903893@linuxfoundation.org>
@@ -59,78 +60,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Howells <dhowells@redhat.com>
+From: Nick Reitemeyer <nick.reitemeyer@web.de>
 
-[ Upstream commit 158fe6665389964a1de212818b4a5c52b7f7aff4 ]
+[ Upstream commit da3289044833769188c0da945d2cec90af35e87e ]
 
-Abstract out the calculation of there being sufficient Tx buffer space.
-This is reproduced several times in the rxrpc sendmsg code.
+The Coreriver TouchCore 360 is like the midas board touchkey, but it is
+using a fixed regulator.
 
-Signed-off-by: David Howells <dhowells@redhat.com>
+Signed-off-by: Nick Reitemeyer <nick.reitemeyer@web.de>
+Link: https://lore.kernel.org/r/20200121141525.3404-3-nick.reitemeyer@web.de
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/rxrpc/sendmsg.c | 27 ++++++++++++++++++---------
- 1 file changed, 18 insertions(+), 9 deletions(-)
+ drivers/input/keyboard/tm2-touchkey.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-diff --git a/net/rxrpc/sendmsg.c b/net/rxrpc/sendmsg.c
-index 136eb465bfcb2..1cbd43eeda937 100644
---- a/net/rxrpc/sendmsg.c
-+++ b/net/rxrpc/sendmsg.c
-@@ -17,6 +17,21 @@
- #include <net/af_rxrpc.h>
- #include "ar-internal.h"
+diff --git a/drivers/input/keyboard/tm2-touchkey.c b/drivers/input/keyboard/tm2-touchkey.c
+index 14b55bacdd0f1..fb078e049413f 100644
+--- a/drivers/input/keyboard/tm2-touchkey.c
++++ b/drivers/input/keyboard/tm2-touchkey.c
+@@ -75,6 +75,14 @@ static struct touchkey_variant aries_touchkey_variant = {
+ 	.cmd_led_off = ARIES_TOUCHKEY_CMD_LED_OFF,
+ };
  
-+/*
-+ * Return true if there's sufficient Tx queue space.
-+ */
-+static bool rxrpc_check_tx_space(struct rxrpc_call *call, rxrpc_seq_t *_tx_win)
-+{
-+	unsigned int win_size =
-+		min_t(unsigned int, call->tx_winsize,
-+		      call->cong_cwnd + call->cong_extra);
-+	rxrpc_seq_t tx_win = READ_ONCE(call->tx_hard_ack);
++static const struct touchkey_variant tc360_touchkey_variant = {
++	.keycode_reg = 0x00,
++	.base_reg = 0x00,
++	.fixed_regulator = true,
++	.cmd_led_on = TM2_TOUCHKEY_CMD_LED_ON,
++	.cmd_led_off = TM2_TOUCHKEY_CMD_LED_OFF,
++};
 +
-+	if (_tx_win)
-+		*_tx_win = tx_win;
-+	return call->tx_top - tx_win < win_size;
-+}
-+
- /*
-  * Wait for space to appear in the Tx queue or a signal to occur.
-  */
-@@ -26,9 +41,7 @@ static int rxrpc_wait_for_tx_window_intr(struct rxrpc_sock *rx,
+ static int tm2_touchkey_led_brightness_set(struct led_classdev *led_dev,
+ 					    enum led_brightness brightness)
  {
- 	for (;;) {
- 		set_current_state(TASK_INTERRUPTIBLE);
--		if (call->tx_top - call->tx_hard_ack <
--		    min_t(unsigned int, call->tx_winsize,
--			  call->cong_cwnd + call->cong_extra))
-+		if (rxrpc_check_tx_space(call, NULL))
- 			return 0;
- 
- 		if (call->state >= RXRPC_CALL_COMPLETE)
-@@ -68,9 +81,7 @@ static int rxrpc_wait_for_tx_window_nonintr(struct rxrpc_sock *rx,
- 		set_current_state(TASK_UNINTERRUPTIBLE);
- 
- 		tx_win = READ_ONCE(call->tx_hard_ack);
--		if (call->tx_top - tx_win <
--		    min_t(unsigned int, call->tx_winsize,
--			  call->cong_cwnd + call->cong_extra))
-+		if (rxrpc_check_tx_space(call, &tx_win))
- 			return 0;
- 
- 		if (call->state >= RXRPC_CALL_COMPLETE)
-@@ -302,9 +313,7 @@ static int rxrpc_send_data(struct rxrpc_sock *rx,
- 
- 			_debug("alloc");
- 
--			if (call->tx_top - call->tx_hard_ack >=
--			    min_t(unsigned int, call->tx_winsize,
--				  call->cong_cwnd + call->cong_extra)) {
-+			if (!rxrpc_check_tx_space(call, NULL)) {
- 				ret = -EAGAIN;
- 				if (msg->msg_flags & MSG_DONTWAIT)
- 					goto maybe_error;
+@@ -327,6 +335,9 @@ static const struct of_device_id tm2_touchkey_of_match[] = {
+ 	}, {
+ 		.compatible = "cypress,aries-touchkey",
+ 		.data = &aries_touchkey_variant,
++	}, {
++		.compatible = "coreriver,tc360-touchkey",
++		.data = &tc360_touchkey_variant,
+ 	},
+ 	{ },
+ };
 -- 
 2.20.1
 
