@@ -5,51 +5,52 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41CEDC2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:06:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AED61C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:06:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 17BE8206D9
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:06:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D013206D9
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:06:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587049562;
-	bh=gRsQNMLbwAKVeC0Gb+JWu5Kd2OwoKKeUa99fqZnlHeI=;
+	s=default; t=1587049565;
+	bh=YoydgxVY04JUElx6pTX1WVnIwMMo7Gnp01oStplhfd0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pMZwOMl3tSEt5Xq9C9SHNTmK3/pgN9PjjXzmG6/GqOJQNDO/PmDQxa38mkoytvDgo
-	 l4PgruOoEjNyGPoQOf/kKZw9q5CEcdemXFiXIs78RAvTrUtQS4ZPTL61PPiDgNMb7J
-	 Om1oml3jUU0EVrodRoovYuZbiTyTe+8CPXj4Nh4s=
+	b=yZhpEkpFafiWelnyQmJBsYXz6dh7hv9wDtvhkZNGErcBEzzgck/eavU9Giz+qE2BI
+	 xWrrufBO1HjOCntqc4hv+3iK2Exw1erUK8l1OOvjxaZyfgUE9IcKc6VhUIy6u1h94v
+	 WdUox+vr6qnqxijLUVSk5K3EG0sO/Kun3rDjZ8x8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2441680AbgDPPF5 (ORCPT
+        id S2442050AbgDPPGE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:05:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38722 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 11:06:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38666 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2408894AbgDPNwY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:52:24 -0400
+        id S2408879AbgDPNwW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:52:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 73B1020732;
-        Thu, 16 Apr 2020 13:52:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F1B5820786;
+        Thu, 16 Apr 2020 13:52:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587045143;
-        bh=gRsQNMLbwAKVeC0Gb+JWu5Kd2OwoKKeUa99fqZnlHeI=;
+        s=default; t=1587045141;
+        bh=YoydgxVY04JUElx6pTX1WVnIwMMo7Gnp01oStplhfd0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eAAVR1JZ+ZUpFvahDdOB3qyPp91/lsvwX93E3T0L6yHhbW4Y5N6pjhNsMEfMgLBbS
-         yyJStOffgemZeVTQvrcgfwr8t4soJvP+bagwe95Tb9K+JrK4WhXNhK9fp+jLWZ01oE
-         JkICbWnmQnfmE31m0flw0zvgVXC3zpEuae9H6oy4=
+        b=K4nsrnokAg3eHpck/mFD7+Q4lUAxmHUlemT6bf2JcIYuHhb/oKZSt7wyk6ZsfSc05
+         f92n5SvcG4FR8+IDLSI9Q/L9QjOmNnIo4/recl4QF6oM8BL7LQOn8ZbzOxccTEd4fV
+         68CxezYUGoYHfLGAViOCNSOe73lIf4zIrLKmOhnw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Philipp Zabel <p.zabel@pengutronix.de>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
+        stable@vger.kernel.org,
+        Dafna Hirschfeld <dafna.hirschfeld@collabora.com>,
+        Helen Koike <helen.koike@collabora.com>,
         Hans Verkuil <hverkuil-cisco@xs4all.nl>,
         Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 007/254] media: hantro: fix extra MV/MC sync space calculation
-Date:   Thu, 16 Apr 2020 15:21:36 +0200
-Message-Id: <20200416131326.646275180@linuxfoundation.org>
+Subject: [PATCH 5.6 006/254] media: vimc: streamer: fix memory leak in vimc subdevs if kthread_run fails
+Date:   Thu, 16 Apr 2020 15:21:35 +0200
+Message-Id: <20200416131326.511984176@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.804095985@linuxfoundation.org>
 References: <20200416131325.804095985@linuxfoundation.org>
@@ -62,36 +63,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Philipp Zabel <p.zabel@pengutronix.de>
+From: Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
 
-[ Upstream commit 042584e9055b615ac917239884fb0d65690f56ec ]
+[ Upstream commit ceeb2e6166dddf3c9757abbbf84032027e2fa2d2 ]
 
-Add space for MVs and MC sync data to the capture buffers depending on
-whether the post processor will be enabled for the new capture format
-passed to TRY_FMT, not the currently set capture format.
+In case kthread_run fails, the vimc subdevices
+should be notified that streaming stopped so they can
+release the memory for the streaming. Also, kthread should be
+set to NULL.
 
-Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
-Reviewed-by: Ezequiel Garcia <ezequiel@collabora.com>
+Signed-off-by: Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
+Acked-by: Helen Koike <helen.koike@collabora.com>
 Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/staging/media/hantro/hantro_v4l2.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/media/platform/vimc/vimc-streamer.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/staging/media/hantro/hantro_v4l2.c b/drivers/staging/media/hantro/hantro_v4l2.c
-index 0198bcda26b75..f4ae2cee0f189 100644
---- a/drivers/staging/media/hantro/hantro_v4l2.c
-+++ b/drivers/staging/media/hantro/hantro_v4l2.c
-@@ -295,7 +295,7 @@ static int vidioc_try_fmt(struct file *file, void *priv, struct v4l2_format *f,
- 		 * +---------------------------+
- 		 */
- 		if (ctx->vpu_src_fmt->fourcc == V4L2_PIX_FMT_H264_SLICE &&
--		    !hantro_needs_postproc(ctx, ctx->vpu_dst_fmt))
-+		    !hantro_needs_postproc(ctx, fmt))
- 			pix_mp->plane_fmt[0].sizeimage +=
- 				64 * MB_WIDTH(pix_mp->width) *
- 				     MB_WIDTH(pix_mp->height) + 32;
+diff --git a/drivers/media/platform/vimc/vimc-streamer.c b/drivers/media/platform/vimc/vimc-streamer.c
+index cd6b55433c9ee..43e494df61d88 100644
+--- a/drivers/media/platform/vimc/vimc-streamer.c
++++ b/drivers/media/platform/vimc/vimc-streamer.c
+@@ -207,8 +207,13 @@ int vimc_streamer_s_stream(struct vimc_stream *stream,
+ 		stream->kthread = kthread_run(vimc_streamer_thread, stream,
+ 					      "vimc-streamer thread");
+ 
+-		if (IS_ERR(stream->kthread))
+-			return PTR_ERR(stream->kthread);
++		if (IS_ERR(stream->kthread)) {
++			ret = PTR_ERR(stream->kthread);
++			dev_err(ved->dev, "kthread_run failed with %d\n", ret);
++			vimc_streamer_pipeline_terminate(stream);
++			stream->kthread = NULL;
++			return ret;
++		}
+ 
+ 	} else {
+ 		if (!stream->kthread)
 -- 
 2.20.1
 
