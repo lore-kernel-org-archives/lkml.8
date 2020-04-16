@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24FE0C352BE
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:16:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0E4DC2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:16:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 056C72222D
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:16:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79A2822241
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:16:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587050182;
-	bh=shd0LP0Bg8wGz6s3YwEhALAbANLNDLZwnav84oEtfjo=;
+	s=default; t=1587050189;
+	bh=VmVN60V25JspsZ14eGwB7Xo4/VC6TrWzh+uz3z2ASuA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EwvjBlBjtWztRReZmneBoKEgu+OaC21R2T/ISzoycbXXnuXDpRwcUPhP5I0KaaXiN
-	 DdO/vgb2KMoS7aU90vYsdd/xnwBVDRV41xOcSqdeIHJNvmso2D3qbQ4fxlwgZa5VFO
-	 7BZzAOGLo2gPj/U7lrJrHsOiejSAO7jqqxrB4c6c=
+	b=Vmu86eNnLJATI4zEmZGly6v4qBblwn/IGRCN/BBKxXCWQJcYesNDJLGe/IA+5F334
+	 1iIhEbtrEPkVvppC6tR0ADTygGwMR7H/LzrefpJBPUiublwVkCx6uodZk31hB7U/YH
+	 T5VUyqo8jQtg2b/GYVS3E4jODGI/nbTXQx76ZAlo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2503590AbgDPPQT (ORCPT
+        id S2503801AbgDPPQ1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:16:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35836 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 11:16:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35830 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2441622AbgDPNuC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2441637AbgDPNuC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 16 Apr 2020 09:50:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4809721927;
-        Thu, 16 Apr 2020 13:49:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2190E2223F;
+        Thu, 16 Apr 2020 13:49:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044972;
-        bh=shd0LP0Bg8wGz6s3YwEhALAbANLNDLZwnav84oEtfjo=;
+        s=default; t=1587044960;
+        bh=VmVN60V25JspsZ14eGwB7Xo4/VC6TrWzh+uz3z2ASuA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=P1fUF88whAGy5wp6zMpfCTe5D6FcZovIUws5LM1ZmwusnBVVedGX2ZKohZK4R2N+o
-         Eoy5kuWZdpjfxhKXmUOfRJbTTwS16UueuKjmkmSEykdhABxqrMnFP8qUVREHSaS6di
-         VTgnUfbUQ+RWKCdSQ8ouUuL1H/jipOwxnRtqiWAc=
+        b=aNpvQQk/jcMLMdXwkMur12w2GRR/N9HqcS/6PZJ/LaX8jwJKFdWyyL6owh5Afr85q
+         7OChxm0jFKzOqTlwAnenadwL49pqJocUy/qcvHsxeUxra6zyE3fwOkwqOd1xn3Qeu0
+         1gDcuyT61WmUzqzZePBPRWuBO3h6e6c8KKrOFcbw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Frieder Schrempf <frieder.schrempf@kontron.de>,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH 5.4 136/232] mtd: spinand: Do not erase the block before writing a bad block marker
-Date:   Thu, 16 Apr 2020 15:23:50 +0200
-Message-Id: <20200416131331.970575378@linuxfoundation.org>
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Gilad Ben-Yossef <gilad@benyossef.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Subject: [PATCH 5.4 170/232] crypto: ccree - protect against empty or NULL scatterlists
+Date:   Thu, 16 Apr 2020 15:24:24 +0200
+Message-Id: <20200416131336.274627879@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131316.640996080@linuxfoundation.org>
 References: <20200416131316.640996080@linuxfoundation.org>
@@ -61,50 +61,163 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Frieder Schrempf <frieder.schrempf@kontron.de>
+From: Gilad Ben-Yossef <gilad@benyossef.com>
 
-commit b645ad39d56846618704e463b24bb994c9585c7f upstream.
+commit ce0fc6db38decf0d2919bfe783de6d6b76e421a9 upstream.
 
-Currently when marking a block, we use spinand_erase_op() to erase
-the block before writing the marker to the OOB area. Doing so without
-waiting for the operation to finish can lead to the marking failing
-silently and no bad block marker being written to the flash.
+Deal gracefully with a NULL or empty scatterlist which can happen
+if both cryptlen and assoclen are zero and we're doing in-place
+AEAD encryption.
 
-In fact we don't need to do an erase at all before writing the BBM.
-The ECC is disabled for raw accesses to the OOB data and we don't
-need to work around any issues with chips reporting ECC errors as it
-is known to be the case for raw NAND.
+This fixes a crash when this causes us to try and map a NULL page,
+at least with some platforms / DMA mapping configs.
 
-Fixes: 7529df465248 ("mtd: nand: Add core infrastructure to support SPI NANDs")
-Cc: stable@vger.kernel.org
-Signed-off-by: Frieder Schrempf <frieder.schrempf@kontron.de>
-Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-Link: https://lore.kernel.org/linux-mtd/20200218100432.32433-4-frieder.schrempf@kontron.de
+Cc: stable@vger.kernel.org # v4.19+
+Reported-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Gilad Ben-Yossef <gilad@benyossef.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/mtd/nand/spi/core.c |    3 ---
- 1 file changed, 3 deletions(-)
+ drivers/crypto/ccree/cc_buffer_mgr.c |   62 +++++++++++++++--------------------
+ drivers/crypto/ccree/cc_buffer_mgr.h |    1 
+ 2 files changed, 28 insertions(+), 35 deletions(-)
 
---- a/drivers/mtd/nand/spi/core.c
-+++ b/drivers/mtd/nand/spi/core.c
-@@ -612,7 +612,6 @@ static int spinand_markbad(struct nand_d
- 	};
- 	int ret;
+--- a/drivers/crypto/ccree/cc_buffer_mgr.c
++++ b/drivers/crypto/ccree/cc_buffer_mgr.c
+@@ -87,6 +87,8 @@ static unsigned int cc_get_sgl_nents(str
+ {
+ 	unsigned int nents = 0;
  
--	/* Erase block before marking it bad. */
- 	ret = spinand_select_target(spinand, pos->target);
- 	if (ret)
- 		return ret;
-@@ -621,8 +620,6 @@ static int spinand_markbad(struct nand_d
- 	if (ret)
- 		return ret;
++	*lbytes = 0;
++
+ 	while (nbytes && sg_list) {
+ 		nents++;
+ 		/* get the number of bytes in the last entry */
+@@ -95,6 +97,7 @@ static unsigned int cc_get_sgl_nents(str
+ 				nbytes : sg_list->length;
+ 		sg_list = sg_next(sg_list);
+ 	}
++
+ 	dev_dbg(dev, "nents %d last bytes %d\n", nents, *lbytes);
+ 	return nents;
+ }
+@@ -290,37 +293,25 @@ static int cc_map_sg(struct device *dev,
+ 		     unsigned int nbytes, int direction, u32 *nents,
+ 		     u32 max_sg_nents, u32 *lbytes, u32 *mapped_nents)
+ {
+-	if (sg_is_last(sg)) {
+-		/* One entry only case -set to DLLI */
+-		if (dma_map_sg(dev, sg, 1, direction) != 1) {
+-			dev_err(dev, "dma_map_sg() single buffer failed\n");
+-			return -ENOMEM;
+-		}
+-		dev_dbg(dev, "Mapped sg: dma_address=%pad page=%p addr=%pK offset=%u length=%u\n",
+-			&sg_dma_address(sg), sg_page(sg), sg_virt(sg),
+-			sg->offset, sg->length);
+-		*lbytes = nbytes;
+-		*nents = 1;
+-		*mapped_nents = 1;
+-	} else {  /*sg_is_last*/
+-		*nents = cc_get_sgl_nents(dev, sg, nbytes, lbytes);
+-		if (*nents > max_sg_nents) {
+-			*nents = 0;
+-			dev_err(dev, "Too many fragments. current %d max %d\n",
+-				*nents, max_sg_nents);
+-			return -ENOMEM;
+-		}
+-		/* In case of mmu the number of mapped nents might
+-		 * be changed from the original sgl nents
+-		 */
+-		*mapped_nents = dma_map_sg(dev, sg, *nents, direction);
+-		if (*mapped_nents == 0) {
+-			*nents = 0;
+-			dev_err(dev, "dma_map_sg() sg buffer failed\n");
+-			return -ENOMEM;
+-		}
++	int ret = 0;
++
++	*nents = cc_get_sgl_nents(dev, sg, nbytes, lbytes);
++	if (*nents > max_sg_nents) {
++		*nents = 0;
++		dev_err(dev, "Too many fragments. current %d max %d\n",
++			*nents, max_sg_nents);
++		return -ENOMEM;
+ 	}
  
--	spinand_erase_op(spinand, pos);
--
- 	return spinand_write_page(spinand, &req);
++	ret = dma_map_sg(dev, sg, *nents, direction);
++	if (dma_mapping_error(dev, ret)) {
++		*nents = 0;
++		dev_err(dev, "dma_map_sg() sg buffer failed %d\n", ret);
++		return -ENOMEM;
++	}
++
++	*mapped_nents = ret;
++
+ 	return 0;
  }
  
+@@ -555,11 +546,12 @@ void cc_unmap_aead_request(struct device
+ 		sg_virt(req->src), areq_ctx->src.nents, areq_ctx->assoc.nents,
+ 		areq_ctx->assoclen, req->cryptlen);
+ 
+-	dma_unmap_sg(dev, req->src, sg_nents(req->src), DMA_BIDIRECTIONAL);
++	dma_unmap_sg(dev, req->src, areq_ctx->src.mapped_nents,
++		     DMA_BIDIRECTIONAL);
+ 	if (req->src != req->dst) {
+ 		dev_dbg(dev, "Unmapping dst sgl: req->dst=%pK\n",
+ 			sg_virt(req->dst));
+-		dma_unmap_sg(dev, req->dst, sg_nents(req->dst),
++		dma_unmap_sg(dev, req->dst, areq_ctx->dst.mapped_nents,
+ 			     DMA_BIDIRECTIONAL);
+ 	}
+ 	if (drvdata->coherent &&
+@@ -881,7 +873,7 @@ static int cc_aead_chain_data(struct cc_
+ 					    &src_last_bytes);
+ 	sg_index = areq_ctx->src_sgl->length;
+ 	//check where the data starts
+-	while (sg_index <= size_to_skip) {
++	while (src_mapped_nents && (sg_index <= size_to_skip)) {
+ 		src_mapped_nents--;
+ 		offset -= areq_ctx->src_sgl->length;
+ 		sgl = sg_next(areq_ctx->src_sgl);
+@@ -908,7 +900,7 @@ static int cc_aead_chain_data(struct cc_
+ 			size_for_map += crypto_aead_ivsize(tfm);
+ 
+ 		rc = cc_map_sg(dev, req->dst, size_for_map, DMA_BIDIRECTIONAL,
+-			       &areq_ctx->dst.nents,
++			       &areq_ctx->dst.mapped_nents,
+ 			       LLI_MAX_NUM_OF_DATA_ENTRIES, &dst_last_bytes,
+ 			       &dst_mapped_nents);
+ 		if (rc)
+@@ -921,7 +913,7 @@ static int cc_aead_chain_data(struct cc_
+ 	offset = size_to_skip;
+ 
+ 	//check where the data starts
+-	while (sg_index <= size_to_skip) {
++	while (dst_mapped_nents && sg_index <= size_to_skip) {
+ 		dst_mapped_nents--;
+ 		offset -= areq_ctx->dst_sgl->length;
+ 		sgl = sg_next(areq_ctx->dst_sgl);
+@@ -1123,7 +1115,7 @@ int cc_map_aead_request(struct cc_drvdat
+ 	if (is_gcm4543)
+ 		size_to_map += crypto_aead_ivsize(tfm);
+ 	rc = cc_map_sg(dev, req->src, size_to_map, DMA_BIDIRECTIONAL,
+-		       &areq_ctx->src.nents,
++		       &areq_ctx->src.mapped_nents,
+ 		       (LLI_MAX_NUM_OF_ASSOC_DATA_ENTRIES +
+ 			LLI_MAX_NUM_OF_DATA_ENTRIES),
+ 		       &dummy, &mapped_nents);
+--- a/drivers/crypto/ccree/cc_buffer_mgr.h
++++ b/drivers/crypto/ccree/cc_buffer_mgr.h
+@@ -25,6 +25,7 @@ enum cc_sg_cpy_direct {
+ 
+ struct cc_mlli {
+ 	cc_sram_addr_t sram_addr;
++	unsigned int mapped_nents;
+ 	unsigned int nents; //sg nents
+ 	unsigned int mlli_nents; //mlli nents might be different than the above
+ };
 
 
