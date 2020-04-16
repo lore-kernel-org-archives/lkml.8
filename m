@@ -7,51 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3911C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:34:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65FA0C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:34:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D148B214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:34:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42156214AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:34:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587051247;
-	bh=OX08Yy+S0/dVbFy6XcBFg78t8CZ/ZdRHwjDiG4BWfVM=;
+	s=default; t=1587051253;
+	bh=lFhx4Pwgt/IIWG+kD1mKhR5l8kclKGuuGvtVWpV6au4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=x+6hRE6z7ONqTu8e3rPX2DHFWsFPBjyAEycBPlvA1qXjYHJeeRRrq2UWQGVFl3O0l
-	 T7jKSV82MSER1uTmuFIJyLVxY+SWUZTWhuDRezNJPmhGUxXw5ynuOkRQ94Pst9A6c/
-	 rbifIh3b2RWfgLp4583jPdNvmBNpv2LeBVpev7cE=
+	b=I9QVuf1PLiqpwIpktnOstLY8HCUXOYueouNprWm53GCiohYurov20z8Mvw651QPLM
+	 USikgv2s3OP5lJed95C3LOo+o6vPcc2lpPgcoQmFD7nC45vYXTwsI6df1ClzyxFbCb
+	 xW2jvVLrCE/ycFlq4Abmk1Q6bAqBbIMgMjU8oxxg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2442580AbgDPPeG (ORCPT
+        id S2442589AbgDPPeL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:34:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53590 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 11:34:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53632 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2898216AbgDPNkw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:40:52 -0400
+        id S2898219AbgDPNky (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:40:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2DD9A214D8;
-        Thu, 16 Apr 2020 13:40:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9351720732;
+        Thu, 16 Apr 2020 13:40:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044451;
-        bh=OX08Yy+S0/dVbFy6XcBFg78t8CZ/ZdRHwjDiG4BWfVM=;
+        s=default; t=1587044454;
+        bh=lFhx4Pwgt/IIWG+kD1mKhR5l8kclKGuuGvtVWpV6au4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=paMwxTuxFiR9xBF990B35BAzHlVPcbmLOJcVtF8FKBY5DMPtlp7Jm1kkoo1PRve+U
-         hjqpDJmXCTPG2HwRjAA6Ar72MTdDQA7Z/ebks3eetL6paETB9blpdtETRedc+Q56M3
-         GIS8lU3m2qQe3EHWB/kNZtAYT7BwL/jRd3RtW2rg=
+        b=Y0G0dCGbz1MRbIvnqynEgq7EiaWolm3uRJGDT8DelnAGQXwWTwfBVeowfJxhuu0GK
+         8kwVT31qTmoqg0LatM4nMrUp3nKhrf+AsZpL5HvU7fNyCkraOMSIxwRfJVKu1jTvd0
+         S8kT6oC2B2MHtnF6C7t6Ej2ezIODNFgxigPitMMg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sam Lunt <samuel.j.lunt@gmail.com>,
-        He Zhe <zhe.he@windriver.com>, Jiri Olsa <jolsa@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>, trivial@kernel.org,
-        stable@kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 5.5 223/257] perf tools: Support Python 3.8+ in Makefile
-Date:   Thu, 16 Apr 2020 15:24:34 +0200
-Message-Id: <20200416131353.772880178@linuxfoundation.org>
+        stable@vger.kernel.org, Michael Mueller <mimu@linux.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>
+Subject: [PATCH 5.5 224/257] s390/diag: fix display of diagnose call statistics
+Date:   Thu, 16 Apr 2020 15:24:35 +0200
+Message-Id: <20200416131353.894962281@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.891903893@linuxfoundation.org>
 References: <20200416131325.891903893@linuxfoundation.org>
@@ -64,59 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sam Lunt <samueljlunt@gmail.com>
+From: Michael Mueller <mimu@linux.ibm.com>
 
-commit b9c9ce4e598e012ca7c1813fae2f4d02395807de upstream.
+commit 6c7c851f1b666a8a455678a0b480b9162de86052 upstream.
 
-Python 3.8 changed the output of 'python-config --ldflags' to no longer
-include the '-lpythonX.Y' flag (this apparently fixed an issue loading
-modules with a statically linked Python executable).  The libpython
-feature check in linux/build/feature fails if the Python library is not
-included in FEATURE_CHECK_LDFLAGS-libpython variable.
+Show the full diag statistic table and not just parts of it.
 
-This adds a check in the Makefile to determine if PYTHON_CONFIG accepts
-the '--embed' flag and passes that flag alongside '--ldflags' if so.
+The issue surfaced in a KVM guest with a number of vcpus
+defined smaller than NR_DIAG_STAT.
 
-tools/perf is the only place the libpython feature check is used.
-
-Signed-off-by: Sam Lunt <samuel.j.lunt@gmail.com>
-Tested-by: He Zhe <zhe.he@windriver.com>
-Link: http://lore.kernel.org/lkml/c56be2e1-8111-9dfe-8298-f7d0f9ab7431@windriver.com
-Acked-by: Jiri Olsa <jolsa@redhat.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: trivial@kernel.org
-Cc: stable@kernel.org
-Link: http://lore.kernel.org/lkml/20200131181123.tmamivhq4b7uqasr@gmail.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Fixes: 1ec2772e0c3c ("s390/diag: add a statistic for diagnose calls")
+Cc: stable@vger.kernel.org
+Signed-off-by: Michael Mueller <mimu@linux.ibm.com>
+Reviewed-by: Heiko Carstens <heiko.carstens@de.ibm.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- tools/perf/Makefile.config |   11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+ arch/s390/kernel/diag.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/tools/perf/Makefile.config
-+++ b/tools/perf/Makefile.config
-@@ -228,8 +228,17 @@ strip-libs  = $(filter-out -l%,$(1))
+--- a/arch/s390/kernel/diag.c
++++ b/arch/s390/kernel/diag.c
+@@ -84,7 +84,7 @@ static int show_diag_stat(struct seq_fil
  
- PYTHON_CONFIG_SQ := $(call shell-sq,$(PYTHON_CONFIG))
+ static void *show_diag_stat_start(struct seq_file *m, loff_t *pos)
+ {
+-	return *pos <= nr_cpu_ids ? (void *)((unsigned long) *pos + 1) : NULL;
++	return *pos <= NR_DIAG_STAT ? (void *)((unsigned long) *pos + 1) : NULL;
+ }
  
-+# Python 3.8 changed the output of `python-config --ldflags` to not include the
-+# '-lpythonX.Y' flag unless '--embed' is also passed. The feature check for
-+# libpython fails if that flag is not included in LDFLAGS
-+ifeq ($(shell $(PYTHON_CONFIG_SQ) --ldflags --embed 2>&1 1>/dev/null; echo $$?), 0)
-+  PYTHON_CONFIG_LDFLAGS := --ldflags --embed
-+else
-+  PYTHON_CONFIG_LDFLAGS := --ldflags
-+endif
-+
- ifdef PYTHON_CONFIG
--  PYTHON_EMBED_LDOPTS := $(shell $(PYTHON_CONFIG_SQ) --ldflags 2>/dev/null)
-+  PYTHON_EMBED_LDOPTS := $(shell $(PYTHON_CONFIG_SQ) $(PYTHON_CONFIG_LDFLAGS) 2>/dev/null)
-   PYTHON_EMBED_LDFLAGS := $(call strip-libs,$(PYTHON_EMBED_LDOPTS))
-   PYTHON_EMBED_LIBADD := $(call grep-libs,$(PYTHON_EMBED_LDOPTS)) -lutil
-   PYTHON_EMBED_CCOPTS := $(shell $(PYTHON_CONFIG_SQ) --includes 2>/dev/null)
+ static void *show_diag_stat_next(struct seq_file *m, void *v, loff_t *pos)
 
 
