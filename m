@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF321C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:41:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2268CC2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:41:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B978D22241
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:41:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E36F72072D
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:41:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587051667;
-	bh=x3Qs4aSBXK64Z+K9htOVT9QwK/aJU4j3a0hDBID9p/U=;
+	s=default; t=1587051675;
+	bh=WtyTCRlFyMzJAkJbuvSlHht8TZrezfj5ottSM/w2hRY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OdYtTHdUUp04wA0HIB9LUuwCxmPl82YqNm3i/ZFRyuCtBZDqezS5SDTwciiq85bH2
-	 6+UJEOqEKz3bSjuHYEqoxgvMyaERVsAYp+bBiY10EUJn0wh7EEemQ7+OyXes447oj7
-	 TBfCk284u5covjxlwPES7fSIdTOGa19x70CuHxLQ=
+	b=e8OD1/Z7MFv+hDQtFhviIHxrAoCjYoYwSqbt+kkWvb4xndrjUYlamDjyvSrZ4nC5/
+	 Yuwr1wgiUNxY+IiytoAtkl3h4AbOq/kKKZRbqTODyuWW52sNDtJ5IiYWxlJFqYH2Vj
+	 B8InOLJFLdhjkCg95WTxtpJRw9CQvWnGEz5Myf7c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395501AbgDPPlD (ORCPT
+        id S2395508AbgDPPlM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:41:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49786 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 11:41:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49502 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2897470AbgDPNh3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:37:29 -0400
+        id S2897428AbgDPNhP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:37:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E9D97221EB;
-        Thu, 16 Apr 2020 13:37:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 38A7C221F9;
+        Thu, 16 Apr 2020 13:37:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044249;
-        bh=x3Qs4aSBXK64Z+K9htOVT9QwK/aJU4j3a0hDBID9p/U=;
+        s=default; t=1587044234;
+        bh=WtyTCRlFyMzJAkJbuvSlHht8TZrezfj5ottSM/w2hRY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=l/I0wCTaIAIzQuF4RLi6BuWQ095yviDLN5QiPAUwpefj/fs4wu0FBPKihR4pABj7Y
-         OGbbexotFBYziRZxSIUF3NIF4Ktnnx/AdvzqXvMg4YMEy6wlPBbwAYqlGFyGoKVRmH
-         9BAspEJFfEwHKhQSa176Apbj/RzOahKPDWmRbEuY=
+        b=qBu8xALIy2nsCst/Fx+ArA/v0up1T6TWVMX2rYKlfeLeI3Iz/LHDH2HtO8px5LKUD
+         zuwzqmS0/+UP6h/iODMIHo1Q2yHIfn63bmNNls0LWYKRYiuQD+P2Jo6ryD5IXdi2tP
+         YY0VpCf2u6Y+h2M0WB88p/lP9FpGsc4npI7E7QO4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kristian Klausen <kristian@klausen.dk>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH 5.5 141/257] platform/x86: asus-wmi: Support laptops where the first battery is named BATT
-Date:   Thu, 16 Apr 2020 15:23:12 +0200
-Message-Id: <20200416131344.056757034@linuxfoundation.org>
+        stable@vger.kernel.org, Remi Pommarel <repk@triplefau.lt>,
+        Kalle Valo <kvalo@codeaurora.org>
+Subject: [PATCH 5.5 135/257] ath9k: Handle txpower changes even when TPC is disabled
+Date:   Thu, 16 Apr 2020 15:23:06 +0200
+Message-Id: <20200416131343.334987227@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.891903893@linuxfoundation.org>
 References: <20200416131325.891903893@linuxfoundation.org>
@@ -59,41 +59,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kristian Klausen <kristian@klausen.dk>
+From: Remi Pommarel <repk@triplefau.lt>
 
-commit 6b3586d45bba14f6912f37488090c37a3710e7b4 upstream.
+commit 968ae2caad0782db5dbbabb560d3cdefd2945d38 upstream.
 
-The WMI method to set the charge threshold does not provide a
-way to specific a battery, so we assume it is the first/primary
-battery (by checking if the name is BAT0).
-On some newer ASUS laptops (Zenbook UM431DA) though, the
-primary/first battery isn't named BAT0 but BATT, so we need
-to support that case.
+When TPC is disabled IEEE80211_CONF_CHANGE_POWER event can be handled to
+reconfigure HW's maximum txpower.
 
-Fixes: 7973353e92ee ("platform/x86: asus-wmi: Refactor charge threshold to use the battery hooking API")
+This fixes 0dBm txpower setting when user attaches to an interface for
+the first time with the following scenario:
+
+ieee80211_do_open()
+    ath9k_add_interface()
+        ath9k_set_txpower() /* Set TX power with not yet initialized
+                               sc->hw->conf.power_level */
+
+    ieee80211_hw_config() /* Iniatilize sc->hw->conf.power_level and
+                             raise IEEE80211_CONF_CHANGE_POWER */
+
+    ath9k_config() /* IEEE80211_CONF_CHANGE_POWER is ignored */
+
+This issue can be reproduced with the following:
+
+  $ modprobe -r ath9k
+  $ modprobe ath9k
+  $ wpa_supplicant -i wlan0 -c /tmp/wpa.conf &
+  $ iw dev /* Here TX power is either 0 or 3 depending on RF chain */
+  $ killall wpa_supplicant
+  $ iw dev /* TX power goes back to calibrated value and subsequent
+              calls will be fine */
+
+Fixes: 283dd11994cde ("ath9k: add per-vif TX power capability")
 Cc: stable@vger.kernel.org
-Signed-off-by: Kristian Klausen <kristian@klausen.dk>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Remi Pommarel <repk@triplefau.lt>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/platform/x86/asus-wmi.c |    5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/net/wireless/ath/ath9k/main.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/drivers/platform/x86/asus-wmi.c
-+++ b/drivers/platform/x86/asus-wmi.c
-@@ -418,8 +418,11 @@ static int asus_wmi_battery_add(struct p
- {
- 	/* The WMI method does not provide a way to specific a battery, so we
- 	 * just assume it is the first battery.
-+	 * Note: On some newer ASUS laptops (Zenbook UM431DA), the primary/first
-+	 * battery is named BATT.
- 	 */
--	if (strcmp(battery->desc->name, "BAT0") != 0)
-+	if (strcmp(battery->desc->name, "BAT0") != 0 &&
-+	    strcmp(battery->desc->name, "BATT") != 0)
- 		return -ENODEV;
+--- a/drivers/net/wireless/ath/ath9k/main.c
++++ b/drivers/net/wireless/ath/ath9k/main.c
+@@ -1457,6 +1457,9 @@ static int ath9k_config(struct ieee80211
+ 		ath_chanctx_set_channel(sc, ctx, &hw->conf.chandef);
+ 	}
  
- 	if (device_create_file(&battery->dev,
++	if (changed & IEEE80211_CONF_CHANGE_POWER)
++		ath9k_set_txpower(sc, NULL);
++
+ 	mutex_unlock(&sc->mutex);
+ 	ath9k_ps_restore(sc);
+ 
 
 
