@@ -2,149 +2,183 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 687FBC352BE
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 12:08:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DDACC2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 12:10:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 530BD20767
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 12:08:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 118B720767
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 12:10:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2635042AbgDPMIY (ORCPT
+        id S2635097AbgDPMKD convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 08:08:24 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:38952 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2634744AbgDPMIK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 08:08:10 -0400
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 0B70046E24AE8485149C;
-        Thu, 16 Apr 2020 20:08:06 +0800 (CST)
-Received: from [127.0.0.1] (10.142.68.147) by DGGEMS406-HUB.china.huawei.com
- (10.3.19.206) with Microsoft SMTP Server id 14.3.487.0; Thu, 16 Apr 2020
- 20:07:55 +0800
-Subject: Re: [PATCH] KVM: handle the right RAS SEA(Synchronous External Abort)
- type
-To:     James Morse <james.morse@arm.com>
-CC:     <maz@kernel.org>, <julien.thierry.kdev@gmail.com>,
-        <suzuki.poulose@arm.com>, <catalin.marinas@arm.com>,
-        <will@kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        <kvmarm@lists.cs.columbia.edu>, <linux-kernel@vger.kernel.org>,
-        <zhengxiang9@huawei.com>, <tanxiaofei@huawei.com>,
-        <linuxarm@huawei.com>
-References: <20200411121740.37615-1-gengdongjiu@huawei.com>
- <0fa259ab-0e2f-a8b3-783d-24a725b4cc5d@arm.com>
-From:   gengdongjiu <gengdongjiu@huawei.com>
-Message-ID: <65414dc5-1cd7-003d-7c6a-5da62c6a4a1d@huawei.com>
-Date:   Thu, 16 Apr 2020 20:07:52 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.3.0
-MIME-Version: 1.0
-In-Reply-To: <0fa259ab-0e2f-a8b3-783d-24a725b4cc5d@arm.com>
-Content-Type: text/plain; charset="utf-8"
+        Thu, 16 Apr 2020 08:10:03 -0400
+Received: from mga06.intel.com ([134.134.136.31]:62062 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2634901AbgDPMJd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 08:09:33 -0400
+IronPort-SDR: 9UgL5jWQLPSKZp0vmiHPvjuIREB90tx3CcWpBi0KuU3ny2EPlI7p7j/LYJQ+yMVY8Hq6Q7SL2H
+ OroywUm8NZwg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2020 05:09:30 -0700
+IronPort-SDR: 7/ajiPgfD/BuSBclgpGNfPwHnIMKHqpR58/pw/L7zRnXqSjCRTatWo3VkclArs9/eogSwWzkF+
+ L4fqzsXpsUIQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,390,1580803200"; 
+   d="scan'208";a="272049486"
+Received: from fmsmsx103.amr.corp.intel.com ([10.18.124.201])
+  by orsmga002.jf.intel.com with ESMTP; 16 Apr 2020 05:09:29 -0700
+Received: from shsmsx152.ccr.corp.intel.com (10.239.6.52) by
+ FMSMSX103.amr.corp.intel.com (10.18.124.201) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Thu, 16 Apr 2020 05:09:29 -0700
+Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.225]) by
+ SHSMSX152.ccr.corp.intel.com ([169.254.6.209]) with mapi id 14.03.0439.000;
+ Thu, 16 Apr 2020 20:09:26 +0800
+From:   "Tian, Kevin" <kevin.tian@intel.com>
+To:     "Liu, Yi L" <yi.l.liu@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>
+CC:     "eric.auger@redhat.com" <eric.auger@redhat.com>,
+        "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Tian, Jun J" <jun.j.tian@intel.com>,
+        "Sun, Yi Y" <yi.y.sun@intel.com>,
+        "jean-philippe@linaro.org" <jean-philippe@linaro.org>,
+        "peterx@redhat.com" <peterx@redhat.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Wu, Hao" <hao.wu@intel.com>
+Subject: RE: [PATCH v1 7/8] vfio/type1: Add VFIO_IOMMU_CACHE_INVALIDATE
+Thread-Topic: [PATCH v1 7/8] vfio/type1: Add VFIO_IOMMU_CACHE_INVALIDATE
+Thread-Index: AQHWAEUdbUtKvEWiiEiZu1SnRvWegKhl0sQAgAEuFaCAABNDAIAUHAOAgACdTsA=
+Date:   Thu, 16 Apr 2020 12:09:25 +0000
+Message-ID: <AADFC41AFE54684AB9EE6CBC0274A5D19D82336C@SHSMSX104.ccr.corp.intel.com>
+References: <1584880325-10561-1-git-send-email-yi.l.liu@intel.com>
+        <1584880325-10561-8-git-send-email-yi.l.liu@intel.com>
+        <20200402142428.2901432e@w520.home>
+        <AADFC41AFE54684AB9EE6CBC0274A5D19D807C4A@SHSMSX104.ccr.corp.intel.com>
+ <20200403093436.094b1928@w520.home>
+ <A2975661238FB949B60364EF0F2C25743A231BAA@SHSMSX104.ccr.corp.intel.com>
+In-Reply-To: <A2975661238FB949B60364EF0F2C25743A231BAA@SHSMSX104.ccr.corp.intel.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.142.68.147]
-X-CFilter-Loop: Reflected
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [10.239.127.40]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi James
-
-On 2020/4/14 20:18, James Morse wrote:
-> Hi Geng,
+> From: Liu, Yi L <yi.l.liu@intel.com>
+> Sent: Thursday, April 16, 2020 6:40 PM
 > 
-> On 11/04/2020 13:17, Dongjiu Geng wrote:
->> When the RAS Extension is implemented, b0b011000, 0b011100,
->> 0b011101, 0b011110, and 0b011111, are not used and reserved
->> to the DFSC[5:0] of ESR_ELx, but the code still checks these
->> unused bits, so remove them.
+> Hi Alex,
+> Still have a direction question with you. Better get agreement with you
+> before heading forward.
 > 
-> They aren't unused: CPUs without the RAS extensions may still generate these.
+> > From: Alex Williamson <alex.williamson@redhat.com>
+> > Sent: Friday, April 3, 2020 11:35 PM
+> [...]
+> > > > > + *
+> > > > > + * returns: 0 on success, -errno on failure.
+> > > > > + */
+> > > > > +struct vfio_iommu_type1_cache_invalidate {
+> > > > > +	__u32   argsz;
+> > > > > +	__u32   flags;
+> > > > > +	struct	iommu_cache_invalidate_info cache_info;
+> > > > > +};
+> > > > > +#define VFIO_IOMMU_CACHE_INVALIDATE      _IO(VFIO_TYPE,
+> > VFIO_BASE
+> > > > + 24)
+> > > >
+> > > > The future extension capabilities of this ioctl worry me, I wonder if
+> > > > we should do another data[] with flag defining that data as
+> CACHE_INFO.
+> > >
+> > > Can you elaborate? Does it mean with this way we don't rely on iommu
+> > > driver to provide version_to_size conversion and instead we just pass
+> > > data[] to iommu driver for further audit?
+> >
+> > No, my concern is that this ioctl has a single function, strictly tied
+> > to the iommu uapi.  If we replace cache_info with data[] then we can
+> > define a flag to specify that data[] is struct
+> > iommu_cache_invalidate_info, and if we need to, a different flag to
+> > identify data[] as something else.  For example if we get stuck
+> > expanding cache_info to meet new demands and develop a new uapi to
+> > solve that, how would we expand this ioctl to support it rather than
+> > also create a new ioctl?  There's also a trade-off in making the ioctl
+> > usage more difficult for the user.  I'd still expect the vfio layer to
+> > check the flag and interpret data[] as indicated by the flag rather
+> > than just passing a blob of opaque data to the iommu layer though.
+> > Thanks,
 > 
-> kvm_handle_guest_abort() wants to know if this is an external abort.
-> KVM doesn't really care if the CPU has the RAS extensions or not, its the arch code's job
-> to sort all that out.
-
-No, handle_guest_sea() ---> ghes_notify_sea  ---> apei driver
-
-If it is an  external abort, it will call apei driver to handle it, but it should be only SEA will call the apei driver.
-other type of external abort should not call apei driver.
-I am not see arch code sort all that out.
-
-        /* Synchronous External Abort? */
-        if (kvm_vcpu_dabt_isextabt(vcpu)) {
-                /*
-                 * For RAS the host kernel may handle this abort.
-                 * There is no need to pass the error into the guest.
-                 */
-                if (!handle_guest_sea(fault_ipa, kvm_vcpu_get_hsr(vcpu)))
-                        return 1;
-         }
-
+> Based on your comments about defining a single ioctl and a unified
+> vfio structure (with a @data[] field) for pasid_alloc/free, bind/
+> unbind_gpasid, cache_inv. After some offline trying, I think it would
+> be good for bind/unbind_gpasid and cache_inv as both of them use the
+> iommu uapi definition. While the pasid alloc/free operation doesn't.
+> It would be weird to put all of them together. So pasid alloc/free
+> may have a separate ioctl. It would look as below. Does this direction
+> look good per your opinion?
 > 
+> ioctl #22: VFIO_IOMMU_PASID_REQUEST
+> /**
+>   * @pasid: used to return the pasid alloc result when flags == ALLOC_PASID
+>   *         specify a pasid to be freed when flags == FREE_PASID
+>   * @range: specify the allocation range when flags == ALLOC_PASID
+>   */
+> struct vfio_iommu_pasid_request {
+> 	__u32	argsz;
+> #define VFIO_IOMMU_ALLOC_PASID	(1 << 0)
+> #define VFIO_IOMMU_FREE_PASID	(1 << 1)
+> 	__u32	flags;
+> 	__u32	pasid;
+> 	struct {
+> 		__u32	min;
+> 		__u32	max;
+> 	} range;
+> };
 > 
->> If the handling of guest ras data error fails, it should
->> inject data instead of SError to let the guest recover as
->> much as possible.
-
-In some hardware platform, it supports RAS, but the RAS error address will be not recorded, so it is better to inject a data abort instead of SError for thtat platform.
-because guest will try to do recovery for the Synchronous data abort, such as kill the error application. But for SError, guest will be panic.
-
+> ioctl #23: VFIO_IOMMU_NESTING_OP
+> struct vfio_iommu_type1_nesting_op {
+> 	__u32	argsz;
+> 	__u32	flags;
+> 	__u32	op;
+> 	__u8	data[];
+> };
 > 
-> (I don't quite follow your point here).
-> 
-> If KVM injected a synchronous external abort due to a RAS error here, then you wouldn't be
-> able to support firmware-first RAS with Qemu. I don't think this is what you want.
-> 
-> 
-> The handling is (and should be) decoupled.
-> 
-> KVM guests aren't special. Whatever happens for a normal user-space process is what should
-> happen here. KVM is just doing the plumbing:
-> 
-> When the hypervisor takes an external abort due to the guest, it should plumb the error
-> into the arch code to be handled. This is what would happen for a normal EL0 process.
-> This is what do_sea() and kvm_handle_guest_sea() do with apei_claim_sea().
-> 
-> If the RAS code says it handled this error, then we can continue. For user-space, we
-> return to user-space. For a guest, we return to the guest. (for user-space this piece is
-> not quite complete in mainline, see:
-> https://lore.kernel.org/linux-acpi/20200228174817.74278-4-james.morse@arm.com/ )
-> 
-> This first part happens even if the errors are notified by IRQs, or found in a polled buffer.
-> 
-> The RAS code may have 'handled' the memory by unmapping it, and marking the corresponding
-> page as HWPOISONed. If user-space tries to access this, it will be give an
-> SIGBUS:MCEERR_AR. If a guest tries to do this, the same things happens. (The signal goes
-> to Qemu).
-> (See do_page_fault()s use of the MCEERR si_code's, and kvm_send_hwpoison_signal)
-> 
-> This second part is the same regardless of how the kernel discovered the RAS error in the
-> first place.
-> 
-> 
-> If the RAS code says it did not handle this error, it means it wasn't a RAS error, or your
-> platform doesn't support RAS. For an external-abort there is very little the hypervisor
-> can do in this situation. It does what KVM has always done: inject an asynchronous
-> external abort.
-> This should only happen if the host has failed to handle the error. KVM's use of
-> asynchronous abort is the simplest one size fits all.
-> 
-> Are you seeing this happen? If so, what are the circumstances. Did the host handle the
-> error? (if not: why not!)
-
-Yes, some platform supports RAS but will not record the error address, so the host has failed to handle the error.
-
-> 
-> 
-> Thanks,
-> 
-> James
-> .
+> /* Nesting Ops */
+> #define VFIO_IOMMU_NESTING_OP_BIND_PGTBL        0
+> #define VFIO_IOMMU_NESTING_OP_UNBIND_PGTBL      1
+> #define VFIO_IOMMU_NESTING_OP_CACHE_INVLD       2
 > 
 
+Then why cannot we just put PASID into the header since the
+majority of nested usage is associated with a pasid? 
+
+ioctl #23: VFIO_IOMMU_NESTING_OP
+struct vfio_iommu_type1_nesting_op {
+	__u32	argsz;
+	__u32	flags;
+	__u32	op;
+	__u32   pasid;
+	__u8	data[];
+};
+
+In case of SMMUv2 which supports nested w/o PASID, this field can
+be ignored for that specific case.
+
+Thanks
+Kevin
