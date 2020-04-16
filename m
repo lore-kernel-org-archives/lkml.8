@@ -2,114 +2,91 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8856BC2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 16:27:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5403DC2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 16:27:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 706E120857
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 16:27:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 312BC2223E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 16:27:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="wUMC0iiC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408199AbgDPQ11 (ORCPT
+        id S2393333AbgDPQ1Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 12:27:27 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:18620 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2391186AbgDPQ1Z (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 16 Apr 2020 12:27:25 -0400
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03GG5wXP098341
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 12:27:24 -0400
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30eqd7qvwn-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 12:27:24 -0400
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <ldufour@linux.ibm.com>;
-        Thu, 16 Apr 2020 17:26:45 +0100
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 16 Apr 2020 17:26:42 +0100
-Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03GGRHhJ52428924
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 16 Apr 2020 16:27:18 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D662942041;
-        Thu, 16 Apr 2020 16:27:17 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 763554204B;
-        Thu, 16 Apr 2020 16:27:17 +0000 (GMT)
-Received: from pomme.tlslab.ibm.com (unknown [9.145.24.8])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 16 Apr 2020 16:27:17 +0000 (GMT)
-From:   Laurent Dufour <ldufour@linux.ibm.com>
-To:     kvm-ppc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Cc:     paulus@samba.org, mpe@ellerman.id.au, linux-kernel@vger.kernel.org,
-        Alexey Kardashevskiy <aik@ozlabs.ru>, benh@kernel.crashing.org
-Subject: [PATCH] KVM: PPC: Book3S HV: read ibm,secure-memory nodes
-Date:   Thu, 16 Apr 2020 18:27:15 +0200
-X-Mailer: git-send-email 2.26.1
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55602 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1732468AbgDPQ1X (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 12:27:23 -0400
+Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D58ACC061A0F
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 09:27:22 -0700 (PDT)
+Received: by mail-il1-x141.google.com with SMTP id t4so6078317ilp.1
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 09:27:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=5DsdlMWlvuKqdtofFGPhOBVDzjYRJgpB+utt/BhA+Gg=;
+        b=wUMC0iiCB0tQ1cxYbtN02WiSpx8JmnyaLU5ZLLvSd1FVmiW0lGTTIM0Yc6qs5MfpYB
+         /NnHD75ZXPbMPmND6SalTeHbMOH2QfztZ619tbR5Pr0OezsUZLYJ75KHQ2ISCusbNp3y
+         Zoy3lFwZfvt5XHYCnUmTPrCcYusEZZsxDp60qXBJCrtGNe+sci7LBs6HDM8OjhPJ0Hyj
+         1O5XGyw3A/7/pwTGUbS1t0dBgol6qHj+BU0c1J2/udEV5dkhApZ6GTi9YBFmsVljCujI
+         X43Zsj85uzCfki6E3pI/dqd3K2blN6FnoG+nhHmcPgEdRBg2doNye7GZYCUdNU48RtDn
+         fvTA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=5DsdlMWlvuKqdtofFGPhOBVDzjYRJgpB+utt/BhA+Gg=;
+        b=mOWgg+oefYAS5rr6JG4MixPwdC8ID7dP9er1r3hMKbch5J8ywy6Hzrca5V0l6V9cWR
+         4pDAkVOKmeu5jYIL8rXsD6lZ51aQGiRDkatcGeDlBY6nYJgQR+Lj1fwesVZkdNRKNzUp
+         N4ozivRLcaVNJCkPKI9iJ0eRviEcqpgSCkcBrUYyD/ziGNWtv89WjjdrD1dDzTG+x9Wk
+         xg6U2diqrkc9YiUwKAlpAEiqdpr+3TB8yftUjmblsM6QULvDy5CTzTfMJAc7KbPdb4bX
+         loWNEH5KiZcCBkefRUCaM/uGTRy2BMvz04s0EiEaVVUfOmzD3iiDXXUMT/sxn/7ShdMR
+         0yOA==
+X-Gm-Message-State: AGi0PuaMcPkv27SyDshU/Y+737P73HZl9+L72EbiEtbd/3AwECBgSlld
+        OM6yd5yNLn0ZMz9VW/w2NQD41/X40OQvnQ==
+X-Google-Smtp-Source: APiQypJ0dfbckQxr1NrwNvt7cHhmbz6qQidF/3io3d3O3dqzN970+sNdaHNdcctW3wgajOCqL3gYuA==
+X-Received: by 2002:a92:d44e:: with SMTP id r14mr9721711ilm.244.1587054442072;
+        Thu, 16 Apr 2020 09:27:22 -0700 (PDT)
+Received: from [192.168.1.159] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id d10sm7251313ilu.46.2020.04.16.09.27.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 16 Apr 2020 09:27:21 -0700 (PDT)
+Subject: Re: [PATCH] ahci: Add Intel Comet Lake PCH-U PCI ID
+To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
+Cc:     "open list:LIBATA SUBSYSTEM (Serial and Parallel ATA drivers)" 
+        <linux-ide@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20200416063540.30462-1-kai.heng.feng@canonical.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <8b04c4e8-32f1-216e-055d-5ba2e1052750@kernel.dk>
+Date:   Thu, 16 Apr 2020 10:27:20 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 20041616-4275-0000-0000-000003C106C5
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20041616-4276-0000-0000-000038D68199
-Message-Id: <20200416162715.45846-1-ldufour@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-16_06:2020-04-14,2020-04-16 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 suspectscore=0
- spamscore=0 clxscore=1015 bulkscore=0 priorityscore=1501 malwarescore=0
- phishscore=0 mlxlogscore=999 lowpriorityscore=0 adultscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004160112
+In-Reply-To: <20200416063540.30462-1-kai.heng.feng@canonical.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The newly introduced ibm,secure-memory nodes supersede the
-ibm,uv-firmware's property secure-memory-ranges.
+On 4/16/20 12:35 AM, Kai-Heng Feng wrote:
+> Add Intel Comet Lake PCH-U PCI ID to the list of supported controllers.
+> 
+> Set default SATA LPM so the SoC can enter S0ix.
 
-Firmware will no more expose the secure-memory-ranges property so first
-read the new one and if not found rollback to the older one.
+Applied, thanks.
 
-Signed-off-by: Laurent Dufour <ldufour@linux.ibm.com>
----
- arch/powerpc/kvm/book3s_hv_uvmem.c | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
-
-diff --git a/arch/powerpc/kvm/book3s_hv_uvmem.c b/arch/powerpc/kvm/book3s_hv_uvmem.c
-index 53b88cae3e73..ad950f8996e0 100644
---- a/arch/powerpc/kvm/book3s_hv_uvmem.c
-+++ b/arch/powerpc/kvm/book3s_hv_uvmem.c
-@@ -735,6 +735,20 @@ static u64 kvmppc_get_secmem_size(void)
- 	const __be32 *prop;
- 	u64 size = 0;
- 
-+	/*
-+	 * First try the new ibm,secure-memory nodes which supersede the
-+	 * secure-memory-ranges property.
-+	 * If we found somes, no need to read the deprecated one.
-+	 */
-+	for_each_compatible_node(np, NULL, "ibm,secure-memory") {
-+		prop = of_get_property(np, "reg", &len);
-+		if (!prop)
-+			continue;
-+		size += of_read_number(prop + 2, 2);
-+	}
-+	if (size)
-+		return size;
-+
- 	np = of_find_compatible_node(NULL, NULL, "ibm,uv-firmware");
- 	if (!np)
- 		goto out;
 -- 
-2.26.1
+Jens Axboe
 
