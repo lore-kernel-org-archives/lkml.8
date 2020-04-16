@@ -2,98 +2,150 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9A49C352BE
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:53:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2286DC2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:53:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8F1F6206D9
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:53:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587048818;
-	bh=w2Ej3Tf7bYLxv0YY/vSBA1bE+ot8s4ZOc9fI9Z+53YQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=19cRNfEqhMQfxknZogIrtBMX/855Jbpvy+IM4e8m/d0vIEN7LQkWOsJt/5Rh0c5eO
-	 GKhfsqtd2xcMQ8IvAwjoWVUPWENGWdzvhCzwN4isj5Q8Xn5xyjhR10WCbb1eiqK24k
-	 yogQdIASpAWMZJ4PNbp/eBoa7hTGh9/jh0GPcIQc=
+	by mail.kernel.org (Postfix) with ESMTP id EAF16206A2
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:53:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="CMDKQUmL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403755AbgDPOxg (ORCPT
+        id S2403800AbgDPOxp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:53:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44188 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2409251AbgDPN5H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:57:07 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1C86421734;
-        Thu, 16 Apr 2020 13:57:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587045427;
-        bh=w2Ej3Tf7bYLxv0YY/vSBA1bE+ot8s4ZOc9fI9Z+53YQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RBM275C89iZjh1sFdI0UXMLeFsqNJ0qX3eQN58BA0ygFiNwoQO3DRQ71PV3AWpLQ6
-         OoMwH5jhhPvbDaRlWvvZhFrvbRxSpT297O1nVVR4oBaqezmj1mUD+VHp7cdTdhc9E6
-         YSamk9K4dYiNUYfeuBhRlku6GYRRA9WuznlH4KQ4=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kristian Klausen <kristian@klausen.dk>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH 5.6 129/254] platform/x86: asus-wmi: Support laptops where the first battery is named BATT
-Date:   Thu, 16 Apr 2020 15:23:38 +0200
-Message-Id: <20200416131342.593864784@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200416131325.804095985@linuxfoundation.org>
-References: <20200416131325.804095985@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Thu, 16 Apr 2020 10:53:45 -0400
+Received: from mail-bn8nam12on2083.outbound.protection.outlook.com ([40.107.237.83]:6051
+        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2409263AbgDPN5J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:57:09 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=kv8lRke9VMF+ZYQUNnYt4lPAd2IYWMSvInWxHVj1Tr6/i2V4zis325/rXZ2nbYcwgGV3Motcxu09MrEqWw94mBPEAhqnPcIlhDq6ALJjZ8RZq6DONZzivUdtNc53Komjxdg+GbbEAFA4S4C2X9u0in0IY6Ymj21DgBHriM6ffM6w358WEfZdYJ/+xQiAdABeTbPLOanR0Dccxs6ALFE1SKxijWdZXpKLLJFHkEZd/1erXU46VYzzLFQJQN71nT5ZOqDuePgPo0Ae6MGpk3PFIjdg4FfYADh1TW657fkpIpBCxBhwjTSEhq6oJkpmKkuR5Ig5TuuAZLTq1hqKWGXaBg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=+uxcJtdS18MDY1NC9DT6CVmBcNDt2kGXjY0DVaWNm88=;
+ b=RZk7Y8C/PoMHqimMCEc6kbhYJcTojMpzV2yRUICvsKvLxvRQn9UB6oWCRqAjbUDzVSH6M2Jbd3BuZnh0I8erp7HEE8rFNH/MRwySGL4oAgTASt99JgPR9Axxe71e/N+4ZTuxNzp3HBQa8ye6FBU8s6bmU4LzLgaf98YFn8QvGPRKssGiwJ0dA2fyMWMjM/6IKlLRY3jxeIpEh5EI4rtiqFbttt99c6bctT3AGoh5QzZCmw2mW7us2UqIBbuTx67Wd/Sit6uMILpHEK0h94JdEYZI7DuHhZt/VaPM3O+JSHOSdTNTSLISaKSXLAPqCz0wcVT1nBRdu02bbXDvtuIVFA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=+uxcJtdS18MDY1NC9DT6CVmBcNDt2kGXjY0DVaWNm88=;
+ b=CMDKQUmLRuAzU0z6b2zbGdcr4qjArUUadrBaOS/iHNK7qDC4ArxVbzHPerHh9NB58pP7KmcSUpPbL1P1wEmfpws79dYGYcbcQUqzHwrKMn/i9iRRlZBIDrbdwsi455Glh3yWrj3ybGagK9Hk71LJywF34J2hC1v9JvS+l9GM8aI=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=Thomas.Lendacky@amd.com; 
+Received: from DM6PR12MB3163.namprd12.prod.outlook.com (2603:10b6:5:15e::26)
+ by DM6PR12MB3930.namprd12.prod.outlook.com (2603:10b6:5:1c9::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.17; Thu, 16 Apr
+ 2020 13:57:07 +0000
+Received: from DM6PR12MB3163.namprd12.prod.outlook.com
+ ([fe80::f0f9:a88f:f840:2733]) by DM6PR12MB3163.namprd12.prod.outlook.com
+ ([fe80::f0f9:a88f:f840:2733%7]) with mapi id 15.20.2900.028; Thu, 16 Apr 2020
+ 13:57:07 +0000
+Subject: Re: [PATCH] KVM: SVM: fix compilation with modular PSP and
+ non-modular KVM
+To:     Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org
+Cc:     ubizjak@gmail.com
+References: <20200413075032.5546-1-pbonzini@redhat.com>
+From:   Tom Lendacky <thomas.lendacky@amd.com>
+Message-ID: <d8cab90f-8c9c-7f79-0913-ba0d8576206d@amd.com>
+Date:   Thu, 16 Apr 2020 08:57:05 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
+In-Reply-To: <20200413075032.5546-1-pbonzini@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SN2PR01CA0052.prod.exchangelabs.com (2603:10b6:800::20) To
+ DM6PR12MB3163.namprd12.prod.outlook.com (2603:10b6:5:15e::26)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from office-linux.texastahm.com (67.79.209.213) by SN2PR01CA0052.prod.exchangelabs.com (2603:10b6:800::20) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2921.27 via Frontend Transport; Thu, 16 Apr 2020 13:57:06 +0000
+X-Originating-IP: [67.79.209.213]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 9a38daea-571f-4620-85c1-08d7e20e0ce7
+X-MS-TrafficTypeDiagnostic: DM6PR12MB3930:
+X-Microsoft-Antispam-PRVS: <DM6PR12MB393031E0E01544C4F0AABAB9ECD80@DM6PR12MB3930.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
+X-Forefront-PRVS: 0375972289
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB3163.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(396003)(366004)(39860400002)(136003)(376002)(346002)(66476007)(5660300002)(31686004)(6486002)(8676002)(81156014)(2906002)(478600001)(66556008)(8936002)(66946007)(186003)(52116002)(36756003)(86362001)(6506007)(16526019)(6512007)(2616005)(26005)(4326008)(53546011)(31696002)(956004)(316002);DIR:OUT;SFP:1101;
+Received-SPF: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 5R7J4sC3uJfPl3FiqnmxbeMRy7Xj2fGzAUBWG4+lOyv0PXs7wcntbCud4p79VBMl6J+TcnFqvc7EBnSEuyfLEPxS8GvkFCgqxJ2D6awpHYN1Y1jBBZPTuFvzkwT+i8cwvYSObeTFCUhcQjshi+9mFXw5bLTwXZzW+ZT5mTg2rIcazpM84o75vKANLgLzQ+SfJy3EG83gUNvHRh9Jq+IY7UaSVxuOwsjs91c0xX95ghRWrTcoOhqQKzosX9iBtOBLWRzMe0gHMLo2yXLeZvDQvdG1YPryX7eYsQ4kZEH9cBvEkK8mbXRWo8kISXfR+AUjNcwxSh6clVMYM31q/jrkIYYr2tphwQIwaVwfDRVIUmJXWWsVMG1axuMELPScSuVkj5l0hTA2AeG4eB3DYyP2eJvy6WxFwOdlwI1X25qC3u7+KLIRgVbKmx2SsPL5QHTf
+X-MS-Exchange-AntiSpam-MessageData: mNJER00r4xKmVEXq2twWvOz1J1d5pxH/3RJBTbPBfru5S6RA0x/P9YemXuLkuWEvjBFFJhetUnydnFNxnj0WGpk3GC9ivrnNcvKQnBypX7xbnw7jxH5cs7N/9T3Z+iY0OgSRGhhFOk2uLmlGP+1MbA==
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9a38daea-571f-4620-85c1-08d7e20e0ce7
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Apr 2020 13:57:07.4131
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: LmEMOgCJkNlO1swvVpH1PH14ZKpk1OiKWYdEwA+VpOnX+nCpJX3+0E5VPDAZAj8PpbD4vzMLS9qAAjPSt9KUEQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB3930
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kristian Klausen <kristian@klausen.dk>
+On 4/13/20 2:50 AM, Paolo Bonzini wrote:
+> Use svm_sev_enabled() in order to cull all calls to PSP code.  Otherwise,
+> compilation fails with undefined symbols if the PSP device driver is compiled
+> as a module and KVM is not.
 
-commit 6b3586d45bba14f6912f37488090c37a3710e7b4 upstream.
+The Kconfig support will set CONFIG_KVM_AMD_SEV to "n" in this situation, 
+so it might be worth seeing if sev.o could be removed from the build at 
+that point. I'll try and look at that when I get a chance, but I'm 
+currently buried with a ton of other work.
 
-The WMI method to set the charge threshold does not provide a
-way to specific a battery, so we assume it is the first/primary
-battery (by checking if the name is BAT0).
-On some newer ASUS laptops (Zenbook UM431DA) though, the
-primary/first battery isn't named BAT0 but BATT, so we need
-to support that case.
+> 
+> Reported-by: Uros Bizjak <ubizjak@gmail.com>
+> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+> ---
+>   arch/x86/kvm/svm/sev.c | 5 ++++-
+>   1 file changed, 4 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/x86/kvm/svm/sev.c b/arch/x86/kvm/svm/sev.c
+> index 0e3fc311d7da..364ffe32139c 100644
+> --- a/arch/x86/kvm/svm/sev.c
+> +++ b/arch/x86/kvm/svm/sev.c
+> @@ -1117,7 +1117,7 @@ int __init sev_hardware_setup(void)
+>   	/* Maximum number of encrypted guests supported simultaneously */
+>   	max_sev_asid = cpuid_ecx(0x8000001F);
+>   
+> -	if (!max_sev_asid)
+> +        if (!svm_sev_enabled())
 
-Fixes: 7973353e92ee ("platform/x86: asus-wmi: Refactor charge threshold to use the battery hooking API")
-Cc: stable@vger.kernel.org
-Signed-off-by: Kristian Klausen <kristian@klausen.dk>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+It looks like these are spaces instead of tabs, could just be my email 
+veiwer, though.
 
----
- drivers/platform/x86/asus-wmi.c |    5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+>   		return 1;
+>   
+>   	/* Minimum ASID value that should be used for SEV guest */
+> @@ -1156,6 +1156,9 @@ int __init sev_hardware_setup(void)
+>   
+>   void sev_hardware_teardown(void)
+>   {
+> +        if (!svm_sev_enabled())
+> +                return;
+> +
 
---- a/drivers/platform/x86/asus-wmi.c
-+++ b/drivers/platform/x86/asus-wmi.c
-@@ -426,8 +426,11 @@ static int asus_wmi_battery_add(struct p
- {
- 	/* The WMI method does not provide a way to specific a battery, so we
- 	 * just assume it is the first battery.
-+	 * Note: On some newer ASUS laptops (Zenbook UM431DA), the primary/first
-+	 * battery is named BATT.
- 	 */
--	if (strcmp(battery->desc->name, "BAT0") != 0)
-+	if (strcmp(battery->desc->name, "BAT0") != 0 &&
-+	    strcmp(battery->desc->name, "BATT") != 0)
- 		return -ENODEV;
- 
- 	if (device_create_file(&battery->dev,
+Ditto on the spaces/tabs thing, here.
 
+Thanks,
+Tom
 
+>   	bitmap_free(sev_asid_bitmap);
+>   	bitmap_free(sev_reclaim_asid_bitmap);
+>   
+> 
