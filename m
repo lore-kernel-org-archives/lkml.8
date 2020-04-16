@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BD41C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:02:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8CA1C3815B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:02:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3CEBA22250
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:02:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9C1722250
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:02:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587045768;
-	bh=BOu0AN0pfQjoXKcTkTU6Nc2Y2gjBUNMbPmTmThh6Y0I=;
+	s=default; t=1587045773;
+	bh=7rP73lTWU6+Q7t9AJyrmnd9s5HX/5v+B3ctmotKKrpU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EC4W2rOeZypRFg21CLF4yEwNEnvB2wyZHwBxWu9/LLLroaBxId82glyQQpdw3APOT
-	 xwFTJ3vbk/fmSmNJaowwgmfwfjAyu+ZgjuKijcYc8fOcjqBvl3a57NCCsMyZqRdmxX
-	 ZsgIO8lfBzjaEDhifQpseDB3hhT9lhBA9xMvriW4=
+	b=iTr9kVBjFIBWjUDjRqkT+dllo3atu0aFf6rU+8B+MwBH89C6CU7M/1BomIEDDr74X
+	 uCcVJ5Vc8TmsfGLuPKVHAoGQVN8fdMGwLxDXTxllkIw+wz5HNUweTKHlTVLLJjwpcp
+	 arqoMbjZBy9x180RHPR058NLNL9mB7Hr0LkezinA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2505186AbgDPOCq (ORCPT
+        id S1728297AbgDPOCv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:02:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54628 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 10:02:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54804 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2898352AbgDPNln (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:41:43 -0400
+        id S2898379AbgDPNlx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:41:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9E952214D8;
-        Thu, 16 Apr 2020 13:41:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7ED732076D;
+        Thu, 16 Apr 2020 13:41:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044503;
-        bh=BOu0AN0pfQjoXKcTkTU6Nc2Y2gjBUNMbPmTmThh6Y0I=;
+        s=default; t=1587044513;
+        bh=7rP73lTWU6+Q7t9AJyrmnd9s5HX/5v+B3ctmotKKrpU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kr3qPryl//Ul4T2HMr/LiU/v4eZLTvBetroyIu0IxMEVPXCccqCLpI9Z8sLPgo8Sc
-         V0qs3Kfam9Y9oa8IzbQ0gN6wlUzqTQbUaejgwwWWeEnFwrmsPGgRj645Y9/IDgJFLx
-         0ul6O+535x0Bed5STIVyhO/1m9diGUCHXLeJ3ngA=
+        b=mvTltQ0VccKQvvceFN301QAUr2DgmyU3jnTFGyytVYUITTCMyPHkij8np9sp2erqO
+         3jSVB3rZWE9EY1A2j3IOWU6lJV4XOWP5nuj05bSGKeYqLx1/0dg1GnbgfgZSHKKmp0
+         ySO5ea0mdeRNRdLrgap+N/qzXdcmrGEV7Ns1ougg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chris Wilson <chris@chris-wilson.co.uk>,
-        Matthew Auld <matthew.william.auld@gmail.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>
-Subject: [PATCH 5.5 207/257] drm/i915/gem: Flush all the reloc_gpu batch
-Date:   Thu, 16 Apr 2020 15:24:18 +0200
-Message-Id: <20200416131351.953230891@linuxfoundation.org>
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Christian Gmeiner <christian.gmeiner@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>
+Subject: [PATCH 5.5 208/257] drm/etnaviv: rework perfmon query infrastructure
+Date:   Thu, 16 Apr 2020 15:24:19 +0200
+Message-Id: <20200416131352.073781570@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.891903893@linuxfoundation.org>
 References: <20200416131325.891903893@linuxfoundation.org>
@@ -60,45 +60,136 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chris Wilson <chris@chris-wilson.co.uk>
+From: Christian Gmeiner <christian.gmeiner@gmail.com>
 
-commit 1aaea8476d9f014667d2cb24819f9bcaf3ebb7a4 upstream.
+commit ed1dd899baa32d47d9a93d98336472da50564346 upstream.
 
-__i915_gem_object_flush_map() takes a byte range, so feed it the written
-bytes and do not mistake the u32 index as bytes!
+Report the correct perfmon domains and signals depending
+on the supported feature flags.
 
-Fixes: a679f58d0510 ("drm/i915: Flush pages on acquisition")
-Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
-Cc: Matthew Auld <matthew.william.auld@gmail.com>
-Cc: <stable@vger.kernel.org> # v5.2+
-Reviewed-by: Matthew Auld <matthew.william.auld@gmail.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200406114821.10949-1-chris@chris-wilson.co.uk
-(cherry picked from commit 30c88a47f1abd5744908d3681f54dcf823fe2a12)
-Signed-off-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+Fixes: 9e2c2e273012 ("drm/etnaviv: add infrastructure to query perf counter")
+Cc: stable@vger.kernel.org
+Signed-off-by: Christian Gmeiner <christian.gmeiner@gmail.com>
+Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/i915/gem/i915_gem_execbuffer.c |    8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ drivers/gpu/drm/etnaviv/etnaviv_perfmon.c |   59 ++++++++++++++++++++++++++----
+ 1 file changed, 52 insertions(+), 7 deletions(-)
 
---- a/drivers/gpu/drm/i915/gem/i915_gem_execbuffer.c
-+++ b/drivers/gpu/drm/i915/gem/i915_gem_execbuffer.c
-@@ -939,11 +939,13 @@ static inline struct i915_ggtt *cache_to
+--- a/drivers/gpu/drm/etnaviv/etnaviv_perfmon.c
++++ b/drivers/gpu/drm/etnaviv/etnaviv_perfmon.c
+@@ -32,6 +32,7 @@ struct etnaviv_pm_domain {
+ };
  
- static void reloc_gpu_flush(struct reloc_cache *cache)
- {
--	GEM_BUG_ON(cache->rq_size >= cache->rq->batch->obj->base.size / sizeof(u32));
-+	struct drm_i915_gem_object *obj = cache->rq->batch->obj;
+ struct etnaviv_pm_domain_meta {
++	unsigned int feature;
+ 	const struct etnaviv_pm_domain *domains;
+ 	u32 nr_domains;
+ };
+@@ -410,36 +411,78 @@ static const struct etnaviv_pm_domain do
+ 
+ static const struct etnaviv_pm_domain_meta doms_meta[] = {
+ 	{
++		.feature = chipFeatures_PIPE_3D,
+ 		.nr_domains = ARRAY_SIZE(doms_3d),
+ 		.domains = &doms_3d[0]
+ 	},
+ 	{
++		.feature = chipFeatures_PIPE_2D,
+ 		.nr_domains = ARRAY_SIZE(doms_2d),
+ 		.domains = &doms_2d[0]
+ 	},
+ 	{
++		.feature = chipFeatures_PIPE_VG,
+ 		.nr_domains = ARRAY_SIZE(doms_vg),
+ 		.domains = &doms_vg[0]
+ 	}
+ };
+ 
++static unsigned int num_pm_domains(const struct etnaviv_gpu *gpu)
++{
++	unsigned int num = 0, i;
 +
-+	GEM_BUG_ON(cache->rq_size >= obj->base.size / sizeof(u32));
- 	cache->rq_cmd[cache->rq_size] = MI_BATCH_BUFFER_END;
++	for (i = 0; i < ARRAY_SIZE(doms_meta); i++) {
++		const struct etnaviv_pm_domain_meta *meta = &doms_meta[i];
++
++		if (gpu->identity.features & meta->feature)
++			num += meta->nr_domains;
++	}
++
++	return num;
++}
++
++static const struct etnaviv_pm_domain *pm_domain(const struct etnaviv_gpu *gpu,
++	unsigned int index)
++{
++	const struct etnaviv_pm_domain *domain = NULL;
++	unsigned int offset = 0, i;
++
++	for (i = 0; i < ARRAY_SIZE(doms_meta); i++) {
++		const struct etnaviv_pm_domain_meta *meta = &doms_meta[i];
++
++		if (!(gpu->identity.features & meta->feature))
++			continue;
++
++		if (meta->nr_domains < (index - offset)) {
++			offset += meta->nr_domains;
++			continue;
++		}
++
++		domain = meta->domains + (index - offset);
++	}
++
++	return domain;
++}
++
+ int etnaviv_pm_query_dom(struct etnaviv_gpu *gpu,
+ 	struct drm_etnaviv_pm_domain *domain)
+ {
+-	const struct etnaviv_pm_domain_meta *meta = &doms_meta[domain->pipe];
++	const unsigned int nr_domains = num_pm_domains(gpu);
+ 	const struct etnaviv_pm_domain *dom;
  
--	__i915_gem_object_flush_map(cache->rq->batch->obj, 0, cache->rq_size);
--	i915_gem_object_unpin_map(cache->rq->batch->obj);
-+	__i915_gem_object_flush_map(obj, 0, sizeof(u32) * (cache->rq_size + 1));
-+	i915_gem_object_unpin_map(obj);
+-	if (domain->iter >= meta->nr_domains)
++	if (domain->iter >= nr_domains)
+ 		return -EINVAL;
  
- 	intel_gt_chipset_flush(cache->rq->engine->gt);
+-	dom = meta->domains + domain->iter;
++	dom = pm_domain(gpu, domain->iter);
++	if (!dom)
++		return -EINVAL;
  
+ 	domain->id = domain->iter;
+ 	domain->nr_signals = dom->nr_signals;
+ 	strncpy(domain->name, dom->name, sizeof(domain->name));
+ 
+ 	domain->iter++;
+-	if (domain->iter == meta->nr_domains)
++	if (domain->iter == nr_domains)
+ 		domain->iter = 0xff;
+ 
+ 	return 0;
+@@ -448,14 +491,16 @@ int etnaviv_pm_query_dom(struct etnaviv_
+ int etnaviv_pm_query_sig(struct etnaviv_gpu *gpu,
+ 	struct drm_etnaviv_pm_signal *signal)
+ {
+-	const struct etnaviv_pm_domain_meta *meta = &doms_meta[signal->pipe];
++	const unsigned int nr_domains = num_pm_domains(gpu);
+ 	const struct etnaviv_pm_domain *dom;
+ 	const struct etnaviv_pm_signal *sig;
+ 
+-	if (signal->domain >= meta->nr_domains)
++	if (signal->domain >= nr_domains)
+ 		return -EINVAL;
+ 
+-	dom = meta->domains + signal->domain;
++	dom = pm_domain(gpu, signal->domain);
++	if (!dom)
++		return -EINVAL;
+ 
+ 	if (signal->iter >= dom->nr_signals)
+ 		return -EINVAL;
 
 
