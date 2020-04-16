@@ -7,45 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ACF8C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:26:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E2C7C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:26:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 13D632076D
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:26:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE82E2076D
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:26:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587047179;
-	bh=c/+ghOKLZbmpam34in/vAlc768DdP6257rzcST0JZms=;
+	s=default; t=1587047186;
+	bh=A/ZkzyYxdWbXzwjiIwFZHZCuIhtw4g1dykFh7jvlhjk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HPkQKA75j9jCWO+i7tTMAdr9AzquFt8/8GXJbQx49Xk92Pkfqhys737fufXAoXsJ5
-	 iOxuRIQZ1mVOPqDtf4yDlqaoXlLbdji+YQa4f/ca0WvLVZKLYBZxsY75738dQ8ncDT
-	 zN8Hz/PDOZimb0P8rMUCkEPfdncXrbu4wofRB4Ms=
+	b=aIUabtXGBbDvyyBmWnEQZvT3FSCWdwA/JqE54+ib4SkYiAeEsozpW9+JQGhu2zj1W
+	 MEc7F+8ODF/h0doiRWB3bDhqAueNnK5vBnMr19npUXLPXgIGNheCDsVn977eP3teX+
+	 28P61ZaCgITQl5PY2kpxWSxAWOn8WMF+Pqfa71Gk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2410083AbgDPO0R (ORCPT
+        id S2410098AbgDPO0Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:26:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45514 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 10:26:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45810 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2409362AbgDPN6d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:58:33 -0400
+        id S2409399AbgDPN6s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:58:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 717B3217D8;
-        Thu, 16 Apr 2020 13:58:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2B28921734;
+        Thu, 16 Apr 2020 13:58:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587045512;
-        bh=c/+ghOKLZbmpam34in/vAlc768DdP6257rzcST0JZms=;
+        s=default; t=1587045527;
+        bh=A/ZkzyYxdWbXzwjiIwFZHZCuIhtw4g1dykFh7jvlhjk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WHigHWSjTzZQHph3NT0fvrNpXikN2N0RbgSLoqm+3nei/DANi+I649yrTD1GBShwE
-         uJ8yXShxS79diSHyJSrlEsYYCQlLEKxQmEq9ovIexu6thIsgmKY3ZhyrkjfOIS4RC8
-         zofJB7vZEVpZpCV25unOT20btg4giy24EGfSifKI=
+        b=wjxqgv2pNdxr3+DcdPJprvXuMursbHpB2NAw0Bevzm8xNPhJsL+MEK6dRfuSq87Bz
+         kkDownrSzvWBSbjJxmnGVPY7ytF/E7olfa6IcHukBTzcawPmYjKo2+P0i3z0ZBmhOw
+         Q/EQSfmtbq+XD2HSxWuFtw+pQw8A1mmkYDfoE2K0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 5.6 165/254] io_uring: honor original task RLIMIT_FSIZE
-Date:   Thu, 16 Apr 2020 15:24:14 +0200
-Message-Id: <20200416131347.163857313@linuxfoundation.org>
+        stable@vger.kernel.org, Scott Wood <swood@redhat.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Guenter Roeck <linux@roeck-us.net>
+Subject: [PATCH 5.6 170/254] sched/core: Remove duplicate assignment in sched_tick_remote()
+Date:   Thu, 16 Apr 2020 15:24:19 +0200
+Message-Id: <20200416131347.767245701@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.804095985@linuxfoundation.org>
 References: <20200416131325.804095985@linuxfoundation.org>
@@ -58,82 +62,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jens Axboe <axboe@kernel.dk>
+From: Scott Wood <swood@redhat.com>
 
-commit 4ed734b0d0913e566a9d871e15d24eb240f269f7 upstream.
+commit 82e0516ce3a147365a5dd2a9bedd5ba43a18663d upstream.
 
-With the previous fixes for number of files open checking, I added some
-debug code to see if we had other spots where we're checking rlimit()
-against the async io-wq workers. The only one I found was file size
-checking, which we should also honor.
+A redundant "curr = rq->curr" was added; remove it.
 
-During write and fallocate prep, store the max file size and override
-that for the current ask if we're in io-wq worker context.
-
-Cc: stable@vger.kernel.org # 5.1+
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Fixes: ebc0f83c78a2 ("timers/nohz: Update NOHZ load in remote tick")
+Signed-off-by: Scott Wood <swood@redhat.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/1580776558-12882-1-git-send-email-swood@redhat.com
+Cc: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-
 ---
- fs/io_uring.c |   13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ kernel/sched/core.c |    1 -
+ 1 file changed, 1 deletion(-)
 
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -565,6 +565,7 @@ struct io_kiocb {
- 	struct list_head	link_list;
- 	unsigned int		flags;
- 	refcount_t		refs;
-+	unsigned long		fsize;
- 	u64			user_data;
- 	u32			result;
- 	u32			sequence;
-@@ -2294,6 +2295,8 @@ static int io_write_prep(struct io_kiocb
- 	if (unlikely(!(req->file->f_mode & FMODE_WRITE)))
- 		return -EBADF;
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -3671,7 +3671,6 @@ static void sched_tick_remote(struct wor
+ 	if (cpu_is_offline(cpu))
+ 		goto out_unlock;
  
-+	req->fsize = rlimit(RLIMIT_FSIZE);
-+
- 	/* either don't need iovec imported or already have it */
- 	if (!req->io || req->flags & REQ_F_NEED_CLEANUP)
- 		return 0;
-@@ -2366,10 +2369,17 @@ static int io_write(struct io_kiocb *req
- 		}
- 		kiocb->ki_flags |= IOCB_WRITE;
+-	curr = rq->curr;
+ 	update_rq_clock(rq);
  
-+		if (!force_nonblock)
-+			current->signal->rlim[RLIMIT_FSIZE].rlim_cur = req->fsize;
-+
- 		if (req->file->f_op->write_iter)
- 			ret2 = call_write_iter(req->file, kiocb, &iter);
- 		else
- 			ret2 = loop_rw_iter(WRITE, req->file, kiocb, &iter);
-+
-+		if (!force_nonblock)
-+			current->signal->rlim[RLIMIT_FSIZE].rlim_cur = RLIM_INFINITY;
-+
- 		/*
- 		 * Raw bdev writes will -EOPNOTSUPP for IOCB_NOWAIT. Just
- 		 * retry them without IOCB_NOWAIT.
-@@ -2512,8 +2522,10 @@ static void io_fallocate_finish(struct i
- 	if (io_req_cancelled(req))
- 		return;
- 
-+	current->signal->rlim[RLIMIT_FSIZE].rlim_cur = req->fsize;
- 	ret = vfs_fallocate(req->file, req->sync.mode, req->sync.off,
- 				req->sync.len);
-+	current->signal->rlim[RLIMIT_FSIZE].rlim_cur = RLIM_INFINITY;
- 	if (ret < 0)
- 		req_set_fail_links(req);
- 	io_cqring_add_event(req, ret);
-@@ -2531,6 +2543,7 @@ static int io_fallocate_prep(struct io_k
- 	req->sync.off = READ_ONCE(sqe->off);
- 	req->sync.len = READ_ONCE(sqe->addr);
- 	req->sync.mode = READ_ONCE(sqe->len);
-+	req->fsize = rlimit(RLIMIT_FSIZE);
- 	return 0;
- }
- 
+ 	if (!is_idle_task(curr)) {
 
 
