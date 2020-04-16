@@ -4,54 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C92F3C2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:27:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A2C3C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:27:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A2BB6214D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:27:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18A2822242
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:27:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587050852;
-	bh=CbXVf1X13Fq5Weg0NUfcTRtDQk8jJn0eg2TMZC0+J5o=;
+	s=default; t=1587050859;
+	bh=VYPYg6i/pKod6qF6y1lY09357dtCaYVNp3iKvoKFzC8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bLS4ikYkxDeoI038Vt2KKigzRjTp2P3+SrFNvZgNkvSkWne0znYCgvj5Wi19EHvRV
-	 aF9+cqiwQBtw/TSVCpgNacZu/wv9bojKsrtpwrMq9uw4yKTpvIU1QTWYQpB/WF6j+c
-	 8APLh95Oin3JnUtsOXz/pKM9E9km/3IASRVzxSzs=
+	b=Y3904oFAcUlcp2i7fEO23ythCoph/J8xyCVjHS9D2tDcTcOniTlHgTjKHwjxIn5du
+	 8a0TvuiobWCS0pcaj6p/clvCvit6X350Np09KOofaRJAuUICwIvROtrQH9M6TikUFx
+	 jKRop3ip9nsDUGdo9fI8dkipz8nUt6ze9iV6QeB0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393779AbgDPP1b (ORCPT
+        id S2395231AbgDPP1g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:27:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57910 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 11:27:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57734 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2898459AbgDPNoj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:44:39 -0400
+        id S2898448AbgDPNo3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:44:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 71E2421744;
-        Thu, 16 Apr 2020 13:44:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7B9812076D;
+        Thu, 16 Apr 2020 13:44:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044678;
-        bh=CbXVf1X13Fq5Weg0NUfcTRtDQk8jJn0eg2TMZC0+J5o=;
+        s=default; t=1587044669;
+        bh=VYPYg6i/pKod6qF6y1lY09357dtCaYVNp3iKvoKFzC8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rygkh93nZBoB05dFHAAB7WDECddhGegypvZRm0jELlbta3MjacKFZbaqCH8KpTSa1
-         i2/xFh8ID4ZtA5uupoZkmP7GlP0WjUvee48EzL90uG82KjaqYz+1AoJeK6wiMunze4
-         zTv06a5uxR6AZJYbGVvHmxE78z0Y/dtf6lv6dvdk=
+        b=bphs0LKd+f/7qhwOyo2uF+Kdskb662yWrw5GxK852kGQyYRy2DBVy1nkMOuaa6Gs0
+         8pp3oWm6Yh4LfUYavqfEjhVynRvl5g+Ht4zYgPuJFjfXywd1Hb7A7sIdFlwo6HZiFU
+         KvAwcqIUWq0/AUD/sglDGQL6ATHToNAKKI/Ibgfg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dongjin Kim <tobetter@gmail.com>,
-        Jianxin Pan <jianxin.pan@amlogic.com>,
-        Thinh Nguyen <thinhn@synopsys.com>,
-        Jun Li <lijun.kernel@gmail.com>, Tim <elatllat@gmail.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 058/232] usb: dwc3: core: add support for disabling SS instances in park mode
-Date:   Thu, 16 Apr 2020 15:22:32 +0200
-Message-Id: <20200416131322.786013320@linuxfoundation.org>
+        stable@vger.kernel.org, Arvind Sankar <nivedita@alum.mit.edu>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 054/232] efi/x86: Ignore the memory attributes table on i386
+Date:   Thu, 16 Apr 2020 15:22:28 +0200
+Message-Id: <20200416131322.379079652@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131316.640996080@linuxfoundation.org>
 References: <20200416131316.640996080@linuxfoundation.org>
@@ -64,97 +60,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Neil Armstrong <narmstrong@baylibre.com>
+From: Ard Biesheuvel <ardb@kernel.org>
 
-[ Upstream commit 7ba6b09fda5e0cb741ee56f3264665e0edc64822 ]
+[ Upstream commit dd09fad9d2caad2325a39b766ce9e79cfc690184 ]
 
-In certain circumstances, the XHCI SuperSpeed instance in park mode
-can fail to recover, thus on Amlogic G12A/G12B/SM1 SoCs when there is high
-load on the single XHCI SuperSpeed instance, the controller can crash like:
- xhci-hcd xhci-hcd.0.auto: xHCI host not responding to stop endpoint command.
- xhci-hcd xhci-hcd.0.auto: Host halt failed, -110
- xhci-hcd xhci-hcd.0.auto: xHCI host controller not responding, assume dead
- xhci-hcd xhci-hcd.0.auto: xHCI host not responding to stop endpoint command.
- hub 2-1.1:1.0: hub_ext_port_status failed (err = -22)
- xhci-hcd xhci-hcd.0.auto: HC died; cleaning up
- usb 2-1.1-port1: cannot reset (err = -22)
+Commit:
 
-Setting the PARKMODE_DISABLE_SS bit in the DWC3_USB3_GUCTL1 mitigates
-the issue. The bit is described as :
-"When this bit is set to '1' all SS bus instances in park mode are disabled"
+  3a6b6c6fb23667fa ("efi: Make EFI_MEMORY_ATTRIBUTES_TABLE initialization common across all architectures")
 
-Synopsys explains:
-The GUCTL1.PARKMODE_DISABLE_SS is only available in
-dwc_usb3 controller running in host mode.
-This should not be set for other IPs.
-This can be disabled by default based on IP, but I recommend to have a
-property to enable this feature for devices that need this.
+moved the call to efi_memattr_init() from ARM specific to the generic
+EFI init code, in order to be able to apply the restricted permissions
+described in that table on x86 as well.
 
-CC: Dongjin Kim <tobetter@gmail.com>
-Cc: Jianxin Pan <jianxin.pan@amlogic.com>
-Cc: Thinh Nguyen <thinhn@synopsys.com>
-Cc: Jun Li <lijun.kernel@gmail.com>
-Reported-by: Tim <elatllat@gmail.com>
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-Signed-off-by: Felipe Balbi <balbi@kernel.org>
+We never enabled this feature fully on i386, and so mapping and
+reserving this table is pointless. However, due to the early call to
+memblock_reserve(), the memory bookkeeping gets confused to the point
+where it produces the splat below when we try to map the memory later
+on:
+
+  ------------[ cut here ]------------
+  ioremap on RAM at 0x3f251000 - 0x3fa1afff
+  WARNING: CPU: 0 PID: 0 at arch/x86/mm/ioremap.c:166 __ioremap_caller ...
+  Modules linked in:
+  CPU: 0 PID: 0 Comm: swapper/0 Not tainted 4.20.0 #48
+  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+  EIP: __ioremap_caller.constprop.0+0x249/0x260
+  Code: 90 0f b7 05 4e 38 40 de 09 45 e0 e9 09 ff ff ff 90 8d 45 ec c6 05 ...
+  EAX: 00000029 EBX: 00000000 ECX: de59c228 EDX: 00000001
+  ESI: 3f250fff EDI: 00000000 EBP: de3edf20 ESP: de3edee0
+  DS: 007b ES: 007b FS: 00d8 GS: 00e0 SS: 0068 EFLAGS: 00200296
+  CR0: 80050033 CR2: ffd17000 CR3: 1e58c000 CR4: 00040690
+  Call Trace:
+   ioremap_cache+0xd/0x10
+   ? old_map_region+0x72/0x9d
+   old_map_region+0x72/0x9d
+   efi_map_region+0x8/0xa
+   efi_enter_virtual_mode+0x260/0x43b
+   start_kernel+0x329/0x3aa
+   i386_start_kernel+0xa7/0xab
+   startup_32_smp+0x164/0x168
+  ---[ end trace e15ccf6b9f356833 ]---
+
+Let's work around this by disregarding the memory attributes table
+altogether on i386, which does not result in a loss of functionality
+or protection, given that we never consumed the contents.
+
+Fixes: 3a6b6c6fb23667fa ("efi: Make EFI_MEMORY_ATTRIBUTES_TABLE ... ")
+Tested-by: Arvind Sankar <nivedita@alum.mit.edu>
+Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Link: https://lore.kernel.org/r/20200304165917.5893-1-ardb@kernel.org
+Link: https://lore.kernel.org/r/20200308080859.21568-21-ardb@kernel.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/dwc3/core.c | 5 +++++
- drivers/usb/dwc3/core.h | 4 ++++
- 2 files changed, 9 insertions(+)
+ drivers/firmware/efi/efi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
-index cede7a8e36055..526c275ad0bc5 100644
---- a/drivers/usb/dwc3/core.c
-+++ b/drivers/usb/dwc3/core.c
-@@ -992,6 +992,9 @@ static int dwc3_core_init(struct dwc3 *dwc)
- 		if (dwc->dis_tx_ipgap_linecheck_quirk)
- 			reg |= DWC3_GUCTL1_TX_IPGAP_LINECHECK_DIS;
- 
-+		if (dwc->parkmode_disable_ss_quirk)
-+			reg |= DWC3_GUCTL1_PARKMODE_DISABLE_SS;
-+
- 		dwc3_writel(dwc->regs, DWC3_GUCTL1, reg);
+diff --git a/drivers/firmware/efi/efi.c b/drivers/firmware/efi/efi.c
+index ad8a4bc074fbf..e3861d267d9aa 100644
+--- a/drivers/firmware/efi/efi.c
++++ b/drivers/firmware/efi/efi.c
+@@ -562,7 +562,7 @@ int __init efi_config_parse_tables(void *config_tables, int count, int sz,
+ 		}
  	}
  
-@@ -1305,6 +1308,8 @@ static void dwc3_get_properties(struct dwc3 *dwc)
- 				"snps,dis-del-phy-power-chg-quirk");
- 	dwc->dis_tx_ipgap_linecheck_quirk = device_property_read_bool(dev,
- 				"snps,dis-tx-ipgap-linecheck-quirk");
-+	dwc->parkmode_disable_ss_quirk = device_property_read_bool(dev,
-+				"snps,parkmode-disable-ss-quirk");
+-	if (efi_enabled(EFI_MEMMAP))
++	if (!IS_ENABLED(CONFIG_X86_32) && efi_enabled(EFI_MEMMAP))
+ 		efi_memattr_init();
  
- 	dwc->tx_de_emphasis_quirk = device_property_read_bool(dev,
- 				"snps,tx_de_emphasis_quirk");
-diff --git a/drivers/usb/dwc3/core.h b/drivers/usb/dwc3/core.h
-index 77c4a9abe3652..3ecc69c5b150f 100644
---- a/drivers/usb/dwc3/core.h
-+++ b/drivers/usb/dwc3/core.h
-@@ -249,6 +249,7 @@
- #define DWC3_GUCTL_HSTINAUTORETRY	BIT(14)
- 
- /* Global User Control 1 Register */
-+#define DWC3_GUCTL1_PARKMODE_DISABLE_SS	BIT(17)
- #define DWC3_GUCTL1_TX_IPGAP_LINECHECK_DIS	BIT(28)
- #define DWC3_GUCTL1_DEV_L1_EXIT_BY_HW	BIT(24)
- 
-@@ -1024,6 +1025,8 @@ struct dwc3_scratchpad_array {
-  *			change quirk.
-  * @dis_tx_ipgap_linecheck_quirk: set if we disable u2mac linestate
-  *			check during HS transmit.
-+ * @parkmode_disable_ss_quirk: set if we need to disable all SuperSpeed
-+ *			instances in park mode.
-  * @tx_de_emphasis_quirk: set if we enable Tx de-emphasis quirk
-  * @tx_de_emphasis: Tx de-emphasis value
-  * 	0	- -6dB de-emphasis
-@@ -1215,6 +1218,7 @@ struct dwc3 {
- 	unsigned		dis_u2_freeclk_exists_quirk:1;
- 	unsigned		dis_del_phy_power_chg_quirk:1;
- 	unsigned		dis_tx_ipgap_linecheck_quirk:1;
-+	unsigned		parkmode_disable_ss_quirk:1;
- 
- 	unsigned		tx_de_emphasis_quirk:1;
- 	unsigned		tx_de_emphasis:2;
+ 	efi_tpm_eventlog_init();
 -- 
 2.20.1
 
