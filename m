@@ -2,134 +2,195 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDD22C2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 09:01:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6F3FC2BB85
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 09:01:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A863D206B9
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 09:01:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FA8420784
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 09:01:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SAZOXk8e"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qMyY08os"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502255AbgDPJAL (ORCPT
+        id S2503072AbgDPJB0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 05:00:11 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:36282 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2502898AbgDPIvA (ORCPT
+        Thu, 16 Apr 2020 05:01:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40274 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2502923AbgDPIsR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 04:51:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587027048;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=HBOSp8KoaqgQUXlL6khiQxh82SbQfD3UXPaPxlc3NpI=;
-        b=SAZOXk8e3bOfIiblT3KEanC34Cr2ERHz2OAj1z5udHAIYoMzy7FEBAiLU3tOkG3vjFBXLU
-        RJ1+UhYcNWRmanl/jDRIR+NLsaMtjBZk/1GV7FNoFaE1tJlNcojdz6CEPLZ0gyeSPCoaxI
-        vu2BVvUEOncDoo6OHYGGljUZxbKLZSQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-270-MuypNbuHM0uD0I3hVYYtuw-1; Thu, 16 Apr 2020 04:50:46 -0400
-X-MC-Unique: MuypNbuHM0uD0I3hVYYtuw-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 994A818C35A6;
-        Thu, 16 Apr 2020 08:50:42 +0000 (UTC)
-Received: from gondolin (ovpn-112-234.ams2.redhat.com [10.36.112.234])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 330E27E7C4;
-        Thu, 16 Apr 2020 08:50:22 +0000 (UTC)
-Date:   Thu, 16 Apr 2020 10:50:19 +0200
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
-Cc:     Marc Zyngier <maz@kernel.org>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>, kvm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
-        linux-mips@vger.kernel.org, kvm-ppc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, pbonzini@redhat.com,
-        tsbogend@alpha.franken.de, paulus@ozlabs.org, mpe@ellerman.id.au,
-        benh@kernel.crashing.org, borntraeger@de.ibm.com,
-        frankja@linux.ibm.com, david@redhat.com, heiko.carstens@de.ibm.com,
-        gor@linux.ibm.com, sean.j.christopherson@intel.com,
-        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
-        hpa@zytor.com, james.morse@arm.com, julien.thierry.kdev@gmail.com,
-        suzuki.poulose@arm.com, christoffer.dall@arm.com,
-        peterx@redhat.com, thuth@redhat.com
-Subject: Re: [PATCH v2] KVM: Optimize kvm_arch_vcpu_ioctl_run function
-Message-ID: <20200416105019.51191d79.cohuck@redhat.com>
-In-Reply-To: <8b92fb5b-5138-0695-fb90-6c36b8dfad00@linux.alibaba.com>
-References: <20200416051057.26526-1-tianjia.zhang@linux.alibaba.com>
-        <878sivx67g.fsf@vitty.brq.redhat.com>
-        <1000159f971a6fa3b5bd9e5871ce4d82@kernel.org>
-        <8b92fb5b-5138-0695-fb90-6c36b8dfad00@linux.alibaba.com>
-Organization: Red Hat GmbH
+        Thu, 16 Apr 2020 04:48:17 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B69FC061A10
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 01:48:12 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id k1so3857957wrx.4
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 01:48:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=gCC6rxpfNBHEEJoswTl2+v3GlY13e+wv1Apu4C5uUJ0=;
+        b=qMyY08os0xXarDJEQ8j9nJU1G/4i1ajvSN1547JGWNAU4kptYy+l0ETyItzmwelvLC
+         nCDep5Cl1t95mbiIhlCDcowJNJGFakofRU/UeiPQv049DorrDQDyvOhQ0iXlohLp8hin
+         3bAdw+39EFnaQiFiejH+534QfsSXNhMyYx4ZtJs1O8APzJpuT9KiZORIU2xx8m9me3GJ
+         nRCzeSz6fhZnRuGUV65gJOj0k8DMrASVs1ffDMfO5wQ+4MKhMzyo1Hf7xWdNJii/ENzy
+         uOrTcZOmWLeo1D6phvtKajqfSbjF0JkyzG19tN5chV4GtOZYui9witk4RNmc7L0KIuBW
+         GEOQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=gCC6rxpfNBHEEJoswTl2+v3GlY13e+wv1Apu4C5uUJ0=;
+        b=bZgbylvH98ByyNXo1T6evCgKM+pLgkqgUM9Dd29qam9Sog6d3lYWapcqowHnn7V2lJ
+         z5jJAgvpzXSaef/KnvyGVYVfSxSOkqQtoyRzqJ1ktIrsXSYbowmj3cf1qknQaPRnNsir
+         qum3Ort+UUrmduDY2mKM3cmu/DPAAHyV7lPEWGcrSNv0MNjZvTCcDG6Hw2hebDqWrSze
+         arO+ZaLw8lca7ovqAjrIPIcp861w9A/vLS96hjXWWBrUrKypIJgg6e0tsZWWX+kk0VJy
+         eg19VLUNYXrdrSjnb7KwMwPUoNqDgX32+urN3bsfLyR6nGuRJthYemTRRN4Oh1Lm9Y7R
+         7iKQ==
+X-Gm-Message-State: AGi0Pub/4NK2xcYPu2gfhUNKljVvh8tYMNdGFCdZjPdV804tRrUmaChR
+        w0pczgXTp0GrsMijoF0R0Ed1sQ==
+X-Google-Smtp-Source: APiQypLyhDVW4E+VOlBHWErivAdlGrtxixDqwonOAkbRNQamJnKVsV0vJKLtvSLryabLtX0HhH0tLg==
+X-Received: by 2002:a5d:4286:: with SMTP id k6mr21252278wrq.222.1587026890846;
+        Thu, 16 Apr 2020 01:48:10 -0700 (PDT)
+Received: from dell ([95.149.164.124])
+        by smtp.gmail.com with ESMTPSA id z15sm14429845wrs.47.2020.04.16.01.48.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Apr 2020 01:48:10 -0700 (PDT)
+Date:   Thu, 16 Apr 2020 09:49:10 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        Eddie Huang <eddie.huang@mediatek.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Richard Fontana <rfontana@redhat.com>,
+        Frank Wunderlich <frank-w@public-files.de>,
+        Josef Friedl <josef.friedl@speed.at>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ran Bi <ran.bi@mediatek.com>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org,
+        srv_heupstream@mediatek.com
+Subject: Re: [PATCH v12 1/6] mfd: mt6397: Modify suspend/resume behavior
+Message-ID: <20200416084910.GX2167633@dell>
+References: <1586333531-21641-1-git-send-email-hsin-hsiung.wang@mediatek.com>
+ <1586333531-21641-2-git-send-email-hsin-hsiung.wang@mediatek.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1586333531-21641-2-git-send-email-hsin-hsiung.wang@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 16 Apr 2020 16:45:33 +0800
-Tianjia Zhang <tianjia.zhang@linux.alibaba.com> wrote:
+On Wed, 08 Apr 2020, Hsin-Hsiung Wang wrote:
 
-> On 2020/4/16 16:28, Marc Zyngier wrote:
-> > On 2020-04-16 08:03, Vitaly Kuznetsov wrote: =20
-> >> Tianjia Zhang <tianjia.zhang@linux.alibaba.com> writes:
-> >> =20
-> >>> In earlier versions of kvm, 'kvm_run' is an independent structure
-> >>> and is not included in the vcpu structure. At present, 'kvm_run'
-> >>> is already included in the vcpu structure, so the parameter
-> >>> 'kvm_run' is redundant.
-> >>>
-> >>> This patch simplify the function definition, removes the extra
-> >>> 'kvm_run' parameter, and extract it from the 'kvm_vcpu' structure
-> >>> if necessary.
-> >>>
-> >>> Signed-off-by: Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
-> >>> ---
-> >>>
-> >>> v2 change:
-> >>> =C2=A0 remove 'kvm_run' parameter and extract it from 'kvm_vcpu'
-> >>>
-> >>> =C2=A0arch/mips/kvm/mips.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=
-=A0 3 ++-
-> >>> =C2=A0arch/powerpc/kvm/powerpc.c |=C2=A0 3 ++-
-> >>> =C2=A0arch/s390/kvm/kvm-s390.c=C2=A0=C2=A0 |=C2=A0 3 ++-
-> >>> =C2=A0arch/x86/kvm/x86.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 | 11 ++++++-----
-> >>> =C2=A0include/linux/kvm_host.h=C2=A0=C2=A0 |=C2=A0 2 +-
-> >>> =C2=A0virt/kvm/arm/arm.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 |=C2=A0 6 +++---
-> >>> =C2=A0virt/kvm/kvm_main.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=
-=C2=A0 2 +-
-> >>> =C2=A07 files changed, 17 insertions(+), 13 deletions(-)
+> Some pmics don't need backup interrupt settings, so we change to use
+> pm notifier for the pmics which are necessary to store settings.
+> 
+> Signed-off-by: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
+> ---
+>  drivers/mfd/mt6397-core.c       | 30 ------------------------------
+>  drivers/mfd/mt6397-irq.c        | 35 ++++++++++++++++++++++++++++++++++-
+>  include/linux/mfd/mt6397/core.h |  2 ++
+>  3 files changed, 36 insertions(+), 31 deletions(-)
+> 
+> diff --git a/drivers/mfd/mt6397-core.c b/drivers/mfd/mt6397-core.c
+> index 0437c85..d2e70d8 100644
+> --- a/drivers/mfd/mt6397-core.c
+> +++ b/drivers/mfd/mt6397-core.c
+> @@ -100,35 +100,6 @@ static const struct mfd_cell mt6397_devs[] = {
+>  	}
+>  };
+>  
+> -#ifdef CONFIG_PM_SLEEP
+> -static int mt6397_irq_suspend(struct device *dev)
+> -{
+> -	struct mt6397_chip *chip = dev_get_drvdata(dev);
+> -
+> -	regmap_write(chip->regmap, chip->int_con[0], chip->wake_mask[0]);
+> -	regmap_write(chip->regmap, chip->int_con[1], chip->wake_mask[1]);
+> -
+> -	enable_irq_wake(chip->irq);
+> -
+> -	return 0;
+> -}
+> -
+> -static int mt6397_irq_resume(struct device *dev)
+> -{
+> -	struct mt6397_chip *chip = dev_get_drvdata(dev);
+> -
+> -	regmap_write(chip->regmap, chip->int_con[0], chip->irq_masks_cur[0]);
+> -	regmap_write(chip->regmap, chip->int_con[1], chip->irq_masks_cur[1]);
+> -
+> -	disable_irq_wake(chip->irq);
+> -
+> -	return 0;
+> -}
+> -#endif
+> -
+> -static SIMPLE_DEV_PM_OPS(mt6397_pm_ops, mt6397_irq_suspend,
+> -			mt6397_irq_resume);
+> -
+>  struct chip_data {
+>  	u32 cid_addr;
+>  	u32 cid_shift;
+> @@ -238,7 +209,6 @@ static struct platform_driver mt6397_driver = {
+>  	.driver = {
+>  		.name = "mt6397",
+>  		.of_match_table = of_match_ptr(mt6397_of_match),
+> -		.pm = &mt6397_pm_ops,
+>  	},
+>  	.id_table = mt6397_id,
+>  };
+> diff --git a/drivers/mfd/mt6397-irq.c b/drivers/mfd/mt6397-irq.c
+> index b2d3ce1..2924919 100644
+> --- a/drivers/mfd/mt6397-irq.c
+> +++ b/drivers/mfd/mt6397-irq.c
+> @@ -9,6 +9,7 @@
+>  #include <linux/of_irq.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/regmap.h>
+> +#include <linux/suspend.h>
+>  #include <linux/mfd/mt6323/core.h>
+>  #include <linux/mfd/mt6323/registers.h>
+>  #include <linux/mfd/mt6397/core.h>
+> @@ -81,7 +82,7 @@ static struct irq_chip mt6397_irq_chip = {
+>  static void mt6397_irq_handle_reg(struct mt6397_chip *mt6397, int reg,
+>  				  int irqbase)
+>  {
+> -	unsigned int status;
+> +	unsigned int status = 0;
 
-> > Overall, there is a large set of cleanups to be done when both the vcpu=
-=20
-> > and the run
-> > structures are passed as parameters at the same time. Just grepping the=
-=20
-> > tree for
-> > kvm_run is pretty instructive.
-> >=20
-> >  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 M. =20
->=20
-> Sorry, it's my mistake, I only compiled the x86 platform, I will submit=20
-> patch again.
+This looks like an unrelated change, no?
 
-I think it's completely fine (and even preferable) to do cleanups like
-that on top.
+>  	int i, irq, ret;
+>  
+>  	ret = regmap_read(mt6397->regmap, reg, &status);
+> @@ -128,6 +129,36 @@ static const struct irq_domain_ops mt6397_irq_domain_ops = {
+>  	.map = mt6397_irq_domain_map,
+>  };
 
-[FWIW, I compiled s390 here.]
+Other than that.
 
+For my own reference:
+  Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
