@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABB8EC2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:36:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D48BC2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:36:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7EFAF221F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:36:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F4F0221EB
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:36:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587044172;
-	bh=V59zFjV6ZZmWmqaah7XOzcTvl8C+F7D/XEZk8w+uE1E=;
+	s=default; t=1587044180;
+	bh=mXD2I/il6tBw5ftO+FfyEg8zHZ3c8AkmHQr4H5K2YyQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yTy5JVBo8lFPnOsuyxrb4qACSxACW2RwXt556Qss14ghUXuo9wKHlxUA4fXn4+aaU
-	 bMb5VZPW8PlqNmRFeFYZHPtuWhLH2bB3ad/rynKfg1cg17HXTvmYeUHKDCldloRtG2
-	 tOGw9/muvCkoL1Dyufs02rJgNlvxSIIw5cNoXNZ4=
+	b=oq/KcYwro1Jk/rOmu4bb3HO2Htgjvbp8+6ecY2IigWCnpohhYKxZI41AUCIAVif+Q
+	 r9yp+pXwfHGcQS84e2hLNDzr7oMwh2DmWq5bYJtBGaUMOISWJqR8OVGXNM1FmdVcsr
+	 TnZTQAFycknc7d2urGD85rGNc9mHHgfYkJiLb7RU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2896322AbgDPNgG (ORCPT
+        id S2897302AbgDPNgR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 09:36:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39548 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 09:36:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39634 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2896041AbgDPN3i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:29:38 -0400
+        id S2896049AbgDPN3l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:29:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 09E2F20767;
-        Thu, 16 Apr 2020 13:29:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5ECA521D7F;
+        Thu, 16 Apr 2020 13:29:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587043778;
-        bh=V59zFjV6ZZmWmqaah7XOzcTvl8C+F7D/XEZk8w+uE1E=;
+        s=default; t=1587043780;
+        bh=mXD2I/il6tBw5ftO+FfyEg8zHZ3c8AkmHQr4H5K2YyQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rWvWjvg0AmVE2mNZE94RZSREArPC7+Iplmhc/zA3XYBT6jXjAfxrEtbMnMtaSDhxQ
-         G/nfXrF4OfVWDrVIQ0W+OomUjIFNXqysD1L0ZVPWJOVYcFgjFD5P0LeA6/JJ8K8SWe
-         NZR6Gs8S8xn5x5vpzOUd9Z3VPE4KC/KEG52OhBD0=
+        b=jikhFanPKnNZdxRJ6UVEQiSC3ilQe2BP58fMIylRUz/pBwlVj8Gk3jHGrZ30ZxtSo
+         OTEaD0dZDJHXZCFtGggHBpuEULKOOZTRTjiUDUYu31zSu74m5pAyYEpH9xG+HmW7ZR
+         xhNA4hEvX/z++SXtrE2ozEKcjphLp4xwO+1A1InY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>,
-        Daniel Axtens <dja@axtens.net>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org, Zhenzhong Duan <zhenzhong.duan@oracle.com>,
+        Thomas Gleixner <tglx@linutronix.de>, konrad.wilk@oracle.com,
+        dwmw@amazon.co.uk, bp@suse.de, srinivas.eeda@oracle.com,
+        peterz@infradead.org, hpa@zytor.com,
         Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH 4.19 096/146] powerpc/pseries: Drop pointless static qualifier in vpa_debugfs_init()
-Date:   Thu, 16 Apr 2020 15:23:57 +0200
-Message-Id: <20200416131255.906873948@linuxfoundation.org>
+Subject: [PATCH 4.19 097/146] x86/speculation: Remove redundant arch_smt_update() invocation
+Date:   Thu, 16 Apr 2020 15:23:58 +0200
+Message-Id: <20200416131256.026395108@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131242.353444678@linuxfoundation.org>
 References: <20200416131242.353444678@linuxfoundation.org>
@@ -61,35 +62,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Zhenzhong Duan <zhenzhong.duan@oracle.com>
 
-commit 11dd34f3eae5a468013bb161a1dcf1fecd2ca321 upstream.
+commit 34d66caf251df91ff27b24a3a786810d29989eca upstream.
 
-There is no need to have the 'struct dentry *vpa_dir' variable static
-since new value always be assigned before use it.
+With commit a74cfffb03b7 ("x86/speculation: Rework SMT state change"),
+arch_smt_update() is invoked from each individual CPU hotplug function.
 
-Fixes: c6c26fb55e8e ("powerpc/pseries: Export raw per-CPU VPA data via debugfs")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Reviewed-by: Daniel Axtens <dja@axtens.net>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20190218125644.87448-1-yuehaibing@huawei.com
+Therefore the extra arch_smt_update() call in the sysfs SMT control is
+redundant.
+
+Fixes: a74cfffb03b7 ("x86/speculation: Rework SMT state change")
+Signed-off-by: Zhenzhong Duan <zhenzhong.duan@oracle.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: <konrad.wilk@oracle.com>
+Cc: <dwmw@amazon.co.uk>
+Cc: <bp@suse.de>
+Cc: <srinivas.eeda@oracle.com>
+Cc: <peterz@infradead.org>
+Cc: <hpa@zytor.com>
+Link: https://lkml.kernel.org/r/e2e064f2-e8ef-42ca-bf4f-76b612964752@default
 Cc: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/powerpc/platforms/pseries/lpar.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/cpu.c |    5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
---- a/arch/powerpc/platforms/pseries/lpar.c
-+++ b/arch/powerpc/platforms/pseries/lpar.c
-@@ -1056,7 +1056,7 @@ static int __init vpa_debugfs_init(void)
- {
- 	char name[16];
- 	long i;
--	static struct dentry *vpa_dir;
-+	struct dentry *vpa_dir;
+--- a/kernel/cpu.c
++++ b/kernel/cpu.c
+@@ -2070,10 +2070,8 @@ int cpuhp_smt_disable(enum cpuhp_smt_con
+ 		 */
+ 		cpuhp_offline_cpu_device(cpu);
+ 	}
+-	if (!ret) {
++	if (!ret)
+ 		cpu_smt_control = ctrlval;
+-		arch_smt_update();
+-	}
+ 	cpu_maps_update_done();
+ 	return ret;
+ }
+@@ -2084,7 +2082,6 @@ int cpuhp_smt_enable(void)
  
- 	if (!firmware_has_feature(FW_FEATURE_SPLPAR))
- 		return 0;
+ 	cpu_maps_update_begin();
+ 	cpu_smt_control = CPU_SMT_ENABLED;
+-	arch_smt_update();
+ 	for_each_present_cpu(cpu) {
+ 		/* Skip online CPUs and CPUs on offline nodes */
+ 		if (cpu_online(cpu) || !node_online(cpu_to_node(cpu)))
 
 
