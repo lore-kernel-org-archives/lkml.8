@@ -7,45 +7,50 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C0B5C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:23:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33325C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:23:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 28F332220A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:23:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E7A92076D
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:23:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587047021;
-	bh=dOADrGFjZ/rXCi+5xfhr7DK9w3epKFzRh782rc/iFgs=;
+	s=default; t=1587047029;
+	bh=1jzhNCiKswhoIJTfB2OLMsRckfeRXXkCNaRRwVljCGw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=P1OX/COu4hdxn8Ya+f4B7XH4XrJY/ZZAXhX1EUA+yvz7DX93kCnFbV5stNoNDndcG
-	 HV3k7wP76+RwyKXbXIoTS8TY0cFPdTpZJ4pdnNiN7dQPdt4+3zxFFbIWHVj/dUW/Fw
-	 jSYlkPkusWKWYlNTPZO1DvMl6Id/+LIsTQ6aENQ0=
+	b=Q+ReGTr1RExfZIEaM5wBHzood1S63fXL0PRdw5p9V0+aJtT9kbZPvMarylhamAAOF
+	 fn7Yb7dgh3uOfQNexQxn4IGnPJy6GH4s3LoDIAMRpBPb7NSOsbue7BGGImGOID+sMV
+	 zNy8hseQ763bEGraO2j1X9dxrtcvU5ZSaRkf+94g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732834AbgDPOXj (ORCPT
+        id S2393626AbgDPOXq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:23:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43912 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 10:23:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43936 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2409234AbgDPN4x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:56:53 -0400
+        id S2409247AbgDPN4z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:56:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 84F6B20732;
-        Thu, 16 Apr 2020 13:56:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E99F920786;
+        Thu, 16 Apr 2020 13:56:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587045413;
-        bh=dOADrGFjZ/rXCi+5xfhr7DK9w3epKFzRh782rc/iFgs=;
+        s=default; t=1587045415;
+        bh=1jzhNCiKswhoIJTfB2OLMsRckfeRXXkCNaRRwVljCGw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BcfFVp62XfGL6tYjILljpO9WtuX6T2c+UyWhHC/xJrt3rN0e282GA84JGcCCxGqZH
-         ocWcC5vGqaxGLMIBRkI2saOOVWtZ77ihhzzNX7TbJiGv6FxImVtGUEJvsuNF9+Qlu7
-         Q2O2nUmJ2eYp0AZEo/iZ3FbTN5iRy7nv1FxtuyQU=
+        b=sFXF656UiBTpJn3JMkDrhH2qFhxm4zT0Eb07ArMJnvBMZUSj2Q9XR0jYe+M3yeLwJ
+         dch3ODJ5IAg6wKhII0ohLBVF+9Ko+QampC93fN36BBRBmyTshbkVvxKo+mMuaKuPb6
+         qPGmYnHUEr92ABO0xuERKV6zLzxPR42iwNa4DTo8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Eric W. Biederman" <ebiederm@xmission.com>
-Subject: [PATCH 5.6 124/254] signal: Extend exec_id to 64bits
-Date:   Thu, 16 Apr 2020 15:23:33 +0200
-Message-Id: <20200416131341.888514502@linuxfoundation.org>
+        stable@vger.kernel.org, Tom Lendacky <thomas.lendacky@amd.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>, linux-efi@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        David Hildenbrand <david@redhat.com>,
+        Heinrich Schuchardt <xypron.glpk@gmx.de>
+Subject: [PATCH 5.6 098/254] efi/x86: Add TPM related EFI tables to unencrypted mapping checks
+Date:   Thu, 16 Apr 2020 15:23:07 +0200
+Message-Id: <20200416131338.257988354@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.804095985@linuxfoundation.org>
 References: <20200416131325.804095985@linuxfoundation.org>
@@ -58,82 +63,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric W. Biederman <ebiederm@xmission.com>
+From: Tom Lendacky <thomas.lendacky@amd.com>
 
-commit d1e7fd6462ca9fc76650fbe6ca800e35b24267da upstream.
+commit f10e80a19b07b58fc2adad7945f8313b01503bae upstream.
 
-Replace the 32bit exec_id with a 64bit exec_id to make it impossible
-to wrap the exec_id counter.  With care an attacker can cause exec_id
-wrap and send arbitrary signals to a newly exec'd parent.  This
-bypasses the signal sending checks if the parent changes their
-credentials during exec.
+When booting with SME active, EFI tables must be mapped unencrypted since
+they were built by UEFI in unencrypted memory. Update the list of tables
+to be checked during early_memremap() processing to account for the EFI
+TPM tables.
 
-The severity of this problem can been seen that in my limited testing
-of a 32bit exec_id it can take as little as 19s to exec 65536 times.
-Which means that it can take as little as 14 days to wrap a 32bit
-exec_id.  Adam Zabrocki has succeeded wrapping the self_exe_id in 7
-days.  Even my slower timing is in the uptime of a typical server.
-Which means self_exec_id is simply a speed bump today, and if exec
-gets noticably faster self_exec_id won't even be a speed bump.
+This fixes a bug where an EFI TPM log table has been created by UEFI, but
+it lives in memory that has been marked as usable rather than reserved.
 
-Extending self_exec_id to 64bits introduces a problem on 32bit
-architectures where reading self_exec_id is no longer atomic and can
-take two read instructions.  Which means that is is possible to hit
-a window where the read value of exec_id does not match the written
-value.  So with very lucky timing after this change this still
-remains expoiltable.
-
-I have updated the update of exec_id on exec to use WRITE_ONCE
-and the read of exec_id in do_notify_parent to use READ_ONCE
-to make it clear that there is no locking between these two
-locations.
-
-Link: https://lore.kernel.org/kernel-hardening/20200324215049.GA3710@pi3.com.pl
-Fixes: 2.3.23pre2
-Cc: stable@vger.kernel.org
-Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
+Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
+Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Cc: linux-efi@vger.kernel.org
+Cc: Ingo Molnar <mingo@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: David Hildenbrand <david@redhat.com>
+Cc: Heinrich Schuchardt <xypron.glpk@gmx.de>
+Cc: <stable@vger.kernel.org> # v5.4+
+Link: https://lore.kernel.org/r/4144cd813f113c20cdfa511cf59500a64e6015be.1582662842.git.thomas.lendacky@amd.com
+Link: https://lore.kernel.org/r/20200228121408.9075-2-ardb@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/exec.c             |    2 +-
- include/linux/sched.h |    4 ++--
- kernel/signal.c       |    2 +-
- 3 files changed, 4 insertions(+), 4 deletions(-)
+ arch/x86/platform/efi/efi.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/fs/exec.c
-+++ b/fs/exec.c
-@@ -1386,7 +1386,7 @@ void setup_new_exec(struct linux_binprm
+--- a/arch/x86/platform/efi/efi.c
++++ b/arch/x86/platform/efi/efi.c
+@@ -85,6 +85,8 @@ static const unsigned long * const efi_t
+ #ifdef CONFIG_EFI_RCI2_TABLE
+ 	&rci2_table_phys,
+ #endif
++	&efi.tpm_log,
++	&efi.tpm_final_log,
+ };
  
- 	/* An exec changes our domain. We are no longer part of the thread
- 	   group */
--	current->self_exec_id++;
-+	WRITE_ONCE(current->self_exec_id, current->self_exec_id + 1);
- 	flush_signal_handlers(current, 0);
- }
- EXPORT_SYMBOL(setup_new_exec);
---- a/include/linux/sched.h
-+++ b/include/linux/sched.h
-@@ -939,8 +939,8 @@ struct task_struct {
- 	struct seccomp			seccomp;
- 
- 	/* Thread group tracking: */
--	u32				parent_exec_id;
--	u32				self_exec_id;
-+	u64				parent_exec_id;
-+	u64				self_exec_id;
- 
- 	/* Protection against (de-)allocation: mm, files, fs, tty, keyrings, mems_allowed, mempolicy: */
- 	spinlock_t			alloc_lock;
---- a/kernel/signal.c
-+++ b/kernel/signal.c
-@@ -1931,7 +1931,7 @@ bool do_notify_parent(struct task_struct
- 		 * This is only possible if parent == real_parent.
- 		 * Check if it has changed security domain.
- 		 */
--		if (tsk->parent_exec_id != tsk->parent->self_exec_id)
-+		if (tsk->parent_exec_id != READ_ONCE(tsk->parent->self_exec_id))
- 			sig = SIGCHLD;
- 	}
- 
+ u64 efi_setup;		/* efi setup_data physical address */
 
 
