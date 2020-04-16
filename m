@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A499C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:28:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C49CC3815B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:28:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 68BCC21D79
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:28:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EB5621D93
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:28:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587043689;
-	bh=eUYWMO0lOftTvx7LH14lERm5G1MalglcjgYGjYMuWzQ=;
+	s=default; t=1587043703;
+	bh=fSNbiy2el5P90GKHtiHlis5ld66ekToXznPAUl6Zzjg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ENYUsthtMWDXqsC3tiCX7tZyEUp/eHDbVKilRamymNQo+3RPUXs9ZjYKOmRJBdqOR
-	 Dz/EG6KnNgvMmTdACZCewnY6nqxHZ9GijTnemqSd0z3vB7cs6FUyib7OOzyHYJtpFb
-	 KMDIA0Sm4lHvbtfVgGURc1psWXRaWM8V21qHQm14=
+	b=pamSQ2DgjOcTCIUWiUJRvsIfixXIkCGH3LgDsHnhqYTjvjYu1rHABkIUpuwNbrvR/
+	 LIl1/NYM898gfJlyJsdBtS5C2PB42MZiML3/NXcUgbl2cIl1m04qxxXH4oDR1H8Bql
+	 yXFVB1NWBBmlgwlXmgsuYzC5daE31xTvJVPRW5fs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2895676AbgDPN2H (ORCPT
+        id S2895734AbgDPN2W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 09:28:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35338 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 09:28:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35484 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2895354AbgDPN1D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:27:03 -0400
+        id S2895411AbgDPN1K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:27:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4BE74217D8;
-        Thu, 16 Apr 2020 13:27:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8EC13206E9;
+        Thu, 16 Apr 2020 13:27:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587043622;
-        bh=eUYWMO0lOftTvx7LH14lERm5G1MalglcjgYGjYMuWzQ=;
+        s=default; t=1587043630;
+        bh=fSNbiy2el5P90GKHtiHlis5ld66ekToXznPAUl6Zzjg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DMTXrlX5kcUJGpsS9HSUS6KG9BcZNNp8uQGJ2ylJKrfvyvY5wZvhGptsV+mjohaOB
-         Xpk8IXv3ddI42jvmAxIcGxLQxRNLAOItUk/rlIXYGYVCQYA6uSgOUeRGpQE1b5FpiS
-         r1zIMQwxwM07v8bl/kD80G2DtrmaMiXBz3binOxo=
+        b=JZ7EgjJN0kBL6p1CI0bOzbkxlKpncEzSsgVKgUCytSfjjQqSmR+J6NFO7RanO6gJR
+         1GAEEhTy6iKuY3yx9L2AzBxAogmef8XNCJYscRFp+NyV+SzXjKPmtBTOTaNiqIL6gb
+         dz1zPaLftiupQK3YRgL3Nokj9PBFY9k+Y+nIBhGU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Luo bin <luobin9@huawei.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Alain Volmat <avolmat@me.com>,
+        Patrice Chotard <patrice.chotard@st.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 006/146] hinic: fix wrong para of wait_for_completion_timeout
-Date:   Thu, 16 Apr 2020 15:22:27 +0200
-Message-Id: <20200416131243.369745622@linuxfoundation.org>
+Subject: [PATCH 4.19 009/146] i2c: st: fix missing struct parameter description
+Date:   Thu, 16 Apr 2020 15:22:30 +0200
+Message-Id: <20200416131243.801663383@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131242.353444678@linuxfoundation.org>
 References: <20200416131242.353444678@linuxfoundation.org>
@@ -60,58 +61,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Luo bin <luobin9@huawei.com>
+From: Alain Volmat <avolmat@me.com>
 
-[ Upstream commit 0da7c322f116210ebfdda59c7da663a6fc5e9cc8 ]
+[ Upstream commit f491c6687332920e296d0209e366fe2ca7eab1c6 ]
 
-the second input parameter of wait_for_completion_timeout should
-be jiffies instead of millisecond
+Fix a missing struct parameter description to allow
+warning free W=1 compilation.
 
-Signed-off-by: Luo bin <luobin9@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Alain Volmat <avolmat@me.com>
+Reviewed-by: Patrice Chotard <patrice.chotard@st.com>
+Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/huawei/hinic/hinic_hw_cmdq.c | 3 ++-
- drivers/net/ethernet/huawei/hinic/hinic_hw_mgmt.c | 5 +++--
- 2 files changed, 5 insertions(+), 3 deletions(-)
+ drivers/i2c/busses/i2c-st.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/ethernet/huawei/hinic/hinic_hw_cmdq.c b/drivers/net/ethernet/huawei/hinic/hinic_hw_cmdq.c
-index 4d09ea786b35f..ee715bf785adf 100644
---- a/drivers/net/ethernet/huawei/hinic/hinic_hw_cmdq.c
-+++ b/drivers/net/ethernet/huawei/hinic/hinic_hw_cmdq.c
-@@ -398,7 +398,8 @@ static int cmdq_sync_cmd_direct_resp(struct hinic_cmdq *cmdq,
- 
- 	spin_unlock_bh(&cmdq->cmdq_lock);
- 
--	if (!wait_for_completion_timeout(&done, CMDQ_TIMEOUT)) {
-+	if (!wait_for_completion_timeout(&done,
-+					 msecs_to_jiffies(CMDQ_TIMEOUT))) {
- 		spin_lock_bh(&cmdq->cmdq_lock);
- 
- 		if (cmdq->errcode[curr_prod_idx] == &errcode)
-diff --git a/drivers/net/ethernet/huawei/hinic/hinic_hw_mgmt.c b/drivers/net/ethernet/huawei/hinic/hinic_hw_mgmt.c
-index 278dc13f3dae8..9fcf2e5e00039 100644
---- a/drivers/net/ethernet/huawei/hinic/hinic_hw_mgmt.c
-+++ b/drivers/net/ethernet/huawei/hinic/hinic_hw_mgmt.c
-@@ -52,7 +52,7 @@
- 
- #define MSG_NOT_RESP                    0xFFFF
- 
--#define MGMT_MSG_TIMEOUT                1000
-+#define MGMT_MSG_TIMEOUT                5000
- 
- #define mgmt_to_pfhwdev(pf_mgmt)        \
- 		container_of(pf_mgmt, struct hinic_pfhwdev, pf_to_mgmt)
-@@ -276,7 +276,8 @@ static int msg_to_mgmt_sync(struct hinic_pf_to_mgmt *pf_to_mgmt,
- 		goto unlock_sync_msg;
- 	}
- 
--	if (!wait_for_completion_timeout(recv_done, MGMT_MSG_TIMEOUT)) {
-+	if (!wait_for_completion_timeout(recv_done,
-+					 msecs_to_jiffies(MGMT_MSG_TIMEOUT))) {
- 		dev_err(&pdev->dev, "MGMT timeout, MSG id = %d\n", msg_id);
- 		err = -ETIMEDOUT;
- 		goto unlock_sync_msg;
+diff --git a/drivers/i2c/busses/i2c-st.c b/drivers/i2c/busses/i2c-st.c
+index 9e62f893958aa..81158ae8bfe36 100644
+--- a/drivers/i2c/busses/i2c-st.c
++++ b/drivers/i2c/busses/i2c-st.c
+@@ -437,6 +437,7 @@ static void st_i2c_wr_fill_tx_fifo(struct st_i2c_dev *i2c_dev)
+ /**
+  * st_i2c_rd_fill_tx_fifo() - Fill the Tx FIFO in read mode
+  * @i2c_dev: Controller's private data
++ * @max: Maximum amount of data to fill into the Tx FIFO
+  *
+  * This functions fills the Tx FIFO with fixed pattern when
+  * in read mode to trigger clock.
 -- 
 2.20.1
 
