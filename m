@@ -2,151 +2,85 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BE51C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:56:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D931DC2BB85
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:56:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 64CDE2051A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:56:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587048994;
-	bh=3kEk6/zVo3sJR35rT+QxemBP+agX3sfi360QU1ZUimQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=E38oarACIsiD5jo4y+COM2oy/nG/gr8J1fAg+ahUap4y+kEx+9Lko5UbuSIFVrfdP
-	 GwQMmrpkarOlkr+JpUi1xzloAbXTi7hpqF5ZcdBTlx6k/SwaGrX7HKwq/YEJpi677w
-	 uNSrZqEk1Qnp9zCtafXlsULlzylJVoatcOksZuY0=
+	by mail.kernel.org (Postfix) with ESMTP id B632A2051A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:56:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409112AbgDPO4b (ORCPT
+        id S2405239AbgDPO4v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:56:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43158 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 10:56:51 -0400
+Received: from mga06.intel.com ([134.134.136.31]:7588 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728217AbgDPN4F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:56:05 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AD59721927;
-        Thu, 16 Apr 2020 13:56:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587045364;
-        bh=3kEk6/zVo3sJR35rT+QxemBP+agX3sfi360QU1ZUimQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=n0ysDbKiwbc8IiSqJjRzlXaN51jzIYX9xFILIX2ubMC9n/WhNXUs20nUm0QgpCC5q
-         fYdBuUim5rZ1zSThO0A/gnED8vEIcLrWCsZDDUksPm1GMWI24GYcjpqayQs/9qUQPc
-         Mw4icAckf2b4kAdAZHmV2msgCd2NFZQqasJly3vk=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>
-Subject: [PATCH 5.6 105/254] sched/fair: Fix enqueue_task_fair warning
-Date:   Thu, 16 Apr 2020 15:23:14 +0200
-Message-Id: <20200416131339.229926761@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200416131325.804095985@linuxfoundation.org>
-References: <20200416131325.804095985@linuxfoundation.org>
-User-Agent: quilt/0.66
+        id S2409182AbgDPO4l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 10:56:41 -0400
+IronPort-SDR: s8YkELX1IbRRK2DsNPzM2BtwZjK5310yHKkRIn75auguFMjRyW/FBz5KtFndcvcC8XWdJYpv31
+ QoP3iQIoSUUQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2020 07:56:40 -0700
+IronPort-SDR: uLbV3hxQRXypLeaOz3XOjU4fzbZM2N0R9vWON9psEM7DrROpZqt+eYG7CGc2dwHondC2MgtJMy
+ O3nzONKtczOA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,391,1580803200"; 
+   d="scan'208";a="332865081"
+Received: from mylly.fi.intel.com (HELO [10.237.72.51]) ([10.237.72.51])
+  by orsmga001.jf.intel.com with ESMTP; 16 Apr 2020 07:56:38 -0700
+Subject: Re: Regression with commit 0a67361dcdaa
+To:     Ard Biesheuvel <ardb@kernel.org>
+Cc:     linux-efi <linux-efi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+References: <eb0d88d0-879e-c500-261e-69c76fb68a89@linux.intel.com>
+ <CAMj1kXGGdwuP6X5jvbqmjsP2+bZ7CoJKZ5-WVoPYEjq9HTjuDA@mail.gmail.com>
+From:   Jarkko Nikula <jarkko.nikula@linux.intel.com>
+Message-ID: <9ae0c751-5024-6eda-ca78-80cfd1ed066f@linux.intel.com>
+Date:   Thu, 16 Apr 2020 17:56:38 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMj1kXGGdwuP6X5jvbqmjsP2+bZ7CoJKZ5-WVoPYEjq9HTjuDA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vincent Guittot <vincent.guittot@linaro.org>
+On 4/16/20 5:36 PM, Ard Biesheuvel wrote:
+> On Thu, 16 Apr 2020 at 16:35, Jarkko Nikula
+> <jarkko.nikula@linux.intel.com> wrote:
+>>
+>> Hi
+>>
+>> v5.7-rc1 hangs in early boot on an Intel Atom based prototype hardware
+>> while v5.6 boots fine. I bisected the regression into 0a67361dcdaa
+>> ("efi/x86: Remove runtime table address from kexec EFI setup data").
+>>
+>> v5.7-rc1 caused a reboot loop on another Intel Core based prototype HW.
+>> Reboots also on top of 0a67361dcdaa but boots fine with that commit
+>> reverted.
+>>
+>> Our test system uses kexec to boot the test kernel. These two machines
+>> got regression with v5.7-rc1. We have also others that boot fine.
+>>
+> 
+> This should already be fixed in Linus's tree. Please report back
+> whether that solves your problem or not.
+> 
+Ah, I forgot to pull & test before bisecting...
 
-commit fe61468b2cbc2b7ce5f8d3bf32ae5001d4c434e9 upstream.
+Yes, both machines boot fine with the HEAD 00086336a8d9 ("Merge tag 
+'efi-urgent-2020-04-15' of 
+git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip").
 
-When a cfs rq is throttled, the latter and its child are removed from the
-leaf list but their nr_running is not changed which includes staying higher
-than 1. When a task is enqueued in this throttled branch, the cfs rqs must
-be added back in order to ensure correct ordering in the list but this can
-only happens if nr_running == 1.
-When cfs bandwidth is used, we call unconditionnaly list_add_leaf_cfs_rq()
-when enqueuing an entity to make sure that the complete branch will be
-added.
-
-Similarly unthrottle_cfs_rq() can stop adding cfs in the list when a parent
-is throttled. Iterate the remaining entity to ensure that the complete
-branch will be added in the list.
-
-Reported-by: Christian Borntraeger <borntraeger@de.ibm.com>
-Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
-Tested-by: Christian Borntraeger <borntraeger@de.ibm.com>
-Tested-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
-Cc: stable@vger.kernel.org
-Cc: stable@vger.kernel.org #v5.1+
-Link: https://lkml.kernel.org/r/20200306135257.25044-1-vincent.guittot@linaro.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- kernel/sched/fair.c |   26 ++++++++++++++++++++++----
- 1 file changed, 22 insertions(+), 4 deletions(-)
-
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -3957,6 +3957,7 @@ static inline void check_schedstat_requi
- #endif
- }
- 
-+static inline bool cfs_bandwidth_used(void);
- 
- /*
-  * MIGRATION
-@@ -4035,10 +4036,16 @@ enqueue_entity(struct cfs_rq *cfs_rq, st
- 		__enqueue_entity(cfs_rq, se);
- 	se->on_rq = 1;
- 
--	if (cfs_rq->nr_running == 1) {
-+	/*
-+	 * When bandwidth control is enabled, cfs might have been removed
-+	 * because of a parent been throttled but cfs->nr_running > 1. Try to
-+	 * add it unconditionnally.
-+	 */
-+	if (cfs_rq->nr_running == 1 || cfs_bandwidth_used())
- 		list_add_leaf_cfs_rq(cfs_rq);
-+
-+	if (cfs_rq->nr_running == 1)
- 		check_enqueue_throttle(cfs_rq);
--	}
- }
- 
- static void __clear_buddies_last(struct sched_entity *se)
-@@ -4619,11 +4626,22 @@ void unthrottle_cfs_rq(struct cfs_rq *cf
- 			break;
- 	}
- 
--	assert_list_leaf_cfs_rq(rq);
--
- 	if (!se)
- 		add_nr_running(rq, task_delta);
- 
-+	/*
-+	 * The cfs_rq_throttled() breaks in the above iteration can result in
-+	 * incomplete leaf list maintenance, resulting in triggering the
-+	 * assertion below.
-+	 */
-+	for_each_sched_entity(se) {
-+		cfs_rq = cfs_rq_of(se);
-+
-+		list_add_leaf_cfs_rq(cfs_rq);
-+	}
-+
-+	assert_list_leaf_cfs_rq(rq);
-+
- 	/* Determine whether we need to wake up potentially idle CPU: */
- 	if (rq->curr == rq->idle && rq->cfs.nr_running)
- 		resched_curr(rq);
-
-
+-- 
+Jarkko
