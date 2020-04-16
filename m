@@ -2,161 +2,124 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B2EAC2BA2B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 07:05:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D39E4C352BE
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 07:06:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5A9C120771
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 07:05:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A980F20771
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 07:06:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Ym1Zof5k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438014AbgDPHFq (ORCPT
+        id S2438491AbgDPHG1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 03:05:46 -0400
-Received: from mail-il1-f198.google.com ([209.85.166.198]:49648 "EHLO
-        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2437954AbgDPHFQ (ORCPT
+        Thu, 16 Apr 2020 03:06:27 -0400
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:4641 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2437186AbgDPHGU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 03:05:16 -0400
-Received: by mail-il1-f198.google.com with SMTP id r17so8088729ila.16
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 00:05:15 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=TVvBVOi41Qo7r/+UOsEfQG1z/YRIhNfOcDF384KFc24=;
-        b=WkH+fHWXGSnVsLJBV7d1styZtO7XIViHOKQx3TDSQ+Q0QG48SCJJ2IyQqeTzRlZOew
-         1v78OgOUWZsfaXnfVVkKwW6AOXwR2bdZtkq/AkwmTVQZx4qp5WdAD4wVlX0gEXdV9RnR
-         ihuaZe1YSiEdl8Cra+24zjJuXgjs4kGPGdXCeowb7QbivebFE+trCO1l0Gi62ghnhvaq
-         NmJJXMcYElBVAtLQWKqIph2IDRcQ6ZiQmPHVmr2jd+EWL+Ifh6ufSNRfyrjlMBzZJDWL
-         3i69UEMyXevBeSSTgKEkPHinAL+HF8hoTzrxnKnk2N+vvGHW3r7BtEzzK4Thu1uzzpqg
-         0gpA==
-X-Gm-Message-State: AGi0PuZYW+3xZWzw7yY3/mb0Kapcm9JqI+BIn1dtbPh7ktWmGSR+F+Rj
-        g0x+e9GISpHdHGIY/5Tb/+gyASRdVRbhbICHJIRFqssVb1C7
-X-Google-Smtp-Source: APiQypKBqNDHPOkuF+tpw9qAi5DbjodJ5a9xwXABXAyXw6VezRclbW19E1SSkdh9CYCb+KnhaYXF/crHs7oo6yopYcjrft2QOZu3
+        Thu, 16 Apr 2020 03:06:20 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e9803af0000>; Thu, 16 Apr 2020 00:05:19 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Thu, 16 Apr 2020 00:06:18 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Thu, 16 Apr 2020 00:06:18 -0700
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 16 Apr
+ 2020 07:06:18 +0000
+Received: from [10.24.37.103] (10.124.1.5) by DRHQMAIL107.nvidia.com
+ (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 16 Apr
+ 2020 07:06:14 +0000
+Subject: Re: [TEGRA194_CPUFREQ Patch 2/3] cpufreq: Add Tegra194 cpufreq driver
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+CC:     <rjw@rjwysocki.net>, <catalin.marinas@arm.com>, <will@kernel.org>,
+        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
+        <talho@nvidia.com>, <linux-pm@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <bbasu@nvidia.com>,
+        <mperttunen@nvidia.com>, Sumit Gupta <sumitg@nvidia.com>
+References: <20200406025549.qfwzlk3745y3r274@vireshk-i7>
+ <3ab4136c-8cca-c2f9-d286-b82dac23e720@nvidia.com>
+ <20200408055301.jhvu5bc2luu3b5qr@vireshk-i7>
+ <08307e54-0e14-14a3-7d6a-d59e1e04a683@nvidia.com>
+ <20200409074415.twpzu2n4frqlde7b@vireshk-i7>
+ <00390070-38a1-19aa-ca59-42c4658bee7e@nvidia.com>
+ <20200413062141.a6hmwipexhv3sctq@vireshk-i7>
+ <64b609f1-efb1-425f-a91a-27a492bd3ec4@nvidia.com>
+ <20200414054504.e3qn2cnxqur4sclw@vireshk-i7>
+ <d6e0eed6-4267-fca9-59e1-02d16e17ff34@nvidia.com>
+ <20200416033715.hscztwkxie2o5i3r@vireshk-i7>
+From:   Sumit Gupta <sumitg@nvidia.com>
+Message-ID: <8ea80551-b47c-3dd5-4efa-6befecc279e1@nvidia.com>
+Date:   Thu, 16 Apr 2020 12:36:30 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-X-Received: by 2002:a6b:7203:: with SMTP id n3mr16253379ioc.23.1587020714552;
- Thu, 16 Apr 2020 00:05:14 -0700 (PDT)
-Date:   Thu, 16 Apr 2020 00:05:14 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000f1377e05a3630d32@google.com>
-Subject: KMSAN: uninit-value in sctp_ootb_pkt_new
-From:   syzbot <syzbot+6751381fe5a26df5b74d@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, glider@google.com, kuba@kernel.org,
-        linux-kernel@vger.kernel.org, linux-sctp@vger.kernel.org,
-        marcelo.leitner@gmail.com, netdev@vger.kernel.org,
-        nhorman@tuxdriver.com, syzkaller-bugs@googlegroups.com,
-        vyasevich@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200416033715.hscztwkxie2o5i3r@vireshk-i7>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1587020719; bh=MEcFP8G3VxgwBAt3A1oRVQWL07CnwPJfWLc3Wywyjpg=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=Ym1Zof5kV4ZzNBXuhXOY6pCMuNXLHXbISr+b04QIKvNWYzdvddezwVuXMpid2BF5/
+         dPfkdQNOTOxwvEjv0+wd7hCnNKkb8FlFD8nTuS66Zsv/E+tYrpbTFQtsnTyCM0IHed
+         QJxsYrwBMxHjeNsU7m177c0g4VNPYU5YLdeyBsjHvmbkdksZ0xTbWVzZeIvZXdJgj7
+         qnnuPfvuQoOA+S/MvnDcKQZN5bkim4KueK5S7THIGk9WB1KWKuJPst/htuBdxTdd78
+         SsokaJxGXH+ZdN77GNGGGQ9I3cwDBWGmBrY6dMiePRVUIu9mpDj4o3swCIo5ZHNWFH
+         nsLq+/ogcmUUg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
-
-syzbot found the following crash on:
-
-HEAD commit:    75303409 kmsan: dma: call KMSAN hooks for DMA mappings whe..
-git tree:       https://github.com/google/kmsan.git master
-console output: https://syzkaller.appspot.com/x/log.txt?x=11d2f9e7e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=7811db4cc444a7f6
-dashboard link: https://syzkaller.appspot.com/bug?extid=6751381fe5a26df5b74d
-compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
-
-Unfortunately, I don't have any reproducer for this crash yet.
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+6751381fe5a26df5b74d@syzkaller.appspotmail.com
-
-=====================================================
-BUG: KMSAN: uninit-value in __arch_swab32 arch/x86/include/uapi/asm/swab.h:10 [inline]
-BUG: KMSAN: uninit-value in __fswab32 include/uapi/linux/swab.h:60 [inline]
-BUG: KMSAN: uninit-value in sctp_ootb_pkt_new+0x202/0x540 net/sctp/sm_statefuns.c:6256
-CPU: 0 PID: 20127 Comm: syz-executor.2 Not tainted 5.6.0-rc7-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x1c9/0x220 lib/dump_stack.c:118
- kmsan_report+0xf7/0x1e0 mm/kmsan/kmsan_report.c:118
- __msan_warning+0x58/0xa0 mm/kmsan/kmsan_instr.c:215
- __arch_swab32 arch/x86/include/uapi/asm/swab.h:10 [inline]
- __fswab32 include/uapi/linux/swab.h:60 [inline]
- sctp_ootb_pkt_new+0x202/0x540 net/sctp/sm_statefuns.c:6256
- sctp_sf_tabort_8_4_8+0xe6/0x7e0 net/sctp/sm_statefuns.c:3372
- sctp_sf_do_5_1B_init+0x6be/0x1b60 net/sctp/sm_statefuns.c:338
- sctp_do_sm+0x2b4/0x9a30 net/sctp/sm_sideeffect.c:1153
- sctp_endpoint_bh_rcv+0xd54/0xfe0 net/sctp/endpointola.c:395
- sctp_inq_push+0x300/0x420 net/sctp/inqueue.c:80
- sctp_rcv+0x48b9/0x5410 net/sctp/input.c:256
- ip_protocol_deliver_rcu+0x700/0xbc0 net/ipv4/ip_input.c:204
- ip_local_deliver_finish net/ipv4/ip_input.c:231 [inline]
- NF_HOOK include/linux/netfilter.h:307 [inline]
- ip_local_deliver+0x62a/0x7c0 net/ipv4/ip_input.c:252
- dst_input include/net/dst.h:442 [inline]
- ip_rcv_finish net/ipv4/ip_input.c:428 [inline]
- NF_HOOK include/linux/netfilter.h:307 [inline]
- ip_rcv+0x6cf/0x750 net/ipv4/ip_input.c:538
- __netif_receive_skb_one_core net/core/dev.c:5187 [inline]
- __netif_receive_skb net/core/dev.c:5301 [inline]
- netif_receive_skb_internal net/core/dev.c:5391 [inline]
- netif_receive_skb+0xbb5/0xf20 net/core/dev.c:5450
- tun_rx_batched include/linux/skbuff.h:4351 [inline]
- tun_get_user+0x6aef/0x6f60 drivers/net/tun.c:1997
- tun_chr_write_iter+0x1f2/0x360 drivers/net/tun.c:2026
- call_write_iter include/linux/fs.h:1902 [inline]
- new_sync_write fs/read_write.c:483 [inline]
- __vfs_write+0xa5a/0xca0 fs/read_write.c:496
- vfs_write+0x44a/0x8f0 fs/read_write.c:558
- ksys_write+0x267/0x450 fs/read_write.c:611
- __do_sys_write fs/read_write.c:623 [inline]
- __se_sys_write+0x92/0xb0 fs/read_write.c:620
- __x64_sys_write+0x4a/0x70 fs/read_write.c:620
- do_syscall_64+0xb8/0x160 arch/x86/entry/common.c:296
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x45c889
-Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007f973b07dc78 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
-RAX: ffffffffffffffda RBX: 00007f973b07e6d4 RCX: 000000000045c889
-RDX: 000000000000002e RSI: 00000000200001c0 RDI: 0000000000000003
-RBP: 000000000076bf00 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
-R13: 0000000000000d0d R14: 00000000004cf3b9 R15: 000000000076bf0c
-
-Uninit was created at:
- kmsan_save_stack_with_flags mm/kmsan/kmsan.c:144 [inline]
- kmsan_internal_poison_shadow+0x66/0xd0 mm/kmsan/kmsan.c:127
- kmsan_slab_alloc+0x8a/0xe0 mm/kmsan/kmsan_hooks.c:82
- slab_alloc_node mm/slub.c:2801 [inline]
- __kmalloc_node_track_caller+0xb40/0x1200 mm/slub.c:4420
- __kmalloc_reserve net/core/skbuff.c:142 [inline]
- __alloc_skb+0x2fd/0xac0 net/core/skbuff.c:210
- alloc_skb include/linux/skbuff.h:1081 [inline]
- alloc_skb_with_frags+0x18c/0xa70 net/core/skbuff.c:5764
- sock_alloc_send_pskb+0xada/0xc60 net/core/sock.c:2245
- tun_alloc_skb drivers/net/tun.c:1529 [inline]
- tun_get_user+0x10ae/0x6f60 drivers/net/tun.c:1843
- tun_chr_write_iter+0x1f2/0x360 drivers/net/tun.c:2026
- call_write_iter include/linux/fs.h:1902 [inline]
- new_sync_write fs/read_write.c:483 [inline]
- __vfs_write+0xa5a/0xca0 fs/read_write.c:496
- vfs_write+0x44a/0x8f0 fs/read_write.c:558
- ksys_write+0x267/0x450 fs/read_write.c:611
- __do_sys_write fs/read_write.c:623 [inline]
- __se_sys_write+0x92/0xb0 fs/read_write.c:620
- __x64_sys_write+0x4a/0x70 fs/read_write.c:620
- do_syscall_64+0xb8/0x160 arch/x86/entry/common.c:296
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-=====================================================
 
 
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+On 16/04/20 9:07 AM, Viresh Kumar wrote:
+> External email: Use caution opening links or attachments
+> 
+> 
+> On 15-04-20, 16:55, Sumit Gupta wrote:
+>>
+>>
+>> On 14/04/20 11:15 AM, Viresh Kumar wrote:
+>>> External email: Use caution opening links or attachments
+>>>
+>>>
+>>> On 13-04-20, 17:50, Sumit Gupta wrote:
+>>>> This was done considering long delay value as explained previously.
+>>>> Do you think that smp_call_function_single() would be better than work queue
+>>>> here?
+>>>
+>>> Don't work with assumptions, you should test both and see which one
+>>> works better. Workqueue should never be faster than
+>>> smp_call_function_single() with my understanding.
+>> Checked the time taken and its almost same in both cases.
+>> Earlier we used smp_call_function_single(), but delay time period was small
+>> in that SOC. In T194, the time period was more. So, this is an optimization
+>> done because using work queue has advantage as interrupts will not be
+>> disabled for that period.
+> 
+> Hmm, okay, keep the workqueue and mention the required details in a
+> comment for everyone to understand why the implementation is done that
+> way.
+> 
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+sure, thank you!
+
+> --
+> viresh
+> 
