@@ -2,194 +2,114 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5AB7C352BE
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:14:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BDCEC352BE
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:14:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A4B5522250
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:14:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587050043;
-	bh=7rP73lTWU6+Q7t9AJyrmnd9s5HX/5v+B3ctmotKKrpU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XN3412pyqPJIrNKncOSMS5HdSmLlsNUS5HU/zLMLuObyyWa3Qg+4PLq6nymGq6vbt
-	 YF0BN7x9ETFSZomzuyOgf/9t30E2um4lN9pPOx8WWTwfLzNtp9lJy9SOGhyKMgw+vn
-	 JpS8BfaQSgk89Q+z4FPe2PB4Yx4V28Zo4T0ZuciI=
+	by mail.kernel.org (Postfix) with ESMTP id 087DA214D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:14:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Bj1DjXXC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395046AbgDPPL6 (ORCPT
+        id S2442252AbgDPPOH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:11:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35828 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2441658AbgDPNuL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:50:11 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        Thu, 16 Apr 2020 11:14:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43690 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2395071AbgDPPMS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 11:12:18 -0400
+Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B5DDC061A41
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 08:12:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=Content-Type:MIME-Version:References:
+        Subject:Cc:To:From:Date:Message-Id:Sender:Reply-To:Content-Transfer-Encoding:
+        Content-ID:Content-Description:In-Reply-To;
+        bh=b/SVIF2bqg/aqFhiDrD4mJ5SPvsGXxPICH6tt/LqIrQ=; b=Bj1DjXXCocH4tUw12qeWrn1JeB
+        oM3bo+wTGczUMDn1QaedE6l5Rk1me7g20I1afVqXRx2OO1izft/EXM7QlT8ri4Tlt5nhf61VML+e9
+        jt4uDfPBRCQ1dYv9tk9ipU2M7d3zVS9/dAjTPs+zmhupb271CUdABZevC5uIySeHn3xOpe0Fj6xKs
+        MKqnliYnsO7a415mqKKRsM8dH6ogsKxecg2mG8q1XMWidnUMU0JKgqUxxuNXft3FxwYHbWw7BA199
+        WVTogdy2gJ1opROkyxD2FIJKK9jtJ31J9+tW+O+KXw9BDiy6vfQBmlhSFiAvWsxBtApZSqSWO6/HW
+        VM2MVK9A==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jP6BJ-00046w-4y; Thu, 16 Apr 2020 15:11:57 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 067A322209;
-        Thu, 16 Apr 2020 13:49:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044987;
-        bh=7rP73lTWU6+Q7t9AJyrmnd9s5HX/5v+B3ctmotKKrpU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OCXQAgGF9293E9kquWdmeNdWsIgKsR30GXzNahbwYDERgynwL8qldKhQ8pbYvq8hK
-         dICW+PKTDim9UEZiBqvm9OIbS9tD3F4cAXj6RJIgApAQsjhtRAKImh/FirdznYy0TG
-         hZzo1RMkCBi4scDQERRBFMP87ZomfrriWq7/VHIA=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Christian Gmeiner <christian.gmeiner@gmail.com>,
-        Lucas Stach <l.stach@pengutronix.de>
-Subject: [PATCH 5.4 184/232] drm/etnaviv: rework perfmon query infrastructure
-Date:   Thu, 16 Apr 2020 15:24:38 +0200
-Message-Id: <20200416131338.116664868@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200416131316.640996080@linuxfoundation.org>
-References: <20200416131316.640996080@linuxfoundation.org>
-User-Agent: quilt/0.66
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 43A5630746C;
+        Thu, 16 Apr 2020 17:11:54 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
+        id 14C9A2B0DE4C6; Thu, 16 Apr 2020 17:11:54 +0200 (CEST)
+Message-Id: <20200416151025.004441230@infradead.org>
+User-Agent: quilt/0.65
+Date:   Thu, 16 Apr 2020 17:07:57 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     jpoimboe@redhat.com, alexandre.chartre@oracle.com
+Cc:     linux-kernel@vger.kernel.org, jthierry@redhat.com,
+        tglx@linutronix.de, x86@kernel.org, peterz@infradead.org
+Subject: [RFC][PATCH 5/7] x86/speculation: Change __FILL_RETURN_BUFFER to work with objtool
+References: <20200416150752.569029800@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christian Gmeiner <christian.gmeiner@gmail.com>
+From: Alexandre Chartre <alexandre.chartre@oracle.com>
 
-commit ed1dd899baa32d47d9a93d98336472da50564346 upstream.
+Change __FILL_RETURN_BUFFER so that the stack state is deterministically
+defined for each iteration and that objtool can have an accurate view
+of the stack.
 
-Report the correct perfmon domains and signals depending
-on the supported feature flags.
-
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-Fixes: 9e2c2e273012 ("drm/etnaviv: add infrastructure to query perf counter")
-Cc: stable@vger.kernel.org
-Signed-off-by: Christian Gmeiner <christian.gmeiner@gmail.com>
-Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Suggested-by: Peter Zijlstra <peterz@infradead.org>
+Signed-off-by: Alexandre Chartre <alexandre.chartre@oracle.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Link: https://lkml.kernel.org/r/20200414103618.12657-8-alexandre.chartre@oracle.com
 ---
- drivers/gpu/drm/etnaviv/etnaviv_perfmon.c |   59 ++++++++++++++++++++++++++----
- 1 file changed, 52 insertions(+), 7 deletions(-)
+ arch/x86/include/asm/nospec-branch.h |    7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
---- a/drivers/gpu/drm/etnaviv/etnaviv_perfmon.c
-+++ b/drivers/gpu/drm/etnaviv/etnaviv_perfmon.c
-@@ -32,6 +32,7 @@ struct etnaviv_pm_domain {
- };
+--- a/arch/x86/include/asm/nospec-branch.h
++++ b/arch/x86/include/asm/nospec-branch.h
+@@ -4,6 +4,7 @@
+ #define _ASM_X86_NOSPEC_BRANCH_H_
  
- struct etnaviv_pm_domain_meta {
-+	unsigned int feature;
- 	const struct etnaviv_pm_domain *domains;
- 	u32 nr_domains;
- };
-@@ -410,36 +411,78 @@ static const struct etnaviv_pm_domain do
+ #include <linux/static_key.h>
++#include <linux/frame.h>
  
- static const struct etnaviv_pm_domain_meta doms_meta[] = {
- 	{
-+		.feature = chipFeatures_PIPE_3D,
- 		.nr_domains = ARRAY_SIZE(doms_3d),
- 		.domains = &doms_3d[0]
- 	},
- 	{
-+		.feature = chipFeatures_PIPE_2D,
- 		.nr_domains = ARRAY_SIZE(doms_2d),
- 		.domains = &doms_2d[0]
- 	},
- 	{
-+		.feature = chipFeatures_PIPE_VG,
- 		.nr_domains = ARRAY_SIZE(doms_vg),
- 		.domains = &doms_vg[0]
- 	}
- };
+ #include <asm/alternative.h>
+ #include <asm/alternative-asm.h>
+@@ -46,12 +47,14 @@
+ #define __FILL_RETURN_BUFFER(reg, nr, sp)	\
+ 	mov	$(nr/2), reg;			\
+ 771:						\
++	ANNOTATE_INTRA_FUNCTION_CALL		\
+ 	call	772f;				\
+ 773:	/* speculation trap */			\
+ 	pause;					\
+ 	lfence;					\
+ 	jmp	773b;				\
+ 772:						\
++	ANNOTATE_INTRA_FUNCTION_CALL		\
+ 	call	774f;				\
+ 775:	/* speculation trap */			\
+ 	pause;					\
+@@ -59,8 +62,8 @@
+ 	jmp	775b;				\
+ 774:						\
+ 	dec	reg;				\
+-	jnz	771b;				\
+-	add	$(BITS_PER_LONG/8) * nr, sp;
++	add	$(BITS_PER_LONG/8) * 2, sp;	\
++	jnz	771b;
  
-+static unsigned int num_pm_domains(const struct etnaviv_gpu *gpu)
-+{
-+	unsigned int num = 0, i;
-+
-+	for (i = 0; i < ARRAY_SIZE(doms_meta); i++) {
-+		const struct etnaviv_pm_domain_meta *meta = &doms_meta[i];
-+
-+		if (gpu->identity.features & meta->feature)
-+			num += meta->nr_domains;
-+	}
-+
-+	return num;
-+}
-+
-+static const struct etnaviv_pm_domain *pm_domain(const struct etnaviv_gpu *gpu,
-+	unsigned int index)
-+{
-+	const struct etnaviv_pm_domain *domain = NULL;
-+	unsigned int offset = 0, i;
-+
-+	for (i = 0; i < ARRAY_SIZE(doms_meta); i++) {
-+		const struct etnaviv_pm_domain_meta *meta = &doms_meta[i];
-+
-+		if (!(gpu->identity.features & meta->feature))
-+			continue;
-+
-+		if (meta->nr_domains < (index - offset)) {
-+			offset += meta->nr_domains;
-+			continue;
-+		}
-+
-+		domain = meta->domains + (index - offset);
-+	}
-+
-+	return domain;
-+}
-+
- int etnaviv_pm_query_dom(struct etnaviv_gpu *gpu,
- 	struct drm_etnaviv_pm_domain *domain)
- {
--	const struct etnaviv_pm_domain_meta *meta = &doms_meta[domain->pipe];
-+	const unsigned int nr_domains = num_pm_domains(gpu);
- 	const struct etnaviv_pm_domain *dom;
+ #ifdef __ASSEMBLY__
  
--	if (domain->iter >= meta->nr_domains)
-+	if (domain->iter >= nr_domains)
- 		return -EINVAL;
- 
--	dom = meta->domains + domain->iter;
-+	dom = pm_domain(gpu, domain->iter);
-+	if (!dom)
-+		return -EINVAL;
- 
- 	domain->id = domain->iter;
- 	domain->nr_signals = dom->nr_signals;
- 	strncpy(domain->name, dom->name, sizeof(domain->name));
- 
- 	domain->iter++;
--	if (domain->iter == meta->nr_domains)
-+	if (domain->iter == nr_domains)
- 		domain->iter = 0xff;
- 
- 	return 0;
-@@ -448,14 +491,16 @@ int etnaviv_pm_query_dom(struct etnaviv_
- int etnaviv_pm_query_sig(struct etnaviv_gpu *gpu,
- 	struct drm_etnaviv_pm_signal *signal)
- {
--	const struct etnaviv_pm_domain_meta *meta = &doms_meta[signal->pipe];
-+	const unsigned int nr_domains = num_pm_domains(gpu);
- 	const struct etnaviv_pm_domain *dom;
- 	const struct etnaviv_pm_signal *sig;
- 
--	if (signal->domain >= meta->nr_domains)
-+	if (signal->domain >= nr_domains)
- 		return -EINVAL;
- 
--	dom = meta->domains + signal->domain;
-+	dom = pm_domain(gpu, signal->domain);
-+	if (!dom)
-+		return -EINVAL;
- 
- 	if (signal->iter >= dom->nr_signals)
- 		return -EINVAL;
 
 
