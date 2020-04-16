@@ -2,122 +2,340 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45630C352BE
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 03:56:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65904C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 03:56:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 21E0E2076D
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 03:56:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 336D62076D
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 03:56:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="caX+Ir0i";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="ROdAAu0G"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kNcpvZvk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403999AbgDPD43 (ORCPT
+        id S2404105AbgDPD4m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 23:56:29 -0400
-Received: from out3-smtp.messagingengine.com ([66.111.4.27]:36717 "EHLO
-        out3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728187AbgDPD4Y (ORCPT
+        Wed, 15 Apr 2020 23:56:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51332 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728187AbgDPD4f (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 23:56:24 -0400
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailout.nyi.internal (Postfix) with ESMTP id D06EA5C0111;
-        Wed, 15 Apr 2020 23:56:23 -0400 (EDT)
-Received: from imap2 ([10.202.2.52])
-  by compute3.internal (MEProxy); Wed, 15 Apr 2020 23:56:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
-        mime-version:message-id:in-reply-to:references:date:from:to:cc
-        :subject:content-type; s=fm2; bh=YIfc6yIC2BLuseO1/P1Gj+zOdgsgiLg
-        pvWs+B1qmSOI=; b=caX+Ir0iipoGQK8AcRu9Yfc1lvZAF1n9JoP6T4MvnqeLaKX
-        HR9/HEKpWI8t6cnw7aTA8fqsHTX/IwOiwGaiBkc8YeIsKEJXO9t3CwEfi+Ayr3+g
-        eX7JY04CgxPj43j9pZKIlUhohhtpPTuVaDVJhC5gMmJ6F3gfhiNYarcrHiLjyAyF
-        bjtScbc4EPxMLNSCABpuJteo7gi3HqVJIh0AP6O4CkNFR/QEkeiH07851JZI3PPQ
-        zSdXDJOfl6MrITX3Pm9HtEIMRnBTJVyFnO8meBpWgPZC3OZzKa/dbJihje0ySs2z
-        ROLbSPSD1muxdOVqO3UYf7VYPJ+0o0VfL8rOhVQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=YIfc6y
-        IC2BLuseO1/P1Gj+zOdgsgiLgpvWs+B1qmSOI=; b=ROdAAu0G4mF9TsBznYXtRB
-        FIItH/jON2fNCy1T1Y6SRk/sPlygCJQfGveqZtmk+iczKgTrdF6toMqGOepTwXS/
-        He+ROWpzpJqJK/BFadKVTCcK04hntiWuOX3m6/xA+9uan6jAdM+YKwiZSrzhNo2R
-        VPziuou5PvZfceFhFQR565RaypOB3MyyDHJmf9oDpZZ5C9Y8EgT4t66KpecA0GA8
-        nxgWSocEjI5TdTG7PJlS312LTeqrUvQRsiNGkiS4JCD0LlnO3nr+4ea4yrjCyxw/
-        97aCgCTNOz9oCqRRQGeL7GvD9ptlqsz14n0oUOcupI1wOo+xqVl3EAaDnWJwR+HA
-        ==
-X-ME-Sender: <xms:Z9eXXsHRcjZJClS8H5854KEKrV5CULc4D7dHTLOM6JAk8W7Z0kvFlA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrfeeggdejjecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefofgggkfgjfhffhffvufgtsehttdertderredtnecuhfhrohhmpedftehnughr
-    vgifucflvghffhgvrhihfdcuoegrnhgurhgvfiesrghjrdhiugdrrghuqeenucevlhhush
-    htvghrufhiiigvpedunecurfgrrhgrmhepmhgrihhlfhhrohhmpegrnhgurhgvfiesrghj
-    rdhiugdrrghu
-X-ME-Proxy: <xmx:Z9eXXgNqfcWJoBosiX5Jo_xdrE-MECqk5t05HtRVdDFUyDSiniP_bw>
-    <xmx:Z9eXXpDxTDoju9Oh30kRlNO7hASzNt5F9ZdC_0lud1wvnVyVY-fdmw>
-    <xmx:Z9eXXnzvK0-E0GCyaxo5I8p2mqHXZdAhhxwcWh7zZwj6DpWQp2KZ6A>
-    <xmx:Z9eXXvAxpjhJg0SpMySa-HGbX5O6SNZ-RiNWMCAiyCOTUJ3c9CKpIw>
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id 98BE9E00B9; Wed, 15 Apr 2020 23:56:23 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.1.7-1131-g3221b37-fmstable-20200415v1
-Mime-Version: 1.0
-Message-Id: <2a546e5b-5a5e-42e8-a201-67cd9063249f@www.fastmail.com>
-In-Reply-To: <20200410145904.GA15615@bbwork.lan>
-References: <20200406101553.28958-1-a.filippov@yadro.com>
- <ad46ff33-8ce2-4ffa-b12e-204053e4f705@www.fastmail.com>
- <20200410145904.GA15615@bbwork.lan>
-Date:   Thu, 16 Apr 2020 13:26:50 +0930
-From:   "Andrew Jeffery" <andrew@aj.id.au>
-To:     "Alexander A. Filippov" <a.filippov@yadro.com>
-Cc:     linux-aspeed@lists.ozlabs.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, "Joel Stanley" <joel@jms.id.au>,
-        "Rob Herring" <robh+dt@kernel.org>
-Subject: Re: [PATCH] ARM: DTS: Aspeed: Add YADRO Nicole BMC
-Content-Type: text/plain
+        Wed, 15 Apr 2020 23:56:35 -0400
+Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C786EC061A0C
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 20:56:33 -0700 (PDT)
+Received: by mail-ed1-x543.google.com with SMTP id j20so7584584edj.0
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 20:56:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=sy4bfVWhsdTWNgqPRGhhiWcZGLUTZcB8trDnHlt8Gqo=;
+        b=kNcpvZvkO+SE8zjVWuy3MdvnMQZmZJ5AzGYFYCK2wJlqStUM3MH10l8HVOnfYjDXLC
+         dRLMsrzh1Xj4x8ygPglpCVumifUc/bRbA7badYIirDk9hvmSDYpphqo69m941rOsI/n2
+         4VnqwTxZsCT7Xrg7vdi6O1g/k9nzQIshPtFKsqM7FxEYA6urDY/uL56FHoagyST66Nn5
+         90ZialcWJXjyfFELxo+2Ht7QS6Jc8MibKJkyFbJDcAUYqEo210ypx8gqG1ymKSicKClk
+         O0qXyNVAbMV41LkYX2s6CCeDv0SdPM+F54XzLju2ytoXkBNq0ddDim/M1WB4JRORZqrN
+         OipQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=sy4bfVWhsdTWNgqPRGhhiWcZGLUTZcB8trDnHlt8Gqo=;
+        b=nZXQC5kcEcQGGAOELqiO8HuvGA7gZlWm/fYMnZ5f1Mw6wXU6Xjrhj4woXrcAMk9Yib
+         0zEm2Z4JlZAHXrHPwqI38863WxJMzbtdeq+0o/lqwHJbni5biLTNxSzP9DDjUAuXG1Hb
+         s/TNaFrfKzcHfAPuTneCwWHAJFGhUuzpOyar35n0ORLWxhiqGneWFuewYXsSYpAI54U0
+         B2lRC1L8TFdyX26FcrC0fArLp8pTAYpcky0JjCP9yubMxwMAl4TVI1CfiG+f/Fh6sxgS
+         3G4caEr3nnOrgk45QSOWiE9P/Z5ke/kxM6rHWlwdFpI9TsLSdFOdRTOi5MpigZkeu/5x
+         qppw==
+X-Gm-Message-State: AGi0PubANLcGH6aUOpq3FCXq+vZ5AYUMVFjW67fEiJ3qaXG2OKtjHA4B
+        lx18rqLK/36x/1dJzr2+XbnLWU6Lflqb4dbuR10=
+X-Google-Smtp-Source: APiQypI+a5XXARBuaLeO6TOK7DsB1XkrvzyT+cKJaAdTFMK/KjqhTeAq/RXwhK0JiW/qtSAWlnAiQMbKrEnE4ZZscHY=
+X-Received: by 2002:a50:f61b:: with SMTP id c27mr11953174edn.256.1587009392261;
+ Wed, 15 Apr 2020 20:56:32 -0700 (PDT)
+MIME-Version: 1.0
+References: <000000000000571acf05a229cb2f@google.com> <000000000000cb36d505a2fcf27b@google.com>
+In-Reply-To: <000000000000cb36d505a2fcf27b@google.com>
+From:   Yang Shi <shy828301@gmail.com>
+Date:   Wed, 15 Apr 2020 20:56:19 -0700
+Message-ID: <CAHbLzkqeNLyzP21m3iL4KxE8O0MPZW_vkYozwdLCaVKNp_idnA@mail.gmail.com>
+Subject: Re: possible deadlock in shmem_mfill_atomic_pte
+To:     syzbot <syzbot+e27980339d305f2dbfd9@syzkaller.appspotmail.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Hugh Dickins <hughd@google.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux MM <linux-mm@kvack.org>, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+#syz test: https://github.com/yang-shi/linux.git
+8f9c86c99d278d375ae24b7ea426e1662c5e4009
 
-
-On Sat, 11 Apr 2020, at 00:29, Alexander A. Filippov wrote:
-> On Fri, Apr 10, 2020 at 02:29:47PM +0930, Andrew Jeffery wrote:
-> > 
-> > 
-> > > +&i2c11 {
-> > > +	status = "okay";
-> > > +};
-> > > +
-> > > +&i2c12 {
-> > > +	status = "okay";
-> > > +};
-> > 
-> > Are you accessing devices on the busses from userspace? It would
-> > be helpful to comment here why you're enabling all of these busses
-> > but not describing any devices on them, if it's necessary to enable
-> > them at all.
-> > 
-> 
-> Yes, some of them are unused and may be removed.
-> For others I'll add comments in the next version.
-> 
-> > > +
-> > > +&adc {
-> > > +	status = "okay";
-> > 
-> > You should specify the pinmux configuration for the channels you're using
-> > to ensure exclusive access to those pins (otherwise they could be exported
-> > e.g. as GPIOs).
-> 
-> It was just copied from Romulus and looks like I missed iio-hwmon-battery.
-> Is it what you meant?
-
-The Romulus devicetree may need to be fixed too :)
-
-Andrew
+On Fri, Apr 10, 2020 at 10:16 PM syzbot
+<syzbot+e27980339d305f2dbfd9@syzkaller.appspotmail.com> wrote:
+>
+> syzbot has found a reproducer for the following crash on:
+>
+> HEAD commit:    ab6f762f printk: queue wake_up_klogd irq_work only if per-..
+> git tree:       upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=158a6b5de00000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=3010ccb0f380f660
+> dashboard link: https://syzkaller.appspot.com/bug?extid=e27980339d305f2dbfd9
+> compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12d3c5afe00000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=15e7f51be00000
+>
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+e27980339d305f2dbfd9@syzkaller.appspotmail.com
+>
+> ========================================================
+> WARNING: possible irq lock inversion dependency detected
+> 5.6.0-syzkaller #0 Not tainted
+> --------------------------------------------------------
+> syz-executor941/7000 just changed the state of lock:
+> ffff88808d9b18d8 (&info->lock){+.+.}-{2:2}, at: spin_lock include/linux/spinlock.h:353 [inline]
+> ffff88808d9b18d8 (&info->lock){+.+.}-{2:2}, at: shmem_mfill_atomic_pte+0x13f4/0x1e10 mm/shmem.c:2402
+> but this lock was taken by another, SOFTIRQ-safe lock in the past:
+>  (&xa->xa_lock#4){..-.}-{2:2}
+>
+>
+> and interrupts could create inverse lock ordering between them.
+>
+>
+> other info that might help us debug this:
+>  Possible interrupt unsafe locking scenario:
+>
+>        CPU0                    CPU1
+>        ----                    ----
+>   lock(&info->lock);
+>                                local_irq_disable();
+>                                lock(&xa->xa_lock#4);
+>                                lock(&info->lock);
+>   <Interrupt>
+>     lock(&xa->xa_lock#4);
+>
+>  *** DEADLOCK ***
+>
+> 2 locks held by syz-executor941/7000:
+>  #0: ffff88809edf10e8 (&mm->mmap_sem#2){++++}-{3:3}, at: __mcopy_atomic mm/userfaultfd.c:491 [inline]
+>  #0: ffff88809edf10e8 (&mm->mmap_sem#2){++++}-{3:3}, at: mcopy_atomic+0x17a/0x1ba0 mm/userfaultfd.c:632
+>  #1: ffff888098e211f8 (ptlock_ptr(page)#2){+.+.}-{2:2}, at: spin_lock include/linux/spinlock.h:353 [inline]
+>  #1: ffff888098e211f8 (ptlock_ptr(page)#2){+.+.}-{2:2}, at: shmem_mfill_atomic_pte+0xf73/0x1e10 mm/shmem.c:2389
+>
+> the shortest dependencies between 2nd lock and 1st lock:
+>  -> (&xa->xa_lock#4){..-.}-{2:2} {
+>     IN-SOFTIRQ-W at:
+>                       lock_acquire+0x169/0x480 kernel/locking/lockdep.c:4923
+>                       __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inline]
+>                       _raw_spin_lock_irqsave+0x9e/0xc0 kernel/locking/spinlock.c:159
+>                       test_clear_page_writeback+0x2d8/0xac0 mm/page-writeback.c:2728
+>                       end_page_writeback+0x212/0x390 mm/filemap.c:1317
+>                       end_bio_bh_io_sync+0xb1/0x110 fs/buffer.c:3012
+>                       req_bio_endio block/blk-core.c:245 [inline]
+>                       blk_update_request+0x437/0x1070 block/blk-core.c:1472
+>                       scsi_end_request+0x7a/0x7f0 drivers/scsi/scsi_lib.c:575
+>                       scsi_io_completion+0x178/0x1be0 drivers/scsi/scsi_lib.c:959
+>                       blk_done_softirq+0x2f2/0x360 block/blk-softirq.c:37
+>                       __do_softirq+0x268/0x80c kernel/softirq.c:292
+>                       invoke_softirq kernel/softirq.c:373 [inline]
+>                       irq_exit+0x223/0x230 kernel/softirq.c:413
+>                       exiting_irq arch/x86/include/asm/apic.h:546 [inline]
+>                       do_IRQ+0xfb/0x1d0 arch/x86/kernel/irq.c:263
+>                       ret_from_intr+0x0/0x2b
+>                       orc_find arch/x86/kernel/unwind_orc.c:164 [inline]
+>                       unwind_next_frame+0x20b/0x1cf0 arch/x86/kernel/unwind_orc.c:407
+>                       arch_stack_walk+0xb4/0xe0 arch/x86/kernel/stacktrace.c:25
+>                       stack_trace_save+0xad/0x150 kernel/stacktrace.c:123
+>                       save_stack mm/kasan/common.c:49 [inline]
+>                       set_track mm/kasan/common.c:57 [inline]
+>                       __kasan_kmalloc+0x114/0x160 mm/kasan/common.c:495
+>                       __do_kmalloc mm/slab.c:3656 [inline]
+>                       __kmalloc+0x24b/0x330 mm/slab.c:3665
+>                       kmalloc include/linux/slab.h:560 [inline]
+>                       tomoyo_realpath_from_path+0xd8/0x630 security/tomoyo/realpath.c:252
+>                       tomoyo_get_realpath security/tomoyo/file.c:151 [inline]
+>                       tomoyo_check_open_permission+0x1b6/0x900 security/tomoyo/file.c:771
+>                       security_file_open+0x50/0xc0 security/security.c:1548
+>                       do_dentry_open+0x35d/0x10b0 fs/open.c:784
+>                       do_open fs/namei.c:3229 [inline]
+>                       path_openat+0x2790/0x38b0 fs/namei.c:3346
+>                       do_filp_open+0x191/0x3a0 fs/namei.c:3373
+>                       do_sys_openat2+0x463/0x770 fs/open.c:1148
+>                       do_sys_open fs/open.c:1164 [inline]
+>                       ksys_open include/linux/syscalls.h:1386 [inline]
+>                       __do_sys_open fs/open.c:1170 [inline]
+>                       __se_sys_open fs/open.c:1168 [inline]
+>                       __x64_sys_open+0x1af/0x1e0 fs/open.c:1168
+>                       do_syscall_64+0xf3/0x1b0 arch/x86/entry/common.c:295
+>                       entry_SYSCALL_64_after_hwframe+0x49/0xb3
+>     INITIAL USE at:
+>                      lock_acquire+0x169/0x480 kernel/locking/lockdep.c:4923
+>                      __raw_spin_lock_irq include/linux/spinlock_api_smp.h:128 [inline]
+>                      _raw_spin_lock_irq+0x67/0x80 kernel/locking/spinlock.c:167
+>                      spin_lock_irq include/linux/spinlock.h:378 [inline]
+>                      __add_to_page_cache_locked+0x53d/0xc70 mm/filemap.c:855
+>                      add_to_page_cache_lru+0x17f/0x4d0 mm/filemap.c:921
+>                      do_read_cache_page+0x209/0xd00 mm/filemap.c:2755
+>                      read_mapping_page include/linux/pagemap.h:397 [inline]
+>                      read_part_sector+0xd8/0x2d0 block/partitions/core.c:643
+>                      adfspart_check_ICS+0x45/0x640 block/partitions/acorn.c:360
+>                      check_partition block/partitions/core.c:140 [inline]
+>                      blk_add_partitions+0x3ce/0x1240 block/partitions/core.c:571
+>                      bdev_disk_changed+0x446/0x5d0 fs/block_dev.c:1544
+>                      __blkdev_get+0xb2b/0x13d0 fs/block_dev.c:1647
+>                      register_disk block/genhd.c:763 [inline]
+>                      __device_add_disk+0x95f/0x1040 block/genhd.c:853
+>                      add_disk include/linux/genhd.h:294 [inline]
+>                      brd_init+0x349/0x42a drivers/block/brd.c:533
+>                      do_one_initcall+0x14b/0x350 init/main.c:1157
+>                      do_initcall_level+0x101/0x14c init/main.c:1230
+>                      do_initcalls+0x59/0x9b init/main.c:1246
+>                      kernel_init_freeable+0x2fa/0x418 init/main.c:1450
+>                      kernel_init+0xd/0x290 init/main.c:1357
+>                      ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+>   }
+>   ... key      at: [<ffffffff8b5afa68>] xa_init_flags.__key+0x0/0x10
+>   ... acquired at:
+>    lock_acquire+0x169/0x480 kernel/locking/lockdep.c:4923
+>    __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inline]
+>    _raw_spin_lock_irqsave+0x9e/0xc0 kernel/locking/spinlock.c:159
+>    shmem_uncharge+0x34/0x4c0 mm/shmem.c:341
+>    __split_huge_page+0xda8/0x1900 mm/huge_memory.c:2613
+>    split_huge_page_to_list+0x10a4/0x15f0 mm/huge_memory.c:2886
+>    split_huge_page include/linux/huge_mm.h:204 [inline]
+>    shmem_punch_compound+0x17d/0x1c0 mm/shmem.c:814
+>    shmem_undo_range+0x5da/0x1d00 mm/shmem.c:870
+>    shmem_truncate_range mm/shmem.c:980 [inline]
+>    shmem_setattr+0x4e3/0x8a0 mm/shmem.c:1039
+>    notify_change+0xad5/0xfb0 fs/attr.c:336
+>    do_truncate fs/open.c:64 [inline]
+>    do_sys_ftruncate+0x55f/0x690 fs/open.c:195
+>    do_syscall_64+0xf3/0x1b0 arch/x86/entry/common.c:295
+>    entry_SYSCALL_64_after_hwframe+0x49/0xb3
+>
+> -> (&info->lock){+.+.}-{2:2} {
+>    HARDIRQ-ON-W at:
+>                     lock_acquire+0x169/0x480 kernel/locking/lockdep.c:4923
+>                     __raw_spin_lock include/linux/spinlock_api_smp.h:142 [inline]
+>                     _raw_spin_lock+0x2a/0x40 kernel/locking/spinlock.c:151
+>                     spin_lock include/linux/spinlock.h:353 [inline]
+>                     shmem_mfill_atomic_pte+0x13f4/0x1e10 mm/shmem.c:2402
+>                     shmem_mcopy_atomic_pte+0x3a/0x50 mm/shmem.c:2440
+>                     mfill_atomic_pte mm/userfaultfd.c:449 [inline]
+>                     __mcopy_atomic mm/userfaultfd.c:582 [inline]
+>                     mcopy_atomic+0x84f/0x1ba0 mm/userfaultfd.c:632
+>                     userfaultfd_copy fs/userfaultfd.c:1743 [inline]
+>                     userfaultfd_ioctl+0x2289/0x4890 fs/userfaultfd.c:1941
+>                     vfs_ioctl fs/ioctl.c:47 [inline]
+>                     ksys_ioctl fs/ioctl.c:763 [inline]
+>                     __do_sys_ioctl fs/ioctl.c:772 [inline]
+>                     __se_sys_ioctl+0xf9/0x160 fs/ioctl.c:770
+>                     do_syscall_64+0xf3/0x1b0 arch/x86/entry/common.c:295
+>                     entry_SYSCALL_64_after_hwframe+0x49/0xb3
+>    SOFTIRQ-ON-W at:
+>                     lock_acquire+0x169/0x480 kernel/locking/lockdep.c:4923
+>                     __raw_spin_lock include/linux/spinlock_api_smp.h:142 [inline]
+>                     _raw_spin_lock+0x2a/0x40 kernel/locking/spinlock.c:151
+>                     spin_lock include/linux/spinlock.h:353 [inline]
+>                     shmem_mfill_atomic_pte+0x13f4/0x1e10 mm/shmem.c:2402
+>                     shmem_mcopy_atomic_pte+0x3a/0x50 mm/shmem.c:2440
+>                     mfill_atomic_pte mm/userfaultfd.c:449 [inline]
+>                     __mcopy_atomic mm/userfaultfd.c:582 [inline]
+>                     mcopy_atomic+0x84f/0x1ba0 mm/userfaultfd.c:632
+>                     userfaultfd_copy fs/userfaultfd.c:1743 [inline]
+>                     userfaultfd_ioctl+0x2289/0x4890 fs/userfaultfd.c:1941
+>                     vfs_ioctl fs/ioctl.c:47 [inline]
+>                     ksys_ioctl fs/ioctl.c:763 [inline]
+>                     __do_sys_ioctl fs/ioctl.c:772 [inline]
+>                     __se_sys_ioctl+0xf9/0x160 fs/ioctl.c:770
+>                     do_syscall_64+0xf3/0x1b0 arch/x86/entry/common.c:295
+>                     entry_SYSCALL_64_after_hwframe+0x49/0xb3
+>    INITIAL USE at:
+>                    lock_acquire+0x169/0x480 kernel/locking/lockdep.c:4923
+>                    __raw_spin_lock_irq include/linux/spinlock_api_smp.h:128 [inline]
+>                    _raw_spin_lock_irq+0x67/0x80 kernel/locking/spinlock.c:167
+>                    spin_lock_irq include/linux/spinlock.h:378 [inline]
+>                    shmem_getpage_gfp+0x2160/0x3120 mm/shmem.c:1882
+>                    shmem_getpage mm/shmem.c:154 [inline]
+>                    shmem_write_begin+0xcd/0x1a0 mm/shmem.c:2483
+>                    generic_perform_write+0x23b/0x4e0 mm/filemap.c:3302
+>                    __generic_file_write_iter+0x22b/0x4e0 mm/filemap.c:3431
+>                    generic_file_write_iter+0x4a6/0x650 mm/filemap.c:3463
+>                    call_write_iter include/linux/fs.h:1907 [inline]
+>                    new_sync_write fs/read_write.c:484 [inline]
+>                    __vfs_write+0x54c/0x710 fs/read_write.c:497
+>                    vfs_write+0x274/0x580 fs/read_write.c:559
+>                    ksys_write+0x11b/0x220 fs/read_write.c:612
+>                    do_syscall_64+0xf3/0x1b0 arch/x86/entry/common.c:295
+>                    entry_SYSCALL_64_after_hwframe+0x49/0xb3
+>  }
+>  ... key      at: [<ffffffff8b59f840>] shmem_get_inode.__key+0x0/0x10
+>  ... acquired at:
+>    mark_lock_irq kernel/locking/lockdep.c:3585 [inline]
+>    mark_lock+0x529/0x1b00 kernel/locking/lockdep.c:3935
+>    mark_usage kernel/locking/lockdep.c:3852 [inline]
+>    __lock_acquire+0xb95/0x2b90 kernel/locking/lockdep.c:4298
+>    lock_acquire+0x169/0x480 kernel/locking/lockdep.c:4923
+>    __raw_spin_lock include/linux/spinlock_api_smp.h:142 [inline]
+>    _raw_spin_lock+0x2a/0x40 kernel/locking/spinlock.c:151
+>    spin_lock include/linux/spinlock.h:353 [inline]
+>    shmem_mfill_atomic_pte+0x13f4/0x1e10 mm/shmem.c:2402
+>    shmem_mcopy_atomic_pte+0x3a/0x50 mm/shmem.c:2440
+>    mfill_atomic_pte mm/userfaultfd.c:449 [inline]
+>    __mcopy_atomic mm/userfaultfd.c:582 [inline]
+>    mcopy_atomic+0x84f/0x1ba0 mm/userfaultfd.c:632
+>    userfaultfd_copy fs/userfaultfd.c:1743 [inline]
+>    userfaultfd_ioctl+0x2289/0x4890 fs/userfaultfd.c:1941
+>    vfs_ioctl fs/ioctl.c:47 [inline]
+>    ksys_ioctl fs/ioctl.c:763 [inline]
+>    __do_sys_ioctl fs/ioctl.c:772 [inline]
+>    __se_sys_ioctl+0xf9/0x160 fs/ioctl.c:770
+>    do_syscall_64+0xf3/0x1b0 arch/x86/entry/common.c:295
+>    entry_SYSCALL_64_after_hwframe+0x49/0xb3
+>
+>
+> stack backtrace:
+> CPU: 1 PID: 7000 Comm: syz-executor941 Not tainted 5.6.0-syzkaller #0
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+> Call Trace:
+>  __dump_stack lib/dump_stack.c:77 [inline]
+>  dump_stack+0x1e9/0x30e lib/dump_stack.c:118
+>  print_irq_inversion_bug+0xb67/0xe90 kernel/locking/lockdep.c:3447
+>  check_usage_backwards+0x13f/0x240 kernel/locking/lockdep.c:3499
+>  mark_lock_irq kernel/locking/lockdep.c:3585 [inline]
+>  mark_lock+0x529/0x1b00 kernel/locking/lockdep.c:3935
+>  mark_usage kernel/locking/lockdep.c:3852 [inline]
+>  __lock_acquire+0xb95/0x2b90 kernel/locking/lockdep.c:4298
+>  lock_acquire+0x169/0x480 kernel/locking/lockdep.c:4923
+>  __raw_spin_lock include/linux/spinlock_api_smp.h:142 [inline]
+>  _raw_spin_lock+0x2a/0x40 kernel/locking/spinlock.c:151
+>  spin_lock include/linux/spinlock.h:353 [inline]
+>  shmem_mfill_atomic_pte+0x13f4/0x1e10 mm/shmem.c:2402
+>  shmem_mcopy_atomic_pte+0x3a/0x50 mm/shmem.c:2440
+>  mfill_atomic_pte mm/userfaultfd.c:449 [inline]
+>  __mcopy_atomic mm/userfaultfd.c:582 [inline]
+>  mcopy_atomic+0x84f/0x1ba0 mm/userfaultfd.c:632
+>  userfaultfd_copy fs/userfaultfd.c:1743 [inline]
+>  userfaultfd_ioctl+0x2289/0x4890 fs/userfaultfd.c:1941
+>  vfs_ioctl fs/ioctl.c:47 [inline]
+>  ksys_ioctl fs/ioctl.c:763 [inline]
+>  __do_sys_ioctl fs/ioctl.c:772 [inline]
+>  __se_sys_ioctl+0xf9/0x160 fs/ioctl.c:770
+>  do_syscall_64+0xf3/0x1b0 arch/x86/entry/common.c:295
+>  entry_SYSCALL_64_after_hwframe+0x49/0xb3
+> RIP: 0033:0x444399
+> Code: 0d d8 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 db d7 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+> RSP: 002b:00007ffd0974a4a8 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+> RAX: ffffffffffffffda RBX: 00000000004002e0 RCX: 0000000000444399
+> RDX: 00000000200a0fe0 RSI: 00000000c028aa03 RDI: 0000000000000004
+> RBP: 00000000006cf018 R08: 00000000004002e0 R09: 00000000004002e0
+> R10: 00000000004002e0 R11: 0000000000000246 R12: 0000000000402000
+> R13: 0000000000402090 R14: 0000000000000000 R15: 0000000000000000
+>
+>
