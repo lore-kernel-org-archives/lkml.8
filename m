@@ -2,301 +2,121 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7007DC2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 03:42:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F2E9C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 03:43:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4883120771
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 03:42:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587008544;
-	bh=3bdCitI6DbtfpJ8kO1TDqDqoKTqTZP8xYsOYGObs8do=;
-	h=Date:From:To:Subject:References:In-Reply-To:List-ID:From;
-	b=wq8FIllZNt9PefcvoMT/rMokKCvQTYyHwkxMAybeQfct3RYZ/NloxfcRWrz9ruqx1
-	 WV9nqCHBP97apk8wf0GViwoEWFizBHgsH3n+GzVuP0SnT3zqLyptWG/n6J20WYQJuk
-	 v1UU38Vawo6att6Nk8BimiJ4gCwxbyVpun+CEcZQ=
+	by mail.kernel.org (Postfix) with ESMTP id 1688720737
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 03:43:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391272AbgDPDmW (ORCPT
+        id S2391451AbgDPDnl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 23:42:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47614 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390798AbgDPDmS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 23:42:18 -0400
-Received: from localhost (unknown [104.132.1.66])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7724420737;
-        Thu, 16 Apr 2020 03:42:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587008537;
-        bh=3bdCitI6DbtfpJ8kO1TDqDqoKTqTZP8xYsOYGObs8do=;
-        h=Date:From:To:Subject:References:In-Reply-To:From;
-        b=s9vZ1bN22hDMSwhRJNr7GEGww4DRupw6O6A1EJ+JEk2S2hei94WewGsC3RW/fQZL9
-         gkoNv6u0FGNAs86g5A+hWgkRlMaTkt44gZTjY38tebmcO/loIEOVxJ9U+FGASJKRkQ
-         zIExw821mKKrsnz4Fx02WRWLliw+2d1iqZA+ss78=
-Date:   Wed, 15 Apr 2020 20:42:17 -0700
-From:   Jaegeuk Kim <jaegeuk@kernel.org>
-To:     linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, kernel-team@android.com
-Subject: Re: [f2fs-dev] [PATCH v2] f2fs: add tracepoint for f2fs iostat
-Message-ID: <20200416034217.GA254838@google.com>
-References: <20200413161649.38177-1-jaegeuk@kernel.org>
+        Wed, 15 Apr 2020 23:43:41 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:44332 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729245AbgDPDni (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 23:43:38 -0400
+Received: by mail-pf1-f193.google.com with SMTP id b72so1039791pfb.11;
+        Wed, 15 Apr 2020 20:43:36 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=MF+GTcAP/Qi1eGTnMDQ31INQwaQqeTxesD5C90whNm4=;
+        b=OSNHTeLgm7mfq2H+4Mbf2xG+wk1C2t/IBwmavxqO0EBEuN2WGqif1n9DhZ/czrNHEI
+         B9SiNSXXQOViU1Gs04jpYjPKAO0y3yH2Jko8ctQpph++ShfDhl9f3SHrlMFkDD+sx8t/
+         laj9b/tbS7mRA7WsXbt2HRmj50GT7A0aGk5UiDftQQSyNMQVx7jS2MO1w8UFxb6DcCRo
+         FiCUJAE8tj0ppNkTzyPw8iy31TpJxeobxw7hhCMMyJzOXOXltUJF/h8Ld5K0Uyt/6Beu
+         SLZmzbF2XmMkYtHq1x98SolAcPEx43uGmg1E0iDYpO+oxLg61jKxnbgBHfoqThLhOK1n
+         2D1w==
+X-Gm-Message-State: AGi0PuaLrv2lnb4+V0aw9SObEk8bkOfe3c3RIsxaJsof4Ih6GPY7+jio
+        MULKmfLOCtx2vpzOez9qwVo=
+X-Google-Smtp-Source: APiQypJW/DVeigCfIx/tEMJ1u8JJIZm5hJJ9dvGJdqr8k9BoFgyywcE0DNRRh5Kfl5ObHf8rRTRZ/A==
+X-Received: by 2002:a63:1f0c:: with SMTP id f12mr28638998pgf.245.1587008615446;
+        Wed, 15 Apr 2020 20:43:35 -0700 (PDT)
+Received: from ?IPv6:2601:647:4000:d7:91ba:7380:46ae:a781? ([2601:647:4000:d7:91ba:7380:46ae:a781])
+        by smtp.gmail.com with ESMTPSA id u24sm12045079pgo.65.2020.04.15.20.43.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 15 Apr 2020 20:43:34 -0700 (PDT)
+Subject: Re: [PATCH 3/5] blktrace: refcount the request_queue during ioctl
+To:     Luis Chamberlain <mcgrof@kernel.org>
+Cc:     Christoph Hellwig <hch@infradead.org>, axboe@kernel.dk,
+        viro@zeniv.linux.org.uk, gregkh@linuxfoundation.org,
+        rostedt@goodmis.org, mingo@redhat.com, jack@suse.cz,
+        ming.lei@redhat.com, nstange@suse.de, akpm@linux-foundation.org,
+        mhocko@suse.com, yukuai3@huawei.com, linux-block@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Omar Sandoval <osandov@fb.com>,
+        Hannes Reinecke <hare@suse.com>,
+        Michal Hocko <mhocko@kernel.org>
+References: <20200414041902.16769-1-mcgrof@kernel.org>
+ <20200414041902.16769-4-mcgrof@kernel.org>
+ <20200414154044.GB25765@infradead.org>
+ <20200415061649.GS11244@42.do-not-panic.com>
+ <20200415071425.GA21099@infradead.org>
+ <20200415123434.GU11244@42.do-not-panic.com>
+ <73332d32-b095-507f-fb2a-68460533eeb7@acm.org>
+ <20200416011247.GB11244@42.do-not-panic.com>
+From:   Bart Van Assche <bvanassche@acm.org>
+Autocrypt: addr=bvanassche@acm.org; prefer-encrypt=mutual; keydata=
+ mQENBFSOu4oBCADcRWxVUvkkvRmmwTwIjIJvZOu6wNm+dz5AF4z0FHW2KNZL3oheO3P8UZWr
+ LQOrCfRcK8e/sIs2Y2D3Lg/SL7qqbMehGEYcJptu6mKkywBfoYbtBkVoJ/jQsi2H0vBiiCOy
+ fmxMHIPcYxaJdXxrOG2UO4B60Y/BzE6OrPDT44w4cZA9DH5xialliWU447Bts8TJNa3lZKS1
+ AvW1ZklbvJfAJJAwzDih35LxU2fcWbmhPa7EO2DCv/LM1B10GBB/oQB5kvlq4aA2PSIWkqz4
+ 3SI5kCPSsygD6wKnbRsvNn2mIACva6VHdm62A7xel5dJRfpQjXj2snd1F/YNoNc66UUTABEB
+ AAG0JEJhcnQgVmFuIEFzc2NoZSA8YnZhbmFzc2NoZUBhY20ub3JnPokBOQQTAQIAIwUCVI67
+ igIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEHFcPTXFzhAJ8QkH/1AdXblKL65M
+ Y1Zk1bYKnkAb4a98LxCPm/pJBilvci6boefwlBDZ2NZuuYWYgyrehMB5H+q+Kq4P0IBbTqTa
+ jTPAANn62A6jwJ0FnCn6YaM9TZQjM1F7LoDX3v+oAkaoXuq0dQ4hnxQNu792bi6QyVdZUvKc
+ macVFVgfK9n04mL7RzjO3f+X4midKt/s+G+IPr4DGlrq+WH27eDbpUR3aYRk8EgbgGKvQFdD
+ CEBFJi+5ZKOArmJVBSk21RHDpqyz6Vit3rjep7c1SN8s7NhVi9cjkKmMDM7KYhXkWc10lKx2
+ RTkFI30rkDm4U+JpdAd2+tP3tjGf9AyGGinpzE2XY1K5AQ0EVI67igEIAKiSyd0nECrgz+H5
+ PcFDGYQpGDMTl8MOPCKw/F3diXPuj2eql4xSbAdbUCJzk2ETif5s3twT2ER8cUTEVOaCEUY3
+ eOiaFgQ+nGLx4BXqqGewikPJCe+UBjFnH1m2/IFn4T9jPZkV8xlkKmDUqMK5EV9n3eQLkn5g
+ lco+FepTtmbkSCCjd91EfThVbNYpVQ5ZjdBCXN66CKyJDMJ85HVr5rmXG/nqriTh6cv1l1Js
+ T7AFvvPjUPknS6d+BETMhTkbGzoyS+sywEsQAgA+BMCxBH4LvUmHYhpS+W6CiZ3ZMxjO8Hgc
+ ++w1mLeRUvda3i4/U8wDT3SWuHcB3DWlcppECLkAEQEAAYkBHwQYAQIACQUCVI67igIbDAAK
+ CRBxXD01xc4QCZ4dB/0QrnEasxjM0PGeXK5hcZMT9Eo998alUfn5XU0RQDYdwp6/kMEXMdmT
+ oH0F0xB3SQ8WVSXA9rrc4EBvZruWQ+5/zjVrhhfUAx12CzL4oQ9Ro2k45daYaonKTANYG22y
+ //x8dLe2Fv1By4SKGhmzwH87uXxbTJAUxiWIi1np0z3/RDnoVyfmfbbL1DY7zf2hYXLLzsJR
+ mSsED/1nlJ9Oq5fALdNEPgDyPUerqHxcmIub+pF0AzJoYHK5punqpqfGmqPbjxrJLPJfHVKy
+ goMj5DlBMoYqEgpbwdUYkH6QdizJJCur4icy8GUNbisFYABeoJ91pnD4IGei3MTdvINSZI5e
+Message-ID: <a71d9c9b-72c8-8905-aeba-08e5382f5a81@acm.org>
+Date:   Wed, 15 Apr 2020 20:43:32 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200413161649.38177-1-jaegeuk@kernel.org>
+In-Reply-To: <20200416011247.GB11244@42.do-not-panic.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-v2:
- - add sysfs entry to give the time period
- - keep stat records in sbi
+On 2020-04-15 18:12, Luis Chamberlain wrote:
+> On Wed, Apr 15, 2020 at 07:18:22AM -0700, Bart Van Assche wrote:
+>> blk_get_queue() prevents concurrent freeing of struct request_queue but
+>> does not prevent concurrent blk_cleanup_queue() calls.
+> 
+> Wouldn't concurrent blk_cleanup_queue() calls be a bug? If so should
+> I make it clear that it would be or simply prevent it?
 
-From 805015f3f2cec3acf43321359129c5382a1d5db4 Mon Sep 17 00:00:00 2001
-From: Daeho Jeong <daehojeong@google.com>
-Date: Mon, 30 Mar 2020 03:30:59 +0000
-Subject: [PATCH] f2fs: add tracepoint for f2fs iostat
+I think calling blk_cleanup_queue() while the queue refcount > 0 is well
+established behavior. At least the SCSI core triggers that behavior
+since a very long time. I prefer not to change that behavior.
 
-Added a tracepoint to see iostat of f2fs. Default period of that
-is 3 second. This tracepoint can be used to be monitoring
-I/O statistics periodically.
+Regarding patch 3/5: how about dropping that patch? If the queue
+refcount can drop to zero while blk_trace_ioctl() is in progress I think
+that should be fixed in the block_device_operations.open callback
+instead of in blk_trace_ioctl().
 
-Bug: 152162885
-Change-Id: I6fbe010b9cf1a90caa0f4793a6dab77c4cba7da6
-Signed-off-by: Daeho Jeong <daehojeong@google.com>
----
- Documentation/ABI/testing/sysfs-fs-f2fs |  6 +++
- fs/f2fs/f2fs.h                          | 16 +++++++-
- fs/f2fs/super.c                         |  1 +
- fs/f2fs/sysfs.c                         | 39 +++++++++++++++++++
- include/trace/events/f2fs.h             | 52 +++++++++++++++++++++++++
- 5 files changed, 113 insertions(+), 1 deletion(-)
+Thanks,
 
-diff --git a/Documentation/ABI/testing/sysfs-fs-f2fs b/Documentation/ABI/testing/sysfs-fs-f2fs
-index c8620ea7022a7..427f5b45c67f1 100644
---- a/Documentation/ABI/testing/sysfs-fs-f2fs
-+++ b/Documentation/ABI/testing/sysfs-fs-f2fs
-@@ -332,3 +332,9 @@ Description:	Give a way to attach REQ_META|FUA to data writes
- 		*      REQ_META     |      REQ_FUA      |
- 		*    5 |    4 |   3 |    2 |    1 |   0 |
- 		* Cold | Warm | Hot | Cold | Warm | Hot |
-+
-+What:		/sys/fs/f2fs/<disk>/iostat_period_ms
-+Date:		April 2020
-+Contact:	"Daeho Jeong" <daehojeong@google.com>
-+Description:	Give a way to change iostat_period time. 3secs by default.
-+		The new iostat trace gives stats gap given the period.
-diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-index c2788738aa0d4..6cedbfb2067c5 100644
---- a/fs/f2fs/f2fs.h
-+++ b/fs/f2fs/f2fs.h
-@@ -1505,7 +1505,10 @@ struct f2fs_sb_info {
- 	/* For app/fs IO statistics */
- 	spinlock_t iostat_lock;
- 	unsigned long long write_iostat[NR_IO_TYPE];
-+	unsigned long long prev_write_iostat[NR_IO_TYPE];
- 	bool iostat_enable;
-+	unsigned long iostat_next_period;
-+	unsigned int iostat_period_ms;
- 
- 	/* to attach REQ_META|REQ_FUA flags */
- 	unsigned int data_io_flag;
-@@ -2999,16 +3002,25 @@ static inline int get_inline_xattr_addrs(struct inode *inode)
- 		sizeof((f2fs_inode)->field))			\
- 		<= (F2FS_OLD_ATTRIBUTE_SIZE + (extra_isize)))	\
- 
-+#define DEFAULT_IOSTAT_PERIOD_MS	3000
-+#define MIN_IOSTAT_PERIOD_MS		100
-+/* maximum period of iostat tracing is 1 day */
-+#define MAX_IOSTAT_PERIOD_MS		8640000
-+
- static inline void f2fs_reset_iostat(struct f2fs_sb_info *sbi)
- {
- 	int i;
- 
- 	spin_lock(&sbi->iostat_lock);
--	for (i = 0; i < NR_IO_TYPE; i++)
-+	for (i = 0; i < NR_IO_TYPE; i++) {
- 		sbi->write_iostat[i] = 0;
-+		sbi->prev_write_iostat[i] = 0;
-+	}
- 	spin_unlock(&sbi->iostat_lock);
- }
- 
-+extern void f2fs_record_iostat(struct f2fs_sb_info *sbi);
-+
- static inline void f2fs_update_iostat(struct f2fs_sb_info *sbi,
- 			enum iostat_type type, unsigned long long io_bytes)
- {
-@@ -3022,6 +3034,8 @@ static inline void f2fs_update_iostat(struct f2fs_sb_info *sbi,
- 			sbi->write_iostat[APP_WRITE_IO] -
- 			sbi->write_iostat[APP_DIRECT_IO];
- 	spin_unlock(&sbi->iostat_lock);
-+
-+	f2fs_record_iostat(sbi);
- }
- 
- #define __is_large_section(sbi)		((sbi)->segs_per_sec > 1)
-diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
-index f2dfc21c6abb0..438296e17183d 100644
---- a/fs/f2fs/super.c
-+++ b/fs/f2fs/super.c
-@@ -3424,6 +3424,7 @@ static int f2fs_fill_super(struct super_block *sb, void *data, int silent)
- 	/* init iostat info */
- 	spin_lock_init(&sbi->iostat_lock);
- 	sbi->iostat_enable = false;
-+	sbi->iostat_period_ms = DEFAULT_IOSTAT_PERIOD_MS;
- 
- 	for (i = 0; i < NR_PAGE_TYPE; i++) {
- 		int n = (i == META) ? 1: NR_TEMP_TYPE;
-diff --git a/fs/f2fs/sysfs.c b/fs/f2fs/sysfs.c
-index aeebfb5024a22..d05cb68c26374 100644
---- a/fs/f2fs/sysfs.c
-+++ b/fs/f2fs/sysfs.c
-@@ -15,6 +15,7 @@
- #include "f2fs.h"
- #include "segment.h"
- #include "gc.h"
-+#include <trace/events/f2fs.h>
- 
- static struct proc_dir_entry *f2fs_proc_root;
- 
-@@ -379,6 +380,15 @@ static ssize_t __sbi_store(struct f2fs_attr *a,
- 		return count;
- 	}
- 
-+	if (!strcmp(a->attr.name, "iostat_period_ms")) {
-+		if (t < MIN_IOSTAT_PERIOD_MS || t > MAX_IOSTAT_PERIOD_MS)
-+			return -EINVAL;
-+		spin_lock(&sbi->iostat_lock);
-+		sbi->iostat_period_ms = (unsigned int)t;
-+		spin_unlock(&sbi->iostat_lock);
-+		return count;
-+	}
-+
- 	*ui = (unsigned int)t;
- 
- 	return count;
-@@ -535,6 +545,7 @@ F2FS_RW_ATTR(F2FS_SBI, f2fs_sb_info, gc_idle_interval, interval_time[GC_TIME]);
- F2FS_RW_ATTR(F2FS_SBI, f2fs_sb_info,
- 		umount_discard_timeout, interval_time[UMOUNT_DISCARD_TIMEOUT]);
- F2FS_RW_ATTR(F2FS_SBI, f2fs_sb_info, iostat_enable, iostat_enable);
-+F2FS_RW_ATTR(F2FS_SBI, f2fs_sb_info, iostat_period_ms, iostat_period_ms);
- F2FS_RW_ATTR(F2FS_SBI, f2fs_sb_info, readdir_ra, readdir_ra);
- F2FS_RW_ATTR(F2FS_SBI, f2fs_sb_info, gc_pin_file_thresh, gc_pin_file_threshold);
- F2FS_RW_ATTR(F2FS_SBI, f2fs_super_block, extension_list, extension_list);
-@@ -615,6 +626,7 @@ static struct attribute *f2fs_attrs[] = {
- 	ATTR_LIST(gc_idle_interval),
- 	ATTR_LIST(umount_discard_timeout),
- 	ATTR_LIST(iostat_enable),
-+	ATTR_LIST(iostat_period_ms),
- 	ATTR_LIST(readdir_ra),
- 	ATTR_LIST(gc_pin_file_thresh),
- 	ATTR_LIST(extension_list),
-@@ -751,6 +763,33 @@ static int __maybe_unused segment_bits_seq_show(struct seq_file *seq,
- 	return 0;
- }
- 
-+void f2fs_record_iostat(struct f2fs_sb_info *sbi)
-+{
-+	unsigned long long iostat_diff[NR_IO_TYPE];
-+	int i;
-+
-+	if (time_is_after_jiffies(sbi->iostat_next_period))
-+		return;
-+
-+	/* Need double check under the lock */
-+	spin_lock(&sbi->iostat_lock);
-+	if (time_is_after_jiffies(sbi->iostat_next_period)) {
-+		spin_unlock(&sbi->iostat_lock);
-+		return;
-+	}
-+	sbi->iostat_next_period = jiffies +
-+				msecs_to_jiffies(sbi->iostat_period_ms);
-+
-+	for (i = 0; i < NR_IO_TYPE; i++) {
-+		iostat_diff[i] = sbi->write_iostat[i] -
-+				sbi->prev_write_iostat[i];
-+		sbi->prev_write_iostat[i] = sbi->write_iostat[i];
-+	}
-+	spin_unlock(&sbi->iostat_lock);
-+
-+	trace_f2fs_iostat(sbi, iostat_diff);
-+}
-+
- static int __maybe_unused iostat_info_seq_show(struct seq_file *seq,
- 					       void *offset)
- {
-diff --git a/include/trace/events/f2fs.h b/include/trace/events/f2fs.h
-index d97adfc327f03..e78c8696e2adc 100644
---- a/include/trace/events/f2fs.h
-+++ b/include/trace/events/f2fs.h
-@@ -1812,6 +1812,58 @@ DEFINE_EVENT(f2fs_zip_end, f2fs_decompress_pages_end,
- 	TP_ARGS(inode, cluster_idx, compressed_size, ret)
- );
- 
-+TRACE_EVENT(f2fs_iostat,
-+
-+	TP_PROTO(struct f2fs_sb_info *sbi, unsigned long long *iostat),
-+
-+	TP_ARGS(sbi, iostat),
-+
-+	TP_STRUCT__entry(
-+		__field(dev_t,	dev)
-+		__field(unsigned long long,	app_dio)
-+		__field(unsigned long long,	app_bio)
-+		__field(unsigned long long,	app_wio)
-+		__field(unsigned long long,	app_mio)
-+		__field(unsigned long long,	fs_dio)
-+		__field(unsigned long long,	fs_nio)
-+		__field(unsigned long long,	fs_mio)
-+		__field(unsigned long long,	fs_gc_dio)
-+		__field(unsigned long long,	fs_gc_nio)
-+		__field(unsigned long long,	fs_cp_dio)
-+		__field(unsigned long long,	fs_cp_nio)
-+		__field(unsigned long long,	fs_cp_mio)
-+		__field(unsigned long long,	fs_discard)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->dev		= sbi->sb->s_dev;
-+		__entry->app_dio	= iostat[APP_DIRECT_IO];
-+		__entry->app_bio	= iostat[APP_BUFFERED_IO];
-+		__entry->app_wio	= iostat[APP_WRITE_IO];
-+		__entry->app_mio	= iostat[APP_MAPPED_IO];
-+		__entry->fs_dio		= iostat[FS_DATA_IO];
-+		__entry->fs_nio		= iostat[FS_NODE_IO];
-+		__entry->fs_mio		= iostat[FS_META_IO];
-+		__entry->fs_gc_dio	= iostat[FS_GC_DATA_IO];
-+		__entry->fs_gc_nio	= iostat[FS_GC_NODE_IO];
-+		__entry->fs_cp_dio	= iostat[FS_CP_DATA_IO];
-+		__entry->fs_cp_nio	= iostat[FS_CP_NODE_IO];
-+		__entry->fs_cp_mio	= iostat[FS_CP_META_IO];
-+		__entry->fs_discard	= iostat[FS_DISCARD];
-+	),
-+
-+	TP_printk("dev = (%d,%d), "
-+		"app [write=%llu (direct=%llu, buffered=%llu), mapped=%llu], "
-+		"fs [data=%llu, node=%llu, meta=%llu, discard=%llu], "
-+		"gc [data=%llu, node=%llu], "
-+		"cp [data=%llu, node=%llu, meta=%llu]",
-+		show_dev(__entry->dev), __entry->app_wio, __entry->app_dio,
-+		__entry->app_bio, __entry->app_mio, __entry->fs_dio,
-+		__entry->fs_nio, __entry->fs_mio, __entry->fs_discard,
-+		__entry->fs_gc_dio, __entry->fs_gc_nio, __entry->fs_cp_dio,
-+		__entry->fs_cp_nio, __entry->fs_cp_mio)
-+);
-+
- #endif /* _TRACE_F2FS_H */
- 
-  /* This part must be outside protection */
--- 
-2.26.0.110.g2183baf09c-goog
-
-
+Bart.
