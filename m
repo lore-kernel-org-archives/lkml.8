@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8350C2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:38:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8ACDC2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:38:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C317B2076D
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:38:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C230A2223D
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:38:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587051527;
-	bh=aBs0U7UDsdXOR98ZbF/DFAx8LAlxF0lzVvph7LALPJo=;
+	s=default; t=1587051532;
+	bh=79z7BDql8stYOus3GTROCiSx/mTNrMJNRyoDBHRU8TQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0sCLon/3PVAlNEFzju9r4G44EO08l6Gr+rbxofJ0uLgAw9N9Hm8Axh5QIMdEujIeL
-	 hX3h3Yfb0y2p9qgagW99G4HH/TXEbMB7bYha1i16dAwnOtzTkfmHHTBHje1j9xvie2
-	 b6+QRTm1ABj8s8rYy8pRNrZJW9qNQt4WK+OWxiMI=
+	b=tnDhzVdijyvP8ikNjA5Ca4qvb0a+EImo/gaAs1KMDBmvPpOStNovS3dfzLB4R+nTk
+	 eXw3q2qDkSd/3//Us1JDUttfyQR4+0UE/7kUtYPaP7Y9MMNUNv44eG12FZ9BVwokdI
+	 Xd2HvgTyrWqb8r2E/g6vlij4j5XSAiKVkqFMvtT4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395378AbgDPPip (ORCPT
+        id S2393640AbgDPPiv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:38:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51282 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 11:38:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51260 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2897754AbgDPNiv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:38:51 -0400
+        id S2897762AbgDPNis (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:38:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7F5B821BE5;
-        Thu, 16 Apr 2020 13:38:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0E0852224F;
+        Thu, 16 Apr 2020 13:38:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044331;
-        bh=aBs0U7UDsdXOR98ZbF/DFAx8LAlxF0lzVvph7LALPJo=;
+        s=default; t=1587044328;
+        bh=79z7BDql8stYOus3GTROCiSx/mTNrMJNRyoDBHRU8TQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=E+Sh0eiJODW4xoginZykbFYRET/PcDU+aRE841Qsuy/kkd7AYZM8SxaSSGdwJG5EZ
-         Uh1B0fr0ykWk2yIfI9b46EOvB1zJq1uZYlJseLNe3ui+brGXtFSVm/NEaLRBa7CvNn
-         ZSR6PNxI8qARdV/hjcUVrcmDyv3eb35B2Fr99UJA=
+        b=gCWcUbeZ5M1qJQfd/PEzbOc1wLUSugDNQYvwU7WFX+3lLDrhc+UJ89xFtyf35emLG
+         9cXPaT6R/HE/YaE/xYAWKRGagwGv+zW0yvO/KxfczduXfuaxWX7ml8MmSk5lHC/9kN
+         vnvNixr+sFJUDnVWsMtkF5fiOYG7Jf2B84akLUUM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sean Tranchetti <stranche@codeaurora.org>,
-        Subash Abhinov Kasiviswanathan <subashab@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Alex Elder <elder@linaro.org>
-Subject: [PATCH 5.5 175/257] net: qualcomm: rmnet: Allow configuration updates to existing devices
-Date:   Thu, 16 Apr 2020 15:23:46 +0200
-Message-Id: <20200416131348.227637049@linuxfoundation.org>
+        stable@vger.kernel.org, Laura Abbott <labbott@redhat.com>,
+        Anssi Hannula <anssi.hannula@bitwise.fi>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH 5.5 174/257] tools: gpio: Fix out-of-tree build regression
+Date:   Thu, 16 Apr 2020 15:23:45 +0200
+Message-Id: <20200416131348.111146640@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.891903893@linuxfoundation.org>
 References: <20200416131325.891903893@linuxfoundation.org>
@@ -62,74 +61,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Subash Abhinov Kasiviswanathan <subashab@codeaurora.org>
+From: Anssi Hannula <anssi.hannula@bitwise.fi>
 
-commit 2abb5792387eb188b12051337d5dcd2cba615cb0 upstream.
+commit 82f04bfe2aff428b063eefd234679b2d693228ed upstream.
 
-This allows the changelink operation to succeed if the mux_id was
-specified as an argument. Note that the mux_id must match the
-existing mux_id of the rmnet device or should be an unused mux_id.
+Commit 0161a94e2d1c7 ("tools: gpio: Correctly add make dependencies for
+gpio_utils") added a make rule for gpio-utils-in.o but used $(output)
+instead of the correct $(OUTPUT) for the output directory, breaking
+out-of-tree build (O=xx) with the following error:
 
-Fixes: 1dc49e9d164c ("net: rmnet: do not allow to change mux id if mux id is duplicated")
-Reported-and-tested-by: Alex Elder <elder@linaro.org>
-Signed-off-by: Sean Tranchetti <stranche@codeaurora.org>
-Signed-off-by: Subash Abhinov Kasiviswanathan <subashab@codeaurora.org>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Cc: Guenter Roeck <linux@roeck-us.net>
+  No rule to make target 'out/tools/gpio/gpio-utils-in.o', needed by 'out/tools/gpio/lsgpio-in.o'.  Stop.
+
+Fix that.
+
+Fixes: 0161a94e2d1c ("tools: gpio: Correctly add make dependencies for gpio_utils")
+Cc: <stable@vger.kernel.org>
+Cc: Laura Abbott <labbott@redhat.com>
+Signed-off-by: Anssi Hannula <anssi.hannula@bitwise.fi>
+Link: https://lore.kernel.org/r/20200325103154.32235-1-anssi.hannula@bitwise.fi
+Reviewed-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/ethernet/qualcomm/rmnet/rmnet_config.c |   31 ++++++++++++---------
- 1 file changed, 19 insertions(+), 12 deletions(-)
+ tools/gpio/Makefile |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/net/ethernet/qualcomm/rmnet/rmnet_config.c
-+++ b/drivers/net/ethernet/qualcomm/rmnet/rmnet_config.c
-@@ -279,7 +279,6 @@ static int rmnet_changelink(struct net_d
- {
- 	struct rmnet_priv *priv = netdev_priv(dev);
- 	struct net_device *real_dev;
--	struct rmnet_endpoint *ep;
- 	struct rmnet_port *port;
- 	u16 mux_id;
+--- a/tools/gpio/Makefile
++++ b/tools/gpio/Makefile
+@@ -35,7 +35,7 @@ $(OUTPUT)include/linux/gpio.h: ../../inc
  
-@@ -294,19 +293,27 @@ static int rmnet_changelink(struct net_d
+ prepare: $(OUTPUT)include/linux/gpio.h
  
- 	if (data[IFLA_RMNET_MUX_ID]) {
- 		mux_id = nla_get_u16(data[IFLA_RMNET_MUX_ID]);
--		if (rmnet_get_endpoint(port, mux_id)) {
--			NL_SET_ERR_MSG_MOD(extack, "MUX ID already exists");
--			return -EINVAL;
--		}
--		ep = rmnet_get_endpoint(port, priv->mux_id);
--		if (!ep)
--			return -ENODEV;
+-GPIO_UTILS_IN := $(output)gpio-utils-in.o
++GPIO_UTILS_IN := $(OUTPUT)gpio-utils-in.o
+ $(GPIO_UTILS_IN): prepare FORCE
+ 	$(Q)$(MAKE) $(build)=gpio-utils
  
--		hlist_del_init_rcu(&ep->hlnode);
--		hlist_add_head_rcu(&ep->hlnode, &port->muxed_ep[mux_id]);
-+		if (mux_id != priv->mux_id) {
-+			struct rmnet_endpoint *ep;
-+
-+			ep = rmnet_get_endpoint(port, priv->mux_id);
-+			if (!ep)
-+				return -ENODEV;
-+
-+			if (rmnet_get_endpoint(port, mux_id)) {
-+				NL_SET_ERR_MSG_MOD(extack,
-+						   "MUX ID already exists");
-+				return -EINVAL;
-+			}
-+
-+			hlist_del_init_rcu(&ep->hlnode);
-+			hlist_add_head_rcu(&ep->hlnode,
-+					   &port->muxed_ep[mux_id]);
- 
--		ep->mux_id = mux_id;
--		priv->mux_id = mux_id;
-+			ep->mux_id = mux_id;
-+			priv->mux_id = mux_id;
-+		}
- 	}
- 
- 	if (data[IFLA_RMNET_FLAGS]) {
 
 
