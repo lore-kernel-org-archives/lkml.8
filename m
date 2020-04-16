@@ -2,154 +2,179 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C046CC2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:23:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2C8DC2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:23:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9F2812224E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:23:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E2C22222D
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:23:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587050622;
-	bh=ZIoIsXIaQkSSo9DwrSDuxVUKUDWHBUIiPNGyWCNpMjY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=TpnJDNYIHHLxfWJY7e+Pp9wfWRNv6Kf4BG2cYGnM9LQ3WNdYBFKOS8DjQdJP2C4yG
-	 viJQhA7nEuaf9UQ5/VjZhy20it6asPSgTzfqhVfThw8wThZ2qLaYHRIzv6uQ6S/qbx
-	 yDX/y2O0nuOBC0cREh+L/YhOxDoN2myTfNqqu1rY=
+	s=default; t=1587050631;
+	bh=cLAUE6W9azIyv7Ba+e+54A7+PzMWCz7hsSN19O7q4Ek=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=XheqYcRMx9z3Wn+KJifYf4EwH5R4lXO/XbyzJQlwGUiuXcGzMJwoxk/52pESWJzki
+	 admUqs3Pb0oADlqq/ZQPME4bCZ8QlTnr8QDkeKfsM4hbj8AGaZ28dvixyPLiatwoEK
+	 DMUD2FJ1q7pZJXCEeP+fT/mFaiaWiB4jUfwhzwVk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438677AbgDPPXl (ORCPT
+        id S2442479AbgDPPXu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:23:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37050 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 11:23:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58512 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2395153AbgDPPXc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 11:23:32 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        id S2898474AbgDPNpG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:45:06 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7A022214D8;
-        Thu, 16 Apr 2020 15:23:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 832FA20732;
+        Thu, 16 Apr 2020 13:45:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587050611;
-        bh=ZIoIsXIaQkSSo9DwrSDuxVUKUDWHBUIiPNGyWCNpMjY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=bBTzd9OrYpXGg6ORHDevc26biU8U6Ir9eDMrYVbq0oazh6OMuVNc+sGyIZ47f/7em
-         9meS9HRqxJekEbvO8q77PIn9Lnv5yio2WbX+XoF1s/KEVYXbiaOmjD7h4soWVtcrHG
-         7bhbBJI+VfwXU79XQ6M8zC9fvfiC7rsu/xGQ/jfU=
-Date:   Thu, 16 Apr 2020 16:23:28 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     alsa-devel@alsa-project.org, Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>, devicetree@vger.kernel.org,
-        dmaengine@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        Jaroslav Kysela <perex@perex.cz>,
-        Jiri Kosina <trivial@kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Liam Girdwood <lgirdwood@gmail.com>, linux-iio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        Michael Hennerich <Michael.Hennerich@analog.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Stefan Popa <stefan.popa@analog.com>,
-        Takashi Iwai <tiwai@suse.com>,
-        =?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>,
-        Vinod Koul <vkoul@kernel.org>
-Subject: Applied "ASoC: Fix misspellings of "Analog Devices"" to the asoc tree
-In-Reply-To:  <20200416103058.15269-7-geert+renesas@glider.be>
-Message-Id:  <applied-20200416103058.15269-7-geert+renesas@glider.be>
-X-Patchwork-Hint: ignore
+        s=default; t=1587044706;
+        bh=cLAUE6W9azIyv7Ba+e+54A7+PzMWCz7hsSN19O7q4Ek=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=TxpIhnzApP5x1ElgykUvVwqZ1iYpeFaBS+UnxNAhYanoU+Zjdc5y4yg2fwOJPlXiC
+         MkhkVXc/aCn0c7Ya8L8D37826CSLnb8KIo6HM2AV3UMOvZGFbyHK0hwB/wdIvzOMQ4
+         rdgcJv6GLCxxHRuh035pbF+4CuI6slVk87/jEpQw=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 068/232] btrfs: track reloc roots based on their commit root bytenr
+Date:   Thu, 16 Apr 2020 15:22:42 +0200
+Message-Id: <20200416131323.836631577@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.1
+In-Reply-To: <20200416131316.640996080@linuxfoundation.org>
+References: <20200416131316.640996080@linuxfoundation.org>
+User-Agent: quilt/0.66
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patch
+From: Josef Bacik <josef@toxicpanda.com>
 
-   ASoC: Fix misspellings of "Analog Devices"
+[ Upstream commit ea287ab157c2816bf12aad4cece41372f9d146b4 ]
 
-has been applied to the asoc tree at
+We always search the commit root of the extent tree for looking up back
+references, however we track the reloc roots based on their current
+bytenr.
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
+This is wrong, if we commit the transaction between relocating tree
+blocks we could end up in this code in build_backref_tree
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
+  if (key.objectid == key.offset) {
+	  /*
+	   * Only root blocks of reloc trees use backref
+	   * pointing to itself.
+	   */
+	  root = find_reloc_root(rc, cur->bytenr);
+	  ASSERT(root);
+	  cur->root = root;
+	  break;
+  }
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+find_reloc_root() is looking based on the bytenr we had in the commit
+root, but if we've COWed this reloc root we will not find that bytenr,
+and we will trip over the ASSERT(root).
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
+Fix this by using the commit_root->start bytenr for indexing the commit
+root.  Then we change the __update_reloc_root() caller to be used when
+we switch the commit root for the reloc root during commit.
 
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
+This fixes the panic I was seeing when we started throttling relocation
+for delayed refs.
 
-Thanks,
-Mark
-
-From b938b25f49cdb47397b0215b69cdd5251b4b2f8b Mon Sep 17 00:00:00 2001
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Date: Thu, 16 Apr 2020 12:30:58 +0200
-Subject: [PATCH] ASoC: Fix misspellings of "Analog Devices"
-
-According to https://www.analog.com/, the company name is spelled
-"Analog Devices".
-
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Link: https://lore.kernel.org/r/20200416103058.15269-7-geert+renesas@glider.be
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Josef Bacik <josef@toxicpanda.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/codecs/ad1980.c  | 2 +-
- sound/soc/codecs/ad73311.c | 2 +-
- sound/soc/codecs/wm8782.c  | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
+ fs/btrfs/relocation.c | 17 +++++++----------
+ 1 file changed, 7 insertions(+), 10 deletions(-)
 
-diff --git a/sound/soc/codecs/ad1980.c b/sound/soc/codecs/ad1980.c
-index c4414c725c1f..43b1337bac37 100644
---- a/sound/soc/codecs/ad1980.c
-+++ b/sound/soc/codecs/ad1980.c
-@@ -2,7 +2,7 @@
- /*
-  * ad1980.c  --  ALSA Soc AD1980 codec support
-  *
-- * Copyright:	Analog Device Inc.
-+ * Copyright:	Analog Devices Inc.
-  * Author:	Roy Huang <roy.huang@analog.com>
-  * 		Cliff Cai <cliff.cai@analog.com>
-  */
-diff --git a/sound/soc/codecs/ad73311.c b/sound/soc/codecs/ad73311.c
-index 10daf61f0294..b98bf19f594e 100644
---- a/sound/soc/codecs/ad73311.c
-+++ b/sound/soc/codecs/ad73311.c
-@@ -2,7 +2,7 @@
- /*
-  * ad73311.c  --  ALSA Soc AD73311 codec support
-  *
-- * Copyright:	Analog Device Inc.
-+ * Copyright:	Analog Devices Inc.
-  * Author:	Cliff Cai <cliff.cai@analog.com>
-  */
+diff --git a/fs/btrfs/relocation.c b/fs/btrfs/relocation.c
+index c4ed7015cc7d9..cb4a888fc9dec 100644
+--- a/fs/btrfs/relocation.c
++++ b/fs/btrfs/relocation.c
+@@ -1298,7 +1298,7 @@ static int __must_check __add_reloc_root(struct btrfs_root *root)
+ 	if (!node)
+ 		return -ENOMEM;
  
-diff --git a/sound/soc/codecs/wm8782.c b/sound/soc/codecs/wm8782.c
-index aa5577e364d0..f89855c616eb 100644
---- a/sound/soc/codecs/wm8782.c
-+++ b/sound/soc/codecs/wm8782.c
-@@ -7,7 +7,7 @@
-  * Author: Johannes Stezenbach <js@sig21.net>
-  *
-  * based on ad73311.c
-- * Copyright:	Analog Device Inc.
-+ * Copyright:	Analog Devices Inc.
-  * Author:	Cliff Cai <cliff.cai@analog.com>
-  */
+-	node->bytenr = root->node->start;
++	node->bytenr = root->commit_root->start;
+ 	node->data = root;
  
+ 	spin_lock(&rc->reloc_root_tree.lock);
+@@ -1329,10 +1329,11 @@ static void __del_reloc_root(struct btrfs_root *root)
+ 	if (rc && root->node) {
+ 		spin_lock(&rc->reloc_root_tree.lock);
+ 		rb_node = tree_search(&rc->reloc_root_tree.rb_root,
+-				      root->node->start);
++				      root->commit_root->start);
+ 		if (rb_node) {
+ 			node = rb_entry(rb_node, struct mapping_node, rb_node);
+ 			rb_erase(&node->rb_node, &rc->reloc_root_tree.rb_root);
++			RB_CLEAR_NODE(&node->rb_node);
+ 		}
+ 		spin_unlock(&rc->reloc_root_tree.lock);
+ 		if (!node)
+@@ -1350,7 +1351,7 @@ static void __del_reloc_root(struct btrfs_root *root)
+  * helper to update the 'address of tree root -> reloc tree'
+  * mapping
+  */
+-static int __update_reloc_root(struct btrfs_root *root, u64 new_bytenr)
++static int __update_reloc_root(struct btrfs_root *root)
+ {
+ 	struct btrfs_fs_info *fs_info = root->fs_info;
+ 	struct rb_node *rb_node;
+@@ -1359,7 +1360,7 @@ static int __update_reloc_root(struct btrfs_root *root, u64 new_bytenr)
+ 
+ 	spin_lock(&rc->reloc_root_tree.lock);
+ 	rb_node = tree_search(&rc->reloc_root_tree.rb_root,
+-			      root->node->start);
++			      root->commit_root->start);
+ 	if (rb_node) {
+ 		node = rb_entry(rb_node, struct mapping_node, rb_node);
+ 		rb_erase(&node->rb_node, &rc->reloc_root_tree.rb_root);
+@@ -1371,7 +1372,7 @@ static int __update_reloc_root(struct btrfs_root *root, u64 new_bytenr)
+ 	BUG_ON((struct btrfs_root *)node->data != root);
+ 
+ 	spin_lock(&rc->reloc_root_tree.lock);
+-	node->bytenr = new_bytenr;
++	node->bytenr = root->node->start;
+ 	rb_node = tree_insert(&rc->reloc_root_tree.rb_root,
+ 			      node->bytenr, &node->rb_node);
+ 	spin_unlock(&rc->reloc_root_tree.lock);
+@@ -1529,6 +1530,7 @@ int btrfs_update_reloc_root(struct btrfs_trans_handle *trans,
+ 	}
+ 
+ 	if (reloc_root->commit_root != reloc_root->node) {
++		__update_reloc_root(reloc_root);
+ 		btrfs_set_root_node(root_item, reloc_root->node);
+ 		free_extent_buffer(reloc_root->commit_root);
+ 		reloc_root->commit_root = btrfs_root_node(reloc_root);
+@@ -4718,11 +4720,6 @@ int btrfs_reloc_cow_block(struct btrfs_trans_handle *trans,
+ 	BUG_ON(rc->stage == UPDATE_DATA_PTRS &&
+ 	       root->root_key.objectid == BTRFS_DATA_RELOC_TREE_OBJECTID);
+ 
+-	if (root->root_key.objectid == BTRFS_TREE_RELOC_OBJECTID) {
+-		if (buf == root->node)
+-			__update_reloc_root(root, cow->start);
+-	}
+-
+ 	level = btrfs_header_level(buf);
+ 	if (btrfs_header_generation(buf) <=
+ 	    btrfs_root_last_snapshot(&root->root_item))
 -- 
 2.20.1
+
+
 
