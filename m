@@ -2,103 +2,107 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AA45C38A29
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 00:57:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAD8EC3815B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 00:57:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 092F1208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 00:57:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586998637;
-	bh=D1cdmZrrpBRbgmrLVaVBeOswtpdvqTyzIt0hgqZ/xq4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=tqkvVyNwwCSu+G9p8zWrRe4cIOK9TK31ZF6WnJv2KgvtZRnBgfvh2FLkm0d6MZUvs
-	 qvDgVTd+1CPLS+YQUfCFF1X4KN2a2Zk6/jKHEyuyMSAJ+QPh3oK+sw9VauFqubznnC
-	 6+lJRFTsGCKOgPCN3PrILI3fCu7w2qcYgh9SNmGk=
+	by mail.kernel.org (Postfix) with ESMTP id 96C6420936
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 00:57:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Zxz39exV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391924AbgDPA5M (ORCPT
+        id S2391965AbgDPA5b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 20:57:12 -0400
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:35020 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730956AbgDPA4j (ORCPT
+        Wed, 15 Apr 2020 20:57:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51724 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405983AbgDPA44 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 20:56:39 -0400
-Received: by mail-pj1-f68.google.com with SMTP id mn19so633005pjb.0;
-        Wed, 15 Apr 2020 17:56:39 -0700 (PDT)
+        Wed, 15 Apr 2020 20:56:56 -0400
+Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E461C061A0C
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 17:56:52 -0700 (PDT)
+Received: by mail-io1-xd41.google.com with SMTP id o127so19326472iof.0
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 17:56:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0pi57Yw1CcnU/t5xDRYzAtYW33asqFUBaWgZbJ3tOfE=;
+        b=Zxz39exVNPQUoC5oC7KxutI6O9HlznMuRYa653fUmfYsyaTRiTIZKuc9pujiaQLdn/
+         6CTSitD7ypenyMARA3xWa1qvKF/8ZZRmHFyZAj3U7hHkFWoLTv1Vjvem8/AWPxPWGYRd
+         9YsDvAZ0l32UROX6xPE8XcQ0FNYxiVvtWNDvI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=eO9sNPLfM7z72dEgAo+/qu9o3q8PbtexT1d+8SrfwsA=;
-        b=JGh+lJxesRqdgeJtFbGZGz14pDNgxiidkKGncb3l9ppgkSKTBj3Fu2FdnBsHIM3a/I
-         buzrXL/LyEC5BTpTB2rvsnyxBmmbJ64ngdj7Z5logaFtTa7FRRfhXlgVFpIoT3h7PrMa
-         pdPfaNe0s/bC8cr77YKDsFnKYOrZajbtS0OqPpIV0In0wxzct4OoGGZr2t8n5zlP9AGm
-         wMSYVacKJIfzSBEdOFvphsqxzX6Z845TWt743HAwT6aRdnSEyR5opplk4ASbIbLsbNW0
-         H3VNdhUSk06VejV+fEO3QWGZfGlng+/zB5sRF5PjOYFed8RkIyt6y9FWHLkS1Xk7BpJh
-         /x3g==
-X-Gm-Message-State: AGi0PubcF15xm3TaWnXt5HJ6WDWhIjr+kQeGW7Vrvgog+TIisRv1aY0i
-        RM32Hc2sCFPNUhx8SDRSA6Q=
-X-Google-Smtp-Source: APiQypLTnLjPDNnNSqH+28hBHDSVc+roLpy3QPduruGp0bWr41DL6u4FpH1sWq/opGKxLvN3EFlJxw==
-X-Received: by 2002:a17:90a:276a:: with SMTP id o97mr2095369pje.194.1586998598514;
-        Wed, 15 Apr 2020 17:56:38 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id p11sm12753364pff.173.2020.04.15.17.56.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Apr 2020 17:56:37 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id 7781640277; Thu, 16 Apr 2020 00:56:36 +0000 (UTC)
-Date:   Thu, 16 Apr 2020 00:56:36 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Eric Sandeen <sandeen@sandeen.net>
-Cc:     axboe@kernel.dk, viro@zeniv.linux.org.uk, bvanassche@acm.org,
-        gregkh@linuxfoundation.org, rostedt@goodmis.org, mingo@redhat.com,
-        jack@suse.cz, ming.lei@redhat.com, nstange@suse.de,
-        akpm@linux-foundation.org, mhocko@suse.com, yukuai3@huawei.com,
-        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Omar Sandoval <osandov@fb.com>,
-        Hannes Reinecke <hare@suse.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        syzbot+603294af2d01acfdd6da@syzkaller.appspotmail.com
-Subject: Re: [PATCH 2/5] blktrace: fix debugfs use after free
-Message-ID: <20200416005636.GA11244@42.do-not-panic.com>
-References: <20200414041902.16769-1-mcgrof@kernel.org>
- <20200414041902.16769-3-mcgrof@kernel.org>
- <55401e02-f61c-25eb-271c-3ec7baf35e28@sandeen.net>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0pi57Yw1CcnU/t5xDRYzAtYW33asqFUBaWgZbJ3tOfE=;
+        b=EUnJJdAPTwI3P2v/dbF56Hpb8sN4E90afMf5HNDk818gktRhgN6R5u+9xpjJ9MNzQh
+         07/gAcSjbAYLfu14rpHasVD4OvdKYJdKVKg/8PbU4QZfQIQl0Hqwu4m43f+tAfubsi7i
+         BmFeZXMk/6tKzOBoLzIBN+ObQHKY2e2OiLMLYinBjFxNVE3jTaspbQNJR2IgdaV5rOls
+         4+NugI8nQ+QIICX8m2CnLr3yCxoA60dfTS8/ZIOac6WVALk0HhX9HYdnPnXwpeEmxNiW
+         uM2Wp5TjEwI7/IwuR61OwOCFPCa3Q6OqBthapRBtYkVsOQlNmnwDv6zZ5d4p40aovxc1
+         LY5g==
+X-Gm-Message-State: AGi0Pub/c649KIucNTcBupHVjajdETP7fURAhLJt0FJHPi+ZpJk50++s
+        346n2wLGbEm5zqhthA1+49mgKL4GORef5TiAUrmrsw==
+X-Google-Smtp-Source: APiQypLaV14jW6zqGw/DJyeFplem0IPQuVzPs6SMj5UQP5j6yl5Y9t8lEAsFhz+mS6nRLGgdHeSVWyjl3NF1UNgldr0=
+X-Received: by 2002:a6b:491a:: with SMTP id u26mr28900283iob.30.1586998611518;
+ Wed, 15 Apr 2020 17:56:51 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <55401e02-f61c-25eb-271c-3ec7baf35e28@sandeen.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200403052900.258855-1-evanbenn@chromium.org>
+ <CAKz_xw0gV+w_gMkLfB4qUBdULLfFoiv1TBWp9_PHy33wP_XWyA@mail.gmail.com>
+ <890948ef-7276-fdae-d270-eb30eff3eab2@amlogic.com> <243e107c-35c1-2d14-5285-c9e13744963c@amlogic.com>
+ <CAODwPW9RSB37+4EJ2QXAwz=ShFB23L1GKC2mLYE5L5JuQR2tPw@mail.gmail.com>
+ <20200415231215.GA182398@roeck-us.net> <CAKz_xw0+gKBM1jp-Avnd+4j9vSxUix67RZBX-NNbStb0+ri4+Q@mail.gmail.com>
+In-Reply-To: <CAKz_xw0+gKBM1jp-Avnd+4j9vSxUix67RZBX-NNbStb0+ri4+Q@mail.gmail.com>
+From:   Julius Werner <jwerner@chromium.org>
+Date:   Wed, 15 Apr 2020 17:56:39 -0700
+Message-ID: <CAODwPW9Vt7TcWfKYDmRgLndb2-+5HoNvA6XMJJznXCudQDngqw@mail.gmail.com>
+Subject: Re: [PATCH v2 0/2] Add a watchdog driver that uses ARM Secure Monitor Calls.
+To:     Evan Benn <evanbenn@chromium.org>
+Cc:     Guenter Roeck <linux@roeck-us.net>,
+        Julius Werner <jwerner@chromium.org>,
+        Xingyu Chen <xingyu.chen@amlogic.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Anson Huang <Anson.Huang@nxp.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Olof Johansson <olof@lixom.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Rob Herring <robh@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Vinod Koul <vkoul@kernel.org>, Will Deacon <will@kernel.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        devicetree@vger.kernel.org,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        LINUX-WATCHDOG <linux-watchdog@vger.kernel.org>,
+        Jianxin Pan <jianxin.pan@amlogic.com>,
+        Yonghui Yu <yonghui.yu@amlogic.com>,
+        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 15, 2020 at 12:38:26PM -0500, Eric Sandeen wrote:
-> On 4/13/20 11:18 PM, Luis Chamberlain wrote:
-> > On commit 6ac93117ab00 ("blktrace: use existing disk debugfs directory")
-> > merged on v4.12 Omar fixed the original blktrace code for request-based
-> > drivers (multiqueue). This however left in place a possible crash, if you
-> > happen to abuse blktrace in a way it was not intended.
-> > 
-> > Namely, if you loop adding a device, setup the blktrace with BLKTRACESETUP,
-> > forget to BLKTRACETEARDOWN, and then just remove the device you end up
-> > with a panic:
-> 
-> I think this patch makes this all cleaner anyway, but - without the apparent
-> loop bug mentioned by Bart which allows removal of the loop device while blktrace
-> is active (if I read that right), can this still happen?
+> Can anyone provide advice about making SMCWD_FUNC_ID a device tree
+> param directly, vs using the compatible to select from a table.
 
-I have not tested that, but some modifications of the break-blktrace
-program could enable us to test that, however I don't think the race
-would be possible after patch 3/5 "blktrace: refcount the request_queue
-during ioctl" is merged, as removal then a pending blktrace would
-refcount the request_queue and the removal would have to wait until
-the refcount is decremeneted, until after the blktrace ioctl.
-
-  Luis
+Sounds like most people prefer the way with using different compatible
+strings? (Personally I don't really care either way.)
