@@ -2,105 +2,110 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8B00C352BE
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:57:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9042BC2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:57:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9D3A1214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:57:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587052629;
-	bh=IXc2+E9hVVLIpvFapORhoJC08y/a0HDb+C+wTixsHN4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LgTX+nHFCGGy9AVEAfLzMavjM+W2sfibfXuQDG/yyZIjT93qsT8wBTeqPZhsvPrn/
-	 AidMrtymOiowHGcQ0TcEf/EKw+YZZldWZW7+xfzDDLGTu2QcJ+6toRV8ah0kN+JfLf
-	 +bEaeGr/yQsVdh/ut9djjSUTgv/Z0WNbz/IPw7gk=
+	by mail.kernel.org (Postfix) with ESMTP id 770A9214AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:57:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2442850AbgDPP5G (ORCPT
+        id S1726116AbgDPP5Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:57:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37712 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 11:57:16 -0400
+Received: from foss.arm.com ([217.140.110.172]:36780 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2895792AbgDPN2i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:28:38 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2407221D82;
-        Thu, 16 Apr 2020 13:28:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587043717;
-        bh=IXc2+E9hVVLIpvFapORhoJC08y/a0HDb+C+wTixsHN4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hK29YDlSkkaXGBtEMD1kEZVZcz4pPWBv+cy/1r2iRyGYdphIYmROnJqu2P7sHl/mt
-         mfSThRX7r3Tf6c+ipZXycNGMU9eDZwtCc7I5zcfgCkBYlrZlJLy58vRUxlNRFu03Kg
-         WfKSrTOunhU+epRvRSzsq8EQGpV3HWa4Ylta0bl0=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vasily Averin <vvs@virtuozzo.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Subject: [PATCH 4.19 070/146] tpm: tpm2_bios_measurements_next should increase position index
-Date:   Thu, 16 Apr 2020 15:23:31 +0200
-Message-Id: <20200416131252.532858013@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200416131242.353444678@linuxfoundation.org>
-References: <20200416131242.353444678@linuxfoundation.org>
-User-Agent: quilt/0.66
+        id S2442848AbgDPP5F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 11:57:05 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2620A30E;
+        Thu, 16 Apr 2020 08:57:05 -0700 (PDT)
+Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 94EA73F237;
+        Thu, 16 Apr 2020 08:57:03 -0700 (PDT)
+Date:   Thu, 16 Apr 2020 16:56:56 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Andy Gross <agross@kernel.org>, Wei Xu <xuwei5@hisilicon.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Robert Richter <rrichter@marvell.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH 2/2] [RFC] arm64: Add dependencies to vendor-specific
+ errata
+Message-ID: <20200416155655.GA7155@lakrids.cambridge.arm.com>
+References: <20200416115658.20406-1-geert+renesas@glider.be>
+ <20200416115658.20406-3-geert+renesas@glider.be>
+ <20200416125630.GF4987@lakrids.cambridge.arm.com>
+ <CAMuHMdWRW4+YLR8fz0hUTAPupRkM4Y5c82XHuOWSvNYOh-BZ0A@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdWRW4+YLR8fz0hUTAPupRkM4Y5c82XHuOWSvNYOh-BZ0A@mail.gmail.com>
+User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vasily Averin <vvs@virtuozzo.com>
+On Thu, Apr 16, 2020 at 05:38:07PM +0200, Geert Uytterhoeven wrote:
+> On Thu, Apr 16, 2020 at 2:56 PM Mark Rutland <mark.rutland@arm.com> wrote:
+> > On Thu, Apr 16, 2020 at 01:56:58PM +0200, Geert Uytterhoeven wrote:
+> > > Currently the user is asked about enabling support for each and every
+> > > vendor-specific erratum, even when support for the specific platform is
+> > > not enabled.
+> > >
+> > > Fix this by adding platform dependencies to the config options
+> > > controlling support for vendor-specific errata.
 
-commit f9bf8adb55cd5a357b247a16aafddf8c97b276e0 upstream.
-
-If .next function does not change position index,
-following .show function will repeat output related
-to current position index.
-
-For /sys/kernel/security/tpm0/binary_bios_measurements:
-1) read after lseek beyound end of file generates whole last line.
-2) read after lseek to middle of last line generates
-expected end of last line and unexpected whole last line once again.
-
-Cc: stable@vger.kernel.org # 4.19.x
-Fixes: 1f4aace60b0e ("fs/seq_file.c: simplify seq_file iteration code ...")
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=206283
-Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
-Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- drivers/char/tpm/eventlog/tpm2.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
---- a/drivers/char/tpm/eventlog/tpm2.c
-+++ b/drivers/char/tpm/eventlog/tpm2.c
-@@ -143,6 +143,7 @@ static void *tpm2_bios_measurements_next
- 	size_t event_size;
- 	void *marker;
+> > I'm not su1re that it makes sense to do this in general, becaose the
+> > ARCH_* platform symbols are about plactform/SoC support (e.g. pinctrl
+> > drivers), and these are (mostly) CPU-local and/or VM-visible.
+> >
+> > I think that it makes sense for those to be independent because:
  
-+	(*pos)++;
- 	event_header = log->bios_event_log;
- 
- 	if (v == SEQ_START_TOKEN) {
-@@ -167,7 +168,6 @@ static void *tpm2_bios_measurements_next
- 	if (((v + event_size) >= limit) || (event_size == 0))
- 		return NULL;
- 
--	(*pos)++;
- 	return v;
- }
- 
+> > * It prevents building a minimal VM image with all (non-virtualized)
+> >   platform support disabled, but all possible (VM-visible) errata
+> >   options enabled. I do that occassionally for testing/analysis, and I
+> >   can imagine this is useful for those building images that are only
+> >   intended to be used in VMs.
+> 
+> Oh, you also want to build a "generic" guest kernel, with all ARCH_*
+> symbols disabled. 
 
+Yup! As above I do this today for building test kernels I run on a
+number of different hosts, and I'm aware of other use-cases (e.g. WSL2
+or docker for mac) where you may want to do this to minimize the core
+kernel either for size or security reasons.
 
+> Let's hope a maleficent user cannot disable errata mitigations in the
+> guest kernel and break the host ;-)
+
+Indeed ;)
+
+For cases where a malicious guest could cause harm we've added
+workarounds in KVM, so unless we've missed something that shouldn't be
+the case.
+
+Otherwise, a guest missing these is just shooting itself in the foot.
+
+> And perhaps you do want to enable some platform-specific drivers for
+> VFIO pass-through?  Hence having ARCH_* dependencies on those drivers
+> means they cannot be enabled :-( Hmm...
+
+IIRC platform device passthrough requires an corresponding VFIO platform
+driver in the host to handle reset and so on, but it does seem a shame
+to not allow the user to select a driver if they really want it.
+
+I guess there might be platform-specific PCIe drivers too, which might
+work with VFIO regardless.
+
+Thanks,
+Mark.
