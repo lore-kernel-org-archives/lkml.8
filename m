@@ -2,178 +2,100 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2CE5C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:57:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55B07C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:57:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7F4C0214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:57:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587052665;
-	bh=QSkXV98D3bYlOYnTg+eURXDtc02pydxmQZRaKXYxric=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fq18V7ryG4MMsvCAzB7xZv0nxsy5sQ9UDrZhf3tEw6iRWGQCP79vcJdfOK7jCwI+1
-	 ZNKlN/yOTzspPfqNyUXGo1bKfpZyX+4yEFcERxzfa0IQBXBNZayJ0CkNrXhV7ELhH6
-	 Hx1asYptuTX1v1HzO2x08oC38zx32jb+LTKcdOmY=
+	by mail.kernel.org (Postfix) with ESMTP id 2DBA1214AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:57:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2442886AbgDPP5n (ORCPT
+        id S2442636AbgDPP5y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:57:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37326 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2895756AbgDPN2Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:28:24 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 88E99206E9;
-        Thu, 16 Apr 2020 13:28:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587043703;
-        bh=QSkXV98D3bYlOYnTg+eURXDtc02pydxmQZRaKXYxric=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=C4ZIymjfONuANs7GBkA5r8d94gBNefghUcmaL626DZQ0vqn9ox8GfLiktRrupJc6j
-         dNwuBLbXH39Mr5xMuD8L1oyxNeNA7YOWwjmPAhEKIVo60tXR0058V6PCXqy4ovYntU
-         tHnfHCtJa+J6vViKUIdsQBJpEeCqeFp0Kmpda6Bc=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+        Thu, 16 Apr 2020 11:57:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50832 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2442872AbgDPP5a (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 11:57:30 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 029FCC061A10
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 08:57:30 -0700 (PDT)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id D86A82A22A7
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
 To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Hoyer <David.Hoyer@netapp.com>,
-        Lukas Wunner <lukas@wunner.de>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Keith Busch <kbusch@kernel.org>
-Subject: [PATCH 4.19 064/146] PCI: pciehp: Fix indefinite wait on sysfs requests
-Date:   Thu, 16 Apr 2020 15:23:25 +0200
-Message-Id: <20200416131251.645432763@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200416131242.353444678@linuxfoundation.org>
-References: <20200416131242.353444678@linuxfoundation.org>
-User-Agent: quilt/0.66
+Cc:     Collabora Kernel ML <kernel@collabora.com>, matthias.bgg@gmail.com,
+        drinkcat@chromium.org, hsinyi@chromium.org,
+        laurent.pinchart@ideasonboard.com,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH v2 1/7] drm/bridge: ps8640: Get the EDID from eDP control
+Date:   Thu, 16 Apr 2020 17:57:13 +0200
+Message-Id: <20200416155720.2360443-2-enric.balletbo@collabora.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200416155720.2360443-1-enric.balletbo@collabora.com>
+References: <20200416155720.2360443-1-enric.balletbo@collabora.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lukas Wunner <lukas@wunner.de>
+The PS8640 DSI-to-eDP bridge can retrieve the EDID, so implement the
+.get_edid callback and set the flag to indicate the core to use it.
 
-commit 3e487d2e4aa466decd226353755c9d423e8fbacc upstream.
-
-David Hoyer reports that powering pciehp slots up or down via sysfs may
-hang:  The call to wait_event() in pciehp_sysfs_enable_slot() and
-_disable_slot() does not return because ctrl->ist_running remains true.
-
-This flag, which was introduced by commit 157c1062fcd8 ("PCI: pciehp: Avoid
-returning prematurely from sysfs requests"), signifies that the IRQ thread
-pciehp_ist() is running.  It is set to true at the top of pciehp_ist() and
-reset to false at the end.  However there are two additional return
-statements in pciehp_ist() before which the commit neglected to reset the
-flag to false and wake up waiters for the flag.
-
-That omission opens up the following race when powering up the slot:
-
-* pciehp_ist() runs because a PCI_EXP_SLTSTA_PDC event was requested
-  by pciehp_sysfs_enable_slot()
-
-* pciehp_ist() turns on slot power via the following call stack:
-  pciehp_handle_presence_or_link_change() -> pciehp_enable_slot() ->
-  __pciehp_enable_slot() -> board_added() -> pciehp_power_on_slot()
-
-* after slot power is turned on, the link comes up, resulting in a
-  PCI_EXP_SLTSTA_DLLSC event
-
-* the IRQ handler pciehp_isr() stores the event in ctrl->pending_events
-  and returns IRQ_WAKE_THREAD
-
-* the IRQ thread is already woken (it's bringing up the slot), but the
-  genirq code remembers to re-run the IRQ thread after it has finished
-  (such that it can deal with the new event) by setting IRQTF_RUNTHREAD
-  via __handle_irq_event_percpu() -> __irq_wake_thread()
-
-* the IRQ thread removes PCI_EXP_SLTSTA_DLLSC from ctrl->pending_events
-  via board_added() -> pciehp_check_link_status() in order to deal with
-  presence and link flaps per commit 6c35a1ac3da6 ("PCI: pciehp:
-  Tolerate initially unstable link")
-
-* after pciehp_ist() has successfully brought up the slot, it resets
-  ctrl->ist_running to false and wakes up the sysfs requester
-
-* the genirq code re-runs pciehp_ist(), which sets ctrl->ist_running
-  to true but then returns with IRQ_NONE because ctrl->pending_events
-  is empty
-
-* pciehp_sysfs_enable_slot() is finally woken but notices that
-  ctrl->ist_running is true, hence continues waiting
-
-The only way to get the hung task going again is to trigger a hotplug
-event which brings down the slot, e.g. by yanking out the card.
-
-The same race exists when powering down the slot because remove_board()
-likewise clears link or presence changes in ctrl->pending_events per commit
-3943af9d01e9 ("PCI: pciehp: Ignore Link State Changes after powering off a
-slot") and thereby may cause a re-run of pciehp_ist() which returns with
-IRQ_NONE without resetting ctrl->ist_running to false.
-
-Fix by adding a goto label before the teardown steps at the end of
-pciehp_ist() and jumping to that label from the two return statements which
-currently neglect to reset the ctrl->ist_running flag.
-
-Fixes: 157c1062fcd8 ("PCI: pciehp: Avoid returning prematurely from sysfs requests")
-Link: https://lore.kernel.org/r/cca1effa488065cb055120aa01b65719094bdcb5.1584530321.git.lukas@wunner.de
-Reported-by: David Hoyer <David.Hoyer@netapp.com>
-Signed-off-by: Lukas Wunner <lukas@wunner.de>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Reviewed-by: Keith Busch <kbusch@kernel.org>
-Cc: stable@vger.kernel.org	# v4.19+
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
 ---
- drivers/pci/hotplug/pciehp_hpc.c |   14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
 
---- a/drivers/pci/hotplug/pciehp_hpc.c
-+++ b/drivers/pci/hotplug/pciehp_hpc.c
-@@ -627,17 +627,15 @@ static irqreturn_t pciehp_ist(int irq, v
- 	if (atomic_fetch_and(~RERUN_ISR, &ctrl->pending_events) & RERUN_ISR) {
- 		ret = pciehp_isr(irq, dev_id);
- 		enable_irq(irq);
--		if (ret != IRQ_WAKE_THREAD) {
--			pci_config_pm_runtime_put(pdev);
--			return ret;
--		}
-+		if (ret != IRQ_WAKE_THREAD)
-+			goto out;
- 	}
- 
- 	synchronize_hardirq(irq);
- 	events = atomic_xchg(&ctrl->pending_events, 0);
- 	if (!events) {
--		pci_config_pm_runtime_put(pdev);
--		return IRQ_NONE;
-+		ret = IRQ_NONE;
-+		goto out;
- 	}
- 
- 	/* Check Attention Button Pressed */
-@@ -666,10 +664,12 @@ static irqreturn_t pciehp_ist(int irq, v
- 		pciehp_handle_presence_or_link_change(slot, events);
- 	up_read(&ctrl->reset_lock);
- 
-+	ret = IRQ_HANDLED;
-+out:
- 	pci_config_pm_runtime_put(pdev);
- 	ctrl->ist_running = false;
- 	wake_up(&ctrl->requester);
--	return IRQ_HANDLED;
-+	return ret;
+Changes in v2: None
+
+ drivers/gpu/drm/bridge/parade-ps8640.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
+
+diff --git a/drivers/gpu/drm/bridge/parade-ps8640.c b/drivers/gpu/drm/bridge/parade-ps8640.c
+index d3a53442d449..956b76e0a44d 100644
+--- a/drivers/gpu/drm/bridge/parade-ps8640.c
++++ b/drivers/gpu/drm/bridge/parade-ps8640.c
+@@ -242,8 +242,18 @@ static int ps8640_bridge_attach(struct drm_bridge *bridge,
+ 	return ret;
  }
  
- static int pciehp_poll(void *data)
-
++static struct edid *ps8640_bridge_get_edid(struct drm_bridge *bridge,
++					   struct drm_connector *connector)
++{
++	struct ps8640 *ps_bridge = bridge_to_ps8640(bridge);
++
++	return drm_get_edid(connector,
++			    ps_bridge->page[PAGE0_DP_CNTL]->adapter);
++}
++
+ static const struct drm_bridge_funcs ps8640_bridge_funcs = {
+ 	.attach = ps8640_bridge_attach,
++	.get_edid = ps8640_bridge_get_edid,
+ 	.post_disable = ps8640_post_disable,
+ 	.pre_enable = ps8640_pre_enable,
+ };
+@@ -296,6 +306,8 @@ static int ps8640_probe(struct i2c_client *client)
+ 
+ 	ps_bridge->bridge.funcs = &ps8640_bridge_funcs;
+ 	ps_bridge->bridge.of_node = dev->of_node;
++	ps_bridge->bridge.ops = DRM_BRIDGE_OP_EDID;
++	ps_bridge->bridge.type = DRM_MODE_CONNECTOR_eDP;
+ 
+ 	ps_bridge->page[PAGE0_DP_CNTL] = client;
+ 
+-- 
+2.25.1
 
