@@ -4,49 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88DF0C2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:23:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C0B5C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:23:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5D48C21D7E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:23:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28F332220A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:23:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587047015;
-	bh=WtyTCRlFyMzJAkJbuvSlHht8TZrezfj5ottSM/w2hRY=;
+	s=default; t=1587047021;
+	bh=dOADrGFjZ/rXCi+5xfhr7DK9w3epKFzRh782rc/iFgs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uj4RTGxlIijLjGJD5nKVGCH0xpmQJqXG84rSVsILf0KpYO6Urk7F8rDer1KsSvqkl
-	 e7gWV37W2TK7Z41LHGmehlpoxkqmsTFt/egusQKseQgyclA99XknUJdj9rW7Y6vy89
-	 NuEZvfSR9qBaEiATeYW5Mdoigko75RZ8DVX7DpGo=
+	b=P1OX/COu4hdxn8Ya+f4B7XH4XrJY/ZZAXhX1EUA+yvz7DX93kCnFbV5stNoNDndcG
+	 HV3k7wP76+RwyKXbXIoTS8TY0cFPdTpZJ4pdnNiN7dQPdt4+3zxFFbIWHVj/dUW/Fw
+	 jSYlkPkusWKWYlNTPZO1DvMl6Id/+LIsTQ6aENQ0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390141AbgDPOXe (ORCPT
+        id S1732834AbgDPOXj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:23:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43862 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 10:23:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43912 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2409225AbgDPN4v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:56:51 -0400
+        id S2409234AbgDPN4x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:56:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 17D4321734;
-        Thu, 16 Apr 2020 13:56:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 84F6B20732;
+        Thu, 16 Apr 2020 13:56:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587045410;
-        bh=WtyTCRlFyMzJAkJbuvSlHht8TZrezfj5ottSM/w2hRY=;
+        s=default; t=1587045413;
+        bh=dOADrGFjZ/rXCi+5xfhr7DK9w3epKFzRh782rc/iFgs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ggogU+qQTHRtlsQS1CPJpz4VL2rGLWySvyqV0iFWXs8A29ilUUDsyJOeKwmKl56hS
-         zuhWEQGMQlpSJVVl8vTGpRg3rzBqLfqPYfoR4oS6wkBNBLW18XFLNklqisDs8Odgrr
-         h8zqN4m5y18If7Zgl31wfX2xOrQBsC4Jr1WMpb/8=
+        b=BcfFVp62XfGL6tYjILljpO9WtuX6T2c+UyWhHC/xJrt3rN0e282GA84JGcCCxGqZH
+         ocWcC5vGqaxGLMIBRkI2saOOVWtZ77ihhzzNX7TbJiGv6FxImVtGUEJvsuNF9+Qlu7
+         Q2O2nUmJ2eYp0AZEo/iZ3FbTN5iRy7nv1FxtuyQU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Remi Pommarel <repk@triplefau.lt>,
-        Kalle Valo <kvalo@codeaurora.org>
-Subject: [PATCH 5.6 123/254] ath9k: Handle txpower changes even when TPC is disabled
-Date:   Thu, 16 Apr 2020 15:23:32 +0200
-Message-Id: <20200416131341.751761811@linuxfoundation.org>
+        stable@vger.kernel.org, "Eric W. Biederman" <ebiederm@xmission.com>
+Subject: [PATCH 5.6 124/254] signal: Extend exec_id to 64bits
+Date:   Thu, 16 Apr 2020 15:23:33 +0200
+Message-Id: <20200416131341.888514502@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.804095985@linuxfoundation.org>
 References: <20200416131325.804095985@linuxfoundation.org>
@@ -59,57 +58,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Remi Pommarel <repk@triplefau.lt>
+From: Eric W. Biederman <ebiederm@xmission.com>
 
-commit 968ae2caad0782db5dbbabb560d3cdefd2945d38 upstream.
+commit d1e7fd6462ca9fc76650fbe6ca800e35b24267da upstream.
 
-When TPC is disabled IEEE80211_CONF_CHANGE_POWER event can be handled to
-reconfigure HW's maximum txpower.
+Replace the 32bit exec_id with a 64bit exec_id to make it impossible
+to wrap the exec_id counter.  With care an attacker can cause exec_id
+wrap and send arbitrary signals to a newly exec'd parent.  This
+bypasses the signal sending checks if the parent changes their
+credentials during exec.
 
-This fixes 0dBm txpower setting when user attaches to an interface for
-the first time with the following scenario:
+The severity of this problem can been seen that in my limited testing
+of a 32bit exec_id it can take as little as 19s to exec 65536 times.
+Which means that it can take as little as 14 days to wrap a 32bit
+exec_id.  Adam Zabrocki has succeeded wrapping the self_exe_id in 7
+days.  Even my slower timing is in the uptime of a typical server.
+Which means self_exec_id is simply a speed bump today, and if exec
+gets noticably faster self_exec_id won't even be a speed bump.
 
-ieee80211_do_open()
-    ath9k_add_interface()
-        ath9k_set_txpower() /* Set TX power with not yet initialized
-                               sc->hw->conf.power_level */
+Extending self_exec_id to 64bits introduces a problem on 32bit
+architectures where reading self_exec_id is no longer atomic and can
+take two read instructions.  Which means that is is possible to hit
+a window where the read value of exec_id does not match the written
+value.  So with very lucky timing after this change this still
+remains expoiltable.
 
-    ieee80211_hw_config() /* Iniatilize sc->hw->conf.power_level and
-                             raise IEEE80211_CONF_CHANGE_POWER */
+I have updated the update of exec_id on exec to use WRITE_ONCE
+and the read of exec_id in do_notify_parent to use READ_ONCE
+to make it clear that there is no locking between these two
+locations.
 
-    ath9k_config() /* IEEE80211_CONF_CHANGE_POWER is ignored */
-
-This issue can be reproduced with the following:
-
-  $ modprobe -r ath9k
-  $ modprobe ath9k
-  $ wpa_supplicant -i wlan0 -c /tmp/wpa.conf &
-  $ iw dev /* Here TX power is either 0 or 3 depending on RF chain */
-  $ killall wpa_supplicant
-  $ iw dev /* TX power goes back to calibrated value and subsequent
-              calls will be fine */
-
-Fixes: 283dd11994cde ("ath9k: add per-vif TX power capability")
+Link: https://lore.kernel.org/kernel-hardening/20200324215049.GA3710@pi3.com.pl
+Fixes: 2.3.23pre2
 Cc: stable@vger.kernel.org
-Signed-off-by: Remi Pommarel <repk@triplefau.lt>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/wireless/ath/ath9k/main.c |    3 +++
- 1 file changed, 3 insertions(+)
+ fs/exec.c             |    2 +-
+ include/linux/sched.h |    4 ++--
+ kernel/signal.c       |    2 +-
+ 3 files changed, 4 insertions(+), 4 deletions(-)
 
---- a/drivers/net/wireless/ath/ath9k/main.c
-+++ b/drivers/net/wireless/ath/ath9k/main.c
-@@ -1457,6 +1457,9 @@ static int ath9k_config(struct ieee80211
- 		ath_chanctx_set_channel(sc, ctx, &hw->conf.chandef);
- 	}
+--- a/fs/exec.c
++++ b/fs/exec.c
+@@ -1386,7 +1386,7 @@ void setup_new_exec(struct linux_binprm
  
-+	if (changed & IEEE80211_CONF_CHANGE_POWER)
-+		ath9k_set_txpower(sc, NULL);
-+
- 	mutex_unlock(&sc->mutex);
- 	ath9k_ps_restore(sc);
+ 	/* An exec changes our domain. We are no longer part of the thread
+ 	   group */
+-	current->self_exec_id++;
++	WRITE_ONCE(current->self_exec_id, current->self_exec_id + 1);
+ 	flush_signal_handlers(current, 0);
+ }
+ EXPORT_SYMBOL(setup_new_exec);
+--- a/include/linux/sched.h
++++ b/include/linux/sched.h
+@@ -939,8 +939,8 @@ struct task_struct {
+ 	struct seccomp			seccomp;
+ 
+ 	/* Thread group tracking: */
+-	u32				parent_exec_id;
+-	u32				self_exec_id;
++	u64				parent_exec_id;
++	u64				self_exec_id;
+ 
+ 	/* Protection against (de-)allocation: mm, files, fs, tty, keyrings, mems_allowed, mempolicy: */
+ 	spinlock_t			alloc_lock;
+--- a/kernel/signal.c
++++ b/kernel/signal.c
+@@ -1931,7 +1931,7 @@ bool do_notify_parent(struct task_struct
+ 		 * This is only possible if parent == real_parent.
+ 		 * Check if it has changed security domain.
+ 		 */
+-		if (tsk->parent_exec_id != tsk->parent->self_exec_id)
++		if (tsk->parent_exec_id != READ_ONCE(tsk->parent->self_exec_id))
+ 			sig = SIGCHLD;
+ 	}
  
 
 
