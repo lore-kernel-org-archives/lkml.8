@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65FA0C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:34:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F096C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:34:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 42156214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:34:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF0A422242
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:34:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587051253;
-	bh=lFhx4Pwgt/IIWG+kD1mKhR5l8kclKGuuGvtVWpV6au4=;
+	s=default; t=1587051257;
+	bh=T7UqCQ4MmuEZ9jZMyvkZ7fXJdJnl0Slb6/yftBff6Ww=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=I9QVuf1PLiqpwIpktnOstLY8HCUXOYueouNprWm53GCiohYurov20z8Mvw651QPLM
-	 USikgv2s3OP5lJed95C3LOo+o6vPcc2lpPgcoQmFD7nC45vYXTwsI6df1ClzyxFbCb
-	 xW2jvVLrCE/ycFlq4Abmk1Q6bAqBbIMgMjU8oxxg=
+	b=TQKF7g8t7BLZQ4fkbYowV8fRC9NxS/yKrB7wDqD0LhczML6MULSnZU/62qGO8y5T9
+	 XB8eoAc69dUD0st4pU+S6kvR8ddwM9UtteKU/NHDZINgJriCsIgvMihPIPoOk4GlJA
+	 S9/e0pfzIcfAVXxkd0w8KeEqGH0DeNJ1Y0/nyGxI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2442589AbgDPPeL (ORCPT
+        id S2442601AbgDPPeQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:34:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53632 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 11:34:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53660 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2898219AbgDPNky (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:40:54 -0400
+        id S2898230AbgDPNk6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:40:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9351720732;
-        Thu, 16 Apr 2020 13:40:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0F0F02222D;
+        Thu, 16 Apr 2020 13:40:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044454;
-        bh=lFhx4Pwgt/IIWG+kD1mKhR5l8kclKGuuGvtVWpV6au4=;
+        s=default; t=1587044456;
+        bh=T7UqCQ4MmuEZ9jZMyvkZ7fXJdJnl0Slb6/yftBff6Ww=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Y0G0dCGbz1MRbIvnqynEgq7EiaWolm3uRJGDT8DelnAGQXwWTwfBVeowfJxhuu0GK
-         8kwVT31qTmoqg0LatM4nMrUp3nKhrf+AsZpL5HvU7fNyCkraOMSIxwRfJVKu1jTvd0
-         S8kT6oC2B2MHtnF6C7t6Ej2ezIODNFgxigPitMMg=
+        b=aFWmJfqb+ZEXeJs4LE0DT0beWPqUh27jsb02NARF8hz1HjhQvx9vPE7ULGKg8T0wC
+         KyAYMNMX8fr8skQjQESKRFQFu2Hj7hc9UrzSv/RFsFUDlQ1KF7I2PedDij3u3pAaL5
+         +inqP7L239t+79sn3AGanDO2SqgYG9XCnV5t/g/M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michael Mueller <mimu@linux.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>
-Subject: [PATCH 5.5 224/257] s390/diag: fix display of diagnose call statistics
-Date:   Thu, 16 Apr 2020 15:24:35 +0200
-Message-Id: <20200416131353.894962281@linuxfoundation.org>
+        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: [PATCH 5.5 225/257] Input: i8042 - add Acer Aspire 5738z to nomux list
+Date:   Thu, 16 Apr 2020 15:24:36 +0200
+Message-Id: <20200416131353.982195897@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.891903893@linuxfoundation.org>
 References: <20200416131325.891903893@linuxfoundation.org>
@@ -60,36 +59,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Mueller <mimu@linux.ibm.com>
+From: Hans de Goede <hdegoede@redhat.com>
 
-commit 6c7c851f1b666a8a455678a0b480b9162de86052 upstream.
+commit ebc68cedec4aead47d8d11623d013cca9bf8e825 upstream.
 
-Show the full diag statistic table and not just parts of it.
+The Acer Aspire 5738z has a button to disable (and re-enable) the
+touchpad next to the touchpad.
 
-The issue surfaced in a KVM guest with a number of vcpus
-defined smaller than NR_DIAG_STAT.
+When this button is pressed a LED underneath indicates that the touchpad
+is disabled (and an event is send to userspace and GNOME shows its
+touchpad enabled / disable OSD thingie).
 
-Fixes: 1ec2772e0c3c ("s390/diag: add a statistic for diagnose calls")
+So far so good, but after re-enabling the touchpad it no longer works.
+
+The laptop does not have an external ps2 port, so mux mode is not needed
+and disabling mux mode fixes the touchpad no longer working after toggling
+it off and back on again, so lets add this laptop model to the nomux list.
+
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Link: https://lore.kernel.org/r/20200331123947.318908-1-hdegoede@redhat.com
 Cc: stable@vger.kernel.org
-Signed-off-by: Michael Mueller <mimu@linux.ibm.com>
-Reviewed-by: Heiko Carstens <heiko.carstens@de.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/s390/kernel/diag.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/input/serio/i8042-x86ia64io.h |   11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
---- a/arch/s390/kernel/diag.c
-+++ b/arch/s390/kernel/diag.c
-@@ -84,7 +84,7 @@ static int show_diag_stat(struct seq_fil
+--- a/drivers/input/serio/i8042-x86ia64io.h
++++ b/drivers/input/serio/i8042-x86ia64io.h
+@@ -530,6 +530,17 @@ static const struct dmi_system_id __init
+ 			DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo LaVie Z"),
+ 		},
+ 	},
++	{
++		/*
++		 * Acer Aspire 5738z
++		 * Touchpad stops working in mux mode when dis- + re-enabled
++		 * with the touchpad enable/disable toggle hotkey
++		 */
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Acer"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "Aspire 5738"),
++		},
++	},
+ 	{ }
+ };
  
- static void *show_diag_stat_start(struct seq_file *m, loff_t *pos)
- {
--	return *pos <= nr_cpu_ids ? (void *)((unsigned long) *pos + 1) : NULL;
-+	return *pos <= NR_DIAG_STAT ? (void *)((unsigned long) *pos + 1) : NULL;
- }
- 
- static void *show_diag_stat_next(struct seq_file *m, void *v, loff_t *pos)
 
 
