@@ -2,130 +2,293 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73ABEC2BA2B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 07:28:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F189C2D0EF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 07:28:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5036F214D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 07:28:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="nS2o1aPJ"
+	by mail.kernel.org (Postfix) with ESMTP id 01F06206D5
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 07:28:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587022092;
+	bh=w+nPkuKj2fNBoyAqj0+LVj5YRJnCBFYLxnu4z9r5o3Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=CEajww/m+IjYoDF50oT+5RISvTzM5lhycoz2cGMKHFlV8qqLHmywxjsmntcRPoE7U
+	 t1GRg/NWO/1miNbeqYXHqU0dnwHX0u2d+z3o2IeCJhIaFFU4bW8xtugPny5ViY2BRF
+	 DH4221lTIWysyu9WvnTVD0dpIbVf7SxgYVIUpq1U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439044AbgDPH2G (ORCPT
+        id S2439295AbgDPH2K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 03:28:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55936 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2439271AbgDPH2C (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 03:28:02 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2A70C061A0C
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 00:28:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=+c0BnVkUz/p/ZKVi7AZts0cdD6pPHHHH4PNO8czLDVY=; b=nS2o1aPJSp7O48N4kyJVtmzwm9
-        o/CUJvWe2Ml1QhA8pNAxjV7XCmlmH2xiukea7gdl8oBX35YDirwn9uk6CMtmQ9p683g+j0UXrxKiF
-        fTR9SW9rhWZ7CrgfCRNs3FRsQTj+gcuyiQbASur8OhEncmXrdGzdyztPYlwCXAL1aUZakUr60fY31
-        sxyaR4cvx3nngoGR3IZZvpO1SZcxt5Q0xu0JVv5tdelkuVeuxsvWhBfnrYv4UF+rb91GV8Fty64Oc
-        uC/tX13pHdogoWD4zd/6hZjevXzbmPnZwF9upx+PRN3Bu4JF+aTVGYNgkJeJW2CX86RJkd6LOkb2x
-        SjTRyH5g==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jOyvm-0002R2-89; Thu, 16 Apr 2020 07:27:26 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        Thu, 16 Apr 2020 03:28:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57574 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2439264AbgDPH2F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 03:28:05 -0400
+Received: from localhost (unknown [213.57.247.131])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 9F7583015D0;
-        Thu, 16 Apr 2020 09:27:23 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 5DEE229E70278; Thu, 16 Apr 2020 09:27:23 +0200 (CEST)
-Date:   Thu, 16 Apr 2020 09:27:23 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Muchun Song <songmuchun@bytedance.com>
-Cc:     mingo@redhat.com, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
-        mingo@kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] sched/cpuacct: Use __this_cpu_add() instead of
- this_cpu_ptr()
-Message-ID: <20200416072723.GK20730@hirez.programming.kicks-ass.net>
-References: <20200416065310.37539-1-songmuchun@bytedance.com>
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EF201206D5;
+        Thu, 16 Apr 2020 07:28:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587022084;
+        bh=w+nPkuKj2fNBoyAqj0+LVj5YRJnCBFYLxnu4z9r5o3Y=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=p/+FaYsXXVpQvawW/bB5pBeFg94y8wvi68MZpusiUD9zf/VTvB/hqDWPT24gpNdlC
+         XDOTiQSFGQKDR4FJnfTeqH9jU6xA5AfbuZM10qjcO4GVgrJFZrTPoxnBiaVw8VyHKK
+         AUbK3qm9zutGjGBq1rIFNYoERjXWo70jPkwEChWo=
+Date:   Thu, 16 Apr 2020 10:28:01 +0300
+From:   Leon Romanovsky <leon@kernel.org>
+To:     Robert Marko <robert.marko@sartura.hr>
+Cc:     andrew@lunn.ch, f.fainelli@gmail.com, hkallweit1@gmail.com,
+        linux@armlinux.org.uk, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, agross@kernel.org,
+        bjorn.andersson@linaro.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        Christian Lamparter <chunkeey@gmail.com>,
+        Luka Perkov <luka.perkov@sartura.hr>
+Subject: Re: [PATCH v3 1/3] net: phy: mdio: add IPQ40xx MDIO driver
+Message-ID: <20200416072801.GG1309273@unreal>
+References: <20200415150244.2737206-1-robert.marko@sartura.hr>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200416065310.37539-1-songmuchun@bytedance.com>
+In-Reply-To: <20200415150244.2737206-1-robert.marko@sartura.hr>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 16, 2020 at 02:53:10PM +0800, Muchun Song wrote:
-> There seems to be no difference between the two, but on some
-> architectures(e.g. x86_64), there will be optimizations for
-> __this_cpu_add(). We can disassemble the code for you to see
-> the difference between them on x86_64.
-> 
->   1) this_cpu_ptr(ca->cpuusage)->usages[index] += cputime;
-> 
->      ffffffff810d7227: add %gs:0x7ef37fa9(%rip),%rax # f1d8 <this_cpu_off>
->      ffffffff810d722f: add %rsi,(%rax)               # %rsi is @cputime
-> 
-> This result in two add instructions emitted by the compiler.
-> 
->   2) __this_cpu_add(ca->cpuusage->usages[index], cputime);
-> 
->      ffffffff810d7227: add %rsi,%gs:(%rax)           # %rsi is @cputime
-> 
-> This result in only one add instruction emitted by the compiler.
-> 
-> So we have enough reasons to use the __this_cpu_add().
-
-The patch is OK, but I can't take it with such complete nonsense for a
-Changelog.
-
-The reason this_cpu_add() and __this_cpu_add() exist and are different
-is for different calling context. this_cpu_*() is always safe and
-correct, but as you notice, not always optimal. __this_cpu_*() relies on
-the caller already having preemption (and or IRQs disabled) to allow for
-better code-gen.
-
-Now, the below call-sites have rq->lock taken, and this means preemption
-(and IRQs) are indeed disabled, so it is safe to use __this_cpu_*().
-
-> Signed-off-by: Muchun Song <songmuchun@bytedance.com>
+On Wed, Apr 15, 2020 at 05:02:43PM +0200, Robert Marko wrote:
+> This patch adds the driver for the MDIO interface
+> inside of Qualcomm IPQ40xx series SoC-s.
+>
+> Signed-off-by: Christian Lamparter <chunkeey@gmail.com>
+> Signed-off-by: Robert Marko <robert.marko@sartura.hr>
+> Cc: Luka Perkov <luka.perkov@sartura.hr>
 > ---
->  kernel/sched/cpuacct.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/kernel/sched/cpuacct.c b/kernel/sched/cpuacct.c
-> index 9fbb103834345..6448b0438ffb2 100644
-> --- a/kernel/sched/cpuacct.c
-> +++ b/kernel/sched/cpuacct.c
-> @@ -347,7 +347,7 @@ void cpuacct_charge(struct task_struct *tsk, u64 cputime)
->  	rcu_read_lock();
->  
->  	for (ca = task_ca(tsk); ca; ca = parent_ca(ca))
-> -		this_cpu_ptr(ca->cpuusage)->usages[index] += cputime;
-> +		__this_cpu_add(ca->cpuusage->usages[index], cputime);
->  
->  	rcu_read_unlock();
->  }
-> @@ -363,7 +363,7 @@ void cpuacct_account_field(struct task_struct *tsk, int index, u64 val)
->  
->  	rcu_read_lock();
->  	for (ca = task_ca(tsk); ca != &root_cpuacct; ca = parent_ca(ca))
-> -		this_cpu_ptr(ca->cpustat)->cpustat[index] += val;
-> +		__this_cpu_add(ca->cpustat->cpustat[index], val);
->  	rcu_read_unlock();
->  }
->  
-> -- 
-> 2.11.0
-> 
+> Changes from v2 to v3:
+> * Rename registers
+> * Remove unnecessary variable initialisations
+> * Switch to readl_poll_timeout() instead of custom solution
+> * Drop unused header
+>
+> Changes from v1 to v2:
+> * Remove magic default value
+> * Remove lockdep_assert_held
+> * Add C45 check
+> * Simplify the driver
+> * Drop device and mii_bus structs from private struct
+> * Use devm_mdiobus_alloc_size()
+>
+>  drivers/net/phy/Kconfig        |   7 ++
+>  drivers/net/phy/Makefile       |   1 +
+>  drivers/net/phy/mdio-ipq40xx.c | 160 +++++++++++++++++++++++++++++++++
+>  3 files changed, 168 insertions(+)
+>  create mode 100644 drivers/net/phy/mdio-ipq40xx.c
+>
+> diff --git a/drivers/net/phy/Kconfig b/drivers/net/phy/Kconfig
+> index 3fa33d27eeba..23bb5db033e3 100644
+> --- a/drivers/net/phy/Kconfig
+> +++ b/drivers/net/phy/Kconfig
+> @@ -157,6 +157,13 @@ config MDIO_I2C
+>
+>  	  This is library mode.
+>
+> +config MDIO_IPQ40XX
+> +	tristate "Qualcomm IPQ40xx MDIO interface"
+> +	depends on HAS_IOMEM && OF_MDIO
+> +	help
+> +	  This driver supports the MDIO interface found in Qualcomm
+> +	  IPQ40xx series Soc-s.
+> +
+>  config MDIO_IPQ8064
+>  	tristate "Qualcomm IPQ8064 MDIO interface support"
+>  	depends on HAS_IOMEM && OF_MDIO
+> diff --git a/drivers/net/phy/Makefile b/drivers/net/phy/Makefile
+> index 2f5c7093a65b..36aafc6128c4 100644
+> --- a/drivers/net/phy/Makefile
+> +++ b/drivers/net/phy/Makefile
+> @@ -37,6 +37,7 @@ obj-$(CONFIG_MDIO_CAVIUM)	+= mdio-cavium.o
+>  obj-$(CONFIG_MDIO_GPIO)		+= mdio-gpio.o
+>  obj-$(CONFIG_MDIO_HISI_FEMAC)	+= mdio-hisi-femac.o
+>  obj-$(CONFIG_MDIO_I2C)		+= mdio-i2c.o
+> +obj-$(CONFIG_MDIO_IPQ40XX)	+= mdio-ipq40xx.o
+>  obj-$(CONFIG_MDIO_IPQ8064)	+= mdio-ipq8064.o
+>  obj-$(CONFIG_MDIO_MOXART)	+= mdio-moxart.o
+>  obj-$(CONFIG_MDIO_MSCC_MIIM)	+= mdio-mscc-miim.o
+> diff --git a/drivers/net/phy/mdio-ipq40xx.c b/drivers/net/phy/mdio-ipq40xx.c
+> new file mode 100644
+> index 000000000000..acf1230341bd
+> --- /dev/null
+> +++ b/drivers/net/phy/mdio-ipq40xx.c
+> @@ -0,0 +1,160 @@
+> +// SPDX-License-Identifier: GPL-2.0 OR BSD-3-Clause
+> +/* Copyright (c) 2015, The Linux Foundation. All rights reserved. */
+> +/* Copyright (c) 2020 Sartura Ltd. */
+> +
+> +#include <linux/delay.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/io.h>
+> +#include <linux/iopoll.h>
+> +#include <linux/of_address.h>
+> +#include <linux/of_mdio.h>
+> +#include <linux/phy.h>
+> +#include <linux/platform_device.h>
+> +
+> +#define MDIO_ADDR_REG				0x44
+> +#define MDIO_DATA_WRITE_REG			0x48
+> +#define MDIO_DATA_READ_REG			0x4c
+> +#define MDIO_CMD_REG				0x50
+> +#define MDIO_CMD_ACCESS_BUSY		BIT(16)
+> +#define MDIO_CMD_ACCESS_START		BIT(8)
+> +#define MDIO_CMD_ACCESS_CODE_READ	0
+> +#define MDIO_CMD_ACCESS_CODE_WRITE	1
+> +
+> +#define IPQ40XX_MDIO_TIMEOUT	10000
+> +#define IPQ40XX_MDIO_SLEEP		10
+> +
+> +struct ipq40xx_mdio_data {
+> +	void __iomem	*membase;
+> +};
+> +
+> +static int ipq40xx_mdio_wait_busy(struct mii_bus *bus)
+> +{
+> +	struct ipq40xx_mdio_data *priv = bus->priv;
+> +	unsigned int busy;
+> +
+> +	return readl_poll_timeout(priv->membase + MDIO_CMD_REG, busy,
+> +				  (busy & MDIO_CMD_ACCESS_BUSY) == 0,
+> +				  IPQ40XX_MDIO_SLEEP, IPQ40XX_MDIO_TIMEOUT);
+> +}
+> +
+> +static int ipq40xx_mdio_read(struct mii_bus *bus, int mii_id, int regnum)
+> +{
+> +	struct ipq40xx_mdio_data *priv = bus->priv;
+> +	unsigned int cmd;
+> +
+> +	/* Reject clause 45 */
+> +	if (regnum & MII_ADDR_C45)
+> +		return -EOPNOTSUPP;
+> +
+> +	if (ipq40xx_mdio_wait_busy(bus))
+> +		return -ETIMEDOUT;
+> +
+> +	/* issue the phy address and reg */
+> +	writel((mii_id << 8) | regnum, priv->membase + MDIO_ADDR_REG);
+> +
+> +	cmd = MDIO_CMD_ACCESS_START | MDIO_CMD_ACCESS_CODE_READ;
+> +
+> +	/* issue read command */
+> +	writel(cmd, priv->membase + MDIO_CMD_REG);
+> +
+> +	/* Wait read complete */
+> +	if (ipq40xx_mdio_wait_busy(bus))
+> +		return -ETIMEDOUT;
+> +
+> +	/* Read and return data */
+> +	return readl(priv->membase + MDIO_DATA_READ_REG);
+> +}
+> +
+> +static int ipq40xx_mdio_write(struct mii_bus *bus, int mii_id, int regnum,
+> +							 u16 value)
+> +{
+> +	struct ipq40xx_mdio_data *priv = bus->priv;
+> +	unsigned int cmd;
+> +
+> +	/* Reject clause 45 */
+> +	if (regnum & MII_ADDR_C45)
+> +		return -EOPNOTSUPP;
+> +
+> +	if (ipq40xx_mdio_wait_busy(bus))
+> +		return -ETIMEDOUT;
+> +
+> +	/* issue the phy address and reg */
+> +	writel((mii_id << 8) | regnum, priv->membase + MDIO_ADDR_REG);
+> +
+> +	/* issue write data */
+> +	writel(value, priv->membase + MDIO_DATA_WRITE_REG);
+> +
+> +	cmd = MDIO_CMD_ACCESS_START | MDIO_CMD_ACCESS_CODE_WRITE;
+> +	/* issue write command */
+> +	writel(cmd, priv->membase + MDIO_CMD_REG);
+> +
+> +	/* Wait write complete */
+> +	if (ipq40xx_mdio_wait_busy(bus))
+> +		return -ETIMEDOUT;
+> +
+> +	return 0;
+> +}
+> +
+> +static int ipq40xx_mdio_probe(struct platform_device *pdev)
+> +{
+> +	struct ipq40xx_mdio_data *priv;
+> +	struct mii_bus *bus;
+> +	int ret;
+> +
+> +	bus = devm_mdiobus_alloc_size(&pdev->dev, sizeof(*priv));
+> +	if (!bus)
+> +		return -ENOMEM;
+> +
+> +	priv = bus->priv;
+> +
+> +	priv->membase = devm_platform_ioremap_resource(pdev, 0);
+> +	if (IS_ERR(priv->membase))
+> +		return PTR_ERR(priv->membase);
+> +
+> +	bus->name = "ipq40xx_mdio";
+> +	bus->read = ipq40xx_mdio_read;
+> +	bus->write = ipq40xx_mdio_write;
+> +	bus->parent = &pdev->dev;
+> +	snprintf(bus->id, MII_BUS_ID_SIZE, "%s%d", pdev->name, pdev->id);
+> +
+> +	ret = of_mdiobus_register(bus, pdev->dev.of_node);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "Cannot register MDIO bus!\n");
+> +		return ret;
+> +	}
+> +
+> +	platform_set_drvdata(pdev, bus);
+> +
+> +	return 0;
+> +}
+> +
+> +static int ipq40xx_mdio_remove(struct platform_device *pdev)
+> +{
+> +	struct mii_bus *bus = platform_get_drvdata(pdev);
+> +
+> +	mdiobus_unregister(bus);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id ipq40xx_mdio_dt_ids[] = {
+> +	{ .compatible = "qcom,ipq40xx-mdio" },
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(of, ipq40xx_mdio_dt_ids);
+> +
+> +static struct platform_driver ipq40xx_mdio_driver = {
+> +	.probe = ipq40xx_mdio_probe,
+> +	.remove = ipq40xx_mdio_remove,
+> +	.driver = {
+> +		.name = "ipq40xx-mdio",
+> +		.of_match_table = ipq40xx_mdio_dt_ids,
+> +	},
+> +};
+> +
+> +module_platform_driver(ipq40xx_mdio_driver);
+> +
+> +MODULE_DESCRIPTION("IPQ40XX MDIO interface driver");
+> +MODULE_AUTHOR("Qualcomm Atheros");
+
+Strictly saying, but author can't be company.
+
+> +MODULE_LICENSE("Dual BSD/GPL");
+> --
+> 2.26.0
+>
