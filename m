@@ -2,175 +2,172 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73893C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 06:02:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FFD1C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 06:02:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 54C752076A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 06:02:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF6122076A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 06:02:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="O8oy2RFi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407476AbgDPGCa (ORCPT
+        id S2407552AbgDPGCg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 02:02:30 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:61498 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2407165AbgDPGC0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 02:02:26 -0400
-Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03G5X2uS015813;
-        Thu, 16 Apr 2020 02:02:02 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30ef1jknfb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 16 Apr 2020 02:02:01 -0400
-Received: from m0127361.ppops.net (m0127361.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 03G5X7lX016027;
-        Thu, 16 Apr 2020 02:01:57 -0400
-Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30ef1jkneg-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 16 Apr 2020 02:01:57 -0400
-Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
-        by ppma02dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 03G607Rn018459;
-        Thu, 16 Apr 2020 06:01:55 GMT
-Received: from b01cxnp22034.gho.pok.ibm.com (b01cxnp22034.gho.pok.ibm.com [9.57.198.24])
-        by ppma02dal.us.ibm.com with ESMTP id 30b5h7a04r-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 16 Apr 2020 06:01:55 +0000
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp22034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03G61s1H12910984
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 16 Apr 2020 06:01:54 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4A937B2065;
-        Thu, 16 Apr 2020 06:01:54 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4A278B2067;
-        Thu, 16 Apr 2020 06:01:53 +0000 (GMT)
-Received: from [9.70.82.143] (unknown [9.70.82.143])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Thu, 16 Apr 2020 06:01:53 +0000 (GMT)
-Subject: [PATCH v11 05/14] powerpc/vas: Register NX with fault window ID
- and IRQ port value
-From:   Haren Myneni <haren@linux.ibm.com>
-To:     mpe@ellerman.id.au
-Cc:     mikey@neuling.org, srikar@linux.vnet.ibm.com,
-        frederic.barrat@fr.ibm.com, linux-kernel@vger.kernel.org,
-        npiggin@gmail.com, hch@infradead.org, oohall@gmail.com,
-        clg@kaod.org, herbert@gondor.apana.org.au,
-        sukadev@linux.vnet.ibm.com, linuxppc-dev@lists.ozlabs.org,
-        ajd@linux.ibm.com
-In-Reply-To: <1587016214.2275.1036.camel@hbabu-laptop>
-References: <1587016214.2275.1036.camel@hbabu-laptop>
-Content-Type: text/plain; charset="UTF-8"
-Date:   Wed, 15 Apr 2020 23:01:28 -0700
-Message-ID: <1587016888.2275.1054.camel@hbabu-laptop>
-Mime-Version: 1.0
-X-Mailer: Evolution 2.28.3 
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-16_01:2020-04-14,2020-04-16 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0
- lowpriorityscore=0 impostorscore=0 spamscore=0 mlxlogscore=933
- adultscore=0 clxscore=1015 priorityscore=1501 suspectscore=1 bulkscore=0
- mlxscore=0 malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004160033
+        Thu, 16 Apr 2020 02:02:36 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:62434 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2407219AbgDPGC3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 02:02:29 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 492pXf3l6tz9tymJ;
+        Thu, 16 Apr 2020 08:02:26 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=O8oy2RFi; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id g-FuaxY7oTtY; Thu, 16 Apr 2020 08:02:26 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 492pXf1zxrz9tymG;
+        Thu, 16 Apr 2020 08:02:26 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1587016946; bh=hTy16bHLpfNFXF319tqIwS+sWuGHucopXVc/QbhW67s=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=O8oy2RFimIrYMQU6MOhSUDlpsJHr6m+uld+wQJw+BGfDvNaWMNnWU+tE2HxDT1tk1
+         1ljd3fzGwO/8xVpaMoG2PvW+zrCn+JLLj60PI5Qlvlu9SS1pYu+IX+ZrGDva/4xAjI
+         6lrUGp1uXE7zJW2a9klM0meDl1MZZMq4InFtJ2rc=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 5A4388B778;
+        Thu, 16 Apr 2020 08:02:27 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id s9h0hRILTj-Q; Thu, 16 Apr 2020 08:02:27 +0200 (CEST)
+Received: from [192.168.4.90] (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 87A7E8B756;
+        Thu, 16 Apr 2020 08:02:26 +0200 (CEST)
+Subject: Re: [PATCH v2,5/5] drivers: uio: new driver for fsl_85xx_cache_sram
+To:     Wang Wenhu <wenhu.wang@vivo.com>
+Cc:     gregkh@linuxfoundation.org, kernel@vivo.com,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        mpe@ellerman.id.au, oss@buserror.net
+References: <37b6b890-e537-7424-6b26-04565681f40a@c-s.fr>
+ <20200416052247.112887-1-wenhu.wang@vivo.com>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <99ae46c0-1160-6ad2-e426-6dcc9191ab41@c-s.fr>
+Date:   Thu, 16 Apr 2020 08:02:19 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
+MIME-Version: 1.0
+In-Reply-To: <20200416052247.112887-1-wenhu.wang@vivo.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-For each user space send window, register NX with fault window ID
-and port value so that NX paste CRBs in this fault FIFO when it
-sees fault on the request buffer.
 
-Signed-off-by: Sukadev Bhattiprolu <sukadev@linux.vnet.ibm.com>
-Signed-off-by: Haren Myneni <haren@linux.ibm.com>
----
- arch/powerpc/platforms/powernv/vas-window.c | 15 +++++++++++++--
- arch/powerpc/platforms/powernv/vas.h        | 15 +++++++++++++++
- 2 files changed, 28 insertions(+), 2 deletions(-)
+Le 16/04/2020 à 07:22, Wang Wenhu a écrit :
+> Yes, kzalloc() would clean the allocated areas and the init of remaining array
+> elements are redundant. I will remove the block in v3.
+> 
+>>>> +		dev_err(&pdev->dev, "error no valid uio-map configured\n");
+>>>> +		ret = -EINVAL;
+>>>> +		goto err_info_free_internel;
+>>>> +	}
+>>>> +
+>>>> +	info->version = "0.1.0";
+>>>
+>>> Could you define some DRIVER_VERSION in the top of the file next to
+>>> DRIVER_NAME instead of hard coding in the middle on a function ?
+>>
+>> That's what v1 had, and Greg KH said to remove it.  I'm guessing that he
+>> thought it was the common-but-pointless practice of having the driver print a
+>> version number that never gets updated, rather than something the UIO API
+>> (unfortunately, compared to a feature query interface) expects.  That said,
+>> I'm not sure what the value is of making it a macro since it should only be
+>> used once, that use is self documenting, it isn't tunable, etc.  Though if
+>> this isn't a macro, UIO_NAME also shouldn't be (and if it is made a macro
+>> again, it should be UIO_VERSION, not DRIVER_VERSION).
+>>
+>> Does this really need a three-part version scheme?  What's wrong with a
+>> version of "1", to be changed to "2" in the hopefully-unlikely event that the
+>> userspace API changes?  Assuming UIO is used for this at all, which doesn't
+>> seem like a great fit to me.
+>>
+>> -Scott
+>>
+> 
+> As Scott mentioned, the version define as necessity by uio core but actually
+> useless for us here(and for many other type of devices I guess). So maybe the better
+> way is to set it optionally, but this belong first to uio core.
+> 
+> For the cache-sram uio driver, I will define an UIO_VERSION micro as a compromise
+> fit all wonders, no confusing as Greg first mentioned.
 
-diff --git a/arch/powerpc/platforms/powernv/vas-window.c b/arch/powerpc/platforms/powernv/vas-window.c
-index 1783fa9..dc46bf6 100644
---- a/arch/powerpc/platforms/powernv/vas-window.c
-+++ b/arch/powerpc/platforms/powernv/vas-window.c
-@@ -373,7 +373,7 @@ int init_winctx_regs(struct vas_window *window, struct vas_winctx *winctx)
- 	init_xlate_regs(window, winctx->user_win);
- 
- 	val = 0ULL;
--	val = SET_FIELD(VAS_FAULT_TX_WIN, val, 0);
-+	val = SET_FIELD(VAS_FAULT_TX_WIN, val, winctx->fault_win_id);
- 	write_hvwc_reg(window, VREG(FAULT_TX_WIN), val);
- 
- 	/* In PowerNV, interrupts go to HV. */
-@@ -748,6 +748,8 @@ static void init_winctx_for_rxwin(struct vas_window *rxwin,
- 
- 	winctx->min_scope = VAS_SCOPE_LOCAL;
- 	winctx->max_scope = VAS_SCOPE_VECTORED_GROUP;
-+	if (rxwin->vinst->virq)
-+		winctx->irq_port = rxwin->vinst->irq_port;
- }
- 
- static bool rx_win_args_valid(enum vas_cop_type cop,
-@@ -944,13 +946,22 @@ static void init_winctx_for_txwin(struct vas_window *txwin,
- 	winctx->lpid = txattr->lpid;
- 	winctx->pidr = txattr->pidr;
- 	winctx->rx_win_id = txwin->rxwin->winid;
-+	/*
-+	 * IRQ and fault window setup is successful. Set fault window
-+	 * for the send window so that ready to handle faults.
-+	 */
-+	if (txwin->vinst->virq)
-+		winctx->fault_win_id = txwin->vinst->fault_win->winid;
- 
- 	winctx->dma_type = VAS_DMA_TYPE_INJECT;
- 	winctx->tc_mode = txattr->tc_mode;
- 	winctx->min_scope = VAS_SCOPE_LOCAL;
- 	winctx->max_scope = VAS_SCOPE_VECTORED_GROUP;
-+	if (txwin->vinst->virq)
-+		winctx->irq_port = txwin->vinst->irq_port;
- 
--	winctx->pswid = 0;
-+	winctx->pswid = txattr->pswid ? txattr->pswid :
-+			encode_pswid(txwin->vinst->vas_id, txwin->winid);
- }
- 
- static bool tx_win_args_valid(enum vas_cop_type cop,
-diff --git a/arch/powerpc/platforms/powernv/vas.h b/arch/powerpc/platforms/powernv/vas.h
-index 9c8e3f5..88d084d 100644
---- a/arch/powerpc/platforms/powernv/vas.h
-+++ b/arch/powerpc/platforms/powernv/vas.h
-@@ -467,6 +467,21 @@ static inline u64 read_hvwc_reg(struct vas_window *win,
- 	return in_be64(win->hvwc_map+reg);
- }
- 
-+/*
-+ * Encode/decode the Partition Send Window ID (PSWID) for a window in
-+ * a way that we can uniquely identify any window in the system. i.e.
-+ * we should be able to locate the 'struct vas_window' given the PSWID.
-+ *
-+ *	Bits	Usage
-+ *	0:7	VAS id (8 bits)
-+ *	8:15	Unused, 0 (3 bits)
-+ *	16:31	Window id (16 bits)
-+ */
-+static inline u32 encode_pswid(int vasid, int winid)
-+{
-+	return ((u32)winid | (vasid << (31 - 7)));
-+}
-+
- static inline void decode_pswid(u32 pswid, int *vasid, int *winid)
- {
- 	if (vasid)
--- 
-1.8.3.1
+Yes I like it.
 
+> 
+>>> +static const struct of_device_id uio_mpc85xx_l2ctlr_of_match[] = {
+>>> +	{	.compatible = "uio,fsl,p2020-l2-cache-controller",	},
+>>> +	{	.compatible = "uio,fsl,p2010-l2-cache-controller",	},
+>>> +	{	.compatible = "uio,fsl,p1020-l2-cache-controller",	},
+>>> +	{	.compatible = "uio,fsl,p1011-l2-cache-controller",	},
+>>> +	{	.compatible = "uio,fsl,p1013-l2-cache-controller",	},
+>>> +	{	.compatible = "uio,fsl,p1022-l2-cache-controller",	},
+>>> +	{	.compatible = "uio,fsl,mpc8548-l2-cache-controller",	},
+>>> +	{	.compatible = "uio,fsl,mpc8544-l2-cache-controller",	},
+>>> +	{	.compatible = "uio,fsl,mpc8572-l2-cache-controller",	},
+>>> +	{	.compatible = "uio,fsl,mpc8536-l2-cache-controller",	},
+>>> +	{	.compatible = "uio,fsl,p1021-l2-cache-controller",	},
+>>> +	{	.compatible = "uio,fsl,p1012-l2-cache-controller",	},
+>>> +	{	.compatible = "uio,fsl,p1025-l2-cache-controller",	},
+>>> +	{	.compatible = "uio,fsl,p1016-l2-cache-controller",	},
+>>> +	{	.compatible = "uio,fsl,p1024-l2-cache-controller",	},
+>>> +	{	.compatible = "uio,fsl,p1015-l2-cache-controller",	},
+>>> +	{	.compatible = "uio,fsl,p1010-l2-cache-controller",	},
+>>> +	{	.compatible = "uio,fsl,bsc9131-l2-cache-controller",	},
+>>> +	{},
+>>> +};
+>>
+>> NACK
+>>
+>> The device tree describes the hardware, not what driver you want to bind the
+>> hardware to, or how you want to allocate the resources.  And even if defining
+>> nodes for sram allocation were the right way to go, why do you have a separate
+>> compatible for each chip when you're just describing software configuration?
+>>
+>> Instead, have module parameters that take the sizes and alignments you'd like
+>> to allocate and expose to userspace.  Better still would be some sort of
+>> dynamic allocation (e.g. open a fd, ioctl to set the requested size/alignment,
+>> if it succeeds you can mmap it, and when the fd is closed the region is
+>> freed).
+>>
+>> -Scott
+>>
+> 
+> Can not agree more. But what if I want to define more than one cache-sram uio devices?
+> How about use the device tree for pseudo uio cache-sram driver?
+> 
+> static const struct of_device_id uio_mpc85xx_l2ctlr_of_match[] = {
+> 	{	.compatible = "uio,cache-sram",	},
+> 	{},
+> };
+> 
 
+You can still give it a name in line with your driver, ie: 
+"uio,mpc85xx-cache-sram"
 
+After, it you have different behaviours depending on the compatible, 
+then you have to add a .data field which will tell the driver which 
+behaviour to implement.
+
+Christophe
