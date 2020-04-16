@@ -7,46 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C14EBC2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:21:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9ECDC2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:21:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 993222076D
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:21:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B709B21734
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:21:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587046868;
-	bh=QacHWWHP2ypjKPjprKD6bhOij6cFw/F0WEMxr8v+1t4=;
+	s=default; t=1587046876;
+	bh=P0Kbr+jaiAUTu7vRnV1VEh+m2Ui/C/b38dc6jJjmH4w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CSwDZU34NGkuT31Ezko7MFB96Mbv8W2ABZ4qaUzmMShQTdNdMHriZsl9vfLICu9LA
-	 ww3sK4Ndg5PgIXkg/hAJW5ebCHPVz6ghfOyXFVlXj7NB1De+27i/OuATsmdBxCIZH2
-	 pw477/aN45l1kNRicMkK6u1WHGkGt8PJ9w64BNBw=
+	b=m78neFf5MOA3LKKiRsuWsE+66G+wpPhOeeCXjf3BnBWfru5N08GuJ6Z1Ax0lmELiN
+	 mALCzLF+bBZY+qpk/00LmjtWElCecHGhmJxwFC7GvlCmi40/uzcNkPJlioGBMlOvfH
+	 jpY1ywudUmTDJ+M3kn4hOLkdHi0SEaxIokB9rE9A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389852AbgDPOVG (ORCPT
+        id S2390208AbgDPOVN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:21:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41594 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 10:21:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41800 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2409086AbgDPNzB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:55:01 -0400
+        id S2392466AbgDPNzP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:55:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EEA4E20732;
-        Thu, 16 Apr 2020 13:54:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B739C2078B;
+        Thu, 16 Apr 2020 13:55:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587045300;
-        bh=QacHWWHP2ypjKPjprKD6bhOij6cFw/F0WEMxr8v+1t4=;
+        s=default; t=1587045315;
+        bh=P0Kbr+jaiAUTu7vRnV1VEh+m2Ui/C/b38dc6jJjmH4w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zWg5XFU2AJiDxqFRnRUJTN4o4cIAs9Tn/nAec8WwqWpB+N/y9ma7AaJhidT1spUus
-         KWSdGqgSDMkOH6Mxnj8sYzEDhOIYK/1kjvJ5uAn88eaEa+8KlWgmtG6dA+I/FqoqUr
-         jRfQOWyX8DNVhQQPDXMDszWjgalc0yooyAJarXYk=
+        b=S664S1ozUITbNRtd5ozUTnQz5gAp+fluvoYWADP+A4ob46pkPjcxwvcyQYCmo7Y5m
+         xBNbzEafFoM7hTFx8E+Y64bwMwwYF6Ozk6YbMtI81gOhonACKQqA9n0Da6JRPZwSqX
+         X4v9eABJRn4LUxs4GC1Jpvlx+jgmpbNlK7v7S2kg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kailang Yang <kailang@realtek.com>,
-        Hui Wang <hui.wang@canonical.com>, Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.6 078/254] ALSA: hda/realtek - a fake key event is triggered by running shutup
-Date:   Thu, 16 Apr 2020 15:22:47 +0200
-Message-Id: <20200416131335.630555331@linuxfoundation.org>
+        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 5.6 083/254] ALSA: hda/realtek - Add quirk for MSI GL63
+Date:   Thu, 16 Apr 2020 15:22:52 +0200
+Message-Id: <20200416131336.290417770@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.804095985@linuxfoundation.org>
 References: <20200416131325.804095985@linuxfoundation.org>
@@ -59,248 +58,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hui Wang <hui.wang@canonical.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-commit 476c02e0b4fd9071d158f6a1a1dfea1d36ee0ffd upstream.
+commit 1d3aa4a5516d2e4933fe3cca11d3349ef63bc547 upstream.
 
-On the Lenovo X1C7 machines, after we plug the headset, the rt_resume()
-and rt_suspend() of the codec driver will be called periodically, the
-driver can't stay in the rt_suspend state even users doen't use the
-sound card.
+MSI GL63 laptop requires the similar quirk like other MSI models,
+ALC1220_FIXUP_CLEVO_P950.  The board BIOS doesn't provide a PCI SSID
+for the device, hence we need to take the codec SSID (1462:1275)
+instead.
 
-Through debugging, I found  when running rt_suspend(), it will call
-alc225_shutup(), in this function, it will change 3k pull down control
-by alc_update_coef_idx(codec, 0x4a, 0, 3 << 10), this will trigger a
-fake key event and that event will resume the codec, when codec
-suspend agin, it will trigger the fake key event one more time, this
-process will repeat.
-
-If disable the key event before changing the pull down control, it
-will not trigger fake key event. It also needs to restore the pull
-down control and re-enable the key event, otherwise the system can't
-get key event when codec is in rt_suspend state.
-
-Also move some functions ahead of alc225_shutup(), this can save the
-function declaration.
-
-Fixes: 76f7dec08fd6 (ALSA: hda/realtek - Add Headset Button supported for ThinkPad X1)
-Cc: Kailang Yang <kailang@realtek.com>
+BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=207157
 Cc: <stable@vger.kernel.org>
-Signed-off-by: Hui Wang <hui.wang@canonical.com>
-Link: https://lore.kernel.org/r/20200329082018.20486-1-hui.wang@canonical.com
+Link: https://lore.kernel.org/r/20200408135645.21896-1-tiwai@suse.de
 Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/pci/hda/patch_realtek.c |  170 ++++++++++++++++++++++++++----------------
- 1 file changed, 107 insertions(+), 63 deletions(-)
+ sound/pci/hda/patch_realtek.c |    1 +
+ 1 file changed, 1 insertion(+)
 
 --- a/sound/pci/hda/patch_realtek.c
 +++ b/sound/pci/hda/patch_realtek.c
-@@ -107,6 +107,7 @@ struct alc_spec {
- 	unsigned int done_hp_init:1;
- 	unsigned int no_shutup_pins:1;
- 	unsigned int ultra_low_power:1;
-+	unsigned int has_hs_key:1;
- 
- 	/* for PLL fix */
- 	hda_nid_t pll_nid;
-@@ -2982,6 +2983,107 @@ static int alc269_parse_auto_config(stru
- 	return alc_parse_auto_config(codec, alc269_ignore, ssids);
- }
- 
-+static const struct hda_jack_keymap alc_headset_btn_keymap[] = {
-+	{ SND_JACK_BTN_0, KEY_PLAYPAUSE },
-+	{ SND_JACK_BTN_1, KEY_VOICECOMMAND },
-+	{ SND_JACK_BTN_2, KEY_VOLUMEUP },
-+	{ SND_JACK_BTN_3, KEY_VOLUMEDOWN },
-+	{}
-+};
-+
-+static void alc_headset_btn_callback(struct hda_codec *codec,
-+				     struct hda_jack_callback *jack)
-+{
-+	int report = 0;
-+
-+	if (jack->unsol_res & (7 << 13))
-+		report |= SND_JACK_BTN_0;
-+
-+	if (jack->unsol_res  & (1 << 16 | 3 << 8))
-+		report |= SND_JACK_BTN_1;
-+
-+	/* Volume up key */
-+	if (jack->unsol_res & (7 << 23))
-+		report |= SND_JACK_BTN_2;
-+
-+	/* Volume down key */
-+	if (jack->unsol_res & (7 << 10))
-+		report |= SND_JACK_BTN_3;
-+
-+	jack->jack->button_state = report;
-+}
-+
-+static void alc_disable_headset_jack_key(struct hda_codec *codec)
-+{
-+	struct alc_spec *spec = codec->spec;
-+
-+	if (!spec->has_hs_key)
-+		return;
-+
-+	switch (codec->core.vendor_id) {
-+	case 0x10ec0215:
-+	case 0x10ec0225:
-+	case 0x10ec0285:
-+	case 0x10ec0295:
-+	case 0x10ec0289:
-+	case 0x10ec0299:
-+		alc_write_coef_idx(codec, 0x48, 0x0);
-+		alc_update_coef_idx(codec, 0x49, 0x0045, 0x0);
-+		alc_update_coef_idx(codec, 0x44, 0x0045 << 8, 0x0);
-+		break;
-+	case 0x10ec0236:
-+	case 0x10ec0256:
-+		alc_write_coef_idx(codec, 0x48, 0x0);
-+		alc_update_coef_idx(codec, 0x49, 0x0045, 0x0);
-+		break;
-+	}
-+}
-+
-+static void alc_enable_headset_jack_key(struct hda_codec *codec)
-+{
-+	struct alc_spec *spec = codec->spec;
-+
-+	if (!spec->has_hs_key)
-+		return;
-+
-+	switch (codec->core.vendor_id) {
-+	case 0x10ec0215:
-+	case 0x10ec0225:
-+	case 0x10ec0285:
-+	case 0x10ec0295:
-+	case 0x10ec0289:
-+	case 0x10ec0299:
-+		alc_write_coef_idx(codec, 0x48, 0xd011);
-+		alc_update_coef_idx(codec, 0x49, 0x007f, 0x0045);
-+		alc_update_coef_idx(codec, 0x44, 0x007f << 8, 0x0045 << 8);
-+		break;
-+	case 0x10ec0236:
-+	case 0x10ec0256:
-+		alc_write_coef_idx(codec, 0x48, 0xd011);
-+		alc_update_coef_idx(codec, 0x49, 0x007f, 0x0045);
-+		break;
-+	}
-+}
-+
-+static void alc_fixup_headset_jack(struct hda_codec *codec,
-+				    const struct hda_fixup *fix, int action)
-+{
-+	struct alc_spec *spec = codec->spec;
-+
-+	switch (action) {
-+	case HDA_FIXUP_ACT_PRE_PROBE:
-+		spec->has_hs_key = 1;
-+		snd_hda_jack_detect_enable_callback(codec, 0x55,
-+						    alc_headset_btn_callback);
-+		snd_hda_jack_add_kctl(codec, 0x55, "Headset Jack", false,
-+				      SND_JACK_HEADSET, alc_headset_btn_keymap);
-+		break;
-+	case HDA_FIXUP_ACT_INIT:
-+		alc_enable_headset_jack_key(codec);
-+		break;
-+	}
-+}
-+
- static void alc269vb_toggle_power_output(struct hda_codec *codec, int power_up)
- {
- 	alc_update_coef_idx(codec, 0x04, 1 << 11, power_up ? (1 << 11) : 0);
-@@ -3372,6 +3474,8 @@ static void alc225_shutup(struct hda_cod
- 
- 	if (!hp_pin)
- 		hp_pin = 0x21;
-+
-+	alc_disable_headset_jack_key(codec);
- 	/* 3k pull low control for Headset jack. */
- 	alc_update_coef_idx(codec, 0x4a, 0, 3 << 10);
- 
-@@ -3411,6 +3515,9 @@ static void alc225_shutup(struct hda_cod
- 		alc_update_coef_idx(codec, 0x4a, 3<<4, 2<<4);
- 		msleep(30);
- 	}
-+
-+	alc_update_coef_idx(codec, 0x4a, 3 << 10, 0);
-+	alc_enable_headset_jack_key(codec);
- }
- 
- static void alc_default_init(struct hda_codec *codec)
-@@ -5668,69 +5775,6 @@ static void alc285_fixup_invalidate_dacs
- 	snd_hda_override_wcaps(codec, 0x03, 0);
- }
- 
--static const struct hda_jack_keymap alc_headset_btn_keymap[] = {
--	{ SND_JACK_BTN_0, KEY_PLAYPAUSE },
--	{ SND_JACK_BTN_1, KEY_VOICECOMMAND },
--	{ SND_JACK_BTN_2, KEY_VOLUMEUP },
--	{ SND_JACK_BTN_3, KEY_VOLUMEDOWN },
--	{}
--};
--
--static void alc_headset_btn_callback(struct hda_codec *codec,
--				     struct hda_jack_callback *jack)
--{
--	int report = 0;
--
--	if (jack->unsol_res & (7 << 13))
--		report |= SND_JACK_BTN_0;
--
--	if (jack->unsol_res  & (1 << 16 | 3 << 8))
--		report |= SND_JACK_BTN_1;
--
--	/* Volume up key */
--	if (jack->unsol_res & (7 << 23))
--		report |= SND_JACK_BTN_2;
--
--	/* Volume down key */
--	if (jack->unsol_res & (7 << 10))
--		report |= SND_JACK_BTN_3;
--
--	jack->jack->button_state = report;
--}
--
--static void alc_fixup_headset_jack(struct hda_codec *codec,
--				    const struct hda_fixup *fix, int action)
--{
--
--	switch (action) {
--	case HDA_FIXUP_ACT_PRE_PROBE:
--		snd_hda_jack_detect_enable_callback(codec, 0x55,
--						    alc_headset_btn_callback);
--		snd_hda_jack_add_kctl(codec, 0x55, "Headset Jack", false,
--				      SND_JACK_HEADSET, alc_headset_btn_keymap);
--		break;
--	case HDA_FIXUP_ACT_INIT:
--		switch (codec->core.vendor_id) {
--		case 0x10ec0215:
--		case 0x10ec0225:
--		case 0x10ec0285:
--		case 0x10ec0295:
--		case 0x10ec0289:
--		case 0x10ec0299:
--			alc_write_coef_idx(codec, 0x48, 0xd011);
--			alc_update_coef_idx(codec, 0x49, 0x007f, 0x0045);
--			alc_update_coef_idx(codec, 0x44, 0x007f << 8, 0x0045 << 8);
--			break;
--		case 0x10ec0236:
--		case 0x10ec0256:
--			alc_write_coef_idx(codec, 0x48, 0xd011);
--			alc_update_coef_idx(codec, 0x49, 0x007f, 0x0045);
--			break;
--		}
--		break;
--	}
--}
--
- static void alc295_fixup_chromebook(struct hda_codec *codec,
- 				    const struct hda_fixup *fix, int action)
- {
+@@ -2447,6 +2447,7 @@ static const struct snd_pci_quirk alc882
+ 	SND_PCI_QUIRK(0x1458, 0xa0b8, "Gigabyte AZ370-Gaming", ALC1220_FIXUP_GB_DUAL_CODECS),
+ 	SND_PCI_QUIRK(0x1458, 0xa0cd, "Gigabyte X570 Aorus Master", ALC1220_FIXUP_CLEVO_P950),
+ 	SND_PCI_QUIRK(0x1462, 0x1228, "MSI-GP63", ALC1220_FIXUP_CLEVO_P950),
++	SND_PCI_QUIRK(0x1462, 0x1275, "MSI-GL63", ALC1220_FIXUP_CLEVO_P950),
+ 	SND_PCI_QUIRK(0x1462, 0x1276, "MSI-GL73", ALC1220_FIXUP_CLEVO_P950),
+ 	SND_PCI_QUIRK(0x1462, 0x1293, "MSI-GP65", ALC1220_FIXUP_CLEVO_P950),
+ 	SND_PCI_QUIRK(0x1462, 0x7350, "MSI-7350", ALC889_FIXUP_CD),
 
 
