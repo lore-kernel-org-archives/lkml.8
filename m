@@ -2,129 +2,144 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3C31C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:43:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66A31C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:44:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C1734207FC
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:43:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Kj33VeBH"
+	by mail.kernel.org (Postfix) with ESMTP id 448CA21D82
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:44:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587048245;
+	bh=Uw/LefC3XCr1iMFhfr8Ok7AVKDELhZBCxDGahLsTOoY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=rOf8nFxbBoz2ZOI/p1xSq0ubXrVCnOIb+3rm9I6gFYkYsk8aeSJltW5M3hVNSYVgO
+	 WEaM2sdhUQzz7yBs76kOGrVcQXgtbtjGlvBkHtlygP256wEoMKJld5p4reDDBzR3Qe
+	 bcRqUoVqanq64CWCNSiotGVeCwveKeUQ0EkHmUKo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394551AbgDPOn4 (ORCPT
+        id S2394564AbgDPOoC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:43:56 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:29637 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730302AbgDPOnu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 10:43:50 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587048229;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=MWF7qeFYGcwjfe4u/XIKlxtmBa+zuBoTmVw0MA2bPLk=;
-        b=Kj33VeBHwI8PgzJfC4J+BOyht29ICVvsdy/GgOtSkS6uB+ACWBSIB3GpP4kXF7uVc0sljv
-        eMK9JROD7C0+ZVdZFgXimAAKwDdEWjzpo2xYcNjxkvA9QrZR8zRtaAB6eIUVuGRE+Nprxn
-        O8MQCfNS+y8F2DC7378ONAzmBSmTYWc=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-94-wJELbwD0OO2EOCILcZJ6Yg-1; Thu, 16 Apr 2020 10:43:45 -0400
-X-MC-Unique: wJELbwD0OO2EOCILcZJ6Yg-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Thu, 16 Apr 2020 10:44:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47366 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2392596AbgDPOAS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 10:00:18 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2AD988017FD;
-        Thu, 16 Apr 2020 14:43:44 +0000 (UTC)
-Received: from oldenburg2.str.redhat.com (ovpn-113-198.ams2.redhat.com [10.36.113.198])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id A07A95D9E2;
-        Thu, 16 Apr 2020 14:43:42 +0000 (UTC)
-From:   Florian Weimer <fweimer@redhat.com>
-To:     Miklos Szeredi <mszeredi@redhat.com>
-Cc:     Al Viro <viro@ZenIV.linux.org.uk>, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
-        Eric Sandeen <sandeen@sandeen.net>
-Subject: Re: [PATCH] vfs: add faccessat2 syscall
-References: <20200416143532.11743-1-mszeredi@redhat.com>
-Date:   Thu, 16 Apr 2020 16:43:40 +0200
-In-Reply-To: <20200416143532.11743-1-mszeredi@redhat.com> (Miklos Szeredi's
-        message of "Thu, 16 Apr 2020 16:35:32 +0200")
-Message-ID: <87a73bcwyr.fsf@oldenburg2.str.redhat.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.3 (gnu/linux)
+        by mail.kernel.org (Postfix) with ESMTPSA id BED5720732;
+        Thu, 16 Apr 2020 14:00:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587045618;
+        bh=Uw/LefC3XCr1iMFhfr8Ok7AVKDELhZBCxDGahLsTOoY=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Qj2HNngwVJAffWY24z6qtfz7vxGznR2vqjjl6wnrsoBd/9/oYDjHwjNmhNzLFj5MV
+         BRJgsBYK3pKQ/Z4hiTFANuf5tH5rLqwOtygRjPzXvjYrLN7tk+FQVKOxtfzFFEI4fp
+         RTO9TeIHdgg9fknARs9YIjqo0yJNcDSscl8MFlRw=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Alex Deucher <alexander.deucher@amd.com>
+Subject: [PATCH 5.6 208/254] drm/prime: fix extracting of the DMA addresses from a scatterlist
+Date:   Thu, 16 Apr 2020 15:24:57 +0200
+Message-Id: <20200416131352.071141403@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.1
+In-Reply-To: <20200416131325.804095985@linuxfoundation.org>
+References: <20200416131325.804095985@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Miklos Szeredi:
+From: Marek Szyprowski <m.szyprowski@samsung.com>
 
-> POSIX defines faccessat() as having a fourth "flags" argument, while the
-> linux syscall doesn't have it.  Glibc tries to emulate AT_EACCESS and
-> AT_SYMLINK_NOFOLLOW, but AT_EACCESS emulation is broken.
->
-> Add a new faccessat(2) syscall with the added flags argument and implement
-> both flags.
->
-> The value of AT_EACCESS is defined in glibc headers to be the same as
-> AT_REMOVEDIR.  Use this value for the kernel interface as well, together
-> with the explanatory comment.
+commit c0f83d164fb8f3a2b7bc379a6c1e27d1123a9eab upstream.
 
-Thanks a lot for this!
+Scatterlist elements contains both pages and DMA addresses, but one
+should not assume 1:1 relation between them. The sg->length is the size
+of the physical memory chunk described by the sg->page, while
+sg_dma_len(sg) is the size of the DMA (IO virtual) chunk described by
+the sg_dma_address(sg).
 
-> +long do_faccessat(int dfd, const char __user *filename, int mode, int flags)
-> +{
-> +	const struct cred *old_cred = NULL;
-> +	struct path path;
-> +	struct inode *inode;
-> +	int res;
-> +	unsigned int lookup_flags = LOOKUP_FOLLOW;
-> +
-> +	if (mode & ~S_IRWXO)	/* where's F_OK, X_OK, W_OK, R_OK? */
-> +		return -EINVAL;
-> +
-> +	if (flags & ~(AT_EACCESS | AT_SYMLINK_NOFOLLOW))
-> +		return -EINVAL;
+The proper way of extracting both: pages and DMA addresses of the whole
+buffer described by a scatterlist it to iterate independently over the
+sg->pages/sg->length and sg_dma_address(sg)/sg_dma_len(sg) entries.
 
-Should this accept AT_EMPTY_PATH as well?
+Fixes: 42e67b479eab ("drm/prime: use dma length macro when mapping sg")
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Reviewed-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200327162126.29705-1-m.szyprowski@samsung.com
+Cc: stable@vger.kernel.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-(I can't comment on the rest of the logic of the patch.)
+---
+ drivers/gpu/drm/drm_prime.c |   37 +++++++++++++++++++++++++------------
+ 1 file changed, 25 insertions(+), 12 deletions(-)
 
-> diff --git a/include/uapi/linux/fcntl.h b/include/uapi/linux/fcntl.h
-> index ca88b7bce553..2f86b2ad6d7e 100644
-> --- a/include/uapi/linux/fcntl.h
-> +++ b/include/uapi/linux/fcntl.h
-> @@ -84,10 +84,20 @@
->  #define DN_ATTRIB	0x00000020	/* File changed attibutes */
->  #define DN_MULTISHOT	0x80000000	/* Don't remove notifier */
->  
-> +/*
-> + * The constants AT_REMOVEDIR and AT_EACCESS have the same value.  AT_EACCESS is
-> + * meaningful only to faccessat, while AT_REMOVEDIR is meaningful only to
-> + * unlinkat.  The two functions do completely different things and therefore,
-> + * the flags can be allowed to overlap.  For example, passing AT_REMOVEDIR to
-> + * faccessat would be undefined behavior and thus treating it equivalent to
-> + * AT_EACCESS is valid undefined behavior.
-> + */
->  #define AT_FDCWD		-100    /* Special value used to indicate
->                                             openat should use the current
->                                             working directory. */
->  #define AT_SYMLINK_NOFOLLOW	0x100   /* Do not follow symbolic links.  */
-> +#define AT_EACCESS		0x200	/* Test access permitted for
-> +                                           effective IDs, not real IDs.  */
->  #define AT_REMOVEDIR		0x200   /* Remove directory instead of
->                                             unlinking file.  */
->  #define AT_SYMLINK_FOLLOW	0x400   /* Follow symbolic links.  */
+--- a/drivers/gpu/drm/drm_prime.c
++++ b/drivers/gpu/drm/drm_prime.c
+@@ -962,27 +962,40 @@ int drm_prime_sg_to_page_addr_arrays(str
+ 	unsigned count;
+ 	struct scatterlist *sg;
+ 	struct page *page;
+-	u32 len, index;
++	u32 page_len, page_index;
+ 	dma_addr_t addr;
++	u32 dma_len, dma_index;
+ 
+-	index = 0;
++	/*
++	 * Scatterlist elements contains both pages and DMA addresses, but
++	 * one shoud not assume 1:1 relation between them. The sg->length is
++	 * the size of the physical memory chunk described by the sg->page,
++	 * while sg_dma_len(sg) is the size of the DMA (IO virtual) chunk
++	 * described by the sg_dma_address(sg).
++	 */
++	page_index = 0;
++	dma_index = 0;
+ 	for_each_sg(sgt->sgl, sg, sgt->nents, count) {
+-		len = sg_dma_len(sg);
++		page_len = sg->length;
+ 		page = sg_page(sg);
++		dma_len = sg_dma_len(sg);
+ 		addr = sg_dma_address(sg);
+ 
+-		while (len > 0) {
+-			if (WARN_ON(index >= max_entries))
++		while (pages && page_len > 0) {
++			if (WARN_ON(page_index >= max_entries))
+ 				return -1;
+-			if (pages)
+-				pages[index] = page;
+-			if (addrs)
+-				addrs[index] = addr;
+-
++			pages[page_index] = page;
+ 			page++;
++			page_len -= PAGE_SIZE;
++			page_index++;
++		}
++		while (addrs && dma_len > 0) {
++			if (WARN_ON(dma_index >= max_entries))
++				return -1;
++			addrs[dma_index] = addr;
+ 			addr += PAGE_SIZE;
+-			len -= PAGE_SIZE;
+-			index++;
++			dma_len -= PAGE_SIZE;
++			dma_index++;
+ 		}
+ 	}
+ 	return 0;
 
-I can confirm that this is what glibc does, ofr better or worse.
-
-Thanks,
-Florian
 
