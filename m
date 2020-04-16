@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67622C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:59:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D88B2C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:59:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4117F21744
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:59:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B50BC217D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:59:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587045545;
-	bh=dlEss9BDF5MWdoHoy1JlqYZL4Ppiy0B4C1vCgajjelQ=;
+	s=default; t=1587045554;
+	bh=IFWJtKO8b6hb9xBju8DtQHaiyO8+G0f/3xvR3wpJ/4I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=a8K2izZuCuSWILqbADuMT0i0h4RzC553G/4y+i7Ibt45l3SLZEtL4oqY3jGAec4Cz
-	 9RWOvDKi+a0r3nTc+1OlS9qzNykebcgxhNPepVCLc187+n53yNrAucwNnsFzqCPlty
-	 ICN7jCzThV6suI7CEKgMhw6mihz4VGou43qm0upQ=
+	b=IjNLatS5qLVwY4pPxUpUNuVGcd8UNmco8b3wykyyAPjpIrhlQScf7vaOWZB83u0Cd
+	 JrlmJA2GyAKO8CCwypXZuRorsrX+yTS3TewWLFzwFzNJ4opjctUrzo0XLq5NN7+j2J
+	 LNiXbvGP7oFm4+PT4LcZjSZma2MmmgT5OPJZdICM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728450AbgDPN7D (ORCPT
+        id S2898821AbgDPN7M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 09:59:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52414 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 09:59:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52458 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2898023AbgDPNjz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:39:55 -0400
+        id S2898029AbgDPNj5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:39:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6C64220732;
-        Thu, 16 Apr 2020 13:39:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DA5DF218AC;
+        Thu, 16 Apr 2020 13:39:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044394;
-        bh=dlEss9BDF5MWdoHoy1JlqYZL4Ppiy0B4C1vCgajjelQ=;
+        s=default; t=1587044397;
+        bh=IFWJtKO8b6hb9xBju8DtQHaiyO8+G0f/3xvR3wpJ/4I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AsUY5EEO5RmCtgFxZhTTsXm4nQwG1A48oZmU/slWUzE0RD2pEu40tmxyiuLxAITHb
-         FyPH+ZAd11o3gRayqYDogzcUkdqVEBi33TdZRHc4ZrcOfvb1FRW5MSifsTNeilREpT
-         zLxrPxIeiaqCh95zLtVz/Vg3q+a3PdnXIQQ7nmMs=
+        b=cHYVQCth3xyMVRXxTodAtOKUhDqGFIqYC6ffgcvMUuBLPtlMHluRNvZE8gfw8Mq8w
+         2WlEiWKIQ2L7uWzeUqAHaTEjtnRtQ7mp8V9LvckcodINJjADwXDsB9/glf4+Ll/HS6
+         NWcS6pbf4sHP4YzVYQ9T2OL68jAsCiajSON1krHo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
-        Filipe Manana <fdmanana@suse.com>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 5.5 163/257] btrfs: fix missing file extent item for hole after ranged fsync
-Date:   Thu, 16 Apr 2020 15:23:34 +0200
-Message-Id: <20200416131346.917604883@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH 5.5 199/257] ARM: dts: exynos: Fix polarity of the LCD SPI bus on UniversalC210 board
+Date:   Thu, 16 Apr 2020 15:24:10 +0200
+Message-Id: <20200416131350.996178690@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.891903893@linuxfoundation.org>
 References: <20200416131325.891903893@linuxfoundation.org>
@@ -60,103 +61,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Filipe Manana <fdmanana@suse.com>
+From: Marek Szyprowski <m.szyprowski@samsung.com>
 
-commit 95418ed1d10774cd9a49af6f39e216c1256f1eeb upstream.
+commit 32a1671ff8e84f0dfff3a50d4b2091d25e91f5e2 upstream.
 
-When doing a fast fsync for a range that starts at an offset greater than
-zero, we can end up with a log that when replayed causes the respective
-inode miss a file extent item representing a hole if we are not using the
-NO_HOLES feature. This is because for fast fsyncs we don't log any extents
-that cover a range different from the one requested in the fsync.
+Recent changes in the SPI core and the SPI-GPIO driver revealed that the
+GPIO lines for the LD9040 LCD controller on the UniversalC210 board are
+defined incorrectly. Fix the polarity for those lines to match the old
+behavior and hardware requirements to fix LCD panel operation with
+recent kernels.
 
-Example scenario to trigger it:
-
-  $ mkfs.btrfs -O ^no-holes -f /dev/sdd
-  $ mount /dev/sdd /mnt
-
-  # Create a file with a single 256K and fsync it to clear to full sync
-  # bit in the inode - we want the msync below to trigger a fast fsync.
-  $ xfs_io -f -c "pwrite -S 0xab 0 256K" -c "fsync" /mnt/foo
-
-  # Force a transaction commit and wipe out the log tree.
-  $ sync
-
-  # Dirty 768K of data, increasing the file size to 1Mb, and flush only
-  # the range from 256K to 512K without updating the log tree
-  # (sync_file_range() does not trigger fsync, it only starts writeback
-  # and waits for it to finish).
-
-  $ xfs_io -c "pwrite -S 0xcd 256K 768K" /mnt/foo
-  $ xfs_io -c "sync_range -abw 256K 256K" /mnt/foo
-
-  # Now dirty the range from 768K to 1M again and sync that range.
-  $ xfs_io -c "mmap -w 768K 256K"        \
-           -c "mwrite -S 0xef 768K 256K" \
-           -c "msync -s 768K 256K"       \
-           -c "munmap"                   \
-           /mnt/foo
-
-  <power fail>
-
-  # Mount to replay the log.
-  $ mount /dev/sdd /mnt
-  $ umount /mnt
-
-  $ btrfs check /dev/sdd
-  Opening filesystem to check...
-  Checking filesystem on /dev/sdd
-  UUID: 482fb574-b288-478e-a190-a9c44a78fca6
-  [1/7] checking root items
-  [2/7] checking extents
-  [3/7] checking free space cache
-  [4/7] checking fs roots
-  root 5 inode 257 errors 100, file extent discount
-  Found file extent holes:
-       start: 262144, len: 524288
-  ERROR: errors found in fs roots
-  found 720896 bytes used, error(s) found
-  total csum bytes: 512
-  total tree bytes: 131072
-  total fs tree bytes: 32768
-  total extent tree bytes: 16384
-  btree space waste bytes: 123514
-  file data blocks allocated: 589824
-    referenced 589824
-
-Fix this issue by setting the range to full (0 to LLONG_MAX) when the
-NO_HOLES feature is not enabled. This results in extra work being done
-but it gives the guarantee we don't end up with missing holes after
-replaying the log.
-
-CC: stable@vger.kernel.org # 4.19+
-Reviewed-by: Josef Bacik <josef@toxicpanda.com>
-Signed-off-by: Filipe Manana <fdmanana@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Cc: <stable@vger.kernel.org> # 5.0.x
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Reviewed-by: Andrzej Hajda <a.hajda@samsung.com>
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/file.c |   10 ++++++++++
- 1 file changed, 10 insertions(+)
+ arch/arm/boot/dts/exynos4210-universal_c210.dts |    4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
---- a/fs/btrfs/file.c
-+++ b/fs/btrfs/file.c
-@@ -2072,6 +2072,16 @@ int btrfs_sync_file(struct file *file, l
- 	btrfs_init_log_ctx(&ctx, inode);
+--- a/arch/arm/boot/dts/exynos4210-universal_c210.dts
++++ b/arch/arm/boot/dts/exynos4210-universal_c210.dts
+@@ -115,7 +115,7 @@
+ 		gpio-sck = <&gpy3 1 GPIO_ACTIVE_HIGH>;
+ 		gpio-mosi = <&gpy3 3 GPIO_ACTIVE_HIGH>;
+ 		num-chipselects = <1>;
+-		cs-gpios = <&gpy4 3 GPIO_ACTIVE_HIGH>;
++		cs-gpios = <&gpy4 3 GPIO_ACTIVE_LOW>;
  
- 	/*
-+	 * Set the range to full if the NO_HOLES feature is not enabled.
-+	 * This is to avoid missing file extent items representing holes after
-+	 * replaying the log.
-+	 */
-+	if (!btrfs_fs_incompat(fs_info, NO_HOLES)) {
-+		start = 0;
-+		end = LLONG_MAX;
-+	}
-+
-+	/*
- 	 * We write the dirty pages in the range and wait until they complete
- 	 * out of the ->i_mutex. If so, we can flush the dirty pages by
- 	 * multi-task, and make the performance up.  See
+ 		lcd@0 {
+ 			compatible = "samsung,ld9040";
+@@ -124,8 +124,6 @@
+ 			vci-supply = <&ldo17_reg>;
+ 			reset-gpios = <&gpy4 5 GPIO_ACTIVE_HIGH>;
+ 			spi-max-frequency = <1200000>;
+-			spi-cpol;
+-			spi-cpha;
+ 			power-on-delay = <10>;
+ 			reset-delay = <10>;
+ 			panel-width-mm = <90>;
 
 
