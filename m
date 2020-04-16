@@ -2,187 +2,112 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19D38C2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 08:14:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE437C2BB85
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 08:16:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E43C4206E9
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 08:14:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="PIyhFm+D"
+	by mail.kernel.org (Postfix) with ESMTP id AFD2421556
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 08:16:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2441163AbgDPIO3 (ORCPT
+        id S2441260AbgDPIQI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 04:14:29 -0400
-Received: from mga11.intel.com ([192.55.52.93]:16972 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2440675AbgDPIEi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 04:04:38 -0400
-IronPort-SDR: DsJ9c7qzkhz0GzDDCAEq2SLI9iZkABT9z0roWxBWHyLvXioOwKxnc9XPOmou0sCBauNMifAfZz
- J94luCWFUzxQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2020 01:04:34 -0700
-IronPort-SDR: 7gACtVKVc35tm5+gxR4tEB1gwmU/z2u6DsyX/aqIm4L/2TbRpSoBiMplvM08YQf6LWsREBHAlp
- Y6z+yg+rqUkw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,390,1580803200"; 
-   d="scan'208";a="245915866"
-Received: from fmsmsx105.amr.corp.intel.com ([10.18.124.203])
-  by fmsmga008.fm.intel.com with ESMTP; 16 Apr 2020 01:04:34 -0700
-Received: from FMSMSX109.amr.corp.intel.com (10.18.116.9) by
- FMSMSX105.amr.corp.intel.com (10.18.124.203) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Thu, 16 Apr 2020 01:04:33 -0700
-Received: from FMSEDG002.ED.cps.intel.com (10.1.192.134) by
- fmsmsx109.amr.corp.intel.com (10.18.116.9) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Thu, 16 Apr 2020 01:04:32 -0700
-Received: from NAM02-SN1-obe.outbound.protection.outlook.com (104.47.36.55) by
- edgegateway.intel.com (192.55.55.69) with Microsoft SMTP Server (TLS) id
- 14.3.439.0; Thu, 16 Apr 2020 01:04:32 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=BIkf2vAsX3WqD90k1HY6TQAZqnsIgV0iMLs482HFNNfSI+Jam/PWhh04Na+rQ6E+j0Cb9X0V7W+s7trRyLyIB89XPr7GOnk+1bnwGyu1LpjR3D0X5JocD5Kg+0op4SzZ3LIyY6L22pl6IlrPcjq87F+uJP8QhwnGl+lX7JkqLC7v7GiU6A0Hyuq04t2jLKMdXTaGMyGqUOc1pu7HvjDZuW2eycT6zxRZHiA39laqY9zvgXP0t2bfwIJuJiOE2USn4On99yb5wmiMuAUx2KtOxDubvv3/teeLC1M9Wi7FGiPuf+CoFdV4jKdwtY+VNnTJuaY+cqzX1U1KAIq203a2sg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Pp9yhZK6IsPpd9nobkg05a1vSXNOU2GETu5iLhDnNlY=;
- b=QQXxxKFpPHaHkcJHnWQUKpyWaFDccVJ+Jlk4kBDNYVWZ+ypjbzTNHFghuktLyyDfmceIUQrCRMB92HcAz9Lvih6fv6sPnvpntYmGyJzDtsKKgp3fPb6D5Cp85o7f+i1gO81IzHvpn0spx910fHaHBcLeG1zvKKaBAuis0AjAQgx/rEgLoIJlygq0fC9a72xcUCHKx16RXngiN8yDyqnbFN4k1KQQJbiq+LAX/QjG8iSP2UZ3WQEfbIau6eurIgo9l4KaOBehehUNQsGstCAXEUju4VPZ1Na5SLW13sZ7AJiPjSeGvm1LK0FHTR4uSaIMB1a2miSST5Vnv8IqSAh5AQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
- s=selector2-intel-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Pp9yhZK6IsPpd9nobkg05a1vSXNOU2GETu5iLhDnNlY=;
- b=PIyhFm+DixjyqVYh149OIOkxdCflibRchzqHf96JGIugX9myaSlvtOBNAD4AMCR2AJzKW+HpWewZpQ4MaIKcyaMYFuOaGWC8bEI+lbFoGyrWpPO2ybpcu6+9/p16awp8bCfq3rZatzDIuin5NYl4wHOv67YrD6pqZWCZCeQP1DU=
-Received: from DM6PR11MB3819.namprd11.prod.outlook.com (2603:10b6:5:13f::31)
- by DM6PR11MB2809.namprd11.prod.outlook.com (2603:10b6:5:c5::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.24; Thu, 16 Apr
- 2020 08:04:30 +0000
-Received: from DM6PR11MB3819.namprd11.prod.outlook.com
- ([fe80::98a:bb06:5551:e5a3]) by DM6PR11MB3819.namprd11.prod.outlook.com
- ([fe80::98a:bb06:5551:e5a3%3]) with mapi id 15.20.2900.028; Thu, 16 Apr 2020
- 08:04:30 +0000
-From:   "Wu, Hao" <hao.wu@intel.com>
-To:     "Xu, Yilun" <yilun.xu@intel.com>,
-        "mdf@kernel.org" <mdf@kernel.org>,
-        "linux-fpga@vger.kernel.org" <linux-fpga@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     "trix@redhat.com" <trix@redhat.com>,
-        "bhu@redhat.com" <bhu@redhat.com>, "Xu, Yilun" <yilun.xu@intel.com>
-Subject: RE: [PATCH 1/2] fpga: dfl: pci: reduce the scope of variable 'ret'
-Thread-Topic: [PATCH 1/2] fpga: dfl: pci: reduce the scope of variable 'ret'
-Thread-Index: AQHWE5193+0/nQdMD0KUurSvMI7dQ6h7Yzcg
-Date:   Thu, 16 Apr 2020 08:04:30 +0000
-Message-ID: <DM6PR11MB3819619E9B2C7326218247E385D80@DM6PR11MB3819.namprd11.prod.outlook.com>
-References: <1587006712-22696-1-git-send-email-yilun.xu@intel.com>
- <1587006712-22696-2-git-send-email-yilun.xu@intel.com>
-In-Reply-To: <1587006712-22696-2-git-send-email-yilun.xu@intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-reaction: no-action
-dlp-version: 11.2.0.6
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=hao.wu@intel.com; 
-x-originating-ip: [192.102.204.36]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 6a3c550a-d946-4eb8-1d63-08d7e1dcca9d
-x-ms-traffictypediagnostic: DM6PR11MB2809:
-x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM6PR11MB28093837FC5ECB8D83EADD5885D80@DM6PR11MB2809.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:792;
-x-forefront-prvs: 0375972289
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR11MB3819.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(136003)(396003)(39860400002)(376002)(346002)(366004)(66476007)(64756008)(66446008)(6506007)(110136005)(478600001)(52536014)(54906003)(86362001)(316002)(55016002)(53546011)(5660300002)(66946007)(186003)(66556008)(71200400001)(76116006)(26005)(4326008)(9686003)(33656002)(7696005)(81156014)(8676002)(2906002)(107886003)(8936002);DIR:OUT;SFP:1102;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: ILkW77kw4HPHGxCzdiTy2DtUJvppeRqWAkEAHcIIFcXlHxvpRTIt5OkQlQTT1gydCMUpI+qc50pU63WfLCpnl+yJVgnaqXXvBG8zlIrjikRBDIT5GK/FLcn26kmIHOo23G4+/VEunhq5+GH+rFxW0JEEgtHRMfuNfzi9wav864lHShJppBYkwyCS82bvW/tmj/zDKffOVsJI+4+CBvdeGqtqrPIBuRZfRgZhJU6KGjc3XzxZJ3n6ataYnUETrr1fmcXEJ3IHcp1SodYqt3+VfSV5+ETdtfGE9a8fK2PWi+7uMiZcW5aloV8K/IzL1a1RRFalJ0/aXMeTezq790mTJCzk+ynTXe8qwZO6A4jxRoJ/pvy7WLIj3g9qL/xGh4GikXdIYCslIV8mfQsB2CmPxKOW/AEclBIkhleQVkXKK17YM/i5qQ00mhcMEJK/PG1c
-x-ms-exchange-antispam-messagedata: ieCZ2pIb39u8rwqqFoWbvOsR3E+jf8O2oq+q+nDOWLRHPPMTe/BPAYJBkKnR8hHuXrMKkx81GOevAQa1Z8XBjEwiX8PlAcO9USidqaEVPVWwnggt2dqh6yX1NSohMs0196mZJ8qhqwbNME2pd7z+rQ==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 16 Apr 2020 04:16:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34748 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2441179AbgDPIN2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 04:13:28 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 664BFC061A0C;
+        Thu, 16 Apr 2020 01:13:27 -0700 (PDT)
+Received: from localhost ([127.0.0.1] helo=vostro)
+        by Galois.linutronix.de with esmtps (TLS1.2:RSA_AES_256_CBC_SHA1:256)
+        (Exim 4.80)
+        (envelope-from <john.ogness@linutronix.de>)
+        id 1jOzeH-0000Rs-4N; Thu, 16 Apr 2020 10:13:25 +0200
+From:   John Ogness <john.ogness@linutronix.de>
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc:     Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org
+Subject: Re: [PATCH RT] printk: console must not schedule for drivers
+References: <20200406212217.2323-1-john.ogness@linutronix.de>
+        <20200415163416.r3fce3g5kokm4bub@linutronix.de>
+Date:   Thu, 16 Apr 2020 10:13:23 +0200
+In-Reply-To: <20200415163416.r3fce3g5kokm4bub@linutronix.de> (Sebastian
+        Andrzej Siewior's message of "Wed, 15 Apr 2020 18:34:16 +0200")
+Message-ID: <87o8rrg864.fsf@vostro.fn.ogness.net>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6a3c550a-d946-4eb8-1d63-08d7e1dcca9d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Apr 2020 08:04:30.3014
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: tN7djQhAaZYXJHjJm+9Nvol/z0h1twJY+Tk/+7T45Lsa89WIRBvnPl17z51LIgnekKQnrmUfreWWTcK+B+KYnQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR11MB2809
-X-OriginatorOrg: intel.com
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> -----Original Message-----
-> From: linux-fpga-owner@vger.kernel.org <linux-fpga-owner@vger.kernel.org>
-> On Behalf Of Xu Yilun
-> Sent: Thursday, April 16, 2020 11:12 AM
-> To: mdf@kernel.org; linux-fpga@vger.kernel.org; linux-
-> kernel@vger.kernel.org
-> Cc: trix@redhat.com; bhu@redhat.com; Xu, Yilun <yilun.xu@intel.com>
-> Subject: [PATCH 1/2] fpga: dfl: pci: reduce the scope of variable 'ret'
->=20
-> This is to fix lkp cppcheck warnings:
->=20
->  drivers/fpga/dfl-pci.c:230:6: warning: The scope of the variable 'ret' c=
-an be
-> reduced. [variableScope]
->     int ret =3D 0;
->         ^
->=20
->  drivers/fpga/dfl-pci.c:230:10: warning: Variable 'ret' is assigned a val=
-ue that
-> is never used. [unreadVariable]
->     int ret =3D 0;
->             ^
->=20
-> Fixes: 3c2760b78f90 ("fpga: dfl: pci: fix return value of
-> cci_pci_sriov_configure")
-> Reported-by: kbuild test robot <lkp@intel.com>
-> Signed-off-by: Xu Yilun <yilun.xu@intel.com>
+On 2020-04-15, Sebastian Andrzej Siewior <bigeasy@linutronix.de> wrote:
+>> Even though the printk kthread is always preemptible, it is still not
+>> allowed to call cond_resched() from within console drivers. The
+>> task may become non-preemptible in the console driver call chain. For
+>> example, vt_console_print() takes a spinlock and then can call into
+>> fbcon_redraw(), which can conditionally invoke cond_resched():
+>> 
+>> BUG: sleeping function called from invalid context at
+>> kernel/printk/printk.c:2322
+>> in_atomic(): 1, irqs_disabled(): 0, non_block: 0, pid: 177, name: printk
+>> CPU: 0 PID: 177 Comm: printk Not tainted 5.6.2-00011-ga536059557f1d9 #1
+>> Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-1
+>> 04/01/2014
+>> Call Trace:
+>>  dump_stack+0x66/0x8b
+>>  ___might_sleep+0x102/0x120
+>>  console_conditional_schedule+0x24/0x30
+>>  fbcon_redraw+0x96/0x1c0
+>>  ? fbcon_cursor+0x100/0x190
+>>  fbcon_scroll+0x556/0xd70
+>>  con_scroll+0x147/0x1e0
+>>  lf+0x9e/0xb0
+>>  vt_console_print+0x253/0x3d0
+>>  printk_kthread_func+0x1d5/0x3b0
+>> 
+>> Disable cond_resched() for the call into the console drivers.
+>
+> Interesting. So you get a report and I don't?
 
-Looks good to me.
+Apparently only the patch author was notified. The reporter should
+include all the people tagged in the patch. I'll send him an email about
+this.
 
-Acked-by: Wu Hao <hao.wu@intel.com>
+> - So before the re-rewrite, console_unlock() set this 0 before
+>   invoking the console drivers so it was always 0. I assume it was
+>   called with disabled interrupts.
 
-> ---
->  drivers/fpga/dfl-pci.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->=20
-> diff --git a/drivers/fpga/dfl-pci.c b/drivers/fpga/dfl-pci.c
-> index 5387550..a78c409 100644
-> --- a/drivers/fpga/dfl-pci.c
-> +++ b/drivers/fpga/dfl-pci.c
-> @@ -227,7 +227,6 @@ static int cci_pci_sriov_configure(struct pci_dev
-> *pcidev, int num_vfs)
->  {
->  	struct cci_drvdata *drvdata =3D pci_get_drvdata(pcidev);
->  	struct dfl_fpga_cdev *cdev =3D drvdata->cdev;
-> -	int ret =3D 0;
->=20
->  	if (!num_vfs) {
->  		/*
-> @@ -239,6 +238,8 @@ static int cci_pci_sriov_configure(struct pci_dev
-> *pcidev, int num_vfs)
->  		dfl_fpga_cdev_config_ports_pf(cdev);
->=20
->  	} else {
-> +		int ret;
-> +
->  		/*
->  		 * before enable SRIOV, put released ports into VF access
-> mode
->  		 * first of all.
-> --
-> 2.7.4
+Correct.
 
+> - Is there a scenario in fbcon where this function is invoked and
+>   console_may_schedule is not 0?
+
+Yes. The ttys/consoles are invoked through other call chains not related
+to printk. Since console_lock() can sleep, any caller of console_lock()
+_should_ be allowed to perform the cond_resched(). (The printk thread is
+an exception here!)
+
+Here is one call chain I picked out:
+
+tty_io.c:tty_write_message()
+    mutex_lock()
+    tty->ops->write() -> usb-serial.c:serial_write()
+        port->serial->type->write() -> vt.c:con_write()
+            do_con_write()
+                console_lock()
+                    console_may_schedule = 1;
+                console_conditional_schedule();
+                    cond_resched();
+
+From the mutex_lock() we can see that we are in a non-atomic context. In
+this case it is OK to call console_lock() and cond_resched().
+
+John Ogness
