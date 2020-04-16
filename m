@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18BB6C2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:15:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97BA6C2BB85
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:15:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DE2722222D
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:15:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7757C2222D
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:15:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587050117;
-	bh=abW9mqF4/+eweCUNjDjEwQ43Ov3PO8W9fEwl/H+1PM4=;
+	s=default; t=1587050127;
+	bh=Myj1CDp0UdOsG9VN9HTP9WtLs++9igsmwDL49tx1CsU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gniIH5AhQrV2LlCEZ/CLNmno2i4CCmVniFYamTJBPdZXpZq6nuduVmHRBu92bMOwI
-	 VjeZrMsHL+h3bA9h+saiv4xYDV2pe/BBZD/dVx0z4AyDakw5HWx/yDWyZ9sbiSnhdD
-	 2RsU7x5U+0fWfVaxKme3TrJBxLNkIXALNH1JDuFQ=
+	b=iv79ssWubFmbVS5bZ0Gi5Vc64JSYYcCMyZ2KfOdrvlchbHiyQfQYvdX1D7LrWZONl
+	 ttLWxi9xol7+PTrDOm2VzjVbGoRjW84BMgVJwO4vGhBPR1M4/zMm+kPA8v77N4zUi1
+	 kdMrhxXPgkIhC87xw5fL0ImdLpboflZy81XYCxco=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730777AbgDPPPQ (ORCPT
+        id S2408704AbgDPPP0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:15:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36062 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 11:15:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35832 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2441653AbgDPNuH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:50:07 -0400
+        id S2441579AbgDPNuD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:50:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9ADCB221F7;
-        Thu, 16 Apr 2020 13:49:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 773412078B;
+        Thu, 16 Apr 2020 13:49:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044980;
-        bh=abW9mqF4/+eweCUNjDjEwQ43Ov3PO8W9fEwl/H+1PM4=;
+        s=default; t=1587044967;
+        bh=Myj1CDp0UdOsG9VN9HTP9WtLs++9igsmwDL49tx1CsU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VRgtykpXfzbv9+eun7cGMUFGVCYXec59sNT5vdeTTQs6r3b/02B+Zpg8gRMe6Pr5K
-         d4VDGrKvSy+HH8rESIQTcZLDulP530cYfcGVv4BJeKzlRZBA6WH2ZkU6qOFzLlo9S0
-         2bjI+OiIsPoXq3YyZ87djHOJ/0y81y04xm6hWSZ8=
+        b=Psfj3FZajJb2lEVRnqtXnEh8cG2MO6XcR13vRNOBoSVM/U/5REXcrFVv0YWm+FHuT
+         yJPN7F6STYEaGfpOuuacz5vXgkxOPnAdVrXNidNIg4A1/mKnaexG2AbCQypTMN+hGh
+         a4fKpYgrJrWyHHSSFFIUO9RRHWhU17ZfnIlGFDJ8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 5.4 139/232] btrfs: reloc: clean dirty subvols if we fail to start a transaction
-Date:   Thu, 16 Apr 2020 15:23:53 +0200
-Message-Id: <20200416131332.370952511@linuxfoundation.org>
+        stable@vger.kernel.org, Jens Remus <jremus@linux.ibm.com>,
+        Benjamin Block <bblock@linux.ibm.com>,
+        Steffen Maier <maier@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 5.4 173/232] scsi: zfcp: fix missing erp_lock in port recovery trigger for point-to-point
+Date:   Thu, 16 Apr 2020 15:24:27 +0200
+Message-Id: <20200416131336.669729816@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131316.640996080@linuxfoundation.org>
 References: <20200416131316.640996080@linuxfoundation.org>
@@ -59,51 +61,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josef Bacik <josef@toxicpanda.com>
+From: Steffen Maier <maier@linux.ibm.com>
 
-commit 6217b0fadd4473a16fabc6aecd7527a9f71af534 upstream.
+commit 819732be9fea728623e1ed84eba28def7384ad1f upstream.
 
-If we do merge_reloc_roots() we could insert a few roots onto the dirty
-subvol roots list, where we hold a ref on them.  If we fail to start the
-transaction we need to run clean_dirty_subvols() in order to cleanup the
-refs.
+v2.6.27 commit cc8c282963bd ("[SCSI] zfcp: Automatically attach remote
+ports") introduced zfcp automatic port scan.
 
-CC: stable@vger.kernel.org # 5.4+
-Signed-off-by: Josef Bacik <josef@toxicpanda.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Before that, the user had to use the sysfs attribute "port_add" of an FCP
+device (adapter) to add and open remote (target) ports, even for the remote
+peer port in point-to-point topology. That code path did a proper port open
+recovery trigger taking the erp_lock.
+
+Since above commit, a new helper function zfcp_erp_open_ptp_port()
+performed an UNlocked port open recovery trigger. This can race with other
+parallel recovery triggers. In zfcp_erp_action_enqueue() this could corrupt
+e.g. adapter->erp_total_count or adapter->erp_ready_head.
+
+As already found for fabric topology in v4.17 commit fa89adba1941 ("scsi:
+zfcp: fix infinite iteration on ERP ready list"), there was an endless loop
+during tracing of rport (un)block.  A subsequent v4.18 commit 9e156c54ace3
+("scsi: zfcp: assert that the ERP lock is held when tracing a recovery
+trigger") introduced a lockdep assertion for that case.
+
+As a side effect, that lockdep assertion now uncovered the unlocked code
+path for PtP. It is from within an adapter ERP action:
+
+zfcp_erp_strategy[1479]  intentionally DROPs erp lock around
+                         zfcp_erp_strategy_do_action()
+zfcp_erp_strategy_do_action[1441]      NO erp lock
+zfcp_erp_adapter_strategy[876]         NO erp lock
+zfcp_erp_adapter_strategy_open[855]    NO erp lock
+zfcp_erp_adapter_strategy_open_fsf[806]NO erp lock
+zfcp_erp_adapter_strat_fsf_xconf[772]  erp lock only around
+                                       zfcp_erp_action_to_running(),
+                                       BUT *_not_* around
+                                       zfcp_erp_enqueue_ptp_port()
+zfcp_erp_enqueue_ptp_port[728]         BUG: *_not_* taking erp lock
+_zfcp_erp_port_reopen[432]             assumes to be called with erp lock
+zfcp_erp_action_enqueue[314]           assumes to be called with erp lock
+zfcp_dbf_rec_trig[288]                 _checks_ to be called with erp lock:
+	lockdep_assert_held(&adapter->erp_lock);
+
+It causes the following lockdep warning:
+
+WARNING: CPU: 2 PID: 775 at drivers/s390/scsi/zfcp_dbf.c:288
+                            zfcp_dbf_rec_trig+0x16a/0x188
+no locks held by zfcperp0.0.17c0/775.
+
+Fix this by using the proper locked recovery trigger helper function.
+
+Link: https://lore.kernel.org/r/20200312174505.51294-2-maier@linux.ibm.com
+Fixes: cc8c282963bd ("[SCSI] zfcp: Automatically attach remote ports")
+Cc: <stable@vger.kernel.org> #v2.6.27+
+Reviewed-by: Jens Remus <jremus@linux.ibm.com>
+Reviewed-by: Benjamin Block <bblock@linux.ibm.com>
+Signed-off-by: Steffen Maier <maier@linux.ibm.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/relocation.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/s390/scsi/zfcp_erp.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/fs/btrfs/relocation.c
-+++ b/fs/btrfs/relocation.c
-@@ -4224,10 +4224,10 @@ restart:
- 		goto out_free;
- 	}
- 	btrfs_commit_transaction(trans);
-+out_free:
- 	ret = clean_dirty_subvols(rc);
- 	if (ret < 0 && !err)
- 		err = ret;
--out_free:
- 	btrfs_free_block_rsv(fs_info, rc->block_rsv);
- 	btrfs_free_path(path);
- 	return err;
-@@ -4625,10 +4625,10 @@ int btrfs_recover_relocation(struct btrf
- 	trans = btrfs_join_transaction(rc->extent_root);
- 	if (IS_ERR(trans)) {
- 		err = PTR_ERR(trans);
--		goto out_free;
-+		goto out_clean;
- 	}
- 	err = btrfs_commit_transaction(trans);
--
-+out_clean:
- 	ret = clean_dirty_subvols(rc);
- 	if (ret < 0 && !err)
- 		err = ret;
+--- a/drivers/s390/scsi/zfcp_erp.c
++++ b/drivers/s390/scsi/zfcp_erp.c
+@@ -725,7 +725,7 @@ static void zfcp_erp_enqueue_ptp_port(st
+ 				 adapter->peer_d_id);
+ 	if (IS_ERR(port)) /* error or port already attached */
+ 		return;
+-	_zfcp_erp_port_reopen(port, 0, "ereptp1");
++	zfcp_erp_port_reopen(port, 0, "ereptp1");
+ }
+ 
+ static enum zfcp_erp_act_result zfcp_erp_adapter_strat_fsf_xconf(
 
 
