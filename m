@@ -7,55 +7,52 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 249D5C2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:17:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0419AC2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:17:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 01D812063A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:17:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D305D2063A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:17:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587046622;
-	bh=TBa/gNjvjTHN3djEFnEHH8oe/fBri/XKmyoBAZzUjjY=;
+	s=default; t=1587046627;
+	bh=UrwSOr4h2UrF7KC5Oh4oX+BltuND9X9C5BW/wnK2KGY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Q3IFlGZcnhhmi5ZUmrEAVJ9WoWvs2Jt9cD32EL5hM4Zo8caX6vpHeuBS/IzXMPpS7
-	 m4A2nFk9J0tX5Np/C7ZAzNgih4lOIObrElZgwJedIjukOnknUShhEzspz6yRvoncY4
-	 DtyGskGuQW12CVP8kanDMEv/jipMhbOTaX93C1kA=
+	b=GxBNda8gPjF7pgZ4/6xnZtZooTSoHdOB4HUJwRmPy4rMWgph1wD0ZhRMMHBTp80ao
+	 KqnTvYHZWPisW/6nOM6q9cCx3AWTnZu2VxXR2GQ0AGOV47d9J5VQrk3Fn0RWsE5JOR
+	 eRD53sh7Fcz4fcMlQuj7ikmXSdNEuth5rIH51Q8U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393901AbgDPORA (ORCPT
+        id S2393935AbgDPORG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:17:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38404 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 10:17:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38502 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392439AbgDPNwK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:52:10 -0400
+        id S2392455AbgDPNwO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:52:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8FF7F20732;
-        Thu, 16 Apr 2020 13:52:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9B5BE2078B;
+        Thu, 16 Apr 2020 13:52:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587045129;
-        bh=TBa/gNjvjTHN3djEFnEHH8oe/fBri/XKmyoBAZzUjjY=;
+        s=default; t=1587045134;
+        bh=UrwSOr4h2UrF7KC5Oh4oX+BltuND9X9C5BW/wnK2KGY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=stFPPPMKLW0scbtwXJ86y61OLZv0Hky/M6BSc9qn6LhLYbJpOnYepkdAeQQMqv6Mp
-         6emlFEbvqeOktmnAo8SfReun2QhntgYhy4PqM+BGuV3oaxyIo2E8thRmyEMX4pTI1b
-         oO70PdnUf0Y4sWwGLCXmZMjOxMQsj6blZ4R7TFhQ=
+        b=zqOp6hagiQ7hLRXoy+i8CufYnqdSIjjOtVPPav35hgS9ZnQHyYOPhwL7ZqKnedP+S
+         psixrj1fqU4SsJq1S1h3+kEHYZhr2y9yuxO7fNGepu9qbVeM+1AsJ3klVR+zpRl425
+         SkcLk2FzZT/VFGMCV6OLNQBgiTlPSXY/SYsNkMiA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Mohammad Rasim <mohammad.rasim96@gmail.com>,
-        Sean Young <sean@mess.org>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        stable@vger.kernel.org, Robert Richter <rrichter@marvell.com>,
+        Borislav Petkov <bp@suse.de>,
+        Aristeu Rozanski <aris@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 001/254] media: rc: add keymap for Videostrong KII Pro
-Date:   Thu, 16 Apr 2020 15:21:30 +0200
-Message-Id: <20200416131325.959861647@linuxfoundation.org>
+Subject: [PATCH 5.6 003/254] EDAC/mc: Report "unknown memory" on too many DIMM labels found
+Date:   Thu, 16 Apr 2020 15:21:32 +0200
+Message-Id: <20200416131326.200686408@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.804095985@linuxfoundation.org>
 References: <20200416131325.804095985@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -64,137 +61,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mohammad Rasim <mohammad.rasim96@gmail.com>
+From: Robert Richter <rrichter@marvell.com>
 
-[ Upstream commit 30defecb98400575349a7d32f0526e1dc42ea83e ]
+[ Upstream commit 65bb4d1af92cf007adc0a0c59dadcc393c5cada6 ]
 
-This is an NEC remote control device shipped with the Videostrong KII Pro
-tv box as well as other devices from videostrong.
+There is a limitation to report only EDAC_MAX_LABELS in e->label of
+the error descriptor. This is to prevent a potential string overflow.
 
-Signed-off-by: Mohammad Rasim <mohammad.rasim96@gmail.com>
-Signed-off-by: Sean Young <sean@mess.org>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+The current implementation falls back to "any memory" in this case and
+also stops all further processing to find a unique row and channel of
+the possible error location.
+
+Reporting "any memory" is wrong as the memory controller reported an
+error location for one of the layers. Instead, report "unknown memory"
+and also do not break early in the loop to further check row and channel
+for uniqueness.
+
+ [ bp: Massage commit message. ]
+
+Signed-off-by: Robert Richter <rrichter@marvell.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Acked-by: Aristeu Rozanski <aris@redhat.com>
+Link: https://lkml.kernel.org/r/20200123090210.26933-7-rrichter@marvell.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/rc/keymaps/Makefile             |  1 +
- .../media/rc/keymaps/rc-videostrong-kii-pro.c | 83 +++++++++++++++++++
- include/media/rc-map.h                        |  1 +
- 3 files changed, 85 insertions(+)
- create mode 100644 drivers/media/rc/keymaps/rc-videostrong-kii-pro.c
+ drivers/edac/edac_mc.c | 21 +++++++++++----------
+ 1 file changed, 11 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/media/rc/keymaps/Makefile b/drivers/media/rc/keymaps/Makefile
-index 63261ef6380a9..aaa1bf81d00d4 100644
---- a/drivers/media/rc/keymaps/Makefile
-+++ b/drivers/media/rc/keymaps/Makefile
-@@ -119,6 +119,7 @@ obj-$(CONFIG_RC_MAP) += rc-adstech-dvb-t-pci.o \
- 			rc-videomate-m1f.o \
- 			rc-videomate-s350.o \
- 			rc-videomate-tv-pvr.o \
-+			rc-videostrong-kii-pro.o \
- 			rc-wetek-hub.o \
- 			rc-wetek-play2.o \
- 			rc-winfast.o \
-diff --git a/drivers/media/rc/keymaps/rc-videostrong-kii-pro.c b/drivers/media/rc/keymaps/rc-videostrong-kii-pro.c
-new file mode 100644
-index 0000000000000..414d4d231e7ed
---- /dev/null
-+++ b/drivers/media/rc/keymaps/rc-videostrong-kii-pro.c
-@@ -0,0 +1,83 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+//
-+// Copyright (C) 2019 Mohammad Rasim <mohammad.rasim96@gmail.com>
-+
-+#include <media/rc-map.h>
-+#include <linux/module.h>
-+
-+//
-+// Keytable for the Videostrong KII Pro STB remote control
-+//
-+
-+static struct rc_map_table kii_pro[] = {
-+	{ 0x59, KEY_POWER },
-+	{ 0x19, KEY_MUTE },
-+	{ 0x42, KEY_RED },
-+	{ 0x40, KEY_GREEN },
-+	{ 0x00, KEY_YELLOW },
-+	{ 0x03, KEY_BLUE },
-+	{ 0x4a, KEY_BACK },
-+	{ 0x48, KEY_FORWARD },
-+	{ 0x08, KEY_PREVIOUSSONG},
-+	{ 0x0b, KEY_NEXTSONG},
-+	{ 0x46, KEY_PLAYPAUSE },
-+	{ 0x44, KEY_STOP },
-+	{ 0x1f, KEY_FAVORITES},	//KEY_F5?
-+	{ 0x04, KEY_PVR },
-+	{ 0x4d, KEY_EPG },
-+	{ 0x02, KEY_INFO },
-+	{ 0x09, KEY_SUBTITLE },
-+	{ 0x01, KEY_AUDIO },
-+	{ 0x0d, KEY_HOMEPAGE },
-+	{ 0x11, KEY_TV },	// DTV ?
-+	{ 0x06, KEY_UP },
-+	{ 0x5a, KEY_LEFT },
-+	{ 0x1a, KEY_ENTER },	// KEY_OK ?
-+	{ 0x1b, KEY_RIGHT },
-+	{ 0x16, KEY_DOWN },
-+	{ 0x45, KEY_MENU },
-+	{ 0x05, KEY_ESC },
-+	{ 0x13, KEY_VOLUMEUP },
-+	{ 0x17, KEY_VOLUMEDOWN },
-+	{ 0x58, KEY_APPSELECT },
-+	{ 0x12, KEY_VENDOR },	// mouse
-+	{ 0x55, KEY_PAGEUP },	// KEY_CHANNELUP ?
-+	{ 0x15, KEY_PAGEDOWN },	// KEY_CHANNELDOWN ?
-+	{ 0x52, KEY_1 },
-+	{ 0x50, KEY_2 },
-+	{ 0x10, KEY_3 },
-+	{ 0x56, KEY_4 },
-+	{ 0x54, KEY_5 },
-+	{ 0x14, KEY_6 },
-+	{ 0x4e, KEY_7 },
-+	{ 0x4c, KEY_8 },
-+	{ 0x0c, KEY_9 },
-+	{ 0x18, KEY_WWW },	// KEY_F7
-+	{ 0x0f, KEY_0 },
-+	{ 0x51, KEY_BACKSPACE },
-+};
-+
-+static struct rc_map_list kii_pro_map = {
-+	.map = {
-+		.scan     = kii_pro,
-+		.size     = ARRAY_SIZE(kii_pro),
-+		.rc_proto = RC_PROTO_NEC,
-+		.name     = RC_MAP_KII_PRO,
-+	}
-+};
-+
-+static int __init init_rc_map_kii_pro(void)
-+{
-+	return rc_map_register(&kii_pro_map);
-+}
-+
-+static void __exit exit_rc_map_kii_pro(void)
-+{
-+	rc_map_unregister(&kii_pro_map);
-+}
-+
-+module_init(init_rc_map_kii_pro)
-+module_exit(exit_rc_map_kii_pro)
-+
-+MODULE_LICENSE("GPL");
-+MODULE_AUTHOR("Mohammad Rasim <mohammad.rasim96@gmail.com>");
-diff --git a/include/media/rc-map.h b/include/media/rc-map.h
-index f99575a0d29c8..d22810dcd85c6 100644
---- a/include/media/rc-map.h
-+++ b/include/media/rc-map.h
-@@ -274,6 +274,7 @@ struct rc_map *rc_map_get(const char *name);
- #define RC_MAP_VIDEOMATE_K100            "rc-videomate-k100"
- #define RC_MAP_VIDEOMATE_S350            "rc-videomate-s350"
- #define RC_MAP_VIDEOMATE_TV_PVR          "rc-videomate-tv-pvr"
-+#define RC_MAP_KII_PRO                   "rc-videostrong-kii-pro"
- #define RC_MAP_WETEK_HUB                 "rc-wetek-hub"
- #define RC_MAP_WETEK_PLAY2               "rc-wetek-play2"
- #define RC_MAP_WINFAST                   "rc-winfast"
+diff --git a/drivers/edac/edac_mc.c b/drivers/edac/edac_mc.c
+index 69e0d90460e6c..2349f2ad946bb 100644
+--- a/drivers/edac/edac_mc.c
++++ b/drivers/edac/edac_mc.c
+@@ -1180,20 +1180,21 @@ void edac_mc_handle_error(const enum hw_event_mc_err_type type,
+ 		 * channel/memory controller/...  may be affected.
+ 		 * Also, don't show errors for empty DIMM slots.
+ 		 */
+-		if (!e->enable_per_layer_report || !dimm->nr_pages)
++		if (!dimm->nr_pages)
+ 			continue;
+ 
+-		if (n_labels >= EDAC_MAX_LABELS) {
+-			e->enable_per_layer_report = false;
+-			break;
+-		}
+ 		n_labels++;
+-		if (p != e->label) {
+-			strcpy(p, OTHER_LABEL);
+-			p += strlen(OTHER_LABEL);
++		if (n_labels > EDAC_MAX_LABELS) {
++			p = e->label;
++			*p = '\0';
++		} else {
++			if (p != e->label) {
++				strcpy(p, OTHER_LABEL);
++				p += strlen(OTHER_LABEL);
++			}
++			strcpy(p, dimm->label);
++			p += strlen(p);
+ 		}
+-		strcpy(p, dimm->label);
+-		p += strlen(p);
+ 
+ 		/*
+ 		 * get csrow/channel of the DIMM, in order to allow
 -- 
 2.20.1
 
