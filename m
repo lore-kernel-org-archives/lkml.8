@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26E01C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:49:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FC14C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:49:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F2C1021927
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:49:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09ABB20732
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:49:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587052169;
-	bh=T/a03JFRVwZf26cJQ8+4XA7GcZj1JeU8Ggit0HX5RJM=;
+	s=default; t=1587052179;
+	bh=Zg0lXdbFYkI82DZL3HsOsGw1RamNs7bH/YilUYo10QM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RtRp8Dqs+jz8ewqfKDAu6YOAockFTKdhJifSPKHi9klIXFQgS00TNg7e/KGMNPIDo
-	 OG/GoIlIFRdpbkeERrfyBEBlo5z9pww8S+lhkQG6ihHuuzFe45ptuwHoMr7u05JVii
-	 MW5DepUp1uC0iTzYmV2ENWxH+D1vEM0BsZKw9FdQ=
+	b=bAvoyhzTB/stuy5pTS/1SUC8YhPUplspUjckqVXU+HQjNwQQAx9APPZWeWT1pqpqm
+	 jl0YyHH3Hlr9I5PPujT7HniXMCZHV9QJCoGB6ol8bhCZPy17UwKxsC94+Zs0FcPD1a
+	 XDQZ9C1nRaM5fOgwU1UpS/pasi97ATN+XsexFDj0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2442620AbgDPPt1 (ORCPT
+        id S2442628AbgDPPtg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:49:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44082 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 11:49:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44080 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2896662AbgDPNdB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2896663AbgDPNdB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 16 Apr 2020 09:33:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 315BB22282;
-        Thu, 16 Apr 2020 13:32:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B6D3422281;
+        Thu, 16 Apr 2020 13:32:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587043961;
-        bh=T/a03JFRVwZf26cJQ8+4XA7GcZj1JeU8Ggit0HX5RJM=;
+        s=default; t=1587043959;
+        bh=Zg0lXdbFYkI82DZL3HsOsGw1RamNs7bH/YilUYo10QM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YQtRO5aDCDnjP8OU9PSjWfPbAeJDN70Wb3qrPM2NtsgOHPSQQonHtg52Jt93IFYbk
-         15JFTqaHHA66zgt8onpF3TqGNJBeUaa5DSbT3hZFa3aRQf+ObrgYhe6THEiEYXPeKi
-         k1eM8ALOQv61EXf1D/xIh8xHBRhS4xJ4JlVnlq+I=
+        b=QqZHWAFpMA5NkAuX+7d8zStByJCIRutlCMDvrhKRb7g8Ahm8QrS1PE0MpAk/g5ry7
+         Vfd4znEzWpeaKlQCThxboNZEb8qQcYFkak07R+NvulZ09JTKmZ3Da+BWlotO86vhYG
+         t1Q3zzeqSDHQNqrbllSUPpEmK2rFp5ChXeCE5Abc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xu Wang <vulab@iscas.ac.cn>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Ilan Peer <ilan.peer@intel.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
+        Johannes Berg <johannes.berg@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 024/257] qlcnic: Fix bad kzalloc null test
-Date:   Thu, 16 Apr 2020 15:21:15 +0200
-Message-Id: <20200416131328.982279691@linuxfoundation.org>
+Subject: [PATCH 5.5 023/257] cfg80211: Do not warn on same channel at the end of CSA
+Date:   Thu, 16 Apr 2020 15:21:14 +0200
+Message-Id: <20200416131328.860716097@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.891903893@linuxfoundation.org>
 References: <20200416131325.891903893@linuxfoundation.org>
@@ -60,33 +61,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xu Wang <vulab@iscas.ac.cn>
+From: Ilan Peer <ilan.peer@intel.com>
 
-[ Upstream commit bcaeb886ade124331a6f3a5cef34a3f1484c0a03 ]
+[ Upstream commit 05dcb8bb258575a8dd3499d0d78bd2db633c2b23 ]
 
-In qlcnic_83xx_get_reset_instruction_template, the variable
-of null test is bad, so correct it.
+When cfg80211_update_assoc_bss_entry() is called, there is a
+verification that the BSS channel actually changed. As some APs use
+CSA also for bandwidth changes, this would result with a kernel
+warning.
 
-Signed-off-by: Xu Wang <vulab@iscas.ac.cn>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fix this by removing the WARN_ON().
+
+Signed-off-by: Ilan Peer <ilan.peer@intel.com>
+Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
+Link: https://lore.kernel.org/r/iwlwifi.20200326150855.96316ada0e8d.I6710376b1b4257e5f4712fc7ab16e2b638d512aa@changeid
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/qlogic/qlcnic/qlcnic_83xx_init.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/wireless/scan.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/qlogic/qlcnic/qlcnic_83xx_init.c b/drivers/net/ethernet/qlogic/qlcnic/qlcnic_83xx_init.c
-index 07f9067affc65..cda5b0a9e9489 100644
---- a/drivers/net/ethernet/qlogic/qlcnic/qlcnic_83xx_init.c
-+++ b/drivers/net/ethernet/qlogic/qlcnic/qlcnic_83xx_init.c
-@@ -1720,7 +1720,7 @@ static int qlcnic_83xx_get_reset_instruction_template(struct qlcnic_adapter *p_d
+diff --git a/net/wireless/scan.c b/net/wireless/scan.c
+index aef240fdf8df6..328402ab64a3f 100644
+--- a/net/wireless/scan.c
++++ b/net/wireless/scan.c
+@@ -2022,7 +2022,11 @@ void cfg80211_update_assoc_bss_entry(struct wireless_dev *wdev,
  
- 	ahw->reset.seq_error = 0;
- 	ahw->reset.buff = kzalloc(QLC_83XX_RESTART_TEMPLATE_SIZE, GFP_KERNEL);
--	if (p_dev->ahw->reset.buff == NULL)
-+	if (ahw->reset.buff == NULL)
- 		return -ENOMEM;
+ 	spin_lock_bh(&rdev->bss_lock);
  
- 	p_buff = p_dev->ahw->reset.buff;
+-	if (WARN_ON(cbss->pub.channel == chan))
++	/*
++	 * Some APs use CSA also for bandwidth changes, i.e., without actually
++	 * changing the control channel, so no need to update in such a case.
++	 */
++	if (cbss->pub.channel == chan)
+ 		goto done;
+ 
+ 	/* use transmitting bss */
 -- 
 2.20.1
 
