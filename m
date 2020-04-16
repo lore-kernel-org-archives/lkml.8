@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74495C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:55:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ABCFC2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:55:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 489032076D
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:55:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79A9320732
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:55:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587045339;
-	bh=6H1V2cPpME8yyZYSE40VWtVW+9eZQ/zpTdh4A8UwM1s=;
+	s=default; t=1587045347;
+	bh=ESA2Q8qNEyYMT9qiYnzTb8YCAnx8roVpY6pxsaqV8pw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MgK+Sigf2cNvD2zyBkA+FkO32SBF+E06ZfZZjlYZpFU5aKTIu/bz/gQ3qq8QpvmEK
-	 FqIFUXpzi/2TveeTa8tTEuIT2nH/xSrgzqH9DH/FT7LrGd36xBvTA4bkaHifY0OuFv
-	 zyW54umVVqh67mXKqPzu2TFUHW2eaXJod5+G6Uso=
+	b=yRMab9/GmrhKjxmQF4kgrTkqdBXVrZs+fCAvCP5dJNQ39+lgj4TuTHVhkmPg5Vg2Y
+	 aVTHyuS8TFfw4KZq+Dli5f+//CryMWg0AV7Qc8llpHc/8Bxbe495kILwe2V3qdoBfn
+	 U0rT29nuv2F+rFiQ47xd4wCe7RYOxu7eoybtcIeI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392465AbgDPNzg (ORCPT
+        id S2441728AbgDPNzo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 09:55:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50858 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 09:55:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50884 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2897689AbgDPNiY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:38:24 -0400
+        id S2897693AbgDPNi1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:38:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 617FC22203;
-        Thu, 16 Apr 2020 13:38:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CD1A920732;
+        Thu, 16 Apr 2020 13:38:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044303;
-        bh=6H1V2cPpME8yyZYSE40VWtVW+9eZQ/zpTdh4A8UwM1s=;
+        s=default; t=1587044306;
+        bh=ESA2Q8qNEyYMT9qiYnzTb8YCAnx8roVpY6pxsaqV8pw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uhdM0fdH7rygOpl4+EqTJCDVPCA2ZP3Bx3ATafVZXF02vXJm0Y+1aqZxeV2gxNqSX
-         T4Ty6CxCVoKjDkp0FJE6rQ5vQIMUHYfHxhdtjDB1GhaqZujUOHZyqVqy2YIa7bRUjm
-         nfdw9OJdmqA83J/pUvz6KOZ0LeWMTeQqhRUFnZOk=
+        b=ITNuYaKTM9xsP2Q85qa0GZK5pa6Gs2sEN9q5vjg7jiWXPuSJyx2WIMuW05uK2AQIG
+         EbXflS1hNoJCdm6ZvP3bujUonnZAVPb8Xlw5TXW09BhgODOv/POqhJH42xbAbD/tBD
+         htBqVUcicjybsuSr6jSNcK0dIbTVAd5I2tLvPESc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vasily Averin <vvs@virtuozzo.com>,
+        stable@vger.kernel.org, Eric Biggers <ebiggers@google.com>,
+        Yang Xu <xuyang2018.jy@cn.fujitsu.com>,
         Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Subject: [PATCH 5.5 122/257] tpm: tpm2_bios_measurements_next should increase position index
-Date:   Thu, 16 Apr 2020 15:22:53 +0200
-Message-Id: <20200416131341.565617325@linuxfoundation.org>
+Subject: [PATCH 5.5 123/257] KEYS: reaching the keys quotas correctly
+Date:   Thu, 16 Apr 2020 15:22:54 +0200
+Message-Id: <20200416131341.705090440@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.891903893@linuxfoundation.org>
 References: <20200416131325.891903893@linuxfoundation.org>
@@ -59,48 +60,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vasily Averin <vvs@virtuozzo.com>
+From: Yang Xu <xuyang2018.jy@cn.fujitsu.com>
 
-commit f9bf8adb55cd5a357b247a16aafddf8c97b276e0 upstream.
+commit 2e356101e72ab1361821b3af024d64877d9a798d upstream.
 
-If .next function does not change position index,
-following .show function will repeat output related
-to current position index.
+Currently, when we add a new user key, the calltrace as below:
 
-For /sys/kernel/security/tpm0/binary_bios_measurements:
-1) read after lseek beyound end of file generates whole last line.
-2) read after lseek to middle of last line generates
-expected end of last line and unexpected whole last line once again.
+add_key()
+  key_create_or_update()
+    key_alloc()
+    __key_instantiate_and_link
+      generic_key_instantiate
+        key_payload_reserve
+          ......
 
-Cc: stable@vger.kernel.org # 4.19.x
-Fixes: 1f4aace60b0e ("fs/seq_file.c: simplify seq_file iteration code ...")
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=206283
-Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
+Since commit a08bf91ce28e ("KEYS: allow reaching the keys quotas exactly"),
+we can reach max bytes/keys in key_alloc, but we forget to remove this
+limit when we reserver space for payload in key_payload_reserve. So we
+can only reach max keys but not max bytes when having delta between plen
+and type->def_datalen. Remove this limit when instantiating the key, so we
+can keep consistent with key_alloc.
+
+Also, fix the similar problem in keyctl_chown_key().
+
+Fixes: 0b77f5bfb45c ("keys: make the keyring quotas controllable through /proc/sys")
+Fixes: a08bf91ce28e ("KEYS: allow reaching the keys quotas exactly")
+Cc: stable@vger.kernel.org # 5.0.x
+Cc: Eric Biggers <ebiggers@google.com>
+Signed-off-by: Yang Xu <xuyang2018.jy@cn.fujitsu.com>
 Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Reviewed-by: Eric Biggers <ebiggers@google.com>
 Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/char/tpm/eventlog/tpm2.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ security/keys/key.c    |    2 +-
+ security/keys/keyctl.c |    4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
---- a/drivers/char/tpm/eventlog/tpm2.c
-+++ b/drivers/char/tpm/eventlog/tpm2.c
-@@ -94,6 +94,7 @@ static void *tpm2_bios_measurements_next
- 	size_t event_size;
- 	void *marker;
+--- a/security/keys/key.c
++++ b/security/keys/key.c
+@@ -381,7 +381,7 @@ int key_payload_reserve(struct key *key,
+ 		spin_lock(&key->user->lock);
  
-+	(*pos)++;
- 	event_header = log->bios_event_log;
+ 		if (delta > 0 &&
+-		    (key->user->qnbytes + delta >= maxbytes ||
++		    (key->user->qnbytes + delta > maxbytes ||
+ 		     key->user->qnbytes + delta < key->user->qnbytes)) {
+ 			ret = -EDQUOT;
+ 		}
+--- a/security/keys/keyctl.c
++++ b/security/keys/keyctl.c
+@@ -937,8 +937,8 @@ long keyctl_chown_key(key_serial_t id, u
+ 				key_quota_root_maxbytes : key_quota_maxbytes;
  
- 	if (v == SEQ_START_TOKEN) {
-@@ -118,7 +119,6 @@ static void *tpm2_bios_measurements_next
- 	if (((v + event_size) >= limit) || (event_size == 0))
- 		return NULL;
- 
--	(*pos)++;
- 	return v;
- }
- 
+ 			spin_lock(&newowner->lock);
+-			if (newowner->qnkeys + 1 >= maxkeys ||
+-			    newowner->qnbytes + key->quotalen >= maxbytes ||
++			if (newowner->qnkeys + 1 > maxkeys ||
++			    newowner->qnbytes + key->quotalen > maxbytes ||
+ 			    newowner->qnbytes + key->quotalen <
+ 			    newowner->qnbytes)
+ 				goto quota_overrun;
 
 
