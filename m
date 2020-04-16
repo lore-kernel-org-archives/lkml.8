@@ -2,181 +2,199 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 650C9C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:59:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60295C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:59:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 44FA4214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:59:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MGeTnGvI"
+	by mail.kernel.org (Postfix) with ESMTP id 2E66C217D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:59:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587052792;
+	bh=9GOJc2UvoxWIasa8Ynx8hgzZr5zciOzgHTvFBRG9Ob0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=r4kxe0x5WFig3jf1U7yvO0t0VRt9+E/ELS0bPSh5klszL/UXNG1A7oPUTpe9lWaZw
+	 KGxubjy4BZfo+7pRE1Hbyks4AbPArwWyoG1tAwqd64rmnwScReJBmB1pOK6an7CKxB
+	 VQOz2MfWIDMe0aLZLPs0qVXMyB1Pb7TREbDLmm3Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2896590AbgDPP7U (ORCPT
+        id S2897277AbgDPP7v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:59:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51062 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2896089AbgDPP7A (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 11:59:00 -0400
-Received: from mail-oi1-x241.google.com (mail-oi1-x241.google.com [IPv6:2607:f8b0:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23B5FC061A0C
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 08:59:00 -0700 (PDT)
-Received: by mail-oi1-x241.google.com with SMTP id t199so13578171oif.7
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 08:59:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=RKkzesvk5cYfKkW+cuVfyJJ4B3TfqgCX4qySMMGKGlg=;
-        b=MGeTnGvI/2k6bxRBviIyd1LSkMZNOawQBC63cTOw3eNT0E2cqiGkqP5WM1LyY9cMCd
-         O8yJOXkdTY9vlwgcQZEdCBZkjsiMs3JQEKv/w07/loPznlTIv0qQfB+83EaslJL1jHkk
-         QH0H/Oka1VIrsQPXERMd/sv/kAn1gX1q4CJAHf8eRMVOIBks6PtE+Pks7rIMGXpx+kdr
-         gm+GETzmhGS5ichB041ZwaGZFAxNB4gCONZf2UN1wWrfDm+u6Jo6rrQ3HgGJaQNta4yz
-         Oyg+mE8xJ43OI3nc5YKILs3NLr2uH1ld2+XpCXKn0sHlE3V5pdNa7vaex7HxtTiNbdU5
-         YI8w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=RKkzesvk5cYfKkW+cuVfyJJ4B3TfqgCX4qySMMGKGlg=;
-        b=KjcAGPdSFXh9/fKvaNf/GSsgsVjpp9tOTEJDXTRhFn6R1WcEYEqBW+ulTDbVAYbTve
-         +9AYP1o4/MChVukN36+iNErV6EcTC/Uc71r3S9qvVgj3oVgAzaeu+9lOvfbk3bLlUzD5
-         6wGT8TmBEZTNVM+YTLvIB7qC615fHh7VqoKIV7Ar700VC6JyUtrdvMj6Ytgh1IxTAbaG
-         52Lq/fdMxwcoe2wkuGaTpwTb63OzbViwAMaVUg7a3FpzMzXhV/pGzO3H0vv6rHOslwhA
-         LjUW8NGB11Z6Fe4nS5DbPjSXKtaf5UKRx/IFqh+YIP9kZJY7XLBWukZ60QitCIggz1M8
-         KTug==
-X-Gm-Message-State: AGi0PuaV1QQ8u/s11wneXWJLHhhjCSJ7qFjWu2t1Ud7jAU6DDRPBgyQS
-        7Mv7HpahKh1xKLIBSIUWEAhn3YD2AXUI+6mGaNmaLQ==
-X-Google-Smtp-Source: APiQypL37Ygn1cZS2h8rp5duKkw4wQjuaqjVXMf73uWNup7h9A6Akm1TUOoiCtGtBN76Q4Q8+Bnc9jARMpQqUlQlZIA=
-X-Received: by 2002:aca:56c2:: with SMTP id k185mr3169314oib.141.1587052739351;
- Thu, 16 Apr 2020 08:58:59 -0700 (PDT)
+        Thu, 16 Apr 2020 11:59:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36878 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2895668AbgDPN2E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:28:04 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0297F206E9;
+        Thu, 16 Apr 2020 13:28:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587043683;
+        bh=9GOJc2UvoxWIasa8Ynx8hgzZr5zciOzgHTvFBRG9Ob0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=kIpETN2cvMo90rfS1T4PseIRAraWrnBbxf19C0WA37ibTIaOM4qQ5BLOULIgJz7c9
+         FtXnXTYzMR+jgcDMU2awqQeo8T9l60wZikF2fWcnPAENLM7leRYL+Ydw5Q6XthM90L
+         v9F3DDgR060JF+LIbEevw6a8PGISaHxKr+S3UI44=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Thomas Hebb <tommyhebb@gmail.com>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.19 057/146] ALSA: hda/realtek - Remove now-unnecessary XPS 13 headphone noise fixups
+Date:   Thu, 16 Apr 2020 15:23:18 +0200
+Message-Id: <20200416131250.688512798@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.1
+In-Reply-To: <20200416131242.353444678@linuxfoundation.org>
+References: <20200416131242.353444678@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-References: <20200415210512.805-1-valentin.schneider@arm.com>
- <20200415210512.805-10-valentin.schneider@arm.com> <CAKfTPtBDGzrvG=YhjBZBEgfx5EtM-rTC-dWX5phqh4bOY5XqgA@mail.gmail.com>
- <jhj4ktjpw2z.mognet@arm.com> <d508a6a5-c04f-087f-8767-6fb397b70055@arm.com>
- <CAKfTPtD5x_NQ1KfHhTiAR3eNA85+k13nfSR-9_PKLp6FgVu08A@mail.gmail.com> <jhjv9lz78nv.mognet@arm.com>
-In-Reply-To: <jhjv9lz78nv.mognet@arm.com>
-From:   Vincent Guittot <vincent.guittot@linaro.org>
-Date:   Thu, 16 Apr 2020 17:58:47 +0200
-Message-ID: <CAKfTPtDFD7KMcSK-2_LP-_APN2m05pWVhzKvJOVnD+Nacn846w@mail.gmail.com>
-Subject: Re: [PATCH v3 9/9] sched/topology: Define and use shortcut pointers
- for wakeup sd_flag scan
-To:     Valentin Schneider <valentin.schneider@arm.com>
-Cc:     Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 16 Apr 2020 at 17:27, Valentin Schneider
-<valentin.schneider@arm.com> wrote:
->
->
-> On 16/04/20 14:36, Vincent Guittot wrote:
-> >> Coming back to the v2 discussion on this patch
-> >>
-> >> https://lore.kernel.org/r/20200311181601.18314-10-valentin.schneider@arm.com
-> >>
-> >> SD_BALANCE_WAKE is not used in mainline anymore, so wakeups are always
-> >> fast today.
-> >>
-> >> I.e. you wouldn't need a per_cpu(sd_balance_wake, cpu) since it's always
-> >> NULL.
-> >>
-> >> I.e. want_affine logic and the 'for_each_domain(cpu, tmp)' isn't needed
-> >> anymore.
-> >>
-> >> This will dramatically simplify the code in select_task_rq_fair().
-> >>
-> >> But I guess Vincent wants to keep the functionality so we're able to
-> >> enable SD_BALANCE_WAKE on certain sd's?
-> >
-> > I looked too quickly what was done by this patch. I thought that it
-> > was adding a per_cpu pointer for all cases including the fast path
-> > with wake affine but it only skips the for_each_domain loop for the
-> > slow paths which don't need it because they are already slow.
-> >
-> > It would be better to keep the for_each_domain loop for slow paths and
-> > to use a per_cpu pointer for fast_path/wake affine. Regarding the
-> > wake_affine path, we don't really care about looping all domains and
-> > we could directly use the highest domain because wake_affine() that is
-> > used in the loop, only uses the imbalance_pct of the sched domain for
-> > wake_affine_weight() and it should not harm to use only the highest
-> > domain and then select_idle_sibling doesn't use it but the llc or
-> > asym_capacity pointer instead.
->
-> So Dietmar's pointing out that sd will always be NULL for want_affine,
-> because want_affine can only be true at wakeups and we don't have any
-> topologies with SD_BALANCE_WAKE anymore. We would still want to call
-> wake_affine() though, because that can change new_cpu.
->
-> What you are adding on top is that the only sd field used in wake_affine()
-> is the imbalance_pct, so we could take a shortcut and just go for the
-> highest domain with SD_WAKE_AFFINE; i.e. something like this:
->
-> ---
-> if (want_affine) {
->         // We can cache that at topology buildup
->         sd = highest_flag_domain(cpu, SD_WAKE_AFFINE);
+From: Thomas Hebb <tommyhebb@gmail.com>
 
-Yes and this one should be cached at topology buildup
+commit f36938aa7440f46a0a365f1cfde5f5985af2bef3 upstream.
 
->
->         if (cpumask_test_cpu(prev_cpu, sched_domain_span(sd) &&
->             cpu != prev_cpu)
->                 new_cpu = wake_affine();
->
->         // Directly go to select_idle_sibling()
->         goto sis;
-> }
->
-> // !want_affine logic here
-> ---
->
-> As for the !want_affine part, we could either keep the current domain walk
-> (IIUC this is what you are suggesting) or go for the extra cached pointers
-> I'm introducing.
->
-> Now if we are a bit bolder than that, because there are no more
-> (mainline) topologies w/ SD_BALANCE_WAKE, we could even turn the above
-> into:
->
-> ---
-> if (wake_flags & WF_TTWU) {
->         if (want_affine) {
->                 // We can cache that at topology buildup
->                 sd = highest_flag_domain(cpu, SD_WAKE_AFFINE);
->
->                 if (cpumask_test_cpu(prev_cpu, sched_domain_span(sd) &&
->                     cpu != prev_cpu)
->                         new_cpu = wake_affine();
->
->         }
->         // Directly go to select_idle_sibling()
->         goto sis;
-> }
->
-> // !want_affine logic here
-> ---
->
-> This in turns mean we could get rid of SD_BALANCE_WAKE entirely... I'm a
-> bit more reluctant to that only because the last SD_BALANCE_WAKE setter was
+patch_realtek.c has historically failed to properly configure the PC
+Beep Hidden Register for the ALC256 codec (among others). Depending on
+your kernel version, symptoms of this misconfiguration can range from
+chassis noise, picked up by a poorly-shielded PCBEEP trace, getting
+amplified and played on your internal speaker and/or headphones to loud
+feedback, which responds to the "Headphone Mic Boost" ALSA control,
+getting played through your headphones. For details of the problem, see
+the patch in this series titled "ALSA: hda/realtek - Set principled PC
+Beep configuration for ALC256", which fixes the configuration.
 
-For now, we should probably skip the additional test above: "if
-(wake_flags & WF_TTWU) {" and keep SD_BALANCE_WAKE so we will continue
-to loop in case of !want_affine.
+These symptoms have been most noticed on the Dell XPS 13 9350 and 9360,
+popular laptops that use the ALC256. As a result, several model-specific
+fixups have been introduced to try and fix the problem, the most
+egregious of which locks the "Headphone Mic Boost" control as a hack to
+minimize noise from a feedback loop that shouldn't have been there in
+the first place.
 
-We can imagine that we might want at the end to be a bit more smart
-for SD_BALANCE_WAKE and the slow path... like with the latency nice
-proposal and latency-nice=19 as a example
+Now that the underlying issue has been fixed, remove all these fixups.
+Remaining fixups needed by the XPS 13 are all picked up by existing pin
+quirks.
 
-> removed fairly recently, see
->   a526d466798d ("sched/topology: Remove SD_BALANCE_WAKE on asymmetric capacity systems")
+This change should, for the XPS 13 9350/9360
+
+ - Significantly increase volume and audio quality on headphones
+ - Eliminate headphone popping on suspend/resume
+ - Allow "Headphone Mic Boost" to be set again, making the headphone
+   jack fully usable as a microphone jack too.
+
+Fixes: 8c69729b4439 ("ALSA: hda - Fix headphone noise after Dell XPS 13 resume back from S3")
+Fixes: 423cd785619a ("ALSA: hda - Fix headphone noise on Dell XPS 13 9360")
+Fixes: e4c9fd10eb21 ("ALSA: hda - Apply headphone noise quirk for another Dell XPS 13 variant")
+Fixes: 1099f48457d0 ("ALSA: hda/realtek: Reduce the Headphone static noise on XPS 9350/9360")
+Cc: stable@vger.kernel.org
+Signed-off-by: Thomas Hebb <tommyhebb@gmail.com>
+Link: https://lore.kernel.org/r/b649a00edfde150cf6eebbb4390e15e0c2deb39a.1585584498.git.tommyhebb@gmail.com
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ Documentation/sound/hd-audio/models.rst |    2 -
+ sound/pci/hda/patch_realtek.c           |   34 --------------------------------
+ 2 files changed, 36 deletions(-)
+
+--- a/Documentation/sound/hd-audio/models.rst
++++ b/Documentation/sound/hd-audio/models.rst
+@@ -216,8 +216,6 @@ alc298-dell-aio
+     ALC298 fixups on Dell AIO machines
+ alc275-dell-xps
+     ALC275 fixups on Dell XPS models
+-alc256-dell-xps13
+-    ALC256 fixups on Dell XPS13
+ lenovo-spk-noise
+     Workaround for speaker noise on Lenovo machines
+ lenovo-hotkey
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -5272,17 +5272,6 @@ static void alc271_hp_gate_mic_jack(stru
+ 	}
+ }
+ 
+-static void alc256_fixup_dell_xps_13_headphone_noise2(struct hda_codec *codec,
+-						      const struct hda_fixup *fix,
+-						      int action)
+-{
+-	if (action != HDA_FIXUP_ACT_PRE_PROBE)
+-		return;
+-
+-	snd_hda_codec_amp_stereo(codec, 0x1a, HDA_INPUT, 0, HDA_AMP_VOLMASK, 1);
+-	snd_hda_override_wcaps(codec, 0x1a, get_wcaps(codec, 0x1a) & ~AC_WCAP_IN_AMP);
+-}
+-
+ static void alc269_fixup_limit_int_mic_boost(struct hda_codec *codec,
+ 					     const struct hda_fixup *fix,
+ 					     int action)
+@@ -5674,8 +5663,6 @@ enum {
+ 	ALC298_FIXUP_DELL1_MIC_NO_PRESENCE,
+ 	ALC298_FIXUP_DELL_AIO_MIC_NO_PRESENCE,
+ 	ALC275_FIXUP_DELL_XPS,
+-	ALC256_FIXUP_DELL_XPS_13_HEADPHONE_NOISE,
+-	ALC256_FIXUP_DELL_XPS_13_HEADPHONE_NOISE2,
+ 	ALC293_FIXUP_LENOVO_SPK_NOISE,
+ 	ALC233_FIXUP_LENOVO_LINE2_MIC_HOTKEY,
+ 	ALC255_FIXUP_DELL_SPK_NOISE,
+@@ -6387,23 +6374,6 @@ static const struct hda_fixup alc269_fix
+ 			{}
+ 		}
+ 	},
+-	[ALC256_FIXUP_DELL_XPS_13_HEADPHONE_NOISE] = {
+-		.type = HDA_FIXUP_VERBS,
+-		.v.verbs = (const struct hda_verb[]) {
+-			/* Disable pass-through path for FRONT 14h */
+-			{0x20, AC_VERB_SET_COEF_INDEX, 0x36},
+-			{0x20, AC_VERB_SET_PROC_COEF, 0x1737},
+-			{}
+-		},
+-		.chained = true,
+-		.chain_id = ALC255_FIXUP_DELL1_MIC_NO_PRESENCE
+-	},
+-	[ALC256_FIXUP_DELL_XPS_13_HEADPHONE_NOISE2] = {
+-		.type = HDA_FIXUP_FUNC,
+-		.v.func = alc256_fixup_dell_xps_13_headphone_noise2,
+-		.chained = true,
+-		.chain_id = ALC256_FIXUP_DELL_XPS_13_HEADPHONE_NOISE
+-	},
+ 	[ALC293_FIXUP_LENOVO_SPK_NOISE] = {
+ 		.type = HDA_FIXUP_FUNC,
+ 		.v.func = alc_fixup_disable_aamix,
+@@ -6871,17 +6841,14 @@ static const struct snd_pci_quirk alc269
+ 	SND_PCI_QUIRK(0x1028, 0x06de, "Dell", ALC293_FIXUP_DISABLE_AAMIX_MULTIJACK),
+ 	SND_PCI_QUIRK(0x1028, 0x06df, "Dell", ALC293_FIXUP_DISABLE_AAMIX_MULTIJACK),
+ 	SND_PCI_QUIRK(0x1028, 0x06e0, "Dell", ALC293_FIXUP_DISABLE_AAMIX_MULTIJACK),
+-	SND_PCI_QUIRK(0x1028, 0x0704, "Dell XPS 13 9350", ALC256_FIXUP_DELL_XPS_13_HEADPHONE_NOISE2),
+ 	SND_PCI_QUIRK(0x1028, 0x0706, "Dell Inspiron 7559", ALC256_FIXUP_DELL_INSPIRON_7559_SUBWOOFER),
+ 	SND_PCI_QUIRK(0x1028, 0x0725, "Dell Inspiron 3162", ALC255_FIXUP_DELL_SPK_NOISE),
+ 	SND_PCI_QUIRK(0x1028, 0x0738, "Dell Precision 5820", ALC269_FIXUP_NO_SHUTUP),
+-	SND_PCI_QUIRK(0x1028, 0x075b, "Dell XPS 13 9360", ALC256_FIXUP_DELL_XPS_13_HEADPHONE_NOISE2),
+ 	SND_PCI_QUIRK(0x1028, 0x075c, "Dell XPS 27 7760", ALC298_FIXUP_SPK_VOLUME),
+ 	SND_PCI_QUIRK(0x1028, 0x075d, "Dell AIO", ALC298_FIXUP_SPK_VOLUME),
+ 	SND_PCI_QUIRK(0x1028, 0x07b0, "Dell Precision 7520", ALC295_FIXUP_DISABLE_DAC3),
+ 	SND_PCI_QUIRK(0x1028, 0x0798, "Dell Inspiron 17 7000 Gaming", ALC256_FIXUP_DELL_INSPIRON_7559_SUBWOOFER),
+ 	SND_PCI_QUIRK(0x1028, 0x080c, "Dell WYSE", ALC225_FIXUP_DELL_WYSE_MIC_NO_PRESENCE),
+-	SND_PCI_QUIRK(0x1028, 0x082a, "Dell XPS 13 9360", ALC256_FIXUP_DELL_XPS_13_HEADPHONE_NOISE2),
+ 	SND_PCI_QUIRK(0x1028, 0x084b, "Dell", ALC274_FIXUP_DELL_AIO_LINEOUT_VERB),
+ 	SND_PCI_QUIRK(0x1028, 0x084e, "Dell", ALC274_FIXUP_DELL_AIO_LINEOUT_VERB),
+ 	SND_PCI_QUIRK(0x1028, 0x0871, "Dell Precision 3630", ALC255_FIXUP_DELL_HEADSET_MIC),
+@@ -7232,7 +7199,6 @@ static const struct hda_model_fixup alc2
+ 	{.id = ALC298_FIXUP_DELL1_MIC_NO_PRESENCE, .name = "alc298-dell1"},
+ 	{.id = ALC298_FIXUP_DELL_AIO_MIC_NO_PRESENCE, .name = "alc298-dell-aio"},
+ 	{.id = ALC275_FIXUP_DELL_XPS, .name = "alc275-dell-xps"},
+-	{.id = ALC256_FIXUP_DELL_XPS_13_HEADPHONE_NOISE, .name = "alc256-dell-xps13"},
+ 	{.id = ALC293_FIXUP_LENOVO_SPK_NOISE, .name = "lenovo-spk-noise"},
+ 	{.id = ALC233_FIXUP_LENOVO_LINE2_MIC_HOTKEY, .name = "lenovo-hotkey"},
+ 	{.id = ALC255_FIXUP_DELL_SPK_NOISE, .name = "dell-spk-noise"},
+
+
