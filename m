@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 603A1C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:56:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BE51C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:56:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3BFFB2051A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:56:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64CDE2051A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:56:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587048987;
-	bh=HdXtnSDiFfxfTy6EzlLlUY/QDpdHEh4TrJnt8XaWZyw=;
+	s=default; t=1587048994;
+	bh=3kEk6/zVo3sJR35rT+QxemBP+agX3sfi360QU1ZUimQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FqylwQdSd7Z45A/Dl47Qs4HNsBqWlLEv7u6n/VqBv0L8U7jsDIcLGAB5bdWTyFfWB
-	 /zFzn5nUyeNp0eXqM/6rOysOwbKwfnSBld1CaKo1sWqc3vRCIBDGDFLaFCmamMyFhn
-	 DBinikAPsLeJnI36IJtYmDf6HbVGrieBhPDG1JJU=
+	b=E38oarACIsiD5jo4y+COM2oy/nG/gr8J1fAg+ahUap4y+kEx+9Lko5UbuSIFVrfdP
+	 GwQMmrpkarOlkr+JpUi1xzloAbXTi7hpqF5ZcdBTlx6k/SwaGrX7HKwq/YEJpi677w
+	 uNSrZqEk1Qnp9zCtafXlsULlzylJVoatcOksZuY0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408329AbgDPO40 (ORCPT
+        id S2409112AbgDPO4b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:56:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43026 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 10:56:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43158 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727909AbgDPN4H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:56:07 -0400
+        id S1728217AbgDPN4F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:56:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 245D420786;
-        Thu, 16 Apr 2020 13:56:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AD59721927;
+        Thu, 16 Apr 2020 13:56:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587045366;
-        bh=HdXtnSDiFfxfTy6EzlLlUY/QDpdHEh4TrJnt8XaWZyw=;
+        s=default; t=1587045364;
+        bh=3kEk6/zVo3sJR35rT+QxemBP+agX3sfi360QU1ZUimQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tyofWH/z+Z3EpyW7DhNjyfqQ8W9RUH3hDKkrTRCBXT/hqB4YYg77PgmGKOuzpecCC
-         at370i15H4Gy0igkms6/e1wPXbHX4MHapBaDCyh4dxQ5/gptYimyPDVCglsbWexi9v
-         BnA4wB0tUTotA52kbboyEd6yAhS/YsBAmoahv+f8=
+        b=n0ysDbKiwbc8IiSqJjRzlXaN51jzIYX9xFILIX2ubMC9n/WhNXUs20nUm0QgpCC5q
+         fYdBuUim5rZ1zSThO0A/gnED8vEIcLrWCsZDDUksPm1GMWI24GYcjpqayQs/9qUQPc
+         Mw4icAckf2b4kAdAZHmV2msgCd2NFZQqasJly3vk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Matthew Garrett <matthewgarrett@google.com>,
-        Jerry Snitselaar <jsnitsel@redhat.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Subject: [PATCH 5.6 106/254] tpm: Dont make log failures fatal
-Date:   Thu, 16 Apr 2020 15:23:15 +0200
-Message-Id: <20200416131339.353262951@linuxfoundation.org>
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>
+Subject: [PATCH 5.6 105/254] sched/fair: Fix enqueue_task_fair warning
+Date:   Thu, 16 Apr 2020 15:23:14 +0200
+Message-Id: <20200416131339.229926761@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.804095985@linuxfoundation.org>
 References: <20200416131325.804095985@linuxfoundation.org>
@@ -61,92 +62,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matthew Garrett <matthewgarrett@google.com>
+From: Vincent Guittot <vincent.guittot@linaro.org>
 
-commit 805fa88e0780b7ce1cc9b649dd91a0a7164c6eb4 upstream.
+commit fe61468b2cbc2b7ce5f8d3bf32ae5001d4c434e9 upstream.
 
-If a TPM is in disabled state, it's reasonable for it to have an empty
-log. Bailing out of probe in this case means that the PPI interface
-isn't available, so there's no way to then enable the TPM from the OS.
-In general it seems reasonable to ignore log errors - they shouldn't
-interfere with any other TPM functionality.
+When a cfs rq is throttled, the latter and its child are removed from the
+leaf list but their nr_running is not changed which includes staying higher
+than 1. When a task is enqueued in this throttled branch, the cfs rqs must
+be added back in order to ensure correct ordering in the list but this can
+only happens if nr_running == 1.
+When cfs bandwidth is used, we call unconditionnaly list_add_leaf_cfs_rq()
+when enqueuing an entity to make sure that the complete branch will be
+added.
 
-Signed-off-by: Matthew Garrett <matthewgarrett@google.com>
-Cc: stable@vger.kernel.org # 4.19.x
-Reviewed-by: Jerry Snitselaar <jsnitsel@redhat.com>
-Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Similarly unthrottle_cfs_rq() can stop adding cfs in the list when a parent
+is throttled. Iterate the remaining entity to ensure that the complete
+branch will be added in the list.
+
+Reported-by: Christian Borntraeger <borntraeger@de.ibm.com>
+Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Reviewed-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
+Tested-by: Christian Borntraeger <borntraeger@de.ibm.com>
+Tested-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
+Cc: stable@vger.kernel.org
+Cc: stable@vger.kernel.org #v5.1+
+Link: https://lkml.kernel.org/r/20200306135257.25044-1-vincent.guittot@linaro.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/char/tpm/eventlog/common.c |   12 ++++--------
- drivers/char/tpm/tpm-chip.c        |    4 +---
- drivers/char/tpm/tpm.h             |    2 +-
- 3 files changed, 6 insertions(+), 12 deletions(-)
+ kernel/sched/fair.c |   26 ++++++++++++++++++++++----
+ 1 file changed, 22 insertions(+), 4 deletions(-)
 
---- a/drivers/char/tpm/eventlog/common.c
-+++ b/drivers/char/tpm/eventlog/common.c
-@@ -99,11 +99,8 @@ static int tpm_read_log(struct tpm_chip
-  *
-  * If an event log is found then the securityfs files are setup to
-  * export it to userspace, otherwise nothing is done.
-- *
-- * Returns -ENODEV if the firmware has no event log or securityfs is not
-- * supported.
-  */
--int tpm_bios_log_setup(struct tpm_chip *chip)
-+void tpm_bios_log_setup(struct tpm_chip *chip)
- {
- 	const char *name = dev_name(&chip->dev);
- 	unsigned int cnt;
-@@ -112,7 +109,7 @@ int tpm_bios_log_setup(struct tpm_chip *
- 
- 	rc = tpm_read_log(chip);
- 	if (rc < 0)
--		return rc;
-+		return;
- 	log_version = rc;
- 
- 	cnt = 0;
-@@ -158,13 +155,12 @@ int tpm_bios_log_setup(struct tpm_chip *
- 		cnt++;
- 	}
- 
--	return 0;
-+	return;
- 
- err:
--	rc = PTR_ERR(chip->bios_dir[cnt]);
- 	chip->bios_dir[cnt] = NULL;
- 	tpm_bios_log_teardown(chip);
--	return rc;
-+	return;
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -3957,6 +3957,7 @@ static inline void check_schedstat_requi
+ #endif
  }
  
- void tpm_bios_log_teardown(struct tpm_chip *chip)
---- a/drivers/char/tpm/tpm-chip.c
-+++ b/drivers/char/tpm/tpm-chip.c
-@@ -596,9 +596,7 @@ int tpm_chip_register(struct tpm_chip *c
++static inline bool cfs_bandwidth_used(void);
  
- 	tpm_sysfs_add_device(chip);
+ /*
+  * MIGRATION
+@@ -4035,10 +4036,16 @@ enqueue_entity(struct cfs_rq *cfs_rq, st
+ 		__enqueue_entity(cfs_rq, se);
+ 	se->on_rq = 1;
  
--	rc = tpm_bios_log_setup(chip);
--	if (rc != 0 && rc != -ENODEV)
--		return rc;
-+	tpm_bios_log_setup(chip);
+-	if (cfs_rq->nr_running == 1) {
++	/*
++	 * When bandwidth control is enabled, cfs might have been removed
++	 * because of a parent been throttled but cfs->nr_running > 1. Try to
++	 * add it unconditionnally.
++	 */
++	if (cfs_rq->nr_running == 1 || cfs_bandwidth_used())
+ 		list_add_leaf_cfs_rq(cfs_rq);
++
++	if (cfs_rq->nr_running == 1)
+ 		check_enqueue_throttle(cfs_rq);
+-	}
+ }
  
- 	tpm_add_ppi(chip);
+ static void __clear_buddies_last(struct sched_entity *se)
+@@ -4619,11 +4626,22 @@ void unthrottle_cfs_rq(struct cfs_rq *cf
+ 			break;
+ 	}
  
---- a/drivers/char/tpm/tpm.h
-+++ b/drivers/char/tpm/tpm.h
-@@ -235,7 +235,7 @@ int tpm2_prepare_space(struct tpm_chip *
- int tpm2_commit_space(struct tpm_chip *chip, struct tpm_space *space, void *buf,
- 		      size_t *bufsiz);
+-	assert_list_leaf_cfs_rq(rq);
+-
+ 	if (!se)
+ 		add_nr_running(rq, task_delta);
  
--int tpm_bios_log_setup(struct tpm_chip *chip);
-+void tpm_bios_log_setup(struct tpm_chip *chip);
- void tpm_bios_log_teardown(struct tpm_chip *chip);
- int tpm_dev_common_init(void);
- void tpm_dev_common_exit(void);
++	/*
++	 * The cfs_rq_throttled() breaks in the above iteration can result in
++	 * incomplete leaf list maintenance, resulting in triggering the
++	 * assertion below.
++	 */
++	for_each_sched_entity(se) {
++		cfs_rq = cfs_rq_of(se);
++
++		list_add_leaf_cfs_rq(cfs_rq);
++	}
++
++	assert_list_leaf_cfs_rq(rq);
++
+ 	/* Determine whether we need to wake up potentially idle CPU: */
+ 	if (rq->curr == rq->idle && rq->cfs.nr_running)
+ 		resched_curr(rq);
 
 
