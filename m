@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18213C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:15:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 118AAC2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:15:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E50182222D
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:15:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFD6421D7E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:15:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587050139;
-	bh=cIOg4crpwTP9ciJe671gs1El4Wkf8mdK+l18SkpVrV8=;
+	s=default; t=1587050145;
+	bh=Yh6gZjfyX6QP1J55zaEdH+YpizqUockH6mB2K0kyNj0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=i1n1OKh+1cX5ybiJymr+ZeLlByCw01In057zxxzsinWYQ4BppwKJanWWg9Zwr71rf
-	 v985bjcZVUV4o6+wOiNupy1PavXCgEDD9SwZgDZ+ulep/nfwgFoT1WVRD3w2gGy/U9
-	 vqJ+zfDyo90uBYJMXD8SGpIsiEWDZGiWbYFNcOZ8=
+	b=Tv4u81jnmWyAbbPe+QP5u1Lwc+GsFBgeVXaNWN3nutYpzpQCfolPE1N0TIlrrf1em
+	 p+mjk7JJjBWofiVaDAJvPVwAd18XiCGY7MKYRQFGIznlmx870QV6mcr5h89k12XRmd
+	 PM0dvA2Sx3LN7dsP2ItW/aB0hELFyyx74PSFiEDs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408794AbgDPPPh (ORCPT
+        id S2408894AbgDPPPo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:15:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35834 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 11:15:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35828 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2441643AbgDPNuC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2441571AbgDPNuC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 16 Apr 2020 09:50:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EBE9A20786;
-        Thu, 16 Apr 2020 13:49:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A920921734;
+        Thu, 16 Apr 2020 13:49:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044965;
-        bh=cIOg4crpwTP9ciJe671gs1El4Wkf8mdK+l18SkpVrV8=;
+        s=default; t=1587044958;
+        bh=Yh6gZjfyX6QP1J55zaEdH+YpizqUockH6mB2K0kyNj0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FD8VPc0KNBXRzlPq83OOYxIUari7/uvbiIIhn8JXVHW5ayxEHLN8sA9G04gSNGDK2
-         1+yrIdqr0lMHSDZZkX2KyixjVqG4ZKtiN9moZpp+qTaxXMVM251uRWVk1XqrWYB5L6
-         JqECHt2cGdPQewRUPEmsUsMmSHBXUK/uY+P6e6dU=
+        b=uVWZvvOQQ2lS/pzF4P7Q/pod//hbCB7tZrS5N+mutR5UPyBjr9VwKxUqmqQ9k5p9+
+         WBLYxlaozJPvbqyanVJqTsShJ+i66vCbE0XyNmkSq7LmOphJHCW/RIrzIUZIlepPnT
+         KM6/iRzhxpyqokb7AzcRTxRx3kXTu1u0qDdGSqIE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Gilad Ben-Yossef <gilad@benyossef.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 5.4 172/232] crypto: ccree - dec auth tag size from cryptlen map
-Date:   Thu, 16 Apr 2020 15:24:26 +0200
-Message-Id: <20200416131336.541747933@linuxfoundation.org>
+        stable@vger.kernel.org, Yilu Lin <linyilu@huawei.com>,
+        Steve French <stfrench@microsoft.com>,
+        Ronnie Sahlberg <lsahlber@redhat.com>
+Subject: [PATCH 5.4 134/232] CIFS: Fix bug which the return value by asynchronous read is error
+Date:   Thu, 16 Apr 2020 15:23:48 +0200
+Message-Id: <20200416131331.755418580@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131316.640996080@linuxfoundation.org>
 References: <20200416131316.640996080@linuxfoundation.org>
@@ -60,41 +60,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gilad Ben-Yossef <gilad@benyossef.com>
+From: Yilu Lin <linyilu@huawei.com>
 
-commit 8962c6d2c2b8ca51b0f188109015b15fc5f4da44 upstream.
+commit 97adda8b3ab703de8e4c8d27646ddd54fe22879c upstream.
 
-Remove the auth tag size from cryptlen before mapping the destination
-in out-of-place AEAD decryption thus resolving a crash with
-extended testmgr tests.
+This patch is used to fix the bug in collect_uncached_read_data()
+that rc is automatically converted from a signed number to an
+unsigned number when the CIFS asynchronous read fails.
+It will cause ctx->rc is error.
 
-Signed-off-by: Gilad Ben-Yossef <gilad@benyossef.com>
-Reported-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: stable@vger.kernel.org # v4.19+
-Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Example:
+Share a directory and create a file on the Windows OS.
+Mount the directory to the Linux OS using CIFS.
+On the CIFS client of the Linux OS, invoke the pread interface to
+deliver the read request.
+
+The size of the read length plus offset of the read request is greater
+than the maximum file size.
+
+In this case, the CIFS server on the Windows OS returns a failure
+message (for example, the return value of
+smb2.nt_status is STATUS_INVALID_PARAMETER).
+
+After receiving the response message, the CIFS client parses
+smb2.nt_status to STATUS_INVALID_PARAMETER
+and converts it to the Linux error code (rdata->result=-22).
+
+Then the CIFS client invokes the collect_uncached_read_data function to
+assign the value of rdata->result to rc, that is, rc=rdata->result=-22.
+
+The type of the ctx->total_len variable is unsigned integer,
+the type of the rc variable is integer, and the type of
+the ctx->rc variable is ssize_t.
+
+Therefore, during the ternary operation, the value of rc is
+automatically converted to an unsigned number. The final result is
+ctx->rc=4294967274. However, the expected result is ctx->rc=-22.
+
+Signed-off-by: Yilu Lin <linyilu@huawei.com>
+Signed-off-by: Steve French <stfrench@microsoft.com>
+CC: Stable <stable@vger.kernel.org>
+Acked-by: Ronnie Sahlberg <lsahlber@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/crypto/ccree/cc_buffer_mgr.c |    8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ fs/cifs/file.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/crypto/ccree/cc_buffer_mgr.c
-+++ b/drivers/crypto/ccree/cc_buffer_mgr.c
-@@ -894,8 +894,12 @@ static int cc_aead_chain_data(struct cc_
+--- a/fs/cifs/file.c
++++ b/fs/cifs/file.c
+@@ -3778,7 +3778,7 @@ again:
+ 	if (rc == -ENODATA)
+ 		rc = 0;
  
- 	if (req->src != req->dst) {
- 		size_for_map = areq_ctx->assoclen + req->cryptlen;
--		size_for_map += (direct == DRV_CRYPTO_DIRECTION_ENCRYPT) ?
--				authsize : 0;
-+
-+		if (direct == DRV_CRYPTO_DIRECTION_ENCRYPT)
-+			size_for_map += authsize;
-+		else
-+			size_for_map -= authsize;
-+
- 		if (is_gcm4543)
- 			size_for_map += crypto_aead_ivsize(tfm);
+-	ctx->rc = (rc == 0) ? ctx->total_len : rc;
++	ctx->rc = (rc == 0) ? (ssize_t)ctx->total_len : rc;
+ 
+ 	mutex_unlock(&ctx->aio_mutex);
  
 
 
