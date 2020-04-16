@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DB04C352BE
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:34:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29BA7C2BB85
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:35:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2D42320732
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:34:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0DA822202
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:35:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587044092;
-	bh=jU2NGxoZVfqGEeV789O2fBDa8eNmaSTF3BTMq0ydWxI=;
+	s=default; t=1587044102;
+	bh=0gjf5YqcN+G+KhGMwDQCjSTFjQQdkoDROMTfwF97JW8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xFc+DP+GKF08kNEop+0hb0oHMxMoR7qTdAV6EUjXceOFp3/+ZGVAYZovMVdTZbEbB
-	 fAYXTs0b0OJKmWZjidxuBNVcEtx5ekqLauNaXqx2IGiw98FFclCdU/BlSOBWXnrDfW
-	 foSBOCu3XKAtI92yq6qNa/qLjaX9yLGhRl8MKIGo=
+	b=Nn8HXUaiKEjI8dkd5uIp80vph1X12L6WXRZwRgnS4tISGco2rGJHToMVh0odzCbWw
+	 tUAO/zibd4plThHH2T8I+FTHFASgWgaQQDCQdmTwHHx46Vxrs3BQ0GN+xzE9ePl3sW
+	 NSBO5OFWQptPfFr+8MEB76phUN+RGb/NbCkVhXNw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2896414AbgDPNes (ORCPT
+        id S2897043AbgDPNe7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 09:34:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38740 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 09:34:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38862 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2895952AbgDPN3J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:29:09 -0400
+        id S2895966AbgDPN3M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:29:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BB40721D79;
-        Thu, 16 Apr 2020 13:29:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 33BC522202;
+        Thu, 16 Apr 2020 13:29:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587043749;
-        bh=jU2NGxoZVfqGEeV789O2fBDa8eNmaSTF3BTMq0ydWxI=;
+        s=default; t=1587043751;
+        bh=0gjf5YqcN+G+KhGMwDQCjSTFjQQdkoDROMTfwF97JW8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bvYc46qRBpPM+/I2TOvC5FDWN57abOAyWvlKLP7W2zeZDijjzRoYmCR/d/NA0TYI4
-         LNeuNuUIIsQsjzk429YwkCBRvtM+vKkqYyoLTAYourgc4BdP0DBBIWfqfYrBuCSh4f
-         EjbQe+Hz5Gkheyp7bhFgY60iRkFYX1xjNGawcaPo=
+        b=jwQ1hDhj6XVPXghSm2ADRVqYLyucsxBRBVMaTe6knxbnV0CJLEv+yOVW0sVbYZPv5
+         6eziqLl9iJhQwkBfXw8atQNg8WPbZvtqOaVLz9dlrxl6x7tYFpjqsAS+VoFQEykLHK
+         oIM4MBEmW2gIODXIgnladSzO3DXe1Hj7CBbVttr4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 4.19 085/146] KVM: VMX: fix crash cleanup when KVM wasnt used
-Date:   Thu, 16 Apr 2020 15:23:46 +0200
-Message-Id: <20200416131254.426476528@linuxfoundation.org>
+        stable@vger.kernel.org, Yilu Lin <linyilu@huawei.com>,
+        Steve French <stfrench@microsoft.com>,
+        Ronnie Sahlberg <lsahlber@redhat.com>
+Subject: [PATCH 4.19 086/146] CIFS: Fix bug which the return value by asynchronous read is error
+Date:   Thu, 16 Apr 2020 15:23:47 +0200
+Message-Id: <20200416131254.548613471@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131242.353444678@linuxfoundation.org>
 References: <20200416131242.353444678@linuxfoundation.org>
@@ -60,75 +60,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vitaly Kuznetsov <vkuznets@redhat.com>
+From: Yilu Lin <linyilu@huawei.com>
 
-commit dbef2808af6c594922fe32833b30f55f35e9da6d upstream.
+commit 97adda8b3ab703de8e4c8d27646ddd54fe22879c upstream.
 
-If KVM wasn't used at all before we crash the cleanup procedure fails with
- BUG: unable to handle page fault for address: ffffffffffffffc8
- #PF: supervisor read access in kernel mode
- #PF: error_code(0x0000) - not-present page
- PGD 23215067 P4D 23215067 PUD 23217067 PMD 0
- Oops: 0000 [#8] SMP PTI
- CPU: 0 PID: 3542 Comm: bash Kdump: loaded Tainted: G      D           5.6.0-rc2+ #823
- RIP: 0010:crash_vmclear_local_loaded_vmcss.cold+0x19/0x51 [kvm_intel]
+This patch is used to fix the bug in collect_uncached_read_data()
+that rc is automatically converted from a signed number to an
+unsigned number when the CIFS asynchronous read fails.
+It will cause ctx->rc is error.
 
-The root cause is that loaded_vmcss_on_cpu list is not yet initialized,
-we initialize it in hardware_enable() but this only happens when we start
-a VM.
+Example:
+Share a directory and create a file on the Windows OS.
+Mount the directory to the Linux OS using CIFS.
+On the CIFS client of the Linux OS, invoke the pread interface to
+deliver the read request.
 
-Previously, we used to have a bitmap with enabled CPUs and that was
-preventing [masking] the issue.
+The size of the read length plus offset of the read request is greater
+than the maximum file size.
 
-Initialized loaded_vmcss_on_cpu list earlier, right before we assign
-crash_vmclear_loaded_vmcss pointer. blocked_vcpu_on_cpu list and
-blocked_vcpu_on_cpu_lock are moved altogether for consistency.
+In this case, the CIFS server on the Windows OS returns a failure
+message (for example, the return value of
+smb2.nt_status is STATUS_INVALID_PARAMETER).
 
-Fixes: 31603d4fc2bb ("KVM: VMX: Always VMCLEAR in-use VMCSes during crash with kexec support")
-Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-Message-Id: <20200401081348.1345307-1-vkuznets@redhat.com>
-Reviewed-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+After receiving the response message, the CIFS client parses
+smb2.nt_status to STATUS_INVALID_PARAMETER
+and converts it to the Linux error code (rdata->result=-22).
+
+Then the CIFS client invokes the collect_uncached_read_data function to
+assign the value of rdata->result to rc, that is, rc=rdata->result=-22.
+
+The type of the ctx->total_len variable is unsigned integer,
+the type of the rc variable is integer, and the type of
+the ctx->rc variable is ssize_t.
+
+Therefore, during the ternary operation, the value of rc is
+automatically converted to an unsigned number. The final result is
+ctx->rc=4294967274. However, the expected result is ctx->rc=-22.
+
+Signed-off-by: Yilu Lin <linyilu@huawei.com>
+Signed-off-by: Steve French <stfrench@microsoft.com>
+CC: Stable <stable@vger.kernel.org>
+Acked-by: Ronnie Sahlberg <lsahlber@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kvm/vmx.c |   12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
+ fs/cifs/file.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/x86/kvm/vmx.c
-+++ b/arch/x86/kvm/vmx.c
-@@ -4398,10 +4398,6 @@ static int hardware_enable(void)
- 	    !hv_get_vp_assist_page(cpu))
- 		return -EFAULT;
+--- a/fs/cifs/file.c
++++ b/fs/cifs/file.c
+@@ -3339,7 +3339,7 @@ again:
+ 	if (rc == -ENODATA)
+ 		rc = 0;
  
--	INIT_LIST_HEAD(&per_cpu(loaded_vmcss_on_cpu, cpu));
--	INIT_LIST_HEAD(&per_cpu(blocked_vcpu_on_cpu, cpu));
--	spin_lock_init(&per_cpu(blocked_vcpu_on_cpu_lock, cpu));
--
- 	rdmsrl(MSR_IA32_FEATURE_CONTROL, old);
+-	ctx->rc = (rc == 0) ? ctx->total_len : rc;
++	ctx->rc = (rc == 0) ? (ssize_t)ctx->total_len : rc;
  
- 	test_bits = FEATURE_CONTROL_LOCKED;
-@@ -14554,7 +14550,7 @@ module_exit(vmx_exit);
+ 	mutex_unlock(&ctx->aio_mutex);
  
- static int __init vmx_init(void)
- {
--	int r;
-+	int r, cpu;
- 
- #if IS_ENABLED(CONFIG_HYPERV)
- 	/*
-@@ -14605,6 +14601,12 @@ static int __init vmx_init(void)
- 		}
- 	}
- 
-+	for_each_possible_cpu(cpu) {
-+		INIT_LIST_HEAD(&per_cpu(loaded_vmcss_on_cpu, cpu));
-+		INIT_LIST_HEAD(&per_cpu(blocked_vcpu_on_cpu, cpu));
-+		spin_lock_init(&per_cpu(blocked_vcpu_on_cpu_lock, cpu));
-+	}
-+
- #ifdef CONFIG_KEXEC_CORE
- 	rcu_assign_pointer(crash_vmclear_loaded_vmcss,
- 			   crash_vmclear_local_loaded_vmcss);
 
 
