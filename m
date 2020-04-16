@@ -2,85 +2,92 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D931DC2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:56:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E55EC352BE
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:57:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B632A2051A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:56:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2104206D9
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:56:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587049020;
+	bh=i/WQ4zp2hHzop+pFU2DiVs4dApyLMmZBX3q6djS2+kI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=fq7LBV+sLpm6magHbUn35yGSQineYd7vQi3wjDTVJqw4Ym4Ff3AZHUjz/EkgfxyRT
+	 G0twyeMSLJ1/9tScLNXsoC72xtVDp8et7WDQ1thRrPhCU5axbesWSd38dIKraM+qxL
+	 mBgFZzCA5j6erKkIRWDvm8SyNRxumZSVJGLqyCtM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405239AbgDPO4v (ORCPT
+        id S2404393AbgDPO45 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:56:51 -0400
-Received: from mga06.intel.com ([134.134.136.31]:7588 "EHLO mga06.intel.com"
+        Thu, 16 Apr 2020 10:56:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43096 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2409182AbgDPO4l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 10:56:41 -0400
-IronPort-SDR: s8YkELX1IbRRK2DsNPzM2BtwZjK5310yHKkRIn75auguFMjRyW/FBz5KtFndcvcC8XWdJYpv31
- QoP3iQIoSUUQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2020 07:56:40 -0700
-IronPort-SDR: uLbV3hxQRXypLeaOz3XOjU4fzbZM2N0R9vWON9psEM7DrROpZqt+eYG7CGc2dwHondC2MgtJMy
- O3nzONKtczOA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,391,1580803200"; 
-   d="scan'208";a="332865081"
-Received: from mylly.fi.intel.com (HELO [10.237.72.51]) ([10.237.72.51])
-  by orsmga001.jf.intel.com with ESMTP; 16 Apr 2020 07:56:38 -0700
-Subject: Re: Regression with commit 0a67361dcdaa
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     linux-efi <linux-efi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-References: <eb0d88d0-879e-c500-261e-69c76fb68a89@linux.intel.com>
- <CAMj1kXGGdwuP6X5jvbqmjsP2+bZ7CoJKZ5-WVoPYEjq9HTjuDA@mail.gmail.com>
-From:   Jarkko Nikula <jarkko.nikula@linux.intel.com>
-Message-ID: <9ae0c751-5024-6eda-ca78-80cfd1ed066f@linux.intel.com>
-Date:   Thu, 16 Apr 2020 17:56:38 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        id S2409143AbgDPN4C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:56:02 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 42C5221744;
+        Thu, 16 Apr 2020 13:56:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587045361;
+        bh=i/WQ4zp2hHzop+pFU2DiVs4dApyLMmZBX3q6djS2+kI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=IpSF4T10z6CeKRjgjdRXBXTkliIkNeGbUIxNbKi4e+ItUY8QqPlbN5yF3FKOpZYRS
+         qdpzD5RsIVB0Au3x2ISMA+gAtBv9Hghbg8NKmpe+QDPbQ6COX94eK3HUaNdcYFkHeY
+         QrnmXaC6xQxxrn5NLur/9768W9Ck4+6JmaJ8hgsY=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Wenhua Liu <liuw@vmware.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Keith Busch <kbusch@kernel.org>
+Subject: [PATCH 5.6 096/254] nvmet-tcp: fix maxh2cdata icresp parameter
+Date:   Thu, 16 Apr 2020 15:23:05 +0200
+Message-Id: <20200416131337.973130294@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.1
+In-Reply-To: <20200416131325.804095985@linuxfoundation.org>
+References: <20200416131325.804095985@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <CAMj1kXGGdwuP6X5jvbqmjsP2+bZ7CoJKZ5-WVoPYEjq9HTjuDA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/16/20 5:36 PM, Ard Biesheuvel wrote:
-> On Thu, 16 Apr 2020 at 16:35, Jarkko Nikula
-> <jarkko.nikula@linux.intel.com> wrote:
->>
->> Hi
->>
->> v5.7-rc1 hangs in early boot on an Intel Atom based prototype hardware
->> while v5.6 boots fine. I bisected the regression into 0a67361dcdaa
->> ("efi/x86: Remove runtime table address from kexec EFI setup data").
->>
->> v5.7-rc1 caused a reboot loop on another Intel Core based prototype HW.
->> Reboots also on top of 0a67361dcdaa but boots fine with that commit
->> reverted.
->>
->> Our test system uses kexec to boot the test kernel. These two machines
->> got regression with v5.7-rc1. We have also others that boot fine.
->>
-> 
-> This should already be fixed in Linus's tree. Please report back
-> whether that solves your problem or not.
-> 
-Ah, I forgot to pull & test before bisecting...
+From: Sagi Grimberg <sagi@grimberg.me>
 
-Yes, both machines boot fine with the HEAD 00086336a8d9 ("Merge tag 
-'efi-urgent-2020-04-15' of 
-git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip").
+commit 9cda34e37489244a8c8628617e24b2dbc8a8edad upstream.
 
--- 
-Jarkko
+MAXH2CDATA is not zero based. Also no reason to limit ourselves to
+1M transfers as we can do more easily. Make this an arbitrary limit
+of 16M.
+
+Reported-by: Wenhua Liu <liuw@vmware.com>
+Cc: stable@vger.kernel.org # v5.0+
+Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
+Signed-off-by: Keith Busch <kbusch@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ drivers/nvme/target/tcp.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- a/drivers/nvme/target/tcp.c
++++ b/drivers/nvme/target/tcp.c
+@@ -794,7 +794,7 @@ static int nvmet_tcp_handle_icreq(struct
+ 	icresp->hdr.pdo = 0;
+ 	icresp->hdr.plen = cpu_to_le32(icresp->hdr.hlen);
+ 	icresp->pfv = cpu_to_le16(NVME_TCP_PFV_1_0);
+-	icresp->maxdata = cpu_to_le32(0xffff); /* FIXME: support r2t */
++	icresp->maxdata = cpu_to_le32(0x400000); /* 16M arbitrary limit */
+ 	icresp->cpda = 0;
+ 	if (queue->hdr_digest)
+ 		icresp->digest |= NVME_TCP_HDR_DIGEST_ENABLE;
+
+
