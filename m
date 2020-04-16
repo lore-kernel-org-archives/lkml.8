@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23D7DC2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:24:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA763C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:24:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F318321D7E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:24:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B480E2076D
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:24:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587047082;
-	bh=l4gKo6MhDDCSkseuLFU9PhEztEAvyYUgelDYwzGowQo=;
+	s=default; t=1587047088;
+	bh=4lyHPOia/diCQ/+NljQpEdlVVkc7jJ+7eEXLzgL9/kQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aXjZlq4l0Do72S0NUBim9DGuwrgHtACaDrbeMBKo8T2SKC7KixOTwS0ZKApAud5Ac
-	 dQ6LCpUSZAbo73gcgFWwJ9gxxIexw8m92ojTyZHsToetLfJ1mWdQCFICBCGUwZ79RW
-	 MAYex67QmKfU4lRVAlA+beB6FyTjBvD4mOUE/AZI=
+	b=0a4lwpKHAldzOQGxa6f2RztP0WDRqQeR9z5Maj87JIDu7p82wF0rh8QTTmfBCwd3e
+	 mm63zKL+Q7AEyQ2xQO71Lg4dIUVp66DWY1+Cl5Dw31h3yKszjn/1eGSPs+G376oF/N
+	 rXWa8TG4Y2FNpyLkwJHkE6tUtq1lm7DbicNv7LFs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393974AbgDPOYk (ORCPT
+        id S2394235AbgDPOYr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:24:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44660 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 10:24:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44698 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2506705AbgDPN5f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:57:35 -0400
+        id S2506726AbgDPN5h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:57:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CD45020732;
-        Thu, 16 Apr 2020 13:57:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3D85F21734;
+        Thu, 16 Apr 2020 13:57:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587045454;
-        bh=l4gKo6MhDDCSkseuLFU9PhEztEAvyYUgelDYwzGowQo=;
+        s=default; t=1587045456;
+        bh=4lyHPOia/diCQ/+NljQpEdlVVkc7jJ+7eEXLzgL9/kQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YlrfHUpKhWRxUZa0zGePQNmAGm/MfU9W2sC3pZjS0wQT+flHO2/GDkRNpLhtZgm0k
-         7Mwm4NNFD8FtDbLsTBN82iwFyHfQSo1yxPTUAYI+19ooFIlG4Gv1HW2qM1ge/R1dKw
-         /PaHRqQGT5hcBj4PbrVyVYu/hOFv5aP7kwqJ2/uc=
+        b=j80IicQV9x9L224uo1io9Ir5x9RudD/1prY13cpcsrb0kA35IgvFUrXQrPwJpjBXz
+         LnoEYRfLp2CakQD+xcTI9H2WrEec5aajBTcZzSZ2gu1wpfHDMMEO8Apm5SgmRmoa2F
+         hju+iT/CQB4sp2agMGnBDPq6oQ4TcxdI7e3N29SQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kar Hin Ong <kar.hin.ong@ni.com>,
-        Sean V Kelley <sean.v.kelley@linux.intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH 5.6 101/254] PCI: Add boot interrupt quirk mechanism for Xeon chipsets
-Date:   Thu, 16 Apr 2020 15:23:10 +0200
-Message-Id: <20200416131338.672842253@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Stanimir Varbanov <svarbanov@mm-sol.com>
+Subject: [PATCH 5.6 102/254] PCI: qcom: Fix the fixup of PCI_VENDOR_ID_QCOM
+Date:   Thu, 16 Apr 2020 15:23:11 +0200
+Message-Id: <20200416131338.805474836@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.804095985@linuxfoundation.org>
 References: <20200416131325.804095985@linuxfoundation.org>
@@ -61,168 +61,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean V Kelley <sean.v.kelley@linux.intel.com>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-commit b88bf6c3b6ff77948c153cac4e564642b0b90632 upstream.
+commit 604f3956524a6a53c1e3dd27b4b685b664d181ec upstream.
 
-The following was observed by Kar Hin Ong with RT patchset:
+There exists non-bridge PCIe devices with PCI_VENDOR_ID_QCOM, so limit
+the fixup to only affect the relevant PCIe bridges.
 
-  Backtrace:
-  irq 19: nobody cared (try booting with the "irqpoll" option)
-  CPU: 0 PID: 3329 Comm: irq/34-nipalk Tainted:4.14.87-rt49 #1
-  Hardware name: National Instruments NI PXIe-8880/NI PXIe-8880,
-           BIOS 2.1.5f1 01/09/2020
-  Call Trace:
-  <IRQ>
-    ? dump_stack+0x46/0x5e
-    ? __report_bad_irq+0x2e/0xb0
-    ? note_interrupt+0x242/0x290
-    ? nNIKAL100_memoryRead16+0x8/0x10 [nikal]
-    ? handle_irq_event_percpu+0x55/0x70
-    ? handle_irq_event+0x4f/0x80
-    ? handle_fasteoi_irq+0x81/0x180
-    ? handle_irq+0x1c/0x30
-    ? do_IRQ+0x41/0xd0
-    ? common_interrupt+0x84/0x84
-  </IRQ>
-  ...
-  handlers:
-  [<ffffffffb3297200>] irq_default_primary_handler threaded
-  [<ffffffffb3669180>] usb_hcd_irq
-  Disabling IRQ #19
-
-The problem being that this device is triggering boot interrupts
-due to threaded interrupt handling and masking of the IO-APIC. These
-boot interrupts are then forwarded on to the legacy PCH's PIRQ lines
-where there is no handler present for the device.
-
-Whenever a PCI device fires interrupt (INTx) to Pin 20 of IOAPIC 2
-(GSI 44), the kernel receives two interrupts:
-
-   1. Interrupt from Pin 20 of IOAPIC 2  -> Expected
-   2. Interrupt from Pin 19 of IOAPIC 1  -> UNEXPECTED
-
-Quirks for disabling boot interrupts (preferred) or rerouting the
-handler exist but do not address these Xeon chipsets' mechanism:
-https://lore.kernel.org/lkml/12131949181903-git-send-email-sassmann@suse.de/
-
-Add a new mechanism via PCI CFG for those chipsets supporting CIPINTRC
-register's dis_intx_rout2ich bit.
-
-Link: https://lore.kernel.org/r/20200220192930.64820-2-sean.v.kelley@linux.intel.com
-Reported-by: Kar Hin Ong <kar.hin.ong@ni.com>
-Tested-by: Kar Hin Ong <kar.hin.ong@ni.com>
-Signed-off-by: Sean V Kelley <sean.v.kelley@linux.intel.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: stable@vger.kernel.org
+Fixes: 322f03436692 ("PCI: qcom: Use default config space read function")
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Acked-by: Stanimir Varbanov <svarbanov@mm-sol.com>
+Cc: stable@vger.kernel.org # v5.2+
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/pci/quirks.c |   80 ++++++++++++++++++++++++++++++++++++++++++++++-----
- 1 file changed, 73 insertions(+), 7 deletions(-)
+ drivers/pci/controller/dwc/pcie-qcom.c |    8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -1970,26 +1970,92 @@ DECLARE_PCI_FIXUP_RESUME(PCI_VENDOR_ID_I
- /*
-  * IO-APIC1 on 6300ESB generates boot interrupts, see Intel order no
-  * 300641-004US, section 5.7.3.
-+ *
-+ * Core IO on Xeon E5 1600/2600/4600, see Intel order no 326509-003.
-+ * Core IO on Xeon E5 v2, see Intel order no 329188-003.
-+ * Core IO on Xeon E7 v2, see Intel order no 329595-002.
-+ * Core IO on Xeon E5 v3, see Intel order no 330784-003.
-+ * Core IO on Xeon E7 v3, see Intel order no 332315-001US.
-+ * Core IO on Xeon E5 v4, see Intel order no 333810-002US.
-+ * Core IO on Xeon E7 v4, see Intel order no 332315-001US.
-+ * Core IO on Xeon D-1500, see Intel order no 332051-001.
-+ * Core IO on Xeon Scalable, see Intel order no 610950.
-  */
--#define INTEL_6300_IOAPIC_ABAR		0x40
-+#define INTEL_6300_IOAPIC_ABAR		0x40	/* Bus 0, Dev 29, Func 5 */
- #define INTEL_6300_DISABLE_BOOT_IRQ	(1<<14)
- 
-+#define INTEL_CIPINTRC_CFG_OFFSET	0x14C	/* Bus 0, Dev 5, Func 0 */
-+#define INTEL_CIPINTRC_DIS_INTX_ICH	(1<<25)
-+
- static void quirk_disable_intel_boot_interrupt(struct pci_dev *dev)
+--- a/drivers/pci/controller/dwc/pcie-qcom.c
++++ b/drivers/pci/controller/dwc/pcie-qcom.c
+@@ -1439,7 +1439,13 @@ static void qcom_fixup_class(struct pci_
  {
- 	u16 pci_config_word;
-+	u32 pci_config_dword;
- 
- 	if (noioapicquirk)
- 		return;
- 
--	pci_read_config_word(dev, INTEL_6300_IOAPIC_ABAR, &pci_config_word);
--	pci_config_word |= INTEL_6300_DISABLE_BOOT_IRQ;
--	pci_write_config_word(dev, INTEL_6300_IOAPIC_ABAR, pci_config_word);
--
-+	switch (dev->device) {
-+	case PCI_DEVICE_ID_INTEL_ESB_10:
-+		pci_read_config_word(dev, INTEL_6300_IOAPIC_ABAR,
-+				     &pci_config_word);
-+		pci_config_word |= INTEL_6300_DISABLE_BOOT_IRQ;
-+		pci_write_config_word(dev, INTEL_6300_IOAPIC_ABAR,
-+				      pci_config_word);
-+		break;
-+	case 0x3c28:	/* Xeon E5 1600/2600/4600	*/
-+	case 0x0e28:	/* Xeon E5/E7 V2		*/
-+	case 0x2f28:	/* Xeon E5/E7 V3,V4		*/
-+	case 0x6f28:	/* Xeon D-1500			*/
-+	case 0x2034:	/* Xeon Scalable Family		*/
-+		pci_read_config_dword(dev, INTEL_CIPINTRC_CFG_OFFSET,
-+				      &pci_config_dword);
-+		pci_config_dword |= INTEL_CIPINTRC_DIS_INTX_ICH;
-+		pci_write_config_dword(dev, INTEL_CIPINTRC_CFG_OFFSET,
-+				       pci_config_dword);
-+		break;
-+	default:
-+		return;
-+	}
- 	pci_info(dev, "disabled boot interrupts on device [%04x:%04x]\n",
- 		 dev->vendor, dev->device);
+ 	dev->class = PCI_CLASS_BRIDGE_PCI << 8;
  }
--DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL,   PCI_DEVICE_ID_INTEL_ESB_10,	quirk_disable_intel_boot_interrupt);
--DECLARE_PCI_FIXUP_RESUME(PCI_VENDOR_ID_INTEL,   PCI_DEVICE_ID_INTEL_ESB_10,	quirk_disable_intel_boot_interrupt);
-+/*
-+ * Device 29 Func 5 Device IDs of IO-APIC
-+ * containing ABAR—APIC1 Alternate Base Address Register
-+ */
-+DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL,	PCI_DEVICE_ID_INTEL_ESB_10,
-+		quirk_disable_intel_boot_interrupt);
-+DECLARE_PCI_FIXUP_RESUME(PCI_VENDOR_ID_INTEL,	PCI_DEVICE_ID_INTEL_ESB_10,
-+		quirk_disable_intel_boot_interrupt);
-+
-+/*
-+ * Device 5 Func 0 Device IDs of Core IO modules/hubs
-+ * containing Coherent Interface Protocol Interrupt Control
-+ *
-+ * Device IDs obtained from volume 2 datasheets of commented
-+ * families above.
-+ */
-+DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL,	0x3c28,
-+		quirk_disable_intel_boot_interrupt);
-+DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL,	0x0e28,
-+		quirk_disable_intel_boot_interrupt);
-+DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL,	0x2f28,
-+		quirk_disable_intel_boot_interrupt);
-+DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL,	0x6f28,
-+		quirk_disable_intel_boot_interrupt);
-+DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL,	0x2034,
-+		quirk_disable_intel_boot_interrupt);
-+DECLARE_PCI_FIXUP_RESUME(PCI_VENDOR_ID_INTEL,	0x3c28,
-+		quirk_disable_intel_boot_interrupt);
-+DECLARE_PCI_FIXUP_RESUME(PCI_VENDOR_ID_INTEL,	0x0e28,
-+		quirk_disable_intel_boot_interrupt);
-+DECLARE_PCI_FIXUP_RESUME(PCI_VENDOR_ID_INTEL,	0x2f28,
-+		quirk_disable_intel_boot_interrupt);
-+DECLARE_PCI_FIXUP_RESUME(PCI_VENDOR_ID_INTEL,	0x6f28,
-+		quirk_disable_intel_boot_interrupt);
-+DECLARE_PCI_FIXUP_RESUME(PCI_VENDOR_ID_INTEL,	0x2034,
-+		quirk_disable_intel_boot_interrupt);
+-DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, PCI_ANY_ID, qcom_fixup_class);
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x0101, qcom_fixup_class);
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x0104, qcom_fixup_class);
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x0106, qcom_fixup_class);
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x0107, qcom_fixup_class);
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x0302, qcom_fixup_class);
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x1000, qcom_fixup_class);
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x1001, qcom_fixup_class);
  
- /* Disable boot interrupts on HT-1000 */
- #define BC_HT1000_FEATURE_REG		0x64
+ static struct platform_driver qcom_pcie_driver = {
+ 	.probe = qcom_pcie_probe,
 
 
