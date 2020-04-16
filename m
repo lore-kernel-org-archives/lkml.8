@@ -3,67 +3,66 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 392BEC2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 16:41:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 829DCC2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 16:42:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1ECC021D7E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 16:41:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 652EF21D7E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 16:42:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391887AbgDPQl4 (ORCPT
+        id S2394314AbgDPQmM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 12:41:56 -0400
-Received: from elvis.franken.de ([193.175.24.41]:42212 "EHLO elvis.franken.de"
+        Thu, 16 Apr 2020 12:42:12 -0400
+Received: from elvis.franken.de ([193.175.24.41]:42207 "EHLO elvis.franken.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731646AbgDPQlf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 12:41:35 -0400
+        id S1727800AbgDPQld (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 12:41:33 -0400
 Received: from uucp (helo=alpha)
         by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
-        id 1jP7Zy-0001kl-04; Thu, 16 Apr 2020 18:41:30 +0200
+        id 1jP7Zy-0001kl-01; Thu, 16 Apr 2020 18:41:30 +0200
 Received: by alpha.franken.de (Postfix, from userid 1000)
-        id 10BFCC0144; Thu, 16 Apr 2020 18:40:16 +0200 (CEST)
-Date:   Thu, 16 Apr 2020 18:40:16 +0200
+        id 130E2C0144; Thu, 16 Apr 2020 18:35:21 +0200 (CEST)
+Date:   Thu, 16 Apr 2020 18:35:21 +0200
 From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     sboyd@kernel.org, jiaxun.yang@flygoat.com,
-        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org, chenhc@lemote.com,
-        Paul Burton <paulburton@kernel.org>, mturquette@baylibre.com
-Subject: Re: [PATCH] mips: loongsoon2ef: remove private clk api
-Message-ID: <20200416164016.GE24743@alpha.franken.de>
-References: <20200409064416.83340-1-sboyd@kernel.org>
- <20200409090228.2241176-1-arnd@arndb.de>
+To:     Mike Rapoport <rppt@kernel.org>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>, Peter Xu <peterx@redhat.com>,
+        maobibo <maobibo@loongson.cn>,
+        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
+        linux-mips@vger.kernel.org, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Mike Rapoport <rppt@linux.ibm.com>
+Subject: Re: [PATCH] mips: define pud_index() regardless of page table folding
+Message-ID: <20200416163521.GB24743@alpha.franken.de>
+References: <20200402081614.5696-1-rppt@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200409090228.2241176-1-arnd@arndb.de>
+In-Reply-To: <20200402081614.5696-1-rppt@kernel.org>
 User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 09, 2020 at 11:02:28AM +0200, Arnd Bergmann wrote:
-> As platforms are moving to COMMON_CLK in general, loongson2ef
-> stuck out as something that has a private implementation but
-> does not actually use it except for setting the frequency of
-> the CPU itself from the loongson2_cpufreq driver.
+On Thu, Apr 02, 2020 at 11:16:14AM +0300, Mike Rapoport wrote:
+> From: Mike Rapoport <rppt@linux.ibm.com>
 > 
-> Change that driver to call the register setting function directly
-> and remove the rest of the stub implementation.
+> Commit 31168f033e37 ("mips: drop __pXd_offset() macros that duplicate
+> pXd_index() ones") is correct that pud_index() & __pud_offset() are the
+> same when pud_index() is actually provided, however it does not take into
+> account the __PAGETABLE_PUD_FOLDED case. This has broken MIPS KVM
+> compilation because it relied on availability of pud_index().
 > 
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> Define pud_index() regardless of page table folded. It will evaluate to
+> actual index for 4-level pagetables and to 0 for folded PUD level.
+> 
+> Link: https://lore.kernel.org/lkml/20200331154749.5457-1-pbonzini@redhat.com
+> Reported-by: Paolo Bonzini <pbonzini@redhat.com>
+> Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
 > ---
->  arch/mips/include/asm/clock.h                 | 49 ----------
->  .../include/asm/mach-loongson2ef/loongson.h   |  1 +
->  arch/mips/loongson2ef/Kconfig                 |  1 -
->  arch/mips/loongson2ef/lemote-2f/clock.c       | 98 +------------------
->  arch/mips/loongson64/smp.c                    |  1 -
->  drivers/cpufreq/loongson2_cpufreq.c           | 22 +----
->  6 files changed, 8 insertions(+), 164 deletions(-)
->  delete mode 100644 arch/mips/include/asm/clock.h
+>  arch/mips/include/asm/pgtable-64.h | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 
 applied to mips-next.
 
