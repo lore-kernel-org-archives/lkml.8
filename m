@@ -7,53 +7,51 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFFC6C2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:26:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A3DDC2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:27:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9773321BE5
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:26:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E0CD21BE5
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:27:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587043617;
-	bh=VOfh+h2MtQqoZ+YNlZDh/acRHYS0plv1SE5C2r/svls=;
+	s=default; t=1587043627;
+	bh=oj+XMYejkYfYV1Q101OcM0l/io3atrU26NDGuzee03E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mzs2hgAwGbDXhrgKLAUhTlpj9bavvdtmw53aBB+ej8H8xIoBFCm6TnRrb9uNZSx/L
-	 l11+EHhyDJhKDWJtgnzEO6QnCMKSRe2zp25162B2iTGnu3r2KU6Z5ZRR8V4kRJs4qq
-	 iR+n+dUD2+1Drr1YtwaolJlQY44CEhFJzd3c3XYA=
+	b=WIxdqQvHrqFdMBaBDFqZiM4a1iYSnUz9B8c+dS35+keQjv7/GDZdHD4+7XuAMh4DM
+	 626gfomwxYtjqpB9rOCCQ1Jt1eJFOVgYzJHXUl33kNtJn1mYzBuhuJnKoBdPxUNRDf
+	 WIZDNNif9Q0QeokM76XseYUAhhxuIpW+k20AvpXk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2895319AbgDPN0y (ORCPT
+        id S2895341AbgDPN1E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 09:26:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34318 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 09:27:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34574 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2895174AbgDPN0F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:26:05 -0400
+        id S2895261AbgDPN0U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:26:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AF7C0206E9;
-        Thu, 16 Apr 2020 13:26:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7F48A21D82;
+        Thu, 16 Apr 2020 13:26:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587043564;
-        bh=VOfh+h2MtQqoZ+YNlZDh/acRHYS0plv1SE5C2r/svls=;
+        s=default; t=1587043579;
+        bh=oj+XMYejkYfYV1Q101OcM0l/io3atrU26NDGuzee03E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eMEyqVIPZLeMERCeVhNU51iU64K2M72HPKvKzh4RnKbuZ8/6dgIEIP2Npzi63Qxi8
-         sEBnZ0HSclGK9VoZz18IMmiaNww/QdfZRyXRe+abkws/b1/Q578IJsfBJcRGFLpF4u
-         6y9wTnNIvmnfFmLe8GxREVklXHZA75LGjpgiGLGk=
+        b=QQaZLXbirB8QTTptARSWFhMT8KNHbL5/7YNGdhou5Jf0TKrhcFpcUf873xWZ34QKU
+         Kk/z2wh3OHzZ5uZlULH5JelTDdbiJKS5Leq9uN9QPj4H8jaoEQ1A78SZh0Jk4G/PRc
+         mETYyur+cT6TzrETu4iT3hdLQ3rw2DFeTL03qR6s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ondrej Jirman <megous@megous.com>,
-        Maxime Ripard <maxime@cerno.tech>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 001/146] ARM: dts: sun8i-a83t-tbs-a711: HM5065 doesnt like such a high voltage
-Date:   Thu, 16 Apr 2020 15:22:22 +0200
-Message-Id: <20200416131242.573777598@linuxfoundation.org>
+        stable@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
+        "Alexey Dobriyan (SK hynix)" <adobriyan@gmail.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 015/146] null_blk: fix spurious IO errors after failed past-wp access
+Date:   Thu, 16 Apr 2020 15:22:36 +0200
+Message-Id: <20200416131244.597812857@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131242.353444678@linuxfoundation.org>
 References: <20200416131242.353444678@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -62,35 +60,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ondrej Jirman <megous@megous.com>
+From: Alexey Dobriyan <adobriyan@gmail.com>
 
-[ Upstream commit a40550952c000667b20082d58077bc647da6c890 ]
+[ Upstream commit ff77042296d0a54535ddf74412c5ae92cb4ec76a ]
 
-Lowering the voltage solves the quick image degradation over time
-(minutes), that was probably caused by overheating.
+Steps to reproduce:
 
-Signed-off-by: Ondrej Jirman <megous@megous.com>
-Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+	BLKRESETZONE zone 0
+
+	// force EIO
+	pwrite(fd, buf, 4096, 4096);
+
+	[issue more IO including zone ioctls]
+
+It will start failing randomly including IO to unrelated zones because of
+->error "reuse". Trigger can be partition detection as well if test is not
+run immediately which is even more entertaining.
+
+The fix is of course to clear ->error where necessary.
+
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Alexey Dobriyan (SK hynix) <adobriyan@gmail.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/block/null_blk_main.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts b/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
-index 49547a43cc90a..54cbdaf7ffdcc 100644
---- a/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
-+++ b/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
-@@ -318,8 +318,8 @@
- };
+diff --git a/drivers/block/null_blk_main.c b/drivers/block/null_blk_main.c
+index 78355a0e61db6..d2d7dc9cd58d2 100644
+--- a/drivers/block/null_blk_main.c
++++ b/drivers/block/null_blk_main.c
+@@ -571,6 +571,7 @@ static struct nullb_cmd *__alloc_cmd(struct nullb_queue *nq)
+ 	if (tag != -1U) {
+ 		cmd = &nq->cmds[tag];
+ 		cmd->tag = tag;
++		cmd->error = BLK_STS_OK;
+ 		cmd->nq = nq;
+ 		if (nq->dev->irqmode == NULL_IRQ_TIMER) {
+ 			hrtimer_init(&cmd->timer, CLOCK_MONOTONIC,
+@@ -1433,6 +1434,7 @@ static blk_status_t null_queue_rq(struct blk_mq_hw_ctx *hctx,
+ 		cmd->timer.function = null_cmd_timer_expired;
+ 	}
+ 	cmd->rq = bd->rq;
++	cmd->error = BLK_STS_OK;
+ 	cmd->nq = nq;
  
- &reg_dldo3 {
--	regulator-min-microvolt = <2800000>;
--	regulator-max-microvolt = <2800000>;
-+	regulator-min-microvolt = <1800000>;
-+	regulator-max-microvolt = <1800000>;
- 	regulator-name = "vdd-csi";
- };
- 
+ 	blk_mq_start_request(bd->rq);
 -- 
 2.20.1
 
