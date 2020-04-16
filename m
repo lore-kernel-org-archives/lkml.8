@@ -2,153 +2,117 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEA7CC38A29
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 21:28:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1757CC2BA2B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 21:29:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9EB13206B9
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 21:28:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587072527;
-	bh=1W5GV7/V9Tn9maKaBF+xq4SFgOYwywBEJY7SBo772cw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=KsShSVTb6dJx9dcoqtoLGWh3xNITnhc/60+Cw/0MCV9CT8opLIcqo3tpwPsosjcKG
-	 LkZw5FogZn7GiwgHlw//IAwogvw9MesdMMokmOQC9VwIa6B7VOAY4/I2Hzd2Qv3PKX
-	 7iXH0Bvw3oO+thNNchfEA+i0dwm1Qne2tniovRZ4=
+	by mail.kernel.org (Postfix) with ESMTP id E4FA1206D5
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 21:29:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GBH/CeFk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727956AbgDPV2q (ORCPT
+        id S1728050AbgDPV3h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 17:28:46 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:35688 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726049AbgDPV2p (ORCPT
+        Thu, 16 Apr 2020 17:29:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46188 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726049AbgDPV3e (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 17:28:45 -0400
-Received: by mail-oi1-f194.google.com with SMTP id b7so293107oic.2;
-        Thu, 16 Apr 2020 14:28:45 -0700 (PDT)
+        Thu, 16 Apr 2020 17:29:34 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40832C061A0C;
+        Thu, 16 Apr 2020 14:29:33 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id t4so93414plq.12;
+        Thu, 16 Apr 2020 14:29:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=xKJ12TLkzQ/kXKzUNh7uZY71wcHGHq0dr9HRnNeejTs=;
+        b=GBH/CeFkVshycdrumE7Cxfzsr2k8oHphKunJ5cQkq/J+BEWy0B8mN7So8xFtkmT2Sy
+         OJVsuR2YdLMqncaZ6zEycx4nFK+mVPVCNYOhjvj5TJ4RS3I/Bw/QlW04R3YfV2LvoegR
+         VqTg6xwm5Nj0dgN2MN3j+53B+5FTa1R+FgI5eGsuwX5plLN3LtvSF+4f7XCVCnlpdS2E
+         youpM0r8I65nbaeR/IJm+pYpAJo61yBeI+0D06Vq7lhAn2pENbE0q5kjHsJm1SjuuqSW
+         nTRiaYpEwP4ycb7a8oWaa9JHyDjdhAEzkl6JO6tU1pfvjzI+2K8oMGvBshxGCKJxpHxF
+         fFfA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=aZDi6M75xZSmYWePqnnoB2rg9ADM0ASJydJXaT8e6cw=;
-        b=cz9Bza8i+enE7ijRp4/UurlFtuvEdZucR19pyNWXNWbQ7wdUhoKLBj1a5cFsBGhTRQ
-         jGLXxv1MOj69Q7MVbsZ7sPiGj8Uhq8S9DA4Kr6o83blJ/PqEyCaHrfMi5sW5jpBkn6Zq
-         60ERJjY6hockxC8Eutsq9P2XYRCW5fqhhaEHAYi7zhw3FRTzJkDV245qDuwFmzBEiDDg
-         BwKir3sfASDlGt+R05Dh9y8rjJNjVRM9FFKDORolZJCYehO1Cyx4a7XRWHD5s3hyCgIa
-         Y0LUiOHveSCb54UG87bC5FjF089qp5YhY5mnszd8VwxQSmU9gJJe/UgpPj3Zo+wiG0wQ
-         IPkw==
-X-Gm-Message-State: AGi0PuaGSuk7qqbb5J2VRpIb68RvyBbftYv7EXjJkPZqH1DmhR0swvFr
-        gn28zuVcoG49uRVg1P9l8A==
-X-Google-Smtp-Source: APiQypIRlMbrSk467b8ch8GEIs0tdW1iIBJ5clIPnKZJ1NATxlpFo+/Ezfx3Bv68xYsrgs91PDj6mA==
-X-Received: by 2002:a05:6808:992:: with SMTP id a18mr110243oic.142.1587072524616;
-        Thu, 16 Apr 2020 14:28:44 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id z12sm7405057otk.24.2020.04.16.14.28.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Apr 2020 14:28:43 -0700 (PDT)
-Received: (nullmailer pid 29393 invoked by uid 1000);
-        Thu, 16 Apr 2020 21:28:42 -0000
-Date:   Thu, 16 Apr 2020 16:28:42 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Sergey Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Sebastian Reichel <sre@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 3/4] dt-bindings: power: reset: Add regmap support to the
- SYSCON reboot-mode bindings
-Message-ID: <20200416212842.GA18756@bogus>
-References: <20200306130341.9585-1-Sergey.Semin@baikalelectronics.ru>
- <20200306130402.1F4F0803079F@mail.baikalelectronics.ru>
- <20200312211438.GA21883@bogus>
- <20200313130231.wrvvcttm7ofaxbfo@ubsrv2.baikal.int>
- <CAL_Jsq+W84r687zNV=2S-hj9=xbTQxkx9MpVNDTn6TOrBgiGUw@mail.gmail.com>
- <20200331195053.dcexmhbsbnbfuabe@ubsrv2.baikal.int>
- <20200416195620.4q6scqk5rqbonz4s@ubsrv2.baikal.int>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xKJ12TLkzQ/kXKzUNh7uZY71wcHGHq0dr9HRnNeejTs=;
+        b=gdzIt9debtoisiNVf+gRSU0nAmazzGYmQGOlAqjBURy0DbcJCmWDAWvLyaA+ULAi5J
+         QnCsmCz6bNwdnlzwgi1c2ekABLpcheC9J7tlcLmodgNklx7QlxKmfrQqG7fYUICqImIv
+         rJe5bjo6szT40Idhki/9/Mpks139qGjntxzTb5LwP4VK9PZrhfQfSL4p7dZl4fMUDml8
+         pUYIAf1pdAHxce6TM7Zm5ulkMb/mIyPZ9y6M1Ua2O+rM/diNxJ44BgzZd28Od/3JIfH0
+         pcfgiCfgrDXTriekYBWgVNXM9YbbD1xnzc+PU8rjLSGhuqzqtGyCuSVg/an1SKdyMyBG
+         I+/Q==
+X-Gm-Message-State: AGi0PuZTXfN3S2Uvq2u4I1RcVjkHA6/zkIf32QKmCiSiAi3C1BdnamzV
+        miGa1zWKnULo375Kuz3unJkXJkJO4EboT5ejl6c=
+X-Google-Smtp-Source: APiQypK7aMZjGbS/drYLPjs2OxK5ulil5CIhuwgD0W6W93ut0pOvMYA8S/xXs0MgwEgcE2/MgaPagQBZIHYcv42CEL4=
+X-Received: by 2002:a17:902:aa09:: with SMTP id be9mr261775plb.18.1587072572729;
+ Thu, 16 Apr 2020 14:29:32 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200416195620.4q6scqk5rqbonz4s@ubsrv2.baikal.int>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200416152345.23077-1-zhengdejin5@gmail.com> <6ca3cd57-de73-5327-5773-e08bf12c4a85@web.de>
+ <7713a931e4475294de85b74aca298dde8be4242d.camel@perches.com>
+In-Reply-To: <7713a931e4475294de85b74aca298dde8be4242d.camel@perches.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Fri, 17 Apr 2020 00:29:20 +0300
+Message-ID: <CAHp75Vdd8SzrzXuxTTtkqRBWZuebhumJfv_fBPqdKwe780_ZEQ@mail.gmail.com>
+Subject: Re: [PATCH v2] i2c: busses: remove duplicate dev_err()
+To:     Joe Perches <joe@perches.com>
+Cc:     Markus Elfring <Markus.Elfring@web.de>,
+        Dejin Zheng <zhengdejin5@gmail.com>,
+        linux-i2c <linux-i2c@vger.kernel.org>,
+        kernel-janitors@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Thor Thayer <thor.thayer@linux.intel.com>,
+        Tang Bin <tangbin@cmss.chinamobile.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Patrick Williams <alpawi@amazon.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Krzysztof Adamski <krzysztof.adamski@nokia.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Barry Song <baohua@kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Dong Aisheng <aisheng.dong@nxp.com>,
+        George Cherian <gcherian@marvell.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Neil Armstrong <narmstrong@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 16, 2020 at 10:56:20PM +0300, Sergey Semin wrote:
-> Rob,
-> Any comment on my suggestion below?
-> 
-> Regards,
-> -Sergey
-> 
-> On Tue, Mar 31, 2020 at 10:50:53PM +0300, Sergey Semin wrote:
-> > On Wed, Mar 18, 2020 at 05:14:25PM -0600, Rob Herring wrote:
-> > > On Fri, Mar 13, 2020 at 7:03 AM Sergey Semin
-> > > <Sergey.Semin@baikalelectronics.ru> wrote:
-> > > >
-> > > > On Thu, Mar 12, 2020 at 04:14:38PM -0500, Rob Herring wrote:
-> > > > > On Fri, Mar 06, 2020 at 04:03:40PM +0300, Sergey.Semin@baikalelectronics.ru wrote:
-> > > > > > From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> > > > > >
-> > > > > > Optional regmap property will be used to refer to a syscon-controller
-> > > > > > having a reboot tolerant register mapped.
-> > > > >
-> > > > > NAK. It should simply be a child node of the 'syscon-controller'.
-> > > >
-> > > > Hm, It's dilemma. The driver maintainer said ack, while you disagree.)
-> > > > So the code change will be merged while the doc-part won't? Lets discuss then
-> > > > to settle the issue.
-> > > >
-> > > > Why 'syscon-reboot' can be out of syscon-controller node, while
-> > > > 'syscon-reboot-mode' can't?
-> > > 
-> > > Look at the history and you will see one was reviewed by DT
-> > > maintainers and one wasn't.
-> > > 
-> > > > They both belong to the same usecase: save
-> > > > cause id and reboot. So having similar properties-set and declaring their
-> > > > nodes someplace nearby is natural.
-> > > 
-> > > Which is what I'm asking for. Where else in the tree does it make
-> > > sense to locate the 'syscon-reboot-mode' node? Locate nodes where they
-> > > logically belong.
-> > > 
-> > > > According to the driver 'syscon-reboot'
-> > > > can't lack the regmap property because it's mandatory, while here you refuse
-> > > > to have even optional support. Additionally in most of the cases the
-> > > > 'syscon-reboot' nodes aren't declared as a child of a system controller
-> > > > node. Why 'syscon-reboot-mode' can't work in a similar way?
-> > > 
-> > > There's plenty of bad or "don't follow current best practice" examples
-> > > in the tree for all sorts of things. That is not a reason for doing
-> > > something in a new binding or adding to an existing one.
-> > > 
-> > > Rob
-> > 
-> > Alright. I see your point. What about I'd provide a sort of opposite
-> > implementation? I could make the "regmap"-phandle reference being optional
-> > in the !"syscon-reboot"! driver instead of adding the regmap-property
-> > support to the "syscon-reboot-mode" driver. So if regmap property isn't
-> > defined in the "syscon-reboot"-compatible node, the driver will try to
-> > get a syscon regmap from the parental node as it's done in the
-> > "syscon-reboot-mode" driver.
+On Fri, Apr 17, 2020 at 12:28 AM Joe Perches <joe@perches.com> wrote:
+>
+> On Thu, 2020-04-16 at 20:22 +0200, Markus Elfring wrote:
+> > > it will print an error message by itself when platform_get_irq()
+> > > goes wrong. so don't need dev_err() in here again.
+> >
+> > I suggest to improve the commit message considerably.
+>
+> I suggest you ignore Markus' suggestion.
+>
+> The commit message is OK.
+>
+> The subject _could_ have included "platform_get_irq" something like
+>
+> Subject: [PATCH v2] i2c: busses: Remove platform_get_irq()'s duplicated dev_err()
+>
+> but I believe it's not important enough to redo.
 
-That seems fine.
++1, I think it's good enough.
 
-> > Seeing you think that regmap-property-based design is a bad practice in
-> > this case, I also could mark the property as deprecated in the "syscon-reboot"
-> > dt schema and print a warning from the "syscon-reboot" driver if one is defined.
-
-Depends on how many platforms will start getting warnings. I think just 
-marking deprecated is enough.
-
-Rob
+-- 
+With Best Regards,
+Andy Shevchenko
