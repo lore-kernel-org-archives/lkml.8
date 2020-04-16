@@ -2,195 +2,301 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DE35C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 03:40:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7007DC2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 03:42:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 663922072D
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 03:40:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rRAYu5sO"
+	by mail.kernel.org (Postfix) with ESMTP id 4883120771
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 03:42:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587008544;
+	bh=3bdCitI6DbtfpJ8kO1TDqDqoKTqTZP8xYsOYGObs8do=;
+	h=Date:From:To:Subject:References:In-Reply-To:List-ID:From;
+	b=wq8FIllZNt9PefcvoMT/rMokKCvQTYyHwkxMAybeQfct3RYZ/NloxfcRWrz9ruqx1
+	 WV9nqCHBP97apk8wf0GViwoEWFizBHgsH3n+GzVuP0SnT3zqLyptWG/n6J20WYQJuk
+	 v1UU38Vawo6att6Nk8BimiJ4gCwxbyVpun+CEcZQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391360AbgDPDkX (ORCPT
+        id S2391272AbgDPDmW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 23:40:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48768 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2391128AbgDPDkQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 23:40:16 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C190BC061A0C
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 20:40:15 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id d1so1067814pfh.1
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 20:40:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=m5hy4xiunR5mbPaXPcryFldNP/am+ULUKmnq7qSCn+g=;
-        b=rRAYu5sOSvLYPzxWffYX0ycmRMPHrLZ5lHiPZ9pcq5k+rdLLWRssm+fW56CIpLszLi
-         ayhJb3kkkobrDJL0gj6BQPMIiUGgAOTvKuc/H73Fz+snsiIfonSV/OXB0V8U9sk6QOkv
-         /p12BI4vz2UqPIWf3UqKSnzcw0Y8mGgWolafGDKFe+XkKlPjfDhny1gjuF/sersF5lU0
-         DjbA3gq2I32tbz+foeXF+ngk7hNDyaCWA5JBNteUCMc8e/t6Sk5Qs7uKsf5jfTyyDNk8
-         DAoMkWhh+s+58/1IdngL+qSc07/UWMLfgxDOuWUtxu5DylkOHQb8LZQi4qAmBtx5TrYE
-         9zjw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=m5hy4xiunR5mbPaXPcryFldNP/am+ULUKmnq7qSCn+g=;
-        b=etMvg32iA/VRQ0RcNweAGO8eRAGA2AnQtGroIsKXnw3489YMHGK9Glevc2bPisFQf/
-         AEs09HFZZfKEdH0DYcfpESHv6wqRLJHBbpHLrWlpmEvDTaqMneVLmjZVg/TlrBEIhB5o
-         I+sU8VqC5qPKLDgBSoXo40cf45VWESeQ0lbgwLfru2X39bIJLXoF2oWQKdZuaPPZrGvY
-         yiQqpN6w5/ZG4tHyxJ3wLET+niaU2FYq3Q2PNQd7DLUB+I9GwFLejPkj58guWLM5vhmo
-         NVUy/HN6oOiD1OZRZJvGjHyZYntYb03LQax0Ljtb08aRCNOQdj5gwUXFpS5w6bRnEjo3
-         SHCg==
-X-Gm-Message-State: AGi0PubZVDtYnIN+Ur1RUeloK+0xPGJReovNEj65dqDQnnAFXI+ASVoS
-        p4I1Ps0g5exdkLvuBaevA4k=
-X-Google-Smtp-Source: APiQypKv+vtsM7+NyjKz3c0seHkYPKBdICKpdkWDHg5Z7D0tsjZ8vYtQ5VJgYitMbR8fsvzVNwgHoQ==
-X-Received: by 2002:a63:4526:: with SMTP id s38mr6778872pga.410.1587008415303;
-        Wed, 15 Apr 2020 20:40:15 -0700 (PDT)
-Received: from HP-G1 ([45.135.186.26])
-        by smtp.gmail.com with ESMTPSA id a12sm8840158pfr.28.2020.04.15.20.40.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Apr 2020 20:40:14 -0700 (PDT)
-Date:   Thu, 16 Apr 2020 11:39:05 +0800
-From:   Chen Yu <yu.chen.surf@gmail.com>
-To:     vpillai <vpillai@digitalocean.com>
-Cc:     Nishanth Aravamudan <naravamudan@digitalocean.com>,
-        Julien Desfossez <jdesfossez@digitalocean.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Tim Chen <tim.c.chen@linux.intel.com>, mingo@kernel.org,
-        tglx@linutronix.de, pjt@google.com, torvalds@linux-foundation.org,
-        linux-kernel@vger.kernel.org, fweisbec@gmail.com,
-        keescook@chromium.org, kerrnel@google.com,
-        Phil Auld <pauld@redhat.com>, Aaron Lu <aaron.lwe@gmail.com>,
-        Aubrey Li <aubrey.intel@gmail.com>, aubrey.li@linux.intel.com,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Joel Fernandes <joelaf@google.com>, joel@joelfernandes.org,
-        Aaron Lu <aaron.lu@linux.alibaba.com>,
-        Long Cui <long.cui@intel.com>
-Subject: Re: [RFC PATCH 07/13] sched: Add core wide task selection and
- scheduling.
-Message-ID: <20200416033804.GA5712@HP-G1>
-References: <cover.1583332764.git.vpillai@digitalocean.com>
- <e942da7fd881977923463f19648085c1bfaa37f8.1583332765.git.vpillai@digitalocean.com>
+        Wed, 15 Apr 2020 23:42:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47614 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390798AbgDPDmS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 23:42:18 -0400
+Received: from localhost (unknown [104.132.1.66])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7724420737;
+        Thu, 16 Apr 2020 03:42:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587008537;
+        bh=3bdCitI6DbtfpJ8kO1TDqDqoKTqTZP8xYsOYGObs8do=;
+        h=Date:From:To:Subject:References:In-Reply-To:From;
+        b=s9vZ1bN22hDMSwhRJNr7GEGww4DRupw6O6A1EJ+JEk2S2hei94WewGsC3RW/fQZL9
+         gkoNv6u0FGNAs86g5A+hWgkRlMaTkt44gZTjY38tebmcO/loIEOVxJ9U+FGASJKRkQ
+         zIExw821mKKrsnz4Fx02WRWLliw+2d1iqZA+ss78=
+Date:   Wed, 15 Apr 2020 20:42:17 -0700
+From:   Jaegeuk Kim <jaegeuk@kernel.org>
+To:     linux-kernel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, kernel-team@android.com
+Subject: Re: [f2fs-dev] [PATCH v2] f2fs: add tracepoint for f2fs iostat
+Message-ID: <20200416034217.GA254838@google.com>
+References: <20200413161649.38177-1-jaegeuk@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <e942da7fd881977923463f19648085c1bfaa37f8.1583332765.git.vpillai@digitalocean.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200413161649.38177-1-jaegeuk@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 04, 2020 at 04:59:57PM +0000, vpillai wrote:
-> From: Peter Zijlstra <peterz@infradead.org>
-> 
-> Instead of only selecting a local task, select a task for all SMT
-> siblings for every reschedule on the core (irrespective which logical
-> CPU does the reschedule).
-> 
-> There could be races in core scheduler where a CPU is trying to pick
-> a task for its sibling in core scheduler, when that CPU has just been
-> offlined.  We should not schedule any tasks on the CPU in this case.
-> Return an idle task in pick_next_task for this situation.
-> 
-> NOTE: there is still potential for siblings rivalry.
-> NOTE: this is far too complicated; but thus far I've failed to
->       simplify it further.
-> 
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> Signed-off-by: Julien Desfossez <jdesfossez@digitalocean.com>
-> Signed-off-by: Vineeth Remanan Pillai <vpillai@digitalocean.com>
-> Signed-off-by: Aaron Lu <aaron.lu@linux.alibaba.com>
-> Signed-off-by: Tim Chen <tim.c.chen@linux.intel.com>
-> ---
-[cut]
+v2:
+ - add sysfs entry to give the time period
+ - keep stat records in sbi
 
-Hi Vineeth,
-An NULL pointer exception was found when testing V5 on top of stable
-v5.6.2. And we tried the patch Peter suggested, the NULL pointer
-was not found so far. We don't know if this change would help mitigate
-the symptom, but it should do no harm to test with this fix applied.
+From 805015f3f2cec3acf43321359129c5382a1d5db4 Mon Sep 17 00:00:00 2001
+From: Daeho Jeong <daehojeong@google.com>
+Date: Mon, 30 Mar 2020 03:30:59 +0000
+Subject: [PATCH] f2fs: add tracepoint for f2fs iostat
 
-Thanks,
-Chenyu
+Added a tracepoint to see iostat of f2fs. Default period of that
+is 3 second. This tracepoint can be used to be monitoring
+I/O statistics periodically.
 
-From 6828eaf4611eeb3e1bad3b9a0d4ec53c6fa01fe3 Mon Sep 17 00:00:00 2001
-From: Chen Yu <yu.c.chen@intel.com>
-Date: Thu, 16 Apr 2020 10:51:07 +0800
-Subject: [PATCH] sched: Fix pick_next_task() race condition in core scheduling
-
-As Perter mentioned that Commit 6e2df0581f56 ("sched: Fix pick_next_task()
-vs 'change' pattern race") has fixed a race condition due to rq->lock
-improperly released after put_prev_task(), backport this fix to core
-scheduling's pick_next_task() as well.
-
-Without this fix, Aubrey, Long and I found an NULL exception point
-triggered within one hour when running RDT MBA(Intel Resource Directory
-Technolodge Memory Bandwidth Allocation) benchmarks on a 36 Core(72 HTs)
-platform, which tries to dereference a NULL sched_entity:
-
-[ 3618.429053] BUG: kernel NULL pointer dereference, address: 0000000000000160
-[ 3618.429039] RIP: 0010:pick_task_fair+0x2e/0xa0
-[ 3618.429042] RSP: 0018:ffffc90000317da8 EFLAGS: 00010046
-[ 3618.429044] RAX: 0000000000000000 RBX: ffff88afdf4ad100 RCX: 0000000000000001
-[ 3618.429045] RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffff88afdf4ad100
-[ 3618.429045] RBP: ffffc90000317dc0 R08: 0000000000000048 R09: 0100000000100000
-[ 3618.429046] R10: 0000000000000001 R11: 0000000000000000 R12: 0000000000000000
-[ 3618.429047] R13: 000000000002d080 R14: ffff88afdf4ad080 R15: 0000000000000014
-[ 3618.429048]  ? pick_task_fair+0x48/0xa0
-[ 3618.429048]  pick_next_task+0x34c/0x7e0
-[ 3618.429049]  ? tick_program_event+0x44/0x70
-[ 3618.429049]  __schedule+0xee/0x5d0
-[ 3618.429050]  schedule_idle+0x2c/0x40
-[ 3618.429051]  do_idle+0x175/0x280
-[ 3618.429051]  cpu_startup_entry+0x1d/0x30
-[ 3618.429052]  start_secondary+0x169/0x1c0
-[ 3618.429052]  secondary_startup_64+0xa4/0xb0
-
-While with this patch applied, no NULL pointer exception was found within
-14 hours for now. Although there's no direct evidence this fix would solve
-the issue, it does fix a potential race condition.
-
-Signed-off-by: Chen Yu <yu.c.chen@intel.com>
+Bug: 152162885
+Change-Id: I6fbe010b9cf1a90caa0f4793a6dab77c4cba7da6
+Signed-off-by: Daeho Jeong <daehojeong@google.com>
 ---
- kernel/sched/core.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+ Documentation/ABI/testing/sysfs-fs-f2fs |  6 +++
+ fs/f2fs/f2fs.h                          | 16 +++++++-
+ fs/f2fs/super.c                         |  1 +
+ fs/f2fs/sysfs.c                         | 39 +++++++++++++++++++
+ include/trace/events/f2fs.h             | 52 +++++++++++++++++++++++++
+ 5 files changed, 113 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 02495d44870f..ef101a3ef583 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -4477,9 +4477,14 @@ pick_next_task(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
- 		return next;
+diff --git a/Documentation/ABI/testing/sysfs-fs-f2fs b/Documentation/ABI/testing/sysfs-fs-f2fs
+index c8620ea7022a7..427f5b45c67f1 100644
+--- a/Documentation/ABI/testing/sysfs-fs-f2fs
++++ b/Documentation/ABI/testing/sysfs-fs-f2fs
+@@ -332,3 +332,9 @@ Description:	Give a way to attach REQ_META|FUA to data writes
+ 		*      REQ_META     |      REQ_FUA      |
+ 		*    5 |    4 |   3 |    2 |    1 |   0 |
+ 		* Cold | Warm | Hot | Cold | Warm | Hot |
++
++What:		/sys/fs/f2fs/<disk>/iostat_period_ms
++Date:		April 2020
++Contact:	"Daeho Jeong" <daehojeong@google.com>
++Description:	Give a way to change iostat_period time. 3secs by default.
++		The new iostat trace gives stats gap given the period.
+diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+index c2788738aa0d4..6cedbfb2067c5 100644
+--- a/fs/f2fs/f2fs.h
++++ b/fs/f2fs/f2fs.h
+@@ -1505,7 +1505,10 @@ struct f2fs_sb_info {
+ 	/* For app/fs IO statistics */
+ 	spinlock_t iostat_lock;
+ 	unsigned long long write_iostat[NR_IO_TYPE];
++	unsigned long long prev_write_iostat[NR_IO_TYPE];
+ 	bool iostat_enable;
++	unsigned long iostat_next_period;
++	unsigned int iostat_period_ms;
+ 
+ 	/* to attach REQ_META|REQ_FUA flags */
+ 	unsigned int data_io_flag;
+@@ -2999,16 +3002,25 @@ static inline int get_inline_xattr_addrs(struct inode *inode)
+ 		sizeof((f2fs_inode)->field))			\
+ 		<= (F2FS_OLD_ATTRIBUTE_SIZE + (extra_isize)))	\
+ 
++#define DEFAULT_IOSTAT_PERIOD_MS	3000
++#define MIN_IOSTAT_PERIOD_MS		100
++/* maximum period of iostat tracing is 1 day */
++#define MAX_IOSTAT_PERIOD_MS		8640000
++
+ static inline void f2fs_reset_iostat(struct f2fs_sb_info *sbi)
+ {
+ 	int i;
+ 
+ 	spin_lock(&sbi->iostat_lock);
+-	for (i = 0; i < NR_IO_TYPE; i++)
++	for (i = 0; i < NR_IO_TYPE; i++) {
+ 		sbi->write_iostat[i] = 0;
++		sbi->prev_write_iostat[i] = 0;
++	}
+ 	spin_unlock(&sbi->iostat_lock);
+ }
+ 
++extern void f2fs_record_iostat(struct f2fs_sb_info *sbi);
++
+ static inline void f2fs_update_iostat(struct f2fs_sb_info *sbi,
+ 			enum iostat_type type, unsigned long long io_bytes)
+ {
+@@ -3022,6 +3034,8 @@ static inline void f2fs_update_iostat(struct f2fs_sb_info *sbi,
+ 			sbi->write_iostat[APP_WRITE_IO] -
+ 			sbi->write_iostat[APP_DIRECT_IO];
+ 	spin_unlock(&sbi->iostat_lock);
++
++	f2fs_record_iostat(sbi);
+ }
+ 
+ #define __is_large_section(sbi)		((sbi)->segs_per_sec > 1)
+diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
+index f2dfc21c6abb0..438296e17183d 100644
+--- a/fs/f2fs/super.c
++++ b/fs/f2fs/super.c
+@@ -3424,6 +3424,7 @@ static int f2fs_fill_super(struct super_block *sb, void *data, int silent)
+ 	/* init iostat info */
+ 	spin_lock_init(&sbi->iostat_lock);
+ 	sbi->iostat_enable = false;
++	sbi->iostat_period_ms = DEFAULT_IOSTAT_PERIOD_MS;
+ 
+ 	for (i = 0; i < NR_PAGE_TYPE; i++) {
+ 		int n = (i == META) ? 1: NR_TEMP_TYPE;
+diff --git a/fs/f2fs/sysfs.c b/fs/f2fs/sysfs.c
+index aeebfb5024a22..d05cb68c26374 100644
+--- a/fs/f2fs/sysfs.c
++++ b/fs/f2fs/sysfs.c
+@@ -15,6 +15,7 @@
+ #include "f2fs.h"
+ #include "segment.h"
+ #include "gc.h"
++#include <trace/events/f2fs.h>
+ 
+ static struct proc_dir_entry *f2fs_proc_root;
+ 
+@@ -379,6 +380,15 @@ static ssize_t __sbi_store(struct f2fs_attr *a,
+ 		return count;
  	}
  
--	prev->sched_class->put_prev_task(rq, prev);
--	if (!rq->nr_running)
--		newidle_balance(rq, rf);
-+
-+#ifdef CONFIG_SMP
-+	for_class_range(class, prev->sched_class, &idle_sched_class) {
-+		if (class->balance(rq, prev, rf))
-+			break;
++	if (!strcmp(a->attr.name, "iostat_period_ms")) {
++		if (t < MIN_IOSTAT_PERIOD_MS || t > MAX_IOSTAT_PERIOD_MS)
++			return -EINVAL;
++		spin_lock(&sbi->iostat_lock);
++		sbi->iostat_period_ms = (unsigned int)t;
++		spin_unlock(&sbi->iostat_lock);
++		return count;
 +	}
-+#endif
-+	put_prev_task(rq, prev);
++
+ 	*ui = (unsigned int)t;
  
- 	smt_mask = cpu_smt_mask(cpu);
+ 	return count;
+@@ -535,6 +545,7 @@ F2FS_RW_ATTR(F2FS_SBI, f2fs_sb_info, gc_idle_interval, interval_time[GC_TIME]);
+ F2FS_RW_ATTR(F2FS_SBI, f2fs_sb_info,
+ 		umount_discard_timeout, interval_time[UMOUNT_DISCARD_TIMEOUT]);
+ F2FS_RW_ATTR(F2FS_SBI, f2fs_sb_info, iostat_enable, iostat_enable);
++F2FS_RW_ATTR(F2FS_SBI, f2fs_sb_info, iostat_period_ms, iostat_period_ms);
+ F2FS_RW_ATTR(F2FS_SBI, f2fs_sb_info, readdir_ra, readdir_ra);
+ F2FS_RW_ATTR(F2FS_SBI, f2fs_sb_info, gc_pin_file_thresh, gc_pin_file_threshold);
+ F2FS_RW_ATTR(F2FS_SBI, f2fs_super_block, extension_list, extension_list);
+@@ -615,6 +626,7 @@ static struct attribute *f2fs_attrs[] = {
+ 	ATTR_LIST(gc_idle_interval),
+ 	ATTR_LIST(umount_discard_timeout),
+ 	ATTR_LIST(iostat_enable),
++	ATTR_LIST(iostat_period_ms),
+ 	ATTR_LIST(readdir_ra),
+ 	ATTR_LIST(gc_pin_file_thresh),
+ 	ATTR_LIST(extension_list),
+@@ -751,6 +763,33 @@ static int __maybe_unused segment_bits_seq_show(struct seq_file *seq,
+ 	return 0;
+ }
  
++void f2fs_record_iostat(struct f2fs_sb_info *sbi)
++{
++	unsigned long long iostat_diff[NR_IO_TYPE];
++	int i;
++
++	if (time_is_after_jiffies(sbi->iostat_next_period))
++		return;
++
++	/* Need double check under the lock */
++	spin_lock(&sbi->iostat_lock);
++	if (time_is_after_jiffies(sbi->iostat_next_period)) {
++		spin_unlock(&sbi->iostat_lock);
++		return;
++	}
++	sbi->iostat_next_period = jiffies +
++				msecs_to_jiffies(sbi->iostat_period_ms);
++
++	for (i = 0; i < NR_IO_TYPE; i++) {
++		iostat_diff[i] = sbi->write_iostat[i] -
++				sbi->prev_write_iostat[i];
++		sbi->prev_write_iostat[i] = sbi->write_iostat[i];
++	}
++	spin_unlock(&sbi->iostat_lock);
++
++	trace_f2fs_iostat(sbi, iostat_diff);
++}
++
+ static int __maybe_unused iostat_info_seq_show(struct seq_file *seq,
+ 					       void *offset)
+ {
+diff --git a/include/trace/events/f2fs.h b/include/trace/events/f2fs.h
+index d97adfc327f03..e78c8696e2adc 100644
+--- a/include/trace/events/f2fs.h
++++ b/include/trace/events/f2fs.h
+@@ -1812,6 +1812,58 @@ DEFINE_EVENT(f2fs_zip_end, f2fs_decompress_pages_end,
+ 	TP_ARGS(inode, cluster_idx, compressed_size, ret)
+ );
+ 
++TRACE_EVENT(f2fs_iostat,
++
++	TP_PROTO(struct f2fs_sb_info *sbi, unsigned long long *iostat),
++
++	TP_ARGS(sbi, iostat),
++
++	TP_STRUCT__entry(
++		__field(dev_t,	dev)
++		__field(unsigned long long,	app_dio)
++		__field(unsigned long long,	app_bio)
++		__field(unsigned long long,	app_wio)
++		__field(unsigned long long,	app_mio)
++		__field(unsigned long long,	fs_dio)
++		__field(unsigned long long,	fs_nio)
++		__field(unsigned long long,	fs_mio)
++		__field(unsigned long long,	fs_gc_dio)
++		__field(unsigned long long,	fs_gc_nio)
++		__field(unsigned long long,	fs_cp_dio)
++		__field(unsigned long long,	fs_cp_nio)
++		__field(unsigned long long,	fs_cp_mio)
++		__field(unsigned long long,	fs_discard)
++	),
++
++	TP_fast_assign(
++		__entry->dev		= sbi->sb->s_dev;
++		__entry->app_dio	= iostat[APP_DIRECT_IO];
++		__entry->app_bio	= iostat[APP_BUFFERED_IO];
++		__entry->app_wio	= iostat[APP_WRITE_IO];
++		__entry->app_mio	= iostat[APP_MAPPED_IO];
++		__entry->fs_dio		= iostat[FS_DATA_IO];
++		__entry->fs_nio		= iostat[FS_NODE_IO];
++		__entry->fs_mio		= iostat[FS_META_IO];
++		__entry->fs_gc_dio	= iostat[FS_GC_DATA_IO];
++		__entry->fs_gc_nio	= iostat[FS_GC_NODE_IO];
++		__entry->fs_cp_dio	= iostat[FS_CP_DATA_IO];
++		__entry->fs_cp_nio	= iostat[FS_CP_NODE_IO];
++		__entry->fs_cp_mio	= iostat[FS_CP_META_IO];
++		__entry->fs_discard	= iostat[FS_DISCARD];
++	),
++
++	TP_printk("dev = (%d,%d), "
++		"app [write=%llu (direct=%llu, buffered=%llu), mapped=%llu], "
++		"fs [data=%llu, node=%llu, meta=%llu, discard=%llu], "
++		"gc [data=%llu, node=%llu], "
++		"cp [data=%llu, node=%llu, meta=%llu]",
++		show_dev(__entry->dev), __entry->app_wio, __entry->app_dio,
++		__entry->app_bio, __entry->app_mio, __entry->fs_dio,
++		__entry->fs_nio, __entry->fs_mio, __entry->fs_discard,
++		__entry->fs_gc_dio, __entry->fs_gc_nio, __entry->fs_cp_dio,
++		__entry->fs_cp_nio, __entry->fs_cp_mio)
++);
++
+ #endif /* _TRACE_F2FS_H */
+ 
+  /* This part must be outside protection */
 -- 
-2.20.1
+2.26.0.110.g2183baf09c-goog
+
 
