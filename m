@@ -2,88 +2,177 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4EB0C352BE
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 22:17:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9B2CC2BA2B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 22:19:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A9ADA221F9
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 22:17:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A541E218AC
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 22:19:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Tc8b5F8F"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="usOSe4Mz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728912AbgDPWRM (ORCPT
+        id S1728928AbgDPWTT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 18:17:12 -0400
-Received: from ozlabs.org ([203.11.71.1]:60595 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728251AbgDPWRM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 18:17:12 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 493D9K6bR9z9sRN;
-        Fri, 17 Apr 2020 08:17:09 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1587075430;
-        bh=SN53g5J2zyelH6wbBo51OeHNv9f5qzmMVigBqCC5AJ8=;
-        h=Date:From:To:Cc:Subject:From;
-        b=Tc8b5F8FzfMVZp3rW0+lI4ALSMEkmIixt3Q5W+LxV4QBNbBOkHg4jWVQDJTg/PDei
-         E66fTLNyqNNuNJh+2zKNxLE4KRJDXR+HIY1kMcVOo+2yUNDkg4tQuFr2dxB0nUY+MT
-         d0F7w9r9nDo4CvChF0mRz3ZhmToQA8kyldZIet5sWwhov5S7wv0pEoTryHy08MlreQ
-         Aic9Ah6TDuqQdgJO5LFuIRaQLeY2KO/3MbIDzyoaK3I8iLX2Kc0dzcPIz8Zht5zNt4
-         7QZfpL8iDfZzazyvXPEeZDRenOsveDAPvRSh9ij0uKzyWIp0H0Tqof4jSxRs38FY8p
-         o9W0ui/3urFPA==
-Date:   Fri, 17 Apr 2020 08:17:07 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Jaegeuk Kim <jaegeuk@kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: Signed-off-by missing for commit in the f2fs tree
-Message-ID: <20200417081707.0c7c84f3@canb.auug.org.au>
+        Thu, 16 Apr 2020 18:19:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53980 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728221AbgDPWTR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 18:19:17 -0400
+Received: from mail-yb1-xb44.google.com (mail-yb1-xb44.google.com [IPv6:2607:f8b0:4864:20::b44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C605DC061A0C
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 15:19:17 -0700 (PDT)
+Received: by mail-yb1-xb44.google.com with SMTP id g6so2891950ybh.12
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 15:19:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=bEaKlFXLvZkTF1WbImU8k4TjAxStPFiDUhxy9HHTvfo=;
+        b=usOSe4MzkuxL5nKsgNMMsCqcXtZVMEN45JzLMSBeGYs9/bIZkhn/EJBjHeRBszfiV2
+         u6T+vjWVyfG+1qFiq/iID0tIJjuj4xPq5++MFFAvDO1aPuvlJY0ZxNAhg3SWfJu1RdQ4
+         aQn+9ljr4WqDs73oyrTY0nDeBiuyLUubH6vkRXAz11xZISE5kL+V+bUimCbkljZXDHW9
+         vmYqGN5tlCG9qyN9YXvVqyhJpX9i7TBGKksdAjB0wmjLs5r01eHIYFRMO+PmEBwqsqFM
+         VSrhkjNIKqxdMvbAswW+XT/Irt9H4wVLbpSSlqNqCNj4MjrhM2w5DXr7Xojp3EeltJIJ
+         j3uA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=bEaKlFXLvZkTF1WbImU8k4TjAxStPFiDUhxy9HHTvfo=;
+        b=fRUOVFUJCGnn+EFMBlLACZdeM8D0P9f2JWjAhVQd/XO4YQljHdOF+MaCh97L+sue64
+         Xdhnb4e/2L3iiyxFnYIgPn1pnYsVcOWpWgAg7I4vW8wAxg2EsBaRls1FA1TW2edIpzZ3
+         sovtx4j9oO8+1ox/A5+Q9OlErJQMOjhhgq27/MA7+nRm5ZarnPR2b/HNE1oa0zGV+VBg
+         8p8l1zsAX8Nj+MwiEDVmWvmRU3pQq8PXgUVaty+gNdCEXEBWXIRMT0Uo0ZR5YRS6rbPd
+         OJlsUp3DJO191tdVHeKThh3vaPd5w1gCtMKtRU9hjYyrQ+7rjmO54RQ/z+VIKoFE/yR9
+         FgKA==
+X-Gm-Message-State: AGi0PuYcNJ20ujXv4OfJ2xJOwHNQacd+swD7pTAJXfWGOQfEjn2AhBci
+        cDrBLYwuhmNm5cIh6pFoKOJfjHCls20e4OOhdz6OSw==
+X-Google-Smtp-Source: APiQypK/Raydb2Hwqc7lQkm0BcyExmPOSBeLJJw5JSAyZGslZAHoTfuyzKiVUyTTSyLITGOUPmLumbQj4KdqQYNdmGg=
+X-Received: by 2002:a05:6902:505:: with SMTP id x5mr905928ybs.286.1587075556390;
+ Thu, 16 Apr 2020 15:19:16 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/3CH4vjpkEJ14b3ZfBS1E5T.";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+References: <20200416063551.47637-1-irogers@google.com> <20200416063551.47637-5-irogers@google.com>
+ <20200416095501.GC369437@krava> <CAP-5=fVOb1nV2gdGGWLQvTApoMR=qzaSQHSwxsAKAXQ=wqQV+g@mail.gmail.com>
+ <20200416201011.GB414900@krava>
+In-Reply-To: <20200416201011.GB414900@krava>
+From:   Ian Rogers <irogers@google.com>
+Date:   Thu, 16 Apr 2020 15:19:04 -0700
+Message-ID: <CAP-5=fVebXnQaQAVGszZtKg2DpUh-UXD12YDOzjo3k-SUNxYVw@mail.gmail.com>
+Subject: Re: [PATCH v9 4/4] perf tools: add support for libpfm4
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Igor Lubashev <ilubashe@akamai.com>,
+        Alexey Budankov <alexey.budankov@linux.intel.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Jiwei Sun <jiwei.sun@windriver.com>,
+        yuzhoujian <yuzhoujian@didichuxing.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Leo Yan <leo.yan@linaro.org>,
+        John Garry <john.garry@huawei.com>,
+        LKML <linux-kernel@vger.kernel.org>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        Stephane Eranian <eranian@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/3CH4vjpkEJ14b3ZfBS1E5T.
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Thu, Apr 16, 2020 at 1:10 PM Jiri Olsa <jolsa@redhat.com> wrote:
+>
+> On Thu, Apr 16, 2020 at 09:02:54AM -0700, Ian Rogers wrote:
+> > On Thu, Apr 16, 2020 at 2:55 AM Jiri Olsa <jolsa@redhat.com> wrote:
+> > >
+> > > On Wed, Apr 15, 2020 at 11:35:51PM -0700, Ian Rogers wrote:
+> > > > From: Stephane Eranian <eranian@google.com>
+> > > >
+> > > > This patch links perf with the libpfm4 library if it is available
+> > > > and NO_LIBPFM4 isn't passed to the build. The libpfm4 library
+> > > > contains hardware event tables for all processors supported by
+> > > > perf_events. It is a helper library that helps convert from a
+> > > > symbolic event name to the event encoding required by the
+> > > > underlying kernel interface. This library is open-source and
+> > > > available from: http://perfmon2.sf.net.
+> > > >
+> > > > With this patch, it is possible to specify full hardware events
+> > > > by name. Hardware filters are also supported. Events must be
+> > > > specified via the --pfm-events and not -e option. Both options
+> > > > are active at the same time and it is possible to mix and match:
+> > > >
+> > > > $ perf stat --pfm-events inst_retired:any_p:c=1:i -e cycles ....
+> > > >
+> > > > Signed-off-by: Stephane Eranian <eranian@google.com>
+> > > > Reviewed-by: Ian Rogers <irogers@google.com>
+> > >
+> > >         # perf list
+> > >         ...
+> > >         perf_raw pfm-events
+> > >           r0000
+> > >             [perf_events raw event syntax: r[0-9a-fA-F]+]
+> > >
+> > >         skl pfm-events
+> > >           UNHALTED_CORE_CYCLES
+> > >             [Count core clock cycles whenever the clock signal on the specific core is running (not halted)]
+> > >           UNHALTED_REFERENCE_CYCLES
+> > >
+> > > please add ':' behind the '* pfm-events' label
+> >
+> > Thanks! Not sure I follow here. skl here is the pmu. pfm-events is
+> > here just to make it clearer these are --pfm-events. The event is
+> > selected with '--pfm-events UNHALTED_CORE_CYCLES'. Will putting
+> > skl:pfm-events here make it look like that is part of the event
+> > encoding?
+>
+> aah I might have misunderstood the output here then, we have preceeding
+> output like:
+>
+> cache:
+>   l1d.replacement
+>        [L1D data line replacements]
+>
+> so I thought the 'skl pfm-events' is just a label
+>
+>
+> how about we use the first current label in the middle like:
+>
+>         # perf list
+>         List of pre-defined events (to be used in -e):
+>
+>           current events stuff
+>
+>         List of pfm events (to be used in --pfm-xxx):
+>
+>           pfm events stuff
+>
+> or maybe put it under 'perf list --pfm', thoughts?
 
-Hi all,
+We decided on the former which is in the new patch set. However, the
+output isn't conditional on the pager being used, which it is in the
+regular event case.
+https://lore.kernel.org/lkml/20200416221457.46710-1-irogers@google.com/T/#t
 
-Commit
+Let me know if there is more to address. Thanks!
+Ian
 
-  46471a1f6e97 ("f2fs: add tracepoint for f2fs iostat")
-
-is missing a Signed-off-by from its committer.
-
-Looks like the SOB line was lost in the rebase :-(
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/3CH4vjpkEJ14b3ZfBS1E5T.
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6Y2WMACgkQAVBC80lX
-0GyAMAf+J/LIQeUMu4m6DboZ5BjqrKCoa3mJi2xujSbg7aspYldV2a/CrnXT170j
-dsNuvxDdkRdf3awWfGlhtCKXBHa/VnE1qJ3H9XpttI8oULNkmWeqvRHeEMslai6T
-1/nPjBAjv+uqCNsH1kjBJmZPNk/WAoLPQw2PEFdmzTm9pFYRIF9/Wt/I+ir/QbPW
-99BL3UvorMAGRZ9Bmb+WOQbMLkj91EAWs2ZOFpNu5Hc8HQN+nN9MNWdxSOkC2ud0
-fH0aYIwaGdcv21vo0PBc7N3WLPKj/qGONu07CUEU23Sl3emRrcHN4AAYT0pXlqGA
-m1PfOdWcK/4+WedMQW/Ztlwg7jYrjg==
-=mmzg
------END PGP SIGNATURE-----
-
---Sig_/3CH4vjpkEJ14b3ZfBS1E5T.--
+> jirka
+>
