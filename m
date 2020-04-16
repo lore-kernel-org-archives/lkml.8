@@ -2,144 +2,77 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BE2AC3815B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 19:47:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F290C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 19:53:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4B52720786
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 19:47:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IAp51Lnn"
+	by mail.kernel.org (Postfix) with ESMTP id 5AC342063A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 19:53:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731097AbgDPTrj (ORCPT
+        id S1728603AbgDPTxg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 15:47:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58594 "EHLO
+        Thu, 16 Apr 2020 15:53:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59502 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729391AbgDPTri (ORCPT
+        by vger.kernel.org with ESMTP id S1728199AbgDPTxd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 15:47:38 -0400
-Received: from mail-qv1-xf43.google.com (mail-qv1-xf43.google.com [IPv6:2607:f8b0:4864:20::f43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F05CCC061A0C;
-        Thu, 16 Apr 2020 12:47:37 -0700 (PDT)
-Received: by mail-qv1-xf43.google.com with SMTP id di6so2672492qvb.10;
-        Thu, 16 Apr 2020 12:47:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=IiQaPOayJr5kvs71qL3IciXFap6VIqNgrywtbyP8RsQ=;
-        b=IAp51LnnxGVluTzeHRtGz8VARjSfnCAjuCl69no0XTQV0d3qD7kTImLBnxzNHa3Qaz
-         na2O5C4U+jjVurGny/iDOZP7DQA94WJJIE15Rb4/gs4fk7T88hJvy/x7XP5FuI/qxtzS
-         fE+IsXIsd3+fpuBTk0KaVYfSTWlzJqd1ZdHdT0mxwxvIxqN/GBau5aX7oJJ1XqDgxtRt
-         8RH8En9BP7eHgxTcJIgI0ZOb3jIcFVwWqRMzeJmrCZgP+dxyJui8/IIyDIioL1xmjqyQ
-         YGRKCtfvpQUq5RQanOCJ/F8fcbGYrPtufqKpQbSrvgYq3Ic4DNb5iglB6lPSkPGX2utc
-         ux8g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=IiQaPOayJr5kvs71qL3IciXFap6VIqNgrywtbyP8RsQ=;
-        b=Vu6+v4XlBJzyxgDlLz+aXI54l2MyO+7PUQncHbC6P2/wn69pDsmCSBBrP7uACakRcu
-         YGq++2hlCsZpUWDAWq5CMMgZ3IjpH13BRX5FdoDrvKIp4kTjuT9/8YFfh04oMyLWH3Y1
-         UZ5vgBw/R6btyT5M1xVhJXLD58IxV1/Wijvi3drDSaGLOjMAPpfwCWYMz13ptcwCWlHe
-         ypUyhM8WlPKNtMsJsoJ0UliBbe085XA+oajbwmmoktkKqFfl+iR8xDyyHEAkjKTCcGKK
-         H1jvQjN16VfBfhr0vNnqYG/OfmgmviOjpCCCGqrdbclSpiMZzVM4PGHxjRSwLBJUiyDe
-         PL8g==
-X-Gm-Message-State: AGi0Pua8s3WcNGp1RMcC07Kiua+HrWKwgkCiq17wCM1ffvIwTrp9cSpH
-        xBSUINojG4Wm7zOaSdyk47+wSvlYPmOiOdV4/TQ=
-X-Google-Smtp-Source: APiQypKtquRwWQQXFqOBPvTZeBbMC3tNNdEXbLRDwIg2ysD7zcUg4ZsrG/9Ggfv0t+EXh+ucnxtI3C2lYt6SlX8rXiA=
-X-Received: by 2002:a0c:fd8c:: with SMTP id p12mr12042055qvr.163.1587066457100;
- Thu, 16 Apr 2020 12:47:37 -0700 (PDT)
+        Thu, 16 Apr 2020 15:53:33 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05962C061A0C;
+        Thu, 16 Apr 2020 12:53:32 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 49C832A23D7;
+        Thu, 16 Apr 2020 20:53:31 +0100 (BST)
+Date:   Thu, 16 Apr 2020 21:53:28 +0200
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     Christophe Kerello <christophe.kerello@st.com>
+Cc:     <miquel.raynal@bootlin.com>, <richard@nod.at>, <vigneshr@ti.com>,
+        <lee.jones@linaro.org>, <robh+dt@kernel.org>,
+        <mark.rutland@arm.com>, <tony@atomide.com>, marex@denx.de,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mtd@lists.infradead.org,
+        linux-stm32@st-md-mailman.stormreply.com
+Subject: Re: [PATCH v2 03/12] bus: stm32-fmc2-ebi: add STM32 FMC2 EBI
+ controller driver
+Message-ID: <20200416215328.53982fef@collabora.com>
+In-Reply-To: <1586966256-29548-4-git-send-email-christophe.kerello@st.com>
+References: <1586966256-29548-1-git-send-email-christophe.kerello@st.com>
+        <1586966256-29548-4-git-send-email-christophe.kerello@st.com>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-References: <000000000000500e6f05a34ecc01@google.com> <4ba5ee0c-ec81-8ce3-6681-465e34b98a93@iogearbox.net>
- <a9219326-c07c-1069-270c-4bef17ee7b88@fb.com> <20200416102612.GO1163@kadam>
-In-Reply-To: <20200416102612.GO1163@kadam>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Thu, 16 Apr 2020 12:47:25 -0700
-Message-ID: <CAEf4BzY2XwQw0ZMN6PaJtN=DfAMQyMtGuo7dnmVH1embBXmhuw@mail.gmail.com>
-Subject: Re: WARNING in bpf_cgroup_link_release
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     Andrii Nakryiko <andriin@fb.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        syzbot <syzbot+8a5dadc5c0b1d7055945@syzkaller.appspotmail.com>,
-        Alexei Starovoitov <ast@kernel.org>, bpf <bpf@vger.kernel.org>,
-        john fastabend <john.fastabend@gmail.com>,
-        Martin Lau <kafai@fb.com>, KP Singh <kpsingh@chromium.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>,
-        Song Liu <songliubraving@fb.com>,
-        syzkaller-bugs@googlegroups.com, Yonghong Song <yhs@fb.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 16, 2020 at 3:29 AM Dan Carpenter <dan.carpenter@oracle.com> wr=
-ote:
->
-> On Wed, Apr 15, 2020 at 09:51:40AM -0700, 'Andrii Nakryiko' via syzkaller=
--bugs wrote:
-> > On 4/15/20 4:57 AM, Daniel Borkmann wrote:
-> > > On 4/15/20 8:55 AM, syzbot wrote:
-> > > > Hello,
-> > > >
-> > > > syzbot found the following crash on:
-> > >
-> > > Andrii, ptal.
-> > >
-> > > > HEAD commit:    1a323ea5 x86: get rid of 'errret' argument to
-> > > > __get_user_x..
-> > > > git tree:       bpf-next
-> > > > console output: https://urldefense.proofpoint.com/v2/url?u=3Dhttps-=
-3A__syzkaller.appspot.com_x_log.txt-3Fx-3D148ccb57e00000&d=3DDwICaQ&c=3D5VD=
-0RTtNlTh3ycd41b3MUw&r=3Dvxqvl81C2rT6GOGdPyz8iQ&m=3DT2Ez0XmyIpHmEa_MPTTUOh61=
-jMDXqwETtTaTbSe-2M4&s=3D-6XBbsNV1O4X5flrx4Yssfjc56d0qeSHgwHhd92UPJc&e=3D
-> > > > kernel config:  https://urldefense.proofpoint.com/v2/url?u=3Dhttps-=
-3A__syzkaller.appspot.com_x_.config-3Fx-3D8c1e98458335a7d1&d=3DDwICaQ&c=3D5=
-VD0RTtNlTh3ycd41b3MUw&r=3Dvxqvl81C2rT6GOGdPyz8iQ&m=3DT2Ez0XmyIpHmEa_MPTTUOh=
-61jMDXqwETtTaTbSe-2M4&s=3Ds5-1AlWtSiBvo66WN4_UXoXMGIGIqsoUCrmAnxNnfX0&e=3D
-> > > > dashboard link: https://urldefense.proofpoint.com/v2/url?u=3Dhttps-=
-3A__syzkaller.appspot.com_bug-3Fextid-3D8a5dadc5c0b1d7055945&d=3DDwICaQ&c=
-=3D5VD0RTtNlTh3ycd41b3MUw&r=3Dvxqvl81C2rT6GOGdPyz8iQ&m=3DT2Ez0XmyIpHmEa_MPT=
-TUOh61jMDXqwETtTaTbSe-2M4&s=3DhAA0702qJH5EwRwvG0RKmj8FwIRm1O8hvmoS7ne5Dls&e=
-=3D
-> > > > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> > > >
-> > > > Unfortunately, I don't have any reproducer for this crash yet.
-> > > >
-> > > > IMPORTANT: if you fix the bug, please add the following tag to the
-> > > > commit:
-> > > > Reported-by: syzbot+8a5dadc5c0b1d7055945@syzkaller.appspotmail.com
-> > > >
-> > > > ------------[ cut here ]------------
-> > > > WARNING: CPU: 0 PID: 25081 at kernel/bpf/cgroup.c:796
-> > > > bpf_cgroup_link_release+0x260/0x3a0 kernel/bpf/cgroup.c:796
-> >
-> > This warning is triggered due to __cgroup_bpf_detach returning an error=
-. It
-> > can do it only in two cases: either attached item is not found, which f=
-rom
-> > starting at code some moreI don't see how that can happen. The other re=
-ason
-> > - kmalloc() failing to allocate memory for new effective prog array.
->
-> If you look at the log file then this was allocation fault injection in
-> bpf_prog_array_alloc().
+On Wed, 15 Apr 2020 17:57:27 +0200
+Christophe Kerello <christophe.kerello@st.com> wrote:
 
-Ah, I see, thanks for pointing this out! So that confirms that it's
-not a bug, but just unfortunate result of potentially failing cgroup
-BPF program detach code path.
+> The driver adds the support for the STMicroelectronics FMC2 EBI controller
+> found on STM32MP SOCs.
+> 
+> Signed-off-by: Christophe Kerello <christophe.kerello@st.com>
+> Tested-by: Marek Vasut <marex@denx.de>
+> ---
+> Changes in v2:
+>  - call 2 APIs to manage FMC2 enable/disable instead of ops
+>  - call 2 APIs to manage FMC2 NWAIT shared signal instead of ops
+> 
+>  drivers/bus/Kconfig          |   11 +
+>  drivers/bus/Makefile         |    1 +
+>  drivers/bus/stm32-fmc2-ebi.c | 1091 ++++++++++++++++++++++++++++++++++++++++++
 
->
-> https://syzkaller.appspot.com/x/log.txt?x=3D148ccb57e00000
->
-> regards,
-> dan carpenter
->
+Hm, I see that other memory bus controller drivers are placed under
+drivers/memory/, any reason for choosing drivers/bus/? If that's where
+we want to have all generic memory bus controllers to live it might be
+worth moving existing drivers to the drivers/bus/ directory at some
+point.
