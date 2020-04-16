@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37869C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:27:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F20EC2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:28:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 14B3721D7E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:27:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BF7C21D7E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:28:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587047277;
-	bh=gCFa4uuwm4XERH0jUZR1oplIf17Y25xXY4RyOKeKdfY=;
+	s=default; t=1587047285;
+	bh=VZ39YWwP05qYCay5b0xukEXzfT7EKSUhftLU/x7SAco=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GDADxRP0Gg9Obio83w5o5C62QWAqVSxDhmjzmlxr0Zo5wwKbKKBzfYU3PwXFwhKtY
-	 GF57R4YLAxIzAzZuhYfG00KVtg3dGKyBCIH2bjPlIskOGLFZ8GPcrh9Ljw4bNxS6VW
-	 PTbzNhu12ltaepfEIfab1Rn1ln7G9DQKv06aUoOU=
+	b=HCZdFGTUdbpB22gkwBwyXAIKn/0RzSf1sNfubWaqHK6olvkB2PX8I63RW/gQNNDCv
+	 Hl/lLLWRSuKtteEsk5JWVLWykl/3leLnqfRW8PMTRi54zHL/Y2btrJpz8NRmNLABfQ
+	 ZAR0StS3gZHsqbdSfhFvOe0kXgGT+SnHmlhLbWBc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409859AbgDPO1y (ORCPT
+        id S1732051AbgDPO2B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:27:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46898 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 10:28:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47062 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2409043AbgDPN7t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:59:49 -0400
+        id S1728635AbgDPOAB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 10:00:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6A7F62078B;
-        Thu, 16 Apr 2020 13:59:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 787B2217D8;
+        Thu, 16 Apr 2020 14:00:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587045588;
-        bh=gCFa4uuwm4XERH0jUZR1oplIf17Y25xXY4RyOKeKdfY=;
+        s=default; t=1587045600;
+        bh=VZ39YWwP05qYCay5b0xukEXzfT7EKSUhftLU/x7SAco=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LJdOH8Skh/valhlFFREfGbz+o+ah2bz8K7Be8n9aBF8HjajvEgbKDeEm4fHxskMb3
-         UFt9uw2gYD2j8YQmT3bft4dlGg943XJMMKP8n0B5BdSi8gQKc0uPlesvA3xh7vomJb
-         9QlzzgTx4KlE7Q/tCr8pRb2jGOYWkWLXIcOZXNco=
+        b=sKSQOdA6vlcU/3I6S3Fl41ge9LYvCc75MF7TOzMJCkcFuJoc6azoCk8Kgtv7/YEcB
+         XmE8Ip648l3NNrKhG4eMSSBMyx9WIkjwyUxNqjGQ/aiY1856PY5lzhOxqmg6uBoTND
+         qVmSoSJwW/5kpcte279iZ28WypM71HUb0k+fSTDY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Christophe Leroy <christophe.leroy@c-s.fr>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 5.6 197/254] selftests/powerpc: Add tlbie_test in .gitignore
-Date:   Thu, 16 Apr 2020 15:24:46 +0200
-Message-Id: <20200416131350.820126586@linuxfoundation.org>
+        stable@vger.kernel.org, Andrei Botila <andrei.botila@nxp.com>,
+        =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Subject: [PATCH 5.6 184/254] crypto: caam - update xts sector size for large input length
+Date:   Thu, 16 Apr 2020 15:24:33 +0200
+Message-Id: <20200416131349.381275941@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.804095985@linuxfoundation.org>
 References: <20200416131325.804095985@linuxfoundation.org>
@@ -59,30 +60,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe Leroy <christophe.leroy@c-s.fr>
+From: Andrei Botila <andrei.botila@nxp.com>
 
-commit 47bf235f324c696395c30541fe4fcf99fcd24188 upstream.
+commit 3f142b6a7b573bde6cff926f246da05652c61eb4 upstream.
 
-The commit identified below added tlbie_test but forgot to add it in
-.gitignore.
+Since in the software implementation of XTS-AES there is
+no notion of sector every input length is processed the same way.
+CAAM implementation has the notion of sector which causes different
+results between the software implementation and the one in CAAM
+for input lengths bigger than 512 bytes.
+Increase sector size to maximum value on 16 bits.
 
-Fixes: 93cad5f78995 ("selftests/powerpc: Add test case for tlbie vs mtpidr ordering issue")
-Cc: stable@vger.kernel.org # v5.4+
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/259f9c06ed4563c4fa4fa8ffa652347278d769e7.1582847784.git.christophe.leroy@c-s.fr
+Fixes: c6415a6016bf ("crypto: caam - add support for acipher xts(aes)")
+Cc: <stable@vger.kernel.org> # v4.12+
+Signed-off-by: Andrei Botila <andrei.botila@nxp.com>
+Reviewed-by: Horia Geantă <horia.geanta@nxp.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- tools/testing/selftests/powerpc/mm/.gitignore |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/crypto/caam/caamalg_desc.c |   16 ++++++++++++++--
+ 1 file changed, 14 insertions(+), 2 deletions(-)
 
---- a/tools/testing/selftests/powerpc/mm/.gitignore
-+++ b/tools/testing/selftests/powerpc/mm/.gitignore
-@@ -6,3 +6,4 @@ segv_errors
- wild_bctr
- large_vm_fork_separation
- bad_accesses
-+tlbie_test
+--- a/drivers/crypto/caam/caamalg_desc.c
++++ b/drivers/crypto/caam/caamalg_desc.c
+@@ -1524,7 +1524,13 @@ EXPORT_SYMBOL(cnstr_shdsc_skcipher_decap
+  */
+ void cnstr_shdsc_xts_skcipher_encap(u32 * const desc, struct alginfo *cdata)
+ {
+-	__be64 sector_size = cpu_to_be64(512);
++	/*
++	 * Set sector size to a big value, practically disabling
++	 * sector size segmentation in xts implementation. We cannot
++	 * take full advantage of this HW feature with existing
++	 * crypto API / dm-crypt SW architecture.
++	 */
++	__be64 sector_size = cpu_to_be64(BIT(15));
+ 	u32 *key_jump_cmd;
+ 
+ 	init_sh_desc(desc, HDR_SHARE_SERIAL | HDR_SAVECTX);
+@@ -1577,7 +1583,13 @@ EXPORT_SYMBOL(cnstr_shdsc_xts_skcipher_e
+  */
+ void cnstr_shdsc_xts_skcipher_decap(u32 * const desc, struct alginfo *cdata)
+ {
+-	__be64 sector_size = cpu_to_be64(512);
++	/*
++	 * Set sector size to a big value, practically disabling
++	 * sector size segmentation in xts implementation. We cannot
++	 * take full advantage of this HW feature with existing
++	 * crypto API / dm-crypt SW architecture.
++	 */
++	__be64 sector_size = cpu_to_be64(BIT(15));
+ 	u32 *key_jump_cmd;
+ 
+ 	init_sh_desc(desc, HDR_SHARE_SERIAL | HDR_SAVECTX);
 
 
