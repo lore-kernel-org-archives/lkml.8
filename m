@@ -2,230 +2,143 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4179C352BE
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 18:26:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B683C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 18:26:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7DEF02222D
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 18:26:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D969C2222D
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 18:26:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B46r11rA"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ar1Z/cb6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390162AbgDPS0K (ORCPT
+        id S2390176AbgDPS00 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 14:26:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45980 "EHLO
+        Thu, 16 Apr 2020 14:26:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46032 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726435AbgDPS0F (ORCPT
+        with ESMTP id S1727901AbgDPS0Z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 14:26:05 -0400
-Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F7FDC061A0C;
-        Thu, 16 Apr 2020 11:26:05 -0700 (PDT)
-Received: by mail-il1-x142.google.com with SMTP id z13so7833725ilp.11;
-        Thu, 16 Apr 2020 11:26:05 -0700 (PDT)
+        Thu, 16 Apr 2020 14:26:25 -0400
+Received: from mail-oi1-x243.google.com (mail-oi1-x243.google.com [IPv6:2607:f8b0:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1EA11C061A0C
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 11:26:24 -0700 (PDT)
+Received: by mail-oi1-x243.google.com with SMTP id d7so12345308oif.9
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 11:26:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=vXJ60xh3HRzmHUILtuHmOWVVlEEjctRU4VDOT5aOyJA=;
-        b=B46r11rA0nYCy2R28GWGYHdW0Mc3ND/KQWNLb4j1VcOse4QKYvSSEGAwV9SAU6AqG1
-         QaULdLnV8qwb6Vq0v8DCiQUtSISrDPdTEO00xZUbJ4SsIclKX1AN1h8mXWTv0N8CL3ez
-         XkrVb26oJMpy2UE9Ohv9dtdV+VtHkoq7NlW7Md6qGnh/znZj2a4UsgMM9zBOMS36iXNm
-         WVjm8QbiMXOWmugYo0V5iqMViRahoUqXQDvwxLOltFFA75FA4hgu9v8YPlzkSWUxaOhe
-         rw6Gp/HevEYAtcDesDgSl+YBgNsW/MlV1hOqzcYAzMsnUE6OWhDswZ4tlsCc3Aa3snSJ
-         HiCA==
+        bh=aOBdn9RcUNTUGqzn1cwLdTTT4EHiOQc1gFprlV5Swzo=;
+        b=ar1Z/cb6+XVPXZIW71AUbODqEYnpqFqNkc3U7YiTvOdft5wxlVkU0unFkA9HDD0uzZ
+         f7Qg4M4jaVhmiqZIbw+yaxSenIN/ZukH+pS0zWIIW0C2lmH9jwvTreeKiozmh+qfz4Vm
+         YZJ149OiSsKu2pR9KYc/jiKmkqZbQiOyi8pU0L/33IRUvpP8IAXLOvX/hc6hqz2cfr0y
+         q7YWM7uIHNvWfB1Mm5359hqAgX4OuFZt6ASZYmKgNJL0omORM7WArOwtGrqDXgjbxtxm
+         /KUbs+50PJsY1aprREnC5uOSM+X4+nrp7cjK4T52boSqCWDWLilGS6mZPRXSJoQQz7UH
+         X2dw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=vXJ60xh3HRzmHUILtuHmOWVVlEEjctRU4VDOT5aOyJA=;
-        b=sVJVenIC4awq868cR/F47aJsxdz6Vsvr1zFKNpz9bUCId7rf7WGSu99pzqHzikbhgK
-         HgQGpvbTvuY10JMar2UUUKg/0s45YXK7+fOyhZsTWynZMyk398HNNjReJcH30QjoTtRF
-         hXtg614Ayavo+FenLQT8n1bbJ9onLztdbS4s7Wqjf+bphW564Sx991R4t6/lvOoJHyyc
-         qqrV1BCqCtoCsDOgmIDGwYAaplBol0/sL7JBBOmkRz1k920dUgE6hJqFOsbVMSqUoCfx
-         492C5uXrc3xMgaUAbOSlfJFm7MaCqYCaqTzy+/T/97Sy2mDZjm5Q6NzXOHMkvSwbnPjF
-         GzKQ==
-X-Gm-Message-State: AGi0PuZQtnlqEoiovqEuOMRusLjnU52nfdp5ZW5V/6hZVEy7jhnntqdi
-        eKJXtNGKGufCe6BGFvIzVyGctrurzRRgh7Lhpz8=
-X-Google-Smtp-Source: APiQypI0D2gbwvLqma38KDzK0z014Rfy0n2y547t4k9gphWQG0y+NQwRvKkvS+gnOgt7J+WNMxsXZw1ZEoAiq3JqnFo=
-X-Received: by 2002:a92:7a07:: with SMTP id v7mr12363629ilc.238.1587061563488;
- Thu, 16 Apr 2020 11:26:03 -0700 (PDT)
+        bh=aOBdn9RcUNTUGqzn1cwLdTTT4EHiOQc1gFprlV5Swzo=;
+        b=LVEoJtZx0z5G67ifBvgFymRa5pdGA1VCvLCzE7atW7cmcNGTviby3yp/bcG2Jr0xKr
+         BvAVkn5V0TjG9hsIYNeEn/6wVyX7MVrRu42qzB9ZVyxp5mMbN0U+rI3wePkcPySoxLhN
+         9R/MvqyUr0UpM1si71nT9BUhLg3v8Ydlor1srfzaemUNPfGj1tz+BNdO+j+dXqgGWZq6
+         /2CdVHxybViNo9fEmEgIRwTdx2btUlSDSWm1XG7NnzPuuZ7iVWDs7QdIACFnCdYWET/7
+         UyKtxWxWTIXMmfjEmcBCCprCWudHJWjuPXx0LCtiSkGpsDcJyQy2613wWcfS/PjhQDYw
+         Op7g==
+X-Gm-Message-State: AGi0PubwKHeKNOO1XTWZwV8VAK1UnV1f8tmPBSQ4HKW5f0dqKEFcNfe1
+        tCUqeEW1FHKoPd5p/RuZ8O6XlYzVaF3GEUlK5vdkig==
+X-Google-Smtp-Source: APiQypImfuGINmzUiAKm+fXdZ4ehIq2ATmivl0tU47oYeAHpGIUVxUBWrMHDUAwnjzFm3Bz2BQ3SVcXY25b83XjVoPo=
+X-Received: by 2002:aca:682:: with SMTP id 124mr3885582oig.69.1587061583117;
+ Thu, 16 Apr 2020 11:26:23 -0700 (PDT)
 MIME-Version: 1.0
-References: <1586165281-11888-1-git-send-email-chun-hung.wu@mediatek.com>
- <1586165281-11888-3-git-send-email-chun-hung.wu@mediatek.com>
- <CAOGqxeUjx+OWRhwWznk-uHZ9op7WTZaAGq6xd4Z4QdL+Hja2yA@mail.gmail.com> <1586823738.16047.7.camel@mtkswgap22>
-In-Reply-To: <1586823738.16047.7.camel@mtkswgap22>
-From:   Alan Cooper <alcooperx@gmail.com>
-Date:   Thu, 16 Apr 2020 14:25:52 -0400
-Message-ID: <CAOGqxeWvo0Dd6DaSEnosFV8xWngUq9By-hdtu4yJZwh6R=PgLw@mail.gmail.com>
-Subject: Re: [PATCH 2/5] [2/5] mmc: host: Remove redundant host CQE bindings
-To:     Chun-Hung Wu <chun-hung.wu@mediatek.com>
-Cc:     mirq-linux@rere.qmqm.pl, Jonathan Hunter <jonathanh@nvidia.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Chaotian Jing <chaotian.jing@mediatek.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Pavel Machek <pavel@ucw.cz>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Pan Bian <bianpan2016@163.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Allison Randal <allison@lohutok.net>,
-        Mathieu Malaterre <malat@debian.org>,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        Kuohong Wang <kuohong.wang@mediatek.com>,
-        kernel-team@android.com,
-        ": Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
-        linux-mmc <linux-mmc@vger.kernel.org>,
-        linux-mediatek@lists.infradead.org,
-        DTML <devicetree@vger.kernel.org>, wsd_upstream@mediatek.com,
-        "moderated list:BROADCOM BCM7XXX ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        linux-arm-msm@vger.kernel.org, linux-tegra@vger.kernel.org
+References: <CGME20200331022842eucas1p29e52dc93c4bd0b6e470c41aef19c9a86@eucas1p2.samsung.com>
+ <20200331022832.209618-1-saravanak@google.com> <781eefdc-c926-7566-5305-bb9633e6fac0@samsung.com>
+ <CAGETcx8aW-EY+bGEPr+20bZUF-=ghZDPyQ8AdU7eYYd-wOvekA@mail.gmail.com> <20200331072910.GC854501@kroah.com>
+In-Reply-To: <20200331072910.GC854501@kroah.com>
+From:   Saravana Kannan <saravanak@google.com>
+Date:   Thu, 16 Apr 2020 11:25:47 -0700
+Message-ID: <CAGETcx9r_t0AWVaTt5hk9s6Tti0UcNAersjXCJ_A04yJKNPtDA@mail.gmail.com>
+Subject: Re: [PATCH v1] driver core: Fix handling of fw_devlink=permissive
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Android Kernel Team <kernel-team@android.com>,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 13, 2020 at 8:22 PM Chun-Hung Wu <chun-hung.wu@mediatek.com> wrote:
+On Tue, Mar 31, 2020 at 12:29 AM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
 >
-> On Mon, 2020-04-06 at 09:59 -0400, Alan Cooper wrote:
-> > On Mon, Apr 6, 2020 at 5:28 AM Chun-Hung Wu <chun-hung.wu@mediatek.com> wrote:
+> On Mon, Mar 30, 2020 at 11:18:01PM -0700, Saravana Kannan wrote:
+> > On Mon, Mar 30, 2020 at 10:43 PM Marek Szyprowski
+> > <m.szyprowski@samsung.com> wrote:
 > > >
-> > > CQE bindings "supports-cqe" and "disable-cqe-dcmd" is parsed
-> > > in mmc_of_parse(). Remove vendor code which parses CQE bindings,
-> > > and use mmc_host->caps2 to decide support CQE or not.
+> > > Hi,
 > > >
-> > > Signed-off-by: Chun-Hung Wu <chun-hung.wu@mediatek.com>
-> > > ---
-> > >  drivers/mmc/host/sdhci-brcmstb.c   | 11 ++++++-----
-> > >  drivers/mmc/host/sdhci-msm.c       |  3 +--
-> > >  drivers/mmc/host/sdhci-of-arasan.c |  3 ---
-> > >  drivers/mmc/host/sdhci-tegra.c     |  2 +-
-> > >  4 files changed, 8 insertions(+), 11 deletions(-)
+> > > On 2020-03-31 04:28, Saravana Kannan wrote:
+> > > > When commit 8375e74f2bca ("driver core: Add fw_devlink kernel
+> > > > commandline option") added fw_devlink, it didn't implement "permissive"
+> > > > mode correctly.
+> > > >
+> > > > That commit got the device links flags correct to make sure unprobed
+> > > > suppliers don't block the probing of a consumer. However, if a consumer
+> > > > is waiting for mandatory suppliers to register, that could still block a
+> > > > consumer from probing.
+> > > >
+> > > > This commit fixes that by making sure in permissive mode, all suppliers
+> > > > to a consumer are treated as a optional suppliers. So, even if a
+> > > > consumer is waiting for suppliers to register and link itself (using the
+> > > > DL_FLAG_SYNC_STATE_ONLY flag) to the supplier, the consumer is never
+> > > > blocked from probing.
+> > > >
+> > > > Fixes: 8375e74f2bca ("driver core: Add fw_devlink kernel commandline option")
+> > > > Reported-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> > > > Signed-off-by: Saravana Kannan <saravanak@google.com>
+> > > > ---
+> > > > Hi Marek,
+> > > >
+> > > > If you pull in this patch and then add back in my patch that created the
+> > > > boot problem for you, can you see if that fixes the boot issue for you?
 > > >
-> > > diff --git a/drivers/mmc/host/sdhci-brcmstb.c b/drivers/mmc/host/sdhci-brcmstb.c
-> > > index ad01f64..07c90c6 100644
-> > > --- a/drivers/mmc/host/sdhci-brcmstb.c
-> > > +++ b/drivers/mmc/host/sdhci-brcmstb.c
-> > > @@ -247,10 +247,6 @@ static int sdhci_brcmstb_probe(struct platform_device *pdev)
-> > >                 return res;
-> > >
-> > >         memset(&brcmstb_pdata, 0, sizeof(brcmstb_pdata));
-> > > -       if (device_property_read_bool(&pdev->dev, "supports-cqe")) {
-> > > -               has_cqe = true;
-> > > -               match_priv->ops->irq = sdhci_brcmstb_cqhci_irq;
+> > > Indeed, this fixes booting on my Raspberry Pi3/4 boards with linux
+> > > next-20200327. Thanks! :)
 > >
-> > The above line that sets the irq was moved to later in the function,
-> > but needs to come before sdhci_pltfm_init()
+> > Hi Marek,
 > >
-> > Al
-> After check the code in sdhci_pltfm_init(), I don't see where
-> match_priv->ops->irq being used in code section.
-> Only "host->ops = pdata->ops;" is assigned, may I know why should
-> we put match_priv->ops->irq = sdhci_brcmstb_cqhci_irq; before
-> sdhci_pltfm_init()?
-> By the way, host only added to kernel after sdhci_brcmstb_add_host(),
-> So, I suppose isr assignment is ok before anywhere of it.
-
-I thought I remembered having to move the "set irq" to before
-sdhci_pltfm_init() when I first added the functionality, but it looks
-like it isn't necessary
-I tested your changes and they worked correctly.
-Acked-by: Al Cooper <alcooperx@gmail.com>
-
-
-
+> > Thanks for testing, but I'm not able to find the tag next-20200327. I
+> > can only find next-20200326 and next-20200330. I was just trying to
+> > make sure that next-20200327 doesn't have the revert Greg did. I'm
+> > guessing you meant next-20200326?
 > >
-> > > -       }
-> > >         brcmstb_pdata.ops = match_priv->ops;
-> > >         host = sdhci_pltfm_init(pdev, &brcmstb_pdata,
-> > >                                 sizeof(struct sdhci_brcmstb_priv));
-> > > @@ -261,7 +257,6 @@ static int sdhci_brcmstb_probe(struct platform_device *pdev)
-> > >
-> > >         pltfm_host = sdhci_priv(host);
-> > >         priv = sdhci_pltfm_priv(pltfm_host);
-> > > -       priv->has_cqe = has_cqe;
-> > >
-> > >         /* Map in the non-standard CFG registers */
-> > >         iomem = platform_get_resource(pdev, IORESOURCE_MEM, 1);
-> > > @@ -276,6 +271,12 @@ static int sdhci_brcmstb_probe(struct platform_device *pdev)
-> > >         if (res)
-> > >                 goto err;
-> > >
-> > > +       if (host->mmc->caps2 & MMC_CAP2_CQE) {
-> > > +               has_cqe = true;
-> > > +               match_priv->ops->irq = sdhci_brcmstb_cqhci_irq;
-> > > +       }
-> > > +       priv->has_cqe = has_cqe;
-> > > +
-> > >         /*
-> > >          * If the chip has enhanced strobe and it's enabled, add
-> > >          * callback
-> > > diff --git a/drivers/mmc/host/sdhci-msm.c b/drivers/mmc/host/sdhci-msm.c
-> > > index c3a160c..fbb2f57 100644
-> > > --- a/drivers/mmc/host/sdhci-msm.c
-> > > +++ b/drivers/mmc/host/sdhci-msm.c
-> > > @@ -1880,7 +1880,6 @@ static int sdhci_msm_probe(struct platform_device *pdev)
-> > >         u8 core_major;
-> > >         const struct sdhci_msm_offset *msm_offset;
-> > >         const struct sdhci_msm_variant_info *var_info;
-> > > -       struct device_node *node = pdev->dev.of_node;
-> > >
-> > >         host = sdhci_pltfm_init(pdev, &sdhci_msm_pdata, sizeof(*msm_host));
-> > >         if (IS_ERR(host))
-> > > @@ -2076,7 +2075,7 @@ static int sdhci_msm_probe(struct platform_device *pdev)
-> > >         pm_runtime_use_autosuspend(&pdev->dev);
-> > >
-> > >         host->mmc_host_ops.execute_tuning = sdhci_msm_execute_tuning;
-> > > -       if (of_property_read_bool(node, "supports-cqe"))
-> > > +       if (host->mmc->caps2 & MMC_CAP2_CQE)
-> > >                 ret = sdhci_msm_cqe_add_host(host, pdev);
-> > >         else
-> > >                 ret = sdhci_add_host(host);
-> > > diff --git a/drivers/mmc/host/sdhci-of-arasan.c b/drivers/mmc/host/sdhci-of-arasan.c
-> > > index e49b44b..359eff6 100644
-> > > --- a/drivers/mmc/host/sdhci-of-arasan.c
-> > > +++ b/drivers/mmc/host/sdhci-of-arasan.c
-> > > @@ -1281,9 +1281,6 @@ static int sdhci_arasan_probe(struct platform_device *pdev)
-> > >                                         sdhci_arasan_voltage_switch;
-> > >                 sdhci_arasan->has_cqe = true;
-> > >                 host->mmc->caps2 |= MMC_CAP2_CQE;
-> > > -
-> > > -               if (!of_property_read_bool(np, "disable-cqe-dcmd"))
-> > > -                       host->mmc->caps2 |= MMC_CAP2_CQE_DCMD;
-> > >         }
-> > >
-> > >         ret = sdhci_arasan_add_host(sdhci_arasan);
-> > > diff --git a/drivers/mmc/host/sdhci-tegra.c b/drivers/mmc/host/sdhci-tegra.c
-> > > index 403ac44..d09abdd 100644
-> > > --- a/drivers/mmc/host/sdhci-tegra.c
-> > > +++ b/drivers/mmc/host/sdhci-tegra.c
-> > > @@ -715,7 +715,7 @@ static void tegra_sdhci_parse_dt(struct sdhci_host *host)
-> > >         struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
-> > >         struct sdhci_tegra *tegra_host = sdhci_pltfm_priv(pltfm_host);
-> > >
-> > > -       if (device_property_read_bool(host->mmc->parent, "supports-cqe"))
-> > > +       if (host->mmc->caps2 & MMC_CAP2_CQE)
-> > >                 tegra_host->enable_hwcq = true;
-> > >         else
-> > >                 tegra_host->enable_hwcq = false;
-> > > --
-> > > 1.9.1
+> > > Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> >
+> > Thanks!
+> >
+> > Greg,
+> >
+> > Can you pull in my fix and then revert the revert?
 >
+> After 5.7-rc1 is out I will, thanks.
+
+Hi Greg,
+
+Just to clarify, this patch is a bug fix and I think this patch should
+go into all the stable branches that support fw_devlink.
+
+The only risky change that you needed to wait on for 5.7-rc1 is the
+patch [1] that sets fw_devlink=permissive by default. Well, a revert
+of the revert of [1].
+
+[1] - https://lore.kernel.org/lkml/20200321210305.28937-1-saravanak@google.com/
+
+Thanks,
+Saravana
