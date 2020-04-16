@@ -2,81 +2,120 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E301AC2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:41:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56993C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:41:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CA32621D7E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:41:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35C4921D7E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:41:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587048095;
+	bh=6yOYKSkkjiW+PSa9ceaqSZizZQtvjSKI5yYQ7sjHvpw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=k6YpoAt9J1mM2uY2t9FQynOcl8nFr4u56RA88R20mMXTpUNyVDwW84cnePWa0N6WR
+	 XG5Nr/x2qyTROhks0o7w5dvE+d+v8b6nKpQzVXW64Jcy+xRy8cy72U4QZRvg62k7vS
+	 vaI7GcpLsb19N5lVmxxPIYCH4ZiDFgAFQ9Lx5YYU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394451AbgDPOl2 (ORCPT
+        id S2394457AbgDPOlc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:41:28 -0400
-Received: from cmccmta1.chinamobile.com ([221.176.66.79]:3502 "EHLO
-        cmccmta1.chinamobile.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2394437AbgDPOlJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 10:41:09 -0400
-Received: from spf.mail.chinamobile.com (unknown[172.16.121.7]) by rmmx-syy-dmz-app01-12001 (RichMail) with SMTP id 2ee15e986e74448-87478; Thu, 16 Apr 2020 22:40:57 +0800 (CST)
-X-RM-TRANSID: 2ee15e986e74448-87478
-X-RM-TagInfo: emlType=0                                       
-X-RM-SPAM-FLAG: 00000000
-Received: from localhost.localdomain (unknown[112.1.173.7])
-        by rmsmtp-syy-appsvr04-12004 (RichMail) with SMTP id 2ee45e986e750b1-26b7b;
-        Thu, 16 Apr 2020 22:40:57 +0800 (CST)
-X-RM-TRANSID: 2ee45e986e750b1-26b7b
-From:   Tang Bin <tangbin@cmss.chinamobile.com>
-To:     thierry.reding@gmail.com, airlied@linux.ie, daniel@ffwll.ch,
-        jonathanh@nvidia.com
-Cc:     dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Tang Bin <tangbin@cmss.chinamobile.com>
-Subject: [PATCH] drm/tegra: dc: Use devm_platform_ioremap_resource() to simplify code
-Date:   Thu, 16 Apr 2020 22:42:40 +0800
-Message-Id: <20200416144240.20184-1-tangbin@cmss.chinamobile.com>
-X-Mailer: git-send-email 2.20.1.windows.1
+        Thu, 16 Apr 2020 10:41:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48688 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2405101AbgDPOB2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 10:01:28 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9120A2078B;
+        Thu, 16 Apr 2020 14:01:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587045687;
+        bh=6yOYKSkkjiW+PSa9ceaqSZizZQtvjSKI5yYQ7sjHvpw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Od+jxJNWaW0vwBkXfm+Jimnt2cE0jodbYMPsldQYWTr6tZK/cnDTDN7jnsSvVE0TV
+         k9GE79Ldtevfg3TwyP8t6OrJYvAM9e2l6vVDYaOYt8b3CSkrJn/mO2rHNr+d3SWUGJ
+         Toj7pj6ZOx1y/R69Rm1xCbR/SkzSvtoMfnnECMIs=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH 5.6 237/254] powerpc/64/tm: Dont let userspace set regs->trap via sigreturn
+Date:   Thu, 16 Apr 2020 15:25:26 +0200
+Message-Id: <20200416131355.173982898@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.1
+In-Reply-To: <20200416131325.804095985@linuxfoundation.org>
+References: <20200416131325.804095985@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use devm_platform_ioremap_resource() instead of 
-platform_get_resource()+ devm_ioremap_resource().
+From: Michael Ellerman <mpe@ellerman.id.au>
 
-Signed-off-by: Tang Bin <tangbin@cmss.chinamobile.com>
+commit c7def7fbdeaa25feaa19caf4a27c5d10bd8789e4 upstream.
+
+In restore_tm_sigcontexts() we take the trap value directly from the
+user sigcontext with no checking:
+
+	err |= __get_user(regs->trap, &sc->gp_regs[PT_TRAP]);
+
+This means we can be in the kernel with an arbitrary regs->trap value.
+
+Although that's not immediately problematic, there is a risk we could
+trigger one of the uses of CHECK_FULL_REGS():
+
+	#define CHECK_FULL_REGS(regs)	BUG_ON(regs->trap & 1)
+
+It can also cause us to unnecessarily save non-volatile GPRs again in
+save_nvgprs(), which shouldn't be problematic but is still wrong.
+
+It's also possible it could trick the syscall restart machinery, which
+relies on regs->trap not being == 0xc00 (see 9a81c16b5275 ("powerpc:
+fix double syscall restarts")), though I haven't been able to make
+that happen.
+
+Finally it doesn't match the behaviour of the non-TM case, in
+restore_sigcontext() which zeroes regs->trap.
+
+So change restore_tm_sigcontexts() to zero regs->trap.
+
+This was discovered while testing Nick's upcoming rewrite of the
+syscall entry path. In that series the call to save_nvgprs() prior to
+signal handling (do_notify_resume()) is removed, which leaves the
+low-bit of regs->trap uncleared which can then trigger the FULL_REGS()
+WARNs in setup_tm_sigcontexts().
+
+Fixes: 2b0a576d15e0 ("powerpc: Add new transactional memory state to the signal context")
+Cc: stable@vger.kernel.org # v3.9+
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20200401023836.3286664-1-mpe@ellerman.id.au
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/gpu/drm/tegra/dc.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ arch/powerpc/kernel/signal_64.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/tegra/dc.c b/drivers/gpu/drm/tegra/dc.c
-index d26fb16d6..72c952b1a 100644
---- a/drivers/gpu/drm/tegra/dc.c
-+++ b/drivers/gpu/drm/tegra/dc.c
-@@ -2503,7 +2503,6 @@ static int tegra_dc_couple(struct tegra_dc *dc)
+--- a/arch/powerpc/kernel/signal_64.c
++++ b/arch/powerpc/kernel/signal_64.c
+@@ -473,8 +473,10 @@ static long restore_tm_sigcontexts(struc
+ 	err |= __get_user(tsk->thread.ckpt_regs.ccr,
+ 			  &sc->gp_regs[PT_CCR]);
  
- static int tegra_dc_probe(struct platform_device *pdev)
- {
--	struct resource *regs;
- 	struct tegra_dc *dc;
- 	int err;
- 
-@@ -2560,8 +2559,7 @@ static int tegra_dc_probe(struct platform_device *pdev)
- 		tegra_powergate_power_off(dc->powergate);
- 	}
- 
--	regs = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	dc->regs = devm_ioremap_resource(&pdev->dev, regs);
-+	dc->regs = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(dc->regs))
- 		return PTR_ERR(dc->regs);
- 
--- 
-2.20.1.windows.1
-
++	/* Don't allow userspace to set the trap value */
++	regs->trap = 0;
++
+ 	/* These regs are not checkpointed; they can go in 'regs'. */
+-	err |= __get_user(regs->trap, &sc->gp_regs[PT_TRAP]);
+ 	err |= __get_user(regs->dar, &sc->gp_regs[PT_DAR]);
+ 	err |= __get_user(regs->dsisr, &sc->gp_regs[PT_DSISR]);
+ 	err |= __get_user(regs->result, &sc->gp_regs[PT_RESULT]);
 
 
