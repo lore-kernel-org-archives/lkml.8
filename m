@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 101C1C352BE
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:05:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E67F9C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:05:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D8026206D6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:04:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C46CF206D6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:05:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587045899;
-	bh=T/a03JFRVwZf26cJQ8+4XA7GcZj1JeU8Ggit0HX5RJM=;
+	s=default; t=1587045903;
+	bh=1Nbx4WvLj84+n0M/+Kj4ou1MfifW815+ZChWgpnGHsA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kwmEWPtrVCLcO3oWuLZsHEX5GzaYrnA9d14YEM3OuDTQmfbFxhX9F1y6XEIBry3O8
-	 uWCy1FLo9Tbzh1E0xj/WSzaAAk5HYv2uF0D21xtGTa01s6cgjsRRnA0hwjFbnL7qxY
-	 mr07LuA2/5j1qJDjkw0pepgUsJ2M7rB0l20t/+As=
+	b=nFIrwFyNS9jY/+O89VF8pQofY329LlkGQqi+8/D1J2OZvONZ7qg+iixE+Ce/cqffI
+	 JtdcabLrFYY6F04fIEYKdKIDxueV+lOTCTwd23zwunBsyAfo+O5dQ811j9gxgsMOH4
+	 cGCTlPrT7vgNRn6P3I+hdZlOr0mh9tXh4TuDW0Z0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393152AbgDPOE6 (ORCPT
+        id S2393223AbgDPOFC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:04:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56116 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 10:05:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56526 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392251AbgDPNnJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:43:09 -0400
+        id S2441590AbgDPNnS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:43:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3193720732;
-        Thu, 16 Apr 2020 13:43:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9465B2076D;
+        Thu, 16 Apr 2020 13:43:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044589;
-        bh=T/a03JFRVwZf26cJQ8+4XA7GcZj1JeU8Ggit0HX5RJM=;
+        s=default; t=1587044597;
+        bh=1Nbx4WvLj84+n0M/+Kj4ou1MfifW815+ZChWgpnGHsA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wO1BH6wYedoqualAEAXrZ+h1tSCADakWiFozQgtOMIWriprLbdPml2UMdnIusW5dM
-         TnjkLT4vseD08djc2Q9qe5Ih7RJoouwFYvxqiHGYSOK1KflG1erspaOoG1jsJLcmbI
-         GqMlUn9lt5dv7aebUijl6/84IcxOjtcR/b/dC3eY=
+        b=t4urDn53AGDol5NGozc+qsh9dTW0ux53zIvDJPqMokuG9zIbGcOfDTOL5kSsrAN1g
+         7kw5EKtH818IMqT4WpcThUItvU2maWOJNRjpMJP+kkworaXoXpPqJKyoxqNmuGlR69
+         9VS1r2z7l6cXmAPm8qnin4RRSgCOp8r/lhV1ZCHw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xu Wang <vulab@iscas.ac.cn>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org,
+        Mohammad Rasim <mohammad.rasim96@gmail.com>,
+        Sean Young <sean@mess.org>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 021/232] qlcnic: Fix bad kzalloc null test
-Date:   Thu, 16 Apr 2020 15:21:55 +0200
-Message-Id: <20200416131318.980828264@linuxfoundation.org>
+Subject: [PATCH 5.4 024/232] media: rc: add keymap for Videostrong KII Pro
+Date:   Thu, 16 Apr 2020 15:21:58 +0200
+Message-Id: <20200416131319.287542456@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131316.640996080@linuxfoundation.org>
 References: <20200416131316.640996080@linuxfoundation.org>
@@ -60,33 +62,137 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xu Wang <vulab@iscas.ac.cn>
+From: Mohammad Rasim <mohammad.rasim96@gmail.com>
 
-[ Upstream commit bcaeb886ade124331a6f3a5cef34a3f1484c0a03 ]
+[ Upstream commit 30defecb98400575349a7d32f0526e1dc42ea83e ]
 
-In qlcnic_83xx_get_reset_instruction_template, the variable
-of null test is bad, so correct it.
+This is an NEC remote control device shipped with the Videostrong KII Pro
+tv box as well as other devices from videostrong.
 
-Signed-off-by: Xu Wang <vulab@iscas.ac.cn>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Mohammad Rasim <mohammad.rasim96@gmail.com>
+Signed-off-by: Sean Young <sean@mess.org>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/qlogic/qlcnic/qlcnic_83xx_init.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/media/rc/keymaps/Makefile             |  1 +
+ .../media/rc/keymaps/rc-videostrong-kii-pro.c | 83 +++++++++++++++++++
+ include/media/rc-map.h                        |  1 +
+ 3 files changed, 85 insertions(+)
+ create mode 100644 drivers/media/rc/keymaps/rc-videostrong-kii-pro.c
 
-diff --git a/drivers/net/ethernet/qlogic/qlcnic/qlcnic_83xx_init.c b/drivers/net/ethernet/qlogic/qlcnic/qlcnic_83xx_init.c
-index 07f9067affc65..cda5b0a9e9489 100644
---- a/drivers/net/ethernet/qlogic/qlcnic/qlcnic_83xx_init.c
-+++ b/drivers/net/ethernet/qlogic/qlcnic/qlcnic_83xx_init.c
-@@ -1720,7 +1720,7 @@ static int qlcnic_83xx_get_reset_instruction_template(struct qlcnic_adapter *p_d
- 
- 	ahw->reset.seq_error = 0;
- 	ahw->reset.buff = kzalloc(QLC_83XX_RESTART_TEMPLATE_SIZE, GFP_KERNEL);
--	if (p_dev->ahw->reset.buff == NULL)
-+	if (ahw->reset.buff == NULL)
- 		return -ENOMEM;
- 
- 	p_buff = p_dev->ahw->reset.buff;
+diff --git a/drivers/media/rc/keymaps/Makefile b/drivers/media/rc/keymaps/Makefile
+index a56fc634d2d68..ea91a9afa6a02 100644
+--- a/drivers/media/rc/keymaps/Makefile
++++ b/drivers/media/rc/keymaps/Makefile
+@@ -117,6 +117,7 @@ obj-$(CONFIG_RC_MAP) += rc-adstech-dvb-t-pci.o \
+ 			rc-videomate-m1f.o \
+ 			rc-videomate-s350.o \
+ 			rc-videomate-tv-pvr.o \
++			rc-videostrong-kii-pro.o \
+ 			rc-wetek-hub.o \
+ 			rc-wetek-play2.o \
+ 			rc-winfast.o \
+diff --git a/drivers/media/rc/keymaps/rc-videostrong-kii-pro.c b/drivers/media/rc/keymaps/rc-videostrong-kii-pro.c
+new file mode 100644
+index 0000000000000..414d4d231e7ed
+--- /dev/null
++++ b/drivers/media/rc/keymaps/rc-videostrong-kii-pro.c
+@@ -0,0 +1,83 @@
++// SPDX-License-Identifier: GPL-2.0+
++//
++// Copyright (C) 2019 Mohammad Rasim <mohammad.rasim96@gmail.com>
++
++#include <media/rc-map.h>
++#include <linux/module.h>
++
++//
++// Keytable for the Videostrong KII Pro STB remote control
++//
++
++static struct rc_map_table kii_pro[] = {
++	{ 0x59, KEY_POWER },
++	{ 0x19, KEY_MUTE },
++	{ 0x42, KEY_RED },
++	{ 0x40, KEY_GREEN },
++	{ 0x00, KEY_YELLOW },
++	{ 0x03, KEY_BLUE },
++	{ 0x4a, KEY_BACK },
++	{ 0x48, KEY_FORWARD },
++	{ 0x08, KEY_PREVIOUSSONG},
++	{ 0x0b, KEY_NEXTSONG},
++	{ 0x46, KEY_PLAYPAUSE },
++	{ 0x44, KEY_STOP },
++	{ 0x1f, KEY_FAVORITES},	//KEY_F5?
++	{ 0x04, KEY_PVR },
++	{ 0x4d, KEY_EPG },
++	{ 0x02, KEY_INFO },
++	{ 0x09, KEY_SUBTITLE },
++	{ 0x01, KEY_AUDIO },
++	{ 0x0d, KEY_HOMEPAGE },
++	{ 0x11, KEY_TV },	// DTV ?
++	{ 0x06, KEY_UP },
++	{ 0x5a, KEY_LEFT },
++	{ 0x1a, KEY_ENTER },	// KEY_OK ?
++	{ 0x1b, KEY_RIGHT },
++	{ 0x16, KEY_DOWN },
++	{ 0x45, KEY_MENU },
++	{ 0x05, KEY_ESC },
++	{ 0x13, KEY_VOLUMEUP },
++	{ 0x17, KEY_VOLUMEDOWN },
++	{ 0x58, KEY_APPSELECT },
++	{ 0x12, KEY_VENDOR },	// mouse
++	{ 0x55, KEY_PAGEUP },	// KEY_CHANNELUP ?
++	{ 0x15, KEY_PAGEDOWN },	// KEY_CHANNELDOWN ?
++	{ 0x52, KEY_1 },
++	{ 0x50, KEY_2 },
++	{ 0x10, KEY_3 },
++	{ 0x56, KEY_4 },
++	{ 0x54, KEY_5 },
++	{ 0x14, KEY_6 },
++	{ 0x4e, KEY_7 },
++	{ 0x4c, KEY_8 },
++	{ 0x0c, KEY_9 },
++	{ 0x18, KEY_WWW },	// KEY_F7
++	{ 0x0f, KEY_0 },
++	{ 0x51, KEY_BACKSPACE },
++};
++
++static struct rc_map_list kii_pro_map = {
++	.map = {
++		.scan     = kii_pro,
++		.size     = ARRAY_SIZE(kii_pro),
++		.rc_proto = RC_PROTO_NEC,
++		.name     = RC_MAP_KII_PRO,
++	}
++};
++
++static int __init init_rc_map_kii_pro(void)
++{
++	return rc_map_register(&kii_pro_map);
++}
++
++static void __exit exit_rc_map_kii_pro(void)
++{
++	rc_map_unregister(&kii_pro_map);
++}
++
++module_init(init_rc_map_kii_pro)
++module_exit(exit_rc_map_kii_pro)
++
++MODULE_LICENSE("GPL");
++MODULE_AUTHOR("Mohammad Rasim <mohammad.rasim96@gmail.com>");
+diff --git a/include/media/rc-map.h b/include/media/rc-map.h
+index afd2ab31bdf2d..c2ef3906e1cd1 100644
+--- a/include/media/rc-map.h
++++ b/include/media/rc-map.h
+@@ -271,6 +271,7 @@ struct rc_map *rc_map_get(const char *name);
+ #define RC_MAP_VIDEOMATE_K100            "rc-videomate-k100"
+ #define RC_MAP_VIDEOMATE_S350            "rc-videomate-s350"
+ #define RC_MAP_VIDEOMATE_TV_PVR          "rc-videomate-tv-pvr"
++#define RC_MAP_KII_PRO                   "rc-videostrong-kii-pro"
+ #define RC_MAP_WETEK_HUB                 "rc-wetek-hub"
+ #define RC_MAP_WETEK_PLAY2               "rc-wetek-play2"
+ #define RC_MAP_WINFAST                   "rc-winfast"
 -- 
 2.20.1
 
