@@ -2,108 +2,106 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47CD1C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:56:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4957C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:56:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2467E206A2
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:56:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 814252051A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:56:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587048981;
+	bh=1ClpcThwENIVjhgFj2BIfnEiPBTFpOMrznL6cQRlSt8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=rSVtPWExDtJopeFFFG91w+b3Ml7jwhoTDvelysJpEMdO1lfQFIYyG2q9I1/PQHa8X
+	 BeVYF07rn6EdVQnegvjRKwwu9N9kSg19zf4LZKKqfCusAh5DGEpPrfQBJLEsCxw08D
+	 KIUX0QKZE+eMwPxVqsaipjHLp76ONnYHoR1IaNbA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392046AbgDPO4M (ORCPT
+        id S1728299AbgDPO4U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:56:12 -0400
-Received: from mail.manjaro.org ([176.9.38.148]:33370 "EHLO mail.manjaro.org"
+        Thu, 16 Apr 2020 10:56:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43216 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2394833AbgDPO4C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 10:56:02 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.manjaro.org (Postfix) with ESMTP id 735653702995;
-        Thu, 16 Apr 2020 16:55:59 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at manjaro.org
-Received: from mail.manjaro.org ([127.0.0.1])
-        by localhost (manjaro.org [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id Erx_frVr7CfS; Thu, 16 Apr 2020 16:55:57 +0200 (CEST)
-From:   Tobias Schramm <t.schramm@manjaro.org>
-To:     Heiko Stuebner <heiko@sntech.de>
-Cc:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Tobias Schramm <t.schramm@manjaro.org>
-Subject: [PATCH] arm64: dts: rockchip: add micro SD card regulator to rockpro64
-Date:   Thu, 16 Apr 2020 16:55:34 +0200
-Message-Id: <20200416145534.1263575-1-t.schramm@manjaro.org>
+        id S1732182AbgDPN4J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:56:09 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 93AF220732;
+        Thu, 16 Apr 2020 13:56:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587045369;
+        bh=1ClpcThwENIVjhgFj2BIfnEiPBTFpOMrznL6cQRlSt8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=ViF1dydqOOEypDST0JeDeldwEJzyi9gO3304A8JgKBzQLS8flkrYEXMn824zORiOD
+         K6cz6X83TBSx03puNOwx7jA+KXiAJwfHzkV8x30IAe1pNYMF3F3y6HpvXrWdVDX6Yp
+         cDEqZEO2GM34OzgQA/w7WrnA+nbuQ53l4B7uUutI=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Vasily Averin <vvs@virtuozzo.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Subject: [PATCH 5.6 107/254] tpm: tpm1_bios_measurements_next should increase position index
+Date:   Thu, 16 Apr 2020 15:23:16 +0200
+Message-Id: <20200416131339.494494210@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.1
+In-Reply-To: <20200416131325.804095985@linuxfoundation.org>
+References: <20200416131325.804095985@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds the RockPro64's micro SD card regulator to the
-RockPro64 dtsi. The regulator is present on all revisions of the
-device.
-Previously the regular was missing, resulting in unreliable boot
-behaviour when booting from SD card.
+From: Vasily Averin <vvs@virtuozzo.com>
 
-Signed-off-by: Tobias Schramm <t.schramm@manjaro.org>
+commit d7a47b96ed1102551eb7325f97937e276fb91045 upstream.
+
+If .next function does not change position index,
+following .show function will repeat output related
+to current position index.
+
+In case of /sys/kernel/security/tpm0/ascii_bios_measurements
+and binary_bios_measurements:
+1) read after lseek beyound end of file generates whole last line.
+2) read after lseek to middle of last line generates
+expected end of last line and unexpected whole last line once again.
+
+Cc: stable@vger.kernel.org # 4.19.x
+Fixes: 1f4aace60b0e ("fs/seq_file.c: simplify seq_file iteration code ...")
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=206283
+Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
+Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- .../boot/dts/rockchip/rk3399-rockpro64.dtsi   | 27 +++++++++++++++++++
- 1 file changed, 27 insertions(+)
+ drivers/char/tpm/eventlog/tpm1.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dtsi
-index 9bca25801260..6788ab28f89a 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dtsi
-@@ -96,6 +96,24 @@ vcc1v8_s3: vcca1v8_s3: vcc1v8-s3 {
- 		vin-supply = <&vcc_1v8>;
- 	};
+--- a/drivers/char/tpm/eventlog/tpm1.c
++++ b/drivers/char/tpm/eventlog/tpm1.c
+@@ -115,6 +115,7 @@ static void *tpm1_bios_measurements_next
+ 	u32 converted_event_size;
+ 	u32 converted_event_type;
  
-+	/* micro SD card power */
-+	vcc3v0_sd: vcc3v0-sd {
-+		compatible = "regulator-fixed";
-+		enable-active-high;
-+		gpio = <&gpio0 RK_PA1 GPIO_ACTIVE_HIGH>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&sdmmc0_pwr_h>;
-+		regulator-name = "vcc3v0_sd";
-+		regulator-always-on;
-+		regulator-min-microvolt = <3000000>;
-+		regulator-max-microvolt = <3000000>;
-+		vin-supply = <&vcc3v3_sys>;
-+
-+		regulator-state-mem {
-+			regulator-off-in-suspend;
-+		};
-+	};
-+
- 	vcc3v3_pcie: vcc3v3-pcie-regulator {
- 		compatible = "regulator-fixed";
- 		enable-active-high;
-@@ -603,6 +621,13 @@ vsel2_gpio: vsel2-gpio {
- 		};
- 	};
++	(*pos)++;
+ 	converted_event_size = do_endian_conversion(event->event_size);
  
-+	sdcard {
-+		sdmmc0_pwr_h: sdmmc0-pwr-h {
-+			rockchip,pins = <0 RK_PA1 RK_FUNC_GPIO &pcfg_pull_none>;
-+		};
-+
-+	};
-+
- 	sdio-pwrseq {
- 		wifi_enable_h: wifi-enable-h {
- 			rockchip,pins = <0 RK_PB2 RK_FUNC_GPIO &pcfg_pull_none>;
-@@ -661,6 +686,8 @@ &sdmmc {
- 	max-frequency = <150000000>;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&sdmmc_clk &sdmmc_cmd &sdmmc_bus4>;
-+	vmmc-supply = <&vcc3v0_sd>;
-+	vqmmc-supply = <&vcc_sdio>;
- 	status = "okay";
- };
+ 	v += sizeof(struct tcpa_event) + converted_event_size;
+@@ -132,7 +133,6 @@ static void *tpm1_bios_measurements_next
+ 	    ((v + sizeof(struct tcpa_event) + converted_event_size) > limit))
+ 		return NULL;
  
--- 
-2.26.0
+-	(*pos)++;
+ 	return v;
+ }
+ 
+
 
