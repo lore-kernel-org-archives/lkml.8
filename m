@@ -2,91 +2,123 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AE2BC352BE
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 22:30:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0162C352BE
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 22:33:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 10D4B221F9
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 22:30:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE2C92078B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 22:33:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="XaJtElvz"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Sps5ULMq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728998AbgDPWai (ORCPT
+        id S1728976AbgDPWdG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 18:30:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55754 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725770AbgDPWai (ORCPT
+        Thu, 16 Apr 2020 18:33:06 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:60208 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728460AbgDPWdE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 18:30:38 -0400
-Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4839C061A0C;
-        Thu, 16 Apr 2020 15:30:37 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 493DSr19S3z9sSG;
-        Fri, 17 Apr 2020 08:30:36 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1587076236;
-        bh=qTJxlRbE+T+2YJFoXSIvLR1Gb9pVj+adyuv8+KIBxEo=;
-        h=Date:From:To:Cc:Subject:From;
-        b=XaJtElvzVrDKHG7powdtA0Ts2h+NyifwOx0F1ACwmQKtgrmStNdRUOJQzpfAIunML
-         W2lEjJE4GDkuOwSDgKsOEvReodSlt+Oaz5lLd5I7vS6JtlYs9aJ6z3gTaemIXFVKh2
-         Pv6FmszcEJUDbwtnuLnvoqaK+jLCzFjT0rzbdFE+CkAVO3A7aFYDqIrV5ts+VAQ7rc
-         ySKeIMZEO/hEhUChMkrx9GRjVcWzTUiezSFXwo7thd8Pmt0Kme9jgolM0g5Kj65jIT
-         ldGaQUxDjyj7Zu+4W9h0CrIqcTuSOcdOrqbYRN7YdRzTn9+z+3d2k7yFI9vnlMJk2c
-         jdesAWZ/JEQow==
-Date:   Fri, 17 Apr 2020 08:30:35 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: Signed-off-by missing for commit in the pinctrl tree
-Message-ID: <20200417083035.3c46185a@canb.auug.org.au>
+        Thu, 16 Apr 2020 18:33:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587076383;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=qUf9DXimPD8UBiVLdfnQM98oUkmHdl6eiPE6mf0vIko=;
+        b=Sps5ULMq4ITIhAj/rLvb95C6Fp04EONH3OvrUE5JSk4+D6z3FivwwiNo2AqBQkSrgLJf2F
+        CzTaNbUZ/ExTmC94a7wvFhU0QW24k+p+0kRpIyD6NGAo9RwBt6QjOfSdbSVTNyiaeGqzC5
+        oFGeC3SD4d38HRyq63tF0KQP4t15RXQ=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-448-RGkDskWaOmSH1H_nMoNpdw-1; Thu, 16 Apr 2020 18:33:01 -0400
+X-MC-Unique: RGkDskWaOmSH1H_nMoNpdw-1
+Received: by mail-wm1-f69.google.com with SMTP id o5so125219wmo.6
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 15:33:01 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=qUf9DXimPD8UBiVLdfnQM98oUkmHdl6eiPE6mf0vIko=;
+        b=tGpXtEq/wW3VnKx8mDd++Ve+CC+FC2X6M5zp01RYve7Ph2RkEt+vcAdbaERcSOKpZx
+         LGpf9p9ez6dO4n8+6Nm6/xPRatoLaVcS2abjGZZvKK6zdsKlN9dA2vXqpdeWkHAEQ596
+         JS1USOFXkm6SfqQNx9oCqnZePUEUF9ZZ8tKQ0yZp6cBOVq0fGKsufAcvaGYM06oEinBY
+         hrFf2TqOJoT148xAoWuLVvWuv3XkNW0xKURtE2ijsqmdWDv1w879ASm586dnGnsc1AZX
+         spriyyG1h/ZAq3RLtjw+IEKcfyRSGIb92V6MjGmLUdaSfYpMk88MXpUXXwDp7ekf9LON
+         12lQ==
+X-Gm-Message-State: AGi0PuYg9g0lt4Ou0+0mKb9zxg9ndlDo4X9NBdMnnXQh9ilsMswE09r9
+        nZaVhVjPYAOIltjoCIcujMLxpm4of+ZYZh0K5zPCmks8Mt3Kr8U7dJoP7NfehAnCUrW9tE9u1LI
+        qeK8YCgT+GS1S4TtiaFi8bHfP
+X-Received: by 2002:a7b:ce81:: with SMTP id q1mr106316wmj.156.1587076380276;
+        Thu, 16 Apr 2020 15:33:00 -0700 (PDT)
+X-Google-Smtp-Source: APiQypIy+rWP6GLwQOV39yuKvCoJ5WM3R60eHJj8M3PsMQSHsFk9lyxG27YOo0I93W1RyqT/v7nwTQ==
+X-Received: by 2002:a7b:ce81:: with SMTP id q1mr106300wmj.156.1587076380092;
+        Thu, 16 Apr 2020 15:33:00 -0700 (PDT)
+Received: from redhat.com (bzq-79-183-51-3.red.bezeqint.net. [79.183.51.3])
+        by smtp.gmail.com with ESMTPSA id h137sm6135220wme.0.2020.04.16.15.32.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Apr 2020 15:32:59 -0700 (PDT)
+Date:   Thu, 16 Apr 2020 18:32:56 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Eugenio =?iso-8859-1?Q?P=E9rez?= <eperezma@redhat.com>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        kvm list <kvm@vger.kernel.org>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Halil Pasic <pasic@linux.ibm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 5/8] tools/virtio: Use __vring_new_virtqueue in
+ virtio_test.c
+Message-ID: <20200416183244-mutt-send-email-mst@kernel.org>
+References: <20200416075643.27330-1-eperezma@redhat.com>
+ <20200416075643.27330-6-eperezma@redhat.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/3QkmPTDbeOyBUd5XnD27qhs";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200416075643.27330-6-eperezma@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/3QkmPTDbeOyBUd5XnD27qhs
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Thu, Apr 16, 2020 at 09:56:40AM +0200, Eugenio Pérez wrote:
+> As updated in ("2a2d1382fe9d virtio: Add improved queue allocation API")
+> 
+> Signed-off-by: Eugenio Pérez <eperezma@redhat.com>
 
-Hi all,
+Pls add motivation for these changes.
 
-Commit
+> ---
+>  tools/virtio/virtio_test.c | 7 +++----
+>  1 file changed, 3 insertions(+), 4 deletions(-)
+> 
+> diff --git a/tools/virtio/virtio_test.c b/tools/virtio/virtio_test.c
+> index 1d5144590df6..d9827b640c21 100644
+> --- a/tools/virtio/virtio_test.c
+> +++ b/tools/virtio/virtio_test.c
+> @@ -106,10 +106,9 @@ static void vq_info_add(struct vdev_info *dev, int num)
+>  	assert(r >= 0);
+>  	memset(info->ring, 0, vring_legacy_size(num, 4096));
+>  	vring_legacy_init(&info->vring, num, info->ring, 4096);
+> -	info->vq = vring_new_virtqueue(info->idx,
+> -				       info->vring.num, 4096, &dev->vdev,
+> -				       true, false, info->ring,
+> -				       vq_notify, vq_callback, "test");
+> +	info->vq =
+> +		__vring_new_virtqueue(info->idx, info->vring, &dev->vdev, true,
+> +				      false, vq_notify, vq_callback, "test");
+>  	assert(info->vq);
+>  	info->vq->priv = info;
+>  	vhost_vq_setup(dev, info);
+> -- 
+> 2.18.1
 
-  eb032d7b146b ("pinctrl: qcom: Remove duplicated include from pinctrl-msm.=
-c")
-
-is missing a Signed-off-by from its committer.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/3QkmPTDbeOyBUd5XnD27qhs
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6Y3IsACgkQAVBC80lX
-0GxgGgf/dsvBHhDEUwJgnIVuILKda03rJVWGfuNivysG5yd7H83AJOna3c6C3flL
-K9t+ud2QJdnPJQo2G6iqXgieQ1x51Sy67JivyCdUoaExse83Qk7deoY9Xi7MqDm3
-YN6OBRllhClQBHt1F3QVB9q/vUTW4lMg7E9Vp18qZ8SK2ukIUVHJGFkJY7oY8oVs
-LEtkvYdWCB4Ls1XmNg7tGh/ohG7jIIFOOkBVJUtuGyFDDfKZg/A7i36DqKArX7Ol
-TvU6WDjAdz6cptQt/LL/2AJ1CZGnUhHDSlIqF9z4szI4zbvis/0c531cAL353RUv
-WRfdN8Ry2u8KdDp4UOLlnwxrLrlTAg==
-=0hN1
------END PGP SIGNATURE-----
-
---Sig_/3QkmPTDbeOyBUd5XnD27qhs--
