@@ -2,103 +2,136 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-18.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FEA7C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 21:39:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC407C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 21:40:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3FB4D22201
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 21:39:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587073190;
-	bh=bAJ7IG5/b71ZJq7XUCtP+ZsmvedloImlFcwjFfbRD3I=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=EQIa5zj5Aw7sEprT7ZHiWAvN8sYtLfPdx+H7SlCChLzjg3UtmzpQU8K9WRKVhzsAw
-	 Jt5aTaWQC/LOkw5xZSQsZYq9S2OAJzsnn0unN0aaVuvFhF2shFHHlQ0sIc4TrVhfKn
-	 yjPV4FteBMBkGFnNWhaWaBopPQyYpkitgtLeZEf4=
+	by mail.kernel.org (Postfix) with ESMTP id 9E597221F9
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 21:40:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TUeRiIpM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728151AbgDPVjt (ORCPT
+        id S1728184AbgDPVkn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 17:39:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53738 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726116AbgDPVjq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 17:39:46 -0400
-Received: from localhost (unknown [104.132.1.66])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9129A221F9;
-        Thu, 16 Apr 2020 21:39:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587073186;
-        bh=bAJ7IG5/b71ZJq7XUCtP+ZsmvedloImlFcwjFfbRD3I=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=04gKc2LhfSMOyvKmKZq0SLEhPmPuEVxpwNkVjb1PKj/NKhrZHVMz//6eT5Ku9DZ/5
-         DW5vSNZJFMMLiGOV8TZIDP7gwJR04xe73MuobgQE2DHQChQ5fKNwJ3yQwHsHpntTb+
-         oSUrbcVDny+B15Ypf99H+KdTMJteynxzBR2w/mcY=
-Date:   Thu, 16 Apr 2020 14:39:46 -0700
-From:   Jaegeuk Kim <jaegeuk@kernel.org>
-To:     Chao Yu <yuchao0@huawei.com>
-Cc:     linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, kernel-team@android.com
-Subject: Re: [f2fs-dev] [PATCH v2] f2fs: fix quota_sync failure due to
- f2fs_lock_op
-Message-ID: <20200416213946.GA196168@google.com>
-References: <20200409173056.229855-1-jaegeuk@kernel.org>
- <77e9f2e6-f3f3-8ca9-e6b5-3d57c4d2acc5@huawei.com>
+        Thu, 16 Apr 2020 17:40:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47928 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726116AbgDPVkn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 17:40:43 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D17F3C061A0C
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 14:40:41 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id c23so35563pgj.3
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 14:40:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
+        bh=8aG+D1bxFs40qRNz6VZ0aSOapi3D49e6jMSTWw1lJbM=;
+        b=TUeRiIpMwOYF4qXOuU/7ZgGvCKqQJUuyAMWEyYYFql0jF9GHVRhw/J9/Sn/V3khDdX
+         N/SEvbMBH3dsUszDG4Tt11G76QQV+/Ve95dV3PmnU5B5COyceRtt6EriAa1DS5TpDqR4
+         TBVqoa6aSKqhO3GMfSHVgvjxpeHxVT1648Q5qKVTNKmrQQhu/pELZz1XNaIZBzOPcIYE
+         0u27bc/BPDfjMz4mDGAgMyqrwmwLVPbj13RNpB0IYTAtSpJhwa3cLVLHGE+baAWb6g8T
+         e9ZuCIgKnAr8ueh18YkmVEycuuMOzPfuLrmeEzhBBnRIQiK72oS2epiBoh4H1W8vGnUt
+         OmHA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=8aG+D1bxFs40qRNz6VZ0aSOapi3D49e6jMSTWw1lJbM=;
+        b=cRqtgUCo49b1P89wqY/5nyC9L8iIUUJwCaM27F9GHHS9+H6zmjNXAgGOpbCjrTRR4x
+         ATlflbLBdK5SJQYFDjawmT8/P9gsYpuoxaL3WfuhjjaEhDuyry+VU/UVuf7U7AymaVfW
+         P2A/V9QGNETwa3AElkCWOHsXLYv80gRSvx0KZZfiBxUbLargLw9m7G/nyqbbVxASTnQQ
+         8F3WYOE5QmoacI4cPAvnGO+irSzcjvFuS3mIjq7+Nef/Za6He4CvkEh6E/+KNXw/86rU
+         JrTFgxON80dGJ8TRWVgiECHtp2/WSck+IvybdW8Y+N/q4hygSvdWME7A+6bi+rmuMvDo
+         sAjA==
+X-Gm-Message-State: AGi0PuaEE0+D+nFmQVgS6XJ0X74ZadqZOaj1U2bcJuh+bEDOJmUb4Jlr
+        Nb4jbkuLxS1vPy6utqCjUtSwTA==
+X-Google-Smtp-Source: APiQypL4M6ez4cFXmXy05xoKGpxnJPamoEwq0HN08Szo77mThr/M/YKShIqnfUd03a7EXe74dtN03A==
+X-Received: by 2002:a62:ce84:: with SMTP id y126mr28521665pfg.244.1587073240829;
+        Thu, 16 Apr 2020 14:40:40 -0700 (PDT)
+Received: from google.com ([2620:15c:202:201:bc61:d85d:eb16:9036])
+        by smtp.gmail.com with ESMTPSA id g14sm12358852pfh.49.2020.04.16.14.40.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Apr 2020 14:40:39 -0700 (PDT)
+Date:   Thu, 16 Apr 2020 14:40:35 -0700
+From:   Benson Leung <bleung@google.com>
+To:     torvalds@linux-foundation.org
+Cc:     bleung@kernel.org, bleung@chromium.org, bleung@google.com,
+        enric.balletbo@collabora.com, linux-kernel@vger.kernel.org
+Subject: [GIT PULL] chrome-platform fixes for v5.7-rc2
+Message-ID: <20200416214035.GA1586@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="OgqxwSJOaUobr8KG"
 Content-Disposition: inline
-In-Reply-To: <77e9f2e6-f3f3-8ca9-e6b5-3d57c4d2acc5@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-f2fs_quota_sync() uses f2fs_lock_op() before flushing dirty pages, but
-f2fs_write_data_page() returns EAGAIN.
-Likewise dentry blocks, we can just bypass getting the lock, since quota
-blocks are also maintained by checkpoint.
 
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
----
-v2:
- - fix multipage write case
+--OgqxwSJOaUobr8KG
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
- fs/f2fs/compress.c | 2 +-
- fs/f2fs/data.c     | 4 ++--
- 2 files changed, 3 insertions(+), 3 deletions(-)
+Hi Linus,
 
-diff --git a/fs/f2fs/compress.c b/fs/f2fs/compress.c
-index df7b2d15eacde..faaa358289010 100644
---- a/fs/f2fs/compress.c
-+++ b/fs/f2fs/compress.c
-@@ -985,7 +985,7 @@ static int f2fs_write_compressed_pages(struct compress_ctx *cc,
- 	loff_t psize;
- 	int i, err;
- 
--	if (!f2fs_trylock_op(sbi))
-+	if (!IS_NOQUOTA(inode) && !f2fs_trylock_op(sbi))
- 		return -EAGAIN;
- 
- 	set_new_dnode(&dn, cc->inode, NULL, NULL, 0);
-diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
-index accd28728642a..5c8d3823d7593 100644
---- a/fs/f2fs/data.c
-+++ b/fs/f2fs/data.c
-@@ -2656,8 +2656,8 @@ int f2fs_write_single_data_page(struct page *page, int *submitted,
- 			f2fs_available_free_memory(sbi, BASE_CHECK))))
- 		goto redirty_out;
- 
--	/* Dentry blocks are controlled by checkpoint */
--	if (S_ISDIR(inode->i_mode)) {
-+	/* Dentry/quota blocks are controlled by checkpoint */
-+	if (S_ISDIR(inode->i_mode) || IS_NOQUOTA(inode)) {
- 		fio.need_lock = LOCK_DONE;
- 		err = f2fs_do_write_data_page(&fio);
- 		goto done;
--- 
-2.26.1.301.g55bc3eb7cb9-goog
+The following changes since commit a46387712da12b61bf1ce1a3f63b60a17b098960:
 
+  platform/chrome: cros_ec_spi: Wait for USECS, not NSECS (2020-04-07 14:42=
+:08 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/chrome-platform/linux.git t=
+ags/tag-chrome-platform-fixes-for-v5.7-rc2
+
+for you to fetch changes up to 538b8471fee89eaf18f6bfbbc0576473f952b83e:
+
+  platform/chrome: cros_ec_sensorhub: Add missing '\n' in log messages (202=
+0-04-13 16:31:33 +0200)
+
+----------------------------------------------------------------
+chrome-platform  fixes for v5.7-rc2
+
+Two small fixes for cros_ec_sensorhub_ring.c, addressing issues
+introduced in the cros_ec_sensorhub FIFO support commit.
+
+----------------------------------------------------------------
+Christophe JAILLET (1):
+      platform/chrome: cros_ec_sensorhub: Add missing '\n' in log messages
+
+Dan Carpenter (1):
+      platform/chrome: cros_ec_sensorhub: Off by one in cros_sensorhub_send=
+_sample()
+
+ drivers/platform/chrome/cros_ec_sensorhub_ring.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+--=20
+Benson Leung
+Staff Software Engineer
+Chrome OS Kernel
+Google Inc.
+bleung@google.com
+Chromium OS Project
+bleung@chromium.org
+
+--OgqxwSJOaUobr8KG
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQQCtZK6p/AktxXfkOlzbaomhzOwwgUCXpjQ0wAKCRBzbaomhzOw
+wiflAP9NBjweJ+bXa0T7QPbvajU/5qTNdF286ZsX7XbAepT6QgEAuKGfhyYP7lbW
+I6kfGxbHvlRh9G0GfAq7qNb0oec+CwI=
+=rlo1
+-----END PGP SIGNATURE-----
+
+--OgqxwSJOaUobr8KG--
