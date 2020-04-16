@@ -2,111 +2,76 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3753C352BE
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:42:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 300AAC2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:42:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A67BE21D94
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:42:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587048167;
-	bh=BudN9PO6+TsvlmZ4xfpD3WYK9Ew7qwscvnSX+TMKCI8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=l0ZWELVQhg7xWu563jBt7dvCBef6WMQcCXfAGrJf4qNB/mT3zflkQsF/YGZTbt2Ba
-	 9mhsq2Ga7PH9thNjNZU+gpGV/X+d84Jwtoz68FDo7m9f1I2JA7xK4ewTRk+9MF9d43
-	 +/DSG5jyaQG9/SZLi2sImFMPqm8EDvPHWTle25tY=
+	by mail.kernel.org (Postfix) with ESMTP id 1A730221F7
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:42:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437593AbgDPOmp (ORCPT
+        id S1733141AbgDPOmg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:42:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47832 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392655AbgDPOAp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 10:00:45 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BE0092192A;
-        Thu, 16 Apr 2020 14:00:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587045645;
-        bh=BudN9PO6+TsvlmZ4xfpD3WYK9Ew7qwscvnSX+TMKCI8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OSo+UAFUoID7pEyl7r++eNNrwFFddF0NzaVaaPaOiaA9ToZj8FMij+k2BWVf9FtjK
-         yHKF9xBFSox+7gvc/G6KrFIM4oQ7jISNqkguSAcDovH4CFsoL2GxKce3us41MKZt/Q
-         lVuZkD/Cc2wWhK95bKB1ckk3CXWnAFuHgPFVAT9k=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chris Wilson <chris@chris-wilson.co.uk>,
-        Andi Shyti <andi.shyti@intel.com>,
-        Lyude Paul <lyude@redhat.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>
-Subject: [PATCH 5.6 218/254] drm/i915/gt: Treat idling as a RPS downclock event
-Date:   Thu, 16 Apr 2020 15:25:07 +0200
-Message-Id: <20200416131353.247729120@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200416131325.804095985@linuxfoundation.org>
-References: <20200416131325.804095985@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Thu, 16 Apr 2020 10:42:36 -0400
+Received: from cmccmta1.chinamobile.com ([221.176.66.79]:4376 "EHLO
+        cmccmta1.chinamobile.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2394466AbgDPOmA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 10:42:00 -0400
+Received: from spf.mail.chinamobile.com (unknown[172.16.121.13]) by rmmx-syy-dmz-app02-12002 (RichMail) with SMTP id 2ee25e986e99474-87734; Thu, 16 Apr 2020 22:41:32 +0800 (CST)
+X-RM-TRANSID: 2ee25e986e99474-87734
+X-RM-TagInfo: emlType=0                                       
+X-RM-SPAM-FLAG: 00000000
+Received: from localhost.localdomain (unknown[112.1.173.7])
+        by rmsmtp-syy-appsvr07-12007 (RichMail) with SMTP id 2ee75e986e9a334-6c092;
+        Thu, 16 Apr 2020 22:41:32 +0800 (CST)
+X-RM-TRANSID: 2ee75e986e9a334-6c092
+From:   Tang Bin <tangbin@cmss.chinamobile.com>
+To:     thierry.reding@gmail.com, airlied@linux.ie, daniel@ffwll.ch,
+        jonathanh@nvidia.com
+Cc:     dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Tang Bin <tangbin@cmss.chinamobile.com>
+Subject: [PATCH] drm/tegra: dc: Omit superfluous error message in tegra_dc_probe()
+Date:   Thu, 16 Apr 2020 22:43:17 +0800
+Message-Id: <20200416144317.2036-1-tangbin@cmss.chinamobile.com>
+X-Mailer: git-send-email 2.20.1.windows.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chris Wilson <chris@chris-wilson.co.uk>
+In the function tegra_dc_probe(), when get irq failed, the function
+platform_get_irq() logs an error message, so remove redundant message
+here.
 
-commit 98479ada421a8fd2123b98efd398a6f1379307ab upstream.
-
-If we park/unpark faster than we can respond to RPS events, we never
-will process a downclock event after expiring a waitboost, and thus we
-will forever restart the GPU at max clocks even if the workload switches
-and doesn't justify full power.
-
-Closes: https://gitlab.freedesktop.org/drm/intel/issues/1500
-Fixes: 3e7abf814193 ("drm/i915: Extract GT render power state management")
-Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
-Cc: Andi Shyti <andi.shyti@intel.com>
-Cc: Lyude Paul <lyude@redhat.com>
-Reviewed-by: Andi Shyti <andi.shyti@intel.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200322163225.28791-1-chris@chris-wilson.co.uk
-Cc: <stable@vger.kernel.org> # v5.5+
-(cherry picked from commit 21abf0bf168dffff1192e0f072af1dc74ae1ff0e)
-Signed-off-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Tang Bin <tangbin@cmss.chinamobile.com>
 ---
- drivers/gpu/drm/i915/gt/intel_rps.c |   13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ drivers/gpu/drm/tegra/dc.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
---- a/drivers/gpu/drm/i915/gt/intel_rps.c
-+++ b/drivers/gpu/drm/i915/gt/intel_rps.c
-@@ -763,6 +763,19 @@ void intel_rps_park(struct intel_rps *rp
- 	intel_uncore_forcewake_get(rps_to_uncore(rps), FORCEWAKE_MEDIA);
- 	rps_set(rps, rps->idle_freq, false);
- 	intel_uncore_forcewake_put(rps_to_uncore(rps), FORCEWAKE_MEDIA);
-+
-+	/*
-+	 * Since we will try and restart from the previously requested
-+	 * frequency on unparking, treat this idle point as a downclock
-+	 * interrupt and reduce the frequency for resume. If we park/unpark
-+	 * more frequently than the rps worker can run, we will not respond
-+	 * to any EI and never see a change in frequency.
-+	 *
-+	 * (Note we accommodate Cherryview's limitation of only using an
-+	 * even bin by applying it to all.)
-+	 */
-+	rps->cur_freq =
-+		max_t(int, round_down(rps->cur_freq - 1, 2), rps->min_freq);
- }
+diff --git a/drivers/gpu/drm/tegra/dc.c b/drivers/gpu/drm/tegra/dc.c
+index 7c70fd31a..d26fb16d6 100644
+--- a/drivers/gpu/drm/tegra/dc.c
++++ b/drivers/gpu/drm/tegra/dc.c
+@@ -2566,10 +2566,8 @@ static int tegra_dc_probe(struct platform_device *pdev)
+ 		return PTR_ERR(dc->regs);
  
- void intel_rps_boost(struct i915_request *rq)
+ 	dc->irq = platform_get_irq(pdev, 0);
+-	if (dc->irq < 0) {
+-		dev_err(&pdev->dev, "failed to get IRQ\n");
++	if (dc->irq < 0)
+ 		return -ENXIO;
+-	}
+ 
+ 	err = tegra_dc_rgb_probe(dc);
+ 	if (err < 0 && err != -ENODEV) {
+-- 
+2.20.1.windows.1
+
 
 
