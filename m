@@ -2,54 +2,51 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98E36C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:08:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41644C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:08:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6B61B206D6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:08:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C3F422260
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:08:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587046118;
-	bh=MnuWYLFkdb1YHimhXS6d0CxSVI1WAlx/FlXUz917YfU=;
+	s=default; t=1587046125;
+	bh=nJdRoDoxFz3pSFS9qZM5LkWIVbVtBTHPKmC7MDR6Yj8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ni/rJJHKzaflKDP0z6St7EVYDePj6RzPOlNHsV2to0BoCTuiPCACrU2zij57Drzlv
-	 2LURiXtcmjAab9Zn0MHplZn+USmDExz+Yy/aeOqGmtGnz6vDDljL5L5xR1pmA9qhnp
-	 MeFtA9s4y3aUgst2/bMHSPK6G0YGKXDZ65c31O4c=
+	b=HKb7jkP7+/FsCtPXEb2UHFo0gJYsV0O4w6Lp49YZEg5mVtVa0oUUxWa+ZngXukrrW
+	 h+qoXTMV2RvNeTwwhJ1d0vEb1qjmetc7w/n2kp9YgLXuseqNBA5VT8ISbQ3Trl3VgK
+	 L3Kcdq7sQ3xe+P82i+Fy5koTp/PJNDBItIRXZ23M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390632AbgDPOIg (ORCPT
+        id S2393032AbgDPOIl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:08:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59360 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 10:08:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59410 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2898536AbgDPNpp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:45:45 -0400
+        id S2898543AbgDPNpt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:45:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C119C208E4;
-        Thu, 16 Apr 2020 13:45:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3D97221734;
+        Thu, 16 Apr 2020 13:45:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044745;
-        bh=MnuWYLFkdb1YHimhXS6d0CxSVI1WAlx/FlXUz917YfU=;
+        s=default; t=1587044747;
+        bh=nJdRoDoxFz3pSFS9qZM5LkWIVbVtBTHPKmC7MDR6Yj8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0oZYrZUOCqCRVCUDvkB2RGwEeRLZyR+VFLKldPXvETv8ma29C+1wYO9UynZRmo/DJ
-         cpfLJvBZIZOF3nSHDRos61PCBU5WM/yrSjzV7ctQjzImfC6h25grFJjKPNOVpC8xYb
-         2opyLVYogVknPEUMEQl2E0pqZjqvPPQYrv1RvVDk=
+        b=mP0c4mPQXQYyvA0NXk7ofxeKs7yBTaZT0sbLRBUrvAUI8roXFjr7uGbTTXRLdVGAj
+         g5yYmdON69HrLUii4FiVoJzfIBEJ0h9E17xvRCZKocXKmaDM6YJTFClnxlAw/U0CTE
+         ++E7+Wzlw4bemvfMS5rfDE+jfrdBasPN+CDKaHaU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, rdunlap@infradead.org,
-        Matt Ranostay <matt.ranostay@konsulko.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 047/232] media: i2c: video-i2c: fix build errors due to imply hwmon
-Date:   Thu, 16 Apr 2020 15:22:21 +0200
-Message-Id: <20200416131321.642130238@linuxfoundation.org>
+        stable@vger.kernel.org, Thomas Hebb <tommyhebb@gmail.com>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 5.4 083/232] ALSA: hda/realtek - Set principled PC Beep configuration for ALC256
+Date:   Thu, 16 Apr 2020 15:22:57 +0200
+Message-Id: <20200416131325.454220158@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131316.640996080@linuxfoundation.org>
 References: <20200416131316.640996080@linuxfoundation.org>
@@ -62,43 +59,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matt Ranostay <matt.ranostay@konsulko.com>
+From: Thomas Hebb <tommyhebb@gmail.com>
 
-[ Upstream commit 64d4fc9926f09861a35d8f0f7d81f056e6d5af7b ]
+commit c44737449468a0bdc50e09ec75e530f208391561 upstream.
 
-Fix build fault when CONFIG_HWMON is a module, and CONFIG_VIDEO_I2C
-as builtin. This is due to 'imply hwmon' in the respective Kconfig.
+The Realtek PC Beep Hidden Register[1] is currently set by
+patch_realtek.c in two different places:
 
-Issue build log:
+In alc_fill_eapd_coef(), it's set to the value 0x5757, corresponding to
+non-beep input on 1Ah and no 1Ah loopback to either headphones or
+speakers. (Although, curiously, the loopback amp is still enabled.) This
+write was added fairly recently by commit e3743f431143 ("ALSA:
+hda/realtek - Dell headphone has noise on unmute for ALC236") and is a
+safe default. However, it happens in the wrong place:
+alc_fill_eapd_coef() runs on module load and cold boot but not on S3
+resume, meaning the register loses its value after suspend.
 
-ld: drivers/media/i2c/video-i2c.o: in function `amg88xx_hwmon_init':
-video-i2c.c:(.text+0x2e1): undefined reference to `devm_hwmon_device_register_with_info
+Conversely, in alc256_init(), the register is updated to unset bit 13
+(disable speaker loopback) and set bit 5 (set non-beep input on 1Ah).
+Although this write does run on S3 resume, it's not quite enough to fix
+up the register's default value of 0x3717. What's missing is a set of
+bit 14 to disable headphone loopback. Without that, we end up with a
+feedback loop where the headphone jack is being driven by amplified
+samples of itself[2].
 
-Cc: rdunlap@infradead.org
-Fixes: acbea6798955 (media: video-i2c: add hwmon support for amg88xx)
-Signed-off-by: Matt Ranostay <matt.ranostay@konsulko.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+This change eliminates the update in alc256_init() and replaces it with
+the 0x5757 write from alc_fill_eapd_coef(). Kailang says that 0x5757 is
+supposed to be the codec's default value, so using it will make
+debugging easier for Realtek.
+
+Affects the ALC255, ALC256, ALC257, ALC235, and ALC236 codecs.
+
+[1] Newly documented in Documentation/sound/hd-audio/realtek-pc-beep.rst
+
+[2] Setting the "Headphone Mic Boost" control from userspace changes
+this feedback loop and has been a widely-shared workaround for headphone
+noise on laptops like the Dell XPS 13 9350. This commit eliminates the
+feedback loop and makes the workaround unnecessary.
+
+Fixes: e1e8c1fdce8b ("ALSA: hda/realtek - Dell headphone has noise on unmute for ALC236")
+Cc: stable@vger.kernel.org
+Signed-off-by: Thomas Hebb <tommyhebb@gmail.com>
+Link: https://lore.kernel.org/r/bf22b417d1f2474b12011c2a39ed6cf8b06d3bf5.1585584498.git.tommyhebb@gmail.com
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/media/i2c/video-i2c.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/pci/hda/patch_realtek.c |   15 +++++++++------
+ 1 file changed, 9 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/media/i2c/video-i2c.c b/drivers/media/i2c/video-i2c.c
-index 078141712c887..0b977e73ceb29 100644
---- a/drivers/media/i2c/video-i2c.c
-+++ b/drivers/media/i2c/video-i2c.c
-@@ -255,7 +255,7 @@ static int amg88xx_set_power(struct video_i2c_data *data, bool on)
- 	return amg88xx_set_power_off(data);
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -368,7 +368,9 @@ static void alc_fill_eapd_coef(struct hd
+ 	case 0x10ec0215:
+ 	case 0x10ec0233:
+ 	case 0x10ec0235:
++	case 0x10ec0236:
+ 	case 0x10ec0255:
++	case 0x10ec0256:
+ 	case 0x10ec0257:
+ 	case 0x10ec0282:
+ 	case 0x10ec0283:
+@@ -380,11 +382,6 @@ static void alc_fill_eapd_coef(struct hd
+ 	case 0x10ec0300:
+ 		alc_update_coef_idx(codec, 0x10, 1<<9, 0);
+ 		break;
+-	case 0x10ec0236:
+-	case 0x10ec0256:
+-		alc_write_coef_idx(codec, 0x36, 0x5757);
+-		alc_update_coef_idx(codec, 0x10, 1<<9, 0);
+-		break;
+ 	case 0x10ec0275:
+ 		alc_update_coef_idx(codec, 0xe, 0, 1<<0);
+ 		break;
+@@ -3371,7 +3368,13 @@ static void alc256_init(struct hda_codec
+ 	alc_update_coefex_idx(codec, 0x57, 0x04, 0x0007, 0x4); /* Hight power */
+ 	alc_update_coefex_idx(codec, 0x53, 0x02, 0x8000, 1 << 15); /* Clear bit */
+ 	alc_update_coefex_idx(codec, 0x53, 0x02, 0x8000, 0 << 15);
+-	alc_update_coef_idx(codec, 0x36, 1 << 13, 1 << 5); /* Switch pcbeep path to Line in path*/
++	/*
++	 * Expose headphone mic (or possibly Line In on some machines) instead
++	 * of PC Beep on 1Ah, and disable 1Ah loopback for all outputs. See
++	 * Documentation/sound/hd-audio/realtek-pc-beep.rst for details of
++	 * this register.
++	 */
++	alc_write_coef_idx(codec, 0x36, 0x5757);
  }
  
--#if IS_ENABLED(CONFIG_HWMON)
-+#if IS_REACHABLE(CONFIG_HWMON)
- 
- static const u32 amg88xx_temp_config[] = {
- 	HWMON_T_INPUT,
--- 
-2.20.1
-
+ static void alc256_shutup(struct hda_codec *codec)
 
 
