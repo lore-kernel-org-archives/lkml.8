@@ -2,64 +2,112 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26209C3815B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 19:45:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AE0BC3815B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 19:46:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0C00B20786
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 19:45:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEA8520786
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 19:46:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OfBLCxcB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726105AbgDPTpT (ORCPT
+        id S1730423AbgDPTqS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 15:45:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58240 "EHLO
+        Thu, 16 Apr 2020 15:46:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58386 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726164AbgDPTpS (ORCPT
+        by vger.kernel.org with ESMTP id S1729391AbgDPTqR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 15:45:18 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20BBAC061A0C;
-        Thu, 16 Apr 2020 12:45:18 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 16AB32A1199;
-        Thu, 16 Apr 2020 20:45:16 +0100 (BST)
-Date:   Thu, 16 Apr 2020 21:45:13 +0200
-From:   Boris Brezillon <boris.brezillon@collabora.com>
-To:     Christophe Kerello <christophe.kerello@st.com>
-Cc:     <miquel.raynal@bootlin.com>, <richard@nod.at>, <vigneshr@ti.com>,
-        <lee.jones@linaro.org>, <robh+dt@kernel.org>,
-        <mark.rutland@arm.com>, <tony@atomide.com>, marex@denx.de,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mtd@lists.infradead.org,
-        linux-stm32@st-md-mailman.stormreply.com
-Subject: Re: [PATCH v2 08/12] mtd: rawnand: stm32_fmc2: use
- FIELD_PREP/FIELD_GET macros
-Message-ID: <20200416214513.43b7b6e1@collabora.com>
-In-Reply-To: <1586966256-29548-9-git-send-email-christophe.kerello@st.com>
-References: <1586966256-29548-1-git-send-email-christophe.kerello@st.com>
-        <1586966256-29548-9-git-send-email-christophe.kerello@st.com>
-Organization: Collabora
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Thu, 16 Apr 2020 15:46:17 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B005EC061A0C;
+        Thu, 16 Apr 2020 12:46:16 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id e26so30651wmk.5;
+        Thu, 16 Apr 2020 12:46:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=hdaOLswCaJX9E3ArN3QYtmnlCCcMvOx+Iq5pWMd6Dso=;
+        b=OfBLCxcBOsBHsU/Vn3l5dO2t1moWKU5iCeduO4yh4CeJjnKbMnyG1XJGGL7BiJWUc9
+         2BvuHk3F+PUQuNAJY+uawOJYwrmoEy8a1y0MqRy9WlvhEgRsWrSJKuD72uv8xTT5fEIC
+         fJ3g8j/lHu6qNxsOG7yG/vQNHzDxUADZOgftsi1b+XRnAVZYXT7ekphW9vCGUkn/d4Su
+         mrSRnCiNBDfUmgs+2Fw87kMzsV9FfqLHi582OHZsV2lsQtbw7kWO9moduDsPYEqO5veS
+         2Of1ptHaNcYlbulCebjbZyKfhuZTkF5Oagep7ALCCzopn4cbxAfUBydpbzIj4TP5uo5V
+         dauQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=hdaOLswCaJX9E3ArN3QYtmnlCCcMvOx+Iq5pWMd6Dso=;
+        b=FgxAijhpyRJ6ugDudx6Ekiu5p3tHSuji2yFpPr/LqJlZMSgJUUvFSDahDhMO+OZz90
+         s9wurmg8ypsIiYqVdGfkfTB/Oh2dsUbhEXxtJ7QKl8ui0dzQq131iYnfFPpl8z0rAXBZ
+         9RBVsVCYRTTxZUI94meNUIQwkm+zOX+EVYwC+ZC+9ZS6ahIGBPuQkld1OoAXqPxavsTS
+         +8d6gVMabDBZ4xLgmFE5+Zukiku62ldb6/sc/M7NLnnRE38jyLF16He1p2dxosiIJqpj
+         S2DmDPr1WEG1Bure/2zoWMZIht9mzFVR6c3iXIDnwQ/x7EGw/v0aVhikAe1akeE7N2M1
+         phqQ==
+X-Gm-Message-State: AGi0PuZK5JjgKilGbvTXby/9+vCFSzgDKS8N/ETS2pzI06HF0346uzKQ
+        q8arvewIHkk0VWrVtv9yqHI=
+X-Google-Smtp-Source: APiQypJPaZ8Uc9+o772th9A6hegmk/Smv9MAxV0CHKHhrAHjzHfgpQ7V8t6tbvhG9TFZVWtFunr6Vg==
+X-Received: by 2002:a1c:5502:: with SMTP id j2mr6297601wmb.71.1587066375308;
+        Thu, 16 Apr 2020 12:46:15 -0700 (PDT)
+Received: from debian.lan (host-84-13-17-86.opaltelecom.net. [84.13.17.86])
+        by smtp.gmail.com with ESMTPSA id v16sm4756092wml.30.2020.04.16.12.46.13
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 16 Apr 2020 12:46:14 -0700 (PDT)
+From:   Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+To:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        Neil Horman <nhorman@tuxdriver.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
+        Paul Wise <pabs3@bonedaddy.net>, stable@vger.kernel.org
+Subject: [PATCH] coredump: fix null pointer dereference on coredump
+Date:   Thu, 16 Apr 2020 20:46:12 +0100
+Message-Id: <20200416194612.21418-1-sudipm.mukherjee@gmail.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 15 Apr 2020 17:57:32 +0200
-Christophe Kerello <christophe.kerello@st.com> wrote:
+If the core_pattern is set to "|" and any process segfaults then we get
+a null pointer derefernce while trying to coredump. The call stack shows:
+[  108.212680] RIP: 0010:do_coredump+0x628/0x11c0
 
-> This patch removes custom macros and uses FIELD_PREP and FIELD_GET macros.
+When the core_pattern has only "|" there is no use of trying the
+coredump and we can check that while formating the corename and exit
+with an error.
 
-Oh, nice. I didn't know about these macros. This could have saved me
-from defining a whole bunch of setters/getters in driver code...
+After this change I get:
+[   48.453756] format_corename failed
+[   48.453758] Aborting core
 
+Fixes: 315c69261dd3 ("coredump: split pipe command whitespace before expanding template")
+Reported-by: Matthew Ruffell <matthew.ruffell@canonical.com>
+Cc: Paul Wise <pabs3@bonedaddy.net>
+Cc: stable@vger.kernel.org
+Signed-off-by: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+---
+ fs/coredump.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/fs/coredump.c b/fs/coredump.c
+index f8296a82d01d..408418e6aa13 100644
+--- a/fs/coredump.c
++++ b/fs/coredump.c
+@@ -211,6 +211,8 @@ static int format_corename(struct core_name *cn, struct coredump_params *cprm,
+ 			return -ENOMEM;
+ 		(*argv)[(*argc)++] = 0;
+ 		++pat_ptr;
++		if (!(*pat_ptr))
++			return -ENOMEM;
+ 	}
+ 
+ 	/* Repeat as long as we have more pattern to process and more output
+-- 
+2.11.0
 
