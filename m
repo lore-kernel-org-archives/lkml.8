@@ -2,131 +2,304 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AE98C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:07:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85C9BC2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:07:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7108420774
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:07:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D68B20774
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:07:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587049646;
+	bh=S5yUT3XahH+vWAmWzWwpw2gx7g3yxN4oFFd7Z/MPZBQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=r90giucmeE+lOYnHys65ChEx5w84tphsY/K1yxTvFsHJ35SOtC59lYG3GXT/3QZaA
+	 5IO3udV4CQ38aDFlYnGmfUA6ZPVWboCdcw+8oNUeUweqf88JIUNZ3FdEy7gkLYPlYg
+	 /0ciWt/bfC0geI2CxYlgGcRvER+eIJfI5CyeWYqQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502065AbgDPPHI (ORCPT
+        id S2502589AbgDPPHY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:07:08 -0400
-Received: from nbd.name ([46.4.11.11]:49192 "EHLO nbd.name"
+        Thu, 16 Apr 2020 11:07:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37974 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2408793AbgDPNv6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:51:58 -0400
-Received: from [2a04:4540:1400:7b00:2d8:61ff:feed:60f5]
-        by ds12 with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.89)
-        (envelope-from <john@phrozen.org>)
-        id 1jP4vV-0004e0-L6; Thu, 16 Apr 2020 15:51:33 +0200
-Subject: Re: [PATCH v1 2/2] mtd: rawnand: Add NAND controller support on Intel
- LGM SoC
-To:     Arnd Bergmann <arnd@arndb.de>,
-        Boris Brezillon <boris.brezillon@collabora.com>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        "Ramuthevar, Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        Andriy Shevchenko <andriy.shevchenko@intel.com>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        cheol.yong.kim@intel.com, devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:MEMORY TECHNOLOGY..." <linux-mtd@lists.infradead.org>,
-        masonccyang@mxic.com.tw, Miquel Raynal <miquel.raynal@bootlin.com>,
-        Piotr Sroka <piotrs@cadence.com>, qi-ming.wu@intel.com,
-        Richard Weinberger <richard@nod.at>,
-        Rob Herring <robh+dt@kernel.org>, Vignesh R <vigneshr@ti.com>,
-        Songjun Wu <songjun.wu@linux.intel.com>,
-        hua.ma@linux.intel.com, yixin.zhu@linux.intel.com,
-        chuanhua.lei@linux.intel.com, Hauke Mehrtens <hauke@hauke-m.de>
-References: <20200414022433.36622-3-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20200415220533.733834-1-martin.blumenstingl@googlemail.com>
- <c33c8653-16a2-5bcd-97a9-511d958b755a@linux.intel.com>
- <20200416113822.2ef326cb@collabora.com>
- <18568cf6-2955-472e-7b68-eb35e654a906@linux.intel.com>
- <20200416122619.2c481792@collabora.com>
- <d3e137fa-54a0-b4ec-eb24-3984eab2a247@linux.intel.com>
- <20200416131725.51259573@collabora.com>
- <de9f50b8-9215-d294-9914-e49701552185@linux.intel.com>
- <20200416135711.039ba85c@collabora.com>
- <CAHp75Vcpb-556imBuhsY-asrKqx7LjvQbq+P-ysK-+ii91YpWQ@mail.gmail.com>
- <20200416144036.3ce8432f@collabora.com>
- <CAK8P3a1rYDfTW60eY3RiiSOeT9EsNxw2rxMuQ9UjaS+JDiHy3Q@mail.gmail.com>
-From:   John Crispin <john@phrozen.org>
-Message-ID: <5cb0fe27-8b65-d777-b1c5-8dc47bda2d54@phrozen.org>
-Date:   Thu, 16 Apr 2020 15:51:32 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        id S2408753AbgDPNvs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:51:48 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 92AD72063A;
+        Thu, 16 Apr 2020 13:51:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587045107;
+        bh=S5yUT3XahH+vWAmWzWwpw2gx7g3yxN4oFFd7Z/MPZBQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=rxdmb+lj/pVtlw8SeOHdHdvP2+VMylQKbJZRbJxFg4oob3z8KhrZqq6rSrZF1EeUy
+         SCCKLQDogBcAgHA4s0JqmEv5XCLnRi5BGwtaHs/maIHqgs01sZhlqZi2uWchpW9oS7
+         b2SG3B7W2pbWqJK0ZS8qIlC/qLvCqc5WBFAsMT9o=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Mikulas Patocka <mpatocka@redhat.com>,
+        Nikos Tsironis <ntsironis@arrikto.com>,
+        Mike Snitzer <snitzer@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 219/232] dm clone: replace spin_lock_irqsave with spin_lock_irq
+Date:   Thu, 16 Apr 2020 15:25:13 +0200
+Message-Id: <20200416131342.886025798@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.1
+In-Reply-To: <20200416131316.640996080@linuxfoundation.org>
+References: <20200416131316.640996080@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <CAK8P3a1rYDfTW60eY3RiiSOeT9EsNxw2rxMuQ9UjaS+JDiHy3Q@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 16.04.20 15:20, Arnd Bergmann wrote:
-> On Thu, Apr 16, 2020 at 2:40 PM Boris Brezillon
-> <boris.brezillon@collabora.com> wrote:
->> On Thu, 16 Apr 2020 15:26:51 +0300
->> Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
->>> On Thu, Apr 16, 2020 at 3:03 PM Boris Brezillon
->>> <boris.brezillon@collabora.com> wrote:
->>>> On Thu, 16 Apr 2020 19:38:03 +0800
->>>> Note that the NAND subsystem is full of unmaintained legacy drivers, so
->>>> every time we see someone who could help us get rid or update one of
->>>> them we have to take this opportunity.
->>>
->>> Don't we rather insist to have a MAINTAINERS record for new code to
->>> avoid (or delay at least) the fate of the legacy drivers?
->>>
->>
->> Well, that's what we do for new drivers, but the xway driver has been
->> added in 2012 and the policy was not enforced at that time. BTW, that
->> goes for most of the legacy drivers in have in the NAND subsystems
->> (some of them even predate the git era).
->>
->> To be clear, I just checked and there's no official maintainer for this
->> driver. Best option would be to Cc the original author and contributors
->> who proposed functional changes to the code, as well as the MIPS
->> maintainers (Xway is a MIPS platform).
-> 
-> A lot of the pre-acquisition code for lantiq was contributed by Hauke
-> Mehrtens and John Crispin. There was an intermediate generation of
-> MIPS SoCs with patches posted for review  by Intel in 2018 (presumably
-> by the same organizatiob), but those were never resubmitted after v2
-> and never merged:
-> 
-> https://lore.kernel.org/linux-mips/20180803030237.3366-1-songjun.wu@linux.intel.com/
-> 
->          Arnd
-> 
+From: Mikulas Patocka <mpatocka@redhat.com>
 
-Hi,
+[ Upstream commit 6ca43ed8376a51afec790dd484a51804ade4352a ]
 
-the legacy Mips SoC had a External Bus Unit (EBU), similar to an 
-Intel/Hitachi style bus. It was used back then for lots of things, 
-sometimes driving Leds via 74* latches, Arcadyan used it for external 
-reset lines and very rarely was it used for nand.
+If we are in a place where it is known that interrupts are enabled,
+functions spin_lock_irq/spin_unlock_irq should be used instead of
+spin_lock_irqsave/spin_unlock_irqrestore.
 
-Looking at this series and comparing it with xway_nand.c we see that the 
-init sequence is near identical. Best guess is that the mountain lion 
-uses an internal block very similar to what the legacy mips silicon used 
-just in a newer generation and the new proposed driver is more feature 
-complete.
+spin_lock_irq and spin_unlock_irq are faster because they don't need to
+push and pop the flags register.
 
-If this is the case ideally the xway_nand.c is dropped and that silicon 
-is made working with the newer driver. Chances are that we just need to 
-add a "support less features" style flag.
+Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
+Signed-off-by: Nikos Tsironis <ntsironis@arrikto.com>
+Signed-off-by: Mike Snitzer <snitzer@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/md/dm-clone-metadata.c | 29 ++++++++++++-----------------
+ drivers/md/dm-clone-metadata.h |  4 +++-
+ drivers/md/dm-clone-target.c   | 28 ++++++++++++----------------
+ 3 files changed, 27 insertions(+), 34 deletions(-)
 
-Unfortunately i no longer have the evalkit for the Mips SoCs.
+diff --git a/drivers/md/dm-clone-metadata.c b/drivers/md/dm-clone-metadata.c
+index 2460cc6e0ef1d..581d11250333a 100644
+--- a/drivers/md/dm-clone-metadata.c
++++ b/drivers/md/dm-clone-metadata.c
+@@ -748,7 +748,7 @@ static int __metadata_commit(struct dm_clone_metadata *cmd)
+ static int __flush_dmap(struct dm_clone_metadata *cmd, struct dirty_map *dmap)
+ {
+ 	int r;
+-	unsigned long word, flags;
++	unsigned long word;
+ 
+ 	word = 0;
+ 	do {
+@@ -772,9 +772,9 @@ static int __flush_dmap(struct dm_clone_metadata *cmd, struct dirty_map *dmap)
+ 		return r;
+ 
+ 	/* Update the changed flag */
+-	spin_lock_irqsave(&cmd->bitmap_lock, flags);
++	spin_lock_irq(&cmd->bitmap_lock);
+ 	dmap->changed = 0;
+-	spin_unlock_irqrestore(&cmd->bitmap_lock, flags);
++	spin_unlock_irq(&cmd->bitmap_lock);
+ 
+ 	return 0;
+ }
+@@ -782,7 +782,6 @@ static int __flush_dmap(struct dm_clone_metadata *cmd, struct dirty_map *dmap)
+ int dm_clone_metadata_pre_commit(struct dm_clone_metadata *cmd)
+ {
+ 	int r = 0;
+-	unsigned long flags;
+ 	struct dirty_map *dmap, *next_dmap;
+ 
+ 	down_write(&cmd->lock);
+@@ -808,9 +807,9 @@ int dm_clone_metadata_pre_commit(struct dm_clone_metadata *cmd)
+ 	}
+ 
+ 	/* Swap dirty bitmaps */
+-	spin_lock_irqsave(&cmd->bitmap_lock, flags);
++	spin_lock_irq(&cmd->bitmap_lock);
+ 	cmd->current_dmap = next_dmap;
+-	spin_unlock_irqrestore(&cmd->bitmap_lock, flags);
++	spin_unlock_irq(&cmd->bitmap_lock);
+ 
+ 	/* Set old dirty bitmap as currently committing */
+ 	cmd->committing_dmap = dmap;
+@@ -878,9 +877,9 @@ int dm_clone_cond_set_range(struct dm_clone_metadata *cmd, unsigned long start,
+ {
+ 	int r = 0;
+ 	struct dirty_map *dmap;
+-	unsigned long word, region_nr, flags;
++	unsigned long word, region_nr;
+ 
+-	spin_lock_irqsave(&cmd->bitmap_lock, flags);
++	spin_lock_irq(&cmd->bitmap_lock);
+ 
+ 	if (cmd->read_only) {
+ 		r = -EPERM;
+@@ -898,7 +897,7 @@ int dm_clone_cond_set_range(struct dm_clone_metadata *cmd, unsigned long start,
+ 		}
+ 	}
+ out:
+-	spin_unlock_irqrestore(&cmd->bitmap_lock, flags);
++	spin_unlock_irq(&cmd->bitmap_lock);
+ 
+ 	return r;
+ }
+@@ -965,13 +964,11 @@ int dm_clone_metadata_abort(struct dm_clone_metadata *cmd)
+ 
+ void dm_clone_metadata_set_read_only(struct dm_clone_metadata *cmd)
+ {
+-	unsigned long flags;
+-
+ 	down_write(&cmd->lock);
+ 
+-	spin_lock_irqsave(&cmd->bitmap_lock, flags);
++	spin_lock_irq(&cmd->bitmap_lock);
+ 	cmd->read_only = 1;
+-	spin_unlock_irqrestore(&cmd->bitmap_lock, flags);
++	spin_unlock_irq(&cmd->bitmap_lock);
+ 
+ 	if (!cmd->fail_io)
+ 		dm_bm_set_read_only(cmd->bm);
+@@ -981,13 +978,11 @@ void dm_clone_metadata_set_read_only(struct dm_clone_metadata *cmd)
+ 
+ void dm_clone_metadata_set_read_write(struct dm_clone_metadata *cmd)
+ {
+-	unsigned long flags;
+-
+ 	down_write(&cmd->lock);
+ 
+-	spin_lock_irqsave(&cmd->bitmap_lock, flags);
++	spin_lock_irq(&cmd->bitmap_lock);
+ 	cmd->read_only = 0;
+-	spin_unlock_irqrestore(&cmd->bitmap_lock, flags);
++	spin_unlock_irq(&cmd->bitmap_lock);
+ 
+ 	if (!cmd->fail_io)
+ 		dm_bm_set_read_write(cmd->bm);
+diff --git a/drivers/md/dm-clone-metadata.h b/drivers/md/dm-clone-metadata.h
+index 6a217f5ea98c0..d848b8799c07d 100644
+--- a/drivers/md/dm-clone-metadata.h
++++ b/drivers/md/dm-clone-metadata.h
+@@ -44,7 +44,9 @@ int dm_clone_set_region_hydrated(struct dm_clone_metadata *cmd, unsigned long re
+  * @start: Starting region number
+  * @nr_regions: Number of regions in the range
+  *
+- * This function doesn't block, so it's safe to call it from interrupt context.
++ * This function doesn't block, but since it uses spin_lock_irq()/spin_unlock_irq()
++ * it's NOT safe to call it from any context where interrupts are disabled, e.g.,
++ * from interrupt context.
+  */
+ int dm_clone_cond_set_range(struct dm_clone_metadata *cmd, unsigned long start,
+ 			    unsigned long nr_regions);
+diff --git a/drivers/md/dm-clone-target.c b/drivers/md/dm-clone-target.c
+index 2addf611ef3d8..ad5dca5d20707 100644
+--- a/drivers/md/dm-clone-target.c
++++ b/drivers/md/dm-clone-target.c
+@@ -338,8 +338,6 @@ static void submit_bios(struct bio_list *bios)
+  */
+ static void issue_bio(struct clone *clone, struct bio *bio)
+ {
+-	unsigned long flags;
+-
+ 	if (!bio_triggers_commit(clone, bio)) {
+ 		generic_make_request(bio);
+ 		return;
+@@ -358,9 +356,9 @@ static void issue_bio(struct clone *clone, struct bio *bio)
+ 	 * Batch together any bios that trigger commits and then issue a single
+ 	 * commit for them in process_deferred_flush_bios().
+ 	 */
+-	spin_lock_irqsave(&clone->lock, flags);
++	spin_lock_irq(&clone->lock);
+ 	bio_list_add(&clone->deferred_flush_bios, bio);
+-	spin_unlock_irqrestore(&clone->lock, flags);
++	spin_unlock_irq(&clone->lock);
+ 
+ 	wake_worker(clone);
+ }
+@@ -475,7 +473,7 @@ static void complete_discard_bio(struct clone *clone, struct bio *bio, bool succ
+ 
+ static void process_discard_bio(struct clone *clone, struct bio *bio)
+ {
+-	unsigned long rs, re, flags;
++	unsigned long rs, re;
+ 
+ 	bio_region_range(clone, bio, &rs, &re);
+ 	BUG_ON(re > clone->nr_regions);
+@@ -507,9 +505,9 @@ static void process_discard_bio(struct clone *clone, struct bio *bio)
+ 	/*
+ 	 * Defer discard processing.
+ 	 */
+-	spin_lock_irqsave(&clone->lock, flags);
++	spin_lock_irq(&clone->lock);
+ 	bio_list_add(&clone->deferred_discard_bios, bio);
+-	spin_unlock_irqrestore(&clone->lock, flags);
++	spin_unlock_irq(&clone->lock);
+ 
+ 	wake_worker(clone);
+ }
+@@ -1167,13 +1165,13 @@ static void process_deferred_discards(struct clone *clone)
+ 	int r = -EPERM;
+ 	struct bio *bio;
+ 	struct blk_plug plug;
+-	unsigned long rs, re, flags;
++	unsigned long rs, re;
+ 	struct bio_list discards = BIO_EMPTY_LIST;
+ 
+-	spin_lock_irqsave(&clone->lock, flags);
++	spin_lock_irq(&clone->lock);
+ 	bio_list_merge(&discards, &clone->deferred_discard_bios);
+ 	bio_list_init(&clone->deferred_discard_bios);
+-	spin_unlock_irqrestore(&clone->lock, flags);
++	spin_unlock_irq(&clone->lock);
+ 
+ 	if (bio_list_empty(&discards))
+ 		return;
+@@ -1203,13 +1201,12 @@ static void process_deferred_discards(struct clone *clone)
+ 
+ static void process_deferred_bios(struct clone *clone)
+ {
+-	unsigned long flags;
+ 	struct bio_list bios = BIO_EMPTY_LIST;
+ 
+-	spin_lock_irqsave(&clone->lock, flags);
++	spin_lock_irq(&clone->lock);
+ 	bio_list_merge(&bios, &clone->deferred_bios);
+ 	bio_list_init(&clone->deferred_bios);
+-	spin_unlock_irqrestore(&clone->lock, flags);
++	spin_unlock_irq(&clone->lock);
+ 
+ 	if (bio_list_empty(&bios))
+ 		return;
+@@ -1220,7 +1217,6 @@ static void process_deferred_bios(struct clone *clone)
+ static void process_deferred_flush_bios(struct clone *clone)
+ {
+ 	struct bio *bio;
+-	unsigned long flags;
+ 	bool dest_dev_flushed;
+ 	struct bio_list bios = BIO_EMPTY_LIST;
+ 	struct bio_list bio_completions = BIO_EMPTY_LIST;
+@@ -1229,13 +1225,13 @@ static void process_deferred_flush_bios(struct clone *clone)
+ 	 * If there are any deferred flush bios, we must commit the metadata
+ 	 * before issuing them or signaling their completion.
+ 	 */
+-	spin_lock_irqsave(&clone->lock, flags);
++	spin_lock_irq(&clone->lock);
+ 	bio_list_merge(&bios, &clone->deferred_flush_bios);
+ 	bio_list_init(&clone->deferred_flush_bios);
+ 
+ 	bio_list_merge(&bio_completions, &clone->deferred_flush_completions);
+ 	bio_list_init(&clone->deferred_flush_completions);
+-	spin_unlock_irqrestore(&clone->lock, flags);
++	spin_unlock_irq(&clone->lock);
+ 
+ 	if (bio_list_empty(&bios) && bio_list_empty(&bio_completions) &&
+ 	    !(dm_clone_changed_this_transaction(clone->cmd) && need_commit_due_to_time(clone)))
+-- 
+2.20.1
 
-    John
+
+
