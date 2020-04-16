@@ -2,186 +2,106 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B61A2C3815B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 19:58:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E131C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 19:59:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 950BF206A2
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 19:58:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45B4C21BE5
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 19:59:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RMkxcA2w"
+	dkim=pass (1024-bit key) header.d=digitalocean.com header.i=@digitalocean.com header.b="H5k+RhY3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730015AbgDPT6T (ORCPT
+        id S1729875AbgDPT7Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 15:58:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60252 "EHLO
+        Thu, 16 Apr 2020 15:59:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60420 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728166AbgDPT6S (ORCPT
+        by vger.kernel.org with ESMTP id S1727827AbgDPT7X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 15:58:18 -0400
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40500C061A0C
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 12:58:18 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id l11so6587631lfc.5
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 12:58:18 -0700 (PDT)
+        Thu, 16 Apr 2020 15:59:23 -0400
+Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5969C061A0C
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 12:59:23 -0700 (PDT)
+Received: by mail-ot1-x342.google.com with SMTP id m13so4138507otf.6
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 12:59:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=digitalocean.com; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=ybW4LX2vmPQl9JQ2ZwHdHhW1BzV6OYfuo6tWqKcJMK8=;
-        b=RMkxcA2wucCF56jg9YbmIp/U6W7PVVV2oHDLnwILZH2o1577cA2Yp5vumHhtlR0R6W
-         SbU9o+WlbDtTiVqx4llipZjU8QvEhPE3FQPIwO2xqtIJvsfSCW/l1Bde/jpE1Epz87NA
-         Zpi4Nye3fzKLH62JZSysNUGA7SMdQ9muAwP9fdwymfNahESexcL9JaXRskMotrElLg6M
-         1d17vq0zcxLDRRJaCUzTKmk1IEYFCmEBWZ0ggvPMfSE0rNusG24TC8R5bAFxzlDKgeZl
-         TVlt/1zfpHS8Xb8XttNFbEskCgl8tWTlB/UYB86hGI/CHrgyGtTA7j6d6ksLB/4Fx3mP
-         ZqCQ==
+         :cc;
+        bh=7WfBtoIVEC6/j56YyjZAfJnwgvU6tH//snMSSsZQdVE=;
+        b=H5k+RhY3rqGx6ykjoJzaZK21rQLgeYa3k6y8fbOlbi2WteJHRLJi5EP/kAjemUxPcx
+         9qwqpetBbT3EDhsDs8VkHDLV9VoNlGwqJlAHDoLRLm0olBD+RlI3SUK6C648J6kQpeGS
+         r271tkeq6UGk+XKTV947ChBjo3Ga+UCN45UY4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=ybW4LX2vmPQl9JQ2ZwHdHhW1BzV6OYfuo6tWqKcJMK8=;
-        b=VWv55HcFPq5FA5OuqIExbNhAE0kyy4BGwtMY/Da9qM+Q7PgQcbE3ARofKgJ0kUCDO/
-         RDFfEoV9JyQtGmm9LqHAJxG0A4mGyn/1RXCvBFyUTMgcsNW297mSIBJNKSVqOC7t5pdH
-         AYiS0tDW+KARoRpHVd/5Kco2KlJGFMsTMUKMvr0Uv1jktzZucx1J1MdA5TdpgIq4Lj1P
-         qmLTmh+rWiIANhMcZMUsroLAQtkEmHnSsTERiqkYwpOB0mZWeu5hNxrbv25+15OPYV/r
-         HT+McuOVDZVmCgFPU90fGigTGYOoj2gXyypRr54CvuIGUsNnGX+NgmLQSpHvQxOO2f8F
-         I1iw==
-X-Gm-Message-State: AGi0PuYswePNYuQYHGQV/ZHt+o1ie/cwpro6KK2mEvG57LAUV+/0GnxF
-        ZFboBtAebYJrXZLhH4MF9BcgJUCRO1pR+WFhps4VYw==
-X-Google-Smtp-Source: APiQypLYPxAhe8ZN3MalK4SKgwOD2za0gA1Wl0sk13pVf7rjguvqJj4y/slIwyioT+WbDq3QMN8y+T8dqi/pjNhUpDg=
-X-Received: by 2002:a19:5e46:: with SMTP id z6mr6503459lfi.74.1587067096605;
- Thu, 16 Apr 2020 12:58:16 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=7WfBtoIVEC6/j56YyjZAfJnwgvU6tH//snMSSsZQdVE=;
+        b=ZKAasGGPYI0DxFjDoBA5WjLBhaBX9QAOrjCeOeXtNe7c/+C46qQzyHX8CDQ9sBgDPV
+         w0jfElbc1GmGGYwEFPUXIW8uMAN4JiQWbnmmLJEWJ8CAs7n0wNtTBd8L3hgHUALy6KKl
+         HgEe/tLgpjX4wQSahVp200nKPst2lmFE9e/l4CyZv2daj5hv2TA6To7SWbB2yPVCJ5uC
+         x6JWj3K/Um5tZOys1b8Bk4SDo0LigKqvxKQEF7SA3ScJ3FP/TNWL9fdkyJxPMZQvJc+K
+         1G/T+HRv6eJwDzkw8uZ5279lem9kUgRgbiQwps2gYoNuee+M2YiNx54mFsHo6+OeLRwF
+         289A==
+X-Gm-Message-State: AGi0PuY52nRkmZ5kroOAsG4W3AJP3UnFpjKYrM4MpRQXqAeJXuWXh8g8
+        IH1r61BI2QLJzQY8mCrOz4Kc0lt8rfziJM9ReiOfBQ==
+X-Google-Smtp-Source: APiQypI7UkXURQxQBK+fW+I4P8ZYrI0brlWeIvLukyl6Upjgw4+FXuKkVVtwPjZ7LItpYuWCdZIRAZSo2Qk6fSH4UHI=
+X-Received: by 2002:a05:6830:155a:: with SMTP id l26mr13773909otp.246.1587067162790;
+ Thu, 16 Apr 2020 12:59:22 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200416131316.640996080@linuxfoundation.org>
-In-Reply-To: <20200416131316.640996080@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Fri, 17 Apr 2020 01:28:05 +0530
-Message-ID: <CA+G9fYtYhFW1XkJWu-zB1LJzEivDnH4tCuhwU85GKFxOp=LkbA@mail.gmail.com>
-Subject: Re: [PATCH 5.4 000/232] 5.4.33-rc1 review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        lkft-triage@lists.linaro.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        linux- stable <stable@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
+References: <cover.1583332764.git.vpillai@digitalocean.com>
+ <e942da7fd881977923463f19648085c1bfaa37f8.1583332765.git.vpillai@digitalocean.com>
+ <20200416033804.GA5712@HP-G1>
+In-Reply-To: <20200416033804.GA5712@HP-G1>
+From:   Vineeth Remanan Pillai <vpillai@digitalocean.com>
+Date:   Thu, 16 Apr 2020 15:59:11 -0400
+Message-ID: <CANaguZC+yKkPNcb65hOWjbhmpdP3zp8SdXf0xuvDeV9kEeqnsw@mail.gmail.com>
+Subject: Re: [RFC PATCH 07/13] sched: Add core wide task selection and scheduling.
+To:     Chen Yu <yu.chen.surf@gmail.com>
+Cc:     Nishanth Aravamudan <naravamudan@digitalocean.com>,
+        Julien Desfossez <jdesfossez@digitalocean.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Paul Turner <pjt@google.com>,
         Linus Torvalds <torvalds@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        =?UTF-8?B?RnLDqWTDqXJpYyBXZWlzYmVja2Vy?= <fweisbec@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Greg Kerr <kerrnel@google.com>, Phil Auld <pauld@redhat.com>,
+        Aaron Lu <aaron.lwe@gmail.com>,
+        Aubrey Li <aubrey.intel@gmail.com>,
+        "Li, Aubrey" <aubrey.li@linux.intel.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Joel Fernandes <joelaf@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Aaron Lu <aaron.lu@linux.alibaba.com>,
+        Long Cui <long.cui@intel.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 16 Apr 2020 at 19:17, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 5.4.33 release.
-> There are 232 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Sat, 18 Apr 2020 13:11:20 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-=
-5.4.33-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-5.4.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+> Hi Vineeth,
+> An NULL pointer exception was found when testing V5 on top of stable
+> v5.6.2. And we tried the patch Peter suggested, the NULL pointer
+> was not found so far. We don't know if this change would help mitigate
+> the symptom, but it should do no harm to test with this fix applied.
 >
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+Thanks for the patch Chenyu!
 
-Summary
-------------------------------------------------------------------------
+I was also looking into this as part of addressing Peter's comments. I
+shall include this patch in v6 along with addressing all the issues
+that Peter pointed out in this thread.
 
-kernel: 5.4.33-rc1
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-5.4.y
-git commit: ccba204bf567bf5349e9635ea1fb8cd18d23c123
-git describe: v5.4.32-233-gccba204bf567
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-5.4-oe/bui=
-ld/v5.4.32-233-gccba204bf567
-
-No regressions (compared to build v5.4.31-42-gf163418797b9)
-
-No fixes (compared to build v5.4.31-42-gf163418797b9)
-
-
-Ran 34739 total tests in the following environments and test suites.
-
-Environments
---------------
-- dragonboard-410c
-- hi6220-hikey
-- i386
-- juno-r2
-- juno-r2-compat
-- juno-r2-kasan
-- nxp-ls2088
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15
-- x86
-- x86-kasan
-
-Test Suites
------------
-* build
-* install-android-platform-tools-r2600
-* install-android-platform-tools-r2800
-* libgpiod
-* linux-log-parser
-* ltp-cve-tests
-* ltp-hugetlb-tests
-* ltp-ipc-tests
-* ltp-mm-tests
-* ltp-sched-tests
-* ltp-syscalls-tests
-* kselftest
-* kvm-unit-tests
-* libhugetlbfs
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-containers-tests
-* ltp-cpuhotplug-tests
-* ltp-crypto-tests
-* ltp-dio-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-io-tests
-* ltp-math-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-securebits-tests
-* network-basic-tests
-* perf
-* v4l2-compliance
-* ltp-fs-tests
-* ltp-open-posix-tests
-* spectre-meltdown-checker-test
-* kselftest-vsyscall-mode-native
-* kselftest-vsyscall-mode-none
-
---=20
-Linaro LKFT
-https://lkft.linaro.org
+Thanks,
+Vineeth
