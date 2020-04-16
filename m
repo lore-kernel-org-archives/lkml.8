@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A92ECC2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:30:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4044BC2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:30:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 87EF721927
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:30:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1ED1821927
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:30:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587047431;
-	bh=USXPWGJ/YKf0rRFL56rcX8aUIC+Psvx24aboiTldo2A=;
+	s=default; t=1587047439;
+	bh=/lUnU82i9NCKa7Nb5n2dmWvwoPHTtDhXL68RLJzcs/I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZXy/87gWpwQQmTzlJ6lx4YVHUnlKHoy0sofVpdtR5HgkVmglqCBKVHlYmbRA5eXz3
-	 kAnP+zOuZZSlz7VVJwN88DgDTb3KYIK0JRNBgE6282zA3UNIjbDwh/o0dhT7cFUyzh
-	 RRaewOIw5cJToRhNsRmjzv/sTQ8GxQrdbNWBrmRM=
+	b=cSSXpJdfAwrClgrNJuFFvJFOE6d/DiCrSjLB4HzO0fhK3kOfF9IiZfbV9/AVFYSi2
+	 sjU2J+ucrDAY8V7fxbbZ7jekSxLO1uNr9hR9TQ4geYvIIOXOd8/Dk2NWNGE7ElbydJ
+	 CSKLGiUJ4BJXV4HsiA/DPZMmCkGtQiRqPjIpA2Cg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394237AbgDPOaT (ORCPT
+        id S1731577AbgDPOah (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:30:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48662 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 10:30:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49044 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392795AbgDPOBZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 10:01:25 -0400
+        id S2409494AbgDPOBm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 10:01:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 161D4217D8;
-        Thu, 16 Apr 2020 14:01:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5D8F5217D8;
+        Thu, 16 Apr 2020 14:01:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587045684;
-        bh=USXPWGJ/YKf0rRFL56rcX8aUIC+Psvx24aboiTldo2A=;
+        s=default; t=1587045701;
+        bh=/lUnU82i9NCKa7Nb5n2dmWvwoPHTtDhXL68RLJzcs/I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lKE9s5Bnr2su15sX/tOijblfuO+TYr/xY5NVFLJKZGtwZtGEU2r9bLbbJ9Q0mqA17
-         OJLbmAyL5ENm7DGOIUL7qMkD/v75l47SzJOZShDc0kQ42tWJxLdJDO16mAIbPZlINp
-         oESWsWBhmkxJnzw/hST7eYkg8OGLWy/Zr0N2yIGM=
+        b=Ljv+DI2eBv4HjO4us029g5e/xYcmz0SZRJBrq8RRRYXpouWcMivdvyjymH/MG1sPu
+         Oj3qLZLGhF9OXlMllhtF0UiaLTABQ0pe9ANWB0buPGXNW10Sz/R5xdpLgZGeQG9kNZ
+         Fkni9Mh8aTaMxVP5Ue7PomR9RVeWznf779oBLmYY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Clement Courbet <courbet@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
+        stable@vger.kernel.org, Larry Finger <Larry.Finger@lwfinger.net>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
         Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 5.6 236/254] powerpc: Make setjmp/longjmp signature standard
-Date:   Thu, 16 Apr 2020 15:25:25 +0200
-Message-Id: <20200416131355.046567363@linuxfoundation.org>
+Subject: [PATCH 5.6 243/254] powerpc/kprobes: Ignore traps that happened in real mode
+Date:   Thu, 16 Apr 2020 15:25:32 +0200
+Message-Id: <20200416131356.192360539@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.804095985@linuxfoundation.org>
 References: <20200416131325.804095985@linuxfoundation.org>
@@ -60,72 +62,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Clement Courbet <courbet@google.com>
+From: Christophe Leroy <christophe.leroy@c-s.fr>
 
-commit c17eb4dca5a353a9dbbb8ad6934fe57af7165e91 upstream.
+commit 21f8b2fa3ca5b01f7a2b51b89ce97a3705a15aa0 upstream.
 
-Declaring setjmp()/longjmp() as taking longs makes the signature
-non-standard, and makes clang complain. In the past, this has been
-worked around by adding -ffreestanding to the compile flags.
+When a program check exception happens while MMU translation is
+disabled, following Oops happens in kprobe_handler() in the following
+code:
 
-The implementation looks like it only ever propagates the value
-(in longjmp) or sets it to 1 (in setjmp), and we only call longjmp
-with integer parameters.
+	} else if (*addr != BREAKPOINT_INSTRUCTION) {
 
-This allows removing -ffreestanding from the compilation flags.
+  BUG: Unable to handle kernel data access on read at 0x0000e268
+  Faulting instruction address: 0xc000ec34
+  Oops: Kernel access of bad area, sig: 11 [#1]
+  BE PAGE_SIZE=16K PREEMPT CMPC885
+  Modules linked in:
+  CPU: 0 PID: 429 Comm: cat Not tainted 5.6.0-rc1-s3k-dev-00824-g84195dc6c58a #3267
+  NIP:  c000ec34 LR: c000ecd8 CTR: c019cab8
+  REGS: ca4d3b58 TRAP: 0300   Not tainted  (5.6.0-rc1-s3k-dev-00824-g84195dc6c58a)
+  MSR:  00001032 <ME,IR,DR,RI>  CR: 2a4d3c52  XER: 00000000
+  DAR: 0000e268 DSISR: c0000000
+  GPR00: c000b09c ca4d3c10 c66d0620 00000000 ca4d3c60 00000000 00009032 00000000
+  GPR08: 00020000 00000000 c087de44 c000afe0 c66d0ad0 100d3dd6 fffffff3 00000000
+  GPR16: 00000000 00000041 00000000 ca4d3d70 00000000 00000000 0000416d 00000000
+  GPR24: 00000004 c53b6128 00000000 0000e268 00000000 c07c0000 c07bb6fc ca4d3c60
+  NIP [c000ec34] kprobe_handler+0x128/0x290
+  LR [c000ecd8] kprobe_handler+0x1cc/0x290
+  Call Trace:
+  [ca4d3c30] [c000b09c] program_check_exception+0xbc/0x6fc
+  [ca4d3c50] [c000e43c] ret_from_except_full+0x0/0x4
+  --- interrupt: 700 at 0xe268
+  Instruction dump:
+  913e0008 81220000 38600001 3929ffff 91220000 80010024 bb410008 7c0803a6
+  38210020 4e800020 38600000 4e800020 <813b0000> 6d2a7fe0 2f8a0008 419e0154
+  ---[ end trace 5b9152d4cdadd06d ]---
 
-Fixes: c9029ef9c957 ("powerpc: Avoid clang warnings around setjmp and longjmp")
-Cc: stable@vger.kernel.org # v4.14+
-Signed-off-by: Clement Courbet <courbet@google.com>
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
-Tested-by: Nathan Chancellor <natechancellor@gmail.com>
+kprobe is not prepared to handle events in real mode and functions
+running in real mode should have been blacklisted, so kprobe_handler()
+can safely bail out telling 'this trap is not mine' for any trap that
+happened while in real-mode.
+
+If the trap happened with MSR_IR or MSR_DR cleared, return 0
+immediately.
+
+Reported-by: Larry Finger <Larry.Finger@lwfinger.net>
+Fixes: 6cc89bad60a6 ("powerpc/kprobes: Invoke handlers directly")
+Cc: stable@vger.kernel.org # v4.10+
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Reviewed-by: Masami Hiramatsu <mhiramat@kernel.org>
+Reviewed-by: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
 Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20200330080400.124803-1-courbet@google.com
+Link: https://lore.kernel.org/r/424331e2006e7291a1bfe40e7f3fa58825f565e1.1582054578.git.christophe.leroy@c-s.fr
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/powerpc/include/asm/setjmp.h |    6 ++++--
- arch/powerpc/kexec/Makefile       |    3 ---
- arch/powerpc/xmon/Makefile        |    3 ---
- 3 files changed, 4 insertions(+), 8 deletions(-)
+ arch/powerpc/kernel/kprobes.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/arch/powerpc/include/asm/setjmp.h
-+++ b/arch/powerpc/include/asm/setjmp.h
-@@ -7,7 +7,9 @@
+--- a/arch/powerpc/kernel/kprobes.c
++++ b/arch/powerpc/kernel/kprobes.c
+@@ -264,6 +264,9 @@ int kprobe_handler(struct pt_regs *regs)
+ 	if (user_mode(regs))
+ 		return 0;
  
- #define JMP_BUF_LEN    23
- 
--extern long setjmp(long *) __attribute__((returns_twice));
--extern void longjmp(long *, long) __attribute__((noreturn));
-+typedef long jmp_buf[JMP_BUF_LEN];
++	if (!(regs->msr & MSR_IR) || !(regs->msr & MSR_DR))
++		return 0;
 +
-+extern int setjmp(jmp_buf env) __attribute__((returns_twice));
-+extern void longjmp(jmp_buf env, int val) __attribute__((noreturn));
- 
- #endif /* _ASM_POWERPC_SETJMP_H */
---- a/arch/powerpc/kexec/Makefile
-+++ b/arch/powerpc/kexec/Makefile
-@@ -3,9 +3,6 @@
- # Makefile for the linux kernel.
- #
- 
--# Avoid clang warnings around longjmp/setjmp declarations
--CFLAGS_crash.o += -ffreestanding
--
- obj-y				+= core.o crash.o core_$(BITS).o
- 
- obj-$(CONFIG_PPC32)		+= relocate_32.o
---- a/arch/powerpc/xmon/Makefile
-+++ b/arch/powerpc/xmon/Makefile
-@@ -1,9 +1,6 @@
- # SPDX-License-Identifier: GPL-2.0
- # Makefile for xmon
- 
--# Avoid clang warnings around longjmp/setjmp declarations
--subdir-ccflags-y := -ffreestanding
--
- GCOV_PROFILE := n
- KCOV_INSTRUMENT := n
- UBSAN_SANITIZE := n
+ 	/*
+ 	 * We don't want to be preempted for the entire
+ 	 * duration of kprobe processing
 
 
