@@ -2,92 +2,115 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACF21C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 01:16:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF4D7C2BA19
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 01:17:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8B540208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 01:16:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A40EF2076D
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 01:17:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=juliacomputing-com.20150623.gappssmtp.com header.i=@juliacomputing-com.20150623.gappssmtp.com header.b="kVCy0Jgi"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rFyRARAR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729983AbgDPBP4 (ORCPT
+        id S1730828AbgDPBRM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 21:15:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54584 "EHLO
+        Wed, 15 Apr 2020 21:17:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54682 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725805AbgDPBP3 (ORCPT
+        with ESMTP id S1725805AbgDPBQG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 21:15:29 -0400
-Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA20AC061A0C
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 18:15:27 -0700 (PDT)
-Received: by mail-il1-x143.google.com with SMTP id c17so5325946ilk.6
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 18:15:27 -0700 (PDT)
+        Wed, 15 Apr 2020 21:16:06 -0400
+Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17460C061A0C
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 18:16:05 -0700 (PDT)
+Received: by mail-ed1-x543.google.com with SMTP id ca21so7322658edb.7
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 18:16:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=juliacomputing-com.20150623.gappssmtp.com; s=20150623;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=ZL/AdIrqcubn1U6a/kqjvBwExmLiwQWSdp5NsKlE2G8=;
-        b=kVCy0JgiCTNp8xA5ArpyuEjQuv1ZH9GrNMbR0QowCSzC5k71Op/5CoOmKx2+RV5yPg
-         OKwIeny8DZUEFtnebOkOTS2HctgRWgw/eQNwZ+rtm9ws95Ui6HfLChpK47K85zm5UW1d
-         dB5xsx5exINXJVKsHZSYMG6oaV1FgCEXSES7w9855aGSHsbz2wtjMfqspaYp3B1w4+6P
-         XOS5yPF0tK+/361BP6mmlnp3kglzZEwWpld1zTCGzEsrzLIz1hScmOQciYhesAeC2jiN
-         kZ5myzIWKRt0xXY4hZEh5Oe+w7nQ2PJva+H5YfZQRg1Fk2bBuGq9u4pujTfSeRr88o6v
-         XItg==
+        bh=DqhZGRoL70sm5/RzVHO716gnr2CLOKeQ+jLS9k1/y4Y=;
+        b=rFyRARARoNvifTie3IBinXaGw3HxWbMokaBEk9FRXHKnN2o9HQhSGjBCrKKdNUYv+q
+         ySccDKON48Kn5CX1Hb2xKb3O+fhncJOjdCjC0t2l1Q6XCKyMahaZUP34nUWaFw0LiVI9
+         r3pjyTURPGWopwqma4Z6YJa5jtcZf1Bz+K56h45IUS205NJ3gScZV0yC5wQSyQ8z50l1
+         Gvin7IoCG734F0kcIVUghxfJXGxvt9U2omfAFExwvrNieQpeK98ioL52hWBJ5aGWexXy
+         3kD1KIFDI5I4GMiAAQlLfEpqutRTj6lMTdeNaJftbg1z01fnoFuiQqpeAYHnmay+F6J9
+         rd/g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=ZL/AdIrqcubn1U6a/kqjvBwExmLiwQWSdp5NsKlE2G8=;
-        b=KkuZWCPVsRz6zNY/X5LqOB4HoClGFJa/eeHbjmIgGBvFnqyIpH6102U7oMmg/a1Tsv
-         rjkw0eyYSA8HlFr4jStOiwtVH94DUiW3ubBw1AHdrnpj5G254U4ryYhupkNoYwPzHfd3
-         1X60gJUjepdAD+ajevNcFnO03qrlYrQF3RNBEwuI9BxFS2uS05c8WNgwsjLdjgwbKJm8
-         8W+IOs4vC8DVM1yUeNxVZ+WCTJuB58PLB9oWw4HZm7BzD25erXztXfX88ynU/NcqBUOs
-         3CLn1KTUon/NrKVNReVSjbojYRpm3IeqQUcneUyWrSPKq2ONpfBb8EgDCCXpseCdi+GY
-         7B2Q==
-X-Gm-Message-State: AGi0PuYpfeLb7eIfU6cgDTiWE8nCc0ZpJGM4JcsvIa4wABeDvC8RElMd
-        e9V0lOTZy3Scq2FlEaUUD5UuaMI2jKDhEc+NVlchbA==
-X-Google-Smtp-Source: APiQypImPr+lJTIA0mH628UTAgJvY94phN98qKggSSMZ1EUaSkryiCYaW55QSKAJ8dHKCKIqwgo9tErb1Ayh1BLiZHo=
-X-Received: by 2002:a92:cf50:: with SMTP id c16mr8339951ilr.181.1586999726924;
- Wed, 15 Apr 2020 18:15:26 -0700 (PDT)
+        bh=DqhZGRoL70sm5/RzVHO716gnr2CLOKeQ+jLS9k1/y4Y=;
+        b=CJjq6EhlLT0HLSEsrwaJVWq5yMpizRBYWT+VJlLBXPhnOJ+aHYiAeXCrn1Nw6Coy4h
+         sX55DyUoo9kLE/s51JwXWD/hrsiRl2FYsDV2/j7rtmtXEEBQASdAFx35j8SnFO2xvx1b
+         F3urlohvbjw4fBH8CPieP6I8A39nzeaSW9lcDjKfkQ+3wOFmX2YmDg1azbopaW+lqzHn
+         5eRQ1O+WsR9wIMDklakczEWGGrfftDaUvKsNu9sST4M3MwnfBo1s4Guc65fa36Dq3nfv
+         QMfLeVeWPYoDs3nDxOGOV2wnDNm8OW5vd3WWhcJTPyAMPBoH4Uzeh902dYHnPMOM0gE1
+         DqSw==
+X-Gm-Message-State: AGi0PuYayGss6YeYsJ9q5ywifVUmwNeHKhgcTlgkoEbRTsGKOH2NuBUO
+        mzTnJgWNaWC4k8NAxd+1mSr/Wr3RQ8Zs8ZRvqSTw/A==
+X-Google-Smtp-Source: APiQypJdK40vPIhcswQ8xkik3AhhbZAYcvE2Hh6OIrvYJSqpheM1v+mhi3nUTHnpQhjxo0F4dTdt0+eK0N4jSjhfODc=
+X-Received: by 2002:a50:a9c5:: with SMTP id n63mr27903084edc.312.1586999763505;
+ Wed, 15 Apr 2020 18:16:03 -0700 (PDT)
 MIME-Version: 1.0
-References: <a5b07aa9-96ea-a9b5-13db-e5dcbd7760e6@intel.com>
- <BEA3CCB8-5127-4E6A-9696-E293C00BFA82@amacapital.net> <CABV8kRxqcCmPKtX3DDOf+47Re1hO1gMeUPhCd6HtDP0-SpcSBw@mail.gmail.com>
- <CALCETrVmsWZ+w6C4RV50DWoL0Qaiy+S6BtXr=QKQEg3MYgAc6w@mail.gmail.com>
- <CABV8kRxfMNxzy8r2P4GKj-22i+GMj=VDfPWAZB-VSgfrsQsjCA@mail.gmail.com> <CALCETrWTDrcynTwpWZ6u6JXRL1rz6_vakLK7=BqMjCPCkQ+9dg@mail.gmail.com>
-In-Reply-To: <CALCETrWTDrcynTwpWZ6u6JXRL1rz6_vakLK7=BqMjCPCkQ+9dg@mail.gmail.com>
-From:   Keno Fischer <keno@juliacomputing.com>
-Date:   Wed, 15 Apr 2020 21:14:50 -0400
-Message-ID: <CABV8kRzbGgF4Uc9+VyzBUiH-kGfMALd8tDtjE3hjyE2Z5VD3-g@mail.gmail.com>
-Subject: Re: [RFC PATCH v2] x86/arch_prctl: Add ARCH_SET_XCR0 to set XCR0 per-thread
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     Dave Hansen <dave.hansen@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andi Kleen <andi@firstfloor.org>,
-        Kyle Huey <khuey@kylehuey.com>,
-        "Robert O'Callahan" <robert@ocallahan.org>
+References: <CADyq12wPW69ovpW4akDY5PGBbrvnwsLO86=sSKTU4CB3dNwG3Q@mail.gmail.com>
+ <20200414214516.GA182757@xz-x1> <20200415031602.22348-1-hdanton@sina.com>
+ <20200415142546.GO5100@ziepe.ca> <20200416000229.GA9922@redhat.com>
+In-Reply-To: <20200416000229.GA9922@redhat.com>
+From:   Brian Geffon <bgeffon@google.com>
+Date:   Wed, 15 Apr 2020 18:15:26 -0700
+Message-ID: <CADyq12xg8vxetG8y=M6i2m4qYrtjsRhmpds-3yKTY2icrHG2GA@mail.gmail.com>
+Subject: Re: Userfaultfd doesn't seem to break out of poll on fd close
+To:     Andrea Arcangeli <aarcange@redhat.com>
+Cc:     Jason Gunthorpe <jgg@ziepe.ca>, Hillf Danton <hdanton@sina.com>,
+        Peter Xu <peterx@redhat.com>, linux-mm <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Sonny Rao <sonnyrao@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Would it make matters easier if tasks with nonstandard XCR0 were not
-> allowed to use ptrace() at all?  And if ARCH_SET_XCR0 were disallowed
-> if the caller is tracing anyone?
+Hi Andrea,
+Thanks for taking the time to reply.
 
-That would be fine by me (as long as you're still allowed to ptrace them of
-course). I do think that using the kernel XCR0 is the best choice, but since
-I don't really have a use case for it, I'm happy to disallow that and
-let anybody who does have a use case come back here and
-argue for it one way or the other.
+> static int userfaultfd_flush(struct file *file, fl_owner_t id)
+> {
+>         struct userfaultfd_ctx *ctx = file->private_data;
+>         wake_up_poll(&ctx->fd_wqh, EPOLLHUP);
+> }
+>
+
+Yes, I think that something like this would work for this situation and eventfd.
+
+> If eventfd and pipes all behave identical to uffd (they should as they
+> don't seem to implement flush) I'm not sure if there's good enough
+> justification to deviate from the default VFS behavior here.
+
+Pipes actually behave a little differently, in the case that you close
+the write end of the pipe the read end will break out of the poll with
+EPOLLHUP, but I suppose closing the read end while the read end is
+being polled would be more analogous to what I'm describing here. And
+this is why it felt weird to me, in these situations the kernel
+_knows_ that after the close nothing can happen on the file
+descriptor, so what's the point of keeping it in a poll? As soon as
+the poll breaks any read, write, ioctl, etc on the fd whether it's a
+userfaultfd or an eventfd would fail with -EBADF.
+
+And all of that I guess makes sense in the case of a non-blocking fd,
+but what about the case of a blocking file descriptor? Both
+userfaultfd and eventfd can seemingly be stuck in a read syscall with
+no way to break them out when the userfaultfd/eventfd has no further
+utility. Here is an example:
+https://gist.github.com/bgaff/607302d86d99ac539efca307ce2dd679
+
+For my use case adding an eventfd on poll works well, so thank you for
+that suggestion. But the behavior just seemed odd to me which is why I
+started this thread.
+
+Thanks,
+Brian
