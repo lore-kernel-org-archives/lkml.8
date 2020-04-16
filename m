@@ -2,115 +2,104 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 159F9C352BE
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:34:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C562C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:34:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E77F1214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:34:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0683A21D91
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:34:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XECzl8bn"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nPBqXI8R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2634956AbgDPPeW (ORCPT
+        id S2395252AbgDPPen (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:34:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57714 "EHLO
+        Thu, 16 Apr 2020 11:34:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47202 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2898232AbgDPNk6 (ORCPT
+        by vger.kernel.org with ESMTP id S1730236AbgDPPed (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:40:58 -0400
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2AEDC061A0C;
-        Thu, 16 Apr 2020 06:40:57 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id f8so5574259lfe.12;
-        Thu, 16 Apr 2020 06:40:57 -0700 (PDT)
+        Thu, 16 Apr 2020 11:34:33 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C44DC061A0C;
+        Thu, 16 Apr 2020 08:34:33 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id nu11so1522511pjb.1;
+        Thu, 16 Apr 2020 08:34:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=ZLzws5i5Y18vpPpWQKpd4tf4rrBI/U3CKui/Sn/uhyY=;
-        b=XECzl8bnoYHa7JBihaNpNho0X+TXnG6VeYsCQPhuEXHf9Iehd/9SIW1/J9mcuEEe0b
-         WRwVX/i41aBzEhsORfM4ZC2TbVxNVMolHRAjUfke0s+RGZmitBw/DnJUZHiKqHqmrYT9
-         I9LXFKpBWBqhTZZXXair5qVTLlU/jJbsjPoWIwsJBBo0mTlFrj9HgsYRzAG31YSPElY4
-         QhYDKuMQA7falqvgwPR4X+Mt7f/W7ZeP/+/HYIh3CRJ+JsZlwpc6xEeVn3/TGziToDl9
-         VblLgngigFTr2b8o136x/G69URCT7TQHa/jhmCrUF857d5kXKZ74Z1HEVMSgcSz3RKnR
-         Ss3A==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=jsditFk3QKLKaKpu5zzpEVcrt2IGRFih4NDFzQtyXXs=;
+        b=nPBqXI8RiRZdfS2zVTNjKBcFjW1AiNA5GXKlCRD34qCrxOunxJDlcKSBtTdBkx6LaO
+         3kiYSF4SvFi1mAc85MycEMHgdDdf6UhULXycpoUNdccUqkntP9dMagf8d76xDPmXKbHn
+         5YHzNTQNT5pvW2CkY28qT/FVpsWqEu+1yJfzFoS6ye616yzbWocIlqVOmyvJ2HRI1Rm6
+         dDJ0gq95XZ3IckajpWuAr/2rIuYp3da+APc4yMjPY42rRrbLfGts4cqcr82J+6qW0YZ9
+         NYpY0tWmByLIT2EqOg68uaMX3KBDbSx7l19DNhKh2utV0DLkYcg5MfYPj8fo0XonnZGy
+         LAXQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=ZLzws5i5Y18vpPpWQKpd4tf4rrBI/U3CKui/Sn/uhyY=;
-        b=NbGit8VHchrgxfyZz/SMcGF8EXrjpZ/Fmr7frzB973H/WfmaPkkAXbxvGNS9htcR0/
-         L74iv6RJYfzNlyp9UimvTdUPvgTkOurxlmHFmR6DLGrMdDUv+llFXYj/ZOGVwYnhiIbg
-         aoCxr7sdIjQX+RZgnpWhwzp33fwaz/mKESkeIIzrih6K7ZE3MJj5S4+3YhC+NvieCrhs
-         15dBvWKJUq07oU2BgcE3cOD9+LRYCokG1/yICMgZwHZm2orN4Bt8oBr69cJsjfL5oFiS
-         +Nvr5rn1DMOuYRbOKNfo417tsSsmp3/RhPYVndqjlOMOeEU8dgLQDtRzsBpbrH+c/Hgk
-         dDWQ==
-X-Gm-Message-State: AGi0PubpMTX1O6rsMQFWR2Ide2kVGp1Poe7NKgrycDPIVwF1BGVUQhXd
-        atm2nfOuI1P1nMBRO/fQpCSrZamP3wKrNCQv5iA=
-X-Google-Smtp-Source: APiQypIWud1D1EiOfs9YtVdVtAQk8rF/e+TJLy4nQSWV2/scuMvXiD9YGPWzt7VIZM5qqDNDgcds4hTD9Rab+a60/+0=
-X-Received: by 2002:a19:88a:: with SMTP id 132mr6153501lfi.130.1587044456209;
- Thu, 16 Apr 2020 06:40:56 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=jsditFk3QKLKaKpu5zzpEVcrt2IGRFih4NDFzQtyXXs=;
+        b=Jei8QuvZJX1RyfOt0dBEadtx/Z4gq+z5NwWnqDZLfNWG7ehJAVnhl7Ai5fITfCE44t
+         YDecjAyGVQchVHcyqaVPxURAY1jiRgGU9167zpeBM4BiDeEcViULzjbfSn0BiSg++u1r
+         NZVWT9odTt7JnEccwGr/QIr5br4pj7BvofBS+raEZNHs5CzgginfhdMdHqSky38m3Bto
+         oE3iS1ZFain16qNAtu9OzRzn3s7nxPAmrn0XErVfmE/iy+rVjS2iw2+AkwKpLvI9SSV4
+         2tOnzuNN0DfRbU69rpwFkFY4p4LpnLNcoSpxutJg2rLPYpUZzb1tesg/UJSiXFpRyNmp
+         S2nQ==
+X-Gm-Message-State: AGi0PuYY7uchaComsIo7C+qK6rhNMoo7O+mU4l0gESoaYk4c8B7Y0Xeq
+        +6QYXEbkajGRUdKHtF+epxw=
+X-Google-Smtp-Source: APiQypIT7t86j5DQnRvr72mtBhKlm/8M5gvrfLGHQgJQXMiJ6n+DxQ1J8xQce7uQ5l2gqo1m2++oXA==
+X-Received: by 2002:a17:90a:c24a:: with SMTP id d10mr5756020pjx.5.1587051272906;
+        Thu, 16 Apr 2020 08:34:32 -0700 (PDT)
+Received: from localhost ([89.208.244.140])
+        by smtp.gmail.com with ESMTPSA id u15sm2897957pjm.47.2020.04.16.08.34.31
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 16 Apr 2020 08:34:32 -0700 (PDT)
+Date:   Thu, 16 Apr 2020 23:34:28 +0800
+From:   Dejin Zheng <zhengdejin5@gmail.com>
+To:     Markus Elfring <Markus.Elfring@web.de>
+Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Allison Randal <allison@lohutok.net>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Patrice Chotard <patrice.chotard@st.com>,
+        Shah Nehal-Bakulchandra <Nehal-bakulchandra.Shah@amd.com>,
+        Tang Bin <tangbin@cmss.chinamobile.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: i2c: img-scb: remove duplicate dev_err()
+Message-ID: <20200416153428.GA23125@nuc8i5>
+References: <08564c03-3bbd-5518-1a9d-a40b8ca09f48@web.de>
+ <20200415025426.GB14300@nuc8i5>
+ <b5db65f5-f236-9e22-98df-07629a827738@web.de>
+ <20200415152115.GA17519@nuc8i5>
+ <668fe4da-56f2-8abe-1113-fa180f307524@web.de>
 MIME-Version: 1.0
-References: <20200414152843.32129-1-pthomas8589@gmail.com> <CACRpkdaPc-rxNmdq7KFKZ-Qi7Tqy2RJ5Lkcv-8bTAh0GX7VygQ@mail.gmail.com>
- <CAMpxmJWZEhKho0+6zf=Ca8tif=Z7PcdNv2=tAsDnOUzeZLYqLg@mail.gmail.com>
-In-Reply-To: <CAMpxmJWZEhKho0+6zf=Ca8tif=Z7PcdNv2=tAsDnOUzeZLYqLg@mail.gmail.com>
-From:   Paul Thomas <pthomas8589@gmail.com>
-Date:   Thu, 16 Apr 2020 09:40:44 -0400
-Message-ID: <CAD56B7ezM5ewaFySr8zeybHvkLmLpcZQzMgYUnVNEvdJnvgGZw@mail.gmail.com>
-Subject: Re: [PATCH v2] gpio: gpio-pca953x, Add get_multiple function
-To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <668fe4da-56f2-8abe-1113-fa180f307524@web.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 16, 2020 at 9:21 AM Bartosz Golaszewski
-<bgolaszewski@baylibre.com> wrote:
+On Wed, Apr 15, 2020 at 06:24:09PM +0200, Markus Elfring wrote:
+> >> Would you like to take another look at corresponding change possibilities?
+> >>
+> > yes, I want to do it and thanks for your info.
+> 
+> This positive feedback can lead to corresponding software development opportunities.
+> Which directions would you like try out next?
 >
-> czw., 16 kwi 2020 o 13:22 Linus Walleij <linus.walleij@linaro.org> napisa=
-=C5=82(a):
-> >
-> > On Tue, Apr 14, 2020 at 5:30 PM Paul Thomas <pthomas8589@gmail.com> wro=
-te:
-> >
-> > > Implement a get_multiple function for gpio-pca953x. If a driver
-> > > leaves get_multiple unimplemented then gpio_chip_get_multiple()
-> > > in gpiolib.c takes care of it by calling chip->get() as needed.
-> > > For i2c chips this is very inefficient. For example if you do an
-> > > 8-bit read then instead of a single i2c transaction there are
-> > > 8 transactions reading the same byte!
-> > >
-> > > This has been tested with max7312 chips on a 5.2 kernel.
-> > >
-> > > Signed-off-by: Paul Thomas <pthomas8589@gmail.com>
-> > > ---
-> > >  changes from v1: rebased to 5.7-rc1
-> >
-> > Acked-by: Linus Walleij <linus.walleij@linaro.org>
-> >
-> > Since I know Bartosz is queueing other patches for this driver I
-> > let him pick it up.
-> >
-> > Yours,
-> > Linus Walleij
->
-> Patch applied. I removed the last line of the commit message since I
-> guess you did test it on v5.7-rc1 after all?
-I applied the patch and compiled the kernel, but I didn't test on our
-embedded board with the actual max7312 chips, that board has a whole
-series of special commits.
+May be related to usb, ethernet and pcie. My current job is related to
+these. Thanks!
 
--Paul
+BR,
+Dejin
 
->
-> Bart
+> Regards,
+> Markus
