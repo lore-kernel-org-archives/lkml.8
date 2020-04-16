@@ -2,135 +2,106 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 188A4C2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 08:59:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60BE3C2BB85
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 09:01:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DF231206B9
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 08:59:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31DCD206B9
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 09:01:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="M9q2RMUF"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=daemons-net.20150623.gappssmtp.com header.i=@daemons-net.20150623.gappssmtp.com header.b="jHpY8l5E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2503178AbgDPI7R (ORCPT
+        id S2503244AbgDPJA4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 04:59:17 -0400
-Received: from ssl.serverraum.org ([176.9.125.105]:38605 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2502875AbgDPI4D (ORCPT
+        Thu, 16 Apr 2020 05:00:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41770 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2503089AbgDPI5y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 04:56:03 -0400
-Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id E19F222F53;
-        Thu, 16 Apr 2020 10:55:46 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1587027354;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=6knnTYd0SD0a2gjJU3xQbFJUgo1WzPpSFmhjfIQyUcY=;
-        b=M9q2RMUFDQVW4SbouNkFNdJPzvQSvOQC+FhQtrDgr+5/mkydRI7TAhGXO0tbJzmPNNyyHX
-        L7gLiTb5PDKWNrrSnrCdEZyt6jYVPk3HsLMtzmSAX0AXDADeVgSzEhGLRf7b5MFNZM8a6g
-        TAZ0ODC6jxTAJEZd8Mh17RprqqBe0Lw=
+        Thu, 16 Apr 2020 04:57:54 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D158FC061A0C
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 01:57:53 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id d17so1353849pgo.0
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 01:57:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=daemons-net.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=+WhoZsJiZov2jfSxLGEtmiUut+TNZxfA/4UuVClNzr0=;
+        b=jHpY8l5EA3+YW5OG9e0VYhz/NzapK19wtLTeBckhDS8G0iv/JnvFI3KhBgA8HT2kUm
+         RO5bKx47ZhsvpuMwnd2IJwj42Dhl33PVwuPNE0XV3HKVl+qOreRwv9BsZI1Vs69c5qjt
+         gi2UdrnPZ2bnv4UmSfjz8GQQMZBIGSHi4oYN9Paocq9BJBmgwxcmLwcN7T859cjKUjhk
+         SmIrs9QoojeRFbklXMWVouoeyvytOMMuz2kZKnk/P8HH7EBnnQlNIIuo4+geFzJ7EapO
+         P3N4mUBxWGjasviGxpAW1cGtu3IQoi9LX90RCU11vvuIY7MLRqBwK+9rDpNdc5Gt+XXE
+         hjNg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=+WhoZsJiZov2jfSxLGEtmiUut+TNZxfA/4UuVClNzr0=;
+        b=Dkukpm+ZlGPO0tsxBXsCJY7w89CMb2BSrFTkZjLhV+sD0/xTSl5LZbb8qYvL0QSXz1
+         9hJbFqhr+e5pe2QdQcdp1H/OE7yikbI8KRzZY5psSWRzs1b25OACn46ThPNg3fBC6nLx
+         aeeLWI9niPsnxFmPEjAmjRcvhFleWpMsHDQVQt6Xirbnr4YHX6Do4CVGJWiw7bmPLjK2
+         jmluRYz0GiJmVcr10oR2eGTxfU09aJ087j80kc3zx+S6BSXZ7jwHW7k8OEQWwCrgunc/
+         1YOWOFCaNnTZlXOLRGce2cFHXV9yhoOdiQkwzdJCQcT5NvA3wW/aHp8lur6aDIm/AkO+
+         wYmg==
+X-Gm-Message-State: AGi0Pub7+Np6IOVgOnBiGHJ757yC4oGgu+IERC3i0Z6ufwspp1y3eY8b
+        b5oeOhOtkjuKvVVw1SdMX9VG
+X-Google-Smtp-Source: APiQypLtw7jKrx1finbL2m0OXLHS4c3y7qRzSB9kUcdRDN8RB6LcSHAIJ0x1AUc/8C91ijJiX9g75w==
+X-Received: by 2002:a63:6f84:: with SMTP id k126mr31197858pgc.391.1587027473270;
+        Thu, 16 Apr 2020 01:57:53 -0700 (PDT)
+Received: from localhost.localdomain ([47.156.151.166])
+        by smtp.googlemail.com with ESMTPSA id x10sm88957pgq.79.2020.04.16.01.57.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Apr 2020 01:57:52 -0700 (PDT)
+From:   Clay McClure <clay@daemons.net>
+Cc:     Clay McClure <clay@daemons.net>,
+        "David S. Miller" <davem@davemloft.net>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Sekhar Nori <nsekhar@ti.com>,
+        Richard Cochran <richardcochran@gmail.com>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] net: cpts: Condition WARN_ON on PTP_1588_CLOCK
+Date:   Thu, 16 Apr 2020 01:56:26 -0700
+Message-Id: <20200416085627.1882-1-clay@daemons.net>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Thu, 16 Apr 2020 10:55:46 +0200
-From:   Michael Walle <michael@walle.cc>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, linux-kernel@vger.kernel.org,
-        linux-hwmon@vger.kernel.org, linux-pwm@vger.kernel.org,
-        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Lee Jones <lee.jones@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v2 11/16] gpio: add support for the sl28cpld GPIO
- controller
-In-Reply-To: <CACRpkdbANL_W3gcTwue5VUCWT95boMXjFSqTeFDZvJ6iSeNpJg@mail.gmail.com>
-References: <20200402203656.27047-1-michael@walle.cc>
- <20200402203656.27047-12-michael@walle.cc>
- <CACRpkdbANL_W3gcTwue5VUCWT95boMXjFSqTeFDZvJ6iSeNpJg@mail.gmail.com>
-Message-ID: <46eb76699a76b3feedccc70f1d1da1de@walle.cc>
-X-Sender: michael@walle.cc
-User-Agent: Roundcube Webmail/1.3.10
-X-Spamd-Bar: +
-X-Rspamd-Server: web
-X-Rspamd-Queue-Id: E19F222F53
-X-Spamd-Result: default: False [1.40 / 15.00];
-         FROM_HAS_DN(0.00)[];
-         TO_DN_SOME(0.00)[];
-         FREEMAIL_ENVRCPT(0.00)[gmail.com];
-         TO_MATCH_ENVRCPT_ALL(0.00)[];
-         TAGGED_RCPT(0.00)[dt];
-         MIME_GOOD(-0.10)[text/plain];
-         DKIM_SIGNED(0.00)[];
-         RCPT_COUNT_TWELVE(0.00)[23];
-         NEURAL_HAM(-0.00)[-0.402];
-         RCVD_COUNT_ZERO(0.00)[0];
-         FROM_EQ_ENVFROM(0.00)[];
-         MIME_TRACE(0.00)[0:+];
-         FREEMAIL_CC(0.00)[vger.kernel.org,lists.infradead.org,baylibre.com,kernel.org,suse.com,roeck-us.net,linaro.org,gmail.com,pengutronix.de,linux-watchdog.org,nxp.com,linutronix.de,lakedaemon.net,linuxfoundation.org];
-         MID_RHS_MATCH_FROM(0.00)[];
-         SUSPICIOUS_RECIPS(1.50)[]
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+CPTS_MOD merely implies PTP_1588_CLOCK; it is possible to build cpts
+without PTP clock support. In that case, ptp_clock_register() returns
+NULL and we should not WARN_ON(cpts->clock) when downing the interface.
+The ptp_*() functions are stubbed without PTP_1588_CLOCK, so it's safe
+to pass them a null pointer.
 
-Hi Linus,
+Signed-off-by: Clay McClure <clay@daemons.net>
+---
+ drivers/net/ethernet/ti/cpts.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Am 2020-04-16 10:34, schrieb Linus Walleij:
-> Hi Michael,
-> 
-> this is looking good provided we can get the generic GPIO regmap
-> helper reviewed and merged. Thanks!
-> 
-> On Thu, Apr 2, 2020 at 10:37 PM Michael Walle <michael@walle.cc> wrote:
-> 
->> This adds support for the GPIO controller of the sl28 board management
->> controller. This driver is part of a multi-function device.
->> 
->> Signed-off-by: Michael Walle <michael@walle.cc>
-> 
->> +       depends on MFD_SL28CPLD
-> 
-> Apart from this depends it seems the patch is compile-time
-> independent of the other patches
+diff --git a/drivers/net/ethernet/ti/cpts.c b/drivers/net/ethernet/ti/cpts.c
+index fd214f8730a9..daf4505f4a70 100644
+--- a/drivers/net/ethernet/ti/cpts.c
++++ b/drivers/net/ethernet/ti/cpts.c
+@@ -646,7 +646,7 @@ EXPORT_SYMBOL_GPL(cpts_register);
+ 
+ void cpts_unregister(struct cpts *cpts)
+ {
+-	if (WARN_ON(!cpts->clock))
++	if (IS_REACHABLE(PTP_1588_CLOCK) && WARN_ON(!cpts->clock))
+ 		return;
+ 
+ 	ptp_clock_unregister(cpts->clock);
+-- 
+2.20.1
 
-correct. There are no common mfd headers or something like that.
-
-> so I'd suggest we just merge
-> the generic regmap driver and this driver to the GPIO tree once
-> we feel finished with them, optimistically assuming that the MFD
-> driver will land and that we will not need any fundamental
-> changes in the GPIO driver.
-> 
-> Worst case we have to revert the driver and that is no disaster.
-
-Sure. One major thing I'm waiting for is the decision/new ideas on
-how to handle the "register is not set or zero" problem, see the
-other thread on the generic regmap gpio. Then I'd respin an update
-of this whole series.
-
--michael
