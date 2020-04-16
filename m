@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A60ADC2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:59:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3852EC2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:59:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7C0462078B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:59:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06CAA21927
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:59:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587045576;
-	bh=P/0lskj5n+fVsZdBwi59YdaK/6ajOC5ljhBBmqt4dHw=;
+	s=default; t=1587045590;
+	bh=mXmldqJE/IfGSyxwgX4d/vi1/B5euc2LVrh7OmYTZyc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rI6zZtIPwmRWlKYJUtvueDa6mcQg4Y4Dv3R+qy3VsNq2dkGXzbOqHc/tEXbKE/E0D
-	 SoqYTVYpDx2W8EdJ/vQ96qJ98XKb56e6YimnVVk6t7lfLAZTU597yIbSRjQHTQXADX
-	 D8sY1DCH9mjqoMgkF1c146LcZbrJnGe4Cd5WKsqc=
+	b=TYdPiEtHAA6Euzl++StMVmMAQAAnbEUER0I+CuDKLcMDXa9lB9hx/Oay9ZHNbCE3E
+	 CUpqH3ZZt1QR29dliH/VxqFJCxXswfvSdu95hMpFs1y6KHeQI2fzBHVS9UDiIBPelX
+	 eIjXjPy9w98F/ROtSM/TWeoFMYyQp9ZIsV9ioM2Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729162AbgDPN7e (ORCPT
+        id S2898878AbgDPN7o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 09:59:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52568 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 09:59:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52714 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2898049AbgDPNkD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:40:03 -0400
+        id S2896335AbgDPNkK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:40:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CF23520732;
-        Thu, 16 Apr 2020 13:40:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2932920732;
+        Thu, 16 Apr 2020 13:40:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044402;
-        bh=P/0lskj5n+fVsZdBwi59YdaK/6ajOC5ljhBBmqt4dHw=;
+        s=default; t=1587044409;
+        bh=mXmldqJE/IfGSyxwgX4d/vi1/B5euc2LVrh7OmYTZyc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bQja+geixbrFiiX3egihn9sTb0/tcWbEK6YJGTfPupIyvHU5cl2lBVmEFM5Je9InM
-         MtqTsfQkoQBKZOV31cYbEvNgHfZ8GMDoOnSy5zuQR++cHJ2Z1c13OOhygqZbhMWsxn
-         H3RloXmC98iNMw75YeXGfW6Dw0k/2RCxy3hnRPm4=
+        b=nPB7KtPz6ycoj3IBf82Fi1Wtqxol1kECbx8nfViwnaoDQbRDoxxpuPRHE5jWgUZND
+         qWPXlMB0DvSW2+CyOdNLJBOLwwFar7TETDOmudMopMUXY2IL2wmDTtRv8L41R6AT5a
+         i+JVUuZ71Pk36Fmi/515xiW6MK28VYErPztcTemo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Fredrik Strupe <fredrik@strupe.net>,
-        Catalin Marinas <catalin.marinas@arm.com>
-Subject: [PATCH 5.5 201/257] arm64: armv8_deprecated: Fix undef_hook mask for thumb setend
-Date:   Thu, 16 Apr 2020 15:24:12 +0200
-Message-Id: <20200416131351.219534451@linuxfoundation.org>
+        stable@vger.kernel.org, Robbie Ko <robbieko@synology.com>,
+        Filipe Manana <fdmanana@suse.com>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 5.5 165/257] btrfs: fix missing semaphore unlock in btrfs_sync_file
+Date:   Thu, 16 Apr 2020 15:23:36 +0200
+Message-Id: <20200416131347.137167039@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.891903893@linuxfoundation.org>
 References: <20200416131325.891903893@linuxfoundation.org>
@@ -60,53 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Fredrik Strupe <fredrik@strupe.net>
+From: Robbie Ko <robbieko@synology.com>
 
-commit fc2266011accd5aeb8ebc335c381991f20e26e33 upstream.
+commit 6ff06729c22ec0b7498d900d79cc88cfb8aceaeb upstream.
 
-For thumb instructions, call_undef_hook() in traps.c first reads a u16,
-and if the u16 indicates a T32 instruction (u16 >= 0xe800), a second
-u16 is read, which then makes up the the lower half-word of a T32
-instruction. For T16 instructions, the second u16 is not read,
-which makes the resulting u32 opcode always have the upper half set to
-0.
+Ordered ops are started twice in sync file, once outside of inode mutex
+and once inside, taking the dio semaphore. There was one error path
+missing the semaphore unlock.
 
-However, having the upper half of instr_mask in the undef_hook set to 0
-masks out the upper half of all thumb instructions - both T16 and T32.
-This results in trapped T32 instructions with the lower half-word equal
-to the T16 encoding of setend (b650) being matched, even though the upper
-half-word is not 0000 and thus indicates a T32 opcode.
-
-An example of such a T32 instruction is eaa0b650, which should raise a
-SIGILL since T32 instructions with an eaa prefix are unallocated as per
-Arm ARM, but instead works as a SETEND because the second half-word is set
-to b650.
-
-This patch fixes the issue by extending instr_mask to include the
-upper u32 half, which will still match T16 instructions where the upper
-half is 0, but not T32 instructions.
-
-Fixes: 2d888f48e056 ("arm64: Emulate SETEND for AArch32 tasks")
-Cc: <stable@vger.kernel.org> # 4.0.x-
-Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-Signed-off-by: Fredrik Strupe <fredrik@strupe.net>
-Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
+Fixes: aab15e8ec2576 ("Btrfs: fix rare chances for data loss when doing a fast fsync")
+CC: stable@vger.kernel.org # 4.19+
+Signed-off-by: Robbie Ko <robbieko@synology.com>
+Reviewed-by: Filipe Manana <fdmanana@suse.com>
+[ add changelog ]
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm64/kernel/armv8_deprecated.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/btrfs/file.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/arch/arm64/kernel/armv8_deprecated.c
-+++ b/arch/arm64/kernel/armv8_deprecated.c
-@@ -601,7 +601,7 @@ static struct undef_hook setend_hooks[]
- 	},
- 	{
- 		/* Thumb mode */
--		.instr_mask	= 0x0000fff7,
-+		.instr_mask	= 0xfffffff7,
- 		.instr_val	= 0x0000b650,
- 		.pstate_mask	= (PSR_AA32_T_BIT | PSR_AA32_MODE_MASK),
- 		.pstate_val	= (PSR_AA32_T_BIT | PSR_AA32_MODE_USR),
+--- a/fs/btrfs/file.c
++++ b/fs/btrfs/file.c
+@@ -2135,6 +2135,7 @@ int btrfs_sync_file(struct file *file, l
+ 	 */
+ 	ret = start_ordered_ops(inode, start, end);
+ 	if (ret) {
++		up_write(&BTRFS_I(inode)->dio_sem);
+ 		inode_unlock(inode);
+ 		goto out;
+ 	}
 
 
