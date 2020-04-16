@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3C75C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:37:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 902EEC2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:37:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CBAC3214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:37:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 684A821D91
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:37:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587051450;
-	bh=0t/oLzkgFXhjX5DcSYiAxTJvv2saLqLGZ+qwSaWFEk8=;
+	s=default; t=1587051460;
+	bh=16MRUCU6snLRWWVpqH8LfJr+huMqXQc8E9e/L4ZEB34=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yl1F6bYCYr6c9Y+NvjERWIf6ZvTYpoJ6XhJT2afQEsLHW/A0iKySvYJPWVwK5J97a
-	 ROK9Ty3NAdZq4DNyrk1DonOAQ0TTY15x7DcW/8ref0I47sbgizYfkU9e1u+qvSM2+w
-	 SvPiVGF3rteybEEM+E5Wor2TtBHdJp8XOYhLzj7k=
+	b=QL+WMvBNXKqMJPyWlh4O9ZRni4fk5TlwO+orySYwnLXozHhHx/dmqv7BNuZsB63Fe
+	 ud/Y6Bg06wjwQ+eG98F9jFxSd8HsvrzZ0LvOTvZS5i1I++HN8DDBX+ioIlbZAOhNXX
+	 wrkoNYQYLL8mo3jRftNKbrEpc+/Nxsi/FwBP7VSc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408261AbgDPPh3 (ORCPT
+        id S2410517AbgDPPhi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:37:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51800 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 11:37:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51628 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2897955AbgDPNj0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:39:26 -0400
+        id S2897913AbgDPNjQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:39:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 172D62063A;
-        Thu, 16 Apr 2020 13:39:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3CEED20732;
+        Thu, 16 Apr 2020 13:39:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044365;
-        bh=0t/oLzkgFXhjX5DcSYiAxTJvv2saLqLGZ+qwSaWFEk8=;
+        s=default; t=1587044355;
+        bh=16MRUCU6snLRWWVpqH8LfJr+huMqXQc8E9e/L4ZEB34=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nHvjlFE5ZAb8dWaDmPvQIcpIFOgjjWLWADV7QSo+AKFLH7LsJDZtRkVHVC5vTZyjo
-         kcC/k1mAg6hNUcdLYPflIqW3g/1YfvYfn1al+yunemQGt/hl4WG5FgZ4TRS8S7u48T
-         OnBfXcfPwFzp5nKf1urdTxo38RBoN+k5BKpfPx5c=
+        b=eF94o2dzxQ+BzdAqYCUV0h5tZw0p2IyNEoi99f1t39mF/3726ZOawATa8I8Kki5vp
+         7sB9YPBsLGrrgBcCGiW1COAdAL+vS7+1MwJ+dZQeBiq1ool80ByFwPK5MpJRyYOVnJ
+         T8JPee7xKQlFVNpuRZMZocAeqaygCK+/CQf26PhM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Matthew Wilcox (Oracle)" <willy@infradead.org>
-Subject: [PATCH 5.5 188/257] XArray: Fix xas_pause for large multi-index entries
-Date:   Thu, 16 Apr 2020 15:23:59 +0200
-Message-Id: <20200416131349.783449444@linuxfoundation.org>
+        stable@vger.kernel.org, Nikos Tsironis <ntsironis@arrikto.com>,
+        Mike Snitzer <snitzer@redhat.com>
+Subject: [PATCH 5.5 184/257] dm clone: Fix handling of partial region discards
+Date:   Thu, 16 Apr 2020 15:23:55 +0200
+Message-Id: <20200416131349.329846347@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.891903893@linuxfoundation.org>
 References: <20200416131325.891903893@linuxfoundation.org>
@@ -59,88 +59,200 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matthew Wilcox (Oracle) <willy@infradead.org>
+From: Nikos Tsironis <ntsironis@arrikto.com>
 
-commit c36d451ad386b34f452fc3c8621ff14b9eaa31a6 upstream.
+commit 4b5142905d4ff58a4b93f7c8eaa7ba829c0a53c9 upstream.
 
-Inspired by the recent Coverity report, I looked for other places where
-the offset wasn't being converted to an unsigned long before being
-shifted, and I found one in xas_pause() when the entry being paused is
-of order >32.
+There is a bug in the way dm-clone handles discards, which can lead to
+discarding the wrong blocks or trying to discard blocks beyond the end
+of the device.
 
-Fixes: b803b42823d0 ("xarray: Add XArray iterators")
-Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
-Cc: stable@vger.kernel.org
+This could lead to data corruption, if the destination device indeed
+discards the underlying blocks, i.e., if the discard operation results
+in the original contents of a block to be lost.
+
+The root of the problem is the code that calculates the range of regions
+covered by a discard request and decides which regions to discard.
+
+Since dm-clone handles the device in units of regions, we don't discard
+parts of a region, only whole regions.
+
+The range is calculated as:
+
+    rs = dm_sector_div_up(bio->bi_iter.bi_sector, clone->region_size);
+    re = bio_end_sector(bio) >> clone->region_shift;
+
+, where 'rs' is the first region to discard and (re - rs) is the number
+of regions to discard.
+
+The bug manifests when we try to discard part of a single region, i.e.,
+when we try to discard a block with size < region_size, and the discard
+request both starts at an offset with respect to the beginning of that
+region and ends before the end of the region.
+
+The root cause is the following comparison:
+
+  if (rs == re)
+    // skip discard and complete original bio immediately
+
+, which doesn't take into account that 'rs' might be greater than 're'.
+
+Thus, we then issue a discard request for the wrong blocks, instead of
+skipping the discard all together.
+
+Fix the check to also take into account the above case, so we don't end
+up discarding the wrong blocks.
+
+Also, add some range checks to dm_clone_set_region_hydrated() and
+dm_clone_cond_set_range(), which update dm-clone's region bitmap.
+
+Note that the aforementioned bug doesn't cause invalid memory accesses,
+because dm_clone_is_range_hydrated() returns True for this case, so the
+checks are just precautionary.
+
+Fixes: 7431b7835f55 ("dm: add clone target")
+Cc: stable@vger.kernel.org # v5.4+
+Signed-off-by: Nikos Tsironis <ntsironis@arrikto.com>
+Signed-off-by: Mike Snitzer <snitzer@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- lib/test_xarray.c |   37 +++++++++++++++++++++++++++++++++++++
- lib/xarray.c      |    2 +-
- 2 files changed, 38 insertions(+), 1 deletion(-)
+ drivers/md/dm-clone-metadata.c |   13 ++++++++++++
+ drivers/md/dm-clone-target.c   |   43 +++++++++++++++++++++++++++--------------
+ 2 files changed, 42 insertions(+), 14 deletions(-)
 
---- a/lib/test_xarray.c
-+++ b/lib/test_xarray.c
-@@ -1156,6 +1156,42 @@ static noinline void check_find_entry(st
- 	XA_BUG_ON(xa, !xa_empty(xa));
+--- a/drivers/md/dm-clone-metadata.c
++++ b/drivers/md/dm-clone-metadata.c
+@@ -850,6 +850,12 @@ int dm_clone_set_region_hydrated(struct
+ 	struct dirty_map *dmap;
+ 	unsigned long word, flags;
+ 
++	if (unlikely(region_nr >= cmd->nr_regions)) {
++		DMERR("Region %lu out of range (total number of regions %lu)",
++		      region_nr, cmd->nr_regions);
++		return -ERANGE;
++	}
++
+ 	word = region_nr / BITS_PER_LONG;
+ 
+ 	spin_lock_irqsave(&cmd->bitmap_lock, flags);
+@@ -879,6 +885,13 @@ int dm_clone_cond_set_range(struct dm_cl
+ 	struct dirty_map *dmap;
+ 	unsigned long word, region_nr;
+ 
++	if (unlikely(start >= cmd->nr_regions || (start + nr_regions) < start ||
++		     (start + nr_regions) > cmd->nr_regions)) {
++		DMERR("Invalid region range: start %lu, nr_regions %lu (total number of regions %lu)",
++		      start, nr_regions, cmd->nr_regions);
++		return -ERANGE;
++	}
++
+ 	spin_lock_irq(&cmd->bitmap_lock);
+ 
+ 	if (cmd->read_only) {
+--- a/drivers/md/dm-clone-target.c
++++ b/drivers/md/dm-clone-target.c
+@@ -293,10 +293,17 @@ static inline unsigned long bio_to_regio
+ 
+ /* Get the region range covered by the bio */
+ static void bio_region_range(struct clone *clone, struct bio *bio,
+-			     unsigned long *rs, unsigned long *re)
++			     unsigned long *rs, unsigned long *nr_regions)
+ {
++	unsigned long end;
++
+ 	*rs = dm_sector_div_up(bio->bi_iter.bi_sector, clone->region_size);
+-	*re = bio_end_sector(bio) >> clone->region_shift;
++	end = bio_end_sector(bio) >> clone->region_shift;
++
++	if (*rs >= end)
++		*nr_regions = 0;
++	else
++		*nr_regions = end - *rs;
  }
  
-+static noinline void check_pause(struct xarray *xa)
-+{
-+	XA_STATE(xas, xa, 0);
-+	void *entry;
-+	unsigned int order;
-+	unsigned long index = 1;
-+	unsigned int count = 0;
-+
-+	for (order = 0; order < order_limit; order++) {
-+		XA_BUG_ON(xa, xa_store_order(xa, index, order,
-+					xa_mk_index(index), GFP_KERNEL));
-+		index += 1UL << order;
-+	}
-+
-+	rcu_read_lock();
-+	xas_for_each(&xas, entry, ULONG_MAX) {
-+		XA_BUG_ON(xa, entry != xa_mk_index(1UL << count));
-+		count++;
-+	}
-+	rcu_read_unlock();
-+	XA_BUG_ON(xa, count != order_limit);
-+
-+	count = 0;
-+	xas_set(&xas, 0);
-+	rcu_read_lock();
-+	xas_for_each(&xas, entry, ULONG_MAX) {
-+		XA_BUG_ON(xa, entry != xa_mk_index(1UL << count));
-+		count++;
-+		xas_pause(&xas);
-+	}
-+	rcu_read_unlock();
-+	XA_BUG_ON(xa, count != order_limit);
-+
-+	xa_destroy(xa);
-+}
-+
- static noinline void check_move_tiny(struct xarray *xa)
- {
- 	XA_STATE(xas, xa, 0);
-@@ -1664,6 +1700,7 @@ static int xarray_checks(void)
- 	check_xa_alloc();
- 	check_find(&array);
- 	check_find_entry(&array);
-+	check_pause(&array);
- 	check_account(&array);
- 	check_destroy(&array);
- 	check_move(&array);
---- a/lib/xarray.c
-+++ b/lib/xarray.c
-@@ -970,7 +970,7 @@ void xas_pause(struct xa_state *xas)
+ /* Check whether a bio overwrites a region */
+@@ -454,7 +461,7 @@ static void trim_bio(struct bio *bio, se
  
- 	xas->xa_node = XAS_RESTART;
- 	if (node) {
--		unsigned int offset = xas->xa_offset;
-+		unsigned long offset = xas->xa_offset;
- 		while (++offset < XA_CHUNK_SIZE) {
- 			if (!xa_is_sibling(xa_entry(xas->xa, node, offset)))
- 				break;
+ static void complete_discard_bio(struct clone *clone, struct bio *bio, bool success)
+ {
+-	unsigned long rs, re;
++	unsigned long rs, nr_regions;
+ 
+ 	/*
+ 	 * If the destination device supports discards, remap and trim the
+@@ -463,9 +470,9 @@ static void complete_discard_bio(struct
+ 	 */
+ 	if (test_bit(DM_CLONE_DISCARD_PASSDOWN, &clone->flags) && success) {
+ 		remap_to_dest(clone, bio);
+-		bio_region_range(clone, bio, &rs, &re);
++		bio_region_range(clone, bio, &rs, &nr_regions);
+ 		trim_bio(bio, rs << clone->region_shift,
+-			 (re - rs) << clone->region_shift);
++			 nr_regions << clone->region_shift);
+ 		generic_make_request(bio);
+ 	} else
+ 		bio_endio(bio);
+@@ -473,12 +480,21 @@ static void complete_discard_bio(struct
+ 
+ static void process_discard_bio(struct clone *clone, struct bio *bio)
+ {
+-	unsigned long rs, re;
++	unsigned long rs, nr_regions;
+ 
+-	bio_region_range(clone, bio, &rs, &re);
+-	BUG_ON(re > clone->nr_regions);
++	bio_region_range(clone, bio, &rs, &nr_regions);
++	if (!nr_regions) {
++		bio_endio(bio);
++		return;
++	}
+ 
+-	if (unlikely(rs == re)) {
++	if (WARN_ON(rs >= clone->nr_regions || (rs + nr_regions) < rs ||
++		    (rs + nr_regions) > clone->nr_regions)) {
++		DMERR("%s: Invalid range (%lu + %lu, total regions %lu) for discard (%llu + %u)",
++		      clone_device_name(clone), rs, nr_regions,
++		      clone->nr_regions,
++		      (unsigned long long)bio->bi_iter.bi_sector,
++		      bio_sectors(bio));
+ 		bio_endio(bio);
+ 		return;
+ 	}
+@@ -487,7 +503,7 @@ static void process_discard_bio(struct c
+ 	 * The covered regions are already hydrated so we just need to pass
+ 	 * down the discard.
+ 	 */
+-	if (dm_clone_is_range_hydrated(clone->cmd, rs, re - rs)) {
++	if (dm_clone_is_range_hydrated(clone->cmd, rs, nr_regions)) {
+ 		complete_discard_bio(clone, bio, true);
+ 		return;
+ 	}
+@@ -1169,7 +1185,7 @@ static void process_deferred_discards(st
+ 	int r = -EPERM;
+ 	struct bio *bio;
+ 	struct blk_plug plug;
+-	unsigned long rs, re;
++	unsigned long rs, nr_regions;
+ 	struct bio_list discards = BIO_EMPTY_LIST;
+ 
+ 	spin_lock_irq(&clone->lock);
+@@ -1185,14 +1201,13 @@ static void process_deferred_discards(st
+ 
+ 	/* Update the metadata */
+ 	bio_list_for_each(bio, &discards) {
+-		bio_region_range(clone, bio, &rs, &re);
++		bio_region_range(clone, bio, &rs, &nr_regions);
+ 		/*
+ 		 * A discard request might cover regions that have been already
+ 		 * hydrated. There is no need to update the metadata for these
+ 		 * regions.
+ 		 */
+-		r = dm_clone_cond_set_range(clone->cmd, rs, re - rs);
+-
++		r = dm_clone_cond_set_range(clone->cmd, rs, nr_regions);
+ 		if (unlikely(r))
+ 			break;
+ 	}
 
 
