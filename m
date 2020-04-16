@@ -2,88 +2,85 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3179C3815B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 19:32:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AD9AC3815B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 19:36:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7951722201
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 19:32:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587065527;
-	bh=faeVG1iBVTsY8w/ZkqXkbv9iMR9B057DVl0dWMgnh0A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=E6amDU9qrzgjV8nh7YI7gx67Nr6kzAYX+ViUU724/4K61pdlQYQkPMTtSsOVi2zHp
-	 DY6yLGUGfygGabhynIGDTBDCAFPs4wzvdxA9CyT2TV8vt1kmfRGXdTPXHj1PZBmqZi
-	 x9Z85k7vY3R4d+2M6jFA1YwwNJCXqLurvDE29ml0=
+	by mail.kernel.org (Postfix) with ESMTP id 652A221BE5
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 19:36:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731186AbgDPTcG (ORCPT
+        id S1730729AbgDPTg2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 15:32:06 -0400
-Received: from mail-yw1-f66.google.com ([209.85.161.66]:33367 "EHLO
-        mail-oo1-f66.google.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728664AbgDPTcF (ORCPT
+        Thu, 16 Apr 2020 15:36:28 -0400
+Received: from smtprelay0152.hostedemail.com ([216.40.44.152]:39730 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725894AbgDPTg1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 15:32:05 -0400
-Received: by mail-oo1-f66.google.com with SMTP id b17so906700ooa.0;
-        Thu, 16 Apr 2020 12:32:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=G2KfsHLol0MxR420xNgeMgYQ50fxqR1O3iC2ZHpUZCI=;
-        b=XlQRNX46xNOgIpzbJem5CSH6woGZBYzcSHE3vXyRWHNgBa07OZbPNzgCxWPBz+9pme
-         S5iefyIjt4j8OupGfhtqKOYcbz8/SETcwtiVMVW5cKJgZPjUQAmmGODnSEDt2kNyICmw
-         52PkbeGTqkHHi2UcMSnocjifLHPn/mpTb6VVXOW6xYn1R/UjhNBLn6FL+X2+gsitqM3x
-         KbtQJoJ84oCbA+N2VLolAprct3zK2Mv6t7nkkaEfefDz8Ul/ZLAwFIje0SbUhMpughkV
-         gXs0iyGCWki9m5KAVjOm6mNCe9/rA8JJCyr/lzIlFS4HXEKV8jV9lyUo/dBO++pcD9Dn
-         dPDQ==
-X-Gm-Message-State: AGi0PubK8GJPLiF2UAr5TGLFtY0Kr8Rzh8S4nLjnAXH21hA+Z5UC2OBa
-        dZzyyawkgIUeZe/YRXBgMp4MHmw=
-X-Google-Smtp-Source: APiQypIkMfpzlk1lmK+EBTOhD1SsnV9Gj8mGtLRMMEgrPlQkC3YqpIsnDV4DJjgAdynWvj140tiheA==
-X-Received: by 2002:a4a:95ee:: with SMTP id p43mr27323868ooi.24.1587065523461;
-        Thu, 16 Apr 2020 12:32:03 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id t10sm1236678oou.38.2020.04.16.12.32.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Apr 2020 12:32:02 -0700 (PDT)
-Received: (nullmailer pid 21598 invoked by uid 1000);
-        Thu, 16 Apr 2020 19:32:01 -0000
-Date:   Thu, 16 Apr 2020 14:32:01 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     alexandru.tachici@analog.com
-Cc:     linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, jic23@kernel.org, robh+dt@kernel.org
-Subject: Re: [PATCH v2 2/2] dt-bindings: iio: dac: AD5570R fix bindings errors
-Message-ID: <20200416193201.GA21490@bogus>
-References: <20200416115848.56156-1-alexandru.tachici@analog.com>
- <20200416115848.56156-3-alexandru.tachici@analog.com>
+        Thu, 16 Apr 2020 15:36:27 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay01.hostedemail.com (Postfix) with ESMTP id 18888100E7B47;
+        Thu, 16 Apr 2020 19:36:26 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: dress88_71e6f49a6bc61
+X-Filterd-Recvd-Size: 2200
+Received: from XPS-9350.home (unknown [47.151.136.130])
+        (Authenticated sender: joe@perches.com)
+        by omf12.hostedemail.com (Postfix) with ESMTPA;
+        Thu, 16 Apr 2020 19:36:22 +0000 (UTC)
+Message-ID: <7713a931e4475294de85b74aca298dde8be4242d.camel@perches.com>
+Subject: Re: [PATCH v2] i2c: busses: remove duplicate dev_err()
+From:   Joe Perches <joe@perches.com>
+To:     Markus Elfring <Markus.Elfring@web.de>,
+        Dejin Zheng <zhengdejin5@gmail.com>, linux-i2c@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Thor Thayer <thor.thayer@linux.intel.com>,
+        Tang Bin <tangbin@cmss.chinamobile.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Patrick Williams <alpawi@amazon.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Krzysztof Adamski <krzysztof.adamski@nokia.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Barry Song <baohua@kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Dong Aisheng <aisheng.dong@nxp.com>,
+        George Cherian <gcherian@marvell.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Neil Armstrong <narmstrong@baylibre.com>
+Date:   Thu, 16 Apr 2020 12:34:10 -0700
+In-Reply-To: <6ca3cd57-de73-5327-5773-e08bf12c4a85@web.de>
+References: <20200416152345.23077-1-zhengdejin5@gmail.com>
+         <6ca3cd57-de73-5327-5773-e08bf12c4a85@web.de>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.34.1-2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200416115848.56156-3-alexandru.tachici@analog.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 16 Apr 2020 14:58:48 +0300, <alexandru.tachici@analog.com> wrote:
-> From: Alexandru Tachici <alexandru.tachici@analog.com>
+On Thu, 2020-04-16 at 20:22 +0200, Markus Elfring wrote:
+> > it will print an error message by itself when platform_get_irq()
+> > goes wrong. so don't need dev_err() in here again.
 > 
-> Replaced num property with reg property, fixed errors
-> reported by dt-binding-check.
-> 
-> Fixes: ea52c21268e6 ("iio: dac: ad5770r: Add AD5770R support")
-> Signed-off-by: Alexandru Tachici <alexandru.tachici@analog.com>
-> ---
->  .../bindings/iio/dac/adi,ad5770r.yaml         | 82 +++++++++----------
->  1 file changed, 39 insertions(+), 43 deletions(-)
-> 
+> I suggest to improve the commit message considerably.
 
-Applied, thanks.
+I suggest you ignore Markus' suggestion.
 
-Rob
+The commit message is OK.
+
+The subject _could_ have included "platform_get_irq" something like
+
+Subject: [PATCH v2] i2c: busses: Remove platform_get_irq()'s duplicated dev_err()
+
+but I believe it's not important enough to redo.
+
+
