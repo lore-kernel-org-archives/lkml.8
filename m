@@ -6,54 +6,54 @@ X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39739C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 11:53:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC638C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 11:53:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 151E021D7F
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 11:53:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6A4621D91
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 11:53:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="k3tOsxmk"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="fo2PvDOG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2634094AbgDPLxi (ORCPT
+        id S2634123AbgDPLxq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 07:53:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40856 "EHLO
+        Thu, 16 Apr 2020 07:53:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40848 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2506705AbgDPLwh (ORCPT
+        with ESMTP id S2506637AbgDPLwe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 07:52:37 -0400
+        Thu, 16 Apr 2020 07:52:34 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 224D1C0610D6
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 04:52:35 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98CC4C061A41
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 04:52:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Type:MIME-Version:References:
         Subject:Cc:To:From:Date:Message-Id:Sender:Reply-To:Content-Transfer-Encoding:
         Content-ID:Content-Description:In-Reply-To;
-        bh=ky754+CLVVHlV5y1DSkxULOOeWjje4mqYPKXavtHYsU=; b=k3tOsxmkzivYN/igBlDcBfD6Y7
-        JmawlBC1GkqtV6DePDaYMGTIMOI52MTAN9bCE+l+nxazY6ugJ1Y5JpMyQa0opMqfy7Dphwo+EkZrr
-        jGqj/5hJLjVxNvmI0MJAPaXJqBqV2qLeZjz31JJr6OnbEtxlOGMXIKCnzfI0oSzwLoSV/8/fkl5XK
-        JBSXGhftt2Yfwg0S3qsTjAXg5sSrBC8keCjMXT3syJxcDP3IWukzxS4SkO/PaW5G4ME3ByxtBwXxD
-        YG/nr+8xwPF+cG30L7lWCSrtUjvDFS5E2Q5XJ6O5yZLFQlARr/ENYbyJvh59RGXqdyX6CeECysqEr
-        84qgDoxQ==;
+        bh=kg55YtsJ6gD5kHbkXXyPvvIFeLGzwYJ6nx3S8CezmJ4=; b=fo2PvDOGCfomuFAnKF5v6F9ZBQ
+        dMKRMt98A/sDpO5rzfVTJ98SwRHGR1ggBY8w0fGKNmEpVGwmTHs+w8LSJNEWF8B3D272tc4+cbyFG
+        lU1CPjmhKR2xQ7d0zRt9Ns6sZF5ikmEJvSVvy2nfExiKhvaynBAbcqzFrH5ID1cuasmfgv65RF/1r
+        WD/ddLc4axPL+kaanBaO4dBEHfE73NeJ3L9nfynxe0IZTYHWIM8se08f20Kwfi0usv2bAojzOdERj
+        MiwjLZniIwWIRIV8V/y1f/Gn5m3FVN+mYdfvEf59TWC8Igemof61fm331TzVBOFCjQ24+q+dM+Dxy
+        +CaW1UIg==;
 Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
         by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jP34D-0004s0-U3; Thu, 16 Apr 2020 11:52:26 +0000
+        id 1jP34H-0004sV-1E; Thu, 16 Apr 2020 11:52:29 +0000
 Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 38D7B307005;
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 5902A307456;
         Thu, 16 Apr 2020 13:52:24 +0200 (CEST)
 Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-        id 220392B0DE4C2; Thu, 16 Apr 2020 13:52:24 +0200 (CEST)
-Message-Id: <20200416115118.631224674@infradead.org>
+        id 34F882B0DE4C7; Thu, 16 Apr 2020 13:52:24 +0200 (CEST)
+Message-Id: <20200416115118.926738768@infradead.org>
 User-Agent: quilt/0.65
-Date:   Thu, 16 Apr 2020 13:47:08 +0200
+Date:   Thu, 16 Apr 2020 13:47:13 +0200
 From:   Peter Zijlstra <peterz@infradead.org>
 To:     tglx@linutronix.de, jpoimboe@redhat.com
 Cc:     linux-kernel@vger.kernel.org, x86@kernel.org, peterz@infradead.org,
         mhiramat@kernel.org, mbenes@suse.cz, jthierry@redhat.com,
         alexandre.chartre@oracle.com
-Subject: [PATCH v5 02/17] objtool: Better handle IRET
+Subject: [PATCH v5 07/17] objtool: Remove SAVE/RESTORE hints
 References: <20200416114706.625340212@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -62,150 +62,141 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Teach objtool a little more about IRET so that we can avoid using the
-SAVE/RESTORE annotation. In particular, make the weird corner case in
-insn->restore go away.
-
-The purpose of that corner case is to deal with the fact that
-UNWIND_HINT_RESTORE lands on the instruction after IRET, but that
-instruction can end up being outside the basic block, consider:
-
-	if (cond)
-		sync_core()
-	foo();
-
-Then the hint will land on foo(), and we'll encounter the restore
-hint without ever having seen the save hint.
-
-By teaching objtool about the arch specific exception frame size, and
-assuming that any IRET in an STT_FUNC symbol is an exception frame
-sized POP, we can remove the use of save/restore hints for this code.
+The SAVE/RESTORE hints are now unused; remove them.
 
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 ---
- arch/x86/include/asm/processor.h |    2 --
- tools/objtool/arch.h             |    1 +
- tools/objtool/arch/x86/decode.c  |   14 ++++++++++++--
- tools/objtool/check.c            |   29 ++++++++++++++++-------------
- 4 files changed, 29 insertions(+), 17 deletions(-)
+ arch/x86/include/asm/orc_types.h       |    4 ---
+ arch/x86/include/asm/unwind_hints.h    |   13 ----------
+ tools/arch/x86/include/asm/orc_types.h |    4 ---
+ tools/objtool/check.c                  |   42 ++-------------------------------
+ tools/objtool/check.h                  |    2 -
+ 5 files changed, 7 insertions(+), 58 deletions(-)
 
---- a/arch/x86/include/asm/processor.h
-+++ b/arch/x86/include/asm/processor.h
-@@ -727,7 +727,6 @@ static inline void sync_core(void)
- 	unsigned int tmp;
+--- a/arch/x86/include/asm/orc_types.h
++++ b/arch/x86/include/asm/orc_types.h
+@@ -58,9 +58,7 @@
+ #define ORC_TYPE_CALL			0
+ #define ORC_TYPE_REGS			1
+ #define ORC_TYPE_REGS_IRET		2
+-#define UNWIND_HINT_TYPE_SAVE		3
+-#define UNWIND_HINT_TYPE_RESTORE	4
+-#define UNWIND_HINT_TYPE_RET_OFFSET	5
++#define UNWIND_HINT_TYPE_RET_OFFSET	3
  
- 	asm volatile (
--		UNWIND_HINT_SAVE
- 		"mov %%ss, %0\n\t"
- 		"pushq %q0\n\t"
- 		"pushq %%rsp\n\t"
-@@ -737,7 +736,6 @@ static inline void sync_core(void)
- 		"pushq %q0\n\t"
- 		"pushq $1f\n\t"
- 		"iretq\n\t"
--		UNWIND_HINT_RESTORE
- 		"1:"
- 		: "=&r" (tmp), ASM_CALL_CONSTRAINT : : "cc", "memory");
- #endif
---- a/tools/objtool/arch.h
-+++ b/tools/objtool/arch.h
-@@ -19,6 +19,7 @@ enum insn_type {
- 	INSN_CALL,
- 	INSN_CALL_DYNAMIC,
- 	INSN_RETURN,
-+	INSN_EXCEPTION_RETURN,
- 	INSN_CONTEXT_SWITCH,
- 	INSN_STACK,
- 	INSN_BUG,
---- a/tools/objtool/arch/x86/decode.c
-+++ b/tools/objtool/arch/x86/decode.c
-@@ -435,9 +435,19 @@ int arch_decode_instruction(struct elf *
- 		*type = INSN_RETURN;
- 		break;
+ #ifndef __ASSEMBLY__
+ /*
+--- a/arch/x86/include/asm/unwind_hints.h
++++ b/arch/x86/include/asm/unwind_hints.h
+@@ -86,15 +86,6 @@
+ 	UNWIND_HINT sp_offset=\sp_offset
+ .endm
  
-+	case 0xcf: /* iret */
-+		*type = INSN_EXCEPTION_RETURN;
-+
-+		/* add $40, %rsp */
-+		op->src.type = OP_SRC_ADD;
-+		op->src.reg = CFI_SP;
-+		op->src.offset = 5*8;
-+		op->dest.type = OP_DEST_REG;
-+		op->dest.reg = CFI_SP;
-+		break;
-+
- 	case 0xca: /* retf */
- 	case 0xcb: /* retf */
--	case 0xcf: /* iret */
- 		*type = INSN_CONTEXT_SWITCH;
- 		break;
+-.macro UNWIND_HINT_SAVE
+-	UNWIND_HINT type=UNWIND_HINT_TYPE_SAVE
+-.endm
+-
+-.macro UNWIND_HINT_RESTORE
+-	UNWIND_HINT type=UNWIND_HINT_TYPE_RESTORE
+-.endm
+-
+-
+ /*
+  * RET_OFFSET: Used on instructions that terminate a function; mostly RETURN
+  * and sibling calls. On these, sp_offset denotes the expected offset from
+@@ -118,9 +109,7 @@
+ 	".balign 4 \n\t"					\
+ 	".popsection\n\t"
  
-@@ -483,7 +493,7 @@ int arch_decode_instruction(struct elf *
+-#define UNWIND_HINT_SAVE UNWIND_HINT(0, 0, UNWIND_HINT_TYPE_SAVE, 0)
+-
+-#define UNWIND_HINT_RESTORE UNWIND_HINT(0, 0, UNWIND_HINT_TYPE_RESTORE, 0)
++#define UNWIND_HINT_RET_OFFSET(offset) UNWIND_HINT(0, (offset), UNWIND_HINT_TYPE_RET_OFFSET, 0)
  
- 	*immediate = insn.immediate.nbytes ? insn.immediate.value : 0;
+ #endif /* __ASSEMBLY__ */
  
--	if (*type == INSN_STACK)
-+	if (*type == INSN_STACK || *type == INSN_EXCEPTION_RETURN)
- 		list_add_tail(&op->list, ops_list);
- 	else
- 		free(op);
+--- a/tools/arch/x86/include/asm/orc_types.h
++++ b/tools/arch/x86/include/asm/orc_types.h
+@@ -58,9 +58,7 @@
+ #define ORC_TYPE_CALL			0
+ #define ORC_TYPE_REGS			1
+ #define ORC_TYPE_REGS_IRET		2
+-#define UNWIND_HINT_TYPE_SAVE		3
+-#define UNWIND_HINT_TYPE_RESTORE	4
+-#define UNWIND_HINT_TYPE_RET_OFFSET	5
++#define UNWIND_HINT_TYPE_RET_OFFSET	3
+ 
+ #ifndef __ASSEMBLY__
+ /*
 --- a/tools/objtool/check.c
 +++ b/tools/objtool/check.c
-@@ -2080,15 +2080,14 @@ static int validate_return(struct symbol
-  * tools/objtool/Documentation/stack-validation.txt.
-  */
- static int validate_branch(struct objtool_file *file, struct symbol *func,
--			   struct instruction *first, struct insn_state state)
-+			   struct instruction *insn, struct insn_state state)
- {
- 	struct alternative *alt;
--	struct instruction *insn, *next_insn;
-+	struct instruction *next_insn;
- 	struct section *sec;
- 	u8 visited;
- 	int ret;
+@@ -1246,15 +1246,7 @@ static int read_unwind_hints(struct objt
  
--	insn = first;
- 	sec = insn->sec;
+ 		cfa = &insn->state.cfa;
  
- 	if (insn->alt_group && list_empty(&insn->alts)) {
-@@ -2141,16 +2140,6 @@ static int validate_branch(struct objtoo
- 				}
- 
- 				if (!save_insn->visited) {
--					/*
--					 * Oops, no state to copy yet.
--					 * Hopefully we can reach this
--					 * instruction from another branch
--					 * after the save insn has been
--					 * visited.
--					 */
--					if (insn == first)
--						return 0;
+-		if (hint->type == UNWIND_HINT_TYPE_SAVE) {
+-			insn->save = true;
+-			continue;
 -
- 					WARN_FUNC("objtool isn't smart enough to handle this CFI save/restore combo",
- 						  sec, insn->offset);
- 					return 1;
-@@ -2243,6 +2232,20 @@ static int validate_branch(struct objtoo
+-		} else if (hint->type == UNWIND_HINT_TYPE_RESTORE) {
+-			insn->restore = true;
+-			insn->hint = true;
+-
+-		} else if (hint->type == UNWIND_HINT_TYPE_RET_OFFSET) {
++		if (hint->type == UNWIND_HINT_TYPE_RET_OFFSET) {
+ 			insn->ret_offset = hint->sp_offset;
+ 			continue;
+ 		}
+@@ -2070,37 +2062,9 @@ static int validate_branch(struct objtoo
+ 				return 0;
+ 		}
  
- 			break;
+-		if (insn->hint) {
+-			if (insn->restore) {
+-				struct instruction *save_insn, *i;
+-
+-				i = insn;
+-				save_insn = NULL;
+-				sym_for_each_insn_continue_reverse(file, func, i) {
+-					if (i->save) {
+-						save_insn = i;
+-						break;
+-					}
+-				}
+-
+-				if (!save_insn) {
+-					WARN_FUNC("no corresponding CFI save for CFI restore",
+-						  sec, insn->offset);
+-					return 1;
+-				}
+-
+-				if (!save_insn->visited) {
+-					WARN_FUNC("objtool isn't smart enough to handle this CFI save/restore combo",
+-						  sec, insn->offset);
+-					return 1;
+-				}
+-
+-				insn->state = save_insn->state;
+-			}
+-
++		if (insn->hint)
+ 			state = insn->state;
+-
+-		} else
++		else
+ 			insn->state = state;
  
-+		case INSN_EXCEPTION_RETURN:
-+			if (handle_insn_ops(insn, &state))
-+				return 1;
-+
-+			/*
-+			 * This handles x86's sync_core() case, where we use an
-+			 * IRET to self. All 'normal' IRET instructions are in
-+			 * STT_NOTYPE entry symbols.
-+			 */
-+			if (func)
-+				break;
-+
-+			return 0;
-+
- 		case INSN_CONTEXT_SWITCH:
- 			if (func && (!next_insn || !next_insn->hint)) {
- 				WARN_FUNC("unsupported instruction in callable function",
+ 		insn->visited |= visited;
+--- a/tools/objtool/check.h
++++ b/tools/objtool/check.h
+@@ -34,7 +34,7 @@ struct instruction {
+ 	enum insn_type type;
+ 	unsigned long immediate;
+ 	bool alt_group, dead_end, ignore, ignore_alts;
+-	bool hint, save, restore;
++	bool hint;
+ 	bool retpoline_safe;
+ 	u8 visited;
+ 	u8 ret_offset;
 
 
