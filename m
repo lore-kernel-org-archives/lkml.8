@@ -2,159 +2,129 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 123C2C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:43:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3C31C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:43:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E32DB207FC
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:43:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587048230;
-	bh=iGAvezQIXpomV+U2h6LGXS5TodfnQCAsqZ5z6i5QdVU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=M20PTsC6XY1y4Gqv+z9NhYEWVDh6wSgQQ5kwg1+ns8+oHYQnmhBSYOQsN1dhjNgrN
-	 YZIeS2VF+yL/WTo2K1VTshOx0Q5nSar2QnWZCzrmOJsMsAfv/2lnC0Y3BfWn8yqiUc
-	 0b/Y6LnQUyceRa0UhFc6bJRPR9xMpkVywx81BhG4=
+	by mail.kernel.org (Postfix) with ESMTP id C1734207FC
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:43:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Kj33VeBH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394547AbgDPOns (ORCPT
+        id S2394551AbgDPOn4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:43:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47472 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392606AbgDPOAX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 10:00:23 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Thu, 16 Apr 2020 10:43:56 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:29637 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730302AbgDPOnu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 10:43:50 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587048229;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=MWF7qeFYGcwjfe4u/XIKlxtmBa+zuBoTmVw0MA2bPLk=;
+        b=Kj33VeBHwI8PgzJfC4J+BOyht29ICVvsdy/GgOtSkS6uB+ACWBSIB3GpP4kXF7uVc0sljv
+        eMK9JROD7C0+ZVdZFgXimAAKwDdEWjzpo2xYcNjxkvA9QrZR8zRtaAB6eIUVuGRE+Nprxn
+        O8MQCfNS+y8F2DC7378ONAzmBSmTYWc=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-94-wJELbwD0OO2EOCILcZJ6Yg-1; Thu, 16 Apr 2020 10:43:45 -0400
+X-MC-Unique: wJELbwD0OO2EOCILcZJ6Yg-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AAF5A20786;
-        Thu, 16 Apr 2020 14:00:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587045623;
-        bh=iGAvezQIXpomV+U2h6LGXS5TodfnQCAsqZ5z6i5QdVU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sgd9EQe6dUZaZLzFHKJGznnK8YBtR7DahVcw35bgZE0vdjFNeHntuVRNeZ29vUWH7
-         iuuK59MSEN+n9DSzgfcJbg4PCkcrUW3UZrVhdjXH1x4nRFa66n0gRNuSqwwUj1psF7
-         ze4FpMWTMIusrlSADZYCpRAvLKD9upPUCR+kZ4ds=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Libor Pechacek <lpechacek@suse.cz>,
-        Michal Suchanek <msuchanek@suse.de>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 5.6 210/254] powerpc/pseries: Avoid NULL pointer dereference when drmem is unavailable
-Date:   Thu, 16 Apr 2020 15:24:59 +0200
-Message-Id: <20200416131352.322391634@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200416131325.804095985@linuxfoundation.org>
-References: <20200416131325.804095985@linuxfoundation.org>
-User-Agent: quilt/0.66
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2AD988017FD;
+        Thu, 16 Apr 2020 14:43:44 +0000 (UTC)
+Received: from oldenburg2.str.redhat.com (ovpn-113-198.ams2.redhat.com [10.36.113.198])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id A07A95D9E2;
+        Thu, 16 Apr 2020 14:43:42 +0000 (UTC)
+From:   Florian Weimer <fweimer@redhat.com>
+To:     Miklos Szeredi <mszeredi@redhat.com>
+Cc:     Al Viro <viro@ZenIV.linux.org.uk>, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
+        Eric Sandeen <sandeen@sandeen.net>
+Subject: Re: [PATCH] vfs: add faccessat2 syscall
+References: <20200416143532.11743-1-mszeredi@redhat.com>
+Date:   Thu, 16 Apr 2020 16:43:40 +0200
+In-Reply-To: <20200416143532.11743-1-mszeredi@redhat.com> (Miklos Szeredi's
+        message of "Thu, 16 Apr 2020 16:35:32 +0200")
+Message-ID: <87a73bcwyr.fsf@oldenburg2.str.redhat.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.3 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Libor Pechacek <lpechacek@suse.cz>
+* Miklos Szeredi:
 
-commit a83836dbc53e96f13fec248ecc201d18e1e3111d upstream.
+> POSIX defines faccessat() as having a fourth "flags" argument, while the
+> linux syscall doesn't have it.  Glibc tries to emulate AT_EACCESS and
+> AT_SYMLINK_NOFOLLOW, but AT_EACCESS emulation is broken.
+>
+> Add a new faccessat(2) syscall with the added flags argument and implement
+> both flags.
+>
+> The value of AT_EACCESS is defined in glibc headers to be the same as
+> AT_REMOVEDIR.  Use this value for the kernel interface as well, together
+> with the explanatory comment.
 
-In guests without hotplugagble memory drmem structure is only zero
-initialized. Trying to manipulate DLPAR parameters results in a crash.
+Thanks a lot for this!
 
-  $ echo "memory add count 1" > /sys/kernel/dlpar
-  Oops: Kernel access of bad area, sig: 11 [#1]
-  LE PAGE_SIZE=64K MMU=Hash SMP NR_CPUS=2048 NUMA pSeries
-  ...
-  NIP:  c0000000000ff294 LR: c0000000000ff248 CTR: 0000000000000000
-  REGS: c0000000fb9d3880 TRAP: 0300   Tainted: G            E      (5.5.0-rc6-2-default)
-  MSR:  8000000000009033 <SF,EE,ME,IR,DR,RI,LE>  CR: 28242428  XER: 20000000
-  CFAR: c0000000009a6c10 DAR: 0000000000000010 DSISR: 40000000 IRQMASK: 0
-  ...
-  NIP dlpar_memory+0x6e4/0xd00
-  LR  dlpar_memory+0x698/0xd00
-  Call Trace:
-    dlpar_memory+0x698/0xd00 (unreliable)
-    handle_dlpar_errorlog+0xc0/0x190
-    dlpar_store+0x198/0x4a0
-    kobj_attr_store+0x30/0x50
-    sysfs_kf_write+0x64/0x90
-    kernfs_fop_write+0x1b0/0x290
-    __vfs_write+0x3c/0x70
-    vfs_write+0xd0/0x260
-    ksys_write+0xdc/0x130
-    system_call+0x5c/0x68
+> +long do_faccessat(int dfd, const char __user *filename, int mode, int flags)
+> +{
+> +	const struct cred *old_cred = NULL;
+> +	struct path path;
+> +	struct inode *inode;
+> +	int res;
+> +	unsigned int lookup_flags = LOOKUP_FOLLOW;
+> +
+> +	if (mode & ~S_IRWXO)	/* where's F_OK, X_OK, W_OK, R_OK? */
+> +		return -EINVAL;
+> +
+> +	if (flags & ~(AT_EACCESS | AT_SYMLINK_NOFOLLOW))
+> +		return -EINVAL;
 
-Taking closer look at the code, I can see that for_each_drmem_lmb is a
-macro expanding into `for (lmb = &drmem_info->lmbs[0]; lmb <=
-&drmem_info->lmbs[drmem_info->n_lmbs - 1]; lmb++)`. When drmem_info->lmbs
-is NULL, the loop would iterate through the whole address range if it
-weren't stopped by the NULL pointer dereference on the next line.
+Should this accept AT_EMPTY_PATH as well?
 
-This patch aligns for_each_drmem_lmb and for_each_drmem_lmb_in_range
-macro behavior with the common C semantics, where the end marker does
-not belong to the scanned range, and alters get_lmb_range() semantics.
-As a side effect, the wraparound observed in the crash is prevented.
+(I can't comment on the rest of the logic of the patch.)
 
-Fixes: 6c6ea53725b3 ("powerpc/mm: Separate ibm, dynamic-memory data from DT format")
-Cc: stable@vger.kernel.org # v4.16+
-Signed-off-by: Libor Pechacek <lpechacek@suse.cz>
-Signed-off-by: Michal Suchanek <msuchanek@suse.de>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20200131132829.10281-1-msuchanek@suse.de
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> diff --git a/include/uapi/linux/fcntl.h b/include/uapi/linux/fcntl.h
+> index ca88b7bce553..2f86b2ad6d7e 100644
+> --- a/include/uapi/linux/fcntl.h
+> +++ b/include/uapi/linux/fcntl.h
+> @@ -84,10 +84,20 @@
+>  #define DN_ATTRIB	0x00000020	/* File changed attibutes */
+>  #define DN_MULTISHOT	0x80000000	/* Don't remove notifier */
+>  
+> +/*
+> + * The constants AT_REMOVEDIR and AT_EACCESS have the same value.  AT_EACCESS is
+> + * meaningful only to faccessat, while AT_REMOVEDIR is meaningful only to
+> + * unlinkat.  The two functions do completely different things and therefore,
+> + * the flags can be allowed to overlap.  For example, passing AT_REMOVEDIR to
+> + * faccessat would be undefined behavior and thus treating it equivalent to
+> + * AT_EACCESS is valid undefined behavior.
+> + */
+>  #define AT_FDCWD		-100    /* Special value used to indicate
+>                                             openat should use the current
+>                                             working directory. */
+>  #define AT_SYMLINK_NOFOLLOW	0x100   /* Do not follow symbolic links.  */
+> +#define AT_EACCESS		0x200	/* Test access permitted for
+> +                                           effective IDs, not real IDs.  */
+>  #define AT_REMOVEDIR		0x200   /* Remove directory instead of
+>                                             unlinking file.  */
+>  #define AT_SYMLINK_FOLLOW	0x400   /* Follow symbolic links.  */
 
----
- arch/powerpc/include/asm/drmem.h                |    4 ++--
- arch/powerpc/platforms/pseries/hotplug-memory.c |    8 ++++----
- 2 files changed, 6 insertions(+), 6 deletions(-)
+I can confirm that this is what glibc does, ofr better or worse.
 
---- a/arch/powerpc/include/asm/drmem.h
-+++ b/arch/powerpc/include/asm/drmem.h
-@@ -27,12 +27,12 @@ struct drmem_lmb_info {
- extern struct drmem_lmb_info *drmem_info;
- 
- #define for_each_drmem_lmb_in_range(lmb, start, end)		\
--	for ((lmb) = (start); (lmb) <= (end); (lmb)++)
-+	for ((lmb) = (start); (lmb) < (end); (lmb)++)
- 
- #define for_each_drmem_lmb(lmb)					\
- 	for_each_drmem_lmb_in_range((lmb),			\
- 		&drmem_info->lmbs[0],				\
--		&drmem_info->lmbs[drmem_info->n_lmbs - 1])
-+		&drmem_info->lmbs[drmem_info->n_lmbs])
- 
- /*
-  * The of_drconf_cell_v1 struct defines the layout of the LMB data
---- a/arch/powerpc/platforms/pseries/hotplug-memory.c
-+++ b/arch/powerpc/platforms/pseries/hotplug-memory.c
-@@ -223,7 +223,7 @@ static int get_lmb_range(u32 drc_index,
- 			 struct drmem_lmb **end_lmb)
- {
- 	struct drmem_lmb *lmb, *start, *end;
--	struct drmem_lmb *last_lmb;
-+	struct drmem_lmb *limit;
- 
- 	start = NULL;
- 	for_each_drmem_lmb(lmb) {
-@@ -236,10 +236,10 @@ static int get_lmb_range(u32 drc_index,
- 	if (!start)
- 		return -EINVAL;
- 
--	end = &start[n_lmbs - 1];
-+	end = &start[n_lmbs];
- 
--	last_lmb = &drmem_info->lmbs[drmem_info->n_lmbs - 1];
--	if (end > last_lmb)
-+	limit = &drmem_info->lmbs[drmem_info->n_lmbs];
-+	if (end > limit)
- 		return -EINVAL;
- 
- 	*start_lmb = start;
-
+Thanks,
+Florian
 
