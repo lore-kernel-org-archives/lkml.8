@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 089F0C352BE
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:20:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E11D4C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:20:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D6C08214D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:20:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B97C3214D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:20:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587050411;
-	bh=7optjhFEa+3PEcCmGs68rGHltQp375AoRvT4kjo1PUQ=;
+	s=default; t=1587050418;
+	bh=rAE7rB+Hi786MKpUO7dDoxTVBTSD19Rs3R/iOiuEn38=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VlB6NXBUsdHOt5CUI1hN+1tVTFMk8B7YOQ5ccQleVrNU02a20HqboK0Y7XNC57nqV
-	 8o9HlXKeNDuVvMmyz3HmZ8AeKANKFmFPMVH2J+c+8Ql5QM4XCAI33bw1lEXQo0IHZi
-	 dy2lUAyGZpg5fRDVPKY8BhRMnCUcGZwJAzanUd90=
+	b=pBuJlcdbIITFKdH+oKeijGlPwGfwnOw/VZeKeGqrg1HANVTdLxZbpzHymLUUnmvlD
+	 jKn9wb6JYXs2k01IV3cdxl1sHpAMIlvCD/EYLDMo3venWw5xQhECCO4Fy3lfTV9kYK
+	 FoTCICuaQ1Xx94+h6nq52Av74KShGs/0Qe29DPdc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2504793AbgDPPUK (ORCPT
+        id S2395143AbgDPPUQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:20:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33570 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 11:20:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33516 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2898681AbgDPNrb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:47:31 -0400
+        id S2898678AbgDPNra (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:47:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 04AAF2222D;
-        Thu, 16 Apr 2020 13:47:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9188921744;
+        Thu, 16 Apr 2020 13:47:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044850;
-        bh=7optjhFEa+3PEcCmGs68rGHltQp375AoRvT4kjo1PUQ=;
+        s=default; t=1587044848;
+        bh=rAE7rB+Hi786MKpUO7dDoxTVBTSD19Rs3R/iOiuEn38=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sv5JfXcYZiSHtnMg9XNG8TTq6Kw9AY2x3GDkYKnRuZ7+OnGPLdgLkYHz/STg2hazm
-         fNyh+IyQiIQC5KsAvUiwlHn07XK7Jq9ZFPl4SYJOMOp8+vMyGfV06k/EZ2NQ6pwUqW
-         DzelvqKfFN/FO8eZJyUbdATZKZ88UaSW23sPlQEY=
+        b=2af+8x1ei6/oKs+NsK8uRVXKPzPl02B5GeDy5OV3YvM+JtSCFOiUBtPWssx8V8n9w
+         Tq1cZynGHYJ8BKSurIF+c51Et3zFAT7x8xhy2M4oKo9sWg4zlwR0Y1Av3S7Gm3/E55
+         lPUo32XS67Sit6R7J5uHPTFyTVjGmpZaGc1nBQPY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Benoit Parrot <bparrot@ti.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Subject: [PATCH 5.4 090/232] media: ti-vpe: cal: fix a kernel oops when unloading module
-Date:   Thu, 16 Apr 2020 15:23:04 +0200
-Message-Id: <20200416131326.263654957@linuxfoundation.org>
+        stable@vger.kernel.org, Liran Alon <liran.alon@oracle.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH 5.4 125/232] KVM: nVMX: Properly handle userspace interrupt window request
+Date:   Thu, 16 Apr 2020 15:23:39 +0200
+Message-Id: <20200416131330.694867397@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131316.640996080@linuxfoundation.org>
 References: <20200416131316.640996080@linuxfoundation.org>
@@ -61,82 +60,163 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Benoit Parrot <bparrot@ti.com>
+From: Sean Christopherson <sean.j.christopherson@intel.com>
 
-commit 80264809ea0a3fd2ee8251f31a9eb85d2c3fc77e upstream.
+commit a1c77abb8d93381e25a8d2df3a917388244ba776 upstream.
 
-After the switch to use v4l2_async_notifier_add_subdev() and
-v4l2_async_notifier_cleanup(), unloading the ti_cal module would cause a
-kernel oops.
+Return true for vmx_interrupt_allowed() if the vCPU is in L2 and L1 has
+external interrupt exiting enabled.  IRQs are never blocked in hardware
+if the CPU is in the guest (L2 from L1's perspective) when IRQs trigger
+VM-Exit.
 
-This was root cause to the fact that v4l2_async_notifier_cleanup() tries
-to kfree the asd pointer passed into v4l2_async_notifier_add_subdev().
+The new check percolates up to kvm_vcpu_ready_for_interrupt_injection()
+and thus vcpu_run(), and so KVM will exit to userspace if userspace has
+requested an interrupt window (to inject an IRQ into L1).
 
-In our case the asd reference was from a statically allocated struct.
-So in effect v4l2_async_notifier_cleanup() was trying to free a pointer
-that was not kalloc.
+Remove the @external_intr param from vmx_check_nested_events(), which is
+actually an indicator that userspace wants an interrupt window, e.g.
+it's named @req_int_win further up the stack.  Injecting a VM-Exit into
+L1 to try and bounce out to L0 userspace is all kinds of broken and is
+no longer necessary.
 
-So here we switch to using a kzalloc struct instead of a static one.
-To achieve this we re-order some of the calls to prevent asd allocation
-from leaking.
+Remove the hack in nested_vmx_vmexit() that attempted to workaround the
+breakage in vmx_check_nested_events() by only filling interrupt info if
+there's an actual interrupt pending.  The hack actually made things
+worse because it caused KVM to _never_ fill interrupt info when the
+LAPIC resides in userspace (kvm_cpu_has_interrupt() queries
+interrupt.injected, which is always cleared by prepare_vmcs12() before
+reaching the hack in nested_vmx_vmexit()).
 
-Fixes: d079f94c9046 ("media: platform: Switch to v4l2_async_notifier_add_subdev")
+Fixes: 6550c4df7e50 ("KVM: nVMX: Fix interrupt window request with "Acknowledge interrupt on exit"")
 Cc: stable@vger.kernel.org
-Signed-off-by: Benoit Parrot <bparrot@ti.com>
-Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc: Liran Alon <liran.alon@oracle.com>
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/media/platform/ti-vpe/cal.c |   13 ++++++++-----
- 1 file changed, 8 insertions(+), 5 deletions(-)
+ arch/x86/include/asm/kvm_host.h |    2 +-
+ arch/x86/kvm/vmx/nested.c       |   18 ++++--------------
+ arch/x86/kvm/vmx/vmx.c          |    9 +++++++--
+ arch/x86/kvm/x86.c              |   10 +++++-----
+ 4 files changed, 17 insertions(+), 22 deletions(-)
 
---- a/drivers/media/platform/ti-vpe/cal.c
-+++ b/drivers/media/platform/ti-vpe/cal.c
-@@ -266,8 +266,6 @@ struct cal_ctx {
- 	struct v4l2_subdev	*sensor;
- 	struct v4l2_fwnode_endpoint	endpoint;
+--- a/arch/x86/include/asm/kvm_host.h
++++ b/arch/x86/include/asm/kvm_host.h
+@@ -1130,7 +1130,7 @@ struct kvm_x86_ops {
+ 	bool (*pt_supported)(void);
+ 	bool (*pku_supported)(void);
  
--	struct v4l2_async_subdev asd;
--
- 	struct v4l2_fh		fh;
- 	struct cal_dev		*dev;
- 	struct cc_data		*cc;
-@@ -1648,7 +1646,6 @@ static int of_cal_create_instance(struct
+-	int (*check_nested_events)(struct kvm_vcpu *vcpu, bool external_intr);
++	int (*check_nested_events)(struct kvm_vcpu *vcpu);
+ 	void (*request_immediate_exit)(struct kvm_vcpu *vcpu);
  
- 	parent = pdev->dev.of_node;
+ 	void (*sched_in)(struct kvm_vcpu *kvm, int cpu);
+--- a/arch/x86/kvm/vmx/nested.c
++++ b/arch/x86/kvm/vmx/nested.c
+@@ -3460,7 +3460,7 @@ static void nested_vmx_inject_exception_
+ 	nested_vmx_vmexit(vcpu, EXIT_REASON_EXCEPTION_NMI, intr_info, exit_qual);
+ }
  
--	asd = &ctx->asd;
- 	endpoint = &ctx->endpoint;
- 
- 	ep_node = NULL;
-@@ -1695,8 +1692,6 @@ static int of_cal_create_instance(struct
- 		ctx_dbg(3, ctx, "can't get remote parent\n");
- 		goto cleanup_exit;
- 	}
--	asd->match_type = V4L2_ASYNC_MATCH_FWNODE;
--	asd->match.fwnode = of_fwnode_handle(sensor_node);
- 
- 	v4l2_fwnode_endpoint_parse(of_fwnode_handle(ep_node), endpoint);
- 
-@@ -1726,9 +1721,17 @@ static int of_cal_create_instance(struct
- 
- 	v4l2_async_notifier_init(&ctx->notifier);
- 
-+	asd = kzalloc(sizeof(*asd), GFP_KERNEL);
-+	if (!asd)
-+		goto cleanup_exit;
-+
-+	asd->match_type = V4L2_ASYNC_MATCH_FWNODE;
-+	asd->match.fwnode = of_fwnode_handle(sensor_node);
-+
- 	ret = v4l2_async_notifier_add_subdev(&ctx->notifier, asd);
- 	if (ret) {
- 		ctx_err(ctx, "Error adding asd\n");
-+		kfree(asd);
- 		goto cleanup_exit;
+-static int vmx_check_nested_events(struct kvm_vcpu *vcpu, bool external_intr)
++static int vmx_check_nested_events(struct kvm_vcpu *vcpu)
+ {
+ 	struct vcpu_vmx *vmx = to_vmx(vcpu);
+ 	unsigned long exit_qual;
+@@ -3507,8 +3507,7 @@ static int vmx_check_nested_events(struc
+ 		return 0;
  	}
  
+-	if ((kvm_cpu_has_interrupt(vcpu) || external_intr) &&
+-	    nested_exit_on_intr(vcpu)) {
++	if (kvm_cpu_has_interrupt(vcpu) && nested_exit_on_intr(vcpu)) {
+ 		if (block_nested_events)
+ 			return -EBUSY;
+ 		nested_vmx_vmexit(vcpu, EXIT_REASON_EXTERNAL_INTERRUPT, 0, 0);
+@@ -4158,17 +4157,8 @@ void nested_vmx_vmexit(struct kvm_vcpu *
+ 	vcpu->arch.mp_state = KVM_MP_STATE_RUNNABLE;
+ 
+ 	if (likely(!vmx->fail)) {
+-		/*
+-		 * TODO: SDM says that with acknowledge interrupt on
+-		 * exit, bit 31 of the VM-exit interrupt information
+-		 * (valid interrupt) is always set to 1 on
+-		 * EXIT_REASON_EXTERNAL_INTERRUPT, so we shouldn't
+-		 * need kvm_cpu_has_interrupt().  See the commit
+-		 * message for details.
+-		 */
+-		if (nested_exit_intr_ack_set(vcpu) &&
+-		    exit_reason == EXIT_REASON_EXTERNAL_INTERRUPT &&
+-		    kvm_cpu_has_interrupt(vcpu)) {
++		if (exit_reason == EXIT_REASON_EXTERNAL_INTERRUPT &&
++		    nested_exit_intr_ack_set(vcpu)) {
+ 			int irq = kvm_cpu_get_interrupt(vcpu);
+ 			WARN_ON(irq < 0);
+ 			vmcs12->vm_exit_intr_info = irq |
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -4505,8 +4505,13 @@ static int vmx_nmi_allowed(struct kvm_vc
+ 
+ static int vmx_interrupt_allowed(struct kvm_vcpu *vcpu)
+ {
+-	return (!to_vmx(vcpu)->nested.nested_run_pending &&
+-		vmcs_readl(GUEST_RFLAGS) & X86_EFLAGS_IF) &&
++	if (to_vmx(vcpu)->nested.nested_run_pending)
++		return false;
++
++	if (is_guest_mode(vcpu) && nested_exit_on_intr(vcpu))
++		return true;
++
++	return (vmcs_readl(GUEST_RFLAGS) & X86_EFLAGS_IF) &&
+ 		!(vmcs_read32(GUEST_INTERRUPTIBILITY_INFO) &
+ 			(GUEST_INTR_STATE_STI | GUEST_INTR_STATE_MOV_SS));
+ }
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -7555,7 +7555,7 @@ static void update_cr8_intercept(struct
+ 	kvm_x86_ops->update_cr8_intercept(vcpu, tpr, max_irr);
+ }
+ 
+-static int inject_pending_event(struct kvm_vcpu *vcpu, bool req_int_win)
++static int inject_pending_event(struct kvm_vcpu *vcpu)
+ {
+ 	int r;
+ 
+@@ -7591,7 +7591,7 @@ static int inject_pending_event(struct k
+ 	 * from L2 to L1.
+ 	 */
+ 	if (is_guest_mode(vcpu) && kvm_x86_ops->check_nested_events) {
+-		r = kvm_x86_ops->check_nested_events(vcpu, req_int_win);
++		r = kvm_x86_ops->check_nested_events(vcpu);
+ 		if (r != 0)
+ 			return r;
+ 	}
+@@ -7653,7 +7653,7 @@ static int inject_pending_event(struct k
+ 		 * KVM_REQ_EVENT only on certain events and not unconditionally?
+ 		 */
+ 		if (is_guest_mode(vcpu) && kvm_x86_ops->check_nested_events) {
+-			r = kvm_x86_ops->check_nested_events(vcpu, req_int_win);
++			r = kvm_x86_ops->check_nested_events(vcpu);
+ 			if (r != 0)
+ 				return r;
+ 		}
+@@ -8130,7 +8130,7 @@ static int vcpu_enter_guest(struct kvm_v
+ 			goto out;
+ 		}
+ 
+-		if (inject_pending_event(vcpu, req_int_win) != 0)
++		if (inject_pending_event(vcpu) != 0)
+ 			req_immediate_exit = true;
+ 		else {
+ 			/* Enable SMI/NMI/IRQ window open exits if needed.
+@@ -8360,7 +8360,7 @@ static inline int vcpu_block(struct kvm
+ static inline bool kvm_vcpu_running(struct kvm_vcpu *vcpu)
+ {
+ 	if (is_guest_mode(vcpu) && kvm_x86_ops->check_nested_events)
+-		kvm_x86_ops->check_nested_events(vcpu, false);
++		kvm_x86_ops->check_nested_events(vcpu);
+ 
+ 	return (vcpu->arch.mp_state == KVM_MP_STATE_RUNNABLE &&
+ 		!vcpu->arch.apf.halted);
 
 
