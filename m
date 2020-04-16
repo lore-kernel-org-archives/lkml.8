@@ -2,70 +2,126 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82F7DC2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:12:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35816C352BE
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:13:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 52C44214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:12:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="IJoM4vYQ"
+	by mail.kernel.org (Postfix) with ESMTP id 192DC214AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:13:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395107AbgDPPMz (ORCPT
+        id S2395116AbgDPPNC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:12:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43716 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729914AbgDPPM2 (ORCPT
+        Thu, 16 Apr 2020 11:13:02 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:43328 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2395079AbgDPPMa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 11:12:28 -0400
-Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49FE1C0610D6
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 08:12:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Subject:Cc:To:From:Date:Message-Id:
-        Sender:Reply-To:MIME-Version:Content-Type:Content-Transfer-Encoding:
-        Content-ID:Content-Description:In-Reply-To:References;
-        bh=LsVp9g60MKfk7ryW4q0HIe7K/ddM+Pems4kp0GQK70U=; b=IJoM4vYQ5wKB1Y075Ha4+wmc2i
-        k6uFvNeMeGEhNXLuStb8tKAr3+l9czSLwKL1lsUBsPmw+7fYmxD8bmwEgjlYnsbcQRyA0ZZXW6sz2
-        1gAQ4wJ+2bDi4McjHGBlX42yBILZdkzilBzmQS3KWoiOb/9wOfpi/cAhMwNa6hP6dzCIo3bbT2eIH
-        4IrWjQB8AJQOqzC7znzE3gc/jHn3f6nL4JazYj6YIIAhiPXSt7JT44Ftjjuvv+PlyNWLWK94366GE
-        4BnNk8chhxgVsTr30PAOBaaso3lXGACVb2JhPEiPqcu12LDTsibv3n7N2qX514v6Brs1s3bX7IV+f
-        oum1WxiA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jP6BH-00046e-Lf; Thu, 16 Apr 2020 15:11:55 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 1CA88304D2B;
-        Thu, 16 Apr 2020 17:11:54 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-        id EF7C52B0DE4BB; Thu, 16 Apr 2020 17:11:53 +0200 (CEST)
-Message-Id: <20200416150752.569029800@infradead.org>
-User-Agent: quilt/0.65
-Date:   Thu, 16 Apr 2020 17:07:52 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     jpoimboe@redhat.com, alexandre.chartre@oracle.com
-Cc:     linux-kernel@vger.kernel.org, jthierry@redhat.com,
-        tglx@linutronix.de, x86@kernel.org, peterz@infradead.org
-Subject: [RFC][PATCH 0/7] objtool vs retpoline
+        Thu, 16 Apr 2020 11:12:30 -0400
+Received: by mail-qk1-f194.google.com with SMTP id 20so13555963qkl.10;
+        Thu, 16 Apr 2020 08:12:29 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=z50ZsQ8IUFKM+b5Biw9UtKMzIva0+uiY3DIJESbMIYI=;
+        b=b3AvZJdB+XYSInOhwiqHoL54WbIpkjelfc/zxOKcDkELhhrh6/iJPR+Hv1B67DRe/k
+         s8Z9GatXTDh3tu0sppjh2cWoBe6BOt65w1ggHYRC42aleTJSn6VVae7hhs0V7SjkfvtC
+         fnDgTkiCoE19/aVbIVS8Ma7lccntWq8VFlCzEYQ+VwrduM/12Xd1E3JjpxTuuP1EBuR2
+         Pq/Tv3VdPBqF23Wcie1Kyho/1wHUQ82vkvodZ32VimH6BeDUVtXmPSt348/Sor9wV/Oz
+         pkkEF4pZRfJcrUHGYF+n18u2nIFOowxakQFK61i+OtPErT7/KNF14Fc7sWA+NIt7CyLW
+         mhUQ==
+X-Gm-Message-State: AGi0PuaDmYZRx2YAB1yUYmL/lTJy+iVId4sJkc5+Jtq7mFzhdjDy3R6W
+        CWl/NFkmJzjOGgMGDO+46Rk=
+X-Google-Smtp-Source: APiQypL6nC7+eoW1r8jlGp0Pbr9X6TqFhXKgLwxJWfl9Gn6UCRZwndkSTjZyZCGBOb2DmniWXBxoFQ==
+X-Received: by 2002:a37:7242:: with SMTP id n63mr30880327qkc.111.1587049949214;
+        Thu, 16 Apr 2020 08:12:29 -0700 (PDT)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id c207sm15252197qkb.7.2020.04.16.08.12.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Apr 2020 08:12:28 -0700 (PDT)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+To:     Arvind Sankar <nivedita@alum.mit.edu>
+Cc:     Ard Biesheuvel <ardb@kernel.org>, linux-efi@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, x86@kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/3] efi: Remove __efistub_global annotation
+Date:   Thu, 16 Apr 2020 11:12:24 -0400
+Message-Id: <20200416151227.3360778-1-nivedita@alum.mit.edu>
+X-Mailer: git-send-email 2.25.3
+In-Reply-To: <20200415221520.2692512-1-nivedita@alum.mit.edu>
+References: <20200415221520.2692512-1-nivedita@alum.mit.edu>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi!
+This patch series removes the need for annotating global data in the EFI
+stub with __efistub_global for ARM32 and X86.
 
-Based on Alexandre's patches, here's a few patches that apply on top of my
-other series:
+This is done by renaming the .data and .bss sections in the object files
+linked into the EFI stub to .data.efistub and .bss.efistub respectively,
+and including those sections into the compressed kernel's .data section
+using its linker script.
 
-  https://lkml.kernel.org/r/20200416114706.625340212@infradead.org
+Changes from v1:
+- drop patch 2 and squash patches 3 and 5 for x86
+- fix R_X86 -> R_386
+- only check native relocation size (32-bit for R386 and 64-bit for
+  RX86_64)
 
-which seems to build a clean defconfig without ANNOTATE_NOSPEC_ALTERNATIVE on.
+The series is based on efi/next, rebased onto v5.7-rc1, plus two earlier
+fixes for x86 EFI that are queued for v5.7.
 
-I've not tried to boot the thing, I'll leave that to the robots.
+Patches on top of v5.7-rc1:
+In efi/next:
+
+Ard Biesheuvel (2):
+      efi: clean up config table description arrays
+      efi: move arch_tables check to caller
+
+Arvind Sankar (19):
+      efi/gop: Remove redundant current_fb_base
+      efi/gop: Move check for framebuffer before con_out
+      efi/gop: Get mode information outside the loop
+      efi/gop: Factor out locating the gop into a function
+      efi/gop: Slightly re-arrange logic of find_gop
+      efi/gop: Move variable declarations into loop block
+      efi/gop: Use helper macros for populating lfb_base
+      efi/gop: Use helper macros for find_bits
+      efi/gop: Remove unreachable code from setup_pixel_info
+      efi/gop: Add prototypes for query_mode and set_mode
+      efi/gop: Allow specifying mode number on command line
+      efi/gop: Allow specifying mode by <xres>x<yres>
+      efi/gop: Allow specifying depth as well as resolution
+      efi/gop: Allow automatically choosing the best mode
+
+Additional:
+Arvind Sankar (2):
+      efi/x86: Move efi stub globals from .bss to .data
+      efi/x86: Always relocate the kernel for EFI handover entry
+
+Arvind Sankar (3):
+  efi/arm: Remove __efistub_global annotation
+  efi/x86: Remove __efistub_global and add relocation check
+  efi: Kill __efistub_global
+
+ arch/arm/boot/compressed/vmlinux.lds.S        |  2 +-
+ arch/x86/boot/compressed/vmlinux.lds.S        |  1 +
+ drivers/firmware/efi/libstub/Makefile         | 31 +++++++++++++------
+ drivers/firmware/efi/libstub/arm-stub.c       |  4 +--
+ .../firmware/efi/libstub/efi-stub-helper.c    | 15 +++++----
+ drivers/firmware/efi/libstub/efistub.h        |  6 ----
+ drivers/firmware/efi/libstub/gop.c            |  2 +-
+ drivers/firmware/efi/libstub/x86-stub.c       |  2 +-
+ 8 files changed, 34 insertions(+), 29 deletions(-)
+
+-- 
+2.25.3
 
