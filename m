@@ -2,149 +2,149 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06665C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:12:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C51EC2BB85
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:12:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D3A98214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:12:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587049937;
-	bh=LkFSaWD8eK5fUBwVuEfFuYOdlmwas0uXDLBhIaHcx94=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DNaSudL2m5EeItgQvtmxm7upyZAWBDnu48MaVRV7kPJMer1Ipq5VsFrnU6Sat3Nn+
-	 MHFd2tI3ZznZhVauQm/o1oAXbwRjRrMNqbos5b7nbLuKhu07+h37u7i4vF2eqnyxD+
-	 nq3vtgvD/YbrkiZC4v+QLN5k+6FS7p75F4xHljLY=
+	by mail.kernel.org (Postfix) with ESMTP id EE81C22246
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:12:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="XvlfIPTb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395063AbgDPPMP (ORCPT
+        id S2387419AbgDPPMb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:12:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35820 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2441661AbgDPNuL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:50:11 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        Thu, 16 Apr 2020 11:12:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43638 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2395052AbgDPPMC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 11:12:02 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E6E7C061A0C
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 08:12:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Type:MIME-Version:References:
+        Subject:Cc:To:From:Date:Message-Id:Sender:Reply-To:Content-Transfer-Encoding:
+        Content-ID:Content-Description:In-Reply-To;
+        bh=C//9zFAM8a38K1V83WGzMSKEDUsKbQ07j0TNt8ViuBg=; b=XvlfIPTbYfHKUs/x7M4H5RhVC8
+        T5lF4mwIFOah4qBdOAdZpr9wf/g1bXk5rxUdXxAUH4EmIEJZfmtTosTExZAN2bM5s22De5q388khD
+        GFMC2zHQUbuWgdvlHAx35ryFYayieLrsPuOp3uw7NvQ6HB30zV7NS4HPYJmYxouswlVZXoYb7iOJJ
+        FINloyMH2VgOy2DWq+vegH60AQceTgzAc2fm9kRlFvPRpCA9WAAPV+jnqwlo5y0xzFidALd7cD422
+        hwWXOnYigwqYZ2nOWFf5EXtPYI6FNGa+3juhMn+CqT6vQlhrdbFdCm2ZXkKv98SafwCr73JsNRvd6
+        lut5e09Q==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jP6BI-0003Wg-94; Thu, 16 Apr 2020 15:11:56 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7491C20732;
-        Thu, 16 Apr 2020 13:49:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044989;
-        bh=LkFSaWD8eK5fUBwVuEfFuYOdlmwas0uXDLBhIaHcx94=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HiPfATfUUUqiu4HAEpPeud7yRwKLFlkb9QwSOIZ5LMK3bKYQxWn3e5499E+oRIxy+
-         COMZVLQUxEqQ8dBh15LGl95eeGh+lG2vdxxlmZKEWSly026fOXjYtlKjs8kGQz5BsN
-         RYrDfDNoos0xeavPyuFWLWLVKUlE0EjU+p8yACu8=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chris Wilson <chris@chris-wilson.co.uk>,
-        Alex Deucher <alexander.deucher@amd.com>
-Subject: [PATCH 5.4 185/232] drm: Remove PageReserved manipulation from drm_pci_alloc
-Date:   Thu, 16 Apr 2020 15:24:39 +0200
-Message-Id: <20200416131338.241102568@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200416131316.640996080@linuxfoundation.org>
-References: <20200416131316.640996080@linuxfoundation.org>
-User-Agent: quilt/0.66
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 43B553074A7;
+        Thu, 16 Apr 2020 17:11:54 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
+        id 1A6782B0DE9F7; Thu, 16 Apr 2020 17:11:54 +0200 (CEST)
+Message-Id: <20200416151025.123683762@infradead.org>
+User-Agent: quilt/0.65
+Date:   Thu, 16 Apr 2020 17:07:59 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     jpoimboe@redhat.com, alexandre.chartre@oracle.com
+Cc:     linux-kernel@vger.kernel.org, jthierry@redhat.com,
+        tglx@linutronix.de, x86@kernel.org, peterz@infradead.org
+Subject: [RFC][PATCH 7/7] x86/nospec: Remove ANNOTATE_NOSPEC_ALTERNATIVE
+References: <20200416150752.569029800@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chris Wilson <chris@chris-wilson.co.uk>
+Now that objtool is smart enough; remove ANNOTATE_NOSPEC_ALTERNATIVE
+so that we might generate correct ORC unwind information.
 
-commit ea36ec8623f56791c6ff6738d0509b7920f85220 upstream.
-
-drm_pci_alloc/drm_pci_free are very thin wrappers around the core dma
-facilities, and we have no special reason within the drm layer to behave
-differently. In particular, since
-
-commit de09d31dd38a50fdce106c15abd68432eebbd014
-Author: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-Date:   Fri Jan 15 16:51:42 2016 -0800
-
-    page-flags: define PG_reserved behavior on compound pages
-
-    As far as I can see there's no users of PG_reserved on compound pages.
-    Let's use PF_NO_COMPOUND here.
-
-it has been illegal to combine GFP_COMP with SetPageReserved, so lets
-stop doing both and leave the dma layer to its own devices.
-
-Reported-by: Taketo Kabe
-Bug: https://gitlab.freedesktop.org/drm/intel/issues/1027
-Fixes: de09d31dd38a ("page-flags: define PG_reserved behavior on compound pages")
-Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
-Cc: <stable@vger.kernel.org> # v4.5+
-Reviewed-by: Alex Deucher <alexander.deucher@amd.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200202171635.4039044-1-chris@chris-wilson.co.uk
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 ---
- drivers/gpu/drm/drm_pci.c |   23 ++---------------------
- 1 file changed, 2 insertions(+), 21 deletions(-)
+ arch/x86/include/asm/nospec-branch.h |   26 +++++++-------------------
+ 1 file changed, 7 insertions(+), 19 deletions(-)
 
---- a/drivers/gpu/drm/drm_pci.c
-+++ b/drivers/gpu/drm/drm_pci.c
-@@ -51,8 +51,6 @@
- drm_dma_handle_t *drm_pci_alloc(struct drm_device * dev, size_t size, size_t align)
- {
- 	drm_dma_handle_t *dmah;
--	unsigned long addr;
--	size_t sz;
- 
- 	/* pci_alloc_consistent only guarantees alignment to the smallest
- 	 * PAGE_SIZE order which is greater than or equal to the requested size.
-@@ -68,20 +66,13 @@ drm_dma_handle_t *drm_pci_alloc(struct d
- 	dmah->size = size;
- 	dmah->vaddr = dma_alloc_coherent(&dev->pdev->dev, size,
- 					 &dmah->busaddr,
--					 GFP_KERNEL | __GFP_COMP);
-+					 GFP_KERNEL);
- 
- 	if (dmah->vaddr == NULL) {
- 		kfree(dmah);
- 		return NULL;
- 	}
- 
--	/* XXX - Is virt_to_page() legal for consistent mem? */
--	/* Reserve */
--	for (addr = (unsigned long)dmah->vaddr, sz = size;
--	     sz > 0; addr += PAGE_SIZE, sz -= PAGE_SIZE) {
--		SetPageReserved(virt_to_page((void *)addr));
--	}
+--- a/arch/x86/include/asm/nospec-branch.h
++++ b/arch/x86/include/asm/nospec-branch.h
+@@ -10,15 +10,7 @@
+ #include <asm/alternative-asm.h>
+ #include <asm/cpufeatures.h>
+ #include <asm/msr-index.h>
 -
- 	return dmah;
- }
+-/*
+- * This should be used immediately before a retpoline alternative. It tells
+- * objtool where the retpolines are so that it can make sense of the control
+- * flow by just reading the original instruction(s) and ignoring the
+- * alternatives.
+- */
+-#define ANNOTATE_NOSPEC_ALTERNATIVE \
+-	ANNOTATE_IGNORE_ALTERNATIVE
++#include <asm/unwind_hints.h>
  
-@@ -94,19 +85,9 @@ EXPORT_SYMBOL(drm_pci_alloc);
+ /*
+  * Fill the CPU return stack buffer.
+@@ -50,6 +42,7 @@
+ 	ANNOTATE_INTRA_FUNCTION_CALL		\
+ 	call	772f;				\
+ 773:	/* speculation trap */			\
++	UNWIND_HINT_EMPTY;			\
+ 	pause;					\
+ 	lfence;					\
+ 	jmp	773b;				\
+@@ -57,6 +50,7 @@
+ 	ANNOTATE_INTRA_FUNCTION_CALL		\
+ 	call	774f;				\
+ 775:	/* speculation trap */			\
++	UNWIND_HINT_EMPTY;			\
+ 	pause;					\
+ 	lfence;					\
+ 	jmp	775b;				\
+@@ -117,10 +111,8 @@
+   */
+ .macro FILL_RETURN_BUFFER reg:req nr:req ftr:req
+ #ifdef CONFIG_RETPOLINE
+-	ANNOTATE_NOSPEC_ALTERNATIVE
+-	ALTERNATIVE "jmp .Lskip_rsb_\@",				\
+-		__stringify(__FILL_RETURN_BUFFER(\reg,\nr,%_ASM_SP))	\
+-		\ftr
++	ALTERNATIVE "jmp .Lskip_rsb_\@", "", \ftr
++	__FILL_RETURN_BUFFER(\reg,\nr,%_ASM_SP)
+ .Lskip_rsb_\@:
+ #endif
+ .endm
+@@ -141,7 +133,6 @@
+  * which is ensured when CONFIG_RETPOLINE is defined.
   */
- void __drm_legacy_pci_free(struct drm_device * dev, drm_dma_handle_t * dmah)
- {
--	unsigned long addr;
--	size_t sz;
--
--	if (dmah->vaddr) {
--		/* XXX - Is virt_to_page() legal for consistent mem? */
--		/* Unreserve */
--		for (addr = (unsigned long)dmah->vaddr, sz = dmah->size;
--		     sz > 0; addr += PAGE_SIZE, sz -= PAGE_SIZE) {
--			ClearPageReserved(virt_to_page((void *)addr));
--		}
-+	if (dmah->vaddr)
- 		dma_free_coherent(&dev->pdev->dev, dmah->size, dmah->vaddr,
- 				  dmah->busaddr);
--	}
- }
+ # define CALL_NOSPEC						\
+-	ANNOTATE_NOSPEC_ALTERNATIVE				\
+ 	ALTERNATIVE("", "lfence", X86_FEATURE_RETPOLINE_AMD)	\
+ 	ALTERNATIVE(ANNOTATE_RETPOLINE_SAFE			\
+ 		    "call *%[thunk_target]\n",			\
+@@ -157,7 +148,6 @@
+  * here, anyway.
+  */
+ # define CALL_NOSPEC						\
+-	ANNOTATE_NOSPEC_ALTERNATIVE				\
+ 	ALTERNATIVE_2(						\
+ 	ANNOTATE_RETPOLINE_SAFE					\
+ 	"call *%[thunk_target]\n",				\
+@@ -225,10 +215,8 @@ static inline void vmexit_fill_RSB(void)
+ #ifdef CONFIG_RETPOLINE
+ 	unsigned long loops;
  
- /**
+-	asm volatile (ANNOTATE_NOSPEC_ALTERNATIVE
+-		      ALTERNATIVE("jmp 910f",
+-				  __stringify(__FILL_RETURN_BUFFER(%0, RSB_CLEAR_LOOPS, %1)),
+-				  X86_FEATURE_RETPOLINE)
++	asm volatile (ALTERNATIVE("jmp 910f", "", X86_FEATURE_RETPOLINE)
++		      __stringify(__FILL_RETURN_BUFFER(%0, RSB_CLEAR_LOOPS, %1))
+ 		      "910:"
+ 		      : "=r" (loops), ASM_CALL_CONSTRAINT
+ 		      : : "memory" );
 
 
