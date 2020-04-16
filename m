@@ -2,123 +2,134 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8D5CC2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 08:47:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 516DEC2D0EF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 08:47:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 91B442076A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 08:47:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 307252076A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 08:47:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=windriversystems.onmicrosoft.com header.i=@windriversystems.onmicrosoft.com header.b="GGEYxj99"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2441353AbgDPIqs (ORCPT
+        id S2502879AbgDPIrV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 04:46:48 -0400
-Received: from mx2.suse.de ([195.135.220.15]:60718 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2502496AbgDPIlR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 04:41:17 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 2E2FFACAD;
-        Thu, 16 Apr 2020 08:40:31 +0000 (UTC)
-Message-ID: <1587026430.32139.29.camel@suse.cz>
-Subject: Re: [PATCH] x86, smpboot: Disable frequency invariance when it's
- unsupported
-From:   Giovanni Gherdovich <ggherdovich@suse.cz>
-To:     Like Xu <like.xu@linux.intel.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Doug Smythies <dsmythies@telus.net>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Date:   Thu, 16 Apr 2020 10:40:30 +0200
-In-Reply-To: <bf43772d-48e5-01d4-dd03-330110e487fa@linux.intel.com>
-References: <20200416020700.167294-1-like.xu@linux.intel.com>
-         <1587017284.32139.20.camel@suse.cz>
-         <bf43772d-48e5-01d4-dd03-330110e487fa@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
+        Thu, 16 Apr 2020 04:47:21 -0400
+Received: from mail-mw2nam10on2078.outbound.protection.outlook.com ([40.107.94.78]:3713
+        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2502751AbgDPImq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 04:42:46 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=gHt+EC35ZZDXkiOZizSHp3c4NkCt+XKL3bdAjg7orEqwDj+EzZleLLoRa3vBZ600OhDcL3vVYCriiEeUTGDFEnbHQNOAygkn0nkVaiypcq4NmETKgJ3/aKXgGfUV6pPKx5/5Npgd6v/KD1nVq2QRwZghlUaFLRL4jeLbJH91DGG2wuBAI28fJC64LdqCkzMzMVQiWBqBzA06mecaM4NCkd8jlJ7M/IcrWQwjJAwOnUxNQ+pwyguiMbB7Dtb0rOCIfl/6McKclF000DLjPvElBL7B2EOVqlWlL7CfECtpY1sgldzEtibmwd9g28ldIKEeNNFl6HZNvec0FOaXI/WJ+A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=fUa6IAxx9gfP3sjKcKWh/Enms00gOXBuG8eD5elwhmY=;
+ b=KbDAaSeev//msgPTG89gWHjK8NRxOvaYjQxcJr5ZNvtfGVun3lkbJNnWWYfaart2UQx3xIYgdElmMK3B816ju6EHTSY70k7Ei/FgDuMYncGs9NlS86cQEeAISOPrj2c1pykVG39gVsKWJcAx2DmIxCuU5wq1bbEfA/vmUfXgNrlVxVc1QySHUGSz0V/o39hHakrfLGd9C5F/InUQmacWhM7rmL+0IXKHLFRCciumcTRCjRx7aVeRCSJ5y1Cx2BL9HBGUE8D3zOY2HGYatMcbNzkFHBrUmjrI8JnmPMYNLGOzpGi0i+yDLcCbjglpV3UxVqyHA9sP5E+5WgfwlrPSQw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=windriver.com; dmarc=pass action=none
+ header.from=windriver.com; dkim=pass header.d=windriver.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=windriversystems.onmicrosoft.com;
+ s=selector2-windriversystems-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=fUa6IAxx9gfP3sjKcKWh/Enms00gOXBuG8eD5elwhmY=;
+ b=GGEYxj99jZZDzvljwc8rCZJEHf288yLT9tcyng8FJKi/T33qJSk3Jp89Ov84Rx6ZFMHR+cJykPWymxm1tErs6TEq65dIa9LY0UDinzGiC0ZaqthxiQ7r/MBMYERcrUWmE+dYerA8RMgI05+794ZKKwaFMOKmSel4lNtfgpNYIzQ=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=Zhe.He@windriver.com; 
+Received: from SN6PR11MB3360.namprd11.prod.outlook.com (2603:10b6:805:c8::30)
+ by SN6PR11MB3373.namprd11.prod.outlook.com (2603:10b6:805:c6::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.26; Thu, 16 Apr
+ 2020 08:40:41 +0000
+Received: from SN6PR11MB3360.namprd11.prod.outlook.com
+ ([fe80::75b1:da01:9747:ae65]) by SN6PR11MB3360.namprd11.prod.outlook.com
+ ([fe80::75b1:da01:9747:ae65%4]) with mapi id 15.20.2900.028; Thu, 16 Apr 2020
+ 08:40:40 +0000
+Subject: Re: [PATCH] x86/mce: Add compat_ioctl assignment to make it
+ compatible with 32-bit system
+To:     tony.luck@intel.com, bp@alien8.de, tglx@linutronix.de,
+        mingo@redhat.com, hpa@zytor.com, x86@kernel.org,
+        linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1583303947-49858-1-git-send-email-zhe.he@windriver.com>
+From:   He Zhe <zhe.he@windriver.com>
+Message-ID: <1f449e01-3207-b699-b91f-d1c04626a447@windriver.com>
+Date:   Thu, 16 Apr 2020 16:40:31 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
+In-Reply-To: <1583303947-49858-1-git-send-email-zhe.he@windriver.com>
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-ClientProxiedBy: HK0PR03CA0116.apcprd03.prod.outlook.com
+ (2603:1096:203:b0::32) To SN6PR11MB3360.namprd11.prod.outlook.com
+ (2603:10b6:805:c8::30)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [128.224.162.175] (60.247.85.82) by HK0PR03CA0116.apcprd03.prod.outlook.com (2603:1096:203:b0::32) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2921.26 via Frontend Transport; Thu, 16 Apr 2020 08:40:36 +0000
+X-Originating-IP: [60.247.85.82]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: bbf12f03-102f-4656-6b6a-08d7e1e1d80c
+X-MS-TrafficTypeDiagnostic: SN6PR11MB3373:
+X-Microsoft-Antispam-PRVS: <SN6PR11MB337346E3AE77A5A0F3124CBB8FD80@SN6PR11MB3373.namprd11.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:6790;
+X-Forefront-PRVS: 0375972289
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR11MB3360.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(396003)(136003)(376002)(346002)(39850400004)(366004)(66476007)(66556008)(5660300002)(186003)(66946007)(6706004)(478600001)(2616005)(52116002)(16576012)(86362001)(6486002)(316002)(16526019)(6666004)(26005)(53546011)(956004)(36756003)(8676002)(81156014)(8936002)(31696002)(31686004)(2906002)(78286006);DIR:OUT;SFP:1101;
+Received-SPF: None (protection.outlook.com: windriver.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: /NgRsP7Cy6CX4ReN3ixZyEPD1HCEKFwmjGCjADM2N6ILhgZja2xaLjkZBSI7djmvvUj5xTzCx/dSspwLYLatB3Hm64UL/bdTMfDgaZPYXvBP96laOGkTcypuaQd21Ah+OBF0LzdCTiTDCHKDQYvMZTfBDSH5ZeDH8ymcs3rtnU2rwp16PgPjyCr8RdBeOvOWnbQk1Tm5kUDS0VSjeC5uJlhkBPGB2ssGfngKXkfxgzVbw5DZDdxjcZ+DzrU0PTukdsthWb+t1imWSEp9L51fydSbwaZOpOiSJs4nnmfqBMIZcidzKc8WpjoZPKfjISjVAS6LWeopkZy/5/8x7bwycCkGHEXrMDaca7DzGMQ1XtCcTl8VQp25pzYUV6BjwAey//s+SCUKjtTtr5qDdv7pXN+yx++3paa+asp/jO9d68bvDRi7IfhBsgO3p/34pGxwckoBcdXhozbAfvurp9yRSkXhKMbCbXbb909Y5a7aMeiNEx9nQM1Z+38YzHFGwsyyfC8INsXfBO8/3/tUCQ25BAUqQgzCU6m8Tm9DUcJ5Wg8=
+X-MS-Exchange-AntiSpam-MessageData: VV4xpqTXv1e6lFf3rEDRZDoyM90er7QWcu1rQw4aIRDg2ketk/le1iddSS4Ydr7rB523JsOoE3r/h9mpoXwKrn49rd+pkrCtlWfw6bn/qYyBgn82Gc3gGnX2tgTrgDq7nweYSdzooLPTA90auewDFA==
+X-OriginatorOrg: windriver.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: bbf12f03-102f-4656-6b6a-08d7e1e1d80c
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Apr 2020 08:40:40.7087
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 8ddb2873-a1ad-4a18-ae4e-4644631433be
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: iTDZFF7+PqR2M7hmBrH9JHCUh/0lHkZfPbLm8deFLL2TJrEIqdC0TL3MhteMlNAChoKv1CCwD5dYp8beFOkshg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR11MB3373
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2020-04-16 at 15:01 +0800, Like Xu wrote:
-> On 2020/4/16 14:08, Giovanni Gherdovich wrote:
-> > [...]
-> > I've just sent fixes for these two problems here:
-> > https://lore.kernel.org/lkml/20200416054745.740-1-ggherdovich@suse.cz/
-> 
-> Hence the "less than 4 cores" comment is weird for C6562
-> but the use of "1C turbo" looks good to me.
-
-Right, your C6562 has 24 cores, (I think) it doesn't support turbo at all,
-declares 1C turbo equal to the base frequency and all other turbo ratios (2C,
-4C etc) as zero.
-
-The commit message of the fix I sent doesn't describe exactly your situation
-but the patch addresses your case nonetheless. Some more comments below.
-
-On Thu, 2020-04-16 at 15:01 +0800, Like Xu wrote:
-> On 2020/4/16 14:08, Giovanni Gherdovich wrote:
-> > [...]
-> > Hello Like Xu,
-> > 
-> > thanks for reporting this and for the patch. My preferred solution for when
-> > the 4 cores turbo freq is detected as zero would be to look for the 1 core turbo
-> > frequency, as we're likely on a machine with less than 4 cores. Is that the
-> > case on your Atom C6562? I couldn't find it on ark.intel.com.
-> 
-> The Atom C6562 is "24 cores" based on 
-> https://www.intel.com/content/dam/www/public/us/en/documents/product-briefs/atom-p5900-product-brief.pdf
-> 
-> #define MSR_PLATFORM_INFO		0x000000ce
-> 
-> the value for this msr is 80820f9801600
-> 
-> #define MSR_TURBO_RATIO_LIMIT		0x000001ad
-> 
-> the value for this msr is 16
-> 
-> I know you didn't test your feature on this platform,
-> but combinations of other various values are also possible
-> (unless it's made clear in the specification).
-
-That's an interesting CPU; let me indulge in a couple of comments/questions
-for my own curiosity.
-From the document you link, the product name in the Intel catalogue seems to
-be Atom P5962B. Apparently it belongs to the "P Series" just launched:
-https://ark.intel.com/content/www/us/en/ark/products/series/202693/intel-atom-processor-p-series.html
-and your product brief suggests it's meant for installation in 5G base stations.
-
-1) Can you share the output of "turbostat --interval 1 sleep 0"? I'm
-   interested in the headers of the output, where all the various pm-related
-   MSRs are decoded.
-
-2) Despite not being in the Intel SDM, I was under the assumption that all
-   Intel CPUs declare the "all-cores turbo" frequency, but it's not the case
-   for this one. Eg: if you have 24 cores, somewhere in your MSRs I'd expect
-   to find "24C turbo" (or even "30C turbo", anything greater or equal than 24).
-   My understanding from
-   https://ark.intel.com/content/www/us/en/ark/products/202682/intel-atom-processor-p5962b-27m-cache-2-20-ghz.html
-   is that this CPU doesn't support turbo boost at all; in other CPUs without
-   turbo I've seen MSRs saying the all-cores turbo freq is equal to the base
-   freq (for compatibility I suppose). Here MSR_TURBO_RATIO_LIMIT says that 1C
-   turbo is the same as base frequency (2.2GHz), but turbo for larger sets of
-   cores is declared as zero, which I find a little odd.
-
-3) The parsing of MSRs in the frequency invariance code is modeled after
-   turbostat, and classifies CPUs in 5 groups: Atom up to Goldmont, Atom from
-   Goldmont onwards, Xeon Phi, Xeon Scalable Processors onwards and "generic
-   Core". As you've already found out from where your panic happens, your Atom
-   falls into the "generic Core" category (function core_set_max_freq_ratio()),
-   but given that it's an Atom and it's been released this very quarter I'd
-   have guessed it to behave like a Goldmont. Something for me to keep in mind.
-
+Can this be considered for the moment?
 
 Thanks,
-Giovanni Gherdovich
+Zhe
+
+On 3/4/20 2:39 PM, zhe.he@windriver.com wrote:
+> From: He Zhe <zhe.he@windriver.com>
+>
+> 32-bit user-space program would get errors like the following from ioctl
+> syscall due to missing compat_ioctl.
+> MCE_GET_RECORD_LEN: Inappropriate ioctl for device
+>
+> compat_ptr_ioctl is provided as a generic implementation of .compat_ioctl
+> file operation to ioctl functions that either ignore the argument or pass
+> a pointer to a compatible data type.
+>
+> Signed-off-by: He Zhe <zhe.he@windriver.com>
+> ---
+>  arch/x86/kernel/cpu/mce/dev-mcelog.c | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/arch/x86/kernel/cpu/mce/dev-mcelog.c b/arch/x86/kernel/cpu/mce/dev-mcelog.c
+> index 7c8958d..6c9b91b7 100644
+> --- a/arch/x86/kernel/cpu/mce/dev-mcelog.c
+> +++ b/arch/x86/kernel/cpu/mce/dev-mcelog.c
+> @@ -328,6 +328,7 @@ static const struct file_operations mce_chrdev_ops = {
+>  	.write			= mce_chrdev_write,
+>  	.poll			= mce_chrdev_poll,
+>  	.unlocked_ioctl		= mce_chrdev_ioctl,
+> +	.compat_ioctl		= compat_ptr_ioctl,
+>  	.llseek			= no_llseek,
+>  };
+>  
+
