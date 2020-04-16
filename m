@@ -2,109 +2,106 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4091BC2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:21:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D685AC2BB85
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:21:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1D49D214D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:21:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hKnRbOBs"
+	by mail.kernel.org (Postfix) with ESMTP id B5E0E214D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:21:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587050499;
+	bh=1ClpcThwENIVjhgFj2BIfnEiPBTFpOMrznL6cQRlSt8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=gSH+EMqH30MMBLKsJD7l0N9J/RXuqBvIGF6COXavb/Pp70gOdlV+g8DnVPFIuH8uO
+	 QlT3UKMXqMVAZCu9CBt8GjkZ0lYjhTFDAaaAEbw3mklLW2cJ8zBsGYMoGRIhJ1TM2u
+	 1po3GhpTkv1QYh/TK3g7jqmU+5vlso/vsfk9brV4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409067AbgDPPVd (ORCPT
+        id S2505248AbgDPPVh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:21:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45098 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2408935AbgDPPVX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 11:21:23 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 14F5BC061A0C;
-        Thu, 16 Apr 2020 08:21:23 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id r4so1791133pgg.4;
-        Thu, 16 Apr 2020 08:21:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=PqhlYvcZrmCM70l8lqNpCrbISzWwKQ5w1U1k6I8jKZA=;
-        b=hKnRbOBsCft+ZCJ3dOvl2hctclPsJj4Mm+JVYqlNJxl8IHZr4V0qPXZZM+ivEpKEr3
-         SiN+TJT7MwvBlrUZGKKnHLyuM09g2LTZ5sFEPYO2Bre9v1C57e3OEQzt+kQMlPAAU7bL
-         jT0KyN96EsaQH2rinKl69nFDw/sZWH5DDkU/O4cF2UmDzXP9sncAFR8MLi/sIqWHacV1
-         58Fu08H460YfxgFvw+eku5Xt1o1O02wzOt2uvW4l497UWGzwVRSjjjN32yjTL4x8Hb6/
-         yTs+chUep9thohSNFC3EA5qoHgYo1fuIHABHIVuWXuQQUGEAO5L/w7IuMCsfcBrVTRll
-         V8sw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=PqhlYvcZrmCM70l8lqNpCrbISzWwKQ5w1U1k6I8jKZA=;
-        b=Hzj7qJu9xBwq6KI+wckzFF1oSuRKCOwKOlT3ldv9A+dLzE4mdM08YNYwcRAB4/XhP8
-         M3J2QmOGr2McDKNmWL5wo1Swx1ddTu2K45hMyBqlGRGOXq5mKuHaLzZf7hd580BThJSZ
-         cRUx1q3o4tlmmv6bQCbMKXABtW1zROXuXCz3WppJp7nrj/2ikvJ+0dwi3XBHtIjiIrRB
-         O6rM0X/w5SrkTPK5QycWmroJUM0yftqrP0fL5KGbpRShJbJFZvzWJS1qWMe8nwnDjfqv
-         AHUQjFa1ur1BJ+Hqf5lDOxcA+CWhhyY6qA8c5/Ry+dk1/gXtB4nH54oPfdj+nYIm0wjS
-         31Cw==
-X-Gm-Message-State: AGi0PuZi1v5vaJuVNC+l5Xn46p3yWQkit2uxylndkxp5uneXSYDNnBHx
-        4hkIeG3KZHN0uNhXFiAyOucYisPH+mh/aB86HJ8=
-X-Google-Smtp-Source: APiQypL4QpTvQB0/qCwH/MWZ7VIatjMX02cplXwC/TTrnIKMzbV6jUInWZ+z6zydE0IKy2JVTEJ6y3JIo/biM4hFQT4=
-X-Received: by 2002:a63:5511:: with SMTP id j17mr15897581pgb.4.1587050482349;
- Thu, 16 Apr 2020 08:21:22 -0700 (PDT)
+        Thu, 16 Apr 2020 11:21:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60794 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2898610AbgDPNqj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:46:39 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B71E021734;
+        Thu, 16 Apr 2020 13:46:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587044799;
+        bh=1ClpcThwENIVjhgFj2BIfnEiPBTFpOMrznL6cQRlSt8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=PwV4PH5M6g5Qr0/MeohryNWCgy856/C6Jus7tBBZhR4mpNj5UroPhE1/D3aH90QKx
+         PUXMPuyZUUKTwfYCWxxzReolYsN/SgpydEenX+yLdnIFu7DEzu6H50Rao0DWgrBy7r
+         x1kU60v2HelvwEOUARpZ8jmZW45hAiblNwoFPatI=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Vasily Averin <vvs@virtuozzo.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Subject: [PATCH 5.4 106/232] tpm: tpm1_bios_measurements_next should increase position index
+Date:   Thu, 16 Apr 2020 15:23:20 +0200
+Message-Id: <20200416131328.380305814@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.1
+In-Reply-To: <20200416131316.640996080@linuxfoundation.org>
+References: <20200416131316.640996080@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-References: <20200408160905.12101-1-andriy.shevchenko@linux.intel.com>
- <20200416141730.GE185537@smile.fi.intel.com> <CAJZ5v0ihzD4knW=pKFmcsW0Q9c5rfyJMFh2ChiePe5SWO6G_TQ@mail.gmail.com>
-In-Reply-To: <CAJZ5v0ihzD4knW=pKFmcsW0Q9c5rfyJMFh2ChiePe5SWO6G_TQ@mail.gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 16 Apr 2020 18:21:15 +0300
-Message-ID: <CAHp75Vf6MT1AFacUkRUP3760nv=3V5kzF2AHWJG64tr5yZ2=dg@mail.gmail.com>
-Subject: Re: [PATCH v1 0/6] platform/x86: intel_cht_int33fe: clean up series
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Darren Hart <dvhart@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 16, 2020 at 6:05 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
->
-> On Thu, Apr 16, 2020 at 4:17 PM Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
-> >
-> > On Wed, Apr 08, 2020 at 07:09:00PM +0300, Andy Shevchenko wrote:
-> > > When I started looking into the intel_cht_int33fe driver for an example of use
-> > > software node API, I have noticed that it's hard to get and code a bit messy.
-> > > Here is a clean up, main part of which is to introduce node groups and API to
-> > > register and unregister them. This and some pre-existing APIs can be used in
-> > > the driver.
-> > >
-> > > So, because of cross-subsystem nature of this series, I may recommend to create
-> > > myself the immutable branch which can be pulled to Rafael's and Greg's trees
-> > > respectively. I'm also open for other proposals how to proceed.
-> >
-> > Greg, Rafael,
-> > any suggestion how to proceed with this series?
-> >
-> > (It has been reviewed and tested).
->
-> You can merge them through platform/x86 as far as I'm concerned, or
-> please let me know if you want me to pick them up.
+From: Vasily Averin <vvs@virtuozzo.com>
 
-Works for me, but I would like to ask for formal Ack tag.
-Thanks!
+commit d7a47b96ed1102551eb7325f97937e276fb91045 upstream.
 
--- 
-With Best Regards,
-Andy Shevchenko
+If .next function does not change position index,
+following .show function will repeat output related
+to current position index.
+
+In case of /sys/kernel/security/tpm0/ascii_bios_measurements
+and binary_bios_measurements:
+1) read after lseek beyound end of file generates whole last line.
+2) read after lseek to middle of last line generates
+expected end of last line and unexpected whole last line once again.
+
+Cc: stable@vger.kernel.org # 4.19.x
+Fixes: 1f4aace60b0e ("fs/seq_file.c: simplify seq_file iteration code ...")
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=206283
+Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
+Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ drivers/char/tpm/eventlog/tpm1.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- a/drivers/char/tpm/eventlog/tpm1.c
++++ b/drivers/char/tpm/eventlog/tpm1.c
+@@ -115,6 +115,7 @@ static void *tpm1_bios_measurements_next
+ 	u32 converted_event_size;
+ 	u32 converted_event_type;
+ 
++	(*pos)++;
+ 	converted_event_size = do_endian_conversion(event->event_size);
+ 
+ 	v += sizeof(struct tcpa_event) + converted_event_size;
+@@ -132,7 +133,6 @@ static void *tpm1_bios_measurements_next
+ 	    ((v + sizeof(struct tcpa_event) + converted_event_size) > limit))
+ 		return NULL;
+ 
+-	(*pos)++;
+ 	return v;
+ }
+ 
+
+
