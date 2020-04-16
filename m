@@ -2,142 +2,96 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA925C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 01:18:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA97EC3815B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 01:19:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 855B82076D
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 01:18:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586999898;
-	bh=Ghz0lZLJntZUtz+57l/FbR56+HxHWxV55k1vKuCFgZg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ESKF5H/TvLSbRtphFYvhEeOkoxccQU23rQgIq0Om7UY5DCmQ5MLOJq9ve4JIq4JAw
-	 VONC/b7w7qPZYH1B5VeIPlmxlSxpNyG9w6aVWOLdsOYzRvlgMntXIR+Rw7Zi9PpMaQ
-	 5AqXMqq1XPh76uMzW5Oros8cwhRjG7PBwIGltLXM=
+	by mail.kernel.org (Postfix) with ESMTP id A791420936
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 01:19:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731121AbgDPBSA (ORCPT
+        id S1729647AbgDPBS7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 21:18:00 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:43729 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730752AbgDPBRH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 21:17:07 -0400
-Received: by mail-pl1-f196.google.com with SMTP id z6so723382plk.10;
-        Wed, 15 Apr 2020 18:17:05 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=WR6dS8sppVhsHDqaOLN6r5u6vSBUIRk19qqS7mXyQHc=;
-        b=TLo7dUqc8BaE8ldndA2REWP2b3LtqVk8fTTZxT0X047322Rb5bK1y2QMU3jYFbrepb
-         wWukpetp7UHdwOYwXERzPs+1PKVCWvKjeXTPjvmMw1zHYFPN1AP+/QS4ozrVJh5u8UBL
-         Kg9lcH3asjIb0IvK6wW6GjL77LEAwCpe7fWV50AZn0Hdb9F3mNpLXQHYTbOU7XqGDPt8
-         VfuRu3SxnoX86qnJ8DIG5BSfcSWvLXSL4CuFa+2k7eUSr7rw2Enp2Asj1DGQ2PkWxe3D
-         tmX9GT2dpe5FMuVFAlRVJ1P2Xkf8Bw7teex8Icc3PNafjn80ARYtN56l6zUWWuDJ8obQ
-         BNkw==
-X-Gm-Message-State: AGi0Puae75KNUcFiI0C2M1EYydHKh6VOU1q+IerRUR1OGB/iqVEyMRJw
-        dMWa0dKo4e9cmepG00fPW5o=
-X-Google-Smtp-Source: APiQypLfsZVuN4sYX8KfJSMniabfDLJgj3Rsrj4/IDbZiZZSHXaIrSBXDqfPp8TpiuntbH07OtI37g==
-X-Received: by 2002:a17:90b:4c8f:: with SMTP id my15mr2146114pjb.63.1586999824688;
-        Wed, 15 Apr 2020 18:17:04 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id o11sm8556031pgd.58.2020.04.15.18.17.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Apr 2020 18:17:03 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id AEA6B40277; Thu, 16 Apr 2020 01:17:02 +0000 (UTC)
-Date:   Thu, 16 Apr 2020 01:17:02 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Bart Van Assche <bvanassche@acm.org>
-Cc:     Christoph Hellwig <hch@infradead.org>, axboe@kernel.dk,
-        viro@zeniv.linux.org.uk, gregkh@linuxfoundation.org,
-        rostedt@goodmis.org, mingo@redhat.com, jack@suse.cz,
-        ming.lei@redhat.com, nstange@suse.de, akpm@linux-foundation.org,
-        mhocko@suse.com, yukuai3@huawei.com, linux-block@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Omar Sandoval <osandov@fb.com>,
-        Hannes Reinecke <hare@suse.com>,
-        Michal Hocko <mhocko@kernel.org>
-Subject: Re: [PATCH 3/5] blktrace: refcount the request_queue during ioctl
-Message-ID: <20200416011702.GC11244@42.do-not-panic.com>
-References: <20200414041902.16769-1-mcgrof@kernel.org>
- <20200414041902.16769-4-mcgrof@kernel.org>
- <20200414154044.GB25765@infradead.org>
- <20200415061649.GS11244@42.do-not-panic.com>
- <49bfcbe0-2630-5c82-f305-fcee489ac9ea@acm.org>
+        Wed, 15 Apr 2020 21:18:59 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:2333 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730752AbgDPBSJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 21:18:09 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 35B945A0308DF2F16736;
+        Thu, 16 Apr 2020 09:18:04 +0800 (CST)
+Received: from [127.0.0.1] (10.173.222.27) by DGGEMS408-HUB.china.huawei.com
+ (10.3.19.208) with Microsoft SMTP Server id 14.3.487.0; Thu, 16 Apr 2020
+ 09:17:55 +0800
+Subject: Re: [PATCH 2/2] KVM: arm64: vgic-its: Fix memory leak on the error
+ path of vgic_add_lpi()
+To:     <kvmarm@lists.cs.columbia.edu>
+CC:     <maz@kernel.org>, <james.morse@arm.com>,
+        <julien.thierry.kdev@gmail.com>, <suzuki.poulose@arm.com>,
+        <wanghaibin.wang@huawei.com>, <yezengruan@huawei.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20200414030349.625-1-yuzenghui@huawei.com>
+ <20200414030349.625-3-yuzenghui@huawei.com>
+From:   Zenghui Yu <yuzenghui@huawei.com>
+Message-ID: <610f2195-f85d-4beb-b711-47d63bb393d0@huawei.com>
+Date:   Thu, 16 Apr 2020 09:17:54 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <49bfcbe0-2630-5c82-f305-fcee489ac9ea@acm.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200414030349.625-3-yuzenghui@huawei.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.173.222.27]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 15, 2020 at 07:45:18AM -0700, Bart Van Assche wrote:
-> On 2020-04-14 23:16, Luis Chamberlain wrote:
-> > On Tue, Apr 14, 2020 at 08:40:44AM -0700, Christoph Hellwig wrote:
-> >> Hmm, where exactly does the race come in so that it can only happen
-> >> after where you take the reference, but not before it?  I'm probably
-> >> missing something, but that just means it needs to be explained a little
-> >> better :)
-> > 
-> >>From the trace on patch 2/5:
-> > 
-> >     BLKTRACE_SETUP(loop0) #2
-> >     [   13.933961] == blk_trace_ioctl(2, BLKTRACESETUP) start
-> >     [   13.936758] === do_blk_trace_setup(2) start
-> >     [   13.938944] === do_blk_trace_setup(2) creating directory
-> >     [   13.941029] === do_blk_trace_setup(2) using what debugfs_lookup() gave
-> >     
-> >     ---> From LOOP_CTL_DEL(loop0) #2
-> >     [   13.971046] === blk_trace_cleanup(7) end
-> >     [   13.973175] == __blk_trace_remove(7) end
-> >     [   13.975352] == blk_trace_shutdown(7) end
-> >     [   13.977415] = __blk_release_queue(7) calling blk_mq_debugfs_unregister()
-> >     [   13.980645] ==== blk_mq_debugfs_unregister(7) begin
-> >     [   13.980696] ==== blk_mq_debugfs_unregister(7) debugfs_remove_recursive(q->debugfs_dir)
-> >     [   13.983118] ==== blk_mq_debugfs_unregister(7) end q->debugfs_dir is NULL
-> >     [   13.986945] = __blk_release_queue(7) blk_mq_debugfs_unregister() end
-> >     [   13.993155] = __blk_release_queue(7) end
-> >     
-> >     ---> From BLKTRACE_SETUP(loop0) #2
-> >     [   13.995928] === do_blk_trace_setup(2) end with ret: 0
-> >     [   13.997623] == blk_trace_ioctl(2, BLKTRACESETUP) end
-> > 
-> > The BLKTRACESETUP above works on request_queue which later
-> > LOOP_CTL_DEL races on and sweeps the debugfs dir underneath us.
-> > If you use this commit alone though, this doesn't fix the race issue
-> > however, and that's because of both still the debugfs_lookup() use
-> > and that we're still using asynchronous removal at this point.
-> > 
-> > refcounting will just ensure we don't take the request_queue underneath
-> > our noses.
+On 2020/4/14 11:03, Zenghui Yu wrote:
+> If we're going to fail out the vgic_add_lpi(), let's make sure the
+> allocated vgic_irq memory is also freed. Though it seems that both
+> cases are unlikely to fail.
 > 
-> I think the above trace reveals a bug in the loop driver. The loop
-> driver shouldn't allow the associated request queue to disappear while
-> the loop device is open.
+> Cc: Zengruan Ye <yezengruan@huawei.com>
+> Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
+> ---
+>   virt/kvm/arm/vgic/vgic-its.c | 8 ++++++--
+>   1 file changed, 6 insertions(+), 2 deletions(-)
+> 
+> diff --git a/virt/kvm/arm/vgic/vgic-its.c b/virt/kvm/arm/vgic/vgic-its.c
+> index d53d34a33e35..3c3b6a0f2dce 100644
+> --- a/virt/kvm/arm/vgic/vgic-its.c
+> +++ b/virt/kvm/arm/vgic/vgic-its.c
+> @@ -98,12 +98,16 @@ static struct vgic_irq *vgic_add_lpi(struct kvm *kvm, u32 intid,
+>   	 * the respective config data from memory here upon mapping the LPI.
+>   	 */
+>   	ret = update_lpi_config(kvm, irq, NULL, false);
+> -	if (ret)
+> +	if (ret) {
+> +		kfree(irq);
+>   		return ERR_PTR(ret);
+> +	}
+>   
+>   	ret = vgic_v3_lpi_sync_pending_status(kvm, irq);
+> -	if (ret)
+> +	if (ret) {
+> +		kfree(irq);
+>   		return ERR_PTR(ret);
+> +	}
 
-The bug was *not* in the driver, the bug was in that deferal of removal
-was allowed to be asynchronous, therefore the removal from a userspace
-perspective *finishes*, but its not actually really done. Back when
-the removal was synchronous, the loop driver waited on cleanup, and
-didn't return to userspace until it was really removed.
+Looking at it again, I realized that this error handling is still not
+complete. Maybe we should use a vgic_put_irq() instead so that we can
+also properly delete the vgic_irq from lpi_list.
 
-This is why I annotated that the move to asynch removal turns out to
-actually be a userspace API regression.
+Marc, what do you think? Could you please help to fix it, or I can
+resend it.
 
-> One may want to have a look at sd_open() in the
-> sd driver. The scsi_disk_get() call in that function not only increases
-> the reference count of the SCSI disk but also of the underlying SCSI device.
 
-Are you saying to use this as a template for what a driver should do or
-do you suspect there is a bug there? Not sure what you mean here.
+Thanks,
+Zenghui
 
-  Luis
