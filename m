@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA74FC2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:49:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51432C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:49:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 926C720732
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:49:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB4ED21927
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:49:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587052155;
-	bh=lmDFwSRJINaEuNcm0imgBOH7qPo597f26/3MDbu0cUE=;
+	s=default; t=1587052159;
+	bh=qs75tEfOs2fCsYk39M8OgekZWGozE5twqSR4yC7eBIg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LC0dhkpZ/O6yMDfqeTRtJ6o0TyUomG7mG3KTtC9dyPLd91fKy3SLpMD5FUx4mP7YM
-	 Sk1BgPCNBkalblo8QC5catGIlnF7GsnGo4C4CvY1Oic8dPavWFX3zLCAPOTbGq6sqm
-	 S2DczQzEEfQKriRfXdIWjWYuDKHCW5OELHTBuDkk=
+	b=WytFQyg9jSAkwQIm3s/6NYBzah6XsOoJM4ONPOyt5ivr/7bYOZBV2wMU/ldfxc9wt
+	 IpGUB5pc78LXFG44CgvmMhWPQ+XE/1Dkp75bVhDndqdJ9qrirKurUPJIZxa6B1pokX
+	 V2rdLEqKWFItKHmMGT4b/DHFSkPcJIaz/yB2P6v0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395405AbgDPPtN (ORCPT
+        id S2395441AbgDPPtR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:49:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44062 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 11:49:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44088 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2896678AbgDPNdE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2896677AbgDPNdE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 16 Apr 2020 09:33:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CB262221F4;
-        Thu, 16 Apr 2020 13:33:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E8BA121D91;
+        Thu, 16 Apr 2020 13:32:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587043981;
-        bh=lmDFwSRJINaEuNcm0imgBOH7qPo597f26/3MDbu0cUE=;
+        s=default; t=1587043976;
+        bh=qs75tEfOs2fCsYk39M8OgekZWGozE5twqSR4yC7eBIg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oTTVzYRv6DFDVpBup/fHKdqLigA1gyT8vtLO7CrIdj9O2GwlSKRNYo1rrTsM82RTo
-         3IJgDF8gP+ASMQNQLdIaoZ4vAgObkpEXePo5O4sj79yvQdDRhaRIPlPHzvVYJCWVsI
-         8u1xiMyO6+PBo+tLTFYdyr2mifUyaAv4r+it4cAk=
+        b=bpAw3kK1vP2/nHZjqZcIPsaPXQol8wldS6KCmGqR9jnPbEhsuB3V5FU2NmM9rhJwf
+         7hCACqCxxyft+N056i9jGf+VvAAqsBc7vAo+KbJFmDLeF2dHsPh+FkUY9mf9oNPKQe
+         CYvx3Wtcv6XIrvGtBmJ8Mdz6RL2m9bF6x1WHaK34=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nick Reitemeyer <nick.reitemeyer@web.de>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        stable@vger.kernel.org, Avraham Stern <avraham.stern@intel.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 007/257] Input: tm2-touchkey - add support for Coreriver TC360 variant
-Date:   Thu, 16 Apr 2020 15:20:58 +0200
-Message-Id: <20200416131326.775263712@linuxfoundation.org>
+Subject: [PATCH 5.5 005/257] iwlwifi: mvm: take the required lock when clearing time event data
+Date:   Thu, 16 Apr 2020 15:20:56 +0200
+Message-Id: <20200416131326.567948201@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.891903893@linuxfoundation.org>
 References: <20200416131325.891903893@linuxfoundation.org>
@@ -60,50 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nick Reitemeyer <nick.reitemeyer@web.de>
+From: Avraham Stern <avraham.stern@intel.com>
 
-[ Upstream commit da3289044833769188c0da945d2cec90af35e87e ]
+[ Upstream commit 089e5016d7eb063712063670e6da7c1a4de1a5c1 ]
 
-The Coreriver TouchCore 360 is like the midas board touchkey, but it is
-using a fixed regulator.
+When receiving a session protection end notification, the time event
+data is cleared without holding the required lock. Fix it.
 
-Signed-off-by: Nick Reitemeyer <nick.reitemeyer@web.de>
-Link: https://lore.kernel.org/r/20200121141525.3404-3-nick.reitemeyer@web.de
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Signed-off-by: Avraham Stern <avraham.stern@intel.com>
+Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
+Link: https://lore.kernel.org/r/iwlwifi.20200306151128.a49846a634e4.Id1ada7c5a964f5e25f4d0eacc2c4b050015b46a2@changeid
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/input/keyboard/tm2-touchkey.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ drivers/net/wireless/intel/iwlwifi/mvm/time-event.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/input/keyboard/tm2-touchkey.c b/drivers/input/keyboard/tm2-touchkey.c
-index 14b55bacdd0f1..fb078e049413f 100644
---- a/drivers/input/keyboard/tm2-touchkey.c
-+++ b/drivers/input/keyboard/tm2-touchkey.c
-@@ -75,6 +75,14 @@ static struct touchkey_variant aries_touchkey_variant = {
- 	.cmd_led_off = ARIES_TOUCHKEY_CMD_LED_OFF,
- };
+diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/time-event.c b/drivers/net/wireless/intel/iwlwifi/mvm/time-event.c
+index c0b420fe5e48f..1babc4bb5194b 100644
+--- a/drivers/net/wireless/intel/iwlwifi/mvm/time-event.c
++++ b/drivers/net/wireless/intel/iwlwifi/mvm/time-event.c
+@@ -785,7 +785,9 @@ void iwl_mvm_rx_session_protect_notif(struct iwl_mvm *mvm,
+ 		if (!le32_to_cpu(notif->status)) {
+ 			iwl_mvm_te_check_disconnect(mvm, vif,
+ 						    "Session protection failure");
++			spin_lock_bh(&mvm->time_event_lock);
+ 			iwl_mvm_te_clear_data(mvm, te_data);
++			spin_unlock_bh(&mvm->time_event_lock);
+ 		}
  
-+static const struct touchkey_variant tc360_touchkey_variant = {
-+	.keycode_reg = 0x00,
-+	.base_reg = 0x00,
-+	.fixed_regulator = true,
-+	.cmd_led_on = TM2_TOUCHKEY_CMD_LED_ON,
-+	.cmd_led_off = TM2_TOUCHKEY_CMD_LED_OFF,
-+};
-+
- static int tm2_touchkey_led_brightness_set(struct led_classdev *led_dev,
- 					    enum led_brightness brightness)
- {
-@@ -327,6 +335,9 @@ static const struct of_device_id tm2_touchkey_of_match[] = {
- 	}, {
- 		.compatible = "cypress,aries-touchkey",
- 		.data = &aries_touchkey_variant,
-+	}, {
-+		.compatible = "coreriver,tc360-touchkey",
-+		.data = &tc360_touchkey_variant,
- 	},
- 	{ },
- };
+ 		if (le32_to_cpu(notif->start)) {
+@@ -801,7 +803,9 @@ void iwl_mvm_rx_session_protect_notif(struct iwl_mvm *mvm,
+ 			 */
+ 			iwl_mvm_te_check_disconnect(mvm, vif,
+ 						    "No beacon heard and the session protection is over already...");
++			spin_lock_bh(&mvm->time_event_lock);
+ 			iwl_mvm_te_clear_data(mvm, te_data);
++			spin_unlock_bh(&mvm->time_event_lock);
+ 		}
+ 
+ 		goto out_unlock;
 -- 
 2.20.1
 
