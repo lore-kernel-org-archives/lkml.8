@@ -2,141 +2,123 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6D39C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 06:29:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 324E7C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 06:30:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C247020732
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 06:29:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A59320732
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 06:30:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZyjhJwx0"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=metafoo.de header.i=@metafoo.de header.b="HGrs7bHQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408015AbgDPG3w (ORCPT
+        id S2407914AbgDPGaK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 02:29:52 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:40927 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2407956AbgDPG3V (ORCPT
+        Thu, 16 Apr 2020 02:30:10 -0400
+Received: from www381.your-server.de ([78.46.137.84]:52766 "EHLO
+        www381.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2408089AbgDPG3z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 02:29:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587018559;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=CROjKRbtqDNxSB0ktwOuky8CijTu7ExjL3TJ8Xjxjqw=;
-        b=ZyjhJwx0LUq26OUvK3n8qBBCu1mZfLzXbMDmrGy0w5GRbh8TMfLf4sj7xJ/QW8QLBGAEyH
-        0Y54lRRFUKNcdrGDSSIOmgntzJA9g7fmNOQje134fr++jI86iqK7ANwsMovywwnNocCUxu
-        7UmmJhKZ4YIM2TGPuE62fDZcBU/YprE=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-52-vOMOp-fePw6MlY42ywi5Nw-1; Thu, 16 Apr 2020 02:29:17 -0400
-X-MC-Unique: vOMOp-fePw6MlY42ywi5Nw-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C8A30802563;
-        Thu, 16 Apr 2020 06:29:13 +0000 (UTC)
-Received: from T590 (ovpn-8-29.pek2.redhat.com [10.72.8.29])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id E8A9312650D;
-        Thu, 16 Apr 2020 06:29:01 +0000 (UTC)
-Date:   Thu, 16 Apr 2020 14:28:56 +0800
-From:   Ming Lei <ming.lei@redhat.com>
-To:     Luis Chamberlain <mcgrof@kernel.org>
-Cc:     axboe@kernel.dk, viro@zeniv.linux.org.uk, bvanassche@acm.org,
-        gregkh@linuxfoundation.org, rostedt@goodmis.org, mingo@redhat.com,
-        jack@suse.cz, nstange@suse.de, akpm@linux-foundation.org,
-        mhocko@suse.com, yukuai3@huawei.com, linux-block@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Omar Sandoval <osandov@fb.com>,
-        Hannes Reinecke <hare@suse.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        syzbot+603294af2d01acfdd6da@syzkaller.appspotmail.com
-Subject: Re: [PATCH 2/5] blktrace: fix debugfs use after free
-Message-ID: <20200416062856.GD2723777@T590>
-References: <20200414041902.16769-1-mcgrof@kernel.org>
- <20200414041902.16769-3-mcgrof@kernel.org>
- <20200416021036.GA2717677@T590>
- <20200416052524.GH11244@42.do-not-panic.com>
- <20200416054750.GA2723777@T590>
- <20200416062054.GL11244@42.do-not-panic.com>
+        Thu, 16 Apr 2020 02:29:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=metafoo.de;
+         s=default2002; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
+        MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender:Reply-To:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=QybabIqwohpn9O1FnmFltvFDw7aWCHKglwxAyd7SJUw=; b=HGrs7bHQSBbDWCz6DsIrljIdJa
+        vEPWCh6HEgse/2C05pjWRKgMAJGKXwOU3fVtqfxEPXItWKy4VZsUsEuETsg3OjhCLr4ne8KY0F+4N
+        Wzdo2jQUSQoBZjCFW/zLi4tqQMBKGyHvKqTeAODeflhOmcj5IIC5Ci4EBJt2PAYLeBRNkk3ec1DO0
+        48JhZO75uuIhFSH332kRrf9QGS0+hUumM8OaAXnn1sdUNo56qQpjF5LUHUlBrIsZ4ZHP5P6CCAa1W
+        C6OJ6R3O1RoPg23c38FP6Wgas1+0KQWkcV04aCkN1WC4U0kSFz5anwz+hHpzcifqO7kChwVdlouQB
+        +WuPf19A==;
+Received: from sslproxy01.your-server.de ([78.46.139.224])
+        by www381.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89_1)
+        (envelope-from <lars@metafoo.de>)
+        id 1jOy20-0001pb-Jb; Thu, 16 Apr 2020 08:29:48 +0200
+Received: from [82.135.73.197] (helo=[192.168.178.20])
+        by sslproxy01.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <lars@metafoo.de>)
+        id 1jOy20-0002EA-B3; Thu, 16 Apr 2020 08:29:48 +0200
+Subject: Re: [PATCH 1/3] iio: adc: ti-ads8344: properly byte swap value
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Jonathan Cameron <jic23@kernel.org>
+Cc:     Hartmut Knaack <knaack.h@gmx.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Gregory CLEMENT <gregory.clement@bootlin.com>,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200415212257.161238-1-alexandre.belloni@bootlin.com>
+ <20200415212257.161238-2-alexandre.belloni@bootlin.com>
+From:   Lars-Peter Clausen <lars@metafoo.de>
+Message-ID: <696223d6-3804-0d22-7564-37161feca869@metafoo.de>
+Date:   Thu, 16 Apr 2020 08:29:45 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200416062054.GL11244@42.do-not-panic.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+In-Reply-To: <20200415212257.161238-2-alexandre.belloni@bootlin.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Authenticated-Sender: lars@metafoo.de
+X-Virus-Scanned: Clear (ClamAV 0.102.2/25783/Wed Apr 15 14:03:13 2020)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 16, 2020 at 06:20:54AM +0000, Luis Chamberlain wrote:
-> On Thu, Apr 16, 2020 at 01:47:50PM +0800, Ming Lei wrote:
-> > On Thu, Apr 16, 2020 at 05:25:24AM +0000, Luis Chamberlain wrote:
-> > > On Thu, Apr 16, 2020 at 10:10:36AM +0800, Ming Lei wrote:
-> > > > In theory, multiple partitions can be traced concurrently, but looks
-> > > > it never works, so it won't cause trouble for multiple partition trace.
-> > > > 
-> > > > One userspace visible change is that blktrace debugfs dir name is switched 
-> > > > to disk name from partition name in case of partition trace, will it
-> > > > break some utilities?
-> > > 
-> > > How is this possible, its not clear to me, we go from:
-> > > 
-> > > -	q->debugfs_dir = debugfs_create_dir(kobject_name(q->kobj.parent),
-> > > -					    blk_debugfs_root);
-> > > 
-> > > To this:
-> > > 
-> > > +	q->debugfs_dir = debugfs_create_dir(kobject_name(q->kobj.parent),
-> > > +					    blk_debugfs_root);
-> > > 
-> > > 
-> > > Maybe I am overlooking something.
-> > 
-> > Your patch removes the blktrace debugfs dir:
-> > 
-> > do_blk_trace_setup()
-> > 
-> > -       dir = debugfs_lookup(buts->name, blk_debugfs_root);
-> > -       if (!dir)
-> > -               bt->dir = dir = debugfs_create_dir(buts->name, blk_debugfs_root);
-> > -
-> > 
-> > Then create blktrace attributes under the dir of q->debugfs_dir.
-> > 
-> > However, buts->name could be one partition device name, but
-> 
-> I can see how buts->name is set to bdevname() which expands to
-> disk_name(bdev->bd_disk, bdev->bd_part->partno, buf).
-> 
-> > q->debugfs_dir has to be disk name.
-> 
-> I can't see this, can you point me to where it is clear the
-> request_queue kobject's parent is sure to be the disk name?
+On 4/15/20 11:22 PM, Alexandre Belloni wrote:
+> The first received byte is the MSB, followed by the LSB so the value needs
+> to be byte swapped.
+>
+> Also, the ADC actually has a delay of one clock on the SPI bus. Read three
+> bytes to get the last bit.
+>
+> Fixes: 8dd2d7c0fed7 ("iio: adc: Add driver for the TI ADS8344 A/DC chips")
+> Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+> ---
+>   drivers/iio/adc/ti-ads8344.c | 6 +++---
+>   1 file changed, 3 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/iio/adc/ti-ads8344.c b/drivers/iio/adc/ti-ads8344.c
+> index 9a460807d46d..6da50ea35217 100644
+> --- a/drivers/iio/adc/ti-ads8344.c
+> +++ b/drivers/iio/adc/ti-ads8344.c
+> @@ -29,7 +29,6 @@ struct ads8344 {
+>   	struct mutex lock;
+>   
+>   	u8 tx_buf ____cacheline_aligned;
+> -	u16 rx_buf;
+>   };
+>   
+>   #define ADS8344_VOLTAGE_CHANNEL(chan, si)				\
+> @@ -76,6 +75,7 @@ static int ads8344_adc_conversion(struct ads8344 *adc, int channel,
+>   {
+>   	struct spi_device *spi = adc->spi;
+>   	int ret;
+> +	u8 buf[3];
+Same as with spi_write(), spi_read() transfer buffers should not be on 
+the stack in case the driver tries to use it for DMA.
+>   
+>   	adc->tx_buf = ADS8344_START;
+>   	if (!differential)
+> @@ -89,11 +89,11 @@ static int ads8344_adc_conversion(struct ads8344 *adc, int channel,
+>   
+>   	udelay(9);
+>   
+> -	ret = spi_read(spi, &adc->rx_buf, 2);
+> +	ret = spi_read(spi, buf, sizeof(buf));
+>   	if (ret)
+>   		return ret;
+>   
+> -	return adc->rx_buf;
+> +	return buf[0] << 9 | buf[1] << 1 | buf[2] >> 7;
+>   }
+>   
+>   static int ads8344_read_raw(struct iio_dev *iio,
 
-blk_register_queue():
-	...
-	ret = kobject_add(&q->kobj, kobject_get(&dev->kobj), "%s", "queue");
-	...
-> 
-> If it is different, the issue I don't think should be debugfs, but
-> the bigger issue would be that blktrace on two different partitions
-> would clash.
-> 
-> Also, the *old* lookup intent on partitions always would fail on mq
-> and we'd end up creating a directory.
-> 
-> I think we'd need to create a directory per partition, even when we
-> don't use blktrace. That makes this more complex than I'd hope for.
-
-Anyway, the current ABI can't be broken, also I'd suggest to understand
-how the userpace utility uses blktrace syscall interfaces first before
-figuring any new approach.
-
-Thanks, 
-Ming
 
