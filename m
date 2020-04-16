@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-11.7 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB73EC352BE
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 09:12:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5B7AC2BB85
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 09:12:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C08A920787
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 09:12:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8AF120771
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 09:12:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2503551AbgDPJMh (ORCPT
+        id S2503569AbgDPJMr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 05:12:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37670 "EHLO
+        Thu, 16 Apr 2020 05:12:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37666 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2502363AbgDPIb6 (ORCPT
+        with ESMTP id S2502360AbgDPIb6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 16 Apr 2020 04:31:58 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DADFBC025483;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99890C025481;
         Thu, 16 Apr 2020 01:31:38 -0700 (PDT)
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jOzvp-0000qW-7L; Thu, 16 Apr 2020 10:31:33 +0200
+        id 1jOzvk-0000oh-F2; Thu, 16 Apr 2020 10:31:28 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id DB17A1C0481;
-        Thu, 16 Apr 2020 10:31:29 +0200 (CEST)
-Date:   Thu, 16 Apr 2020 08:31:29 -0000
-From:   "tip-bot2 for Jin Yao" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 034091C001F;
+        Thu, 16 Apr 2020 10:31:28 +0200 (CEST)
+Date:   Thu, 16 Apr 2020 08:31:27 -0000
+From:   "tip-bot2 for Arnaldo Carvalho de Melo" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/urgent] perf stat: Fix no metric header if --per-socket
- and --metric-only set
-Cc:     Jin Yao <yao.jin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
+Subject: [tip: perf/urgent] tools arch x86: Sync asm/cpufeatures.h with the
+ kernel sources
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Borislav Petkov <bp@suse.de>,
+        Kim Phillips <kim.phillips@amd.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Wei Huang <wei.huang2@amd.com>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200331180226.25915-1-yao.jin@linux.intel.com>
-References: <20200331180226.25915-1-yao.jin@linux.intel.com>
 MIME-Version: 1.0
-Message-ID: <158702588951.28353.3843175338082747310.tip-bot2@tip-bot2>
+Message-ID: <158702588758.28353.11408739688549875929.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -64,85 +64,73 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the perf/urgent branch of tip:
 
-Commit-ID:     8358f698ec9d8467ad00c045e4d83c3e4acc7db4
-Gitweb:        https://git.kernel.org/tip/8358f698ec9d8467ad00c045e4d83c3e4acc7db4
-Author:        Jin Yao <yao.jin@linux.intel.com>
-AuthorDate:    Wed, 01 Apr 2020 02:02:26 +08:00
+Commit-ID:     e00a2d907ec9bf0e8a46543857f25ce95980c341
+Gitweb:        https://git.kernel.org/tip/e00a2d907ec9bf0e8a46543857f25ce95980c341
+Author:        Arnaldo Carvalho de Melo <acme@redhat.com>
+AuthorDate:    Tue, 14 Apr 2020 09:08:23 -03:00
 Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitterDate: Tue, 14 Apr 2020 08:49:26 -03:00
+CommitterDate: Tue, 14 Apr 2020 09:08:23 -03:00
 
-perf stat: Fix no metric header if --per-socket and --metric-only set
+tools arch x86: Sync asm/cpufeatures.h with the kernel sources
 
-We received a report that was no metric header displayed if --per-socket
-and --metric-only were both set.
+To pick up the changes from:
 
-It's hard for script to parse the perf-stat output. This patch fixes this
-issue.
+  077168e241ec ("x86/mce/amd: Add PPIN support for AMD MCE")
+  753039ef8b2f ("x86/cpu/amd: Call init_amd_zn() om Family 19h processors too")
+  6650cdd9a8cc ("x86/split_lock: Enable split lock detection by kernel")
 
-Before:
+These don't cause any changes in tooling, just silences this perf build
+warning:
 
-  root@kbl-ppc:~# perf stat -a -M CPI --metric-only --per-socket
-  ^C
-   Performance counter stats for 'system wide':
+  Warning: Kernel ABI header at 'tools/arch/x86/include/asm/cpufeatures.h' differs from latest version at 'arch/x86/include/asm/cpufeatures.h'
+  diff -u tools/arch/x86/include/asm/cpufeatures.h arch/x86/include/asm/cpufeatures.h
 
-  S0        8                  2.6
-
-         2.215270071 seconds time elapsed
-
-  root@kbl-ppc:~# perf stat -a -M CPI --metric-only --per-socket -I1000
-  #           time socket cpus
-       1.000411692 S0        8                  2.2
-       2.001547952 S0        8                  3.4
-       3.002446511 S0        8                  3.4
-       4.003346157 S0        8                  4.0
-       5.004245736 S0        8                  0.3
-
-After:
-
-  root@kbl-ppc:~# perf stat -a -M CPI --metric-only --per-socket
-  ^C
-   Performance counter stats for 'system wide':
-
-                               CPI
-  S0        8                  2.1
-
-         1.813579830 seconds time elapsed
-
-  root@kbl-ppc:~# perf stat -a -M CPI --metric-only --per-socket -I1000
-  #           time socket cpus                  CPI
-       1.000415122 S0        8                  3.2
-       2.001630051 S0        8                  2.9
-       3.002612278 S0        8                  4.3
-       4.003523594 S0        8                  3.0
-       5.004504256 S0        8                  3.7
-
-Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lore.kernel.org/lkml/20200331180226.25915-1-yao.jin@linux.intel.com
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Borislav Petkov <bp@suse.de>
+Cc: Kim Phillips <kim.phillips@amd.com>
+Cc: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Wei Huang <wei.huang2@amd.com>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/stat-shadow.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ tools/arch/x86/include/asm/cpufeatures.h | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
-index 0fd713d..03ecb8c 100644
---- a/tools/perf/util/stat-shadow.c
-+++ b/tools/perf/util/stat-shadow.c
-@@ -803,8 +803,11 @@ static void generic_metric(struct perf_stat_config *config,
- 				     out->force_header ?
- 				     (metric_name ? metric_name : name) : "", 0);
- 		}
--	} else
--		print_metric(config, ctxp, NULL, NULL, "", 0);
-+	} else {
-+		print_metric(config, ctxp, NULL, NULL,
-+			     out->force_header ?
-+			     (metric_name ? metric_name : name) : "", 0);
-+	}
+diff --git a/tools/arch/x86/include/asm/cpufeatures.h b/tools/arch/x86/include/asm/cpufeatures.h
+index f3327cb..db18994 100644
+--- a/tools/arch/x86/include/asm/cpufeatures.h
++++ b/tools/arch/x86/include/asm/cpufeatures.h
+@@ -217,7 +217,7 @@
+ #define X86_FEATURE_IBRS		( 7*32+25) /* Indirect Branch Restricted Speculation */
+ #define X86_FEATURE_IBPB		( 7*32+26) /* Indirect Branch Prediction Barrier */
+ #define X86_FEATURE_STIBP		( 7*32+27) /* Single Thread Indirect Branch Predictors */
+-#define X86_FEATURE_ZEN			( 7*32+28) /* "" CPU is AMD family 0x17 (Zen) */
++#define X86_FEATURE_ZEN			( 7*32+28) /* "" CPU is AMD family 0x17 or above (Zen) */
+ #define X86_FEATURE_L1TF_PTEINV		( 7*32+29) /* "" L1TF workaround PTE inversion */
+ #define X86_FEATURE_IBRS_ENHANCED	( 7*32+30) /* Enhanced IBRS */
+ #define X86_FEATURE_MSR_IA32_FEAT_CTL	( 7*32+31) /* "" MSR IA32_FEAT_CTL configured */
+@@ -285,6 +285,7 @@
+ #define X86_FEATURE_CQM_MBM_LOCAL	(11*32+ 3) /* LLC Local MBM monitoring */
+ #define X86_FEATURE_FENCE_SWAPGS_USER	(11*32+ 4) /* "" LFENCE in user entry SWAPGS path */
+ #define X86_FEATURE_FENCE_SWAPGS_KERNEL	(11*32+ 5) /* "" LFENCE in kernel entry SWAPGS path */
++#define X86_FEATURE_SPLIT_LOCK_DETECT	(11*32+ 6) /* #AC for split lock */
  
- 	for (i = 1; i < pctx.num_ids; i++)
- 		zfree(&pctx.ids[i].name);
+ /* Intel-defined CPU features, CPUID level 0x00000007:1 (EAX), word 12 */
+ #define X86_FEATURE_AVX512_BF16		(12*32+ 5) /* AVX512 BFLOAT16 instructions */
+@@ -299,6 +300,7 @@
+ #define X86_FEATURE_AMD_IBRS		(13*32+14) /* "" Indirect Branch Restricted Speculation */
+ #define X86_FEATURE_AMD_STIBP		(13*32+15) /* "" Single Thread Indirect Branch Predictors */
+ #define X86_FEATURE_AMD_STIBP_ALWAYS_ON	(13*32+17) /* "" Single Thread Indirect Branch Predictors always-on preferred */
++#define X86_FEATURE_AMD_PPIN		(13*32+23) /* Protected Processor Inventory Number */
+ #define X86_FEATURE_AMD_SSBD		(13*32+24) /* "" Speculative Store Bypass Disable */
+ #define X86_FEATURE_VIRT_SSBD		(13*32+25) /* Virtualized Speculative Store Bypass Disable */
+ #define X86_FEATURE_AMD_SSB_NO		(13*32+26) /* "" Speculative Store Bypass is fixed in hardware. */
+@@ -367,6 +369,7 @@
+ #define X86_FEATURE_INTEL_STIBP		(18*32+27) /* "" Single Thread Indirect Branch Predictors */
+ #define X86_FEATURE_FLUSH_L1D		(18*32+28) /* Flush L1D cache */
+ #define X86_FEATURE_ARCH_CAPABILITIES	(18*32+29) /* IA32_ARCH_CAPABILITIES MSR (Intel) */
++#define X86_FEATURE_CORE_CAPABILITIES	(18*32+30) /* "" IA32_CORE_CAPABILITIES MSR */
+ #define X86_FEATURE_SPEC_CTRL_SSBD	(18*32+31) /* "" Speculative Store Bypass Disable */
+ 
+ /*
