@@ -2,131 +2,91 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC5B3C352BE
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:03:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09A40C2BB85
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:03:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A2EA20771
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:03:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB7A820774
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:03:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587049409;
-	bh=bZPiNyvVGdaJKBKZrFOz0pBhySVoMImQT9fF9e1eZP4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1NQBogG8cGPOwmbBgrkCKBGE7jOfc0xV3mma4qE/KDkJz2MCHwph9UlGI18vhEPGc
-	 EZ8kk/tUshuIdiBOpkGS5ty7QNbacqCOhibqRj2I2lFyXum9a0iSNkn8yTX2tX+gtS
-	 gh8mSS5MBlFUjGSDQ2RuIvmxJrXVRqGjKJSS063s=
+	s=default; t=1587049420;
+	bh=NhtvBsFZKdhQx8mKpVCXLThI3U9c+Uba7tx4ykyajRs=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=gFa9Zov9pSv3Nkwl8lk9CRfrtpWaBlQpcp2cP2IFm9h9SYY0CkxP3PdMPfnmyJ2bW
+	 6wylP9T2Pw8m25himuqKTDjAycxktyHn0vFUvut43OXn+NBfQYZTlH92LqUASz/wJY
+	 YZZXnpE1e2Fb/VKEGdq7pZfDmJZJ1Tpi/LhaB1C8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2441935AbgDPPD0 (ORCPT
+        id S2438680AbgDPPDj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:03:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39974 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2503376AbgDPNxa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:53:30 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A560420786;
-        Thu, 16 Apr 2020 13:53:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587045210;
-        bh=bZPiNyvVGdaJKBKZrFOz0pBhySVoMImQT9fF9e1eZP4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tWGuRn6qZjWxxIkr5SV5xyq8vwqTaI1l3pKiu26+GVkemY44evO3dHrP9sdqg+BXz
-         JxeA22BKWbzMSNmw7aB2C5N5CM6MV9vrghvxfb5oiSNX4PkUhZoEzSMZar1KG3u6Hn
-         DRNGYwnjWVLGI2JMGfQV4RwPkbe4ZeoQvv/B4dak=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, cki-project@redhat.com,
-        Paolo Valente <paolo.valente@linaro.org>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 040/254] block, bfq: move forward the getting of an extra ref in bfq_bfqq_move
-Date:   Thu, 16 Apr 2020 15:22:09 +0200
-Message-Id: <20200416131330.850487573@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200416131325.804095985@linuxfoundation.org>
-References: <20200416131325.804095985@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Thu, 16 Apr 2020 11:03:39 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:44667 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2441866AbgDPPDW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 11:03:22 -0400
+Received: by mail-ot1-f68.google.com with SMTP id j4so3279909otr.11;
+        Thu, 16 Apr 2020 08:03:21 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=NhtvBsFZKdhQx8mKpVCXLThI3U9c+Uba7tx4ykyajRs=;
+        b=TjWUJ5zAuCMKV/+9WBC7+fgsepgjKJGw5BNJxKstk4dvwFxvrezwHpHP2pgqF9g1Sa
+         ykQ3P98d/lzrc792jcX+/73oqFW4l3p6lxRewsKMMKX2cbwnRdLfQP+GgSLhNCm+Yv9p
+         Y47OJ4yCIQQCMuDvjINUbPOZlbHVLhS7sr6EwfnB64StesHwecxn+xMl+o+laC3/LC1h
+         CrrnmcxxOWgKztvfIb6M4c+sscwI7/gkqjXBFzREVHpUFQTlwvClpm2fx/2I7ha5nQwT
+         VPVK0eBGvihSBNUBAvLmUgtcI143osl9ypIkhFYFZasG4bNE6zt4vOB9HiA0ONmXpa8d
+         IDAw==
+X-Gm-Message-State: AGi0PuYJKqmpcKDs1zNoaXVrxJBDUJY9BsBpw9EV/4sBm432My/+F8t4
+        lC1onZKu7x8/SHEQdgDpVF1gYQtzO+YqvTy8/kI=
+X-Google-Smtp-Source: APiQypLc72efPpd7dodFB4nuqP83ZjD9NEcQPJztmkP3OAt5POv/APtHv3UB3jo4tqdUx+X1Km+yjqmHUlsSbehRlls=
+X-Received: by 2002:a9d:1d07:: with SMTP id m7mr25695278otm.167.1587049401160;
+ Thu, 16 Apr 2020 08:03:21 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20200408160905.12101-1-andriy.shevchenko@linux.intel.com> <20200416141730.GE185537@smile.fi.intel.com>
+In-Reply-To: <20200416141730.GE185537@smile.fi.intel.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Thu, 16 Apr 2020 17:03:06 +0200
+Message-ID: <CAJZ5v0ihzD4knW=pKFmcsW0Q9c5rfyJMFh2ChiePe5SWO6G_TQ@mail.gmail.com>
+Subject: Re: [PATCH v1 0/6] platform/x86: intel_cht_int33fe: clean up series
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Darren Hart <dvhart@infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paolo Valente <paolo.valente@linaro.org>
+On Thu, Apr 16, 2020 at 4:17 PM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+>
+> On Wed, Apr 08, 2020 at 07:09:00PM +0300, Andy Shevchenko wrote:
+> > When I started looking into the intel_cht_int33fe driver for an example of use
+> > software node API, I have noticed that it's hard to get and code a bit messy.
+> > Here is a clean up, main part of which is to introduce node groups and API to
+> > register and unregister them. This and some pre-existing APIs can be used in
+> > the driver.
+> >
+> > So, because of cross-subsystem nature of this series, I may recommend to create
+> > myself the immutable branch which can be pulled to Rafael's and Greg's trees
+> > respectively. I'm also open for other proposals how to proceed.
+>
+> Greg, Rafael,
+> any suggestion how to proceed with this series?
+>
+> (It has been reviewed and tested).
 
-[ Upstream commit fd1bb3ae54a9a2e0c42709de861c69aa146b8955 ]
+You can merge them through platform/x86 as far as I'm concerned, or
+please let me know if you want me to pick them up.
 
-Commit ecedd3d7e199 ("block, bfq: get extra ref to prevent a queue
-from being freed during a group move") gets an extra reference to a
-bfq_queue before possibly deactivating it (temporarily), in
-bfq_bfqq_move(). This prevents the bfq_queue from disappearing before
-being reactivated in its new group.
-
-Yet, the bfq_queue may also be expired (i.e., its service may be
-stopped) before the bfq_queue is deactivated. And also an expiration
-may lead to a premature freeing. This commit fixes this issue by
-simply moving forward the getting of the extra reference already
-introduced by commit ecedd3d7e199 ("block, bfq: get extra ref to
-prevent a queue from being freed during a group move").
-
-Reported-by: cki-project@redhat.com
-Tested-by: cki-project@redhat.com
-Signed-off-by: Paolo Valente <paolo.valente@linaro.org>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- block/bfq-cgroup.c | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
-
-diff --git a/block/bfq-cgroup.c b/block/bfq-cgroup.c
-index f0ff6654af289..9d963ed518d1f 100644
---- a/block/bfq-cgroup.c
-+++ b/block/bfq-cgroup.c
-@@ -642,6 +642,12 @@ void bfq_bfqq_move(struct bfq_data *bfqd, struct bfq_queue *bfqq,
- {
- 	struct bfq_entity *entity = &bfqq->entity;
- 
-+	/*
-+	 * Get extra reference to prevent bfqq from being freed in
-+	 * next possible expire or deactivate.
-+	 */
-+	bfqq->ref++;
-+
- 	/* If bfqq is empty, then bfq_bfqq_expire also invokes
- 	 * bfq_del_bfqq_busy, thereby removing bfqq and its entity
- 	 * from data structures related to current group. Otherwise we
-@@ -652,12 +658,6 @@ void bfq_bfqq_move(struct bfq_data *bfqd, struct bfq_queue *bfqq,
- 		bfq_bfqq_expire(bfqd, bfqd->in_service_queue,
- 				false, BFQQE_PREEMPTED);
- 
--	/*
--	 * get extra reference to prevent bfqq from being freed in
--	 * next possible deactivate
--	 */
--	bfqq->ref++;
--
- 	if (bfq_bfqq_busy(bfqq))
- 		bfq_deactivate_bfqq(bfqd, bfqq, false, false);
- 	else if (entity->on_st_or_in_serv)
-@@ -677,7 +677,7 @@ void bfq_bfqq_move(struct bfq_data *bfqd, struct bfq_queue *bfqq,
- 
- 	if (!bfqd->in_service_queue && !bfqd->rq_in_driver)
- 		bfq_schedule_dispatch(bfqd);
--	/* release extra ref taken above */
-+	/* release extra ref taken above, bfqq may happen to be freed now */
- 	bfq_put_queue(bfqq);
- }
- 
--- 
-2.20.1
-
-
-
+Cheers!
