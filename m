@@ -2,121 +2,165 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DC8EC2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 16:16:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F6EAC2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 16:17:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 629762078B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 16:16:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BDE82078B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 16:17:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="QdU4LEVN"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="IlZzqXEu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2410744AbgDPQQJ (ORCPT
+        id S1731171AbgDPQRv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 12:16:09 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:47085 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2438465AbgDPQOQ (ORCPT
+        Thu, 16 Apr 2020 12:17:51 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:23296 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729144AbgDPQRv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 12:14:16 -0400
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03GGCFLB010378;
-        Thu, 16 Apr 2020 18:14:08 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-type; s=STMicroelectronics;
- bh=fjXKxPxzbyDDVi3DEAO1z1G4S222u7YWRmiegBuibKg=;
- b=QdU4LEVNSHbgtgFd4+R31NIe94HOR2k7qZEywHTvP0MEe2gFAcjHDT+It1wbyfsz8b9T
- Phk1HEJ7+5mB/UQhYZJJQB56Rh7ZYg4vdYfW9fE1WVufUZDgZ39+a083xmR1rTuCTw8f
- OVY78E4JkPQ/UA9PNJyCALj4G8KN9akaBge0GTwRd5CKIZcW2AFkctmpspwtXGnkaag+
- YUbd5O1uATKGyWc9FURS2JJzEVXMuLVqNpXkyEkbfby2Afa2yrdEJ7mtqGaPL/NOCiuu
- FWbhwEp02EolXqQcWVBBouqec9F3XmEAS1fcQPANBgObzw46yxfYirJ1XbHT3V1EJENf Gw== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 30dn94kmux-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 16 Apr 2020 18:14:08 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id C141E100034;
-        Thu, 16 Apr 2020 18:14:07 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag3node1.st.com [10.75.127.7])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id B278F2B2D2A;
-        Thu, 16 Apr 2020 18:14:07 +0200 (CEST)
-Received: from localhost (10.75.127.46) by SFHDAG3NODE1.st.com (10.75.127.7)
- with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 16 Apr 2020 18:14:07
- +0200
-From:   Arnaud Pouliquen <arnaud.pouliquen@st.com>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Ohad Ben-Cohen <ohad@wizery.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>
-CC:     <linux-remoteproc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <arnaud.pouliquen@st.com>
-Subject: [RFC 01/18] remoteproc: Store resource table address in rvdev
-Date:   Thu, 16 Apr 2020 18:13:14 +0200
-Message-ID: <20200416161331.7606-2-arnaud.pouliquen@st.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200416161331.7606-1-arnaud.pouliquen@st.com>
-References: <20200416161331.7606-1-arnaud.pouliquen@st.com>
+        Thu, 16 Apr 2020 12:17:51 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1587053870; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=Y2xEDbxocGucjO0qTn7DS340t5u6GBbJbGfyXI59M4M=;
+ b=IlZzqXEu3yaX7Quq5Ym/klZ5V78rD6tJ09LxVJqKfac7dJnKJz2zopso3dg8+y+3skQQ5t4t
+ KXC9CHOM68Nu0kOY+XZpzkcbvCfLmPazue6D1vrLVFcbb22Xhiifv0DIswzviGEve+KwOKTI
+ iYYvXfjCw2LlzmEnDzC2ksurSyA=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e98851f.7f476c392260-smtp-out-n01;
+ Thu, 16 Apr 2020 16:17:35 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id AF45FC433CB; Thu, 16 Apr 2020 16:17:34 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: saiprakash.ranjan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4130BC433F2;
+        Thu, 16 Apr 2020 16:17:34 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.46]
-X-ClientProxiedBy: SFHDAG1NODE1.st.com (10.75.127.1) To SFHDAG3NODE1.st.com
- (10.75.127.7)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-16_06:2020-04-14,2020-04-16 signatures=0
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Thu, 16 Apr 2020 21:47:34 +0530
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc:     Suzuki K Poulose <suzuki.poulose@arm.com>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        linux-arm-msm-owner@vger.kernel.org,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Mike Leach <mike.leach@linaro.org>
+Subject: Re: [PATCH] coresight: tmc: Read TMC mode only when TMC hw is enabled
+In-Reply-To: <CANLsYkxVFMrAOtZhNgQ+uPE5mgt1z8RNa_yAxX2ju7DYrbvBZw@mail.gmail.com>
+References: <20200409113538.5008-1-saiprakash.ranjan@codeaurora.org>
+ <9a792e3e-5a17-156d-4b59-4a3ec8f9993e@arm.com>
+ <1751aeabd22bee18d2eef0f643883265@codeaurora.org>
+ <20200413171418.GB28804@xps15>
+ <75ef334a7e2cc6d87deecadd12c74f59@codeaurora.org>
+ <CANLsYkxVFMrAOtZhNgQ+uPE5mgt1z8RNa_yAxX2ju7DYrbvBZw@mail.gmail.com>
+Message-ID: <00cd8a8e124ada16f36937c4a1b173b9@codeaurora.org>
+X-Sender: saiprakash.ranjan@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Store the resource table address in rvdev struct to be able to
-retrieve it from vdev device.
-This patch prepares the migration of rdev management in rproc_virtio.
-Indeed remoteproc virtio will have to complete the vdev and vrings
-resource table structures.
+Hi Mathieu,
 
-Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
----
- drivers/remoteproc/remoteproc_core.c | 1 +
- include/linux/remoteproc.h           | 2 ++
- 2 files changed, 3 insertions(+)
+On 2020-04-15 21:26, Mathieu Poirier wrote:
+> On Tue, 14 Apr 2020 at 09:47, Sai Prakash Ranjan
+> <saiprakash.ranjan@codeaurora.org> wrote:
+>> 
+>> Hi Mathieu,
+>> 
+>> On 2020-04-13 22:44, Mathieu Poirier wrote:
+>> > On Mon, Apr 13, 2020 at 01:55:30PM +0530, Sai Prakash Ranjan wrote:
+>> >> Hi Suzuki,
+>> >>
+>> >> On 2020-04-13 04:47, Suzuki K Poulose wrote:
+>> >> > Hi Sai,
+>> >> >
+>> >> > On 04/09/2020 12:35 PM, Sai Prakash Ranjan wrote:
+>> >> > > Reading TMC mode register in tmc_read_prepare_etb without
+>> >> > > enabling the TMC hardware leads to async exceptions like
+>> >> > > the one in the call trace below. This can happen if the
+>> >> > > user tries to read the TMC etf data via device node without
+>> >> > > setting up source and the sink first which enables the TMC
+>> >> > > hardware in the path. So make sure that the TMC is enabled
+>> >> > > before we try to read TMC data.
+>> >> >
+>> >> > So, one can trigger the same SError by simply :
+>> >> >
+>> >> > $ cat /sys/bus/coresight/device/tmc_etb0/mgmt/mode
+>> >> >
+>> >>
+>> >> I do not see any SError when I run the above command.
+>> >>
+>> >> localhost ~ # cat /sys/bus/coresight/devices/tmc_etf0/mgmt/mode
+>> >> 0x0
+>> >>
+>> >> And this is most likely due to
+>> >>
+>> >> commit cd9e3474bb793dc ("coresight: add PM runtime calls to
+>> >> coresight_simple_func()")
+>> >
+>> > Ok, so this is related to power management (you can ignore my question
+>> > in the
+>> > previous email).
+>> >
+>> > Regarding function tmc_read_prepare_etb(), the best way to deal with
+>> > this is
+>> > probably make sure drvdata->mode != CS_MODE_DISABLED before reading
+>> > TMC_MODE.
+>> > If there is a buffer to read it will have been copied when the ETB was
+>> > disabled
+>> > and there won't be a need to access the HW.
+>> >
+>> 
+>> This works as well, thanks.
+>> 
+>> diff --git a/drivers/hwtracing/coresight/coresight-tmc-etf.c
+>> b/drivers/hwtracing/coresight/coresight-tmc-etf.c
+>> index d0cc3985b72a..7ffe05930984 100644
+>> --- a/drivers/hwtracing/coresight/coresight-tmc-etf.c
+>> +++ b/drivers/hwtracing/coresight/coresight-tmc-etf.c
+>> @@ -596,6 +596,11 @@ int tmc_read_prepare_etb(struct tmc_drvdata
+>> *drvdata)
+>>                  goto out;
+>>          }
+>> 
+>> +       if (drvdata->mode == CS_MODE_DISABLED) {
+>> +               ret = -EINVAL;
+>> +               goto out;
+>> +       }
+>> +
+> 
+> We are back to your original solution where the ETB buffer can't be
+> read if the ETB itself is not enabled.  It _is_ possible to read the
+> buffer of an ETB that has been disabled.
+> 
+> To fix this consider the following [1].  Take the block at line 607
+> and move it to line 598.  As part of the if() condition at line 619,
+> read the value of the TMC_MODE register and exit if not in circular
+> mode.  If it is in circular mode continue with disabling the hardware.
+> 
+> [1].
+> https://elixir.bootlin.com/linux/v5.7-rc1/source/drivers/hwtracing/coresight/coresight-tmc-etf.c
+> 
 
-diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
-index 097f33e4f1f3..2a0425ab82a7 100644
---- a/drivers/remoteproc/remoteproc_core.c
-+++ b/drivers/remoteproc/remoteproc_core.c
-@@ -504,6 +504,7 @@ static int rproc_handle_vdev(struct rproc *rproc, struct fw_rsc_vdev *rsc,
- 
- 	kref_init(&rvdev->refcount);
- 
-+	rvdev->rsc = rsc;
- 	rvdev->id = rsc->id;
- 	rvdev->rproc = rproc;
- 	rvdev->index = rproc->nb_vdev++;
-diff --git a/include/linux/remoteproc.h b/include/linux/remoteproc.h
-index 16ad66683ad0..a78e28bda962 100644
---- a/include/linux/remoteproc.h
-+++ b/include/linux/remoteproc.h
-@@ -567,6 +567,7 @@ struct rproc_vring {
-  * @rproc: the rproc handle
-  * @vdev: the virio device
-  * @vring: the vrings for this vdev
-+ * @rsc: address of the resource table
-  * @rsc_offset: offset of the vdev's resource entry
-  * @index: vdev position versus other vdev declared in resource table
-  */
-@@ -580,6 +581,7 @@ struct rproc_vdev {
- 	struct list_head node;
- 	struct rproc *rproc;
- 	struct rproc_vring vring[RVDEV_NUM_VRINGS];
-+	struct fw_rsc_vdev *rsc;
- 	u32 rsc_offset;
- 	u32 index;
- };
+Thanks, got it now. Posted v2 - 
+https://lore.kernel.org/patchwork/patch/1226022/
+
+-Sai
+
 -- 
-2.17.1
-
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
+member
+of Code Aurora Forum, hosted by The Linux Foundation
