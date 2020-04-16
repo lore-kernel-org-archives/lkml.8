@@ -2,265 +2,180 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9FC7C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 22:55:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 853FCC2BA2B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 23:03:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 94D31221F9
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 22:55:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B9CC20857
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 23:03:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YXp1wDWM"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vgzVO6BB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728305AbgDPWz2 (ORCPT
+        id S1728530AbgDPXDe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 18:55:28 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:59988 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726441AbgDPWzW (ORCPT
+        Thu, 16 Apr 2020 19:03:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60868 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725988AbgDPXDd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 18:55:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587077720;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=9lsbeDYugkp9ahth1JLAh0S0ZCsR0PhUH/EAQX/EDRo=;
-        b=YXp1wDWMlS95lNTvHr/63zvYqLyR0Ei21irmqm9e/eJyniatCswli+7CfZeQZRlxmyEGTt
-        XnISVHn4P8gh35Ie5MMJRNCnV1XdyUu2LIlwsUzJeTWUpI6W0hIc9Y87cDeea2yOdd8sgA
-        50aAreKZNJxB09TU4I1H2epj06Hn+4k=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-378-35Vgae2DPyuusSZ2CfXqcw-1; Thu, 16 Apr 2020 18:55:17 -0400
-X-MC-Unique: 35Vgae2DPyuusSZ2CfXqcw-1
-Received: by mail-wm1-f71.google.com with SMTP id f17so105708wmm.5
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 15:55:16 -0700 (PDT)
+        Thu, 16 Apr 2020 19:03:33 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EEB19C061A0C;
+        Thu, 16 Apr 2020 16:03:32 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id q22so211750ljg.0;
+        Thu, 16 Apr 2020 16:03:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Z8uoOXp4twM9P9CL3wU74kwZNLbCUFRTsmV6ladVv10=;
+        b=vgzVO6BB7c3OiUt+kzDq772Qp/Lnqd1TScfYm9t/pCh5T1n/iF8jepLsBtpRY227pF
+         vCJ6HSZcjxe/hlnWWEU2H+8rkH+gp+IiaXd8xyvWrTP6hPROy+88zw3i2kDOKNuhsH3D
+         PaBqJeVqNmt2xxJwLhGmqnE121Vv1HyV3U3tMV7lLejOqkHiWLiIJZDDDC93Ld3rn0Bb
+         IltAalp9w37ura37IyuYr73eRh9XnqjbUa7jRVKoXGLDhBA6pi+T+nlm49z8zCMVe3Nt
+         F7hrq7Y/bAl5FsxmNTZ4rvbJTRiKl6VmzTh7I53LHDRP/defhKpqORj4TVC0R3cxkSkP
+         w3cw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=9lsbeDYugkp9ahth1JLAh0S0ZCsR0PhUH/EAQX/EDRo=;
-        b=LM/nmjB3U/gw9qXTYIXaSjHkRaSfE9LsDfKSKiXivTDfZOeG+fEN0dCuY7iRk8tNov
-         xuDD4KfXKess2Yf+kZ+emWxSrYATjEb3fgwEcQsjEXU5blOkzB8RIg573iEq65FAJBKt
-         BX730l5KJpVnx0Rw4+KGJLBHp6DGZLZUOuwMvZwa1klJDueO49kqfrt/ROzpCr2pLCuO
-         yiHPPAYjiB/6cUWlngxRqhOdazOeXmJrQYs0OPLSKjeGnNUlYG8wwe8IzzZ31dOK02Oy
-         HDn/Lp8LTNx74CRp4eTZv8qGolWOxdyaIKHhTyCiM9ENXsuYlzeBN+RnsDy4v1YYDVCr
-         gmKQ==
-X-Gm-Message-State: AGi0PuZS3yTvgfIbA6iO9Dp19TKHeJOFTkj72bCR+EJXUuLHqFRVGKyV
-        kslYgcjLqtUXu/Q63eWNsEyTBZCvuGFBEC/xx2nCXfIi/tNgngFJqEir6Jzq7UpVJyEGbRpHVWQ
-        m7v3BWxGKz0kdXFnEY3bwcYBC
-X-Received: by 2002:adf:9d83:: with SMTP id p3mr610160wre.142.1587077715594;
-        Thu, 16 Apr 2020 15:55:15 -0700 (PDT)
-X-Google-Smtp-Source: APiQypKqqEBtScGXpogtjB81/FXXZd5Rlg+Ab1dKWQPXOFKpcRMvC/kGOOlvzZHP/qvFjygZmEu/KA==
-X-Received: by 2002:adf:9d83:: with SMTP id p3mr610136wre.142.1587077715334;
-        Thu, 16 Apr 2020 15:55:15 -0700 (PDT)
-Received: from redhat.com (bzq-79-183-51-3.red.bezeqint.net. [79.183.51.3])
-        by smtp.gmail.com with ESMTPSA id 138sm5885051wmb.14.2020.04.16.15.55.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Apr 2020 15:55:14 -0700 (PDT)
-Date:   Thu, 16 Apr 2020 18:55:11 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Jason Wang <jasowang@redhat.com>
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
-        netdev@vger.kernel.org, geert@linux-m68k.org,
-        tsbogend@alpha.franken.de, benh@kernel.crashing.org,
-        paulus@samba.org, heiko.carstens@de.ibm.com, gor@linux.ibm.com,
-        borntraeger@de.ibm.com, Michael Ellerman <mpe@ellerman.id.au>
-Subject: Re: [PATCH V2] vhost: do not enable VHOST_MENU by default
-Message-ID: <20200416185426-mutt-send-email-mst@kernel.org>
-References: <20200415024356.23751-1-jasowang@redhat.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Z8uoOXp4twM9P9CL3wU74kwZNLbCUFRTsmV6ladVv10=;
+        b=s/xuW7rmoNj8+oR9R6RmFGo7MdNJtoiLbZo3FVm1dcUX1GYnm5k1vd4MODdym8rrR8
+         njWobSp/a2D/XcP4ecLB6UWZd0PWuIMjrG7fHuwLtQKWJsTe7IaFZvSxNU5PhJIZiA+j
+         gbhjumGylbY8BDYOJd64FlaGekTujboxq/bWyxf9DrWBHsZgtf8Wu8mXXEeaVTjo63QT
+         mrzX3iYom6z+bW2AxOJbv+RhzkMMCo6xmlzh/7i0gWfP9+9ukzpoZE0elvzsFQis9zYI
+         mmbSppUaj9lHWD6WAVgLT+lPJrrtHgcn45Gg66Jccq7q3UUsZSxdnLoEosn21AZBgVpn
+         jTYg==
+X-Gm-Message-State: AGi0PuYfLZVyVH85VeDeSU35mikfAz0KPk0ye3yIIjoni/bBzNLyFT4u
+        QeNzYVvKwBXm+X3DZtie48bSquE9
+X-Google-Smtp-Source: APiQypK8WnUVD8hasXWixMVEp3FXnqD+7VdEf8+IsRlUpiO6lZKJ8z3vonz33E14poQGWj1nvc6+rw==
+X-Received: by 2002:a2e:854e:: with SMTP id u14mr248556ljj.95.1587078211071;
+        Thu, 16 Apr 2020 16:03:31 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
+        by smtp.googlemail.com with ESMTPSA id d3sm14000341lfq.63.2020.04.16.16.03.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 16 Apr 2020 16:03:30 -0700 (PDT)
+Subject: Re: [PATCH v10 0/2] Panel rotation patches
+To:     "dbasehore ." <dbasehore@chromium.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sean Paul <sean@poorly.run>, Daniel Vetter <daniel@ffwll.ch>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
+References: <20200306002112.255361-1-dbasehore@chromium.org>
+ <ecbfb5f8-615a-4a88-5dac-de17158125bf@gmail.com>
+ <CAGAzgsqpjZxh7PEL_Dy7HrFeFGm7+=F6cL3QG9KmK9CHvDWZ9g@mail.gmail.com>
+ <6dc9ef16-9671-6ce8-27e6-aa1f4c009ee2@gmail.com>
+ <CAGAzgsrNrq+S+-5KEFVnJn6S5DRn1fKkToD5=KR911T9AOAF-w@mail.gmail.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <736ad1d2-4a28-87e8-62f7-28a5582c9fcf@gmail.com>
+Date:   Fri, 17 Apr 2020 02:03:29 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200415024356.23751-1-jasowang@redhat.com>
+In-Reply-To: <CAGAzgsrNrq+S+-5KEFVnJn6S5DRn1fKkToD5=KR911T9AOAF-w@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 15, 2020 at 10:43:56AM +0800, Jason Wang wrote:
-> We try to keep the defconfig untouched after decoupling CONFIG_VHOST
-> out of CONFIG_VIRTUALIZATION in commit 20c384f1ea1a
-> ("vhost: refine vhost and vringh kconfig") by enabling VHOST_MENU by
-> default. Then the defconfigs can keep enabling CONFIG_VHOST_NET
-> without the caring of CONFIG_VHOST.
+15.04.2020 00:32, dbasehore . пишет:
+> On Tue, Apr 14, 2020 at 2:18 PM Dmitry Osipenko <digetx@gmail.com> wrote:
+>>
+>> 14.04.2020 22:32, dbasehore . пишет:
+>>> Hi Dmitry, sorry for the late reply.
+>>>
+>>> On Sun, Mar 8, 2020 at 12:25 PM Dmitry Osipenko <digetx@gmail.com> wrote:
+>>>>
+>>>> 06.03.2020 03:21, Derek Basehore пишет:
+>>>>> This adds the plumbing for reading panel rotation from the devicetree
+>>>>> and sets up adding a panel property for the panel orientation on
+>>>>> Mediatek SoCs when a rotation is present.
+>>>>
+>>>> Hello Derek and everyone,
+>>>>
+>>>> I'm looking at adding display rotation support to NVIDIA Tegra DRM
+>>>> driver because some devices have display panel physically mounted
+>>>> upside-down, and thus, display controller's scan-out needs to be rotated
+>>>> by 180° in this case.
+>>>>
+>>>> Derek, yours panel-rotation patches add support for assigning panel's
+>>>> orientation to the connector, but then only primary display plane
+>>>> receives rotation value in [1], while rotation needs to be applied to
+>>>> all available overlay/cursor planes and this should happen in other
+>>>> places than [1] as well.
+>>>
+>>> This is intended. We don't correct the output in the kernel. We
+>>> instead rely on notifying userspace that the panel is rotated, then we
+>>> handle it there.
+>>>
+>>>>
+>>>> [1] drm_client_modeset_commit_atomic()
+>>>>
+>>>> Please also note that in a case of the scan-out rotation, plane's
+>>>> coordinates need to be changed in accordance to the display's rotation.
+>>>>
+>>>> I looked briefly through the DRM code and my understanding that the DRM
+>>>> core currently doesn't support use-case where scan-out needs to rotated
+>>>> based on a panel's orientation, correct? Is it the use-case you're
+>>>> working on for the Mediatek driver?
+>>>
+>>> Yes, we rely on userspace to rotate the output. The major reason for
+>>> this is because there may not be a "free" hardware rotation that can
+>>> be applied to the overlay. Sean Paul and others also preferred that
+>>> userspace control what is output to the screen instead of the kernel
+>>> taking care of it. This code just adds the drm property to the panel.
+>>>
+>>
+>> Could you please explain what that userspace is?
 > 
-> But this will leave a "CONFIG_VHOST_MENU=y" in all defconfigs and even
-> for the ones that doesn't want vhost. So it actually shifts the
-> burdens to the maintainers of all other to add "CONFIG_VHOST_MENU is
-> not set". So this patch tries to enable CONFIG_VHOST explicitly in
-> defconfigs that enables CONFIG_VHOST_NET and CONFIG_VHOST_VSOCK.
+> This was added for Chrome OS, which uses its own graphics stack,
+> Ozone, instead of Xorg.
 > 
-> Acked-by: Christian Borntraeger <borntraeger@de.ibm.com> (s390)
-> Acked-by: Michael Ellerman <mpe@ellerman.id.au> (powerpc)
-> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-> Cc: Paul Mackerras <paulus@samba.org>
-> Cc: Michael Ellerman <mpe@ellerman.id.au>
-> Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
-> Cc: Vasily Gorbik <gor@linux.ibm.com>
-> Cc: Christian Borntraeger <borntraeger@de.ibm.com>
-> Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
-> Signed-off-by: Jason Wang <jasowang@redhat.com>
 
-I rebased this on top of OABI fix since that
-seems more orgent to fix.
-Pushed to my vhost branch pls take a look and
-if possible test.
-Thanks!
+Thank you very much for the clarification.
 
-> ---
-> Change since V1:
-> - depends on EVENTFD for VHOST
-> ---
->  arch/mips/configs/malta_kvm_defconfig  |  1 +
->  arch/powerpc/configs/powernv_defconfig |  1 +
->  arch/powerpc/configs/ppc64_defconfig   |  1 +
->  arch/powerpc/configs/pseries_defconfig |  1 +
->  arch/s390/configs/debug_defconfig      |  1 +
->  arch/s390/configs/defconfig            |  1 +
->  drivers/vhost/Kconfig                  | 26 +++++++++-----------------
->  7 files changed, 15 insertions(+), 17 deletions(-)
-> 
-> diff --git a/arch/mips/configs/malta_kvm_defconfig b/arch/mips/configs/malta_kvm_defconfig
-> index 8ef612552a19..06f0c7a0ca87 100644
-> --- a/arch/mips/configs/malta_kvm_defconfig
-> +++ b/arch/mips/configs/malta_kvm_defconfig
-> @@ -18,6 +18,7 @@ CONFIG_PCI=y
->  CONFIG_VIRTUALIZATION=y
->  CONFIG_KVM=m
->  CONFIG_KVM_MIPS_DEBUG_COP0_COUNTERS=y
-> +CONFIG_VHOST=m
->  CONFIG_VHOST_NET=m
->  CONFIG_MODULES=y
->  CONFIG_MODULE_UNLOAD=y
-> diff --git a/arch/powerpc/configs/powernv_defconfig b/arch/powerpc/configs/powernv_defconfig
-> index 71749377d164..404245b4594d 100644
-> --- a/arch/powerpc/configs/powernv_defconfig
-> +++ b/arch/powerpc/configs/powernv_defconfig
-> @@ -346,5 +346,6 @@ CONFIG_CRYPTO_DEV_VMX=y
->  CONFIG_VIRTUALIZATION=y
->  CONFIG_KVM_BOOK3S_64=m
->  CONFIG_KVM_BOOK3S_64_HV=m
-> +CONFIG_VHOST=m
->  CONFIG_VHOST_NET=m
->  CONFIG_PRINTK_TIME=y
-> diff --git a/arch/powerpc/configs/ppc64_defconfig b/arch/powerpc/configs/ppc64_defconfig
-> index 7e68cb222c7b..4599fc7be285 100644
-> --- a/arch/powerpc/configs/ppc64_defconfig
-> +++ b/arch/powerpc/configs/ppc64_defconfig
-> @@ -61,6 +61,7 @@ CONFIG_ELECTRA_CF=y
->  CONFIG_VIRTUALIZATION=y
->  CONFIG_KVM_BOOK3S_64=m
->  CONFIG_KVM_BOOK3S_64_HV=m
-> +CONFIG_VHOST=m
->  CONFIG_VHOST_NET=m
->  CONFIG_OPROFILE=m
->  CONFIG_KPROBES=y
-> diff --git a/arch/powerpc/configs/pseries_defconfig b/arch/powerpc/configs/pseries_defconfig
-> index 6b68109e248f..4cad3901b5de 100644
-> --- a/arch/powerpc/configs/pseries_defconfig
-> +++ b/arch/powerpc/configs/pseries_defconfig
-> @@ -321,5 +321,6 @@ CONFIG_CRYPTO_DEV_VMX=y
->  CONFIG_VIRTUALIZATION=y
->  CONFIG_KVM_BOOK3S_64=m
->  CONFIG_KVM_BOOK3S_64_HV=m
-> +CONFIG_VHOST=m
->  CONFIG_VHOST_NET=m
->  CONFIG_PRINTK_TIME=y
-> diff --git a/arch/s390/configs/debug_defconfig b/arch/s390/configs/debug_defconfig
-> index 0c86ba19fa2b..6ec6e69630d1 100644
-> --- a/arch/s390/configs/debug_defconfig
-> +++ b/arch/s390/configs/debug_defconfig
-> @@ -57,6 +57,7 @@ CONFIG_PROTECTED_VIRTUALIZATION_GUEST=y
->  CONFIG_CMM=m
->  CONFIG_APPLDATA_BASE=y
->  CONFIG_KVM=m
-> +CONFIG_VHOST=m
->  CONFIG_VHOST_NET=m
->  CONFIG_VHOST_VSOCK=m
->  CONFIG_OPROFILE=m
-> diff --git a/arch/s390/configs/defconfig b/arch/s390/configs/defconfig
-> index 6b27d861a9a3..d1b3bf83d687 100644
-> --- a/arch/s390/configs/defconfig
-> +++ b/arch/s390/configs/defconfig
-> @@ -57,6 +57,7 @@ CONFIG_PROTECTED_VIRTUALIZATION_GUEST=y
->  CONFIG_CMM=m
->  CONFIG_APPLDATA_BASE=y
->  CONFIG_KVM=m
-> +CONFIG_VHOST=m
->  CONFIG_VHOST_NET=m
->  CONFIG_VHOST_VSOCK=m
->  CONFIG_OPROFILE=m
-> diff --git a/drivers/vhost/Kconfig b/drivers/vhost/Kconfig
-> index e79cbbdfea45..29f171a53d8a 100644
-> --- a/drivers/vhost/Kconfig
-> +++ b/drivers/vhost/Kconfig
-> @@ -12,23 +12,19 @@ config VHOST_RING
->  	  This option is selected by any driver which needs to access
->  	  the host side of a virtio ring.
->  
-> -config VHOST
-> -	tristate
-> +menuconfig VHOST
-> +	tristate "Vhost Devices"
-> +	depends on EVENTFD
->  	select VHOST_IOTLB
->  	help
-> -	  This option is selected by any driver which needs to access
-> -	  the core of vhost.
-> +	  Enable option to support host kernel or hardware accelerator
-> +	  for virtio device.
->  
-> -menuconfig VHOST_MENU
-> -	bool "VHOST drivers"
-> -	default y
-> -
-> -if VHOST_MENU
-> +if VHOST
->  
->  config VHOST_NET
->  	tristate "Host kernel accelerator for virtio net"
-> -	depends on NET && EVENTFD && (TUN || !TUN) && (TAP || !TAP)
-> -	select VHOST
-> +	depends on NET && (TUN || !TUN) && (TAP || !TAP)
->  	---help---
->  	  This kernel module can be loaded in host kernel to accelerate
->  	  guest networking with virtio_net. Not to be confused with virtio_net
-> @@ -39,8 +35,7 @@ config VHOST_NET
->  
->  config VHOST_SCSI
->  	tristate "VHOST_SCSI TCM fabric driver"
-> -	depends on TARGET_CORE && EVENTFD
-> -	select VHOST
-> +	depends on TARGET_CORE
->  	default n
->  	---help---
->  	Say M here to enable the vhost_scsi TCM fabric module
-> @@ -48,8 +43,7 @@ config VHOST_SCSI
->  
->  config VHOST_VSOCK
->  	tristate "vhost virtio-vsock driver"
-> -	depends on VSOCKETS && EVENTFD
-> -	select VHOST
-> +	depends on VSOCKETS
->  	select VIRTIO_VSOCKETS_COMMON
->  	default n
->  	---help---
-> @@ -62,8 +56,6 @@ config VHOST_VSOCK
->  
->  config VHOST_VDPA
->  	tristate "Vhost driver for vDPA-based backend"
-> -	depends on EVENTFD
-> -	select VHOST
->  	depends on VDPA
->  	help
->  	  This kernel module can be loaded in host kernel to accelerate
-> -- 
-> 2.20.1
+It's probably not a big problem for something monolithic and customized
+like ChromeOS to issue a software update in order to take into account
+all specifics of a particular device, but this doesn't work nicely for a
+generic software, like a usual Linux distro.
 
+>> AFAIK, things like Xorg modesetting don't support that orientation property.
+
+In my case it's not only the display panel which is upside-down, but
+also the touchscreen. Hence both display output and touchscreen input
+need to be rotated at once, otherwise you'll end up with either display
+or input being upside-down.
+
+The 180° rotation should be free on NVIDIA Tegra. There are no known
+limitations for the planes and BSP kernel video driver handles the
+plane's coordinates/framebuffer rotation within the driver.
+
+The kernel's input subsystem allows us to transparently (for userspace)
+remap the touchscreen input (by specifying generic touchscreen
+device-tree properties), while this is not the case for the DRM subsystem.
+
+@Thierry, @Sean, @Daniel, could you please help me to understand how a
+coordinated display / input rotation could be implemented, making the
+rotation transparent to the user (i.e. avoiding xorg.conf hacking and
+etc)? It should be nice if display's output could be flipped within the
+DRM driver, hiding this fact from userspace.
+
+Will it be okay if we'll add a transparent-rotation support specifically
+to the Tegra DRM driver? For example if device-tree contains
+nvidia,display-flip-y property, then the Tegra DRM driver will take care
+of rotating coordinates/framebuffer of the display planes.
