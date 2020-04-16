@@ -2,53 +2,55 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5ED1C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:32:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8BC6C352BE
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:32:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 89C1121927
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:32:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CABF822242
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:32:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587051167;
-	bh=zKyqng7UQLIRnBl9HEhPGNekpS+6cG07OfzlHTV9SNo=;
+	s=default; t=1587051172;
+	bh=7Cy+Z5k2LepY15IBrx2bepvfp44ohwzM436i7z1/ZDw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Xc+CdiufXb+HE5aLusXQMyqkpQ3UqnDZnUl7+auv0TVUZDUL92PJ5QhoYePHQ3bYv
-	 sObOSAohQeejkkpsQbrl1L4Eplfv3met82LwdT40AwyB8YTPB0n9+WWM2io4toulZ4
-	 kmcFVWVsttsimMqEZOl9xf71tdkpJ+KmdHDKNmVE=
+	b=A8l/nHzox5cmd4GUlvGWhWWibGXkJ8dq2LRmu+cZmUYhO08d7/5cyFaXlTiiB+MTH
+	 dvPNrHZ/F0Vf4q18+k9jLPZXrX01hdHNr1BeKB5/B5NJS+qzNFXfMJN2uJFwfOpp+3
+	 r2KJd5YZcGU0O97TQQLtbw6S38OsU3bRbsH3ElUs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439335AbgDPPcq (ORCPT
+        id S2442472AbgDPPcv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:32:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55120 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 11:32:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55032 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726572AbgDPNmL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:42:11 -0400
+        id S1726539AbgDPNmF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:42:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B89A2214D8;
-        Thu, 16 Apr 2020 13:42:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B8BA620732;
+        Thu, 16 Apr 2020 13:42:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044530;
-        bh=zKyqng7UQLIRnBl9HEhPGNekpS+6cG07OfzlHTV9SNo=;
+        s=default; t=1587044525;
+        bh=7Cy+Z5k2LepY15IBrx2bepvfp44ohwzM436i7z1/ZDw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zc5LEz+lDAbrXtEtCe0YTHqCBZEnUxW3uoBpI/UG0Hd9dByzqvyryK54kjRCm+N8d
-         wRYEb/Ogan+LXdIMrKhsbr97iEKFq0sfvyQpwfrDT7npwazWnTiC89Kn8+r/uV5afM
-         wiAPbEMndFJkWSZyhBT1R0ADHdLaYPIXrGgSbHVQ=
+        b=we+0Zhxjp3acpJ3s9OZLM6Ni6sVH/fo/LT2zJx/j6SDSi02GPto6Jgxob/cGVlr0D
+         /tGiAlhFaFfGlTmEx3Q6iv19A8+YkCosXlROymxt+9zziDlpX3GaWUrdXH3MYFC7wT
+         iK1YxIO/5XuXls4rZfnUx2ZyHZ6XNODaFC3CWY94=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Faiz Abbas <faiz_abbas@ti.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 256/257] mmc: sdhci: Convert sdhci_set_timeout_irq() to non-static
-Date:   Thu, 16 Apr 2020 15:25:07 +0200
-Message-Id: <20200416131357.487296244@linuxfoundation.org>
+        stable@vger.kernel.org, Christophe Leroy <christophe.leroy@c-s.fr>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Leonardo Bras <leonardo@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Shuah Khan <shuah@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.5 203/257] selftests/vm: fix map_hugetlb length used for testing read and write
+Date:   Thu, 16 Apr 2020 15:24:14 +0200
+Message-Id: <20200416131351.454384761@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.891903893@linuxfoundation.org>
 References: <20200416131325.891903893@linuxfoundation.org>
@@ -61,56 +63,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Faiz Abbas <faiz_abbas@ti.com>
+From: Christophe Leroy <christophe.leroy@c-s.fr>
 
-[ Upstream commit 7907ebe741a7f14ed12889ebe770438a4ff47613 ]
+commit cabc30da10e677c67ab9a136b1478175734715c5 upstream.
 
-Export sdhci_set_timeout_irq() so that it is accessible from platform drivers.
+Commit fa7b9a805c79 ("tools/selftest/vm: allow choosing mem size and page
+size in map_hugetlb") added the possibility to change the size of memory
+mapped for the test, but left the read and write test using the default
+value.  This is unnoticed when mapping a length greater than the default
+one, but segfaults otherwise.
 
-Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
-Link: https://lore.kernel.org/r/20200116105154.7685-6-faiz_abbas@ti.com
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fix read_bytes() and write_bytes() by giving them the real length.
+
+Also fix the call to munmap().
+
+Fixes: fa7b9a805c79 ("tools/selftest/vm: allow choosing mem size and page size in map_hugetlb")
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Reviewed-by: Leonardo Bras <leonardo@linux.ibm.com>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Shuah Khan <shuah@kernel.org>
+Cc: <stable@vger.kernel.org>
+Link: http://lkml.kernel.org/r/9a404a13c871c4bd0ba9ede68f69a1225180dd7e.1580978385.git.christophe.leroy@c-s.fr
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/mmc/host/sdhci.c | 3 ++-
- drivers/mmc/host/sdhci.h | 1 +
- 2 files changed, 3 insertions(+), 1 deletion(-)
+ tools/testing/selftests/vm/map_hugetlb.c |   14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
-index 659a9459ace34..29c854e48bc69 100644
---- a/drivers/mmc/host/sdhci.c
-+++ b/drivers/mmc/host/sdhci.c
-@@ -992,7 +992,7 @@ static void sdhci_set_transfer_irqs(struct sdhci_host *host)
- 	sdhci_writel(host, host->ier, SDHCI_SIGNAL_ENABLE);
+--- a/tools/testing/selftests/vm/map_hugetlb.c
++++ b/tools/testing/selftests/vm/map_hugetlb.c
+@@ -45,20 +45,20 @@ static void check_bytes(char *addr)
+ 	printf("First hex is %x\n", *((unsigned int *)addr));
  }
  
--static void sdhci_set_data_timeout_irq(struct sdhci_host *host, bool enable)
-+void sdhci_set_data_timeout_irq(struct sdhci_host *host, bool enable)
+-static void write_bytes(char *addr)
++static void write_bytes(char *addr, size_t length)
  {
- 	if (enable)
- 		host->ier |= SDHCI_INT_DATA_TIMEOUT;
-@@ -1001,6 +1001,7 @@ static void sdhci_set_data_timeout_irq(struct sdhci_host *host, bool enable)
- 	sdhci_writel(host, host->ier, SDHCI_INT_ENABLE);
- 	sdhci_writel(host, host->ier, SDHCI_SIGNAL_ENABLE);
+ 	unsigned long i;
+ 
+-	for (i = 0; i < LENGTH; i++)
++	for (i = 0; i < length; i++)
+ 		*(addr + i) = (char)i;
  }
-+EXPORT_SYMBOL_GPL(sdhci_set_data_timeout_irq);
  
- static void sdhci_set_timeout(struct sdhci_host *host, struct mmc_command *cmd)
+-static int read_bytes(char *addr)
++static int read_bytes(char *addr, size_t length)
  {
-diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
-index fe83ece6965b1..4613d71b3cd6e 100644
---- a/drivers/mmc/host/sdhci.h
-+++ b/drivers/mmc/host/sdhci.h
-@@ -795,5 +795,6 @@ void sdhci_end_tuning(struct sdhci_host *host);
- void sdhci_reset_tuning(struct sdhci_host *host);
- void sdhci_send_tuning(struct sdhci_host *host, u32 opcode);
- void sdhci_abort_tuning(struct sdhci_host *host, u32 opcode);
-+void sdhci_set_data_timeout_irq(struct sdhci_host *host, bool enable);
+ 	unsigned long i;
  
- #endif /* __SDHCI_HW_H */
--- 
-2.20.1
-
+ 	check_bytes(addr);
+-	for (i = 0; i < LENGTH; i++)
++	for (i = 0; i < length; i++)
+ 		if (*(addr + i) != (char)i) {
+ 			printf("Mismatch at %lu\n", i);
+ 			return 1;
+@@ -96,11 +96,11 @@ int main(int argc, char **argv)
+ 
+ 	printf("Returned address is %p\n", addr);
+ 	check_bytes(addr);
+-	write_bytes(addr);
+-	ret = read_bytes(addr);
++	write_bytes(addr, length);
++	ret = read_bytes(addr, length);
+ 
+ 	/* munmap() length of MAP_HUGETLB memory must be hugepage aligned */
+-	if (munmap(addr, LENGTH)) {
++	if (munmap(addr, length)) {
+ 		perror("munmap");
+ 		exit(1);
+ 	}
 
 
