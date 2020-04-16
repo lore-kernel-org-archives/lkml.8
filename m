@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49F7CC2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:48:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C05F7C2BB85
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:48:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1DDEF208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:48:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 985AA20732
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:48:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587044910;
-	bh=lrPL53OSTON8Nsv/n0d7JXU7mtHY8Pldg49JI8vXw20=;
+	s=default; t=1587044939;
+	bh=yJIkyK8GkRpK/3XpjVDYAwzoCs2uv8iHW55ZABuRjzg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jz619CGrNpJjcASc7Hq+xAMbaGim28snwSrTSOJmLLwPyA5smaXI+WEspw/ND23RA
-	 uBzVNSvZbvwlWfi3D7n0r7g0D9CmkPocRETguQpESQvzPq76BcAf+cpRfwQ7sNSIDF
-	 SVcXtg2voX/XGTieYM6fCaFstCV1EvwJ/CxuXzKM=
+	b=Zvr1ndzjaKsBSygXhaGDw6iCajHhv1fHrbgA+Ntx2TvtwYdsw4VxSs9TeEaMBkPTE
+	 IabPziXA1eOACQx9+7BYKJLaTl+5quGOgiLusp1aog1ZGFpVghCLKzcfzitu4iGDw9
+	 mmffwGFJTQ/WSLzBMU1LFsYsMd42Z1rY2F0zm7qg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2898740AbgDPNs0 (ORCPT
+        id S2898521AbgDPNsv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 09:48:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48166 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 09:48:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48204 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2897267AbgDPNgD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:36:03 -0400
+        id S2897278AbgDPNgH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:36:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E709D221F4;
-        Thu, 16 Apr 2020 13:36:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6A7B021BE5;
+        Thu, 16 Apr 2020 13:36:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044163;
-        bh=lrPL53OSTON8Nsv/n0d7JXU7mtHY8Pldg49JI8vXw20=;
+        s=default; t=1587044165;
+        bh=yJIkyK8GkRpK/3XpjVDYAwzoCs2uv8iHW55ZABuRjzg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=g0r9jJ4ZwZyNqxTNSbdaDRR3FCFuEeURLvp75BBWpbfyGtZdqhHmEd47h1BV3qnsg
-         Zcr9tKhJDLFm/KuZquWlJBBwcPLua5aaWMbTvwx6VH4vNN3aYEvc1dFjQoLPuSrA6U
-         028Vs/71fvGvJ7kl1djrB1uuC0QzGJQji56lqj4A=
+        b=E32alX0LxJGvuILYFrmV74DFIlpgrLyJJE1QqHNyn1k+cFrqO2P2aBJwHwQe5+qyf
+         EXSNrqhoKLvfq+9tX8xrlL996U3M9DSSOHrNkPZA6F60V0sKqv3LrbLYS5fbewwt6f
+         mr12RMxvz9RnrBqDkO/Mu1cBXF07uChxYvXmYris=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
+        stable@vger.kernel.org, Jan Engelhardt <jengelh@inai.de>,
         "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Subject: [PATCH 5.5 105/257] ACPI: EC: Avoid printing confusing messages in acpi_ec_setup()
-Date:   Thu, 16 Apr 2020 15:22:36 +0200
-Message-Id: <20200416131339.279815773@linuxfoundation.org>
+Subject: [PATCH 5.5 106/257] acpi/x86: ignore unspecified bit positions in the ACPI global lock field
+Date:   Thu, 16 Apr 2020 15:22:37 +0200
+Message-Id: <20200416131339.419444813@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.891903893@linuxfoundation.org>
 References: <20200416131325.891903893@linuxfoundation.org>
@@ -59,62 +59,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+From: Jan Engelhardt <jengelh@inai.de>
 
-commit c823c17a8ea4db4943152388a0beb9a556715716 upstream.
+commit ecb9c790999fd6c5af0f44783bd0217f0b89ec2b upstream.
 
-It doesn't really make sense to pass ec->handle of the ECDT EC to
-acpi_handle_info(), because it is set to ACPI_ROOT_OBJECT in
-acpi_ec_ecdt_probe(), so rework acpi_ec_setup() to avoid using
-acpi_handle_info() for printing messages.
+The value in "new" is constructed from "old" such that all bits defined
+as reserved by the ACPI spec[1] are left untouched. But if those bits
+do not happen to be all zero, "new < 3" will not evaluate to true.
 
-First, notice that the "Used as first EC" message is not really
-useful, because it is immediately followed by a more meaningful one
-from either acpi_ec_ecdt_probe() or acpi_ec_dsdt_probe() (the latter
-also includes the EC object path), so drop it altogether.
+The firmware of the laptop(s) Medion MD63490 / Akoya P15648 comes with
+garbage inside the "FACS" ACPI table. The starting value is
+old=0x4944454d, therefore new=0x4944454e, which is >= 3. Mask off
+the reserved bits.
 
-Second, use pr_info() for printing the EC configuration information.
+[1] https://uefi.org/sites/default/files/resources/ACPI_6_2.pdf
 
-While at it, make the code in question avoid printing invalid GPE or
-IRQ numbers and make it print the GPE/IRQ information only when the
-driver is ready to handle events.
-
-Fixes: 72c77b7ea9ce ("ACPI / EC: Cleanup first_ec/boot_ec code")
-Fixes: 406857f773b0 ("ACPI: EC: add support for hardware-reduced systems")
-Cc: 5.5+ <stable@vger.kernel.org> # 5.5+
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=206553
+Cc: All applicable <stable@vger.kernel.org>
+Signed-off-by: Jan Engelhardt <jengelh@inai.de>
 Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/acpi/ec.c |   15 ++++++++++-----
- 1 file changed, 10 insertions(+), 5 deletions(-)
+ arch/x86/kernel/acpi/boot.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/acpi/ec.c
-+++ b/drivers/acpi/ec.c
-@@ -1592,14 +1592,19 @@ static int acpi_ec_setup(struct acpi_ec
- 		return ret;
- 
- 	/* First EC capable of handling transactions */
--	if (!first_ec) {
-+	if (!first_ec)
- 		first_ec = ec;
--		acpi_handle_info(first_ec->handle, "Used as first EC\n");
-+
-+	pr_info("EC_CMD/EC_SC=0x%lx, EC_DATA=0x%lx\n", ec->command_addr,
-+		ec->data_addr);
-+
-+	if (test_bit(EC_FLAGS_EVENT_HANDLER_INSTALLED, &ec->flags)) {
-+		if (ec->gpe >= 0)
-+			pr_info("GPE=0x%x\n", ec->gpe);
-+		else
-+			pr_info("IRQ=%d\n", ec->irq);
- 	}
- 
--	acpi_handle_info(ec->handle,
--			 "GPE=0x%x, IRQ=%d, EC_CMD/EC_SC=0x%lx, EC_DATA=0x%lx\n",
--			 ec->gpe, ec->irq, ec->command_addr, ec->data_addr);
- 	return ret;
+--- a/arch/x86/kernel/acpi/boot.c
++++ b/arch/x86/kernel/acpi/boot.c
+@@ -1740,7 +1740,7 @@ int __acpi_acquire_global_lock(unsigned
+ 		new = (((old & ~0x3) + 2) + ((old >> 1) & 0x1));
+ 		val = cmpxchg(lock, old, new);
+ 	} while (unlikely (val != old));
+-	return (new < 3) ? -1 : 0;
++	return ((new & 0x3) < 3) ? -1 : 0;
  }
  
+ int __acpi_release_global_lock(unsigned int *lock)
 
 
