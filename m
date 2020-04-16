@@ -2,83 +2,96 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F24BC2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:40:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AF53C352BE
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:40:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7F2CE2076D
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:40:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33F322076D
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:40:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587044442;
+	bh=sPrl9R+yoAc0NrziY7jtHcAjfyMMgN98O+1GI2m295k=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=x6uZx6GXbVa542G1sT9oUQUp5Ja97aozpNPhn9Xvf2ND/dwTL/5XdOI8Kd/Gn7GZD
+	 EgnUcC+MyY9yUmy6sVF/ebI/1t7FV2cOkKHBYMjdb64Qyo8/6NVc22X+cblRWX8abG
+	 ii43uCz+CqDXVSLOHpuD8lTRLFCMPj9S64EBOuG4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2898129AbgDPNkd (ORCPT
+        id S2898152AbgDPNkj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 09:40:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56124 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2896307AbgDPNau (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:30:50 -0400
-Received: from theia.8bytes.org (8bytes.org [IPv6:2a01:238:4383:600:38bc:a715:4b6d:a889])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17B6CC061A0C
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 06:30:50 -0700 (PDT)
-Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id E492DED; Thu, 16 Apr 2020 15:30:46 +0200 (CEST)
-Date:   Thu, 16 Apr 2020 15:30:45 +0200
-From:   Joerg Roedel <joro@8bytes.org>
-To:     Arvind Sankar <nivedita@alum.mit.edu>
-Cc:     x86@kernel.org, hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Jiri Slaby <jslaby@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Juergen Gross <jgross@suse.com>,
-        Kees Cook <keescook@chromium.org>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        Joerg Roedel <jroedel@suse.de>
-Subject: Re: [PATCH 12/70] x86/boot/compressed/64: Add IDT Infrastructure
-Message-ID: <20200416133045.GA4290@8bytes.org>
-References: <20200319091407.1481-1-joro@8bytes.org>
- <20200319091407.1481-13-joro@8bytes.org>
- <20200407022127.GA1048595@rani.riverdale.lan>
+        Thu, 16 Apr 2020 09:40:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41094 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2896304AbgDPNat (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:30:49 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C708C208E4;
+        Thu, 16 Apr 2020 13:30:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587043849;
+        bh=sPrl9R+yoAc0NrziY7jtHcAjfyMMgN98O+1GI2m295k=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=hCT+5IK6qLY1v6AJbD3k9xnadXfpvbRAcz3gMK0GAjGJKKwO/eT0kw/9A71IikKB3
+         x9+ElEzi05ks4KyBX8vjEOZsj3X9JGwuZy/lwuAqHFEAs1clcolqdfvOHicf2NJIk4
+         aXr17cRNfOaT/r2geKyYVU1k2ycar+Ot8YkjIa34=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Subject: [PATCH 4.19 075/146] MIPS: OCTEON: irq: Fix potential NULL pointer dereference
+Date:   Thu, 16 Apr 2020 15:23:36 +0200
+Message-Id: <20200416131253.199088941@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.1
+In-Reply-To: <20200416131242.353444678@linuxfoundation.org>
+References: <20200416131242.353444678@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200407022127.GA1048595@rani.riverdale.lan>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Arvind,
+From: Gustavo A. R. Silva <gustavo@embeddedor.com>
 
-On Mon, Apr 06, 2020 at 10:21:27PM -0400, Arvind Sankar wrote:
-> On Thu, Mar 19, 2020 at 10:13:09AM +0100, Joerg Roedel wrote:
-> > From: Joerg Roedel <jroedel@suse.de>
-> > +/*
-> > + * Reload GDT after relocation - The GDT at the non-relocated position
-> > + * might be overwritten soon by the in-place decompression, so reload
-> > + * GDT at the relocated address. The GDT is referenced by exception
-> > + * handling and needs to be set up correctly.
-> > + */
-> > +	leaq	gdt(%rip), %rax
-> > +	movq	%rax, gdt64+2(%rip)
-> > +	lgdt	gdt64(%rip)
-> > +
-> >  /*
-> >   * Clear BSS (stack is currently empty)
-> >   */
-> 
-> Note that this is now done in mainline as of commit c98a76eabbb6e, just
-> prior to jumping to .Lrelocated, so this can be dropped on the next
-> rebase.
+commit 792a402c2840054533ef56279c212ef6da87d811 upstream.
 
-Thanks for the heads-up, I removed this hunk.
+There is a potential NULL pointer dereference in case kzalloc()
+fails and returns NULL.
 
-Regards,
+Fix this by adding a NULL check on *cd*
 
-	Joerg
+This bug was detected with the help of Coccinelle.
+
+Fixes: 64b139f97c01 ("MIPS: OCTEON: irq: add CIB and other fixes")
+Cc: stable@vger.kernel.org
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ arch/mips/cavium-octeon/octeon-irq.c |    3 +++
+ 1 file changed, 3 insertions(+)
+
+--- a/arch/mips/cavium-octeon/octeon-irq.c
++++ b/arch/mips/cavium-octeon/octeon-irq.c
+@@ -2199,6 +2199,9 @@ static int octeon_irq_cib_map(struct irq
+ 	}
+ 
+ 	cd = kzalloc(sizeof(*cd), GFP_KERNEL);
++	if (!cd)
++		return -ENOMEM;
++
+ 	cd->host_data = host_data;
+ 	cd->bit = hw;
+ 
+
+
