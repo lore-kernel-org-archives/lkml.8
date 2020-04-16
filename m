@@ -2,108 +2,146 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F136C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 04:47:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3B38C2D0EF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 04:55:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 18BFA20771
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 04:47:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="DIr5D1Dw"
+	by mail.kernel.org (Postfix) with ESMTP id D70ED20767
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 04:55:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404631AbgDPErb (ORCPT
+        id S2404726AbgDPEzS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 00:47:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59200 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392038AbgDPErZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 00:47:25 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37904C061A0F
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 21:47:25 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id z26so6271566ljz.11
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 21:47:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+NDlWQ/mRFjSuqtZlOq7qrYq4K4xoJ9j5o51tM/JSCc=;
-        b=DIr5D1DwGtuWE+AQZWvlocaxYUwNMz4kWu1civ3xfMmjTJptX9W/wDWceP+Ufd46OU
-         TMM1FddMh61/VRQPGRl+VZiqTv/2mTZGXp6xwrFGC0wqsbdu1e/qXu7bPPJxzKwElWZ9
-         W+/w8sk81hHsOttLqrUDm1veCpPpttvFydWhg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+NDlWQ/mRFjSuqtZlOq7qrYq4K4xoJ9j5o51tM/JSCc=;
-        b=a9C17VT8JMhGi5CiNd1p+3/JbKRHpb/X+m5qZbg5V+RRvX6dYy+DdUNJwg4ij1Eleq
-         UNFa7enQVAGnvAXa5GT+4gnKNNX8tixGLAqSKMqScQ3i5XbAKZdWe5x+RGBT+2EiVIBR
-         Cn207aN2Ebju8ra1iI/BxdRFwBific8ZIvptXJHaj5dLVHJv6OMH2A/6sI8G7zBMe23w
-         WA2jEDj1DshKk5obSb7G+SGfG7TshP/DnessOZrw/FG2jZNQGIr7/D1On921RJlOOm3w
-         u/TbrpQfA+mAem7PNjKSntKa2+nL/rUU/poVHdr+Q4iBhKLMSpWoti9+0fK/dPdH8xs0
-         G1iA==
-X-Gm-Message-State: AGi0PuY3PVTesrgQTFSrxbsW4XVnsDpf2P4UYLG2qc8PSXNIzUV6KZne
-        EyjGb/njtEWpuoV8A+lmCBnq92luBJ8kUnKWbZ6d/w==
-X-Google-Smtp-Source: APiQypJA4A7ULXkeBweYmQbdUIOUieWPyVIxDPOys0Ry6iqrOvNMb71M3vq6dhM29YnR8rKQis03m1kXD1m5wzUHDRU=
-X-Received: by 2002:a2e:b4d0:: with SMTP id r16mr125354ljm.129.1587012443450;
- Wed, 15 Apr 2020 21:47:23 -0700 (PDT)
+        Thu, 16 Apr 2020 00:55:18 -0400
+Received: from mga05.intel.com ([192.55.52.43]:5444 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2392050AbgDPEzN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 00:55:13 -0400
+IronPort-SDR: Xe/Yh5tA/rdPb13tcbu9p8/t4nh7R4q7k0FoQOwsYA1ikqg3bOLxe9OgxLCLzQ1ViFPjoobkq9
+ 8doApZkQwBqA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2020 21:55:12 -0700
+IronPort-SDR: pZtd7vRp+1wAfFFUc4dYQhNxwL7ML1BPxtXVmt14bXI9MjzxEXGDgb6vWxttxE6aJuQpPdluMT
+ MpBvmjg1273Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,388,1580803200"; 
+   d="scan'208";a="257087980"
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.147])
+  by orsmga006.jf.intel.com with ESMTP; 15 Apr 2020 21:55:11 -0700
+Date:   Wed, 15 Apr 2020 21:55:11 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Jan Kara <jack@suse.cz>
+Cc:     linux-kernel@vger.kernel.org,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jeff Moyer <jmoyer@redhat.com>,
+        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH V8 09/11] fs: Introduce DCACHE_DONTCACHE
+Message-ID: <20200416045511.GI2309605@iweiny-DESK2.sc.intel.com>
+References: <20200415064523.2244712-1-ira.weiny@intel.com>
+ <20200415064523.2244712-10-ira.weiny@intel.com>
+ <20200415090153.GF501@quack2.suse.cz>
 MIME-Version: 1.0
-References: <20200322182019.32493-1-rayagonda.kokatanur@broadcom.com> <20200415122945.GC910@ninjato>
-In-Reply-To: <20200415122945.GC910@ninjato>
-From:   Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
-Date:   Thu, 16 Apr 2020 10:17:11 +0530
-Message-ID: <CAHO=5PF5yOOUUKHzEA1710YRFJe8VvR09HinjR9Hyoo7kXFa=g@mail.gmail.com>
-Subject: Re: [PATCH v1 1/1] i2c: iproc: generate stop event for slave writes
-To:     Wolfram Sang <wsa@the-dreams.de>
-Cc:     Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
-        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
-        Lori Hikichi <lori.hikichi@broadcom.com>,
-        Shreesha Rajashekar <shreesha.rajashekar@broadcom.com>,
-        Nishka Dasgupta <nishkadg.linux@gmail.com>,
-        linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200415090153.GF501@quack2.suse.cz>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 15, 2020 at 5:59 PM Wolfram Sang <wsa@the-dreams.de> wrote:
->
-> On Sun, Mar 22, 2020 at 11:50:19PM +0530, Rayagonda Kokatanur wrote:
-> > When slave status is I2C_SLAVE_RX_END, generate I2C_SLAVE_STOP
-> > event to i2c_client.
-> >
-> > Fixes: c245d94ed106 ("i2c: iproc: Add multi byte read-write support for slave mode")
-> > Signed-off-by: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
->
-> Just to make sure: That means the HW has already detected a STOP
-> condition on the bus?
-Yes.
->
+On Wed, Apr 15, 2020 at 11:01:53AM +0200, Jan Kara wrote:
+> On Tue 14-04-20 23:45:21, ira.weiny@intel.com wrote:
+> > From: Ira Weiny <ira.weiny@intel.com>
+> > 
+> > DCACHE_DONTCACHE indicates a dentry should not be cached on final
+> > dput().
+> > 
+> > Also add a helper function which will flag I_DONTCACHE as well ad
+> > DCACHE_DONTCACHE on all dentries point to a specified inode.
+> 
+> I think this sentence needs more work :). Like: Also add a helper function
+> which will mark the inode with I_DONTCACHE flag and also mark all dentries
+> pointing to a specified inode as DCACHE_DONTCACHE.
+> 
+> > 
+> > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+> > 
 > > ---
-> >  drivers/i2c/busses/i2c-bcm-iproc.c | 3 +++
-> >  1 file changed, 3 insertions(+)
-> >
-> > diff --git a/drivers/i2c/busses/i2c-bcm-iproc.c b/drivers/i2c/busses/i2c-bcm-iproc.c
-> > index 30efb7913b2e..b58224b7ba79 100644
-> > --- a/drivers/i2c/busses/i2c-bcm-iproc.c
-> > +++ b/drivers/i2c/busses/i2c-bcm-iproc.c
-> > @@ -360,6 +360,9 @@ static bool bcm_iproc_i2c_slave_isr(struct bcm_iproc_i2c_dev *iproc_i2c,
-> >                       value = (u8)((val >> S_RX_DATA_SHIFT) & S_RX_DATA_MASK);
-> >                       i2c_slave_event(iproc_i2c->slave,
-> >                                       I2C_SLAVE_WRITE_RECEIVED, &value);
-> > +                     if (rx_status == I2C_SLAVE_RX_END)
-> > +                             i2c_slave_event(iproc_i2c->slave,
-> > +                                             I2C_SLAVE_STOP, &value);
-> >               }
-> >       } else if (status & BIT(IS_S_TX_UNDERRUN_SHIFT)) {
-> >               /* Master read other than start */
-> > --
-> > 2.17.1
-> >
+> > Changes from V7:
+> > 	new patch
+> > ---
+> >  fs/dcache.c            |  4 ++++
+> >  fs/inode.c             | 15 +++++++++++++++
+> >  include/linux/dcache.h |  2 ++
+> >  include/linux/fs.h     |  1 +
+> >  4 files changed, 22 insertions(+)
+> 
+> ...
+> 
+> > diff --git a/fs/inode.c b/fs/inode.c
+> > index 93d9252a00ab..b8b1917a324e 100644
+> > --- a/fs/inode.c
+> > +++ b/fs/inode.c
+> > @@ -1526,6 +1526,21 @@ int generic_delete_inode(struct inode *inode)
+> >  }
+> >  EXPORT_SYMBOL(generic_delete_inode);
+> >  
+> > +void flag_inode_dontcache(struct inode *inode)
+> 
+> mark_inode_dontcache?
+
+That works.
+
+> 
+> > +{
+> > +	struct dentry *dent;
+> 
+> This is really nitpicking but dentry variables are usually called 'de' or
+> 'dentry' :)
+
+Easy change.  done.
+
+> 
+> > +
+> > +	rcu_read_lock();
+> 
+> I don't think this list is safe to traverse under RCU. E.g.
+> dentry_unlink_inode() does hlist_del_init(&dentry->d_u.d_alias). Usually,
+> we traverse this list under inode->i_lock protection AFAICS.
+
+Ah...  not sure where I got that.  I thought I found this locked with rcu
+somewhere but I obviously got confused.  And I did not even use the rcu version
+of the list iterator...  :-(
+
+I'll clean it up, thanks for the review,
+Ira
+
+> 
+> 								Honza
+> 
+> > +	hlist_for_each_entry(dent, &inode->i_dentry, d_u.d_alias) {
+> > +		spin_lock(&dent->d_lock);
+> > +		dent->d_flags |= DCACHE_DONTCACHE;
+> > +		spin_unlock(&dent->d_lock);
+> > +	}
+> > +	rcu_read_unlock();
+> > +	inode->i_state |= I_DONTCACHE;
+> > +}
+> > +EXPORT_SYMBOL(flag_inode_dontcache);
+> > +
+> >  /*
+> >   * Called when we're dropping the last reference
+> >   * to an inode.
+> -- 
+> Jan Kara <jack@suse.com>
+> SUSE Labs, CR
