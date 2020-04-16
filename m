@@ -2,278 +2,91 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10E1BC2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 09:58:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DC8AC2BB85
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 10:03:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E249F2078B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 09:58:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1786A2076A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 10:03:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2504231AbgDPJ57 (ORCPT
+        id S2504398AbgDPKDL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 05:57:59 -0400
-Received: from m17618.mail.qiye.163.com ([59.111.176.18]:50308 "EHLO
-        m17618.mail.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2504322AbgDPJ5u (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 05:57:50 -0400
-Received: from ubuntu.localdomain (unknown [58.251.74.226])
-        by m17618.mail.qiye.163.com (Hmail) with ESMTPA id BE89C4E3785;
-        Thu, 16 Apr 2020 15:42:03 +0800 (CST)
-From:   Wang Wenhu <wenhu.wang@vivo.com>
-To:     gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-        oss@buserror.net, christophe.leroy@c-s.fr,
-        linuxppc-dev@lists.ozlabs.org
-Cc:     kernel@vivo.com, Wang Wenhu <wenhu.wang@vivo.com>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH v3,4/4] drivers: uio: new driver for fsl_85xx_cache_sram
-Date:   Thu, 16 Apr 2020 00:41:41 -0700
-Message-Id: <20200416074141.3555-5-wenhu.wang@vivo.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200416074141.3555-1-wenhu.wang@vivo.com>
-References: <20200415152442.122873-1-wenhu.wang@vivo.com>
- <20200416074141.3555-1-wenhu.wang@vivo.com>
-X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgYFAkeWUFZT1VKS0lLS0tJSE1OSkpJSFlXWShZQU
-        hPN1dZLVlBSVdZCQ4XHghZQVk1NCk2OjckKS43PlkG
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6OhQ6Kxw4AjgzFggjHSMjKiM6
-        AggaCVZVSlVKTkNMS0lJQklPSUtJVTMWGhIXVQweFRMOVQwaFRw7DRINFFUYFBZFWVdZEgtZQVlO
-        Q1VJTkpVTE9VSUlNWVdZCAFZQUNLQ043Bg++
-X-HM-Tid: 0a7181f009179376kuwsbe89c4e3785
+        Thu, 16 Apr 2020 06:03:11 -0400
+Received: from mga03.intel.com ([134.134.136.65]:36884 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2504310AbgDPKDD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 06:03:03 -0400
+IronPort-SDR: K5fii6x0a+Q+J/Cpn5rN+BIwiB3uuhBvprcLs2zaEoCfuhqLzcDt6j3r1v+U9B5PHkMQXYdS0c
+ X25UkglEjZ3w==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2020 03:03:02 -0700
+IronPort-SDR: D/jtQe/ve3dW6BN9Lpt8Wr74vjlUp9HCDN8CnSWb6ufNQiwpup6kIF+zzmgt2ISB501s+hEHdi
+ b3SwtvYaQC5g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,390,1580803200"; 
+   d="scan'208";a="363940282"
+Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.87]) ([10.237.72.87])
+  by fmsmga001.fm.intel.com with ESMTP; 16 Apr 2020 03:02:58 -0700
+Subject: Re: [PATCH V1 1/4] mmc: sdhci-msm: Enable MMC_CAP_WAIT_WHILE_BUSY
+ host capability
+To:     Veerabhadrarao Badiganti <vbadigan@codeaurora.org>,
+        ulf.hansson@linaro.org
+Cc:     bjorn.andersson@linaro.org, linux-mmc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        Andy Gross <agross@kernel.org>
+References: <1586706808-27337-1-git-send-email-vbadigan@codeaurora.org>
+ <1586706808-27337-2-git-send-email-vbadigan@codeaurora.org>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Message-ID: <dba669ef-fa43-a380-472e-a682862eb8f3@intel.com>
+Date:   Thu, 16 Apr 2020 13:02:09 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
+MIME-Version: 1.0
+In-Reply-To: <1586706808-27337-2-git-send-email-vbadigan@codeaurora.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A driver for freescale 85xx platforms to access the Cache-Sram form
-user level. This is extremely helpful for some user-space applications
-that require high performance memory accesses.
+On 12/04/20 6:53 pm, Veerabhadrarao Badiganti wrote:
+> MSM sd host controller is capable of HW busy detection of device busy
+> singaling over DAT0 line.
 
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Christophe Leroy <christophe.leroy@c-s.fr>
-Cc: Scott Wood <oss@buserror.net>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: linuxppc-dev@lists.ozlabs.org
-Signed-off-by: Wang Wenhu <wenhu.wang@vivo.com>
----
-Changes since v1:
- * Addressed comments from Greg K-H
- * Moved kfree(info->name) into uio_info_free_internal()
-Changes since v2:
- * Addressed comments from Greg, Scott and Christophe
- * Use "uiomem->internal_addr" as if condition for sram memory free,
-   and memset the uiomem entry
- * Modified of_match_table make the driver apart from Cache-Sram HW info
-   which belong to the HW level driver fsl_85xx_cache_sram to match
- * Use roundup_pow_of_two for align calculation
- * Remove useless clear block of uiomem entries.
- * Use UIO_INFO_VER micro for info->version, and define it as
-   "devicetree,pseudo", meaning this is pseudo device and probed from
-   device tree configuration
- * Select FSL_85XX_CACHE_SRAM rather than depends on it
----
- drivers/uio/Kconfig                   |   9 ++
- drivers/uio/Makefile                  |   1 +
- drivers/uio/uio_fsl_85xx_cache_sram.c | 158 ++++++++++++++++++++++++++
- 3 files changed, 168 insertions(+)
- create mode 100644 drivers/uio/uio_fsl_85xx_cache_sram.c
+singaling -> signaling
 
-diff --git a/drivers/uio/Kconfig b/drivers/uio/Kconfig
-index 202ee81cfc2b..9c3b47461b71 100644
---- a/drivers/uio/Kconfig
-+++ b/drivers/uio/Kconfig
-@@ -105,6 +105,15 @@ config UIO_NETX
- 	  To compile this driver as a module, choose M here; the module
- 	  will be called uio_netx.
- 
-+config UIO_FSL_85XX_CACHE_SRAM
-+	tristate "Freescale 85xx Cache-Sram driver"
-+	depends on FSL_SOC_BOOKE && PPC32
-+	select FSL_85XX_CACHE_SRAM
-+	help
-+	  Generic driver for accessing the Cache-Sram form user level. This
-+	  is extremely helpful for some user-space applications that require
-+	  high performance memory accesses.
-+
- config UIO_FSL_ELBC_GPCM
- 	tristate "eLBC/GPCM driver"
- 	depends on FSL_LBC
-diff --git a/drivers/uio/Makefile b/drivers/uio/Makefile
-index c285dd2a4539..be2056cffc21 100644
---- a/drivers/uio/Makefile
-+++ b/drivers/uio/Makefile
-@@ -10,4 +10,5 @@ obj-$(CONFIG_UIO_NETX)	+= uio_netx.o
- obj-$(CONFIG_UIO_PRUSS)         += uio_pruss.o
- obj-$(CONFIG_UIO_MF624)         += uio_mf624.o
- obj-$(CONFIG_UIO_FSL_ELBC_GPCM)	+= uio_fsl_elbc_gpcm.o
-+obj-$(CONFIG_UIO_FSL_85XX_CACHE_SRAM)	+= uio_fsl_85xx_cache_sram.o
- obj-$(CONFIG_UIO_HV_GENERIC)	+= uio_hv_generic.o
-diff --git a/drivers/uio/uio_fsl_85xx_cache_sram.c b/drivers/uio/uio_fsl_85xx_cache_sram.c
-new file mode 100644
-index 000000000000..8701df695307
---- /dev/null
-+++ b/drivers/uio/uio_fsl_85xx_cache_sram.c
-@@ -0,0 +1,158 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2020 Vivo Communication Technology Co. Ltd.
-+ * Copyright (C) 2020 Wang Wenhu <wenhu.wang@vivo.com>
-+ * All rights reserved.
-+ */
-+
-+#include <linux/platform_device.h>
-+#include <linux/uio_driver.h>
-+#include <linux/stringify.h>
-+#include <linux/module.h>
-+#include <linux/kernel.h>
-+#include <asm/fsl_85xx_cache_sram.h>
-+
-+#define DRIVER_NAME	"uio_fsl_85xx_cache_sram"
-+#define UIO_INFO_VER	"devicetree,pseudo"
-+#define UIO_NAME	"uio_cache_sram"
-+
-+static void uio_info_free_internal(struct uio_info *info)
-+{
-+	struct uio_mem *uiomem = info->mem;
-+
-+	while (uiomem < &info->mem[MAX_UIO_MAPS]) {
-+		if (uiomem->internal_addr) {
-+			mpc85xx_cache_sram_free(uiomem->internal_addr);
-+			kfree(uiomem->name);
-+			memset(uiomem, 0, sizeof(*uiomem));
-+		}
-+		uiomem++;
-+	}
-+
-+	kfree(info->name);
-+}
-+
-+static int uio_fsl_85xx_cache_sram_probe(struct platform_device *pdev)
-+{
-+	struct device_node *parent = pdev->dev.of_node;
-+	struct device_node *node = NULL;
-+	struct uio_info *info;
-+	struct uio_mem *uiomem;
-+	const char *dt_name;
-+	u32 mem_size;
-+	int ret;
-+
-+	/* alloc uio_info for one device */
-+	info = kzalloc(sizeof(*info), GFP_KERNEL);
-+	if (!info)
-+		return -ENOMEM;
-+
-+	/* get optional uio name */
-+	if (of_property_read_string(parent, "uio_name", &dt_name))
-+		dt_name = UIO_NAME;
-+
-+	info->name = kstrdup(dt_name, GFP_KERNEL);
-+	if (!info->name) {
-+		ret = -ENOMEM;
-+		goto err_info_free;
-+	}
-+
-+	uiomem = info->mem;
-+	for_each_child_of_node(parent, node) {
-+		void *virt;
-+		phys_addr_t phys;
-+
-+		ret = of_property_read_u32(node, "cache-mem-size", &mem_size);
-+		if (ret) {
-+			ret = -EINVAL;
-+			goto err_info_free_internal;
-+		}
-+
-+		if (mem_size == 0) {
-+			dev_err(&pdev->dev, "cache-mem-size should not be 0\n");
-+			ret = -EINVAL;
-+			goto err_info_free_internal;
-+		}
-+
-+		virt = mpc85xx_cache_sram_alloc(mem_size,
-+						&phys,
-+						roundup_pow_of_two(mem_size));
-+		if (!virt) {
-+			/* mpc85xx_cache_sram_alloc to define the real cause */
-+			ret = -ENOMEM;
-+			goto err_info_free_internal;
-+		}
-+
-+		uiomem->memtype = UIO_MEM_PHYS;
-+		uiomem->addr = phys;
-+		uiomem->size = mem_size;
-+		uiomem->name = kstrdup(node->name, GFP_KERNEL);;
-+		uiomem->internal_addr = virt;
-+		uiomem++;
-+
-+		if (uiomem >= &info->mem[MAX_UIO_MAPS]) {
-+			dev_warn(&pdev->dev, "more than %d uio-maps for device.\n",
-+				 MAX_UIO_MAPS);
-+			break;
-+		}
-+	}
-+
-+	if (uiomem == info->mem) {
-+		dev_err(&pdev->dev, "error no valid uio-map configured\n");
-+		ret = -EINVAL;
-+		goto err_info_free_internal;
-+	}
-+
-+	info->version = UIO_INFO_VER;
-+
-+	/* register uio device */
-+	if (uio_register_device(&pdev->dev, info)) {
-+		dev_err(&pdev->dev, "uio registration failed\n");
-+		ret = -ENODEV;
-+		goto err_info_free_internal;
-+	}
-+
-+	platform_set_drvdata(pdev, info);
-+
-+	return 0;
-+err_info_free_internal:
-+	uio_info_free_internal(info);
-+err_info_free:
-+	kfree(info);
-+	return ret;
-+}
-+
-+static int uio_fsl_85xx_cache_sram_remove(struct platform_device *pdev)
-+{
-+	struct uio_info *info = platform_get_drvdata(pdev);
-+
-+	uio_unregister_device(info);
-+
-+	uio_info_free_internal(info);
-+
-+	kfree(info);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id uio_mpc85xx_l2ctlr_of_match[] = {
-+	{	.compatible = "uio,mpc85xx-cache-sram",	},
-+	{},
-+};
-+
-+static struct platform_driver uio_fsl_85xx_cache_sram = {
-+	.probe = uio_fsl_85xx_cache_sram_probe,
-+	.remove = uio_fsl_85xx_cache_sram_remove,
-+	.driver = {
-+		.name = DRIVER_NAME,
-+		.owner = THIS_MODULE,
-+		.of_match_table	= uio_mpc85xx_l2ctlr_of_match,
-+	},
-+};
-+
-+module_platform_driver(uio_fsl_85xx_cache_sram);
-+
-+MODULE_AUTHOR("Wang Wenhu <wenhu.wang@vivo.com>");
-+MODULE_DESCRIPTION("Freescale MPC85xx Cache-Sram UIO Platform Driver");
-+MODULE_ALIAS("platform:" DRIVER_NAME);
-+MODULE_LICENSE("GPL v2");
--- 
-2.17.1
+> 
+> So set MMC_CAP_WAIT_WHILE_BUSY capability for qcom sdhc.
+> 
+> Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+
+> ---
+>  drivers/mmc/host/sdhci-msm.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/drivers/mmc/host/sdhci-msm.c b/drivers/mmc/host/sdhci-msm.c
+> index 09ff731..013dcea 100644
+> --- a/drivers/mmc/host/sdhci-msm.c
+> +++ b/drivers/mmc/host/sdhci-msm.c
+> @@ -2087,6 +2087,8 @@ static int sdhci_msm_probe(struct platform_device *pdev)
+>  		goto clk_disable;
+>  	}
+>  
+> +	msm_host->mmc->caps |= MMC_CAP_WAIT_WHILE_BUSY;
+> +
+>  	pm_runtime_get_noresume(&pdev->dev);
+>  	pm_runtime_set_active(&pdev->dev);
+>  	pm_runtime_enable(&pdev->dev);
+> 
 
