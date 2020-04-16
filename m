@@ -2,100 +2,139 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBCFBC2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:57:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52A7DC2BB85
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:57:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A6D9E206A2
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:57:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25FDE206A2
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:57:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587049059;
-	bh=V0otI6gVyfDSkDi9pLuqdj9z9fHD1hVrU6r4MDAkjaU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=DDIySSuBsaAfhQkw5jR/7lMAGMacBxYYJI8BYVky1flmO7rDu/ldhw0SvjCT6fw4m
-	 dBhj0q3J20mNgQz82zK8WXcIyeqp/8Z0h5va+UPPqZc/02WzUWu366PbJquQoW7DsM
-	 nTVTWkW1iThHih4h6DLEXXwB1y0uNk/Wx46Z+7PU=
+	s=default; t=1587049069;
+	bh=ME4yxp5YGUd5ExSL/7QlLZ37D4gGwITbqrkigSQi8gc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Urtc2XMPaai8X3GMx79XtmCRmhIwPCqqHOco+Ymrm4S98MwE1BGCCaaXIqsEGf6Bw
+	 2mxECYVTL5i8Gow2KRhjEJbLNYs8o/b0CLkaVDYWQ46y5dVDKsxJuCkwyt739VIykT
+	 DyFTL99mU2FUYlU671Bv74Pgbb5FmUlLdQzKqLFg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409356AbgDPO5h (ORCPT
+        id S1732080AbgDPO5s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:57:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41308 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 10:57:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42764 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728463AbgDPO5Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 10:57:25 -0400
-Received: from mail-il1-f182.google.com (mail-il1-f182.google.com [209.85.166.182])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S2441757AbgDPNzr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:55:47 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8F2CE22250;
-        Thu, 16 Apr 2020 14:57:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7E81720786;
+        Thu, 16 Apr 2020 13:55:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587049044;
-        bh=V0otI6gVyfDSkDi9pLuqdj9z9fHD1hVrU6r4MDAkjaU=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=eH5cwJ6Vemlq8tWwK/OI3bNQgP5TkacIgI9R7K7Ci9iaafK3wmZ1z5nIWGI8/MBnz
-         KXsK5TfkIkqYJDqTj17R6leB9fZfjGtAHPkUG3X5ad08PfSEsmIaYwJnabN+rt5414
-         LLTsKgZyeKV1nE2tfNkkvkDbjmUre6zUShW/6Fso=
-Received: by mail-il1-f182.google.com with SMTP id u5so7183316ilb.5;
-        Thu, 16 Apr 2020 07:57:24 -0700 (PDT)
-X-Gm-Message-State: AGi0PuZlzxmKXYaEvrjB7eOG4NTlP+w4vqL/pjP0JGuKetdOiHvhVDcK
-        bKhpqpWNGCoSokMnbIVsCZ9q6ndXCx5+e5auwKo=
-X-Google-Smtp-Source: APiQypJOghpmilZOFUzSx9f9kqFywMdVN+qnaJPXwQkShHHhsviduS/U5YL3G4CG0thdgj8z1jRPR7OHKPMe596W/oQ=
-X-Received: by 2002:a92:991c:: with SMTP id p28mr6599337ili.258.1587049044044;
- Thu, 16 Apr 2020 07:57:24 -0700 (PDT)
+        s=default; t=1587045347;
+        bh=ME4yxp5YGUd5ExSL/7QlLZ37D4gGwITbqrkigSQi8gc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=AimuwJyWvj94JDYDLwT6bu+TTkqUb/ypDym35s+eeIuMk4WJzIkb7cWRx0oPVUh+w
+         acuupU+zB/SW6ZFt0Q6n0JNTUSEqG3DmmiwXQc7jYkQlXeIP6kveTRGu94VBxpJT1y
+         E4q9+1zamwy5hx7SzHqB3od8sEmjXJn3sBBd4bb0=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Junyong Sun <sunjunyong@xiaomi.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.6 057/254] firmware: fix a double abort case with fw_load_sysfs_fallback
+Date:   Thu, 16 Apr 2020 15:22:26 +0200
+Message-Id: <20200416131333.038671964@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.1
+In-Reply-To: <20200416131325.804095985@linuxfoundation.org>
+References: <20200416131325.804095985@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-References: <eb0d88d0-879e-c500-261e-69c76fb68a89@linux.intel.com>
- <CAMj1kXGGdwuP6X5jvbqmjsP2+bZ7CoJKZ5-WVoPYEjq9HTjuDA@mail.gmail.com> <9ae0c751-5024-6eda-ca78-80cfd1ed066f@linux.intel.com>
-In-Reply-To: <9ae0c751-5024-6eda-ca78-80cfd1ed066f@linux.intel.com>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Thu, 16 Apr 2020 16:57:13 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXH+9wM5xwm31YE=CY6WUyeCt66r-3g5SohisQPcz3x-Kg@mail.gmail.com>
-Message-ID: <CAMj1kXH+9wM5xwm31YE=CY6WUyeCt66r-3g5SohisQPcz3x-Kg@mail.gmail.com>
-Subject: Re: Regression with commit 0a67361dcdaa
-To:     Jarkko Nikula <jarkko.nikula@linux.intel.com>
-Cc:     linux-efi <linux-efi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 16 Apr 2020 at 16:56, Jarkko Nikula
-<jarkko.nikula@linux.intel.com> wrote:
->
-> On 4/16/20 5:36 PM, Ard Biesheuvel wrote:
-> > On Thu, 16 Apr 2020 at 16:35, Jarkko Nikula
-> > <jarkko.nikula@linux.intel.com> wrote:
-> >>
-> >> Hi
-> >>
-> >> v5.7-rc1 hangs in early boot on an Intel Atom based prototype hardware
-> >> while v5.6 boots fine. I bisected the regression into 0a67361dcdaa
-> >> ("efi/x86: Remove runtime table address from kexec EFI setup data").
-> >>
-> >> v5.7-rc1 caused a reboot loop on another Intel Core based prototype HW.
-> >> Reboots also on top of 0a67361dcdaa but boots fine with that commit
-> >> reverted.
-> >>
-> >> Our test system uses kexec to boot the test kernel. These two machines
-> >> got regression with v5.7-rc1. We have also others that boot fine.
-> >>
-> >
-> > This should already be fixed in Linus's tree. Please report back
-> > whether that solves your problem or not.
-> >
-> Ah, I forgot to pull & test before bisecting...
->
-> Yes, both machines boot fine with the HEAD 00086336a8d9 ("Merge tag
-> 'efi-urgent-2020-04-15' of
-> git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip").
->
+From: Junyong Sun <sunjy516@gmail.com>
+
+[ Upstream commit bcfbd3523f3c6eea51a74d217a8ebc5463bcb7f4 ]
+
+fw_sysfs_wait_timeout may return err with -ENOENT
+at fw_load_sysfs_fallback and firmware is already
+in abort status, no need to abort again, so skip it.
+
+This issue is caused by concurrent situation like below:
+when thread 1# wait firmware loading, thread 2# may write
+-1 to abort loading and wakeup thread 1# before it timeout.
+so wait_for_completion_killable_timeout of thread 1# would
+return remaining time which is != 0 with fw_st->status
+FW_STATUS_ABORTED.And the results would be converted into
+err -ENOENT in __fw_state_wait_common and transfered to
+fw_load_sysfs_fallback in thread 1#.
+The -ENOENT means firmware status is already at ABORTED,
+so fw_load_sysfs_fallback no need to get mutex to abort again.
+-----------------------------
+thread 1#,wait for loading
+fw_load_sysfs_fallback
+ ->fw_sysfs_wait_timeout
+    ->__fw_state_wait_common
+       ->wait_for_completion_killable_timeout
+
+in __fw_state_wait_common,
+...
+93    ret = wait_for_completion_killable_timeout(&fw_st->completion, timeout);
+94    if (ret != 0 && fw_st->status == FW_STATUS_ABORTED)
+95       return -ENOENT;
+96    if (!ret)
+97	 return -ETIMEDOUT;
+98
+99    return ret < 0 ? ret : 0;
+-----------------------------
+thread 2#, write -1 to abort loading
+firmware_loading_store
+ ->fw_load_abort
+   ->__fw_load_abort
+     ->fw_state_aborted
+       ->__fw_state_set
+         ->complete_all
+
+in __fw_state_set,
+...
+111    if (status == FW_STATUS_DONE || status == FW_STATUS_ABORTED)
+112       complete_all(&fw_st->completion);
+-------------------------------------------
+BTW,the double abort issue would not cause kernel panic or create an issue,
+but slow down it sometimes.The change is just a minor optimization.
+
+Signed-off-by: Junyong Sun <sunjunyong@xiaomi.com>
+Acked-by: Luis Chamberlain <mcgrof@kernel.org>
+Link: https://lore.kernel.org/r/1583202968-28792-1-git-send-email-sunjunyong@xiaomi.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/base/firmware_loader/fallback.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/base/firmware_loader/fallback.c b/drivers/base/firmware_loader/fallback.c
+index 8704e1bae1758..1e9c96e3ed636 100644
+--- a/drivers/base/firmware_loader/fallback.c
++++ b/drivers/base/firmware_loader/fallback.c
+@@ -525,7 +525,7 @@ static int fw_load_sysfs_fallback(struct fw_sysfs *fw_sysfs,
+ 	}
+ 
+ 	retval = fw_sysfs_wait_timeout(fw_priv, timeout);
+-	if (retval < 0) {
++	if (retval < 0 && retval != -ENOENT) {
+ 		mutex_lock(&fw_lock);
+ 		fw_load_abort(fw_sysfs);
+ 		mutex_unlock(&fw_lock);
+-- 
+2.20.1
 
 
-OK, good to know. Thanks for confirming.
+
