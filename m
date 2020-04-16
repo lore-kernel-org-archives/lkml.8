@@ -7,47 +7,50 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09081C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:09:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED953C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:09:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D617E20656
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:09:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C126620656
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:09:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587046161;
-	bh=i/WQ4zp2hHzop+pFU2DiVs4dApyLMmZBX3q6djS2+kI=;
+	s=default; t=1587046174;
+	bh=1jzhNCiKswhoIJTfB2OLMsRckfeRXXkCNaRRwVljCGw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Hy/yYhztRSRCrulpMZ0OzfINSMbDAySV5QoYilxk6DEVNb/xF0TSPPKOSNJEuQqde
-	 LybP8C9ORN2+e3Q9f9qVXcS4G18+F4dxGLTghE6eJyMcMWgfNo966f3eUfh/54/54O
-	 4pJfs0OkT7ccr3fzG8LRvZKXqBZPD4zLfI0i01sc=
+	b=wYpC1eX9ECc2VK9Ul5dTRu8WYu10ygZhGmYjETD48ofDOjZv87OEC9jUGj4A4dSnQ
+	 WKpazP4O37YRSly5UIcA79pssUMB4r/ne3/nyg37MorXKTw1dw5PWe0+RyXphJCE5J
+	 LQ9wori5YrWyKf/UDIlpIZzxxfDWGwrjJET0EjTc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390748AbgDPOJS (ORCPT
+        id S1731890AbgDPOJ3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:09:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60046 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 10:09:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60184 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2439547AbgDPNqN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:46:13 -0400
+        id S2392296AbgDPNqR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:46:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B2F5C21744;
-        Thu, 16 Apr 2020 13:46:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C89512076D;
+        Thu, 16 Apr 2020 13:46:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044772;
-        bh=i/WQ4zp2hHzop+pFU2DiVs4dApyLMmZBX3q6djS2+kI=;
+        s=default; t=1587044777;
+        bh=1jzhNCiKswhoIJTfB2OLMsRckfeRXXkCNaRRwVljCGw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZIlUQcEcq/3Nc8GkkNMRs+EHKlAz2XqrgyXzSVHTynF2Yd8i51RfCuoLiNBQ9OAL8
-         B8v0EBIeQUoB5kl6mUV0JcW5gReVxYOZbApejlRvPj6x5/OMuQnr83LE/1itsiQFXJ
-         O8vShyoxdfgEud5rp2aQfVTOiRoLm5ejViKgJazE=
+        b=1XwVQIwwDgT6qZooVs194NawgPWKaz/Z7xbhWz0YUt2OZjpgxrNKIapnicc9XL2ST
+         B4Ooln7hPRXk7tPHvEHGprNcaADlF8m4XvRePkRpe5v372pqKUPDnjkrLpQKlKecmF
+         pJCtwRmY7xb2Sj4aG5PsvjqjifIwixyLC/uSOOnM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wenhua Liu <liuw@vmware.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Keith Busch <kbusch@kernel.org>
-Subject: [PATCH 5.4 096/232] nvmet-tcp: fix maxh2cdata icresp parameter
-Date:   Thu, 16 Apr 2020 15:23:10 +0200
-Message-Id: <20200416131326.982034058@linuxfoundation.org>
+        stable@vger.kernel.org, Tom Lendacky <thomas.lendacky@amd.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>, linux-efi@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        David Hildenbrand <david@redhat.com>,
+        Heinrich Schuchardt <xypron.glpk@gmx.de>
+Subject: [PATCH 5.4 098/232] efi/x86: Add TPM related EFI tables to unencrypted mapping checks
+Date:   Thu, 16 Apr 2020 15:23:12 +0200
+Message-Id: <20200416131327.275420952@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131316.640996080@linuxfoundation.org>
 References: <20200416131316.640996080@linuxfoundation.org>
@@ -60,34 +63,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sagi Grimberg <sagi@grimberg.me>
+From: Tom Lendacky <thomas.lendacky@amd.com>
 
-commit 9cda34e37489244a8c8628617e24b2dbc8a8edad upstream.
+commit f10e80a19b07b58fc2adad7945f8313b01503bae upstream.
 
-MAXH2CDATA is not zero based. Also no reason to limit ourselves to
-1M transfers as we can do more easily. Make this an arbitrary limit
-of 16M.
+When booting with SME active, EFI tables must be mapped unencrypted since
+they were built by UEFI in unencrypted memory. Update the list of tables
+to be checked during early_memremap() processing to account for the EFI
+TPM tables.
 
-Reported-by: Wenhua Liu <liuw@vmware.com>
-Cc: stable@vger.kernel.org # v5.0+
-Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
-Signed-off-by: Keith Busch <kbusch@kernel.org>
+This fixes a bug where an EFI TPM log table has been created by UEFI, but
+it lives in memory that has been marked as usable rather than reserved.
+
+Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
+Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Cc: linux-efi@vger.kernel.org
+Cc: Ingo Molnar <mingo@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: David Hildenbrand <david@redhat.com>
+Cc: Heinrich Schuchardt <xypron.glpk@gmx.de>
+Cc: <stable@vger.kernel.org> # v5.4+
+Link: https://lore.kernel.org/r/4144cd813f113c20cdfa511cf59500a64e6015be.1582662842.git.thomas.lendacky@amd.com
+Link: https://lore.kernel.org/r/20200228121408.9075-2-ardb@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/nvme/target/tcp.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/platform/efi/efi.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/drivers/nvme/target/tcp.c
-+++ b/drivers/nvme/target/tcp.c
-@@ -794,7 +794,7 @@ static int nvmet_tcp_handle_icreq(struct
- 	icresp->hdr.pdo = 0;
- 	icresp->hdr.plen = cpu_to_le32(icresp->hdr.hlen);
- 	icresp->pfv = cpu_to_le16(NVME_TCP_PFV_1_0);
--	icresp->maxdata = cpu_to_le32(0xffff); /* FIXME: support r2t */
-+	icresp->maxdata = cpu_to_le32(0x400000); /* 16M arbitrary limit */
- 	icresp->cpda = 0;
- 	if (queue->hdr_digest)
- 		icresp->digest |= NVME_TCP_HDR_DIGEST_ENABLE;
+--- a/arch/x86/platform/efi/efi.c
++++ b/arch/x86/platform/efi/efi.c
+@@ -85,6 +85,8 @@ static const unsigned long * const efi_t
+ #ifdef CONFIG_EFI_RCI2_TABLE
+ 	&rci2_table_phys,
+ #endif
++	&efi.tpm_log,
++	&efi.tpm_final_log,
+ };
+ 
+ u64 efi_setup;		/* efi setup_data physical address */
 
 
