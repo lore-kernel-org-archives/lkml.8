@@ -2,122 +2,124 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E540C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:48:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 106C0C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:48:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 18ADD206B9
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:48:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587048503;
-	bh=RDjO3YYy/MdIUEH1+yLlqQdclPfYbYEFsqVHv24n7HY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VrzwXnYualQ56Og+J8PN0Zbm8I9VP9fi43ss3/9qJq741jUxrM8mrp4iMM04NbbZg
-	 +t8KE1816635vN6IZb/9Ka7gxKFOqKyW81/4D5WbQaU4iwo6nErmTg30BwWwvpIBJ7
-	 Q/c/6KhM2pQLV5XGM3PpcT0GxvHFdmNSVLBauo54=
+	by mail.kernel.org (Postfix) with ESMTP id E22F82223D
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:48:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="GK1YygrF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394698AbgDPOsV (ORCPT
+        id S2394729AbgDPOsb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:48:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45872 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 10:48:31 -0400
+Received: from m12-15.163.com ([220.181.12.15]:41115 "EHLO m12-15.163.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2506792AbgDPN6x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:58:53 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0C3D42192A;
-        Thu, 16 Apr 2020 13:58:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587045532;
-        bh=RDjO3YYy/MdIUEH1+yLlqQdclPfYbYEFsqVHv24n7HY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ItWe3DapJXVtz2JyTy8t4kDEIGwpQm49WbL8PZPqint++1mKO7E8O5JjR7irAuXV8
-         iL42kXO7KOpFfTUtZZjvoZA8LA0L3f0WgL62y2rJCfwsOqFMnLtGU6hogfS5zYszYF
-         9r5Zc6nht/lE5mt2hrq8v8SMH1ndYlRVrMQBPe5I=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
-        Chris Down <chris@chrisdown.name>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH 5.6 172/254] mm, memcg: do not high throttle allocators based on wraparound
-Date:   Thu, 16 Apr 2020 15:24:21 +0200
-Message-Id: <20200416131347.961450401@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200416131325.804095985@linuxfoundation.org>
-References: <20200416131325.804095985@linuxfoundation.org>
-User-Agent: quilt/0.66
+        id S2388313AbgDPOsU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 10:48:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+        s=s110527; h=Subject:From:Message-ID:Date:MIME-Version; bh=ZQh8z
+        vaxY75qRenaS2+9ZBLOwyTNAytPW3k4i9ijrVc=; b=GK1YygrFtatATaJVoO56P
+        hng3VrGOv784QI2W6ZXsWS85QE0uNQ82LuIwqO8IUE4yUfg8mKXPfWYtmMvb/Mee
+        15U89pwYTYbABP4ezatVClCBPfRAFZ8QOiHhz9s3PQXPDne87fhfmS8Fwyk4u/yA
+        5jukIUYgiNye2pbmEhbdps=
+Received: from [192.168.0.6] (unknown [125.82.10.107])
+        by smtp11 (Coremail) with SMTP id D8CowAAnNupBb5he2_OiDg--.557S2;
+        Thu, 16 Apr 2020 22:44:18 +0800 (CST)
+Subject: Re: [PATCH v2] net/mlx5: add the missing space character
+To:     Saeed Mahameed <saeedm@mellanox.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "leon@kernel.org" <leon@kernel.org>
+Cc:     "cai@lca.pw" <cai@lca.pw>,
+        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+        "lsahlber@redhat.com" <lsahlber@redhat.com>,
+        "kw@linux.com" <kw@linux.com>,
+        "xiubli@redhat.com" <xiubli@redhat.com>,
+        "airlied@redhat.com" <airlied@redhat.com>,
+        Moshe Shemesh <moshe@mellanox.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "wqu@suse.com" <wqu@suse.com>,
+        "chris@chris-wilson.co.uk" <chris@chris-wilson.co.uk>,
+        "yamada.masahiro@socionext.com" <yamada.masahiro@socionext.com>,
+        "stfrench@microsoft.com" <stfrench@microsoft.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+References: <20200403042659.9167-1-xianfengting221@163.com>
+ <14df0ecf093bb2df4efaf9e6f5220ea2bf863f53.camel@mellanox.com>
+From:   Hu Haowen <xianfengting221@163.com>
+Message-ID: <fae7a094-62e8-d797-a89b-23faf0eb374e@163.com>
+Date:   Thu, 16 Apr 2020 22:44:17 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <14df0ecf093bb2df4efaf9e6f5220ea2bf863f53.camel@mellanox.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-CM-TRANSID: D8CowAAnNupBb5he2_OiDg--.557S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW7tw4xtFWrXF15ArW3Gw4rXwb_yoW8ZF18pF
+        s5Jay7Ca1ktryUXa1xZF48Z3s5Cws5Ka48WF4fK3s5Xr1kt3WfGr15KrW5CFnI9r1fJ3ya
+        qFnrZFW7Aw15WaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jKApnUUUUU=
+X-Originating-IP: [125.82.10.107]
+X-CM-SenderInfo: h0ld0wxhqj3xtqjsjii6rwjhhfrp/1tbiQwMIAFc7OSCDLgAAsQ
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jakub Kicinski <kuba@kernel.org>
 
-commit 9b8b17541f13809d06f6f873325305ddbb760e3e upstream.
+On 2020/4/9 3:42 AM, Saeed Mahameed wrote:
+> On Fri, 2020-04-03 at 12:26 +0800, Hu Haowen wrote:
+>> Commit 91b56d8462a9 ("net/mlx5: improve some comments") did not add
+>> that missing space character and this commit is used to fix it up.
+>>
+>> Fixes: 91b56d8462a9 ("net/mlx5: improve some comments")
+>>
+> Please re-spin and submit to net-next once net-next re-opens,
+> avoid referencing the above commit since this patch is a stand alone
+> and has nothing to do with that patch.. just have a stand alone commit
+> message explaining the space fix.
 
-If a cgroup violates its memory.high constraints, we may end up unduly
-penalising it.  For example, for the following hierarchy:
+Sorry for my late reply. Because I'm a kernel newbie, I know nothing
+about the basic methods and manners in the kernel development. Thanks
+a lot for your patience on my mistake, pointing it out and fixing it
+up.
 
-  A:   max high, 20 usage
-  A/B: 9 high, 10 usage
-  A/C: max high, 10 usage
+Btw, did net-next re-open and did my changes get into the mainline?
 
-We would end up doing the following calculation below when calculating
-high delay for A/B:
 
-  A/B: 10 - 9 = 1...
-  A:   20 - PAGE_COUNTER_MAX = 21, so set max_overage to 21.
-
-This gets worse with higher disparities in usage in the parent.
-
-I have no idea how this disappeared from the final version of the patch,
-but it is certainly Not Good(tm).  This wasn't obvious in testing because,
-for a simple cgroup hierarchy with only one child, the result is usually
-roughly the same.  It's only in more complex hierarchies that things go
-really awry (although still, the effects are limited to a maximum of 2
-seconds in schedule_timeout_killable at a maximum).
-
-[chris@chrisdown.name: changelog]
-Fixes: e26733e0d0ec ("mm, memcg: throttle allocators based on ancestral memory.high")
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-Signed-off-by: Chris Down <chris@chrisdown.name>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Acked-by: Michal Hocko <mhocko@suse.com>
-Cc: Johannes Weiner <hannes@cmpxchg.org>
-Cc: <stable@vger.kernel.org>	[5.4.x]
-Link: http://lkml.kernel.org/r/20200331152424.GA1019937@chrisdown.name
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- mm/memcontrol.c |    3 +++
- 1 file changed, 3 insertions(+)
-
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -2324,6 +2324,9 @@ static unsigned long calculate_high_dela
- 		usage = page_counter_read(&memcg->memory);
- 		high = READ_ONCE(memcg->high);
- 
-+		if (usage <= high)
-+			continue;
-+
- 		/*
- 		 * Prevent division by 0 in overage calculation by acting as if
- 		 * it was a threshold of 1 page
-
+>
+> i fixed the commit message of the previous patch, so the Fixes tag is
+> unnecessary
+>
+>> Signed-off-by: Hu Haowen <xianfengting221@163.com>
+>
+>> ---
+>>   drivers/net/ethernet/mellanox/mlx5/core/diag/fw_tracer.c | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/net/ethernet/mellanox/mlx5/core/diag/fw_tracer.c
+>> b/drivers/net/ethernet/mellanox/mlx5/core/diag/fw_tracer.c
+>> index c9c9b479bda5..31bddb48e5c3 100644
+>> --- a/drivers/net/ethernet/mellanox/mlx5/core/diag/fw_tracer.c
+>> +++ b/drivers/net/ethernet/mellanox/mlx5/core/diag/fw_tracer.c
+>> @@ -676,7 +676,7 @@ static void mlx5_fw_tracer_handle_traces(struct
+>> work_struct *work)
+>>   	block_count = tracer->buff.size / TRACER_BLOCK_SIZE_BYTE;
+>>   	start_offset = tracer->buff.consumer_index *
+>> TRACER_BLOCK_SIZE_BYTE;
+>>   
+>> -	/* Copy the block to local buffer to avoid HW override while
+>> being processed*/
+>> +	/* Copy the block to local buffer to avoid HW override while
+>> being processed */
+>>   	memcpy(tmp_trace_block, tracer->buff.log_buf + start_offset,
+>>   	       TRACER_BLOCK_SIZE_BYTE);
+>>   
 
