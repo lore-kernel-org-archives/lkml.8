@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 589D9C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:23:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88DF0C2BB85
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:23:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3416121D7E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:23:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D48C21D7E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:23:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587047012;
-	bh=/BTERr8ntuoVM+oROY3RpI5yVZsGtjKuXRPEP0DY5B8=;
+	s=default; t=1587047015;
+	bh=WtyTCRlFyMzJAkJbuvSlHht8TZrezfj5ottSM/w2hRY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FOJ4sh36IAFsE4ee2komaFXvrWPqTlY5po8Hc8GfEFXoj4z5ebo+ZyK0U357pnepq
-	 oIJauXRUHn+W7dBoQVeLmwcg9CmyU8dyQf6+XxMfQ77TO6FLYfSbPkM+bPiU4zRwMV
-	 D+buUE+FEjrl7OccfQoDy02DEOi2yC7+3K7jkfME=
+	b=uj4RTGxlIijLjGJD5nKVGCH0xpmQJqXG84rSVsILf0KpYO6Urk7F8rDer1KsSvqkl
+	 e7gWV37W2TK7Z41LHGmehlpoxkqmsTFt/egusQKseQgyclA99XknUJdj9rW7Y6vy89
+	 NuEZvfSR9qBaEiATeYW5Mdoigko75RZ8DVX7DpGo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731983AbgDPOX2 (ORCPT
+        id S2390141AbgDPOXe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:23:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43690 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 10:23:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43862 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404976AbgDPN4j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:56:39 -0400
+        id S2409225AbgDPN4v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:56:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0255F217D8;
-        Thu, 16 Apr 2020 13:56:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 17D4321734;
+        Thu, 16 Apr 2020 13:56:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587045398;
-        bh=/BTERr8ntuoVM+oROY3RpI5yVZsGtjKuXRPEP0DY5B8=;
+        s=default; t=1587045410;
+        bh=WtyTCRlFyMzJAkJbuvSlHht8TZrezfj5ottSM/w2hRY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pz3YIK/ZRne+TNOLnaVdpdcF01046wzzI6276LHL66QGxtrkMWVD4De0eyhx0ZB+3
-         hEqyZV7ARtd/ydAV7lRuJy/NgUMnbR88Yh9BWttgmNZs73a19aD/2DGA+w8UedsXzG
-         UXdOJdbOdcE4PmLGkQjEeZQd1FOlE/b1/CZMxOmk=
+        b=ggogU+qQTHRtlsQS1CPJpz4VL2rGLWySvyqV0iFWXs8A29ilUUDsyJOeKwmKl56hS
+         zuhWEQGMQlpSJVVl8vTGpRg3rzBqLfqPYfoR4oS6wkBNBLW18XFLNklqisDs8Odgrr
+         h8zqN4m5y18If7Zgl31wfX2xOrQBsC4Jr1WMpb/8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vasily Averin <vvs@virtuozzo.com>,
-        Kees Cook <keescook@chromium.org>
-Subject: [PATCH 5.6 118/254] pstore: pstore_ftrace_seq_next should increase position index
-Date:   Thu, 16 Apr 2020 15:23:27 +0200
-Message-Id: <20200416131341.034602639@linuxfoundation.org>
+        stable@vger.kernel.org, Remi Pommarel <repk@triplefau.lt>,
+        Kalle Valo <kvalo@codeaurora.org>
+Subject: [PATCH 5.6 123/254] ath9k: Handle txpower changes even when TPC is disabled
+Date:   Thu, 16 Apr 2020 15:23:32 +0200
+Message-Id: <20200416131341.751761811@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.804095985@linuxfoundation.org>
 References: <20200416131325.804095985@linuxfoundation.org>
@@ -59,81 +59,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vasily Averin <vvs@virtuozzo.com>
+From: Remi Pommarel <repk@triplefau.lt>
 
-commit 6c871b7314dde9ab64f20de8f5aa3d01be4518e8 upstream.
+commit 968ae2caad0782db5dbbabb560d3cdefd2945d38 upstream.
 
-In Aug 2018 NeilBrown noticed
-commit 1f4aace60b0e ("fs/seq_file.c: simplify seq_file iteration code and interface")
-"Some ->next functions do not increment *pos when they return NULL...
-Note that such ->next functions are buggy and should be fixed.
-A simple demonstration is
+When TPC is disabled IEEE80211_CONF_CHANGE_POWER event can be handled to
+reconfigure HW's maximum txpower.
 
- dd if=/proc/swaps bs=1000 skip=1
+This fixes 0dBm txpower setting when user attaches to an interface for
+the first time with the following scenario:
 
-Choose any block size larger than the size of /proc/swaps. This will
-always show the whole last line of /proc/swaps"
+ieee80211_do_open()
+    ath9k_add_interface()
+        ath9k_set_txpower() /* Set TX power with not yet initialized
+                               sc->hw->conf.power_level */
 
-/proc/swaps output was fixed recently, however there are lot of other
-affected files, and one of them is related to pstore subsystem.
+    ieee80211_hw_config() /* Iniatilize sc->hw->conf.power_level and
+                             raise IEEE80211_CONF_CHANGE_POWER */
 
-If .next function does not change position index, following .show function
-will repeat output related to current position index.
+    ath9k_config() /* IEEE80211_CONF_CHANGE_POWER is ignored */
 
-There are at least 2 related problems:
-- read after lseek beyond end of file, described above by NeilBrown
-  "dd if=<AFFECTED_FILE> bs=1000 skip=1" will generate whole last list
-- read after lseek on in middle of last line will output expected rest of
-  last line but then repeat whole last line once again.
+This issue can be reproduced with the following:
 
-If .show() function generates multy-line output (like
-pstore_ftrace_seq_show() does ?) following bash script cycles endlessly
+  $ modprobe -r ath9k
+  $ modprobe ath9k
+  $ wpa_supplicant -i wlan0 -c /tmp/wpa.conf &
+  $ iw dev /* Here TX power is either 0 or 3 depending on RF chain */
+  $ killall wpa_supplicant
+  $ iw dev /* TX power goes back to calibrated value and subsequent
+              calls will be fine */
 
- $ q=;while read -r r;do echo "$((++q)) $r";done < AFFECTED_FILE
-
-Unfortunately I'm not familiar enough to pstore subsystem and was unable
-to find affected pstore-related file on my test node.
-
-If .next function does not change position index, following .show function
-will repeat output related to current position index.
-
+Fixes: 283dd11994cde ("ath9k: add per-vif TX power capability")
 Cc: stable@vger.kernel.org
-Fixes: 1f4aace60b0e ("fs/seq_file.c: simplify seq_file iteration code ...")
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=206283
-Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
-Link: https://lore.kernel.org/r/4e49830d-4c88-0171-ee24-1ee540028dad@virtuozzo.com
-[kees: with robustness tweak from Joel Fernandes <joelaf@google.com>]
-Signed-off-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Remi Pommarel <repk@triplefau.lt>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/pstore/inode.c |    5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/net/wireless/ath/ath9k/main.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/fs/pstore/inode.c
-+++ b/fs/pstore/inode.c
-@@ -87,11 +87,11 @@ static void *pstore_ftrace_seq_next(stru
- 	struct pstore_private *ps = s->private;
- 	struct pstore_ftrace_seq_data *data = v;
+--- a/drivers/net/wireless/ath/ath9k/main.c
++++ b/drivers/net/wireless/ath/ath9k/main.c
+@@ -1457,6 +1457,9 @@ static int ath9k_config(struct ieee80211
+ 		ath_chanctx_set_channel(sc, ctx, &hw->conf.chandef);
+ 	}
  
-+	(*pos)++;
- 	data->off += REC_SIZE;
- 	if (data->off + REC_SIZE > ps->total_size)
- 		return NULL;
- 
--	(*pos)++;
- 	return data;
- }
- 
-@@ -101,6 +101,9 @@ static int pstore_ftrace_seq_show(struct
- 	struct pstore_ftrace_seq_data *data = v;
- 	struct pstore_ftrace_record *rec;
- 
-+	if (!data)
-+		return 0;
++	if (changed & IEEE80211_CONF_CHANGE_POWER)
++		ath9k_set_txpower(sc, NULL);
 +
- 	rec = (struct pstore_ftrace_record *)(ps->record->buf + data->off);
+ 	mutex_unlock(&sc->mutex);
+ 	ath9k_ps_restore(sc);
  
- 	seq_printf(s, "CPU:%d ts:%llu %08lx  %08lx  %ps <- %pS\n",
 
 
