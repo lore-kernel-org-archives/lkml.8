@@ -2,200 +2,145 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7C67C2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 16:23:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E845C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 16:23:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C2E5220857
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 16:23:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587054193;
-	bh=dYe0L8knPjq4V+e3C0CynMr68uvk2h/61C1ujyYiF70=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=wuBQAQuZCLpYiSjTSsXotiBAUasX6vGbT3Lti4RRXMW1VWo4dt1KNcTpScztsLSR6
-	 DkDooxt0tDL034R2rceHZu3wwk0wfejsq1UCO/ZvRg29+0Nn7+SNk6Enkt+MlOiiq2
-	 JG5MAX9BLdG2zVmGLoso2siUv9IfMsuD71wFDOtQ=
+	by mail.kernel.org (Postfix) with ESMTP id 7C90920857
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 16:23:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J52186us"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2410498AbgDPQXM (ORCPT
+        id S2410771AbgDPQXV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 12:23:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50818 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729633AbgDPQXG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 12:23:06 -0400
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9A03322250;
-        Thu, 16 Apr 2020 16:23:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587054185;
-        bh=dYe0L8knPjq4V+e3C0CynMr68uvk2h/61C1ujyYiF70=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=m92+j7PyJJqSdIZDHDYxGpMk1MSTdEN3OfxmyZ5uDz3gYONFBBkjqZfnO2V19s6L3
-         uWSFke5h6gqhJSuJUX/v4SaHaHZp1FcOjeDRIRraalXi9n50/SXBviV2xU4LGfnrd5
-         Ek5R1e51qljTWjy8yVonj+VDn0jnnD+E/Zrj+BWE=
-Received: by mail-ej1-f41.google.com with SMTP id s9so1713435eju.1;
-        Thu, 16 Apr 2020 09:23:05 -0700 (PDT)
-X-Gm-Message-State: AGi0Pub+htmOBUicEH+5GKsykiMe17NI6O3zbKw5fJhuoYhKKWaSnVMl
-        iiyvH0OSeZ6gsKPZPhfJWdV5hJ+GlP/+Qprujw==
-X-Google-Smtp-Source: APiQypJY17+s5/o0+wlz0famZC0WrI5UI7Klts8JPoOZRnB9zgY8QO2uzy/FBMWzeg9CvxriYGO6Q1j1IF4pKi5aPZw=
-X-Received: by 2002:a17:906:2ad4:: with SMTP id m20mr10975923eje.324.1587054183934;
- Thu, 16 Apr 2020 09:23:03 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200311165322.1594233-1-enric.balletbo@collabora.com>
- <20200311165322.1594233-5-enric.balletbo@collabora.com> <02290a21-7392-a2cf-576c-215091ec05e8@suse.com>
- <1585177534.26117.4.camel@mtksdaap41> <f3c2926a-ef92-b004-9786-5be1645af497@suse.com>
- <1585234277.12089.3.camel@mtksdaap41> <73ef0b8e-2802-a047-2a56-936b63d264cb@suse.com>
-In-Reply-To: <73ef0b8e-2802-a047-2a56-936b63d264cb@suse.com>
-From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
-Date:   Fri, 17 Apr 2020 00:22:52 +0800
-X-Gmail-Original-Message-ID: <CAAOTY__EV8PHau9CzSiA8up1QAmZxfK2QnaTid0WrNOsn2Xcag@mail.gmail.com>
-Message-ID: <CAAOTY__EV8PHau9CzSiA8up1QAmZxfK2QnaTid0WrNOsn2Xcag@mail.gmail.com>
-Subject: Re: [PATCH v12 4/5] soc / drm: mediatek: Move routing control to
- mmsys device
-To:     Matthias Brugger <mbrugger@suse.com>
-Cc:     CK Hu <ck.hu@mediatek.com>, Mark Rutland <mark.rutland@arm.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Minghsiu Tsai <minghsiu.tsai@mediatek.com>,
-        Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
-        David Airlie <airlied@linux.ie>,
-        Michael Turquette <mturquette@baylibre.com>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        Richard Fontana <rfontana@redhat.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        ulrich.hecht+renesas@gmail.com,
-        Collabora Kernel ML <kernel@collabora.com>,
-        linux-clk@vger.kernel.org, Weiyi Lu <weiyi.lu@mediatek.com>,
-        wens@csie.org, Allison Randal <allison@lohutok.net>,
-        mtk01761 <wendell.lin@mediatek.com>, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, Philipp Zabel <p.zabel@pengutronix.de>,
-        Frank Wunderlich <frank-w@public-files.de>,
-        Seiya Wang <seiya.wang@mediatek.com>, sean.wang@mediatek.com,
-        Houlong Wei <houlong.wei@mediatek.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Hsin-Yi Wang <hsinyi@chromium.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Stephen Boyd <sboyd@kernel.org>,
+        Thu, 16 Apr 2020 12:23:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54942 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729633AbgDPQXN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 12:23:13 -0400
+Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D0C0C061A0C;
+        Thu, 16 Apr 2020 09:23:13 -0700 (PDT)
+Received: by mail-qk1-x743.google.com with SMTP id 20so13835245qkl.10;
+        Thu, 16 Apr 2020 09:23:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=zyCDv7z5P0ha1HmRsnaqPPghx3RwbCflcoKCK45AcNQ=;
+        b=J52186us0PCS+Cz5RZA6O1mgs7unxz8luOWtHeEVsVCLVREwEDlIrfHaKZtURXKodV
+         urpmXfWvnimP59fPHugAPdEkZTxtlAVSbB7ecb8pq5VmzOkGpbM/CLn1a92wDTczam19
+         arxKY9C6PJzYJeFj9YmPiL/rAYlzCKtAvXt/FY7RaFCkkelB+6bhcWwQzNT9XZ81ZJQ8
+         HVTqzf52Vu+6+nQOrZm5gMHc4KtdUL2772KVcy6PkLZtHJvKwQYYQ5o3l5X4rQnQtZy1
+         oz4VhpBsCu3nR7f2sqXZS/LLg4OpnNItIx8d3lmVUlkKIx9+tX98dB4X1+VQPC/wK4TE
+         AUHA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=zyCDv7z5P0ha1HmRsnaqPPghx3RwbCflcoKCK45AcNQ=;
+        b=MZ7LWV5sxmHVGWjYSwaIRhRreQzXGFQjF6RVI7CW50dI8oS2a36geYLio5cBSB/6Ao
+         LFBOPcbTTlnjqu2me62I8ityzjWExv0fYV9ZQ1GTRazmwmPaMVQuhnHI5aam9MjgEuoc
+         2z61IAnwTK7bGhm7apW5rpBJM+yTuDDlJ49jIqZXpXHuM+wT4Kry33RFiCt4twbSnpLa
+         nsZ5SFf/0VWIKqWuVIfAp8bGj5LcbdKnaWqCIfosa44faKfO1lZgQFT7yfO8E9NcULGj
+         HvRtvt5H6uzMJ8foBd/E8n7Jo8hKf5IcPFKJLj0Q0o8bVlwC3SFGm4O9yR+U5fBGB3mi
+         3erg==
+X-Gm-Message-State: AGi0PubbSx1Mgf+NXctnLCwkkNuqRWeKWA3xC73IQGxglAYN5Maej0EW
+        YFbZQjMNq+YfegOrllNY9TdJU0iBfZpOoA==
+X-Google-Smtp-Source: APiQypLbzSLCVFS1K2wcJuiSSKo7Ug5S+nV6EpBYg/kFWNvmaebKGIrDFk8kqGe/sp5s/DnbLsbl2w==
+X-Received: by 2002:a37:8787:: with SMTP id j129mr32366716qkd.157.1587054192708;
+        Thu, 16 Apr 2020 09:23:12 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([179.97.37.151])
+        by smtp.gmail.com with ESMTPSA id r18sm884383qtt.25.2020.04.16.09.23.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Apr 2020 09:23:11 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id DEFB5409A3; Thu, 16 Apr 2020 13:23:09 -0300 (-03)
+Date:   Thu, 16 Apr 2020 13:23:09 -0300
+To:     Ian Rogers <irogers@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        rdunlap@infradead.org, linux-kernel <linux-kernel@vger.kernel.org>,
-        Daniel Vetter <daniel@ffwll.ch>, matthias.bgg@kernel.org,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Thomas Gleixner <tglx@linutronix.de>,
+        Igor Lubashev <ilubashe@akamai.com>,
+        Alexey Budankov <alexey.budankov@linux.intel.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Jiwei Sun <jiwei.sun@windriver.com>,
+        yuzhoujian <yuzhoujian@didichuxing.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Leo Yan <leo.yan@linaro.org>,
+        John Garry <john.garry@huawei.com>,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Stephane Eranian <eranian@google.com>
+Subject: Re: [PATCH v10 1/4] perf doc: allow ASCIIDOC_EXTRA to be an argument
+Message-ID: <20200416162309.GH2650@kernel.org>
+References: <20200416162058.201954-1-irogers@google.com>
+ <20200416162058.201954-2-irogers@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200416162058.201954-2-irogers@google.com>
+X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Matthias:
+Em Thu, Apr 16, 2020 at 09:20:55AM -0700, Ian Rogers escreveu:
+> This will allow parent makefiles to pass values to asciidoc.
 
-Matthias Brugger <mbrugger@suse.com> =E6=96=BC 2020=E5=B9=B43=E6=9C=8826=E6=
-=97=A5 =E9=80=B1=E5=9B=9B =E4=B8=8B=E5=8D=8811:45=E5=AF=AB=E9=81=93=EF=BC=
-=9A
->
->
->
-> On 26/03/2020 15:51, CK Hu wrote:
-> > Hi, Matthias:
-> >
-> > On Thu, 2020-03-26 at 12:54 +0100, Matthias Brugger wrote:
-> >> Hi CK,
-> >>
-> >> On 26/03/2020 00:05, CK Hu wrote:
-> >>> Hi, Matthias:
-> >>>
-> >>> On Wed, 2020-03-25 at 17:16 +0100, Matthias Brugger wrote:
-> >>>>
-> >>>> On 11/03/2020 17:53, Enric Balletbo i Serra wrote:
-> >>>>> Provide a mtk_mmsys_ddp_connect() and mtk_mmsys_disconnect() functi=
-ons to
-> >>>>> replace mtk_ddp_add_comp_to_path() and mtk_ddp_remove_comp_from_pat=
-h().
-> >>>>> Those functions will allow DRM driver and others to control the dat=
-a
-> >>>>> path routing.
-> >>>>>
-> >>>>> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com=
->
-> >>>>> Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
-> >>>>> Reviewed-by: CK Hu <ck.hu@mediatek.com>
-> >>>>> Acked-by: CK Hu <ck.hu@mediatek.com>
-> >>>>
-> >>>> This patch does not apply against v5.6-rc1.
-> >>>> Please rebase as this is a quite big patch and it won't be easy to d=
-o that by hand.
-> >>>
-> >>> I think this patch depends on [1] which has been acked by me and I ha=
-ve
-> >>> not picked it. The simple way is that you pick [1] first and then pic=
-k
-> >>> this series.
-> >>>
-> >>> [1]
-> >>> https://patchwork.kernel.org/patch/11406227/
-> >>>
-> >>
-> >> You would need to provide a stable tag for me that I can merge into my=
- tree. You
-> >> can also try to merge my for-next [1] which has the newest version fro=
-m Enric.
-> >> If you see any merge conflict, then we have to do something about it :=
-)
-> >>
-> >> Regards,
-> >> Matthias
-> >>
-> >> [1]
-> >> https://git.kernel.org/pub/scm/linux/kernel/git/matthias.bgg/linux.git=
-/log/?h=3Dfor-next
-> >>
-> >
-> > You have applied this series, so I would not apply other patches which
-> > would conflict with this series. After this series land on main stream
-> > (wish it happen in this merge window), I would rebase other patch on
-> > main stream.
-> >
->
-> I haven't (yet) send the pull request. If you want to bring in your patch=
-es in
-> v5.7 as well we can find a solution to that. Shall I provide you with a s=
-table
-> branch which you can merge? This way you can add all your patches in the =
-pull
-> request as well and we don't have to wait for v5.8 to get things into mai=
-nline.
->
-> Let me know and I'll provide you with a stable branch.
+Thanks, applied
+ 
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/perf/Documentation/Makefile | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/tools/perf/Documentation/Makefile b/tools/perf/Documentation/Makefile
+> index 31824d5269cc..6e54979c2124 100644
+> --- a/tools/perf/Documentation/Makefile
+> +++ b/tools/perf/Documentation/Makefile
+> @@ -48,7 +48,7 @@ man5dir=$(mandir)/man5
+>  man7dir=$(mandir)/man7
+>  
+>  ASCIIDOC=asciidoc
+> -ASCIIDOC_EXTRA = --unsafe -f asciidoc.conf
+> +ASCIIDOC_EXTRA += --unsafe -f asciidoc.conf
+>  ASCIIDOC_HTML = xhtml11
+>  MANPAGE_XSL = manpage-normal.xsl
+>  XMLTO_EXTRA =
+> @@ -59,7 +59,7 @@ HTML_REF = origin/html
+>  
+>  ifdef USE_ASCIIDOCTOR
+>  ASCIIDOC = asciidoctor
+> -ASCIIDOC_EXTRA = -a compat-mode
+> +ASCIIDOC_EXTRA += -a compat-mode
+>  ASCIIDOC_EXTRA += -I. -rasciidoctor-extensions
+>  ASCIIDOC_EXTRA += -a mansource="perf" -a manmanual="perf Manual"
+>  ASCIIDOC_HTML = xhtml5
+> -- 
+> 2.26.1.301.g55bc3eb7cb9-goog
+> 
 
-This series is in linux-next but does not in main stream. So would you
-please provide a stable branch so I could pull this series?
+-- 
 
-Regards,
-Chun-Kuang.
-
->
-> Regards,
-> Matthias
->
-> > Regards,
-> > CK
-> >
-> >>> Regards,
-> >>> CK
-> >>>
-> >>>>
-> >>>> Regards,
-> >>>> Matthias
-> >>>>
-> >>>>> ---
-> >>>>>
+- Arnaldo
