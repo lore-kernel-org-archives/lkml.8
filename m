@@ -5,49 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45D3AC2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:27:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BBD1C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:27:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 16F9221D79
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:27:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7293F21D82
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:27:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587043647;
-	bh=vDbC//cFoiarsCOyRPOI0FBifzs1I3USmWge+kKgjaU=;
+	s=default; t=1587043657;
+	bh=u7f2pqtpVNbs8a/p06LRN9rLRFe4gO8tJL2WMQuS9X0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YYCwUgVqS80pVmKRmSS8BsIpNsChnfyWhNGvmBdmrEq4rpfOCM4Dugxt14/UWzOxv
-	 D5R2ynhvXfkdcjwTY0kfPratHG4g/NiOS1IssDq34LZ56cqmh2GpmLMesuq4ywtCNn
-	 f/9HsqQP8QnmA0vi/5VigTwwBX/x2sHAP7XGp+2U=
+	b=pfqbAfuN6N/uocIYB1carh+m5kftKjxno8GGCKx/oEZ1fDCxtYFWtH/K20XTiRyBl
+	 I7YBZ5o2xwozZCGma+3vdK1GVo1FZRfkOwtF5DqPDfleGtZCLsZjIKTW6G55g+RBeP
+	 Lcj/m2NI5UHU2kWYjz2XPli56A3f1kxwD+PV9gvY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2895471AbgDPN1U (ORCPT
+        id S2895534AbgDPN1e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 09:27:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34476 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 09:27:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34908 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2895268AbgDPN0e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:26:34 -0400
+        id S2895286AbgDPN0l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:26:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 04764221F6;
-        Thu, 16 Apr 2020 13:26:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 43FA321BE5;
+        Thu, 16 Apr 2020 13:26:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587043593;
-        bh=vDbC//cFoiarsCOyRPOI0FBifzs1I3USmWge+kKgjaU=;
+        s=default; t=1587043600;
+        bh=u7f2pqtpVNbs8a/p06LRN9rLRFe4gO8tJL2WMQuS9X0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zLg0eTwKC7DV431gCgXINQ1RI0XppHkL+R5FN2eECDEpxJYHkWwDXv0hkjZmvnKhV
-         exQ5Ctp9WTEadQeo8/i4wN2iPfy/e3ocIJiwZrbevOl8VcRVYy5RTwQUkRbunyaKdW
-         AG9n3kjRsuneGsj7FzhKK5oDAmwNDM4SAFFl0/JY=
+        b=vWnzeSFrzEeajAiiEF2SEbgT1CfuNbAbqo91x/uCPenc5OjC9rx+HMuXQocxOYixR
+         QOBVSKvZJ7X8U7Q/MJJUNOX2Dxh9Z+TE0PM3PE9MQPhcv4dJLTOKP3Naqxyo0t4cXc
+         k188uTeZon6RfqN6osa8I4Z42OdbVx9DBUH8owp4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Borislav Petkov <bp@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 021/146] selftests/x86/ptrace_syscall_32: Fix no-vDSO segfault
-Date:   Thu, 16 Apr 2020 15:22:42 +0200
-Message-Id: <20200416131245.400616517@linuxfoundation.org>
+        stable@vger.kernel.org, rdunlap@infradead.org,
+        Matt Ranostay <matt.ranostay@konsulko.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 023/146] media: i2c: video-i2c: fix build errors due to imply hwmon
+Date:   Thu, 16 Apr 2020 15:22:44 +0200
+Message-Id: <20200416131245.622380720@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131242.353444678@linuxfoundation.org>
 References: <20200416131242.353444678@linuxfoundation.org>
@@ -60,40 +62,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andy Lutomirski <luto@kernel.org>
+From: Matt Ranostay <matt.ranostay@konsulko.com>
 
-[ Upstream commit 630b99ab60aa972052a4202a1ff96c7e45eb0054 ]
+[ Upstream commit 64d4fc9926f09861a35d8f0f7d81f056e6d5af7b ]
 
-If AT_SYSINFO is not present, don't try to call a NULL pointer.
+Fix build fault when CONFIG_HWMON is a module, and CONFIG_VIDEO_I2C
+as builtin. This is due to 'imply hwmon' in the respective Kconfig.
 
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Andy Lutomirski <luto@kernel.org>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Link: https://lkml.kernel.org/r/faaf688265a7e1a5b944d6f8bc0f6368158306d3.1584052409.git.luto@kernel.org
+Issue build log:
+
+ld: drivers/media/i2c/video-i2c.o: in function `amg88xx_hwmon_init':
+video-i2c.c:(.text+0x2e1): undefined reference to `devm_hwmon_device_register_with_info
+
+Cc: rdunlap@infradead.org
+Fixes: acbea6798955 (media: video-i2c: add hwmon support for amg88xx)
+Signed-off-by: Matt Ranostay <matt.ranostay@konsulko.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/x86/ptrace_syscall.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/media/i2c/video-i2c.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/testing/selftests/x86/ptrace_syscall.c b/tools/testing/selftests/x86/ptrace_syscall.c
-index 6f22238f32173..12aaa063196e7 100644
---- a/tools/testing/selftests/x86/ptrace_syscall.c
-+++ b/tools/testing/selftests/x86/ptrace_syscall.c
-@@ -414,8 +414,12 @@ int main()
+diff --git a/drivers/media/i2c/video-i2c.c b/drivers/media/i2c/video-i2c.c
+index f27d294dcbef5..dd50acc085d89 100644
+--- a/drivers/media/i2c/video-i2c.c
++++ b/drivers/media/i2c/video-i2c.c
+@@ -105,7 +105,7 @@ static int amg88xx_xfer(struct video_i2c_data *data, char *buf)
+ 	return (ret == 2) ? 0 : -EIO;
+ }
  
- #if defined(__i386__) && (!defined(__GLIBC__) || __GLIBC__ > 2 || __GLIBC_MINOR__ >= 16)
- 	vsyscall32 = (void *)getauxval(AT_SYSINFO);
--	printf("[RUN]\tCheck AT_SYSINFO return regs\n");
--	test_sys32_regs(do_full_vsyscall32);
-+	if (vsyscall32) {
-+		printf("[RUN]\tCheck AT_SYSINFO return regs\n");
-+		test_sys32_regs(do_full_vsyscall32);
-+	} else {
-+		printf("[SKIP]\tAT_SYSINFO is not available\n");
-+	}
- #endif
+-#if IS_ENABLED(CONFIG_HWMON)
++#if IS_REACHABLE(CONFIG_HWMON)
  
- 	test_ptrace_syscall_restart();
+ static const u32 amg88xx_temp_config[] = {
+ 	HWMON_T_INPUT,
 -- 
 2.20.1
 
