@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87769C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:40:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1058CC2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:40:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5313B21D91
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:40:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D959721D91
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:40:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587051626;
-	bh=bFWDlqP9USn3c5lqfAuj6t5+gOROS4BcTG8X8ED4KOI=;
+	s=default; t=1587051633;
+	bh=kxAl/kLJfUsCpIvICM6QwVBnOzWBV/taZCwvMzq5wjc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LEsN1QrBiSv/lNEfkKbhDSkub5hl9VNvhDhfTGGX0tSI6JHBabdkEz6Cf2cNcTI71
-	 yVKDiMWkzuFpagIwEVL6ZlTnlXjvk/EU5vgap/eeJwlh3Fg5jL9lP5jwKheHu8dDkg
-	 pgU0xVGFFKHcnVYMy+bPAQ+ZA56SOwcExIA1emZg=
+	b=dxsRvupiCe6yelGC1kwXAGunvbibtY4QFrOK26PqGoewM83R+gymeTUVb8fmo34Km
+	 nTlvtSjf/qIZAjfq/wezTGyjNmBXx2nwmFTeVpfvED5ZzYsR4aiNsFXwP2Fc0Ey2mS
+	 eSdduLJcyGIOy3RRHVGyo+8ulvD/Fr8AZQ8eHSdo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388300AbgDPPkW (ORCPT
+        id S2633654AbgDPPkc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:40:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50116 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 11:40:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50046 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2897538AbgDPNhu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:37:50 -0400
+        id S2897510AbgDPNhm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:37:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9FA1C221F4;
-        Thu, 16 Apr 2020 13:37:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3268B22203;
+        Thu, 16 Apr 2020 13:37:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044269;
-        bh=bFWDlqP9USn3c5lqfAuj6t5+gOROS4BcTG8X8ED4KOI=;
+        s=default; t=1587044261;
+        bh=kxAl/kLJfUsCpIvICM6QwVBnOzWBV/taZCwvMzq5wjc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BNLzNi46Usq1Lpo/GxVgCp1U9k2sAJSNRR+1XeeECZe7djOnr4Ywj5RFkpEHtnm9c
-         pwqtNpKB12++AZmU9SI3TQf4SlqwEa5w/+FKzszgvlxm3SEUPz1ZLOgm0q1YUeqMGo
-         6ovcdcss8EBvND7bIpMkCQqcocSLeWsJxHrMjTj4=
+        b=hzlpErWkarf34ALBF2+cBnWHa3Znq7JZabslqLbg/1sXh3gNrAjrD6uRFkPSdh3xB
+         rJrOuXX/E/Jkowj976VrWSCBSL9lfWrPGvg0EQk24Fq+ziurpd//Tb1mwJVQKidecF
+         u+jXb8LxILsRWwRtzkUbXO7xNQ/wxZc89i3GA9UA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 5.5 148/257] KVM: x86: Gracefully handle __vmalloc() failure during VM allocation
-Date:   Thu, 16 Apr 2020 15:23:19 +0200
-Message-Id: <20200416131344.971663792@linuxfoundation.org>
+        stable@vger.kernel.org, David Hildenbrand <david@redhat.com>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>
+Subject: [PATCH 5.5 145/257] KVM: s390: vsie: Fix delivery of addressing exceptions
+Date:   Thu, 16 Apr 2020 15:23:16 +0200
+Message-Id: <20200416131344.575648040@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.891903893@linuxfoundation.org>
 References: <20200416131325.891903893@linuxfoundation.org>
@@ -61,50 +60,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Christopherson <sean.j.christopherson@intel.com>
+From: David Hildenbrand <david@redhat.com>
 
-commit d18b2f43b9147c8005ae0844fb445d8cc6a87e31 upstream.
+commit 4d4cee96fb7a3cc53702a9be8299bf525be4ee98 upstream.
 
-Check the result of __vmalloc() to avoid dereferencing a NULL pointer in
-the event that allocation failres.
+Whenever we get an -EFAULT, we failed to read in guest 2 physical
+address space. Such addressing exceptions are reported via a program
+intercept to the nested hypervisor.
 
-Fixes: d1e5b0e98ea27 ("kvm: Make VM ioctl do valloc for some archs")
-Cc: stable@vger.kernel.org
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+We faked the intercept, we have to return to guest 2. Instead, right
+now we would be returning -EFAULT from the intercept handler, eventually
+crashing the VM.
+the correct thing to do is to return 1 as rc == 1 is the internal
+representation of "we have to go back into g2".
+
+Addressing exceptions can only happen if the g2->g3 page tables
+reference invalid g2 addresses (say, either a table or the final page is
+not accessible - so something that basically never happens in sane
+environments.
+
+Identified by manual code inspection.
+
+Fixes: a3508fbe9dc6 ("KVM: s390: vsie: initial support for nested virtualization")
+Cc: <stable@vger.kernel.org> # v4.8+
+Signed-off-by: David Hildenbrand <david@redhat.com>
+Link: https://lore.kernel.org/r/20200403153050.20569-3-david@redhat.com
+Reviewed-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
+Reviewed-by: Christian Borntraeger <borntraeger@de.ibm.com>
+[borntraeger@de.ibm.com: fix patch description]
+Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kvm/svm.c     |    4 ++++
- arch/x86/kvm/vmx/vmx.c |    4 ++++
- 2 files changed, 8 insertions(+)
+ arch/s390/kvm/vsie.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/arch/x86/kvm/svm.c
-+++ b/arch/x86/kvm/svm.c
-@@ -1930,6 +1930,10 @@ static struct kvm *svm_vm_alloc(void)
- 	struct kvm_svm *kvm_svm = __vmalloc(sizeof(struct kvm_svm),
- 					    GFP_KERNEL_ACCOUNT | __GFP_ZERO,
- 					    PAGE_KERNEL);
-+
-+	if (!kvm_svm)
-+		return NULL;
-+
- 	return &kvm_svm->kvm;
+--- a/arch/s390/kvm/vsie.c
++++ b/arch/s390/kvm/vsie.c
+@@ -1202,6 +1202,7 @@ static int vsie_run(struct kvm_vcpu *vcp
+ 		scb_s->iprcc = PGM_ADDRESSING;
+ 		scb_s->pgmilc = 4;
+ 		scb_s->gpsw.addr = __rewind_psw(scb_s->gpsw, 4);
++		rc = 1;
+ 	}
+ 	return rc;
  }
- 
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -6633,6 +6633,10 @@ static struct kvm *vmx_vm_alloc(void)
- 	struct kvm_vmx *kvm_vmx = __vmalloc(sizeof(struct kvm_vmx),
- 					    GFP_KERNEL_ACCOUNT | __GFP_ZERO,
- 					    PAGE_KERNEL);
-+
-+	if (!kvm_vmx)
-+		return NULL;
-+
- 	return &kvm_vmx->kvm;
- }
- 
 
 
