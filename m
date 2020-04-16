@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3D70C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 16:00:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BF9DC2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 16:00:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9C122221EB
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 16:00:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35E72217D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 16:00:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587052841;
-	bh=SXAong0dK9Zt1RqkvYCfwsNxtQBl+WYaOrbAXLIv3TA=;
+	s=default; t=1587052846;
+	bh=nVtLNzcB5rwLaJSW7grsfccpshBFrNYp6ZC60q4Kl0g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ey6Lc23ESF3ZR8zX8WDOYSYEmedtbD4T1lCKtUWtd4sTjJCNSEki+LO1bDpiMZF/3
-	 JeSo4ZaTaP0dE3NW+qhz+Uy8sGuW7godttNuTAywkDtVPAeqx8+UVS0+/h1IRrL2T7
-	 wHH0xvtZ5o0N/vfu2xCqwDs8Ca94FtZgF08K+ahM=
+	b=2YthADi8BVnmSxEMh+Vl1/RZWl1PSyarvjax/99obd7kC85Kis7mgXfIbjEn06sq/
+	 0Hv9JGXXen50c5T8JoxVybFuLVdFSEoNrFXPP/8v1lJLuuONUdOOnjmJ5ldiqqyOXW
+	 a7OY2CmMurgWOQWvGXqdmZiqZtFTfBPDWnHzHrf0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2636382AbgDPQAk (ORCPT
+        id S2636413AbgDPQAo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 12:00:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35302 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 12:00:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35218 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2895352AbgDPN1C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:27:02 -0400
+        id S2895344AbgDPN07 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:26:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D6C5521BE5;
-        Thu, 16 Apr 2020 13:26:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5CC3C217D8;
+        Thu, 16 Apr 2020 13:26:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587043620;
-        bh=SXAong0dK9Zt1RqkvYCfwsNxtQBl+WYaOrbAXLIv3TA=;
+        s=default; t=1587043617;
+        bh=nVtLNzcB5rwLaJSW7grsfccpshBFrNYp6ZC60q4Kl0g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2ItrGqxf5lbj7nehZCrfbqxHcXJCZ5zxnhigTeqHzTyCKfJC4MPew24f3HO/4PT+8
-         i6j8Y7k5GLGwQlK5UOdvjSr3+tf7IE4BtQ2iPUDyl/Ww5+BdHszl56bzQ4bFMo1TEq
-         V+/p370Ss+SLScHhiixi0hCKV8FF096LDF1rKfqU=
+        b=LIVP7ddLR9ZjoQ9kaF2rZmDE1QT1EejBLfIN6botlR6gUpB6x3uK/9hyZ0SN3e6ka
+         weI9bwGG8Vz1xC+wtx10HlfwOF+u59+MRs/QvFyENN1XevnJvsBwLOoc+bVd0QmvUM
+         BkcMyW3SPYDL9XxDeTEGvTgRVPfN4esryI3FOmGY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Luo bin <luobin9@huawei.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 005/146] hinic: fix a bug of waitting for IO stopped
-Date:   Thu, 16 Apr 2020 15:22:26 +0200
-Message-Id: <20200416131243.187874522@linuxfoundation.org>
+        stable@vger.kernel.org, Sahitya Tummala <stummala@codeaurora.org>,
+        Pradeep P V K <ppvk@codeaurora.org>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 030/146] block: Fix use-after-free issue accessing struct io_cq
+Date:   Thu, 16 Apr 2020 15:22:51 +0200
+Message-Id: <20200416131246.615351428@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131242.353444678@linuxfoundation.org>
 References: <20200416131242.353444678@linuxfoundation.org>
@@ -60,90 +60,113 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Luo bin <luobin9@huawei.com>
+From: Sahitya Tummala <stummala@codeaurora.org>
 
-[ Upstream commit 96758117dc528e6d84bd23d205e8cf7f31eda029 ]
+[ Upstream commit 30a2da7b7e225ef6c87a660419ea04d3cef3f6a7 ]
 
-it's unreliable for fw to check whether IO is stopped, so driver
-wait for enough time to ensure IO process is done in hw before
-freeing resources
+There is a potential race between ioc_release_fn() and
+ioc_clear_queue() as shown below, due to which below kernel
+crash is observed. It also can result into use-after-free
+issue.
 
-Signed-off-by: Luo bin <luobin9@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+context#1:				context#2:
+ioc_release_fn()			__ioc_clear_queue() gets the same icq
+->spin_lock(&ioc->lock);		->spin_lock(&ioc->lock);
+->ioc_destroy_icq(icq);
+  ->list_del_init(&icq->q_node);
+  ->call_rcu(&icq->__rcu_head,
+  	icq_free_icq_rcu);
+->spin_unlock(&ioc->lock);
+					->ioc_destroy_icq(icq);
+					  ->hlist_del_init(&icq->ioc_node);
+					  This results into below crash as this memory
+					  is now used by icq->__rcu_head in context#1.
+					  There is a chance that icq could be free'd
+					  as well.
+
+22150.386550:   <6> Unable to handle kernel write to read-only memory
+at virtual address ffffffaa8d31ca50
+...
+Call trace:
+22150.607350:   <2>  ioc_destroy_icq+0x44/0x110
+22150.611202:   <2>  ioc_clear_queue+0xac/0x148
+22150.615056:   <2>  blk_cleanup_queue+0x11c/0x1a0
+22150.619174:   <2>  __scsi_remove_device+0xdc/0x128
+22150.623465:   <2>  scsi_forget_host+0x2c/0x78
+22150.627315:   <2>  scsi_remove_host+0x7c/0x2a0
+22150.631257:   <2>  usb_stor_disconnect+0x74/0xc8
+22150.635371:   <2>  usb_unbind_interface+0xc8/0x278
+22150.639665:   <2>  device_release_driver_internal+0x198/0x250
+22150.644897:   <2>  device_release_driver+0x24/0x30
+22150.649176:   <2>  bus_remove_device+0xec/0x140
+22150.653204:   <2>  device_del+0x270/0x460
+22150.656712:   <2>  usb_disable_device+0x120/0x390
+22150.660918:   <2>  usb_disconnect+0xf4/0x2e0
+22150.664684:   <2>  hub_event+0xd70/0x17e8
+22150.668197:   <2>  process_one_work+0x210/0x480
+22150.672222:   <2>  worker_thread+0x32c/0x4c8
+
+Fix this by adding a new ICQ_DESTROYED flag in ioc_destroy_icq() to
+indicate this icq is once marked as destroyed. Also, ensure
+__ioc_clear_queue() is accessing icq within rcu_read_lock/unlock so
+that icq doesn't get free'd up while it is still using it.
+
+Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
+Co-developed-by: Pradeep P V K <ppvk@codeaurora.org>
+Signed-off-by: Pradeep P V K <ppvk@codeaurora.org>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../net/ethernet/huawei/hinic/hinic_hw_dev.c  | 51 +------------------
- 1 file changed, 2 insertions(+), 49 deletions(-)
+ block/blk-ioc.c           | 7 +++++++
+ include/linux/iocontext.h | 1 +
+ 2 files changed, 8 insertions(+)
 
-diff --git a/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.c b/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.c
-index 9deec13d98e93..4c91c8ceac5f9 100644
---- a/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.c
-+++ b/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.c
-@@ -370,50 +370,6 @@ static int wait_for_db_state(struct hinic_hwdev *hwdev)
- 	return -EFAULT;
+diff --git a/block/blk-ioc.c b/block/blk-ioc.c
+index 01580f88fcb39..4c810969c3e2f 100644
+--- a/block/blk-ioc.c
++++ b/block/blk-ioc.c
+@@ -87,6 +87,7 @@ static void ioc_destroy_icq(struct io_cq *icq)
+ 	 * making it impossible to determine icq_cache.  Record it in @icq.
+ 	 */
+ 	icq->__rcu_icq_cache = et->icq_cache;
++	icq->flags |= ICQ_DESTROYED;
+ 	call_rcu(&icq->__rcu_head, icq_free_icq_rcu);
  }
  
--static int wait_for_io_stopped(struct hinic_hwdev *hwdev)
--{
--	struct hinic_cmd_io_status cmd_io_status;
--	struct hinic_hwif *hwif = hwdev->hwif;
--	struct pci_dev *pdev = hwif->pdev;
--	struct hinic_pfhwdev *pfhwdev;
--	unsigned long end;
--	u16 out_size;
--	int err;
--
--	if (!HINIC_IS_PF(hwif) && !HINIC_IS_PPF(hwif)) {
--		dev_err(&pdev->dev, "Unsupported PCI Function type\n");
--		return -EINVAL;
--	}
--
--	pfhwdev = container_of(hwdev, struct hinic_pfhwdev, hwdev);
--
--	cmd_io_status.func_idx = HINIC_HWIF_FUNC_IDX(hwif);
--
--	end = jiffies + msecs_to_jiffies(IO_STATUS_TIMEOUT);
--	do {
--		err = hinic_msg_to_mgmt(&pfhwdev->pf_to_mgmt, HINIC_MOD_COMM,
--					HINIC_COMM_CMD_IO_STATUS_GET,
--					&cmd_io_status, sizeof(cmd_io_status),
--					&cmd_io_status, &out_size,
--					HINIC_MGMT_MSG_SYNC);
--		if ((err) || (out_size != sizeof(cmd_io_status))) {
--			dev_err(&pdev->dev, "Failed to get IO status, ret = %d\n",
--				err);
--			return err;
--		}
--
--		if (cmd_io_status.status == IO_STOPPED) {
--			dev_info(&pdev->dev, "IO stopped\n");
--			return 0;
--		}
--
--		msleep(20);
--	} while (time_before(jiffies, end));
--
--	dev_err(&pdev->dev, "Wait for IO stopped - Timeout\n");
--	return -ETIMEDOUT;
--}
--
- /**
-  * clear_io_resource - set the IO resources as not active in the NIC
-  * @hwdev: the NIC HW device
-@@ -433,11 +389,8 @@ static int clear_io_resources(struct hinic_hwdev *hwdev)
- 		return -EINVAL;
+@@ -230,15 +231,21 @@ static void __ioc_clear_queue(struct list_head *icq_list)
+ {
+ 	unsigned long flags;
+ 
++	rcu_read_lock();
+ 	while (!list_empty(icq_list)) {
+ 		struct io_cq *icq = list_entry(icq_list->next,
+ 					       struct io_cq, q_node);
+ 		struct io_context *ioc = icq->ioc;
+ 
+ 		spin_lock_irqsave(&ioc->lock, flags);
++		if (icq->flags & ICQ_DESTROYED) {
++			spin_unlock_irqrestore(&ioc->lock, flags);
++			continue;
++		}
+ 		ioc_destroy_icq(icq);
+ 		spin_unlock_irqrestore(&ioc->lock, flags);
  	}
++	rcu_read_unlock();
+ }
  
--	err = wait_for_io_stopped(hwdev);
--	if (err) {
--		dev_err(&pdev->dev, "IO has not stopped yet\n");
--		return err;
--	}
-+	/* sleep 100ms to wait for firmware stopping I/O */
-+	msleep(100);
+ /**
+diff --git a/include/linux/iocontext.h b/include/linux/iocontext.h
+index dba15ca8e60bc..1dcd9198beb7f 100644
+--- a/include/linux/iocontext.h
++++ b/include/linux/iocontext.h
+@@ -8,6 +8,7 @@
  
- 	cmd_clear_io_res.func_idx = HINIC_HWIF_FUNC_IDX(hwif);
+ enum {
+ 	ICQ_EXITED		= 1 << 2,
++	ICQ_DESTROYED		= 1 << 3,
+ };
  
+ /*
 -- 
 2.20.1
 
