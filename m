@@ -2,173 +2,89 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BF9DC2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 16:00:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48704C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 16:00:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 35E72217D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 16:00:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587052846;
-	bh=nVtLNzcB5rwLaJSW7grsfccpshBFrNYp6ZC60q4Kl0g=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2YthADi8BVnmSxEMh+Vl1/RZWl1PSyarvjax/99obd7kC85Kis7mgXfIbjEn06sq/
-	 0Hv9JGXXen50c5T8JoxVybFuLVdFSEoNrFXPP/8v1lJLuuONUdOOnjmJ5ldiqqyOXW
-	 a7OY2CmMurgWOQWvGXqdmZiqZtFTfBPDWnHzHrf0=
+	by mail.kernel.org (Postfix) with ESMTP id 2FADE217D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 16:00:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2636413AbgDPQAo (ORCPT
+        id S2636434AbgDPQAr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 12:00:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35218 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 12:00:47 -0400
+Received: from mga01.intel.com ([192.55.52.88]:3424 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2895344AbgDPN07 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:26:59 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5CC3C217D8;
-        Thu, 16 Apr 2020 13:26:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587043617;
-        bh=nVtLNzcB5rwLaJSW7grsfccpshBFrNYp6ZC60q4Kl0g=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LIVP7ddLR9ZjoQ9kaF2rZmDE1QT1EejBLfIN6botlR6gUpB6x3uK/9hyZ0SN3e6ka
-         weI9bwGG8Vz1xC+wtx10HlfwOF+u59+MRs/QvFyENN1XevnJvsBwLOoc+bVd0QmvUM
-         BkcMyW3SPYDL9XxDeTEGvTgRVPfN4esryI3FOmGY=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sahitya Tummala <stummala@codeaurora.org>,
-        Pradeep P V K <ppvk@codeaurora.org>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 030/146] block: Fix use-after-free issue accessing struct io_cq
-Date:   Thu, 16 Apr 2020 15:22:51 +0200
-Message-Id: <20200416131246.615351428@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200416131242.353444678@linuxfoundation.org>
-References: <20200416131242.353444678@linuxfoundation.org>
-User-Agent: quilt/0.66
+        id S2636277AbgDPQAf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 12:00:35 -0400
+IronPort-SDR: 2J/wh0wIYCWhf1Z3/MN9OyYEsauFVWT+IGGEObuZbs4Gk8S0kQAEJ0qJIPKnLMbW34khj0HzaH
+ r/yDaUYdHP/g==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2020 09:00:34 -0700
+IronPort-SDR: yJ088btDTNzvL2Vk+437eBGYkoQC6+Yjz9Cn9GhybEUCWIdcrHcHY50kSJYiYLPX0Jz26guHFd
+ pOsjAGTMZEig==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,391,1580803200"; 
+   d="scan'208";a="278039807"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga004.fm.intel.com with ESMTP; 16 Apr 2020 09:00:32 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1000)
+        id 72AAF190; Thu, 16 Apr 2020 19:00:31 +0300 (EEST)
+From:   "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+To:     akpm@linux-foundation.org, Andrea Arcangeli <aarcange@redhat.com>
+Cc:     Zi Yan <ziy@nvidia.com>, Yang Shi <yang.shi@linux.alibaba.com>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        William Kucharski <william.kucharski@oracle.com>,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Subject: [PATCHv4 4/8] khugepaged: Drain LRU add pagevec after swapin
+Date:   Thu, 16 Apr 2020 19:00:22 +0300
+Message-Id: <20200416160026.16538-5-kirill.shutemov@linux.intel.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200416160026.16538-1-kirill.shutemov@linux.intel.com>
+References: <20200416160026.16538-1-kirill.shutemov@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sahitya Tummala <stummala@codeaurora.org>
+__collapse_huge_page_isolate() may fail due to extra pin in the LRU add
+pagevec. It's pretty common for swapin case: we swap in pages just to
+fail due to the extra pin.
 
-[ Upstream commit 30a2da7b7e225ef6c87a660419ea04d3cef3f6a7 ]
+Drain LRU add pagevec on successful swapin.
 
-There is a potential race between ioc_release_fn() and
-ioc_clear_queue() as shown below, due to which below kernel
-crash is observed. It also can result into use-after-free
-issue.
-
-context#1:				context#2:
-ioc_release_fn()			__ioc_clear_queue() gets the same icq
-->spin_lock(&ioc->lock);		->spin_lock(&ioc->lock);
-->ioc_destroy_icq(icq);
-  ->list_del_init(&icq->q_node);
-  ->call_rcu(&icq->__rcu_head,
-  	icq_free_icq_rcu);
-->spin_unlock(&ioc->lock);
-					->ioc_destroy_icq(icq);
-					  ->hlist_del_init(&icq->ioc_node);
-					  This results into below crash as this memory
-					  is now used by icq->__rcu_head in context#1.
-					  There is a chance that icq could be free'd
-					  as well.
-
-22150.386550:   <6> Unable to handle kernel write to read-only memory
-at virtual address ffffffaa8d31ca50
-...
-Call trace:
-22150.607350:   <2>  ioc_destroy_icq+0x44/0x110
-22150.611202:   <2>  ioc_clear_queue+0xac/0x148
-22150.615056:   <2>  blk_cleanup_queue+0x11c/0x1a0
-22150.619174:   <2>  __scsi_remove_device+0xdc/0x128
-22150.623465:   <2>  scsi_forget_host+0x2c/0x78
-22150.627315:   <2>  scsi_remove_host+0x7c/0x2a0
-22150.631257:   <2>  usb_stor_disconnect+0x74/0xc8
-22150.635371:   <2>  usb_unbind_interface+0xc8/0x278
-22150.639665:   <2>  device_release_driver_internal+0x198/0x250
-22150.644897:   <2>  device_release_driver+0x24/0x30
-22150.649176:   <2>  bus_remove_device+0xec/0x140
-22150.653204:   <2>  device_del+0x270/0x460
-22150.656712:   <2>  usb_disable_device+0x120/0x390
-22150.660918:   <2>  usb_disconnect+0xf4/0x2e0
-22150.664684:   <2>  hub_event+0xd70/0x17e8
-22150.668197:   <2>  process_one_work+0x210/0x480
-22150.672222:   <2>  worker_thread+0x32c/0x4c8
-
-Fix this by adding a new ICQ_DESTROYED flag in ioc_destroy_icq() to
-indicate this icq is once marked as destroyed. Also, ensure
-__ioc_clear_queue() is accessing icq within rcu_read_lock/unlock so
-that icq doesn't get free'd up while it is still using it.
-
-Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
-Co-developed-by: Pradeep P V K <ppvk@codeaurora.org>
-Signed-off-by: Pradeep P V K <ppvk@codeaurora.org>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+Reviewed-by: William Kucharski <william.kucharski@oracle.com>
+Reviewed-and-Tested-by: Zi Yan <ziy@nvidia.com>
+Acked-by: Yang Shi <yang.shi@linux.alibaba.com>
 ---
- block/blk-ioc.c           | 7 +++++++
- include/linux/iocontext.h | 1 +
- 2 files changed, 8 insertions(+)
+ mm/khugepaged.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/block/blk-ioc.c b/block/blk-ioc.c
-index 01580f88fcb39..4c810969c3e2f 100644
---- a/block/blk-ioc.c
-+++ b/block/blk-ioc.c
-@@ -87,6 +87,7 @@ static void ioc_destroy_icq(struct io_cq *icq)
- 	 * making it impossible to determine icq_cache.  Record it in @icq.
- 	 */
- 	icq->__rcu_icq_cache = et->icq_cache;
-+	icq->flags |= ICQ_DESTROYED;
- 	call_rcu(&icq->__rcu_head, icq_free_icq_rcu);
- }
- 
-@@ -230,15 +231,21 @@ static void __ioc_clear_queue(struct list_head *icq_list)
- {
- 	unsigned long flags;
- 
-+	rcu_read_lock();
- 	while (!list_empty(icq_list)) {
- 		struct io_cq *icq = list_entry(icq_list->next,
- 					       struct io_cq, q_node);
- 		struct io_context *ioc = icq->ioc;
- 
- 		spin_lock_irqsave(&ioc->lock, flags);
-+		if (icq->flags & ICQ_DESTROYED) {
-+			spin_unlock_irqrestore(&ioc->lock, flags);
-+			continue;
-+		}
- 		ioc_destroy_icq(icq);
- 		spin_unlock_irqrestore(&ioc->lock, flags);
+diff --git a/mm/khugepaged.c b/mm/khugepaged.c
+index 0b75b9821f44..adc686f13447 100644
+--- a/mm/khugepaged.c
++++ b/mm/khugepaged.c
+@@ -931,6 +931,11 @@ static bool __collapse_huge_page_swapin(struct mm_struct *mm,
  	}
-+	rcu_read_unlock();
+ 	vmf.pte--;
+ 	pte_unmap(vmf.pte);
++
++	/* Drain LRU add pagevec to remove extra pin on the swapped in pages */
++	if (swapped_in)
++		lru_add_drain();
++
+ 	trace_mm_collapse_huge_page_swapin(mm, swapped_in, referenced, 1);
+ 	return true;
  }
- 
- /**
-diff --git a/include/linux/iocontext.h b/include/linux/iocontext.h
-index dba15ca8e60bc..1dcd9198beb7f 100644
---- a/include/linux/iocontext.h
-+++ b/include/linux/iocontext.h
-@@ -8,6 +8,7 @@
- 
- enum {
- 	ICQ_EXITED		= 1 << 2,
-+	ICQ_DESTROYED		= 1 << 3,
- };
- 
- /*
 -- 
-2.20.1
-
-
+2.26.1
 
