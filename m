@@ -7,47 +7,51 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6547CC2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:17:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B42DEC2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:17:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3DC4F2076D
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:17:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9061F206B9
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:17:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587046651;
-	bh=oo8k5WceXRjdNhrIZURPloY5o+v2rdHZpBp5cNa6Cy0=;
+	s=default; t=1587046657;
+	bh=xSuIVxf2IZEyMJBOPJqn1kxpuXNYcQGD/c4t9Fjt72E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=q0Jms47dZ7nzSzuI43vJu9oGQGU0leIpg09xHaKqVcttM+ZvBbxzyFp0uV7qAXwiz
-	 ZYe+G3TCtzDCZHmYBSiBlIAjJ97t3uXZA1t6d8qg2y44OPe1oe0odUoBYdqkcqMyog
-	 K1bNcc9CJx6LyvPAQCHsai90OVNfSvWS62OQPmO0=
+	b=ibPZqsbDZjCRKLs99pc8mDe8pDe4qf4+Fc9hxO2Qo4M2q1loph6KgjH8N3/DY539A
+	 yABGom5Qb/B13eF6tFCHxojVUUPxRFR56FLtCg71Q0xPAJ1Uypg4JksTRiXTa6v3s3
+	 a9luu+gZaat1tlUG3rn183vDBoe0w80B/ZCCBUqU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2441969AbgDPOR2 (ORCPT
+        id S2439305AbgDPORg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:17:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39000 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 10:17:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38914 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2441310AbgDPNwj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:52:39 -0400
+        id S2440062AbgDPNwe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:52:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5C4952063A;
-        Thu, 16 Apr 2020 13:52:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 769C821734;
+        Thu, 16 Apr 2020 13:52:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587045158;
-        bh=oo8k5WceXRjdNhrIZURPloY5o+v2rdHZpBp5cNa6Cy0=;
+        s=default; t=1587045153;
+        bh=xSuIVxf2IZEyMJBOPJqn1kxpuXNYcQGD/c4t9Fjt72E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ekLt/tsH4WlFoKZg7NNdHEqSSCCNcVaA7Gmtxo39PAjjQBVzp30D6EcVKdg/8qBxt
-         dD3LaMVup6eZuZmI5269aPsh5xUQC8AEJcFgLECdL4Nc2nm7esFb7hzra4zeCFWYqN
-         J7tq91r+aHAGhoPR/4tyRinUVhgzgc0aYSVOCky8=
+        b=nOF5xdW3QHXo5xiEaPECcsdS+YTS0SL63wA8W7z0Lw3Ucge3SnVbHuBn62dvaDIqA
+         d9ubAv7beuzDTBNqeRC1r5S38LRL8aHvs4W0VXiJJBPB5fKavzoTz4O4h4eigEkA8M
+         vPHkfLaiRANwuu5IzpoWvqypOdDNsT0WEOD80G/E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
-        "Alexey Dobriyan (SK hynix)" <adobriyan@gmail.com>,
+        stable@vger.kernel.org, Bart Van Assche <bvanassche@acm.org>,
+        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
+        Johannes Thumshirn <jth@kernel.org>,
+        Hannes Reinecke <hare@suse.com>,
+        Ming Lei <ming.lei@redhat.com>,
+        Christoph Hellwig <hch@infradead.org>,
         Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 021/254] null_blk: fix spurious IO errors after failed past-wp access
-Date:   Thu, 16 Apr 2020 15:21:50 +0200
-Message-Id: <20200416131328.465682024@linuxfoundation.org>
+Subject: [PATCH 5.6 019/254] null_blk: Handle null_add_dev() failures properly
+Date:   Thu, 16 Apr 2020 15:21:48 +0200
+Message-Id: <20200416131328.214550214@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.804095985@linuxfoundation.org>
 References: <20200416131325.804095985@linuxfoundation.org>
@@ -60,53 +64,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexey Dobriyan <adobriyan@gmail.com>
+From: Bart Van Assche <bvanassche@acm.org>
 
-[ Upstream commit ff77042296d0a54535ddf74412c5ae92cb4ec76a ]
+[ Upstream commit 9b03b713082a31a5b90e0a893c72aa620e255c26 ]
 
-Steps to reproduce:
+If null_add_dev() fails then null_del_dev() is called with a NULL argument.
+Make null_del_dev() handle this scenario correctly. This patch fixes the
+following KASAN complaint:
 
-	BLKRESETZONE zone 0
+null-ptr-deref in null_del_dev+0x28/0x280 [null_blk]
+Read of size 8 at addr 0000000000000000 by task find/1062
 
-	// force EIO
-	pwrite(fd, buf, 4096, 4096);
+Call Trace:
+ dump_stack+0xa5/0xe6
+ __kasan_report.cold+0x65/0x99
+ kasan_report+0x16/0x20
+ __asan_load8+0x58/0x90
+ null_del_dev+0x28/0x280 [null_blk]
+ nullb_group_drop_item+0x7e/0xa0 [null_blk]
+ client_drop_item+0x53/0x80 [configfs]
+ configfs_rmdir+0x395/0x4e0 [configfs]
+ vfs_rmdir+0xb6/0x220
+ do_rmdir+0x238/0x2c0
+ __x64_sys_unlinkat+0x75/0x90
+ do_syscall_64+0x6f/0x2f0
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-	[issue more IO including zone ioctls]
-
-It will start failing randomly including IO to unrelated zones because of
-->error "reuse". Trigger can be partition detection as well if test is not
-run immediately which is even more entertaining.
-
-The fix is of course to clear ->error where necessary.
-
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Alexey Dobriyan (SK hynix) <adobriyan@gmail.com>
+Signed-off-by: Bart Van Assche <bvanassche@acm.org>
+Reviewed-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
+Cc: Johannes Thumshirn <jth@kernel.org>
+Cc: Hannes Reinecke <hare@suse.com>
+Cc: Ming Lei <ming.lei@redhat.com>
+Cc: Christoph Hellwig <hch@infradead.org>
 Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/block/null_blk_main.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/block/null_blk_main.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/block/null_blk_main.c b/drivers/block/null_blk_main.c
-index 2b8b4cb447cfb..d6a8d66e98036 100644
+index 8ada43b3eca13..d5b4a92033d48 100644
 --- a/drivers/block/null_blk_main.c
 +++ b/drivers/block/null_blk_main.c
-@@ -605,6 +605,7 @@ static struct nullb_cmd *__alloc_cmd(struct nullb_queue *nq)
- 	if (tag != -1U) {
- 		cmd = &nq->cmds[tag];
- 		cmd->tag = tag;
-+		cmd->error = BLK_STS_OK;
- 		cmd->nq = nq;
- 		if (nq->dev->irqmode == NULL_IRQ_TIMER) {
- 			hrtimer_init(&cmd->timer, CLOCK_MONOTONIC,
-@@ -1385,6 +1386,7 @@ static blk_status_t null_queue_rq(struct blk_mq_hw_ctx *hctx,
- 		cmd->timer.function = null_cmd_timer_expired;
- 	}
- 	cmd->rq = bd->rq;
-+	cmd->error = BLK_STS_OK;
- 	cmd->nq = nq;
+@@ -1432,7 +1432,12 @@ static void cleanup_queues(struct nullb *nullb)
  
- 	blk_mq_start_request(bd->rq);
+ static void null_del_dev(struct nullb *nullb)
+ {
+-	struct nullb_device *dev = nullb->dev;
++	struct nullb_device *dev;
++
++	if (!nullb)
++		return;
++
++	dev = nullb->dev;
+ 
+ 	ida_simple_remove(&nullb_indexes, nullb->index);
+ 
 -- 
 2.20.1
 
