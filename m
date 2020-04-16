@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A8DEC2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:10:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78202C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:10:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 30BFB2076D
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:10:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45A3122241
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:10:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587046200;
-	bh=+uJIfhq4To9PPx/vDjuWEYrcyKoHKGRkmagYR3usmxQ=;
+	s=default; t=1587046206;
+	bh=ENed83rf4FZN7TR/sxCG3io39qV5+j/aFwGFBuAPpkg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VYIVe3Me9nCb7LXOdxxnN0+zfGyVtZNMw5lfH05UdiZwPrNpDM4CyOk/7e0GT7FID
-	 TfL8zWOKS7RRC3sAHG1BeyDHT3ldpO1WSJ0Z7c3Lk73eE0nqYP+3raiCgph+IXixMF
-	 9twNBg/M5KZ6Qg5pVz7SLGfipF6S0oQ+1zRXWpyA=
+	b=JsbGi2zFJ/Fu8W7b5EAOYDcukY14Yt+WPZdBo0Daa4YoX1x5ovqq+J3Lo7TiTLm+/
+	 OcG3uMth2y+SZ171P4rZoniSXo0jOoMA4PaoWLkStBu2b4BZW0467EtQdU1Btq0aMD
+	 SbyXU96V5tPLAUkQoyJxyynWtxxkwn3LgYUhvBJ8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393472AbgDPOJ6 (ORCPT
+        id S2393052AbgDPOKE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:09:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60498 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 10:10:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60538 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2898592AbgDPNq1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:46:27 -0400
+        id S2898595AbgDPNqa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:46:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 761382076D;
-        Thu, 16 Apr 2020 13:46:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E5BD6208E4;
+        Thu, 16 Apr 2020 13:46:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044786;
-        bh=+uJIfhq4To9PPx/vDjuWEYrcyKoHKGRkmagYR3usmxQ=;
+        s=default; t=1587044789;
+        bh=ENed83rf4FZN7TR/sxCG3io39qV5+j/aFwGFBuAPpkg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NFIV2OQE6qZN61gMLsHRSKMI+9AlHc08TZ+4v22FwJuDooLVn61AHhN2UOaZMRyjo
-         g+f4P8S24U4JIwUR71h0dfvwwAQ4c0xVFz0B/ToDd6PvxFbTkLyLiYNNP4PeWUgSGP
-         2O9fZ3noZKMmYxrbpU0iA9skvpKbm77oqFMP/kfg=
+        b=GFGfFd2eDL3kywdIvzQYm34tNqAelO+G6CsXLDyPfWjdJ0hbniWVlPRlVQFgkbFNU
+         INZIvX6gAj4wpsXsfDZx5CjZ1lXxQo251xTM9viLcVB8DoNDo6jhS9H2seFD8zNhXh
+         S6W0A+qVMkmOOrlSN+LUTOSlonDZD1R9zsVrQplA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Stanimir Varbanov <svarbanov@mm-sol.com>
-Subject: [PATCH 5.4 102/232] PCI: qcom: Fix the fixup of PCI_VENDOR_ID_QCOM
-Date:   Thu, 16 Apr 2020 15:23:16 +0200
-Message-Id: <20200416131327.815719699@linuxfoundation.org>
+        stable@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: [PATCH 5.4 103/232] PCI: endpoint: Fix for concurrent memory allocation in OB address region
+Date:   Thu, 16 Apr 2020 15:23:17 +0200
+Message-Id: <20200416131327.962803146@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131316.640996080@linuxfoundation.org>
 References: <20200416131316.640996080@linuxfoundation.org>
@@ -61,40 +59,95 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
+From: Kishon Vijay Abraham I <kishon@ti.com>
 
-commit 604f3956524a6a53c1e3dd27b4b685b664d181ec upstream.
+commit 04e046ca57ebed3943422dee10eec9e73aec081e upstream.
 
-There exists non-bridge PCIe devices with PCI_VENDOR_ID_QCOM, so limit
-the fixup to only affect the relevant PCIe bridges.
+pci-epc-mem uses a bitmap to manage the Endpoint outbound (OB) address
+region. This address region will be shared by multiple endpoint
+functions (in the case of multi function endpoint) and it has to be
+protected from concurrent access to avoid updating an inconsistent state.
 
-Fixes: 322f03436692 ("PCI: qcom: Use default config space read function")
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Use a mutex to protect bitmap updates to prevent the memory
+allocation API from returning incorrect addresses.
+
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Acked-by: Stanimir Varbanov <svarbanov@mm-sol.com>
-Cc: stable@vger.kernel.org # v5.2+
+Cc: stable@vger.kernel.org # v4.14+
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/pci/controller/dwc/pcie-qcom.c |    8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ drivers/pci/endpoint/pci-epc-mem.c |   10 ++++++++--
+ include/linux/pci-epc.h            |    3 +++
+ 2 files changed, 11 insertions(+), 2 deletions(-)
 
---- a/drivers/pci/controller/dwc/pcie-qcom.c
-+++ b/drivers/pci/controller/dwc/pcie-qcom.c
-@@ -1289,7 +1289,13 @@ static void qcom_fixup_class(struct pci_
- {
- 	dev->class = PCI_CLASS_BRIDGE_PCI << 8;
- }
--DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, PCI_ANY_ID, qcom_fixup_class);
-+DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x0101, qcom_fixup_class);
-+DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x0104, qcom_fixup_class);
-+DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x0106, qcom_fixup_class);
-+DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x0107, qcom_fixup_class);
-+DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x0302, qcom_fixup_class);
-+DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x1000, qcom_fixup_class);
-+DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x1001, qcom_fixup_class);
+--- a/drivers/pci/endpoint/pci-epc-mem.c
++++ b/drivers/pci/endpoint/pci-epc-mem.c
+@@ -79,6 +79,7 @@ int __pci_epc_mem_init(struct pci_epc *e
+ 	mem->page_size = page_size;
+ 	mem->pages = pages;
+ 	mem->size = size;
++	mutex_init(&mem->lock);
  
- static struct platform_driver qcom_pcie_driver = {
- 	.probe = qcom_pcie_probe,
+ 	epc->mem = mem;
+ 
+@@ -122,7 +123,7 @@ void __iomem *pci_epc_mem_alloc_addr(str
+ 				     phys_addr_t *phys_addr, size_t size)
+ {
+ 	int pageno;
+-	void __iomem *virt_addr;
++	void __iomem *virt_addr = NULL;
+ 	struct pci_epc_mem *mem = epc->mem;
+ 	unsigned int page_shift = ilog2(mem->page_size);
+ 	int order;
+@@ -130,15 +131,18 @@ void __iomem *pci_epc_mem_alloc_addr(str
+ 	size = ALIGN(size, mem->page_size);
+ 	order = pci_epc_mem_get_order(mem, size);
+ 
++	mutex_lock(&mem->lock);
+ 	pageno = bitmap_find_free_region(mem->bitmap, mem->pages, order);
+ 	if (pageno < 0)
+-		return NULL;
++		goto ret;
+ 
+ 	*phys_addr = mem->phys_base + (pageno << page_shift);
+ 	virt_addr = ioremap(*phys_addr, size);
+ 	if (!virt_addr)
+ 		bitmap_release_region(mem->bitmap, pageno, order);
+ 
++ret:
++	mutex_unlock(&mem->lock);
+ 	return virt_addr;
+ }
+ EXPORT_SYMBOL_GPL(pci_epc_mem_alloc_addr);
+@@ -164,7 +168,9 @@ void pci_epc_mem_free_addr(struct pci_ep
+ 	pageno = (phys_addr - mem->phys_base) >> page_shift;
+ 	size = ALIGN(size, mem->page_size);
+ 	order = pci_epc_mem_get_order(mem, size);
++	mutex_lock(&mem->lock);
+ 	bitmap_release_region(mem->bitmap, pageno, order);
++	mutex_unlock(&mem->lock);
+ }
+ EXPORT_SYMBOL_GPL(pci_epc_mem_free_addr);
+ 
+--- a/include/linux/pci-epc.h
++++ b/include/linux/pci-epc.h
+@@ -71,6 +71,7 @@ struct pci_epc_ops {
+  * @bitmap: bitmap to manage the PCI address space
+  * @pages: number of bits representing the address region
+  * @page_size: size of each page
++ * @lock: mutex to protect bitmap
+  */
+ struct pci_epc_mem {
+ 	phys_addr_t	phys_base;
+@@ -78,6 +79,8 @@ struct pci_epc_mem {
+ 	unsigned long	*bitmap;
+ 	size_t		page_size;
+ 	int		pages;
++	/* mutex to protect against concurrent access for memory allocation*/
++	struct mutex	lock;
+ };
+ 
+ /**
 
 
