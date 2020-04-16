@@ -2,56 +2,51 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D40DBC2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:59:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99C28C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:59:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9DDE8206D9
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:59:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78B13214AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:59:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587049183;
-	bh=46mEjSm/G6IxHNb/fSSMev4MKJ0GpsninI8lztdBv/Q=;
+	s=default; t=1587049188;
+	bh=RlPp1iaNAIZtXV/7DCpgYxXxtz24O5yn7VLRupqjAtw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wwHK3d/pLXOAu3riTaCJvp7/mml6wRd+Nug7RwY8PuLULHh1UFm4Vmt2gsBELtU85
-	 c6IXUg+c5Lc7Z8h2g9p1RSvieMbJqHjrl+/r3U0+OmUNiMI+/FF0q1ShEPISl2e8o/
-	 u5IFZVqqlPl1faB/7aDIkiIYSfdYdzvEM0/xVimI=
+	b=KNxM3DrNjF//1Wz+VKr9G9CcLOn7oUaVyp4H9Y1RfXbjdhbmb42EFqxRePv4CopHt
+	 FnB1qjoSR4a4xztV86FllalBPxB3LZevePb+Rip6MlE5nfUfnEBvnNlVqSf9SBqWcB
+	 /rMdq7C6gfePU2niEJ2FGbkQPdMZMMTo6RlgHi8M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438652AbgDPO7l (ORCPT
+        id S2438799AbgDPO7q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:59:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41336 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 10:59:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41150 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2898829AbgDPNyo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:54:44 -0400
+        id S2898866AbgDPNyl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:54:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E429920786;
-        Thu, 16 Apr 2020 13:54:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7A8F120732;
+        Thu, 16 Apr 2020 13:54:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587045283;
-        bh=46mEjSm/G6IxHNb/fSSMev4MKJ0GpsninI8lztdBv/Q=;
+        s=default; t=1587045280;
+        bh=RlPp1iaNAIZtXV/7DCpgYxXxtz24O5yn7VLRupqjAtw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DV6yEeXYrAkuA03o35PL9EdtAsF6Di+V0v95NlrtTnB5oyYnQ307tkD575Jj/jJj8
-         vdeap4B4ywMMBpxfm2BE4U1FoRNGbO99SgJwRbtvsQzcyotyqLNKR7GqPg+Te9O3xX
-         UqOHTG8bqgj3k7I8tRgmWEZnyQWwjh7yuJYXWSJ0=
+        b=JKCQjvfk1GQRueUJiR/LvcbgYidSenVFPHxqOE24zBkt2laJlQxfdeG4Rf71MzUO6
+         tvJxnijcdcVi8KYI7XNrRzmKFDrHLYkRXfJGeBVdgCe6lZnwXT8bEAVp9CU7f9FgGg
+         qcV4xxR4NGRvig5tuUpGvgHIo6jfLh1LzIbA2xbI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dongjin Kim <tobetter@gmail.com>,
-        Jianxin Pan <jianxin.pan@amlogic.com>,
-        Thinh Nguyen <thinhn@synopsys.com>,
-        Jun Li <lijun.kernel@gmail.com>, Tim <elatllat@gmail.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 054/254] usb: dwc3: core: add support for disabling SS instances in park mode
-Date:   Thu, 16 Apr 2020 15:22:23 +0200
-Message-Id: <20200416131332.663789377@linuxfoundation.org>
+        stable@vger.kernel.org, Thinh Nguyen <thinhn@synopsys.com>,
+        Felipe Balbi <balbi@kernel.org>
+Subject: [PATCH 5.6 071/254] usb: gadget: composite: Inform controller driver of self-powered
+Date:   Thu, 16 Apr 2020 15:22:40 +0200
+Message-Id: <20200416131334.752534395@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.804095985@linuxfoundation.org>
 References: <20200416131325.804095985@linuxfoundation.org>
@@ -64,99 +59,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Neil Armstrong <narmstrong@baylibre.com>
+From: Thinh Nguyen <Thinh.Nguyen@synopsys.com>
 
-[ Upstream commit 7ba6b09fda5e0cb741ee56f3264665e0edc64822 ]
+commit 5e5caf4fa8d3039140b4548b6ab23dd17fce9b2c upstream.
 
-In certain circumstances, the XHCI SuperSpeed instance in park mode
-can fail to recover, thus on Amlogic G12A/G12B/SM1 SoCs when there is high
-load on the single XHCI SuperSpeed instance, the controller can crash like:
- xhci-hcd xhci-hcd.0.auto: xHCI host not responding to stop endpoint command.
- xhci-hcd xhci-hcd.0.auto: Host halt failed, -110
- xhci-hcd xhci-hcd.0.auto: xHCI host controller not responding, assume dead
- xhci-hcd xhci-hcd.0.auto: xHCI host not responding to stop endpoint command.
- hub 2-1.1:1.0: hub_ext_port_status failed (err = -22)
- xhci-hcd xhci-hcd.0.auto: HC died; cleaning up
- usb 2-1.1-port1: cannot reset (err = -22)
+Different configuration/condition may draw different power. Inform the
+controller driver of the change so it can respond properly (e.g.
+GET_STATUS request). This fixes an issue with setting MaxPower from
+configfs. The composite driver doesn't check this value when setting
+self-powered.
 
-Setting the PARKMODE_DISABLE_SS bit in the DWC3_USB3_GUCTL1 mitigates
-the issue. The bit is described as :
-"When this bit is set to '1' all SS bus instances in park mode are disabled"
-
-Synopsys explains:
-The GUCTL1.PARKMODE_DISABLE_SS is only available in
-dwc_usb3 controller running in host mode.
-This should not be set for other IPs.
-This can be disabled by default based on IP, but I recommend to have a
-property to enable this feature for devices that need this.
-
-CC: Dongjin Kim <tobetter@gmail.com>
-Cc: Jianxin Pan <jianxin.pan@amlogic.com>
-Cc: Thinh Nguyen <thinhn@synopsys.com>
-Cc: Jun Li <lijun.kernel@gmail.com>
-Reported-by: Tim <elatllat@gmail.com>
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+Cc: stable@vger.kernel.org
+Fixes: 88af8bbe4ef7 ("usb: gadget: the start of the configfs interface")
+Signed-off-by: Thinh Nguyen <thinhn@synopsys.com>
 Signed-off-by: Felipe Balbi <balbi@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/usb/dwc3/core.c | 5 +++++
- drivers/usb/dwc3/core.h | 4 ++++
- 2 files changed, 9 insertions(+)
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
-index 1d85c42b9c674..43bd5b1ea9e2c 100644
---- a/drivers/usb/dwc3/core.c
-+++ b/drivers/usb/dwc3/core.c
-@@ -1029,6 +1029,9 @@ static int dwc3_core_init(struct dwc3 *dwc)
- 		if (dwc->dis_tx_ipgap_linecheck_quirk)
- 			reg |= DWC3_GUCTL1_TX_IPGAP_LINECHECK_DIS;
- 
-+		if (dwc->parkmode_disable_ss_quirk)
-+			reg |= DWC3_GUCTL1_PARKMODE_DISABLE_SS;
+---
+ drivers/usb/gadget/composite.c |    9 +++++++++
+ 1 file changed, 9 insertions(+)
+
+--- a/drivers/usb/gadget/composite.c
++++ b/drivers/usb/gadget/composite.c
+@@ -861,6 +861,11 @@ static int set_config(struct usb_composi
+ 	else
+ 		power = min(power, 900U);
+ done:
++	if (power <= USB_SELF_POWER_VBUS_MAX_DRAW)
++		usb_gadget_set_selfpowered(gadget);
++	else
++		usb_gadget_clear_selfpowered(gadget);
 +
- 		dwc3_writel(dwc->regs, DWC3_GUCTL1, reg);
+ 	usb_gadget_vbus_draw(gadget, power);
+ 	if (result >= 0 && cdev->delayed_status)
+ 		result = USB_GADGET_DELAYED_STATUS;
+@@ -2279,6 +2284,7 @@ void composite_suspend(struct usb_gadget
+ 
+ 	cdev->suspended = 1;
+ 
++	usb_gadget_set_selfpowered(gadget);
+ 	usb_gadget_vbus_draw(gadget, 2);
+ }
+ 
+@@ -2307,6 +2313,9 @@ void composite_resume(struct usb_gadget
+ 		else
+ 			maxpower = min(maxpower, 900U);
+ 
++		if (maxpower > USB_SELF_POWER_VBUS_MAX_DRAW)
++			usb_gadget_clear_selfpowered(gadget);
++
+ 		usb_gadget_vbus_draw(gadget, maxpower);
  	}
  
-@@ -1342,6 +1345,8 @@ static void dwc3_get_properties(struct dwc3 *dwc)
- 				"snps,dis-del-phy-power-chg-quirk");
- 	dwc->dis_tx_ipgap_linecheck_quirk = device_property_read_bool(dev,
- 				"snps,dis-tx-ipgap-linecheck-quirk");
-+	dwc->parkmode_disable_ss_quirk = device_property_read_bool(dev,
-+				"snps,parkmode-disable-ss-quirk");
- 
- 	dwc->tx_de_emphasis_quirk = device_property_read_bool(dev,
- 				"snps,tx_de_emphasis_quirk");
-diff --git a/drivers/usb/dwc3/core.h b/drivers/usb/dwc3/core.h
-index 77c4a9abe3652..3ecc69c5b150f 100644
---- a/drivers/usb/dwc3/core.h
-+++ b/drivers/usb/dwc3/core.h
-@@ -249,6 +249,7 @@
- #define DWC3_GUCTL_HSTINAUTORETRY	BIT(14)
- 
- /* Global User Control 1 Register */
-+#define DWC3_GUCTL1_PARKMODE_DISABLE_SS	BIT(17)
- #define DWC3_GUCTL1_TX_IPGAP_LINECHECK_DIS	BIT(28)
- #define DWC3_GUCTL1_DEV_L1_EXIT_BY_HW	BIT(24)
- 
-@@ -1024,6 +1025,8 @@ struct dwc3_scratchpad_array {
-  *			change quirk.
-  * @dis_tx_ipgap_linecheck_quirk: set if we disable u2mac linestate
-  *			check during HS transmit.
-+ * @parkmode_disable_ss_quirk: set if we need to disable all SuperSpeed
-+ *			instances in park mode.
-  * @tx_de_emphasis_quirk: set if we enable Tx de-emphasis quirk
-  * @tx_de_emphasis: Tx de-emphasis value
-  * 	0	- -6dB de-emphasis
-@@ -1215,6 +1218,7 @@ struct dwc3 {
- 	unsigned		dis_u2_freeclk_exists_quirk:1;
- 	unsigned		dis_del_phy_power_chg_quirk:1;
- 	unsigned		dis_tx_ipgap_linecheck_quirk:1;
-+	unsigned		parkmode_disable_ss_quirk:1;
- 
- 	unsigned		tx_de_emphasis_quirk:1;
- 	unsigned		tx_de_emphasis:2;
--- 
-2.20.1
-
 
 
