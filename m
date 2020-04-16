@@ -2,162 +2,147 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 196F0C3815B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 03:25:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95F66C2BA19
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 03:28:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E7FE92076D
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 03:25:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="MRQdieME"
+	by mail.kernel.org (Postfix) with ESMTP id 77EF62076D
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 03:28:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390823AbgDPDZa (ORCPT
+        id S2390991AbgDPD2V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 23:25:30 -0400
-Received: from mail-eopbgr80041.outbound.protection.outlook.com ([40.107.8.41]:61698
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
+        Wed, 15 Apr 2020 23:28:21 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:2336 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2388679AbgDPDZ0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 23:25:26 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=SRzw+oUDTNDaE0P1XW5aYnC3EcGjEAOuP8dOZuCjRyoSnZmXYQozJakLBaQNB9ba7sxb/VJHjKymV28C7cOhWV0Nr3gPIg/W16bktZuwsiJn9HuGZGWz+TT5q/k0NpAUTCjwVTxnL9EhNs8dYiOPY/bz5Z9FgYfswnSsIsN2H4kPUjO9i2iKvJxXFeGpMCvyfJU9R66rlgsJJQhGApgY137X0MBUtOEz9QYQTyHWZ+fbh1QIowG18Zp+0SFPljLDtNXngecr99adyW4PkBvUWpI8+B9uWv4URHDMyTFeNJ6zq/6Ukv1T40eMdmEa0VBEUgJfvo8WIvr8ZBoQa95nkw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=knyUoZE4wv+YXjq5MDP3ECk/bnce9WQ+irsxak+ITsU=;
- b=FcsiAYiiC/EIuWi2PYuZcXk4rZ6jhHbX6lb/RmqzCW4CmWoETuW5Y+UI6G6qFr/72vZF2/dIOk9mcETX/NDW6nHyBAqbNwHaDZQIsTAhrC5n728/2j5g912VW0ERaLGID8U9iWu9A0Z/mykEhgCt8W6N7lzlEGY0dqoEuJdj8Pgb3zidJkrbHRMWg8NXa9ESy+yMEhm87gerd5T3OKnljgmOKfhr1exhucgHXSrhTgaRWbbTk6mkPExZ3KTkwW+H9nQZwMjzhgWhOHtqI3RcExb7YX/hHMQV8nSBoRwVvxXBBDi6b7UZykD5/XKuzYxe71JjwrmuK49Kv7dL5iFHBQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=knyUoZE4wv+YXjq5MDP3ECk/bnce9WQ+irsxak+ITsU=;
- b=MRQdieMEDAHRWbSxetxaQJv5nSWmD2urn3wJ+bydqWSCr7P2ygubs90dgUY/DVm6UlzKLxd6Z05nvF9tMkZZefaQWWcQGo1ROjQh2ZyI4fgIJ/vCe6bd3nWdBAFziMl0yqTMz0YqAJ4fUqEeUXdAkiTUxhazSpLAfjtdRmktZqQ=
-Received: from VI1PR05MB5102.eurprd05.prod.outlook.com (2603:10a6:803:5e::23)
- by VI1PR05MB4271.eurprd05.prod.outlook.com (2603:10a6:803:4c::26) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.17; Thu, 16 Apr
- 2020 03:25:21 +0000
-Received: from VI1PR05MB5102.eurprd05.prod.outlook.com
- ([fe80::9d19:a564:b84e:7c19]) by VI1PR05MB5102.eurprd05.prod.outlook.com
- ([fe80::9d19:a564:b84e:7c19%7]) with mapi id 15.20.2900.028; Thu, 16 Apr 2020
- 03:25:21 +0000
-From:   Saeed Mahameed <saeedm@mellanox.com>
-To:     "arnd@arndb.de" <arnd@arndb.de>
-CC:     "narmstrong@baylibre.com" <narmstrong@baylibre.com>,
-        "masahiroy@kernel.org" <masahiroy@kernel.org>,
-        "Laurent.pinchart@ideasonboard.com" 
-        <Laurent.pinchart@ideasonboard.com>,
-        "leon@kernel.org" <leon@kernel.org>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "nico@fluxnic.net" <nico@fluxnic.net>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "kieran.bingham+renesas@ideasonboard.com" 
-        <kieran.bingham+renesas@ideasonboard.com>,
-        "jani.nikula@linux.intel.com" <jani.nikula@linux.intel.com>,
-        "a.hajda@samsung.com" <a.hajda@samsung.com>,
-        "jonas@kwiboo.se" <jonas@kwiboo.se>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "airlied@linux.ie" <airlied@linux.ie>,
-        "jgg@ziepe.ca" <jgg@ziepe.ca>,
-        "jernej.skrabec@siol.net" <jernej.skrabec@siol.net>
-Subject: Re: [RFC 0/6] Regressions for "imply" behavior change
-Thread-Topic: [RFC 0/6] Regressions for "imply" behavior change
-Thread-Index: AQHWDeQiJzc7TgrcN0yUMWAEU5j98qhvr4mAgAADKgCAAB92AIAAp0gAgAEtnwCAAPPSAIAAHv4AgAXrpwCAABBmgIAAD4MAgAAAr4CAACg8gIAAECAAgAIjCgA=
-Date:   Thu, 16 Apr 2020 03:25:21 +0000
-Message-ID: <834c7606743424c64951dd2193ca15e29799bf18.camel@mellanox.com>
-References: <20200408202711.1198966-1-arnd@arndb.de>
-         <nycvar.YSQ.7.76.2004081633260.2671@knanqh.ubzr>
-         <CAK8P3a2frDf4BzEpEF0uwPTV2dv6Jve+6N97z1sSuSBUAPJquA@mail.gmail.com>
-         <20200408224224.GD11886@ziepe.ca> <87k12pgifv.fsf@intel.com>
-         <7d9410a4b7d0ef975f7cbd8f0b6762df114df539.camel@mellanox.com>
-         <20200410171320.GN11886@ziepe.ca>
-         <16441479b793077cdef9658f35773739038c39dc.camel@mellanox.com>
-         <20200414132900.GD5100@ziepe.ca>
-         <CAK8P3a0aFQ7h4zRDW=QLogXWc88JkJJXEOK0_CpWwsRjq6+T+w@mail.gmail.com>
-         <20200414152312.GF5100@ziepe.ca>
-         <CAK8P3a1PjP9_b5NdmqTLeGN4y+3JXx_yyTE8YAf1u5rYHWPA9g@mail.gmail.com>
-         <f6d83b08fc0bc171b5ba5b2a0bc138727d92e2c0.camel@mellanox.com>
-         <CAK8P3a1-J=4EAxh7TtQxugxwXk239u8ffgxZNRdw_WWy8ExFoQ@mail.gmail.com>
-In-Reply-To: <CAK8P3a1-J=4EAxh7TtQxugxwXk239u8ffgxZNRdw_WWy8ExFoQ@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Evolution 3.34.4 (3.34.4-1.fc31) 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=saeedm@mellanox.com; 
-x-originating-ip: [73.15.39.150]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 82daffa3-92f8-4ba8-49ea-08d7e1b5cb88
-x-ms-traffictypediagnostic: VI1PR05MB4271:
-x-microsoft-antispam-prvs: <VI1PR05MB4271649E778EA2A4D374A9BDBED80@VI1PR05MB4271.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 0375972289
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR05MB5102.eurprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(366004)(136003)(396003)(39860400002)(346002)(376002)(66556008)(66476007)(6916009)(6486002)(5660300002)(71200400001)(64756008)(478600001)(2616005)(76116006)(7416002)(6512007)(91956017)(66946007)(86362001)(66446008)(2906002)(81156014)(54906003)(36756003)(8936002)(186003)(8676002)(6506007)(26005)(4326008)(53546011)(316002);DIR:OUT;SFP:1101;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 8HepqqDIGzEi7tORF5X5Tb7eoVREWluEC80774g/prha3cqwPaYbN25lrUFgxiRMpD6DNohkoTAJwmB1bmhc/s/h08T3m+Yu1uw4wKvvW3QlujiEvVWTyJrY88cA7s7RHtIA+B2IABZIJ/v04Ku4ysyNK3G0nHcZn1yN68lplqCMTbomq2Vjo4cGKJIHpj4nhXEmxelt2GOazolzidEhTxrM/Uh3UimAptxXxu4ihGloyqMbfShC+72RsFudGO28QuMs8G8TC1xJnOWAIFsYgRU9kn5zjpI+2LgySfw/4ZBEFuUY3xl6njDgIoOkUf3sn34wOQckv6Idwz8e2zJY6F5b+PLiLjkeulztQLE+ti1Y2bQ6zH4giqTtYaKW2acl3Def1H1fASvDdbXL/NDr7nktvAcG67TDMsaFsMNmjt+9Pq1QANe0SGmXFNlp4BQ+
-x-ms-exchange-antispam-messagedata: JcdCHeSTiG2XhCo9in9V3RAZ5m5DubGzdykDehww6r9Poa9SQdOPri/i0CFqV5+Nl4NLIj9tPz51AXD7oEQrxLOUZgTuHROkO5I6zpVoZxLjEXiKh0Pv26gtRsHSfb1o0IQ/g+esnfH3YCPAh4x7nQ==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <1152EAD69D690A4AAA58D754FDFF7D44@eurprd05.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        id S2390005AbgDPD2Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 23:28:16 -0400
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 0020A7D09D55C0CCF71F;
+        Thu, 16 Apr 2020 11:28:09 +0800 (CST)
+Received: from [127.0.0.1] (10.173.221.230) by DGGEMS413-HUB.china.huawei.com
+ (10.3.19.213) with Microsoft SMTP Server id 14.3.487.0; Thu, 16 Apr 2020
+ 11:27:59 +0800
+Subject: Re: [PATCH v2] KVM/arm64: Support enabling dirty log gradually in
+ small chunks
+To:     <kvm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <kvmarm@lists.cs.columbia.edu>
+References: <20200413122023.52583-1-zhukeqian1@huawei.com>
+CC:     Marc Zyngier <maz@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>,
+        "James Morse" <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Will Deacon <will@kernel.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Jay Zhou <jianjay.zhou@huawei.com>,
+        <wanghaibin.wang@huawei.com>
+From:   zhukeqian <zhukeqian1@huawei.com>
+Message-ID: <e93e85b3-cdab-d293-6c68-c563fab46d94@huawei.com>
+Date:   Thu, 16 Apr 2020 11:27:57 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.7.1
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 82daffa3-92f8-4ba8-49ea-08d7e1b5cb88
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Apr 2020 03:25:21.3792
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: YbQgTK6PilEv+Zeii4Jn71Dy1zQrZY5+bMuMqMoYAgPlYJdHs2RD+bigZumM785TlqnxNBaQlw9Ujc8EMBGsIw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB4271
+In-Reply-To: <20200413122023.52583-1-zhukeqian1@huawei.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.173.221.230]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVHVlLCAyMDIwLTA0LTE0IGF0IDIwOjQ3ICswMjAwLCBBcm5kIEJlcmdtYW5uIHdyb3RlOg0K
-PiBPbiBUdWUsIEFwciAxNCwgMjAyMCBhdCA3OjQ5IFBNIFNhZWVkIE1haGFtZWVkIDxzYWVlZG1A
-bWVsbGFub3guY29tPg0KPiB3cm90ZToNCj4gPiBPbiBUdWUsIDIwMjAtMDQtMTQgYXQgMTc6MjUg
-KzAyMDAsIEFybmQgQmVyZ21hbm4gd3JvdGU6DQo+ID4gPiBPbiBUdWUsIEFwciAxNCwgMjAyMCBh
-dCA1OjIzIFBNIEphc29uIEd1bnRob3JwZSA8amdnQHppZXBlLmNhPg0KPiA+ID4gd3JvdGU6DQo+
-ID4gPiBDb3JyZWN0Lg0KPiA+ID4gDQo+ID4gDQo+ID4gR3JlYXQgIQ0KPiA+IA0KPiA+IFRoZW4g
-Ym90dG9tIGxpbmUgd2Ugd2lsbCBjaGFuZ2UgbWx4NS9LY29uZmlnOiB0bw0KPiA+IA0KPiA+IGRl
-cGVuZHMgb24gVlhMQU4gfHwgIVZYTEFODQo+IA0KPiBPaw0KPiANCg0KQlRXIGhvdyBhYm91dCBh
-ZGRpbmcgYSBuZXcgS2NvbmZpZyBvcHRpb24gdG8gaGlkZSB0aGUgZGV0YWlscyBvZiANCiggQkFS
-IHx8ICFCQVIpID8gYXMgSmFzb24gYWxyZWFkeSBleHBsYWluZWQgYW5kIHN1Z2dlc3RlZCwgdGhp
-cyB3aWxsDQptYWtlIGl0IGVhc2llciBmb3IgdGhlIHVzZXJzIGFuZCBkZXZlbG9wZXJzIHRvIHVu
-ZGVyc3RhbmQgdGhlIGFjdHVhbA0KbWVhbmluZyBiZWhpbmQgdGhpcyB0cmlzdGF0ZSB3ZWlyZCBj
-b25kaXRpb24uDQoNCmUuZyBoYXZlIGEgbmV3IGtleXdvcmQ6DQogICAgIHJlYWNoIFZYTEFODQp3
-aGljaCB3aWxsIGJlIGVxdWl2YWxlbnQgdG86IA0KICAgICBkZXBlbmRzIG9uIFZYTEFOICYmICFW
-WExBTg0KDQo+ID4gVGhpcyB3aWxsIGZvcmNlIE1MWDVfQ09SRSB0byBtIHdoZW4gbmVjZXNzYXJ5
-IHRvIG1ha2UgdnhsYW4NCj4gPiByZWFjaGFibGUNCj4gPiB0byBtbHg1X2NvcmUuICBTbyBubyBu
-ZWVkIGZvciBleHBsaWNpdCB1c2Ugb2YgSVNfUkVBQ0hBQkxFKCkuDQo+ID4gaW4gbWx4NSB0aGVy
-ZSBhcmUgNCBvZiB0aGVzZToNCj4gPiANCj4gPiAgICAgICAgIGltcGx5IFBUUF8xNTg4X0NMT0NL
-DQo+ID4gICAgICAgICBpbXBseSBWWExBTg0KPiA+ICAgICAgICAgaW1wbHkgTUxYRlcNCj4gPiAg
-ICAgICAgIGltcGx5IFBDSV9IWVBFUlZfSU5URVJGQUNFDQo+IA0KPiBBcyBtZW50aW9uZWQgZWFy
-bGllciwgd2UgZG8gbmVlZCB0byByZXBsYWNlIHRoZSAnaW1wbHkNCj4gUFRQXzE1ODhfQ0xPQ0sn
-DQo+IHdpdGggdGhlIHNhbWUNCj4gDQo+ICAgICAgICAgIGRlcGVuZHMgb24gUFRQXzE1ODhfQ0xP
-Q0sgfHwgIVBUUF8xNTg4X0NMT0NLDQo+IA0KPiBTbyBmYXIgSSBoYXZlIG5vdCBzZWVuIHByb2Js
-ZW1zIGZvciB0aGUgb3RoZXIgdHdvIG9wdGlvbnMsIHNvIEkNCj4gYXNzdW1lIHRoZXkNCj4gYXJl
-IGZpbmUgZm9yIG5vdyAtLSBpdCBzZWVtcyB0byBidWlsZCBqdXN0IGZpbmUgd2l0aG91dA0KPiBQ
-Q0lfSFlQRVJWX0lOVEVSRkFDRSwNCj4gYW5kIE1MWEZXIGhhcyBubyBvdGhlciBkZXBlbmRlbmNp
-ZXMsIG1lYW5pbmcgdGhhdCAnaW1wbHknIGlzIHRoZQ0KPiBzYW1lIGFzICdzZWxlY3QnIGhlcmUu
-IFVzaW5nICdzZWxlY3QgTUxYRlcnIHdvdWxkIG1ha2UgaXQgY2xlYXJlcg0KPiBwZXJoYXBzLg0K
-DQpObywgSSB3b3VsZCBsaWtlIHRvIGF2b2lkIHNlbGVjdCBhbmQgYWxsb3cgYnVpbGRpbmcgbWx4
-NSB3aXRob3V0IE1MWEZXLA0KTUxYRlcgYWxyZWFkeSBoYXMgYSBzdHViIHByb3RlY3RlZCB3aXRo
-IElTX1JFQUNIQUJMRSgpLCB0aGlzIGlzIHdoeSB3ZQ0KZG9uJ3QgaGF2ZSBhbiBpc3N1ZSB3aXRo
-IGl0Lg0KDQoNCj4gDQo+ICAgICAgIEFybmQNCg==
+Hi Marc,
+
+In RFC patch, I still write protect huge pages when DIRTY_LOG_INITIALLY_ALL_SET
+is enabled by userspace. I find that both huge pages and normal pages can be
+write protected during log clear. So this formal patch is pretty simple now.
+
+Thanks,
+Keqian
+
+On 2020/4/13 20:20, Keqian Zhu wrote:
+> There is already support of enabling dirty log graually in small chunks
+> for x86 in commit 3c9bd4006bfc ("KVM: x86: enable dirty log gradually in
+> small chunks"). This adds support for arm64.
+> 
+> x86 still writes protect all huge pages when DIRTY_LOG_INITIALLY_ALL_SET
+> is eanbled. However, for arm64, both huge pages and normal pages can be
+> write protected gradually by userspace.
+> 
+> Under the Huawei Kunpeng 920 2.6GHz platform, I did some tests on 128G
+> Linux VMs with different page size. The memory pressure is 127G in each
+> case. The time taken of memory_global_dirty_log_start in QEMU is listed
+> below:
+> 
+> Page Size      Before    After Optimization
+>   4K            650ms         1.8ms
+>   2M             4ms          1.8ms
+>   1G             2ms          1.8ms
+> 
+> Besides the time reduction, the biggest income is that we will minimize
+> the performance side effect (because of dissloving huge pages and marking
+> memslots dirty) on guest after enabling dirty log.
+> 
+> Signed-off-by: Keqian Zhu <zhukeqian1@huawei.com>
+> ---
+>  Documentation/virt/kvm/api.rst    |  2 +-
+>  arch/arm64/include/asm/kvm_host.h |  3 +++
+>  virt/kvm/arm/mmu.c                | 12 ++++++++++--
+>  3 files changed, 14 insertions(+), 3 deletions(-)
+> 
+> diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
+> index efbbe570aa9b..0017f63fa44f 100644
+> --- a/Documentation/virt/kvm/api.rst
+> +++ b/Documentation/virt/kvm/api.rst
+> @@ -5777,7 +5777,7 @@ will be initialized to 1 when created.  This also improves performance because
+>  dirty logging can be enabled gradually in small chunks on the first call
+>  to KVM_CLEAR_DIRTY_LOG.  KVM_DIRTY_LOG_INITIALLY_SET depends on
+>  KVM_DIRTY_LOG_MANUAL_PROTECT_ENABLE (it is also only available on
+> -x86 for now).
+> +x86 and arm64 for now).
+>  
+>  KVM_CAP_MANUAL_DIRTY_LOG_PROTECT2 was previously available under the name
+>  KVM_CAP_MANUAL_DIRTY_LOG_PROTECT, but the implementation had bugs that make
+> diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/asm/kvm_host.h
+> index 32c8a675e5a4..a723f84fab83 100644
+> --- a/arch/arm64/include/asm/kvm_host.h
+> +++ b/arch/arm64/include/asm/kvm_host.h
+> @@ -46,6 +46,9 @@
+>  #define KVM_REQ_RECORD_STEAL	KVM_ARCH_REQ(3)
+>  #define KVM_REQ_RELOAD_GICv4	KVM_ARCH_REQ(4)
+>  
+> +#define KVM_DIRTY_LOG_MANUAL_CAPS   (KVM_DIRTY_LOG_MANUAL_PROTECT_ENABLE | \
+> +				     KVM_DIRTY_LOG_INITIALLY_SET)
+> +
+>  DECLARE_STATIC_KEY_FALSE(userspace_irqchip_in_use);
+>  
+>  extern unsigned int kvm_sve_max_vl;
+> diff --git a/virt/kvm/arm/mmu.c b/virt/kvm/arm/mmu.c
+> index e3b9ee268823..1077f653a611 100644
+> --- a/virt/kvm/arm/mmu.c
+> +++ b/virt/kvm/arm/mmu.c
+> @@ -2265,8 +2265,16 @@ void kvm_arch_commit_memory_region(struct kvm *kvm,
+>  	 * allocated dirty_bitmap[], dirty pages will be be tracked while the
+>  	 * memory slot is write protected.
+>  	 */
+> -	if (change != KVM_MR_DELETE && mem->flags & KVM_MEM_LOG_DIRTY_PAGES)
+> -		kvm_mmu_wp_memory_region(kvm, mem->slot);
+> +	if (change != KVM_MR_DELETE && mem->flags & KVM_MEM_LOG_DIRTY_PAGES) {
+> +		/*
+> +		 * If we're with initial-all-set, we don't need to write
+> +		 * protect any pages because they're all reported as dirty.
+> +		 * Huge pages and normal pages will be write protect gradually.
+> +		 */
+> +		if (!kvm_dirty_log_manual_protect_and_init_set(kvm)) {
+> +			kvm_mmu_wp_memory_region(kvm, mem->slot);
+> +		}
+> +	}
+>  }
+>  
+>  int kvm_arch_prepare_memory_region(struct kvm *kvm,
+> 
+
