@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31AEAC2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:51:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F23B3C2BB85
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:51:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EE0FB21D93
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:51:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D04E421D93
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:51:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587048671;
-	bh=Mh3AGzpSVVNlEmzjAtk+AFJDbUsAPb4V+DNYqMwXSuk=;
+	s=default; t=1587048684;
+	bh=i0FAMdGeB47d7n7jQ+EuAe35EUlp5GFAO5j5lWcQ9JQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QT8HG3g/csJPzygl5yl87IDlzdtVKfOrc5+Egf+TCQPDeWSdyJX+YCQMoMTTzmKm6
-	 9XCCzc0dndMqRWMeeAqbHkb61dV2Fk5gIeKRJOCtnyTVHBJV3L61I2Ska/v2+Ma+4H
-	 FwP3b7J9ybs6YfcXBHWtHgHjRHv+oYVIDXKhTYg8=
+	b=cyAt/HAtFAem79I6U1RgLIkANqpHFjWCeA3tfZSl0VYsLNTms3mJA2OBW/85pc+76
+	 /8cqB7Qy4lJFgXfKRpteJ1R4apRktNPUP29VT+Wv6aYcBTZ7RggLQZoy3g6l+9gI7e
+	 a+YNEDphuYOV8DcZHuV8RFOOgodki/S+EEKQ4CiY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394674AbgDPOvG (ORCPT
+        id S2394808AbgDPOvV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:51:06 -0400
+        Thu, 16 Apr 2020 10:51:21 -0400
 Received: from mail.kernel.org ([198.145.29.99]:45128 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2441733AbgDPN6J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:58:09 -0400
+        id S2636330AbgDPN6E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:58:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0D597217D8;
-        Thu, 16 Apr 2020 13:58:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1E76D20786;
+        Thu, 16 Apr 2020 13:58:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587045488;
-        bh=Mh3AGzpSVVNlEmzjAtk+AFJDbUsAPb4V+DNYqMwXSuk=;
+        s=default; t=1587045483;
+        bh=i0FAMdGeB47d7n7jQ+EuAe35EUlp5GFAO5j5lWcQ9JQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xxKGv6dmjcR4ketmoid6oWkfRhqBdw2aYRRQIF49Y/vLG7nSy2756WpuDjyBWRM8u
-         QC+hGFICg5p9SiIVDyhYBuFjfjlIAywXS+RhTvEmEE2VkO5gAy4r+arIbNanPehxt5
-         8VjQ1j8jsXURLDPiCJFrJZ59bAMdv+Y1S9cXJVXA=
+        b=WfLlf9TY9CKF2kC67tkXDCZYdYav/QeeFdX7fSYxw1KWlyoFv6pvsIBeBfFDRkkwo
+         pVz081c61BMGvdOpKEakvdh5dT4E55p39i0kOozYwDHsah9DNuPmClXl1JetanImkY
+         My30KtqGJy20qcgRSKsDdGd6B2QlLYxeYE5uvKIM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Robbie Ko <robbieko@synology.com>,
+        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
         Filipe Manana <fdmanana@suse.com>,
         David Sterba <dsterba@suse.com>
-Subject: [PATCH 5.6 156/254] btrfs: fix missing semaphore unlock in btrfs_sync_file
-Date:   Thu, 16 Apr 2020 15:24:05 +0200
-Message-Id: <20200416131346.136980688@linuxfoundation.org>
+Subject: [PATCH 5.6 154/254] btrfs: fix missing file extent item for hole after ranged fsync
+Date:   Thu, 16 Apr 2020 15:24:03 +0200
+Message-Id: <20200416131345.870952910@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.804095985@linuxfoundation.org>
 References: <20200416131325.804095985@linuxfoundation.org>
@@ -60,35 +60,103 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Robbie Ko <robbieko@synology.com>
+From: Filipe Manana <fdmanana@suse.com>
 
-commit 6ff06729c22ec0b7498d900d79cc88cfb8aceaeb upstream.
+commit 95418ed1d10774cd9a49af6f39e216c1256f1eeb upstream.
 
-Ordered ops are started twice in sync file, once outside of inode mutex
-and once inside, taking the dio semaphore. There was one error path
-missing the semaphore unlock.
+When doing a fast fsync for a range that starts at an offset greater than
+zero, we can end up with a log that when replayed causes the respective
+inode miss a file extent item representing a hole if we are not using the
+NO_HOLES feature. This is because for fast fsyncs we don't log any extents
+that cover a range different from the one requested in the fsync.
 
-Fixes: aab15e8ec2576 ("Btrfs: fix rare chances for data loss when doing a fast fsync")
+Example scenario to trigger it:
+
+  $ mkfs.btrfs -O ^no-holes -f /dev/sdd
+  $ mount /dev/sdd /mnt
+
+  # Create a file with a single 256K and fsync it to clear to full sync
+  # bit in the inode - we want the msync below to trigger a fast fsync.
+  $ xfs_io -f -c "pwrite -S 0xab 0 256K" -c "fsync" /mnt/foo
+
+  # Force a transaction commit and wipe out the log tree.
+  $ sync
+
+  # Dirty 768K of data, increasing the file size to 1Mb, and flush only
+  # the range from 256K to 512K without updating the log tree
+  # (sync_file_range() does not trigger fsync, it only starts writeback
+  # and waits for it to finish).
+
+  $ xfs_io -c "pwrite -S 0xcd 256K 768K" /mnt/foo
+  $ xfs_io -c "sync_range -abw 256K 256K" /mnt/foo
+
+  # Now dirty the range from 768K to 1M again and sync that range.
+  $ xfs_io -c "mmap -w 768K 256K"        \
+           -c "mwrite -S 0xef 768K 256K" \
+           -c "msync -s 768K 256K"       \
+           -c "munmap"                   \
+           /mnt/foo
+
+  <power fail>
+
+  # Mount to replay the log.
+  $ mount /dev/sdd /mnt
+  $ umount /mnt
+
+  $ btrfs check /dev/sdd
+  Opening filesystem to check...
+  Checking filesystem on /dev/sdd
+  UUID: 482fb574-b288-478e-a190-a9c44a78fca6
+  [1/7] checking root items
+  [2/7] checking extents
+  [3/7] checking free space cache
+  [4/7] checking fs roots
+  root 5 inode 257 errors 100, file extent discount
+  Found file extent holes:
+       start: 262144, len: 524288
+  ERROR: errors found in fs roots
+  found 720896 bytes used, error(s) found
+  total csum bytes: 512
+  total tree bytes: 131072
+  total fs tree bytes: 32768
+  total extent tree bytes: 16384
+  btree space waste bytes: 123514
+  file data blocks allocated: 589824
+    referenced 589824
+
+Fix this issue by setting the range to full (0 to LLONG_MAX) when the
+NO_HOLES feature is not enabled. This results in extra work being done
+but it gives the guarantee we don't end up with missing holes after
+replaying the log.
+
 CC: stable@vger.kernel.org # 4.19+
-Signed-off-by: Robbie Ko <robbieko@synology.com>
-Reviewed-by: Filipe Manana <fdmanana@suse.com>
-[ add changelog ]
+Reviewed-by: Josef Bacik <josef@toxicpanda.com>
+Signed-off-by: Filipe Manana <fdmanana@suse.com>
 Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/file.c |    1 +
- 1 file changed, 1 insertion(+)
+ fs/btrfs/file.c |   10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
 --- a/fs/btrfs/file.c
 +++ b/fs/btrfs/file.c
-@@ -2134,6 +2134,7 @@ int btrfs_sync_file(struct file *file, l
- 	 */
- 	ret = start_ordered_ops(inode, start, end);
- 	if (ret) {
-+		up_write(&BTRFS_I(inode)->dio_sem);
- 		inode_unlock(inode);
- 		goto out;
- 	}
+@@ -2071,6 +2071,16 @@ int btrfs_sync_file(struct file *file, l
+ 	btrfs_init_log_ctx(&ctx, inode);
+ 
+ 	/*
++	 * Set the range to full if the NO_HOLES feature is not enabled.
++	 * This is to avoid missing file extent items representing holes after
++	 * replaying the log.
++	 */
++	if (!btrfs_fs_incompat(fs_info, NO_HOLES)) {
++		start = 0;
++		end = LLONG_MAX;
++	}
++
++	/*
+ 	 * We write the dirty pages in the range and wait until they complete
+ 	 * out of the ->i_mutex. If so, we can flush the dirty pages by
+ 	 * multi-task, and make the performance up.  See
 
 
