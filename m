@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12C3EC2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:16:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 901CAC2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:16:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E1F87214D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:16:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B3C0214D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:16:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587050203;
-	bh=TFXnfxHugoSP3Q7WZCuT3ZsZo+7q/qP8JgVFHiV9l8U=;
+	s=default; t=1587050216;
+	bh=0t/oLzkgFXhjX5DcSYiAxTJvv2saLqLGZ+qwSaWFEk8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JwIRggZO9AS85RHgfBKwg97JJILpC/4kDJ71s8+TlNvim8dSARj+p+b+YjO63EwWc
-	 2SqhtPLiOZB7D8ZmvN9gBUysWFlYOLecqq+GHLIC4aC3AKnSTMghluG3FPmd9+w7Tg
-	 dLY5jod4zOwod6/vN69YlRwAjQV36usZoimFyVn8=
+	b=eNcqq3bxpOIvAaXD640SGoNlcmP/d/xTJxxi4UD3q8f26fMokHUBhauWVRMaN4yIc
+	 0349o3HJl9DJ8sq18hLJwkmUoSOpLY2/gflBogOvKuFJnaUE0LvpEE4bXqEzjOy6md
+	 p5Om5aP7l63QIW74x1DKbVEGp0Ii8pm1K89qkUqw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2503922AbgDPPQl (ORCPT
+        id S2440962AbgDPPQz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:16:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35838 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 11:16:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35160 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2441377AbgDPNuC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:50:02 -0400
+        id S1729389AbgDPNtI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:49:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BF763217D8;
-        Thu, 16 Apr 2020 13:49:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 04A5F208E4;
+        Thu, 16 Apr 2020 13:49:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044970;
-        bh=TFXnfxHugoSP3Q7WZCuT3ZsZo+7q/qP8JgVFHiV9l8U=;
+        s=default; t=1587044948;
+        bh=0t/oLzkgFXhjX5DcSYiAxTJvv2saLqLGZ+qwSaWFEk8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EMQqW2YOeM58uqXzkbAPVP9xYwJE+5x9cu3slGF5Ld4k2UtkU9h5qB5etMnXEYhUV
-         3vZCnHtaidqNkaiDAseKrTbYA8ctsYSNHU9/25pi5TUY/NNaFbQiiQrm2SpNfD6Xmd
-         l4ZsmFLH2rXzuOtn95UJnw+/TRyDAvOehwrmBHyw=
+        b=YvOY3+tfG3vGYBDzCUqFci6xQMFAG1JrQXjYUlLRcorIT8hLzmOTaXYH7ECl6ilTW
+         +ZuviIksA7vT9WDzDEm4eoenRJ8vNuKYivG0FRvRjzAEXaFLM5dpWUdnaNVyaasIeS
+         Bu82hYvZnGuIOlm2xj9NAfkv+iPKJSMwxvgUCmnY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Frieder Schrempf <frieder.schrempf@kontron.de>,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH 5.4 135/232] mtd: spinand: Stop using spinand->oobbuf for buffering bad block markers
-Date:   Thu, 16 Apr 2020 15:23:49 +0200
-Message-Id: <20200416131331.864786637@linuxfoundation.org>
+        "Matthew Wilcox (Oracle)" <willy@infradead.org>
+Subject: [PATCH 5.4 166/232] XArray: Fix xas_pause for large multi-index entries
+Date:   Thu, 16 Apr 2020 15:24:20 +0200
+Message-Id: <20200416131335.784038432@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131316.640996080@linuxfoundation.org>
 References: <20200416131316.640996080@linuxfoundation.org>
@@ -61,85 +59,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Frieder Schrempf <frieder.schrempf@kontron.de>
+From: Matthew Wilcox (Oracle) <willy@infradead.org>
 
-commit 2148937501ee3d663e0010e519a553fea67ad103 upstream.
+commit c36d451ad386b34f452fc3c8621ff14b9eaa31a6 upstream.
 
-For reading and writing the bad block markers, spinand->oobbuf is
-currently used as a buffer for the marker bytes. During the
-underlying read and write operations to actually get/set the content
-of the OOB area, the content of spinand->oobbuf is reused and changed
-by accessing it through spinand->oobbuf and/or spinand->databuf.
+Inspired by the recent Coverity report, I looked for other places where
+the offset wasn't being converted to an unsigned long before being
+shifted, and I found one in xas_pause() when the entry being paused is
+of order >32.
 
-This is a flaw in the original design of the SPI NAND core and at the
-latest from 13c15e07eedf ("mtd: spinand: Handle the case where
-PROGRAM LOAD does not reset the cache") on, it results in not having
-the bad block marker written at all, as the spinand->oobbuf is
-cleared to 0xff after setting the marker bytes to zero.
-
-To fix it, we now just store the two bytes for the marker on the
-stack and let the read/write operations copy it from/to the page
-buffer later.
-
-Fixes: 7529df465248 ("mtd: nand: Add core infrastructure to support SPI NANDs")
+Fixes: b803b42823d0 ("xarray: Add XArray iterators")
+Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
 Cc: stable@vger.kernel.org
-Signed-off-by: Frieder Schrempf <frieder.schrempf@kontron.de>
-Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-Link: https://lore.kernel.org/linux-mtd/20200218100432.32433-2-frieder.schrempf@kontron.de
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/mtd/nand/spi/core.c |   14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+ lib/test_xarray.c |   37 +++++++++++++++++++++++++++++++++++++
+ lib/xarray.c      |    2 +-
+ 2 files changed, 38 insertions(+), 1 deletion(-)
 
---- a/drivers/mtd/nand/spi/core.c
-+++ b/drivers/mtd/nand/spi/core.c
-@@ -568,18 +568,18 @@ static int spinand_mtd_write(struct mtd_
- static bool spinand_isbad(struct nand_device *nand, const struct nand_pos *pos)
- {
- 	struct spinand_device *spinand = nand_to_spinand(nand);
-+	u8 marker[2] = { };
- 	struct nand_page_io_req req = {
- 		.pos = *pos,
--		.ooblen = 2,
-+		.ooblen = sizeof(marker),
- 		.ooboffs = 0,
--		.oobbuf.in = spinand->oobbuf,
-+		.oobbuf.in = marker,
- 		.mode = MTD_OPS_RAW,
- 	};
- 
--	memset(spinand->oobbuf, 0, 2);
- 	spinand_select_target(spinand, pos->target);
- 	spinand_read_page(spinand, &req, false);
--	if (spinand->oobbuf[0] != 0xff || spinand->oobbuf[1] != 0xff)
-+	if (marker[0] != 0xff || marker[1] != 0xff)
- 		return true;
- 
- 	return false;
-@@ -603,11 +603,12 @@ static int spinand_mtd_block_isbad(struc
- static int spinand_markbad(struct nand_device *nand, const struct nand_pos *pos)
- {
- 	struct spinand_device *spinand = nand_to_spinand(nand);
-+	u8 marker[2] = { };
- 	struct nand_page_io_req req = {
- 		.pos = *pos,
- 		.ooboffs = 0,
--		.ooblen = 2,
--		.oobbuf.out = spinand->oobbuf,
-+		.ooblen = sizeof(marker),
-+		.oobbuf.out = marker,
- 	};
- 	int ret;
- 
-@@ -622,7 +623,6 @@ static int spinand_markbad(struct nand_d
- 
- 	spinand_erase_op(spinand, pos);
- 
--	memset(spinand->oobbuf, 0, 2);
- 	return spinand_write_page(spinand, &req);
+--- a/lib/test_xarray.c
++++ b/lib/test_xarray.c
+@@ -1156,6 +1156,42 @@ static noinline void check_find_entry(st
+ 	XA_BUG_ON(xa, !xa_empty(xa));
  }
  
++static noinline void check_pause(struct xarray *xa)
++{
++	XA_STATE(xas, xa, 0);
++	void *entry;
++	unsigned int order;
++	unsigned long index = 1;
++	unsigned int count = 0;
++
++	for (order = 0; order < order_limit; order++) {
++		XA_BUG_ON(xa, xa_store_order(xa, index, order,
++					xa_mk_index(index), GFP_KERNEL));
++		index += 1UL << order;
++	}
++
++	rcu_read_lock();
++	xas_for_each(&xas, entry, ULONG_MAX) {
++		XA_BUG_ON(xa, entry != xa_mk_index(1UL << count));
++		count++;
++	}
++	rcu_read_unlock();
++	XA_BUG_ON(xa, count != order_limit);
++
++	count = 0;
++	xas_set(&xas, 0);
++	rcu_read_lock();
++	xas_for_each(&xas, entry, ULONG_MAX) {
++		XA_BUG_ON(xa, entry != xa_mk_index(1UL << count));
++		count++;
++		xas_pause(&xas);
++	}
++	rcu_read_unlock();
++	XA_BUG_ON(xa, count != order_limit);
++
++	xa_destroy(xa);
++}
++
+ static noinline void check_move_tiny(struct xarray *xa)
+ {
+ 	XA_STATE(xas, xa, 0);
+@@ -1664,6 +1700,7 @@ static int xarray_checks(void)
+ 	check_xa_alloc();
+ 	check_find(&array);
+ 	check_find_entry(&array);
++	check_pause(&array);
+ 	check_account(&array);
+ 	check_destroy(&array);
+ 	check_move(&array);
+--- a/lib/xarray.c
++++ b/lib/xarray.c
+@@ -970,7 +970,7 @@ void xas_pause(struct xa_state *xas)
+ 
+ 	xas->xa_node = XAS_RESTART;
+ 	if (node) {
+-		unsigned int offset = xas->xa_offset;
++		unsigned long offset = xas->xa_offset;
+ 		while (++offset < XA_CHUNK_SIZE) {
+ 			if (!xa_is_sibling(xa_entry(xas->xa, node, offset)))
+ 				break;
 
 
