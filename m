@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4791C352BE
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:32:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C151C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:32:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A1B9622264
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:32:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0377622275
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:32:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587043931;
-	bh=O7V0h3Pp//Pa004XuacvG1SJV34cloXKEn9Xo9N6PpM=;
+	s=default; t=1587043940;
+	bh=BamNKXhfNiFIPXsfMP57heTe3HPRT8zjnwY/cjSBLY8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sjBoXXp+3hGCjPFV5e7BpGQmdz4LIJT5bSwJelOg6o16jxCUVw4MVaTFqckCO/m8g
-	 kt3MfEH+f9ha3iMoaLpmwCujztj3iU+Z7gCQ9FnBoXOyN8XSDSgrkdMLcQtQ28yXKx
-	 37JYYFhIdh9uN1y6p4j+VxA2GSzssv6XfFrL1DPo=
+	b=jO+3/yQSy6PW9kTnpvg2yxry459N4HqietG5yEhOCU6KMDKvQ8RUTCqwyHO1g2M3n
+	 Q6nljhHfhRDkhPMJD9FmBA9yQIggVN5AErA/FIpEYxhu5Dz/hy/N8TBAabCNif+WHB
+	 hFIopZVYLvPyU/+LtxfrSdk4ZCqo93PE3fpAINpM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2896517AbgDPNcJ (ORCPT
+        id S2895875AbgDPNcS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 09:32:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37512 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 09:32:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37652 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2895770AbgDPN2b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:28:31 -0400
+        id S2895787AbgDPN2g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:28:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D41EF206E9;
-        Thu, 16 Apr 2020 13:28:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B638E21BE5;
+        Thu, 16 Apr 2020 13:28:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587043710;
-        bh=O7V0h3Pp//Pa004XuacvG1SJV34cloXKEn9Xo9N6PpM=;
+        s=default; t=1587043715;
+        bh=BamNKXhfNiFIPXsfMP57heTe3HPRT8zjnwY/cjSBLY8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Fr5NxINFZ7gZCMP2fiqG0bvugiH+MqLuJxutpB0jU0plK1GUdYygFbNEf14bcwixe
-         A9kMH2IsRapo1yX2zhqOXpgQjFOdjtVkM1NhpPQEZMBP8k0yu8Wg4xYGRmlz+yyhsL
-         /AYpYz6Av/qkzCwGQQ9e9VDsJgnx4pnwXP+D+flY=
+        b=WetpIXFKwaiSu7+XE0mjzYC4cSsw1Q3ixukp6vPaP0am5ekr2bRSS+UXHUsThhEOc
+         AiUCRqeh3CFwRl6LGuXaQ4HNGNVDK6z1Y4/yUu+/l9FCTzDg9n4ctFexQLYDyIN4aV
+         l+NVzwjTg/xgL9f5VY95Ma+toF4Oppwbvf2JuvuA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: [PATCH 4.19 067/146] PCI: endpoint: Fix for concurrent memory allocation in OB address region
-Date:   Thu, 16 Apr 2020 15:23:28 +0200
-Message-Id: <20200416131252.072173927@linuxfoundation.org>
+        stable@vger.kernel.org, Vasily Averin <vvs@virtuozzo.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Subject: [PATCH 4.19 069/146] tpm: tpm1_bios_measurements_next should increase position index
+Date:   Thu, 16 Apr 2020 15:23:30 +0200
+Message-Id: <20200416131252.401580845@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131242.353444678@linuxfoundation.org>
 References: <20200416131242.353444678@linuxfoundation.org>
@@ -59,95 +59,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kishon Vijay Abraham I <kishon@ti.com>
+From: Vasily Averin <vvs@virtuozzo.com>
 
-commit 04e046ca57ebed3943422dee10eec9e73aec081e upstream.
+commit d7a47b96ed1102551eb7325f97937e276fb91045 upstream.
 
-pci-epc-mem uses a bitmap to manage the Endpoint outbound (OB) address
-region. This address region will be shared by multiple endpoint
-functions (in the case of multi function endpoint) and it has to be
-protected from concurrent access to avoid updating an inconsistent state.
+If .next function does not change position index,
+following .show function will repeat output related
+to current position index.
 
-Use a mutex to protect bitmap updates to prevent the memory
-allocation API from returning incorrect addresses.
+In case of /sys/kernel/security/tpm0/ascii_bios_measurements
+and binary_bios_measurements:
+1) read after lseek beyound end of file generates whole last line.
+2) read after lseek to middle of last line generates
+expected end of last line and unexpected whole last line once again.
 
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: stable@vger.kernel.org # v4.14+
+Cc: stable@vger.kernel.org # 4.19.x
+Fixes: 1f4aace60b0e ("fs/seq_file.c: simplify seq_file iteration code ...")
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=206283
+Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
+Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/pci/endpoint/pci-epc-mem.c |   10 ++++++++--
- include/linux/pci-epc.h            |    3 +++
- 2 files changed, 11 insertions(+), 2 deletions(-)
+ drivers/char/tpm/eventlog/tpm1.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/pci/endpoint/pci-epc-mem.c
-+++ b/drivers/pci/endpoint/pci-epc-mem.c
-@@ -79,6 +79,7 @@ int __pci_epc_mem_init(struct pci_epc *e
- 	mem->page_size = page_size;
- 	mem->pages = pages;
- 	mem->size = size;
-+	mutex_init(&mem->lock);
+--- a/drivers/char/tpm/eventlog/tpm1.c
++++ b/drivers/char/tpm/eventlog/tpm1.c
+@@ -129,6 +129,7 @@ static void *tpm1_bios_measurements_next
+ 	u32 converted_event_size;
+ 	u32 converted_event_type;
  
- 	epc->mem = mem;
++	(*pos)++;
+ 	converted_event_size = do_endian_conversion(event->event_size);
  
-@@ -122,7 +123,7 @@ void __iomem *pci_epc_mem_alloc_addr(str
- 				     phys_addr_t *phys_addr, size_t size)
- {
- 	int pageno;
--	void __iomem *virt_addr;
-+	void __iomem *virt_addr = NULL;
- 	struct pci_epc_mem *mem = epc->mem;
- 	unsigned int page_shift = ilog2(mem->page_size);
- 	int order;
-@@ -130,15 +131,18 @@ void __iomem *pci_epc_mem_alloc_addr(str
- 	size = ALIGN(size, mem->page_size);
- 	order = pci_epc_mem_get_order(mem, size);
+ 	v += sizeof(struct tcpa_event) + converted_event_size;
+@@ -146,7 +147,6 @@ static void *tpm1_bios_measurements_next
+ 	    ((v + sizeof(struct tcpa_event) + converted_event_size) >= limit))
+ 		return NULL;
  
-+	mutex_lock(&mem->lock);
- 	pageno = bitmap_find_free_region(mem->bitmap, mem->pages, order);
- 	if (pageno < 0)
--		return NULL;
-+		goto ret;
- 
- 	*phys_addr = mem->phys_base + (pageno << page_shift);
- 	virt_addr = ioremap(*phys_addr, size);
- 	if (!virt_addr)
- 		bitmap_release_region(mem->bitmap, pageno, order);
- 
-+ret:
-+	mutex_unlock(&mem->lock);
- 	return virt_addr;
+-	(*pos)++;
+ 	return v;
  }
- EXPORT_SYMBOL_GPL(pci_epc_mem_alloc_addr);
-@@ -164,7 +168,9 @@ void pci_epc_mem_free_addr(struct pci_ep
- 	pageno = (phys_addr - mem->phys_base) >> page_shift;
- 	size = ALIGN(size, mem->page_size);
- 	order = pci_epc_mem_get_order(mem, size);
-+	mutex_lock(&mem->lock);
- 	bitmap_release_region(mem->bitmap, pageno, order);
-+	mutex_unlock(&mem->lock);
- }
- EXPORT_SYMBOL_GPL(pci_epc_mem_free_addr);
  
---- a/include/linux/pci-epc.h
-+++ b/include/linux/pci-epc.h
-@@ -69,6 +69,7 @@ struct pci_epc_ops {
-  * @bitmap: bitmap to manage the PCI address space
-  * @pages: number of bits representing the address region
-  * @page_size: size of each page
-+ * @lock: mutex to protect bitmap
-  */
- struct pci_epc_mem {
- 	phys_addr_t	phys_base;
-@@ -76,6 +77,8 @@ struct pci_epc_mem {
- 	unsigned long	*bitmap;
- 	size_t		page_size;
- 	int		pages;
-+	/* mutex to protect against concurrent access for memory allocation*/
-+	struct mutex	lock;
- };
- 
- /**
 
 
