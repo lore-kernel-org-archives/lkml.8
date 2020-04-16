@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0E8FC2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:35:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 928C5C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:35:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 96EB9221F9
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:35:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F407221F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:35:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587044150;
-	bh=0CSh/3iuY/hLOBpsWWHw2RMNg5o9HoNcm5Ux17DNj/g=;
+	s=default; t=1587044159;
+	bh=+IihUw+6SGwkdQnmsD8FiVqQUmXU2ZZTpB7TR3Hzxjw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1awPXRDeteFxsI7qr0nBJzhnY1lxpxwfj4W/Dc3mmBiQipL7Z6hq6vVGq5A0Yxe7B
-	 m0UdZjbgmoNG/5Vtxa2xEsptJsxZ503/TbhHzaJFVIjue6CpuA9CSJIRKvwp8McaKG
-	 c9RbIiA88ph3ff+D0v7hwH91HCOoM8sUPjK9Rfro=
+	b=CEkfSgRGN44fEOZ7wclcIeQA/wd3FzgrY8U9r9jradQ+7J5n5ZpFdw5DL5nz3SEvY
+	 075q3gnxiw857RKnfT856mEf7YZuNh9VyLYK3BQeUVOu6iTXXuiuJhjSwECdACa30z
+	 7H+PF78Edo2PNFMvjIIQMXxOS80jN+ClAuQnHBic=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2897204AbgDPNfs (ORCPT
+        id S2897249AbgDPNf4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 09:35:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39286 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 09:35:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39496 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2895195AbgDPN33 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:29:29 -0400
+        id S2896029AbgDPN3g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:29:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D9DFC208E4;
-        Thu, 16 Apr 2020 13:29:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8F822208E4;
+        Thu, 16 Apr 2020 13:29:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587043766;
-        bh=0CSh/3iuY/hLOBpsWWHw2RMNg5o9HoNcm5Ux17DNj/g=;
+        s=default; t=1587043776;
+        bh=+IihUw+6SGwkdQnmsD8FiVqQUmXU2ZZTpB7TR3Hzxjw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vPNRDfgfjsXaeGzp+lCG+4XQbtI0P94mE56S/J9lX3VpMopO8p4P31IwguDpUTnaQ
-         6sakn4oPcJkyIDT8GaiSKAXGXb8nzjzpXyHVsTnZlDlFKVeWAbGSTRKzmv/PX+k6SW
-         CZ7hMpkmPZ5LO+ZTwf3s5FAMoPEaz79hO1puuuzg=
+        b=UzUcVDDCMeY/HxBT76hGT6NLpR/1AcaMqCrJ5KQraAUCe7rNF7pXdk5LijFdmvzII
+         +q+EWpqygeKD8FPmu81B7QQU16+wb/F1pOQ9FbmdpMhIVmm43gO+rPvl4bb7EMrRtJ
+         XGuvRz/6OwNJOowrrI0TGig7eeupnUjGwL6BMU6k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
-        Filipe Manana <fdmanana@suse.com>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 4.19 092/146] btrfs: fix missing file extent item for hole after ranged fsync
-Date:   Thu, 16 Apr 2020 15:23:53 +0200
-Message-Id: <20200416131255.350339700@linuxfoundation.org>
+        stable@vger.kernel.org, Chao Yu <yuchao0@huawei.com>,
+        Gao Xiang <gaoxiang25@huawei.com>
+Subject: [PATCH 4.19 095/146] erofs: correct the remaining shrink objects
+Date:   Thu, 16 Apr 2020 15:23:56 +0200
+Message-Id: <20200416131255.773411526@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131242.353444678@linuxfoundation.org>
 References: <20200416131242.353444678@linuxfoundation.org>
@@ -60,103 +59,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Filipe Manana <fdmanana@suse.com>
+From: Gao Xiang <gaoxiang25@huawei.com>
 
-commit 95418ed1d10774cd9a49af6f39e216c1256f1eeb upstream.
+commit 9d5a09c6f3b5fb85af20e3a34827b5d27d152b34 upstream.
 
-When doing a fast fsync for a range that starts at an offset greater than
-zero, we can end up with a log that when replayed causes the respective
-inode miss a file extent item representing a hole if we are not using the
-NO_HOLES feature. This is because for fast fsyncs we don't log any extents
-that cover a range different from the one requested in the fsync.
+The remaining count should not include successful
+shrink attempts.
 
-Example scenario to trigger it:
-
-  $ mkfs.btrfs -O ^no-holes -f /dev/sdd
-  $ mount /dev/sdd /mnt
-
-  # Create a file with a single 256K and fsync it to clear to full sync
-  # bit in the inode - we want the msync below to trigger a fast fsync.
-  $ xfs_io -f -c "pwrite -S 0xab 0 256K" -c "fsync" /mnt/foo
-
-  # Force a transaction commit and wipe out the log tree.
-  $ sync
-
-  # Dirty 768K of data, increasing the file size to 1Mb, and flush only
-  # the range from 256K to 512K without updating the log tree
-  # (sync_file_range() does not trigger fsync, it only starts writeback
-  # and waits for it to finish).
-
-  $ xfs_io -c "pwrite -S 0xcd 256K 768K" /mnt/foo
-  $ xfs_io -c "sync_range -abw 256K 256K" /mnt/foo
-
-  # Now dirty the range from 768K to 1M again and sync that range.
-  $ xfs_io -c "mmap -w 768K 256K"        \
-           -c "mwrite -S 0xef 768K 256K" \
-           -c "msync -s 768K 256K"       \
-           -c "munmap"                   \
-           /mnt/foo
-
-  <power fail>
-
-  # Mount to replay the log.
-  $ mount /dev/sdd /mnt
-  $ umount /mnt
-
-  $ btrfs check /dev/sdd
-  Opening filesystem to check...
-  Checking filesystem on /dev/sdd
-  UUID: 482fb574-b288-478e-a190-a9c44a78fca6
-  [1/7] checking root items
-  [2/7] checking extents
-  [3/7] checking free space cache
-  [4/7] checking fs roots
-  root 5 inode 257 errors 100, file extent discount
-  Found file extent holes:
-       start: 262144, len: 524288
-  ERROR: errors found in fs roots
-  found 720896 bytes used, error(s) found
-  total csum bytes: 512
-  total tree bytes: 131072
-  total fs tree bytes: 32768
-  total extent tree bytes: 16384
-  btree space waste bytes: 123514
-  file data blocks allocated: 589824
-    referenced 589824
-
-Fix this issue by setting the range to full (0 to LLONG_MAX) when the
-NO_HOLES feature is not enabled. This results in extra work being done
-but it gives the guarantee we don't end up with missing holes after
-replaying the log.
-
-CC: stable@vger.kernel.org # 4.19+
-Reviewed-by: Josef Bacik <josef@toxicpanda.com>
-Signed-off-by: Filipe Manana <fdmanana@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Fixes: e7e9a307be9d ("staging: erofs: introduce workstation for decompression")
+Cc: <stable@vger.kernel.org> # 4.19+
+Link: https://lore.kernel.org/r/20200226081008.86348-1-gaoxiang25@huawei.com
+Reviewed-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
----
- fs/btrfs/file.c |   10 ++++++++++
- 1 file changed, 10 insertions(+)
 
---- a/fs/btrfs/file.c
-+++ b/fs/btrfs/file.c
-@@ -2074,6 +2074,16 @@ int btrfs_sync_file(struct file *file, l
- 	btrfs_init_log_ctx(&ctx, inode);
+---
+ drivers/staging/erofs/utils.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- a/drivers/staging/erofs/utils.c
++++ b/drivers/staging/erofs/utils.c
+@@ -309,7 +309,7 @@ unsigned long erofs_shrink_scan(struct s
+ 		sbi->shrinker_run_no = run_no;
  
- 	/*
-+	 * Set the range to full if the NO_HOLES feature is not enabled.
-+	 * This is to avoid missing file extent items representing holes after
-+	 * replaying the log.
-+	 */
-+	if (!btrfs_fs_incompat(fs_info, NO_HOLES)) {
-+		start = 0;
-+		end = LLONG_MAX;
-+	}
-+
-+	/*
- 	 * We write the dirty pages in the range and wait until they complete
- 	 * out of the ->i_mutex. If so, we can flush the dirty pages by
- 	 * multi-task, and make the performance up.  See
+ #ifdef CONFIG_EROFS_FS_ZIP
+-		freed += erofs_shrink_workstation(sbi, nr, false);
++		freed += erofs_shrink_workstation(sbi, nr - freed, false);
+ #endif
+ 
+ 		spin_lock(&erofs_sb_list_lock);
 
 
