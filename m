@@ -2,316 +2,118 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82779C2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 09:03:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55AC9C2BB85
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 09:03:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4ED74206B9
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 09:03:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YGYqjG/v"
+	by mail.kernel.org (Postfix) with ESMTP id 2C769206B9
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 09:03:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2503314AbgDPJC7 (ORCPT
+        id S2503345AbgDPJDT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 05:02:59 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:28898 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2503216AbgDPI7o (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 04:59:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587027581;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=in7H7ONw1I+4eSMhCHSqKuOKU2BfMnrz5BOl84K5Oq8=;
-        b=YGYqjG/vQFlkFx9L658Ysw+txbIEqgesZI3d+l+mvQ1TVRigbN1tt3q5KWp8FblmbzZxsw
-        V18FjH8zbAgJM9zFKgavXYcfNpFAPm9SpCVRVMKcqBUvYfiaR+v3zVQP+BJvqodQRHRAj3
-        eSwQmTuas4WltcFq4rdZJ4LShO+Nw/8=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-364-ZqGePp6QO-uDRG4zODkS5Q-1; Thu, 16 Apr 2020 04:59:39 -0400
-X-MC-Unique: ZqGePp6QO-uDRG4zODkS5Q-1
-Received: by mail-wr1-f71.google.com with SMTP id o10so1374599wrj.7
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 01:59:39 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=in7H7ONw1I+4eSMhCHSqKuOKU2BfMnrz5BOl84K5Oq8=;
-        b=Nh3zIdI4xy+P7QEtzY51q92N8qggonQNXBFtyKqrQ2JkGRgOJ87GhCk4ec1PFIG6P4
-         TvJktfbPVdVMAE6X2EmwtIqa+yStyu6odm5m4cxXQLOoH331mByKruiCZZg0j7a2atqy
-         juYPqYSCUIyRwl/x/A+uIWxZzsLbZ99g/PpqWUO18VpzeT5i9AoaIMp0bY21QM9k5Pow
-         RZMVVaXaGOfrydpCLchOCjYKjjqnBscdJ2pIhbhMzIuniL+XAzv4qxeG4B5g+ngxqXyA
-         UuUSu+ZScOevMtotXUT9x3FVMhF+peO7qJWRQ4HBWVUTiRjiedPSmVL1UTkv25EXUcDX
-         c7ng==
-X-Gm-Message-State: AGi0PuZaf0YfBwPu8pPOywuviSp4dzHfmXlqom8pheMsGmEnYCZcw0qg
-        EzJN4KGiOIt2tDyRDnhJAaVWHxyBQSNeWghnH5UA1S7jlJC+HxI+5nSfjGbKNBDu0JETtq8Jx9p
-        LbX98sg4QOCuA8fIORCpujT09
-X-Received: by 2002:a1c:147:: with SMTP id 68mr3929439wmb.28.1587027578052;
-        Thu, 16 Apr 2020 01:59:38 -0700 (PDT)
-X-Google-Smtp-Source: APiQypJwQh54RSSTeHtY2vKDQoaZm78XQsS1ZWxR4YWgXLJfKe2naCDb5se24MGz7TfFPoP3/EgqGA==
-X-Received: by 2002:a1c:147:: with SMTP id 68mr3929409wmb.28.1587027577613;
-        Thu, 16 Apr 2020 01:59:37 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:59f3:e385:f957:c478? ([2001:b07:6468:f312:59f3:e385:f957:c478])
-        by smtp.gmail.com with ESMTPSA id u3sm17215942wrt.93.2020.04.16.01.59.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 16 Apr 2020 01:59:37 -0700 (PDT)
-Subject: Re: [PATCH] KVM: nVMX: Remove non-functional "support" for CR3 target
- values
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200416000739.9012-1-sean.j.christopherson@intel.com>
- <875zdzx5zd.fsf@vitty.brq.redhat.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <e94edb29-29b4-750a-ca91-052129f6a29c@redhat.com>
-Date:   Thu, 16 Apr 2020 10:59:24 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
-MIME-Version: 1.0
-In-Reply-To: <875zdzx5zd.fsf@vitty.brq.redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Thu, 16 Apr 2020 05:03:19 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:47850 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2503146AbgDPI6U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 04:58:20 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id E8F23200C33;
+        Thu, 16 Apr 2020 10:58:14 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 30E49200C3E;
+        Thu, 16 Apr 2020 10:58:12 +0200 (CEST)
+Received: from titan.ap.freescale.net (titan.ap.freescale.net [10.192.208.233])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 53BD7402A8;
+        Thu, 16 Apr 2020 16:58:08 +0800 (SGT)
+From:   Yuantian Tang <andy.tang@nxp.com>
+To:     rui.zhang@intel.com, edubezval@gmail.com, daniel.lezcano@linaro.org
+Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Yuantian Tang <andy.tang@nxp.com>
+Subject: [PATCH] thermal: qoriq: Update the settings for TMUv2
+Date:   Thu, 16 Apr 2020 16:43:52 +0800
+Message-Id: <20200416084352.33604-1-andy.tang@nxp.com>
+X-Mailer: git-send-email 2.9.5
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 16/04/20 09:08, Vitaly Kuznetsov wrote:
-> Sean Christopherson <sean.j.christopherson@intel.com> writes:
-> 
->> Remove all references to cr3_target_value[0-3] and replace the fields
->> in vmcs12 with "dead_space" to preserve the vmcs12 layout.  KVM doesn't
->> support emulating CR3-target values, despite a variety of code that
->> implies otherwise, as KVM unconditionally reports '0' for the number of
->> supported CR3-target values.
->>
->> This technically fixes a bug where KVM would incorrectly allow VMREAD
->> and VMWRITE to nonexistent fields, i.e. cr3_target_value[0-3].  Per
->> Intel's SDM, the number of supported CR3-target values reported in
->> VMX_MISC also enumerates the existence of the associated VMCS fields:
->>
->>   If a future implementation supports more than 4 CR3-target values, they
->>   will be encoded consecutively following the 4 encodings given here.
->>
->> Alternatively, the "bug" could be fixed by actually advertisting support
->> for 4 CR3-target values, but that'd likely just enable kvm-unit-tests
->> given that no one has complained about lack of support for going on ten
->> years, e.g. KVM, Xen and HyperV don't use CR3-target values.
->>
->> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
->> ---
->>
->> Krish's patch to allow L1 to disable unrestricted guest got me poking
->> around the related code.  That led me into nested_vmx_exit_handled_cr()
->> and handle_cr().  handle_cr() does WARN_ON_ONCE(enable_unrestricted_guest)
->> in the MOV-to-CR3 path, as KVM should never enable CR3-exiting for L1.
->> But the CR3-target matching nested_vmx_exit_handled_cr() meant that it
->> would be possible to trigger the warn by enabling CR3-exiting in L1 with
->> a valid list of CR3-targets.  I got so far as to write a patch and a unit
->> test, and then I checked MSR_IA32_VMX_MISC under KVM...
->>
->> AFAICT, properly emulating CR3-targets would be a trivial patch.  But, I
->> don't think there would be any meaningful users, e.g. Xen is the one
->> hypervisor (that I am aware of) that runs with EPT disabled for certain
->> use cases, and even Xen doesn't bother with CR3-targets.  On the other
->> hand, the odds of introducing a bug of one form or another seem high.
->>
->> Amusing side note, Xen's only reference to vmcs.CR3_TARGET_VALUE* is in
->> its vmcs_dump_vcpu(), which explains why KVM's dump_vmcs() bothers to spit
->> out the unused CR3-target fields :-).
->>
->>  Documentation/virt/kvm/nested-vmx.rst |  5 +----
->>  arch/x86/kvm/vmx/evmcs.c              |  8 --------
->>  arch/x86/kvm/vmx/nested.c             | 17 -----------------
->>  arch/x86/kvm/vmx/vmcs12.c             |  4 ----
->>  arch/x86/kvm/vmx/vmcs12.h             | 10 ++--------
->>  arch/x86/kvm/vmx/vmx.c                |  9 ---------
->>  6 files changed, 3 insertions(+), 50 deletions(-)
-> 
-> 
-> 'git grep CR3_TARGET_VALUE' tells me we also have stuff in selftests:
-> 
-> tools/testing/selftests/kvm/include/evmcs.h:    case CR3_TARGET_VALUE0:
-> tools/testing/selftests/kvm/include/evmcs.h:    case CR3_TARGET_VALUE1:
-> tools/testing/selftests/kvm/include/evmcs.h:    case CR3_TARGET_VALUE2:
-> tools/testing/selftests/kvm/include/evmcs.h:    case CR3_TARGET_VALUE3:
-> tools/testing/selftests/kvm/include/evmcs.h:    case CR3_TARGET_VALUE0:
-> tools/testing/selftests/kvm/include/evmcs.h:    case CR3_TARGET_VALUE1:
-> tools/testing/selftests/kvm/include/evmcs.h:    case CR3_TARGET_VALUE2:
-> tools/testing/selftests/kvm/include/evmcs.h:    case CR3_TARGET_VALUE3:
-> tools/testing/selftests/kvm/include/x86_64/vmx.h:       CR3_TARGET_VALUE0               = 0x00006008,
-> tools/testing/selftests/kvm/include/x86_64/vmx.h:       CR3_TARGET_VALUE1               = 0x0000600a,
-> tools/testing/selftests/kvm/include/x86_64/vmx.h:       CR3_TARGET_VALUE2               = 0x0000600c,
-> tools/testing/selftests/kvm/include/x86_64/vmx.h:       CR3_TARGET_VALUE3               = 0x0000600e,
-> 
-> we should probably clean it up al well.
+For TMU v2, TMSAR registers need to be set properly to get the
+accurate temperature values.
+Also temperature reading needs to convert to degree Celsius
+since it is in degrees Kelvin.
 
-I don't think so, they are documented fields according to the Microsoft
-and Intel specs so they can be kept in the selftests.  The selftests'
-"hypervisor" side should not be tied to KVM implementation details.
+Signed-off-by: Yuantian Tang <andy.tang@nxp.com>
+---
+ drivers/thermal/qoriq_thermal.c | 15 ++++++++++++++-
+ 1 file changed, 14 insertions(+), 1 deletion(-)
 
-Paolo
-
-> 
->>
->> diff --git a/Documentation/virt/kvm/nested-vmx.rst b/Documentation/virt/kvm/nested-vmx.rst
->> index 592b0ab6970b..89851cbb7df9 100644
->> --- a/Documentation/virt/kvm/nested-vmx.rst
->> +++ b/Documentation/virt/kvm/nested-vmx.rst
->> @@ -116,10 +116,7 @@ struct shadow_vmcs is ever changed.
->>  		natural_width cr4_guest_host_mask;
->>  		natural_width cr0_read_shadow;
->>  		natural_width cr4_read_shadow;
->> -		natural_width cr3_target_value0;
->> -		natural_width cr3_target_value1;
->> -		natural_width cr3_target_value2;
->> -		natural_width cr3_target_value3;
->> +		natural_width dead_space[4]; /* Last remnants of cr3_target_value[0-3]. */
->>  		natural_width exit_qualification;
->>  		natural_width guest_linear_address;
->>  		natural_width guest_cr0;
->> diff --git a/arch/x86/kvm/vmx/evmcs.c b/arch/x86/kvm/vmx/evmcs.c
->> index 303813423c3e..73f3e07c1852 100644
->> --- a/arch/x86/kvm/vmx/evmcs.c
->> +++ b/arch/x86/kvm/vmx/evmcs.c
->> @@ -160,14 +160,6 @@ const struct evmcs_field vmcs_field_to_evmcs_1[] = {
->>  		     HV_VMX_ENLIGHTENED_CLEAN_FIELD_ALL),
->>  	EVMCS1_FIELD(VM_ENTRY_MSR_LOAD_ADDR, vm_entry_msr_load_addr,
->>  		     HV_VMX_ENLIGHTENED_CLEAN_FIELD_ALL),
->> -	EVMCS1_FIELD(CR3_TARGET_VALUE0, cr3_target_value0,
->> -		     HV_VMX_ENLIGHTENED_CLEAN_FIELD_ALL),
->> -	EVMCS1_FIELD(CR3_TARGET_VALUE1, cr3_target_value1,
->> -		     HV_VMX_ENLIGHTENED_CLEAN_FIELD_ALL),
->> -	EVMCS1_FIELD(CR3_TARGET_VALUE2, cr3_target_value2,
->> -		     HV_VMX_ENLIGHTENED_CLEAN_FIELD_ALL),
->> -	EVMCS1_FIELD(CR3_TARGET_VALUE3, cr3_target_value3,
->> -		     HV_VMX_ENLIGHTENED_CLEAN_FIELD_ALL),
->>  
->>  	/* 32 bit rw */
->>  	EVMCS1_FIELD(TPR_THRESHOLD, tpr_threshold,
->> diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
->> index aca57d8da400..aeb56b515c5c 100644
->> --- a/arch/x86/kvm/vmx/nested.c
->> +++ b/arch/x86/kvm/vmx/nested.c
->> @@ -1785,10 +1785,6 @@ static int copy_enlightened_to_vmcs12(struct vcpu_vmx *vmx)
->>  	 * vmcs12->vm_exit_msr_store_addr = evmcs->vm_exit_msr_store_addr;
->>  	 * vmcs12->vm_exit_msr_load_addr = evmcs->vm_exit_msr_load_addr;
->>  	 * vmcs12->vm_entry_msr_load_addr = evmcs->vm_entry_msr_load_addr;
->> -	 * vmcs12->cr3_target_value0 = evmcs->cr3_target_value0;
->> -	 * vmcs12->cr3_target_value1 = evmcs->cr3_target_value1;
->> -	 * vmcs12->cr3_target_value2 = evmcs->cr3_target_value2;
->> -	 * vmcs12->cr3_target_value3 = evmcs->cr3_target_value3;
->>  	 * vmcs12->page_fault_error_code_mask =
->>  	 *		evmcs->page_fault_error_code_mask;
->>  	 * vmcs12->page_fault_error_code_match =
->> @@ -1862,10 +1858,6 @@ static int copy_vmcs12_to_enlightened(struct vcpu_vmx *vmx)
->>  	 * evmcs->vm_exit_msr_store_addr = vmcs12->vm_exit_msr_store_addr;
->>  	 * evmcs->vm_exit_msr_load_addr = vmcs12->vm_exit_msr_load_addr;
->>  	 * evmcs->vm_entry_msr_load_addr = vmcs12->vm_entry_msr_load_addr;
->> -	 * evmcs->cr3_target_value0 = vmcs12->cr3_target_value0;
->> -	 * evmcs->cr3_target_value1 = vmcs12->cr3_target_value1;
->> -	 * evmcs->cr3_target_value2 = vmcs12->cr3_target_value2;
->> -	 * evmcs->cr3_target_value3 = vmcs12->cr3_target_value3;
->>  	 * evmcs->tpr_threshold = vmcs12->tpr_threshold;
->>  	 * evmcs->virtual_processor_id = vmcs12->virtual_processor_id;
->>  	 * evmcs->exception_bitmap = vmcs12->exception_bitmap;
->> @@ -5540,15 +5532,6 @@ static bool nested_vmx_exit_handled_cr(struct kvm_vcpu *vcpu,
->>  				return true;
->>  			break;
->>  		case 3:
->> -			if ((vmcs12->cr3_target_count >= 1 &&
->> -					vmcs12->cr3_target_value0 == val) ||
->> -				(vmcs12->cr3_target_count >= 2 &&
->> -					vmcs12->cr3_target_value1 == val) ||
->> -				(vmcs12->cr3_target_count >= 3 &&
->> -					vmcs12->cr3_target_value2 == val) ||
->> -				(vmcs12->cr3_target_count >= 4 &&
->> -					vmcs12->cr3_target_value3 == val))
->> -				return false;
->>  			if (nested_cpu_has(vmcs12, CPU_BASED_CR3_LOAD_EXITING))
->>  				return true;
->>  			break;
->> diff --git a/arch/x86/kvm/vmx/vmcs12.c b/arch/x86/kvm/vmx/vmcs12.c
->> index 53dfb401316d..c8e51c004f78 100644
->> --- a/arch/x86/kvm/vmx/vmcs12.c
->> +++ b/arch/x86/kvm/vmx/vmcs12.c
->> @@ -115,10 +115,6 @@ const unsigned short vmcs_field_to_offset_table[] = {
->>  	FIELD(CR4_GUEST_HOST_MASK, cr4_guest_host_mask),
->>  	FIELD(CR0_READ_SHADOW, cr0_read_shadow),
->>  	FIELD(CR4_READ_SHADOW, cr4_read_shadow),
->> -	FIELD(CR3_TARGET_VALUE0, cr3_target_value0),
->> -	FIELD(CR3_TARGET_VALUE1, cr3_target_value1),
->> -	FIELD(CR3_TARGET_VALUE2, cr3_target_value2),
->> -	FIELD(CR3_TARGET_VALUE3, cr3_target_value3),
->>  	FIELD(EXIT_QUALIFICATION, exit_qualification),
->>  	FIELD(GUEST_LINEAR_ADDRESS, guest_linear_address),
->>  	FIELD(GUEST_CR0, guest_cr0),
->> diff --git a/arch/x86/kvm/vmx/vmcs12.h b/arch/x86/kvm/vmx/vmcs12.h
->> index d0c6df373f67..80232daf00ff 100644
->> --- a/arch/x86/kvm/vmx/vmcs12.h
->> +++ b/arch/x86/kvm/vmx/vmcs12.h
->> @@ -80,10 +80,7 @@ struct __packed vmcs12 {
->>  	natural_width cr4_guest_host_mask;
->>  	natural_width cr0_read_shadow;
->>  	natural_width cr4_read_shadow;
->> -	natural_width cr3_target_value0;
->> -	natural_width cr3_target_value1;
->> -	natural_width cr3_target_value2;
->> -	natural_width cr3_target_value3;
->> +	natural_width dead_space[4]; /* Last remnants of cr3_target_value[0-3]. */
->>  	natural_width exit_qualification;
->>  	natural_width guest_linear_address;
->>  	natural_width guest_cr0;
->> @@ -263,10 +260,7 @@ static inline void vmx_check_vmcs12_offsets(void)
->>  	CHECK_OFFSET(cr4_guest_host_mask, 352);
->>  	CHECK_OFFSET(cr0_read_shadow, 360);
->>  	CHECK_OFFSET(cr4_read_shadow, 368);
->> -	CHECK_OFFSET(cr3_target_value0, 376);
->> -	CHECK_OFFSET(cr3_target_value1, 384);
->> -	CHECK_OFFSET(cr3_target_value2, 392);
->> -	CHECK_OFFSET(cr3_target_value3, 400);
->> +	CHECK_OFFSET(dead_space, 376);
->>  	CHECK_OFFSET(exit_qualification, 408);
->>  	CHECK_OFFSET(guest_linear_address, 416);
->>  	CHECK_OFFSET(guest_cr0, 424);
->> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
->> index aa1b8cf7c915..1ba7722445cc 100644
->> --- a/arch/x86/kvm/vmx/vmx.c
->> +++ b/arch/x86/kvm/vmx/vmx.c
->> @@ -5711,7 +5711,6 @@ void dump_vmcs(void)
->>  	u32 cpu_based_exec_ctrl, pin_based_exec_ctrl, secondary_exec_control;
->>  	unsigned long cr4;
->>  	u64 efer;
->> -	int i, n;
->>  
->>  	if (!dump_invalid_vmcs) {
->>  		pr_warn_ratelimited("set kvm_intel.dump_invalid_vmcs=1 to dump internal KVM state.\n");
->> @@ -5848,14 +5847,6 @@ void dump_vmcs(void)
->>  		pr_err("PostedIntrVec = 0x%02x\n", vmcs_read16(POSTED_INTR_NV));
->>  	if ((secondary_exec_control & SECONDARY_EXEC_ENABLE_EPT))
->>  		pr_err("EPT pointer = 0x%016llx\n", vmcs_read64(EPT_POINTER));
->> -	n = vmcs_read32(CR3_TARGET_COUNT);
->> -	for (i = 0; i + 1 < n; i += 4)
->> -		pr_err("CR3 target%u=%016lx target%u=%016lx\n",
->> -		       i, vmcs_readl(CR3_TARGET_VALUE0 + i * 2),
->> -		       i + 1, vmcs_readl(CR3_TARGET_VALUE0 + i * 2 + 2));
->> -	if (i < n)
->> -		pr_err("CR3 target%u=%016lx\n",
->> -		       i, vmcs_readl(CR3_TARGET_VALUE0 + i * 2));
->>  	if (secondary_exec_control & SECONDARY_EXEC_PAUSE_LOOP_EXITING)
->>  		pr_err("PLE Gap=%08x Window=%08x\n",
->>  		       vmcs_read32(PLE_GAP), vmcs_read32(PLE_WINDOW));
-> 
+diff --git a/drivers/thermal/qoriq_thermal.c b/drivers/thermal/qoriq_thermal.c
+index 028a6bbf75dc..c6ab0a0681cb 100644
+--- a/drivers/thermal/qoriq_thermal.c
++++ b/drivers/thermal/qoriq_thermal.c
+@@ -23,6 +23,7 @@
+ #define TMTMIR_DEFAULT	0x0000000f
+ #define TIER_DISABLE	0x0
+ #define TEUMR0_V2		0x51009c00
++#define TMSARA_V2		0xe
+ #define TMU_VER1		0x1
+ #define TMU_VER2		0x2
+ 
+@@ -50,6 +51,9 @@
+ 					    * Site Register
+ 					    */
+ #define TRITSR_V	BIT(31)
++#define REGS_V2_TMSAR(n)	(0x304 + 16 * (n))	/* TMU monitoring
++						* site adjustment register
++						*/
+ #define REGS_TTRnCR(n)	(0xf10 + 4 * (n)) /* Temperature Range n
+ 					   * Control Register
+ 					   */
+@@ -100,7 +104,11 @@ static int tmu_get_temp(void *p, int *temp)
+ 				     10 * USEC_PER_MSEC))
+ 		return -ENODATA;
+ 
+-	*temp = (val & 0xff) * 1000;
++	/* For TMUv2, temperature reading in degrees Kelvin */
++	if (qdata->ver == TMU_VER1)
++		*temp = (val & 0xff) * 1000;
++	else
++		*temp = (val & 0x1ff) - 273;
+ 
+ 	return 0;
+ }
+@@ -192,6 +200,8 @@ static int qoriq_tmu_calibration(struct device *dev,
+ 
+ static void qoriq_tmu_init_device(struct qoriq_tmu_data *data)
+ {
++	int i;
++
+ 	/* Disable interrupt, using polling instead */
+ 	regmap_write(data->regmap, REGS_TIER, TIER_DISABLE);
+ 
+@@ -202,6 +212,8 @@ static void qoriq_tmu_init_device(struct qoriq_tmu_data *data)
+ 	} else {
+ 		regmap_write(data->regmap, REGS_V2_TMTMIR, TMTMIR_DEFAULT);
+ 		regmap_write(data->regmap, REGS_V2_TEUMR(0), TEUMR0_V2);
++		for (i = 0; i < 7; i++)
++			regmap_write(data->regmap, REGS_V2_TMSAR(i), TMSARA_V2);
+ 	}
+ 
+ 	/* Disable monitoring */
+@@ -212,6 +224,7 @@ static const struct regmap_range qoriq_yes_ranges[] = {
+ 	regmap_reg_range(REGS_TMR, REGS_TSCFGR),
+ 	regmap_reg_range(REGS_TTRnCR(0), REGS_TTRnCR(3)),
+ 	regmap_reg_range(REGS_V2_TEUMR(0), REGS_V2_TEUMR(2)),
++	regmap_reg_range(REGS_V2_TMSAR(0), REGS_V2_TMSAR(15)),
+ 	regmap_reg_range(REGS_IPBRR(0), REGS_IPBRR(1)),
+ 	/* Read only registers below */
+ 	regmap_reg_range(REGS_TRITSR(0), REGS_TRITSR(15)),
+-- 
+2.17.1
 
