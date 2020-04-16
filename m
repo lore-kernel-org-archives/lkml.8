@@ -2,112 +2,109 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	HK_RANDOM_FROM,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A178DC2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 11:45:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 319C2C2BB85
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 11:46:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 880FD21D7F
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 11:45:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0EFA6206E9
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 11:46:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2505068AbgDPLpv (ORCPT
+        id S2506597AbgDPLqI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 07:45:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57068 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2505187AbgDPKgN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 06:36:13 -0400
-X-Greylist: delayed 301 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 16 Apr 2020 03:36:13 PDT
-Received: from xavier.telenet-ops.be (xavier.telenet-ops.be [IPv6:2a02:1800:120:4::f00:14])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5012EC061A0F
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 03:36:13 -0700 (PDT)
-Received: from ramsan ([IPv6:2a02:1810:ac12:ed60:fd83:81bb:c1d7:433d])
-        by xavier.telenet-ops.be with bizsmtp
-        id TNWz2200i4dKHqf01NWzxE; Thu, 16 Apr 2020 12:31:11 +0200
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan with esmtp (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1jP1nP-0001cj-Ll; Thu, 16 Apr 2020 12:30:59 +0200
-Received: from geert by rox.of.borg with local (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1jP1nP-0003z7-JX; Thu, 16 Apr 2020 12:30:59 +0200
-From:   Geert Uytterhoeven <geert+renesas@glider.be>
-To:     Rob Herring <robh+dt@kernel.org>, Vinod Koul <vkoul@kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Michael Hennerich <Michael.Hennerich@analog.com>,
-        Stefan Popa <stefan.popa@analog.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        =?UTF-8?q?Nuno=20S=C3=A1?= <nuno.sa@analog.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jiri Kosina <trivial@kernel.org>
-Cc:     devicetree@vger.kernel.org, dmaengine@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-iio@vger.kernel.org,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH trivial 0/6] Fix misspellings of "Analog Devices"
-Date:   Thu, 16 Apr 2020 12:30:52 +0200
-Message-Id: <20200416103058.15269-1-geert+renesas@glider.be>
-X-Mailer: git-send-email 2.17.1
+        Thu, 16 Apr 2020 07:46:08 -0400
+Received: from mga01.intel.com ([192.55.52.88]:46619 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2504914AbgDPKdi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 06:33:38 -0400
+IronPort-SDR: CBFc0+RD/rxjCamx/CRPEvlO6bTrJVUX4OIwq8jHiIvt3Rvp6XRL3YygupM8qsk+0JJ4zR+pQB
+ qT1GHhZyJ7JA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2020 03:33:27 -0700
+IronPort-SDR: GM7QgTRxLZxNtY5oDGeuldEujPWqCiRNQBU2Z1aqO/DnlR2z2n87sj4SRohvLHQLhs+KMo2hax
+ VASDiE9UKVsA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,390,1580803200"; 
+   d="scan'208";a="277947896"
+Received: from lxy-clx-4s.sh.intel.com ([10.239.43.132])
+  by fmsmga004.fm.intel.com with ESMTP; 16 Apr 2020 03:33:26 -0700
+From:   Xiaoyao Li <xiaoyao.li@intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        kvm@vger.kernel.org
+Cc:     Nadav Amit <namit@cs.technion.ac.il>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        linux-kernel@vger.kernel.org, Xiaoyao Li <xiaoyao.li@intel.com>
+Subject: [RFC PATCH 1/3] kvm: x86: Rename KVM_DEBUGREG_RELOAD to KVM_DEBUGREG_NEED_RELOAD
+Date:   Thu, 16 Apr 2020 18:15:07 +0800
+Message-Id: <20200416101509.73526-2-xiaoyao.li@intel.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200416101509.73526-1-xiaoyao.li@intel.com>
+References: <20200416101509.73526-1-xiaoyao.li@intel.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-	Hi all,
+To make it more clear that the flag means DRn (except DR7) need to be
+reloaded before vm entry.
 
-In several files the company also known as ADI is spelled as "Analog
-Device".  However, according to https://www.analog.com/, the company
-name is spelled "Analog Devices".
+Signed-off-by: Xiaoyao Li <xiaoyao.li@intel.com>
+---
+ arch/x86/include/asm/kvm_host.h | 2 +-
+ arch/x86/kvm/x86.c              | 6 +++---
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-Hence this patch series, one per subsystem, fixes these misspellings.
-
-Thanks for your comments!
-
-Geert Uytterhoeven (6):
-  dt-bindings: Fix misspellings of "Analog Devices"
-  dma: Fix misspelling of "Analog Devices"
-  drm: Fix misspellings of "Analog Devices"
-  iio: Fix misspellings of "Analog Devices"
-  ALSA: Fix misspellings of "Analog Devices"
-  ASoC: Fix misspellings of "Analog Devices"
-
- .../devicetree/bindings/display/bridge/adi,adv7123.txt        | 4 ++--
- .../devicetree/bindings/display/bridge/adi,adv7511.txt        | 4 ++--
- Documentation/devicetree/bindings/dma/adi,axi-dmac.txt        | 2 +-
- Documentation/devicetree/bindings/iio/dac/ad5755.txt          | 2 +-
- drivers/dma/Kconfig                                           | 2 +-
- drivers/gpu/drm/bridge/adv7511/Kconfig                        | 2 +-
- drivers/gpu/drm/drm_fb_cma_helper.c                           | 2 +-
- drivers/gpu/drm/tegra/fb.c                                    | 2 +-
- drivers/iio/adc/ad7791.c                                      | 2 +-
- drivers/iio/trigger/iio-trig-hrtimer.c                        | 2 +-
- drivers/staging/iio/Documentation/overview.txt                | 2 +-
- sound/isa/ad1816a/ad1816a.c                                   | 2 +-
- sound/pci/ac97/ac97_patch.c                                   | 2 +-
- sound/pci/hda/Kconfig                                         | 4 ++--
- sound/soc/codecs/ad1980.c                                     | 2 +-
- sound/soc/codecs/ad73311.c                                    | 2 +-
- sound/soc/codecs/wm8782.c                                     | 2 +-
- 17 files changed, 20 insertions(+), 20 deletions(-)
-
+diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+index c7da23aed79a..f465c76e6e5a 100644
+--- a/arch/x86/include/asm/kvm_host.h
++++ b/arch/x86/include/asm/kvm_host.h
+@@ -511,7 +511,7 @@ struct kvm_pmu_ops;
+ enum {
+ 	KVM_DEBUGREG_BP_ENABLED = 1,
+ 	KVM_DEBUGREG_WONT_EXIT = 2,
+-	KVM_DEBUGREG_RELOAD = 4,
++	KVM_DEBUGREG_NEED_RELOAD = 4,
+ };
+ 
+ struct kvm_mtrr_range {
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index de77bc9bd0d7..cce926658d10 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -1067,7 +1067,7 @@ static void kvm_update_dr0123(struct kvm_vcpu *vcpu)
+ 	if (!(vcpu->guest_debug & KVM_GUESTDBG_USE_HW_BP)) {
+ 		for (i = 0; i < KVM_NR_DB_REGS; i++)
+ 			vcpu->arch.eff_db[i] = vcpu->arch.db[i];
+-		vcpu->arch.switch_db_regs |= KVM_DEBUGREG_RELOAD;
++		vcpu->arch.switch_db_regs |= KVM_DEBUGREG_NEED_RELOAD;
+ 	}
+ }
+ 
+@@ -8407,7 +8407,7 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
+ 		set_debugreg(vcpu->arch.eff_db[2], 2);
+ 		set_debugreg(vcpu->arch.eff_db[3], 3);
+ 		set_debugreg(vcpu->arch.dr6, 6);
+-		vcpu->arch.switch_db_regs &= ~KVM_DEBUGREG_RELOAD;
++		vcpu->arch.switch_db_regs &= ~KVM_DEBUGREG_NEED_RELOAD;
+ 	}
+ 
+ 	kvm_x86_ops.run(vcpu);
+@@ -8424,7 +8424,7 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
+ 		kvm_update_dr0123(vcpu);
+ 		kvm_update_dr6(vcpu);
+ 		kvm_update_dr7(vcpu);
+-		vcpu->arch.switch_db_regs &= ~KVM_DEBUGREG_RELOAD;
++		vcpu->arch.switch_db_regs &= ~KVM_DEBUGREG_NEED_RELOAD;
+ 	}
+ 
+ 	/*
 -- 
-2.17.1
+2.20.1
 
-Gr{oetje,eeting}s,
-
-						Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-							    -- Linus Torvalds
