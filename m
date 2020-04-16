@@ -2,99 +2,133 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A669FC2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 09:55:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3ECFC2D0EF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 09:56:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 85B5D2078B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 09:55:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3FF22078B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 09:56:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MYvkiXit"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2504471AbgDPJzp (ORCPT
+        id S2504519AbgDPJ4N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 05:55:45 -0400
-Received: from m17618.mail.qiye.163.com ([59.111.176.18]:49294 "EHLO
-        m17618.mail.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2504147AbgDPJzl (ORCPT
+        Thu, 16 Apr 2020 05:56:13 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:53878 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2504485AbgDPJ4H (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 05:55:41 -0400
-Received: from ubuntu.localdomain (unknown [58.251.74.226])
-        by m17618.mail.qiye.163.com (Hmail) with ESMTPA id A18BC4E30C2;
-        Thu, 16 Apr 2020 15:42:00 +0800 (CST)
-From:   Wang Wenhu <wenhu.wang@vivo.com>
-To:     gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-        oss@buserror.net, christophe.leroy@c-s.fr,
-        linuxppc-dev@lists.ozlabs.org
-Cc:     kernel@vivo.com, Wang Wenhu <wenhu.wang@vivo.com>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH v3,2/4] powerpc: sysdev: fix compile error for fsl_85xx_cache_sram
-Date:   Thu, 16 Apr 2020 00:41:39 -0700
-Message-Id: <20200416074141.3555-3-wenhu.wang@vivo.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200416074141.3555-1-wenhu.wang@vivo.com>
-References: <20200415152442.122873-1-wenhu.wang@vivo.com>
- <20200416074141.3555-1-wenhu.wang@vivo.com>
+        Thu, 16 Apr 2020 05:56:07 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587030966;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=Lc+yq/vS8URFnXpc64MoW39Z5tJ2hW9F4KCw+f7L+9Y=;
+        b=MYvkiXit4vyOFBpwCtXamuRL+nF4hnyC71La6wca05DoRk4e8cTLF8F7tJ+sPHJXjqR7Ap
+        GL2r60Wj3svOdwsmIXVuherpwLPFdVd38t5pPjIliwmuonxBoWWPZoMg6OlhDvQpc3dvPQ
+        0Fj8G6oYZX/lZF+EpJdTVbFEDiR7gqQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-360-e75isgY2Mlqqj38w2wFCoA-1; Thu, 16 Apr 2020 05:56:00 -0400
+X-MC-Unique: e75isgY2Mlqqj38w2wFCoA-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5B5238018A3;
+        Thu, 16 Apr 2020 09:55:57 +0000 (UTC)
+Received: from krava (unknown [10.40.195.119])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 206AE60BF3;
+        Thu, 16 Apr 2020 09:55:50 +0000 (UTC)
+Date:   Thu, 16 Apr 2020 11:55:48 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Ian Rogers <irogers@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Igor Lubashev <ilubashe@akamai.com>,
+        Alexey Budankov <alexey.budankov@linux.intel.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Jiwei Sun <jiwei.sun@windriver.com>,
+        yuzhoujian <yuzhoujian@didichuxing.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Leo Yan <leo.yan@linaro.org>,
+        John Garry <john.garry@huawei.com>,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Stephane Eranian <eranian@google.com>
+Subject: Re: [PATCH v9 4/4] perf tools: add support for libpfm4
+Message-ID: <20200416095548.GD369437@krava>
+References: <20200416063551.47637-1-irogers@google.com>
+ <20200416063551.47637-5-irogers@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgYFAkeWUFZSVVCS0pCQkJCTktPS0NCT1lXWShZQU
-        hPN1dZLVlBSVdZCQ4XHghZQVk1NCk2OjckKS43PlkG
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Pjo6HSo4Vjg#OAg3HSxIKjYt
-        SU4wFBJVSlVKTkNMS0lJQklKS09KVTMWGhIXVQweFRMOVQwaFRw7DRINFFUYFBZFWVdZEgtZQVlO
-        Q1VJTkpVTE9VSUlNWVdZCAFZQUhIS0M3Bg++
-X-HM-Tid: 0a7181effcdd9376kuwsa18bc4e30c2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200416063551.47637-5-irogers@google.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Include linux/io.h into fsl_85xx_cache_sram.c to fix the
-implicit-declaration compile error when building Cache-Sram.
+On Wed, Apr 15, 2020 at 11:35:51PM -0700, Ian Rogers wrote:
 
-arch/powerpc/sysdev/fsl_85xx_cache_sram.c: In function ‘instantiate_cache_sram’:
-arch/powerpc/sysdev/fsl_85xx_cache_sram.c:97:26: error: implicit declaration of function ‘ioremap_coherent’; did you mean ‘bitmap_complement’? [-Werror=implicit-function-declaration]
-  cache_sram->base_virt = ioremap_coherent(cache_sram->base_phys,
-                          ^~~~~~~~~~~~~~~~
-                          bitmap_complement
-arch/powerpc/sysdev/fsl_85xx_cache_sram.c:97:24: error: assignment makes pointer from integer without a cast [-Werror=int-conversion]
-  cache_sram->base_virt = ioremap_coherent(cache_sram->base_phys,
-                        ^
-arch/powerpc/sysdev/fsl_85xx_cache_sram.c:123:2: error: implicit declaration of function ‘iounmap’; did you mean ‘roundup’? [-Werror=implicit-function-declaration]
-  iounmap(cache_sram->base_virt);
-  ^~~~~~~
-  roundup
-cc1: all warnings being treated as errors
+SNIP
 
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Christophe Leroy <christophe.leroy@c-s.fr>
-Cc: Scott Wood <oss@buserror.net>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: linuxppc-dev@lists.ozlabs.org
-Fixes: 6db92cc9d07d ("powerpc/85xx: add cache-sram support")
-Signed-off-by: WANG Wenhu <wenhu.wang@vivo.com>
----
-Changes since v1:
- * None
-Changes since v2:
- * None
----
- arch/powerpc/sysdev/fsl_85xx_cache_sram.c | 1 +
- 1 file changed, 1 insertion(+)
+> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+> index 1ab349abe904..80ac598f125b 100644
+> --- a/tools/perf/builtin-record.c
+> +++ b/tools/perf/builtin-record.c
+> @@ -43,6 +43,7 @@
+>  #include "util/time-utils.h"
+>  #include "util/units.h"
+>  #include "util/bpf-event.h"
+> +#include "util/pfm.h"
+>  #include "asm/bug.h"
+>  #include "perf.h"
+>  
+> @@ -64,6 +65,9 @@
+>  #include <linux/zalloc.h>
+>  #include <linux/bitmap.h>
+>  
+> +
+> +
+> +
 
-diff --git a/arch/powerpc/sysdev/fsl_85xx_cache_sram.c b/arch/powerpc/sysdev/fsl_85xx_cache_sram.c
-index f6c665dac725..be3aef4229d7 100644
---- a/arch/powerpc/sysdev/fsl_85xx_cache_sram.c
-+++ b/arch/powerpc/sysdev/fsl_85xx_cache_sram.c
-@@ -17,6 +17,7 @@
- #include <linux/of_platform.h>
- #include <asm/pgtable.h>
- #include <asm/fsl_85xx_cache_sram.h>
-+#include <linux/io.h>
- 
- #include "fsl_85xx_cache_ctlr.h"
- 
--- 
-2.17.1
+extra new lines..
+
+jirka
+
+>  struct switch_output {
+>  	bool		 enabled;
+>  	bool		 signal;
+> @@ -2421,6 +2425,11 @@ static struct option __record_options[] = {
+>  #endif
+>  	OPT_CALLBACK(0, "max-size", &record.output_max_size,
+>  		     "size", "Limit the maximum size of the output file", parse_output_max_size),
+> +#ifdef HAVE_LIBPFM
+> +	OPT_CALLBACK(0, "pfm-events", &record.evlist, "event",
+> +		"libpfm4 event selector. use 'perf list' to list available events",
+> +		parse_libpfm_events_option),
+> +#endif
+>  	OPT_END()
+>  };
+
+SNIP
 
