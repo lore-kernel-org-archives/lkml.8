@@ -8,61 +8,61 @@ X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 174FAC2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 16:14:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E897C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 16:14:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E3F9E20771
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 16:14:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 173FB20857
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 16:14:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oaXHw4Oo"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="aGvQz7rp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2506870AbgDPQNJ (ORCPT
+        id S1730943AbgDPQOM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 12:13:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53304 "EHLO
+        Thu, 16 Apr 2020 12:14:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53322 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2506832AbgDPQM5 (ORCPT
+        by vger.kernel.org with ESMTP id S2506859AbgDPQND (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 12:12:57 -0400
-Received: from mail-pj1-x104a.google.com (mail-pj1-x104a.google.com [IPv6:2607:f8b0:4864:20::104a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A14CDC061A0C
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 09:12:57 -0700 (PDT)
-Received: by mail-pj1-x104a.google.com with SMTP id nk12so3348986pjb.0
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 09:12:57 -0700 (PDT)
+        Thu, 16 Apr 2020 12:13:03 -0400
+Received: from mail-pl1-x649.google.com (mail-pl1-x649.google.com [IPv6:2607:f8b0:4864:20::649])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91FF7C061A10
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 09:13:02 -0700 (PDT)
+Received: by mail-pl1-x649.google.com with SMTP id l1so3158777pld.14
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 09:13:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=0zoCAxwf9k6lfoo3cxV3l2Ts8Ighj8ILmpKvjJbqwvo=;
-        b=oaXHw4OoNjSODYtqP+D86dNRDfH9pFvBIgL5AAghUBFYKnrbVWQbiCIYvMoV5G/92q
-         eAijVWC8ga1IgT8f2InqqkXDfvnJOHAfEoJR4Tv3ygcBIFNB+3MRslx3FassUAy0Uatd
-         KTgMwbBl3RKE4Te0j7hl6uSM+q2hHmXvTAE68O2Qqmw80ejmwBmIa/uQIk0Ea6awb4D/
-         kiUfpIC642BpdAmbbEnAoxCTXQxQ62KaUPmVGWnjnutLyFbIJjdlfDx/bJhA/U7yXFFD
-         en3fX1+ixzUBoNEWIbC1MibOBSiJdNjGY0/wQFmuEOqMPTQHYahJnCQZvu4lXlhPO+Ut
-         3Uiw==
+        bh=jhbZSy8N7pmIKGLCoqfuWjSb1n91/ddT1S0YkqMO/sE=;
+        b=aGvQz7rpj1gmlNot9DGOyVfFExMSMhcz9FOTIfJbSo6J2eaS4Q9EvaTX97Nd1b7Is2
+         Bi/uzVXKD8nyy0gdnni7g4rNQaOUONSHCDbXi1JxVmjuSDUSR9C3hyS6ONRIgdqe5A7o
+         KRFqaiwPkP7F+S6duXdhRB2xtAeRc18dKkptU+TW+VkoS72brWS3gLP1uLJyWKMa1apq
+         6GOIGu4r7BbAhSSQiEldxlhfcpZpwS7Ujq6MBf2bUhjBlcqdRF1nhMsPi7t9S8NV1SxC
+         8eUuHSdrmpT1WtCHfSF0mYe/M0/QauT7xIFnKzHxZWJuc08m/q50qVVerwI3cu0X+K2t
+         149A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=0zoCAxwf9k6lfoo3cxV3l2Ts8Ighj8ILmpKvjJbqwvo=;
-        b=hcm3/VdLGQDfO/oCJ+EZYXbL6LwEAG0PJRUslspWAU7KsEkIAss27cfggX5+EQW3Lk
-         dK1lMj1HPVRs3GaqOs90oj7w7IVf0c5ukNpDE7YKC+6VkOvPUKyVGLR5ztjiPZHre2I/
-         cleUkc/AJG5HQ+yH31J6d0KktgNs21fB0utOT3gdLE6CuZGtF0fm48eNOCMjY2ANGqOL
-         dtMQvA59i2fnnXocF4C5Qk62KKPS1oTK9qOV+5DkBd2f856A9JQcD7QkjWskhRz760Gm
-         WkrF7KIRW3niWGktrHxClnRHb2Ecs71fngt6SO5zlbPOME8JJ9k1QIp3TME9bFzypSU3
-         483Q==
-X-Gm-Message-State: AGi0PuZeyAMPoDoUVz8jBjaay5nCQAZYwXS3MHFfndU3Az/bQBPqOZiK
-        tMcQrlLK5Hui84orxrS/bngq8lCG8Z70hn0JT3o=
-X-Google-Smtp-Source: APiQypKIig2VehAviH0oXuxl4EJ3M3D8ILlWZ/6oWMjPFzuhTA+6Vu4jAmcNZSFI+UI1yW8xrivvKTZYZblKhvZz34o=
-X-Received: by 2002:a63:d049:: with SMTP id s9mr30834027pgi.384.1587053577150;
- Thu, 16 Apr 2020 09:12:57 -0700 (PDT)
-Date:   Thu, 16 Apr 2020 09:12:36 -0700
+        bh=jhbZSy8N7pmIKGLCoqfuWjSb1n91/ddT1S0YkqMO/sE=;
+        b=G4cX/L/cevo3lyH20+6ca5pjUAlePX7BF+Fm25uURQv27W2g5d9yHIZTcYfHAaTLeH
+         2rJ7rxb8HBq880I2Envb2Yf2yfT0ti+JvExDVh7cpm2vmZh9A/pzkdsA/3hClbsmqeD2
+         sqhHcUPDoIMb9FxbEunbWxt8XsBBB70ru0hnCLGnHHrS/MEbP6KLrJ2XkinKZ+NbrmBP
+         vIYoTIS2/KKIBtemaVIghNh+jDsRaavW8E7zXDb4mXRxZjeJjE3XwWOE/nPYTzjps1xc
+         cxf9ScAieVPPHqaGVdDSbwb51g8EwwuiZqxsqGXTy9T83WylgB0t0E4R0C5b+8MhjGSz
+         CQtw==
+X-Gm-Message-State: AGi0Pua7hald+gopWTZFCS9HTnrL95BCwSEmZqV9BVu6l8LrKXM5X35u
+        Ep7K1/kG4fwywHUS5isdQDWK93PG9ZsL0Q0vBqI=
+X-Google-Smtp-Source: APiQypL8a8EcwgkAdr2i3smmJxOyKHY3RiUFRcgoCxLBedFlxJV/kyUEcY4a7Jl+ITX16xXqRHQjeNwR/jbT4qE4WrI=
+X-Received: by 2002:a65:68c7:: with SMTP id k7mr33098346pgt.248.1587053582058;
+ Thu, 16 Apr 2020 09:13:02 -0700 (PDT)
+Date:   Thu, 16 Apr 2020 09:12:38 -0700
 In-Reply-To: <20200416161245.148813-1-samitolvanen@google.com>
-Message-Id: <20200416161245.148813-4-samitolvanen@google.com>
+Message-Id: <20200416161245.148813-6-samitolvanen@google.com>
 Mime-Version: 1.0
 References: <20191018161033.261971-1-samitolvanen@google.com> <20200416161245.148813-1-samitolvanen@google.com>
 X-Mailer: git-send-email 2.26.1.301.g55bc3eb7cb9-goog
-Subject: [PATCH v11 03/12] scs: add support for stack usage debugging
+Subject: [PATCH v11 05/12] arm64: reserve x18 from general allocation with SCS
 From:   Sami Tolvanen <samitolvanen@google.com>
 To:     Will Deacon <will@kernel.org>,
         Catalin Marinas <catalin.marinas@arm.com>,
@@ -94,72 +94,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Implements CONFIG_DEBUG_STACK_USAGE for shadow stacks. When enabled,
-also prints out the highest shadow stack usage per process.
+Reserve the x18 register from general allocation when SCS is enabled,
+because the compiler uses the register to store the current task's
+shadow stack pointer. Note that all external kernel modules must also be
+compiled with -ffixed-x18 if the kernel has SCS enabled.
 
 Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
 Reviewed-by: Kees Cook <keescook@chromium.org>
+Acked-by: Will Deacon <will@kernel.org>
 ---
- kernel/scs.c | 39 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 39 insertions(+)
+ arch/arm64/Makefile | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/kernel/scs.c b/kernel/scs.c
-index 5245e992c692..ad74d13f2c0f 100644
---- a/kernel/scs.c
-+++ b/kernel/scs.c
-@@ -184,6 +184,44 @@ int scs_prepare(struct task_struct *tsk, int node)
- 	return 0;
- }
+diff --git a/arch/arm64/Makefile b/arch/arm64/Makefile
+index 85e4149cc5d5..409a6c1be8cc 100644
+--- a/arch/arm64/Makefile
++++ b/arch/arm64/Makefile
+@@ -81,6 +81,10 @@ endif
  
-+#ifdef CONFIG_DEBUG_STACK_USAGE
-+static inline unsigned long scs_used(struct task_struct *tsk)
-+{
-+	unsigned long *p = __scs_base(tsk);
-+	unsigned long *end = scs_magic(p);
-+	unsigned long s = (unsigned long)p;
-+
-+	while (p < end && READ_ONCE_NOCHECK(*p))
-+		p++;
-+
-+	return (unsigned long)p - s;
-+}
-+
-+static void scs_check_usage(struct task_struct *tsk)
-+{
-+	static DEFINE_SPINLOCK(lock);
-+	static unsigned long highest;
-+	unsigned long used = scs_used(tsk);
-+
-+	if (used <= highest)
-+		return;
-+
-+	spin_lock(&lock);
-+
-+	if (used > highest) {
-+		pr_info("%s (%d): highest shadow stack usage: %lu bytes\n",
-+			tsk->comm, task_pid_nr(tsk), used);
-+		highest = used;
-+	}
-+
-+	spin_unlock(&lock);
-+}
-+#else
-+static inline void scs_check_usage(struct task_struct *tsk)
-+{
-+}
-+#endif
-+
- bool scs_corrupted(struct task_struct *tsk)
- {
- 	unsigned long *magic = scs_magic(__scs_base(tsk));
-@@ -200,6 +238,7 @@ void scs_release(struct task_struct *tsk)
- 		return;
+ KBUILD_CFLAGS += $(branch-prot-flags-y)
  
- 	WARN_ON(scs_corrupted(tsk));
-+	scs_check_usage(tsk);
- 
- 	scs_account(tsk, -1);
- 	task_set_scs(tsk, NULL);
++ifeq ($(CONFIG_SHADOW_CALL_STACK), y)
++KBUILD_CFLAGS	+= -ffixed-x18
++endif
++
+ ifeq ($(CONFIG_CPU_BIG_ENDIAN), y)
+ KBUILD_CPPFLAGS	+= -mbig-endian
+ CHECKFLAGS	+= -D__AARCH64EB__
 -- 
 2.26.1.301.g55bc3eb7cb9-goog
 
