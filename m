@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C8D5C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:02:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EF3DC2BB85
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:02:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3850020732
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:02:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F3CB217D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:02:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587045755;
-	bh=QXDIIPH8GK3Ux1ynVTxNG6RvRhtHCDyClAcTXjsslm8=;
+	s=default; t=1587045762;
+	bh=f/MuBIwhf8lkkmoBHa26oyZAK+2rL9c6PazhpF9AxPo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qZQfD/2d0+vRQP7bWKFEhqo1k5jilOb/HT4PSIL2WVtMHEjEBQnJs6LEtl4DfwoGe
-	 Meljak3aTLEOSO8KAamK3Tmxiax+x166Vow0LRhAbKoT4l1P6PpV/WJzT51Ok9qXv/
-	 L3UKSr9gzBpmAmm0LkWMqPdcwbCdfDUwHkF44cTQ=
+	b=g+psvP7uAEUrd/ImC2AY1VD4apyuMOoMAhG96SdOBiB17+yimhj/sRqtcgVngs7hn
+	 c2FJOY/S1DqFcV/wd8np8cZwAARQp2nxUKLnSeVKu9cT8XCZ75FXxwryEEaasabBOk
+	 w8GZTirOvAqZ2hFyGQf8KjM1ZgD2cuYuo0n9xN94=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730288AbgDPOCd (ORCPT
+        id S2441912AbgDPOCk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:02:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54538 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 10:02:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54500 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2898336AbgDPNli (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:41:38 -0400
+        id S2898334AbgDPNlg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:41:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B95B220732;
-        Thu, 16 Apr 2020 13:41:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 51DA1214D8;
+        Thu, 16 Apr 2020 13:41:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044498;
-        bh=QXDIIPH8GK3Ux1ynVTxNG6RvRhtHCDyClAcTXjsslm8=;
+        s=default; t=1587044495;
+        bh=f/MuBIwhf8lkkmoBHa26oyZAK+2rL9c6PazhpF9AxPo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=io20Vhn7yFnuaIwrGn4pY/4IKrQjW/eEIUkRsserv7zThRuna8xfQ+taO8Fb54v0h
-         jcWlLtIG/S/fBo4+3jtWxAMgXn8N+A1HefkQZjUdcFDfo+rvf47Ap9eSSv+nO4ERkQ
-         ECnZanO7M2gnVs4UdWcg80ijn7oJV6119i8vk2Es=
+        b=RpmsedYNPhtyf2FFnmKvrlXW4P2XHxf03Id3jWpE9cE33hLmCcJgd/KHrdFc9qsXZ
+         1itPj24h+otMwPUieTdmZ+T+McG1PjFEJ8jNpLMadc7y9O8bjw7VcJ/BZzY98gXPPy
+         pwkj8JShSbbg2vCaiubVrUUfw7oehrNsDXfvUIro=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg@kaod.org>,
-        Greg Kurz <groug@kaod.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 5.5 241/257] powerpc/xive: Fix xmon support on the PowerNV platform
-Date:   Thu, 16 Apr 2020 15:24:52 +0200
-Message-Id: <20200416131355.977857219@linuxfoundation.org>
+        stable@vger.kernel.org, Andrew Donnellan <ajd@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Daniel Axtens <dja@axtens.net>
+Subject: [PATCH 5.5 240/257] powerpc/64: Setup a paca before parsing device tree etc.
+Date:   Thu, 16 Apr 2020 15:24:51 +0200
+Message-Id: <20200416131355.536237727@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.891903893@linuxfoundation.org>
 References: <20200416131325.891903893@linuxfoundation.org>
@@ -61,43 +60,132 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Cédric Le Goater <clg@kaod.org>
+From: Daniel Axtens <dja@axtens.net>
 
-commit 97ef275077932c65b1b8ec5022abd737a9fbf3e0 upstream.
+commit d4a8e98621543d5798421eed177978bf2b3cdd11 upstream.
 
-The PowerNV platform has multiple IRQ chips and the xmon command
-dumping the state of the XIVE interrupt should only operate on the
-XIVE IRQ chip.
+Currently we set up the paca after parsing the device tree for CPU
+features. Prior to that, r13 contains random data, which means there
+is random data in r13 while we're running the generic dt parsing code.
 
-Fixes: 5896163f7f91 ("powerpc/xmon: Improve output of XIVE interrupts")
-Cc: stable@vger.kernel.org # v5.4+
-Signed-off-by: Cédric Le Goater <clg@kaod.org>
-Reviewed-by: Greg Kurz <groug@kaod.org>
+This random data varies depending on whether we boot through a vmlinux
+or a zImage: for the vmlinux case it's usually around zero, but for
+zImages we see random values like 912a72603d420015.
+
+This is poor practice, and can also lead to difficult-to-debug
+crashes. For example, when kcov is enabled, the kcov instrumentation
+attempts to read preempt_count out of the current task, which goes via
+the paca. This then crashes in the zImage case.
+
+Similarly stack protector can cause crashes if r13 is bogus, by
+reading from the stack canary in the paca.
+
+To resolve this:
+
+ - move the paca setup to before the CPU feature parsing.
+
+ - because we no longer have access to CPU feature flags in paca
+ setup, change the HV feature test in the paca setup path to consider
+ the actual value of the MSR rather than the CPU feature.
+
+Translations get switched on once we leave early_setup, so I think
+we'd already catch any other cases where the paca or task aren't set
+up.
+
+Boot tested on a P9 guest and host.
+
+Fixes: fb0b0a73b223 ("powerpc: Enable kcov")
+Fixes: 06ec27aea9fc ("powerpc/64: add stack protector support")
+Cc: stable@vger.kernel.org # v4.20+
+Reviewed-by: Andrew Donnellan <ajd@linux.ibm.com>
+Suggested-by: Michael Ellerman <mpe@ellerman.id.au>
+Signed-off-by: Daniel Axtens <dja@axtens.net>
+[mpe: Reword comments & change log a bit to mention stack protector]
 Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20200306150143.5551-3-clg@kaod.org
+Link: https://lore.kernel.org/r/20200320032116.1024773-1-mpe@ellerman.id.au
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/powerpc/sysdev/xive/common.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ arch/powerpc/kernel/dt_cpu_ftrs.c |    1 -
+ arch/powerpc/kernel/paca.c        |   10 +++++++---
+ arch/powerpc/kernel/setup_64.c    |   30 ++++++++++++++++++++++++------
+ 3 files changed, 31 insertions(+), 10 deletions(-)
 
---- a/arch/powerpc/sysdev/xive/common.c
-+++ b/arch/powerpc/sysdev/xive/common.c
-@@ -258,11 +258,15 @@ notrace void xmon_xive_do_dump(int cpu)
+--- a/arch/powerpc/kernel/dt_cpu_ftrs.c
++++ b/arch/powerpc/kernel/dt_cpu_ftrs.c
+@@ -139,7 +139,6 @@ static void __init cpufeatures_setup_cpu
+ 	/* Initialize the base environment -- clear FSCR/HFSCR.  */
+ 	hv_mode = !!(mfmsr() & MSR_HV);
+ 	if (hv_mode) {
+-		/* CPU_FTR_HVMODE is used early in PACA setup */
+ 		cur_cpu_spec->cpu_features |= CPU_FTR_HVMODE;
+ 		mtspr(SPRN_HFSCR, 0);
+ 	}
+--- a/arch/powerpc/kernel/paca.c
++++ b/arch/powerpc/kernel/paca.c
+@@ -214,11 +214,15 @@ void setup_paca(struct paca_struct *new_
+ 	/* On Book3E, initialize the TLB miss exception frames */
+ 	mtspr(SPRN_SPRG_TLB_EXFRAME, local_paca->extlb);
+ #else
+-	/* In HV mode, we setup both HPACA and PACA to avoid problems
++	/*
++	 * In HV mode, we setup both HPACA and PACA to avoid problems
+ 	 * if we do a GET_PACA() before the feature fixups have been
+-	 * applied
++	 * applied.
++	 *
++	 * Normally you should test against CPU_FTR_HVMODE, but CPU features
++	 * are not yet set up when we first reach here.
+ 	 */
+-	if (early_cpu_has_feature(CPU_FTR_HVMODE))
++	if (mfmsr() & MSR_HV)
+ 		mtspr(SPRN_SPRG_HPACA, local_paca);
+ #endif
+ 	mtspr(SPRN_SPRG_PACA, local_paca);
+--- a/arch/powerpc/kernel/setup_64.c
++++ b/arch/powerpc/kernel/setup_64.c
+@@ -285,18 +285,36 @@ void __init early_setup(unsigned long dt
  
- int xmon_xive_get_irq_config(u32 hw_irq, struct irq_data *d)
- {
-+	struct irq_chip *chip = irq_data_get_irq_chip(d);
- 	int rc;
- 	u32 target;
- 	u8 prio;
- 	u32 lirq;
+ 	/* -------- printk is _NOT_ safe to use here ! ------- */
  
-+	if (!is_xive_irq(chip))
-+		return -EINVAL;
+-	/* Try new device tree based feature discovery ... */
+-	if (!dt_cpu_ftrs_init(__va(dt_ptr)))
+-		/* Otherwise use the old style CPU table */
+-		identify_cpu(0, mfspr(SPRN_PVR));
+-
+-	/* Assume we're on cpu 0 for now. Don't write to the paca yet! */
++	/*
++	 * Assume we're on cpu 0 for now.
++	 *
++	 * We need to load a PACA very early for a few reasons.
++	 *
++	 * The stack protector canary is stored in the paca, so as soon as we
++	 * call any stack protected code we need r13 pointing somewhere valid.
++	 *
++	 * If we are using kcov it will call in_task() in its instrumentation,
++	 * which relies on the current task from the PACA.
++	 *
++	 * dt_cpu_ftrs_init() calls into generic OF/fdt code, as well as
++	 * printk(), which can trigger both stack protector and kcov.
++	 *
++	 * percpu variables and spin locks also use the paca.
++	 *
++	 * So set up a temporary paca. It will be replaced below once we know
++	 * what CPU we are on.
++	 */
+ 	initialise_paca(&boot_paca, 0);
+ 	setup_paca(&boot_paca);
+ 	fixup_boot_paca();
+ 
+ 	/* -------- printk is now safe to use ------- */
+ 
++	/* Try new device tree based feature discovery ... */
++	if (!dt_cpu_ftrs_init(__va(dt_ptr)))
++		/* Otherwise use the old style CPU table */
++		identify_cpu(0, mfspr(SPRN_PVR));
 +
- 	rc = xive_ops->get_irq_config(hw_irq, &target, &prio, &lirq);
- 	if (rc) {
- 		xmon_printf("IRQ 0x%08x : no config rc=%d\n", hw_irq, rc);
+ 	/* Enable early debugging if any specified (see udbg.h) */
+ 	udbg_early_init();
+ 
 
 
