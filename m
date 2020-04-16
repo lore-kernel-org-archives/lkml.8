@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08253C352BE
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:05:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D67DC2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:05:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D075C206D6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:05:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C791206D6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:05:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587045916;
-	bh=Kxg+6mNL0fU0Qz97sBuOPhNXN09NkF4B2vPqrXgEL0w=;
+	s=default; t=1587045923;
+	bh=pPQAnpLJ6swHilZZiXwdXrhXTemHxz69XOukH7cla4c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UkTfN8uFwd0YkFxSqfUHdeNYJVZZTvIXOxLoeeg5zFZ/BM/JKCOmGfVzNiLgfk7V1
-	 HiFZdIChoVcwPMUVlx83IGy24kvjG5L/9Hmm7WZYejytdpIwq9cfDwNMAB/IbyrEcT
-	 lxc5cH+T4UMs43ZWILCR0GrqNQ9x6LGh+12Svcnk=
+	b=JiyARmXkT3oZ2Xy8EyCgz96K+MPICaDdjlvhF4zOoZ4QwbB78ez40Ag6GbXuBPttW
+	 gOHdr24ECacWfzLIGyUzubnj40xaJw5SFKLxs9yF8ESq/cgpGJ/1dsJdRsRIC9+bzK
+	 cAaF3b6FJlXgdSNKVI43Uz+21G217DwktqT2gG+g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405735AbgDPOFO (ORCPT
+        id S2392778AbgDPOFV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:05:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56652 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 10:05:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56832 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2441617AbgDPNnW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:43:22 -0400
+        id S1728371AbgDPNnc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:43:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AA6DF2222C;
-        Thu, 16 Apr 2020 13:43:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 807A0214D8;
+        Thu, 16 Apr 2020 13:43:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044602;
-        bh=Kxg+6mNL0fU0Qz97sBuOPhNXN09NkF4B2vPqrXgEL0w=;
+        s=default; t=1587044612;
+        bh=pPQAnpLJ6swHilZZiXwdXrhXTemHxz69XOukH7cla4c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PaIq/PfLUeMh76xuvfNZQhgCO2eyc+37MPkJWTpZaDj9Io5dLfyYeKuCCIt//eARf
-         j/xIXEGgLFZ0DVt21uEYi52GZDQvr5NO+ZxnH1yTsrELYO8ejH25QHLvbQGOtrZR5Q
-         y1+DW1J7RTOmduzImVXsbQl2qdeLzrowLmM1//oc=
+        b=k1CAyKdXimIUYaOnNqNFZ3LRp1M2oK45+4uv2DrjPl/PY6ma0JCYhk7le7EA6/71w
+         5PTFzObB8Zhc5HmrNCGy5Bk7g+yeXbuOzyO6LjPFlDeM61dpfYmsb52/cZG/s6j8Eo
+         vhwaVkdbaRDYaww7J/KkKqno+9CjHXI/YoSPrdqM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Ajay Singh <ajay.kathat@microchip.com>,
+        stable@vger.kernel.org, Tony Lindgren <tony@atomide.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 026/232] staging: wilc1000: avoid double unlocking of wilc->hif_cs mutex
-Date:   Thu, 16 Apr 2020 15:22:00 +0200
-Message-Id: <20200416131319.485120134@linuxfoundation.org>
+Subject: [PATCH 5.4 003/232] ARM: dts: Fix dm814x Ethernet by changing to use rgmii-id mode
+Date:   Thu, 16 Apr 2020 15:21:37 +0200
+Message-Id: <20200416131317.023733829@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131316.640996080@linuxfoundation.org>
 References: <20200416131316.640996080@linuxfoundation.org>
@@ -61,39 +59,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ajay Singh <ajay.kathat@microchip.com>
+From: Tony Lindgren <tony@atomide.com>
 
-[ Upstream commit 6c411581caef6e3b2c286871641018364c6db50a ]
+[ Upstream commit b46b2b7ba6e104d265ab705914859ec0db7a98c5 ]
 
-Possible double unlocking of 'wilc->hif_cs' mutex was identified by
-smatch [1]. Removed the extra call to release_bus() in
-wilc_wlan_handle_txq() which was missed in earlier commit fdc2ac1aafc6
-("staging: wilc1000: support suspend/resume functionality").
+Commit cd28d1d6e52e ("net: phy: at803x: Disable phy delay for RGMII mode")
+caused a regression for dm814x boards where NFSroot would no longer work.
 
-[1]. https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org/thread/NOEVW7C3GV74EWXJO3XX6VT2NKVB2HMT/
+Let's fix the issue by configuring "rgmii-id" mode as internal delays are
+needed that is no longer the case with "rgmii" mode.
 
-Reported-by: kbuild test robot <lkp@intel.com>
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Ajay Singh <ajay.kathat@microchip.com>
-Link: https://lore.kernel.org/r/20200221170120.15739-1-ajay.kathat@microchip.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/staging/wilc1000/wilc_wlan.c | 1 -
- 1 file changed, 1 deletion(-)
+ arch/arm/boot/dts/dm8148-evm.dts       | 4 ++--
+ arch/arm/boot/dts/dm8148-t410.dts      | 4 ++--
+ arch/arm/boot/dts/dra62x-j5eco-evm.dts | 4 ++--
+ 3 files changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/staging/wilc1000/wilc_wlan.c b/drivers/staging/wilc1000/wilc_wlan.c
-index 771d8cb68dc17..02f551536e18b 100644
---- a/drivers/staging/wilc1000/wilc_wlan.c
-+++ b/drivers/staging/wilc1000/wilc_wlan.c
-@@ -578,7 +578,6 @@ int wilc_wlan_handle_txq(struct wilc *wilc, u32 *txq_count)
- 				entries = ((reg >> 3) & 0x3f);
- 				break;
- 			}
--			release_bus(wilc, WILC_BUS_RELEASE_ALLOW_SLEEP);
- 		} while (--timeout);
- 		if (timeout <= 0) {
- 			ret = func->hif_write_reg(wilc, WILC_HOST_VMM_CTL, 0x0);
+diff --git a/arch/arm/boot/dts/dm8148-evm.dts b/arch/arm/boot/dts/dm8148-evm.dts
+index 3931fb068ff09..91d1018ab75fc 100644
+--- a/arch/arm/boot/dts/dm8148-evm.dts
++++ b/arch/arm/boot/dts/dm8148-evm.dts
+@@ -24,12 +24,12 @@
+ 
+ &cpsw_emac0 {
+ 	phy-handle = <&ethphy0>;
+-	phy-mode = "rgmii";
++	phy-mode = "rgmii-id";
+ };
+ 
+ &cpsw_emac1 {
+ 	phy-handle = <&ethphy1>;
+-	phy-mode = "rgmii";
++	phy-mode = "rgmii-id";
+ };
+ 
+ &davinci_mdio {
+diff --git a/arch/arm/boot/dts/dm8148-t410.dts b/arch/arm/boot/dts/dm8148-t410.dts
+index 9e43d5ec0bb2f..79ccdd4470f4c 100644
+--- a/arch/arm/boot/dts/dm8148-t410.dts
++++ b/arch/arm/boot/dts/dm8148-t410.dts
+@@ -33,12 +33,12 @@
+ 
+ &cpsw_emac0 {
+ 	phy-handle = <&ethphy0>;
+-	phy-mode = "rgmii";
++	phy-mode = "rgmii-id";
+ };
+ 
+ &cpsw_emac1 {
+ 	phy-handle = <&ethphy1>;
+-	phy-mode = "rgmii";
++	phy-mode = "rgmii-id";
+ };
+ 
+ &davinci_mdio {
+diff --git a/arch/arm/boot/dts/dra62x-j5eco-evm.dts b/arch/arm/boot/dts/dra62x-j5eco-evm.dts
+index 861ab90a3f3aa..c16e183822bee 100644
+--- a/arch/arm/boot/dts/dra62x-j5eco-evm.dts
++++ b/arch/arm/boot/dts/dra62x-j5eco-evm.dts
+@@ -24,12 +24,12 @@
+ 
+ &cpsw_emac0 {
+ 	phy-handle = <&ethphy0>;
+-	phy-mode = "rgmii";
++	phy-mode = "rgmii-id";
+ };
+ 
+ &cpsw_emac1 {
+ 	phy-handle = <&ethphy1>;
+-	phy-mode = "rgmii";
++	phy-mode = "rgmii-id";
+ };
+ 
+ &davinci_mdio {
 -- 
 2.20.1
 
