@@ -7,51 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CADDC2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 16:00:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EA65C2BB85
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 16:00:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1424E214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 16:00:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CE5D214AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 16:00:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587052829;
-	bh=pYYnWNXIOOVYT3paGvt0+fyCX+Hzf57UqsPRpVa5kcM=;
+	s=default; t=1587052831;
+	bh=Ew9ijdVo0MZy0U3RGxQUl97TyvgHRME/rCP+4QrqC+4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QsMpLRMYQjXmPf1Q6hNXIfztfmy3kMkQAyR2E9w+tvf0mTg2DXRzRUioS4LjVl7++
-	 2MRq+XtuQvWaSLlQQDNyuvd0jpkTZEoaUMrdfHoTkzbf926U+8/lvZYIauVOC4T2dc
-	 e0Ggqh1RVGRJnIP+PcbvqhHm4BagywX49VWGyVu4=
+	b=O26BBAdeGuEGsIfc2xAyPMgSHY1s0gzIJ95sAHWXnUgD+Z156CdAgHMo8ntG7nU0n
+	 LKCc64gw+f7f+Y1FFigSJPuhsKmktPbFzQb81lcNnMI1U94Ok/LpGCMdy8j85lmYop
+	 0Q6Gjk9KdtEy9bIK7BHIZClTq/LtmJh+kXmqEr/w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2895486AbgDPQA0 (ORCPT
+        id S2635831AbgDPQAa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 12:00:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35700 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 12:00:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35648 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2895469AbgDPN1U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:27:20 -0400
+        id S2895455AbgDPN1R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:27:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 40C5A206E9;
-        Thu, 16 Apr 2020 13:27:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D357121D94;
+        Thu, 16 Apr 2020 13:27:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587043639;
-        bh=pYYnWNXIOOVYT3paGvt0+fyCX+Hzf57UqsPRpVa5kcM=;
+        s=default; t=1587043637;
+        bh=Ew9ijdVo0MZy0U3RGxQUl97TyvgHRME/rCP+4QrqC+4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2O9iiMRv+zB2ucvferMQgKTFUe+ces2f8ZnRen8xNC+JOsW8lSG7eAB3CDulGMtMZ
-         h7bZIhxM/cOjW0Ub+wZrVe6Yeaei+XVLgfZkPIiGKBaCEY/J2fx9dQBFzVACRvIwcU
-         iOBNSWuou282jdp4h6Uf6qjH79nk79WMFsX5HfDs=
+        b=tkgbMrE6re9xET3J4LLWbtnK+QDCuVcTWXNfkTL/P18kzWAZAfE/Q3fcXcK9Y7mLk
+         SL2IkL/5tQffS1aECvu4YYhqL1v9fWyDoPBI3P6HWOljT0kCgDphbl93c7WQwZaILg
+         ICI1h91KaP4yW0GBawvcoiQI1nInVg1kVeOy3ExY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dongjin Kim <tobetter@gmail.com>,
-        Jianxin Pan <jianxin.pan@amlogic.com>,
-        Thinh Nguyen <thinhn@synopsys.com>,
-        Jun Li <lijun.kernel@gmail.com>, Tim <elatllat@gmail.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Felipe Balbi <balbi@kernel.org>,
+        stable@vger.kernel.org, Ondrej Jirman <megous@megous.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Maxime Ripard <maxime@cerno.tech>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 032/146] usb: dwc3: core: add support for disabling SS instances in park mode
-Date:   Thu, 16 Apr 2020 15:22:53 +0200
-Message-Id: <20200416131246.895332182@linuxfoundation.org>
+Subject: [PATCH 4.19 002/146] bus: sunxi-rsb: Return correct data when mixing 16-bit and 8-bit reads
+Date:   Thu, 16 Apr 2020 15:22:23 +0200
+Message-Id: <20200416131242.729748289@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131242.353444678@linuxfoundation.org>
 References: <20200416131242.353444678@linuxfoundation.org>
@@ -64,97 +61,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Neil Armstrong <narmstrong@baylibre.com>
+From: Ondrej Jirman <megous@megous.com>
 
-[ Upstream commit 7ba6b09fda5e0cb741ee56f3264665e0edc64822 ]
+[ Upstream commit a43ab30dcd4a1abcdd0d2461bf1cf7c0817f6cd3 ]
 
-In certain circumstances, the XHCI SuperSpeed instance in park mode
-can fail to recover, thus on Amlogic G12A/G12B/SM1 SoCs when there is high
-load on the single XHCI SuperSpeed instance, the controller can crash like:
- xhci-hcd xhci-hcd.0.auto: xHCI host not responding to stop endpoint command.
- xhci-hcd xhci-hcd.0.auto: Host halt failed, -110
- xhci-hcd xhci-hcd.0.auto: xHCI host controller not responding, assume dead
- xhci-hcd xhci-hcd.0.auto: xHCI host not responding to stop endpoint command.
- hub 2-1.1:1.0: hub_ext_port_status failed (err = -22)
- xhci-hcd xhci-hcd.0.auto: HC died; cleaning up
- usb 2-1.1-port1: cannot reset (err = -22)
+When doing a 16-bit read that returns data in the MSB byte, the
+RSB_DATA register will keep the MSB byte unchanged when doing
+the following 8-bit read. sunxi_rsb_read() will then return
+a result that contains high byte from 16-bit read mixed with
+the 8-bit result.
 
-Setting the PARKMODE_DISABLE_SS bit in the DWC3_USB3_GUCTL1 mitigates
-the issue. The bit is described as :
-"When this bit is set to '1' all SS bus instances in park mode are disabled"
+The consequence is that after this happens the PMIC's regmap will
+look like this: (0x33 is the high byte from the 16-bit read)
 
-Synopsys explains:
-The GUCTL1.PARKMODE_DISABLE_SS is only available in
-dwc_usb3 controller running in host mode.
-This should not be set for other IPs.
-This can be disabled by default based on IP, but I recommend to have a
-property to enable this feature for devices that need this.
+% cat /sys/kernel/debug/regmap/sunxi-rsb-3a3/registers
+00: 33
+01: 33
+02: 33
+03: 33
+04: 33
+05: 33
+06: 33
+07: 33
+08: 33
+09: 33
+0a: 33
+0b: 33
+0c: 33
+0d: 33
+0e: 33
+[snip]
 
-CC: Dongjin Kim <tobetter@gmail.com>
-Cc: Jianxin Pan <jianxin.pan@amlogic.com>
-Cc: Thinh Nguyen <thinhn@synopsys.com>
-Cc: Jun Li <lijun.kernel@gmail.com>
-Reported-by: Tim <elatllat@gmail.com>
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-Signed-off-by: Felipe Balbi <balbi@kernel.org>
+Fix this by masking the result of the read with the correct mask
+based on the size of the read. There are no 16-bit users in the
+mainline kernel, so this doesn't need to get into the stable tree.
+
+Signed-off-by: Ondrej Jirman <megous@megous.com>
+Acked-by: Chen-Yu Tsai <wens@csie.org>
+Signed-off-by: Maxime Ripard <maxime@cerno.tech>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/dwc3/core.c | 5 +++++
- drivers/usb/dwc3/core.h | 4 ++++
- 2 files changed, 9 insertions(+)
+ drivers/bus/sunxi-rsb.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
-index 6666d2a52bf56..60d08269ad9a0 100644
---- a/drivers/usb/dwc3/core.c
-+++ b/drivers/usb/dwc3/core.c
-@@ -981,6 +981,9 @@ static int dwc3_core_init(struct dwc3 *dwc)
- 		if (dwc->dis_tx_ipgap_linecheck_quirk)
- 			reg |= DWC3_GUCTL1_TX_IPGAP_LINECHECK_DIS;
+diff --git a/drivers/bus/sunxi-rsb.c b/drivers/bus/sunxi-rsb.c
+index 1b76d95859027..2ca2cc56bcef6 100644
+--- a/drivers/bus/sunxi-rsb.c
++++ b/drivers/bus/sunxi-rsb.c
+@@ -345,7 +345,7 @@ static int sunxi_rsb_read(struct sunxi_rsb *rsb, u8 rtaddr, u8 addr,
+ 	if (ret)
+ 		goto unlock;
  
-+		if (dwc->parkmode_disable_ss_quirk)
-+			reg |= DWC3_GUCTL1_PARKMODE_DISABLE_SS;
-+
- 		dwc3_writel(dwc->regs, DWC3_GUCTL1, reg);
- 	}
+-	*buf = readl(rsb->regs + RSB_DATA);
++	*buf = readl(rsb->regs + RSB_DATA) & GENMASK(len * 8 - 1, 0);
  
-@@ -1287,6 +1290,8 @@ static void dwc3_get_properties(struct dwc3 *dwc)
- 				"snps,dis-del-phy-power-chg-quirk");
- 	dwc->dis_tx_ipgap_linecheck_quirk = device_property_read_bool(dev,
- 				"snps,dis-tx-ipgap-linecheck-quirk");
-+	dwc->parkmode_disable_ss_quirk = device_property_read_bool(dev,
-+				"snps,parkmode-disable-ss-quirk");
- 
- 	dwc->tx_de_emphasis_quirk = device_property_read_bool(dev,
- 				"snps,tx_de_emphasis_quirk");
-diff --git a/drivers/usb/dwc3/core.h b/drivers/usb/dwc3/core.h
-index 131028501752b..e34308d64619e 100644
---- a/drivers/usb/dwc3/core.h
-+++ b/drivers/usb/dwc3/core.h
-@@ -242,6 +242,7 @@
- #define DWC3_GUCTL_HSTINAUTORETRY	BIT(14)
- 
- /* Global User Control 1 Register */
-+#define DWC3_GUCTL1_PARKMODE_DISABLE_SS	BIT(17)
- #define DWC3_GUCTL1_TX_IPGAP_LINECHECK_DIS	BIT(28)
- #define DWC3_GUCTL1_DEV_L1_EXIT_BY_HW	BIT(24)
- 
-@@ -992,6 +993,8 @@ struct dwc3_scratchpad_array {
-  *			change quirk.
-  * @dis_tx_ipgap_linecheck_quirk: set if we disable u2mac linestate
-  *			check during HS transmit.
-+ * @parkmode_disable_ss_quirk: set if we need to disable all SuperSpeed
-+ *			instances in park mode.
-  * @tx_de_emphasis_quirk: set if we enable Tx de-emphasis quirk
-  * @tx_de_emphasis: Tx de-emphasis value
-  * 	0	- -6dB de-emphasis
-@@ -1163,6 +1166,7 @@ struct dwc3 {
- 	unsigned		dis_u2_freeclk_exists_quirk:1;
- 	unsigned		dis_del_phy_power_chg_quirk:1;
- 	unsigned		dis_tx_ipgap_linecheck_quirk:1;
-+	unsigned		parkmode_disable_ss_quirk:1;
- 
- 	unsigned		tx_de_emphasis_quirk:1;
- 	unsigned		tx_de_emphasis:2;
+ unlock:
+ 	mutex_unlock(&rsb->lock);
 -- 
 2.20.1
 
