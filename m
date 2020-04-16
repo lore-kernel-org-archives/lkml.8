@@ -2,115 +2,169 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AD93C2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 08:58:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B11FC352BE
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 08:59:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E705020784
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 08:58:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587027524;
-	bh=hrWU6kk9Sm5Qu65G34Lh8AIxzgETA/uQZLe/0g/hvbI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=cQlpW9BKYBVEj/ef+zQtg5x6HOSaQwHTJGpu3q6K7E9j0ggG8efnCUAN+a2vx9/ZR
-	 tljh77AVIo7T1QvPfZ/XRDz/bCSw8XhRArVk9+YlbSUFyH26cMBrLmldU2tzO4Zk9w
-	 rvdHthCMkdvUk9oefk7l8kHJ1edAUMKyHlnPs41o=
+	by mail.kernel.org (Postfix) with ESMTP id 3539A206B9
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 08:59:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2503152AbgDPI6c (ORCPT
+        id S2503165AbgDPI67 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 04:58:32 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:46861 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2502720AbgDPIvD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 04:51:03 -0400
-Received: by mail-ed1-f67.google.com with SMTP id w4so7902927edv.13;
-        Thu, 16 Apr 2020 01:51:00 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=612iSfEdCExrydRb4c/BtgR5OtI+RlzyNcwVt1HFejQ=;
-        b=BNN1dm8BnF20ZEVRVraemvq1X1zndJl0bV3Sz8GJRusVtvnKGfe1jIrl//7n+DdVxr
-         O5W1vwiHhm9sUxMY9Uka9BiarY9vwI5p2k4I8pLkyLNYjoCBtuAj4TqErl8r4nkM7+kM
-         QnXgj9GKwGZbV2YIPKanYlLxMOA1D6je6ff9AEz4IEctQlSnf60/WoFYD/1AB20GmGT6
-         ugdpNdsHoG6TF6OI9dv/DSoB2gGGr2RF4eFycnzDp3LjXd0o188XNu7vR4efKiKUSABj
-         ciKsQAgDnFOQhTR7AuZjjdZCjxJr5OHOBZ3egy3hTu7n0HBQYE6aDESG9F4gS/sAjm0m
-         nDwA==
-X-Gm-Message-State: AGi0PuYJx7kh5qnDyfwANOKUjdd7WqM5uzgC9EM5towOsx+JcA4YiIJW
-        CHJQWR/Wl+BFtcrel7sAk4E=
-X-Google-Smtp-Source: APiQypLBJohNWBf8al3U6Nm7wdqmu7TVhKtwUuNuYqABpoxhkFpKFPfFew2b9nU4yPhd8D2/wycwag==
-X-Received: by 2002:aa7:d1d6:: with SMTP id g22mr7466242edp.36.1587027059468;
-        Thu, 16 Apr 2020 01:50:59 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.125])
-        by smtp.googlemail.com with ESMTPSA id b15sm2495600edn.69.2020.04.16.01.50.54
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 16 Apr 2020 01:50:58 -0700 (PDT)
-Date:   Thu, 16 Apr 2020 10:50:49 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Jonathan Bakker <xc-racer2@live.ca>
-Cc:     "H. Nikolaus Schaller" <hns@goldelico.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        James Hogan <jhogan@kernel.org>, Kukjin Kim <kgene@kernel.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Philipp Rossak <embed3d@gmail.com>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-omap@vger.kernel.org, openpvrsgx-devgroup@letux.org,
-        letux-kernel@openphoenux.org, kernel@pyra-handheld.com,
-        linux-mips@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>
-Subject: Re: [PATCH v6 08/12] arm: dts: s5pv210: Add G3D node
-Message-ID: <20200416085049.GA7193@kozik-lap>
-References: <cover.1586939718.git.hns@goldelico.com>
- <b6733f80546bf3e6b3799f716b9c8e0f407de03d.1586939718.git.hns@goldelico.com>
- <CAJKOXPcb9KWNAem-CAx_zCS+sZoEHYc0J8x0nk1xjY9hD4-M4w@mail.gmail.com>
- <AB9B8741-CFF7-414D-9489-D381B539538D@goldelico.com>
- <BN6PR04MB0660640B15550F75C8CCD4DEA3DB0@BN6PR04MB0660.namprd04.prod.outlook.com>
+        Thu, 16 Apr 2020 04:58:59 -0400
+Received: from mx2.suse.de ([195.135.220.15]:40456 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2502931AbgDPI4H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 04:56:07 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 3EB20AC4D;
+        Thu, 16 Apr 2020 08:56:03 +0000 (UTC)
+Date:   Thu, 16 Apr 2020 10:56:02 +0200 (CEST)
+From:   Miroslav Benes <mbenes@suse.cz>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+cc:     live-patching@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Jessica Yu <jeyu@kernel.org>, linux-s390@vger.kernel.org,
+        heiko.carstens@de.ibm.com
+Subject: Re: [PATCH 4/7] s390/module: Use s390_kernel_write() for
+ relocations
+In-Reply-To: <e7f2ad87cf83dcdaa7b69b4e37c11fa355bdfe78.1586881704.git.jpoimboe@redhat.com>
+Message-ID: <alpine.LSU.2.21.2004161047410.10475@pobox.suse.cz>
+References: <cover.1586881704.git.jpoimboe@redhat.com> <e7f2ad87cf83dcdaa7b69b4e37c11fa355bdfe78.1586881704.git.jpoimboe@redhat.com>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <BN6PR04MB0660640B15550F75C8CCD4DEA3DB0@BN6PR04MB0660.namprd04.prod.outlook.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 15, 2020 at 11:17:16AM -0700, Jonathan Bakker wrote:
- 
-> >>
-> >>> +
-> >>> +                       assigned-clocks = <&clocks MOUT_G3D>, <&clocks DOUT_G3D>;
-> >>> +                       assigned-clock-rates = <0>, <66700000>;
-> >>> +                       assigned-clock-parents = <&clocks MOUT_MPLL>;
-> >>
-> >> Probably this should have status disabled because you do not set
-> >> regulator supply.
+On Tue, 14 Apr 2020, Josh Poimboeuf wrote:
+
+> From: Peter Zijlstra <peterz@infradead.org>
 > 
-> I don't believe there is a regulator on s5pv210, if there is, then it is a
-> fixed regulator with no control on both s5pv210 devices that I have.
+> Instead of playing games with module_{dis,en}able_ro(), use existing
+> text poking mechanisms to apply relocations after module loading.
 > 
-> The vendor driver did use the regulator framework for its power domain
-> implementation, but that definitely shouldn't be upstreamed.
+> So far only x86, s390 and Power have HAVE_LIVEPATCH but only the first
+> two also have STRICT_MODULE_RWX.
+> 
+> This will allow removal of the last module_disable_ro() usage in
+> livepatch.  The ultimate goal is to completely disallow making
+> executable mappings writable.
+> 
+> [ jpoimboe: Split up patches. Use mod state to determine whether
+> 	    memcpy() can be used. ]
+> 
+> Cc: linux-s390@vger.kernel.org
+> Cc: heiko.carstens@de.ibm.com
+> Suggested-by: Josh Poimboeuf <jpoimboe@redhat.com>
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+> ---
+>  arch/s390/kernel/module.c | 106 ++++++++++++++++++++++----------------
+>  1 file changed, 61 insertions(+), 45 deletions(-)
+> 
+> diff --git a/arch/s390/kernel/module.c b/arch/s390/kernel/module.c
+> index ba8f19bb438b..e85e378f876e 100644
+> --- a/arch/s390/kernel/module.c
+> +++ b/arch/s390/kernel/module.c
+> @@ -174,7 +174,8 @@ int module_frob_arch_sections(Elf_Ehdr *hdr, Elf_Shdr *sechdrs,
+>  }
+>  
+>  static int apply_rela_bits(Elf_Addr loc, Elf_Addr val,
+> -			   int sign, int bits, int shift)
+> +			   int sign, int bits, int shift,
+> +			   void (*write)(void *dest, const void *src, size_t len))
+>  {
+>  	unsigned long umax;
+>  	long min, max;
+> @@ -194,26 +195,29 @@ static int apply_rela_bits(Elf_Addr loc, Elf_Addr val,
+>  			return -ENOEXEC;
+>  	}
+>  
+> -	if (bits == 8)
+> -		*(unsigned char *) loc = val;
+> -	else if (bits == 12)
+> -		*(unsigned short *) loc = (val & 0xfff) |
+> +	if (bits == 8) {
+> +		write(loc, &val, 1);
+> +	} else if (bits == 12) {
+> +		unsigned short tmp = (val & 0xfff) |
+>  			(*(unsigned short *) loc & 0xf000);
+> -	else if (bits == 16)
+> -		*(unsigned short *) loc = val;
+> -	else if (bits == 20)
+> -		*(unsigned int *) loc = (val & 0xfff) << 16 |
+> -			(val & 0xff000) >> 4 |
+> -			(*(unsigned int *) loc & 0xf00000ff);
+> -	else if (bits == 32)
+> -		*(unsigned int *) loc = val;
+> -	else if (bits == 64)
+> -		*(unsigned long *) loc = val;
+> +		write(loc, &tmp, 2);
+> +	} else if (bits == 16) {
+> +		write(loc, &val, 2);
+> +	} else if (bits == 20) {
+> +		unsigned int tmp = (val & 0xfff) << 16 |
+> +			(val & 0xff000) >> 4 | (*(unsigned int *) loc & 0xf00000ff);
+> +		write(loc, &tmp, 4);
+> +	} else if (bits == 32) {
+> +		write(loc, &val, 4);
+> +	} else if (bits == 64) {
+> +		write(loc, &val, 8);
+> +	}
+>  	return 0;
+>  }
 
-Starting with Exynos4210 usually they have separate regulator from PMIC
-but maybe S5Pv210 indeed is different.  Leave it then without it.
+The compiler complains about the above changes
 
-Best regards,
-Krzysztof
+arch/s390/kernel/module.c:199:9: warning: passing argument 1 of 'write' makes pointer from integer without a cast [-Wint-conversion]
+   write(loc, &val, 1);
+         ^~~
+arch/s390/kernel/module.c:199:9: note: expected 'void *' but argument is of type 'Elf64_Addr' {aka 'long long unsigned int'}
 
+[...]  
+
+> -int apply_relocate_add(Elf_Shdr *sechdrs, const char *strtab,
+> +static int __apply_relocate_add(Elf_Shdr *sechdrs, const char *strtab,
+>  		       unsigned int symindex, unsigned int relsec,
+> -		       struct module *me)
+> +		       struct module *me,
+> +		       void (*write)(void *dest, const void *src, size_t len))
+>  {
+>  	Elf_Addr base;
+>  	Elf_Sym *symtab;
+
+You also need to update apply_rela() call site in this function. It is 
+missing write argument.
+
+> @@ -437,6 +442,17 @@ int apply_relocate_add(Elf_Shdr *sechdrs, const char *strtab,
+>  	return 0;
+>  }
+>  
+> +int apply_relocate_add(Elf_Shdr *sechdrs, const char *strtab,
+> +		       unsigned int symindex, unsigned int relsec,
+> +		       struct module *me)
+> +{
+> +	int ret;
+
+ret is unused;
+
+> +	bool early = me->state == MODULE_STATE_UNFORMED;
+> +
+> +	return __apply_relocate_add(sechdrs, strtab, symindex, relsec, me,
+> +				    early ? memcpy : s390_kernel_write);
+
+The compiler warns about
+
+arch/s390/kernel/module.c: In function 'apply_relocate_add':
+arch/s390/kernel/module.c:453:24: warning: pointer type mismatch in conditional expression
+         early ? memcpy : s390_kernel_write);
+
+Miroslav
