@@ -2,469 +2,276 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE959C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:35:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49ACBC2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:36:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8C8F121927
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:35:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FD6D21927
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:36:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ah1Inv9K"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SvYdGZ3a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394324AbgDPOfw (ORCPT
+        id S1731225AbgDPOgC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:35:52 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:43685 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728856AbgDPOfl (ORCPT
+        Thu, 16 Apr 2020 10:36:02 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:33408 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2393845AbgDPOQx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 10:35:41 -0400
+        Thu, 16 Apr 2020 10:16:53 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587047738;
+        s=mimecast20190719; t=1587046611;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=mOJ9kmDKiVnV3a7Y16W/iKQ6cpMDxJKcLsNdQiBKNwM=;
-        b=ah1Inv9KswGWkDjGK0DoTQcU45ugbkw5qsuTOh/VcMHW4sVex05j5AL7jQMHQD74zWXqwH
-        W+m28oxrQqYvDHPK8Iu+kCeQF9ceVm+S9YbJko7CPVSxeeMyQwF55xsLfHSmbxdhzDseBl
-        8LV8Wpv/Gt3wqrclCHrUQerpRzJT9IU=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-498-Dc9WD1JQMbGOsjd5t1-aJg-1; Thu, 16 Apr 2020 10:35:37 -0400
-X-MC-Unique: Dc9WD1JQMbGOsjd5t1-aJg-1
-Received: by mail-wr1-f71.google.com with SMTP id r11so1787527wrx.21
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 07:35:37 -0700 (PDT)
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=7hnF0DDKrlu0/wsAOrUaDsyzDUw85QJZaEcoKNO3lxk=;
+        b=SvYdGZ3aB2HM4vGJZC4IJZMI5Ghn/QhCJUyzgirtfYUn5edLNd94S0dQ7aJT23gG+tZb/N
+        hQgrpphHu1TUJukhuqbxXYToC1nH3oYw1m/FEd2eb7wdlaf+LB+wgs4ROE0hMnt4dL/yE8
+        oXFWXd0CXJxn6pIHQrrTEQXC4E23Vew=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-423-pPv6Si5HPcWKv6XL_H4bZA-1; Thu, 16 Apr 2020 10:16:49 -0400
+X-MC-Unique: pPv6Si5HPcWKv6XL_H4bZA-1
+Received: by mail-wr1-f72.google.com with SMTP id e5so1754555wrs.23
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 07:16:49 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=mOJ9kmDKiVnV3a7Y16W/iKQ6cpMDxJKcLsNdQiBKNwM=;
-        b=mc5VQuYeqnKZvmaNsmRgzNJdKSmnilszWVGoXlUpcQzvCDW8WgL8lq7gVbpYJ+dA8e
-         uXWe+gOrWCNota3zHSk1d1Vc8cHNPqSaInk/sE9fRMSAB8mTzwp8AcFFhVueXES6M88C
-         dfsdEDsF0pakV066qOgMpUGPxRahICEV12IpyX5Y7mvZXHEW1d2fB2mzl3zlCxZog94S
-         5NzO0KcUy7cBwn7ktYLvk7nl0MNe9Dw2nmMfmMmutPQIjoYqKvCnGivl08Zb8uuM+A+1
-         3kwGANH/YzyxkUsnMjVYCxtSvaEOO6Evf8mw2JjSaTUs3RUmWpT27dfNBYTwqwc7/PkS
-         8MEA==
-X-Gm-Message-State: AGi0PuaGlKI0TGvJdrZ6OVN1wASyd1KHh/bU0vJpSZ7voXAqy9Z/ymhs
-        7ftLxLEOKh0j6c88G8O7wWn5/TOb3Rnzwx+FoSBU8JV+WOI6ogTK7KUfqxm1TJliTD5vqmCv/zC
-        Uavt9hETCLzlSc5f9jka0j1n4
-X-Received: by 2002:a1c:5ac4:: with SMTP id o187mr5449263wmb.79.1587047735533;
-        Thu, 16 Apr 2020 07:35:35 -0700 (PDT)
-X-Google-Smtp-Source: APiQypILmvXZjHsEMyYfTHeL5GkyREpiFhTmsQOFgCr1ncefGwfzylEh2GRXdLWY3CGLbRVw/F37fA==
-X-Received: by 2002:a1c:5ac4:: with SMTP id o187mr5449215wmb.79.1587047735024;
-        Thu, 16 Apr 2020 07:35:35 -0700 (PDT)
-Received: from miu.piliscsaba.redhat.com (catv-212-96-48-140.catv.broadband.hu. [212.96.48.140])
-        by smtp.gmail.com with ESMTPSA id 1sm4057533wmi.0.2020.04.16.07.35.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Apr 2020 07:35:34 -0700 (PDT)
-From:   Miklos Szeredi <mszeredi@redhat.com>
-To:     Al Viro <viro@ZenIV.linux.org.uk>
-Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-api@vger.kernel.org, Eric Sandeen <sandeen@sandeen.net>
-Subject: [PATCH] vfs: add faccessat2 syscall
-Date:   Thu, 16 Apr 2020 16:35:32 +0200
-Message-Id: <20200416143532.11743-1-mszeredi@redhat.com>
-X-Mailer: git-send-email 2.21.1
+        bh=7hnF0DDKrlu0/wsAOrUaDsyzDUw85QJZaEcoKNO3lxk=;
+        b=CR8a4vFEr2tSuTIdZucn0CDTGFp4no21yE86lbqlI6OlmeLGm5zV8etdMMGLpFs28n
+         yjTMHYkP7QmoibqXjsUlXS2loWzv1E4rd9vDhXC9CddMHmX4jvEuUzl0iS31MX2u97G9
+         qQKSrQfyec39sm/wF3gJfkVnziPi9iBSwKKi+N2A2vJQOvP+Dx6kukBOiP4xLfsUnhjw
+         Gvx818YniTMQt711n57h++sV1CsuVEtLXdRnyrxKxD6mE1n8WccOTUGphEjEIustCn96
+         nHre4vf494eOmfH0S3IrB+6Y1tVfi8s6/ZMGw+dBQbaPJksAhmo4bN4h5rcI1HDRt6iT
+         289A==
+X-Gm-Message-State: AGi0PuZzHLt30ZVsq+jGmSFhwmR8xnS2tquXtHAkixfD04SxLVdbNUKa
+        1Y1NQaI1Hh4qltkUxOVVfSmqEL0WV7mx+8I6zl9fua5Y75onNnY7jgqoRQR1z0MIv6erQchBus5
+        9ZRNy0oGtXXHvjKIKtHobAaVt
+X-Received: by 2002:a5d:6584:: with SMTP id q4mr24139441wru.403.1587046608291;
+        Thu, 16 Apr 2020 07:16:48 -0700 (PDT)
+X-Google-Smtp-Source: APiQypJaroci/qQpvf8qcrl+CF8Sz/BzOeyBmpL55iYWlGov5mFc7JlBFtlz5rT24UUwp7LeJ9OTfQ==
+X-Received: by 2002:a5d:6584:: with SMTP id q4mr24139399wru.403.1587046607973;
+        Thu, 16 Apr 2020 07:16:47 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:399d:3ef7:647c:b12d? ([2001:b07:6468:f312:399d:3ef7:647c:b12d])
+        by smtp.gmail.com with ESMTPSA id d133sm4118344wmc.27.2020.04.16.07.16.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 16 Apr 2020 07:16:47 -0700 (PDT)
+Subject: Re: [PATCH v2] KVM: Optimize kvm_arch_vcpu_ioctl_run function
+To:     Tianjia Zhang <tianjia.zhang@linux.alibaba.com>,
+        tsbogend@alpha.franken.de, paulus@ozlabs.org, mpe@ellerman.id.au,
+        benh@kernel.crashing.org, borntraeger@de.ibm.com,
+        frankja@linux.ibm.com, david@redhat.com, cohuck@redhat.com,
+        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        sean.j.christopherson@intel.com, vkuznets@redhat.com,
+        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
+        hpa@zytor.com, maz@kernel.org, james.morse@arm.com,
+        julien.thierry.kdev@gmail.com, suzuki.poulose@arm.com,
+        christoffer.dall@arm.com, peterx@redhat.com, thuth@redhat.com
+Cc:     kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kvmarm@lists.cs.columbia.edu, linux-mips@vger.kernel.org,
+        kvm-ppc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200416051057.26526-1-tianjia.zhang@linux.alibaba.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <db7b02c0-2b7b-7c93-9dd0-b0303ea5da5e@redhat.com>
+Date:   Thu, 16 Apr 2020 16:16:44 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200416051057.26526-1-tianjia.zhang@linux.alibaba.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-POSIX defines faccessat() as having a fourth "flags" argument, while the
-linux syscall doesn't have it.  Glibc tries to emulate AT_EACCESS and
-AT_SYMLINK_NOFOLLOW, but AT_EACCESS emulation is broken.
+On 16/04/20 07:10, Tianjia Zhang wrote:
+> In earlier versions of kvm, 'kvm_run' is an independent structure
+> and is not included in the vcpu structure. At present, 'kvm_run'
+> is already included in the vcpu structure, so the parameter
+> 'kvm_run' is redundant.
+> 
+> This patch simplify the function definition, removes the extra
+> 'kvm_run' parameter, and extract it from the 'kvm_vcpu' structure
+> if necessary.
+> 
+> Signed-off-by: Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
+> ---
+> 
+> v2 change:
+>   remove 'kvm_run' parameter and extract it from 'kvm_vcpu'
+> 
+>  arch/mips/kvm/mips.c       |  3 ++-
+>  arch/powerpc/kvm/powerpc.c |  3 ++-
+>  arch/s390/kvm/kvm-s390.c   |  3 ++-
+>  arch/x86/kvm/x86.c         | 11 ++++++-----
+>  include/linux/kvm_host.h   |  2 +-
+>  virt/kvm/arm/arm.c         |  6 +++---
+>  virt/kvm/kvm_main.c        |  2 +-
+>  7 files changed, 17 insertions(+), 13 deletions(-)
+> 
+> diff --git a/arch/mips/kvm/mips.c b/arch/mips/kvm/mips.c
+> index 8f05dd0a0f4e..ec24adf4857e 100644
+> --- a/arch/mips/kvm/mips.c
+> +++ b/arch/mips/kvm/mips.c
+> @@ -439,8 +439,9 @@ int kvm_arch_vcpu_ioctl_set_guest_debug(struct kvm_vcpu *vcpu,
+>  	return -ENOIOCTLCMD;
+>  }
+>  
+> -int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu, struct kvm_run *run)
+> +int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu)
+>  {
+> +	struct kvm_run *run = vcpu->run;
+>  	int r = -EINTR;
+>  
+>  	vcpu_load(vcpu);
+> diff --git a/arch/powerpc/kvm/powerpc.c b/arch/powerpc/kvm/powerpc.c
+> index e15166b0a16d..7e24691e138a 100644
+> --- a/arch/powerpc/kvm/powerpc.c
+> +++ b/arch/powerpc/kvm/powerpc.c
+> @@ -1764,8 +1764,9 @@ int kvm_vcpu_ioctl_set_one_reg(struct kvm_vcpu *vcpu, struct kvm_one_reg *reg)
+>  	return r;
+>  }
+>  
+> -int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu, struct kvm_run *run)
+> +int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu)
+>  {
+> +	struct kvm_run *run = vcpu->run;
+>  	int r;
+>  
+>  	vcpu_load(vcpu);
+> diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
+> index 19a81024fe16..443af3ead739 100644
+> --- a/arch/s390/kvm/kvm-s390.c
+> +++ b/arch/s390/kvm/kvm-s390.c
+> @@ -4333,8 +4333,9 @@ static void store_regs(struct kvm_vcpu *vcpu, struct kvm_run *kvm_run)
+>  		store_regs_fmt2(vcpu, kvm_run);
+>  }
+>  
+> -int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu, struct kvm_run *kvm_run)
+> +int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu)
+>  {
+> +	struct kvm_run *kvm_run = vcpu->run;
+>  	int rc;
+>  
+>  	if (kvm_run->immediate_exit)
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index 3bf2ecafd027..a0338e86c90f 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -8707,8 +8707,9 @@ static void kvm_put_guest_fpu(struct kvm_vcpu *vcpu)
+>  	trace_kvm_fpu(0);
+>  }
+>  
+> -int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu, struct kvm_run *kvm_run)
+> +int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu)
+>  {
+> +	struct kvm_run *kvm_run = vcpu->run;
+>  	int r;
+>  
+>  	vcpu_load(vcpu);
+> @@ -8726,18 +8727,18 @@ int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu, struct kvm_run *kvm_run)
+>  		r = -EAGAIN;
+>  		if (signal_pending(current)) {
+>  			r = -EINTR;
+> -			vcpu->run->exit_reason = KVM_EXIT_INTR;
+> +			kvm_run->exit_reason = KVM_EXIT_INTR;
+>  			++vcpu->stat.signal_exits;
+>  		}
+>  		goto out;
+>  	}
+>  
+> -	if (vcpu->run->kvm_valid_regs & ~KVM_SYNC_X86_VALID_FIELDS) {
+> +	if (kvm_run->kvm_valid_regs & ~KVM_SYNC_X86_VALID_FIELDS) {
+>  		r = -EINVAL;
+>  		goto out;
+>  	}
+>  
+> -	if (vcpu->run->kvm_dirty_regs) {
+> +	if (kvm_run->kvm_dirty_regs) {
+>  		r = sync_regs(vcpu);
+>  		if (r != 0)
+>  			goto out;
+> @@ -8767,7 +8768,7 @@ int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu, struct kvm_run *kvm_run)
+>  
+>  out:
+>  	kvm_put_guest_fpu(vcpu);
+> -	if (vcpu->run->kvm_valid_regs)
+> +	if (kvm_run->kvm_valid_regs)
+>  		store_regs(vcpu);
+>  	post_kvm_run_save(vcpu);
+>  	kvm_sigset_deactivate(vcpu);
+> diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
+> index 6d58beb65454..1e17ef719595 100644
+> --- a/include/linux/kvm_host.h
+> +++ b/include/linux/kvm_host.h
+> @@ -866,7 +866,7 @@ int kvm_arch_vcpu_ioctl_set_mpstate(struct kvm_vcpu *vcpu,
+>  				    struct kvm_mp_state *mp_state);
+>  int kvm_arch_vcpu_ioctl_set_guest_debug(struct kvm_vcpu *vcpu,
+>  					struct kvm_guest_debug *dbg);
+> -int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu, struct kvm_run *kvm_run);
+> +int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu);
+>  
+>  int kvm_arch_init(void *opaque);
+>  void kvm_arch_exit(void);
+> diff --git a/virt/kvm/arm/arm.c b/virt/kvm/arm/arm.c
+> index 48d0ec44ad77..f5390ac2165b 100644
+> --- a/virt/kvm/arm/arm.c
+> +++ b/virt/kvm/arm/arm.c
+> @@ -639,7 +639,6 @@ static void check_vcpu_requests(struct kvm_vcpu *vcpu)
+>  /**
+>   * kvm_arch_vcpu_ioctl_run - the main VCPU run function to execute guest code
+>   * @vcpu:	The VCPU pointer
+> - * @run:	The kvm_run structure pointer used for userspace state exchange
+>   *
+>   * This function is called through the VCPU_RUN ioctl called from user space. It
+>   * will execute VM code in a loop until the time slice for the process is used
+> @@ -647,8 +646,9 @@ static void check_vcpu_requests(struct kvm_vcpu *vcpu)
+>   * return with return value 0 and with the kvm_run structure filled in with the
+>   * required data for the requested emulation.
+>   */
+> -int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu, struct kvm_run *run)
+> +int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu)
+>  {
+> +	struct kvm_run *run = vcpu->run;
+>  	int ret;
+>  
+>  	if (unlikely(!kvm_vcpu_initialized(vcpu)))
+> @@ -659,7 +659,7 @@ int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu, struct kvm_run *run)
+>  		return ret;
+>  
+>  	if (run->exit_reason == KVM_EXIT_MMIO) {
+> -		ret = kvm_handle_mmio_return(vcpu, vcpu->run);
+> +		ret = kvm_handle_mmio_return(vcpu, run);
+>  		if (ret)
+>  			return ret;
+>  	}
+> diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+> index 74bdb7bf3295..e18faea89146 100644
+> --- a/virt/kvm/kvm_main.c
+> +++ b/virt/kvm/kvm_main.c
+> @@ -3135,7 +3135,7 @@ static long kvm_vcpu_ioctl(struct file *filp,
+>  				synchronize_rcu();
+>  			put_pid(oldpid);
+>  		}
+> -		r = kvm_arch_vcpu_ioctl_run(vcpu, vcpu->run);
+> +		r = kvm_arch_vcpu_ioctl_run(vcpu);
+>  		trace_kvm_userspace_exit(vcpu->run->exit_reason, r);
+>  		break;
+>  	}
+> 
 
-Add a new faccessat(2) syscall with the added flags argument and implement
-both flags.
+Queued, thanks.
 
-The value of AT_EACCESS is defined in glibc headers to be the same as
-AT_REMOVEDIR.  Use this value for the kernel interface as well, together
-with the explanatory comment.
-
-Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
----
- arch/alpha/kernel/syscalls/syscall.tbl      |  1 +
- arch/arm/tools/syscall.tbl                  |  1 +
- arch/arm64/include/asm/unistd.h             |  2 +-
- arch/arm64/include/asm/unistd32.h           |  2 +
- arch/ia64/kernel/syscalls/syscall.tbl       |  1 +
- arch/m68k/kernel/syscalls/syscall.tbl       |  1 +
- arch/microblaze/kernel/syscalls/syscall.tbl |  1 +
- arch/mips/kernel/syscalls/syscall_n32.tbl   |  1 +
- arch/mips/kernel/syscalls/syscall_n64.tbl   |  1 +
- arch/mips/kernel/syscalls/syscall_o32.tbl   |  1 +
- arch/parisc/kernel/syscalls/syscall.tbl     |  1 +
- arch/powerpc/kernel/syscalls/syscall.tbl    |  1 +
- arch/s390/kernel/syscalls/syscall.tbl       |  1 +
- arch/sh/kernel/syscalls/syscall.tbl         |  1 +
- arch/sparc/kernel/syscalls/syscall.tbl      |  1 +
- arch/x86/entry/syscalls/syscall_32.tbl      |  1 +
- arch/x86/entry/syscalls/syscall_64.tbl      |  1 +
- arch/xtensa/kernel/syscalls/syscall.tbl     |  1 +
- fs/internal.h                               |  1 -
- fs/open.c                                   | 56 ++++++++++++++++-----
- include/linux/syscalls.h                    |  7 ++-
- include/uapi/asm-generic/unistd.h           |  4 +-
- include/uapi/linux/fcntl.h                  | 10 ++++
- 23 files changed, 80 insertions(+), 18 deletions(-)
-
-diff --git a/arch/alpha/kernel/syscalls/syscall.tbl b/arch/alpha/kernel/syscalls/syscall.tbl
-index 36d42da7466a..5ddd128d4b7a 100644
---- a/arch/alpha/kernel/syscalls/syscall.tbl
-+++ b/arch/alpha/kernel/syscalls/syscall.tbl
-@@ -477,3 +477,4 @@
- # 545 reserved for clone3
- 547	common	openat2				sys_openat2
- 548	common	pidfd_getfd			sys_pidfd_getfd
-+549	common	faccessat2			sys_faccessat2
-diff --git a/arch/arm/tools/syscall.tbl b/arch/arm/tools/syscall.tbl
-index 4d1cf74a2caa..d5cae5ffede0 100644
---- a/arch/arm/tools/syscall.tbl
-+++ b/arch/arm/tools/syscall.tbl
-@@ -451,3 +451,4 @@
- 435	common	clone3				sys_clone3
- 437	common	openat2				sys_openat2
- 438	common	pidfd_getfd			sys_pidfd_getfd
-+439	common	faccessat2			sys_faccessat2
-diff --git a/arch/arm64/include/asm/unistd.h b/arch/arm64/include/asm/unistd.h
-index 803039d504de..3b859596840d 100644
---- a/arch/arm64/include/asm/unistd.h
-+++ b/arch/arm64/include/asm/unistd.h
-@@ -38,7 +38,7 @@
- #define __ARM_NR_compat_set_tls		(__ARM_NR_COMPAT_BASE + 5)
- #define __ARM_NR_COMPAT_END		(__ARM_NR_COMPAT_BASE + 0x800)
- 
--#define __NR_compat_syscalls		439
-+#define __NR_compat_syscalls		440
- #endif
- 
- #define __ARCH_WANT_SYS_CLONE
-diff --git a/arch/arm64/include/asm/unistd32.h b/arch/arm64/include/asm/unistd32.h
-index c1c61635f89c..6d95d0c8bf2f 100644
---- a/arch/arm64/include/asm/unistd32.h
-+++ b/arch/arm64/include/asm/unistd32.h
-@@ -883,6 +883,8 @@ __SYSCALL(__NR_clone3, sys_clone3)
- __SYSCALL(__NR_openat2, sys_openat2)
- #define __NR_pidfd_getfd 438
- __SYSCALL(__NR_pidfd_getfd, sys_pidfd_getfd)
-+#define __NR_faccessat2 439
-+__SYSCALL(__NR_faccessat2, sys_faccessat2)
- 
- /*
-  * Please add new compat syscalls above this comment and update
-diff --git a/arch/ia64/kernel/syscalls/syscall.tbl b/arch/ia64/kernel/syscalls/syscall.tbl
-index 042911e670b8..49e325b604b3 100644
---- a/arch/ia64/kernel/syscalls/syscall.tbl
-+++ b/arch/ia64/kernel/syscalls/syscall.tbl
-@@ -358,3 +358,4 @@
- # 435 reserved for clone3
- 437	common	openat2				sys_openat2
- 438	common	pidfd_getfd			sys_pidfd_getfd
-+439	common	faccessat2			sys_faccessat2
-diff --git a/arch/m68k/kernel/syscalls/syscall.tbl b/arch/m68k/kernel/syscalls/syscall.tbl
-index f4f49fcb76d0..f71b1bbcc198 100644
---- a/arch/m68k/kernel/syscalls/syscall.tbl
-+++ b/arch/m68k/kernel/syscalls/syscall.tbl
-@@ -437,3 +437,4 @@
- 435	common	clone3				__sys_clone3
- 437	common	openat2				sys_openat2
- 438	common	pidfd_getfd			sys_pidfd_getfd
-+439	common	faccessat2			sys_faccessat2
-diff --git a/arch/microblaze/kernel/syscalls/syscall.tbl b/arch/microblaze/kernel/syscalls/syscall.tbl
-index 4c67b11f9c9e..edacc4561f2b 100644
---- a/arch/microblaze/kernel/syscalls/syscall.tbl
-+++ b/arch/microblaze/kernel/syscalls/syscall.tbl
-@@ -443,3 +443,4 @@
- 435	common	clone3				sys_clone3
- 437	common	openat2				sys_openat2
- 438	common	pidfd_getfd			sys_pidfd_getfd
-+439	common	faccessat2			sys_faccessat2
-diff --git a/arch/mips/kernel/syscalls/syscall_n32.tbl b/arch/mips/kernel/syscalls/syscall_n32.tbl
-index 1f9e8ad636cc..f777141f5256 100644
---- a/arch/mips/kernel/syscalls/syscall_n32.tbl
-+++ b/arch/mips/kernel/syscalls/syscall_n32.tbl
-@@ -376,3 +376,4 @@
- 435	n32	clone3				__sys_clone3
- 437	n32	openat2				sys_openat2
- 438	n32	pidfd_getfd			sys_pidfd_getfd
-+439	n32	faccessat2			sys_faccessat2
-diff --git a/arch/mips/kernel/syscalls/syscall_n64.tbl b/arch/mips/kernel/syscalls/syscall_n64.tbl
-index c0b9d802dbf6..da8c76394e17 100644
---- a/arch/mips/kernel/syscalls/syscall_n64.tbl
-+++ b/arch/mips/kernel/syscalls/syscall_n64.tbl
-@@ -352,3 +352,4 @@
- 435	n64	clone3				__sys_clone3
- 437	n64	openat2				sys_openat2
- 438	n64	pidfd_getfd			sys_pidfd_getfd
-+439	n64	faccessat2			sys_faccessat2
-diff --git a/arch/mips/kernel/syscalls/syscall_o32.tbl b/arch/mips/kernel/syscalls/syscall_o32.tbl
-index ac586774c980..13280625d312 100644
---- a/arch/mips/kernel/syscalls/syscall_o32.tbl
-+++ b/arch/mips/kernel/syscalls/syscall_o32.tbl
-@@ -425,3 +425,4 @@
- 435	o32	clone3				__sys_clone3
- 437	o32	openat2				sys_openat2
- 438	o32	pidfd_getfd			sys_pidfd_getfd
-+439	o32	faccessat2			sys_faccessat2
-diff --git a/arch/parisc/kernel/syscalls/syscall.tbl b/arch/parisc/kernel/syscalls/syscall.tbl
-index 52a15f5cd130..5a758fa6ec52 100644
---- a/arch/parisc/kernel/syscalls/syscall.tbl
-+++ b/arch/parisc/kernel/syscalls/syscall.tbl
-@@ -435,3 +435,4 @@
- 435	common	clone3				sys_clone3_wrapper
- 437	common	openat2				sys_openat2
- 438	common	pidfd_getfd			sys_pidfd_getfd
-+439	common	faccessat2			sys_faccessat2
-diff --git a/arch/powerpc/kernel/syscalls/syscall.tbl b/arch/powerpc/kernel/syscalls/syscall.tbl
-index 220ae11555f2..f833a3190822 100644
---- a/arch/powerpc/kernel/syscalls/syscall.tbl
-+++ b/arch/powerpc/kernel/syscalls/syscall.tbl
-@@ -527,3 +527,4 @@
- 435	spu	clone3				sys_ni_syscall
- 437	common	openat2				sys_openat2
- 438	common	pidfd_getfd			sys_pidfd_getfd
-+439	common	faccessat2			sys_faccessat2
-diff --git a/arch/s390/kernel/syscalls/syscall.tbl b/arch/s390/kernel/syscalls/syscall.tbl
-index bd7bd3581a0f..bfdcb7633957 100644
---- a/arch/s390/kernel/syscalls/syscall.tbl
-+++ b/arch/s390/kernel/syscalls/syscall.tbl
-@@ -440,3 +440,4 @@
- 435  common	clone3			sys_clone3			sys_clone3
- 437  common	openat2			sys_openat2			sys_openat2
- 438  common	pidfd_getfd		sys_pidfd_getfd			sys_pidfd_getfd
-+439  common	faccessat2		sys_faccessat2			sys_faccessat2
-diff --git a/arch/sh/kernel/syscalls/syscall.tbl b/arch/sh/kernel/syscalls/syscall.tbl
-index c7a30fcd135f..acc35daa1b79 100644
---- a/arch/sh/kernel/syscalls/syscall.tbl
-+++ b/arch/sh/kernel/syscalls/syscall.tbl
-@@ -440,3 +440,4 @@
- # 435 reserved for clone3
- 437	common	openat2				sys_openat2
- 438	common	pidfd_getfd			sys_pidfd_getfd
-+439	common	faccessat2			sys_faccessat2
-diff --git a/arch/sparc/kernel/syscalls/syscall.tbl b/arch/sparc/kernel/syscalls/syscall.tbl
-index f13615ecdecc..8004a276cb74 100644
---- a/arch/sparc/kernel/syscalls/syscall.tbl
-+++ b/arch/sparc/kernel/syscalls/syscall.tbl
-@@ -483,3 +483,4 @@
- # 435 reserved for clone3
- 437	common	openat2			sys_openat2
- 438	common	pidfd_getfd			sys_pidfd_getfd
-+439	common	faccessat2			sys_faccessat2
-diff --git a/arch/x86/entry/syscalls/syscall_32.tbl b/arch/x86/entry/syscalls/syscall_32.tbl
-index 54581ac671b4..d8f8a1a69ed1 100644
---- a/arch/x86/entry/syscalls/syscall_32.tbl
-+++ b/arch/x86/entry/syscalls/syscall_32.tbl
-@@ -442,3 +442,4 @@
- 435	i386	clone3			sys_clone3
- 437	i386	openat2			sys_openat2
- 438	i386	pidfd_getfd		sys_pidfd_getfd
-+439	i386	faccessat2		sys_faccessat2
-diff --git a/arch/x86/entry/syscalls/syscall_64.tbl b/arch/x86/entry/syscalls/syscall_64.tbl
-index 37b844f839bc..78847b32e137 100644
---- a/arch/x86/entry/syscalls/syscall_64.tbl
-+++ b/arch/x86/entry/syscalls/syscall_64.tbl
-@@ -359,6 +359,7 @@
- 435	common	clone3			sys_clone3
- 437	common	openat2			sys_openat2
- 438	common	pidfd_getfd		sys_pidfd_getfd
-+439	common	faccessat2		sys_faccessat2
- 
- #
- # x32-specific system call numbers start at 512 to avoid cache impact
-diff --git a/arch/xtensa/kernel/syscalls/syscall.tbl b/arch/xtensa/kernel/syscalls/syscall.tbl
-index 85a9ab1bc04d..69d0d73876b3 100644
---- a/arch/xtensa/kernel/syscalls/syscall.tbl
-+++ b/arch/xtensa/kernel/syscalls/syscall.tbl
-@@ -408,3 +408,4 @@
- 435	common	clone3				sys_clone3
- 437	common	openat2				sys_openat2
- 438	common	pidfd_getfd			sys_pidfd_getfd
-+439	common	faccessat2			sys_faccessat2
-diff --git a/fs/internal.h b/fs/internal.h
-index aa5d45524e87..0d467e32dd7e 100644
---- a/fs/internal.h
-+++ b/fs/internal.h
-@@ -126,7 +126,6 @@ extern struct open_how build_open_how(int flags, umode_t mode);
- extern int build_open_flags(const struct open_how *how, struct open_flags *op);
- 
- long do_sys_ftruncate(unsigned int fd, loff_t length, int small);
--long do_faccessat(int dfd, const char __user *filename, int mode);
- int do_fchmodat(int dfd, const char __user *filename, umode_t mode);
- int do_fchownat(int dfd, const char __user *filename, uid_t user, gid_t group,
- 		int flag);
-diff --git a/fs/open.c b/fs/open.c
-index 719b320ede52..f30cd5d46ac1 100644
---- a/fs/open.c
-+++ b/fs/open.c
-@@ -345,21 +345,14 @@ SYSCALL_DEFINE4(fallocate, int, fd, int, mode, loff_t, offset, loff_t, len)
-  * We do this by temporarily clearing all FS-related capabilities and
-  * switching the fsuid/fsgid around to the real ones.
-  */
--long do_faccessat(int dfd, const char __user *filename, int mode)
-+static const struct cred *access_override_creds(void)
- {
- 	const struct cred *old_cred;
- 	struct cred *override_cred;
--	struct path path;
--	struct inode *inode;
--	int res;
--	unsigned int lookup_flags = LOOKUP_FOLLOW;
--
--	if (mode & ~S_IRWXO)	/* where's F_OK, X_OK, W_OK, R_OK? */
--		return -EINVAL;
- 
- 	override_cred = prepare_creds();
- 	if (!override_cred)
--		return -ENOMEM;
-+		return NULL;
- 
- 	override_cred->fsuid = override_cred->uid;
- 	override_cred->fsgid = override_cred->gid;
-@@ -394,6 +387,36 @@ long do_faccessat(int dfd, const char __user *filename, int mode)
- 	override_cred->non_rcu = 1;
- 
- 	old_cred = override_creds(override_cred);
-+
-+	/* override_cred() gets its own ref */
-+	put_cred(override_cred);
-+
-+	return old_cred;
-+}
-+
-+long do_faccessat(int dfd, const char __user *filename, int mode, int flags)
-+{
-+	const struct cred *old_cred = NULL;
-+	struct path path;
-+	struct inode *inode;
-+	int res;
-+	unsigned int lookup_flags = LOOKUP_FOLLOW;
-+
-+	if (mode & ~S_IRWXO)	/* where's F_OK, X_OK, W_OK, R_OK? */
-+		return -EINVAL;
-+
-+	if (flags & ~(AT_EACCESS | AT_SYMLINK_NOFOLLOW))
-+		return -EINVAL;
-+
-+	if (flags & AT_SYMLINK_NOFOLLOW)
-+		lookup_flags &= ~LOOKUP_FOLLOW;
-+
-+	if (!(flags & AT_EACCESS)) {
-+		old_cred = access_override_creds();
-+		if (!old_cred)
-+			return -ENOMEM;
-+	}
-+
- retry:
- 	res = user_path_at(dfd, filename, lookup_flags, &path);
- 	if (res)
-@@ -435,19 +458,26 @@ long do_faccessat(int dfd, const char __user *filename, int mode)
- 		goto retry;
- 	}
- out:
--	revert_creds(old_cred);
--	put_cred(override_cred);
-+	if (old_cred)
-+		revert_creds(old_cred);
-+
- 	return res;
- }
- 
- SYSCALL_DEFINE3(faccessat, int, dfd, const char __user *, filename, int, mode)
- {
--	return do_faccessat(dfd, filename, mode);
-+	return do_faccessat(dfd, filename, mode, 0);
-+}
-+
-+SYSCALL_DEFINE4(faccessat2, int, dfd, const char __user *, filename, int, mode,
-+		int, flags)
-+{
-+	return do_faccessat(dfd, filename, mode, flags);
- }
- 
- SYSCALL_DEFINE2(access, const char __user *, filename, int, mode)
- {
--	return do_faccessat(AT_FDCWD, filename, mode);
-+	return do_faccessat(AT_FDCWD, filename, mode, 0);
- }
- 
- int ksys_chdir(const char __user *filename)
-diff --git a/include/linux/syscalls.h b/include/linux/syscalls.h
-index 1815065d52f3..baec24782301 100644
---- a/include/linux/syscalls.h
-+++ b/include/linux/syscalls.h
-@@ -428,6 +428,8 @@ asmlinkage long sys_ftruncate64(unsigned int fd, loff_t length);
- #endif
- asmlinkage long sys_fallocate(int fd, int mode, loff_t offset, loff_t len);
- asmlinkage long sys_faccessat(int dfd, const char __user *filename, int mode);
-+asmlinkage long sys_faccessat2(int dfd, const char __user *filename, int mode,
-+			       int flags);
- asmlinkage long sys_chdir(const char __user *filename);
- asmlinkage long sys_fchdir(unsigned int fd);
- asmlinkage long sys_chroot(const char __user *filename);
-@@ -1333,11 +1335,12 @@ static inline int ksys_chmod(const char __user *filename, umode_t mode)
- 	return do_fchmodat(AT_FDCWD, filename, mode);
- }
- 
--extern long do_faccessat(int dfd, const char __user *filename, int mode);
-+extern long do_faccessat(int dfd, const char __user *filename, int mode,
-+			 int flags);
- 
- static inline long ksys_access(const char __user *filename, int mode)
- {
--	return do_faccessat(AT_FDCWD, filename, mode);
-+	return do_faccessat(AT_FDCWD, filename, mode, 0);
- }
- 
- extern int do_fchownat(int dfd, const char __user *filename, uid_t user,
-diff --git a/include/uapi/asm-generic/unistd.h b/include/uapi/asm-generic/unistd.h
-index 3a3201e4618e..f4a01305d9a6 100644
---- a/include/uapi/asm-generic/unistd.h
-+++ b/include/uapi/asm-generic/unistd.h
-@@ -855,9 +855,11 @@ __SYSCALL(__NR_clone3, sys_clone3)
- __SYSCALL(__NR_openat2, sys_openat2)
- #define __NR_pidfd_getfd 438
- __SYSCALL(__NR_pidfd_getfd, sys_pidfd_getfd)
-+#define __NR_faccessat2 439
-+__SYSCALL(__NR_faccessat2, sys_faccessat2)
- 
- #undef __NR_syscalls
--#define __NR_syscalls 439
-+#define __NR_syscalls 440
- 
- /*
-  * 32 bit systems traditionally used different
-diff --git a/include/uapi/linux/fcntl.h b/include/uapi/linux/fcntl.h
-index ca88b7bce553..2f86b2ad6d7e 100644
---- a/include/uapi/linux/fcntl.h
-+++ b/include/uapi/linux/fcntl.h
-@@ -84,10 +84,20 @@
- #define DN_ATTRIB	0x00000020	/* File changed attibutes */
- #define DN_MULTISHOT	0x80000000	/* Don't remove notifier */
- 
-+/*
-+ * The constants AT_REMOVEDIR and AT_EACCESS have the same value.  AT_EACCESS is
-+ * meaningful only to faccessat, while AT_REMOVEDIR is meaningful only to
-+ * unlinkat.  The two functions do completely different things and therefore,
-+ * the flags can be allowed to overlap.  For example, passing AT_REMOVEDIR to
-+ * faccessat would be undefined behavior and thus treating it equivalent to
-+ * AT_EACCESS is valid undefined behavior.
-+ */
- #define AT_FDCWD		-100    /* Special value used to indicate
-                                            openat should use the current
-                                            working directory. */
- #define AT_SYMLINK_NOFOLLOW	0x100   /* Do not follow symbolic links.  */
-+#define AT_EACCESS		0x200	/* Test access permitted for
-+                                           effective IDs, not real IDs.  */
- #define AT_REMOVEDIR		0x200   /* Remove directory instead of
-                                            unlinking file.  */
- #define AT_SYMLINK_FOLLOW	0x400   /* Follow symbolic links.  */
--- 
-2.21.1
+Paolo
 
