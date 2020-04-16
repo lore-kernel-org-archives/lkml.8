@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B918C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:06:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3794AC3815B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:07:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 48589217D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:06:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 142FE20786
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:07:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587046011;
-	bh=skWxrDeaTk6+jv+cXjW6TzCDWVjh/oty9QB9S9uiJkE=;
+	s=default; t=1587046022;
+	bh=EcDjb+tFM4yNiTfg1D6Ed/fB5P+qg1QBJfyiwJqtlsY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MW2K/6bZYK++7Afm5OG06/9mo2yELLB5iaA0AdDqy1554phW3OSIC0Bg+8lVguB8V
-	 fiSegpzvh1lnwEpZUm1ec9mZAqC8hNAE736oeMhuKYh++VHObgkWTxuBmAcVbKPXlB
-	 /pRePQTx2O7waHNmW3UR2ZqYWrNnfUcnmyOwo6oY=
+	b=Wi7W7vqiKNCSbcxJsDpvS8dZxnPIrpQue95+LEcYcr78c7cy/w7uTDFwRDpcCRnk+
+	 UKl9MbY3O6Z6B3rZBHxZ7a2EfyBjjNGhWqhwLTZi7FITw7ONIV1jTrV8/0eMvjgJmb
+	 RF9xIYTY5XRPGKuHiRI+UnwjOlXnO5WJydGQb6X8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409710AbgDPOGt (ORCPT
+        id S2409696AbgDPOG7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:06:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57780 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 10:06:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57852 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2898436AbgDPNoc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:44:32 -0400
+        id S2898456AbgDPNoh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:44:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EB9A120732;
-        Thu, 16 Apr 2020 13:44:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 020B7208E4;
+        Thu, 16 Apr 2020 13:44:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044671;
-        bh=skWxrDeaTk6+jv+cXjW6TzCDWVjh/oty9QB9S9uiJkE=;
+        s=default; t=1587044676;
+        bh=EcDjb+tFM4yNiTfg1D6Ed/fB5P+qg1QBJfyiwJqtlsY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=U/LD2LvsTFdRrink/P7TTwV56fMBy40gyv1Am2ZUxmaVZM7MTaBRQ3r4SCoqfQt8b
-         1QJ6TsufhQj6XgPKCxM52+FiDb2hNurTYFxuySPIwa3Rp6uelUCdZ3vYNeFsu6sFgc
-         G9+Avuj++lNp1hLUUbMb2V9gGyUzn294BFmF7/mU=
+        b=B1mFIm1mgxIiGnRJacIO4RelpMkHs2xnMwiIU/qq8aVTe/VTzr0nJvLIPlLLxb79Y
+         yWQAwoMnKVJJ6YYP9SVo7mPIop4lbCd17cGkleifFnGa4pAtcPKnv87agK9wQqbm0e
+         ZWeZnKWnrluH9MHE8yZdzWoN7zQRms4piw8jH6dA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Alexander Sverdlin <alexander.sverdlin@nokia.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
+        stable@vger.kernel.org, Dongchun Zhu <dongchun.zhu@mediatek.com>,
+        Tomasz Figa <tfiga@chromium.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 055/232] genirq/irqdomain: Check pointer in irq_domain_alloc_irqs_hierarchy()
-Date:   Thu, 16 Apr 2020 15:22:29 +0200
-Message-Id: <20200416131322.479917119@linuxfoundation.org>
+Subject: [PATCH 5.4 057/232] media: i2c: ov5695: Fix power on and off sequences
+Date:   Thu, 16 Apr 2020 15:22:31 +0200
+Message-Id: <20200416131322.683971780@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131316.640996080@linuxfoundation.org>
 References: <20200416131316.640996080@linuxfoundation.org>
@@ -61,64 +62,132 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Sverdlin <alexander.sverdlin@nokia.com>
+From: Dongchun Zhu <dongchun.zhu@mediatek.com>
 
-[ Upstream commit 87f2d1c662fa1761359fdf558246f97e484d177a ]
+[ Upstream commit f1a64f56663e9d03e509439016dcbddd0166b2da ]
 
-irq_domain_alloc_irqs_hierarchy() has 3 call sites in the compilation unit
-but only one of them checks for the pointer which is being dereferenced
-inside the called function. Move the check into the function. This allows
-for catching the error instead of the following crash:
+>From the measured hardware signal, OV5695 reset pin goes high for a
+short period of time during boot-up. From the sensor specification, the
+reset pin is active low and the DT binding defines the pin as active
+low, which means that the values set by the driver are inverted and thus
+the value requested in probe ends up high.
 
-Unable to handle kernel NULL pointer dereference at virtual address 00000000
-PC is at 0x0
-LR is at gpiochip_hierarchy_irq_domain_alloc+0x11f/0x140
-...
-[<c06c23ff>] (gpiochip_hierarchy_irq_domain_alloc)
-[<c0462a89>] (__irq_domain_alloc_irqs)
-[<c0462dad>] (irq_create_fwspec_mapping)
-[<c06c2251>] (gpiochip_to_irq)
-[<c06c1c9b>] (gpiod_to_irq)
-[<bf973073>] (gpio_irqs_init [gpio_irqs])
-[<bf974048>] (gpio_irqs_exit+0xecc/0xe84 [gpio_irqs])
-Code: bad PC value
+Fix it by changing probe to request the reset GPIO initialized to high,
+which makes the initial state of the physical signal low.
 
-Signed-off-by: Alexander Sverdlin <alexander.sverdlin@nokia.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20200306174720.82604-1-alexander.sverdlin@nokia.com
+In addition, DOVDD rising must occur before DVDD rising from spec., but
+regulator_bulk_enable() API enables all the regulators asynchronously.
+Use an explicit loops of regulator_enable() instead.
+
+For power off sequence, it is required that DVDD falls first. Given the
+bulk API does not give any guarantee about the order of regulators,
+change the driver to use regulator_disable() instead.
+
+The sensor also requires a delay between reset high and first I2C
+transaction, which was assumed to be 8192 XVCLK cycles, but 1ms is
+recommended by the vendor. Fix this as well.
+
+Signed-off-by: Dongchun Zhu <dongchun.zhu@mediatek.com>
+Signed-off-by: Tomasz Figa <tfiga@chromium.org>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/irq/irqdomain.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ drivers/media/i2c/ov5695.c | 49 ++++++++++++++++++++++++--------------
+ 1 file changed, 31 insertions(+), 18 deletions(-)
 
-diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
-index 480df36597206..c776b8e86fbcc 100644
---- a/kernel/irq/irqdomain.c
-+++ b/kernel/irq/irqdomain.c
-@@ -1293,6 +1293,11 @@ int irq_domain_alloc_irqs_hierarchy(struct irq_domain *domain,
- 				    unsigned int irq_base,
- 				    unsigned int nr_irqs, void *arg)
- {
-+	if (!domain->ops->alloc) {
-+		pr_debug("domain->ops->alloc() is NULL\n");
-+		return -ENOSYS;
-+	}
-+
- 	return domain->ops->alloc(domain, irq_base, nr_irqs, arg);
+diff --git a/drivers/media/i2c/ov5695.c b/drivers/media/i2c/ov5695.c
+index 34b7046d97021..1adcd1ed16641 100644
+--- a/drivers/media/i2c/ov5695.c
++++ b/drivers/media/i2c/ov5695.c
+@@ -971,16 +971,9 @@ unlock_and_return:
+ 	return ret;
  }
  
-@@ -1330,11 +1335,6 @@ int __irq_domain_alloc_irqs(struct irq_domain *domain, int irq_base,
- 			return -EINVAL;
+-/* Calculate the delay in us by clock rate and clock cycles */
+-static inline u32 ov5695_cal_delay(u32 cycles)
+-{
+-	return DIV_ROUND_UP(cycles, OV5695_XVCLK_FREQ / 1000 / 1000);
+-}
+-
+ static int __ov5695_power_on(struct ov5695 *ov5695)
+ {
+-	int ret;
+-	u32 delay_us;
++	int i, ret;
+ 	struct device *dev = &ov5695->client->dev;
+ 
+ 	ret = clk_prepare_enable(ov5695->xvclk);
+@@ -991,21 +984,28 @@ static int __ov5695_power_on(struct ov5695 *ov5695)
+ 
+ 	gpiod_set_value_cansleep(ov5695->reset_gpio, 1);
+ 
+-	ret = regulator_bulk_enable(OV5695_NUM_SUPPLIES, ov5695->supplies);
+-	if (ret < 0) {
+-		dev_err(dev, "Failed to enable regulators\n");
+-		goto disable_clk;
++	/*
++	 * The hardware requires the regulators to be powered on in order,
++	 * so enable them one by one.
++	 */
++	for (i = 0; i < OV5695_NUM_SUPPLIES; i++) {
++		ret = regulator_enable(ov5695->supplies[i].consumer);
++		if (ret) {
++			dev_err(dev, "Failed to enable %s: %d\n",
++				ov5695->supplies[i].supply, ret);
++			goto disable_reg_clk;
++		}
  	}
  
--	if (!domain->ops->alloc) {
--		pr_debug("domain->ops->alloc() is NULL\n");
--		return -ENOSYS;
--	}
--
- 	if (realloc && irq_base >= 0) {
- 		virq = irq_base;
- 	} else {
+ 	gpiod_set_value_cansleep(ov5695->reset_gpio, 0);
+ 
+-	/* 8192 cycles prior to first SCCB transaction */
+-	delay_us = ov5695_cal_delay(8192);
+-	usleep_range(delay_us, delay_us * 2);
++	usleep_range(1000, 1200);
+ 
+ 	return 0;
+ 
+-disable_clk:
++disable_reg_clk:
++	for (--i; i >= 0; i--)
++		regulator_disable(ov5695->supplies[i].consumer);
+ 	clk_disable_unprepare(ov5695->xvclk);
+ 
+ 	return ret;
+@@ -1013,9 +1013,22 @@ disable_clk:
+ 
+ static void __ov5695_power_off(struct ov5695 *ov5695)
+ {
++	struct device *dev = &ov5695->client->dev;
++	int i, ret;
++
+ 	clk_disable_unprepare(ov5695->xvclk);
+ 	gpiod_set_value_cansleep(ov5695->reset_gpio, 1);
+-	regulator_bulk_disable(OV5695_NUM_SUPPLIES, ov5695->supplies);
++
++	/*
++	 * The hardware requires the regulators to be powered off in order,
++	 * so disable them one by one.
++	 */
++	for (i = OV5695_NUM_SUPPLIES - 1; i >= 0; i--) {
++		ret = regulator_disable(ov5695->supplies[i].consumer);
++		if (ret)
++			dev_err(dev, "Failed to disable %s: %d\n",
++				ov5695->supplies[i].supply, ret);
++	}
+ }
+ 
+ static int __maybe_unused ov5695_runtime_resume(struct device *dev)
+@@ -1285,7 +1298,7 @@ static int ov5695_probe(struct i2c_client *client,
+ 	if (clk_get_rate(ov5695->xvclk) != OV5695_XVCLK_FREQ)
+ 		dev_warn(dev, "xvclk mismatched, modes are based on 24MHz\n");
+ 
+-	ov5695->reset_gpio = devm_gpiod_get(dev, "reset", GPIOD_OUT_LOW);
++	ov5695->reset_gpio = devm_gpiod_get(dev, "reset", GPIOD_OUT_HIGH);
+ 	if (IS_ERR(ov5695->reset_gpio)) {
+ 		dev_err(dev, "Failed to get reset-gpios\n");
+ 		return -EINVAL;
 -- 
 2.20.1
 
