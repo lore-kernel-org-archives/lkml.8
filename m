@@ -2,109 +2,167 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD8A7C2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:03:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C043C2BB85
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:03:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9CAD720771
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:03:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RoTJFRbR"
+	by mail.kernel.org (Postfix) with ESMTP id EF2D921D7E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:03:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587049389;
+	bh=ILaFXLncLtlLJvpqxOT469RMpi89TpLFQOQJW2lRpX8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=QWO4hVIT0Ph01Z4jrSJ+6mMG4xNQ0iyh6iXL5i7ioUfqnqg2XViWLBImgIj9SLL40
+	 9+mW/Ton5Q/FOcIPsDM3OahT97Fi/zLAvRZwJDVZFaIb0JS7p+KVjWZrrT9AHwySHU
+	 fyOSaxDCNTb1kF7kQKMXCRDYPIO6D4l+HKuk83as=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2441724AbgDPPDA (ORCPT
+        id S2394882AbgDPPDG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:03:00 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:35869 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2441725AbgDPNxm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:53:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587045221;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=l5Kvo8iqImptqYWsZSVRrcAXyDBLn+NV1FJvmlGAZQs=;
-        b=RoTJFRbR4rzaOwNX7LcSs9elegXgI7fBsqdwi96HECy8futjYinQItzUlaftvuAqO0c7Yb
-        jwQKfnWxXZxY4S1NGcuwObEHaIOcri0paPu1hRmE5RL6nVFuXREyfZvkeVOh9qL6cofR/c
-        t3/UBI4k02MNHwYgJeIEBCfOdW1IRlU=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-252-2YJKJvimMT-5RUX7qxa0pA-1; Thu, 16 Apr 2020 09:53:39 -0400
-X-MC-Unique: 2YJKJvimMT-5RUX7qxa0pA-1
-Received: by mail-wr1-f70.google.com with SMTP id d17so1723931wrr.17
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 06:53:39 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=l5Kvo8iqImptqYWsZSVRrcAXyDBLn+NV1FJvmlGAZQs=;
-        b=djHXVdtt/LEOwQgqdnBQ5lFz3DoHoPR3IykBa87k3QzUf7dHOmTJ4mLtjIvc/YsozY
-         T0FXgHfHPEIOmvhSiTjiXNpnIqBHrG/OW5wEiTGJvEa/wkQkRAiRiJb3g6IJLArmSGEj
-         JaHeAey0w9pFsSTvakBLfmWnZA7AIBK8tSoVARSJAiKCaAt7QOPUnLnXbwLioe4/FABN
-         YJR0jz+DGf5IOuU1qRVZ9hPghsiNYrLkNMbB/hY+oVnvmwSpvkUIsqzArKlslMVpN+xL
-         ToTWnbYuNZT/sPpmS72UKHjFULCSs4W38kuWnWc1wOlE6q5+AqbewKF6QHWT2/MN5IWt
-         TxQg==
-X-Gm-Message-State: AGi0PuYbyU7D+JS2uli26XaYPkFARDSSIeesFV/lA2vfT/flNLphqoft
-        OllLm8c7hFfU61TB+YlK04zepRQHvZOoqO+9DZYQsmCR4j5TkqiTSNJANI0RvW4mJ8JZdl2ZPRi
-        MqVIO2x0iM3y6Pw5uY7pHG58t
-X-Received: by 2002:a1c:41d7:: with SMTP id o206mr5041261wma.89.1587045218354;
-        Thu, 16 Apr 2020 06:53:38 -0700 (PDT)
-X-Google-Smtp-Source: APiQypJz8z7BCZnr8VscT/Dzs37ZSpW6T2prR2o4U8uyDX4us/2PqqegrZdIYt2ZRQvbdMEU26XesA==
-X-Received: by 2002:a1c:41d7:: with SMTP id o206mr5041239wma.89.1587045218126;
-        Thu, 16 Apr 2020 06:53:38 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:399d:3ef7:647c:b12d? ([2001:b07:6468:f312:399d:3ef7:647c:b12d])
-        by smtp.gmail.com with ESMTPSA id f23sm3585008wml.4.2020.04.16.06.53.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 16 Apr 2020 06:53:37 -0700 (PDT)
-Subject: Re: [PATCH 1/1] selftests: kvm: Add overlapped memory regions test
-To:     Krish Sadhukhan <krish.sadhukhan@oracle.com>,
-        Wainer dos Santos Moschetta <wainersm@redhat.com>,
-        kvm@vger.kernel.org
-Cc:     drjones@redhat.com, sean.j.christopherson@intel.com,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
-References: <20200415204505.10021-1-wainersm@redhat.com>
- <20200415204505.10021-2-wainersm@redhat.com>
- <455a01b6-506b-3c16-7ad8-327ad63292e9@oracle.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <1d05b77b-1e8b-2dfd-cbc9-5b09b685b630@redhat.com>
-Date:   Thu, 16 Apr 2020 15:53:36 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Thu, 16 Apr 2020 11:03:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40170 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2438815AbgDPNxk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:53:40 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6CF5D2076D;
+        Thu, 16 Apr 2020 13:53:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587045219;
+        bh=ILaFXLncLtlLJvpqxOT469RMpi89TpLFQOQJW2lRpX8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=ybV/LIlddqhD5qf0sbJeiCc0X+bHShem2q69lqMtUJYryHFXG5bAkjogOBfTcrZ+U
+         av2r1t7gzFpOPUEnjQWDJpPOAw6OVoQOxcd+T5ybwNjN0co9GbvPSZeT/Jxy7fmlWE
+         RTe+hkcB5ISw+eGM+fZo8AiRGsdufaUHC9WC3mg4=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Bob Peterson <rpeterso@redhat.com>,
+        Andreas Gruenbacher <agruenba@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.6 044/254] gfs2: Do log_flush in gfs2_ail_empty_gl even if ail list is empty
+Date:   Thu, 16 Apr 2020 15:22:13 +0200
+Message-Id: <20200416131331.401389752@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.1
+In-Reply-To: <20200416131325.804095985@linuxfoundation.org>
+References: <20200416131325.804095985@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <455a01b6-506b-3c16-7ad8-327ad63292e9@oracle.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 16/04/20 01:57, Krish Sadhukhan wrote:
-> 
->> Add the test_overlap_memory_regions() test case in
->> set_memory_region_test. This should check that overlapping
->> memory regions on the guest physical address cannot be added.
-> 
-> 
-> I think the commit header and the body need some improvement. For example,
-> 
->         Header: Test that overlapping guest memory regions can not be added
-> 
->         Body:  Enhance the existing tests in set_memory_region_test.c so
-> that it tests overlapping guest
-> 
->                     memory regions. The new test verifies that adding
-> overlapping guest memory regions fails.
+From: Bob Peterson <rpeterso@redhat.com>
 
-I like Wainer's header and your body. :)
+[ Upstream commit 9ff78289356af640941bbb0dd3f46af2063f0046 ]
 
-Paolo
+Before this patch, if gfs2_ail_empty_gl saw there was nothing on
+the ail list, it would return and not flush the log. The problem
+is that there could still be a revoke for the rgrp sitting on the
+sd_log_le_revoke list that's been recently taken off the ail list.
+But that revoke still needs to be written, and the rgrp_go_inval
+still needs to call log_flush_wait to ensure the revokes are all
+properly written to the journal before we relinquish control of
+the glock to another node. If we give the glock to another node
+before we have this knowledge, the node might crash and its journal
+replayed, in which case the missing revoke would allow the journal
+replay to replay the rgrp over top of the rgrp we already gave to
+another node, thus overwriting its changes and corrupting the
+file system.
+
+This patch makes gfs2_ail_empty_gl still call gfs2_log_flush rather
+than returning.
+
+Signed-off-by: Bob Peterson <rpeterso@redhat.com>
+Reviewed-by: Andreas Gruenbacher <agruenba@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ fs/gfs2/glops.c | 27 ++++++++++++++++++++++++++-
+ fs/gfs2/log.c   |  2 +-
+ fs/gfs2/log.h   |  1 +
+ 3 files changed, 28 insertions(+), 2 deletions(-)
+
+diff --git a/fs/gfs2/glops.c b/fs/gfs2/glops.c
+index 061d22e1ceb6e..efc899a3876b4 100644
+--- a/fs/gfs2/glops.c
++++ b/fs/gfs2/glops.c
+@@ -89,8 +89,32 @@ static void gfs2_ail_empty_gl(struct gfs2_glock *gl)
+ 	INIT_LIST_HEAD(&tr.tr_databuf);
+ 	tr.tr_revokes = atomic_read(&gl->gl_ail_count);
+ 
+-	if (!tr.tr_revokes)
++	if (!tr.tr_revokes) {
++		bool have_revokes;
++		bool log_in_flight;
++
++		/*
++		 * We have nothing on the ail, but there could be revokes on
++		 * the sdp revoke queue, in which case, we still want to flush
++		 * the log and wait for it to finish.
++		 *
++		 * If the sdp revoke list is empty too, we might still have an
++		 * io outstanding for writing revokes, so we should wait for
++		 * it before returning.
++		 *
++		 * If none of these conditions are true, our revokes are all
++		 * flushed and we can return.
++		 */
++		gfs2_log_lock(sdp);
++		have_revokes = !list_empty(&sdp->sd_log_revokes);
++		log_in_flight = atomic_read(&sdp->sd_log_in_flight);
++		gfs2_log_unlock(sdp);
++		if (have_revokes)
++			goto flush;
++		if (log_in_flight)
++			log_flush_wait(sdp);
+ 		return;
++	}
+ 
+ 	/* A shortened, inline version of gfs2_trans_begin()
+          * tr->alloced is not set since the transaction structure is
+@@ -105,6 +129,7 @@ static void gfs2_ail_empty_gl(struct gfs2_glock *gl)
+ 	__gfs2_ail_flush(gl, 0, tr.tr_revokes);
+ 
+ 	gfs2_trans_end(sdp);
++flush:
+ 	gfs2_log_flush(sdp, NULL, GFS2_LOG_HEAD_FLUSH_NORMAL |
+ 		       GFS2_LFC_AIL_EMPTY_GL);
+ }
+diff --git a/fs/gfs2/log.c b/fs/gfs2/log.c
+index 00a2e721a374f..08dd6a4302344 100644
+--- a/fs/gfs2/log.c
++++ b/fs/gfs2/log.c
+@@ -512,7 +512,7 @@ static void log_pull_tail(struct gfs2_sbd *sdp, unsigned int new_tail)
+ }
+ 
+ 
+-static void log_flush_wait(struct gfs2_sbd *sdp)
++void log_flush_wait(struct gfs2_sbd *sdp)
+ {
+ 	DEFINE_WAIT(wait);
+ 
+diff --git a/fs/gfs2/log.h b/fs/gfs2/log.h
+index c0a65e5a126b6..c1cd6ae176597 100644
+--- a/fs/gfs2/log.h
++++ b/fs/gfs2/log.h
+@@ -73,6 +73,7 @@ extern void gfs2_log_flush(struct gfs2_sbd *sdp, struct gfs2_glock *gl,
+ 			   u32 type);
+ extern void gfs2_log_commit(struct gfs2_sbd *sdp, struct gfs2_trans *trans);
+ extern void gfs2_ail1_flush(struct gfs2_sbd *sdp, struct writeback_control *wbc);
++extern void log_flush_wait(struct gfs2_sbd *sdp);
+ 
+ extern int gfs2_logd(void *data);
+ extern void gfs2_add_revoke(struct gfs2_sbd *sdp, struct gfs2_bufdata *bd);
+-- 
+2.20.1
+
+
 
