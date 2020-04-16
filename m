@@ -2,185 +2,64 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AC02C352BE
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 19:43:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26209C3815B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 19:45:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 69F81206D5
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 19:43:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="v3X3C0Za"
+	by mail.kernel.org (Postfix) with ESMTP id 0C00B20786
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 19:45:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728794AbgDPTnc (ORCPT
+        id S1726105AbgDPTpT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 15:43:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57960 "EHLO
+        Thu, 16 Apr 2020 15:45:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58240 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728043AbgDPTna (ORCPT
+        by vger.kernel.org with ESMTP id S1726164AbgDPTpS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 15:43:30 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05C5AC061A0C
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 12:43:30 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id e25so2668162ljg.5
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 12:43:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=uwSGpCllokSfqNGL6oss9wyAqUMAat2WrC0cAMBjDAk=;
-        b=v3X3C0Za2rryzPItLIrreDK5DGHhTkL1mY1pAW56x8wepKCDn00DQKL6hhYNLUJtIS
-         PRVT6262ISLBiZuTuXfFLAFGb2zzHA1AwxrGM11aauK+wz7vAH7uni7cB0f23LeIgJC5
-         xxrm/7Y0lNkQ8U3OxIuYarwGx/1/qZ8hbarOUOrLMJeRARh+IuZYPw9+PLcOPk4UQu9u
-         d2ZYcUuRP5yBT9Yic1aAZ38qOnnrmUaC+KTG3EJudjWkVdOCCHltLxVEHlqDAJXv9nKw
-         t2UN47Xp8QNSsi/sajAxtDcJ4hASk0Hh/58EIGBgu1qwrruKw7+sY2oRDuDCj0qtXtkM
-         I61w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=uwSGpCllokSfqNGL6oss9wyAqUMAat2WrC0cAMBjDAk=;
-        b=gL4NF9z8cASKXh16k4izVLTL8ROJN/HIWYW+lLNI/Yc9F2/1/sRfRjr9La1FR4HDII
-         U1E5S3SEEE87xF3DIKXHalhGC7iCPDnfzIsOLqakiAPjBzZ4Vm06jd4gIAbKUiZ9l1bR
-         q9N95+R9KTCMjC14MWEU5COqy+ZexTjpMEO2YyIqH+f+5m3J6OOnqMmNKKb0TwDK4Qu/
-         5vFT+lMW1dGZ654YII2RJwOqe2mWO6LD+9/JaYA+adwXYzvGiKrLIL7TnGY3/kbqMzd6
-         fPKSBKTm3RwZBGvjhUg/PEsZfXFTckd286IcPk6SxQi8ui6Xq0Ith/sARQq6ixjrwzKU
-         8mcQ==
-X-Gm-Message-State: AGi0PubGUK21eWIDQ/FGa/o93uNDYKd1ch0VY1ApdXXH/38JIf5r6vI5
-        tlODhLrG50rUpsBg1I1wLpgPt3VcPOl0Ed0ZNN4cAw==
-X-Google-Smtp-Source: APiQypI7zn0Ag3wpPXIq0cMKQBUYTA9vu4dBllapgvop9p2++y3RxipMd/76W4XD8OEmCb32OM6oErVgvTGFJuUGl9w=
-X-Received: by 2002:a2e:6c05:: with SMTP id h5mr7329953ljc.217.1587066208330;
- Thu, 16 Apr 2020 12:43:28 -0700 (PDT)
+        Thu, 16 Apr 2020 15:45:18 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20BBAC061A0C;
+        Thu, 16 Apr 2020 12:45:18 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 16AB32A1199;
+        Thu, 16 Apr 2020 20:45:16 +0100 (BST)
+Date:   Thu, 16 Apr 2020 21:45:13 +0200
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     Christophe Kerello <christophe.kerello@st.com>
+Cc:     <miquel.raynal@bootlin.com>, <richard@nod.at>, <vigneshr@ti.com>,
+        <lee.jones@linaro.org>, <robh+dt@kernel.org>,
+        <mark.rutland@arm.com>, <tony@atomide.com>, marex@denx.de,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mtd@lists.infradead.org,
+        linux-stm32@st-md-mailman.stormreply.com
+Subject: Re: [PATCH v2 08/12] mtd: rawnand: stm32_fmc2: use
+ FIELD_PREP/FIELD_GET macros
+Message-ID: <20200416214513.43b7b6e1@collabora.com>
+In-Reply-To: <1586966256-29548-9-git-send-email-christophe.kerello@st.com>
+References: <1586966256-29548-1-git-send-email-christophe.kerello@st.com>
+        <1586966256-29548-9-git-send-email-christophe.kerello@st.com>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-References: <20200416131325.891903893@linuxfoundation.org>
-In-Reply-To: <20200416131325.891903893@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Fri, 17 Apr 2020 01:13:16 +0530
-Message-ID: <CA+G9fYsbb6Axbheg8urRH_Dhbm27sWqiy898WDAZRVo8bj+jZw@mail.gmail.com>
-Subject: Re: [PATCH 5.5 000/257] 5.5.18-rc1 review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        lkft-triage@lists.linaro.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        linux- stable <stable@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 16 Apr 2020 at 19:05, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 5.5.18 release.
-> There are 257 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Sat, 18 Apr 2020 13:11:20 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-=
-5.5.18-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-5.5.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+On Wed, 15 Apr 2020 17:57:32 +0200
+Christophe Kerello <christophe.kerello@st.com> wrote:
+
+> This patch removes custom macros and uses FIELD_PREP and FIELD_GET macros.
+
+Oh, nice. I didn't know about these macros. This could have saved me
+from defining a whole bunch of setters/getters in driver code...
 
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
-
-Summary
-------------------------------------------------------------------------
-
-kernel: 5.5.18-rc1
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-5.5.y
-git commit: 23ca98930364cb8a4bdc5a27feb6d7fe29668e47
-git describe: v5.5.17-258-g23ca98930364
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-5.5-oe/bui=
-ld/v5.5.17-258-g23ca98930364
-
-
-No regressions (compared to build v5.5.16-45-g95e8add082c3)
-
-No fixes (compared to build v5.5.16-45-g95e8add082c3)
-
-Ran 33449 total tests in the following environments and test suites.
-
-Environments
---------------
-- dragonboard-410c
-- hi6220-hikey
-- i386
-- juno-r2
-- juno-r2-compat
-- juno-r2-kasan
-- nxp-ls2088
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15
-- x86
-- x86-kasan
-
-Test Suites
------------
-* build
-* install-android-platform-tools-r2600
-* install-android-platform-tools-r2800
-* libgpiod
-* libhugetlbfs
-* linux-log-parser
-* ltp-containers-tests
-* ltp-cve-tests
-* ltp-dio-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-syscalls-tests
-* perf
-* kselftest
-* kvm-unit-tests
-* ltp-commands-tests
-* ltp-hugetlb-tests
-* ltp-math-tests
-* ltp-mm-tests
-* network-basic-tests
-* ltp-cap_bounds-tests
-* ltp-cpuhotplug-tests
-* ltp-crypto-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-nptl-tests
-* ltp-open-posix-tests
-* ltp-pty-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* v4l2-compliance
-* spectre-meltdown-checker-test
-* kselftest-vsyscall-mode-none
-
---=20
-Linaro LKFT
-https://lkft.linaro.org
