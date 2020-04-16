@@ -7,32 +7,32 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=DATE_IN_PAST_06_12,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C52CFC352BE
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 08:50:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2B0FC2BB85
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 08:50:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AF58C221EB
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 08:50:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACC1E221EC
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 08:50:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730009AbgDQIun (ORCPT
+        id S1729991AbgDQIui (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 04:50:43 -0400
+        Fri, 17 Apr 2020 04:50:38 -0400
 Received: from mga09.intel.com ([134.134.136.24]:7443 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729999AbgDQIuk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 04:50:40 -0400
-IronPort-SDR: UwKyoFmV/gntPZEbwPWnqXq8yLGQuYI7z6X7/P6g9QSk7upLGXs6jzV4hGJtqC8VzuqPtnJvBM
- hNkNQT43VxEw==
+        id S1729965AbgDQIuh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Apr 2020 04:50:37 -0400
+IronPort-SDR: /ukP6EB27WsMt9V3bKfW58zcenxvHYspDFgPmcQ583wNi+LEtI3tZhHbD1XfUe5bMdt+M8Plfr
+ z6AC57Lo6Svw==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2020 01:50:40 -0700
-IronPort-SDR: VDaYhI04bXnxrIgdRX3TvFSDnT3Mfg5N7oy8zUI/vOJTe+h5K225x3dn/AAvSM6lWlBai1cDYp
- sn8ifT+KwXig==
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2020 01:50:36 -0700
+IronPort-SDR: gfOsYFLTybkPRyrNv0LcZc8ObkXbC0NWu4yG6cCK6Ebtn8V7eHtEW5UAm9rxoSnlPAClz8FHCk
+ xZMHp0/p72Cw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.72,394,1580803200"; 
-   d="scan'208";a="454661472"
+   d="scan'208";a="454661457"
 Received: from bard-ubuntu.sh.intel.com ([10.239.13.33])
-  by fmsmga005.fm.intel.com with ESMTP; 17 Apr 2020 01:50:35 -0700
+  by fmsmga005.fm.intel.com with ESMTP; 17 Apr 2020 01:50:32 -0700
 From:   Bard Liao <yung-chuan.liao@linux.intel.com>
 To:     alsa-devel@alsa-project.org, vkoul@kernel.org
 Cc:     linux-kernel@vger.kernel.org, tiwai@suse.de, broonie@kernel.org,
@@ -41,9 +41,9 @@ Cc:     linux-kernel@vger.kernel.org, tiwai@suse.de, broonie@kernel.org,
         ranjani.sridharan@linux.intel.com, hui.wang@canonical.com,
         pierre-louis.bossart@linux.intel.com, sanyog.r.kale@intel.com,
         slawomir.blauciak@intel.com, mengdong.lin@intel.com
-Subject: [RFC 3/5] soundwire: qcom: fix error handling in probe
-Date:   Fri, 17 Apr 2020 04:55:22 +0800
-Message-Id: <20200416205524.2043-4-yung-chuan.liao@linux.intel.com>
+Subject: [RFC 2/5] soundwire: master: use device node pointer from master device
+Date:   Fri, 17 Apr 2020 04:55:21 +0800
+Message-Id: <20200416205524.2043-3-yung-chuan.liao@linux.intel.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200416205524.2043-1-yung-chuan.liao@linux.intel.com>
 References: <20200416205524.2043-1-yung-chuan.liao@linux.intel.com>
@@ -52,87 +52,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 
-Make sure all error cases are properly handled and all resources freed.
+device_node pointer is required for scanning slave devices, update
+it from the master device.
 
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 Signed-off-by: Bard Liao <yung-chuan.liao@linux.intel.com>
 ---
- drivers/soundwire/qcom.c | 26 +++++++++++++++++---------
- 1 file changed, 17 insertions(+), 9 deletions(-)
+ drivers/soundwire/master.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/soundwire/qcom.c b/drivers/soundwire/qcom.c
-index d6c9ad231873..e08a17c13f92 100644
---- a/drivers/soundwire/qcom.c
-+++ b/drivers/soundwire/qcom.c
-@@ -765,12 +765,16 @@ static int qcom_swrm_probe(struct platform_device *pdev)
- 	}
+diff --git a/drivers/soundwire/master.c b/drivers/soundwire/master.c
+index 094518817601..c930c871caae 100644
+--- a/drivers/soundwire/master.c
++++ b/drivers/soundwire/master.c
+@@ -49,6 +49,7 @@ struct sdw_master_device
+ 	md->link_ops = link_ops;
  
- 	ctrl->irq = of_irq_get(dev->of_node, 0);
--	if (ctrl->irq < 0)
--		return ctrl->irq;
-+	if (ctrl->irq < 0) {
-+		ret = ctrl->irq;
-+		goto err_init;
-+	}
- 
- 	ctrl->hclk = devm_clk_get(dev, "iface");
--	if (IS_ERR(ctrl->hclk))
--		return PTR_ERR(ctrl->hclk);
-+	if (IS_ERR(ctrl->hclk)) {
-+		ret = PTR_ERR(ctrl->hclk);
-+		goto err_init;
-+	}
- 
- 	clk_prepare_enable(ctrl->hclk);
- 
-@@ -787,7 +791,7 @@ static int qcom_swrm_probe(struct platform_device *pdev)
- 
- 	ret = qcom_swrm_get_port_config(ctrl);
- 	if (ret)
--		return ret;
-+		goto err_clk;
- 
- 	params = &ctrl->bus.params;
- 	params->max_dr_freq = DEFAULT_CLK_FREQ;
-@@ -814,28 +818,32 @@ static int qcom_swrm_probe(struct platform_device *pdev)
- 					"soundwire", ctrl);
- 	if (ret) {
- 		dev_err(dev, "Failed to request soundwire irq\n");
--		goto err;
-+		goto err_clk;
- 	}
- 
- 	ret = sdw_add_bus_master(&ctrl->bus);
- 	if (ret) {
- 		dev_err(dev, "Failed to register Soundwire controller (%d)\n",
- 			ret);
--		goto err;
-+		goto err_clk;
- 	}
- 
- 	qcom_swrm_init(ctrl);
- 	ret = qcom_swrm_register_dais(ctrl);
- 	if (ret)
--		goto err;
-+		goto err_master_add;
- 
- 	dev_info(dev, "Qualcomm Soundwire controller v%x.%x.%x Registered\n",
- 		 (ctrl->version >> 24) & 0xff, (ctrl->version >> 16) & 0xff,
- 		 ctrl->version & 0xffff);
- 
- 	return 0;
--err:
-+
-+err_master_add:
-+	sdw_delete_bus_master(&ctrl->bus);
-+err_clk:
- 	clk_disable_unprepare(ctrl->hclk);
-+err_init:
- 	return ret;
- }
- 
+ 	md->dev.parent = parent;
++	md->dev.of_node = parent->of_node;
+ 	md->dev.fwnode = fwnode;
+ 	md->dev.bus = &sdw_bus_type;
+ 	md->dev.type = &sdw_master_type;
 -- 
 2.17.1
 
