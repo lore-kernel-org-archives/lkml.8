@@ -2,66 +2,137 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89B19C352BE
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:08:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64116C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:08:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6FC2C206D9
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:08:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FCBF206D9
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:08:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587049716;
+	bh=7Cy+Z5k2LepY15IBrx2bepvfp44ohwzM436i7z1/ZDw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=OlDnZMngnau5YnBEPFE4044xZbRBiFtMa9t/ZOxu8ohcRMoWsR91OXeMjD18UeAm1
+	 aP2HcJnDBzvrzb0YJ5eDtKgRyssqdGoaRbdAWNWiU5wrHXvI9TqH+SJNHTUTzJ/r/c
+	 c1RIBzjqi06rmwk8gh49lxd0+kz37z05/+DTUsZg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388888AbgDPPIK (ORCPT
+        id S2394881AbgDPPId (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:08:10 -0400
-Received: from mga07.intel.com ([134.134.136.100]:63742 "EHLO mga07.intel.com"
+        Thu, 16 Apr 2020 11:08:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37412 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2441872AbgDPPHw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 11:07:52 -0400
-IronPort-SDR: CRhiPWPlSDDWiEGWg66HjxGlQNN/Ma26T12do60+1eiLeXlQVDjQxMtUcIMw3AiSKtZ9Z3SkXi
- 8EtfiGGhvjAA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2020 08:07:50 -0700
-IronPort-SDR: o5iUjlKVYAkiSQVPwxHxIkIYdjmBCXuTBBpdTwXmAecBBvW1C+zOu8iK1KaQu3UOTksj0n79i9
- Gz3Rqojkq5Bw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,391,1580803200"; 
-   d="scan'208";a="278018877"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by fmsmga004.fm.intel.com with ESMTP; 16 Apr 2020 08:07:49 -0700
-Date:   Thu, 16 Apr 2020 08:07:49 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Xiaoyao Li <xiaoyao.li@intel.com>
-Subject: Re: [PATCH v2 00/10] KVM: VMX: Unionize vcpu_vmx.exit_reason
-Message-ID: <20200416150749.GA12170@linux.intel.com>
-References: <20200415175519.14230-1-sean.j.christopherson@intel.com>
- <a77ca940-afe4-a94a-2698-6cda0f95ba5c@redhat.com>
+        id S2408731AbgDPNvS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:51:18 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 18BD220732;
+        Thu, 16 Apr 2020 13:51:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587045077;
+        bh=7Cy+Z5k2LepY15IBrx2bepvfp44ohwzM436i7z1/ZDw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=TBXUbhs6Hr2FPmaLsR7XGdKLKygGeAkzN5uMI1ZGouFbDrynUcF5nPxoYpj5woNXE
+         qvgoDAsdKoco+qrTHuQGKjHeZgIhu+h4XZ86Wn0K4CcGgAI4l0CZyzp45Ig93eSTjw
+         a/LmiRAonQ//4N4GYFop7QHDGtGMoxxlOra1spI4=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Christophe Leroy <christophe.leroy@c-s.fr>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Leonardo Bras <leonardo@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Shuah Khan <shuah@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.4 180/232] selftests/vm: fix map_hugetlb length used for testing read and write
+Date:   Thu, 16 Apr 2020 15:24:34 +0200
+Message-Id: <20200416131337.587177556@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.1
+In-Reply-To: <20200416131316.640996080@linuxfoundation.org>
+References: <20200416131316.640996080@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a77ca940-afe4-a94a-2698-6cda0f95ba5c@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 16, 2020 at 03:44:06PM +0200, Paolo Bonzini wrote:
-> On 15/04/20 19:55, Sean Christopherson wrote:
-> For now I committed only patches 1-9, just to limit the conflicts with
-> the other series.  I would like to understand how you think the
-> conflicts should be fixed with the union.
+From: Christophe Leroy <christophe.leroy@c-s.fr>
 
-Pushed a branch.  Basically, take the union code and then make sure there
-aren't any vmcs_read32(VM_EXIT_INTR_INFO) or vmcs_readl(EXIT_QUALIFICATION)
-calls outside of the caching accessors or dump_vmcs().
+commit cabc30da10e677c67ab9a136b1478175734715c5 upstream.
 
-  https://github.com/sean-jc/linux for_paolo_merge_union_cache 
+Commit fa7b9a805c79 ("tools/selftest/vm: allow choosing mem size and page
+size in map_hugetlb") added the possibility to change the size of memory
+mapped for the test, but left the read and write test using the default
+value.  This is unnoticed when mapping a length greater than the default
+one, but segfaults otherwise.
+
+Fix read_bytes() and write_bytes() by giving them the real length.
+
+Also fix the call to munmap().
+
+Fixes: fa7b9a805c79 ("tools/selftest/vm: allow choosing mem size and page size in map_hugetlb")
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Reviewed-by: Leonardo Bras <leonardo@linux.ibm.com>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Shuah Khan <shuah@kernel.org>
+Cc: <stable@vger.kernel.org>
+Link: http://lkml.kernel.org/r/9a404a13c871c4bd0ba9ede68f69a1225180dd7e.1580978385.git.christophe.leroy@c-s.fr
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ tools/testing/selftests/vm/map_hugetlb.c |   14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
+
+--- a/tools/testing/selftests/vm/map_hugetlb.c
++++ b/tools/testing/selftests/vm/map_hugetlb.c
+@@ -45,20 +45,20 @@ static void check_bytes(char *addr)
+ 	printf("First hex is %x\n", *((unsigned int *)addr));
+ }
+ 
+-static void write_bytes(char *addr)
++static void write_bytes(char *addr, size_t length)
+ {
+ 	unsigned long i;
+ 
+-	for (i = 0; i < LENGTH; i++)
++	for (i = 0; i < length; i++)
+ 		*(addr + i) = (char)i;
+ }
+ 
+-static int read_bytes(char *addr)
++static int read_bytes(char *addr, size_t length)
+ {
+ 	unsigned long i;
+ 
+ 	check_bytes(addr);
+-	for (i = 0; i < LENGTH; i++)
++	for (i = 0; i < length; i++)
+ 		if (*(addr + i) != (char)i) {
+ 			printf("Mismatch at %lu\n", i);
+ 			return 1;
+@@ -96,11 +96,11 @@ int main(int argc, char **argv)
+ 
+ 	printf("Returned address is %p\n", addr);
+ 	check_bytes(addr);
+-	write_bytes(addr);
+-	ret = read_bytes(addr);
++	write_bytes(addr, length);
++	ret = read_bytes(addr, length);
+ 
+ 	/* munmap() length of MAP_HUGETLB memory must be hugepage aligned */
+-	if (munmap(addr, LENGTH)) {
++	if (munmap(addr, length)) {
+ 		perror("munmap");
+ 		exit(1);
+ 	}
+
+
