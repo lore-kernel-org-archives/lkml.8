@@ -2,92 +2,137 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46502C38A29
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 10:24:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F006C38A29
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 10:25:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1D753208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 10:24:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B103208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 10:25:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="giTjFL1B"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QF/62xKO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729238AbgDQKYJ (ORCPT
+        id S1729277AbgDQKZJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 06:24:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53604 "EHLO
+        Fri, 17 Apr 2020 06:25:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53772 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726207AbgDQKYI (ORCPT
+        by vger.kernel.org with ESMTP id S1726207AbgDQKZJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 06:24:08 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19B56C061A0F
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 03:24:07 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id u15so1492452ljd.3
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 03:24:07 -0700 (PDT)
+        Fri, 17 Apr 2020 06:25:09 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D794DC061A0C;
+        Fri, 17 Apr 2020 03:25:08 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id h69so900780pgc.8;
+        Fri, 17 Apr 2020 03:25:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=6xh3Ld/pBCZAhJ90aiDZksEp/qEQMXBOJcsAfbBaK6Q=;
-        b=giTjFL1BiCXWrEM5RhSWRQHK+eCIEd03IIa+pZLSNQ6mZ5hlVXL+3m9hNrY0Dh+d/U
-         qzZG+Lfmrhxyx6obIpthYnt7Kp/Z+30Wk/pTkX8gr2I+715AtgWRPxE3gObmhY7Vts/I
-         2FQOHSGb2Gk9aP+GdM73Q/sfvuBDHhl9P9Eg6hD3lJ1FKOOivu0vXsjd08zu7u7wQfFx
-         WgbSi0FoHO8groeHDLrLrsZ89++T+6dwZzotBwa7uU+qgNuz5XwLb3yFZkSRUYqki2bq
-         LXyRC5jDcaNGJ6Mgmr5craGz2R++HWjBAD9J0zvEPc4kcIOZ2rW1LFPr/hjZog3Na6a5
-         1Acw==
+         :cc;
+        bh=b59Nt5scDU2I1ZDjfM7PvNLErzWlHfnlPXD2jIEsqco=;
+        b=QF/62xKOAGBXrpJVXe2CSzq0qfuJV5Jn7SLuPzRkDM4nnT6httYseD3xm1KN+exzJ0
+         3iKkz7+eNWQRw+cT9m4eZTnQy3Tsl1WNIxmUjXFLWKXJ7TKMw63RNaHN/EXoFzNRK3UR
+         KJ+dvaUFseoBPUECuk1agUwjwK5PNIHj1983Ona1WMgbwEO2izQfnYGSxO5YhrZfjrns
+         sM7Ncz8OeHUvb7/lpmMOa5WhKfVojort7uihb7WWkV4Ts8QyYDOKdQze8ORPoD4LjIlP
+         5pO9swd8Mh2Bjw/XYEbJXbm1U1SIQw+mzGmQeizLNi0BGA5mMG3FCv2EUgIMmFFVQ60i
+         JUgg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=6xh3Ld/pBCZAhJ90aiDZksEp/qEQMXBOJcsAfbBaK6Q=;
-        b=bz0K7sgaV6jU9dYgzYO8jbZSp8c0etQAtmjTWTZWJzVpMAtvHirRQcqEFaC8OPcree
-         2e4XjvE9n3Qs+/nWaz/OgARwELDv2IcZjMozGxxJ7hBEmef7scnIpel9sl2kIGSpSDaM
-         0mxk2Efwwqs9pIQWOWHiJoJjEai07olyGAM9mSzcUlSk43eKlLjavS3qlYUby6uFJa9R
-         TMZ8kJs3aHLdmzwIxw8PKFzcHOr1QmuiQ+zOuHLXRGHVko8DJ5SdUm5UwIKyiWI6IniZ
-         OlIffrR2dXI7GdrtMmRxq0y38ei1GcbkJzYsBIFGmu5hdzztxpKHv3RGW0SJmDEBd6r3
-         XDxg==
-X-Gm-Message-State: AGi0PuaLkoMsb+tKSeHP/UVLrHZXHdUHjveF6RkJuA2KRIfNGaeYDjrp
-        9KNhXNqKJSp/ynKdl8T0KUNT/3tAzba2ABn4pCtXTg==
-X-Google-Smtp-Source: APiQypLMpKkzuNPY8HzZEB9HxFgfYPLTA1H77q6Vzn3sQ1X+S/jz3oLiktC6wGnFEluk6hq3vA9ZVhj1wuoaPBU6rrU=
-X-Received: by 2002:a2e:5048:: with SMTP id v8mr1569503ljd.99.1587119045618;
- Fri, 17 Apr 2020 03:24:05 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=b59Nt5scDU2I1ZDjfM7PvNLErzWlHfnlPXD2jIEsqco=;
+        b=Oijhq2f3DXgrcWVJCxlAcukulNOfbYPSlKnxLGFXLGeUwumGqE12mfiGZGyI1OXoRh
+         jGX3gpOgx4Q3bNlsWnmWVofR0/W6+4Yacs98gK3FZEKc0aoR9TrNvwnNx7Ie3N4tEErG
+         vI7B5CpcTTfk18ojj2rEHMkMhSAhSQmI1HsX/z9l+BCmw7HJKPgdFIfyO/f71WaQfI3T
+         7cQacOzP0DYfIFvhHeuLThPQP4+e59SK4RIHmV+OhH01nJmxTS/fDoHwDjACjmns/OLf
+         W4wLkiJmndN9kJz0yAacBsB0r87rFGpHQsJUy8YOR8/fgzLFzHQMtPxF6UgYABfcYDAs
+         yT8Q==
+X-Gm-Message-State: AGi0PuZuRD6ttE2O5IsJboSyuuDrh0ghHf9t02uefA0xkc6kraHAhAcU
+        5/S/7O0RmqPDuJ6rfg1/oyVtGjOppiuFflYQrqM=
+X-Google-Smtp-Source: APiQypJB5C0r8xWDag1OlivjFfDKudf0TLNN5OTS7UcWSbL6KeqEjucuUfSLSXFbYi3TBDhBThCAum6+tRIRm/lhiOg=
+X-Received: by 2002:aa7:9097:: with SMTP id i23mr2448171pfa.170.1587119108436;
+ Fri, 17 Apr 2020 03:25:08 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200417122758.54637c13@canb.auug.org.au>
-In-Reply-To: <20200417122758.54637c13@canb.auug.org.au>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 17 Apr 2020 12:23:54 +0200
-Message-ID: <CACRpkdbfuFbu4POkNG+jm6eGwqJbT+G=xEGUL=snnM1KNfA9Kw@mail.gmail.com>
-Subject: Re: linux-next: build warning after merge of the pinctrl tree
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+References: <20200415212257.161238-1-alexandre.belloni@bootlin.com> <20200415212257.161238-3-alexandre.belloni@bootlin.com>
+In-Reply-To: <20200415212257.161238-3-alexandre.belloni@bootlin.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Fri, 17 Apr 2020 13:24:57 +0300
+Message-ID: <CAHp75VcHRYLqk_b6H6TXqer98c6ZzSKctW=CbMvHzdThPxjfgQ@mail.gmail.com>
+Subject: Re: [PATCH 2/3] iio: adc: ti-ads8344: remove tx_buf from driver data
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Gregory CLEMENT <gregory.clement@bootlin.com>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 17, 2020 at 4:28 AM Stephen Rothwell <sfr@canb.auug.org.au> wro=
-te:
-
-> After merging the pinctrl tree, today's linux-next build (x86_64
-> allmodconfig) produced this warning:
+On Thu, Apr 16, 2020 at 4:08 AM Alexandre Belloni
+<alexandre.belloni@bootlin.com> wrote:
 >
-> WARNING: modpost: missing MODULE_LICENSE() in drivers/pinctrl/pinctrl-mcp=
-23s08.o
-> see include/linux/module.h for more information
+> There is no need to keep tx_buf around, it is only used for the conversion.
 >
-> Introduced by commit
+
+As Lars said. And some SPI controllers may want to DMA even one byte, so, NAK.
+
+
+> Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+> ---
+>  drivers/iio/adc/ti-ads8344.c | 18 ++++++------------
+>  1 file changed, 6 insertions(+), 12 deletions(-)
 >
->   0f04a81784fe ("pinctrl: mcp23s08: Split to three parts: core, I=C2=B2C,=
- SPI")
+> diff --git a/drivers/iio/adc/ti-ads8344.c b/drivers/iio/adc/ti-ads8344.c
+> index 6da50ea35217..9b2d3a8ea6bd 100644
+> --- a/drivers/iio/adc/ti-ads8344.c
+> +++ b/drivers/iio/adc/ti-ads8344.c
+> @@ -22,13 +22,7 @@
+>  struct ads8344 {
+>         struct spi_device *spi;
+>         struct regulator *reg;
+> -       /*
+> -        * Lock protecting access to adc->tx_buff and rx_buff,
+> -        * especially from concurrent read on sysfs file.
+> -        */
+> -       struct mutex lock;
+> -
+> -       u8 tx_buf ____cacheline_aligned;
+> +       struct mutex lock; /* protect from concurrent conversions */
+>  };
+>
+>  #define ADS8344_VOLTAGE_CHANNEL(chan, si)                              \
+> @@ -77,13 +71,13 @@ static int ads8344_adc_conversion(struct ads8344 *adc, int channel,
+>         int ret;
+>         u8 buf[3];
+>
+> -       adc->tx_buf = ADS8344_START;
+> +       buf[0] = ADS8344_START;
+>         if (!differential)
+> -               adc->tx_buf |= ADS8344_SINGLE_END;
+> -       adc->tx_buf |= ADS8344_CHANNEL(channel);
+> -       adc->tx_buf |= ADS8344_CLOCK_INTERNAL;
+> +               buf[0] |= ADS8344_SINGLE_END;
+> +       buf[0] |= ADS8344_CHANNEL(channel);
+> +       buf[0] |= ADS8344_CLOCK_INTERNAL;
+>
+> -       ret = spi_write(spi, &adc->tx_buf, 1);
+> +       ret = spi_write(spi, buf, 1);
+>         if (ret)
+>                 return ret;
+>
+> --
+> 2.25.2
+>
 
-Thanks I got a patch to fix it up and applied.
 
-Yours,
-Linus Walleij
+-- 
+With Best Regards,
+Andy Shevchenko
