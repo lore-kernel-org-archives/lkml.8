@@ -2,98 +2,135 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 672F4C352BE
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 12:22:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABEF5C352BE
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 12:25:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 43F7520656
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 12:22:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8023521D94
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 12:25:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="rN7z2enz"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Y0FX8+rx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728992AbgDQMWF (ORCPT
+        id S1728718AbgDQMZL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 08:22:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43662 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727877AbgDQMWE (ORCPT
+        Fri, 17 Apr 2020 08:25:11 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:35954 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727877AbgDQMZL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 08:22:04 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B05B2C061A0C
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 05:22:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=SLoUm+BzJe/VKqHJ2ONW40lm1UdZG6XkpJnj2k6pZhc=; b=rN7z2enzlzxrutdF0NtmuQYPMY
-        FkSfXw/WcKyzu0QT0EMWZTbjBbJZcT37xLdgwwBW3cTGQvr1MjV7ivrplxL0DTFefuvf7jCB5aKI4
-        Rss3b3QP3pu0n6cmPEvRXIzW9lb2cQrJC3XRfT4E6KnCj3Ndd/axunrxs1TNfxk8wXC+SmlZcV9WO
-        ju7AiL6ppeFYp6fyjhYR2IvaayU0pV4gnV3nJAQjKjfM7SVOR8hv+3PPV2ra6slIWRthniferaoqK
-        QCFRDRT9z6CxEP0GMYaYAEyZxd7TPh78WiRB0TCd/NCuMVMo/fg90Q/zaLYdLqRw5QDyfhLxYgve+
-        17TCG+MQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jPQ0E-0002iW-SY; Fri, 17 Apr 2020 12:21:51 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 6F05B307005;
-        Fri, 17 Apr 2020 14:21:48 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 208812B121525; Fri, 17 Apr 2020 14:21:48 +0200 (CEST)
-Date:   Fri, 17 Apr 2020 14:21:48 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Mel Gorman <mgorman@techsingularity.net>
-Cc:     SeongJae Park <sjpark@amazon.com>,
-        "Huang, Ying" <ying.huang@intel.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-        Mel Gorman <mgorman@suse.de>, Rik van Riel <riel@surriel.com>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>,
-        Tejun Heo <tj@kernel.org>, Dave Hansen <dave.hansen@intel.com>,
-        Tim Chen <tim.c.chen@intel.com>,
-        Aubrey Li <aubrey.li@intel.com>
-Subject: Re: Re: Re: [RFC] autonuma: Support to scan page table asynchronously
-Message-ID: <20200417122148.GC20730@hirez.programming.kicks-ass.net>
-References: <20200417100417.GT20730@hirez.programming.kicks-ass.net>
- <20200417102129.23399-1-sjpark@amazon.com>
- <20200417121629.GA3758@techsingularity.net>
+        Fri, 17 Apr 2020 08:25:11 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587126309;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=6SYQc5vlhk7XbIz6vBeT6lWe63ZtgKx7c9HrEfLpD3c=;
+        b=Y0FX8+rxNBDfOTW28czAyRkFFSZXdemRWyDZzdATfQdk7aooakAe9zQdRSxp/89H9DyU9f
+        vbaIPHwpr0OJSbeoUSqicnYdGwJbXCPYv1k9UvdVtiPW4dbN9M35l1Gl+sH8EvribjbLhv
+        xI1hucvAORareMfuuF5TLS+wdNMPcos=
+Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
+ [209.85.219.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-325-Gt_P8W8uPQ6ZMchoKq0_bQ-1; Fri, 17 Apr 2020 08:25:08 -0400
+X-MC-Unique: Gt_P8W8uPQ6ZMchoKq0_bQ-1
+Received: by mail-qv1-f69.google.com with SMTP id u5so2024969qvt.12
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 05:25:08 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=6SYQc5vlhk7XbIz6vBeT6lWe63ZtgKx7c9HrEfLpD3c=;
+        b=T33a59It2KTOTInN6gV6XZ5yqvv3VJWdeZvBw4QGxsFpuU6qzzXFL887D3J8LGAi7X
+         2tVqMgYe7lxThX2MHwPYcQtfLqhDHXsA+a9HVXGOlQb1uTcYmL/uvLjAe1Lcagshbqjw
+         dLD1wwoSlpioOTXu1oXzB+GsUyd/3yt95lPSTiHOvLMFUfff8kjB405LNfh83cCutn8q
+         sdQZqt754KutrMePiGr0XW1jGxipmWWJXv/3Z6gqV0dMvnEP791x0hOniBodFey5P+RS
+         H8u3Fs01Pmj1TYSE8biHLhLJJthx9tLZLYX7zubNK2hhNy7e5K9p2okgi7J8CYt4t52V
+         rVSA==
+X-Gm-Message-State: AGi0PuauZbNkrgVYXXCko6xRkr347udTZlwJfRjux81r+veBXSzHV+6c
+        LLuOOoUy0XFaOmvmLCAwTagHoIv/+CpMFh8WS8lFC+IWvBO/ughYWpLEG7KqGlxfH5cnyUF0hf6
+        gDnf7UquuJJo9V4eVyJX8FWov6YDNbKAK3VHV6i7h
+X-Received: by 2002:a37:7786:: with SMTP id s128mr2986057qkc.497.1587126307608;
+        Fri, 17 Apr 2020 05:25:07 -0700 (PDT)
+X-Google-Smtp-Source: APiQypKBfWZGJeymkb2lYpO2MfszDQFTMR0yiJ30RKxU2YF4NbhBMAq5PZqSKtDRB05J3D3z30Fv7G/YFuiyJNOVrTM=
+X-Received: by 2002:a37:7786:: with SMTP id s128mr2986028qkc.497.1587126307322;
+ Fri, 17 Apr 2020 05:25:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200417121629.GA3758@techsingularity.net>
+References: <20200416075643.27330-1-eperezma@redhat.com> <20200416075643.27330-6-eperezma@redhat.com>
+ <20200416183244-mutt-send-email-mst@kernel.org>
+In-Reply-To: <20200416183244-mutt-send-email-mst@kernel.org>
+From:   Eugenio Perez Martin <eperezma@redhat.com>
+Date:   Fri, 17 Apr 2020 14:24:31 +0200
+Message-ID: <CAJaqyWcuxG03+J+BW=fPb=JFKLPi0h5sRGv9cjWv63eyspS4Qg@mail.gmail.com>
+Subject: Re: [PATCH v2 5/8] tools/virtio: Use __vring_new_virtqueue in virtio_test.c
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        kvm list <kvm@vger.kernel.org>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Halil Pasic <pasic@linux.ibm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 17, 2020 at 01:16:29PM +0100, Mel Gorman wrote:
-> On Fri, Apr 17, 2020 at 12:21:29PM +0200, SeongJae Park wrote:
-> > On Fri, 17 Apr 2020 12:04:17 +0200 Peter Zijlstra <peterz@infradead.org> wrote:
-> > 
-> > > On Fri, Apr 17, 2020 at 09:05:08AM +0200, SeongJae Park wrote:
-> > > > I think the main idea of DAMON[1] might be able to applied here.  Have you
-> > > > considered it?
-> > > > 
-> > > > [1] https://lore.kernel.org/linux-mm/20200406130938.14066-1-sjpark@amazon.com/
-> > > 
-> > > I've ignored that entire thing after you said the information it
-> > > provides was already available through the PMU.
-> > 
-> > Sorry if my answer made you confused.  What I wanted to say was that the
-> > fundamental access checking mechanism that DAMON depends on is PTE Accessed bit
-> > for now, but it could be modified to use PMU or other features instead. 
-> 
-> I would not be inclined to lean towards either approach for NUMA
-> balancing. Fiddling with the accessed bit can have consequences for page
-> aging and residency -- fine for debugging a problem, not to fine for
-> normal usage. I would expect the PMU approach would have high overhead
-> as well as taking over a PMU counter that userspace debugging may expect
-> to be available.
+On Fri, Apr 17, 2020 at 12:33 AM Michael S. Tsirkin <mst@redhat.com> wrote:
+>
+> On Thu, Apr 16, 2020 at 09:56:40AM +0200, Eugenio P=C3=A9rez wrote:
+> > As updated in ("2a2d1382fe9d virtio: Add improved queue allocation API"=
+)
+> >
+> > Signed-off-by: Eugenio P=C3=A9rez <eperezma@redhat.com>
+>
+> Pls add motivation for these changes.
+>
 
-Oh, quite agreed; I was just saying I never saw the use of that whole
-DAMON thing. AFAICT it's not actually solving a problem, just making
-more.
+The original motivation was to make code as close as possible to
+virtio_net. Also, it skips a (probably not expensive) initialization
+in vring_new_virtqueue.
+
+With the recent events, I think that this could be useful to test when
+userspace and kernel use different struct layout, maybe with some
+sanitizer. I can drop it if you don't see it the same way (or if I
+didn't understand the problem and this does not help).
+
+Thanks!
+
+> > ---
+> >  tools/virtio/virtio_test.c | 7 +++----
+> >  1 file changed, 3 insertions(+), 4 deletions(-)
+> >
+> > diff --git a/tools/virtio/virtio_test.c b/tools/virtio/virtio_test.c
+> > index 1d5144590df6..d9827b640c21 100644
+> > --- a/tools/virtio/virtio_test.c
+> > +++ b/tools/virtio/virtio_test.c
+> > @@ -106,10 +106,9 @@ static void vq_info_add(struct vdev_info *dev, int=
+ num)
+> >       assert(r >=3D 0);
+> >       memset(info->ring, 0, vring_legacy_size(num, 4096));
+> >       vring_legacy_init(&info->vring, num, info->ring, 4096);
+> > -     info->vq =3D vring_new_virtqueue(info->idx,
+> > -                                    info->vring.num, 4096, &dev->vdev,
+> > -                                    true, false, info->ring,
+> > -                                    vq_notify, vq_callback, "test");
+> > +     info->vq =3D
+> > +             __vring_new_virtqueue(info->idx, info->vring, &dev->vdev,=
+ true,
+> > +                                   false, vq_notify, vq_callback, "tes=
+t");
+> >       assert(info->vq);
+> >       info->vq->priv =3D info;
+> >       vhost_vq_setup(dev, info);
+> > --
+> > 2.18.1
+>
+
