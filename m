@@ -2,90 +2,96 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 355E8C2D0EF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 19:12:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7C55C2D0EF
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 19:14:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2075120780
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 19:12:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B7EE2076D
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 19:14:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="q74mObg3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729491AbgDQTMA (ORCPT
+        id S1730368AbgDQTOW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 15:12:00 -0400
-Received: from mga17.intel.com ([192.55.52.151]:48467 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728223AbgDQTL7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 15:11:59 -0400
-IronPort-SDR: MF9Yyj5QDdOYabRmE6wT1eVt8xxz34g2Z4hEIC/siSN3Q93xG7rG/MMxnYVen/xvuWkPwlXoQR
- rTwEmXjwOyhg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2020 12:11:59 -0700
-IronPort-SDR: Cj7NFqYKB4Vr6aF2AtD3poafxbzMBlmyVx6d5dkZft7ZJuuLNPoM5oig1wPwbpktNDe/4x57D+
- UbzJm7ZhR1Zw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,395,1580803200"; 
-   d="scan'208";a="244789479"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by fmsmga007.fm.intel.com with ESMTP; 17 Apr 2020 12:11:59 -0700
-Date:   Fri, 17 Apr 2020 12:11:59 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Peter Xu <peterx@redhat.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, Vitaly Kuznetsov <vkuznets@redhat.com>
-Subject: Re: [PATCH 0/3] KVM: x86: move nested-related kvm_x86_ops to a
- separate struct
-Message-ID: <20200417191159.GA14609@linux.intel.com>
-References: <20200417164413.71885-1-pbonzini@redhat.com>
- <20200417190553.GI287932@xz-x1>
+        Fri, 17 Apr 2020 15:14:22 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:19392 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730125AbgDQTOV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Apr 2020 15:14:21 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e99ff9d0000>; Fri, 17 Apr 2020 12:12:29 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Fri, 17 Apr 2020 12:14:21 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Fri, 17 Apr 2020 12:14:21 -0700
+Received: from HQMAIL107.nvidia.com (172.20.187.13) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 17 Apr
+ 2020 19:14:21 +0000
+Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Fri, 17 Apr 2020 19:14:20 +0000
+Received: from skomatineni-linux.nvidia.com (Not Verified[10.2.171.241]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5e9a000b0000>; Fri, 17 Apr 2020 12:14:20 -0700
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+To:     <adrian.hunter@intel.com>, <ulf.hansson@linaro.org>,
+        <baolin.wang@linaro.org>, <kstewart@linuxfoundation.org>,
+        <tglx@linutronix.de>, <bradleybolen@gmail.com>,
+        <gregkh@linuxfoundation.org>, <faiz_abbas@ti.com>,
+        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
+        <skomatineni@nvidia.com>
+CC:     <bbiswas@nvidia.com>, <anrao@nvidia.com>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-mmc@vger.kernel.org>
+Subject: [PATCH 4.19.113 0/3] Fix for long operation cmds busy detection
+Date:   Fri, 17 Apr 2020 12:14:01 -0700
+Message-ID: <1587150844-12003-1-git-send-email-skomatineni@nvidia.com>
+X-Mailer: git-send-email 2.7.4
+X-NVConfidentiality: public
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200417190553.GI287932@xz-x1>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1587150749; bh=MLMeZlGwo09nxFFR4BPaUlO5N8koBh6qfFD6TaQ2IpY=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         X-NVConfidentiality:MIME-Version:Content-Type;
+        b=q74mObg3UbRlzdKkJ0MO2ODy070ojZ36VSP3SOZWz5D6a47VZpuIrMeObRBRxqlZ1
+         w5iJXdGi3/z/tzKieBrn7Yjow18QiVJNxNBCAweL6/qHp8Ts6ryYKCkEzbI1oD2uwm
+         t69IFPGIVhJAMgLgpOWRni6efg84H00lcMLx1SejKJCHLHOgOjjz/e5zCs9yxlg7bI
+         MbnMPKU7MjribqepGMOZCbLYa0vvL/3PlkDtRgMwcV4AbtrJP3LqHKZ18vLjaDUayj
+         dsrw6hglkerYbee+Y3MR3HnOlrNkbgIqaXOAhTsUN4tnH85jLItL2fBJ+qJCjrknFf
+         SOy5x9SSpJyiQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 17, 2020 at 03:05:53PM -0400, Peter Xu wrote:
-> On Fri, Apr 17, 2020 at 12:44:10PM -0400, Paolo Bonzini wrote:
-> > While this reintroduces some pointer chasing that was removed in
-> > afaf0b2f9b80 ("KVM: x86: Copy kvm_x86_ops by value to eliminate layer
-> > of indirection", 2020-03-31), the cost is small compared to retpolines
-> > and anyway most of the callbacks are not even remotely on a fastpath.
-> > In fact, only check_nested_events should be called during normal VM
-> > runtime.  When static calls are merged into Linux my plan is to use them
-> > instead of callbacks, and that will finally make things fast again by
-> > removing the retpolines.
-> 
-> Paolo,
-> 
-> Just out of curiousity: is there an explicit reason to not copy the
-> whole kvm_x86_nested_ops but use pointers (since after all we just
-> reworked kvm_x86_ops)?
+This series includes manually backported changes that implements Tegra
+specific timeout callback to switch between finite and infinite HW busy
+detection wait modes.
 
-Ya, my vote would be to copy by value as well.  I'd also be in favor of
-dropping the _ops part, e.g.
+sdhci-tegra driver patch implements set_timeout callback based on one of
+the sdhci host driver patch that refactors sdhci_set_timeout and allows
+drivers to call __sdhci_set_timeout with their timeout callback
+implementation.
 
-  struct kvm_x86_ops {
-        struct kvm_x86_nested_ops nested;
+Both of these patches are manually backported in this series.
 
-        ...
-  };
 
-and drop the "nested" parts from the ops, e.g.
+Sowjanya Komatineni (3):
+  mmc: sdhci: Refactor sdhci_set_timeout()
+  sdhci: tegra: Implement Tegra specific set_timeout callback
+  sdhci: tegra: Enable MMC_CAP_WAIT_WHILE_BUSY host capability
 
-  check_nested_events() -> check_events()
+ drivers/mmc/host/sdhci-tegra.c | 32 ++++++++++++++++++++++++++++++++
+ drivers/mmc/host/sdhci.c       | 38 ++++++++++++++++++++------------------
+ drivers/mmc/host/sdhci.h       |  1 +
+ 3 files changed, 53 insertions(+), 18 deletions(-)
 
-which yields:
+-- 
+2.7.4
 
-	r = kvm_x86_ops.nested.check_events(vcpu);
-	if (r != 0)
-		return r;
-
-I had this coded up but shelved it when svm.c got fractured :-).
