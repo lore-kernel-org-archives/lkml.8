@@ -2,144 +2,188 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55B89C352BE
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 09:45:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 312B0C352BE
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 09:47:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 282F7207FC
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 09:45:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P2rW5IBM"
+	by mail.kernel.org (Postfix) with ESMTP id 12033207FC
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 09:47:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726798AbgDQJpk (ORCPT
+        id S1727943AbgDQJrO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 05:45:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47592 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725932AbgDQJpj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 05:45:39 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 648AAC061A0C;
-        Fri, 17 Apr 2020 02:45:39 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id y4so1357891ljn.7;
-        Fri, 17 Apr 2020 02:45:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=LbDCyzZ+wvIY394IIvuzzVGrKtnyT3vqI08Zb16TqU8=;
-        b=P2rW5IBMX7R2KqCLSsRLAu+Yu01gD4Fs6k1iCsa4rRmbDN6bf1y4Uk75MUR94B9j6B
-         ccnBkoD78+NYMJMFZNc/3b0JOnHESX23grmjrVjWHZrSaAqKPw3D3JeSSs6AuZfxCOTV
-         L/CLUBtSi9NNI0y10viaa8jCe9Meu0lhCFJg9rGtXjAeI8HWUoliJdajP94g7QYX6/bx
-         PsIWWxeR03D5FriiQknOdrmx5w+0DCcz4K1kteQcpP3bVDfUWxJT99LUPafxFxiF3GeS
-         ZkSXY9JrxarJ8P6jHrTUuhP9RDM5zNxkaR1mEKacAPvZn+Vj9TlBgUoGptIBZGnXzjlQ
-         rLug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=LbDCyzZ+wvIY394IIvuzzVGrKtnyT3vqI08Zb16TqU8=;
-        b=nWbg4kzlYjWE/cQGWeO5uMUNMCtsSLCZ4MsTsg7sirFObZ+k5tnNH+zb8Z1hQVWERw
-         PBJ/TpPOQM7lyaEzZqEEMsrE6i40nOYtiBz6thmjr7ntVEVTlfuyYkgWK9tjpaAolh08
-         Fl4DPDa4BkfPvVmSi2UiffAwSRzWKv0jlsBUL1WFBde7GUa3ETLJQ8NQsAORWVbRKp8C
-         WeiDl8qQlPhFNLXjAZGTXT84rpto93PFKqypYyg43aPXlKczc2L+d4i7eBhQWMGpovGj
-         kFmQocgu5jyVrQxVsj3A7gaQg8zRgyenTvGn1GaUWBUC/tlWFLR+bCzoSJNDJ9MkaySP
-         Qzqw==
-X-Gm-Message-State: AGi0PuYHqAp/cG7Y5nSdO7+oXT1doBjOMkyoaJi8+JLINKAt6ZQGEpEB
-        AgLSyfptFp82c3Myf2VJsla91FtWNHjMhcX6Bmg=
-X-Google-Smtp-Source: APiQypI0mj1jwcNFt3E9A0uUmQJYUkIGlF6XDEMLDymiymNJ8v/pYeR0P4Mhe285ant6cVIhc9WajxyUh43RoaIjoMY=
-X-Received: by 2002:a2e:9496:: with SMTP id c22mr773456ljh.165.1587116737574;
- Fri, 17 Apr 2020 02:45:37 -0700 (PDT)
+        Fri, 17 Apr 2020 05:47:14 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:2348 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725830AbgDQJrN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Apr 2020 05:47:13 -0400
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id D82F383C57B3FD2E2153;
+        Fri, 17 Apr 2020 17:47:10 +0800 (CST)
+Received: from [127.0.0.1] (10.173.221.230) by DGGEMS409-HUB.china.huawei.com
+ (10.3.19.209) with Microsoft SMTP Server id 14.3.487.0; Fri, 17 Apr 2020
+ 17:47:00 +0800
+Subject: Re: [PATCH v2] KVM/arm64: Support enabling dirty log gradually in
+ small chunks
+To:     Marc Zyngier <maz@kernel.org>
+References: <20200413122023.52583-1-zhukeqian1@huawei.com>
+ <20200416160833.728017e9@why>
+CC:     <kvm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <kvmarm@lists.cs.columbia.edu>,
+        "Paolo Bonzini" <pbonzini@redhat.com>,
+        James Morse <james.morse@arm.com>,
+        "Julien Thierry" <julien.thierry.kdev@gmail.com>,
+        Will Deacon <will@kernel.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Jay Zhou <jianjay.zhou@huawei.com>,
+        <wanghaibin.wang@huawei.com>
+From:   zhukeqian <zhukeqian1@huawei.com>
+Message-ID: <44ce4553-5215-2290-5956-2e6c577d030b@huawei.com>
+Date:   Fri, 17 Apr 2020 17:46:59 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.7.1
 MIME-Version: 1.0
-References: <20200325090122.9308-1-butterflyhuangxx@gmail.com> <4149a5b4-c3f3-2902-84e2-eedc9ecc54f8@xs4all.nl>
-In-Reply-To: <4149a5b4-c3f3-2902-84e2-eedc9ecc54f8@xs4all.nl>
-From:   butt3rflyh4ck <butterflyhuangxx@gmail.com>
-Date:   Fri, 17 Apr 2020 17:45:26 +0800
-Message-ID: <CAFcO6XN-adr9SYt2KX2UyNChV+XSprnWmOWkGuPMcaS6FT+gGg@mail.gmail.com>
-Subject: Re: [PATCH] media: media/pci: prevent memory leak in bttv_probe
-To:     Hans Verkuil <hverkuil-cisco@xs4all.nl>, mchehab@kernel.org,
-        tglx@linutronix.de, mpe@ellerman.id.au, allison@lohutok.net
-Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200416160833.728017e9@why>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.173.221.230]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 17, 2020 at 3:26 PM Hans Verkuil <hverkuil-cisco@xs4all.nl> wrote:
->
-> On 25/03/2020 10:01, Xiaolong Huang wrote:
-> > In bttv_probe if some functions such as pci_enable_device,
-> > pci_set_dma_mask and request_mem_region fails the allocated
-> >  memory for btv should be released.
-> >
-> > Signed-off-by: Xiaolong Huang <butterflyhuangxx@gmail.com>
-> > ---
-> >  drivers/media/pci/bt8xx/bttv-driver.c | 8 ++++++++
-> >  1 file changed, 8 insertions(+)
-> >
-> > diff --git a/drivers/media/pci/bt8xx/bttv-driver.c b/drivers/media/pci/bt8xx/bttv-driver.c
-> > index a359da7773a9..37ac59110383 100644
-> > --- a/drivers/media/pci/bt8xx/bttv-driver.c
-> > +++ b/drivers/media/pci/bt8xx/bttv-driver.c
-> > @@ -4013,10 +4013,14 @@ static int bttv_probe(struct pci_dev *dev, const struct pci_device_id *pci_id)
-> >       btv->id  = dev->device;
-> >       if (pci_enable_device(dev)) {
-> >               pr_warn("%d: Can't enable device\n", btv->c.nr);
-> > +             bttvs[btv->c.nr] = NULL;
-> > +             kfree(btv);
-> >               return -EIO;
->
-> Let's change this...
->
-> >       }
-> >       if (pci_set_dma_mask(dev, DMA_BIT_MASK(32))) {
-> >               pr_warn("%d: No suitable DMA available\n", btv->c.nr);
-> > +             bttvs[btv->c.nr] = NULL;
-> > +             kfree(btv);
-> >               return -EIO;
->
-> this...
->
-> >       }
-> >       if (!request_mem_region(pci_resource_start(dev,0),
-> > @@ -4025,6 +4029,8 @@ static int bttv_probe(struct pci_dev *dev, const struct pci_device_id *pci_id)
-> >               pr_warn("%d: can't request iomem (0x%llx)\n",
-> >                       btv->c.nr,
-> >                       (unsigned long long)pci_resource_start(dev, 0));
-> > +             bttvs[btv->c.nr] = NULL;
-> > +             kfree(btv);
-> >               return -EBUSY;
->
-> and this to a goto free_mem.
->
-> >       }
-> >       pci_set_master(dev);
-> > @@ -4211,6 +4217,8 @@ static int bttv_probe(struct pci_dev *dev, const struct pci_device_id *pci_id)
-> >       release_mem_region(pci_resource_start(btv->c.pci,0),
-> >                          pci_resource_len(btv->c.pci,0));
-> >       pci_disable_device(btv->c.pci);
->
-> And add the free_mem: label here.
->
-> > +     bttvs[btv->c.nr] = NULL;
-> > +     kfree(btv);
-> >       return result;
-> >  }
-> >
-> >
->
-> Regards,
->
->         Hans
+Hi Marc,
 
-Good, I will modify the patch and resend a new one.
+On 2020/4/16 23:08, Marc Zyngier wrote:
+> On Mon, 13 Apr 2020 20:20:23 +0800
+> Keqian Zhu <zhukeqian1@huawei.com> wrote:
+> 
+>> There is already support of enabling dirty log graually in small chunks
+> 
+> gradually
+> 
+>> for x86 in commit 3c9bd4006bfc ("KVM: x86: enable dirty log gradually in
+>> small chunks"). This adds support for arm64.
+>>
+>> x86 still writes protect all huge pages when DIRTY_LOG_INITIALLY_ALL_SET
+>> is eanbled. However, for arm64, both huge pages and normal pages can be
+> 
+> enabled
+> 
+>> write protected gradually by userspace.
+>>
+>> Under the Huawei Kunpeng 920 2.6GHz platform, I did some tests on 128G
+>> Linux VMs with different page size. The memory pressure is 127G in each
+>> case. The time taken of memory_global_dirty_log_start in QEMU is listed
+>> below:
+>>
+>> Page Size      Before    After Optimization
+>>   4K            650ms         1.8ms
+>>   2M             4ms          1.8ms
+>>   1G             2ms          1.8ms
+> 
+> These numbers are different from what you have advertised before. What
+> changed?
+In patch RFC, the numbers is got when memory pressure is 100G, so the number
+is bigger here.
+> 
+>>
+>> Besides the time reduction, the biggest income is that we will minimize
+> 
+> s/income/improvement/
+> 
+>> the performance side effect (because of dissloving huge pages and marking
+> 
+> dissolving
+embarrassed for these misspell :(
+> 
+>> memslots dirty) on guest after enabling dirty log.
+>>
+>> Signed-off-by: Keqian Zhu <zhukeqian1@huawei.com>
+>> ---
+>>  Documentation/virt/kvm/api.rst    |  2 +-
+>>  arch/arm64/include/asm/kvm_host.h |  3 +++
+>>  virt/kvm/arm/mmu.c                | 12 ++++++++++--
+>>  3 files changed, 14 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
+>> index efbbe570aa9b..0017f63fa44f 100644
+>> --- a/Documentation/virt/kvm/api.rst
+>> +++ b/Documentation/virt/kvm/api.rst
+>> @@ -5777,7 +5777,7 @@ will be initialized to 1 when created.  This also improves performance because
+>>  dirty logging can be enabled gradually in small chunks on the first call
+>>  to KVM_CLEAR_DIRTY_LOG.  KVM_DIRTY_LOG_INITIALLY_SET depends on
+>>  KVM_DIRTY_LOG_MANUAL_PROTECT_ENABLE (it is also only available on
+>> -x86 for now).
+>> +x86 and arm64 for now).
+>>  
+>>  KVM_CAP_MANUAL_DIRTY_LOG_PROTECT2 was previously available under the name
+>>  KVM_CAP_MANUAL_DIRTY_LOG_PROTECT, but the implementation had bugs that make
+>> diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/asm/kvm_host.h
+>> index 32c8a675e5a4..a723f84fab83 100644
+>> --- a/arch/arm64/include/asm/kvm_host.h
+>> +++ b/arch/arm64/include/asm/kvm_host.h
+>> @@ -46,6 +46,9 @@
+>>  #define KVM_REQ_RECORD_STEAL	KVM_ARCH_REQ(3)
+>>  #define KVM_REQ_RELOAD_GICv4	KVM_ARCH_REQ(4)
+>>  
+>> +#define KVM_DIRTY_LOG_MANUAL_CAPS   (KVM_DIRTY_LOG_MANUAL_PROTECT_ENABLE | \
+>> +				     KVM_DIRTY_LOG_INITIALLY_SET)
+>> +
+>>  DECLARE_STATIC_KEY_FALSE(userspace_irqchip_in_use);
+>>  
+>>  extern unsigned int kvm_sve_max_vl;
+>> diff --git a/virt/kvm/arm/mmu.c b/virt/kvm/arm/mmu.c
+>> index e3b9ee268823..1077f653a611 100644
+>> --- a/virt/kvm/arm/mmu.c
+>> +++ b/virt/kvm/arm/mmu.c
+>> @@ -2265,8 +2265,16 @@ void kvm_arch_commit_memory_region(struct kvm *kvm,
+>>  	 * allocated dirty_bitmap[], dirty pages will be be tracked while the
+>>  	 * memory slot is write protected.
+>>  	 */
+>> -	if (change != KVM_MR_DELETE && mem->flags & KVM_MEM_LOG_DIRTY_PAGES)
+>> -		kvm_mmu_wp_memory_region(kvm, mem->slot);
+>> +	if (change != KVM_MR_DELETE && mem->flags & KVM_MEM_LOG_DIRTY_PAGES) {
+>> +		/*
+>> +		 * If we're with initial-all-set, we don't need to write
+>> +		 * protect any pages because they're all reported as dirty.
+>> +		 * Huge pages and normal pages will be write protect gradually.
+>> +		 */
+>> +		if (!kvm_dirty_log_manual_protect_and_init_set(kvm)) {
+>> +			kvm_mmu_wp_memory_region(kvm, mem->slot);
+>> +		}
+>> +	}
+>>  }
+>>  
+>>  int kvm_arch_prepare_memory_region(struct kvm *kvm,
+> 
+> As it is, it is pretty good. The one thing that isn't clear to me is
+> why we have a difference in behaviour between x86 and arm64. What
+> prevents x86 from having the same behaviour as arm64?
+I am also not very clear about the difference. Maybe there is historic reason.
+
+Before introducing DIRTY_LOG_INITIALLY_ALL_SET, all pages will be write
+protected when starting dirty log, but only normal pages are needed
+to be write protected again during dirty log sync, because huge pages will
+be dissolved to normal pages.
+
+For that x86 uses different routine to write protect huge pages and normal pages,
+and arm64 uses same routine to do this, so arm64 still write protect all
+pages again during dirty log sync, but x86 didn't.
+
+So I think that x86 can write protect huge pages gradually too, just need to add
+some code legs in dirty log sync.
 
 Thanks,
+Keqian
+> 
+> Thanks,
+> 
+> 	M.
+> 
 
-      Butt3flyh4ck
