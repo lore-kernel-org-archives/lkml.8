@@ -2,110 +2,295 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D047EC2D0EF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 20:06:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56FE6C2D0EF
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 20:07:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B149E221EA
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 20:06:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0921F221EA
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 20:07:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="t0sfYbth"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730908AbgDQUGv (ORCPT
+        id S1730932AbgDQUHW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 16:06:51 -0400
-Received: from mout.kundenserver.de ([212.227.126.131]:37103 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730573AbgDQUGv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 16:06:51 -0400
-Received: from mail-qt1-f180.google.com ([209.85.160.180]) by
- mrelayeu.kundenserver.de (mreue010 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1M8QiW-1jL9XV33js-004UwX; Fri, 17 Apr 2020 22:06:49 +0200
-Received: by mail-qt1-f180.google.com with SMTP id x2so3110601qtr.0;
-        Fri, 17 Apr 2020 13:06:49 -0700 (PDT)
-X-Gm-Message-State: AGi0PubwJtWaPqKeB14VwyJ6MAaIMvki8umzIGon9wFv5dXOOshBcXnJ
-        wqTjwtkMvXna0/5SxOXODZzqRtA4CRcsPqzHehY=
-X-Google-Smtp-Source: APiQypIuVYTMsWNIMRfLctc2Px6V3Nv5laT/h9easo3nN8JdO/iC9u+TYaVOxEylqCGtuWj1RzmpVdKpAc4Qm4vntwk=
-X-Received: by 2002:ac8:6757:: with SMTP id n23mr4819273qtp.304.1587154008516;
- Fri, 17 Apr 2020 13:06:48 -0700 (PDT)
+        Fri, 17 Apr 2020 16:07:22 -0400
+Received: from mail-eopbgr50087.outbound.protection.outlook.com ([40.107.5.87]:12773
+        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730573AbgDQUHV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Apr 2020 16:07:21 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=RhAI4ttjLXvLvQLHkl9GIWpVs859y/jA8+G/Sx7bE9ViVV8geVwaUiW3H97BX/zPHopE2kDuLskzK4hyFu+A+Y5jvU2+iPQWtaJkecuwm8P1S1jRQat7S69BE6BOkDlWckFujUBvljTvErDFclDtVZXIFS+zuZQqhgTQTiUQqwHSPvdn6lxrKc9ZZizZXukk7FrgNfZUnyw0XqP6qgGWJvEeEpHBPcEw8ujbkxvF0DyXLqe6+iuSm18gxqsGbzVRm9lDz73KMp3ZSq0bb6U/9DLUqpPCkd7xDrJgNgLKTPeu2FwSeynttdMnrZQnq4QsbVMM76rBlVQ15htvk+pnnA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1GwEgSulrP4Nghlw8OO20TCr145kK9+j6WbLr7NlmcE=;
+ b=Pmf6ef4aQut05fP6+PTCoJeYIg349cEIIRzh4rrOHWqwlJ6elrVoIjPqr6OqH2MMOipRIcOUdVZmLEm5H8Pele6DEwijtVbBnjOr9tfAVG/fVBd7wghA4BZBUkOjslLAPUzUBwFMl8+kHZe4Fbe4JXn0VJnZX2+w/lTdIZ0FayJgpoANR+WcDngjpI1K2CLPChsKO9bc0uw4+NwlVKy+bKyQgGmer6EEzdRK5lBpZ8BbhF+7WUdxG75RnDcy6A2rrsRQfNYGvrx7jjafOMK87Vq75+DxDhhtfBe7IsMfNls/b8OFnKeBGLbSZR1ipupjgoVv/6JbyvTXDZXYPmz0lA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1GwEgSulrP4Nghlw8OO20TCr145kK9+j6WbLr7NlmcE=;
+ b=t0sfYbthM9pfdUzthwGpjX5qEPJzfSVsOwK1aRH5gSWB5R4GwBej1P1jiYee+vtgl00cUVrpvuBc1dm90c3XZy5w9p8UOTHKR7i1WsUwRVLDzw7iriz15xgLqx5WOmuG4711H1mJtxLwW3cXNM5TrmqzZPwN9XJmniXLe/ekbwk=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=saeedm@mellanox.com; 
+Received: from VI1PR05MB5102.eurprd05.prod.outlook.com (2603:10a6:803:5e::23)
+ by VI1PR05MB5917.eurprd05.prod.outlook.com (2603:10a6:803:e5::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.17; Fri, 17 Apr
+ 2020 20:07:16 +0000
+Received: from VI1PR05MB5102.eurprd05.prod.outlook.com
+ ([fe80::9d19:a564:b84e:7c19]) by VI1PR05MB5102.eurprd05.prod.outlook.com
+ ([fe80::9d19:a564:b84e:7c19%7]) with mapi id 15.20.2900.030; Fri, 17 Apr 2020
+ 20:07:16 +0000
+From:   Saeed Mahameed <saeedm@mellanox.com>
+To:     Masahiro Yamada <masahiroy@kernel.org>,
+        linux-kbuild@vger.kernel.org
+Cc:     Arnd Bergmann <arnd@arndb.de>, Jason Gunthorpe <jgg@ziepe.ca>,
+        Nicolas Pitre <nico@fluxnic.net>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Saeed Mahameed <saeedm@mellanox.com>, narmstrong@baylibre.com,
+        Laurent.pinchart@ideasonboard.com, leon@kernel.org,
+        kieran.bingham+renesas@ideasonboard.com, jonas@kwiboo.se,
+        airlied@linux.ie, jernej.skrabec@siol.net,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        linux-rdma@vger.kernel.org
+Subject: [RFC PATCH v2 1/3] Kconfig: Introduce "uses" keyword
+Date:   Fri, 17 Apr 2020 13:06:25 -0700
+Message-Id: <20200417200627.129849-1-saeedm@mellanox.com>
+X-Mailer: git-send-email 2.25.2
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: BYAPR05CA0100.namprd05.prod.outlook.com
+ (2603:10b6:a03:e0::41) To VI1PR05MB5102.eurprd05.prod.outlook.com
+ (2603:10a6:803:5e::23)
 MIME-Version: 1.0
-References: <20200414070142.288696-1-hch@lst.de> <20200414070142.288696-5-hch@lst.de>
- <CAK8P3a3HvbPKTkwfWr6PbZ96koO_NrJP1qgk8H1mgk=qUScGkQ@mail.gmail.com>
- <20200415074514.GA1393@lst.de> <CAK8P3a0QGQX85LaqKC1UuTERk6Bpr5TW6aWF+jxi2cOpa4L_AA@mail.gmail.com>
- <20200417132714.GA6401@lst.de> <87o8rqc7az.fsf@x220.int.ebiederm.org>
-In-Reply-To: <87o8rqc7az.fsf@x220.int.ebiederm.org>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Fri, 17 Apr 2020 22:06:32 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a0x0vsgVp-pRWd7rL-6Zg9KimNQjJpnp6KG+kS1=eK7wg@mail.gmail.com>
-Message-ID: <CAK8P3a0x0vsgVp-pRWd7rL-6Zg9KimNQjJpnp6KG+kS1=eK7wg@mail.gmail.com>
-Subject: Re: [PATCH 4/8] binfmt_elf: open code copy_siginfo_to_user to
- kernelspace buffer
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Jeremy Kerr <jk@ozlabs.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:FJYARPUTcTI5ilVImAaKDLXrV419J/atlbHDqy6EpyXPfBFphnb
- Wu7yOUxKWwqU3TrJgIzUTWyK+Aoj7DObEifzaOTXALipy1aXN3EYWzu71cl2nIIXGNafjRL
- u1K1Y93P7sw2cdVx+jW5uYANF/5BVVjTu883KiqzIqFbian+a3floaeJshdvHYy2LxgZ/6D
- MvcnnNvyF0F12SINkKi7g==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:8VDhBQqp7NI=:jpsEGnKPTVvn48t9buXnHl
- 6Jq1w0wHxdwWyzV6tm1KaqKnx/Xob1WGBq0Jk2o93zy5Y6ftTNwO7dhUGxw4TLIFVYKzY1LQb
- 0hqTM+7T6pM87aZxCKYBWRNcJwFR5Vju3cw0NqdmWbVLnN2kOfOTeFgLy1kur4YdgJjExKEoo
- pb+5m8IUWay24ToMzgcTEhQ8IVdOZvJyWLAD4gbCqpfWcJ3pjjVgAIPnBpCyfi1w/oX4Z1ZCD
- 9rMPzMKRD/tpHLPdSbaNhPS41rEiwJi76XKIMJvHhdJU4RO6NSDJJph5LwORSiQVXNCN7AW0f
- 6OQzjAvM1I9QJubyg52ViS98YVmWVB/2wjTOavfWFJOd5jnLg2Au9Nx0OlyDAQOKBHd+udi1H
- Umd8XBe6H/0p1q4wknQn0fgGmAsLBhz/vXRwPAEzoV1HAwnfHkFDdMDdFRFapMiZux7gP3Rfr
- iFVL2+wcqSI2CdY9b9UePuolpJR60tpVy9GPwG0wSpdN5LOyLbra6RN1k4LUJVA8QB1Hb7TiK
- eeFVBLRxdiJsnTC6HsdCg9lSMoF7drN1pNcJidJTJSMU1tF3hwYHWhlYMCzksTOODVwKTAI2M
- MRL2jfTIlSnNKg2Z0+HXUQ1f5BVV1OHvfCSG1vCTkeyIDBQWK7gGmH5LeM3kyAhLsH/01Rl48
- PDOkN1+sBWD3TwrH6PHij3lOGXAOL260fqMLLAx/BObKb0WQLzf+kRao12VdLLCiXynuH/MK2
- +t5o3tjLN/RLiOmBsAbsZrMveDlNzFC/uJJxEnXsuXC1AQvSPF06HthAdP+3sCw30+wxCOPzv
- e58tjvmiC73A9na962XZTKMh9rl/YRsy3NS0q2M2QzRlHxcyTM=
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from smtp.office365.com (73.15.39.150) by BYAPR05CA0100.namprd05.prod.outlook.com (2603:10b6:a03:e0::41) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.9 via Frontend Transport; Fri, 17 Apr 2020 20:07:10 +0000
+X-Mailer: git-send-email 2.25.2
+X-Originating-IP: [73.15.39.150]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 1493a089-ef3b-4bf2-be3a-08d7e30aebe5
+X-MS-TrafficTypeDiagnostic: VI1PR05MB5917:|VI1PR05MB5917:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <VI1PR05MB591718CD85CCEF4F65BC1AD4BED90@VI1PR05MB5917.eurprd05.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:2276;
+X-Forefront-PRVS: 0376ECF4DD
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR05MB5102.eurprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(136003)(346002)(376002)(366004)(39860400002)(396003)(8676002)(7416002)(26005)(6666004)(478600001)(86362001)(2906002)(81156014)(52116002)(4326008)(186003)(16526019)(36756003)(956004)(5660300002)(2616005)(54906003)(1076003)(316002)(66556008)(66946007)(66476007)(6506007)(8936002)(6512007)(6486002)(966005)(54420400002);DIR:OUT;SFP:1101;
+Received-SPF: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: SllO1p/qRzzh0x2F4yDWUf1hJCy5n4oP0BJYrYYBsZrJJMaxEC+j4qnVVrSmmQXNX/tXDC/ALjLYoqrBK7tbx+ktxZ2281jKWmCIshmSA2NMr+antHK5uUW/VfjSpiWVTtW9cb++Oa4WztPyvf/EcTBd1Y6M0Fgfjwebk1OV6WD0Nl8YYs+nstyDb4+66y7pOyvSLtpHsPgdh8Z2gUjYWLCcNTm0A/AK2vIQwrxWpH0rw6IWG8LTPmeHRBzHhi0HW9Vg5qlfAwEX2W+Vnop8WDIR8Lhv8tAJ/PJB2omEs0g7UakRamfVBB6sP9WA0jTbw7Chqcf+adR51mQaXL4qAd8k0kK39te1+nI2O1XL1SLT5J0WKcvqgcahSy/0pBJS45Q3hHLlaJW70JRg73eosbDWEENXYUPhZoTGRMSR4OOHAqBVcG+x1bscOQq1PMC+asKZCcstcmoF7B0UkYIpcN4SBsIf7oqb5Xh85GBNRUcRPcK9B5tqKJX9V8rFFAF3gGwVpwyDiK3Nw6/tgWGEa7e5Uv2F8UCAjHD56u8DldYgu7TEus1LFt1VFcN0GN7O2mnny4swvUgEg+lI/rU48g==
+X-MS-Exchange-AntiSpam-MessageData: zKaOXgsJIKy0QS+qqr44jBQ/DTBHAMzAYIU1voG7lbnPjiREyyABIdiXhgQ5KRItNi+hokJRYIq2ikaie5yNxP0zncrZwPn75isnF16xYztSqjcV0SNoCSiTzfy+OhnpkEAvXaGW5J2A29TVWCWhPw==
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1493a089-ef3b-4bf2-be3a-08d7e30aebe5
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Apr 2020 20:07:16.1425
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: CDFlQ799+nlqI+IMtsJGZ5DL0nTwFBwIVGrf/rbz+Ki2AjOqBIqaBeTZ2J3S6kPeC8qdX0l3HhWzm+BW3ij7TA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB5917
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 17, 2020 at 8:13 PM Eric W. Biederman <ebiederm@xmission.com> wrote:
->
-> Christoph Hellwig <hch@lst.de> writes:
->
-> > On Wed, Apr 15, 2020 at 10:20:11AM +0200, Arnd Bergmann wrote:
-> >> > I'd rather keep it out of this series and to
-> >> > an interested party.  Then again x32 doesn't seem to have a whole lot
-> >> > of interested parties..
-> >>
-> >> Fine with me. It's on my mental list of things that we want to kill off
-> >> eventually as soon as the remaining users stop replying to questions
-> >> about it.
-> >>
-> >> In fact I should really turn that into a properly maintained list in
-> >> Documentation/... that contains any options that someone has
-> >> asked about removing in the past, along with the reasons for keeping
-> >> it around and a time at which we should ask about it again.
-> >
-> > To the newly added x86 maintainers:  Arnd brought up the point that
-> > elf_core_dump writes the ABI siginfo format into the core dump. That
-> > format differs for i386 vs x32.  Is there any good way to find out
-> > which is the right format when are not in a syscall?
-> >
-> > As far a I can tell x32 vs i386 just seems to be based around what
-> > syscall table was used for the current syscall, but core dumps aren't
-> > always in syscall context.
->
-> I don't think this matters.  The i386 and x32 signal structures
-> only differ for SIGCHLD.  The SIGCHLD signal does cause coredumps.
-> So as long as we get the 32bit vs 64bit distinct correct all should be
-> well.
+Due to the changes to the semantics of the imply keyword [1], which now
+will not force any config options to the implied configs any more.
 
-Ok, makes sense. Thanks for taking a look into this!
+A module (FOO) that has a weak dependency on some other modules (BAR)
+is now broken if it was using imply to force dependency restrictions.
+e.g.: FOO needs BAR to be reachable, especially when FOO=y and BAR=m.
+Which might now introduce build/link errors.
 
-      Arnd
+There are two options to solve this:
+1. use IS_REACHABLE(BAR), everywhere BAR is referenced inside FOO.
+2. in FOO's Kconfig add: depends on (BAR || !BAR)
+
+The first option is not desirable, and will leave the user confused when
+setting FOO=y and BAR=m, FOO will never reach BAR even though both are
+compiled.
+
+The 2nd one is the preferred approach, and will guarantee BAR is always
+reachable by FOO if both are compiled. But, (BAR || !BAR) is really
+confusing for those who don't really get how kconfig tristate arithmetics
+work.
+
+To solve this and hide this weird expression and to avoid repetition
+across the tree, we introduce new keyword "uses" to the Kconfig options
+family.
+
+uses BAR:
+Equivalent to: depends on symbol || !symbol
+Semantically it means, if FOO is enabled (y/m) and has the option:
+uses BAR, make sure it can reach/use BAR when possible.
+
+For example: if FOO=y and BAR=m, FOO will be forced to m.
+
+[1] https://lore.kernel.org/linux-doc/20200302062340.21453-1-masahiroy@kernel.org/
+
+Link: https://lkml.org/lkml/2020/4/8/839
+Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+Cc: Masahiro Yamada <masahiroy@kernel.org>
+Cc: linux-kbuild@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+---
+
+V2: - Fix double free due to single allocation of sym expr.
+    - Added a 3rd patch to convert to new keyword treewide.
+
+ Documentation/kbuild/kconfig-language.rst | 10 ++++++++++
+ scripts/kconfig/expr.h                    |  1 +
+ scripts/kconfig/lexer.l                   |  1 +
+ scripts/kconfig/menu.c                    |  4 +++-
+ scripts/kconfig/parser.y                  | 16 ++++++++++++++++
+ scripts/kconfig/symbol.c                  |  2 ++
+ 6 files changed, 33 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/kbuild/kconfig-language.rst b/Documentation/kbuild/kconfig-language.rst
+index a1601ec3317b..8db8c2d80794 100644
+--- a/Documentation/kbuild/kconfig-language.rst
++++ b/Documentation/kbuild/kconfig-language.rst
+@@ -130,6 +130,16 @@ applicable everywhere (see syntax).
+ 	bool "foo"
+ 	default y
+ 
++- uses dependencies: "uses" <symbol>
++
++  Equivalent to: depends on symbol || !symbol
++  Semantically it means, if FOO is enabled (y/m) and has the option:
++  uses BAR, make sure it can reach/use BAR when possible.
++  For example: if FOO=y and BAR=m, FOO will be forced to m.
++
++  Note:
++      To understand how (symbol || !symbol) is actually computed, please see `Menu dependencies`_
++
+ - reverse dependencies: "select" <symbol> ["if" <expr>]
+ 
+   While normal dependencies reduce the upper limit of a symbol (see
+diff --git a/scripts/kconfig/expr.h b/scripts/kconfig/expr.h
+index 5c3443692f34..face672fb4b4 100644
+--- a/scripts/kconfig/expr.h
++++ b/scripts/kconfig/expr.h
+@@ -185,6 +185,7 @@ enum prop_type {
+ 	P_CHOICE,   /* choice value */
+ 	P_SELECT,   /* select BAR */
+ 	P_IMPLY,    /* imply BAR */
++	P_USES,     /* uses BAR */
+ 	P_RANGE,    /* range 7..100 (for a symbol) */
+ 	P_SYMBOL,   /* where a symbol is defined */
+ };
+diff --git a/scripts/kconfig/lexer.l b/scripts/kconfig/lexer.l
+index 6354c905b006..c6a0017b10d4 100644
+--- a/scripts/kconfig/lexer.l
++++ b/scripts/kconfig/lexer.l
+@@ -102,6 +102,7 @@ n	[A-Za-z0-9_-]
+ "default"		return T_DEFAULT;
+ "defconfig_list"	return T_DEFCONFIG_LIST;
+ "depends"		return T_DEPENDS;
++"uses"			return T_USES;
+ "endchoice"		return T_ENDCHOICE;
+ "endif"			return T_ENDIF;
+ "endmenu"		return T_ENDMENU;
+diff --git a/scripts/kconfig/menu.c b/scripts/kconfig/menu.c
+index e436ba44c9c5..e26161b31a11 100644
+--- a/scripts/kconfig/menu.c
++++ b/scripts/kconfig/menu.c
+@@ -274,7 +274,9 @@ static void sym_check_prop(struct symbol *sym)
+ 			break;
+ 		case P_SELECT:
+ 		case P_IMPLY:
+-			use = prop->type == P_SELECT ? "select" : "imply";
++		case P_USES:
++			use = prop->type == P_SELECT ? "select" :
++				prop->type == P_IMPLY ? "imply" : "uses";
+ 			sym2 = prop_get_symbol(prop);
+ 			if (sym->type != S_BOOLEAN && sym->type != S_TRISTATE)
+ 				prop_warn(prop,
+diff --git a/scripts/kconfig/parser.y b/scripts/kconfig/parser.y
+index 708b6c4b13ca..0356ecbaf87d 100644
+--- a/scripts/kconfig/parser.y
++++ b/scripts/kconfig/parser.y
+@@ -57,6 +57,7 @@ static struct menu *current_menu, *current_entry;
+ %token T_DEF_BOOL
+ %token T_DEF_TRISTATE
+ %token T_DEPENDS
++%token T_USES
+ %token T_ENDCHOICE
+ %token T_ENDIF
+ %token T_ENDMENU
+@@ -169,6 +170,7 @@ config_option_list:
+ 	  /* empty */
+ 	| config_option_list config_option
+ 	| config_option_list depends
++	| config_option_list uses
+ 	| config_option_list help
+ ;
+ 
+@@ -261,6 +263,7 @@ choice_option_list:
+ 	  /* empty */
+ 	| choice_option_list choice_option
+ 	| choice_option_list depends
++	| choice_option_list uses
+ 	| choice_option_list help
+ ;
+ 
+@@ -360,6 +363,7 @@ menu_option_list:
+ 	  /* empty */
+ 	| menu_option_list visible
+ 	| menu_option_list depends
++	| menu_option_list uses
+ ;
+ 
+ source_stmt: T_SOURCE T_WORD_QUOTE T_EOL
+@@ -384,6 +388,7 @@ comment_stmt: comment comment_option_list
+ comment_option_list:
+ 	  /* empty */
+ 	| comment_option_list depends
++	| comment_option_list uses
+ ;
+ 
+ /* help option */
+@@ -418,6 +423,17 @@ depends: T_DEPENDS T_ON expr T_EOL
+ 	printd(DEBUG_PARSE, "%s:%d:depends on\n", zconf_curname(), zconf_lineno());
+ };
+ 
++/* uses symbol: depends on symbol || !symbol */
++uses: T_USES symbol T_EOL
++{
++	struct expr *symexpr1 = expr_alloc_symbol($2);
++	struct expr *symexpr2 = expr_alloc_symbol($2);
++
++	menu_add_dep(expr_alloc_two(E_OR, symexpr1, expr_alloc_one(E_NOT, symexpr2)));
++	printd(DEBUG_PARSE, "%s:%d: uses: depends on %s || ! %s\n",
++	       zconf_curname(), zconf_lineno(), $2->name, $2->name);
++};
++
+ /* visibility option */
+ visible: T_VISIBLE if_expr T_EOL
+ {
+diff --git a/scripts/kconfig/symbol.c b/scripts/kconfig/symbol.c
+index 3dc81397d003..422f7ea47722 100644
+--- a/scripts/kconfig/symbol.c
++++ b/scripts/kconfig/symbol.c
+@@ -1295,6 +1295,8 @@ const char *prop_get_type_name(enum prop_type type)
+ 		return "choice";
+ 	case P_SELECT:
+ 		return "select";
++	case P_USES:
++		return "uses";
+ 	case P_IMPLY:
+ 		return "imply";
+ 	case P_RANGE:
+-- 
+2.25.2
+
