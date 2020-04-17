@@ -2,180 +2,168 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FAB5C38A2C
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 18:00:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9A37C3815B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 18:01:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 470B12078E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 18:00:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="OvckqUd4"
+	by mail.kernel.org (Postfix) with ESMTP id D50BF2078E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 18:01:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730345AbgDQSAr (ORCPT
+        id S1730371AbgDQSBh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 14:00:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39938 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730315AbgDQSAq (ORCPT
+        Fri, 17 Apr 2020 14:01:37 -0400
+Received: from out03.mta.xmission.com ([166.70.13.233]:49226 "EHLO
+        out03.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730278AbgDQSBg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 14:00:46 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 607C1C061A41
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 11:00:45 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id b8so1405684pfp.8
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 11:00:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=UOMj1CMTwdnMbS+z4qVkFuhDs1cGdfp1YT34y+yBusk=;
-        b=OvckqUd4ZmienArBUa8jPpxgm7tQccflIrBwirJ78gUp7uqVrx3mfTAwv0UxSmRrya
-         Lz37ElSMIolopvUjumNLuYbbvVA4PsZnQqyMCyd+rnrVNMnGSZf6nmpiwan6L7M+FLkl
-         4wJt5ZteoqCNiPJ+z8t2Nl9Y0ShW0V/x9H4ZI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=UOMj1CMTwdnMbS+z4qVkFuhDs1cGdfp1YT34y+yBusk=;
-        b=s5h/Pvb3ab6b6J5X3vrBbYMW+07nx4O+83vy+mL6N3gqu2joKLYXwcFuiV1AYmqeno
-         6jP9dnaMLDvLAlN1PaEiTM3meTBByeOGFkwqjayBZ4BTc3PHS83VIHtLC6ZCc0IQRDuu
-         RTFk+f2zg9lWB79IMbOas7A3YnFtES7aqwMmV4/sNxN0Tdi80r43AQ6A3ngR7pvP2OlM
-         gAiPjrtn1/Aowwnzjvbz1iWo6SO82dIgBBQyv5Kq71iQl9/5RXqMPeoY4KKaeDLIGnfw
-         N0Mr28nvKLutTVMKn6qNVW833eM7FflHBdd93blROcQq6hVyWTYNrUmwzgJAkAcJuwFS
-         TD6Q==
-X-Gm-Message-State: AGi0Pua85pbmyp3ipSVJsdk6MySQRhUa3ClPweJW/cVUoORzWgJnpvXG
-        nCtpc3AO3vZx01vTH0hY+U4aNg==
-X-Google-Smtp-Source: APiQypK9eg7Gq7tr1Oc+DzJ0VwRSWi/rb9t3MDel9BaZ7Cw8P2/BSa0rmeULMt3F00M6mVyVdqN1Dw==
-X-Received: by 2002:a62:1a54:: with SMTP id a81mr4490224pfa.122.1587146443888;
-        Fri, 17 Apr 2020 11:00:43 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
-        by smtp.gmail.com with ESMTPSA id w13sm5101109pfn.192.2020.04.17.11.00.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 17 Apr 2020 11:00:42 -0700 (PDT)
-Date:   Fri, 17 Apr 2020 11:00:41 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Rajendra Nayak <rnayak@codeaurora.org>
-Cc:     viresh.kumar@linaro.org, sboyd@kernel.org,
-        bjorn.andersson@linaro.org, agross@kernel.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Akash Asthana <akashast@codeaurora.org>,
-        linux-serial@vger.kernel.org
-Subject: Re: [PATCH v2 01/17] tty: serial: qcom_geni_serial: Use OPP API to
- set clk/perf state
-Message-ID: <20200417180041.GD199755@google.com>
-References: <1587132279-27659-1-git-send-email-rnayak@codeaurora.org>
- <1587132279-27659-2-git-send-email-rnayak@codeaurora.org>
+        Fri, 17 Apr 2020 14:01:36 -0400
+Received: from in01.mta.xmission.com ([166.70.13.51])
+        by out03.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.90_1)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jPVJ0-0002nt-Hj; Fri, 17 Apr 2020 12:01:34 -0600
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jPVIy-0006x7-Sb; Fri, 17 Apr 2020 12:01:34 -0600
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     <linux-kernel@vger.kernel.org>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Alexey Gladkov <gladkov.alexey@gmail.com>
+Date:   Fri, 17 Apr 2020 12:58:31 -0500
+Message-ID: <87y2quc7ug.fsf@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <1587132279-27659-2-git-send-email-rnayak@codeaurora.org>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Type: text/plain
+X-XM-SPF: eid=1jPVIy-0006x7-Sb;;;mid=<87y2quc7ug.fsf@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX18A/NXNfLi9rMluPPKH7xgUBMnP76m2akk=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: [GIT PULL] Please pull proc fixes for v5.7-rc2
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rajendra,
 
-On Fri, Apr 17, 2020 at 07:34:23PM +0530, Rajendra Nayak wrote:
-> geni serial needs to express a perforamnce state requirement on CX
-> powerdomain depending on the frequency of the clock rates.
-> Use OPP table from DT to register with OPP framework and use
-> dev_pm_opp_set_rate() to set the clk/perf state.
-> 
-> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Akash Asthana <akashast@codeaurora.org>
-> Cc: linux-serial@vger.kernel.org
-> ---
->  drivers/tty/serial/qcom_geni_serial.c | 30 +++++++++++++++++++++++++-----
->  include/linux/qcom-geni-se.h          |  2 ++
->  2 files changed, 27 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/tty/serial/qcom_geni_serial.c b/drivers/tty/serial/qcom_geni_serial.c
-> index 6119090..151012c 100644
-> --- a/drivers/tty/serial/qcom_geni_serial.c
-> +++ b/drivers/tty/serial/qcom_geni_serial.c
-> @@ -9,6 +9,7 @@
->  #include <linux/module.h>
->  #include <linux/of.h>
->  #include <linux/of_device.h>
-> +#include <linux/pm_opp.h>
->  #include <linux/platform_device.h>
->  #include <linux/pm_runtime.h>
->  #include <linux/pm_wakeirq.h>
-> @@ -128,6 +129,7 @@ struct qcom_geni_serial_port {
->  	int wakeup_irq;
->  	bool rx_tx_swap;
->  	bool cts_rts_swap;
-> +	bool opp_table;
 
-The name of the variable suggests that it holds a OPP table, something
-like 'has_opp_table' would be clearer.
+Linus,
 
->  };
->  
->  static const struct uart_ops qcom_geni_console_pops;
-> @@ -961,7 +963,7 @@ static void qcom_geni_serial_set_termios(struct uart_port *uport,
->  		goto out_restart_rx;
->  
->  	uport->uartclk = clk_rate;
-> -	clk_set_rate(port->se.clk, clk_rate);
-> +	dev_pm_opp_set_rate(uport->dev, clk_rate);
->  	ser_clk_cfg = SER_CLK_EN;
->  	ser_clk_cfg |= clk_div << CLK_DIV_SHFT;
->  
-> @@ -1198,8 +1200,11 @@ static void qcom_geni_serial_pm(struct uart_port *uport,
->  	if (new_state == UART_PM_STATE_ON && old_state == UART_PM_STATE_OFF)
->  		geni_se_resources_on(&port->se);
->  	else if (new_state == UART_PM_STATE_OFF &&
-> -			old_state == UART_PM_STATE_ON)
-> +			old_state == UART_PM_STATE_ON) {
-> +		/* Drop the performance state vote */
-> +		dev_pm_opp_set_rate(uport->dev, 0);
->  		geni_se_resources_off(&port->se);
-> +	}
->  }
->  
->  static const struct uart_ops qcom_geni_console_pops = {
-> @@ -1318,13 +1323,20 @@ static int qcom_geni_serial_probe(struct platform_device *pdev)
->  	if (of_property_read_bool(pdev->dev.of_node, "cts-rts-swap"))
->  		port->cts_rts_swap = true;
->  
-> +	port->se.opp = dev_pm_opp_set_clkname(&pdev->dev, "se");
-> +	if (IS_ERR(port->se.opp))
-> +		return PTR_ERR(port->se.opp);
-> +	/* OPP table is optional */
-> +	if (!dev_pm_opp_of_add_table(&pdev->dev))
+Please pull the for-linus branch from the git tree:
 
-Even if the OPP table is optional you probably want to fail if the error
-is anything other than -ENODEV ("'operating-points' property is not found
-or is invalid data in device node.").
+   git://git.kernel.org/pub/scm/linux/kernel/git/ebiederm/user-namespace.git for-linus
 
-> diff --git a/include/linux/qcom-geni-se.h b/include/linux/qcom-geni-se.h
-> index dd46494..737e713 100644
-> --- a/include/linux/qcom-geni-se.h
-> +++ b/include/linux/qcom-geni-se.h
-> @@ -24,6 +24,7 @@ enum geni_se_protocol_type {
->  
->  struct geni_wrapper;
->  struct clk;
-> +struct opp_table;
->  
->  /**
->   * struct geni_se - GENI Serial Engine
-> @@ -39,6 +40,7 @@ struct geni_se {
->  	struct device *dev;
->  	struct geni_wrapper *wrapper;
->  	struct clk *clk;
-> +	struct opp_table *opp;
+   HEAD: 4fa3b1c417377c352208ee9f487e17cfcee32348 proc: Handle umounts cleanly
 
-This name suggests that the variable holds a single OPP ('struct
-dev_pm_opp'). Most other code uses the name 'opp_table', which
-also seems a good candidate here.
+While running syzbot happened to spot one more oversight in my rework of
+proc_flush_task.  The fields proc_self and proc_thread_self were not
+being reinitialized on when proc was unmounted, which could cause
+problems if the mount of proc fails.
+
+---
+
+From 4fa3b1c417377c352208ee9f487e17cfcee32348 Mon Sep 17 00:00:00 2001
+From: "Eric W. Biederman" <ebiederm@xmission.com>
+Date: Wed, 15 Apr 2020 12:37:27 -0500
+Subject: [PATCH] proc: Handle umounts cleanly
+
+syzbot writes:
+> KASAN: use-after-free Read in dput (2)
+>
+> proc_fill_super: allocate dentry failed
+> ==================================================================
+> BUG: KASAN: use-after-free in fast_dput fs/dcache.c:727 [inline]
+> BUG: KASAN: use-after-free in dput+0x53e/0xdf0 fs/dcache.c:846
+> Read of size 4 at addr ffff88808a618cf0 by task syz-executor.0/8426
+>
+> CPU: 0 PID: 8426 Comm: syz-executor.0 Not tainted 5.6.0-next-20200412-syzkaller #0
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+> Call Trace:
+>  __dump_stack lib/dump_stack.c:77 [inline]
+>  dump_stack+0x188/0x20d lib/dump_stack.c:118
+>  print_address_description.constprop.0.cold+0xd3/0x315 mm/kasan/report.c:382
+>  __kasan_report.cold+0x35/0x4d mm/kasan/report.c:511
+>  kasan_report+0x33/0x50 mm/kasan/common.c:625
+>  fast_dput fs/dcache.c:727 [inline]
+>  dput+0x53e/0xdf0 fs/dcache.c:846
+>  proc_kill_sb+0x73/0xf0 fs/proc/root.c:195
+>  deactivate_locked_super+0x8c/0xf0 fs/super.c:335
+>  vfs_get_super+0x258/0x2d0 fs/super.c:1212
+>  vfs_get_tree+0x89/0x2f0 fs/super.c:1547
+>  do_new_mount fs/namespace.c:2813 [inline]
+>  do_mount+0x1306/0x1b30 fs/namespace.c:3138
+>  __do_sys_mount fs/namespace.c:3347 [inline]
+>  __se_sys_mount fs/namespace.c:3324 [inline]
+>  __x64_sys_mount+0x18f/0x230 fs/namespace.c:3324
+>  do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
+>  entry_SYSCALL_64_after_hwframe+0x49/0xb3
+> RIP: 0033:0x45c889
+> Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+> RSP: 002b:00007ffc1930ec48 EFLAGS: 00000246 ORIG_RAX: 00000000000000a5
+> RAX: ffffffffffffffda RBX: 0000000001324914 RCX: 000000000045c889
+> RDX: 0000000020000140 RSI: 0000000020000040 RDI: 0000000000000000
+> RBP: 000000000076bf00 R08: 0000000000000000 R09: 0000000000000000
+> R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000003
+> R13: 0000000000000749 R14: 00000000004ca15a R15: 0000000000000013
+
+Looking at the code now that it the internal mount of proc is no
+longer used it is possible to unmount proc.   If proc is unmounted
+the fields of the pid namespace that were used for filesystem
+specific state are not reinitialized.
+
+Which means that proc_self and proc_thread_self can be pointers to
+already freed dentries.
+
+The reported user after free appears to be from mounting and
+unmounting proc followed by mounting proc again and using error
+injection to cause the new root dentry allocation to fail.  This in
+turn results in proc_kill_sb running with proc_self and
+proc_thread_self still retaining their values from the previous mount
+of proc.  Then calling dput on either proc_self of proc_thread_self
+will result in double put.  Which KASAN sees as a use after free.
+
+Solve this by always reinitializing the filesystem state stored
+in the struct pid_namespace, when proc is unmounted.
+
+Reported-by: syzbot+72868dd424eb66c6b95f@syzkaller.appspotmail.com
+Acked-by: Christian Brauner <christian.brauner@ubuntu.com>
+Fixes: 69879c01a0c3 ("proc: Remove the now unnecessary internal mount of proc")
+Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
+---
+ fs/proc/root.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/fs/proc/root.c b/fs/proc/root.c
+index 2633f10446c3..cdbe9293ea55 100644
+--- a/fs/proc/root.c
++++ b/fs/proc/root.c
+@@ -196,6 +196,13 @@ static void proc_kill_sb(struct super_block *sb)
+ 	if (ns->proc_thread_self)
+ 		dput(ns->proc_thread_self);
+ 	kill_anon_super(sb);
++
++	/* Make the pid namespace safe for the next mount of proc */
++	ns->proc_self = NULL;
++	ns->proc_thread_self = NULL;
++	ns->pid_gid = GLOBAL_ROOT_GID;
++	ns->hide_pid = 0;
++
+ 	put_pid_ns(ns);
+ }
+ 
+-- 
+2.20.1
+
+
+
+
+
+
