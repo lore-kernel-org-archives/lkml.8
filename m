@@ -2,91 +2,148 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5642C38A29
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 19:56:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39BB9C2D0EF
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 19:58:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9E7E220776
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 19:56:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2079620776
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 19:58:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730892AbgDQT4F (ORCPT
+        id S1730780AbgDQT6S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 15:56:05 -0400
-Received: from mga09.intel.com ([134.134.136.24]:42224 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730573AbgDQT4F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 15:56:05 -0400
-IronPort-SDR: bY+Nv4DwfffzSmk0QNIxEVXMojkanhI8Y1yehpOvtA9FBVafRPqvDQq2WOON/FdRnvI4uEw0QR
- nG9QjhbjMQcw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2020 12:56:04 -0700
-IronPort-SDR: DSdNJnSTF08K8+2knzazgSJw4aK89y2I/PYIfXOevJJrdxvcH2YIgzuticvjcnp2CyXYPO616J
- 7iX3UmwWbGFA==
-X-IronPort-AV: E=Sophos;i="5.72,395,1580803200"; 
-   d="scan'208";a="428339779"
-Received: from agluck-desk2.sc.intel.com (HELO agluck-desk2.amr.corp.intel.com) ([10.3.52.68])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2020 12:56:03 -0700
-Date:   Fri, 17 Apr 2020 12:56:01 -0700
-From:   "Luck, Tony" <tony.luck@intel.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Ingo Molnar <mingo@kernel.org>, Fenghua Yu <fenghua.yu@intel.com>,
-        Borislav Petkov <bp@alien8.de>, H Peter Anvin <hpa@zytor.com>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Ravi V Shankar <ravi.v.shankar@intel.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        linux-kernel@vger.kernel.org, x86@kernel.org
-Subject: Re: [PATCH 2/3] x86/split_lock: Bits in IA32_CORE_CAPABILITIES are
- not architectural
-Message-ID: <20200417195601.GA22640@agluck-desk2.amr.corp.intel.com>
-References: <20200416205754.21177-1-tony.luck@intel.com>
- <20200416205754.21177-3-tony.luck@intel.com>
- <878siumnrf.fsf@nanos.tec.linutronix.de>
- <20200417170607.GA18267@agluck-desk2.amr.corp.intel.com>
- <87ftd1zzau.fsf@nanos.tec.linutronix.de>
+        Fri, 17 Apr 2020 15:58:18 -0400
+Received: from smtprelay0225.hostedemail.com ([216.40.44.225]:37994 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730573AbgDQT6R (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Apr 2020 15:58:17 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay04.hostedemail.com (Postfix) with ESMTP id D4035180A7344;
+        Fri, 17 Apr 2020 19:58:16 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: owl79_4831856ceed2e
+X-Filterd-Recvd-Size: 3676
+Received: from XPS-9350.home (unknown [47.151.136.130])
+        (Authenticated sender: joe@perches.com)
+        by omf02.hostedemail.com (Postfix) with ESMTPA;
+        Fri, 17 Apr 2020 19:58:15 +0000 (UTC)
+Message-ID: <51793346cd065247886af6d54c32691e94c9b843.camel@perches.com>
+Subject: Re: checkpatch.pl: WARNING: else is not generally useful after a
+ break or return
+From:   Joe Perches <joe@perches.com>
+To:     Luben Tuikov <luben.tuikov@amd.com>,
+        Andy Whitcroft <apw@canonical.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Date:   Fri, 17 Apr 2020 12:56:03 -0700
+In-Reply-To: <064ada88-9fa3-6f6d-967c-00d4e2d325ae@amd.com>
+References: <064ada88-9fa3-6f6d-967c-00d4e2d325ae@amd.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.34.1-2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87ftd1zzau.fsf@nanos.tec.linutronix.de>
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 17, 2020 at 09:29:13PM +0200, Thomas Gleixner wrote:
-> "Luck, Tony" <tony.luck@intel.com> writes:
-> > On Fri, Apr 17, 2020 at 12:04:36PM +0200, Thomas Gleixner wrote:
-> > +	if (!m->driver_data)
-> > +		goto setup;
-> > +	if (!cpu_has(c, X86_FEATURE_CORE_CAPABILITIES))
-> > +		return;
-> > +	rdmsrl(MSR_IA32_CORE_CAPS, ia32_core_caps);
-> > +	if (!(ia32_core_caps & MSR_IA32_CORE_CAPS_SPLIT_LOCK_DETECT))
-> > +		return;
-> > +setup:
-> > +	split_lock_setup();
+On Fri, 2020-04-17 at 15:20 -0400, Luben Tuikov wrote:
+> Hi,
 > 
-> Which looks nicer w/o the goto:
+> I'm getting what seems to be a false positive in this case:
 > 
-> 	if (m->driver_data) {
-> 		if (!cpu_has(c, X86_FEATURE_CORE_CAPABILITIES))
-> 			return;
-> 		rdmsrl(MSR_IA32_CORE_CAPS, ia32_core_caps);
-> 		if (!(ia32_core_caps & MSR_IA32_CORE_CAPS_SPLIT_LOCK_DETECT))
-> 			return;
+> :32: WARNING: else is not generally useful after a break or return
+> #32: FILE: drivers/gpu/drm/amd/amdgpu/amdgpu_job.c:55:
+> +		return 0;
+> +	} else {
+> 
+> for the following code, at the bottom of a function:
+> 
+> 	if (amdgpu_device_should_recover_gpu(ring->adev)) {
+> 		amdgpu_device_gpu_recover(ring->adev, job);
+> 		return 0;
+> 	} else {
+> 		drm_sched_suspend_timeout(&ring->sched);
+> 		return 1;
 > 	}
+> }
 > 
-> Hmm?
+> Which seems to be coming from commit:
+> 
+> commit 032a4c0f9a77ce565355c6e191553e853ba66f09
+> Author: Joe Perches <joe@perches.com>
+> Date:   Wed Aug 6 16:10:29 2014 -0700
+> 
+>     checkpatch: warn on unnecessary else after return or break
+>     
+>     Using an else following a break or return can unnecessarily indent code
+>     blocks.
+>     
+>     ie:
+>             for (i = 0; i < 100; i++) {
+>                     int foo = bar();
+>                     if (foo < 1)
+>                             break;
+>                     else
+>                             usleep(1);
+>             }
+>     
+>     is generally better written as:
+>     
+>             for (i = 0; i < 100; i++) {
+>                     int foo = bar();
+>                     if (foo < 1)
+>                             break;
+>                     usleep(1);
+>             }
+>     
+>     Warn when a bare else statement is preceded by a break or return
+>     indented 1 tab more than the else.
+>     
+>     Signed-off-by: Joe Perches <joe@perches.com>
+>     Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+>     Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+> 
+> While I agree with what the commit is trying to do,
+> it doesn't seem to apply to the if-else statement which I quoted
+> above. That is, the "else" is not "bare"--to use the lingo of
+> the commit.
+> 
+> I suggest that no warning is issued when the "else" is a compound
+> statement, as shown in my example at the top of this email.
+> 
+> It is only natural to write:
+> 
+> 	if (amdgpu_device_should_recover_gpu(ring->adev)) {
+> 		amdgpu_device_gpu_recover(ring->adev, job);
+> 		return 0;
+> 	} else {
+> 		drm_sched_suspend_timeout(&ring->sched);
+> 		return 1;
+> 	}
+> }
+> 
+> instead of,
+> 
+> 	if (amdgpu_device_should_recover_gpu(ring->adev)) {
+> 		amdgpu_device_gpu_recover(ring->adev, job);
+> 		return 0;
+> 	}
+> 	drm_sched_suspend_timeout(&ring->sched);
+> 	return 1;
+> }
 
-Swings and roundabouts ... getting rid of the goto makes for
-deeper indentation. But if you really want to get rid of the
-goto, then your version is fine with me.
+This is continuing an email thread sent privately to Andy and me.
 
-Do you want me to spin it into v3?
+I disagree and do not believe this should be implemented in
+checkpatch as an accepted typical coding style.
 
--Tony
+btw:
+
+Even in your example, amdgpu_device_gpu_recover has a return
+value, can fail, and likely should not just return 0.
+
+
+
