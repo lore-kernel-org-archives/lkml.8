@@ -2,124 +2,203 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F50EC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 21:54:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BC8AC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 21:54:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2318720B1F
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 21:54:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m+cALHaS"
+	by mail.kernel.org (Postfix) with ESMTP id DC620214AF
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 21:54:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728528AbgDQVyH (ORCPT
+        id S1728562AbgDQVyY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 17:54:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47812 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728202AbgDQVyG (ORCPT
+        Fri, 17 Apr 2020 17:54:24 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:65504 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728202AbgDQVyX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 17:54:06 -0400
-Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52E29C061A0C
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 14:54:06 -0700 (PDT)
-Received: by mail-qt1-x844.google.com with SMTP id x8so2144471qtp.13
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 14:54:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=fbRYSjnFHgrJijO18Dq7PBQwjz3wu/QQdb70LbuYkT0=;
-        b=m+cALHaSRGFc9gA6TXpOD491JlByBoXsu/qlrTDbpRtZUhrd39+cbkBHxBtqAfQcbW
-         aUrWk9QuKf20EDzHy/CGUp36d/28khjyFathi+wBykAmENEQma6JtTKx5sHJSDQeOn17
-         mAuquV5OyQYZvfvwJXokZgEbhjyZq31CPrEXXbY0hmiEgT9P+0DB6rK0OUuNcKBMDqTu
-         kmHGaWtr2Rm1xsyHCuOZA0Amb3te2zmaV8GjCDwFDSIfNmtG/c5DMD0r6xy3MuLqZh7f
-         CocoQjrtk++M/Tcsi4OGi7w60tOnVy6eIfEdyhx3fJBF/PWXhhmqs9z+8s8up1dxTVJH
-         ExUg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=fbRYSjnFHgrJijO18Dq7PBQwjz3wu/QQdb70LbuYkT0=;
-        b=a4mQFhIAKjMwCXLiBYhpdZI3XFCzc+DV4HiGx4sy4p7axWAJvN1dCwGwiIUafUH1NI
-         yTufJ2dTDMbcELcCRC/i90yb3E+Cdk5b89P/TCRfGaCUrPdbedA659of1WTiDIQufoBB
-         io2Y0qeuVM+JBVSrro7a9lVhxMye1nfueXrM6IGdgzZPr8bZK84iau6XSUlFQzP0bkAs
-         MH/P7iKx98ymdxavoistFYhcPzsKN0jy/gBCrDUBgsn2KiLSTfodBmH/9M3Eye62E32k
-         n6/2r9B+vZR3BOZhfrRnbuCDr/2P06yKp+hzwh3LnIrZGZJsKStfrJbBYO9/B4+1oDm4
-         RrZQ==
-X-Gm-Message-State: AGi0PubVwXTz305Fpuu738wC/+jp93MF2umGorJtSHVuj+Q0LUJTMcOz
-        CvuCCHZGbdOWOtFv6ej3S1A=
-X-Google-Smtp-Source: APiQypK3FrJvg4jNITle9d5Fk3q6CPNvLrqhPDfULZ5Hn3S32mv8Nvs6innrCdjBtiA0ik1oyWQmTQ==
-X-Received: by 2002:ac8:1943:: with SMTP id g3mr4144269qtk.323.1587160445521;
-        Fri, 17 Apr 2020 14:54:05 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([179.97.37.151])
-        by smtp.gmail.com with ESMTPSA id y132sm18062530qka.19.2020.04.17.14.54.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Apr 2020 14:54:04 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id BCAFA409A3; Fri, 17 Apr 2020 18:54:02 -0300 (-03)
-Date:   Fri, 17 Apr 2020 18:54:02 -0300
-To:     "Liang, Kan" <kan.liang@linux.intel.com>
-Cc:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
-        jolsa@redhat.com, peterz@infradead.org, mingo@redhat.com,
-        linux-kernel@vger.kernel.org, namhyung@kernel.org,
-        adrian.hunter@intel.com, mathieu.poirier@linaro.org,
-        ravi.bangoria@linux.ibm.com, alexey.budankov@linux.intel.com,
-        vitaly.slobodskoy@intel.com, pavel.gerasimov@intel.com,
-        mpe@ellerman.id.au, eranian@google.com, ak@linux.intel.com
-Subject: Re: [PATCH V4 00/17] Stitch LBR call stack (Perf Tools)
-Message-ID: <20200417215402.GC21512@kernel.org>
-References: <20200319202517.23423-1-kan.liang@linux.intel.com>
- <20200417174803.GA21512@kernel.org>
- <2b34783b-85d1-6d30-d9e1-f550f8b6e9c0@linux.intel.com>
+        Fri, 17 Apr 2020 17:54:23 -0400
+Received: from 185.80.35.16 (185.80.35.16) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.415)
+ id 678169856faca4dd; Fri, 17 Apr 2020 23:54:19 +0200
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Alan Stern <stern@rowland.harvard.edu>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Qais Yousef <qais.yousef@arm.com>,
+        USB list <linux-usb@vger.kernel.org>,
+        Linux-pm mailing list <linux-pm@vger.kernel.org>,
+        Kernel development list <linux-kernel@vger.kernel.org>
+Subject: Re: lockdep warning in urb.c:363 usb_submit_urb
+Date:   Fri, 17 Apr 2020 23:54:18 +0200
+Message-ID: <3462492.idEHzggvYf@kreacher>
+In-Reply-To: <Pine.LNX.4.44L0.2004171129430.30344-100000@netrider.rowland.org>
+References: <Pine.LNX.4.44L0.2004171129430.30344-100000@netrider.rowland.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2b34783b-85d1-6d30-d9e1-f550f8b6e9c0@linux.intel.com>
-X-Url:  http://acmel.wordpress.com
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Fri, Apr 17, 2020 at 05:47:49PM -0400, Liang, Kan escreveu:
+On Friday, April 17, 2020 6:10:19 PM CEST Alan Stern wrote:
+> On Fri, 17 Apr 2020, Rafael J. Wysocki wrote:
 > 
+> > On Thursday, April 16, 2020 5:18:15 PM CEST Alan Stern wrote:
 > 
-> On 4/17/2020 1:48 PM, Arnaldo Carvalho de Melo wrote:
-> > Em Thu, Mar 19, 2020 at 01:25:00PM -0700, kan.liang@linux.intel.com escreveu:
-> > > For a simple test case tchain_edit with 43 depth of call stacks.
-> > > perf record --call-graph lbr -- ./tchain_edit
-> > > perf report --stitch-lbr
 
-> > > Without --stitch-lbr, perf report only display 32 depth of call stacks.
-> > > With --stitch-lbr, perf report can display all 43 depth of call stacks.
-> > > The depth of call stacks increase 34.3%.
+[cut]
 
-> > > Correspondingly, the processing time of perf report increases 39%,
-> > > Without --stitch-lbr:                           11.0 sec
-> > > With --stitch-lbr:                              15.3 sec
+> > > So here's what we've got:
+> > > 
+> > > > > Transition   Conditions for dev_pm_skip_resume() to return "true"
+> > > > > ----------   ----------------------------------------------------
+> > > > > 
+> > > > > RESTORE      Never
+> > > > 
+> > > > Right.
+> > > 
+> > > >  THAW	         dev_pm_skip_suspend() returns "true".
+> > > 
+> > > >  RESUME        power.must_resume is clear (which requires
+> > > >                  MAY_SKIP_RESUME and power.may_skip_resume to be set and
+> > > >                  the runtime usage counter to be = 1, and which 
+> > > >                  propagates up from dependent devices)
+> > > > 
+> > > > Nothing else is really strictly required IMO.
+> > > 
+> > > This seems very clear and simple.  And I will repeat here some of the 
+> > > things posted earlier, to make the description more complete:
+> > > 
+> > > 	During the suspend side, for each of the
+> > > 	{suspend,freeze,poweroff}_{late,noirq} phases: If
+> > > 	dev_pm_skip_suspend() returns true then the subsystem should
+> > > 	not invoke the driver's callback, and if there is no subsystem
+> > > 	callback then the core will not invoke the driver's callback.
+> > > 
+> > > 	During the resume side, for each of the
+> > > 	{resume,thaw,restore}_{early,noirq} phases: If
+> > > 	dev_pm_skip_resume() returns true then the subsystem should
+> > > 	not invoke the driver's callback, and if there is no subsystem
+> > > 	callback then the core will not invoke the driver's callback.
+> > > 
+> > > 	dev_pm_skip_suspend() will return "true" if SMART_SUSPEND is
+> > > 	set and the device's runtime status is "suspended".
+> > > 
+> > > 	For dev_pm_skip_resume() and power.must_resume, see above.
+> > > 
+> > > 	At the start of the {resume,thaw,restore}_noirq phase, if
+> > > 	dev_pm_skip_resume() returns true then the core will set the
+> > > 	runtime status to "suspended".  Otherwise it will set the
+> > > 	runtime status to "active".  If this is not what the subsystem
+> > > 	or driver wants, it must update the runtime status itself.
 
-> > Next time provide the full test proggie, I had to expand those ... to
-> > reproduce your results,
+There is one detail here that I missed, sorry about that.
 
-> Sure, I will do so in the future.
+Actually, the core can only set the runtime status to "active" for
+devices where dev_pm_skip_suspend() returns 'true'.
 
-> > all I have is in perf/core, some patches are
-> > still to be processed, will continue later, have to stop now, see:
+First, if the device is not "suspended", its status is "active" already
+anyway.
 
-> > https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/commit/?id=13cfba6b741ff
+Second, if the device has SMART_SUSPEND clear, the driver may not expect
+its runtime status to change from "suspended" to "active" during system-wide
+resume-type transitions (the driver's system-wide PM callbacks may use
+the runtime status to determine what to do and changing the status this
+way may confuse that).
 
-> > For my testing, looks really great!
+[Actually, the drivers that set neither SMART_SUSPEND nor MAY_SKIP_RESUME
+ may not expect the runtime status to change during system-wide resume-type
+ transitions at all, but there is the corner case when the driver can set
+ MAY_SKIP_RESUME without setting SMART_SUSPEND.  In that case its "noirq"
+ and "early" resume callbacks may be skipped and then it should expect
+ the runtime status to sometimes change from "active" to "suspended" during
+ RESUME transitions, but it may still not expect to see changes the other way
+ around, as in that case all of its callbacks are going to be invoked and
+ apply the internal runtime status handling mentioned above.]
 
-> Thanks for the testing. :)
+So overall:
 
-My pleasure.
+  At the start of the {resume,thaw,restore}_noirq phase, if
+  dev_pm_skip_resume() returns true ,then the core will set the
+  runtime status to "suspended".  Otherwise, if dev_pm_skip_suspend()
+  also returns true, then the core will set the runtime status to "active".
+  If this is not what the subsystem or driver wants, it must update the
+  runtime status itself.
 
-BTW everything is in there by now.
+> > > For this to work properly, we will have to rely on subsystems/drivers
+> > > to call pm_runtime_resume() during the suspend/freeze transition if
+> > > SMART_SUSPEND is clear.
+> > 
+> > That has been the case forever, though.
+> 
+> I'm not so sure about that.  The existing PM core code doesn't ever get
+> into a situation where it tries to set a device's runtime status to
+> "active" while the parent's status is "suspended".
 
-- Arnaldo
+I'm assuming that you refer to the scenario below.
+
+> > > Otherwise we could have the following scenario:
+> > > 
+> > > Device A has a child B, and both are runtime suspended when hibernation
+> > > starts.  Suppose that the SMART_SUSPEND flag is set for A but not for
+> > > B, and suppose that B's subsystem/driver neglects to call
+> > > pm_runtime_resume() during the FREEZE transition.  Then during the THAW
+> > > transition, dev_pm_skip_resume() will return "true" for A and "false"  
+> > > for B.  This will lead to an error when the core tries to set B's
+> > > runtime status to "active" while A's status is "suspended".
+
+That cannot happen, because dev_pm_smart_suspend() also returns 'false' for B
+and so its runtime status will not be changed to "active".
+
+> > > One way to avoid this is to have the core make the pm_runtime_resume()  
+> > > call, but you have said that you don't like that approach.  Any 
+> > > suggestions?
+> > 
+> > Because the core has not been calling pm_runtime_resume() during system-wide
+> > suspend for devices with SMART_SUSPEND clear, that should not be changed or
+> > we'll see regressions.
+> > 
+> > I know for a fact that some drivers expect the core to be doing nothing
+> > with respect to that.
+> > 
+> > > Should the core take some special action following ->freeze_noirq if
+> > > the runtime status is "suspended" and SMART_SUSPEND is clear?
+> > 
+> > Again, anything like that would change the current behavior which may
+> > not be expected by at least some drivers, so I wouldn't change that.
+> > 
+> > IOW, SMART_SUSPEND clear means to the core that *it* need not care about
+> > the suspend side at all (because somebody else will do that).
+> 
+> But the core _does_ need to care, because if somebody else fails to
+> take care of the suspend side then the core would trigger the WARN() in
+> pm_runtime_enable() for the parent device.  I guess we could consider
+> such a WARN() to be a symptom of a bug in the driver or subsystem,
+> rather than in the core; is that how you want to handle the scenario
+> above?
+> 
+> This approach doesn't seem robust.  I can easily imagine cases where
+> the parent's driver is aware of SMART_SUSPEND but the child's driver
+> isn't.  Currently we don't require the child's driver to call 
+> pm_runtime_resume().  Do you really want to consider all such cases to 
+> be bugs?
+> 
+> Basically, I'm saying that if the core allows things to arrive at a
+> situation where we can come out of THAW with a runtime-suspended parent
+> and a runtime-active child, it really should be considered to be the
+> core's fault.
+
+AFAICS, this particular one is not an issue.
+
+BTW, I have updated my pm-sleep-core branch to reflect what appears to be
+the current state-of-the-art to me.
+
+I'm going to post a v2 of this patch series over the weekend for reference.
+
+Cheers!
+
+
+
