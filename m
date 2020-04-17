@@ -2,157 +2,105 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.7 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EB60C38A29
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 10:20:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1666EC352BE
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 10:20:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5948A208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 10:20:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="q6vYtPsi"
+	by mail.kernel.org (Postfix) with ESMTP id F14B0208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 10:20:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728861AbgDQKTw (ORCPT
+        id S1728939AbgDQKUW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 06:19:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52858 "EHLO
+        Fri, 17 Apr 2020 06:20:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53012 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728144AbgDQKT1 (ORCPT
+        by vger.kernel.org with ESMTP id S1728631AbgDQKUW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 06:19:27 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CEE93C061A0F
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 03:19:25 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id w11so884454pga.12
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 03:19:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=Ty9TQTjWvzY6Grz85/BgM3W5FIy2Fq6407pZyTtwzbI=;
-        b=q6vYtPsi279r4gZwjmK0lADCWk83Aw27TpjFuR486x9Fg/jSQQlsq/M2M5DT8I1i6A
-         GP2CaI4PxrPfnJh9JKKc/O/0F74VEavRqOkopFpywlIc4bYY2CeWisrFDsZaugLcONKb
-         cTM0F5iqpKJA+DvX58EfjOfUimrYmh6HTTOxVMc9ETn9ERuDhiAU3XvVrxnKJnQjxOj+
-         khU8tqSMb6T+kXPhUVClXoCdJmWKtkq4sjlivMoymuKYDBi3B0AKFGYDYGaqRLqCyATS
-         /4juFM6A1gSeluMNtix0QqAjV8xLmJh8aQT4ujp6BOcwFHNJRor/q0MIGWZx+C1FqY6D
-         IyQA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=Ty9TQTjWvzY6Grz85/BgM3W5FIy2Fq6407pZyTtwzbI=;
-        b=NpxWhrOMFQy5XtAcwXJtEcpARsbJ1QBqLVwK2XvpD7cKaN+GsPZy5EfhnI7TrUQDmd
-         Xtps2vTMsQQ+43yQKQYc+y4pyMThTkPTs1a/16o3vM0hsJOXvWu0I6wie8Md/j8MzAUV
-         bRulYdG2hvC0U8zxFG4neubjtwYf/Q1lJLW35y56il5oP8aSvyJSh5TpjKpZ4TyZ1QWJ
-         2uyyTNx7gJYHrQQwC8mNcn7GaNTNaTZYspAb2S2Uq2raMzhadn+nGzTFl6LkIwbCr6Cd
-         w1yXVRieoDYZS3cSgKDzIMOr2mvd9LvwZBGI4YVzbFJmFx3hafeESbX3u8sNICs4abYQ
-         WNNw==
-X-Gm-Message-State: AGi0PuZ0hOKtUTjofjdIryHwlhST7IB8yhZHXD5Zc/iMGJwAP4ZSEIfq
-        yuGBTOmoWOGOe9aTQR4MUTm9
-X-Google-Smtp-Source: APiQypLivRS+jr84KCVU43CbZvx9g2aVlPNj8F7+dQWJd7s2CaFzd1iu/pT3ZiHkUrXBKLVSSTbH4Q==
-X-Received: by 2002:a63:d742:: with SMTP id w2mr2129826pgi.401.1587118765122;
-        Fri, 17 Apr 2020 03:19:25 -0700 (PDT)
-Received: from Mani-XPS-13-9360 ([2409:4072:630d:b86f:218c:c3f8:1490:7b19])
-        by smtp.gmail.com with ESMTPSA id x25sm17011580pfm.203.2020.04.17.03.19.21
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 17 Apr 2020 03:19:24 -0700 (PDT)
-Date:   Fri, 17 Apr 2020 15:49:18 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Hemant Kumar <hemantk@codeaurora.org>
-Cc:     jhugo@codeaurora.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, smohanad@codeaurora.org,
-        dan.carpenter@oracle.com
-Subject: Re: [PATCH 1/2] bus: mhi: core: Fix parsing of mhi_flags
-Message-ID: <20200417101918.GB10295@Mani-XPS-13-9360>
-References: <20200413120741.2832-1-manivannan.sadhasivam@linaro.org>
- <73d4815e-af00-e4cd-95c5-5043d334224c@codeaurora.org>
+        Fri, 17 Apr 2020 06:20:22 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0380BC061A0C;
+        Fri, 17 Apr 2020 03:20:22 -0700 (PDT)
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1jPO6Z-00062G-Bp; Fri, 17 Apr 2020 12:20:15 +0200
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id C76361C0072;
+        Fri, 17 Apr 2020 12:20:14 +0200 (CEST)
+Date:   Fri, 17 Apr 2020 10:20:14 -0000
+From:   "tip-bot2 for Tony Luck" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/urgent] x86/split_lock: Update to use X86_MATCH_INTEL_FAM6_MODEL()
+Cc:     Tony Luck <tony.luck@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200416205754.21177-2-tony.luck@intel.com>
+References: <20200416205754.21177-2-tony.luck@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <73d4815e-af00-e4cd-95c5-5043d334224c@codeaurora.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Message-ID: <158711881435.28353.9813486883264323804.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 16, 2020 at 12:01:30PM -0700, Hemant Kumar wrote:
-> Hi Mani,
-> 
-> On 4/13/20 5:07 AM, Manivannan Sadhasivam wrote:
-> > With the current parsing of mhi_flags, the following statement always
-> > return false:
-> > 
-> > eob = !!(flags & MHI_EOB);
-> > 
-> > This is due to the fact that 'enum mhi_flags' starts with index 0 and we
-> > are using direct AND operation to extract each bit. Fix this by using
-> > BIT() macro to extract each bit and make the mhi_flags index start from 1.
-> > 
-> > Fixes: 189ff97cca53 ("bus: mhi: core: Add support for data transfer")
-> > Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > ---
-> >   drivers/bus/mhi/core/main.c | 6 +++---
-> >   include/linux/mhi.h         | 2 +-
-> >   2 files changed, 4 insertions(+), 4 deletions(-)
-> > 
-> > diff --git a/drivers/bus/mhi/core/main.c b/drivers/bus/mhi/core/main.c
-> > index eb4256b81406..4165a853c189 100644
-> > --- a/drivers/bus/mhi/core/main.c
-> > +++ b/drivers/bus/mhi/core/main.c
-> > @@ -1090,9 +1090,9 @@ int mhi_gen_tre(struct mhi_controller *mhi_cntrl, struct mhi_chan *mhi_chan,
-> >   	if (ret)
-> >   		return ret;
-> > -	eob = !!(flags & MHI_EOB);
-> > -	eot = !!(flags & MHI_EOT);
-> > -	chain = !!(flags & MHI_CHAIN);
-> > +	eob = !!(flags & BIT(0));
-> > +	eot = !!(flags & BIT(1));
-> > +	chain = !!(flags & BIT(2));
-> 
-> How about setting enums  with BIT macro and still use same enums above. If
-> flags is having MHI _CHAIN (enum value 3) but comparing with BIT(2) (value
-> 4) will not work.
-> 
+The following commit has been merged into the x86/urgent branch of tip:
 
-Doh, you are right. Will fix it!
+Commit-ID:     3ab0762d1edfda6ccbc08f636acab42c103c299f
+Gitweb:        https://git.kernel.org/tip/3ab0762d1edfda6ccbc08f636acab42c103c299f
+Author:        Tony Luck <tony.luck@intel.com>
+AuthorDate:    Thu, 16 Apr 2020 13:57:52 -07:00
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Fri, 17 Apr 2020 12:14:12 +02:00
 
-Thanks,
-Mani
+x86/split_lock: Update to use X86_MATCH_INTEL_FAM6_MODEL()
 
-> >   	bei = !!(mhi_chan->intmod);
-> >   	mhi_tre = tre_ring->wp;
-> > diff --git a/include/linux/mhi.h b/include/linux/mhi.h
-> > index ad1996001965..22185fecbbf2 100644
-> > --- a/include/linux/mhi.h
-> > +++ b/include/linux/mhi.h
-> > @@ -53,7 +53,7 @@ enum mhi_callback {
-> >    * @MHI_CHAIN: Linked transfer
-> >    */
-> >   enum mhi_flags {
-> > -	MHI_EOB,
-> > +	MHI_EOB = 1,
-> >   	MHI_EOT,
-> >   	MHI_CHAIN,
-> >   };
-> 
-> enum mhi_flags {
-> 
->     MHI_EOB = BIT(0),
-> 
->     MHI_EOT = BIT(1),
-> 
->     MHI_CHAIN = BIT(2),
-> 
-> }
-> 
-> -- 
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> a Linux Foundation Collaborative Project
+The SPLIT_LOCK_CPU() macro escaped the tree-wide sweep for old-style
+initialization. Update to use X86_MATCH_INTEL_FAM6_MODEL().
+
+Fixes: 6650cdd9a8cc ("x86/split_lock: Enable split lock detection by kernel")
+Signed-off-by: Tony Luck <tony.luck@intel.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/20200416205754.21177-2-tony.luck@intel.com
+
+---
+ arch/x86/kernel/cpu/intel.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
+
+diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
+index bf08d45..ec0d8c7 100644
+--- a/arch/x86/kernel/cpu/intel.c
++++ b/arch/x86/kernel/cpu/intel.c
+@@ -1119,8 +1119,6 @@ void switch_to_sld(unsigned long tifn)
+ 	sld_update_msr(!(tifn & _TIF_SLD));
+ }
+ 
+-#define SPLIT_LOCK_CPU(model) {X86_VENDOR_INTEL, 6, model, X86_FEATURE_ANY}
+-
+ /*
+  * The following processors have the split lock detection feature. But
+  * since they don't have the IA32_CORE_CAPABILITIES MSR, the feature cannot
+@@ -1128,8 +1126,8 @@ void switch_to_sld(unsigned long tifn)
+  * processors.
+  */
+ static const struct x86_cpu_id split_lock_cpu_ids[] __initconst = {
+-	SPLIT_LOCK_CPU(INTEL_FAM6_ICELAKE_X),
+-	SPLIT_LOCK_CPU(INTEL_FAM6_ICELAKE_L),
++	X86_MATCH_INTEL_FAM6_MODEL(ICELAKE_X,		0),
++	X86_MATCH_INTEL_FAM6_MODEL(ICELAKE_L,		0),
+ 	{}
+ };
+ 
