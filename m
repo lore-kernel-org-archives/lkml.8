@@ -5,70 +5,71 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 217C4C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 07:01:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98C13C2BB55
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 07:01:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F3D1821D91
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 07:01:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78418221E9
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 07:01:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="civ0gk1k"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="N2oHjmSU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728354AbgDQHBS (ORCPT
+        id S1728503AbgDQHB1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 03:01:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50174 "EHLO
+        Fri, 17 Apr 2020 03:01:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50178 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728225AbgDQHBM (ORCPT
+        with ESMTP id S1728296AbgDQHBP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 03:01:12 -0400
+        Fri, 17 Apr 2020 03:01:15 -0400
 Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E636C061A0F
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 00:01:11 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id x3so633113pfp.7
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 00:01:11 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B621C0610D6
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 00:01:15 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id y25so641244pfn.5
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 00:01:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=yknmXxbqGxVfxrNz0jvbTW2mgVTxtXbV4FI/gCIqcjM=;
-        b=civ0gk1keolqnPGVaUGkyNSJDvVGU8ajyEYU3VaMBeM0lgdwWv5cMHq80pGerPytVm
-         XBJXBtZa38KYD3dTapc4WNr9WFNQbJBFIu7KWxHcnyby2tihC4fsexPQQCQClq40NVyV
-         aVve2BQivQFk9fn4IjdsAfwQLVfheYEWGhHWn9wpcpRkv8qBSsux16mO8yrr41qZJ8ZI
-         vQbG4WQTcBVJ/ais/d6KHidfArAzBMss1PQEPe8ebx3Cg1V+QwasTyRFb2vm4SdaQSSL
-         BO/MjafY2c6wQkij+Bv8W+OCVT+iSYl8CJdx3YADy4+60SCTiGfHILXYq+H175/xlLQj
-         3/Sg==
+        bh=EaN0Seks3JgknsK9BVWkgtTm/fzHe3RWKNOjTd9p+qc=;
+        b=N2oHjmSUk1H3eZy02ScumUxitUXE/7djA+CdKOZRbv02gbQB/4+1vOymlchCMXQgRf
+         sWhee0lK0XhaWru25QV0dQi88JkGU6QKvheoj5dnaoZEBXYJw/oNmQbw6n9/c+N8N9ln
+         VpWWQur1cUWtzOJNcWt7ldKd0CQjyWuqjod+/Re+S8czpvszlqcneqlWA2loOvY5AHiE
+         W+27jroj6PpmZCsdhMk0VwbaxZfe1h28snyy98zQPo51o5dD0OU59v1Rn57uen8M8RE/
+         fSr/TVwuviDyoTJl8NaFpXSliWhM8LZhf5RwSBwtzGKoDpUg/B0pIAqoEvsvDIjNFYuc
+         1EpQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=yknmXxbqGxVfxrNz0jvbTW2mgVTxtXbV4FI/gCIqcjM=;
-        b=MXL+aTERhfNUcmNKHhGVCwgxoL7swKVUy6pJAZszREfDkFBhvlzbLsiBYNESxS+W/v
-         vda/IOi5r8NU3DaIVm2cOX0zLXxosMC1ZY92y8NbUPVAxydXShodM4qULrE/l5t5fXML
-         G1f2gUQDX/Wx0B4GDlEBTd1TOrSZbTY62ceK/rr90gIVdrHrmAYewNUBv8QfHYoOAxMI
-         JXm66VkK9eZGvR6k7eaF2guzN0cqFnTmPcUgxfNw3DaTqCp+WNy7QyceFaUAJp1h2NbL
-         8L3yrc74t+jmJqZwT93beEjT6is7g9OJdaaxkLFm5ry+Fd9lkTME38fjOOHvbEgFRRIu
-         TcYA==
-X-Gm-Message-State: AGi0PuZIz2O8i7NaC7+4HPMWFyZCvqDj7wHZrt98TfqJuiaIUJqjoOYv
-        vpWwpsKwIFnGFXzxBCGRMrJfYA==
-X-Google-Smtp-Source: APiQypLVvbrjumlCLlmTCPuXNewSaDSHjE0x0aDETbToJCw1qIkwOjllFHprFIl39+UtGyokRT4g1Q==
-X-Received: by 2002:a05:6a00:2cf:: with SMTP id b15mr1777440pft.174.1587106870611;
-        Fri, 17 Apr 2020 00:01:10 -0700 (PDT)
+        bh=EaN0Seks3JgknsK9BVWkgtTm/fzHe3RWKNOjTd9p+qc=;
+        b=njSzmzP9PpGQLzuan7TM++7VzbQfY50R9pW0aOwH/lvONtKK0hbkwybkcWUo0nDrhv
+         IvZzNkedQgnc6wq2kzSKXYcMaHOw3wwx7FYGG2OWY9e39gH8sfL7W9kShNBffzLHVSRE
+         s+/S7vvTCcqXJm2beonU/r90TSPnQh28q40w9rHLcLeeOz2z2nrPmcNWQNpF954icjtn
+         sCAgx78yhzG+F/lJEubGbSKjppWjyg/ac6m1qF/PQmPxkLOw4mWyEt/4zhFv6bLa1OB3
+         aWB2UJ3g8KPpmpvJCBaWUB8R6QzUzmm6Lk5xBr62fM0tqM1hYzaMiFqtk/DN7FhpfN73
+         X0Kw==
+X-Gm-Message-State: AGi0Pua9w/7dZ7rPt2zV/cGMTCEsqg04Wm7fXTdc5bH24p+TuyqtUxLU
+        XYqZZaV5wVPqV1LCh8+dz3Un+A==
+X-Google-Smtp-Source: APiQypI4H58E4Hn7junl0qfO7JnmLs7Wc3DZgo9GXuO7Bx45z0RdlE5e+2Hj0zhyut03Ql8vjew09g==
+X-Received: by 2002:aa7:943c:: with SMTP id y28mr1780257pfo.171.1587106874750;
+        Fri, 17 Apr 2020 00:01:14 -0700 (PDT)
 Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id c125sm18561609pfa.142.2020.04.17.00.01.09
+        by smtp.gmail.com with ESMTPSA id c125sm18561609pfa.142.2020.04.17.00.01.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Apr 2020 00:01:09 -0700 (PDT)
+        Fri, 17 Apr 2020 00:01:14 -0700 (PDT)
 From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Michael Turquette <mturquette@baylibre.com>,
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Michael Turquette <mturquette@baylibre.com>,
         Stephen Boyd <sboyd@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     Andy Gross <agross@kernel.org>, linux-arm-msm@vger.kernel.org,
-        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/4] clk: qcom: gdsc: Handle GDSC regulator supplies
-Date:   Fri, 17 Apr 2020 00:00:41 -0700
-Message-Id: <20200417070044.1376212-2-bjorn.andersson@linaro.org>
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 4/4] arm64: dts: qcom: msm8996: Make GPU node control GPU_GX GDSC
+Date:   Fri, 17 Apr 2020 00:00:44 -0700
+Message-Id: <20200417070044.1376212-5-bjorn.andersson@linaro.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20200417070044.1376212-1-bjorn.andersson@linaro.org>
 References: <20200417070044.1376212-1-bjorn.andersson@linaro.org>
@@ -79,109 +80,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Certain GDSCs, such as the GPU_GX on MSM8996, requires that the upstream
-regulator supply is powered in order to be turned on.
-
-It's not guaranteed that the bootloader will leave these supplies on and
-the driver core will attempt to enable any GDSCs before allowing the
-individual drivers to probe defer on the PMIC regulator driver not yet
-being present.
-
-So the gdsc driver needs to be made aware of supplying regulators and
-probe defer on their absence, and it needs to enable and disable the
-regulator accordingly.
-
-Voltage adjustments of the supplying regulator are deferred to the
-client drivers themselves.
+Presumably the GPU node needs to control both the GPU and GPU GX power
+domains, but given that GPU GX now depends on the GPU GDSC both can
+effectively be controlled by controlling GPU GX. So use this instead.
 
 Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 ---
 
 Changes since v1:
-- Sorted includes
-- Dropped unnecessary comment
+- None
 
- drivers/clk/qcom/gdsc.c | 23 +++++++++++++++++++++++
- drivers/clk/qcom/gdsc.h |  4 ++++
- 2 files changed, 27 insertions(+)
+ arch/arm64/boot/dts/qcom/msm8996.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/clk/qcom/gdsc.c b/drivers/clk/qcom/gdsc.c
-index a250f59708d8..04944f11659b 100644
---- a/drivers/clk/qcom/gdsc.c
-+++ b/drivers/clk/qcom/gdsc.c
-@@ -11,6 +11,7 @@
- #include <linux/ktime.h>
- #include <linux/pm_domain.h>
- #include <linux/regmap.h>
-+#include <linux/regulator/consumer.h>
- #include <linux/reset-controller.h>
- #include <linux/slab.h>
- #include "gdsc.h"
-@@ -112,6 +113,12 @@ static int gdsc_toggle_logic(struct gdsc *sc, enum gdsc_status status)
- 	int ret;
- 	u32 val = (status == GDSC_ON) ? 0 : SW_COLLAPSE_MASK;
+diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+index 895202d07a8b..af1f4977b97d 100644
+--- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+@@ -639,7 +639,7 @@ gpu@b00000 {
+ 				"mem",
+ 				"mem_iface";
  
-+	if (status == GDSC_ON && sc->rsupply) {
-+		ret = regulator_enable(sc->rsupply);
-+		if (ret < 0)
-+			return ret;
-+	}
-+
- 	ret = regmap_update_bits(sc->regmap, sc->gdscr, SW_COLLAPSE_MASK, val);
- 	if (ret)
- 		return ret;
-@@ -143,6 +150,13 @@ static int gdsc_toggle_logic(struct gdsc *sc, enum gdsc_status status)
+-			power-domains = <&mmcc GPU_GDSC>;
++			power-domains = <&mmcc GPU_GX_GDSC>;
+ 			iommus = <&adreno_smmu 0>;
  
- 	ret = gdsc_poll_status(sc, status);
- 	WARN(ret, "%s status stuck at 'o%s'", sc->pd.name, status ? "ff" : "n");
-+
-+	if (!ret && status == GDSC_OFF && sc->rsupply) {
-+		ret = regulator_disable(sc->rsupply);
-+		if (ret < 0)
-+			return ret;
-+	}
-+
- 	return ret;
- }
- 
-@@ -371,6 +385,15 @@ int gdsc_register(struct gdsc_desc *desc,
- 	if (!data->domains)
- 		return -ENOMEM;
- 
-+	for (i = 0; i < num; i++) {
-+		if (!scs[i] || !scs[i]->supply)
-+			continue;
-+
-+		scs[i]->rsupply = devm_regulator_get(dev, scs[i]->supply);
-+		if (IS_ERR(scs[i]->rsupply))
-+			return PTR_ERR(scs[i]->rsupply);
-+	}
-+
- 	data->num_domains = num;
- 	for (i = 0; i < num; i++) {
- 		if (!scs[i])
-diff --git a/drivers/clk/qcom/gdsc.h b/drivers/clk/qcom/gdsc.h
-index 64cdc8cf0d4d..c36fc26dcdff 100644
---- a/drivers/clk/qcom/gdsc.h
-+++ b/drivers/clk/qcom/gdsc.h
-@@ -10,6 +10,7 @@
- #include <linux/pm_domain.h>
- 
- struct regmap;
-+struct regulator;
- struct reset_controller_dev;
- 
- /**
-@@ -52,6 +53,9 @@ struct gdsc {
- 	struct reset_controller_dev	*rcdev;
- 	unsigned int			*resets;
- 	unsigned int			reset_count;
-+
-+	const char 			*supply;
-+	struct regulator		*rsupply;
- };
- 
- struct gdsc_desc {
+ 			nvmem-cells = <&gpu_speed_bin>;
 -- 
 2.24.0
 
