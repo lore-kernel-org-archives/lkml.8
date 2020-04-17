@@ -2,114 +2,171 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 709D8C2BB85
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 09:05:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFD6FC3815B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 09:05:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 45F0C221F7
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 09:05:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6DEE207FC
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 09:05:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730104AbgDQJFI (ORCPT
+        id S1730121AbgDQJFK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 05:05:08 -0400
-Received: from mga18.intel.com ([134.134.136.126]:27130 "EHLO mga18.intel.com"
+        Fri, 17 Apr 2020 05:05:10 -0400
+Received: from mx2.suse.de ([195.135.220.15]:45134 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728419AbgDQJFG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 05:05:06 -0400
-IronPort-SDR: 16Tx0uSrbMV34ixbWqLRGR1nMYsgmoFF4zjxesj+pG/gfVkXYEBITYhhEJ+El0nEvi4E6zgaB+
- w7nP8U5ZBE5Q==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2020 02:05:05 -0700
-IronPort-SDR: iImZ98H6UD3xcWqYoNqzdpqoBINcrRfzHDRb1nBDIsxheRoaWWd338Fac35K5WTATRAqRj0z2X
- Pzvhpr0Af3jQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,394,1580803200"; 
-   d="scan'208";a="364275266"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
-  by fmsmga001.fm.intel.com with SMTP; 17 Apr 2020 02:05:01 -0700
-Received: by lahna (sSMTP sendmail emulation); Fri, 17 Apr 2020 12:05:00 +0300
-Date:   Fri, 17 Apr 2020 12:05:00 +0300
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Brian Norris <briannorris@chromium.org>
-Cc:     =?utf-8?Q?Micha=C5=82?= Stanek <mst@semihalf.com>,
-        linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, stanekm@google.com,
-        stable@vger.kernel.org, Marcin Wojtas <mw@semihalf.com>,
-        levinale@chromium.org, andriy.shevchenko@linux.intel.com,
-        Linus Walleij <linus.walleij@linaro.org>,
-        bgolaszewski@baylibre.com, rafael.j.wysocki@intel.com,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH] pinctrl: cherryview: Add quirk with custom translation
- of ACPI GPIO numbers
-Message-ID: <20200417090500.GM2586@lahna.fi.intel.com>
-References: <20200205194804.1647-1-mst@semihalf.com>
- <20200206083149.GK2667@lahna.fi.intel.com>
- <CAMiGqYi2rVAc=hepkY-4S1U_3dJdbR4pOoB0f8tbBL4pzWLdxA@mail.gmail.com>
- <20200207075654.GB2667@lahna.fi.intel.com>
- <CAMiGqYjmd2edUezEXsX4JBSyOozzks1Pu8miPEviGsx=x59nZQ@mail.gmail.com>
- <20200210101414.GN2667@lahna.fi.intel.com>
- <CAMiGqYiYp=aSgW-4ro5ceUEaB7g0XhepFg+HZgfPvtvQL9Z1jA@mail.gmail.com>
- <20200310144913.GY2540@lahna.fi.intel.com>
- <20200417020641.GA145784@google.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200417020641.GA145784@google.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+        id S1729920AbgDQJFJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Apr 2020 05:05:09 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 92E8AAB76;
+        Fri, 17 Apr 2020 09:05:06 +0000 (UTC)
+Date:   Fri, 17 Apr 2020 11:05:06 +0200
+Message-ID: <s5ho8rqbhz1.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     Jason Yan <yanaijie@huawei.com>
+Cc:     <perex@perex.cz>, <tiwai@suse.com>, <hariprasad.kelam@gmail.com>,
+        <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
+        Hulk Robot <hulkci@huawei.com>
+Subject: Re: [PATCH] ALSA: au88x0: remove some dead code
+In-Reply-To: <20200417092232.13371-1-yanaijie@huawei.com>
+References: <20200417092232.13371-1-yanaijie@huawei.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 16, 2020 at 07:06:41PM -0700, Brian Norris wrote:
-> If you just read the last sentence from Michal, you get the wrong
-> picture. There's no hard-coding of gpiochipX numbers going on. We only
-> had the pin offsets "hardcoded" (in ACPI), and the kernel driver
-> unilaterally changed from a contiguous mapping to a non-contiguous
-> mapping.
+On Fri, 17 Apr 2020 11:22:32 +0200,
+Jason Yan wrote:
+> 
+> Fix the following gcc warning:
+> 
+> sound/pci/au88x0/au88x0_a3ddata.c:62:25: warning: ‘A3dHrirDImpulse’
+> defined but not used [-Wunused-const-variable=]
+>  static const a3d_Hrtf_t A3dHrirDImpulse = {
+>                          ^~~~~~~~~~~~~~~
+> sound/pci/au88x0/au88x0_a3ddata.c:50:25: warning: ‘A3dHrirSatTest’
+> defined but not used [-Wunused-const-variable=]
+>  static const a3d_Hrtf_t A3dHrirSatTest = {
+>                          ^~~~~~~~~~~~~~
+> sound/pci/au88x0/au88x0_a3ddata.c:33:25: warning: ‘A3dHrirOnes’ defined
+> but not used [-Wunused-const-variable=]
+>  static const a3d_Hrtf_t A3dHrirOnes = {
+>                          ^~~~~~~~~~~
+> 
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: Jason Yan <yanaijie@huawei.com>
 
-OK, I now understand the issue. My apologies that I was not able to
-figure that out from the previous explanation.
+I'd rather keep them but disable with #if 0, if it's only about the
+minor compiler warnings.
 
-So indeed if relative GPIO numbering inside the gpiochip was changed
-then it is kernel regression and needs to be dealt with.
+The whole code is a result of reverse engineering and those dead code
+are simply there just because of lack of testing.  Removing makes it
+impossible for retesting (if any).
 
-> How do you recommend determining (both pre- and
-> post-commit-03c4749dd6c7ff94) whether pin 22 is at offset 22, vs. offset
-> 19?
 
-I wonder if we can add back the previous GPIO base like this?
+thanks,
 
-diff --git a/drivers/pinctrl/intel/pinctrl-cherryview.c b/drivers/pinctrl/intel/pinctrl-cherryview.c
-index 4c74fdde576d..f53de56bb763 100644
---- a/drivers/pinctrl/intel/pinctrl-cherryview.c
-+++ b/drivers/pinctrl/intel/pinctrl-cherryview.c
-@@ -1591,17 +1591,18 @@ static int chv_gpio_add_pin_ranges(struct gpio_chip *chip)
- 	struct chv_pinctrl *pctrl = gpiochip_get_data(chip);
- 	const struct chv_community *community = pctrl->community;
- 	const struct chv_gpio_pinrange *range;
--	int ret, i;
-+	int ret, i, offset;
- 
--	for (i = 0; i < community->ngpio_ranges; i++) {
-+	for (i = 0, offset = 0; i < community->ngpio_ranges; i++) {
- 		range = &community->gpio_ranges[i];
--		ret = gpiochip_add_pin_range(chip, dev_name(pctrl->dev),
--					     range->base, range->base,
--					     range->npins);
-+		ret = gpiochip_add_pin_range(chip, dev_name(pctrl->dev), offset,
-+					     range->base, range->npins);
- 		if (ret) {
- 			dev_err(pctrl->dev, "failed to add GPIO pin range\n");
- 			return ret;
- 		}
-+
-+		offset += range->npins;
- 	}
- 
- 	return 0;
+Takashi
+
+> ---
+>  sound/pci/au88x0/au88x0_a3d.c     | 23 -------------------
+>  sound/pci/au88x0/au88x0_a3ddata.c | 38 -------------------------------
+>  2 files changed, 61 deletions(-)
+> 
+> diff --git a/sound/pci/au88x0/au88x0_a3d.c b/sound/pci/au88x0/au88x0_a3d.c
+> index 2db183f8826a..4d3b79a34c69 100644
+> --- a/sound/pci/au88x0/au88x0_a3d.c
+> +++ b/sound/pci/au88x0/au88x0_a3d.c
+> @@ -512,31 +512,8 @@ static void a3dsrc_ProgramPipe(a3dsrc_t * a)
+>  	/* Single spike leads to identity transfer function. */
+>  	a3dsrc_SetHrtfCurrent(a, A3dHrirImpulse, A3dHrirImpulse);
+>  	a3dsrc_SetHrtfTarget(a, A3dHrirImpulse, A3dHrirImpulse);
+> -
+> -	/* Test: Sounds saturated. */
+> -	//a3dsrc_SetHrtfCurrent(a, A3dHrirSatTest, A3dHrirSatTest);
+> -	//a3dsrc_SetHrtfTarget(a, A3dHrirSatTest, A3dHrirSatTest);      
+>  }
+>  
+> -/* VDB = Vortex audio Dataflow Bus */
+> -#if 0
+> -static void a3dsrc_ClearVDBData(a3dsrc_t * a, unsigned long aa)
+> -{
+> -	vortex_t *vortex = (vortex_t *) (a->vortex);
+> -
+> -	// ((aa >> 2) << 8) - (aa >> 2)
+> -	hwwrite(vortex->mmio,
+> -		a3d_addrS(a->slice, A3D_SLICE_VDBDest) + (a->source << 2), 0);
+> -	hwwrite(vortex->mmio,
+> -		a3d_addrS(a->slice,
+> -			  A3D_SLICE_VDBDest + 4) + (a->source << 2), 0);
+> -	/*
+> -	   hwwrite(vortex->mmio, 0x19c00 + (((aa>>2)*255*4)+aa)*8, 0);
+> -	   hwwrite(vortex->mmio, 0x19c04 + (((aa>>2)*255*4)+aa)*8, 0);
+> -	 */
+> -}
+> -#endif
+> -
+>  /* A3D HwSource stuff. */
+>  
+>  static void vortex_A3dSourceHw_Initialize(vortex_t * v, int source, int slice)
+> diff --git a/sound/pci/au88x0/au88x0_a3ddata.c b/sound/pci/au88x0/au88x0_a3ddata.c
+> index 18623cb6bc52..cc41ea67a6d3 100644
+> --- a/sound/pci/au88x0/au88x0_a3ddata.c
+> +++ b/sound/pci/au88x0/au88x0_a3ddata.c
+> @@ -30,44 +30,6 @@ static const a3d_Hrtf_t A3dHrirImpulse = {
+>  	0, 0, 0
+>  };
+>  
+> -static const a3d_Hrtf_t A3dHrirOnes = {
+> -	0x7fff, 0x7fff, 0x7fff, 0x7fff, 0x7fff, 0x7fff, 0x7fff, 0x7fff,
+> -	0x7fff,
+> -	0x7fff,
+> -	0x7fff, 0x7fff, 0x7fff, 0x7fff, 0x7fff, 0x7fff, 0x7fff, 0x7fff,
+> -	0x7fff,
+> -	0x7fff,
+> -	0x7fff, 0x7fff, 0x7fff, 0x7fff, 0x7fff, 0x7fff, 0x7fff, 0x7fff,
+> -	0x7fff, 0x7fff, 0x7fff, 0x7fff, 0x7fff, 0x7fff, 0x7fff, 0x7fff,
+> -	0x7fff,
+> -	0x7fff,
+> -	0x7fff, 0x7fff, 0x7fff, 0x7fff, 0x7fff, 0x7fff, 0x7fff, 0x7fff,
+> -	0x7fff,
+> -	0x7fff,
+> -	0x7fff, 0x7fff, 0x7fff, 0x7fff, 0x7fff, 0x7fff, 0x7fff, 0x7fff
+> -};
+> -
+> -static const a3d_Hrtf_t A3dHrirSatTest = {
+> -	0x7fff, 0x7fff, 0x7fff, 0x7fff, 0x7fff, 0x7fff, 0x7fff, 0x7fff,
+> -	0x7fff,
+> -	0x7fff,
+> -	0x8001, 0x8001, 0x8001, 0x8001, 0x8001, 0x8001, 0x8001, 0x8001,
+> -	0x8001,
+> -	0x8001,
+> -	0x7fff, 0x0000, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+> -	0, 0, 0,
+> -	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+> -};
+> -
+> -static const a3d_Hrtf_t A3dHrirDImpulse = {
+> -	0, 0x7fff, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+> -	0, 0, 0,
+> -	0, 0, 0, 0,
+> -	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+> -	0, 0, 0,
+> -	0, 0, 0
+> -};
+> -
+>  static const a3d_ItdDline_t A3dItdDlineZeros = {
+>  	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+>  	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+> -- 
+> 2.21.1
+> 
