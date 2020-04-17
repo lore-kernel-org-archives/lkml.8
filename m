@@ -2,126 +2,115 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11A11C2D0EF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 14:05:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D695C352BE
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 14:05:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D868C21973
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 14:05:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F4ED21D6C
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 14:05:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MskfxfEs"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gh5UVTH0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730875AbgDQOE7 (ORCPT
+        id S1730933AbgDQOFN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 10:04:59 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:40747 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730846AbgDQOE4 (ORCPT
+        Fri, 17 Apr 2020 10:05:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59628 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730865AbgDQOE6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 10:04:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587132295;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=ofPRNPiKndJ+19yFksMsIFZm5zHoy/SE96l7lsxCjLM=;
-        b=MskfxfEspysp0br21V3NFFiiLPxaU2hTh30qxCMGLc8u/kKx3EFIN5Hhr2gzg0DSzwvXjj
-        x/HxHm3yNu8iqlHMizcUjy8aIgTn6YiJIVrcAGh39l5WaJmLZ5pXez+kYwSXzoLzw5tVMw
-        lbAno58dJCYK/5/dsKUrqojmDCdksBA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-169-XCRqe-RjPOShM75MtGtE1g-1; Fri, 17 Apr 2020 10:04:51 -0400
-X-MC-Unique: XCRqe-RjPOShM75MtGtE1g-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id EB6521085942;
-        Fri, 17 Apr 2020 14:04:49 +0000 (UTC)
-Received: from treble.redhat.com (ovpn-116-146.rdu2.redhat.com [10.10.116.146])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C8B525C1C5;
-        Fri, 17 Apr 2020 14:04:48 +0000 (UTC)
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     live-patching@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jessica Yu <jeyu@kernel.org>, linux-s390@vger.kernel.org,
-        heiko.carstens@de.ibm.com
-Subject: [PATCH v2 5/9] s390: Change s390_kernel_write() return type to match memcpy()
-Date:   Fri, 17 Apr 2020 09:04:30 -0500
-Message-Id: <8194db48a4aa32caf55fb028669a48ab9ab3c874.1587131959.git.jpoimboe@redhat.com>
-In-Reply-To: <cover.1587131959.git.jpoimboe@redhat.com>
-References: <cover.1587131959.git.jpoimboe@redhat.com>
+        Fri, 17 Apr 2020 10:04:58 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21273C061A0C;
+        Fri, 17 Apr 2020 07:04:58 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id k21so2174013ljh.2;
+        Fri, 17 Apr 2020 07:04:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=MvB7E+fkHBWgxJAx2lFY2q5a2NQT0tGN1gYVdKIfgks=;
+        b=Gh5UVTH061Dw7U8EczAHCOJ8b8h8MCrVJ2gX6r0m0HkdPnkma27G30r4eD+/2ORR9Z
+         CcsAhwutLzqMFkA+H83jOhF3FEsbTaUQK/ZY+urTo3efKEIAHGZbBjO73oFOWBMY2ZBv
+         Qk50KSMfQdcwdCclem4MqzYJ+SLdVNJwlDsy2k6kQC24cEPCCw2qLad3GcJQXEWG9RBD
+         t30WY+EYMUKGsAj0wOEKeKjVU7CdgDyXkHKYHto8KaubXzvSgqkteeIW1Zjs/C47T2PV
+         M0iXTmbku/V8nbLD2ZO+ZKbD5KljCI3VowxLjlvWEM3u0QUuA5vpHJ2GJRdU8fIvtda7
+         5OKQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=MvB7E+fkHBWgxJAx2lFY2q5a2NQT0tGN1gYVdKIfgks=;
+        b=rqFFjQWYR0MqF7lOK8nGqPqR4OX4g5+x51SI4xVKRDgXeqdXArVrgiDuYH9MIysqCz
+         2qGeNmMKRxqs1QilCatVExejv4M0LfBXzf3rVNgag7pbLjBMSQEYAf3lUVX/H9IS/9r7
+         M6EuAr0Y8UjEOk3sksZU7J+CQomihDsUIZRYoYQbNLMdx50gsxNczPfOce+vzqGM0syc
+         ei8lDv8Hwzk1qCx0hxEkSzkhkqTeMS5/cq0P616ItX1pa4UeOCIMF6/jTtTIr5ad6dKG
+         pYwqmxhxra1sxp3YJX/tLTQUEgebZlhsQVjxaoditDWAoxnxSthFWUHd7su5F/FCjj/R
+         sMKw==
+X-Gm-Message-State: AGi0Pua2BxneylezUWzoahIIXWZPh4T7tguvS7UwiIIwy3axlZ9WzPVM
+        NNkrLbBQ/pLLik9D2/CHAf1VKtUR
+X-Google-Smtp-Source: APiQypLmN2ntcwfQEPno8AODZXXC7nUvrT6i9PGmxYkRjyMWjXCDbqAk7plyEVOWui5/rYOR1fLt0Q==
+X-Received: by 2002:a2e:953:: with SMTP id 80mr2269187ljj.276.1587132296192;
+        Fri, 17 Apr 2020 07:04:56 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
+        by smtp.googlemail.com with ESMTPSA id t19sm17816956lfl.53.2020.04.17.07.04.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 17 Apr 2020 07:04:55 -0700 (PDT)
+Subject: Re: [PATCH RE-SEND v1] PM / devfreq: Replace strncpy with strscpy
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>
+Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200227170854.9949-1-digetx@gmail.com>
+Message-ID: <09712864-01a5-e2f9-b55f-e822169d30fc@gmail.com>
+Date:   Fri, 17 Apr 2020 17:04:54 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200227170854.9949-1-digetx@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-s390_kernel_write()'s function type is almost identical to memcpy().
-Change its return type to "void *" so they can be used interchangeably.
+27.02.2020 20:08, Dmitry Osipenko пишет:
+> GCC produces this warning when kernel compiled using `make W=1`:
+> 
+>   warning: ‘strncpy’ specified bound 16 equals destination size [-Wstringop-truncation]
+>   772 |  strncpy(devfreq->governor_name, governor_name, DEVFREQ_NAME_LEN);
+> 
+> The strncpy doesn't take care of NULL-termination of the destination
+> buffer, while the strscpy does.
+> 
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> ---
+>  drivers/devfreq/devfreq.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
+> index 8494c5f05a73..2011f64bfa3a 100644
+> --- a/drivers/devfreq/devfreq.c
+> +++ b/drivers/devfreq/devfreq.c
+> @@ -769,7 +769,7 @@ struct devfreq *devfreq_add_device(struct device *dev,
+>  	devfreq->dev.release = devfreq_dev_release;
+>  	INIT_LIST_HEAD(&devfreq->node);
+>  	devfreq->profile = profile;
+> -	strncpy(devfreq->governor_name, governor_name, DEVFREQ_NAME_LEN);
+> +	strscpy(devfreq->governor_name, governor_name, DEVFREQ_NAME_LEN);
+>  	devfreq->previous_freq = profile->initial_freq;
+>  	devfreq->last_status.current_frequency = profile->initial_freq;
+>  	devfreq->data = data;
+> 
 
-Cc: linux-s390@vger.kernel.org
-Cc: heiko.carstens@de.ibm.com
-Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
----
- arch/s390/include/asm/uaccess.h | 2 +-
- arch/s390/mm/maccess.c          | 9 ++++++---
- 2 files changed, 7 insertions(+), 4 deletions(-)
+Hello Chanwoo,
 
-diff --git a/arch/s390/include/asm/uaccess.h b/arch/s390/include/asm/uacc=
-ess.h
-index a470f1fa9f2a..324438889fe1 100644
---- a/arch/s390/include/asm/uaccess.h
-+++ b/arch/s390/include/asm/uaccess.h
-@@ -276,6 +276,6 @@ static inline unsigned long __must_check clear_user(v=
-oid __user *to, unsigned lo
- }
-=20
- int copy_to_user_real(void __user *dest, void *src, unsigned long count)=
-;
--void s390_kernel_write(void *dst, const void *src, size_t size);
-+void *s390_kernel_write(void *dst, const void *src, size_t size);
-=20
- #endif /* __S390_UACCESS_H */
-diff --git a/arch/s390/mm/maccess.c b/arch/s390/mm/maccess.c
-index de7ca4b6718f..22a0be655f27 100644
---- a/arch/s390/mm/maccess.c
-+++ b/arch/s390/mm/maccess.c
-@@ -55,19 +55,22 @@ static notrace long s390_kernel_write_odd(void *dst, =
-const void *src, size_t siz
-  */
- static DEFINE_SPINLOCK(s390_kernel_write_lock);
-=20
--void notrace s390_kernel_write(void *dst, const void *src, size_t size)
-+notrace void *s390_kernel_write(void *dst, const void *src, size_t size)
- {
-+	void *tmp =3D dst;
- 	unsigned long flags;
- 	long copied;
-=20
- 	spin_lock_irqsave(&s390_kernel_write_lock, flags);
- 	while (size) {
--		copied =3D s390_kernel_write_odd(dst, src, size);
--		dst +=3D copied;
-+		copied =3D s390_kernel_write_odd(tmp, src, size);
-+		tmp +=3D copied;
- 		src +=3D copied;
- 		size -=3D copied;
- 	}
- 	spin_unlock_irqrestore(&s390_kernel_write_lock, flags);
-+
-+	return dst;
- }
-=20
- static int __no_sanitize_address __memcpy_real(void *dest, void *src, si=
-ze_t count)
---=20
-2.21.1
-
+Do you have any objections to this patch?
