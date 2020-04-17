@@ -2,120 +2,179 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1557FC2BA2B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 02:17:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD4F5C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 02:20:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DCDF6221E9
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 02:17:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CD85206B9
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 02:20:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729153AbgDQCR5 convert rfc822-to-8bit (ORCPT
+        id S1729226AbgDQCUh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 22:17:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33900 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 22:20:37 -0400
+Received: from mga14.intel.com ([192.55.52.115]:15877 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729095AbgDQCR4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 22:17:56 -0400
-Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 53DAE206B9;
-        Fri, 17 Apr 2020 02:17:55 +0000 (UTC)
-Date:   Thu, 16 Apr 2020 22:17:53 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Qian Cai <cai@lca.pw>
-Cc:     Michael Ellerman <mpe@ellerman.id.au>,
-        Russell Currey <ruscur@russell.cc>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: POWER9 crash due to STRICT_KERNEL_RWX (WAS: Re: Linux-next
- POWER9 NULL pointer NIP...)
-Message-ID: <20200416221753.4e47080a@oasis.local.home>
-In-Reply-To: <69F0448F-CA5B-497D-B8AF-2848175B9477@lca.pw>
-References: <15AC5B0E-A221-4B8C-9039-FA96B8EF7C88@lca.pw>
-        <87eeszlb6u.fsf@mpe.ellerman.id.au>
-        <0675B22E-8F32-432C-9378-FDE159DD1729@lca.pw>
-        <20200407093054.3eb23e45@gandalf.local.home>
-        <EA9F9A54-87BC-477A-BE8A-7D53F80C5223@lca.pw>
-        <20200409101413.35d9c72d@gandalf.local.home>
-        <06A2EA93-B730-4DB1-819F-D27E7032F0B3@lca.pw>
-        <161662E3-5D9C-4C15-919C-CFEFE4CC35CB@lca.pw>
-        <69F0448F-CA5B-497D-B8AF-2848175B9477@lca.pw>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1728969AbgDQCUh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 22:20:37 -0400
+IronPort-SDR: iGGgdohgwt2s3SYEw4Mul+yyqFBBqZbWAE3h7KWkRf/CBfrkUvUzSNQSvWFz+Kkmu9dk/SUKrz
+ Rh2u/O3YkRLw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2020 19:20:37 -0700
+IronPort-SDR: IyH74imscbpapo+hYD5q4u1fkpMnA7qIrUw0FowKZCiutqF2oWJFnF4W1EAqmWt0NH1GoHFj27
+ kVw7bxmDjV8Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,393,1580803200"; 
+   d="scan'208";a="278218385"
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.147])
+  by fmsmga004.fm.intel.com with ESMTP; 16 Apr 2020 19:20:36 -0700
+Date:   Thu, 16 Apr 2020 19:20:36 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     linux-kernel@vger.kernel.org, Jan Kara <jack@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jeff Moyer <jmoyer@redhat.com>,
+        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH RFC 4/8] fs/ext4: Introduce DAX inode flag
+Message-ID: <20200417022036.GQ2309605@iweiny-DESK2.sc.intel.com>
+References: <20200414040030.1802884-1-ira.weiny@intel.com>
+ <20200414040030.1802884-5-ira.weiny@intel.com>
+ <20200416162504.GB6733@magnolia>
+ <20200416223327.GO2309605@iweiny-DESK2.sc.intel.com>
+ <20200416224937.GY6749@magnolia>
+ <20200417003719.GP2309605@iweiny-DESK2.sc.intel.com>
+ <20200417015731.GU6742@magnolia>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200417015731.GU6742@magnolia>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 16 Apr 2020 21:19:10 -0400
-Qian Cai <cai@lca.pw> wrote:
-
-> OK, reverted the commit,
+On Thu, Apr 16, 2020 at 06:57:31PM -0700, Darrick J. Wong wrote:
+> On Thu, Apr 16, 2020 at 05:37:19PM -0700, Ira Weiny wrote:
+> > On Thu, Apr 16, 2020 at 03:49:37PM -0700, Darrick J. Wong wrote:
+> > > On Thu, Apr 16, 2020 at 03:33:27PM -0700, Ira Weiny wrote:
+> > > > On Thu, Apr 16, 2020 at 09:25:04AM -0700, Darrick J. Wong wrote:
+> > > > > On Mon, Apr 13, 2020 at 09:00:26PM -0700, ira.weiny@intel.com wrote:
+> > > > > > From: Ira Weiny <ira.weiny@intel.com>
+> > > > > > 
+> > > > > > Add a flag to preserve FS_XFLAG_DAX in the ext4 inode.
+> > > > > > 
+> > > > > > Set the flag to be user visible and changeable.  Set the flag to be
+> > > > > > inherited.  Allow applications to change the flag at any time.
+> > > > > > 
+> > > > > > Finally, on regular files, flag the inode to not be cached to facilitate
+> > > > > > changing S_DAX on the next creation of the inode.
+> > > > > > 
+> > > > > > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+> > > > > > ---
+> > > > > >  fs/ext4/ext4.h  | 13 +++++++++----
+> > > > > >  fs/ext4/ioctl.c | 21 ++++++++++++++++++++-
+> > > > > >  2 files changed, 29 insertions(+), 5 deletions(-)
+> > > > > > 
+> > > > > > diff --git a/fs/ext4/ext4.h b/fs/ext4/ext4.h
+> > > > > > index 61b37a052052..434021fcec88 100644
+> > > > > > --- a/fs/ext4/ext4.h
+> > > > > > +++ b/fs/ext4/ext4.h
+> > > > > > @@ -415,13 +415,16 @@ struct flex_groups {
+> > > > > >  #define EXT4_VERITY_FL			0x00100000 /* Verity protected inode */
+> > > > > >  #define EXT4_EA_INODE_FL	        0x00200000 /* Inode used for large EA */
+> > > > > >  #define EXT4_EOFBLOCKS_FL		0x00400000 /* Blocks allocated beyond EOF */
+> > > > > > +
+> > > > > > +#define EXT4_DAX_FL			0x00800000 /* Inode is DAX */
+> > > > > 
+> > > > > Sooo, fun fact about ext4 vs. the world--
+> > > > > 
+> > > > > The GETFLAGS/SETFLAGS ioctl, since it came from ext2, shares the same
+> > > > > flag values as the ondisk inode flags in ext*.  Therefore, each of these
+> > > > > EXT4_[whatever]_FL values are supposed to have a FS_[whatever]_FL
+> > > > > equivalent in include/uapi/linux/fs.h.
+> > > > 
+> > > > Interesting...
+> > > > 
+> > > > > 
+> > > > > (Note that the "[whatever]" is a straight translation since the same
+> > > > > uapi header also defines the FS_XFLAG_[xfswhatever] flag values; ignore
+> > > > > those.)
+> > > > > 
+> > > > > Evidently, FS_NOCOW_FL already took 0x800000, but ext4.h was never
+> > > > > updated to note that the value was taken.  I think Ted might be inclined
+> > > > > to reserve the ondisk inode bit just in case ext4 ever does support copy
+> > > > > on write, though that's his call. :)
+> > > > 
+> > > > Seems like I should change this...  And I did not realize I was inherently
+> > > > changing a bit definition which was exposed to other FS's...
+> > > 
+> > > <nod> This whole thing is a mess, particularly now that we have two vfs
+> > > ioctls to set per-fs inode attributes, both of which were inherited from
+> > > other filesystems... :(
+> > >
+> > 
+> > Ok I've changed it.
+> > 
+> > > 
+> > > > > 
+> > > > > Long story short - can you use 0x1000000 for this instead, and add the
+> > > > > corresponding value to the uapi fs.h?  I guess that also means that we
+> > > > > can change FS_XFLAG_DAX (in the form of FS_DAX_FL in FSSETFLAGS) after
+> > > > > that.
+> > > > 
+> > > > :-/
+> > > > 
+> > > > Are there any potential users of FS_XFLAG_DAX now?
+> > > 
+> > > Yes, it's in the userspace ABI so we can't get rid of it.
+> > > 
+> > > (FWIW there are several flags that exist in both FS_XFLAG_* and FS_*_FL
+> > > form.)
+> > > 
+> > > > From what it looks like, changing FS_XFLAG_DAX to FS_DAX_FL would be pretty
+> > > > straight forward.  Just to be sure, looks like XFS converts the FS_[xxx]_FL to
+> > > > FS_XFLAGS_[xxx] in xfs_merge_ioc_xflags()?  But it does not look like all the
+> > > > FS_[xxx]_FL flags are converted.  Is is that XFS does not support those
+> > > > options?  Or is it depending on the VFS layer for some of them?
+> > > 
+> > > XFS doesn't support most of the FS_*_FL flags.
+> > 
+> > If FS_XFLAG_DAX needs to continue to be user visible I think we need to keep
+> > that flag and we should not expose the EXT4_DAX_FL flag...
+> > 
+> > I think that works for XFS.
+> > 
+> > But for ext4 it looks like EXT4_FL_XFLAG_VISIBLE was intended to be used for
+> > [GET|SET]XATTR where EXT4_FL_USER_VISIBLE was intended to for [GET|SET]FLAGS...
+> > But if I don't add EXT4_DAX_FL in EXT4_FL_XFLAG_VISIBLE my test fails.
+> > 
+> > I've been playing with the flags and looking at the code and I _thought_ the
+> > following patch would ensure that FS_XFLAG_DAX is the only one visible but for
+> > some reason FS_XFLAG_DAX can't be set with this patch.  I still need the
+> > EXT4_FL_USER_VISIBLE mask altered...  Which I believe would expose EXT4_DAX_FL
+> > directly as well.
+> > 
+> > Jan, Ted?  Any ideas?  Or should we expose EXT4_DAX_FL and FS_XFLAG_DAX in
+> > ext4?
 > 
-> c55d7b5e6426 (“powerpc: Remove STRICT_KERNEL_RWX incompatibility with RELOCATABLE”)
-> 
-> or set STRICT_KERNEL_RWX=n fixed the crash below and also mentioned in this thread,
+> Both flags should be exposed through their respective ioctl interfaces
+> in both filesystems.  That way we don't have to add even more verbiage
+> to the documentation to instruct userspace programmers on how to special
+> case ext4 and XFS for the same piece of functionality.
 
-This may be a symptom and not a cure.
+Wouldn't it be more confusing for the user to have 2 different flags which do
+the same thing?
 
-> 
-> https://lore.kernel.org/lkml/15AC5B0E-A221-4B8C-9039-FA96B8EF7C88@lca.pw/
-> 
-> [  148.110969][T13115] LTP: starting chown04_16
-> [  148.255048][T13380] kernel tried to execute exec-protected page (c0000000016804ac) - exploit attempt? (uid: 0)
-> [  148.255099][T13380] BUG: Unable to handle kernel instruction fetch
-> [  148.255122][T13380] Faulting instruction address: 0xc0000000016804ac
-> [  148.255136][T13380] Oops: Kernel access of bad area, sig: 11 [#1]
-> [  148.255157][T13380] LE PAGE_SIZE=64K MMU=Radix SMP NR_CPUS=256 DEBUG_PAGEALLOC NUMA PowerNV
-> [  148.255171][T13380] Modules linked in: loop kvm_hv kvm xfs sd_mod bnx2x mdio ahci tg3 libahci libphy libata firmware_class dm_mirror dm_region_hash dm_log dm_mod
-> [  148.255213][T13380] CPU: 45 PID: 13380 Comm: chown04_16 Tainted: G        W         5.6.0+ #7
-> [  148.255236][T13380] NIP:  c0000000016804ac LR: c00800000fa60408 CTR: c0000000016804ac
-> [  148.255250][T13380] REGS: c0000010a6fafa00 TRAP: 0400   Tainted: G        W          (5.6.0+)
-> [  148.255281][T13380] MSR:  9000000010009033 <SF,HV,EE,ME,IR,DR,RI,LE>  CR: 84000248  XER: 20040000
-> [  148.255310][T13380] CFAR: c00800000fa66534 IRQMASK: 0 
-> [  148.255310][T13380] GPR00: c000000000973268 c0000010a6fafc90 c000000001648200 0000000000000000 
-> [  148.255310][T13380] GPR04: c000000d8a22dc00 c0000010a6fafd30 00000000b5e98331 ffffffff00012c9f 
-> [  148.255310][T13380] GPR08: c000000d8a22dc00 0000000000000000 0000000000000000 c00000000163c520 
-> [  148.255310][T13380] GPR12: c0000000016804ac c000001ffffdad80 0000000000000000 0000000000000000 
-> [  148.255310][T13380] GPR16: 0000000000000000 0000000000000000 0000000000000000 0000000000000000 
-> [  148.255310][T13380] GPR20: 0000000000000000 0000000000000000 0000000000000000 0000000000000000 
-> [  148.255310][T13380] GPR24: 00007fff8f5e2e48 0000000000000000 c00800000fa6a488 c0000010a6fafd30 
-> [  148.255310][T13380] GPR28: 0000000000000000 000000007fffffff c00800000fa60400 c000000efd0c6780 
-> [  148.255494][T13380] NIP [c0000000016804ac] sysctl_net_busy_read+0x0/0x4
+I would think that using FS_XFLAG_DAX _only_ (for both ext4 and xfs) would be
+easier without special cases?
 
-The instruction pointer is on sysctl_net_busy_read? Isn't that data and
-not code?
-
-In net/socket.c:
-
-  #ifdef CONFIG_NET_RX_BUSY_POLL
-  unsigned int sysctl_net_busy_read __read_mostly;
-  unsigned int sysctl_net_busy_poll __read_mostly;
-  #endif
-
--- Steve
-
-
-> [  148.255516][T13380] LR [c00800000fa60408] find_free_cb+0x8/0x30 [loop]
-> [  148.255528][T13380] Call Trace:
-> [  148.255538][T13380] [c0000010a6fafc90] [c0000000009732c0] idr_for_each+0xf0/0x170 (unreliable)
-> [  148.255572][T13380] [c0000010a6fafd10] [c00800000fa626c4] loop_lookup.part.1+0x4c/0xb0 [loop]
-> [  148.255597][T13380] [c0000010a6fafd50] [c00800000fa634d8] loop_control_ioctl+0x120/0x1d0 [loop]
-> [  148.255623][T13380] [c0000010a6fafdb0] [c0000000004ddc08] ksys_ioctl+0xd8/0x130
-> [  148.255636][T13380] [c0000010a6fafe00] [c0000000004ddc88] sys_ioctl+0x28/0x40
-> [  148.255669][T13380] [c0000010a6fafe20] [c00000000000b378] system_call+0x5c/0x68
-> [  148.255699][T13380] Instruction dump:
-> [  148.255718][T13380] XXXXXXXX XXXXXXXX XXXXXXXX XXXXXXXX XXXXXXXX XXXXXXXX XXXXXXXX XXXXXXXX 
-> [  148.255744][T13380] XXXXXXXX XXXXXXXX XXXXXXXX XXXXXXXX XXXXXXXX XXXXXXXX XXXXXXXX XXXXXXXX 
-> [  148.255772][T13380] ---[ end trace a5894a74208c22ec ]---
-> [  148.576663][T13380] 
-> [  149.576765][T13380] Kernel panic - not syncing: Fatal exception
-> 
+Ira
 
