@@ -2,87 +2,127 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81BEEC352BE
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 10:06:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BA81C352BE
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 10:08:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5EA08221EA
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 10:06:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="mDpYd1gB"
+	by mail.kernel.org (Postfix) with ESMTP id 7EF172063A
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 10:08:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728799AbgDQKGo (ORCPT
+        id S1728623AbgDQKIs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 06:06:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50876 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725830AbgDQKGo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 06:06:44 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 590F5C061A0C
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 03:06:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=cOrb9bPUWtgd6Wsapeaho8G1pU3bJiwluL4FFzGvoDY=; b=mDpYd1gB+bi0K4T4b1v2Ciw4pB
-        UIpwkgnCLwn7EJ8E43eLTiXToKyD7vCnn5f/+RDLTb4wEVE1AKWZq5y27rYTaouKNUL1doADfsHBS
-        g4e49uwqq6dw+4sABzWQLf8R2J28Yvu3fUzjDSl4LOmfp/ca3DIMYuBG9MO87/vb46UgyltIgcBVe
-        tqZe/VN94XQXkHZlFN0VhQmTAXOc/o3gZl80CZTsTawZ+vKl7Xe97Uvk/63Y39/t72JrDcykvywjV
-        SSK5qmyEXIntmLYozQxcBrrceaBJ2zPOWWiOs0I/U6YOuLuuvq1nQt951OIlVEsHRlXz/yBwA0OZc
-        WD2KJbWQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jPNtL-0000Hp-Tm; Fri, 17 Apr 2020 10:06:36 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 03B773006E0;
-        Fri, 17 Apr 2020 12:06:33 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id B68282B1213AC; Fri, 17 Apr 2020 12:06:33 +0200 (CEST)
-Date:   Fri, 17 Apr 2020 12:06:33 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     "Huang, Ying" <ying.huang@intel.com>
-Cc:     Mel Gorman <mgorman@techsingularity.net>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-        Mel Gorman <mgorman@suse.de>, Rik van Riel <riel@surriel.com>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>,
-        Tejun Heo <tj@kernel.org>, Dave Hansen <dave.hansen@intel.com>,
-        Tim Chen <tim.c.chen@intel.com>,
-        Aubrey Li <aubrey.li@intel.com>
-Subject: Re: [RFC] autonuma: Support to scan page table asynchronously
-Message-ID: <20200417100633.GU20730@hirez.programming.kicks-ass.net>
-References: <20200414081951.297676-1-ying.huang@intel.com>
- <20200414120646.GN3818@techsingularity.net>
- <20200415113226.GE20730@hirez.programming.kicks-ass.net>
- <87o8rsxlws.fsf@yhuang-dev.intel.com>
+        Fri, 17 Apr 2020 06:08:48 -0400
+Received: from mx2.suse.de ([195.135.220.15]:47908 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725830AbgDQKIr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Apr 2020 06:08:47 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 17D10ADBB;
+        Fri, 17 Apr 2020 10:08:45 +0000 (UTC)
+Subject: Re: [PATCH] x86/asm: Provide a Kconfig symbol for disabling old
+ assembly annotations
+To:     Mark Brown <broonie@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>
+Cc:     x86@kernel.org, Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, linux-kernel@vger.kernel.org
+References: <20200416182402.6206-1-broonie@kernel.org>
+From:   Jiri Slaby <jslaby@suse.cz>
+Autocrypt: addr=jslaby@suse.cz; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <8fe6e63a-fd92-aec7-26ae-da65711b5747@suse.cz>
+Date:   Fri, 17 Apr 2020 12:08:44 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87o8rsxlws.fsf@yhuang-dev.intel.com>
+In-Reply-To: <20200416182402.6206-1-broonie@kernel.org>
+Content-Type: text/plain; charset=iso-8859-2
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 16, 2020 at 09:24:35AM +0800, Huang, Ying wrote:
-> Peter Zijlstra <peterz@infradead.org> writes:
+On 16. 04. 20, 20:24, Mark Brown wrote:
+> As x86 was converted to use the modern SYM_ annotations for assembly ifdefs
+> were added to remove the generic definitions of the old style annotations
+> on x86. Rather than collect a list of architectures in the ifdefs as more
+> architectures are converted over provide a Kconfig symbol for this and
+> update x86 to use it.
 > 
-> > On Tue, Apr 14, 2020 at 01:06:46PM +0100, Mel Gorman wrote:
-> >> While it's just an opinion, my preference would be to focus on reducing
-> >> the cost and amount of scanning done -- particularly for threads.
-> >
-> > This; I really don't believe in those back-charging things, esp. since
-> > not having cgroups or having multiple applications in a single cgroup is
-> > a valid setup.
-> 
-> Technically, it appears possible to back-charge the CPU time to the
-> process/thread directly (not the cgroup).
+> Signed-off-by: Mark Brown <broonie@kernel.org>
 
-I've yet to see a sane proposal there. What we're not going to do is
-make regular task accounting more expensive than it already is.
+Acked-by: Jiri Slaby <jslaby@suse.cz>
+
+> ---
+> 
+> arm64 will all being well be able to use this shortly.
+> 
+>  arch/x86/Kconfig        | 1 +
+>  include/linux/linkage.h | 8 ++++----
+>  lib/Kconfig             | 3 +++
+>  3 files changed, 8 insertions(+), 4 deletions(-)
+> 
+> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+> index 5706d0c8377f..1c6f88cefc88 100644
+> --- a/arch/x86/Kconfig
+> +++ b/arch/x86/Kconfig
+> @@ -92,6 +92,7 @@ config X86
+>  	select ARCH_USE_BUILTIN_BSWAP
+>  	select ARCH_USE_QUEUED_RWLOCKS
+>  	select ARCH_USE_QUEUED_SPINLOCKS
+> +	select ARCH_USE_SYM_ANNOTATIONS
+>  	select ARCH_WANT_BATCHED_UNMAP_TLB_FLUSH
+>  	select ARCH_WANT_DEFAULT_BPF_JIT	if X86_64
+>  	select ARCH_WANTS_DYNAMIC_TASK_STRUCT
+...
+thanks,
+-- 
+js
+suse labs
