@@ -2,92 +2,106 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53AF2C38A2C
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 16:16:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA763C352BE
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 16:16:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 252B52072D
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 16:16:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4CC82072D
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 16:16:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587140163;
-	bh=dMnwJXovzpQ6YBUUVCY4KPofcSqzELKGUYZ13cOxUdI=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
-	b=MWSbXu3bMw29FG8YL50eWWakTMBob2CZ6hM5fVsuc9EfDe3uu20ov4SR1hhr8l+eM
-	 T4jIw7OFdnWwVDC9pSXVWQhuZSQY7PvSFLShwezKK1ErtyGxXJ+N/1VGw9M2A3Wpai
-	 9IjHoSq2GZLrF/SB8Z3ZbW/MiucoU0HsZC5hKn0c=
+	s=default; t=1587140219;
+	bh=XtsgZHijijuzZe7pbCMmqmPNOdju+fj2LvLO6lzXAzI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=gujjpoLQgSwEEZya6AmZABt9vTeO+/2HydNJVU1NkXDcFKWqFMzB+jsxJQSMppGPy
+	 6Cf5aed9jtBoVheAovam7Tjwk7VjHmUj4dRR2hUhd+ss9I8R227VP982X32hb6pZnI
+	 vXx0putxSUhAD/T/+1ZumDFZ9IKzEjooaftnDDiQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730192AbgDQQQC (ORCPT
+        id S1730035AbgDQQQ7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 12:16:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38158 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728105AbgDQQQC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 12:16:02 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1680120857;
-        Fri, 17 Apr 2020 16:16:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587140161;
-        bh=dMnwJXovzpQ6YBUUVCY4KPofcSqzELKGUYZ13cOxUdI=;
-        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=2puiKB/0hiVpk1D9MJlEu9jeNCctSYUHooAr1pZSC9C4mMMjiYt2xjJMHYza+dh9P
-         9oGoYR4/8Z6FSOcRGaxAc49WewRgBYQ6S8UyVyNK0Fcd5Te3/KnkaMQDMiwSJ6MV9X
-         cKTvjq1ss1t31ZKGl8MG7fVht9JIrM3x+xh4qjvk=
-Date:   Fri, 17 Apr 2020 17:15:59 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Matthias Blankertz <matthias.blankertz@cetitec.com>
-Cc:     linux-kernel@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
-        linux-renesas-soc@vger.kernel.org
-In-Reply-To: <20200415141017.384017-1-matthias.blankertz@cetitec.com>
-References: <20200415141017.384017-1-matthias.blankertz@cetitec.com>
-Subject: Re: [PATCH 0/2] ASoC: rsnd: Fixes for multichannel HDMI audio output
-Message-Id: <158714007098.22963.15064526974433346524.b4-ty@kernel.org>
+        Fri, 17 Apr 2020 12:16:59 -0400
+Received: from mail-oo1-f53.google.com ([209.85.161.53]:38867 "EHLO
+        mail-oo1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729581AbgDQQQ6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Apr 2020 12:16:58 -0400
+Received: by mail-oo1-f53.google.com with SMTP id i9so571277ool.5;
+        Fri, 17 Apr 2020 09:16:57 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=n18HlrFzEzddDGYInumpnanTTIeL8cwMsOF4IHAX20k=;
+        b=ZsBc4Idx2Rn2GiJ2ruLjzQOxjscl9dPRKpIiRuDeYmCM77ZZpJctK1vNJNIUMWfclF
+         bIYeBUXzUJC0K5JLG4q+JJCVhik58ZTRnWkMURCfW3O+/Dsvdmm+QGllyoimZv1cm1ng
+         kNIBlAaYFEQhh9Axd7SW7Er6J5UsM747Wfidb+GAoi1/IOAvEznr30b7NqFWvO0VOkuL
+         YE4D4Ikz471a+jmpP4o5CFoFs+S6Q0e04lDJv9k13wE/YEKykKdL0QvCssmEiwf/C/mb
+         3ot4a6dZpsovWShNfphV9rn5LIB+L9glmrL5F4B5nIUBpZlggoGYrB+eRXouHU1nnqVZ
+         u2dg==
+X-Gm-Message-State: AGi0PuYYxoiPjQKUGJ9Y4tAqKkR32FF/0bYHZJStVjb+9NX++eIWkQGe
+        w2GffWe9+duHdfMJr+utcw==
+X-Google-Smtp-Source: APiQypJbw3Petn9wdktbWmJ2xla/a7PdjaDZGC8jQledwof5uDQTF8vX3jEaNAjBtZO247IkQqC/rA==
+X-Received: by 2002:a4a:5482:: with SMTP id t124mr3083325ooa.92.1587140216553;
+        Fri, 17 Apr 2020 09:16:56 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id i23sm8048489otp.74.2020.04.17.09.16.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 17 Apr 2020 09:16:55 -0700 (PDT)
+Received: (nullmailer pid 32046 invoked by uid 1000);
+        Fri, 17 Apr 2020 16:16:53 -0000
+Date:   Fri, 17 Apr 2020 11:16:53 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Dinh Nguyen <dinguyen@kernel.org>
+Cc:     linux-clk@vger.kernel.org, dinguyen@kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        sboyd@kernel.org, mturquette@baylibre.com, robh+dt@kernel.org,
+        mark.rutland@arm.com
+Subject: Re: [PATCHv7 4/5] dt-bindings: documentation: add clock bindings
+ information for Agilex
+Message-ID: <20200417161653.GA31608@bogus>
+References: <20200415164642.29382-1-dinguyen@kernel.org>
+ <20200415164642.29382-5-dinguyen@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200415164642.29382-5-dinguyen@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 15 Apr 2020 16:10:15 +0200, Matthias Blankertz wrote:
-> This fixes two issues in the snd-soc-rcar driver blocking multichannel
-> HDMI audio out: The parent SSI in a multi-SSI configuration is not
-> correctly set up and started, and the SSI->HDMI channel mapping is
-> wrong.
+On Wed, 15 Apr 2020 11:46:41 -0500, Dinh Nguyen wrote:
+> Document the Agilex clock bindings, and add the clock header file. The
+> clock header is an enumeration of all the different clocks on the Agilex
+> platform.
 > 
-> With these patches, the following device tree snippet can be used on an
-> r8a7795-based platform (Salvator-X) to enable multichannel HDMI audio on
-> HDMI0:
+> Signed-off-by: Dinh Nguyen <dinguyen@kernel.org>
+> ---
+> v7: Fix license to be "(GPL-2.0-only OR BSD-2-Clause)"
+> v6: fix build error by adding descriptions for clocks and reg in
+>     properties
+> v5: update license to GPL-2.0-only
+>     Add additionalProperties
+>     Add clock input for clkmgr
+> v4: really fix build error(comment formatting was wrong)
+> v3: address comments from Stephen Boyd
+>     fix build error(tab removed in line 37)
+>     renamed to intel,agilex.yaml
+> v2: convert original document to YAML
+> ---
+>  .../bindings/clock/intel,agilex.yaml          | 46 ++++++++++++
+>  include/dt-bindings/clock/agilex-clock.h      | 70 +++++++++++++++++++
+>  2 files changed, 116 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/intel,agilex.yaml
+>  create mode 100644 include/dt-bindings/clock/agilex-clock.h
 > 
-> [...]
 
-Applied, thanks!
+Please add Acked-by/Reviewed-by tags when posting new versions. However,
+there's no need to repost patches *only* to add the tags. The upstream
+maintainer will do that for acks received on the version they apply.
 
-[1/2] ASoC: rsnd: Fix parent SSI start/stop in multi-SSI mode
-      commit: a09fb3f28a60ba3e928a1fa94b0456780800299d
-[2/2] ASoC: rsnd: Fix HDMI channel mapping for multi-SSI mode
-      commit: b94e164759b82d0c1c80d4b1c8f12c9bee83f11d
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
+If a tag was not added on purpose, please state why and what changed.
