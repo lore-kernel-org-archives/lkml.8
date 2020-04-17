@@ -2,250 +2,105 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A084C352BE
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 16:05:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 552ECC2D0EF
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 16:06:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4F33D2223C
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 16:05:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B84A2078E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 16:06:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="VFLfdDp+"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FDVHEYVd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729736AbgDQQF4 (ORCPT
+        id S1729746AbgDQQGy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 12:05:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50368 "EHLO
+        Fri, 17 Apr 2020 12:06:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50516 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728542AbgDQQFz (ORCPT
+        by vger.kernel.org with ESMTP id S1726168AbgDQQGx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 12:05:55 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06B0AC061A0C
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 09:05:55 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id f13so3622334wrm.13
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 09:05:54 -0700 (PDT)
+        Fri, 17 Apr 2020 12:06:53 -0400
+Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6DCFBC061A0C
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 09:06:53 -0700 (PDT)
+Received: by mail-ed1-x541.google.com with SMTP id d16so1579808edv.8
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 09:06:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:references:from:autocrypt:organization:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=OrsbW1cwgo9ceeNF1CWvn3jQrpfjDBd8Kk2yxJXwnfs=;
-        b=VFLfdDp+VczGBZ6BQFptM+VUIgpNFTXDCHbdNwWkYh+f/yeL9OpHA0if60q+s/ZfVK
-         K3z5awg35CaSA16BBpqV3fg3VVOhwfv2jiV/YuvZlzqnMb2taoZyy9Xlt4Rw7trLPpti
-         mUkdy8X9J4TL/6Q36iIAqNCNQvQLRsW389kDDYJ0FnY3+gV2M9kwz0Upu2zAJCq6xfFG
-         sWQ7Oke3cs+g+J3b0rqGd6506lX0CEje5rOoG1VN97Pa4s72RmWHF+3oduh0AG3Vxqp9
-         Z68CMf9COHlvN/oct6reSHfBQ7pFF/tjkmmBuL+xYnKiSN8MrMDroU6djSX2xnEu1vF/
-         /tEg==
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to;
+        bh=27vSJ4rxOXVt//bXSzwM2gE9hxQU8k65hX9qhcsZGTg=;
+        b=FDVHEYVd2U51L0wNE01nzXLkKibCgVY7B14xhp/galjgLldz2slwvq1301/o7NpxuB
+         lgW8Pb6xYOsLUJZRwuUoO36z/o/OghwrDpkTVV6UEjlQhimiAd58oBQMZr6AU1vtAPVL
+         efZKXyZ8M9GNq/mq8fbcypKQ9Jc70L64rNb7vVjzgh2zF47h8fqLUwYVaFt5JqJavrNR
+         AIdT5heWa7/DmtAloGsAuwndo7QnLqXBTJjVKTkkhDam6tWZEqf9hbOn08QkyspY3O5l
+         7r/x2PSkKkjY/GDds/KxJ87Dc9PyVe1cPVxw+hkh34oR6I8bHSgZERiq49KTTNFe4dKT
+         J/dg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:autocrypt
-         :organization:message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=OrsbW1cwgo9ceeNF1CWvn3jQrpfjDBd8Kk2yxJXwnfs=;
-        b=Xuwh9Vxz9VssS2wH+P8kUUWb9XJP++GyrdENKdlrXMsYnwaKVvZA/SEVoEMkSE/Fwt
-         MOfHdX0c1kX4+ZDrFf3R2bXjrEfMTqo4SgdFrzxpmyNepS/WnEswDB+Nncey8Al1YprF
-         dZrsFDMWz3N67gogFqZDsUiPX5E4i+RllksdOMWUlBrtWEpaucAnGw5WffzagcfexNH8
-         dZbMBXpbHJuf5FXr490zN5VvUR2zgrOKTaWlyKa82CkPGnJNeU6bLXar7x7kR0g/ROBM
-         h0prcg1J5eI13cA8aP4PKU3b8uFjc9ti5beWBdZMRbMl41qUJM4VwOtmZuotWvGX1/qu
-         GzbA==
-X-Gm-Message-State: AGi0PuZ91nehZwsUTw7FKgCcVncZ2feTv7Chgz3ZziMoJP3Wosbmwgq8
-        h9sMyDGcFjsq8vs7NCXVrqbzYw==
-X-Google-Smtp-Source: APiQypJRLB7pu1QH6lVRik4FyloP1QJhfGAUuafpZGXHvj4ir8V3OxUfgIlcPnkknHFK8OixQd4EhA==
-X-Received: by 2002:adf:e487:: with SMTP id i7mr4539668wrm.393.1587139553524;
-        Fri, 17 Apr 2020 09:05:53 -0700 (PDT)
-Received: from ?IPv6:2a01:e35:2ec0:82b0:39cc:a07:8b48:cc56? ([2a01:e35:2ec0:82b0:39cc:a07:8b48:cc56])
-        by smtp.gmail.com with ESMTPSA id k3sm23665824wru.90.2020.04.17.09.05.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 17 Apr 2020 09:05:52 -0700 (PDT)
-Subject: Re: [PATCH v5 1/8] drm/fourcc: Add modifier definitions for
- describing Amlogic Video Framebuffer Compression
-To:     dri-devel@lists.freedesktop.org, linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Kevin Hilman <khilman@baylibre.com>
-References: <20200416152500.29429-1-narmstrong@baylibre.com>
- <20200416152500.29429-2-narmstrong@baylibre.com>
- <20200417150729.GP3456981@phenom.ffwll.local>
-From:   Neil Armstrong <narmstrong@baylibre.com>
-Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
- 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
- BSwxi7g3Mu7u5kUByanqHyA=
-Organization: Baylibre
-Message-ID: <65879a34-2e31-2908-3cc4-183f62c70ca0@baylibre.com>
-Date:   Fri, 17 Apr 2020 18:05:51 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=27vSJ4rxOXVt//bXSzwM2gE9hxQU8k65hX9qhcsZGTg=;
+        b=CagnTbrpbltN2PGSJtE6Dkslb1vzTk1u3aSEYHJ6mp/XowRdRs0vQl/6a8QqZe1fGl
+         Z/QfugTyel4MazIuooP0ayomfif6x0SjrWXyZeBvzI9XTV6BpEr3KG5zGnUxOcc/PX3A
+         F37HhFcNhevHaNn6UqmyT1B3x2lApvUhnnTsSc/1nGCSRfGcXQEcAmT8jXBqPyxtqf7o
+         JhJ7J48zi8kT3DUy8s8mQzfY8L2Eji7evDetKuTAL/KAgVGxHjAjxfFT7xb9uRnO5BAc
+         aWm40z4NIYd4HieJAlWpbeKCJgJwyS3mlyPz5RZNy28OeKLQXhC6xwhTR48HVeZpic+4
+         6H8A==
+X-Gm-Message-State: AGi0PuYcY+SDpJPcwkQxEFDZYwfXfJPmG06SxKtyE4SfuVJbXkBy3rrP
+        legOZztBTqld4RHu0JyeTP+TqE5wFxMNx/3VhSpl88Gy
+X-Google-Smtp-Source: APiQypKMVyp7kppgou3joWELwx5feu+pJVPehJdlmWs5EsoIKdyMM1Aizt1TwiQtlNFXjDCKliyrmwcTSAIyJ+G7J9o=
+X-Received: by 2002:aa7:c649:: with SMTP id z9mr3771315edr.288.1587139612155;
+ Fri, 17 Apr 2020 09:06:52 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200417150729.GP3456981@phenom.ffwll.local>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+From:   Marc Dionne <marc.c.dionne@gmail.com>
+Date:   Fri, 17 Apr 2020 13:06:40 -0300
+Message-ID: <CAB9dFdtBqrcmKcV=zxPyV5uNB7WeKOqqC4k5KtY+9vxS9ooKoA@mail.gmail.com>
+Subject: FreeNAS VM disk access errors, bisected to commit 6f1a4891a592
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 17/04/2020 17:07, Daniel Vetter wrote:
-> On Thu, Apr 16, 2020 at 05:24:53PM +0200, Neil Armstrong wrote:
->> Amlogic uses a proprietary lossless image compression protocol and format
->> for their hardware video codec accelerators, either video decoders or
->> video input encoders.
->>
->> It considerably reduces memory bandwidth while writing and reading
->> frames in memory.
->>
->> The underlying storage is considered to be 3 components, 8bit or 10-bit
->> per component, YCbCr 420, single plane :
->> - DRM_FORMAT_YUV420_8BIT
->> - DRM_FORMAT_YUV420_10BIT
->>
->> This modifier will be notably added to DMA-BUF frames imported from the V4L2
->> Amlogic VDEC decoder.
->>
->> This introduces the basic layout composed of:
->> - a body content organized in 64x32 superblocks with 4096 bytes per
->>   superblock in default mode.
->> - a 32 bytes per 128x64 header block
->>
->> This layout is tranferrable between Amlogic SoCs supporting this modifier.
->>
->> Tested-by: Kevin Hilman <khilman@baylibre.com>
->> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
->> ---
->>  include/uapi/drm/drm_fourcc.h | 39 +++++++++++++++++++++++++++++++++++
->>  1 file changed, 39 insertions(+)
->>
->> diff --git a/include/uapi/drm/drm_fourcc.h b/include/uapi/drm/drm_fourcc.h
->> index 8bc0b31597d8..a1b163a5641f 100644
->> --- a/include/uapi/drm/drm_fourcc.h
->> +++ b/include/uapi/drm/drm_fourcc.h
->> @@ -309,6 +309,7 @@ extern "C" {
->>  #define DRM_FORMAT_MOD_VENDOR_BROADCOM 0x07
->>  #define DRM_FORMAT_MOD_VENDOR_ARM     0x08
->>  #define DRM_FORMAT_MOD_VENDOR_ALLWINNER 0x09
->> +#define DRM_FORMAT_MOD_VENDOR_AMLOGIC 0x0a
->>  
->>  /* add more to the end as needed */
->>  
->> @@ -804,6 +805,44 @@ extern "C" {
->>   */
->>  #define DRM_FORMAT_MOD_ALLWINNER_TILED fourcc_mod_code(ALLWINNER, 1)
->>  
->> +/*
->> + * Amlogic Video Framebuffer Compression modifiers
->> + *
->> + * Amlogic uses a proprietary lossless image compression protocol and format
->> + * for their hardware video codec accelerators, either video decoders or
->> + * video input encoders.
->> + *
->> + * It considerably reduces memory bandwidth while writing and reading
->> + * frames in memory.
->> + *
->> + * The underlying storage is considered to be 3 components, 8bit or 10-bit
->> + * per component YCbCr 420, single plane :
->> + * - DRM_FORMAT_YUV420_8BIT
->> + * - DRM_FORMAT_YUV420_10BIT
->> + *
->> + * The first 8 bits of the mode defines the layout, then the following 8 bits
->> + * defines the options changing the layout.
-> 
-> None of the modifiers you're doing seem to have these other 8 bits
-> defined anywhere. And it's not encoded in your modifiers. Can't we just
-> enumerate the ones we have/need and done?
+Hi,
 
-It's introduced in patch 5
+Commit 6f1a4891a592 ("x86/apic/msi: Plug non-maskable MSI affinity
+race") causes Linux VMs hosted on FreeNAS (bhyve hypervisor) to lose
+access to their disk devices shortly after boot.  The disks are zfs
+zvols on the host, presented to each VM.
 
-> 
->> + *
->> + * Not all combinations are valid, and different SoCs may support different
->> + * combinations of layout and options.
->> + */
->> +#define DRM_FORMAT_MOD_AMLOGIC_FBC(__modes) fourcc_mod_code(AMLOGIC, __modes)
->> +
->> +/* Amlogic FBC Layouts */
->> +#define DRM_FORMAT_MOD_AMLOGIC_FBC_LAYOUT_MASK		(0xf << 0)
->> +
->> +/*
->> + * Amlogic FBC Basic Layout
->> + *
->> + * The basic layout is composed of:
->> + * - a body content organized in 64x32 superblocks with 4096 bytes per
->> + *   superblock in default mode.
->> + * - a 32 bytes per 128x64 header block
->> + *
->> + * This layout is transferrable between Amlogic SoCs supporting this modifier.
->> + */
->> +#define DRM_FORMAT_MOD_AMLOGIC_FBC_LAYOUT_BASIC		(1ULL << 0)
-> 
-> This is kinda confusing, since this isn't actually the modifier, but the
-> mode of the modifer. Generally what we do is only define the former, with
-> maybe some macros to extract stuff.
-> 
-> To make this more mistake-proof I'd only define the full modifier code.
-> Definitely don't add a #define with the DRM_FORMAT_MOD_ prefix which isn't
-> actually a full modifier code.
+Background: I recently updated some fedora 31 VMs running under the
+bhyve hypervisor (hosted on a FreeNAS mini), and they moved to a
+distro 5.5 kernel (5.5.15).  Shortly after reboot, the disks became
+inaccessible with any operation getting EIO errors.  Booting back into
+a 5.4 kernel, everything was fine.  I built a 5.7-rc1 kernel, which
+showed the same symptoms, and was then able to bisect it down to
+commit 6f1a4891a592.  Note that the symptoms do not occur on every
+boot, but often enough (roughly 80%) to make bisection possible.
 
-Exact, I'll use the same scheme as AFBC: AMLOGIC_FBC_FORMAT_ ...
+Applying a manual revert of 6f1a4891a592 on top of mainline from
+yesterday gives me a kernel that works fine.
 
-Neil
+Not sure which details are useful, but here are some bits that might
+be relevant:
+- FreeNAS host is running FreeNAS-11.3-U2
+- efi/bios details:
+    efi: EFI v2.40 by BHYVE
+    efi:  SMBIOS=0x7fb5b000  ACPI=0x7fb88000  ACPI 2.0=0x7fb88014
+    DMI:  BHYVE, BIOS 1.00 03/14/2014
+- A sample disk:
+    ata4: SATA link up 6.0 Gbps (SStatus 133 SControl 300)
+    ata4.00: ATA-9: BHYVE SATA DISK, 001, max UDMA/133
+    ata4.00: 2147483680 sectors, multi 128: LBA48 NCQ (depth 32)
+    ata4.00: configured for UDMA/133
+    scsi 3:0:0:0: Direct-Access     ATA      BHYVE SATA DISK  001  PQ: 0 ANSI: 5
+    scsi 3:0:0:0: Attached scsi generic sg3 type 0
+- The first sign of a problem on a "bad" kernel shows up as:
+    ata1.00: exception Emask 0x0 SAct 0x78000001 SErr 0x0 action 0x6 frozen
 
-> -Daniel
-> 
->> +
->>  #if defined(__cplusplus)
->>  }
->>  #endif
->> -- 
->> 2.22.0
->>
-> 
-
+Thanks,
+Marc
