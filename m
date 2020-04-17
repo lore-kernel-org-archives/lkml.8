@@ -2,121 +2,122 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B7AEC352BE
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 15:41:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A141C38A2B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 15:42:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 547D42223C
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 15:41:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26C752223F
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 15:42:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587138172;
+	bh=kagP5imwfFnyfuXXe6TqpflslXEdlrVOwpFJMLTiiq4=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=XV2MQDCwSh+wp6lNcPOBt1YXUao0f4LN87tZiH8QXM2bhFk9F2HzmK5xtQlh6ckt6
+	 STgceZ5SSyPW8f+QvdAzoLGH0zT0C97cs5HZ0p/FOQ7GtMuMhy5oGH+ekk3AWJsCaQ
+	 UZV61hMGho9GIx+4UMZdJMqdwyF5PpjPtN5Mp3VM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729274AbgDQPlp convert rfc822-to-8bit (ORCPT
+        id S1729292AbgDQPmv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 11:41:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46588 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729110AbgDQPlp (ORCPT
+        Fri, 17 Apr 2020 11:42:51 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:40073 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729086AbgDQPmv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 11:41:45 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25B52C061A0C;
-        Fri, 17 Apr 2020 08:41:45 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 0920E2A0613;
-        Fri, 17 Apr 2020 16:41:43 +0100 (BST)
-Date:   Fri, 17 Apr 2020 17:41:40 +0200
-From:   Boris Brezillon <boris.brezillon@collabora.com>
-To:     Marek Vasut <marex@denx.de>
-Cc:     Christophe Kerello <christophe.kerello@st.com>,
-        miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
-        lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        tony@atomide.com, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
-        linux-stm32@st-md-mailman.stormreply.com
-Subject: Re: [PATCH v2 03/12] bus: stm32-fmc2-ebi: add STM32 FMC2 EBI
- controller driver
-Message-ID: <20200417174140.00456f36@collabora.com>
-In-Reply-To: <c69f86f4-5904-3f35-dac1-87080402a096@denx.de>
-References: <1586966256-29548-1-git-send-email-christophe.kerello@st.com>
-        <1586966256-29548-4-git-send-email-christophe.kerello@st.com>
-        <20200416215328.53982fef@collabora.com>
-        <e4a21df4-b01b-1215-7a3b-fea94f099b8f@st.com>
-        <c69f86f4-5904-3f35-dac1-87080402a096@denx.de>
-Organization: Collabora
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Fri, 17 Apr 2020 11:42:51 -0400
+Received: by mail-oi1-f195.google.com with SMTP id t199so2417087oif.7;
+        Fri, 17 Apr 2020 08:42:49 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=yoZ8CcbFLME/ZwmQ3YBGDjBpmj9xhabgRWeRec3Maok=;
+        b=ePwH8Izj4U6/7y2E+xV/tXcg7ocx+aGYnxWKPeMhbdD0HS8ABChjivY25eG3I0MNXA
+         Xjz7ePeVv7ikvwxzVTW5twoaa+jld7eMLA9kFSDelVuqppW9T9ioJ0BcjKSh3ONmQH6C
+         DZupOyiLDhomNkAD5zre1GTsoXeMQuAO9bOYUu+Xz+zK0sTf2hTRwWRkO6pMyZEr9uAZ
+         NT2RzMfnYuEU22z6NhG47oLcuv0J5RLLfkPSga7TkCTpNBPxtdSXDD0o6XdOHKhjBdxr
+         Gj/bfw6YqmkKvDYz5nGmlTkaZbON5Whw7DKh8bVoxD1TQwmGb/MRrjYxl2boDgvNDvdt
+         ND4Q==
+X-Gm-Message-State: AGi0PuakZz/x2q85C3hAWUoatAYnVYBeRSpiRPcuz0CCJoLCopSIPSiH
+        jdnBnI0rab9Iu2sUYKTXU4NTaCY=
+X-Google-Smtp-Source: APiQypI+GA+kBbRldfyKxh5eL6dZtg5236mW4GRY2z5bVcoddCJCjdd4jyehv3n32yULzZ50GdP/2w==
+X-Received: by 2002:aca:2212:: with SMTP id b18mr2661325oic.121.1587138168489;
+        Fri, 17 Apr 2020 08:42:48 -0700 (PDT)
+Received: from xps15.herring.priv (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.googlemail.com with ESMTPSA id y131sm8067166oie.39.2020.04.17.08.42.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 17 Apr 2020 08:42:47 -0700 (PDT)
+From:   Rob Herring <robh@kernel.org>
+To:     devicetree@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Masahiro Yamada <masahiroy@kernel.org>
+Subject: [PATCH v2] dt-bindings: Add a minimum version check for dtschema
+Date:   Fri, 17 Apr 2020 10:42:46 -0500
+Message-Id: <20200417154246.2714-1-robh@kernel.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 17 Apr 2020 17:31:49 +0200
-Marek Vasut <marex@denx.de> wrote:
+The dtschema package must be somewhat up to date as the tools and
+meta-schema checks are still evolving. Implement a version check,
+so this can be enforced. This will help ensure new schema submissions
+get checked against the latest meta-schemas.
 
-> On 4/17/20 5:29 PM, Christophe Kerello wrote:
-> > 
-> > 
-> > On 4/16/20 9:53 PM, Boris Brezillon wrote:  
-> >> On Wed, 15 Apr 2020 17:57:27 +0200
-> >> Christophe Kerello <christophe.kerello@st.com> wrote:
-> >>  
-> >>> The driver adds the support for the STMicroelectronics FMC2 EBI
-> >>> controller
-> >>> found on STM32MP SOCs.
-> >>>
-> >>> Signed-off-by: Christophe Kerello <christophe.kerello@st.com>
-> >>> Tested-by: Marek Vasut <marex@denx.de>
-> >>> ---
-> >>> Changes in v2:
-> >>>   - call 2 APIs to manage FMC2 enable/disable instead of ops
-> >>>   - call 2 APIs to manage FMC2 NWAIT shared signal instead of ops
-> >>>
-> >>>   drivers/bus/Kconfig          |   11 +
-> >>>   drivers/bus/Makefile         |    1 +
-> >>>   drivers/bus/stm32-fmc2-ebi.c | 1091
-> >>> ++++++++++++++++++++++++++++++++++++++++++  
-> >>
-> >> Hm, I see that other memory bus controller drivers are placed under
-> >> drivers/memory/, any reason for choosing drivers/bus/? If that's where
-> >> we want to have all generic memory bus controllers to live it might be
-> >> worth moving existing drivers to the drivers/bus/ directory at some
-> >> point.
-> >>  
-> > 
-> > Hi Boris,
-> > 
-> > I see this controller as an external bus interface as we are able to
-> > attach different devices on it, like a PSRAM, an ethernet controller, a
-> > FPGA, a LCD display, ...
-> > 
-> > When I had a look at bus/Kconfig file, I have found similar drivers
-> > (like IMX_WEIM or QCOM_EBI2 drivers). These drivers are able to connect
-> > devices like NAND Flash, SRAM, ethernet adapters, FPGAs and LCD displays
-> > as it is written in the Kconfig file.
-> > 
-> > But, after checking memory/Kconfig file, it is also possible to find
-> > similar drivers (like ATMEL_EBI driver that is inspired by the WEIM bus
-> > driver).
-> > 
-> > So, I will follow the recommendation and I will move it to
-> > drivers/memory folder if it is the place where this driver should be.  
-> 
-> The EBI isn't a memory bus, you can very well have a non-memory device,
-> like an external parallel bus memory controller on it. So why should it
-> be in drivers/memory ?
+Cc: Masahiro Yamada <masahiroy@kernel.org>
+Signed-off-by: Rob Herring <robh@kernel.org>
+---
+v2:
+ - Use a build rule for the version check instead
 
-Just like most of those so-called memory bus controllers we have under
-drivers/memory/ => they are most of the time used to interact with
-memories but can also be used for other things (Christophe listed a few
-uses cases). And I'm not pushing one way or the other, all I said was
-that we should makes things consistent instead of having half of
-those controller drivers in drivers/memory/ and the other half in
-drivers/bus/.
+ Documentation/devicetree/bindings/Makefile | 14 +++++++++++---
+ 1 file changed, 11 insertions(+), 3 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/Makefile b/Documentation/devicetree/bindings/Makefile
+index 1df680d07461..daf0dda45a78 100644
+--- a/Documentation/devicetree/bindings/Makefile
++++ b/Documentation/devicetree/bindings/Makefile
+@@ -3,11 +3,19 @@ DT_DOC_CHECKER ?= dt-doc-validate
+ DT_EXTRACT_EX ?= dt-extract-example
+ DT_MK_SCHEMA ?= dt-mk-schema
+ 
++DT_SCHEMA_MIN_VERSION = 2020.04
++
++PHONY += check_dtschema_version
++check_dtschema_version:
++	@printf "%s\n" $(DT_SCHEMA_MIN_VERSION) \
++	  $$($(DT_DOC_CHECKER) --version 2>/dev/null || echo 0) | sort -VC || \
++	  (echo "ERROR: dtschema minimum version is v$(DT_SCHEMA_MIN_VERSION)"; exit 1) 1>&2
++
+ quiet_cmd_chk_binding = CHKDT   $(patsubst $(srctree)/%,%,$<)
+       cmd_chk_binding = $(DT_DOC_CHECKER) -u $(srctree)/$(src) $< ; \
+                         $(DT_EXTRACT_EX) $< > $@
+ 
+-$(obj)/%.example.dts: $(src)/%.yaml FORCE
++$(obj)/%.example.dts: $(src)/%.yaml check_dtschema_version FORCE
+ 	$(call if_changed,chk_binding)
+ 
+ # Use full schemas when checking %.example.dts
+@@ -34,11 +42,11 @@ override DTC_FLAGS := \
+ 	-Wno-avoid_unnecessary_addr_size \
+ 	-Wno-graph_child_address
+ 
+-$(obj)/processed-schema-examples.yaml: $(DT_DOCS) FORCE
++$(obj)/processed-schema-examples.yaml: $(DT_DOCS) check_dtschema_version FORCE
+ 	$(call if_changed,mk_schema)
+ 
+ $(obj)/processed-schema.yaml: DT_MK_SCHEMA_FLAGS := -u
+-$(obj)/processed-schema.yaml: $(DT_SCHEMA_FILES) FORCE
++$(obj)/processed-schema.yaml: $(DT_SCHEMA_FILES) check_dtschema_version FORCE
+ 	$(call if_changed,mk_schema)
+ 
+ extra-y += processed-schema.yaml
+-- 
+2.20.1
 
