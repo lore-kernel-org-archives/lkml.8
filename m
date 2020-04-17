@@ -2,188 +2,111 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E39BC352BE
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 14:24:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BC18C38A2C
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 14:25:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7EE9120857
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 14:24:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40A2820B1F
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 14:25:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="nPBtDwzD"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="gKw5eoYU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726767AbgDQOYF (ORCPT
+        id S1727798AbgDQOZp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 10:24:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34418 "EHLO
+        Fri, 17 Apr 2020 10:25:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34688 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725272AbgDQOYE (ORCPT
+        with ESMTP id S1726036AbgDQOZo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 10:24:04 -0400
-Received: from mo6-p02-ob.smtp.rzone.de (mo6-p02-ob.smtp.rzone.de [IPv6:2a01:238:20a:202:5302::10])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47EDEC061A0C;
-        Fri, 17 Apr 2020 07:24:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1587133442;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=jO+yQRzrrw68/h3Wl6XnCozXZ5ZYigOcbMraY2Wt/Go=;
-        b=nPBtDwzDg+x5S+A4ijT0C/Xei3e/cPD6xhniPZFqiSN/bXw54jOSolcj6QBoumY4OY
-        Tb7ENyGy5AZo9SEpgglhluFRb2oP/1gt5MB6iNJCinFlgg7bsrWmAKQCGYmRO65cPw+M
-        cNSX0lKls7Ct6NSeclQujoY4Z6BYELPwbWto+eIy5xxaSDE0s5nEpZZETQs4Ng8c0tab
-        HH2v1HSwE9y36EGAycUt/QzZygQFbHKfiMnDteL6cGTlDTGYLaang4Qf8A3NmXUx9cch
-        kknGQ1vpZs4sTSVVS8pTbF0ATJjcpDNRtCYxB3EhlOJ8LjwFKYDJFjAihm9a/txHc8rA
-        Y8fQ==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj7wpz8NMGH/PgwDWjbQ=="
-X-RZG-CLASS-ID: mo00
-Received: from imac.fritz.box
-        by smtp.strato.de (RZmta 46.5.0 DYNA|AUTH)
-        with ESMTPSA id g06d2dw3HEMm2A5
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
-        (Client did not present a certificate);
-        Fri, 17 Apr 2020 16:22:48 +0200 (CEST)
-Subject: Re: [PATCHv3] w1: omap-hdq: Simplify driver with PM runtime autosuspend
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+        Fri, 17 Apr 2020 10:25:44 -0400
+Received: from mail-pf1-x42a.google.com (mail-pf1-x42a.google.com [IPv6:2607:f8b0:4864:20::42a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A241AC061A10
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 07:25:43 -0700 (PDT)
+Received: by mail-pf1-x42a.google.com with SMTP id g30so1141395pfr.3
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 07:25:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=L6cWP5WK6ujku9y43wjaNC6S0VeElTh4yenPv8t29Ak=;
+        b=gKw5eoYUIpd77RsZ9EA4/OBI5it3b4QtTk5w0WNiaVsQlhU0AvTC99Kwb6pyQrnZwb
+         8mkxqNjg6VEOZTZqnkLOebZlO/n/v5mMNjfkBB1cGO3Fx7O3pVDrmTfYyuyYufQ9ccR3
+         RtPWKLjDzCOGMUWt9saeSwmpszseuFa+iiXqlLA7QMz5NdgXvU//k288EsKe0YfAzi6u
+         dvmxk+qgp7K7fE2PnVT7fvqSgeWduMN7B1pblLGgZqKs3H1NpzAxQ5FN/ffFSwvnE0Dr
+         z0qCKxdTOrenMDSXdIXvCN19QGBDvsZe/1e/6pTgbuMcknn8YL4CeODkrzae32Dl8ywr
+         FA6w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=L6cWP5WK6ujku9y43wjaNC6S0VeElTh4yenPv8t29Ak=;
+        b=D/gHdUalubj2c86bHPhFXZEiID/6wGx7O+mdeHU+6AldcLSjLBIE8vTaXAxq2npmc/
+         KrMQ7Z3QUhfg7t1qOzSqz5fjXxFxF2d/IukLNOAhoBaKOol5PugwiTWd5UOeaCnAtLu1
+         q2pZ20vA5YIwvGeWTfGjHQS74gHd+ErctuNDGMHpx1xCCfZvmQvvBMFKX7O4yUmbsOgw
+         rSisvcZ74hCdudtYaW+nIyMyFPsXjdERaXhRJ5Mlae2HdjNGfLbBskMmTIigBbgViNds
+         oagh1M3ZkzS2i/hDgbcjzJ6ZtkqIZ9k+pvpPVlhd6UUKAW5LTfKAK4ilqKM39eaaN337
+         p/lg==
+X-Gm-Message-State: AGi0Pub5yAO65kS8taV0L7JjJ0KL1ICFrnUPc6Zdyk1agOK14ecjwRI7
+        A+rmdgCbv7eetD4Z+SyY+sQZfw==
+X-Google-Smtp-Source: APiQypLk3UKQ7IlVU68RBsk4YcfumTB0+HNr5I6KmasWP50lwGXPB60OmHhJAmy9VXUBKXWGkLn5iw==
+X-Received: by 2002:a63:1662:: with SMTP id 34mr3312317pgw.117.1587133542614;
+        Fri, 17 Apr 2020 07:25:42 -0700 (PDT)
+Received: from [192.168.1.188] ([66.219.217.145])
+        by smtp.gmail.com with ESMTPSA id r18sm579944pfg.120.2020.04.17.07.25.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 17 Apr 2020 07:25:41 -0700 (PDT)
+Subject: Re: improve use_mm / unuse_mm v2
+To:     Christoph Hellwig <hch@lst.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Zhenyu Wang <zhenyuw@linux.intel.com>,
+        Zhi Wang <zhi.a.wang@intel.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>, linux-kernel@vger.kernel.org,
+        amd-gfx@lists.freedesktop.org, intel-gvt-dev@lists.freedesktop.org,
+        intel-gfx@lists.freedesktop.org, linux-usb@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        linux-fsdevel@vger.kernel.org, io-uring@vger.kernel.org,
+        linux-mm@kvack.org
+References: <20200416053158.586887-1-hch@lst.de>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <8d314bc3-ea59-684d-2d34-20b152a36f4f@kernel.dk>
+Date:   Fri, 17 Apr 2020 08:25:38 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
+MIME-Version: 1.0
+In-Reply-To: <20200416053158.586887-1-hch@lst.de>
 Content-Type: text/plain; charset=utf-8
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-In-Reply-To: <20200416184638.GI37466@atomide.com>
-Date:   Fri, 17 Apr 2020 16:22:47 +0200
-Cc:     Evgeniy Polyakov <zbr@ioremap.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-omap <linux-omap@vger.kernel.org>,
-        Adam Ford <aford173@gmail.com>,
-        "Andrew F . Davis" <afd@ti.com>,
-        Andreas Kemnade <andreas@kemnade.info>,
-        Vignesh R <vigneshr@ti.com>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <3197C3F0-DEB9-4221-AFBD-4F2A08C84C4C@goldelico.com>
-References: <20191217004048.46298-1-tony@atomide.com> <7B8C7DD9-095B-48FC-9642-695D07B79E97@goldelico.com> <20200416184638.GI37466@atomide.com>
-To:     Tony Lindgren <tony@atomide.com>
-X-Mailer: Apple Mail (2.3124)
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 4/15/20 11:31 PM, Christoph Hellwig wrote:
+> Hi all,
+> 
+> this series improves the use_mm / unuse_mm interface by better
+> documenting the assumptions, and my taking the set_fs manipulations
+> spread over the callers into the core API.
+> 
+> Changes since v1:
+>  - drop a few patches
+>  - fix a comment typo
+>  - cover the newly merged use_mm/unuse_mm caller in vfio
 
-> Am 16.04.2020 um 20:46 schrieb Tony Lindgren <tony@atomide.com>:
->=20
-> * H. Nikolaus Schaller <hns@goldelico.com> [200416 15:04]:
->> Hi Tony,
->> it looks as if something with this patch is broken on GTA04. For v5.6 =
-and v5.7-rc1.
->>=20
->> HDQ battery access times out after ca. 15 seconds and I get =
-temperature of -273.1=C2=B0C...
->>=20
->> Reverting this patch and everything is ok again.
->=20
-> Hmm OK interesting.
->=20
->> What is "ti,mode" about? Do we have that (indirectly) in gta04.dtsi?
->> Or does this patch need some CONFIGs we do not happen to have?
->=20
-> Sounds like you have things working though so there should be no
-> need for having ti,mode =3D "1w" in the dts.
->=20
->>> 	pm_runtime_enable(&pdev->dev);
->>> +	pm_runtime_use_autosuspend(&pdev->dev);
->>> +	pm_runtime_set_autosuspend_delay(&pdev->dev, 300);
->=20
-> Care to check if changing pm_runtime_set_autosuspend_delay value
-> to -1 in probe makes the issue go away? Or change it manually
-> to -1 via sysfs.
->=20
-> If that helps, likely we have a missing pm_runtime_get_sync()
-> somewhere in the driver.
+You can add my reviewed-by/tested-by to the patches, passes the
+io_uring regression tests.
 
-Yes, it does! It suffices to set it to -1 for one readout.
-Aything else I can test?
-
-root@letux:~# time cat /sys/class/power_supply/bq27000-battery/uevent
-POWER_SUPPLY_NAME=3Dbq27000-battery
-POWER_SUPPLY_STATUS=3DDischarging
-POWER_SUPPLY_PRESENT=3D1
-POWER_SUPPLY_VOLTAGE_NOW=3D4049000
-POWER_SUPPLY_CURRENT_NOW=3D233478
-POWER_SUPPLY_CAPACITY=3D0
-POWER_SUPPLY_CAPACITY_LEVEL=3DNormal
-POWER_SUPPLY_TEMP=3D-2731
-POWER_SUPPLY_TIME_TO_EMPTY_NOW=3D0
-POWER_SUPPLY_TIME_TO_EMPTY_AVG=3D0
-POWER_SUPPLY_TIME_TO_FULL_NOW=3D0
-POWER_SUPPLY_TECHNOLOGY=3DLi-ion
-POWER_SUPPLY_CHARGE_FULL=3D0
-POWER_SUPPLY_CHARGE_NOW=3D755788
-POWER_SUPPLY_CHARGE_FULL_DESIGN=3D1233792
-POWER_SUPPLY_CYCLE_COUNT=3D80
-POWER_SUPPLY_ENERGY_NOW=3D0
-POWER_SUPPLY_POWER_AVG=3D941700
-POWER_SUPPLY_HEALTH=3DGood
-POWER_SUPPLY_MANUFACTURER=3DTexas Instruments
-
-real    0m8.910s
-user    0m0.001s
-sys     0m0.028s
-root@letux:~# echo -1 =
->/sys/bus/platform/drivers/omap_hdq/480b2000.1w/power/autosuspend_delay_ms=
-
-root@letux:~# time cat /sys/class/power_supply/bq27000-battery/uevent
-POWER_SUPPLY_NAME=3Dbq27000-battery
-POWER_SUPPLY_STATUS=3DDischarging
-POWER_SUPPLY_PRESENT=3D1
-POWER_SUPPLY_VOLTAGE_NOW=3D3985000
-POWER_SUPPLY_CURRENT_NOW=3D231871
-POWER_SUPPLY_CAPACITY=3D78
-POWER_SUPPLY_CAPACITY_LEVEL=3DNormal
-POWER_SUPPLY_TEMP=3D354
-POWER_SUPPLY_TIME_TO_EMPTY_NOW=3D10440
-POWER_SUPPLY_TIME_TO_EMPTY_AVG=3D9900
-POWER_SUPPLY_TECHNOLOGY=3DLi-ion
-POWER_SUPPLY_CHARGE_FULL=3D858138
-POWER_SUPPLY_CHARGE_NOW=3D670170
-POWER_SUPPLY_CHARGE_FULL_DESIGN=3D1233792
-POWER_SUPPLY_CYCLE_COUNT=3D80
-POWER_SUPPLY_ENERGY_NOW=3D2544780
-POWER_SUPPLY_POWER_AVG=3D922720
-POWER_SUPPLY_HEALTH=3DGood
-POWER_SUPPLY_MANUFACTURER=3DTexas Instruments
-
-real    0m0.232s
-user    0m0.001s
-sys     0m0.023s
-root@letux:~# echo 300 =
->/sys/bus/platform/drivers/omap_hdq/480b2000.1w/power/autosuspend_delay_ms=
-
-root@letux:~# time cat /sys/class/power_supply/bq27000-battery/uevent
-POWER_SUPPLY_NAME=3Dbq27000-battery
-POWER_SUPPLY_STATUS=3DDischarging
-POWER_SUPPLY_PRESENT=3D1
-POWER_SUPPLY_VOLTAGE_NOW=3D3985000
-POWER_SUPPLY_CURRENT_NOW=3D234727
-POWER_SUPPLY_CAPACITY=3D78
-POWER_SUPPLY_CAPACITY_LEVEL=3DNormal
-POWER_SUPPLY_TEMP=3D354
-POWER_SUPPLY_TIME_TO_EMPTY_NOW=3D10620
-POWER_SUPPLY_TIME_TO_EMPTY_AVG=3D10140
-POWER_SUPPLY_TECHNOLOGY=3DLi-ion
-POWER_SUPPLY_CHARGE_FULL=3D858138
-POWER_SUPPLY_CHARGE_NOW=3D669102
-POWER_SUPPLY_CHARGE_FULL_DESIGN=3D1233792
-POWER_SUPPLY_CYCLE_COUNT=3D80
-POWER_SUPPLY_ENERGY_NOW=3D2541860
-POWER_SUPPLY_POWER_AVG=3D903740
-POWER_SUPPLY_HEALTH=3DGood
-POWER_SUPPLY_MANUFACTURER=3DTexas Instruments
-
-real    0m0.178s
-user    0m0.000s
-sys     0m0.029s
-root@letux:~#=20
-
-BR and thanks,
-Nikolaus
+-- 
+Jens Axboe
 
