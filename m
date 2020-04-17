@@ -2,118 +2,97 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2355AC2D0EF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 12:40:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D92ADC352BE
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 12:40:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E609421D94
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 12:40:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B58A02064A
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 12:40:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="jJaoNQrE"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="l8mddYZi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729684AbgDQMks (ORCPT
+        id S1729724AbgDQMkw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 08:40:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46560 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727897AbgDQMkr (ORCPT
+        Fri, 17 Apr 2020 08:40:52 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:19510 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727897AbgDQMkv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 08:40:47 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37BBEC061A0C
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 05:40:47 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id k1so2889161wrx.4
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 05:40:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Hw3zBq2iflGKeF6TIA06foptPhPCqmQ4gALSXVPDoYo=;
-        b=jJaoNQrEIBPf8c+ShjvPCVr441gyQQerRqJv93mnrEQA3Xj+pLqdOzATk/Rn2d6mM5
-         3QOcSW4fe/9UKaVuVYEHRDrU8RkNrG9QOrLRxAsWHkQQi2tSBQ13I+XF0EQBrqVA3bra
-         sIKelGB72/XTdlKCQox25CECzSE17EDwMta1XSkH2DLt217o/7jDjJROmpFDxwtrWNRU
-         vHF1nnsGUxzPphnUY7UhD+m7rnI2dyvzQLLjsrqI69ekVOfd3E2mdhSIIQIbXbKphLkq
-         I9wQtMALwtQYIyiBTVn0d8qzFf20+E0n3CIBqQ4Ea2FXzt3wIoqvj5evJQ7B3R6Hcd/A
-         QQjQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Hw3zBq2iflGKeF6TIA06foptPhPCqmQ4gALSXVPDoYo=;
-        b=aoHJdxFfxzDq7VKnNJF3QpwHUBk9wp5yAX9rvyhA+vqHggN1RPJ1qo1bNDU1nBhfV0
-         8IE9Whet1aUZ5X4vlX7OsoM4ASzovkaB1wsTGa3uI4beT7gu1rJ0tmdesCq2mXpRx8ZJ
-         7T8Hhs6ZLodQK9Gmqdmb1vpDUbAiQkrUfc6VUw8AF0zfVg4Xxvm3ebtY9rys7JUc7/UO
-         QAPdE491UlrM3ZEXugqMbmN6Rn9O1F8V+g4HIxih+oPNfbbdnhGP965MezGxHswsZGjo
-         +D5ABDSs/hiBwv69MThmgKeFMX3aIwQ9h//jFzVHr6QD7mwIHp2185rXEaPRnYqoe5Sx
-         wthg==
-X-Gm-Message-State: AGi0PuZV9G2jSubd2zIQdu7QrAnrM3c48YbKXh7G4LKLA1RHfm3z6rS2
-        wKy4husYwX5qLgT05wWZ51+oSLvYE5bbgRjDi9uS5w==
-X-Google-Smtp-Source: APiQypJN6AKoUZezns2JYdhqA8iYyC3VPzV6Le8z1oI9oshNNiKtXSuZACI1oSLtIfdlgPsUtMjg1TAGYQBxVtgnw8M=
-X-Received: by 2002:adf:b35c:: with SMTP id k28mr3718749wrd.61.1587127244899;
- Fri, 17 Apr 2020 05:40:44 -0700 (PDT)
+        Fri, 17 Apr 2020 08:40:51 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e99a3630001>; Fri, 17 Apr 2020 05:38:59 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Fri, 17 Apr 2020 05:40:51 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Fri, 17 Apr 2020 05:40:51 -0700
+Received: from HQMAIL107.nvidia.com (172.20.187.13) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 17 Apr
+ 2020 12:40:50 +0000
+Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Fri, 17 Apr 2020 12:40:51 +0000
+Received: from moonraker.nvidia.com (Not Verified[10.26.73.163]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5e99a3d10003>; Fri, 17 Apr 2020 05:40:50 -0700
+From:   Jon Hunter <jonathanh@nvidia.com>
+To:     Thierry Reding <thierry.reding@gmail.com>
+CC:     <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Jon Hunter <jonathanh@nvidia.com>
+Subject: [PATCH] soc/tegra: fuse: Update the SoC revision attribute to display a name
+Date:   Fri, 17 Apr 2020 13:40:46 +0100
+Message-ID: <20200417124046.26400-1-jonathanh@nvidia.com>
+X-Mailer: git-send-email 2.17.1
+X-NVConfidentiality: public
 MIME-Version: 1.0
-References: <20200417121222.156422-1-wangkefeng.wang@huawei.com>
-In-Reply-To: <20200417121222.156422-1-wangkefeng.wang@huawei.com>
-From:   Anup Patel <anup@brainfault.org>
-Date:   Fri, 17 Apr 2020 18:10:32 +0530
-Message-ID: <CAAhSdy2cFnYM4Q03nCUof33KwtfDhefvZVc044ukcjSa+CaYZw@mail.gmail.com>
-Subject: Re: [PATCH 1/3] riscv: sbi: Correct sbi_shutdown() and
- sbi_clear_ipi() export
-To:     Kefeng Wang <wangkefeng.wang@huawei.com>
-Cc:     Atish Patra <atish.patra@wdc.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
-        linux-riscv <linux-riscv@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1587127139; bh=J65c/MvkuaR8eKoN8yHmhT2faFLCAxi0NFqBMduNorA=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         X-NVConfidentiality:MIME-Version:Content-Type;
+        b=l8mddYZixe3VXl3ZUEHPqOeON88seL17bjq9mzY4KKSixB2p+mEZDsGr8EmKrHNhT
+         xcKdi5Ddhstp2a7p9Ze38tMDtI4VZzdgZzxhUlPR8z/GG8SZW1xhfFIxXtV4hvdVa4
+         csrmDRZLV3bRUBynsgPs/ySzbZUS/plL+xAqKJKo2qTnY+NlHV2h/DxUq9SCREYWjP
+         Z7hcyHSrYtnLiPL3qW8zII976N3c1to2Ju7H5GyhleqYI3mdoc0EPaZhVUEMxJKoUr
+         JfvUgsC61LFmQXnWlmcfDLjCQgisE5qw9hFdFG3eqcClvAQX6SDJLcb7Qy3iyCPZxy
+         +3n1epR+K65IA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 17, 2020 at 5:40 PM Kefeng Wang <wangkefeng.wang@huawei.com> wrote:
->
-> Fix incorrect EXPORT_SYMBOL().
->
-> Fixes: efca13989250 ("RISC-V: Introduce a new config for SBI v0.1")
-> Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
-> ---
->  arch/riscv/kernel/sbi.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/arch/riscv/kernel/sbi.c b/arch/riscv/kernel/sbi.c
-> index 7c24da59bccf..62b10a16c8d7 100644
-> --- a/arch/riscv/kernel/sbi.c
-> +++ b/arch/riscv/kernel/sbi.c
-> @@ -102,7 +102,7 @@ void sbi_shutdown(void)
->  {
->         sbi_ecall(SBI_EXT_0_1_SHUTDOWN, 0, 0, 0, 0, 0, 0, 0);
->  }
-> -EXPORT_SYMBOL(sbi_set_timer);
-> +EXPORT_SYMBOL(sbi_shutdown);
->
->  /**
->   * sbi_clear_ipi() - Clear any pending IPIs for the calling hart.
-> @@ -113,7 +113,7 @@ void sbi_clear_ipi(void)
->  {
->         sbi_ecall(SBI_EXT_0_1_CLEAR_IPI, 0, 0, 0, 0, 0, 0, 0);
->  }
-> -EXPORT_SYMBOL(sbi_shutdown);
-> +EXPORT_SYMBOL(sbi_clear_ipi);
->
->  /**
->   * sbi_set_timer_v01() - Program the timer for next timer event.
-> --
-> 2.20.1
->
+Currently the SoC revision attribute for Tegra devices displays the
+value of the enum associated with a particular revision. This is not
+very useful because to obtain the actual revision you need to
+use the tegra_revision enumeration to translate the value.
 
-Looks good to me.
+It is more meaningful to display a name for the revision, such as
+'A01', than the enumarated value and therefore, update the revision
+attribute to display a name. This change does alter the ABI, which
+is unfortunate, but this is more meaningful and maintable.
 
-Reviewed-by: Anup Patel <anup@brainfault.org>
+Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
+---
+ drivers/soc/tegra/fuse/fuse-tegra.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Regards,
-Anup
+diff --git a/drivers/soc/tegra/fuse/fuse-tegra.c b/drivers/soc/tegra/fuse/fuse-tegra.c
+index db65ddb6a5d2..d1f8dd0289e6 100644
+--- a/drivers/soc/tegra/fuse/fuse-tegra.c
++++ b/drivers/soc/tegra/fuse/fuse-tegra.c
+@@ -363,7 +363,8 @@ struct device * __init tegra_soc_device_register(void)
+ 		return NULL;
+ 
+ 	attr->family = kasprintf(GFP_KERNEL, "Tegra");
+-	attr->revision = kasprintf(GFP_KERNEL, "%d", tegra_sku_info.revision);
++	attr->revision = kasprintf(GFP_KERNEL, "%s",
++		tegra_revision_name[tegra_sku_info.revision]);
+ 	attr->soc_id = kasprintf(GFP_KERNEL, "%u", tegra_get_chip_id());
+ 	attr->custom_attr_group = fuse->soc->soc_attr_group;
+ 
+-- 
+2.17.1
+
