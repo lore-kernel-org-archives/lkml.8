@@ -2,143 +2,120 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48DDDC38A2C
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 12:44:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A78E6C352BE
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 12:45:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 26FF4208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 12:44:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 859942083E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 12:45:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="jKWNIpb/";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="L7tx7yWX"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="mWXaRH/e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729745AbgDQMo2 (ORCPT
+        id S1729770AbgDQMpa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 08:44:28 -0400
-Received: from out2-smtp.messagingengine.com ([66.111.4.26]:60693 "EHLO
-        out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729034AbgDQMo1 (ORCPT
+        Fri, 17 Apr 2020 08:45:30 -0400
+Received: from smtp-fw-6002.amazon.com ([52.95.49.90]:44288 "EHLO
+        smtp-fw-6002.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729176AbgDQMp3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 08:44:27 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.nyi.internal (Postfix) with ESMTP id CADD25C0207;
-        Fri, 17 Apr 2020 08:44:25 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Fri, 17 Apr 2020 08:44:25 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=KRTBXgxtnpIGY2Rffw9qnshJuWR
-        4Sx3VOxgPioXE+Wk=; b=jKWNIpb/gchBDf8b6tKNx9h+rDp7o4zch5BMhABV1n+
-        wYXsXhr1CgAGK4NKTUSTmgFAXTqguJokWrd6lnE7g4UnTP7FsDSva4SwfoYDD1M4
-        k1K0ALePbSPZUgucMePPt7GRVzhG+5lDTYcHJQ3Qq2csr5YMVHbSRFgkv8jUPEwi
-        R9uljDj82HviF/ps6TEdURJyYwVkkxST9ENeNwi9w6+pUgNZFCX+RNNAO7bycJLL
-        r9GZcFZW12/zIdU2cpaMU9oL7ZVNP52zn0kIXy/cUY+k60m7Y905lDkr5nKZUEOW
-        GxESfZB0+Qhx/kbU9Sob7BLa6ei4qMt6ND3AJlDf71Q==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=KRTBXg
-        xtnpIGY2Rffw9qnshJuWR4Sx3VOxgPioXE+Wk=; b=L7tx7yWXT+ng7Dx1Ke2XfS
-        sdGjM1pjvpjHhqXk1xeR1VoBT/N/taUYgna2syAjD48iIi/lnFOkQ3ItbSQPt7wG
-        RkZkD3g2GgflxLaYsunqlrqDr+WFvXjbUAKVP3aALdXzlS+Ty+XZ49YdZ0Yir9hG
-        a6wdM/ssM8EC03hSrt90ssH9PjESLw6lPxE5bvj3RaXwYwC6a3pTC+/O39Tt3q7/
-        606iTkuo+kW0tkDKcA1IfR/IEXpRjboUT+mM/hSsMM4wDMOhm03+Y8rC76HSnrFt
-        plZM0znazF708XnT/SIe77wwdir0GW1OlzrTeGTdgI9iIr59js57nEUNG4Iyufdg
-        ==
-X-ME-Sender: <xms:qKSZXqT_lQ9VGLtM5z6SHltgALFrxtchQYkNDlC_m_v8jnWE8VOHaQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrfeejgdehhecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggujgesghdtreertddtvdenucfhrhhomhepofgrgihimhgv
-    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucffohhmrghinh
-    epkhgvrhhnvghlrdhorhhgnecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgv
-    rhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepmhgrgihimhgvsegtvghrnh
-    hordhtvggthh
-X-ME-Proxy: <xmx:qKSZXhy4J0mzJxJiqN-NWWtzo-zPmD3n-6ZDoHri6kU3X3dQnWMx5A>
-    <xmx:qKSZXsJAXYlwU1AxxETriuzDAO_URZGf9Gx-WyhD8_p6Rkn3JInhRQ>
-    <xmx:qKSZXuP6nlV9mNq-dT-8l0qVPkYYwhFq2rWTEIXvQKzPOaY4FayoOg>
-    <xmx:qaSZXtX67zhIwYR17HlHWpPk22jyHhf3JobJ6CuEx-5Dg074wn3h6g>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 63CE23280060;
-        Fri, 17 Apr 2020 08:44:24 -0400 (EDT)
-Date:   Fri, 17 Apr 2020 14:44:22 +0200
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc:     Discussions about the Letux Kernel <letux-kernel@openphoenux.org>,
-        linux-omap <linux-omap@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [drm:simple_bridge_attach [simple_bridge]] *ERROR* Fix bridge
- driver to make connector optional!
-Message-ID: <20200417124422.fl35igitvd7thpr5@gilmour.lan>
-References: <CB5A5B81-F06C-4CBE-95DE-96C8723D2AC5@goldelico.com>
+        Fri, 17 Apr 2020 08:45:29 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1587127529; x=1618663529;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   mime-version;
+  bh=VxdcW703gWBgz7FjjmMl11fS0NzvwPPH68Vk83e+i3s=;
+  b=mWXaRH/eX9vv2t/jT0tgayZlg0oHUY+JDkHZR3iLPz/TIbVkX78wbcES
+   yAM4lsBxid8TLNSewdyNthgQFIaXYmraA4+XR+znNnRrccecgvyxL0xdg
+   Sb/xTw0mVTvCiGHMrjHHi5AnpDKXb+PFQA4RP09IMibJnZ7zZto5GQRXQ
+   E=;
+IronPort-SDR: Uwjivzvoj5wIrsPJMQnmh8OIZG1IMiibxXi2pVfuBwu3II9eAc8zOYplTvCSBdMmURrkrxR6xO
+ uk7l3VpanCRw==
+X-IronPort-AV: E=Sophos;i="5.72,395,1580774400"; 
+   d="scan'208";a="25954007"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1a-7d76a15f.us-east-1.amazon.com) ([10.43.8.6])
+  by smtp-border-fw-out-6002.iad6.amazon.com with ESMTP; 17 Apr 2020 12:45:16 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
+        by email-inbound-relay-1a-7d76a15f.us-east-1.amazon.com (Postfix) with ESMTPS id 2A0FFA236A;
+        Fri, 17 Apr 2020 12:45:15 +0000 (UTC)
+Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
+ EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Fri, 17 Apr 2020 12:45:14 +0000
+Received: from u886c93fd17d25d.ant.amazon.com (10.43.162.238) by
+ EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Fri, 17 Apr 2020 12:45:03 +0000
+From:   SeongJae Park <sjpark@amazon.com>
+To:     Mel Gorman <mgorman@techsingularity.net>
+CC:     SeongJae Park <sjpark@amazon.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Huang, Ying" <ying.huang@intel.com>, <linux-mm@kvack.org>,
+        <linux-kernel@vger.kernel.org>, Ingo Molnar <mingo@redhat.com>,
+        Mel Gorman <mgorman@suse.de>, Rik van Riel <riel@surriel.com>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Tejun Heo <tj@kernel.org>, Dave Hansen <dave.hansen@intel.com>,
+        Tim Chen <tim.c.chen@intel.com>,
+        Aubrey Li <aubrey.li@intel.com>
+Subject: Re: Re: Re: Re: [RFC] autonuma: Support to scan page table asynchronously
+Date:   Fri, 17 Apr 2020 14:44:37 +0200
+Message-ID: <20200417124437.25445-1-sjpark@amazon.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200417121629.GA3758@techsingularity.net> (raw)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="uebxnokcear6r3sc"
-Content-Disposition: inline
-In-Reply-To: <CB5A5B81-F06C-4CBE-95DE-96C8723D2AC5@goldelico.com>
+Content-Type: text/plain
+X-Originating-IP: [10.43.162.238]
+X-ClientProxiedBy: EX13D06UWA004.ant.amazon.com (10.43.160.164) To
+ EX13D31EUA001.ant.amazon.com (10.43.165.15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, 17 Apr 2020 13:16:29 +0100 Mel Gorman <mgorman@techsingularity.net> wrote:
 
---uebxnokcear6r3sc
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> On Fri, Apr 17, 2020 at 12:21:29PM +0200, SeongJae Park wrote:
+> > On Fri, 17 Apr 2020 12:04:17 +0200 Peter Zijlstra <peterz@infradead.org> wrote:
+> > 
+> > > On Fri, Apr 17, 2020 at 09:05:08AM +0200, SeongJae Park wrote:
+> > > > I think the main idea of DAMON[1] might be able to applied here.  Have you
+> > > > considered it?
+> > > > 
+> > > > [1] https://lore.kernel.org/linux-mm/20200406130938.14066-1-sjpark@amazon.com/
+> > > 
+> > > I've ignored that entire thing after you said the information it
+> > > provides was already available through the PMU.
+> > 
+> > Sorry if my answer made you confused.  What I wanted to say was that the
+> > fundamental access checking mechanism that DAMON depends on is PTE Accessed bit
+> > for now, but it could be modified to use PMU or other features instead. 
+> 
+> I would not be inclined to lean towards either approach for NUMA
+> balancing. Fiddling with the accessed bit can have consequences for page
+> aging and residency -- fine for debugging a problem, not to fine for
+> normal usage. I would expect the PMU approach would have high overhead
+> as well as taking over a PMU counter that userspace debugging may expect
+> to be available.
 
-Hi,
+Good point.  But, isn't it ok to use Accessed bit as long as PG_Idle and
+PG_Young is adjusted properly?  Current DAMON implementation does so, as
+idle_page_tracking also does.
 
-Cc'ing Laurent
+That said, the core logics of DAMON and the underlying access check primitive
+are logically seperated.  I am planning[1] to further entirely seperate those
+and let users to be able to use right access check promitive for their needs.
 
-On Fri, Apr 17, 2020 at 02:18:11PM +0200, H. Nikolaus Schaller wrote:
-> Hi Maxime,
-> I have started to test v5.7-rc1 and can't fully boot the GTA04
-> device any more.
->=20
-> What I see in the log is:
->=20
-> [   28.567840] [drm:simple_bridge_attach [simple_bridge]] *ERROR* Fix bri=
-dge driver to make connector optional!
-> [   28.567871] omapdrm omapdrm.0: unable to attach bridge /ocp@68000000/d=
-ss@48050000/encoder@48050c00
-> [   28.786529] omapdrm omapdrm.0: omap_modeset_init failed: ret=3D-22
-> [   28.841552] omapdrm: probe of omapdrm.0 failed with error -22
->=20
-> This device uses the ti,opa362 chip which did have a dedicated
-> omapdss driver before (which is removed now) and which seems to
-> be supported by the simple_bridge now.
->=20
-> The opa362 is sitting in the video out path from
->=20
-> 	omapdrm -> venc -> opa362 -> video-out-connector.
->=20
-> What does this error mean? How can it be fixed?
+If I'm missing something, please let me know.
 
--22 is usually EINVAL, which can be pretty much anything. A good thing to do
- would be to bisect to see which actual commit broke it, but if I was to be=
-t on
- something I guess it would be
+[1] https://lore.kernel.org/linux-mm/20200409094232.29680-1-sjpark@amazon.com/
 
-https://lore.kernel.org/dri-devel/20200226112514.12455-1-laurent.pinchart@i=
-deasonboard.com/
 
-Maxime
+Thanks,
+SeongJae Park
 
---uebxnokcear6r3sc
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXpmkpgAKCRDj7w1vZxhR
-xQiLAQCJ2xQosSagOkqyXxot5lEViVcLssIszdTzpkTitzEG6AEAvPbauwwDo1R9
-7QwBbCXIj9aSKnpQcBvxDQ0ooUEpIw8=
-=Tp4p
------END PGP SIGNATURE-----
-
---uebxnokcear6r3sc--
+> 
+> -- 
+> Mel Gorman
+> SUSE Labs
