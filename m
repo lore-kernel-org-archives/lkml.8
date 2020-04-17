@@ -2,144 +2,86 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5752C2D0EF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 18:05:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF0D1C3815B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 18:06:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B0DB82078E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 18:05:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B81D7221F7
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 18:06:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730362AbgDQSFX (ORCPT
+        id S1730381AbgDQSGN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 14:05:23 -0400
-Received: from out30-44.freemail.mail.aliyun.com ([115.124.30.44]:51266 "EHLO
-        out30-44.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730236AbgDQSFW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 14:05:22 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R191e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04394;MF=bo.liu@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0TvqiUma_1587146713;
-Received: from rsjd01523.et2sqa(mailfrom:bo.liu@linux.alibaba.com fp:SMTPD_---0TvqiUma_1587146713)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Sat, 18 Apr 2020 02:05:19 +0800
-Date:   Sat, 18 Apr 2020 02:05:13 +0800
-From:   Liu Bo <bo.liu@linux.alibaba.com>
-To:     Vivek Goyal <vgoyal@redhat.com>
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-nvdimm@lists.01.org, virtio-fs@redhat.com, miklos@szeredi.hu,
-        stefanha@redhat.com, dgilbert@redhat.com, mst@redhat.com
-Subject: Re: [PATCH 20/20] fuse,virtiofs: Add logic to free up a memory range
-Message-ID: <20200417180513.GA67026@rsjd01523.et2sqa>
-Reply-To: bo.liu@linux.alibaba.com
-References: <20200304165845.3081-1-vgoyal@redhat.com>
- <20200304165845.3081-21-vgoyal@redhat.com>
- <20200326000904.GA34937@rsjd01523.et2sqa>
- <20200327140114.GB32717@redhat.com>
- <20200327220606.GA119028@rsjd01523.et2sqa>
- <20200414193045.GB210453@redhat.com>
- <20200415172229.GA121484@rsjd01523.et2sqa>
- <20200416190507.GC276932@redhat.com>
+        Fri, 17 Apr 2020 14:06:13 -0400
+Received: from mx2.suse.de ([195.135.220.15]:33830 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730236AbgDQSGM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Apr 2020 14:06:12 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 89AABABD6;
+        Fri, 17 Apr 2020 18:06:10 +0000 (UTC)
+Message-ID: <500e8c46a9b411aed03965b6f9130ccde457193d.camel@suse.de>
+Subject: Re: [PATCH v2 0/2] of: property: fw_devlink misc fixes
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     saravanak@google.com
+Cc:     frowand.list@gmail.com, robh+dt@kernel.org,
+        devicetree@vger.kernel.org, gregkh@linuxfoundation.org,
+        linux-kernel@vger.kernel.org
+Date:   Fri, 17 Apr 2020 20:06:04 +0200
+In-Reply-To: <20200417165442.1856-1-nsaenzjulienne@suse.de>
+References: <20200417165442.1856-1-nsaenzjulienne@suse.de>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-NXq2S/HrSFRiloiSwbjW"
+User-Agent: Evolution 3.34.4 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200416190507.GC276932@redhat.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 16, 2020 at 03:05:07PM -0400, Vivek Goyal wrote:
-> On Thu, Apr 16, 2020 at 01:22:29AM +0800, Liu Bo wrote:
-> > On Tue, Apr 14, 2020 at 03:30:45PM -0400, Vivek Goyal wrote:
-> > > On Sat, Mar 28, 2020 at 06:06:06AM +0800, Liu Bo wrote:
-> > > > On Fri, Mar 27, 2020 at 10:01:14AM -0400, Vivek Goyal wrote:
-> > > > > On Thu, Mar 26, 2020 at 08:09:05AM +0800, Liu Bo wrote:
-> > > > > 
-> > > > > [..]
-> > > > > > > +/*
-> > > > > > > + * Find first mapping in the tree and free it and return it. Do not add
-> > > > > > > + * it back to free pool. If fault == true, this function should be called
-> > > > > > > + * with fi->i_mmap_sem held.
-> > > > > > > + */
-> > > > > > > +static struct fuse_dax_mapping *inode_reclaim_one_dmap(struct fuse_conn *fc,
-> > > > > > > +							 struct inode *inode,
-> > > > > > > +							 bool fault)
-> > > > > > > +{
-> > > > > > > +	struct fuse_inode *fi = get_fuse_inode(inode);
-> > > > > > > +	struct fuse_dax_mapping *dmap;
-> > > > > > > +	int ret;
-> > > > > > > +
-> > > > > > > +	if (!fault)
-> > > > > > > +		down_write(&fi->i_mmap_sem);
-> > > > > > > +
-> > > > > > > +	/*
-> > > > > > > +	 * Make sure there are no references to inode pages using
-> > > > > > > +	 * get_user_pages()
-> > > > > > > +	 */
-> > > > > > > +	ret = fuse_break_dax_layouts(inode, 0, 0);
-> > > > > > 
-> > > > > > Hi Vivek,
-> > > > > > 
-> > > > > > This patch is enabling inline reclaim for fault path, but fault path
-> > > > > > has already holds a locked exceptional entry which I believe the above
-> > > > > > fuse_break_dax_layouts() needs to wait for, can you please elaborate
-> > > > > > on how this can be avoided?
-> > > > > > 
-> > > > > 
-> > > > > Hi Liubo,
-> > > > > 
-> > > > > Can you please point to the exact lock you are referring to. I will
-> > > > > check it out. Once we got rid of needing to take inode lock in
-> > > > > reclaim path, that opended the door to do inline reclaim in fault
-> > > > > path as well. But I was not aware of this exceptional entry lock.
-> > > > 
-> > > > Hi Vivek,
-> > > > 
-> > > > dax_iomap_{pte,pmd}_fault has called grab_mapping_entry to get a
-> > > > locked entry, when this fault gets into inline reclaim, would
-> > > > fuse_break_dax_layouts wait for the locked exceptional entry which is
-> > > > locked in dax_iomap_{pte,pmd}_fault?
-> > > 
-> > > Hi Liu Bo,
-> > > 
-> > > This is a good point. Indeed it can deadlock the way code is written
-> > > currently.
-> > >
-> > 
-> > It's 100% reproducible on 4.19, but not on 5.x which has xarray for
-> > dax_layout_busy_page.
-> > 
-> > It was weird that on 5.x kernel the deadlock is gone, it turned out
-> > that xarray search in dax_layout_busy_page simply skips the empty
-> > locked exceptional entry, I didn't get deeper to find out whether it's
-> > reasonable, but with that 5.x doesn't run to deadlock.
-> 
-> I found more problems with enabling inline reclaim in fault path. I
-> am holding fi->i_mmap_sem, shared and fuse_break_dax_layouts() can
-> drop fi->i_mmap_sem if page is busy. I don't think we can drop and
-> reacquire fi->i_mmap_sem while in fault path.
->
 
-Good point, yes, dropping & reacquiring lock might bring more trouble
-w.r.t race on the i_mmap_sem.
+--=-NXq2S/HrSFRiloiSwbjW
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-> Also fuse_break_dax_layouts() does not know if we are holding it
-> shared or exclusive.
-> 
-> So I will probably have to go back to disable inline reclaim in
-> fault path. If memory range is not available go back up in
-> fuse_dax_fault(), drop fi->i_mmap_sem lock and wait on wait queue for
-> a range to become free and retry.
-> 
-> I can retain the changes I did to break layout for a 2MB range only
-> and not the whole file. I think that's a good optimization to retain
-> anyway.
->
+Hi Saravana,
 
-That part does look reasonable to me.
+On Fri, 2020-04-17 at 18:54 +0200, Nicolas Saenz Julienne wrote:
+> As I'm interested in using this feature to fine-tune Raspberry Pi 4's
+> device probe dependencies, I tried to get the board to boot with
+> fw_devlink=3Don. As of today's linux-next the board won't boot with that
+> option. I tried to address the underlying issues.
+>=20
 
-thanks,
-liubo
+On a semi-related topic, have you looked at vendor specific properties? mos=
+t of
+them create a consumer/supplier relationship, it'd be nice to be able to ta=
+ke
+those ones into account as well.
+
+Regards,
+Nicolas
+
+
+--=-NXq2S/HrSFRiloiSwbjW
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl6Z8AwACgkQlfZmHno8
+x/7W4Af+L7+hPKqqXUkYFXjbuqmUF+sKSHVVRIXIsxSYit8z826zssjJ7Mg+nYKA
+wWHS17cWFa9hM+ncxWwq5sRFPPjVP/+u0nTPWOANTWzUxCz8rFkej89KC+W4V6sm
+A5ccmxsUz/6uXTaMwCca0h5Z9tklUdNFSCAMTGvOCmaIRt/kW/7bbV0ISVRNVkMl
+1iz6zSZI99s0mLyzEJRGB67bq0uRZxAF49/CUeybCUupRh172CX90MydlAo97Qrf
+a2WODZVjRyb4y4W6LLwZZaqnMgosP4CgMzoBi1K68ZopU9aNigjY7e2vyrWQ+RHc
+VEmwjwpWi00cCNzqlIdIOZi6S+8Rig==
+=DXai
+-----END PGP SIGNATURE-----
+
+--=-NXq2S/HrSFRiloiSwbjW--
+
