@@ -2,75 +2,80 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27448C352BE
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 10:04:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B4C6C352BE
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 10:05:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0FF5F21D91
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 10:04:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10B9521D91
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 10:05:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="DyT5X2yw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728615AbgDQKEo (ORCPT
+        id S1728714AbgDQKFD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 06:04:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50562 "EHLO
+        Fri, 17 Apr 2020 06:05:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50618 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726366AbgDQKEn (ORCPT
+        with ESMTP id S1726366AbgDQKFC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 06:04:43 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0719C061A0C
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 03:04:43 -0700 (PDT)
-Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jPNrR-0005qF-FJ; Fri, 17 Apr 2020 12:04:37 +0200
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 04063104096; Fri, 17 Apr 2020 12:04:36 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Tony Luck <tony.luck@intel.com>
-Cc:     Tony Luck <tony.luck@intel.com>, Ingo Molnar <mingo@kernel.org>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Borislav Petkov <bp@alien8.de>, H Peter Anvin <hpa@zytor.com>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Ravi V Shankar <ravi.v.shankar@intel.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        linux-kernel@vger.kernel.org, x86@kernel.org
-Subject: Re: [PATCH 2/3] x86/split_lock: Bits in IA32_CORE_CAPABILITIES are not architectural
-In-Reply-To: <20200416205754.21177-3-tony.luck@intel.com>
-References: <20200416205754.21177-1-tony.luck@intel.com> <20200416205754.21177-3-tony.luck@intel.com>
-Date:   Fri, 17 Apr 2020 12:04:36 +0200
-Message-ID: <878siumnrf.fsf@nanos.tec.linutronix.de>
+        Fri, 17 Apr 2020 06:05:02 -0400
+Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 545CFC061A0C
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 03:05:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=GVL6tgAFwgffDbhheeH49uz+J5xS7rxe9LbYjvob9SI=; b=DyT5X2ywxTKZXaAlPBbRhvJa5b
+        qJswAbTkoXJhlMCc3mwsLtxcmc0wulm9BuvH4g4svEPKyQIpdW6mcq2CfQLmeYJ8ocVptbJQjU909
+        kGFdPLM9QOEsH46r4juwUcVB/vrs/MkYRDbAbqbc+8y47W2d2QEN9ENLYyMfYBvPgqiBVe8sJ1Tso
+        AzsNCXjHCw0TAOKbCCLY90M8N8c4TrCMKSCmZ11Baj3Ozdrv60M6oZeJmfN5AjhavyPpoRpeOzNx3
+        dau6rrsisCeRholRRndwScMlHyb/+1qb7z2ZuIOP6/lQ20EHXtFUn5BZOUBm2h2fXZi+mdtFYR1qt
+        Xjvd4EMw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jPNrB-0004aT-Kn; Fri, 17 Apr 2020 10:04:21 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id C10D930477A;
+        Fri, 17 Apr 2020 12:04:17 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 9829F2B1213AA; Fri, 17 Apr 2020 12:04:17 +0200 (CEST)
+Date:   Fri, 17 Apr 2020 12:04:17 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     SeongJae Park <sjpark@amazon.com>
+Cc:     "Huang, Ying" <ying.huang@intel.com>,
+        Mel Gorman <mgorman@techsingularity.net>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+        Mel Gorman <mgorman@suse.de>, Rik van Riel <riel@surriel.com>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Tejun Heo <tj@kernel.org>, Dave Hansen <dave.hansen@intel.com>,
+        Tim Chen <tim.c.chen@intel.com>,
+        Aubrey Li <aubrey.li@intel.com>
+Subject: Re: Re: [RFC] autonuma: Support to scan page table asynchronously
+Message-ID: <20200417100417.GT20730@hirez.programming.kicks-ass.net>
+References: <87eespyxld.fsf@yhuang-dev.intel.com>
+ <20200417070508.32243-1-sjpark@amazon.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200417070508.32243-1-sjpark@amazon.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Tony Luck <tony.luck@intel.com> writes:
-> +	m = x86_match_cpu(split_lock_cpu_ids);
-> +	if (!m)
-> +		return;
-> +
-> +	if (m->driver_data && cpu_has(c, X86_FEATURE_CORE_CAPABILITIES))
-> {
+On Fri, Apr 17, 2020 at 09:05:08AM +0200, SeongJae Park wrote:
+> I think the main idea of DAMON[1] might be able to applied here.  Have you
+> considered it?
+> 
+> [1] https://lore.kernel.org/linux-mm/20200406130938.14066-1-sjpark@amazon.com/
 
-This condition results in the following:
+I've ignored that entire thing after you said the information it
+provides was already available through the PMU.
 
-    driver_data     MSR_CORE_CAPS	 MSR_CORE_CAPS_SLD	SLD available
 
-1       0             Don't care          Don't care               Y
-2       1                N                Don't care               Y
-3       1                Y                    Y                    Y
-4       1                Y                    N                    N
-
-#2 does not make any sense to me.
-
-Thanks,
-
-        tglx
