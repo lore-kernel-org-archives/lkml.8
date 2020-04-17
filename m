@@ -2,87 +2,99 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25271C352BE
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 12:35:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74BF5C38A2B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 12:35:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 03789208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 12:35:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54CD421D94
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 12:35:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729280AbgDQMfT (ORCPT
+        id S1729498AbgDQMfe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 08:35:19 -0400
-Received: from mx2.suse.de ([195.135.220.15]:33670 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727877AbgDQMfS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 08:35:18 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 15185AC64;
-        Fri, 17 Apr 2020 12:35:17 +0000 (UTC)
-Date:   Fri, 17 Apr 2020 14:35:16 +0200 (CEST)
-From:   Miroslav Benes <mbenes@suse.cz>
-To:     Peter Zijlstra <peterz@infradead.org>
-cc:     tglx@linutronix.de, jpoimboe@redhat.com,
-        linux-kernel@vger.kernel.org, x86@kernel.org, mhiramat@kernel.org,
-        jthierry@redhat.com, alexandre.chartre@oracle.com
-Subject: Re: [PATCH v5 02/17] objtool: Better handle IRET
-In-Reply-To: <20200417122553.GD20730@hirez.programming.kicks-ass.net>
-Message-ID: <alpine.LSU.2.21.2004171434280.7737@pobox.suse.cz>
-References: <20200416114706.625340212@infradead.org> <20200416115118.631224674@infradead.org> <alpine.LSU.2.21.2004171326230.7737@pobox.suse.cz> <20200417122553.GD20730@hirez.programming.kicks-ass.net>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+        Fri, 17 Apr 2020 08:35:34 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:55774 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727877AbgDQMfe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Apr 2020 08:35:34 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 4B1791C01FB; Fri, 17 Apr 2020 14:35:32 +0200 (CEST)
+Date:   Fri, 17 Apr 2020 14:35:31 +0200
+From:   Pavel Machek <pavel@denx.de>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        chris.paterson2@renesas.com
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+        patches@kernelci.org, ben.hutchings@codethink.co.uk,
+        lkft-triage@lists.linaro.org, stable@vger.kernel.org
+Subject: Re: [PATCH 4.19 000/146] 4.19.116-rc1 review
+Message-ID: <20200417123531.GA19028@duo.ucw.cz>
+References: <20200416131242.353444678@linuxfoundation.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="YiEDa0DAkWCtVeE4"
+Content-Disposition: inline
+In-Reply-To: <20200416131242.353444678@linuxfoundation.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 17 Apr 2020, Peter Zijlstra wrote:
 
-> On Fri, Apr 17, 2020 at 01:29:32PM +0200, Miroslav Benes wrote:
-> > On Thu, 16 Apr 2020, Peter Zijlstra wrote:
-> 
-> > > +		case INSN_EXCEPTION_RETURN:
-> > > +			if (handle_insn_ops(insn, &state))
-> > > +				return 1;
-> > > +
-> > > +			/*
-> > > +			 * This handles x86's sync_core() case, where we use an
-> > > +			 * IRET to self. All 'normal' IRET instructions are in
-> > > +			 * STT_NOTYPE entry symbols.
-> > > +			 */
-> > > +			if (func)
-> > > +				break;
-> > > +
-> > > +			return 0;
-> > > +
-> > >  		case INSN_CONTEXT_SWITCH:
-> > >  			if (func && (!next_insn || !next_insn->hint)) {
-> > >  				WARN_FUNC("unsupported instruction in callable function",
-> > 
-> > It looks really simple.
-> > 
-> > Have you tried Julien's proposal about removing INSN_STACK altogether, 
-> > move the x86 to arch/x86/ and call handle_insn_ops() unconditionally, or 
-> > have you just postponed it? As I said, I think it could be better in the 
-> > long term, but the above looks good for now as well.
-> 
-> If you look at this other set I send yesterday:
-> 
->   https://lkml.kernel.org/r/20200416150752.569029800@infradead.org
-> 
-> (also, sorry for not adding you to the Cc; also best look at the gitweb
-> version, the patches I send out are missing a hunk and lacking some
-> back-merges.. clearly I wasn't having a good day yesterday).
-> 
-> it has this intra_function_calls crud that needs explicit conditional
-> handle_insn_ops().
+--YiEDa0DAkWCtVeE4
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Ah, ok. Thanks for letting me know. There are so many patches for objtool 
-flying around now that it is easy to miss something.
+Hi!
 
-Miroslav
+> This is the start of the stable review cycle for the 4.19.116 release.
+> There are 146 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>=20
+> Responses should be made by Sat, 18 Apr 2020 13:11:20 +0000.
+> Anything received after that time might be too late.
+>=20
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.11=
+6-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git=
+ linux-4.19.y
+> and the diffstat can be found below.
+
+CIP project ran tests on this one, and we have de0-nano failure:
+
+https://gitlab.com/cip-project/cip-testing/linux-stable-rc-ci/pipelines/136=
+707029
+
+Detailed results should be at:
+
+https://lava.ciplatform.org/scheduler/job/14716
+https://lava.ciplatform.org/scheduler/job/14717
+
+=2E.but those results do not load for me (?).
+
+Best regards,
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--YiEDa0DAkWCtVeE4
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXpmikwAKCRAw5/Bqldv6
+8rteAJ9oEJhd6KdD7SDd7a+wYGzoxTToVQCfWte+OA4WLHYjgi0e7tDkg2HEF90=
+=uuJJ
+-----END PGP SIGNATURE-----
+
+--YiEDa0DAkWCtVeE4--
