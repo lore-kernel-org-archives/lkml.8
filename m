@@ -2,78 +2,92 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB344C352BE
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 02:24:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F4EBC2BA2B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 02:27:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B340E221E9
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 02:24:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2691C221E9
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 02:27:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dxuuu.xyz header.i=@dxuuu.xyz header.b="TvZlMGGP";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="zHF9nk9e"
+	dkim=pass (2048-bit key) header.d=russell.cc header.i=@russell.cc header.b="atz2j8Ob";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="gqd6KNRb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729218AbgDQCYJ (ORCPT
+        id S1729252AbgDQC1s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 22:24:09 -0400
-Received: from new1-smtp.messagingengine.com ([66.111.4.221]:57315 "EHLO
-        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728969AbgDQCYI (ORCPT
+        Thu, 16 Apr 2020 22:27:48 -0400
+Received: from wout1-smtp.messagingengine.com ([64.147.123.24]:39811 "EHLO
+        wout1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728969AbgDQC1r (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 22:24:08 -0400
+        Thu, 16 Apr 2020 22:27:47 -0400
 Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 6D7DA580694;
-        Thu, 16 Apr 2020 22:24:06 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute4.internal (MEProxy); Thu, 16 Apr 2020 22:24:06 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dxuuu.xyz; h=
-        from:to:cc:subject:date:message-id:mime-version
-        :content-transfer-encoding; s=fm3; bh=j7uOIyaUtmiDGZuoZsMKodKEmp
-        ZENeznYoKSaWM7KV4=; b=TvZlMGGPaOwNxFqDjQZxdcB1aD0edPmGgyl/ExjWA1
-        y/qjuQkOgisNTmceRAHFTAAT1oR4KUzFEeXxS3ruC73EUvIoUJo3GqhsrxCT96Xd
-        WCug7l1pP+ik3asPlhjoH8LoadiDqWN62uofO1GOwhxLXlR9OXG+iVEK3pvAbYbD
-        8253gcD07HpqE0dXxlFOz/dvzXxaN6BpWL+AXr4n+oBjqKiNBX6awgZCaFCEaxLr
-        0AGlhOzvtGvDyM4/zDwiK05y9GOb8Hw/r1zjU3p8DC39t8nlXwUTEvGd7f+xghX0
-        8Vn6wk10LbSgKONbb059E56j8KIffJb0xxRf51wGCeZg==
+        by mailout.west.internal (Postfix) with ESMTP id ACD62794;
+        Thu, 16 Apr 2020 22:27:46 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Thu, 16 Apr 2020 22:27:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=russell.cc; h=
+        message-id:subject:from:to:cc:date:in-reply-to:references
+        :content-type:mime-version:content-transfer-encoding; s=fm1; bh=
+        Z4EK0RmjHHENIp/2ipnM27VWqO3MyOqHeIqAH9ex9ZI=; b=atz2j8ObFE8ZQMZE
+        339vFt3PI4Nb+5auKOQLfY6DoHXpKfwh+tQAqaH/TLREs9YA9u5ZSA1wbB23mQAS
+        XBvxivytTpfrAm7HSCOkpF8E12utAiNrS92SMgWpXt8LtPR+ukkDS2CUURNtYLIR
+        m/d4rcq751Aok3KOyyeEgeTqSucaz7P18XqxwTzv4CBfcPI2LUK3lGVvSDCIL7dx
+        MqYWOzZrfMxFeY4nl1AoR1LMGLa8xOlSeqZfmBODKJN1+287NAi9BPntBZAgOS93
+        kOVhmLO8qE2JXyPjMINVHj99ouvYQImw5GYK+QUW12POopC3PsS/W/kThhzWHNIg
+        huPNqw==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
-        :x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=j7uOIyaUtmiDGZuoZ
-        sMKodKEmpZENeznYoKSaWM7KV4=; b=zHF9nk9eDpE87PX2SKNi3k8wIA4e9B3Qw
-        /OoCaARQgit1hqD+ZPcu57PncOEfu9laOu4/W5dSVrkEbt333NZ+MGW5PWWjGgod
-        d5OM3FHRH1g9Etxf2uzEnrnGMQzjfo/AoDKJXY2gs6YVgumAFyjxabZpQhG/mQoR
-        xa1fyfeN0UO4wduQQjyuluV+Dta95AvEXFOSEtL61qcJ+Zqd/j+ZHj6/G2k09y4z
-        bEmosQ7Eh2lRaWP70H8BVkrKSocn/QZzn4RqLdxN4M5SuaqtRRJqyR2CshIa2RNQ
-        UDmL1y33Mth6I9ub926nqKPudndKDRMO7DxtVc6PxrazlQw7gCNzg==
-X-ME-Sender: <xms:RhOZXg8tJhOKdij9k98UR7hz1eVU9F3BKEJfdq74WxUz1YcR4AQltQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrfeeigdehkecutefuodetggdotefrodftvf
+        messagingengine.com; h=cc:content-transfer-encoding:content-type
+        :date:from:in-reply-to:message-id:mime-version:references
+        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm2; bh=Z4EK0RmjHHENIp/2ipnM27VWqO3MyOqHeIqAH9ex9
+        ZI=; b=gqd6KNRbc8C3IRSAKSfLTTG34ukwZDlP3e1gjR7KBK5BZ1F4X+N67rY1u
+        veUYE7rFa+Rdifi6nDJnv9d7yHdLX3p86KrWrh6BJSFGQXt8V980gl2I/KLKnxqT
+        Y+u3BM+zmdjlEg8mlFmjPp7EtXRPEF9VETi1LAN0q8BydG6m9SXTBU5lMPG9elJ1
+        NTM7Ik40sl7XUuL1AZ2UvFzHCoNV/G3du2n3Lu7N3Mk1u+67y/ckkAIPPdRh4OwT
+        RyybnBGxz8ZOgolYYTeINrTtklcY4AWFj0wBDI8ozvGuK40Om9uF4TNm/yO47cKk
+        k0PzCX7MbTRnQZRqGyX2CELNcptIA==
+X-ME-Sender: <xms:IRSZXgS_LELLZei2llCF1Y8PwZVs9FNzBHrrmXAFOJ3reQjFG_s80w>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrfeeigdehlecutefuodetggdotefrodftvf
     curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecuogfuuhhsphgvtghtffhomhgrihhnucdlgeelmdenfg
-    hrlhcuvffnffculddujedmnegovehorghsthgrlhdqhfeguddvqddtvdculdduhedtmden
-    ucfjughrpefhvffufffkofgggfestdekredtredttdenucfhrhhomhepffgrnhhivghluc
-    giuhcuoegugihusegugihuuhhurdighiiiqeenucffohhmrghinhepghhithhhuhgsrdgt
-    ohhmpdhsphhinhhitghsrdhnvghtpdhgihhthhhusgdrihhonecukfhppeduieefrdduud
-    egrddufedvrdegnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhf
-    rhhomhepugiguhesugiguhhuuhdrgiihii
-X-ME-Proxy: <xmx:RhOZXq9V1fwbcIbqLP_uhFilsRpCkoMiPlx4YP_Me8X4Jrf9zl29pg>
-    <xmx:RhOZXmHUYy8ky2NiIxcTs41Le0wwGh4h-9QXzOcB7uj1Xq7IE0uZ6g>
-    <xmx:RhOZXpaZbfIId1Wfg66FMmj0z5QUqnqKUOLL4V04RN56nNY9GH5YEQ>
-    <xmx:RhOZXtTzL2Y8-vV5boYpY1mmIBk8eXhLW4z5H4SqbzR0a5m1-qKQ6w>
-Received: from dlxu-fedora-R90QNFJV.thefacebook.com (unknown [163.114.132.4])
-        by mail.messagingengine.com (Postfix) with ESMTPA id A0F76306008B;
-        Thu, 16 Apr 2020 22:24:04 -0400 (EDT)
-From:   Daniel Xu <dxu@dxuuu.xyz>
-To:     linux-kernel@vger.kernel.org
-Cc:     Daniel Xu <dxu@dxuuu.xyz>, bpf@vger.kernel.org, kernel-team@fb.com,
-        jolsa@kernel.org, brendan.d.gregg@gmail.com,
-        andrii.nakryiko@gmail.com, ast@kernel.org
-Subject: [RFC] uapi: Convert stat.h #define flags to enums
-Date:   Thu, 16 Apr 2020 19:23:15 -0700
-Message-Id: <20200417022315.1931959-1-dxu@dxuuu.xyz>
-X-Mailer: git-send-email 2.25.2
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenfg
+    hrlhcuvffnffculddvtddmnecujfgurhepkffuhffvffgjfhgtfggggfesthekredttder
+    jeenucfhrhhomheptfhushhsvghllhcuvehurhhrvgihuceorhhushgtuhhrsehruhhssh
+    gvlhhlrdgttgeqnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucfkphepuddvuddr
+    geehrddvuddvrddvfeelnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrg
+    hilhhfrhhomheprhhushgtuhhrsehruhhsshgvlhhlrdgttg
+X-ME-Proxy: <xmx:IRSZXhSiMiZfe2q4JTASJDPD3yIWG-pTzHSOQRS2ID3IqV-fbUXzPA>
+    <xmx:IRSZXknV7NFM6yI_95kCgzKdHXUbA6acshCybsM3b-Wbm7lyff69jA>
+    <xmx:IRSZXiRjheovvanl6DEIdL3lwDb4FjuWqt-NCW-ZLEsnp5ksF9xtNg>
+    <xmx:IhSZXjVYZWQPBvehUfecVASDPicIGngFYFLoW_jDaH3CtGbE-M2xUA>
+Received: from crackle.ozlabs.ibm.com (ppp121-45-212-239.bras1.cbr2.internode.on.net [121.45.212.239])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 86E173280063;
+        Thu, 16 Apr 2020 22:27:43 -0400 (EDT)
+Message-ID: <f733132895e14123995e6bdaa93854c5632672bc.camel@russell.cc>
+Subject: Re: POWER9 crash due to STRICT_KERNEL_RWX (WAS: Re: Linux-next
+ POWER9 NULL pointer NIP...)
+From:   Russell Currey <ruscur@russell.cc>
+To:     Steven Rostedt <rostedt@goodmis.org>, Qian Cai <cai@lca.pw>
+Cc:     Michael Ellerman <mpe@ellerman.id.au>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Date:   Fri, 17 Apr 2020 12:27:41 +1000
+In-Reply-To: <20200416221753.4e47080a@oasis.local.home>
+References: <15AC5B0E-A221-4B8C-9039-FA96B8EF7C88@lca.pw>
+         <87eeszlb6u.fsf@mpe.ellerman.id.au>
+         <0675B22E-8F32-432C-9378-FDE159DD1729@lca.pw>
+         <20200407093054.3eb23e45@gandalf.local.home>
+         <EA9F9A54-87BC-477A-BE8A-7D53F80C5223@lca.pw>
+         <20200409101413.35d9c72d@gandalf.local.home>
+         <06A2EA93-B730-4DB1-819F-D27E7032F0B3@lca.pw>
+         <161662E3-5D9C-4C15-919C-CFEFE4CC35CB@lca.pw>
+         <69F0448F-CA5B-497D-B8AF-2848175B9477@lca.pw>
+         <20200416221753.4e47080a@oasis.local.home>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.1 
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -81,180 +95,107 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-BPF Type Format (BTF) is especially powerful for tracing tools like
-bcc and bpftrace. It allows tools to know about kernel data structures
-and layouts without having to parse headers. Headers are problematic
-because (1) they do not always come installed on production / user
-systems, (2) headers may not always describe the correct struct layout
-due to compile time flags, and (3) can be tricky to parse [0][1].
+On Thu, 2020-04-16 at 22:17 -0400, Steven Rostedt wrote:
+> On Thu, 16 Apr 2020 21:19:10 -0400
+> Qian Cai <cai@lca.pw> wrote:
+> 
+> > OK, reverted the commit,
+> > 
+> > c55d7b5e6426 (“powerpc: Remove STRICT_KERNEL_RWX incompatibility
+> > with RELOCATABLE”)
+> > 
+> > or set STRICT_KERNEL_RWX=n fixed the crash below and also mentioned
+> > in this thread,
+> 
+> This may be a symptom and not a cure.
 
-As BTF becomes enabled on more systems [2], it becomes more desirable to
-have BTF contain everything a tracing tool needs. BTF overhead is quite
-minimal (~1.5MB) [3] so using BTF in lieu of parsing headers is very
-attractive.
+Reverting the patch with the given config will have the same effect as
+STRICT_KERNEL_RWX=n.  Not discounting that it could be a bug on the
+powerpc side (i.e. relocatable kernels with strict RWX on haven't been
+exhaustively tested yet), but we should definitely figure out what's
+going on with this bad access first.
 
-While BTF already contains almost everything tracing tools need (eg
-structs, enums, unions, function signatures, etc.), it is missing a lot
-of flags. The reason is that most flags are defined as preprocessor
-macros and are thus invisible to the compiler when it generates debug
-info.
-
-However, there is a solution: we can convert macro flags into enums.
-This would be quite a complicated and long running task so I'm hoping
-this patch can start a discussion. I'm sure I haven't fully considered
-the implications so hopefully we can discuss it.
-
-This patch, when applied to a kernel with BTF, allows bpftrace to "see"
-the flags [4]:
-
-    # bpftrace --btf -e 'BEGIN { printf("%d\n", S_IRWXG); }'
-    Attaching 1 probe...
-    56
-    ^C
-
-[0]: https://github.com/iovisor/bcc/pull/2133
-[1]: https://github.com/iovisor/bcc/pull/2547
-[2]: https://www.spinics.net/linux/fedora/fedora-kernel/msg07746.html
-[3]: https://facebookmicrosites.github.io/bpf/blog/2018/11/14/btf-enhancement.html
-[4]: https://github.com/iovisor/bpftrace/pull/1274
-
-Signed-off-by: Daniel Xu <dxu@dxuuu.xyz>
----
- include/uapi/linux/stat.h | 99 +++++++++++++++++++++------------------
- 1 file changed, 53 insertions(+), 46 deletions(-)
-
-diff --git a/include/uapi/linux/stat.h b/include/uapi/linux/stat.h
-index ad80a5c885d5..658446fc5a20 100644
---- a/include/uapi/linux/stat.h
-+++ b/include/uapi/linux/stat.h
-@@ -6,17 +6,19 @@
- 
- #if defined(__KERNEL__) || !defined(__GLIBC__) || (__GLIBC__ < 2)
- 
--#define S_IFMT  00170000
--#define S_IFSOCK 0140000
--#define S_IFLNK	 0120000
--#define S_IFREG  0100000
--#define S_IFBLK  0060000
--#define S_IFDIR  0040000
--#define S_IFCHR  0020000
--#define S_IFIFO  0010000
--#define S_ISUID  0004000
--#define S_ISGID  0002000
--#define S_ISVTX  0001000
-+enum {
-+	S_IFMT    = 00170000,
-+	S_IFSOCK  = 0140000,
-+	S_IFLNK	  = 0120000,
-+	S_IFREG   = 0100000,
-+	S_IFBLK   = 0060000,
-+	S_IFDIR   = 0040000,
-+	S_IFCHR   = 0020000,
-+	S_IFIFO   = 0010000,
-+	S_ISUID   = 0004000,
-+	S_ISGID   = 0002000,
-+	S_ISVTX   = 0001000,
-+};
- 
- #define S_ISLNK(m)	(((m) & S_IFMT) == S_IFLNK)
- #define S_ISREG(m)	(((m) & S_IFMT) == S_IFREG)
-@@ -26,20 +28,22 @@
- #define S_ISFIFO(m)	(((m) & S_IFMT) == S_IFIFO)
- #define S_ISSOCK(m)	(((m) & S_IFMT) == S_IFSOCK)
- 
--#define S_IRWXU 00700
--#define S_IRUSR 00400
--#define S_IWUSR 00200
--#define S_IXUSR 00100
-+enum {
-+	S_IRWXU   = 00700,
-+	S_IRUSR   = 00400,
-+	S_IWUSR   = 00200,
-+	S_IXUSR   = 00100,
- 
--#define S_IRWXG 00070
--#define S_IRGRP 00040
--#define S_IWGRP 00020
--#define S_IXGRP 00010
-+	S_IRWXG   = 00070,
-+	S_IRGRP   = 00040,
-+	S_IWGRP   = 00020,
-+	S_IXGRP   = 00010,
- 
--#define S_IRWXO 00007
--#define S_IROTH 00004
--#define S_IWOTH 00002
--#define S_IXOTH 00001
-+	S_IRWXO   = 00007,
-+	S_IROTH   = 00004,
-+	S_IWOTH   = 00002,
-+	S_IXOTH   = 00001,
-+};
- 
- #endif
- 
-@@ -135,21 +139,23 @@ struct statx {
-  * These bits should be set in the mask argument of statx() to request
-  * particular items when calling statx().
-  */
--#define STATX_TYPE		0x00000001U	/* Want/got stx_mode & S_IFMT */
--#define STATX_MODE		0x00000002U	/* Want/got stx_mode & ~S_IFMT */
--#define STATX_NLINK		0x00000004U	/* Want/got stx_nlink */
--#define STATX_UID		0x00000008U	/* Want/got stx_uid */
--#define STATX_GID		0x00000010U	/* Want/got stx_gid */
--#define STATX_ATIME		0x00000020U	/* Want/got stx_atime */
--#define STATX_MTIME		0x00000040U	/* Want/got stx_mtime */
--#define STATX_CTIME		0x00000080U	/* Want/got stx_ctime */
--#define STATX_INO		0x00000100U	/* Want/got stx_ino */
--#define STATX_SIZE		0x00000200U	/* Want/got stx_size */
--#define STATX_BLOCKS		0x00000400U	/* Want/got stx_blocks */
--#define STATX_BASIC_STATS	0x000007ffU	/* The stuff in the normal stat struct */
--#define STATX_BTIME		0x00000800U	/* Want/got stx_btime */
--#define STATX_ALL		0x00000fffU	/* All currently supported flags */
--#define STATX__RESERVED		0x80000000U	/* Reserved for future struct statx expansion */
-+enum {
-+	STATX_TYPE		= 0x00000001U,	/* Want/got stx_mode & S_IFMT */
-+	STATX_MODE		= 0x00000002U,	/* Want/got stx_mode & ~S_IFMT */
-+	STATX_NLINK		= 0x00000004U,	/* Want/got stx_nlink */
-+	STATX_UID		= 0x00000008U,	/* Want/got stx_uid */
-+	STATX_GID		= 0x00000010U,	/* Want/got stx_gid */
-+	STATX_ATIME		= 0x00000020U,	/* Want/got stx_atime */
-+	STATX_MTIME		= 0x00000040U,	/* Want/got stx_mtime */
-+	STATX_CTIME		= 0x00000080U,	/* Want/got stx_ctime */
-+	STATX_INO		= 0x00000100U,	/* Want/got stx_ino */
-+	STATX_SIZE		= 0x00000200U,	/* Want/got stx_size */
-+	STATX_BLOCKS		= 0x00000400U,	/* Want/got stx_blocks */
-+	STATX_BASIC_STATS	= 0x000007ffU,	/* The stuff in the normal stat struct */
-+	STATX_BTIME		= 0x00000800U,	/* Want/got stx_btime */
-+	STATX_ALL		= 0x00000fffU,	/* All currently supported flags */
-+	STATX__RESERVED		= 0x80000000U,	/* Reserved for future struct statx expansion */
-+};
- 
- /*
-  * Attributes to be found in stx_attributes and masked in stx_attributes_mask.
-@@ -162,13 +168,14 @@ struct statx {
-  * semantically.  Where possible, the numerical value is picked to correspond
-  * also.
-  */
--#define STATX_ATTR_COMPRESSED		0x00000004 /* [I] File is compressed by the fs */
--#define STATX_ATTR_IMMUTABLE		0x00000010 /* [I] File is marked immutable */
--#define STATX_ATTR_APPEND		0x00000020 /* [I] File is append-only */
--#define STATX_ATTR_NODUMP		0x00000040 /* [I] File is not to be dumped */
--#define STATX_ATTR_ENCRYPTED		0x00000800 /* [I] File requires key to decrypt in fs */
--#define STATX_ATTR_AUTOMOUNT		0x00001000 /* Dir: Automount trigger */
--#define STATX_ATTR_VERITY		0x00100000 /* [I] Verity protected file */
--
-+enum {
-+	STATX_ATTR_COMPRESSED		= 0x00000004, /* [I] File is compressed by the fs */
-+	STATX_ATTR_IMMUTABLE		= 0x00000010, /* [I] File is marked immutable */
-+	STATX_ATTR_APPEND		= 0x00000020, /* [I] File is append-only */
-+	STATX_ATTR_NODUMP		= 0x00000040, /* [I] File is not to be dumped */
-+	STATX_ATTR_ENCRYPTED		= 0x00000800, /* [I] File requires key to decrypt in fs */
-+	STATX_ATTR_AUTOMOUNT		= 0x00001000, /* Dir: Automount trigger */
-+	STATX_ATTR_VERITY		= 0x00100000, /* [I] Verity protected file */
-+};
- 
- #endif /* _UAPI_LINUX_STAT_H */
--- 
-2.25.2
+> 
+> > https://lore.kernel.org/lkml/15AC5B0E-A221-4B8C-9039-FA96B8EF7C88@lca.pw/
+> > 
+> > [  148.110969][T13115] LTP: starting chown04_16
+> > [  148.255048][T13380] kernel tried to execute exec-protected page
+> > (c0000000016804ac) - exploit attempt? (uid: 0)
+> > [  148.255099][T13380] BUG: Unable to handle kernel instruction
+> > fetch
+> > [  148.255122][T13380] Faulting instruction address:
+> > 0xc0000000016804ac
+> > [  148.255136][T13380] Oops: Kernel access of bad area, sig: 11
+> > [#1]
+> > [  148.255157][T13380] LE PAGE_SIZE=64K MMU=Radix SMP NR_CPUS=256
+> > DEBUG_PAGEALLOC NUMA PowerNV
+> > [  148.255171][T13380] Modules linked in: loop kvm_hv kvm xfs
+> > sd_mod bnx2x mdio ahci tg3 libahci libphy libata firmware_class
+> > dm_mirror dm_region_hash dm_log dm_mod
+> > [  148.255213][T13380] CPU: 45 PID: 13380 Comm: chown04_16 Tainted:
+> > G        W         5.6.0+ #7
+> > [  148.255236][T13380] NIP:  c0000000016804ac LR: c00800000fa60408
+> > CTR: c0000000016804ac
+> > [  148.255250][T13380] REGS: c0000010a6fafa00 TRAP: 0400   Tainted:
+> > G        W          (5.6.0+)
+> > [  148.255281][T13380] MSR:  9000000010009033
+> > <SF,HV,EE,ME,IR,DR,RI,LE>  CR: 84000248  XER: 20040000
+> > [  148.255310][T13380] CFAR: c00800000fa66534 IRQMASK: 0 
+> > [  148.255310][T13380] GPR00: c000000000973268 c0000010a6fafc90
+> > c000000001648200 0000000000000000 
+> > [  148.255310][T13380] GPR04: c000000d8a22dc00 c0000010a6fafd30
+> > 00000000b5e98331 ffffffff00012c9f 
+> > [  148.255310][T13380] GPR08: c000000d8a22dc00 0000000000000000
+> > 0000000000000000 c00000000163c520 
+> > [  148.255310][T13380] GPR12: c0000000016804ac c000001ffffdad80
+> > 0000000000000000 0000000000000000 
+> > [  148.255310][T13380] GPR16: 0000000000000000 0000000000000000
+> > 0000000000000000 0000000000000000 
+> > [  148.255310][T13380] GPR20: 0000000000000000 0000000000000000
+> > 0000000000000000 0000000000000000 
+> > [  148.255310][T13380] GPR24: 00007fff8f5e2e48 0000000000000000
+> > c00800000fa6a488 c0000010a6fafd30 
+> > [  148.255310][T13380] GPR28: 0000000000000000 000000007fffffff
+> > c00800000fa60400 c000000efd0c6780 
+> > [  148.255494][T13380] NIP [c0000000016804ac]
+> > sysctl_net_busy_read+0x0/0x4
+> 
+> The instruction pointer is on sysctl_net_busy_read? Isn't that data
+> and
+> not code?
+> 
+> In net/socket.c:
+> 
+>   #ifdef CONFIG_NET_RX_BUSY_POLL
+>   unsigned int sysctl_net_busy_read __read_mostly;
+>   unsigned int sysctl_net_busy_poll __read_mostly;
+>   #endif
+> 
+> -- Steve
+> 
+> 
+> > [  148.255516][T13380] LR [c00800000fa60408] find_free_cb+0x8/0x30
+> > [loop]
+> > [  148.255528][T13380] Call Trace:
+> > [  148.255538][T13380] [c0000010a6fafc90] [c0000000009732c0]
+> > idr_for_each+0xf0/0x170 (unreliable)
+> > [  148.255572][T13380] [c0000010a6fafd10] [c00800000fa626c4]
+> > loop_lookup.part.1+0x4c/0xb0 [loop]
+> > [  148.255597][T13380] [c0000010a6fafd50] [c00800000fa634d8]
+> > loop_control_ioctl+0x120/0x1d0 [loop]
+> > [  148.255623][T13380] [c0000010a6fafdb0] [c0000000004ddc08]
+> > ksys_ioctl+0xd8/0x130
+> > [  148.255636][T13380] [c0000010a6fafe00] [c0000000004ddc88]
+> > sys_ioctl+0x28/0x40
+> > [  148.255669][T13380] [c0000010a6fafe20] [c00000000000b378]
+> > system_call+0x5c/0x68
+> > [  148.255699][T13380] Instruction dump:
+> > [  148.255718][T13380] XXXXXXXX XXXXXXXX XXXXXXXX XXXXXXXX XXXXXXXX
+> > XXXXXXXX XXXXXXXX XXXXXXXX 
+> > [  148.255744][T13380] XXXXXXXX XXXXXXXX XXXXXXXX XXXXXXXX XXXXXXXX
+> > XXXXXXXX XXXXXXXX XXXXXXXX 
+> > [  148.255772][T13380] ---[ end trace a5894a74208c22ec ]---
+> > [  148.576663][T13380] 
+> > [  149.576765][T13380] Kernel panic - not syncing: Fatal exception
+> > 
 
