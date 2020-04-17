@@ -2,144 +2,98 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 299D1C38A29
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 10:25:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B64F3C352BE
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 10:25:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 12B7621D95
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 10:25:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82793208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 10:25:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dlO8RvCX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729396AbgDQKZS (ORCPT
+        id S1729417AbgDQKZi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 06:25:18 -0400
-Received: from mout.kundenserver.de ([212.227.126.133]:51859 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729278AbgDQKZQ (ORCPT
+        Fri, 17 Apr 2020 06:25:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53844 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728869AbgDQKZf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 06:25:16 -0400
-Received: from mail-qv1-f53.google.com ([209.85.219.53]) by
- mrelayeu.kundenserver.de (mreue012 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1MVaQW-1jqzE40EHE-00RZzt; Fri, 17 Apr 2020 12:25:12 +0200
-Received: by mail-qv1-f53.google.com with SMTP id fb4so607467qvb.7;
-        Fri, 17 Apr 2020 03:25:11 -0700 (PDT)
-X-Gm-Message-State: AGi0PuZWLl2qM+AGVO525O3nGWCzx7Bs8FZF7lV45SVq3IIic1k2JjTk
-        PboGWa2pbEfvTS5bnIeaWYDOccnZJSfx34Qkr7E=
-X-Google-Smtp-Source: APiQypIB2zeumiLa3MV5PYzBoQjOUFtHKNbyl4fGbow5Q2vMaBcCtz4gWpqlw/ntLojC4LisiS1Dfdptk6HkaKY1e3k=
-X-Received: by 2002:a0c:eb11:: with SMTP id j17mr1919854qvp.197.1587119110584;
- Fri, 17 Apr 2020 03:25:10 -0700 (PDT)
+        Fri, 17 Apr 2020 06:25:35 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53659C061A0C
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 03:25:35 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id f13so2397333wrm.13
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 03:25:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=7q6Jr729CYPyB+SZq18Uo5FBiWv9vtwUqdtC6T3/0KY=;
+        b=dlO8RvCXvGGmr6yzDqAZ9YvBrhmjSkPSe8h0tKG5BmXImFbDltrIrkxQZ4TeZo04JI
+         YMJ0uhz1Yq1d50kOOWywT4WR9uo6mWknaxmFiyJnV1LZ9I3AK1KsD3Dah2xtvmE/dgRC
+         SK6RfTl50sxwT9QsPChaYauj1M1saCADdqXjl+8Lp/4lGZ8iZlKNtEjoIjEMvfYiFdP9
+         cEj9kMTHWoQSbJCIox3TvJlfLA+advfZuM78uz2H8ippl6he89qd8rKlPKIgFmd55rO2
+         WSi1LCTNtfNeE6mzhswYg9IfERLWleAwr2VeDwpeq0/Aefpa7zjJVnKgfO8AF43nn5+D
+         V0+g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=7q6Jr729CYPyB+SZq18Uo5FBiWv9vtwUqdtC6T3/0KY=;
+        b=t4A6nKllHmeyaJiJwkWF+ig7MXt5AgT6alp7L64kdaF26m+NrcwiZZ4f4f0vxPlYp5
+         +7tMTB3LDYOYv59Hu9KfKQoWmGkDAvfUFqH297gc06wCjhv1rXvHfUOtv+EA1uk5CrTj
+         zd9HUdXdNicL1W5iZPWFwze+H0MYP8o8mH3UwqLui1YVqvYEyjjczlzfgNfmR9kM5Yq4
+         eg4y8E/56emUg6gw4F3RPr1S5ZZhg8NqUqnV/kRKTXFwkf0T9j2+IpxCyGtjQru3fgm6
+         w6wvgYlNSjrRy5715ytxwOEcCLJzgsz6ZUnA4ObHgHjWOUP+BvnGoCfl2sZ9/9UKbQ93
+         BbDA==
+X-Gm-Message-State: AGi0Pua4jNk7BrV83o+pZtO57+bU5zSFI2eVFVVDLL9gSoN3fjhp4Dls
+        Ejpz3sCm438DBomBrGdn54YgiPVyMHQ=
+X-Google-Smtp-Source: APiQypIesHKULrJQELVTc4QG4A4qrye3XjdCXJO3F/sfsVC3VlmxnFnm9C4pa+YIPQH5+uD+fQYmlQ==
+X-Received: by 2002:adf:eccb:: with SMTP id s11mr2953592wro.138.1587119134099;
+        Fri, 17 Apr 2020 03:25:34 -0700 (PDT)
+Received: from dell ([95.149.164.124])
+        by smtp.gmail.com with ESMTPSA id 1sm7302840wmz.13.2020.04.17.03.25.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 17 Apr 2020 03:25:33 -0700 (PDT)
+Date:   Fri, 17 Apr 2020 11:26:35 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] mfd: intel-lpss: Update LPSS UART #2 PCI ID for
+ Jasper Lake
+Message-ID: <20200417102635.GC3737@dell>
+References: <20200414095134.80135-1-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
-References: <20200417011146.83973-1-saeedm@mellanox.com>
-In-Reply-To: <20200417011146.83973-1-saeedm@mellanox.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Fri, 17 Apr 2020 12:24:54 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a2LXR1pHoid7F69Q6VZp4E0g-Fcdt03PaGdebxWpguexw@mail.gmail.com>
-Message-ID: <CAK8P3a2LXR1pHoid7F69Q6VZp4E0g-Fcdt03PaGdebxWpguexw@mail.gmail.com>
-Subject: Re: [RFC PATCH 1/2] Kconfig: Introduce "uses" keyword
-To:     Saeed Mahameed <saeedm@mellanox.com>
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Nicolas Pitre <nico@fluxnic.net>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        David Airlie <airlied@linux.ie>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>,
-        linux-rdma <linux-rdma@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:FKewQyedx4MT95mr2TOU1/1mQ/CNhYY4mnJwtHzgnmnsXdB4uTA
- ArAC2d45lYaeKOWrsZAG3xBhidATB0pcOOJ2olVR7ReDdiZMlCmq0NZUcK1XcikzVNY+oyq
- w2BcTGBN/hfdmxJDGslVB7zgSthwoDNqb4ylOQx5JEJMPf6Ha44HQ9P89BhU37mgH+HDzjK
- /WSoS9FWp40Yghdkai1Ng==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:68JXqcqwA1Q=:o2PR7LcuJAO/9T3Pf5qxuV
- boVSQg7iRUg6VH8QKZclMmfu7cSx1dd/26lov4u6YPbgmOy+CiiG8vs046gVs9XjvKwq60oYW
- 1UU9msB5FvsX5TGu+wjMTOPmLbHp8y7V/zC2x+ox1sPnn4THnZLRLaFMTYv8rhhKaJAmUIrEC
- d3yDwssBf2Q/q13er8PBNVpt1aGKhAaF974e+d8q38V6KvxdC0KlJWI8AwuIs4M9PYcXUb8u4
- iQ8cMeh2Mzg78fpW0XG+WTlJd5c/KFn8Ky8Sud2MO10Fu5jqe9ibEi9Ncr2BODtG4HlhMAVQm
- 6j4MM/w9MBPou5MxuCR8gCYgoq9Wlo5uOfpqh7wdKA2l9nPzhThh2erYAYYkl/+Rpe6dXcoxb
- /JndQ7+ye4gEVKXVQm6/yH5RWjdFsrk2zxVnqeUGZ4x4Hx5o6k/hF7k35vNUNZjbYDKcDlKH4
- EV7TVruo7sAKhJL88/jG2EBfTtiONUUYZBkW+izhdnsScoQ1SxnQXOMPM6hxFGuf1S8GxX0yl
- XrgfvzdkEZvGyS+l/5oq4xCNGhEIKGYUZjT9kQztklArZFe8t7jC1o4AHnLdGZOn/3fLiAGG0
- b2dDuaJt2ykdPZGo5qwgOIDBrh8x9Eph5iPG8mW9X/1z7gF5lt3Z5Cv8EoiNU9dSx984aiylM
- yue36YGGDkQ6s3h/zLeWON63sfPfmr18UoWpv0v8FraDnzU0uXoy+2P1MUWRjFdiQUoDoiXqh
- MSDSIKSLqwrCWOexFBY9/JgRB385P0ae9jum8b+J0vR99JEH6Tq4VfiKU6hxR6qdI2Gj8XXUM
- 7vAF/aeoD63NYVqpMuiW1TVd/zTHVky+2rovxuAogbiqkBe2Fo=
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200414095134.80135-1-andriy.shevchenko@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 17, 2020 at 3:12 AM Saeed Mahameed <saeedm@mellanox.com> wrote:
->
-> Due to the changes to the semantics of imply keyword [1], which now
-> doesn't force any config options to the implied configs any more.
->
-> A module (FOO) that has a weak dependency on some other modules (BAR)
-> is now broken if it was using imply to force dependency restrictions.
-> e.g.: FOO needs BAR to be reachable, especially when FOO=y and BAR=m.
-> Which might now introduce build/link errors.
->
-> There are two options to solve this:
-> 1. use IS_REACHABLE(BAR), everywhere BAR is referenced inside FOO.
-> 2. in FOO's Kconfig add: depends on (BAR || !BAR)
->
-> The first option is not desirable, and will leave the user confused when
-> setting FOO=y and BAR=m, FOO will never reach BAR even though both are
-> compiled.
->
-> The 2nd one is the preferred approach, and will guarantee BAR is always
-> reachable by FOO if both are compiled. But, (BAR || !BAR) is really
-> confusing for those who don't really get how kconfig tristate arithmetics
-> work.
->
-> To solve this and hide this weird expression and to avoid repetition
-> across the tree, we introduce new keyword "uses" to the Kconfig options
-> family.
->
-> uses BAR:
-> Equivalent to: depends on symbol || !symbol
-> Semantically it means, if FOO is enabled (y/m) and has the option:
-> uses BAR, make sure it can reach/use BAR when possible.
->
-> For example: if FOO=y and BAR=m, FOO will be forced to m.
->
-> [1] https://lore.kernel.org/linux-doc/20200302062340.21453-1-masahiroy@kernel.org/
+On Tue, 14 Apr 2020, Andy Shevchenko wrote:
 
-Thanks a lot for getting this done. I've tried it out on my randconfig
-build tree
-and can confirm that this works together with your second patch to address the
-specific MLX5 problem.
+> It appears that preliminary documentation has a typo in the ID list,
+> i.e. LPSS UART #2 had been advertised wrongly.
+> 
+> Fix the driver according to the EDS v0.9.
+> 
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
+>  drivers/mfd/intel-lpss-pci.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-I also tried out replacing all other instances of 'depends on FOO ||
-!FOO', using
-this oneline script:
+Applied, thanks.
 
-git ls-files | grep Kconfig |  xargs sed -i
-'s:depends.on.\([A-Z0-9_a-z]\+\) || \(\1 \?= \?n\|!\1\):uses \1:'
-
-Unfortunately, this immediately crashes with:
-
-$ make -skj30
-how to free type 0?
-double free or corruption (fasttop)
-make[6]: *** [/git/arm-soc/scripts/kconfig/Makefile:71: olddefconfig]
-Aborted (core dumped)
-make[5]: *** [/git/arm-soc/Makefile:587: olddefconfig] Error 2
-make[4]: *** [/git/arm-soc/scripts/kconfig/Makefile:95:
-allrandom.config] Error 2
-make[3]: *** [/git/arm-soc/Makefile:587: allrandom.config] Error 2
-make[2]: *** [Makefile:180: sub-make] Error 2
-make[2]: Target 'allrandom.config' not remade because of errors.
-make[1]: *** [makefile:127: allrandom.config] Error 2
-
-It's probably easy to fix, but I did not look any deeper into the bug.
-
-       Arnd
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
