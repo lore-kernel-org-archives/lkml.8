@@ -4,34 +4,34 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D260BC2D0EF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 17:00:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23496C38A2B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 17:01:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B2C2A2054F
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 17:00:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0DA020771
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 17:01:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="MYs6p9Xm"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="xYaAzoSu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728220AbgDQRA4 (ORCPT
+        id S1728303AbgDQRBD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 13:00:56 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:52692 "EHLO
+        Fri, 17 Apr 2020 13:01:03 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:52832 "EHLO
         crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728156AbgDQRAz (ORCPT
+        with ESMTP id S1728221AbgDQRBC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 13:00:55 -0400
+        Fri, 17 Apr 2020 13:01:02 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1587142845; h=from:from:sender:reply-to:subject:subject:date:date:
+        s=mail; t=1587142846; h=from:from:sender:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=o3zw8LmkztmL6dg62Jfpot0N6HFwJoFrNa3N2HiaqvE=;
-        b=MYs6p9XmBaTxF4IRqKC4UEiuLtInr2ZFe45ZtgBXJYXTXQoR/AXCvFxZHaBdqr88tYRYdk
-        XHw0+ZVvLn7h+hWQJDMifu64dydWdXFdhGYoOhOlBPpPV5u8ReosKGNNqxeybuMhrWfmwL
-        MnPYhqivZ+rlJGazxoZTL6uc/ZvnDSk=
+        bh=8jnFrNHMJwYTRfGU+bxklpH8fY874eOvwZEWt6NCZZM=;
+        b=xYaAzoSuObd/ydytGqBUBmjqrbvJAXHDUZvE8cA7wGGfTu3m82DOx4XdnQ3jfS8v54wuj8
+        GGhtJpSwyJWSVo3nbSwy0MBQM2Fj9FJgxPqmduDc7GO3tSZsT4PFyA/5cw/C+okjws+xom
+        bMnrpv6IkoNPpqO1e9CC4YoxFe3Xp8g=
 From:   Paul Cercueil <paul@crapouillou.net>
 To:     Ohad Ben-Cohen <ohad@wizery.com>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
@@ -39,9 +39,9 @@ To:     Ohad Ben-Cohen <ohad@wizery.com>,
 Cc:     od@zcrc.me, linux-remoteproc@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH v6 2/5] remoteproc: Add device-managed variants of rproc_alloc/rproc_add
-Date:   Fri, 17 Apr 2020 19:00:37 +0200
-Message-Id: <20200417170040.174319-2-paul@crapouillou.net>
+Subject: [PATCH v6 3/5] remoteproc: Add support for runtime PM
+Date:   Fri, 17 Apr 2020 19:00:38 +0200
+Message-Id: <20200417170040.174319-3-paul@crapouillou.net>
 In-Reply-To: <20200417170040.174319-1-paul@crapouillou.net>
 References: <20200417170040.174319-1-paul@crapouillou.net>
 MIME-Version: 1.0
@@ -51,125 +51,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add API functions devm_rproc_alloc() and devm_rproc_add(), which behave
-like rproc_alloc() and rproc_add() respectively, but register their
-respective cleanup function to be called on driver detach.
+Call pm_runtime_get_sync() before the firmware is loaded, and
+pm_runtime_put() after the remote processor has been stopped.
+
+Even though the remoteproc device has no PM callbacks, this allows the
+parent device's PM callbacks to be properly called.
 
 Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 ---
 
 Notes:
-    v3: New patch
-    v4: No change
-    v5: - Fix return value documentation
-    	- Fix typo in documentation
-    v6: No change
+    v2-v4: No change
+    v5: Move calls to prepare/unprepare to rproc_fw_boot/rproc_shutdown
+    v6: Instead of prepare/unprepare callbacks, use PM runtime callbacks
 
- drivers/remoteproc/remoteproc_core.c | 67 ++++++++++++++++++++++++++++
- include/linux/remoteproc.h           |  5 +++
- 2 files changed, 72 insertions(+)
+ drivers/remoteproc/remoteproc_core.c | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
-index e12a54e67588..a7f96bc98406 100644
+index a7f96bc98406..d391b054efd8 100644
 --- a/drivers/remoteproc/remoteproc_core.c
 +++ b/drivers/remoteproc/remoteproc_core.c
-@@ -1949,6 +1949,33 @@ int rproc_add(struct rproc *rproc)
+@@ -29,6 +29,7 @@
+ #include <linux/devcoredump.h>
+ #include <linux/rculist.h>
+ #include <linux/remoteproc.h>
++#include <linux/pm_runtime.h>
+ #include <linux/iommu.h>
+ #include <linux/idr.h>
+ #include <linux/elf.h>
+@@ -1384,6 +1385,8 @@ static int rproc_fw_boot(struct rproc *rproc, const struct firmware *fw)
+ 
+ 	dev_info(dev, "Booting fw image %s, size %zd\n", name, fw->size);
+ 
++	pm_runtime_get_sync(dev);
++
+ 	/*
+ 	 * if enabling an IOMMU isn't relevant for this rproc, this is
+ 	 * just a nop
+@@ -1391,7 +1394,7 @@ static int rproc_fw_boot(struct rproc *rproc, const struct firmware *fw)
+ 	ret = rproc_enable_iommu(rproc);
+ 	if (ret) {
+ 		dev_err(dev, "can't enable iommu: %d\n", ret);
+-		return ret;
++		goto put_pm_runtime;
+ 	}
+ 
+ 	rproc->bootaddr = rproc_get_boot_addr(rproc, fw);
+@@ -1435,6 +1438,8 @@ static int rproc_fw_boot(struct rproc *rproc, const struct firmware *fw)
+ 	rproc->table_ptr = NULL;
+ disable_iommu:
+ 	rproc_disable_iommu(rproc);
++put_pm_runtime:
++	pm_runtime_put(dev);
+ 	return ret;
  }
- EXPORT_SYMBOL(rproc_add);
  
-+static void devm_rproc_remove(void *rproc)
-+{
-+	rproc_del(rproc);
-+}
+@@ -1840,6 +1845,8 @@ void rproc_shutdown(struct rproc *rproc)
+ 
+ 	rproc_disable_iommu(rproc);
+ 
++	pm_runtime_put(dev);
 +
-+/**
-+ * devm_rproc_add() - resource managed rproc_add()
-+ * @dev: the underlying device
-+ * @rproc: the remote processor handle to register
-+ *
-+ * This function performs like rproc_add() but the registered rproc device will
-+ * automatically be removed on driver detach.
-+ *
-+ * Returns: 0 on success, negative errno on failure
-+ */
-+int devm_rproc_add(struct device *dev, struct rproc *rproc)
-+{
-+	int err;
+ 	/* Free the copy of the resource table */
+ 	kfree(rproc->cached_table);
+ 	rproc->cached_table = NULL;
+@@ -2118,6 +2125,9 @@ struct rproc *rproc_alloc(struct device *dev, const char *name,
+ 
+ 	rproc->state = RPROC_OFFLINE;
+ 
++	pm_runtime_no_callbacks(&rproc->dev);
++	pm_runtime_enable(&rproc->dev);
 +
-+	err = rproc_add(rproc);
-+	if (err)
-+		return err;
-+
-+	return devm_add_action_or_reset(dev, devm_rproc_remove, rproc);
-+}
-+EXPORT_SYMBOL(devm_rproc_add);
-+
- /**
-  * rproc_type_release() - release a remote processor instance
-  * @dev: the rproc's device
-@@ -2171,6 +2198,46 @@ int rproc_del(struct rproc *rproc)
+ 	return rproc;
  }
- EXPORT_SYMBOL(rproc_del);
- 
-+static void devm_rproc_free(struct device *dev, void *res)
-+{
-+	rproc_free(*(struct rproc **)res);
-+}
-+
-+/**
-+ * devm_rproc_alloc() - resource managed rproc_alloc()
-+ * @dev: the underlying device
-+ * @name: name of this remote processor
-+ * @ops: platform-specific handlers (mainly start/stop)
-+ * @firmware: name of firmware file to load, can be NULL
-+ * @len: length of private data needed by the rproc driver (in bytes)
-+ *
-+ * This function performs like rproc_alloc() but the acquired rproc device will
-+ * automatically be released on driver detach.
-+ *
-+ * Returns: new rproc instance, or NULL on failure
-+ */
-+struct rproc *devm_rproc_alloc(struct device *dev, const char *name,
-+			       const struct rproc_ops *ops,
-+			       const char *firmware, int len)
-+{
-+	struct rproc **ptr, *rproc;
-+
-+	ptr = devres_alloc(devm_rproc_free, sizeof(*ptr), GFP_KERNEL);
-+	if (!ptr)
-+		return ERR_PTR(-ENOMEM);
-+
-+	rproc = rproc_alloc(dev, name, ops, firmware, len);
-+	if (rproc) {
-+		*ptr = rproc;
-+		devres_add(dev, ptr);
-+	} else {
-+		devres_free(ptr);
-+	}
-+
-+	return rproc;
-+}
-+EXPORT_SYMBOL(devm_rproc_alloc);
-+
- /**
-  * rproc_add_subdev() - add a subdevice to a remoteproc
-  * @rproc: rproc handle to add the subdevice to
-diff --git a/include/linux/remoteproc.h b/include/linux/remoteproc.h
-index 9c07d7958c53..8c9c0dda03c3 100644
---- a/include/linux/remoteproc.h
-+++ b/include/linux/remoteproc.h
-@@ -599,6 +599,11 @@ int rproc_add(struct rproc *rproc);
- int rproc_del(struct rproc *rproc);
- void rproc_free(struct rproc *rproc);
- 
-+struct rproc *devm_rproc_alloc(struct device *dev, const char *name,
-+			       const struct rproc_ops *ops,
-+			       const char *firmware, int len);
-+int devm_rproc_add(struct device *dev, struct rproc *rproc);
-+
- void rproc_add_carveout(struct rproc *rproc, struct rproc_mem_entry *mem);
- 
- struct rproc_mem_entry *
+ EXPORT_SYMBOL(rproc_alloc);
+@@ -2133,6 +2143,7 @@ EXPORT_SYMBOL(rproc_alloc);
+  */
+ void rproc_free(struct rproc *rproc)
+ {
++	pm_runtime_disable(&rproc->dev);
+ 	put_device(&rproc->dev);
+ }
+ EXPORT_SYMBOL(rproc_free);
 -- 
 2.25.1
 
