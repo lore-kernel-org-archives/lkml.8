@@ -2,185 +2,75 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F187EC2BB55
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 06:12:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E31FC2D0EF
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 06:16:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D26F721D82
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 06:12:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CBCB221F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 06:16:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DWs0AAfB"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="N/0lT/ts"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726941AbgDQGMy (ORCPT
+        id S1727807AbgDQGQW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 02:12:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42656 "EHLO
+        Fri, 17 Apr 2020 02:16:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43202 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726767AbgDQGMx (ORCPT
+        by vger.kernel.org with ESMTP id S1726710AbgDQGQW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 02:12:53 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9D72C061A0F
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 23:12:51 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id r7so769791ljg.13
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 23:12:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=/FWw4e/+lDvAmu+pvQ9Pt7wJyGjaI+MJpbg/WlFhQoY=;
-        b=DWs0AAfBddGnQrOocMzjgWXUFlNZRjsMFKpZZk1alBffd05xn0vWCArXbzrXfZ/LoD
-         0MIuidiI9kFFFU9VG2rx0pZ9mqqEZ4VB/9MthpbhrjydeJA61GP5P9BCGKQ21OQqslps
-         FHb25rrBesneEq8UVU+lYTV1Nv9Xyj+FlRJVMZi4JNvOBBh6QrNsp97BUV68PMAGEsrk
-         wMyL54e0V5hqRNsHOVWpBx/Q51mdZSg+JvJ8rrugunPCO3poVwwe9J7xGwpFEHrGl46n
-         7UcOLOXM2Mw0UbmwE+JPFN5ktFTFuEIFM5OPAeIM76dFhWY/ISjVGiva7Ar4sEsleH7z
-         5PKw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=/FWw4e/+lDvAmu+pvQ9Pt7wJyGjaI+MJpbg/WlFhQoY=;
-        b=oxNv4DYpzuceH/XjBTGdMAfCEL8fYsXUzjvJ3Y2hv2kJw+7p7022d1a+P3/GCpZvt8
-         bzHjCVqziNhkrp0rYHx72povgWrsfcwOt7iNIAl7ZsznQYsdlvuaMGiC6LPUZ8jALWIl
-         HjDc2UZIuyxwOXoLoF2linmPJQ2fOzLmO2GEtDD+hgppoYZ2WFoFivFjCJmCEK9Asr9V
-         E5+m7JHzSP35vJJ7j8Xi7XjgL9DIx5eJ4sGNLlvufl0Y6MLPvRTZOrBzpD/+9SV8Ycdh
-         GICOBssBOa5+LNYAw3uvQycbIbM/0PvFDYNp3+fr0Id87nejMo6qouXrgCNHpazlc0bJ
-         kGoA==
-X-Gm-Message-State: AGi0PuZKc1c4UgH+VgIliNV6tS+A+8SYfxqGaFBIZeZD15tBqIw9vXP7
-        3wK2S4E6cVVeQa9fqmvi1UUiV3O5hK1umW5kS+pbrg==
-X-Google-Smtp-Source: APiQypKb3+zxnSo0/2D/NRf9zuuLTRuHXjegLXh+h+lcqb7FR4RKOujc/jxeRno9sG+zci/i/eKugeePtqHsRbEYKK4=
-X-Received: by 2002:a2e:b52f:: with SMTP id z15mr1078568ljm.38.1587103969891;
- Thu, 16 Apr 2020 23:12:49 -0700 (PDT)
+        Fri, 17 Apr 2020 02:16:22 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A387C061A0C;
+        Thu, 16 Apr 2020 23:16:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description;
+        bh=mE/dOyjqqJ9UifL3Sk+D0V7qq7bhB7t90DrI6tsIv9E=; b=N/0lT/tsDvJ/dX88bNUzPMtL3Z
+        p1EXWZ4Vc/DtWTm9H9X05+yrqEFN8Nu2V/dPA1pqLtPnkYf4MCw/glE3oQOQdtbVT0riA0oIGBXf9
+        rAWt2loIuoL0NgO0MIYmKhcp/+/p/nVfXFIQQEn6NomgL10oGmMw/Q9dHh32twFe564xFag5Ahs4W
+        EdKdvbncyMl83MZU6tWvCjr/YJFjgzE0vlMTGGKTevzU/TftBTLyuYib18C+3x9svXgnZqifTOT2e
+        XA/hzVPY5zDHWcnr5KAx+ED54T4pslv2r7FltTKxE2+491ZbSsWML+QGSuM71GqMcXnEHRE9mv4pL
+        ertWKfQQ==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jPKIU-0002vF-Uf; Fri, 17 Apr 2020 06:16:19 +0000
+Subject: Re: linux-next: Tree for Apr 17 (pinctrl-mcp23s08)
+To:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
+References: <20200417145017.3932443d@canb.auug.org.au>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <0f828695-71cc-ab94-e0f0-ae63a192b283@infradead.org>
+Date:   Thu, 16 Apr 2020 23:16:13 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-References: <20200416131242.353444678@linuxfoundation.org>
-In-Reply-To: <20200416131242.353444678@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Fri, 17 Apr 2020 11:42:38 +0530
-Message-ID: <CA+G9fYsjyFQxJBYS+i94cStSGTKUHydLcC9XT=x94km5mySxxg@mail.gmail.com>
-Subject: Re: [PATCH 4.19 000/146] 4.19.116-rc1 review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        lkft-triage@lists.linaro.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        linux- stable <stable@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200417145017.3932443d@canb.auug.org.au>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 16 Apr 2020 at 18:56, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 4.19.116 release.
-> There are 146 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Sat, 18 Apr 2020 13:11:20 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
-4.19.116-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-4.19.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
->
+On 4/16/20 9:50 PM, Stephen Rothwell wrote:
+> Hi all,
+> 
+> Changes since 20200416:
+> 
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+on i386:
 
-Summary
-------------------------------------------------------------------------
+WARNING: modpost: missing MODULE_LICENSE() in drivers/pinctrl/pinctrl-mcp23s08.o
 
-kernel: 4.19.116-rc1
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-4.19.y
-git commit: 287f80e07bbc28d3a2a25d2b53674c912d515376
-git describe: v4.19.115-147-g287f80e07bbc
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.19-oe/bu=
-ild/v4.19.115-147-g287f80e07bbc
-
-
-No regressions (compared to build v4.19.114-55-g3b903e5affcf)
-
-No fixes (compared to build v4.19.114-55-g3b903e5affcf)
-
-Ran 31564 total tests in the following environments and test suites.
-
-Environments
---------------
-- dragonboard-410c - arm64
-- hi6220-hikey - arm64
-- i386
-- juno-r2 - arm64
-- juno-r2-compat
-- juno-r2-kasan
-- nxp-ls2088
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15 - arm
-- x86_64
-- x86-kasan
-
-Test Suites
------------
-* build
-* install-android-platform-tools-r2600
-* install-android-platform-tools-r2800
-* linux-log-parser
-* ltp-cve-tests
-* ltp-dio-tests
-* ltp-hugetlb-tests
-* ltp-io-tests
-* ltp-mm-tests
-* ltp-sched-tests
-* ltp-syscalls-tests
-* perf
-* kselftest
-* kvm-unit-tests
-* libhugetlbfs
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-containers-tests
-* ltp-cpuhotplug-tests
-* ltp-crypto-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-securebits-tests
-* network-basic-tests
-* ltp-fs-tests
-* ltp-open-posix-tests
-* v4l2-compliance
-* spectre-meltdown-checker-test
-* kselftest-vsyscall-mode-native
-* kselftest-vsyscall-mode-none
-
---=20
-Linaro LKFT
-https://lkft.linaro.org
+ 
+-- 
+~Randy
+Reported-by: Randy Dunlap <rdunlap@infradead.org>
