@@ -2,113 +2,99 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25126C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 05:01:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EBE7C2D0EF
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 05:10:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0C91921D94
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 05:01:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56CEE21D94
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 05:10:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726655AbgDQFBd (ORCPT
+        id S1726660AbgDQFKv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 01:01:33 -0400
-Received: from mga09.intel.com ([134.134.136.24]:60789 "EHLO mga09.intel.com"
+        Fri, 17 Apr 2020 01:10:51 -0400
+Received: from mga06.intel.com ([134.134.136.31]:51848 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726026AbgDQFBc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 01:01:32 -0400
-IronPort-SDR: 2RsSl9GR1MhW+5KUJptMatVT228rDjmLPX6IfhfiB1dIHrv+Cv0s82h0z//sBaXwHUCgCmHxV+
- pInH192KaaqA==
+        id S1726568AbgDQFKu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Apr 2020 01:10:50 -0400
+IronPort-SDR: 23Nnya4jyXwBiGHSOaffZIpPRJVVQzmPg9jFbZy29fhO5kdMDfzOxUcQqBMen/lPYdZIfuVv6j
+ AADUlfXm7vNQ==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2020 22:01:32 -0700
-IronPort-SDR: y9xCn0hZVNz07AYUIHEbV88iGRzkkdCHHgqDEJ7xsIgzlicLI5zaLj+whK8ekhjh/dljRJyXCJ
- NfX0eUU93Pdg==
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2020 22:10:49 -0700
+IronPort-SDR: Ru+AzaksJhRHLDZOjcFgQYBfOUAcETbupMhsMVFpsNC8dGKJHTKDJbEIdtNPHMYgY9m8+OdLLs
+ jUukL2Thokdg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.72,393,1580803200"; 
-   d="scan'208";a="455514715"
-Received: from shbuild999.sh.intel.com ([10.239.147.105])
-  by fmsmga006.fm.intel.com with ESMTP; 16 Apr 2020 22:01:30 -0700
-From:   Feng Tang <feng.tang@intel.com>
-To:     Corey Minyard <minyard@acm.org>, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        openipmi-developer@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org
-Cc:     Feng Tang <feng.tang@intel.com>
-Subject: [PATCH RFC] ipmi: use vzalloc instead of kmalloc for user creation
-Date:   Fri, 17 Apr 2020 13:01:29 +0800
-Message-Id: <1587099689-13678-1-git-send-email-feng.tang@intel.com>
-X-Mailer: git-send-email 2.7.4
+   d="scan'208";a="244610530"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga007.fm.intel.com with ESMTP; 16 Apr 2020 22:10:49 -0700
+Received: from [10.255.156.142] (vramuthx-mobl1.gar.corp.intel.com [10.255.156.142])
+        by linux.intel.com (Postfix) with ESMTP id 592125802C9;
+        Thu, 16 Apr 2020 22:10:44 -0700 (PDT)
+Subject: Re: [PATCH v1 2/2] mtd: rawnand: Add NAND controller support on Intel
+ LGM SoC
+To:     Andy Shevchenko <andriy.shevchenko@intel.com>,
+        Boris Brezillon <boris.brezillon@collabora.com>
+Cc:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        anders.roxell@linaro.org, arnd@arndb.de, brendanhiggins@google.com,
+        cheol.yong.kim@intel.com, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
+        masonccyang@mxic.com.tw, miquel.raynal@bootlin.com,
+        piotrs@cadence.com, qi-ming.wu@intel.com, richard@nod.at,
+        robh+dt@kernel.org, tglx@linutronix.de, vigneshr@ti.com
+References: <20200414022433.36622-3-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20200415220533.733834-1-martin.blumenstingl@googlemail.com>
+ <c33c8653-16a2-5bcd-97a9-511d958b755a@linux.intel.com>
+ <20200416113822.2ef326cb@collabora.com>
+ <18568cf6-2955-472e-7b68-eb35e654a906@linux.intel.com>
+ <20200416122619.2c481792@collabora.com>
+ <d3e137fa-54a0-b4ec-eb24-3984eab2a247@linux.intel.com>
+ <20200416131725.51259573@collabora.com>
+ <20200416113250.GA185537@smile.fi.intel.com>
+From:   "Ramuthevar, Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Message-ID: <c8611110-d2ce-7d16-3acc-974d37ab116a@linux.intel.com>
+Date:   Fri, 17 Apr 2020 13:10:43 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
+MIME-Version: 1.0
+In-Reply-To: <20200416113250.GA185537@smile.fi.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We met mulitple times of failure of staring bmc-watchdog,
-due to the runtime memory allocation failure of order 4.
+Hi Andy,
 
-     bmc-watchdog: page allocation failure: order:4, mode:0x40cc0(GFP_KERNEL|__GFP_COMP), nodemask=(null),cpuset=/,mems_allowed=0-1
-     CPU: 1 PID: 2571 Comm: bmc-watchdog Not tainted 5.5.0-00045-g7d6bb61d6188c #1
-     Hardware name: Intel Corporation S2600WFT/S2600WFT, BIOS SE5C620.86B.00.01.0015.110720180833 11/07/2018
-     Call Trace:
-      dump_stack+0x66/0x8b
-      warn_alloc+0xfe/0x160
-      __alloc_pages_slowpath+0xd3e/0xd80
-      __alloc_pages_nodemask+0x2f0/0x340
-      kmalloc_order+0x18/0x70
-      kmalloc_order_trace+0x1d/0xb0
-      ipmi_create_user+0x55/0x2c0 [ipmi_msghandler]
-      ipmi_open+0x72/0x110 [ipmi_devintf]
-      chrdev_open+0xcb/0x1e0
-      do_dentry_open+0x1ce/0x380
-      path_openat+0x305/0x14f0
-      do_filp_open+0x9b/0x110
-      do_sys_open+0x1bd/0x250
-      do_syscall_64+0x5b/0x1f0
-      entry_SYSCALL_64_after_hwframe+0x44/0xa9
+On 16/4/2020 7:32 pm, Andy Shevchenko wrote:
+> On Thu, Apr 16, 2020 at 01:17:25PM +0200, Boris Brezillon wrote:
+>> On Thu, 16 Apr 2020 18:40:53 +0800
+>> "Ramuthevar, Vadivel MuruganX"
+>> <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
+>>
+>>>>>> we'll be happy to have one more of the existing driver converted to
+>>>>>> ->exec_op() ;-).
+>>>>> I have completely adapted to ->exec_op() hook up to replace the legacy
+>>>>> call-back.
+>>>> I suspect porting what you've done to the xway driver shouldn't be too
+>>>> complicated.
+>>> Not ported from xway_nand.c driver , we have developed from the scratch
+>>> to make it work on
+>>> Intel LGM SoC , it's new x86 ATOM based SoC, IP itself completely
+>>> different and most of the registers won't match.
+>>> if we port then it would be ugly and also what are the problem may occur
+>>> we do not know.
+>> Sorry but IMO they look similar enough to try to merge them.
+> I agree. I tried to convince them internally... but here we are.
 
-Using vzalloc/vfree for creating ipmi_user heals the
-problem.
+Agreed,  will do the changes as Boris and Martin suggested, Thanks!
 
-Signed-off-by: Feng Tang <feng.tang@intel.com>
----
- drivers/char/ipmi/ipmi_msghandler.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/char/ipmi/ipmi_msghandler.c b/drivers/char/ipmi/ipmi_msghandler.c
-index c48d8f0..96f1573 100644
---- a/drivers/char/ipmi/ipmi_msghandler.c
-+++ b/drivers/char/ipmi/ipmi_msghandler.c
-@@ -1153,7 +1153,7 @@ static void free_user_work(struct work_struct *work)
- 					      remove_work);
- 
- 	cleanup_srcu_struct(&user->release_barrier);
--	kfree(user);
-+	vfree(user);
- }
- 
- int ipmi_create_user(unsigned int          if_num,
-@@ -1185,7 +1185,7 @@ int ipmi_create_user(unsigned int          if_num,
- 	if (rv)
- 		return rv;
- 
--	new_user = kmalloc(sizeof(*new_user), GFP_KERNEL);
-+	new_user = vzalloc(sizeof(*new_user));
- 	if (!new_user)
- 		return -ENOMEM;
- 
-@@ -1232,7 +1232,7 @@ int ipmi_create_user(unsigned int          if_num,
- 
- out_kfree:
- 	srcu_read_unlock(&ipmi_interfaces_srcu, index);
--	kfree(new_user);
-+	vfree(new_user);
- 	return rv;
- }
- EXPORT_SYMBOL(ipmi_create_user);
--- 
-2.7.4
-
+Regards
+Vadivel
