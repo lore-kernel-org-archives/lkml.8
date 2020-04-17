@@ -2,124 +2,104 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9559C2BB55
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 05:59:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AB15C2D0EF
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 06:01:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A7A22221F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 05:59:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MpUvL2Yu"
+	by mail.kernel.org (Postfix) with ESMTP id E656E21973
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 06:01:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726753AbgDQF7x (ORCPT
+        id S1726759AbgDQGBw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 01:59:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40672 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726065AbgDQF7w (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 01:59:52 -0400
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C40DC061A0C;
-        Thu, 16 Apr 2020 22:59:52 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id u10so825524lfo.8;
-        Thu, 16 Apr 2020 22:59:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:content-transfer-encoding:mime-version:subject:date:references
-         :to:in-reply-to:message-id;
-        bh=KCPHum5NfriSROGpDRagY9arwqzGeCJ9Uy+nSz5Dbdc=;
-        b=MpUvL2YuibSpJZaVDnKEidiTlm12+7C3IICF/DGMVymDcthklvavDzR4qLWBc5/AiQ
-         LzQ6n82JAvdDE4x0Y0VHjZR8Q9R6fHgG4NmVFcNstmSjg/4fd8uZkVp0Ws+TogUnDemI
-         KPu86DCU1sJ6qurFzBKyzEAocXBtgTIC7rdcBXhLcY+1IlGADeDPGcbMTSAv/tKDoHoq
-         uKjlN1G6GwdEjh3rvN5BNXLUMaFnHFgJ+1/xBlo4WOoTnpYy860a/eBE3pC3ZD0CGVnV
-         OSDjmijdX+nlYz5o9chHIAzSm8ou3CgTuft1M/q2FXXvu/cuf88J6eowvYGce7wufYEV
-         AJZQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:content-transfer-encoding:mime-version
-         :subject:date:references:to:in-reply-to:message-id;
-        bh=KCPHum5NfriSROGpDRagY9arwqzGeCJ9Uy+nSz5Dbdc=;
-        b=uV71KkaQciDUfLZoZNYyLK2BzlWstoPFTrr0TwfRgqbAxBTgsBAcf3ah8Quv0TC7z4
-         rN34FR+iJb+7dos3w+Br8FO4LYa59od9flI2eAATKc+iYRCWr0q/wCqcI/3Ii0PK0W9V
-         aRr/acJ/B9leaDSZIf1vLGANlEn8FFHGqli5ajelAiyr6F0TQ0kK6erDTMhWv9CaeKdu
-         hkSaZ6plUdaFGUI3N7jZuhPjM32kgVXLR/1cou/7TDjLeHJCHIoaYHSf0Skf7HYDZeOb
-         qO625foP7sV8TBvSfEbasTFRQX9+32LAEFdEW9aMD4S4JyKwgGTgsszcob513E3+N80s
-         USFw==
-X-Gm-Message-State: AGi0PuYuXcflCFwK9D5zSu0KeXLfhyXEpPBrxdHExhqEvNGEjWiuSXQW
-        RoOXEAxp6ZTCKL1Dfdt6Z3DS8nJA
-X-Google-Smtp-Source: APiQypI3qukQ4tZM9Ts9XozSXmQmnYwjcbblor1p9+Yx3fV/8PNw7LNqEB1j/HGIrOAooq+lva/v3w==
-X-Received: by 2002:ac2:4213:: with SMTP id y19mr866623lfh.99.1587103190526;
-        Thu, 16 Apr 2020 22:59:50 -0700 (PDT)
-Received: from [172.16.20.20] ([87.200.95.144])
-        by smtp.gmail.com with ESMTPSA id c22sm15226427ljh.66.2020.04.16.22.59.48
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 16 Apr 2020 22:59:49 -0700 (PDT)
-From:   Christian Hewitt <christianshewitt@gmail.com>
-Content-Type: text/plain;
-        charset=us-ascii
-Content-Transfer-Encoding: quoted-printable
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.14\))
-Subject: Re: [PATCH] arm64: dts: meson-g12b-khadas-vim3: fix missing frddr_a
- node
-Date:   Fri, 17 Apr 2020 09:59:45 +0400
-References: <20200415095927.3780-1-christianshewitt@gmail.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20200415095927.3780-1-christianshewitt@gmail.com>
-Message-Id: <AA7AFC1F-AB6E-438D-8510-BC472552C554@gmail.com>
-X-Mailer: Apple Mail (2.3445.104.14)
+        Fri, 17 Apr 2020 02:01:52 -0400
+Received: from mga01.intel.com ([192.55.52.88]:54126 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726065AbgDQGBv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Apr 2020 02:01:51 -0400
+IronPort-SDR: YXBbX3P8Exyf17PXjrDl0/WT6gneLcwTB7i51FP1Zw9F5p74CCqqwZYOj6Caw4O0W1K3GIYRzK
+ 1LWBY35TWbrQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2020 23:01:51 -0700
+IronPort-SDR: qs/5JrKYhI5fjKMKNid/BnUiMqTRYtpN7CI4cWdzotGHs1aG5KkPVKMMBIatdivZOOVpGG0uHk
+ S8pw/ojxwjKA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,393,1580803200"; 
+   d="scan'208";a="272318270"
+Received: from hao-dev.bj.intel.com ([10.238.157.65])
+  by orsmga002.jf.intel.com with ESMTP; 16 Apr 2020 23:01:48 -0700
+From:   Wu Hao <hao.wu@intel.com>
+To:     will@kernel.org, mdf@kernel.org, mark.rutland@arm.com,
+        gregkh@linuxfoundation.org, linux-fpga@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     linux-api@vger.kernel.org, atull@kernel.org, yilun.xu@intel.com,
+        trix@redhat.com, bhu@redhat.com, Wu Hao <hao.wu@intel.com>
+Subject: [PATCH v9 0/2] add performance reporting support to FPGA DFL drivers
+Date:   Fri, 17 Apr 2020 13:39:58 +0800
+Message-Id: <1587102000-18262-1-git-send-email-hao.wu@intel.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi all,
 
-> On 15 Apr 2020, at 1:59 pm, chewitt <christianshewitt@gmail.com> =
-wrote:
->=20
-> From: Christian Hewitt <christianshewitt@gmail.com>
->=20
-> The frddr_a node was accidently deleted when creating a common dtsi =
-for the
-> Khadas VIM3/VIM3L boards, preventing audio from working on the VIM3.
->=20
-> Fixes: 4f26cc1c96c9 ("arm64: dts: khadas-vim3: move common nodes into =
-meson-khadas-vim3.dtsi")
-> Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
-> ---
-> arch/arm64/boot/dts/amlogic/meson-g12b-khadas-vim3.dtsi | 4 ++++
-> 1 file changed, 4 insertions(+)
->=20
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b-khadas-vim3.dtsi =
-b/arch/arm64/boot/dts/amlogic/meson-g12b-khadas-vim3.dtsi
-> index c33e85fbdaba..c6c8caed8327 100644
-> --- a/arch/arm64/boot/dts/amlogic/meson-g12b-khadas-vim3.dtsi
-> +++ b/arch/arm64/boot/dts/amlogic/meson-g12b-khadas-vim3.dtsi
-> @@ -154,6 +154,10 @@
-> 	clock-latency =3D <50000>;
-> };
->=20
-> +&frddr_a {
-> +	status =3D "okay";
-> +};
-> +
-> &frddr_b {
-> 	status =3D "okay";
-> };
-> --=20
-> 2.17.1
+This patchset adds performance reporting support for FPGA DFL drivers. It
+introduces one pmu to expose userspace interfaces via standard perf API.
+User could use standard perf tool to access perf events exposed via pmu.
 
-NB: I appears the same change was sent by Neil in [1] as a fix to 5.4, =
-but
-this appears to have been dropped/missed somewhere.
+This patchset is generated based on 5.7-rc1.
 
-[1] https://patchwork.kernel.org/patch/11198535/
+Main changes from v8:
+ - rebase against 5.7-rc1.
+
+Main changes from v7:
+ - rename pmu name from "fme%d" to "dfl_fme%d".
+ - monitor cpu hotplug for cpumask sysfs and update cpumask sysfs doc.
+ - add extra read for 64bit counter registers to avoid 2-32bit readl issue.
+
+Main changes from v6:
+ - add a new ABI/testing/ sysfs documentation in patch #2.
+ - fix a warning reported by kbuild in patch #2.
+
+Main changes from v5:
+ - use dev_ext_attribute instead of fme_perf_event_attr.
+ - use is_visible function to decide which events to expose per
+   hardware capability, and add event_init checking for all events.
+
+Main changes from v4:
+ - rebase and clean up.
+ - update Kconfig for PERF_EVENTS dependency.
+
+Main changes from v3:
+ - add more descriptions in doc, including how to use perf tool for these
+   hardware counters. (patch #1)
+ - use standard perf API instead of sysfs entries. (patch #2)
+
+Wu Hao (1):
+  fpga: dfl: fme: add performance reporting support
+
+Xu Yilun (1):
+  Documentation: fpga: dfl: add description for performance reporting
+    support
+
+ .../testing/sysfs-bus-event_source-devices-dfl_fme |  104 ++
+ Documentation/fpga/dfl.rst                         |   84 ++
+ drivers/fpga/Kconfig                               |    2 +-
+ drivers/fpga/Makefile                              |    1 +
+ drivers/fpga/dfl-fme-main.c                        |    4 +
+ drivers/fpga/dfl-fme-perf.c                        | 1020 ++++++++++++++++++++
+ drivers/fpga/dfl-fme.h                             |    2 +
+ drivers/fpga/dfl.h                                 |    2 +
+ 8 files changed, 1218 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-bus-event_source-devices-dfl_fme
+ create mode 100644 drivers/fpga/dfl-fme-perf.c
+
+-- 
+1.8.3.1
 
