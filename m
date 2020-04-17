@@ -2,97 +2,84 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65284C2D0EF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 04:05:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C938FC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 04:06:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3C2B221D93
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 04:05:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A32BE21D94
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 04:06:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587096336;
-	bh=Hna12HYTPcsdDzrAZYka1iFbZHk72Y721EN7BBRSnlg=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=wvSXpgs8E0QcyJjr6gR96nYt81PaSkgdKS7LErIop6c80YnGG2e+Vw0sIb7+YMQhv
-	 AJ796yzH0gUomH+Faz6LDip35vOThP2UfXByH+h13cOfExbjKbIOszyxnnRuKTPuUF
-	 Gf3dqYh0i/23sGNh1CT3ZjEnoKhQ4HFkQ9vEvHT0=
+	s=default; t=1587096408;
+	bh=Ox+92WObcJunp5pe05700XTqNPVCEcZ9XiB7PoMy0Tc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=fnBwAM2Zj4xLq2KLjmINBQAN1zXTygXtqrKSQP6CSgNf5oQI570hK6EOwban25A0X
+	 TNq4d46UA2QofCdszay4NjUHC/OeDjIX8kqVVELCfndkMU/835F1Ksux+IHohsXeMD
+	 /+rVMAELCoZD0RHyx9cd/Ov5UEwYLbdLlzmDKlaM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726356AbgDQEFf (ORCPT
+        id S1726400AbgDQEGr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 00:05:35 -0400
-Received: from conuserg-12.nifty.com ([210.131.2.79]:37842 "EHLO
-        conuserg-12.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725900AbgDQEFe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 00:05:34 -0400
-Received: from oscar.flets-west.jp (softbank060142179096.bbtec.net [60.142.179.96]) (authenticated)
-        by conuserg-12.nifty.com with ESMTP id 03H44vZD014012;
-        Fri, 17 Apr 2020 13:04:57 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-12.nifty.com 03H44vZD014012
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1587096298;
-        bh=qN43PMkS5NKTugSiCouk5snU8lM3THH2z0nBNU4+ChA=;
-        h=From:To:Cc:Subject:Date:From;
-        b=D807E+U+/foQCrY9gVuyE9DKueGFRYT5XW/w5j92iEoLZHVaINRTw7LYDo5/x2Q4c
-         Y9oWZ4at0kvzW3Vmc2YCnIK3qAAm4dx5COQTrGVwU9NnRxlPbmJcEDsBvkFPPHbgco
-         SwVOawZR2tJO2VmwJM2++vBQSvTUeDoWyGVHuVI5ZEryWxxJi9Y8XRjFLbsReTGAK3
-         sWRaUIAj2cC+q2e0DLyGXmAbmp//5rk1KBQg82og6MjBy8UjUSykwpOVZ+obnKQKuv
-         60U/3raubsSpwReVelOKxFvYVQY+3QwTFWiyQ/0or8zWpdwjH8j7ku2ZBPdMJsJdrM
-         MUK+0Qj6aSNLQ==
-X-Nifty-SrcIP: [60.142.179.96]
-From:   Masahiro Yamada <masahiroy@kernel.org>
-To:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] kbuild: check libyaml installation for 'make dt_binding_check'
-Date:   Fri, 17 Apr 2020 13:04:55 +0900
-Message-Id: <20200417040455.763892-1-masahiroy@kernel.org>
-X-Mailer: git-send-email 2.25.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Fri, 17 Apr 2020 00:06:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54606 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725900AbgDQEGr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Apr 2020 00:06:47 -0400
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C772321D93;
+        Fri, 17 Apr 2020 04:06:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587096407;
+        bh=Ox+92WObcJunp5pe05700XTqNPVCEcZ9XiB7PoMy0Tc=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=QY7ZU/+JVxuT2+vH/epQoI3Nw4QIVGsEgVwexZzpUIVeCl6hpubioHP9oR74gcb42
+         J1FpGvATJx+EGzI4rv2eMbjBISoyvIVfXOAaSaKV7uL+V6KcMVSBDwQMMtgCK4cJz1
+         AvgNYBimV4WNZVsQfXSLzqxwE6GXL3J2t/S1JbUI=
+Date:   Thu, 16 Apr 2020 21:06:46 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     "Huang\, Ying" <ying.huang@intel.com>
+Cc:     Andrea Righi <andrea.righi@canonical.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Anchal Agarwal <anchalag@amazon.com>, <linux-mm@kvack.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3] mm: swap: properly update readahead statistics in
+ unuse_pte_range()
+Message-Id: <20200416210646.774bae8c321e3a44d6ffa8c3@linux-foundation.org>
+In-Reply-To: <871romvmrh.fsf@yhuang-dev.intel.com>
+References: <20200416180132.GB3352@xps-13>
+        <871romvmrh.fsf@yhuang-dev.intel.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If you run 'make dtbs_check' without installing the libyaml package,
-the error message "dtc needs libyaml ..." is shown.
+On Fri, 17 Apr 2020 11:01:22 +0800 "Huang\, Ying" <ying.huang@intel.com> wrote:
 
-This should be checked also for 'make dt_binding_check' because dtc
-needs to validate *.example.dts extracted from *.yaml files.
+> Andrea Righi <andrea.righi@canonical.com> writes:
+> 
+> > In unuse_pte_range() we blindly swap-in pages without checking if the
+> > swap entry is already present in the swap cache.
+> >
+> > By doing this, the hit/miss ratio used by the swap readahead heuristic
+> > is not properly updated and this leads to non-optimal performance during
+> > swapoff.
+> 
+> It's more important to describe why we need this patch in the patch
+> description.  So, please add some information about your use case.  And
+> please focus on the technical part instead of the business part.
 
-It is missing since commit 4f0e3a57d6eb ("kbuild: Add support for DT
-binding schema checks"), but this fix-up is applicable only after commit
-e10c4321dc1e ("kbuild: allow to run dt_binding_check and dtbs_check
-in a single command").
+Confused.  I thought the changelog was quite good.  If "business part"
+means "end user effect of the patch" then that's a very important
+thing.
 
-I gave the Fixes tag to the latter in case somebody is interested in
-back-porting this.
+> Thanks!  But you don't need to do this.  You can add my Reviewed-by after
+> we have finished the work on patch description.
 
-Fixes: e10c4321dc1e ("kbuild: allow to run dt_binding_check and dtbs_check in a single command")
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
----
-
- scripts/dtc/Makefile | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/scripts/dtc/Makefile b/scripts/dtc/Makefile
-index 2f3c3a7e1620..ef85f8b7d4a7 100644
---- a/scripts/dtc/Makefile
-+++ b/scripts/dtc/Makefile
-@@ -13,7 +13,7 @@ dtc-objs	+= dtc-lexer.lex.o dtc-parser.tab.o
- HOST_EXTRACFLAGS := -I $(srctree)/$(src)/libfdt
- 
- ifeq ($(shell pkg-config --exists yaml-0.1 2>/dev/null && echo yes),)
--ifneq ($(CHECK_DTBS),)
-+ifneq ($(CHECK_DT_BINDING)$(CHECK_DTBS),)
- $(error dtc needs libyaml for DT schema validation support. \
- 	Install the necessary libyaml development package.)
- endif
--- 
-2.25.1
-
+Can you be more specific about how you want this changed?
