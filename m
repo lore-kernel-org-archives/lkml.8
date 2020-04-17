@@ -6,100 +6,179 @@ X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E914C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 23:02:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6CE1C38A2B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 23:07:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 28695214D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 23:02:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92500214D8
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 23:07:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="nSXAQWrK"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="JSL84TXr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727996AbgDQXCa (ORCPT
+        id S1728010AbgDQXHm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 19:02:30 -0400
-Received: from smtp-fw-9101.amazon.com ([207.171.184.25]:61305 "EHLO
-        smtp-fw-9101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725953AbgDQXC3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 19:02:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1587164548; x=1618700548;
-  h=from:to:cc:date:message-id:references:in-reply-to:
-   content-id:content-transfer-encoding:mime-version:subject;
-  bh=Ih+jlxV8V/YeiawHs8+BibSIuYKqK0v/dfpekPCSovA=;
-  b=nSXAQWrKwoMAJGAKBSK9M9gYmJuXA2u+q/6DlRfHd1GkrBXrZQ9WVZKX
-   McTG7EwU57juYE5LA5CxlX802I+Fw3PDZutb7is/ETqmcZ0aMh/Qv6RnE
-   V4rVzcC7hg2D7CyZGwGOsU/KyXEmE7xMAvl0GBV8IQRtCDHVzFkw18oSP
-   Q=;
-IronPort-SDR: LgZorR9/HOhY5UGkoC8URUtXxTLqhuBmgR6jySm/4vMrQghyRMO9XH8cAPKhJJ4K28GZP69q0W
- vrEmGiP/Aaig==
-X-IronPort-AV: E=Sophos;i="5.72,395,1580774400"; 
-   d="scan'208";a="29466861"
-Subject: Re: [PATCH v3 3/5] arch/x86/mm: Refactor cond_ibpb() to support other use
- cases
-Thread-Topic: [PATCH v3 3/5] arch/x86/mm: Refactor cond_ibpb() to support other use cases
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1a-807d4a99.us-east-1.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-9101.sea19.amazon.com with ESMTP; 17 Apr 2020 23:02:26 +0000
-Received: from EX13MTAUWB001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
-        by email-inbound-relay-1a-807d4a99.us-east-1.amazon.com (Postfix) with ESMTPS id 71B58A2554;
-        Fri, 17 Apr 2020 23:02:23 +0000 (UTC)
-Received: from EX13D01UWB001.ant.amazon.com (10.43.161.75) by
- EX13MTAUWB001.ant.amazon.com (10.43.161.207) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Fri, 17 Apr 2020 23:02:22 +0000
-Received: from EX13D01UWB002.ant.amazon.com (10.43.161.136) by
- EX13d01UWB001.ant.amazon.com (10.43.161.75) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Fri, 17 Apr 2020 23:02:22 +0000
-Received: from EX13D01UWB002.ant.amazon.com ([10.43.161.136]) by
- EX13d01UWB002.ant.amazon.com ([10.43.161.136]) with mapi id 15.00.1497.006;
- Fri, 17 Apr 2020 23:02:22 +0000
-From:   "Singh, Balbir" <sblbir@amazon.com>
-To:     "tglx@linutronix.de" <tglx@linutronix.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     "keescook@chromium.org" <keescook@chromium.org>,
-        "tony.luck@intel.com" <tony.luck@intel.com>,
-        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
-        "jpoimboe@redhat.com" <jpoimboe@redhat.com>,
+        Fri, 17 Apr 2020 19:07:42 -0400
+Received: from mail-eopbgr1310113.outbound.protection.outlook.com ([40.107.131.113]:32457
+        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726036AbgDQXHl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Apr 2020 19:07:41 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=W8nY51giSedU8SPZdpnGqNlXiPKqflf78OHm06UFenkkR0vx42y5+Tr81E3RoxXB1oXvUSm2MeGpOoD6Osz68/AGNSf++YP80Op9VblQo9V8ubszIWsuaq9p94Og2HRRhig8IVIMcClM/G2Z0tQ4aSgol4x/iMTGSnSt7a6lrZ0Z0WkqV3VDqkjNpEM4rO910hSbc4tVwoYDgkpwI/pvDlVAn3UZGRGItCD/bf1QLkiDebJESyReofhFFSNO11HUitiaeeli447ni4okKTgny3od8YPJqxFEW34S8T/9KwEgdPzePCf6p9JUkBJafK23hf921pHNd5RV+h9zjMLHnQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=DUvK8PhqN5D0DVkkiaZkVPw+btV96IcFhSRz2qAvs18=;
+ b=UP6LioA0AchA8J50zk5Yk2Nv2p6RWxi7b4th6hCOyJlVW9Gkk1+YB/GLtj/wFOav4SS1Vi2syTzyB0JxalmudFwc87KvTglkF90kxWFVTnJviFUqpagQkwySgAHJkVPlhLb7ZkDmnQdIbSbHfjlcs5O/8blTHjIdK4flQYKBOr2wf3l3pinEUAJz26/BbWZBCuGuy6I9tLqSatf2cQxhZtjs5sX4F3zDE2IEplqkKJyi6rmjmF56jZfuyhuA0pVHu6IapZ8B8thkmo+kCBTHGb7Lvxz9J/aHqlZJRaIpbdWaDIMouT9FQNmQgpbo6+W1LAB7O3ttS4nLbGuVGL1JCA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=DUvK8PhqN5D0DVkkiaZkVPw+btV96IcFhSRz2qAvs18=;
+ b=JSL84TXrZ1eeA8ur00EgQMj4BuG35P/XDzVH+A5ko699AmXOcfD78PRHrgq1WeFVcD+yjcAsT62eZa/+YssYLH6cv7UzWXBkfc4FjTM3v19nwF66z+qR3M+j+jZCZJaDlEW+BQqzQvvk6droTbZ6AVCzAYuT+JxBEP51M/HkJu8=
+Received: from HK0P153MB0273.APCP153.PROD.OUTLOOK.COM (2603:1096:203:b2::12)
+ by HK0P153MB0131.APCP153.PROD.OUTLOOK.COM (2603:1096:203:19::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.3; Fri, 17 Apr
+ 2020 23:07:08 +0000
+Received: from HK0P153MB0273.APCP153.PROD.OUTLOOK.COM
+ ([fe80::2d07:e045:9d5b:898a]) by HK0P153MB0273.APCP153.PROD.OUTLOOK.COM
+ ([fe80::2d07:e045:9d5b:898a%2]) with mapi id 15.20.2937.007; Fri, 17 Apr 2020
+ 23:07:08 +0000
+From:   Dexuan Cui <decui@microsoft.com>
+To:     vkuznets <vkuznets@redhat.com>, Wei Liu <wei.liu@kernel.org>
+CC:     "bp@alien8.de" <bp@alien8.de>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        "hpa@zytor.com" <hpa@zytor.com>, KY Srinivasan <kys@microsoft.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
         "x86@kernel.org" <x86@kernel.org>,
-        "dave.hansen@intel.com" <dave.hansen@intel.com>
-Thread-Index: AQHWDYR7nJnYqlkTfUah7gQhUeso0Kh9V0WAgACmMAA=
-Date:   Fri, 17 Apr 2020 23:02:22 +0000
-Message-ID: <12023cc73a6344ed7499e09492a6934c1dfaf044.camel@amazon.com>
-References: <20200408090229.16467-1-sblbir@amazon.com>
-         <20200408090229.16467-4-sblbir@amazon.com>
-         <87sgh2l0q4.fsf@nanos.tec.linutronix.de>
-In-Reply-To: <87sgh2l0q4.fsf@nanos.tec.linutronix.de>
-Accept-Language: en-GB, en-US
+        Michael Kelley <mikelley@microsoft.com>,
+        "wei.liu@kernel.org" <wei.liu@kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+Subject: RE: [PATCH] x86/hyperv: Suspend/resume the VP assist page for
+ hibernation
+Thread-Topic: [PATCH] x86/hyperv: Suspend/resume the VP assist page for
+ hibernation
+Thread-Index: AQHWFLBBfBcacZSsfESBcN86F1My4ah97Qsg
+Date:   Fri, 17 Apr 2020 23:07:08 +0000
+Message-ID: <HK0P153MB02736C41200574F4196283CABFD90@HK0P153MB0273.APCP153.PROD.OUTLOOK.COM>
+References: <1587104999-28927-1-git-send-email-decui@microsoft.com>
+ <87blnqv389.fsf@vitty.brq.redhat.com>
+ <20200417105558.2jkqq2lih6vvoip2@debian>
+ <87wo6etj39.fsf@vitty.brq.redhat.com>
+In-Reply-To: <87wo6etj39.fsf@vitty.brq.redhat.com>
+Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.43.161.52]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <62794DA7E655C54A8F58E120A4C10A62@amazon.com>
-Content-Transfer-Encoding: base64
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=decui@microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-04-17T23:07:06.4996719Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=8b000693-a052-4d43-922c-3da48af3830c;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=decui@microsoft.com; 
+x-originating-ip: [2601:600:a280:7f70:6de6:6792:4d71:47c3]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 1da9ccb9-b1db-4386-34d2-08d7e3240dc9
+x-ms-traffictypediagnostic: HK0P153MB0131:|HK0P153MB0131:|HK0P153MB0131:
+x-ms-exchange-transport-forked: True
+x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+x-microsoft-antispam-prvs: <HK0P153MB01311B038A9A0B0383BFFBE9BFD90@HK0P153MB0131.APCP153.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:2512;
+x-forefront-prvs: 0376ECF4DD
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HK0P153MB0273.APCP153.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(396003)(346002)(376002)(136003)(39860400002)(2906002)(10290500003)(5660300002)(71200400001)(478600001)(186003)(82950400001)(82960400001)(66556008)(54906003)(52536014)(76116006)(4326008)(8990500004)(64756008)(7416002)(66946007)(86362001)(66446008)(8676002)(81156014)(7696005)(6506007)(9686003)(53546011)(15650500001)(33656002)(316002)(55016002)(8936002)(66476007)(110136005);DIR:OUT;SFP:1102;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: MYEIRTPWm7Ao3qcZVwd3f115e90ghDsPjltblx5iA0yHqI4YQ06ymtIrnLEaEVvFmHWKo6iBnO3+Gc3NHnnKBxBSgSe486KXZCyV1kTe1ypdR+ORO2MwrGqo8qKqFTiWIzD49pRuO54DxMv8dVF2/RHplgbfv/GWipUmGpZFp8TyEl+kisNH0G4yWIbQ04xMKaQ2cy4Ci1rygLjyLQvbh/8m5+Mv5o6SHIaRhctsGO7f1psoej8UjQ4hD8yIhW+R/jRfD5rUGB9y+cI8yONXtRm+dNBU70HX3//dS0a7iRMjW/G/YxGp7H4z43baBvJHEr5AxcHU/fZPeo/DjgXdJ4ysAiq08R4wIjJJ8r+fBXmSxVF4k1DNw5MTxq2gPXZ4b+DgURqMHpfkuRFjowuhFKA8nbi5kjo5gDO/UsVeEyX/ad1UwHFMAXbpbqx6JHLs
+x-ms-exchange-antispam-messagedata: ZxZKn3Be7/CVSk/D3qGkxttxBRTQlpkYCohfwY4GV/gTq3fCwTvpYYHJr4eH2D9fkdOHnQkfcEmPIJ0lGNycTeGnol5ENaMhHOtoydA9E/6NwURxV5tTCPRpYOs3RN03xbSwsCxZGsnYTu9qsqU0vV85/0/ILz8c8vTtSTlWlryLN5vR9X+NAl7lEwpWg0csw6ePKv8wm34GcEnnOT5C7HFuhGGszP4evb+D0MfM02EIWdOZqn8hu+nLbSyNYKD52aVa/2xWBa9y5rplHFuvf0x2Hxb9MwugOrqfcAM1rr3n6H+ZpMc43/Ebek3KUu5pKhaS3gOiX22f+yJDiZ85ZDNQAoYUkLx/OrhK7EcI4J0KYFRNdhZlIboa9l2hMIkXvjAh0IsESt8tRto1cscabKVoxp/NTLw4PZ7m9RJRLVeX7JiSGwWkm6S7TGu36Fijanf/3m+q+CwF1ljJTR4t/e7ASqdiAJcVSuIA5BrxdTbNwG/Jqolct7rUiJ6iZ+kH93rLDRDcuskdzOjO6a+alUBnKqhMYjUKCYxe8EKIDDH3jfxcXPABsgtzhtm8l912NTC/AHAmcIFQrNRB8oeoLpiHpUCbdmykV5UaorXT2cBYVCqMAHhXhZ3OkDjH4dCgR1P1TGFR9U+EqI1H1CftM/o4t34EBrXJN8p33PW8U7aMa6FhenZ2+EjEtiT6IiFZKnh4uZx/R06p6N2pM4ga9Q3dzq6zxKDIR3LhynRv1/sx6G2YQoeYBgX+N88ZSN7xAxRLZQPoIM42PadSIq23MducYLhwhL0jZEL4XFLrBbSrVolzW0PPKUKChSq7L4HiOAbqY7mymZYGNxMOlm1ZqwOwGNWGDK8KJOVoEgDtvp0=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1da9ccb9-b1db-4386-34d2-08d7e3240dc9
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Apr 2020 23:07:08.1275
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: qw0WJDYQayeuHoLwMtOC8eVBoNY1g38MXFAeWf629XO0o4Jeszc+Jj5S7MBItuG1nsyHRI8sK9cMWsUDzPPDhA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: HK0P153MB0131
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gRnJpLCAyMDIwLTA0LTE3IGF0IDE1OjA3ICswMjAwLCBUaG9tYXMgR2xlaXhuZXIgd3JvdGU6
-DQo+IA0KPiBCYWxiaXIgU2luZ2ggPHNibGJpckBhbWF6b24uY29tPiB3cml0ZXM6DQo+ID4gDQo+
-ID4gIC8qDQo+ID4gLSAqIFVzZSBiaXQgMCB0byBtYW5nbGUgdGhlIFRJRl9TUEVDX0lCIHN0YXRl
-IGludG8gdGhlIG1tIHBvaW50ZXIgd2hpY2ggaXMNCj4gPiAtICogc3RvcmVkIGluIGNwdV90bGJf
-c3RhdGUubGFzdF91c2VyX21tX2licGIuDQo+ID4gKyAqIEJpdHMgdG8gbWFuZ2xlIHRoZSBUSUZf
-U1BFQ19JQiBzdGF0ZSBpbnRvIHRoZSBtbSBwb2ludGVyIHdoaWNoIGlzDQo+ID4gKyAqIHN0b3Jl
-ZCBpbiBjcHVfdGxiX3N0YXRlLmxhc3RfdXNlcl9tbV9zcGVjLg0KPiA+ICAgKi8NCj4gPiAgI2Rl
-ZmluZSBMQVNUX1VTRVJfTU1fSUJQQiAgICAweDFVTA0KPiA+ICsjZGVmaW5lIExBU1RfVVNFUl9N
-TV9TUEVDX01BU0sgICAgICAgKExBU1RfVVNFUl9NTV9JQlBCKQ0KPiA+IA0KPiA+ICAgICAgIC8q
-IFJlaW5pdGlhbGl6ZSB0bGJzdGF0ZS4gKi8NCj4gPiAtICAgICB0aGlzX2NwdV93cml0ZShjcHVf
-dGxic3RhdGUubGFzdF91c2VyX21tX2licGIsIExBU1RfVVNFUl9NTV9JQlBCKTsNCj4gPiArICAg
-ICB0aGlzX2NwdV93cml0ZShjcHVfdGxic3RhdGUubGFzdF91c2VyX21tX3NwZWMsIExBU1RfVVNF
-Ul9NTV9JQlBCKTsNCj4gDQo+IFNob3VsZG4ndCB0aGF0IGJlIExBU1RfVVNFUl9NTV9NQVNLPw0K
-PiANCj4gDQoNCk5vLCB0aGF0IGNyYXNoZXMgdGhlIHN5c3RlbSBmb3IgU1cgZmx1c2hlcywgYmVj
-YXVzZSBpdCB0cmllcyB0byBmbHVzaCB0aGUgTDFEDQp2aWEgdGhlIHNvZnR3YXJlIGxvb3AgYW5k
-IGVhcmx5IGVub3VnaCB3ZSBkb24ndCBoYXZlIHRoZSBsMWRfZmx1c2hfcGFnZXMNCmFsbG9jYXRl
-ZC4gTEFTVF9VU0VSX01NX01BU0sgaGFzIExBU1RfVVNFUl9NTV9GTFVTSF9MMUQgYml0IHNldC4N
-Cg0KQmFsYmlyIFNpbmdoLg0K
+> From: Vitaly Kuznetsov <vkuznets@redhat.com>
+> Sent: Friday, April 17, 2020 5:04 AM
+> To: Wei Liu <wei.liu@kernel.org>
+>=20
+> Wei Liu <wei.liu@kernel.org> writes:
+>=20
+> > On Fri, Apr 17, 2020 at 12:03:18PM +0200, Vitaly Kuznetsov wrote:
+> >> Dexuan Cui <decui@microsoft.com> writes:
+> >>
+> >> > Unlike the other CPUs, CPU0 is never offlined during hibernation. So=
+ in the
+> >> > resume path, the "new" kernel's VP assist page is not suspended (i.e=
+.
+> >> > disabled), and later when we jump to the "old" kernel, the page is n=
+ot
+> >> > properly re-enabled for CPU0 with the allocated page from the old ke=
+rnel.
+> >> >
+> >> > So far, the VP assist page is only used by hv_apic_eoi_write().
+> >>
+> >> No, not only for that ('git grep hv_get_vp_assist_page')
+
+Sorry, I unintentionally ignored that, as I have few knowledge about the
+optimization for nested virtualization. :-)
+
+> >> KVM on Hyper-V also needs VP assist page to use Enlightened VMCS. In
+> >> particular, Enlightened VMPTR is written there.
+> >>
+> >> This makes me wonder: how does hibernation work with KVM in case we
+> use
+> >> Enlightened VMCS and we have VMs running? We need to make sure VP
+> Assist
+> >> page content is preserved.
+> >
+> > The page itself is preserved, isn't it?
+> >
+>=20
+> Right, unlike hyperv_pcpu_input_arg is is not freed.
+>=20
+> > hv_cpu_die never frees the vp_assit page. It merely disables it.
+> > hv_cpu_init only allocates a new page if necessary.
+>=20
+> I'm not really sure that Hyper-V will like us when we disable VP Assist
+> page and have an active L2 guest using Enlightened VMCS, who knows what
+> it caches and when. I'll try to at least test if/how it works.
+>=20
+> This all is not really related to Dexuan's patch)
+> --
+> Vitaly
+
+It looks you imply that: if there is no active L2 guests, it should be safe=
+ to=20
+disable/reenable the assist page upon hibernation?
+
+Can you please write a patch for KVM (when KVM runs on Hyper-V) to abort
+the hibernation request if there is any active L2 guest? The pm_notifier ca=
+n=20
+be used for this.
+
+Thanks,
+-- Dexuan
