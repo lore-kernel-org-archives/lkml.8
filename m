@@ -6,69 +6,63 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EFE4C352BE
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 12:53:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A299FC2D0EF
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 12:57:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 782DE2083E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 12:53:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AFE32137B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 12:57:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729776AbgDQMxz (ORCPT
+        id S1729893AbgDQM5Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 08:53:55 -0400
-Received: from mga04.intel.com ([192.55.52.120]:51413 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729034AbgDQMxx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 08:53:53 -0400
-IronPort-SDR: Y/UTyZzJekMNpK4B9aEkLXm8r6MrNc+tolooeNYnMMbMY+n7Hvcol9ZZ/iMIOjx/rIO+246SEe
- 7oZaIw0HIqCQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2020 05:53:50 -0700
-IronPort-SDR: IF9FvVYYRsALomR7JBJYD4OrD7z1TD+jkZkjtMbWkbL2Y+K9fLy7iBbf/C7fbLqZdQ4wR8Ku3+
- Jv1Nnuhi9vNg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,395,1580803200"; 
-   d="scan'208";a="257569830"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga006.jf.intel.com with ESMTP; 17 Apr 2020 05:53:47 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jPQVC-001VLK-J5; Fri, 17 Apr 2020 15:53:50 +0300
-Date:   Fri, 17 Apr 2020 15:53:50 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     rishi gupta <gupt21@gmail.com>
-Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Greg KH <gregkh@linuxfoundation.org>, jslaby@suse.com,
-        robh+dt@kernel.org, corbet@lwn.net, devicetree@vger.kernel.org,
-        linux-serial@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>,
-        linux-doc@vger.kernel.org
-Subject: Re: [PATCH v3 4/4] tty: documentation: document how to use ttyvs
- driver
-Message-ID: <20200417125350.GW185537@smile.fi.intel.com>
-References: <1587012974-21219-1-git-send-email-gupt21@gmail.com>
- <1587012974-21219-4-git-send-email-gupt21@gmail.com>
- <20200416092441.4216ffe3@coco.lan>
- <CALUj-gtwKiV_CQYLkncX0v2fNNAyfTfzut+BgXmgzKLW7tMLOw@mail.gmail.com>
+        Fri, 17 Apr 2020 08:57:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49106 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729034AbgDQM5Q (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Apr 2020 08:57:16 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E586C061A0C
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 05:57:16 -0700 (PDT)
+Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jPQYI-0008LQ-T0; Fri, 17 Apr 2020 14:57:03 +0200
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id 871A1104096; Fri, 17 Apr 2020 14:57:02 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Balbir Singh <sblbir@amazon.com>, linux-kernel@vger.kernel.org
+Cc:     jpoimboe@redhat.com, tony.luck@intel.com, keescook@chromium.org,
+        benh@kernel.crashing.org, x86@kernel.org, dave.hansen@intel.com,
+        Balbir Singh <sblbir@amazon.com>
+Subject: Re: [PATCH v3 1/5] arch/x86/kvm: Refactor l1d flush lifecycle management
+In-Reply-To: <20200408090229.16467-2-sblbir@amazon.com>
+References: <20200408090229.16467-1-sblbir@amazon.com> <20200408090229.16467-2-sblbir@amazon.com>
+Date:   Fri, 17 Apr 2020 14:57:02 +0200
+Message-ID: <871rommfs1.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CALUj-gtwKiV_CQYLkncX0v2fNNAyfTfzut+BgXmgzKLW7tMLOw@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 17, 2020 at 10:46:40AM +0530, rishi gupta wrote:
-> Thanks Mauro and Randy, I will spin v4 with above suggestions soon.
+Balbir Singh <sblbir@amazon.com> writes:
+>  #include <asm-generic/cacheflush.h>
+>  #include <asm/special_insns.h>
+>  
+> +#define L1D_CACHE_ORDER 4
 
-Give some more time to review actual code. It's 1000 LOCs!
-I suggest wait at least few days.
+Newline between constants and declarations please
 
+>  void clflush_cache_range(void *addr, unsigned int size);
+> +void *alloc_l1d_flush_pages(void);
+> +void cleanup_l1d_flush_pages(void *l1d_flush_pages);
 
--- 
-With Best Regards,
-Andy Shevchenko
+Can we please have a consistent name space prefix?
 
+l1d_flush_*()
 
+Thanks,
+
+        tglx
