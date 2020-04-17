@@ -2,135 +2,115 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-5.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F23BFC38A29
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 22:19:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEBA5C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 22:22:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D19BE221E9
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 22:19:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4277221EA
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 22:22:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K8PuDkEL"
+	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="H3DfPMz9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728730AbgDQWTl (ORCPT
+        id S1728644AbgDQWWN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 18:19:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51754 "EHLO
+        Fri, 17 Apr 2020 18:22:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52308 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728470AbgDQWTk (ORCPT
+        by vger.kernel.org with ESMTP id S1728470AbgDQWWM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 18:19:40 -0400
-Received: from mail-oi1-x243.google.com (mail-oi1-x243.google.com [IPv6:2607:f8b0:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25E28C061A0C;
-        Fri, 17 Apr 2020 15:19:39 -0700 (PDT)
-Received: by mail-oi1-x243.google.com with SMTP id o25so3415553oic.11;
-        Fri, 17 Apr 2020 15:19:39 -0700 (PDT)
+        Fri, 17 Apr 2020 18:22:12 -0400
+Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89F26C061A0C
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 15:22:11 -0700 (PDT)
+Received: by mail-ed1-x544.google.com with SMTP id a43so2634029edf.6
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 15:22:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=yW1rTc/fkIGCNKy5NNRXoxwqN+9iD/xtD2sA5y2Ygts=;
-        b=K8PuDkELJoZhAcizFoboOzhRmWXkhFdTSZaaMf8sX6UlPapG9poyvyftZH6GH5eJCl
-         pgq+BEg7YAwtqtxmzTjsx2YXgOt84mX0I3dD7OjmlrWCrqXuYbTGgL1hkgtpqp7jTGzY
-         4N9rM4gjl0XTPhPi/Y7W9GptFFwxTqGfEZh2ZXSWkXhXhQokcrZqxggzEuLQmxCMzTMG
-         k0bf2AcMoCs5xOpOXJLBB5Vmnn/UMKedTa7CYJLBZma7Wt+nXgBago3gwG3GaiFboU+k
-         S18t78HwCnZVoo3FixR3gUFkhRsHNXkQ2Mqzi3XA5zIVajNq+8h5SjnmqW2PPTEt9HGO
-         Sqdw==
+        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=w/f6Gl9VweQh9zLrWdi52uB3NRZA6g/9Wq4OQPDCCok=;
+        b=H3DfPMz9QpW/RVs87ATxAd0SsMbtWuVycfBc1ONf/oUQsagHrI9Ke4p+W5O7Gk7ehP
+         /4vhZItQbyiiB+ZS1/PiPBFH+ll43T9adO+5wKFGdXabapt/1a49KshpnQDTilurOcnK
+         +HgG7JSS7DHU62PKRqDiT9WdfeBrO5U8uy/sZRMvebc6erkJmjWqejiPzlne/2Vlm+FI
+         pQ9l/UJKmKKSJ3uWMEuql9J6KxKK1xwY3F4/VXODWIcouK5uG1Vc3isY3JOIoue/+KyZ
+         jLaLsrmWqfe60UaEdzerikzKxI+Ou4QgvvkpFDu1KsRFQtSow+A+sUZ9l32zClua8+Pw
+         +vbQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=yW1rTc/fkIGCNKy5NNRXoxwqN+9iD/xtD2sA5y2Ygts=;
-        b=LeWO6X8SPBXkuRuWybBNBh8MqK2YGMRAUIn2iCwyNiEy04nohtZDi4ISkxOynyyJ1w
-         FR+vhasgNFaiufEdBlTgabWTBwFaYV8MQr1MzoI1nBrhMg/rb54BBMHXlGzTQh+EyL1h
-         M5g8bu85UPmUI0Lv1QpAz1pO5I4Go8Lygenv5JfiGg6L69yH97pqes5FqzzD+zvhPBxh
-         i83OKj/FiXLw8X/SUnn5ruIV5RO2fuhpoAO9IG5l+jQAdgKcU7lxJ2eZZi1LGEwSA9Iu
-         NipTPdjnq3X+9d0WpF4k4O6+cyI2PP0tzSCQdDvJ2QcxAOdSi4ovstlN0x210iwXX3IB
-         e6lQ==
-X-Gm-Message-State: AGi0PuZAOai1oWWQaDqakH6NScoUkOHWaBQe78lpjW6gVA9bLlE13JAR
-        96s9LHRe4ZOcRgfMWOTAKJ4=
-X-Google-Smtp-Source: APiQypJROud2ynmS8ZZ+1tLghEUJwO0lE5GiqY6V2tQK0kHfEreSrGenaDr/D5lDg0PuGUoH5k9CLg==
-X-Received: by 2002:aca:3e8a:: with SMTP id l132mr223511oia.151.1587161978435;
-        Fri, 17 Apr 2020 15:19:38 -0700 (PDT)
-Received: from ubuntu-s3-xlarge-x86 ([2604:1380:4111:8b00::3])
-        by smtp.gmail.com with ESMTPSA id v14sm141733ooe.10.2020.04.17.15.19.37
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 17 Apr 2020 15:19:37 -0700 (PDT)
-Date:   Fri, 17 Apr 2020 15:19:36 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     Jeff Dike <jdike@addtoit.com>, Richard Weinberger <richard@nod.at>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-        linux-um@lists.infradead.org, linux-kbuild@vger.kernel.org,
-        Alex Dewar <alex.dewar@gmx.co.uk>,
-        Erel Geron <erelx.geron@intel.com>,
-        Johannes Berg <johannes.berg@intel.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] um: do not evaluate compiler's library path when cleaning
-Message-ID: <20200417221936.GA13833@ubuntu-s3-xlarge-x86>
-References: <20200417180455.1174340-1-masahiroy@kernel.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=w/f6Gl9VweQh9zLrWdi52uB3NRZA6g/9Wq4OQPDCCok=;
+        b=odJ6qRIFtCDeu+Cbl4MwSsqJDrYG9rQO5u6uShImmhQ+QgEACqDzp4ymKJcRGnFbgc
+         QcF9UALOSX/okEyTmHi3h7iMyHpwuudZmNzWDGMoitRsEOyCyQBajxqOwiUzsaEGFzdH
+         HyAoPXFq9M+PtkLNZEY5PcZoGjwV9glDGSImOSYwiKFuQCONnl2D9+Xk/jDblP+bZCtm
+         EWjeHeFppVjZIOJP5xovjq1jDyLV/oQn6TAGnDVSAr5AzRR9Qav0+9vclFb8p1HJ0hQ6
+         QHVMPGpS672BzXUS20pT/43Gx0Z0V7nRx/ElUKlZ7mEPR3/XyuHD9bRCYGL8LVs/8xNd
+         AOBQ==
+X-Gm-Message-State: AGi0Pubh48DqXkcK8axXdnQHhhek6B7NR2UXUeRA0WRHGY/Sht2Hgdev
+        Hs/QQDyLuF/teJzVAK74BIlNWEHpEdE6XW5pToN2
+X-Google-Smtp-Source: APiQypJsbxCVHQN8UqEDhRhDcXP36MYF6Zp4aTeC61C3FS6fTD07E25L1PXAFJR2/Y6qCsXxV7ziDl/GtGSB95wAMiE=
+X-Received: by 2002:a05:6402:1215:: with SMTP id c21mr5347669edw.128.1587162129901;
+ Fri, 17 Apr 2020 15:22:09 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200417180455.1174340-1-masahiroy@kernel.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200402141319.28714-1-vdronov@redhat.com> <2d7174b1-115f-b86f-8054-a5caef4b69ff@schaufler-ca.com>
+ <1800109401.20260657.1585845081366.JavaMail.zimbra@redhat.com> <20200409215056.qa5uso6rr57y4joo@madcap2.tricolour.ca>
+In-Reply-To: <20200409215056.qa5uso6rr57y4joo@madcap2.tricolour.ca>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Fri, 17 Apr 2020 18:21:59 -0400
+Message-ID: <CAHC9VhRG-W5ni6jPbtDFbZ=bgSEaoweMrf0ZMJJi_3-sC+u4QQ@mail.gmail.com>
+Subject: Re: [PATCH ghak96] audit: set cwd in audit context for file-related
+ LSM audit records
+To:     Richard Guy Briggs <rgb@redhat.com>
+Cc:     Vladis Dronov <vdronov@redhat.com>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Eric Paris <eparis@redhat.com>, linux-audit@redhat.com,
+        James Morris <jmorris@namei.org>,
+        "Serge E . Hallyn" <serge@hallyn.com>,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Apr 18, 2020 at 03:04:55AM +0900, Masahiro Yamada wrote:
-> Since commit a83e4ca26af8 ("kbuild: remove cc-option switch from
-> -Wframe-larger-than="), 'make ARCH=um clean' emits an error message
-> as follows:
-> 
->   $ make ARCH=um clean
->   gcc: error: missing argument to '-Wframe-larger-than='
-> 
-> We do not care compiler flags when cleaning.
-> 
-> Use the '=' operator for lazy expansion because we do not use
-> LDFLAGS_pcap.o or LDFLAGS_vde.o when cleaning.
-> 
-> While I was here, I removed the redundant -r option because it
-> already exists in the recipe.
-> 
-> Fixes: a83e4ca26af8 ("kbuild: remove cc-option switch from -Wframe-larger-than=")
-> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-> ---
-> 
->  arch/um/drivers/Makefile | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/um/drivers/Makefile b/arch/um/drivers/Makefile
-> index a290821e355c..2a249f619467 100644
-> --- a/arch/um/drivers/Makefile
-> +++ b/arch/um/drivers/Makefile
-> @@ -18,9 +18,9 @@ ubd-objs := ubd_kern.o ubd_user.o
->  port-objs := port_kern.o port_user.o
->  harddog-objs := harddog_kern.o harddog_user.o
->  
-> -LDFLAGS_pcap.o := -r $(shell $(CC) $(KBUILD_CFLAGS) -print-file-name=libpcap.a)
-> +LDFLAGS_pcap.o = $(shell $(CC) $(KBUILD_CFLAGS) -print-file-name=libpcap.a)
->  
-> -LDFLAGS_vde.o := -r $(shell $(CC) $(CFLAGS) -print-file-name=libvdeplug.a)
-> +LDFLAGS_vde.o = $(shell $(CC) $(CFLAGS) -print-file-name=libvdeplug.a)
->  
->  targets := pcap_kern.o pcap_user.o vde_kern.o vde_user.o
->  
-> -- 
-> 2.25.1
-> 
+On Thu, Apr 9, 2020 at 5:51 PM Richard Guy Briggs <rgb@redhat.com> wrote:
+> On 2020-04-02 12:31, Vladis Dronov wrote:
+> > Hello, Casey, all,
+> >
+> > ----- Original Message -----
+> > > From: "Casey Schaufler" <casey@schaufler-ca.com>
+> > > Subject: Re: [PATCH ghak96] audit: set cwd in audit context for file-related LSM audit records
+> > >
+> > > On 4/2/2020 7:13 AM, Vladis Dronov wrote:
+> > > > Set a current working directory in an audit context for the following
+> > > > record
+> > > > types in dump_common_audit_data(): LSM_AUDIT_DATA_PATH,
+> > > > LSM_AUDIT_DATA_FILE,
+> > > > LSM_AUDIT_DATA_IOCTL_OP, LSM_AUDIT_DATA_DENTRY, LSM_AUDIT_DATA_INODE so a
+> > > > separate CWD record is emitted later.
+> > > >
+> > > > Link: https://github.com/linux-audit/audit-kernel/issues/96
+> > >
+> > > I don't have a problem with the patch, but it sure would be nice
+> > > if you explained why these events "could use a CWD record".
+> >
+> > (adding Richard Guy Briggs <rgb@redhat.com> which I should have been done earlier)
+> >
+> > I would agree, adding "cwd=" field in the LSM record itself is simpler to me.
+>
+> We already have a CWD record to record this information.  It usually
+> accompanies an AUDIT_PATH record, but the intent is that it accompanies
+> any event that has filesystem pathnames in path= or name= fields in
+> records to help understand the command's context relative to the
+> filesystem.
 
-I tested building pcap.o both before and after this change, no changes
-there.
+Yes, I think the right thing to do here is simply generate a CWD
+record in these cases.
 
-I do see the clean error fixed.
-
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
-Tested-by: Nathan Chancellor <natechancellor@gmail.com> [build]
+-- 
+paul moore
+www.paul-moore.com
