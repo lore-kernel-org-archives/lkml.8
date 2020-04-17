@@ -2,178 +2,112 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-1.2 required=3.0 tests=DATE_IN_PAST_03_06,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DB3AC352BE
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 06:34:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56078C2BB55
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 06:34:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5D5D2221EA
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 06:34:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32D932063A
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 06:34:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="QJWl4WcT"
+	dkim=pass (2048-bit key) header.d=jonmasters-org.20150623.gappssmtp.com header.i=@jonmasters-org.20150623.gappssmtp.com header.b="olbb2NiO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728022AbgDQGeT (ORCPT
+        id S1728043AbgDQGe0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 02:34:19 -0400
-Received: from ssl.serverraum.org ([176.9.125.105]:42453 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727912AbgDQGeS (ORCPT
+        Fri, 17 Apr 2020 02:34:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45982 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728028AbgDQGeZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 02:34:18 -0400
-Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id 062C222EEB;
-        Fri, 17 Apr 2020 08:34:09 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1587105252;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=yRofvrT7uJxuqc53iK0glkaODL7zqW5wwpHXjFjKcgw=;
-        b=QJWl4WcToI73JqjXrubzRp0qLIcPIjk2ilLyWMLcnLKpiGqrfWON6uL1z8JhJq7r5UUkyF
-        TKqmBRGjCEejYmQaC3M7NJhp8Ji3md43YmGOp9YWBADR/RoIApO6RHynSWNUvMQUz3QA90
-        FlDbwzSR3GqZVaXjssTh33Iz8CDafW4=
+        Fri, 17 Apr 2020 02:34:25 -0400
+Received: from mail-pl1-x62d.google.com (mail-pl1-x62d.google.com [IPv6:2607:f8b0:4864:20::62d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D37AC061A0C
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 23:34:25 -0700 (PDT)
+Received: by mail-pl1-x62d.google.com with SMTP id ay1so624498plb.0
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 23:34:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=jonmasters-org.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:organization:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=AGtrib0SEzkR/i2V3s4NGjpmeVSFBI11mJRr1zQWoZ0=;
+        b=olbb2NiOwt83kdgpCRfGruCS9PsmIXJiG7v/4yuq2xN+fK5WmfIqyEsNMhGLmgFS6H
+         T6v8kzROEUmkQxcbYbsDIRgPKDEpeI7yIeZdsOObmTq94npTByiAYZVSH7bJ564in3xJ
+         lLysV9TQFWgvbCXhBDBufX6NdXmdbgDf8vlhAYtKDcz4jRkaw7ya2/cd3KUgVq6ftnLx
+         +PoC4yWKRe7YaqhlcFWKBbtbmB6ONuuajtXm4hCL+FNo1SNDtatWveDr5BoK/XEST1bl
+         sl7HPDpg3b9xOHqKWoK549yrBv00rzIjPzHoKUdW3buvLU96QMxx+MfUtdeOd+7Zv3kD
+         IDBA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:organization
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=AGtrib0SEzkR/i2V3s4NGjpmeVSFBI11mJRr1zQWoZ0=;
+        b=sVo79GbjprDhMcRXlM99Pww+akKOXKtf+tq3hd04ocuOe3bJiyX3ncJj9mh3kSbiJh
+         YZppjNUJQyvX12YJcl1prccDlqI8zvlMXtL9ShOEzog87wCgMG/bWFuUnLsOCGRcnJ+a
+         dS9G9KImYlX6kkFLi4QdQvW1LNiOcsYDsCbyadHlY2bvaGbLtdq8Bfi2bV8iVmDDWsK3
+         uFVFWbHm+py+K/49pVLmI93VqSOMPd7OIloizUl5/HuHO+dQDPixKovoQVjB5K+zhpxD
+         Izjvyx1asUwNy8DGOe3h4pQb4UHfgy/RxjCkYqyUd0sQZu5gYX6siSagOI11HCUwX8tv
+         4cpw==
+X-Gm-Message-State: AGi0PuYxVqvD+Dt0J+RZAyMiOHdwtTfXPC/Sx9OvzIQ4eVGY2YfVSaIZ
+        8dW6c2NJlEMMyz4l6Sl/lQDqVYkPORc=
+X-Google-Smtp-Source: APiQypIcuKO7DdOeAFhZLcOccIk4KE+dqVYWfOtGK7UqgbvAcMxBVzSjJZDCDStvQmzF+njQAdYZhg==
+X-Received: by 2002:a17:90a:a402:: with SMTP id y2mr2653604pjp.55.1587105264879;
+        Thu, 16 Apr 2020 23:34:24 -0700 (PDT)
+Received: from independence.bos.jonmasters.org (Boston.jonmasters.org. [50.195.43.97])
+        by smtp.gmail.com with ESMTPSA id o125sm17063631pgo.74.2020.04.16.23.34.23
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 16 Apr 2020 23:34:24 -0700 (PDT)
+Subject: Re: SPCR and default serial port
+To:     "Herrenschmidt, Benjamin" <benh@amazon.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc:     "x86@kernel.org" <x86@kernel.org>
+References: <364e0ff5da091ed7faa0232302b6181ac30000de.camel@amazon.com>
+From:   Jon Masters <jcm@jonmasters.org>
+Organization: World Organi{s,z}ation of Broken Dreams
+Message-ID: <2e2fe044-251d-eca9-3692-8f3182db3905@jonmasters.org>
+Date:   Thu, 16 Apr 2020 23:29:41 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+In-Reply-To: <364e0ff5da091ed7faa0232302b6181ac30000de.camel@amazon.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-Date:   Fri, 17 Apr 2020 08:34:09 +0200
-From:   Michael Walle <michael@walle.cc>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, linux-kernel@vger.kernel.org,
-        linux-hwmon@vger.kernel.org, linux-pwm@vger.kernel.org,
-        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Lee Jones <lee.jones@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v2 10/16] gpio: add a reusable generic gpio_chip using
- regmap
-In-Reply-To: <CACRpkdaqgHhPwdKdUai4zvi21qR-cSQUKyzZ3SyfWBLPN9us3w@mail.gmail.com>
-References: <20200402203656.27047-1-michael@walle.cc>
- <20200402203656.27047-11-michael@walle.cc>
- <CACRpkdaqgHhPwdKdUai4zvi21qR-cSQUKyzZ3SyfWBLPN9us3w@mail.gmail.com>
-Message-ID: <f82706a8596436d13642c49e26233133@walle.cc>
-X-Sender: michael@walle.cc
-User-Agent: Roundcube Webmail/1.3.10
-X-Spamd-Bar: +
-X-Rspamd-Server: web
-X-Rspamd-Queue-Id: 062C222EEB
-X-Spamd-Result: default: False [1.40 / 15.00];
-         FROM_HAS_DN(0.00)[];
-         TO_DN_SOME(0.00)[];
-         FREEMAIL_ENVRCPT(0.00)[gmail.com];
-         TO_MATCH_ENVRCPT_ALL(0.00)[];
-         TAGGED_RCPT(0.00)[dt];
-         MIME_GOOD(-0.10)[text/plain];
-         DKIM_SIGNED(0.00)[];
-         RCPT_COUNT_TWELVE(0.00)[23];
-         NEURAL_HAM(-0.00)[-0.393];
-         RCVD_COUNT_ZERO(0.00)[0];
-         FROM_EQ_ENVFROM(0.00)[];
-         MIME_TRACE(0.00)[0:+];
-         FREEMAIL_CC(0.00)[vger.kernel.org,lists.infradead.org,baylibre.com,kernel.org,suse.com,roeck-us.net,linaro.org,gmail.com,pengutronix.de,linux-watchdog.org,nxp.com,linutronix.de,lakedaemon.net,linuxfoundation.org];
-         MID_RHS_MATCH_FROM(0.00)[];
-         SUSPICIOUS_RECIPS(1.50)[]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On 4/15/20 2:04 AM, Herrenschmidt, Benjamin wrote:
+> Hi !
+> 
+> Today, arm64 allows the serial port specified in ACPI SPCR table to be
+> selected as a default console, but x86 doesn't (second argument to
+> acpi_parse_spcr).
+> 
+> I understand while we might have been worried of breaking existing
+> setups back then but should we re-think this, maybe via a CONFIG option
+> ?
+> 
+> It makes a lot of sense to have firmware tell us which of the
+> potentially many serial port in a system is our active console, along
+> with its configuration...
+> 
+> This also shouldn't cause problem on systems that already specify a
+> console explicitly on the command line.
+> 
+> Any opinion ?
 
-Am 2020-04-16 11:27, schrieb Linus Walleij:
-> On Thu, Apr 2, 2020 at 10:37 PM Michael Walle <michael@walle.cc> wrote:
-> 
->> There are quite a lot simple GPIO controller which are using regmap to
->> access the hardware. This driver tries to be a base to unify existing
->> code into one place. This won't cover everything but it should be a 
->> good
->> starting point.
->> 
->> It does not implement its own irq_chip because there is already a
->> generic one for regmap based devices. Instead, the irq_chip will be
->> instanciated in the parent driver and its irq domain will be associate
->> to this driver.
->> 
->> For now it consists of the usual registers, like set (and an optional
->> clear) data register, an input register and direction registers.
->> Out-of-the-box, it supports consecutive register mappings and mappings
->> where the registers have gaps between them with a linear mapping 
->> between
->> GPIO offset and bit position. For weirder mappings the user can 
->> register
->> its own .xlate().
->> 
->> Signed-off-by: Michael Walle <michael@walle.cc>
-> 
-> Overall I really like this driver and I think we should merge is as 
-> soon
-> as it is in reasonable shape and then improve on top so we can start
-> migrating drivers to it.
-> 
->> +static int gpio_regmap_to_irq(struct gpio_chip *chip, unsigned int 
->> offset)
->> +{
->> +       struct gpio_regmap_data *data = gpiochip_get_data(chip);
->> +       struct gpio_regmap *gpio = data->gpio;
->> +
->> +       /* the user might have its own .to_irq callback */
->> +       if (gpio->to_irq)
->> +               return gpio->to_irq(gpio, offset);
->> +
->> +       return irq_create_mapping(gpio->irq_domain, offset);
-> 
-> I think that should at least be irq_find_mapping(), the mapping should
-> definately not be created by the .to_irq() callback since that is just
-> a convenience function.
+I think it would be /great/ if x86 followed Arm. A config option would 
+allow it to be easily ignored by those who don't want it, but you'll 
+want to get data from e.g. distros on how many systems have weird BIOSes 
+that provide a non-useful table today.
 
-what do you mean by conenience function? are there other ways? if you 
-use
-irq_find_mapping() who will create the mappings? most gpio drivers use a
-similar function like gpio_regmap_to_irq().
+Jon.
 
-> 
->> +       if (gpio->irq_domain)
->> +               chip->to_irq = gpio_regmap_to_irq;
-> 
-> I don't know about this.
-> (...)
->> + * @irq_domain:                (Optional) IRQ domain if the 
->> controller is
->> + *                     interrupt-capable
-> (...)
->> +       struct irq_domain *irq_domain;
-> 
-> I don't think this is a good storage place for the irqdomain, we 
-> already have
-> gpio_irq_chip inside gpio_chip and that has an irqdomain, we should
-> strive to reuse that infrastructure also for regmap GPIO I think, for 
-> now
-> I would just leave .to_irq() out of this and let the driver deal with 
-> any
-> irqs.
-
-How would a driver attach the to_irq callback then? At the moment, the
-gpio_regmap doesn't expose the gpio_chip. So either we have to do that 
-or
-the config still have to have a .to_irq property.
-
--michael
+-- 
+Computer Architect
