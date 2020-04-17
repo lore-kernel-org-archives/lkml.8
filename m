@@ -2,247 +2,201 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5938C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 22:24:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11F1FC38A29
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 22:26:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9D02F221EA
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 22:24:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Spf98Qg5"
+	by mail.kernel.org (Postfix) with ESMTP id E6FEA2223D
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 22:26:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728859AbgDQWYe (ORCPT
+        id S1728898AbgDQW0S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 18:24:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52774 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728496AbgDQWYe (ORCPT
+        Fri, 17 Apr 2020 18:26:18 -0400
+Received: from out02.mta.xmission.com ([166.70.13.232]:51506 "EHLO
+        out02.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728470AbgDQW0R (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 18:24:34 -0400
-Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B411C061A0C
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 15:24:33 -0700 (PDT)
-Received: by mail-io1-xd41.google.com with SMTP id y17so4071375iow.9
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 15:24:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9l7ReVXML5iC1lUXKjwrOgZKOV8ZzgKkL7y7FQ7TRC8=;
-        b=Spf98Qg5qFQCzvnqgZgRv9fmE2Syrwc7Gqbh4i98GT3U8W9nhHwgX5Fcoc//T54NMd
-         0uY892q8flmpGYSSbSgi5bH6fe3fDZ7klazcneNNR3pbC0X5zgLLwFCm4VfMXd5hZgos
-         +8SamfzzVfSj/m1igwp6sMozIYa9LWyURM0yc30+WMlTJP2dN2pZHnBWatc+oBu6HXyN
-         Eqfu5VFV6290Xm9etLyap+97UVMongeQ90ZfalwAGBQqKt0xKzYuiKRBxP5cBP4YiCx2
-         0LK61hzM0pcDfDj2SKcLvZxWrT+LWLhyCIUQUrftJOz0ZCi2pf8748pbsVL+kCKxU51d
-         9oXQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9l7ReVXML5iC1lUXKjwrOgZKOV8ZzgKkL7y7FQ7TRC8=;
-        b=HXNpjuY8ubEBi3MgqHwIma+6Gwz+C9smlnI1v+A7WThrG4ZhnyqJnMKZjzrr7WY4mG
-         6oPNPznNffo+EQ30yg1GuQyioX+JTmoeYg2HLYjiNfQHmVvH04B7Wfb5js8AVKy2sUzu
-         iSi2Akar2/gecN4k3e12y7RmWi+x80fOxlaRzlrgvDBuLPKn/S91rzHWeDGS30fYCG3e
-         MZ/U//K8be4zd7oLSdjxxUKiz8L3R2Fl/p1ofa8X1HSorOr2hxR9cBwnMD2RKcBXrwB/
-         wtH1CxVleThIgRM9N3YdnZv0K0bzOnecscJOxawVdaf/M6K4cwgBWpG1leOdbQ4DHSgN
-         7PZQ==
-X-Gm-Message-State: AGi0PuYPCRBw23enqiYnz74nbaOVC9Y1mJiJByjbp1+A3yEbkb8LhyzY
-        naJKbasFq2VIydUoY3K9z2qCDnTf4CoTa2xM3YJjSw==
-X-Google-Smtp-Source: APiQypL6PL6+MLLIpNc0SmvY24c0Q4ez5CT8xBF/CqHav+Y7obUoOyXH/xedbXEuqARaRaw8L9lptDwOz6Nj/dxncHY=
-X-Received: by 2002:a6b:8bd2:: with SMTP id n201mr5392033iod.131.1587162272197;
- Fri, 17 Apr 2020 15:24:32 -0700 (PDT)
+        Fri, 17 Apr 2020 18:26:17 -0400
+Received: from in01.mta.xmission.com ([166.70.13.51])
+        by out02.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.90_1)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jPZR5-0003bo-Sg; Fri, 17 Apr 2020 16:26:12 -0600
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jPZR4-0002qC-5z; Fri, 17 Apr 2020 16:26:11 -0600
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     Paul Moore <paul@paul-moore.com>
+Cc:     Richard Guy Briggs <rgb@redhat.com>, nhorman@tuxdriver.com,
+        linux-api@vger.kernel.org, containers@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>, dhowells@redhat.com,
+        linux-audit@redhat.com, netfilter-devel@vger.kernel.org,
+        simo@redhat.com, netdev@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, Eric Paris <eparis@parisplace.org>,
+        mpatel@redhat.com, Serge Hallyn <serge@hallyn.com>
+References: <20200318215550.es4stkjwnefrfen2@madcap2.tricolour.ca>
+        <CAHC9VhSdDDP7Ec-w61NhGxZG5ZiekmrBCAg=Y=VJvEZcgQh46g@mail.gmail.com>
+        <20200319220249.jyr6xmwvflya5mks@madcap2.tricolour.ca>
+        <CAHC9VhR84aN72yNB_j61zZgrQV1y6yvrBLNY7jp7BqQiEDL+cw@mail.gmail.com>
+        <20200324210152.5uydf3zqi3dwshfu@madcap2.tricolour.ca>
+        <CAHC9VhTQUnVhoN3JXTAQ7ti+nNLfGNVXhT6D-GYJRSpJHCwDRg@mail.gmail.com>
+        <20200330134705.jlrkoiqpgjh3rvoh@madcap2.tricolour.ca>
+        <CAHC9VhQTsEMcYAF1CSHrrVn07DR450W9j6sFVfKAQZ0VpheOfw@mail.gmail.com>
+        <20200330162156.mzh2tsnovngudlx2@madcap2.tricolour.ca>
+        <CAHC9VhTRzZXJ6yUFL+xZWHNWZFTyiizBK12ntrcSwmgmySbkWw@mail.gmail.com>
+        <20200330174937.xalrsiev7q3yxsx2@madcap2.tricolour.ca>
+        <CAHC9VhR_bKSHDn2WAUgkquu+COwZUanc0RV3GRjMDvpoJ5krjQ@mail.gmail.com>
+        <871ronf9x2.fsf@x220.int.ebiederm.org>
+        <CAHC9VhR3gbmj5+5MY-whLtStKqDEHgvMRigU9hW0X1kpxF91ag@mail.gmail.com>
+Date:   Fri, 17 Apr 2020 17:23:08 -0500
+In-Reply-To: <CAHC9VhR3gbmj5+5MY-whLtStKqDEHgvMRigU9hW0X1kpxF91ag@mail.gmail.com>
+        (Paul Moore's message of "Thu, 16 Apr 2020 17:53:23 -0400")
+Message-ID: <871rol7nw3.fsf@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-References: <20200304142628.8471-1-NShubin@topcon.com> <20200406113310.3041-1-nikita.shubin@maquefel.me>
- <20200406113310.3041-2-nikita.shubin@maquefel.me> <20200414164519.GA24061@xps15>
- <45761587100993@mail.yandex.ru> <CANLsYkxvuwFdG3YnE7tTxQaD7uF0d_XnPjt1KS++FFe0W3fbdw@mail.gmail.com>
- <20200417202653.00002500@maquefel.me>
-In-Reply-To: <20200417202653.00002500@maquefel.me>
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-Date:   Fri, 17 Apr 2020 16:24:21 -0600
-Message-ID: <CANLsYkyUoG9fW7NoXMS1D7WjPGew7FT0jyOP1E0ipmwW-qEG7A@mail.gmail.com>
-Subject: Re: [PATCH v2 1/3] remoteproc: imx_rproc: set pc on start
-To:     Nikita Shubin <nikita.shubin@maquefel.me>
-Cc:     Nikita Shubin <nshubin@topcon.com>,
-        Ohad Ben-Cohen <ohad@wizery.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        "linux-remoteproc@vger.kernel.org" <linux-remoteproc@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-XM-SPF: eid=1jPZR4-0002qC-5z;;;mid=<871rol7nw3.fsf@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX19qZeMGpaRFmwABWE5nM2gXLxe0XB+DPDY=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: Re: [PATCH ghak90 V8 07/16] audit: add contid support for signalling the audit daemon
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 17 Apr 2020 at 11:27, Nikita Shubin <nikita.shubin@maquefel.me> wrote:
->
-> On Fri, 17 Apr 2020 11:01:22 -0600
-> Mathieu Poirier <mathieu.poirier@linaro.org> wrote:
->
-> > On Thu, 16 Apr 2020 at 23:40, <nikita.shubin@maquefel.me> wrote:
-> > >
-> > > Hi Mathieue,
-> > >
-> > > Hi Nikita,
-> > >
-> > > On Mon, Apr 06, 2020 at 02:33:08PM +0300, nikita.shubin@maquefel.me
-> > > wrote:
-> > >
-> > >  In case elf file interrupt vector is not supposed to be at OCRAM_S,
-> > >  it is needed to write elf entry point to OCRAM_S + 0x4, to boot M4
-> > >  firmware.
-> > >
-> > >  Otherwise firmware located anywhere besides OCRAM_S won't boot.
-> > >
-> > >  The firmware must set stack poiner as first instruction:
-> > >
-> > >  Reset_Handler:
-> > >      ldr sp, = __stack /* set stack pointer */
-> > >
-> > >  Signed-off-by: Nikita Shubin <NShubin@topcon.com>
-> > >
-> > >
-> > > The address in the SoB has to match what is found in the "From:"
-> > > field of the email header. Checkpatch is complaining about that,
-> > > something I would have expected to be fixed before sending this set
-> > > out.
-> > >
-> > > Noted and will be fixed.
-> > >
-> > >  ---
-> > >   drivers/remoteproc/imx_rproc.c | 16 +++++++++++++++-
-> > >   1 file changed, 15 insertions(+), 1 deletion(-)
-> > >
-> > >  diff --git a/drivers/remoteproc/imx_rproc.c
-> > > b/drivers/remoteproc/imx_rproc.c index 3e72b6f38d4b..bebc58d0f711
-> > > 100644 --- a/drivers/remoteproc/imx_rproc.c
-> > >  +++ b/drivers/remoteproc/imx_rproc.c
-> > >  @@ -45,6 +45,8 @@
-> > >
-> > >   #define IMX7D_RPROC_MEM_MAX 8
-> > >
-> > >  +#define IMX_BOOT_PC 0x4
-> > >  +
-> > >   /**
-> > >    * struct imx_rproc_mem - slim internal memory structure
-> > >    * @cpu_addr: MPU virtual address of the memory region
-> > >  @@ -85,6 +87,7 @@ struct imx_rproc {
-> > >           const struct imx_rproc_dcfg *dcfg;
-> > >           struct imx_rproc_mem mem[IMX7D_RPROC_MEM_MAX];
-> > >           struct clk *clk;
-> > >  + void __iomem *bootreg;
-> > >   };
-> > >
-> > >   static const struct imx_rproc_att imx_rproc_att_imx7d[] = {
-> > >  @@ -162,11 +165,16 @@ static int imx_rproc_start(struct rproc
-> > > *rproc) struct device *dev = priv->dev;
-> > >           int ret;
-> > >
-> > >  + /* write entry point to program counter */
-> > >  + writel(rproc->bootaddr, priv->bootreg);
-> > >
-> > >
-> > > What happens on all the other IMX systems where this fix is not
-> > > needed? Will they continue to work properly?
-> > >
-> > > Yes, my bad, it is also needed for IMX6 (but even so i need to
-> > > study this topic more carefully), this should be applied
-> > > exclusively for imx7d for now, and if will be needed someone with
-> > > imx6 hardware to test on can extend this on imx6 also.
-> > >
-> > >
-> > >
-> > >
-> > >  +
-> > >           ret = regmap_update_bits(priv->regmap, dcfg->src_reg,
-> > >                                    dcfg->src_mask, dcfg->src_start);
-> > >           if (ret)
-> > >                   dev_err(dev, "Failed to enable M4!\n");
-> > >
-> > >  + dev_info(&rproc->dev, "Started from 0x%x\n", rproc->bootaddr);
-> > >  +
-> > >           return ret;
-> > >   }
-> > >
-> > >  @@ -182,6 +190,9 @@ static int imx_rproc_stop(struct rproc *rproc)
-> > >           if (ret)
-> > >                   dev_err(dev, "Failed to stop M4!\n");
-> > >
-> > >  + /* clear entry points */
-> > >  + writel(0, priv->bootreg);
-> > >  +
-> > >           return ret;
-> > >   }
-> > >
-> > >  @@ -243,7 +254,8 @@ static void *imx_rproc_da_to_va(struct rproc
-> > > *rproc, u64 da, int len) static const struct rproc_ops
-> > > imx_rproc_ops = { .start = imx_rproc_start,
-> > >           .stop = imx_rproc_stop,
-> > >  - .da_to_va = imx_rproc_da_to_va,
-> > >  + .da_to_va = imx_rproc_da_to_va,
-> > >  + .get_boot_addr = rproc_elf_get_boot_addr,
-> > >
-> > >
-> > > How is this useful? Sure it will set rproc->bootaddr in
-> > > rproc_fw_boot() but what good does that do when it is invariably
-> > > set again in imx_rproc_start() ?
-> > >
-> > > The priv->bootreg is the address where we are writing Entry Point
-> > > and it is fixed, 0x04 address is translated to 0x00180004, so don't
-> > > quite understand you we are writing rproc->bootaddr into
-> > > priv->bootreg, not wiseversa.
-> > >
-> >
-> > What is your reason to set ops->get_boot_addr ?  How does that help
-> > the work done in this patch?
->
-> The reason is the following :
->
-> remoteproc_core.c:
-> | rproc_fw_boot(struct rproc *rproc, const struct firmware *fw)
-> | rproc->bootaddr = rproc_get_boot_addr(rproc, fw);
->
-> remoteproc_internal.h
-> | static inline
-> | u32 rproc_get_boot_addr(struct rproc *rproc, const struct firmware
-> *fw) | {
-> |       if (rproc->ops->get_boot_addr)
-> |               return rproc->ops->get_boot_addr(rproc, fw);
-> |
-> |       return 0;
-> | }
+Paul Moore <paul@paul-moore.com> writes:
 
-And as I said above the value of rproc->bootaddr is set to
-priv->bootreg in imx_rproc_stop().  What am I missing?  More over
-imx_rproc_ops doesn't have a ->load() function and as such rproc_alloc
-will set it to rproc_elf_get_boot_addr()
+> On Thu, Apr 16, 2020 at 4:36 PM Eric W. Biederman <ebiederm@xmission.com> wrote:
+>> Paul Moore <paul@paul-moore.com> writes:
+>> > On Mon, Mar 30, 2020 at 1:49 PM Richard Guy Briggs <rgb@redhat.com> wrote:
+>> >> On 2020-03-30 13:34, Paul Moore wrote:
+>> >> > On Mon, Mar 30, 2020 at 12:22 PM Richard Guy Briggs <rgb@redhat.com> wrote:
+>> >> > > On 2020-03-30 10:26, Paul Moore wrote:
+>> >> > > > On Mon, Mar 30, 2020 at 9:47 AM Richard Guy Briggs <rgb@redhat.com> wrote:
+>> >> > > > > On 2020-03-28 23:11, Paul Moore wrote:
+>> >> > > > > > On Tue, Mar 24, 2020 at 5:02 PM Richard Guy Briggs <rgb@redhat.com> wrote:
+>> >> > > > > > > On 2020-03-23 20:16, Paul Moore wrote:
+>> >> > > > > > > > On Thu, Mar 19, 2020 at 6:03 PM Richard Guy Briggs <rgb@redhat.com> wrote:
+>> >> > > > > > > > > On 2020-03-18 18:06, Paul Moore wrote:
+>> >
+>> > ...
+>> >
+>> >> > > Well, every time a record gets generated, *any* record gets generated,
+>> >> > > we'll need to check for which audit daemons this record is in scope and
+>> >> > > generate a different one for each depending on the content and whether
+>> >> > > or not the content is influenced by the scope.
+>> >> >
+>> >> > That's the problem right there - we don't want to have to generate a
+>> >> > unique record for *each* auditd on *every* record.  That is a recipe
+>> >> > for disaster.
+>> >> >
+>> >> > Solving this for all of the known audit records is not something we
+>> >> > need to worry about in depth at the moment (although giving it some
+>> >> > casual thought is not a bad thing), but solving this for the audit
+>> >> > container ID information *is* something we need to worry about right
+>> >> > now.
+>> >>
+>> >> If you think that a different nested contid value string per daemon is
+>> >> not acceptable, then we are back to issuing a record that has only *one*
+>> >> contid listed without any nesting information.  This brings us back to
+>> >> the original problem of keeping *all* audit log history since the boot
+>> >> of the machine to be able to track the nesting of any particular contid.
+>> >
+>> > I'm not ruling anything out, except for the "let's just completely
+>> > regenerate every record for each auditd instance".
+>>
+>> Paul I am a bit confused about what you are referring to when you say
+>> regenerate every record.
+>>
+>> Are you saying that you don't want to repeat the sequence:
+>>         audit_log_start(...);
+>>         audit_log_format(...);
+>>         audit_log_end(...);
+>> for every nested audit daemon?
+>
+> If it can be avoided yes.  Audit performance is already not-awesome,
+> this would make it even worse.
 
+As far as I can see not repeating sequences like that is fundamental
+for making this work at all.  Just because only the audit subsystem
+should know about one or multiple audit daemons.  Nothing else should
+care.
+
+>> Or are you saying that you would like to literraly want to send the same
+>> skb to each of the nested audit daemons?
 >
-> >
-> > >
-> > >   };
-> > >
-> > >   static int imx_rproc_addr_init(struct imx_rproc *priv,
-> > >  @@ -360,6 +372,8 @@ static int imx_rproc_probe(struct
-> > > platform_device *pdev) goto err_put_rproc;
-> > >           }
-> > >
-> > >  + priv->bootreg = imx_rproc_da_to_va(rproc, IMX_BOOT_PC,
-> > > sizeof(u32)); +
-> > >           /*
-> > >            * clk for M4 block including memory. Should be
-> > >            * enabled before .start for FW transfer.
-> > >  --
-> > >  2.25.1
-> > >
+> Ideally we would reuse the generated audit messages as much as
+> possible.  Less work is better.  That's really my main concern here,
+> let's make sure we aren't going to totally tank performance when we
+> have a bunch of nested audit daemons.
+
+So I think there are two parts of this answer.  Assuming we are talking
+about nesting audit daemons in containers we will have different
+rulesets and I expect most of the events for a nested audit daemon won't
+be of interest to the outer audit daemon.
+
+Beyond that it should be very straight forward to keep a pointer and
+leave the buffer as a scatter gather list until audit_log_end
+and translate pids, and rewrite ACIDs attributes in audit_log_end
+when we build the final packet.  Either through collaboration with
+audit_log_format or a special audit_log command that carefully sets
+up the handful of things that need that information.
+
+Hmm.  I am seeing that we send skbs to kauditd and then kauditd
+sends those skbs to userspace.  I presume that is primary so that
+sending messages to userspace does not block the process being audited.
+
+Plus a little bit so that the retry logic will work.
+
+I think the naive implementation would be to simply have 1 kauditd
+per auditd (strictly and audit context/namespace).  Although that can be
+optimized if that is a problem.
+
+Beyond that I think we would need to look at profiles to really
+understand where the bottlenecks are.
+
+>> Or are you thinking of something else?
 >
+> As mentioned above, I'm not thinking of anything specific, other than
+> let's please not have to regenerate *all* of the audit record strings
+> for each instance of an audit daemon, that's going to be a killer.
+>
+> Maybe we have to regenerate some, if we do, what would that look like
+> in code?  How do we handle the regeneration aspect?  I worry that is
+> going to be really ugly.
+>
+> Maybe we finally burn down the audit_log_format(...) function and pass
+> structs/TLVs to the audit subsystem and the audit subsystem generates
+> the strings in the auditd connection thread.  Some of the record
+> strings could likely be shared, others would need to be ACID/auditd
+> dependent.
+
+I think we just a very limited amount of structs/TLVs for the cases that
+matter and one-one auditd and kauditd implementations we should still
+be able to do everything in audit_log_end.  Plus doing as much work as
+possible in audit_log_end where things are still cache hot is desirable.
+
+> I'm open to any ideas people may have.  We have a problem, let's solve
+> it.
+
+It definitely makes sense to look ahead to having audit daemons running
+in containers, but in the grand scheme of things that is a nice to have.
+Probably something we will and should get to, but we have lived a long
+time without auditd running in containers so I expect we can live a
+while longer.
+
+As I understand Richard patchset for the specific case of the ACID we
+are only talking about taking a subset of an existing string, and one
+string at that.  Not hard at all.  Especially when looking at the
+fundamental fact that we will need to send a different skb to
+userspace, for each audit daemon.
+
+Eric
