@@ -2,354 +2,210 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9301EC38A2B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 18:52:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E52C6C2D0EF
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 18:52:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 76D2820936
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 18:52:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFC2F2223D
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 18:52:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="b9psBUSp"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="oIsxMzbF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730154AbgDQSwa (ORCPT
+        id S1730199AbgDQSwi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 14:52:30 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:54936 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726750AbgDQSwZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 14:52:25 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03HIowdu122682;
-        Fri, 17 Apr 2020 18:51:10 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=corp-2020-01-29;
- bh=DZd6UPQzcMTwx3wEmjGf0AsFTi+5iq8DbxhsZLV2NqE=;
- b=b9psBUSpRkTr2L95udee0EQmkDD5jmIQPndviol3DiWqGxL1ee79D5zuYvqRDTbP6TIH
- aHPmdOAhmzYzfWoyXDPwlv9eW41oZuGWrsVO4Y9jVEdL5+IMmeNdw7mb4MgLw00qiz+b
- g4Er58jEwI6b9NDWLju8ULNpaW80L/gO4B1h8hPiqAzNJeP+6csK4gLuj7hE+OiqPFz5
- drIgzxWDVpVHw4+FzVDCwFQOZkXR9IbxaX5JeSa1Qy9xYO82w3YPLSI0k/FAJsFBt8Yg
- WREqiY0m+MGjlKzcAXvmn6gAPHCbOF7O2yY0Pbp1ah9z889gj7C3jgiQkPQNFtyqAc9f vw== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 30e0aae8fx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 17 Apr 2020 18:51:10 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03HIcJGS118501;
-        Fri, 17 Apr 2020 18:51:09 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3020.oracle.com with ESMTP id 30dn9ks84c-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 17 Apr 2020 18:51:09 +0000
-Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 03HIp4un029040;
-        Fri, 17 Apr 2020 18:51:04 GMT
-Received: from monkey.oracle.com (/71.63.128.209)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 17 Apr 2020 11:51:03 -0700
-From:   Mike Kravetz <mike.kravetz@oracle.com>
-To:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
-        linux-s390@vger.kernel.org, sparclinux@vger.kernel.org,
-        linux-doc@vger.kernel.org
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Longpeng <longpeng2@huawei.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Mina Almasry <almasrymina@google.com>,
-        Peter Xu <peterx@redhat.com>,
-        Nitesh Narayan Lal <nitesh@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>
-Subject: [PATCH v3 2/4] hugetlbfs: move hugepagesz= parsing to arch independent code
-Date:   Fri, 17 Apr 2020 11:50:47 -0700
-Message-Id: <20200417185049.275845-3-mike.kravetz@oracle.com>
-X-Mailer: git-send-email 2.25.2
-In-Reply-To: <20200417185049.275845-1-mike.kravetz@oracle.com>
-References: <20200417185049.275845-1-mike.kravetz@oracle.com>
+        Fri, 17 Apr 2020 14:52:38 -0400
+Received: from mail-mw2nam12on2058.outbound.protection.outlook.com ([40.107.244.58]:6160
+        "EHLO NAM12-MW2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727840AbgDQSwV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Apr 2020 14:52:21 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=jU2ga4vbs/aijmnu59bqYns5XBXThfairKiOqdbapnalt3abqYXfWOCFrIci/JlEe49AcZIN7Zh0KjdhDSyjHme6q6K7M/fWH+ew73SfnWxX6Lfw/qIOTjWFOjo6QME5G5+/RwT4ouPlKv1SS5Jt8y4cy0RBLbVa8zMH4H68CZtGtxC+mQn8z1g5iA7aR/6bXxlA2H5VINUAy5Lcv+JZrRKPUl+/WYaUZixQvuAMQWRlPMYxskH6UfE9x2+DNGlbfLYdgfijQrzgafKW2EWD0Qjg6GA4b4DNS8vFnHdSCkPLOGLzRL/aR0TEJFA9KwJQVj0+zu3xwVhLsdl5uD7bVg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=VNn4oIxUx4+Kil5Tegoho2MjFXI7IdrkhSZzPqFY+8M=;
+ b=AK8lie2oBfjRVYx7qXH7+mby+MvBMiCxHsOZZYJ0o32XYMgMt5duieK79lXRDhzBpWLTPqXPG0qCuUo5ZiCyDZmCPBwrsPEhfLZyhmp4VWOKP72HU0mvRLA+MMV4k4+kYCKBwL5LyO5jrAUQinzncae/t5zuHc5ME9NbWSWLrVddsvQ66LbdtLDi6mF5Fz1SAAYcJW9zhJhWrohNFGdYRDjDq7PepiKKKfNVJRjXCmoH/f2/ixRYNJtzvd1rsJQPHj+HFR3S+6umW9RWDokYx1w0BpJIfb1MOQ6yhY/8XKhvT1GmBtb7zx8wBhV5665ZL6nlBRnV3+hbnKf2e0/XJg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=VNn4oIxUx4+Kil5Tegoho2MjFXI7IdrkhSZzPqFY+8M=;
+ b=oIsxMzbFST7ykM743lmesdFQPXdxgwX1fHo4eGYq4qQvslkM5AuQI90IUxkpTg1zFr2s40BX5szg8uS5bu3Xm+/XG9GKH/y4jK2YVMC69JI19nHp4jxvJeZkvWAanjOlrjrMMKyqG8oVBrN0lTFE/3FoQm/pHSida5HS9RYSIDE=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=Luben.Tuikov@amd.com; 
+Received: from DM6PR12MB3355.namprd12.prod.outlook.com (2603:10b6:5:115::26)
+ by DM6PR12MB2650.namprd12.prod.outlook.com (2603:10b6:5:4a::23) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2921.29; Fri, 17 Apr
+ 2020 18:52:19 +0000
+Received: from DM6PR12MB3355.namprd12.prod.outlook.com
+ ([fe80::cd6e:7536:4dbb:aa85]) by DM6PR12MB3355.namprd12.prod.outlook.com
+ ([fe80::cd6e:7536:4dbb:aa85%5]) with mapi id 15.20.2921.027; Fri, 17 Apr 2020
+ 18:52:19 +0000
+Subject: Re: checkpatch.pl warning for "return" with value
+To:     Joe Perches <joe@perches.com>, Andy Whitcroft <apw@canonical.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>
+References: <a1eea414-2422-3a9f-b9bb-1ab7d6113dd6@amd.com>
+ <1a47c5c428968a0e1d0ac5b92ce7ebdd4014fd38.camel@perches.com>
+From:   Luben Tuikov <luben.tuikov@amd.com>
+Message-ID: <8859753b-c7c9-78ec-20cc-ce424b436b13@amd.com>
+Date:   Fri, 17 Apr 2020 14:52:17 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
+In-Reply-To: <1a47c5c428968a0e1d0ac5b92ce7ebdd4014fd38.camel@perches.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-CA
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: YTOPR0101CA0003.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:b00:15::16) To DM6PR12MB3355.namprd12.prod.outlook.com
+ (2603:10b6:5:115::26)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9594 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 mlxscore=0 adultscore=0
- spamscore=0 phishscore=0 bulkscore=0 suspectscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004170142
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9594 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 clxscore=1015
- impostorscore=0 mlxlogscore=999 mlxscore=0 lowpriorityscore=0
- suspectscore=0 adultscore=0 spamscore=0 malwarescore=0 phishscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004170142
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from localhost.localdomain (108.162.131.176) by YTOPR0101CA0003.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b00:15::16) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2921.25 via Frontend Transport; Fri, 17 Apr 2020 18:52:18 +0000
+X-Originating-IP: [108.162.131.176]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: e2e805cc-7926-469b-9548-08d7e3007468
+X-MS-TrafficTypeDiagnostic: DM6PR12MB2650:
+X-Microsoft-Antispam-PRVS: <DM6PR12MB2650D3DF06599394D704D97E99D90@DM6PR12MB2650.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
+X-Forefront-PRVS: 0376ECF4DD
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB3355.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(39860400002)(136003)(396003)(376002)(366004)(346002)(6486002)(86362001)(31686004)(31696002)(36756003)(81156014)(8676002)(8936002)(66556008)(26005)(6506007)(66946007)(53546011)(52116002)(66476007)(55236004)(110136005)(2906002)(316002)(5660300002)(956004)(2616005)(44832011)(6512007)(4326008)(186003)(16526019)(478600001);DIR:OUT;SFP:1101;
+Received-SPF: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: H0VESOrhmd6g+FiTWD4Dm9nLygGO15NjFtoI0JbZK+YfOml/9Tl5dslOYNyBdUY5wDR5zL5aSXjhtr6VnK54v0Io+31wwA1VH648bNFWkn4o+e0mofVsJLVua3/hABAz5sEoXnhbd98JtYAU7i9QFLWTGn5rnmCLfqepKyC42JNGDF+eaGGkB2WbF26pF0YPVW27cm9QWSWI/15WUW56fQmVVWnGUCGyUi+5VIpuiRKiSiBBNOJmv8b+B8EG9INbkdSoQfheKK1lmg/243d+0pKvGHUcVCKgDizxJF/pkmXnulwJH8TP3krINU/wKN5uEgt7FKDvpvxcb6HvA6wsCwB0Cb+y02K3tgI0zj/FdE3fi6+s1HmWZ6uzUT5eTVJS/qOU4ldvExBPGII1ihY8LkzBN1VeOlS0gxuQbwPv+ijvWJTFZ5WmFPEAC9tTDNH6
+X-MS-Exchange-AntiSpam-MessageData: sYw9rPKzYQL+gKyLAzP4Q9Ayy0c1Z6MklcH/c3t785OZpTS8G9z4znWpMi3mq0BjLGlFxr2l3xcL7dtYJp+KT6NvC9IqTHVM+xU4YUfjNef+XaoIuYB/EbROAwi740SH+5O8EtDIW3pn2x8ymcX3xO1uycpec/nxCie2NI+/sBFNtesq9h8mw9Cl6xnMHfSDo4yHnJh/2Rhaatk/4Q8y18lfgvCaNhgnI+7/l7l2QqUT1TGsDGZXZaGRyE+yQK9qrCgnKF+IJXv7zxO4Sn+10CsXuBq4dQv+iJVYC3OfLfvIm9XGftDtKS3ftFY4Lf7UYLIjvwUQICne+Lnf4MFZXJJ56RAFL6QhvpcC92bmiMFpfJdf3yOyPcECwUX3ZLqN0EheOZ7mB2zi8ejmSrUZE1jxU9IohF40RUvbz65MIM9GwfzPEDCsNM122e+UvDT48qKD92q3R5+ZjtHASBJN6g4/yXY8Nhbb77pfkgq1pBP2rcQBV6f7Jl7ixg5sbXhVVHeSZY8OZpoWM7r6mwirDD5O2brHZd27Hwra+jd5ctBSbkx46j7sKuTBJ6dJzAdJHKQUSqCLCXdNiZc9c3IeHzrvgR1kUMcxntzCnAePM5S8x0aD9TgENlIP/ngVkUGhkNqgmRCIwjjrQvTk/RjjV8kLXcUROsEUz/41+K51strJS+oX7l961WotSC/YKRW1hARmYNIx6sKUhrhcZ4rd+zVAp1MWTQqfs3cAs85dUyUxFJ5pNzvKMrGwsVDYRihULFXdZVnWGklSsFjMMaO0mSXgOR+wbvCJYxspCANUZCYMIqskMG9A7fexSxO0x3lb
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e2e805cc-7926-469b-9548-08d7e3007468
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Apr 2020 18:52:19.0999
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 44U7vEJE5MMORdJmUcIMLi8CdfnJIqWBiNU2VbFPnty+81Yt5KLbn+/RrDrGIsBi
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB2650
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now that architectures provide arch_hugetlb_valid_size(), parsing
-of "hugepagesz=" can be done in architecture independent code.
-Create a single routine to handle hugepagesz= parsing and remove
-all arch specific routines.  We can also remove the interface
-hugetlb_bad_size() as this is no longer used outside arch independent
-code.
+On 2020-04-17 1:32 p.m., Joe Perches wrote:
+> On Fri, 2020-04-17 at 13:20 -0400, Luben Tuikov wrote:
+>> Hi guys,
+>>
+>> I get this warning:
+>>
+>> :32: WARNING: else is not generally useful after a break or return
+>> #32: FILE: drivers/gpu/drm/amd/amdgpu/amdgpu_job.c:55:
+>> +		return 0;
+>> +	} else {
+>>
+>> for the following code, at the bottom of a function:
+>>
+>> 	if (amdgpu_device_should_recover_gpu(ring->adev)) {
+>> 		amdgpu_device_gpu_recover(ring->adev, job);
+>> 		return 0;
+>> 	} else {
+>> 		drm_sched_suspend_timeout(&ring->sched);
+>> 		return 1;
+>> 	}
+>> }
+>>
+>> It seems like a false positive--I mean, if the else branch was
+>> taken, we'd return a different result.
+> 
+> There is an existing checkpatch exception for single line
+> if/else returns
+> like:
+> 
+> 	if (foo)
+> 		return bar;
+> 	else
+> 		return baz;
+> 
+> because that's a pretty common code style.
 
-This also provides consistent behavior of hugetlbfs command line
-options.  The hugepagesz= option should only be specified once for
-a specific size, but some architectures allow multiple instances.
-This appears to be more of an oversight when code was added by some
-architectures to set up ALL huge pages sizes.
+Yes, that's true--and that's what I have above, except
+the braces.
 
-Signed-off-by: Mike Kravetz <mike.kravetz@oracle.com>
-Acked-by: Mina Almasry <almasrymina@google.com>
-Reviewed-by: Peter Xu <peterx@redhat.com>
----
- arch/arm64/mm/hugetlbpage.c   | 15 ---------------
- arch/powerpc/mm/hugetlbpage.c | 15 ---------------
- arch/riscv/mm/hugetlbpage.c   | 16 ----------------
- arch/s390/mm/hugetlbpage.c    | 18 ------------------
- arch/sparc/mm/init_64.c       | 22 ----------------------
- arch/x86/mm/hugetlbpage.c     | 16 ----------------
- include/linux/hugetlb.h       |  1 -
- mm/hugetlb.c                  | 23 +++++++++++++++++------
- 8 files changed, 17 insertions(+), 109 deletions(-)
+> 
+> But I personally don't think that your example fits the
+> same style.
 
-diff --git a/arch/arm64/mm/hugetlbpage.c b/arch/arm64/mm/hugetlbpage.c
-index 069b96ee2aec..f706b821aba6 100644
---- a/arch/arm64/mm/hugetlbpage.c
-+++ b/arch/arm64/mm/hugetlbpage.c
-@@ -476,18 +476,3 @@ bool __init arch_hugetlb_valid_size(unsigned long size)
- 
- 	return false;
- }
--
--static __init int setup_hugepagesz(char *opt)
--{
--	unsigned long ps = memparse(opt, &opt);
--
--	if (arch_hugetlb_valid_size(ps)) {
--		add_huge_page_size(ps);
--		return 1;
--	}
--
--	hugetlb_bad_size();
--	pr_err("hugepagesz: Unsupported page size %lu K\n", ps >> 10);
--	return 0;
--}
--__setup("hugepagesz=", setup_hugepagesz);
-diff --git a/arch/powerpc/mm/hugetlbpage.c b/arch/powerpc/mm/hugetlbpage.c
-index de54d2a37830..2c3fa0a7787b 100644
---- a/arch/powerpc/mm/hugetlbpage.c
-+++ b/arch/powerpc/mm/hugetlbpage.c
-@@ -589,21 +589,6 @@ static int __init add_huge_page_size(unsigned long long size)
- 	return 0;
- }
- 
--static int __init hugepage_setup_sz(char *str)
--{
--	unsigned long long size;
--
--	size = memparse(str, &str);
--
--	if (add_huge_page_size(size) != 0) {
--		hugetlb_bad_size();
--		pr_err("Invalid huge page size specified(%llu)\n", size);
--	}
--
--	return 1;
--}
--__setup("hugepagesz=", hugepage_setup_sz);
--
- static int __init hugetlbpage_init(void)
- {
- 	bool configured = false;
-diff --git a/arch/riscv/mm/hugetlbpage.c b/arch/riscv/mm/hugetlbpage.c
-index da1f516bc451..4e5d7e9f0eef 100644
---- a/arch/riscv/mm/hugetlbpage.c
-+++ b/arch/riscv/mm/hugetlbpage.c
-@@ -22,22 +22,6 @@ bool __init arch_hugetlb_valid_size(unsigned long size)
- 		return false;
- }
- 
--static __init int setup_hugepagesz(char *opt)
--{
--	unsigned long ps = memparse(opt, &opt);
--
--	if (arch_hugetlb_valid_size(ps)) {
--		hugetlb_add_hstate(ilog2(ps) - PAGE_SHIFT);
--		return 1;
--	}
--
--	hugetlb_bad_size();
--	pr_err("hugepagesz: Unsupported page size %lu M\n", ps >> 20);
--	return 0;
--
--}
--__setup("hugepagesz=", setup_hugepagesz);
--
- #ifdef CONFIG_CONTIG_ALLOC
- static __init int gigantic_pages_init(void)
- {
-diff --git a/arch/s390/mm/hugetlbpage.c b/arch/s390/mm/hugetlbpage.c
-index ac25b207624c..242dfc0d462d 100644
---- a/arch/s390/mm/hugetlbpage.c
-+++ b/arch/s390/mm/hugetlbpage.c
-@@ -261,24 +261,6 @@ bool __init arch_hugetlb_valid_size(unsigned long size)
- 		return false;
- }
- 
--static __init int setup_hugepagesz(char *opt)
--{
--	unsigned long size;
--	char *string = opt;
--
--	size = memparse(opt, &opt);
--	if (arch_hugetlb_valid_size(size)) {
--		hugetlb_add_hstate(ilog2(size) - PAGE_SHIFT);
--	} else {
--		hugetlb_bad_size();
--		pr_err("hugepagesz= specifies an unsupported page size %s\n",
--			string);
--		return 0;
--	}
--	return 1;
--}
--__setup("hugepagesz=", setup_hugepagesz);
--
- static unsigned long hugetlb_get_unmapped_area_bottomup(struct file *file,
- 		unsigned long addr, unsigned long len,
- 		unsigned long pgoff, unsigned long flags)
-diff --git a/arch/sparc/mm/init_64.c b/arch/sparc/mm/init_64.c
-index 2bfe8e22b706..4618f96fd30f 100644
---- a/arch/sparc/mm/init_64.c
-+++ b/arch/sparc/mm/init_64.c
-@@ -397,28 +397,6 @@ bool __init arch_hugetlb_valid_size(unsigned long size)
- 
- 	return true;
- }
--
--static int __init setup_hugepagesz(char *string)
--{
--	unsigned long long hugepage_size;
--	int rc = 0;
--
--	hugepage_size = memparse(string, &string);
--
--	if (!arch_hugetlb_valid_size((unsigned long)hugepage_size)) {
--		hugetlb_bad_size();
--		pr_err("hugepagesz=%llu not supported by MMU.\n",
--			hugepage_size);
--		goto out;
--	}
--
--	add_huge_page_size(hugepage_size);
--	rc = 1;
--
--out:
--	return rc;
--}
--__setup("hugepagesz=", setup_hugepagesz);
- #endif	/* CONFIG_HUGETLB_PAGE */
- 
- void update_mmu_cache(struct vm_area_struct *vma, unsigned long address, pte_t *ptep)
-diff --git a/arch/x86/mm/hugetlbpage.c b/arch/x86/mm/hugetlbpage.c
-index 1c4372bfe782..937d640a89e3 100644
---- a/arch/x86/mm/hugetlbpage.c
-+++ b/arch/x86/mm/hugetlbpage.c
-@@ -191,22 +191,6 @@ bool __init arch_hugetlb_valid_size(unsigned long size)
- 		return false;
- }
- 
--static __init int setup_hugepagesz(char *opt)
--{
--	unsigned long ps = memparse(opt, &opt);
--
--	if (arch_hugetlb_valid_size(ps)) {
--		hugetlb_add_hstate(ilog2(ps) - PAGE_SHIFT);
--	} else {
--		hugetlb_bad_size();
--		printk(KERN_ERR "hugepagesz: Unsupported page size %lu M\n",
--			ps >> 20);
--		return 0;
--	}
--	return 1;
--}
--__setup("hugepagesz=", setup_hugepagesz);
--
- #ifdef CONFIG_CONTIG_ALLOC
- static __init int gigantic_pages_init(void)
- {
-diff --git a/include/linux/hugetlb.h b/include/linux/hugetlb.h
-index 2eb15f5ab01e..0c13706054ef 100644
---- a/include/linux/hugetlb.h
-+++ b/include/linux/hugetlb.h
-@@ -519,7 +519,6 @@ int huge_add_to_page_cache(struct page *page, struct address_space *mapping,
- int __init __alloc_bootmem_huge_page(struct hstate *h);
- int __init alloc_bootmem_huge_page(struct hstate *h);
- 
--void __init hugetlb_bad_size(void);
- void __init hugetlb_add_hstate(unsigned order);
- bool __init arch_hugetlb_valid_size(unsigned long size);
- struct hstate *size_to_hstate(unsigned long size);
-diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-index 871ac1681f37..b2d276408cec 100644
---- a/mm/hugetlb.c
-+++ b/mm/hugetlb.c
-@@ -3262,12 +3262,6 @@ bool __init __attribute((weak)) arch_hugetlb_valid_size(unsigned long size)
- 	return size == HPAGE_SIZE;
- }
- 
--/* Should be called on processing a hugepagesz=... option */
--void __init hugetlb_bad_size(void)
--{
--	parsed_valid_hugepagesz = false;
--}
--
- void __init hugetlb_add_hstate(unsigned int order)
- {
- 	struct hstate *h;
-@@ -3337,6 +3331,23 @@ static int __init hugetlb_nrpages_setup(char *s)
- }
- __setup("hugepages=", hugetlb_nrpages_setup);
- 
-+static int __init hugepagesz_setup(char *s)
-+{
-+	unsigned long size;
-+
-+	size = (unsigned long)memparse(s, NULL);
-+
-+	if (!arch_hugetlb_valid_size(size)) {
-+		parsed_valid_hugepagesz = false;
-+		pr_err("HugeTLB: unsupported hugepagesz %s\n", s);
-+		return 0;
-+	}
-+
-+	hugetlb_add_hstate(ilog2(size) - PAGE_SHIFT);
-+	return 1;
-+}
-+__setup("hugepagesz=", hugepagesz_setup);
-+
- static int __init default_hugepagesz_setup(char *s)
- {
- 	unsigned long size;
--- 
-2.25.2
+Why? Linguistically, it doesn't matter if a compound
+statement is used or a single one. (I mean, one could
+use a comma "," too... :-) )
+
+> 
+> I think when unexpected condition should be separated from
+> the expected condition which should typically be the last
+> block of a function like:
+
+I couldn't understand this sentence because of the "when"
+and "which".
+
+> 
+> 
+> 	if (<atypical_condition>) {
+> 		...;
+> 		return <atypical_result>;
+> 	}
+> 
+> 	...;
+> 	return <typical_result>;
+> }
+> 
+> If you want to code it, and it works, go ahead, but I
+> won't attempt it because I think it's not appropriate.
+
+For error checking, when the 2nd ellipsis is
+a long, long body of the function, so that the error
+checking is done at the top, then long body,
+then at the bottom we return some computed value.
+But in the case I have above, it's a compact if-else
+at the bottom of the function.
+
+In the example I gave above, there is no "typical" or
+"atypical" condition--it's just checking a condition
+and deciding what to do, all at the bottom of
+a function. (And that condition, samples
+an external stimuli, which cannot be predicted.)
+
+Also checking and returning from a function, doesn't
+always have to be binary. It could be,
+
+	if (A) {
+		...;
+		return X;
+	} else if (B) {
+		...;
+		return Y;
+	} else {
+		...;
+		return Z;
+	}
+}
+
+And interestingly, checkpatch.pl doesn't complain for
+the triplet above. But if I remove condition B, above,
+it does complain.
+
+Since we're returning a different result and since
+it works fine with a triplet, could you fix the binary
+case above to not complain?
+
+You already seem to have an exception for it, as you stated
+above.
+
+Regards,
+Luben
 
