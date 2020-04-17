@@ -2,110 +2,181 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E698C352BE
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 12:07:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E5EAC38A2B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 12:09:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5BF8B2083E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 12:07:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D1212220A
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 12:09:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="vJucq13R"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a0P/bUJk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728188AbgDQMHD (ORCPT
+        id S1728307AbgDQMJL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 08:07:03 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:41036 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726050AbgDQMHC (ORCPT
+        Fri, 17 Apr 2020 08:09:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41682 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726050AbgDQMJK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 08:07:02 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 03HC6hnv000596;
-        Fri, 17 Apr 2020 07:06:43 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1587125203;
-        bh=EzH3YxuoL3K+W9EnJg8cY1fwb5eXAbwJZcryLRdN1Y8=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=vJucq13R7ulppcwNJZG0rFJc2a35ib1Y353Veb0NlAjhcxlHtKfBKUGLfG7S+2wtR
-         WB3/wcWP/LPVxVOC7rjdn3ZQwqrITu20Ckp0Q2Ia34VFAWTYhvCNKbYR6BGTXX4yN6
-         6vAeMgiaa0U6Ob5YKwGxRDcXF0VBD0NA1SjMM5Cc=
-Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 03HC6hPk111509
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 17 Apr 2020 07:06:43 -0500
-Received: from DFLE112.ent.ti.com (10.64.6.33) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 17
- Apr 2020 07:06:43 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Fri, 17 Apr 2020 07:06:43 -0500
-Received: from [10.250.52.63] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03HC6g4x072420;
-        Fri, 17 Apr 2020 07:06:42 -0500
-Subject: Re: [PATCH] can: tcan4x5x: Replace depends on REGMAP_SPI with depends
- on SPI
-To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        <linux-kernel@vger.kernel.org>
-CC:     Collabora Kernel ML <kernel@collabora.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Marc Kleine-Budde <mkl@pengutronix.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Wolfgang Grandegger <wg@grandegger.com>,
-        <linux-can@vger.kernel.org>, <netdev@vger.kernel.org>
-References: <20200413141013.506613-1-enric.balletbo@collabora.com>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <fd411219-f528-683c-ab39-1786a99c392b@ti.com>
-Date:   Fri, 17 Apr 2020 07:00:52 -0500
+        Fri, 17 Apr 2020 08:09:10 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5691FC061A0C;
+        Fri, 17 Apr 2020 05:09:10 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id g13so735011wrb.8;
+        Fri, 17 Apr 2020 05:09:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=YQmfy5glSWEhJacmHQcBoh0P5gI+y1xLhn/MI5MwRqk=;
+        b=a0P/bUJk6o4KfMmFecVMQRsWuelunj5M3QJxQxTu6to4WAQob5LfbxChfRH0a6dwDj
+         iNR57ygB8uH7UURrRNzWkQ8vspIJVqgol9MkvvXSz/cm+AnLhC+uKmwA3jpvuOobCcgc
+         KON4uK1f+5Y1OLIVlTxIEEI3ASLbbuSLQ3NiS2NUfo5xrqJo/Q5iMZpWAjtWhx5/M0KN
+         hRvTCofOnBp3OUfJMfth7Ov6eIlNj9MXG1acK/G7uyIUgNEBLcPBcKJ+tIH80fWO6DuJ
+         rWftpSBDDApCaJzKHUzzK+sJRq2rmfLKHntuqUrJ3fCT5oPSY1tJwYLhRQuZIlZ5M9eF
+         pKXw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=YQmfy5glSWEhJacmHQcBoh0P5gI+y1xLhn/MI5MwRqk=;
+        b=E0jQAW5jFcsLuO3Hg8mEupkZ/V5Xa8y+1nLFnLV7EQ956stA2UWwNA8ycnAbGKSHhP
+         VlXRfAfp9V3OvD3/exmMPk0JEgFicxP3JEer8tOCTVbzcBFuCWLagwr4Z9xgjrb5N8M3
+         1PNjOAsF9EK2fHQrsir63OexZwywIog0+0RPqP2LEo9HDX4CotBaqhZSkmaCoE/ndqNe
+         M78Wub7ZXfnK6q4zoB0a27xly9wkDCHNl1kc8tr04f/7p1UUhBbuDheh92zrgQrtIFsp
+         oFWgiAsFTWZB0WHV2T2+WsLcnD15pDGKZcy8/H84gJXYBQsMCTAtkmIxIaiFsrWLcDgE
+         IXTg==
+X-Gm-Message-State: AGi0PubSyIoywME9o6jFMSwgY2F6mPzfqNOTgUVxMtkrlSiRreaLCBAi
+        F1vDnI4CZFw6/Wg72vd05YNg6GIP
+X-Google-Smtp-Source: APiQypJw9RvOMBiofKtDCRe+QcAA+eB/l83Q4b2jSf0HWRF7CviGAUhDoTYoDphSTR+uEnZgPspyVA==
+X-Received: by 2002:a5d:4485:: with SMTP id j5mr3343798wrq.427.1587125348648;
+        Fri, 17 Apr 2020 05:09:08 -0700 (PDT)
+Received: from ?IPv6:2a02:810d:340:2e50:14a4:6f21:1f15:2088? ([2a02:810d:340:2e50:14a4:6f21:1f15:2088])
+        by smtp.gmail.com with ESMTPSA id n2sm10823975wrq.74.2020.04.17.05.09.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 17 Apr 2020 05:09:08 -0700 (PDT)
+Subject: Re: [PATCH v6 00/12] ARM/MIPS: DTS: add child nodes describing the
+ PVRSGX GPU present in some OMAP SoC and JZ4780 (and many more)
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>,
+        Maxime Ripard <maxime@cerno.tech>
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        James Hogan <jhogan@kernel.org>, Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-omap <linux-omap@vger.kernel.org>,
+        OpenPVRSGX Linux Driver Group <openpvrsgx-devgroup@letux.org>,
+        Discussions about the Letux Kernel 
+        <letux-kernel@openphoenux.org>, kernel@pyra-handheld.com,
+        linux-mips@vger.kernel.org,
+        arm-soc <linux-arm-kernel@lists.infradead.org>,
+        linux-samsung-soc@vger.kernel.org
+References: <cover.1586939718.git.hns@goldelico.com>
+ <20200415101008.zxzxca2vlfsefpdv@gilmour.lan>
+ <2E3401F1-A106-4396-8FE6-51CAB72926A4@goldelico.com>
+ <20200415130233.rgn7xrtwqicptke2@gilmour.lan>
+ <C589D06E-435E-4316-AD0A-8498325039E3@goldelico.com>
+From:   Philipp Rossak <embed3d@gmail.com>
+Message-ID: <10969e64-fe1f-d692-4984-4ba916bd2161@gmail.com>
+Date:   Fri, 17 Apr 2020 14:09:06 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <20200413141013.506613-1-enric.balletbo@collabora.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <C589D06E-435E-4316-AD0A-8498325039E3@goldelico.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Enric
+Hi all,
 
-On 4/13/20 9:10 AM, Enric Balletbo i Serra wrote:
-> regmap is a library function that gets selected by drivers that need
-> it. No driver modules should depend on it. Instead depends on SPI and
-> select REGMAP_SPI. Depending on REGMAP_SPI makes this driver only build
-> if another driver already selected REGMAP_SPI, as the symbol can't be
-> selected through the menu kernel configuration.
->
-> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-> ---
->
->   drivers/net/can/m_can/Kconfig | 3 ++-
->   1 file changed, 2 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/net/can/m_can/Kconfig b/drivers/net/can/m_can/Kconfig
-> index 1ff0b7fe81d6..c10932a7f1fe 100644
-> --- a/drivers/net/can/m_can/Kconfig
-> +++ b/drivers/net/can/m_can/Kconfig
-> @@ -16,7 +16,8 @@ config CAN_M_CAN_PLATFORM
->   
->   config CAN_M_CAN_TCAN4X5X
->   	depends on CAN_M_CAN
-> -	depends on REGMAP_SPI
-> +	depends on SPI
-> +	select REGMAP_SPI
->   	tristate "TCAN4X5X M_CAN device"
->   	---help---
->   	  Say Y here if you want support for Texas Instruments TCAN4x5x
+On 15.04.20 15:04, H. Nikolaus Schaller wrote:
+> 
+>> Am 15.04.2020 um 15:02 schrieb Maxime Ripard <maxime@cerno.tech>:
+>>
+>> On Wed, Apr 15, 2020 at 02:41:52PM +0200, H. Nikolaus Schaller wrote:
+>>>>> The kernel modules built from this project have successfully
+>>>>> demonstrated to work with the DTS definitions from this patch set on
+>>>>> AM335x BeagleBone Black, DM3730 and OMAP5 Pyra and Droid 4. They
+>>>>> partially work on OMAP3530 and PandaBoard ES but that is likely a
+>>>>> problem in the kernel driver or the (non-free) user-space libraries
+>>>>> and binaries.
+>>>>>
+>>>>> Wotk for JZ4780 (CI20 board) is in progress and there is potential
+>>>>> to extend this work to e.g. BananaPi-M3 (A83) and some Intel Poulsbo
+>>>>> and CedarView devices.
+>>>>
+>>>> If it's not been tested on any Allwinner board yet, I'll leave it
+>>>> aside until it's been properly shown to work.
+>>>
+>>> Phillip has tested something on a83.
+>>
+Yes I'm currently working on the a83t demo. The kernel module is loading 
+correctly and the clocks, interrupts and resets seems to be working 
+correctly.
+
+I'm currently working on getting the users space driver working with the 
+kernel driver. This is hopefully done soon.
+
+>> I'm a bit skeptical on that one since it doesn't even list the
+>> interrupts connected to the GPU that the binding mandates.
+> 
+> I think he left it out for a future update.
+> But best he comments himself.
+
+I'm currently working on those bindings. They are now 90% done, but they 
+are not finished till now. Currently there is some mainline support 
+missing to add the full binding. The A83T and also the A31/A31s have a 
+GPU Power Off Gating Register in the R_PRCM module, that is not 
+supported right now in Mainline. The Register need to be written when 
+the GPU is powered on and off.
+
+@Maxime: I totally agree on your point that a demo needs to be provided 
+before the related DTS patches should be provided. That's the reason why 
+I added the gpu placeholder patches.
+Do you have an idea how a driver for the R_PRCM stuff can look like? I'm 
+not that experienced with the clock driver framework.
+
+The big question is right now how to proceed with the A83T and A31s 
+patches. I see there three options, which one do you prefer?:
+
+1. Provide now placeholder patches and send new patches, if everything 
+is clear and other things are mainlined
+2. Provide now patches as complete as possible and provide later patches 
+to complete them when the R_PRCM things are mainlined
+3. Leave them out, till the related work is mainlined and the bindings 
+are final.
 
 
-Reviewed-by: Dan Murphy <dmurphy@ti.com>
+Since this GPU IP core is very flexible and the SOC manufactures can 
+configure it on their needs, I think the binding will extend in the 
+future. For example the SGX544 GPU is available in different 
+configurations: there is a SGX544 core and SGX544MPx core. The x stands 
+for the count of the USSE (Universal Scalable Shader Engine) cores. For 
+example the GPU in the A83T is a MP1 and the A31/A31s a MP2.
+In addition to that some of the GPU's have also a 2D engine.
+There might be even more differences in the GPU's that we don't know 
+right now and should be described in the Devicetree, but that's a 
+different topic that we should keep in mind.
 
+Cheers
+Philipp
