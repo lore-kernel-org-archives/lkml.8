@@ -2,113 +2,77 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64E56C38A2D
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 11:58:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D532C38A29
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 11:59:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 43531221EC
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 11:58:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="jfPpSOV7"
+	by mail.kernel.org (Postfix) with ESMTP id 6E1A921D94
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 11:59:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587124742;
+	bh=Aprbi/9luBFOOOlSs7z6d13WlhqpFLi/llfRAm/Yr+s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=S9Sfvvuh1prMYUmybFDQFVaqZvhVv8x3ZOCvgTdPcevqawEYM6FtlNDtTafDBcxtN
+	 c56SFjIeID4x1hmMbv6xoYRkVByTDqcCZO3iMDwTImrA3NoEJgsmfOYNp/L9P9mQhk
+	 4Tcq+y77C78uoEU7ZqSR4iD1hs423j5c7Sy5RAPY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730547AbgDQL6k (ORCPT
+        id S1730568AbgDQL7B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 07:58:40 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:3537 "EHLO pegase1.c-s.fr"
+        Fri, 17 Apr 2020 07:59:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54310 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730510AbgDQL6k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 07:58:40 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 493ZP83Y0lz9txqB;
-        Fri, 17 Apr 2020 13:58:36 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=jfPpSOV7; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id wfRM3Xf0C7Jq; Fri, 17 Apr 2020 13:58:36 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 493ZP82Tp4z9txq9;
-        Fri, 17 Apr 2020 13:58:36 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1587124716; bh=+6aCIvAjXcrudQUn/2M34iLi4CXsZ4oDJBUUcikxFjw=;
-        h=From:Subject:To:Cc:Date:From;
-        b=jfPpSOV7hWuqb8Yk/0+ksMs1N5K1NC948+vstNM2JYatw/u5nLYB30h/bIcG6AiSk
-         qVkErlb8yiSGYtYNT2VEiItmaor9wtDSZNc53QgtQvG647ScRENCKupXFW46UN6xvE
-         FxqjRyn0hBWTxxNhmsUgwh9um2ZTDCdXr4jfV8YU=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 9F7538BB69;
-        Fri, 17 Apr 2020 13:58:37 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id T6GIoqH92K4h; Fri, 17 Apr 2020 13:58:37 +0200 (CEST)
-Received: from localhost.localdomain (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 47F068BB4C;
-        Fri, 17 Apr 2020 13:58:37 +0200 (CEST)
-Received: by localhost.localdomain (Postfix, from userid 0)
-        id 05E3B657A3; Fri, 17 Apr 2020 11:58:36 +0000 (UTC)
-Message-Id: <540242f7d4573f7cdf1b3bf46bb35f743b2cd68f.1587124651.git.christophe.leroy@c-s.fr>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [PATCH] powerpc/mm: Fix CONFIG_PPC_KUAP_DEBUG on PPC32
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Fri, 17 Apr 2020 11:58:36 +0000 (UTC)
+        id S1730536AbgDQL7A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Apr 2020 07:59:00 -0400
+Received: from localhost (unknown [223.235.195.235])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CA06C2078E;
+        Fri, 17 Apr 2020 11:58:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587124740;
+        bh=Aprbi/9luBFOOOlSs7z6d13WlhqpFLi/llfRAm/Yr+s=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=BYVgEsBMMDaQz/nkxwqdId8LDIS9qtDWoGkz7uqJCosA/bfbMf8y7ILbHAeYZMBGU
+         qoB6LzD4ZZ/1wLLSgvJ/uqQKhxi42dF3WedHwIMabGNKdflC6OSzUS/IRJEFkix2vv
+         RYnjktPcKKdtPhdl3VeCb7ekvzBRv13K0Vmuu3M0=
+Date:   Fri, 17 Apr 2020 17:28:56 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     leonid.ravich@dell.com
+Cc:     dmaengine@vger.kernel.org, lravich@gmail.com,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        "Alexander.Barabash@dell.com" <Alexander.Barabash@dell.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Jilayne Lovejoy <opensource@jilayne.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/2] dmaengine: ioat: fixing chunk sizing macros
+ dependency
+Message-ID: <20200417115856.GP72691@vkoul-mobl>
+References: <20200402163356.9029-2-leonid.ravich@dell.com>
+ <20200416170628.16196-1-leonid.ravich@dell.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200416170628.16196-1-leonid.ravich@dell.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-CONFIG_PPC_KUAP_DEBUG is not selectable because it depends on PPC_32
-which doesn't exists.
+On 16-04-20, 20:06, leonid.ravich@dell.com wrote:
+> From: Leonid Ravich <Leonid.Ravich@emc.com>
+> 
+> changing macros which assumption is chunk size of 2M,
+> which can be other size
+> prepare for changing allocation chunk size.
 
-Fixing it leads to a deadlock due to a vital register getting
-clobbered in _switch().
-
-Change dependency to PPC32 and use r0 instead of r4 in _switch()
-
-Fixes: e2fb9f544431 ("powerpc/32: Prepare for Kernel Userspace Access Protection")
-Cc: stable@vger.kernel.org
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
----
- arch/powerpc/kernel/entry_32.S         | 2 +-
- arch/powerpc/platforms/Kconfig.cputype | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/arch/powerpc/kernel/entry_32.S b/arch/powerpc/kernel/entry_32.S
-index a6371fb8f761..8420abd4ea1c 100644
---- a/arch/powerpc/kernel/entry_32.S
-+++ b/arch/powerpc/kernel/entry_32.S
-@@ -732,7 +732,7 @@ END_FTR_SECTION_IFSET(CPU_FTR_SPE)
- 	stw	r10,_CCR(r1)
- 	stw	r1,KSP(r3)	/* Set old stack pointer */
- 
--	kuap_check r2, r4
-+	kuap_check r2, r0
- #ifdef CONFIG_SMP
- 	/* We need a sync somewhere here to make sure that if the
- 	 * previous task gets rescheduled on another CPU, it sees all
-diff --git a/arch/powerpc/platforms/Kconfig.cputype b/arch/powerpc/platforms/Kconfig.cputype
-index 11412078e732..9fffe99b343d 100644
---- a/arch/powerpc/platforms/Kconfig.cputype
-+++ b/arch/powerpc/platforms/Kconfig.cputype
-@@ -397,7 +397,7 @@ config PPC_KUAP
- 
- config PPC_KUAP_DEBUG
- 	bool "Extra debugging for Kernel Userspace Access Protection"
--	depends on PPC_KUAP && (PPC_RADIX_MMU || PPC_32)
-+	depends on PPC_KUAP && (PPC_RADIX_MMU || PPC32)
- 	help
- 	  Add extra debugging for Kernel Userspace Access Protection (KUAP)
- 	  If you're unsure, say N.
+Applied both, thanks
 -- 
-2.25.0
-
+~Vinod
