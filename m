@@ -2,108 +2,104 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D05EC38A2B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 13:33:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 048BDC2D0EF
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 13:33:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 352192137B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 13:33:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="epcco69x"
+	by mail.kernel.org (Postfix) with ESMTP id DBEC22053B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 13:33:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730691AbgDQNdT (ORCPT
+        id S1730713AbgDQNdl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 09:33:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54646 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730562AbgDQNdS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 09:33:18 -0400
-Received: from mail-qv1-xf34.google.com (mail-qv1-xf34.google.com [IPv6:2607:f8b0:4864:20::f34])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67818C061A0C;
-        Fri, 17 Apr 2020 06:33:17 -0700 (PDT)
-Received: by mail-qv1-xf34.google.com with SMTP id q31so836662qvf.11;
-        Fri, 17 Apr 2020 06:33:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=rsGTgPNg0gRWQFVhxxKuk9eFwxrJEOjXFxqXlY1g5z4=;
-        b=epcco69xZAmv9uWNczNH7J2bL3Pr0XPUSc9ZREpu7yQBt6L6AaIlrpDgmTB0eKFhJz
-         4uvuUnGrEEngOQ0PpB3vSfBxMsHTg3nDb3EFX0Qaq2LMkUGxqsC798CprmxOQXbhxrDn
-         cR8+WfOKCPIoun3JzRe73Q+Iq56blgrrH//XAm4gVs2UCKhEOAZGBVzRUai2LYfzXxCE
-         a8luP2pqAmCCVp7zjPZXJnQz55CVGrkGkbkccVZhooBkZOCCv2lxidbAV71/f6ci8yYB
-         xBplb1jL9x12TTUJQbN2rWRq18bJX84NIy9carCcpR0HCcBeQyzHd5FDhz55RieMNktn
-         PIzA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=rsGTgPNg0gRWQFVhxxKuk9eFwxrJEOjXFxqXlY1g5z4=;
-        b=r/d0QajAurtKcehXirFEdirLbXOrT75TiXfwz+2QqWKjCYjMweeeqEOJlfWrhXGPAA
-         TyPGz3SVq5r5gAocWkY4j2gj/ySGikHr0JHiq3UczMuv0uV/dBwU3MVF48PEhIJIoCEI
-         TpOcJTQA22dc/Qw9lfAIm8pvudAM9dJoK67Fg0j9WuAURZTc8CWrHmUqKsHB7UEtdLqQ
-         GV0pTWoiNXhJFo3MTUM27RMcYBl1ScyrZcK05ArGWYUvm2G4XAbU1+PTugqs45YCEyAr
-         XwiNfIWlgO8ps79NQT3wec5BQJb7qKrub8ZcwLfAELahkqZ9AgXYvVlq44Ax8pgehYnB
-         o0zw==
-X-Gm-Message-State: AGi0PuZ8Nw6I+6jzu4oTl0tJqh8oZdQQpDoRGW+HSluV42/6LIsLXqrW
-        ReUu3IrukHDfhYiOnSWWjltqte91EKqsWNJT1Q==
-X-Google-Smtp-Source: APiQypJG6oFpnyio1PPFBWwCpYmnOYnIaMdVhY9EJy4Zv7COOdH/yMcJ5r6yBoDHlREoZ0NErbDn4nECeqFYYjVVo/U=
-X-Received: by 2002:ad4:4ae3:: with SMTP id cp3mr2545384qvb.136.1587130396490;
- Fri, 17 Apr 2020 06:33:16 -0700 (PDT)
+        Fri, 17 Apr 2020 09:33:41 -0400
+Received: from mga11.intel.com ([192.55.52.93]:20698 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730610AbgDQNdk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Apr 2020 09:33:40 -0400
+IronPort-SDR: A8sdd/x7//Itl5n6PmufCSO/Ey5/rtCdYA7NYVQeOsysuu5xn+Uxgj+s2WzR9TrKMJfTVT0dxb
+ txo68Zvvdc4w==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2020 06:33:40 -0700
+IronPort-SDR: 8i6j3nEPlk0bXHPhT0/jUcxr4Mtp6sg0LT4GqD1WUm4FPS4NvEm4vaZxzy3YmR3OVYwB2shxCB
+ 7MyOgCC+RC9w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,395,1580803200"; 
+   d="scan'208";a="278380256"
+Received: from dsbrown-mobl.amr.corp.intel.com (HELO [10.251.128.242]) ([10.251.128.242])
+  by fmsmga004.fm.intel.com with ESMTP; 17 Apr 2020 06:33:38 -0700
+Subject: Re: [PATCH v2] ASoC: bdw-rt5650: remove 3-channel capture support
+To:     Cezary Rojewski <cezary.rojewski@intel.com>,
+        "Lu, Brent" <brent.lu@intel.com>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>
+Cc:     Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Jie Yang <yang.jie@linux.intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Takashi Iwai <tiwai@suse.com>,
+        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
+        Ben Zhang <benzh@chromium.org>,
+        "Chiang, Mac" <mac.chiang@intel.com>,
+        Mark Brown <broonie@kernel.org>
+References: <1586766533-18557-1-git-send-email-brent.lu@intel.com>
+ <9a484795-ea4a-e559-4ea9-3de24417ec9b@linux.intel.com>
+ <BN6PR1101MB21320F655CFC1C271CCA9CE097DD0@BN6PR1101MB2132.namprd11.prod.outlook.com>
+ <4b9455cb-d0d2-f5d8-f04c-df6e5abb4441@linux.intel.com>
+ <BN6PR1101MB2132BBB45C6683D6BE1FBCD897D90@BN6PR1101MB2132.namprd11.prod.outlook.com>
+ <95d0a64e-d2e9-7117-75c5-6c68b1426f93@intel.com>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Message-ID: <b402d107-9a8b-c4df-de13-f6bf61195442@linux.intel.com>
+Date:   Fri, 17 Apr 2020 08:33:38 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <20200417081122.59d9a417@canb.auug.org.au>
-In-Reply-To: <20200417081122.59d9a417@canb.auug.org.au>
-From:   Rob Herring <robherring2@gmail.com>
-Date:   Fri, 17 Apr 2020 08:33:05 -0500
-Message-ID: <CAL_JsqK9dcuss5AzAauegZpL3=uaAn0zG3JOxyKSuDNgMsb76Q@mail.gmail.com>
-Subject: Re: linux-next: Fixes tag needs some work in the devicetree-fixes tree
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Alexandru Tachici <alexandru.tachici@analog.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <95d0a64e-d2e9-7117-75c5-6c68b1426f93@intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 16, 2020 at 5:11 PM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
->
-> Hi all,
->
-> In commit
->
->   acca9cd4a084 ("dt-bindings: iio: dac: AD5570R fix bindings errors")
->
-> Fixes tag
->
->   Fixes: ea52c21268e6 ("iio: dac: ad5770r: Add AD5770R support")
->
-> has these problem(s):
->
->   - Subject does not match target commit subject
->     Just use
->         git log -1 --format='Fixes: %h ("%s")'
->
-> Did you mean
->
-> Fixes: ea52c21268e6 ("dt-bindings: iio: dac: Add docs for AD5770R DAC")
 
-Sigh, yes. Now fixed.
 
-Thanks,
-Rob
+On 4/17/20 2:59 AM, Cezary Rojewski wrote:
+> On 2020-04-17 03:32, Lu, Brent wrote:
+>>>
+>>> It seems like a generic problem on all Broadwell devices so let's 
+>>> solve with
+>>> one a single patchset.
+>>>
+>>> Shouldn't we just add the 2ch constraints for broadwell.c and 
+>>> bdw-rt5677.c,
+>>> and the 2 or 4ch constraint for bdw-rt5650.c? Would this work for you?
+>>>
+>>> Thanks
+>>> -Pierre
+>>
+>> Hi Pierre,
+>>
+>> Are you saying submitting a new patch to add constraints to all three 
+>> broadwell.c,
+>> bdw-rt5650.c, and bdw-rt5677.c?
+>>
+>>
+>> Regards,
+>> Brent
+>>
+> 
+> What Pierre suggested is that you submit a series of patches instead - 
+> one for each of BDW machine boards. If the same problem exists on all of 
+> them, there is no reason to left other boards unattended.
 
->
-> or
->
-> Fixes: cbbb819837f6 ("iio: dac: ad5770r: Add AD5770R support")
->
-> --
-> Cheers,
-> Stephen Rothwell
+Yes, a series of 3 patches with the same code pattern, the only 
+variation being 4 ch allowed for bdw-rt5650.c in addition to the default 
+2ch for all 3 boards.
+
+Thanks
+-Pierre
