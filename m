@@ -2,152 +2,102 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48829C2D0EF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 14:26:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EB42C38A2B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 14:29:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 226E220B1F
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 14:26:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10B1C2087E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 14:29:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="BaIKCdF/"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="BbU0gDPu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728006AbgDQO04 (ORCPT
+        id S1726707AbgDQO3v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 10:26:56 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:38374 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728010AbgDQO0z (ORCPT
+        Fri, 17 Apr 2020 10:29:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35342 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725970AbgDQO3u (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 10:26:55 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1587133614; h=Content-Transfer-Encoding: MIME-Version:
- References: In-Reply-To: Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=fSWZYAx+xUo9BW8l9Vg7d7Qrc7pAbwtD1+dmCZo15aU=; b=BaIKCdF/1DE7jbJCb/IulSSmjWi+mzORwHKD6Vh18yBLpvuCHqVf1v77bVavCzDffcY6tyUz
- JhoRXWR3KdbTPpKXk5i9yCmCVH8b1+0Abz8zAgGOCqxWlMP72UEFTXkWkQPCN9LnyI+7WgBn
- m39ztzeSzureY3aKbpYXM0dw6FE=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e99bca5.7fe88aa9f960-smtp-out-n03;
- Fri, 17 Apr 2020 14:26:45 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id CAFB7C433BA; Fri, 17 Apr 2020 14:26:43 +0000 (UTC)
-Received: from blr-ubuntu-87.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: sibis)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 002ABC4478F;
-        Fri, 17 Apr 2020 14:26:39 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 002ABC4478F
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sibis@codeaurora.org
-From:   Sibi Sankar <sibis@codeaurora.org>
-To:     bjorn.andersson@linaro.org
-Cc:     agross@kernel.org, robh+dt@kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, evgreen@chromium.org,
-        ohad@wizery.com, mka@chromium.org, dianders@chromium.org,
-        devicetree@vger.kernel.org, Sibi Sankar <sibis@codeaurora.org>
-Subject: [PATCH 5/5] arm64: dts: qcom: sc7180: Update Q6V5 MSS node
-Date:   Fri, 17 Apr 2020 19:56:05 +0530
-Message-Id: <20200417142605.28885-6-sibis@codeaurora.org>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200417142605.28885-1-sibis@codeaurora.org>
-References: <20200417142605.28885-1-sibis@codeaurora.org>
+        Fri, 17 Apr 2020 10:29:50 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 953C4C061A0C;
+        Fri, 17 Apr 2020 07:29:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=rhvxWH9vx73LZxxbSLZjrpt6xiGRw+gmZ6cOdnw55xQ=; b=BbU0gDPuafoS2nVanEcj/vqeMM
+        OZtn9r+O/5Vg5H5hwI+87H0npqjd7CFoR/MyBnlj+Y0nHXekfBnEauUIad6MZXPlD3P0HDroaY25n
+        xZZ5XqkYjZMey9qa9p63W74y9wlbhGJ2N9NvodNp+bSDkFsfzv3vMnd2ji3sC2/m8UyB3i4SpveX/
+        doh2Qzvk7XH2/Ol8MyI25RY5lXbCWCJx46vndeUUWEnEFZ0ku7fdeq4Z7vQvudiNdEP5fxnA8rVab
+        ZPkuSUpoO5qsdz4tlCw8tlXVHoTlTKkf0R3HZd9GJOa22uTSYUFj9mmcg6DbAuIs6e4AC7wif5coH
+        6kdqGLhw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jPS02-0005mv-PM; Fri, 17 Apr 2020 14:29:46 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 7EFBD3006E0;
+        Fri, 17 Apr 2020 16:29:44 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 6680A2B121814; Fri, 17 Apr 2020 16:29:44 +0200 (CEST)
+Date:   Fri, 17 Apr 2020 16:29:44 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     live-patching@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jessica Yu <jeyu@kernel.org>, x86@kernel.org
+Subject: Re: [PATCH v2 7/9] x86/module: Use text_poke() for late relocations
+Message-ID: <20200417142944.GF20730@hirez.programming.kicks-ass.net>
+References: <cover.1587131959.git.jpoimboe@redhat.com>
+ <572b12b6adcdab29c54cfd41ca8b4672abad628c.1587131959.git.jpoimboe@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <572b12b6adcdab29c54cfd41ca8b4672abad628c.1587131959.git.jpoimboe@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add TCSR node and update MSS node to support MSA based Modem boot on
-SC7180 SoCs.
+On Fri, Apr 17, 2020 at 09:04:32AM -0500, Josh Poimboeuf wrote:
+> +int apply_relocate_add(Elf64_Shdr *sechdrs,
+> +		   const char *strtab,
+> +		   unsigned int symindex,
+> +		   unsigned int relsec,
+> +		   struct module *me)
+> +{
+> +	int ret;
+> +	bool early = me->state == MODULE_STATE_UNFORMED;
+> +	void *(*write)(void *, const void *, size_t) = memcpy;
+> +
+> +	if (!early) {
+> +		write = text_poke;
+> +		mutex_lock(&text_mutex);
+> +	}
+> +
+> +	ret = __apply_relocate_add(sechdrs, strtab, symindex, relsec, me,
+> +				   write);
+> +
+> +	if (!early) {
+> +		mutex_unlock(&text_mutex);
+> +		text_poke_sync();
 
-Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
----
+I'm thinking text_poke_sync() wants to be inside text_mutex. Although
+given that nothing should be running that text, it really doesn't
+matter.
 
-Depends on the following bindings:
-iommus: https://patchwork.kernel.org/patch/11443101/
-spare-regs: https://patchwork.kernel.org/patch/11491425/
-
- arch/arm64/boot/dts/qcom/sc7180-idp.dts | 42 +++++++++++++++++++++++++
- arch/arm64/boot/dts/qcom/sc7180.dtsi    |  5 +++
- 2 files changed, 47 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-index e613d70cc0198..6f472872be1a3 100644
---- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-+++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-@@ -319,6 +319,48 @@ &qupv3_id_1 {
- 	status = "okay";
- };
- 
-+&remoteproc_mpss {
-+	compatible = "qcom,sc7180-mss-pil";
-+	reg = <0 0x04080000 0 0x410>, <0 0x04180000 0 0x48>;
-+	reg-names = "qdsp6", "rmb";
-+
-+	clocks = <&gcc GCC_MSS_CFG_AHB_CLK>,
-+		 <&gcc GCC_MSS_Q6_MEMNOC_AXI_CLK>,
-+		 <&gcc GCC_MSS_NAV_AXI_CLK>,
-+		 <&gcc GCC_MSS_SNOC_AXI_CLK>,
-+		 <&gcc GCC_MSS_MFAB_AXIS_CLK>,
-+		 <&rpmhcc RPMH_CXO_CLK>;
-+	clock-names = "iface", "bus", "nav", "snoc_axi",
-+		      "mnoc_axi", "xo";
-+
-+	iommus = <&apps_smmu 0x460 0x1>, <&apps_smmu 0x444 0x2>;
-+
-+	resets = <&aoss_reset AOSS_CC_MSS_RESTART>,
-+		 <&pdc_reset PDC_MODEM_SYNC_RESET>;
-+	reset-names = "mss_restart", "pdc_reset";
-+
-+	qcom,halt-regs = <&tcsr_mutex_regs 0x23000 0x25000 0x24000>;
-+	qcom,spare-regs = <&tcsr_regs 0xb3e4>;
-+
-+	power-domains = <&aoss_qmp AOSS_QMP_LS_MODEM>,
-+			<&rpmhpd SC7180_CX>,
-+			<&rpmhpd SC7180_MX>,
-+			<&rpmhpd SC7180_MSS>;
-+	power-domain-names = "load_state", "cx", "mx", "mss";
-+
-+	/delete-property/memory-region;
-+
-+	status = "okay";
-+
-+	mba {
-+		memory-region = <&mba_mem>;
-+	};
-+
-+	mpss {
-+		memory-region = <&mpss_mem>;
-+	};
-+};
-+
- &uart3 {
- 	status = "okay";
- 
-diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-index e319762a0bffc..c49801ddb9d70 100644
---- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-@@ -981,6 +981,11 @@ tcsr_mutex_regs: syscon@1f40000 {
- 			reg = <0 0x01f40000 0 0x40000>;
- 		};
- 
-+		tcsr_regs: syscon@1fc0000 {
-+			compatible = "syscon";
-+			reg = <0 0x01fc0000 0 0x40000>;
-+		};
-+
- 		tlmm: pinctrl@3500000 {
- 			compatible = "qcom,sc7180-pinctrl";
- 			reg = <0 0x03500000 0 0x300000>,
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+>  #endif
+>  
+>  int module_finalize(const Elf_Ehdr *hdr,
+> -- 
+> 2.21.1
+> 
