@@ -2,272 +2,53 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA54BC2D0EF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 12:59:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 406D0C38A2B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 12:59:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 92A85206D9
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 12:59:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="KLz4FqKx"
+	by mail.kernel.org (Postfix) with ESMTP id 2A72C206A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 12:59:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730631AbgDQM7Y (ORCPT
+        id S1730649AbgDQM7e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 08:59:24 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:47230 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730165AbgDQM6m (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 08:58:42 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 03HCw9wr013747;
-        Fri, 17 Apr 2020 07:58:09 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1587128289;
-        bh=DOBs9Avsla6Bvl41pGUSBS2Aw8GI+lo3Fc5IsqKblZY=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=KLz4FqKxWiDDhqCUEdPYrrxAUHBrrLTrgdQWGal0OKp0knS+dghLtntNbJrDMlFJO
-         qaZOvAAm0fkLIkyyOD5dmy9jMS5zYgbFxZsOtKhKkRSmSspfHNj5hOSTMuqJZOW/0O
-         arlyeeucNvzTEC4XuuVJrqhbpFrueYtBJv4WuJ5U=
-Received: from DFLE106.ent.ti.com (dfle106.ent.ti.com [10.64.6.27])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 03HCw9jF056878
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 17 Apr 2020 07:58:09 -0500
-Received: from DFLE112.ent.ti.com (10.64.6.33) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 17
- Apr 2020 07:58:08 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Fri, 17 Apr 2020 07:58:08 -0500
-Received: from a0393678ub.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03HCvsD8031089;
-        Fri, 17 Apr 2020 07:58:05 -0500
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-To:     Tom Joseph <tjoseph@cadence.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>
-CC:     Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH v3 03/14] PCI: cadence: Add support to use custom read and write accessors
-Date:   Fri, 17 Apr 2020 18:27:42 +0530
-Message-ID: <20200417125753.13021-4-kishon@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200417125753.13021-1-kishon@ti.com>
-References: <20200417125753.13021-1-kishon@ti.com>
+        Fri, 17 Apr 2020 08:59:34 -0400
+Received: from verein.lst.de ([213.95.11.211]:57514 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730166AbgDQM7c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Apr 2020 08:59:32 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id A72B768BEB; Fri, 17 Apr 2020 14:59:29 +0200 (CEST)
+Date:   Fri, 17 Apr 2020 14:59:29 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
+Cc:     kbusch@kernel.org, axboe@fb.com, hch@lst.de, sagi@grimberg.me,
+        linux-stable <stable@vger.kernel.org>,
+        "open list:NVM EXPRESS DRIVER" <linux-nvme@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] nvme/pci: Use Discard instead of Write Zeroes on SK
+ hynix SC300
+Message-ID: <20200417125929.GA5053@lst.de>
+References: <20200417083641.28205-1-kai.heng.feng@canonical.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200417083641.28205-1-kai.heng.feng@canonical.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support to use custom read and write accessors. Platforms that
-don't support half word or byte access or any other constraint
-while accessing registers can use this feature to populate custom
-read and write accessors. These custom accessors are used for both
-standard register access and configuration space register access of
-the PCIe host bridge.
+On Fri, Apr 17, 2020 at 04:36:41PM +0800, Kai-Heng Feng wrote:
+> After commit 6e02318eaea5 ("nvme: add support for the Write Zeroes
+> command"), SK hynix SC300 becomes very slow with the following error
+> message:
+> [  224.567695] blk_update_request: operation not supported error, dev nvme1n1, sector 499384320 op 0x9:(WRITE_ZEROES) flags 0x1000000 phys_seg 0 prio class 0]
+> 
+> Use quirk NVME_QUIRK_DEALLOCATE_ZEROES to workaround this issue.
 
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
----
- drivers/pci/controller/cadence/pcie-cadence.h | 107 +++++++++++++++---
- 1 file changed, 94 insertions(+), 13 deletions(-)
-
-diff --git a/drivers/pci/controller/cadence/pcie-cadence.h b/drivers/pci/controller/cadence/pcie-cadence.h
-index df14ad002fe9..70b6b25153e8 100644
---- a/drivers/pci/controller/cadence/pcie-cadence.h
-+++ b/drivers/pci/controller/cadence/pcie-cadence.h
-@@ -223,6 +223,11 @@ enum cdns_pcie_msg_routing {
- 	MSG_ROUTING_GATHER,
- };
- 
-+struct cdns_pcie_ops {
-+	u32	(*read)(void __iomem *addr, int size);
-+	void	(*write)(void __iomem *addr, int size, u32 value);
-+};
-+
- /**
-  * struct cdns_pcie - private data for Cadence PCIe controller drivers
-  * @reg_base: IO mapped register base
-@@ -239,7 +244,7 @@ struct cdns_pcie {
- 	int			phy_count;
- 	struct phy		**phy;
- 	struct device_link	**link;
--	const struct cdns_pcie_common_ops *ops;
-+	const struct cdns_pcie_ops *ops;
- };
- 
- /**
-@@ -299,69 +304,145 @@ struct cdns_pcie_ep {
- /* Register access */
- static inline void cdns_pcie_writeb(struct cdns_pcie *pcie, u32 reg, u8 value)
- {
--	writeb(value, pcie->reg_base + reg);
-+	void __iomem *addr = pcie->reg_base + reg;
-+
-+	if (pcie->ops && pcie->ops->write) {
-+		pcie->ops->write(addr, 0x1, value);
-+		return;
-+	}
-+
-+	writeb(value, addr);
- }
- 
- static inline void cdns_pcie_writew(struct cdns_pcie *pcie, u32 reg, u16 value)
- {
--	writew(value, pcie->reg_base + reg);
-+	void __iomem *addr = pcie->reg_base + reg;
-+
-+	if (pcie->ops && pcie->ops->write) {
-+		pcie->ops->write(addr, 0x2, value);
-+		return;
-+	}
-+
-+	writew(value, addr);
- }
- 
- static inline void cdns_pcie_writel(struct cdns_pcie *pcie, u32 reg, u32 value)
- {
--	writel(value, pcie->reg_base + reg);
-+	void __iomem *addr = pcie->reg_base + reg;
-+
-+	if (pcie->ops && pcie->ops->write) {
-+		pcie->ops->write(addr, 0x4, value);
-+		return;
-+	}
-+
-+	writel(value, addr);
- }
- 
- static inline u32 cdns_pcie_readl(struct cdns_pcie *pcie, u32 reg)
- {
--	return readl(pcie->reg_base + reg);
-+	void __iomem *addr = pcie->reg_base + reg;
-+
-+	if (pcie->ops && pcie->ops->read)
-+		return pcie->ops->read(addr, 0x4);
-+
-+	return readl(addr);
- }
- 
- /* Root Port register access */
- static inline void cdns_pcie_rp_writeb(struct cdns_pcie *pcie,
- 				       u32 reg, u8 value)
- {
--	writeb(value, pcie->reg_base + CDNS_PCIE_RP_BASE + reg);
-+	void __iomem *addr = pcie->reg_base + CDNS_PCIE_RP_BASE + reg;
-+
-+	if (pcie->ops && pcie->ops->write) {
-+		pcie->ops->write(addr, 0x1, value);
-+		return;
-+	}
-+
-+	writeb(value, addr);
- }
- 
- static inline void cdns_pcie_rp_writew(struct cdns_pcie *pcie,
- 				       u32 reg, u16 value)
- {
--	writew(value, pcie->reg_base + CDNS_PCIE_RP_BASE + reg);
-+	void __iomem *addr = pcie->reg_base + CDNS_PCIE_RP_BASE + reg;
-+
-+	if (pcie->ops && pcie->ops->write) {
-+		pcie->ops->write(addr, 0x2, value);
-+		return;
-+	}
-+
-+	writew(value, addr);
- }
- 
- /* Endpoint Function register access */
- static inline void cdns_pcie_ep_fn_writeb(struct cdns_pcie *pcie, u8 fn,
- 					  u32 reg, u8 value)
- {
--	writeb(value, pcie->reg_base + CDNS_PCIE_EP_FUNC_BASE(fn) + reg);
-+	void __iomem *addr = pcie->reg_base + CDNS_PCIE_EP_FUNC_BASE(fn) + reg;
-+
-+	if (pcie->ops && pcie->ops->write) {
-+		pcie->ops->write(addr, 0x1, value);
-+		return;
-+	}
-+
-+	writeb(value, addr);
- }
- 
- static inline void cdns_pcie_ep_fn_writew(struct cdns_pcie *pcie, u8 fn,
- 					  u32 reg, u16 value)
- {
--	writew(value, pcie->reg_base + CDNS_PCIE_EP_FUNC_BASE(fn) + reg);
-+	void __iomem *addr = pcie->reg_base + CDNS_PCIE_EP_FUNC_BASE(fn) + reg;
-+
-+	if (pcie->ops && pcie->ops->write) {
-+		pcie->ops->write(addr, 0x2, value);
-+		return;
-+	}
-+
-+	writew(value, addr);
- }
- 
- static inline void cdns_pcie_ep_fn_writel(struct cdns_pcie *pcie, u8 fn,
- 					  u32 reg, u32 value)
- {
--	writel(value, pcie->reg_base + CDNS_PCIE_EP_FUNC_BASE(fn) + reg);
-+	void __iomem *addr = pcie->reg_base + CDNS_PCIE_EP_FUNC_BASE(fn) + reg;
-+
-+	if (pcie->ops && pcie->ops->write) {
-+		pcie->ops->write(addr, 0x4, value);
-+		return;
-+	}
-+
-+	writel(value, addr);
- }
- 
- static inline u8 cdns_pcie_ep_fn_readb(struct cdns_pcie *pcie, u8 fn, u32 reg)
- {
--	return readb(pcie->reg_base + CDNS_PCIE_EP_FUNC_BASE(fn) + reg);
-+	void __iomem *addr = pcie->reg_base + CDNS_PCIE_EP_FUNC_BASE(fn) + reg;
-+
-+	if (pcie->ops && pcie->ops->read)
-+		return pcie->ops->read(addr, 0x1);
-+
-+	return readb(addr);
- }
- 
- static inline u16 cdns_pcie_ep_fn_readw(struct cdns_pcie *pcie, u8 fn, u32 reg)
- {
--	return readw(pcie->reg_base + CDNS_PCIE_EP_FUNC_BASE(fn) + reg);
-+	void __iomem *addr = pcie->reg_base + CDNS_PCIE_EP_FUNC_BASE(fn) + reg;
-+
-+	if (pcie->ops && pcie->ops->read)
-+		return pcie->ops->read(addr, 0x2);
-+
-+	return readw(addr);
- }
- 
- static inline u32 cdns_pcie_ep_fn_readl(struct cdns_pcie *pcie, u8 fn, u32 reg)
- {
--	return readl(pcie->reg_base + CDNS_PCIE_EP_FUNC_BASE(fn) + reg);
-+	void __iomem *addr = pcie->reg_base + CDNS_PCIE_EP_FUNC_BASE(fn) + reg;
-+
-+	if (pcie->ops && pcie->ops->read)
-+		return pcie->ops->read(addr, 0x4);
-+
-+	return readl(addr);
- }
- 
- #ifdef CONFIG_PCIE_CADENCE_HOST
--- 
-2.17.1
-
+Do you have a written guarantee from SK Hynix that it will always zero
+all blocks discarded?
