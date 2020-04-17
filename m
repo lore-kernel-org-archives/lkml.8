@@ -2,111 +2,105 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0AF4C2D0EF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 15:06:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60E52C352BE
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 15:07:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D7B7D21924
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 15:06:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F0DE20857
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 15:07:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728800AbgDQPGj (ORCPT
+        id S1728625AbgDQPH0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 11:06:39 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:54028 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728688AbgDQPGe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 11:06:34 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id 98BD22A2AD9
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-To:     linux-kernel@vger.kernel.org,
-        Collabora Kernel ML <kernel@collabora.com>
-Cc:     matthias.bgg@gmail.com, drinkcat@chromium.org, hsinyi@chromium.org,
-        laurent.pinchart@ideasonboard.com,
-        Chun-Kuang Hu <chunkuang.hu@kernel.org>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org
-Subject: [PATCH v3 7/7] drm/mediatek: mtk_dsi: Create connector for bridges
-Date:   Fri, 17 Apr 2020 17:06:14 +0200
-Message-Id: <20200417150614.2631786-8-enric.balletbo@collabora.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200417150614.2631786-1-enric.balletbo@collabora.com>
-References: <20200417150614.2631786-1-enric.balletbo@collabora.com>
+        Fri, 17 Apr 2020 11:07:26 -0400
+Received: from muru.com ([72.249.23.125]:49880 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728114AbgDQPH0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Apr 2020 11:07:26 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 6BBBB8047;
+        Fri, 17 Apr 2020 15:08:12 +0000 (UTC)
+Date:   Fri, 17 Apr 2020 08:07:21 -0700
+From:   Tony Lindgren <tony@atomide.com>
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc:     Andreas Kemnade <andreas@kemnade.info>,
+        Evgeniy Polyakov <zbr@ioremap.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-omap <linux-omap@vger.kernel.org>,
+        Adam Ford <aford173@gmail.com>,
+        "Andrew F . Davis" <afd@ti.com>, Vignesh R <vigneshr@ti.com>
+Subject: Re: [PATCHv3] w1: omap-hdq: Simplify driver with PM runtime
+ autosuspend
+Message-ID: <20200417150721.GL37466@atomide.com>
+References: <20191217004048.46298-1-tony@atomide.com>
+ <7B8C7DD9-095B-48FC-9642-695D07B79E97@goldelico.com>
+ <20200416184638.GI37466@atomide.com>
+ <3197C3F0-DEB9-4221-AFBD-4F2A08C84C4C@goldelico.com>
+ <20200417164340.3d9043d1@aktux>
+ <6430AF54-849E-456B-8DB0-B4478BBDB78D@goldelico.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6430AF54-849E-456B-8DB0-B4478BBDB78D@goldelico.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use the drm_bridge_connector helper to create a connector for pipelines
-that use drm_bridge. This allows splitting connector operations across
-multiple bridges when necessary, instead of having the last bridge in
-the chain creating the connector and handling all connector operations
-internally.
+* H. Nikolaus Schaller <hns@goldelico.com> [200417 14:53]:
+> 
+> > Am 17.04.2020 um 16:43 schrieb Andreas Kemnade <andreas@kemnade.info>:
+> > 
+> > On Fri, 17 Apr 2020 16:22:47 +0200
+> > "H. Nikolaus Schaller" <hns@goldelico.com> wrote:
+> > 
+> >>> Am 16.04.2020 um 20:46 schrieb Tony Lindgren <tony@atomide.com>:
+> >>> Care to check if changing pm_runtime_set_autosuspend_delay value
+> >>> to -1 in probe makes the issue go away? Or change it manually
+> >>> to -1 via sysfs.
+> >>> 
+> >>> If that helps, likely we have a missing pm_runtime_get_sync()
+> >>> somewhere in the driver.  
+> >> 
+> >> Yes, it does! It suffices to set it to -1 for one readout.
+> >> Aything else I can test?
 
-Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
----
+You could sprinkle dev_info(dev, "%s\n", __func__) to the
+omap_hdq_runtime_suspend() and omap_hdq_runtime_resume()
+functions.
 
-Changes in v3:
-- Move the bridge.type line to the patch that adds drm_bridge support. (Laurent Pinchart)
+> > How does it depend on loaded drivers?
+> > Is it really mainline kernel + config + devicetree or something else?
+> 
+> Well, I can revert the patch on the same
+> kernel (5.6 or 5.7-rc1) + config + devicetree + user-space
+> and the problem is gone.
+> 
+> This means that something is different between the old and the new
+> version which makes the hdq access delayed and failing. Of course I
+> don't know the reason for it and what does influence it.
+> 
+> > 
+> > Can you reproduce the problem with init=/bin/bash
+> > and then mount sysfs and modprobe omap_hdq?
+> 
+> I am not sure how quickly I can test such a setup.
+> 
+> > Regarding pm_runtime stuff I thought I have the worst case scenario.
+> 
+> What may make a difference is the sequence in which drivers are loaded.
 
-Changes in v2: None
+Well to me it seems that we have PM runtime handling properly
+implemented for all the functions in w1_bus_master omap_w1_master,
+so we should not have any consumers calling into the driver
+bypassing PM runtime.
 
- drivers/gpu/drm/mediatek/mtk_dsi.c | 13 ++++++++++++-
- 1 file changed, 12 insertions(+), 1 deletion(-)
+Maybe the PM runtime usecounts get unbalanced somewhere in the
+driver where we end up with driver permanently in disabled state?
 
-diff --git a/drivers/gpu/drm/mediatek/mtk_dsi.c b/drivers/gpu/drm/mediatek/mtk_dsi.c
-index 157097c63b23..85f76b01ae4d 100644
---- a/drivers/gpu/drm/mediatek/mtk_dsi.c
-+++ b/drivers/gpu/drm/mediatek/mtk_dsi.c
-@@ -17,6 +17,7 @@
- 
- #include <drm/drm_atomic_helper.h>
- #include <drm/drm_bridge.h>
-+#include <drm/drm_bridge_connector.h>
- #include <drm/drm_mipi_dsi.h>
- #include <drm/drm_of.h>
- #include <drm/drm_panel.h>
-@@ -183,6 +184,7 @@ struct mtk_dsi {
- 	struct drm_encoder encoder;
- 	struct drm_bridge bridge;
- 	struct drm_bridge *next_bridge;
-+	struct drm_connector *connector;
- 	struct phy *phy;
- 
- 	void __iomem *regs;
-@@ -977,10 +979,19 @@ static int mtk_dsi_encoder_init(struct drm_device *drm, struct mtk_dsi *dsi)
- 	 */
- 	dsi->encoder.possible_crtcs = 1;
- 
--	ret = drm_bridge_attach(&dsi->encoder, &dsi->bridge, NULL, 0);
-+	ret = drm_bridge_attach(&dsi->encoder, &dsi->bridge, NULL,
-+				DRM_BRIDGE_ATTACH_NO_CONNECTOR);
- 	if (ret)
- 		goto err_cleanup_encoder;
- 
-+	dsi->connector = drm_bridge_connector_init(drm, &dsi->encoder);
-+	if (IS_ERR(dsi->connector)) {
-+		DRM_ERROR("Unable to create bridge connector\n");
-+		ret = PTR_ERR(dsi->connector);
-+		goto err_cleanup_encoder;
-+	}
-+	drm_connector_attach_encoder(dsi->connector, &dsi->encoder);
-+
- 	return 0;
- 
- err_cleanup_encoder:
--- 
-2.25.1
+Regards,
 
+Tony
