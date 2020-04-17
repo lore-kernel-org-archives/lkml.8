@@ -2,87 +2,181 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E19BBC2D0EF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 19:39:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 594A3C38A29
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 19:40:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B8ED6206D9
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 19:39:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34650206D9
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 19:40:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="MysNWm+Y"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="r4LN2nQ9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730619AbgDQTjK (ORCPT
+        id S1730636AbgDQTkB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 15:39:10 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:45034 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730336AbgDQTjJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 15:39:09 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=5wbOmjfBKlirMRvp5xkC4Vfb3UzqF4kW6GaX+rtLC0w=; b=MysNWm+Y2KusXIbmHXxDn1//Qv
-        lmbrRrLEkeVCG+iEB0C0OrfMinRn1UVeI6mD+HHpRourTk3OftiF7Lz3FKcGF89362FLHYkjt1Nxz
-        DIuA5NLySaGnnqp7dNYaGovpinRPtaPD2Qb9+KeQUBxfC4d6VEvx+/2ETsh4TwlDY808=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1jPWpN-003LEM-6k; Fri, 17 Apr 2020 21:39:05 +0200
-Date:   Fri, 17 Apr 2020 21:39:05 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Michael Walle <michael@walle.cc>
-Cc:     linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        "David S . Miller" <davem@davemloft.net>
-Subject: Re: [PATCH net-next 2/3] net: phy: add Broadcom BCM54140 support
-Message-ID: <20200417193905.GF785713@lunn.ch>
-References: <20200417192858.6997-1-michael@walle.cc>
- <20200417192858.6997-2-michael@walle.cc>
+        Fri, 17 Apr 2020 15:40:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55322 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730336AbgDQTkA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Apr 2020 15:40:00 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4AA9FC061A0F
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 12:40:00 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id x26so1575363pgc.10
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 12:40:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=HHki1/clwzRpcS2KonbHjBcGr0VzFjzzuxJR5A2/dPA=;
+        b=r4LN2nQ95y2i7LQKYDZSCrOF1+aJbkcHn8LCmMGH5TDF42dLiCIBWRd2P4qx3Zho14
+         7aTfN3Dbs/37d0JoOeKq+VExwsd6kY6dH1Qz4jilxwT/Bxh3rMmY49ZW79bjC1vl3LbT
+         5G2Emdx+5v6CRsbJqLe1LdQMiaww+5mxwukoE63zp0IHWuMqAVMrW0cvOky6dgc+LJVf
+         9skxFnsl79e9lKvrA6j0H8BAJ2xjDdU85/hC3M1AsS/J6J9ghWcEY0P21vE1V0hxUk9W
+         xY/mmXYk0D0xNvjl70Zq17IIdmRqiJcE/c1KQoH4TyRsl5AOSMTIl4f0zau7IBIeJMcR
+         hGoQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=HHki1/clwzRpcS2KonbHjBcGr0VzFjzzuxJR5A2/dPA=;
+        b=AqKRgq8J7c2eQzHnZehYz7dTDUJhATIN3EKImaZIcq716yHwMojYGyDz2Z8GB4OUFO
+         D8f2oD2ehQbMNbabgJtw7Ba7lc5dQQXt4NgtmstZiH1c4dZAT4vg6NZboHJXCqiAgDrM
+         KXayZdkDgCB8V6zLVpEKTSbORmGoFsjdvot9Lh5O8bFgm2fGCpSuqwLcPmND9PC4BMxa
+         ecIKOJuIW00GrCbDx9Qq49TZVkw0nFWiKIoLtKI1rbCA9ZXkdaZDQWoj17c+E7mU/s6D
+         5wriu3xQglfz4YRgSnpgifnqZGnF1kcEXSU5ZjCEmfR+Ckv/7eKAd1jGybOlUHkDEAKM
+         N6UQ==
+X-Gm-Message-State: AGi0PublofZF1BW0xAqI/dFFBPhRv2gYPjvcNKPr/5/e/btBhWFvO6aS
+        96WVf2M3S08LoLWvzYhv4Fwkaw==
+X-Google-Smtp-Source: APiQypKxU/Fe2C9/2BVfZrjinp9TFg/I6raVR8ub6XtMJFTsnuEutdn0FPOZHNUVPLyvYKYplnX24Q==
+X-Received: by 2002:a63:c007:: with SMTP id h7mr4549793pgg.428.1587152399831;
+        Fri, 17 Apr 2020 12:39:59 -0700 (PDT)
+Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
+        by smtp.gmail.com with ESMTPSA id i9sm2358018pfk.199.2020.04.17.12.39.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 17 Apr 2020 12:39:59 -0700 (PDT)
+Date:   Fri, 17 Apr 2020 13:39:57 -0600
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+To:     Clement Leger <cleger@kalray.eu>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Ohad Ben-Cohen <ohad@wizery.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 2/2] remoteproc: use rproc_coredump_set_elf_info in
+ drivers
+Message-ID: <20200417193957.GC6797@xps15>
+References: <20200410102433.2672-1-cleger@kalray.eu>
+ <20200410102433.2672-3-cleger@kalray.eu>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200417192858.6997-2-michael@walle.cc>
+In-Reply-To: <20200410102433.2672-3-cleger@kalray.eu>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 17, 2020 at 09:28:57PM +0200, Michael Walle wrote:
+On Fri, Apr 10, 2020 at 12:24:33PM +0200, Clement Leger wrote:
+> Modify drivers which are using remoteproc coredump functionnality to use
 
-> +static int bcm54140_get_base_addr_and_port(struct phy_device *phydev)
-> +{
-> +	struct bcm54140_phy_priv *priv = phydev->priv;
-> +	struct mii_bus *bus = phydev->mdio.bus;
-> +	int addr, min_addr, max_addr;
-> +	int step = 1;
-> +	u32 phy_id;
-> +	int tmp;
+s/functionnality/functionality
+
+> rproc_coredump_set_elf_info in order to create correct elf coredump
+> format.
+> 
+> Signed-off-by: Clement Leger <cleger@kalray.eu>
+> ---
+>  drivers/remoteproc/qcom_q6v5_adsp.c | 1 +
+>  drivers/remoteproc/qcom_q6v5_mss.c  | 3 +++
+>  drivers/remoteproc/qcom_q6v5_pas.c  | 1 +
+>  drivers/remoteproc/qcom_wcnss.c     | 1 +
+>  drivers/remoteproc/stm32_rproc.c    | 1 +
+>  5 files changed, 7 insertions(+)
+> 
+> diff --git a/drivers/remoteproc/qcom_q6v5_adsp.c b/drivers/remoteproc/qcom_q6v5_adsp.c
+> index 2b01f2282062..8c3bd0954a13 100644
+> --- a/drivers/remoteproc/qcom_q6v5_adsp.c
+> +++ b/drivers/remoteproc/qcom_q6v5_adsp.c
+> @@ -423,6 +423,7 @@ static int adsp_probe(struct platform_device *pdev)
+>  		dev_err(&pdev->dev, "unable to allocate remoteproc\n");
+>  		return -ENOMEM;
+>  	}
+> +	rproc_coredump_set_elf_info(rproc, ELFCLASS32, EM_NONE);
+>  
+>  	adsp = (struct qcom_adsp *)rproc->priv;
+>  	adsp->dev = &pdev->dev;
+> diff --git a/drivers/remoteproc/qcom_q6v5_mss.c b/drivers/remoteproc/qcom_q6v5_mss.c
+> index 03ffc6db4c68..5a7ff1092362 100644
+> --- a/drivers/remoteproc/qcom_q6v5_mss.c
+> +++ b/drivers/remoteproc/qcom_q6v5_mss.c
+> @@ -1355,6 +1355,8 @@ static int qcom_q6v5_register_dump_segments(struct rproc *rproc,
+>  		return ret;
+>  	}
+>  
+> +	rproc_coredump_set_elf_info(rproc, ELFCLASS32, EM_NONE);
 > +
-> +	min_addr = phydev->mdio.addr;
-> +	max_addr = phydev->mdio.addr;
-> +	addr = phydev->mdio.addr;
-> +
-> +	/* We scan forward and backwards and look for PHYs which have the
-> +	 * same phy_id like we do. Step 1 will scan forward, step 2
-> +	 * backwards. Once we are finished, we have a min_addr and
-> +	 * max_addr which resembles the range of PHY addresses of the same
-> +	 * type of PHY. There is one caveat; there may be many PHYs of
-> +	 * the same type, but we know that each PHY takes exactly 4
-> +	 * consecutive addresses. Therefore we can deduce our offset
-> +	 * to the base address of this quad PHY.
-> +	 */
+>  	ehdr = (struct elf32_hdr *)fw->data;
+>  	phdrs = (struct elf32_phdr *)(ehdr + 1);
+>  	qproc->dump_complete_mask = 0;
+> @@ -1632,6 +1634,7 @@ static int q6v5_probe(struct platform_device *pdev)
+>  	}
+>  
+>  	rproc->auto_boot = false;
+> +	rproc_coredump_set_elf_info(rproc, ELFCLASS32, EM_NONE);
+>  
+>  	qproc = (struct q6v5 *)rproc->priv;
+>  	qproc->dev = &pdev->dev;
+> diff --git a/drivers/remoteproc/qcom_q6v5_pas.c b/drivers/remoteproc/qcom_q6v5_pas.c
+> index a41860d2243a..991f57e8e55b 100644
+> --- a/drivers/remoteproc/qcom_q6v5_pas.c
+> +++ b/drivers/remoteproc/qcom_q6v5_pas.c
+> @@ -390,6 +390,7 @@ static int adsp_probe(struct platform_device *pdev)
+>  	}
+>  
+>  	rproc->auto_boot = desc->auto_boot;
+> +	rproc_coredump_set_elf_info(rproc, ELFCLASS32, EM_NONE);
+>  
+>  	adsp = (struct qcom_adsp *)rproc->priv;
+>  	adsp->dev = &pdev->dev;
+> diff --git a/drivers/remoteproc/qcom_wcnss.c b/drivers/remoteproc/qcom_wcnss.c
+> index 0c7afd038f0d..5d65e1a9329a 100644
+> --- a/drivers/remoteproc/qcom_wcnss.c
+> +++ b/drivers/remoteproc/qcom_wcnss.c
+> @@ -480,6 +480,7 @@ static int wcnss_probe(struct platform_device *pdev)
+>  		dev_err(&pdev->dev, "unable to allocate remoteproc\n");
+>  		return -ENOMEM;
+>  	}
+> +	rproc_coredump_set_elf_info(rproc, ELFCLASS32, EM_NONE);
+>  
+>  	wcnss = (struct qcom_wcnss *)rproc->priv;
+>  	wcnss->dev = &pdev->dev;
+> diff --git a/drivers/remoteproc/stm32_rproc.c b/drivers/remoteproc/stm32_rproc.c
+> index 6a66dbf2df40..0f9d02ca4f5a 100644
+> --- a/drivers/remoteproc/stm32_rproc.c
+> +++ b/drivers/remoteproc/stm32_rproc.c
+> @@ -625,6 +625,7 @@ static int stm32_rproc_probe(struct platform_device *pdev)
+>  	if (!rproc)
+>  		return -ENOMEM;
+>  
+> +	rproc_coredump_set_elf_info(rproc, ELFCLASS32, EM_NONE);
 
-Hi Michael
+With the above:
 
-How much flexibility is there in setting the base address using
-strapping etc? Is it limited to a multiple of 4?
+Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 
+>  	rproc->has_iommu = false;
+>  	ddata = rproc->priv;
+>  	ddata->workqueue = create_workqueue(dev_name(dev));
+> -- 
+> 2.17.1
+> 
