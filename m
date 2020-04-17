@@ -2,68 +2,105 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C22ABC38A29
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 09:08:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2630BC38A29
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 09:08:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AB7A12064A
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 09:08:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 097022064A
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 09:08:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730152AbgDQJIi (ORCPT
+        id S1730164AbgDQJIq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 05:08:38 -0400
-Received: from mga02.intel.com ([134.134.136.20]:40938 "EHLO mga02.intel.com"
+        Fri, 17 Apr 2020 05:08:46 -0400
+Received: from mx2.suse.de ([195.135.220.15]:46664 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729920AbgDQJIh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 05:08:37 -0400
-IronPort-SDR: To4oH2p7SgNoRwACYvLFmehZ8+D9rWjOumVcHOUzgcXXcX4c6mvlM+b/WV8uAx8XUrrtbSEIll
- citXcOxi09EQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2020 02:08:37 -0700
-IronPort-SDR: tV/NdWMXWbHzH70bd5vww+Lg4Os+UqivkaqitE/FyhyC0x1T/S0mm26LM9LQ1DPSeX7pYDciYj
- y8L0W+HV5wQw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,394,1580803200"; 
-   d="scan'208";a="364275963"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
-  by fmsmga001.fm.intel.com with SMTP; 17 Apr 2020 02:08:34 -0700
-Received: by lahna (sSMTP sendmail emulation); Fri, 17 Apr 2020 12:08:33 +0300
-Date:   Fri, 17 Apr 2020 12:08:33 +0300
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Grace Kao <grace.kao@intel.com>
-Cc:     linux-gpio@vger.kernel.org, Andy Shevchenko <andy@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-kernel@vger.kernel.org, briannorris@chromium.org
-Subject: Re: [PATCH v2 1/1] pinctrl: cherryview: Add missing spinlock usage
- in chv_gpio_irq_handler
-Message-ID: <20200417090833.GO2586@lahna.fi.intel.com>
-References: <20200417030449.10601-1-grace.kao@intel.com>
- <20200417041154.13063-1-grace.kao@intel.com>
+        id S1729920AbgDQJIp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Apr 2020 05:08:45 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 69E84ABE2;
+        Fri, 17 Apr 2020 09:08:43 +0000 (UTC)
+Date:   Fri, 17 Apr 2020 11:08:42 +0200 (CEST)
+From:   Miroslav Benes <mbenes@suse.cz>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+cc:     Peter Zijlstra <peterz@infradead.org>,
+        live-patching@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jessica Yu <jeyu@kernel.org>
+Subject: Re: [PATCH 0/7] livepatch,module: Remove .klp.arch and
+ module_disable_ro()
+In-Reply-To: <20200416122051.p3dk5i7h6ty4cwuc@treble>
+Message-ID: <alpine.LSU.2.21.2004171104050.31054@pobox.suse.cz>
+References: <cover.1586881704.git.jpoimboe@redhat.com> <20200414182726.GF2483@worktop.programming.kicks-ass.net> <20200414190814.glra2gceqgy34iyx@treble> <alpine.LSU.2.21.2004161136340.10475@pobox.suse.cz> <20200416122051.p3dk5i7h6ty4cwuc@treble>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200417041154.13063-1-grace.kao@intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 17, 2020 at 12:11:54PM +0800, Grace Kao wrote:
-> According to Braswell NDA Specification Update (#557593),
-> concurrent read accesses may result in returning 0xffffffff and write
-> instructions may be dropped. We have an established format for the
-> commit references, i.e.
-> cdca06e4e859 ("pinctrl: baytrail: Add missing spinlock usage in
-> byt_gpio_irq_handler")
-> 
-> Signed-off-by: Grace Kao <grace.kao@intel.com>
-> Reported-by: Brian Norris <briannorris@chromium.org>
-> Reviewed-by: Brian Norris <briannorris@chromium.org>
+On Thu, 16 Apr 2020, Josh Poimboeuf wrote:
 
-Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> On Thu, Apr 16, 2020 at 11:45:05AM +0200, Miroslav Benes wrote:
+> > On Tue, 14 Apr 2020, Josh Poimboeuf wrote:
+> > 
+> > > On Tue, Apr 14, 2020 at 08:27:26PM +0200, Peter Zijlstra wrote:
+> > > > On Tue, Apr 14, 2020 at 11:28:36AM -0500, Josh Poimboeuf wrote:
+> > > > > Better late than never, these patches add simplifications and
+> > > > > improvements for some issues Peter found six months ago, as part of his
+> > > > > non-writable text code (W^X) cleanups.
+> > > > 
+> > > > Excellent stuff, thanks!!
+> > > >
+> > > > I'll go brush up these two patches then:
+> > > > 
+> > > >   https://lkml.kernel.org/r/20191018074634.801435443@infradead.org
+> > > >   https://lkml.kernel.org/r/20191018074634.858645375@infradead.org
+> > > 
+> > > Ah right, I meant to bring that up.  I actually played around with those
+> > > patches.  While it would be nice to figure out a way to converge the
+> > > ftrace module init, I didn't really like the first patch.
+> > > 
+> > > It bothers me that both the notifiers and the module init() both see the
+> > > same MODULE_STATE_COMING state, but only in the former case is the text
+> > > writable.
+> > > 
+> > > I think it's cognitively simpler if MODULE_STATE_COMING always means the
+> > > same thing, like the comments imply, "fully formed" and thus
+> > > not-writable:
+> > > 
+> > > enum module_state {
+> > > 	MODULE_STATE_LIVE,	/* Normal state. */
+> > > 	MODULE_STATE_COMING,	/* Full formed, running module_init. */
+> > > 	MODULE_STATE_GOING,	/* Going away. */
+> > > 	MODULE_STATE_UNFORMED,	/* Still setting it up. */
+> > > };
+> > > 
+> > > And, it keeps tighter constraints on what a notifier can do, which is a
+> > > good thing if we can get away with it.
+> > 
+> > Agreed.
+> > 
+> > On the other hand, the first patch would remove the tiny race window when 
+> > a module state is still UNFORMED, but the protections are (being) set up. 
+> > Patches 4/7 and 5/7 allow to use memcpy in that case, because it is early. 
+> > But it is in fact not already. I haven't checked yet if it really matters 
+> > somewhere (a race with livepatch running klp_module_coming while another 
+> > module is being loaded or anything like that).
+> 
+> Maybe I'm missing your point, but I don't see any races here.
+> 
+> apply_relocate_add() only writes to the patch module's text, so there
+> can't be races with other modules.
+
+I meant... a patch module is being loaded and at the same time a 
+to-be-patched module too. So apply_relocate_add() called from 
+klp_module_coming() would see UNFORMED in the patch module state and the 
+permissions would be set up already. So memcpy would not work. But we 
+protect against that (and many other things) by taking klp_mutex, of 
+course. I managed to confuse myself again, sorry about that.
+
+Miroslav
