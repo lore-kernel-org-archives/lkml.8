@@ -2,217 +2,121 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DB2DC38A2B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 15:38:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B7AEC352BE
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 15:41:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 71E7220936
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 15:38:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 547D42223C
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 15:41:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729404AbgDQPiB (ORCPT
+        id S1729274AbgDQPlp convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 11:38:01 -0400
-Received: from mout-p-101.mailbox.org ([80.241.56.151]:56610 "EHLO
-        mout-p-101.mailbox.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729008AbgDQPiA (ORCPT
+        Fri, 17 Apr 2020 11:41:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46588 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729110AbgDQPlp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 11:38:00 -0400
-Received: from smtp1.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:105:465:1:1:0])
-        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
+        Fri, 17 Apr 2020 11:41:45 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25B52C061A0C;
+        Fri, 17 Apr 2020 08:41:45 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mout-p-101.mailbox.org (Postfix) with ESMTPS id 493gGF63gjzKmbF;
-        Fri, 17 Apr 2020 17:37:57 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-Received: from smtp1.mailbox.org ([80.241.60.240])
-        by spamfilter06.heinlein-hosting.de (spamfilter06.heinlein-hosting.de [80.241.56.125]) (amavisd-new, port 10030)
-        with ESMTP id Le9MmvzJwhqy; Fri, 17 Apr 2020 17:37:51 +0200 (CEST)
-Date:   Sat, 18 Apr 2020 01:37:40 +1000
-From:   Aleksa Sarai <cyphar@cyphar.com>
-To:     "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        Christian Brauner <christian@brauner.io>,
-        Aleksa Sarai <asarai@suse.de>,
-        linux-man <linux-man@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH RFC 1/3] symlink.7: document magic-links more completely
-Message-ID: <20200417153740.37j2uxjcasyieuoa@yavin.dot.cyphar.com>
-References: <20191003145542.17490-1-cyphar@cyphar.com>
- <20191003145542.17490-2-cyphar@cyphar.com>
- <CAKgNAkiqU0TtmoZ8A89FT4zSYS7AcvWX6oc=1-45L95XbSkUog@mail.gmail.com>
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 0920E2A0613;
+        Fri, 17 Apr 2020 16:41:43 +0100 (BST)
+Date:   Fri, 17 Apr 2020 17:41:40 +0200
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     Marek Vasut <marex@denx.de>
+Cc:     Christophe Kerello <christophe.kerello@st.com>,
+        miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
+        lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        tony@atomide.com, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
+        linux-stm32@st-md-mailman.stormreply.com
+Subject: Re: [PATCH v2 03/12] bus: stm32-fmc2-ebi: add STM32 FMC2 EBI
+ controller driver
+Message-ID: <20200417174140.00456f36@collabora.com>
+In-Reply-To: <c69f86f4-5904-3f35-dac1-87080402a096@denx.de>
+References: <1586966256-29548-1-git-send-email-christophe.kerello@st.com>
+        <1586966256-29548-4-git-send-email-christophe.kerello@st.com>
+        <20200416215328.53982fef@collabora.com>
+        <e4a21df4-b01b-1215-7a3b-fea94f099b8f@st.com>
+        <c69f86f4-5904-3f35-dac1-87080402a096@denx.de>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="syb7vzwyvrr2nafi"
-Content-Disposition: inline
-In-Reply-To: <CAKgNAkiqU0TtmoZ8A89FT4zSYS7AcvWX6oc=1-45L95XbSkUog@mail.gmail.com>
-X-Rspamd-Queue-Id: A7CA31805
-X-Rspamd-Score: -6.73 / 15.00 / 15.00
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, 17 Apr 2020 17:31:49 +0200
+Marek Vasut <marex@denx.de> wrote:
 
---syb7vzwyvrr2nafi
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> On 4/17/20 5:29 PM, Christophe Kerello wrote:
+> > 
+> > 
+> > On 4/16/20 9:53 PM, Boris Brezillon wrote:  
+> >> On Wed, 15 Apr 2020 17:57:27 +0200
+> >> Christophe Kerello <christophe.kerello@st.com> wrote:
+> >>  
+> >>> The driver adds the support for the STMicroelectronics FMC2 EBI
+> >>> controller
+> >>> found on STM32MP SOCs.
+> >>>
+> >>> Signed-off-by: Christophe Kerello <christophe.kerello@st.com>
+> >>> Tested-by: Marek Vasut <marex@denx.de>
+> >>> ---
+> >>> Changes in v2:
+> >>>   - call 2 APIs to manage FMC2 enable/disable instead of ops
+> >>>   - call 2 APIs to manage FMC2 NWAIT shared signal instead of ops
+> >>>
+> >>>   drivers/bus/Kconfig          |   11 +
+> >>>   drivers/bus/Makefile         |    1 +
+> >>>   drivers/bus/stm32-fmc2-ebi.c | 1091
+> >>> ++++++++++++++++++++++++++++++++++++++++++  
+> >>
+> >> Hm, I see that other memory bus controller drivers are placed under
+> >> drivers/memory/, any reason for choosing drivers/bus/? If that's where
+> >> we want to have all generic memory bus controllers to live it might be
+> >> worth moving existing drivers to the drivers/bus/ directory at some
+> >> point.
+> >>  
+> > 
+> > Hi Boris,
+> > 
+> > I see this controller as an external bus interface as we are able to
+> > attach different devices on it, like a PSRAM, an ethernet controller, a
+> > FPGA, a LCD display, ...
+> > 
+> > When I had a look at bus/Kconfig file, I have found similar drivers
+> > (like IMX_WEIM or QCOM_EBI2 drivers). These drivers are able to connect
+> > devices like NAND Flash, SRAM, ethernet adapters, FPGAs and LCD displays
+> > as it is written in the Kconfig file.
+> > 
+> > But, after checking memory/Kconfig file, it is also possible to find
+> > similar drivers (like ATMEL_EBI driver that is inspired by the WEIM bus
+> > driver).
+> > 
+> > So, I will follow the recommendation and I will move it to
+> > drivers/memory folder if it is the place where this driver should be.  
+> 
+> The EBI isn't a memory bus, you can very well have a non-memory device,
+> like an external parallel bus memory controller on it. So why should it
+> be in drivers/memory ?
 
-On 2020-04-17, Michael Kerrisk (man-pages) <mtk.manpages@gmail.com> wrote:
-> Hi Aleksa,
->=20
-> Re our discussion of documentation to be added for magic symlinks,
-> there was the patch below, which got paused. I guess this just needs a
-> light refresh?
+Just like most of those so-called memory bus controllers we have under
+drivers/memory/ => they are most of the time used to interact with
+memories but can also be used for other things (Christophe listed a few
+uses cases). And I'm not pushing one way or the other, all I said was
+that we should makes things consistent instead of having half of
+those controller drivers in drivers/memory/ and the other half in
+drivers/bus/.
 
-Yes, this is the patch I was thinking of -- but since the whole "magic
-link mode" semantics weren't in the openat2() series that was merged,
-this would need a refresh. Also I feel that magic-links probably deserve
-a slightly longer explanation than I gave here.
-
-> Thanks,
->=20
-> Michael
->=20
-> On Thu, 3 Oct 2019 at 16:56, Aleksa Sarai <cyphar@cyphar.com> wrote:
-> >
-> > Traditionally, magic-links have not been a well-understood topic in
-> > Linux. Given the new changes in their semantics (related to the link
-> > mode of trailing magic-links), it seems like a good opportunity to shine
-> > more light on magic-links and their semantics.
-> >
-> > Signed-off-by: Aleksa Sarai <cyphar@cyphar.com>
-> > ---
-> >  man7/path_resolution.7 | 15 +++++++++++++++
-> >  man7/symlink.7         | 39 ++++++++++++++++++++++++++++++---------
-> >  2 files changed, 45 insertions(+), 9 deletions(-)
-> >
-> > diff --git a/man7/path_resolution.7 b/man7/path_resolution.7
-> > index 07664ed8faec..46f25ec4cdfa 100644
-> > --- a/man7/path_resolution.7
-> > +++ b/man7/path_resolution.7
-> > @@ -136,6 +136,21 @@ we are just creating it.
-> >  The details on the treatment
-> >  of the final entry are described in the manual pages of the specific
-> >  system calls.
-> > +.PP
-> > +Since Linux 5.FOO, if the final entry is a "magic-link" (see
-> > +.BR symlink (7)),
-> > +and the user is attempting to
-> > +.BR open (2)
-> > +it, then there is an additional permission-related restriction applied=
- to the
-> > +operation: the requested access mode must not exceed the "link mode" o=
-f the
-> > +magic-link (unlike ordinary symlinks, magic-links have their own file =
-mode.)
-> > +For example, if
-> > +.I /proc/[pid]/fd/[num]
-> > +has a link mode of
-> > +.BR 0500 ,
-> > +unprivileged users are not permitted to
-> > +.BR open ()
-> > +the magic-link for writing.
-> >  .SS . and ..
-> >  By convention, every directory has the entries "." and "..",
-> >  which refer to the directory itself and to its parent directory,
-> > diff --git a/man7/symlink.7 b/man7/symlink.7
-> > index 9f5bddd5dc21..33f0ec703acd 100644
-> > --- a/man7/symlink.7
-> > +++ b/man7/symlink.7
-> > @@ -84,6 +84,25 @@ as they are implemented on Linux and other systems,
-> >  are outlined here.
-> >  It is important that site-local applications also conform to these rul=
-es,
-> >  so that the user interface can be as consistent as possible.
-> > +.SS Magic-links
-> > +There is a special class of symlink-like objects known as "magic-links=
-" which
-> > +can be found in certain pseudo-filesystems such as
-> > +.BR proc (5)
-> > +(examples include
-> > +.IR /proc/[pid]/exe " and " /proc/[pid]/fd/* .)
-> > +Unlike normal symlinks, magic-links are not resolved through
-> > +pathname-expansion, but instead act as direct references to the kernel=
-'s own
-> > +representation of a file handle. As such, these magic-links allow user=
-s to
-> > +access files which cannot be referenced with normal paths (such as unl=
-inked
-> > +files still referenced by a running program.)
-> > +.PP
-> > +Because they can bypass ordinary
-> > +.BR mount_namespaces (7)-based
-> > +restrictions, magic-links have been used as attack vectors in various =
-exploits.
-> > +As such (since Linux 5.FOO), there are additional restrictions placed =
-on the
-> > +re-opening of magic-links (see
-> > +.BR path_resolution (7)
-> > +for more details.)
-> >  .SS Symbolic link ownership, permissions, and timestamps
-> >  The owner and group of an existing symbolic link can be changed
-> >  using
-> > @@ -99,16 +118,18 @@ of a symbolic link can be changed using
-> >  or
-> >  .BR lutimes (3).
-> >  .PP
-> > -On Linux, the permissions of a symbolic link are not used
-> > -in any operations; the permissions are always
-> > -0777 (read, write, and execute for all user categories),
-> >  .\" Linux does not currently implement an lchmod(2).
-> > -and can't be changed.
-> > -(Note that there are some "magic" symbolic links in the
-> > -.I /proc
-> > -directory tree\(emfor example, the
-> > -.IR /proc/[pid]/fd/*
-> > -files\(emthat have different permissions.)
-> > +On Linux, the permissions of an ordinary symbolic link are not used in=
- any
-> > +operations; the permissions are always 0777 (read, write, and execute =
-for all
-> > +user categories), and can't be changed.
-> > +.PP
-> > +However, magic-links do not follow this rule. They can have a non-0777=
- mode,
-> > +which is used for permission checks when the final
-> > +component of an
-> > +.BR open (2)'s
-> > +path is a magic-link (see
-> > +.BR path_resolution (7).)
-> > +
-> >  .\"
-> >  .\" The
-> >  .\" 4.4BSD
-> > --
-> > 2.23.0
-> >
->=20
->=20
-> --=20
-> Michael Kerrisk
-> Linux man-pages maintainer; http://www.kernel.org/doc/man-pages/
-> Linux/UNIX System Programming Training: http://man7.org/training/
-
-
---=20
-Aleksa Sarai
-Senior Software Engineer (Containers)
-SUSE Linux GmbH
-<https://www.cyphar.com/>
-
---syb7vzwyvrr2nafi
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQSxZm6dtfE8gxLLfYqdlLljIbnQEgUCXpnNQAAKCRCdlLljIbnQ
-EtJxAP4iVwtZsIQJsWRPvKFpLrO+MuKBOHZ8y5pMdV7znPB54gEAkujcyOtXHdtp
-2VLvRGYOKn939L3xgsrEqZSUCRhrSg4=
-=YtrC
------END PGP SIGNATURE-----
-
---syb7vzwyvrr2nafi--
