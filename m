@@ -2,192 +2,457 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E27BC2D0EF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 17:19:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 671B8C2D0EF
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 17:21:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1A9042078E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 17:19:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40D362078E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 17:21:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728712AbgDQRTi (ORCPT
+        id S1729590AbgDQRVO convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 13:19:38 -0400
-Received: from mga12.intel.com ([192.55.52.136]:38364 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728162AbgDQRTh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 13:19:37 -0400
-IronPort-SDR: aEyryLCkhgfAPbbLSBdFjw6ieQacCmrTcjjGIE+toJ7E4OuZzeL1F+7hB6d78l7yuyZTA34FAn
- 2kQHnsVR4uvA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2020 10:19:36 -0700
-IronPort-SDR: PLkem773MNJbcn2ONOYkpbZvrY7xDpNrF167sHCQ6p1V8QhAE99GtvdakzYl9hbOr8WqAiOY9d
- 8jS1H0TzeeTw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,395,1580803200"; 
-   d="scan'208";a="428292211"
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.147])
-  by orsmga005.jf.intel.com with ESMTP; 17 Apr 2020 10:19:36 -0700
-Date:   Fri, 17 Apr 2020 10:19:36 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     Andreas Dilger <adilger@dilger.ca>
-Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
-        linux-kernel@vger.kernel.org, Jan Kara <jack@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jeff Moyer <jmoyer@redhat.com>,
-        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH RFC 4/8] fs/ext4: Introduce DAX inode flag
-Message-ID: <20200417171936.GT2309605@iweiny-DESK2.sc.intel.com>
-References: <20200417022036.GQ2309605@iweiny-DESK2.sc.intel.com>
- <324CEF76-20AA-40F5-A31B-6E0B1CCED736@dilger.ca>
+        Fri, 17 Apr 2020 13:21:14 -0400
+Received: from mailoutvs59.siol.net ([185.57.226.250]:40114 "EHLO
+        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728863AbgDQRVO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Apr 2020 13:21:14 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.siol.net (Postfix) with ESMTP id 99F9D524C3A;
+        Fri, 17 Apr 2020 19:15:14 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at psrvmta09.zcs-production.pri
+Received: from mail.siol.net ([127.0.0.1])
+        by localhost (psrvmta09.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id b6KrGSb_97M0; Fri, 17 Apr 2020 19:15:13 +0200 (CEST)
+Received: from mail.siol.net (localhost [127.0.0.1])
+        by mail.siol.net (Postfix) with ESMTPS id AF4AA524C39;
+        Fri, 17 Apr 2020 19:15:13 +0200 (CEST)
+Received: from jernej-laptop.localnet (cpe-194-152-20-232.static.triera.net [194.152.20.232])
+        (Authenticated sender: jernej.skrabec@siol.net)
+        by mail.siol.net (Postfix) with ESMTPA id DD577524C3B;
+        Fri, 17 Apr 2020 19:15:12 +0200 (CEST)
+From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@siol.net>
+To:     robh+dt@kernel.org, andrew@lunn.ch, f.fainelli@gmail.com,
+        Heiner Kallweit <hkallweit1@gmail.com>
+Cc:     mripard@kernel.org, wens@csie.org, lee.jones@linaro.org,
+        linux@armlinux.org.uk, davem@davemloft.net,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Subject: Re: [RFC PATCH 2/4] net: phy: Add support for AC200 EPHY
+Date:   Fri, 17 Apr 2020 19:15:12 +0200
+Message-ID: <4409454.rnE6jSC6OK@jernej-laptop>
+In-Reply-To: <1d03b2a8-fed5-5de8-6326-81b7436637da@gmail.com>
+References: <20200416185758.1388148-1-jernej.skrabec@siol.net> <3035405.oiGErgHkdL@jernej-laptop> <1d03b2a8-fed5-5de8-6326-81b7436637da@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <324CEF76-20AA-40F5-A31B-6E0B1CCED736@dilger.ca>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 17, 2020 at 12:43:39AM -0600, Andreas Dilger wrote:
-> We still need to store an on-disk DAX flag for Ext4, and at that point it
-> doesn't make sense not to expose it via the standard Ext4 chattr utility.
-> 
-> So having EXT4_DAX_FL (== FS_DAX_FL) is no extra effort to add.
-
-I'll leave it exposed then.
-
-Thanks,
-Ira
-
-> 
-> Cheers, Andreas
-> 
-> > On Apr 16, 2020, at 20:20, Ira Weiny <ira.weiny@intel.com> wrote:
+Dne petek, 17. april 2020 ob 18:29:04 CEST je Heiner Kallweit napisal(a):
+> On 17.04.2020 18:03, Jernej Škrabec wrote:
+> > Dne četrtek, 16. april 2020 ob 22:18:52 CEST je Heiner Kallweit 
+napisal(a):
+> >> On 16.04.2020 20:57, Jernej Skrabec wrote:
+> >>> AC200 MFD IC supports Fast Ethernet PHY. Add a driver for it.
+> >>> 
+> >>> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> >>> ---
+> >>> 
+> >>>  drivers/net/phy/Kconfig  |   7 ++
+> >>>  drivers/net/phy/Makefile |   1 +
+> >>>  drivers/net/phy/ac200.c  | 206 +++++++++++++++++++++++++++++++++++++++
+> >>>  3 files changed, 214 insertions(+)
+> >>>  create mode 100644 drivers/net/phy/ac200.c
+> >>> 
+> >>> diff --git a/drivers/net/phy/Kconfig b/drivers/net/phy/Kconfig
+> >>> index 3fa33d27eeba..16af69f69eaf 100644
+> >>> --- a/drivers/net/phy/Kconfig
+> >>> +++ b/drivers/net/phy/Kconfig
+> >>> @@ -288,6 +288,13 @@ config ADIN_PHY
+> >>> 
+> >>>  	  - ADIN1300 - Robust,Industrial, Low Latency 10/100/1000 Gigabit
+> >>>  	  
+> >>>  	    Ethernet PHY
+> >>> 
+> >>> +config AC200_PHY
+> >>> +	tristate "AC200 EPHY"
+> >>> +	depends on NVMEM
+> >>> +	depends on OF
+> >>> +	help
+> >>> +	  Fast ethernet PHY as found in X-Powers AC200 multi-function
 > > 
-> > ﻿On Thu, Apr 16, 2020 at 06:57:31PM -0700, Darrick J. Wong wrote:
-> >>> On Thu, Apr 16, 2020 at 05:37:19PM -0700, Ira Weiny wrote:
-> >>> On Thu, Apr 16, 2020 at 03:49:37PM -0700, Darrick J. Wong wrote:
-> >>>> On Thu, Apr 16, 2020 at 03:33:27PM -0700, Ira Weiny wrote:
-> >>>>> On Thu, Apr 16, 2020 at 09:25:04AM -0700, Darrick J. Wong wrote:
-> >>>>>> On Mon, Apr 13, 2020 at 09:00:26PM -0700, ira.weiny@intel.com wrote:
-> >>>>>>> From: Ira Weiny <ira.weiny@intel.com>
-> >>>>>>> 
-> >>>>>>> Add a flag to preserve FS_XFLAG_DAX in the ext4 inode.
-> >>>>>>> 
-> >>>>>>> Set the flag to be user visible and changeable.  Set the flag to be
-> >>>>>>> inherited.  Allow applications to change the flag at any time.
-> >>>>>>> 
-> >>>>>>> Finally, on regular files, flag the inode to not be cached to facilitate
-> >>>>>>> changing S_DAX on the next creation of the inode.
-> >>>>>>> 
-> >>>>>>> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-> >>>>>>> ---
-> >>>>>>> fs/ext4/ext4.h  | 13 +++++++++----
-> >>>>>>> fs/ext4/ioctl.c | 21 ++++++++++++++++++++-
-> >>>>>>> 2 files changed, 29 insertions(+), 5 deletions(-)
-> >>>>>>> 
-> >>>>>>> diff --git a/fs/ext4/ext4.h b/fs/ext4/ext4.h
-> >>>>>>> index 61b37a052052..434021fcec88 100644
-> >>>>>>> --- a/fs/ext4/ext4.h
-> >>>>>>> +++ b/fs/ext4/ext4.h
-> >>>>>>> @@ -415,13 +415,16 @@ struct flex_groups {
-> >>>>>>> #define EXT4_VERITY_FL            0x00100000 /* Verity protected inode */
-> >>>>>>> #define EXT4_EA_INODE_FL            0x00200000 /* Inode used for large EA */
-> >>>>>>> #define EXT4_EOFBLOCKS_FL        0x00400000 /* Blocks allocated beyond EOF */
-> >>>>>>> +
-> >>>>>>> +#define EXT4_DAX_FL            0x00800000 /* Inode is DAX */
-> >>>>>> 
-> >>>>>> Sooo, fun fact about ext4 vs. the world--
-> >>>>>> 
-> >>>>>> The GETFLAGS/SETFLAGS ioctl, since it came from ext2, shares the same
-> >>>>>> flag values as the ondisk inode flags in ext*.  Therefore, each of these
-> >>>>>> EXT4_[whatever]_FL values are supposed to have a FS_[whatever]_FL
-> >>>>>> equivalent in include/uapi/linux/fs.h.
-> >>>>> 
-> >>>>> Interesting...
-> >>>>> 
-> >>>>>> 
-> >>>>>> (Note that the "[whatever]" is a straight translation since the same
-> >>>>>> uapi header also defines the FS_XFLAG_[xfswhatever] flag values; ignore
-> >>>>>> those.)
-> >>>>>> 
-> >>>>>> Evidently, FS_NOCOW_FL already took 0x800000, but ext4.h was never
-> >>>>>> updated to note that the value was taken.  I think Ted might be inclined
-> >>>>>> to reserve the ondisk inode bit just in case ext4 ever does support copy
-> >>>>>> on write, though that's his call. :)
-> >>>>> 
-> >>>>> Seems like I should change this...  And I did not realize I was inherently
-> >>>>> changing a bit definition which was exposed to other FS's...
-> >>>> 
-> >>>> <nod> This whole thing is a mess, particularly now that we have two vfs
-> >>>> ioctls to set per-fs inode attributes, both of which were inherited from
-> >>>> other filesystems... :(
-> >>>> 
+> > device.
+> > 
+> >>> +
 > >>> 
-> >>> Ok I've changed it.
+> >>>  config AMD_PHY
+> >>>  
+> >>>  	tristate "AMD PHYs"
+> >>>  	---help---
 > >>> 
-> >>>> 
-> >>>>>> 
-> >>>>>> Long story short - can you use 0x1000000 for this instead, and add the
-> >>>>>> corresponding value to the uapi fs.h?  I guess that also means that we
-> >>>>>> can change FS_XFLAG_DAX (in the form of FS_DAX_FL in FSSETFLAGS) after
-> >>>>>> that.
-> >>>>> 
-> >>>>> :-/
-> >>>>> 
-> >>>>> Are there any potential users of FS_XFLAG_DAX now?
-> >>>> 
-> >>>> Yes, it's in the userspace ABI so we can't get rid of it.
-> >>>> 
-> >>>> (FWIW there are several flags that exist in both FS_XFLAG_* and FS_*_FL
-> >>>> form.)
-> >>>> 
-> >>>>> From what it looks like, changing FS_XFLAG_DAX to FS_DAX_FL would be pretty
-> >>>>> straight forward.  Just to be sure, looks like XFS converts the FS_[xxx]_FL to
-> >>>>> FS_XFLAGS_[xxx] in xfs_merge_ioc_xflags()?  But it does not look like all the
-> >>>>> FS_[xxx]_FL flags are converted.  Is is that XFS does not support those
-> >>>>> options?  Or is it depending on the VFS layer for some of them?
-> >>>> 
-> >>>> XFS doesn't support most of the FS_*_FL flags.
+> >>> diff --git a/drivers/net/phy/Makefile b/drivers/net/phy/Makefile
+> >>> index 2f5c7093a65b..b0c5b91900fa 100644
+> >>> --- a/drivers/net/phy/Makefile
+> >>> +++ b/drivers/net/phy/Makefile
+> >>> @@ -53,6 +53,7 @@ obj-$(CONFIG_SFP)		+= sfp.o
 > >>> 
-> >>> If FS_XFLAG_DAX needs to continue to be user visible I think we need to keep
-> >>> that flag and we should not expose the EXT4_DAX_FL flag...
+> >>>  sfp-obj-$(CONFIG_SFP)		+= sfp-bus.o
+> >>>  obj-y				+= $(sfp-obj-y) $(sfp-obj-m)
 > >>> 
-> >>> I think that works for XFS.
+> >>> +obj-$(CONFIG_AC200_PHY)		+= ac200.o
 > >>> 
-> >>> But for ext4 it looks like EXT4_FL_XFLAG_VISIBLE was intended to be used for
-> >>> [GET|SET]XATTR where EXT4_FL_USER_VISIBLE was intended to for [GET|SET]FLAGS...
-> >>> But if I don't add EXT4_DAX_FL in EXT4_FL_XFLAG_VISIBLE my test fails.
+> >>>  obj-$(CONFIG_ADIN_PHY)		+= adin.o
+> >>>  obj-$(CONFIG_AMD_PHY)		+= amd.o
+> >>>  aquantia-objs			+= aquantia_main.o
 > >>> 
-> >>> I've been playing with the flags and looking at the code and I _thought_ the
-> >>> following patch would ensure that FS_XFLAG_DAX is the only one visible but for
-> >>> some reason FS_XFLAG_DAX can't be set with this patch.  I still need the
-> >>> EXT4_FL_USER_VISIBLE mask altered...  Which I believe would expose EXT4_DAX_FL
-> >>> directly as well.
-> >>> 
-> >>> Jan, Ted?  Any ideas?  Or should we expose EXT4_DAX_FL and FS_XFLAG_DAX in
-> >>> ext4?
+> >>> diff --git a/drivers/net/phy/ac200.c b/drivers/net/phy/ac200.c
+> >>> new file mode 100644
+> >>> index 000000000000..3d7856ff8f91
+> >>> --- /dev/null
+> >>> +++ b/drivers/net/phy/ac200.c
+> >>> @@ -0,0 +1,206 @@
+> >>> +// SPDX-License-Identifier: GPL-2.0+
+> >>> +/**
+> >>> + * Driver for AC200 Ethernet PHY
+> >>> + *
+> >>> + * Copyright (c) 2020 Jernej Skrabec <jernej.skrabec@siol.net>
+> >>> + */
+> >>> +
+> >>> +#include <linux/kernel.h>
+> >>> +#include <linux/module.h>
+> >>> +#include <linux/mfd/ac200.h>
+> >>> +#include <linux/nvmem-consumer.h>
+> >>> +#include <linux/of.h>
+> >>> +#include <linux/phy.h>
+> >>> +#include <linux/platform_device.h>
+> >>> +
+> >>> +#define AC200_EPHY_ID			0x00441400
+> >>> +#define AC200_EPHY_ID_MASK		0x0ffffff0
+> >>> +
 > >> 
-> >> Both flags should be exposed through their respective ioctl interfaces
-> >> in both filesystems.  That way we don't have to add even more verbiage
-> >> to the documentation to instruct userspace programmers on how to special
-> >> case ext4 and XFS for the same piece of functionality.
+> >> You could use PHY_ID_MATCH_MODEL() here.
 > > 
-> > Wouldn't it be more confusing for the user to have 2 different flags which do
-> > the same thing?
+> > Ok.
 > > 
-> > I would think that using FS_XFLAG_DAX _only_ (for both ext4 and xfs) would be
-> > easier without special cases?
+> >>> +/* macros for system ephy control 0 register */
+> >>> +#define AC200_EPHY_RESET_INVALID	BIT(0)
+> >>> +#define AC200_EPHY_SYSCLK_GATING	BIT(1)
+> >>> +
+> >>> +/* macros for system ephy control 1 register */
+> >>> +#define AC200_EPHY_E_EPHY_MII_IO_EN	BIT(0)
+> >>> +#define AC200_EPHY_E_LNK_LED_IO_EN	BIT(1)
+> >>> +#define AC200_EPHY_E_SPD_LED_IO_EN	BIT(2)
+> >>> +#define AC200_EPHY_E_DPX_LED_IO_EN	BIT(3)
+> >>> +
+> >>> +/* macros for ephy control register */
+> >>> +#define AC200_EPHY_SHUTDOWN		BIT(0)
+> >>> +#define AC200_EPHY_LED_POL		BIT(1)
+> >>> +#define AC200_EPHY_CLK_SEL		BIT(2)
+> >>> +#define AC200_EPHY_ADDR(x)		(((x) & 0x1F) << 4)
+> >>> +#define AC200_EPHY_XMII_SEL		BIT(11)
+> >>> +#define AC200_EPHY_CALIB(x)		(((x) & 0xF) << 12)
+> >>> +
+> >>> +struct ac200_ephy_dev {
+> >>> +	struct phy_driver	*ephy;
+> >> 
+> >> Why embedding a pointer and not a struct phy_driver directly?
+> >> Then you could omit the separate allocation.
 > > 
-> > Ira
+> > Right.
 > > 
+> >> ephy is not the best naming. It may be read as a phy_device.
+> >> Better use phydrv.
+> > 
+> > Ok.
+> > 
+> >>> +	struct regmap		*regmap;
+> >>> +};
+> >>> +
+> >>> +static char *ac200_phy_name = "AC200 EPHY";
+> >>> +
+> >> 
+> >> Why not using the name directly in the assignment?
+> > 
+> > phy_driver->name is pointer. Wouldn't that mean that string is allocated
+> > on
+> > stack and next time pointer is used, it will return garbage?
+> 
+> No, it's not on the stack. No problem here.
+> 
+> >> And better naming: "AC200 Fast Ethernet"
+> > 
+> > Ok.
+> > 
+> >>> +static int ac200_ephy_config_init(struct phy_device *phydev)
+> >>> +{
+> >>> +	const struct ac200_ephy_dev *priv = phydev->drv->driver_data;
+> >>> +	unsigned int value;
+> >>> +	int ret;
+> >>> +
+> >>> +	phy_write(phydev, 0x1f, 0x0100);	/* Switch to Page 1 */
+> >>> +	phy_write(phydev, 0x12, 0x4824);	/* Disable APS */
+> >>> +
+> >>> +	phy_write(phydev, 0x1f, 0x0200);	/* Switch to Page 2 */
+> >>> +	phy_write(phydev, 0x18, 0x0000);	/* PHYAFE TRX optimization */
+> >>> +
+> >>> +	phy_write(phydev, 0x1f, 0x0600);	/* Switch to Page 6 */
+> >>> +	phy_write(phydev, 0x14, 0x708f);	/* PHYAFE TX optimization */
+> >>> +	phy_write(phydev, 0x13, 0xF000);	/* PHYAFE RX optimization */
+> >>> +	phy_write(phydev, 0x15, 0x1530);
+> >>> +
+> >>> +	phy_write(phydev, 0x1f, 0x0800);	/* Switch to Page 6 */
+> >>> +	phy_write(phydev, 0x18, 0x00bc);	/* PHYAFE TRX optimization */
+> >>> +
+> >>> +	phy_write(phydev, 0x1f, 0x0100);	/* switch to page 1 */
+> >>> +	phy_clear_bits(phydev, 0x17, BIT(3));	/* disable intelligent
+> > 
+> > IEEE */
+> > 
+> >>> +
+> >>> +	/* next two blocks disable 802.3az IEEE */
+> >>> +	phy_write(phydev, 0x1f, 0x0200);	/* switch to page 2 */
+> >>> +	phy_write(phydev, 0x18, 0x0000);
+> >>> +
+> >>> +	phy_write(phydev, 0x1f, 0x0000);	/* switch to page 0 */
+> >>> +	phy_clear_bits_mmd(phydev, 0x7, 0x3c, BIT(1));
+> >> 
+> >> Better use the following:
+> >> phy_write_mmd(phydev, MDIO_MMD_AN, MDIO_AN_EEE_ADV, 0x0000);
+> >> It makes clear that you disable advertising EEE completely.
+> > 
+> > Ok.
+> > 
+> >>> +
+> >>> +	if (phydev->interface == PHY_INTERFACE_MODE_RMII)
+> >>> +		value = AC200_EPHY_XMII_SEL;
+> >>> +	else
+> >>> +		value = 0;
+> >>> +
+> >>> +	ret = regmap_update_bits(priv->regmap, AC200_EPHY_CTL,
+> >>> +				 AC200_EPHY_XMII_SEL, value);
+> >>> +	if (ret)
+> >>> +		return ret;
+> >>> +
+> >> 
+> >> I had a brief look at the spec, and it's not fully clear
+> >> to me what this register setting does. Does it affect the
+> >> MAC side and/or the PHY side?
+> > 
+> > It's my understanding that it selects interface mode on PHY. Besides
+> > datasheet mentioned in cover letter, BSP drivers (one for MFD and one for
+> > PHY) are the only other source of information. BSP PHY driver is located
+> > here:
+> > https://github.com/Allwinner-Homlet/H6-BSP4.9-linux/blob/master/drivers/ne
+> > t/ phy/sunxi-ephy.c
+> > 
+> >> If it affects the PHY side, then I'd expect that the chip
+> >> has to talk to the PHY via the MDIO bus. Means there should
+> >> be a PHY register for setting MII vs. RMII.
+> >> In this case the setup could be very much simplified.
+> >> Then the PHY driver wouldn't have to be embedded in the
+> >> platform driver.
+> > 
+> > Actually, PHY has to be configured first through I2C and then through
+> > MDIO. I2C is used to enable it (power it up), configure LED polarity, set
+> > PHY address, write calibration value stored elsewhere.
+> > 
+> > Based on all available documentation I have (code and datasheet), this I2C
+> > register is the only way to select MII or RMII mode.
+> 
+> Then how and where is the PHY interface mode configured on the MAC side?
+> If there is no such setting, then I'd assume that this register bit
+> configures both sides. This leads to the question whether the interface
+> mode really needs to be set in the PHY driver's config_init().
+> If we could avoid this, then you could make the PHY driver static.
+
+Check patch 4. There is emac node added with property phy-mode = "rmii"; 
+AC200 and H6 are internally connected through RMII interface.
+
+Note that MAC has multiplexed interface and can either uses this copackaged 
+PHY or external PHY. External PHY usually uses RGMII interface.
+
+In 99% cases, this PHY driver will be used for copackaged AC200 with H6 SoC, 
+which means it will be used in RMII mode. Even if someone uses standalone 
+AC200 IC with mainline Linux, will probably still use RMII. But there is still 
+very small chance that someone will use it in MII mode.
+
+Anyway, if that special setting for H6 proves important, we will still need a 
+way to convey that information from platform driver to PHY. Easiest way to do 
+that is through driver_data.
+
+> 
+> You could set the PHY interface mode as soon as the PHY interface mode
+> is read from DT. So why not set the interface mode at the place where
+> you configure the other values like PHY address?
+
+PHY interface mode is actually set on MAC side in DT. This PHY has acutally 
+programmable PHY address through I2C. Currently I hardcoded it to 1.
+
+As I explained in cover letter, I don't really know how to properly present 
+this device in DT. Based on current DT documentation, PHY node would have to 
+be child node of mdio bus node and MFD node at the same time which is not 
+possible.
+
+> 
+> >>> +	/* FIXME: This is H6 specific */
+> >>> +	phy_set_bits(phydev, 0x13, BIT(12));
+> >>> +
+> >> 
+> >> This seems to indicate that the same PHY is used in a slightly
+> >> different version with other Hx models. Do they use different
+> >> PHY ID's?
+> > 
+> > Situation is a bit complicated. Same PHY, at least with same PHY ID, is
+> > used in different ways.
+> > 1. as part of standalone AC200 MFD IC
+> > 2. as part of AC200 wafer copackaged with H6 SoC wafer in same package.
+> > This in theory shouldn't be any different than standalone IC, but it
+> > apparently is, based on the BSP driver code.
+> > 3. integrated directly in SoCs like H3, H5 and V3s. There is no I2C access
+> > to configuration register. Instead, it's memory mapped and slightly
+> > different.
+> > 
+> > In all cases PHY ID is same, just glue logic is different.
+> > 
+> > I asked Allwinner if above setting is really necessary for H6 and what it
+> > does, but I didn't get any useful answer back.
+> > 
+> > So maybe another compatible is needed for H6.
+> > 
+> > Best regards,
+> > Jernej
+> > 
+> >>> +	return 0;
+> >>> +}
+> >>> +
+> >>> +static int ac200_ephy_probe(struct platform_device *pdev)
+> >>> +{
+> >>> +	struct ac200_dev *ac200 = dev_get_drvdata(pdev->dev.parent);
+> >>> +	struct device *dev = &pdev->dev;
+> >>> +	struct ac200_ephy_dev *priv;
+> >>> +	struct nvmem_cell *calcell;
+> >>> +	struct phy_driver *ephy;
+> >>> +	u16 *caldata, calib;
+> >>> +	size_t callen;
+> >>> +	int ret;
+> >>> +
+> >>> +	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+> >>> +	if (!priv)
+> >>> +		return -ENOMEM;
+> >>> +
+> >>> +	ephy = devm_kzalloc(dev, sizeof(*ephy), GFP_KERNEL);
+> >>> +	if (!ephy)
+> >>> +		return -ENOMEM;
+> >>> +
+> >>> +	calcell = devm_nvmem_cell_get(dev, "calibration");
+> >>> +	if (IS_ERR(calcell)) {
+> >>> +		dev_err(dev, "Unable to find calibration data!\n");
+> >>> +		return PTR_ERR(calcell);
+> >>> +	}
+> >>> +
+> >>> +	caldata = nvmem_cell_read(calcell, &callen);
+> >>> +	if (IS_ERR(caldata)) {
+> >>> +		dev_err(dev, "Unable to read calibration data!\n");
+> >>> +		return PTR_ERR(caldata);
+> >>> +	}
+> >>> +
+> >>> +	if (callen != 2) {
+> >>> +		dev_err(dev, "Calibration data has wrong length: 2 !=
+> > 
+> > %zu\n",
+> > 
+> >>> +			callen);
+> >>> +		kfree(caldata);
+> >>> +		return -EINVAL;
+> >>> +	}
+> >>> +
+> >>> +	calib = *caldata + 3;
+> >>> +	kfree(caldata);
+> >>> +
+> >>> +	ephy->phy_id = AC200_EPHY_ID;
+> >>> +	ephy->phy_id_mask = AC200_EPHY_ID_MASK;
+> >>> +	ephy->name = ac200_phy_name;
+> >>> +	ephy->driver_data = priv;
+> >>> +	ephy->soft_reset = genphy_soft_reset;
+> >>> +	ephy->config_init = ac200_ephy_config_init;
+> >>> +	ephy->suspend = genphy_suspend;
+> >>> +	ephy->resume = genphy_resume;
+> >>> +
+> >>> +	priv->ephy = ephy;
+> >>> +	priv->regmap = ac200->regmap;
+> >>> +	platform_set_drvdata(pdev, priv);
+> >>> +
+> >>> +	ret = regmap_write(ac200->regmap, AC200_SYS_EPHY_CTL0,
+> >>> +			   AC200_EPHY_RESET_INVALID |
+> >>> +			   AC200_EPHY_SYSCLK_GATING);
+> >>> +	if (ret)
+> >>> +		return ret;
+> >>> +
+> >>> +	ret = regmap_write(ac200->regmap, AC200_SYS_EPHY_CTL1,
+> >>> +			   AC200_EPHY_E_EPHY_MII_IO_EN |
+> >>> +			   AC200_EPHY_E_LNK_LED_IO_EN |
+> >>> +			   AC200_EPHY_E_SPD_LED_IO_EN |
+> >>> +			   AC200_EPHY_E_DPX_LED_IO_EN);
+> >>> +	if (ret)
+> >>> +		return ret;
+> >>> +
+> >>> +	ret = regmap_write(ac200->regmap, AC200_EPHY_CTL,
+> >>> +			   AC200_EPHY_LED_POL |
+> >>> +			   AC200_EPHY_CLK_SEL |
+> >>> +			   AC200_EPHY_ADDR(1) |
+> >>> +			   AC200_EPHY_CALIB(calib));
+> >>> +	if (ret)
+> >>> +		return ret;
+> >>> +
+> >>> +	ret = phy_driver_register(priv->ephy, THIS_MODULE);
+> >>> +	if (ret) {
+> >>> +		dev_err(dev, "Unable to register phy\n");
+> >>> +		return ret;
+> >>> +	}
+> >>> +
+> >>> +	return 0;
+> >>> +}
+> >>> +
+> >>> +static int ac200_ephy_remove(struct platform_device *pdev)
+> >>> +{
+> >>> +	struct ac200_ephy_dev *priv = platform_get_drvdata(pdev);
+> >>> +
+> >>> +	phy_driver_unregister(priv->ephy);
+> >>> +
+> >>> +	regmap_write(priv->regmap, AC200_EPHY_CTL, AC200_EPHY_SHUTDOWN);
+> >>> +	regmap_write(priv->regmap, AC200_SYS_EPHY_CTL1, 0);
+> >>> +	regmap_write(priv->regmap, AC200_SYS_EPHY_CTL0, 0);
+> >>> +
+> >>> +	return 0;
+> >>> +}
+> >>> +
+> >>> +static const struct of_device_id ac200_ephy_match[] = {
+> >>> +	{ .compatible = "x-powers,ac200-ephy" },
+> >>> +	{ /* sentinel */ }
+> >>> +};
+> >>> +MODULE_DEVICE_TABLE(of, ac200_ephy_match);
+> >>> +
+> >>> +static struct platform_driver ac200_ephy_driver = {
+> >>> +	.probe		= ac200_ephy_probe,
+> >>> +	.remove		= ac200_ephy_remove,
+> >>> +	.driver		= {
+> >>> +		.name		= "ac200-ephy",
+> >>> +		.of_match_table	= ac200_ephy_match,
+> >>> +	},
+> >>> +};
+> >>> +module_platform_driver(ac200_ephy_driver);
+> >>> +
+> >>> +MODULE_AUTHOR("Jernej Skrabec <jernej.skrabec@siol.net>");
+> >>> +MODULE_DESCRIPTION("AC200 Ethernet PHY driver");
+> >>> +MODULE_LICENSE("GPL");
+
+
+
+
