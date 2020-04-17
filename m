@@ -2,155 +2,183 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B6F4C352BE
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 00:46:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 257C6C352BE
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 00:49:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 27B7C221F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 00:46:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=jgottula-com.20150623.gappssmtp.com header.i=@jgottula-com.20150623.gappssmtp.com header.b="nFkxDEP5"
+	by mail.kernel.org (Postfix) with ESMTP id 0C70621841
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 00:49:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728272AbgDQAqI (ORCPT
+        id S1728401AbgDQAtu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 20:46:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48740 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726627AbgDQAqH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 20:46:07 -0400
-Received: from mail-vs1-xe41.google.com (mail-vs1-xe41.google.com [IPv6:2607:f8b0:4864:20::e41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55464C061A0C
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 17:46:06 -0700 (PDT)
-Received: by mail-vs1-xe41.google.com with SMTP id y185so165535vsy.8
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 17:46:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=jgottula-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=98QNDXNNi1/b9nh1s56044uMzWepsdxzuM+zy1ZjRxU=;
-        b=nFkxDEP5t02hVcrnliNnd9dc1y+GiLs22EKy+tLyO3fXH9tBa+cKxVG6bsGHJBqEUl
-         cs2UXX2VTUu7edfBFqgeSbwbmg+sryNav/F9LImOfjwz9sruHXCb9abixx9cdvUZAqAb
-         CdhCfHgyRm4asocPeYGS3RdX0j/kSN57fjamUpFinPwCVhasHt7uXH1JBgb1V+2RGel6
-         1iztnj+WMRqGnL27F8Z7VlBQBK4UDqzbbQOvWbYpoKwpEQedyO6Jg3Bpn2wbhglY+Zbp
-         Kh3FGd981CMRmk7rjc/JUHpdcgd/zoW1cwN3issixl0BtDdNGFZ3bkUqeh+by79V+RkS
-         0ABA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=98QNDXNNi1/b9nh1s56044uMzWepsdxzuM+zy1ZjRxU=;
-        b=WQe4z1NDyhTghYdrfLRwbOuvUBO72LxLzne78xJS8yWnZPeOFJzLovWJOMLNAfKSqC
-         mE34Wt1RUkRNaA09a9DNNOxjEe8t5x5mLCv36U9ReQSA/u3H3/UM5LrUBb5Vo7oiEnhG
-         Fdbz33IM2RinHMLKPZBIx0EOjj+uqsjo+DUdhx+B9+xdxA+aPVpQqUf8IP7JmRWHmELs
-         4EbqInqqDxoKoZJAzi+PWU0YsjZQtD/teJzNPB9y9yqkNsJya2G8o3bY0yieBFsSlO+e
-         8e2U/Nz7AFIQmUNiZo9nbogjbg8cp8AQR4cvQuZmF+qN2o0qB2c9KEqhRDVKD5OnM9LU
-         +xyg==
-X-Gm-Message-State: AGi0PuZZaAcIU6kwyFcKF3zAINvOla4epZmTjcaEUGZYctJy0ptxPvYv
-        FdrnR+7mI1c6+NQjJQ9kdGfii89ZLdxtu/T0WINZpA==
-X-Google-Smtp-Source: APiQypJT/nzaZl1RZrciK4UlldYYOjXJrnUG6cC4F7AkHx8huVmh54MdmiFbcbxJAC44wxDaul2Ok4UZA5L7skkhW6k=
-X-Received: by 2002:a67:7d10:: with SMTP id y16mr318990vsc.23.1587084365254;
- Thu, 16 Apr 2020 17:46:05 -0700 (PDT)
-MIME-Version: 1.0
-References: <CAKuMfTUPzPjuNk+T_GQMCKoB9ssh2arr6xRiu6VODwwB0PMdZw@mail.gmail.com>
- <20200416214649.GA60148@google.com>
-In-Reply-To: <20200416214649.GA60148@google.com>
-From:   Justin Gottula <justin@jgottula.com>
-Date:   Thu, 16 Apr 2020 17:45:31 -0700
-Message-ID: <CAKuMfTVpaetB0qQ_hm8cSowtZN8HUKXdADWhKXC=4eKd1i5oSw@mail.gmail.com>
-Subject: Re: [PATCH] zram: fix writeback_store returning zero in most situations
-To:     Minchan Kim <minchan@kernel.org>
-Cc:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Nitin Gupta <ngupta@vflare.org>, Jens Axboe <axboe@kernel.dk>,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 16 Apr 2020 20:49:50 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:54498 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725862AbgDQAtt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 20:49:49 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id DB8B6200F18;
+        Fri, 17 Apr 2020 02:49:46 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id BA1302002C9;
+        Fri, 17 Apr 2020 02:49:41 +0200 (CEST)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 86727402D8;
+        Fri, 17 Apr 2020 08:49:35 +0800 (SGT)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
+        shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+        festevam@gmail.com, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH V3 1/5] dt-bindings: clock: Convert i.MX6Q clock to json-schema
+Date:   Fri, 17 Apr 2020 08:41:27 +0800
+Message-Id: <1587084091-5941-1-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 16, 2020 at 2:47 PM Minchan Kim <minchan@kernel.org> wrote:
-> I couldn't remember why I wanted to do continue even though we knew
-> the write was failure from the beginning.
->
-> Couldn't we just bail out whenever we encounter the error?
-> Sergey, Justin, what do you think?
->
-> IMO, it would be more consistent with other error handling.
+Convert the i.MX6Q clock binding to DT schema format using json-schema.
 
-As far as being consistent with the rest of the error handling in the
-loop, I think there's a reasonable distinction that can be drawn between
-some of the error cases and others. With some, breaking out immediately is
-obviously the correct action; but with others, it's not as clear-cut.
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+Changes since V2:
+	- Force 'interrupts' minItem/maxItem to 2.
+---
+ .../devicetree/bindings/clock/imx6q-clock.txt      | 41 -------------
+ .../devicetree/bindings/clock/imx6q-clock.yaml     | 67 ++++++++++++++++++++++
+ 2 files changed, 67 insertions(+), 41 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/clock/imx6q-clock.txt
+ create mode 100644 Documentation/devicetree/bindings/clock/imx6q-clock.yaml
 
-For the zram->wb_limit_enable && !zram->bd_wb_limit case, breaking out of
-the loop and immediately returning makes complete sense: once we've hit
-the writeback limit, there's nothing that could happen in future loop
-iterations that could cause us to somehow _not_ be at the limit anymore.
-So there's no reason to continue the loop.
+diff --git a/Documentation/devicetree/bindings/clock/imx6q-clock.txt b/Documentation/devicetree/bindings/clock/imx6q-clock.txt
+deleted file mode 100644
+index 13d36d4..0000000
+--- a/Documentation/devicetree/bindings/clock/imx6q-clock.txt
++++ /dev/null
+@@ -1,41 +0,0 @@
+-* Clock bindings for Freescale i.MX6 Quad
+-
+-Required properties:
+-- compatible: Should be "fsl,imx6q-ccm"
+-- reg: Address and length of the register set
+-- interrupts: Should contain CCM interrupt
+-- #clock-cells: Should be <1>
+-
+-Optional properties:
+-- fsl,pmic-stby-poweroff: Configure CCM to assert PMIC_STBY_REQ signal
+-  on power off.
+-  Use this property if the SoC should be powered off by external power
+-  management IC (PMIC) triggered via PMIC_STBY_REQ signal.
+-  Boards that are designed to initiate poweroff on PMIC_ON_REQ signal should
+-  be using "syscon-poweroff" driver instead.
+-- clocks: list of clock specifiers, must contain an entry for each entry
+-          in clock-names
+-- clock-names: valid names are "osc", "ckil", "ckih1", "anaclk1" and "anaclk2"
+-
+-The clock consumer should specify the desired clock by having the clock
+-ID in its "clocks" phandle cell.  See include/dt-bindings/clock/imx6qdl-clock.h
+-for the full list of i.MX6 Quad and DualLite clock IDs.
+-
+-Examples:
+-
+-#include <dt-bindings/clock/imx6qdl-clock.h>
+-
+-clks: ccm@20c4000 {
+-	compatible = "fsl,imx6q-ccm";
+-	reg = <0x020c4000 0x4000>;
+-	interrupts = <0 87 0x04 0 88 0x04>;
+-	#clock-cells = <1>;
+-};
+-
+-uart1: serial@2020000 {
+-	compatible = "fsl,imx6q-uart", "fsl,imx21-uart";
+-	reg = <0x02020000 0x4000>;
+-	interrupts = <0 26 0x04>;
+-	clocks = <&clks IMX6QDL_CLK_UART_IPG>, <&clks IMX6QDL_CLK_UART_SERIAL>;
+-	clock-names = "ipg", "per";
+-};
+diff --git a/Documentation/devicetree/bindings/clock/imx6q-clock.yaml b/Documentation/devicetree/bindings/clock/imx6q-clock.yaml
+new file mode 100644
+index 0000000..0daf789
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/imx6q-clock.yaml
+@@ -0,0 +1,67 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/clock/imx6q-clock.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Clock bindings for Freescale i.MX6 Quad
++
++maintainers:
++  - Anson Huang <Anson.Huang@nxp.com>
++
++properties:
++  compatible:
++    const: fsl,imx6q-ccm
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    minItems: 2
++    maxItems: 2
++
++  '#clock-cells':
++    const: 1
++
++  clocks:
++    items:
++      - description: 24m osc
++      - description: 32k osc
++      - description: ckih1 clock input
++      - description: anaclk1 clock input
++      - description: anaclk2 clock input
++
++  clock-names:
++    items:
++      - const: osc
++      - const: ckil
++      - const: ckih1
++      - const: anaclk1
++      - const: anaclk2
++
++  fsl,pmic-stby-poweroff:
++    $ref: /schemas/types.yaml#/definitions/flag
++    description: |
++      Use this property if the SoC should be powered off by external power
++      management IC (PMIC) triggered via PMIC_STBY_REQ signal.
++      Boards that are designed to initiate poweroff on PMIC_ON_REQ signal should
++      be using "syscon-poweroff" driver instead.
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - '#clock-cells'
++
++examples:
++  # Clock Control Module node:
++  - |
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++
++    clks: clock-controller@20c4000 {
++        compatible = "fsl,imx6q-ccm";
++        reg = <0x020c4000 0x4000>;
++        interrupts = <0 87 IRQ_TYPE_LEVEL_HIGH>,
++                     <0 88 IRQ_TYPE_LEVEL_HIGH>;
++        #clock-cells = <1>;
++    };
+-- 
+2.7.4
 
-Similarly, for the alloc_block_bdev(zram) failure case, breaking out of
-the loop and immediately returning also makes complete sense: if we've
-already run out of blocks on the backing device, then continuing to loop
-isn't going to result in is somehow ending up with more backing device
-blocks available. So there's no reason to continue the loop in that case
-either.
-
-With the zram_bvec_read and submit_bio_wait failure cases, though, it's
-not nearly as clear that a failure on the current slot _automatically_
-guarantees that all future slots would also have errors. For example, in
-the zram_bvec_read failure case, it's entirely possible that the
-decompression code in the currently-used compression backend might have
-had a problem with the current buffer; but that doesn't necessarily seem
-like a clear-cut indication that the same decompression error would
-definitely happen on later iterations of the loop: in fact, many of the
-later slots could very well be ZRAM_HUGE or ZRAM_SAME, and so they would
-avoid that type of error entirely. And in the submit_bio_wait failure
-case, it's also conceivable that the backing device may have had some sort
-of write error with the current block and data buffer, but that the same
-error might not happen again on future iterations of the loop when writing
-a different buffer to potentially an entirely different block. (Especially
-if the backing device happens to be using some kind of complicated driver,
-like one of the weirder LVM/device-mapper backends or a network block
-device.)
-
-So, at least when it comes to "are these particular failure cases the kind
-where it would certainly make no sense to continue with future loop
-iterations because we would definitely have the same failures then too",
-there's a reasonable argument that the zram_bvec_read and submit_bio_wait
-error cases don't necessarily fit that logic and so potentially shouldn't
-immediately break and return.
-
-A couple of other considerations came to mind while thinking about this:
-
-1. From the standpoint of the user, what should they reasonably be
-expecting to happen when writing "huge"/"idle" to the writeback file? A
-best-effort attempt at doing all possible block writebacks (of the
-requested type) that can possibly be successfully accomplished? Or,
-writeback of only as many blocks as can be done until a (possibly
-transient or not-applicable-to-all-blocks) error pops up, and then
-stopping at that point? I tend to think that the former makes a bit more
-sense, but I don't know for sure if it's the definite Right Answer.
-
-2. There is a bit of a predicament with the keep-going-even-if-an-error-
-happened approach. There could be multiple submit_bio_wait failures (e.g.
-due to a few blocks that couldn't be written-back due to transient write
-errors on the backing device), each with their own error return value; but
-we can only return one error code from writeback_store. So how do we even
-communicate a multiple-errors-happened situation to the user properly? My
-patch, as originally written, would give the user an errno corresponding
-to the last submit_bio_wait failure to happen; but of course that leaves
-out any other error codes that may have also come up on prior write
-attempts that failed (and those failures could have been for different
-reasons). And then also, it's entirely possible that submit_bio_wait may
-return -EIO or -ENOSPC or -ENOMEM, which would be ambiguous with the other
-meanings of those error codes from the writeback_store function itself
-(-EIO for WB limit, -ENOSPC for no free blocks on backing device, -ENOMEM
-if couldn't allocate the temporary page).
-
-As for the main issue of whether or not to break out of the loop in the
-event of a backing device write error, I think it probably makes more
-sense not to break out. But it could probably be argued either way.
