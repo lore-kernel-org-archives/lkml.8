@@ -2,86 +2,78 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BA81C352BE
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 10:08:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2AC1C3815B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 10:09:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7EF172063A
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 10:08:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 806D3221EB
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 10:09:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PmBZ6s6g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728623AbgDQKIs (ORCPT
+        id S1728816AbgDQKJJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 06:08:48 -0400
-Received: from mx2.suse.de ([195.135.220.15]:47908 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725830AbgDQKIr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 06:08:47 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 17D10ADBB;
-        Fri, 17 Apr 2020 10:08:45 +0000 (UTC)
-Subject: Re: [PATCH] x86/asm: Provide a Kconfig symbol for disabling old
- assembly annotations
-To:     Mark Brown <broonie@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>
-Cc:     x86@kernel.org, Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, linux-kernel@vger.kernel.org
-References: <20200416182402.6206-1-broonie@kernel.org>
-From:   Jiri Slaby <jslaby@suse.cz>
-Autocrypt: addr=jslaby@suse.cz; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <8fe6e63a-fd92-aec7-26ae-da65711b5747@suse.cz>
-Date:   Fri, 17 Apr 2020 12:08:44 +0200
+        Fri, 17 Apr 2020 06:09:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51238 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725830AbgDQKJJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Apr 2020 06:09:09 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A083DC061A0C;
+        Fri, 17 Apr 2020 03:09:08 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id b11so2387179wrs.6;
+        Fri, 17 Apr 2020 03:09:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=cc:subject:to:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=YbQK9qqTQiwPps3zNgPuWa95hc6ZueRySP087ny5ENk=;
+        b=PmBZ6s6gB2kAVb0CXGcgeEjWaw/v2nBdGhnWLBnah8i2gpparN6TXRfTnZGcIiude1
+         SQnnZ7TSzayvbiUmcvtNKxO1+ARSOW5Cy8D1cSPaaQKINOateT6sHJX4RoPlet/+H/Jo
+         1rfZ/ipaSTmeF58KdaMEL/Do03fJhguoQlsBXygG/1ZlkTh32DJGT6JQ1AuPTFbtDg/T
+         9K+8a4U5FxE0f7Wh9G+f8qAASDLO6AnSTAAWM+nsdT9zkkUphQG+mGXvaRh/v5b4WnHg
+         Ko8qMKbcy+QX+N47FEBT2e2V8G7QLYI0WhEbok1jGgV5RAM9qzja7tIIogrnXA9Kd82O
+         vj4w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:cc:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=YbQK9qqTQiwPps3zNgPuWa95hc6ZueRySP087ny5ENk=;
+        b=H1uNGhTTThd+JvwF7hupmzBIaoKHEJbYzHV8yIYeunsRtpsGDZouS5kOxR+1pU8C8S
+         2/aB4CxdYfmZ/vHPn59ULwVObuwP4wDZbctNq3gNTPW8zlJ+/uPebtPgqCVgc5I7mXbP
+         UqONh/l+Vhs4BPMOSXIzAPGI8nebxX5xGfdLjAVjROfRLZKVnWbuf1wj/Sl/7c2pVgYU
+         esLF5J5Yig5o0p9T5wdWAZlrGSlQjGHtdGWpzDpdTgdOlDSJfkhL5E9DI1dUmw+Xf/NO
+         XFJ6g+Ugmym0MwjTyUOtIH8kMPakHcMB3hGyS2jqNdkZQOtCQapRje5Uv4neI/oQ00RW
+         Wz/g==
+X-Gm-Message-State: AGi0PuaT3JjMNLCgoBj0hnuWF7Ay/Ko6WTJIb5tyClczjY/ahwJ6vNUB
+        62jJsdtgUUXW0z07TZ/9IfJH1pPe
+X-Google-Smtp-Source: APiQypLha09XH0F2Owwo8u49JRobTHMw6E2L2t2qISNfYkDdujBq7HlHwG/2kGKsc/+QQWoWlJIP8A==
+X-Received: by 2002:adf:afdf:: with SMTP id y31mr3061238wrd.120.1587118147181;
+        Fri, 17 Apr 2020 03:09:07 -0700 (PDT)
+Received: from ?IPv6:2001:a61:2482:101:3351:6160:8173:cc31? ([2001:a61:2482:101:3351:6160:8173:cc31])
+        by smtp.gmail.com with ESMTPSA id g186sm7161924wme.7.2020.04.17.03.09.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 17 Apr 2020 03:09:06 -0700 (PDT)
+Cc:     mtk.manpages@gmail.com, linux-man@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] bpf.2: update enum bpf_map_type and enum bpf_prog_type
+To:     Peter Wu <peter@lekensteyn.nl>
+References: <20190804205353.2956-1-peter@lekensteyn.nl>
+From:   "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
+Message-ID: <fafd846d-d365-efc2-8a6a-a5a1b471e9cd@gmail.com>
+Date:   Fri, 17 Apr 2020 12:09:04 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.6.0
 MIME-Version: 1.0
-In-Reply-To: <20200416182402.6206-1-broonie@kernel.org>
-Content-Type: text/plain; charset=iso-8859-2
+In-Reply-To: <20190804205353.2956-1-peter@lekensteyn.nl>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -89,40 +81,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 16. 04. 20, 20:24, Mark Brown wrote:
-> As x86 was converted to use the modern SYM_ annotations for assembly ifdefs
-> were added to remove the generic definitions of the old style annotations
-> on x86. Rather than collect a list of architectures in the ifdefs as more
-> architectures are converted over provide a Kconfig symbol for this and
-> update x86 to use it.
-> 
-> Signed-off-by: Mark Brown <broonie@kernel.org>
+Hello Peter,
 
-Acked-by: Jiri Slaby <jslaby@suse.cz>
+On 8/4/19 10:53 PM, Peter Wu wrote:
+> Taken from Linux v5.3-rc2. Add a reference to the header file to save
+> the future reader some time figuring out whether more entries exist.
 
+Thanks. Patch applied.
+
+Cheers,
+
+Michael
+
+
+> Signed-off-by: Peter Wu <peter@lekensteyn.nl>
 > ---
+>  man2/bpf.2 | 27 +++++++++++++++++++++++++++
+>  1 file changed, 27 insertions(+)
 > 
-> arm64 will all being well be able to use this shortly.
+> diff --git a/man2/bpf.2 b/man2/bpf.2
+> index 5a766aaa8..51e3bd111 100644
+> --- a/man2/bpf.2
+> +++ b/man2/bpf.2
+> @@ -367,6 +367,14 @@ enum bpf_map_type {
+>      BPF_MAP_TYPE_DEVMAP,
+>      BPF_MAP_TYPE_SOCKMAP,
+>      BPF_MAP_TYPE_CPUMAP,
+> +    BPF_MAP_TYPE_XSKMAP,
+> +    BPF_MAP_TYPE_SOCKHASH,
+> +    BPF_MAP_TYPE_CGROUP_STORAGE,
+> +    BPF_MAP_TYPE_REUSEPORT_SOCKARRAY,
+> +    BPF_MAP_TYPE_PERCPU_CGROUP_STORAGE,
+> +    BPF_MAP_TYPE_QUEUE,
+> +    BPF_MAP_TYPE_STACK,
+> +    /* See /usr/include/linux/bpf.h for the full list. */
+>  };
+>  .EE
+>  .in
+> @@ -756,6 +764,25 @@ enum bpf_prog_type {
+>      BPF_PROG_TYPE_KPROBE,
+>      BPF_PROG_TYPE_SCHED_CLS,
+>      BPF_PROG_TYPE_SCHED_ACT,
+> +    BPF_PROG_TYPE_TRACEPOINT,
+> +    BPF_PROG_TYPE_XDP,
+> +    BPF_PROG_TYPE_PERF_EVENT,
+> +    BPF_PROG_TYPE_CGROUP_SKB,
+> +    BPF_PROG_TYPE_CGROUP_SOCK,
+> +    BPF_PROG_TYPE_LWT_IN,
+> +    BPF_PROG_TYPE_LWT_OUT,
+> +    BPF_PROG_TYPE_LWT_XMIT,
+> +    BPF_PROG_TYPE_SOCK_OPS,
+> +    BPF_PROG_TYPE_SK_SKB,
+> +    BPF_PROG_TYPE_CGROUP_DEVICE,
+> +    BPF_PROG_TYPE_SK_MSG,
+> +    BPF_PROG_TYPE_RAW_TRACEPOINT,
+> +    BPF_PROG_TYPE_CGROUP_SOCK_ADDR,
+> +    BPF_PROG_TYPE_LWT_SEG6LOCAL,
+> +    BPF_PROG_TYPE_LIRC_MODE2,
+> +    BPF_PROG_TYPE_SK_REUSEPORT,
+> +    BPF_PROG_TYPE_FLOW_DISSECTOR,
+> +    /* See /usr/include/linux/bpf.h for the full list. */
+>  };
+>  .EE
+>  .in
 > 
->  arch/x86/Kconfig        | 1 +
->  include/linux/linkage.h | 8 ++++----
->  lib/Kconfig             | 3 +++
->  3 files changed, 8 insertions(+), 4 deletions(-)
-> 
-> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-> index 5706d0c8377f..1c6f88cefc88 100644
-> --- a/arch/x86/Kconfig
-> +++ b/arch/x86/Kconfig
-> @@ -92,6 +92,7 @@ config X86
->  	select ARCH_USE_BUILTIN_BSWAP
->  	select ARCH_USE_QUEUED_RWLOCKS
->  	select ARCH_USE_QUEUED_SPINLOCKS
-> +	select ARCH_USE_SYM_ANNOTATIONS
->  	select ARCH_WANT_BATCHED_UNMAP_TLB_FLUSH
->  	select ARCH_WANT_DEFAULT_BPF_JIT	if X86_64
->  	select ARCH_WANTS_DYNAMIC_TASK_STRUCT
-...
-thanks,
+
+
 -- 
-js
-suse labs
+Michael Kerrisk
+Linux man-pages maintainer; http://www.kernel.org/doc/man-pages/
+Linux/UNIX System Programming Training: http://man7.org/training/
