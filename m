@@ -2,142 +2,113 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77000C2BB85
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 06:40:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0776CC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 06:41:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5EDF720771
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 06:40:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4F1220771
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 06:41:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="gHYxbzsc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728028AbgDQGkq (ORCPT
+        id S1728118AbgDQGl4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 02:40:46 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:2386 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728000AbgDQGkq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 02:40:46 -0400
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id CB58F782E7D097BE4BA6;
-        Fri, 17 Apr 2020 14:40:42 +0800 (CST)
-Received: from [127.0.0.1] (10.173.222.27) by DGGEMS402-HUB.china.huawei.com
- (10.3.19.202) with Microsoft SMTP Server id 14.3.487.0; Fri, 17 Apr 2020
- 14:40:32 +0800
-Subject: Re: [PATCH 2/2] KVM: arm64: vgic-its: Fix memory leak on the error
- path of vgic_add_lpi()
-To:     Marc Zyngier <maz@kernel.org>
-CC:     <kvmarm@lists.cs.columbia.edu>, <james.morse@arm.com>,
-        <julien.thierry.kdev@gmail.com>, <suzuki.poulose@arm.com>,
-        <wanghaibin.wang@huawei.com>, <yezengruan@huawei.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20200414030349.625-1-yuzenghui@huawei.com>
- <20200414030349.625-3-yuzenghui@huawei.com>
- <610f2195-f85d-4beb-b711-47d63bb393d0@huawei.com>
- <2173e13527cc9578838f0364ad29f6cc@kernel.org>
-From:   Zenghui Yu <yuzenghui@huawei.com>
-Message-ID: <de03883a-179f-fbe5-e5f4-6138e5684660@huawei.com>
-Date:   Fri, 17 Apr 2020 14:40:31 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.0
+        Fri, 17 Apr 2020 02:41:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47156 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726232AbgDQGlz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Apr 2020 02:41:55 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7CB08C061A0C;
+        Thu, 16 Apr 2020 23:41:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
+        :Reply-To:Content-Type:Content-ID:Content-Description;
+        bh=/o7UlcR7J0OLMWDDmedYROrKyeeA4yowwB6Tl9ToCVo=; b=gHYxbzscb67CdZTtvE54hU8sIP
+        lQ2J0uyjyyd/+K64HuOhJujus+zZsv+8VmWhPc+CrfBqLqz97duGj42273wi1vIlYsdKMRuL62uSS
+        J63fXvGTKvrgYApoSf8OPKdBs+YQm5l1Htmm10HOtY2atGECRmjO9GAl2okhZXUrA1nt465GoIH/M
+        sotvn3mpz8wHHll5qOJY5eIPGdhH/9pB8VdF5e+G54zRqdURwLoXIFYZcaaNZTt0JUvtIeyRNUxMR
+        bQ0y5IWVY4pLx7lBW2OlIIcdb1IL9Mg12VfZxKGVWkkVq/gYKxxv16N8D7wWGF3grKBJkKfiv9vin
+        EDOneduA==;
+Received: from [2001:4bb8:184:4aa1:c70:4a89:bc61:2] (helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jPKhD-0002hI-Vt; Fri, 17 Apr 2020 06:41:52 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>
+Cc:     Luis Chamberlain <mcgrof@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-fsdevel@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: [PATCH 1/6] bpf-cgroup: remove unused exports
+Date:   Fri, 17 Apr 2020 08:41:41 +0200
+Message-Id: <20200417064146.1086644-2-hch@lst.de>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200417064146.1086644-1-hch@lst.de>
+References: <20200417064146.1086644-1-hch@lst.de>
 MIME-Version: 1.0
-In-Reply-To: <2173e13527cc9578838f0364ad29f6cc@kernel.org>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.173.222.27]
-X-CFilter-Loop: Reflected
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/4/17 1:23, Marc Zyngier wrote:
-> On 2020-04-16 02:17, Zenghui Yu wrote:
->> On 2020/4/14 11:03, Zenghui Yu wrote:
->>> If we're going to fail out the vgic_add_lpi(), let's make sure the
->>> allocated vgic_irq memory is also freed. Though it seems that both
->>> cases are unlikely to fail.
->>>
->>> Cc: Zengruan Ye <yezengruan@huawei.com>
->>> Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
->>> ---
->>>   virt/kvm/arm/vgic/vgic-its.c | 8 ++++++--
->>>   1 file changed, 6 insertions(+), 2 deletions(-)
->>>
->>> diff --git a/virt/kvm/arm/vgic/vgic-its.c b/virt/kvm/arm/vgic/vgic-its.c
->>> index d53d34a33e35..3c3b6a0f2dce 100644
->>> --- a/virt/kvm/arm/vgic/vgic-its.c
->>> +++ b/virt/kvm/arm/vgic/vgic-its.c
->>> @@ -98,12 +98,16 @@ static struct vgic_irq *vgic_add_lpi(struct kvm 
->>> *kvm, u32 intid,
->>>        * the respective config data from memory here upon mapping the 
->>> LPI.
->>>        */
->>>       ret = update_lpi_config(kvm, irq, NULL, false);
->>> -    if (ret)
->>> +    if (ret) {
->>> +        kfree(irq);
->>>           return ERR_PTR(ret);
->>> +    }
->>>         ret = vgic_v3_lpi_sync_pending_status(kvm, irq);
->>> -    if (ret)
->>> +    if (ret) {
->>> +        kfree(irq);
->>>           return ERR_PTR(ret);
->>> +    }
->>
->> Looking at it again, I realized that this error handling is still not
->> complete. Maybe we should use a vgic_put_irq() instead so that we can
->> also properly delete the vgic_irq from lpi_list.
-> 
-> Yes, this is a more correct fix indeed. There is still a bit of a bizarre
-> behaviour if you have two vgic_add_lpi() racing to create the same 
-> interrupt,
-> which is pretty dodgy anyway (it means we have two MAPI at the same 
-> time...).
-> You end-up with re-reading the state from memory... Oh well.
-> 
->> Marc, what do you think? Could you please help to fix it, or I can
->> resend it.
-> 
-> I've fixed it as such (with a comment for a good measure):
-> 
-> diff --git a/virt/kvm/arm/vgic/vgic-its.c b/virt/kvm/arm/vgic/vgic-its.c
-> index 3c3b6a0f2dce..c012a52b19f5 100644
-> --- a/virt/kvm/arm/vgic/vgic-its.c
-> +++ b/virt/kvm/arm/vgic/vgic-its.c
-> @@ -96,16 +96,19 @@ static struct vgic_irq *vgic_add_lpi(struct kvm 
-> *kvm, u32 intid,
->        * We "cache" the configuration table entries in our struct 
-> vgic_irq's.
->        * However we only have those structs for mapped IRQs, so we read in
->        * the respective config data from memory here upon mapping the LPI.
-> +     *
-> +     * Should any of these fail, behave as if we couldn't create the LPI
-> +     * by dropping the refcount and returning the error.
->        */
->       ret = update_lpi_config(kvm, irq, NULL, false);
->       if (ret) {
-> -        kfree(irq);
-> +        vgic_put_irq(kvm, irq);
->           return ERR_PTR(ret);
->       }
-> 
->       ret = vgic_v3_lpi_sync_pending_status(kvm, irq);
->       if (ret) {
-> -        kfree(irq);
-> +        vgic_put_irq(kvm, irq);
->           return ERR_PTR(ret);
->       }
-> 
-> 
-> Let me know if you agree with that.
+Except for a few of the networking hooks called from modular ipv4 or
+ipv6 code, all of hooks are just called from guaranteed to be built-in
+code.
 
-Agreed. Thanks for the fix!
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+---
+ kernel/bpf/cgroup.c | 4 ----
+ 1 file changed, 4 deletions(-)
 
-
-Zenghui
+diff --git a/kernel/bpf/cgroup.c b/kernel/bpf/cgroup.c
+index cb305e71e7de..929d9a7263da 100644
+--- a/kernel/bpf/cgroup.c
++++ b/kernel/bpf/cgroup.c
+@@ -1054,7 +1054,6 @@ int __cgroup_bpf_check_dev_permission(short dev_type, u32 major, u32 minor,
+ 
+ 	return !allow;
+ }
+-EXPORT_SYMBOL(__cgroup_bpf_check_dev_permission);
+ 
+ static const struct bpf_func_proto *
+ cgroup_base_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
+@@ -1221,7 +1220,6 @@ int __cgroup_bpf_run_filter_sysctl(struct ctl_table_header *head,
+ 
+ 	return ret == 1 ? 0 : -EPERM;
+ }
+-EXPORT_SYMBOL(__cgroup_bpf_run_filter_sysctl);
+ 
+ #ifdef CONFIG_NET
+ static bool __cgroup_bpf_prog_array_is_empty(struct cgroup *cgrp,
+@@ -1326,7 +1324,6 @@ int __cgroup_bpf_run_filter_setsockopt(struct sock *sk, int *level,
+ 		sockopt_free_buf(&ctx);
+ 	return ret;
+ }
+-EXPORT_SYMBOL(__cgroup_bpf_run_filter_setsockopt);
+ 
+ int __cgroup_bpf_run_filter_getsockopt(struct sock *sk, int level,
+ 				       int optname, char __user *optval,
+@@ -1413,7 +1410,6 @@ int __cgroup_bpf_run_filter_getsockopt(struct sock *sk, int level,
+ 	sockopt_free_buf(&ctx);
+ 	return ret;
+ }
+-EXPORT_SYMBOL(__cgroup_bpf_run_filter_getsockopt);
+ #endif
+ 
+ static ssize_t sysctl_cpy_dir(const struct ctl_dir *dir, char **bufp,
+-- 
+2.25.1
 
