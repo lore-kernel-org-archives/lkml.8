@@ -2,313 +2,96 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2870C2BB55
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 08:40:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02B7BC352BE
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 08:41:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BD26B2137B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 08:40:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5D3D2137B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 08:41:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587112868;
+	bh=Q4esTZYVNmqT30vqB5Ty7wXcBtA09QLwSlf9T8E+ZBY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=pEpx18/MtLI5G5px1kzmYBDm86XfE9SPk81jsWFLJ20tHi6OCK13Dk+Zuxj4sy2rW
+	 ZT9omXv0ZTtiElEqBMCcfvNO6mQgTDKB4JDlQ5fHMCkzYG0a6fn8TliwP6DvZmZ9E9
+	 oqn26rCt3IE94vROgud1zVVwoOICsENy4+eTF9DU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729896AbgDQIkR (ORCPT
+        id S1729901AbgDQIlI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 04:40:17 -0400
-Received: from mga03.intel.com ([134.134.136.65]:64716 "EHLO mga03.intel.com"
+        Fri, 17 Apr 2020 04:41:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34368 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729796AbgDQIkP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 04:40:15 -0400
-IronPort-SDR: NbpRTZLCPYpktC/mUs7G+2qu3svogeO+H1RdLpTNp88BrqBsWmeLM+Q97PikQZ/QkmTOFxhCIv
- Dz1H7M2pSgnA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2020 01:40:15 -0700
-IronPort-SDR: Qw/6VtXAAp+Z178rQ5jifBekM2FbH8hLF3U16DemPpFbboc0ntAnVJiYH/FveK9KEZeMhJbaCW
- 1yaWy2lCMPNg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,394,1580803200"; 
-   d="scan'208";a="454658961"
-Received: from likexu-mobl1.ccr.corp.intel.com (HELO [10.238.4.236]) ([10.238.4.236])
-  by fmsmga005.fm.intel.com with ESMTP; 17 Apr 2020 01:40:05 -0700
-Reply-To: like.xu@intel.com
-Subject: Re: [PATCH v9 03/10] perf/x86: Add constraint to create guest LBR
- event without hw counter
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Like Xu <like.xu@linux.intel.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
-        Andi Kleen <ak@linux.intel.com>,
-        Jim Mattson <jmattson@google.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Liran Alon <liran.alon@oracle.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Liang Kan <kan.liang@linux.intel.com>,
-        Wei Wang <wei.w.wang@intel.com>, linux-kernel@vger.kernel.org,
-        Ingo Molnar <mingo@kernel.org>
-References: <20200313021616.112322-1-like.xu@linux.intel.com>
- <20200313021616.112322-4-like.xu@linux.intel.com>
- <20200409163717.GD20713@hirez.programming.kicks-ass.net>
- <0b89963d-33d8-3b0f-fc56-eff3ccce648d@intel.com>
-From:   "Xu, Like" <like.xu@intel.com>
-Organization: Intel OTC
-Message-ID: <afa1528f-9aa5-2300-3c84-dc20bf17a8cc@intel.com>
-Date:   Fri, 17 Apr 2020 16:40:04 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        id S1729760AbgDQIlH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Apr 2020 04:41:07 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B050C2137B;
+        Fri, 17 Apr 2020 08:41:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587112867;
+        bh=Q4esTZYVNmqT30vqB5Ty7wXcBtA09QLwSlf9T8E+ZBY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=j4dvaNIUbdbJ++rgfPga0xtZ6c8pwdLGVZ+75rsfMK9B9GAAJEGFjchkTAIYPyRFK
+         xAk/AsjrAsDm6THYnGnC8TPcjHOYM02u9ih+qEpIuCZ+Jk9BNw2esVekMPso2ccuNE
+         PgJnnDiPoaAGfONc5XICnGncl0FKtvoliUkQnf0A=
+Date:   Fri, 17 Apr 2020 09:41:04 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     Kamal Dasu <kdasu.kdev@gmail.com>,
+        bcm-kernel-feedback-list@broadcom.com, linux-spi@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [Patch 1/9] spi: bcm-qspi: Handle clock probe deferral
+Message-ID: <20200417084104.GA5315@sirena.org.uk>
+References: <20200416174309.34044-1-kdasu.kdev@gmail.com>
+ <20200416174932.GP5354@sirena.org.uk>
+ <7b2db6ed-1aab-4c61-e519-a73d9e3af454@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <0b89963d-33d8-3b0f-fc56-eff3ccce648d@intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="xHFwDpU9dbj6ez1V"
+Content-Disposition: inline
+In-Reply-To: <7b2db6ed-1aab-4c61-e519-a73d9e3af454@gmail.com>
+X-Cookie: MOUNT TAPE U1439 ON B3, NO RING
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Peter,
 
-On 2020/4/10 11:03, Xu, Like wrote:
-> Hi Peter,
->
-> First of all, thanks for your comments!
->
-> On 2020/4/10 0:37, Peter Zijlstra wrote:
->>> diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
->>> index 3bb738f5a472..e919187a0751 100644
->>> --- a/arch/x86/events/core.c
->>> +++ b/arch/x86/events/core.c
->>> @@ -74,7 +74,8 @@ u64 x86_perf_event_update(struct perf_event *event)
->>>       int idx = hwc->idx;
->>>       u64 delta;
->>>   -    if (idx == INTEL_PMC_IDX_FIXED_BTS)
->>> +    if ((idx == INTEL_PMC_IDX_FIXED_BTS) ||
->>> +        (idx == INTEL_PMC_IDX_FIXED_VLBR))
->>>           return 0;
->>>         /*
->>> @@ -1102,7 +1103,8 @@ static inline void x86_assign_hw_event(struct 
->>> perf_event *event,
->>>       hwc->last_cpu = smp_processor_id();
->>>       hwc->last_tag = ++cpuc->tags[i];
->>>   -    if (hwc->idx == INTEL_PMC_IDX_FIXED_BTS) {
->>> +    if ((hwc->idx == INTEL_PMC_IDX_FIXED_BTS) ||
->>> +        (hwc->idx == INTEL_PMC_IDX_FIXED_VLBR)) {
->>>           hwc->config_base = 0;
->>>           hwc->event_base    = 0;
->>>       } else if (hwc->idx >= INTEL_PMC_IDX_FIXED) {
->>> @@ -1233,7 +1235,8 @@ int x86_perf_event_set_period(struct perf_event 
->>> *event)
->>>       s64 period = hwc->sample_period;
->>>       int ret = 0, idx = hwc->idx;
->>>   -    if (idx == INTEL_PMC_IDX_FIXED_BTS)
->>> +    if ((idx == INTEL_PMC_IDX_FIXED_BTS) ||
->>> +        (idx == INTEL_PMC_IDX_FIXED_VLBR))
->>>           return 0;
->>>         /*
->> That seems unfortunate; can that be >= INTEL_PMC_IDX_FIXED_BTS ? If so,
->> that probably wants a comment with the definitions.
->>
->> Or otherwise check for !hwc->event_base. That should be 0 for both these
->> things.
-> Yes, the !hwc->event_base looks good to me.
->>
->>> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
->>> index 3be51aa06e67..901c82032f4a 100644
->>> --- a/arch/x86/events/intel/core.c
->>> +++ b/arch/x86/events/intel/core.c
->>> @@ -2157,6 +2157,9 @@ static void intel_pmu_disable_event(struct 
->>> perf_event *event)
->>>           return;
->>>       }
->>>   +    if (unlikely(hwc->idx == INTEL_PMC_IDX_FIXED_VLBR))
->>> +        return;
->>> +
->> Please check code-gen to see if you can cut down on brancher here;
->> there's 4 cases:
->>
->>   - vlbr
->>   - bts
->>   - fixed
->>   - gp
->>
->> perhaps you can write it like so:
->>
->> (also see 
->> https://lkml.kernel.org/r/20190828090217.GN2386@hirez.programming.kicks-ass.net 
->> )
->>
->> static void intel_pmu_enable_event(struct perf_event *event)
->> {
->>     ...
->>     int idx = hwx->idx;
->>
->>     if (idx < INTEL_PMC_IDX_FIXED) {
->>         intel_set_masks(event, idx);
->>         __x86_pmu_enable_event(hwc, ARCH_PERFMON_EVENTSEL_ENABLE);
->>     } else if (idx < INTEL_PMC_IDX_FIXED_BTS) {
->>         intel_set_masks(event, idx);
->>         intel_pmu_enable_fixed(event);
->>     } else if (idx == INTEL_PMC_IDX_FIXED_BTS) {
->>         intel_pmu_enable_bts(hwc->config);
->>     }
->>
->>     /* nothing for INTEL_PMC_IDX_FIXED_VLBR */
->> }
->>
->> That should sort the branches in order of: gp,fixed,bts,vlbr
->
-> Note the current order is: bts, pebs, fixed, gp.
->
-> Sure, let me try to refactor it in this way.
->>
->>>       cpuc->intel_ctrl_guest_mask &= ~(1ull << hwc->idx);
->>>       cpuc->intel_ctrl_host_mask &= ~(1ull << hwc->idx);
->>>       cpuc->intel_cp_status &= ~(1ull << hwc->idx);
->>> @@ -2241,6 +2244,9 @@ static void intel_pmu_enable_event(struct 
->>> perf_event *event)
->>>           return;
->>>       }
->>>   +    if (unlikely(hwc->idx == INTEL_PMC_IDX_FIXED_VLBR))
->>> +        return;
->>> +
->>>       if (event->attr.exclude_host)
->>>           cpuc->intel_ctrl_guest_mask |= (1ull << hwc->idx);
->>>       if (event->attr.exclude_guest)
->> idem.
-> idem.
->>
->>> @@ -2595,6 +2601,15 @@ intel_bts_constraints(struct perf_event *event)
->>>       return NULL;
->>>   }
->>>   +static struct event_constraint *
->>> +intel_guest_event_constraints(struct perf_event *event)
->>> +{
->>> +    if (unlikely(is_guest_lbr_event(event)))
->>> +        return &guest_lbr_constraint;
->>> +
->>> +    return NULL;
->>> +}
->> This is a mis-nomer, it isn't just any guest_event
->
-> Sure,  I'll rename it to intel_guest_lbr_event_constraints()
-> instead of using it as a unified interface to get all of guest event 
-> constraints.
->
->>
->>> +
->>>   static int intel_alt_er(int idx, u64 config)
->>>   {
->>>       int alt_idx = idx;
->>> @@ -2785,6 +2800,10 @@ __intel_get_event_constraints(struct 
->>> cpu_hw_events *cpuc, int idx,
->>>   {
->>>       struct event_constraint *c;
->>>   +    c = intel_guest_event_constraints(event);
->>> +    if (c)
->>> +        return c;
->>> +
->>>       c = intel_bts_constraints(event);
->>>       if (c)
->>>           return c;
->>> diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
->>> index 1025bc6eb04f..9a62264a3068 100644
->>> --- a/arch/x86/events/perf_event.h
->>> +++ b/arch/x86/events/perf_event.h
->>> @@ -969,6 +969,20 @@ static inline bool intel_pmu_has_bts(struct 
->>> perf_event *event)
->>>       return intel_pmu_has_bts_period(event, hwc->sample_period);
->>>   }
->>>   +static inline bool is_guest_event(struct perf_event *event)
->>> +{
->>> +    if (event->attr.exclude_host && is_kernel_event(event))
->>> +        return true;
->>> +    return false;
->>> +}
->> I don't like this one, what if another in-kernel users generates an
->> event with exclude_host set ?
-> Thanks for the clear attitude.
->
-> How about:
-> - remove the is_guest_event() to avoid potential misuse;
-> - move all checks into is_guest_lbr_event() and make it dedicated:
->
-> static inline bool is_guest_lbr_event(struct perf_event *event)
-> {
->     if (is_kernel_event(event) &&
->         event->attr.exclude_host && needs_branch_stack(event))
->         return true;
->     return false;
-> }
->
-> In this case, it's safe to generate an event with exclude_host set
-> and also use LBR to count guest or nothing for other in-kernel users
-> because the intel_guest_lbr_event_constraints() makes LBR exclusive.
->
-> For this generic usage, I may rename:
-> - is_guest_lbr_event() to is_lbr_no_counter_event();
-> - intel_guest_lbr_event_constraints() to 
-> intel_lbr_no_counter_event_constraints();
->
-> Is this acceptable to you？
-> If there is anything needs to be improved, please let me know.
-Do you have any preference for this ?
+--xHFwDpU9dbj6ez1V
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-If you have more comments for the general idea or code details, please let 
-me know.
-For example, you may take a look at the interface named 
-intel_pmu_create_lbr_event()
-in the "[PATCH v9 07/10] KVM: x86/pmu: Add LBR feature emulation via guest 
-LBR event".
+On Thu, Apr 16, 2020 at 01:55:21PM -0700, Florian Fainelli wrote:
+> On 4/16/2020 10:49 AM, Mark Brown wrote:
 
-If not, I'll spin the next version based on your current feedback.
+> > Did Florian author this patch or you?  The signoffs look like it was
+> > him.
 
-Thanks,
-Like Xu
->
->>> @@ -989,6 +1003,7 @@ void release_ds_buffers(void);
->>>   void reserve_ds_buffers(void);
->>>     extern struct event_constraint bts_constraint;
->>> +extern struct event_constraint guest_lbr_constraint;
->>>     void intel_pmu_enable_bts(u64 config);
->>>   diff --git a/arch/x86/include/asm/perf_event.h 
->>> b/arch/x86/include/asm/perf_event.h
->>> index e018a1cf604c..674130aca75a 100644
->>> --- a/arch/x86/include/asm/perf_event.h
->>> +++ b/arch/x86/include/asm/perf_event.h
->>> @@ -181,9 +181,19 @@ struct x86_pmu_capability {
->>>   #define GLOBAL_STATUS_UNC_OVF                BIT_ULL(61)
->>>   #define GLOBAL_STATUS_ASIF                BIT_ULL(60)
->>>   #define GLOBAL_STATUS_COUNTERS_FROZEN            BIT_ULL(59)
->>> -#define GLOBAL_STATUS_LBRS_FROZEN            BIT_ULL(58)
->>> +#define GLOBAL_STATUS_LBRS_FROZEN_BIT            58
->>> +#define GLOBAL_STATUS_LBRS_FROZEN BIT_ULL(GLOBAL_STATUS_LBRS_FROZEN_BIT)
->>>   #define GLOBAL_STATUS_TRACE_TOPAPMI            BIT_ULL(55)
->>>   +/*
->>> + * We model guest LBR event tracing as another fixed-mode PMC like BTS.
->>> + *
->>> + * We choose bit 58 (LBRS_FROZEN_BIT) which is used to indicate that 
->>> the LBR
->>> + * stack is frozen on a hardware PMI request in the PERF_GLOBAL_STATUS 
->>> msr,
->>> + * and the 59th PMC counter (if any) is not supposed to use it as well.
->> Is this saying that STATUS.58 should never be set? I don't really
->> understand the language.
-> My fault, and let me make it more clearly:
->
-> We choose bit 58 because it's used to indicate LBR stack frozen state
-> not like other overflow conditions in the PERF_GLOBAL_STATUS msr,
-> and it will not be used for any actual fixed events.
->
->>
->>> + */
->>> +#define INTEL_PMC_IDX_FIXED_VLBR GLOBAL_STATUS_LBRS_FROZEN_BIT
->>> +
->>>   /*
->>>    * Adaptive PEBS v4
->>>    */
->
+> I believe I did author that one ;)
 
+In that case the patch (and any others that are similar, I saw more)
+should say so - please resend with a From: in the patch.  Kamal, if you
+do git commit --amend --author='Florian Fainelli <f.fainelli@gmail.com>'
+that should do the right thing.
+
+--xHFwDpU9dbj6ez1V
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEyBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl6Za5kACgkQJNaLcl1U
+h9A9xwf4tJJ4FQfCqc3g/g18a7HQvQ+rTSw1zy3scDDH2VMdbuuwSDGW/r4v4JWQ
+oU95OE0cL3DSRieGt97D4iXnct/lP+38ETY9tWW+dVYMP7s+pmXEEWgWLd/qIIFc
+seoBQuSxW0CeZTBGlS6b7SY/G2LK9c9s5kgxkhvqay0Uvc1jgKZqCu0gwKzbHXJv
+PGbE89ob5MzL7PkjsftkZ+imKogOvIf286UVvrd6setQqjh9AbMgblDhaKlvYERb
+20m9D0jkpJeTjkxYz+g8Xh5Op1b0bDgm1VY2K/wCHPRdSS3W59TY7rgZXhxD0cN5
+vsi8xG8mYfU/E/peqBMYftWPtk/j
+=gGzp
+-----END PGP SIGNATURE-----
+
+--xHFwDpU9dbj6ez1V--
