@@ -2,107 +2,99 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71FF1C2D0EF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 13:19:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3436C38A2B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 13:19:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 55AE620724
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 13:19:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C097B20724
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 13:19:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="arucBQ+/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730293AbgDQNTj (ORCPT
+        id S1730512AbgDQNTo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 09:19:39 -0400
-Received: from out30-56.freemail.mail.aliyun.com ([115.124.30.56]:59829 "EHLO
-        out30-56.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729799AbgDQNTj (ORCPT
+        Fri, 17 Apr 2020 09:19:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52532 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729799AbgDQNTm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 09:19:39 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R121e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07484;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=39;SR=0;TI=SMTPD_---0TvoZ8X3_1587129567;
-Received: from IT-FVFX43SYHV2H.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0TvoZ8X3_1587129567)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Fri, 17 Apr 2020 21:19:28 +0800
-Subject: Re: [PATCH v8 03/10] mm/lru: replace pgdat lru_lock with lruvec lock
-To:     Shakeel Butt <shakeelb@google.com>,
-        Johannes Weiner <hannes@cmpxchg.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Cgroups <cgroups@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux MM <linux-mm@kvack.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Tejun Heo <tj@kernel.org>, Hugh Dickins <hughd@google.com>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Roman Gushchin <guro@fb.com>,
-        Chris Down <chris@chrisdown.name>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vlastimil Babka <vbabka@suse.cz>, Qian Cai <cai@lca.pw>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        David Rientjes <rientjes@google.com>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        swkhack <swkhack@gmail.com>,
-        "Potyra, Stefan" <Stefan.Potyra@elektrobit.com>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Colin Ian King <colin.king@canonical.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Peng Fan <peng.fan@nxp.com>,
-        Nikolay Borisov <nborisov@suse.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>,
-        Yafang Shao <laoar.shao@gmail.com>,
-        Wei Yang <richard.weiyang@gmail.com>
-References: <1579143909-156105-1-git-send-email-alex.shi@linux.alibaba.com>
- <1579143909-156105-4-git-send-email-alex.shi@linux.alibaba.com>
- <20200116215222.GA64230@cmpxchg.org>
- <cdcdb710-1d78-6fac-48d7-35519ddcdc6a@linux.alibaba.com>
- <20200413180725.GA99267@cmpxchg.org>
- <8e7bf170-2bb5-f862-c12b-809f7f7d96cb@linux.alibaba.com>
- <20200414163114.GA136578@cmpxchg.org>
- <54af0662-cbb4-88c7-7eae-f969684025dd@linux.alibaba.com>
- <0bed9f1a-400d-d9a9-aeb4-de1dd9ccbb45@linux.alibaba.com>
- <20200416152830.GA195132@cmpxchg.org>
- <CALvZod4bdmkd_YG=96O8+zCSCFNpsBQiN+3Cq+6oD7jn3GTYog@mail.gmail.com>
-From:   Alex Shi <alex.shi@linux.alibaba.com>
-Message-ID: <6c114a89-7120-13d2-35ee-85c1e2933fca@linux.alibaba.com>
-Date:   Fri, 17 Apr 2020 21:18:36 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.6.0
+        Fri, 17 Apr 2020 09:19:42 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D9A0C061A0C;
+        Fri, 17 Apr 2020 06:19:41 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id w11so1087223pga.12;
+        Fri, 17 Apr 2020 06:19:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=CV8f9fUDt9Ye3K4+eyyMNBwqOPh+bB0aDZMTDBg5B1k=;
+        b=arucBQ+/EchOT6pi4l3KrhCifh7jzAbc+c8SJBhI5Pu4XdCy05L1XekzmJcStIWx2b
+         a7lWfKcRkEeal7qdiCusOzxHHf8RPk7B45dOWY/Y4FHBp1BxGb3LLtxZ4Hej/PDlr4r9
+         ji+gc6BmzX8Xvb6PjQlF5oiCRPc94jxRe0La55hCMV4j7Whvaws+iNAsto3pYbroEQ3u
+         Idocbfe1KPCjWmKo455Oaju3NhaHjDPsVjrtfPPG0/sT2pqGTDRz1Fl/2ikK9rrs1arq
+         wK93BtAXjCIuMOLs8aemywSfImI3V+y7ztcwC1W1XiRI9pSvs9NSfxRx9DMVABcpaKGx
+         UK1Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=CV8f9fUDt9Ye3K4+eyyMNBwqOPh+bB0aDZMTDBg5B1k=;
+        b=am9vGJipaTu/TdPXD2ylCO5Na7WWA8e/XOq32dvUkw6KvYHUsOAYUTAjlWVe+SCT8q
+         IMyLgLPNzkPiuP2tCmF5d1X0Z+N+Hv78NPb0D4uRkpnAzx7xQOXfhZ5f0nV+xjeYh3xU
+         3P7WjT6fnlPeO0b9ahKyZdT9+FmZpzVhAtX17grwCGLI9mtLCUHHHpcVW0hpcv2JJVDi
+         psK8tTR7kX7TDjImMyeJ2LzUMHOcitkh+k24KjFDokwjj66HuQssnQWZwGKMV6gVOnSN
+         AVF15jcxNVV9cjJhFQEANhvLifm+Oir5wU0w+7EAsXEt7Y4c5j7LzfVn1+hLVqs3r7lj
+         X9zA==
+X-Gm-Message-State: AGi0PuYKwk/jTLompDikHGPfzmASaHE+/Kkf1FQSg8rKyBOn/RodjxXk
+        VsoFm450aTDMGLNC6BipDwaYi/t19Eax/xJXqPY=
+X-Google-Smtp-Source: APiQypLcNtzPYv2k2eGg66NditC/QPx1/u2hrrqd13v0vTJV/qlKEIuHZ/eabl0VDTrJeDhIMt+jtJ3pYSblemZIRUE=
+X-Received: by 2002:aa7:8f26:: with SMTP id y6mr3163344pfr.36.1587129581013;
+ Fri, 17 Apr 2020 06:19:41 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CALvZod4bdmkd_YG=96O8+zCSCFNpsBQiN+3Cq+6oD7jn3GTYog@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+References: <20200417030449.10601-1-grace.kao@intel.com> <20200417041154.13063-1-grace.kao@intel.com>
+ <20200417090833.GO2586@lahna.fi.intel.com>
+In-Reply-To: <20200417090833.GO2586@lahna.fi.intel.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Fri, 17 Apr 2020 16:19:34 +0300
+Message-ID: <CAHp75Ve0yzbXUAehBnKnDUFPeLt=H5bmcH_M_zG4RjEHXAq71A@mail.gmail.com>
+Subject: Re: [PATCH v2 1/1] pinctrl: cherryview: Add missing spinlock usage in chv_gpio_irq_handler
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     Grace Kao <grace.kao@intel.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Andy Shevchenko <andy@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Brian Norris <briannorris@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Apr 17, 2020 at 12:08 PM Mika Westerberg
+<mika.westerberg@linux.intel.com> wrote:
+>
+> On Fri, Apr 17, 2020 at 12:11:54PM +0800, Grace Kao wrote:
+> > According to Braswell NDA Specification Update (#557593),
+> > concurrent read accesses may result in returning 0xffffffff and write
+> > instructions may be dropped. We have an established format for the
+> > commit references, i.e.
+> > cdca06e4e859 ("pinctrl: baytrail: Add missing spinlock usage in
+> > byt_gpio_irq_handler")
+> >
+> > Signed-off-by: Grace Kao <grace.kao@intel.com>
+> > Reported-by: Brian Norris <briannorris@chromium.org>
+> > Reviewed-by: Brian Norris <briannorris@chromium.org>
+>
+> Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 
+Applied for fixes, thanks!
 
-在 2020/4/17 上午1:47, Shakeel Butt 写道:
-> I think this would be a very good cleanup and will make the code much
-> more readable. I totally agree to keep this separate from the other
-> work. Please do CC me the series once it's ready.
-> 
-> Now regarding the per-memcg LRU locks, Alex, did you get the chance to
-> try the workload Hugh has provided? I was planning of posting Hugh's
-> patch series but Hugh advised me to wait for your & Johannes's
-> response since you both have already invested a lot of time in your
-> series and I do want to see how Johannes's TestClearPageLRU() idea
-> will look like, so, I will hold off for now.
-> 
-
-Hugh Dickin's testcase is great. It reveal the race on memcg charge in hours.
-
-Thanks
-Alex
+-- 
+With Best Regards,
+Andy Shevchenko
