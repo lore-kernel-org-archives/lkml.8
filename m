@@ -2,138 +2,315 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54598C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 07:37:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 414A9C2BB85
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 07:38:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1C6BB2054F
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 07:37:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EMU5Ntr9"
+	by mail.kernel.org (Postfix) with ESMTP id 1D20621924
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 07:38:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587109098;
+	bh=yrKI16PGU2/F2359di/DJKakW7pmZsWTHNFml//uClM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=GPCqlY0e1jl5V1GrJjN8TIW5XKnudlYBAK81yesvbdogehwuJIB5Mi2+B2ZILnBvZ
+	 hz6wzTCs9et6jD96dSxXgvjavx6lbGqgAc9rJkq9C81Zk4ATkSYmSsf+dM3Maez4Xr
+	 Ex1Hc9WwwmDZzDtC2t5a1aqTN1/quREAKasqKEZY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729109AbgDQHhL (ORCPT
+        id S1729137AbgDQHiR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 03:37:11 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:43923 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728419AbgDQHhK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 03:37:10 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587109029;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=jaBkf60z6Ucgd4MtXh8B5Z8TuNHfL0rGLFOOLfFygBo=;
-        b=EMU5Ntr9MW0qs0jVUFARWE1hWyqz4EE3DCPrrQmaavGnVRB4UxCayVF06glu4did+/iUJT
-        W1jMvlmCwn0pBN7oV5EOblRAHSKP1jnhbAjJF1wR1zMxvQq6IDZ7miG3POBV1NvUESbY/k
-        COaaY9tTI328hSWQXFywRULITYfbhuA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-301-Oz42WgarOu2KCxpJlj-H3w-1; Fri, 17 Apr 2020 03:37:05 -0400
-X-MC-Unique: Oz42WgarOu2KCxpJlj-H3w-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Fri, 17 Apr 2020 03:38:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40134 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728928AbgDQHiQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Apr 2020 03:38:16 -0400
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 932298017F6;
-        Fri, 17 Apr 2020 07:37:02 +0000 (UTC)
-Received: from [10.72.13.202] (ovpn-13-202.pek2.redhat.com [10.72.13.202])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 1D94860BE0;
-        Fri, 17 Apr 2020 07:36:53 +0000 (UTC)
-Subject: Re: [PATCH V2] vhost: do not enable VHOST_MENU by default
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
-        netdev@vger.kernel.org, geert@linux-m68k.org,
-        tsbogend@alpha.franken.de, benh@kernel.crashing.org,
-        paulus@samba.org, heiko.carstens@de.ibm.com, gor@linux.ibm.com,
-        borntraeger@de.ibm.com, Michael Ellerman <mpe@ellerman.id.au>
-References: <20200415024356.23751-1-jasowang@redhat.com>
- <20200416185426-mutt-send-email-mst@kernel.org>
- <b7e2deb7-cb64-b625-aeb4-760c7b28c0c8@redhat.com>
- <20200417022929-mutt-send-email-mst@kernel.org>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <4274625d-6feb-81b6-5b0a-695229e7c33d@redhat.com>
-Date:   Fri, 17 Apr 2020 15:36:52 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <20200417022929-mutt-send-email-mst@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-Content-Transfer-Encoding: quoted-printable
+        by mail.kernel.org (Postfix) with ESMTPSA id 9E92D2054F;
+        Fri, 17 Apr 2020 07:38:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587109096;
+        bh=yrKI16PGU2/F2359di/DJKakW7pmZsWTHNFml//uClM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=rO9dLQ7hHNCL4ZXpw19uyZNtjHnjZQ+JK3u2eHXSnUkEp3p/GRABZN8p/L1AiEE8s
+         h8rsMMA3Rgk1f66pZmjKdRWgbQ7ep7JmgUwNzd+rH/HaSWVCMbTmeCeUVENK3mGA79
+         l10vU4U1AVZ2qj2wTuidPP/DD+D0GnWcrGbT88LE=
+Date:   Fri, 17 Apr 2020 16:38:10 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Jiri Olsa <jolsa@redhat.com>, Ingo Molnar <mingo@elte.hu>
+Cc:     Jiri Olsa <jolsa@kernel.org>,
+        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Peter Zijlstra <peterz@infradead.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        "bibo,mao" <bibo.mao@intel.com>,
+        "Ziqian SUN (Zamir)" <zsun@redhat.com>, stable@vger.kernel.org
+Subject: Re: [PATCHv2] kretprobe: Prevent triggering kretprobe from within
+ kprobe_flush_task
+Message-Id: <20200417163810.ffe5c9145eae281fc493932c@kernel.org>
+In-Reply-To: <20200416143104.GA400699@krava>
+References: <20200408164641.3299633-1-jolsa@kernel.org>
+        <20200409234101.8814f3cbead69337ac5a33fa@kernel.org>
+        <20200409184451.GG3309111@krava>
+        <20200409201336.GH3309111@krava>
+        <20200410093159.0d7000a08fd76c2eaf1398f8@kernel.org>
+        <20200414160338.GE208694@krava>
+        <20200415090507.GG208694@krava>
+        <20200416105506.904b7847a1b621b75463076d@kernel.org>
+        <20200416091320.GA322899@krava>
+        <20200416224250.7a53fb581e50aa32df75a0cf@kernel.org>
+        <20200416143104.GA400699@krava>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, 16 Apr 2020 16:31:04 +0200
+Jiri Olsa <jolsa@redhat.com> wrote:
 
-On 2020/4/17 =E4=B8=8B=E5=8D=882:33, Michael S. Tsirkin wrote:
-> On Fri, Apr 17, 2020 at 11:12:14AM +0800, Jason Wang wrote:
->> On 2020/4/17 =E4=B8=8A=E5=8D=886:55, Michael S. Tsirkin wrote:
->>> On Wed, Apr 15, 2020 at 10:43:56AM +0800, Jason Wang wrote:
->>>> We try to keep the defconfig untouched after decoupling CONFIG_VHOST
->>>> out of CONFIG_VIRTUALIZATION in commit 20c384f1ea1a
->>>> ("vhost: refine vhost and vringh kconfig") by enabling VHOST_MENU by
->>>> default. Then the defconfigs can keep enabling CONFIG_VHOST_NET
->>>> without the caring of CONFIG_VHOST.
->>>>
->>>> But this will leave a "CONFIG_VHOST_MENU=3Dy" in all defconfigs and =
-even
->>>> for the ones that doesn't want vhost. So it actually shifts the
->>>> burdens to the maintainers of all other to add "CONFIG_VHOST_MENU is
->>>> not set". So this patch tries to enable CONFIG_VHOST explicitly in
->>>> defconfigs that enables CONFIG_VHOST_NET and CONFIG_VHOST_VSOCK.
->>>>
->>>> Acked-by: Christian Borntraeger<borntraeger@de.ibm.com>  (s390)
->>>> Acked-by: Michael Ellerman<mpe@ellerman.id.au>  (powerpc)
->>>> Cc: Thomas Bogendoerfer<tsbogend@alpha.franken.de>
->>>> Cc: Benjamin Herrenschmidt<benh@kernel.crashing.org>
->>>> Cc: Paul Mackerras<paulus@samba.org>
->>>> Cc: Michael Ellerman<mpe@ellerman.id.au>
->>>> Cc: Heiko Carstens<heiko.carstens@de.ibm.com>
->>>> Cc: Vasily Gorbik<gor@linux.ibm.com>
->>>> Cc: Christian Borntraeger<borntraeger@de.ibm.com>
->>>> Reported-by: Geert Uytterhoeven<geert@linux-m68k.org>
->>>> Signed-off-by: Jason Wang<jasowang@redhat.com>
->>> I rebased this on top of OABI fix since that
->>> seems more orgent to fix.
->>> Pushed to my vhost branch pls take a look and
->>> if possible test.
->>> Thanks!
->>
->> I test this patch by generating the defconfigs that wants vhost_net or
->> vhost_vsock. All looks fine.
->>
->> But having CONFIG_VHOST_DPN=3Dy may end up with the similar situation =
-that
->> this patch want to address.
->> Maybe we can let CONFIG_VHOST depends on !ARM || AEABI then add anothe=
-r
->> menuconfig for VHOST_RING and do something similar?
->>
->> Thanks
-> Sorry I don't understand. After this patch CONFIG_VHOST_DPN is just
-> an internal variable for the OABI fix. I kept it separate
-> so it's easy to revert for 5.8. Yes we could squash it into
-> VHOST directly but I don't see how that changes logic at all.
+> Ziqian reported lockup when adding retprobe on _raw_spin_lock_irqsave.
+> My test was also able to trigger lockdep output:
+> 
+>  ============================================
+>  WARNING: possible recursive locking detected
+>  5.6.0-rc6+ #6 Not tainted
+>  --------------------------------------------
+>  sched-messaging/2767 is trying to acquire lock:
+>  ffffffff9a492798 (&(kretprobe_table_locks[i].lock)){-.-.}, at: kretprobe_hash_lock+0x52/0xa0
+> 
+>  but task is already holding lock:
+>  ffffffff9a491a18 (&(kretprobe_table_locks[i].lock)){-.-.}, at: kretprobe_trampoline+0x0/0x50
+> 
+>  other info that might help us debug this:
+>   Possible unsafe locking scenario:
+> 
+>         CPU0
+>         ----
+>    lock(&(kretprobe_table_locks[i].lock));
+>    lock(&(kretprobe_table_locks[i].lock));
+> 
+>   *** DEADLOCK ***
+> 
+>   May be due to missing lock nesting notation
+> 
+>  1 lock held by sched-messaging/2767:
+>   #0: ffffffff9a491a18 (&(kretprobe_table_locks[i].lock)){-.-.}, at: kretprobe_trampoline+0x0/0x50
+> 
+>  stack backtrace:
+>  CPU: 3 PID: 2767 Comm: sched-messaging Not tainted 5.6.0-rc6+ #6
+>  Call Trace:
+>   dump_stack+0x96/0xe0
+>   __lock_acquire.cold.57+0x173/0x2b7
+>   ? native_queued_spin_lock_slowpath+0x42b/0x9e0
+>   ? lockdep_hardirqs_on+0x590/0x590
+>   ? __lock_acquire+0xf63/0x4030
+>   lock_acquire+0x15a/0x3d0
+>   ? kretprobe_hash_lock+0x52/0xa0
+>   _raw_spin_lock_irqsave+0x36/0x70
+>   ? kretprobe_hash_lock+0x52/0xa0
+>   kretprobe_hash_lock+0x52/0xa0
+>   trampoline_handler+0xf8/0x940
+>   ? kprobe_fault_handler+0x380/0x380
+>   ? find_held_lock+0x3a/0x1c0
+>   kretprobe_trampoline+0x25/0x50
+>   ? lock_acquired+0x392/0xbc0
+>   ? _raw_spin_lock_irqsave+0x50/0x70
+>   ? __get_valid_kprobe+0x1f0/0x1f0
+>   ? _raw_spin_unlock_irqrestore+0x3b/0x40
+>   ? finish_task_switch+0x4b9/0x6d0
+>   ? __switch_to_asm+0x34/0x70
+>   ? __switch_to_asm+0x40/0x70
+> 
+> The code within the kretprobe handler checks for probe reentrancy,
+> so we won't trigger any _raw_spin_lock_irqsave probe in there.
+> 
+> The problem is in outside kprobe_flush_task, where we call:
+> 
+>   kprobe_flush_task
+>     kretprobe_table_lock
+>       raw_spin_lock_irqsave
+>         _raw_spin_lock_irqsave
+> 
+> where _raw_spin_lock_irqsave triggers the kretprobe and installs
+> kretprobe_trampoline handler on _raw_spin_lock_irqsave return.
+> 
+> The kretprobe_trampoline handler is then executed with already
+> locked kretprobe_table_locks, and first thing it does is to
+> lock kretprobe_table_locks ;-) the whole lockup path like:
+> 
+>   kprobe_flush_task
+>     kretprobe_table_lock
+>       raw_spin_lock_irqsave
+>         _raw_spin_lock_irqsave ---> probe triggered, kretprobe_trampoline installed
+> 
+>         ---> kretprobe_table_locks locked
+> 
+>         kretprobe_trampoline
+>           trampoline_handler
+>             kretprobe_hash_lock(current, &head, &flags);  <--- deadlock
+> 
+> Adding kprobe_busy_begin/end helpers that mark code with fake
+> probe installed to prevent triggering of another kprobe within
+> this code.
+> 
+> Using these helpers in kprobe_flush_task, so the probe recursion
+> protection check is hit and the probe is never set to prevent
+> above lockup.
+> 
+
+Thanks Jiri!
+
+Ingo, could you pick this up?
+
+Regards,
+
+> Fixes: ef53d9c5e4da ('kprobes: improve kretprobe scalability with hashed locking')
+> Cc: stable@vger.kernel.org
+> Reported-by: "Ziqian SUN (Zamir)" <zsun@redhat.com>
+> Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
+> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> ---
+>  arch/x86/kernel/kprobes/core.c | 16 +++-------------
+>  include/linux/kprobes.h        |  4 ++++
+>  kernel/kprobes.c               | 24 ++++++++++++++++++++++++
+>  3 files changed, 31 insertions(+), 13 deletions(-)
+> 
+> v2 changes: updated changelog with Fixes/Ack and Cc stable
+> 
+> diff --git a/arch/x86/kernel/kprobes/core.c b/arch/x86/kernel/kprobes/core.c
+> index 4d7022a740ab..a12adbe1559d 100644
+> --- a/arch/x86/kernel/kprobes/core.c
+> +++ b/arch/x86/kernel/kprobes/core.c
+> @@ -753,16 +753,11 @@ asm(
+>  NOKPROBE_SYMBOL(kretprobe_trampoline);
+>  STACK_FRAME_NON_STANDARD(kretprobe_trampoline);
+>  
+> -static struct kprobe kretprobe_kprobe = {
+> -	.addr = (void *)kretprobe_trampoline,
+> -};
+> -
+>  /*
+>   * Called from kretprobe_trampoline
+>   */
+>  __used __visible void *trampoline_handler(struct pt_regs *regs)
+>  {
+> -	struct kprobe_ctlblk *kcb;
+>  	struct kretprobe_instance *ri = NULL;
+>  	struct hlist_head *head, empty_rp;
+>  	struct hlist_node *tmp;
+> @@ -772,16 +767,12 @@ __used __visible void *trampoline_handler(struct pt_regs *regs)
+>  	void *frame_pointer;
+>  	bool skipped = false;
+>  
+> -	preempt_disable();
+> -
+>  	/*
+>  	 * Set a dummy kprobe for avoiding kretprobe recursion.
+>  	 * Since kretprobe never run in kprobe handler, kprobe must not
+>  	 * be running at this point.
+>  	 */
+> -	kcb = get_kprobe_ctlblk();
+> -	__this_cpu_write(current_kprobe, &kretprobe_kprobe);
+> -	kcb->kprobe_status = KPROBE_HIT_ACTIVE;
+> +	kprobe_busy_begin();
+>  
+>  	INIT_HLIST_HEAD(&empty_rp);
+>  	kretprobe_hash_lock(current, &head, &flags);
+> @@ -857,7 +848,7 @@ __used __visible void *trampoline_handler(struct pt_regs *regs)
+>  			__this_cpu_write(current_kprobe, &ri->rp->kp);
+>  			ri->ret_addr = correct_ret_addr;
+>  			ri->rp->handler(ri, regs);
+> -			__this_cpu_write(current_kprobe, &kretprobe_kprobe);
+> +			__this_cpu_write(current_kprobe, &kprobe_busy);
+>  		}
+>  
+>  		recycle_rp_inst(ri, &empty_rp);
+> @@ -873,8 +864,7 @@ __used __visible void *trampoline_handler(struct pt_regs *regs)
+>  
+>  	kretprobe_hash_unlock(current, &flags);
+>  
+> -	__this_cpu_write(current_kprobe, NULL);
+> -	preempt_enable();
+> +	kprobe_busy_end();
+>  
+>  	hlist_for_each_entry_safe(ri, tmp, &empty_rp, hlist) {
+>  		hlist_del(&ri->hlist);
+> diff --git a/include/linux/kprobes.h b/include/linux/kprobes.h
+> index 04bdaf01112c..645fd401c856 100644
+> --- a/include/linux/kprobes.h
+> +++ b/include/linux/kprobes.h
+> @@ -350,6 +350,10 @@ static inline struct kprobe_ctlblk *get_kprobe_ctlblk(void)
+>  	return this_cpu_ptr(&kprobe_ctlblk);
+>  }
+>  
+> +extern struct kprobe kprobe_busy;
+> +void kprobe_busy_begin(void);
+> +void kprobe_busy_end(void);
+> +
+>  kprobe_opcode_t *kprobe_lookup_name(const char *name, unsigned int offset);
+>  int register_kprobe(struct kprobe *p);
+>  void unregister_kprobe(struct kprobe *p);
+> diff --git a/kernel/kprobes.c b/kernel/kprobes.c
+> index 2625c241ac00..75bb4a8458e7 100644
+> --- a/kernel/kprobes.c
+> +++ b/kernel/kprobes.c
+> @@ -1236,6 +1236,26 @@ __releases(hlist_lock)
+>  }
+>  NOKPROBE_SYMBOL(kretprobe_table_unlock);
+>  
+> +struct kprobe kprobe_busy = {
+> +	.addr = (void *) get_kprobe,
+> +};
+> +
+> +void kprobe_busy_begin(void)
+> +{
+> +	struct kprobe_ctlblk *kcb;
+> +
+> +	preempt_disable();
+> +	__this_cpu_write(current_kprobe, &kprobe_busy);
+> +	kcb = get_kprobe_ctlblk();
+> +	kcb->kprobe_status = KPROBE_HIT_ACTIVE;
+> +}
+> +
+> +void kprobe_busy_end(void)
+> +{
+> +	__this_cpu_write(current_kprobe, NULL);
+> +	preempt_enable();
+> +}
+> +
+>  /*
+>   * This function is called from finish_task_switch when task tk becomes dead,
+>   * so that we can recycle any function-return probe instances associated
+> @@ -1253,6 +1273,8 @@ void kprobe_flush_task(struct task_struct *tk)
+>  		/* Early boot.  kretprobe_table_locks not yet initialized. */
+>  		return;
+>  
+> +	kprobe_busy_begin();
+> +
+>  	INIT_HLIST_HEAD(&empty_rp);
+>  	hash = hash_ptr(tk, KPROBE_HASH_BITS);
+>  	head = &kretprobe_inst_table[hash];
+> @@ -1266,6 +1288,8 @@ void kprobe_flush_task(struct task_struct *tk)
+>  		hlist_del(&ri->hlist);
+>  		kfree(ri);
+>  	}
+> +
+> +	kprobe_busy_end();
+>  }
+>  NOKPROBE_SYMBOL(kprobe_flush_task);
+>  
+> -- 
+> 2.18.2
+> 
 
 
-Sorry for being unclear.
-
-I meant since it was enabled by default, "CONFIG_VHOST_DPN=3Dy" will be=20
-left in the defconfigs. This requires the arch maintainers to add=20
-"CONFIG_VHOST_VDPN is not set". (Geert complains about this)
-
-Thanks
-
-
->
-
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
