@@ -2,81 +2,76 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B95EC2BB85
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 07:33:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E564C2BB55
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 07:35:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 70F09214AF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 07:33:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D408D2054F
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 07:35:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="bGSZQAFJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729075AbgDQHdA (ORCPT
+        id S1729095AbgDQHfP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 03:33:00 -0400
-Received: from smtprelay0233.hostedemail.com ([216.40.44.233]:57740 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728419AbgDQHdA (ORCPT
+        Fri, 17 Apr 2020 03:35:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55486 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729017AbgDQHfO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 03:33:00 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay05.hostedemail.com (Postfix) with ESMTP id 2884B180284E9;
-        Fri, 17 Apr 2020 07:32:59 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: food81_710b3da05d519
-X-Filterd-Recvd-Size: 2062
-Received: from XPS-9350.home (unknown [47.151.136.130])
-        (Authenticated sender: joe@perches.com)
-        by omf19.hostedemail.com (Postfix) with ESMTPA;
-        Fri, 17 Apr 2020 07:32:56 +0000 (UTC)
-Message-ID: <df23fe6083baad4781a2b79bcbd7d3db055eecd3.camel@perches.com>
-Subject: Re: [PATCH v2 7/9] media: MAINTAINERS: rkisp1: add path to
- dt-bindings
-From:   Joe Perches <joe@perches.com>
-To:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Helen Koike <helen.koike@collabora.com>,
-        devicetree@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-rockchip@lists.infradead.org
-Cc:     linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org,
-        robh+dt@kernel.org, heiko@sntech.de, kernel@collabora.com,
-        dafna.hirschfeld@collabora.com, ezequiel@collabora.com,
-        mark.rutland@arm.com, karthik.poduval@gmail.com, jbx6244@gmail.com,
-        kishon@ti.com
-Date:   Fri, 17 Apr 2020 00:30:44 -0700
-In-Reply-To: <9a95d227-9592-2c5c-fe6d-dff9b84f4292@xs4all.nl>
-References: <20200403161538.1375908-1-helen.koike@collabora.com>
-         <20200403161538.1375908-8-helen.koike@collabora.com>
-         <9a95d227-9592-2c5c-fe6d-dff9b84f4292@xs4all.nl>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.34.1-2 
+        Fri, 17 Apr 2020 03:35:14 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1CCDDC061A0C;
+        Fri, 17 Apr 2020 00:35:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=DdP3H169eV2IavVQf/9gs/bbd8L/xKwiCNv9vSMdxK4=; b=bGSZQAFJDJ/MCm5VUi8/qe5aEZ
+        2BliRBR3H2ALwBicpgBWjJiUZ931UFHzyU/0xJum2/jmFrLsPDipN3kUY5QByQo6I8UMQsNiOcQeq
+        0hxr2eG6l4elNqjKA15ulu+DT8T0R+0nUHqRFsWZO9Hx+bOaW51u3ZDWbk5xxBJNVAra6CyfLMOef
+        BSZtIwZqYyA2rWbX436N7g6IpYviu22S2h8n/6ylptcKbbPEbeSbW7ZWXS/vX+TOTLj7cfAoTup+V
+        6fOHLPx5hY49kdUfPBnKdX/iaZzjR3JnrvG5lNpKAFdlvoQjdFVzcpwADZJNDKOyIJwTs9/bptNGu
+        tQuSZm6g==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jPLWp-0005ew-G8; Fri, 17 Apr 2020 07:35:11 +0000
+Date:   Fri, 17 Apr 2020 00:35:11 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Max Kellermann <mk@cm4all.com>
+Cc:     linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org,
+        trond.myklebust@hammerspace.com, bfields@redhat.com, tytso@mit.edu,
+        viro@zeniv.linux.org.uk, agruenba@redhat.com,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH v3 1/4] fs/posix_acl: apply umask if superblock disables
+ ACL support
+Message-ID: <20200417073511.GA598@infradead.org>
+References: <20200407142243.2032-1-mk@cm4all.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200407142243.2032-1-mk@cm4all.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2020-04-17 at 09:18 +0200, Hans Verkuil wrote:
-> On 03/04/2020 18:15, Helen Koike wrote:
-> > The Rockchip ISP bindings was moved out of staging.
-> > Update MAINTAINERS file with the new path.
-> 
-> Shouldn't there be a reference to Documentation/devicetree/bindings/phy/rockchip-mipi-dphy-rx0.yaml
-> as well in MAINTAINERS?
+On Tue, Apr 07, 2020 at 04:22:40PM +0200, Max Kellermann wrote:
+>  
+> -	if (S_ISLNK(*mode) || !IS_POSIXACL(dir))
+> +	if (S_ISLNK(*mode))
+>  		return 0;
+>  
+> +	if (!IS_POSIXACL(dir)) {
+> +		*mode &= ~current_umask();
+> +		return 0;
+> +	}
+> +
 
-And please keep the file references F: fields in
-alphabetic order.
-
-> > diff --git a/MAINTAINERS b/MAINTAINERS
-[]
-> > @@ -14303,6 +14303,7 @@ M:	Helen Koike <helen.koike@collabora.com>
-> >  L:	linux-media@vger.kernel.org
-> >  S:	Maintained
-> >  F:	drivers/staging/media/rkisp1/
-> > +F:	Documentation/devicetree/bindings/media/rockchip-isp1.yaml
-> >  
-> >  ROCKCHIP RASTER 2D GRAPHIC ACCELERATION UNIT DRIVER
-> >  M:	Jacob Chen <jacob-chen@iotwrt.com>
-> > 
-
+I think the first hunk is obviously correct, but I don't think we need
+the second one, as the handling of the get_acl() eturn value should do
+the right thing.  If you want to optimize it a bit, it might be worth to
+move the !IS_POSIXACL check in get_acl to the top of the function,
+before checking the cached ACL.
