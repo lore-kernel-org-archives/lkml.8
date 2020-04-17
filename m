@@ -2,110 +2,123 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 062C3C2D0EF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 14:51:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6893DC38A2C
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 14:51:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D50432223C
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 14:51:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42F702223C
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 14:51:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="jIcIMrDa"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oO/L3Fvs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728257AbgDQOvt (ORCPT
+        id S1728277AbgDQOv4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 10:51:49 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:58928 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727850AbgDQOvt (ORCPT
+        Fri, 17 Apr 2020 10:51:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38772 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727850AbgDQOv4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 10:51:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587135107;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=yQIzhOfMzw73993cxueMJNgEnkW4RYZ7tWZBL73PzbE=;
-        b=jIcIMrDaY7TQIsZDLaWXOhvnly+z+svou3Li00YOUTsZ8NCu3J++sfXXDE238OgP0AkqDg
-        Tb8V3O29CH1IPeCOtdk24XGofvpHIJ/uW0M78BCq9LPiPalX58NJ3IqHG9D7cdM3UXx2jb
-        BMMd2DG/L1AkcyiiZ06n598v5XptLvc=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-348-Ke1Kwz6rMoeXfhkRC1yUsQ-1; Fri, 17 Apr 2020 10:51:41 -0400
-X-MC-Unique: Ke1Kwz6rMoeXfhkRC1yUsQ-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 152EBDB60;
-        Fri, 17 Apr 2020 14:51:40 +0000 (UTC)
-Received: from treble (ovpn-116-146.rdu2.redhat.com [10.10.116.146])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id BF19618A85;
-        Fri, 17 Apr 2020 14:51:38 +0000 (UTC)
-Date:   Fri, 17 Apr 2020 09:51:36 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     live-patching@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jessica Yu <jeyu@kernel.org>, x86@kernel.org
-Subject: Re: [PATCH v2 7/9] x86/module: Use text_poke() for late relocations
-Message-ID: <20200417145136.ls3tafthtql6prhn@treble>
-References: <cover.1587131959.git.jpoimboe@redhat.com>
- <572b12b6adcdab29c54cfd41ca8b4672abad628c.1587131959.git.jpoimboe@redhat.com>
- <20200417142944.GF20730@hirez.programming.kicks-ass.net>
+        Fri, 17 Apr 2020 10:51:56 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C204EC061A0C;
+        Fri, 17 Apr 2020 07:51:55 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id v8so5123620wma.0;
+        Fri, 17 Apr 2020 07:51:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=YW/m6LvUDm14fECG63jq0+bjFbSb+5TTFXaHDDYWM/I=;
+        b=oO/L3FvsHa0vf+P7DWAUzHQ73QNVuxOPnvkTd4rT9phupOkapPvk070rBoZgW+xy0D
+         bBraLamFCmnbcrAlrsiYyoRk5rmJWIOv+h2e2oMorq7g6AIw0S54ZrFGYkzkW/8ysGCR
+         467XRqy/nIN30SDMW5CFaebYQ3CZW3aFWT4U3yXgvtvF9ZAiMHwDHSfBNAKbHdwPfqKn
+         mYQxjNxlIlIg8bZGI9+qDFgv4TImLGRZ01pkiG82Jzd6zxQwXlAiiGvMNmmoyHe1kIQx
+         yY7bBcV1S6viIAdabkna4ltna5nQvqL/lIm9z6oh4V9h4TR1oxJV2GRNcwIWeT1yYWXo
+         Jl8A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=YW/m6LvUDm14fECG63jq0+bjFbSb+5TTFXaHDDYWM/I=;
+        b=U6zANE1LVAItm4jndZPzbd9JlqfTiPmzJCDS2jNNjfRtEfe3EoSgUz5EFYtIoYRy7m
+         PPJMPjxvBZdVg2TEbkZdQgM9/phVbZG+OL7N7nAQhFfkaAUIVBr4eA/u9gLAMugQSdMw
+         jIxgOL+MRyH6XsmeT9h7OCEjb2NRP57PA9TSvWY79JezZY9qBbyMgtzrV4MpcAVC8HIE
+         RwO0DQqLbd51dEvrB/I0+r1eOUmUjUbSzVETvJ/a+a1pzsDLkSlGwqKDBC4++lmplzpb
+         hjP0kOaO9bZqzPN4Dua7E7AK0IlJNWJmNd3u3RkES2pyhrmxW3+A/hdr8RgrnirYhrcY
+         nEHQ==
+X-Gm-Message-State: AGi0PuYXEIk1XCNSwvqenP9yOPrCTItRb9TYpX3y+M9iSyDRnjqOVuMk
+        kfQQIlCCZ4gGZy9kcAYPzxoJ8yhx
+X-Google-Smtp-Source: APiQypKAbsG2v1WQaLKRNFkDILulw/SdGDc5V6hyWNsZ+JF7kgVocqLc55OPtZ0/P5FUUcIX5qPzzg==
+X-Received: by 2002:a7b:cb59:: with SMTP id v25mr3769643wmj.139.1587135114085;
+        Fri, 17 Apr 2020 07:51:54 -0700 (PDT)
+Received: from [192.168.0.104] (p5B3F7443.dip0.t-ipconnect.de. [91.63.116.67])
+        by smtp.gmail.com with ESMTPSA id i25sm8298407wml.43.2020.04.17.07.51.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 17 Apr 2020 07:51:53 -0700 (PDT)
+Subject: Re: [PATCH v10 3/6] iio: adc: mp2629: Add support for mp2629 ADC
+ driver
+To:     Randy Dunlap <rdunlap@infradead.org>, lee.jones@linaro.org,
+        andy.shevchenko@gmail.com, robh+dt@kernel.org, jic23@kernel.org,
+        knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, sre@kernel.org
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-iio@vger.kernel.org, linux-pm@vger.kernel.org
+References: <20200417085003.6124-1-sravanhome@gmail.com>
+ <20200417085003.6124-4-sravanhome@gmail.com>
+ <a8da9a3d-93a5-b926-b8c0-84138b59ad4f@infradead.org>
+From:   saravanan sekar <sravanhome@gmail.com>
+Message-ID: <2b4c7de2-aa85-65aa-be5e-3daed689c44d@gmail.com>
+Date:   Fri, 17 Apr 2020 16:51:52 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200417142944.GF20730@hirez.programming.kicks-ass.net>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+In-Reply-To: <a8da9a3d-93a5-b926-b8c0-84138b59ad4f@infradead.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 17, 2020 at 04:29:44PM +0200, Peter Zijlstra wrote:
-> On Fri, Apr 17, 2020 at 09:04:32AM -0500, Josh Poimboeuf wrote:
-> > +int apply_relocate_add(Elf64_Shdr *sechdrs,
-> > +		   const char *strtab,
-> > +		   unsigned int symindex,
-> > +		   unsigned int relsec,
-> > +		   struct module *me)
-> > +{
-> > +	int ret;
-> > +	bool early = me->state == MODULE_STATE_UNFORMED;
-> > +	void *(*write)(void *, const void *, size_t) = memcpy;
-> > +
-> > +	if (!early) {
-> > +		write = text_poke;
-> > +		mutex_lock(&text_mutex);
-> > +	}
-> > +
-> > +	ret = __apply_relocate_add(sechdrs, strtab, symindex, relsec, me,
-> > +				   write);
-> > +
-> > +	if (!early) {
-> > +		mutex_unlock(&text_mutex);
-> > +		text_poke_sync();
-> 
-> I'm thinking text_poke_sync() wants to be inside text_mutex. Although
-> given that nothing should be running that text, it really doesn't
-> matter.
+Hi Randy,
 
-Yeah, makes sense.
+On 17/04/20 4:35 pm, Randy Dunlap wrote:
+> Hi--
+>
+> On 4/17/20 1:50 AM, Saravanan Sekar wrote:
+>> diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
+>> index 82e33082958c..ef0c0cd31855 100644
+>> --- a/drivers/iio/adc/Kconfig
+>> +++ b/drivers/iio/adc/Kconfig
+>> @@ -680,6 +680,16 @@ config MESON_SARADC
+>>   	  To compile this driver as a module, choose M here: the
+>>   	  module will be called meson_saradc.
+>>   
+>> +config MP2629_ADC
+>> +	tristate "Monolithic MP2629 ADC driver"
+>> +	depends on MFD_MP2629
+> 	depends on I2C
+> ?
 
-diff --git a/arch/x86/kernel/module.c b/arch/x86/kernel/module.c
-index 2a997afa04c6..23c95a53d20e 100644
---- a/arch/x86/kernel/module.c
-+++ b/arch/x86/kernel/module.c
-@@ -237,8 +237,8 @@ int apply_relocate_add(Elf64_Shdr *sechdrs,
- 				   write);
- 
- 	if (!early) {
--		mutex_unlock(&text_mutex);
- 		text_poke_sync();
-+		mutex_unlock(&text_mutex);
- 	}
- 
- 	return ret;
+Made "depends on I2C" in MFD_MP2629, hope not needed becomes redundant here
 
+Thanks,
+Saravanan
+
+>> +	help
+>> +	  Say yes to have support for battery charger IC MP2629 ADC device
+>> +	  accessed over I2C.
+>> +
+>> +	  This driver provides ADC conversion of system, input power supply
+>> +	  and battery voltage & current information.
+>> +
+>>   config NAU7802
+>>   	tristate "Nuvoton NAU7802 ADC driver"
+>>   	depends on I2C
+> thanks.
