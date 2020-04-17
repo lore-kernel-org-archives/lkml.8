@@ -2,117 +2,110 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30034C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 23:19:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 717C6C38A2B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 23:24:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E4DD6221EA
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 23:19:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44C292223C
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 23:24:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="O3KHKU0k"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kJdb1cMF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727955AbgDQXTr (ORCPT
+        id S1728278AbgDQXYH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 19:19:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33200 "EHLO
+        Fri, 17 Apr 2020 19:24:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33860 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726036AbgDQXTq (ORCPT
+        with ESMTP id S1726036AbgDQXYF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 19:19:46 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E29AC061A0C
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 16:19:45 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id t16so1511073plo.7
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 16:19:45 -0700 (PDT)
+        Fri, 17 Apr 2020 19:24:05 -0400
+Received: from mail-yb1-xb2d.google.com (mail-yb1-xb2d.google.com [IPv6:2607:f8b0:4864:20::b2d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81C8AC061A0C;
+        Fri, 17 Apr 2020 16:24:05 -0700 (PDT)
+Received: by mail-yb1-xb2d.google.com with SMTP id l5so1921595ybf.5;
+        Fri, 17 Apr 2020 16:24:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=eZN/WzOYxhMTyXM1n4Hh0KjKOonGokmtIz9JOOeY5Vg=;
-        b=O3KHKU0k3dInIICnUfIysdWxzBUY+XUTDdijeLAiDhdFnA8PBKuhSQpvogX9RxTlrx
-         kTA/e34YdRHp6WhC8hlBrw/wHMQiAsB5baO1CXMAOyQ8ifvtNvMIs4s159Dofwdzj2+m
-         xmOBe5OL0lfhhbpZGbUM2gQ8jnidHc+1xlY/fOe26n2CzbTPuNkpasriAoOqZ07DoWfI
-         xFKb+gMgSzaUOzRj2fy3suByEC/htSW+YF9Iyf3GrQ2l41nZaLnZ/2iMxm16wj+3V8iu
-         ZKOI3sDWFzGtyd0JvAiuvKjTy/lgLrzbwdLv8B0BzgGvUDUm8aMYaJdtnU/2KyLI1DQe
-         j/UQ==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=HoiSxHhSigFRcJk85mjSruoDJHuLkPKUFTIYImgm6Ug=;
+        b=kJdb1cMFcngGa0qp/KwVwgNtuNxTmrDtjaIwLAJFoNFpQhRy6q5sHg5MTKyXeGjwWu
+         vBHicJ4/2qO+c9u26+845klREFX9I5XdF+lkZsUOX2W59oXD0X0snxgaFfClthr3xbn7
+         CSudiFAf2zSIPObwc6IUG29u/5JVnUYcHJCsdF3lhu2ldziUi5lRt1Q4zpTHq3PeSNwp
+         Ng7+cMA/1D8kIComwJKKXIEVQliODb/0w0bKTuk3Wjf9vtPXDhcpIxgRPo+bitkuLBz8
+         T/MyKESZ3xGPBcP7fJ3cdb8wdGhksJnnBUgXmE7OdCW6qXouR6PLxcE4Ehr2Pan6h5je
+         ocIg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=eZN/WzOYxhMTyXM1n4Hh0KjKOonGokmtIz9JOOeY5Vg=;
-        b=WKB6AWuFsCeyeafBFb831W29dixrLPUR4SWLfSP2FukDIwJSUSIbQKb5KV14cb38pj
-         VgRsdNOKKA1TKVhlww8EyEcONdlFhaRwZDXB6Hhu/Unp8nxZ6flyWJG5R3kJdFIQzhgA
-         XltG/RkoV0YN/Zhb1BIhp8OPiTMSta1HtamWoZqyUhFsJCeEwu+KEE5Viqg3dxtdUNv3
-         I79//91SSQxzZC0pUazi3eutrZGuT3QHC7Pb72RicHZ9mYAf/RL5kkeMMBrc6CummRIp
-         VoTyOYZ6CO2q5C65ZJxdt5SNGxlJmRTaveWqDxbdS1kDGydHZp4FFDoLPPmIflwZxs2Q
-         DZJw==
-X-Gm-Message-State: AGi0PuaFcGsY7sCNkcopVuLfwheW/U2KqMHraETi6ougzsOXOuSby7I2
-        bnitjmqS5ZzBZ9XTn6GhQj2Brg==
-X-Google-Smtp-Source: APiQypI+0JpweCt3GR455upZub8Lrjz/gzQ722UCFMq+C5APeD7it5UYnLinXZ4wa5mxzmtEsNYr0Q==
-X-Received: by 2002:a17:902:bd09:: with SMTP id p9mr6170885pls.25.1587165584157;
-        Fri, 17 Apr 2020 16:19:44 -0700 (PDT)
-Received: from google.com ([2620:15c:201:2:ce90:ab18:83b0:619])
-        by smtp.gmail.com with ESMTPSA id y123sm20188542pfb.13.2020.04.17.16.19.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Apr 2020 16:19:42 -0700 (PDT)
-Date:   Fri, 17 Apr 2020 16:19:37 -0700
-From:   Sami Tolvanen <samitolvanen@google.com>
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        James Morse <james.morse@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Ingo Molnar <mingo@redhat.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Kees Cook <keescook@chromium.org>,
-        Laura Abbott <labbott@redhat.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Jann Horn <jannh@google.com>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        clang-built-linux@googlegroups.com,
-        kernel-hardening@lists.openwall.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v11 04/12] scs: disable when function graph tracing is
- enabled
-Message-ID: <20200417231937.GA214321@google.com>
-References: <20191018161033.261971-1-samitolvanen@google.com>
- <20200416161245.148813-1-samitolvanen@google.com>
- <20200416161245.148813-5-samitolvanen@google.com>
- <20200417100039.GS20730@hirez.programming.kicks-ass.net>
- <20200417144620.GA9529@lakrids.cambridge.arm.com>
- <20200417152645.GH20730@hirez.programming.kicks-ass.net>
- <20200417154613.GB9529@lakrids.cambridge.arm.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=HoiSxHhSigFRcJk85mjSruoDJHuLkPKUFTIYImgm6Ug=;
+        b=PpJ9P/8wjU3j4oc3yZw7kO8WwsGNPB8NCIPH30Tz6MYU7JIC3fRhBH8b2rEB7Jequj
+         m5qV+TMT/hjNrBibT7NSb+T1c73BcBaiBFi94ypGHFs6DQPLNaTZQybeWBDkdu7kk3ln
+         1BDDra7oOkvl9UwWvIHGZc5HcFqZmo4m+F+qDkZ7oC2hgqydndMhqJ1bp4lhLQG1g8/j
+         29fRPRgbdy7IY2SaDpFbEUPvsg39H8+QO0Bp5UGe19qV8ZE5xU6+rPlUFk0TcYDN1pLe
+         k7DwHR4YU7s4T9X3Xx2wg9JAZ2OHpn3WvWdV9HHxCeMOv48MtzoUxrsP8F/SQcR09qRT
+         582g==
+X-Gm-Message-State: AGi0PubH9hQX9syL+0r1MIJ3zNS+wTxwF1ydGLWBUuowGujn0jKFLV3r
+        mmJknmdUUZqsQSqMr7c/ZJXrFm4gz/5CSLU9ohzZvcEVB2g=
+X-Google-Smtp-Source: APiQypIaoZNcLb0nbIIWdy9AexGlinfJyksDNrXL01uuwQ39JevXQ5RG2DIGZoNajN0gFWDBeQoLtKsPk7LcZ6YXDU0=
+X-Received: by 2002:a25:aa0c:: with SMTP id s12mr2066981ybi.183.1587165844440;
+ Fri, 17 Apr 2020 16:24:04 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200417154613.GB9529@lakrids.cambridge.arm.com>
+References: <3865908.1586874010@warthog.procyon.org.uk>
+In-Reply-To: <3865908.1586874010@warthog.procyon.org.uk>
+From:   Steve French <smfrench@gmail.com>
+Date:   Fri, 17 Apr 2020 18:23:53 -0500
+Message-ID: <CAH2r5mv5p=WJQu2SbTn53FeTsXyN6ke_CgEjVARQ3fX8QAtK_w@mail.gmail.com>
+Subject: Re: What's a good default TTL for DNS keys in the kernel
+To:     David Howells <dhowells@redhat.com>
+Cc:     linux-nfs <linux-nfs@vger.kernel.org>,
+        CIFS <linux-cifs@vger.kernel.org>, linux-afs@lists.infradead.org,
+        ceph-devel@vger.kernel.org, keyrings@vger.kernel.org,
+        Network Development <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, fweimer@redhat.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 17, 2020 at 04:46:14PM +0100, Mark Rutland wrote:
-> If KRETPROBES works by messing with the LR at the instnat the function
-> is entered, that should work similarly. If it works by replacing the
-> RET it should also work out since any pauth/SCS work will have been
-> undone by that point. If it attempts to mess with the return address in
-> the middle of a function then it's not reliable today.
+>> The question remains what the expected impact of TTL expiry is.  Will
+>> the kernel just perform a new DNS query if it needs one?
 
-I did initially have a patch to disable kretprobes (until v5), but as
-Mark pointed out back then, the return address is modified before it
-gets pushed to the shadow stack, so there was no conflict with SCS. I
-confirmed this on arm64, but haven't looked at other architectures.
+For SMB3/CIFS mounts, Paulo added support last year for automatic
+reconnect if the IP address of the server changes.  It also is helpful
+when DFS (global name space) addresses change.
 
-Sami
+It does not require a remount for SMB3/CIFS
+
+On Tue, Apr 14, 2020 at 11:09 AM David Howells <dhowells@redhat.com> wrote:
+>
+> Since key.dns_resolver isn't given a TTL for the address information obtained
+> for getaddrinfo(), no expiry is set on dns_resolver keys in the kernel for
+> NFS, CIFS or Ceph.  AFS gets one if it looks up a cell SRV or AFSDB record
+> because that is looked up in the DNS directly, but it doesn't look up A or
+> AAAA records, so doesn't get an expiry for the addresses themselves.
+>
+> I've previously asked the libc folks if there's a way to get this information
+> exposed in struct addrinfo, but I don't think that ended up going anywhere -
+> and, in any case, would take a few years to work through the system.
+>
+> For the moment, I think I should put a default on any dns_resolver keys and
+> have it applied either by the kernel (configurable with a /proc/sys/ setting)
+> or by the key.dnf_resolver program (configurable with an /etc file).
+>
+> Any suggestion as to the preferred default TTL?  10 minutes?
+>
+> David
+>
+
+
+-- 
+Thanks,
+
+Steve
