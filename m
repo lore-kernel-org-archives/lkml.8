@@ -2,221 +2,210 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3084FC38A2B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 15:54:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB652C2D0EF
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 15:56:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 152AE2053B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 15:54:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DF3E20656
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 15:56:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="hjCFx5RJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729474AbgDQPyA convert rfc822-to-8bit (ORCPT
+        id S1729511AbgDQP4W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 11:54:00 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:63087 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726168AbgDQPyA (ORCPT
+        Fri, 17 Apr 2020 11:56:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48838 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728550AbgDQP4V (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 11:54:00 -0400
-Received: from 185.80.35.16 (185.80.35.16) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.415)
- id 643ac3c85cee0d5c; Fri, 17 Apr 2020 17:53:55 +0200
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Randy Dunlap <rdunlap@infradead.org>,
-        Toralf =?ISO-8859-1?Q?F=F6rster?= <toralf.foerster@gmx.de>
-Cc:     Linux Kernel <linux-kernel@vger.kernel.org>,
-        ACPI Devel Mailing List <linux-acpi@vger.kernel.org>
-Subject: Re: regression 5.6.4->5.6.5 at drivers/acpi/ec.c
-Date:   Fri, 17 Apr 2020 17:53:55 +0200
-Message-ID: <5392275.BHAU0OPJTB@kreacher>
-In-Reply-To: <5478a950-4355-8084-ea7d-fe8b270bf2e3@infradead.org>
-References: <fdd9ce1d-146a-5fbf-75c5-3a9384603312@gmx.de> <5478a950-4355-8084-ea7d-fe8b270bf2e3@infradead.org>
+        Fri, 17 Apr 2020 11:56:21 -0400
+Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76F84C061A0C
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 08:56:21 -0700 (PDT)
+Received: by mail-qt1-x844.google.com with SMTP id 71so2285165qtc.12
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 08:56:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=X5ZmL/lkK7p6sLrLWGHaYJr8ALem1oHicAKASp6iJuw=;
+        b=hjCFx5RJ3D/BBYOq+Y6PDF/JMJ6L7fE5sjgYh/a751A4DDAqmv9Dg4L93SeUqCfdLz
+         cuToO5Z8aNGs/aNNgZrhVSEXyh/FdCp6OGrRr9LXeZ5bUQfjLQOXPSB2wzB9QRh+cwCD
+         L3gvo8ffRa/HFxNoSLGjQXnXEWL+ppxM35jar5tIAnlo667Pz1jUIOT5tSKI63lUfLJ9
+         QeBNdWDkmL1Eos75ndtt7TM9C3LXhq1BRXP6WCtXv7vEhWrUxLVzz57w53bot/xc2ezs
+         BSSDNLAyfMoe2Zq+ZYn/PvaW011qZcLtxNez831X+K0IHCJgXMnBoadAxdXHnTi0vCoE
+         ZaJA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=X5ZmL/lkK7p6sLrLWGHaYJr8ALem1oHicAKASp6iJuw=;
+        b=APqSjreGNbj6Unl+PIAJGUBkbD1Ok64KORxfX0l2p2oi0xrKezKLCW3FlXIlSuuM8B
+         EuIR0paBz4oU2Vuh+Q4GYgY+Pu+wUbpXNO7gSFEqWLEtIVLIQmzazN3cVKJ/JPa9KL+u
+         38FcwuBi+dJ4yUvxY5p2V0DSqEbw/X/D2CJdovuK+3TgvwowHC/gZ9tuGffNjs3ul5L9
+         /nXakpXiCSujebyB/im0DI3XQWp9K+CyPHP2a0+NsZnLQywLnokwpEwY+rXcDv89Yez6
+         aAlxCC6zoWH5FkYoiUEXxbanv9B1EUmmvsWYjPK4gZkQDkdoLmB59Ko/TwkGlFvJFaGS
+         3Tjw==
+X-Gm-Message-State: AGi0PubezRJXcvCQWmtgzAlO/AwFSUgq58KzexfZGpmd9zL2MdhnRN1O
+        unMrohp7Kcr+Oq468Mu0pxjK7A==
+X-Google-Smtp-Source: APiQypJ38fd0b2LrQ3XC+DfMxeutcIwIoSdqwwVCUYOwgW9Ij6b/tyXqcaVfXJ3Ob03JzSrm6kHntw==
+X-Received: by 2002:ac8:1788:: with SMTP id o8mr3659700qtj.15.1587138980467;
+        Fri, 17 Apr 2020 08:56:20 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
+        by smtp.gmail.com with ESMTPSA id x18sm9413102qkn.107.2020.04.17.08.56.19
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 17 Apr 2020 08:56:19 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1jPTLm-0002G7-US; Fri, 17 Apr 2020 12:56:18 -0300
+Date:   Fri, 17 Apr 2020 12:56:18 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     g@ziepe.ca, Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        selvin.xavier@broadcom.com, devesh.sharma@broadcom.com,
+        dledford@redhat.com, leon@kernel.org, colin.king@canonical.com,
+        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] RDMA/ocrdma: Fix an off-by-one issue in 'ocrdma_add_stat'
+Message-ID: <20200417155618.GG26002@ziepe.ca>
+References: <20200328073040.24429-1-christophe.jaillet@wanadoo.fr>
+ <20200414183441.GA28870@ziepe.ca>
+ <20200416130847.GP1163@kadam>
+ <20200416184754.GZ5100@ziepe.ca>
+ <20200417112624.GS1163@kadam>
+ <20200417122542.GC5100@ziepe.ca>
+ <20200417130955.GU1163@kadam>
+ <20200417134816.GD26002@ziepe.ca>
+ <20200417151314.GV1163@kadam>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200417151314.GV1163@kadam>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Friday, April 17, 2020 5:17:17 PM CEST Randy Dunlap wrote:
-> [add Cc's]
+On Fri, Apr 17, 2020 at 06:13:14PM +0300, Dan Carpenter wrote:
+> I was just meant unsigned iterators, not sizes.  I consider that to be a
+> different sort of bug.  The original code did this:
 > 
-> On 4/17/20 8:10 AM, Toralf Förster wrote:
-> > At a T440s under hardened Gentoo Linux I' faced with this new spew (system seems to be working fine otherwise):
+> 	desc_size = max_t(int, 32, desc_size);
+> 
+> Using signed casts for min_t() always seems like a crazy thing to me.  I
+> have a static checker warning for those but I think people didn't accept
+> my patches for those if it was only for kernel hardenning and
+> readability instead of to fix bugs.  I don't know why, maybe casting to
+> an int is faster?
+
+Casting usually doesn't cost anything... But I think this shows again
+why int is trouble: most likely desc_size is a unsigned value stored
+in an int, and the temptation of max_t is to use the type of the
+output variable.  So 'int' is a logical, if not bonkers choice.
+
+If desc_size was properly unsigned then the author should keep using
+unsigned through the max_t()
+
+> > > You would need to hit a series of fairly rare events for this
+> > > warning to be useful and I have never seen that happen yet.
 > > 
+> > IIRC the case was the uapi rightly used u32, which was then wrongly
+> > implicitly cast to some internal function,  accepting int, which then
+> > did something sort of like
 > > 
-> > pci 0000:02:00.0: reg 0x10: [mem 0xe0500000-0xe0500fff]
-> > pci 0000:02:00.0: supports D1 D2
-> > pci 0000:02:00.0: PME# supported from D1 D2 D3hot D3cold
-> > pci 0000:00:1c.0: PCI bridge to [bus 02]
-> > pci 0000:00:1c.0:   bridge window [mem 0xe0500000-0xe05fffff]
-> > pci 0000:03:00.0: [8086:08b2] type 00 class 0x028000
-> > pci 0000:03:00.0: reg 0x10: [mem 0xe0400000-0xe0401fff 64bit]
-> > pci 0000:03:00.0: PME# supported from D0 D3hot D3cold
-> > pci 0000:00:1c.1: PCI bridge to [bus 03]
-> > pci 0000:00:1c.1:   bridge window [mem 0xe0400000-0xe04fffff]
-> > ACPI: EC: interrupt unblocked
-> > ACPI: EC: event unblocked
-> > ACPI: EC: EC_CMD/EC_SC=0x66, EC_DATA=0x62
-> > ACPI: EC: GPE=0x25
-> > ACPI: \_SB_.PCI0.LPC_.EC__: Boot ECDT EC initialization complete
-> > ACPI: \_SB_.PCI0.LPC_.EC__: EC: Used to handle transactions and events
-> > ACPI: EC: EC_CMD/EC_SC=0x66, EC_DATA=0x62
-> > ACPI: EC: GPE=0x25
-> > ACPI: \_SB_.PCI0.LPC_.EC__: Boot ECDT EC initialization complete
-> > ACPI: \_SB_.PCI0.LPC_.EC__: EC: Used to handle transactions and events
-> > ------------[ cut here ]------------
-> > Could not request EC data io port 0x62
-> > WARNING: CPU: 0 PID: 1 at drivers/acpi/ec.c:1677 acpi_ec_add+0x26e/0x280
-> > Modules linked in:
-> > CPU: 0 PID: 1 Comm: swapper/0 Tainted: G                T 5.6.5 #5
-> > Hardware name: LENOVO 20AQCTO1WW/20AQCTO1WW, BIOS GJET92WW (2.42 ) 03/03/2017
-> > RIP: 0010:acpi_ec_add+0x26e/0x280
-> > Code: fe ff ff 48 8b 75 10 48 c7 c7 d0 27 9b 8d e8 81 c7 b6 ff 0f 0b e9 c9 fe ff ff 48 8b 75 18 48 c7 c7 a8 27 9b 8d e8 6a c7 b6 ff <0f> 0b e9 8a fe ff ff 41 bc f4 ff ff ff e9 ac fe ff ff 48 83 3d f8
-> > RSP: 0000:ffffb45b40053c80 EFLAGS: 00010282
-> > RAX: 0000000000000000 RBX: ffffa2827012b800 RCX: 0000000000000000
-> > RDX: 0000000000000026 RSI: ffffffff8e26f666 RDI: ffffffff8e26fa66
-> > RBP: ffffa282709b4b00 R08: 0000000089294f76 R09: 0000000000000026
-> > R10: 000000000000000f R11: ffffb45b40053aa8 R12: 0000000000000000
-> > R13: 0000000000000000 R14: 0000000000000001 R15: 0000000000000030
-> > FS:  0000000000000000(0000) GS:ffffa28272600000(0000) knlGS:0000000000000000
-> > CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > CR2: ffffa2827e5ff000 CR3: 000000008e80a001 CR4: 00000000001606f0
-> > Call Trace:
-> >  acpi_device_probe+0x40/0x100
-> >  really_probe+0xe8/0x2d0
-> >  driver_probe_device+0x57/0xd0
-> >  ? driver_allows_async_probing+0x50/0x50
-> >  bus_for_each_drv+0x90/0xe0
-> >  __device_attach+0xea/0x160
-> >  acpi_bus_register_early_device+0x4b/0x70
-> >  acpi_ec_init+0x2ee/0x361
-> >  acpi_init+0x410/0x4a0
-> >  ? acpi_sleep_proc_init+0x4c/0x4c
-> >  do_one_initcall+0x93/0x1f0
-> >  kernel_init_freeable+0x3e7/0x4cc
-> >  ? rest_init+0xc0/0xc0
-> >  kernel_init+0x6/0x110
-> >  ? rest_init+0xc0/0xc0
-> >  ret_from_fork+0x35/0x40
-> > ---[ end trace cd90af9f64ca9345 ]---
-> > ------------[ cut here ]------------
-> > Could not request EC cmd io port 0x66
-> > WARNING: CPU: 0 PID: 1 at drivers/acpi/ec.c:1679 acpi_ec_add+0x257/0x280
-> > Modules linked in:
-> > CPU: 0 PID: 1 Comm: swapper/0 Tainted: G        W       T 5.6.5 #5
-> > Hardware name: LENOVO 20AQCTO1WW/20AQCTO1WW, BIOS GJET92WW (2.42 ) 03/03/2017
-> > RIP: 0010:acpi_ec_add+0x257/0x280
-> > Code: 8b 55 00 48 89 ef 48 89 10 e8 65 e0 ff ff 48 8b 2d 4e d7 3b 01 e9 4a fe ff ff 48 8b 75 10 48 c7 c7 d0 27 9b 8d e8 81 c7 b6 ff <0f> 0b e9 c9 fe ff ff 48 8b 75 18 48 c7 c7 a8 27 9b 8d e8 6a c7 b6
-> > RAX: 0000000000000000 RBX: ffffa2827012b800 RCX: 0000000000000000
-> > RDX: 0000000000000025 RSI: ffffffff8e26f665 RDI: ffffffff8e26fa65
-> > RBP: ffffa282709b4b00 R08: 000000008935c8e8 R09: 0000000000000025
-> > R10: 000000000000000f R11: ffffb45b40053aa8 R12: 0000000000000000
-> > R13: 0000000000000000 R14: 0000000000000001 R15: 0000000000000030
-> > FS:  0000000000000000(0000) GS:ffffa28272600000(0000) knlGS:0000000000000000
-> > CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > CR2: ffffa2827e5ff000 CR3: 000000008e80a001 CR4: 00000000001606f0
-> > Call Trace:
-> >  acpi_device_probe+0x40/0x100
-> >  really_probe+0xe8/0x2d0
-> >  driver_probe_device+0x57/0xd0
-> >  ? driver_allows_async_probing+0x50/0x50
-> >  bus_for_each_drv+0x90/0xe0
-> >  __device_attach+0xea/0x160
-> >  acpi_bus_register_early_device+0x4b/0x70
-> >  acpi_ec_init+0x2ee/0x361
-> >  acpi_init+0x410/0x4a0
-> >  ? acpi_sleep_proc_init+0x4c/0x4c
-> >  do_one_initcall+0x93/0x1f0
-> >  kernel_init_freeable+0x3e7/0x4cc
-> >  ? rest_init+0xc0/0xc0
-> >  kernel_init+0x6/0x110
-> >  ? rest_init+0xc0/0xc0
-> >  ret_from_fork+0x35/0x40
-> > ---[ end trace cd90af9f64ca9346 ]---
-> > iommu: Default domain type: Translated
-> > pci 0000:00:02.0: vgaarb: setting as boot VGA device
-> > pci 0000:00:02.0: vgaarb: VGA device added: decodes=io+mem,owns=io+mem,locks=none
-> > pci 0000:00:02.0: vgaarb: bridge control possible
-> > vgaarb: loaded
-> > SCSI subsystem initialized
-> > libata version 3.00 loaded.
-> > ACPI: bus type USB registered
-> > usbcore: registered new interface driver usbfs
-> > usbcore: registered new interface driver hub
-> > usbcore: registered new device driver usb
-> > pps_core: LinuxPPS API ver. 1 registered
-> > pps_core: Software ver. 5.3.6 - Copyright 2005-2007 Rodolfo Giometti <giometti@linux.it>
-> > EDAC MC: Ver: 3.0.0
-> > PCI: Using ACPI for IRQ routing
-> > PCI: pci_cache_line_size set to 64 bytes
-> > e820: reserve RAM buffer [mem 0x0009d000-0x0009ffff]
-> > e820: reserve RAM buffer [mem 0xaf70b000-0xafffffff]
-> > e820: reserve RAM buffer [mem 0x33e600000-0x33fffffff]
-> > hpet0: at MMIO 0xfed00000, IRQs 2, 8, 0, 0, 0, 0, 0, 0
-> > hpet0: 8 comparators, 64-bit 14.318180 MHz counter
-> > clocksource: Switched to clocksource tsc-early
-> > *** VALIDATE ramfs ***
-> > *** VALIDATE hugetlbfs ***
-> > pnp: PnP ACPI init
-> > system 00:00: [mem 0x00000000-0x0009ffff] could not be reserved
-> > system 00:00: [mem 0x000c0000-0x000c3fff] could not be reserved
-> > system 00:00: [mem 0x000c4000-0x000c7fff] could not be reserved
-> > system 00:00: [mem 0x000c8000-0x000cbfff] could not be reserved
-> > system 00:00: [mem 0x000cc000-0x000cffff] could not be reserved
-> > system 00:00: [mem 0x000d0000-0x000d3fff] has been reserved
-> > system 00:00: [mem 0x000d4000-0x000d7fff] has been reserved
-> > system 00:00: [mem 0x000d8000-0x000dbfff] has been reserved
-> > system 00:00: [mem 0x000dc000-0x000dffff] has been reserved
-> > system 00:00: [mem 0x000e0000-0x000e3fff] could not be reserved
-> > system 00:00: [mem 0x000e4000-0x000e7fff] could not be reserved
-> > system 00:00: [mem 0x000e8000-0x000ebfff] could not be reserved
-> > system 00:00: [mem 0x000ec000-0x000effff] could not be reserved
-> > system 00:00: [mem 0x000f0000-0x000fffff] could not be reserved
-> > system 00:00: [mem 0x00100000-0xbf9fffff] could not be reserved
-> > system 00:00: [mem 0xfec00000-0xfed3ffff] could not be reserved
-> > system 00:00: [mem 0xfed4c000-0xffffffff] could not be reserved
-> > system 00:00: Plug and Play ACPI device, IDs PNP0c01 (active)
-> > pnp 00:01: [Firmware Bug]: PNP resource [mem 0xfed10000-0xfed13fff] covers only part of 0000:00:00.0 Intel MCH; extending to [mem 0xfed10000-0xfed17fff]
-> > system 00:01: [io  0x1800-0x189f] has been reserved
-> > system 00:01: [io  0x0800-0x087f] has been reserved
-> > system 00:01: [io  0x0880-0x08ff] has been reserved
-> > system 00:01: [io  0x0900-0x097f] has been reserved
-> > system 00:01: [io  0x0980-0x09ff] has been reserved
-> > system 00:01: [io  0x0a00-0x0a7f] has been reserved
-> > system 00:01: [io  0x0a80-0x0aff] has been reserved
-> > system 00:01: [io  0x0b00-0x0b7f] has been reserved
-> > system 00:01: [io  0x0b80-0x0bff] has been reserved
-> > system 00:01: [io  0x15e0-0x15ef] has been reserved
-> > system 00:01: [io  0x1600-0x167f] has been reserved
-> > system 00:01: [io  0x1640-0x165f] has been reserved
-> > system 00:01: [mem 0xf8000000-0xfbffffff] has been reserved
+> >   int len
+> >   if (len >= sizeof(a))
+> >        return -EINVAL
+> >   copy_from_user(a, b, len)
+> 
+> This code works.  "len" is type promoted to unsigned and negative values
+> are rejected.
 
-Does the patch below (untested) make any difference?
+Expecting people to know the unsigned/sign implicit promotion rules
+for expressions to determine the code is right/wrong is just asking to
+much, IMHO. I certainly don't have them all memorized and try to avoid
+them :(
 
----
- drivers/acpi/ec.c |    5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+Using int pretty much guarentees you hit those cases...
 
-Index: linux-pm/drivers/acpi/ec.c
-===================================================================
---- linux-pm.orig/drivers/acpi/ec.c
-+++ linux-pm/drivers/acpi/ec.c
-@@ -2067,7 +2067,10 @@ static struct acpi_driver acpi_ec_driver
- 		.add = acpi_ec_add,
- 		.remove = acpi_ec_remove,
- 		},
--	.drv.pm = &acpi_ec_pm,
-+	.drv = {
-+		.probe_type = PROBE_FORCE_SYNCHRONOUS,
-+		.pm = &acpi_ec_pm,
-+	},
- };
+> The real life example was slightly more complicated than that.  But the
+> point is that a lot of people think unsigned values are inherently more
+> safe and they use u32 everywhere as a default datatype.  I argue that
+> the default should always be int unless there is a good reason
+> otherwise.
+
+Why? In my experience most values actually are never negative.
+
+> to save memory.  There are reasons for the other datatypes to exist, but
+> using them is tricky so it's best to avoid it if you can.
+
+I can't say I have the same experience..
  
- static void acpi_ec_destroy_workqueues(void)
+> There is a lot of magic to making your limits unsigned long type.
 
+Oh? More magic than int is implictly promoted to unsigned anyhow?
 
+> > > Originally if user_value was an int then the loop would have been a
+> > > harmless no-op but now it was a large positive value so it lead to
+> > > memory corruption.  Another example is:
+> > > 
+> > > 	for (i = 0; i < user_value - 1; i++) {
+> > 
+> > Again, code like this is simply missing required input validation. The
+> > for loop works with int by dumb luck, and this would be broken if it
+> > called copy_from_user.
+> 
+> The thing about int type is that it works like people expect normal
+> numbers to work.
 
+Not really. Some cases are a bit better, some are worse. As above when
+using int:
+
+ -1 >= sizeof(A) == true
+
+Which is not at all how any sane person thinks about normal
+numbers. There are lots of these odd traps around implicit promotion.
+
+While foo-1 is right there, explicitly. If foo-1 < 0 and the code is
+not expecting it then you have a clear problem.
+
+> People normally think that zero minus one is going to
+> be negative but if they change to u32 by default then it wraps to
+> UINT_MAX and that's unexpected.  
+
+Maybe I've been doing this too long, but this seems totally expected
+to me...
+
+> There is an element where the static checker encourages people to
+> "change your types to match" and that's garbage advice.  Changing
+> your types doesn't magically make things better and I would argue
+> that it normally makes things worse.
+
+I don't know much about this warning, but I do find that people
+starting out tend to just use 'int' everywhere and 'hope for the best'
+without any clear understanding or thinking of what types are what.
+
+> > If you get the in habit of using types properly then it is less likely
+> > this bug-class will happen. If your habit is to just always use 'int'
+> > for everything then you *will* accidently cause a user value to be
+> > implicitly casted.
+> 
+> This is an interesting theory but I haven't seen any evidence to support
+> it.  My intuition is that it's better to only care when you have to
+> otherwise you get overwhelmed.
+
+If you make everything unsigned, there really is no downside, other
+than possible subtraction related issues that exist anyhow, AFAIK.
+
+This is the approach the C std uses, pretty much the entire API is
+properly marked with signed/unsigned. I feel in pretty good company
+advocating that this is the best way to write C code :)
+
+But then again, I find the modular math intuitive and aware to be
+careful with subtraction...
+
+Jason
