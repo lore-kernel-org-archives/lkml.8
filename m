@@ -6,39 +6,40 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39EA8C38A2B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 16:56:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46252C38A2C
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 16:56:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 06E6522202
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 16:56:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19B3720771
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 16:56:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728396AbgDQQ4K (ORCPT
+        id S1728449AbgDQQ4O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 12:56:10 -0400
-Received: from muru.com ([72.249.23.125]:50196 "EHLO muru.com"
+        Fri, 17 Apr 2020 12:56:14 -0400
+Received: from muru.com ([72.249.23.125]:50262 "EHLO muru.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728294AbgDQQ4F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 12:56:05 -0400
+        id S1728248AbgDQQ4K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Apr 2020 12:56:10 -0400
 Received: from hillo.muru.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTP id F2F4B8192;
-        Fri, 17 Apr 2020 16:56:48 +0000 (UTC)
+        by muru.com (Postfix) with ESMTP id 851278161;
+        Fri, 17 Apr 2020 16:56:55 +0000 (UTC)
 From:   Tony Lindgren <tony@atomide.com>
 To:     linux-omap@vger.kernel.org
-Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+Cc:     linux-arm-kernel@lists.infradead.org, Keerthy <j-keerthy@ti.com>,
+        Lokesh Vutla <lokeshvutla@ti.com>,
+        Tero Kristo <t-kristo@ti.com>,
+        "H. Nikolaus Schaller" <hns@goldelico.com>,
+        Aaro Koskinen <aaro.koskinen@iki.fi>,
         Adam Ford <aford173@gmail.com>,
         Andreas Kemnade <andreas@kemnade.info>,
-        "H. Nikolaus Schaller" <hns@goldelico.com>,
-        Keerthy <j-keerthy@ti.com>, Lokesh Vutla <lokeshvutla@ti.com>,
-        Tero Kristo <t-kristo@ti.com>,
-        Aaro Koskinen <aaro.koskinen@iki.fi>,
         Daniel Lezcano <daniel.lezcano@linaro.org>,
         Michael Turquette <mturquette@baylibre.com>,
         Stephen Boyd <sboyd@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 10/14] ARM: dts: Configure system timers for omap3
-Date:   Fri, 17 Apr 2020 09:55:15 -0700
-Message-Id: <20200417165519.4979-11-tony@atomide.com>
+        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 13/14] ARM: OMAP2+: Drop old timer code for dmtimer and 32k counter
+Date:   Fri, 17 Apr 2020 09:55:18 -0700
+Message-Id: <20200417165519.4979-14-tony@atomide.com>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200417165519.4979-1-tony@atomide.com>
 References: <20200417165519.4979-1-tony@atomide.com>
@@ -49,557 +50,666 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We can now init system timers using the dmtimer and 32k counter
-based on only devicetree data and drivers/clocksource timers.
-Let's configure the clocksource and clockevent, and drop the old
-unused platform data.
+With dmtimer and 32k counter being initialized based on devicetree data,
+we can just drop the old timer code.
 
-As we're just dropping platform data, and the early platform data
-init is based on the custom ti,hwmods property, we want to drop
-both the platform data and ti,hwmods property in a single patch.
+This still leaves the omap5 and dra7 realtime_counter_init() that
+depend on the smc calls and control module platform code for the dra7
+quirk init.
 
-Since the dmtimer can use both 32k clock and system clock as the
-source, let's also configure the SoC specific default values. The
-board specific dts files can reconfigure these with assigned-clocks
-and assigned-clock-parents as needed.
-
-Let's also update the dts file to use #include while at it.
-
-Cc: devicetree@vger.kernel.org
-Cc: Adam Ford <aford173@gmail.com>
-Cc: Andreas Kemnade <andreas@kemnade.info>
-Cc: "H. Nikolaus Schaller" <hns@goldelico.com>
 Cc: Keerthy <j-keerthy@ti.com>
 Cc: Lokesh Vutla <lokeshvutla@ti.com>
 Cc: Tero Kristo <t-kristo@ti.com>
 Signed-off-by: Tony Lindgren <tony@atomide.com>
 ---
- arch/arm/boot/dts/am3517.dtsi              |  16 ++-
- arch/arm/boot/dts/omap3-beagle.dts         |  16 +++
- arch/arm/boot/dts/omap3-devkit8000.dts     |  16 +++
- arch/arm/boot/dts/omap3.dtsi               | 130 ++++++++++++++----
- arch/arm/mach-omap2/board-generic.c        |  10 +-
- arch/arm/mach-omap2/omap_hwmod_3xxx_data.c | 146 +--------------------
- 6 files changed, 159 insertions(+), 175 deletions(-)
+ arch/arm/mach-omap2/Makefile |   4 +-
+ arch/arm/mach-omap2/common.h |   7 +
+ arch/arm/mach-omap2/timer.c  | 551 -----------------------------------
+ 3 files changed, 10 insertions(+), 552 deletions(-)
 
-diff --git a/arch/arm/boot/dts/am3517.dtsi b/arch/arm/boot/dts/am3517.dtsi
---- a/arch/arm/boot/dts/am3517.dtsi
-+++ b/arch/arm/boot/dts/am3517.dtsi
-@@ -169,5 +169,17 @@ &mmu_isp {
- 	status = "disabled";
- };
+diff --git a/arch/arm/mach-omap2/Makefile b/arch/arm/mach-omap2/Makefile
+--- a/arch/arm/mach-omap2/Makefile
++++ b/arch/arm/mach-omap2/Makefile
+@@ -7,7 +7,7 @@ ccflags-y := -I$(srctree)/$(src)/include \
+ 	-I$(srctree)/arch/arm/plat-omap/include
  
--/include/ "am35xx-clocks.dtsi"
--/include/ "omap36xx-am35xx-omap3430es2plus-clocks.dtsi"
-+#include "am35xx-clocks.dtsi"
-+#include "omap36xx-am35xx-omap3430es2plus-clocks.dtsi"
+ # Common support
+-obj-y := id.o io.o control.o devices.o fb.o timer.o pm.o \
++obj-y := id.o io.o control.o devices.o fb.o pm.o \
+ 	 common.o dma.o wd_timer.o display.o i2c.o hdq1w.o omap_hwmod.o \
+ 	 omap_device.o omap-headsmp.o sram.o
+ 
+@@ -16,6 +16,8 @@ hwmod-common				= omap_hwmod.o omap_hwmod_reset.o \
+ clock-common				= clock.o
+ secure-common				= omap-smc.o omap-secure.o
+ 
++obj-$(CONFIG_SOC_HAS_REALTIME_COUNTER)	+= timer.o
 +
-+&timer1 {
-+	compatible = "ti,dmtimer-clocksource";
-+	assigned-clocks = <&gpt1_fck>;
-+	assigned-clock-parents = <&sys_ck>;
-+};
+ obj-$(CONFIG_ARCH_OMAP2) += $(omap-2-3-common) $(hwmod-common)
+ obj-$(CONFIG_ARCH_OMAP3) += $(omap-2-3-common) $(hwmod-common) $(secure-common)
+ obj-$(CONFIG_ARCH_OMAP4) += $(hwmod-common) $(secure-common)
+diff --git a/arch/arm/mach-omap2/common.h b/arch/arm/mach-omap2/common.h
+--- a/arch/arm/mach-omap2/common.h
++++ b/arch/arm/mach-omap2/common.h
+@@ -111,7 +111,14 @@ static inline int omap_l2_cache_init(void)
+ #define OMAP_L2C_AUX_CTRL	0
+ #define omap4_l2c310_write_sec	NULL
+ #endif
 +
-+&timer2 {
-+	compatible = "ti,dmtimer-clockevent";
-+	assigned-clocks = <&gpt2_fck>;
-+	assigned-clock-parents = <&sys_ck>;
-+};
-diff --git a/arch/arm/boot/dts/omap3-beagle.dts b/arch/arm/boot/dts/omap3-beagle.dts
---- a/arch/arm/boot/dts/omap3-beagle.dts
-+++ b/arch/arm/boot/dts/omap3-beagle.dts
-@@ -304,6 +304,22 @@ &usbhsehci {
- 	phys = <0 &hsusb2_phy>;
- };
++#ifdef CONFIG_SOC_HAS_REALTIME_COUNTER
+ extern void omap5_realtime_timer_init(void);
++#else
++static inline void omap5_realtime_timer_init(void)
++{
++}
++#endif
  
-+&timer1 {
-+	/* Unusable as clockevent */
-+	compatible = "ti,omap3430-timer";
-+};
-+
-+&timer12 {
-+	compatible = "ti,dmtimer-clocksource";
-+	/* Always clocked by secure_32k_fck */
-+};
-+
-+&timer2 {
-+	compatible = "ti,dmtimer-clockevent";
-+	assigned-clocks = <&gpt2_fck>;
-+	assigned-clock-parents = <&sys_ck>;
-+};
-+
- &twl_gpio {
- 	ti,use-leds;
- 	/* pullups: BIT(1) */
-diff --git a/arch/arm/boot/dts/omap3-devkit8000.dts b/arch/arm/boot/dts/omap3-devkit8000.dts
---- a/arch/arm/boot/dts/omap3-devkit8000.dts
-+++ b/arch/arm/boot/dts/omap3-devkit8000.dts
-@@ -14,3 +14,19 @@ aliases {
- 		display2 = &tv0;
- 	};
- };
-+
-+&timer1 {
-+	/* Unusable as clockevent */
-+	compatible = "ti,omap3430-timer";
-+};
-+
-+&timer12 {
-+	compatible = "ti,dmtimer-clocksource";
-+	/* Always clocked by secure_32k_fck */
-+};
-+
-+&timer2 {
-+	compatible = "ti,dmtimer-clockevent";
-+	assigned-clocks = <&gpt2_fck>;
-+	assigned-clock-parents = <&sys_ck>;
-+};
-diff --git a/arch/arm/boot/dts/omap3.dtsi b/arch/arm/boot/dts/omap3.dtsi
---- a/arch/arm/boot/dts/omap3.dtsi
-+++ b/arch/arm/boot/dts/omap3.dtsi
-@@ -193,10 +193,23 @@ cm_clockdomains: clockdomains {
- 			};
- 		};
+ void omap2420_init_early(void);
+ void omap2430_init_early(void);
+diff --git a/arch/arm/mach-omap2/timer.c b/arch/arm/mach-omap2/timer.c
+--- a/arch/arm/mach-omap2/timer.c
++++ b/arch/arm/mach-omap2/timer.c
+@@ -26,34 +26,12 @@
+  * License. See the file "COPYING" in the main directory of this archive
+  * for more details.
+  */
+-#include <linux/init.h>
+-#include <linux/time.h>
+-#include <linux/interrupt.h>
+-#include <linux/err.h>
+ #include <linux/clk.h>
+-#include <linux/delay.h>
+-#include <linux/irq.h>
+ #include <linux/clocksource.h>
+-#include <linux/clockchips.h>
+-#include <linux/slab.h>
+-#include <linux/of.h>
+-#include <linux/of_address.h>
+-#include <linux/of_irq.h>
+-#include <linux/platform_device.h>
+-#include <linux/platform_data/dmtimer-omap.h>
+-#include <linux/sched_clock.h>
+-
+-#include <asm/mach/time.h>
+-
+-#include "omap_hwmod.h"
+-#include "omap_device.h"
+-#include <plat/counter-32k.h>
+-#include <clocksource/timer-ti-dm.h>
  
--		counter32k: counter@48320000 {
--			compatible = "ti,omap-counter32k";
--			reg = <0x48320000 0x20>;
--			ti,hwmods = "counter_32k";
-+		target-module@48320000 {
-+			compatible = "ti,sysc-omap2", "ti,sysc";
-+			reg = <0x48320000 0x4>,
-+			      <0x48320004 0x4>;
-+			reg-names = "rev", "sysc";
-+			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
-+					<SYSC_IDLE_NO>;
-+			clocks = <&wkup_32k_fck>, <&omap_32ksync_ick>;
-+			clock-names = "fck", "ick";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x48320000 0x1000>;
-+
-+			counter32k: counter@0 {
-+				compatible = "ti,omap-counter32k";
-+				reg = <0x0 0x20>;
-+			};
- 		};
+ #include "soc.h"
+ #include "common.h"
+ #include "control.h"
+-#include "powerdomain.h"
+ #include "omap-secure.h"
  
- 		intc: interrupt-controller@48200000 {
-@@ -637,19 +650,63 @@ sham: sham@480c3000 {
- 			dma-names = "rx";
- 		};
+ #define REALTIME_COUNTER_BASE				0x48243200
+@@ -61,294 +39,12 @@
+ #define INCREMENTER_DENUMERATOR_RELOAD_OFFSET		0x14
+ #define NUMERATOR_DENUMERATOR_MASK			0xfffff000
  
--		timer1: timer@48318000 {
--			compatible = "ti,omap3430-timer";
--			reg = <0x48318000 0x400>;
--			interrupts = <37>;
--			ti,hwmods = "timer1";
--			ti,timer-alwon;
-+		target-module@48318000 {
-+			compatible = "ti,sysc-omap2-timer", "ti,sysc";
-+			reg = <0x48318000 0x4>,
-+			      <0x48318010 0x4>,
-+			      <0x48318014 0x4>;
-+			reg-names = "rev", "sysc", "syss";
-+			ti,sysc-mask = <(SYSC_OMAP2_CLOCKACTIVITY |
-+					 SYSC_OMAP2_EMUFREE |
-+					 SYSC_OMAP2_ENAWAKEUP |
-+					 SYSC_OMAP2_SOFTRESET |
-+					 SYSC_OMAP2_AUTOIDLE)>;
-+			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
-+					<SYSC_IDLE_NO>,
-+					<SYSC_IDLE_SMART>;
-+			ti,syss-mask = <1>;
-+			clocks = <&gpt1_fck>, <&gpt1_ick>;
-+			clock-names = "fck", "ick";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x48318000 0x1000>;
-+
-+			timer1: timer@0 {
-+				compatible = "ti,omap3430-timer";
-+				reg = <0x0 0x80>;
-+				clocks = <&gpt1_fck>;
-+				clock-names = "fck";
-+				interrupts = <37>;
-+				ti,timer-alwon;
-+			};
- 		};
+-/* Clockevent code */
+-
+-static struct omap_dm_timer clkev;
+-static struct clock_event_device clockevent_gpt;
+-
+-/* Clockevent hwmod for am335x and am437x suspend */
+-static struct omap_hwmod *clockevent_gpt_hwmod;
+-
+-/* Clockesource hwmod for am437x suspend */
+-static struct omap_hwmod *clocksource_gpt_hwmod;
+-
+-#ifdef CONFIG_SOC_HAS_REALTIME_COUNTER
+ static unsigned long arch_timer_freq;
  
--		timer2: timer@49032000 {
--			compatible = "ti,omap3430-timer";
--			reg = <0x49032000 0x400>;
--			interrupts = <38>;
--			ti,hwmods = "timer2";
-+		target-module@49032000 {
-+			compatible = "ti,sysc-omap2-timer", "ti,sysc";
-+			reg = <0x49032000 0x4>,
-+			      <0x49032010 0x4>,
-+			      <0x49032014 0x4>;
-+			reg-names = "rev", "sysc", "syss";
-+			ti,sysc-mask = <(SYSC_OMAP2_CLOCKACTIVITY |
-+					 SYSC_OMAP2_EMUFREE |
-+					 SYSC_OMAP2_ENAWAKEUP |
-+					 SYSC_OMAP2_SOFTRESET |
-+					 SYSC_OMAP2_AUTOIDLE)>;
-+			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
-+					<SYSC_IDLE_NO>,
-+					<SYSC_IDLE_SMART>;
-+			ti,syss-mask = <1>;
-+			clocks = <&gpt2_fck>, <&gpt2_ick>;
-+			clock-names = "fck", "ick";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x49032000 0x1000>;
-+
-+			timer2: timer@0 {
-+				compatible = "ti,omap3430-timer";
-+				reg = <0 0x400>;
-+				interrupts = <38>;
-+			};
- 		};
- 
- 		timer3: timer@49034000 {
-@@ -723,13 +780,34 @@ timer11: timer@48088000 {
- 			ti,timer-pwm;
- 		};
- 
--		timer12: timer@48304000 {
--			compatible = "ti,omap3430-timer";
--			reg = <0x48304000 0x400>;
--			interrupts = <95>;
--			ti,hwmods = "timer12";
--			ti,timer-alwon;
--			ti,timer-secure;
-+		target-module@48304000 {
-+			compatible = "ti,sysc-omap2-timer", "ti,sysc";
-+			reg = <0x48304000 0x4>,
-+			      <0x48304010 0x4>,
-+			      <0x48304014 0x4>;
-+			reg-names = "rev", "sysc", "syss";
-+			ti,sysc-mask = <(SYSC_OMAP2_CLOCKACTIVITY |
-+					 SYSC_OMAP2_EMUFREE |
-+					 SYSC_OMAP2_ENAWAKEUP |
-+					 SYSC_OMAP2_SOFTRESET |
-+					 SYSC_OMAP2_AUTOIDLE)>;
-+			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
-+					<SYSC_IDLE_NO>,
-+					<SYSC_IDLE_SMART>;
-+			ti,syss-mask = <1>;
-+			clocks = <&gpt12_fck>, <&gpt12_ick>;
-+			clock-names = "fck", "ick";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x48304000 0x1000>;
-+
-+			timer12: timer@0 {
-+				compatible = "ti,omap3430-timer";
-+				reg = <0 0x400>;
-+				interrupts = <95>;
-+				ti,timer-alwon;
-+				ti,timer-secure;
-+			};
- 		};
- 
- 		usbhstll: usbhstll@48062000 {
-@@ -886,4 +964,10 @@ ssi_port2: ssi-port@4805b000 {
- 	};
- };
- 
--/include/ "omap3xxx-clocks.dtsi"
-+#include "omap3xxx-clocks.dtsi"
-+
-+&timer1 {
-+	compatible = "ti,dmtimer-clockevent";
-+	assigned-clocks = <&gpt1_fck>;
-+	assigned-clock-parents = <&omap_32k_fck>;
-+};
-diff --git a/arch/arm/mach-omap2/board-generic.c b/arch/arm/mach-omap2/board-generic.c
---- a/arch/arm/mach-omap2/board-generic.c
-+++ b/arch/arm/mach-omap2/board-generic.c
-@@ -114,7 +114,7 @@ DT_MACHINE_START(OMAP3_N900_DT, "Nokia RX-51 board")
- 	.init_early	= omap3430_init_early,
- 	.init_machine	= omap_generic_init,
- 	.init_late	= omap3_init_late,
--	.init_time	= omap_init_time,
-+	.init_time	= omap_init_time_of,
- 	.dt_compat	= n900_boards_compat,
- 	.restart	= omap3xxx_restart,
- MACHINE_END
-@@ -132,7 +132,7 @@ DT_MACHINE_START(OMAP3_DT, "Generic OMAP3 (Flattened Device Tree)")
- 	.init_early	= omap3430_init_early,
- 	.init_machine	= omap_generic_init,
- 	.init_late	= omap3_init_late,
--	.init_time	= omap_init_time,
-+	.init_time	= omap_init_time_of,
- 	.dt_compat	= omap3_boards_compat,
- 	.restart	= omap3xxx_restart,
- MACHINE_END
-@@ -149,7 +149,7 @@ DT_MACHINE_START(OMAP36XX_DT, "Generic OMAP36xx (Flattened Device Tree)")
- 	.init_early	= omap3630_init_early,
- 	.init_machine	= omap_generic_init,
- 	.init_late	= omap3_init_late,
--	.init_time	= omap_init_time,
-+	.init_time	= omap_init_time_of,
- 	.dt_compat	= omap36xx_boards_compat,
- 	.restart	= omap3xxx_restart,
- MACHINE_END
-@@ -166,7 +166,7 @@ DT_MACHINE_START(OMAP3_GP_DT, "Generic OMAP3-GP (Flattened Device Tree)")
- 	.init_early	= omap3430_init_early,
- 	.init_machine	= omap_generic_init,
- 	.init_late	= omap3_init_late,
--	.init_time	= omap3_secure_sync32k_timer_init,
-+	.init_time	= omap_init_time_of,
- 	.dt_compat	= omap3_gp_boards_compat,
- 	.restart	= omap3xxx_restart,
- MACHINE_END
-@@ -182,7 +182,7 @@ DT_MACHINE_START(AM3517_DT, "Generic AM3517 (Flattened Device Tree)")
- 	.init_early	= am35xx_init_early,
- 	.init_machine	= omap_generic_init,
- 	.init_late	= omap3_init_late,
--	.init_time	= omap3_gptimer_timer_init,
-+	.init_time	= omap_init_time_of,
- 	.dt_compat	= am3517_boards_compat,
- 	.restart	= omap3xxx_restart,
- MACHINE_END
-diff --git a/arch/arm/mach-omap2/omap_hwmod_3xxx_data.c b/arch/arm/mach-omap2/omap_hwmod_3xxx_data.c
---- a/arch/arm/mach-omap2/omap_hwmod_3xxx_data.c
-+++ b/arch/arm/mach-omap2/omap_hwmod_3xxx_data.c
-@@ -147,36 +147,6 @@ static struct omap_hwmod_class omap3xxx_timer_hwmod_class = {
- 	.sysc = &omap3xxx_timer_sysc,
- };
- 
--/* timer1 */
--static struct omap_hwmod omap3xxx_timer1_hwmod = {
--	.name		= "timer1",
--	.main_clk	= "gpt1_fck",
--	.prcm		= {
--		.omap2 = {
--			.module_offs = WKUP_MOD,
--			.idlest_reg_id = 1,
--			.idlest_idle_bit = OMAP3430_ST_GPT1_SHIFT,
--		},
--	},
--	.class		= &omap3xxx_timer_hwmod_class,
--	.flags		= HWMOD_SET_DEFAULT_CLOCKACT,
--};
--
--/* timer2 */
--static struct omap_hwmod omap3xxx_timer2_hwmod = {
--	.name		= "timer2",
--	.main_clk	= "gpt2_fck",
--	.prcm		= {
--		.omap2 = {
--			.module_offs = OMAP3430_PER_MOD,
--			.idlest_reg_id = 1,
--			.idlest_idle_bit = OMAP3430_ST_GPT2_SHIFT,
--		},
--	},
--	.class		= &omap3xxx_timer_hwmod_class,
--	.flags		= HWMOD_SET_DEFAULT_CLOCKACT,
--};
--
- /* timer3 */
- static struct omap_hwmod omap3xxx_timer3_hwmod = {
- 	.name		= "timer3",
-@@ -312,21 +282,6 @@ static struct omap_hwmod omap3xxx_timer11_hwmod = {
- 	.flags		= HWMOD_SET_DEFAULT_CLOCKACT,
- };
- 
--/* timer12 */
--static struct omap_hwmod omap3xxx_timer12_hwmod = {
--	.name		= "timer12",
--	.main_clk	= "gpt12_fck",
--	.prcm		= {
--		.omap2 = {
--			.module_offs = WKUP_MOD,
--			.idlest_reg_id = 1,
--			.idlest_idle_bit = OMAP3430_ST_GPT12_SHIFT,
--		},
--	},
--	.class		= &omap3xxx_timer_hwmod_class,
--	.flags		= HWMOD_SET_DEFAULT_CLOCKACT,
--};
--
- /*
-  * 'wd_timer' class
-  * 32-bit watchdog upward counter that generates a pulse on the reset pin on
-@@ -1524,38 +1479,6 @@ static struct omap_hwmod omap3xxx_sad2d_hwmod = {
- 	.class		= &omap3xxx_sad2d_class,
- };
- 
--/*
-- * '32K sync counter' class
-- * 32-bit ordinary counter, clocked by the falling edge of the 32 khz clock
-- */
--static struct omap_hwmod_class_sysconfig omap3xxx_counter_sysc = {
--	.rev_offs	= 0x0000,
--	.sysc_offs	= 0x0004,
--	.sysc_flags	= SYSC_HAS_SIDLEMODE,
--	.idlemodes	= (SIDLE_FORCE | SIDLE_NO),
--	.sysc_fields	= &omap_hwmod_sysc_type1,
--};
--
--static struct omap_hwmod_class omap3xxx_counter_hwmod_class = {
--	.name	= "counter",
--	.sysc	= &omap3xxx_counter_sysc,
--};
--
--static struct omap_hwmod omap3xxx_counter_32k_hwmod = {
--	.name		= "counter_32k",
--	.class		= &omap3xxx_counter_hwmod_class,
--	.clkdm_name	= "wkup_clkdm",
--	.flags		= HWMOD_SWSUP_SIDLE,
--	.main_clk	= "wkup_32k_fck",
--	.prcm		= {
--		.omap2	= {
--			.module_offs = WKUP_MOD,
--			.idlest_reg_id = 1,
--			.idlest_idle_bit = OMAP3430_ST_32KSYNC_SHIFT,
--		},
--	},
--};
--
- /*
-  * 'gpmc' class
-  * general purpose memory controller
-@@ -1868,25 +1791,6 @@ static struct omap_hwmod_ocp_if omap3xxx_l3__iva = {
- 	.user		= OCP_USER_MPU | OCP_USER_SDMA,
- };
- 
--
--/* l4_wkup -> timer1 */
--static struct omap_hwmod_ocp_if omap3xxx_l4_wkup__timer1 = {
--	.master		= &omap3xxx_l4_wkup_hwmod,
--	.slave		= &omap3xxx_timer1_hwmod,
--	.clk		= "gpt1_ick",
--	.user		= OCP_USER_MPU | OCP_USER_SDMA,
--};
--
--
--/* l4_per -> timer2 */
--static struct omap_hwmod_ocp_if omap3xxx_l4_per__timer2 = {
--	.master		= &omap3xxx_l4_per_hwmod,
--	.slave		= &omap3xxx_timer2_hwmod,
--	.clk		= "gpt2_ick",
--	.user		= OCP_USER_MPU | OCP_USER_SDMA,
--};
--
--
- /* l4_per -> timer3 */
- static struct omap_hwmod_ocp_if omap3xxx_l4_per__timer3 = {
- 	.master		= &omap3xxx_l4_per_hwmod,
-@@ -1965,15 +1869,6 @@ static struct omap_hwmod_ocp_if omap3xxx_l4_core__timer11 = {
- 	.user		= OCP_USER_MPU | OCP_USER_SDMA,
- };
- 
--
--/* l4_core -> timer12 */
--static struct omap_hwmod_ocp_if omap3xxx_l4_sec__timer12 = {
--	.master		= &omap3xxx_l4_sec_hwmod,
--	.slave		= &omap3xxx_timer12_hwmod,
--	.clk		= "gpt12_ick",
--	.user		= OCP_USER_MPU | OCP_USER_SDMA,
--};
--
- /* l4_wkup -> wd_timer2 */
- 
- static struct omap_hwmod_ocp_if omap3xxx_l4_wkup__wd_timer2 = {
-@@ -2325,16 +2220,6 @@ static struct omap_hwmod_ocp_if omap3xxx_l4_core__hdq1w = {
- 	.flags		= OMAP_FIREWALL_L4 | OCPIF_SWSUP_IDLE,
- };
- 
--/* l4_wkup -> 32ksync_counter */
--
--
--static struct omap_hwmod_ocp_if omap3xxx_l4_wkup__counter_32k = {
--	.master		= &omap3xxx_l4_wkup_hwmod,
--	.slave		= &omap3xxx_counter_32k_hwmod,
--	.clk		= "omap_32ksync_ick",
--	.user		= OCP_USER_MPU | OCP_USER_SDMA,
--};
--
- /* am35xx has Davinci MDIO & EMAC */
- static struct omap_hwmod_class am35xx_mdio_class = {
- 	.name = "davinci_mdio",
-@@ -2551,8 +2436,6 @@ static struct omap_hwmod_ocp_if *omap3xxx_hwmod_ocp_ifs[] __initdata = {
- 	&omap3_l4_core__i2c2,
- 	&omap3_l4_core__i2c3,
- 	&omap3xxx_l4_wkup__l4_sec,
--	&omap3xxx_l4_wkup__timer1,
--	&omap3xxx_l4_per__timer2,
- 	&omap3xxx_l4_per__timer3,
- 	&omap3xxx_l4_per__timer4,
- 	&omap3xxx_l4_per__timer5,
-@@ -2580,27 +2463,10 @@ static struct omap_hwmod_ocp_if *omap3xxx_hwmod_ocp_ifs[] __initdata = {
- 	&omap34xx_l4_core__mcspi2,
- 	&omap34xx_l4_core__mcspi3,
- 	&omap34xx_l4_core__mcspi4,
--	&omap3xxx_l4_wkup__counter_32k,
- 	&omap3xxx_l3_main__gpmc,
- 	NULL,
- };
- 
--/* GP-only hwmod links */
--static struct omap_hwmod_ocp_if *omap34xx_gp_hwmod_ocp_ifs[] __initdata = {
--	&omap3xxx_l4_sec__timer12,
--	NULL,
--};
--
--static struct omap_hwmod_ocp_if *omap36xx_gp_hwmod_ocp_ifs[] __initdata = {
--	&omap3xxx_l4_sec__timer12,
--	NULL,
--};
--
--static struct omap_hwmod_ocp_if *am35xx_gp_hwmod_ocp_ifs[] __initdata = {
--	&omap3xxx_l4_sec__timer12,
--	NULL,
--};
--
- /* crypto hwmod links */
- static struct omap_hwmod_ocp_if *omap34xx_sham_hwmod_ocp_ifs[] __initdata = {
- 	&omap3xxx_l4_core__sham,
-@@ -2774,7 +2640,7 @@ static bool __init omap3xxx_hwmod_is_hs_ip_block_usable(struct device_node *bus,
- int __init omap3xxx_hwmod_init(void)
+ void set_cntfreq(void)
  {
- 	int r;
--	struct omap_hwmod_ocp_if **h = NULL, **h_gp = NULL, **h_sham = NULL;
-+	struct omap_hwmod_ocp_if **h = NULL, **h_sham = NULL;
- 	struct omap_hwmod_ocp_if **h_aes = NULL;
- 	struct device_node *bus;
- 	unsigned int rev;
-@@ -2797,18 +2663,15 @@ int __init omap3xxx_hwmod_init(void)
- 	    rev == OMAP3430_REV_ES2_1 || rev == OMAP3430_REV_ES3_0 ||
- 	    rev == OMAP3430_REV_ES3_1 || rev == OMAP3430_REV_ES3_1_2) {
- 		h = omap34xx_hwmod_ocp_ifs;
--		h_gp = omap34xx_gp_hwmod_ocp_ifs;
- 		h_sham = omap34xx_sham_hwmod_ocp_ifs;
- 		h_aes = omap34xx_aes_hwmod_ocp_ifs;
- 	} else if (rev == AM35XX_REV_ES1_0 || rev == AM35XX_REV_ES1_1) {
- 		h = am35xx_hwmod_ocp_ifs;
--		h_gp = am35xx_gp_hwmod_ocp_ifs;
- 		h_sham = am35xx_sham_hwmod_ocp_ifs;
- 		h_aes = am35xx_aes_hwmod_ocp_ifs;
- 	} else if (rev == OMAP3630_REV_ES1_0 || rev == OMAP3630_REV_ES1_1 ||
- 		   rev == OMAP3630_REV_ES1_2) {
- 		h = omap36xx_hwmod_ocp_ifs;
--		h_gp = omap36xx_gp_hwmod_ocp_ifs;
- 		h_sham = omap36xx_sham_hwmod_ocp_ifs;
- 		h_aes = omap36xx_aes_hwmod_ocp_ifs;
- 	} else {
-@@ -2820,13 +2683,6 @@ int __init omap3xxx_hwmod_init(void)
- 	if (r < 0)
- 		return r;
- 
--	/* Register GP-only hwmod links. */
--	if (h_gp && omap_type() == OMAP2_DEVICE_TYPE_GP) {
--		r = omap_hwmod_register_links(h_gp);
--		if (r < 0)
--			return r;
+ 	omap_smc1(OMAP5_DRA7_MON_SET_CNTFRQ_INDEX, arch_timer_freq);
+ }
+-#endif
+-
+-static irqreturn_t omap2_gp_timer_interrupt(int irq, void *dev_id)
+-{
+-	struct clock_event_device *evt = &clockevent_gpt;
+-
+-	__omap_dm_timer_write_status(&clkev, OMAP_TIMER_INT_OVERFLOW);
+-
+-	evt->event_handler(evt);
+-	return IRQ_HANDLED;
+-}
+-
+-static int omap2_gp_timer_set_next_event(unsigned long cycles,
+-					 struct clock_event_device *evt)
+-{
+-	__omap_dm_timer_load_start(&clkev, OMAP_TIMER_CTRL_ST,
+-				   0xffffffff - cycles, OMAP_TIMER_POSTED);
+-
+-	return 0;
+-}
+-
+-static int omap2_gp_timer_shutdown(struct clock_event_device *evt)
+-{
+-	__omap_dm_timer_stop(&clkev, OMAP_TIMER_POSTED, clkev.rate);
+-	return 0;
+-}
+-
+-static int omap2_gp_timer_set_periodic(struct clock_event_device *evt)
+-{
+-	u32 period;
+-
+-	__omap_dm_timer_stop(&clkev, OMAP_TIMER_POSTED, clkev.rate);
+-
+-	period = clkev.rate / HZ;
+-	period -= 1;
+-	/* Looks like we need to first set the load value separately */
+-	__omap_dm_timer_write(&clkev, OMAP_TIMER_LOAD_REG, 0xffffffff - period,
+-			      OMAP_TIMER_POSTED);
+-	__omap_dm_timer_load_start(&clkev,
+-				   OMAP_TIMER_CTRL_AR | OMAP_TIMER_CTRL_ST,
+-				   0xffffffff - period, OMAP_TIMER_POSTED);
+-	return 0;
+-}
+-
+-static void omap_clkevt_idle(struct clock_event_device *unused)
+-{
+-	if (!clockevent_gpt_hwmod)
+-		return;
+-
+-	omap_hwmod_idle(clockevent_gpt_hwmod);
+-}
+-
+-static void omap_clkevt_unidle(struct clock_event_device *unused)
+-{
+-	if (!clockevent_gpt_hwmod)
+-		return;
+-
+-	omap_hwmod_enable(clockevent_gpt_hwmod);
+-	__omap_dm_timer_int_enable(&clkev, OMAP_TIMER_INT_OVERFLOW);
+-}
+-
+-static struct clock_event_device clockevent_gpt = {
+-	.features		= CLOCK_EVT_FEAT_PERIODIC |
+-				  CLOCK_EVT_FEAT_ONESHOT,
+-	.rating			= 300,
+-	.set_next_event		= omap2_gp_timer_set_next_event,
+-	.set_state_shutdown	= omap2_gp_timer_shutdown,
+-	.set_state_periodic	= omap2_gp_timer_set_periodic,
+-	.set_state_oneshot	= omap2_gp_timer_shutdown,
+-	.tick_resume		= omap2_gp_timer_shutdown,
+-};
+-
+-static const struct of_device_id omap_timer_match[] __initconst = {
+-	{ .compatible = "ti,omap2420-timer", },
+-	{ .compatible = "ti,omap3430-timer", },
+-	{ .compatible = "ti,omap4430-timer", },
+-	{ .compatible = "ti,omap5430-timer", },
+-	{ .compatible = "ti,dm814-timer", },
+-	{ .compatible = "ti,dm816-timer", },
+-	{ .compatible = "ti,am335x-timer", },
+-	{ .compatible = "ti,am335x-timer-1ms", },
+-	{ }
+-};
+-
+-static int omap_timer_add_disabled_property(struct device_node *np)
+-{
+-	struct property *prop;
+-
+-	prop = kzalloc(sizeof(*prop), GFP_KERNEL);
+-	if (!prop)
+-		return -ENOMEM;
+-
+-	prop->name = "status";
+-	prop->value = "disabled";
+-	prop->length = strlen(prop->value);
+-
+-	return of_add_property(np, prop);
+-}
+-
+-static int omap_timer_update_dt(struct device_node *np)
+-{
+-	int error = 0;
+-
+-	if (!of_device_is_compatible(np, "ti,omap-counter32k")) {
+-		error = omap_timer_add_disabled_property(np);
+-		if (error)
+-			return error;
 -	}
 -
- 	/*
- 	 * Register crypto hwmod links only if they are not disabled in DT.
- 	 * If DT information is missing, enable them only for GP devices.
+-	/* No parent interconnect target module configured? */
+-	if (of_get_property(np, "ti,hwmods", NULL))
+-		return error;
+-
+-	/* Tag parent interconnect target module disabled */
+-	error = omap_timer_add_disabled_property(np->parent);
+-	if (error)
+-		return error;
+-
+-	return 0;
+-}
+-
+-/**
+- * omap_get_timer_dt - get a timer using device-tree
+- * @match	- device-tree match structure for matching a device type
+- * @property	- optional timer property to match
+- *
+- * Helper function to get a timer during early boot using device-tree for use
+- * as kernel system timer. Optionally, the property argument can be used to
+- * select a timer with a specific property. Once a timer is found then mark
+- * the timer node in device-tree as disabled, to prevent the kernel from
+- * registering this timer as a platform device and so no one else can use it.
+- */
+-static struct device_node * __init omap_get_timer_dt(const struct of_device_id *match,
+-						     const char *property)
+-{
+-	struct device_node *np;
+-	int error;
+-
+-	for_each_matching_node(np, match) {
+-		if (!of_device_is_available(np))
+-			continue;
+-
+-		if (property && !of_get_property(np, property, NULL))
+-			continue;
+-
+-		if (!property && (of_get_property(np, "ti,timer-alwon", NULL) ||
+-				  of_get_property(np, "ti,timer-dsp", NULL) ||
+-				  of_get_property(np, "ti,timer-pwm", NULL) ||
+-				  of_get_property(np, "ti,timer-secure", NULL)))
+-			continue;
+-
+-		error = omap_timer_update_dt(np);
+-		WARN(error, "%s: Could not update dt: %i\n", __func__, error);
+-
+-		return np;
+-	}
+-
+-	return NULL;
+-}
+-
+-/**
+- * omap_dmtimer_init - initialisation function when device tree is used
+- *
+- * For secure OMAP3/DRA7xx devices, timers with device type "timer-secure"
+- * cannot be used by the kernel as they are reserved. Therefore, to prevent the
+- * kernel registering these devices remove them dynamically from the device
+- * tree on boot.
+- */
+-static void __init omap_dmtimer_init(void)
+-{
+-	struct device_node *np;
+-
+-	if (!cpu_is_omap34xx() && !soc_is_dra7xx())
+-		return;
+-
+-	/* If we are a secure device, remove any secure timer nodes */
+-	if ((omap_type() != OMAP2_DEVICE_TYPE_GP)) {
+-		np = omap_get_timer_dt(omap_timer_match, "ti,timer-secure");
+-		of_node_put(np);
+-	}
+-}
+-
+-/**
+- * omap_dm_timer_get_errata - get errata flags for a timer
+- *
+- * Get the timer errata flags that are specific to the OMAP device being used.
+- */
+-static u32 __init omap_dm_timer_get_errata(void)
+-{
+-	if (cpu_is_omap24xx())
+-		return 0;
+-
+-	return OMAP_TIMER_ERRATA_I103_I767;
+-}
+-
+-static int __init omap_dm_timer_init_one(struct omap_dm_timer *timer,
+-					 const char *fck_source,
+-					 const char *property,
+-					 const char **timer_name,
+-					 int posted)
+-{
+-	const char *oh_name = NULL;
+-	struct device_node *np;
+-	struct omap_hwmod *oh;
+-	struct clk *src;
+-	int r = 0;
+-
+-	np = omap_get_timer_dt(omap_timer_match, property);
+-	if (!np)
+-		return -ENODEV;
+-
+-	of_property_read_string_index(np, "ti,hwmods", 0, &oh_name);
+-	if (!oh_name) {
+-		of_property_read_string_index(np->parent, "ti,hwmods", 0,
+-					      &oh_name);
+-		if (!oh_name)
+-			return -ENODEV;
+-	}
+-
+-	timer->irq = irq_of_parse_and_map(np, 0);
+-	if (!timer->irq)
+-		return -ENXIO;
+-
+-	timer->io_base = of_iomap(np, 0);
+-
+-	timer->fclk = of_clk_get_by_name(np, "fck");
+-
+-	of_node_put(np);
+-
+-	oh = omap_hwmod_lookup(oh_name);
+-	if (!oh)
+-		return -ENODEV;
+-
+-	*timer_name = oh->name;
+-
+-	if (!timer->io_base)
+-		return -ENXIO;
+-
+-	omap_hwmod_setup_one(oh_name);
+-
+-	/* After the dmtimer is using hwmod these clocks won't be needed */
+-	if (IS_ERR_OR_NULL(timer->fclk))
+-		timer->fclk = clk_get(NULL, omap_hwmod_get_main_clk(oh));
+-	if (IS_ERR(timer->fclk))
+-		return PTR_ERR(timer->fclk);
+-
+-	src = clk_get(NULL, fck_source);
+-	if (IS_ERR(src))
+-		return PTR_ERR(src);
+-
+-	WARN(clk_set_parent(timer->fclk, src) < 0,
+-	     "Cannot set timer parent clock, no PLL clock driver?");
+-
+-	clk_put(src);
+-
+-	omap_hwmod_enable(oh);
+-	__omap_dm_timer_init_regs(timer);
+-
+-	if (posted)
+-		__omap_dm_timer_enable_posted(timer);
+-
+-	/* Check that the intended posted configuration matches the actual */
+-	if (posted != timer->posted)
+-		return -EINVAL;
+-
+-	timer->rate = clk_get_rate(timer->fclk);
+-	timer->reserved = 1;
+-
+-	return r;
+-}
+ 
+ #if !defined(CONFIG_SMP) && defined(CONFIG_GENERIC_CLOCKEVENTS_BROADCAST)
+ void tick_broadcast(const struct cpumask *mask)
+@@ -356,226 +52,6 @@ void tick_broadcast(const struct cpumask *mask)
+ }
+ #endif
+ 
+-static void __init omap2_gp_clockevent_init(int gptimer_id,
+-						const char *fck_source,
+-						const char *property)
+-{
+-	int res;
+-
+-	clkev.id = gptimer_id;
+-	clkev.errata = omap_dm_timer_get_errata();
+-
+-	/*
+-	 * For clock-event timers we never read the timer counter and
+-	 * so we are not impacted by errata i103 and i767. Therefore,
+-	 * we can safely ignore this errata for clock-event timers.
+-	 */
+-	__omap_dm_timer_override_errata(&clkev, OMAP_TIMER_ERRATA_I103_I767);
+-
+-	res = omap_dm_timer_init_one(&clkev, fck_source, property,
+-				     &clockevent_gpt.name, OMAP_TIMER_POSTED);
+-	BUG_ON(res);
+-
+-	if (request_irq(clkev.irq, omap2_gp_timer_interrupt,
+-			IRQF_TIMER | IRQF_IRQPOLL, "gp_timer", &clkev))
+-		pr_err("Failed to request irq %d (gp_timer)\n", clkev.irq);
+-
+-	__omap_dm_timer_int_enable(&clkev, OMAP_TIMER_INT_OVERFLOW);
+-
+-	clockevent_gpt.cpumask = cpu_possible_mask;
+-	clockevent_gpt.irq = omap_dm_timer_get_irq(&clkev);
+-	clockevents_config_and_register(&clockevent_gpt, clkev.rate,
+-					3, /* Timer internal resynch latency */
+-					0xffffffff);
+-
+-	if (soc_is_am33xx() || soc_is_am43xx()) {
+-		clockevent_gpt.suspend = omap_clkevt_idle;
+-		clockevent_gpt.resume = omap_clkevt_unidle;
+-
+-		clockevent_gpt_hwmod =
+-			omap_hwmod_lookup(clockevent_gpt.name);
+-	}
+-
+-	pr_info("OMAP clockevent source: %s at %lu Hz\n", clockevent_gpt.name,
+-		clkev.rate);
+-}
+-
+-/* Clocksource code */
+-static struct omap_dm_timer clksrc;
+-static bool use_gptimer_clksrc __initdata;
+-
+-/*
+- * clocksource
+- */
+-static u64 clocksource_read_cycles(struct clocksource *cs)
+-{
+-	return (u64)__omap_dm_timer_read_counter(&clksrc,
+-						     OMAP_TIMER_NONPOSTED);
+-}
+-
+-static struct clocksource clocksource_gpt = {
+-	.rating		= 300,
+-	.read		= clocksource_read_cycles,
+-	.mask		= CLOCKSOURCE_MASK(32),
+-	.flags		= CLOCK_SOURCE_IS_CONTINUOUS,
+-};
+-
+-static u64 notrace dmtimer_read_sched_clock(void)
+-{
+-	if (clksrc.reserved)
+-		return __omap_dm_timer_read_counter(&clksrc,
+-						    OMAP_TIMER_NONPOSTED);
+-
+-	return 0;
+-}
+-
+-static const struct of_device_id omap_counter_match[] __initconst = {
+-	{ .compatible = "ti,omap-counter32k", },
+-	{ }
+-};
+-
+-/* Setup free-running counter for clocksource */
+-static int __init __maybe_unused omap2_sync32k_clocksource_init(void)
+-{
+-	int ret;
+-	struct device_node *np = NULL;
+-	struct omap_hwmod *oh;
+-	const char *oh_name = "counter_32k";
+-
+-	/*
+-	 * See if the 32kHz counter is supported.
+-	 */
+-	np = omap_get_timer_dt(omap_counter_match, NULL);
+-	if (!np)
+-		return -ENODEV;
+-
+-	of_property_read_string_index(np->parent, "ti,hwmods", 0, &oh_name);
+-	if (!oh_name) {
+-		of_property_read_string_index(np, "ti,hwmods", 0, &oh_name);
+-		if (!oh_name)
+-			return -ENODEV;
+-	}
+-
+-	/*
+-	 * First check hwmod data is available for sync32k counter
+-	 */
+-	oh = omap_hwmod_lookup(oh_name);
+-	if (!oh || oh->slaves_cnt == 0)
+-		return -ENODEV;
+-
+-	omap_hwmod_setup_one(oh_name);
+-
+-	ret = omap_hwmod_enable(oh);
+-	if (ret) {
+-		pr_warn("%s: failed to enable counter_32k module (%d)\n",
+-							__func__, ret);
+-		return ret;
+-	}
+-
+-	return ret;
+-}
+-
+-static unsigned int omap2_gptimer_clksrc_load;
+-
+-static void omap2_gptimer_clksrc_suspend(struct clocksource *unused)
+-{
+-	omap2_gptimer_clksrc_load =
+-		__omap_dm_timer_read_counter(&clksrc, OMAP_TIMER_NONPOSTED);
+-
+-	omap_hwmod_idle(clocksource_gpt_hwmod);
+-}
+-
+-static void omap2_gptimer_clksrc_resume(struct clocksource *unused)
+-{
+-	omap_hwmod_enable(clocksource_gpt_hwmod);
+-
+-	__omap_dm_timer_load_start(&clksrc,
+-				   OMAP_TIMER_CTRL_ST | OMAP_TIMER_CTRL_AR,
+-				   omap2_gptimer_clksrc_load,
+-				   OMAP_TIMER_NONPOSTED);
+-}
+-
+-static void __init omap2_gptimer_clocksource_init(int gptimer_id,
+-						  const char *fck_source,
+-						  const char *property)
+-{
+-	int res;
+-
+-	clksrc.id = gptimer_id;
+-	clksrc.errata = omap_dm_timer_get_errata();
+-
+-	res = omap_dm_timer_init_one(&clksrc, fck_source, property,
+-				     &clocksource_gpt.name,
+-				     OMAP_TIMER_NONPOSTED);
+-
+-	if (soc_is_am43xx()) {
+-		clocksource_gpt.suspend = omap2_gptimer_clksrc_suspend;
+-		clocksource_gpt.resume = omap2_gptimer_clksrc_resume;
+-
+-		clocksource_gpt_hwmod =
+-			omap_hwmod_lookup(clocksource_gpt.name);
+-	}
+-
+-	BUG_ON(res);
+-
+-	__omap_dm_timer_load_start(&clksrc,
+-				   OMAP_TIMER_CTRL_ST | OMAP_TIMER_CTRL_AR, 0,
+-				   OMAP_TIMER_NONPOSTED);
+-	sched_clock_register(dmtimer_read_sched_clock, 32, clksrc.rate);
+-
+-	if (clocksource_register_hz(&clocksource_gpt, clksrc.rate))
+-		pr_err("Could not register clocksource %s\n",
+-			clocksource_gpt.name);
+-	else
+-		pr_info("OMAP clocksource: %s at %lu Hz\n",
+-			clocksource_gpt.name, clksrc.rate);
+-}
+-
+-static void __init __omap_sync32k_timer_init(int clkev_nr, const char *clkev_src,
+-		const char *clkev_prop, int clksrc_nr, const char *clksrc_src,
+-		const char *clksrc_prop, bool gptimer)
+-{
+-	omap_clk_init();
+-	omap_dmtimer_init();
+-	omap2_gp_clockevent_init(clkev_nr, clkev_src, clkev_prop);
+-
+-	/* Enable the use of clocksource="gp_timer" kernel parameter */
+-	if (clksrc_nr && (use_gptimer_clksrc || gptimer))
+-		omap2_gptimer_clocksource_init(clksrc_nr, clksrc_src,
+-						clksrc_prop);
+-	else
+-		omap2_sync32k_clocksource_init();
+-}
+-
+-void __init omap_init_time(void)
+-{
+-	__omap_sync32k_timer_init(1, "timer_32k_ck", "ti,timer-alwon",
+-			2, "timer_sys_ck", NULL, false);
+-
+-	timer_probe();
+-}
+-
+-#if defined(CONFIG_ARCH_OMAP3) || defined(CONFIG_SOC_AM43XX)
+-void __init omap3_secure_sync32k_timer_init(void)
+-{
+-	__omap_sync32k_timer_init(12, "secure_32k_fck", "ti,timer-secure",
+-			2, "timer_sys_ck", NULL, false);
+-
+-	timer_probe();
+-}
+-#endif /* CONFIG_ARCH_OMAP3 */
+-
+-#if defined(CONFIG_ARCH_OMAP3) || defined(CONFIG_SOC_AM33XX) || \
+-	defined(CONFIG_SOC_AM43XX)
+-void __init omap3_gptimer_timer_init(void)
+-{
+-	__omap_sync32k_timer_init(2, "timer_sys_ck", NULL,
+-			1, "timer_sys_ck", "ti,timer-alwon", true);
+-	if (of_have_populated_dt())
+-		timer_probe();
+-}
+-#endif
+-
+ #if defined(CONFIG_SOC_OMAP5) || defined(CONFIG_SOC_DRA7XX)
+ 
+ /*
+@@ -589,7 +65,6 @@ void __init omap3_gptimer_timer_init(void)
+  */
+ static void __init realtime_counter_init(void)
+ {
+-#ifdef CONFIG_SOC_HAS_REALTIME_COUNTER
+ 	void __iomem *base;
+ 	static struct clk *sys_clk;
+ 	unsigned long rate;
+@@ -688,7 +163,6 @@ static void __init realtime_counter_init(void)
+ 	set_cntfreq();
+ 
+ 	iounmap(base);
+-#endif
+ }
+ 
+ void __init omap5_realtime_timer_init(void)
+@@ -699,28 +173,3 @@ void __init omap5_realtime_timer_init(void)
+ 	timer_probe();
+ }
+ #endif /* CONFIG_SOC_OMAP5 || CONFIG_SOC_DRA7XX */
+-
+-/**
+- * omap2_override_clocksource - clocksource override with user configuration
+- *
+- * Allows user to override default clocksource, using kernel parameter
+- *   clocksource="gp_timer"	(For all OMAP2PLUS architectures)
+- *
+- * Note that, here we are using same standard kernel parameter "clocksource=",
+- * and not introducing any OMAP specific interface.
+- */
+-static int __init omap2_override_clocksource(char *str)
+-{
+-	if (!str)
+-		return 0;
+-	/*
+-	 * For OMAP architecture, we only have two options
+-	 *    - sync_32k (default)
+-	 *    - gp_timer (sys_clk based)
+-	 */
+-	if (!strcmp(str, "gp_timer"))
+-		use_gptimer_clksrc = true;
+-
+-	return 0;
+-}
+-early_param("clocksource", omap2_override_clocksource);
 -- 
 2.26.1
