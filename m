@@ -2,113 +2,192 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3C41C2D0EF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 12:49:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72AD6C2D0EF
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 12:50:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C8FDF208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 12:49:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F30F208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 12:50:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587127809;
+	bh=1Kssa3G/QCo5jRCKyBkgrgk7TiSh1kwDD4fBjcBMC70=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=fsrVQPeKFGtW/QJen5a67F1vr3Iz4yoISIehg7u+vwou7aAy2Cq/sUKCZsknHDFfj
+	 dqajLN+tWkI0OtRs2xVEMvj/hKFu3IQOCvzxRjJM6z51dQT8d0cPL9NB2R+Fhbn2dm
+	 N8B/bwU5H0Gw1rJAbhblv/mG0cg19qjyxXQhCNz0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729776AbgDQMt6 (ORCPT
+        id S1729867AbgDQMuI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 08:49:58 -0400
-Received: from mga07.intel.com ([134.134.136.100]:13467 "EHLO mga07.intel.com"
+        Fri, 17 Apr 2020 08:50:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39132 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727877AbgDQMt6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 08:49:58 -0400
-IronPort-SDR: d25U/x8aQ1ROBIR8GmF/MVnTSSJO/15a+p5knOvCm6CoiPnhR+CA1NS08Qot4HenMIMUT/mHy+
- NZS1TXiFvwAg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2020 05:49:57 -0700
-IronPort-SDR: u91vT/8R96PqqOwJZ/zmjrYrVjxn5h++dhiMGTpcQXN/WIusuJSIcX+L8EUakarT17Zf+5T1Rb
- I/aeL3P+rWOw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,395,1580803200"; 
-   d="scan'208";a="364320718"
-Received: from lzhu11-mobl1.ccr.corp.intel.com (HELO [10.254.212.68]) ([10.254.212.68])
-  by fmsmga001.fm.intel.com with ESMTP; 17 Apr 2020 05:49:54 -0700
-Cc:     baolu.lu@linux.intel.com, Joerg Roedel <joro@8bytes.org>,
-        ashok.raj@intel.com, jacob.jun.pan@linux.intel.com,
-        kevin.tian@intel.com,
-        Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        Daniel Drake <drake@endlessm.com>,
-        Derrick Jonathan <jonathan.derrick@intel.com>,
-        Jerry Snitselaar <jsnitsel@redhat.com>,
-        Robin Murphy <robin.murphy@arm.com>
-Subject: Re: [PATCH v3 1/3] iommu/vt-d: Allow 32bit devices to uses DMA domain
-To:     Christoph Hellwig <hch@lst.de>
-References: <20200416062354.10307-1-baolu.lu@linux.intel.com>
- <20200416062354.10307-2-baolu.lu@linux.intel.com>
- <20200416070102.GA12588@lst.de>
- <e11d8138-f704-2f5e-c0b1-70b367a33d5d@linux.intel.com>
- <20200417065054.GA18880@lst.de>
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-Message-ID: <741e4882-969f-b102-f91a-f2ef86b6fb90@linux.intel.com>
-Date:   Fri, 17 Apr 2020 20:49:53 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-MIME-Version: 1.0
-In-Reply-To: <20200417065054.GA18880@lst.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+        id S1727877AbgDQMuH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Apr 2020 08:50:07 -0400
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E52042083E;
+        Fri, 17 Apr 2020 12:50:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587127806;
+        bh=1Kssa3G/QCo5jRCKyBkgrgk7TiSh1kwDD4fBjcBMC70=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=2SHu1HjYaq+TUUvOFDh4rRrPGE6erjABlIPm/oYjVffmYc3Po6EJLX6WpPqoJLKFB
+         x8U/cj4n5jria1Y1NHVeXCy8i714yrYSGRhb/Pctx6gILbNZMLN0L6RoLRqN3y4kR3
+         cY2VKGNJFQZzlfQ6mXT+bDZNQlh5C3ufeAzFZ6ZM=
+Date:   Fri, 17 Apr 2020 21:50:00 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Joerg Roedel <joro@8bytes.org>
+Cc:     Borislav Petkov <bp@alien8.de>, Joerg Roedel <jroedel@suse.de>,
+        x86@kernel.org, hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Jiri Slaby <jslaby@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Juergen Gross <jgross@suse.com>,
+        Kees Cook <keescook@chromium.org>,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org
+Subject: Re: [PATCH 05/70] x86/insn: Make inat-tables.c suitable for
+ pre-decompression code
+Message-Id: <20200417215000.47141001f80005f41153d22e@kernel.org>
+In-Reply-To: <20200416152406.GB4290@8bytes.org>
+References: <20200319091407.1481-1-joro@8bytes.org>
+        <20200319091407.1481-6-joro@8bytes.org>
+        <20200325153945.GD27261@zn.tnic>
+        <20200327120232.c8e455ca100dc0d96e4ddc43@kernel.org>
+        <20200416152406.GB4290@8bytes.org>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Christoph,
+On Thu, 16 Apr 2020 17:24:06 +0200
+Joerg Roedel <joro@8bytes.org> wrote:
 
-On 2020/4/17 14:50, Christoph Hellwig wrote:
-> On Thu, Apr 16, 2020 at 03:40:38PM +0800, Lu Baolu wrote:
->>> description.  I'd need to look at the final code, but it seems like
->>> this will still cause bounce buffering instead of using dynamic
->>> mapping, which still seems like an awful idea.
->>
->> Yes. If the user chooses to use identity domain by default through
->> kernel command, identity domain will be applied for all devices. For
->> those devices with limited addressing capability, bounce buffering will
->> be used when they try to access the memory beyond their address
->> capability. This won't cause any kernel regression as far as I can see.
->>
->> Switching domain during runtime with drivers loaded will cause real
->> problems as I said in the commit message. That's the reason why I am
->> proposing to remove it. If we want to keep it, we have to make sure that
->> switching domain for one device should not impact other devices which
->> share the same domain with it. Furthermore, it's better to implement it
->> in the generic layer to keep device driver behavior consistent on all
->> architectures.
+> Hi Masami,
 > 
-> I don't disagree with the technical points.  What I pointed out is that
+> On Fri, Mar 27, 2020 at 12:02:32PM +0900, Masami Hiramatsu wrote:
+> > On Wed, 25 Mar 2020 16:39:45 +0100
+> > Borislav Petkov <bp@alien8.de> wrote:
+> > 
+> > > + Masami.
+> > > 
+> > > On Thu, Mar 19, 2020 at 10:13:02AM +0100, Joerg Roedel wrote:
+> > > > From: Joerg Roedel <jroedel@suse.de>
+> > > > 
+> > > > The inat-tables.c file has some arrays in it that contain pointers to
+> > > > other arrays. These pointers need to be relocated when the kernel
+> > > > image is moved to a different location.
+> > > > 
+> > > > The pre-decompression boot-code has no support for applying ELF
+> > > > relocations, so initialize these arrays at runtime in the
+> > > > pre-decompression code to make sure all pointers are correctly
+> > > > initialized.
+> > 
+> > I need to check the whole series, but as far as I can understand from
+> > this patch, this seems not allowing to store the address value in
+> > static pointers. It may break more things, for example _kprobe_blacklist
+> > records the NOKPROBE_SYMBOL() symbol addresses at the build time.
 > 
->   a) the actual technical change is not in the commit log, which it
->      should be
+> The runtime-initialization function is only used in the
+> pre-decompression boot code (arch/x86/boot/compressed/) which is not
+> part of the running kernel image. At that stage of booting there is no
+> support for kprobe or tracing or any other neat features that might
+> break things here.
 
-Sorry! I should make the commit message more comprehensive.
+Ah, I got it. So you intended to port the instruction decoder to
+pre-decompression boot code, correct?
 
->   b) that I still think taking away the ability to dynamically map
->      devices in the identify domain after all the time we allowed for
->      that is going to cause nasty regressions.
+> > > > +	print "#ifndef __BOOT_COMPRESSED\n"
+> > > > +
+> > > >  	# print escape opcode map's array
+> > > >  	print "/* Escape opcode map array */"
+> > > >  	print "const insn_attr_t * const inat_escape_tables[INAT_ESC_MAX + 1]" \
+> > > > @@ -388,6 +391,51 @@ END {
+> > > >  		for (j = 0; j < max_lprefix; j++)
+> > > >  			if (atable[i,j])
+> > > >  				print "	["i"]["j"] = "atable[i,j]","
+> > > > -	print "};"
+> > > > +	print "};\n"
+> > > > +
+> > > > +	print "#else /* !__BOOT_COMPRESSED */\n"
+> > 
+> > I think the definitions of inat_*_tables can be shared in both case.
+> > If __BOOT_COMPRESSED is set, we can define inat_init_tables() as a
+> > initialize function, and if not, it will be just a dummy "do {} while (0)".
 > 
+> The inat_*_tables are all declared const, so this way it is not possible
+> to change them at runtime.
 
-This change just asks Intel IOMMU driver to use the default domain
-specified by the generic default domain framework, just like what other
-vendor iommu drivers do. I understand that some users wants to use DMA
-domain for some specific devices when the default domain type is
-identity, and vice versa, use identity domain for some devices while
-default one is DMA. I think Sai's patch series posted at
+Indeed.
 
-https://www.spinics.net/lists/iommu/msg41680.html
+> For the running kernel image this is fine, as
+> there are ELF relocations which fix things up, but at the
+> pre-decompression boot stage there are no ELF relocations which can fix
+> the tables, so the pointers in there need to be initialized at runtime.
 
-is a good start. It changes the default domain with all device drivers
-unbound in the generic layer, hence every vendor iommu driver could
-benefit from it.
+OK.
 
-Best regards,
-baolu
+> 
+> > BTW, where is the __BOOT_COMPRESSED defined?
+> 
+> It is defined in arch/x86/boot/compressed/sev-es.c by patch
+> 
+> 	x86/boot/compressed/64: Setup GHCB Based VC Exception handler
+> 
+> which also includes parts of the instruction decoder into the
+> pre-decompression boot code and adds the only call-site for
+> inat_init_tables().
+
+Thanks, I understand it.
+
+> 
+> > > > +	print "static void inat_init_tables(void)"
+> > 
+> > This functions should be "inline".
+> > And I can not see the call-site of inat_init_tables() in this patch.
+> 
+> The call-site is added with the patch that includes the
+> instruction decoder into the pre-decompression code. If possible I'd
+> like to keep those things separate, as both patches are already pretty
+> big by themselfes (and they do different things, in different parts of
+> the code).
+
+OK, if you will send v2, please CC both to me.
+
+> 
+> > If possible, please include call-site with definition (especially
+> > new init function) so that I can check the init call timing too.
+> 
+> The function is called at the first #VC exception after a GHCB has been
+> set up. Call-path is: boot_vc_handler -> sev_es_setup_ghcb ->
+> inat_init_tables.
+
+sound good to me. 
+
+Thank you,
+
+> 
+> See
+> 
+> 	https://git.kernel.org/pub/scm/linux/kernel/git/joro/linux.git/tree/arch/x86/boot/compressed/sev-es.c?h=sev-es-client-v5.6-rc6
+> 
+> for the full code there.
+> 
+> Thanks,
+> 
+> 	Joerg
+
+
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
