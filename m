@@ -2,161 +2,126 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BBB8C2D0EF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 15:35:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE84DC352BE
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 15:36:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7BE3D21924
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 15:35:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF10D20936
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 15:36:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Ltd7kDcs"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="OdW7KdXp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729336AbgDQPfy (ORCPT
+        id S1729349AbgDQPgx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 11:35:54 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:47540 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728956AbgDQPfy (ORCPT
+        Fri, 17 Apr 2020 11:36:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45826 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728956AbgDQPgw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 11:35:54 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 03HFZq48090492;
-        Fri, 17 Apr 2020 10:35:52 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1587137752;
-        bh=hJeyNDpmGRXVeIvbuGZyC5Hmururm2U2J7LTl5PaVDY=;
-        h=Subject:From:To:CC:References:Date:In-Reply-To;
-        b=Ltd7kDcszWTv7cdimoUV3xi/9vpHRt6ZIJT8OoIEDhAAiIL4+01zakWMZuiOdW0Pk
-         zgQ78fyXxe4p27f8v6cPj+gs76KGPcJK1rjkVl3tRTsuEW2/sFhkRBbe6KjjVXmubA
-         5t7dgA+ooJ8spbgjF7zhemgG6n0r3dfgxDkRb0vU=
-Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 03HFZqp6065739
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 17 Apr 2020 10:35:52 -0500
-Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 17
- Apr 2020 10:35:52 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Fri, 17 Apr 2020 10:35:52 -0500
-Received: from [10.250.48.148] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03HFZpQm089838;
-        Fri, 17 Apr 2020 10:35:51 -0500
-Subject: Re: [PATCH v2 6/7] remoteproc: Split rproc_ops allocation from
- rproc_alloc()
-From:   Suman Anna <s-anna@ti.com>
-To:     Mathieu Poirier <mathieu.poirier@linaro.org>,
-        <bjorn.andersson@linaro.org>, <ohad@wizery.com>
-CC:     <elder@linaro.org>, <Markus.Elfring@web.de>,
-        <linux-remoteproc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20200415204858.2448-1-mathieu.poirier@linaro.org>
- <20200415204858.2448-7-mathieu.poirier@linaro.org>
- <61497230-40ec-ffc6-3cc0-e5cb754ac859@ti.com>
-Message-ID: <58eaa90a-9777-4abe-fbf7-229cc68a37aa@ti.com>
-Date:   Fri, 17 Apr 2020 10:35:51 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Fri, 17 Apr 2020 11:36:52 -0400
+Received: from mail.andi.de1.cc (mail.andi.de1.cc [IPv6:2a01:238:4321:8900:456f:ecd6:43e:202c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56E88C061A0C;
+        Fri, 17 Apr 2020 08:36:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=kemnade.info; s=20180802; h=Content-Transfer-Encoding:Content-Type:
+        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=vcwymhpAC/15yRZg8+DeqjyOHNYHJOED4/yGfBW+CMM=; b=OdW7KdXpbReAT9Bswx0vdyF4Bg
+        6QpD7/O0aVes/1sBIYlgy4IqVSSIqFm2hyOgN0xDYJ4Y5kND5Lyqvi2JfBk+I8YL5jwoy+FMS0G6X
+        PJaGK1/olpjxt0QG2APOlf86lc9vkTimQVdq1rB5+SO6naKsk199jtwlNw3Gyz7Nl8ZE=;
+Received: from p200300ccff0bc3001a3da2fffebfd33a.dip0.t-ipconnect.de ([2003:cc:ff0b:c300:1a3d:a2ff:febf:d33a] helo=aktux)
+        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <andreas@kemnade.info>)
+        id 1jPT2r-0008JZ-I8; Fri, 17 Apr 2020 17:36:46 +0200
+Date:   Fri, 17 Apr 2020 17:36:44 +0200
+From:   Andreas Kemnade <andreas@kemnade.info>
+To:     Tony Lindgren <tony@atomide.com>
+Cc:     "H. Nikolaus Schaller" <hns@goldelico.com>,
+        Evgeniy Polyakov <zbr@ioremap.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-omap <linux-omap@vger.kernel.org>,
+        Adam Ford <aford173@gmail.com>,
+        "Andrew F . Davis" <afd@ti.com>, Vignesh R <vigneshr@ti.com>
+Subject: Re: [PATCHv3] w1: omap-hdq: Simplify driver with PM runtime
+ autosuspend
+Message-ID: <20200417173644.03c99166@aktux>
+In-Reply-To: <20200417151447.GM37466@atomide.com>
+References: <20191217004048.46298-1-tony@atomide.com>
+        <7B8C7DD9-095B-48FC-9642-695D07B79E97@goldelico.com>
+        <20200416184638.GI37466@atomide.com>
+        <3197C3F0-DEB9-4221-AFBD-4F2A08C84C4C@goldelico.com>
+        <20200417164340.3d9043d1@aktux>
+        <6430AF54-849E-456B-8DB0-B4478BBDB78D@goldelico.com>
+        <20200417150721.GL37466@atomide.com>
+        <20200417151447.GM37466@atomide.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <61497230-40ec-ffc6-3cc0-e5cb754ac859@ti.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/17/20 8:49 AM, Suman Anna wrote:
-> On 4/15/20 3:48 PM, Mathieu Poirier wrote:
->> Make the rproc_ops allocation a function on its own in an effort
->> to clean up function rproc_alloc().
->>
->> Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
->> Reviewed-by: Alex Elder <elder@linaro.org>
->> ---
->>   drivers/remoteproc/remoteproc_core.c | 32 +++++++++++++++++-----------
->>   1 file changed, 20 insertions(+), 12 deletions(-)
->>
->> diff --git a/drivers/remoteproc/remoteproc_core.c 
->> b/drivers/remoteproc/remoteproc_core.c
->> index 0bfa6998705d..a5a0ceb86b3f 100644
->> --- a/drivers/remoteproc/remoteproc_core.c
->> +++ b/drivers/remoteproc/remoteproc_core.c
->> @@ -2001,6 +2001,25 @@ static int rproc_alloc_firmware(struct rproc 
->> *rproc,
->>       return 0;
->>   }
->> +static int rproc_alloc_ops(struct rproc *rproc, const struct 
->> rproc_ops *ops)
->> +{
->> +    rproc->ops = kmemdup(ops, sizeof(*ops), GFP_KERNEL);
->> +    if (!rproc->ops)
->> +        return -ENOMEM;
->> +
->> +    /* Default to ELF loader if no load function is specified */
->> +    if (!rproc->ops->load) {
->> +        rproc->ops->load = rproc_elf_load_segments;
->> +        rproc->ops->parse_fw = rproc_elf_load_rsc_table;
->> +        rproc->ops->find_loaded_rsc_table =
->> +                        rproc_elf_find_loaded_rsc_table;
->> +        rproc->ops->sanity_check = rproc_elf_sanity_check;
-> 
-> So, the conditional check on sanity check is dropped and the callback 
-> switched here without the changelog reflecting anything why. You should 
-> just rebase this patch on top of Clement's patch [1] that removes the 
-> conditional flag, and also usage from the remoteproc platform drivers.
-> 
-> regards
-> Suman
-> 
-> [1] https://patchwork.kernel.org/patch/11462013/
+On Fri, 17 Apr 2020 08:14:47 -0700
+Tony Lindgren <tony@atomide.com> wrote:
 
-Sorry, gave the wrong link, that was v1. This is the latest,
-https://patchwork.kernel.org/patch/11466955/
+> * Tony Lindgren <tony@atomide.com> [200417 15:08]:
+> > Maybe the PM runtime usecounts get unbalanced somewhere in the
+> > driver where we end up with driver permanently in disabled state?  
+> 
+> Or it could be that with omap_hdq.c no longer blocking SoC
+> deeper idle states, omap_hdq.c now loses context if you have
+> omap3 off mode enabled during idle?
+> 
+I run twice (to get mmc access cached):
 
-> 
-> 
->> +        rproc->ops->get_boot_addr = rproc_elf_get_boot_addr;
->> +    }
->> +
->> +    return 0;
->> +}
->> +
->>   /**
->>    * rproc_alloc() - allocate a remote processor handle
->>    * @dev: the underlying device
->> @@ -2040,8 +2059,7 @@ struct rproc *rproc_alloc(struct device *dev, 
->> const char *name,
->>       if (rproc_alloc_firmware(rproc, name, firmware))
->>           goto free_rproc;
->> -    rproc->ops = kmemdup(ops, sizeof(*ops), GFP_KERNEL);
->> -    if (!rproc->ops)
->> +    if (rproc_alloc_ops(rproc, ops))
->>           goto free_firmware;
->>       rproc->name = name;
->> @@ -2068,16 +2086,6 @@ struct rproc *rproc_alloc(struct device *dev, 
->> const char *name,
->>       atomic_set(&rproc->power, 0);
->> -    /* Default to ELF loader if no load function is specified */
->> -    if (!rproc->ops->load) {
->> -        rproc->ops->load = rproc_elf_load_segments;
->> -        rproc->ops->parse_fw = rproc_elf_load_rsc_table;
->> -        rproc->ops->find_loaded_rsc_table = 
->> rproc_elf_find_loaded_rsc_table;
->> -        if (!rproc->ops->sanity_check)
->> -            rproc->ops->sanity_check = rproc_elf32_sanity_check;
->> -        rproc->ops->get_boot_addr = rproc_elf_get_boot_addr;
->> -    }
->> -
->>       mutex_init(&rproc->lock);
->>       INIT_LIST_HEAD(&rproc->carveouts);
->>
-> 
+root@(none):/# sleep 15 ; /usr/local/bin/idledump >/run/idledump ; cat /sys/cla
+ss/power_supply/bq27000-battery/current_now ; cat /run/idledump 
+32665
+     CM_IDLEST1_CORE 00000042
+     CM_IDLEST3_CORE 00000000
+     CM_FCLKEN1_CORE 00000000
+     CM_FCLKEN3_CORE 00000002
+     CM_CLKSTST_CORE 00000003
+     CM_IDLEST_CKGEN 00000001
+    CM_IDLEST2_CKGEN 00000000
+       CM_FCLKEN_DSS 00000000
+       CM_IDLEST_DSS 00000000
+       CM_FCLKEN_CAM 00000000
+       CM_IDLEST_CAM 00000000
+       CM_FCLKEN_PER 00000000
+       CM_IDLEST_PER 00030000
+root@(none):/# 
+root@(none):/# cat /sys/kernel/debug/pm_debug/count 
+usbhost_pwrdm (ON),OFF:754,RET:9148,INA:0,ON:9903,RET-LOGIC-OFF:0,RET-MEMBANK1-OFF:0
+sgx_pwrdm (OFF),OFF:1,RET:0,INA:1,ON:2,RET-LOGIC-OFF:0,RET-MEMBANK1-OFF:0
+core_pwrdm (ON),OFF:0,RET:0,INA:0,ON:1,RET-LOGIC-OFF:0,RET-MEMBANK1-OFF:0,RET-MEMBANK2-OFF:0
+per_pwrdm (ON),OFF:237,RET:1202,INA:0,ON:1440,RET-LOGIC-OFF:0,RET-MEMBANK1-OFF:0
+dss_pwrdm (ON),OFF:754,RET:9148,INA:0,ON:9903,RET-LOGIC-OFF:0,RET-MEMBANK1-OFF:0
+cam_pwrdm (OFF),OFF:1,RET:1,INA:0,ON:2,RET-LOGIC-OFF:0,RET-MEMBANK1-OFF:0
+neon_pwrdm (ON),OFF:638,RET:9015,INA:250,ON:9904,RET-LOGIC-OFF:0
+mpu_pwrdm (ON),OFF:638,RET:9014,INA:250,ON:9903,RET-LOGIC-OFF:0,RET-MEMBANK1-OFF:0
+iva2_pwrdm (OFF),OFF:1,RET:1,INA:0,ON:2,RET-LOGIC-OFF:0,RET-MEMBANK1-OFF:0,RET-MEMBANK2-OFF:0,RET-MEMBANK3-OFF:0,RET-MEMBANK4-OFF:0
+usbhost_clkdm->usbhost_pwrdm (1)
+sgx_clkdm->sgx_pwrdm (0)
+per_clkdm->per_pwrdm (16)
+cam_clkdm->cam_pwrdm (0)
+dss_clkdm->dss_pwrdm (1)
+d2d_clkdm->core_pwrdm (0)
+iva2_clkdm->iva2_pwrdm (0)
+mpu_clkdm->mpu_pwrdm (0)
+core_l4_clkdm->core_pwrdm (21)
+core_l3_clkdm->core_pwrdm (1)
+neon_clkdm->neon_pwrdm (0)
+
+Regards,
+Andreas
 
