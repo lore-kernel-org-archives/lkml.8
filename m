@@ -2,232 +2,135 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1918AC38A29
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 22:19:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F23BFC38A29
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 22:19:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E3342221EA
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 22:19:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D19BE221E9
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 22:19:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="hw60FApB"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K8PuDkEL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728660AbgDQWTV (ORCPT
+        id S1728730AbgDQWTl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 18:19:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51708 "EHLO
+        Fri, 17 Apr 2020 18:19:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51754 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728587AbgDQWTV (ORCPT
+        by vger.kernel.org with ESMTP id S1728470AbgDQWTk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 18:19:21 -0400
-Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB4FCC061A0C
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 15:19:20 -0700 (PDT)
-Received: by mail-ed1-x544.google.com with SMTP id w4so2603720edv.13
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 15:19:20 -0700 (PDT)
+        Fri, 17 Apr 2020 18:19:40 -0400
+Received: from mail-oi1-x243.google.com (mail-oi1-x243.google.com [IPv6:2607:f8b0:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25E28C061A0C;
+        Fri, 17 Apr 2020 15:19:39 -0700 (PDT)
+Received: by mail-oi1-x243.google.com with SMTP id o25so3415553oic.11;
+        Fri, 17 Apr 2020 15:19:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=W8Gwda6aJagQ951htxX1UFCzfkSdxr3HJlytQNZ7BG0=;
-        b=hw60FApBl0ej+c0ZefeOnuQVfEuhSP+fB30PNrG5RjlKIRKuzXjHydC+fcT5/l48Ea
-         xzzz3oqwmdQqAdJVGTVYDzL6wtTJwxdWSXP9RKOcRH7RHkhtegJge9262cKCimRcan+X
-         MYo0z7YtN9icpkaCuDEKRSJUHojP+t2Rcp0XD4yu9EVq/2EZh0lEeLW1v9h7Qs9kmzxl
-         nWdLz9k8lHu5Nz3edokz7GG+6ttEva33xSc5BZy9GHLZintvDi8U5um8vuN4xCRuqlLq
-         ag8pxGKIirk4tCoR4tp/n6wIZqwX//RkLfxKkInKA6TwkRpeYCkuB1ckn/R9faWpO3xY
-         efbA==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=yW1rTc/fkIGCNKy5NNRXoxwqN+9iD/xtD2sA5y2Ygts=;
+        b=K8PuDkELJoZhAcizFoboOzhRmWXkhFdTSZaaMf8sX6UlPapG9poyvyftZH6GH5eJCl
+         pgq+BEg7YAwtqtxmzTjsx2YXgOt84mX0I3dD7OjmlrWCrqXuYbTGgL1hkgtpqp7jTGzY
+         4N9rM4gjl0XTPhPi/Y7W9GptFFwxTqGfEZh2ZXSWkXhXhQokcrZqxggzEuLQmxCMzTMG
+         k0bf2AcMoCs5xOpOXJLBB5Vmnn/UMKedTa7CYJLBZma7Wt+nXgBago3gwG3GaiFboU+k
+         S18t78HwCnZVoo3FixR3gUFkhRsHNXkQ2Mqzi3XA5zIVajNq+8h5SjnmqW2PPTEt9HGO
+         Sqdw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=W8Gwda6aJagQ951htxX1UFCzfkSdxr3HJlytQNZ7BG0=;
-        b=KYJ9aF+2cUX6DsMx7ngFhNMB8mBFGGkwKbXWzXrsgR8/SD04YObbKPYVrSBnNaGq7V
-         uzpssqHxIIFIECV2OJ94LJ0hjVfWPp1w1tUCQTaeploN0Srxo2cLpxQWsJuHS5HaDKKU
-         9FXhjXFyc70t2qZFvGigq5Evn0Rch9XFok03arFVmDdILOA1PDjmadO3N+AkGqRDEAbe
-         QY1OOiZXLAWPHXd5dIO8SN5T0yiFcxiIsQxCBV3FONU2DevETyDSQOD3dc//jI47C3+8
-         i4HmOVcIft7iPWSVvxuo9i9Qufcqcf1efnMW8j2BDB+6xcWYuO2VY3BJgf/9PKSAFwIo
-         jO+Q==
-X-Gm-Message-State: AGi0PuZMRXsTL+4EBKgSb/T5xv6yA0u8ubXARvU7vMAXqmtoGiZVgz39
-        FUq7jH+S4YSBsCKUydeIP5kFOUGRs3FnKgGW1U/s
-X-Google-Smtp-Source: APiQypKl/tfHK9jHI/GBf28NGrFcg5tn9HvmP2XPnIPytRpWNK1hjfLIGKjX4Ue222ygpwS3+sj0iKDM7sxcH/3cdT4=
-X-Received: by 2002:aa7:c401:: with SMTP id j1mr5071836edq.31.1587161959380;
- Fri, 17 Apr 2020 15:19:19 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=yW1rTc/fkIGCNKy5NNRXoxwqN+9iD/xtD2sA5y2Ygts=;
+        b=LeWO6X8SPBXkuRuWybBNBh8MqK2YGMRAUIn2iCwyNiEy04nohtZDi4ISkxOynyyJ1w
+         FR+vhasgNFaiufEdBlTgabWTBwFaYV8MQr1MzoI1nBrhMg/rb54BBMHXlGzTQh+EyL1h
+         M5g8bu85UPmUI0Lv1QpAz1pO5I4Go8Lygenv5JfiGg6L69yH97pqes5FqzzD+zvhPBxh
+         i83OKj/FiXLw8X/SUnn5ruIV5RO2fuhpoAO9IG5l+jQAdgKcU7lxJ2eZZi1LGEwSA9Iu
+         NipTPdjnq3X+9d0WpF4k4O6+cyI2PP0tzSCQdDvJ2QcxAOdSi4ovstlN0x210iwXX3IB
+         e6lQ==
+X-Gm-Message-State: AGi0PuZAOai1oWWQaDqakH6NScoUkOHWaBQe78lpjW6gVA9bLlE13JAR
+        96s9LHRe4ZOcRgfMWOTAKJ4=
+X-Google-Smtp-Source: APiQypJROud2ynmS8ZZ+1tLghEUJwO0lE5GiqY6V2tQK0kHfEreSrGenaDr/D5lDg0PuGUoH5k9CLg==
+X-Received: by 2002:aca:3e8a:: with SMTP id l132mr223511oia.151.1587161978435;
+        Fri, 17 Apr 2020 15:19:38 -0700 (PDT)
+Received: from ubuntu-s3-xlarge-x86 ([2604:1380:4111:8b00::3])
+        by smtp.gmail.com with ESMTPSA id v14sm141733ooe.10.2020.04.17.15.19.37
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 17 Apr 2020 15:19:37 -0700 (PDT)
+Date:   Fri, 17 Apr 2020 15:19:36 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     Jeff Dike <jdike@addtoit.com>, Richard Weinberger <richard@nod.at>,
+        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+        linux-um@lists.infradead.org, linux-kbuild@vger.kernel.org,
+        Alex Dewar <alex.dewar@gmx.co.uk>,
+        Erel Geron <erelx.geron@intel.com>,
+        Johannes Berg <johannes.berg@intel.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] um: do not evaluate compiler's library path when cleaning
+Message-ID: <20200417221936.GA13833@ubuntu-s3-xlarge-x86>
+References: <20200417180455.1174340-1-masahiroy@kernel.org>
 MIME-Version: 1.0
-References: <82d85f72416560c155031375fb5b32ac06394c31.1584033222.git.rgb@redhat.com>
- <CAHC9VhRqytBECZ+bgo_OXavbRmPKEu0OOqS=xe=FQFhG+Qv=oA@mail.gmail.com> <20200417213423.leermiriy4jzgwf4@madcap2.tricolour.ca>
-In-Reply-To: <20200417213423.leermiriy4jzgwf4@madcap2.tricolour.ca>
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Fri, 17 Apr 2020 18:19:07 -0400
-Message-ID: <CAHC9VhRy9krH8gxMHX1qpHLNR7De0KyouOrAvEzGKYkr8r2B0g@mail.gmail.com>
-Subject: Re: [PATCH ghak28 V7] audit: log audit netlink multicast bind and
- unbind events
-To:     Richard Guy Briggs <rgb@redhat.com>
-Cc:     Linux-Audit Mailing List <linux-audit@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Eric Paris <eparis@parisplace.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200417180455.1174340-1-masahiroy@kernel.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 17, 2020 at 5:34 PM Richard Guy Briggs <rgb@redhat.com> wrote:
-> On 2020-04-17 17:18, Paul Moore wrote:
-> > On Tue, Mar 17, 2020 at 12:04 PM Richard Guy Briggs <rgb@redhat.com> wr=
-ote:
-> > >
-> > > Log information about programs connecting to and disconnecting from t=
-he
-> > > audit netlink multicast socket. This is needed so that during
-> > > investigations a security officer can tell who or what had access to =
-the
-> > > audit trail.  This helps to meet the FAU_SAR.2 requirement for Common
-> > > Criteria.  Here is the systemd startup event:
-> > >
-> > > type=3DPROCTITLE msg=3Daudit(2020-02-18 15:26:50.775:10) : proctitle=
-=3D/init
-> > > type=3DSYSCALL msg=3Daudit(2020-02-18 15:26:50.775:10) : arch=3Dx86_6=
-4 syscall=3Dbind success=3Dyes exit=3D0 a0=3D0x19 a1=3D0x55645c369b70 a2=3D=
-0xc a3=3D0x7fff9fedec24 items=3D0 ppid=3D0 pid=3D1 auid=3Dunset uid=3Droot =
-gid=3Droot euid=3Droot suid=3Droot fsuid=3Droot egid=3Droot sgid=3Droot fsg=
-id=3Droot tty=3D(none) ses=3Dunset comm=3Dsystemd exe=3D/usr/lib/systemd/sy=
-stemd subj=3Dkernel key=3D(null)
-> > > type=3DUNKNOWN[1335] msg=3Daudit(2020-02-18 15:26:50.775:10) : pid=3D=
-1 uid=3Droot auid=3Dunset tty=3D(none) ses=3Dunset subj=3Dkernel comm=3Dsys=
-temd exe=3D/usr/lib/systemd/systemd nl-mcgrp=3D1 op=3Dconnect res=3Dyes
-> > >
-> > > And the events from the test suite:
-> > >
-> > > type=3DPROCTITLE msg=3Daudit(2020-02-18 15:28:01.594:307) : proctitle=
-=3D/usr/bin/perl -w amcast_joinpart/test
-> > > type=3DSYSCALL msg=3Daudit(2020-02-18 15:28:01.594:307) : arch=3Dx86_=
-64 syscall=3Dbind success=3Dyes exit=3D0 a0=3D0x7 a1=3D0x558ebc428be0 a2=3D=
-0xc a3=3D0x0 items=3D0 ppid=3D642 pid=3D645 auid=3Droot uid=3Droot gid=3Dro=
-ot euid=3Droot suid=3Droot fsuid=3Droot egid=3Droot sgid=3Droot fsgid=3Droo=
-t tty=3DttyS0 ses=3D1 comm=3Dperl exe=3D/usr/bin/perl subj=3Dunconfined_u:u=
-nconfined_r:unconfined_t:s0-s0:c0.c1023 key=3D(null)
-> > > type=3DUNKNOWN[1335] msg=3Daudit(2020-02-18 15:28:01.594:307) : pid=
-=3D645 uid=3Droot auid=3Droot tty=3DttyS0 ses=3D1 subj=3Dunconfined_u:uncon=
-fined_r:unconfined_t:s0-s0:c0.c1023 comm=3Dperl exe=3D/usr/bin/perl nl-mcgr=
-p=3D1 op=3Dconnect res=3Dyes
-> > >
-> > > type=3DPROCTITLE msg=3Daudit(2020-03-17 11:35:31.474:344) : proctitle=
-=3D/usr/bin/perl -w amcast_joinpart/test
-> > > type=3DSYSCALL msg=3Daudit(2020-03-17 11:35:31.474:344) : arch=3Dx86_=
-64 syscall=3Dsetsockopt success=3Dyes exit=3D0 a0=3D0x7 a1=3DSOL_NETLINK a2=
-=3D0x2 a3=3D0x7ffee21ca5f0 items=3D0 ppid=3D686 pid=3D689 auid=3Droot uid=
-=3Droot gid=3Droot euid=3Droot suid=3Droot fsuid=3Droot egid=3Droot sgid=3D=
-root fsgid=3Droot tty=3DttyS0 ses=3D3 comm=3Dperl exe=3D/usr/bin/perl subj=
-=3Dunconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023 key=3D(null)
-> > > type=3DUNKNOWN[1335] msg=3Daudit(2020-03-17 11:35:31.474:344) : pid=
-=3D689 uid=3Droot auid=3Droot tty=3DttyS0 ses=3D3 subj=3Dunconfined_u:uncon=
-fined_r:unconfined_t:s0-s0:c0.c1023 comm=3Dperl exe=3D/usr/bin/perl nl-mcgr=
-p=3D1 op=3Ddisconnect res=3Dyes
-> > >
-> > > type=3DUNKNOWN[1335] msg=3Daudit(2020-01-17 10:36:24.051:295) : pid=
-=3D674 uid=3Droot auid=3Droot tty=3DttyS0 ses=3D3 subj=3Dunconfined_u:uncon=
-fined_r:unconfined_t:s0-s0:c0.c1023 comm=3Dperl exe=3D/usr/bin/perl nl-mcgr=
-p=3D1 op=3Ddisconnect res=3Dyes
-> >
-> > This patch looks fine to me, but this line is curious ... I'm assuming
-> > this is just a stray/cut-n-paste-error from the last time you updated
-> > the commit description?  If so, just let me know and I can drop it
-> > while merging, otherwise there is something odd going on ....
->
-> That last line is the result of close() from an earlier version of the
-> testsuite, rather than setsockopt(..., NETLINK_DROP_MEMBERSHIP, ...).
->
-> This is why we need the subject attributes, as noted in the first note
-> above the changelog below.
+On Sat, Apr 18, 2020 at 03:04:55AM +0900, Masahiro Yamada wrote:
+> Since commit a83e4ca26af8 ("kbuild: remove cc-option switch from
+> -Wframe-larger-than="), 'make ARCH=um clean' emits an error message
+> as follows:
+> 
+>   $ make ARCH=um clean
+>   gcc: error: missing argument to '-Wframe-larger-than='
+> 
+> We do not care compiler flags when cleaning.
+> 
+> Use the '=' operator for lazy expansion because we do not use
+> LDFLAGS_pcap.o or LDFLAGS_vde.o when cleaning.
+> 
+> While I was here, I removed the redundant -r option because it
+> already exists in the recipe.
+> 
+> Fixes: a83e4ca26af8 ("kbuild: remove cc-option switch from -Wframe-larger-than=")
+> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+> ---
+> 
+>  arch/um/drivers/Makefile | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/um/drivers/Makefile b/arch/um/drivers/Makefile
+> index a290821e355c..2a249f619467 100644
+> --- a/arch/um/drivers/Makefile
+> +++ b/arch/um/drivers/Makefile
+> @@ -18,9 +18,9 @@ ubd-objs := ubd_kern.o ubd_user.o
+>  port-objs := port_kern.o port_user.o
+>  harddog-objs := harddog_kern.o harddog_user.o
+>  
+> -LDFLAGS_pcap.o := -r $(shell $(CC) $(KBUILD_CFLAGS) -print-file-name=libpcap.a)
+> +LDFLAGS_pcap.o = $(shell $(CC) $(KBUILD_CFLAGS) -print-file-name=libpcap.a)
+>  
+> -LDFLAGS_vde.o := -r $(shell $(CC) $(CFLAGS) -print-file-name=libvdeplug.a)
+> +LDFLAGS_vde.o = $(shell $(CC) $(CFLAGS) -print-file-name=libvdeplug.a)
+>  
+>  targets := pcap_kern.o pcap_user.o vde_kern.o vde_user.o
+>  
+> -- 
+> 2.25.1
+> 
 
-Argh.  I wasn't looking at the subject info, I was just noting the
-timestamp was obviously wrong and the connects/disconnects didn't
-match.
+I tested building pcap.o both before and after this change, no changes
+there.
 
-I was going to be nice and just drop that message during the merge,
-but you need to regenerate those messages with the audit records from
-just this patch since it is 1/3.  As it stands right now someone is
-going to be very confused in a few years when they try to reconcile
-the code changes with your commit description.
+I do see the clean error fixed.
 
-Regardless of the subject info, we should make sure the
-connects/disconnects are matched.  The example you provide from the
-test shows one connect, but two disconnects.  That is going to confuse
-people looking through the audit logs.  I'm hoping you just did a
-copy-n-paste error, but if not we need to figure that out and find a
-way to make them match if there is somewhat to do so.
-
-While you are respinning this patch, please fix the checkpatch.pl
-errors; there were multiple line length, space/tab, and code indent
-problems.  I was going to fix them during the merge, but you might as
-well fix them now.  Feel free to insert my usual plea to run your
-patches through checkpatch.pl before submitting.
-
-> > > Please see the upstream issue tracker at
-> > >   https://github.com/linux-audit/audit-kernel/issues/28
-> > > With the feature description at
-> > >   https://github.com/linux-audit/audit-kernel/wiki/RFE-Audit-Multicas=
-t-Socket-Join-Part
-> > > The testsuite support is at
-> > >   https://github.com/rgbriggs/audit-testsuite/compare/ghak28-mcast-pa=
-rt-join
-> > >   https://github.com/linux-audit/audit-testsuite/pull/93
-> > > And the userspace support patch is at
-> > >   https://github.com/linux-audit/audit-userspace/pull/114
-> > >
-> > > Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
-> > >
-> > > ---
-> > > Note: subj attrs included due to missing syscall record for disconnec=
-t on close
-> > > Note: tried refactor of subj attrs, but this is yet another new order=
-.
-> > >
-> > > Changelog:
-> > > v7:
-> > > - rename audit_log_multicast_bind to audit_log_multicast
-> > >
-> > > v6:
-> > > - rebased on 5.6-rc1 audit/next and audit log BPF
-> > > - updated patch description sample records
-> > >
-> > > v5:
-> > > - rebased on 5.5-rc1 audit/next
-> > > - group bind/unbind ops
-> > > - add audit context
-> > > - justify message number skip
-> > > - check audit_enabled
-> > > - change field name from nlnk-grp to nl-mcgrp
-> > > - fix whitespace issues
-> > >
-> > > v4:
-> > > - 2017-10-13 sgrubb
-> > > - squash to 1 patch
-> > > - rebase on KERN_MODULE event
-> > > - open code subj attrs
-> > >
-> > > v3:
-> > > - 2016-11-30 sgrubb
-> > > - rebase on REPLACE event
-> > > - minimize audit_log_format calls
-> > > - rename audit_log_bind to audit_log_multicast_bind
-> > >
-> > > v2:
-> > > - 2015-07-23 sgrubb
-> > > - spin off audit_log_task_simple in seperate patch
-> > >
-> > > v1:
-> > > - 2014-10-07 rgb
-> > > ---
-> > >  include/uapi/linux/audit.h |  1 +
-> > >  kernel/audit.c             | 48 ++++++++++++++++++++++++++++++++++++=
-++++++----
-> > >  2 files changed, 45 insertions(+), 4 deletions(-)
-
---=20
-paul moore
-www.paul-moore.com
+Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+Tested-by: Nathan Chancellor <natechancellor@gmail.com> [build]
