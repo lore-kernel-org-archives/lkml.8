@@ -2,101 +2,107 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FF1AC2D0EF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 19:06:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 425AEC2D0EF
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 19:06:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DFA5420780
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 19:06:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19A9820780
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 19:06:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CjH6Xkpp"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AhxeHMIZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729241AbgDQTGA (ORCPT
+        id S1729749AbgDQTGY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 15:06:00 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:32332 "EHLO
+        Fri, 17 Apr 2020 15:06:24 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:40077 "EHLO
         us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726554AbgDQTF7 (ORCPT
+        by vger.kernel.org with ESMTP id S1729287AbgDQTGX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 15:05:59 -0400
+        Fri, 17 Apr 2020 15:06:23 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587150358;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=aexqVQ7wQQYqij2tXK706tjApKpXd1pq/NygCDJJnFw=;
-        b=CjH6Xkpp8diOEF+g4dDjcgQWbypn+TixbqYbwxLjeUbSQcKPW51ElkA2UGuqUqkWfqocxp
-        +ATSw7hlvPqhayt53nQdO0km7/01dJlrq1YR3KG+67EEk4dsokUBJ9+9OV8FZnh8VNUpZW
-        ltovXvMUMonMnrLEvi1tHDfzaFKLff0=
-Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
- [209.85.219.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-108-BkyMJSxaPT-BauuTxllA0A-1; Fri, 17 Apr 2020 15:05:56 -0400
-X-MC-Unique: BkyMJSxaPT-BauuTxllA0A-1
-Received: by mail-qv1-f69.google.com with SMTP id et5so3149112qvb.5
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 12:05:55 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=aexqVQ7wQQYqij2tXK706tjApKpXd1pq/NygCDJJnFw=;
-        b=IePEFIC8KDcThWH53lz9Svcn8MkrFTsi5iW+7TLgqhcmFq/CeG54wzRzeV4m+vWhaU
-         2Wv5jz7KteuSlmw6JvEh/gYP6hp1zF9TRgVVnP/hzBGeDuMajDssX9TDiQNGE3Illx/d
-         +iWb68mlNNotCjIdZ/sTcTfbwyBlQynyU9abI9AxF7TYMqKmK2jMqRp1FGxW3H+ZYcFN
-         WQFpkjXjNjOXAdwrVsj5YulR5zxi4+s+wHDkAhpCx3tlDVlk3wLL4iSqT4iCHf+xh2/L
-         RGJQypgUS/NDPNoJa1GZ2U1MLPLtcmemxZ3evZWKfaFfWUL3cziYYGzrTRtgM5h32qk3
-         tPHw==
-X-Gm-Message-State: AGi0PubGt918a7kG4Ri34Lx3/SoMAm4Ac8Wzzk1g/fPfywjcHZe6tzhJ
-        Hzatj8mc72pUBJhXf/CbLfwAJ7xM63bqAldLubYjGI7dG8kWdXR5bsxtyucdq0uJgV933071pO5
-        LtfKEdB4F/vHWOll8yCfggfLX
-X-Received: by 2002:ac8:6642:: with SMTP id j2mr4466577qtp.311.1587150355608;
-        Fri, 17 Apr 2020 12:05:55 -0700 (PDT)
-X-Google-Smtp-Source: APiQypJK47cUAW8UhtqP+6vEGJNWgIFR2kpnvCsa+tpq1Wupmn2CfkAR46gEVGsdrfyTnQkPGXbbBw==
-X-Received: by 2002:ac8:6642:: with SMTP id j2mr4466545qtp.311.1587150355360;
-        Fri, 17 Apr 2020 12:05:55 -0700 (PDT)
-Received: from xz-x1 ([2607:9880:19c0:32::2])
-        by smtp.gmail.com with ESMTPSA id y21sm17199104qka.37.2020.04.17.12.05.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Apr 2020 12:05:54 -0700 (PDT)
-Date:   Fri, 17 Apr 2020 15:05:53 -0400
-From:   Peter Xu <peterx@redhat.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>
-Subject: Re: [PATCH 0/3] KVM: x86: move nested-related kvm_x86_ops to a
- separate struct
-Message-ID: <20200417190553.GI287932@xz-x1>
-References: <20200417164413.71885-1-pbonzini@redhat.com>
+        s=mimecast20190719; t=1587150382;
+        h=from:from:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:in-reply-to:in-reply-to:  references:references;
+        bh=l7NhxqPBgZKRGKonQi6tXhellcY9V1W8AoTLk+/o7jk=;
+        b=AhxeHMIZqqfumAhEEcGpEJT0vbq+K9osCYcm/FPh6HGkN2ruGA1677b0yV8yDVVmcZbaiY
+        RBYMKRnhW94QgDmwdjV/eBJTtaxBbI1X88SQB/k9MQzExmQNJHD1AazJ5AwOeRXtBfe28M
+        r0uEf22j0Nkqu8PTimCRWGUr97N948w=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-68-ETcNWG3XNDSFn1nDcYYgJg-1; Fri, 17 Apr 2020 15:06:20 -0400
+X-MC-Unique: ETcNWG3XNDSFn1nDcYYgJg-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E5842107ACC7;
+        Fri, 17 Apr 2020 19:06:18 +0000 (UTC)
+Received: from tucnak.zalov.cz (ovpn-112-104.ams2.redhat.com [10.36.112.104])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 1C485D7664;
+        Fri, 17 Apr 2020 19:06:17 +0000 (UTC)
+Received: from tucnak.zalov.cz (localhost [127.0.0.1])
+        by tucnak.zalov.cz (8.15.2/8.15.2) with ESMTP id 03HJ6EnA028978;
+        Fri, 17 Apr 2020 21:06:14 +0200
+Received: (from jakub@localhost)
+        by tucnak.zalov.cz (8.15.2/8.15.2/Submit) id 03HJ6785028977;
+        Fri, 17 Apr 2020 21:06:07 +0200
+Date:   Fri, 17 Apr 2020 21:06:07 +0200
+From:   Jakub Jelinek <jakub@redhat.com>
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Borislav Petkov <bp@alien8.de>,
+        Sergei Trofimovich <slyfox@gentoo.org>,
+        Michael Matz <matz@suse.de>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Subject: Re: [PATCH v2] x86: fix early boot crash on gcc-10
+Message-ID: <20200417190607.GY2424@tucnak>
+Reply-To: Jakub Jelinek <jakub@redhat.com>
+References: <20200415074842.GA31016@zn.tnic>
+ <alpine.LSU.2.21.2004151445520.11688@wotan.suse.de>
+ <20200415231930.19755bc7@sf>
+ <20200417075739.GA7322@zn.tnic>
+ <20200417080726.GS2424@tucnak>
+ <20200417084224.GB7322@zn.tnic>
+ <20200417085859.GU2424@tucnak>
+ <20200417090909.GC7322@zn.tnic>
+ <CAKwvOdnFXPBJsAUD++HtYS5JiR2KmX73M5GAUe-tvX-JYV7DaA@mail.gmail.com>
+ <CAKwvOdmNwNwa6rMC27-QZq8VDrYdTQeQqss-bAwF1EMmnAHxdw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200417164413.71885-1-pbonzini@redhat.com>
+In-Reply-To: <CAKwvOdmNwNwa6rMC27-QZq8VDrYdTQeQqss-bAwF1EMmnAHxdw@mail.gmail.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 17, 2020 at 12:44:10PM -0400, Paolo Bonzini wrote:
-> While this reintroduces some pointer chasing that was removed in
-> afaf0b2f9b80 ("KVM: x86: Copy kvm_x86_ops by value to eliminate layer
-> of indirection", 2020-03-31), the cost is small compared to retpolines
-> and anyway most of the callbacks are not even remotely on a fastpath.
-> In fact, only check_nested_events should be called during normal VM
-> runtime.  When static calls are merged into Linux my plan is to use them
-> instead of callbacks, and that will finally make things fast again by
-> removing the retpolines.
+On Fri, Apr 17, 2020 at 11:22:25AM -0700, Nick Desaulniers wrote:
+> > Sorry, I don't quite follow.  The idea is that an empty asm statement
+> > in foo() should prevent foo() from being inlined into bar()?
+> 
+> s/inlined/tail called/
 
-Paolo,
+Yeah.  The thing is, the caller changes the stack protector guard base
+value, so at the start of the function it saves a different value then
+it compares at the end.  But, the function that it calls at the end
+actually doesn't return, so this isn't a problem.
+If it is tail called though, the stack protector guard checking is done
+before the tail call and it crashes.
+If the called function is marked with noreturn attribute or _Noreturn,
+at least GCC will also not tail call it and all is fine, but not sure
+what LLVM does in that case.
 
-Just out of curiousity: is there an explicit reason to not copy the
-whole kvm_x86_nested_ops but use pointers (since after all we just
-reworked kvm_x86_ops)?
-
-Thanks,
-
--- 
-Peter Xu
+	Jakub
 
