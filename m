@@ -1,142 +1,109 @@
 Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Level: *
+X-Spam-Status: No, score=1.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLACK autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 868B9C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 21:17:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA160C38A2B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 21:18:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5B6262083E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 21:17:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FD7A2083E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 21:18:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jg0aAF/V"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="sKr8AsmV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728037AbgDQVRI (ORCPT
+        id S1728081AbgDQVSY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 17:17:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42124 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726420AbgDQVRI (ORCPT
+        Fri, 17 Apr 2020 17:18:24 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:60290 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726503AbgDQVSX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 17:17:08 -0400
-Received: from mail-ua1-x942.google.com (mail-ua1-x942.google.com [IPv6:2607:f8b0:4864:20::942])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D818DC061A0F
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 14:17:07 -0700 (PDT)
-Received: by mail-ua1-x942.google.com with SMTP id u12so1178134uau.10
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 14:17:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=iJ2fYj8faRnQWYU+YUvw2BuJTdJ8p/wj9zFiQhRecXY=;
-        b=jg0aAF/VBOEowYu593EttCPIZkn+y5RfCCJA7A9me76IkPZAsRrbd0/T/gxbhJ/Nea
-         tWQR2GXYK9vwBRwjMNG23L4vJh1oGHmRc2CjVNncy5RDzfuzEGb8ed+0x7qWLo5t/5OA
-         YnhUhWAj1kNKyBGVtXGLHtwZuHxHlvy5ESOgA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=iJ2fYj8faRnQWYU+YUvw2BuJTdJ8p/wj9zFiQhRecXY=;
-        b=tNGhWZ6d1FUk0C49XooLausLbDIKJmTSoAeimJ3uDac09dIMEOElWAiYeHfsI4fJLw
-         z6t9T4jTEWY+5KiSyRXi475sDoG/eCdnvskt7tr8gyxj8Qs+jqnNCwUOS95eYVQK4VND
-         D4Lk9P49MbWwhqQHuSCadmhUPC691cJ2vACghIK2sFxDvsfYn3pXynoGihzzRW1Hwrxo
-         hUciXC1lsRwJrXrEf++/5MibA00DSBjQnmSHQm5DuLkVhRrfXzeNUPlvMqDpjcGRn8un
-         XXKlOASgWw5Yg/lbY+4x9EycibAvpzw4QIHk0WcFSWRNEiyee0+2LL8CVrECMUr+Y2lw
-         LKuQ==
-X-Gm-Message-State: AGi0PuZBbkMTyHt1GL6iex30ZHC/d3nlZ+Y2Uu0q+g33XTDmnsmQjtL/
-        tlzkeqgVKVkYEw/yQnQhCL7V/sSfrX8=
-X-Google-Smtp-Source: APiQypK1AS44f9YAYcP9aasPaJYvE16dh4m5pw4RWmCIfS7Tfdnf8MrLsFm+e0v45wpAWLa9g4MP1w==
-X-Received: by 2002:a9f:2204:: with SMTP id 4mr690185uad.87.1587158226582;
-        Fri, 17 Apr 2020 14:17:06 -0700 (PDT)
-Received: from mail-vk1-f170.google.com (mail-vk1-f170.google.com. [209.85.221.170])
-        by smtp.gmail.com with ESMTPSA id x73sm2970281vsc.27.2020.04.17.14.17.05
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 17 Apr 2020 14:17:05 -0700 (PDT)
-Received: by mail-vk1-f170.google.com with SMTP id q200so730640vka.13
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 14:17:05 -0700 (PDT)
-X-Received: by 2002:a1f:5fc3:: with SMTP id t186mr4344481vkb.92.1587158224782;
- Fri, 17 Apr 2020 14:17:04 -0700 (PDT)
+        Fri, 17 Apr 2020 17:18:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1587158300; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=5k83m+YQ/YjzGCYNL53EXy0Y9lSW9rtJnIlxD9H/TDA=;
+        b=sKr8AsmVcnP58PaG7Ml8U/UnEWO2S+S8NsYqW3PgRr40iK50euk4O6fUOjT1qSV+tEzetN
+        z//xT9wtdEkKLhs1xaAXXWgeTMbNd5f3xWKnZCiYhFYI2VhTEFacMTh9YJ9VqXwgANvOhn
+        zpR9n7Rq7LYOjf8HwU//sQMZsQmtkvE=
+Date:   Fri, 17 Apr 2020 23:18:08 +0200
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [RESEND PATCH v5 3/5] IIO: Ingenic JZ47xx: Add touchscreen mode.
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Artur Rojek <contact@artur-rojek.eu>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        linux-input <linux-input@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Message-Id: <86BY8Q.C5XO8D57M7BI1@crapouillou.net>
+In-Reply-To: <CAHp75VfxQFFnVMhGvv0GCb3gv5jTPLDqLyhihRVc2earY=aYcg@mail.gmail.com>
+References: <20200417202859.35427-1-contact@artur-rojek.eu>
+        <20200417202859.35427-3-contact@artur-rojek.eu>
+        <CAHp75Vcwnu8tw92nMYc_5-x_iX+FY8_OhtaJkSYNehmNUDkHGQ@mail.gmail.com>
+        <3KAY8Q.NNI6X4F9QRIX1@crapouillou.net>
+        <CAHp75VfxQFFnVMhGvv0GCb3gv5jTPLDqLyhihRVc2earY=aYcg@mail.gmail.com>
 MIME-Version: 1.0
-References: <1586703004-13674-1-git-send-email-mkshah@codeaurora.org>
- <1586703004-13674-3-git-send-email-mkshah@codeaurora.org> <158708153779.132238.7823999141480422982@swboyd.mtv.corp.google.com>
-In-Reply-To: <158708153779.132238.7823999141480422982@swboyd.mtv.corp.google.com>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Fri, 17 Apr 2020 14:16:53 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=WOwMrTNS7FK0jybJyEOvT-rHarA0m5U6B+pKoeA7RCHQ@mail.gmail.com>
-Message-ID: <CAD=FV=WOwMrTNS7FK0jybJyEOvT-rHarA0m5U6B+pKoeA7RCHQ@mail.gmail.com>
-Subject: Re: [PATCH v17 2/6] soc: qcom: rpmh: Update dirty flag only when data changes
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     Maulik Shah <mkshah@codeaurora.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Evan Green <evgreen@chromium.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Lina Iyer <ilina@codeaurora.org>, lsrao@codeaurora.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 16, 2020 at 4:59 PM Stephen Boyd <swboyd@chromium.org> wrote:
->
-> Quoting Maulik Shah (2020-04-12 07:50:00)
-> > diff --git a/drivers/soc/qcom/rpmh.c b/drivers/soc/qcom/rpmh.c
-> > index eb0ded0..03630ae 100644
-> > --- a/drivers/soc/qcom/rpmh.c
-> > +++ b/drivers/soc/qcom/rpmh.c
-> > @@ -133,26 +134,27 @@ static struct cache_req *cache_rpm_request(struct rpmh_ctrlr *ctrlr,
-> >
-> >         req->addr = cmd->addr;
-> >         req->sleep_val = req->wake_val = UINT_MAX;
-> > -       INIT_LIST_HEAD(&req->list);
-> >         list_add_tail(&req->list, &ctrlr->cache);
-> >
-> >  existing:
-> > +       old_sleep_val = req->sleep_val;
-> > +       old_wake_val = req->wake_val;
-> > +
-> >         switch (state) {
-> >         case RPMH_ACTIVE_ONLY_STATE:
-> > -               if (req->sleep_val != UINT_MAX)
-> > -                       req->wake_val = cmd->data;
-> > -               break;
-> >         case RPMH_WAKE_ONLY_STATE:
-> >                 req->wake_val = cmd->data;
-> >                 break;
-> >         case RPMH_SLEEP_STATE:
-> >                 req->sleep_val = cmd->data;
-> >                 break;
-> > -       default:
-> > -               break;
-> >         }
-> >
-> > -       ctrlr->dirty = true;
-> > +       ctrlr->dirty = (req->sleep_val != old_sleep_val ||
-> > +                       req->wake_val != old_wake_val) &&
-> > +                       req->sleep_val != UINT_MAX &&
-> > +                       req->wake_val != UINT_MAX;
->
-> Can this change ctrl->dirty from true to false? I'm worried that we need
-> to make this a saturating assignment instead of an assignment.
->
->         ctrl->dirty = ctrl->dirty || (req->sleep_val != .. );
 
-This seems like a serious problem with the current code and feels like
-we need a fix sooner rather than later.  I'm sorry I missed it in
-review (and in fact, I probably suggested the exact code that's here
-so it's even more my fault).  :(
 
-I posted:
+Le sam. 18 avril 2020 =E0 0:13, Andy Shevchenko=20
+<andy.shevchenko@gmail.com> a =E9crit :
+> On Sat, Apr 18, 2020 at 12:05 AM Paul Cercueil <paul@crapouillou.net>=20
+> wrote:
+>>  Le ven. 17 avril 2020 =E0 23:59, Andy Shevchenko
+>>  <andy.shevchenko@gmail.com> a =E9crit :
+>>  > On Fri, Apr 17, 2020 at 11:21 PM Artur Rojek=20
+>> <contact@artur-rojek.eu>
+>>  > wrote:
+>=20
+> ...
+>=20
+>>  >>  +       irq =3D platform_get_irq(pdev, 0);
+>>  >
+>>  > Before it worked w/o IRQ, here is a regression you introduced.
+>>=20
+>>  Before it simply did not need the IRQ, which is provided by the
+>>  devicetree anyway. No regression here.
+>=20
+> Does it work without IRQ? Or it was a dead code till now?
+> For me it's clear regression. Otherwise something is really wrong in a
+> process of development of this driver.
 
-https://lore.kernel.org/r/20200417141531.1.Ia4b74158497213eabad7c3d474c50bfccb3f342e@changeid
+Nothing wrong here. The IRQ was not used by the driver for the=20
+functionality it provided before. It is required now to support the=20
+touchscreen channels.
 
--Doug
+-Paul
+
+
+>>  >>  +       if (irq < 0) {
+>>  >
+>>  >>  +               dev_err(dev, "Failed to get irq: %d\n", irq);
+>>  >
+>>  > Redundant message.
+>>  >
+>>  >>  +               return irq;
+>>  >>  +       }
+>=20
+> --
+> With Best Regards,
+> Andy Shevchenko
+
+
