@@ -1,152 +1,184 @@
 Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Level: *
+X-Spam-Status: No, score=1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLACK autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1282C38A2C
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 21:09:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 444D4C38A29
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 21:11:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 992BB20776
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 21:09:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1926D2083E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 21:11:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JIJ9eiP0"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IPvvVVaT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727875AbgDQVJR (ORCPT
+        id S1727889AbgDQVLC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 17:09:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40906 "EHLO
+        Fri, 17 Apr 2020 17:11:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41178 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727840AbgDQVJP (ORCPT
+        with ESMTP id S1726129AbgDQVLB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 17:09:15 -0400
-Received: from mail-oi1-x243.google.com (mail-oi1-x243.google.com [IPv6:2607:f8b0:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 140ECC061A0F
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 14:09:15 -0700 (PDT)
-Received: by mail-oi1-x243.google.com with SMTP id 8so3291014oiy.6
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 14:09:15 -0700 (PDT)
+        Fri, 17 Apr 2020 17:11:01 -0400
+Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3E70C061A0C;
+        Fri, 17 Apr 2020 14:11:01 -0700 (PDT)
+Received: by mail-io1-xd44.google.com with SMTP id w20so3925542iob.2;
+        Fri, 17 Apr 2020 14:11:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=zz9iwCIr/F3QG8mgmb+B3MoXqMi0D5rT/9ckWLDoDEM=;
-        b=JIJ9eiP0d18p+Zkg+P6W3I47al2Fd/m5GOB+bsA4kAfEEP6SEguLqDnF1U4cU4Otoj
-         yGNGZ8kL394HrJzIfPQd4Xa5bLpKRbvjaGl1kCmY99Xd6DydUHPlE54AF70b9KUHL94o
-         WES7sAEMa/PKEy72T7FDyZs6YJ8bwb5U3ksHMUIHnWV39SwgV2FDMhkiBLJgNcgnxQ5r
-         Y7P8JD2YO9H9nAN6qUOS0HQYi0THeZjDwDfrUsXlpS36dkWSYh1ZwJmz+IEcezNziFG4
-         piYsepr1qBtBWXLB9aqZNXGyAk65n7/zwIQnrbLpChhpYS3hIU6jxStoubTfcoszTlJk
-         vBUw==
+        bh=OlJHu2tNIRXilHBPRkOqOH56O/SKw0eGa9SbGUKri/I=;
+        b=IPvvVVaTbCBrVHxOQannxvijirEKYdyuFI3EY6lupoF4gZjUlVvngD0Bpe/lyCT9Uc
+         jyVK/ASI1lavaq/GtpOeuDiVtlQARpmrpIJpF2uMVHQJgfe6+meMZ2+ToRSXf0BxSjzx
+         I1GnhxOyCSZA1OcGlAU3LnRdsrnhcHjHhKoOH/Qyvx00+48r55qku3V7iR4R7p92foCS
+         8IAPXE+fN7NUFhskpXc0lEbgXgfyG/HBkbG+I+Kz2PE6dHvP3gVKqcdOHQ5FZS5WEGXf
+         zcjNe/ZU/mZyPfNizmlzBMnEkDdgZ3xk6vrtZq30n/ZCCOSYftArEWIEtD7qL6whdRjB
+         nLBA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=zz9iwCIr/F3QG8mgmb+B3MoXqMi0D5rT/9ckWLDoDEM=;
-        b=uCw7o1YJmMDgbFVANHCN18wh6RTxICPu92fsE8rBBZffVAKv02jedbBcxQHZo3H2iq
-         cKCmQy9IdpbMcIFVrdFuHXejO/dsqE59gF8nQt0fUIhffKZx25F7TrauKcsAxcuFvJmh
-         lYmqEEBrZmrNQlTDwKO6nNUK2tC7CfLupoe3bwjEEV2bV8lg4ackwbmVVz8vwH3YNbXQ
-         6QdOq00Lqd7XeIR9I07oA04h8L9Exxnb/kiEfNyQy3WJwawdft0xiXSiN1d4SYc65Qw/
-         wrR0JH4YyeKt2MEex97auRJfiAYiJuduNjv9VhJOjj6+8JVkpViQ5Ikj9p3U3Y+Q629I
-         jb1g==
-X-Gm-Message-State: AGi0PuaYBOIo+NKlI3BUYMPzA6xvc32KQdC13dFJgQavyMEYVF/Dt4U1
-        K+wgqdMAzGJaQl6qN7EJdJDA3NCd/4Knqf9Isf/OFg==
-X-Google-Smtp-Source: APiQypK8ir71E/2iF5VbQ56Y9/gwhbhgTxYiJSR6H1lg11vLsrlw/eq/raUXM3LbEIAhwUCfR+wycDIH61u7ER+R8JA=
-X-Received: by 2002:a54:481a:: with SMTP id j26mr3623960oij.172.1587157753792;
- Fri, 17 Apr 2020 14:09:13 -0700 (PDT)
+        bh=OlJHu2tNIRXilHBPRkOqOH56O/SKw0eGa9SbGUKri/I=;
+        b=fum/YS7qLUhwPyC5Gye7JksuDZM4BAtY8jEb1XH5dNPd7EeuVB3AARuNjALLzI0Zh8
+         BGIVJ+8b5F7v5fmpoN2cSo/CnAeM+la9a2xc4fNzRoiD9k/5OKTscnthmmFotjm6O57u
+         dStde9sLHrGC7krQ53fyxYKJEZ1Rgv9YKZeahhepEOQTWzdxFSABJVYCh1c+eRNR1wBD
+         eNawgNl7FYDO8o5I4ES1nL+CQVU1yKzndHRpZFzpY5rVRFcs90dU/SCbl9L7uD5RFaUw
+         Fq+LflUFFSteaILJXc3Lrwu4+TRkjUQ+eo3syFE2MClzpzUyPVF1MCpPu7Ym+BR/YXYv
+         SPFg==
+X-Gm-Message-State: AGi0PuZYFasaT9c49Vt3uF1yRkGWqmMrmPvA+05mPU/8uJT1+EAyT8oQ
+        Bh1k1HwVXNYZTVCdaltM7tWl2jU695+JaqM0Egg=
+X-Google-Smtp-Source: APiQypIwrfIN47EKCM+k+nQMgN0YMdfXIBKXrLZf67ebNQ3PQCjJg4xmrZKDsH9ryfjvK/p0Dul/uUyUIvlovW5A+mw=
+X-Received: by 2002:a6b:f60f:: with SMTP id n15mr5150493ioh.22.1587157861052;
+ Fri, 17 Apr 2020 14:11:01 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200417165442.1856-1-nsaenzjulienne@suse.de> <20200417165442.1856-3-nsaenzjulienne@suse.de>
-In-Reply-To: <20200417165442.1856-3-nsaenzjulienne@suse.de>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Fri, 17 Apr 2020 14:08:37 -0700
-Message-ID: <CAGETcx81uPQLCurX6N6pMH+2jOZBcs-9u5yhBp83jQWJks0EFw@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] of: property: Do not link to disabled devices
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
+References: <20200417202859.35427-1-contact@artur-rojek.eu> <20200417202859.35427-5-contact@artur-rojek.eu>
+In-Reply-To: <20200417202859.35427-5-contact@artur-rojek.eu>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Sat, 18 Apr 2020 00:10:49 +0300
+Message-ID: <CAHp75VfRbnnuUhfyXpu+5dp4TutHSrHus=sX_vG_5F0dX4k0fQ@mail.gmail.com>
+Subject: Re: [RESEND PATCH v5 5/5] input: joystick: Add ADC attached joystick driver.
+To:     Artur Rojek <contact@artur-rojek.eu>
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
+        Mark Rutland <mark.rutland@arm.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Heiko Stuebner <heiko@sntech.de>,
+        linux-input <linux-input@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 17, 2020 at 9:54 AM Nicolas Saenz Julienne
-<nsaenzjulienne@suse.de> wrote:
+On Fri, Apr 17, 2020 at 11:21 PM Artur Rojek <contact@artur-rojek.eu> wrote:
 >
-> When creating a consumer/supplier relationship between two devices,
-> make sure the supplier node is actually active. Otherwise this will
-> create a link relationship that will never be fulfilled. This, in the
-> worst case scenario, will hang the system during boot.
->
-> Note that, in practice, the fact that a device-tree represented
-> consumer/supplier relationship isn't fulfilled will not prevent devices
-> from successfully probing.
->
-> Fixes: a3e1d1a7f5fc ("of: property: Add functional dependency link from DT bindings")
-> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
->
-> ---
->
-> Changes since v1:
->  - Move availability check into the compatible search routine and bail
->    if device node disabled
->
->  drivers/of/property.c | 19 ++++++++++++++++++-
->  1 file changed, 18 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/of/property.c b/drivers/of/property.c
-> index dc034eb45defd..14b6266dd054b 100644
-> --- a/drivers/of/property.c
-> +++ b/drivers/of/property.c
-> @@ -1045,8 +1045,25 @@ static int of_link_to_phandle(struct device *dev, struct device_node *sup_np,
->          * Find the device node that contains the supplier phandle.  It may be
->          * @sup_np or it may be an ancestor of @sup_np.
->          */
-> -       while (sup_np && !of_find_property(sup_np, "compatible", NULL))
-> +       while (sup_np) {
+> Add a driver for joystick devices connected to ADC controllers
+> supporting the Industrial I/O subsystem.
+
+...
+
+> +#include <linux/of.h>
+
+Do you really need this? (See below as well)
+
+...
+
+> +               sign = (tolower(joy->chans[i].channel->scan_type.sign) == 's');
+
+Too many parentheses. But here it's up to you,
+
+...
+
+> +               case 2:
+
+> +                       val = ((const u16 *)data)[i];
+
+Can't you do this in each branch below?
+
+> +                       if (endianness == IIO_BE)
+> +                               val = be16_to_cpu(val);
+> +                       else if (endianness == IIO_LE)
+> +                               val = le16_to_cpu(val);
+> +                       break;
+
+...
+
+> +       device_for_each_child_node(dev, child) {
+> +               ret = fwnode_property_read_u32(child, "reg", &i);
+> +               if (ret || i >= num_axes) {
+> +                       dev_err(dev, "reg invalid or missing");
+> +                       goto err;
+> +               }
 > +
-> +               /*
-> +                * Don't allow linking a device node as consumer of a disabled
-> +                * node.
-> +                */
-
-Minor nit: I'd just say "Don't allow linking to a disabled supplier".
-
-> +               if (!of_device_is_available(sup_np)) {
-> +                       dev_dbg(dev, "Not linking to %pOFP - Not available\n",
-> +                               sup_np);
-> +                       of_node_put(sup_np);
-> +                       return -ENODEV;
+> +               if (fwnode_property_read_u32(child, "linux,code",
+> +                                            &axes[i].code)) {
+> +                       dev_err(dev, "linux,code invalid or missing");
+> +                       goto err;
+> +               }
+> +
+> +               if (fwnode_property_read_u32_array(child, "abs-range",
+> +                                                  axes[i].range, 2)) {
+> +                       dev_err(dev, "abs-range invalid or missing");
+> +                       goto err;
 > +               }
 
-This if block looks very similar to the one right after the loop.
-Maybe there's a nice way to combine it?
-
-If you replace this if block with this, it'll end up with the same result.
-if (!of_device_is_available(sup_np)) {
-        of_node_put(sup_np);
-        sup_np = NULL;
-}
-
-of_get_next_parent() handles a NULL input properly. So that won't be a
-problem. And "No device" is a valid statement for both cases I think.
-
-> +
-> +               if (of_find_property(sup_np, "compatible", NULL))
-> +                       break;
-> +
->                 sup_np = of_get_next_parent(sup_np);
 > +       }
 > +
->         if (!sup_np) {
->                 dev_dbg(dev, "Not linking to %pOFP - No device\n", tmp_np);
->                 return -ENODEV;
+> +       joy->axes = axes;
+> +
+> +       return 0;
+> +
+> +err:
+> +       fwnode_handle_put(child);
 
-However, not against this patch as is if Rob/Frank like it as is.
+> +       return -EINVAL;
 
--Saravana
+Can we avoid shadowing the actual error code?
+
+...
+
+> +       bits = joy->chans[0].channel->scan_type.storagebits;
+
+> +       if (!bits || (bits >> 3) > 2) {
+
+Wouldn't be clear to use simple 'bits > 16'?
+
+> +               dev_err(dev, "Unsupported channel storage size");
+> +               return -EINVAL;
+> +       }
+
+...
+
+> +static const struct of_device_id adc_joystick_of_match[] = {
+> +       { .compatible = "adc-joystick", },
+> +       { },
+> +};
+> +MODULE_DEVICE_TABLE(of, adc_joystick_of_match);
+> +
+> +static struct platform_driver adc_joystick_driver = {
+> +       .driver = {
+> +               .name = "adc-joystick",
+
+> +               .of_match_table = of_match_ptr(adc_joystick_of_match),
+
+Drop this a bit harmful of_match_ptr() macro. It should go with ugly
+#ifdeffery. Here you simple introduced a compiler warning.
+On top of that, you are using device property API, OF use in this case
+is contradictory (at lest to some extend).
+
+> +       },
+> +       .probe = adc_joystick_probe,
+> +};
+
+-- 
+With Best Regards,
+Andy Shevchenko
