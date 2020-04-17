@@ -2,158 +2,95 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36673C352BE
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 10:30:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AA12C352BE
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 10:32:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0F45321D95
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 10:30:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56ED3221EB
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 10:32:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="OJJIIwuj"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ywRwzmQX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729307AbgDQKas (ORCPT
+        id S1727874AbgDQKcZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 06:30:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54656 "EHLO
+        Fri, 17 Apr 2020 06:32:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54914 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728830AbgDQKar (ORCPT
+        by vger.kernel.org with ESMTP id S1726469AbgDQKcY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 06:30:47 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8DA77C061A0C;
-        Fri, 17 Apr 2020 03:30:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Transfer-Encoding
-        :Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-        Sender:Reply-To:Content-ID:Content-Description;
-        bh=5T+iJux5AD2LbQoaV8j0BcNwC32G2ubqGpp3NLw7K2U=; b=OJJIIwujh1arTkzUU+hPFfANoY
-        NiFEfLxyk7MLGkT08KL5BncSK7vyJY5V1xcSdc9lu4nmdLJWsOOjLtcHiAFMxitLUHUhiDjpxfur5
-        re+nSC6fHG0QGIQepP+ceQyfoA498aJNGGkDr8wP1kTpcdo48Dbs7e5ih92O3nndERPXsTZSpJ9J5
-        eGj1sgLq1Zy0x0/y/NQh7uct6dhQwwEu+QZ88iicydfw2e/NkA1C05v7rJHyuUD+IfeLPpFKwD4WA
-        Jc2eMY70zCMsMSJgshZNIsYf8F/uwbsy+9V7UIrA79dxto2GrGLCaxDqW56X6o2O4Y0O0qZg4kN5G
-        KvHh6R6Q==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jPOGL-0007BH-EK; Fri, 17 Apr 2020 10:30:21 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 1EEC53006E0;
-        Fri, 17 Apr 2020 12:30:17 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 075632B0DE450; Fri, 17 Apr 2020 12:30:17 +0200 (CEST)
-Date:   Fri, 17 Apr 2020 12:30:16 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     "Xu, Like" <like.xu@intel.com>
-Cc:     Like Xu <like.xu@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
-        Andi Kleen <ak@linux.intel.com>,
-        Jim Mattson <jmattson@google.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Liran Alon <liran.alon@oracle.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Liang Kan <kan.liang@linux.intel.com>,
-        Wei Wang <wei.w.wang@intel.com>, linux-kernel@vger.kernel.org,
-        Ingo Molnar <mingo@kernel.org>
-Subject: Re: [PATCH v9 03/10] perf/x86: Add constraint to create guest LBR
- event without hw counter
-Message-ID: <20200417103016.GV20730@hirez.programming.kicks-ass.net>
-References: <20200313021616.112322-1-like.xu@linux.intel.com>
- <20200313021616.112322-4-like.xu@linux.intel.com>
- <20200409163717.GD20713@hirez.programming.kicks-ass.net>
- <0b89963d-33d8-3b0f-fc56-eff3ccce648d@intel.com>
+        Fri, 17 Apr 2020 06:32:24 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F481C061A0F
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 03:32:24 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id h25so1474235lja.10
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 03:32:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=gqTZqGTsSmrCAsKabRRCDqcEbF//TC1XPh5bWqTeeJw=;
+        b=ywRwzmQXj0N15QtED4mbKHHxNMxp+dKkqB02inJG6CliOcv/3OC2yaxGGjLQAjZp4o
+         WnfZm8STb6DjwbMaTEQdFSGXkWWXZAtj+NzMJh7PpokgIRLzyZaqtGLhxYO1f/bJGA04
+         T7ySiF2Q/AINsIukerlIXfdLOmY+p4+N5Z8HzL5tP2jDfG3J8emKgGWjWXct3zMFpwKb
+         r9jrhH0xzGEZ5wje0oGTgCw/ilago7SPrxqfAblSyzrVSryjystpYW8/rKU2i8CRvgYd
+         F5jvSYlWi0gbUVXIMfDFXOg8/gVjOm5RT0P7N39+0gG+vpJxNKYGYUKdZHsFF/x9HrcO
+         D3Vw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=gqTZqGTsSmrCAsKabRRCDqcEbF//TC1XPh5bWqTeeJw=;
+        b=IlYN57ukJfFzZ08caGfuLIYM4MxS30n7k4VeFaagJe2QMIqRqi39UjIh0YGiaFH/Bh
+         7yXpRldVS5dw3+YzsmNhWHKB72RPN90twDyT2JUwhFfXr/3qDBOs2maRkpENX/Sh5cut
+         7uiH4H/5GOcPUHW3AND/hqOyZgnbgOFuKhKaxxKMei/0FoqA8ayQSUVtHpn5kmMMg3oG
+         Fh+asZWY/6mKgyiIjVMefxr/YWvmFvcBxWoBGzK2WROOanEfUz+i++3+hz9S7qXcjo69
+         0E8rZ554X2sLzvUaAUm8Er8ArbmJd7Sb6raU3fAyQLDUG8aXp2LgY20SvoZCRAZeqZg7
+         QwSg==
+X-Gm-Message-State: AGi0Pub9Zso0SFxpslv4nn1f3vGsMHVI/LRYD3fWaL7GMY05nS6kMSKH
+        tRsIdtT2+7ZQ6Gd8NfX72jsWVXApXkLm0/4VGXBjfA==
+X-Google-Smtp-Source: APiQypLAl4mqnWMVQC+ZN2inks+YZp11ZLS8VUKuXUOYfoUWZq/ZxzWXQvOW3gzuEVyBVbRMrGdjP4t68o56ttFlBNk=
+X-Received: by 2002:a05:651c:23b:: with SMTP id z27mr1627862ljn.125.1587119542755;
+ Fri, 17 Apr 2020 03:32:22 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <0b89963d-33d8-3b0f-fc56-eff3ccce648d@intel.com>
+References: <20200417082851.7d68e9ea@canb.auug.org.au>
+In-Reply-To: <20200417082851.7d68e9ea@canb.auug.org.au>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Fri, 17 Apr 2020 12:32:11 +0200
+Message-ID: <CACRpkdY1UtTtRK7LaUxrBFRFooeT4s7h0GSKHNhsZrrMtJ5=3A@mail.gmail.com>
+Subject: Re: linux-next: Signed-off-by missing for commits in the gpio tree
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 10, 2020 at 11:03:33AM +0800, Xu, Like wrote:
-> On 2020/4/10 0:37, Peter Zijlstra wrote:
+On Fri, Apr 17, 2020 at 12:28 AM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
 
-> > That should sort the branches in order of: gp,fixed,bts,vlbr
-> 
-> Note the current order is: bts, pebs, fixed, gp.
+> Commits
+>
+>   fe5dfc6af3eb ("MAINTAINERS: Add Segey Semin to maintainers of DW APB GPIO driver")
+>   49a369f94046 ("gpio: dwapb: Add debounce reference clock support")
+>   cbabbfa160bd ("gpio: dwapb: Use optional-clocks interface for APB ref-clock")
+>   fb7e1fc1b806 ("dt-bindings: gpio: Add Sergey Semin to DW APB GPIO driver maintainers")
+>   7f51dbb7cab7 ("dt-bindings: gpio: Add DW GPIO debounce clock property")
+>   179587eb757f ("dt-bindings: gpio: Convert snps,dw-apb-gpio to DT schema")
+>
+> are missing a Signed-off-by from their committer.
 
-Yeah, and that means that gp (which is I think the most common case) is
-the most expensive.
+Ooops I hurt myself on the b4 tool, forgetting to pass --signoff to the
+resulting git am foo.mbx... need to learn habits.
 
-> Sure, let me try to refactor it in this way.
+Sometimes I feel there should be some git am hook that just enforce
+my --signoff on branches that go upstream so it can't go wrong.
+Has anyone seen something like that?
 
-Thanks!
-
-> > > +static inline bool is_guest_event(struct perf_event *event)
-> > > +{
-> > > +	if (event->attr.exclude_host && is_kernel_event(event))
-> > > +		return true;
-> > > +	return false;
-> > > +}
-> > I don't like this one, what if another in-kernel users generates an
-> > event with exclude_host set ?
-> Thanks for the clear attitude.
-> 
-> How about:
-> - remove the is_guest_event() to avoid potential misuse;
-> - move all checks into is_guest_lbr_event() and make it dedicated:
-> 
-> static inline bool is_guest_lbr_event(struct perf_event *event)
-> {
->     if (is_kernel_event(event) &&
->         event->attr.exclude_host && needs_branch_stack(event))
->         return true;
->     return false;
-> }
-> 
-> In this case, it's safe to generate an event with exclude_host set
-> and also use LBR to count guest or nothing for other in-kernel users
-> because the intel_guest_lbr_event_constraints() makes LBR exclusive.
-> 
-> For this generic usage, I may rename:
-> - is_guest_lbr_event() to is_lbr_no_counter_event();
-> - intel_guest_lbr_event_constraints() to
-> intel_lbr_no_counter_event_constraints();
-> 
-> Is this acceptable to you？
-
-I suppose so, please put a comment on top of that function though, so we
-don't forget.
-
-> > > @@ -181,9 +181,19 @@ struct x86_pmu_capability {
-> > >   #define GLOBAL_STATUS_UNC_OVF				BIT_ULL(61)
-> > >   #define GLOBAL_STATUS_ASIF				BIT_ULL(60)
-> > >   #define GLOBAL_STATUS_COUNTERS_FROZEN			BIT_ULL(59)
-> > > -#define GLOBAL_STATUS_LBRS_FROZEN			BIT_ULL(58)
-> > > +#define GLOBAL_STATUS_LBRS_FROZEN_BIT			58
-> > > +#define GLOBAL_STATUS_LBRS_FROZEN			BIT_ULL(GLOBAL_STATUS_LBRS_FROZEN_BIT)
-> > >   #define GLOBAL_STATUS_TRACE_TOPAPMI			BIT_ULL(55)
-> > > +/*
-> > > + * We model guest LBR event tracing as another fixed-mode PMC like BTS.
-> > > + *
-> > > + * We choose bit 58 (LBRS_FROZEN_BIT) which is used to indicate that the LBR
-> > > + * stack is frozen on a hardware PMI request in the PERF_GLOBAL_STATUS msr,
-> > > + * and the 59th PMC counter (if any) is not supposed to use it as well.
-> > Is this saying that STATUS.58 should never be set? I don't really
-> > understand the language.
-> My fault, and let me make it more clearly:
-> 
-> We choose bit 58 because it's used to indicate LBR stack frozen state
-> not like other overflow conditions in the PERF_GLOBAL_STATUS msr,
-> and it will not be used for any actual fixed events.
-
-That's only with v4, also we unconditionally mask that bit in
-handle_pmi_common(), so it'll never be set in the overflow handling.
-
-That's all fine, I suppose, all you want is means of programming the LBR
-registers, we don't actually do anything with then in the host context.
-Please write a more elaborate comment here.
+Yours,
+Linus Walleij
