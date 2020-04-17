@@ -2,147 +2,273 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F861C2BB55
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 07:55:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA458C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 07:57:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7EAA82137B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 07:55:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 952082137B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 07:57:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="snrlRQN2"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="AluqYVhE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729566AbgDQHzS (ORCPT
+        id S1729500AbgDQH5r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 03:55:18 -0400
-Received: from mail-db8eur05on2054.outbound.protection.outlook.com ([40.107.20.54]:31143
-        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728330AbgDQHzR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 03:55:17 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=H9vMZP6ZsOXQImhLWX6OSRA0/O9ISOGUU/NXRC6joM3OLagAGAIOcCN6viPdDfmz02qdeORjO95Vt2l2A0REq7LZQTvQPe3sYmIvEH956NCwBusEEMSC4vw97kNgJpVk9a1xI87GfWKRwAiY1vyaguRFSDy/QbIN1tR1IlL0MP12Mu+UfWMfVh93UIspIxVYFvB5bHnfvP2mrDYzbRxeRqyOnxbib2oPNriGbkaOyItsxPgfnH9cw3dq9wdKuBItgk6sumTfCAlQDOtomU7TbSKuuB1pNtQDxYBpB7IOmsdfh0YLJCOIdkCWjILWIU8loREsEyC7WIeGBGAb/CFa2w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=mbdbjL9D+ean5ZtuIpcFCnHZjuyArRZ5nKNN81Srew4=;
- b=lBbYnXgWgl/skhYpkLIq23PVfadYDrnCTwFZxuqvIEpKjhwygZXO/QvhiinaXUzs/EGZ3e8SiLunweAmwlJYbWrj37J7nUS5mw+QlSwgsOK79/aBtuYTHV7Hv0Da6i8Vcjrycgn3La95uqO2IEvEKnYEZxRMJi+3bEsaK+ApRmXiXHafFw6ng8g10xXLQTg5KYEK7QhP2Ap4uWD4oFwFeh+USp8kaiiOoeMn72DPPE9/4nZ1zYVww/1PBb2hQkQGJ6MCmfMt/FtVwcETusyRpX94N+yQP/39kjfapUFADTJj0MMIu28jnwCqc7ff+1KuRsg01nOf/OPOepETQ2cTRw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=mbdbjL9D+ean5ZtuIpcFCnHZjuyArRZ5nKNN81Srew4=;
- b=snrlRQN20tdkA/GuLA7VCN7qUzcxpQfREOYD8U1dwGjWIohHfUvipoyGiox7RfMorP0t/etVIiRn6Z3K1Kq7hjM5FaF+dp5kleuUC74079vU/jKi3rtwXDpJX6Hb78Nflzz8KpGByUZXBT/BV1cDuFhtRbMvpF0PiLjrEpse+AA=
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (2603:10a6:8:10::18)
- by DB3PR0402MB3753.eurprd04.prod.outlook.com (2603:10a6:8:e::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2921.25; Fri, 17 Apr
- 2020 07:55:12 +0000
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::3143:c46:62e4:8a8b]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::3143:c46:62e4:8a8b%7]) with mapi id 15.20.2900.028; Fri, 17 Apr 2020
- 07:55:12 +0000
-From:   Anson Huang <anson.huang@nxp.com>
-To:     Marco Felsch <m.felsch@pengutronix.de>
-CC:     "mturquette@baylibre.com" <mturquette@baylibre.com>,
-        "sboyd@kernel.org" <sboyd@kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: RE: [PATCH V3 1/5] dt-bindings: clock: Convert i.MX6Q clock to
- json-schema
-Thread-Topic: [PATCH V3 1/5] dt-bindings: clock: Convert i.MX6Q clock to
- json-schema
-Thread-Index: AQHWFFIY18ixE2pSOkulfD2QNeGmeah88E4AgAABqcA=
-Date:   Fri, 17 Apr 2020 07:55:12 +0000
-Message-ID: <DB3PR0402MB391662E6DC10F745DC5984FBF5D90@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-References: <1587084091-5941-1-git-send-email-Anson.Huang@nxp.com>
- <20200417074742.geo3hvvencztb3xv@pengutronix.de>
-In-Reply-To: <20200417074742.geo3hvvencztb3xv@pengutronix.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=anson.huang@nxp.com; 
-x-originating-ip: [119.31.174.68]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: a6a0fb65-fc61-4d1f-0816-08d7e2a4a8a2
-x-ms-traffictypediagnostic: DB3PR0402MB3753:|DB3PR0402MB3753:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB3PR0402MB375312D599D62861D75EFB5FF5D90@DB3PR0402MB3753.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-forefront-prvs: 0376ECF4DD
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(366004)(396003)(39860400002)(376002)(346002)(136003)(55016002)(53546011)(76116006)(8936002)(6916009)(7416002)(316002)(54906003)(66946007)(7696005)(71200400001)(5660300002)(9686003)(478600001)(66446008)(66476007)(64756008)(66556008)(186003)(81156014)(2906002)(86362001)(8676002)(6506007)(52536014)(4326008)(44832011)(33656002)(26005)(4744005);DIR:OUT;SFP:1101;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: Qrj5QksMjB7j0MtNr0p8NwZCCDlrlvPmUb+iHBf3cyx6S1YvzVM5TCaQEcFx65LuqpRQlk32LXo8pka/sv3IfVqJ3/psL3xb21VhlXSYCRavNbHqla0MQYLdn8UJjVU/k/J7UIGAd9cGyefDI1trdPcplII0RvlN9wo5DjjmED3y9RMnffokFFkmbnLokDilR8SckOdX6RA7cqMFMCHWFLkuu24jAA9gfSPVxSUiU4HX/piIASRMFpwh/oRlbSbSz6tZEXrOO5ceUgTau2EBWcXgjtIfyPsqDEOTjdIX9NW9JmFxLxVaYBYQ+KPj2opBeiZ9/TxfYcSFfWwFQe6c0RHoFCw5L36aEXXHDPsoMk6zmTqtEx7J0Loc4jaVXN8pvSp2cpeG6+usn4AFv0J64fbjAOtZo86o2c7+rLnhGy8yNA8v2v29A8hElSWYzt1p
-x-ms-exchange-antispam-messagedata: AOCXs2PZzydr/l/FCH9j6dnJ1Y3MyarYBFcFNK1kl5tXu2ga2lk/Yj3dx0nxwSnHhAa59MV3it25otNKdOW6AVAqXV1WEiu8xHhTy+4mgfildL9cfCew9EcT1jCL7RwIdDgHL2XEKdbUbYJ+GDsxdw==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Fri, 17 Apr 2020 03:57:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58992 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729112AbgDQH5q (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Apr 2020 03:57:46 -0400
+Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7E29C061A0C
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 00:57:46 -0700 (PDT)
+Received: from zn.tnic (p200300EC2F0DA8008DA98E92B4F5B53B.dip0.t-ipconnect.de [IPv6:2003:ec:2f0d:a800:8da9:8e92:b4f5:b53b])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 06A3E1EC0D05;
+        Fri, 17 Apr 2020 09:57:43 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1587110264;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=zuEo7svkjrMtI2OullVs2TYs+y2TT7+L22ms+w42ubo=;
+        b=AluqYVhE2FzTFdXUeT4xeP8Zqbda3m78zs7OAlMcnAi+6WBNp1ceDsd6keLqHn0nwuthvX
+        ZlotGM4DmPg6brZch9pfEg4Cbg/OnSbp0NkBnkBt7leIyqs8BI2Kd0rh08QSYpqptNrYTb
+        7Z9mP/tTgmtACpZFe+aplNPkz2vHB9A=
+Date:   Fri, 17 Apr 2020 09:57:39 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Sergei Trofimovich <slyfox@gentoo.org>
+Cc:     Michael Matz <matz@suse.de>, Jakub Jelinek <jakub@redhat.com>,
+        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>, x86@kernel.org
+Subject: Re: [PATCH v2] x86: fix early boot crash on gcc-10
+Message-ID: <20200417075739.GA7322@zn.tnic>
+References: <20200326223501.GK11398@zn.tnic>
+ <20200328084858.421444-1-slyfox@gentoo.org>
+ <20200413163540.GD3772@zn.tnic>
+ <alpine.LSU.2.21.2004141343370.11688@wotan.suse.de>
+ <20200415074842.GA31016@zn.tnic>
+ <alpine.LSU.2.21.2004151445520.11688@wotan.suse.de>
+ <20200415231930.19755bc7@sf>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a6a0fb65-fc61-4d1f-0816-08d7e2a4a8a2
-X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Apr 2020 07:55:12.6400
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: I/1tusVLhP8C33dsLbxkgkN2RVVjYlwqxWIBA2WQAhemBuUWL0ejLiFY4ND10nOFO5PxNz2rldCqZY/Eedw5DA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3753
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200415231930.19755bc7@sf>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Marco
+On Wed, Apr 15, 2020 at 11:19:30PM +0100, Sergei Trofimovich wrote:
+> Ah, that makes sense. Borislav, should I send a fix forward against
+> x86 tree to move -fno-stack-protector as it was in v1 patch?
+> Or you'll revert v2 and apply v1 ~as is? Or should I send those myself?
 
-> Subject: Re: [PATCH V3 1/5] dt-bindings: clock: Convert i.MX6Q clock to
-> json-schema
->=20
-> Hi Anson,
->=20
-> thanks for the patches :) one last nitpick.
->=20
-> On 20-04-17 08:41, Anson Huang wrote:
->=20
-> ...
->=20
-> > +examples:
-> > +  # Clock Control Module node:
-> > +  - |
-> > +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> > +
-> > +    clks: clock-controller@20c4000 {
-> > +        compatible =3D "fsl,imx6q-ccm";
-> > +        reg =3D <0x020c4000 0x4000>;
-> > +        interrupts =3D <0 87 IRQ_TYPE_LEVEL_HIGH>,
-> > +                     <0 88 IRQ_TYPE_LEVEL_HIGH>;
->=20
-> The imx6ull and others start using the GIC_SPI define within the example.=
- We
-> should take the chance to uniform that. Apart of this feel free to add my=
-:
->=20
-> Reviewed-by: Marco Felsch <m.felsch@pengutronix.de>
+Yeah, Peter and I have been discussing something like the below
+yesterday. I don't like the additional exports too much but would
+disable stack protector only for the one function...
 
-OK, if there is other comments that need to send next version, I will chang=
-e it.
+---
+diff --git a/arch/x86/include/asm/processor.h b/arch/x86/include/asm/processor.h
+index 3bcf27caf6c9..e258a6a21674 100644
+--- a/arch/x86/include/asm/processor.h
++++ b/arch/x86/include/asm/processor.h
+@@ -990,4 +990,8 @@ enum mds_mitigations {
+ 	MDS_MITIGATION_VMWERV,
+ };
+ 
++extern int enable_start_cpu0;
++void smp_callin(void);
++void notrace start_secondary(void *unused);
++
+ #endif /* _ASM_X86_PROCESSOR_H */
+diff --git a/arch/x86/kernel/Makefile b/arch/x86/kernel/Makefile
+index 92e1261ec4ec..7130ca9edc50 100644
+--- a/arch/x86/kernel/Makefile
++++ b/arch/x86/kernel/Makefile
+@@ -87,7 +87,13 @@ obj-$(CONFIG_PCI)		+= early-quirks.o
+ apm-y				:= apm_32.o
+ obj-$(CONFIG_APM)		+= apm.o
+ obj-$(CONFIG_SMP)		+= smp.o
+-obj-$(CONFIG_SMP)		+= smpboot.o
++
++nostackprot := $(call cc-option, -fno-stack-protector)
++CFLAGS_smpboot_aux.o := $(nostackprot)
++
++smpboot_all-y			:= smpboot.o smpboot_aux.o
++obj-$(CONFIG_SMP)		+= smpboot_all.o
++
+ obj-$(CONFIG_X86_TSC)		+= tsc_sync.o
+ obj-$(CONFIG_SMP)		+= setup_percpu.o
+ obj-$(CONFIG_X86_MPPARSE)	+= mpparse.o
+diff --git a/arch/x86/kernel/smpboot.c b/arch/x86/kernel/smpboot.c
+index 3b9bf8c7e29d..1ce6280999f9 100644
+--- a/arch/x86/kernel/smpboot.c
++++ b/arch/x86/kernel/smpboot.c
+@@ -153,7 +153,7 @@ static void init_freq_invariance(void);
+  * Report back to the Boot Processor during boot time or to the caller processor
+  * during CPU online.
+  */
+-static void smp_callin(void)
++void smp_callin(void)
+ {
+ 	int cpuid;
+ 
+@@ -208,65 +208,7 @@ static void smp_callin(void)
+ }
+ 
+ static int cpu0_logical_apicid;
+-static int enable_start_cpu0;
+-/*
+- * Activate a secondary processor.
+- */
+-static void notrace start_secondary(void *unused)
+-{
+-	/*
+-	 * Don't put *anything* except direct CPU state initialization
+-	 * before cpu_init(), SMP booting is too fragile that we want to
+-	 * limit the things done here to the most necessary things.
+-	 */
+-	cr4_init();
+-
+-#ifdef CONFIG_X86_32
+-	/* switch away from the initial page table */
+-	load_cr3(swapper_pg_dir);
+-	__flush_tlb_all();
+-#endif
+-	load_current_idt();
+-	cpu_init();
+-	x86_cpuinit.early_percpu_clock_init();
+-	preempt_disable();
+-	smp_callin();
+-
+-	enable_start_cpu0 = 0;
+-
+-	/* otherwise gcc will move up smp_processor_id before the cpu_init */
+-	barrier();
+-	/*
+-	 * Check TSC synchronization with the boot CPU:
+-	 */
+-	check_tsc_sync_target();
+-
+-	speculative_store_bypass_ht_init();
+-
+-	/*
+-	 * Lock vector_lock, set CPU online and bring the vector
+-	 * allocator online. Online must be set with vector_lock held
+-	 * to prevent a concurrent irq setup/teardown from seeing a
+-	 * half valid vector space.
+-	 */
+-	lock_vector_lock();
+-	set_cpu_online(smp_processor_id(), true);
+-	lapic_online();
+-	unlock_vector_lock();
+-	cpu_set_state_online(smp_processor_id());
+-	x86_platform.nmi_init();
+-
+-	/* enable local interrupts */
+-	local_irq_enable();
+-
+-	/* to prevent fake stack check failure in clock setup */
+-	boot_init_stack_canary();
+-
+-	x86_cpuinit.setup_percpu_clockev();
+-
+-	wmb();
+-	cpu_startup_entry(CPUHP_AP_ONLINE_IDLE);
+-}
++int enable_start_cpu0;
+ 
+ /**
+  * topology_is_primary_thread - Check whether CPU is the primary SMT thread
+diff --git a/arch/x86/kernel/smpboot_aux.c b/arch/x86/kernel/smpboot_aux.c
+new file mode 100644
+index 000000000000..8863fde54eed
+--- /dev/null
++++ b/arch/x86/kernel/smpboot_aux.c
+@@ -0,0 +1,70 @@
++#include <linux/cpu.h>
++
++#include <asm/desc.h>
++#include <asm/hw_irq.h>
++#include <asm/spec-ctrl.h>
++#include <asm/processor.h>
++#include <asm/stackprotector.h>
++
++/*
++ * Activate a secondary processor.
++ *
++ * Note: boot_init_stack_canary() sets up the canary value so omit the stack
++ * canary creation for this function only by keeping it in a separate
++ * compilation unit.
++ */
++void notrace start_secondary(void *unused)
++{
++	/*
++	 * Don't put *anything* except direct CPU state initialization
++	 * before cpu_init(), SMP booting is too fragile that we want to
++	 * limit the things done here to the most necessary things.
++	 */
++	cr4_init();
++
++#ifdef CONFIG_X86_32
++	/* switch away from the initial page table */
++	load_cr3(swapper_pg_dir);
++	__flush_tlb_all();
++#endif
++	load_current_idt();
++	cpu_init();
++	x86_cpuinit.early_percpu_clock_init();
++	preempt_disable();
++	smp_callin();
++
++	enable_start_cpu0 = 0;
++
++	/* otherwise gcc will move up smp_processor_id before the cpu_init */
++	barrier();
++	/*
++	 * Check TSC synchronization with the boot CPU:
++	 */
++	check_tsc_sync_target();
++
++	speculative_store_bypass_ht_init();
++
++	/*
++	 * Lock vector_lock, set CPU online and bring the vector
++	 * allocator online. Online must be set with vector_lock held
++	 * to prevent a concurrent irq setup/teardown from seeing a
++	 * half valid vector space.
++	 */
++	lock_vector_lock();
++	set_cpu_online(smp_processor_id(), true);
++	lapic_online();
++	unlock_vector_lock();
++	cpu_set_state_online(smp_processor_id());
++	x86_platform.nmi_init();
++
++	/* enable local interrupts */
++	local_irq_enable();
++
++	/* to prevent fake stack check failure in clock setup */
++	boot_init_stack_canary();
++
++	x86_cpuinit.setup_percpu_clockev();
++
++	wmb();
++	cpu_startup_entry(CPUHP_AP_ONLINE_IDLE);
++}
 
-Thanks,
-Anson
+-- 
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
