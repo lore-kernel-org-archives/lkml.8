@@ -2,95 +2,90 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19555C38A2B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 14:21:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 687F2C38A2B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 14:22:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E340C20857
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 14:21:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B79520857
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 14:22:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="AdY1FakQ"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="hcfQPOHy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726382AbgDQOVT (ORCPT
+        id S1726429AbgDQOW3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 10:21:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33998 "EHLO
+        Fri, 17 Apr 2020 10:22:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34172 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725796AbgDQOVT (ORCPT
+        with ESMTP id S1725906AbgDQOW3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 10:21:19 -0400
-Received: from mo6-p02-ob.smtp.rzone.de (mo6-p02-ob.smtp.rzone.de [IPv6:2a01:238:20a:202:5302::7])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9109C061A0C;
-        Fri, 17 Apr 2020 07:21:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1587133277;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=7kjhvy86KZzZOuUOpUtvnjFtfnnF8Cv7o7DriQuJiC4=;
-        b=AdY1FakQVUpLcJ6kwEI7w6cpYt9OTc7N5UBvt+Lmn7ieBFSw11p/UEfpzmluz0KJn2
-        l90R3DaUH4LRINJ+8/huctH4/KqbB+PaAycJdB4P7OIr/qdGhZvIPd/yZr27N+HO2uad
-        PyuDKbVnNbSuuWDCvZynqkSeZ+sZYVICXdM9lQKacyU7Abd4wp1ZoVnW0nRcyV06R1S6
-        X5xxjoFLMe4LKAubpHFf0fgM8CTSvtUcOE6lDM0n4XlPrg8O9ex/rXRyTcaWBpN+auNt
-        3//HQZ9YLv2emyZtWwMZA6MeLTTxVS/rYKfoO73wvuochH9I2pm7QYhJr87P8kN4MK+6
-        LAGQ==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj7wpz8NMGH/PgwDWjbQ=="
-X-RZG-CLASS-ID: mo00
-Received: from imac.fritz.box
-        by smtp.strato.de (RZmta 46.5.0 DYNA|AUTH)
-        with ESMTPSA id g06d2dw3HEL529h
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
-        (Client did not present a certificate);
-        Fri, 17 Apr 2020 16:21:05 +0200 (CEST)
-Subject: Re: [PATCHv3] w1: omap-hdq: Simplify driver with PM runtime autosuspend
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Content-Type: text/plain; charset=us-ascii
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-In-Reply-To: <20200416203309.GK37466@atomide.com>
-Date:   Fri, 17 Apr 2020 16:21:05 +0200
-Cc:     Andreas Kemnade <andreas@kemnade.info>,
-        Evgeniy Polyakov <zbr@ioremap.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
-        Adam Ford <aford173@gmail.com>,
-        "Andrew F . Davis" <afd@ti.com>, Vignesh R <vigneshr@ti.com>
+        Fri, 17 Apr 2020 10:22:29 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E073CC061A0F
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 07:22:27 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id o185so642159pgo.3
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 07:22:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=1mjhi/vw2O0pWtL1L+I1BJBKmVKf6YJhnj/uKAs8WK0=;
+        b=hcfQPOHy1owTc4NkDbg1cgGC14uO4Or6hks8TjO4dr9ed6hyywwRm09/xwhxDeChmM
+         noRyzKQuYp2YSki89Y74KpaOMgQ4bDO3Hj+1U4t2RThLBEXcS+UPZT+SKHV/5LjFr6+R
+         sZZK1tife+ycq7118QoM94kgot4rFUlgqWbxRzaoam+rkfuqi/Wj+zmsMOxvFOlJ3TjI
+         Xp0fWM8NCuAKx6WWBS3A0lz870stnrTfqNFFzCxmYBl4ccHWETcnUlIhld/24dkd54+S
+         41l8a4gREnxQmoH+IxClKsq7VUnssX4ds1zlJ9ICT0cfeNA1MCxlIqYFAF4OAJqZB9Sw
+         Z39w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=1mjhi/vw2O0pWtL1L+I1BJBKmVKf6YJhnj/uKAs8WK0=;
+        b=Vb4jFrTxxKfinU/VthEYKqjQ+WLka0mA0TBaSjmsQzDoO0fB81RwVy0bCX+26Jk7k/
+         53uaQDdntbDI1Y0cvQyxST35s0ISPGkbAyH95VW3csnxhoUyN1Joq17pWvIxR9wNPd41
+         RgIloFadIYQ+Q9hhZJjaZa5YMJpDN9H++MrUN3Id30XKC4bZXu+C/xvjWaIxLngkGEYN
+         einU67yN3KuV1MI+27iS65os6L9HbatHFogE7SyUMo+EnnmoHUOiiutMhI4yEoNgeXyL
+         DX+S4lps8lXzgjpuJInkW2YRFjZZ70lxAyw2Zi72gaCPNU7X54DyGNM8Qw7bmH2Ku+In
+         UB4Q==
+X-Gm-Message-State: AGi0PubWBEhUjKiixUjV8++O5HUJOXhkZw9u4Aq9fJ9vFSQHQ1LniP11
+        nc6xzosbHkPv6h/DH26oVdRAFFoJAMfQDQ==
+X-Google-Smtp-Source: APiQypIHuLffI9pE2UOq/KSndl/Gk+ULKTxg3i0PlkKmEpUI42IViGSXfVqhCBtEVbPQL3MuUlkeQA==
+X-Received: by 2002:a63:5125:: with SMTP id f37mr3247139pgb.327.1587133347044;
+        Fri, 17 Apr 2020 07:22:27 -0700 (PDT)
+Received: from [192.168.1.188] ([66.219.217.145])
+        by smtp.gmail.com with ESMTPSA id p8sm5897252pjd.10.2020.04.17.07.22.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 17 Apr 2020 07:22:26 -0700 (PDT)
+Subject: Re: [PATCH 1/2] blk-wbt: Use tracepoint_string() for wbt_step
+ tracepoint string literals
+To:     Tommi Rantala <tommi.t.rantala@nokia.com>
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200417130023.104481-1-tommi.t.rantala@nokia.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <3948a162-f983-3b7b-9823-8c75dfe57736@kernel.dk>
+Date:   Fri, 17 Apr 2020 08:22:24 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
+MIME-Version: 1.0
+In-Reply-To: <20200417130023.104481-1-tommi.t.rantala@nokia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-Message-Id: <C47EC6CB-CB84-4F48-994D-01DA4DB44426@goldelico.com>
-References: <20191217004048.46298-1-tony@atomide.com> <7B8C7DD9-095B-48FC-9642-695D07B79E97@goldelico.com> <20200416184638.GI37466@atomide.com> <20200416220449.17068b21@aktux> <20200416203309.GK37466@atomide.com>
-To:     Tony Lindgren <tony@atomide.com>
-X-Mailer: Apple Mail (2.3124)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 4/17/20 7:00 AM, Tommi Rantala wrote:
+> Use tracepoint_string() for string literals that are used in the
+> wbt_step tracepoint, so that userspace tools can display the string
+> content.
 
-> Am 16.04.2020 um 22:33 schrieb Tony Lindgren <tony@atomide.com>:
-> 
-> * Andreas Kemnade <andreas@kemnade.info> [200416 20:05]:
->> On Thu, 16 Apr 2020 11:46:38 -0700
->> Tony Lindgren <tony@atomide.com> wrote:
->>> If that helps, likely we have a missing pm_runtime_get_sync()
->>> somewhere in the driver.
->>> 
->> I have not tested yet with v5.7-rc1 (it is compiling right now),
->> but I have not seen any problems with init=/bin/bash on v5.6
->> and only a minimal set of modules loaded on gta04. I have seen that
->> 42 for IDLEST
-> 
-> Yeah I think you did test this change on gta04 earlier based
-> on the Tested-by from you :)
+Applied 1-2, thanks.
 
-I think Andreas may have simply missed my test situation.
-
-> 
->> So might be something a bit more weird.
-> 
-> OK please let us know what you find out.
-> 
-> Regards,
-> 
-> Tony
+-- 
+Jens Axboe
 
