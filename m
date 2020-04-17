@@ -2,166 +2,164 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4979DC352BE
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 09:31:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C32DC38A2C
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 09:31:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2A18920776
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 09:31:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27CB420776
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 09:31:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lRAgf2/B"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="By0UkC0U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730294AbgDQJb3 (ORCPT
+        id S1730307AbgDQJbc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 05:31:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45384 "EHLO
+        Fri, 17 Apr 2020 05:31:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45390 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730284AbgDQJb2 (ORCPT
+        with ESMTP id S1730284AbgDQJbb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 05:31:28 -0400
-Received: from mail-vs1-xe42.google.com (mail-vs1-xe42.google.com [IPv6:2607:f8b0:4864:20::e42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30B57C061A10
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 02:31:28 -0700 (PDT)
-Received: by mail-vs1-xe42.google.com with SMTP id b5so778513vsb.1
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 02:31:28 -0700 (PDT)
+        Fri, 17 Apr 2020 05:31:31 -0400
+Received: from mail-vs1-xe43.google.com (mail-vs1-xe43.google.com [IPv6:2607:f8b0:4864:20::e43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22DDFC061A0C
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 02:31:31 -0700 (PDT)
+Received: by mail-vs1-xe43.google.com with SMTP id r7so772660vso.2
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 02:31:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=0DhfyrheLxlm64HysXnEP/oVk+ltHF14up7W9jwtxhE=;
-        b=lRAgf2/Bnpu2lykOzQs3F063/lNbfp+Cv6oHIsGRQ+rHDzwagnMciX5ErpIVeWyZlR
-         xaDIoPsB6CDvbCvYko+CiA/QO06lGnL1kuEQZAitTjAK6tKrZ4L7pwWHiDKL0TtRWhET
-         +tLK4WLk9qaJ5znN/CNYFnuISQqDVdyberPQsDOQOOelA7+YDPzsTkUBhlzFdaKMgQRj
-         bh95PvcMW1cZE5xDBeU5iZ6IbGXdippth6/neIS8M0zKfWJ0EPLPlTsnSUCrMOD7sRFA
-         mCIXZSX+l22OYHO1jRKgutQ7f9u+NLeWnBcvI5cDjg5h3hoJtlfmljq7QEh8aTiKpE07
-         YZyg==
+        bh=p64gz4wBBzrCn9693S5Yg9rZbwKOwkix1v4fg68Kaak=;
+        b=By0UkC0UOpKSJshUVUxtFt+AsHtAS3exQ/0f8C0eZVdh7ZlgbbEO/V4/W6S2CLvsEQ
+         la185+DwqLva/ga3ddjQJsHoOckWFGSG/bOGp4zRs8MW9lL1WDRMAoIIAPXCqAOLSeEL
+         F2zkDGqaH4/qUcByFpf7pU7/zVEfcs1IyMNpp8VCxDQqTMzYeTdlbiAaaG/RsazOJGmg
+         s6v79X0qRbhRxMcibMTRHPqhIzkzJW25rgkNY64JpOyVu2eiuCj83apSm9arX5dkAGFI
+         2kax/j+06Gb0y6o6BDMxUD2cbc/bXyuJqpu00MNatNuaDblJnHKjhPxUrsR/+cV5PDm8
+         VGug==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=0DhfyrheLxlm64HysXnEP/oVk+ltHF14up7W9jwtxhE=;
-        b=Pfnok3RfAw4lAkfGzHXdZl+OSEZ7pYWPhjK0YPPQSaQEqXLVMs+XvuJos1ijlXekTt
-         zTMvLjH2l2TTEhPsipKep93wGJej1MoyNVesOSCs7dK/5ObkFP4CW5dbZ1pBlf30LgNq
-         bMU3cUW71Ekl5833Ehqlo1u8H4OLDHd5OV2kEV0JO9BYqRRVTXrkdzXrsh9X3Lw2fIOb
-         umsiwUTDJyAS3h5bDpm3x3EgBC24Z5cd2t6CvPaTw2DEX7gkXTcyQMgI7EBViP7p7Irq
-         iZrVaKzTB5XxKTY8OdK7Lz7FSG9LiQpOvDjbogWReBg+8HlzTMIGl/+4tMW34UM4tlWC
-         uxmQ==
-X-Gm-Message-State: AGi0PuZELlm89P5MjfBjOBwZiz9QrA8dmqcJmlA2yv2Kc7z1JurTj1Aj
-        1IqTHkLvpyT+koyeadIDqhkH2MY0C7Uo+JRg0KQcmA==
-X-Google-Smtp-Source: APiQypJFpluAtonYOz7KEkFYaq6sAXwzGMK54pnlbluzocgJFaP8Z2VGGgHHo1RAOcCOlj2KGfMDe9mEhtqqe5bCTd8=
-X-Received: by 2002:a67:ead1:: with SMTP id s17mr1470684vso.200.1587115887252;
- Fri, 17 Apr 2020 02:31:27 -0700 (PDT)
+        bh=p64gz4wBBzrCn9693S5Yg9rZbwKOwkix1v4fg68Kaak=;
+        b=Vkjb88EAh4MODy5nms5NwNt/SjDrvkWbuGnTb+blvs+mnkhqs59ENJfjTPrH9SnZri
+         YfFsdBvNnxHyMHuvsq1pv3tGOOWH6XwXHQHRTjL4xo9e/8JdqgwrTxlYKdKpgM+Z/PLZ
+         3k1gn4I1KCTDm5GzD0dUQx7ip6bX9wRwKWWLoZmLCd6KhFtauHzy1Emv8vPancM9FVUc
+         I0OUy8VMiR4bGUtNBSQCxIFsrrMZWBrVDTFw/sTxolNzYW3AUN0jbGQLygtwgVFaC2gi
+         CPleihZvZZuoc46uZBXHSGhimqYJa64/+KA40S4QUT4Gg3x5tlbR4QxHk/JP0Oz1wZy7
+         H8tg==
+X-Gm-Message-State: AGi0PuY4z9yYw0EWCKqqjI3IYwMpe5DxcUlBaKrzG7ekEEqdf3dxuorb
+        MO5sZcNj/GpaTArGvmwvLV/EtDPpJm243m3f7A0eaA==
+X-Google-Smtp-Source: APiQypKTNkTpvRdq+a9PAoyBZV9h6xbL3cicvsKIs4XdjEhAkHKBJJUZuuhk8/gcK1ihy/h/WXevsS5Uvr1S19jnvHg=
+X-Received: by 2002:a05:6102:72d:: with SMTP id u13mr1392649vsg.35.1587115890241;
+ Fri, 17 Apr 2020 02:31:30 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200413162717.1.Idece266f5c8793193b57a1ddb1066d030c6af8e0@changeid>
-In-Reply-To: <20200413162717.1.Idece266f5c8793193b57a1ddb1066d030c6af8e0@changeid>
+References: <20200416182402.16858-1-natechancellor@gmail.com>
+In-Reply-To: <20200416182402.16858-1-natechancellor@gmail.com>
 From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Fri, 17 Apr 2020 11:30:51 +0200
-Message-ID: <CAPDyKFog4f1GuZC3BpY-P4yX_FNogGi3x5M3KQmhoO7OQsdQVw@mail.gmail.com>
-Subject: Re: [PATCH] mmc: cqhci: Avoid false "cqhci: CQE stuck on" by not
- open-coding timeout loop
-To:     Douglas Anderson <dianders@chromium.org>
+Date:   Fri, 17 Apr 2020 11:30:54 +0200
+Message-ID: <CAPDyKFr4VX-3Z=iboMbDmhJvwh+GL5wg_50aPw+_j5jMLBWctg@mail.gmail.com>
+Subject: Re: [PATCH] mmc: sdhci-of-arasan: Remove uninitialized ret variables
+To:     Nathan Chancellor <natechancellor@gmail.com>
 Cc:     Adrian Hunter <adrian.hunter@intel.com>,
-        Ritesh Harjani <riteshh@codeaurora.org>,
-        Asutosh Das <asutoshd@codeaurora.org>,
-        Venkat Gopalakrishnan <venkatg@codeaurora.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Konstantin Dorfman <kdorfman@codeaurora.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Subhash Jadavani <subhashj@codeaurora.org>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Manish Narani <manish.narani@xilinx.com>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>
+        clang-built-linux@googlegroups.com,
+        "kernelci . org bot" <bot@kernelci.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 14 Apr 2020 at 01:27, Douglas Anderson <dianders@chromium.org> wrote:
+On Thu, 16 Apr 2020 at 20:24, Nathan Chancellor
+<natechancellor@gmail.com> wrote:
 >
-> Open-coding a timeout loop invariably leads to errors with handling
-> the timeout properly in one corner case or another.  In the case of
-> cqhci we might report "CQE stuck on" even if it wasn't stuck on.
-> You'd just need this sequence of events to happen in cqhci_off():
+> Clang warns:
 >
-> 1. Call ktime_get().
-> 2. Something happens to interrupt the CPU for > 100 us (context switch
->    or interrupt).
-> 3. Check time and; set "timed_out" to true since > 100 us.
-> 4. Read CQHCI_CTL.
-> 5. Both "reg & CQHCI_HALT" and "timed_out" are true, so break.
-> 6. Since "timed_out" is true, falsely print the error message.
+> drivers/mmc/host/sdhci-of-arasan.c:784:9: warning: variable 'ret' is
+> uninitialized when used here [-Wuninitialized]
+>         return ret;
+>                ^~~
+> drivers/mmc/host/sdhci-of-arasan.c:738:9: note: initialize the variable
+> 'ret' to silence this warning
+>         int ret;
+>                ^
+>                 = 0
+> drivers/mmc/host/sdhci-of-arasan.c:860:9: warning: variable 'ret' is
+> uninitialized when used here [-Wuninitialized]
+>         return ret;
+>                ^~~
+> drivers/mmc/host/sdhci-of-arasan.c:810:9: note: initialize the variable
+> 'ret' to silence this warning
+>         int ret;
+>                ^
+>                 = 0
+> 2 warnings generated.
 >
-> Rather than fixing the polling loop, use readx_poll_timeout() like
-> many people do.  This has been time tested to handle the corner cases.
+> This looks like a copy paste error. Neither function has handling that
+> needs ret so just remove it and return 0 directly.
 >
-> Fixes: a4080225f51d ("mmc: cqhci: support for command queue enabled host")
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> Fixes: f73e66a36772 ("sdhci: arasan: Add support for Versal Tap Delays")
+> Link: https://github.com/ClangBuiltLinux/linux/issues/996
+> Reported-by: kernelci.org bot <bot@kernelci.org>
+> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
 
-Applied for fixes, and by adding a stable tag, thanks!
+Applied for next, thanks!
 
 Kind regards
 Uffe
 
 
 > ---
+>  drivers/mmc/host/sdhci-of-arasan.c | 6 ++----
+>  1 file changed, 2 insertions(+), 4 deletions(-)
 >
->  drivers/mmc/host/cqhci.c | 21 ++++++++++-----------
->  1 file changed, 10 insertions(+), 11 deletions(-)
+> diff --git a/drivers/mmc/host/sdhci-of-arasan.c b/drivers/mmc/host/sdhci-of-arasan.c
+> index 16e26c217a77..18bf0e76b1eb 100644
+> --- a/drivers/mmc/host/sdhci-of-arasan.c
+> +++ b/drivers/mmc/host/sdhci-of-arasan.c
+> @@ -735,7 +735,6 @@ static int sdhci_versal_sdcardclk_set_phase(struct clk_hw *hw, int degrees)
+>                 container_of(clk_data, struct sdhci_arasan_data, clk_data);
+>         struct sdhci_host *host = sdhci_arasan->host;
+>         u8 tap_delay, tap_max = 0;
+> -       int ret;
 >
-> diff --git a/drivers/mmc/host/cqhci.c b/drivers/mmc/host/cqhci.c
-> index c2239ee2c0ef..75934f3c117e 100644
-> --- a/drivers/mmc/host/cqhci.c
-> +++ b/drivers/mmc/host/cqhci.c
-> @@ -5,6 +5,7 @@
->  #include <linux/delay.h>
->  #include <linux/highmem.h>
->  #include <linux/io.h>
-> +#include <linux/iopoll.h>
->  #include <linux/module.h>
->  #include <linux/dma-mapping.h>
->  #include <linux/slab.h>
-> @@ -349,12 +350,16 @@ static int cqhci_enable(struct mmc_host *mmc, struct mmc_card *card)
->  /* CQHCI is idle and should halt immediately, so set a small timeout */
->  #define CQHCI_OFF_TIMEOUT 100
+>         /*
+>          * This is applicable for SDHCI_SPEC_300 and above
+> @@ -781,7 +780,7 @@ static int sdhci_versal_sdcardclk_set_phase(struct clk_hw *hw, int degrees)
+>                 sdhci_writel(host, regval, SDHCI_ARASAN_OTAPDLY_REGISTER);
+>         }
 >
-> +static u32 cqhci_read_ctl(struct cqhci_host *cq_host)
-> +{
-> +       return cqhci_readl(cq_host, CQHCI_CTL);
-> +}
-> +
->  static void cqhci_off(struct mmc_host *mmc)
->  {
->         struct cqhci_host *cq_host = mmc->cqe_private;
-> -       ktime_t timeout;
-> -       bool timed_out;
->         u32 reg;
-> +       int err;
+> -       return ret;
+> +       return 0;
+>  }
 >
->         if (!cq_host->enabled || !mmc->cqe_on || cq_host->recovery_halt)
->                 return;
-> @@ -364,15 +369,9 @@ static void cqhci_off(struct mmc_host *mmc)
+>  static const struct clk_ops versal_sdcardclk_ops = {
+> @@ -807,7 +806,6 @@ static int sdhci_versal_sampleclk_set_phase(struct clk_hw *hw, int degrees)
+>                 container_of(clk_data, struct sdhci_arasan_data, clk_data);
+>         struct sdhci_host *host = sdhci_arasan->host;
+>         u8 tap_delay, tap_max = 0;
+> -       int ret;
 >
->         cqhci_writel(cq_host, CQHCI_HALT, CQHCI_CTL);
+>         /*
+>          * This is applicable for SDHCI_SPEC_300 and above
+> @@ -857,7 +855,7 @@ static int sdhci_versal_sampleclk_set_phase(struct clk_hw *hw, int degrees)
+>                 sdhci_writel(host, regval, SDHCI_ARASAN_ITAPDLY_REGISTER);
+>         }
 >
-> -       timeout = ktime_add_us(ktime_get(), CQHCI_OFF_TIMEOUT);
-> -       while (1) {
-> -               timed_out = ktime_compare(ktime_get(), timeout) > 0;
-> -               reg = cqhci_readl(cq_host, CQHCI_CTL);
-> -               if ((reg & CQHCI_HALT) || timed_out)
-> -                       break;
-> -       }
-> -
-> -       if (timed_out)
-> +       err = readx_poll_timeout(cqhci_read_ctl, cq_host, reg,
-> +                                reg & CQHCI_HALT, 0, CQHCI_OFF_TIMEOUT);
-> +       if (err < 0)
->                 pr_err("%s: cqhci: CQE stuck on\n", mmc_hostname(mmc));
->         else
->                 pr_debug("%s: cqhci: CQE off\n", mmc_hostname(mmc));
+> -       return ret;
+> +       return 0;
+>  }
+>
+>  static const struct clk_ops versal_sampleclk_ops = {
+>
+> base-commit: a3ca59b9af21e68069555ffff1ad89bd2a7c40fc
 > --
-> 2.26.0.110.g2183baf09c-goog
+> 2.26.1
 >
