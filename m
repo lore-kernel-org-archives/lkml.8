@@ -2,181 +2,79 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E5EAC38A2B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 12:09:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F6B8C352BE
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 12:10:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5D1212220A
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 12:09:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a0P/bUJk"
+	by mail.kernel.org (Postfix) with ESMTP id 23F8D2083E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 12:10:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728307AbgDQMJL (ORCPT
+        id S1728321AbgDQMKr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 08:09:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41682 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726050AbgDQMJK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 08:09:10 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5691FC061A0C;
-        Fri, 17 Apr 2020 05:09:10 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id g13so735011wrb.8;
-        Fri, 17 Apr 2020 05:09:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=YQmfy5glSWEhJacmHQcBoh0P5gI+y1xLhn/MI5MwRqk=;
-        b=a0P/bUJk6o4KfMmFecVMQRsWuelunj5M3QJxQxTu6to4WAQob5LfbxChfRH0a6dwDj
-         iNR57ygB8uH7UURrRNzWkQ8vspIJVqgol9MkvvXSz/cm+AnLhC+uKmwA3jpvuOobCcgc
-         KON4uK1f+5Y1OLIVlTxIEEI3ASLbbuSLQ3NiS2NUfo5xrqJo/Q5iMZpWAjtWhx5/M0KN
-         hRvTCofOnBp3OUfJMfth7Ov6eIlNj9MXG1acK/G7uyIUgNEBLcPBcKJ+tIH80fWO6DuJ
-         rWftpSBDDApCaJzKHUzzK+sJRq2rmfLKHntuqUrJ3fCT5oPSY1tJwYLhRQuZIlZ5M9eF
-         pKXw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=YQmfy5glSWEhJacmHQcBoh0P5gI+y1xLhn/MI5MwRqk=;
-        b=E0jQAW5jFcsLuO3Hg8mEupkZ/V5Xa8y+1nLFnLV7EQ956stA2UWwNA8ycnAbGKSHhP
-         VlXRfAfp9V3OvD3/exmMPk0JEgFicxP3JEer8tOCTVbzcBFuCWLagwr4Z9xgjrb5N8M3
-         1PNjOAsF9EK2fHQrsir63OexZwywIog0+0RPqP2LEo9HDX4CotBaqhZSkmaCoE/ndqNe
-         M78Wub7ZXfnK6q4zoB0a27xly9wkDCHNl1kc8tr04f/7p1UUhBbuDheh92zrgQrtIFsp
-         oFWgiAsFTWZB0WHV2T2+WsLcnD15pDGKZcy8/H84gJXYBQsMCTAtkmIxIaiFsrWLcDgE
-         IXTg==
-X-Gm-Message-State: AGi0PubSyIoywME9o6jFMSwgY2F6mPzfqNOTgUVxMtkrlSiRreaLCBAi
-        F1vDnI4CZFw6/Wg72vd05YNg6GIP
-X-Google-Smtp-Source: APiQypJw9RvOMBiofKtDCRe+QcAA+eB/l83Q4b2jSf0HWRF7CviGAUhDoTYoDphSTR+uEnZgPspyVA==
-X-Received: by 2002:a5d:4485:: with SMTP id j5mr3343798wrq.427.1587125348648;
-        Fri, 17 Apr 2020 05:09:08 -0700 (PDT)
-Received: from ?IPv6:2a02:810d:340:2e50:14a4:6f21:1f15:2088? ([2a02:810d:340:2e50:14a4:6f21:1f15:2088])
-        by smtp.gmail.com with ESMTPSA id n2sm10823975wrq.74.2020.04.17.05.09.06
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 17 Apr 2020 05:09:08 -0700 (PDT)
-Subject: Re: [PATCH v6 00/12] ARM/MIPS: DTS: add child nodes describing the
- PVRSGX GPU present in some OMAP SoC and JZ4780 (and many more)
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>,
-        Maxime Ripard <maxime@cerno.tech>
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        James Hogan <jhogan@kernel.org>, Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-omap <linux-omap@vger.kernel.org>,
-        OpenPVRSGX Linux Driver Group <openpvrsgx-devgroup@letux.org>,
-        Discussions about the Letux Kernel 
-        <letux-kernel@openphoenux.org>, kernel@pyra-handheld.com,
-        linux-mips@vger.kernel.org,
-        arm-soc <linux-arm-kernel@lists.infradead.org>,
-        linux-samsung-soc@vger.kernel.org
-References: <cover.1586939718.git.hns@goldelico.com>
- <20200415101008.zxzxca2vlfsefpdv@gilmour.lan>
- <2E3401F1-A106-4396-8FE6-51CAB72926A4@goldelico.com>
- <20200415130233.rgn7xrtwqicptke2@gilmour.lan>
- <C589D06E-435E-4316-AD0A-8498325039E3@goldelico.com>
-From:   Philipp Rossak <embed3d@gmail.com>
-Message-ID: <10969e64-fe1f-d692-4984-4ba916bd2161@gmail.com>
-Date:   Fri, 17 Apr 2020 14:09:06 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Fri, 17 Apr 2020 08:10:47 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:2351 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727831AbgDQMKq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Apr 2020 08:10:46 -0400
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 9B89DD7271A07F10F0C2;
+        Fri, 17 Apr 2020 20:10:44 +0800 (CST)
+Received: from localhost.localdomain.localdomain (10.175.113.25) by
+ DGGEMS411-HUB.china.huawei.com (10.3.19.211) with Microsoft SMTP Server id
+ 14.3.487.0; Fri, 17 Apr 2020 20:10:36 +0800
+From:   Kefeng Wang <wangkefeng.wang@huawei.com>
+To:     <atish.patra@wdc.com>, Paul Walmsley <paul.walmsley@sifive.com>,
+        "Palmer Dabbelt" <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        <linux-kernel@vger.kernel.org>, <linux-riscv@lists.infradead.org>
+CC:     Kefeng Wang <wangkefeng.wang@huawei.com>
+Subject: [PATCH 1/3] riscv: sbi: Correct sbi_shutdown() and sbi_clear_ipi() export
+Date:   Fri, 17 Apr 2020 20:12:20 +0800
+Message-ID: <20200417121222.156422-1-wangkefeng.wang@huawei.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <C589D06E-435E-4316-AD0A-8498325039E3@goldelico.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.113.25]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all,
+Fix incorrect EXPORT_SYMBOL().
 
-On 15.04.20 15:04, H. Nikolaus Schaller wrote:
-> 
->> Am 15.04.2020 um 15:02 schrieb Maxime Ripard <maxime@cerno.tech>:
->>
->> On Wed, Apr 15, 2020 at 02:41:52PM +0200, H. Nikolaus Schaller wrote:
->>>>> The kernel modules built from this project have successfully
->>>>> demonstrated to work with the DTS definitions from this patch set on
->>>>> AM335x BeagleBone Black, DM3730 and OMAP5 Pyra and Droid 4. They
->>>>> partially work on OMAP3530 and PandaBoard ES but that is likely a
->>>>> problem in the kernel driver or the (non-free) user-space libraries
->>>>> and binaries.
->>>>>
->>>>> Wotk for JZ4780 (CI20 board) is in progress and there is potential
->>>>> to extend this work to e.g. BananaPi-M3 (A83) and some Intel Poulsbo
->>>>> and CedarView devices.
->>>>
->>>> If it's not been tested on any Allwinner board yet, I'll leave it
->>>> aside until it's been properly shown to work.
->>>
->>> Phillip has tested something on a83.
->>
-Yes I'm currently working on the a83t demo. The kernel module is loading 
-correctly and the clocks, interrupts and resets seems to be working 
-correctly.
+Fixes: efca13989250 ("RISC-V: Introduce a new config for SBI v0.1")
+Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+---
+ arch/riscv/kernel/sbi.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-I'm currently working on getting the users space driver working with the 
-kernel driver. This is hopefully done soon.
+diff --git a/arch/riscv/kernel/sbi.c b/arch/riscv/kernel/sbi.c
+index 7c24da59bccf..62b10a16c8d7 100644
+--- a/arch/riscv/kernel/sbi.c
++++ b/arch/riscv/kernel/sbi.c
+@@ -102,7 +102,7 @@ void sbi_shutdown(void)
+ {
+ 	sbi_ecall(SBI_EXT_0_1_SHUTDOWN, 0, 0, 0, 0, 0, 0, 0);
+ }
+-EXPORT_SYMBOL(sbi_set_timer);
++EXPORT_SYMBOL(sbi_shutdown);
+ 
+ /**
+  * sbi_clear_ipi() - Clear any pending IPIs for the calling hart.
+@@ -113,7 +113,7 @@ void sbi_clear_ipi(void)
+ {
+ 	sbi_ecall(SBI_EXT_0_1_CLEAR_IPI, 0, 0, 0, 0, 0, 0, 0);
+ }
+-EXPORT_SYMBOL(sbi_shutdown);
++EXPORT_SYMBOL(sbi_clear_ipi);
+ 
+ /**
+  * sbi_set_timer_v01() - Program the timer for next timer event.
+-- 
+2.20.1
 
->> I'm a bit skeptical on that one since it doesn't even list the
->> interrupts connected to the GPU that the binding mandates.
-> 
-> I think he left it out for a future update.
-> But best he comments himself.
-
-I'm currently working on those bindings. They are now 90% done, but they 
-are not finished till now. Currently there is some mainline support 
-missing to add the full binding. The A83T and also the A31/A31s have a 
-GPU Power Off Gating Register in the R_PRCM module, that is not 
-supported right now in Mainline. The Register need to be written when 
-the GPU is powered on and off.
-
-@Maxime: I totally agree on your point that a demo needs to be provided 
-before the related DTS patches should be provided. That's the reason why 
-I added the gpu placeholder patches.
-Do you have an idea how a driver for the R_PRCM stuff can look like? I'm 
-not that experienced with the clock driver framework.
-
-The big question is right now how to proceed with the A83T and A31s 
-patches. I see there three options, which one do you prefer?:
-
-1. Provide now placeholder patches and send new patches, if everything 
-is clear and other things are mainlined
-2. Provide now patches as complete as possible and provide later patches 
-to complete them when the R_PRCM things are mainlined
-3. Leave them out, till the related work is mainlined and the bindings 
-are final.
-
-
-Since this GPU IP core is very flexible and the SOC manufactures can 
-configure it on their needs, I think the binding will extend in the 
-future. For example the SGX544 GPU is available in different 
-configurations: there is a SGX544 core and SGX544MPx core. The x stands 
-for the count of the USSE (Universal Scalable Shader Engine) cores. For 
-example the GPU in the A83T is a MP1 and the A31/A31s a MP2.
-In addition to that some of the GPU's have also a 2D engine.
-There might be even more differences in the GPU's that we don't know 
-right now and should be described in the Devicetree, but that's a 
-different topic that we should keep in mind.
-
-Cheers
-Philipp
