@@ -3,180 +3,197 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79FC9C352BE
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 11:28:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 601C4C352BE
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 11:29:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 608E4208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 11:28:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41EC221D94
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 11:29:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730365AbgDQL2m (ORCPT
+        id S1730318AbgDQL3g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 07:28:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35448 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730295AbgDQL2l (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 07:28:41 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 864CAC061A0F
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 04:28:41 -0700 (PDT)
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ore@pengutronix.de>)
-        id 1jPPAg-0004FF-Fj; Fri, 17 Apr 2020 13:28:34 +0200
-Received: from ore by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ore@pengutronix.de>)
-        id 1jPPAc-0002xV-I1; Fri, 17 Apr 2020 13:28:30 +0200
-Date:   Fri, 17 Apr 2020 13:28:30 +0200
-From:   Oleksij Rempel <o.rempel@pengutronix.de>
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     Andrew Lunn <andrew@lunn.ch>, Michal Kubecek <mkubecek@suse.cz>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mkl@pengutronix.de,
-        kernel@pengutronix.de, David Jander <david@protonic.nl>,
-        Jakub Kicinski <kuba@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Heiner Kallweit <hkallweit1@gmail.com>
-Subject: Re: [PATCH v1] ethtool: provide UAPI for PHY master/slave
- configuration.
-Message-ID: <20200417112830.mhevvmnyxpve6xvk@pengutronix.de>
-References: <20200415121209.12197-1-o.rempel@pengutronix.de>
- <20200415215739.GI657811@lunn.ch>
- <20200417101145.GP25745@shell.armlinux.org.uk>
+        Fri, 17 Apr 2020 07:29:36 -0400
+Received: from mx2.suse.de ([195.135.220.15]:54828 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730237AbgDQL3f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Apr 2020 07:29:35 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id A3C81ABEF;
+        Fri, 17 Apr 2020 11:29:33 +0000 (UTC)
+Date:   Fri, 17 Apr 2020 13:29:32 +0200 (CEST)
+From:   Miroslav Benes <mbenes@suse.cz>
+To:     Peter Zijlstra <peterz@infradead.org>
+cc:     tglx@linutronix.de, jpoimboe@redhat.com,
+        linux-kernel@vger.kernel.org, x86@kernel.org, mhiramat@kernel.org,
+        jthierry@redhat.com, alexandre.chartre@oracle.com
+Subject: Re: [PATCH v5 02/17] objtool: Better handle IRET
+In-Reply-To: <20200416115118.631224674@infradead.org>
+Message-ID: <alpine.LSU.2.21.2004171326230.7737@pobox.suse.cz>
+References: <20200416114706.625340212@infradead.org> <20200416115118.631224674@infradead.org>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="pykonr2qxhbolp4w"
-Content-Disposition: inline
-In-Reply-To: <20200417101145.GP25745@shell.armlinux.org.uk>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 12:26:47 up 154 days,  1:45, 169 users,  load average: 0.06, 0.02,
- 0.03
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, 16 Apr 2020, Peter Zijlstra wrote:
 
---pykonr2qxhbolp4w
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> Teach objtool a little more about IRET so that we can avoid using the
+> SAVE/RESTORE annotation. In particular, make the weird corner case in
+> insn->restore go away.
+> 
+> The purpose of that corner case is to deal with the fact that
+> UNWIND_HINT_RESTORE lands on the instruction after IRET, but that
+> instruction can end up being outside the basic block, consider:
+> 
+> 	if (cond)
+> 		sync_core()
+> 	foo();
+> 
+> Then the hint will land on foo(), and we'll encounter the restore
+> hint without ever having seen the save hint.
+> 
+> By teaching objtool about the arch specific exception frame size, and
+> assuming that any IRET in an STT_FUNC symbol is an exception frame
+> sized POP, we can remove the use of save/restore hints for this code.
+> 
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> ---
+>  arch/x86/include/asm/processor.h |    2 --
+>  tools/objtool/arch.h             |    1 +
+>  tools/objtool/arch/x86/decode.c  |   14 ++++++++++++--
+>  tools/objtool/check.c            |   29 ++++++++++++++++-------------
+>  4 files changed, 29 insertions(+), 17 deletions(-)
+> 
+> --- a/arch/x86/include/asm/processor.h
+> +++ b/arch/x86/include/asm/processor.h
+> @@ -727,7 +727,6 @@ static inline void sync_core(void)
+>  	unsigned int tmp;
+>  
+>  	asm volatile (
+> -		UNWIND_HINT_SAVE
+>  		"mov %%ss, %0\n\t"
+>  		"pushq %q0\n\t"
+>  		"pushq %%rsp\n\t"
+> @@ -737,7 +736,6 @@ static inline void sync_core(void)
+>  		"pushq %q0\n\t"
+>  		"pushq $1f\n\t"
+>  		"iretq\n\t"
+> -		UNWIND_HINT_RESTORE
+>  		"1:"
+>  		: "=&r" (tmp), ASM_CALL_CONSTRAINT : : "cc", "memory");
+>  #endif
+> --- a/tools/objtool/arch.h
+> +++ b/tools/objtool/arch.h
+> @@ -19,6 +19,7 @@ enum insn_type {
+>  	INSN_CALL,
+>  	INSN_CALL_DYNAMIC,
+>  	INSN_RETURN,
+> +	INSN_EXCEPTION_RETURN,
+>  	INSN_CONTEXT_SWITCH,
+>  	INSN_STACK,
+>  	INSN_BUG,
+> --- a/tools/objtool/arch/x86/decode.c
+> +++ b/tools/objtool/arch/x86/decode.c
+> @@ -435,9 +435,19 @@ int arch_decode_instruction(struct elf *
+>  		*type = INSN_RETURN;
+>  		break;
+>  
+> +	case 0xcf: /* iret */
+> +		*type = INSN_EXCEPTION_RETURN;
+> +
+> +		/* add $40, %rsp */
+> +		op->src.type = OP_SRC_ADD;
+> +		op->src.reg = CFI_SP;
+> +		op->src.offset = 5*8;
+> +		op->dest.type = OP_DEST_REG;
+> +		op->dest.reg = CFI_SP;
+> +		break;
+> +
+>  	case 0xca: /* retf */
+>  	case 0xcb: /* retf */
+> -	case 0xcf: /* iret */
+>  		*type = INSN_CONTEXT_SWITCH;
+>  		break;
+>  
+> @@ -483,7 +493,7 @@ int arch_decode_instruction(struct elf *
+>  
+>  	*immediate = insn.immediate.nbytes ? insn.immediate.value : 0;
+>  
+> -	if (*type == INSN_STACK)
+> +	if (*type == INSN_STACK || *type == INSN_EXCEPTION_RETURN)
+>  		list_add_tail(&op->list, ops_list);
+>  	else
+>  		free(op);
+> --- a/tools/objtool/check.c
+> +++ b/tools/objtool/check.c
+> @@ -2080,15 +2080,14 @@ static int validate_return(struct symbol
+>   * tools/objtool/Documentation/stack-validation.txt.
+>   */
+>  static int validate_branch(struct objtool_file *file, struct symbol *func,
+> -			   struct instruction *first, struct insn_state state)
+> +			   struct instruction *insn, struct insn_state state)
+>  {
+>  	struct alternative *alt;
+> -	struct instruction *insn, *next_insn;
+> +	struct instruction *next_insn;
+>  	struct section *sec;
+>  	u8 visited;
+>  	int ret;
+>  
+> -	insn = first;
+>  	sec = insn->sec;
+>  
+>  	if (insn->alt_group && list_empty(&insn->alts)) {
+> @@ -2141,16 +2140,6 @@ static int validate_branch(struct objtoo
+>  				}
+>  
+>  				if (!save_insn->visited) {
+> -					/*
+> -					 * Oops, no state to copy yet.
+> -					 * Hopefully we can reach this
+> -					 * instruction from another branch
+> -					 * after the save insn has been
+> -					 * visited.
+> -					 */
+> -					if (insn == first)
+> -						return 0;
+> -
+>  					WARN_FUNC("objtool isn't smart enough to handle this CFI save/restore combo",
+>  						  sec, insn->offset);
+>  					return 1;
+> @@ -2243,6 +2232,20 @@ static int validate_branch(struct objtoo
+>  
+>  			break;
+>  
+> +		case INSN_EXCEPTION_RETURN:
+> +			if (handle_insn_ops(insn, &state))
+> +				return 1;
+> +
+> +			/*
+> +			 * This handles x86's sync_core() case, where we use an
+> +			 * IRET to self. All 'normal' IRET instructions are in
+> +			 * STT_NOTYPE entry symbols.
+> +			 */
+> +			if (func)
+> +				break;
+> +
+> +			return 0;
+> +
+>  		case INSN_CONTEXT_SWITCH:
+>  			if (func && (!next_insn || !next_insn->hint)) {
+>  				WARN_FUNC("unsupported instruction in callable function",
 
-On Fri, Apr 17, 2020 at 11:11:45AM +0100, Russell King - ARM Linux admin wr=
-ote:
-> On Wed, Apr 15, 2020 at 11:57:39PM +0200, Andrew Lunn wrote:
-> > > diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_devic=
-e.c
-> > > index c8b0c34030d32..d5edf2bc40e43 100644
-> > > --- a/drivers/net/phy/phy_device.c
-> > > +++ b/drivers/net/phy/phy_device.c
-> > > @@ -604,6 +604,7 @@ struct phy_device *phy_device_create(struct mii_b=
-us *bus, int addr, u32 phy_id,
-> > >  	dev->asym_pause =3D 0;
-> > >  	dev->link =3D 0;
-> > >  	dev->interface =3D PHY_INTERFACE_MODE_GMII;
-> > > +	dev->master_slave =3D PORT_MODE_UNKNOWN;
-> >=20
-> > phydev->master_slave is how we want the PHY to be configured. I don't
-> > think PORT_MODE_UNKNOWN makes any sense in that contest. 802.3 gives
-> > some defaults. 9.12 should be 0, meaning manual master/slave
-> > configuration is disabled. The majority of linux devices are end
-> > systems. So we should default to a single point device. So i would
-> > initialise PORT_MODE_SLAVE, or whatever we end up calling that.
->=20
-> I'm not sure that is a good idea given that we use phylib to drive
-> the built-in PHYs in DSA switches, which ought to prefer master mode
-> via the "is a multiport device" bit.
->=20
-> Just to be clear, there are three bits that configure 1G PHYs, which
-> I've framed in briefer terminology:
->=20
-> - 9.12: auto/manual configuration (1=3D manual 0=3D slave)
-> - 9.11: manual master/slave configuration (1=3D master, 0 =3D slave)
-> - 9.10: auto master/slave preference (1=3D multiport / master)
->=20
-> It is recommended that multiport devices (such as DSA switches) set
-> 9.10 so they prefer to be master.
->=20
-> It's likely that the reason is to reduce cross-talk interference
-> between neighbouring ports both inside the PHY, magnetics and the
-> board itself. I would suspect that this becomes critical when
-> operating at towards the maximum cable length.
->=20
-> I've checked some of my DSA switches, and 9.10 appears to default to
-> one, as expected given what's in the specs.
+It looks really simple.
 
-Hm..
-I've checked one of my DSA devices and 9.10 is by default 0 (proffered
-slave). It get slave even if it is preferred master and it is
-connected to a workstation (not multiport device) with a e1000e NIC.
-The e1000e is configured by default as preferred master.
+Have you tried Julien's proposal about removing INSN_STACK altogether, 
+move the x86 to arch/x86/ and call handle_insn_ops() unconditionally, or 
+have you just postponed it? As I said, I think it could be better in the 
+long term, but the above looks good for now as well.
 
-Grepping over current linux kernel I see following attempts to
-configure master/slave modes:
-drivers/net/ethernet/intel/e1000e/phy.c:597
-  e1000_set_master_slave_mode()
-
-all intel NICs have similar code code and do not touch preferred bit
-9.10. Only force master/slave modes. So the preferred master is probably
-PHY defaults, bootstrap or eeprom.
-
-drivers/net/ethernet/broadcom/tg3.c
-this driver seems to always force master mode
-
-drivers/net/phy/broadcom.c:39
-if ethernet controller is BCMA_CHIP_ID_BCM53573 and the PHY is PHY_ID_BCM54=
-210E
-then force master mode.
-
-drivers/net/phy/micrel.c:637
-Force master mode if devicetree property is set: micrel,force-master
-
-drivers/net/phy/realtek.c:173
-	/* RTL8211C has an issue when operating in Gigabit slave mode *=20
-	return phy_set_bits(phydev, MII_CTRL1000,
-		CTL1000_ENABLE_MASTER | CTL1000_AS_MASTER)
-
-Regards,
-Oleksij
---=20
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
-
---pykonr2qxhbolp4w
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEERBNZvwSgvmcMY/T74omh9DUaUbMFAl6ZktoACgkQ4omh9DUa
-UbPEGw//VFNanq+Y6stjK9i/n3XiVe5KQ5YY8Ukr+2JLgV4Zfoeio7g62UAjWoNi
-FYLrHrXvUfsr1ZND43G7FyEyuMtVzy+FDN/Q7htTbZFTu1VHGOHXOeKpmZaLiQNN
-zlAtBTcrycqvkre+tClOz/uPmbzz3O4Ut/R1c01dTJXPf6NOlsl7ZNBPSx+b+hs2
-6idToq0yUZD6Jz4QZKdfsjZwXQ1lpdBwXjwJE3/pK+lEDrw4P274shA6hQ42I/2W
-fkx8W0w1008N5mXG8jkOBThrA1PmFd0J/J8iHxNmuAgSoPCwFOjoHUBsoXmCfHs1
-9o3UBNabwmKTrsGXxA3+5CQS61PCWo4a4h4uqEJRCjfkK+SC1iSVf2dRxw1kE5pI
-oiSHKOyVuoJsI02on3iwjOYHSkfWAtp+OrgbyKKzuTCaVllo0icK/SfEzLK3P6Ho
-UR28LrTz95Jfm5w5KbG5x97iC/SCeGvH6FMhXfBKN5kWFIj/T4TkTJVuoVSt6BVP
-pBO3gaJe1huQeOq5rV7KW5haDsZ+Sqi0hY/7ltyHGSJLKCM8ceFixnS8uHNehrzr
-uIKCQ4lg/YI35sLNtKFu+p3xgKO4jhycN2j+VL/+V/p7h9BtrOjcyzjmGF1YH0Eu
-V2Gfc2Db3zuOif+QSIcYqWjTQ0eNLwkOcrfm701eX7lXvOoZQO4=
-=Hlrq
------END PGP SIGNATURE-----
-
---pykonr2qxhbolp4w--
+Miroslav
