@@ -2,115 +2,106 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21A94C2BB85
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 08:06:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E70A6C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 08:07:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F180B214AF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 08:06:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF6F120644
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 08:07:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hp61XEm/"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GOVWb49A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729644AbgDQIGu (ORCPT
+        id S1729661AbgDQIHp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 04:06:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60386 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729495AbgDQIGt (ORCPT
+        Fri, 17 Apr 2020 04:07:45 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:20799 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729176AbgDQIHo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 04:06:49 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7F15C061A0C
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 01:06:48 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id x4so1971867wmj.1
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 01:06:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=zdfOAuP7fyaW1ZeVyULlmT33DOYYP23f5Q8B9QajRJM=;
-        b=hp61XEm/FGok8REvT3T074Wd8aZs0iWy57mOLbwQwMZJ4fXWTGHB/uBLrS8uABZB3z
-         Ge7AjEe0ea/LPcRsyDaoj/3SfsO+9XJcvLBt2V2lO7eTmMbrwX4gbP8tTy4OGWFKZkI2
-         el7svo/333VhxnyuleH4Bapz6a8oBvZ/lg3gRvR2n6JYFcwRzqo3/emiEUzSEVoO+QiB
-         qrM9tDaFGqLxLgCp8DOxZU14nAeEJEXQTsWlxOfhVbYbvjpZu5h6KD9pVAviyer7rwGK
-         K/uKTz/NJFf5MyvXRJ0d40YR+HD+RuwPDysK0i9kmNDFGi0SVvEW3NF/wRwSEm099Cxj
-         YIig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=zdfOAuP7fyaW1ZeVyULlmT33DOYYP23f5Q8B9QajRJM=;
-        b=sHGbaiuvVJxSap08CicaxF/0YPGq6502KjK0CtIqr2AUouyk+5PUruW/fIVHwSVyNm
-         1ZIJAOsqp3i4Knyy40b0h+Vta/HZpMadQpAW5F1b60toYevVN+JrSO+4Aq0d7+P8U0U0
-         Cq8sBOrtEHyiuoG9at1ktZdrya4yNsgO1Hw7c1yo7H4YLef730b3ywtZ1SXG0tRhPs92
-         QN9UmCnaX9AqtmoCOaLiJC7O3jBYl6l8LR5DDZpGO9YVbqCzrcUiI4F7HvCqvT8itl5e
-         KqEMloCCY4B0+Z9T7RTjG6mETBj7sBtslTsPAM1Zvjv3SQzhP2RaeCR8HzzEq3axk6wH
-         0IRg==
-X-Gm-Message-State: AGi0PubBszEyLvcSi9Vae1Z1dXKRDA4jgna2HJdUMsR83cEnkPVWTyrN
-        YVQMHYI3OWOl3wk9FY6sElj1uQ==
-X-Google-Smtp-Source: APiQypIr5rhPvU7gLyvcYwjnpws074PfDg+NI0F7JmZjX82UBiLQKJtlQDYychc2ykdFgdc5xHfxmQ==
-X-Received: by 2002:a7b:ca54:: with SMTP id m20mr701534wml.45.1587110807651;
-        Fri, 17 Apr 2020 01:06:47 -0700 (PDT)
-Received: from dell ([95.149.164.124])
-        by smtp.gmail.com with ESMTPSA id u7sm7245869wmg.41.2020.04.17.01.06.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Apr 2020 01:06:46 -0700 (PDT)
-Date:   Fri, 17 Apr 2020 09:07:47 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Abel Vesa <abel.vesa@nxp.com>
-Cc:     Shawn Guo <shawnguo@kernel.org>, Peng Fan <peng.fan@nxp.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Anson Huang <anson.huang@nxp.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Jacky Bai <ping.bai@nxp.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v3 01/13] mfd: Add i.MX generic mix support
-Message-ID: <20200417080747.GE2167633@dell>
-References: <1586937773-5836-1-git-send-email-abel.vesa@nxp.com>
- <1586937773-5836-2-git-send-email-abel.vesa@nxp.com>
+        Fri, 17 Apr 2020 04:07:44 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587110863;
+        h=from:from:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:in-reply-to:in-reply-to:  references:references;
+        bh=NccU6pdLlMoSxH6d3Hr9mUjUtMyNeVmxbtBZCQRRwy8=;
+        b=GOVWb49AHhiCqAwLlh5xSsXDvBDAlRl9SCAIJzYuU5yeggMN+gh/AtiStBV5Sdna6BoAKk
+        TZ07O4gYDJqALsoX/hRNp+3XUNljYvFwy64bwaaipOiAlrglarI3p+bYzundPdFsrLiP9z
+        D5U71PLjsa9nBeZ8uBMAPL2KpRIl/U4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-495-aan4zgP_MUezxqVGX3NAHw-1; Fri, 17 Apr 2020 04:07:39 -0400
+X-MC-Unique: aan4zgP_MUezxqVGX3NAHw-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2FF2D18C35A2;
+        Fri, 17 Apr 2020 08:07:37 +0000 (UTC)
+Received: from tucnak.zalov.cz (ovpn-112-104.ams2.redhat.com [10.36.112.104])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 676BB1001B3F;
+        Fri, 17 Apr 2020 08:07:36 +0000 (UTC)
+Received: from tucnak.zalov.cz (localhost [127.0.0.1])
+        by tucnak.zalov.cz (8.15.2/8.15.2) with ESMTP id 03H87XoG004216;
+        Fri, 17 Apr 2020 10:07:33 +0200
+Received: (from jakub@localhost)
+        by tucnak.zalov.cz (8.15.2/8.15.2/Submit) id 03H87QGB004215;
+        Fri, 17 Apr 2020 10:07:26 +0200
+Date:   Fri, 17 Apr 2020 10:07:26 +0200
+From:   Jakub Jelinek <jakub@redhat.com>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Sergei Trofimovich <slyfox@gentoo.org>,
+        Michael Matz <matz@suse.de>, linux-kernel@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>, x86@kernel.org
+Subject: Re: [PATCH v2] x86: fix early boot crash on gcc-10
+Message-ID: <20200417080726.GS2424@tucnak>
+Reply-To: Jakub Jelinek <jakub@redhat.com>
+References: <20200326223501.GK11398@zn.tnic>
+ <20200328084858.421444-1-slyfox@gentoo.org>
+ <20200413163540.GD3772@zn.tnic>
+ <alpine.LSU.2.21.2004141343370.11688@wotan.suse.de>
+ <20200415074842.GA31016@zn.tnic>
+ <alpine.LSU.2.21.2004151445520.11688@wotan.suse.de>
+ <20200415231930.19755bc7@sf>
+ <20200417075739.GA7322@zn.tnic>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1586937773-5836-2-git-send-email-abel.vesa@nxp.com>
+In-Reply-To: <20200417075739.GA7322@zn.tnic>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 15 Apr 2020, Abel Vesa wrote:
-
-> Some of the i.MX SoCs have a IP for interfacing the dedicated IPs with
-> clocks, resets and interrupts, plus some other specific control registers.
-> To allow the functionality to be split between drivers, this MFD driver is
-> added that has only two purposes: register the devices and map the entire
-> register addresses. Everything else is left to the dedicated drivers that
-> will bind to the registered devices.
+On Fri, Apr 17, 2020 at 09:57:39AM +0200, Borislav Petkov wrote:
+> On Wed, Apr 15, 2020 at 11:19:30PM +0100, Sergei Trofimovich wrote:
+> > Ah, that makes sense. Borislav, should I send a fix forward against
+> > x86 tree to move -fno-stack-protector as it was in v1 patch?
+> > Or you'll revert v2 and apply v1 ~as is? Or should I send those myself?
 > 
-> Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
-> ---
->  drivers/mfd/Kconfig   | 11 +++++++++++
->  drivers/mfd/Makefile  |  1 +
->  drivers/mfd/imx-mix.c | 48 ++++++++++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 60 insertions(+)
->  create mode 100644 drivers/mfd/imx-mix.c
+> Yeah, Peter and I have been discussing something like the below
+> yesterday. I don't like the additional exports too much but would
+> disable stack protector only for the one function...
 
-For completeness - Arnd's reply to this patch:
+If you want minimal changes, you can as I said earlier either
+mark cpu_startup_entry noreturn (in the declaration in some header so that
+smpboot.c sees it), or you could add something after the cpu_startup_entry
+call to ensure it is not tail call optimized (e.g. just
+	/* Prevent tail call to cpu_startup_entry because the stack
+	   protector guard has been changed in the middle of this function
+	   and must not be checked before tail calling another function.  */
+	asm ("");
+would do, or for (;;); , or combine both, mark cpu_startup_entry noreturn and
+add asm (""); (which most GCC versions will optimize away as unreachable).
 
-  https://www.spinics.net/lists/linux-clk/msg47703.html
+	Jakub
 
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
