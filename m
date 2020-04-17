@@ -2,179 +2,169 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CC63C38A2B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 17:06:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDA1BC2D0EF
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 17:06:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5B76120776
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 17:06:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587143164;
-	bh=yzvetAbVpiaLVdfmAxZMZ7Knq0EnO5SErf91lV63dCQ=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=nKZc7fDqUZ0avfasae0qOYwbk2md9w+dRIWI+DYPZgxSacOCaaFWhaPCfKLdZlR3N
-	 xSWpAahkL246TmFCZIXqaj/I1liahCYgmc3F3cXwQfd0VT8eM5VukXTzO+oAheTzzT
-	 1pVG+sl1gvS1uv2stsba3SJRwREASzuETLkDNzvU=
+	by mail.kernel.org (Postfix) with ESMTP id CB1D920776
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 17:06:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728644AbgDQRGD (ORCPT
+        id S1728685AbgDQRGK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 13:06:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33000 "EHLO mail.kernel.org"
+        Fri, 17 Apr 2020 13:06:10 -0400
+Received: from mga17.intel.com ([192.55.52.151]:40508 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727913AbgDQRGD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 13:06:03 -0400
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 00C3B20771;
-        Fri, 17 Apr 2020 17:06:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587143162;
-        bh=yzvetAbVpiaLVdfmAxZMZ7Knq0EnO5SErf91lV63dCQ=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=lTnup2Atbd2Lvjr+R0STiF44puICPoxiy4kAuAchj+cezOuhCz2rkKUIcEDye3wz+
-         RLlLtGGylM3ydtePh23XBMB064T2Th0aiiVGXg4VXhgwTi/yMajYtzwmWAzlOa/sHb
-         tLwwEwWSvUhZhFoLXo0ChYSXfQ3YnKtCtyDnKznA=
-Subject: Re: [PATCH 5.6 000/254] 5.6.5-rc1 review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        torvalds@linux-foundation.org
-Cc:     linux-kernel@vger.kernel.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org, shuah <shuah@kernel.org>
-References: <20200416131325.804095985@linuxfoundation.org>
- <a83ee7a6-d13d-6929-e4be-669058714fd9@kernel.org>
- <20200417083813.GE141762@kroah.com>
-From:   shuah <shuah@kernel.org>
-Message-ID: <e3126e04-1887-7b77-a791-3e789845d08d@kernel.org>
-Date:   Fri, 17 Apr 2020 11:05:22 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        id S1727913AbgDQRGJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Apr 2020 13:06:09 -0400
+IronPort-SDR: AjGI3eJ9pNfrxViAu4x1MyLckr+vEONQDemp9LAnMlkk0JXEsU4zRpHPWLM2SOnuNt/tdVE2GS
+ 5/HFdOwaGX6A==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2020 10:06:08 -0700
+IronPort-SDR: oWEEqNM+7i3WPWHh2w6V/2UblrE/Y/aK9kseWVHcyzKnhHPe1gpnMAp8zjfaAHZTDBcDdg4UlE
+ ZWmfbiYUX4Yg==
+X-IronPort-AV: E=Sophos;i="5.72,395,1580803200"; 
+   d="scan'208";a="299663835"
+Received: from agluck-desk2.sc.intel.com (HELO agluck-desk2.amr.corp.intel.com) ([10.3.52.68])
+  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2020 10:06:08 -0700
+Date:   Fri, 17 Apr 2020 10:06:07 -0700
+From:   "Luck, Tony" <tony.luck@intel.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Ingo Molnar <mingo@kernel.org>, Fenghua Yu <fenghua.yu@intel.com>,
+        Borislav Petkov <bp@alien8.de>, H Peter Anvin <hpa@zytor.com>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Ravi V Shankar <ravi.v.shankar@intel.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        linux-kernel@vger.kernel.org, x86@kernel.org
+Subject: Re: [PATCH 2/3] x86/split_lock: Bits in IA32_CORE_CAPABILITIES are
+ not architectural
+Message-ID: <20200417170607.GA18267@agluck-desk2.amr.corp.intel.com>
+References: <20200416205754.21177-1-tony.luck@intel.com>
+ <20200416205754.21177-3-tony.luck@intel.com>
+ <878siumnrf.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <20200417083813.GE141762@kroah.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <878siumnrf.fsf@nanos.tec.linutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/17/20 2:38 AM, Greg Kroah-Hartman wrote:
-> On Thu, Apr 16, 2020 at 03:35:35PM -0600, shuah wrote:
->> On 4/16/20 7:21 AM, Greg Kroah-Hartman wrote:
->>> This is the start of the stable review cycle for the 5.6.5 release.
->>> There are 254 patches in this series, all will be posted as a response
->>> to this one.  If anyone has any issues with these being applied, please
->>> let me know.
->>>
->>> Responses should be made by Sat, 18 Apr 2020 13:11:20 +0000.
->>> Anything received after that time might be too late.
->>>
->>> The whole patch series can be found in one patch at:
->>> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.6.5-rc1.gz
->>> or in the git tree and branch at:
->>> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.6.y
->>> and the diffstat can be found below.
->>>
->>> thanks,
->>>
->>> greg k-h
->>>
->>
->> Compiled and booted on my test system. No dmesg regressions.
->> reboot and poweroff hang forever. I saw this problem on
->> Linux 5.7rc1 as well.
->>
->> AMD Ryzen 5 PRO 2400GE
->>
->> I don't see this problem on Intel i7-8550U
->>
->> I haven't started debugging yet. I will have to go back and
->> check if it is introduced in 5.6.4-rc1. 5.6-3-rc2 is the last
->> good one.
->>
->> I will update you later on today with bisect data.
+On Fri, Apr 17, 2020 at 12:04:36PM +0200, Thomas Gleixner wrote:
+> Tony Luck <tony.luck@intel.com> writes:
+> > +	m = x86_match_cpu(split_lock_cpu_ids);
+> > +	if (!m)
+> > +		return;
+> > +
+> > +	if (m->driver_data && cpu_has(c, X86_FEATURE_CORE_CAPABILITIES))
+> > {
 > 
-> Oh nice, we are bug-compatible with mainline :(
+> This condition results in the following:
 > 
+>     driver_data     MSR_CORE_CAPS	 MSR_CORE_CAPS_SLD	SLD available
+> 
+> 1       0             Don't care          Don't care               Y
+> 2       1                N                Don't care               Y
+> 3       1                Y                    Y                    Y
+> 4       1                Y                    N                    N
+> 
+> #2 does not make any sense to me.
 
-Okay success. I reverted it and Linux 5.6-rc1 no longer hangs
-on reboot/poweroff
+Nor to me :-(
 
-git bisect bad
-a655a99c9f6a1d819d695fca6d48b450449f45ee is the first bad commit
+I got too clever trying to combine tests.
 
-Okay success. I reverted it and Linux 5.6-rc1 no longer hangs
-on reboot/poweroff
+New version taking cases one at a time so my "stuck inside the
+house for six weeks now" brain can follow the steps.
 
-I am building Linux 5.7-rc1 with this reverted now.
+-Tony
 
-Details and full bisect log. I am building Linux 5.7-rc1 with
-this reverted now.
+From 8c9d779e358eaa239b9647b7a3fe8ebee9becd63 Mon Sep 17 00:00:00 2001
+From: Tony Luck <tony.luck@intel.com>
+Date: Thu, 16 Apr 2020 10:37:42 -0700
+Subject: [PATCH v2] x86/split_lock: Bits in IA32_CORE_CAPABILITIES are not
+ architectural
 
-commit a655a99c9f6a1d819d695fca6d48b450449f45ee
-Author: Prike Liang <Prike.Liang@amd.com>
-Date:   Tue Apr 7 20:21:26 2020 +0800
+The Intel Software Developers' Manual erroneously listed bit 5 of the
+IA32_CORE_CAPABILITIES register as an architectural feature. It is not.
 
-     drm/amdgpu: fix gfx hang during suspend with video playback (v2)
+Features enumerated by IA32_CORE_CAPABILITIES are model specific and
+implementation details may vary in different cpu models. Thus it is only
+safe to trust features after checking the CPU model.
 
-     [ Upstream commit 487eca11a321ef33bcf4ca5adb3c0c4954db1b58 ]
+Icelake client and server models are known to implement the split lock
+detect feature even though they don't enumerate IA32_CORE_CAPABILITIES
 
-     The system will be hang up during S3 suspend because of SMU is pending
-     for GC not respose the register CP_HQD_ACTIVE access request.This issue
-     root cause of accessing the GC register under enter GFX CGGPG and can
-     be fixed by disable GFX CGPG before perform suspend.
+Fixes: 6650cdd9a8cc ("x86/split_lock: Enable split lock detection by kernel")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Tony Luck <tony.luck@intel.com>
+---
+ arch/x86/kernel/cpu/intel.c | 38 +++++++++++++++++++++----------------
+ 1 file changed, 22 insertions(+), 16 deletions(-)
 
-     v2: Use disable the GFX CGPG instead of RLC safe mode guard.
+diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
+index 6119deb32660..0bf0d7e3832a 100644
+--- a/arch/x86/kernel/cpu/intel.c
++++ b/arch/x86/kernel/cpu/intel.c
+@@ -1120,10 +1120,12 @@ void switch_to_sld(unsigned long tifn)
+ }
+ 
+ /*
+- * The following processors have the split lock detection feature. But
+- * since they don't have the IA32_CORE_CAPABILITIES MSR, the feature cannot
+- * be enumerated. Enable it by family and model matching on these
+- * processors.
++ * Bits in the IA32_CORE_CAPABILITIES are not architectural, so they
++ * should only be trusted if you know you are on a model that implements
++ * them.
++ * The driver_data field is set to zero to indicate CPU models like
++ * Icelake that are known to have the split-lock feature even though
++ * they do not enumerate IA32_CORE_CAPABILITIES.
+  */
+ static const struct x86_cpu_id split_lock_cpu_ids[] __initconst = {
+ 	X86_MATCH_INTEL_FAM6_MODEL(ICELAKE_X,           0),
+@@ -1133,19 +1135,23 @@ static const struct x86_cpu_id split_lock_cpu_ids[] __initconst = {
+ 
+ void __init cpu_set_core_cap_bits(struct cpuinfo_x86 *c)
+ {
+-	u64 ia32_core_caps = 0;
++	const struct x86_cpu_id *m;
++	u64 ia32_core_caps;
+ 
+-	if (c->x86_vendor != X86_VENDOR_INTEL)
++	if (boot_cpu_has(X86_FEATURE_HYPERVISOR))
++		return;
++
++	m = x86_match_cpu(split_lock_cpu_ids);
++	if (!m)
+ 		return;
+-	if (cpu_has(c, X86_FEATURE_CORE_CAPABILITIES)) {
+-		/* Enumerate features reported in IA32_CORE_CAPABILITIES MSR. */
+-		rdmsrl(MSR_IA32_CORE_CAPS, ia32_core_caps);
+-	} else if (!boot_cpu_has(X86_FEATURE_HYPERVISOR)) {
+-		/* Enumerate split lock detection by family and model. */
+-		if (x86_match_cpu(split_lock_cpu_ids))
+-			ia32_core_caps |= MSR_IA32_CORE_CAPS_SPLIT_LOCK_DETECT;
+-	}
+ 
+-	if (ia32_core_caps & MSR_IA32_CORE_CAPS_SPLIT_LOCK_DETECT)
+-		split_lock_setup();
++	if (!m->driver_data)
++		goto setup;
++	if (!cpu_has(c, X86_FEATURE_CORE_CAPABILITIES))
++		return;
++	rdmsrl(MSR_IA32_CORE_CAPS, ia32_core_caps);
++	if (!(ia32_core_caps & MSR_IA32_CORE_CAPS_SPLIT_LOCK_DETECT))
++		return;
++setup:
++	split_lock_setup();
+ }
+-- 
+2.21.1
 
-     Signed-off-by: Prike Liang <Prike.Liang@amd.com>
-     Tested-by: Mengbing Wang <Mengbing.Wang@amd.com>
-     Reviewed-by: Huang Rui <ray.huang@amd.com>
-     Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-     Cc: stable@vger.kernel.org
-     Signed-off-by: Sasha Levin <sashal@kernel.org>
-
-:040000 040000 95fb17ff249bfc19d8b65119fdcb5a4ced21d487 
-7a62a4762daedbb41f0eda5831a116ad2c2b8077 M      drivers
-
-Full bisect log:
-git bisect start
-# good: [0a27a29496060843ae3a8fe78aaec0062cbd5dfa] Linux 5.6.4
-git bisect good 0a27a29496060843ae3a8fe78aaec0062cbd5dfa
-# bad: [576aa353744ce5f1279071363e4a55e97f486f39] Linux 5.6.5-rc1
-git bisect bad 576aa353744ce5f1279071363e4a55e97f486f39
-# good: [7509db5d111a5763a199902052eecc480e0ec724] x86/tsc_msr: Make MSR 
-derived TSC frequency more accurate
-git bisect good 7509db5d111a5763a199902052eecc480e0ec724
-# good: [15f1ead7d7966d087352ba2cf81a1759b25ad163] scsi: lpfc: Fix 
-broken Credit Recovery after driver load
-git bisect good 15f1ead7d7966d087352ba2cf81a1759b25ad163
-# good: [9e52b4ab5fadd803c8c2e617aa8c151720757fb1] s390/diag: fix 
-display of diagnose call statistics
-git bisect good 9e52b4ab5fadd803c8c2e617aa8c151720757fb1
-# good: [3e1e6903924fd6c95db7e46c5baa41dfa0f46fdb] 
-powerpc/hash64/devmap: Use H_PAGE_THP_HUGE when setting up huge devmap 
-PTE entries
-git bisect good 3e1e6903924fd6c95db7e46c5baa41dfa0f46fdb
-# good: [0344e0fee2f904ebce1d58bec8ace3ee9cf5f777] drm/dp_mst: Fix 
-clearing payload state on topology disable
-git bisect good 0344e0fee2f904ebce1d58bec8ace3ee9cf5f777
-# bad: [136881c0420bb52d5f21f75688f5aee1cf401737] perf/core: Unify 
-{pinned,flexible}_sched_in()
-git bisect bad 136881c0420bb52d5f21f75688f5aee1cf401737
-# bad: [0d928b424b99cfe0e7806c530f6039a053d5082d] drm/i915/ggtt: do not 
-set bits 1-11 in gen12 ptes
-git bisect bad 0d928b424b99cfe0e7806c530f6039a053d5082d
-# bad: [a655a99c9f6a1d819d695fca6d48b450449f45ee] drm/amdgpu: fix gfx 
-hang during suspend with video playback (v2)
-git bisect bad a655a99c9f6a1d819d695fca6d48b450449f45ee
-# first bad commit: [a655a99c9f6a1d819d695fca6d48b450449f45ee] 
-drm/amdgpu: fix gfx hang during suspend with video playback (v2)
-
-thanks,
--- Shuah
