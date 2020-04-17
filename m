@@ -2,66 +2,144 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 501BBC2D0EF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 13:30:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BC90C2D0EF
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 13:31:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2E36B2078E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 13:30:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BA9D20B1F
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 13:31:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VLOJMmy8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730671AbgDQNak (ORCPT
+        id S1730685AbgDQNbR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 09:30:40 -0400
-Received: from mx2.suse.de ([195.135.220.15]:36900 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730610AbgDQNaj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 09:30:39 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id A7911AC94;
-        Fri, 17 Apr 2020 13:30:37 +0000 (UTC)
-Received: by ds.suse.cz (Postfix, from userid 10065)
-        id 789BDDA727; Fri, 17 Apr 2020 15:29:57 +0200 (CEST)
-From:   David Sterba <dsterba@suse.com>
-To:     torvalds@linux-foundation.org
-Cc:     David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [GIT PULL] Btrfs fix for 5.7-rc2
-Date:   Fri, 17 Apr 2020 15:29:54 +0200
-Message-Id: <cover.1587129870.git.dsterba@suse.com>
-X-Mailer: git-send-email 2.25.0
+        Fri, 17 Apr 2020 09:31:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54332 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730370AbgDQNbQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Apr 2020 09:31:16 -0400
+Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0AB8CC061A0C;
+        Fri, 17 Apr 2020 06:31:15 -0700 (PDT)
+Received: by mail-qt1-x841.google.com with SMTP id x2so1923346qtr.0;
+        Fri, 17 Apr 2020 06:31:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=zD2hyP2njzf+JLR/yZbIZJx3UrjGaarac4VvkjGYRc4=;
+        b=VLOJMmy8eo8EAhdxUSFSAMthHxQawRfo3+C4UinpMBJUHaUlvTpWeCnwIY570qHaEK
+         2vucuaJJ5tQ6vBVCxJBhAvJbh8U+we7Nk4XxV0wRR0TQYnj0PMZsf/3gfCEcq30Ir9Fm
+         PWoTWB2OhRhqrTFzacIiXGSsS0KMHQsaVkB1aFVA/V0t7S6ZKNWtymBYjIvHIsF4IPLv
+         sJPT0kZ75QrW2BDdWp255kkDqr0uCwpxdnAaI+WvupnDRh70+LQEXny43WdW07KlPmL7
+         zgQvPHr8z00UOEvq4V5M/3/g/BU7lOXPVaGLr7eMWXlb9YT3Fdbuv1FjokwkKlOuhlNU
+         zq1Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=zD2hyP2njzf+JLR/yZbIZJx3UrjGaarac4VvkjGYRc4=;
+        b=onErySaZ2DVnuGJqZToezct7LS+U/2XYCT9/0gFM20FZSgzZ8kjj76w/H5k3FnI/a4
+         UM6zWh98ismHz+GEWtVpZdFQmoSzpbyFHrc14STFKWPTW7VOXuRgPkvVWYSTgAcZ6myb
+         3SsgbsWEcnUWdIcYpMZ6XgCO5P/eo8SlQIoSfebCb1Z+qaiRVrNXwQFGCLRZ4ub5H/0G
+         x+j6VYYOmJ6JQPD/j6oePrVtYNf491R26DXpjLXZfM8VD5mAOz6CRZYIp3oHUq3Cdfts
+         3P4fIQfDJ5YIQLRGbAv+7zjtFzQY0+T/gPEfpFx+2BaRvy+5IsTuMUplIJy3pAbOpqXK
+         vEDw==
+X-Gm-Message-State: AGi0PuboDGsql90kd0Ls1xmREUP/vBWuUjH7P6J3smLJJ9Wcz2WFtvee
+        Yg32Exz36TunBNZr41DYhZ4=
+X-Google-Smtp-Source: APiQypKqAHB+sGS71RtZpy0uC4grvuK0SP47TXWEUYmVYPe9gcet7gJ5BGeuBnDhUXawC8b03B0vjg==
+X-Received: by 2002:ac8:1e91:: with SMTP id c17mr2976062qtm.237.1587130274102;
+        Fri, 17 Apr 2020 06:31:14 -0700 (PDT)
+Received: from localhost.localdomain ([168.181.48.229])
+        by smtp.gmail.com with ESMTPSA id m11sm16530411qkg.130.2020.04.17.06.31.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 17 Apr 2020 06:31:13 -0700 (PDT)
+Received: by localhost.localdomain (Postfix, from userid 1000)
+        id C2EB3C163C; Fri, 17 Apr 2020 10:31:10 -0300 (-03)
+Date:   Fri, 17 Apr 2020 10:31:10 -0300
+From:   Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
+To:     Hillf Danton <hdanton@sina.com>
+Cc:     syzbot <syzbot+96e916d6f6f7617bc9fc@syzkaller.appspotmail.com>,
+        davem@davemloft.net, kuba@kernel.org, linux-kernel@vger.kernel.org,
+        linux-sctp@vger.kernel.org, netdev@vger.kernel.org,
+        nhorman@tuxdriver.com, syzkaller-bugs@googlegroups.com,
+        vyasevich@gmail.com
+Subject: Re: memory leak in sctp_stream_init_ext (2)
+Message-ID: <20200417133110.GA2688@localhost.localdomain>
+References: <0000000000004373bc05a37460df@google.com>
+ <20200417083224.13400-1-hdanton@sina.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200417083224.13400-1-hdanton@sina.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Fri, Apr 17, 2020 at 04:32:24PM +0800, Hillf Danton wrote:
+> 
+> On Thu, 16 Apr 2020 20:45:10 -0700
+> > syzbot found the following crash on:
+> > 
+> > HEAD commit:    00086336 Merge tag 'efi-urgent-2020-04-15' of git://git.ke..
+> > git tree:       upstream
+> > console output: https://syzkaller.appspot.com/x/log.txt?x=12996107e00000
+> > kernel config:  https://syzkaller.appspot.com/x/.config?x=efff978b972fb2c
+> > dashboard link: https://syzkaller.appspot.com/bug?extid=96e916d6f6f7617bc9fc
+> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=137ddf3fe00000
+> > 
+> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> > Reported-by: syzbot+96e916d6f6f7617bc9fc@syzkaller.appspotmail.com
+> > 
+> > BUG: memory leak
+> > unreferenced object 0xffff888103ba4580 (size 96):
+> >   comm "syz-executor.1", pid 8335, jiffies 4294953411 (age 14.410s)
+> >   hex dump (first 32 bytes):
+> >     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+> >     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+> >   backtrace:
+> >     [<00000000b06f3e80>] kmalloc include/linux/slab.h:555 [inline]
+> >     [<00000000b06f3e80>] kzalloc include/linux/slab.h:669 [inline]
+> >     [<00000000b06f3e80>] sctp_stream_init_ext+0x28/0xe0 net/sctp/stream.c:162
+> >     [<00000000aff2ecba>] sctp_sendmsg_to_asoc+0x9af/0xab0 net/sctp/socket.c:1811
+> >     [<00000000d5d5eb76>] sctp_sendmsg+0x2a6/0xc60 net/sctp/socket.c:2031
+> >     [<0000000023cdbfa3>] inet_sendmsg+0x39/0x60 net/ipv4/af_inet.c:807
+> >     [<00000000885878ef>] sock_sendmsg_nosec net/socket.c:652 [inline]
+> >     [<00000000885878ef>] sock_sendmsg+0x4c/0x60 net/socket.c:672
+> >     [<0000000009d727e5>] __sys_sendto+0x11d/0x1c0 net/socket.c:2000
+> >     [<0000000066974477>] __do_sys_sendto net/socket.c:2012 [inline]
+> >     [<0000000066974477>] __se_sys_sendto net/socket.c:2008 [inline]
+> >     [<0000000066974477>] __x64_sys_sendto+0x26/0x30 net/socket.c:2008
+> >     [<00000000ecc1fea9>] do_syscall_64+0x6e/0x220 arch/x86/entry/common.c:295
+> >     [<00000000605d798b>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> 
+> Release ext in case of failure of initializing stream.
+> 
+> --- a/net/sctp/stream.c
+> +++ b/net/sctp/stream.c
+> @@ -145,9 +145,10 @@ in:
+>  	ret = sctp_stream_alloc_in(stream, incnt, gfp);
+>  	if (ret) {
 
-please pull a regression fix for a warning caused by running balance and
-snapshot creation in parallel. Thanks.
+Are you working on the right code? Seems you're missing
+61d5d4062876 ("sctp: fix err handling of stream initialization")
 
-----------------------------------------------------------------
-The following changes since commit 34c51814b2b87cb2e5a98c92fe957db2ee8e27f4:
+Anyhow, the patch intention looks right.
 
-  btrfs: re-instantiate the removed BTRFS_SUBVOL_CREATE_ASYNC definition (2020-04-10 18:48:27 +0200)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux.git for-5.7-rc1-tag
-
-for you to fetch changes up to aec7db3b13a07d515c15ada752a7287a44a79ea0:
-
-  btrfs: fix setting last_trans for reloc roots (2020-04-17 15:20:08 +0200)
-
-----------------------------------------------------------------
-Josef Bacik (1):
-      btrfs: fix setting last_trans for reloc roots
-
- fs/btrfs/relocation.c | 19 +++++++++++++++++--
- 1 file changed, 17 insertions(+), 2 deletions(-)
+>  		sched->free(stream);
+> +		for (i = 0; i < stream->outcnt; i++)
+> +			kfree(SCTP_SO(stream, i)->ext);
+>  		genradix_free(&stream->out);
+>  		stream->outcnt = 0;
+> -		goto out;
+>  	}
+>  
+>  out:
+> 
