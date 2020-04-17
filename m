@@ -2,86 +2,108 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF0D1C3815B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 18:06:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4855FC3815B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 18:07:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B81D7221F7
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 18:06:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24CE12078E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 18:07:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587146822;
+	bh=Oty3QgChT/ley53VNMwqfYQxhwuZj6u4rbCRY3t0lAs=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=h3gGn3Ns/Gs5scRP/jXR6OLP8zamaQTGRl1EvWkerd+rVQQBRpDTd2j/Xvoh/eRGJ
+	 EJA5s+cOw2bJbSf5vxJyLnjXDiU43jSFJEToH73HeeSMNXTUxPB69rC9jSX819Uixg
+	 k3ehZlTqHwriR6b/4ys8t5fbOlw7r3eflXwIV0zs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730381AbgDQSGN (ORCPT
+        id S1730403AbgDQSHB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 14:06:13 -0400
-Received: from mx2.suse.de ([195.135.220.15]:33830 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730236AbgDQSGM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 14:06:12 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 89AABABD6;
-        Fri, 17 Apr 2020 18:06:10 +0000 (UTC)
-Message-ID: <500e8c46a9b411aed03965b6f9130ccde457193d.camel@suse.de>
-Subject: Re: [PATCH v2 0/2] of: property: fw_devlink misc fixes
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     saravanak@google.com
-Cc:     frowand.list@gmail.com, robh+dt@kernel.org,
-        devicetree@vger.kernel.org, gregkh@linuxfoundation.org,
+        Fri, 17 Apr 2020 14:07:01 -0400
+Received: from conuserg-07.nifty.com ([210.131.2.74]:37940 "EHLO
+        conuserg-07.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730236AbgDQSHA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Apr 2020 14:07:00 -0400
+Received: from oscar.flets-west.jp (softbank060142179096.bbtec.net [60.142.179.96]) (authenticated)
+        by conuserg-07.nifty.com with ESMTP id 03HI5ABN029932;
+        Sat, 18 Apr 2020 03:05:10 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-07.nifty.com 03HI5ABN029932
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1587146711;
+        bh=SFGIrF50APy5dH88SntYVAB40FrC6WituPFt2il885M=;
+        h=From:To:Cc:Subject:Date:From;
+        b=khCtS4XBOln4glzBZmoYcVnO3BquMr7u+AR+bU/tCPRR9LyZVixoBaxeoHhLDVLfV
+         lDXnnNcgNaV0Oei0lEmP/r2/vt4cxEv8O4fF2n27X7jGwyWh8glK1eUljcn0vjcU+D
+         35fBGnhLPjNGFJj662itfmv0wa5AgXX62V3RQ1MNTIPKPSFOCyOmvnnWhAHLYQBjd3
+         dkCaUuz8AmHF0vBqWk7zF4vWEdx11stnl/4UK6R84IiXdSkWpTbqqUc+yvoaeO5hwd
+         OOskfDPcclqNhE1KA9vtE2iN1Z+HQgJY7DIwJ9RDUlGQYUhlcTR363CltdrsWg8gzp
+         wdgjc8Bkxv2Ew==
+X-Nifty-SrcIP: [60.142.179.96]
+From:   Masahiro Yamada <masahiroy@kernel.org>
+To:     Jeff Dike <jdike@addtoit.com>, Richard Weinberger <richard@nod.at>,
+        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+        linux-um@lists.infradead.org
+Cc:     linux-kbuild@vger.kernel.org,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Alex Dewar <alex.dewar@gmx.co.uk>,
+        Erel Geron <erelx.geron@intel.com>,
+        Johannes Berg <johannes.berg@intel.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
         linux-kernel@vger.kernel.org
-Date:   Fri, 17 Apr 2020 20:06:04 +0200
-In-Reply-To: <20200417165442.1856-1-nsaenzjulienne@suse.de>
-References: <20200417165442.1856-1-nsaenzjulienne@suse.de>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-NXq2S/HrSFRiloiSwbjW"
-User-Agent: Evolution 3.34.4 
+Subject: [PATCH] um: do not evaluate compiler's library path when cleaning
+Date:   Sat, 18 Apr 2020 03:04:55 +0900
+Message-Id: <20200417180455.1174340-1-masahiroy@kernel.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Since commit a83e4ca26af8 ("kbuild: remove cc-option switch from
+-Wframe-larger-than="), 'make ARCH=um clean' emits an error message
+as follows:
 
---=-NXq2S/HrSFRiloiSwbjW
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+  $ make ARCH=um clean
+  gcc: error: missing argument to '-Wframe-larger-than='
 
-Hi Saravana,
+We do not care compiler flags when cleaning.
 
-On Fri, 2020-04-17 at 18:54 +0200, Nicolas Saenz Julienne wrote:
-> As I'm interested in using this feature to fine-tune Raspberry Pi 4's
-> device probe dependencies, I tried to get the board to boot with
-> fw_devlink=3Don. As of today's linux-next the board won't boot with that
-> option. I tried to address the underlying issues.
->=20
+Use the '=' operator for lazy expansion because we do not use
+LDFLAGS_pcap.o or LDFLAGS_vde.o when cleaning.
 
-On a semi-related topic, have you looked at vendor specific properties? mos=
-t of
-them create a consumer/supplier relationship, it'd be nice to be able to ta=
-ke
-those ones into account as well.
+While I was here, I removed the redundant -r option because it
+already exists in the recipe.
 
-Regards,
-Nicolas
+Fixes: a83e4ca26af8 ("kbuild: remove cc-option switch from -Wframe-larger-than=")
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+---
 
+ arch/um/drivers/Makefile | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---=-NXq2S/HrSFRiloiSwbjW
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl6Z8AwACgkQlfZmHno8
-x/7W4Af+L7+hPKqqXUkYFXjbuqmUF+sKSHVVRIXIsxSYit8z826zssjJ7Mg+nYKA
-wWHS17cWFa9hM+ncxWwq5sRFPPjVP/+u0nTPWOANTWzUxCz8rFkej89KC+W4V6sm
-A5ccmxsUz/6uXTaMwCca0h5Z9tklUdNFSCAMTGvOCmaIRt/kW/7bbV0ISVRNVkMl
-1iz6zSZI99s0mLyzEJRGB67bq0uRZxAF49/CUeybCUupRh172CX90MydlAo97Qrf
-a2WODZVjRyb4y4W6LLwZZaqnMgosP4CgMzoBi1K68ZopU9aNigjY7e2vyrWQ+RHc
-VEmwjwpWi00cCNzqlIdIOZi6S+8Rig==
-=DXai
------END PGP SIGNATURE-----
-
---=-NXq2S/HrSFRiloiSwbjW--
+diff --git a/arch/um/drivers/Makefile b/arch/um/drivers/Makefile
+index a290821e355c..2a249f619467 100644
+--- a/arch/um/drivers/Makefile
++++ b/arch/um/drivers/Makefile
+@@ -18,9 +18,9 @@ ubd-objs := ubd_kern.o ubd_user.o
+ port-objs := port_kern.o port_user.o
+ harddog-objs := harddog_kern.o harddog_user.o
+ 
+-LDFLAGS_pcap.o := -r $(shell $(CC) $(KBUILD_CFLAGS) -print-file-name=libpcap.a)
++LDFLAGS_pcap.o = $(shell $(CC) $(KBUILD_CFLAGS) -print-file-name=libpcap.a)
+ 
+-LDFLAGS_vde.o := -r $(shell $(CC) $(CFLAGS) -print-file-name=libvdeplug.a)
++LDFLAGS_vde.o = $(shell $(CC) $(CFLAGS) -print-file-name=libvdeplug.a)
+ 
+ targets := pcap_kern.o pcap_user.o vde_kern.o vde_user.o
+ 
+-- 
+2.25.1
 
