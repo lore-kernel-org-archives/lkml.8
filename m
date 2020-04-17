@@ -2,143 +2,219 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DA7EC38A2C
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 17:17:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A64CDC2D0EF
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 17:17:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EAD832078E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 17:17:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 830BB22209
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 17:17:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="CNNTU61m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729753AbgDQRRB (ORCPT
+        id S1729835AbgDQRRf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 13:17:01 -0400
-Received: from mga12.intel.com ([192.55.52.136]:38157 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729089AbgDQRQ6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 13:16:58 -0400
-IronPort-SDR: TDzeZbABJTbufrYz33bNk3JRvnLgOb8hGG0MzmLPruqHlHdFseZiH+Ef208fiWFPTPIkp9qAPX
- wsAD1GZnRWMQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2020 10:16:58 -0700
-IronPort-SDR: L2dwuoyin03HyOU5KrPBh9CDc81ImlQp2KPyhR47GOUbJRmLrjLvY7GZb/GojCMKECmFFaDiXv
- S+kEdQsA6kWw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,395,1580803200"; 
-   d="scan'208";a="428291531"
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.147])
-  by orsmga005.jf.intel.com with ESMTP; 17 Apr 2020 10:16:57 -0700
-Date:   Fri, 17 Apr 2020 10:16:57 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     Jan Kara <jack@suse.cz>
-Cc:     linux-kernel@vger.kernel.org,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jeff Moyer <jmoyer@redhat.com>,
-        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH RFC 6/8] fs/ext4: Update ext4_should_use_dax()
-Message-ID: <20200417171656.GR2309605@iweiny-DESK2.sc.intel.com>
-References: <20200414040030.1802884-1-ira.weiny@intel.com>
- <20200414040030.1802884-7-ira.weiny@intel.com>
- <20200415135834.GI6126@quack2.suse.cz>
+        Fri, 17 Apr 2020 13:17:35 -0400
+Received: from esa3.microchip.iphmx.com ([68.232.153.233]:27205 "EHLO
+        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729089AbgDQRR2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Apr 2020 13:17:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1587143848; x=1618679848;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=Z97YOUsyGakXRlsIeAgnyUr2EaXM9GuayVOBY7SPxZQ=;
+  b=CNNTU61mVIuFePxf0sgViSpdqguKUDYIxUp0RfORBS1WCjndc85mXJI7
+   EjcsmeDhF2eZf4fxcK+0f/UUpeFJLxBSnVt2r8wzVVzZ6BpXy1JdTuLzd
+   P/Kzl3VKK3jYM8FEG8ZQuT2kLOcwLB2+XawugfAmlDVrUk+ofs1kGNsZB
+   0BfjFskuttSRBmNKfrSS/tgSqYvHdDtNgWzuIvavu8m9V5LMxMEATXjtY
+   1CarkbDrqcKmuvP8kz8ZEV/+oh+D4IG98mjaUcYQZKJpOyFONyoYw4ChY
+   MwAVIlE6nI78uCuPYfBrUFTP6dnyPSluQ9ktFAxfsl3QMAYv0k26e8O+e
+   A==;
+IronPort-SDR: 2IIOiNY0TIQc5JY3syiYgx9veibgSIDFWqVrAw4gP5rQmScuOeqMwWeSQnU5PNv41NA3s7nLmT
+ N8uv3OkbkBi/1gpYfsEViAWgwvSEeouk8YbKj+fGplpShSgSDnu0kRLh1vDu8KTkoUULv3H6Ly
+ XSWx/5gOVUHMaWYVVLPfYL8Q/LZinTaV14+QBnzstDFhmx1Iazzs5dd+fEBE6x1lbRZqzF7KZo
+ qbGYDZsA9vu5fgoEQSg4wOoNDsa6QDTyCNWJtFM70j7lGzKGYM3MjjLf/WNZqFaPBvodYpkbRe
+ MKY=
+X-IronPort-AV: E=Sophos;i="5.72,395,1580799600"; 
+   d="scan'208";a="73717575"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 17 Apr 2020 10:14:25 -0700
+Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Fri, 17 Apr 2020 10:14:04 -0700
+Received: from [10.171.246.39] (10.10.115.15) by chn-vm-ex03.mchp-main.com
+ (10.10.85.151) with Microsoft SMTP Server id 15.1.1713.5 via Frontend
+ Transport; Fri, 17 Apr 2020 10:14:20 -0700
+Subject: Re: [PATCH 4/5] net: macb: WoL support for GEM type of Ethernet
+ controller
+To:     <linux-arm-kernel@lists.infradead.org>, <netdev@vger.kernel.org>,
+        "Claudiu Beznea" <claudiu.beznea@microchip.com>,
+        <harini.katakam@xilinx.com>, <f.fainelli@gmail.com>,
+        <linux@armlinux.org.uk>
+CC:     <linux-kernel@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        <pthombar@cadence.com>, <sergio.prado@e-labworks.com>,
+        <antoine.tenart@bootlin.com>, <andrew@lunn.ch>,
+        <michal.simek@xilinx.com>
+References: <cover.1587058078.git.nicolas.ferre@microchip.com>
+ <56bb7a742093cec160c4465c808778a14b2607e7.1587058078.git.nicolas.ferre@microchip.com>
+From:   Nicolas Ferre <nicolas.ferre@microchip.com>
+Organization: microchip
+Message-ID: <61762f4b-03fa-5484-334e-8515eed485e2@microchip.com>
+Date:   Fri, 17 Apr 2020 19:14:19 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200415135834.GI6126@quack2.suse.cz>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+In-Reply-To: <56bb7a742093cec160c4465c808778a14b2607e7.1587058078.git.nicolas.ferre@microchip.com>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 15, 2020 at 03:58:34PM +0200, Jan Kara wrote:
-> On Mon 13-04-20 21:00:28, ira.weiny@intel.com wrote:
-> > From: Ira Weiny <ira.weiny@intel.com>
-> > 
-> > Change the logic of ext4_should_use_dax() to support using the inode dax
-> > flag OR the overriding tri-state mount option.
-> > 
-> > While we are at it change the function to ext4_enable_dax() as this
-> > better reflects the ask.
+On 16/04/2020 at 19:44, nicolas.ferre@microchip.com wrote:
+> From: Nicolas Ferre <nicolas.ferre@microchip.com>
 > 
-> I disagree with the renaming. ext4_enable_dax() suggests it enables
-> something. It does not. I'd either leave ext4_should_use_dax() or maybe
-> change it to ext4_should_enable_dax() if you really like the "enable" word
-> :).
-
-Ok that does sound better.  And I've changed it in the xfs series as well.
-
-but I kept Darrick's review on that patch...
-
+> Adapt the Wake-on-Lan feature to the Cadence GEM Ethernet controller.
+> This controller has different register layout and cannot be handled by
+> previous code.
+> We disable completely interrupts on all the queues but the queue 0.
+> Handling of WoL interrupt is done in another interrupt handler
+> positioned depending on the controller version used, just between
+> suspend() and resume() calls.
+> It allows to lower pressure on the generic interrupt hot path by
+> removing the need to handle 2 tests for each IRQ: the first figuring out
+> the controller revision, the second for actually knowing if the WoL bit
+> is set.
 > 
-> > 
-> > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-> > ---
-> >  fs/ext4/inode.c | 16 ++++++++++++----
-> >  1 file changed, 12 insertions(+), 4 deletions(-)
-> > 
-> > diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
-> > index fa0ff78dc033..e9d582e516bc 100644
-> > --- a/fs/ext4/inode.c
-> > +++ b/fs/ext4/inode.c
-> > @@ -4383,9 +4383,11 @@ int ext4_get_inode_loc(struct inode *inode, struct ext4_iloc *iloc)
-> >  		!ext4_test_inode_state(inode, EXT4_STATE_XATTR));
-> >  }
-> >  
-> > -static bool ext4_should_use_dax(struct inode *inode)
-> > +static bool ext4_enable_dax(struct inode *inode)
-> >  {
-> > -	if (!test_opt(inode->i_sb, DAX))
-> > +	unsigned int flags = EXT4_I(inode)->i_flags;
-> > +
-> > +	if (test_opt2(inode->i_sb, NODAX))
-> >  		return false;
-> >  	if (!S_ISREG(inode->i_mode))
-> >  		return false;
-> > @@ -4397,7 +4399,13 @@ static bool ext4_should_use_dax(struct inode *inode)
-> >  		return false;
-> >  	if (ext4_test_inode_flag(inode, EXT4_INODE_VERITY))
-> >  		return false;
-> > -	return true;
-> > +	if (!bdev_dax_supported(inode->i_sb->s_bdev,
-> > +				inode->i_sb->s_blocksize))
-> > +		return false;
-> > +	if (test_opt(inode->i_sb, DAX))
-> > +		return true;
-> > +
-> > +	return (flags & EXT4_DAX_FL) == EXT4_DAX_FL;
+> Queue management in suspend()/resume() functions inspired from RFC patch
+> by Harini Katakam <harinik@xilinx.com>, thanks!
 > 
-> flags & EXT4_DAX_FL is enough here, isn't it?
+> Signed-off-by: Nicolas Ferre <nicolas.ferre@microchip.com>
+> ---
+>   drivers/net/ethernet/cadence/macb.h      |   3 +
+>   drivers/net/ethernet/cadence/macb_main.c | 121 ++++++++++++++++++++---
+>   2 files changed, 109 insertions(+), 15 deletions(-)
 
-Yes, changed.
+[..]
 
-Ira
+> @@ -4534,23 +4564,56 @@ static int __maybe_unused macb_suspend(struct device *dev)
+>   	struct macb_queue *queue = bp->queues;
+>   	unsigned long flags;
+>   	unsigned int q;
+> +	int err;
+>   
+>   	if (!netif_running(netdev))
+>   		return 0;
+>   
+>   	if (bp->wol & MACB_WOL_ENABLED) {
+> -		macb_writel(bp, IER, MACB_BIT(WOL));
+> -		macb_writel(bp, WOL, MACB_BIT(MAG));
+> -		enable_irq_wake(bp->queues[0].irq);
+> -		netif_device_detach(netdev);
+> -	} else {
+> -		netif_device_detach(netdev);
+> +		spin_lock_irqsave(&bp->lock, flags);
+> +		/* Flush all status bits */
+> +		macb_writel(bp, TSR, -1);
+> +		macb_writel(bp, RSR, -1);
+>   		for (q = 0, queue = bp->queues; q < bp->num_queues;
+> -		     ++q, ++queue)
+> -			napi_disable(&queue->napi);
+> -		rtnl_lock();
+> -		phylink_stop(bp->phylink);
+> -		rtnl_unlock();
+> +		     ++q, ++queue) {
+> +			/* Disable all interrupts */
+> +			queue_writel(queue, IDR, -1);
+> +			queue_readl(queue, ISR);
+> +			if (bp->caps & MACB_CAPS_ISR_CLEAR_ON_WRITE)
+> +				queue_writel(queue, ISR, -1);
+> +		}
+> +		/* Change interrupt handler and
+> +		 * Enable WoL IRQ on queue 0
+> +		 */
+> +		if (macb_is_gem(bp)) {
+> +			devm_free_irq(dev, bp->queues[0].irq, bp->queues);
+> +			err = devm_request_irq(dev, bp->queues[0].irq, gem_wol_interrupt,
+> +					       IRQF_SHARED, netdev->name, bp->queues);
+> +			if (err) {
+> +				dev_err(dev,
+> +					"Unable to request IRQ %d (error %d)\n",
+> +					bp->queues[0].irq, err);
+> +				return err;
+> +			}
+> +			queue_writel(bp->queues, IER, GEM_BIT(WOL));
+> +			gem_writel(bp, WOL, MACB_BIT(MAG));
+> +		} else {
+> +			queue_writel(bp->queues, IER, MACB_BIT(WOL));
+> +			macb_writel(bp, WOL, MACB_BIT(MAG));
+> +		}
+> +		spin_unlock_irqrestore(&bp->lock, flags);
+> +
+> +		enable_irq_wake(bp->queues[0].irq);
+> +	}
+> +
+> +	netif_device_detach(netdev);
+> +	for (q = 0, queue = bp->queues; q < bp->num_queues;
+> +	     ++q, ++queue)
+> +		napi_disable(&queue->napi);
+> +
+> +	if (!(bp->wol & MACB_WOL_ENABLED)) {
+> +		phy_stop(netdev->phydev);
+> +		phy_suspend(netdev->phydev);
 
-> 
-> 								Honza
-> 
-> >  }
-> >  
-> >  void ext4_set_inode_flags(struct inode *inode)
-> > @@ -4415,7 +4423,7 @@ void ext4_set_inode_flags(struct inode *inode)
-> >  		new_fl |= S_NOATIME;
-> >  	if (flags & EXT4_DIRSYNC_FL)
-> >  		new_fl |= S_DIRSYNC;
-> > -	if (ext4_should_use_dax(inode))
-> > +	if (ext4_enable_dax(inode))
-> >  		new_fl |= S_DAX;
-> >  	if (flags & EXT4_ENCRYPT_FL)
-> >  		new_fl |= S_ENCRYPTED;
-> > -- 
-> > 2.25.1
-> > 
-> -- 
-> Jan Kara <jack@suse.com>
-> SUSE Labs, CR
+Bug here: you must read:
+
+		rtnl_lock();
+		phylink_stop(bp->phylink);
+		rtnl_unlock();
+
+Instead of the 2 previous lines. I'll correct in v2.
+
+Sorry for the regression.
+
+
+>   		spin_lock_irqsave(&bp->lock, flags);
+>   		macb_reset_hw(bp);
+>   		spin_unlock_irqrestore(&bp->lock, flags);
+> @@ -4575,20 +4638,48 @@ static int __maybe_unused macb_resume(struct device *dev)
+
+[..]
+BTW: I have issue having a real resume event from the phy with this 
+series. I'm investigating that but didn't find anything for now.
+
+Observation #1: when the WoL is not enabled, I don't have link issue. 
+But the path in suspend/resume is far more intrusive in phy state.
+
+Observation #2: when WoL is enabled, I need to do a full ifdown/ifup 
+sequence for gain access again to the link:
+
+ip link show eth0
+2: eth0: <NO-CARRIER,BROADCAST,MULTICAST,UP> mtu 1500 qdisc pfifo_fast 
+state DOWN mode DEFAULT group default qlen 1000
+     link/ether 54:10:ec:be:50:b0 brd ff:ff:ff:ff:ff:ff
+
+ifdown eth0 && ifup eth0
+
+ip link show eth0
+2: eth0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast 
+state UP mode DEFAULT group default qlen 1000
+     link/ether 54:10:ec:be:50:b0 brd ff:ff:ff:ff:ff:ff
+
+Observation #3: I didn't experience this behavior while playing with the 
+WoL on my 4.19 kernel before porting to Mainline.
+
+Best regards,
+-- 
+Nicolas Ferre
