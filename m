@@ -2,88 +2,104 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 100E5C352BE
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 09:48:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF22EC352BE
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 09:48:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D9F23207FC
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 09:48:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E11421D94
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 09:48:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HvynZc9s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726539AbgDQJsU (ORCPT
+        id S1726650AbgDQJsk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 05:48:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48006 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725830AbgDQJsT (ORCPT
+        Fri, 17 Apr 2020 05:48:40 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:40095 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726727AbgDQJsk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 05:48:19 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 973B5C061A0C
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 02:48:19 -0700 (PDT)
-Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jPNbX-0005Xp-KG; Fri, 17 Apr 2020 11:48:11 +0200
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 28371104096; Fri, 17 Apr 2020 11:48:11 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     "Luck\, Tony" <tony.luck@intel.com>
-Cc:     Ingo Molnar <mingo@kernel.org>, Fenghua Yu <fenghua.yu@intel.com>,
-        Borislav Petkov <bp@alien8.de>, H Peter Anvin <hpa@zytor.com>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Ravi V Shankar <ravi.v.shankar@intel.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        linux-kernel@vger.kernel.org, x86@kernel.org
-Subject: Re: [PATCH 2/3] x86/split_lock: Bits in IA32_CORE_CAPABILITIES are not architectural
-In-Reply-To: <20200416223335.GA23759@agluck-desk2.amr.corp.intel.com>
-References: <20200416205754.21177-1-tony.luck@intel.com> <20200416205754.21177-3-tony.luck@intel.com> <87eesnm6fc.fsf@nanos.tec.linutronix.de> <20200416223335.GA23759@agluck-desk2.amr.corp.intel.com>
-Date:   Fri, 17 Apr 2020 11:48:11 +0200
-Message-ID: <87blnqmois.fsf@nanos.tec.linutronix.de>
+        Fri, 17 Apr 2020 05:48:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587116918;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=EH1XZETTMUkBMVwE0SvYImZx8kDPUe6xlEK01XCSGX4=;
+        b=HvynZc9s7IPI7J6F4BrfBjQRfm3WjqT4B0+KqPtfeOnVzw9trFsuDSCWxk66d7WE8YDu+m
+        GtSn2dPFEbmvJ75KdgK2joldR55UpVpgrJhUuEowU5OuefDknFyvdHCa4VYev+x6biv6gy
+        2bq+PuKJbogKqesnn3tSF4pwPmpSV7c=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-199-MzTmX318NzqE3LOEWqBCMw-1; Fri, 17 Apr 2020 05:48:35 -0400
+X-MC-Unique: MzTmX318NzqE3LOEWqBCMw-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B26A51005509;
+        Fri, 17 Apr 2020 09:48:31 +0000 (UTC)
+Received: from [10.72.13.157] (ovpn-13-157.pek2.redhat.com [10.72.13.157])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 73F3611A088;
+        Fri, 17 Apr 2020 09:48:22 +0000 (UTC)
+Subject: Re: [PATCH V2] vhost: do not enable VHOST_MENU by default
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
+        netdev@vger.kernel.org, geert@linux-m68k.org,
+        tsbogend@alpha.franken.de, benh@kernel.crashing.org,
+        paulus@samba.org, heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        borntraeger@de.ibm.com, Michael Ellerman <mpe@ellerman.id.au>
+References: <20200416185426-mutt-send-email-mst@kernel.org>
+ <b7e2deb7-cb64-b625-aeb4-760c7b28c0c8@redhat.com>
+ <20200417022929-mutt-send-email-mst@kernel.org>
+ <4274625d-6feb-81b6-5b0a-695229e7c33d@redhat.com>
+ <20200417042912-mutt-send-email-mst@kernel.org>
+ <fdb555a6-4b8d-15b6-0849-3fe0e0786038@redhat.com>
+ <20200417044230-mutt-send-email-mst@kernel.org>
+ <73843240-3040-655d-baa9-683341ed4786@redhat.com>
+ <20200417050029-mutt-send-email-mst@kernel.org>
+ <ce8a18e5-3c74-73cc-57c5-10c40af838a3@redhat.com>
+ <20200417053803-mutt-send-email-mst@kernel.org>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <71b98c3b-1a38-b9aa-149c-f48c92a77448@redhat.com>
+Date:   Fri, 17 Apr 2020 17:48:20 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <20200417053803-mutt-send-email-mst@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Tony,
 
-"Luck, Tony" <tony.luck@intel.com> writes:
-> On Fri, Apr 17, 2020 at 12:06:47AM +0200, Thomas Gleixner wrote:
->> Tony Luck <tony.luck@intel.com> writes:
->> > Features enumerated by IA32_CORE_CAPABILITIES are model specific and
->> > implementation details may vary in different cpu models. Thus it is only
->> > safe to trust features after checking the CPU model.
->> 
->> What's the point of the IA32_CORE_CAPABILITIES check if we need a model
->> match to figure out whether IA32_CORE_CAPABILITIES bit 5 is valid to
->> enumerate split lock detection?
->> 
->> IOW, are we going to see CPUs which end up in the match list and have
->> bit 5 cleared in IA32_CORE_CAPABILITIES?
->
-> There may be low-end SKUs of a model that don't have all the features of
-> the high-end SKUs. So yes, you may find that a specific SKU of a model
-> on the list for a feature doesn't have the feature.
->
-> A model specific feature may also have implementation differences
-> on different models.  E.g. if Intel were to produce a model that
-> did split lock "right" (with thread-scoped control). That would
-> still use the same bit in IA32_CORE_CAPABILITIES, but the OS would
-> need model specific knowledge to know that this split lock detect
-> worked differently from another model that has split lock detect.
+On 2020/4/17 =E4=B8=8B=E5=8D=885:38, Michael S. Tsirkin wrote:
+> On Fri, Apr 17, 2020 at 05:33:56PM +0800, Jason Wang wrote:
+>> On 2020/4/17 =E4=B8=8B=E5=8D=885:01, Michael S. Tsirkin wrote:
+>>>> There could be some misunderstanding here. I thought it's somehow si=
+milar: a
+>>>> CONFIG_VHOST_MENU=3Dy will be left in the defconfigs even if CONFIG_=
+VHOST is
+>>>> not set.
+>>>>
+>>>> Thanks
+>>>>
+>>> BTW do entries with no prompt actually appear in defconfig?
+>>>
+>> Yes. I can see CONFIG_VHOST_DPN=3Dy after make ARCH=3Dm68k defconfig
+> You see it in .config right? So that's harmless right?
 
-IA32_CORE_CAPABILITIES makes a lot of sense to enumerate per thread
-functionality because common sense and consistency are overrated.
 
-Can Intel's HW folks please stop their approach of 'let software
-deal with the mess we create' once and forever?
+Yes.
 
-Thanks,
+Thanks
 
-        tglx
