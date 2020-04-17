@@ -2,137 +2,137 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7B4AC38A29
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 19:22:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 355CBC38A29
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 19:25:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A92C62078E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 19:22:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17A802078E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 19:25:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HOiEvn1C"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="V9KS9pd3";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="xl9ezzRK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730428AbgDQTV7 (ORCPT
+        id S1730231AbgDQTZT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 15:21:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52516 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730352AbgDQTV7 (ORCPT
+        Fri, 17 Apr 2020 15:25:19 -0400
+Received: from esa2.hgst.iphmx.com ([68.232.143.124]:3968 "EHLO
+        esa2.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728826AbgDQTZS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 15:21:59 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 177D8C061A0F
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 12:21:59 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id ay1so1325472plb.0
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 12:21:58 -0700 (PDT)
+        Fri, 17 Apr 2020 15:25:18 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1587151552; x=1618687552;
+  h=from:to:cc:subject:date:message-id:references:
+   content-transfer-encoding:mime-version;
+  bh=ufpqaUu80owrFV9l8wknfkLbk4Ty++tv/FRQbr1850M=;
+  b=V9KS9pd3a7l6UsRgoNe8zvK36Ya7MJzQBj/vMlKv9F7Mwc/wkyGWZ9Z6
+   Mnhyu660D3JhcgTvHlKRVEhDzNKMrSHfFTQEV7IQUYzBqzhHqGX/qnryP
+   6710miu7ia+GVD+bRZG+ClKsIkoQevdQBbrxSZYYtL+6huwza+Kj8UIYq
+   OE3IRnNPjymGAIOYAbkh9Wly/QPxaQPKrHvbb6O/MbA+7gQygCS6cBZ7H
+   R1zvL3htdmr/AbtFaaEN2O/iTo/FzoCwSzGqdM5D5MJc41zGYEAdN/JIj
+   TbmXcz7C7nBfOWmIxj2QZDCIBwvBpRbEKOVYRWzY9a1kjYGQbtexG11cw
+   w==;
+IronPort-SDR: 0+4LEr+6HIa6KC8OnRsamjboZ6LkYMaXEXHcAeeBL/OXx9S0rk6+bKZCAkTjvZ4qRvdivXGAzL
+ QWLBC/yihuW5aBFq7pr/GtJo7TGzxyQTZh2/V2REQUy7kSzwFOPD9VMYVQuojBtZyZC8D6FuTg
+ U9EKVm/Q5qbzfTilHOLTpx657TYyUslshvLzM3EL4HbucptumPhMIdmBzH9we77Yt/OsI1cCdW
+ xRvAoP/d57Vts2Ze9C476v7Q8118BM41pmJCldar1SqX2DCL1mUdN8QsBOkQ4WLEztcLbHEmvh
+ jrs=
+X-IronPort-AV: E=Sophos;i="5.72,395,1580745600"; 
+   d="scan'208";a="238017268"
+Received: from mail-bn7nam10lp2109.outbound.protection.outlook.com (HELO NAM10-BN7-obe.outbound.protection.outlook.com) ([104.47.70.109])
+  by ob1.hgst.iphmx.com with ESMTP; 18 Apr 2020 03:25:38 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=DFgFRzQg4QVRVoQqjbe2x18bLQlISEdK+l8z5pz4Snagpuszcfdbwh21OL01S0t0L9uKuXUwdBl+qZDSNIHVbobq+MF44gww/imo6pjt3M+vII1MIJGfztXSzmfIIworHny4RzbcD/66A7v/iuRl8a8Oyz8mIw0ajI9yd9JAebotCTMP8fGFLhCUc6Nj6bTJeyjcfXSTltBPVH9de65fVyhqrHDXD+pXC+jIIEwB2gTgyG/mjJ6IMSUT8ziCkikxDzNDWyAoIP2HPi24ZIMR91uyDSLQQaCDWDeZZIPuv653WBwyBWTMGC35GaFdfjRTj72EYgmMg37EioiEZIhepA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=EX9YePprWTQYlv/6GZ3B/cWoCYUFYBkLVbWfsIW7G7E=;
+ b=ApeKY0mtWfDjyt43tFxIOk0T2ed1Gez19O0i4LXM+Ujk6kH1Fe+wTB+RuZ6S+8V0ZiL+pSb/RP5UKuI4ztrQWIUF+w6uQQ4l6rFJROYNIdpreuVYLc5U6yqVhtZmYagq/3+NN88NQ77QiTVqXJyTCOymeP2qe4Un1mP+Z/AyTjFFMIp8PXz8UbgBtZDksZtacggIDQLTHZZY3H8TgEer/5etRQFjuK/WsbSt6MW2C68sLvxKxA/wt/FUvjwleXlkr2zgX5tDw+7N4PLHg8q4GKa3TC9taqTL4Q0bYqtcachmVR01/npAnADe8iMe9BSqE8nFtuhJwK0E8rTmVcUdFQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
+ header.d=wdc.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=zMiXOyiLL5u4PWujbjCmvRqsaMSoEDouVZ76G40OsaI=;
-        b=HOiEvn1CydEmRhsVyHkWxtwxyhRBVsz7FG8B3D11JoSSKOkTdYpUxLwVzX+cVt5lJz
-         NaNF3KChUSzVBLCGZkljHGR1IQ0eijL0VDieRE3Fp2vp1N7ISY//759ujAneqrpH8yrR
-         5ZO6ifVnydwKmU2A7i59lmaLzKI68y1+ko1vKsBwJ0J+0BPTOc32FSzercDDxGkdaIl0
-         d/a/9x89kuSakmVgjCmIQkVWTGg3NCuE3DPRsx9vqEAkurk8keqaPatIf0Xmmb5+U3S4
-         nkV2fovh4MJPftXgcSEMHaXwYVEafC4nBqtu+aUcR38/7kY8WYARpmJtvxlcZTC4ldQA
-         yRVg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=zMiXOyiLL5u4PWujbjCmvRqsaMSoEDouVZ76G40OsaI=;
-        b=qaKM6lHFjzQzATmy8zTe2wetm8ZPCg9Tqtae5E6ULBEp81SLhk+8z9xC2WSDPjjWVg
-         omh8vKPiCg9WoE4gaT6N4cJ80/drQgG2/pFXfzziGvb4qRVNgz0ZfHvMmqRCV7JG+rrL
-         yMJlxKiiEwE9Zao0YoYjiNcF1m77abihKlXrRa94gWRjPUCeVurkLudZGhx4AaUIxS6R
-         VWlk5ch1pgTAdzmFlk7sdNMI4bPGpYK/tfQOXk+XK4vOk7iWsO5W/U5IJOn0JrTccmJM
-         bK+i/CFp8OdMVgyulqjHFsfb97/+Lfy7UFYDhF2Kx/NSY/2fFw7js9tpvYL4JxZWt6LD
-         4scQ==
-X-Gm-Message-State: AGi0Pub0mwWvfy94ZN0Au5j9wbD6SKL7bxj0nslun7v7YC1hheZa6+iG
-        e/pfZrrxkAIa5o670XCNpj4v6w==
-X-Google-Smtp-Source: APiQypLCZ2gSD93SLEZLZ1nDN2rC1wWCt+YehOgoKcmEhMz8hMDxzJBnTZh3xOSbkmhbkcT/lDedfw==
-X-Received: by 2002:a17:902:6ac7:: with SMTP id i7mr4663865plt.116.1587151318406;
-        Fri, 17 Apr 2020 12:21:58 -0700 (PDT)
-Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
-        by smtp.gmail.com with ESMTPSA id nu13sm6551802pjb.22.2020.04.17.12.21.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Apr 2020 12:21:57 -0700 (PDT)
-Date:   Fri, 17 Apr 2020 13:21:55 -0600
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Peng Fan <peng.fan@nxp.com>, ohad@wizery.com,
-        linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-imx@nxp.com
-Subject: Re: [PATCH 2/2] remoteproc: use filesz as backup when translate
- memsz fail
-Message-ID: <20200417192155.GA6797@xps15>
-References: <1586420572-28353-1-git-send-email-peng.fan@nxp.com>
- <1586420572-28353-2-git-send-email-peng.fan@nxp.com>
- <20200410012226.GV20625@builder.lan>
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=EX9YePprWTQYlv/6GZ3B/cWoCYUFYBkLVbWfsIW7G7E=;
+ b=xl9ezzRKRz3X+uqzI7Ix67lnQ2IfPNQA8YUewUTBRUmk+i85f/g5kKFCgKKhhRe1VXbj/ewYBGheX9nbkp2w1euTMNMtTm/alifECjgoto0W/aEwWpirEoh29jp+12PXqMipDMGGfIwwPUPyFQSFwnV0UzqSqnCzrncA5rkYXTk=
+Received: from BYAPR04MB4965.namprd04.prod.outlook.com (2603:10b6:a03:4d::25)
+ by BYAPR04MB5509.namprd04.prod.outlook.com (2603:10b6:a03:e4::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.24; Fri, 17 Apr
+ 2020 19:25:07 +0000
+Received: from BYAPR04MB4965.namprd04.prod.outlook.com
+ ([fe80::28be:e964:37e5:44b6]) by BYAPR04MB4965.namprd04.prod.outlook.com
+ ([fe80::28be:e964:37e5:44b6%6]) with mapi id 15.20.2921.027; Fri, 17 Apr 2020
+ 19:25:06 +0000
+From:   Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>
+To:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        "kbusch@kernel.org" <kbusch@kernel.org>,
+        "axboe@fb.com" <axboe@fb.com>, "hch@lst.de" <hch@lst.de>,
+        "sagi@grimberg.me" <sagi@grimberg.me>
+CC:     "open list:NVM EXPRESS DRIVER" <linux-nvme@lists.infradead.org>,
+        linux-stable <stable@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] nvme/pci: Use Discard instead of Write Zeroes on SK hynix
+ SC300
+Thread-Topic: [PATCH] nvme/pci: Use Discard instead of Write Zeroes on SK
+ hynix SC300
+Thread-Index: AQHWFJNgC1T1D2C2k0C8UtF2YjQiRQ==
+Date:   Fri, 17 Apr 2020 19:25:06 +0000
+Message-ID: <BYAPR04MB49658C7772879D7BA5A6E62D86D90@BYAPR04MB4965.namprd04.prod.outlook.com>
+References: <20200417083641.28205-1-kai.heng.feng@canonical.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Chaitanya.Kulkarni@wdc.com; 
+x-originating-ip: [199.255.45.62]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 8f25680c-08ac-4750-2968-08d7e305097f
+x-ms-traffictypediagnostic: BYAPR04MB5509:
+x-microsoft-antispam-prvs: <BYAPR04MB5509222E11B2B4E6EECAF49B86D90@BYAPR04MB5509.namprd04.prod.outlook.com>
+wdcipoutbound: EOP-TRUE
+x-ms-oob-tlc-oobclassifiers: OLM:191;
+x-forefront-prvs: 0376ECF4DD
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR04MB4965.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(4636009)(396003)(376002)(366004)(346002)(136003)(39860400002)(4744005)(71200400001)(316002)(478600001)(110136005)(186003)(66556008)(55016002)(64756008)(9686003)(66446008)(54906003)(66476007)(5660300002)(6506007)(76116006)(7696005)(2906002)(33656002)(8936002)(4326008)(53546011)(66946007)(26005)(86362001)(8676002)(52536014)(81156014);DIR:OUT;SFP:1102;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: RN4K6LsRJ6uUE31Wg2sMfCJz2u2FjqiHfbW8PK+vxhGxjprOI1QpSQDrAe0GZAT6OWLM8bo7piC/TlDmpPEOkv32uHIQI0aZGcknIAqQrPJNGDUtA2eM+yterus/M/a+xFOC00T/4NcvZ4/6Stn2EL+CmI8bRUGjFk/qwWr4Ms0FRv+NuRkXw253Y5kkOr41suqpKSHqa6xQpEZW0u82BmlkBwuCL2piTEB+3fftaI/eINRTbhHeTvncFe2W9QYcj/vzxkZAk9HokzX5jr1JzqujeGeSGSxK+8eVT1tgHmh2PZLhbe7yIlUIyuLuvhId1YchE9phQUq2GuedlZUPlJpe8t4mzKtcNdZjIvsc9dEwLMugtL9lK7RRZ72neHtWozGDx3+SqeUc4gzeBCn2GLYkRO5V66FIniXyf7oxQgcrItQN0HbTkn5SYe5rbp68
+x-ms-exchange-antispam-messagedata: 2zlhnafUsPIRsFz7e8G9OsEN6VYLJCWfLBZzxQdzhjIqEh+L/2oY9U+1H72Rpt7kqW0IPHlk2amrGZg50e3juuoXRGDBmNkB9+d3nUlDyMSo4foA2lkFu5jiG5jyXUEHJ79RfAslLMilu6r8AZJJYA==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200410012226.GV20625@builder.lan>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8f25680c-08ac-4750-2968-08d7e305097f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Apr 2020 19:25:06.8465
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: j9Z1Kwr7dNOv+6ar0iiH+mDpdGwu2iP1JSWDm89FmfX2pXDdDed7f8NN4dIX3FRX41u8FlQGNFYh0HVHk/hi8aNnfzZ2bZq952r5lwzRqTk=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR04MB5509
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 09, 2020 at 06:22:26PM -0700, Bjorn Andersson wrote:
-> On Thu 09 Apr 01:22 PDT 2020, Peng Fan wrote:
-> 
-> > Since we no need memset if memsz is larger than filesz, we could
-> > use filesz for the da to va translation when memsz translation fail.
-> > 
-> 
-> To me this implies that the firmware has a segment that's larger than
-> the memory that it's going to run in. I think even if we're not writing
-> to the entire memsz, asking da_to_va for the entire memsz provides a
-> valuable sanity check.
-> 
-> Regards,
-> Bjorn
-> 
-> > Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> > ---
-> >  drivers/remoteproc/remoteproc_elf_loader.c | 12 ++++++++++--
-> >  1 file changed, 10 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/drivers/remoteproc/remoteproc_elf_loader.c b/drivers/remoteproc/remoteproc_elf_loader.c
-> > index cc50fe70d50c..74d425a4b34c 100644
-> > --- a/drivers/remoteproc/remoteproc_elf_loader.c
-> > +++ b/drivers/remoteproc/remoteproc_elf_loader.c
-> > @@ -229,8 +229,16 @@ int rproc_elf_load_segments(struct rproc *rproc, const struct firmware *fw)
-> >  		if (!ptr) {
-> >  			dev_err(dev, "bad phdr da 0x%llx mem 0x%llx\n", da,
-> >  				memsz);
-> > -			ret = -EINVAL;
-> > -			break;
-> > +
-> > +			ptr = rproc_da_to_va(rproc, da, filesz);
-> > +			if (!ptr) {
-> > +				dev_err(dev,
-> > +					"bad phdr da 0x%llx mem 0x%llx\n",
-> > +					da, filesz);
-> > +				ret = -EINVAL;
-> > +				break;
-> > +			}
-> > +
-
-Adding to Bjorn's comment, I think if rproc_da_to_va() fails with memsz but
-succeeds with filesz something went wrong with how memory was laid out in the
-DT or the ELF resources.  To me this patch offers the wrong solution - the
-focus should be on why rproc_da_to_va() fails.
-
-Thanks,
-Mathieu  
-
-> >  		}
-> >  
-> >  		/* put the segment where the remote processor expects it */
-> > -- 
-> > 2.16.4
-> > 
+On 04/17/2020 01:37 AM, Kai-Heng Feng wrote:=0A=
+> After commit 6e02318eaea5 ("nvme: add support for the Write Zeroes=0A=
+> command"), SK hynix SC300 becomes very slow with the following error=0A=
+> message:=0A=
+> [  224.567695] blk_update_request: operation not supported error, dev nvm=
+e1n1, sector 499384320 op 0x9:(WRITE_ZEROES) flags 0x1000000 phys_seg 0 pri=
+o class 0]=0A=
+>=0A=
+> Use quirk NVME_QUIRK_DEALLOCATE_ZEROES to workaround this issue.=0A=
+Can you share=0A=
+nvme id-ctrl -H /dev/nvme0 | grep oncs -A 8=0A=
+output?=0A=
+=0A=
