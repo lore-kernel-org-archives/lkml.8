@@ -2,224 +2,212 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60041C2D0EF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 18:13:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FC07C2D0EF
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 18:14:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 404E12053B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 18:13:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587147236;
-	bh=MyJQ5S61hZT4V2BH2yLDJ8Nc/SLpyEplqHEm7BtFeSU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=uZG8kJGHdZJZES6BpC0Bj1sa2YJUWgceHMEIvi72cJbhkbm893GOkQVHarvEaNe1R
-	 4O4/S2nEasbC++0QJB/UUP0Z+cwqvIeUGDPsS6yTI2/il0ImEfJqDn9KGouydqLgVf
-	 wy1+kQzMrp2T8/9KueH4oYAIUK2grIUb1bc+TKjQ=
+	by mail.kernel.org (Postfix) with ESMTP id 142C3206F9
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 18:14:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="VITfARv4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730587AbgDQSNz (ORCPT
+        id S1730596AbgDQSOh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 14:13:55 -0400
-Received: from conssluserg-01.nifty.com ([210.131.2.80]:49844 "EHLO
-        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730323AbgDQSNy (ORCPT
+        Fri, 17 Apr 2020 14:14:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42076 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730256AbgDQSOg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 14:13:54 -0400
-Received: from mail-ua1-f51.google.com (mail-ua1-f51.google.com [209.85.222.51]) (authenticated)
-        by conssluserg-01.nifty.com with ESMTP id 03HIDIi6013834;
-        Sat, 18 Apr 2020 03:13:19 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com 03HIDIi6013834
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1587147200;
-        bh=xO9EX2FjdnmulH032XwMxEkWt0+XozsHmF+IUr7+mzc=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=iTEENjHNsaXV5k8y6Hsan5NYkMb5BI0tt0uPGXby6Cq+LA/B5iSRxU5ibZleFxd6b
-         Sbj9e8pJ5ggzBhJcx4A6dGz8RKU6ExSLCT5o74nIRaPEGKpQR9RaoHxIgogTTDhdD0
-         aFGcg3HKftbbb+WwTUORphdcrSA1it7V/+FTWNqEgl8fnUZ0i9yaEOxA2R6GL/oL3D
-         0b048c4r4xtHzxyGo/emxB+wM8hzJORGAhV4JnbFijTIXTT0v6QOmcvnjSV0CoKs22
-         u+gjOjeica0StuIbzA7PfJnOmmuPmwwO8GC7iXunK9AEqqDVsxgABz6GjI3rHKzI83
-         Lfs2AxPtuJ65Q==
-X-Nifty-SrcIP: [209.85.222.51]
-Received: by mail-ua1-f51.google.com with SMTP id t8so985304uap.3;
-        Fri, 17 Apr 2020 11:13:19 -0700 (PDT)
-X-Gm-Message-State: AGi0PuZS/vQW7kCrq38FjwVpf2taqj5X8pyXXYHyMVRMEfeVsI7WpXWh
-        Lq1ADPloLmtuWGGq9i7ImlO+I2JENVub+2Ktb8U=
-X-Google-Smtp-Source: APiQypIWevgCl0lUbNIf5kaJg9YU9ekzFm6t/g7Cl7vCfmDvL95HxVgrNe52VtqbDduHIGsTaGzsIgZXHqUlm9sJCVw=
-X-Received: by 2002:ab0:2790:: with SMTP id t16mr109917uap.40.1587147198192;
- Fri, 17 Apr 2020 11:13:18 -0700 (PDT)
+        Fri, 17 Apr 2020 14:14:36 -0400
+Received: from mail-oi1-x244.google.com (mail-oi1-x244.google.com [IPv6:2607:f8b0:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78E41C061A0C
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 11:14:36 -0700 (PDT)
+Received: by mail-oi1-x244.google.com with SMTP id k9so2846552oia.8
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 11:14:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=8ZtGqnHCQ07/Ew2aP7iD3NcrezbX+AN+GwFRXoG4Q1s=;
+        b=VITfARv4/usebH48Hls8WBXhMUQ4Gj5ghaLuDkZLWDvu69+TtDM4myloJYEz7HGLG+
+         ctiSRBGjjHoQpLHe9ktSiWjtor4yQjJF8PlYuOTPZPpBh/G/DtZ2VrpUjQNhn4mcSqku
+         gJpuiLS0Y/WtCI7eT8UESFjBUlyfLMPIUWc9Q=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8ZtGqnHCQ07/Ew2aP7iD3NcrezbX+AN+GwFRXoG4Q1s=;
+        b=QYDagLzhKc6HWBIAfrZuBpAMocLoHSNJiMuz29/Z1I+clvZ3eGSrvVOs66bqAThQpU
+         TnIFeJpekRD9TVdkQ4frQaDvI/WQbEJRhXZwOC/WRsX1y5BgpIWIeQ4e13GdRZcunyRK
+         EuEfSsT2W8YfLf6IsxpuRc84dhlVLBcuvMY6tPgMyefIhQ36uW8K7NgVDtf/TeL8450A
+         nrsRRVAjDMbR8EZUHqYN9sAS+GYf7UHAxOB7ZKBD5kAe0yvV/Zl5Z5NkaKg7djQju//u
+         a3Fs4/6fQpVJTk9qU/UGVFc7bZa0g5mgIs5ucJ2L0Kls1DOAK/PUJdHWxlvOgCc6JEGU
+         qeuA==
+X-Gm-Message-State: AGi0PuY6PmS05OaYWj2gpbmPNiNr5xgqPAz5J1SfHS/UA6Zt154i6aQI
+        VzSxJTwCKZ1odFD94XNmYuUA/6wVh73+fLGSc2yc2A==
+X-Google-Smtp-Source: APiQypL0F757LauIcBY+JcZyLMy1N/8zxDWB1hXSGdCXb1RXCdnwO8/JVGdpn2VXZvyWPj7TygkZGcDnOVapsu7/az8=
+X-Received: by 2002:aca:4408:: with SMTP id r8mr3135520oia.14.1587147275820;
+ Fri, 17 Apr 2020 11:14:35 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200414012132.32721-1-vitor@massaru.org>
-In-Reply-To: <20200414012132.32721-1-vitor@massaru.org>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Sat, 18 Apr 2020 03:12:41 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQYxtcNinV7JR+c8Pn9Rp1g0TxJ7m_mOFNOJQsB=OiAoA@mail.gmail.com>
-Message-ID: <CAK7LNAQYxtcNinV7JR+c8Pn9Rp1g0TxJ7m_mOFNOJQsB=OiAoA@mail.gmail.com>
-Subject: Re: [PATCH v2] kbuild: ensure mrproper removes arch/$(SUBARCH)/include/generated/
-To:     Vitor Massaru Iha <vitor@massaru.org>
-Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
+References: <20200416152500.29429-1-narmstrong@baylibre.com>
+ <20200416152500.29429-2-narmstrong@baylibre.com> <20200417150729.GP3456981@phenom.ffwll.local>
+ <65879a34-2e31-2908-3cc4-183f62c70ca0@baylibre.com>
+In-Reply-To: <65879a34-2e31-2908-3cc4-183f62c70ca0@baylibre.com>
+From:   Daniel Vetter <daniel@ffwll.ch>
+Date:   Fri, 17 Apr 2020 20:14:24 +0200
+Message-ID: <CAKMK7uHXtcMFv6LpCEjTg5V-TXbkt2eLyitZoCfSc-nMnwJbuA@mail.gmail.com>
+Subject: Re: [PATCH v5 1/8] drm/fourcc: Add modifier definitions for
+ describing Amlogic Video Framebuffer Compression
+To:     Neil Armstrong <narmstrong@baylibre.com>
+Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-amlogic@lists.infradead.org,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Shuah Khan <skhan@linuxfoundation.org>
+        Kevin Hilman <khilman@baylibre.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi.
-
-On Tue, Apr 14, 2020 at 10:21 AM Vitor Massaru Iha <vitor@massaru.org> wrote:
+On Fri, Apr 17, 2020 at 6:05 PM Neil Armstrong <narmstrong@baylibre.com> wrote:
 >
-> In the following use case, when compiling the kernel for the UML
-> architecture, for example:
+> On 17/04/2020 17:07, Daniel Vetter wrote:
+> > On Thu, Apr 16, 2020 at 05:24:53PM +0200, Neil Armstrong wrote:
+> >> Amlogic uses a proprietary lossless image compression protocol and format
+> >> for their hardware video codec accelerators, either video decoders or
+> >> video input encoders.
+> >>
+> >> It considerably reduces memory bandwidth while writing and reading
+> >> frames in memory.
+> >>
+> >> The underlying storage is considered to be 3 components, 8bit or 10-bit
+> >> per component, YCbCr 420, single plane :
+> >> - DRM_FORMAT_YUV420_8BIT
+> >> - DRM_FORMAT_YUV420_10BIT
+> >>
+> >> This modifier will be notably added to DMA-BUF frames imported from the V4L2
+> >> Amlogic VDEC decoder.
+> >>
+> >> This introduces the basic layout composed of:
+> >> - a body content organized in 64x32 superblocks with 4096 bytes per
+> >>   superblock in default mode.
+> >> - a 32 bytes per 128x64 header block
+> >>
+> >> This layout is tranferrable between Amlogic SoCs supporting this modifier.
+> >>
+> >> Tested-by: Kevin Hilman <khilman@baylibre.com>
+> >> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> >> ---
+> >>  include/uapi/drm/drm_fourcc.h | 39 +++++++++++++++++++++++++++++++++++
+> >>  1 file changed, 39 insertions(+)
+> >>
+> >> diff --git a/include/uapi/drm/drm_fourcc.h b/include/uapi/drm/drm_fourcc.h
+> >> index 8bc0b31597d8..a1b163a5641f 100644
+> >> --- a/include/uapi/drm/drm_fourcc.h
+> >> +++ b/include/uapi/drm/drm_fourcc.h
+> >> @@ -309,6 +309,7 @@ extern "C" {
+> >>  #define DRM_FORMAT_MOD_VENDOR_BROADCOM 0x07
+> >>  #define DRM_FORMAT_MOD_VENDOR_ARM     0x08
+> >>  #define DRM_FORMAT_MOD_VENDOR_ALLWINNER 0x09
+> >> +#define DRM_FORMAT_MOD_VENDOR_AMLOGIC 0x0a
+> >>
+> >>  /* add more to the end as needed */
+> >>
+> >> @@ -804,6 +805,44 @@ extern "C" {
+> >>   */
+> >>  #define DRM_FORMAT_MOD_ALLWINNER_TILED fourcc_mod_code(ALLWINNER, 1)
+> >>
+> >> +/*
+> >> + * Amlogic Video Framebuffer Compression modifiers
+> >> + *
+> >> + * Amlogic uses a proprietary lossless image compression protocol and format
+> >> + * for their hardware video codec accelerators, either video decoders or
+> >> + * video input encoders.
+> >> + *
+> >> + * It considerably reduces memory bandwidth while writing and reading
+> >> + * frames in memory.
+> >> + *
+> >> + * The underlying storage is considered to be 3 components, 8bit or 10-bit
+> >> + * per component YCbCr 420, single plane :
+> >> + * - DRM_FORMAT_YUV420_8BIT
+> >> + * - DRM_FORMAT_YUV420_10BIT
+> >> + *
+> >> + * The first 8 bits of the mode defines the layout, then the following 8 bits
+> >> + * defines the options changing the layout.
+> >
+> > None of the modifiers you're doing seem to have these other 8 bits
+> > defined anywhere. And it's not encoded in your modifiers. Can't we just
+> > enumerate the ones we have/need and done?
 >
->  * `make ARCH=um defconfig && make ARCH=um -j8`,
+> It's introduced in patch 5
+
+Hm must have been blind, I overlooked the << 8 shift. I'd just do a
+macro which encoders all fields into the modifier, instead of
+hand-rolling this.
+
+> >
+> >> + *
+> >> + * Not all combinations are valid, and different SoCs may support different
+> >> + * combinations of layout and options.
+> >> + */
+> >> +#define DRM_FORMAT_MOD_AMLOGIC_FBC(__modes) fourcc_mod_code(AMLOGIC, __modes)
+> >> +
+> >> +/* Amlogic FBC Layouts */
+> >> +#define DRM_FORMAT_MOD_AMLOGIC_FBC_LAYOUT_MASK              (0xf << 0)
+> >> +
+> >> +/*
+> >> + * Amlogic FBC Basic Layout
+> >> + *
+> >> + * The basic layout is composed of:
+> >> + * - a body content organized in 64x32 superblocks with 4096 bytes per
+> >> + *   superblock in default mode.
+> >> + * - a 32 bytes per 128x64 header block
+> >> + *
+> >> + * This layout is transferrable between Amlogic SoCs supporting this modifier.
+> >> + */
+> >> +#define DRM_FORMAT_MOD_AMLOGIC_FBC_LAYOUT_BASIC             (1ULL << 0)
+> >
+> > This is kinda confusing, since this isn't actually the modifier, but the
+> > mode of the modifer. Generally what we do is only define the former, with
+> > maybe some macros to extract stuff.
+> >
+> > To make this more mistake-proof I'd only define the full modifier code.
+> > Definitely don't add a #define with the DRM_FORMAT_MOD_ prefix which isn't
+> > actually a full modifier code.
 >
-> SUBARCH files are generated, however when we run the command:
+> Exact, I'll use the same scheme as AFBC: AMLOGIC_FBC_FORMAT_ ...
+
+Yup there's a number of parametried modifiers. As long as the stuff
+you get from a DRM_FORMAT_MOD_ ... macro is a full modifier with
+everything it should be all fine.
+-Daniel
+
+> Neil
 >
->  * `mrproper ARCH=um`
-
-
-      make ARCH=um mrproper
-
-
-> the files `arch/$(SUBARCH)/include/generated/ aren't cleaned up.
+> > -Daniel
+> >
+> >> +
+> >>  #if defined(__cplusplus)
+> >>  }
+> >>  #endif
+> >> --
+> >> 2.22.0
+> >>
+> >
 >
-> This generates compilation errors by running the following command:
->
->  * `make ARCH=um defconfig O=./build_um && make ARCH=um -j8 O=./build_um`
->
-> This PATCH fix that problem.
-
-  This patch fixes ...
-
->
-> This makes it possible to compile on different architectures that use the
-> SUBARCH variable, in different build directories and root directory of the
-> linux directory. This is important because we can compile without the object
-> files being overwritten. This reduces the re-compilation time in this use case.
-
-Sorry, I do not understand this paragraph.
-
-
-Brendan Higgins just reported the build error
-in the out-of-tree build after in-tree build.
-
-
-[1] make ARCH=um defconfig all
-[2] make ARCH=um mrproper
-[3] make ARCH=um O=foo defconfig all
-
-  -> build error
-
-Ins't it?
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
 
 
 
->
-> Besides that, in the workflow of developing unit tests, using kunit, and
-> compiling in different architectures to develop or test a PATCH, this use case
-> applies.
->
->  * This bug was introduced in this commit a788b2ed81abe
-
-
-Instead, adding Fixes tag is the convention.
-
-Fixes: a788b2ed81ab ("kbuild: check arch/$(SRCARCH)/include/generated
-before out-of-tree build")
-
-
->
->  * Related bug: https://bugzilla.kernel.org/show_bug.cgi?id=205219
-
-
-Maybe, this can be also a tag.
-
-
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=205219
-
-
-
-
->
-> Signed-off-by: Vitor Massaru Iha <vitor@massaru.org>
-
-
-Reported-by: Brendan Higgins <brendanhiggins@google.com>
-
-
-
-> Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
-> Tested-by: Brendan Higgins <brendanhiggins@google.com>
-> ---
-> v2:
->  * Explains what this PATCH does and the importance as suggested
->    by Brendan Higgins.
-> ---
->  Makefile | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
->
-> diff --git a/Makefile b/Makefile
-> index 70def4907036..e1a79796032e 100644
-> --- a/Makefile
-> +++ b/Makefile
-> @@ -532,7 +532,8 @@ outputmakefile:
->  ifdef building_out_of_srctree
->         $(Q)if [ -f $(srctree)/.config -o \
->                  -d $(srctree)/include/config -o \
-> -                -d $(srctree)/arch/$(SRCARCH)/include/generated ]; then \
-> +                -d $(srctree)/arch/$(SRCARCH)/include/generated -o \
-> +                -d $(srctree)/arch/$(SUBARCH)/include/generated ]; then \
-
-
-This hunk is unneeded.
-
-
-
->                 echo >&2 "***"; \
->                 echo >&2 "*** The source tree is not clean, please run 'make$(if $(findstring command line, $(origin ARCH)), ARCH=$(ARCH)) mrproper'"; \
->                 echo >&2 "*** in $(abs_srctree)";\
-> @@ -1388,6 +1389,7 @@ CLEAN_FILES += modules.builtin modules.builtin.modinfo modules.nsdeps
->  # Directories & files removed with 'make mrproper'
->  MRPROPER_DIRS  += include/config include/generated          \
->                   arch/$(SRCARCH)/include/generated .tmp_objdiff \
-> +                 arch/$(SUBARCH)/include/generated \
->                   debian/ snap/ tar-install/
->  MRPROPER_FILES += .config .config.old .version \
->                   Module.symvers \
-> --
-> 2.25.1
->
-
-
-This problem is only related to ARCH=um builds.
-So, it should be fixed in arch/um/Makefile.
-
-
-
-
-diff --git a/arch/um/Makefile b/arch/um/Makefile
-index d2daa206872d..275f5ffdf6f0 100644
---- a/arch/um/Makefile
-+++ b/arch/um/Makefile
-@@ -140,6 +140,7 @@ export CFLAGS_vmlinux := $(LINK-y) $(LINK_WRAPS)
-$(LD_FLAGS_CMDLINE)
- # When cleaning we don't include .config, so we don't include
- # TT or skas makefiles and don't clean skas_ptregs.h.
- CLEAN_FILES += linux x.i gmon.out
-+MRPROPER_DIRS += arch/$(SUBARCH)/include/generated
-
- archclean:
-        @find . \( -name '*.bb' -o -name '*.bbg' -o -name '*.da' \
-
-
-
-
-
---
-Best Regards
-Masahiro Yamada
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
++41 (0) 79 365 57 48 - http://blog.ffwll.ch
