@@ -2,140 +2,255 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F3EBC2D0EF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 14:41:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 604D0C2D0EF
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 14:41:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 19D5620936
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 14:41:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4724821924
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 14:41:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728045AbgDQOlA (ORCPT
+        id S1728072AbgDQOl2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 10:41:00 -0400
-Received: from out30-130.freemail.mail.aliyun.com ([115.124.30.130]:44814 "EHLO
-        out30-130.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726707AbgDQOlA (ORCPT
+        Fri, 17 Apr 2020 10:41:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37134 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726707AbgDQOl1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 10:41:00 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R871e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04357;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=39;SR=0;TI=SMTPD_---0TvqIRjz_1587134450;
-Received: from IT-FVFX43SYHV2H.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0TvqIRjz_1587134450)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Fri, 17 Apr 2020 22:40:52 +0800
-Subject: Re: [PATCH v8 03/10] mm/lru: replace pgdat lru_lock with lruvec lock
-To:     Johannes Weiner <hannes@cmpxchg.org>
-Cc:     akpm@linux-foundation.org, cgroups@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        mgorman@techsingularity.net, tj@kernel.org, hughd@google.com,
-        khlebnikov@yandex-team.ru, daniel.m.jordan@oracle.com,
-        yang.shi@linux.alibaba.com, willy@infradead.org,
-        shakeelb@google.com, Michal Hocko <mhocko@kernel.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Roman Gushchin <guro@fb.com>,
-        Chris Down <chris@chrisdown.name>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vlastimil Babka <vbabka@suse.cz>, Qian Cai <cai@lca.pw>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        David Rientjes <rientjes@google.com>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        swkhack <swkhack@gmail.com>,
-        "Potyra, Stefan" <Stefan.Potyra@elektrobit.com>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Colin Ian King <colin.king@canonical.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Peng Fan <peng.fan@nxp.com>,
-        Nikolay Borisov <nborisov@suse.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>,
-        Yafang Shao <laoar.shao@gmail.com>,
-        Wei Yang <richard.weiyang@gmail.com>
-References: <1579143909-156105-1-git-send-email-alex.shi@linux.alibaba.com>
- <1579143909-156105-4-git-send-email-alex.shi@linux.alibaba.com>
- <20200116215222.GA64230@cmpxchg.org>
- <cdcdb710-1d78-6fac-48d7-35519ddcdc6a@linux.alibaba.com>
- <20200413180725.GA99267@cmpxchg.org>
- <8e7bf170-2bb5-f862-c12b-809f7f7d96cb@linux.alibaba.com>
- <20200414163114.GA136578@cmpxchg.org>
- <54af0662-cbb4-88c7-7eae-f969684025dd@linux.alibaba.com>
- <0bed9f1a-400d-d9a9-aeb4-de1dd9ccbb45@linux.alibaba.com>
- <20200416152830.GA195132@cmpxchg.org>
-From:   Alex Shi <alex.shi@linux.alibaba.com>
-Message-ID: <2403add7-d468-7615-22c5-3fafb1264d54@linux.alibaba.com>
-Date:   Fri, 17 Apr 2020 22:39:59 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.6.0
+        Fri, 17 Apr 2020 10:41:27 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82E36C061A0C
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 07:41:27 -0700 (PDT)
+Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jPSB9-0001HI-BB; Fri, 17 Apr 2020 16:41:15 +0200
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id CDE79104096; Fri, 17 Apr 2020 16:41:14 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Balbir Singh <sblbir@amazon.com>, linux-kernel@vger.kernel.org
+Cc:     jpoimboe@redhat.com, tony.luck@intel.com, keescook@chromium.org,
+        benh@kernel.crashing.org, x86@kernel.org, dave.hansen@intel.com,
+        Balbir Singh <sblbir@amazon.com>
+Subject: Re: [PATCH v3 4/5] arch/x86: Optionally flush L1D on context switch
+In-Reply-To: <20200408090229.16467-5-sblbir@amazon.com>
+References: <20200408090229.16467-1-sblbir@amazon.com> <20200408090229.16467-5-sblbir@amazon.com>
+Date:   Fri, 17 Apr 2020 16:41:14 +0200
+Message-ID: <87mu7akwdx.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <20200416152830.GA195132@cmpxchg.org>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Balbir Singh <sblbir@amazon.com> writes:
+ 
+> +static void *l1d_flush_pages;
+> +static DEFINE_MUTEX(l1d_flush_mutex);
+> +
+> +int enable_l1d_flush_for_task(struct task_struct *tsk)
 
+static ?
 
-在 2020/4/16 下午11:28, Johannes Weiner 写道:
-> Hi Alex,
-> 
-> On Thu, Apr 16, 2020 at 04:01:20PM +0800, Alex Shi wrote:
->>
->>
->> 在 2020/4/15 下午9:42, Alex Shi 写道:
->>> Hi Johannes,
->>>
->>> Thanks a lot for point out!
->>>
->>> Charging in __read_swap_cache_async would ask for 3 layers function arguments
->>> pass, that would be a bit ugly. Compare to this, could we move out the
->>> lru_cache add after commit_charge, like ksm copied pages?
->>>
->>> That give a bit extra non lru list time, but the page just only be used only
->>> after add_anon_rmap setting. Could it cause troubles?
->>
->> Hi Johannes & Andrew,
->>
->> Doing lru_cache_add_anon during swapin_readahead can give a very short timing 
->> for possible page reclaiming for these few pages.
->>
->> If we delay these few pages lru adding till after the vm_fault target page 
->> get memcg charging(mem_cgroup_commit_charge) and activate, we could skip the 
->> mem_cgroup_try_charge/commit_charge/cancel_charge process in __read_swap_cache_async().
->> But the cost is maximum SWAP_RA_ORDER_CEILING number pages on each cpu miss
->> page reclaiming in a short time. On the other hand, save the target vm_fault
->> page from reclaiming before activate it during that time.
-> 
-> The readahead pages surrounding the faulting page might never get
-> accessed and pile up to large amounts. Users can also trigger
-> non-faulting readahead with MADV_WILLNEED.
-> 
-> So unfortunately, I don't see a way to keep these pages off the
-> LRU. They do need to be reclaimable, or they become a DoS vector.
-> 
-> I'm currently preparing a small patch series to make swap ownership
-> tracking an integral part of memcg and change the swapin charging
-> sequence, then you don't have to worry about it. This will also
-> unblock Joonsoo's "workingset protection/detection on the anonymous
-> LRU list" patch series, since he is blocked on the same problem - he
-> needs the correct LRU available at swapin time to process refaults
-> correctly. Both of your patch series are already pretty large, they
-> shouldn't need to also deal with that.
-> 
+> +{
+> +	struct page *page;
+> +	int ret = 0;
+> +
+> +	if (static_cpu_has(X86_FEATURE_FLUSH_L1D))
+> +		goto done;
+> +
+> +	page = READ_ONCE(l1d_flush_pages);
+> +	if (unlikely(!page)) {
+> +		mutex_lock(&l1d_flush_mutex);
+> +		if (!l1d_flush_pages) {
+> +			l1d_flush_pages = alloc_l1d_flush_pages();
+> +			if (!l1d_flush_pages) {
+> +				mutex_unlock(&l1d_flush_mutex);
+> +				return -ENOMEM;
+> +			}
+> +		}
+> +		mutex_unlock(&l1d_flush_mutex);
+> +	}
 
-That sounds great!
-BTW, the swapin target page will add into inactive_anon list and then activate
-after chaged. that left a minum time slot for this page to be reclaimed.
-May better activate it early?
+So this is +/- the mutex the same code as KVM has. Why is this not moved
+into l1d_flush.c, i.e. 
 
-Also I have 2 clean up patches, which may or may not useful for you. will send
-it to you. :)
+static void *l1d_flush_pages;
+static DEFINE_MUTEX(l1d_flush_mutex);
 
-Thanks
-Alex
+int l1d_flush_init(void)
+{
+	int ret;
+        
+	if (static_cpu_has(X86_FEATURE_FLUSH_L1D) || l1d_flush_pages)
+		return 0;
+
+	mutex_lock(&l1d_flush_mutex);
+	if (!l1d_flush_pages)
+		l1d_flush_pages = l1d_flush_alloc_pages();
+        ret = l1d_flush_pages ? 0 : -ENOMEM;        
+	mutex_unlock(&l1d_flush_mutex);
+        return ret;
+}
+EXPORT_SYMBOL_GPL(l1d_flush_init);
+
+which removes the export of l1d_flush_alloc_pages() and gets rid of the
+cleanup counterpart. In a real world deployment unloading of VMX if used
+once is unlikely and with the task based one you end up with these pages
+'leaked' anyway if used once.
+
+Can we please make this simple and consistent?
+
+> +done:
+> +	set_ti_thread_flag(&tsk->thread_info, TIF_SPEC_FLUSH_L1D);
+> +	return ret;
+> +}
+> +
+> +int disable_l1d_flush_for_task(struct task_struct *tsk)
+
+static void?
+
+> +{
+> +	clear_ti_thread_flag(&tsk->thread_info, TIF_SPEC_FLUSH_L1D);
+> +	return 0;
+> +}
+> +
+> +int arch_prctl_l1d_flush_get(struct task_struct *tsk)
+> +{
+> +	return test_ti_thread_flag(&tsk->thread_info, TIF_SPEC_FLUSH_L1D);
+> +}
+> +
+> +int arch_prctl_l1d_flush_set(struct task_struct *tsk, unsigned long enable)
+> +{
+> +	if (enable)
+> +		return enable_l1d_flush_for_task(tsk);
+> +	return disable_l1d_flush_for_task(tsk);
+> +}
+
+If any other architecture enables this, then it will have _ALL_ of this
+code duplicated. So we should rather have:
+
+  - CONFIG_FLUSH_L1D which gets selected by features requesting
+    it, i.e. X86 + VMX
+
+  - CONFIG_FLUSH_L1D_PRCTL which gets selected by architectures
+    supporting it, i.e. X86. This selects CONFIG_FLUSH_L1D and enables
+    the prctl logic.
+
+  - arch/xxx/include/asm/l1d_flush.h which has for x86:
+
+    #include <linux/l1d_flush.h>
+    #include <asm/thread_info.h>
+
+    #define L1D_CACHE_ORDER 4
+
+    static inline bool arch_has_l1d_flush_hw(void)
+    {
+    	return static_cpu_has(X86_FEATURE_FLUSH_L1D);
+    }
+
+    // This is to make the allocation function conditional or if an
+    // architecture knows upfront compile time optimized.
+
+    static inline void arch_l1d_flush(void *pages, unsigned long options)
+    {
+        if (static_cpu_has(X86_FEATURE_FLUSH_L1D)) {
+        	...
+                return;
+        }
+
+        if (options & POPULATE_TLB)
+        	l1d_flush_populate_tlb(pages);
+        l1d_flush_sw(pages);
+    }
+
+    // The option bits go into linux/l1d_flush.h and the asm header has
+    // exactly one file which includes it: lib/l1d_flush.c
+    //
+    // All other places (VMX, arch context switch code) include 
+    // linux/l1d_flush.h which also contains the prototypes for
+    // l1d_flush_init() and l1d_flush().
+
+  - Have l1d_flush_init() and the alloc function in lib/l1d_flush.c
+
+  - The flush invocation in lib/l1d_flush.c:
+
+    void l1d_flush(unsigned long options)
+    {
+   	arch_l1d_flush(l1d_flush_pages, options);
+    }
+    EXPORT_SYMBOL_GPL(l1d_flush);
+
+  - All architectures have to use TIF_SPEC_FLUSH_L1D if they want to
+    support the prctl.
+
+    So all of the above arch_prctl*() stuff becomes generic and sits in
+    lib/l1d_flush.c hidden behind CONFIG_FLUSH_L1D_PRCTL.
+
+    The only architecture specific bits are in the actual context switch
+    code.
+
+Hmm?
+
+> diff --git a/include/uapi/linux/prctl.h b/include/uapi/linux/prctl.h
+> index 07b4f8131e36..42cb3038c81a 100644
+> --- a/include/uapi/linux/prctl.h
+> +++ b/include/uapi/linux/prctl.h
+> @@ -238,4 +238,8 @@ struct prctl_mm_map {
+>  #define PR_SET_IO_FLUSHER		57
+>  #define PR_GET_IO_FLUSHER		58
+>  
+> +/* Flush L1D on context switch (mm) */
+> +#define PR_SET_L1D_FLUSH		59
+> +#define PR_GET_L1D_FLUSH		60
+> +
+>  #endif /* _LINUX_PRCTL_H */
+> diff --git a/kernel/sys.c b/kernel/sys.c
+> index d325f3ab624a..578aa8b6d87e 100644
+> --- a/kernel/sys.c
+> +++ b/kernel/sys.c
+> @@ -2262,6 +2262,16 @@ int __weak arch_prctl_spec_ctrl_set(struct task_struct *t, unsigned long which,
+>  	return -EINVAL;
+>  }
+>  
+> +int __weak arch_prctl_l1d_flush_set(struct task_struct *tsk, unsigned long enable)
+> +{
+> +	return -EINVAL;
+> +}
+> +
+> +int __weak arch_prctl_l1d_flush_get(struct task_struct *t)
+> +{
+> +	return -EINVAL;
+> +}
+> +
+>  #define PR_IO_FLUSHER (PF_MEMALLOC_NOIO | PF_LESS_THROTTLE)
+>  
+>  SYSCALL_DEFINE5(prctl, int, option, unsigned long, arg2, unsigned long, arg3,
+> @@ -2514,6 +2524,16 @@ SYSCALL_DEFINE5(prctl, int, option, unsigned long, arg2, unsigned long, arg3,
+>  
+>  		error = (current->flags & PR_IO_FLUSHER) == PR_IO_FLUSHER;
+>  		break;
+> +	case PR_SET_L1D_FLUSH:
+> +		if (arg3 || arg4 || arg5)
+> +			return -EINVAL;
+> +		error = arch_prctl_l1d_flush_set(me, arg2);
+> +		break;
+> +	case PR_GET_L1D_FLUSH:
+> +		if (arg2 || arg3 || arg4 || arg5)
+> +			return -EINVAL;
+> +		error = arch_prctl_l1d_flush_get(me);
+> +		break;
+>  	default:
+>  		error = -EINVAL;
+>  		break;
+
+The prctl itself looks fine to me.
+
+Thanks,
+
+        tglx
+
