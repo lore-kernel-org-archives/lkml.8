@@ -2,198 +2,110 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 601C4C352BE
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 11:29:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF347C352BE
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 11:29:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 41EC221D94
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 11:29:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B98B9207FC
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 11:29:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UuOfXI5p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730318AbgDQL3g (ORCPT
+        id S1730377AbgDQL3p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 07:29:36 -0400
-Received: from mx2.suse.de ([195.135.220.15]:54828 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730237AbgDQL3f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 07:29:35 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id A3C81ABEF;
-        Fri, 17 Apr 2020 11:29:33 +0000 (UTC)
-Date:   Fri, 17 Apr 2020 13:29:32 +0200 (CEST)
-From:   Miroslav Benes <mbenes@suse.cz>
-To:     Peter Zijlstra <peterz@infradead.org>
-cc:     tglx@linutronix.de, jpoimboe@redhat.com,
-        linux-kernel@vger.kernel.org, x86@kernel.org, mhiramat@kernel.org,
-        jthierry@redhat.com, alexandre.chartre@oracle.com
-Subject: Re: [PATCH v5 02/17] objtool: Better handle IRET
-In-Reply-To: <20200416115118.631224674@infradead.org>
-Message-ID: <alpine.LSU.2.21.2004171326230.7737@pobox.suse.cz>
-References: <20200416114706.625340212@infradead.org> <20200416115118.631224674@infradead.org>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+        Fri, 17 Apr 2020 07:29:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35610 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730324AbgDQL3p (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Apr 2020 07:29:45 -0400
+Received: from mail-vs1-xe41.google.com (mail-vs1-xe41.google.com [IPv6:2607:f8b0:4864:20::e41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 14B26C061A0F
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 04:29:45 -0700 (PDT)
+Received: by mail-vs1-xe41.google.com with SMTP id t189so931497vst.7
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 04:29:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Lc+0dA5ZQ6U/TmJnVIFeGMJ1UgmxFTvQYOdMP2cGglY=;
+        b=UuOfXI5pPysHol9zXgk317NJuZvCfQiXWDHh5nA1sEItDgTUCsp4xF/1omvUhOEakt
+         ULf37ERYsiG1pKtq4hkc6WS8i1WkCjzKIUdXT1NxEULrCnEbEZX3TWIJzCWJlo0fHYxh
+         frrHJXWGFayKHUcS6NuATF30wpb41eWLL6wYk8LnNVhEJiQJ9YYWHvpYdH710VbJgUMg
+         mGFbalwNVkD2CP6jJ8GUznERRygLYYEjEAm4UQSUdC0GkAC1WPRnLkFHl7L25Krhi9ap
+         VC1fh5Y4Nfy434MpX8ah2yd/isxal1+Lwk1/hKcJz/DSkhLpWCjFlVp5RkRZM5+v3WvK
+         ocpw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Lc+0dA5ZQ6U/TmJnVIFeGMJ1UgmxFTvQYOdMP2cGglY=;
+        b=P+G9slNq9RGjI5eTRQqUg7md7p5WgsrSdPwoFNd0kaWWcAxF79O3cAQKe6bsgFiDvf
+         0DFaGs0oBul6/cJN60eNhQvAew6tBkMZqS+uhwcLCl6j2WPq4pR8+boiBPplA95UTeEd
+         sX5h15WCIJNj2Y5Ko3BkroetIfjFESJrgVm76jVB0b3Bh0tKjaJ8Gn/Lrzj5NFtbL6N+
+         5npw5dR+DQBG4L87iaxjyIh5o9EnRo/8gSi+98VE/wediO7Mq3ngmkod8x09NhSqeq9Z
+         HTSTfMCDYQbjE0asfezXaRHJsfb+dWgThAICsPZBn0vPXJOTXcblN86vh++McC/9M2BG
+         3T7Q==
+X-Gm-Message-State: AGi0Pubi7cdfNcZJAPyQyQW9cUahdmIVqOII5jns3SFnhaSiFyxsL+no
+        9yzPY+xBbFuzcXqSs+Yhi9MSOvw7Ukbn3PaqM2bzeA==
+X-Google-Smtp-Source: APiQypIOp3J008s/bXB9WKJub9sYBgZQSDtFNy6ifDOoslHH7Jbc679wSfxiWRv9bj/JvDoEvcOEy6Gs///EOUjlB+g=
+X-Received: by 2002:a05:6102:72d:: with SMTP id u13mr1662810vsg.35.1587122984277;
+ Fri, 17 Apr 2020 04:29:44 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+References: <20200410145643.630b0731@xhacker.debian>
+In-Reply-To: <20200410145643.630b0731@xhacker.debian>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Fri, 17 Apr 2020 13:29:08 +0200
+Message-ID: <CAPDyKFpmcXt2oikzz8hKCLecctnZo9PLNZgu-FRnO8y2jfc-kA@mail.gmail.com>
+Subject: Re: [PATCH] mmc: sd: use HIGH_SPEED_BUS_SPEED in mmc_sd_switch_hs()
+To:     Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+Cc:     "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 16 Apr 2020, Peter Zijlstra wrote:
+On Fri, 10 Apr 2020 at 08:57, Jisheng Zhang <Jisheng.Zhang@synaptics.com> wrote:
+>
+> Use the well defined HIGH_SPEED_BUS_SPEED macro in mmc_sd_switch_hs()
+> to make code more readable.
+>
+> Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
 
-> Teach objtool a little more about IRET so that we can avoid using the
-> SAVE/RESTORE annotation. In particular, make the weird corner case in
-> insn->restore go away.
-> 
-> The purpose of that corner case is to deal with the fact that
-> UNWIND_HINT_RESTORE lands on the instruction after IRET, but that
-> instruction can end up being outside the basic block, consider:
-> 
-> 	if (cond)
-> 		sync_core()
-> 	foo();
-> 
-> Then the hint will land on foo(), and we'll encounter the restore
-> hint without ever having seen the save hint.
-> 
-> By teaching objtool about the arch specific exception frame size, and
-> assuming that any IRET in an STT_FUNC symbol is an exception frame
-> sized POP, we can remove the use of save/restore hints for this code.
-> 
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Applied for next, thanks!
+
+Kind regards
+Uffe
+
+
 > ---
->  arch/x86/include/asm/processor.h |    2 --
->  tools/objtool/arch.h             |    1 +
->  tools/objtool/arch/x86/decode.c  |   14 ++++++++++++--
->  tools/objtool/check.c            |   29 ++++++++++++++++-------------
->  4 files changed, 29 insertions(+), 17 deletions(-)
-> 
-> --- a/arch/x86/include/asm/processor.h
-> +++ b/arch/x86/include/asm/processor.h
-> @@ -727,7 +727,6 @@ static inline void sync_core(void)
->  	unsigned int tmp;
->  
->  	asm volatile (
-> -		UNWIND_HINT_SAVE
->  		"mov %%ss, %0\n\t"
->  		"pushq %q0\n\t"
->  		"pushq %%rsp\n\t"
-> @@ -737,7 +736,6 @@ static inline void sync_core(void)
->  		"pushq %q0\n\t"
->  		"pushq $1f\n\t"
->  		"iretq\n\t"
-> -		UNWIND_HINT_RESTORE
->  		"1:"
->  		: "=&r" (tmp), ASM_CALL_CONSTRAINT : : "cc", "memory");
->  #endif
-> --- a/tools/objtool/arch.h
-> +++ b/tools/objtool/arch.h
-> @@ -19,6 +19,7 @@ enum insn_type {
->  	INSN_CALL,
->  	INSN_CALL_DYNAMIC,
->  	INSN_RETURN,
-> +	INSN_EXCEPTION_RETURN,
->  	INSN_CONTEXT_SWITCH,
->  	INSN_STACK,
->  	INSN_BUG,
-> --- a/tools/objtool/arch/x86/decode.c
-> +++ b/tools/objtool/arch/x86/decode.c
-> @@ -435,9 +435,19 @@ int arch_decode_instruction(struct elf *
->  		*type = INSN_RETURN;
->  		break;
->  
-> +	case 0xcf: /* iret */
-> +		*type = INSN_EXCEPTION_RETURN;
-> +
-> +		/* add $40, %rsp */
-> +		op->src.type = OP_SRC_ADD;
-> +		op->src.reg = CFI_SP;
-> +		op->src.offset = 5*8;
-> +		op->dest.type = OP_DEST_REG;
-> +		op->dest.reg = CFI_SP;
-> +		break;
-> +
->  	case 0xca: /* retf */
->  	case 0xcb: /* retf */
-> -	case 0xcf: /* iret */
->  		*type = INSN_CONTEXT_SWITCH;
->  		break;
->  
-> @@ -483,7 +493,7 @@ int arch_decode_instruction(struct elf *
->  
->  	*immediate = insn.immediate.nbytes ? insn.immediate.value : 0;
->  
-> -	if (*type == INSN_STACK)
-> +	if (*type == INSN_STACK || *type == INSN_EXCEPTION_RETURN)
->  		list_add_tail(&op->list, ops_list);
->  	else
->  		free(op);
-> --- a/tools/objtool/check.c
-> +++ b/tools/objtool/check.c
-> @@ -2080,15 +2080,14 @@ static int validate_return(struct symbol
->   * tools/objtool/Documentation/stack-validation.txt.
->   */
->  static int validate_branch(struct objtool_file *file, struct symbol *func,
-> -			   struct instruction *first, struct insn_state state)
-> +			   struct instruction *insn, struct insn_state state)
->  {
->  	struct alternative *alt;
-> -	struct instruction *insn, *next_insn;
-> +	struct instruction *next_insn;
->  	struct section *sec;
->  	u8 visited;
->  	int ret;
->  
-> -	insn = first;
->  	sec = insn->sec;
->  
->  	if (insn->alt_group && list_empty(&insn->alts)) {
-> @@ -2141,16 +2140,6 @@ static int validate_branch(struct objtoo
->  				}
->  
->  				if (!save_insn->visited) {
-> -					/*
-> -					 * Oops, no state to copy yet.
-> -					 * Hopefully we can reach this
-> -					 * instruction from another branch
-> -					 * after the save insn has been
-> -					 * visited.
-> -					 */
-> -					if (insn == first)
-> -						return 0;
-> -
->  					WARN_FUNC("objtool isn't smart enough to handle this CFI save/restore combo",
->  						  sec, insn->offset);
->  					return 1;
-> @@ -2243,6 +2232,20 @@ static int validate_branch(struct objtoo
->  
->  			break;
->  
-> +		case INSN_EXCEPTION_RETURN:
-> +			if (handle_insn_ops(insn, &state))
-> +				return 1;
-> +
-> +			/*
-> +			 * This handles x86's sync_core() case, where we use an
-> +			 * IRET to self. All 'normal' IRET instructions are in
-> +			 * STT_NOTYPE entry symbols.
-> +			 */
-> +			if (func)
-> +				break;
-> +
-> +			return 0;
-> +
->  		case INSN_CONTEXT_SWITCH:
->  			if (func && (!next_insn || !next_insn->hint)) {
->  				WARN_FUNC("unsupported instruction in callable function",
-
-It looks really simple.
-
-Have you tried Julien's proposal about removing INSN_STACK altogether, 
-move the x86 to arch/x86/ and call handle_insn_ops() unconditionally, or 
-have you just postponed it? As I said, I think it could be better in the 
-long term, but the above looks good for now as well.
-
-Miroslav
+>  drivers/mmc/core/sd.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/mmc/core/sd.c b/drivers/mmc/core/sd.c
+> index 76c7add367d5..43de3190d718 100644
+> --- a/drivers/mmc/core/sd.c
+> +++ b/drivers/mmc/core/sd.c
+> @@ -376,11 +376,11 @@ int mmc_sd_switch_hs(struct mmc_card *card)
+>         if (!status)
+>                 return -ENOMEM;
+>
+> -       err = mmc_sd_switch(card, 1, 0, 1, status);
+> +       err = mmc_sd_switch(card, 1, 0, HIGH_SPEED_BUS_SPEED, status);
+>         if (err)
+>                 goto out;
+>
+> -       if ((status[16] & 0xF) != 1) {
+> +       if ((status[16] & 0xF) != HIGH_SPEED_BUS_SPEED) {
+>                 pr_warn("%s: Problem switching card into high-speed mode!\n",
+>                         mmc_hostname(card->host));
+>                 err = 0;
+> --
+> 2.26.0
+>
