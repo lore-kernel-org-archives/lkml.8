@@ -2,68 +2,123 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 334BCC2D0EF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 13:07:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 926DEC352BE
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 13:08:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DB83B206B9
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 13:07:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72804206B9
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 13:08:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587128890;
+	bh=GWq+raL5THvXb3WHttxsZ8oxicGdBehyddDxLEKM9oA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=bZYQNdH7vMwGZEb2KPO+PPb7N9N1EhiPgo8mTm5jKvy1roCBSE7zUZoUdz1LQIBtE
+	 tjYL6u/kUccmZt8VXJwzuxAaP3HNOokenzqwdyjkOqzgEd/A7YDMOXQDZMbV9/2Lt4
+	 7sgUqvJ0k+9z8Qkz6L3RXR6pCNiupzfnirJaVukM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730017AbgDQNHk (ORCPT
+        id S1730217AbgDQNIJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 09:07:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50702 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729799AbgDQNHk (ORCPT
+        Fri, 17 Apr 2020 09:08:09 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:46647 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729799AbgDQNIJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 09:07:40 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29820C061A0C
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 06:07:40 -0700 (PDT)
-Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jPQiS-00006l-6S; Fri, 17 Apr 2020 15:07:32 +0200
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id D37BE104096; Fri, 17 Apr 2020 15:07:31 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Balbir Singh <sblbir@amazon.com>, linux-kernel@vger.kernel.org
-Cc:     jpoimboe@redhat.com, tony.luck@intel.com, keescook@chromium.org,
-        benh@kernel.crashing.org, x86@kernel.org, dave.hansen@intel.com,
-        Balbir Singh <sblbir@amazon.com>
-Subject: Re: [PATCH v3 3/5] arch/x86/mm: Refactor cond_ibpb() to support other use cases
-In-Reply-To: <20200408090229.16467-4-sblbir@amazon.com>
-References: <20200408090229.16467-1-sblbir@amazon.com> <20200408090229.16467-4-sblbir@amazon.com>
-Date:   Fri, 17 Apr 2020 15:07:31 +0200
-Message-ID: <87sgh2l0q4.fsf@nanos.tec.linutronix.de>
+        Fri, 17 Apr 2020 09:08:09 -0400
+Received: by mail-wr1-f65.google.com with SMTP id f13so2927887wrm.13;
+        Fri, 17 Apr 2020 06:08:07 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=0xitfCt44NpX/zHg++7+cxiDZSUTq6AViagZQ7XxH/s=;
+        b=pr9CMS5OwOqhVyHaSZUkRHuEtNa8enP6P9K8IhmKFc1K75ZSMGx8i2hIkW6+Gd5CWZ
+         fr6OAA20RMnKlQWqG0rsqEvQYV66SQ4LhW0Wf2bhxI/5sLOuizcTIN1qroj09Y1bCC8p
+         8Trve533y6o+9FTNBFXFsjtWoli8i6qd8skjozY7KwmMPy2wzYjCH0qcIV2lj8HiwOzM
+         0MqWpW4YtqcWoC69TYdxJSpR3ghZ/HBwmKD44Xg9LFzNxKeOY2Ilzu4tvUcMO6URVA2m
+         1mTqhcdNUHZL93jnVKs0IGIXecEBg2fwkajS31ioOAhURZAsNpIXhxB1VAe/SbFc2Itz
+         l3SA==
+X-Gm-Message-State: AGi0PuYUZDPFYvBfqnbebgMbGRYj6toOMbMCzG5xcaREkny2CNAQBKPs
+        mktCALCOsRqCubri7pAVb/ZCochg
+X-Google-Smtp-Source: APiQypIti7bfzNiuiDl5ZIOJ90yq2LCbDxv2TSX7eAGxppwiDKE+l+L9K/O8MI3/qNMS9Ht1k90zzw==
+X-Received: by 2002:adf:f5c4:: with SMTP id k4mr3832796wrp.294.1587128886968;
+        Fri, 17 Apr 2020 06:08:06 -0700 (PDT)
+Received: from debian (44.142.6.51.dyn.plus.net. [51.6.142.44])
+        by smtp.gmail.com with ESMTPSA id a7sm15244713wrs.61.2020.04.17.06.08.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 17 Apr 2020 06:08:06 -0700 (PDT)
+Date:   Fri, 17 Apr 2020 14:08:03 +0100
+From:   Wei Liu <wei.liu@kernel.org>
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+        bp@alien8.de, haiyangz@microsoft.com, hpa@zytor.com,
+        kys@microsoft.com, linux-hyperv@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mingo@redhat.com,
+        sthemmin@microsoft.com, tglx@linutronix.de, x86@kernel.org,
+        mikelley@microsoft.com, kvm@vger.kernel.org
+Subject: Re: [PATCH] x86/hyperv: Suspend/resume the VP assist page for
+ hibernation
+Message-ID: <20200417130803.ci2orezcrb64z64m@debian>
+References: <1587104999-28927-1-git-send-email-decui@microsoft.com>
+ <87blnqv389.fsf@vitty.brq.redhat.com>
+ <20200417105558.2jkqq2lih6vvoip2@debian>
+ <87wo6etj39.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87wo6etj39.fsf@vitty.brq.redhat.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Balbir Singh <sblbir@amazon.com> writes:
->  
->  /*
-> - * Use bit 0 to mangle the TIF_SPEC_IB state into the mm pointer which is
-> - * stored in cpu_tlb_state.last_user_mm_ibpb.
-> + * Bits to mangle the TIF_SPEC_IB state into the mm pointer which is
-> + * stored in cpu_tlb_state.last_user_mm_spec.
->   */
->  #define LAST_USER_MM_IBPB	0x1UL
-> +#define LAST_USER_MM_SPEC_MASK	(LAST_USER_MM_IBPB)
->  
->  	/* Reinitialize tlbstate. */
-> -	this_cpu_write(cpu_tlbstate.last_user_mm_ibpb, LAST_USER_MM_IBPB);
-> +	this_cpu_write(cpu_tlbstate.last_user_mm_spec, LAST_USER_MM_IBPB);
+On Fri, Apr 17, 2020 at 02:03:38PM +0200, Vitaly Kuznetsov wrote:
+> Wei Liu <wei.liu@kernel.org> writes:
+> 
+> > On Fri, Apr 17, 2020 at 12:03:18PM +0200, Vitaly Kuznetsov wrote:
+> >> Dexuan Cui <decui@microsoft.com> writes:
+> >> 
+> >> > Unlike the other CPUs, CPU0 is never offlined during hibernation. So in the
+> >> > resume path, the "new" kernel's VP assist page is not suspended (i.e.
+> >> > disabled), and later when we jump to the "old" kernel, the page is not
+> >> > properly re-enabled for CPU0 with the allocated page from the old kernel.
+> >> >
+> >> > So far, the VP assist page is only used by hv_apic_eoi_write().
+> >> 
+> >> No, not only for that ('git grep hv_get_vp_assist_page')
+> >> 
+> >> KVM on Hyper-V also needs VP assist page to use Enlightened VMCS. In
+> >> particular, Enlightened VMPTR is written there.
+> >> 
+> >> This makes me wonder: how does hibernation work with KVM in case we use
+> >> Enlightened VMCS and we have VMs running? We need to make sure VP Assist
+> >> page content is preserved.
+> >
+> > The page itself is preserved, isn't it?
+> >
+> 
+> Right, unlike hyperv_pcpu_input_arg is is not freed.
+> 
+> > hv_cpu_die never frees the vp_assit page. It merely disables it.
+> > hv_cpu_init only allocates a new page if necessary.
+> 
+> I'm not really sure that Hyper-V will like us when we disable VP Assist
+> page and have an active L2 guest using Enlightened VMCS, who knows what
+> it caches and when. I'll try to at least test if/how it works.
+> 
 
-Shouldn't that be LAST_USER_MM_MASK?
+I'm curious to know that as well. :-)
 
-Thanks,
+> This all is not really related to Dexuan's patch)
 
-        tglx
+Right.
+
+Wei.
+
+> 
+> -- 
+> Vitaly
+> 
