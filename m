@@ -4,34 +4,38 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B39FFC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 07:09:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47001C2BB85
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 07:09:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 81397208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 07:09:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 309032083E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 07:09:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728841AbgDQHJZ (ORCPT
+        id S1728849AbgDQHJi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 03:09:25 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:45800 "EHLO huawei.com"
+        Fri, 17 Apr 2020 03:09:38 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:42486 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728159AbgDQHJY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 03:09:24 -0400
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id AB646A30DEDBDD42FFC6;
-        Fri, 17 Apr 2020 15:09:22 +0800 (CST)
-Received: from huawei.com (10.175.124.28) by DGGEMS405-HUB.china.huawei.com
- (10.3.19.205) with Microsoft SMTP Server id 14.3.487.0; Fri, 17 Apr 2020
- 15:09:16 +0800
+        id S1728159AbgDQHJi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Apr 2020 03:09:38 -0400
+Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 28D6622F2F9E658195FE;
+        Fri, 17 Apr 2020 15:09:35 +0800 (CST)
+Received: from huawei.com (10.175.124.28) by DGGEMS404-HUB.china.huawei.com
+ (10.3.19.204) with Microsoft SMTP Server id 14.3.487.0; Fri, 17 Apr 2020
+ 15:09:27 +0800
 From:   Jason Yan <yanaijie@huawei.com>
-To:     <will@kernel.org>, <tglx@linutronix.de>,
+To:     <konrad.wilk@oracle.com>, <bhelgaas@google.com>,
+        <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
+        <x86@kernel.org>, <hpa@zytor.com>,
+        <xen-devel@lists.xenproject.org>, <linux-pci@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>
 CC:     Jason Yan <yanaijie@huawei.com>, Hulk Robot <hulkci@huawei.com>
-Subject: [PATCH] samples/hw_breakpoint: make sample_hbp static
-Date:   Fri, 17 Apr 2020 15:35:42 +0800
-Message-ID: <20200417073542.42721-1-yanaijie@huawei.com>
+Subject: [PATCH] xen/pci: make xen_msi_init() static
+Date:   Fri, 17 Apr 2020 15:35:53 +0800
+Message-ID: <20200417073553.42873-1-yanaijie@huawei.com>
 X-Mailer: git-send-email 2.21.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7BIT
@@ -45,28 +49,28 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Fix the following sparse warning:
 
-samples/hw_breakpoint/data_breakpoint.c:24:19: warning: symbol
-'sample_hbp' was not declared. Should it be static?
+arch/x86/pci/xen.c:426:13: warning: symbol 'xen_msi_init' was not
+declared. Should it be static?
 
 Reported-by: Hulk Robot <hulkci@huawei.com>
 Signed-off-by: Jason Yan <yanaijie@huawei.com>
 ---
- samples/hw_breakpoint/data_breakpoint.c | 2 +-
+ arch/x86/pci/xen.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/samples/hw_breakpoint/data_breakpoint.c b/samples/hw_breakpoint/data_breakpoint.c
-index 418c46fe5ffc..37c4f0ea8e53 100644
---- a/samples/hw_breakpoint/data_breakpoint.c
-+++ b/samples/hw_breakpoint/data_breakpoint.c
-@@ -21,7 +21,7 @@
- #include <linux/perf_event.h>
- #include <linux/hw_breakpoint.h>
+diff --git a/arch/x86/pci/xen.c b/arch/x86/pci/xen.c
+index 91220cc25854..0d06f12ccd74 100644
+--- a/arch/x86/pci/xen.c
++++ b/arch/x86/pci/xen.c
+@@ -423,7 +423,7 @@ int __init pci_xen_init(void)
+ }
  
--struct perf_event * __percpu *sample_hbp;
-+static struct perf_event * __percpu *sample_hbp;
- 
- static char ksym_name[KSYM_NAME_LEN] = "jiffies";
- module_param_string(ksym, ksym_name, KSYM_NAME_LEN, S_IRUGO);
+ #ifdef CONFIG_PCI_MSI
+-void __init xen_msi_init(void)
++static void __init xen_msi_init(void)
+ {
+ 	if (!disable_apic) {
+ 		/*
 -- 
 2.21.1
 
