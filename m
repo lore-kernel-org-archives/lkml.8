@@ -2,373 +2,198 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,TVD_PH_BODY_ACCOUNTS_PRE
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5E98C38A29
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 09:57:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C029AC352BE
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 09:58:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 99D1F21D95
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 09:57:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="r1OM7MYy"
+	by mail.kernel.org (Postfix) with ESMTP id A162421D94
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 09:58:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728709AbgDQJ5g (ORCPT
+        id S1728733AbgDQJ6A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 05:57:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49448 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727840AbgDQJ5d (ORCPT
+        Fri, 17 Apr 2020 05:58:00 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:55670 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726712AbgDQJ6A (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 05:57:33 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8EF72C061A0F
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 02:57:33 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id x18so2378776wrq.2
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 02:57:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=BxdOY3z0xM0CI52w6qoCNlpFo6ByBsjg8n/akR2lelc=;
-        b=r1OM7MYyPLUl1o1MFezOlO7AvDxrNPs6Xz4NAaLKl1TeAvn0VSfVhxoS0vfa7/Whv7
-         THcyu2XioGBgIj5oDSF+9361zmgyquIbS6my6peNI0bAJtf04uWiutCiT4VdZSUcguLn
-         /6zCSWZVeKEHxaSRyu6OI1F5yMOym//DYJYCLlB2PwcKGxDvuI9fczsQyuGHOTTUKATk
-         UyU9NBUqVdnPgXC7eWYrSlZ3X+QDCmPPMoREUkj+At+d6rc1t+LXvEME7+Qhg8L+xmJX
-         zktoqKg+G5CMds+vod2roisaCDjzmK8OdJn3j2tpAzF6ZPwYrfe6fMWje3JXw45cYzb7
-         k/Zg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=BxdOY3z0xM0CI52w6qoCNlpFo6ByBsjg8n/akR2lelc=;
-        b=azmwce1y/UHTujQE3UpPF3FlbK6GJ+KnKQdP+dwk8zd+TIw4m6dZdDjz4/8UySQ7O7
-         wNpCVSjE6Cus2Rw9YO/4hbS3vCe6NqeXkuMgFKncAdfg80HsB6D8/TFBOOX8fB3sKwY+
-         EY4AKfCuZIaC1qHYw+y+JtRoFhL28vJjtAxXgPQowRnneVMgrQrtbTQnbVWnRPbkS4/d
-         oSvkRW9BzVu1CsKBrO2kNRCzMbi0fh4GUJmGSe8eiqrXTVRw1/1gKo8KZQLUrfivCekY
-         2bfAf3S4BysF4yhcZyVEMvW2HdAHx7WAzy3KVtDvrHQNWkZuv2PvoS5o4KYAhI5xOQEd
-         Hxaw==
-X-Gm-Message-State: AGi0PuZwJ0ITftjgHwW/R0tc5MLlNmGyzXxTUvufV+EJhS7J0i3TVdXE
-        mkX8iHKCG2Clid58JAukKID/yQ==
-X-Google-Smtp-Source: APiQypIue/Km0CGvOVXLRMs3dRNzNn2b+oQJbWUSRC7S+I6HZthWyFZ45PSiWlv1OzGFmHnp1EEYHg==
-X-Received: by 2002:adf:b1c8:: with SMTP id r8mr2997631wra.218.1587117452173;
-        Fri, 17 Apr 2020 02:57:32 -0700 (PDT)
-Received: from dell ([95.149.164.124])
-        by smtp.gmail.com with ESMTPSA id h188sm7601572wme.8.2020.04.17.02.57.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Apr 2020 02:57:31 -0700 (PDT)
-Date:   Fri, 17 Apr 2020 10:58:31 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Tim Harvey <tharvey@gateworks.com>
-Cc:     Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        linux-hwmon@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Robert Jones <rjones@gateworks.com>
-Subject: Re: [PATCH v8 1/3] dt-bindings: mfd: Add Gateworks System Controller
- bindings
-Message-ID: <20200417095831.GI2167633@dell>
-References: <1585341214-25285-1-git-send-email-tharvey@gateworks.com>
- <1585341214-25285-2-git-send-email-tharvey@gateworks.com>
+        Fri, 17 Apr 2020 05:58:00 -0400
+Received: from 185.80.35.16 (185.80.35.16) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.415)
+ id 58873dd5037093b4; Fri, 17 Apr 2020 11:57:56 +0200
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Alan Stern <stern@rowland.harvard.edu>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Qais Yousef <qais.yousef@arm.com>,
+        USB list <linux-usb@vger.kernel.org>,
+        Linux-pm mailing list <linux-pm@vger.kernel.org>,
+        Kernel development list <linux-kernel@vger.kernel.org>
+Subject: Re: lockdep warning in urb.c:363 usb_submit_urb
+Date:   Fri, 17 Apr 2020 11:57:55 +0200
+Message-ID: <2040116.cccRbkeLkK@kreacher>
+In-Reply-To: <Pine.LNX.4.44L0.2004161036410.14937-100000@netrider.rowland.org>
+References: <Pine.LNX.4.44L0.2004161036410.14937-100000@netrider.rowland.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1585341214-25285-2-git-send-email-tharvey@gateworks.com>
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 27 Mar 2020, Tim Harvey wrote:
+On Thursday, April 16, 2020 5:18:15 PM CEST Alan Stern wrote:
+> Thanks for all your help straightening this out.  I think the end 
+> result will be a distinct improvement over the old code.
 
-> This patch adds documentation of device-tree bindings for the
-> Gateworks System Controller (GSC).
+Yes, I believe so.
+
+> On Thu, 16 Apr 2020, Rafael J. Wysocki wrote:
 > 
-> Signed-off-by: Tim Harvey <tharvey@gateworks.com>
-> ---
-> v8:
->  - add register to fan-controller node name
+> > This means that the dev_pm_skip_resume() logic really is relatively
+> > straightforward:
+> >  - If the current transition is RESTORE, return "false".
+> >  - Otherwise, if the current transition is THAW, return the return value
+> >    of dev_pm_skip_suspend().
+> >  - Otherwise (so the current transition is RESUME which is the only remaining
+> >    case), return the logical negation of power.must_resume.
+> > 
+> > > Also, it would mean 
+> > > that a device whose subsystem doesn't know about power.may_skip_resume 
+> > > would never be allowed to stay in runtime suspend.
+> > 
+> > Not really, because I want the core to set power.may_skip_resume for the
+> > devices for which dev_pm_skip_suspend() returns "true" if the "suspend_late"
+> > subsystem-level callback is not present.  [It might be more consistent
+> > to simply set it for all devices for which dev_pm_skip_suspend() returns
+> > "true" and let the subsystems update it should they want to?  IOW, the
+> > default value of power.may_skip_resume could be the return value of
+> > dev_pm_skip_suspend()?]
 > 
-> v7:
->  - change divider from mili-ohms to ohms
->  - add constraints for voltage divider and offset
->  - remove unnecessary ref for offset
->  - renamed fan to fan-controller and changed base prop to reg
+> How about this?  Let's set power.may_skip_resume to "true" for each
+> device before issuing ->prepare.
+
+Yes, it can be set to 'true' by default for all devices.
+
+It doesn't need to be before ->prepare, it can be before ->suspend (as it
+is now).
+
+> The subsystem can set it to "false"
+> if it wants to during any of the suspend-side callbacks.  Following the
+> ->suspend_noirq callback, the core will do the equivalent of:
 > 
-> v6:
->  - fix typo
->  - drop invalid description from #interrupt-cells property
->  - fix adc pattern property
->  - add unit suffix
->  - replace hwmon/adc with adc/channel
->  - changed adc type to mode and enum int
->  - add unit suffix and drop ref for voltage-divider
->  - moved fan to its own subnode with base register
+> 	dev->power.may_skip_resume &= dev_pm_skip_suspend(dev);
 > 
-> v5:
->  - resolve dt_binding_check issues
+> before propagating the flag.  Any subsystem changes to support this
+> should be minimal, since only ACPI and PCI currently use
+> may_skip_resume.
+
+IMO it can be simpler even.
+
+Because power.may_skip_resume is taken into account along with
+MAY_SKIP_RESUME and the driver setting the latter must be prepared
+for skipping its resume callbacks regardless of the suspend side of
+things, they may always be skipped (and the device may be left in
+suspend accordingly) if there is a reason to avoid doing that.
+
+The core doesn't know about those reasons, so it has no reason to
+touch power.may_skip_resume after setting it at the outset and then
+whoever sees a reason why these callbacks should run (the subsystem
+or the driver) needs to clear power.may_skip_resume (and clearing it
+more than once obviously makes no difference).
+
+> > > What about the runtime PM usage counter?
+> > 
+> > Yes, it applies to that too.
+> > 
+> > Of course, if dev_pm_skip_suspend() returns "true", the usage counter cannot
+> > be greater than 1 (for the given device as well as for any dependent devices).
 > 
-> v4:
->  - move to using pwm<n>_auto_point<m>_{pwm,temp} for FAN PWM
->  - remove unncessary resolution/scaling properties for ADCs
->  - update to yaml
->  - remove watchdog
+> Well, in theory the subsystem could call pm_runtime_get_noresume().  I 
+> can't imagine why it would want to, though.
+
+Indeed.
+
+> So here's what we've got:
 > 
-> v3:
->  - replaced _ with -
->  - remove input bindings
->  - added full description of hwmon
->  - fix unit address of hwmon child nodes
-> ---
->  .../devicetree/bindings/mfd/gateworks-gsc.yaml     | 194 +++++++++++++++++++++
->  1 file changed, 194 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mfd/gateworks-gsc.yaml
+> > > Transition   Conditions for dev_pm_skip_resume() to return "true"
+> > > ----------   ----------------------------------------------------
+> > > 
+> > > RESTORE      Never
+> > 
+> > Right.
 > 
-> diff --git a/Documentation/devicetree/bindings/mfd/gateworks-gsc.yaml b/Documentation/devicetree/bindings/mfd/gateworks-gsc.yaml
-> new file mode 100644
-> index 00000000..a96751c9
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mfd/gateworks-gsc.yaml
-> @@ -0,0 +1,194 @@
-> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/mfd/gateworks-gsc.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Gateworks System Controller multi-function device
+> >  THAW	         dev_pm_skip_suspend() returns "true".
+> 
+> >  RESUME        power.must_resume is clear (which requires
+> >                  MAY_SKIP_RESUME and power.may_skip_resume to be set and
+> >                  the runtime usage counter to be = 1, and which 
+> >                  propagates up from dependent devices)
+> > 
+> > Nothing else is really strictly required IMO.
+> 
+> This seems very clear and simple.  And I will repeat here some of the 
+> things posted earlier, to make the description more complete:
+> 
+> 	During the suspend side, for each of the
+> 	{suspend,freeze,poweroff}_{late,noirq} phases: If
+> 	dev_pm_skip_suspend() returns true then the subsystem should
+> 	not invoke the driver's callback, and if there is no subsystem
+> 	callback then the core will not invoke the driver's callback.
+> 
+> 	During the resume side, for each of the
+> 	{resume,thaw,restore}_{early,noirq} phases: If
+> 	dev_pm_skip_resume() returns true then the subsystem should
+> 	not invoke the driver's callback, and if there is no subsystem
+> 	callback then the core will not invoke the driver's callback.
+> 
+> 	dev_pm_skip_suspend() will return "true" if SMART_SUSPEND is
+> 	set and the device's runtime status is "suspended".
+> 
+> 	For dev_pm_skip_resume() and power.must_resume, see above.
+> 
+> 	At the start of the {resume,thaw,restore}_noirq phase, if
+> 	dev_pm_skip_resume() returns true then the core will set the
+> 	runtime status to "suspended".  Otherwise it will set the
+> 	runtime status to "active".  If this is not what the subsystem
+> 	or driver wants, it must update the runtime status itself.
+> 
+> For this to work properly, we will have to rely on subsystems/drivers
+> to call pm_runtime_resume() during the suspend/freeze transition if
+> SMART_SUSPEND is clear.
 
-I'd prefer if you didn't use Linuxisums in DT docs.
+That has been the case forever, though.
 
-A 'multi-function device' isn't a thing - we made it up.
+> Otherwise we could have the following scenario:
+> 
+> Device A has a child B, and both are runtime suspended when hibernation
+> starts.  Suppose that the SMART_SUSPEND flag is set for A but not for
+> B, and suppose that B's subsystem/driver neglects to call
+> pm_runtime_resume() during the FREEZE transition.  Then during the THAW
+> transition, dev_pm_skip_resume() will return "true" for A and "false"  
+> for B.  This will lead to an error when the core tries to set B's
+> runtime status to "active" while A's status is "suspended".
+> 
+> One way to avoid this is to have the core make the pm_runtime_resume()  
+> call, but you have said that you don't like that approach.  Any 
+> suggestions?
 
-Nowhere in the documentation [0] is the Gateworks System Controller
-described as a multi-function device.
+Because the core has not been calling pm_runtime_resume() during system-wide
+suspend for devices with SMART_SUSPEND clear, that should not be changed or
+we'll see regressions.
 
-[0] http://trac.gateworks.com/wiki/gsc
+I know for a fact that some drivers expect the core to be doing nothing
+with respect to that.
 
-> +description: |
-> +  The GSC is a Multifunction I2C slave device with the following submodules:
+> Should the core take some special action following ->freeze_noirq if
+> the runtime status is "suspended" and SMART_SUSPEND is clear?
 
-No it isn't.  It's a:
+Again, anything like that would change the current behavior which may
+not be expected by at least some drivers, so I wouldn't change that.
 
-  "The Gateworks System Controller (GSC) is a device present across
-   various Gateworks product families that provides a set of system
-   related feature such as the following (refer to the board hardware
-   user manuals to see what features are present)"
+IOW, SMART_SUSPEND clear means to the core that *it* need not care about
+the suspend side at all (because somebody else will do that).
 
-> +   - Watchdog Timer
-> +   - GPIO
-> +   - Pushbutton controller
-> +   - Hardware Monitor with ADC's for temperature and voltage rails and
-> +     fan controller
 
-Why is "Monitor" capitalised, but "controller" is not?
 
-I would s/Monitor/monitor/ here.
-
-> +maintainers:
-> +  - Tim Harvey <tharvey@gateworks.com>
-> +  - Robert Jones <rjones@gateworks.com>
-> +
-> +properties:
-> +  $nodename:
-> +    pattern: "gsc@[0-9a-f]{1,2}"
-> +  compatible:
-> +    const: gw,gsc
-> +
-> +  reg:
-> +    description: I2C device address
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  interrupt-controller: true
-> +
-> +  "#interrupt-cells":
-> +    const: 1
-> +
-> +  "#address-cells":
-> +    const: 1
-> +
-> +  "#size-cells":
-> +    const: 0
-> +
-> +  adc:
-> +    type: object
-> +    description: Optional Hardware Monitoring module
-
-Again, an odd thing to capitalise.
-
-> +    properties:
-> +      compatible:
-> +        const: gw,gsc-adc
-> +
-> +      "#address-cells":
-> +        const: 1
-> +
-> +      "#size-cells":
-> +        const: 0
-> +
-> +    patternProperties:
-> +      "^channel@[0-9]+$":
-> +        type: object
-> +        description: |
-> +          Properties for a single ADC which can report cooked values
-> +          (ie temperature sensor based on thermister), raw values
-> +          (ie voltage rail with a pre-scaling resistor divider).
-
-/ie/i.e./
-
-> +        properties:
-> +          reg:
-> +            description: Register of the ADC
-> +            maxItems: 1
-> +
-> +          label:
-> +            description: Name of the ADC input
-> +
-> +          gw,mode:
-> +            description: |
-> +              conversion mode:
-> +                0 - temperature, in C*10
-> +                1 - pre-scaled voltage value
-> +                2 - scaled voltage based on an optional resistor divider
-> +                    and optional offset
-> +            allOf:
-> +              - $ref: /schemas/types.yaml#/definitions/uint32
-
-Rob just submitted a patch-set to remove 'allOf's from '$ref'
-properties.
-
-> +            enum: [0, 1, 2]
-> +
-> +          gw,voltage-divider-ohms:
-> +            description: values of resistors for divider on raw ADC input
-
-s/values/Values/
-
-> +            maxItems: 2
-> +            items:
-> +             minimum: 1000
-> +             maximum: 1000000
-> +
-> +          gw,voltage-offset-microvolt:
-> +            description: |
-> +              A positive voltage offset to apply to a raw ADC
-> +              (ie to compensate for a diode drop).
-
-s/ie/i.e/
-
-> +            minimum: 0
-> +            maximum: 1000000
-> +
-> +        required:
-> +          - gw,mode
-> +          - reg
-> +          - label
-> +
-> +    required:
-> +      - compatible
-> +      - "#address-cells"
-> +      - "#size-cells"
-> +
-> +patternProperties:
-> +  "^fan-controller@[0-9a-f]+$":
-> +    type: object
-> +    description: Optional FAN controller
-
-"Fan"
-
-> +    properties:
-> +      compatible:
-> +        const: gw,gsc-fan
-> +
-> +      "#address-cells":
-> +        const: 1
-> +
-> +      "#size-cells":
-> +        const: 0
-> +
-> +      reg:
-> +        description: The fan controller base address
-> +        maxItems: 1
-> +
-> +    required:
-> +      - compatible
-> +      - reg
-> +      - "#address-cells"
-> +      - "#size-cells"
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - interrupt-controller
-> +  - "#interrupt-cells"
-> +  - "#address-cells"
-> +  - "#size-cells"
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/gpio/gpio.h>
-> +    i2c {
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +
-> +        gsc@20 {
-> +            compatible = "gw,gsc";
-> +            reg = <0x20>;
-> +            interrupt-parent = <&gpio1>;
-> +            interrupts = <4 GPIO_ACTIVE_LOW>;
-> +            interrupt-controller;
-> +            #interrupt-cells = <1>;
-> +            #address-cells = <1>;
-> +            #size-cells = <0>;
-> +
-> +            adc {
-> +                compatible = "gw,gsc-adc";
-> +                #address-cells = <1>;
-> +                #size-cells = <0>;
-> +
-> +                channel@0 { /* A0: Board Temperature */
-> +                    reg = <0x00>;
-> +                    label = "temp";
-> +                    gw,mode = <0>;
-> +                };
-> +
-> +                channel@2 { /* A1: Input Voltage (raw ADC) */
-> +                    reg = <0x02>;
-> +                    label = "vdd_vin";
-> +                    gw,mode = <1>;
-> +                    gw,voltage-divider-ohms = <22100 1000>;
-> +                    gw,voltage-offset-microvolt = <800000>;
-> +                };
-> +
-> +                channel@b { /* A2: Battery voltage */
-> +                    reg = <0x0b>;
-> +                    label = "vdd_bat";
-> +                    gw,mode = <1>;
-> +                };
-> +            };
-> +
-> +            fan-controller@2c {
-> +                #address-cells = <1>;
-> +                #size-cells = <0>;
-> +                compatible = "gw,gsc-fan";
-> +                reg = <0x2c>;
-> +            };
-> +        };
-> +    };
-
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
