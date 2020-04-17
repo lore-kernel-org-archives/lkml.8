@@ -2,113 +2,144 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94352C3815B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 09:45:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55B89C352BE
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 09:45:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 71541207FC
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 09:45:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 282F7207FC
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 09:45:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="mcBBPOLl"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P2rW5IBM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726632AbgDQJpf (ORCPT
+        id S1726798AbgDQJpk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 05:45:35 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:9684 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725932AbgDQJpe (ORCPT
+        Fri, 17 Apr 2020 05:45:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47592 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725932AbgDQJpj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 05:45:34 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e997a4e0000>; Fri, 17 Apr 2020 02:43:42 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Fri, 17 Apr 2020 02:45:33 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Fri, 17 Apr 2020 02:45:33 -0700
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL111.nvidia.com
- (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 17 Apr
- 2020 09:45:33 +0000
-Received: from [10.26.73.163] (172.20.13.39) by DRHQMAIL107.nvidia.com
- (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 17 Apr
- 2020 09:45:30 +0000
-Subject: Re: [PATCH 5.6 000/254] 5.6.5-rc1 review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
-        <linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
-        <ben.hutchings@codethink.co.uk>, <lkft-triage@lists.linaro.org>,
-        <stable@vger.kernel.org>, linux-tegra <linux-tegra@vger.kernel.org>
-References: <20200416131325.804095985@linuxfoundation.org>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <7d8d7d76-54e6-c8e4-9e3b-d8d599c26be9@nvidia.com>
-Date:   Fri, 17 Apr 2020 10:45:29 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Fri, 17 Apr 2020 05:45:39 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 648AAC061A0C;
+        Fri, 17 Apr 2020 02:45:39 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id y4so1357891ljn.7;
+        Fri, 17 Apr 2020 02:45:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=LbDCyzZ+wvIY394IIvuzzVGrKtnyT3vqI08Zb16TqU8=;
+        b=P2rW5IBMX7R2KqCLSsRLAu+Yu01gD4Fs6k1iCsa4rRmbDN6bf1y4Uk75MUR94B9j6B
+         ccnBkoD78+NYMJMFZNc/3b0JOnHESX23grmjrVjWHZrSaAqKPw3D3JeSSs6AuZfxCOTV
+         L/CLUBtSi9NNI0y10viaa8jCe9Meu0lhCFJg9rGtXjAeI8HWUoliJdajP94g7QYX6/bx
+         PsIWWxeR03D5FriiQknOdrmx5w+0DCcz4K1kteQcpP3bVDfUWxJT99LUPafxFxiF3GeS
+         ZkSXY9JrxarJ8P6jHrTUuhP9RDM5zNxkaR1mEKacAPvZn+Vj9TlBgUoGptIBZGnXzjlQ
+         rLug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=LbDCyzZ+wvIY394IIvuzzVGrKtnyT3vqI08Zb16TqU8=;
+        b=nWbg4kzlYjWE/cQGWeO5uMUNMCtsSLCZ4MsTsg7sirFObZ+k5tnNH+zb8Z1hQVWERw
+         PBJ/TpPOQM7lyaEzZqEEMsrE6i40nOYtiBz6thmjr7ntVEVTlfuyYkgWK9tjpaAolh08
+         Fl4DPDa4BkfPvVmSi2UiffAwSRzWKv0jlsBUL1WFBde7GUa3ETLJQ8NQsAORWVbRKp8C
+         WeiDl8qQlPhFNLXjAZGTXT84rpto93PFKqypYyg43aPXlKczc2L+d4i7eBhQWMGpovGj
+         kFmQocgu5jyVrQxVsj3A7gaQg8zRgyenTvGn1GaUWBUC/tlWFLR+bCzoSJNDJ9MkaySP
+         Qzqw==
+X-Gm-Message-State: AGi0PuYHqAp/cG7Y5nSdO7+oXT1doBjOMkyoaJi8+JLINKAt6ZQGEpEB
+        AgLSyfptFp82c3Myf2VJsla91FtWNHjMhcX6Bmg=
+X-Google-Smtp-Source: APiQypI0mj1jwcNFt3E9A0uUmQJYUkIGlF6XDEMLDymiymNJ8v/pYeR0P4Mhe285ant6cVIhc9WajxyUh43RoaIjoMY=
+X-Received: by 2002:a2e:9496:: with SMTP id c22mr773456ljh.165.1587116737574;
+ Fri, 17 Apr 2020 02:45:37 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200416131325.804095985@linuxfoundation.org>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- DRHQMAIL107.nvidia.com (10.27.9.16)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1587116622; bh=bLV+P+sFcEOhTJL8uuevydv/o2v4bzholXkxAyfmTg0=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=mcBBPOLlg186vLZ+Q7M1+loiyxDyVzwSSqSTv2Sb1sseTnHe6gjIi5zCl/+AsMKja
-         lzAy5gkXTCXQToMuhGWU6KCwpMpOT4WldNQA/LH6uXlvt737UpD5WGsPvJp7340oB4
-         5Ui1fj7RzrZIg6UVAP9PQmib8dF/1Xh8apcY/kjYk2aotiW7ab3fKZ3pQWz2NOSNOm
-         WrxBxRU82fdc9gWEWnySA/KtBNkJ9qIQjFk7NBr9FGtOsNEs1FyVEveTo3HODxVy6V
-         QBpGofN98GquM0Fd58aWUePpFVN+IfZjn+UAghe9oRhH26AHt1JbDfjfJAKPJv5tA1
-         A8vI1d3AzYZjA==
+References: <20200325090122.9308-1-butterflyhuangxx@gmail.com> <4149a5b4-c3f3-2902-84e2-eedc9ecc54f8@xs4all.nl>
+In-Reply-To: <4149a5b4-c3f3-2902-84e2-eedc9ecc54f8@xs4all.nl>
+From:   butt3rflyh4ck <butterflyhuangxx@gmail.com>
+Date:   Fri, 17 Apr 2020 17:45:26 +0800
+Message-ID: <CAFcO6XN-adr9SYt2KX2UyNChV+XSprnWmOWkGuPMcaS6FT+gGg@mail.gmail.com>
+Subject: Re: [PATCH] media: media/pci: prevent memory leak in bttv_probe
+To:     Hans Verkuil <hverkuil-cisco@xs4all.nl>, mchehab@kernel.org,
+        tglx@linutronix.de, mpe@ellerman.id.au, allison@lohutok.net
+Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Apr 17, 2020 at 3:26 PM Hans Verkuil <hverkuil-cisco@xs4all.nl> wrote:
+>
+> On 25/03/2020 10:01, Xiaolong Huang wrote:
+> > In bttv_probe if some functions such as pci_enable_device,
+> > pci_set_dma_mask and request_mem_region fails the allocated
+> >  memory for btv should be released.
+> >
+> > Signed-off-by: Xiaolong Huang <butterflyhuangxx@gmail.com>
+> > ---
+> >  drivers/media/pci/bt8xx/bttv-driver.c | 8 ++++++++
+> >  1 file changed, 8 insertions(+)
+> >
+> > diff --git a/drivers/media/pci/bt8xx/bttv-driver.c b/drivers/media/pci/bt8xx/bttv-driver.c
+> > index a359da7773a9..37ac59110383 100644
+> > --- a/drivers/media/pci/bt8xx/bttv-driver.c
+> > +++ b/drivers/media/pci/bt8xx/bttv-driver.c
+> > @@ -4013,10 +4013,14 @@ static int bttv_probe(struct pci_dev *dev, const struct pci_device_id *pci_id)
+> >       btv->id  = dev->device;
+> >       if (pci_enable_device(dev)) {
+> >               pr_warn("%d: Can't enable device\n", btv->c.nr);
+> > +             bttvs[btv->c.nr] = NULL;
+> > +             kfree(btv);
+> >               return -EIO;
+>
+> Let's change this...
+>
+> >       }
+> >       if (pci_set_dma_mask(dev, DMA_BIT_MASK(32))) {
+> >               pr_warn("%d: No suitable DMA available\n", btv->c.nr);
+> > +             bttvs[btv->c.nr] = NULL;
+> > +             kfree(btv);
+> >               return -EIO;
+>
+> this...
+>
+> >       }
+> >       if (!request_mem_region(pci_resource_start(dev,0),
+> > @@ -4025,6 +4029,8 @@ static int bttv_probe(struct pci_dev *dev, const struct pci_device_id *pci_id)
+> >               pr_warn("%d: can't request iomem (0x%llx)\n",
+> >                       btv->c.nr,
+> >                       (unsigned long long)pci_resource_start(dev, 0));
+> > +             bttvs[btv->c.nr] = NULL;
+> > +             kfree(btv);
+> >               return -EBUSY;
+>
+> and this to a goto free_mem.
+>
+> >       }
+> >       pci_set_master(dev);
+> > @@ -4211,6 +4217,8 @@ static int bttv_probe(struct pci_dev *dev, const struct pci_device_id *pci_id)
+> >       release_mem_region(pci_resource_start(btv->c.pci,0),
+> >                          pci_resource_len(btv->c.pci,0));
+> >       pci_disable_device(btv->c.pci);
+>
+> And add the free_mem: label here.
+>
+> > +     bttvs[btv->c.nr] = NULL;
+> > +     kfree(btv);
+> >       return result;
+> >  }
+> >
+> >
+>
+> Regards,
+>
+>         Hans
 
-On 16/04/2020 14:21, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.6.5 release.
-> There are 254 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Sat, 18 Apr 2020 13:11:20 +0000.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.6.5-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.6.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
+Good, I will modify the patch and resend a new one.
 
-All tests are passing for Tegra ...
+Thanks,
 
-Test results for stable-v5.6:
-    13 builds:	13 pass, 0 fail
-    24 boots:	24 pass, 0 fail
-    40 tests:	40 pass, 0 fail
-
-Linux version:	5.6.5-rc1-g576aa353744c
-Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
-                tegra194-p2972-0000, tegra20-ventana,
-                tegra210-p2371-2180, tegra210-p3450-0000,
-                tegra30-cardhu-a04
-
-Cheers
-Jon
-
--- 
-nvpublic
+      Butt3flyh4ck
