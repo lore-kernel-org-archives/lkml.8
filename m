@@ -2,311 +2,182 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C0BAC352BE
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 14:05:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 501F0C38A2B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 14:05:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4FA89214AF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 14:05:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FB2621973
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 14:05:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XRmqYuk/"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="l8ttVRhS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730997AbgDQOFi (ORCPT
+        id S1731009AbgDQOFq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 10:05:38 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:32670 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730563AbgDQOEx (ORCPT
+        Fri, 17 Apr 2020 10:05:46 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:43151 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730563AbgDQOFp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 10:04:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587132291;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=i0tluceAt8IB57hg7L7VN2sNvLw35l5ZpHsApbRPqz0=;
-        b=XRmqYuk/mqagBaF8r+OyKUJFGYP+6sGyD7F0M3v+kLmbguncIi3DO9rDWJ9WZoe2FlshVf
-        8v+eLHkrj3YTaaDdoz72MpXv48Fg628fZUjd0u4oPbZ20jYTOSArSaK94DRk6rzHYoeNmc
-        h+CB/RZiXEBo8GH3rPhRia9+83ctDvY=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-113-wBCraTDHNdmEKgRrpIeXjg-1; Fri, 17 Apr 2020 10:04:48 -0400
-X-MC-Unique: wBCraTDHNdmEKgRrpIeXjg-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Fri, 17 Apr 2020 10:05:45 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1587132345; h=References: In-Reply-To: Message-Id: Date:
+ Subject: Cc: To: From: Sender;
+ bh=CN4hjm7aZcN+iyfH3H8zWKIe1rY4Y4n7ceS2lTKBT6E=; b=l8ttVRhSqUr24gZ0hihqxCmWsc0WiK8E6xBsubd30XOkeb+IqRPweBZV/mwjxz002yEmE7kt
+ xutiXdbk6MJxSDvrnUMlDnbrDbMLBCADfsKbtLtVEPtDin3CHMD1D/BUHJlnb0xb4uriqhAr
+ GJxg/ypDlIZLWpy49EAKD+5lM7Q=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e99b7b3.7efc49ed2ca8-smtp-out-n04;
+ Fri, 17 Apr 2020 14:05:39 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 7E844C494AA; Fri, 17 Apr 2020 14:05:36 +0000 (UTC)
+Received: from blr-ubuntu-173.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B67E58010F0;
-        Fri, 17 Apr 2020 14:04:47 +0000 (UTC)
-Received: from treble.redhat.com (ovpn-116-146.rdu2.redhat.com [10.10.116.146])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 16EF25C1C5;
-        Fri, 17 Apr 2020 14:04:46 +0000 (UTC)
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     live-patching@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jessica Yu <jeyu@kernel.org>
-Subject: [PATCH v2 3/9] livepatch: Remove .klp.arch
-Date:   Fri, 17 Apr 2020 09:04:28 -0500
-Message-Id: <6d289a3de158bc84dd929e4555d4d81577c35635.1587131959.git.jpoimboe@redhat.com>
-In-Reply-To: <cover.1587131959.git.jpoimboe@redhat.com>
-References: <cover.1587131959.git.jpoimboe@redhat.com>
-MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-Content-Transfer-Encoding: quoted-printable
+        (Authenticated sender: rnayak)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 64B3CC44788;
+        Fri, 17 Apr 2020 14:05:29 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 64B3CC44788
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
+From:   Rajendra Nayak <rnayak@codeaurora.org>
+To:     viresh.kumar@linaro.org, sboyd@kernel.org,
+        bjorn.andersson@linaro.org, agross@kernel.org
+Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mka@chromium.org,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH v2 05/17] drm/msm/dpu: Use OPP API to set clk/perf state
+Date:   Fri, 17 Apr 2020 19:34:27 +0530
+Message-Id: <1587132279-27659-6-git-send-email-rnayak@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1587132279-27659-1-git-send-email-rnayak@codeaurora.org>
+References: <1587132279-27659-1-git-send-email-rnayak@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Zijlstra <peterz@infradead.org>
+On some qualcomm platforms DPU needs to express a perforamnce state
+requirement on a power domain depennding on the clock rates.
+Use OPP table from DT to register with OPP framework and use
+dev_pm_opp_set_rate() to set the clk/perf state.
 
-After the previous patch, vmlinux-specific KLP relocations are now
-applied early during KLP module load.  This means that .klp.arch
-sections are no longer needed for *vmlinux-specific* KLP relocations.
-
-One might think they're still needed for *module-specific* KLP
-relocations.  If a to-be-patched module is loaded *after* its
-corresponding KLP module is loaded, any corresponding KLP relocations
-will be delayed until the to-be-patched module is loaded.  If any
-special sections (.parainstructions, for example) rely on those
-relocations, their initializations (apply_paravirt) need to be done
-afterwards.  Thus the apparent need for arch_klp_init_object_loaded()
-and its corresponding .klp.arch sections -- it allows some of the
-special section initializations to be done at a later time.
-
-But... if you look closer, that dependency between the special sections
-and the module-specific KLP relocations doesn't actually exist in
-reality.  Looking at the contents of the .altinstructions and
-.parainstructions sections, there's not a realistic scenario in which a
-KLP module's .altinstructions or .parainstructions section needs to
-access a symbol in a to-be-patched module.  It might need to access a
-local symbol or even a vmlinux symbol; but not another module's symbol.
-When a special section needs to reference a local or vmlinux symbol, a
-normal rela can be used instead of a KLP rela.
-
-Since the special section initializations don't actually have any real
-dependency on module-specific KLP relocations, .klp.arch and
-arch_klp_init_object_loaded() no longer have a reason to exist.  So
-remove them.
-
-As Peter said much more succinctly:
-
-  So the reason for .klp.arch was that .klp.rela.* stuff would overwrite
-  paravirt instructions. If that happens you're doing it wrong. Those
-  RELAs are core kernel, not module, and thus should've happened in
-  .rela.* sections at patch-module loading time.
-
-  Reverting this removes the two apply_{paravirt,alternatives}() calls
-  from the late patching path, and means we don't have to worry about
-  them when removing module_disable_ro().
-
-[ jpoimboe: Rewrote patch description.  Tweaked klp_init_object_loaded()
-	    error path. ]
-
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+Cc: Rob Clark <robdclark@gmail.com>
+Cc: Sean Paul <sean@poorly.run>
+Cc: dri-devel@lists.freedesktop.org
 ---
- Documentation/livepatch/module-elf-format.rst | 15 +-----
- arch/x86/kernel/Makefile                      |  1 -
- arch/x86/kernel/livepatch.c                   | 53 -------------------
- include/linux/livepatch.h                     |  3 --
- kernel/livepatch/core.c                       | 27 ++++------
- 5 files changed, 11 insertions(+), 88 deletions(-)
- delete mode 100644 arch/x86/kernel/livepatch.c
+ drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c |  3 ++-
+ drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c       | 20 +++++++++++++++++++-
+ drivers/gpu/drm/msm/disp/dpu1/dpu_kms.h       |  4 ++++
+ 3 files changed, 25 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/livepatch/module-elf-format.rst b/Documentatio=
-n/livepatch/module-elf-format.rst
-index 2a591e6f8e6c..8c6b894c4661 100644
---- a/Documentation/livepatch/module-elf-format.rst
-+++ b/Documentation/livepatch/module-elf-format.rst
-@@ -14,8 +14,7 @@ This document outlines the Elf format requirements that=
- livepatch modules must f
-    4. Livepatch symbols
-       4.1 A livepatch module's symbol table
-       4.2 Livepatch symbol format
--   5. Architecture-specific sections
--   6. Symbol table and Elf section access
-+   5. Symbol table and Elf section access
-=20
- 1. Background and motivation
- =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D
-@@ -298,17 +297,7 @@ Examples:
-   Note that the 'Ndx' (Section index) for these symbols is SHN_LIVEPATCH=
- (0xff20).
-   "OS" means OS-specific.
-=20
--5. Architecture-specific sections
--=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D
--Architectures may override arch_klp_init_object_loaded() to perform
--additional arch-specific tasks when a target module loads, such as apply=
-ing
--arch-specific sections. On x86 for example, we must apply per-object
--.altinstructions and .parainstructions sections when a target module loa=
-ds.
--These sections must be prefixed with ".klp.arch.$objname." so that they =
-can
--be easily identified when iterating through a patch module's Elf section=
-s
--(See arch/x86/kernel/livepatch.c for a complete example).
--
--6. Symbol table and Elf section access
-+5. Symbol table and Elf section access
- =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
- A livepatch module's symbol table is accessible through module->symtab.
-=20
-diff --git a/arch/x86/kernel/Makefile b/arch/x86/kernel/Makefile
-index d6d61c4455fa..fc8834342516 100644
---- a/arch/x86/kernel/Makefile
-+++ b/arch/x86/kernel/Makefile
-@@ -94,7 +94,6 @@ obj-$(CONFIG_X86_MPPARSE)	+=3D mpparse.o
- obj-y				+=3D apic/
- obj-$(CONFIG_X86_REBOOTFIXUPS)	+=3D reboot_fixups_32.o
- obj-$(CONFIG_DYNAMIC_FTRACE)	+=3D ftrace.o
--obj-$(CONFIG_LIVEPATCH)	+=3D livepatch.o
- obj-$(CONFIG_FUNCTION_TRACER)	+=3D ftrace_$(BITS).o
- obj-$(CONFIG_FUNCTION_GRAPH_TRACER) +=3D ftrace.o
- obj-$(CONFIG_FTRACE_SYSCALLS)	+=3D ftrace.o
-diff --git a/arch/x86/kernel/livepatch.c b/arch/x86/kernel/livepatch.c
-deleted file mode 100644
-index 6a68e41206e7..000000000000
---- a/arch/x86/kernel/livepatch.c
-+++ /dev/null
-@@ -1,53 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0-or-later
--/*
-- * livepatch.c - x86-specific Kernel Live Patching Core
-- */
--
--#include <linux/module.h>
--#include <linux/kallsyms.h>
--#include <linux/livepatch.h>
--#include <asm/text-patching.h>
--
--/* Apply per-object alternatives. Based on x86 module_finalize() */
--void arch_klp_init_object_loaded(struct klp_patch *patch,
--				 struct klp_object *obj)
--{
--	int cnt;
--	struct klp_modinfo *info;
--	Elf_Shdr *s, *alt =3D NULL, *para =3D NULL;
--	void *aseg, *pseg;
--	const char *objname;
--	char sec_objname[MODULE_NAME_LEN];
--	char secname[KSYM_NAME_LEN];
--
--	info =3D patch->mod->klp_info;
--	objname =3D obj->name ? obj->name : "vmlinux";
--
--	/* See livepatch core code for BUILD_BUG_ON() explanation */
--	BUILD_BUG_ON(MODULE_NAME_LEN < 56 || KSYM_NAME_LEN !=3D 128);
--
--	for (s =3D info->sechdrs; s < info->sechdrs + info->hdr.e_shnum; s++) {
--		/* Apply per-object .klp.arch sections */
--		cnt =3D sscanf(info->secstrings + s->sh_name,
--			     ".klp.arch.%55[^.].%127s",
--			     sec_objname, secname);
--		if (cnt !=3D 2)
--			continue;
--		if (strcmp(sec_objname, objname))
--			continue;
--		if (!strcmp(".altinstructions", secname))
--			alt =3D s;
--		if (!strcmp(".parainstructions", secname))
--			para =3D s;
--	}
--
--	if (alt) {
--		aseg =3D (void *) alt->sh_addr;
--		apply_alternatives(aseg, aseg + alt->sh_size);
--	}
--
--	if (para) {
--		pseg =3D (void *) para->sh_addr;
--		apply_paravirt(pseg, pseg + para->sh_size);
--	}
--}
-diff --git a/include/linux/livepatch.h b/include/linux/livepatch.h
-index 85fc23759dc1..533359e48c39 100644
---- a/include/linux/livepatch.h
-+++ b/include/linux/livepatch.h
-@@ -195,9 +195,6 @@ struct klp_patch {
-=20
- int klp_enable_patch(struct klp_patch *);
-=20
--void arch_klp_init_object_loaded(struct klp_patch *patch,
--				 struct klp_object *obj);
--
- /* Called from the module loader during module coming/going states */
- int klp_module_coming(struct module *mod);
- void klp_module_going(struct module *mod);
-diff --git a/kernel/livepatch/core.c b/kernel/livepatch/core.c
-index 5fda3afc0285..9d865b08d0b0 100644
---- a/kernel/livepatch/core.c
-+++ b/kernel/livepatch/core.c
-@@ -741,12 +741,6 @@ static int klp_init_func(struct klp_object *obj, str=
-uct klp_func *func)
- 			   func->old_sympos ? func->old_sympos : 1);
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c
+index 11f2beb..fe5717df 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c
+@@ -7,6 +7,7 @@
+ #include <linux/debugfs.h>
+ #include <linux/errno.h>
+ #include <linux/mutex.h>
++#include <linux/pm_opp.h>
+ #include <linux/sort.h>
+ #include <linux/clk.h>
+ #include <linux/bitmap.h>
+@@ -239,7 +240,7 @@ static int _dpu_core_perf_set_core_clk_rate(struct dpu_kms *kms, u64 rate)
+ 		rate = core_clk->max_rate;
+ 
+ 	core_clk->rate = rate;
+-	return msm_dss_clk_set_rate(core_clk, 1);
++	return dev_pm_opp_set_rate(&kms->pdev->dev, core_clk->rate);
  }
-=20
--/* Arches may override this to finish any remaining arch-specific tasks =
-*/
--void __weak arch_klp_init_object_loaded(struct klp_patch *patch,
--					struct klp_object *obj)
--{
--}
--
- /* parts of the initialization that is done only when the object is load=
-ed */
- static int klp_init_object_loaded(struct klp_patch *patch,
- 				  struct klp_object *obj)
-@@ -755,10 +749,11 @@ static int klp_init_object_loaded(struct klp_patch =
-*patch,
- 	int ret;
- 	struct klp_modinfo *info =3D patch->mod->klp_info;
-=20
--	mutex_lock(&text_mutex);
--	module_disable_ro(patch->mod);
--
- 	if (klp_is_module(obj)) {
+ 
+ static u64 _dpu_core_perf_get_core_clk_rate(struct dpu_kms *kms)
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
+index ce19f1d..cfce642 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
+@@ -10,6 +10,7 @@
+ #include <linux/debugfs.h>
+ #include <linux/dma-buf.h>
+ #include <linux/of_irq.h>
++#include <linux/pm_opp.h>
+ 
+ #include <drm/drm_crtc.h>
+ #include <drm/drm_file.h>
+@@ -1033,11 +1034,18 @@ static int dpu_bind(struct device *dev, struct device *master, void *data)
+ 	if (!dpu_kms)
+ 		return -ENOMEM;
+ 
++	dpu_kms->opp = dev_pm_opp_set_clkname(dev, "core");
++	if (IS_ERR(dpu_kms->opp))
++		return PTR_ERR(dpu_kms->opp);
++	/* OPP table is optional */
++	if (!dev_pm_opp_of_add_table(dev))
++		dpu_kms->opp_table = true;
 +
-+		mutex_lock(&text_mutex);
-+		module_disable_ro(patch->mod);
+ 	mp = &dpu_kms->mp;
+ 	ret = msm_dss_parse_clock(pdev, mp);
+ 	if (ret) {
+ 		DPU_ERROR("failed to parse clocks, ret=%d\n", ret);
+-		return ret;
++		goto err;
+ 	}
+ 
+ 	platform_set_drvdata(pdev, dpu_kms);
+@@ -1051,6 +1059,11 @@ static int dpu_bind(struct device *dev, struct device *master, void *data)
+ 
+ 	priv->kms = &dpu_kms->base;
+ 	return ret;
++err:
++	if (dpu_kms->opp_table)
++		dev_pm_opp_of_remove_table(dev);
++	dev_pm_opp_put_clkname(dpu_kms->opp);
++	return ret;
+ }
+ 
+ static void dpu_unbind(struct device *dev, struct device *master, void *data)
+@@ -1059,6 +1072,9 @@ static void dpu_unbind(struct device *dev, struct device *master, void *data)
+ 	struct dpu_kms *dpu_kms = platform_get_drvdata(pdev);
+ 	struct dss_module_power *mp = &dpu_kms->mp;
+ 
++	if (dpu_kms->opp_table)
++		dev_pm_opp_of_remove_table(dev);
++	dev_pm_opp_put_clkname(dpu_kms->opp);
+ 	msm_dss_put_clk(mp->clk_config, mp->num_clk);
+ 	devm_kfree(&pdev->dev, mp->clk_config);
+ 	mp->num_clk = 0;
+@@ -1090,6 +1106,8 @@ static int __maybe_unused dpu_runtime_suspend(struct device *dev)
+ 	struct dpu_kms *dpu_kms = platform_get_drvdata(pdev);
+ 	struct dss_module_power *mp = &dpu_kms->mp;
+ 
++	/* Drop the performance state vote */
++	dev_pm_opp_set_rate(dev, 0);
+ 	rc = msm_dss_enable_clk(mp->clk_config, mp->num_clk, false);
+ 	if (rc)
+ 		DPU_ERROR("clock disable failed rc:%d\n", rc);
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.h b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.h
+index 211f5de9..0060709 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.h
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.h
+@@ -128,6 +128,10 @@ struct dpu_kms {
+ 
+ 	struct platform_device *pdev;
+ 	bool rpm_enabled;
 +
- 		/*
- 		 * Only write module-specific relocations here
- 		 * (.klp.rela.{module}.*).  vmlinux-specific relocations were
-@@ -770,17 +765,13 @@ static int klp_init_object_loaded(struct klp_patch =
-*patch,
- 					    patch->mod->core_kallsyms.strtab,
- 					    info->symndx, patch->mod,
- 					    obj->name);
--		if (ret) {
--			module_enable_ro(patch->mod, true);
--			mutex_unlock(&text_mutex);
--			return ret;
--		}
--	}
-=20
--	arch_klp_init_object_loaded(patch, obj);
-+		module_enable_ro(patch->mod, true);
-+		mutex_unlock(&text_mutex);
-=20
--	module_enable_ro(patch->mod, true);
--	mutex_unlock(&text_mutex);
-+		if (ret)
-+			return ret;
-+	}
-=20
- 	klp_for_each_func(obj, func) {
- 		ret =3D klp_find_object_symbol(obj->name, func->old_name,
---=20
-2.21.1
-
++	struct opp_table *opp;
++	bool opp_table;
++
+ 	struct dss_module_power mp;
+ 
+ 	/* reference count bandwidth requests, so we know when we can
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
