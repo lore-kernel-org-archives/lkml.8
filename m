@@ -2,115 +2,138 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FE3AC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 07:40:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F15D0C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 07:42:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DED9420857
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 07:40:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FcBenMqF"
+	by mail.kernel.org (Postfix) with ESMTP id CCFB82087E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 07:42:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587109352;
+	bh=RytlNnohLlxheLZs5JJcHJ+1KnMXZLuPP/8eBpkQuUs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=e6T485NuTRHjfOsjX6xu25qe8ZWEFkT9QgLQg61CHy2g3U7eqqkFQuZ00m6AY99Ei
+	 1gpHoS17UHj8uCF4hwRyrxHzxgppiNWOLJagOqWuyl0s4NsKmuXd8vkrEnDAijlPfn
+	 Y5V84f8XnWQMjFzZcr2bcXjtr+Gl1DiwMNVUdqMQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727828AbgDQHkv (ORCPT
+        id S1728371AbgDQHmb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 03:40:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56344 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725768AbgDQHku (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 03:40:50 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28792C061A0C;
-        Fri, 17 Apr 2020 00:40:50 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id h2so1880775wmb.4;
-        Fri, 17 Apr 2020 00:40:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=M6zd6QhvfNJlEwVbZDRhDx/68LHI8zgQWBMk5eF3jR0=;
-        b=FcBenMqFS5c2OoxTLCn55ksThTSSUloPM/Zc55FM/evT6+1CaYC8UMmy7FzGcra0Fl
-         VkyTyRf7ifqtgwFrnGQV574d5i51AkTBteqmekTgabH6Oz7Ka18/laSW1bXXfsUTvYLN
-         qslPQ/MTbviAHsjwiyIo0lb5UdkPgSBaKNOjFsa4N/kMzWFciQNMVrFaCPtyaTHlVg01
-         UubuxJJBZNC8UBchdmCAGde40f75hU4/lWOVq0agF5vbtKnDD4WEyQAe5PQsfVmhTPIG
-         7mhwgNeb5sECqGq3aegAmSw1JECTp5oSpiq1JziZHWrecuxS2bSfO92Vq9eKfWWYulS3
-         ZpZA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=M6zd6QhvfNJlEwVbZDRhDx/68LHI8zgQWBMk5eF3jR0=;
-        b=HUH3qoUxEhrR6RwlHXcfy0tv2fYp7zECUo4QHPni48yYK823GxytVHr7Fbew873WeL
-         FbLEirXyZSXiAmWoYdi6Jz0lpAhsgN/qq1xA+SDrjk35AJE/d/So2JrqQ6IIM3F42I9/
-         6LtiPq03Tf7F1UkE06CvU3RFqrUT1YGjnHwJ4b2m6Cb4yZsOz84HhwkM7zuNjD4AhRPd
-         7imyshMKvzwdwzVPsBrfGUIE5lxn8e6WEQKweDPNc1AjHVTRHW74G9FlKkOLwMJBHoPx
-         ah3C1vC+4Bgc9vATUJo1PtCHJrOISRjuqYritQoRqbcEfFddg8ODKaYTU2hl7qYl+Jcd
-         acpQ==
-X-Gm-Message-State: AGi0PuZKDrlNS2VMf3l4fKFjVToQv3ppTXhtVpUYy5OB1vj/y3PjKcoO
-        oWyyZ4tU76FdW6s8GRUZGU4=
-X-Google-Smtp-Source: APiQypKN0pm4j1A38T2NDteLwArt/IZPZZVBmjJtO+MGEg1XFX2vXkZjdyxrYCpIAipEGsrTY5p4RA==
-X-Received: by 2002:a05:600c:da:: with SMTP id u26mr2051692wmm.48.1587109248784;
-        Fri, 17 Apr 2020 00:40:48 -0700 (PDT)
-Received: from localhost.localdomain (x59cc99b1.dyn.telefonica.de. [89.204.153.177])
-        by smtp.gmail.com with ESMTPSA id a10sm30628942wrm.87.2020.04.17.00.40.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Apr 2020 00:40:48 -0700 (PDT)
-From:   Sedat Dilek <sedat.dilek@gmail.com>
-To:     Johannes Berg <johannes.berg@intel.com>,
-        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
-        Intel Linux Wireless <linuxwifi@intel.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Chris Rorvick <chris@rorvick.com>,
-        Sedat Dilek <sedat.dilek@gmail.com>
-Subject: [PATCH wireless-drivers v2] iwlwifi: actually check allocated conf_tlv pointer
-Date:   Fri, 17 Apr 2020 09:40:35 +0200
-Message-Id: <20200417074035.12214-1-sedat.dilek@gmail.com>
-X-Mailer: git-send-email 2.26.1
+        Fri, 17 Apr 2020 03:42:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41830 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727892AbgDQHmb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Apr 2020 03:42:31 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D3AB820857;
+        Fri, 17 Apr 2020 07:42:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587109350;
+        bh=RytlNnohLlxheLZs5JJcHJ+1KnMXZLuPP/8eBpkQuUs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=hiGeoQhVN4HMT4L+CV3ztP5pYHp8T4N4tbLB/vti7FyUdbJFOtZbnitIBD4kZ7FMz
+         i9Z/qZgaZ5Z3aTEZcCjHVVshVUKijJc0+SE8xXX5M0sL9Rlnfh7GPNLq0+A7WlIBSp
+         WoavnouHAulpBOyWRrbSR2tdOAS0J17BIpIV94hU=
+Date:   Fri, 17 Apr 2020 09:42:28 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Scott Wood <oss@buserror.net>
+Cc:     =?utf-8?B?546L5paH6JmO?= <wenhu.wang@vivo.com>,
+        Rob Herring <robh@kernel.org>, linux-kernel@vger.kernel.org,
+        christophe.leroy@c-s.fr, linuxppc-dev@lists.ozlabs.org,
+        kernel@vivo.com
+Subject: Re: [PATCH v4,4/4] drivers: uio: new driver for fsl_85xx_cache_sram
+Message-ID: <20200417074228.GA22586@kroah.com>
+References: <ANcAoADRCKKtO5p9r33Ll4og.3.1587090694317.Hmail.wenhu.wang@vivo.com>
+ <64bb1f056abd8bfab2befef5d1e6baec2056077f.camel@buserror.net>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <64bb1f056abd8bfab2befef5d1e6baec2056077f.camel@buserror.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chris Rorvick <chris@rorvick.com>
+On Thu, Apr 16, 2020 at 11:58:29PM -0500, Scott Wood wrote:
+> On Fri, 2020-04-17 at 10:31 +0800, 王文虎 wrote:
+> > > > On Thu, 2020-04-16 at 08:35 -0700, Wang Wenhu wrote:
+> > > > > +#define UIO_INFO_VER	"devicetree,pseudo"
+> > > > 
+> > > > What does this mean?  Changing a number into a non-obvious string (Why
+> > > > "pseudo"?  Why does the UIO user care that the config came from the
+> > > > device
+> > > > tree?) just to avoid setting off Greg's version number autoresponse
+> > > > isn't
+> > > > really helping anything.
+> > > > 
+> > > > > +static const struct of_device_id uio_mpc85xx_l2ctlr_of_match[] = {
+> > > > > +	{	.compatible = "uio,mpc85xx-cache-sram",	},
+> > > 
+> > > Form is <vendor>,<device> and "uio" is not a vendor (and never will be).
+> > > 
+> > 
+> > Should have been something like "fsl,mpc85xx-cache-sram-uio", and if it is
+> > to be defined with module parameters, this would be user defined.
+> > Anyway, <vendor>,<device> should always be used.
+> > 
+> > > > > +	{},
+> > > > > +};
+> > > > > +
+> > > > > +static struct platform_driver uio_fsl_85xx_cache_sram = {
+> > > > > +	.probe = uio_fsl_85xx_cache_sram_probe,
+> > > > > +	.remove = uio_fsl_85xx_cache_sram_remove,
+> > > > > +	.driver = {
+> > > > > +		.name = DRIVER_NAME,
+> > > > > +		.owner = THIS_MODULE,
+> > > > > +		.of_match_table	= uio_mpc85xx_l2ctlr_of_match,
+> > > > > +	},
+> > > > > +};
+> > > > 
+> > > > Greg's comment notwithstanding, I really don't think this belongs in the
+> > > > device tree (and if I do get overruled on that point, it at least needs
+> > > > a
+> > > > binding document).  Let me try to come up with a patch for dynamic
+> > > > allocation.
+> > > 
+> > > Agreed. "UIO" bindings have long been rejected.
+> > > 
+> > 
+> > Sounds it is. And does the modification below fit well?
+> > ---
+> > -static const struct of_device_id uio_mpc85xx_l2ctlr_of_match[] = {
+> > -       {       .compatible = "uio,mpc85xx-cache-sram", },
+> > -       {},
+> > +#ifdef CONFIG_OF
+> > +static struct of_device_id uio_fsl_85xx_cache_sram_of_match[] = {
+> > +       { /* This is filled with module_parm */ },
+> > +       { /* Sentinel */ },
+> >  };
+> > +MODULE_DEVICE_TABLE(of, uio_fsl_85xx_cache_sram_of_match);
+> > +module_param_string(of_id, uio_fsl_85xx_cache_sram_of_match[0].compatible,
+> > +                           sizeof(uio_fsl_85xx_cache_sram_of_match[0].compa
+> > tible), 0);
+> > +MODULE_PARM_DESC(of_id, "platform device id to be handled by cache-sram-
+> > uio");
+> > +#endif
+> 
+> No.  The point is that you wouldn't be configuring this with the device tree
+> at all.
 
-Commit 71bc0334a637 ("iwlwifi: check allocated pointer when allocating
-conf_tlvs") attempted to fix a typoe introduced by commit 17b809c9b22e
-("iwlwifi: dbg: move debug data to a struct") but does not implement the
-check correctly.
+Wait, why not?  Don't force people to use module parameters, that is
+crazy.  DT describes the hardware involved, if someone wants to bind to
+a specific range of memory, as described by DT, why can't they do so?
 
-Fixes: 71bc0334a637 ("iwlwifi: check allocated pointer when allocating conf_tlvs")
-Tweeted-by: @grsecurity
-Message-Id: <20200402050219.4842-1-chris@rorvick.com>
-Signed-off-by: Chris Rorvick <chris@rorvick.com>
-Signed-off-by: Sedat Dilek <sedat.dilek@gmail.com>
----
- drivers/net/wireless/intel/iwlwifi/iwl-drv.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I can understand not liking the name "uio" in a dt tree, but there's no
+reason that DT can not describe what a driver binds to here.
 
-diff --git a/drivers/net/wireless/intel/iwlwifi/iwl-drv.c b/drivers/net/wireless/intel/iwlwifi/iwl-drv.c
-index ff52e69c1c80..eeb750bdbda1 100644
---- a/drivers/net/wireless/intel/iwlwifi/iwl-drv.c
-+++ b/drivers/net/wireless/intel/iwlwifi/iwl-drv.c
-@@ -1467,7 +1467,7 @@ static void iwl_req_fw_callback(const struct firmware *ucode_raw, void *context)
- 				kmemdup(pieces->dbg_conf_tlv[i],
- 					pieces->dbg_conf_tlv_len[i],
- 					GFP_KERNEL);
--			if (!pieces->dbg_conf_tlv[i])
-+			if (!drv->fw.dbg.conf_tlv[i])
- 				goto out_free_fw;
- 		}
- 	}
--- 
-2.26.1
+Remember, module parameters are NEVER the answer, this isn't the 1990's
+anymore.
 
+thanks,
+
+greg k-h
