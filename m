@@ -2,114 +2,178 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BAA9C352BE
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 11:26:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48F50C38A2B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 11:27:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 35FF2208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 11:26:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26475208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 11:27:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="NW9h3C7l"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FGtXg/Bf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730310AbgDQL0t (ORCPT
+        id S1730336AbgDQL10 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 07:26:49 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:42686 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730176AbgDQL0t (ORCPT
+        Fri, 17 Apr 2020 07:27:26 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:26894 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1730312AbgDQL1Z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 07:26:49 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03HBOxtT112760;
-        Fri, 17 Apr 2020 11:26:41 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=2O0V3yblK/29tvWyAvBHQUZ86B8G/e/jVaheTAg9ans=;
- b=NW9h3C7l12IBiw3dwnhbItGHVe+6NB4UKB4+7UPW5vT91Y60g/arwqpQ3lh5UGmbyeqO
- p2eEbhI74qD+NqeKdDkkoIuB4UbK3eTKI13UpccLSwMuyTrAMhUBS7Hx4NMmBC7d8RyF
- SfrBD6hBkk9WWK4QQwFFqUG6A2pfMA8yLMNHvvRmVwdhBNFzBOsx7xoEHxwsPp5th4rj
- cAubsGgVjpyVHc2KT17rEZ7a6DBA19GSf91Oi8L2FNNy991jl0+tN8AAKWA1J3V3UYW2
- Zhw132HJLj0yiB5DwLmE4jRP41oym7DpKrTBxdb4TIMR42l4cgO6kQcHhT7TNBqSfQOO Wg== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2120.oracle.com with ESMTP id 30dn95xk6x-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 17 Apr 2020 11:26:41 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03HBLMwB040528;
-        Fri, 17 Apr 2020 11:26:40 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3030.oracle.com with ESMTP id 30dn91c893-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 17 Apr 2020 11:26:40 +0000
-Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 03HBQb78005629;
-        Fri, 17 Apr 2020 11:26:38 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 17 Apr 2020 04:26:37 -0700
-Date:   Fri, 17 Apr 2020 14:26:24 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        selvin.xavier@broadcom.com, devesh.sharma@broadcom.com,
-        dledford@redhat.com, leon@kernel.org, colin.king@canonical.com,
-        roland@purestorage.com, linux-rdma@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] RDMA/ocrdma: Fix an off-by-one issue in 'ocrdma_add_stat'
-Message-ID: <20200417112624.GS1163@kadam>
-References: <20200328073040.24429-1-christophe.jaillet@wanadoo.fr>
- <20200414183441.GA28870@ziepe.ca>
- <20200416130847.GP1163@kadam>
- <20200416184754.GZ5100@ziepe.ca>
+        Fri, 17 Apr 2020 07:27:25 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587122843;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Vr7BOIbO9qakvttMKiL/rWtwPVentFYT4peua3moyXg=;
+        b=FGtXg/BfIeVUcUgJm7b4x1m+EyvkxAEy0Ybg6O7O7cujyo5jDZg7ZgHJEGU5B5YeWmAwhe
+        h5wX/4CVtEtoOjHorOJgrMWADX5nKe3hseRhazYPaUDLOfsZbRPX38lsrwV4sqN7mGFnL1
+        MBDy0UeGPxgQ4j29J931fc6z1LITVSM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-359-fiee8RQFNc2mMhyoQXOhVA-1; Fri, 17 Apr 2020 07:27:19 -0400
+X-MC-Unique: fiee8RQFNc2mMhyoQXOhVA-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A3B72107ACCA;
+        Fri, 17 Apr 2020 11:27:16 +0000 (UTC)
+Received: from gondolin (ovpn-112-200.ams2.redhat.com [10.36.112.200])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 330F75C1C5;
+        Fri, 17 Apr 2020 11:27:02 +0000 (UTC)
+Date:   Fri, 17 Apr 2020 13:24:57 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Yan Zhao <yan.y.zhao@intel.com>
+Cc:     "intel-gvt-dev@lists.freedesktop.org" 
+        <intel-gvt-dev@lists.freedesktop.org>,
+        "libvir-list@redhat.com" <libvir-list@redhat.com>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "aik@ozlabs.ru" <aik@ozlabs.ru>,
+        "Zhengxiao.zx@alibaba-inc.com" <Zhengxiao.zx@alibaba-inc.com>,
+        "shuangtai.tst@alibaba-inc.com" <shuangtai.tst@alibaba-inc.com>,
+        "qemu-devel@nongnu.org" <qemu-devel@nongnu.org>,
+        "eauger@redhat.com" <eauger@redhat.com>,
+        "Liu, Yi L" <yi.l.liu@intel.com>, "Zeng, Xin" <xin.zeng@intel.com>,
+        "Yang, Ziye" <ziye.yang@intel.com>,
+        "mlevitsk@redhat.com" <mlevitsk@redhat.com>,
+        "pasic@linux.ibm.com" <pasic@linux.ibm.com>,
+        "felipe@nutanix.com" <felipe@nutanix.com>,
+        "Liu, Changpeng" <changpeng.liu@intel.com>,
+        "Ken.Xue@amd.com" <Ken.Xue@amd.com>,
+        "jonathan.davies@nutanix.com" <jonathan.davies@nutanix.com>,
+        "He, Shaopeng" <shaopeng.he@intel.com>,
+        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+        "eskultet@redhat.com" <eskultet@redhat.com>,
+        "dgilbert@redhat.com" <dgilbert@redhat.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        "zhenyuw@linux.intel.com" <zhenyuw@linux.intel.com>,
+        "Wang, Zhi A" <zhi.a.wang@intel.com>,
+        "cjia@nvidia.com" <cjia@nvidia.com>,
+        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
+        "berrange@redhat.com" <berrange@redhat.com>,
+        "dinechin@redhat.com" <dinechin@redhat.com>,
+        "corbet@lwn.net" <corbet@lwn.net>
+Subject: Re: [PATCH v5 0/4] introduction of migration_version attribute for
+ VFIO live migration
+Message-ID: <20200417132457.45d91fe3.cohuck@redhat.com>
+In-Reply-To: <20200417095202.GD16688@joy-OptiPlex-7040>
+References: <20200413055201.27053-1-yan.y.zhao@intel.com>
+        <20200417104450.2d2f2fa9.cohuck@redhat.com>
+        <20200417095202.GD16688@joy-OptiPlex-7040>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200416184754.GZ5100@ziepe.ca>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9593 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 mlxlogscore=999
- suspectscore=0 malwarescore=0 spamscore=0 phishscore=0 adultscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004170091
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9593 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 clxscore=1015
- malwarescore=0 bulkscore=0 priorityscore=1501 lowpriorityscore=0
- mlxscore=0 phishscore=0 spamscore=0 impostorscore=0 suspectscore=0
- mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004170091
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 16, 2020 at 03:47:54PM -0300, Jason Gunthorpe wrote:
-> On Thu, Apr 16, 2020 at 04:08:47PM +0300, Dan Carpenter wrote:
-> > On Tue, Apr 14, 2020 at 03:34:41PM -0300, Jason Gunthorpe wrote:
-> > > The memcpy is still kind of silly right? What about this:
+On Fri, 17 Apr 2020 05:52:02 -0400
+Yan Zhao <yan.y.zhao@intel.com> wrote:
+
+> On Fri, Apr 17, 2020 at 04:44:50PM +0800, Cornelia Huck wrote:
+> > On Mon, 13 Apr 2020 01:52:01 -0400
+> > Yan Zhao <yan.y.zhao@intel.com> wrote:
+> >   
+> > > This patchset introduces a migration_version attribute under sysfs of VFIO
+> > > Mediated devices.
 > > > 
-> > > static int ocrdma_add_stat(char *start, char *pcur, char *name, u64 count)
-> > > {
-> > > 	size_t len = (start + OCRDMA_MAX_DBGFS_MEM) - pcur;
-> > > 	int cpy_len;
+> > > This migration_version attribute is used to check migration compatibility
+> > > between two mdev devices.
 > > > 
-> > > 	cpy_len = snprintf(pcur, len, "%s: %llu\n", name, count);
-> > > 	if (cpy_len >= len || cpy_len < 0) {
+> > > Currently, it has two locations:
+> > > (1) under mdev_type node,
+> > >     which can be used even before device creation, but only for mdev
+> > >     devices of the same mdev type.
+> > > (2) under mdev device node,
+> > >     which can only be used after the mdev devices are created, but the src
+> > >     and target mdev devices are not necessarily be of the same mdev type
+> > > (The second location is newly added in v5, in order to keep consistent
+> > > with the migration_version node for migratable pass-though devices)  
 > > 
-> > The kernel version of snprintf() doesn't and will never return
-> > negatives.  It would cause a huge security headache if it started
-> > returning negatives.
+> > What is the relationship between those two attributes?
+> >   
+> (1) is for mdev devices specifically, and (2) is provided to keep the same
+> sysfs interface as with non-mdev cases. so (2) is for both mdev devices and
+> non-mdev devices.
 > 
-> Begs the question why it returns an int then :)
+> in future, if we enable vfio-pci vendor ops, (i.e. a non-mdev device
+> is binding to vfio-pci, but is able to register migration region and do
+> migration transactions from a vendor provided affiliate driver),
+> the vendor driver would export (2) directly, under device node.
+> It is not able to provide (1) as there're no mdev devices involved.
 
-People should use "int" as their default type.  "int i;".  It means
-"This is a normal number.  Nothing special about it.  It's not too high.
-It's not defined by hardware requirements."  Other types call attention
-to themselves, but int is the humble datatype.
+Ok, creating an alternate attribute for non-mdev devices makes sense.
+However, wouldn't that rather be a case (3)? The change here only
+refers to mdev devices.
 
-regards,
-dan carpenter
+> 
+> > Is existence (and compatibility) of (1) a pre-req for possible
+> > existence (and compatibility) of (2)?
+> >  
+> no. (2) does not reply on (1).
+
+Hm. Non-existence of (1) seems to imply "this type does not support
+migration". If an mdev created for such a type suddenly does support
+migration, it feels a bit odd.
+
+(It obviously cannot be a prereq for what I called (3) above.)
+
+> 
+> > Does userspace need to check (1) or can it completely rely on (2), if
+> > it so chooses?
+> >  
+> I think it can completely reply on (2) if compatibility check before
+> mdev creation is not required.
+> 
+> > If devices with a different mdev type are indeed compatible, it seems
+> > userspace can only find out after the devices have actually been
+> > created, as (1) does not apply?  
+> yes, I think so. 
+
+How useful would it be for userspace to even look at (1) in that case?
+It only knows if things have a chance of working if it actually goes
+ahead and creates devices.
+
+> 
+> > One of my worries is that the existence of an attribute with the same
+> > name in two similar locations might lead to confusion. But maybe it
+> > isn't a problem.
+> >  
+> Yes, I have the same feeling. but as (2) is for sysfs interface
+> consistency, to make it transparent to userspace tools like libvirt,
+> I guess the same name is necessary?
+
+What do we actually need here, I wonder? (1) and (2) seem to serve
+slightly different purposes, while (2) and what I called (3) have the
+same purpose. Is it important to userspace that (1) and (2) have the
+same name?
+
