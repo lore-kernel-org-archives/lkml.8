@@ -2,171 +2,278 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA164C2D0EF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 19:08:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51A71C38A2B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 19:09:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AA59520780
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 19:08:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="eohS/Pgm"
+	by mail.kernel.org (Postfix) with ESMTP id 3457F20780
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 19:09:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730210AbgDQTI6 (ORCPT
+        id S1730283AbgDQTJB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 15:08:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50488 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729765AbgDQTIr (ORCPT
+        Fri, 17 Apr 2020 15:09:01 -0400
+Received: from out03.mta.xmission.com ([166.70.13.233]:41364 "EHLO
+        out03.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730159AbgDQTI4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 15:08:47 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E009BC061A0C;
-        Fri, 17 Apr 2020 12:08:46 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id t14so4234925wrw.12;
-        Fri, 17 Apr 2020 12:08:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=6W8grtyB7pbKtLO6nZYSpUXrUqbnBG7Y9G7Qj2TNYYc=;
-        b=eohS/PgmixifbU4OP9qQXJdkkkFkvnj2zGyIiM+8j+RuemBqtPhzU9GuDwm66czYQ+
-         i1YhLAVCQFHqn4XlfLKAob3MWZv7PxMT40D80jRRe8gEO3T3Jg9DvohBJRz32LLhvNUl
-         vBntwB/NJF9web2wrX4R6LzzIqoeWQbKcIxQ1c22a6vmEvCGDl6M5WCdFGs88agO3IMN
-         r+7vfSTVUn4JFtHIBK0PmRanq9XpckRa3UFVckfod8hEPasvoe1WjWbK4pwfj2FC8Zhl
-         V5J6/p2/og5MOLQEZ21CisSqHRYcfkVKeUWWS3qnyizvgcUjbhelr4mtf+AyhR2mWHVK
-         DleQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=6W8grtyB7pbKtLO6nZYSpUXrUqbnBG7Y9G7Qj2TNYYc=;
-        b=Kfa7rj27RdSRbTfFdHZVmG2BgM88Xmm/tTHnrjz349jiVPLaoEU4T1WwXrXl5U2Wrg
-         /J/13DZ34FT37hNg/Rc+FfMbSviA3Gnv+1Gs/QUHnOfGmqgfmxBpWHrnuhSDG/CRKpNf
-         8s1V1d5+BnjmTh/yEFjIn9fjY2sgHYFRvI6R6Qfj5ASSzf6AK1d5ZgjhDMVwhoRyNfOB
-         jb2Q0z0wSrCL5gtWqsTb0OFtUjMbhdz72p1RAZY/gATcjGQyABu4BCNGXOu6JA3iCEUn
-         7ESQGeNAwZ4JHUb9GO8F5JRlQXQ/u9YUgCky3EO7feXUAaPMFOzJ53LskS71zhZAxWVL
-         f3Rw==
-X-Gm-Message-State: AGi0PuYFkFOwMtRSm1gloeaZxpc8cJ8aqft/E0Yxr5HubDSZQuVjvLgn
-        3N3FLkKJgn/u6aPHwRkj5JU=
-X-Google-Smtp-Source: APiQypJUOfw5uaHckCfVeIv6eCok6EoXcFAHNfbYAHfNICppRDK0dqv5ZqH3wlSqzLkRMKtX2D5vQQ==
-X-Received: by 2002:adf:c109:: with SMTP id r9mr5403450wre.265.1587150525549;
-        Fri, 17 Apr 2020 12:08:45 -0700 (PDT)
-Received: from localhost.localdomain (p200300F137142E00428D5CFFFEB99DB8.dip0.t-ipconnect.de. [2003:f1:3714:2e00:428d:5cff:feb9:9db8])
-        by smtp.googlemail.com with ESMTPSA id q17sm8722220wmj.45.2020.04.17.12.08.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Apr 2020 12:08:44 -0700 (PDT)
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-To:     robh+dt@kernel.org, khilman@baylibre.com, narmstrong@baylibre.com,
-        linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH v2 4/4] soc: amlogic: meson-ee-pwrc: add support for the Meson GX SoCs
-Date:   Fri, 17 Apr 2020 21:08:25 +0200
-Message-Id: <20200417190825.1363345-5-martin.blumenstingl@googlemail.com>
-X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200417190825.1363345-1-martin.blumenstingl@googlemail.com>
-References: <20200417190825.1363345-1-martin.blumenstingl@googlemail.com>
+        Fri, 17 Apr 2020 15:08:56 -0400
+Received: from in01.mta.xmission.com ([166.70.13.51])
+        by out03.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.90_1)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jPWMA-0001fW-Vt; Fri, 17 Apr 2020 13:08:55 -0600
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jPWM9-0002Jc-Oz; Fri, 17 Apr 2020 13:08:54 -0600
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     Alexey Gladkov <gladkov.alexey@gmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        Linux Security Module <linux-security-module@vger.kernel.org>,
+        Akinobu Mita <akinobu.mita@gmail.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Alexey Gladkov <legion@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Daniel Micay <danielmicay@gmail.com>,
+        Djalal Harouni <tixxdz@gmail.com>,
+        "Dmitry V . Levin" <ldv@altlinux.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        "J . Bruce Fields" <bfields@fieldses.org>,
+        Jeff Layton <jlayton@poochiereds.net>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        David Howells <dhowells@redhat.com>
+References: <20200409123752.1070597-1-gladkov.alexey@gmail.com>
+        <20200409123752.1070597-8-gladkov.alexey@gmail.com>
+Date:   Fri, 17 Apr 2020 14:05:50 -0500
+In-Reply-To: <20200409123752.1070597-8-gladkov.alexey@gmail.com> (Alexey
+        Gladkov's message of "Thu, 9 Apr 2020 14:37:51 +0200")
+Message-ID: <87imhyaq5t.fsf@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-XM-SPF: eid=1jPWM9-0002Jc-Oz;;;mid=<87imhyaq5t.fsf@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX18mi3tx9WzkSqqVKApsnvyPLwyDMV1zckg=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: Re: [PATCH RESEND v11 7/8] proc: use human-readable values for hidepid
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for the Meson GX SoCs to the meson-ee-pwrc driver.
+Alexey Gladkov <gladkov.alexey@gmail.com> writes:
 
-The power domains on the GX SoCs are very similar to G12A. The only
-known differences so far are:
-- The GX SoCs do not have the HHI_VPU_MEM_PD_REG2 register (for the
-  VPU power-domain)
-- The GX SoCs have an additional reset line called "dvin"
+> The hidepid parameter values are becoming more and more and it becomes
+> difficult to remember what each new magic number means.
 
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
----
- drivers/soc/amlogic/meson-ee-pwrc.c | 26 ++++++++++++++++++++++++--
- 1 file changed, 24 insertions(+), 2 deletions(-)
+So I relooked at the code.  And I think I was misreading things.
+However I think it is a legitimate concern.
 
-diff --git a/drivers/soc/amlogic/meson-ee-pwrc.c b/drivers/soc/amlogic/meson-ee-pwrc.c
-index b30868da456a..a90572cb9c82 100644
---- a/drivers/soc/amlogic/meson-ee-pwrc.c
-+++ b/drivers/soc/amlogic/meson-ee-pwrc.c
-@@ -16,6 +16,7 @@
- #include <linux/clk.h>
- #include <dt-bindings/power/meson8-power.h>
- #include <dt-bindings/power/meson-g12a-power.h>
-+#include <dt-bindings/power/meson-gxbb-power.h>
- #include <dt-bindings/power/meson-sm1-power.h>
- 
- /* AO Offsets */
-@@ -73,7 +74,7 @@ struct meson_ee_pwrc_domain_data {
- 
- /* TOP Power Domains */
- 
--static struct meson_ee_pwrc_top_domain g12a_pwrc_vpu = {
-+static struct meson_ee_pwrc_top_domain gxbb_pwrc_vpu = {
- 	.sleep_reg = AO_RTI_GEN_PWR_SLEEP0,
- 	.sleep_mask = BIT(8),
- 	.iso_reg = AO_RTI_GEN_PWR_SLEEP0,
-@@ -138,6 +139,12 @@ static struct meson_ee_pwrc_mem_domain g12a_pwrc_mem_vpu[] = {
- 	VPU_HHI_MEMPD(HHI_MEM_PD_REG0),
- };
- 
-+static struct meson_ee_pwrc_mem_domain gxbb_pwrc_mem_vpu[] = {
-+	VPU_MEMPD(HHI_VPU_MEM_PD_REG0),
-+	VPU_MEMPD(HHI_VPU_MEM_PD_REG1),
-+	VPU_HHI_MEMPD(HHI_MEM_PD_REG0),
-+};
-+
- static struct meson_ee_pwrc_mem_domain meson8_pwrc_mem_eth[] = {
- 	{ HHI_MEM_PD_REG0, GENMASK(3, 2) },
- };
-@@ -223,11 +230,17 @@ static struct meson_ee_pwrc_mem_domain sm1_pwrc_mem_audio[] = {
- static bool pwrc_ee_get_power(struct meson_ee_pwrc_domain *pwrc_domain);
- 
- static struct meson_ee_pwrc_domain_desc g12a_pwrc_domains[] = {
--	[PWRC_G12A_VPU_ID]  = VPU_PD("VPU", &g12a_pwrc_vpu, g12a_pwrc_mem_vpu,
-+	[PWRC_G12A_VPU_ID]  = VPU_PD("VPU", &gxbb_pwrc_vpu, g12a_pwrc_mem_vpu,
- 				     pwrc_ee_get_power, 11, 2),
- 	[PWRC_G12A_ETH_ID] = MEM_PD("ETH", meson8_pwrc_mem_eth),
- };
- 
-+static struct meson_ee_pwrc_domain_desc gxbb_pwrc_domains[] = {
-+	[PWRC_GXBB_VPU_ID]  = VPU_PD("VPU", &gxbb_pwrc_vpu, gxbb_pwrc_mem_vpu,
-+				     pwrc_ee_get_power, 12, 2),
-+	[PWRC_GXBB_ETHERNET_MEM_ID] = MEM_PD("ETH", meson8_pwrc_mem_eth),
-+};
-+
- static struct meson_ee_pwrc_domain_desc meson8_pwrc_domains[] = {
- 	[PWRC_MESON8_VPU_ID]  = VPU_PD("VPU", &meson8_pwrc_vpu,
- 				       meson8_pwrc_mem_vpu, pwrc_ee_get_power,
-@@ -514,6 +527,11 @@ static struct meson_ee_pwrc_domain_data meson_ee_g12a_pwrc_data = {
- 	.domains = g12a_pwrc_domains,
- };
- 
-+static struct meson_ee_pwrc_domain_data meson_ee_gxbb_pwrc_data = {
-+	.count = ARRAY_SIZE(gxbb_pwrc_domains),
-+	.domains = gxbb_pwrc_domains,
-+};
-+
- static struct meson_ee_pwrc_domain_data meson_ee_m8_pwrc_data = {
- 	.count = ARRAY_SIZE(meson8_pwrc_domains),
- 	.domains = meson8_pwrc_domains,
-@@ -542,6 +560,10 @@ static const struct of_device_id meson_ee_pwrc_match_table[] = {
- 		.compatible = "amlogic,meson8m2-pwrc",
- 		.data = &meson_ee_m8b_pwrc_data,
- 	},
-+	{
-+		.compatible = "amlogic,meson-gxbb-pwrc",
-+		.data = &meson_ee_gxbb_pwrc_data,
-+	},
- 	{
- 		.compatible = "amlogic,meson-g12a-pwrc",
- 		.data = &meson_ee_g12a_pwrc_data,
--- 
-2.26.1
+Can you please mention in your description of this change that
+switching from fsparam_u32 to fs_param_string is safe even when
+using the new mount api because fsparam_u32 and fs_param_string
+both are sent from userspace with "fsconfig(fd, FSCONFIG_SET_STRING, ...)".
 
+Or words to that effect.  Ideally you will even manually test that case
+to confirm.
+
+Thank you,
+Eric
+
+
+> Suggested-by: Andy Lutomirski <luto@kernel.org>
+> Signed-off-by: Alexey Gladkov <gladkov.alexey@gmail.com>
+> Reviewed-by: Alexey Dobriyan <adobriyan@gmail.com>
+> Reviewed-by: Kees Cook <keescook@chromium.org>
+> ---
+>  Documentation/filesystems/proc.txt | 52 +++++++++++++++---------------
+>  fs/proc/inode.c                    | 15 ++++++++-
+>  fs/proc/root.c                     | 38 +++++++++++++++++++---
+>  3 files changed, 74 insertions(+), 31 deletions(-)
+>
+> diff --git a/Documentation/filesystems/proc.txt b/Documentation/filesystems/proc.txt
+> index bd0e0ab85048..af47672cb2cb 100644
+> --- a/Documentation/filesystems/proc.txt
+> +++ b/Documentation/filesystems/proc.txt
+> @@ -2025,28 +2025,28 @@ The following mount options are supported:
+>  	gid=		Set the group authorized to learn processes information.
+>  	subset=		Show only the specified subset of procfs.
+>  
+> -hidepid=0 means classic mode - everybody may access all /proc/<pid>/ directories
+> -(default).
+> -
+> -hidepid=1 means users may not access any /proc/<pid>/ directories but their
+> -own.  Sensitive files like cmdline, sched*, status are now protected against
+> -other users.  This makes it impossible to learn whether any user runs
+> -specific program (given the program doesn't reveal itself by its behaviour).
+> -As an additional bonus, as /proc/<pid>/cmdline is unaccessible for other users,
+> -poorly written programs passing sensitive information via program arguments are
+> -now protected against local eavesdroppers.
+> -
+> -hidepid=2 means hidepid=1 plus all /proc/<pid>/ will be fully invisible to other
+> -users.  It doesn't mean that it hides a fact whether a process with a specific
+> -pid value exists (it can be learned by other means, e.g. by "kill -0 $PID"),
+> -but it hides process' uid and gid, which may be learned by stat()'ing
+> -/proc/<pid>/ otherwise.  It greatly complicates an intruder's task of gathering
+> -information about running processes, whether some daemon runs with elevated
+> -privileges, whether other user runs some sensitive program, whether other users
+> -run any program at all, etc.
+> -
+> -hidepid=4 means that procfs should only contain /proc/<pid>/ directories
+> -that the caller can ptrace.
+> +hidepid=off or hidepid=0 means classic mode - everybody may access all
+> +/proc/<pid>/ directories (default).
+> +
+> +hidepid=noaccess or hidepid=1 means users may not access any /proc/<pid>/
+> +directories but their own.  Sensitive files like cmdline, sched*, status are now
+> +protected against other users.  This makes it impossible to learn whether any
+> +user runs specific program (given the program doesn't reveal itself by its
+> +behaviour).  As an additional bonus, as /proc/<pid>/cmdline is unaccessible for
+> +other users, poorly written programs passing sensitive information via program
+> +arguments are now protected against local eavesdroppers.
+> +
+> +hidepid=invisible or hidepid=2 means hidepid=noaccess plus all /proc/<pid>/ will
+> +be fully invisible to other users.  It doesn't mean that it hides a fact whether
+> +a process with a specific pid value exists (it can be learned by other means,
+> +e.g. by "kill -0 $PID"), but it hides process' uid and gid, which may be learned
+> +by stat()'ing /proc/<pid>/ otherwise.  It greatly complicates an intruder's task
+> +of gathering information about running processes, whether some daemon runs with
+> +elevated privileges, whether other user runs some sensitive program, whether
+> +other users run any program at all, etc.
+> +
+> +hidepid=ptraceable or hidepid=4 means that procfs should only contain
+> +/proc/<pid>/ directories that the caller can ptrace.
+>  
+>  gid= defines a group authorized to learn processes information otherwise
+>  prohibited by hidepid=.  If you use some daemon like identd which needs to learn
+> @@ -2093,8 +2093,8 @@ creates a new procfs instance. Mount options affect own procfs instance.
+>  It means that it became possible to have several procfs instances
+>  displaying tasks with different filtering options in one pid namespace.
+>  
+> -# mount -o hidepid=2 -t proc proc /proc
+> -# mount -o hidepid=1 -t proc proc /tmp/proc
+> +# mount -o hidepid=invisible -t proc proc /proc
+> +# mount -o hidepid=noaccess -t proc proc /tmp/proc
+>  # grep ^proc /proc/mounts
+> -proc /proc proc rw,relatime,hidepid=2 0 0
+> -proc /tmp/proc proc rw,relatime,hidepid=1 0 0
+> +proc /proc proc rw,relatime,hidepid=invisible 0 0
+> +proc /tmp/proc proc rw,relatime,hidepid=noaccess 0 0
+> diff --git a/fs/proc/inode.c b/fs/proc/inode.c
+> index e6577ce6027b..d38a9e592352 100644
+> --- a/fs/proc/inode.c
+> +++ b/fs/proc/inode.c
+> @@ -24,6 +24,7 @@
+>  #include <linux/seq_file.h>
+>  #include <linux/slab.h>
+>  #include <linux/mount.h>
+> +#include <linux/bug.h>
+>  
+>  #include <linux/uaccess.h>
+>  
+> @@ -165,6 +166,18 @@ void proc_invalidate_siblings_dcache(struct hlist_head *inodes, spinlock_t *lock
+>  		deactivate_super(old_sb);
+>  }
+>  
+> +static inline const char *hidepid2str(int v)
+> +{
+> +	switch (v) {
+> +		case HIDEPID_OFF: return "off";
+> +		case HIDEPID_NO_ACCESS: return "noaccess";
+> +		case HIDEPID_INVISIBLE: return "invisible";
+> +		case HIDEPID_NOT_PTRACEABLE: return "ptraceable";
+> +	}
+> +	WARN_ONCE(1, "bad hide_pid value: %d\n", v);
+> +	return "unknown";
+> +}
+> +
+>  static int proc_show_options(struct seq_file *seq, struct dentry *root)
+>  {
+>  	struct proc_fs_info *fs_info = proc_sb_info(root->d_sb);
+> @@ -172,7 +185,7 @@ static int proc_show_options(struct seq_file *seq, struct dentry *root)
+>  	if (!gid_eq(fs_info->pid_gid, GLOBAL_ROOT_GID))
+>  		seq_printf(seq, ",gid=%u", from_kgid_munged(&init_user_ns, fs_info->pid_gid));
+>  	if (fs_info->hide_pid != HIDEPID_OFF)
+> -		seq_printf(seq, ",hidepid=%u", fs_info->hide_pid);
+> +		seq_printf(seq, ",hidepid=%s", hidepid2str(fs_info->hide_pid));
+>  	if (fs_info->pidonly != PROC_PIDONLY_OFF)
+>  		seq_printf(seq, ",subset=pid");
+>  
+> diff --git a/fs/proc/root.c b/fs/proc/root.c
+> index dbcd96f07c7a..c6caae9e4308 100644
+> --- a/fs/proc/root.c
+> +++ b/fs/proc/root.c
+> @@ -45,7 +45,7 @@ enum proc_param {
+>  
+>  static const struct fs_parameter_spec proc_fs_parameters[] = {
+>  	fsparam_u32("gid",	Opt_gid),
+> -	fsparam_u32("hidepid",	Opt_hidepid),
+> +	fsparam_string("hidepid",	Opt_hidepid),
+>  	fsparam_string("subset",	Opt_subset),
+>  	{}
+>  };
+> @@ -58,6 +58,37 @@ static inline int valid_hidepid(unsigned int value)
+>  		value == HIDEPID_NOT_PTRACEABLE);
+>  }
+>  
+> +static int proc_parse_hidepid_param(struct fs_context *fc, struct fs_parameter *param)
+> +{
+> +	struct proc_fs_context *ctx = fc->fs_private;
+> +	struct fs_parameter_spec hidepid_u32_spec = fsparam_u32("hidepid", Opt_hidepid);
+> +	struct fs_parse_result result;
+> +	int base = (unsigned long)hidepid_u32_spec.data;
+> +
+> +	if (param->type != fs_value_is_string)
+> +		return invalf(fc, "proc: unexpected type of hidepid value\n");
+> +
+> +	if (!kstrtouint(param->string, base, &result.uint_32)) {
+> +		if (!valid_hidepid(result.uint_32))
+> +			return invalf(fc, "proc: unknown value of hidepid - %s\n", param->string);
+> +		ctx->hidepid = result.uint_32;
+> +		return 0;
+> +	}
+> +
+> +	if (!strcmp(param->string, "off"))
+> +		ctx->hidepid = HIDEPID_OFF;
+> +	else if (!strcmp(param->string, "noaccess"))
+> +		ctx->hidepid = HIDEPID_NO_ACCESS;
+> +	else if (!strcmp(param->string, "invisible"))
+> +		ctx->hidepid = HIDEPID_INVISIBLE;
+> +	else if (!strcmp(param->string, "ptraceable"))
+> +		ctx->hidepid = HIDEPID_NOT_PTRACEABLE;
+> +	else
+> +		return invalf(fc, "proc: unknown value of hidepid - %s\n", param->string);
+> +
+> +	return 0;
+> +}
+> +
+>  static int proc_parse_subset_param(struct fs_context *fc, char *value)
+>  {
+>  	struct proc_fs_context *ctx = fc->fs_private;
+> @@ -97,9 +128,8 @@ static int proc_parse_param(struct fs_context *fc, struct fs_parameter *param)
+>  		break;
+>  
+>  	case Opt_hidepid:
+> -		if (!valid_hidepid(result.uint_32))
+> -			return invalf(fc, "proc: unknown value of hidepid.\n");
+> -		ctx->hidepid = result.uint_32;
+> +		if (proc_parse_hidepid_param(fc, param))
+> +			return -EINVAL;
+>  		break;
+>  
+>  	case Opt_subset:
