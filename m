@@ -1,184 +1,91 @@
 Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: *
-X-Spam-Status: No, score=1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLACK autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Level: 
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 444D4C38A29
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 21:11:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63540C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 21:11:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1926D2083E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 21:11:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IPvvVVaT"
+	by mail.kernel.org (Postfix) with ESMTP id 414EE20776
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 21:11:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727889AbgDQVLC (ORCPT
+        id S1727913AbgDQVL3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 17:11:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41178 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726129AbgDQVLB (ORCPT
+        Fri, 17 Apr 2020 17:11:29 -0400
+Received: from out03.mta.xmission.com ([166.70.13.233]:46498 "EHLO
+        out03.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726129AbgDQVL3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 17:11:01 -0400
-Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3E70C061A0C;
-        Fri, 17 Apr 2020 14:11:01 -0700 (PDT)
-Received: by mail-io1-xd44.google.com with SMTP id w20so3925542iob.2;
-        Fri, 17 Apr 2020 14:11:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=OlJHu2tNIRXilHBPRkOqOH56O/SKw0eGa9SbGUKri/I=;
-        b=IPvvVVaTbCBrVHxOQannxvijirEKYdyuFI3EY6lupoF4gZjUlVvngD0Bpe/lyCT9Uc
-         jyVK/ASI1lavaq/GtpOeuDiVtlQARpmrpIJpF2uMVHQJgfe6+meMZ2+ToRSXf0BxSjzx
-         I1GnhxOyCSZA1OcGlAU3LnRdsrnhcHjHhKoOH/Qyvx00+48r55qku3V7iR4R7p92foCS
-         8IAPXE+fN7NUFhskpXc0lEbgXgfyG/HBkbG+I+Kz2PE6dHvP3gVKqcdOHQ5FZS5WEGXf
-         zcjNe/ZU/mZyPfNizmlzBMnEkDdgZ3xk6vrtZq30n/ZCCOSYftArEWIEtD7qL6whdRjB
-         nLBA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=OlJHu2tNIRXilHBPRkOqOH56O/SKw0eGa9SbGUKri/I=;
-        b=fum/YS7qLUhwPyC5Gye7JksuDZM4BAtY8jEb1XH5dNPd7EeuVB3AARuNjALLzI0Zh8
-         BGIVJ+8b5F7v5fmpoN2cSo/CnAeM+la9a2xc4fNzRoiD9k/5OKTscnthmmFotjm6O57u
-         dStde9sLHrGC7krQ53fyxYKJEZ1Rgv9YKZeahhepEOQTWzdxFSABJVYCh1c+eRNR1wBD
-         eNawgNl7FYDO8o5I4ES1nL+CQVU1yKzndHRpZFzpY5rVRFcs90dU/SCbl9L7uD5RFaUw
-         Fq+LflUFFSteaILJXc3Lrwu4+TRkjUQ+eo3syFE2MClzpzUyPVF1MCpPu7Ym+BR/YXYv
-         SPFg==
-X-Gm-Message-State: AGi0PuZYFasaT9c49Vt3uF1yRkGWqmMrmPvA+05mPU/8uJT1+EAyT8oQ
-        Bh1k1HwVXNYZTVCdaltM7tWl2jU695+JaqM0Egg=
-X-Google-Smtp-Source: APiQypIwrfIN47EKCM+k+nQMgN0YMdfXIBKXrLZf67ebNQ3PQCjJg4xmrZKDsH9ryfjvK/p0Dul/uUyUIvlovW5A+mw=
-X-Received: by 2002:a6b:f60f:: with SMTP id n15mr5150493ioh.22.1587157861052;
- Fri, 17 Apr 2020 14:11:01 -0700 (PDT)
+        Fri, 17 Apr 2020 17:11:29 -0400
+Received: from in02.mta.xmission.com ([166.70.13.52])
+        by out03.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.90_1)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jPYGk-0005yL-PC; Fri, 17 Apr 2020 15:11:26 -0600
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jPYGi-0003AY-UF; Fri, 17 Apr 2020 15:11:26 -0600
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Jeremy Kerr <jk@ozlabs.org>, Arnd Bergmann <arnd@arndb.de>,
+        linuxppc-dev@lists.ozlabs.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, x86@kernel.org
+References: <20200414070142.288696-1-hch@lst.de>
+        <20200414070142.288696-3-hch@lst.de>
+Date:   Fri, 17 Apr 2020 16:08:23 -0500
+In-Reply-To: <20200414070142.288696-3-hch@lst.de> (Christoph Hellwig's message
+        of "Tue, 14 Apr 2020 09:01:36 +0200")
+Message-ID: <87pnc5akhk.fsf@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-References: <20200417202859.35427-1-contact@artur-rojek.eu> <20200417202859.35427-5-contact@artur-rojek.eu>
-In-Reply-To: <20200417202859.35427-5-contact@artur-rojek.eu>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Sat, 18 Apr 2020 00:10:49 +0300
-Message-ID: <CAHp75VfRbnnuUhfyXpu+5dp4TutHSrHus=sX_vG_5F0dX4k0fQ@mail.gmail.com>
-Subject: Re: [RESEND PATCH v5 5/5] input: joystick: Add ADC attached joystick driver.
-To:     Artur Rojek <contact@artur-rojek.eu>
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Heiko Stuebner <heiko@sntech.de>,
-        linux-input <linux-input@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-XM-SPF: eid=1jPYGi-0003AY-UF;;;mid=<87pnc5akhk.fsf@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX1/sMSqzlC3UCo8sLeQoBbXwuy1pdf5wSzo=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: Re: [PATCH 2/8] signal: clean up __copy_siginfo_to_user32
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 17, 2020 at 11:21 PM Artur Rojek <contact@artur-rojek.eu> wrote:
->
-> Add a driver for joystick devices connected to ADC controllers
-> supporting the Industrial I/O subsystem.
+Christoph Hellwig <hch@lst.de> writes:
 
-...
+> Instead of an architecture specific calling convention in common code
+> just pass a flags argument with architecture specific values.
 
-> +#include <linux/of.h>
+This bothers me because it makes all architectures pay for the sins of
+x32.  Further it starts burying the details of the what is happening in
+architecture specific helpers.  Hiding the fact that there is only
+one niche architecture that does anything weird.
 
-Do you really need this? (See below as well)
+I am very sensitive to hiding away signal handling details right now
+because way to much of the signal handling code got hidden in
+architecture specific files and was quite buggy because as a result.
 
-...
+My general sense is putting all of the weird details up front and center
+in kernel/signal.c is the only way for this code will be looked at
+and successfully maintained.
 
-> +               sign = (tolower(joy->chans[i].channel->scan_type.sign) == 's');
+How about these patches to solve set_fs with binfmt_elf instead:
 
-Too many parentheses. But here it's up to you,
+Eric W. Biederman (2):
+      signal: Factor copy_siginfo_to_external32 from copy_siginfo_to_user32
+      signal: Remove the set_fs in binfmt_elf.c:fill_siginfo_note
 
-...
+ fs/binfmt_elf.c        |   5 +----
+ fs/compat_binfmt_elf.c |   2 +-
+ include/linux/compat.h |   1 +
+ include/linux/signal.h |   7 +++++++
+ kernel/signal.c        | 108 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++----------------------------------------------
 
-> +               case 2:
-
-> +                       val = ((const u16 *)data)[i];
-
-Can't you do this in each branch below?
-
-> +                       if (endianness == IIO_BE)
-> +                               val = be16_to_cpu(val);
-> +                       else if (endianness == IIO_LE)
-> +                               val = le16_to_cpu(val);
-> +                       break;
-
-...
-
-> +       device_for_each_child_node(dev, child) {
-> +               ret = fwnode_property_read_u32(child, "reg", &i);
-> +               if (ret || i >= num_axes) {
-> +                       dev_err(dev, "reg invalid or missing");
-> +                       goto err;
-> +               }
-> +
-> +               if (fwnode_property_read_u32(child, "linux,code",
-> +                                            &axes[i].code)) {
-> +                       dev_err(dev, "linux,code invalid or missing");
-> +                       goto err;
-> +               }
-> +
-> +               if (fwnode_property_read_u32_array(child, "abs-range",
-> +                                                  axes[i].range, 2)) {
-> +                       dev_err(dev, "abs-range invalid or missing");
-> +                       goto err;
-> +               }
-
-> +       }
-> +
-> +       joy->axes = axes;
-> +
-> +       return 0;
-> +
-> +err:
-> +       fwnode_handle_put(child);
-
-> +       return -EINVAL;
-
-Can we avoid shadowing the actual error code?
-
-...
-
-> +       bits = joy->chans[0].channel->scan_type.storagebits;
-
-> +       if (!bits || (bits >> 3) > 2) {
-
-Wouldn't be clear to use simple 'bits > 16'?
-
-> +               dev_err(dev, "Unsupported channel storage size");
-> +               return -EINVAL;
-> +       }
-
-...
-
-> +static const struct of_device_id adc_joystick_of_match[] = {
-> +       { .compatible = "adc-joystick", },
-> +       { },
-> +};
-> +MODULE_DEVICE_TABLE(of, adc_joystick_of_match);
-> +
-> +static struct platform_driver adc_joystick_driver = {
-> +       .driver = {
-> +               .name = "adc-joystick",
-
-> +               .of_match_table = of_match_ptr(adc_joystick_of_match),
-
-Drop this a bit harmful of_match_ptr() macro. It should go with ugly
-#ifdeffery. Here you simple introduced a compiler warning.
-On top of that, you are using device property API, OF use in this case
-is contradictory (at lest to some extend).
-
-> +       },
-> +       .probe = adc_joystick_probe,
-> +};
-
--- 
-With Best Regards,
-Andy Shevchenko
+Eric
