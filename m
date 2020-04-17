@@ -2,140 +2,155 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE6FDC2BA2B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 02:39:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C276BC2BA2B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 02:40:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A3C27221E8
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 02:39:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91D5E221E8
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 02:40:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="FGKe/ato"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="Xpp7yTD7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729299AbgDQCjq (ORCPT
+        id S1729350AbgDQCkt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 22:39:46 -0400
-Received: from mailout2.samsung.com ([203.254.224.25]:18004 "EHLO
-        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728923AbgDQCjp (ORCPT
+        Thu, 16 Apr 2020 22:40:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38290 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728715AbgDQCks (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 22:39:45 -0400
-Received: from epcas1p2.samsung.com (unknown [182.195.41.46])
-        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20200417023942epoutp021f8d482f632b0ce386a9b0ef3694aa8c~GewWcmg100143901439epoutp02T
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 02:39:42 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20200417023942epoutp021f8d482f632b0ce386a9b0ef3694aa8c~GewWcmg100143901439epoutp02T
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1587091182;
-        bh=aCggvvISb3vjRmzdZ3XN/dTBA9tNd8xpqtSM2O/byS8=;
-        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-        b=FGKe/atoUSf1e5pDPFhdRXx5snb074CzT+xfZuSQFFAb0D0NBec5gR24HqNzWKK0q
-         g0KeW3sQbqKcjHMoPJ0yamw1yECQO2eBtE1b5ioRPcOmckwe835Xorkx7RANC4WbmM
-         93eiwNffZnHODc4srUEns1drjcLWBbhR6dWg1w8c=
-Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
-        epcas1p3.samsung.com (KnoxPortal) with ESMTP id
-        20200417023941epcas1p3d9ea8a388e181f5b633b36ac8969647e~GewVwymrf0742907429epcas1p3V;
-        Fri, 17 Apr 2020 02:39:41 +0000 (GMT)
-Received: from epsmges1p3.samsung.com (unknown [182.195.40.162]) by
-        epsnrtp2.localdomain (Postfix) with ESMTP id 493L0D5N6MzMqYkf; Fri, 17 Apr
-        2020 02:39:40 +0000 (GMT)
-Received: from epcas1p3.samsung.com ( [182.195.41.47]) by
-        epsmges1p3.samsung.com (Symantec Messaging Gateway) with SMTP id
-        70.4F.04648.CE6199E5; Fri, 17 Apr 2020 11:39:40 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas1p4.samsung.com (KnoxPortal) with ESMTPA id
-        20200417023939epcas1p499c819249017442a881d82cf5e04241b~GewT32Cof1009010090epcas1p49;
-        Fri, 17 Apr 2020 02:39:39 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200417023939epsmtrp128ed0c50efe08f2cdae8e009d7a5c600~GewT2n6ef2543625436epsmtrp1O;
-        Fri, 17 Apr 2020 02:39:39 +0000 (GMT)
-X-AuditID: b6c32a37-1f3ff70000001228-99-5e9916eca325
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        5A.B2.04024.BE6199E5; Fri, 17 Apr 2020 11:39:39 +0900 (KST)
-Received: from namjaejeon01 (unknown [10.88.104.63]) by epsmtip2.samsung.com
-        (KnoxPortal) with ESMTPA id
-        20200417023939epsmtip2dfd10ce662583b4fff0517d2c8d264a7~GewTt6TAE1695216952epsmtip22;
-        Fri, 17 Apr 2020 02:39:39 +0000 (GMT)
-From:   "Namjae Jeon" <namjae.jeon@samsung.com>
-To:     "'Tetsuhiro Kohada'" <Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
-Cc:     <Mori.Takahiro@ab.MitsubishiElectric.co.jp>,
-        <motai.hirotaka@aj.mitsubishielectric.co.jp>,
-        "'Sungjong Seo'" <sj1557.seo@samsung.com>,
-        <linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200416085121.57495-1-Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
-Subject: RE: [PATCH v3] exfat: replace 'time_ms' with 'time_cs'
-Date:   Fri, 17 Apr 2020 11:39:39 +0900
-Message-ID: <003601d61461$7140be60$53c23b20$@samsung.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQFivWokrSbtdWWlBCyBJ+5kie97TAJblN7TqVBpbUA=
-Content-Language: ko
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprLJsWRmVeSWpSXmKPExsWy7bCmvu4bsZlxBlvvqlu8OTmVxWLP3pMs
-        Fpd3zWGzuPz/E4vFsi+TWSy2/DvC6sDm8WXOcXaPtsn/2D2aj61k8+jbsorR4/MmuQDWqByb
-        jNTElNQihdS85PyUzLx0WyXv4HjneFMzA0NdQ0sLcyWFvMTcVFslF58AXbfMHKALlBTKEnNK
-        gUIBicXFSvp2NkX5pSWpChn5xSW2SqkFKTkFhgYFesWJucWleel6yfm5VoYGBkamQJUJORkL
-        l65hK9jIWnFr4UP2BsbdLF2MHBwSAiYSLUfEuxi5OIQEdjBKPNl7jgnC+cQoMbn7OwuE841R
-        4sj3HYwwHR2tThDxvYwSM/YdYe5i5ARyXjJKbJkSCGKzCehK/Puznw3EFhFwl1hz7iczSAOz
-        wHlGiQkT/oE1cAoESVx/fYAFxBYWsJdYef88K4jNIqAqsfvDeyYQm1fAUuLau29sELagxMmZ
-        T8DqmQXkJba/nQM2R0JAQeLn02WsIMeJCFhJvGrzhygRkZjd2Qa2V0LgNZvE+SWNrBD1LhKb
-        395lgrCFJV4d38IOYUtJvOxvY4d4slri436o8R2MEi++20LYxhI3128AW8UsoCmxfpc+RFhR
-        YufvuYwQa/kk3n3tYYWYwivR0SYEUaIq0XfpMNRSaYmu9g/sExiVZiH5axaSv2YheWAWwrIF
-        jCyrGMVSC4pz01OLDQuMkWN6EyM4aWqZ72DccM7nEKMAB6MSD2+C/Yw4IdbEsuLK3EOMEhzM
-        SiK8fKZAId6UxMqq1KL8+KLSnNTiQ4ymwGCfyCwlmpwPTOh5JfGGpkbGxsYWJmbmZqbGSuK8
-        U6/nxAkJpCeWpGanphakFsH0MXFwSjUw8rbslNFvP871KGa36t+LJ5Q7Jn5ZffXMPk+24C4z
-        3feWdlsTc19e+FXX9jRI7OmVnUKxa58vsFTYWiR++B2H4uOqPftfbXlc6nt48nSZ/sx+4eUT
-        fjx84XKQc+Gl4rL60ECJqwdXJy7UFlniU7pBxtvpiQL3iZ5Cw9dMgd4e5ZKdEuIveDIVlFiK
-        MxINtZiLihMB8nNaE7ADAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupgkeLIzCtJLcpLzFFi42LZdlhJXve12Mw4g+ZzZhZvTk5lsdiz9ySL
-        xeVdc9gsLv//xGKx7MtkFost/46wOrB5fJlznN2jbfI/do/mYyvZPPq2rGL0+LxJLoA1issm
-        JTUnsyy1SN8ugStj4dI1bAUbWStuLXzI3sC4m6WLkYNDQsBEoqPVqYuRi0NIYDejxMf+w+xd
-        jJxAcWmJYyfOMEPUCEscPlwMUfOcUeLv7Q+sIDVsAroS//7sZwOxRQTcJdac+8kMUsQscJFR
-        4v+5dWwQHYsZJXat7QHr4BQIkrj++gALiC0sYC+x8v55sDiLgKrE7g/vmUBsXgFLiWvvvrFB
-        2IISJ2c+AbuUWUBPom0jI0iYWUBeYvvbOcwQhypI/Hy6jBWkRETASuJVmz9EiYjE7M425gmM
-        wrOQDJqFMGgWkkGzkHQsYGRZxSiZWlCcm55bbFhgmJdarlecmFtcmpeul5yfu4kRHD9amjsY
-        Ly+JP8QowMGoxMObYD8jTog1say4MvcQowQHs5IIL58pUIg3JbGyKrUoP76oNCe1+BCjNAeL
-        kjjv07xjkUIC6YklqdmpqQWpRTBZJg5OqQZGK17dL8zsj27I+5TN5Z629enEsyn5RuZhL0/Y
-        uE/b6lNcqNoVerPdPev5kuaTBm0XjzQ8kjH4u+pOUu7HmJjMvwsO9987znbg5C2NlwyKJ/2m
-        J4UrRNb4Llow+WaaXtQ78zKjpUefGkvHyV5Sdsmoffb5Zs/nvc3bLv3kS5rxyqHomanP/EZb
-        JZbijERDLeai4kQAYhJhH5sCAAA=
-X-CMS-MailID: 20200417023939epcas1p499c819249017442a881d82cf5e04241b
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20200416085144epcas1p1527b8df86453c7566b1a4d5a85689e69
-References: <CGME20200416085144epcas1p1527b8df86453c7566b1a4d5a85689e69@epcas1p1.samsung.com>
-        <20200416085121.57495-1-Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
+        Thu, 16 Apr 2020 22:40:48 -0400
+Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB2B1C061A0C
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 19:40:48 -0700 (PDT)
+Received: by mail-qk1-x741.google.com with SMTP id l78so1023079qke.7
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 19:40:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=content-transfer-encoding:from:mime-version:date:subject:message-id
+         :cc:to;
+        bh=GbLsq3eNz0RhPkanQBBFrRr66hvLaz1YBG3/HwOzWxU=;
+        b=Xpp7yTD7jP8DZZhjp+3VvLmWFViMXRgGwL/tLWA5l1J7XuQ312TbIDKOy7dq8KLGHu
+         cw+byvGhvqjIQf3ScjqH5GN16bnEMjKFZCLud2Rl9zloH1qjOa3IBRjWAQ1JyRmzRqDQ
+         t2SqYg2kNEst3L50rz28j8vBAGg23C0B6O0zNUWqvMoNsGwkxYdD7sSxyfGAF4WM3VOZ
+         jeLenVy+4es9nBtDAaVqL3IMyPHV/2kJMJdin/qT/ROfgQjFAUY2IYuORmMKykdjJdsF
+         fp3d94+AxrhRV329MwXCpPX5/NfFtTANgnyn4Z1+aCKNj7dV2vjt3TTCS3nC02fx2DZF
+         N9bg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version:date
+         :subject:message-id:cc:to;
+        bh=GbLsq3eNz0RhPkanQBBFrRr66hvLaz1YBG3/HwOzWxU=;
+        b=tqgCAJJ75B61H1i6iNTIBlvdW0bvojjgTL2TYJAbBFsCmWy96Qvhw4RfxX8rTy+Jdl
+         wu1VtUwZQf1L6bbEyBnpUq4Cjgn6i1M7on6gbKWJZOS9C3TcJWz32Sb0OI1oSX0xEcol
+         l3On5Z5r5R3/KTO74UMHTHIq3IInbt4wrjyamMS8puoLiATvc9BBTDLO1IlFZE84yUqi
+         DjOTyX+20HjUkFbCStW5M4iDtw+Y2SS05cqNda0PrW8hub7FUm315u3Yde+t6FrLJrsB
+         DGWw7luPliiHvt51vXwEAQRekN6qxwAQC1RpeDdiEefNJ2VbS5TCF0X4nfqf9WnQHf+r
+         kQvg==
+X-Gm-Message-State: AGi0PubWhzWobUQBs11WxUrr8lg2d1MdfjuO4kkjZxMKhTkGvlfUJ3zT
+        QGghk5X0Rbzny7XS9uTP7/w2BA==
+X-Google-Smtp-Source: APiQypK8TYdwx/USMHjOH1XzRj6r1e2j+LKXgQyM0qE85qw2DADiSMTvFHnp7+redCQ4TwBS6xeNwQ==
+X-Received: by 2002:ae9:ddc6:: with SMTP id r189mr1151445qkf.14.1587091247707;
+        Thu, 16 Apr 2020 19:40:47 -0700 (PDT)
+Received: from [192.168.1.183] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id m83sm10950760qke.117.2020.04.16.19.40.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 16 Apr 2020 19:40:47 -0700 (PDT)
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
+From:   Qian Cai <cai@lca.pw>
+Mime-Version: 1.0 (1.0)
+Date:   Thu, 16 Apr 2020 22:40:46 -0400
+Subject: Re: POWER9 crash due to STRICT_KERNEL_RWX (WAS: Re: Linux-next POWER9 NULL pointer NIP...)
+Message-Id: <43EE54C0-6F20-4ADD-9948-21F24D90C5E1@lca.pw>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        LKML <linux-kernel@vger.kernel.org>
+To:     Russell Currey <ruscur@russell.cc>
+X-Mailer: iPhone Mail (17D50)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Replace "time_ms"  with "time_cs" in the file directory entry structure
-> and related functions.
-> 
-> The unit of create_time_ms/modify_time_ms in File Directory Entry are not
-> 'milli-second', but 'centi-second'.
-> The exfat specification uses the term '10ms', but instead use 'cs' as in
-> "msdos_fs.h".
-> 
-> Signed-off-by: Tetsuhiro Kohada
-> <Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
-> ---
-I have run checkpatch.pl on your patch.
-It give a following warning.
 
-WARNING: Missing Signed-off-by: line by nominal patch author 'Tetsuhiro
-Kohada <Kohada.Tetsuhiro@dc.mitsubishielectric.co.jp>'
-total: 0 errors, 1 warnings, 127 lines checked
 
-Please fix it.
-Thanks!
+> On Apr 16, 2020, at 10:27 PM, Russell Currey <ruscur@russell.cc> wrote:
+>=20
+> Reverting the patch with the given config will have the same effect as
+> STRICT_KERNEL_RWX=3Dn.  Not discounting that it could be a bug on the
+> powerpc side (i.e. relocatable kernels with strict RWX on haven't been
+> exhaustively tested yet), but we should definitely figure out what's
+> going on with this bad access first.
 
+BTW, this bad access only happened once. The overwhelming rest of crashes ar=
+e with NULL pointer NIP like below. How can you explain that STRICT_KERNEL_R=
+WX=3Dn would also make those NULL NIP disappear if STRICT_KERNEL_RWX is just=
+ a messenger?
+
+[  215.281666][T16896] LTP: starting chown04_16
+[  215.424203][T18297] BUG: Unable to handle kernel instruction fetch (NULL p=
+ointer?)
+[  215.424289][T18297] Faulting instruction address: 0x00000000
+[  215.424313][T18297] Oops: Kernel access of bad area, sig: 11 [#1]
+[  215.424341][T18297] LE PAGE_SIZE=3D64K MMU=3DRadix SMP NR_CPUS=3D256 DEBU=
+G_PAGEALLOC NUMA PowerNV
+[  215.424383][T18297] Modules linked in: loop kvm_hv kvm ip_tables x_tables=
+ xfs sd_mod bnx2x mdio tg3 ahci libahci libphy libata firmware_class dm_mirr=
+or dm_region_hash dm_log dm_mod
+[  215.424459][T18297] CPU: 85 PID: 18297 Comm: chown04_16 Tainted: G       =
+ W         5.6.0-next-20200405+ #3
+[  215.424489][T18297] NIP:  0000000000000000 LR: c00800000fbc0408 CTR: 0000=
+000000000000
+[  215.424530][T18297] REGS: c000200b8606f990 TRAP: 0400   Tainted: G       =
+ W          (5.6.0-next-20200405+)
+[  215.424570][T18297] MSR:  9000000040009033 <SF,HV,EE,ME,IR,DR,RI,LE>  CR:=
+ 84000248  XER: 20040000
+[  215.424619][T18297] CFAR: c00800000fbc64f4 IRQMASK: 0=20
+[  215.424619][T18297] GPR00: c0000000006c2238 c000200b8606fc20 c00000000165=
+ce00 0000000000000000=20
+[  215.424619][T18297] GPR04: c000201a58106400 c000200b8606fcc0 000000005f03=
+7e7d ffffffff00013bfb=20
+[  215.424619][T18297] GPR08: c000201a58106400 0000000000000000 000000000000=
+0000 c000000001652ee0=20
+[  215.424619][T18297] GPR12: 0000000000000000 c000201fff69a600 000000000000=
+0000 0000000000000000=20
+[  215.424619][T18297] GPR16: 0000000000000000 0000000000000000 000000000000=
+0000 0000000000000000=20
+[  215.424619][T18297] GPR20: 0000000000000000 0000000000000000 000000000000=
+0000 0000000000000007=20
+[  215.424619][T18297] GPR24: 0000000000000000 0000000000000000 c00800000fbc=
+8688 c000200b8606fcc0=20
+[  215.424619][T18297] GPR28: 0000000000000000 000000007fffffff c00800000fbc=
+0400 c00020068b8c0e70=20
+[  215.424914][T18297] NIP [0000000000000000] 0x0
+[  215.424953][T18297] LR [c00800000fbc0408] find_free_cb+0x8/0x30 [loop]
+find_free_cb at drivers/block/loop.c:2129
+[  215.424997][T18297] Call Trace:
+[  215.425036][T18297] [c000200b8606fc20] [c0000000006c2290] idr_for_each+0x=
+f0/0x170 (unreliable)
+[  215.425073][T18297] [c000200b8606fca0] [c00800000fbc2744] loop_lookup.par=
+t.2+0x4c/0xb0 [loop]
+loop_lookup at drivers/block/loop.c:2144
+[  215.425105][T18297] [c000200b8606fce0] [c00800000fbc3558] loop_control_io=
+ctl+0x120/0x1d0 [loop]
+[  215.425149][T18297] [c000200b8606fd40] [c0000000004eb688] ksys_ioctl+0xd8=
+/0x130
+[  215.425190][T18297] [c000200b8606fd90] [c0000000004eb708] sys_ioctl+0x28/=
+0x40
+[  215.425233][T18297] [c000200b8606fdb0] [c00000000003cc30] system_call_exc=
+eption+0x110/0x1e0
+[  215.425274][T18297] [c000200b8606fe20] [c00000000000c9f0] system_call_com=
+mon+0xf0/0x278
+[  215.425314][T18297] Instruction dump:
+[  215.425338][T18297] XXXXXXXX XXXXXXXX XXXXXXXX XXXXXXXX XXXXXXXX XXXXXXXX=
+ XXXXXXXX XXXXXXXX=20
+[  215.425374][T18297] XXXXXXXX XXXXXXXX XXXXXXXX XXXXXXXX XXXXXXXX XXXXXXXX=
+ XXXXXXXX XXXXXXXX=20
+[  215.425422][T18297] ---[ end trace ebed248fad431966 ]---
+[  215.642114][T18297]=20
+[  216.642220][T18297] Kernel panic - not syncing: Fatal exception=
