@@ -2,142 +2,150 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1E3BC352BE
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 13:50:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90DEAC352BE
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 13:50:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7A7D320B1F
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 13:50:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BDAA2087E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 13:50:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="hN7fEaQJ"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="O8CXYfnF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730772AbgDQNuE (ORCPT
+        id S1730778AbgDQNuI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 09:50:04 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:55610 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730731AbgDQNuD (ORCPT
+        Fri, 17 Apr 2020 09:50:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57284 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730757AbgDQNuD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 17 Apr 2020 09:50:03 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 03HDo2eg071207;
-        Fri, 17 Apr 2020 08:50:02 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1587131402;
-        bh=j5wFi+TfsuaZTYKTgVJ0AgTcn5CS2jUXSCWPWYserYA=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=hN7fEaQJnfqxgIrmOCII/XwEr9pPT9kgJwL83JjyNKZqLqaFbOLGDTTgIrsVQ3hXw
-         UWuKBTthtgQ0R8pXphV8MNIUNRGtO3yuY9MA8bY9VJCLBcOTNF4Hut9VVBxvVQhJkB
-         WH4Dw/TMoXZAI8bW1HEoDxLNDtui4m4Q58Vkej3w=
-Received: from DLEE111.ent.ti.com (dlee111.ent.ti.com [157.170.170.22])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03HDo2J5125957;
-        Fri, 17 Apr 2020 08:50:02 -0500
-Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 17
- Apr 2020 08:50:02 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Fri, 17 Apr 2020 08:50:01 -0500
-Received: from [10.250.48.148] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03HDo14D124693;
-        Fri, 17 Apr 2020 08:50:01 -0500
-Subject: Re: [PATCH v2 7/7] remoteproc: Get rid of tedious error path
-To:     Mathieu Poirier <mathieu.poirier@linaro.org>,
-        <bjorn.andersson@linaro.org>, <ohad@wizery.com>
-CC:     <elder@linaro.org>, <Markus.Elfring@web.de>,
-        <linux-remoteproc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20200415204858.2448-1-mathieu.poirier@linaro.org>
- <20200415204858.2448-8-mathieu.poirier@linaro.org>
-From:   Suman Anna <s-anna@ti.com>
-Message-ID: <6b21d836-a31c-eeaa-efff-aff589861775@ti.com>
-Date:   Fri, 17 Apr 2020 08:50:01 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4806C061A0F
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 06:50:03 -0700 (PDT)
+Received: by mail-qk1-x742.google.com with SMTP id x66so2363595qkd.9
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 06:50:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=0zcNvdKdai5+wZ9tPiIjxeHl1r1POZ3pfY1yVYty/CE=;
+        b=O8CXYfnFgyT3JxRsc7Le4trNF7KXYW5D1b+IqKzvIlluMnBQxEUoMH8H40fIbIC0P3
+         65maZjgung61OOmf3WIxLWtlswk2NRhvgoBny0laR0PNDlDxgoBs3SM1df/AA1hEPz4I
+         uIfcx0OtTyRzIRunc/iOMdHvQ/kJE4ov7v6992OWPGYatRHl3uDfOF2VImJndJ2IP4CS
+         hX/oVWRmX2FqvdyronHkVG2xshVc4r9eduWZKxWPneggQzI3Sz/AWvagvUiXoIMq8PjA
+         d7zbvjrevHDJZ1TAhI+ui9e6uXcJrhndRrYyvtKMM1vS88nmuWheKmNpaKchUdegcaNB
+         5ejg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=0zcNvdKdai5+wZ9tPiIjxeHl1r1POZ3pfY1yVYty/CE=;
+        b=f7npG65vbgiFqqdksNaHuktNpXuyCHy2Bjl9klEmtAR76h27ZoWhukJZBYY5nO2zlx
+         FGkgzp5CYgatLb+VJNcrDMr4+ciQ5UxklqbjjkLDOI8OJ5nqsl1FUc3Z8+HdjMMjevPY
+         R7wgucY7vboigj/Z6u5JR11fPLcWStOevAYfrtxATFpLPd712HNRyfeflEq3jg3VQ2Hm
+         mAwuQ3lJ8jyy0/77IRkpH2dz5nLyVrKOfejLE/lChVYKzAI18G35T2AqdhNa4iq140P6
+         B3MWMjek/Y2Ri029pxG2zEsE+eBeOugs7Oyyy7c/gwEOF084/HsgOPcCp/d7NeYWER2c
+         T5Pw==
+X-Gm-Message-State: AGi0PuZfMxjTkga9QWaxDHlIvrgch3j5p4DStECO46DBea6NJ0C0SkeQ
+        /nR1WajM6XsjKgZs23RAPov1ig==
+X-Google-Smtp-Source: APiQypJUph/pZ7+qqCeSnYdiVZYUfGc29i+OGh5I254nq16GQjpEH/+/7PYVLPTMZgZGL+VfYOxhCQ==
+X-Received: by 2002:a37:5a02:: with SMTP id o2mr3256734qkb.380.1587131402855;
+        Fri, 17 Apr 2020 06:50:02 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
+        by smtp.gmail.com with ESMTPSA id g6sm5127171qtc.52.2020.04.17.06.50.02
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 17 Apr 2020 06:50:02 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1jPRNZ-00005H-RZ; Fri, 17 Apr 2020 10:50:01 -0300
+Date:   Fri, 17 Apr 2020 10:50:01 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Marion & Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc:     selvin.xavier@broadcom.com, devesh.sharma@broadcom.com,
+        dledford@redhat.com, leon@kernel.org, colin.king@canonical.com,
+        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] RDMA/ocrdma: Fix an off-by-one issue in 'ocrdma_add_stat'
+Message-ID: <20200417135001.GE26002@ziepe.ca>
+References: <20200328073040.24429-1-christophe.jaillet@wanadoo.fr>
+ <20200414183441.GA28870@ziepe.ca>
+ <8c17ed4f-fb29-4ff8-35db-afab284c6e71@wanadoo.fr>
 MIME-Version: 1.0
-In-Reply-To: <20200415204858.2448-8-mathieu.poirier@linaro.org>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <8c17ed4f-fb29-4ff8-35db-afab284c6e71@wanadoo.fr>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/15/20 3:48 PM, Mathieu Poirier wrote:
-> Get rid of tedious error management by moving firmware and operation
-> allocation after calling device_initialize().  That way we take advantage
-> of the automatic call to rproc_type_release() to cleanup after ourselves
-> when put_device() is called.
+On Fri, Apr 17, 2020 at 03:28:21PM +0200, Marion & Christophe JAILLET wrote:
 > 
-> Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-> Reviewed-by: Alex Elder <elder@linaro.org>
-
-Acked-by: Suman Anna <s-anna@ti.com>
-
-regards
-Suman
-
-> ---
->   drivers/remoteproc/remoteproc_core.c | 22 +++++++++-------------
->   1 file changed, 9 insertions(+), 13 deletions(-)
+> Le 14/04/2020 à 20:34, Jason Gunthorpe a écrit :
+> > On Sat, Mar 28, 2020 at 08:30:40AM +0100, Christophe JAILLET wrote:
+> > > There is an off-by-one issue when checking if there is enough space in the
+> > > output buffer, because we must keep some place for a final '\0'.
+> > > 
+> > > While at it:
+> > >     - Use 'scnprintf' instead of 'snprintf' in order to avoid a superfluous
+> > >      'strlen'
+> > >     - avoid some useless initializations
+> > >     - avoida hard coded buffer size that can be computed at built time.
+> > > 
+> > > Fixes: a51f06e1679e ("RDMA/ocrdma: Query controller information")
+> > > Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+> > > The '\0' comes from memset(..., 0, ...) in all callers.
+> > > This could be also avoided if needed.
+> > >   drivers/infiniband/hw/ocrdma/ocrdma_stats.c | 9 ++++-----
+> > >   1 file changed, 4 insertions(+), 5 deletions(-)
+> > > 
+> > > diff --git a/drivers/infiniband/hw/ocrdma/ocrdma_stats.c b/drivers/infiniband/hw/ocrdma/ocrdma_stats.c
+> > > index 5f831e3bdbad..614a449e6b87 100644
+> > > +++ b/drivers/infiniband/hw/ocrdma/ocrdma_stats.c
+> > > @@ -49,13 +49,12 @@ static struct dentry *ocrdma_dbgfs_dir;
+> > >   static int ocrdma_add_stat(char *start, char *pcur,
+> > >   				char *name, u64 count)
+> > >   {
+> > > -	char buff[128] = {0};
+> > > -	int cpy_len = 0;
+> > > +	char buff[128];
+> > > +	int cpy_len;
+> > > -	snprintf(buff, 128, "%s: %llu\n", name, count);
+> > > -	cpy_len = strlen(buff);
+> > > +	cpy_len = scnprintf(buff, sizeof(buff), "%s: %llu\n", name, count);
+> > > -	if (pcur + cpy_len > start + OCRDMA_MAX_DBGFS_MEM) {
+> > > +	if (pcur + cpy_len >= start + OCRDMA_MAX_DBGFS_MEM) {
+> > >   		pr_err("%s: No space in stats buff\n", __func__);
+> > >   		return 0;
+> > >   	}
+> > The memcpy is still kind of silly right? What about this:
+> > 
+> > static int ocrdma_add_stat(char *start, char *pcur, char *name, u64 count)
+> > {
+> > 	size_t len = (start + OCRDMA_MAX_DBGFS_MEM) - pcur;
+> > 	int cpy_len;
+> > 
+> > 	cpy_len = snprintf(pcur, len, "%s: %llu\n", name, count);
+> > 	if (cpy_len >= len || cpy_len < 0) {
+> > 		pr_err("%s: No space in stats buff\n", __func__);
+> > 		return 0;
+> > 	}
+> > 	return cpy_len;
+> > }
+> > 
+> > Jason
 > 
-> diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
-> index a5a0ceb86b3f..405c94f151a7 100644
-> --- a/drivers/remoteproc/remoteproc_core.c
-> +++ b/drivers/remoteproc/remoteproc_core.c
-> @@ -2056,12 +2056,6 @@ struct rproc *rproc_alloc(struct device *dev, const char *name,
->   	if (!rproc)
->   		return NULL;
->   
-> -	if (rproc_alloc_firmware(rproc, name, firmware))
-> -		goto free_rproc;
-> -
-> -	if (rproc_alloc_ops(rproc, ops))
-> -		goto free_firmware;
-> -
->   	rproc->name = name;
->   	rproc->priv = &rproc[1];
->   	rproc->auto_boot = true;
-> @@ -2074,12 +2068,17 @@ struct rproc *rproc_alloc(struct device *dev, const char *name,
->   	rproc->dev.driver_data = rproc;
->   	idr_init(&rproc->notifyids);
->   
-> +	if (rproc_alloc_firmware(rproc, name, firmware))
-> +		goto put_device;
-> +
-> +	if (rproc_alloc_ops(rproc, ops))
-> +		goto put_device;
-> +
->   	/* Assign a unique device index and name */
->   	rproc->index = ida_simple_get(&rproc_dev_index, 0, 0, GFP_KERNEL);
->   	if (rproc->index < 0) {
->   		dev_err(dev, "ida_simple_get failed: %d\n", rproc->index);
-> -		put_device(&rproc->dev);
-> -		return NULL;
-> +		goto put_device;
->   	}
->   
->   	dev_set_name(&rproc->dev, "remoteproc%d", rproc->index);
-> @@ -2100,11 +2099,8 @@ struct rproc *rproc_alloc(struct device *dev, const char *name,
->   	rproc->state = RPROC_OFFLINE;
->   
->   	return rproc;
-> -
-> -free_firmware:
-> -	kfree(rproc->firmware);
-> -free_rproc:
-> -	kfree(rproc);
-> +put_device:
-> +	put_device(&rproc->dev);
->   	return NULL;
->   }
->   EXPORT_SYMBOL(rproc_alloc);
-> 
+> It can looks useless, but I think that the goal was to make sure that we
+> would not display truncated data. Each line is either complete or absent.
 
+So it needsa *pcur = 0 in the error path?
+
+Jason
