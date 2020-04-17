@@ -2,373 +2,415 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.7 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C560EC2D0EF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 16:02:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0FD1C2D0EF
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 16:03:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 94300206B9
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 16:02:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MjL6mhUF"
+	by mail.kernel.org (Postfix) with ESMTP id A650720771
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 16:03:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729581AbgDQQCO (ORCPT
+        id S1729696AbgDQQDe convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 12:02:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49786 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726168AbgDQQCN (ORCPT
+        Fri, 17 Apr 2020 12:03:34 -0400
+Received: from mailoutvs55.siol.net ([185.57.226.246]:38517 "EHLO
+        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729310AbgDQQDe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 12:02:13 -0400
-Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A35EC061A0C
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 09:02:13 -0700 (PDT)
-Received: by mail-il1-x141.google.com with SMTP id e4so2612746ils.4
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 09:02:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Ow0Kc3IM7l1Pl3ygzeT9L0fTTZ4DxTMoAT1E2719uQ0=;
-        b=MjL6mhUFmzxZPCPPwZHrpqBTfExrGPFMKXuLWJNZjiqPGw1TaITDyuMVu5NYeW/byO
-         eSUdppSk7qLuYr9tTvaPYCbzyrUyG8fhffyDMvgC1x/BTSw9nYtXJTKyXWZ4/MOqkYmC
-         gApC+IhrUCpaD+sdi8wZObjkXi8wVbvWCV3cmPLqUsmhF82aG/30NdeirrRx88Rsrq4A
-         BFP3D0gZh9R83MKlnVnsFDH7vSQcohUfo7v4JI0u1139FxH1HxG+n/bBRaF4TsLw06P/
-         39dPOqtdZsy/sJQBQ/FbqgD+eCthGBz4KY+CmF3vgGTU7QJydz+BXB8DdZDHFVteWh8D
-         cjfg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Ow0Kc3IM7l1Pl3ygzeT9L0fTTZ4DxTMoAT1E2719uQ0=;
-        b=Ca7o4+kYbHPKJNFhYOT6wWrsC4/ztiL6XarIXgQDA8L4r19fBVL17Kdlepo9ZZbmFK
-         Z1NLBTzhEvZXeXuzPqmXgkXmxw1O11zHsHWA0Rg31fMCA/uOWVvGqWvSgJYp/r0CHp/n
-         LBKwCp4nG3ZyZcZgSWjCIeGrfJygxghGDQfbNb5q6Ayp7fHreUGi4z/+hKx8VRleFNlc
-         +KBqdlmFtEC17JYKvJxVNsDA6E9jIY7QewmaAjPdtpuaUnK1XLfjhGIpBZuEUA7uNgeB
-         P2sbodUB7NhVbcu1Dnjk3+yfSwfWY4mJmPsoV8namK0pgoZlFdy3d0xPDoC6sCxW9r8j
-         +HPw==
-X-Gm-Message-State: AGi0PuarxsQoK5HzhdLHMcZr57U3auunmSMpsVW7ZVfSsUj4RRClD9kU
-        sGZ+MXyOaf3qpOgkC9uLKC1BPZ9zZRpOhT+YrLC61w==
-X-Google-Smtp-Source: APiQypLLN6hpNPrciosxVWRfxqtxblYXJhb0mAZ+3XY79TIlLCuwTRGnOJcQga3hcnrDuAiwihy0ALVG1vK6DqTNjkE=
-X-Received: by 2002:a05:6e02:68a:: with SMTP id o10mr3808041ils.72.1587139332463;
- Fri, 17 Apr 2020 09:02:12 -0700 (PDT)
+        Fri, 17 Apr 2020 12:03:34 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.siol.net (Zimbra) with ESMTP id 85DC1524BF5;
+        Fri, 17 Apr 2020 18:03:30 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at psrvmta12.zcs-production.pri
+Received: from mail.siol.net ([127.0.0.1])
+        by localhost (psrvmta12.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id viEKrc35exMc; Fri, 17 Apr 2020 18:03:29 +0200 (CEST)
+Received: from mail.siol.net (localhost [127.0.0.1])
+        by mail.siol.net (Zimbra) with ESMTPS id B7CED524BF2;
+        Fri, 17 Apr 2020 18:03:29 +0200 (CEST)
+Received: from jernej-laptop.localnet (cpe-194-152-20-232.static.triera.net [194.152.20.232])
+        (Authenticated sender: jernej.skrabec@siol.net)
+        by mail.siol.net (Zimbra) with ESMTPA id ECF8E524BF5;
+        Fri, 17 Apr 2020 18:03:28 +0200 (CEST)
+From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@siol.net>
+To:     robh+dt@kernel.org, andrew@lunn.ch, f.fainelli@gmail.com,
+        Heiner Kallweit <hkallweit1@gmail.com>
+Cc:     mripard@kernel.org, wens@csie.org, lee.jones@linaro.org,
+        linux@armlinux.org.uk, davem@davemloft.net,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Subject: Re: [RFC PATCH 2/4] net: phy: Add support for AC200 EPHY
+Date:   Fri, 17 Apr 2020 18:03:28 +0200
+Message-ID: <3035405.oiGErgHkdL@jernej-laptop>
+In-Reply-To: <0340f85c-987f-900b-53c8-d29b4672a8fa@gmail.com>
+References: <20200416185758.1388148-1-jernej.skrabec@siol.net> <20200416185758.1388148-3-jernej.skrabec@siol.net> <0340f85c-987f-900b-53c8-d29b4672a8fa@gmail.com>
 MIME-Version: 1.0
-References: <20200304142628.8471-1-NShubin@topcon.com> <20200406113310.3041-1-nikita.shubin@maquefel.me>
- <20200406113310.3041-3-nikita.shubin@maquefel.me> <20200414172004.GB24061@xps15>
- <20200417113747.00007cfb@maquefel.me>
-In-Reply-To: <20200417113747.00007cfb@maquefel.me>
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-Date:   Fri, 17 Apr 2020 10:02:01 -0600
-Message-ID: <CANLsYkwun87oVw5ZG_g0niq7Yns5+xWJEVb72FwP=d3PruXCcQ@mail.gmail.com>
-Subject: Re: [PATCH v2 2/3] remoteproc: imx_rproc: mailbox support
-To:     Nikita Shubin <nikita.shubin@maquefel.me>
-Cc:     Nikita Shubin <NShubin@topcon.com>,
-        Ohad Ben-Cohen <ohad@wizery.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        linux-remoteproc <linux-remoteproc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Transfer-Encoding: 8BIT
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 17 Apr 2020 at 02:38, Nikita Shubin <nikita.shubin@maquefel.me> wrote:
->
-> On Tue, 14 Apr 2020 11:20:05 -0600
-> Mathieu Poirier <mathieu.poirier@linaro.org> wrote:
->
-> > On Mon, Apr 06, 2020 at 02:33:09PM +0300, nikita.shubin@maquefel.me
-> > wrote:
-> > > Add support for mailboxes to imx_rproc
-> > >
-> > > Signed-off-by: Nikita Shubin <NShubin@topcon.com>
-> > > ---
-> > >  drivers/remoteproc/Kconfig     |   2 +
-> > >  drivers/remoteproc/imx_rproc.c | 142
-> > > ++++++++++++++++++++++++++++++++- 2 files changed, 143
-> > > insertions(+), 1 deletion(-)
-> > >
-> > > diff --git a/drivers/remoteproc/Kconfig b/drivers/remoteproc/Kconfig
-> > > index 94afdde4bc9f..02d23a54c9cf 100644
-> > > --- a/drivers/remoteproc/Kconfig
-> > > +++ b/drivers/remoteproc/Kconfig
-> > > @@ -17,6 +17,8 @@ if REMOTEPROC
-> > >  config IMX_REMOTEPROC
-> > >     tristate "IMX6/7 remoteproc support"
-> > >     depends on ARCH_MXC
-> > > +   select MAILBOX
-> > > +   select IMX_MBOX
-> > >     help
-> > >       Say y here to support iMX's remote processors (Cortex M4
-> > >       on iMX7D) via the remote processor framework.
-> > > diff --git a/drivers/remoteproc/imx_rproc.c
-> > > b/drivers/remoteproc/imx_rproc.c index bebc58d0f711..d2bede4ccb70
-> > > 100644 --- a/drivers/remoteproc/imx_rproc.c
-> > > +++ b/drivers/remoteproc/imx_rproc.c
-> > > @@ -14,6 +14,9 @@
-> > >  #include <linux/platform_device.h>
-> > >  #include <linux/regmap.h>
-> > >  #include <linux/remoteproc.h>
-> > > +#include <linux/mailbox_client.h>
-> > > +
-> > > +#include "remoteproc_internal.h"
-> > >
-> > >  #define IMX7D_SRC_SCR                      0x0C
-> > >  #define IMX7D_ENABLE_M4                    BIT(3)
-> > > @@ -47,6 +50,12 @@
-> > >
-> > >  #define IMX_BOOT_PC                        0x4
-> > >
-> > > +#define IMX_MBOX_NB_VQ                     2
-> > > +#define IMX_MBOX_NB_MBX            2
-> >
-> > Please align this.
-> >
-> > > +
-> > > +#define IMX_MBX_VQ0                "vq0"
-> > > +#define IMX_MBX_VQ1                "vq1"
-> > > +
-> > >  /**
-> > >   * struct imx_rproc_mem - slim internal memory structure
-> > >   * @cpu_addr: MPU virtual address of the memory region
-> > > @@ -80,6 +89,14 @@ struct imx_rproc_dcfg {
-> > >     size_t                          att_size;
-> > >  };
-> > >
-> > > +struct imx_mbox {
-> > > +   const unsigned char name[10];
-> > > +   struct mbox_chan *chan;
-> > > +   struct mbox_client client;
-> > > +   struct work_struct vq_work;
-> > > +   int vq_id;
-> > > +};
-> > > +
-> > >  struct imx_rproc {
-> > >     struct device                   *dev;
-> > >     struct regmap                   *regmap;
-> > > @@ -88,6 +105,8 @@ struct imx_rproc {
-> > >     struct imx_rproc_mem
-> > > mem[IMX7D_RPROC_MEM_MAX]; struct clk                        *clk;
-> > >     void __iomem                    *bootreg;
-> > > +   struct imx_mbox mb[IMX_MBOX_NB_MBX];
-> > > +   struct workqueue_struct *workqueue;
-> > >  };
-> > >
-> > >  static const struct imx_rproc_att imx_rproc_att_imx7d[] = {
-> > > @@ -251,10 +270,118 @@ static void *imx_rproc_da_to_va(struct rproc
-> > > *rproc, u64 da, int len) return va;
-> > >  }
-> > >
-> > > +static void imx_rproc_mb_vq_work(struct work_struct *work)
-> > > +{
-> > > +   struct imx_mbox *mb = container_of(work, struct imx_mbox,
-> > > vq_work);
-> > > +   struct rproc *rproc = dev_get_drvdata(mb->client.dev);
-> > > +
-> > > +   if (rproc_vq_interrupt(rproc, mb->vq_id) == IRQ_NONE)
-> > > +           dev_dbg(&rproc->dev, "no message found in vq%d\n",
-> > > mb->vq_id); +}
-> > > +
-> > > +static void imx_rproc_mb_callback(struct mbox_client *cl, void
-> > > *data) +{
-> > > +   struct rproc *rproc = dev_get_drvdata(cl->dev);
-> > > +   struct imx_mbox *mb = container_of(cl, struct imx_mbox,
-> > > client);
-> > > +   struct imx_rproc *ddata = rproc->priv;
-> > > +
-> > > +   queue_work(ddata->workqueue, &mb->vq_work);
-> > > +}
-> > > +
-> > > +static const struct imx_mbox imx_rproc_mbox[IMX_MBOX_NB_MBX] = {
-> > > +   {
-> > > +           .name = IMX_MBX_VQ0,
-> > > +           .vq_id = 0,
-> > > +           .client = {
-> > > +                   .rx_callback = imx_rproc_mb_callback,
-> > > +                   .tx_block = false,
-> > > +           },
-> > > +   },
-> > > +   {
-> > > +           .name = IMX_MBX_VQ1,
-> > > +           .vq_id = 1,
-> > > +           .client = {
-> > > +                   .rx_callback = imx_rproc_mb_callback,
-> > > +                   .tx_block = false,
-> > > +           },
-> > > +   },
-> > > +};
-> > > +
-> > > +static void imx_rproc_request_mbox(struct rproc *rproc)
-> > > +{
-> > > +   struct imx_rproc *ddata = rproc->priv;
-> > > +   struct device *dev = &rproc->dev;
-> > > +   unsigned int i;
-> > > +   const unsigned char *name;
-> > > +   struct mbox_client *cl;
-> > > +
-> > > +   /* Initialise mailbox structure table */
-> > > +   memcpy(ddata->mb, imx_rproc_mbox, sizeof(imx_rproc_mbox));
-> > > +
-> > > +   for (i = 0; i < IMX_MBOX_NB_MBX; i++) {
-> > > +           name = ddata->mb[i].name;
-> > > +
-> > > +           cl = &ddata->mb[i].client;
-> > > +           cl->dev = dev->parent;
-> > > +
-> > > +           ddata->mb[i].chan =
-> > > mbox_request_channel_byname(cl, name); +
-> > > +           dev_dbg(dev, "%s: name=%s, idx=%u\n",
-> > > +                   __func__, name, ddata->mb[i].vq_id);
-> > > +
-> > > +           if (IS_ERR(ddata->mb[i].chan)) {
-> > > +                   dev_warn(dev, "cannot get %s mbox\n",
-> > > name);
-> > > +                   ddata->mb[i].chan = NULL;
-> >
-> > If the mailbox isn't ready this driver will fail without a chance of
-> > recovery. Since most of the code in this patch is a carbon copy of
-> > the implementation found in stm32_proc.c, I suggest you do the same
-> > as they did in stm32_rproc_request_mbox() and privision for cases
-> > where requesting a channel returns -EPROBE_DEFER.
-> >
->
-> Noted, will be fixed.
->
-> > > +           }
-> > > +
-> > > +           if (ddata->mb[i].vq_id >= 0)
-> > > +                   INIT_WORK(&ddata->mb[i].vq_work,
-> > > imx_rproc_mb_vq_work);
-> > > +   }
-> > > +}
-> > > +
-> > > +static void imx_rproc_free_mbox(struct rproc *rproc)
-> > > +{
-> > > +   struct imx_rproc *ddata = rproc->priv;
-> > > +   unsigned int i;
-> > > +
-> > > +   dev_dbg(&rproc->dev, "%s: %d boxes\n",
-> > > +           __func__, ARRAY_SIZE(ddata->mb));
-> > > +
-> > > +   for (i = 0; i < ARRAY_SIZE(ddata->mb); i++) {
-> > > +           if (ddata->mb[i].chan)
-> > > +                   mbox_free_channel(ddata->mb[i].chan);
-> > > +           ddata->mb[i].chan = NULL;
-> > > +   }
-> > > +}
-> > > +
-> > > +static void imx_rproc_kick(struct rproc *rproc, int vqid)
-> > > +{
-> > > +   struct imx_rproc *ddata = rproc->priv;
-> > > +   unsigned int i;
-> > > +   int err;
-> > > +
-> > > +   if (WARN_ON(vqid >= IMX_MBOX_NB_VQ))
-> > > +           return;
-> > > +
-> > > +   for (i = 0; i < IMX_MBOX_NB_MBX; i++) {
-> > > +           if (vqid != ddata->mb[i].vq_id)
-> > > +                   continue;
-> > > +           if (!ddata->mb[i].chan)
-> > > +                   return;
-> > > +           dev_dbg(&rproc->dev, "sending message : vqid =
-> > > %d\n", vqid);
-> > > +           err = mbox_send_message(ddata->mb[i].chan, &vqid);
-> > > +           if (err < 0)
-> > > +                   dev_err(&rproc->dev, "%s: failed (%s,
-> > > err:%d)\n",
-> > > +                                   __func__,
-> > > ddata->mb[i].name, err);
-> > > +                   return;
-> > > +   }
-> > > +}
-> > > +
-> > >  static const struct rproc_ops imx_rproc_ops = {
-> > >     .start          = imx_rproc_start,
-> > >     .stop           = imx_rproc_stop,
-> > >     .da_to_va       = imx_rproc_da_to_va,
-> > > +   .kick           = imx_rproc_kick,
-> > >     .get_boot_addr  = rproc_elf_get_boot_addr,
-> > >  };
-> > >
-> > > @@ -384,14 +511,26 @@ static int imx_rproc_probe(struct
-> > > platform_device *pdev) goto err_put_rproc;
-> > >     }
-> > >
-> > > +   priv->workqueue = create_workqueue(dev_name(dev));
-> > > +   if (!priv->workqueue) {
-> > > +           dev_err(dev, "cannot create workqueue\n");
-> > > +           ret = -ENOMEM;
-> > > +           goto err_put_clk;
-> > > +   }
-> > > +
-> > > +   imx_rproc_request_mbox(rproc);
-> > > +
-> > >     ret = rproc_add(rproc);
-> > >     if (ret) {
-> > >             dev_err(dev, "rproc_add failed\n");
-> > > -           goto err_put_clk;
-> > > +           goto err_free_mb;
-> > >     }
-> > >
-> > >     return 0;
-> > >
-> > > +err_free_mb:
-> > > +   imx_rproc_free_mbox(rproc);
-> > > +   destroy_workqueue(priv->workqueue);
-> > >  err_put_clk:
-> > >     clk_disable_unprepare(priv->clk);
-> > >  err_put_rproc:
-> > > @@ -407,6 +546,7 @@ static int imx_rproc_remove(struct
-> > > platform_device *pdev)
-> > >     clk_disable_unprepare(priv->clk);
-> > >     rproc_del(rproc);
-> > > +   imx_rproc_free_mbox(rproc);
-> >
-> > I have no issues with people reusing code already found in the kernel
-> > - in fact I encourage it because it makes reviewing patches much
-> > easier.  On the flip side you have to give credit where it is due.
-> > Here adding a line in the changelog that mentions where you took your
-> > inspiration from will be much appreciated.
->
-> Please don't blame on things i never did citing my own self from 0/0:
+Dne četrtek, 16. april 2020 ob 22:18:52 CEST je Heiner Kallweit napisal(a):
+> On 16.04.2020 20:57, Jernej Skrabec wrote:
+> > AC200 MFD IC supports Fast Ethernet PHY. Add a driver for it.
+> > 
+> > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> > ---
+> > 
+> >  drivers/net/phy/Kconfig  |   7 ++
+> >  drivers/net/phy/Makefile |   1 +
+> >  drivers/net/phy/ac200.c  | 206 +++++++++++++++++++++++++++++++++++++++
+> >  3 files changed, 214 insertions(+)
+> >  create mode 100644 drivers/net/phy/ac200.c
+> > 
+> > diff --git a/drivers/net/phy/Kconfig b/drivers/net/phy/Kconfig
+> > index 3fa33d27eeba..16af69f69eaf 100644
+> > --- a/drivers/net/phy/Kconfig
+> > +++ b/drivers/net/phy/Kconfig
+> > @@ -288,6 +288,13 @@ config ADIN_PHY
+> > 
+> >  	  - ADIN1300 - Robust,Industrial, Low Latency 10/100/1000 Gigabit
+> >  	  
+> >  	    Ethernet PHY
+> > 
+> > +config AC200_PHY
+> > +	tristate "AC200 EPHY"
+> > +	depends on NVMEM
+> > +	depends on OF
+> > +	help
+> > +	  Fast ethernet PHY as found in X-Powers AC200 multi-function 
+device.
+> > +
+> > 
+> >  config AMD_PHY
+> >  
+> >  	tristate "AMD PHYs"
+> >  	---help---
+> > 
+> > diff --git a/drivers/net/phy/Makefile b/drivers/net/phy/Makefile
+> > index 2f5c7093a65b..b0c5b91900fa 100644
+> > --- a/drivers/net/phy/Makefile
+> > +++ b/drivers/net/phy/Makefile
+> > @@ -53,6 +53,7 @@ obj-$(CONFIG_SFP)		+= sfp.o
+> > 
+> >  sfp-obj-$(CONFIG_SFP)		+= sfp-bus.o
+> >  obj-y				+= $(sfp-obj-y) $(sfp-obj-m)
+> > 
+> > +obj-$(CONFIG_AC200_PHY)		+= ac200.o
+> > 
+> >  obj-$(CONFIG_ADIN_PHY)		+= adin.o
+> >  obj-$(CONFIG_AMD_PHY)		+= amd.o
+> >  aquantia-objs			+= aquantia_main.o
+> > 
+> > diff --git a/drivers/net/phy/ac200.c b/drivers/net/phy/ac200.c
+> > new file mode 100644
+> > index 000000000000..3d7856ff8f91
+> > --- /dev/null
+> > +++ b/drivers/net/phy/ac200.c
+> > @@ -0,0 +1,206 @@
+> > +// SPDX-License-Identifier: GPL-2.0+
+> > +/**
+> > + * Driver for AC200 Ethernet PHY
+> > + *
+> > + * Copyright (c) 2020 Jernej Skrabec <jernej.skrabec@siol.net>
+> > + */
+> > +
+> > +#include <linux/kernel.h>
+> > +#include <linux/module.h>
+> > +#include <linux/mfd/ac200.h>
+> > +#include <linux/nvmem-consumer.h>
+> > +#include <linux/of.h>
+> > +#include <linux/phy.h>
+> > +#include <linux/platform_device.h>
+> > +
+> > +#define AC200_EPHY_ID			0x00441400
+> > +#define AC200_EPHY_ID_MASK		0x0ffffff0
+> > +
+> 
+> You could use PHY_ID_MATCH_MODEL() here.
 
-I am not blaming you at all.
+Ok.
 
->
-> | Regarding mailboxes and memory regions :
->
-> | This code is heavily derived from stm32-rproc (i.e. copy pasted) and
-> | this fact needs to reflected in commits, please tell me how to
-> | emphasize this fact.
->
-> I am eager to give credits.
+> 
+> > +/* macros for system ephy control 0 register */
+> > +#define AC200_EPHY_RESET_INVALID	BIT(0)
+> > +#define AC200_EPHY_SYSCLK_GATING	BIT(1)
+> > +
+> > +/* macros for system ephy control 1 register */
+> > +#define AC200_EPHY_E_EPHY_MII_IO_EN	BIT(0)
+> > +#define AC200_EPHY_E_LNK_LED_IO_EN	BIT(1)
+> > +#define AC200_EPHY_E_SPD_LED_IO_EN	BIT(2)
+> > +#define AC200_EPHY_E_DPX_LED_IO_EN	BIT(3)
+> > +
+> > +/* macros for ephy control register */
+> > +#define AC200_EPHY_SHUTDOWN		BIT(0)
+> > +#define AC200_EPHY_LED_POL		BIT(1)
+> > +#define AC200_EPHY_CLK_SEL		BIT(2)
+> > +#define AC200_EPHY_ADDR(x)		(((x) & 0x1F) << 4)
+> > +#define AC200_EPHY_XMII_SEL		BIT(11)
+> > +#define AC200_EPHY_CALIB(x)		(((x) & 0xF) << 12)
+> > +
+> > +struct ac200_ephy_dev {
+> > +	struct phy_driver	*ephy;
+> 
+> Why embedding a pointer and not a struct phy_driver directly?
+> Then you could omit the separate allocation.
 
-I didn't notice that in the original cover letter.  In the changelog,
-between the description of the work and the signed-off-by and on a
-line on its own, simply write that "the work is inspired from the
-STM32 platform driver (drivers/remoteproc/stm32_rproc.c)".
+Right.
 
->
->
-> >
-> > Thanks,
-> > Mathieu
-> >
-> > >     rproc_free(rproc);
-> > >
-> > >     return 0;
-> > > --
-> > > 2.25.1
-> > >
->
+> 
+> ephy is not the best naming. It may be read as a phy_device.
+> Better use phydrv.
+
+Ok.
+
+> 
+> > +	struct regmap		*regmap;
+> > +};
+> > +
+> > +static char *ac200_phy_name = "AC200 EPHY";
+> > +
+> 
+> Why not using the name directly in the assignment?
+
+phy_driver->name is pointer. Wouldn't that mean that string is allocated on 
+stack and next time pointer is used, it will return garbage?
+
+> And better naming: "AC200 Fast Ethernet"
+
+Ok.
+
+> 
+> > +static int ac200_ephy_config_init(struct phy_device *phydev)
+> > +{
+> > +	const struct ac200_ephy_dev *priv = phydev->drv->driver_data;
+> > +	unsigned int value;
+> > +	int ret;
+> > +
+> > +	phy_write(phydev, 0x1f, 0x0100);	/* Switch to Page 1 */
+> > +	phy_write(phydev, 0x12, 0x4824);	/* Disable APS */
+> > +
+> > +	phy_write(phydev, 0x1f, 0x0200);	/* Switch to Page 2 */
+> > +	phy_write(phydev, 0x18, 0x0000);	/* PHYAFE TRX optimization */
+> > +
+> > +	phy_write(phydev, 0x1f, 0x0600);	/* Switch to Page 6 */
+> > +	phy_write(phydev, 0x14, 0x708f);	/* PHYAFE TX optimization */
+> > +	phy_write(phydev, 0x13, 0xF000);	/* PHYAFE RX optimization */
+> > +	phy_write(phydev, 0x15, 0x1530);
+> > +
+> > +	phy_write(phydev, 0x1f, 0x0800);	/* Switch to Page 6 */
+> > +	phy_write(phydev, 0x18, 0x00bc);	/* PHYAFE TRX optimization */
+> > +
+> > +	phy_write(phydev, 0x1f, 0x0100);	/* switch to page 1 */
+> > +	phy_clear_bits(phydev, 0x17, BIT(3));	/* disable intelligent 
+IEEE */
+> > +
+> > +	/* next two blocks disable 802.3az IEEE */
+> > +	phy_write(phydev, 0x1f, 0x0200);	/* switch to page 2 */
+> > +	phy_write(phydev, 0x18, 0x0000);
+> > +
+> > +	phy_write(phydev, 0x1f, 0x0000);	/* switch to page 0 */
+> > +	phy_clear_bits_mmd(phydev, 0x7, 0x3c, BIT(1));
+> 
+> Better use the following:
+> phy_write_mmd(phydev, MDIO_MMD_AN, MDIO_AN_EEE_ADV, 0x0000);
+> It makes clear that you disable advertising EEE completely.
+
+Ok.
+
+> 
+> > +
+> > +	if (phydev->interface == PHY_INTERFACE_MODE_RMII)
+> > +		value = AC200_EPHY_XMII_SEL;
+> > +	else
+> > +		value = 0;
+> > +
+> > +	ret = regmap_update_bits(priv->regmap, AC200_EPHY_CTL,
+> > +				 AC200_EPHY_XMII_SEL, value);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> 
+> I had a brief look at the spec, and it's not fully clear
+> to me what this register setting does. Does it affect the
+> MAC side and/or the PHY side?
+
+It's my understanding that it selects interface mode on PHY. Besides datasheet 
+mentioned in cover letter, BSP drivers (one for MFD and one for PHY) are the 
+only other source of information. BSP PHY driver is located here:
+https://github.com/Allwinner-Homlet/H6-BSP4.9-linux/blob/master/drivers/net/
+phy/sunxi-ephy.c
+
+> If it affects the PHY side, then I'd expect that the chip
+> has to talk to the PHY via the MDIO bus. Means there should
+> be a PHY register for setting MII vs. RMII.
+> In this case the setup could be very much simplified.
+> Then the PHY driver wouldn't have to be embedded in the
+> platform driver.
+
+Actually, PHY has to be configured first through I2C and then through MDIO. I2C 
+is used to enable it (power it up), configure LED polarity, set PHY address, 
+write calibration value stored elsewhere.
+
+Based on all available documentation I have (code and datasheet), this I2C 
+register is the only way to select MII or RMII mode.
+
+> 
+> > +	/* FIXME: This is H6 specific */
+> > +	phy_set_bits(phydev, 0x13, BIT(12));
+> > +
+> 
+> This seems to indicate that the same PHY is used in a slightly
+> different version with other Hx models. Do they use different
+> PHY ID's?
+
+Situation is a bit complicated. Same PHY, at least with same PHY ID, is used 
+in different ways.
+1. as part of standalone AC200 MFD IC
+2. as part of AC200 wafer copackaged with H6 SoC wafer in same package. This 
+in theory shouldn't be any different than standalone IC, but it apparently is, 
+based on the BSP driver code.
+3. integrated directly in SoCs like H3, H5 and V3s. There is no I2C access to 
+configuration register. Instead, it's memory mapped and slightly different.
+
+In all cases PHY ID is same, just glue logic is different.
+
+I asked Allwinner if above setting is really necessary for H6 and what it 
+does, but I didn't get any useful answer back.
+
+So maybe another compatible is needed for H6.
+
+Best regards,
+Jernej
+
+> 
+> > +	return 0;
+> > +}
+> > +
+> > +static int ac200_ephy_probe(struct platform_device *pdev)
+> > +{
+> > +	struct ac200_dev *ac200 = dev_get_drvdata(pdev->dev.parent);
+> > +	struct device *dev = &pdev->dev;
+> > +	struct ac200_ephy_dev *priv;
+> > +	struct nvmem_cell *calcell;
+> > +	struct phy_driver *ephy;
+> > +	u16 *caldata, calib;
+> > +	size_t callen;
+> > +	int ret;
+> > +
+> > +	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+> > +	if (!priv)
+> > +		return -ENOMEM;
+> > +
+> > +	ephy = devm_kzalloc(dev, sizeof(*ephy), GFP_KERNEL);
+> > +	if (!ephy)
+> > +		return -ENOMEM;
+> > +
+> > +	calcell = devm_nvmem_cell_get(dev, "calibration");
+> > +	if (IS_ERR(calcell)) {
+> > +		dev_err(dev, "Unable to find calibration data!\n");
+> > +		return PTR_ERR(calcell);
+> > +	}
+> > +
+> > +	caldata = nvmem_cell_read(calcell, &callen);
+> > +	if (IS_ERR(caldata)) {
+> > +		dev_err(dev, "Unable to read calibration data!\n");
+> > +		return PTR_ERR(caldata);
+> > +	}
+> > +
+> > +	if (callen != 2) {
+> > +		dev_err(dev, "Calibration data has wrong length: 2 != 
+%zu\n",
+> > +			callen);
+> > +		kfree(caldata);
+> > +		return -EINVAL;
+> > +	}
+> > +
+> > +	calib = *caldata + 3;
+> > +	kfree(caldata);
+> > +
+> > +	ephy->phy_id = AC200_EPHY_ID;
+> > +	ephy->phy_id_mask = AC200_EPHY_ID_MASK;
+> > +	ephy->name = ac200_phy_name;
+> > +	ephy->driver_data = priv;
+> > +	ephy->soft_reset = genphy_soft_reset;
+> > +	ephy->config_init = ac200_ephy_config_init;
+> > +	ephy->suspend = genphy_suspend;
+> > +	ephy->resume = genphy_resume;
+> > +
+> > +	priv->ephy = ephy;
+> > +	priv->regmap = ac200->regmap;
+> > +	platform_set_drvdata(pdev, priv);
+> > +
+> > +	ret = regmap_write(ac200->regmap, AC200_SYS_EPHY_CTL0,
+> > +			   AC200_EPHY_RESET_INVALID |
+> > +			   AC200_EPHY_SYSCLK_GATING);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	ret = regmap_write(ac200->regmap, AC200_SYS_EPHY_CTL1,
+> > +			   AC200_EPHY_E_EPHY_MII_IO_EN |
+> > +			   AC200_EPHY_E_LNK_LED_IO_EN |
+> > +			   AC200_EPHY_E_SPD_LED_IO_EN |
+> > +			   AC200_EPHY_E_DPX_LED_IO_EN);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	ret = regmap_write(ac200->regmap, AC200_EPHY_CTL,
+> > +			   AC200_EPHY_LED_POL |
+> > +			   AC200_EPHY_CLK_SEL |
+> > +			   AC200_EPHY_ADDR(1) |
+> > +			   AC200_EPHY_CALIB(calib));
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	ret = phy_driver_register(priv->ephy, THIS_MODULE);
+> > +	if (ret) {
+> > +		dev_err(dev, "Unable to register phy\n");
+> > +		return ret;
+> > +	}
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static int ac200_ephy_remove(struct platform_device *pdev)
+> > +{
+> > +	struct ac200_ephy_dev *priv = platform_get_drvdata(pdev);
+> > +
+> > +	phy_driver_unregister(priv->ephy);
+> > +
+> > +	regmap_write(priv->regmap, AC200_EPHY_CTL, AC200_EPHY_SHUTDOWN);
+> > +	regmap_write(priv->regmap, AC200_SYS_EPHY_CTL1, 0);
+> > +	regmap_write(priv->regmap, AC200_SYS_EPHY_CTL0, 0);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static const struct of_device_id ac200_ephy_match[] = {
+> > +	{ .compatible = "x-powers,ac200-ephy" },
+> > +	{ /* sentinel */ }
+> > +};
+> > +MODULE_DEVICE_TABLE(of, ac200_ephy_match);
+> > +
+> > +static struct platform_driver ac200_ephy_driver = {
+> > +	.probe		= ac200_ephy_probe,
+> > +	.remove		= ac200_ephy_remove,
+> > +	.driver		= {
+> > +		.name		= "ac200-ephy",
+> > +		.of_match_table	= ac200_ephy_match,
+> > +	},
+> > +};
+> > +module_platform_driver(ac200_ephy_driver);
+> > +
+> > +MODULE_AUTHOR("Jernej Skrabec <jernej.skrabec@siol.net>");
+> > +MODULE_DESCRIPTION("AC200 Ethernet PHY driver");
+> > +MODULE_LICENSE("GPL");
+
+
+
+
