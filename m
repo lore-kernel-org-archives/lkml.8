@@ -2,115 +2,114 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D695C352BE
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81850C2D0EF
 	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 14:05:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3F4ED21D6C
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 14:05:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8860E21973
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 14:05:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gh5UVTH0"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="mpbUlOrN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730933AbgDQOFN (ORCPT
+        id S1730925AbgDQOFN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Fri, 17 Apr 2020 10:05:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59628 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730865AbgDQOE6 (ORCPT
+Received: from mail27.static.mailgun.info ([104.130.122.27]:43151 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730774AbgDQOFL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 10:04:58 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21273C061A0C;
-        Fri, 17 Apr 2020 07:04:58 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id k21so2174013ljh.2;
-        Fri, 17 Apr 2020 07:04:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=MvB7E+fkHBWgxJAx2lFY2q5a2NQT0tGN1gYVdKIfgks=;
-        b=Gh5UVTH061Dw7U8EczAHCOJ8b8h8MCrVJ2gX6r0m0HkdPnkma27G30r4eD+/2ORR9Z
-         CcsAhwutLzqMFkA+H83jOhF3FEsbTaUQK/ZY+urTo3efKEIAHGZbBjO73oFOWBMY2ZBv
-         Qk50KSMfQdcwdCclem4MqzYJ+SLdVNJwlDsy2k6kQC24cEPCCw2qLad3GcJQXEWG9RBD
-         t30WY+EYMUKGsAj0wOEKeKjVU7CdgDyXkHKYHto8KaubXzvSgqkteeIW1Zjs/C47T2PV
-         M0iXTmbku/V8nbLD2ZO+ZKbD5KljCI3VowxLjlvWEM3u0QUuA5vpHJ2GJRdU8fIvtda7
-         5OKQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=MvB7E+fkHBWgxJAx2lFY2q5a2NQT0tGN1gYVdKIfgks=;
-        b=rqFFjQWYR0MqF7lOK8nGqPqR4OX4g5+x51SI4xVKRDgXeqdXArVrgiDuYH9MIysqCz
-         2qGeNmMKRxqs1QilCatVExejv4M0LfBXzf3rVNgag7pbLjBMSQEYAf3lUVX/H9IS/9r7
-         M6EuAr0Y8UjEOk3sksZU7J+CQomihDsUIZRYoYQbNLMdx50gsxNczPfOce+vzqGM0syc
-         ei8lDv8Hwzk1qCx0hxEkSzkhkqTeMS5/cq0P616ItX1pa4UeOCIMF6/jTtTIr5ad6dKG
-         pYwqmxhxra1sxp3YJX/tLTQUEgebZlhsQVjxaoditDWAoxnxSthFWUHd7su5F/FCjj/R
-         sMKw==
-X-Gm-Message-State: AGi0Pua2BxneylezUWzoahIIXWZPh4T7tguvS7UwiIIwy3axlZ9WzPVM
-        NNkrLbBQ/pLLik9D2/CHAf1VKtUR
-X-Google-Smtp-Source: APiQypLmN2ntcwfQEPno8AODZXXC7nUvrT6i9PGmxYkRjyMWjXCDbqAk7plyEVOWui5/rYOR1fLt0Q==
-X-Received: by 2002:a2e:953:: with SMTP id 80mr2269187ljj.276.1587132296192;
-        Fri, 17 Apr 2020 07:04:56 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
-        by smtp.googlemail.com with ESMTPSA id t19sm17816956lfl.53.2020.04.17.07.04.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 17 Apr 2020 07:04:55 -0700 (PDT)
-Subject: Re: [PATCH RE-SEND v1] PM / devfreq: Replace strncpy with strscpy
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200227170854.9949-1-digetx@gmail.com>
-Message-ID: <09712864-01a5-e2f9-b55f-e822169d30fc@gmail.com>
-Date:   Fri, 17 Apr 2020 17:04:54 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-MIME-Version: 1.0
-In-Reply-To: <20200227170854.9949-1-digetx@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Fri, 17 Apr 2020 10:05:11 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1587132311; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=jOasTJk8TBKsg8tFnzipV3s1efilzTH1QAd2yaXELsc=; b=mpbUlOrNu1RARtYzEBFQFpw+W75PQH1WFzTPsBcjOjPML79CAoO/SoRtQbtz4rqa/b1DLn/V
+ +C3mP7I8GpH9McRqBFxxKzpvjzTg3QkaHUYSLzV0xeyxrqAKiTJqo1mYG034xzcfsHQZd26k
+ rIG+4/jc2Nyu0SBXSxDEtSHdtcA=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e99b795.7f3ea85c0c38-smtp-out-n04;
+ Fri, 17 Apr 2020 14:05:09 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id B2AEAC44799; Fri, 17 Apr 2020 14:05:08 +0000 (UTC)
+Received: from blr-ubuntu-173.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: rnayak)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id EE401C4478C;
+        Fri, 17 Apr 2020 14:05:02 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org EE401C4478C
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
+From:   Rajendra Nayak <rnayak@codeaurora.org>
+To:     viresh.kumar@linaro.org, sboyd@kernel.org,
+        bjorn.andersson@linaro.org, agross@kernel.org
+Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mka@chromium.org,
+        Rajendra Nayak <rnayak@codeaurora.org>
+Subject: [PATCH v2 00/17] DVFS for IO devices on sdm845 and sc7180
+Date:   Fri, 17 Apr 2020 19:34:22 +0530
+Message-Id: <1587132279-27659-1-git-send-email-rnayak@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-27.02.2020 20:08, Dmitry Osipenko пишет:
-> GCC produces this warning when kernel compiled using `make W=1`:
-> 
->   warning: ‘strncpy’ specified bound 16 equals destination size [-Wstringop-truncation]
->   772 |  strncpy(devfreq->governor_name, governor_name, DEVFREQ_NAME_LEN);
-> 
-> The strncpy doesn't take care of NULL-termination of the destination
-> buffer, while the strscpy does.
-> 
-> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-> ---
->  drivers/devfreq/devfreq.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
-> index 8494c5f05a73..2011f64bfa3a 100644
-> --- a/drivers/devfreq/devfreq.c
-> +++ b/drivers/devfreq/devfreq.c
-> @@ -769,7 +769,7 @@ struct devfreq *devfreq_add_device(struct device *dev,
->  	devfreq->dev.release = devfreq_dev_release;
->  	INIT_LIST_HEAD(&devfreq->node);
->  	devfreq->profile = profile;
-> -	strncpy(devfreq->governor_name, governor_name, DEVFREQ_NAME_LEN);
-> +	strscpy(devfreq->governor_name, governor_name, DEVFREQ_NAME_LEN);
->  	devfreq->previous_freq = profile->initial_freq;
->  	devfreq->last_status.current_frequency = profile->initial_freq;
->  	devfreq->data = data;
-> 
+Changes in v2:
+1. Added error handling for dev_pm_opp_set_clkname()
+and dev_pm_opp_of_add_table()
+2. Used dev_pm_opp_put_clkname() in the cleanup path
+3. Dropped the OPP patch pulled in by Viresh [1]
+4. Dropped the UFS patches since they had some major rework
+needed because of changes that were merged in the merge window
+and I don't have a UFS device currently to validate the changes.
 
-Hello Chanwoo,
+We have had support added in the OPP core for a while now to support
+DVFS for IO devices, and this series uses that infrastructure to
+add DVFS support for various IO devices in sdm845 and sc7180 SoCs.
 
-Do you have any objections to this patch?
+[1] https://lkml.org/lkml/2020/4/14/98 
+
+Rajendra Nayak (17):
+  tty: serial: qcom_geni_serial: Use OPP API to set clk/perf state
+  spi: spi-geni-qcom: Use OPP API to set clk/perf state
+  arm64: dts: sdm845: Add OPP table for all qup devices
+  arm64: dts: sc7180: Add OPP table for all qup devices
+  drm/msm/dpu: Use OPP API to set clk/perf state
+  drm/msm: dsi: Use OPP API to set clk/perf state
+  arm64: dts: sdm845: Add DSI and MDP OPP tables and power-domains
+  arm64: dts: sc7180: Add DSI and MDP OPP tables and power-domains
+  mmc: sdhci-msm: Use OPP API to set clk/perf state
+  arm64: dts: sdm845: Add sdhc opps and power-domains
+  arm64: dts: sc7180: Add sdhc opps and power-domains
+  media: venus: core: Add support for opp tables/perf voting
+  arm64: dts: sdm845: Add OPP tables and power-domains for venus
+  arm64: dts: sc7180: Add OPP tables and power-domains for venus
+  spi: spi-qcom-qspi: Use OPP API to set clk/perf state
+  arm64: dts: sdm845: Add qspi opps and power-domains
+  arm64: dts: sc7180: Add qspi opps and power-domains
+
+ arch/arm64/boot/dts/qcom/sc7180.dtsi           | 199 +++++++++++++++++-
+ arch/arm64/boot/dts/qcom/sdm845.dtsi           | 266 ++++++++++++++++++++++++-
+ drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c  |   3 +-
+ drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c        |  20 +-
+ drivers/gpu/drm/msm/disp/dpu1/dpu_kms.h        |   4 +
+ drivers/gpu/drm/msm/dsi/dsi.h                  |   2 +
+ drivers/gpu/drm/msm/dsi/dsi_cfg.c              |   4 +-
+ drivers/gpu/drm/msm/dsi/dsi_host.c             |  53 +++++
+ drivers/media/platform/qcom/venus/core.c       |  21 ++
+ drivers/media/platform/qcom/venus/core.h       |   5 +
+ drivers/media/platform/qcom/venus/pm_helpers.c |  37 +++-
+ drivers/mmc/host/sdhci-msm.c                   |  34 +++-
+ drivers/spi/spi-geni-qcom.c                    |  22 +-
+ drivers/spi/spi-qcom-qspi.c                    |  24 ++-
+ drivers/tty/serial/qcom_geni_serial.c          |  30 ++-
+ include/linux/qcom-geni-se.h                   |   2 +
+ 16 files changed, 700 insertions(+), 26 deletions(-)
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
