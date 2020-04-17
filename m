@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AF68C38A29
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F692C3815B
 	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 10:45:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 52FE3221EC
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 10:45:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6993B221F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 10:45:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730040AbgDQKpp (ORCPT
+        id S1730055AbgDQKpq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 06:45:45 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:39578 "EHLO huawei.com"
+        Fri, 17 Apr 2020 06:45:46 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:39514 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729954AbgDQKpd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729945AbgDQKpd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 17 Apr 2020 06:45:33 -0400
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id CA8E422B716E232EB4CD;
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id B57A69A7C71A36E71477;
         Fri, 17 Apr 2020 18:45:31 +0800 (CST)
 Received: from localhost.localdomain (10.69.192.58) by
  DGGEMS411-HUB.china.huawei.com (10.3.19.211) with Microsoft SMTP Server id
- 14.3.487.0; Fri, 17 Apr 2020 18:45:21 +0800
+ 14.3.487.0; Fri, 17 Apr 2020 18:45:22 +0800
 From:   John Garry <john.garry@huawei.com>
 To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
         <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
@@ -35,9 +35,9 @@ CC:     <ak@linux.intel.com>, <linuxarm@huawei.com>,
         <zhangshaokun@hisilicon.com>,
         <linux-arm-kernel@lists.infradead.org>,
         John Garry <john.garry@huawei.com>
-Subject: [RFC PATCH v2 11/13] perf metricgroup: Split up metricgroup__print()
-Date:   Fri, 17 Apr 2020 18:41:22 +0800
-Message-ID: <1587120084-18990-12-git-send-email-john.garry@huawei.com>
+Subject: [RFC PATCH v2 12/13] perf metricgroup: Support printing metric groups for system PMUs
+Date:   Fri, 17 Apr 2020 18:41:23 +0800
+Message-ID: <1587120084-18990-13-git-send-email-john.garry@huawei.com>
 X-Mailer: git-send-email 2.8.1
 In-Reply-To: <1587120084-18990-1-git-send-email-john.garry@huawei.com>
 References: <1587120084-18990-1-git-send-email-john.garry@huawei.com>
@@ -50,166 +50,110 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-To aid supporting system event metric groups, break up the function
-metricgroup__print() into a part which iterates metrics and a part
-which actually "prints" the metric.
-
-No functional change intended.
+Currently only metricgroups for core- or uncore-based events is supported.
+Extend this for system events.
 
 Signed-off-by: John Garry <john.garry@huawei.com>
 ---
- tools/perf/util/metricgroup.c | 117 ++++++++++++++++++++++++------------------
- 1 file changed, 66 insertions(+), 51 deletions(-)
+ tools/perf/util/metricgroup.c | 61 ++++++++++++++++++++++++++++++++++++++++---
+ 1 file changed, 57 insertions(+), 4 deletions(-)
 
 diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-index d1033756a1bc..31e97e24c2b0 100644
+index 31e97e24c2b0..81a6aa04a601 100644
 --- a/tools/perf/util/metricgroup.c
 +++ b/tools/perf/util/metricgroup.c
-@@ -315,6 +315,68 @@ static void metricgroup__print_strlist(struct strlist *metrics, bool raw)
- 		putchar('\n');
+@@ -377,19 +377,55 @@ static void metricgroup__print_pmu_event(struct pmu_event *pe,
+ 	}
  }
  
++struct metricgroup_print_sys_idata {
++	struct strlist *metriclist;
++	bool metricgroups;
++	char *filter;
++	bool raw;
++	bool details;
++	struct rblist *groups;
++};
 +
-+static void metricgroup__print_pmu_event(struct pmu_event *pe,
-+					 bool metricgroups, char *filter,
-+					 bool raw, bool details,
-+					 struct rblist *groups,
-+					 struct strlist *metriclist)
++typedef int (*metricgroup_sys_event_iter_fn)(struct pmu_event *pe, void *);
++
++struct metricgroup_iter_data {
++	metricgroup_sys_event_iter_fn fn;
++	void *data;
++};
++
++static int metricgroup__sys_event_iter(struct perf_pmu *pmu,
++				       struct pmu_event *pe,
++				       void *data)
 +{
-+	const char *g;
++	struct metricgroup_iter_data *d = data;
 +
-+	g = pe->metric_group;
-+	if (!g && pe->metric_name) {
-+		if (pe->name)
-+			return;
-+		g = "No_group";
-+	}
++	if (!pe->metric_expr || !pe->compat || strcmp(pe->compat, pmu->id))
++		return 0;
 +
-+	if (g) {
-+		char *omg;
-+		char *mg = strdup(g);
++	return d->fn(pe, d->data);
++}
 +
-+		if (!mg)
-+			return;
-+		omg = mg;
-+		while ((g = strsep(&mg, ";")) != NULL) {
-+			struct mep *me;
-+			char *s;
++static int metricgroup__print_sys_event_iter(struct pmu_event *pe, void *data)
++{
++	struct metricgroup_print_sys_idata *d = data;
 +
-+			g = skip_spaces(g);
-+			if (*g == 0)
-+				g = "No_group";
-+			if (filter && !strstr(g, filter))
-+				continue;
-+			if (raw)
-+				s = (char *)pe->metric_name;
-+			else {
-+				if (asprintf(&s, "%s\n%*s%s]", pe->metric_name,
-+					     8, "[", pe->desc) < 0)
-+					return;
++	metricgroup__print_pmu_event(pe, d->metricgroups, d->filter, d->raw,
++				     d->details, d->groups, d->metriclist);
 +
-+				if (details) {
-+					if (asprintf(&s, "%s\n%*s%s]", s, 8,
-+						     "[", pe->metric_expr) < 0)
-+						return;
-+				}
-+			}
-+
-+			if (!s)
-+				continue;
-+
-+			if (!metricgroups) {
-+				strlist__add(metriclist, s);
-+			} else {
-+				me = mep_lookup(groups, g);
-+				if (!me)
-+					continue;
-+				strlist__add(me->metrics, s);
-+			}
-+		}
-+		free(omg);
-+	}
++	return 0;
 +}
 +
  void metricgroup__print(bool metrics, bool metricgroups, char *filter,
  			bool raw, bool details)
  {
-@@ -339,63 +401,15 @@ void metricgroup__print(bool metrics, bool metricgroups, char *filter,
+ 	struct pmu_events_map *map = perf_pmu__find_map(NULL);
+ 	struct pmu_event *pe;
++	struct perf_pmu *pmu = NULL;
+ 	int i;
+ 	struct rblist groups;
+ 	struct rb_node *node, *next;
+ 	struct strlist *metriclist = NULL;
+ 
+-	if (!map)
+-		return;
+-
+ 	if (!metricgroups) {
+ 		metriclist = strlist__new(NULL, NULL);
+ 		if (!metriclist)
+@@ -400,7 +436,7 @@ void metricgroup__print(bool metrics, bool metricgroups, char *filter,
+ 	groups.node_new = mep_new;
  	groups.node_cmp = mep_cmp;
  	groups.node_delete = mep_delete;
- 	for (i = 0; ; i++) {
--		const char *g;
+-	for (i = 0; ; i++) {
++	for (i = 0; map; i++) {
  		pe = &map->table[i];
  
  		if (!pe->name && !pe->metric_group && !pe->metric_name)
- 			break;
- 		if (!pe->metric_expr)
- 			continue;
--		g = pe->metric_group;
--		if (!g && pe->metric_name) {
--			if (pe->name)
--				continue;
--			g = "No_group";
--		}
--		if (g) {
--			char *omg;
--			char *mg = strdup(g);
--
--			if (!mg)
--				return;
--			omg = mg;
--			while ((g = strsep(&mg, ";")) != NULL) {
--				struct mep *me;
--				char *s;
--
--				g = skip_spaces(g);
--				if (*g == 0)
--					g = "No_group";
--				if (filter && !strstr(g, filter))
--					continue;
--				if (raw)
--					s = (char *)pe->metric_name;
--				else {
--					if (asprintf(&s, "%s\n%*s%s]",
--						     pe->metric_name, 8, "[", pe->desc) < 0)
--						return;
--
--					if (details) {
--						if (asprintf(&s, "%s\n%*s%s]",
--							     s, 8, "[", pe->metric_expr) < 0)
--							return;
--					}
--				}
--
--				if (!s)
--					continue;
- 
--				if (!metricgroups) {
--					strlist__add(metriclist, s);
--				} else {
--					me = mep_lookup(&groups, g);
--					if (!me)
--						continue;
--					strlist__add(me->metrics, s);
--				}
--			}
--			free(omg);
--		}
-+		metricgroup__print_pmu_event(pe, metricgroups, filter, raw,
-+					     details, &groups, metriclist);
+@@ -412,6 +448,23 @@ void metricgroup__print(bool metrics, bool metricgroups, char *filter,
+ 					     details, &groups, metriclist);
  	}
  
++	while ((pmu = perf_pmu__scan(pmu)) != NULL) {
++		struct metricgroup_iter_data data = {
++			.fn = metricgroup__print_sys_event_iter,
++			.data = (void *) &(struct metricgroup_print_sys_idata){
++				.metriclist = metriclist,
++				.metricgroups = metricgroups,
++				.filter = filter,
++				.raw = raw,
++				.details = details,
++				.groups = &groups,
++			},
++		};
++
++		pmu_for_each_sys_event(pmu, metricgroup__sys_event_iter,
++				       &data);
++	}
++
  	if (metricgroups && !raw)
-@@ -407,7 +421,8 @@ void metricgroup__print(bool metrics, bool metricgroups, char *filter,
- 		struct mep *me = container_of(node, struct mep, nd);
- 
- 		if (metricgroups)
--			printf("%s%s%s", me->name, metrics && !raw ? ":" : "", raw ? " " : "\n");
-+			printf("%s%s%s", me->name, metrics && !raw ? ":" : "",
-+			       raw ? " " : "\n");
- 		if (metrics)
- 			metricgroup__print_strlist(me->metrics, raw);
- 		next = rb_next(node);
+ 		printf("\nMetric Groups:\n\n");
+ 	else if (metrics && !raw)
 -- 
 2.16.4
 
