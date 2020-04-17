@@ -2,140 +2,87 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5CA6C2D0EF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 05:21:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E9D1C2D0EF
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 05:23:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 860602063A
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 05:21:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32DD422202
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 05:23:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="h2CPCe9s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726720AbgDQFVq (ORCPT
+        id S1726740AbgDQFXR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 01:21:46 -0400
-Received: from mga09.intel.com ([134.134.136.24]:61629 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726616AbgDQFVp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 01:21:45 -0400
-IronPort-SDR: 36IFSQSyo94m9vN0W6f3ojiKkcJNvGC9U7h+cjno4aMfwqgs5yF9OpJg+3rfpRkXhwl9lxm3VE
- QeTdCsPIhQ0g==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2020 22:21:44 -0700
-IronPort-SDR: IWLWq5/I+DZ3obhuAuh5M/w5s7v9CK98H7ehZi2J+M3Y9scL4D61yFNAkGqs9ArSO8PXYVzxFY
- xTXiixFR09cg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,393,1580803200"; 
-   d="scan'208";a="333086319"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga001.jf.intel.com with ESMTP; 16 Apr 2020 22:21:44 -0700
-Received: from [10.255.156.142] (vramuthx-mobl1.gar.corp.intel.com [10.255.156.142])
-        by linux.intel.com (Postfix) with ESMTP id 518AC580661;
-        Thu, 16 Apr 2020 22:21:40 -0700 (PDT)
-Subject: Re: [PATCH v1 2/2] mtd: rawnand: Add NAND controller support on Intel
- LGM SoC
-To:     Boris Brezillon <boris.brezillon@collabora.com>
-Cc:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        anders.roxell@linaro.org, andriy.shevchenko@intel.com,
-        arnd@arndb.de, brendanhiggins@google.com, cheol.yong.kim@intel.com,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mtd@lists.infradead.org, masonccyang@mxic.com.tw,
-        miquel.raynal@bootlin.com, piotrs@cadence.com,
-        qi-ming.wu@intel.com, richard@nod.at, robh+dt@kernel.org,
-        tglx@linutronix.de, vigneshr@ti.com
-References: <20200414022433.36622-3-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20200415220533.733834-1-martin.blumenstingl@googlemail.com>
- <c33c8653-16a2-5bcd-97a9-511d958b755a@linux.intel.com>
- <20200416113822.2ef326cb@collabora.com>
- <18568cf6-2955-472e-7b68-eb35e654a906@linux.intel.com>
- <20200416122619.2c481792@collabora.com>
- <d3e137fa-54a0-b4ec-eb24-3984eab2a247@linux.intel.com>
- <20200416131725.51259573@collabora.com>
- <de9f50b8-9215-d294-9914-e49701552185@linux.intel.com>
- <20200416135711.039ba85c@collabora.com>
-From:   "Ramuthevar, Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Message-ID: <003fa549-08c5-5867-2b02-54b483c16465@linux.intel.com>
-Date:   Fri, 17 Apr 2020 13:21:39 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Fri, 17 Apr 2020 01:23:17 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:39305 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726616AbgDQFXQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Apr 2020 01:23:16 -0400
+X-UUID: 3b90cc3f571b4daaa24d2ae732a939f4-20200417
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=GC70dnpItBpOUTcj3PL92Hyrly0wCDW2Ddw/cKCswvo=;
+        b=h2CPCe9sCtqwEezN0e9irmL2n0J1thkAVwI8YOMcwT6FHN2JTBuq7lj9Mqt+HYA2tyS/7/zIE5iriou4SZWr1Zl6Eg8t53aHp6bbao4e7fCcdr5cmcukixJTfED4FPYxSxBKvWyJ73o5CjiUx80ItT2n8m56nLJbeu7mE0VbnnA=;
+X-UUID: 3b90cc3f571b4daaa24d2ae732a939f4-20200417
+Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw02.mediatek.com
+        (envelope-from <macpaul.lin@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 483603488; Fri, 17 Apr 2020 13:23:13 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs08n1.mediatek.inc (172.21.101.55) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Fri, 17 Apr 2020 13:23:11 +0800
+Received: from mtkswgap22.mediatek.inc (172.21.77.33) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Fri, 17 Apr 2020 13:23:12 +0800
+From:   Macpaul Lin <macpaul.lin@mediatek.com>
+To:     Min Guo <min.Guo@mediatek.com>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
+CC:     Mediatek WSD Upstream <wsd_upstream@mediatek.com>,
+        Macpaul Lin <macpaul.lin@mediatek.com>,
+        Macpaul Lin <macpaul.lin@gmail.com>
+Subject: [PATCH 1/2] dt-bindings: phy-mtk-tphy: add the property about force_vbus
+Date:   Fri, 17 Apr 2020 13:23:05 +0800
+Message-ID: <1587100986-3104-1-git-send-email-macpaul.lin@mediatek.com>
+X-Mailer: git-send-email 1.7.9.5
 MIME-Version: 1.0
-In-Reply-To: <20200416135711.039ba85c@collabora.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Boris,
+Rm9yIHNvbWUgcGxhdGZvcm1zLCB0aGV5IGRvbid0IGhhdmUgdmJ1cyBwaW4gY29ubmVjdGlvbiBi
+ZXR3ZWVuIHVzYidzIHBoeQ0KYW5kIG1hYy4gSGVuY2Ugd2UgbmVlZCB0byBjb250cm9sIGZvcmNl
+X3ZidXMgcmVsYXRlZCByZWdpc3RlcnMgdG8ga2VlcA0KaGFyZHdhcmUgd29ya3Mgbm9ybWFsLg0K
+VGhpcyBwYXRjaCBhZGQgdGhlIHJlcXVpcmVkIGJvb2wgcHJvcGVydHkgZm9yY2VfdmJ1cy4NCg0K
+U2lnbmVkLW9mZi1ieTogTWFjcGF1bCBMaW4gPG1hY3BhdWwubGluQG1lZGlhdGVrLmNvbT4NCi0t
+LQ0KIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9waHkvcGh5LW10ay10cGh5LnR4
+dCB8IDMgKysrDQogMSBmaWxlIGNoYW5nZWQsIDMgaW5zZXJ0aW9ucygrKQ0KDQpkaWZmIC0tZ2l0
+IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BoeS9waHktbXRrLXRwaHkudHh0
+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BoeS9waHktbXRrLXRwaHkudHh0
+DQppbmRleCBkZDc1YjY3NmI3MWQuLjZiNDliNjUxYmVjYyAxMDA2NDQNCi0tLSBhL0RvY3VtZW50
+YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9waHkvcGh5LW10ay10cGh5LnR4dA0KKysrIGIvRG9j
+dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BoeS9waHktbXRrLXRwaHkudHh0DQpAQCAt
+MzcsNiArMzcsOSBAQCBPcHRpb25hbCBwcm9wZXJ0aWVzIChjb250cm9sbGVyIChwYXJlbnQpIG5v
+ZGUpOg0KIAkJICBjYWxpYnJhdGUNCiAgLSBtZWRpYXRlayxzcmMtY29lZgk6IGNvZWZmaWNpZW50
+IGZvciBzbGV3IHJhdGUgY2FsaWJyYXRlLCBkZXBlbmRzIG9uDQogCQkgIFNvQyBwcm9jZXNzDQor
+IC0gZm9yY2VfdmJ1cwk6IGlmIHRoZSBwbGF0Zm9ybSBoYXMgbm8gdmJ1cyBjb25uZWN0aW9uIGJl
+dHdlZW4gcGh5IGFuZCBtYWMsDQorCQkgIChmb3JjZV92YnVzIG1vZGUpLCB0aGVuIHRoaXMgcHJv
+cGVydHkgc2hvdWxkIGJlIGV4aXN0Lg0KKwkJICBPdGhlcndpc2Ugbm90IHRvIGFkZCB0aGlzIHBy
+b3BlcnR5Lg0KIA0KIFJlcXVpcmVkIHByb3BlcnRpZXMgKHBvcnQgKGNoaWxkKSBub2RlKToNCiAt
+IHJlZwkJOiBhZGRyZXNzIGFuZCBsZW5ndGggb2YgdGhlIHJlZ2lzdGVyIHNldCBmb3IgdGhlIHBv
+cnQuDQotLSANCjIuMTguMA0K
 
-On 16/4/2020 7:57 pm, Boris Brezillon wrote:
-> On Thu, 16 Apr 2020 19:38:03 +0800
-> "Ramuthevar, Vadivel MuruganX"
-> <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
->
->> On 16/4/2020 7:17 pm, Boris Brezillon wrote:
->>> On Thu, 16 Apr 2020 18:40:53 +0800
->>> "Ramuthevar, Vadivel MuruganX"
->>> <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
->>>   
->>>>>>> we'll be happy to have one more of the existing driver converted to
->>>>>>> ->exec_op() ;-).
->>>>>> I have completely adapted to ->exec_op() hook up to replace the legacy
->>>>>> call-back.
->>>>> I suspect porting what you've done to the xway driver shouldn't be too
->>>>> complicated.
->>>> Not ported from xway_nand.c driver , we have developed from the scratch
->>>> to make it work on
->>>> Intel LGM SoC , it's new x86 ATOM based SoC, IP itself completely
->>>> different and most of the registers won't match.
->>>> if we port then it would be ugly and also what are the problem may occur
->>>> we do not know.
->>> Sorry but IMO they look similar enough to try to merge them.
->> Thanks! Boris, need suggestion from you since you are maintainer and
->> also expertise on mtd-subsystem.
-> I *was* the maintainer :).
->
->> There are different features involved and lines of code is more, if we
->> add new driver patches over xway-nand driver
-> How about retro-fitting the xway logic into your driver then? I mean,
-> adding a 100 lines of code to your driver to get rid of the 500+ lines
-> we have in xway_nand.c is still a win.
->
->> is completely looks ugly and it may disturb the existing functionality
->> as well since we don't have platform to validate:'(.
-> How ugly? Can you show us? Maybe we can come with a solution to make it
-> less ugly.
->
-> As for the testing part, there are 4 scenarios:
->
-> 1/ Your changes work perfectly fine on older platforms. Yay \o/!
-> 2/ You break the xway driver and existing users notice it before this
->     series gets merged. Now you found someone to validate your changes.
-> 3/ You break the xway driver and none of the existing users notice it
->     before the driver is merged, but they notice it afterwards. Too bad
->     this happened after we've merged the driver, but now you've found
->     someone to help you fix the problem :P.
-> 4/ You break things for old platforms but no one ever complains about
->     it, either because there's no users left or because they never
->     update their kernels. In any case, that's no longer your problem.
->     Someone will remove those old platforms one day and get rid of the
->     unneeded code in the NAND driver.
->
-> What's more likely to happen is #3 or #4, and I think the NAND
-> maintainer would be fine with both.
->
-> Note that the NAND subsystem is full of unmaintained legacy drivers, so
-> every time we see someone who could help us get rid or update one of
-> them we have to take this opportunity.
-Agreed!, Thank you very much for the suggestions and clear inputs.
-To proceed further, can you please share your inputs to dividing the tasks
-and patches to be sent if possible.
-
-Regards
-Vadivel
