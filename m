@@ -2,88 +2,180 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB2BAC3815B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 18:00:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FAB5C38A2C
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 18:00:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B4D3E2078E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 18:00:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587146405;
-	bh=aFi/cH9VShyIjxtxf9sPR4MSk0W9tWF8AtG6I+diLoo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=GsmNNP5fz5xzMtzbifsBEXVGMUQfv7VSM/N7fJB/jYLs7Cx+phGzo/TYs9NZV9Mdh
-	 DQCnNhKx7KTbiHWLpfgLQif4/AWk30wcw3RK/0HN4tQ3Sl/q7BWGLypq+mhqiYIjxU
-	 Yd0KLSMQntoO5nQ/yXy9Y5mmML7QauNADL1u3irM=
+	by mail.kernel.org (Postfix) with ESMTP id 470B12078E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 18:00:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="OvckqUd4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730307AbgDQSAE (ORCPT
+        id S1730345AbgDQSAr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 14:00:04 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:36019 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730033AbgDQSAE (ORCPT
+        Fri, 17 Apr 2020 14:00:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39938 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730315AbgDQSAq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 14:00:04 -0400
-Received: by mail-pg1-f193.google.com with SMTP id o185so934540pgo.3;
-        Fri, 17 Apr 2020 11:00:03 -0700 (PDT)
+        Fri, 17 Apr 2020 14:00:46 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 607C1C061A41
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 11:00:45 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id b8so1405684pfp.8
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 11:00:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=UOMj1CMTwdnMbS+z4qVkFuhDs1cGdfp1YT34y+yBusk=;
+        b=OvckqUd4ZmienArBUa8jPpxgm7tQccflIrBwirJ78gUp7uqVrx3mfTAwv0UxSmRrya
+         Lz37ElSMIolopvUjumNLuYbbvVA4PsZnQqyMCyd+rnrVNMnGSZf6nmpiwan6L7M+FLkl
+         4wJt5ZteoqCNiPJ+z8t2Nl9Y0ShW0V/x9H4ZI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=IjZCkEIb+6WDJxMusK/HPrzk4lilNygCHu7ICADzBDI=;
-        b=IGH6++I9jAMejicRypWgjx4pPu3K5W7q4CxqscWb9f4ondGixa4MKwA+aAnJySEkXl
-         TOi7QIcRD/3wi3M8IQHp4koL0fOo2xAkJ9S/V9FHA5zEr050kumUuERoL0LBrBH6LSFd
-         itNCbKuRzhGOSbrOWjoFI+Ign1CPpTcSDJxno1yWSsCikHKiNLmNIuoUdPV4p91TqO9x
-         qBL5Emf1OwLoJOCrICj0VCGHcCgEk1eXYMvELwD4c3HFK9RFCCoJ74sW3FLNHB+f2SO0
-         GdZ99UsBXz3xqOv300006/JpqtIXS3LLzS5qBMZE+ZLso6x4ssvI3kNHgk08Try99nSI
-         FIPw==
-X-Gm-Message-State: AGi0PuabiS7KAiRL5tTXTQTkGgemExhKpCtYT2lyLnI6HXnPaoK9bBQW
-        98R3UqaH+DN0FYUwFjKhtyw=
-X-Google-Smtp-Source: APiQypLFQjbQ+Jct1/RepT1qj19XCtjzpBzkT5ETgeSBpzgVKxqlNXHZmUGIMT21Q9DTRRm+/Bkcrg==
-X-Received: by 2002:a62:1415:: with SMTP id 21mr4395722pfu.134.1587146403237;
-        Fri, 17 Apr 2020 11:00:03 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id c3sm6178665pjc.43.2020.04.17.11.00.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Apr 2020 11:00:01 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id 256B94028E; Fri, 17 Apr 2020 18:00:01 +0000 (UTC)
-Date:   Fri, 17 Apr 2020 18:00:01 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
+        bh=UOMj1CMTwdnMbS+z4qVkFuhDs1cGdfp1YT34y+yBusk=;
+        b=s5h/Pvb3ab6b6J5X3vrBbYMW+07nx4O+83vy+mL6N3gqu2joKLYXwcFuiV1AYmqeno
+         6jP9dnaMLDvLAlN1PaEiTM3meTBByeOGFkwqjayBZ4BTc3PHS83VIHtLC6ZCc0IQRDuu
+         RTFk+f2zg9lWB79IMbOas7A3YnFtES7aqwMmV4/sNxN0Tdi80r43AQ6A3ngR7pvP2OlM
+         gAiPjrtn1/Aowwnzjvbz1iWo6SO82dIgBBQyv5Kq71iQl9/5RXqMPeoY4KKaeDLIGnfw
+         N0Mr28nvKLutTVMKn6qNVW833eM7FflHBdd93blROcQq6hVyWTYNrUmwzgJAkAcJuwFS
+         TD6Q==
+X-Gm-Message-State: AGi0Pua85pbmyp3ipSVJsdk6MySQRhUa3ClPweJW/cVUoORzWgJnpvXG
+        nCtpc3AO3vZx01vTH0hY+U4aNg==
+X-Google-Smtp-Source: APiQypK9eg7Gq7tr1Oc+DzJ0VwRSWi/rb9t3MDel9BaZ7Cw8P2/BSa0rmeULMt3F00M6mVyVdqN1Dw==
+X-Received: by 2002:a62:1a54:: with SMTP id a81mr4490224pfa.122.1587146443888;
+        Fri, 17 Apr 2020 11:00:43 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
+        by smtp.gmail.com with ESMTPSA id w13sm5101109pfn.192.2020.04.17.11.00.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 17 Apr 2020 11:00:42 -0700 (PDT)
+Date:   Fri, 17 Apr 2020 11:00:41 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Rajendra Nayak <rnayak@codeaurora.org>
+Cc:     viresh.kumar@linaro.org, sboyd@kernel.org,
+        bjorn.andersson@linaro.org, agross@kernel.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-fsdevel@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: Re: pass kernel pointers to the sysctl ->proc_handler method
-Message-ID: <20200417180001.GW11244@42.do-not-panic.com>
-References: <20200417064146.1086644-1-hch@lst.de>
+        Akash Asthana <akashast@codeaurora.org>,
+        linux-serial@vger.kernel.org
+Subject: Re: [PATCH v2 01/17] tty: serial: qcom_geni_serial: Use OPP API to
+ set clk/perf state
+Message-ID: <20200417180041.GD199755@google.com>
+References: <1587132279-27659-1-git-send-email-rnayak@codeaurora.org>
+ <1587132279-27659-2-git-send-email-rnayak@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200417064146.1086644-1-hch@lst.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1587132279-27659-2-git-send-email-rnayak@codeaurora.org>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 17, 2020 at 08:41:40AM +0200, Christoph Hellwig wrote:
-> Hi all,
+Hi Rajendra,
+
+On Fri, Apr 17, 2020 at 07:34:23PM +0530, Rajendra Nayak wrote:
+> geni serial needs to express a perforamnce state requirement on CX
+> powerdomain depending on the frequency of the clock rates.
+> Use OPP table from DT to register with OPP framework and use
+> dev_pm_opp_set_rate() to set the clk/perf state.
 > 
-> this series changes the sysctl ->proc_handler methods to take kernel
-> pointers.  This simplifies some of the pointer handling in the methods
-> (which could probably be further simplified now), and gets rid of the
-> set_fs address space overrides used by bpf.
+> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Akash Asthana <akashast@codeaurora.org>
+> Cc: linux-serial@vger.kernel.org
+> ---
+>  drivers/tty/serial/qcom_geni_serial.c | 30 +++++++++++++++++++++++++-----
+>  include/linux/qcom-geni-se.h          |  2 ++
+>  2 files changed, 27 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/tty/serial/qcom_geni_serial.c b/drivers/tty/serial/qcom_geni_serial.c
+> index 6119090..151012c 100644
+> --- a/drivers/tty/serial/qcom_geni_serial.c
+> +++ b/drivers/tty/serial/qcom_geni_serial.c
+> @@ -9,6 +9,7 @@
+>  #include <linux/module.h>
+>  #include <linux/of.h>
+>  #include <linux/of_device.h>
+> +#include <linux/pm_opp.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/pm_runtime.h>
+>  #include <linux/pm_wakeirq.h>
+> @@ -128,6 +129,7 @@ struct qcom_geni_serial_port {
+>  	int wakeup_irq;
+>  	bool rx_tx_swap;
+>  	bool cts_rts_swap;
+> +	bool opp_table;
 
-Reviewed-by: Luis Chamberlain <mcgrof@kernel.org>
+The name of the variable suggests that it holds a OPP table, something
+like 'has_opp_table' would be clearer.
 
-  Luis
+>  };
+>  
+>  static const struct uart_ops qcom_geni_console_pops;
+> @@ -961,7 +963,7 @@ static void qcom_geni_serial_set_termios(struct uart_port *uport,
+>  		goto out_restart_rx;
+>  
+>  	uport->uartclk = clk_rate;
+> -	clk_set_rate(port->se.clk, clk_rate);
+> +	dev_pm_opp_set_rate(uport->dev, clk_rate);
+>  	ser_clk_cfg = SER_CLK_EN;
+>  	ser_clk_cfg |= clk_div << CLK_DIV_SHFT;
+>  
+> @@ -1198,8 +1200,11 @@ static void qcom_geni_serial_pm(struct uart_port *uport,
+>  	if (new_state == UART_PM_STATE_ON && old_state == UART_PM_STATE_OFF)
+>  		geni_se_resources_on(&port->se);
+>  	else if (new_state == UART_PM_STATE_OFF &&
+> -			old_state == UART_PM_STATE_ON)
+> +			old_state == UART_PM_STATE_ON) {
+> +		/* Drop the performance state vote */
+> +		dev_pm_opp_set_rate(uport->dev, 0);
+>  		geni_se_resources_off(&port->se);
+> +	}
+>  }
+>  
+>  static const struct uart_ops qcom_geni_console_pops = {
+> @@ -1318,13 +1323,20 @@ static int qcom_geni_serial_probe(struct platform_device *pdev)
+>  	if (of_property_read_bool(pdev->dev.of_node, "cts-rts-swap"))
+>  		port->cts_rts_swap = true;
+>  
+> +	port->se.opp = dev_pm_opp_set_clkname(&pdev->dev, "se");
+> +	if (IS_ERR(port->se.opp))
+> +		return PTR_ERR(port->se.opp);
+> +	/* OPP table is optional */
+> +	if (!dev_pm_opp_of_add_table(&pdev->dev))
+
+Even if the OPP table is optional you probably want to fail if the error
+is anything other than -ENODEV ("'operating-points' property is not found
+or is invalid data in device node.").
+
+> diff --git a/include/linux/qcom-geni-se.h b/include/linux/qcom-geni-se.h
+> index dd46494..737e713 100644
+> --- a/include/linux/qcom-geni-se.h
+> +++ b/include/linux/qcom-geni-se.h
+> @@ -24,6 +24,7 @@ enum geni_se_protocol_type {
+>  
+>  struct geni_wrapper;
+>  struct clk;
+> +struct opp_table;
+>  
+>  /**
+>   * struct geni_se - GENI Serial Engine
+> @@ -39,6 +40,7 @@ struct geni_se {
+>  	struct device *dev;
+>  	struct geni_wrapper *wrapper;
+>  	struct clk *clk;
+> +	struct opp_table *opp;
+
+This name suggests that the variable holds a single OPP ('struct
+dev_pm_opp'). Most other code uses the name 'opp_table', which
+also seems a good candidate here.
