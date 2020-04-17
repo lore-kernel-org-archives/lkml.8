@@ -2,113 +2,228 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAC8CC38A2B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 16:38:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4820C2D0EF
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 16:44:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B724620780
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 16:38:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DB762078E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 16:44:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UeaX/l/2"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="I8TsQw5w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726709AbgDQQi4 (ORCPT
+        id S1726465AbgDQQoG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 12:38:56 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:51720 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726390AbgDQQis (ORCPT
+        Fri, 17 Apr 2020 12:44:06 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:42140 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725964AbgDQQoF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 12:38:48 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587141527;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:in-reply-to:in-reply-to:references:references;
-        bh=J7/+hu9xA4V/kb8irjtGYa6Qo9G4EJkKAhc6pSJfI0o=;
-        b=UeaX/l/20GO3JBwzsoQIi8onTZ+diuiktMtOtbfHrMJ7O6KCyUtL7hbH4K/0jYba9P9I2+
-        r5hWcAb7RKeYk3vyfjcGxRjVAtr62wnJ+I38mUcqJdat3+K8zfjRXlZIAra17Tx7hgFtyb
-        p/nunvavmPec9WpdzyEl4z1jrLcReCg=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-390-wpnn2rtMOUa9iepu47f1rA-1; Fri, 17 Apr 2020 12:38:45 -0400
-X-MC-Unique: wpnn2rtMOUa9iepu47f1rA-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 84C2E8024E2;
-        Fri, 17 Apr 2020 16:38:44 +0000 (UTC)
-Received: from virtlab511.virt.lab.eng.bos.redhat.com (virtlab511.virt.lab.eng.bos.redhat.com [10.19.152.198])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 1846C5DA84;
-        Fri, 17 Apr 2020 16:38:44 +0000 (UTC)
-From:   Paolo Bonzini <pbonzini@redhat.com>
-To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        stable@vger.kernel.org
-Subject: [PATCH 1/2] KVM: SVM: avoid infinite loop on NPF from bad address
-Date:   Fri, 17 Apr 2020 12:38:42 -0400
-Message-Id: <20200417163843.71624-2-pbonzini@redhat.com>
-In-Reply-To: <20200417163843.71624-1-pbonzini@redhat.com>
-References: <20200417163843.71624-1-pbonzini@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+        Fri, 17 Apr 2020 12:44:05 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 03HGi2TM068609;
+        Fri, 17 Apr 2020 11:44:02 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1587141842;
+        bh=C5ZM4aWfGtnuHTTZhSX2+Ie3wR/ZWNt+wWMfl4WFyjA=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=I8TsQw5wscZJzhL59S3kv1u03/ko87NgrRv5Nv0IkzxyPIEVBvm+dB+rnjKVEbNFE
+         +eP8KgVWp1D6VHHrOP1/9a5ewGPTtcKCcU7giky1I3zj9fm4R8acYYpLMA6ahxJure
+         Da/JyVm797QdnsH0EhCwRLaf9hFZotdo8HveW7IM=
+Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 03HGi1SA056616
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 17 Apr 2020 11:44:02 -0500
+Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 17
+ Apr 2020 11:44:01 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Fri, 17 Apr 2020 11:44:01 -0500
+Received: from [10.250.48.148] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03HGi14L095536;
+        Fri, 17 Apr 2020 11:44:01 -0500
+Subject: Re: [PATCH 1/2] remoteproc: drop memset when loading elf segments
+To:     Peng Fan <peng.fan@nxp.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+CC:     "ohad@wizery.com" <ohad@wizery.com>,
+        "linux-remoteproc@vger.kernel.org" <linux-remoteproc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+References: <1586420572-28353-1-git-send-email-peng.fan@nxp.com>
+ <20200410012034.GU20625@builder.lan>
+ <AM0PR04MB44816C59A9BE84465AC8F2C388DE0@AM0PR04MB4481.eurprd04.prod.outlook.com>
+ <20200411015104.GJ576963@builder.lan>
+ <AM0PR04MB4481CF4ACD86C69B329D5F2188DD0@AM0PR04MB4481.eurprd04.prod.outlook.com>
+From:   Suman Anna <s-anna@ti.com>
+Message-ID: <07eb5b9f-60cd-6555-1904-7b348bdc43f2@ti.com>
+Date:   Fri, 17 Apr 2020 11:43:56 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
+MIME-Version: 1.0
+In-Reply-To: <AM0PR04MB4481CF4ACD86C69B329D5F2188DD0@AM0PR04MB4481.eurprd04.prod.outlook.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When a nested page fault is taken from an address that does not have
-a memslot associated to it, kvm_mmu_do_page_fault returns RET_PF_EMULATE
-(via mmu_set_spte) and kvm_mmu_page_fault then invokes svm_need_emulation_on_page_fault.
+On 4/13/20 4:05 AM, Peng Fan wrote:
+> 
+>> Subject: Re: [PATCH 1/2] remoteproc: drop memset when loading elf
+>> segments
+>>
+>> On Thu 09 Apr 18:29 PDT 2020, Peng Fan wrote:
+>>
+>>> Hi Bjorn,
+>>>
+>>>> Subject: Re: [PATCH 1/2] remoteproc: drop memset when loading elf
+>>>> segments
+>>>>
+>>>> On Thu 09 Apr 01:22 PDT 2020, Peng Fan wrote:
+>>>>
+>>>>> To arm64, "dc      zva, dst" is used in memset.
+>>>>> Per ARM DDI 0487A.j, chapter C5.3.8 DC ZVA, Data Cache Zero by VA,
+>>>>>
+>>>>> "If the memory region being zeroed is any type of Device memory,
+>>>>> this instruction can give an alignment fault which is prioritized
+>>>>> in the same way as other alignment faults that are determined by
+>>>>> the memory type."
+>>>>>
+>>>>> On i.MX platforms, when elf is loaded to onchip TCM area, the
+>>>>> region is ioremapped, so "dc zva, dst" will trigger abort.
+>>>>>
+>>>>> Since memset is not strictly required, let's drop it.
+>>>>>
+>>>>
+>>>> This would imply that we trust that the firmware doesn't expect
+>>>> remoteproc to zero out the memory, which we've always done. So I
+>>>> don't think we can say that it's not required.
+>>>
+>>> Saying an image runs on a remote core needs Linux to help zero out BSS
+>>> section, this not make sense to me.
+>>
+>> Maybe not, but it has always done it, so if there's firmware out there that
+>> depends on it such change would break them..
+> 
+> Got it.
+> 
+>>
+>>> My case is as following, I need to load section 7 data.
+>>> I no need to let remoteproc to memset section 8/9/10/11/12, the
+>>> firmware itself could handle that. Just because the memsz is larger
+>>> than filesz, remoreproc must memset?
+>>
+>> By having a PT_LOAD segment covering these I think it's reasonable to
+>> assume that the ELF loader should be able to touch the associated memory.
+>>
+>>> Section Headers:
+>>>    [Nr] Name              Type            Addr     Off    Size
+>> ES Flg Lk Inf Al
+>>>    [ 0]                   NULL            00000000 000000
+>> 000000 00      0   0  0
+>>>    [ 1] .interrupts       PROGBITS        1ffe0000 010000 000240 00
+>> A  0   0  4
+>>>    [ 2] .resource_table   PROGBITS        1ffe0240 010240 000058 00
+>> A  0   0  1
+>>>    [ 3] .text             PROGBITS        1ffe02a0 0102a0 009ccc 00
+>> AX  0   0 16
+>>>    [ 4] .ARM              ARM_EXIDX       1ffe9f6c 019f6c 000008
+>> 00  AL  3   0  4
+>>>    [ 5] .init_array       INIT_ARRAY      1ffe9f74 019f74 000004 04
+>> WA  0   0  4
+>>>    [ 6] .fini_array       FINI_ARRAY      1ffe9f78 019f78 000004 04
+>> WA  0   0  4
+>>>    [ 7] .data             PROGBITS        1fff9240 029240 000084
+>> 00  WA  0   0  4
+>>>    [ 8] .ncache.init      PROGBITS        1fff92c4 0292c4 000000 00
+>> W  0   0  1
+>>>    [ 9] .ncache           NOBITS          1fff92c4 0292c4 000a80
+>> 00  WA  0   0  4
+>>>    [10] .bss              NOBITS          1fff9d44 0292c4 01f5c0
+>> 00  WA  0   0  4
+>>>    [11] .heap             NOBITS          20019304 0292c4 000404
+>> 00  WA  0   0  1
+>>>    [12] .stack            NOBITS          20019708 0292c4 000400
+>> 00  WA  0   0  1
+>>>
+>>>>
+>>>>> Signed-off-by: Peng Fan <peng.fan@nxp.com>
+>>>>> ---
+>>>>>   drivers/remoteproc/remoteproc_elf_loader.c | 7 ++-----
+>>>>>   1 file changed, 2 insertions(+), 5 deletions(-)
+>>>>>
+>>>>> diff --git a/drivers/remoteproc/remoteproc_elf_loader.c
+>>>>> b/drivers/remoteproc/remoteproc_elf_loader.c
+>>>>> index 16e2c496fd45..cc50fe70d50c 100644
+>>>>> --- a/drivers/remoteproc/remoteproc_elf_loader.c
+>>>>> +++ b/drivers/remoteproc/remoteproc_elf_loader.c
+>>>>> @@ -238,14 +238,11 @@ int rproc_elf_load_segments(struct rproc
+>>>>> *rproc,
+>>>> const struct firmware *fw)
+>>>>>   			memcpy(ptr, elf_data + offset, filesz);
+>>>>>
+>>>>>   		/*
+>>>>> -		 * Zero out remaining memory for this segment.
+>>>>> +		 * No need zero out remaining memory for this segment.
+>>>>>   		 *
+>>>>>   		 * This isn't strictly required since dma_alloc_coherent already
+>>>>> -		 * did this for us. albeit harmless, we may consider removing
+>>>>> -		 * this.
+>>>>> +		 * did this for us.
+>>>>
+>>>> In the case of recovery this comment is wrong, we do not
+>>>> dma_alloc_coherent() the carveout during a recovery.
+>>>
+>>> Isn't the it the firmware's job to memset the region?
+>>>
+>>
+>> I'm not aware of this being a documented requirement, we've always done it
+>> here for them, so removing this call would be a change in behavior.
+>>
+>>>>
+>>>> And in your case you ioremapped existing TCM, so it's never true.
+>>>>
+>>>>>   		 */
+>>>>> -		if (memsz > filesz)
+>>>>> -			memset(ptr + filesz, 0, memsz - filesz);
+>>>>
+>>>> So I think you do want to zero out this region. Question is how we do it...
+>>>
+>>> I have contacted our M4 owners, we no need clear it from Linux side.
+>>
+>> And I think _most_ firmware out there, like yours, does clear BSS etc during
+>> initialization.
+>>
+>>> We also support booting m4 before booting Linux, at that case, Linux
+>>> has noting to do with memset. It is just I try loading m4 image with
+>>> Linux, and met the issue that memset trigger abort.
+>>>
+>>
+>> Please see the proposal for attaching to already running remoteproc's from
+>> Mathieu. I don't expect that you want to load your PROGBITS either in this
+>> case?
+> 
+> No need to load for early boot case. It is just userspace load trigger
+> kernel panic, because memset arm64 could not work for ioremapped memory.
+> 
+> How about adding ops hooks for memset and memcpy to let driver
+> have their own implementation?
 
-The default answer there is to return false, but in this case this just
-causes the page fault to be retried ad libitum.  Since this is not a
-fast path, and the only other case where it is taken is an erratum,
-just stick a kvm_vcpu_gfn_to_memslot check in there to detect the
-common case where the erratum is not happening.
+Hi Peng,
 
-This fixes an infinite loop in the new set_memory_region_test.
+The trick is to use the ioremap_wc() variant instead of ioremap() in 
+your platform driver while mapping the TCMs. I know multiple folks have 
+run into this issue. This is what most of the remoteproc drivers use, 
+and mmio-sram driver also uses the same.
 
-Fixes: 05d5a4863525 ("KVM: SVM: Workaround errata#1096 (insn_len maybe zero on SMAP violation)")
-Cc: stable@vger.kernel.org
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
----
- arch/x86/kvm/svm/svm.c | 7 +++++++
- virt/kvm/kvm_main.c    | 1 +
- 2 files changed, 8 insertions(+)
-
-diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-index a91e397d6750..c86f7278509b 100644
---- a/arch/x86/kvm/svm/svm.c
-+++ b/arch/x86/kvm/svm/svm.c
-@@ -3837,6 +3837,13 @@ static bool svm_need_emulation_on_page_fault(struct kvm_vcpu *vcpu)
- 	bool smap = cr4 & X86_CR4_SMAP;
- 	bool is_user = svm_get_cpl(vcpu) == 3;
- 
-+	/*
-+	 * If RIP is invalid, go ahead with emulation which will cause an
-+	 * internal error exit.
-+	 */
-+	if (!kvm_vcpu_gfn_to_memslot(vcpu, kvm_rip_read(vcpu) >> PAGE_SHIFT))
-+		return true;
-+
- 	/*
- 	 * Detect and workaround Errata 1096 Fam_17h_00_0Fh.
- 	 *
-diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-index e2f60e313c87..e7436d054305 100644
---- a/virt/kvm/kvm_main.c
-+++ b/virt/kvm/kvm_main.c
-@@ -1602,6 +1602,7 @@ struct kvm_memory_slot *kvm_vcpu_gfn_to_memslot(struct kvm_vcpu *vcpu, gfn_t gfn
- {
- 	return __gfn_to_memslot(kvm_vcpu_memslots(vcpu), gfn);
- }
-+EXPORT_SYMBOL_GPL(kvm_vcpu_gfn_to_memslot);
- 
- bool kvm_is_visible_gfn(struct kvm *kvm, gfn_t gfn)
- {
--- 
-2.18.2
-
-
+regards
+Suman
