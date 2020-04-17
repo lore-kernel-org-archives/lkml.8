@@ -2,109 +2,127 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4024AC2BA2B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 03:00:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 319B5C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 03:01:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2525421D94
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 03:00:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 124FB21D94
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 03:01:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729440AbgDQDAL (ORCPT
+        id S1729453AbgDQDB0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 23:00:11 -0400
-Received: from out30-45.freemail.mail.aliyun.com ([115.124.30.45]:35203 "EHLO
-        out30-45.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726261AbgDQDAK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 23:00:10 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R161e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04397;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=4;SR=0;TI=SMTPD_---0Tvl54ED_1587092406;
-Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0Tvl54ED_1587092406)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Fri, 17 Apr 2020 11:00:07 +0800
-Subject: Re: [PATCH] shmem: fix possible deadlocks on shmlock_user_lock
-To:     Hugh Dickins <hughd@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org
-References: <alpine.LSU.2.11.2004161707410.16322@eggly.anvils>
-From:   Yang Shi <yang.shi@linux.alibaba.com>
-Message-ID: <a8382e58-76e0-7b38-1805-ba38e3434367@linux.alibaba.com>
-Date:   Thu, 16 Apr 2020 20:00:05 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
- Gecko/20100101 Thunderbird/52.7.0
+        Thu, 16 Apr 2020 23:01:26 -0400
+Received: from mga04.intel.com ([192.55.52.120]:21668 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726261AbgDQDBZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 23:01:25 -0400
+IronPort-SDR: M5EIEsAo9IUlYXQ9fj8IK7R9TAjjf751f6Mab25GQ/A/4W07lmjbtoxhxfgtnSt5EcKjzCgtOi
+ Z+Ygmz8ATj4g==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2020 20:01:25 -0700
+IronPort-SDR: 4xXBe1wnECRz/UV85LMKUwzgWH5fHFhfCBvqCT4xRlF3F0nTHNQLb9gHFmsHaGegX0rnJCKXYe
+ +nq561+7bwVg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,393,1580803200"; 
+   d="scan'208";a="254072337"
+Received: from yhuang-dev.sh.intel.com (HELO yhuang-dev) ([10.239.159.23])
+  by orsmga003.jf.intel.com with ESMTP; 16 Apr 2020 20:01:23 -0700
+From:   "Huang\, Ying" <ying.huang@intel.com>
+To:     Andrea Righi <andrea.righi@canonical.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Minchan Kim <minchan@kernel.org>,
+        Anchal Agarwal <anchalag@amazon.com>, <linux-mm@kvack.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3] mm: swap: properly update readahead statistics in unuse_pte_range()
+References: <20200416180132.GB3352@xps-13>
+Date:   Fri, 17 Apr 2020 11:01:22 +0800
+In-Reply-To: <20200416180132.GB3352@xps-13> (Andrea Righi's message of "Thu,
+        16 Apr 2020 20:01:32 +0200")
+Message-ID: <871romvmrh.fsf@yhuang-dev.intel.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-In-Reply-To: <alpine.LSU.2.11.2004161707410.16322@eggly.anvils>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=ascii
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Andrea Righi <andrea.righi@canonical.com> writes:
 
+> In unuse_pte_range() we blindly swap-in pages without checking if the
+> swap entry is already present in the swap cache.
+>
+> By doing this, the hit/miss ratio used by the swap readahead heuristic
+> is not properly updated and this leads to non-optimal performance during
+> swapoff.
 
-On 4/16/20 5:11 PM, Hugh Dickins wrote:
-> Recent commit 71725ed10c40 ("mm: huge tmpfs: try to split_huge_page()
-> when punching hole") has allowed syzkaller to probe deeper, uncovering
-> a long-standing lockdep issue between the irq-unsafe shmlock_user_lock,
-> the irq-safe xa_lock on mapping->i_pages, and shmem inode's info->lock
-> which nests inside xa_lock (or tree_lock) since 4.8's shmem_uncharge().
->
-> user_shm_lock(), servicing SysV shmctl(SHM_LOCK), wants shmlock_user_lock
-> while its caller shmem_lock() holds info->lock with interrupts disabled;
-> but hugetlbfs_file_setup() calls user_shm_lock() with interrupts enabled,
-> and might be interrupted by a writeback endio wanting xa_lock on i_pages.
-> This may not risk an actual deadlock, since shmem inodes do not take part
-> in writeback accounting, but there are several easy ways to avoid it.
->
-> Requiring interrupts disabled for shmlock_user_lock would be easy,
-> but it's a high-level global lock for which that seems inappropriate.
-> Instead, recall that the use of info->lock to guard info->flags in
-> shmem_lock() dates from pre-3.1 days, when races with SHMEM_PAGEIN and
-> SHMEM_TRUNCATE could occur: nowadays it serves no purpose, the only flag
-> added or removed is VM_LOCKED itself, and calls to shmem_lock() an inode
-> are already serialized by the caller.  Take info->lock out of the chain
-> and the possibility of deadlock or lockdep warning goes away.
->
-> Reported-by: syzbot+c8a8197c8852f566b9d9@syzkaller.appspotmail.com
-> Link: https://lore.kernel.org/lkml/000000000000e5838c05a3152f53@google.com/
-> Reported-by: syzbot+40b71e145e73f78f81ad@syzkaller.appspotmail.com
-> Link: https://lore.kernel.org/lkml/0000000000003712b305a331d3b1@google.com/
-> Fixes: 4595ef88d136 ("shmem: make shmem_inode_info::lock irq-safe")
-> Signed-off-by: Hugh Dickins <hughd@google.com>
-> Cc: Yang Shi <yang.shi@linux.alibaba.com>
-> ---
->
->   mm/shmem.c |    7 +++++--
->   1 file changed, 5 insertions(+), 2 deletions(-)
+It's more important to describe why we need this patch in the patch
+description.  So, please add some information about your use case.  And
+please focus on the technical part instead of the business part.
 
-Acked-by: Yang Shi <yang.shi@linux.alibaba.com>
-
+> Tracing the distribution of the readahead size returned by the swap
+> readahead heuristic during swapoff shows that a small readahead size is
+> used most of the time as if we had only misses (this happens both with
+> cluster and vma readahead), for example:
 >
-> --- 5.7-rc1/mm/shmem.c	2020-04-11 12:58:26.415524805 -0700
-> +++ linux/mm/shmem.c	2020-04-16 11:04:06.729738730 -0700
-> @@ -2179,7 +2179,11 @@ int shmem_lock(struct file *file, int lo
->   	struct shmem_inode_info *info = SHMEM_I(inode);
->   	int retval = -ENOMEM;
->   
-> -	spin_lock_irq(&info->lock);
-> +	/*
-> +	 * What serializes the accesses to info->flags?
-> +	 * ipc_lock_object() when called from shmctl_do_lock(),
-> +	 * no serialization needed when called from shm_destroy().
-> +	 */
->   	if (lock && !(info->flags & VM_LOCKED)) {
->   		if (!user_shm_lock(inode->i_size, user))
->   			goto out_nomem;
-> @@ -2194,7 +2198,6 @@ int shmem_lock(struct file *file, int lo
->   	retval = 0;
->   
->   out_nomem:
-> -	spin_unlock_irq(&info->lock);
->   	return retval;
->   }
->   
+> r::swapin_nr_pages(unsigned long offset):unsigned long:$retval
+>         COUNT      EVENT
+>         36948      $retval = 8
+>         44151      $retval = 4
+>         49290      $retval = 1
+>         527771     $retval = 2
+>
+> Checking if the swap entry is present in the swap cache, instead, allows
+> to properly update the readahead statistics and the heuristic behaves in
+> a better way during swapoff, selecting a bigger readahead size:
+>
+> r::swapin_nr_pages(unsigned long offset):unsigned long:$retval
+>         COUNT      EVENT
+>         1618       $retval = 1
+>         4960       $retval = 2
+>         41315      $retval = 4
+>         103521     $retval = 8
+>
+> In terms of swapoff performance the result is the following:
+>
+> Testing environment
+> ===================
+>
+>  - Host:
+>    CPU: 1.8GHz Intel Core i7-8565U (quad-core, 8MB cache)
+>    HDD: PC401 NVMe SK hynix 512GB
+>    MEM: 16GB
+>
+>  - Guest (kvm):
+>    8GB of RAM
+>    virtio block driver
+>    16GB swap file on ext4 (/swapfile)
+>
+> Test case
+> =========
+>  - allocate 85% of memory
+>  - `systemctl hibernate` to force all the pages to be swapped-out to the
+>    swap file
+>  - resume the system
+>  - measure the time that swapoff takes to complete:
+>    # /usr/bin/time swapoff /swapfile
+>
+> Result (swapoff time)
+> ======
+>                   5.6 vanilla   5.6 w/ this patch
+>                   -----------   -----------------
+> cluster-readahead      22.09s              12.19s
+>     vma-readahead      18.20s              15.33s
+>
+> Signed-off-by: "Huang, Ying" <ying.huang@intel.com>
 
+Thanks!  But you don't need to do this.  You can add my Reviewed-by after
+we have finished the work on patch description.
+
+Best Regards,
+Huang, Ying
