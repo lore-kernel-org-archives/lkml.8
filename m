@@ -2,109 +2,140 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43A7DC352BE
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 16:15:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F53CC2D0EF
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 16:15:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 23D8E20857
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 16:15:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587140119;
-	bh=ECCfbaSoEBEJ6WvTW36xUahNJiM0dMQr/S7euQZ88dw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Gp8djto5tj7DWgivkaMxi/eG5BVu27mw4wuLFiLbQbp3G+lOjRMazU0+ixKi1AGK/
-	 gzyAwssP8/Br6o7AxtkRVKPEhGBGwP/9llMt2pxNiP4UhHhW00aydrsh3dayc3mjbt
-	 1jtb0+P56r0BVWyfnirFTmnFrzV0NOA2xOY2OdNQ=
+	by mail.kernel.org (Postfix) with ESMTP id C9E5220857
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 16:15:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729903AbgDQQPS (ORCPT
+        id S1730035AbgDQQPZ convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 12:15:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37772 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728105AbgDQQPR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 12:15:17 -0400
-Received: from localhost (unknown [104.132.1.66])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1DF672072D;
-        Fri, 17 Apr 2020 16:15:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587140117;
-        bh=ECCfbaSoEBEJ6WvTW36xUahNJiM0dMQr/S7euQZ88dw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=AKJgxUHT9WLUQmTCNTg45NPovpnw3Zz+WXdmnua4zbrQuym9O5pYzYViZrtEaOwIJ
-         lgaLTU2oB/a8gRFrCD2mLR4aor/SqW1qEQg+EN3aMGtDILQhgawWD7PWB/DW6O1cjO
-         t4DLlGphDdhHzG+O9w0awnT2jYVYQo9OEwThD2Ws=
-Date:   Fri, 17 Apr 2020 09:15:16 -0700
-From:   Jaegeuk Kim <jaegeuk@kernel.org>
-To:     Chao Yu <yuchao0@huawei.com>
-Cc:     Sahitya Tummala <stummala@codeaurora.org>,
-        linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net
-Subject: Re: [f2fs-dev] [PATCH] f2fs: prevent meta updates while checkpoint
- is in progress
-Message-ID: <20200417161516.GA17901@google.com>
-References: <20200331035419.GB79749@google.com>
- <20200331090608.GZ20234@codeaurora.org>
- <20200331184307.GA198665@google.com>
- <20200401050801.GA20234@codeaurora.org>
- <20200403171727.GB68460@google.com>
- <20200403172750.GD68460@google.com>
- <20200413174237.GC39092@google.com>
- <20200414134403.GA69282@google.com>
- <20200416214045.GB196168@google.com>
- <e1b763bf-7f72-01eb-a368-9b70e0f46f55@huawei.com>
+        Fri, 17 Apr 2020 12:15:25 -0400
+Received: from mailoutvs15.siol.net ([185.57.226.206]:45694 "EHLO
+        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728105AbgDQQPY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Apr 2020 12:15:24 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.siol.net (Postfix) with ESMTP id 7E3B3524BB0;
+        Fri, 17 Apr 2020 18:15:19 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at psrvmta09.zcs-production.pri
+Received: from mail.siol.net ([127.0.0.1])
+        by localhost (psrvmta09.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id 8zL-mRWm0sXI; Fri, 17 Apr 2020 18:15:19 +0200 (CEST)
+Received: from mail.siol.net (localhost [127.0.0.1])
+        by mail.siol.net (Postfix) with ESMTPS id 1358A524C5F;
+        Fri, 17 Apr 2020 18:15:19 +0200 (CEST)
+Received: from jernej-laptop.localnet (cpe-194-152-20-232.static.triera.net [194.152.20.232])
+        (Authenticated sender: jernej.skrabec@siol.net)
+        by mail.siol.net (Postfix) with ESMTPA id 03505524C64;
+        Fri, 17 Apr 2020 18:15:17 +0200 (CEST)
+From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@siol.net>
+To:     robh+dt@kernel.org, andrew@lunn.ch, f.fainelli@gmail.com,
+        Heiner Kallweit <hkallweit1@gmail.com>
+Cc:     mripard@kernel.org, wens@csie.org, lee.jones@linaro.org,
+        linux@armlinux.org.uk, davem@davemloft.net,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Subject: Re: [RFC PATCH 2/4] net: phy: Add support for AC200 EPHY
+Date:   Fri, 17 Apr 2020 18:15:17 +0200
+Message-ID: <6176364.4vTCxPXJkl@jernej-laptop>
+In-Reply-To: <0340f85c-987f-900b-53c8-d29b4672a8fa@gmail.com>
+References: <20200416185758.1388148-1-jernej.skrabec@siol.net> <20200416185758.1388148-3-jernej.skrabec@siol.net> <0340f85c-987f-900b-53c8-d29b4672a8fa@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e1b763bf-7f72-01eb-a368-9b70e0f46f55@huawei.com>
+Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sahitya,
-
-Could you please test this patch fully? I didn't test at all.
-
-Thanks,
-
-On 04/17, Chao Yu wrote:
-> On 2020/4/17 5:40, Jaegeuk Kim wrote:
-> > On 04/14, Jaegeuk Kim wrote:
-> >> On 04/13, Jaegeuk Kim wrote:
-> >>> On 04/03, Jaegeuk Kim wrote:
-> >>>> On 04/03, Jaegeuk Kim wrote:
-> >>>>> On 04/01, Sahitya Tummala wrote:
-> >>>>>> Hi Jaegeuk,
-> >>>>>>
-> >>>>>> Got it.
-> >>>>>> The diff below looks good to me.
-> >>>>>> Would you like me to test it and put a patch for this?
-> >>>>>
-> >>>>> Sahitya, Chao,
-> >>>>>
-> >>>>> Could you please take a look at this patch and test intensively?
-> >>>>>
-> >>>>> Thanks,
+Dne četrtek, 16. april 2020 ob 22:18:52 CEST je Heiner Kallweit napisal(a):
+> On 16.04.2020 20:57, Jernej Skrabec wrote:
+> > AC200 MFD IC supports Fast Ethernet PHY. Add a driver for it.
 > > 
-> > v5:
-> >  - add signal handler
+> > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> > ---
 > > 
-> > Sahitya raised an issue:
-> > - prevent meta updates while checkpoint is in progress
+> >  drivers/net/phy/Kconfig  |   7 ++
+> >  drivers/net/phy/Makefile |   1 +
+> >  drivers/net/phy/ac200.c  | 206 +++++++++++++++++++++++++++++++++++++++
+> >  3 files changed, 214 insertions(+)
+> >  create mode 100644 drivers/net/phy/ac200.c
 > > 
-> > allocate_segment_for_resize() can cause metapage updates if
-> > it requires to change the current node/data segments for resizing.
-> > Stop these meta updates when there is a checkpoint already
-> > in progress to prevent inconsistent CP data.
+> > diff --git a/drivers/net/phy/Kconfig b/drivers/net/phy/Kconfig
+> > index 3fa33d27eeba..16af69f69eaf 100644
+> > --- a/drivers/net/phy/Kconfig
+> > +++ b/drivers/net/phy/Kconfig
+> > @@ -288,6 +288,13 @@ config ADIN_PHY
 > > 
-> > Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
-> > Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+> >  	  - ADIN1300 - Robust,Industrial, Low Latency 10/100/1000 Gigabit
+> >  	  
+> >  	    Ethernet PHY
+> > 
+> > +config AC200_PHY
+> > +	tristate "AC200 EPHY"
+> > +	depends on NVMEM
+> > +	depends on OF
+> > +	help
+> > +	  Fast ethernet PHY as found in X-Powers AC200 multi-function 
+device.
+> > +
+> > 
+> >  config AMD_PHY
+> >  
+> >  	tristate "AMD PHYs"
+> >  	---help---
+> > 
+> > diff --git a/drivers/net/phy/Makefile b/drivers/net/phy/Makefile
+> > index 2f5c7093a65b..b0c5b91900fa 100644
+> > --- a/drivers/net/phy/Makefile
+> > +++ b/drivers/net/phy/Makefile
+> > @@ -53,6 +53,7 @@ obj-$(CONFIG_SFP)		+= sfp.o
+> > 
+> >  sfp-obj-$(CONFIG_SFP)		+= sfp-bus.o
+> >  obj-y				+= $(sfp-obj-y) $(sfp-obj-m)
+> > 
+> > +obj-$(CONFIG_AC200_PHY)		+= ac200.o
+> > 
+> >  obj-$(CONFIG_ADIN_PHY)		+= adin.o
+> >  obj-$(CONFIG_AMD_PHY)		+= amd.o
+> >  aquantia-objs			+= aquantia_main.o
+> > 
+> > diff --git a/drivers/net/phy/ac200.c b/drivers/net/phy/ac200.c
+> > new file mode 100644
+> > index 000000000000..3d7856ff8f91
+> > --- /dev/null
+> > +++ b/drivers/net/phy/ac200.c
+> > @@ -0,0 +1,206 @@
+> > +// SPDX-License-Identifier: GPL-2.0+
+> > +/**
+> > + * Driver for AC200 Ethernet PHY
+> > + *
+> > + * Copyright (c) 2020 Jernej Skrabec <jernej.skrabec@siol.net>
+> > + */
+> > +
+> > +#include <linux/kernel.h>
+> > +#include <linux/module.h>
+> > +#include <linux/mfd/ac200.h>
+> > +#include <linux/nvmem-consumer.h>
+> > +#include <linux/of.h>
+> > +#include <linux/phy.h>
+> > +#include <linux/platform_device.h>
+> > +
+> > +#define AC200_EPHY_ID			0x00441400
+> > +#define AC200_EPHY_ID_MASK		0x0ffffff0
+> > +
 > 
-> Reviewed-by: Chao Yu <yuchao0@huawei.com>
-> 
-> Thanks,
+> You could use PHY_ID_MATCH_MODEL() here.
+
+Hm... This doesn't work with dynamically allocated memory, right?
+
+Best regards,
+Jernej
+
+
