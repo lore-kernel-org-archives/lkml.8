@@ -2,114 +2,96 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03B76C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 21:31:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A82F2C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 21:32:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C656A206B9
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 21:31:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B370206B9
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 21:32:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="X7ie4/cL"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="pyUkzSPR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728104AbgDQVbS (ORCPT
+        id S1728152AbgDQVcu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 17:31:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44288 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727889AbgDQVbR (ORCPT
+        Fri, 17 Apr 2020 17:32:50 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:34402 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727889AbgDQVcu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 17:31:17 -0400
-Received: from mail-yb1-xb41.google.com (mail-yb1-xb41.google.com [IPv6:2607:f8b0:4864:20::b41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A183C061A0C
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 14:31:16 -0700 (PDT)
-Received: by mail-yb1-xb41.google.com with SMTP id i16so1780950ybq.9
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 14:31:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=VlK4+w1QC00q805dbGzDfZYQ3w7WLZTC7nlE4Jl0fcw=;
-        b=X7ie4/cLiKiBHIRiKqysqBt6Y8oXdxEA6RDt+c8ynb1e67Xu8xKs+thBLBFZAo+f79
-         fzZB+s+AukisujpubGehpG2nMKzMIEL2glau4ScakRGjO3yR3Ixn5APSzfrdexLOMpBv
-         zBn/lfWpo5ucEdY1Q9lFgz4TW8NMp2rppz6z0cxDxarWVn90Sk6s/sVNbcy4zTKecDkK
-         jz26PKlLgP3cw75scAckydb3RpW64jmmC61LK6/QLBKFRMj3molcynG3s9DplLWJJaX4
-         zNFauyQj8jxYN5VUK3iG0MX5obd90h8VHPk8jkjjf5qAPzrMWt5eGKr2xU+UCgb9j7B+
-         o0QA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=VlK4+w1QC00q805dbGzDfZYQ3w7WLZTC7nlE4Jl0fcw=;
-        b=kmrHHbV/w7zP/dGEEfaULCp/0w6iwIkihsRsNOiqAuMZHQxoaPM8CQWovzEFnyvIvx
-         hGoB+YdxC2XKo0lX+MTFslc5iFFuteGO9LmcXf2zAsKn31T9FGlvWHGuhiPFjPiUeR42
-         QuiVV9MocmlTzR9MQ2ZcUNPnFlM/Fi9PLZottRU3QtFr5pLUbTBNYGxVaTc56htdjZVm
-         u+/jISI0Hnr5MKsaEt+gSJLQNSWkgWPV6C9n7v6vjC/HGPfPXzCdIYtT5LxaBJtERfXw
-         wvuoEfn9teH0o2QcFdo1U6OgDRT8r/SodplBqCd0osYUjwexbKXlxUCRiC0WxyY1NfF/
-         NEWg==
-X-Gm-Message-State: AGi0PuYi+EPmZ3nmWYAS+MS0CKi4kyTNP1KF7qV0mi0K1Ka5yv7E+b20
-        oqSE1UsngTg1j7Pe08kCxmMoQGLDziTpxvEg+6mIlw==
-X-Google-Smtp-Source: APiQypImoXwKVREQerXGn/Kx6PmgTQ/vEYsDXv8PGwramrEP9mVfP8fi8esMQq8EGb9BiQ5tbFomrYgHLBh24hhhB2o=
-X-Received: by 2002:a25:4443:: with SMTP id r64mr1384458yba.41.1587159075073;
- Fri, 17 Apr 2020 14:31:15 -0700 (PDT)
+        Fri, 17 Apr 2020 17:32:50 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03HLIQsK017001;
+        Fri, 17 Apr 2020 21:32:13 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : references : date : in-reply-to : message-id : mime-version :
+ content-type; s=corp-2020-01-29;
+ bh=UHhXn4TFb7iP/yLbQUBSjFu5xKU2uaPUb6UZTF11SnI=;
+ b=pyUkzSPRbSwThrq20A2lvHv19pKI0vRXo7Rs0aFxXOfeYE46fTHRvtn5lXknlo/uhOJg
+ WtdwXyyULSbeCchHvyx8xs1Jdd82b7pb1IsU5Zvtm7jpLxR4w6T+Z3WxiOGAXLTcw2f8
+ hJQcbQx4+21+s2emts7FGQi4XohcghyhBWznd9EjpIFgkLA/HGMinYQDIpxuHiLbFRF5
+ MY3GVBDR28vJrCrVJ02m93x7ybtJ6i49X6/lnNjtGVF4z3gnCwrRNs0yV8GFzVV4eyCB
+ OUKBZxSlfyQUDL0Z7NK6Se6NQLRsmXc5NkH69WrxI+CBPvNUl2ke7N0U2GQavO6NwKyf CQ== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2120.oracle.com with ESMTP id 30dn961c72-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 17 Apr 2020 21:32:13 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03HLWC5d142752;
+        Fri, 17 Apr 2020 21:32:13 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3020.oracle.com with ESMTP id 30dn9m51a7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 17 Apr 2020 21:32:12 +0000
+Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 03HLW2hw002064;
+        Fri, 17 Apr 2020 21:32:02 GMT
+Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 17 Apr 2020 14:32:02 -0700
+To:     Jason Yan <yanaijie@huawei.com>
+Cc:     <QLogic-Storage-Upstream@cavium.com>, <jejb@linux.ibm.com>,
+        <martin.petersen@oracle.com>, <linux-scsi@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Hulk Robot <hulkci@huawei.com>
+Subject: Re: [PATCH] scsi: qedi: make qedi_ll2_buf_size static
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+References: <20200415085029.7170-1-yanaijie@huawei.com>
+Date:   Fri, 17 Apr 2020 17:32:00 -0400
+In-Reply-To: <20200415085029.7170-1-yanaijie@huawei.com> (Jason Yan's message
+        of "Wed, 15 Apr 2020 16:50:29 +0800")
+Message-ID: <yq14kthol2n.fsf@oracle.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
 MIME-Version: 1.0
-References: <20200417182842.12522-1-irogers@google.com> <20200417184536.GK20730@hirez.programming.kicks-ass.net>
-In-Reply-To: <20200417184536.GK20730@hirez.programming.kicks-ass.net>
-From:   Ian Rogers <irogers@google.com>
-Date:   Fri, 17 Apr 2020 14:31:04 -0700
-Message-ID: <CAP-5=fU=mBqrZYqMYSXd6_12YV43ZPNSqQ=8GCRj5ZAQRJperg@mail.gmail.com>
-Subject: Re: [PATCH] perf/core: fix parent pid/tid in task exit events
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        Stephane Eranian <eranian@google.com>,
-        KP Singh <kpsingh@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9594 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=927 mlxscore=0 adultscore=0
+ spamscore=0 phishscore=0 bulkscore=0 suspectscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004170156
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9594 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 clxscore=1011
+ malwarescore=0 bulkscore=0 priorityscore=1501 lowpriorityscore=0
+ mlxscore=0 phishscore=0 spamscore=0 impostorscore=0 suspectscore=0
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004170155
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 17, 2020 at 11:45 AM Peter Zijlstra <peterz@infradead.org> wrote:
+
+Jason,
+
+> Fix the following sparse warning:
 >
-> On Fri, Apr 17, 2020 at 11:28:42AM -0700, Ian Rogers wrote:
-> > Current logic yields the child task as the parent.
-> >
-> > Before:
-> > $ perf record bash -c "perf list > /dev/null"
-> > $ perf script -D |grep 'FORK\|EXIT'
-> > 4387036190981094 0x5a70 [0x30]: PERF_RECORD_FORK(10472:10472):(10470:10470)
-> > 4387036606207580 0xf050 [0x30]: PERF_RECORD_EXIT(10472:10472):(10472:10472)
-> > 4387036607103839 0x17150 [0x30]: PERF_RECORD_EXIT(10470:10470):(10470:10470)
-> >                                                    ^
-> >   Note the repeated values here -------------------/
-> >
-> > After:
-> > 383281514043 0x9d8 [0x30]: PERF_RECORD_FORK(2268:2268):(2266:2266)
-> > 383442003996 0x2180 [0x30]: PERF_RECORD_EXIT(2268:2268):(2266:2266)
-> > 383451297778 0xb70 [0x30]: PERF_RECORD_EXIT(2266:2266):(2265:2265)
-> >
->
-> Fixes: .... ?
+> drivers/scsi/qedi/qedi_main.c:44:6: warning: symbol 'qedi_ll2_buf_size'
+> was not declared. Should it be static?
 
-Fixes:  94d5d1b2d891 ("perf_counter: Report the cloning task as parent
-on perf_counter_fork()")
+Applied to 5.8/scsi-queue, thanks!
 
-Sorry, re-sending as plain-text was disabled on the message and so it
-bounced on lkml. Took some digging to find the original commit :-)
-
-Thanks,
-Ian
-
->
-> > Reported-by: KP Singh <kpsingh@google.com>
-> > Signed-off-by: Ian Rogers <irogers@google.com>
+-- 
+Martin K. Petersen	Oracle Linux Engineering
