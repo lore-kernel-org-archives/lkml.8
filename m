@@ -2,360 +2,157 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84D12C38A29
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 08:51:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6F7BC3815B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 08:51:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5BCE82076D
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 08:51:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6A452076D
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 08:51:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X6Cx0Jy/"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CfNdQIXP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730074AbgDQIvN (ORCPT
+        id S1730077AbgDQIvi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 04:51:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38890 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729886AbgDQIuY (ORCPT
+        Fri, 17 Apr 2020 04:51:38 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:30688 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729890AbgDQIvg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 04:50:24 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D686AC061A0F;
-        Fri, 17 Apr 2020 01:50:23 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id i10so2088427wrv.10;
-        Fri, 17 Apr 2020 01:50:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=tIMSggY5t3bJxxo9RkdopxY8+yMNt9VADm3loRiXMow=;
-        b=X6Cx0Jy/wDAy5sJwQZlRnnraW5fqmGvCXGd21b0z2i2Z6/gIHin9+UAo9KKADsxein
-         TMp9CcFIxw/6eNna2gi6QF+/r19I6UnFZ/psHu81Tf0iGjac4rp2yPGka8aNaX6xnNwo
-         TnrzHTGFPS3h6Af3eBzmQ5J/qlsI/sMkU7siIoPSq4L8SJl06tSNjZNPRp5ko6ZH58DL
-         65AYwNuXvGqKWfcs9ABcugB8Tch2LiSRVUbKb5TbzfKeAWG2yvK3QFwMU/a3hm2hdaMh
-         yWhXZxqDhaQGjfUn+YBhpPwrkqhsSs8i2nb19rrrOehvch6HoTPI2NF5MWo/txHGJ5JR
-         5ONQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=tIMSggY5t3bJxxo9RkdopxY8+yMNt9VADm3loRiXMow=;
-        b=s0GCfuh5rCEA7IeT4XeGPTQcdewphP9+XjxYhNmg8tf7RlGd0L4wMbuZS/kjOKPmaP
-         9OEkxtrcdL1/8o3gkym+TPVMXGB8MJ4ib6OfCeZyjyfTDt+6e0R7wWqBWQRqSae2eob/
-         8oTGVZNmmShW63HOCYRUirBMQ0yFCVHATidyY/9yrubP8tnCb8xqqWZ1VloBda61Xzsw
-         vlefrHR31KZqaKeL0MU9MSQ+BM04NgUapPhwEyOYFuPthBCHnbmijSk9KbWm7+SeiNRb
-         34Rsg5CgMhZ94CPGjSiTLS0M2xYUsnfq13+a2ZTCmSwszr4og+Q0eDxMvmos1w02L7s3
-         mLZA==
-X-Gm-Message-State: AGi0PuZUTAZ80ygUo5eMmyJKo/mq/SFk7VE1gD002865RaA4MCFuKWfL
-        SjRZpqXSnUKLXZQeJPJo2C8=
-X-Google-Smtp-Source: APiQypIgvp/0IjJEYcPbsJzxkhn2piiT+v2r3KMSnGjtKkcZnaFQS9urPPFba/FFumfYLcMSJoreGg==
-X-Received: by 2002:adf:afc6:: with SMTP id y6mr2532579wrd.74.1587113422542;
-        Fri, 17 Apr 2020 01:50:22 -0700 (PDT)
-Received: from localhost.localdomain (p5B3F7443.dip0.t-ipconnect.de. [91.63.116.67])
-        by smtp.gmail.com with ESMTPSA id l5sm6807527wmi.22.2020.04.17.01.50.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Apr 2020 01:50:21 -0700 (PDT)
-From:   Saravanan Sekar <sravanhome@gmail.com>
-To:     lee.jones@linaro.org, andy.shevchenko@gmail.com,
-        robh+dt@kernel.org, jic23@kernel.org, knaack.h@gmx.de,
-        lars@metafoo.de, pmeerw@pmeerw.net, sre@kernel.org
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-iio@vger.kernel.org, linux-pm@vger.kernel.org,
-        Saravanan Sekar <sravanhome@gmail.com>
-Subject: [PATCH v10 3/6] iio: adc: mp2629: Add support for mp2629 ADC driver
-Date:   Fri, 17 Apr 2020 10:50:00 +0200
-Message-Id: <20200417085003.6124-4-sravanhome@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200417085003.6124-1-sravanhome@gmail.com>
-References: <20200417085003.6124-1-sravanhome@gmail.com>
+        Fri, 17 Apr 2020 04:51:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587113495;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=uQwVoLWLfFbH6h152kN8CMNJtHnIpy94SgeEfTqCWgE=;
+        b=CfNdQIXP+6j3FGXsL1WFUHxdLb1Dek+lY1gEGxUnQs6J2WygG5M2dgTacIEQD8s1UqRK4U
+        Zh2SzEik/WVPfw4ogbMHwnysS1PTzfyvxcFYc+G2A2rUUVp8Knn+t3Mc5SHdSqd77K5CSJ
+        7eYMORvrFzu51QMWxWYrMo6OVx+oulg=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-290-YshOpB4qNkaObaMFdM5aTw-1; Fri, 17 Apr 2020 04:51:31 -0400
+X-MC-Unique: YshOpB4qNkaObaMFdM5aTw-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5BFDADB20;
+        Fri, 17 Apr 2020 08:51:29 +0000 (UTC)
+Received: from [10.72.13.202] (ovpn-13-202.pek2.redhat.com [10.72.13.202])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 2890E5DA2C;
+        Fri, 17 Apr 2020 08:51:20 +0000 (UTC)
+Subject: Re: [PATCH V2] vhost: do not enable VHOST_MENU by default
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
+        netdev@vger.kernel.org, geert@linux-m68k.org,
+        tsbogend@alpha.franken.de, benh@kernel.crashing.org,
+        paulus@samba.org, heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        borntraeger@de.ibm.com, Michael Ellerman <mpe@ellerman.id.au>
+References: <20200415024356.23751-1-jasowang@redhat.com>
+ <20200416185426-mutt-send-email-mst@kernel.org>
+ <b7e2deb7-cb64-b625-aeb4-760c7b28c0c8@redhat.com>
+ <20200417022929-mutt-send-email-mst@kernel.org>
+ <4274625d-6feb-81b6-5b0a-695229e7c33d@redhat.com>
+ <20200417042912-mutt-send-email-mst@kernel.org>
+ <fdb555a6-4b8d-15b6-0849-3fe0e0786038@redhat.com>
+ <20200417044230-mutt-send-email-mst@kernel.org>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <73843240-3040-655d-baa9-683341ed4786@redhat.com>
+Date:   Fri, 17 Apr 2020 16:51:19 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+MIME-Version: 1.0
+In-Reply-To: <20200417044230-mutt-send-email-mst@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for 8-bit resolution ADC readings for input power
-supply and battery charging measurement. Provides voltage, current
-readings to mp2629 power supply driver.
 
-Signed-off-by: Saravanan Sekar <sravanhome@gmail.com>
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
----
- drivers/iio/adc/Kconfig      |  10 ++
- drivers/iio/adc/Makefile     |   1 +
- drivers/iio/adc/mp2629_adc.c | 208 +++++++++++++++++++++++++++++++++++
- include/linux/mfd/mp2629.h   |   9 ++
- 4 files changed, 228 insertions(+)
- create mode 100644 drivers/iio/adc/mp2629_adc.c
+On 2020/4/17 =E4=B8=8B=E5=8D=884:46, Michael S. Tsirkin wrote:
+> On Fri, Apr 17, 2020 at 04:39:49PM +0800, Jason Wang wrote:
+>> On 2020/4/17 =E4=B8=8B=E5=8D=884:29, Michael S. Tsirkin wrote:
+>>> On Fri, Apr 17, 2020 at 03:36:52PM +0800, Jason Wang wrote:
+>>>> On 2020/4/17 =E4=B8=8B=E5=8D=882:33, Michael S. Tsirkin wrote:
+>>>>> On Fri, Apr 17, 2020 at 11:12:14AM +0800, Jason Wang wrote:
+>>>>>> On 2020/4/17 =E4=B8=8A=E5=8D=886:55, Michael S. Tsirkin wrote:
+>>>>>>> On Wed, Apr 15, 2020 at 10:43:56AM +0800, Jason Wang wrote:
+>>>>>>>> We try to keep the defconfig untouched after decoupling CONFIG_V=
+HOST
+>>>>>>>> out of CONFIG_VIRTUALIZATION in commit 20c384f1ea1a
+>>>>>>>> ("vhost: refine vhost and vringh kconfig") by enabling VHOST_MEN=
+U by
+>>>>>>>> default. Then the defconfigs can keep enabling CONFIG_VHOST_NET
+>>>>>>>> without the caring of CONFIG_VHOST.
+>>>>>>>>
+>>>>>>>> But this will leave a "CONFIG_VHOST_MENU=3Dy" in all defconfigs =
+and even
+>>>>>>>> for the ones that doesn't want vhost. So it actually shifts the
+>>>>>>>> burdens to the maintainers of all other to add "CONFIG_VHOST_MEN=
+U is
+>>>>>>>> not set". So this patch tries to enable CONFIG_VHOST explicitly =
+in
+>>>>>>>> defconfigs that enables CONFIG_VHOST_NET and CONFIG_VHOST_VSOCK.
+>>>>>>>>
+>>>>>>>> Acked-by: Christian Borntraeger<borntraeger@de.ibm.com>   (s390)
+>>>>>>>> Acked-by: Michael Ellerman<mpe@ellerman.id.au>   (powerpc)
+>>>>>>>> Cc: Thomas Bogendoerfer<tsbogend@alpha.franken.de>
+>>>>>>>> Cc: Benjamin Herrenschmidt<benh@kernel.crashing.org>
+>>>>>>>> Cc: Paul Mackerras<paulus@samba.org>
+>>>>>>>> Cc: Michael Ellerman<mpe@ellerman.id.au>
+>>>>>>>> Cc: Heiko Carstens<heiko.carstens@de.ibm.com>
+>>>>>>>> Cc: Vasily Gorbik<gor@linux.ibm.com>
+>>>>>>>> Cc: Christian Borntraeger<borntraeger@de.ibm.com>
+>>>>>>>> Reported-by: Geert Uytterhoeven<geert@linux-m68k.org>
+>>>>>>>> Signed-off-by: Jason Wang<jasowang@redhat.com>
+>>>>>>> I rebased this on top of OABI fix since that
+>>>>>>> seems more orgent to fix.
+>>>>>>> Pushed to my vhost branch pls take a look and
+>>>>>>> if possible test.
+>>>>>>> Thanks!
+>>>>>> I test this patch by generating the defconfigs that wants vhost_ne=
+t or
+>>>>>> vhost_vsock. All looks fine.
+>>>>>>
+>>>>>> But having CONFIG_VHOST_DPN=3Dy may end up with the similar situat=
+ion that
+>>>>>> this patch want to address.
+>>>>>> Maybe we can let CONFIG_VHOST depends on !ARM || AEABI then add an=
+other
+>>>>>> menuconfig for VHOST_RING and do something similar?
+>>>>>>
+>>>>>> Thanks
+>>>>> Sorry I don't understand. After this patch CONFIG_VHOST_DPN is just
+>>>>> an internal variable for the OABI fix. I kept it separate
+>>>>> so it's easy to revert for 5.8. Yes we could squash it into
+>>>>> VHOST directly but I don't see how that changes logic at all.
+>>>> Sorry for being unclear.
+>>>>
+>>>> I meant since it was enabled by default, "CONFIG_VHOST_DPN=3Dy" will=
+ be left
+>>>> in the defconfigs.
+>>> But who cares?
+>> FYI, please seehttps://www.spinics.net/lists/kvm/msg212685.html
+> The complaint was not about the symbol IIUC.  It was that we caused
+> everyone to build vhost unless they manually disabled it.
 
-diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
-index 82e33082958c..ef0c0cd31855 100644
---- a/drivers/iio/adc/Kconfig
-+++ b/drivers/iio/adc/Kconfig
-@@ -680,6 +680,16 @@ config MESON_SARADC
- 	  To compile this driver as a module, choose M here: the
- 	  module will be called meson_saradc.
- 
-+config MP2629_ADC
-+	tristate "Monolithic MP2629 ADC driver"
-+	depends on MFD_MP2629
-+	help
-+	  Say yes to have support for battery charger IC MP2629 ADC device
-+	  accessed over I2C.
-+
-+	  This driver provides ADC conversion of system, input power supply
-+	  and battery voltage & current information.
-+
- config NAU7802
- 	tristate "Nuvoton NAU7802 ADC driver"
- 	depends on I2C
-diff --git a/drivers/iio/adc/Makefile b/drivers/iio/adc/Makefile
-index 919228900df9..f14416c245a6 100644
---- a/drivers/iio/adc/Makefile
-+++ b/drivers/iio/adc/Makefile
-@@ -64,6 +64,7 @@ obj-$(CONFIG_MCP3911) += mcp3911.o
- obj-$(CONFIG_MEDIATEK_MT6577_AUXADC) += mt6577_auxadc.o
- obj-$(CONFIG_MEN_Z188_ADC) += men_z188_adc.o
- obj-$(CONFIG_MESON_SARADC) += meson_saradc.o
-+obj-$(CONFIG_MP2629_ADC) += mp2629_adc.o
- obj-$(CONFIG_MXS_LRADC_ADC) += mxs-lradc-adc.o
- obj-$(CONFIG_NAU7802) += nau7802.o
- obj-$(CONFIG_NPCM_ADC) += npcm_adc.o
-diff --git a/drivers/iio/adc/mp2629_adc.c b/drivers/iio/adc/mp2629_adc.c
-new file mode 100644
-index 000000000000..faf389f32729
---- /dev/null
-+++ b/drivers/iio/adc/mp2629_adc.c
-@@ -0,0 +1,208 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/*
-+ * MP2629 Driver for ADC
-+ *
-+ * Copyright 2020 Monolithic Power Systems, Inc
-+ *
-+ * Author: Saravanan Sekar <sravanhome@gmail.com>
-+ */
-+
-+#include <linux/iio/driver.h>
-+#include <linux/iio/iio.h>
-+#include <linux/iio/machine.h>
-+#include <linux/mfd/mp2629.h>
-+#include <linux/module.h>
-+#include <linux/mutex.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+
-+#define	MP2629_REG_ADC_CTRL		0x03
-+#define	MP2629_REG_BATT_VOLT		0x0e
-+#define	MP2629_REG_SYSTEM_VOLT		0x0f
-+#define	MP2629_REG_INPUT_VOLT		0x11
-+#define	MP2629_REG_BATT_CURRENT		0x12
-+#define	MP2629_REG_INPUT_CURRENT	0x13
-+
-+#define	MP2629_ADC_START		BIT(7)
-+#define	MP2629_ADC_CONTINUOUS		BIT(6)
-+
-+#define MP2629_MAP(_mp, _mpc) IIO_MAP(#_mp, "mp2629_charger", "mp2629-"_mpc)
-+
-+#define MP2629_ADC_CHAN(_ch, _type) {				\
-+	.type = _type,						\
-+	.indexed = 1,						\
-+	.datasheet_name = #_ch,					\
-+	.channel = MP2629_ ## _ch,				\
-+	.address = MP2629_REG_ ## _ch,				\
-+	.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),		\
-+	.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE),	\
-+}
-+
-+struct mp2629_adc {
-+	struct regmap *regmap;
-+	struct device *dev;
-+};
-+
-+static struct iio_chan_spec mp2629_channels[] = {
-+	MP2629_ADC_CHAN(BATT_VOLT, IIO_VOLTAGE),
-+	MP2629_ADC_CHAN(SYSTEM_VOLT, IIO_VOLTAGE),
-+	MP2629_ADC_CHAN(INPUT_VOLT, IIO_VOLTAGE),
-+	MP2629_ADC_CHAN(BATT_CURRENT, IIO_CURRENT),
-+	MP2629_ADC_CHAN(INPUT_CURRENT, IIO_CURRENT)
-+};
-+
-+static struct iio_map mp2629_adc_maps[] = {
-+	MP2629_MAP(BATT_VOLT, "batt-volt"),
-+	MP2629_MAP(SYSTEM_VOLT, "system-volt"),
-+	MP2629_MAP(INPUT_VOLT, "input-volt"),
-+	MP2629_MAP(BATT_CURRENT, "batt-current"),
-+	MP2629_MAP(INPUT_CURRENT, "input-current")
-+};
-+
-+static int mp2629_read_raw(struct iio_dev *indio_dev,
-+			struct iio_chan_spec const *chan,
-+			int *val, int *val2, long mask)
-+{
-+	struct mp2629_adc *info = iio_priv(indio_dev);
-+	unsigned int rval;
-+	int ret;
-+
-+	switch (mask) {
-+	case IIO_CHAN_INFO_RAW:
-+		ret = regmap_read(info->regmap, chan->address, &rval);
-+		if (ret)
-+			return ret;
-+
-+		if (chan->address == MP2629_INPUT_VOLT)
-+			rval &= GENMASK(6, 0);
-+		*val = rval;
-+		return IIO_VAL_INT;
-+
-+	case IIO_CHAN_INFO_SCALE:
-+		switch (chan->channel) {
-+		case MP2629_BATT_VOLT:
-+		case MP2629_SYSTEM_VOLT:
-+			*val = 20;
-+			return IIO_VAL_INT;
-+
-+		case MP2629_INPUT_VOLT:
-+			*val = 60;
-+			return IIO_VAL_INT;
-+
-+		case MP2629_BATT_CURRENT:
-+			*val = 175;
-+			*val2 = 10;
-+			return IIO_VAL_FRACTIONAL;
-+
-+		case MP2629_INPUT_CURRENT:
-+			*val = 133;
-+			*val2 = 10;
-+			return IIO_VAL_FRACTIONAL;
-+
-+		default:
-+			return -EINVAL;
-+		}
-+
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
-+static const struct iio_info mp2629_adc_info = {
-+	.read_raw = &mp2629_read_raw,
-+};
-+
-+static int mp2629_adc_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct mp2629_info *ddata = dev_get_drvdata(dev->parent);
-+	struct mp2629_adc *info;
-+	struct iio_dev *indio_dev;
-+	int ret;
-+
-+	indio_dev = devm_iio_device_alloc(dev, sizeof(*info));
-+	if (!indio_dev)
-+		return -ENOMEM;
-+
-+	info = iio_priv(indio_dev);
-+	info->regmap = ddata->regmap;
-+	info->dev = dev;
-+	platform_set_drvdata(pdev, indio_dev);
-+
-+	ret = regmap_update_bits(ddata->regmap, MP2629_REG_ADC_CTRL,
-+				MP2629_ADC_START | MP2629_ADC_CONTINUOUS,
-+				MP2629_ADC_START | MP2629_ADC_CONTINUOUS);
-+	if (ret) {
-+		dev_err(dev, "adc enable fail: %d\n", ret);
-+		return ret;
-+	}
-+
-+	ret = iio_map_array_register(indio_dev, mp2629_adc_maps);
-+	if (ret) {
-+		dev_err(dev, "IIO maps register fail: %d\n", ret);
-+		goto fail_disable;
-+	}
-+
-+	indio_dev->name = "mp2629-adc";
-+	indio_dev->dev.parent = dev;
-+	indio_dev->channels = mp2629_channels;
-+	indio_dev->num_channels = ARRAY_SIZE(mp2629_channels);
-+	indio_dev->modes = INDIO_DIRECT_MODE;
-+	indio_dev->info = &mp2629_adc_info;
-+
-+	ret = iio_device_register(indio_dev);
-+	if (ret) {
-+		dev_err(dev, "IIO device register fail: %d\n", ret);
-+		goto fail_map_unregister;
-+	}
-+
-+	return 0;
-+
-+fail_map_unregister:
-+	iio_map_array_unregister(indio_dev);
-+
-+fail_disable:
-+	regmap_update_bits(ddata->regmap, MP2629_REG_ADC_CTRL,
-+					 MP2629_ADC_CONTINUOUS, 0);
-+	regmap_update_bits(ddata->regmap, MP2629_REG_ADC_CTRL,
-+					 MP2629_ADC_START, 0);
-+
-+	return ret;
-+}
-+
-+static int mp2629_adc_remove(struct platform_device *pdev)
-+{
-+	struct iio_dev *indio_dev = platform_get_drvdata(pdev);
-+	struct mp2629_adc *info = iio_priv(indio_dev);
-+
-+	iio_device_unregister(indio_dev);
-+
-+	iio_map_array_unregister(indio_dev);
-+
-+	regmap_update_bits(info->regmap, MP2629_REG_ADC_CTRL,
-+					 MP2629_ADC_CONTINUOUS, 0);
-+	regmap_update_bits(info->regmap, MP2629_REG_ADC_CTRL,
-+					 MP2629_ADC_START, 0);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id mp2629_adc_of_match[] = {
-+	{ .compatible = "mps,mp2629_adc"},
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, mp2629_adc_of_match);
-+
-+static struct platform_driver mp2629_adc_driver = {
-+	.driver = {
-+		.name = "mp2629_adc",
-+		.of_match_table = mp2629_adc_of_match,
-+	},
-+	.probe		= mp2629_adc_probe,
-+	.remove		= mp2629_adc_remove,
-+};
-+module_platform_driver(mp2629_adc_driver);
-+
-+MODULE_AUTHOR("Saravanan Sekar <sravanhome@gmail.com>");
-+MODULE_DESCRIPTION("MP2629 ADC driver");
-+MODULE_LICENSE("GPL");
-diff --git a/include/linux/mfd/mp2629.h b/include/linux/mfd/mp2629.h
-index 06985e41fc6f..83ebfab41691 100644
---- a/include/linux/mfd/mp2629.h
-+++ b/include/linux/mfd/mp2629.h
-@@ -16,4 +16,13 @@ struct mp2629_info {
- 	struct regmap *regmap;
- };
- 
-+enum mp2629_adc_chan {
-+	MP2629_BATT_VOLT,
-+	MP2629_SYSTEM_VOLT,
-+	MP2629_INPUT_VOLT,
-+	MP2629_BATT_CURRENT,
-+	MP2629_INPUT_CURRENT,
-+	MP2629_ADC_CHAN_END
-+};
-+
- #endif
--- 
-2.17.1
+
+There could be some misunderstanding here. I thought it's somehow=20
+similar: a CONFIG_VHOST_MENU=3Dy will be left in the defconfigs even if=20
+CONFIG_VHOST is not set.
+
+Thanks
+
+
+>
 
