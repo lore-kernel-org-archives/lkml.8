@@ -2,240 +2,120 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 935E5C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 06:43:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F5E9C2BB55
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 06:43:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6006A2087E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 06:43:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55492221EA
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 06:43:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dilger-ca.20150623.gappssmtp.com header.i=@dilger-ca.20150623.gappssmtp.com header.b="DqK2lBOu"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="F7FD5j8w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728429AbgDQGnm (ORCPT
+        id S1728466AbgDQGnv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 02:43:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47440 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728007AbgDQGnl (ORCPT
+        Fri, 17 Apr 2020 02:43:51 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:37554 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728012AbgDQGnv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 02:43:41 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9DC23C061A0C
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 23:43:41 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id a22so665050pjk.5
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 23:43:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dilger-ca.20150623.gappssmtp.com; s=20150623;
-        h=content-transfer-encoding:from:mime-version:subject:date:message-id
-         :references:cc:in-reply-to:to;
-        bh=5q3WqG9SB5tYdylD2a0m5b5mUeTB2l3FK9r70pi+Ta8=;
-        b=DqK2lBOu1IjOaMaSXoWKH7Z3nE+GdH2xNBeBIFaPFIZXAMexv9v4dvdfVh2OSCXe2s
-         775s6zQRsymiZbMg2KT+TJmTFnoy0mi79qnpBAJyx2Uc+iK47AIgrSVRYkhGFlWReplI
-         XZ0rQ7ktoRxqI0voxTZKcxe/la8PNlMQFl6TZOZkuPT3TvBsBhI7amo2wyJUX7xC1dCS
-         EjPK7wAtbH1Lt4M9ATsJlW0iqf2SDhBO174r1qojZ6Q3xoNgF5TeHe0e5F4KyEFGFLLc
-         jgouEoiKD6oz5aHLizmmt1OmoijtGH0kxiuMzGp+UzFLwZnREgTxxw4R8GCGeBRPK0T3
-         B9Wg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=5q3WqG9SB5tYdylD2a0m5b5mUeTB2l3FK9r70pi+Ta8=;
-        b=rofEx3eFjoIabTkZlOdqfjTB8s6HbaA8F/SSNRZbJB9bC76y67Zo0SXO2Ws2Gguol8
-         wF7VlPv6Xq1F+h2Ewu/jHqRvkWRcFs6ktEJoexpcMnlYxjHjfx5Z+FLB34eNUaAJSvae
-         hLt4DiylPghoM9GMoH/tQ7EKLiitDiMk+AVfpCrIRct9rgS4y+DFs/d3wNDmCrH0fssr
-         KHvZHvl3n4pIaMVfyx0BmQxQJQLTh2+rJx6L1a82X3HJHvWYVYb50gHXbtXFvk7P6fwb
-         Be0iqdITDgLUWAjpsDX9yJLITIZcsBR8WouKaFCO1nb8qGD0C8bAby+x7F+DDdSECcZ1
-         oBJw==
-X-Gm-Message-State: AGi0Pub1Sdl1vgI/QwkpMoGx5yLRefAjkgghWtyLZhYkkNYoQzSQcs3e
-        TcXn+Ww9fY73CvoQX+UO7g+TVw==
-X-Google-Smtp-Source: APiQypLGkzoCro0ltAdsDK4nr1W39R+Zc9W7hACqJqfvv9aDZqi6iQ5f5vF/xvLE9JvhSHCIcunKEA==
-X-Received: by 2002:a17:902:5999:: with SMTP id p25mr2141910pli.189.1587105821015;
-        Thu, 16 Apr 2020 23:43:41 -0700 (PDT)
-Received: from [192.168.10.175] (S0106a84e3fe4b223.cg.shawcable.net. [70.77.216.213])
-        by smtp.gmail.com with ESMTPSA id h66sm17773686pgc.42.2020.04.16.23.43.40
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 16 Apr 2020 23:43:40 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-From:   Andreas Dilger <adilger@dilger.ca>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH RFC 4/8] fs/ext4: Introduce DAX inode flag
-Date:   Fri, 17 Apr 2020 00:43:39 -0600
-Message-Id: <324CEF76-20AA-40F5-A31B-6E0B1CCED736@dilger.ca>
-References: <20200417022036.GQ2309605@iweiny-DESK2.sc.intel.com>
-Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
-        linux-kernel@vger.kernel.org, Jan Kara <jack@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jeff Moyer <jmoyer@redhat.com>,
-        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-In-Reply-To: <20200417022036.GQ2309605@iweiny-DESK2.sc.intel.com>
-To:     Ira Weiny <ira.weiny@intel.com>
-X-Mailer: iPhone Mail (17E262)
+        Fri, 17 Apr 2020 02:43:51 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 03H6hkJU044583;
+        Fri, 17 Apr 2020 01:43:46 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1587105826;
+        bh=v75aJKj0g8xdcGf9rfysy67IjF1nkGYA4DJMScXfJBM=;
+        h=From:To:CC:Subject:Date;
+        b=F7FD5j8w8K7Al02lWbBtqhiSZ7Ve6TxPv0Gw6/ox2dsH6Ur5CS6XXNh9D35hppI/g
+         ayKDhdJUch0kAZ+Yjy3aI6b5sthVcwEm88bHfLJ49ZX1QkoLlyd6goQJCtlhtgKnOx
+         HYzwOeQJqfzpFub4in5vmBdM5aRMbyywTa+ZheIM=
+Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 03H6hk0U092044
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 17 Apr 2020 01:43:46 -0500
+Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 17
+ Apr 2020 01:43:46 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE101.ent.ti.com
+ (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Fri, 17 Apr 2020 01:43:46 -0500
+Received: from a0393678ub.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03H6hhbe088706;
+        Fri, 17 Apr 2020 01:43:43 -0500
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+To:     =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Rob Herring <robh+dt@kernel.org>
+CC:     <linux-omap@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>, <stable@kernel.org>
+Subject: [PATCH] ARM: dts: dra7: Fix bus_dma_limit for PCIe
+Date:   Fri, 17 Apr 2020 12:13:40 +0530
+Message-ID: <20200417064340.17527-1-kishon@ti.com>
+X-Mailer: git-send-email 2.17.1
+MIME-Version: 1.0
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We still need to store an on-disk DAX flag for Ext4, and at that point it
-doesn't make sense not to expose it via the standard Ext4 chattr utility.
+Even though commit cfb5d65f2595 ("ARM: dts: dra7: Add bus_dma_limit
+for L3 bus") added bus_dma_limit for L3 bus, the PCIe controller
+gets incorrect value of bus_dma_limit.
 
-So having EXT4_DAX_FL (=3D=3D FS_DAX_FL) is no extra effort to add.
+Fix it by adding empty dma-ranges property to axi@0 and axi@1
+(parent device tree node of PCIe controller).
 
-Cheers, Andreas
+Cc: stable@kernel.org
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+---
+ arch/arm/boot/dts/dra7.dtsi | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-> On Apr 16, 2020, at 20:20, Ira Weiny <ira.weiny@intel.com> wrote:
->=20
-> =EF=BB=BFOn Thu, Apr 16, 2020 at 06:57:31PM -0700, Darrick J. Wong wrote:
->>> On Thu, Apr 16, 2020 at 05:37:19PM -0700, Ira Weiny wrote:
->>> On Thu, Apr 16, 2020 at 03:49:37PM -0700, Darrick J. Wong wrote:
->>>> On Thu, Apr 16, 2020 at 03:33:27PM -0700, Ira Weiny wrote:
->>>>> On Thu, Apr 16, 2020 at 09:25:04AM -0700, Darrick J. Wong wrote:
->>>>>> On Mon, Apr 13, 2020 at 09:00:26PM -0700, ira.weiny@intel.com wrote:
->>>>>>> From: Ira Weiny <ira.weiny@intel.com>
->>>>>>>=20
->>>>>>> Add a flag to preserve FS_XFLAG_DAX in the ext4 inode.
->>>>>>>=20
->>>>>>> Set the flag to be user visible and changeable.  Set the flag to be
->>>>>>> inherited.  Allow applications to change the flag at any time.
->>>>>>>=20
->>>>>>> Finally, on regular files, flag the inode to not be cached to facili=
-tate
->>>>>>> changing S_DAX on the next creation of the inode.
->>>>>>>=20
->>>>>>> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
->>>>>>> ---
->>>>>>> fs/ext4/ext4.h  | 13 +++++++++----
->>>>>>> fs/ext4/ioctl.c | 21 ++++++++++++++++++++-
->>>>>>> 2 files changed, 29 insertions(+), 5 deletions(-)
->>>>>>>=20
->>>>>>> diff --git a/fs/ext4/ext4.h b/fs/ext4/ext4.h
->>>>>>> index 61b37a052052..434021fcec88 100644
->>>>>>> --- a/fs/ext4/ext4.h
->>>>>>> +++ b/fs/ext4/ext4.h
->>>>>>> @@ -415,13 +415,16 @@ struct flex_groups {
->>>>>>> #define EXT4_VERITY_FL            0x00100000 /* Verity protected ino=
-de */
->>>>>>> #define EXT4_EA_INODE_FL            0x00200000 /* Inode used for lar=
-ge EA */
->>>>>>> #define EXT4_EOFBLOCKS_FL        0x00400000 /* Blocks allocated beyo=
-nd EOF */
->>>>>>> +
->>>>>>> +#define EXT4_DAX_FL            0x00800000 /* Inode is DAX */
->>>>>>=20
->>>>>> Sooo, fun fact about ext4 vs. the world--
->>>>>>=20
->>>>>> The GETFLAGS/SETFLAGS ioctl, since it came from ext2, shares the same=
+diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
+index 4740989ed9c4..7191ee6a1b82 100644
+--- a/arch/arm/boot/dts/dra7.dtsi
++++ b/arch/arm/boot/dts/dra7.dtsi
+@@ -172,6 +172,7 @@
+ 			#address-cells = <1>;
+ 			ranges = <0x51000000 0x51000000 0x3000
+ 				  0x0	     0x20000000 0x10000000>;
++			dma-ranges;
+ 			/**
+ 			 * To enable PCI endpoint mode, disable the pcie1_rc
+ 			 * node and enable pcie1_ep mode.
+@@ -185,7 +186,6 @@
+ 				device_type = "pci";
+ 				ranges = <0x81000000 0 0          0x03000 0 0x00010000
+ 					  0x82000000 0 0x20013000 0x13000 0 0xffed000>;
+-				dma-ranges = <0x02000000 0x0 0x00000000 0x00000000 0x1 0x00000000>;
+ 				bus-range = <0x00 0xff>;
+ 				#interrupt-cells = <1>;
+ 				num-lanes = <1>;
+@@ -230,6 +230,7 @@
+ 			#address-cells = <1>;
+ 			ranges = <0x51800000 0x51800000 0x3000
+ 				  0x0	     0x30000000 0x10000000>;
++			dma-ranges;
+ 			status = "disabled";
+ 			pcie2_rc: pcie@51800000 {
+ 				reg = <0x51800000 0x2000>, <0x51802000 0x14c>, <0x1000 0x2000>;
+@@ -240,7 +241,6 @@
+ 				device_type = "pci";
+ 				ranges = <0x81000000 0 0          0x03000 0 0x00010000
+ 					  0x82000000 0 0x30013000 0x13000 0 0xffed000>;
+-				dma-ranges = <0x02000000 0x0 0x00000000 0x00000000 0x1 0x00000000>;
+ 				bus-range = <0x00 0xff>;
+ 				#interrupt-cells = <1>;
+ 				num-lanes = <1>;
+-- 
+2.17.1
 
->>>>>> flag values as the ondisk inode flags in ext*.  Therefore, each of th=
-ese
->>>>>> EXT4_[whatever]_FL values are supposed to have a FS_[whatever]_FL
->>>>>> equivalent in include/uapi/linux/fs.h.
->>>>>=20
->>>>> Interesting...
->>>>>=20
->>>>>>=20
->>>>>> (Note that the "[whatever]" is a straight translation since the same
->>>>>> uapi header also defines the FS_XFLAG_[xfswhatever] flag values; igno=
-re
->>>>>> those.)
->>>>>>=20
->>>>>> Evidently, FS_NOCOW_FL already took 0x800000, but ext4.h was never
->>>>>> updated to note that the value was taken.  I think Ted might be incli=
-ned
->>>>>> to reserve the ondisk inode bit just in case ext4 ever does support c=
-opy
->>>>>> on write, though that's his call. :)
->>>>>=20
->>>>> Seems like I should change this...  And I did not realize I was inhere=
-ntly
->>>>> changing a bit definition which was exposed to other FS's...
->>>>=20
->>>> <nod> This whole thing is a mess, particularly now that we have two vfs=
-
->>>> ioctls to set per-fs inode attributes, both of which were inherited fro=
-m
->>>> other filesystems... :(
->>>>=20
->>>=20
->>> Ok I've changed it.
->>>=20
->>>>=20
->>>>>>=20
->>>>>> Long story short - can you use 0x1000000 for this instead, and add th=
-e
->>>>>> corresponding value to the uapi fs.h?  I guess that also means that w=
-e
->>>>>> can change FS_XFLAG_DAX (in the form of FS_DAX_FL in FSSETFLAGS) afte=
-r
->>>>>> that.
->>>>>=20
->>>>> :-/
->>>>>=20
->>>>> Are there any potential users of FS_XFLAG_DAX now?
->>>>=20
->>>> Yes, it's in the userspace ABI so we can't get rid of it.
->>>>=20
->>>> (FWIW there are several flags that exist in both FS_XFLAG_* and FS_*_FL=
-
->>>> form.)
->>>>=20
->>>>> =46rom what it looks like, changing FS_XFLAG_DAX to FS_DAX_FL would be=
- pretty
->>>>> straight forward.  Just to be sure, looks like XFS converts the FS_[xx=
-x]_FL to
->>>>> FS_XFLAGS_[xxx] in xfs_merge_ioc_xflags()?  But it does not look like a=
-ll the
->>>>> FS_[xxx]_FL flags are converted.  Is is that XFS does not support thos=
-e
->>>>> options?  Or is it depending on the VFS layer for some of them?
->>>>=20
->>>> XFS doesn't support most of the FS_*_FL flags.
->>>=20
->>> If FS_XFLAG_DAX needs to continue to be user visible I think we need to k=
-eep
->>> that flag and we should not expose the EXT4_DAX_FL flag...
->>>=20
->>> I think that works for XFS.
->>>=20
->>> But for ext4 it looks like EXT4_FL_XFLAG_VISIBLE was intended to be used=
- for
->>> [GET|SET]XATTR where EXT4_FL_USER_VISIBLE was intended to for [GET|SET]FL=
-AGS...
->>> But if I don't add EXT4_DAX_FL in EXT4_FL_XFLAG_VISIBLE my test fails.
->>>=20
->>> I've been playing with the flags and looking at the code and I _thought_=
- the
->>> following patch would ensure that FS_XFLAG_DAX is the only one visible b=
-ut for
->>> some reason FS_XFLAG_DAX can't be set with this patch.  I still need the=
-
->>> EXT4_FL_USER_VISIBLE mask altered...  Which I believe would expose EXT4_=
-DAX_FL
->>> directly as well.
->>>=20
->>> Jan, Ted?  Any ideas?  Or should we expose EXT4_DAX_FL and FS_XFLAG_DAX i=
-n
->>> ext4?
->>=20
->> Both flags should be exposed through their respective ioctl interfaces
->> in both filesystems.  That way we don't have to add even more verbiage
->> to the documentation to instruct userspace programmers on how to special
->> case ext4 and XFS for the same piece of functionality.
->=20
-> Wouldn't it be more confusing for the user to have 2 different flags which=
- do
-> the same thing?
->=20
-> I would think that using FS_XFLAG_DAX _only_ (for both ext4 and xfs) would=
- be
-> easier without special cases?
->=20
-> Ira
->=20
