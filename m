@@ -2,161 +2,155 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E22CC352BE
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 00:38:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B6F4C352BE
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 00:46:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7CEB62076D
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 00:38:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587083924;
-	bh=dsfVZcmcKJN537QBgK6FGyP7iZmiLTZwvWWD2lBwjq4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=QTGRXIM1gVRkpuS+fR81uvGT8NbpH5bTYNRpUCC5EsMBGCp9BNfdST/DxG0IvslvC
-	 GoF254oazuR8Ki/Yg4txpQeahRc8arRIesQYRQ1lV2L4Ppcpl9FGWnsnXr2nyBJvYG
-	 iMKUbiHy9qeqoZhdKfRQvY3A+Fd1/2OCwMi4niWs=
+	by mail.kernel.org (Postfix) with ESMTP id 27B7C221F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 00:46:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=jgottula-com.20150623.gappssmtp.com header.i=@jgottula-com.20150623.gappssmtp.com header.b="nFkxDEP5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728296AbgDQAin (ORCPT
+        id S1728272AbgDQAqI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 20:38:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47604 "EHLO
+        Thu, 16 Apr 2020 20:46:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48740 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726114AbgDQAin (ORCPT
+        by vger.kernel.org with ESMTP id S1726627AbgDQAqH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 20:38:43 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E10AFC061A0C
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 17:38:41 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id t40so322236pjb.3
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 17:38:41 -0700 (PDT)
+        Thu, 16 Apr 2020 20:46:07 -0400
+Received: from mail-vs1-xe41.google.com (mail-vs1-xe41.google.com [IPv6:2607:f8b0:4864:20::e41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55464C061A0C
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 17:46:06 -0700 (PDT)
+Received: by mail-vs1-xe41.google.com with SMTP id y185so165535vsy.8
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 17:46:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=40k/XtvgB9LVenFiOiVygQS7HVI2RZC9x/MgUNMGQ+8=;
-        b=DGa99OeHcgqul2lpIMRadFKqrPltY/0DTJCaYLgH/Wx7/RcFpsXtlnXMp+HFBSviDs
-         G89HKv3XqIYnZlVuoNVXNSMXVX8A8uhnzr6sUz5QZ25Gk+fMU6r7aLmEsyJE3shFQfp6
-         fuvPFrgI3jJiaXT+dvdx/4YXfAvK1h8Xf9sqvoEBSHmZBWP+rPshVdKoOd+61yubtEmp
-         J3V9hOlmoans53p8dps1e1GV7RDviUoctZikYRwb7+yW6GAaTv3nxSW0a2YAZg+KLE5Q
-         a3FoYQNrNbN06uFxKjvsuQKQ12QTNFCEwsXr9/iPOU2bYV9fa7uV9proDHzw+RY47Oml
-         u7+A==
+        d=jgottula-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=98QNDXNNi1/b9nh1s56044uMzWepsdxzuM+zy1ZjRxU=;
+        b=nFkxDEP5t02hVcrnliNnd9dc1y+GiLs22EKy+tLyO3fXH9tBa+cKxVG6bsGHJBqEUl
+         cs2UXX2VTUu7edfBFqgeSbwbmg+sryNav/F9LImOfjwz9sruHXCb9abixx9cdvUZAqAb
+         CdhCfHgyRm4asocPeYGS3RdX0j/kSN57fjamUpFinPwCVhasHt7uXH1JBgb1V+2RGel6
+         1iztnj+WMRqGnL27F8Z7VlBQBK4UDqzbbQOvWbYpoKwpEQedyO6Jg3Bpn2wbhglY+Zbp
+         Kh3FGd981CMRmk7rjc/JUHpdcgd/zoW1cwN3issixl0BtDdNGFZ3bkUqeh+by79V+RkS
+         0ABA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=40k/XtvgB9LVenFiOiVygQS7HVI2RZC9x/MgUNMGQ+8=;
-        b=meH4uhBRZhHb/D2ZZuh398DQladnUES20OZdRebcDnON8J3YkxNONjevr7M88oS2ce
-         bh2lq8DfUR3JDXmCeozmzRA9FZc2lan/qUYDOds+XSANl/0rbs1BbBLzxzqf8L4XcPXE
-         dlMpvlTstNB2cVLSTdcF/7TV/3Pa1sS4LxaqorOnziITyHIJ6FR26uwfd4g6iw+G52Xr
-         a+f9olIFwrnYa7y+ipMKc/EBjZKXYWAzX1Rr5eLp9GyKGav2jHwe5s3WQXeYMbpJE0Mi
-         b/Ueg1+yaKHjzJ2Km7yHfrufxnL3f7HqVJHiDdncZp9hbRcNlWbQZqfc8uDVhfYvW/D2
-         QfhQ==
-X-Gm-Message-State: AGi0PuYwYCp9E69+HwiNCOxBPA+zdYYc+RiqlvcYeILYzj+P1EBO09s3
-        hpJ9aBfwlNknCZ/e4ko5N8w=
-X-Google-Smtp-Source: APiQypJ8+z2d/tbIVisTDIJOW12hGb84xkYG5Q+TvvdKi3d8H64/yGWbztz8UPvj/YRBSc0Z2kFJRg==
-X-Received: by 2002:a17:90b:1989:: with SMTP id mv9mr1147373pjb.70.1587083921013;
-        Thu, 16 Apr 2020 17:38:41 -0700 (PDT)
-Received: from google.com ([2601:647:4001:3000::50e3])
-        by smtp.gmail.com with ESMTPSA id gv7sm382543pjb.16.2020.04.16.17.38.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Apr 2020 17:38:39 -0700 (PDT)
-Date:   Thu, 16 Apr 2020 17:38:37 -0700
-From:   Minchan Kim <minchan@kernel.org>
-To:     Jaewon Kim <jaewon31.kim@samsung.com>,
-        Johannes Weiner <hannes@cmpxchg.org>
-Cc:     mgorman@suse.de, m.szyprowski@samsung.com, mina86@mina86.com,
-        riel@redhat.com, akpm@linux-foundation.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, jaewon31.kim@gmail.com,
-        ytk.lee@samsung.com
-Subject: Re: [PATCH] mm/vmscan: skip layzfree page on
- reclaim_clean_pages_from_list
-Message-ID: <20200417003837.GA90471@google.com>
-References: <CGME20200416033543epcas1p2b256bef770bb1310a9bf62bda80a976a@epcas1p2.samsung.com>
- <20200416033514.6366-1-jaewon31.kim@samsung.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=98QNDXNNi1/b9nh1s56044uMzWepsdxzuM+zy1ZjRxU=;
+        b=WQe4z1NDyhTghYdrfLRwbOuvUBO72LxLzne78xJS8yWnZPeOFJzLovWJOMLNAfKSqC
+         mE34Wt1RUkRNaA09a9DNNOxjEe8t5x5mLCv36U9ReQSA/u3H3/UM5LrUBb5Vo7oiEnhG
+         Fdbz33IM2RinHMLKPZBIx0EOjj+uqsjo+DUdhx+B9+xdxA+aPVpQqUf8IP7JmRWHmELs
+         4EbqInqqDxoKoZJAzi+PWU0YsjZQtD/teJzNPB9y9yqkNsJya2G8o3bY0yieBFsSlO+e
+         8e2U/Nz7AFIQmUNiZo9nbogjbg8cp8AQR4cvQuZmF+qN2o0qB2c9KEqhRDVKD5OnM9LU
+         +xyg==
+X-Gm-Message-State: AGi0PuZZaAcIU6kwyFcKF3zAINvOla4epZmTjcaEUGZYctJy0ptxPvYv
+        FdrnR+7mI1c6+NQjJQ9kdGfii89ZLdxtu/T0WINZpA==
+X-Google-Smtp-Source: APiQypJT/nzaZl1RZrciK4UlldYYOjXJrnUG6cC4F7AkHx8huVmh54MdmiFbcbxJAC44wxDaul2Ok4UZA5L7skkhW6k=
+X-Received: by 2002:a67:7d10:: with SMTP id y16mr318990vsc.23.1587084365254;
+ Thu, 16 Apr 2020 17:46:05 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200416033514.6366-1-jaewon31.kim@samsung.com>
+References: <CAKuMfTUPzPjuNk+T_GQMCKoB9ssh2arr6xRiu6VODwwB0PMdZw@mail.gmail.com>
+ <20200416214649.GA60148@google.com>
+In-Reply-To: <20200416214649.GA60148@google.com>
+From:   Justin Gottula <justin@jgottula.com>
+Date:   Thu, 16 Apr 2020 17:45:31 -0700
+Message-ID: <CAKuMfTVpaetB0qQ_hm8cSowtZN8HUKXdADWhKXC=4eKd1i5oSw@mail.gmail.com>
+Subject: Re: [PATCH] zram: fix writeback_store returning zero in most situations
+To:     Minchan Kim <minchan@kernel.org>
+Cc:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Nitin Gupta <ngupta@vflare.org>, Jens Axboe <axboe@kernel.dk>,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jaewon,
+On Thu, Apr 16, 2020 at 2:47 PM Minchan Kim <minchan@kernel.org> wrote:
+> I couldn't remember why I wanted to do continue even though we knew
+> the write was failure from the beginning.
+>
+> Couldn't we just bail out whenever we encounter the error?
+> Sergey, Justin, what do you think?
+>
+> IMO, it would be more consistent with other error handling.
 
-On Thu, Apr 16, 2020 at 12:35:14PM +0900, Jaewon Kim wrote:
-> This patch fix nr_isolate_* mismatch problem between cma and dirty
-> lazyfree page.
-> 
-> If try_to_unmap_one is used for reclaim and it detects a dirty lazyfree
-> page, then the lazyfree page is changed to a normal anon page having
-> SwapBacked by commit 18863d3a3f59 ("mm: remove SWAP_DIRTY in ttu"). Even
-> with the change, reclaim context correctly counts isolated files because
-> it uses is_file_lru to distinguish file. And the change to anon is not
-> happened if try_to_unmap_one is used for migration. So migration context
-> like compaction also correctly counts isolated files even though it uses
-> page_is_file_lru insted of is_file_lru. Recently page_is_file_cache was
-> renamed to page_is_file_lru by commit 9de4f22a60f7 ("mm: code cleanup for
-> MADV_FREE").
-> 
-> But the nr_isolate_* mismatch problem happens on cma alloc. There is
-> reclaim_clean_pages_from_list which is being used only by cma. It was
-> introduced by commit 02c6de8d757c ("mm: cma: discard clean pages during
-> contiguous allocation instead of migration") to reclaim clean file pages
-> without migration. The cma alloc uses both reclaim_clean_pages_from_list
-> and migrate_pages, and it uses page_is_file_lru to count isolated
-> files. If there are dirty lazyfree pages allocated from cma memory
-> region, the pages are counted as isolated file at the beginging but are
-> counted as isolated anon after finished.
-> 
-> Mem-Info:
-> Node 0 active_anon:3045904kB inactive_anon:611448kB active_file:14892kB inactive_file:205636kB unevictable:10416kB isolated(anon):0kB isolated(file):37664kB mapped:630216kB dirty:384kB writeback:0kB shmem:42576kB writeback_tmp:0kB unstable:0kB all_unreclaimable? no
-> 
-> Like log above, there was too much isolated file, 37664kB, which
-> triggers too_many_isolated in reclaim when there is no isolated file in
-> system wide. It could be reproducible by running two programs, doing
-> MADV_FREE, writing and doing cma alloc, respectively. Although isolated
-> anon is 0, I found that the internal value of isolated anon was the
-> negative value of isolated file.
-> 
-> Fix this by skipping anon pages on reclaim_clean_pages_from_list. The
-> lazyfree page can be checked by both PageAnon(page) and
-> page_is_file_lru. But in this case, PageAnon is enough to skip all
-> anon pages.
-> 
-> Reported-by: Yong-Taek Lee <ytk.lee@samsung.com>
-> Signed-off-by: Jaewon Kim <jaewon31.kim@samsung.com>
+As far as being consistent with the rest of the error handling in the
+loop, I think there's a reasonable distinction that can be drawn between
+some of the error cases and others. With some, breaking out immediately is
+obviously the correct action; but with others, it's not as clear-cut.
 
-Thanks for the investigation!
-The thing is MADV_FREEed page since supporting swapless could change
-his LRU status between reclaim.
+For the zram->wb_limit_enable && !zram->bd_wb_limit case, breaking out of
+the loop and immediately returning makes complete sense: once we've hit
+the writeback limit, there's nothing that could happen in future loop
+iterations that could cause us to somehow _not_ be at the limit anymore.
+So there's no reason to continue the loop.
 
-I am worry about voiding the optimization we have kept in CMA but
-also don't have good idea, either so I tend to agree with this.
+Similarly, for the alloc_block_bdev(zram) failure case, breaking out of
+the loop and immediately returning also makes complete sense: if we've
+already run out of blocks on the backing device, then continuing to loop
+isn't going to result in is somehow ending up with more backing device
+blocks available. So there's no reason to continue the loop in that case
+either.
 
-Let me Cc Johannes who might have better idea.
+With the zram_bvec_read and submit_bio_wait failure cases, though, it's
+not nearly as clear that a failure on the current slot _automatically_
+guarantees that all future slots would also have errors. For example, in
+the zram_bvec_read failure case, it's entirely possible that the
+decompression code in the currently-used compression backend might have
+had a problem with the current buffer; but that doesn't necessarily seem
+like a clear-cut indication that the same decompression error would
+definitely happen on later iterations of the loop: in fact, many of the
+later slots could very well be ZRAM_HUGE or ZRAM_SAME, and so they would
+avoid that type of error entirely. And in the submit_bio_wait failure
+case, it's also conceivable that the backing device may have had some sort
+of write error with the current block and data buffer, but that the same
+error might not happen again on future iterations of the loop when writing
+a different buffer to potentially an entirely different block. (Especially
+if the backing device happens to be using some kind of complicated driver,
+like one of the weirder LVM/device-mapper backends or a network block
+device.)
 
-> ---
->  mm/vmscan.c | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/mm/vmscan.c b/mm/vmscan.c
-> index b06868fc4926..9380a18eef5e 100644
-> --- a/mm/vmscan.c
-> +++ b/mm/vmscan.c
-> @@ -1497,6 +1497,9 @@ unsigned long reclaim_clean_pages_from_list(struct zone *zone,
->  	LIST_HEAD(clean_pages);
->  
->  	list_for_each_entry_safe(page, next, page_list, lru) {
-> +		/* to avoid race with MADV_FREE anon page */
-> +		if (PageAnon(page))
-> +			continue;
->  		if (page_is_file_lru(page) && !PageDirty(page) &&
->  		    !__PageMovable(page) && !PageUnevictable(page)) {
->  			ClearPageActive(page);
-> -- 
-> 2.13.7
-> 
+So, at least when it comes to "are these particular failure cases the kind
+where it would certainly make no sense to continue with future loop
+iterations because we would definitely have the same failures then too",
+there's a reasonable argument that the zram_bvec_read and submit_bio_wait
+error cases don't necessarily fit that logic and so potentially shouldn't
+immediately break and return.
+
+A couple of other considerations came to mind while thinking about this:
+
+1. From the standpoint of the user, what should they reasonably be
+expecting to happen when writing "huge"/"idle" to the writeback file? A
+best-effort attempt at doing all possible block writebacks (of the
+requested type) that can possibly be successfully accomplished? Or,
+writeback of only as many blocks as can be done until a (possibly
+transient or not-applicable-to-all-blocks) error pops up, and then
+stopping at that point? I tend to think that the former makes a bit more
+sense, but I don't know for sure if it's the definite Right Answer.
+
+2. There is a bit of a predicament with the keep-going-even-if-an-error-
+happened approach. There could be multiple submit_bio_wait failures (e.g.
+due to a few blocks that couldn't be written-back due to transient write
+errors on the backing device), each with their own error return value; but
+we can only return one error code from writeback_store. So how do we even
+communicate a multiple-errors-happened situation to the user properly? My
+patch, as originally written, would give the user an errno corresponding
+to the last submit_bio_wait failure to happen; but of course that leaves
+out any other error codes that may have also come up on prior write
+attempts that failed (and those failures could have been for different
+reasons). And then also, it's entirely possible that submit_bio_wait may
+return -EIO or -ENOSPC or -ENOMEM, which would be ambiguous with the other
+meanings of those error codes from the writeback_store function itself
+(-EIO for WB limit, -ENOSPC for no free blocks on backing device, -ENOMEM
+if couldn't allocate the temporary page).
+
+As for the main issue of whether or not to break out of the loop in the
+event of a backing device write error, I think it probably makes more
+sense not to break out. But it could probably be argued either way.
