@@ -2,97 +2,87 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BACC0C352BE
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 09:39:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90C92C3815B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 09:39:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 868FE21D91
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 09:39:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JbqKbSdc"
+	by mail.kernel.org (Postfix) with ESMTP id 79947208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 09:39:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730425AbgDQJjU (ORCPT
+        id S1730438AbgDQJja (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 05:39:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46614 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730334AbgDQJjU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 05:39:20 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED723C061A0C
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 02:39:18 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id x25so2268864wmc.0
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 02:39:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=sNSs/WMMs8v8LjUrmuY7lbgWrm5/KMfPWOpJUMEIGMY=;
-        b=JbqKbSdcMZexzofzc9Tq5ioiUHPtcqHNoP80MWNiHMvtWkRfplPiXtpRt7drnCbcN9
-         rKjiG756xPwfC6l1JaF/NFRdW+2kWQDPFrX1OwBZQauIi4x+sy2x4Dqc1HoNBgJSLgYX
-         eIijShSPioui6pcAky8KsSWFNu51TS5FZaBjH/4MNOVs4Tc6tuDvMflchE+v/bev1YAT
-         6NMfglbEG9f47JiuYUo2Dgz/WCeNpjdIhdUme0OZgQ3WbR0tdI5gmZ+9Zy4845YvNPmG
-         FW48wgsMsMaXEbZu8WmM3LcdW8DjOmE8GNwx+HMk/5H2b6lH7qF969czt/QGWjVvFXGy
-         XFeQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=sNSs/WMMs8v8LjUrmuY7lbgWrm5/KMfPWOpJUMEIGMY=;
-        b=LigX/MuYg64A8UsAIT0sS2H0MoSgGFNZ/lXN6JY6vG8C3Mtcms8wkp6DmhQ3dKSmgx
-         XaoLmbGW/mQupQOHBmIScAkjfFNhGcnln0wWl9C+0/nY5RGeoY5MKQz9NhguFeqt4q00
-         /Ed1YT69N6DDqpRCNh43y/RMOEvhjZNLv/NO41Y2HoGQ0oid0W3kaAWEizj7LA4uFlMe
-         8Q4nd2480H5ChV5rzOOS14IiNSqbz/JHGhYusRbVaVtzZ4MW3iFva0vpYD6mRVJftP2K
-         aMSaSgvVyruNeYcVYg2F0pXQxMpKKSiNFGMhkwbDI/0wptVrcU/4GiIGNqlwLZh5iPW6
-         H/+A==
-X-Gm-Message-State: AGi0PuYY2b1dMqHbz/GeaDufNH+Rg/Sd5PizuKLU6AA4yAPI45feziQM
-        AkHS6h8mp6oK+uvimaRhtlccsw==
-X-Google-Smtp-Source: APiQypLjCDr+lHOQd9iORXNvwi4wAxPgeC5qmc2MlHGFNNmFnbrdDVk1ilQZTEUF+aK84deHja4gzg==
-X-Received: by 2002:a1c:1b88:: with SMTP id b130mr2417599wmb.75.1587116357734;
-        Fri, 17 Apr 2020 02:39:17 -0700 (PDT)
-Received: from srini-hackbox.lan (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.gmail.com with ESMTPSA id y18sm7719884wmc.45.2020.04.17.02.39.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Apr 2020 02:39:16 -0700 (PDT)
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-To:     srini@kernel.org, gregkh@linuxfoundation.org
-Cc:     linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH] slimbus: ngd: remove redundant assignment
-Date:   Fri, 17 Apr 2020 10:39:14 +0100
-Message-Id: <20200417093914.22052-1-srinivas.kandagatla@linaro.org>
-X-Mailer: git-send-email 2.21.0
+        Fri, 17 Apr 2020 05:39:30 -0400
+Received: from foss.arm.com ([217.140.110.172]:48898 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730318AbgDQJj2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Apr 2020 05:39:28 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 60F2F30E;
+        Fri, 17 Apr 2020 02:39:28 -0700 (PDT)
+Received: from [10.37.12.128] (unknown [10.37.12.128])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7D2C23F73D;
+        Fri, 17 Apr 2020 02:39:26 -0700 (PDT)
+Subject: Re: [PATCH 3/8] arm64: cpufeature: Add CPU capability for AArch32 EL1
+ support
+To:     maz@kernel.org
+Cc:     will@kernel.org, linux-arm-kernel@lists.infradead.org,
+        kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org,
+        mark.rutland@arm.com, anshuman.khandual@arm.com,
+        catalin.marinas@arm.com, saiprakash.ranjan@codeaurora.org,
+        dianders@chromium.org, kernel-team@android.com
+References: <20200414213114.2378-1-will@kernel.org>
+ <20200414213114.2378-4-will@kernel.org>
+ <a83a19eb-9051-0a43-0bac-353f67d93d79@arm.com>
+ <20200415101444.GC12621@willie-the-truck>
+ <7978a5a9-463e-5e96-7ea9-d8472b7b051c@arm.com> <20200415142237.651114f7@why>
+From:   Suzuki K Poulose <suzuki.poulose@arm.com>
+Message-ID: <1ffdf91a-e418-61ec-1056-756e1a81f4a6@arm.com>
+Date:   Fri, 17 Apr 2020 10:44:16 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200415142237.651114f7@why>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-remove redundant assignment, as this is already done fewlines lines before.
+On 04/15/2020 02:22 PM, Marc Zyngier wrote:
+> On Wed, 15 Apr 2020 14:15:51 +0100
+> Suzuki K Poulose <suzuki.poulose@arm.com> wrote:
+> 
+>> On 04/15/2020 11:14 AM, Will Deacon wrote:
+>>> On Wed, Apr 15, 2020 at 11:13:54AM +0100, Suzuki K Poulose wrote:
+>>>> On 04/14/2020 10:31 PM, Will Deacon wrote:
+>>>>> Although we emit a "SANITY CHECK" warning and taint the kernel if we
+>>>>> detect a CPU mismatch for AArch32 support at EL1, we still online the
+>>>>> CPU with disastrous consequences for any running 32-bit VMs.
+>>>>>
+>>>>> Introduce a capability for AArch32 support at EL1 so that late onlining
+>>>>> of incompatible CPUs is forbidden.
+>>>>>
+>>>>> Signed-off-by: Will Deacon <will@kernel.org>
+>>>>
+>>>> One of the other important missing sanity check for KVM is the VMID width
+>>>> check. I will code something up.
+>>>
+>>> Cheers! Do we handle things like the IPA size already?
+>>
+>> Good point. No, we don't. I will include this too.
+> 
+> There is also the question of the ARMv8.5-GTG extension. I have a patch
+> that treats it as non-strict, but that approach would fail with KVM if
+> we online a late CPU without support for the right page size at S2.
 
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
----
- drivers/slimbus/qcom-ngd-ctrl.c | 1 -
- 1 file changed, 1 deletion(-)
+Good point. Again this can be added to the list of checks performed on
+the hot-plugged CPUs along with IPA, VMID width.
 
-diff --git a/drivers/slimbus/qcom-ngd-ctrl.c b/drivers/slimbus/qcom-ngd-ctrl.c
-index 7426b5884218..743ee7b4e63f 100644
---- a/drivers/slimbus/qcom-ngd-ctrl.c
-+++ b/drivers/slimbus/qcom-ngd-ctrl.c
-@@ -1365,7 +1365,6 @@ static int of_qcom_slim_ngd_register(struct device *parent,
- 		platform_device_add(ngd->pdev);
- 		ngd->base = ctrl->base + ngd->id * data->offset +
- 					(ngd->id - 1) * data->size;
--		ctrl->ngd = ngd;
- 
- 		return 0;
- 	}
--- 
-2.21.0
+Cheers
+Suzuki
 
