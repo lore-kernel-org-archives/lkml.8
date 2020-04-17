@@ -2,40 +2,44 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BB85C2D0EF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 16:55:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9825AC352BE
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 16:55:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3660F22202
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 16:55:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BDB320771
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 16:55:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727883AbgDQQy7 (ORCPT
+        id S1727968AbgDQQzd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 12:54:59 -0400
-Received: from mx2.suse.de ([195.135.220.15]:42404 "EHLO mx2.suse.de"
+        Fri, 17 Apr 2020 12:55:33 -0400
+Received: from muru.com ([72.249.23.125]:49980 "EHLO muru.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726105AbgDQQy5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 12:54:57 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 5D7AAAB89;
-        Fri, 17 Apr 2020 16:54:55 +0000 (UTC)
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     saravanak@google.com, linux-kernel@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     devicetree@vger.kernel.org,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Subject: [PATCH v2 1/2] of: property: Fix create device links for all child-supplier dependencies
-Date:   Fri, 17 Apr 2020 18:54:41 +0200
-Message-Id: <20200417165442.1856-2-nsaenzjulienne@suse.de>
-X-Mailer: git-send-email 2.26.0
-In-Reply-To: <20200417165442.1856-1-nsaenzjulienne@suse.de>
-References: <20200417165442.1856-1-nsaenzjulienne@suse.de>
+        id S1727840AbgDQQzc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Apr 2020 12:55:32 -0400
+Received: from hillo.muru.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTP id 3D9B48047;
+        Fri, 17 Apr 2020 16:56:17 +0000 (UTC)
+From:   Tony Lindgren <tony@atomide.com>
+To:     linux-omap@vger.kernel.org
+Cc:     linux-arm-kernel@lists.infradead.org,
+        "H. Nikolaus Schaller" <hns@goldelico.com>,
+        Aaro Koskinen <aaro.koskinen@iki.fi>,
+        Adam Ford <aford173@gmail.com>,
+        Andreas Kemnade <andreas@kemnade.info>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Keerthy <j-keerthy@ti.com>, Lokesh Vutla <lokeshvutla@ti.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, Tero Kristo <t-kristo@ti.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 00/14] Update omaps to use drivers/clocksource timers
+Date:   Fri, 17 Apr 2020 09:55:05 -0700
+Message-Id: <20200417165519.4979-1-tony@atomide.com>
+X-Mailer: git-send-email 2.26.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -43,41 +47,86 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Upon adding a new device from a DT node, we scan its properties and its
-children's properties in order to create a consumer/supplier
-relationship between the device and the property provider.
+Hi all,
 
-That said, it's possible for some of the node's children to be disabled,
-which will create links that'll never be fulfilled.
+Here's a series of changes to udpate omaps to use drivers/clocksource
+timers for the 32k counter and dmtimer and to remove the old legacy
+platform code. Please review and test.
 
-To get around this, use the for_each_available_child_of_node() function
-instead of for_each_available_node() when iterating over the node's
-children.
+Daniel, if the the first two patches look OK after review, maybe you
+can again set up an immutable branch for the first two patches against
+v5.7-rc1 that I can merge in?
 
-Fixes: d4387cd11741 ("of: property: Create device links for all child-supplier depencencies")
-Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Regards,
 
----
+Tony
 
-Changes since v1:
- - Slightly reword description
 
- drivers/of/property.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Tony Lindgren (14):
+  clocksource/drivers/timer-ti-32k: Add support for initializing
+    directly
+  clocksource/drivers/timer-ti-dm: Add clockevent and clocksource
+    support
+  clk: ti: dm816: enable sysclk6_ck on init
+  bus: ti-sysc: Ignore timer12 on secure omap3
+  ARM: OMAP2+: Add omap_init_time_of()
+  ARM: dts: Configure system timers for am335x
+  ARM: dts: Configure system timers for am437x
+  ARM: dts: Configure system timers for omap4
+  ARM: dts: Configure system timers for omap5 and dra7
+  ARM: dts: Configure system timers for omap3
+  ARM: dts: Configure system timers for ti81xx
+  ARM: dts: Configure system timers for omap2
+  ARM: OMAP2+: Drop old timer code for dmtimer and 32k counter
+  bus: ti-sysc: Timers no longer need legacy quirk handling
 
-diff --git a/drivers/of/property.c b/drivers/of/property.c
-index 252e4f6001553..dc034eb45defd 100644
---- a/drivers/of/property.c
-+++ b/drivers/of/property.c
-@@ -1298,7 +1298,7 @@ static int of_link_to_suppliers(struct device *dev,
- 		if (of_link_property(dev, con_np, p->name))
- 			ret = -ENODEV;
- 
--	for_each_child_of_node(con_np, child)
-+	for_each_available_child_of_node(con_np, child)
- 		if (of_link_to_suppliers(dev, child) && !ret)
- 			ret = -EAGAIN;
- 
+ .../devicetree/bindings/timer/ti,timer.txt    |   2 +
+ arch/arm/boot/dts/am33xx-l4.dtsi              |   2 -
+ arch/arm/boot/dts/am33xx.dtsi                 |  12 +
+ arch/arm/boot/dts/am3517.dtsi                 |  16 +-
+ arch/arm/boot/dts/am4372.dtsi                 |  12 +
+ arch/arm/boot/dts/am437x-l4.dtsi              |   3 -
+ arch/arm/boot/dts/dm814x.dtsi                 |  66 +-
+ arch/arm/boot/dts/dm816x.dtsi                 |  70 ++-
+ arch/arm/boot/dts/dra7-l4.dtsi                |   5 -
+ arch/arm/boot/dts/dra7.dtsi                   |   6 +
+ arch/arm/boot/dts/omap2.dtsi                  |  38 +-
+ arch/arm/boot/dts/omap2420.dtsi               |  65 +-
+ arch/arm/boot/dts/omap2430.dtsi               |  65 +-
+ arch/arm/boot/dts/omap3-beagle.dts            |  16 +
+ arch/arm/boot/dts/omap3-devkit8000.dts        |  16 +
+ arch/arm/boot/dts/omap3.dtsi                  | 130 +++-
+ arch/arm/boot/dts/omap4-l4.dtsi               |   2 -
+ arch/arm/boot/dts/omap4.dtsi                  |   6 +
+ arch/arm/boot/dts/omap5-l4.dtsi               |   2 -
+ arch/arm/boot/dts/omap5.dtsi                  |   6 +
+ arch/arm/mach-omap2/Makefile                  |   4 +-
+ arch/arm/mach-omap2/board-generic.c           |  32 +-
+ arch/arm/mach-omap2/common.h                  |   7 +
+ arch/arm/mach-omap2/omap_hwmod_2420_data.c    |  20 -
+ arch/arm/mach-omap2/omap_hwmod_2430_data.c    |  19 -
+ .../omap_hwmod_2xxx_interconnect_data.c       |   8 -
+ .../mach-omap2/omap_hwmod_2xxx_ipblock_data.c |  47 --
+ .../omap_hwmod_33xx_43xx_common_data.h        |   2 -
+ .../omap_hwmod_33xx_43xx_interconnect_data.c  |   8 -
+ .../omap_hwmod_33xx_43xx_ipblock_data.c       |  62 --
+ arch/arm/mach-omap2/omap_hwmod_33xx_data.c    |  10 -
+ arch/arm/mach-omap2/omap_hwmod_3xxx_data.c    | 146 +----
+ arch/arm/mach-omap2/omap_hwmod_43xx_data.c    |  45 --
+ arch/arm/mach-omap2/omap_hwmod_44xx_data.c    |  90 ---
+ arch/arm/mach-omap2/omap_hwmod_54xx_data.c    |  89 ---
+ arch/arm/mach-omap2/omap_hwmod_7xx_data.c     | 176 ------
+ arch/arm/mach-omap2/omap_hwmod_81xx_data.c    |  74 ---
+ arch/arm/mach-omap2/omap_hwmod_common_data.h  |   3 -
+ arch/arm/mach-omap2/timer.c                   | 568 +-----------------
+ drivers/bus/ti-sysc.c                         |  25 +-
+ drivers/clk/ti/clk-816x.c                     |   1 +
+ drivers/clocksource/Makefile                  |   1 +
+ drivers/clocksource/timer-ti-32k.c            |  48 +-
+ drivers/clocksource/timer-ti-dm-systimer.c    | 468 +++++++++++++++
+ include/clocksource/timer-ti-dm.h             |   1 +
+ 45 files changed, 1016 insertions(+), 1478 deletions(-)
+ create mode 100644 drivers/clocksource/timer-ti-dm-systimer.c
+
 -- 
-2.26.0
-
+2.26.1
