@@ -2,75 +2,73 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCDE5C2D0EF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 18:33:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCBB8C38A2B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 18:34:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9F80D20780
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 18:33:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B454A22202
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 18:34:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Adm0UqbK"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="bojG319N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728132AbgDQSdr (ORCPT
+        id S1728531AbgDQSeJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 14:33:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45066 "EHLO
+        Fri, 17 Apr 2020 14:34:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45112 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726054AbgDQSdr (ORCPT
+        by vger.kernel.org with ESMTP id S1726054AbgDQSeG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 14:33:47 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0DF90C061A0C;
-        Fri, 17 Apr 2020 11:33:47 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id r4so1512451pgg.4;
-        Fri, 17 Apr 2020 11:33:47 -0700 (PDT)
+        Fri, 17 Apr 2020 14:34:06 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E7BBC061A0C;
+        Fri, 17 Apr 2020 11:34:05 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id u13so4190698wrp.3;
+        Fri, 17 Apr 2020 11:34:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=googlemail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=nDZqRs08yW8rmkLGicGD1U3ejEUDLw8Yn7W5t1UZPFo=;
-        b=Adm0UqbK4EhGULyk4ehca7RcMRTuQeudlh3i29+AzJINbhEdhrZxcJ8lq9vWB7EkkG
-         Dd/wx9AbcU1RTgKyNuRQmaqhuHjceXd7HFY7ASfaU6CK3oqpcRGl1/VwmFIRi9QdrTRJ
-         4SLt4EhBgjehg5E6m2ztMzD0pa+G0H0VQJJEcJn0QxhBUu72wn72D8rDd8D80X8URUZK
-         R+LowDO1EA+W33znbD7mYDIchCJ9GMkzHUwGjojYApaSQLBvHaye0qAk9fXwNtuwf0mV
-         yUTBuSzWQZ0psotjyeHwvm71k6fhmz9AzaKdSoUBQnY4rObH1Nuui6h1aZFYgrMyOiQw
-         VEiA==
+        bh=HscwK37cFKMub3BOfrP9Hc3SiCJrLqjZW3xZhk6qI2w=;
+        b=bojG319NgtlkmTI7fGKzyA3aVCpaJ72KnmzPfwmdX98DNtqGu52+YZO0jEYJx14DUV
+         0UdRwgovBE4uF3rYGkGa0veuWdTk0KtjapL6E/KH+XF45W2hOuuB/ZDdQyyoFUDpLmER
+         rXUHhb7xW8cXpDW1mL6eng/NpL66M8c/0lNO3f69ju6HCLcVCOuKKQmXyNQeuMZ4WA63
+         enPL2hlKsmIjp7gPiEdE1cCmttEnIkij5Z+v7gioM65U8o2hDS9BVzda80BZVAeRRGih
+         gplpdez6CT5dyOG8KIBuMSYxst7NDLKViV4FewZrh4qA63JRfeezF0+BYto7AE8dGNBq
+         CZKA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=nDZqRs08yW8rmkLGicGD1U3ejEUDLw8Yn7W5t1UZPFo=;
-        b=H9pWAv9b6x+N6gebAwKg9iyvXvAWayIpWOJv9Rlf9GunOra1B4nCRyJkFRRftMjbdX
-         U5tdH0L6AIf0aY3R4m/GQdaGPibAG+iWXUbaxsNhpFO5BcAy8/CdQXM6D6RbDKFp7Z6e
-         x9so391fFUI74zMJj68py7dhibOSp9lQ8k4+Ymz3HPEeQFFUBzb/gUb3DVdGcHQtS+vD
-         n6bmx7/JjHATFiuxaeIcx+VIO8rG7J7SM26IqIDx3hGtbE/PTkPZBIs2TDC4nRwE22Cs
-         sKX2ViQfzsJMqoHqJIdd+KzZzZDS8VG9cxourJOVL6l8kw+zjyU58ShG6Q7/118r9WSJ
-         t+SA==
-X-Gm-Message-State: AGi0PuZATz4eRuDx/hJeuvuT8LEW4jbLDuOkb637Ch0k2BnaquP6J3Pa
-        fCcKhKIeBntSCDgqHYQ2WrA1vFi8
-X-Google-Smtp-Source: APiQypJ7yu6e20Z9lERl9UPYAY4MjeVTTtJ925wGDt8BkyIlq5x1y+RrHbGafCp27Q0ZK8pKHd/Nhw==
-X-Received: by 2002:a63:1415:: with SMTP id u21mr4175888pgl.452.1587148426177;
-        Fri, 17 Apr 2020 11:33:46 -0700 (PDT)
-Received: from localhost.localdomain (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
-        by smtp.gmail.com with ESMTPSA id u7sm18368297pfu.90.2020.04.17.11.33.44
+        bh=HscwK37cFKMub3BOfrP9Hc3SiCJrLqjZW3xZhk6qI2w=;
+        b=OW/NoogrVUWoiMHMSAnK31GsK7d0RvueBTE1M8QkeT40lK+CqN4yFq6aExwchX9f/k
+         kbnR3gCxIkjRzIzRq1Zx6exsTXXp3PgnItoaI3C5jxH/0a/tOA2dodpTg+ZIlQjY49Pa
+         R2nDPCrFpdsfFt07tUbRCDmGUvc7nKtION8HB86wrIig4Ee/0FmCxcdBCP+WEFcOSRya
+         AajAZWxrcCJSqYoboIckaZeEzVAvEj2r47rvH5f6qV3fw/zFZIvKhBjj8aknLBd+g7Jk
+         YjJ9GvlQkPE6DTVdWEorqeLjc365Kb/D/DHIRcETrUECjp3RQdT+ihHbPpzdQQNgieYX
+         9yGQ==
+X-Gm-Message-State: AGi0PuZQVI7+Kpc3gvG9g21YnYF2xXnWWxHP/8A4wSBSYSwwzwwuamPs
+        FmvFDQuleNEBxUcDUPnywp8=
+X-Google-Smtp-Source: APiQypLijZgFjxv4x89tuM/h2XT9WSLRN+Fy5h09T4tZQq+JQ6uZXZRDgovMQuFHwHCvNlKO23KWTQ==
+X-Received: by 2002:a5d:42c7:: with SMTP id t7mr3138328wrr.336.1587148443929;
+        Fri, 17 Apr 2020 11:34:03 -0700 (PDT)
+Received: from localhost.localdomain (p200300F137142E00428D5CFFFEB99DB8.dip0.t-ipconnect.de. [2003:f1:3714:2e00:428d:5cff:feb9:9db8])
+        by smtp.googlemail.com with ESMTPSA id o7sm3074994wmh.46.2020.04.17.11.34.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Apr 2020 11:33:45 -0700 (PDT)
-From:   Florian Fainelli <f.fainelli@gmail.com>
-To:     netdev@vger.kernel.org
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH net-next] net: dsa: b53: per-port interrupts are optional
-Date:   Fri, 17 Apr 2020 11:33:41 -0700
-Message-Id: <20200417183341.8375-1-f.fainelli@gmail.com>
-X-Mailer: git-send-email 2.19.1
+        Fri, 17 Apr 2020 11:34:03 -0700 (PDT)
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+To:     linus.walleij@linaro.org, linux-gpio@vger.kernel.org,
+        linux-amlogic@lists.infradead.org
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        jbrunet@baylibre.com, khilman@baylibre.com,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: [PATCH RESEND v2 0/2] pinctrl-meson: two small improvements
+Date:   Fri, 17 Apr 2020 20:33:47 +0200
+Message-Id: <20200417183349.1283092-1-martin.blumenstingl@googlemail.com>
+X-Mailer: git-send-email 2.26.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -78,27 +76,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Make use of platform_get_irq_byname_optional() to avoid printing
-messages on the kernel console that interrupts cannot be found.
+While playing with audio output on Meson8b I found out that the
+vendor kernel uses a custom version of the GPIO_PULL_UP flag. I
+suspect that we will need this for audio support on Meson8b and/or
+Meson8m2 but I don't see it hurt other platforms.
 
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
----
- drivers/net/dsa/b53/b53_srab.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Also while comparing the register bits with the GPIO direction (of
+GPIOs exported to sysfs) I sometimes had a mismatch. This also wires
+up gpio_chip.get_direction to have sysfs and the actual registers in
+sync.
 
-diff --git a/drivers/net/dsa/b53/b53_srab.c b/drivers/net/dsa/b53/b53_srab.c
-index 0a1be5259be0..1207c3095027 100644
---- a/drivers/net/dsa/b53/b53_srab.c
-+++ b/drivers/net/dsa/b53/b53_srab.c
-@@ -524,7 +524,7 @@ static void b53_srab_prepare_irq(struct platform_device *pdev)
- 
- 		port->num = i;
- 		port->dev = dev;
--		port->irq = platform_get_irq_byname(pdev, name);
-+		port->irq = platform_get_irq_byname_optional(pdev, name);
- 		kfree(name);
- 	}
- 
+
+Changes since v1 from [0]:
+- re-send as non-"RFC" because I only got one comment in the past week
+  for patch #2. Jerome pointed out an alternative way to GPIO_PULL_UP
+  and GPIO_PULL_DOWN. However, this doesn't invalidate the patch, it
+  just means that there are two ways to achieve the same goal.
+
+
+[0] https://patchwork.kernel.org/cover/11484185/
+
+
+Martin Blumenstingl (2):
+  pinctrl: meson: implement the gpio_chip get_direction callback
+  pinctrl: meson: wire up the gpio_chip's set_config callback
+
+ drivers/pinctrl/meson/pinctrl-meson.c | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
+
 -- 
-2.19.1
+2.26.1
 
