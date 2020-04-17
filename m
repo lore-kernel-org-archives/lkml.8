@@ -2,111 +2,187 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D4DEC38A2B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 13:56:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0E05C2D0EF
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 13:58:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 44269214AF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 13:56:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90794214AF
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 13:58:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jTlDTIi1"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qyfnqLcP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730798AbgDQN43 (ORCPT
+        id S1730799AbgDQN6Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 09:56:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58302 "EHLO
+        Fri, 17 Apr 2020 09:58:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58580 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730662AbgDQN42 (ORCPT
+        by vger.kernel.org with ESMTP id S1730687AbgDQN6Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 09:56:28 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C438C061A0C;
-        Fri, 17 Apr 2020 06:56:27 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id t4so983169plq.12;
-        Fri, 17 Apr 2020 06:56:27 -0700 (PDT)
+        Fri, 17 Apr 2020 09:58:16 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0A10C061A0C
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 06:58:15 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id k1so3177866wrx.4
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 06:58:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=g4jx0JyIvsZpRaLj6xflTQ1x/9w2AY54wdVX17gtEWg=;
-        b=jTlDTIi10dLJ/iLQpaRPwBxHl3JsPC9OTDxFGIIVcV+MNukTgz6qW2ad3SdjYBXL5F
-         vj7UQKNuUbwG57v5d21FRcA8BOvR46AvD0fTc1YYN7Je15e+823sm/u9UQsDs4lLMfN0
-         szQMnDfkW7wbv2NISFjz61oP31f2Wcl3aDNHiDWEjOBCKS5MwBVYWTV9M61YIs/w5vVw
-         M0dwQndKp00iW7GU0Pbd+BN+5FgW04quLOF3+JGvDFWQZRMP/BJpsfaJ5XsNqKYbd9oA
-         wKcT60pPDw9u2u/UFADqhGgT3h0kYohpzec949qqWWJSIBzhZUDaR9fd8GiUxfMH4/Bn
-         t1IQ==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=3NhOD7WWCRFx2NWhkccCqUNA946AiGi6gVRl1iOG8JY=;
+        b=qyfnqLcP+9kRh0M5SMq3ClD2TyNOg2DQBddfRvlwEQF+YzANtODQE9oMBqhMir6PtP
+         nePvDTfrt8dYFjR3dD1sdiAvn1i+YB0JMDQsCNrBqQtw7wsRv6oJR66nY4BI/YqnCXNn
+         S7zOrxeniQ9CILrkRmG8vZ6jgdyfgpJ6UDD55lkPPoPnPwhzS7yzdbokS2ELU4gc+S/r
+         tZsF1DfgSbAdCjRLJ7UtFmZ8pWIUIUmeMGHrjOsJuTbbrsXYViOcMhwKBtg33lvptF6d
+         4Osc+ftORpKT2meqaMhgycJPvtzeEMNpVepRknzSnhJ5QsfVcAlpSlLjWpscVcnh5lQl
+         ltMQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=g4jx0JyIvsZpRaLj6xflTQ1x/9w2AY54wdVX17gtEWg=;
-        b=hn2cO6kwhMrAebrM4Bc6IRD0zxllmIYUNGACm273K0TVdgO/M5c5SsQIT/imODVbHj
-         ylIcKtxkiiQ339lFLYHFqk/KEb6mo61r3fjsEOuUglW/C7+m1Lct7Xfo9V9Ook7gHnvF
-         K0aVTlFdApF+5vGXH76iuvxqYuS+r3HxnsZ7qmLTt/iPc4p3jvgZ7qx3wVkmAuh76WXA
-         NiMUySkH0taVt139Mq/Mp9VsWIlep/D0+CCleg3uBunfCt3YGI6WBFPr6IqQ1J9tizjS
-         HpTqicqtcMKMOwhX9WD8+XwaxTM+O6D4MMpf3UoPGEZMUnZ1AiuHou6u7T7epKIsQrPW
-         vLUA==
-X-Gm-Message-State: AGi0PuY0iPxjmhYh0GrVHQ2L9ijxiFmymXEb3lZwEwHYZ/6ecuAFTWk0
-        fhPBlqDrldP2Y+dlW/PIk0M=
-X-Google-Smtp-Source: APiQypKPCu2CGOdGGMayqQ3j0fvsq+IBwZZ826QO7EC/ponw071fYH3jn64BSHMHgc6sfPnO1Mzmig==
-X-Received: by 2002:a17:902:8d91:: with SMTP id v17mr3408069plo.53.1587131786805;
-        Fri, 17 Apr 2020 06:56:26 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id d21sm5670475pjs.3.2020.04.17.06.56.25
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 17 Apr 2020 06:56:26 -0700 (PDT)
-Date:   Fri, 17 Apr 2020 06:56:24 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        Stephen Rothwell <sfr@canb.auug.org.au>
-Subject: Re: [PATCH] soc: qcom: cmd-db: Cast sizeof() to int to silence field
- width warning
-Message-ID: <20200417135624.GA88652@roeck-us.net>
-References: <20200415062033.66406-1-swboyd@chromium.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=3NhOD7WWCRFx2NWhkccCqUNA946AiGi6gVRl1iOG8JY=;
+        b=kG+jHJe/8kdiELYMxOy86sRSf1t7X03XS661JtTW7KrhI8eTVBrhR7NI6DP013V+7n
+         BbdCj7uN5WNPNlp0eAJv1xHsq9suUdOkOeUsxnaYdGGLLyYCWBMrjBy/fPZadmDGuy62
+         1xsU9avOkSmM7W/vaIpRJdorCJTPBScBZ5bhrH3dPZLR7ITgVRFTNfan6R5Zq36lcJuU
+         ghdDfcJJfZZ71Dc3EP5OQkgtbgBXi2UHB3lhYQu6GEKBm7ZTw7snPgIA0hE9HjunMJmU
+         /7fnCIAubW8j9eDh1NY+OF6phIH4K7mhPK9xZCGLygTPYYzyovicIs89TZmZt0CxI9W2
+         Ze+w==
+X-Gm-Message-State: AGi0PuYmOPC9uI+UtJONYU40pr1iryQ08/hXyJmlc9SQzOwpODM+4/UD
+        odEy4+/AGQ6Q8rb7zvjh+S7MCFuDy8ViGnHESLk=
+X-Google-Smtp-Source: APiQypKZa7qguwGxfdxcCF2TK+61OAmPsOG+ZgPl4y3bjlh/AJZ2N3AnJWbmdkm8BbYfsOXpqUarNyQq6OUyOFFqJ3s=
+X-Received: by 2002:a5d:4106:: with SMTP id l6mr4008599wrp.111.1587131894437;
+ Fri, 17 Apr 2020 06:58:14 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200415062033.66406-1-swboyd@chromium.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200417073219.40320-1-yanaijie@huawei.com>
+In-Reply-To: <20200417073219.40320-1-yanaijie@huawei.com>
+From:   Alex Deucher <alexdeucher@gmail.com>
+Date:   Fri, 17 Apr 2020 09:58:03 -0400
+Message-ID: <CADnq5_OTQEvOFZ3WaOAGQqMpkcsSkQ2fwge2+YUV59URnwLHgw@mail.gmail.com>
+Subject: Re: [PATCH] drm/amd/powerplay: remove defined but not used variables
+To:     Jason Yan <yanaijie@huawei.com>
+Cc:     "Quan, Evan" <evan.quan@amd.com>,
+        "Deucher, Alexander" <alexander.deucher@amd.com>,
+        Christian Koenig <christian.koenig@amd.com>,
+        Chunming Zhou <David1.Zhou@amd.com>,
+        Dave Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>,
+        Maling list - DRI developers 
+        <dri-devel@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Hulk Robot <hulkci@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 14, 2020 at 11:20:33PM -0700, Stephen Boyd wrote:
-> We pass the result of sizeof() here to tell the printk format specifier
-> how many bytes to print. That expects an int though and sizeof() isn't
-> that type. Cast to int to silence this warning:
-> 
-> drivers/soc/qcom/cmd-db.c: In function 'cmd_db_debugfs_dump':
-> drivers/soc/qcom/cmd-db.c:281:30: warning: field width specifier '*' expects argument of type 'int', but argument 4 has type 'long unsigned int' [-Wformat=]
-> 
-> Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+On Fri, Apr 17, 2020 at 9:16 AM Jason Yan <yanaijie@huawei.com> wrote:
+>
+> Fix the following gcc warning:
+>
+> drivers/gpu/drm/amd/amdgpu/../powerplay/hwmgr/vega10_powertune.c:710:46:
+> warning: =E2=80=98PSMGCEDCThresholdConfig_vega10=E2=80=99 defined but not=
+ used
+> [-Wunused-const-variable=3D]
+>  static const struct vega10_didt_config_reg
+> PSMGCEDCThresholdConfig_vega10[] =3D
+> ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> drivers/gpu/drm/amd/amdgpu/../powerplay/hwmgr/vega10_powertune.c:654:46:
+> warning: =E2=80=98PSMSEEDCThresholdConfig_Vega10=E2=80=99 defined but not=
+ used
+> [-Wunused-const-variable=3D]
+>  static const struct vega10_didt_config_reg
+> PSMSEEDCThresholdConfig_Vega10[] =3D
+> ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: Jason Yan <yanaijie@huawei.com>
 
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+Applied.  Thanks!
+
+Alex
 
 > ---
->  drivers/soc/qcom/cmd-db.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/soc/qcom/cmd-db.c b/drivers/soc/qcom/cmd-db.c
-> index 6c308f92a13c..6b5c440c9dc3 100644
-> --- a/drivers/soc/qcom/cmd-db.c
-> +++ b/drivers/soc/qcom/cmd-db.c
-> @@ -280,7 +280,7 @@ static int cmd_db_debugfs_dump(struct seq_file *seq, void *p)
->  		ent = rsc_to_entry_header(rsc);
->  		for (j = 0; j < le16_to_cpu(rsc->cnt); j++, ent++) {
->  			seq_printf(seq, "0x%08x: %*pEp", le32_to_cpu(ent->addr),
-> -				   sizeof(ent->id), ent->id);
-> +				   (int)sizeof(ent->id), ent->id);
->  
->  			len = le16_to_cpu(ent->len);
->  			if (len) {
+>  .../amd/powerplay/hwmgr/vega10_powertune.c    | 23 -------------------
+>  1 file changed, 23 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/amd/powerplay/hwmgr/vega10_powertune.c b/dri=
+vers/gpu/drm/amd/powerplay/hwmgr/vega10_powertune.c
+> index ca9b23b5abc9..9757d47dd6b8 100644
+> --- a/drivers/gpu/drm/amd/powerplay/hwmgr/vega10_powertune.c
+> +++ b/drivers/gpu/drm/amd/powerplay/hwmgr/vega10_powertune.c
+> @@ -651,18 +651,6 @@ static const struct vega10_didt_config_reg   PSMSEED=
+CStallDelayConfig_Vega10[] =3D
+>         {   0xFFFFFFFF  }  /* End of list */
+>  };
+>
+> -static const struct vega10_didt_config_reg   PSMSEEDCThresholdConfig_Veg=
+a10[] =3D
+> -{
+> -/* ---------------------------------------------------------------------=
+---------------------------------------------------------------------------=
+---------------------------------
+> - *      Offset                             Mask                         =
+                        Shift                                              =
+    Value
+> - * ---------------------------------------------------------------------=
+---------------------------------------------------------------------------=
+---------------------------------
+> - */
+> -       /* SQ EDC THRESHOLD */
+> -       {   ixDIDT_SQ_EDC_THRESHOLD,           DIDT_SQ_EDC_THRESHOLD__EDC=
+_THRESHOLD_MASK,           DIDT_SQ_EDC_THRESHOLD__EDC_THRESHOLD__SHIFT,    =
+        0x0000 },
+> -
+> -       {   0xFFFFFFFF  }  /* End of list */
+> -};
+> -
+>  static const struct vega10_didt_config_reg   PSMSEEDCCtrlResetConfig_Veg=
+a10[] =3D
+>  {
+>  /* ---------------------------------------------------------------------=
+---------------------------------------------------------------------------=
+---------------------------------
+> @@ -707,17 +695,6 @@ static const struct vega10_didt_config_reg   PSMSEED=
+CCtrlConfig_Vega10[] =3D
+>         {   0xFFFFFFFF  }  /* End of list */
+>  };
+>
+> -static const struct vega10_didt_config_reg   PSMGCEDCThresholdConfig_veg=
+a10[] =3D
+> -{
+> -/* ---------------------------------------------------------------------=
+---------------------------------------------------------------------------=
+---------------------------------
+> - *      Offset                             Mask                         =
+                        Shift                                              =
+    Value
+> - * ---------------------------------------------------------------------=
+---------------------------------------------------------------------------=
+---------------------------------
+> - */
+> -       {   mmGC_EDC_THRESHOLD,                GC_EDC_THRESHOLD__EDC_THRE=
+SHOLD_MASK,                GC_EDC_THRESHOLD__EDC_THRESHOLD__SHIFT,         =
+        0x0000000 },
+> -
+> -       {   0xFFFFFFFF  }  /* End of list */
+> -};
+> -
+>  static const struct vega10_didt_config_reg   PSMGCEDCDroopCtrlConfig_veg=
+a10[] =3D
+>  {
+>  /* ---------------------------------------------------------------------=
+---------------------------------------------------------------------------=
+---------------------------------
+> --
+> 2.21.1
+>
+> _______________________________________________
+> amd-gfx mailing list
+> amd-gfx@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/amd-gfx
