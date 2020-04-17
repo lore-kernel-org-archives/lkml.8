@@ -2,76 +2,187 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5565CC2BB55
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 08:57:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FB1AC2BB55
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 08:57:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3C16A20857
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 08:57:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E978920857
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 08:57:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VZdrBjrZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730059AbgDQI53 (ORCPT
+        id S1730089AbgDQI5v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 04:57:29 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:2347 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730040AbgDQI52 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 04:57:28 -0400
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id EF823D445A7E116B46C7;
-        Fri, 17 Apr 2020 16:57:26 +0800 (CST)
-Received: from huawei.com (10.175.124.28) by DGGEMS404-HUB.china.huawei.com
- (10.3.19.204) with Microsoft SMTP Server id 14.3.487.0; Fri, 17 Apr 2020
- 16:57:18 +0800
-From:   Jason Yan <yanaijie@huawei.com>
-To:     <cezary.rojewski@intel.com>,
-        <pierre-louis.bossart@linux.intel.com>,
-        <liam.r.girdwood@linux.intel.com>, <yang.jie@linux.intel.com>,
-        <broonie@kernel.org>, <perex@perex.cz>, <tiwai@suse.com>,
-        <hdegoede@redhat.com>, <tglx@linutronix.de>,
-        <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>
-CC:     Jason Yan <yanaijie@huawei.com>, Hulk Robot <hulkci@huawei.com>
-Subject: [PATCH] ASoC: Intel: atom: remove unused 'sst_mix_voip_controls'
-Date:   Fri, 17 Apr 2020 17:23:44 +0800
-Message-ID: <20200417092344.14301-1-yanaijie@huawei.com>
-X-Mailer: git-send-email 2.21.1
+        Fri, 17 Apr 2020 04:57:51 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:43894 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1730071AbgDQI5u (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Apr 2020 04:57:50 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587113868;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=57oFuPD/q+SMkeSS1ok5ufPqZbzHPN868lU8tZLRaro=;
+        b=VZdrBjrZrkRkxSOQbWx1KTvjdExhJWTtZAJYUv3c30/DNe1rj61BDiTn2w7yDYx2ghur1G
+        Kd9kEwHUi7vEqmppZ1vGjTY3jbEgVAjsGqjtXF9umDW2+dxniPZhac8uoU23vt0qqdZdx8
+        IYrf/TjwQlyuVSRS9fjBbEYcJOtioXk=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-19-7Rem6eHaOi24Ge2Awr2EeQ-1; Fri, 17 Apr 2020 04:57:46 -0400
+X-MC-Unique: 7Rem6eHaOi24Ge2Awr2EeQ-1
+Received: by mail-wm1-f72.google.com with SMTP id f17so549714wmm.5
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 01:57:46 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=57oFuPD/q+SMkeSS1ok5ufPqZbzHPN868lU8tZLRaro=;
+        b=S3ypKfE5tc1xeNKmbd2C3mjI+KXUAh4pLaPOqoQJla7V3bObI5M1R4vNOG7DrYt7b4
+         uD1TvvApa5qgjAUqHvd7ue+T2ROTBymi1n6srNmG2yoK8cc/A1tBYFMOJT7pVF2kkxUv
+         unCTdjDxfbT0WH8Hp3VFD0ASD4zoQMRyuhwbqYUmwjQ85flHiadlKDkBU/8Sxyp1DE8M
+         L5XmZ4YeZbADLrQkN+Ca5AGoZaTa2V1Fpprw64SfxUGY1hFPbHiMmrXP/HKAIwXNsTSO
+         yez6v134impPXSW+l17/Dt9G1hwAsYLjDB9aXUmOzoZr9m8NUI+V8RJ9lnJ3XcdCqvHw
+         g0bQ==
+X-Gm-Message-State: AGi0PuYTlF0jySHgEVLj94fnvGBIK/lNC1EOuwqXmUSk9XJLtpa6I+0y
+        g/bmZ12bVmjrbXbNZNPYwQCrz+kK10E8frwjD4OdpluqlBY5eDFjUkgJGA/jZC2slLRCjW4fkG3
+        5JcthjZh/WLcpgXlc9fQw6IoW
+X-Received: by 2002:a05:600c:4096:: with SMTP id k22mr2101835wmh.99.1587113865720;
+        Fri, 17 Apr 2020 01:57:45 -0700 (PDT)
+X-Google-Smtp-Source: APiQypKzNTX8c8fQ/vBkdSzMi35lJDuNvId/TTHeWg1TQWoHgILbrk1iRbqaecBOrIQnqlWsFeqPPQ==
+X-Received: by 2002:a05:600c:4096:: with SMTP id k22mr2101824wmh.99.1587113865518;
+        Fri, 17 Apr 2020 01:57:45 -0700 (PDT)
+Received: from redhat.com (bzq-79-183-51-3.red.bezeqint.net. [79.183.51.3])
+        by smtp.gmail.com with ESMTPSA id n6sm31931548wrs.81.2020.04.17.01.57.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 17 Apr 2020 01:57:44 -0700 (PDT)
+Date:   Fri, 17 Apr 2020 04:57:41 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Jason Wang <jasowang@redhat.com>
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
+        netdev@vger.kernel.org, geert@linux-m68k.org,
+        tsbogend@alpha.franken.de, benh@kernel.crashing.org,
+        paulus@samba.org, heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        borntraeger@de.ibm.com, Michael Ellerman <mpe@ellerman.id.au>
+Subject: Re: [PATCH V2] vhost: do not enable VHOST_MENU by default
+Message-ID: <20200417045454-mutt-send-email-mst@kernel.org>
+References: <20200415024356.23751-1-jasowang@redhat.com>
+ <20200416185426-mutt-send-email-mst@kernel.org>
+ <b7e2deb7-cb64-b625-aeb4-760c7b28c0c8@redhat.com>
+ <20200417022929-mutt-send-email-mst@kernel.org>
+ <4274625d-6feb-81b6-5b0a-695229e7c33d@redhat.com>
+ <20200417042912-mutt-send-email-mst@kernel.org>
+ <fdb555a6-4b8d-15b6-0849-3fe0e0786038@redhat.com>
+ <20200417044230-mutt-send-email-mst@kernel.org>
+ <73843240-3040-655d-baa9-683341ed4786@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.175.124.28]
-X-CFilter-Loop: Reflected
+In-Reply-To: <73843240-3040-655d-baa9-683341ed4786@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix the following gcc warning:
+On Fri, Apr 17, 2020 at 04:51:19PM +0800, Jason Wang wrote:
+> 
+> On 2020/4/17 下午4:46, Michael S. Tsirkin wrote:
+> > On Fri, Apr 17, 2020 at 04:39:49PM +0800, Jason Wang wrote:
+> > > On 2020/4/17 下午4:29, Michael S. Tsirkin wrote:
+> > > > On Fri, Apr 17, 2020 at 03:36:52PM +0800, Jason Wang wrote:
+> > > > > On 2020/4/17 下午2:33, Michael S. Tsirkin wrote:
+> > > > > > On Fri, Apr 17, 2020 at 11:12:14AM +0800, Jason Wang wrote:
+> > > > > > > On 2020/4/17 上午6:55, Michael S. Tsirkin wrote:
+> > > > > > > > On Wed, Apr 15, 2020 at 10:43:56AM +0800, Jason Wang wrote:
+> > > > > > > > > We try to keep the defconfig untouched after decoupling CONFIG_VHOST
+> > > > > > > > > out of CONFIG_VIRTUALIZATION in commit 20c384f1ea1a
+> > > > > > > > > ("vhost: refine vhost and vringh kconfig") by enabling VHOST_MENU by
+> > > > > > > > > default. Then the defconfigs can keep enabling CONFIG_VHOST_NET
+> > > > > > > > > without the caring of CONFIG_VHOST.
+> > > > > > > > > 
+> > > > > > > > > But this will leave a "CONFIG_VHOST_MENU=y" in all defconfigs and even
+> > > > > > > > > for the ones that doesn't want vhost. So it actually shifts the
+> > > > > > > > > burdens to the maintainers of all other to add "CONFIG_VHOST_MENU is
+> > > > > > > > > not set". So this patch tries to enable CONFIG_VHOST explicitly in
+> > > > > > > > > defconfigs that enables CONFIG_VHOST_NET and CONFIG_VHOST_VSOCK.
+> > > > > > > > > 
+> > > > > > > > > Acked-by: Christian Borntraeger<borntraeger@de.ibm.com>   (s390)
+> > > > > > > > > Acked-by: Michael Ellerman<mpe@ellerman.id.au>   (powerpc)
+> > > > > > > > > Cc: Thomas Bogendoerfer<tsbogend@alpha.franken.de>
+> > > > > > > > > Cc: Benjamin Herrenschmidt<benh@kernel.crashing.org>
+> > > > > > > > > Cc: Paul Mackerras<paulus@samba.org>
+> > > > > > > > > Cc: Michael Ellerman<mpe@ellerman.id.au>
+> > > > > > > > > Cc: Heiko Carstens<heiko.carstens@de.ibm.com>
+> > > > > > > > > Cc: Vasily Gorbik<gor@linux.ibm.com>
+> > > > > > > > > Cc: Christian Borntraeger<borntraeger@de.ibm.com>
+> > > > > > > > > Reported-by: Geert Uytterhoeven<geert@linux-m68k.org>
+> > > > > > > > > Signed-off-by: Jason Wang<jasowang@redhat.com>
+> > > > > > > > I rebased this on top of OABI fix since that
+> > > > > > > > seems more orgent to fix.
+> > > > > > > > Pushed to my vhost branch pls take a look and
+> > > > > > > > if possible test.
+> > > > > > > > Thanks!
+> > > > > > > I test this patch by generating the defconfigs that wants vhost_net or
+> > > > > > > vhost_vsock. All looks fine.
+> > > > > > > 
+> > > > > > > But having CONFIG_VHOST_DPN=y may end up with the similar situation that
+> > > > > > > this patch want to address.
+> > > > > > > Maybe we can let CONFIG_VHOST depends on !ARM || AEABI then add another
+> > > > > > > menuconfig for VHOST_RING and do something similar?
+> > > > > > > 
+> > > > > > > Thanks
+> > > > > > Sorry I don't understand. After this patch CONFIG_VHOST_DPN is just
+> > > > > > an internal variable for the OABI fix. I kept it separate
+> > > > > > so it's easy to revert for 5.8. Yes we could squash it into
+> > > > > > VHOST directly but I don't see how that changes logic at all.
+> > > > > Sorry for being unclear.
+> > > > > 
+> > > > > I meant since it was enabled by default, "CONFIG_VHOST_DPN=y" will be left
+> > > > > in the defconfigs.
+> > > > But who cares?
+> > > FYI, please seehttps://www.spinics.net/lists/kvm/msg212685.html
+> > The complaint was not about the symbol IIUC.  It was that we caused
+> > everyone to build vhost unless they manually disabled it.
+> 
+> 
+> There could be some misunderstanding here. I thought it's somehow similar: a
+> CONFIG_VHOST_MENU=y will be left in the defconfigs even if CONFIG_VHOST is
+> not set.
+> 
+> Thanks
 
-sound/soc/intel/atom/sst-atom-controls.c:710:30: warning:
-‘sst_mix_voip_controls’ defined but not used [-Wunused-const-variable=]
- SST_SBA_DECLARE_MIX_CONTROLS(sst_mix_voip_controls);
-                              ^
+Hmm. So looking at Documentation/kbuild/kconfig-language.rst :
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Jason Yan <yanaijie@huawei.com>
----
- sound/soc/intel/atom/sst-atom-controls.c | 1 -
- 1 file changed, 1 deletion(-)
+        Things that merit "default y/m" include:
 
-diff --git a/sound/soc/intel/atom/sst-atom-controls.c b/sound/soc/intel/atom/sst-atom-controls.c
-index 69f3af4524ab..541f0059ba7a 100644
---- a/sound/soc/intel/atom/sst-atom-controls.c
-+++ b/sound/soc/intel/atom/sst-atom-controls.c
-@@ -707,7 +707,6 @@ SST_SBA_DECLARE_MIX_CONTROLS(sst_mix_pcm2_controls);
- SST_SBA_DECLARE_MIX_CONTROLS(sst_mix_sprot_l0_controls);
- SST_SBA_DECLARE_MIX_CONTROLS(sst_mix_media_l1_controls);
- SST_SBA_DECLARE_MIX_CONTROLS(sst_mix_media_l2_controls);
--SST_SBA_DECLARE_MIX_CONTROLS(sst_mix_voip_controls);
- SST_SBA_DECLARE_MIX_CONTROLS(sst_mix_codec0_controls);
- SST_SBA_DECLARE_MIX_CONTROLS(sst_mix_codec1_controls);
- SST_SBA_DECLARE_MIX_CONTROLS(sst_mix_modem_controls);
--- 
-2.21.1
+        a) A new Kconfig option for something that used to always be built
+           should be "default y".
+
+
+        b) A new gatekeeping Kconfig option that hides/shows other Kconfig
+           options (but does not generate any code of its own), should be
+           "default y" so people will see those other options.
+
+        c) Sub-driver behavior or similar options for a driver that is
+           "default n". This allows you to provide sane defaults.
+
+
+So it looks like VHOST_MENU is actually matching rule b).
+So what's the problem we are trying to solve with this patch, exactly?
+
+Geert could you clarify pls?
+
+
+> 
+> > 
 
