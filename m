@@ -2,92 +2,122 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CABEC352BE
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 10:41:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85D72C3815B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 10:43:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 24C2B22250
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 10:41:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64740221EA
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 10:43:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="J1NVhna9"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="HkFdGJH+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729400AbgDQKlf (ORCPT
+        id S1729500AbgDQKnP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 06:41:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56374 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726469AbgDQKld (ORCPT
+        Fri, 17 Apr 2020 06:43:15 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:50038 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728868AbgDQKnO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 06:41:33 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CFB24C061A0C
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 03:41:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=EUsPqAz2CAwrpD3T6QffV2gx1aiwSG8eKPhjQi/6B+8=; b=J1NVhna9GYMmhBBZbJe/JHazic
-        AfX6xvryGnz34nCQFLd+jT7u/v1eDYi2ZU30NP2zicuWiVC5daJ7IhzY58NOVbRz4tkbc1OfnRMk8
-        7nQdu3Eus+savcHoGbHwBw8uMH+0RPl34XA2pIaQFlMh/09g17BomSlzyLTg1XBsRGecywYLtfxoP
-        VLbbQeb3who1/Ks4ay5hA8JHNStZCuOcJDlEBljPxt86qMsu5/qnGvXeT2L5GufKrTwUCd9/0157T
-        vg+v1mOpJv1F7zcMTsQypctKs6cvBOpJnX3D3VcR95q09AVkRKxcCPwB3WGZTWwyd5doPtYtGJjgO
-        3VBHGaFQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jPOR6-0005pt-6c; Fri, 17 Apr 2020 10:41:28 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 94F973010BC;
-        Fri, 17 Apr 2020 12:41:26 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 7DDA82B0DED2D; Fri, 17 Apr 2020 12:41:26 +0200 (CEST)
-Date:   Fri, 17 Apr 2020 12:41:26 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Sergei Trofimovich <slyfox@gentoo.org>,
-        Michael Matz <matz@suse.de>, Jakub Jelinek <jakub@redhat.com>,
-        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Andy Lutomirski <luto@kernel.org>, x86@kernel.org
-Subject: Re: [PATCH v2] x86: fix early boot crash on gcc-10
-Message-ID: <20200417104126.GX20730@hirez.programming.kicks-ass.net>
-References: <20200326223501.GK11398@zn.tnic>
- <20200328084858.421444-1-slyfox@gentoo.org>
- <20200413163540.GD3772@zn.tnic>
- <alpine.LSU.2.21.2004141343370.11688@wotan.suse.de>
- <20200415074842.GA31016@zn.tnic>
- <alpine.LSU.2.21.2004151445520.11688@wotan.suse.de>
- <20200415231930.19755bc7@sf>
- <20200417075739.GA7322@zn.tnic>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200417075739.GA7322@zn.tnic>
+        Fri, 17 Apr 2020 06:43:14 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03HAfpfA009360;
+        Fri, 17 Apr 2020 10:42:58 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references; s=corp-2020-01-29;
+ bh=YIWoAje0qyhjK/2S/YVkAhxEbVPEDjaDZZ11p5pY6GU=;
+ b=HkFdGJH+/AZVhHlv/JLptPFLKdNcdq6cte+H53h/7Ha2m0W8BoZIKGy3BA2QIoVtORaY
+ TWVgyo0PznY3lu4dYyhznj0YDn3LOkaTwaB5ziXWjh/NRLFjHwXXAwp/hg+CH6O6gbfJ
+ TvULyc/4ISDCV7QpnuktZaYeinkixQPTFlLeDw1YXsWjGft5Yh82j92SRCEe2D1T9XRU
+ K0yPrh0v8EojQiU78xxLQVn4LEDCYGlLXq3ZR+uTa2iwbAnxcqqmzHIh/Q1b3j6l9YhB
+ vr+KvGKB36kf9QxSZxo1OWTGy12o17gFy3be6sYBKEGn8036FRaZboMJn/fwbXlnVj4e Nw== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 30e0aaby11-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 17 Apr 2020 10:42:58 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03HAc4Wp018976;
+        Fri, 17 Apr 2020 10:42:58 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3030.oracle.com with ESMTP id 30dyp28b89-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 17 Apr 2020 10:42:58 +0000
+Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 03HAgu6a015831;
+        Fri, 17 Apr 2020 10:42:57 GMT
+Received: from localhost.uk.oracle.com (/10.175.205.33)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 17 Apr 2020 03:42:56 -0700
+From:   Alan Maguire <alan.maguire@oracle.com>
+To:     ast@kernel.org, daniel@iogearbox.net, yhs@fb.com
+Cc:     kafai@fb.com, songliubraving@fb.com, andriin@fb.com,
+        john.fastabend@gmail.com, kpsingh@chromium.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, Alan Maguire <alan.maguire@oracle.com>
+Subject: [RFC PATCH bpf-next 2/6] bpf: btf->resolved_[ids,sizes] should not be used for vmlinux BTF
+Date:   Fri, 17 Apr 2020 11:42:36 +0100
+Message-Id: <1587120160-3030-3-git-send-email-alan.maguire@oracle.com>
+X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1587120160-3030-1-git-send-email-alan.maguire@oracle.com>
+References: <1587120160-3030-1-git-send-email-alan.maguire@oracle.com>
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9593 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 suspectscore=0
+ malwarescore=0 phishscore=0 spamscore=0 adultscore=0 mlxscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004170084
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9593 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 clxscore=1011
+ impostorscore=0 mlxlogscore=999 mlxscore=0 lowpriorityscore=0
+ suspectscore=0 adultscore=0 spamscore=0 malwarescore=0 phishscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004170084
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 17, 2020 at 09:57:39AM +0200, Borislav Petkov wrote:
+When testing support for print data structures using patches
+later in this series, I hit NULL pointer dereference bugs when
+printing "struct sk_buff". The problem seems to revolve around
+that structure's use of a zero-length array in the middle of
+the data structure - headers_start[0].
 
-> Yeah, Peter and I have been discussing something like the below
-> yesterday. I don't like the additional exports too much but would
-> disable stack protector only for the one function...
+We see in btf_type_id_size() we consult btf->resolved_ids and
+btf->resolved_sizes; both of which are not used in kernel
+vmlinux BTF so should not be used when handling vmlinux
+BTF data.
 
-I did do promise you bike-shedding... so here goes :-)
+Signed-off-by: Alan Maguire <alan.maguire@oracle.com>
+---
+ kernel/bpf/btf.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-> -obj-$(CONFIG_SMP)		+= smpboot.o
-> +
-> +nostackprot := $(call cc-option, -fno-stack-protector)
-> +CFLAGS_smpboot_aux.o := $(nostackprot)
-> +
-> +smpboot_all-y			:= smpboot.o smpboot_aux.o
-
-So how about we call that file: smpboot_nostack.c or, since it only has
-the one function in: start_secondary.c ?
+diff --git a/kernel/bpf/btf.c b/kernel/bpf/btf.c
+index 50080ad..a474839 100644
+--- a/kernel/bpf/btf.c
++++ b/kernel/bpf/btf.c
+@@ -1170,7 +1170,7 @@ const struct btf_type *btf_type_id_size(const struct btf *btf,
+ 
+ 	if (btf_type_has_size(size_type)) {
+ 		size = size_type->size;
+-	} else if (btf_type_is_array(size_type)) {
++	} else if (btf_type_is_array(size_type) && btf->resolved_sizes) {
+ 		size = btf->resolved_sizes[size_type_id];
+ 	} else if (btf_type_is_ptr(size_type)) {
+ 		size = sizeof(void *);
+@@ -1179,6 +1179,9 @@ const struct btf_type *btf_type_id_size(const struct btf *btf,
+ 				 !btf_type_is_var(size_type)))
+ 			return NULL;
+ 
++		if (!btf->resolved_ids)
++			return NULL;
++
+ 		size_type_id = btf->resolved_ids[size_type_id];
+ 		size_type = btf_type_by_id(btf, size_type_id);
+ 		if (btf_type_nosize_or_null(size_type))
+-- 
+1.8.3.1
 
