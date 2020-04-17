@@ -2,111 +2,88 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F12FC38A29
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 21:56:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 395E2C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 22:12:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DEBA020B1F
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 21:56:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="BGtWiYh0"
+	by mail.kernel.org (Postfix) with ESMTP id 0DE0D214AF
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 22:12:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587161570;
+	bh=ON4JdnnSp41GHtVfQ1OKELVDXoHAdZJmnEWPX+XFdCw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=e58aWREDMEUFDe9iL22sYgbKoLP5thZJ2MQFEuo7yOQcPK8Bdco019rW3xO4ZI9II
+	 OJHqOJKAMSymjz4LdGCFnibcOXBmZFNraZFu3iMiTHLKizRUgXVgNxc6LMkuNWhoFB
+	 E9JRRQYPkR3ZsOqxweRVwY1e1tXQWRPUU4fWTlug=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728626AbgDQV4O (ORCPT
+        id S1728517AbgDQWMt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 17:56:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48150 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728202AbgDQV4O (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 17:56:14 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19CDBC061A0C
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 14:56:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=35vQ9aG9jAJX5dHI+t+djpgDpVwXXiguJrlhJzWaW7c=; b=BGtWiYh0RS7ttpR4W03t1QeP99
-        qbjQwmzdfQIJ8bHYM2mzvjtjypH+TLr0rppcWiJEJsGOudrXda5BSF3LL993XPI6h4JDk06nM/pqe
-        tFjnFKck1c/5vw345vzsesdo7VacT2LUGt9nqz/gXP/Ejpi5DboMfsi2P8RJDkfBLRsdF9ne0vyNh
-        J0pWHSN4bgiXIQ6Yxxj6gInU8xy8iIFEKCnVBPrxi4gvk1ccskebNgNXNX7FDvx1wZz25Z73Ek2nL
-        xyffkQ9KLt5IDSZLZk0HgV8YLWXpCFTSeyq959CXt6V2ojRY2/acTjTRaLzT+xJhfiJzLOnRCEurf
-        RQ+7fk0g==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jPYxv-0001UZ-Rk; Fri, 17 Apr 2020 21:56:04 +0000
-Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 153689834C7; Fri, 17 Apr 2020 23:56:01 +0200 (CEST)
-Date:   Fri, 17 Apr 2020 23:56:01 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
-Cc:     Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Jann Horn <jannh@google.com>, Leo Li <sunpeng.li@amd.com>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        amd-gfx@lists.freedesktop.org, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Harry Wentland <harry.wentland@amd.com>, mhiramat@kernel.org
-Subject: Re: AMD DC graphics display code enables -mhard-float, -msse, -msse2
- without any visible FPU state protection
-Message-ID: <20200417215601.GQ2483@worktop.programming.kicks-ass.net>
-References: <CAG48ez2Sx4ELkM94aD_h_J7K7KBOeuGmvZLKRkg3n_f2WoZ_cg@mail.gmail.com>
- <4c5fe55d-9db9-2f61-59b2-1fb2e1b45ed0@amd.com>
- <20200402141308.GB20730@hirez.programming.kicks-ass.net>
- <20200409155956.GQ20760@hirez.programming.kicks-ass.net>
- <20200409170916.GR20760@hirez.programming.kicks-ass.net>
- <87a2f2fc-972d-ab9b-a29d-72f02d94e60e@amd.com>
- <20200409200125.GB2483@worktop.programming.kicks-ass.net>
- <20200417202728.w2v3frkxqsgutb7h@outlook.office365.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200417202728.w2v3frkxqsgutb7h@outlook.office365.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Fri, 17 Apr 2020 18:12:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44998 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726284AbgDQWMs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Apr 2020 18:12:48 -0400
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EC87120B1F;
+        Fri, 17 Apr 2020 22:12:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587161568;
+        bh=ON4JdnnSp41GHtVfQ1OKELVDXoHAdZJmnEWPX+XFdCw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=CDWhqyB/IlZyphu6jsbA1XfIALDH+nOe4HMk0CDTKJ7edRKniwEH2Cq+6D/wK2Gtl
+         LEi7bg2GM4iBlFWRMCs4hLDij8zeCyTpVgDxl8AmR4nH1dTgIso263RiE9OJ6J4j6z
+         gAz6SYiK4GGU1A0Frqsr7AiKouEeUxj1Au0TBSAk=
+Date:   Fri, 17 Apr 2020 15:12:47 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
+        Baoquan He <bhe@redhat.com>,
+        Shile Zhang <shile.zhang@linux.alibaba.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Alexander Duyck <alexander.duyck@gmail.com>,
+        Oscar Salvador <osalvador@suse.de>
+Subject: Re: [PATCH v2] mm/page_alloc: fix watchdog soft lockups during
+ set_zone_contiguous()
+Message-Id: <20200417151247.0068d5aa3f026ced2289ce31@linux-foundation.org>
+In-Reply-To: <20200416073417.5003-1-david@redhat.com>
+References: <20200416073417.5003-1-david@redhat.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 17, 2020 at 04:27:28PM -0400, Rodrigo Siqueira wrote:
-> I'm going to work on the FPU issues in the display code. In this sense,
-> could you clarify a little bit more about the Makefile issues?
+On Thu, 16 Apr 2020 09:34:17 +0200 David Hildenbrand <david@redhat.com> wrote:
 
-I think it might have been PEBKAC, I assumed allmodconfig would end up
-selecting the driver, it doesn't!
+> Without CONFIG_PREEMPT, it can happen that we get soft lockups detected,
+> e.g., while booting up.
+> 
+> ...
+> 
+> --- a/mm/page_alloc.c
+> +++ b/mm/page_alloc.c
+> @@ -1607,6 +1607,7 @@ void set_zone_contiguous(struct zone *zone)
+>  		if (!__pageblock_pfn_to_page(block_start_pfn,
+>  					     block_end_pfn, zone))
+>  			return;
+> +		cond_resched();
+>  	}
+>  
+>  	/* We confirm that there is no hole */
 
-Adding "AMD GPU" to a defconfig seems to make it work:
-
-$ make O=defconfig-build/ drivers/gpu/drm/amd/amdgpu/../display/dc/calcs/dcn_calcs.o
-
-Sorry about the confusion.
-
-> Also, I applied the patch `[PATCH v4] x86: insn: Add insn_is_fpu()` and
-> tried to reproduce the warning that you described but I didn't see it.
-> Could you explain to me how I can check those warnings?
-
-grab:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/peterz/queue.git x86/fpu
-
-Then build like above:
-
-$ make O=defconfig-build/ drivers/gpu/drm/amd/amdgpu/../display/dc/calcs/dcn_calcs.o
-
-And manually validate:
-
-$ defconfig-build/tools/objtool/objtool check -Ffa defconfig-build/drivers/gpu/drm/amd/amdgpu/../display/dc/calcs/dcn_calcs.o
-defconfig-build/drivers/gpu/drm/amd/amdgpu/../display/dc/calcs/dcn_calcs.o: warning: objtool: dcn_validate_bandwidth()+0x1b17: FPU instruction outside of kernel_fpu_{begin,end}()
-
+I added cc:stable to this one.  Please let me know if that wasn't a
+good idea.
 
