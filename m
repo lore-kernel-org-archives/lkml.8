@@ -2,96 +2,103 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02B7BC352BE
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 08:41:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58809C2BB55
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 08:42:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C5D3D2137B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 08:41:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587112868;
-	bh=Q4esTZYVNmqT30vqB5Ty7wXcBtA09QLwSlf9T8E+ZBY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=pEpx18/MtLI5G5px1kzmYBDm86XfE9SPk81jsWFLJ20tHi6OCK13Dk+Zuxj4sy2rW
-	 ZT9omXv0ZTtiElEqBMCcfvNO6mQgTDKB4JDlQ5fHMCkzYG0a6fn8TliwP6DvZmZ9E9
-	 oqn26rCt3IE94vROgud1zVVwoOICsENy4+eTF9DU=
+	by mail.kernel.org (Postfix) with ESMTP id 2F7112137B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 08:42:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="OZrZ48BI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729901AbgDQIlI (ORCPT
+        id S1729878AbgDQIma (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 04:41:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34368 "EHLO mail.kernel.org"
+        Fri, 17 Apr 2020 04:42:30 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:57146 "EHLO mail.skyhub.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729760AbgDQIlH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 04:41:07 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        id S1729166AbgDQIm3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Apr 2020 04:42:29 -0400
+Received: from zn.tnic (p200300EC2F0DA8008DA98E92B4F5B53B.dip0.t-ipconnect.de [IPv6:2003:ec:2f0d:a800:8da9:8e92:b4f5:b53b])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B050C2137B;
-        Fri, 17 Apr 2020 08:41:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587112867;
-        bh=Q4esTZYVNmqT30vqB5Ty7wXcBtA09QLwSlf9T8E+ZBY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=j4dvaNIUbdbJ++rgfPga0xtZ6c8pwdLGVZ+75rsfMK9B9GAAJEGFjchkTAIYPyRFK
-         xAk/AsjrAsDm6THYnGnC8TPcjHOYM02u9ih+qEpIuCZ+Jk9BNw2esVekMPso2ccuNE
-         PgJnnDiPoaAGfONc5XICnGncl0FKtvoliUkQnf0A=
-Date:   Fri, 17 Apr 2020 09:41:04 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     Kamal Dasu <kdasu.kdev@gmail.com>,
-        bcm-kernel-feedback-list@broadcom.com, linux-spi@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [Patch 1/9] spi: bcm-qspi: Handle clock probe deferral
-Message-ID: <20200417084104.GA5315@sirena.org.uk>
-References: <20200416174309.34044-1-kdasu.kdev@gmail.com>
- <20200416174932.GP5354@sirena.org.uk>
- <7b2db6ed-1aab-4c61-e519-a73d9e3af454@gmail.com>
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id A24301EC0D33;
+        Fri, 17 Apr 2020 10:42:28 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1587112948;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=HpKmgFfZkprWvBMQTEBHQ+HqQrIoR6PYuFrabo8U0Yc=;
+        b=OZrZ48BIgwczXLH05Hga+F1Sauzh7avudhSxJLoODYgCXOozjmlN0sxAlEFVFSCm7Xw5mY
+        BF2x6f9h9TP3K/XjBTf9Jxrs5RbgsoviXnn/EOBSWJQ83LIs92SNGRd6UKU+a3TG3b0tWR
+        th5ZV1oNnqXyJ6Yzvr01jKDfdT1GGrc=
+Date:   Fri, 17 Apr 2020 10:42:24 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Jakub Jelinek <jakub@redhat.com>
+Cc:     Sergei Trofimovich <slyfox@gentoo.org>,
+        Michael Matz <matz@suse.de>, linux-kernel@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>, x86@kernel.org
+Subject: Re: [PATCH v2] x86: fix early boot crash on gcc-10
+Message-ID: <20200417084224.GB7322@zn.tnic>
+References: <20200326223501.GK11398@zn.tnic>
+ <20200328084858.421444-1-slyfox@gentoo.org>
+ <20200413163540.GD3772@zn.tnic>
+ <alpine.LSU.2.21.2004141343370.11688@wotan.suse.de>
+ <20200415074842.GA31016@zn.tnic>
+ <alpine.LSU.2.21.2004151445520.11688@wotan.suse.de>
+ <20200415231930.19755bc7@sf>
+ <20200417075739.GA7322@zn.tnic>
+ <20200417080726.GS2424@tucnak>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="xHFwDpU9dbj6ez1V"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <7b2db6ed-1aab-4c61-e519-a73d9e3af454@gmail.com>
-X-Cookie: MOUNT TAPE U1439 ON B3, NO RING
+In-Reply-To: <20200417080726.GS2424@tucnak>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Apr 17, 2020 at 10:07:26AM +0200, Jakub Jelinek wrote:
+> If you want minimal changes, you can as I said earlier either
+> mark cpu_startup_entry noreturn (in the declaration in some header so that
+> smpboot.c sees it), or you could add something after the cpu_startup_entry
+> call to ensure it is not tail call optimized (e.g. just
+> 	/* Prevent tail call to cpu_startup_entry because the stack
+> 	   protector guard has been changed in the middle of this function
+> 	   and must not be checked before tail calling another function.  */
+> 	asm ("");
 
---xHFwDpU9dbj6ez1V
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+That sounds ok-ish to me too.
 
-On Thu, Apr 16, 2020 at 01:55:21PM -0700, Florian Fainelli wrote:
-> On 4/16/2020 10:49 AM, Mark Brown wrote:
+I know you probably can't tell the future :) but what stops gcc from
+doing the tail-call optimization in the future?
 
-> > Did Florian author this patch or you?  The signoffs look like it was
-> > him.
+Or are optimization decisions behind an inline asm a no-no and will
+pretty much always stay that way?
 
-> I believe I did author that one ;)
+And I hope the clang folks don't come around and say, err, nope, we're
+much more aggressive here.
 
-In that case the patch (and any others that are similar, I saw more)
-should say so - please resend with a From: in the patch.  Kamal, if you
-do git commit --amend --author='Florian Fainelli <f.fainelli@gmail.com>'
-that should do the right thing.
+However, if we do it with the explicit disabling with
+-fno-stack-protector for only this compilation unit, then it is
 
---xHFwDpU9dbj6ez1V
-Content-Type: application/pgp-signature; name="signature.asc"
+1. clear why we're doing this
+2. no compiler would break it
 
------BEGIN PGP SIGNATURE-----
+So I'm still gravitating a bit towards the explicit thing...
 
-iQEyBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl6Za5kACgkQJNaLcl1U
-h9A9xwf4tJJ4FQfCqc3g/g18a7HQvQ+rTSw1zy3scDDH2VMdbuuwSDGW/r4v4JWQ
-oU95OE0cL3DSRieGt97D4iXnct/lP+38ETY9tWW+dVYMP7s+pmXEEWgWLd/qIIFc
-seoBQuSxW0CeZTBGlS6b7SY/G2LK9c9s5kgxkhvqay0Uvc1jgKZqCu0gwKzbHXJv
-PGbE89ob5MzL7PkjsftkZ+imKogOvIf286UVvrd6setQqjh9AbMgblDhaKlvYERb
-20m9D0jkpJeTjkxYz+g8Xh5Op1b0bDgm1VY2K/wCHPRdSS3W59TY7rgZXhxD0cN5
-vsi8xG8mYfU/E/peqBMYftWPtk/j
-=gGzp
------END PGP SIGNATURE-----
+Thx.
 
---xHFwDpU9dbj6ez1V--
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
