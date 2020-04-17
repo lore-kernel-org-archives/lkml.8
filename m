@@ -2,110 +2,154 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1C21C2BB85
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 07:53:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69CCEC2BB85
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 07:54:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C249A214D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 07:53:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="mt7rGzwB"
+	by mail.kernel.org (Postfix) with ESMTP id F38D12137B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 07:54:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729540AbgDQHxt (ORCPT
+        id S1729547AbgDQHyJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 03:53:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58384 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729042AbgDQHxt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 03:53:49 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0E14C061A0C;
-        Fri, 17 Apr 2020 00:53:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=q5yoPHJCkMbeyhbAEdK16CGWUtkEt6yQeeOm9280kIA=; b=mt7rGzwBoRbi0ELfc3cA+epBtT
-        pFHc/KJ2++BbuqlNzuvQGtT9EFknpqUBTHghxHsPIBpyhCaRzRIAfWxs9HX+NLEx+dw2qNOKyjJUX
-        pQrnWj8MVoRiS0y6I3Mekai8z7E9OQnnrwfY3jg9MmaKIapoadc6hvRZqHLw9rep5hFioN2rkYN9r
-        U6kmhyrm/CvT0qHOQwmsbUS4k4mv49TsbX0VD41w5jUo0v5UKSybvBBm80HZIbhNEWza2NpCftCVp
-        NqQ21hJW+QKHRNOiwOJPUlebnxuCEO07I7RKrQLNEelUmYd3o0DLdOC6F0EhmiE4NDo8WkQJgm2V1
-        m7QqotHg==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jPLoq-000071-G0; Fri, 17 Apr 2020 07:53:48 +0000
-Date:   Fri, 17 Apr 2020 00:53:48 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Max Kellermann <mk@cm4all.com>
-Cc:     linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org,
-        trond.myklebust@hammerspace.com, bfields@redhat.com, tytso@mit.edu,
-        viro@zeniv.linux.org.uk, agruenba@redhat.com,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH v3 4/4] nfs/super: check NFS_CAP_ACLS instead of the NFS
- version
-Message-ID: <20200417075348.GD598@infradead.org>
-References: <20200407142243.2032-1-mk@cm4all.com>
- <20200407142243.2032-4-mk@cm4all.com>
+        Fri, 17 Apr 2020 03:54:09 -0400
+Received: from mga06.intel.com ([134.134.136.31]:59833 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728330AbgDQHyH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Apr 2020 03:54:07 -0400
+IronPort-SDR: aCy4eCkLjWRCgjIIldCeLSTyatESlxvDUWXbdmdX05VFd3WeIi3sxXENzJ3T2OuZflHs6f0Zzw
+ w7pZyL7Dy4aQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2020 00:54:06 -0700
+IronPort-SDR: Px9yLcqRBmj56jfaP+rRX6jDKBHOo8gm5ANSSCS9GGBKdDOvt1ZF+D+XGMGxZ8l6+ldxjV2EUs
+ qv+2ehWgYF2A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,394,1580803200"; 
+   d="scan'208";a="299548159"
+Received: from linux.intel.com ([10.54.29.200])
+  by FMSMGA003.fm.intel.com with ESMTP; 17 Apr 2020 00:54:05 -0700
+Received: from [10.255.156.142] (vramuthx-MOBL1.gar.corp.intel.com [10.255.156.142])
+        by linux.intel.com (Postfix) with ESMTP id 154325802C9;
+        Fri, 17 Apr 2020 00:54:00 -0700 (PDT)
+Subject: Re: [PATCH v1 2/2] mtd: rawnand: Add NAND controller support on Intel
+ LGM SoC
+To:     Boris Brezillon <boris.brezillon@collabora.com>
+Cc:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        anders.roxell@linaro.org, andriy.shevchenko@intel.com,
+        arnd@arndb.de, brendanhiggins@google.com, cheol.yong.kim@intel.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mtd@lists.infradead.org, masonccyang@mxic.com.tw,
+        miquel.raynal@bootlin.com, piotrs@cadence.com,
+        qi-ming.wu@intel.com, richard@nod.at, robh+dt@kernel.org,
+        tglx@linutronix.de, vigneshr@ti.com
+References: <20200414022433.36622-3-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20200415220533.733834-1-martin.blumenstingl@googlemail.com>
+ <c33c8653-16a2-5bcd-97a9-511d958b755a@linux.intel.com>
+ <20200416113822.2ef326cb@collabora.com>
+ <18568cf6-2955-472e-7b68-eb35e654a906@linux.intel.com>
+ <20200416122619.2c481792@collabora.com>
+ <d3e137fa-54a0-b4ec-eb24-3984eab2a247@linux.intel.com>
+ <20200416131725.51259573@collabora.com>
+ <de9f50b8-9215-d294-9914-e49701552185@linux.intel.com>
+ <20200416135711.039ba85c@collabora.com>
+ <003fa549-08c5-5867-2b02-54b483c16465@linux.intel.com>
+ <20200417090234.059418f6@collabora.com>
+From:   "Ramuthevar, Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Message-ID: <c26d937a-e9f1-f0f0-5b08-f20a0bd380ab@linux.intel.com>
+Date:   Fri, 17 Apr 2020 15:53:59 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200407142243.2032-4-mk@cm4all.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20200417090234.059418f6@collabora.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 07, 2020 at 04:22:43PM +0200, Max Kellermann wrote:
-> This sets SB_POSIXACL only if ACL support is really enabled, instead
-> of always setting SB_POSIXACL if the NFS protocol version
-> theoretically supports ACL.
-> 
-> The code comment says "We will [apply the umask] ourselves", but that
-> happens in posix_acl_create() only if the kernel has POSIX ACL
-> support.  Without it, posix_acl_create() is an empty dummy function.
-> 
-> So let's not pretend we will apply the umask if we can already know
-> that we will never.
-> 
-> This fixes a problem where the umask is always ignored in the NFS
-> client when compiled without CONFIG_FS_POSIX_ACL.  This is a 4 year
-> old regression caused by commit 013cdf1088d723 which itself was not
-> completely wrong, but failed to consider all the side effects by
-> misdesigned VFS code.
-> 
-> Signed-off-by: Max Kellermann <mk@cm4all.com>
-> Reviewed-by: J. Bruce Fields <bfields@redhat.com>
-> Cc: stable@vger.kernel.org
-> ---
->  fs/nfs/super.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
-> 
-> diff --git a/fs/nfs/super.c b/fs/nfs/super.c
-> index dada09b391c6..dab79193f641 100644
-> --- a/fs/nfs/super.c
-> +++ b/fs/nfs/super.c
-> @@ -977,11 +977,14 @@ static void nfs_fill_super(struct super_block *sb, struct nfs_fs_context *ctx)
->  	if (ctx && ctx->bsize)
->  		sb->s_blocksize = nfs_block_size(ctx->bsize, &sb->s_blocksize_bits);
->  
-> -	if (server->nfs_client->rpc_ops->version != 2) {
-> +	if (NFS_SB(sb)->caps & NFS_CAP_ACLS) {
->  		/* The VFS shouldn't apply the umask to mode bits. We will do
->  		 * so ourselves when necessary.
->  		 */
->  		sb->s_flags |= SB_POSIXACL;
-> +	}
+Hi Boris,
 
-Looks good, but I'd use the opportunity to also fix up the commen to be
-a little less cryptic:
+On 17/4/2020 3:02 pm, Boris Brezillon wrote:
+> On Fri, 17 Apr 2020 13:21:39 +0800
+> "Ramuthevar, Vadivel MuruganX"
+> <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
+>
+>> Hi Boris,
+>>
+>> On 16/4/2020 7:57 pm, Boris Brezillon wrote:
+>>> On Thu, 16 Apr 2020 19:38:03 +0800
+>>> "Ramuthevar, Vadivel MuruganX"
+>>> <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
+>>>   
+>>>> On 16/4/2020 7:17 pm, Boris Brezillon wrote:
+>>>>> On Thu, 16 Apr 2020 18:40:53 +0800
+>>>>> "Ramuthevar, Vadivel MuruganX"
+>>>>> <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
+>>>>>      
+>>>>>>>>> we'll be happy to have one more of the existing driver converted to
+>>>>>>>>> ->exec_op() ;-).
+>>>>>>>> I have completely adapted to ->exec_op() hook up to replace the legacy
+>>>>>>>> call-back.
+>>>>>>> I suspect porting what you've done to the xway driver shouldn't be too
+>>>>>>> complicated.
+>>>>>> Not ported from xway_nand.c driver , we have developed from the scratch
+>>>>>> to make it work on
+>>>>>> Intel LGM SoC , it's new x86 ATOM based SoC, IP itself completely
+>>>>>> different and most of the registers won't match.
+>>>>>> if we port then it would be ugly and also what are the problem may occur
+>>>>>> we do not know.
+>>>>> Sorry but IMO they look similar enough to try to merge them.
+>>>> Thanks! Boris, need suggestion from you since you are maintainer and
+>>>> also expertise on mtd-subsystem.
+>>> I *was* the maintainer :).
+>>>   
+>>>> There are different features involved and lines of code is more, if we
+>>>> add new driver patches over xway-nand driver
+>>> How about retro-fitting the xway logic into your driver then? I mean,
+>>> adding a 100 lines of code to your driver to get rid of the 500+ lines
+>>> we have in xway_nand.c is still a win.
+>>>   
+>>>> is completely looks ugly and it may disturb the existing functionality
+>>>> as well since we don't have platform to validate:'(.
+>>> How ugly? Can you show us? Maybe we can come with a solution to make it
+>>> less ugly.
+>>>
+>>> As for the testing part, there are 4 scenarios:
+>>>
+>>> 1/ Your changes work perfectly fine on older platforms. Yay \o/!
+>>> 2/ You break the xway driver and existing users notice it before this
+>>>      series gets merged. Now you found someone to validate your changes.
+>>> 3/ You break the xway driver and none of the existing users notice it
+>>>      before the driver is merged, but they notice it afterwards. Too bad
+>>>      this happened after we've merged the driver, but now you've found
+>>>      someone to help you fix the problem :P.
+>>> 4/ You break things for old platforms but no one ever complains about
+>>>      it, either because there's no users left or because they never
+>>>      update their kernels. In any case, that's no longer your problem.
+>>>      Someone will remove those old platforms one day and get rid of the
+>>>      unneeded code in the NAND driver.
+>>>
+>>> What's more likely to happen is #3 or #4, and I think the NAND
+>>> maintainer would be fine with both.
+>>>
+>>> Note that the NAND subsystem is full of unmaintained legacy drivers, so
+>>> every time we see someone who could help us get rid or update one of
+>>> them we have to take this opportunity.
+>> Agreed!, Thank you very much for the suggestions and clear inputs.
+>> To proceed further, can you please share your inputs to dividing the tasks
+>> and patches to be sent if possible.
+> Let's start with the new version you were about to post. We'll see how
+> we can merge both drivers based on that.
 
-	/*
-	 * If the server supports ACLs, the VFS shouldn't apply the umask to
-	 * the mode bits as we'll do it ourselves when necessary.
-	 */
-	if (NFS_SB(sb)->caps & NFS_CAP_ACLS)
-		sb->s_flags |= SB_POSIXACL;
+Thank you very much for the review comments and inputs , will post the 
+patches soon.
+
+Regards
+Vadivel
