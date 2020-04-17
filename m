@@ -2,194 +2,166 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE7EFC38A29
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 21:05:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1691BC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 21:07:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BADC420780
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 21:05:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="of25Kvc4"
+	by mail.kernel.org (Postfix) with ESMTP id DD4B82072D
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 21:07:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727791AbgDQVFF (ORCPT
+        id S1726629AbgDQVHo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 17:05:05 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:49538 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726093AbgDQVFE (ORCPT
+        Fri, 17 Apr 2020 17:07:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40662 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726396AbgDQVHn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 17:05:04 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1587157502; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=MwwZLSGVJur6LaUyd5egp9oHyObYEUxgSPJSaKMnHDs=;
-        b=of25Kvc4pVxp/KwaBZNmu03Ftp1b0TRe3KlXFFsYvbjO8e6K3BO7lR0mMCttX7Hf+OGRv+
-        dLV9xBGI2nk4F724zfcDJqTVqkQ0mHbEiqCbMEY4N5zmg0ge/seJMmsX7A1MuKU0Byfemm
-        rExSBUKULDJWJdpjIxauV5jnAdqDaQs=
-Date:   Fri, 17 Apr 2020 23:04:51 +0200
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [RESEND PATCH v5 3/5] IIO: Ingenic JZ47xx: Add touchscreen mode.
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Artur Rojek <contact@artur-rojek.eu>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        linux-input <linux-input@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Message-Id: <3KAY8Q.NNI6X4F9QRIX1@crapouillou.net>
-In-Reply-To: <CAHp75Vcwnu8tw92nMYc_5-x_iX+FY8_OhtaJkSYNehmNUDkHGQ@mail.gmail.com>
-References: <20200417202859.35427-1-contact@artur-rojek.eu>
-        <20200417202859.35427-3-contact@artur-rojek.eu>
-        <CAHp75Vcwnu8tw92nMYc_5-x_iX+FY8_OhtaJkSYNehmNUDkHGQ@mail.gmail.com>
+        Fri, 17 Apr 2020 17:07:43 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C714C061A0C
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 14:07:43 -0700 (PDT)
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jPYD3-0007B9-UA; Fri, 17 Apr 2020 23:07:38 +0200
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id 69E3B100C47; Fri, 17 Apr 2020 23:07:37 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     "Luck\, Tony" <tony.luck@intel.com>
+Cc:     Ingo Molnar <mingo@kernel.org>, Fenghua Yu <fenghua.yu@intel.com>,
+        Borislav Petkov <bp@alien8.de>, H Peter Anvin <hpa@zytor.com>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Ravi V Shankar <ravi.v.shankar@intel.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        linux-kernel@vger.kernel.org, x86@kernel.org
+Subject: Re: [PATCH 2/3] x86/split_lock: Bits in IA32_CORE_CAPABILITIES are not architectural
+In-Reply-To: <877dydzvml.fsf@nanos.tec.linutronix.de>
+Date:   Fri, 17 Apr 2020 23:07:37 +0200
+Message-ID: <873691zuqu.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andy,
+Tony,
 
-Le ven. 17 avril 2020 =E0 23:59, Andy Shevchenko=20
-<andy.shevchenko@gmail.com> a =E9crit :
-> On Fri, Apr 17, 2020 at 11:21 PM Artur Rojek <contact@artur-rojek.eu>=20
-> wrote:
->>=20
->>  The SADC component in JZ47xx SoCs provides support for touchscreen
->>  operations (pen position and pen down pressure) in single-ended and
->>  differential modes.
->>=20
->>  Of the known hardware to use this controller, GCW Zero and Anbernic=20
->> RG-350
->>  utilize the touchscreen mode by having their joystick(s) attached=20
->> to the
->>  X/Y positive/negative input pins.
->>  GCW Zero comes with a single joystick and is sufficiently handled=20
->> with the
->>  currently implemented single-ended mode. Support for boards with two
->>  joysticks, where one is hooked up to Xn/Yn and the other to Xp/Yp=20
->> channels
->>  will need to be provided in the future.
->>=20
->>  The touchscreen component of SADC takes a significant time to=20
->> stabilize
->>  after first receiving the clock and a delay of 50ms has been=20
->> empirically
->>  proven to be a safe value before data sampling can begin.
->>=20
->>  All the boards which probe this driver have the interrupt provided=20
->> from
->>  devicetree, with no need to handle a case where the irq was not=20
->> provided.
->=20
-> Device Tree
-> IRQ
->=20
-> ...
->=20
->>  +               .scan_type =3D {
->>  +                       .sign =3D 'u',
->>  +                       .realbits =3D 12,
->=20
->>  +                       .storagebits =3D 16
->=20
-> It's slightly better to leave comma in such cases.
->=20
->>  +               },
->=20
->>  +               .scan_type =3D {
->>  +                       .sign =3D 'u',
->>  +                       .realbits =3D 12,
->=20
->>  +                       .storagebits =3D 16
->=20
-> Ditto.
->=20
->>  +               },
->=20
-> ...
->=20
->>                  .indexed =3D 1,
->>                  .channel =3D INGENIC_ADC_AUX,
->>  +               .scan_index =3D -1
->=20
-> Ditto. You see above? Isn't it nice that you didn't touch that line?
-> So, perhaps next developer can leverage this subtle kind of things.
->=20
->>                  .indexed =3D 1,
->>                  .channel =3D INGENIC_ADC_BATTERY,
->>  +               .scan_index =3D -1
->=20
-> Ditto.
->=20
->>                  .indexed =3D 1,
->>                  .channel =3D INGENIC_ADC_AUX2,
->>  +               .scan_index =3D -1
->=20
-> Ditto.
->=20
-> ...
->=20
->>  +static int ingenic_adc_buffer_enable(struct iio_dev *iio_dev)
->>  +{
->>  +       struct ingenic_adc *adc =3D iio_priv(iio_dev);
->>  +
->=20
->>  +       clk_enable(adc->clk);
->=20
-> Error check?
->=20
->>  +       /* It takes significant time for the touchscreen hw to=20
->> stabilize. */
->>  +       msleep(50);
->>  +       ingenic_adc_set_config(adc, JZ_ADC_REG_CFG_TOUCH_OPS_MASK,
->>  +                              JZ_ADC_REG_CFG_SAMPLE_NUM(4) |
->>  +                              JZ_ADC_REG_CFG_PULL_UP(4));
->>  +       writew(80, adc->base + JZ_ADC_REG_ADWAIT);
->>  +       writew(2, adc->base + JZ_ADC_REG_ADSAME);
->=20
->>  +       writeb((u8)~JZ_ADC_IRQ_TOUCH, adc->base + JZ_ADC_REG_CTRL);
->=20
-> Why casting?
->=20
->>  +       writel(0, adc->base + JZ_ADC_REG_ADTCH);
->>  +       ingenic_adc_enable(adc, 2, true);
->>  +
->>  +       return 0;
->>  +}
->=20
->>  +       irq =3D platform_get_irq(pdev, 0);
->=20
-> Before it worked w/o IRQ, here is a regression you introduced.
+Thomas Gleixner <tglx@linutronix.de> writes:
+> "Luck, Tony" <tony.luck@intel.com> writes:
+>> Swings and roundabouts ... getting rid of the goto makes for
+>> deeper indentation. But if you really want to get rid of the
+>> goto, then your version is fine with me.
+>>
+>> Do you want me to spin it into v3?
+>
+> Nah. I tweak it myself.
 
-Before it simply did not need the IRQ, which is provided by the=20
-devicetree anyway. No regression here.
+as I fear that the infinite wisdom of HW folks will add yet another
+variant in the foreseeable future, I used a switch() right away and
+tweaked the comments a bit.
 
--Paul
+Can you have a look, please?
 
->=20
->>  +       if (irq < 0) {
->=20
->>  +               dev_err(dev, "Failed to get irq: %d\n", irq);
->=20
-> Redundant message.
->=20
->>  +               return irq;
->>  +       }
->=20
-> --
-> With Best Regards,
-> Andy Shevchenko
+Thanks,
 
+        tglx
 
+8<------------------
+From: Tony Luck <tony.luck@intel.com>
+Subject: x86/split_lock: Bits in IA32_CORE_CAPABILITIES are not architectural
+Date: Thu, 16 Apr 2020 13:57:53 -0700
+
+From: Tony Luck <tony.luck@intel.com>
+
+The Intel Software Developers' Manual erroneously listed bit 5 of the
+IA32_CORE_CAPABILITIES register as an architectural feature. It is not.
+
+Features enumerated by IA32_CORE_CAPABILITIES are model specific and
+implementation details may vary in different cpu models. Thus it is only
+safe to trust features after checking the CPU model.
+
+Icelake client and server models are known to implement the split lock
+detect feature even though they don't enumerate IA32_CORE_CAPABILITIES
+
+Fixes: 6650cdd9a8cc ("x86/split_lock: Enable split lock detection by kernel")
+Signed-off-by: Tony Luck <tony.luck@intel.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/20200416205754.21177-3-tony.luck@intel.com
+
+---
+ arch/x86/kernel/cpu/intel.c |   45 ++++++++++++++++++++++++++++++--------------
+ 1 file changed, 31 insertions(+), 14 deletions(-)
+
+--- a/arch/x86/kernel/cpu/intel.c
++++ b/arch/x86/kernel/cpu/intel.c
+@@ -1120,10 +1120,17 @@ void switch_to_sld(unsigned long tifn)
+ }
+ 
+ /*
+- * The following processors have the split lock detection feature. But
+- * since they don't have the IA32_CORE_CAPABILITIES MSR, the feature cannot
+- * be enumerated. Enable it by family and model matching on these
+- * processors.
++ * Bits in the IA32_CORE_CAPABILITIES are not architectural, so they should
++ * only be trusted if it is confirmed that a CPU model implements a
++ * specific feature at a particular bit position.
++ *
++ * The possible driver data field values:
++ *
++ * - 0: CPU models that are known to have the per-core split-lock detection
++ *	feature even though they do not enumerate IA32_CORE_CAPABILITIES.
++ *
++ * - 1: CPU models which may enumerate IA32_CORE_CAPABILITIES and if so use
++ *      bit 5 to enumerate the per-core split-lock detection feature.
+  */
+ static const struct x86_cpu_id split_lock_cpu_ids[] __initconst = {
+ 	X86_MATCH_INTEL_FAM6_MODEL(ICELAKE_X,		0),
+@@ -1133,19 +1140,29 @@ static const struct x86_cpu_id split_loc
+ 
+ void __init cpu_set_core_cap_bits(struct cpuinfo_x86 *c)
+ {
+-	u64 ia32_core_caps = 0;
++	const struct x86_cpu_id *m;
++	u64 ia32_core_caps;
+ 
+-	if (c->x86_vendor != X86_VENDOR_INTEL)
++	if (boot_cpu_has(X86_FEATURE_HYPERVISOR))
+ 		return;
+-	if (cpu_has(c, X86_FEATURE_CORE_CAPABILITIES)) {
+-		/* Enumerate features reported in IA32_CORE_CAPABILITIES MSR. */
++
++	m = x86_match_cpu(split_lock_cpu_ids);
++	if (!m)
++		return;
++
++	switch (m->driver_data) {
++	case 0:
++		break;
++	case 1:
++		if (!cpu_has(c, X86_FEATURE_CORE_CAPABILITIES))
++			return;
+ 		rdmsrl(MSR_IA32_CORE_CAPS, ia32_core_caps);
+-	} else if (!boot_cpu_has(X86_FEATURE_HYPERVISOR)) {
+-		/* Enumerate split lock detection by family and model. */
+-		if (x86_match_cpu(split_lock_cpu_ids))
+-			ia32_core_caps |= MSR_IA32_CORE_CAPS_SPLIT_LOCK_DETECT;
++		if (!(ia32_core_caps & MSR_IA32_CORE_CAPS_SPLIT_LOCK_DETECT))
++			return;
++		break;
++	default:
++		return;
+ 	}
+ 
+-	if (ia32_core_caps & MSR_IA32_CORE_CAPS_SPLIT_LOCK_DETECT)
+-		split_lock_setup();
++	split_lock_setup();
+ }
