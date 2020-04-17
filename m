@@ -2,89 +2,77 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20E8AC2D0EF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 14:49:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1117AC2D0EF
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 14:50:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ED32C2223F
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 14:49:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E568D2223D
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 14:50:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728190AbgDQOtW (ORCPT
+        id S1728193AbgDQOut (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 10:49:22 -0400
-Received: from asavdk4.altibox.net ([109.247.116.15]:40726 "EHLO
-        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727877AbgDQOtV (ORCPT
+        Fri, 17 Apr 2020 10:50:49 -0400
+Received: from out30-131.freemail.mail.aliyun.com ([115.124.30.131]:37340 "EHLO
+        out30-131.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727850AbgDQOut (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 10:49:21 -0400
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk4.altibox.net (Postfix) with ESMTPS id 3AA40804D5;
-        Fri, 17 Apr 2020 16:49:17 +0200 (CEST)
-Date:   Fri, 17 Apr 2020 16:49:15 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Nicolas Pitre <nico@fluxnic.net>,
-        Greg KH <gregkh@linuxfoundation.org>
-Cc:     gregkh@linuxfoundation.org, Adam Borowski <kilobyte@angband.pl>,
-        Chen Wandun <chenwandun@huawei.com>, jslaby@suse.com,
-        daniel.vetter@ffwll.ch, b.zolnierkie@samsung.com, lukas@wunner.de,
-        ghalat@redhat.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] vt: don't hardcode the mem allocation upper bound
-Message-ID: <20200417144915.GA25595@ravnborg.org>
-References: <nycvar.YSQ.7.76.2003281702410.2671@knanqh.ubzr>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <nycvar.YSQ.7.76.2003281702410.2671@knanqh.ubzr>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=XpTUx2N9 c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=kj9zAlcOel0A:10 a=dg4UtMH5AAAA:8 a=VwQbUJbxAAAA:8
-        a=Zidhv8YuL5__o8oUjuwA:9 a=CjuIK1q_8ugA:10 a=byNfn09xH3PuSfgbYLsR:22
-        a=AjGcO6oz07-iQ99wixmX:22
+        Fri, 17 Apr 2020 10:50:49 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R891e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01422;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0TvqMba0_1587135046;
+Received: from localhost(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0TvqMba0_1587135046)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Fri, 17 Apr 2020 22:50:46 +0800
+From:   Alex Shi <alex.shi@linux.alibaba.com>
+Cc:     Alex Shi <alex.shi@linux.alibaba.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 1/2] locking/rtmutex: Remove unused rt_mutex_cmpxchg_relaxed()
+Date:   Fri, 17 Apr 2020 22:50:31 +0800
+Message-Id: <1587135032-188866-1-git-send-email-alex.shi@linux.alibaba.com>
+X-Mailer: git-send-email 1.8.3.1
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Greg.
+This macro isn't interested by anyone, so remove it.
 
-I assume you will take this patch.
-Not really drm-misc material.
+Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Davidlohr Bueso <dave@stgolabs.net>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Will Deacon <will@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+---
+ kernel/locking/rtmutex.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-	Sam
+diff --git a/kernel/locking/rtmutex.c b/kernel/locking/rtmutex.c
+index c9f090d64f00..cfdd5b93264d 100644
+--- a/kernel/locking/rtmutex.c
++++ b/kernel/locking/rtmutex.c
+@@ -141,7 +141,6 @@ static void fixup_rt_mutex_waiters(struct rt_mutex *lock)
+  * set up.
+  */
+ #ifndef CONFIG_DEBUG_RT_MUTEXES
+-# define rt_mutex_cmpxchg_relaxed(l,c,n) (cmpxchg_relaxed(&l->owner, c, n) == c)
+ # define rt_mutex_cmpxchg_acquire(l,c,n) (cmpxchg_acquire(&l->owner, c, n) == c)
+ # define rt_mutex_cmpxchg_release(l,c,n) (cmpxchg_release(&l->owner, c, n) == c)
+ 
+@@ -202,7 +201,6 @@ static inline bool unlock_rt_mutex_safe(struct rt_mutex *lock,
+ }
+ 
+ #else
+-# define rt_mutex_cmpxchg_relaxed(l,c,n)	(0)
+ # define rt_mutex_cmpxchg_acquire(l,c,n)	(0)
+ # define rt_mutex_cmpxchg_release(l,c,n)	(0)
+ 
+-- 
+1.8.3.1
 
-On Sat, Mar 28, 2020 at 05:32:42PM -0400, Nicolas Pitre wrote:
-> The code in vc_do_resize() bounds the memory allocation size to avoid
-> exceeding MAX_ORDER down the kzalloc() call chain and generating a 
-> runtime warning triggerable from user space. However, not only is it
-> unwise to use a literal value here, but MAX_ORDER may also be
-> configurable based on CONFIG_FORCE_MAX_ZONEORDER.
-> Let's use KMALLOC_MAX_SIZE instead.
-> 
-> Note that prior commit bb1107f7c605 ("mm, slab: make sure that 
-> KMALLOC_MAX_SIZE will fit into MAX_ORDER") the KMALLOC_MAX_SIZE value
-> could not be relied upon.
-> 
-> Signed-off-by: Nicolas Pitre <nico@fluxnic.net>
-> Cc: <stable@vger.kernel.org> # v4.10+
-> 
-> 
-> diff --git a/drivers/tty/vt/vt.c b/drivers/tty/vt/vt.c
-> index 15d2769805..37c5f21490 100644
-> --- a/drivers/tty/vt/vt.c
-> +++ b/drivers/tty/vt/vt.c
-> @@ -1193,7 +1193,7 @@ static int vc_do_resize(struct tty_struct *tty, struct vc_data *vc,
->  	if (new_cols == vc->vc_cols && new_rows == vc->vc_rows)
->  		return 0;
->  
-> -	if (new_screen_size > (4 << 20))
-> +	if (new_screen_size > KMALLOC_MAX_SIZE)
->  		return -EINVAL;
->  	newscreen = kzalloc(new_screen_size, GFP_USER);
->  	if (!newscreen)
