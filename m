@@ -2,142 +2,143 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 041F9C352BE
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 12:43:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48DDDC38A2C
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 12:44:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D58D82064A
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 12:43:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26FF4208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 12:44:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="lW7Cq00O"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="jKWNIpb/";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="L7tx7yWX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729668AbgDQMnS (ORCPT
+        id S1729745AbgDQMo2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 08:43:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46952 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729053AbgDQMnR (ORCPT
+        Fri, 17 Apr 2020 08:44:28 -0400
+Received: from out2-smtp.messagingengine.com ([66.111.4.26]:60693 "EHLO
+        out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729034AbgDQMo1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 08:43:17 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8C3BC061A0C
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 05:43:16 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id j2so2862785wrs.9
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 05:43:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=h5uGvUBBK13xiGM08N0Ar0f5rTAFRwfmSByaivnK03A=;
-        b=lW7Cq00OBPIgaU4boC2NWhBfA/bsU8/tgZ1luVaWA85xijqr+QRcCxBHtn39IQUBcj
-         OFSsXpby/C0JSeaqXBR6kqmZyYcAP7kJkDsL4l1OOe3rXkTpmHNpyyCIohBUMjie/xVP
-         hUuVSymNynjQw3FMf6ITpkubTII7Y1VKk3GFMUwiYmdOlE3+yjH5lJ1liHB97jqZWbyq
-         tgy8/e6Z1erE56HG0eznmdLvtS8YPEh4W7lhkwR5X0PtD/aLwSJUmH7Lm5cLcTklrs6e
-         NkjVNQcxZAYKWJymi5N+NlvKRJxhEuSsJ701USslsxbsiCOb6mIiNigLVlXZG7ykeeH0
-         nJOQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=h5uGvUBBK13xiGM08N0Ar0f5rTAFRwfmSByaivnK03A=;
-        b=k/RUQ/Ls3HJjcQ2XgKMJ1T8390dDtIHaV7P6f4JbvFsXY01PpbBGf3O0lv0YGiutvH
-         nevJ31qPGnAmnuy6OIq4UJlKtrsz63w2FpNDsKAWafduv2Ox3yyWOb6aSlfltM2lKR7E
-         1w7+o0K1Z9vpwM9jSt8B5O4TRCPRBHU9wlIUeNWCH3fIGVsmvrTbxkcKOFIL01D6CWT7
-         POQYtAYGpRvIDS0pFSfOv97OYStL7DwJBr5KXQ7WX+PF6Pcx+DPV1ha7Niz2Ume+RvHA
-         J9Mt8aVfnQRtHThkOnvFdv1BmR7yndsQ0JRmB8h3xxYYC1FC/bjBcvQ28ebbTxiXZvrI
-         O+nw==
-X-Gm-Message-State: AGi0Pub1GakzhAEthN52L9EzCRTqYa+Fr8xwrbHfruVAgDMTkaHILXOJ
-        UNF+GNo1Jocf6hFPVD6TyQVslxp7l6HD60dbsABCAg==
-X-Google-Smtp-Source: APiQypI55lXXZd9uMDkedrEdIWCNpIBCl6PYW/582+5vVyZ761iYDh5v4e2V3mqw5xp5aBwFe4wF0LpJFFnlKYHl7EI=
-X-Received: by 2002:adf:ee0c:: with SMTP id y12mr4096911wrn.0.1587127395436;
- Fri, 17 Apr 2020 05:43:15 -0700 (PDT)
+        Fri, 17 Apr 2020 08:44:27 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailout.nyi.internal (Postfix) with ESMTP id CADD25C0207;
+        Fri, 17 Apr 2020 08:44:25 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Fri, 17 Apr 2020 08:44:25 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm2; bh=KRTBXgxtnpIGY2Rffw9qnshJuWR
+        4Sx3VOxgPioXE+Wk=; b=jKWNIpb/gchBDf8b6tKNx9h+rDp7o4zch5BMhABV1n+
+        wYXsXhr1CgAGK4NKTUSTmgFAXTqguJokWrd6lnE7g4UnTP7FsDSva4SwfoYDD1M4
+        k1K0ALePbSPZUgucMePPt7GRVzhG+5lDTYcHJQ3Qq2csr5YMVHbSRFgkv8jUPEwi
+        R9uljDj82HviF/ps6TEdURJyYwVkkxST9ENeNwi9w6+pUgNZFCX+RNNAO7bycJLL
+        r9GZcFZW12/zIdU2cpaMU9oL7ZVNP52zn0kIXy/cUY+k60m7Y905lDkr5nKZUEOW
+        GxESfZB0+Qhx/kbU9Sob7BLa6ei4qMt6ND3AJlDf71Q==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=KRTBXg
+        xtnpIGY2Rffw9qnshJuWR4Sx3VOxgPioXE+Wk=; b=L7tx7yWXT+ng7Dx1Ke2XfS
+        sdGjM1pjvpjHhqXk1xeR1VoBT/N/taUYgna2syAjD48iIi/lnFOkQ3ItbSQPt7wG
+        RkZkD3g2GgflxLaYsunqlrqDr+WFvXjbUAKVP3aALdXzlS+Ty+XZ49YdZ0Yir9hG
+        a6wdM/ssM8EC03hSrt90ssH9PjESLw6lPxE5bvj3RaXwYwC6a3pTC+/O39Tt3q7/
+        606iTkuo+kW0tkDKcA1IfR/IEXpRjboUT+mM/hSsMM4wDMOhm03+Y8rC76HSnrFt
+        plZM0znazF708XnT/SIe77wwdir0GW1OlzrTeGTdgI9iIr59js57nEUNG4Iyufdg
+        ==
+X-ME-Sender: <xms:qKSZXqT_lQ9VGLtM5z6SHltgALFrxtchQYkNDlC_m_v8jnWE8VOHaQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrfeejgdehhecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkfhggtggujgesghdtreertddtvdenucfhrhhomhepofgrgihimhgv
+    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucffohhmrghinh
+    epkhgvrhhnvghlrdhorhhgnecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgv
+    rhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepmhgrgihimhgvsegtvghrnh
+    hordhtvggthh
+X-ME-Proxy: <xmx:qKSZXhy4J0mzJxJiqN-NWWtzo-zPmD3n-6ZDoHri6kU3X3dQnWMx5A>
+    <xmx:qKSZXsJAXYlwU1AxxETriuzDAO_URZGf9Gx-WyhD8_p6Rkn3JInhRQ>
+    <xmx:qKSZXuP6nlV9mNq-dT-8l0qVPkYYwhFq2rWTEIXvQKzPOaY4FayoOg>
+    <xmx:qaSZXtX67zhIwYR17HlHWpPk22jyHhf3JobJ6CuEx-5Dg074wn3h6g>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 63CE23280060;
+        Fri, 17 Apr 2020 08:44:24 -0400 (EDT)
+Date:   Fri, 17 Apr 2020 14:44:22 +0200
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc:     Discussions about the Letux Kernel <letux-kernel@openphoenux.org>,
+        linux-omap <linux-omap@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [drm:simple_bridge_attach [simple_bridge]] *ERROR* Fix bridge
+ driver to make connector optional!
+Message-ID: <20200417124422.fl35igitvd7thpr5@gilmour.lan>
+References: <CB5A5B81-F06C-4CBE-95DE-96C8723D2AC5@goldelico.com>
 MIME-Version: 1.0
-References: <20200417121222.156422-1-wangkefeng.wang@huawei.com> <20200417121222.156422-3-wangkefeng.wang@huawei.com>
-In-Reply-To: <20200417121222.156422-3-wangkefeng.wang@huawei.com>
-From:   Anup Patel <anup@brainfault.org>
-Date:   Fri, 17 Apr 2020 18:13:03 +0530
-Message-ID: <CAAhSdy0wQrs3-1R+ovEspmDp6aXYEpJEuv4M_cH9XSjkeo2_8Q@mail.gmail.com>
-Subject: Re: [PATCH 3/3] riscv: sbi: Fix undefined reference to sbi_shutdown
-To:     Kefeng Wang <wangkefeng.wang@huawei.com>
-Cc:     Atish Patra <atish.patra@wdc.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
-        linux-riscv <linux-riscv@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="uebxnokcear6r3sc"
+Content-Disposition: inline
+In-Reply-To: <CB5A5B81-F06C-4CBE-95DE-96C8723D2AC5@goldelico.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 17, 2020 at 5:40 PM Kefeng Wang <wangkefeng.wang@huawei.com> wrote:
->
-> There is no shutdown call in SBI v0.2, only set pm_power_off
-> when RISCV_SBI_V01 enabled to fix following build error,
->
-> riscv64-linux-ld: arch/riscv/kernel/sbi.o: in function `sbi_power_off':
-> sbi.c:(.text+0xe): undefined reference to `sbi_shutdown
->
-> Fixes: efca13989250 ("RISC-V: Introduce a new config for SBI v0.1")
-> Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
-> ---
->  arch/riscv/kernel/sbi.c | 13 ++++++++-----
->  1 file changed, 8 insertions(+), 5 deletions(-)
->
-> diff --git a/arch/riscv/kernel/sbi.c b/arch/riscv/kernel/sbi.c
-> index 62b10a16c8d7..f383ef5672b2 100644
-> --- a/arch/riscv/kernel/sbi.c
-> +++ b/arch/riscv/kernel/sbi.c
-> @@ -167,6 +167,11 @@ static int __sbi_rfence_v01(int fid, const unsigned long *hart_mask,
->
->         return result;
->  }
-> +
-> +static void sbi_set_power_off(void)
-> +{
-> +       pm_power_off = sbi_shutdown;
-> +}
->  #else
->  static void __sbi_set_timer_v01(uint64_t stime_value)
->  {
-> @@ -191,6 +196,8 @@ static int __sbi_rfence_v01(int fid, const unsigned long *hart_mask,
->
->         return 0;
->  }
-> +
-> +static void sbi_set_power_off(void) {}
->  #endif /* CONFIG_RISCV_SBI_V01 */
->
->  static void __sbi_set_timer_v02(uint64_t stime_value)
-> @@ -540,16 +547,12 @@ static inline long sbi_get_firmware_version(void)
->         return __sbi_base_ecall(SBI_EXT_BASE_GET_IMP_VERSION);
->  }
->
-> -static void sbi_power_off(void)
-> -{
-> -       sbi_shutdown();
-> -}
->
->  int __init sbi_init(void)
->  {
->         int ret;
->
-> -       pm_power_off = sbi_power_off;
-> +       sbi_set_power_off();
->         ret = sbi_get_spec_version();
->         if (ret > 0)
->                 sbi_spec_version = ret;
-> --
-> 2.20.1
->
 
-Looks good to me.
+--uebxnokcear6r3sc
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Reviewed-by: Anup Patel <anup@brainfault.org>
+Hi,
 
-Regards,
-Anup
+Cc'ing Laurent
+
+On Fri, Apr 17, 2020 at 02:18:11PM +0200, H. Nikolaus Schaller wrote:
+> Hi Maxime,
+> I have started to test v5.7-rc1 and can't fully boot the GTA04
+> device any more.
+>=20
+> What I see in the log is:
+>=20
+> [   28.567840] [drm:simple_bridge_attach [simple_bridge]] *ERROR* Fix bri=
+dge driver to make connector optional!
+> [   28.567871] omapdrm omapdrm.0: unable to attach bridge /ocp@68000000/d=
+ss@48050000/encoder@48050c00
+> [   28.786529] omapdrm omapdrm.0: omap_modeset_init failed: ret=3D-22
+> [   28.841552] omapdrm: probe of omapdrm.0 failed with error -22
+>=20
+> This device uses the ti,opa362 chip which did have a dedicated
+> omapdss driver before (which is removed now) and which seems to
+> be supported by the simple_bridge now.
+>=20
+> The opa362 is sitting in the video out path from
+>=20
+> 	omapdrm -> venc -> opa362 -> video-out-connector.
+>=20
+> What does this error mean? How can it be fixed?
+
+-22 is usually EINVAL, which can be pretty much anything. A good thing to do
+ would be to bisect to see which actual commit broke it, but if I was to be=
+t on
+ something I guess it would be
+
+https://lore.kernel.org/dri-devel/20200226112514.12455-1-laurent.pinchart@i=
+deasonboard.com/
+
+Maxime
+
+--uebxnokcear6r3sc
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXpmkpgAKCRDj7w1vZxhR
+xQiLAQCJ2xQosSagOkqyXxot5lEViVcLssIszdTzpkTitzEG6AEAvPbauwwDo1R9
+7QwBbCXIj9aSKnpQcBvxDQ0ooUEpIw8=
+=Tp4p
+-----END PGP SIGNATURE-----
+
+--uebxnokcear6r3sc--
