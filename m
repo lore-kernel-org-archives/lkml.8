@@ -2,98 +2,139 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BDEAC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 03:41:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8661C352BE
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 03:44:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 020EA21D91
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 03:41:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C8A1217D8
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 03:44:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microway.com header.i=@microway.com header.b="ozMkwas8"
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="VXVza/TJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727800AbgDQDlf (ORCPT
+        id S1726438AbgDQDoR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 23:41:35 -0400
-Received: from 50-247-197-57-static.hfc.comcastbusiness.net ([50.247.197.57]:35060
-        "EHLO microway.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726105AbgDQDle (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 23:41:34 -0400
-X-Greylist: delayed 422 seconds by postgrey-1.27 at vger.kernel.org; Thu, 16 Apr 2020 23:41:33 EDT
-Received: from [10.200.120.6] (openvpn.microway.com [192.168.200.4])
-        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by microway.com (Postfix) with ESMTPSA id 628E73004433
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 23:34:30 -0400 (EDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=microway.com;
-        s=verified; t=1587094470;
-        bh=ywoe/KWhEbobTRp8t8l9tb7jHYngbY9Kh0XrHhm6E/I=;
-        h=Subject:From:To:References:Date:In-Reply-To;
-        b=ozMkwas8l67k5TV4xTD8QaodsCT9I4D8sv/fylFr4sIfb1R4uAsmc/7I5kMMTd2CX
-         oy7R8Q7f5qBgp7RSa0H+E1VVU+T+MBXHsvPBFGr8oTxL3TOUTPbeiFL7ejIsQclqNB
-         tl1MUPqiBP8FSHVQsMMpgMSXxjsAvBpzvuzW5DT4=
-Subject: Re: slow write performance with software RAID on nvme storage
-From:   Rick Warner <rick@microway.com>
-To:     linux-kernel@vger.kernel.org
-References: <0a6373c6-817f-6ead-2a71-7c83c03406be@microway.com>
-Message-ID: <adc13d3c-b311-8781-0395-146848821cef@microway.com>
-Date:   Thu, 16 Apr 2020 23:34:29 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
-MIME-Version: 1.0
-In-Reply-To: <0a6373c6-817f-6ead-2a71-7c83c03406be@microway.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+        Thu, 16 Apr 2020 23:44:17 -0400
+Received: from mail-eopbgr60060.outbound.protection.outlook.com ([40.107.6.60]:51041
+        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725843AbgDQDoQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 23:44:16 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=V/Z1Xkpbo3fTkoZtpiuZTSVjy5BGxp7eOzLPUcpU73EuaUIsYDQWGOsNA++U6T9h0EnZ+3GDSGhqEcf53BOtk5ZpPa+cIW0FeresRWWxhSFGjog9fAjAg+w7gOVV9xevP/8daIxGXM8euvqiPhv0/D7EqzLGOpsJVRPbqBDljLksxvEMVDbqu64pWQgixJcmX3d7H6PLmT8QOMHk26fzWfcn0+MbgUSIMMHoDUoFZpwAChHZl3lWL4B41Nb6N4nBrfXU509aOfYQzWTtLKcTYTWbzzzuCQn/AhxC/rWUMWDbhNsh63idjun6e8CrykQsiqX33FM6MJmJ503CXQ0hew==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=EVK5cTl4/1tYIpsf7nhH+h9xnoGZBUVBHyj9TK9dFcY=;
+ b=chFf4//4m6zQEgT1kprBpBt7FOalAuvi9v/6ofMb8w08Xu3gZ4fTGFZiWe4enFkLraBvalB9EBRTzMlJ6OPPjz9T3CZ5bCyMO5rspeAuH2ij39Z1yfsIvfFhp4wnF2dF4MSTaWKN2lBTyT+lnm5L9NX47P5YnkmaO55mhn5YSnWC++N1VUXiYxWvAvoo2araJLj5jwntEuHripA7QmXLNOKeiBzbmq0RYxRt2KfXz5i8Sa+uilRoXyw8Gf2ZczAPldwrKq+qvkCxTyw+OS0k/cddU1hznNl265OK15PysuWIggpyXvTXBKjCS6WjzNy8KTHg6Zy+GuCZkJpxTSVHCw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=EVK5cTl4/1tYIpsf7nhH+h9xnoGZBUVBHyj9TK9dFcY=;
+ b=VXVza/TJR5iNlYnaaxTQfE7ydY1FvACjQAvXvaLmQkTK20MS7WDZjxHgD4pheLeUFRq0YuUUBtGtlPPig3x7ZKhiydRDlqE7ulRiWqtVJL4AsV9wDIMay6pHkiwg8cGQ+0TOM+ghQXBEOtr5QxYK07dhPAaG/oIGff+9wXz2qaM=
+Received: from VI1PR05MB5102.eurprd05.prod.outlook.com (2603:10a6:803:5e::23)
+ by VI1PR05MB6320.eurprd05.prod.outlook.com (2603:10a6:803:f5::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.20; Fri, 17 Apr
+ 2020 03:44:11 +0000
+Received: from VI1PR05MB5102.eurprd05.prod.outlook.com
+ ([fe80::9d19:a564:b84e:7c19]) by VI1PR05MB5102.eurprd05.prod.outlook.com
+ ([fe80::9d19:a564:b84e:7c19%7]) with mapi id 15.20.2900.030; Fri, 17 Apr 2020
+ 03:44:11 +0000
+From:   Saeed Mahameed <saeedm@mellanox.com>
+To:     "davem@davemloft.net" <davem@davemloft.net>,
+        "xianfengting221@163.com" <xianfengting221@163.com>,
+        "leon@kernel.org" <leon@kernel.org>
+CC:     "cai@lca.pw" <cai@lca.pw>,
+        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+        "lsahlber@redhat.com" <lsahlber@redhat.com>,
+        "kw@linux.com" <kw@linux.com>,
+        "xiubli@redhat.com" <xiubli@redhat.com>,
+        "airlied@redhat.com" <airlied@redhat.com>,
+        Moshe Shemesh <moshe@mellanox.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "wqu@suse.com" <wqu@suse.com>,
+        "chris@chris-wilson.co.uk" <chris@chris-wilson.co.uk>,
+        "yamada.masahiro@socionext.com" <yamada.masahiro@socionext.com>,
+        "stfrench@microsoft.com" <stfrench@microsoft.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+Subject: Re: [PATCH v2] net/mlx5: add the missing space character
+Thread-Topic: [PATCH v2] net/mlx5: add the missing space character
+Thread-Index: AQHWCXBS9ROcHN2SK0+YUleKNIIPWqhvqOGAgAw/QICAANnkAA==
+Date:   Fri, 17 Apr 2020 03:44:10 +0000
+Message-ID: <a77ddcfad6bfd68b9d69e0d5a18cf5d66692d270.camel@mellanox.com>
+References: <20200403042659.9167-1-xianfengting221@163.com>
+         <14df0ecf093bb2df4efaf9e6f5220ea2bf863f53.camel@mellanox.com>
+         <fae7a094-62e8-d797-a89b-23faf0eb374e@163.com>
+In-Reply-To: <fae7a094-62e8-d797-a89b-23faf0eb374e@163.com>
+Accept-Language: en-US
 Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=saeedm@mellanox.com; 
+x-originating-ip: [73.15.39.150]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 8ac2988c-3df6-42b6-595d-08d7e2819752
+x-ms-traffictypediagnostic: VI1PR05MB6320:|VI1PR05MB6320:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VI1PR05MB6320237E87C8986214487C85BED90@VI1PR05MB6320.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:873;
+x-forefront-prvs: 0376ECF4DD
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR05MB5102.eurprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(376002)(136003)(346002)(396003)(39860400002)(366004)(86362001)(8676002)(6506007)(6512007)(4326008)(2616005)(26005)(53546011)(186003)(7416002)(2906002)(64756008)(6486002)(66946007)(478600001)(66556008)(81156014)(316002)(76116006)(66446008)(5660300002)(54906003)(66476007)(8936002)(71200400001)(966005)(36756003)(110136005)(91956017);DIR:OUT;SFP:1101;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: DwkWpGwqTctD892Dj7b+YbE7UnuDRbpmed1IIHPH4amhbLB9z0ylQVb0BTb8wVlTuX0sSLvpsnjDvh/43HrKp8ak+dgzYCc/008jJa5hGx5dPGr9DbWXmDX6xNDf3etdVcuWVpxsyspOHAPyEJM6eTNk9lN22MDpTQLqTmYVcD2taIh0HJoUoCHBcxpF9YyVl0377dMKohnIpPoTssOTnGMg8RDk4rOGoebdUADO0irFsz3qY06bticMgPjr7jUjDldqd6+/TTi4S3UXLQKf+Ts7yef5G+0+5o2QL78IAjzm+e929wdLRrCRHNpMcePIM4cI/IleSQa07jBdM635xQ5s3nDONtLsUpGyw88Xu/tJe2HbCYLcqLQK2E9uISh0MjLiPuk9o58hUyUD25Kbov+8liSrnqcldS76WxGtKX1/IORwRCcJK6w+5umIv5DMDr1eQLOwndDAgE14orzNtjOo+CCvlE0JmRTEm6uRrAOzYuWlOAoxWLVQjRa3FRn1QQzPViBRpXTvJ8FyST/hGg==
+x-ms-exchange-antispam-messagedata: QEehV83TyQDWrPPjgHzO3MNHxRexyiJ8cN9+9JAYSB54Jau8OQ+BGOPCrpMxVNIukSTofqJ115AgQGC8VDzt2zEUss+B2RyBbws9PR17Me4/zSUeEm+OsrVqK2RuTr64y7yChX++CU9vCYTaY/ZfXw==
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <3F37045E54A9BF4EA95688D4A903F82E@eurprd05.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8ac2988c-3df6-42b6-595d-08d7e2819752
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Apr 2020 03:44:10.7692
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 2M3/7VgXSPwwkgCxvavEgvYR3vcKh8IiVBk3UiOAPCmFNMTII8/c/NvhrNavvWqJl5U36ThsG54Zs3ZbH9aUNQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB6320
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Additional testing with fio has shown near theoretical write speeds if I 
-test direct to the /dev/md device instead of using either xfs or ext4.
-
-I've tested different queue settings without significant changes.
-
-Is it possible to get a single XFS or ext4 filesystem performing with 
- >10GB/s write speeds?
-
-On 2019-03-29 16:55, Rick Warner wrote:
-> Hi All,
->
-> We've been testing a 24 drive NVME software RAID and getting far lower
-> write speeds than expected.  The drives are connected with PLX chips
-> such that 12 drives are on 1 x16 connection and the other 12 drives use
-> another x16 link  The system is a Supermicro 2029U-TN24R4T.  The drives
-> are Intel DC P4500 1TB.
->
-> We're testing with fio using 8 jobs.
->
-> Using all defaults with RAID0 I can only get 4 or 5 GB/s write speeds
-> but can hit ~24GB/s read speeds.  The drives have over 1GB/s write speed
-> each, so we should be able to hit at least 20GB/s write speed.
->
-> Testing with RAID6 and defaults got significantly lower (down around
-> 1.5GB/s).  Using a 64k chunk and increasing the group_thread_cnt
-> increased the results to ~4GB/s.
->
-> dmesg shows the RAID parity calc speed being ~40GB/s:
-> [    4.215386] raid6: using algorithm avx512x2 gen() 41397 MB/s
->
->
-> I've played around with filesystem queue choices and tuning but haven't
-> seen any significant improvements.
->
-> What is the bottleneck here? If it's not known, what should I do to
-> determine it?
->
-> I've done a variety of other tests with this system and am happy to
-> elaborate further if any other information is needed.
->
-> Thanks,
-> Rick Warner
-
+T24gVGh1LCAyMDIwLTA0LTE2IGF0IDIyOjQ0ICswODAwLCBIdSBIYW93ZW4gd3JvdGU6DQo+IE9u
+IDIwMjAvNC85IDM6NDIgQU0sIFNhZWVkIE1haGFtZWVkIHdyb3RlOg0KPiA+IE9uIEZyaSwgMjAy
+MC0wNC0wMyBhdCAxMjoyNiArMDgwMCwgSHUgSGFvd2VuIHdyb3RlOg0KPiA+ID4gQ29tbWl0IDkx
+YjU2ZDg0NjJhOSAoIm5ldC9tbHg1OiBpbXByb3ZlIHNvbWUgY29tbWVudHMiKSBkaWQgbm90DQo+
+ID4gPiBhZGQNCj4gPiA+IHRoYXQgbWlzc2luZyBzcGFjZSBjaGFyYWN0ZXIgYW5kIHRoaXMgY29t
+bWl0IGlzIHVzZWQgdG8gZml4IGl0DQo+ID4gPiB1cC4NCj4gPiA+IA0KPiA+ID4gRml4ZXM6IDkx
+YjU2ZDg0NjJhOSAoIm5ldC9tbHg1OiBpbXByb3ZlIHNvbWUgY29tbWVudHMiKQ0KPiA+ID4gDQo+
+ID4gUGxlYXNlIHJlLXNwaW4gYW5kIHN1Ym1pdCB0byBuZXQtbmV4dCBvbmNlIG5ldC1uZXh0IHJl
+LW9wZW5zLA0KPiA+IGF2b2lkIHJlZmVyZW5jaW5nIHRoZSBhYm92ZSBjb21taXQgc2luY2UgdGhp
+cyBwYXRjaCBpcyBhIHN0YW5kDQo+ID4gYWxvbmUNCj4gPiBhbmQgaGFzIG5vdGhpbmcgdG8gZG8g
+d2l0aCB0aGF0IHBhdGNoLi4ganVzdCBoYXZlIGEgc3RhbmQgYWxvbmUNCj4gPiBjb21taXQNCj4g
+PiBtZXNzYWdlIGV4cGxhaW5pbmcgdGhlIHNwYWNlIGZpeC4NCj4gDQo+IFNvcnJ5IGZvciBteSBs
+YXRlIHJlcGx5LiBCZWNhdXNlIEknbSBhIGtlcm5lbCBuZXdiaWUsIEkga25vdyBub3RoaW5nDQo+
+IGFib3V0IHRoZSBiYXNpYyBtZXRob2RzIGFuZCBtYW5uZXJzIGluIHRoZSBrZXJuZWwgZGV2ZWxv
+cG1lbnQuIFRoYW5rcw0KPiBhIGxvdCBmb3IgeW91ciBwYXRpZW5jZSBvbiBteSBtaXN0YWtlLCBw
+b2ludGluZyBpdCBvdXQgYW5kIGZpeGluZyBpdA0KPiB1cC4NCj4gDQo+IEJ0dywgZGlkIG5ldC1u
+ZXh0IHJlLW9wZW4gYW5kIGRpZCBteSBjaGFuZ2VzIGdldCBpbnRvIHRoZSBtYWlubGluZT8NCj4g
+DQo+IA0KDQpOb3JtYWxseSBuZXQtbmV4dCBjbG9zZXMgb25jZSBtZXJnZSB3aW5kb3cgaXMgb3Bl
+biBhdCB0aGUgZW5kIG9mDQpyYzcvcmM4IGtlcm5lbCBjeWNsZS4NCg0KYW5kIHJlb3BlbnMgb24g
+dGhlIHdlZWsgb2YgdGhlIGtlcm5lbCByZWxlYXNlLCBhZnRlciB0aGUgbWVyZ2Ugd2luZG93DQpp
+cyBjbG9zZWQgKDIgd2Vla3MgYWZ0ZXIgcmM3LzggaXMgY2xvc2VkKS4NCg0KeW91IGNhbiB1c2Ug
+dGhpcyBsaW5rLg0KaHR0cDovL3ZnZXIua2VybmVsLm9yZy9+ZGF2ZW0vbmV0LW5leHQuaHRtbA0K
+DQpPciBqdXN0IG1vbml0b3IgbmV0ZGV2IG1haWxpbmcgbGlzdCBmb3IgYW4gZW1haWwgYW5ub3Vu
+Y2VtZW50IGZyb20NCkRhdmlkIE1pbGxlci4NCg0KVGhhbmtzIGFuZCB3ZWxjb21lIHRvIHRoZSBu
+ZXRkZXYgZmFtaWx5Lg0KDQoNCiANCg0K
