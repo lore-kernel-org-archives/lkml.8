@@ -2,200 +2,115 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23B3BC38A29
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 09:28:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41757C352BE
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 09:31:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 01911206B9
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 09:28:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A718208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 09:31:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vc5DC109"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MjESJIAG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730283AbgDQJ2T (ORCPT
+        id S1730278AbgDQJb1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 05:28:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44890 "EHLO
+        Fri, 17 Apr 2020 05:31:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45370 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729987AbgDQJ2S (ORCPT
+        with ESMTP id S1730175AbgDQJb0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 05:28:18 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33841C061A0C;
-        Fri, 17 Apr 2020 02:28:18 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id ng8so856815pjb.2;
-        Fri, 17 Apr 2020 02:28:18 -0700 (PDT)
+        Fri, 17 Apr 2020 05:31:26 -0400
+Received: from mail-vk1-xa41.google.com (mail-vk1-xa41.google.com [IPv6:2607:f8b0:4864:20::a41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 514C3C061A0C
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 02:31:26 -0700 (PDT)
+Received: by mail-vk1-xa41.google.com with SMTP id p123so399765vkg.1
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 02:31:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=mud2l24rltk7uz7NfJ1c85N1cu3yPrMi7djTErSnOqU=;
-        b=vc5DC1093lQFHdM1jrQJQNYSV1EiEy/xW07n2puLWpbVi5RlxW7/bLGEqOI8i/DESw
-         5FZkNogpz5zp99WdsrpAcLE5OptYNIPvJ+hvX//QVnzTpqs+71Qyn+zX9xMaJ9csGLg+
-         U+n3CV9kdkeBXU/W7b93UeVoyHgFUnA2CgbZS4RCECgmBEIf4Ir8eoqVfjB4OF3+UWZk
-         QAip2WgLhpUE8N0kQBInvlsbRyzH6oSPSo8+6DoAQTeUIjA+Ml4lGKInErz7si+mhNdL
-         egyR/BmHbb91Dy1ZPP6QV98pNdNjlqgg20vfiI+k6plnDx0rkElsRQVLIP1xxVo0x/5N
-         pR3w==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=wiAjeMfcURelxBHuZUMdahz3hslfuep2aSIiGdvB4+U=;
+        b=MjESJIAGjhwM+OrbAF9iPGpZJ/vkK1eikxiMgw0yxaSOcuysZ9JVFY/FVkUul49Yb+
+         ovf+VnarnjcO59QYSQd3TdLtK3EwPQLBRvbZrzEppGkSwL/E2vjW0Zi5wxDFNTnhFhjq
+         Dw0Z7KvjigjoPpQ1Oi+ppIM/XAF+Q9U7X850eljiesC/vYF/04hRrI3MXW2XIiCKwnPW
+         2OFZTk0iC/A+Ph+H6IANq/DNHJPd6d9W0yvIPsQ+f6mrvDJ3sqydF5DKb/Tuc50PdYso
+         ZYFrcO4wneJmMqPZGqcZ64OwN1shzuLS7/LRqsHjnYoec4cZEAuRv8fEmOvMRhRwCyhd
+         Atjw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=mud2l24rltk7uz7NfJ1c85N1cu3yPrMi7djTErSnOqU=;
-        b=ql/2GL/ANsFMtT05lPBK3iQ7Fj3FsTTaHW2bysz0A+tEDOZYXOl/GZL9Go5DUDRVRD
-         oBM1eHoOXcx9P5TzucltAswIT/fs2DkHJfsqbX21xlnthaJx4BBaWL+hM0ymmf1YlEvy
-         uKyzCOs/kAVnEaXasrLjZ3ToZpxx1paMjSr/V9YuvmfVxZPVa2aANxkd95YIW0ByX2c+
-         LajrcrkoF9t18mdNHfK0Jyo2a329XcPzYzHCNOGzGC8svBQ5Nx3zSYlFhSFh5o2tqijl
-         /m8nwKFHRtOqJ50goUEvUT8eHWDNvo9EtuCyNEZk4MGeC3G+CO1VGWwTI7WpRIe1s1Vj
-         5lzQ==
-X-Gm-Message-State: AGi0PuaEFk1+/muJnu0qf0Gl/kP1kBpUpIINh0eVxxGICCmY2jehhbvF
-        hvCraJfWeHXV7OGEMYDTqvA=
-X-Google-Smtp-Source: APiQypI44w7N7kV7q0nuZjqIxe3+gPqLsO8N+HYL1hgQ4UomT+clbnmIwUTS7Z0xUC8jJ5bvQchmFw==
-X-Received: by 2002:a17:90a:be12:: with SMTP id a18mr3156831pjs.162.1587115697547;
-        Fri, 17 Apr 2020 02:28:17 -0700 (PDT)
-Received: from laptop.hsd1.wa.comcast.net ([2601:600:817f:a132:df3e:521d:99d5:710d])
-        by smtp.gmail.com with ESMTPSA id 132sm19347742pfc.183.2020.04.17.02.28.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Apr 2020 02:28:16 -0700 (PDT)
-From:   Andrei Vagin <avagin@gmail.com>
-To:     Shuah Khan <shuah@kernel.org>,
-        Dmitry Safonov <0x7f454c46@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andrei Vagin <avagin@gmail.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>
-Subject: [PATCH v2] selftests/timens: handle a case when alarm clocks are not supported
-Date:   Fri, 17 Apr 2020 02:28:10 -0700
-Message-Id: <20200417092810.872455-1-avagin@gmail.com>
-X-Mailer: git-send-email 2.17.2
-In-Reply-To: <20200415061802.722485-1-avagin@gmail.com>
-References: <20200415061802.722485-1-avagin@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=wiAjeMfcURelxBHuZUMdahz3hslfuep2aSIiGdvB4+U=;
+        b=ZF8XVpc+19a3PD51vAWccwcnp7NZM2e+3N4WNKdB/q9fQkTScTgWiKYhEeN+5yh4f0
+         7iCo7MHTc/M/ERTUsEVn6HOl9g/FPt9lMZCh6B4FmtMSRJLjcgHliz+8Rzkb+ZtbhYAp
+         x0nkVJZm6ZOS5oNMhWnacIF9L5xnIXAIdXe9dwXHndkboE7Dg8xOd4v41vxYn+SU8CIT
+         JSOS9rBKAcFfCb6lWQRgd0JQdsC0ZbtDXdHXddjoI3//ybFHCXHXYR7F6pB7jg/HUfEI
+         x7d/YmYaBxuCm47x5mIRBAm1n4hKPA+Sn+/YCv387rvn0AqwjqnXnlq6dJ3VP6nLt3t0
+         h1nw==
+X-Gm-Message-State: AGi0PuaI6FLqt5hoXKT/mZ0S857ejydFYakQ14DZGEuZ+okd6lTeaumZ
+        6nuiJj7Gy7qSYXCSjwh/Bf15+6WX0S2btMW+6OL2OQ==
+X-Google-Smtp-Source: APiQypIhgrTQ9F4wV2XftulBfc+nuqItiJK/bLZiDLrTiNf3ydl2NH2qIiRMIU9GYujl8QU/p2GD5YgyX4Hb2jNJNZg=
+X-Received: by 2002:a1f:5003:: with SMTP id e3mr1648075vkb.59.1587115883938;
+ Fri, 17 Apr 2020 02:31:23 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200416183513.993763-1-martin.blumenstingl@googlemail.com>
+In-Reply-To: <20200416183513.993763-1-martin.blumenstingl@googlemail.com>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Fri, 17 Apr 2020 11:30:48 +0200
+Message-ID: <CAPDyKFrKs-NAYH7aCbEUCBw9wkwQEg-HmDun_cVw+L-EPSyZ_g@mail.gmail.com>
+Subject: Re: [PATCH v2 0/2] meson-mx-sdhc card busy detection fixes
+To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc:     "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This can happen if a testing node doesn't have RTC (real time clock)
-hardware or it doesn't support alarms.
+On Thu, 16 Apr 2020 at 20:37, Martin Blumenstingl
+<martin.blumenstingl@googlemail.com> wrote:
+>
+> The following errors were observed with Linux 5.7-rc1 and an SD card
+> hooked up to the meson-mx-sdio controller:
+>   mmc1: Card stuck being busy! __mmc_poll_for_busy
+>   blk_update_request: I/O error, dev mmcblk1, sector 17111080 op
+>    0x3:(DISCARD) flags 0x0 phys_seg 1 prio class 0
+>
+>
+> At least patch #1 should go to a -fixes branch so it can make it
+> into v5.7.
 
-Cc: Vincenzo Frascino <vincenzo.frascino@arm.com>
-Signed-off-by: Andrei Vagin <avagin@gmail.com>
----
-v2: fix timer.c and timerfd.c too.
+Applied for both patches for fixes, and adding stable tags, thanks!
 
- tools/testing/selftests/timens/clock_nanosleep.c |  2 +-
- tools/testing/selftests/timens/timens.c          |  2 +-
- tools/testing/selftests/timens/timens.h          | 13 ++++++++++++-
- tools/testing/selftests/timens/timer.c           |  5 +++++
- tools/testing/selftests/timens/timerfd.c         |  5 +++++
- 5 files changed, 24 insertions(+), 3 deletions(-)
+Kind regards
+Uffe
 
-diff --git a/tools/testing/selftests/timens/clock_nanosleep.c b/tools/testing/selftests/timens/clock_nanosleep.c
-index 8e7b7c72ef65..72d41b955fb2 100644
---- a/tools/testing/selftests/timens/clock_nanosleep.c
-+++ b/tools/testing/selftests/timens/clock_nanosleep.c
-@@ -119,7 +119,7 @@ int main(int argc, char *argv[])
- 
- 	ksft_set_plan(4);
- 
--	check_config_posix_timers();
-+	check_supported_timers();
- 
- 	if (unshare_timens())
- 		return 1;
-diff --git a/tools/testing/selftests/timens/timens.c b/tools/testing/selftests/timens/timens.c
-index 098be7c83be3..52b6a1185f52 100644
---- a/tools/testing/selftests/timens/timens.c
-+++ b/tools/testing/selftests/timens/timens.c
-@@ -155,7 +155,7 @@ int main(int argc, char *argv[])
- 
- 	nscheck();
- 
--	check_config_posix_timers();
-+	check_supported_timers();
- 
- 	ksft_set_plan(ARRAY_SIZE(clocks) * 2);
- 
-diff --git a/tools/testing/selftests/timens/timens.h b/tools/testing/selftests/timens/timens.h
-index e09e7e39bc52..d4fc52d47146 100644
---- a/tools/testing/selftests/timens/timens.h
-+++ b/tools/testing/selftests/timens/timens.h
-@@ -14,15 +14,26 @@
- #endif
- 
- static int config_posix_timers = true;
-+static int config_alarm_timers = true;
- 
--static inline void check_config_posix_timers(void)
-+static inline void check_supported_timers(void)
- {
-+	struct timespec ts;
-+
- 	if (timer_create(-1, 0, 0) == -1 && errno == ENOSYS)
- 		config_posix_timers = false;
-+
-+	if (clock_gettime(CLOCK_BOOTTIME_ALARM, &ts) == -1 && errno == EINVAL)
-+		config_alarm_timers = false;
- }
- 
- static inline bool check_skip(int clockid)
- {
-+	if (!config_alarm_timers && clockid == CLOCK_BOOTTIME_ALARM) {
-+		ksft_test_result_skip("CLOCK_BOOTTIME_ALARM isn't supported\n");
-+		return true;
-+	}
-+
- 	if (config_posix_timers)
- 		return false;
- 
-diff --git a/tools/testing/selftests/timens/timer.c b/tools/testing/selftests/timens/timer.c
-index 96dba11ebe44..5e7f0051bd7b 100644
---- a/tools/testing/selftests/timens/timer.c
-+++ b/tools/testing/selftests/timens/timer.c
-@@ -22,6 +22,9 @@ int run_test(int clockid, struct timespec now)
- 	timer_t fd;
- 	int i;
- 
-+	if (check_skip(clockid))
-+		return 0;
-+
- 	for (i = 0; i < 2; i++) {
- 		struct sigevent sevp = {.sigev_notify = SIGEV_NONE};
- 		int flags = 0;
-@@ -74,6 +77,8 @@ int main(int argc, char *argv[])
- 
- 	nscheck();
- 
-+	check_supported_timers();
-+
- 	ksft_set_plan(3);
- 
- 	clock_gettime(CLOCK_MONOTONIC, &mtime_now);
-diff --git a/tools/testing/selftests/timens/timerfd.c b/tools/testing/selftests/timens/timerfd.c
-index eff1ec5ff215..9edd43d6b2c1 100644
---- a/tools/testing/selftests/timens/timerfd.c
-+++ b/tools/testing/selftests/timens/timerfd.c
-@@ -28,6 +28,9 @@ int run_test(int clockid, struct timespec now)
- 	long long elapsed;
- 	int fd, i;
- 
-+	if (check_skip(clockid))
-+		return 0;
-+
- 	if (tclock_gettime(clockid, &now))
- 		return pr_perror("clock_gettime(%d)", clockid);
- 
-@@ -81,6 +84,8 @@ int main(int argc, char *argv[])
- 
- 	nscheck();
- 
-+	check_supported_timers();
-+
- 	ksft_set_plan(3);
- 
- 	clock_gettime(CLOCK_MONOTONIC, &mtime_now);
--- 
-2.24.1
 
+>
+>
+> Changes since v1 at [0]:
+> - added correct Fixes tag for patch #1
+> - added a patch which drops the ->card_busy() implementation from
+>   the meson-mx-sdio driver because this is not working
+> - special thanks to Ulf for taking the time to provide debug
+>   patches, explaining things and answering my questions!
+>
+>
+> [0] https://patchwork.kernel.org/patch/11483621/
+>
+>
+> Martin Blumenstingl (2):
+>   mmc: meson-mx-sdio: Set MMC_CAP_WAIT_WHILE_BUSY
+>   mmc: meson-mx-sdio: remove the broken ->card_busy() op
+>
+>  drivers/mmc/host/meson-mx-sdio.c | 11 +----------
+>  1 file changed, 1 insertion(+), 10 deletions(-)
+>
+> --
+> 2.26.1
+>
