@@ -2,200 +2,232 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46E36C38A29
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 12:12:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78A29C352BE
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 12:13:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 273BF208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 12:12:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 566D32083E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 12:13:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=maquefel.me header.i=@maquefel.me header.b="TlkUwKhY"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="xiQKSdOl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727775AbgDQMMU (ORCPT
+        id S1727999AbgDQMNL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 08:12:20 -0400
-Received: from forward105j.mail.yandex.net ([5.45.198.248]:60906 "EHLO
-        forward105j.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726050AbgDQMMT (ORCPT
+        Fri, 17 Apr 2020 08:13:11 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:46460 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726050AbgDQMNG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 08:12:19 -0400
-Received: from mxback4j.mail.yandex.net (mxback4j.mail.yandex.net [IPv6:2a02:6b8:0:1619::10d])
-        by forward105j.mail.yandex.net (Yandex) with ESMTP id 4F607B21D8B;
-        Fri, 17 Apr 2020 15:12:16 +0300 (MSK)
-Received: from myt5-aad1beefab42.qloud-c.yandex.net (myt5-aad1beefab42.qloud-c.yandex.net [2a02:6b8:c12:128:0:640:aad1:beef])
-        by mxback4j.mail.yandex.net (mxback/Yandex) with ESMTP id cuuj3jBftG-CFe4FrvU;
-        Fri, 17 Apr 2020 15:12:16 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=maquefel.me; s=mail; t=1587125536;
-        bh=jtSizO4+twdpIsx/d154x54u4OCPsuneVrmQDquqRBs=;
-        h=In-Reply-To:Subject:Cc:To:From:References:Date:Message-ID;
-        b=TlkUwKhYJ2Xf/4jQdKqYKhoBEYGsW4rImrnQsnUjniFW/echA8plv2aLNjbO4NFnI
-         XjnuCPyCa43Jb5uCjE31X7VNt2x6fYYPKzc/vpetCFfPNL+DZXGV58lj/nl0Lt9cyb
-         f3VzkF7wyrXrYC/8BB3prQamjmTSdvb+K9knQmkM=
-Authentication-Results: mxback4j.mail.yandex.net; dkim=pass header.i=@maquefel.me
-Received: by myt5-aad1beefab42.qloud-c.yandex.net (smtp/Yandex) with ESMTPSA id G9b4xQPTa7-CE2qoMQL;
-        Fri, 17 Apr 2020 15:12:14 +0300
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (Client certificate not present)
-Date:   Fri, 17 Apr 2020 15:11:32 +0300
-From:   Nikita Shubin <nikita.shubin@maquefel.me>
-To:     Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc:     Nikita Shubin <NShubin@topcon.com>,
-        Ohad Ben-Cohen <ohad@wizery.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        linux-remoteproc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/3] remoteproc: imx_rproc: set pc on start
-Message-ID: <20200417151132.00005f8c@maquefel.me>
-In-Reply-To: <20200414164519.GA24061@xps15>
-References: <20200304142628.8471-1-NShubin@topcon.com>
-        <20200406113310.3041-1-nikita.shubin@maquefel.me>
-        <20200406113310.3041-2-nikita.shubin@maquefel.me>
-        <20200414164519.GA24061@xps15>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
+        Fri, 17 Apr 2020 08:13:06 -0400
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03HCBtKT019906;
+        Fri, 17 Apr 2020 14:12:54 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=Zi4SisZc6FbWXefWeIc3r0RkxSLPr1E5Mixl1wY/6PA=;
+ b=xiQKSdOlH+AjgjhNE8ySveLSrC8OELwZvMSkj1mW7S2RXGnb1m7Yh5fFWcNDvZcKmAow
+ zf55Y7nPpJGSQVhz7zbcJW3In8I0gZm+qrc1f7DZoR7CJCYbfPDt/GBj2yCdZbEcX1AT
+ muse+PaOtVzAl9eJyMbzfz4kOg8Vu5VwIcxY6qvoaZrislI8j/TqDYJXvWHzeY6uHIbi
+ SRDqgKYm5/ra17f4L3K8TqkvmTCthlDEy+fu6G3ofz4t7nQcnyRng45skGrVs9HOlbia
+ Ijfl5DD13Rj8atERPO6TXmDmXDOOIQ2RK5MV9XMYKILVS3uvOyXk+bAFNzuaGv5B1xfo Fg== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 30dn761cja-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 17 Apr 2020 14:12:54 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id B27BB10002A;
+        Fri, 17 Apr 2020 14:12:53 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag6node3.st.com [10.75.127.18])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id A45532B0FC9;
+        Fri, 17 Apr 2020 14:12:53 +0200 (CEST)
+Received: from localhost (10.75.127.49) by SFHDAG6NODE3.st.com (10.75.127.18)
+ with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 17 Apr 2020 14:12:52
+ +0200
+From:   <patrice.chotard@st.com>
+To:     Mark Brown <broonie@kernel.org>,
+        Alexandre Torgue <alexandre.torgue@st.com>
+CC:     <mcoquelin.stm32@gmail.com>, <linux-spi@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        Patrice Chotard <patrice.chotard@st.com>,
+        Christophe Kerello <christophe.kerello@st.com>,
+        Benjamin Gaignard <benjamin.gaignard@st.com>
+Subject: spi: stm32-qspi: Add pm_runtime support
+Date:   Fri, 17 Apr 2020 14:12:41 +0200
+Message-ID: <20200417121241.6473-1-patrice.chotard@st.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.49]
+X-ClientProxiedBy: SFHDAG4NODE3.st.com (10.75.127.12) To SFHDAG6NODE3.st.com
+ (10.75.127.18)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-17_03:2020-04-17,2020-04-17 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 14 Apr 2020 10:45:19 -0600
-Mathieu Poirier <mathieu.poirier@linaro.org> wrote:
+From: Patrice Chotard <patrice.chotard@st.com>
 
-> Hi Nikita,
-> 
-> On Mon, Apr 06, 2020 at 02:33:08PM +0300, nikita.shubin@maquefel.me
-> wrote:
-> > In case elf file interrupt vector is not supposed to be at OCRAM_S,
-> > it is needed to write elf entry point to OCRAM_S + 0x4, to boot M4
-> > firmware.
-> > 
-> > Otherwise firmware located anywhere besides OCRAM_S won't boot.
-> > 
-> > The firmware must set stack poiner as first instruction:
-> > 
-> > Reset_Handler:
-> >     ldr   sp, = __stack      /* set stack pointer */
-> > 
-> > Signed-off-by: Nikita Shubin <NShubin@topcon.com>
-> 
-> The address in the SoB has to match what is found in the "From:"
-> field of the email header.  Checkpatch is complaining about that,
-> something I would have expected to be fixed before sending this set
-> out.
-> 
-> > ---
-> >  drivers/remoteproc/imx_rproc.c | 16 +++++++++++++++-
-> >  1 file changed, 15 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/remoteproc/imx_rproc.c
-> > b/drivers/remoteproc/imx_rproc.c index 3e72b6f38d4b..bebc58d0f711
-> > 100644 --- a/drivers/remoteproc/imx_rproc.c
-> > +++ b/drivers/remoteproc/imx_rproc.c
-> > @@ -45,6 +45,8 @@
-> >  
-> >  #define IMX7D_RPROC_MEM_MAX		8
-> >  
-> > +#define IMX_BOOT_PC			0x4
-> > +
-> >  /**
-> >   * struct imx_rproc_mem - slim internal memory structure
-> >   * @cpu_addr: MPU virtual address of the memory region
-> > @@ -85,6 +87,7 @@ struct imx_rproc {
-> >  	const struct imx_rproc_dcfg	*dcfg;
-> >  	struct imx_rproc_mem
-> > mem[IMX7D_RPROC_MEM_MAX]; struct clk			*clk;
-> > +	void __iomem			*bootreg;
-> >  };
-> >  
-> >  static const struct imx_rproc_att imx_rproc_att_imx7d[] = {
-> > @@ -162,11 +165,16 @@ static int imx_rproc_start(struct rproc
-> > *rproc) struct device *dev = priv->dev;
-> >  	int ret;
-> >  
-> > +	/* write entry point to program counter */
-> > +	writel(rproc->bootaddr, priv->bootreg);
-> 
-> What happens on all the other IMX systems where this fix is not
-> needed?  Will they continue to work properly?   
+By default, STM32_AUTOSUSPEND_DELAY is set to -1 which has for
+effect to prevent runtime suspends.
+Runtime suspends can be activated by setting autosuspend_delay_ms using
+sysfs entry :
+echo {delay_in_ms} > /sys/devices/platform/soc/58003000.spi/power/autosusp
+end_delay_ms)
 
-Mathieu you are totally correct imx6/imx7 use different addresses they
-boot.
+Signed-off-by: Christophe Kerello <christophe.kerello@st.com>
+Signed-off-by: Patrice Chotard <patrice.chotard@st.com>
+Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+---
+ drivers/spi/spi-stm32-qspi.c | 57 +++++++++++++++++++++++++++++++++---
+ 1 file changed, 53 insertions(+), 4 deletions(-)
 
-For imx7:
-| On i.MX 7Dual/7Solo, the boot vector for the Cortex-M4 core is located
-| at the start of the OCRAM_S (On Chip RAM - Secure) whose address is
-| 0x0018_0000 from Cortex-A7.
-
-For imx6:
-| The Boot vector for the Cortex-M4 core is located at the start of the
-| TCM_L whose address is 0x007F_8000 from the Cortex-A9. This is a
-| different location than on the i.MX 7Dual/7Solo
-
-But on imx7 0x0 is translated to 0x0018_0000 by imx_rproc_da_to_va, and
-on imx7 0x0 is translated to 0x007F_8000, using imx_rproc_att_imx7d and 
-imx_rproc_att_imx6sx respectively.
-
-I have no information about IMX8 (i have found none available
-publicity), but should be the same as Cortex-M boots from 0x0.
-
-> 
-> > +
-> >  	ret = regmap_update_bits(priv->regmap, dcfg->src_reg,
-> >  				 dcfg->src_mask, dcfg->src_start);
-> >  	if (ret)
-> >  		dev_err(dev, "Failed to enable M4!\n");
-> >  
-> > +	dev_info(&rproc->dev, "Started from 0x%x\n",
-> > rproc->bootaddr); +
-> >  	return ret;
-> >  }
-> >  
-> > @@ -182,6 +190,9 @@ static int imx_rproc_stop(struct rproc *rproc)
-> >  	if (ret)
-> >  		dev_err(dev, "Failed to stop M4!\n");
-> >  
-> > +	/* clear entry points */
-> > +	writel(0, priv->bootreg);
-> > +
-> >  	return ret;
-> >  }
-> >  
-> > @@ -243,7 +254,8 @@ static void *imx_rproc_da_to_va(struct rproc
-> > *rproc, u64 da, int len) static const struct rproc_ops
-> > imx_rproc_ops = { .start		= imx_rproc_start,
-> >  	.stop		= imx_rproc_stop,
-> > -	.da_to_va       = imx_rproc_da_to_va,
-> > +	.da_to_va	= imx_rproc_da_to_va,
-> > +	.get_boot_addr	= rproc_elf_get_boot_addr,
-> 
-> How is this useful?  Sure it will set rproc->bootaddr in
-> rproc_fw_boot() but what good does that do when it is invariably set
-> again in imx_rproc_start() ? 
-> 
-> >  };
-> >  
-> >  static int imx_rproc_addr_init(struct imx_rproc *priv,
-> > @@ -360,6 +372,8 @@ static int imx_rproc_probe(struct
-> > platform_device *pdev) goto err_put_rproc;
-> >  	}
-> >  
-> > +	priv->bootreg = imx_rproc_da_to_va(rproc, IMX_BOOT_PC,
-> > sizeof(u32)); +
-> >  	/*
-> >  	 * clk for M4 block including memory. Should be
-> >  	 * enabled before .start for FW transfer.
-> > -- 
-> > 2.25.1
-> > 
+diff --git a/drivers/spi/spi-stm32-qspi.c b/drivers/spi/spi-stm32-qspi.c
+index d066f5144c3e..2f2ea2c42d6e 100644
+--- a/drivers/spi/spi-stm32-qspi.c
++++ b/drivers/spi/spi-stm32-qspi.c
+@@ -16,6 +16,7 @@
+ #include <linux/of.h>
+ #include <linux/of_device.h>
+ #include <linux/pinctrl/consumer.h>
++#include <linux/pm_runtime.h>
+ #include <linux/platform_device.h>
+ #include <linux/reset.h>
+ #include <linux/sizes.h>
+@@ -87,6 +88,7 @@
+ #define STM32_BUSY_TIMEOUT_US 100000
+ #define STM32_ABT_TIMEOUT_US 100000
+ #define STM32_COMP_TIMEOUT_MS 1000
++#define STM32_AUTOSUSPEND_DELAY -1
+ 
+ struct stm32_qspi_flash {
+ 	struct stm32_qspi *qspi;
+@@ -431,10 +433,17 @@ static int stm32_qspi_exec_op(struct spi_mem *mem, const struct spi_mem_op *op)
+ 	struct stm32_qspi *qspi = spi_controller_get_devdata(mem->spi->master);
+ 	int ret;
+ 
++	ret = pm_runtime_get_sync(qspi->dev);
++	if (ret < 0)
++		return ret;
++
+ 	mutex_lock(&qspi->lock);
+ 	ret = stm32_qspi_send(mem, op);
+ 	mutex_unlock(&qspi->lock);
+ 
++	pm_runtime_mark_last_busy(qspi->dev);
++	pm_runtime_put_autosuspend(qspi->dev);
++
+ 	return ret;
+ }
+ 
+@@ -444,6 +453,7 @@ static int stm32_qspi_setup(struct spi_device *spi)
+ 	struct stm32_qspi *qspi = spi_controller_get_devdata(ctrl);
+ 	struct stm32_qspi_flash *flash;
+ 	u32 presc;
++	int ret;
+ 
+ 	if (ctrl->busy)
+ 		return -EBUSY;
+@@ -451,6 +461,10 @@ static int stm32_qspi_setup(struct spi_device *spi)
+ 	if (!spi->max_speed_hz)
+ 		return -EINVAL;
+ 
++	ret = pm_runtime_get_sync(qspi->dev);
++	if (ret < 0)
++		return ret;
++
+ 	presc = DIV_ROUND_UP(qspi->clk_rate, spi->max_speed_hz) - 1;
+ 
+ 	flash = &qspi->flash[spi->chip_select];
+@@ -467,6 +481,9 @@ static int stm32_qspi_setup(struct spi_device *spi)
+ 	writel_relaxed(qspi->dcr_reg, qspi->io_base + QSPI_DCR);
+ 	mutex_unlock(&qspi->lock);
+ 
++	pm_runtime_mark_last_busy(qspi->dev);
++	pm_runtime_put_autosuspend(qspi->dev);
++
+ 	return 0;
+ }
+ 
+@@ -643,9 +660,20 @@ static int stm32_qspi_probe(struct platform_device *pdev)
+ 	ctrl->num_chipselect = STM32_QSPI_MAX_NORCHIP;
+ 	ctrl->dev.of_node = dev->of_node;
+ 
++	pm_runtime_set_autosuspend_delay(dev, STM32_AUTOSUSPEND_DELAY);
++	pm_runtime_use_autosuspend(dev);
++	pm_runtime_set_active(dev);
++	pm_runtime_enable(dev);
++	pm_runtime_get_noresume(dev);
++
+ 	ret = devm_spi_register_master(dev, ctrl);
+-	if (!ret)
+-		return 0;
++	if (ret)
++		goto err_qspi_release;
++
++	pm_runtime_mark_last_busy(dev);
++	pm_runtime_put_autosuspend(dev);
++
++	return 0;
+ 
+ err_qspi_release:
+ 	stm32_qspi_release(qspi);
+@@ -660,14 +688,28 @@ static int stm32_qspi_remove(struct platform_device *pdev)
+ 	struct stm32_qspi *qspi = platform_get_drvdata(pdev);
+ 
+ 	stm32_qspi_release(qspi);
++
+ 	return 0;
+ }
+ 
+-static int __maybe_unused stm32_qspi_suspend(struct device *dev)
++static int __maybe_unused stm32_qspi_runtime_suspend(struct device *dev)
+ {
+ 	struct stm32_qspi *qspi = dev_get_drvdata(dev);
+ 
+ 	clk_disable_unprepare(qspi->clk);
++
++	return 0;
++}
++
++static int __maybe_unused stm32_qspi_runtime_resume(struct device *dev)
++{
++	struct stm32_qspi *qspi = dev_get_drvdata(dev);
++
++	return clk_prepare_enable(qspi->clk);
++}
++
++static int __maybe_unused stm32_qspi_suspend(struct device *dev)
++{
+ 	pinctrl_pm_select_sleep_state(dev);
+ 
+ 	return 0;
+@@ -683,10 +725,17 @@ static int __maybe_unused stm32_qspi_resume(struct device *dev)
+ 	writel_relaxed(qspi->cr_reg, qspi->io_base + QSPI_CR);
+ 	writel_relaxed(qspi->dcr_reg, qspi->io_base + QSPI_DCR);
+ 
++	pm_runtime_mark_last_busy(qspi->dev);
++	pm_runtime_put_autosuspend(qspi->dev);
++
+ 	return 0;
+ }
+ 
+-static SIMPLE_DEV_PM_OPS(stm32_qspi_pm_ops, stm32_qspi_suspend, stm32_qspi_resume);
++static const struct dev_pm_ops stm32_qspi_pm_ops = {
++	SET_RUNTIME_PM_OPS(stm32_qspi_runtime_suspend,
++			   stm32_qspi_runtime_resume, NULL)
++	SET_SYSTEM_SLEEP_PM_OPS(stm32_qspi_suspend, stm32_qspi_resume)
++};
+ 
+ static const struct of_device_id stm32_qspi_match[] = {
+ 	{.compatible = "st,stm32f469-qspi"},
+-- 
+2.17.1
 
