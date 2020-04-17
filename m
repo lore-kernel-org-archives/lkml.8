@@ -2,82 +2,112 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A489C2BB85
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 08:06:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D414EC2BB55
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 08:06:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 28B7E20644
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 08:06:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="QEuXKVnz"
+	by mail.kernel.org (Postfix) with ESMTP id B3E3E214AF
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 08:06:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729622AbgDQIGU (ORCPT
+        id S1729634AbgDQIGd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 04:06:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60302 "EHLO
+        Fri, 17 Apr 2020 04:06:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60340 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729495AbgDQIGS (ORCPT
+        by vger.kernel.org with ESMTP id S1729495AbgDQIGc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 04:06:18 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2728CC061A0C;
-        Fri, 17 Apr 2020 01:06:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=GdTc/Zzu7raszzr4RX7T2guEFF3lDB9CYabZTEfgBXY=; b=QEuXKVnz/XP2KY6qvCoCoaxFZL
-        YwfX8YOjMokAprB4nQ8NvkRK6Y7bq+HQj7ySjWENQUmqgjWp0Dyd40wFTB93WA0h1/EkJTY0PlArV
-        1RnVEggjkzQnKMr6CiIMwXPzvEyacIoHPOZm0owh/M0tBuS8aYB8th13ZpJhGGaTvDJUXLvDKapSN
-        AVegpSoGABDu6ZPjFVK5MKczDpqh7hhQbKXTWXU3Ne73CJspy8uLw2Et0VKGNC68byShygHd5meEG
-        hVUgUPYhWnYBbTJYPHw/n5U1wSTJ7ctlldij8PpHRRBT6w4Dz1CyX/r9eby2Jagy4Ld0jr+GkAsmD
-        oiPBO0cA==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jPM0t-00019y-2j; Fri, 17 Apr 2020 08:06:15 +0000
-Date:   Fri, 17 Apr 2020 01:06:15 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>, linux-mm@kvack.org,
-        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        Dave Chinner <david@fromorbit.com>
-Subject: Re: implicit AOP_FLAG_NOFS for grab_cache_page_write_begin
-Message-ID: <20200417080615.GA26880@infradead.org>
-References: <20200415070228.GW4629@dhcp22.suse.cz>
- <20200417072931.GA20822@infradead.org>
- <20200417080003.GH26707@dhcp22.suse.cz>
+        Fri, 17 Apr 2020 04:06:32 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA18EC061A0C;
+        Fri, 17 Apr 2020 01:06:31 -0700 (PDT)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: aratiu)
+        with ESMTPSA id 8AD6E2A2164
+From:   Adrian Ratiu <adrian.ratiu@collabora.com>
+To:     Enric Balletbo Serra <eballetbo@gmail.com>,
+        Adrian Ratiu <adrian.ratiu@collabora.com>
+Cc:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Adrian Pop <pop.adrian61@gmail.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Arnaud Ferraris <arnaud.ferraris@collabora.com>,
+        Collabora Kernel ML <kernel@collabora.com>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-imx@nxp.com
+Subject: Re: [PATCH v6 1/8] drm: bridge: dw_mipi_dsi: add initial regmap
+ infrastructure
+In-Reply-To: <CAFqH_513KB+En_xbpXSBG6Q38kYxWCgw0KO3NVxCb6fqHDaKBA@mail.gmail.com>
+References: <20200414151955.311949-1-adrian.ratiu@collabora.com>
+ <20200414151955.311949-2-adrian.ratiu@collabora.com>
+ <CAFqH_52eKB4jtmn5e4HQubv8ijOPqDqncp1dRGahhU3NOorJMQ@mail.gmail.com>
+ <87lfmvjmt5.fsf@collabora.com>
+ <CAFqH_513KB+En_xbpXSBG6Q38kYxWCgw0KO3NVxCb6fqHDaKBA@mail.gmail.com>
+Date:   Fri, 17 Apr 2020 11:07:37 +0300
+Message-ID: <87imhyk01i.fsf@collabora.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200417080003.GH26707@dhcp22.suse.cz>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain; format=flowed
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 17, 2020 at 10:00:03AM +0200, Michal Hocko wrote:
-> > commit aea1b9532143218f8599ecedbbd6bfbf812385e1
-> > Author: Dave Chinner <dchinner@redhat.com>
-> > Date:   Tue Jul 20 17:54:12 2010 +1000
-> > 
-> >     xfs: use GFP_NOFS for page cache allocation
-> > 
-> >     Avoid a lockdep warning by preventing page cache allocation from
-> >     recursing back into the filesystem during memory reclaim.
+On Thu, 16 Apr 2020, Enric Balletbo Serra <eballetbo@gmail.com> 
+wrote:
+> Hi Adrian, 
 > 
-> Thanks for digging this up! The changelog is not really clear whether
-> NOFS is to avoid false possitive lockup warnings or real ones. If the
-> former then we have grown __GFP_NOLOCKDEP flag to workaround the problem
-> if the later then can we use memalloc_nofs_{save,restore} in the xfs
-> specific code please?
+> [snip] 
+> 
+>> >> 
+>> >> +static void dw_mipi_dsi_get_hw_version(struct dw_mipi_dsi 
+>> >> *dsi) +{ +       regmap_read(dsi->regs, DSI_VERSION, 
+>> >> &dsi->hw_version); +       dsi->hw_version &= VERSION; + if 
+>> >> (!dsi->hw_version) +               dev_err(dsi->dev, "Failed 
+>> >> to read DSI hw version register\n"); 
+>> > 
+>> > Is this an error that should be ignored? If you can't get the 
+>> > HW version, probably, there is something wrong with your 
+>> > hardware so, don't you need to return an error? 
+>> > 
+>> 
+>> After thinking a bit more about it, that error should be a 
+>> warning. 
+>> 
+>> I added it because in some cases (for eg. if the peripheral 
+>> clock is disabled) the reads can return 0 which is obviously an 
+>> invalid version and the bridge will error in the next step when 
+>> not finding a layout. 
+>> 
+> 
+> If you'll error anyway, why wait? IIUC at this point the clock 
+> *must* be enabled, and if not, something is wrong with the 
+> driver, I don't see any advantage on delay the error. do you 
+> have a use case where this is called and peripheral clock 
+> disabled? 
 
-As far as I can tell we are never in a file system transaction in XFS
-when allocating page cache pages.  We do, however usually have i_rwsem
-locked (or back in the day the XFS-specific predecessor).  I'm not
-sure what the current issues are, but maybe Dave remembers.  In doubt
-we should try removing the flag and run heavy stress testing with
-lockdep enabled and see if it screams.
+There should be no real use-case (maybe malfunctioning HW), and we 
+could error out here to catch driver bugs ASAP, so I'll go this 
+route then :)
+
+Thank you, much appreciated!
+
+>
+>> So I'll make this a warning in v7 and explicitely mention that
+>> reads version == 0 can be caused by a disabled pclk.
+>>
+>
+> -- Enric
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
