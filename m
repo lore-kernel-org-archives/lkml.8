@@ -6,126 +6,97 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FE94C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 03:24:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90302C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 03:25:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0791721D94
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 03:24:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7302B21D94
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 03:25:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729136AbgDQDYP (ORCPT
+        id S1729442AbgDQDZW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 23:24:15 -0400
-Received: from mga04.intel.com ([192.55.52.120]:22715 "EHLO mga04.intel.com"
+        Thu, 16 Apr 2020 23:25:22 -0400
+Received: from mga01.intel.com ([192.55.52.88]:46448 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728444AbgDQDYO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 23:24:14 -0400
-IronPort-SDR: uRabRcaaOmb+cf1MiuROWjs7h8iT0TDopivNXN8HK7fJixhXf3x2w0WDXGbGKq78/nFT2fx9rk
- b5+qb1bOWYHA==
+        id S1726123AbgDQDZW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 23:25:22 -0400
+IronPort-SDR: iErVSfnI38KwtWQcH4rNDLRGacjRCeNcMdBt/L03K6KGp4kSKPATK795CQhFE6Uq6uZ4mN5Iqc
+ CrzmqAlQrtig==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2020 20:24:14 -0700
-IronPort-SDR: vm7kEmXJN0BsDyOFZzfPgeTZf2QaefCY0zx1kjPSt7pVlPucMluF6jzrfE1Y6kcew5SMLDtqeZ
- f0IdLxZxxWtA==
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2020 20:25:21 -0700
+IronPort-SDR: Y6NxNoqwaocfo1ldFFdrC25qBWTuSkIdagvjBrnhQfQIWAVfWzvOgqnb12F5Lnv/SZ95ck/O34
+ JjcEmikH2k1g==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.72,393,1580803200"; 
-   d="scan'208";a="254081720"
-Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.141])
-  by orsmga003.jf.intel.com with ESMTP; 16 Apr 2020 20:24:11 -0700
-Date:   Fri, 17 Apr 2020 11:21:32 +0800
-From:   Xu Yilun <yilun.xu@intel.com>
-To:     "Wu, Hao" <hao.wu@intel.com>
-Cc:     Tom Rix <trix@redhat.com>, "mdf@kernel.org" <mdf@kernel.org>,
-        "linux-fpga@vger.kernel.org" <linux-fpga@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "bhu@redhat.com" <bhu@redhat.com>
-Subject: Re: [PATCH 1/2] fpga: dfl: pci: reduce the scope of variable 'ret'
-Message-ID: <20200417032132.GA25293@yilunxu-OptiPlex-7050>
-References: <1587006712-22696-1-git-send-email-yilun.xu@intel.com>
- <1587006712-22696-2-git-send-email-yilun.xu@intel.com>
- <DM6PR11MB3819619E9B2C7326218247E385D80@DM6PR11MB3819.namprd11.prod.outlook.com>
- <9b1d85e0-4f44-179b-c847-af858fcc212a@redhat.com>
- <20200417015605.GA30618@yilunxu-OptiPlex-7050>
- <DM6PR11MB381919B83DB49F937E3EDEEA85D90@DM6PR11MB3819.namprd11.prod.outlook.com>
+   d="scan'208";a="428084176"
+Received: from blu2-mobl3.ccr.corp.intel.com (HELO [10.254.212.63]) ([10.254.212.63])
+  by orsmga005.jf.intel.com with ESMTP; 16 Apr 2020 20:25:19 -0700
+Cc:     baolu.lu@linux.intel.com, "Raj, Ashok" <ashok.raj@intel.com>,
+        "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
+        "Liu, Yi L" <yi.l.liu@intel.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 5/7] iommu/vt-d: Save prq descriptors in an internal
+ list
+To:     "Tian, Kevin" <kevin.tian@intel.com>,
+        Joerg Roedel <joro@8bytes.org>
+References: <20200415052542.30421-1-baolu.lu@linux.intel.com>
+ <20200415052542.30421-6-baolu.lu@linux.intel.com>
+ <AADFC41AFE54684AB9EE6CBC0274A5D19D8207B2@SHSMSX104.ccr.corp.intel.com>
+ <399dd037-b32e-30a7-013c-b68e9a3bbc7a@linux.intel.com>
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+Message-ID: <7e95de33-95e9-0647-9611-aa4ec72171c9@linux.intel.com>
+Date:   Fri, 17 Apr 2020 11:25:18 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <DM6PR11MB381919B83DB49F937E3EDEEA85D90@DM6PR11MB3819.namprd11.prod.outlook.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <399dd037-b32e-30a7-013c-b68e9a3bbc7a@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 17, 2020 at 11:05:16AM +0800, Wu, Hao wrote:
-> > -----Original Message-----
-> > From: Xu, Yilun <yilun.xu@intel.com>
-> > Sent: Friday, April 17, 2020 9:56 AM
-> > To: Tom Rix <trix@redhat.com>
-> > Cc: Wu, Hao <hao.wu@intel.com>; mdf@kernel.org; linux-
-> > fpga@vger.kernel.org; linux-kernel@vger.kernel.org; bhu@redhat.com
-> > Subject: Re: [PATCH 1/2] fpga: dfl: pci: reduce the scope of variable 'ret'
-> >
-> > Hi Rix:
-> >
-> > This patch is based on linux-next. There is an preceding patch
-> > (3c2760b78f90 "fpga: dfl: pci: fix return value of cci_pci_sriov_configure",
-> > Also see Fixes:) in linux-next but not merged in 5.7-rc1 yet.
-> > This patch is to fix the lkp warning brought by the previous one.
-> 
-> Yilun
-> 
-> Is it possible that commit id may be different for master then?
+Hi Kevin,
 
-It is possible if the previous patch need a little change when merging
-to master.
-
-I'm not sure how to handle this then. But the previous patch is simple
-and is unlikely to change.
-
+On 2020/4/16 9:46, Lu Baolu wrote:
+> On 2020/4/15 17:30, Tian, Kevin wrote:
+>>> From: Lu Baolu<baolu.lu@linux.intel.com>
+>>> Sent: Wednesday, April 15, 2020 1:26 PM
+>>>
+>>> Currently, the page request interrupt thread handles the page
+>>> requests in the queue in this way:
+>>>
+>>> - Clear PPR bit to ensure new interrupt could come in;
+>>> - Read and record the head and tail registers;
+>>> - Handle all descriptors between head and tail;
+>>> - Write tail to head register.
+>>>
+>>> This might cause some descriptors to be handles multiple times.
+>>> An example sequence:
+>>>
+>>> - Thread A got scheduled with PRQ_1 and PRQ_2 in the queue;
+>>> - Thread A clear the PPR bit and record the head and tail;
+>>> - A new PRQ_3 comes and Thread B gets scheduled;
+>>> - Thread B record the head and tail which includes PRQ_1
+>>>    and PRQ_2.
+>> I may overlook something but isn't the prq interrupt thread
+>> per iommu then why would two prq threads contend here?
 > 
-> Thanks
-> Hao
+> The prq interrupt could be masked by the PPR (Pending Page Request) bit
+> in Page Request Status Register. In the interrupt handling thread once
+> this bit is clear, new prq interrupts are allowed to be generated.
 > 
-> >
-> > Thanks.
-> >
-> > On Thu, Apr 16, 2020 at 09:56:47AM -0700, Tom Rix wrote:
-> > > Please check the scope.
-> > >
-> > > On linus/master, the result of this change looks like
-> > >
-> > > static int cci_pci_sriov_configure(struct pci_dev *pcidev, int num_vfs)
-> > > {
-> > >     struct cci_drvdata *drvdata = pci_get_drvdata(pcidev);
-> > >     struct dfl_fpga_cdev *cdev = drvdata->cdev;
-> > >
-> > >     if (!num_vfs) {
-> > >         /*
-> > >          * disable SRIOV and then put released ports back to default
-> > >          * PF access mode.
-> > >          */
-> > >         pci_disable_sriov(pcidev);
-> > >
-> > >         dfl_fpga_cdev_config_ports_pf(cdev);
-> > >
-> > >     } else {
-> > >         int ret; <--- defined here
-> > >
-> > >         /*
-> > >          * before enable SRIOV, put released ports into VF access mode
-> > >          * first of all.
-> > >          */
-> > >         ret = dfl_fpga_cdev_config_ports_vf(cdev, num_vfs);
-> > >         if (ret)
-> > >             return ret;
-> > >
-> > >         ret = pci_enable_sriov(pcidev, num_vfs);
-> > >         if (ret)
-> > >             dfl_fpga_cdev_config_ports_pf(cdev);
-> > >     }
-> > >
-> > >     return ret;  <---- not in scope, not defined here
-> > > }
-> > >
-> > > Tom
+> So, if a page request is in process and the PPR bit is cleared, another
+> page request from any devices under the same iommu could trigger another
+> interrupt thread.
+
+Rechecked the code. You are right. As long as the interrupt thread is
+per iommu, there will only single prq thread scheduled. I will change
+this accordingly in the new version. Thank you for pointing this out.
+
+Best regards,
+baolu
