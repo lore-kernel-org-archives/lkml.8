@@ -2,179 +2,259 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD4F5C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 02:20:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB344C352BE
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 02:24:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9CD85206B9
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 02:20:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B340E221E9
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 02:24:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=dxuuu.xyz header.i=@dxuuu.xyz header.b="TvZlMGGP";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="zHF9nk9e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729226AbgDQCUh (ORCPT
+        id S1729218AbgDQCYJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 22:20:37 -0400
-Received: from mga14.intel.com ([192.55.52.115]:15877 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728969AbgDQCUh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 22:20:37 -0400
-IronPort-SDR: iGGgdohgwt2s3SYEw4Mul+yyqFBBqZbWAE3h7KWkRf/CBfrkUvUzSNQSvWFz+Kkmu9dk/SUKrz
- Rh2u/O3YkRLw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2020 19:20:37 -0700
-IronPort-SDR: IyH74imscbpapo+hYD5q4u1fkpMnA7qIrUw0FowKZCiutqF2oWJFnF4W1EAqmWt0NH1GoHFj27
- kVw7bxmDjV8Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,393,1580803200"; 
-   d="scan'208";a="278218385"
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.147])
-  by fmsmga004.fm.intel.com with ESMTP; 16 Apr 2020 19:20:36 -0700
-Date:   Thu, 16 Apr 2020 19:20:36 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     linux-kernel@vger.kernel.org, Jan Kara <jack@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jeff Moyer <jmoyer@redhat.com>,
-        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH RFC 4/8] fs/ext4: Introduce DAX inode flag
-Message-ID: <20200417022036.GQ2309605@iweiny-DESK2.sc.intel.com>
-References: <20200414040030.1802884-1-ira.weiny@intel.com>
- <20200414040030.1802884-5-ira.weiny@intel.com>
- <20200416162504.GB6733@magnolia>
- <20200416223327.GO2309605@iweiny-DESK2.sc.intel.com>
- <20200416224937.GY6749@magnolia>
- <20200417003719.GP2309605@iweiny-DESK2.sc.intel.com>
- <20200417015731.GU6742@magnolia>
+        Thu, 16 Apr 2020 22:24:09 -0400
+Received: from new1-smtp.messagingengine.com ([66.111.4.221]:57315 "EHLO
+        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728969AbgDQCYI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 22:24:08 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 6D7DA580694;
+        Thu, 16 Apr 2020 22:24:06 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute4.internal (MEProxy); Thu, 16 Apr 2020 22:24:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dxuuu.xyz; h=
+        from:to:cc:subject:date:message-id:mime-version
+        :content-transfer-encoding; s=fm3; bh=j7uOIyaUtmiDGZuoZsMKodKEmp
+        ZENeznYoKSaWM7KV4=; b=TvZlMGGPaOwNxFqDjQZxdcB1aD0edPmGgyl/ExjWA1
+        y/qjuQkOgisNTmceRAHFTAAT1oR4KUzFEeXxS3ruC73EUvIoUJo3GqhsrxCT96Xd
+        WCug7l1pP+ik3asPlhjoH8LoadiDqWN62uofO1GOwhxLXlR9OXG+iVEK3pvAbYbD
+        8253gcD07HpqE0dXxlFOz/dvzXxaN6BpWL+AXr4n+oBjqKiNBX6awgZCaFCEaxLr
+        0AGlhOzvtGvDyM4/zDwiK05y9GOb8Hw/r1zjU3p8DC39t8nlXwUTEvGd7f+xghX0
+        8Vn6wk10LbSgKONbb059E56j8KIffJb0xxRf51wGCeZg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:date:from
+        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
+        :x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=j7uOIyaUtmiDGZuoZ
+        sMKodKEmpZENeznYoKSaWM7KV4=; b=zHF9nk9eDpE87PX2SKNi3k8wIA4e9B3Qw
+        /OoCaARQgit1hqD+ZPcu57PncOEfu9laOu4/W5dSVrkEbt333NZ+MGW5PWWjGgod
+        d5OM3FHRH1g9Etxf2uzEnrnGMQzjfo/AoDKJXY2gs6YVgumAFyjxabZpQhG/mQoR
+        xa1fyfeN0UO4wduQQjyuluV+Dta95AvEXFOSEtL61qcJ+Zqd/j+ZHj6/G2k09y4z
+        bEmosQ7Eh2lRaWP70H8BVkrKSocn/QZzn4RqLdxN4M5SuaqtRRJqyR2CshIa2RNQ
+        UDmL1y33Mth6I9ub926nqKPudndKDRMO7DxtVc6PxrazlQw7gCNzg==
+X-ME-Sender: <xms:RhOZXg8tJhOKdij9k98UR7hz1eVU9F3BKEJfdq74WxUz1YcR4AQltQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrfeeigdehkecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecuogfuuhhsphgvtghtffhomhgrihhnucdlgeelmdenfg
+    hrlhcuvffnffculddujedmnegovehorghsthgrlhdqhfeguddvqddtvdculdduhedtmden
+    ucfjughrpefhvffufffkofgggfestdekredtredttdenucfhrhhomhepffgrnhhivghluc
+    giuhcuoegugihusegugihuuhhurdighiiiqeenucffohhmrghinhepghhithhhuhgsrdgt
+    ohhmpdhsphhinhhitghsrdhnvghtpdhgihhthhhusgdrihhonecukfhppeduieefrdduud
+    egrddufedvrdegnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhf
+    rhhomhepugiguhesugiguhhuuhdrgiihii
+X-ME-Proxy: <xmx:RhOZXq9V1fwbcIbqLP_uhFilsRpCkoMiPlx4YP_Me8X4Jrf9zl29pg>
+    <xmx:RhOZXmHUYy8ky2NiIxcTs41Le0wwGh4h-9QXzOcB7uj1Xq7IE0uZ6g>
+    <xmx:RhOZXpaZbfIId1Wfg66FMmj0z5QUqnqKUOLL4V04RN56nNY9GH5YEQ>
+    <xmx:RhOZXtTzL2Y8-vV5boYpY1mmIBk8eXhLW4z5H4SqbzR0a5m1-qKQ6w>
+Received: from dlxu-fedora-R90QNFJV.thefacebook.com (unknown [163.114.132.4])
+        by mail.messagingengine.com (Postfix) with ESMTPA id A0F76306008B;
+        Thu, 16 Apr 2020 22:24:04 -0400 (EDT)
+From:   Daniel Xu <dxu@dxuuu.xyz>
+To:     linux-kernel@vger.kernel.org
+Cc:     Daniel Xu <dxu@dxuuu.xyz>, bpf@vger.kernel.org, kernel-team@fb.com,
+        jolsa@kernel.org, brendan.d.gregg@gmail.com,
+        andrii.nakryiko@gmail.com, ast@kernel.org
+Subject: [RFC] uapi: Convert stat.h #define flags to enums
+Date:   Thu, 16 Apr 2020 19:23:15 -0700
+Message-Id: <20200417022315.1931959-1-dxu@dxuuu.xyz>
+X-Mailer: git-send-email 2.25.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200417015731.GU6742@magnolia>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 16, 2020 at 06:57:31PM -0700, Darrick J. Wong wrote:
-> On Thu, Apr 16, 2020 at 05:37:19PM -0700, Ira Weiny wrote:
-> > On Thu, Apr 16, 2020 at 03:49:37PM -0700, Darrick J. Wong wrote:
-> > > On Thu, Apr 16, 2020 at 03:33:27PM -0700, Ira Weiny wrote:
-> > > > On Thu, Apr 16, 2020 at 09:25:04AM -0700, Darrick J. Wong wrote:
-> > > > > On Mon, Apr 13, 2020 at 09:00:26PM -0700, ira.weiny@intel.com wrote:
-> > > > > > From: Ira Weiny <ira.weiny@intel.com>
-> > > > > > 
-> > > > > > Add a flag to preserve FS_XFLAG_DAX in the ext4 inode.
-> > > > > > 
-> > > > > > Set the flag to be user visible and changeable.  Set the flag to be
-> > > > > > inherited.  Allow applications to change the flag at any time.
-> > > > > > 
-> > > > > > Finally, on regular files, flag the inode to not be cached to facilitate
-> > > > > > changing S_DAX on the next creation of the inode.
-> > > > > > 
-> > > > > > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-> > > > > > ---
-> > > > > >  fs/ext4/ext4.h  | 13 +++++++++----
-> > > > > >  fs/ext4/ioctl.c | 21 ++++++++++++++++++++-
-> > > > > >  2 files changed, 29 insertions(+), 5 deletions(-)
-> > > > > > 
-> > > > > > diff --git a/fs/ext4/ext4.h b/fs/ext4/ext4.h
-> > > > > > index 61b37a052052..434021fcec88 100644
-> > > > > > --- a/fs/ext4/ext4.h
-> > > > > > +++ b/fs/ext4/ext4.h
-> > > > > > @@ -415,13 +415,16 @@ struct flex_groups {
-> > > > > >  #define EXT4_VERITY_FL			0x00100000 /* Verity protected inode */
-> > > > > >  #define EXT4_EA_INODE_FL	        0x00200000 /* Inode used for large EA */
-> > > > > >  #define EXT4_EOFBLOCKS_FL		0x00400000 /* Blocks allocated beyond EOF */
-> > > > > > +
-> > > > > > +#define EXT4_DAX_FL			0x00800000 /* Inode is DAX */
-> > > > > 
-> > > > > Sooo, fun fact about ext4 vs. the world--
-> > > > > 
-> > > > > The GETFLAGS/SETFLAGS ioctl, since it came from ext2, shares the same
-> > > > > flag values as the ondisk inode flags in ext*.  Therefore, each of these
-> > > > > EXT4_[whatever]_FL values are supposed to have a FS_[whatever]_FL
-> > > > > equivalent in include/uapi/linux/fs.h.
-> > > > 
-> > > > Interesting...
-> > > > 
-> > > > > 
-> > > > > (Note that the "[whatever]" is a straight translation since the same
-> > > > > uapi header also defines the FS_XFLAG_[xfswhatever] flag values; ignore
-> > > > > those.)
-> > > > > 
-> > > > > Evidently, FS_NOCOW_FL already took 0x800000, but ext4.h was never
-> > > > > updated to note that the value was taken.  I think Ted might be inclined
-> > > > > to reserve the ondisk inode bit just in case ext4 ever does support copy
-> > > > > on write, though that's his call. :)
-> > > > 
-> > > > Seems like I should change this...  And I did not realize I was inherently
-> > > > changing a bit definition which was exposed to other FS's...
-> > > 
-> > > <nod> This whole thing is a mess, particularly now that we have two vfs
-> > > ioctls to set per-fs inode attributes, both of which were inherited from
-> > > other filesystems... :(
-> > >
-> > 
-> > Ok I've changed it.
-> > 
-> > > 
-> > > > > 
-> > > > > Long story short - can you use 0x1000000 for this instead, and add the
-> > > > > corresponding value to the uapi fs.h?  I guess that also means that we
-> > > > > can change FS_XFLAG_DAX (in the form of FS_DAX_FL in FSSETFLAGS) after
-> > > > > that.
-> > > > 
-> > > > :-/
-> > > > 
-> > > > Are there any potential users of FS_XFLAG_DAX now?
-> > > 
-> > > Yes, it's in the userspace ABI so we can't get rid of it.
-> > > 
-> > > (FWIW there are several flags that exist in both FS_XFLAG_* and FS_*_FL
-> > > form.)
-> > > 
-> > > > From what it looks like, changing FS_XFLAG_DAX to FS_DAX_FL would be pretty
-> > > > straight forward.  Just to be sure, looks like XFS converts the FS_[xxx]_FL to
-> > > > FS_XFLAGS_[xxx] in xfs_merge_ioc_xflags()?  But it does not look like all the
-> > > > FS_[xxx]_FL flags are converted.  Is is that XFS does not support those
-> > > > options?  Or is it depending on the VFS layer for some of them?
-> > > 
-> > > XFS doesn't support most of the FS_*_FL flags.
-> > 
-> > If FS_XFLAG_DAX needs to continue to be user visible I think we need to keep
-> > that flag and we should not expose the EXT4_DAX_FL flag...
-> > 
-> > I think that works for XFS.
-> > 
-> > But for ext4 it looks like EXT4_FL_XFLAG_VISIBLE was intended to be used for
-> > [GET|SET]XATTR where EXT4_FL_USER_VISIBLE was intended to for [GET|SET]FLAGS...
-> > But if I don't add EXT4_DAX_FL in EXT4_FL_XFLAG_VISIBLE my test fails.
-> > 
-> > I've been playing with the flags and looking at the code and I _thought_ the
-> > following patch would ensure that FS_XFLAG_DAX is the only one visible but for
-> > some reason FS_XFLAG_DAX can't be set with this patch.  I still need the
-> > EXT4_FL_USER_VISIBLE mask altered...  Which I believe would expose EXT4_DAX_FL
-> > directly as well.
-> > 
-> > Jan, Ted?  Any ideas?  Or should we expose EXT4_DAX_FL and FS_XFLAG_DAX in
-> > ext4?
-> 
-> Both flags should be exposed through their respective ioctl interfaces
-> in both filesystems.  That way we don't have to add even more verbiage
-> to the documentation to instruct userspace programmers on how to special
-> case ext4 and XFS for the same piece of functionality.
+BPF Type Format (BTF) is especially powerful for tracing tools like
+bcc and bpftrace. It allows tools to know about kernel data structures
+and layouts without having to parse headers. Headers are problematic
+because (1) they do not always come installed on production / user
+systems, (2) headers may not always describe the correct struct layout
+due to compile time flags, and (3) can be tricky to parse [0][1].
 
-Wouldn't it be more confusing for the user to have 2 different flags which do
-the same thing?
+As BTF becomes enabled on more systems [2], it becomes more desirable to
+have BTF contain everything a tracing tool needs. BTF overhead is quite
+minimal (~1.5MB) [3] so using BTF in lieu of parsing headers is very
+attractive.
 
-I would think that using FS_XFLAG_DAX _only_ (for both ext4 and xfs) would be
-easier without special cases?
+While BTF already contains almost everything tracing tools need (eg
+structs, enums, unions, function signatures, etc.), it is missing a lot
+of flags. The reason is that most flags are defined as preprocessor
+macros and are thus invisible to the compiler when it generates debug
+info.
 
-Ira
+However, there is a solution: we can convert macro flags into enums.
+This would be quite a complicated and long running task so I'm hoping
+this patch can start a discussion. I'm sure I haven't fully considered
+the implications so hopefully we can discuss it.
+
+This patch, when applied to a kernel with BTF, allows bpftrace to "see"
+the flags [4]:
+
+    # bpftrace --btf -e 'BEGIN { printf("%d\n", S_IRWXG); }'
+    Attaching 1 probe...
+    56
+    ^C
+
+[0]: https://github.com/iovisor/bcc/pull/2133
+[1]: https://github.com/iovisor/bcc/pull/2547
+[2]: https://www.spinics.net/linux/fedora/fedora-kernel/msg07746.html
+[3]: https://facebookmicrosites.github.io/bpf/blog/2018/11/14/btf-enhancement.html
+[4]: https://github.com/iovisor/bpftrace/pull/1274
+
+Signed-off-by: Daniel Xu <dxu@dxuuu.xyz>
+---
+ include/uapi/linux/stat.h | 99 +++++++++++++++++++++------------------
+ 1 file changed, 53 insertions(+), 46 deletions(-)
+
+diff --git a/include/uapi/linux/stat.h b/include/uapi/linux/stat.h
+index ad80a5c885d5..658446fc5a20 100644
+--- a/include/uapi/linux/stat.h
++++ b/include/uapi/linux/stat.h
+@@ -6,17 +6,19 @@
+ 
+ #if defined(__KERNEL__) || !defined(__GLIBC__) || (__GLIBC__ < 2)
+ 
+-#define S_IFMT  00170000
+-#define S_IFSOCK 0140000
+-#define S_IFLNK	 0120000
+-#define S_IFREG  0100000
+-#define S_IFBLK  0060000
+-#define S_IFDIR  0040000
+-#define S_IFCHR  0020000
+-#define S_IFIFO  0010000
+-#define S_ISUID  0004000
+-#define S_ISGID  0002000
+-#define S_ISVTX  0001000
++enum {
++	S_IFMT    = 00170000,
++	S_IFSOCK  = 0140000,
++	S_IFLNK	  = 0120000,
++	S_IFREG   = 0100000,
++	S_IFBLK   = 0060000,
++	S_IFDIR   = 0040000,
++	S_IFCHR   = 0020000,
++	S_IFIFO   = 0010000,
++	S_ISUID   = 0004000,
++	S_ISGID   = 0002000,
++	S_ISVTX   = 0001000,
++};
+ 
+ #define S_ISLNK(m)	(((m) & S_IFMT) == S_IFLNK)
+ #define S_ISREG(m)	(((m) & S_IFMT) == S_IFREG)
+@@ -26,20 +28,22 @@
+ #define S_ISFIFO(m)	(((m) & S_IFMT) == S_IFIFO)
+ #define S_ISSOCK(m)	(((m) & S_IFMT) == S_IFSOCK)
+ 
+-#define S_IRWXU 00700
+-#define S_IRUSR 00400
+-#define S_IWUSR 00200
+-#define S_IXUSR 00100
++enum {
++	S_IRWXU   = 00700,
++	S_IRUSR   = 00400,
++	S_IWUSR   = 00200,
++	S_IXUSR   = 00100,
+ 
+-#define S_IRWXG 00070
+-#define S_IRGRP 00040
+-#define S_IWGRP 00020
+-#define S_IXGRP 00010
++	S_IRWXG   = 00070,
++	S_IRGRP   = 00040,
++	S_IWGRP   = 00020,
++	S_IXGRP   = 00010,
+ 
+-#define S_IRWXO 00007
+-#define S_IROTH 00004
+-#define S_IWOTH 00002
+-#define S_IXOTH 00001
++	S_IRWXO   = 00007,
++	S_IROTH   = 00004,
++	S_IWOTH   = 00002,
++	S_IXOTH   = 00001,
++};
+ 
+ #endif
+ 
+@@ -135,21 +139,23 @@ struct statx {
+  * These bits should be set in the mask argument of statx() to request
+  * particular items when calling statx().
+  */
+-#define STATX_TYPE		0x00000001U	/* Want/got stx_mode & S_IFMT */
+-#define STATX_MODE		0x00000002U	/* Want/got stx_mode & ~S_IFMT */
+-#define STATX_NLINK		0x00000004U	/* Want/got stx_nlink */
+-#define STATX_UID		0x00000008U	/* Want/got stx_uid */
+-#define STATX_GID		0x00000010U	/* Want/got stx_gid */
+-#define STATX_ATIME		0x00000020U	/* Want/got stx_atime */
+-#define STATX_MTIME		0x00000040U	/* Want/got stx_mtime */
+-#define STATX_CTIME		0x00000080U	/* Want/got stx_ctime */
+-#define STATX_INO		0x00000100U	/* Want/got stx_ino */
+-#define STATX_SIZE		0x00000200U	/* Want/got stx_size */
+-#define STATX_BLOCKS		0x00000400U	/* Want/got stx_blocks */
+-#define STATX_BASIC_STATS	0x000007ffU	/* The stuff in the normal stat struct */
+-#define STATX_BTIME		0x00000800U	/* Want/got stx_btime */
+-#define STATX_ALL		0x00000fffU	/* All currently supported flags */
+-#define STATX__RESERVED		0x80000000U	/* Reserved for future struct statx expansion */
++enum {
++	STATX_TYPE		= 0x00000001U,	/* Want/got stx_mode & S_IFMT */
++	STATX_MODE		= 0x00000002U,	/* Want/got stx_mode & ~S_IFMT */
++	STATX_NLINK		= 0x00000004U,	/* Want/got stx_nlink */
++	STATX_UID		= 0x00000008U,	/* Want/got stx_uid */
++	STATX_GID		= 0x00000010U,	/* Want/got stx_gid */
++	STATX_ATIME		= 0x00000020U,	/* Want/got stx_atime */
++	STATX_MTIME		= 0x00000040U,	/* Want/got stx_mtime */
++	STATX_CTIME		= 0x00000080U,	/* Want/got stx_ctime */
++	STATX_INO		= 0x00000100U,	/* Want/got stx_ino */
++	STATX_SIZE		= 0x00000200U,	/* Want/got stx_size */
++	STATX_BLOCKS		= 0x00000400U,	/* Want/got stx_blocks */
++	STATX_BASIC_STATS	= 0x000007ffU,	/* The stuff in the normal stat struct */
++	STATX_BTIME		= 0x00000800U,	/* Want/got stx_btime */
++	STATX_ALL		= 0x00000fffU,	/* All currently supported flags */
++	STATX__RESERVED		= 0x80000000U,	/* Reserved for future struct statx expansion */
++};
+ 
+ /*
+  * Attributes to be found in stx_attributes and masked in stx_attributes_mask.
+@@ -162,13 +168,14 @@ struct statx {
+  * semantically.  Where possible, the numerical value is picked to correspond
+  * also.
+  */
+-#define STATX_ATTR_COMPRESSED		0x00000004 /* [I] File is compressed by the fs */
+-#define STATX_ATTR_IMMUTABLE		0x00000010 /* [I] File is marked immutable */
+-#define STATX_ATTR_APPEND		0x00000020 /* [I] File is append-only */
+-#define STATX_ATTR_NODUMP		0x00000040 /* [I] File is not to be dumped */
+-#define STATX_ATTR_ENCRYPTED		0x00000800 /* [I] File requires key to decrypt in fs */
+-#define STATX_ATTR_AUTOMOUNT		0x00001000 /* Dir: Automount trigger */
+-#define STATX_ATTR_VERITY		0x00100000 /* [I] Verity protected file */
+-
++enum {
++	STATX_ATTR_COMPRESSED		= 0x00000004, /* [I] File is compressed by the fs */
++	STATX_ATTR_IMMUTABLE		= 0x00000010, /* [I] File is marked immutable */
++	STATX_ATTR_APPEND		= 0x00000020, /* [I] File is append-only */
++	STATX_ATTR_NODUMP		= 0x00000040, /* [I] File is not to be dumped */
++	STATX_ATTR_ENCRYPTED		= 0x00000800, /* [I] File requires key to decrypt in fs */
++	STATX_ATTR_AUTOMOUNT		= 0x00001000, /* Dir: Automount trigger */
++	STATX_ATTR_VERITY		= 0x00100000, /* [I] Verity protected file */
++};
+ 
+ #endif /* _UAPI_LINUX_STAT_H */
+-- 
+2.25.2
 
