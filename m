@@ -2,79 +2,109 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBBADC3815B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 10:46:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E22C5C38A29
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 10:47:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B9C4A221EC
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 10:46:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C24BD221F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 10:47:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ohSZaYGO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730146AbgDQKqM (ORCPT
+        id S1729739AbgDQKrq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 06:46:12 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:36070 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729856AbgDQKp3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 06:45:29 -0400
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id A5516EDDB903E51E6C70;
-        Fri, 17 Apr 2020 18:45:26 +0800 (CST)
-Received: from localhost.localdomain (10.69.192.58) by
- DGGEMS411-HUB.china.huawei.com (10.3.19.211) with Microsoft SMTP Server id
- 14.3.487.0; Fri, 17 Apr 2020 18:45:18 +0800
-From:   John Garry <john.garry@huawei.com>
-To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
-        <jolsa@redhat.com>, <namhyung@kernel.org>, <will@kernel.org>
-CC:     <ak@linux.intel.com>, <linuxarm@huawei.com>,
-        <linux-kernel@vger.kernel.org>, <qiangqing.zhang@nxp.com>,
-        <irogers@google.com>, <robin.murphy@arm.com>,
-        <zhangshaokun@hisilicon.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        John Garry <john.garry@huawei.com>
-Subject: [RFC PATCH v2 01/13] perf parse-events: Fix comparison of evsel and leader pmu name
-Date:   Fri, 17 Apr 2020 18:41:12 +0800
-Message-ID: <1587120084-18990-2-git-send-email-john.garry@huawei.com>
-X-Mailer: git-send-email 2.8.1
-In-Reply-To: <1587120084-18990-1-git-send-email-john.garry@huawei.com>
-References: <1587120084-18990-1-git-send-email-john.garry@huawei.com>
+        Fri, 17 Apr 2020 06:47:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57346 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729301AbgDQKrq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Apr 2020 06:47:46 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD262C061A0C;
+        Fri, 17 Apr 2020 03:47:45 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id u65so896155pfb.4;
+        Fri, 17 Apr 2020 03:47:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=dDjT4OI5wAggtMEPQfLGg4TgWcxeq6e+1z/RZEK3k/Q=;
+        b=ohSZaYGOmNuNFEanszOuM7+luXQqfhRyGlZsZNWPDwh+0lJ2cN1jFLW8NxNFM65C93
+         L27TuGpU/q8RxsiQiELyiKgym5Ys84fGonBmwOWfwBOt9jfoCvxqTr/WPXsWUxTzvO3v
+         87J5qKT9NMi4efvgptr1D/EXTAfF1VWy2cVXDqxLMuz75nDkctFjizlgQ3C9xzjnzsXd
+         O2jW8wizVSw5RYLlqy7qbwQqvmUYoE9aAr9H3I1lv6+F1Jc0OYzyGHkr2bkDIPhvornr
+         mqalj6BI/de+uHfiLgOh8w7Xl56MMdszbAELAJhlrrR6ee+Kvrj2+Q+MDhAr52hy6wVz
+         qkMA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=dDjT4OI5wAggtMEPQfLGg4TgWcxeq6e+1z/RZEK3k/Q=;
+        b=qYCoSlxiTrnZKYogx3rpvYzf7tZoslHA03p8PXN+Z1IkRdi4+Kj5NL0Pk+xpU0X8JQ
+         QhbUaoquBQ9GriSk5S850CZRijYf8YXTvOsIq8OKfilq4f7xtMCFTQbkjY2sN62sytnf
+         mxZoaafdOOakDqIHOUSF2wmeHf+3RipuNfB1kzCGkkpOEXp9Fw4I8DR8j1aLldVVbyT8
+         FM0ECHvOaBJNOVu4RznR9N/GgxscC4WXrJG/eNyXG8rQPPqc1lb9t+3/n+LvP46ZzQQF
+         nwinAjbgBOvuAJLw6VYr7JdPfDwfQ2AmTB3VKCvlDVlCpAJ6GskgVdu22mSa4/RHbgTF
+         h1ag==
+X-Gm-Message-State: AGi0PuZQIhfRSMZo3i6c7RKJVaUOHeue87NWCsztPX1KuCDISDgWixuP
+        GRPCjW3bM+7UYAHcnaq08fZw3TUMJQbRqOy/cV8=
+X-Google-Smtp-Source: APiQypLwYX31r/2oriZVds06GsoIRDXLR2ni8jZ606fzcV0mK+e+rtloFjvizPTu/NLYB/tb4L3Ld/xkJyGUEAjW0BY=
+X-Received: by 2002:a63:1d4:: with SMTP id 203mr2349391pgb.74.1587120465482;
+ Fri, 17 Apr 2020 03:47:45 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.69.192.58]
-X-CFilter-Loop: Reflected
+References: <20200416205428.437503-1-alexandre.belloni@bootlin.com>
+ <20200416205428.437503-2-alexandre.belloni@bootlin.com> <CAHp75Vddt-UKkP+b8W2CDYjt5kzggwQ+gTjrieigeYhM=e4Tig@mail.gmail.com>
+In-Reply-To: <CAHp75Vddt-UKkP+b8W2CDYjt5kzggwQ+gTjrieigeYhM=e4Tig@mail.gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Fri, 17 Apr 2020 13:47:33 +0300
+Message-ID: <CAHp75VeUdj4kkGMaapZu2i96faxmdnhC4a4GF1UoGfSKAVtg6g@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] iio: adc: ti-ads8344: properly byte swap value
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Gregory CLEMENT <gregory.clement@bootlin.com>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since we now strdup() the pmu name for the event selector, use strcmp()
-instead of pointer equality for comparison.
+On Fri, Apr 17, 2020 at 1:44 PM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
+>
+> On Thu, Apr 16, 2020 at 11:55 PM Alexandre Belloni
+> <alexandre.belloni@bootlin.com> wrote:
+> >
+> > The first received byte is the MSB, followed by the LSB so the value needs
+> > to be byte swapped.
+> >
+> > Also, the ADC actually has a delay of one clock on the SPI bus. Read three
+> > bytes to get the last bit.
+> >
+>
+> Can you show example of what is read and what is expected to be a correct value?
+> Because it seems I have been reported with similar issue on other TI
+> ADC chip [1]. Perhaps we have to fix all of them?
+>
+> [1]: https://github.com/edison-fw/meta-intel-edison/issues/108
 
-Fixes: d4953f7ef1a2 ("perf parse-events: Fix 3 use after frees found with clang ASANutil/parse-events.c")
-Signed-off-by: John Garry <john.garry@huawei.com>
----
+Also, forgot to mention that TI ADC are 16 bit word, so, we need to
+read two u16 rather then bytes.
 
-I am not 100% sure that this is the right fix....
+Some configuration won't allow to do byte reads.
 
- tools/perf/util/parse-events.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> > Fixes: 8dd2d7c0fed7 ("iio: adc: Add driver for the TI ADS8344 A/DC chips")
+> > Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 
-diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-index 10107747b361..90ddade1ba23 100644
---- a/tools/perf/util/parse-events.c
-+++ b/tools/perf/util/parse-events.c
-@@ -1629,7 +1629,7 @@ parse_events__set_leader_for_uncore_aliase(char *name, struct list_head *list,
- 		 * event. That can be used to distinguish the leader from
- 		 * other members, even they have the same event name.
- 		 */
--		if ((leader != evsel) && (leader->pmu_name == evsel->pmu_name)) {
-+		if ((leader != evsel) && !strcmp(leader->pmu_name, evsel->pmu_name)) {
- 			is_leader = false;
- 			continue;
- 		}
 -- 
-2.16.4
-
+With Best Regards,
+Andy Shevchenko
