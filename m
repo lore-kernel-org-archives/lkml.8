@@ -2,415 +2,311 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0FD1C2D0EF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 16:03:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63352C2D0EF
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 16:04:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A650720771
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 16:03:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 404CA20771
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 16:04:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729696AbgDQQDe convert rfc822-to-8bit (ORCPT
+        id S1729730AbgDQQEw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 12:03:34 -0400
-Received: from mailoutvs55.siol.net ([185.57.226.246]:38517 "EHLO
-        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729310AbgDQQDe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 12:03:34 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.siol.net (Zimbra) with ESMTP id 85DC1524BF5;
-        Fri, 17 Apr 2020 18:03:30 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at psrvmta12.zcs-production.pri
-Received: from mail.siol.net ([127.0.0.1])
-        by localhost (psrvmta12.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id viEKrc35exMc; Fri, 17 Apr 2020 18:03:29 +0200 (CEST)
-Received: from mail.siol.net (localhost [127.0.0.1])
-        by mail.siol.net (Zimbra) with ESMTPS id B7CED524BF2;
-        Fri, 17 Apr 2020 18:03:29 +0200 (CEST)
-Received: from jernej-laptop.localnet (cpe-194-152-20-232.static.triera.net [194.152.20.232])
-        (Authenticated sender: jernej.skrabec@siol.net)
-        by mail.siol.net (Zimbra) with ESMTPA id ECF8E524BF5;
-        Fri, 17 Apr 2020 18:03:28 +0200 (CEST)
-From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@siol.net>
-To:     robh+dt@kernel.org, andrew@lunn.ch, f.fainelli@gmail.com,
-        Heiner Kallweit <hkallweit1@gmail.com>
-Cc:     mripard@kernel.org, wens@csie.org, lee.jones@linaro.org,
-        linux@armlinux.org.uk, davem@davemloft.net,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Subject: Re: [RFC PATCH 2/4] net: phy: Add support for AC200 EPHY
-Date:   Fri, 17 Apr 2020 18:03:28 +0200
-Message-ID: <3035405.oiGErgHkdL@jernej-laptop>
-In-Reply-To: <0340f85c-987f-900b-53c8-d29b4672a8fa@gmail.com>
-References: <20200416185758.1388148-1-jernej.skrabec@siol.net> <20200416185758.1388148-3-jernej.skrabec@siol.net> <0340f85c-987f-900b-53c8-d29b4672a8fa@gmail.com>
+        Fri, 17 Apr 2020 12:04:52 -0400
+Received: from foss.arm.com ([217.140.110.172]:53290 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729318AbgDQQEw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Apr 2020 12:04:52 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EDD38C14;
+        Fri, 17 Apr 2020 09:04:50 -0700 (PDT)
+Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F24263F73D;
+        Fri, 17 Apr 2020 09:04:48 -0700 (PDT)
+Date:   Fri, 17 Apr 2020 17:04:46 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Steven Price <steven.price@arm.com>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        David Hildenbrand <david@redhat.com>,
+        linux-kernel@vger.kernel.org,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Pan Zhang <zhangpan26@huawei.com>,
+        Hsin-Yi Wang <hsinyi@chromium.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        Steve Capper <steve.capper@arm.com>
+Subject: Re: [PATCH RESEND] arm64: Map page table of linear map readonly
+Message-ID: <20200417160446.GC9529@lakrids.cambridge.arm.com>
+References: <20200417152619.41680-1-steven.price@arm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200417152619.41680-1-steven.price@arm.com>
+User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dne četrtek, 16. april 2020 ob 22:18:52 CEST je Heiner Kallweit napisal(a):
-> On 16.04.2020 20:57, Jernej Skrabec wrote:
-> > AC200 MFD IC supports Fast Ethernet PHY. Add a driver for it.
-> > 
-> > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-> > ---
-> > 
-> >  drivers/net/phy/Kconfig  |   7 ++
-> >  drivers/net/phy/Makefile |   1 +
-> >  drivers/net/phy/ac200.c  | 206 +++++++++++++++++++++++++++++++++++++++
-> >  3 files changed, 214 insertions(+)
-> >  create mode 100644 drivers/net/phy/ac200.c
-> > 
-> > diff --git a/drivers/net/phy/Kconfig b/drivers/net/phy/Kconfig
-> > index 3fa33d27eeba..16af69f69eaf 100644
-> > --- a/drivers/net/phy/Kconfig
-> > +++ b/drivers/net/phy/Kconfig
-> > @@ -288,6 +288,13 @@ config ADIN_PHY
-> > 
-> >  	  - ADIN1300 - Robust,Industrial, Low Latency 10/100/1000 Gigabit
-> >  	  
-> >  	    Ethernet PHY
-> > 
-> > +config AC200_PHY
-> > +	tristate "AC200 EPHY"
-> > +	depends on NVMEM
-> > +	depends on OF
-> > +	help
-> > +	  Fast ethernet PHY as found in X-Powers AC200 multi-function 
-device.
-> > +
-> > 
-> >  config AMD_PHY
-> >  
-> >  	tristate "AMD PHYs"
-> >  	---help---
-> > 
-> > diff --git a/drivers/net/phy/Makefile b/drivers/net/phy/Makefile
-> > index 2f5c7093a65b..b0c5b91900fa 100644
-> > --- a/drivers/net/phy/Makefile
-> > +++ b/drivers/net/phy/Makefile
-> > @@ -53,6 +53,7 @@ obj-$(CONFIG_SFP)		+= sfp.o
-> > 
-> >  sfp-obj-$(CONFIG_SFP)		+= sfp-bus.o
-> >  obj-y				+= $(sfp-obj-y) $(sfp-obj-m)
-> > 
-> > +obj-$(CONFIG_AC200_PHY)		+= ac200.o
-> > 
-> >  obj-$(CONFIG_ADIN_PHY)		+= adin.o
-> >  obj-$(CONFIG_AMD_PHY)		+= amd.o
-> >  aquantia-objs			+= aquantia_main.o
-> > 
-> > diff --git a/drivers/net/phy/ac200.c b/drivers/net/phy/ac200.c
-> > new file mode 100644
-> > index 000000000000..3d7856ff8f91
-> > --- /dev/null
-> > +++ b/drivers/net/phy/ac200.c
-> > @@ -0,0 +1,206 @@
-> > +// SPDX-License-Identifier: GPL-2.0+
-> > +/**
-> > + * Driver for AC200 Ethernet PHY
-> > + *
-> > + * Copyright (c) 2020 Jernej Skrabec <jernej.skrabec@siol.net>
-> > + */
-> > +
-> > +#include <linux/kernel.h>
-> > +#include <linux/module.h>
-> > +#include <linux/mfd/ac200.h>
-> > +#include <linux/nvmem-consumer.h>
-> > +#include <linux/of.h>
-> > +#include <linux/phy.h>
-> > +#include <linux/platform_device.h>
-> > +
-> > +#define AC200_EPHY_ID			0x00441400
-> > +#define AC200_EPHY_ID_MASK		0x0ffffff0
-> > +
-> 
-> You could use PHY_ID_MATCH_MODEL() here.
+Hi Steven,
 
-Ok.
+On Fri, Apr 17, 2020 at 04:26:19PM +0100, Steven Price wrote:
+> It's fairly rare that linear mappings need to be updated, so to improve
+> security we can map the leaf page table entries as read-only, this makes
+> it harder for an attacker to modify the permissions of the linear
+> mappings, while the overhead is low because the linear mappings don't
+> need to be changed frequently. When they do need to be updated we can
+> use fixmaps to create a temporary alternative mapping to do the update.
+> 
+> Signed-off-by: Steven Price <steven.price@arm.com>
+> ---
+> Resending as I didn't receive any comments on my first posting[1].
+> Anyone have any views as to whether this is a good idea or not?
+
+TBH, I'm not too keen on this as the direction of travel seems to be
+that we're going to be messing with the linear map more often for things
+like non-coherent DMA (and potentially for carving out VMs etc), and
+this doesn't have a specific threat in mind.
+
+I do agree that minimizing the necessary permissions seems nice in
+abstract, but I'm not sure that the complexity it adds is worthwhile.
+I'm similarly not all that keen on the stuff we did for KSMA with the
+root of the page tables, but the bulk of that was nice cleanup
+regardless, and it was unconditional so we only had one behaviour to
+maintain.
+
+Thanks,
+Mark.
 
 > 
-> > +/* macros for system ephy control 0 register */
-> > +#define AC200_EPHY_RESET_INVALID	BIT(0)
-> > +#define AC200_EPHY_SYSCLK_GATING	BIT(1)
-> > +
-> > +/* macros for system ephy control 1 register */
-> > +#define AC200_EPHY_E_EPHY_MII_IO_EN	BIT(0)
-> > +#define AC200_EPHY_E_LNK_LED_IO_EN	BIT(1)
-> > +#define AC200_EPHY_E_SPD_LED_IO_EN	BIT(2)
-> > +#define AC200_EPHY_E_DPX_LED_IO_EN	BIT(3)
-> > +
-> > +/* macros for ephy control register */
-> > +#define AC200_EPHY_SHUTDOWN		BIT(0)
-> > +#define AC200_EPHY_LED_POL		BIT(1)
-> > +#define AC200_EPHY_CLK_SEL		BIT(2)
-> > +#define AC200_EPHY_ADDR(x)		(((x) & 0x1F) << 4)
-> > +#define AC200_EPHY_XMII_SEL		BIT(11)
-> > +#define AC200_EPHY_CALIB(x)		(((x) & 0xF) << 12)
-> > +
-> > +struct ac200_ephy_dev {
-> > +	struct phy_driver	*ephy;
+> [1] https://lore.kernel.org/linux-arm-kernel/20200306173217.44372-1-steven.price@arm.com/
 > 
-> Why embedding a pointer and not a struct phy_driver directly?
-> Then you could omit the separate allocation.
-
-Right.
-
+>  arch/arm64/Kconfig              |  9 ++++++++
+>  arch/arm64/include/asm/fixmap.h | 20 ++++++++++++++++-
+>  arch/arm64/mm/mmu.c             | 38 +++++++++++++++++++++++++++++++--
+>  arch/arm64/mm/pageattr.c        | 36 ++++++++++++++++++++++++++++++-
+>  4 files changed, 99 insertions(+), 4 deletions(-)
 > 
-> ephy is not the best naming. It may be read as a phy_device.
-> Better use phydrv.
-
-Ok.
-
+> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+> index 40fb05d96c60..138d8b50d894 100644
+> --- a/arch/arm64/Kconfig
+> +++ b/arch/arm64/Kconfig
+> @@ -1213,6 +1213,15 @@ config RODATA_FULL_DEFAULT_ENABLED
+>  	  This requires the linear region to be mapped down to pages,
+>  	  which may adversely affect performance in some cases.
+>  
+> +config LINEAR_PGTABLE_RO
+> +	bool "Apply r/o permissions to page tables of linear mapping"
+> +	help
+> +	  Apply read-only attributes to the page tables that make up the
+> +	  the linear mapping. This prevents the linear page tables from being
+> +	  inadvertently modified.
+> +
+> +	  This requires rodata=on (or RODATA_FULL_DEFAULT_ENABLED).
+> +
+>  config ARM64_SW_TTBR0_PAN
+>  	bool "Emulate Privileged Access Never using TTBR0_EL1 switching"
+>  	help
+> diff --git a/arch/arm64/include/asm/fixmap.h b/arch/arm64/include/asm/fixmap.h
+> index f987b8a8f325..55bf08151d73 100644
+> --- a/arch/arm64/include/asm/fixmap.h
+> +++ b/arch/arm64/include/asm/fixmap.h
+> @@ -67,6 +67,12 @@ enum fixed_addresses {
+>  	FIX_ENTRY_TRAMP_TEXT,
+>  #define TRAMP_VALIAS		(__fix_to_virt(FIX_ENTRY_TRAMP_TEXT))
+>  #endif /* CONFIG_UNMAP_KERNEL_AT_EL0 */
+> +
+> +#ifdef CONFIG_LINEAR_PGTABLE_RO
+> +	FIX_LINEAR_RO_BEGIN,
+> +	FIX_LINEAR_RO_END = FIX_LINEAR_RO_BEGIN + NR_CPUS - 1,
+> +#endif
+> +
+>  	__end_of_permanent_fixed_addresses,
+>  
+>  	/*
+> @@ -77,7 +83,15 @@ enum fixed_addresses {
+>  #define FIX_BTMAPS_SLOTS	7
+>  #define TOTAL_FIX_BTMAPS	(NR_FIX_BTMAPS * FIX_BTMAPS_SLOTS)
+>  
+> +#ifdef CONFIG_LINEAR_PGTABLE_RO
+> +	/*
+> +	 * Share the space with the LINEAR_RO area as during early boot, the
+> +	 * LINEAR_RO area isn't needed
+> +	 */
+> +	FIX_BTMAP_END = FIX_LINEAR_RO_BEGIN,
+> +#else
+>  	FIX_BTMAP_END = __end_of_permanent_fixed_addresses,
+> +#endif
+>  	FIX_BTMAP_BEGIN = FIX_BTMAP_END + TOTAL_FIX_BTMAPS - 1,
+>  
+>  	/*
+> @@ -89,9 +103,13 @@ enum fixed_addresses {
+>  	FIX_PUD,
+>  	FIX_PGD,
+>  
+> -	__end_of_fixed_addresses
+> +	___end_of_fixed_addresses
+>  };
+>  
+> +static const enum fixed_addresses __end_of_fixed_addresses =
+> +	___end_of_fixed_addresses > __end_of_permanent_fixed_addresses ?
+> +	___end_of_fixed_addresses : __end_of_permanent_fixed_addresses;
+> +
+>  #define FIXADDR_SIZE	(__end_of_permanent_fixed_addresses << PAGE_SHIFT)
+>  #define FIXADDR_START	(FIXADDR_TOP - FIXADDR_SIZE)
+>  
+> diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
+> index a374e4f51a62..4f9d14b584a5 100644
+> --- a/arch/arm64/mm/mmu.c
+> +++ b/arch/arm64/mm/mmu.c
+> @@ -21,6 +21,7 @@
+>  #include <linux/fs.h>
+>  #include <linux/io.h>
+>  #include <linux/mm.h>
+> +#include <linux/pagewalk.h>
+>  #include <linux/vmalloc.h>
+>  
+>  #include <asm/barrier.h>
+> @@ -456,6 +457,34 @@ void __init mark_linear_text_alias_ro(void)
+>  			    PAGE_KERNEL_RO);
+>  }
+>  
+> +#ifdef CONFIG_LINEAR_PGTABLE_RO
+> +static int __init mark_linear_pmd_ro(pmd_t *pmd, unsigned long addr,
+> +				     unsigned long next, struct mm_walk *walk)
+> +{
+> +	phys_addr_t pmd_phys = pte_offset_phys(pmd, 0);
+> +
+> +	__map_memblock(walk->mm->pgd, pmd_phys, pmd_phys + PAGE_SIZE,
+> +		       PAGE_KERNEL_RO, NO_BLOCK_MAPPINGS | NO_CONT_MAPPINGS);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct mm_walk_ops mark_linear_pg_ro_ops __initconst = {
+> +	.pmd_entry = mark_linear_pmd_ro,
+> +};
+> +
+> +/*
+> + * Remove the write permission from the leaf page tables of the linear map
+> + */
+> +void __init mark_linear_pg_ro(void)
+> +{
+> +	down_read(&init_mm.mmap_sem);
+> +	walk_page_range_novma(&init_mm, PAGE_OFFSET, PAGE_END,
+> +			      &mark_linear_pg_ro_ops, init_mm.pgd, NULL);
+> +	up_read(&init_mm.mmap_sem);
+> +}
+> +#endif
+> +
+>  static void __init map_mem(pgd_t *pgdp)
+>  {
+>  	phys_addr_t kernel_start = __pa_symbol(_text);
+> @@ -503,7 +532,7 @@ static void __init map_mem(pgd_t *pgdp)
+>  	 * so we should avoid them here.
+>  	 */
+>  	__map_memblock(pgdp, kernel_start, kernel_end,
+> -		       PAGE_KERNEL, NO_CONT_MAPPINGS);
+> +		       PAGE_KERNEL, flags | NO_CONT_MAPPINGS);
+>  	memblock_clear_nomap(kernel_start, kernel_end - kernel_start);
+>  
+>  #ifdef CONFIG_KEXEC_CORE
+> @@ -679,6 +708,11 @@ void __init paging_init(void)
+>  	cpu_replace_ttbr1(lm_alias(swapper_pg_dir));
+>  	init_mm.pgd = swapper_pg_dir;
+>  
+> +#ifdef CONFIG_LINEAR_PGTABLE_RO
+> +	if (rodata_full)
+> +		mark_linear_pg_ro();
+> +#endif
+> +
+>  	memblock_free(__pa_symbol(init_pg_dir),
+>  		      __pa_symbol(init_pg_end) - __pa_symbol(init_pg_dir));
+>  
+> @@ -1187,8 +1221,8 @@ void __set_fixmap(enum fixed_addresses idx,
+>  		set_pte(ptep, pfn_pte(phys >> PAGE_SHIFT, flags));
+>  	} else {
+>  		pte_clear(&init_mm, addr, ptep);
+> -		flush_tlb_kernel_range(addr, addr+PAGE_SIZE);
+>  	}
+> +	flush_tlb_kernel_range(addr, addr + PAGE_SIZE);
+>  }
+>  
+>  void *__init fixmap_remap_fdt(phys_addr_t dt_phys, int *size, pgprot_t prot)
+> diff --git a/arch/arm64/mm/pageattr.c b/arch/arm64/mm/pageattr.c
+> index 250c49008d73..52d34c06656c 100644
+> --- a/arch/arm64/mm/pageattr.c
+> +++ b/arch/arm64/mm/pageattr.c
+> @@ -7,6 +7,7 @@
+>  #include <linux/module.h>
+>  #include <linux/sched.h>
+>  #include <linux/vmalloc.h>
+> +#include <linux/uaccess.h>
+>  
+>  #include <asm/pgtable.h>
+>  #include <asm/set_memory.h>
+> @@ -19,6 +20,33 @@ struct page_change_data {
+>  
+>  bool rodata_full __ro_after_init = IS_ENABLED(CONFIG_RODATA_FULL_DEFAULT_ENABLED);
+>  
+> +#ifdef CONFIG_LINEAR_PGTABLE_RO
+> +static void set_linear_pte_range(pte_t *ptep, pte_t pte)
+> +{
+> +	unsigned long flags;
+> +	unsigned int idx;
+> +	unsigned long addr;
+> +
+> +	local_irq_save(flags);
+> +	preempt_disable();
+> +
+> +	/* During early boot we use FIX_PTE as we don't need a per-CPU slot */
+> +	if (system_state < SYSTEM_SCHEDULING)
+> +		idx = FIX_PTE;
+> +	else
+> +		idx = FIX_LINEAR_RO_BEGIN + smp_processor_id();
+> +
+> +	addr = virt_to_phys(ptep);
+> +	set_fixmap(idx, addr);
+> +	ptep = (pte_t *)(__fix_to_virt(idx) + (addr & ~PAGE_MASK));
+> +	set_pte(ptep, pte);
+> +	clear_fixmap(idx);
+> +
+> +	preempt_enable();
+> +	local_irq_restore(flags);
+> +}
+> +#endif
+> +
+>  static int change_page_range(pte_t *ptep, unsigned long addr, void *data)
+>  {
+>  	struct page_change_data *cdata = data;
+> @@ -27,7 +55,13 @@ static int change_page_range(pte_t *ptep, unsigned long addr, void *data)
+>  	pte = clear_pte_bit(pte, cdata->clear_mask);
+>  	pte = set_pte_bit(pte, cdata->set_mask);
+>  
+> -	set_pte(ptep, pte);
+> +#ifdef CONFIG_LINEAR_PGTABLE_RO
+> +	if (addr >= PAGE_OFFSET)
+> +		set_linear_pte_range(ptep, pte);
+> +	else
+> +#endif
+> +		set_pte(ptep, pte);
+> +
+>  	return 0;
+>  }
+>  
+> -- 
+> 2.20.1
 > 
-> > +	struct regmap		*regmap;
-> > +};
-> > +
-> > +static char *ac200_phy_name = "AC200 EPHY";
-> > +
 > 
-> Why not using the name directly in the assignment?
-
-phy_driver->name is pointer. Wouldn't that mean that string is allocated on 
-stack and next time pointer is used, it will return garbage?
-
-> And better naming: "AC200 Fast Ethernet"
-
-Ok.
-
-> 
-> > +static int ac200_ephy_config_init(struct phy_device *phydev)
-> > +{
-> > +	const struct ac200_ephy_dev *priv = phydev->drv->driver_data;
-> > +	unsigned int value;
-> > +	int ret;
-> > +
-> > +	phy_write(phydev, 0x1f, 0x0100);	/* Switch to Page 1 */
-> > +	phy_write(phydev, 0x12, 0x4824);	/* Disable APS */
-> > +
-> > +	phy_write(phydev, 0x1f, 0x0200);	/* Switch to Page 2 */
-> > +	phy_write(phydev, 0x18, 0x0000);	/* PHYAFE TRX optimization */
-> > +
-> > +	phy_write(phydev, 0x1f, 0x0600);	/* Switch to Page 6 */
-> > +	phy_write(phydev, 0x14, 0x708f);	/* PHYAFE TX optimization */
-> > +	phy_write(phydev, 0x13, 0xF000);	/* PHYAFE RX optimization */
-> > +	phy_write(phydev, 0x15, 0x1530);
-> > +
-> > +	phy_write(phydev, 0x1f, 0x0800);	/* Switch to Page 6 */
-> > +	phy_write(phydev, 0x18, 0x00bc);	/* PHYAFE TRX optimization */
-> > +
-> > +	phy_write(phydev, 0x1f, 0x0100);	/* switch to page 1 */
-> > +	phy_clear_bits(phydev, 0x17, BIT(3));	/* disable intelligent 
-IEEE */
-> > +
-> > +	/* next two blocks disable 802.3az IEEE */
-> > +	phy_write(phydev, 0x1f, 0x0200);	/* switch to page 2 */
-> > +	phy_write(phydev, 0x18, 0x0000);
-> > +
-> > +	phy_write(phydev, 0x1f, 0x0000);	/* switch to page 0 */
-> > +	phy_clear_bits_mmd(phydev, 0x7, 0x3c, BIT(1));
-> 
-> Better use the following:
-> phy_write_mmd(phydev, MDIO_MMD_AN, MDIO_AN_EEE_ADV, 0x0000);
-> It makes clear that you disable advertising EEE completely.
-
-Ok.
-
-> 
-> > +
-> > +	if (phydev->interface == PHY_INTERFACE_MODE_RMII)
-> > +		value = AC200_EPHY_XMII_SEL;
-> > +	else
-> > +		value = 0;
-> > +
-> > +	ret = regmap_update_bits(priv->regmap, AC200_EPHY_CTL,
-> > +				 AC200_EPHY_XMII_SEL, value);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> 
-> I had a brief look at the spec, and it's not fully clear
-> to me what this register setting does. Does it affect the
-> MAC side and/or the PHY side?
-
-It's my understanding that it selects interface mode on PHY. Besides datasheet 
-mentioned in cover letter, BSP drivers (one for MFD and one for PHY) are the 
-only other source of information. BSP PHY driver is located here:
-https://github.com/Allwinner-Homlet/H6-BSP4.9-linux/blob/master/drivers/net/
-phy/sunxi-ephy.c
-
-> If it affects the PHY side, then I'd expect that the chip
-> has to talk to the PHY via the MDIO bus. Means there should
-> be a PHY register for setting MII vs. RMII.
-> In this case the setup could be very much simplified.
-> Then the PHY driver wouldn't have to be embedded in the
-> platform driver.
-
-Actually, PHY has to be configured first through I2C and then through MDIO. I2C 
-is used to enable it (power it up), configure LED polarity, set PHY address, 
-write calibration value stored elsewhere.
-
-Based on all available documentation I have (code and datasheet), this I2C 
-register is the only way to select MII or RMII mode.
-
-> 
-> > +	/* FIXME: This is H6 specific */
-> > +	phy_set_bits(phydev, 0x13, BIT(12));
-> > +
-> 
-> This seems to indicate that the same PHY is used in a slightly
-> different version with other Hx models. Do they use different
-> PHY ID's?
-
-Situation is a bit complicated. Same PHY, at least with same PHY ID, is used 
-in different ways.
-1. as part of standalone AC200 MFD IC
-2. as part of AC200 wafer copackaged with H6 SoC wafer in same package. This 
-in theory shouldn't be any different than standalone IC, but it apparently is, 
-based on the BSP driver code.
-3. integrated directly in SoCs like H3, H5 and V3s. There is no I2C access to 
-configuration register. Instead, it's memory mapped and slightly different.
-
-In all cases PHY ID is same, just glue logic is different.
-
-I asked Allwinner if above setting is really necessary for H6 and what it 
-does, but I didn't get any useful answer back.
-
-So maybe another compatible is needed for H6.
-
-Best regards,
-Jernej
-
-> 
-> > +	return 0;
-> > +}
-> > +
-> > +static int ac200_ephy_probe(struct platform_device *pdev)
-> > +{
-> > +	struct ac200_dev *ac200 = dev_get_drvdata(pdev->dev.parent);
-> > +	struct device *dev = &pdev->dev;
-> > +	struct ac200_ephy_dev *priv;
-> > +	struct nvmem_cell *calcell;
-> > +	struct phy_driver *ephy;
-> > +	u16 *caldata, calib;
-> > +	size_t callen;
-> > +	int ret;
-> > +
-> > +	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-> > +	if (!priv)
-> > +		return -ENOMEM;
-> > +
-> > +	ephy = devm_kzalloc(dev, sizeof(*ephy), GFP_KERNEL);
-> > +	if (!ephy)
-> > +		return -ENOMEM;
-> > +
-> > +	calcell = devm_nvmem_cell_get(dev, "calibration");
-> > +	if (IS_ERR(calcell)) {
-> > +		dev_err(dev, "Unable to find calibration data!\n");
-> > +		return PTR_ERR(calcell);
-> > +	}
-> > +
-> > +	caldata = nvmem_cell_read(calcell, &callen);
-> > +	if (IS_ERR(caldata)) {
-> > +		dev_err(dev, "Unable to read calibration data!\n");
-> > +		return PTR_ERR(caldata);
-> > +	}
-> > +
-> > +	if (callen != 2) {
-> > +		dev_err(dev, "Calibration data has wrong length: 2 != 
-%zu\n",
-> > +			callen);
-> > +		kfree(caldata);
-> > +		return -EINVAL;
-> > +	}
-> > +
-> > +	calib = *caldata + 3;
-> > +	kfree(caldata);
-> > +
-> > +	ephy->phy_id = AC200_EPHY_ID;
-> > +	ephy->phy_id_mask = AC200_EPHY_ID_MASK;
-> > +	ephy->name = ac200_phy_name;
-> > +	ephy->driver_data = priv;
-> > +	ephy->soft_reset = genphy_soft_reset;
-> > +	ephy->config_init = ac200_ephy_config_init;
-> > +	ephy->suspend = genphy_suspend;
-> > +	ephy->resume = genphy_resume;
-> > +
-> > +	priv->ephy = ephy;
-> > +	priv->regmap = ac200->regmap;
-> > +	platform_set_drvdata(pdev, priv);
-> > +
-> > +	ret = regmap_write(ac200->regmap, AC200_SYS_EPHY_CTL0,
-> > +			   AC200_EPHY_RESET_INVALID |
-> > +			   AC200_EPHY_SYSCLK_GATING);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	ret = regmap_write(ac200->regmap, AC200_SYS_EPHY_CTL1,
-> > +			   AC200_EPHY_E_EPHY_MII_IO_EN |
-> > +			   AC200_EPHY_E_LNK_LED_IO_EN |
-> > +			   AC200_EPHY_E_SPD_LED_IO_EN |
-> > +			   AC200_EPHY_E_DPX_LED_IO_EN);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	ret = regmap_write(ac200->regmap, AC200_EPHY_CTL,
-> > +			   AC200_EPHY_LED_POL |
-> > +			   AC200_EPHY_CLK_SEL |
-> > +			   AC200_EPHY_ADDR(1) |
-> > +			   AC200_EPHY_CALIB(calib));
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	ret = phy_driver_register(priv->ephy, THIS_MODULE);
-> > +	if (ret) {
-> > +		dev_err(dev, "Unable to register phy\n");
-> > +		return ret;
-> > +	}
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static int ac200_ephy_remove(struct platform_device *pdev)
-> > +{
-> > +	struct ac200_ephy_dev *priv = platform_get_drvdata(pdev);
-> > +
-> > +	phy_driver_unregister(priv->ephy);
-> > +
-> > +	regmap_write(priv->regmap, AC200_EPHY_CTL, AC200_EPHY_SHUTDOWN);
-> > +	regmap_write(priv->regmap, AC200_SYS_EPHY_CTL1, 0);
-> > +	regmap_write(priv->regmap, AC200_SYS_EPHY_CTL0, 0);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static const struct of_device_id ac200_ephy_match[] = {
-> > +	{ .compatible = "x-powers,ac200-ephy" },
-> > +	{ /* sentinel */ }
-> > +};
-> > +MODULE_DEVICE_TABLE(of, ac200_ephy_match);
-> > +
-> > +static struct platform_driver ac200_ephy_driver = {
-> > +	.probe		= ac200_ephy_probe,
-> > +	.remove		= ac200_ephy_remove,
-> > +	.driver		= {
-> > +		.name		= "ac200-ephy",
-> > +		.of_match_table	= ac200_ephy_match,
-> > +	},
-> > +};
-> > +module_platform_driver(ac200_ephy_driver);
-> > +
-> > +MODULE_AUTHOR("Jernej Skrabec <jernej.skrabec@siol.net>");
-> > +MODULE_DESCRIPTION("AC200 Ethernet PHY driver");
-> > +MODULE_LICENSE("GPL");
-
-
-
-
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
