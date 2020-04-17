@@ -2,222 +2,154 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37007C352BE
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 13:48:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C008C2D0EF
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 13:49:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 10D9720780
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 13:48:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18E242087E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 13:49:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="kyP8zVi6"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="WDLt3SaP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730714AbgDQNsV (ORCPT
+        id S1730750AbgDQNt2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 09:48:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57012 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730625AbgDQNsU (ORCPT
+        Fri, 17 Apr 2020 09:49:28 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:36358 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730731AbgDQNt1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 09:48:20 -0400
-Received: from mail-qv1-xf42.google.com (mail-qv1-xf42.google.com [IPv6:2607:f8b0:4864:20::f42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52409C061A0C
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 06:48:18 -0700 (PDT)
-Received: by mail-qv1-xf42.google.com with SMTP id p13so863707qvt.12
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 06:48:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=op4dPjwrD9QDYZwBa3JIN9ahH57aXRQ+t3CflVy3cr8=;
-        b=kyP8zVi6dK+UN06S/0vCyZbk6Wtw/t/ZTqGvDTUz3If10pQdSdOZd9AowuRmbjJknz
-         I4JKNNtQkvmO9a/mTLcoipilUCUNDBOz3EFrwUh8mcd7d9nuXcWNWHjFCN/7mEQ0cIt5
-         pdOxvmMJdeyBjbMlKDS8iK2PYVhBFFW7+DbhLghYbb49krZFE3TyZzvh/rDDSC5PofxS
-         j6CQR1ePXr8j1TJ6skaDb117FUQWVlIwJrCj38t/j2V+1P75J5VnmJEx046X8rky2hk2
-         jzCRSd+EQ0uOFgVWxqSiky3Gxwkdtk9AhjQPsHfWnbIDhFeAF21kWGstZDUTwlqAZL9g
-         eAQg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=op4dPjwrD9QDYZwBa3JIN9ahH57aXRQ+t3CflVy3cr8=;
-        b=qyBnwhc2d0F7v2VkCK+8eBrhWUGtRs7ASO2kz45IfcO/nDdomyPM0NzY3KpdMdh9iV
-         /z4vdtkrq6yuJAnoPvbdUkiayliz/ppplOkbtJWGRyIjsCPvJT+Kzk53lGtJ+vnZeDaH
-         2RjtZlAWIzF8Rgm3QzQfOU2ivPu4mfv+YOuNv3xbxTAsu+zAosfSL7jY32ZyP95TBPJ+
-         XXvWrhm8euI8t5Vfd+RBJ/IqG+9BnrIxoidTfm11et0rekc2lyjpPvZoEiMYoPb7dtY+
-         zzn3Gah8OxqkQ8OYD/mHRkLns5a8+pUx0MQYOSbIQXvwndEunq/6zV3Ds+uB6eXE2uvP
-         e0qg==
-X-Gm-Message-State: AGi0Pua4F0qGslYaXl6BJKQ6aFR6Zb0sf8Xs+oomdPOAAoWgS4jvauyE
-        9ZiGY4hrhJdLadsGkOfkvMXB3A==
-X-Google-Smtp-Source: APiQypLvhGvSfzUDQrEFAvt/WCBHmAki93uc2vBo7AYzztYvN6JLCSt89dSJ9/9/yyw6CrUivTJjGA==
-X-Received: by 2002:ad4:4f01:: with SMTP id fb1mr2915039qvb.162.1587131297274;
-        Fri, 17 Apr 2020 06:48:17 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
-        by smtp.gmail.com with ESMTPSA id f68sm16922485qtb.19.2020.04.17.06.48.16
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 17 Apr 2020 06:48:16 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1jPRLs-0008VR-5o; Fri, 17 Apr 2020 10:48:16 -0300
-Date:   Fri, 17 Apr 2020 10:48:16 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     g@ziepe.ca, Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        selvin.xavier@broadcom.com, devesh.sharma@broadcom.com,
-        dledford@redhat.com, leon@kernel.org, colin.king@canonical.com,
-        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] RDMA/ocrdma: Fix an off-by-one issue in 'ocrdma_add_stat'
-Message-ID: <20200417134816.GD26002@ziepe.ca>
-References: <20200328073040.24429-1-christophe.jaillet@wanadoo.fr>
- <20200414183441.GA28870@ziepe.ca>
- <20200416130847.GP1163@kadam>
- <20200416184754.GZ5100@ziepe.ca>
- <20200417112624.GS1163@kadam>
- <20200417122542.GC5100@ziepe.ca>
- <20200417130955.GU1163@kadam>
+        Fri, 17 Apr 2020 09:49:27 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 03HDnQJf064011;
+        Fri, 17 Apr 2020 08:49:26 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1587131366;
+        bh=KmKWZbZ++U2YoDUvAF4xgjoYK/bNPGnbSjD/7SOQcxc=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=WDLt3SaPQOr85mDKx/bGSOySyNCbdxeALFwqQH1EoLFdfU7LSPaeJwmnKVaS2yROf
+         pTo6FVpaR2/xMU4BXkpC/H70O7N+Lr9Zt22BPT8v8vEjRUrmQdzgbtxyOEliceFxy+
+         KtD9KkLaxPVu2uYSP2UExT/4EqEqxfpiG1p0s01Y=
+Received: from DLEE102.ent.ti.com (dlee102.ent.ti.com [157.170.170.32])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 03HDnQdq055914
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 17 Apr 2020 08:49:26 -0500
+Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 17
+ Apr 2020 08:49:26 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE110.ent.ti.com
+ (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Fri, 17 Apr 2020 08:49:26 -0500
+Received: from [10.250.48.148] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03HDnPXh119310;
+        Fri, 17 Apr 2020 08:49:26 -0500
+Subject: Re: [PATCH v2 6/7] remoteproc: Split rproc_ops allocation from
+ rproc_alloc()
+To:     Mathieu Poirier <mathieu.poirier@linaro.org>,
+        <bjorn.andersson@linaro.org>, <ohad@wizery.com>
+CC:     <elder@linaro.org>, <Markus.Elfring@web.de>,
+        <linux-remoteproc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20200415204858.2448-1-mathieu.poirier@linaro.org>
+ <20200415204858.2448-7-mathieu.poirier@linaro.org>
+From:   Suman Anna <s-anna@ti.com>
+Message-ID: <61497230-40ec-ffc6-3cc0-e5cb754ac859@ti.com>
+Date:   Fri, 17 Apr 2020 08:49:25 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200417130955.GU1163@kadam>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200415204858.2448-7-mathieu.poirier@linaro.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 17, 2020 at 04:09:55PM +0300, Dan Carpenter wrote:
-> On Fri, Apr 17, 2020 at 09:25:42AM -0300, Jason Gunthorpe wrote:
-> > On Fri, Apr 17, 2020 at 02:26:24PM +0300, Dan Carpenter wrote:
-> > > On Thu, Apr 16, 2020 at 03:47:54PM -0300, Jason Gunthorpe wrote:
-> > > > On Thu, Apr 16, 2020 at 04:08:47PM +0300, Dan Carpenter wrote:
-> > > > > On Tue, Apr 14, 2020 at 03:34:41PM -0300, Jason Gunthorpe wrote:
-> > > > > > The memcpy is still kind of silly right? What about this:
-> > > > > > 
-> > > > > > static int ocrdma_add_stat(char *start, char *pcur, char *name, u64 count)
-> > > > > > {
-> > > > > > 	size_t len = (start + OCRDMA_MAX_DBGFS_MEM) - pcur;
-> > > > > > 	int cpy_len;
-> > > > > > 
-> > > > > > 	cpy_len = snprintf(pcur, len, "%s: %llu\n", name, count);
-> > > > > > 	if (cpy_len >= len || cpy_len < 0) {
-> > > > > 
-> > > > > The kernel version of snprintf() doesn't and will never return
-> > > > > negatives.  It would cause a huge security headache if it started
-> > > > > returning negatives.
-> > > > 
-> > > > Begs the question why it returns an int then :)
-> > > 
-> > > People should use "int" as their default type.  "int i;".  It means
-> > > "This is a normal number.  Nothing special about it.  It's not too high.
-> > > It's not defined by hardware requirements."  Other types call attention
-> > > to themselves, but int is the humble datatype.
-> > 
-> > No, I strongly disagree with this, it is one of my pet peeves to see
-> > 'int' being used for data which is known to be only ever be positive
-> > just to save typing 'unsigned'.
-> > 
-> > Not only is it confusing, but allowing signed values has caused tricky
-> > security bugs, unfortuntely.
+On 4/15/20 3:48 PM, Mathieu Poirier wrote:
+> Make the rproc_ops allocation a function on its own in an effort
+> to clean up function rproc_alloc().
 > 
-> I have the opposite pet peeve.
+> Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+> Reviewed-by: Alex Elder <elder@linaro.org>
+> ---
+>   drivers/remoteproc/remoteproc_core.c | 32 +++++++++++++++++-----------
+>   1 file changed, 20 insertions(+), 12 deletions(-)
 > 
-> I complain about it a lot.  It pains me every time I see a "u32 i;".  I
-> think there is a static analysis warning for using signed which
-> encourages people to write code like that.  That warning really upsets
-> me for two reasons 1) The static checker should know the range of values
-> but it doesn't so it makes me sad to see inferior technology being used
-> when it should deleted instead.  2)  I have never seen this warning
-> prevent a real life bug.
+> diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
+> index 0bfa6998705d..a5a0ceb86b3f 100644
+> --- a/drivers/remoteproc/remoteproc_core.c
+> +++ b/drivers/remoteproc/remoteproc_core.c
+> @@ -2001,6 +2001,25 @@ static int rproc_alloc_firmware(struct rproc *rproc,
+>   	return 0;
+>   }
+>   
+> +static int rproc_alloc_ops(struct rproc *rproc, const struct rproc_ops *ops)
+> +{
+> +	rproc->ops = kmemdup(ops, sizeof(*ops), GFP_KERNEL);
+> +	if (!rproc->ops)
+> +		return -ENOMEM;
+> +
+> +	/* Default to ELF loader if no load function is specified */
+> +	if (!rproc->ops->load) {
+> +		rproc->ops->load = rproc_elf_load_segments;
+> +		rproc->ops->parse_fw = rproc_elf_load_rsc_table;
+> +		rproc->ops->find_loaded_rsc_table =
+> +						rproc_elf_find_loaded_rsc_table;
+> +		rproc->ops->sanity_check = rproc_elf_sanity_check;
 
-I have.. But I'm having trouble finding it in the git torrent..
+So, the conditional check on sanity check is dropped and the callback 
+switched here without the changelog reflecting anything why. You should 
+just rebase this patch on top of Clement's patch [1] that removes the 
+conditional flag, and also usage from the remoteproc platform drivers.
 
-Maybe this one:
+regards
+Suman
 
-commit c2b37f76485f073f020e60b5954b6dc4e55f693c
-Author: Boris Pismenny <borisp@mellanox.com>
-Date:   Thu Mar 8 15:51:41 2018 +0200
+[1] https://patchwork.kernel.org/patch/11462013/
 
-    IB/mlx5: Fix integer overflows in mlx5_ib_create_srq
 
-> You would need to hit a series of fairly rare events for this
-> warning to be useful and I have never seen that happen yet.
-
-IIRC the case was the uapi rightly used u32, which was then wrongly
-implicitly cast to some internal function,  accepting int, which then
-did something sort of like
-
-  int len
-  if (len >= sizeof(a))
-       return -EINVAL
-  copy_from_user(a, b, len)
-
-Which explodes when a negative len is implicitly cast to unsigned long
-to call copy_from_user.
-
-> The most common bug caused by unsigned variables is that it breaks the
-> kernel error handling 
-
-You mean returning -ERRNO? Sure, those should be int, but that is a
-case where a value actually can take on -ve numbers, so it really
-should be signed.
-
-> but there are other problems as well.  There was an example a little
-> while back where someone "fixed" a security problem by making things
-> unsigned.
+> +		rproc->ops->get_boot_addr = rproc_elf_get_boot_addr;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+>   /**
+>    * rproc_alloc() - allocate a remote processor handle
+>    * @dev: the underlying device
+> @@ -2040,8 +2059,7 @@ struct rproc *rproc_alloc(struct device *dev, const char *name,
+>   	if (rproc_alloc_firmware(rproc, name, firmware))
+>   		goto free_rproc;
+>   
+> -	rproc->ops = kmemdup(ops, sizeof(*ops), GFP_KERNEL);
+> -	if (!rproc->ops)
+> +	if (rproc_alloc_ops(rproc, ops))
+>   		goto free_firmware;
+>   
+>   	rproc->name = name;
+> @@ -2068,16 +2086,6 @@ struct rproc *rproc_alloc(struct device *dev, const char *name,
+>   
+>   	atomic_set(&rproc->power, 0);
+>   
+> -	/* Default to ELF loader if no load function is specified */
+> -	if (!rproc->ops->load) {
+> -		rproc->ops->load = rproc_elf_load_segments;
+> -		rproc->ops->parse_fw = rproc_elf_load_rsc_table;
+> -		rproc->ops->find_loaded_rsc_table = rproc_elf_find_loaded_rsc_table;
+> -		if (!rproc->ops->sanity_check)
+> -			rproc->ops->sanity_check = rproc_elf32_sanity_check;
+> -		rproc->ops->get_boot_addr = rproc_elf_get_boot_addr;
+> -	}
+> -
+>   	mutex_init(&rproc->lock);
+>   
+>   	INIT_LIST_HEAD(&rproc->carveouts);
 > 
-> 	for (i = 0; i < user_value; i++) {
 
-This is clearly missing input validation on user_value, the only
-reason int helps at all here is pure dumb luck for this one case.
-
-If it had used something like copy_to_user it would be broken.
-
-> Originally if user_value was an int then the loop would have been a
-> harmless no-op but now it was a large positive value so it lead to
-> memory corruption.  Another example is:
-> 
-> 	for (i = 0; i < user_value - 1; i++) {
-
-Again, code like this is simply missing required input validation. The
-for loop works with int by dumb luck, and this would be broken if it
-called copy_from_user.
- 
-> From my experience with static analysis and security audits, making
-> things unsigned en mass causes more security bugs.  There are definitely
-> times where making variables unsigned is correct for security reasons
-> like when you are taking a size from userspace.
-
-Any code that casts a unsigned value from userspace to a signed value
-in the kernel is deeply suspect, IMHO.
-
-If you get the in habit of using types properly then it is less likely
-this bug-class will happen. If your habit is to just always use 'int'
-for everything then you *will* accidently cause a user value to be
-implicitly casted.
-
-> Complicated types call attention to themselves and they hurt
-> readability.  You sometimes *need* other datatypes and you want those to
-> stand out but if everything is special then nothing is special.
-
-If the programmer knows the value is never negative it should be
-recorded in the code, otherwise it is hard to tell if there are
-problems or not.
-
-Is this code wrong?
-
- int array_idx;
- ...
- if (array_idx < ARRAY_SIZE(foo))
-    return foo[array_idx];
- 
-Since 'int' was used the entire code flow has to be studied to
-determine if 'array_idx' is ever accidently set to negative. If it is
-unsigned I can tell you there is no problem right away.
-
-I do agree with you that people blindly changing things due to
-security scanners is not good..
-
-Jason
