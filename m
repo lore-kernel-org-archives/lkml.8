@@ -2,67 +2,146 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A299FC2D0EF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 12:57:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFA60C2D0EF
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 12:57:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8AFE32137B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 12:57:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B86FD2137B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 12:57:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="CSeYgX9X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729893AbgDQM5Q (ORCPT
+        id S1729949AbgDQM5j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 08:57:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49106 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729034AbgDQM5Q (ORCPT
+        Fri, 17 Apr 2020 08:57:39 -0400
+Received: from esa6.microchip.iphmx.com ([216.71.154.253]:48125 "EHLO
+        esa6.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729034AbgDQM5j (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 08:57:16 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E586C061A0C
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 05:57:16 -0700 (PDT)
-Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jPQYI-0008LQ-T0; Fri, 17 Apr 2020 14:57:03 +0200
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 871A1104096; Fri, 17 Apr 2020 14:57:02 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Balbir Singh <sblbir@amazon.com>, linux-kernel@vger.kernel.org
-Cc:     jpoimboe@redhat.com, tony.luck@intel.com, keescook@chromium.org,
-        benh@kernel.crashing.org, x86@kernel.org, dave.hansen@intel.com,
-        Balbir Singh <sblbir@amazon.com>
-Subject: Re: [PATCH v3 1/5] arch/x86/kvm: Refactor l1d flush lifecycle management
-In-Reply-To: <20200408090229.16467-2-sblbir@amazon.com>
-References: <20200408090229.16467-1-sblbir@amazon.com> <20200408090229.16467-2-sblbir@amazon.com>
-Date:   Fri, 17 Apr 2020 14:57:02 +0200
-Message-ID: <871rommfs1.fsf@nanos.tec.linutronix.de>
+        Fri, 17 Apr 2020 08:57:39 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1587128258; x=1618664258;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=Ew4XnWdKx8Yo/vg5CuEUoLqg3uZ1q1ugduFZ1gg4Zo0=;
+  b=CSeYgX9Xl01m84dldnWoCkbNrv+QjuKPi9xOZYkGdMDXGmjW3iGKMIjS
+   L0mNzWl0+gxE/CiE6zHlAkkXE4XttJOOtDO2lqRL/EBXV/bk2WV5FcPZ1
+   OPwCTjioMyFI6xUVnSLm3620ELmfonDDK8vLMSu5uM52wTadHiq5jvPda
+   UvmZ/d7pKKAYUbb3zG6cC3fkJwY0+tOuhafeOLltMmuC878aLAv/yujkQ
+   zjoLQfPFKolQROXyLvNYuAoYYppxiAkHev/DovV1TyzTXKt2wPkNe+IkD
+   9Iai9ZskD67hc96T4egCT8fPjX6HCxcH50vh2kF/0eX80bNW3glBGRxv2
+   w==;
+IronPort-SDR: 0mHhU6xW5jYa0gqmqanFE4tSK3UAVzOjw5acDrYaN7LBhfWb2ovNjS/kDasbC4xXs5LIKWQPh7
+ 8VSh2K2JUOckp2khKniaon5rvj0lFIvNq5rOIALJkLXowIIMQo/lZPgHk/IbxioFj2GCqVHYfj
+ llBltPxhXq8/XnDfoeXkdyfMjQJK0Mwbl7jVzwCjx/rUvLttPnllJTXPH0C71xPls41rQ12wz5
+ v4nt8j/10W4Aq2dXuHy4RIPGYSd4HOHEm2rez52b+GOKYzJeHFon/tyBOShuntwjlA+gA+FipR
+ 3Jc=
+X-IronPort-AV: E=Sophos;i="5.72,395,1580799600"; 
+   d="scan'208";a="9536051"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 17 Apr 2020 05:57:38 -0700
+Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Fri, 17 Apr 2020 05:57:37 -0700
+Received: from [10.205.29.56] (10.10.115.15) by chn-vm-ex02.mchp-main.com
+ (10.10.85.144) with Microsoft SMTP Server id 15.1.1713.5 via Frontend
+ Transport; Fri, 17 Apr 2020 05:57:12 -0700
+Subject: Re: [PATCH 4/5] net: macb: WoL support for GEM type of Ethernet
+ controller
+To:     Florian Fainelli <f.fainelli@gmail.com>,
+        <linux-arm-kernel@lists.infradead.org>, <netdev@vger.kernel.org>,
+        "Claudiu Beznea" <claudiu.beznea@microchip.com>,
+        <harini.katakam@xilinx.com>
+CC:     <linux-kernel@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        <pthombar@cadence.com>, <sergio.prado@e-labworks.com>,
+        <antoine.tenart@bootlin.com>, <linux@armlinux.org.uk>,
+        <andrew@lunn.ch>, <michal.simek@xilinx.com>
+References: <cover.1587058078.git.nicolas.ferre@microchip.com>
+ <56bb7a742093cec160c4465c808778a14b2607e7.1587058078.git.nicolas.ferre@microchip.com>
+ <6fc99e01-6d64-4248-3627-aa14a914df72@gmail.com>
+From:   Nicolas Ferre <nicolas.ferre@microchip.com>
+Organization: microchip
+Message-ID: <ef8b4010-956f-6e66-dbda-7c9999fec813@microchip.com>
+Date:   Fri, 17 Apr 2020 14:57:31 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <6fc99e01-6d64-4248-3627-aa14a914df72@gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Balbir Singh <sblbir@amazon.com> writes:
->  #include <asm-generic/cacheflush.h>
->  #include <asm/special_insns.h>
->  
-> +#define L1D_CACHE_ORDER 4
+Florian,
 
-Newline between constants and declarations please
+Thank you for your review of the series!
 
->  void clflush_cache_range(void *addr, unsigned int size);
-> +void *alloc_l1d_flush_pages(void);
-> +void cleanup_l1d_flush_pages(void *l1d_flush_pages);
 
-Can we please have a consistent name space prefix?
+On 16/04/2020 at 21:25, Florian Fainelli wrote:
+> On 4/16/2020 10:44 AM, nicolas.ferre@microchip.com wrote:
+>> From: Nicolas Ferre <nicolas.ferre@microchip.com>
+>>
+>> Adapt the Wake-on-Lan feature to the Cadence GEM Ethernet controller.
+>> This controller has different register layout and cannot be handled by
+>> previous code.
+>> We disable completely interrupts on all the queues but the queue 0.
+>> Handling of WoL interrupt is done in another interrupt handler
+>> positioned depending on the controller version used, just between
+>> suspend() and resume() calls.
+>> It allows to lower pressure on the generic interrupt hot path by
+>> removing the need to handle 2 tests for each IRQ: the first figuring out
+>> the controller revision, the second for actually knowing if the WoL bit
+>> is set.
+>>
+>> Queue management in suspend()/resume() functions inspired from RFC patch
+>> by Harini Katakam <harinik@xilinx.com>, thanks!
+>>
+>> Signed-off-by: Nicolas Ferre <nicolas.ferre@microchip.com>
+>> ---
+> 
+> [snip]
+> 
+>>
+>> +static irqreturn_t gem_wol_interrupt(int irq, void *dev_id)
+>> +{
+>> +     struct macb_queue *queue = dev_id;
+>> +     struct macb *bp = queue->bp;
+>> +     u32 status;
+>> +
+>> +     status = queue_readl(queue, ISR);
+>> +
+>> +     if (unlikely(!status))
+>> +             return IRQ_NONE;
+>> +
+>> +     spin_lock(&bp->lock);
+>> +
+>> +     if (status & GEM_BIT(WOL)) {
+>> +             queue_writel(queue, IDR, GEM_BIT(WOL));
+>> +             gem_writel(bp, WOL, 0);
+>> +             netdev_vdbg(bp->dev, "GEM WoL: queue = %u, isr = 0x%08lx\n",
+>> +                         (unsigned int)(queue - bp->queues),
+>> +                         (unsigned long)status);
+>> +             if (bp->caps & MACB_CAPS_ISR_CLEAR_ON_WRITE)
+>> +                     queue_writel(queue, ISR, GEM_BIT(WOL));
+> 
+> You would also need a pm_wakeup_event() call here to record that this
+> device did wake-up the system.
 
-l1d_flush_*()
+Oh yes, indeed that's missing. I'll add it to my v2.
 
-Thanks,
+Thanks. Best regards,
+   Nicolas
 
-        tglx
+
+-- 
+Nicolas Ferre
