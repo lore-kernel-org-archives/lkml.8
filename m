@@ -2,175 +2,142 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83B8BC2BA2B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 02:46:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BC2DC2BA2B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 02:52:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 567E821841
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 02:46:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 645F221841
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 02:52:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=russell.cc header.i=@russell.cc header.b="Ss9Y8NoV";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="nsENolDW"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="JhOQXdgu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729372AbgDQCqf (ORCPT
+        id S1729367AbgDQCwM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 22:46:35 -0400
-Received: from wout1-smtp.messagingengine.com ([64.147.123.24]:50567 "EHLO
-        wout1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729316AbgDQCqe (ORCPT
+        Thu, 16 Apr 2020 22:52:12 -0400
+Received: from mailout3.samsung.com ([203.254.224.33]:39383 "EHLO
+        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729277AbgDQCwL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 22:46:34 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.west.internal (Postfix) with ESMTP id C625360D;
-        Thu, 16 Apr 2020 22:46:33 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Thu, 16 Apr 2020 22:46:34 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=russell.cc; h=
-        message-id:subject:from:to:cc:date:in-reply-to:references
-        :content-type:mime-version:content-transfer-encoding; s=fm1; bh=
-        uBMzu65Xk32W4CUkghS8JLzUYDeM9GMYqeDoBoIfrGs=; b=Ss9Y8NoVoxUKcNfD
-        slmq5Z8mLwBPIrfS3B3BhDP8d0IWEkR/utKrpT4fotfdcbRgEN+TgirmBNkR6BdM
-        eYhwmrKkZgKiUaR2Aok05trJKoaTGXgYrPRQ/a3o13dtY7JbG1bS+1HFhKibIZia
-        oRQOBSaM90KnTO9JJYA7laDdaF8oO/aek2Rwe0k/j2EO4svRc/JoRunnMGOgYbq7
-        /nBUmaqKHugaevFQkqW9sVCLoWkwE75vBeIT+7Ru4yj6GlrcrpvvOzonMf07gbpv
-        1ziNBKpRplBOeMHr2sBIr8pOeIxzDTIg/POybLVLvgVlPTAYDdsuKnCWhlSZHu5A
-        oU/JMw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:content-type
-        :date:from:in-reply-to:message-id:mime-version:references
-        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm2; bh=uBMzu65Xk32W4CUkghS8JLzUYDeM9GMYqeDoBoIfr
-        Gs=; b=nsENolDWAueoEGmiUWO7CIvYFaqdlN8smnGwByIyG8JPznbLktEC17NiP
-        n5D87SQjgksMoEXYrizc9Pd6yxSfUXXEY6+5XpDiIJfP1RkriqFzb3KfvWWY2HOK
-        kjmG/r7pqvDx04uTzZNnU6fLL7fqd4ez2TIj3vqo1hBwueZQr6UcLk3YIC8l2Tqa
-        KdUYOnSUMJxdTUGxupGFYJKbvsxYeDIgvnd/cKgF5OgogCMcs/ul3sb6qxCwTDYb
-        vaW9vbzYrOCcDZuGPXoPoDsTLslX2EtdWiNTl1M+s3wX2zNDVhqenMLdiZ43QN0W
-        yN/qO2HGKwVB+lA8NsK2Jqy3LkbJA==
-X-ME-Sender: <xms:iBiZXlYBbzX0KK26_zWihqBKgsSg-gzdzK9_wX496UZO5rSXNx0Z3Q>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrfeeigdeifecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenfg
-    hrlhcuvffnffculdeftddmnecujfgurhepkffuhffvffgjfhgtfggggfesthejredttder
-    jeenucfhrhhomheptfhushhsvghllhcuvehurhhrvgihuceorhhushgtuhhrsehruhhssh
-    gvlhhlrdgttgeqnecukfhppeduvddurdeghedrvdduvddrvdefleenucevlhhushhtvghr
-    ufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehruhhstghurhesrhhushhsvg
-    hllhdrtggt
-X-ME-Proxy: <xmx:iBiZXk8qh6dLy7GBTMSv2rKezmpBB4Aozb8PAXNgywBVxk4bH9m1Dw>
-    <xmx:iBiZXvChXeSNrICTNzGlfMA8nyPafkgpUxdjuQtlqju4AbN6AT-hog>
-    <xmx:iBiZXovwbuHr5tO0TziBneTOTAXu3Nvuh-y2XvP_983oSySAEJlAAA>
-    <xmx:iRiZXrySExpBHV99HNrmU01z12BfbtegutRn8BDU-MkaK2SWyAGl8g>
-Received: from crackle.ozlabs.ibm.com (ppp121-45-212-239.bras1.cbr2.internode.on.net [121.45.212.239])
-        by mail.messagingengine.com (Postfix) with ESMTPA id B4AD63280064;
-        Thu, 16 Apr 2020 22:46:30 -0400 (EDT)
-Message-ID: <fec2e755ea20e15dc5b6fee6c856562aa42872bd.camel@russell.cc>
-Subject: Re: POWER9 crash due to STRICT_KERNEL_RWX (WAS: Re: Linux-next
- POWER9 NULL pointer NIP...)
-From:   Russell Currey <ruscur@russell.cc>
-To:     Qian Cai <cai@lca.pw>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Date:   Fri, 17 Apr 2020 12:46:28 +1000
-In-Reply-To: <43EE54C0-6F20-4ADD-9948-21F24D90C5E1@lca.pw>
-References: <43EE54C0-6F20-4ADD-9948-21F24D90C5E1@lca.pw>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.1 
+        Thu, 16 Apr 2020 22:52:11 -0400
+Received: from epcas2p3.samsung.com (unknown [182.195.41.55])
+        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20200417025208epoutp03ce79cb385773dd762736035443e1fc70~Ge7NGtQCW0544405444epoutp03d
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 02:52:08 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20200417025208epoutp03ce79cb385773dd762736035443e1fc70~Ge7NGtQCW0544405444epoutp03d
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1587091928;
+        bh=uHjnAsWICGbvd2UvAeIMZ3j2WHQsGzQDZG6azlJmziU=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=JhOQXdgurggunbQNvEQMf+Z9nurqXVNpY1/hTjRmxz6jxvb8SlkmNyyAnPgc3bBmq
+         qEqxMgaDZ4dwEIoa1+f0naKlf1qy5h+9fGuFqwoguYt38xB/trlTMFW06KZvqYhJqT
+         +Yw1HSvhzvUDg645/6m1+bz28rrHJiXjLSxIDLcM=
+Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
+        epcas2p3.samsung.com (KnoxPortal) with ESMTP id
+        20200417025208epcas2p38db948db38a6f7cdee1d09cf57c00699~Ge7MpVHTB3158331583epcas2p3i;
+        Fri, 17 Apr 2020 02:52:08 +0000 (GMT)
+Received: from epsmges2p3.samsung.com (unknown [182.195.40.188]) by
+        epsnrtp2.localdomain (Postfix) with ESMTP id 493LGY6rsgzMqYkc; Fri, 17 Apr
+        2020 02:52:05 +0000 (GMT)
+Received: from epcas2p4.samsung.com ( [182.195.41.56]) by
+        epsmges2p3.samsung.com (Symantec Messaging Gateway) with SMTP id
+        5B.EA.04393.5D9199E5; Fri, 17 Apr 2020 11:52:05 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas2p4.samsung.com (KnoxPortal) with ESMTPA id
+        20200417025205epcas2p46d33e64f2de49041d2ca68ecc98fc83e~Ge7J_VXhG3180931809epcas2p4L;
+        Fri, 17 Apr 2020 02:52:05 +0000 (GMT)
+Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200417025205epsmtrp11d28438d8dbd250622344386361fc7c6~Ge7J9d1lx3164331643epsmtrp1N;
+        Fri, 17 Apr 2020 02:52:05 +0000 (GMT)
+X-AuditID: b6c32a47-667ff70000001129-a4-5e9919d584f4
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        7D.32.04158.5D9199E5; Fri, 17 Apr 2020 11:52:05 +0900 (KST)
+Received: from coldbrew.dsn.sec.samsung.com (unknown [12.36.155.201]) by
+        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200417025205epsmtip10f68d62d315bad4db18b60a74fc0217f~Ge7JytNNp0040800408epsmtip1i;
+        Fri, 17 Apr 2020 02:52:05 +0000 (GMT)
+From:   sy0816.kang@samsung.com
+To:     mchehab@kernel.org
+Cc:     sy0816.kang@samsung.com, Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] media: v4l2-compat-ioctl32.c: copy reserved2 field in
+ get_v4l2_buffer32
+Date:   Fri, 17 Apr 2020 11:45:23 +0900
+Message-Id: <20200417024543.66785-1-sy0816.kang@samsung.com>
+X-Mailer: git-send-email 2.26.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA01Sa0hTYRjm2znbjpfFcZW9rZudkNLSttn0KNqFxIZZSPUjJFsHPThpN3a2
+        bhCZotXKtIumU2skiIxCWybLrMxC0R+rCLtBSHbBlKQ0o7xEZzuL/Pd8z/s83/O97/cSmNwp
+        URCFJhtrNTEGShKKtz+OoeMGFtfuVxZf0tCzF3ukdElji4R+XvsOp1901Evoc613xHSTZ0ZE
+        D31Kom97qrDNhHZ66iLSetxnJNoxn0+qfdhwQ6o93+ZG2gnPcm3/5IQ0W5pjSNWzTD5rjWJN
+        eeb8QlNBGrV9t26rTpOoVMWpkukkKsrEGNk0Kj0rOy6j0MA/ioo6xBjsPJXNcBy1fmOq1Wy3
+        sVF6M2dLo1hLvsGiUlniOcbI2U0F8XlmY4pKqVRreOUBg/7K4DPc8oo44nszKCpCXqkDhRBA
+        bgBn+W/cgUIJOelFcN3Rh4TDOIKqD3UBlZz8ieDV073/HPdqm0WC6D4Cb39j0D6FoL7nC+5X
+        SchlMN5VI/HjBWQkDLWPBEQYOY2g2dERKMwnc6CuqS6AcTIahia/if1YRqbCo/ZRkRC3AkpH
+        vEjgI6Cv9mMgAOP5kjt1mP9SIDsl8Pr12aAhHar7BpGA58NIb1uwUwV8qSgL4hNQPTEhFsyV
+        CIZdvWKhkADOz6d4M8EnxEBLx3o/BHIVPHkbzJ0Hpx/PSgVaBqfL5AKMhtZxtXDHEvj69QUS
+        aC1UVFLCDHPhwc16vBKtcM7pxTmnF+f/VBfC3CiStXDGApZTWxLm/qkHBfYydpsXtfuyuhFJ
+        ICpcdmBTzX65mDnEHTV2IyAwaoFsnoanZPnM0WOs1ayz2g0s1400/KgvYIqFeWZ+y002nUqj
+        TkxUJmtoTaKaphbJPGFv9snJAsbGHmRZC2v95xMRIYoihItxteJcWFpm15oMeu29q2PGl7u+
+        15SWVl0e2/GSqLp1Mo65W63bOrO5vHvUt2tlfbh+T3jnBleRO360Z2zd0iTX4aEGRj07nJnj
+        8f5pbA7t3/JdzD40ONsyrddGO/edcazeOfB+rfRXWHrXBdXwj5RvruI1Zbkn8hZWRFSuO17e
+        TOGcnlHFYlaO+QviXd1zrQMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrFLMWRmVeSWpSXmKPExsWy7bCSnO5VyZlxBi8/cln8nXSM3aJ58Xo2
+        i4sz77JYXN41h82iZ8NWVotlm/4wWTx6am6xedNUZgcOj9+/JjF6bFrVyebx7tw5do/9c9ew
+        e/RtWcXo8XmTnMepr5/ZA9ijuGxSUnMyy1KL9O0SuDKm37/AUnCdo+LczftMDYw72LsYOTkk
+        BEwkds9cwdTFyMUhJLCbUeLI3YUsXYwcQAlpif0bcyFqhCXutxxhhaj5wSjxZGkbI0iCTUBW
+        4tOBGWwgtoiAmMSjba9YQIqYBRqZJK5u+QCWEBaIkNjxag+YzSKgKvHo6wdWEJtXwEbi4LbX
+        TBAb5CVaX+1ghIgLSpyc+YQFxGYGijdvnc08gZFvFpLULCSpBYxMqxglUwuKc9Nziw0LjPJS
+        y/WKE3OLS/PS9ZLzczcxgkNYS2sH44kT8YcYBTgYlXh4E+xnxAmxJpYVV+YeYpTgYFYS4eUz
+        BQrxpiRWVqUW5ccXleakFh9ilOZgURLnlc8/FikkkJ5YkpqdmlqQWgSTZeLglGpg1LC9tLbS
+        pznbUHg30w8+z8tVLQYCpx5vmmjGXxA/3U7T/P69nzu8nNMPRjhcDGUonLB8Z9P539lhFa5S
+        t+sOP7t6v+YRYxxDoGD21bq4tATd9bcmvTRSEvea6s7x0fu/8KsdPY4TixOeWWut/L62fWt3
+        lOvkh+913+tcm+zsXbBXyMRMVLVdiaU4I9FQi7moOBEANh8L710CAAA=
+X-CMS-MailID: 20200417025205epcas2p46d33e64f2de49041d2ca68ecc98fc83e
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: AUTO_CONFIDENTIAL
+CMS-TYPE: 102P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20200417025205epcas2p46d33e64f2de49041d2ca68ecc98fc83e
+References: <CGME20200417025205epcas2p46d33e64f2de49041d2ca68ecc98fc83e@epcas2p4.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2020-04-16 at 22:40 -0400, Qian Cai wrote:
-> > On Apr 16, 2020, at 10:27 PM, Russell Currey <ruscur@russell.cc>
-> > wrote:
-> > 
-> > Reverting the patch with the given config will have the same effect
-> > as
-> > STRICT_KERNEL_RWX=n.  Not discounting that it could be a bug on the
-> > powerpc side (i.e. relocatable kernels with strict RWX on haven't
-> > been
-> > exhaustively tested yet), but we should definitely figure out
-> > what's
-> > going on with this bad access first.
-> 
-> BTW, this bad access only happened once. The overwhelming rest of
-> crashes are with NULL pointer NIP like below. How can you explain
-> that STRICT_KERNEL_RWX=n would also make those NULL NIP disappear if
-> STRICT_KERNEL_RWX is just a messenger?
+From: Sunyoung Kang <sy0816.kang@samsung.com>
 
-What happens if you test with STRICT_KERNEL_RWX=y and RELOCATABLE=n,
-reverting my patch?  This would give us an idea of whether it's
-something broken recently or if there's something else going on.
+get_v4l2_buffer32() didn't copy reserved2 field from userspace to driver.
+So the reserved2 value is not received through compat-ioctl32 in driver.
+This patch copy reserved2 field of v4l2_buffer in get_v4l2_buffer32().
 
-> 
-> [  215.281666][T16896] LTP: starting chown04_16
-> [  215.424203][T18297] BUG: Unable to handle kernel instruction fetch
-> (NULL pointer?)
-> [  215.424289][T18297] Faulting instruction address: 0x00000000
-> [  215.424313][T18297] Oops: Kernel access of bad area, sig: 11 [#1]
-> [  215.424341][T18297] LE PAGE_SIZE=64K MMU=Radix SMP NR_CPUS=256
-> DEBUG_PAGEALLOC NUMA PowerNV
-> [  215.424383][T18297] Modules linked in: loop kvm_hv kvm ip_tables
-> x_tables xfs sd_mod bnx2x mdio tg3 ahci libahci libphy libata
-> firmware_class dm_mirror dm_region_hash dm_log dm_mod
-> [  215.424459][T18297] CPU: 85 PID: 18297 Comm: chown04_16 Tainted:
-> G        W         5.6.0-next-20200405+ #3
-> [  215.424489][T18297] NIP:  0000000000000000 LR: c00800000fbc0408
-> CTR: 0000000000000000
-> [  215.424530][T18297] REGS: c000200b8606f990 TRAP: 0400   Tainted:
-> G        W          (5.6.0-next-20200405+)
-> [  215.424570][T18297] MSR:  9000000040009033
-> <SF,HV,EE,ME,IR,DR,RI,LE>  CR: 84000248  XER: 20040000
-> [  215.424619][T18297] CFAR: c00800000fbc64f4 IRQMASK: 0 
-> [  215.424619][T18297] GPR00: c0000000006c2238 c000200b8606fc20
-> c00000000165ce00 0000000000000000 
-> [  215.424619][T18297] GPR04: c000201a58106400 c000200b8606fcc0
-> 000000005f037e7d ffffffff00013bfb 
-> [  215.424619][T18297] GPR08: c000201a58106400 0000000000000000
-> 0000000000000000 c000000001652ee0 
-> [  215.424619][T18297] GPR12: 0000000000000000 c000201fff69a600
-> 0000000000000000 0000000000000000 
-> [  215.424619][T18297] GPR16: 0000000000000000 0000000000000000
-> 0000000000000000 0000000000000000 
-> [  215.424619][T18297] GPR20: 0000000000000000 0000000000000000
-> 0000000000000000 0000000000000007 
-> [  215.424619][T18297] GPR24: 0000000000000000 0000000000000000
-> c00800000fbc8688 c000200b8606fcc0 
-> [  215.424619][T18297] GPR28: 0000000000000000 000000007fffffff
-> c00800000fbc0400 c00020068b8c0e70 
-> [  215.424914][T18297] NIP [0000000000000000] 0x0
-> [  215.424953][T18297] LR [c00800000fbc0408] find_free_cb+0x8/0x30
-> [loop]
-> find_free_cb at drivers/block/loop.c:2129
-> [  215.424997][T18297] Call Trace:
-> [  215.425036][T18297] [c000200b8606fc20] [c0000000006c2290]
-> idr_for_each+0xf0/0x170 (unreliable)
-> [  215.425073][T18297] [c000200b8606fca0] [c00800000fbc2744]
-> loop_lookup.part.2+0x4c/0xb0 [loop]
-> loop_lookup at drivers/block/loop.c:2144
-> [  215.425105][T18297] [c000200b8606fce0] [c00800000fbc3558]
-> loop_control_ioctl+0x120/0x1d0 [loop]
-> [  215.425149][T18297] [c000200b8606fd40] [c0000000004eb688]
-> ksys_ioctl+0xd8/0x130
-> [  215.425190][T18297] [c000200b8606fd90] [c0000000004eb708]
-> sys_ioctl+0x28/0x40
-> [  215.425233][T18297] [c000200b8606fdb0] [c00000000003cc30]
-> system_call_exception+0x110/0x1e0
-> [  215.425274][T18297] [c000200b8606fe20] [c00000000000c9f0]
-> system_call_common+0xf0/0x278
-> [  215.425314][T18297] Instruction dump:
-> [  215.425338][T18297] XXXXXXXX XXXXXXXX XXXXXXXX XXXXXXXX XXXXXXXX
-> XXXXXXXX XXXXXXXX XXXXXXXX 
-> [  215.425374][T18297] XXXXXXXX XXXXXXXX XXXXXXXX XXXXXXXX XXXXXXXX
-> XXXXXXXX XXXXXXXX XXXXXXXX 
-> [  215.425422][T18297] ---[ end trace ebed248fad431966 ]---
-> [  215.642114][T18297] 
-> [  216.642220][T18297] Kernel panic - not syncing: Fatal exception
+Signed-off-by: Sunyoung Kang <sy0816.kang@samsung.com>
+---
+ drivers/media/v4l2-core/v4l2-compat-ioctl32.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/media/v4l2-core/v4l2-compat-ioctl32.c b/drivers/media/v4l2-core/v4l2-compat-ioctl32.c
+index a99e82ec9ab6..e9b2b9c0ec9a 100644
+--- a/drivers/media/v4l2-core/v4l2-compat-ioctl32.c
++++ b/drivers/media/v4l2-core/v4l2-compat-ioctl32.c
+@@ -665,6 +665,7 @@ static int get_v4l2_buffer32(struct v4l2_buffer __user *p64,
+ 	if (V4L2_TYPE_IS_OUTPUT(type))
+ 		if (assign_in_user(&p64->bytesused, &p32->bytesused) ||
+ 		    assign_in_user(&p64->field, &p32->field) ||
++		    assign_in_user(&p64->reserved2, &p32->reserved2) ||
+ 		    assign_in_user(&p64->timestamp.tv_sec,
+ 				   &p32->timestamp.tv_sec) ||
+ 		    assign_in_user(&p64->timestamp.tv_usec,
+-- 
+2.20.1
 
