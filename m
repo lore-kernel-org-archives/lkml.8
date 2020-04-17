@@ -2,158 +2,190 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E057C2D0EF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 14:08:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9B51C38A2B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 14:08:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2350A21973
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 14:08:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 809E021973
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 14:08:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="VU2fA1YE"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="LG9mimc4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731187AbgDQOIB (ORCPT
+        id S1731191AbgDQOIK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 10:08:01 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:49744 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730908AbgDQOH7 (ORCPT
+        Fri, 17 Apr 2020 10:08:10 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:58216 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730868AbgDQOII (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 10:07:59 -0400
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200417140756euoutp01019994fa2423ec752bfbafa0f0ee8e72~GoJQWNSr91953319533euoutp01u
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 14:07:56 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200417140756euoutp01019994fa2423ec752bfbafa0f0ee8e72~GoJQWNSr91953319533euoutp01u
+        Fri, 17 Apr 2020 10:08:08 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200417140807euoutp02c6708f8f9027b445337e34b6bc20f7b4~GoJaGcIiD1573015730euoutp02W
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 14:08:07 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200417140807euoutp02c6708f8f9027b445337e34b6bc20f7b4~GoJaGcIiD1573015730euoutp02W
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1587132476;
-        bh=U6isxlo64PFJa4vVTOq4zR5g89yDZau5zSJd8NfSZ38=;
+        s=mail20170921; t=1587132487;
+        bh=rQFb332w/W0vE9IwL+r/49dQjXVVZeqdXoTwrmYqvUk=;
         h=From:Subject:To:Cc:Date:In-Reply-To:References:From;
-        b=VU2fA1YEyF8mKDxMI//LiMgKVkQ3F6ndPdJv8c4vZWqwM95IwZCBVZntQWM2Xsdis
-         b0tsik41hOYaXOLaM3So8uE1pkDYFMAoIBE+flKQ82z2xAEHTi7t1MP54RvIeT83BB
-         AfeWjms+wPWPwaBqrQhZjFI8G1C3hVT705hhbG3Q=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20200417140756eucas1p20913872d30b9ae37d4613b2be9867a5f~GoJQBckud1677816778eucas1p2W;
-        Fri, 17 Apr 2020 14:07:56 +0000 (GMT)
+        b=LG9mimc4wly/iYgEWIIGXjAdADAsAOJzgEMQsJziFym6ruUo0PHGXfgkXDVyo20Ac
+         vKx6vktGA5aWZ/hmVSfqZkXsIxI4MCy9fWr+szXhR5JivlJQWZmWcOpgFuxwqwLLl1
+         U+D3Xo5DVVXfZm/USDSeLCcDPjKB5+3vaXDMdwm0=
+Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20200417140806eucas1p197d0cc3dd5c32cf78e85d3e8abec3bd1~GoJZ_-6o11490114901eucas1p1H;
+        Fri, 17 Apr 2020 14:08:06 +0000 (GMT)
 Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges1new.samsung.com (EUCPMTA) with SMTP id 1A.4C.61286.C38B99E5; Fri, 17
-        Apr 2020 15:07:56 +0100 (BST)
+        eusmges2new.samsung.com (EUCPMTA) with SMTP id 52.FF.60679.648B99E5; Fri, 17
+        Apr 2020 15:08:06 +0100 (BST)
 Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
         eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20200417140755eucas1p25c5b548c689ff267fad693b568029e85~GoJPfdFpA1773817738eucas1p28;
-        Fri, 17 Apr 2020 14:07:55 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        20200417140806eucas1p2f8b9146788f9d6713d758833a8e1ba88~GoJZrwpPA1570815708eucas1p2N;
+        Fri, 17 Apr 2020 14:08:06 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
         eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200417140755eusmtrp150da5e7883cbac30ae58cabd7770b9fd~GoJPe6NKX2228222282eusmtrp1c;
-        Fri, 17 Apr 2020 14:07:55 +0000 (GMT)
-X-AuditID: cbfec7f2-ef1ff7000001ef66-31-5e99b83c1f1e
+        20200417140806eusmtrp113e0403ba063812da1635defd08dadb3~GoJZrKlIl2264522645eusmtrp1G;
+        Fri, 17 Apr 2020 14:08:06 +0000 (GMT)
+X-AuditID: cbfec7f4-0cbff7000001ed07-f7-5e99b846d592
 Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id F0.E0.07950.B38B99E5; Fri, 17
-        Apr 2020 15:07:55 +0100 (BST)
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id 1D.C2.08375.648B99E5; Fri, 17
+        Apr 2020 15:08:06 +0100 (BST)
 Received: from [106.120.51.71] (unknown [106.120.51.71]) by
         eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200417140755eusmtip289d5a8ab55a01e95669f065c851c8e12~GoJPKsPPD0417604176eusmtip2J;
-        Fri, 17 Apr 2020 14:07:55 +0000 (GMT)
+        20200417140806eusmtip22d2e41fe87a4aa1ac1d362d1fdcb3be0~GoJZPHMNo2022020220eusmtip2f;
+        Fri, 17 Apr 2020 14:08:06 +0000 (GMT)
 From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Subject: Re: [PATCH v2 0/6] video: fbdev: controlfb: small cleanup
-To:     linux-fbdev@vger.kernel.org
-Cc:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Sam Ravnborg <sam@ravnborg.org>
-Message-ID: <bf36874a-23d5-575a-c1b4-a4d2e3ae8861@samsung.com>
-Date:   Fri, 17 Apr 2020 16:07:55 +0200
+Subject: Re: [PATCH -next] omapfb/dss: remove unused varible
+ 'venc_config_pal_bdghi'
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     allison@lohutok.net, linux-omap@vger.kernel.org,
+        linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Message-ID: <ef8cf200-4bcd-1a53-abcc-65feba6c11fa@samsung.com>
+Date:   Fri, 17 Apr 2020 16:08:05 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
         Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20200324134508.25120-1-b.zolnierkie@samsung.com>
+In-Reply-To: <20200415132350.33088-1-yuehaibing@huawei.com>
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Se0hTYRjG+XYuOy4nx6n4opJ1oOjqBYOGilREDKIIKlAh9ZgnFa/sqGUE
-        KV3mPW2wcIjGkLQVU8bmrZuuUksZeclsWIppqTEyTU0padtR8r/f+7zPw/s98FGYrJbwo1Iz
-        czhlJpvOkBK8pXvVejCyrToupLfUXW4zWAn58NIPUt5bMU/IhzpqSHnjqhkdIRTjpT0iRb3m
-        PamoMOmRYtG4/QweK4lM4tJT8zhlcFSCJGVyqZDILth2xdjUQhagJaoEuVFAH4KGhmmsBEko
-        Gd2I4POcjRCGXwjKJm1iYVhE0N8/hTYjt1Z0uLBoQDD6vY4UBjuCNYvZ5SLpcKhS6V3sRR+D
-        ZZWJcLI3HQhP76hEzgBGFyN4on2LORdSOgpemcdcAZzeBR9mHoud7ENHw8LES0LweMKb6inc
-        yW4Of7nG4spitC/YpupEAgdCq73G1QhonRgGJr6SwruPw7f6n5jAXjDXYxILHAB96jJcCBgQ
-        /C2a2Ui3ImhQr2+kI2DMuuZgynFiLzR1BAvyUWis7BI5ZaA9YNTuKTzCA+623MMEWQpFt2WC
-        ezc0P2gmN8+WtD/EKhGj3VJNu6WOdksd7f+79xGuR75cLp+RzPGhmdzlIJ7N4HMzk4MuZmUY
-        kePX9K33LLShpcFEC6IpxLhLQ8qq42QEm8fnZ1gQUBjjLe064ZCkSWz+VU6ZFa/MTed4C/Kn
-        cMZXGqabvSCjk9kcLo3jsjnl5lZEufkVIMY81dm7XHl4lu37ElSrjzjL+Nrlc5fEK+Wdwftp
-        H117t3/M6fmdccPXKjSFJz28jK3t0vOf7KaBAzfGNSrReHyfKMGk+20NK44YfNb9Zz3cs2qH
-        z56bibExI0Py4VN1AS/OmY2D16eH8g1VkYYR/XPT61mrOjitTv0uTB/96COD8yls6D5MybP/
-        AAckFvoxAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrPIsWRmVeSWpSXmKPExsVy+t/xe7rWO2bGGaydrGRxa905VosrX9+z
-        WZzo+8BqcXnXHDaLFT+3MjqwetzvPs7ksWTaVTaPvi2rGD0+b5ILYInSsynKLy1JVcjILy6x
-        VYo2tDDSM7S00DMysdQzNDaPtTIyVdK3s0lJzcksSy3St0vQy3j0tZG1oIG7YtP6bWwNjF85
-        uhg5OSQETCRavy9i6WLk4hASWMoocfrKBeYuRg6ghIzE8fVlEDXCEn+udbFB1LxmlDjRvZQd
-        JMEmYCUxsX0VI4gtLOAk8a19CyuILSIgL7Gnv50JpIFZoJNRYtnKVVDdExklNjxrB6viFbCT
-        OLL1Dlg3i4CqxPUXa8CmigpESBzeMYsRokZQ4uTMJywgNidQfe+0Q8wgNrOAusSfeZegbHGJ
-        W0/mM0HY8hLb385hnsAoNAtJ+ywkLbOQtMxC0rKAkWUVo0hqaXFuem6xkV5xYm5xaV66XnJ+
-        7iZGYGRtO/Zzyw7GrnfBhxgFOBiVeHgNembGCbEmlhVX5h5ilOBgVhLhPegGFOJNSaysSi3K
-        jy8qzUktPsRoCvTcRGYp0eR8YNTnlcQbmhqaW1gamhubG5tZKInzdggcjBESSE8sSc1OTS1I
-        LYLpY+LglGpgvCm7/ebTrfPtD1d1aTC+EvkrO3GWic7EaW2PL1Td5l7TKnvA3XZp2rSnAeW/
-        NepYvHnXey28+5VrypSPok//O0/mUIhcfO/ykTPzGsyWa729a7mXf4FjHQ/nOu/vG34L8n+9
-        5zh1/oMlF8/wzV+2p9jvW8+zP2xfkjb6zHyUKSfZZDbH0Npca7sSS3FGoqEWc1FxIgCTwOzo
-        wgIAAA==
-X-CMS-MailID: 20200417140755eucas1p25c5b548c689ff267fad693b568029e85
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrIKsWRmVeSWpSXmKPExsWy7djPc7puO2bGGfxdbW6x8sQ/FosrX9+z
+        WZzo+8BqcXnXHDaL2Uv6WSzufH3O4sDm0XLkLavH/e7jTB4f3zxh9/i8SS6AJYrLJiU1J7Ms
+        tUjfLoEr48vVPewFe0QqDk/YzdTA2CjQxcjJISFgIvGyZQYLiC0ksIJR4tkOyy5GLiD7C6NE
+        77tX7BDOZ0aJP49WssN0zPi8gA0isZxRYtfkdUwQzltGiRtTfjOCVLEJWElMbF8FZgsLhEks
+        W/GeDcQWEVCTaDm1hRmkgVlgMqPE5IVfmUASvAJ2Et++tIDZLAKqEld3/wM7SlQgQuLTg8Os
+        EDWCEidnPgGLcwpYSxxbcB2snllAXOLWk/lQtrxE89bZYAskBJaxSzStPsEGcbeLRPPiVlYI
+        W1ji1fEtUP/ISJye3MMC0bCOUeJvxwuo7u2MEssn/4Pqtpa4c+4XkM0BtEJTYv0ufRBTQsBR
+        ove7GYTJJ3HjrSDEDXwSk7ZNZ4YI80p0tAlBzFCT2LBsAxvM1q6dK5knMCrNQvLZLCTfzELy
+        zSyEtQsYWVYxiqeWFuempxYb5aWW6xUn5haX5qXrJefnbmIEJpzT/45/2cG460/SIUYBDkYl
+        Hl6DnplxQqyJZcWVuYcYJTiYlUR4D7oBhXhTEiurUovy44tKc1KLDzFKc7AoifMaL3oZKySQ
+        nliSmp2aWpBaBJNl4uCUamAU+H/Ib/2daUWRFzOCd94tWCcSbdaTvczD/cG7B7cfvpPc5N/a
+        Z2q57Jtg29tW8chIXuHrO/w4k87wX4qU3aU/+YdctnFx/JOX6Xz95kd+TpN0+fn91dN/O7Xv
+        z11gwxszO9ZE9dhP9YurPpaszVpcW8z5stViS6LbX4lNbzw9c+eveLD24dRPSizFGYmGWsxF
+        xYkAGKwDtTQDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrCIsWRmVeSWpSXmKPExsVy+t/xe7puO2bGGZxcq2Cx8sQ/FosrX9+z
+        WZzo+8BqcXnXHDaL2Uv6WSzufH3O4sDm0XLkLavH/e7jTB4f3zxh9/i8SS6AJUrPpii/tCRV
+        ISO/uMRWKdrQwkjP0NJCz8jEUs/Q2DzWyshUSd/OJiU1J7MstUjfLkEv48vVPewFe0QqDk/Y
+        zdTA2CjQxcjJISFgIjHj8wK2LkYuDiGBpYwSq2YuZexi5ABKyEgcX18GUSMs8edaF1TNa0aJ
+        fa/usYEk2ASsJCa2r2IEsYUFwiSWrXgPFhcRUJNoObWFGaSBWWAyo0TH/6dQ3X2MEr8ez2AF
+        qeIVsJP49qWFCcRmEVCVuLr7HwuILSoQIXF4xyxGiBpBiZMzn4DFOQWsJY4tuA5WzyygLvFn
+        3iVmCFtc4taT+VBxeYnmrbOZJzAKzULSPgtJyywkLbOQtCxgZFnFKJJaWpybnltsqFecmFtc
+        mpeul5yfu4kRGGPbjv3cvIPx0sbgQ4wCHIxKPLwGPTPjhFgTy4orcw8xSnAwK4nwHnQDCvGm
+        JFZWpRblxxeV5qQWH2I0BXpuIrOUaHI+MP7zSuINTQ3NLSwNzY3Njc0slMR5OwQOxggJpCeW
+        pGanphakFsH0MXFwSjUw+nzhZncO0z8lm95o4hb9Os6z5fq7e+emT17xRJ09kts3Y+lHDaXQ
+        9k+cTr9FjRRm/+O73bC+5FhJ/LSlgQe0TDg66k68jtEMWKJk9jP3HusGZtnN4s9fvAzNkT6o
+        aMiced9x4nWjsBNpBkLWGR36kTw1jQv1D0ZENNhNe3Vp4nT7Zz1vDvAqsRRnJBpqMRcVJwIA
+        qsVMCscCAAA=
+X-CMS-MailID: 20200417140806eucas1p2f8b9146788f9d6713d758833a8e1ba88
 X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200324134518eucas1p1440c92398ddcbe5ea72d6db3703d3f97
+X-RootMTR: 20200415132418eucas1p2249e350241cee81ce200565455c31f98
 X-EPHeader: CA
 CMS-TYPE: 201P
-X-CMS-RootMailID: 20200324134518eucas1p1440c92398ddcbe5ea72d6db3703d3f97
-References: <CGME20200324134518eucas1p1440c92398ddcbe5ea72d6db3703d3f97@eucas1p1.samsung.com>
-        <20200324134508.25120-1-b.zolnierkie@samsung.com>
+X-CMS-RootMailID: 20200415132418eucas1p2249e350241cee81ce200565455c31f98
+References: <CGME20200415132418eucas1p2249e350241cee81ce200565455c31f98@eucas1p2.samsung.com>
+        <20200415132350.33088-1-yuehaibing@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-On 3/24/20 2:45 PM, Bartlomiej Zolnierkiewicz wrote:
-> Hi,
+On 4/15/20 3:23 PM, YueHaibing wrote:
+> drivers/video/fbdev/omap2/omapfb/dss/venc.c:212:33:
+>  warning: ‘venc_config_pal_bdghi’ defined but not used [-Wunused-const-variable=]
+>  static const struct venc_config venc_config_pal_bdghi = {
+>                                  ^~~~~~~~~~~~~~~~~~~~~
 > 
-> Small cleanup for controlfb driver:
-> 
-> - fix sparse warnings
-> - remove not working module support
-> - add COMPILE_TEST support
-> - remove redundant function prototypes
-> 
-> Changes since v1
-> (https://lore.kernel.org/lkml/20200116140900.26363-1-b.zolnierkie@samsung.com/):
-> - use in_le32() instead of le32_to_cpup()
-> - use eieio() and dcbf() helpers
-> - add invalid_vram_cache() helper
-> - add more dummy CONFIG_PPC_PMAC=n helpers to avoid ifdefs
-> - add ACKs from Sam
-> 
-> Best regards,
-> --
-> Bartlomiej Zolnierkiewicz
-> Samsung R&D Institute Poland
-> Samsung Electronics
-> 
-> 
-> Bartlomiej Zolnierkiewicz (6):
->   video: fbdev: controlfb: fix sparse warning about using incorrect type
->   video: fbdev: controlfb: add COMPILE_TEST support
->   video: fbdev: controlfb: remove obsolete module support
->   video: fbdev: controlfb: remove function prototypes part #1
->   video: fbdev: controlfb: remove function prototypes part #2
->   video: fbdev: controlfb: remove function prototypes part #3
-> 
->  drivers/video/fbdev/Kconfig     |   2 +-
->  drivers/video/fbdev/controlfb.c | 828 +++++++++++++++-----------------
->  2 files changed, 391 insertions(+), 439 deletions(-)
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 
-Patches #1-6 queued for v5.8.
+Patch queued for v5.8 (w/ typo in the patch summary fixed), thanks.
 
 Best regards,
 --
 Bartlomiej Zolnierkiewicz
 Samsung R&D Institute Poland
-Samsung Electronics
+
+> ---
+>  drivers/video/fbdev/omap2/omapfb/dss/venc.c | 43 ---------------------
+>  1 file changed, 43 deletions(-)
+> 
+> diff --git a/drivers/video/fbdev/omap2/omapfb/dss/venc.c b/drivers/video/fbdev/omap2/omapfb/dss/venc.c
+> index f81e2a46366d..d5404d56c922 100644
+> --- a/drivers/video/fbdev/omap2/omapfb/dss/venc.c
+> +++ b/drivers/video/fbdev/omap2/omapfb/dss/venc.c
+> @@ -209,49 +209,6 @@ static const struct venc_config venc_config_ntsc_trm = {
+>  	.gen_ctrl				= 0x00F90000,
+>  };
+>  
+> -static const struct venc_config venc_config_pal_bdghi = {
+> -	.f_control				= 0,
+> -	.vidout_ctrl				= 0,
+> -	.sync_ctrl				= 0,
+> -	.hfltr_ctrl				= 0,
+> -	.x_color				= 0,
+> -	.line21					= 0,
+> -	.ln_sel					= 21,
+> -	.htrigger_vtrigger			= 0,
+> -	.tvdetgp_int_start_stop_x		= 0x00140001,
+> -	.tvdetgp_int_start_stop_y		= 0x00010001,
+> -	.gen_ctrl				= 0x00FB0000,
+> -
+> -	.llen					= 864-1,
+> -	.flens					= 625-1,
+> -	.cc_carr_wss_carr			= 0x2F7625ED,
+> -	.c_phase				= 0xDF,
+> -	.gain_u					= 0x111,
+> -	.gain_v					= 0x181,
+> -	.gain_y					= 0x140,
+> -	.black_level				= 0x3e,
+> -	.blank_level				= 0x3e,
+> -	.m_control				= 0<<2 | 1<<1,
+> -	.bstamp_wss_data			= 0x42,
+> -	.s_carr					= 0x2a098acb,
+> -	.l21__wc_ctl				= 0<<13 | 0x16<<8 | 0<<0,
+> -	.savid__eavid				= 0x06A70108,
+> -	.flen__fal				= 23<<16 | 624<<0,
+> -	.lal__phase_reset			= 2<<17 | 310<<0,
+> -	.hs_int_start_stop_x			= 0x00920358,
+> -	.hs_ext_start_stop_x			= 0x000F035F,
+> -	.vs_int_start_x				= 0x1a7<<16,
+> -	.vs_int_stop_x__vs_int_start_y		= 0x000601A7,
+> -	.vs_int_stop_y__vs_ext_start_x		= 0x01AF0036,
+> -	.vs_ext_stop_x__vs_ext_start_y		= 0x27101af,
+> -	.vs_ext_stop_y				= 0x05,
+> -	.avid_start_stop_x			= 0x03530082,
+> -	.avid_start_stop_y			= 0x0270002E,
+> -	.fid_int_start_x__fid_int_start_y	= 0x0005008A,
+> -	.fid_int_offset_y__fid_ext_start_x	= 0x002E0138,
+> -	.fid_ext_start_y__fid_ext_offset_y	= 0x01380005,
+> -};
+> -
+>  const struct omap_video_timings omap_dss_pal_timings = {
+>  	.x_res		= 720,
+>  	.y_res		= 574,
+> 
