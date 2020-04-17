@@ -2,141 +2,178 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2152C2D0EF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 06:33:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DB3AC352BE
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 06:34:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B28E42063A
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 06:33:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D5D2221EA
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 06:34:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="a5gzAXzJ"
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="QJWl4WcT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727973AbgDQGdw (ORCPT
+        id S1728022AbgDQGeT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 02:33:52 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:33504 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727904AbgDQGdv (ORCPT
+        Fri, 17 Apr 2020 02:34:19 -0400
+Received: from ssl.serverraum.org ([176.9.125.105]:42453 "EHLO
+        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727912AbgDQGeS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 02:33:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587105230;
+        Fri, 17 Apr 2020 02:34:18 -0400
+Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id 062C222EEB;
+        Fri, 17 Apr 2020 08:34:09 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1587105252;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=aRp3vqzXNggkBlbb5TjXuZYOr8GevPVbWARU6hChYxw=;
-        b=a5gzAXzJIrV0XgpXiIwM454VPvFtu3tbmICqq68YzQBOoEqCgtJiWyrE64HVk8/vNQJmR6
-        JgBoCNmvbaDvijkLc6KpYvHR7N+Fs9HWObAKPmwaQuRKYawNmvRIXz5iWbdcFbv+zDiYWQ
-        lyL51RdZuF6rgP1R+5ruoDKcPnUg7w4=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-130-x9QJ0It7NmSPoaWaPH5mLA-1; Fri, 17 Apr 2020 02:33:48 -0400
-X-MC-Unique: x9QJ0It7NmSPoaWaPH5mLA-1
-Received: by mail-wr1-f71.google.com with SMTP id y1so518149wrp.5
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 23:33:48 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=aRp3vqzXNggkBlbb5TjXuZYOr8GevPVbWARU6hChYxw=;
-        b=D+f7NJGW0SO/JFnjYO/pfQQou0t0ZUUtaBjPrfsW5E1qyYazdGurfJyNJbarkYlQC/
-         NptF/o0TmQw7/tY5rtjMJdw5h6M+ex0OvGuQjdMX3532dDtLZWVT9M+8j/aIb+zv0Bvt
-         APvSFqQy5IrCxlIF7ie4C+ao1nd8F5gm5mrDfHyypI93WO2ryTQQkt8opqR8T/eYpbIn
-         3l62tDeI8MpiLOEhct1yp/b6OBouC/XtvbwnkMlZQAKsl5WgRfAVuZsTI7I8ifx24DR6
-         eSM/JgFrWJkwl8ZRZCu4kL+hjDXTbwuf/H/hlvcXdxyhli2LIOH3P7p/SDCPZBweuTEh
-         VmkQ==
-X-Gm-Message-State: AGi0Pubandr+N2PxbBaB8IMIl3oBbVqtY+GSlsm2JWXHY3cEzCYY17cY
-        tkfKozTzKqf+OElXN/38hMht0LIdwb1b1MbJFPjb+eq0E+QaEMjZtFQaDVssamSmPba5Eau3SVo
-        woEBbFuyZULUYpUQ2fLSwMf84
-X-Received: by 2002:a1c:5a06:: with SMTP id o6mr1725643wmb.34.1587105227187;
-        Thu, 16 Apr 2020 23:33:47 -0700 (PDT)
-X-Google-Smtp-Source: APiQypLC+56jzTsL7mtJ8WJVomZZD1bGAAbZ16bTvi8qD3oQHVUMVTlOszcQ+jGs26hCvKjQJ7zNyQ==
-X-Received: by 2002:a1c:5a06:: with SMTP id o6mr1725618wmb.34.1587105226999;
-        Thu, 16 Apr 2020 23:33:46 -0700 (PDT)
-Received: from redhat.com (bzq-79-183-51-3.red.bezeqint.net. [79.183.51.3])
-        by smtp.gmail.com with ESMTPSA id k184sm6461323wmf.9.2020.04.16.23.33.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Apr 2020 23:33:46 -0700 (PDT)
-Date:   Fri, 17 Apr 2020 02:33:43 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Jason Wang <jasowang@redhat.com>
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
-        netdev@vger.kernel.org, geert@linux-m68k.org,
-        tsbogend@alpha.franken.de, benh@kernel.crashing.org,
-        paulus@samba.org, heiko.carstens@de.ibm.com, gor@linux.ibm.com,
-        borntraeger@de.ibm.com, Michael Ellerman <mpe@ellerman.id.au>
-Subject: Re: [PATCH V2] vhost: do not enable VHOST_MENU by default
-Message-ID: <20200417022929-mutt-send-email-mst@kernel.org>
-References: <20200415024356.23751-1-jasowang@redhat.com>
- <20200416185426-mutt-send-email-mst@kernel.org>
- <b7e2deb7-cb64-b625-aeb4-760c7b28c0c8@redhat.com>
+        bh=yRofvrT7uJxuqc53iK0glkaODL7zqW5wwpHXjFjKcgw=;
+        b=QJWl4WcToI73JqjXrubzRp0qLIcPIjk2ilLyWMLcnLKpiGqrfWON6uL1z8JhJq7r5UUkyF
+        TKqmBRGjCEejYmQaC3M7NJhp8Ji3md43YmGOp9YWBADR/RoIApO6RHynSWNUvMQUz3QA90
+        FlDbwzSR3GqZVaXjssTh33Iz8CDafW4=
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <b7e2deb7-cb64-b625-aeb4-760c7b28c0c8@redhat.com>
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Fri, 17 Apr 2020 08:34:09 +0200
+From:   Michael Walle <michael@walle.cc>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, linux-kernel@vger.kernel.org,
+        linux-hwmon@vger.kernel.org, linux-pwm@vger.kernel.org,
+        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Lee Jones <lee.jones@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v2 10/16] gpio: add a reusable generic gpio_chip using
+ regmap
+In-Reply-To: <CACRpkdaqgHhPwdKdUai4zvi21qR-cSQUKyzZ3SyfWBLPN9us3w@mail.gmail.com>
+References: <20200402203656.27047-1-michael@walle.cc>
+ <20200402203656.27047-11-michael@walle.cc>
+ <CACRpkdaqgHhPwdKdUai4zvi21qR-cSQUKyzZ3SyfWBLPN9us3w@mail.gmail.com>
+Message-ID: <f82706a8596436d13642c49e26233133@walle.cc>
+X-Sender: michael@walle.cc
+User-Agent: Roundcube Webmail/1.3.10
+X-Spamd-Bar: +
+X-Rspamd-Server: web
+X-Rspamd-Queue-Id: 062C222EEB
+X-Spamd-Result: default: False [1.40 / 15.00];
+         FROM_HAS_DN(0.00)[];
+         TO_DN_SOME(0.00)[];
+         FREEMAIL_ENVRCPT(0.00)[gmail.com];
+         TO_MATCH_ENVRCPT_ALL(0.00)[];
+         TAGGED_RCPT(0.00)[dt];
+         MIME_GOOD(-0.10)[text/plain];
+         DKIM_SIGNED(0.00)[];
+         RCPT_COUNT_TWELVE(0.00)[23];
+         NEURAL_HAM(-0.00)[-0.393];
+         RCVD_COUNT_ZERO(0.00)[0];
+         FROM_EQ_ENVFROM(0.00)[];
+         MIME_TRACE(0.00)[0:+];
+         FREEMAIL_CC(0.00)[vger.kernel.org,lists.infradead.org,baylibre.com,kernel.org,suse.com,roeck-us.net,linaro.org,gmail.com,pengutronix.de,linux-watchdog.org,nxp.com,linutronix.de,lakedaemon.net,linuxfoundation.org];
+         MID_RHS_MATCH_FROM(0.00)[];
+         SUSPICIOUS_RECIPS(1.50)[]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 17, 2020 at 11:12:14AM +0800, Jason Wang wrote:
-> 
-> On 2020/4/17 上午6:55, Michael S. Tsirkin wrote:
-> > On Wed, Apr 15, 2020 at 10:43:56AM +0800, Jason Wang wrote:
-> > > We try to keep the defconfig untouched after decoupling CONFIG_VHOST
-> > > out of CONFIG_VIRTUALIZATION in commit 20c384f1ea1a
-> > > ("vhost: refine vhost and vringh kconfig") by enabling VHOST_MENU by
-> > > default. Then the defconfigs can keep enabling CONFIG_VHOST_NET
-> > > without the caring of CONFIG_VHOST.
-> > > 
-> > > But this will leave a "CONFIG_VHOST_MENU=y" in all defconfigs and even
-> > > for the ones that doesn't want vhost. So it actually shifts the
-> > > burdens to the maintainers of all other to add "CONFIG_VHOST_MENU is
-> > > not set". So this patch tries to enable CONFIG_VHOST explicitly in
-> > > defconfigs that enables CONFIG_VHOST_NET and CONFIG_VHOST_VSOCK.
-> > > 
-> > > Acked-by: Christian Borntraeger<borntraeger@de.ibm.com>  (s390)
-> > > Acked-by: Michael Ellerman<mpe@ellerman.id.au>  (powerpc)
-> > > Cc: Thomas Bogendoerfer<tsbogend@alpha.franken.de>
-> > > Cc: Benjamin Herrenschmidt<benh@kernel.crashing.org>
-> > > Cc: Paul Mackerras<paulus@samba.org>
-> > > Cc: Michael Ellerman<mpe@ellerman.id.au>
-> > > Cc: Heiko Carstens<heiko.carstens@de.ibm.com>
-> > > Cc: Vasily Gorbik<gor@linux.ibm.com>
-> > > Cc: Christian Borntraeger<borntraeger@de.ibm.com>
-> > > Reported-by: Geert Uytterhoeven<geert@linux-m68k.org>
-> > > Signed-off-by: Jason Wang<jasowang@redhat.com>
-> > I rebased this on top of OABI fix since that
-> > seems more orgent to fix.
-> > Pushed to my vhost branch pls take a look and
-> > if possible test.
-> > Thanks!
-> 
-> 
-> I test this patch by generating the defconfigs that wants vhost_net or
-> vhost_vsock. All looks fine.
-> 
-> But having CONFIG_VHOST_DPN=y may end up with the similar situation that
-> this patch want to address.
-> Maybe we can let CONFIG_VHOST depends on !ARM || AEABI then add another
-> menuconfig for VHOST_RING and do something similar?
-> 
-> Thanks
+Hi Linus,
 
-Sorry I don't understand. After this patch CONFIG_VHOST_DPN is just
-an internal variable for the OABI fix. I kept it separate
-so it's easy to revert for 5.8. Yes we could squash it into
-VHOST directly but I don't see how that changes logic at all.
+Am 2020-04-16 11:27, schrieb Linus Walleij:
+> On Thu, Apr 2, 2020 at 10:37 PM Michael Walle <michael@walle.cc> wrote:
+> 
+>> There are quite a lot simple GPIO controller which are using regmap to
+>> access the hardware. This driver tries to be a base to unify existing
+>> code into one place. This won't cover everything but it should be a 
+>> good
+>> starting point.
+>> 
+>> It does not implement its own irq_chip because there is already a
+>> generic one for regmap based devices. Instead, the irq_chip will be
+>> instanciated in the parent driver and its irq domain will be associate
+>> to this driver.
+>> 
+>> For now it consists of the usual registers, like set (and an optional
+>> clear) data register, an input register and direction registers.
+>> Out-of-the-box, it supports consecutive register mappings and mappings
+>> where the registers have gaps between them with a linear mapping 
+>> between
+>> GPIO offset and bit position. For weirder mappings the user can 
+>> register
+>> its own .xlate().
+>> 
+>> Signed-off-by: Michael Walle <michael@walle.cc>
+> 
+> Overall I really like this driver and I think we should merge is as 
+> soon
+> as it is in reasonable shape and then improve on top so we can start
+> migrating drivers to it.
+> 
+>> +static int gpio_regmap_to_irq(struct gpio_chip *chip, unsigned int 
+>> offset)
+>> +{
+>> +       struct gpio_regmap_data *data = gpiochip_get_data(chip);
+>> +       struct gpio_regmap *gpio = data->gpio;
+>> +
+>> +       /* the user might have its own .to_irq callback */
+>> +       if (gpio->to_irq)
+>> +               return gpio->to_irq(gpio, offset);
+>> +
+>> +       return irq_create_mapping(gpio->irq_domain, offset);
+> 
+> I think that should at least be irq_find_mapping(), the mapping should
+> definately not be created by the .to_irq() callback since that is just
+> a convenience function.
 
--- 
-MST
+what do you mean by conenience function? are there other ways? if you 
+use
+irq_find_mapping() who will create the mappings? most gpio drivers use a
+similar function like gpio_regmap_to_irq().
 
+> 
+>> +       if (gpio->irq_domain)
+>> +               chip->to_irq = gpio_regmap_to_irq;
+> 
+> I don't know about this.
+> (...)
+>> + * @irq_domain:                (Optional) IRQ domain if the 
+>> controller is
+>> + *                     interrupt-capable
+> (...)
+>> +       struct irq_domain *irq_domain;
+> 
+> I don't think this is a good storage place for the irqdomain, we 
+> already have
+> gpio_irq_chip inside gpio_chip and that has an irqdomain, we should
+> strive to reuse that infrastructure also for regmap GPIO I think, for 
+> now
+> I would just leave .to_irq() out of this and let the driver deal with 
+> any
+> irqs.
+
+How would a driver attach the to_irq callback then? At the moment, the
+gpio_regmap doesn't expose the gpio_chip. So either we have to do that 
+or
+the config still have to have a .to_irq property.
+
+-michael
