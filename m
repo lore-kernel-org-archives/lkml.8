@@ -2,93 +2,131 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADCC7C3815B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 17:27:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50549C3815B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 17:28:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 87FE5208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 17:27:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587144475;
-	bh=s4z8xp1gcN7AJEfPRORCrUcBbwIBzQH9fq9yY2je0IY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=vm+wCUWEnnq7Ix6xGSDPRs8kWa6+wARDmyOyDnDgR7LGuzZAgNIcfSc9HvFXHwuZM
-	 y/L04Sy2PKe9tSiwte1Wikr9KZ6m86G2T69wDj6seZBnpsIf3zc9gUJaYkzJcPvL4K
-	 M0vLCl3I2POucylmCkzAwq8+Eg6k0Uasd2slYtFM=
+	by mail.kernel.org (Postfix) with ESMTP id 33E722078E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 17:28:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="xro3vdZ6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729880AbgDQR1y (ORCPT
+        id S1729931AbgDQR21 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 13:27:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34862 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728737AbgDQR1x (ORCPT
+        Fri, 17 Apr 2020 13:28:27 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:50000 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728644AbgDQR21 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 13:27:53 -0400
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2AF5AC061A0F
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 10:27:53 -0700 (PDT)
-Received: by mail-lf1-x144.google.com with SMTP id r17so2452365lff.2
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 10:27:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=C5NQST1nyAnu8ptbe8LACwEwOXn5hUjgwJZB1HluWEM=;
-        b=BSDsQEQvITDO8FLYNfEM0Jy04yGRqu4vT5WnT4ovVsI9MQ2hNBwuBUKS2lm53hq5Bv
-         WHnmjmziBdosh0dRodafXf1uMEqQeME9vosQjgwmwclZP9dIODWxm8GmEinVVsDSTl7o
-         MNme38G/piidMQHqHQGf3MIdQ0/f7fGAcyfdU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=C5NQST1nyAnu8ptbe8LACwEwOXn5hUjgwJZB1HluWEM=;
-        b=XnirT6rA0NH2lTJQ26tXxcZ4tpjtcvu8fpXARRdA8kjxg7sXLGkHXxskh8PRT23ETv
-         JoWt7AWTFjx12RA4/guPswtAD6FHUclj0fmhzUi1lSYoxO3piejcuzTSCyopr6UdFOxA
-         BDyw24KWheAiOKTNQTRum7gBe850osuyWsdsPDVgz10M65YfTYg7DRGPV+nQggCIksTV
-         6kYoBIVtuRqlqeVYaELcLUGRGInFMyzVp0FvtfK7BM5pzx7NpudovZXqfywKba9BH+aN
-         jKwlet064YVlRAyiRT6/k6eJdNSwFh581emI2lJEQ/gXYrWXlqvU+SZcSHWk+rFRqjpD
-         zFTg==
-X-Gm-Message-State: AGi0PuYXJWE2LoRnFth3QiUjT7EosqHH4J4oI4Ud5s8AvOCHr32DSnPp
-        Wv8q+3b3WLNhzJtfOeSfulNeXAzPBDI=
-X-Google-Smtp-Source: APiQypJWh61MAD5Il8dxcp9zq5ipRUOwDDWkmNlNp4TQFrA9gwSq37hkF72ErgM8/So9nEzg0nUpIw==
-X-Received: by 2002:ac2:420c:: with SMTP id y12mr2833154lfh.26.1587144471217;
-        Fri, 17 Apr 2020 10:27:51 -0700 (PDT)
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com. [209.85.208.169])
-        by smtp.gmail.com with ESMTPSA id m18sm18378317lfj.10.2020.04.17.10.27.50
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 17 Apr 2020 10:27:50 -0700 (PDT)
-Received: by mail-lj1-f169.google.com with SMTP id z26so2822489ljz.11
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 10:27:50 -0700 (PDT)
-X-Received: by 2002:a2e:870f:: with SMTP id m15mr2800184lji.16.1587144470102;
- Fri, 17 Apr 2020 10:27:50 -0700 (PDT)
+        Fri, 17 Apr 2020 13:28:27 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 03HHSPtU124434;
+        Fri, 17 Apr 2020 12:28:25 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1587144505;
+        bh=XcktGMm86LrXuFXN4E3o1fTOY1S7SluLSzDZzcvaRfU=;
+        h=From:To:CC:Subject:Date;
+        b=xro3vdZ60hwDNJ2pPIpedzJgEsmZlvi1+XWwEEF0tKRoNQSsPdJzaS1w2MMwmNKEd
+         Ivk1gNuVi9DaSpPnloPHOvXFNvgZcvrsFIe5f993bNzhlR1lGYcj/sVtlxziF9qXHM
+         xYe/KfaVumSTQEIKwZbqV61krYbRL5r7qrZUB5lo=
+Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 03HHSPLq040818
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 17 Apr 2020 12:28:25 -0500
+Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 17
+ Apr 2020 12:28:24 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Fri, 17 Apr 2020 12:28:24 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03HHSOVV048276;
+        Fri, 17 Apr 2020 12:28:24 -0500
+From:   Dan Murphy <dmurphy@ti.com>
+To:     <sre@kernel.org>
+CC:     <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Dan Murphy <dmurphy@ti.com>, Rob Herring <robh@kernel.org>
+Subject: [PATCH 1/2] dt-bindings: power: Add the BQ27561 fuel gauge bindings
+Date:   Fri, 17 Apr 2020 12:22:26 -0500
+Message-ID: <20200417172227.28075-1-dmurphy@ti.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <2750fd4f-8edc-18c2-1991-c1dc794a431f@kernel.dk> <CAHk-=wiWP0M=ZAim7VVuoR+5ri+Ug+KZDE-TZskma4HV91ACxA@mail.gmail.com>
-In-Reply-To: <CAHk-=wiWP0M=ZAim7VVuoR+5ri+Ug+KZDE-TZskma4HV91ACxA@mail.gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Fri, 17 Apr 2020 10:27:34 -0700
-X-Gmail-Original-Message-ID: <CAHk-=whhvP+UQ=A3SHFgT7DUFJ-M7pFPrUusJSFo8p0x8wQUhw@mail.gmail.com>
-Message-ID: <CAHk-=whhvP+UQ=A3SHFgT7DUFJ-M7pFPrUusJSFo8p0x8wQUhw@mail.gmail.com>
-Subject: Re: [GIT PULL] io_uring fixes for 5.7-rc
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        io-uring <io-uring@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 17, 2020 at 10:26 AM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> I cannot convince myself it is right. How do you convince yourself?
+Introduce the Texas Instrument BQ27561 and BQ27750 fuel gauge device
+tree bindings.
 
-.. and equally importantly: even if it were to be now correct - how do
-you make sure it keeps working when it's so odd and subtle and crazy?
+Cc: Rob Herring <robh@kernel.org>
+Signed-off-by: Dan Murphy <dmurphy@ti.com>
+---
+ .../bindings/power/supply/bq27561.yaml        | 46 +++++++++++++++++++
+ 1 file changed, 46 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/power/supply/bq27561.yaml
 
-               Linus
+diff --git a/Documentation/devicetree/bindings/power/supply/bq27561.yaml b/Documentation/devicetree/bindings/power/supply/bq27561.yaml
+new file mode 100644
+index 000000000000..abc9acdbc704
+--- /dev/null
++++ b/Documentation/devicetree/bindings/power/supply/bq27561.yaml
+@@ -0,0 +1,46 @@
++# SPDX-License-Identifier: GPL-2.0
++# Copyright (C) 2020 Texas Instruments Incorporated
++%YAML 1.2
++---
++$id: "http://devicetree.org/schemas/power/supply/bq27561.yaml#"
++$schema: "http://devicetree.org/meta-schemas/core.yaml#"
++
++title: TI BQ27561 and BQ27750 Fuel Gauges
++
++maintainers:
++  - Dan Murphy <dmurphy@ti.com>
++
++description: |
++  The bq27z561 device provides a feature-rich gas gauging solution for
++  single-cell battery pack applications.
++
++  Specifications about the charger can be found at:
++    https://www.ti.com/lit/gpn/bq27z561
++    https://www.ti.com/lit/gpn/bq27750
++
++properties:
++  compatible:
++    enum:
++      - ti,bq27561
++      - ti,bq27750
++
++  reg:
++    maxItems: 1
++    description: |
++      I2C address of the device which is 0x55
++
++required:
++  - compatible
++  - reg
++additionalProperties: false
++
++examples:
++  - |
++    i2c0 {
++      #address-cells = <1>;
++      #size-cells = <0>;
++      fuel_gauge@55 {
++        compatible = "ti,bq27561";
++        reg = <0x55>;
++      };
++    };
+-- 
+2.25.1
+
