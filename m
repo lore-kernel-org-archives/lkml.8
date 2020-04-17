@@ -2,210 +2,181 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB652C2D0EF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 15:56:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3932EC38A2B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 15:58:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8DF3E20656
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 15:56:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12FA02223C
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 15:58:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="hjCFx5RJ"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=marvell.com header.i=@marvell.com header.b="OMb3OPrW";
+	dkim=pass (1024-bit key) header.d=marvell.onmicrosoft.com header.i=@marvell.onmicrosoft.com header.b="o5psAuTJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729511AbgDQP4W (ORCPT
+        id S1729654AbgDQP6Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 11:56:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48838 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728550AbgDQP4V (ORCPT
+        Fri, 17 Apr 2020 11:58:25 -0400
+Received: from mx0a-0016f401.pphosted.com ([67.231.148.174]:40800 "EHLO
+        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726168AbgDQP6Y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 11:56:21 -0400
-Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76F84C061A0C
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 08:56:21 -0700 (PDT)
-Received: by mail-qt1-x844.google.com with SMTP id 71so2285165qtc.12
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 08:56:21 -0700 (PDT)
+        Fri, 17 Apr 2020 11:58:24 -0400
+Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
+        by mx0a-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03HFojW7018788;
+        Fri, 17 Apr 2020 08:58:00 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=date : from : to :
+ cc : subject : message-id : references : content-type : in-reply-to :
+ mime-version; s=pfpt0818; bh=GHJqwHnlfX5LnfNP4c4y2w3xQ2GjYgiWbKzK5jxCqMU=;
+ b=OMb3OPrWuEuSXsD4MSLXb8g8iPFCfX+9OGRnBsFw/mLy+kyPDItnyDoeH2n0g74UB1S9
+ SGmw1N+gcXRwMn6SGgl/o1qTVaWgI6iH24wpdiGUsqLBttxBDtANnH336xLjTV7spgdC
+ w1Fy3fN8a9F/t77HPkHmaX/auN5U17qDDxC4mS8/Yub5d47L2LtgkRqltHTx2FfJzwFt
+ cCn3xhmfdqithTX67TYZ6urye1GwDb1oqoFA3O2bEyRjiIZ3eFYGWkJmDrySbLQgU8iB
+ 3Vi1MxIRQ9mBjDLBAM4rmiP5vC/wSwNmDrpFAcoi0RCGO59z+RhuI39k0t1QTj8qBr2C xQ== 
+Received: from sc-exch01.marvell.com ([199.233.58.181])
+        by mx0a-0016f401.pphosted.com with ESMTP id 30dn8gvrrk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Fri, 17 Apr 2020 08:58:00 -0700
+Received: from SC-EXCH03.marvell.com (10.93.176.83) by SC-EXCH01.marvell.com
+ (10.93.176.81) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Fri, 17 Apr
+ 2020 08:57:58 -0700
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (104.47.55.169)
+ by SC-EXCH03.marvell.com (10.93.176.83) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2 via Frontend Transport; Fri, 17 Apr 2020 08:57:58 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ecN9CUm1H6FVeUe6dVRXFNTV2CMMHS4LjehedpYY0QJlw2emdkZpshnPrZbYxTpYgspkdBGdpEoh3qWRj3BtpES6EgFxPi7cgHF7CZ9+7IJeIaPit+mXvLWMhCyZ6o/RoQvD0sixau0IAQpqJTb1If35Z4xRyGmUDZsAfvkA8uKs3N4aochtrN//ED1nUehoZn/Xz4JoDX7IWUUG8+dpm5/1ixwU3k2tzO6C5aTaBbUqKDjUXbBHHh77ScX7Zp8a7zuLsH38thM4PC0sw2uRXl+t5edfbMq0ghC/hU2dY42r+UOJlTxl2RetwDPHby2OPUTiGaZvrPZ1+VSqbW/5nw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=GHJqwHnlfX5LnfNP4c4y2w3xQ2GjYgiWbKzK5jxCqMU=;
+ b=QlWEQDbVbSqYqoTaBF3FnzfGzZRXv0PFbtg0k7OAQGA9Bipj9QbNVCe8emYF/yWM7Oks4WN+GRnj5LLDwSBLc7AkwtgOzImC/PwPzvpufOM9RHhK5hLQL0dTa3k9oz9IJYbhkl7LGAFOPWML/Qr1qURI8AY9GnZ7TsaMHV7hJcE+j/fzSBHbWgwS49BKd/3Vly81gmxIfsV+X9hThjrlXDhcRdaap5KWTIjG6K5nyEk2MdIpg9P+yRpa8GNOIDnv3Aty5XxVK1CfxYj3J/f2w6EeZ7l2b9ZHu5Cz75sp1LVGJ1dfqmuq2jCHwGgrlaS2P0p6trohlKGM4zKydNm94w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=marvell.com; dmarc=pass action=none header.from=marvell.com;
+ dkim=pass header.d=marvell.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=X5ZmL/lkK7p6sLrLWGHaYJr8ALem1oHicAKASp6iJuw=;
-        b=hjCFx5RJ3D/BBYOq+Y6PDF/JMJ6L7fE5sjgYh/a751A4DDAqmv9Dg4L93SeUqCfdLz
-         cuToO5Z8aNGs/aNNgZrhVSEXyh/FdCp6OGrRr9LXeZ5bUQfjLQOXPSB2wzB9QRh+cwCD
-         L3gvo8ffRa/HFxNoSLGjQXnXEWL+ppxM35jar5tIAnlo667Pz1jUIOT5tSKI63lUfLJ9
-         QeBNdWDkmL1Eos75ndtt7TM9C3LXhq1BRXP6WCtXv7vEhWrUxLVzz57w53bot/xc2ezs
-         BSSDNLAyfMoe2Zq+ZYn/PvaW011qZcLtxNez831X+K0IHCJgXMnBoadAxdXHnTi0vCoE
-         ZaJA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=X5ZmL/lkK7p6sLrLWGHaYJr8ALem1oHicAKASp6iJuw=;
-        b=APqSjreGNbj6Unl+PIAJGUBkbD1Ok64KORxfX0l2p2oi0xrKezKLCW3FlXIlSuuM8B
-         EuIR0paBz4oU2Vuh+Q4GYgY+Pu+wUbpXNO7gSFEqWLEtIVLIQmzazN3cVKJ/JPa9KL+u
-         38FcwuBi+dJ4yUvxY5p2V0DSqEbw/X/D2CJdovuK+3TgvwowHC/gZ9tuGffNjs3ul5L9
-         /nXakpXiCSujebyB/im0DI3XQWp9K+CyPHP2a0+NsZnLQywLnokwpEwY+rXcDv89Yez6
-         aAlxCC6zoWH5FkYoiUEXxbanv9B1EUmmvsWYjPK4gZkQDkdoLmB59Ko/TwkGlFvJFaGS
-         3Tjw==
-X-Gm-Message-State: AGi0PubezRJXcvCQWmtgzAlO/AwFSUgq58KzexfZGpmd9zL2MdhnRN1O
-        unMrohp7Kcr+Oq468Mu0pxjK7A==
-X-Google-Smtp-Source: APiQypJ38fd0b2LrQ3XC+DfMxeutcIwIoSdqwwVCUYOwgW9Ij6b/tyXqcaVfXJ3Ob03JzSrm6kHntw==
-X-Received: by 2002:ac8:1788:: with SMTP id o8mr3659700qtj.15.1587138980467;
-        Fri, 17 Apr 2020 08:56:20 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
-        by smtp.gmail.com with ESMTPSA id x18sm9413102qkn.107.2020.04.17.08.56.19
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 17 Apr 2020 08:56:19 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1jPTLm-0002G7-US; Fri, 17 Apr 2020 12:56:18 -0300
-Date:   Fri, 17 Apr 2020 12:56:18 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     g@ziepe.ca, Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        selvin.xavier@broadcom.com, devesh.sharma@broadcom.com,
-        dledford@redhat.com, leon@kernel.org, colin.king@canonical.com,
-        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] RDMA/ocrdma: Fix an off-by-one issue in 'ocrdma_add_stat'
-Message-ID: <20200417155618.GG26002@ziepe.ca>
-References: <20200328073040.24429-1-christophe.jaillet@wanadoo.fr>
- <20200414183441.GA28870@ziepe.ca>
- <20200416130847.GP1163@kadam>
- <20200416184754.GZ5100@ziepe.ca>
- <20200417112624.GS1163@kadam>
- <20200417122542.GC5100@ziepe.ca>
- <20200417130955.GU1163@kadam>
- <20200417134816.GD26002@ziepe.ca>
- <20200417151314.GV1163@kadam>
-MIME-Version: 1.0
+ d=marvell.onmicrosoft.com; s=selector1-marvell-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=GHJqwHnlfX5LnfNP4c4y2w3xQ2GjYgiWbKzK5jxCqMU=;
+ b=o5psAuTJ+1ob7O4kVDh/jan+kj5rAthP7bu9kylEjmoR6k/7+n6vppG8fhS9teALwz3V65nylcFke7BU1CYkQNmesTCejcKmXg8eqdB1HtESnR2gtdLjOAv2wJecKovViDp0ltEL6fLtL6nN+msyc80L0I0XanEafQS/hm0SSl8=
+Received: from BYAPR18MB2661.namprd18.prod.outlook.com (2603:10b6:a03:136::26)
+ by BYAPR18MB2984.namprd18.prod.outlook.com (2603:10b6:a03:10f::33) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2921.27; Fri, 17 Apr
+ 2020 15:57:57 +0000
+Received: from BYAPR18MB2661.namprd18.prod.outlook.com
+ ([fe80::a165:ffa5:f3eb:d62d]) by BYAPR18MB2661.namprd18.prod.outlook.com
+ ([fe80::a165:ffa5:f3eb:d62d%7]) with mapi id 15.20.2900.028; Fri, 17 Apr 2020
+ 15:57:57 +0000
+Date:   Fri, 17 Apr 2020 17:57:47 +0200
+From:   Robert Richter <rrichter@marvell.com>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+CC:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Wei Xu <xuwei5@hisilicon.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Arnd Bergmann <arnd@arndb.de>, <linux-arm-msm@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/2] [RFC] arm64: Add dependencies to vendor-specific
+ errata
+Message-ID: <20200417155746.25ugwk75quocyb4x@rric.localdomain>
+References: <20200416115658.20406-1-geert+renesas@glider.be>
+ <20200416115658.20406-3-geert+renesas@glider.be>
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200417151314.GV1163@kadam>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200416115658.20406-3-geert+renesas@glider.be>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-ClientProxiedBy: HE1PR0502CA0024.eurprd05.prod.outlook.com
+ (2603:10a6:3:e3::34) To BYAPR18MB2661.namprd18.prod.outlook.com
+ (2603:10b6:a03:136::26)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from rric.localdomain (31.208.96.227) by HE1PR0502CA0024.eurprd05.prod.outlook.com (2603:10a6:3:e3::34) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2921.26 via Frontend Transport; Fri, 17 Apr 2020 15:57:54 +0000
+X-Originating-IP: [31.208.96.227]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: bdceadc0-ec8b-495e-b1d3-08d7e2e818d1
+X-MS-TrafficTypeDiagnostic: BYAPR18MB2984:
+X-Microsoft-Antispam-PRVS: <BYAPR18MB2984BF7924894E27DECC7645D9D90@BYAPR18MB2984.namprd18.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
+X-Forefront-PRVS: 0376ECF4DD
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR18MB2661.namprd18.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(346002)(39860400002)(376002)(366004)(396003)(136003)(55016002)(2906002)(5660300002)(4326008)(316002)(1076003)(54906003)(8676002)(6506007)(53546011)(8936002)(86362001)(26005)(81156014)(52116002)(7696005)(66946007)(478600001)(6666004)(66476007)(186003)(16526019)(66556008)(956004)(9686003)(7416002);DIR:OUT;SFP:1101;
+Received-SPF: None (protection.outlook.com: marvell.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: dNUdxbhF2B2e7VtgGNaHaksXWCSIvob1C1FpAvPDEUN3MinlBSLM6ELidQ2iRpa9roshacrNq+QlBdHpr9R9ACmvswUkJvCnavi/85kkKrLaxzY7zy5iLgOHf2HNVNPJv70f64ZqhwWDyzcsYsIcG3jomm6ITKbBbz7SEPSdN5nlcpqaiyW/b5Uwl6pBBqMDudhdwgM5xCvoVAE29+p7LUrnUwcKCcCKCNpwNbNhjg5KcyF7RuKoa+cSGcLFawOD79+SNDU3PUlEHX/qDIw+KQp3vmlK0x0Tpmfsua/UYyGg4EnFVh+VrAck7IiFRtcvevbKa9v2QFoQJcVDCMPJI+tyyfsReQq191fUtYvhiVbQSlqYAG8Gk2yz/5IRBfyCtmPEjrihfzAD/Ob2yiXkEA4qvXCNkgdEdeEjk0U+GltrhL9LrkQuNbhuvou1NbCT
+X-MS-Exchange-AntiSpam-MessageData: jjCCLRvkgpPfjL3LWk3dVoO7ruMMhvQWGYSQg+dz1UKqR9JIAdm70DstNS7rqHX/N+5EOEsEAd1yajAajejRv/WjAsTmQJ3S4bVLgHSXU4natRsX83XTv8FRUU2ZsU4Zm9NSIsJTeVulnKonbo+3Lg==
+X-MS-Exchange-CrossTenant-Network-Message-Id: bdceadc0-ec8b-495e-b1d3-08d7e2e818d1
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Apr 2020 15:57:57.5638
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 1O2IqzrJtN+amyUUA9E0WpfixsfmnQpxV5vxoJ3C5RkIN7TyvV8qfRAq23xiUYJqle5Oqt3L8Mj4UsoKpB8tMg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR18MB2984
+X-OriginatorOrg: marvell.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-17_07:2020-04-17,2020-04-17 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 17, 2020 at 06:13:14PM +0300, Dan Carpenter wrote:
-> I was just meant unsigned iterators, not sizes.  I consider that to be a
-> different sort of bug.  The original code did this:
+On 16.04.20 13:56:58, Geert Uytterhoeven wrote:
+> Currently the user is asked about enabling support for each and every
+> vendor-specific erratum, even when support for the specific platform is
+> not enabled.
 > 
-> 	desc_size = max_t(int, 32, desc_size);
+> Fix this by adding platform dependencies to the config options
+> controlling support for vendor-specific errata.
 > 
-> Using signed casts for min_t() always seems like a crazy thing to me.  I
-> have a static checker warning for those but I think people didn't accept
-> my patches for those if it was only for kernel hardenning and
-> readability instead of to fix bugs.  I don't know why, maybe casting to
-> an int is faster?
-
-Casting usually doesn't cost anything... But I think this shows again
-why int is trouble: most likely desc_size is a unsigned value stored
-in an int, and the temptation of max_t is to use the type of the
-output variable.  So 'int' is a logical, if not bonkers choice.
-
-If desc_size was properly unsigned then the author should keep using
-unsigned through the max_t()
-
-> > > You would need to hit a series of fairly rare events for this
-> > > warning to be useful and I have never seen that happen yet.
-> > 
-> > IIRC the case was the uapi rightly used u32, which was then wrongly
-> > implicitly cast to some internal function,  accepting int, which then
-> > did something sort of like
-> > 
-> >   int len
-> >   if (len >= sizeof(a))
-> >        return -EINVAL
-> >   copy_from_user(a, b, len)
+> Note that FUJITSU_ERRATUM_010001 is left untouched, as no config symbol
+> exists for the Fujitsu A64FX platform.
 > 
-> This code works.  "len" is type promoted to unsigned and negative values
-> are rejected.
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+>  arch/arm64/Kconfig | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
 
-Expecting people to know the unsigned/sign implicit promotion rules
-for expressions to determine the code is right/wrong is just asking to
-much, IMHO. I certainly don't have them all memorized and try to avoid
-them :(
+> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+> index 8d33d7fed6d8549b..81f52f0b988e6350 100644
+> --- a/arch/arm64/Kconfig
+> +++ b/arch/arm64/Kconfig
+> @@ -622,6 +622,8 @@ config ARM64_ERRATUM_1542419
+>  
+>  	  If unsure, say Y.
+>  
+> +if ARCH_THUNDER2
+> +
+>  config CAVIUM_ERRATUM_22375
+>  	bool "Cavium erratum 22375, 24313"
+>  	default y
+> @@ -697,6 +699,8 @@ config CAVIUM_TX2_ERRATUM_219
+>  
+>  	  If unsure, say Y.
+>  
+> +endif # ARCH_THUNDER2
 
-Using int pretty much guarentees you hit those cases...
+For Cavium servers these ARCH_* options are only used to enable some
+minor (mostly platform) drivers (i2c, spi, gpio, etc.), so the options
+are not of much use and I better would like to get rid of them
+completely, which makes us independent and more flexible when enabling
+or disabling options. In ThunderX* systems there are not many devices
+that are soc or board specific, most of them are detected using
+generic methods like pci or acpi. So the situation is rather
+comparable to x86 systems (there are options based on vendor or core)
+than to ARM embedded chips.
 
-> The real life example was slightly more complicated than that.  But the
-> point is that a lot of people think unsigned values are inherently more
-> safe and they use u32 everywhere as a default datatype.  I argue that
-> the default should always be int unless there is a good reason
-> otherwise.
+Using the ARCH_* options to control also enablement of cpu errata
+handling would add a strong dependency here and will make that options
+a requirement.
 
-Why? In my experience most values actually are never negative.
+How about having core/vendor specific submenus that make switching off
+options easier?
 
-> to save memory.  There are reasons for the other datatypes to exist, but
-> using them is tricky so it's best to avoid it if you can.
+Thanks,
 
-I can't say I have the same experience..
- 
-> There is a lot of magic to making your limits unsigned long type.
-
-Oh? More magic than int is implictly promoted to unsigned anyhow?
-
-> > > Originally if user_value was an int then the loop would have been a
-> > > harmless no-op but now it was a large positive value so it lead to
-> > > memory corruption.  Another example is:
-> > > 
-> > > 	for (i = 0; i < user_value - 1; i++) {
-> > 
-> > Again, code like this is simply missing required input validation. The
-> > for loop works with int by dumb luck, and this would be broken if it
-> > called copy_from_user.
-> 
-> The thing about int type is that it works like people expect normal
-> numbers to work.
-
-Not really. Some cases are a bit better, some are worse. As above when
-using int:
-
- -1 >= sizeof(A) == true
-
-Which is not at all how any sane person thinks about normal
-numbers. There are lots of these odd traps around implicit promotion.
-
-While foo-1 is right there, explicitly. If foo-1 < 0 and the code is
-not expecting it then you have a clear problem.
-
-> People normally think that zero minus one is going to
-> be negative but if they change to u32 by default then it wraps to
-> UINT_MAX and that's unexpected.  
-
-Maybe I've been doing this too long, but this seems totally expected
-to me...
-
-> There is an element where the static checker encourages people to
-> "change your types to match" and that's garbage advice.  Changing
-> your types doesn't magically make things better and I would argue
-> that it normally makes things worse.
-
-I don't know much about this warning, but I do find that people
-starting out tend to just use 'int' everywhere and 'hope for the best'
-without any clear understanding or thinking of what types are what.
-
-> > If you get the in habit of using types properly then it is less likely
-> > this bug-class will happen. If your habit is to just always use 'int'
-> > for everything then you *will* accidently cause a user value to be
-> > implicitly casted.
-> 
-> This is an interesting theory but I haven't seen any evidence to support
-> it.  My intuition is that it's better to only care when you have to
-> otherwise you get overwhelmed.
-
-If you make everything unsigned, there really is no downside, other
-than possible subtraction related issues that exist anyhow, AFAIK.
-
-This is the approach the C std uses, pretty much the entire API is
-properly marked with signed/unsigned. I feel in pretty good company
-advocating that this is the best way to write C code :)
-
-But then again, I find the modular math intuitive and aware to be
-careful with subtraction...
-
-Jason
+-Robert
