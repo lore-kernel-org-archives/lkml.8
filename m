@@ -2,102 +2,94 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92DD4C2D0EF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 18:24:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FDEDC2D0EF
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 18:27:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7319122202
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 18:24:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="wIqsDV+N"
+	by mail.kernel.org (Postfix) with ESMTP id 1A72222247
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 18:27:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730596AbgDQSYH (ORCPT
+        id S1730798AbgDQS13 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 14:24:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43578 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730407AbgDQSYG (ORCPT
+        Fri, 17 Apr 2020 14:27:29 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:36778 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730256AbgDQS12 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 14:24:06 -0400
-Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5D83C061A0C
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 11:24:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=DiAL1Kli1dergiSVAf/Jbou57tH/ONAV2dcLWISgSX8=; b=wIqsDV+NZoQYY2Yw9XkSwGrVu0
-        QSTwgsJZ+xsMhm1Gip1qnno44KUegn95yLjAeOEaEjRLg7xW863exJ10cxWUiGfu6MrYtl3N9QeVc
-        3UAuCnTzmHkuNvr9fRv4o6d/TM7aWdSJDgIj0Br4syu4sRMqcefxOFdPxAKwIGD3hZ/XTdKiAZKBk
-        /+lb783gbdPhSWQ5fCwRF1E9NSF6M46hz1fhFtUrR88VCoVJoYKuKbXcVB3lvO8rqHV+ibkx9drwo
-        IpQGBU6Cl+Rvlzig4kwz3rNr4Xi3+JyncGYONAGLrDRIx4YQGj+ht4wtMStnrCZ5sS4OV38vJuDI7
-        fGiTXAuQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jPVeQ-0007ZF-3M; Fri, 17 Apr 2020 18:23:42 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 6BC243006E0;
-        Fri, 17 Apr 2020 20:23:39 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 5BBF72B124A89; Fri, 17 Apr 2020 20:23:39 +0200 (CEST)
-Date:   Fri, 17 Apr 2020 20:23:39 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Alexandre Chartre <alexandre.chartre@oracle.com>
-Cc:     tglx@linutronix.de, jpoimboe@redhat.com,
-        linux-kernel@vger.kernel.org, x86@kernel.org, mhiramat@kernel.org,
-        mbenes@suse.cz, jthierry@redhat.com
-Subject: Re: [PATCH v5 02/17] objtool: Better handle IRET
-Message-ID: <20200417182339.GJ20730@hirez.programming.kicks-ass.net>
-References: <20200416114706.625340212@infradead.org>
- <20200416115118.631224674@infradead.org>
- <8692ee18-e553-6f90-5291-62d6d57407cd@oracle.com>
+        Fri, 17 Apr 2020 14:27:28 -0400
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03HI3P1X066209;
+        Fri, 17 Apr 2020 14:27:28 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30fe1pyfyk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 17 Apr 2020 14:27:28 -0400
+Received: from m0098393.ppops.net (m0098393.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 03HI4GrO069361;
+        Fri, 17 Apr 2020 14:27:27 -0400
+Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30fe1pyfy7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 17 Apr 2020 14:27:27 -0400
+Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
+        by ppma02dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 03HIPnij021481;
+        Fri, 17 Apr 2020 18:27:26 GMT
+Received: from b01cxnp22034.gho.pok.ibm.com (b01cxnp22034.gho.pok.ibm.com [9.57.198.24])
+        by ppma02dal.us.ibm.com with ESMTP id 30b5h7scy4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 17 Apr 2020 18:27:26 +0000
+Received: from b01ledav005.gho.pok.ibm.com (b01ledav005.gho.pok.ibm.com [9.57.199.110])
+        by b01cxnp22034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03HIRQe539846214
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 17 Apr 2020 18:27:26 GMT
+Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id DE49AAE05C;
+        Fri, 17 Apr 2020 18:27:25 +0000 (GMT)
+Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 98712AE063;
+        Fri, 17 Apr 2020 18:27:25 +0000 (GMT)
+Received: from localhost.localdomain.com (unknown [9.85.151.210])
+        by b01ledav005.gho.pok.ibm.com (Postfix) with ESMTP;
+        Fri, 17 Apr 2020 18:27:25 +0000 (GMT)
+From:   Jared Rossi <jrossi@linux.ibm.com>
+To:     Eric Farman <farman@linux.ibm.com>,
+        Cornelia Huck <cohuck@redhat.com>
+Cc:     linux-s390@vger.kernel.org, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 0/1] vfio-ccw: Enable transparent CCW IPL from DASD
+Date:   Fri, 17 Apr 2020 14:29:38 -0400
+Message-Id: <20200417182939.11460-1-jrossi@linux.ibm.com>
+X-Mailer: git-send-email 2.21.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8692ee18-e553-6f90-5291-62d6d57407cd@oracle.com>
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-17_08:2020-04-17,2020-04-17 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 mlxlogscore=693
+ mlxscore=0 lowpriorityscore=0 priorityscore=1501 phishscore=0
+ malwarescore=0 spamscore=0 impostorscore=0 clxscore=1011 suspectscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004170141
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 17, 2020 at 07:37:32PM +0200, Alexandre Chartre wrote:
-> > @@ -2243,6 +2232,20 @@ static int validate_branch(struct objtoo
-> >   			break;
-> > +		case INSN_EXCEPTION_RETURN:
-> > +			if (handle_insn_ops(insn, &state))
-> > +				return 1;
-> 
-> Do we need to update the stack state for normal IRET? This wasn't done before.
-> So shouldn't this better be:
-> 
->                case INSN_EXCEPTION_RETURN:
->                         if (!func)
->                                 return 0;
-> 
->                         if (handle_insn_ops(insn, &state))
->                                 return 1;
-> 
->                         break;
+Remove the explicit prefetch check when using vfio-ccw devices.
+This check is not needed as all Linux channel programs are intended
+to use prefetch and will be executed in the same way regardless.
 
-Well, I was going to do the unconditional handle_insn_ops(), like
-mentioned, but then that intra_function_call thing spoiled it.
+Jared Rossi (1):
+  vfio-ccw: Enable transparent CCW IPL from DASD
 
-It doesn't matter though; STT_NOTYPE doesn't care.
+ drivers/s390/cio/vfio_ccw_cp.c  | 16 ++++------------
+ drivers/s390/cio/vfio_ccw_cp.h  |  2 +-
+ drivers/s390/cio/vfio_ccw_fsm.c |  6 +++---
+ 3 files changed, 8 insertions(+), 16 deletions(-)
 
-> > +
-> > +			/*
-> > +			 * This handles x86's sync_core() case, where we use an
-> > +			 * IRET to self. All 'normal' IRET instructions are in
-> > +			 * STT_NOTYPE entry symbols.
-> > +			 */
-> > +			if (func)
-> > +				break;
-> 
-> Is it worth checking that func->name is effectively "sync_core"?
+-- 
+2.17.0
 
-It's an inline..
