@@ -2,83 +2,130 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CB35C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 03:24:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FE94C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 03:24:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4BAC521D94
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 03:24:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="U55S4Mjk"
+	by mail.kernel.org (Postfix) with ESMTP id 0791721D94
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 03:24:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728433AbgDQDYF (ORCPT
+        id S1729136AbgDQDYP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 23:24:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44950 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726319AbgDQDYF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 23:24:05 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19F74C061A0C
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 20:24:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=4NwRdnd1tqHPknUqRG8dZUJNk1TYuEB6jMxKNZTYnKQ=; b=U55S4Mjk3H/DrgX1Nyk3DwecPx
-        3RJmjnZtDd66aTMXfWjADMplV3gkjopia000iB+pHjew3iT1rNXZVQRbZYX/wv1l56w7iL2V9c6qV
-        RYUOD5NdhycZ5NQco7Bk7Kxhry9iDWjfeKVlIfI27M9d7tnwIUmN9tfwTn5Dr2yxoV5ZH6FwmCPTf
-        ezxvyAxZslVYOgzG+zDCxiAIMDQrmZM6H4ZMI3y3xaPLmqjUqqEj8PI8ELcj8PziQXA0lX0HgFrY8
-        oOQF3pROJzkMuGePVojzUOJaSE3G/44BKEpWlh2FflNnAviNSZWvE1tWdlOm6RgwBkvEbA15YkeCq
-        sP7+/9qA==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jPHbe-0005WU-5o; Fri, 17 Apr 2020 03:23:54 +0000
-Date:   Thu, 16 Apr 2020 20:23:54 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Bernard Zhao <bernard@vivo.com>
-Cc:     Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, kernel@vivo.com
-Subject: Re: [PATCH] kmalloc_index optimization(code size & runtime stable)
-Message-ID: <20200417032354.GK5820@bombadil.infradead.org>
-References: <1587089010-110083-1-git-send-email-bernard@vivo.com>
+        Thu, 16 Apr 2020 23:24:15 -0400
+Received: from mga04.intel.com ([192.55.52.120]:22715 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728444AbgDQDYO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 23:24:14 -0400
+IronPort-SDR: uRabRcaaOmb+cf1MiuROWjs7h8iT0TDopivNXN8HK7fJixhXf3x2w0WDXGbGKq78/nFT2fx9rk
+ b5+qb1bOWYHA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2020 20:24:14 -0700
+IronPort-SDR: vm7kEmXJN0BsDyOFZzfPgeTZf2QaefCY0zx1kjPSt7pVlPucMluF6jzrfE1Y6kcew5SMLDtqeZ
+ f0IdLxZxxWtA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,393,1580803200"; 
+   d="scan'208";a="254081720"
+Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.141])
+  by orsmga003.jf.intel.com with ESMTP; 16 Apr 2020 20:24:11 -0700
+Date:   Fri, 17 Apr 2020 11:21:32 +0800
+From:   Xu Yilun <yilun.xu@intel.com>
+To:     "Wu, Hao" <hao.wu@intel.com>
+Cc:     Tom Rix <trix@redhat.com>, "mdf@kernel.org" <mdf@kernel.org>,
+        "linux-fpga@vger.kernel.org" <linux-fpga@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "bhu@redhat.com" <bhu@redhat.com>
+Subject: Re: [PATCH 1/2] fpga: dfl: pci: reduce the scope of variable 'ret'
+Message-ID: <20200417032132.GA25293@yilunxu-OptiPlex-7050>
+References: <1587006712-22696-1-git-send-email-yilun.xu@intel.com>
+ <1587006712-22696-2-git-send-email-yilun.xu@intel.com>
+ <DM6PR11MB3819619E9B2C7326218247E385D80@DM6PR11MB3819.namprd11.prod.outlook.com>
+ <9b1d85e0-4f44-179b-c847-af858fcc212a@redhat.com>
+ <20200417015605.GA30618@yilunxu-OptiPlex-7050>
+ <DM6PR11MB381919B83DB49F937E3EDEEA85D90@DM6PR11MB3819.namprd11.prod.outlook.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1587089010-110083-1-git-send-email-bernard@vivo.com>
+In-Reply-To: <DM6PR11MB381919B83DB49F937E3EDEEA85D90@DM6PR11MB3819.namprd11.prod.outlook.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 16, 2020 at 07:03:30PM -0700, Bernard Zhao wrote:
-> kmalloc_index inline function code size optimization and runtime
-> performance stability optimization. After optimization, the function
-> kmalloc_index is more stable, the size will never affecte the function`s
-> execution efficiency.
-> And follow test data shows that the performance of new optimization
-> exceeds the original algorithm when applying for more than 512 Bytes
-> (include 512B).And new optimization runtime is more stable than before.
+On Fri, Apr 17, 2020 at 11:05:16AM +0800, Wu, Hao wrote:
+> > -----Original Message-----
+> > From: Xu, Yilun <yilun.xu@intel.com>
+> > Sent: Friday, April 17, 2020 9:56 AM
+> > To: Tom Rix <trix@redhat.com>
+> > Cc: Wu, Hao <hao.wu@intel.com>; mdf@kernel.org; linux-
+> > fpga@vger.kernel.org; linux-kernel@vger.kernel.org; bhu@redhat.com
+> > Subject: Re: [PATCH 1/2] fpga: dfl: pci: reduce the scope of variable 'ret'
+> >
+> > Hi Rix:
+> >
+> > This patch is based on linux-next. There is an preceding patch
+> > (3c2760b78f90 "fpga: dfl: pci: fix return value of cci_pci_sriov_configure",
+> > Also see Fixes:) in linux-next but not merged in 5.7-rc1 yet.
+> > This patch is to fix the lkp warning brought by the previous one.
+> 
+> Yilun
+> 
+> Is it possible that commit id may be different for master then?
 
-That's all very well and good, but the vast majority of allocations
-are less than 512 bytes in size!  Your numbers show that on average,
-this patch makes the kernel slower!
+It is possible if the previous patch need a little change when merging
+to master.
 
->             size        time/Per 100 million times
->                         old fun		new fun with optimise
-> 		8	203777		241934
-> 		16	245611		409278
-> 		32	236384		408419
-> 		64	275499		447732
-> 		128	354909		416439
-> 		256	360472		406598
-> 		512	431072		409168
-> 		1024	463822		407401
+I'm not sure how to handle this then. But the previous patch is simple
+and is unlikely to change.
 
+> 
+> Thanks
+> Hao
+> 
+> >
+> > Thanks.
+> >
+> > On Thu, Apr 16, 2020 at 09:56:47AM -0700, Tom Rix wrote:
+> > > Please check the scope.
+> > >
+> > > On linus/master, the result of this change looks like
+> > >
+> > > static int cci_pci_sriov_configure(struct pci_dev *pcidev, int num_vfs)
+> > > {
+> > >     struct cci_drvdata *drvdata = pci_get_drvdata(pcidev);
+> > >     struct dfl_fpga_cdev *cdev = drvdata->cdev;
+> > >
+> > >     if (!num_vfs) {
+> > >         /*
+> > >          * disable SRIOV and then put released ports back to default
+> > >          * PF access mode.
+> > >          */
+> > >         pci_disable_sriov(pcidev);
+> > >
+> > >         dfl_fpga_cdev_config_ports_pf(cdev);
+> > >
+> > >     } else {
+> > >         int ret; <--- defined here
+> > >
+> > >         /*
+> > >          * before enable SRIOV, put released ports into VF access mode
+> > >          * first of all.
+> > >          */
+> > >         ret = dfl_fpga_cdev_config_ports_vf(cdev, num_vfs);
+> > >         if (ret)
+> > >             return ret;
+> > >
+> > >         ret = pci_enable_sriov(pcidev, num_vfs);
+> > >         if (ret)
+> > >             dfl_fpga_cdev_config_ports_pf(cdev);
+> > >     }
+> > >
+> > >     return ret;  <---- not in scope, not defined here
+> > > }
+> > >
+> > > Tom
