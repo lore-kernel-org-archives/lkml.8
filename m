@@ -2,113 +2,154 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90A55C2BB55
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 07:01:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1354BC352BE
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 07:01:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7136F221E9
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 07:01:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587106890;
-	bh=A6gsBqO/C5a7aGTcLYtMEYviXTXettEUMZQ5DBfDV8M=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=Be2/NlRtxxv6RUMfBgcI7IbBytkXTskUzXGivOVwqzXRWlrmhIPWe8JAVar6289Rr
-	 PPxF3k2IqHGBRHvgXM1ITQbMZ2/VjbKdhImw++rsVOlez3N1P8EUxG3ucLM+qyusnZ
-	 pn4wOQtS1qWDvQUyqyH2OKwwJtZ1bmbrVNeROvms=
+	by mail.kernel.org (Postfix) with ESMTP id E4FD6221EC
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 07:01:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="i+z1H6qc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728537AbgDQHB3 (ORCPT
+        id S1728449AbgDQHBZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 03:01:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50228 "EHLO
+        Fri, 17 Apr 2020 03:01:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50186 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728466AbgDQHB0 (ORCPT
+        with ESMTP id S1728219AbgDQHBP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 03:01:26 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 473FBC061A0C;
-        Fri, 17 Apr 2020 00:01:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
-        From:Date:Sender:Reply-To:Content-ID:Content-Description;
-        bh=HVLDZVgokzWLzBs8K61qPV5biQljs7Uy59BS0iqfE0Q=; b=YO7SX7phIzs9cV/Zpf/QAQy6HD
-        fB/L442Hz6q/J8L44pykzCYyA7ekbxWv6YGEzwv1vvxmAkWOpRUV5cnR74lIH//lNIR3dfwppS5T8
-        K69yNUkJC0S+pBqWd9pCx7p6+0IhyOVd0XMlnsHBOEoGc+4TKcstgQdqNGYN5pfawgc6VHWvq8umF
-        W1q7GrbvLSCBbX+SKWQ83NXeIJi1Ay1KmB6dA2+rnXTZjAEAxwbqAbwiBMXPd6qgpf9YyI/gIMlvG
-        wUEdnR9xsMm5TK6+mI20dAXjIdSz/GJmP+UstscLOfjgTO1hnC4AdcjFht8wwDfTa+NQKQ6RWS2m4
-        zM0ApeQQ==;
-Received: from ip5f5ad4d8.dynamic.kabel-deutschland.de ([95.90.212.216] helo=coco.lan)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jPL05-000664-4K; Fri, 17 Apr 2020 07:01:21 +0000
-Date:   Fri, 17 Apr 2020 09:01:15 +0200
-From:   Mauro Carvalho Chehab <mchehab@kernel.org>
-To:     Ezequiel Garcia <ezequiel@collabora.com>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-media@vger.kernel.org, Hans Verkuil <hverkuil@xs4all.nl>
-Subject: Re: linux-next: build warning after merge of the v4l-dvb tree
-Message-ID: <20200417090115.3cccc9bd@coco.lan>
-In-Reply-To: <7faaec92dc9b5870b33c6dbb440de0698b5a70e7.camel@collabora.com>
-References: <20200417102226.11d54815@canb.auug.org.au>
-        <7faaec92dc9b5870b33c6dbb440de0698b5a70e7.camel@collabora.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Fri, 17 Apr 2020 03:01:15 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A29F5C0610D5
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 00:01:14 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id d24so632427pll.8
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 00:01:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=e5yt6ZDVqr+7QSHc88Bnrv499SbQQkOFM9/QQvODlrQ=;
+        b=i+z1H6qc1RQjl8dF/ZQWkrj1LOmONZiANWqZQj2D1MApZKXOwpspT+eAloxxqIWDgb
+         2lxvRDCuJUmPo5f5TTlJ8mQBdorfC+3Sb+nANtWH/ShuFGYtSopy6PHdifjCPMZVjFw0
+         AlpaM40+KsDeja6zYbzc2ZmmTZHvG3PuGI2VjJzpwekWr1/xHwTCLj2eRw2dd++Kcv8e
+         Xzje+GzPKMh1Dk+AEFwcOENQ6LqmvYTKIHbkteGRf9J1pkfjaBWgL+y1r0LghOq1kuNM
+         xnXo6BRHouV9DGEgGcOsahVlGL65Hf3d4c/zFgk9eZUDuLcAnx4GX+ynjLehVLKhyejD
+         ijew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=e5yt6ZDVqr+7QSHc88Bnrv499SbQQkOFM9/QQvODlrQ=;
+        b=kZXp/pGVy57mbzq1XKCm9MqY0tyCXFJRl5ucN/8fJfqhbhqi4nPrFO92HBuf6RjoAF
+         a+IZTm4Gr4hcQSslUXmV5RZxLvikjvDLi+ISomYg31RPr/ZbPnJ92f1eXfplYU4zj3Vt
+         iU/uIm0OiGjjCKGKJRuSJSn34ybRB2nCGZUC7xlGXe7jQ4rriMYV2tuWmlzrKrOEff0M
+         3XpSqEv9qcy8qNiY3oB7w6JbdjRXG31BpoC0Wp9nyowNOjfLYN4TN2wA2KFJDlful6gD
+         AqPhNjzgiHPL9G/ynwq8G1zx+Jjrv8kzUZbVVWNHyGbF4pibzuU3apG4OdZf+7dewioM
+         u7BQ==
+X-Gm-Message-State: AGi0PuZnqoBT7uUoknaT2RoUuKpUvOtfdBKy/AVly4M+uCmLWOjfJESz
+        NfiFuSGO7So6jWGEQrr8yh5hJw==
+X-Google-Smtp-Source: APiQypKAPouxJUj8ZEHXCCyGsr9aFHrJPhULvsgTpcyEK+wS31hk0TH+VbwkpYL+s3wPwKVaYlchtA==
+X-Received: by 2002:a17:90a:68cb:: with SMTP id q11mr2759270pjj.15.1587106873385;
+        Fri, 17 Apr 2020 00:01:13 -0700 (PDT)
+Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id c125sm18561609pfa.142.2020.04.17.00.01.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 17 Apr 2020 00:01:12 -0700 (PDT)
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 3/4] arm64: dts: qcom: db820c: Add vdd_gfx and tie it into mmcc
+Date:   Fri, 17 Apr 2020 00:00:43 -0700
+Message-Id: <20200417070044.1376212-4-bjorn.andersson@linaro.org>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20200417070044.1376212-1-bjorn.andersson@linaro.org>
+References: <20200417070044.1376212-1-bjorn.andersson@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Fri, 17 Apr 2020 02:13:47 -0300
-Ezequiel Garcia <ezequiel@collabora.com> escreveu:
+From: Rajendra Nayak <rnayak@codeaurora.org>
 
-> Hi Stephen,
-> 
-> On Fri, 2020-04-17 at 10:22 +1000, Stephen Rothwell wrote:
-> > Hi all,
-> > 
-> > After merging the v4l-dvb tree, today's linux-next build (arm
-> > multi_v7_defconfig) produced this warning:
-> > 
-> > WARNING: unmet direct dependencies detected for MEDIA_CONTROLLER_REQUEST_API
-> >   Depends on [n]: MEDIA_SUPPORT [=m] && MEDIA_CONTROLLER [=y] && STAGING_MEDIA [=n]
-> >   Selected by [m]:
-> >   - VIDEO_VIVID [=m] && MEDIA_SUPPORT [=m] && MEDIA_TEST_SUPPORT [=y] && V4L_TEST_DRIVERS [=y] && VIDEO_DEV [=m] && VIDEO_V4L2 [=m] && !SPARC32 &&
-> > !SPARC64 && FB [=y] && HAS_DMA [=y]
-> >   
-> 
-> Ugh, my bad. MEDIA_CONTROLLER_REQUEST_API can't
-> depend on staging, after this recently merged commit:
-> 
-> "media: Kconfig: Don't expose the Request API option"
-> 
-> So, we should fix that with:
-> 
-> diff --git a/drivers/media/mc/Kconfig b/drivers/media/mc/Kconfig
-> index 7c9628f37196..4815b9dde9af 100644
-> --- a/drivers/media/mc/Kconfig
-> +++ b/drivers/media/mc/Kconfig
-> @@ -14,7 +14,7 @@ config MEDIA_CONTROLLER_DVB
->  
->  config MEDIA_CONTROLLER_REQUEST_API
->         bool
-> -       depends on MEDIA_CONTROLLER && STAGING_MEDIA
-> +       depends on MEDIA_CONTROLLER
->         help
->           DO NOT ENABLE THIS OPTION UNLESS YOU KNOW WHAT YOU'RE DOING.
->  
-> Mauro what do you think?
+Add the SPMI regulator node in the PMI8994, use it to give us VDD_GX
+at a fixed max nominal voltage for the db820c and specify this as supply
+for the MMSS GPU_GX GDSC.
 
-Dropped the dependency and applied on media.
+With the introduction of CPR support the range for VDD_GX should be
+expanded.
 
-I also addressed the "select PCI" issue, with causes troubles on
-s390 random configs (due to HAS_PCI=n on s390).
+Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+[bjorn: Split between pmi8994 and db820c, changed voltage, rewrote commit message]
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+---
 
-Thanks,
-Mauro
+Changes since v1:
+- Polished commit message
+- vdd_gfx -> vdd-gfx
+
+ arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi | 14 ++++++++++++++
+ arch/arm64/boot/dts/qcom/pmi8994.dtsi        |  6 ++++++
+ 2 files changed, 20 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi b/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
+index 4692b7ad16b7..fc23b381c5e4 100644
+--- a/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
++++ b/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
+@@ -251,6 +251,10 @@ &mdss {
+ 	status = "okay";
+ };
+ 
++&mmcc {
++	vdd-gfx-supply = <&vdd_gfx>;
++};
++
+ &msmgpio {
+ 	gpio-line-names =
+ 		"[SPI0_DOUT]", /* GPIO_0, BLSP1_SPI_MOSI, LSEC pin 14 */
+@@ -688,6 +692,16 @@ pinconf {
+ 	};
+ };
+ 
++
++&pmi8994_spmi_regulators {
++	vdd_gfx: s2@1700 {
++		reg = <0x1700 0x100>;
++		regulator-name = "VDD_GFX";
++		regulator-min-microvolt = <980000>;
++		regulator-max-microvolt = <980000>;
++	};
++};
++
+ &rpm_requests {
+ 	pm8994-regulators {
+ 		compatible = "qcom,rpm-pm8994-regulators";
+diff --git a/arch/arm64/boot/dts/qcom/pmi8994.dtsi b/arch/arm64/boot/dts/qcom/pmi8994.dtsi
+index 21e05215abe4..e5ed28ab9b2d 100644
+--- a/arch/arm64/boot/dts/qcom/pmi8994.dtsi
++++ b/arch/arm64/boot/dts/qcom/pmi8994.dtsi
+@@ -26,5 +26,11 @@ pmic@3 {
+ 		reg = <0x3 SPMI_USID>;
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
++
++		pmi8994_spmi_regulators: regulators {
++			compatible = "qcom,pmi8994-regulators";
++			#address-cells = <1>;
++			#size-cells = <1>;
++		};
+ 	};
+ };
+-- 
+2.24.0
+
