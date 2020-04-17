@@ -2,108 +2,89 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51553C38A2B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 20:46:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67474C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 20:48:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2449320656
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 20:46:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jeMFdopT"
+	by mail.kernel.org (Postfix) with ESMTP id 4AA6520656
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 20:48:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726387AbgDQUqq (ORCPT
+        id S1726396AbgDQUsj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 16:46:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37420 "EHLO
+        Fri, 17 Apr 2020 16:48:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37702 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725915AbgDQUqp (ORCPT
+        with ESMTP id S1725915AbgDQUsj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 16:46:45 -0400
-Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2278C061A0C;
-        Fri, 17 Apr 2020 13:46:45 -0700 (PDT)
-Received: by mail-io1-xd43.google.com with SMTP id i19so3787821ioh.12;
-        Fri, 17 Apr 2020 13:46:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=3scn4y13wLoI5WBhFj1I+bDIPfOwf4pzORC604k1TDE=;
-        b=jeMFdopTigupSSjS8K2W+HV8kQ3jE5BQ7stWCfadkHtwQ+ftyF9mA9nOS6FvIpeqNy
-         byvQuWo8ldodVtqPAPenCEOtcrRKGvgwPI8HdKv6EFFniAqSEE40HexTG6XKTjRNpnaB
-         +kPS6Wt/bDSJ+V7TWej75KQkRgln9LstZD/TUefAhw/o3xki+So697rlq81RUTIjQTBJ
-         i3q4z/AP2V1xtJi7I5Rj6OjsciIswpg4hmsJuweobDG+Ttj37iqhVVnyBgSPcDHQWrI3
-         MYyyCtrzVQifrApPQ+mjhNO2fjh72WtqODUcUUWEW6OYfvyU8OdCftcfyuo3BN4efTpo
-         2ryg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3scn4y13wLoI5WBhFj1I+bDIPfOwf4pzORC604k1TDE=;
-        b=Zp+4RLMmII5oKe5FLS0hwNyfiZfo4b7iulObu4cm7CAiv0gYxDfxvqJ0KyAfDCm133
-         IkNyH00xeRidE/8UFX8WQGrnMsY4sPrukPEGyT8Kn8fsj7IhauJoXvfOz9eAhG4b4zFx
-         ZAwmHco/+zXP/fcjdDmpNWSawRrXQcZUCEzBc6zPNsFPLo6Gqo00ZzJLnnzG2LupBVaj
-         Opjn/sgjBn37Ep39M/SjJXN3k0JTfgGhxG6KnuISfP+0z09GAV/YpYmQMlc17G+mKDBi
-         j8k0cOGLu3rZ7jjAmZKw9Np6dh5mPB0GAssBFLTnzx0d5QcB3xLT2nMXg5pQigjJFS1x
-         3PaA==
-X-Gm-Message-State: AGi0PubYLCkASKnSIVaMAeRwmWxOTpix6uYHP3o6vLi/hiEFJ/xFEv34
-        SNDDWDJ3Z7UXFKD+zniPd7f0fhOnZ/7TuT5Gbhc=
-X-Google-Smtp-Source: APiQypLC+N7N97fj9Ci4zOMWgwKnzAsuUQ9JPl5hGP1lQ66/AfoCY+xM0mLNf9qTMqQ0EAiw2Bgx/MWSINKtQSWGOts=
-X-Received: by 2002:a02:211a:: with SMTP id e26mr5115830jaa.141.1587156405199;
- Fri, 17 Apr 2020 13:46:45 -0700 (PDT)
+        Fri, 17 Apr 2020 16:48:39 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D389AC061A0C
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 13:48:38 -0700 (PDT)
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jPXuc-0006z8-UC; Fri, 17 Apr 2020 22:48:35 +0200
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id 6090C100C47; Fri, 17 Apr 2020 22:48:34 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     "Luck\, Tony" <tony.luck@intel.com>
+Cc:     Ingo Molnar <mingo@kernel.org>, Fenghua Yu <fenghua.yu@intel.com>,
+        Borislav Petkov <bp@alien8.de>, H Peter Anvin <hpa@zytor.com>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Ravi V Shankar <ravi.v.shankar@intel.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        linux-kernel@vger.kernel.org, x86@kernel.org
+Subject: Re: [PATCH 2/3] x86/split_lock: Bits in IA32_CORE_CAPABILITIES are not architectural
+In-Reply-To: <20200417195601.GA22640@agluck-desk2.amr.corp.intel.com>
+References: <20200416205754.21177-1-tony.luck@intel.com> <20200416205754.21177-3-tony.luck@intel.com> <878siumnrf.fsf@nanos.tec.linutronix.de> <20200417170607.GA18267@agluck-desk2.amr.corp.intel.com> <87ftd1zzau.fsf@nanos.tec.linutronix.de> <20200417195601.GA22640@agluck-desk2.amr.corp.intel.com>
+Date:   Fri, 17 Apr 2020 22:48:34 +0200
+Message-ID: <877dydzvml.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-References: <20200414134827.18674-1-zhengdejin5@gmail.com> <20200415102158.GH1141@ninjato>
- <20200415160757.GC17519@nuc8i5>
-In-Reply-To: <20200415160757.GC17519@nuc8i5>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 17 Apr 2020 23:46:33 +0300
-Message-ID: <CAHp75Vc+a7sQeY+W+4+-75TCMDCpnPRjUA5T8ZsBZi52PVB9dw@mail.gmail.com>
-Subject: Re: [PATCH v1] i2c: busses: convert to devm_platform_get_and_ioremap_resource
-To:     Dejin Zheng <zhengdejin5@gmail.com>
-Cc:     Wolfram Sang <wsa@the-dreams.de>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Pierre Yves MORDRET <pierre-yves.mordret@st.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre TORGUE <alexandre.torgue@st.com>,
-        Alain Volmat <alain.volmat@st.com>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 16, 2020 at 3:19 AM Dejin Zheng <zhengdejin5@gmail.com> wrote:
+"Luck, Tony" <tony.luck@intel.com> writes:
+
+> On Fri, Apr 17, 2020 at 09:29:13PM +0200, Thomas Gleixner wrote:
+>> "Luck, Tony" <tony.luck@intel.com> writes:
+>> > On Fri, Apr 17, 2020 at 12:04:36PM +0200, Thomas Gleixner wrote:
+>> > +	if (!m->driver_data)
+>> > +		goto setup;
+>> > +	if (!cpu_has(c, X86_FEATURE_CORE_CAPABILITIES))
+>> > +		return;
+>> > +	rdmsrl(MSR_IA32_CORE_CAPS, ia32_core_caps);
+>> > +	if (!(ia32_core_caps & MSR_IA32_CORE_CAPS_SPLIT_LOCK_DETECT))
+>> > +		return;
+>> > +setup:
+>> > +	split_lock_setup();
+>> 
+>> Which looks nicer w/o the goto:
+>> 
+>> 	if (m->driver_data) {
+>> 		if (!cpu_has(c, X86_FEATURE_CORE_CAPABILITIES))
+>> 			return;
+>> 		rdmsrl(MSR_IA32_CORE_CAPS, ia32_core_caps);
+>> 		if (!(ia32_core_caps & MSR_IA32_CORE_CAPS_SPLIT_LOCK_DETECT))
+>> 			return;
+>> 	}
+>> 
+>> Hmm?
 >
-> On Wed, Apr 15, 2020 at 12:21:58PM +0200, Wolfram Sang wrote:
-> > On Tue, Apr 14, 2020 at 09:48:27PM +0800, Dejin Zheng wrote:
-> > > use devm_platform_get_and_ioremap_resource() to simplify code, which
-> > > contains platform_get_resource() and devm_ioremap_resource(), it also
-> > > get the resource for use by the following code.
-> > >
-> > > Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
-> >
-> > Applied to for-next, because it seems 'the new way' but...
-> >
-> > > -   r_mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> > > -   id->membase = devm_ioremap_resource(&pdev->dev, r_mem);
-> > > +   id->membase = devm_platform_get_and_ioremap_resource(pdev, 0, &r_mem);
-> >
-> > ... guys, do you really think this one line reduction improves
-> > readability? Oh well...
-> >
-> Wolfram, Thank you for accepting it. From my personal point of view,
-> as long as the direction is correct, even small improvements are
-> worth doing. Thanks again for your tolerance.
+> Swings and roundabouts ... getting rid of the goto makes for
+> deeper indentation. But if you really want to get rid of the
+> goto, then your version is fine with me.
+>
+> Do you want me to spin it into v3?
 
-Do you have plans to move on from janitor work to something serious?
-
--- 
-With Best Regards,
-Andy Shevchenko
+Nah. I tweak it myself.
