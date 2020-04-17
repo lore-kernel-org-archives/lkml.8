@@ -2,461 +2,264 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A542C2D0EF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 16:29:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC422C38A2B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 16:36:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D344E2078E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 16:29:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0B9F22209
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 16:36:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X0/eIeNu"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="WeTPuYQ+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726629AbgDQQ3S (ORCPT
+        id S1726356AbgDQQgf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 12:29:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53990 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726366AbgDQQ3P (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 12:29:15 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6365DC061A0C;
-        Fri, 17 Apr 2020 09:29:15 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id k1so3768661wrx.4;
-        Fri, 17 Apr 2020 09:29:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ys+l22g6Vc6ru2/885HJ1530x9tYnitfC6EcM+60JII=;
-        b=X0/eIeNuAPgUo0BPE7P5AZ0jdfUVEmCeVLbYZBsFheHPiOnggrBCVgM5g7t/eRduhL
-         2XNF3mwrJRU9K5msvzrOLRtlgQ5o1jLybIWVoMgke9HiQnBGnQ8Ds0i20/9sVLZaRkwP
-         6y0UgELV/eJyxjdQjj0AT3CRU9gALb0BzwHTVYCbo8URkxqAd066yILDpe1rxttaxd4h
-         4srbJGOt8vUc32LVKMqMiIdJeylcet5Q8xEwW3qb3SCos/ZP/wSL9jkHyLeiBxZGyd+q
-         0MCwt5rwOrfaDFqGGsVBhOqjEJ7w3SGzEMEWe3XdJIGqKtZXZdMCVZhvZCCWy+q8KqJD
-         sfGw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ys+l22g6Vc6ru2/885HJ1530x9tYnitfC6EcM+60JII=;
-        b=dHbmhGczV8F6aAQLUVooSVZzPQW55Luw+vmS6Oeg2UqOcS+1SsUWuPq0Xg/S0TADah
-         R7lgYd8Zeg+MAYKb6aFhhCIkn5YULm//50ZAqK00M9bWJoX1cXod4LIUh4IcQhLLRpiw
-         TXlIBt0AVntW7qZKtr+rvRNzYGoLPBdcV0cQ1D0CdqsqTjg0L+h6q82KYLpnK+JL9NbZ
-         0ciNLhQ3HKoK0/NsrwvGN5jSxXSPmkCxopYpIX9bieUrAisTkjmPf6MZ2jvgpW3++KNk
-         S+gLI6mS1kfYBOZ95YrhG7J5NG52D0U4XFsCaBfr0RboV6bjLZezZPGYJR0Hk0Ar30vU
-         NMSg==
-X-Gm-Message-State: AGi0PuZqxDS0Lwt0a4APG/VSFeyUxczZ/llqo4zVLdf9lCCcZkeSFZYB
-        +v+pI4YQEejV/0CKeuRrE0pP9sXT
-X-Google-Smtp-Source: APiQypKixHLngDTI4MWGZA7gdLrkdfBhZcS9nibr8mREmKCnJcx7lDJea7dXkUGEObfH21yfwmsBtA==
-X-Received: by 2002:a5d:4345:: with SMTP id u5mr4649907wrr.417.1587140953546;
-        Fri, 17 Apr 2020 09:29:13 -0700 (PDT)
-Received: from ?IPv6:2003:ea:8f29:6000:adc2:161e:aba7:d360? (p200300EA8F296000ADC2161EABA7D360.dip0.t-ipconnect.de. [2003:ea:8f29:6000:adc2:161e:aba7:d360])
-        by smtp.googlemail.com with ESMTPSA id p5sm35541321wrg.49.2020.04.17.09.29.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 17 Apr 2020 09:29:13 -0700 (PDT)
-Subject: Re: [RFC PATCH 2/4] net: phy: Add support for AC200 EPHY
-To:     =?UTF-8?Q?Jernej_=c5=a0krabec?= <jernej.skrabec@siol.net>,
-        robh+dt@kernel.org, andrew@lunn.ch, f.fainelli@gmail.com
-Cc:     mripard@kernel.org, wens@csie.org, lee.jones@linaro.org,
-        linux@armlinux.org.uk, davem@davemloft.net,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-References: <20200416185758.1388148-1-jernej.skrabec@siol.net>
- <20200416185758.1388148-3-jernej.skrabec@siol.net>
- <0340f85c-987f-900b-53c8-d29b4672a8fa@gmail.com>
- <3035405.oiGErgHkdL@jernej-laptop>
-From:   Heiner Kallweit <hkallweit1@gmail.com>
-Message-ID: <1d03b2a8-fed5-5de8-6326-81b7436637da@gmail.com>
-Date:   Fri, 17 Apr 2020 18:29:04 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+        Fri, 17 Apr 2020 12:36:35 -0400
+Received: from mout.gmx.net ([212.227.15.19]:46019 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725877AbgDQQgd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Apr 2020 12:36:33 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1587141379;
+        bh=8pFHmIheWGUpA07/gHTetCESr9IbCxJLIOfzMMbgHGg=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=WeTPuYQ+1EN7d8+OPAJwTSgX3bgAk8+q+ZXUAmsRUbE0a3LX7oFbFuO4O9YI2kszc
+         Konc60a2tjowtP+xqW35kmWr/qe3cgz6djNm5rk7Dws7vGox3qHkU+hWdakBl6I13h
+         obZvxjFnnfpAED0KlgJP8yXlEQs7bO3hI3Qzt1YI=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from [192.168.178.23] ([77.1.39.83]) by mail.gmx.com (mrgmx004
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MhU9Z-1im0EC2l7r-00ego9; Fri, 17
+ Apr 2020 18:36:19 +0200
+Subject: Re: regression 5.6.4->5.6.5 at drivers/acpi/ec.c
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Randy Dunlap <rdunlap@infradead.org>
+Cc:     Linux Kernel <linux-kernel@vger.kernel.org>,
+        ACPI Devel Mailing List <linux-acpi@vger.kernel.org>
+References: <fdd9ce1d-146a-5fbf-75c5-3a9384603312@gmx.de>
+ <5478a950-4355-8084-ea7d-fe8b270bf2e3@infradead.org>
+ <5392275.BHAU0OPJTB@kreacher>
+From:   =?UTF-8?Q?Toralf_F=c3=b6rster?= <toralf.foerster@gmx.de>
+Autocrypt: addr=toralf.foerster@gmx.de; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <4b21c095-fbe5-1138-b977-a505baa41a2b@gmx.de>
+Date:   Fri, 17 Apr 2020 18:36:19 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <3035405.oiGErgHkdL@jernej-laptop>
+In-Reply-To: <5392275.BHAU0OPJTB@kreacher>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:x6KjDxrNJJNddY94VGILPv7evVxzHIDKEZ55GYdd8btiD6AYfA4
+ qq7XtisXDOqxY7p6Hk7XUrVvzqJ0+BTDRHQolYc4uItyhL00ZaQo0pUF9EH+xlR3EchHib/
+ oV+W7z3rTfNIY8Spgp/dG7822cB8/SZjp3o7cRQjTihqze6563C4RsxWfEJUNLfJ97WqOCq
+ CaKmLDRGWUkeJ1c8J53Hg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:4StItY4LyDI=:ddDN8SShJTI0FplmF7pj7I
+ YzrPsA2siiscRFL/AGPVkigOSjxs+LafjBoGOhr/mhcwYcLAIvUiM3XUfFmizZb03gJ78O4F3
+ lU229v96/0Y3IEG9LxamRY3vpa8w885CCFiVQ2NtKlw32UOYmaB7BPZHjtWeT0w3nC9uphqRp
+ gHMylRWI/FtIwxZsHwTTA7ktPSYHIIWzI2s1Hj4fcm3l2y1qB3JiNG8qdlgVuyqIXooai5Irm
+ 5d9RLssuJqF5fBF2xmCrO6ZdGs44L+uVb75bhSo4MhgyHmromOOeUy2f2UPbVBHWYGjJ1LtHc
+ 4kcfbEwYx540ExR3DdXRbnWgyTcXAzoJUprx61ICkc8ghz7R6ovGmVjzEZ4XMXJv0ERxTYpqb
+ BW8AOHy+StF65NtlGOUR3XL11wwrgn6DD4QNAXR6XDO87BhP1epfOhEN240hhzwYtWfBSFeuJ
+ dDPbWLuTalGfgy6d7hTQKdj4QEl43VLTFq2af7CDB48Pw19FTgrKMWW5XvPXcH1vVfsZ8OCW3
+ y9T3hD0NBMEkQvO+zk3YyWvWn61oLrNzk1+2PZzlgfcJ4hC3oStY29qPDiyLmMoL7tmzl5L69
+ qAEtWK1rwJkQfMjb1TZ3S3EPVQTGY821J6IV1W1o83ppDr6Xl/mt3mfPZo6TzFYJAZHz70UoW
+ vvUK2TrWZtwvr0uS5c4FyUMlrs3LHzB5TweN48+CU3Pz+gvtci8oni3ncIjsQ/Z29nltpkYsw
+ izqGe+FaUiJc1M7PB2wW6/9+q0gjitTr6oLurJawn80qup3ibWo/Y9ZC8USd+eVtSIYvAw5hR
+ IJkmbCF9/UFGcLfWCFnq8Dcc9NcdHYSJsD/AtOVC0nxY37ybeRm1Wb5epwEyFBjP5wmUFy0ne
+ wug/R9vRGNZEdE4iGI5oZQLNEt52JGQ4yyFuIu9gENgw0GTJ2Az28lrvwTjweO/nf9vaSHevg
+ Ol/qDuC8TJjqBdOURNckvNal9tfw5pvH7ut4in1mOGHCJHDzhIEkoD5xvzy+HVM14xYxHlPgB
+ duggus8OEs97J4YsNssf7TVcOrzqPbHgNhIr0ag4rXNbrFqWPKQ2pjt/4MnAmciYi8M25fsZ1
+ cmguNmPrqfQNgAabfvbwJEbztXyEHKfScypk9+ZV5ufjKgcjvPCrRyRA6BNPuNu3YdEcva7Mc
+ MSWIxxpVIjvKVSSlzSv2eqnivHe7nhUStUBdEzaRGaZxaZamLC69V2hy/Zy5R8PqBrgveOJaB
+ aBQRkJi2LxlIuvZu6
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 17.04.2020 18:03, Jernej Škrabec wrote:
-> Dne četrtek, 16. april 2020 ob 22:18:52 CEST je Heiner Kallweit napisal(a):
->> On 16.04.2020 20:57, Jernej Skrabec wrote:
->>> AC200 MFD IC supports Fast Ethernet PHY. Add a driver for it.
->>>
->>> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
->>> ---
->>>
->>>  drivers/net/phy/Kconfig  |   7 ++
->>>  drivers/net/phy/Makefile |   1 +
->>>  drivers/net/phy/ac200.c  | 206 +++++++++++++++++++++++++++++++++++++++
->>>  3 files changed, 214 insertions(+)
->>>  create mode 100644 drivers/net/phy/ac200.c
->>>
->>> diff --git a/drivers/net/phy/Kconfig b/drivers/net/phy/Kconfig
->>> index 3fa33d27eeba..16af69f69eaf 100644
->>> --- a/drivers/net/phy/Kconfig
->>> +++ b/drivers/net/phy/Kconfig
->>> @@ -288,6 +288,13 @@ config ADIN_PHY
->>>
->>>  	  - ADIN1300 - Robust,Industrial, Low Latency 10/100/1000 Gigabit
->>>  	  
->>>  	    Ethernet PHY
->>>
->>> +config AC200_PHY
->>> +	tristate "AC200 EPHY"
->>> +	depends on NVMEM
->>> +	depends on OF
->>> +	help
->>> +	  Fast ethernet PHY as found in X-Powers AC200 multi-function 
-> device.
->>> +
->>>
->>>  config AMD_PHY
->>>  
->>>  	tristate "AMD PHYs"
->>>  	---help---
->>>
->>> diff --git a/drivers/net/phy/Makefile b/drivers/net/phy/Makefile
->>> index 2f5c7093a65b..b0c5b91900fa 100644
->>> --- a/drivers/net/phy/Makefile
->>> +++ b/drivers/net/phy/Makefile
->>> @@ -53,6 +53,7 @@ obj-$(CONFIG_SFP)		+= sfp.o
->>>
->>>  sfp-obj-$(CONFIG_SFP)		+= sfp-bus.o
->>>  obj-y				+= $(sfp-obj-y) $(sfp-obj-m)
->>>
->>> +obj-$(CONFIG_AC200_PHY)		+= ac200.o
->>>
->>>  obj-$(CONFIG_ADIN_PHY)		+= adin.o
->>>  obj-$(CONFIG_AMD_PHY)		+= amd.o
->>>  aquantia-objs			+= aquantia_main.o
->>>
->>> diff --git a/drivers/net/phy/ac200.c b/drivers/net/phy/ac200.c
->>> new file mode 100644
->>> index 000000000000..3d7856ff8f91
->>> --- /dev/null
->>> +++ b/drivers/net/phy/ac200.c
->>> @@ -0,0 +1,206 @@
->>> +// SPDX-License-Identifier: GPL-2.0+
->>> +/**
->>> + * Driver for AC200 Ethernet PHY
->>> + *
->>> + * Copyright (c) 2020 Jernej Skrabec <jernej.skrabec@siol.net>
->>> + */
->>> +
->>> +#include <linux/kernel.h>
->>> +#include <linux/module.h>
->>> +#include <linux/mfd/ac200.h>
->>> +#include <linux/nvmem-consumer.h>
->>> +#include <linux/of.h>
->>> +#include <linux/phy.h>
->>> +#include <linux/platform_device.h>
->>> +
->>> +#define AC200_EPHY_ID			0x00441400
->>> +#define AC200_EPHY_ID_MASK		0x0ffffff0
->>> +
->>
->> You could use PHY_ID_MATCH_MODEL() here.
-> 
-> Ok.
-> 
->>
->>> +/* macros for system ephy control 0 register */
->>> +#define AC200_EPHY_RESET_INVALID	BIT(0)
->>> +#define AC200_EPHY_SYSCLK_GATING	BIT(1)
->>> +
->>> +/* macros for system ephy control 1 register */
->>> +#define AC200_EPHY_E_EPHY_MII_IO_EN	BIT(0)
->>> +#define AC200_EPHY_E_LNK_LED_IO_EN	BIT(1)
->>> +#define AC200_EPHY_E_SPD_LED_IO_EN	BIT(2)
->>> +#define AC200_EPHY_E_DPX_LED_IO_EN	BIT(3)
->>> +
->>> +/* macros for ephy control register */
->>> +#define AC200_EPHY_SHUTDOWN		BIT(0)
->>> +#define AC200_EPHY_LED_POL		BIT(1)
->>> +#define AC200_EPHY_CLK_SEL		BIT(2)
->>> +#define AC200_EPHY_ADDR(x)		(((x) & 0x1F) << 4)
->>> +#define AC200_EPHY_XMII_SEL		BIT(11)
->>> +#define AC200_EPHY_CALIB(x)		(((x) & 0xF) << 12)
->>> +
->>> +struct ac200_ephy_dev {
->>> +	struct phy_driver	*ephy;
->>
->> Why embedding a pointer and not a struct phy_driver directly?
->> Then you could omit the separate allocation.
-> 
-> Right.
-> 
->>
->> ephy is not the best naming. It may be read as a phy_device.
->> Better use phydrv.
-> 
-> Ok.
-> 
->>
->>> +	struct regmap		*regmap;
->>> +};
->>> +
->>> +static char *ac200_phy_name = "AC200 EPHY";
->>> +
->>
->> Why not using the name directly in the assignment?
-> 
-> phy_driver->name is pointer. Wouldn't that mean that string is allocated on 
-> stack and next time pointer is used, it will return garbage?
-> 
-No, it's not on the stack. No problem here.
+On 4/17/20 5:53 PM, Rafael J. Wysocki wrote:
+> Does the patch below (untested) make any difference?
+>
+> ---
+>  drivers/acpi/ec.c |    5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
+>
+> Index: linux-pm/drivers/acpi/ec.c
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> --- linux-pm.orig/drivers/acpi/ec.c
+> +++ linux-pm/drivers/acpi/ec.c
+> @@ -2067,7 +2067,10 @@ static struct acpi_driver acpi_ec_driver
+>  		.add =3D acpi_ec_add,
+>  		.remove =3D acpi_ec_remove,
+>  		},
+> -	.drv.pm =3D &acpi_ec_pm,
+> +	.drv =3D {
+> +		.probe_type =3D PROBE_FORCE_SYNCHRONOUS,
+> +		.pm =3D &acpi_ec_pm,
+> +	},
+>  };
+>
+>  static void acpi_ec_destroy_workqueues(void)
+I'd say no, but for completeness:
 
->> And better naming: "AC200 Fast Ethernet"
-> 
-> Ok.
-> 
->>
->>> +static int ac200_ephy_config_init(struct phy_device *phydev)
->>> +{
->>> +	const struct ac200_ephy_dev *priv = phydev->drv->driver_data;
->>> +	unsigned int value;
->>> +	int ret;
->>> +
->>> +	phy_write(phydev, 0x1f, 0x0100);	/* Switch to Page 1 */
->>> +	phy_write(phydev, 0x12, 0x4824);	/* Disable APS */
->>> +
->>> +	phy_write(phydev, 0x1f, 0x0200);	/* Switch to Page 2 */
->>> +	phy_write(phydev, 0x18, 0x0000);	/* PHYAFE TRX optimization */
->>> +
->>> +	phy_write(phydev, 0x1f, 0x0600);	/* Switch to Page 6 */
->>> +	phy_write(phydev, 0x14, 0x708f);	/* PHYAFE TX optimization */
->>> +	phy_write(phydev, 0x13, 0xF000);	/* PHYAFE RX optimization */
->>> +	phy_write(phydev, 0x15, 0x1530);
->>> +
->>> +	phy_write(phydev, 0x1f, 0x0800);	/* Switch to Page 6 */
->>> +	phy_write(phydev, 0x18, 0x00bc);	/* PHYAFE TRX optimization */
->>> +
->>> +	phy_write(phydev, 0x1f, 0x0100);	/* switch to page 1 */
->>> +	phy_clear_bits(phydev, 0x17, BIT(3));	/* disable intelligent 
-> IEEE */
->>> +
->>> +	/* next two blocks disable 802.3az IEEE */
->>> +	phy_write(phydev, 0x1f, 0x0200);	/* switch to page 2 */
->>> +	phy_write(phydev, 0x18, 0x0000);
->>> +
->>> +	phy_write(phydev, 0x1f, 0x0000);	/* switch to page 0 */
->>> +	phy_clear_bits_mmd(phydev, 0x7, 0x3c, BIT(1));
->>
->> Better use the following:
->> phy_write_mmd(phydev, MDIO_MMD_AN, MDIO_AN_EEE_ADV, 0x0000);
->> It makes clear that you disable advertising EEE completely.
-> 
-> Ok.
-> 
->>
->>> +
->>> +	if (phydev->interface == PHY_INTERFACE_MODE_RMII)
->>> +		value = AC200_EPHY_XMII_SEL;
->>> +	else
->>> +		value = 0;
->>> +
->>> +	ret = regmap_update_bits(priv->regmap, AC200_EPHY_CTL,
->>> +				 AC200_EPHY_XMII_SEL, value);
->>> +	if (ret)
->>> +		return ret;
->>> +
->>
->> I had a brief look at the spec, and it's not fully clear
->> to me what this register setting does. Does it affect the
->> MAC side and/or the PHY side?
-> 
-> It's my understanding that it selects interface mode on PHY. Besides datasheet 
-> mentioned in cover letter, BSP drivers (one for MFD and one for PHY) are the 
-> only other source of information. BSP PHY driver is located here:
-> https://github.com/Allwinner-Homlet/H6-BSP4.9-linux/blob/master/drivers/net/
-> phy/sunxi-ephy.c
-> 
->> If it affects the PHY side, then I'd expect that the chip
->> has to talk to the PHY via the MDIO bus. Means there should
->> be a PHY register for setting MII vs. RMII.
->> In this case the setup could be very much simplified.
->> Then the PHY driver wouldn't have to be embedded in the
->> platform driver.
-> 
-> Actually, PHY has to be configured first through I2C and then through MDIO. I2C 
-> is used to enable it (power it up), configure LED polarity, set PHY address, 
-> write calibration value stored elsewhere.
-> 
-> Based on all available documentation I have (code and datasheet), this I2C 
-> register is the only way to select MII or RMII mode.
-> 
-Then how and where is the PHY interface mode configured on the MAC side?
-If there is no such setting, then I'd assume that this register bit
-configures both sides. This leads to the question whether the interface
-mode really needs to be set in the PHY driver's config_init().
-If we could avoid this, then you could make the PHY driver static.
 
-You could set the PHY interface mode as soon as the PHY interface mode
-is read from DT. So why not set the interface mode at the place where
-you configure the other values like PHY address?
+pci 0000:03:00.0: reg 0x10: [mem 0xe0400000-0xe0401fff 64bit]
+pci 0000:03:00.0: PME# supported from D0 D3hot D3cold
+pci 0000:00:1c.1: PCI bridge to [bus 03]
+pci 0000:00:1c.1:   bridge window [mem 0xe0400000-0xe04fffff]
+ACPI: EC: interrupt unblocked
+ACPI: EC: event unblocked
+ACPI: EC: EC_CMD/EC_SC=3D0x66, EC_DATA=3D0x62
+ACPI: EC: GPE=3D0x25
+ACPI: \_SB_.PCI0.LPC_.EC__: Boot ECDT EC initialization complete
+ACPI: \_SB_.PCI0.LPC_.EC__: EC: Used to handle transactions and events
+ACPI: EC: EC_CMD/EC_SC=3D0x66, EC_DATA=3D0x62
+ACPI: EC: GPE=3D0x25
+ACPI: \_SB_.PCI0.LPC_.EC__: Boot ECDT EC initialization complete
+ACPI: \_SB_.PCI0.LPC_.EC__: EC: Used to handle transactions and events
+=2D-----------[ cut here ]------------
+Could not request EC data io port 0x62
+WARNING: CPU: 2 PID: 1 at drivers/acpi/ec.c:1677 acpi_ec_add+0x26e/0x280
+Modules linked in:
+CPU: 2 PID: 1 Comm: swapper/0 Tainted: G                T 5.6.5 #6
+Hardware name: LENOVO 20AQCTO1WW/20AQCTO1WW, BIOS GJET92WW (2.42 ) 03/03/2=
+017
+RIP: 0010:acpi_ec_add+0x26e/0x280
+Code: fe ff ff 48 8b 75 10 48 c7 c7 d0 27 7b b2 e8 81 c7 b6 ff 0f 0b e9 c9=
+ fe ff ff 48 8b 75 18 48 c7 c7 a8 27 7b b2 e8 6a c7 b6 ff <0f> 0b e9 8a fe=
+ ff ff 41 bc f4 ff ff ff e9 ac fe ff ff 48 83 3d f8
+RSP: 0000:ffffa7e980053c80 EFLAGS: 00010282
+RAX: 0000000000000000 RBX: ffffa359700b3800 RCX: 0000000000000000
+RDX: 0000000000000026 RSI: ffffffffb306f666 RDI: ffffffffb306fa66
+RBP: ffffa35970ab6300 R08: 00000000894e0463 R09: 0000000000000026
+R10: 000000000000000f R11: ffffa7e980053aa8 R12: 0000000000000000
+R13: 0000000000000000 R14: 0000000000000001 R15: 0000000000000030
+FS:  0000000000000000(0000) GS:ffffa35972700000(0000) knlGS:00000000000000=
+00
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000000000000 CR3: 00000001a480a001 CR4: 00000000001606e0
+Call Trace:
+ acpi_device_probe+0x40/0x100
+ really_probe+0xe8/0x2d0
+ driver_probe_device+0x57/0xd0
+ ? driver_allows_async_probing+0x50/0x50
+ bus_for_each_drv+0x90/0xe0
+ __device_attach+0xea/0x160
+ acpi_bus_register_early_device+0x4b/0x70
+ acpi_ec_init+0x2ee/0x361
+ acpi_init+0x410/0x4a0
+ ? acpi_sleep_proc_init+0x4c/0x4c
+ do_one_initcall+0x93/0x1f0
+ kernel_init_freeable+0x3e7/0x4cc
+ ? rest_init+0xc0/0xc0
+ kernel_init+0x6/0x110
+ ? rest_init+0xc0/0xc0
+ ret_from_fork+0x35/0x40
+=2D--[ end trace a946e45fe1b78ebc ]---
+=2D-----------[ cut here ]------------
+Could not request EC cmd io port 0x66
+WARNING: CPU: 2 PID: 1 at drivers/acpi/ec.c:1679 acpi_ec_add+0x257/0x280
+Modules linked in:
+CPU: 2 PID: 1 Comm: swapper/0 Tainted: G        W       T 5.6.5 #6
+Hardware name: LENOVO 20AQCTO1WW/20AQCTO1WW, BIOS GJET92WW (2.42 ) 03/03/2=
+017
+RIP: 0010:acpi_ec_add+0x257/0x280
+Code: 8b 55 00 48 89 ef 48 89 10 e8 65 e0 ff ff 48 8b 2d 4e d7 3b 01 e9 4a=
+ fe ff ff 48 8b 75 10 48 c7 c7 d0 27 7b b2 e8 81 c7 b6 ff <0f> 0b e9 c9 fe=
+ ff ff 48 8b 75 18 48 c7 c7 a8 27 7b b2 e8 6a c7 b6
+RSP: 0000:ffffa7e980053c80 EFLAGS: 00010282
+RAX: 0000000000000000 RBX: ffffa359700b3800 RCX: 0000000000000000
+RDX: 0000000000000025 RSI: ffffffffb306f665 RDI: ffffffffb306fa65
+RBP: ffffa35970ab6300 R08: 000000008997875e R09: 0000000000000025
+R10: 000000000000000f R11: ffffa7e980053aa8 R12: 0000000000000000
+R13: 0000000000000000 R14: 0000000000000001 R15: 0000000000000030
+FS:  0000000000000000(0000) GS:ffffa35972700000(0000) knlGS:00000000000000=
+00
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000000000000 CR3: 00000001a480a001 CR4: 00000000001606e0
+Call Trace:
+ acpi_device_probe+0x40/0x100
+ really_probe+0xe8/0x2d0
+ driver_probe_device+0x57/0xd0
+ ? driver_allows_async_probing+0x50/0x50
+ bus_for_each_drv+0x90/0xe0
+ __device_attach+0xea/0x160
+ acpi_bus_register_early_device+0x4b/0x70
+ acpi_ec_init+0x2ee/0x361
+ acpi_init+0x410/0x4a0
+ ? acpi_sleep_proc_init+0x4c/0x4c
+ do_one_initcall+0x93/0x1f0
+ kernel_init_freeable+0x3e7/0x4cc
+ ? rest_init+0xc0/0xc0
+ kernel_init+0x6/0x110
+ ? rest_init+0xc0/0xc0
+ ret_from_fork+0x35/0x40
+=2D--[ end trace a946e45fe1b78ebd ]---
+iommu: Default domain type: Translated
+pci 0000:00:02.0: vgaarb: setting as boot VGA device
+pci 0000:00:02.0: vgaarb: VGA device added: decodes=3Dio+mem,owns=3Dio+mem=
+,locks=3Dnone
+pci 0000:00:02.0: vgaarb: bridge control possible
+vgaarb: loaded
+SCSI subsystem initialized
+libata version 3.00 loaded.
+ACPI: bus type USB registered
+usbcore: registered new interface driver usbfs
+usbcore: registered new interface driver hub
+usbcore: registered new device driver usb
+pps_core: LinuxPPS API ver. 1 registered
 
->>
->>> +	/* FIXME: This is H6 specific */
->>> +	phy_set_bits(phydev, 0x13, BIT(12));
->>> +
->>
->> This seems to indicate that the same PHY is used in a slightly
->> different version with other Hx models. Do they use different
->> PHY ID's?
-> 
-> Situation is a bit complicated. Same PHY, at least with same PHY ID, is used 
-> in different ways.
-> 1. as part of standalone AC200 MFD IC
-> 2. as part of AC200 wafer copackaged with H6 SoC wafer in same package. This 
-> in theory shouldn't be any different than standalone IC, but it apparently is, 
-> based on the BSP driver code.
-> 3. integrated directly in SoCs like H3, H5 and V3s. There is no I2C access to 
-> configuration register. Instead, it's memory mapped and slightly different.
-> 
-> In all cases PHY ID is same, just glue logic is different.
-> 
-> I asked Allwinner if above setting is really necessary for H6 and what it 
-> does, but I didn't get any useful answer back.
-> 
-> So maybe another compatible is needed for H6.
-> 
-> Best regards,
-> Jernej
-> 
->>
->>> +	return 0;
->>> +}
->>> +
->>> +static int ac200_ephy_probe(struct platform_device *pdev)
->>> +{
->>> +	struct ac200_dev *ac200 = dev_get_drvdata(pdev->dev.parent);
->>> +	struct device *dev = &pdev->dev;
->>> +	struct ac200_ephy_dev *priv;
->>> +	struct nvmem_cell *calcell;
->>> +	struct phy_driver *ephy;
->>> +	u16 *caldata, calib;
->>> +	size_t callen;
->>> +	int ret;
->>> +
->>> +	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
->>> +	if (!priv)
->>> +		return -ENOMEM;
->>> +
->>> +	ephy = devm_kzalloc(dev, sizeof(*ephy), GFP_KERNEL);
->>> +	if (!ephy)
->>> +		return -ENOMEM;
->>> +
->>> +	calcell = devm_nvmem_cell_get(dev, "calibration");
->>> +	if (IS_ERR(calcell)) {
->>> +		dev_err(dev, "Unable to find calibration data!\n");
->>> +		return PTR_ERR(calcell);
->>> +	}
->>> +
->>> +	caldata = nvmem_cell_read(calcell, &callen);
->>> +	if (IS_ERR(caldata)) {
->>> +		dev_err(dev, "Unable to read calibration data!\n");
->>> +		return PTR_ERR(caldata);
->>> +	}
->>> +
->>> +	if (callen != 2) {
->>> +		dev_err(dev, "Calibration data has wrong length: 2 != 
-> %zu\n",
->>> +			callen);
->>> +		kfree(caldata);
->>> +		return -EINVAL;
->>> +	}
->>> +
->>> +	calib = *caldata + 3;
->>> +	kfree(caldata);
->>> +
->>> +	ephy->phy_id = AC200_EPHY_ID;
->>> +	ephy->phy_id_mask = AC200_EPHY_ID_MASK;
->>> +	ephy->name = ac200_phy_name;
->>> +	ephy->driver_data = priv;
->>> +	ephy->soft_reset = genphy_soft_reset;
->>> +	ephy->config_init = ac200_ephy_config_init;
->>> +	ephy->suspend = genphy_suspend;
->>> +	ephy->resume = genphy_resume;
->>> +
->>> +	priv->ephy = ephy;
->>> +	priv->regmap = ac200->regmap;
->>> +	platform_set_drvdata(pdev, priv);
->>> +
->>> +	ret = regmap_write(ac200->regmap, AC200_SYS_EPHY_CTL0,
->>> +			   AC200_EPHY_RESET_INVALID |
->>> +			   AC200_EPHY_SYSCLK_GATING);
->>> +	if (ret)
->>> +		return ret;
->>> +
->>> +	ret = regmap_write(ac200->regmap, AC200_SYS_EPHY_CTL1,
->>> +			   AC200_EPHY_E_EPHY_MII_IO_EN |
->>> +			   AC200_EPHY_E_LNK_LED_IO_EN |
->>> +			   AC200_EPHY_E_SPD_LED_IO_EN |
->>> +			   AC200_EPHY_E_DPX_LED_IO_EN);
->>> +	if (ret)
->>> +		return ret;
->>> +
->>> +	ret = regmap_write(ac200->regmap, AC200_EPHY_CTL,
->>> +			   AC200_EPHY_LED_POL |
->>> +			   AC200_EPHY_CLK_SEL |
->>> +			   AC200_EPHY_ADDR(1) |
->>> +			   AC200_EPHY_CALIB(calib));
->>> +	if (ret)
->>> +		return ret;
->>> +
->>> +	ret = phy_driver_register(priv->ephy, THIS_MODULE);
->>> +	if (ret) {
->>> +		dev_err(dev, "Unable to register phy\n");
->>> +		return ret;
->>> +	}
->>> +
->>> +	return 0;
->>> +}
->>> +
->>> +static int ac200_ephy_remove(struct platform_device *pdev)
->>> +{
->>> +	struct ac200_ephy_dev *priv = platform_get_drvdata(pdev);
->>> +
->>> +	phy_driver_unregister(priv->ephy);
->>> +
->>> +	regmap_write(priv->regmap, AC200_EPHY_CTL, AC200_EPHY_SHUTDOWN);
->>> +	regmap_write(priv->regmap, AC200_SYS_EPHY_CTL1, 0);
->>> +	regmap_write(priv->regmap, AC200_SYS_EPHY_CTL0, 0);
->>> +
->>> +	return 0;
->>> +}
->>> +
->>> +static const struct of_device_id ac200_ephy_match[] = {
->>> +	{ .compatible = "x-powers,ac200-ephy" },
->>> +	{ /* sentinel */ }
->>> +};
->>> +MODULE_DEVICE_TABLE(of, ac200_ephy_match);
->>> +
->>> +static struct platform_driver ac200_ephy_driver = {
->>> +	.probe		= ac200_ephy_probe,
->>> +	.remove		= ac200_ephy_remove,
->>> +	.driver		= {
->>> +		.name		= "ac200-ephy",
->>> +		.of_match_table	= ac200_ephy_match,
->>> +	},
->>> +};
->>> +module_platform_driver(ac200_ephy_driver);
->>> +
->>> +MODULE_AUTHOR("Jernej Skrabec <jernej.skrabec@siol.net>");
->>> +MODULE_DESCRIPTION("AC200 Ethernet PHY driver");
->>> +MODULE_LICENSE("GPL");
-> 
-> 
-> 
-> 
-
+=2D-
+Toralf
