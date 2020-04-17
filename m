@@ -2,107 +2,84 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F51DC38A2B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 11:10:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B50B5C38A2B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 11:13:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 31AB921D95
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 11:10:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92FDA221EA
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 11:13:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730193AbgDQLK2 (ORCPT
+        id S1730246AbgDQLNG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 07:10:28 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:60934 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729468AbgDQLK1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 07:10:27 -0400
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 3A4A7F3EA52CC01CAB9E;
-        Fri, 17 Apr 2020 19:10:25 +0800 (CST)
-Received: from [127.0.0.1] (10.166.213.7) by DGGEMS407-HUB.china.huawei.com
- (10.3.19.207) with Microsoft SMTP Server id 14.3.487.0; Fri, 17 Apr 2020
- 19:10:15 +0800
-Subject: Re: [PATCH] irqchip/irq-bcm7038-l1: make bcm7038_l1_of_init() static
-To:     Marc Zyngier <maz@kernel.org>
-CC:     Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
-        <f.fainelli@gmail.com>, <tglx@linutronix.de>,
-        <jason@lakedaemon.net>, <justinpopo6@gmail.com>,
-        <bcm-kernel-feedback-list@broadcom.com>,
-        <linux-mips@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Hulk Robot <hulkci@huawei.com>
-References: <20200417074036.46594-1-yanaijie@huawei.com>
- <ecb3e3e1-7761-faa7-10fa-67da69604306@cogentembedded.com>
- <b2f6f8cd-557c-3978-f176-e615cba8b458@huawei.com>
- <a71e75e8e391c76bf2f260abbaad4f9d@kernel.org>
-From:   Jason Yan <yanaijie@huawei.com>
-Message-ID: <f06da401-1083-c0c7-17a9-7a3fe0476820@huawei.com>
-Date:   Fri, 17 Apr 2020 19:10:15 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
+        Fri, 17 Apr 2020 07:13:06 -0400
+Received: from relay10.mail.gandi.net ([217.70.178.230]:39535 "EHLO
+        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729846AbgDQLNF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Apr 2020 07:13:05 -0400
+Received: from localhost (lfbn-lyo-1-9-35.w86-202.abo.wanadoo.fr [86.202.105.35])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay10.mail.gandi.net (Postfix) with ESMTPSA id 8B15B24000F;
+        Fri, 17 Apr 2020 11:13:02 +0000 (UTC)
+Date:   Fri, 17 Apr 2020 13:13:02 +0200
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Gregory CLEMENT <gregory.clement@bootlin.com>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 1/2] iio: adc: ti-ads8344: properly byte swap value
+Message-ID: <20200417111302.GZ34509@piout.net>
+References: <20200416205428.437503-1-alexandre.belloni@bootlin.com>
+ <20200416205428.437503-2-alexandre.belloni@bootlin.com>
+ <CAHp75Vddt-UKkP+b8W2CDYjt5kzggwQ+gTjrieigeYhM=e4Tig@mail.gmail.com>
+ <CAHp75VeUdj4kkGMaapZu2i96faxmdnhC4a4GF1UoGfSKAVtg6g@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <a71e75e8e391c76bf2f260abbaad4f9d@kernel.org>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.166.213.7]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHp75VeUdj4kkGMaapZu2i96faxmdnhC4a4GF1UoGfSKAVtg6g@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-在 2020/4/17 19:07, Marc Zyngier 写道:
-> On 2020-04-17 11:56, Jason Yan wrote:
->> 在 2020/4/17 18:26, Sergei Shtylyov 写道:
->>> Hello!
->>>
->>> On 17.04.2020 10:40, Jason Yan wrote:
->>>
->>>> Fix the following sparse warning:
->>>>
->>>> drivers/irqchip/irq-bcm7038-l1.c:419:12: warning: symbol
->>>> 'bcm7038_l1_of_init' was not declared. Should it be static?
->>>>
->>>> Reported-by: Hulk Robot <hulkci@huawei.com>
->>>> Signed-off-by: Jason Yan <yanaijie@huawei.com>
->>>> ---
->>>>   drivers/irqchip/irq-bcm7038-l1.c | 2 +-
->>>>   1 file changed, 1 insertion(+), 1 deletion(-)
->>>>
->>>> diff --git a/drivers/irqchip/irq-bcm7038-l1.c 
->>>> b/drivers/irqchip/irq-bcm7038-l1.c
->>>> index eb9bce93cd05..fd7c537fb42a 100644
->>>> --- a/drivers/irqchip/irq-bcm7038-l1.c
->>>> +++ b/drivers/irqchip/irq-bcm7038-l1.c
->>>> @@ -416,7 +416,7 @@ static const struct irq_domain_ops 
->>>> bcm7038_l1_domain_ops = {
->>>>       .map            = bcm7038_l1_map,
->>>>   };
->>>> -int __init bcm7038_l1_of_init(struct device_node *dn,
->>>> +static int __init bcm7038_l1_of_init(struct device_node *dn,
->>>>                     struct device_node *parent)
->>>
->>>     Reindent the above line please, it should start under *struct* on 
->>> the 1st line.
->>
->> OK, will cook a new one.
+On 17/04/2020 13:47:33+0300, Andy Shevchenko wrote:
+> On Fri, Apr 17, 2020 at 1:44 PM Andy Shevchenko
+> <andy.shevchenko@gmail.com> wrote:
+> >
+> > On Thu, Apr 16, 2020 at 11:55 PM Alexandre Belloni
+> > <alexandre.belloni@bootlin.com> wrote:
+> > >
+> > > The first received byte is the MSB, followed by the LSB so the value needs
+> > > to be byte swapped.
+> > >
+> > > Also, the ADC actually has a delay of one clock on the SPI bus. Read three
+> > > bytes to get the last bit.
+> > >
+> >
+> > Can you show example of what is read and what is expected to be a correct value?
+> > Because it seems I have been reported with similar issue on other TI
+> > ADC chip [1]. Perhaps we have to fix all of them?
+> >
+> > [1]: https://github.com/edison-fw/meta-intel-edison/issues/108
 > 
-> Please don't bother. I've picked the patch already, and it is on its way 
-> to Linus.
+> Also, forgot to mention that TI ADC are 16 bit word, so, we need to
+> read two u16 rather then bytes.
+> 
+> Some configuration won't allow to do byte reads.
 > 
 
-I have send v2 before I saw this. You can just ignore it.
+Both ADC families are not related, I don't think this is your issue. The
+ADS8344 was from Burr-Brown.
 
-Thanks,
 
-Jason
-
-> Thanks,
-> 
->          M.
-
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
