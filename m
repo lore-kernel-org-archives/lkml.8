@@ -2,291 +2,180 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30E27C2D0EF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 06:24:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90103C2BB55
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 06:30:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 16FF221D91
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 06:24:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6AEBA2137B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 06:30:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="dozAzYcu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727911AbgDQGYJ (ORCPT
+        id S1727881AbgDQGab (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 02:24:09 -0400
-Received: from mga04.intel.com ([192.55.52.120]:31426 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726065AbgDQGYI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 02:24:08 -0400
-IronPort-SDR: 0d/PtWEf/IikgNXNLGsv5umIKbwDP44duDWf/MxINKK72yItyirMDKl0MIh+ZFUvSAe+8+oMjl
- glnWQ2FQXKYA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2020 23:24:08 -0700
-IronPort-SDR: s1OVE8Gab0x5ILCWljlWbNIGmN4O1SlykUkrbTuUi6cxOCBGldpq4lB+f1s3kFuJD29nrjdOVs
- 1YH7vYflEVjw==
-X-IronPort-AV: E=Sophos;i="5.72,394,1580803200"; 
-   d="scan'208";a="428127032"
-Received: from mcintra-mobl.ger.corp.intel.com (HELO localhost) ([10.249.44.191])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2020 23:24:02 -0700
-From:   Jani Nikula <jani.nikula@linux.intel.com>
-To:     Saeed Mahameed <saeedm@mellanox.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        linux-kbuild@vger.kernel.org
-Cc:     Arnd Bergmann <arnd@arndb.de>, Jason Gunthorpe <jgg@ziepe.ca>,
-        Nicolas Pitre <nico@fluxnic.net>,
-        Saeed Mahameed <saeedm@mellanox.com>, narmstrong@baylibre.com,
-        Laurent.pinchart@ideasonboard.com, leon@kernel.org,
-        kieran.bingham+renesas@ideasonboard.com, jonas@kwiboo.se,
-        airlied@linux.ie, jernej.skrabec@siol.net,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        linux-rdma@vger.kernel.org
-Subject: Re: [RFC PATCH 1/2] Kconfig: Introduce "uses" keyword
-In-Reply-To: <20200417011146.83973-1-saeedm@mellanox.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <20200417011146.83973-1-saeedm@mellanox.com>
-Date:   Fri, 17 Apr 2020 09:23:59 +0300
-Message-ID: <87v9ly3a0w.fsf@intel.com>
-MIME-Version: 1.0
+        Fri, 17 Apr 2020 02:30:31 -0400
+Received: from mail-dm6nam12on2134.outbound.protection.outlook.com ([40.107.243.134]:56527
+        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726065AbgDQGab (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Apr 2020 02:30:31 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=G39wRhnknX+6ZMiWEWEbG9MegKc2bJ3ohNA59TIM0a8K5mBJi+7AHVvUzPr4Z9AaY5WFqHGzX31JTWM/1A+xQN5/l2TUenBG/tXoEaozi3Lpft1qV7b0sltcgU1VpU7slWH2WbJRYNb4RDFigHAcQH4fb9Q5JwMoFHKxyulR8wjlWNFxSPi1PVsQWm6rRmM+MU7mtbyLHOzko2ZW4K1LSncFT0AICj92xIqd5+2DrsJNwroMXChG3nHfoI/+9Gh+fvc0xHbAmRWMRPMI3pho9pzLUQRhqjtg0EysbUo0zFGLJeohzj2q2PEq/UTP1Eep2Gike+AgckE47LIQb8VmUQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=9R1Z8nqH4kq1M+rxVH6cQ5q5VTgX6JyjlL1W81jaQNQ=;
+ b=MmMxCXd1Zsrpme/MKlgkGm50pa3vFE9eK1Ktk+fpYLGGduoWbmGwf9arCp6Ks86UGcQ9C3EimFM7zwMRvkVmc/FDK0Bh3TvVKY4AWs/QR/XkVgq1mS9AVd4mz3ETxgi8wVWJQzqvvmxJEnMaghQN947JlQDD6+K6pokRliYdf7bJLrfaSXRQTXkawryOvfS2pO8Y0PAHw/oEHQlaeLQmb75Xo7hJ9PBvIAR3Bx69yIHGs20Zp+t1vW5B9bAOD7rijyfRG6nsT6TZoqeKboxslAKEvUxaZfZE/KqIOiQizHFmWq75xR1nwxk2mfGMUXNF5layuEMgNsE5FVX0ZtRCOg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=9R1Z8nqH4kq1M+rxVH6cQ5q5VTgX6JyjlL1W81jaQNQ=;
+ b=dozAzYcuHPr7lntZzYgitICNrsbDV28tM1eDt5fNIODFK2F2ewVBZNabOzMMLKl+mR1SgMC1D+ZMfaRrUtoYPgdWBzl0CnWt5gsVQfpdlGuHe5Ko79fG78qSwHKMVDqvJrQDJ+qjup37zrZRK7EArqraSO+km4+vi+Iowx7IqKc=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=decui@microsoft.com; 
+Received: from BN8PR21MB1139.namprd21.prod.outlook.com (2603:10b6:408:72::10)
+ by BN8PR21MB1201.namprd21.prod.outlook.com (2603:10b6:408:76::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.5; Fri, 17 Apr
+ 2020 06:30:28 +0000
+Received: from BN8PR21MB1139.namprd21.prod.outlook.com
+ ([fe80::b01b:e85:784d:4581]) by BN8PR21MB1139.namprd21.prod.outlook.com
+ ([fe80::b01b:e85:784d:4581%8]) with mapi id 15.20.2937.000; Fri, 17 Apr 2020
+ 06:30:28 +0000
+From:   Dexuan Cui <decui@microsoft.com>
+To:     bp@alien8.de, haiyangz@microsoft.com, hpa@zytor.com,
+        kys@microsoft.com, linux-hyperv@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mingo@redhat.com,
+        sthemmin@microsoft.com, tglx@linutronix.de, x86@kernel.org,
+        mikelley@microsoft.com, vkuznets@redhat.com, wei.liu@kernel.org
+Cc:     Dexuan Cui <decui@microsoft.com>
+Subject: [PATCH] x86/hyperv: Suspend/resume the VP assist page for hibernation
+Date:   Thu, 16 Apr 2020 23:29:59 -0700
+Message-Id: <1587104999-28927-1-git-send-email-decui@microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
+Reply-To: decui@microsoft.com
 Content-Type: text/plain
+X-ClientProxiedBy: CO2PR04CA0157.namprd04.prod.outlook.com
+ (2603:10b6:104:4::11) To BN8PR21MB1139.namprd21.prod.outlook.com
+ (2603:10b6:408:72::10)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (13.77.154.182) by CO2PR04CA0157.namprd04.prod.outlook.com (2603:10b6:104:4::11) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2921.25 via Frontend Transport; Fri, 17 Apr 2020 06:30:26 +0000
+X-Mailer: git-send-email 1.8.3.1
+X-Originating-IP: [13.77.154.182]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: fbef1cfa-99f1-4a82-a30d-08d7e298d1c2
+X-MS-TrafficTypeDiagnostic: BN8PR21MB1201:|BN8PR21MB1201:|BN8PR21MB1201:
+X-MS-Exchange-Transport-Forked: True
+X-LD-Processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+X-Microsoft-Antispam-PRVS: <BN8PR21MB1201C3293B1CC8EF87655284BFD90@BN8PR21MB1201.namprd21.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
+X-Forefront-PRVS: 0376ECF4DD
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN8PR21MB1139.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(396003)(366004)(39860400002)(376002)(346002)(66946007)(15650500001)(86362001)(26005)(8936002)(478600001)(5660300002)(4326008)(107886003)(66556008)(186003)(66476007)(6512007)(6666004)(316002)(82950400001)(82960400001)(52116002)(36756003)(3450700001)(6486002)(81156014)(6506007)(2616005)(2906002)(10290500003)(8676002)(956004)(16526019)(921003)(1121003);DIR:OUT;SFP:1102;
+Received-SPF: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 2sKRKA4kB+AYdCbyeKzMFXcH/mJJ5UIiZadV/O03X+79VTEL5giEM5IFcqCMtFZnWhIHzT56hZSO1ET4cWHQ9hKZ4qivDpD+O4N7nuyIDS2PTEzUeA+zcAui/NNhuHASBdVmPPwODZu3Y7Ywetz+HB4/Qi9kw29eUNLyo0asVqWdQa+eW2AUe6hUQCN4dCPu/2dOLR7LxlrHGiycBt3dDTwLbK4qh9N5mokD89CtfkTYIKBAyELd80pBYBRdyelPbDy4g85bFUVDCTFP6pVxkJHUQGld8yrBS/P08I7hXShWRhnm/2KYNnIyZF3nh50MdQpi18jk2Lb6aAAlf9T+D4Bub0IHt0hcQqJOGeqfofRFzhlsHV58o1G2heaeB8gd3K1+CL/zYzE9aJ6+uYi4npz872yDoURDaK1R7bQcPO4WPOZDZuQoKrjdw/HDImgEqK1o4toqZjdij89P8GZy+SmbDUUf0RhGDXwJPzo1T17Vg4wqyn6JGa8shFm+Zeof
+X-MS-Exchange-AntiSpam-MessageData: i+zoom0Wy5X1yQUDObrtRa1mJsCmHD9GRJSgxH/RdGldqakMXjSn7BzJV8eqJMCAc8xUqQ4JnYQYrtndRbkoi2WACRCu+Owp3VRqzmInBZLF+o4GlxrsoJSkmAHeB9SICaaOX9eF9CK6mwn7qt/bGCz6/a6z/GHclDQ74bD5KhXl/MwGpEcO67pdFjCOJ1GNsFWXE8CWLN0+TI2PihUJzcCY9O1MB3VXKzaLmN91tiNnV3N++DiXB9rHP1e4Muutw5j2E6xpaUxFYhPvtLOH76+NaEoKaBWTpetOgHi1+McFMnkNANvEIZCmu1LvPPzJBv0ROOjx6IJS0eNoTmNLmsnr/6rDbkZptOOUDcplo7wAU/jyJEKmnHtp51/BjzbtyNpJGhB1BDPVmEnW77NXsvwWr8YD2Fj1yrF0+cMXYygQgF5iKq4z/WHd2hp3+L22n+5kqfgNKuiPCZwAw7NO6PEdoidZL2ZaieZZnB6wN3rBeQO4sGZ7zTsl/obvGg9zRDAGtEpxcPFBdiksFRMD/103SbwdEasr1GR/A15YC+PcqeN4JeO2CleRKbm5tcnPCu7KQTx90zDQAuxZ/cye8aYOEC9xhwIRnqWMwG0wCvla9HYVtFfnoyzUbMuSYgEzKQXxQY0FYuzMrwSqZcI9Dl7c7PWr2xcYyZR8rZKrFz8eUamkjrcmq4TSebRACOrT4mIYnAB6vs4bWEswgVDVX/+jIaEl4nezxBBcJtKNnSA+PNOKqSs24w55Dj/h3HTHcwH2Jbmp14X6TRCZ0xurhIl+wnDx/MkYrAYBO3y6ieE=
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: fbef1cfa-99f1-4a82-a30d-08d7e298d1c2
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Apr 2020 06:30:28.2372
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: rBKbqfSODGh96uCGIog15HQu/Ztvllig/EhdDKHo237htMCNxReGtmCAH74a7k9p023v7/gL06qkUYG5JFzkgQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR21MB1201
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 16 Apr 2020, Saeed Mahameed <saeedm@mellanox.com> wrote:
-> Due to the changes to the semantics of imply keyword [1], which now
-> doesn't force any config options to the implied configs any more.
->
-> A module (FOO) that has a weak dependency on some other modules (BAR)
-> is now broken if it was using imply to force dependency restrictions.
-> e.g.: FOO needs BAR to be reachable, especially when FOO=y and BAR=m.
-> Which might now introduce build/link errors.
->
-> There are two options to solve this:
-> 1. use IS_REACHABLE(BAR), everywhere BAR is referenced inside FOO.
-> 2. in FOO's Kconfig add: depends on (BAR || !BAR)
->
-> The first option is not desirable, and will leave the user confused when
-> setting FOO=y and BAR=m, FOO will never reach BAR even though both are
-> compiled.
->
-> The 2nd one is the preferred approach, and will guarantee BAR is always
-> reachable by FOO if both are compiled. But, (BAR || !BAR) is really
-> confusing for those who don't really get how kconfig tristate arithmetics
-> work.
->
-> To solve this and hide this weird expression and to avoid repetition
-> across the tree, we introduce new keyword "uses" to the Kconfig options
-> family.
->
-> uses BAR:
-> Equivalent to: depends on symbol || !symbol
-> Semantically it means, if FOO is enabled (y/m) and has the option:
-> uses BAR, make sure it can reach/use BAR when possible.
->
-> For example: if FOO=y and BAR=m, FOO will be forced to m.
+Unlike the other CPUs, CPU0 is never offlined during hibernation. So in the
+resume path, the "new" kernel's VP assist page is not suspended (i.e.
+disabled), and later when we jump to the "old" kernel, the page is not
+properly re-enabled for CPU0 with the allocated page from the old kernel.
 
-Thanks for doing this. I think *something* needs to be done to help
-people grasp the "depends on FOO || FOO=n" construct; I've seen many
-experienced stumble on this, it's not a rookie mistake.
+So far, the VP assist page is only used by hv_apic_eoi_write(). When the
+page is not properly re-enabled, hvp->apic_assist is always 0, so the
+HV_X64_MSR_EOI MSR is always written. This is not ideal with respect to
+performance, but Hyper-V can still correctly handle this.
 
-I suggested "uses" as a keyword, but I'm not hung up on it.
+The issue is: the hypervisor can corrupt the old kernel memory, and hence
+sometimes cause unexpected behaviors, e.g. when the old kernel's non-boot
+CPUs are being onlined in the resume path, the VM can hang or be killed
+due to virtual triple fault.
 
-Grepping some Kconfigs a problem I realized with *any* new keyword is
-that (FOO || FOO=n) or (FOO || !FOO) is a construct that can be part of
-a larger depends on.
+Fix the issue by calling hv_cpu_die()/hv_cpu_init() in the syscore ops.
 
-For example,
+Without the fix, hibernation can fail at a rate of 1/300 ~ 1/500.
+With the fix, hibernation can pass a long-haul test of 2000 rounds.
 
-drivers/net/ethernet/broadcom/Kconfig:  depends on PCI && (IPV6 || IPV6=n)
+Fixes: 05bd330a7fd8 ("x86/hyperv: Suspend/resume the hypercall page for hibernation")
+Cc: stable@vger.kernel.org
+Signed-off-by: Dexuan Cui <decui@microsoft.com>
+---
+ arch/x86/hyperv/hv_init.c | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 
-Which means that would have to split up to two. Not ideal, but doable. I
-did not find any (FOO || FOO=n) || BAR which would not work with a new
-keyword.
-
-An alternative approach that I thought of is adding a lower level
-expression to tackle this? "FOO=optional" would expand to (FOO || FOO=n)
-anywhere. I have no clue how hard this would be to implement.
-
-For example:
-
-	depends on FOO=optional
-=>	
-	depends on (FOO || FOO=n)
-
-and:
-
-	depends on FOO=optional || BAR
-=>
-	depends on (FOO || FOO=n) || BAR
-
-
-The "optional" keyword is of course open for bikeshedding, but the key
-part here I think is that the "depends on" remains, and should be
-obvious. And also the =optional ties better to the actual symbol being
-depended on.
-
-Thoughts?
-
-BR,
-Jani.
-
-
-
->
-> [1] https://lore.kernel.org/linux-doc/20200302062340.21453-1-masahiroy@kernel.org/
->
-> Link: https://lkml.org/lkml/2020/4/8/839
-> Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
-> Cc: Masahiro Yamada <masahiroy@kernel.org>
-> Cc: linux-kbuild@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> ---
->  Documentation/kbuild/kconfig-language.rst | 10 ++++++++++
->  scripts/kconfig/expr.h                    |  1 +
->  scripts/kconfig/lexer.l                   |  1 +
->  scripts/kconfig/menu.c                    |  4 +++-
->  scripts/kconfig/parser.y                  | 15 +++++++++++++++
->  scripts/kconfig/symbol.c                  |  2 ++
->  6 files changed, 32 insertions(+), 1 deletion(-)
->
-> diff --git a/Documentation/kbuild/kconfig-language.rst b/Documentation/kbuild/kconfig-language.rst
-> index a1601ec3317b..8db8c2d80794 100644
-> --- a/Documentation/kbuild/kconfig-language.rst
-> +++ b/Documentation/kbuild/kconfig-language.rst
-> @@ -130,6 +130,16 @@ applicable everywhere (see syntax).
->  	bool "foo"
->  	default y
->  
-> +- uses dependencies: "uses" <symbol>
-> +
-> +  Equivalent to: depends on symbol || !symbol
-> +  Semantically it means, if FOO is enabled (y/m) and has the option:
-> +  uses BAR, make sure it can reach/use BAR when possible.
-> +  For example: if FOO=y and BAR=m, FOO will be forced to m.
-> +
-> +  Note:
-> +      To understand how (symbol || !symbol) is actually computed, please see `Menu dependencies`_
-> +
->  - reverse dependencies: "select" <symbol> ["if" <expr>]
->  
->    While normal dependencies reduce the upper limit of a symbol (see
-> diff --git a/scripts/kconfig/expr.h b/scripts/kconfig/expr.h
-> index 5c3443692f34..face672fb4b4 100644
-> --- a/scripts/kconfig/expr.h
-> +++ b/scripts/kconfig/expr.h
-> @@ -185,6 +185,7 @@ enum prop_type {
->  	P_CHOICE,   /* choice value */
->  	P_SELECT,   /* select BAR */
->  	P_IMPLY,    /* imply BAR */
-> +	P_USES,     /* uses BAR */
->  	P_RANGE,    /* range 7..100 (for a symbol) */
->  	P_SYMBOL,   /* where a symbol is defined */
->  };
-> diff --git a/scripts/kconfig/lexer.l b/scripts/kconfig/lexer.l
-> index 6354c905b006..c6a0017b10d4 100644
-> --- a/scripts/kconfig/lexer.l
-> +++ b/scripts/kconfig/lexer.l
-> @@ -102,6 +102,7 @@ n	[A-Za-z0-9_-]
->  "default"		return T_DEFAULT;
->  "defconfig_list"	return T_DEFCONFIG_LIST;
->  "depends"		return T_DEPENDS;
-> +"uses"			return T_USES;
->  "endchoice"		return T_ENDCHOICE;
->  "endif"			return T_ENDIF;
->  "endmenu"		return T_ENDMENU;
-> diff --git a/scripts/kconfig/menu.c b/scripts/kconfig/menu.c
-> index e436ba44c9c5..e26161b31a11 100644
-> --- a/scripts/kconfig/menu.c
-> +++ b/scripts/kconfig/menu.c
-> @@ -274,7 +274,9 @@ static void sym_check_prop(struct symbol *sym)
->  			break;
->  		case P_SELECT:
->  		case P_IMPLY:
-> -			use = prop->type == P_SELECT ? "select" : "imply";
-> +		case P_USES:
-> +			use = prop->type == P_SELECT ? "select" :
-> +				prop->type == P_IMPLY ? "imply" : "uses";
->  			sym2 = prop_get_symbol(prop);
->  			if (sym->type != S_BOOLEAN && sym->type != S_TRISTATE)
->  				prop_warn(prop,
-> diff --git a/scripts/kconfig/parser.y b/scripts/kconfig/parser.y
-> index 708b6c4b13ca..c5e9abb49d29 100644
-> --- a/scripts/kconfig/parser.y
-> +++ b/scripts/kconfig/parser.y
-> @@ -57,6 +57,7 @@ static struct menu *current_menu, *current_entry;
->  %token T_DEF_BOOL
->  %token T_DEF_TRISTATE
->  %token T_DEPENDS
-> +%token T_USES
->  %token T_ENDCHOICE
->  %token T_ENDIF
->  %token T_ENDMENU
-> @@ -169,6 +170,7 @@ config_option_list:
->  	  /* empty */
->  	| config_option_list config_option
->  	| config_option_list depends
-> +	| config_option_list uses
->  	| config_option_list help
->  ;
->  
-> @@ -261,6 +263,7 @@ choice_option_list:
->  	  /* empty */
->  	| choice_option_list choice_option
->  	| choice_option_list depends
-> +	| choice_option_list uses
->  	| choice_option_list help
->  ;
->  
-> @@ -360,6 +363,7 @@ menu_option_list:
->  	  /* empty */
->  	| menu_option_list visible
->  	| menu_option_list depends
-> +	| menu_option_list uses
->  ;
->  
->  source_stmt: T_SOURCE T_WORD_QUOTE T_EOL
-> @@ -384,6 +388,7 @@ comment_stmt: comment comment_option_list
->  comment_option_list:
->  	  /* empty */
->  	| comment_option_list depends
-> +	| comment_option_list uses
->  ;
->  
->  /* help option */
-> @@ -418,6 +423,16 @@ depends: T_DEPENDS T_ON expr T_EOL
->  	printd(DEBUG_PARSE, "%s:%d:depends on\n", zconf_curname(), zconf_lineno());
->  };
->  
-> +/* uses symbol: depends on symbol || !symbol */
-> +uses: T_USES symbol T_EOL
-> +{
-> +	struct expr *symexpr = expr_alloc_symbol($2);
-> +
-> +	menu_add_dep(expr_alloc_two(E_OR, symexpr, expr_alloc_one(E_NOT, symexpr)));
-> +	printd(DEBUG_PARSE, "%s:%d: uses: depends on %s || ! %s\n",
-> +	       zconf_curname(), zconf_lineno(), $2->name, $2->name);
-> +};
-> +
->  /* visibility option */
->  visible: T_VISIBLE if_expr T_EOL
->  {
-> diff --git a/scripts/kconfig/symbol.c b/scripts/kconfig/symbol.c
-> index 3dc81397d003..422f7ea47722 100644
-> --- a/scripts/kconfig/symbol.c
-> +++ b/scripts/kconfig/symbol.c
-> @@ -1295,6 +1295,8 @@ const char *prop_get_type_name(enum prop_type type)
->  		return "choice";
->  	case P_SELECT:
->  		return "select";
-> +	case P_USES:
-> +		return "uses";
->  	case P_IMPLY:
->  		return "imply";
->  	case P_RANGE:
-
+diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
+index b0da5320bcff..4d3ce86331a3 100644
+--- a/arch/x86/hyperv/hv_init.c
++++ b/arch/x86/hyperv/hv_init.c
+@@ -72,7 +72,8 @@ static int hv_cpu_init(unsigned int cpu)
+ 	struct page *pg;
+ 
+ 	input_arg = (void **)this_cpu_ptr(hyperv_pcpu_input_arg);
+-	pg = alloc_page(GFP_KERNEL);
++	/* hv_cpu_init() can be called with IRQs disabled from hv_resume() */
++	pg = alloc_page(GFP_ATOMIC);
+ 	if (unlikely(!pg))
+ 		return -ENOMEM;
+ 	*input_arg = page_address(pg);
+@@ -253,6 +254,7 @@ static int __init hv_pci_init(void)
+ static int hv_suspend(void)
+ {
+ 	union hv_x64_msr_hypercall_contents hypercall_msr;
++	int ret;
+ 
+ 	/*
+ 	 * Reset the hypercall page as it is going to be invalidated
+@@ -269,12 +271,17 @@ static int hv_suspend(void)
+ 	hypercall_msr.enable = 0;
+ 	wrmsrl(HV_X64_MSR_HYPERCALL, hypercall_msr.as_uint64);
+ 
+-	return 0;
++	ret = hv_cpu_die(0);
++	return ret;
+ }
+ 
+ static void hv_resume(void)
+ {
+ 	union hv_x64_msr_hypercall_contents hypercall_msr;
++	int ret;
++
++	ret = hv_cpu_init(0);
++	WARN_ON(ret);
+ 
+ 	/* Re-enable the hypercall page */
+ 	rdmsrl(HV_X64_MSR_HYPERCALL, hypercall_msr.as_uint64);
+@@ -287,6 +294,7 @@ static void hv_resume(void)
+ 	hv_hypercall_pg_saved = NULL;
+ }
+ 
++/* Note: when the ops are called, only CPU0 is online and IRQs are disabled. */
+ static struct syscore_ops hv_syscore_ops = {
+ 	.suspend	= hv_suspend,
+ 	.resume		= hv_resume,
 -- 
-Jani Nikula, Intel Open Source Graphics Center
+2.19.1
+
