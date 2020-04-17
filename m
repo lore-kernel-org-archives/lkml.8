@@ -2,157 +2,82 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6F7BC3815B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 08:51:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5853C3815B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 08:54:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A6A452076D
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 08:51:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CfNdQIXP"
+	by mail.kernel.org (Postfix) with ESMTP id 8E1F320857
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 08:54:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730077AbgDQIvi (ORCPT
+        id S1729932AbgDQIy3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 04:51:38 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:30688 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729890AbgDQIvg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 04:51:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587113495;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=uQwVoLWLfFbH6h152kN8CMNJtHnIpy94SgeEfTqCWgE=;
-        b=CfNdQIXP+6j3FGXsL1WFUHxdLb1Dek+lY1gEGxUnQs6J2WygG5M2dgTacIEQD8s1UqRK4U
-        Zh2SzEik/WVPfw4ogbMHwnysS1PTzfyvxcFYc+G2A2rUUVp8Knn+t3Mc5SHdSqd77K5CSJ
-        7eYMORvrFzu51QMWxWYrMo6OVx+oulg=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-290-YshOpB4qNkaObaMFdM5aTw-1; Fri, 17 Apr 2020 04:51:31 -0400
-X-MC-Unique: YshOpB4qNkaObaMFdM5aTw-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5BFDADB20;
-        Fri, 17 Apr 2020 08:51:29 +0000 (UTC)
-Received: from [10.72.13.202] (ovpn-13-202.pek2.redhat.com [10.72.13.202])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 2890E5DA2C;
-        Fri, 17 Apr 2020 08:51:20 +0000 (UTC)
-Subject: Re: [PATCH V2] vhost: do not enable VHOST_MENU by default
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
-        netdev@vger.kernel.org, geert@linux-m68k.org,
-        tsbogend@alpha.franken.de, benh@kernel.crashing.org,
-        paulus@samba.org, heiko.carstens@de.ibm.com, gor@linux.ibm.com,
-        borntraeger@de.ibm.com, Michael Ellerman <mpe@ellerman.id.au>
-References: <20200415024356.23751-1-jasowang@redhat.com>
- <20200416185426-mutt-send-email-mst@kernel.org>
- <b7e2deb7-cb64-b625-aeb4-760c7b28c0c8@redhat.com>
- <20200417022929-mutt-send-email-mst@kernel.org>
- <4274625d-6feb-81b6-5b0a-695229e7c33d@redhat.com>
- <20200417042912-mutt-send-email-mst@kernel.org>
- <fdb555a6-4b8d-15b6-0849-3fe0e0786038@redhat.com>
- <20200417044230-mutt-send-email-mst@kernel.org>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <73843240-3040-655d-baa9-683341ed4786@redhat.com>
-Date:   Fri, 17 Apr 2020 16:51:19 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Fri, 17 Apr 2020 04:54:29 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:49938 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729819AbgDQIy3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Apr 2020 04:54:29 -0400
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id A45ED4FB16B8E53C3F52;
+        Fri, 17 Apr 2020 16:54:26 +0800 (CST)
+Received: from huawei.com (10.175.124.28) by DGGEMS405-HUB.china.huawei.com
+ (10.3.19.205) with Microsoft SMTP Server id 14.3.487.0; Fri, 17 Apr 2020
+ 16:54:16 +0800
+From:   Jason Yan <yanaijie@huawei.com>
+To:     <renesas@glider.be>, <linus.walleij@linaro.org>,
+        <nishkadg.linux@gmail.com>, <linux-renesas-soc@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     Jason Yan <yanaijie@huawei.com>, Hulk Robot <hulkci@huawei.com>
+Subject: [PATCH] pinctrl: rza1: remove unused 'rza1l_swio_pins'
+Date:   Fri, 17 Apr 2020 17:20:42 +0800
+Message-ID: <20200417092042.11994-1-yanaijie@huawei.com>
+X-Mailer: git-send-email 2.21.1
 MIME-Version: 1.0
-In-Reply-To: <20200417044230-mutt-send-email-mst@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.175.124.28]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Fix the following gcc warning:
 
-On 2020/4/17 =E4=B8=8B=E5=8D=884:46, Michael S. Tsirkin wrote:
-> On Fri, Apr 17, 2020 at 04:39:49PM +0800, Jason Wang wrote:
->> On 2020/4/17 =E4=B8=8B=E5=8D=884:29, Michael S. Tsirkin wrote:
->>> On Fri, Apr 17, 2020 at 03:36:52PM +0800, Jason Wang wrote:
->>>> On 2020/4/17 =E4=B8=8B=E5=8D=882:33, Michael S. Tsirkin wrote:
->>>>> On Fri, Apr 17, 2020 at 11:12:14AM +0800, Jason Wang wrote:
->>>>>> On 2020/4/17 =E4=B8=8A=E5=8D=886:55, Michael S. Tsirkin wrote:
->>>>>>> On Wed, Apr 15, 2020 at 10:43:56AM +0800, Jason Wang wrote:
->>>>>>>> We try to keep the defconfig untouched after decoupling CONFIG_V=
-HOST
->>>>>>>> out of CONFIG_VIRTUALIZATION in commit 20c384f1ea1a
->>>>>>>> ("vhost: refine vhost and vringh kconfig") by enabling VHOST_MEN=
-U by
->>>>>>>> default. Then the defconfigs can keep enabling CONFIG_VHOST_NET
->>>>>>>> without the caring of CONFIG_VHOST.
->>>>>>>>
->>>>>>>> But this will leave a "CONFIG_VHOST_MENU=3Dy" in all defconfigs =
-and even
->>>>>>>> for the ones that doesn't want vhost. So it actually shifts the
->>>>>>>> burdens to the maintainers of all other to add "CONFIG_VHOST_MEN=
-U is
->>>>>>>> not set". So this patch tries to enable CONFIG_VHOST explicitly =
-in
->>>>>>>> defconfigs that enables CONFIG_VHOST_NET and CONFIG_VHOST_VSOCK.
->>>>>>>>
->>>>>>>> Acked-by: Christian Borntraeger<borntraeger@de.ibm.com>   (s390)
->>>>>>>> Acked-by: Michael Ellerman<mpe@ellerman.id.au>   (powerpc)
->>>>>>>> Cc: Thomas Bogendoerfer<tsbogend@alpha.franken.de>
->>>>>>>> Cc: Benjamin Herrenschmidt<benh@kernel.crashing.org>
->>>>>>>> Cc: Paul Mackerras<paulus@samba.org>
->>>>>>>> Cc: Michael Ellerman<mpe@ellerman.id.au>
->>>>>>>> Cc: Heiko Carstens<heiko.carstens@de.ibm.com>
->>>>>>>> Cc: Vasily Gorbik<gor@linux.ibm.com>
->>>>>>>> Cc: Christian Borntraeger<borntraeger@de.ibm.com>
->>>>>>>> Reported-by: Geert Uytterhoeven<geert@linux-m68k.org>
->>>>>>>> Signed-off-by: Jason Wang<jasowang@redhat.com>
->>>>>>> I rebased this on top of OABI fix since that
->>>>>>> seems more orgent to fix.
->>>>>>> Pushed to my vhost branch pls take a look and
->>>>>>> if possible test.
->>>>>>> Thanks!
->>>>>> I test this patch by generating the defconfigs that wants vhost_ne=
-t or
->>>>>> vhost_vsock. All looks fine.
->>>>>>
->>>>>> But having CONFIG_VHOST_DPN=3Dy may end up with the similar situat=
-ion that
->>>>>> this patch want to address.
->>>>>> Maybe we can let CONFIG_VHOST depends on !ARM || AEABI then add an=
-other
->>>>>> menuconfig for VHOST_RING and do something similar?
->>>>>>
->>>>>> Thanks
->>>>> Sorry I don't understand. After this patch CONFIG_VHOST_DPN is just
->>>>> an internal variable for the OABI fix. I kept it separate
->>>>> so it's easy to revert for 5.8. Yes we could squash it into
->>>>> VHOST directly but I don't see how that changes logic at all.
->>>> Sorry for being unclear.
->>>>
->>>> I meant since it was enabled by default, "CONFIG_VHOST_DPN=3Dy" will=
- be left
->>>> in the defconfigs.
->>> But who cares?
->> FYI, please seehttps://www.spinics.net/lists/kvm/msg212685.html
-> The complaint was not about the symbol IIUC.  It was that we caused
-> everyone to build vhost unless they manually disabled it.
+drivers/pinctrl/pinctrl-rza1.c:401:35: warning: ‘rza1l_swio_pins’
+defined but not used [-Wunused-const-variable=]
+ static const struct rza1_swio_pin rza1l_swio_pins[] = {
+                                   ^~~~~~~~~~~~~~~
 
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Jason Yan <yanaijie@huawei.com>
+---
+ drivers/pinctrl/pinctrl-rza1.c | 9 ---------
+ 1 file changed, 9 deletions(-)
 
-There could be some misunderstanding here. I thought it's somehow=20
-similar: a CONFIG_VHOST_MENU=3Dy will be left in the defconfigs even if=20
-CONFIG_VHOST is not set.
-
-Thanks
-
-
->
+diff --git a/drivers/pinctrl/pinctrl-rza1.c b/drivers/pinctrl/pinctrl-rza1.c
+index da2d8365c690..e96bf89b3764 100644
+--- a/drivers/pinctrl/pinctrl-rza1.c
++++ b/drivers/pinctrl/pinctrl-rza1.c
+@@ -398,15 +398,6 @@ static const struct rza1_bidir_pin rza1l_bidir_pins_p9[] = {
+ 	{ .pin = 5, .func = 3 },
+ };
+ 
+-static const struct rza1_swio_pin rza1l_swio_pins[] = {
+-	{ .port = 2, .pin = 8, .func = 2, .input = 0 },
+-	{ .port = 5, .pin = 6, .func = 3, .input = 0 },
+-	{ .port = 6, .pin = 6, .func = 3, .input = 0 },
+-	{ .port = 6, .pin = 10, .func = 3, .input = 0 },
+-	{ .port = 7, .pin = 10, .func = 2, .input = 0 },
+-	{ .port = 8, .pin = 2, .func = 3, .input = 0 },
+-};
+-
+ static const struct rza1_bidir_entry rza1l_bidir_entries[RZA1_NPORTS] = {
+ 	[1] = { ARRAY_SIZE(rza1l_bidir_pins_p1), rza1l_bidir_pins_p1 },
+ 	[3] = { ARRAY_SIZE(rza1l_bidir_pins_p3), rza1l_bidir_pins_p3 },
+-- 
+2.21.1
 
