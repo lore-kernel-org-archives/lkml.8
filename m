@@ -2,148 +2,112 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7BBCC2D0EF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 17:08:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A584BC38A2B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 17:08:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7FFBE20656
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 17:08:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8540C20656
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 17:08:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Lu3Lo0Gl"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="GJJsNhUf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728816AbgDQRIg (ORCPT
+        id S1728981AbgDQRIr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 13:08:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60072 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727913AbgDQRId (ORCPT
+        Fri, 17 Apr 2020 13:08:47 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:51050 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728020AbgDQRIp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 13:08:33 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA557C061A0C;
-        Fri, 17 Apr 2020 10:08:32 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id v8so5398653wma.0;
-        Fri, 17 Apr 2020 10:08:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=8q8NmYubJY4+KdZO7S+jhcJYKm2n8n4KmwaTPGy68WA=;
-        b=Lu3Lo0Gl/upDatKbC2xfDfz+fVfny7MnW72qQI2FOHqajpRtPyjqS17VnaPXinm6zh
-         vVONvr+kC6TIWlMd5E0AydaI5EQyouCFnrCU5k3lG7U066TL9TUBgjh5xArbLJn6uAT9
-         BoFeVqI3quCnIlfKUSa7Q/0NIoaSM37raXrfonbz85Q3bSKtqq05OxYfypZOo0vw/7as
-         WK49OWm7GnrQ708BLzqPmpbs4+93+Wi59pJcW9jiK2C+KeHGo6hQ/Ofvd68okcUoHQpi
-         PdBcqU6eBd33EWDXPJKikE+VpgWYZxpz8exTBW1ivrfYpTuxf/tyvNIZLRfI2EGa+y2r
-         enuw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=8q8NmYubJY4+KdZO7S+jhcJYKm2n8n4KmwaTPGy68WA=;
-        b=hfNSQ/0MDklGkXrYaTh5P6OQlEe1x5ZKf2NViINEJZ2J9Q6xfRPvAro+LK/aiR7C27
-         fwuOqesxFAIZe1upoALLKm9BNRd/0DRFOlRBXRitUJAUwlYRpdLxY5spoWg7J1C/rast
-         gxGyfZcF4HJ7SC65/8jhmZB5z6UH4eLpswpK+flgqCUBZxq+d8lsOwJUam/mz0gVvEDz
-         MeUNHjJXGDLhAMSZ/W4uY/FB8I4eKEw4wBquR3f477QErEqKrkqVyzUaWpcN4GfFCVx9
-         d+LstJXKorRxoX5imEbkJNzMojcdFYy2PLEHUPmrqr/PyFreOfZhhzvt+fdTom5sUc7X
-         3wUA==
-X-Gm-Message-State: AGi0PubCn+9uSMvi3U0tm6EFeOu205kdUmuaYrsccFd6C2VcnYqEM+W/
-        Oe5SEDMWlw6/Gw1A0z7bKLI=
-X-Google-Smtp-Source: APiQypKBaevAWvJ6zvlqCNBU+d1ivgTvNeLsUakVcAeM+o089fkuaYBUEwKdgn4/059S5SsTGdtDXg==
-X-Received: by 2002:a1c:3dd6:: with SMTP id k205mr4369017wma.138.1587143311482;
-        Fri, 17 Apr 2020 10:08:31 -0700 (PDT)
-Received: from localhost (pD9E51D62.dip0.t-ipconnect.de. [217.229.29.98])
-        by smtp.gmail.com with ESMTPSA id a1sm23476779wrn.80.2020.04.17.10.08.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Apr 2020 10:08:30 -0700 (PDT)
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc:     Jon Hunter <jonathanh@nvidia.com>, devicetree@vger.kernel.org,
-        linux-rtc@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 2/3] rtc: max77686: Make wakeup support configurable
-Date:   Fri, 17 Apr 2020 19:08:24 +0200
-Message-Id: <20200417170825.2551367-2-thierry.reding@gmail.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200417170825.2551367-1-thierry.reding@gmail.com>
-References: <20200417170825.2551367-1-thierry.reding@gmail.com>
+        Fri, 17 Apr 2020 13:08:45 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03HH8Emn164795;
+        Fri, 17 Apr 2020 17:08:26 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : in-reply-to : message-id : references : mime-version :
+ content-type; s=corp-2020-01-29;
+ bh=9AuAKei1InWbZiUi954FqxZ6IMH4o42cp4Zcjvsq5TU=;
+ b=GJJsNhUfXpcSqBvF7jDngmW0MRJw+h461HG+bRbezlfBsv0QFGTBw2XqkGRtCcwLu/xX
+ WDiT2eLR1yBIaT+Bl3wQShCLJ2z7X9078sV7ywYB83649n8lZXzdtggtusjLA+jLS8yN
+ shn8ZekAdpIOwaxXZAvyZvX0wquk7Q8Hx3fJ95gEAJqZlSlDiQ3CDddDmRUznPzV3Msd
+ 0jlV06+JJe17tuNh/XGqLxgTXktZTmEC9ISSjhbqA/R+xdGdi6BkdWg/yuAhZB9p27Jj
+ 85fWXr10S7q357QQ2oPsN9aFhZHOO11QLvLw+95z3Jmyq0oRQLS+RReSpYJf7iXmpyug 5g== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2120.oracle.com with ESMTP id 30dn9608ra-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 17 Apr 2020 17:08:26 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03HH3PK2029576;
+        Fri, 17 Apr 2020 17:06:26 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3020.oracle.com with ESMTP id 30emerd6j6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 17 Apr 2020 17:06:25 +0000
+Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 03HH6Obc009578;
+        Fri, 17 Apr 2020 17:06:24 GMT
+Received: from dhcp-10-175-205-33.vpn.oracle.com (/10.175.205.33)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 17 Apr 2020 10:06:24 -0700
+Date:   Fri, 17 Apr 2020 18:06:16 +0100 (BST)
+From:   Alan Maguire <alan.maguire@oracle.com>
+X-X-Sender: alan@localhost
+To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+cc:     Alan Maguire <alan.maguire@oracle.com>, ast@kernel.org,
+        daniel@iogearbox.net, yhs@fb.com, kafai@fb.com,
+        songliubraving@fb.com, andriin@fb.com, john.fastabend@gmail.com,
+        kpsingh@chromium.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, bpf@vger.kernel.org
+Subject: Re: [RFC PATCH bpf-next 0/6] bpf, printk: add BTF-based type
+ printing
+In-Reply-To: <20200417164747.GD17973@kernel.org>
+Message-ID: <alpine.LRH.2.21.2004171803550.29397@localhost>
+References: <1587120160-3030-1-git-send-email-alan.maguire@oracle.com> <20200417164747.GD17973@kernel.org>
+User-Agent: Alpine 2.21 (LRH 202 2017-01-01)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9594 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 mlxscore=0 suspectscore=3
+ mlxlogscore=999 phishscore=0 spamscore=0 bulkscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004170131
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9594 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 clxscore=1011
+ malwarescore=0 bulkscore=0 priorityscore=1501 lowpriorityscore=0
+ mlxscore=0 phishscore=0 spamscore=0 impostorscore=0 suspectscore=3
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004170132
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thierry Reding <treding@nvidia.com>
+On Fri, 17 Apr 2020, Arnaldo Carvalho de Melo wrote:
 
-Use the standard "wakeup-source" device tree property to determine if
-the RTC can act as a wakeup source for the system. Note that the driver
-by default always assumes that the RTC can act as a wakeup source, but
-whether it can really do so or not always depends on how it is hooked
-up.
+> Em Fri, Apr 17, 2020 at 11:42:34AM +0100, Alan Maguire escreveu:
+> > To give a flavour for what the printed-out data looks like,
+> > here we use pr_info() to display a struct sk_buff *.  Note
+> > we specify the 'N' modifier to show type field names:
+> > 
+> >   struct sk_buff *skb = alloc_skb(64, GFP_KERNEL);
+> > 
+> >   pr_info("%pTN<struct sk_buff>", skb);
+> > 
+> > ...gives us:
+> > 
+> > {{{.next=00000000c7916e9c,.prev=00000000c7916e9c,{.dev=00000000c7916e9c|.dev_scratch=0}}|.rbnode={.__rb_parent_color=0,.rb_right=00000000c7916e9c,.rb_left=00000000c7916e9c}|.list={.next=00000000c7916e9c,.prev=00000000c7916e9c}},{.sk=00000000c7916e9c|.ip_defrag_offset=0},{.tstamp=0|.skb_mstamp_ns=0},.cb=['\0'],{{._skb_refdst=0,.destructor=00000000c7916e9c}|.tcp_tsorted_anchor={.next=00000000c7916e9c,.prev=00000000c7916e9c}},._nfct=0,.len=0,.data_len=0,.mac_len=0,.hdr_len=0,.queue_mapping=0,.__cloned_offset=[],.cloned=0x0,.nohdr=0x0,.fclone=0x0,.peeked=0x0,.head_frag=0x0,.pfmemalloc=0x0,.active_extensions=0,.headers_start=[],.__pkt_type_offset=[],.pkt_type=0x0,.ignore_df=0x0,.nf_trace=0x0,.ip_summed=0x0,.ooo_okay=0x0,.l4_hash=0x0,.sw_hash=0x0,.wifi_acked_valid=0x0,.wifi_acked=0x0,.no_fcs=0x0,.encapsulation=0x0,.encap_hdr_csum=0x0,.csum_valid=0x0,.__pkt_vlan_present_offset=[],.vlan_present=0x0,.csum_complete_sw=0x0,.csum_level=0x0,.csum_not_inet=0x0,.dst_pending_co
+> 
+> One suggestion, to make this more compact, one could have %pTNz<struct
+> sk_buff>" that wouldn't print any integral type member that is zeroed
+> :-)
+>
 
-In order to preserve backwards compatibility with older device trees,
-only parse the "wakeup-source" property when a device tree node was
-associated with the RTC device. This doesn't typically happen because
-the top-level MFD driver doesn't list any compatible strings that can
-be used to map child nodes to child devices. As a fallback, check if a
-child node named "rtc" exists and use that instead.
+That's a great idea, thanks Arnaldo! I'll add that.
 
-Signed-off-by: Thierry Reding <treding@nvidia.com>
----
-Note that we could obviously add support to the MFD driver to match
-subdevices to their device tree nodes by compatible string, but there
-are side-effects, such as the driver core complaining about the lack
-of a DMA mask for these devices. That in turn could also be fixed but
-it ends up all being rather hacky, so just looking up a child node by
-name seems like a good compromise, especially since there are already
-such subnodes for some of the other subdevices of this PMIC.
----
- drivers/rtc/rtc-max77686.c | 18 +++++++++++++++++-
- 1 file changed, 17 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/rtc/rtc-max77686.c b/drivers/rtc/rtc-max77686.c
-index d5a0e27dd0a0..35fd74b83626 100644
---- a/drivers/rtc/rtc-max77686.c
-+++ b/drivers/rtc/rtc-max77686.c
-@@ -722,6 +722,8 @@ static int max77686_rtc_probe(struct platform_device *pdev)
- {
- 	struct max77686_rtc_info *info;
- 	const struct platform_device_id *id = platform_get_device_id(pdev);
-+	struct device_node *np = of_node_get(pdev->dev.of_node);
-+	bool wakeup = true;
- 	int ret;
+Alan
  
- 	info = devm_kzalloc(&pdev->dev, sizeof(struct max77686_rtc_info),
-@@ -746,7 +748,21 @@ static int max77686_rtc_probe(struct platform_device *pdev)
- 		goto err_rtc;
- 	}
- 
--	device_init_wakeup(&pdev->dev, 1);
-+	/*
-+	 * Only check for the wakeup-source property if there's an actual
-+	 * device tree node for the RTC. If no device tree node had been
-+	 * attached during device instantiation, try looking up the "rtc"
-+	 * child node of the parent's device tree node.
-+	 */
-+	if (!np && pdev->dev.parent->of_node)
-+		np = of_get_child_by_name(pdev->dev.parent->of_node, "rtc");
-+
-+	if (np) {
-+		wakeup = of_property_read_bool(np, "wakeup-source");
-+		of_node_put(np);
-+	}
-+
-+	device_init_wakeup(&pdev->dev, wakeup);
- 
- 	info->rtc_dev = devm_rtc_device_register(&pdev->dev, id->name,
- 					&max77686_rtc_ops, THIS_MODULE);
--- 
-2.24.1
-
+> - Arnaldo
+> 
