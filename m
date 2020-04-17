@@ -2,105 +2,86 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1666EC352BE
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 10:20:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22742C3815B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 10:21:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F14B0208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 10:20:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02D6D21D95
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 10:21:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mQEXkcdM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728939AbgDQKUW (ORCPT
+        id S1728997AbgDQKVh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 06:20:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53012 "EHLO
+        Fri, 17 Apr 2020 06:21:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53206 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728631AbgDQKUW (ORCPT
+        by vger.kernel.org with ESMTP id S1728631AbgDQKVg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 06:20:22 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0380BC061A0C;
-        Fri, 17 Apr 2020 03:20:22 -0700 (PDT)
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1jPO6Z-00062G-Bp; Fri, 17 Apr 2020 12:20:15 +0200
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id C76361C0072;
-        Fri, 17 Apr 2020 12:20:14 +0200 (CEST)
-Date:   Fri, 17 Apr 2020 10:20:14 -0000
-From:   "tip-bot2 for Tony Luck" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/urgent] x86/split_lock: Update to use X86_MATCH_INTEL_FAM6_MODEL()
-Cc:     Tony Luck <tony.luck@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200416205754.21177-2-tony.luck@intel.com>
-References: <20200416205754.21177-2-tony.luck@intel.com>
+        Fri, 17 Apr 2020 06:21:36 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7E03C061A0F
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 03:21:34 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id q22so1498823ljg.0
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 03:21:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=MQOUnSzPjZ8rvbaZqPPxjqcJfgipgrmZi1Zgn0PyywM=;
+        b=mQEXkcdMMwE/eQPM0YapPBtjMo6DST8o/moyzKmeqyXHWeNXpaubL07pfHl0TCMyoP
+         UDzcaqza5elEsa5JBNm9+fq7gPLXOG2qh4fD8KB2OL9HLLRnkaV6TMU0VHE7Nt62638r
+         U45iyML7axS810w9+Q5wyOkZ/VeJ53MjVgt6o98t//JMLxEkXjYYjbO8X+rloy0brHZ0
+         DPkso4foCSua+bH6ScvruldG2dbqu2uXxpJ7RXCqfWADAOnm8oM86LF3QZ8P5jrSIwsH
+         HHIiFP9hwT4MlYhyPmIrLS7Iko6Y6GqA5kuQNDGTB9NqLnv90/OgaYq++M/g7hDwDiX5
+         QnDw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=MQOUnSzPjZ8rvbaZqPPxjqcJfgipgrmZi1Zgn0PyywM=;
+        b=NP3f3AwvDZfofhsnR2j3u9ooW8OFz7SK12uiS1ENzpY12iV9arUmQXD6DMW7sBc0+r
+         Yzmdkssc13NP6K52jhKdhV2Wr9WwptdMog+NufSJB+Zlnl/oCPd/LzJrV52bI7DZaJiW
+         O6jZ037yGCgq0bN6rdUi8fO+xnhwtFaVZcB9XBko47HIzJ9PqiZt8ygLDOH6voKB/HHE
+         CbzjC+5nmjrP0ihbzmung8YSwoIlb/9cwN4PcSFGU7YJY8/A1lA3wjONpKcnmUZQLKlo
+         0Fz/ji1XGZj1mIM1S4kUInrsuxWuAObvhXxIgh1D76s9aAUvHsdzcOvclccN2e4vns++
+         V3cw==
+X-Gm-Message-State: AGi0PuY9SxP0HHcc1+utnrWd4PHjPXAX8NnWSf1B63seSHImnI7i1Sr9
+        rCRK8RkaUllpVfIS0TA8+WIxz2mNGaXzQbzWVikZKw==
+X-Google-Smtp-Source: APiQypLTHEN5Wyv0xGHW8W9/+MjNtXfHLBoSN6+O6bavkPZo9Vmsv7BORVR9ikzPGn8HwVlxK1NAzmMA+uwJYGmoXoI=
+X-Received: by 2002:a2e:9605:: with SMTP id v5mr1602091ljh.258.1587118893186;
+ Fri, 17 Apr 2020 03:21:33 -0700 (PDT)
 MIME-Version: 1.0
-Message-ID: <158711881435.28353.9813486883264323804.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+References: <20200417092125.12513-1-yanaijie@huawei.com>
+In-Reply-To: <20200417092125.12513-1-yanaijie@huawei.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Fri, 17 Apr 2020 12:21:21 +0200
+Message-ID: <CACRpkdYm7_DYSxvj+cwciUrfDZETbJSdGj=5L8O=QK5xcGYcCQ@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: mcp23s08: add module license
+To:     Jason Yan <yanaijie@huawei.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/urgent branch of tip:
+On Fri, Apr 17, 2020 at 10:55 AM Jason Yan <yanaijie@huawei.com> wrote:
 
-Commit-ID:     3ab0762d1edfda6ccbc08f636acab42c103c299f
-Gitweb:        https://git.kernel.org/tip/3ab0762d1edfda6ccbc08f636acab42c103c299f
-Author:        Tony Luck <tony.luck@intel.com>
-AuthorDate:    Thu, 16 Apr 2020 13:57:52 -07:00
-Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Fri, 17 Apr 2020 12:14:12 +02:00
+> Fix the following build warning:
+>
+> WARNING: modpost: missing MODULE_LICENSE() in
+> drivers/pinctrl/pinctrl-mcp23s08.o
+> see include/linux/module.h for more information
+>
+> Signed-off-by: Jason Yan <yanaijie@huawei.com>
 
-x86/split_lock: Update to use X86_MATCH_INTEL_FAM6_MODEL()
+Thanks, patch applied.
 
-The SPLIT_LOCK_CPU() macro escaped the tree-wide sweep for old-style
-initialization. Update to use X86_MATCH_INTEL_FAM6_MODEL().
-
-Fixes: 6650cdd9a8cc ("x86/split_lock: Enable split lock detection by kernel")
-Signed-off-by: Tony Luck <tony.luck@intel.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20200416205754.21177-2-tony.luck@intel.com
-
----
- arch/x86/kernel/cpu/intel.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
-
-diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
-index bf08d45..ec0d8c7 100644
---- a/arch/x86/kernel/cpu/intel.c
-+++ b/arch/x86/kernel/cpu/intel.c
-@@ -1119,8 +1119,6 @@ void switch_to_sld(unsigned long tifn)
- 	sld_update_msr(!(tifn & _TIF_SLD));
- }
- 
--#define SPLIT_LOCK_CPU(model) {X86_VENDOR_INTEL, 6, model, X86_FEATURE_ANY}
--
- /*
-  * The following processors have the split lock detection feature. But
-  * since they don't have the IA32_CORE_CAPABILITIES MSR, the feature cannot
-@@ -1128,8 +1126,8 @@ void switch_to_sld(unsigned long tifn)
-  * processors.
-  */
- static const struct x86_cpu_id split_lock_cpu_ids[] __initconst = {
--	SPLIT_LOCK_CPU(INTEL_FAM6_ICELAKE_X),
--	SPLIT_LOCK_CPU(INTEL_FAM6_ICELAKE_L),
-+	X86_MATCH_INTEL_FAM6_MODEL(ICELAKE_X,		0),
-+	X86_MATCH_INTEL_FAM6_MODEL(ICELAKE_L,		0),
- 	{}
- };
- 
+Yours,
+Linus Walleij
