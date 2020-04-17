@@ -2,128 +2,91 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A60AC38A29
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 11:29:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 502CCC352BE
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 11:31:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 609E9207FC
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 11:29:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GtOmtytk"
+	by mail.kernel.org (Postfix) with ESMTP id 2A646207FC
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 11:31:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730401AbgDQL3w (ORCPT
+        id S1730421AbgDQLbo convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 07:29:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35630 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730324AbgDQL3v (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 07:29:51 -0400
-Received: from mail-ua1-x941.google.com (mail-ua1-x941.google.com [IPv6:2607:f8b0:4864:20::941])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EFF61C061A0F
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 04:29:50 -0700 (PDT)
-Received: by mail-ua1-x941.google.com with SMTP id c17so509234uae.12
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 04:29:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Nu9WgdeKxKQdkeH1gR18VhD9u3Adn8tTkCVWam9LK94=;
-        b=GtOmtytk18kW8KTUJNTrqweEWV6cr1cr3C/OhLizV4J+D5OdrUqwJejcrqB2FP9K8z
-         PYBUxtD/ra0CuRjTRXYgtVHfo19zN25JtaWCwInr9o/VTm9a5UGDMuza4i1fm62ScXS9
-         rN1UfE+7fOrtV1M57/CovyL0iOHcIkByEFdhx60rxFxssfOvvpNEKzg+qeZ77hKtk4Ox
-         xVt/5BJUoLV64O9x2cO7jFh37MK9xhaDQ72/xf0AE4gyMTDGUKjJ1Y4uzvUspMGAIM2M
-         NyxlwU3fs+7X0QoBLrFQ2Cfq7u4S9qvjghwsf+EDLrQziUAaZuBQiycPE80POwx0JOgZ
-         b4DQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Nu9WgdeKxKQdkeH1gR18VhD9u3Adn8tTkCVWam9LK94=;
-        b=PIP7Z9QSmuUAaEGUPa6wJaVdjBaMnrstnj5o6XKB6z1EThqkf80all7VJwk3mQNZMJ
-         aZ9y3KFI8GcqSnx8G13RgoOFiVpfjzqb65EBTGqp/gUQTPs0I2gE2xYAT95JiYu0/rrQ
-         gs8KzqodaCd0VV6eCoM2n7xQhF3ac1V9mQDp1QdGKZ7BeJD+xdhyL1k6Lfup8rRM4fjx
-         39sQ0bNUvC3YRF8eO5/4jwt+mGO/YqTfelxzpZCFC+pssqqXXIEDRCQtVrnt0LjkHTd+
-         HYfkzQFCu2aPmaZ0hgeqL8wez29Mzlw9uLlfxOGaF0szDrUmqN7lemcDIBmTMHwhxu7L
-         QHFg==
-X-Gm-Message-State: AGi0PuYygnTspwA19ikVL0mLDoXW68D6twzFurvh5zZWaCkGxArb2X/7
-        I6wgoP9Ixh4e2/kZpGisdI/F4rpSfiYve74kx/nMEQ==
-X-Google-Smtp-Source: APiQypI99jsnL4mvQY9oQzsMieBqtAo29Y/8grH2oglO8FAd30vRx2tQcJkBygaMr5+Hv/S1jdj3f1P6K2qyFqAhHug=
-X-Received: by 2002:a9f:25af:: with SMTP id 44mr1989461uaf.104.1587122990039;
- Fri, 17 Apr 2020 04:29:50 -0700 (PDT)
+        Fri, 17 Apr 2020 07:31:44 -0400
+Received: from mx2.suse.de ([195.135.220.15]:55428 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730236AbgDQLbo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Apr 2020 07:31:44 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 4A696ABEF;
+        Fri, 17 Apr 2020 11:31:40 +0000 (UTC)
+From:   =?utf-8?Q?Aur=C3=A9lien?= Aptel <aaptel@suse.com>
+To:     Chuck Lever <chuck.lever@oracle.com>,
+        David Howells <dhowells@redhat.com>
+Cc:     Florian Weimer <fweimer@redhat.com>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        linux-cifs@vger.kernel.org, linux-afs@lists.infradead.org,
+        ceph-devel@vger.kernel.org, keyrings@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: What's a good default TTL for DNS keys in the kernel
+In-Reply-To: <8DC44895-E904-4155-B7B8-B109A777F23C@oracle.com>
+References: <874ktl2ide.fsf@oldenburg2.str.redhat.com>
+ <3865908.1586874010@warthog.procyon.org.uk>
+ <128769.1587032833@warthog.procyon.org.uk>
+ <8DC44895-E904-4155-B7B8-B109A777F23C@oracle.com>
+Date:   Fri, 17 Apr 2020 13:31:39 +0200
+Message-ID: <87sgh22vs4.fsf@suse.com>
 MIME-Version: 1.0
-References: <cover.1586744073.git.baolin.wang7@gmail.com>
-In-Reply-To: <cover.1586744073.git.baolin.wang7@gmail.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Fri, 17 Apr 2020 13:29:14 +0200
-Message-ID: <CAPDyKFqfq_UMNfgdu8HioAa6+qy+JYrNkVDg8ARu1BpNKx9hgw@mail.gmail.com>
-Subject: Re: [PATCH v5 0/3] Introduce the request_atomic() for the host
-To:     Baolin Wang <baolin.wang7@gmail.com>
-Cc:     Adrian Hunter <adrian.hunter@intel.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 13 Apr 2020 at 04:46, Baolin Wang <baolin.wang7@gmail.com> wrote:
+Chuck Lever <chuck.lever@oracle.com> writes:
+> The Linux NFS client won't connect to a new server when the server's
+> DNS information changes. A fresh mount operation would be needed for
+> the client to recognize and make use of it.
 >
-> This patch set introduces a new request_atomic() interface for the
-> MMC host controller, which is used to submit a request to host in
-> the atomic context, such as in the irq hard handler, to reduce the
-> request latency.
->
-> Note, this patch set is based on Adrian's patch set:
-> https://www.spinics.net/lists/linux-mmc/msg58529.html
->
-> Any comments are welcome. Thanks.
->
-> Changes from v4:
->  - Remove redundant checking when warning the return value of request_atomic().
->  - Add acked tag from Adrian for patch 1.
->  - Re-implement the request_atomic() based on the Adrian's patch set.
->
-> Changes from v3:
->  - Move patch 3 of V3 patch set into patch 1.
->  - Add a warning for unexpected return value of request_atomic().
->  - Remove redundant checking of ops->request().
->
-> Changes from v2:
->  - Return busy flag if encountering unusual card busy state
->  instead of polling in interrupt context.
->  - Add a work for HSQ to try again in non-atomic context if the host
->  returns busy flag.
->
-> Changes from v1:
->  - Re-split the changes to make them more clear suggested by Ulf.
->  - Factor out the auto CMD23 checking into a separate function.
->
-> Baolin Wang (3):
->   mmc: host: Introduce the request_atomic() for the host
->   mmc: host: sdhci: Implement the request_atomic() API
->   mmc: host: sdhci-sprd: Implement the request_atomic() API
->
->  drivers/mmc/host/mmc_hsq.c    | 29 ++++++++++++++++++++++++++++-
->  drivers/mmc/host/mmc_hsq.h    |  1 +
->  drivers/mmc/host/sdhci-sprd.c | 23 ++++++++++++++++++++---
->  drivers/mmc/host/sdhci.c      | 34 ++++++++++++++++++++++++++++++++++
->  drivers/mmc/host/sdhci.h      |  1 +
->  include/linux/mmc/host.h      |  3 +++
->  6 files changed, 87 insertions(+), 4 deletions(-)
->
-> --
-> 2.17.1
->
+> There are mechanisms in the NFSv4 protocol to collect server IP addresses
+> from the server itself (fs_locations) and then try those locations if the
+> current server fails to respond. But currently that is not implemented in
+> Linux (and servers would need to be ready to provide that kind of update).
 
-Applied for next, thanks!
+We have a very similar system in CIFS. Failover can be handled in 2 ways
+(technically both can be used at the same time):
 
-Kind regards
-Uffe
+a) with DFS, the mount can have a list of possible location to connect
+   to, sort of like cross-server symlinks with multiple possible
+   targets. Note that the target value uses hostnames.
+b) the domain controler can notice the server is down and automatically
+   switch the server hostname DNS entry to a backup one with a different IP.
+
+>> CIFS also doesn't make direct use of the TTL, and again this may be because it
+>> uses the server address as part of the primary key for the superblock (see
+>> cifs_match_super()).
+
+When we try to reconnect after a failure (using (a) or just reconnecting
+to same server) we resolve the host again to try to use any new IP (in
+case (b) happened). This is done via upcalling using the request_key()
+API.
+
+The cifs.upcall prog (from cifs-utils) calls getaddrinfo() and sets a
+key with a default TTL of 10mn [2][3] but if the system uses DNS caching
+via nscd[1] there's no way to tell how long the old IP will remain in
+use...
+
+1: https://linux.die.net/man/8/nscd
+2: https://github.com/piastry/cifs-utils/blob/9a8c21ad9e4510a83a3a41f7a04f763a4fe9ec09/cifs.upcall.c#L66
+3: https://github.com/piastry/cifs-utils/blob/9a8c21ad9e4510a83a3a41f7a04f763a4fe9ec09/cifs.upcall.c#L783
+
+Cheers,
+-- 
+Aurélien Aptel / SUSE Labs Samba Team
+GPG: 1839 CB5F 9F5B FB9B AA97  8C99 03C8 A49B 521B D5D3
+SUSE Software Solutions Germany GmbH, Maxfeldstr. 5, 90409 Nürnberg, DE
+GF: Felix Imendörffer, Mary Higgins, Sri Rasiah HRB 247165 (AG München)
