@@ -2,1336 +2,211 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7306C2D0EF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 06:02:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02B94C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 06:03:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A121E21973
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 06:02:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D70A621973
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 06:03:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726941AbgDQGCC (ORCPT
+        id S1727807AbgDQGDl convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 02:02:02 -0400
-Received: from mga01.intel.com ([192.55.52.88]:54126 "EHLO mga01.intel.com"
+        Fri, 17 Apr 2020 02:03:41 -0400
+Received: from mga07.intel.com ([134.134.136.100]:14496 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726065AbgDQGCB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 02:02:01 -0400
-IronPort-SDR: SQ4M/D0y5BgNsoH1flnXfiLP8zgHTiA4R53GqQqI38HCUB9mRWYXLJDzFTSv02OxNl9Yy66maa
- vdKsKXd4XlfA==
+        id S1726065AbgDQGDk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Apr 2020 02:03:40 -0400
+IronPort-SDR: WlHDknisBJA7/Icnj0vVNBF2i0rbvIfoEGwAe4h6Qt1ds5XJQdnHhTJ3aJKD51HoCIp3QTLVEp
+ 2onnj4S5XlzA==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2020 23:01:58 -0700
-IronPort-SDR: Cdr7+4fDsWWOeOlO6r9LBekpG4/IgLR88anVeItEtOBh0nTJJnuwIVivTZBneZRtm7ZYihTbLp
- P9DTooxoR1HQ==
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2020 23:03:39 -0700
+IronPort-SDR: 3oJfBPD8w2SHu5GVkVWmPFJc87vuY35yXLmk5rjAhOJzer339y32ZGQGwFzeV1X5e+Kd9OhRYN
+ 3y0MS1cieVfQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.72,393,1580803200"; 
-   d="scan'208";a="272318304"
-Received: from hao-dev.bj.intel.com ([10.238.157.65])
-  by orsmga002.jf.intel.com with ESMTP; 16 Apr 2020 23:01:54 -0700
-From:   Wu Hao <hao.wu@intel.com>
-To:     will@kernel.org, mdf@kernel.org, mark.rutland@arm.com,
-        gregkh@linuxfoundation.org, linux-fpga@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     linux-api@vger.kernel.org, atull@kernel.org, yilun.xu@intel.com,
-        trix@redhat.com, bhu@redhat.com, Wu Hao <hao.wu@intel.com>,
-        Luwei Kang <luwei.kang@intel.com>
-Subject: [PATCH v9 2/2] fpga: dfl: fme: add performance reporting support
-Date:   Fri, 17 Apr 2020 13:40:00 +0800
-Message-Id: <1587102000-18262-3-git-send-email-hao.wu@intel.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1587102000-18262-1-git-send-email-hao.wu@intel.com>
-References: <1587102000-18262-1-git-send-email-hao.wu@intel.com>
+   d="scan'208";a="242903975"
+Received: from fmsmsx108.amr.corp.intel.com ([10.18.124.206])
+  by orsmga007.jf.intel.com with ESMTP; 16 Apr 2020 23:03:39 -0700
+Received: from fmsmsx608.amr.corp.intel.com (10.18.126.88) by
+ FMSMSX108.amr.corp.intel.com (10.18.124.206) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Thu, 16 Apr 2020 23:03:39 -0700
+Received: from fmsmsx608.amr.corp.intel.com (10.18.126.88) by
+ fmsmsx608.amr.corp.intel.com (10.18.126.88) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Thu, 16 Apr 2020 23:03:38 -0700
+Received: from shsmsx153.ccr.corp.intel.com (10.239.6.53) by
+ fmsmsx608.amr.corp.intel.com (10.18.126.88) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
+ via Frontend Transport; Thu, 16 Apr 2020 23:03:38 -0700
+Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.225]) by
+ SHSMSX153.ccr.corp.intel.com ([169.254.12.89]) with mapi id 14.03.0439.000;
+ Fri, 17 Apr 2020 14:03:35 +0800
+From:   "Liu, Yi L" <yi.l.liu@intel.com>
+To:     Alex Williamson <alex.williamson@redhat.com>
+CC:     "Tian, Kevin" <kevin.tian@intel.com>,
+        "eric.auger@redhat.com" <eric.auger@redhat.com>,
+        "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Tian, Jun J" <jun.j.tian@intel.com>,
+        "Sun, Yi Y" <yi.y.sun@intel.com>,
+        "jean-philippe@linaro.org" <jean-philippe@linaro.org>,
+        "peterx@redhat.com" <peterx@redhat.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Wu, Hao" <hao.wu@intel.com>
+Subject: RE: [PATCH v1 7/8] vfio/type1: Add VFIO_IOMMU_CACHE_INVALIDATE
+Thread-Topic: [PATCH v1 7/8] vfio/type1: Add VFIO_IOMMU_CACHE_INVALIDATE
+Thread-Index: AQHWAEUdcc1u01skwUmp6uBHREsZ66hl0sQAgACrzQCAAJWLAIAUkGLA///O0ICAAV9r0A==
+Date:   Fri, 17 Apr 2020 06:03:35 +0000
+Message-ID: <A2975661238FB949B60364EF0F2C25743A249BF6@SHSMSX104.ccr.corp.intel.com>
+References: <1584880325-10561-1-git-send-email-yi.l.liu@intel.com>
+        <1584880325-10561-8-git-send-email-yi.l.liu@intel.com>
+        <20200402142428.2901432e@w520.home>
+        <AADFC41AFE54684AB9EE6CBC0274A5D19D807C4A@SHSMSX104.ccr.corp.intel.com>
+        <20200403093436.094b1928@w520.home>
+        <A2975661238FB949B60364EF0F2C25743A231BAA@SHSMSX104.ccr.corp.intel.com>
+ <20200416084031.7266ad40@w520.home>
+In-Reply-To: <20200416084031.7266ad40@w520.home>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [10.239.127.40]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds support for performance reporting private feature
-for FPGA Management Engine (FME). Now it supports several different
-performance counters, including 'basic', 'cache', 'fabric', 'vtd'
-and 'vtd_sip'. It allows user to use standard linux tools to access
-these performance counters.
+Hi Alex,
+> From: Alex Williamson <alex.williamson@redhat.com>
+> Sent: Thursday, April 16, 2020 10:41 PM
+> To: Liu, Yi L <yi.l.liu@intel.com>
+> Subject: Re: [PATCH v1 7/8] vfio/type1: Add VFIO_IOMMU_CACHE_INVALIDATE
+> 
+> On Thu, 16 Apr 2020 10:40:03 +0000
+> "Liu, Yi L" <yi.l.liu@intel.com> wrote:
+> 
+> > Hi Alex,
+> > Still have a direction question with you. Better get agreement with you
+> > before heading forward.
+> >
+> > > From: Alex Williamson <alex.williamson@redhat.com>
+> > > Sent: Friday, April 3, 2020 11:35 PM
+> > [...]
+> > > > > > + *
+> > > > > > + * returns: 0 on success, -errno on failure.
+> > > > > > + */
+> > > > > > +struct vfio_iommu_type1_cache_invalidate {
+> > > > > > +	__u32   argsz;
+> > > > > > +	__u32   flags;
+> > > > > > +	struct	iommu_cache_invalidate_info cache_info;
+> > > > > > +};
+> > > > > > +#define VFIO_IOMMU_CACHE_INVALIDATE      _IO(VFIO_TYPE,
+> > > VFIO_BASE
+> > > > > + 24)
+> > > > >
+> > > > > The future extension capabilities of this ioctl worry me, I wonder if
+> > > > > we should do another data[] with flag defining that data as CACHE_INFO.
+> > > >
+> > > > Can you elaborate? Does it mean with this way we don't rely on iommu
+> > > > driver to provide version_to_size conversion and instead we just pass
+> > > > data[] to iommu driver for further audit?
+> > >
+> > > No, my concern is that this ioctl has a single function, strictly tied
+> > > to the iommu uapi.  If we replace cache_info with data[] then we can
+> > > define a flag to specify that data[] is struct
+> > > iommu_cache_invalidate_info, and if we need to, a different flag to
+> > > identify data[] as something else.  For example if we get stuck
+> > > expanding cache_info to meet new demands and develop a new uapi to
+> > > solve that, how would we expand this ioctl to support it rather than
+> > > also create a new ioctl?  There's also a trade-off in making the ioctl
+> > > usage more difficult for the user.  I'd still expect the vfio layer to
+> > > check the flag and interpret data[] as indicated by the flag rather
+> > > than just passing a blob of opaque data to the iommu layer though.
+> > > Thanks,
+> >
+> > Based on your comments about defining a single ioctl and a unified
+> > vfio structure (with a @data[] field) for pasid_alloc/free, bind/
+> > unbind_gpasid, cache_inv. After some offline trying, I think it would
+> > be good for bind/unbind_gpasid and cache_inv as both of them use the
+> > iommu uapi definition. While the pasid alloc/free operation doesn't.
+> > It would be weird to put all of them together. So pasid alloc/free
+> > may have a separate ioctl. It would look as below. Does this direction
+> > look good per your opinion?
+> >
+> > ioctl #22: VFIO_IOMMU_PASID_REQUEST
+> > /**
+> >   * @pasid: used to return the pasid alloc result when flags == ALLOC_PASID
+> >   *         specify a pasid to be freed when flags == FREE_PASID
+> >   * @range: specify the allocation range when flags == ALLOC_PASID
+> >   */
+> > struct vfio_iommu_pasid_request {
+> > 	__u32	argsz;
+> > #define VFIO_IOMMU_ALLOC_PASID	(1 << 0)
+> > #define VFIO_IOMMU_FREE_PASID	(1 << 1)
+> > 	__u32	flags;
+> > 	__u32	pasid;
+> > 	struct {
+> > 		__u32	min;
+> > 		__u32	max;
+> > 	} range;
+> > };
+> 
+> Can't the ioctl return the pasid valid on alloc (like GET_DEVICE_FD)?
 
-e.g. List all events by "perf list"
+Yep, I think you mentioned before. At that time, I believed it would be
+better to return the result via a __u32 buffer so that make full use of
+the 32 bits. But looks like it doesn't make much difference. I'll follow
+your suggestion.
 
-  perf list | grep fme
+> Would it be useful to support freeing a range of pasids?  If so then we
+> could simply use range for both, ie. allocate a pasid from this range
+> and return it, or free all pasids in this range?  vfio already needs to
+> track pasids to free them on release, so presumably this is something
+> we could support easily.
 
-  dfl_fme0/cache_read_hit/                     [Kernel PMU event]
-  dfl_fme0/cache_read_miss/                    [Kernel PMU event]
-  ...
+yes, I think it is a nice thing. then I can remove the @pasid field.
+will do it.
 
-  dfl_fme0/fab_mmio_read/                      [Kernel PMU event]
-  dfl_fme0/fab_mmio_write/                     [Kernel PMU event]
-  ...
+> > ioctl #23: VFIO_IOMMU_NESTING_OP
+> > struct vfio_iommu_type1_nesting_op {
+> > 	__u32	argsz;
+> > 	__u32	flags;
+> > 	__u32	op;
+> > 	__u8	data[];
+> > };
+> 
+> data only has 4-byte alignment, I think we really want it at an 8-byte
+> alignment.  This is why I embedded the "op" into the flag for
+> DEVICE_FEATURE.  Thanks,
 
-  dfl_fme0/fab_port_mmio_read,portid=?/        [Kernel PMU event]
-  dfl_fme0/fab_port_mmio_write,portid=?/       [Kernel PMU event]
-  ...
+got it. I may also merge the op into flags (maybe the lower 16 bits for
+op).
 
-  dfl_fme0/vtd_port_devtlb_1g_fill,portid=?/   [Kernel PMU event]
-  dfl_fme0/vtd_port_devtlb_2m_fill,portid=?/   [Kernel PMU event]
-  ...
-
-  dfl_fme0/vtd_sip_iotlb_1g_hit/               [Kernel PMU event]
-  dfl_fme0/vtd_sip_iotlb_1g_miss/              [Kernel PMU event]
-  ...
-
-  dfl_fme0/clock                               [Kernel PMU event]
-  ...
-
-e.g. check increased counter value after run one application using
-"perf stat" command.
-
- perf stat -e dfl_fme0/fab_mmio_read/,dfl_fme0/fab_mmio_write/ ./test
-
- Performance counter stats for './test':
-
-                 1      dfl_fme0/fab_mmio_read/
-                 2      dfl_fme0/fab_mmio_write/
-
-       1.009496520 seconds time elapsed
-
-Please note that fabric counters support both fab_* and fab_port_*, but
-actually they are sharing one set of performance counters in hardware.
-If user wants to monitor overall data events on fab_* then fab_port_*
-can't be supported at the same time, see example below:
-
-perf stat -e dfl_fme0/fab_mmio_read/,dfl_fme0/fab_port_mmio_write,portid=0/
-
- Performance counter stats for 'system wide':
-
-                 0      dfl_fme0/fab_mmio_read/
-   <not supported>      dfl_fme0/fab_port_mmio_write,portid=0/
-
-       2.141064085 seconds time elapsed
-
-Signed-off-by: Luwei Kang <luwei.kang@intel.com>
-Signed-off-by: Xu Yilun <yilun.xu@intel.com>
-Signed-off-by: Wu Hao <hao.wu@intel.com>
----
- .../testing/sysfs-bus-event_source-devices-dfl_fme |  104 ++
- drivers/fpga/Kconfig                               |    2 +-
- drivers/fpga/Makefile                              |    1 +
- drivers/fpga/dfl-fme-main.c                        |    4 +
- drivers/fpga/dfl-fme-perf.c                        | 1020 ++++++++++++++++++++
- drivers/fpga/dfl-fme.h                             |    2 +
- drivers/fpga/dfl.h                                 |    2 +
- 7 files changed, 1134 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/ABI/testing/sysfs-bus-event_source-devices-dfl_fme
- create mode 100644 drivers/fpga/dfl-fme-perf.c
-
-diff --git a/Documentation/ABI/testing/sysfs-bus-event_source-devices-dfl_fme b/Documentation/ABI/testing/sysfs-bus-event_source-devices-dfl_fme
-new file mode 100644
-index 0000000..c9278a3
---- /dev/null
-+++ b/Documentation/ABI/testing/sysfs-bus-event_source-devices-dfl_fme
-@@ -0,0 +1,104 @@
-+What:		/sys/bus/event_source/devices/dfl_fmeX/format
-+Date:		April 2020
-+KernelVersion:  5.8
-+Contact:	Wu Hao <hao.wu@intel.com>
-+Description:	Read-only. Attribute group to describe the magic bits
-+		that go into perf_event_attr.config for a particular pmu.
-+		(See ABI/testing/sysfs-bus-event_source-devices-format).
-+
-+		Each attribute under this group defines a bit range of the
-+		perf_event_attr.config. All supported attributes are listed
-+		below.
-+
-+		    event  = "config:0-11"  - event ID
-+		    evtype = "config:12-15" - event type
-+		    portid = "config:16-23" - event source
-+
-+		For example,
-+
-+		    fab_mmio_read = "event=0x06,evtype=0x02,portid=0xff"
-+
-+		It shows this fab_mmio_read is a fabric type (0x02) event with
-+		0x06 local event id for overall monitoring (portid=0xff).
-+
-+What:		/sys/bus/event_source/devices/dfl_fmeX/cpumask
-+Date:		April 2020
-+KernelVersion:  5.8
-+Contact:	Wu Hao <hao.wu@intel.com>
-+Description:	Read-only. This file always returns cpu which the PMU is bound
-+		for access to all fme pmu performance monitoring events.
-+
-+What:		/sys/bus/event_source/devices/dfl_fmeX/events
-+Date:		April 2020
-+KernelVersion:  5.8
-+Contact:	Wu Hao <hao.wu@intel.com>
-+Description:	Read-only. Attribute group to describe performance monitoring
-+		events specific to fme. Each attribute in this group describes
-+		a single performance monitoring event supported by this fme pmu.
-+		The name of the file is the name of the event.
-+		(See ABI/testing/sysfs-bus-event_source-devices-events).
-+
-+		All supported performance monitoring events are listed below.
-+
-+		Basic events (evtype=0x00)
-+
-+		    clock = "event=0x00,evtype=0x00,portid=0xff"
-+
-+		Cache events (evtype=0x01)
-+
-+		    cache_read_hit      = "event=0x00,evtype=0x01,portid=0xff"
-+		    cache_read_miss     = "event=0x01,evtype=0x01,portid=0xff"
-+		    cache_write_hit     = "event=0x02,evtype=0x01,portid=0xff"
-+		    cache_write_miss    = "event=0x03,evtype=0x01,portid=0xff"
-+		    cache_hold_request  = "event=0x05,evtype=0x01,portid=0xff"
-+		    cache_data_write_port_contention =
-+		                          "event=0x06,evtype=0x01,portid=0xff"
-+		    cache_tag_write_port_contention =
-+		                          "event=0x07,evtype=0x01,portid=0xff"
-+		    cache_tx_req_stall  = "event=0x08,evtype=0x01,portid=0xff"
-+		    cache_rx_req_stall  = "event=0x09,evtype=0x01,portid=0xff"
-+		    cache_eviction      = "event=0x0a,evtype=0x01,portid=0xff"
-+
-+		Fabric events (evtype=0x02)
-+
-+		    fab_pcie0_read       = "event=0x00,evtype=0x02,portid=0xff"
-+		    fab_pcie0_write      = "event=0x01,evtype=0x02,portid=0xff"
-+		    fab_pcie1_read       = "event=0x02,evtype=0x02,portid=0xff"
-+		    fab_pcie1_write      = "event=0x03,evtype=0x02,portid=0xff"
-+		    fab_upi_read         = "event=0x04,evtype=0x02,portid=0xff"
-+		    fab_upi_write        = "event=0x05,evtype=0x02,portid=0xff"
-+		    fab_mmio_read        = "event=0x06,evtype=0x02,portid=0xff"
-+		    fab_mmio_write       = "event=0x07,evtype=0x02,portid=0xff"
-+		    fab_port_pcie0_read  = "event=0x00,evtype=0x02,portid=?"
-+		    fab_port_pcie0_write = "event=0x01,evtype=0x02,portid=?"
-+		    fab_port_pcie1_read  = "event=0x02,evtype=0x02,portid=?"
-+		    fab_port_pcie1_write = "event=0x03,evtype=0x02,portid=?"
-+		    fab_port_upi_read    = "event=0x04,evtype=0x02,portid=?"
-+		    fab_port_upi_write   = "event=0x05,evtype=0x02,portid=?"
-+		    fab_port_mmio_read   = "event=0x06,evtype=0x02,portid=?"
-+		    fab_port_mmio_write  = "event=0x07,evtype=0x02,portid=?"
-+
-+		VTD events (evtype=0x03)
-+
-+		    vtd_port_read_transaction  = "event=0x00,evtype=0x03,portid=?"
-+		    vtd_port_write_transaction = "event=0x01,evtype=0x03,portid=?"
-+		    vtd_port_devtlb_read_hit   = "event=0x02,evtype=0x03,portid=?"
-+		    vtd_port_devtlb_write_hit  = "event=0x03,evtype=0x03,portid=?"
-+		    vtd_port_devtlb_4k_fill    = "event=0x04,evtype=0x03,portid=?"
-+		    vtd_port_devtlb_2m_fill    = "event=0x05,evtype=0x03,portid=?"
-+		    vtd_port_devtlb_1g_fill    = "event=0x06,evtype=0x03,portid=?"
-+
-+		VTD SIP events (evtype=0x04)
-+
-+		    vtd_sip_iotlb_4k_hit  = "event=0x00,evtype=0x04,portid=0xff"
-+		    vtd_sip_iotlb_2m_hit  = "event=0x01,evtype=0x04,portid=0xff"
-+		    vtd_sip_iotlb_1g_hit  = "event=0x02,evtype=0x04,portid=0xff"
-+		    vtd_sip_slpwc_l3_hit  = "event=0x03,evtype=0x04,portid=0xff"
-+		    vtd_sip_slpwc_l4_hit  = "event=0x04,evtype=0x04,portid=0xff"
-+		    vtd_sip_rcc_hit       = "event=0x05,evtype=0x04,portid=0xff"
-+		    vtd_sip_iotlb_4k_miss = "event=0x06,evtype=0x04,portid=0xff"
-+		    vtd_sip_iotlb_2m_miss = "event=0x07,evtype=0x04,portid=0xff"
-+		    vtd_sip_iotlb_1g_miss = "event=0x08,evtype=0x04,portid=0xff"
-+		    vtd_sip_slpwc_l3_miss = "event=0x09,evtype=0x04,portid=0xff"
-+		    vtd_sip_slpwc_l4_miss = "event=0x0a,evtype=0x04,portid=0xff"
-+		    vtd_sip_rcc_miss      = "event=0x0b,evtype=0x04,portid=0xff"
-diff --git a/drivers/fpga/Kconfig b/drivers/fpga/Kconfig
-index 72380e1..b2408a7 100644
---- a/drivers/fpga/Kconfig
-+++ b/drivers/fpga/Kconfig
-@@ -156,7 +156,7 @@ config FPGA_DFL
- 
- config FPGA_DFL_FME
- 	tristate "FPGA DFL FME Driver"
--	depends on FPGA_DFL && HWMON
-+	depends on FPGA_DFL && HWMON && PERF_EVENTS
- 	help
- 	  The FPGA Management Engine (FME) is a feature device implemented
- 	  under Device Feature List (DFL) framework. Select this option to
-diff --git a/drivers/fpga/Makefile b/drivers/fpga/Makefile
-index 4865b74..d8e21df 100644
---- a/drivers/fpga/Makefile
-+++ b/drivers/fpga/Makefile
-@@ -40,6 +40,7 @@ obj-$(CONFIG_FPGA_DFL_FME_REGION)	+= dfl-fme-region.o
- obj-$(CONFIG_FPGA_DFL_AFU)		+= dfl-afu.o
- 
- dfl-fme-objs := dfl-fme-main.o dfl-fme-pr.o dfl-fme-error.o
-+dfl-fme-objs += dfl-fme-perf.o
- dfl-afu-objs := dfl-afu-main.o dfl-afu-region.o dfl-afu-dma-region.o
- dfl-afu-objs += dfl-afu-error.o
- 
-diff --git a/drivers/fpga/dfl-fme-main.c b/drivers/fpga/dfl-fme-main.c
-index 1d4690c..3533056 100644
---- a/drivers/fpga/dfl-fme-main.c
-+++ b/drivers/fpga/dfl-fme-main.c
-@@ -580,6 +580,10 @@ static int fme_power_mgmt_init(struct platform_device *pdev,
- 		.ops = &fme_power_mgmt_ops,
- 	},
- 	{
-+		.id_table = fme_perf_id_table,
-+		.ops = &fme_perf_ops,
-+	},
-+	{
- 		.ops = NULL,
- 	},
- };
-diff --git a/drivers/fpga/dfl-fme-perf.c b/drivers/fpga/dfl-fme-perf.c
-new file mode 100644
-index 0000000..6ce1ed2
---- /dev/null
-+++ b/drivers/fpga/dfl-fme-perf.c
-@@ -0,0 +1,1020 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Driver for FPGA Management Engine (FME) Global Performance Reporting
-+ *
-+ * Copyright 2019 Intel Corporation, Inc.
-+ *
-+ * Authors:
-+ *   Kang Luwei <luwei.kang@intel.com>
-+ *   Xiao Guangrong <guangrong.xiao@linux.intel.com>
-+ *   Wu Hao <hao.wu@intel.com>
-+ *   Xu Yilun <yilun.xu@intel.com>
-+ *   Joseph Grecco <joe.grecco@intel.com>
-+ *   Enno Luebbers <enno.luebbers@intel.com>
-+ *   Tim Whisonant <tim.whisonant@intel.com>
-+ *   Ananda Ravuri <ananda.ravuri@intel.com>
-+ *   Mitchel, Henry <henry.mitchel@intel.com>
-+ */
-+
-+#include <linux/perf_event.h>
-+#include "dfl.h"
-+#include "dfl-fme.h"
-+
-+/*
-+ * Performance Counter Registers for Cache.
-+ *
-+ * Cache Events are listed below as CACHE_EVNT_*.
-+ */
-+#define CACHE_CTRL			0x8
-+#define CACHE_RESET_CNTR		BIT_ULL(0)
-+#define CACHE_FREEZE_CNTR		BIT_ULL(8)
-+#define CACHE_CTRL_EVNT			GENMASK_ULL(19, 16)
-+#define CACHE_EVNT_RD_HIT		0x0
-+#define CACHE_EVNT_WR_HIT		0x1
-+#define CACHE_EVNT_RD_MISS		0x2
-+#define CACHE_EVNT_WR_MISS		0x3
-+#define CACHE_EVNT_RSVD			0x4
-+#define CACHE_EVNT_HOLD_REQ		0x5
-+#define CACHE_EVNT_DATA_WR_PORT_CONTEN	0x6
-+#define CACHE_EVNT_TAG_WR_PORT_CONTEN	0x7
-+#define CACHE_EVNT_TX_REQ_STALL		0x8
-+#define CACHE_EVNT_RX_REQ_STALL		0x9
-+#define CACHE_EVNT_EVICTIONS		0xa
-+#define CACHE_EVNT_MAX			CACHE_EVNT_EVICTIONS
-+#define CACHE_CHANNEL_SEL		BIT_ULL(20)
-+#define CACHE_CHANNEL_RD		0
-+#define CACHE_CHANNEL_WR		1
-+#define CACHE_CNTR0			0x10
-+#define CACHE_CNTR1			0x18
-+#define CACHE_CNTR_EVNT_CNTR		GENMASK_ULL(47, 0)
-+#define CACHE_CNTR_EVNT			GENMASK_ULL(63, 60)
-+
-+/*
-+ * Performance Counter Registers for Fabric.
-+ *
-+ * Fabric Events are listed below as FAB_EVNT_*
-+ */
-+#define FAB_CTRL			0x20
-+#define FAB_RESET_CNTR			BIT_ULL(0)
-+#define FAB_FREEZE_CNTR			BIT_ULL(8)
-+#define FAB_CTRL_EVNT			GENMASK_ULL(19, 16)
-+#define FAB_EVNT_PCIE0_RD		0x0
-+#define FAB_EVNT_PCIE0_WR		0x1
-+#define FAB_EVNT_PCIE1_RD		0x2
-+#define FAB_EVNT_PCIE1_WR		0x3
-+#define FAB_EVNT_UPI_RD			0x4
-+#define FAB_EVNT_UPI_WR			0x5
-+#define FAB_EVNT_MMIO_RD		0x6
-+#define FAB_EVNT_MMIO_WR		0x7
-+#define FAB_EVNT_MAX			FAB_EVNT_MMIO_WR
-+#define FAB_PORT_ID			GENMASK_ULL(21, 20)
-+#define FAB_PORT_FILTER			BIT_ULL(23)
-+#define FAB_PORT_FILTER_DISABLE		0
-+#define FAB_PORT_FILTER_ENABLE		1
-+#define FAB_CNTR			0x28
-+#define FAB_CNTR_EVNT_CNTR		GENMASK_ULL(59, 0)
-+#define FAB_CNTR_EVNT			GENMASK_ULL(63, 60)
-+
-+/*
-+ * Performance Counter Registers for Clock.
-+ *
-+ * Clock Counter can't be reset or frozen by SW.
-+ */
-+#define CLK_CNTR			0x30
-+#define BASIC_EVNT_CLK			0x0
-+#define BASIC_EVNT_MAX			BASIC_EVNT_CLK
-+
-+/*
-+ * Performance Counter Registers for IOMMU / VT-D.
-+ *
-+ * VT-D Events are listed below as VTD_EVNT_* and VTD_SIP_EVNT_*
-+ */
-+#define VTD_CTRL			0x38
-+#define VTD_RESET_CNTR			BIT_ULL(0)
-+#define VTD_FREEZE_CNTR			BIT_ULL(8)
-+#define VTD_CTRL_EVNT			GENMASK_ULL(19, 16)
-+#define VTD_EVNT_AFU_MEM_RD_TRANS	0x0
-+#define VTD_EVNT_AFU_MEM_WR_TRANS	0x1
-+#define VTD_EVNT_AFU_DEVTLB_RD_HIT	0x2
-+#define VTD_EVNT_AFU_DEVTLB_WR_HIT	0x3
-+#define VTD_EVNT_DEVTLB_4K_FILL		0x4
-+#define VTD_EVNT_DEVTLB_2M_FILL		0x5
-+#define VTD_EVNT_DEVTLB_1G_FILL		0x6
-+#define VTD_EVNT_MAX			VTD_EVNT_DEVTLB_1G_FILL
-+#define VTD_CNTR			0x40
-+#define VTD_CNTR_EVNT_CNTR		GENMASK_ULL(47, 0)
-+#define VTD_CNTR_EVNT			GENMASK_ULL(63, 60)
-+
-+#define VTD_SIP_CTRL			0x48
-+#define VTD_SIP_RESET_CNTR		BIT_ULL(0)
-+#define VTD_SIP_FREEZE_CNTR		BIT_ULL(8)
-+#define VTD_SIP_CTRL_EVNT		GENMASK_ULL(19, 16)
-+#define VTD_SIP_EVNT_IOTLB_4K_HIT	0x0
-+#define VTD_SIP_EVNT_IOTLB_2M_HIT	0x1
-+#define VTD_SIP_EVNT_IOTLB_1G_HIT	0x2
-+#define VTD_SIP_EVNT_SLPWC_L3_HIT	0x3
-+#define VTD_SIP_EVNT_SLPWC_L4_HIT	0x4
-+#define VTD_SIP_EVNT_RCC_HIT		0x5
-+#define VTD_SIP_EVNT_IOTLB_4K_MISS	0x6
-+#define VTD_SIP_EVNT_IOTLB_2M_MISS	0x7
-+#define VTD_SIP_EVNT_IOTLB_1G_MISS	0x8
-+#define VTD_SIP_EVNT_SLPWC_L3_MISS	0x9
-+#define VTD_SIP_EVNT_SLPWC_L4_MISS	0xa
-+#define VTD_SIP_EVNT_RCC_MISS		0xb
-+#define VTD_SIP_EVNT_MAX		VTD_SIP_EVNT_SLPWC_L4_MISS
-+#define VTD_SIP_CNTR			0X50
-+#define VTD_SIP_CNTR_EVNT_CNTR		GENMASK_ULL(47, 0)
-+#define VTD_SIP_CNTR_EVNT		GENMASK_ULL(63, 60)
-+
-+#define PERF_TIMEOUT			30
-+
-+#define PERF_MAX_PORT_NUM		1U
-+
-+/**
-+ * struct fme_perf_priv - priv data structure for fme perf driver
-+ *
-+ * @dev: parent device.
-+ * @ioaddr: mapped base address of mmio region.
-+ * @pmu: pmu data structure for fme perf counters.
-+ * @id: id of this fme performance report private feature.
-+ * @fab_users: current user number on fabric counters.
-+ * @fab_port_id: used to indicate current working mode of fabric counters.
-+ * @fab_lock: lock to protect fabric counters working mode.
-+ * @cpu: active CPU to which the PMU is bound for accesses.
-+ * @cpuhp_node: node for CPU hotplug notifier link.
-+ * @cpuhp_state: state for CPU hotplug notification;
-+ */
-+struct fme_perf_priv {
-+	struct device *dev;
-+	void __iomem *ioaddr;
-+	struct pmu pmu;
-+	u64 id;
-+
-+	u32 fab_users;
-+	u32 fab_port_id;
-+	spinlock_t fab_lock;
-+
-+	unsigned int cpu;
-+	struct hlist_node node;
-+	enum cpuhp_state cpuhp_state;
-+};
-+
-+/**
-+ * struct fme_perf_event_ops - callbacks for fme perf events
-+ *
-+ * @event_init: callback invoked during event init.
-+ * @event_destroy: callback invoked during event destroy.
-+ * @read_counter: callback to read hardware counters.
-+ */
-+struct fme_perf_event_ops {
-+	int (*event_init)(struct fme_perf_priv *priv, u32 event, u32 portid);
-+	void (*event_destroy)(struct fme_perf_priv *priv, u32 event,
-+			      u32 portid);
-+	u64 (*read_counter)(struct fme_perf_priv *priv, u32 event, u32 portid);
-+};
-+
-+#define to_fme_perf_priv(_pmu)	container_of(_pmu, struct fme_perf_priv, pmu)
-+
-+static ssize_t cpumask_show(struct device *dev,
-+			    struct device_attribute *attr, char *buf)
-+{
-+	struct pmu *pmu = dev_get_drvdata(dev);
-+	struct fme_perf_priv *priv;
-+
-+	priv = to_fme_perf_priv(pmu);
-+
-+	return cpumap_print_to_pagebuf(true, buf, cpumask_of(priv->cpu));
-+}
-+static DEVICE_ATTR_RO(cpumask);
-+
-+static struct attribute *fme_perf_cpumask_attrs[] = {
-+	&dev_attr_cpumask.attr,
-+	NULL,
-+};
-+
-+static struct attribute_group fme_perf_cpumask_group = {
-+	.attrs = fme_perf_cpumask_attrs,
-+};
-+
-+#define FME_EVENT_MASK		GENMASK_ULL(11, 0)
-+#define FME_EVENT_SHIFT		0
-+#define FME_EVTYPE_MASK		GENMASK_ULL(15, 12)
-+#define FME_EVTYPE_SHIFT	12
-+#define FME_EVTYPE_BASIC	0
-+#define FME_EVTYPE_CACHE	1
-+#define FME_EVTYPE_FABRIC	2
-+#define FME_EVTYPE_VTD		3
-+#define FME_EVTYPE_VTD_SIP	4
-+#define FME_EVTYPE_MAX		FME_EVTYPE_VTD_SIP
-+#define FME_PORTID_MASK		GENMASK_ULL(23, 16)
-+#define FME_PORTID_SHIFT	16
-+#define FME_PORTID_ROOT		(0xffU)
-+
-+#define get_event(_config)	FIELD_GET(FME_EVENT_MASK, _config)
-+#define get_evtype(_config)	FIELD_GET(FME_EVTYPE_MASK, _config)
-+#define get_portid(_config)	FIELD_GET(FME_PORTID_MASK, _config)
-+
-+PMU_FORMAT_ATTR(event,		"config:0-11");
-+PMU_FORMAT_ATTR(evtype,		"config:12-15");
-+PMU_FORMAT_ATTR(portid,		"config:16-23");
-+
-+static struct attribute *fme_perf_format_attrs[] = {
-+	&format_attr_event.attr,
-+	&format_attr_evtype.attr,
-+	&format_attr_portid.attr,
-+	NULL,
-+};
-+
-+static struct attribute_group fme_perf_format_group = {
-+	.name = "format",
-+	.attrs = fme_perf_format_attrs,
-+};
-+
-+/*
-+ * There are no default events, but we need to create
-+ * "events" group (with empty attrs) before updating
-+ * it with detected events (using pmu->attr_update).
-+ */
-+static struct attribute *fme_perf_events_attrs_empty[] = {
-+	NULL,
-+};
-+
-+static struct attribute_group fme_perf_events_group = {
-+	.name = "events",
-+	.attrs = fme_perf_events_attrs_empty,
-+};
-+
-+static const struct attribute_group *fme_perf_groups[] = {
-+	&fme_perf_format_group,
-+	&fme_perf_cpumask_group,
-+	&fme_perf_events_group,
-+	NULL,
-+};
-+
-+static bool is_portid_root(u32 portid)
-+{
-+	return portid == FME_PORTID_ROOT;
-+}
-+
-+static bool is_portid_port(u32 portid)
-+{
-+	return portid < PERF_MAX_PORT_NUM;
-+}
-+
-+static bool is_portid_root_or_port(u32 portid)
-+{
-+	return is_portid_root(portid) || is_portid_port(portid);
-+}
-+
-+static u64 fme_read_perf_cntr_reg(void __iomem *addr)
-+{
-+	u32 low;
-+	u64 v;
-+
-+	/*
-+	 * For 64bit counter registers, the counter may increases and carries
-+	 * out of bit [31] between 2 32bit reads. So add extra reads to help
-+	 * to prevent this issue. This only happens in platforms which don't
-+	 * support 64bit read - readq is split into 2 readl.
-+	 */
-+	do {
-+		v = readq(addr);
-+		low = readl(addr);
-+	} while (((u32)v) > low);
-+
-+	return v;
-+}
-+
-+static int basic_event_init(struct fme_perf_priv *priv, u32 event, u32 portid)
-+{
-+	if (event <= BASIC_EVNT_MAX && is_portid_root(portid))
-+		return 0;
-+
-+	return -EINVAL;
-+}
-+
-+static u64 basic_read_event_counter(struct fme_perf_priv *priv,
-+				    u32 event, u32 portid)
-+{
-+	void __iomem *base = priv->ioaddr;
-+
-+	return fme_read_perf_cntr_reg(base + CLK_CNTR);
-+}
-+
-+static int cache_event_init(struct fme_perf_priv *priv, u32 event, u32 portid)
-+{
-+	if (priv->id == FME_FEATURE_ID_GLOBAL_IPERF &&
-+	    event <= CACHE_EVNT_MAX && is_portid_root(portid))
-+		return 0;
-+
-+	return -EINVAL;
-+}
-+
-+static u64 cache_read_event_counter(struct fme_perf_priv *priv,
-+				    u32 event, u32 portid)
-+{
-+	void __iomem *base = priv->ioaddr;
-+	u64 v, count;
-+	u8 channel;
-+
-+	if (event == CACHE_EVNT_WR_HIT || event == CACHE_EVNT_WR_MISS ||
-+	    event == CACHE_EVNT_DATA_WR_PORT_CONTEN ||
-+	    event == CACHE_EVNT_TAG_WR_PORT_CONTEN)
-+		channel = CACHE_CHANNEL_WR;
-+	else
-+		channel = CACHE_CHANNEL_RD;
-+
-+	/* set channel access type and cache event code. */
-+	v = readq(base + CACHE_CTRL);
-+	v &= ~(CACHE_CHANNEL_SEL | CACHE_CTRL_EVNT);
-+	v |= FIELD_PREP(CACHE_CHANNEL_SEL, channel);
-+	v |= FIELD_PREP(CACHE_CTRL_EVNT, event);
-+	writeq(v, base + CACHE_CTRL);
-+
-+	if (readq_poll_timeout_atomic(base + CACHE_CNTR0, v,
-+				      FIELD_GET(CACHE_CNTR_EVNT, v) == event,
-+				      1, PERF_TIMEOUT)) {
-+		dev_err(priv->dev, "timeout, unmatched cache event code in counter register.\n");
-+		return 0;
-+	}
-+
-+	v = fme_read_perf_cntr_reg(base + CACHE_CNTR0);
-+	count = FIELD_GET(CACHE_CNTR_EVNT_CNTR, v);
-+	v = fme_read_perf_cntr_reg(base + CACHE_CNTR1);
-+	count += FIELD_GET(CACHE_CNTR_EVNT_CNTR, v);
-+
-+	return count;
-+}
-+
-+static bool is_fabric_event_supported(struct fme_perf_priv *priv, u32 event,
-+				      u32 portid)
-+{
-+	if (event > FAB_EVNT_MAX || !is_portid_root_or_port(portid))
-+		return false;
-+
-+	if (priv->id == FME_FEATURE_ID_GLOBAL_DPERF &&
-+	    (event == FAB_EVNT_PCIE1_RD || event == FAB_EVNT_UPI_RD ||
-+	     event == FAB_EVNT_PCIE1_WR || event == FAB_EVNT_UPI_WR))
-+		return false;
-+
-+	return true;
-+}
-+
-+static int fabric_event_init(struct fme_perf_priv *priv, u32 event, u32 portid)
-+{
-+	void __iomem *base = priv->ioaddr;
-+	int ret = 0;
-+	u64 v;
-+
-+	if (!is_fabric_event_supported(priv, event, portid))
-+		return -EINVAL;
-+
-+	/*
-+	 * as fabric counter set only can be in either overall or port mode.
-+	 * In overall mode, it counts overall data for FPGA, and in port mode,
-+	 * it is configured to monitor on one individual port.
-+	 *
-+	 * so every time, a new event is initialized, driver checks
-+	 * current working mode and if someone is using this counter set.
-+	 */
-+	spin_lock(&priv->fab_lock);
-+	if (priv->fab_users && priv->fab_port_id != portid) {
-+		dev_dbg(priv->dev, "conflict fabric event monitoring mode.\n");
-+		ret = -EOPNOTSUPP;
-+		goto exit;
-+	}
-+
-+	priv->fab_users++;
-+
-+	/*
-+	 * skip if current working mode matches, otherwise change the working
-+	 * mode per input port_id, to monitor overall data or another port.
-+	 */
-+	if (priv->fab_port_id == portid)
-+		goto exit;
-+
-+	priv->fab_port_id = portid;
-+
-+	v = readq(base + FAB_CTRL);
-+	v &= ~(FAB_PORT_FILTER | FAB_PORT_ID);
-+
-+	if (is_portid_root(portid)) {
-+		v |= FIELD_PREP(FAB_PORT_FILTER, FAB_PORT_FILTER_DISABLE);
-+	} else {
-+		v |= FIELD_PREP(FAB_PORT_FILTER, FAB_PORT_FILTER_ENABLE);
-+		v |= FIELD_PREP(FAB_PORT_ID, portid);
-+	}
-+	writeq(v, base + FAB_CTRL);
-+
-+exit:
-+	spin_unlock(&priv->fab_lock);
-+	return ret;
-+}
-+
-+static void fabric_event_destroy(struct fme_perf_priv *priv, u32 event,
-+				 u32 portid)
-+{
-+	spin_lock(&priv->fab_lock);
-+	priv->fab_users--;
-+	spin_unlock(&priv->fab_lock);
-+}
-+
-+static u64 fabric_read_event_counter(struct fme_perf_priv *priv, u32 event,
-+				     u32 portid)
-+{
-+	void __iomem *base = priv->ioaddr;
-+	u64 v;
-+
-+	v = readq(base + FAB_CTRL);
-+	v &= ~FAB_CTRL_EVNT;
-+	v |= FIELD_PREP(FAB_CTRL_EVNT, event);
-+	writeq(v, base + FAB_CTRL);
-+
-+	if (readq_poll_timeout_atomic(base + FAB_CNTR, v,
-+				      FIELD_GET(FAB_CNTR_EVNT, v) == event,
-+				      1, PERF_TIMEOUT)) {
-+		dev_err(priv->dev, "timeout, unmatched fab event code in counter register.\n");
-+		return 0;
-+	}
-+
-+	v = fme_read_perf_cntr_reg(base + FAB_CNTR);
-+	return FIELD_GET(FAB_CNTR_EVNT_CNTR, v);
-+}
-+
-+static int vtd_event_init(struct fme_perf_priv *priv, u32 event, u32 portid)
-+{
-+	if (priv->id == FME_FEATURE_ID_GLOBAL_IPERF &&
-+	    event <= VTD_EVNT_MAX && is_portid_port(portid))
-+		return 0;
-+
-+	return -EINVAL;
-+}
-+
-+static u64 vtd_read_event_counter(struct fme_perf_priv *priv, u32 event,
-+				  u32 portid)
-+{
-+	void __iomem *base = priv->ioaddr;
-+	u64 v;
-+
-+	event += (portid * (VTD_EVNT_MAX + 1));
-+
-+	v = readq(base + VTD_CTRL);
-+	v &= ~VTD_CTRL_EVNT;
-+	v |= FIELD_PREP(VTD_CTRL_EVNT, event);
-+	writeq(v, base + VTD_CTRL);
-+
-+	if (readq_poll_timeout_atomic(base + VTD_CNTR, v,
-+				      FIELD_GET(VTD_CNTR_EVNT, v) == event,
-+				      1, PERF_TIMEOUT)) {
-+		dev_err(priv->dev, "timeout, unmatched vtd event code in counter register.\n");
-+		return 0;
-+	}
-+
-+	v = fme_read_perf_cntr_reg(base + VTD_CNTR);
-+	return FIELD_GET(VTD_CNTR_EVNT_CNTR, v);
-+}
-+
-+static int vtd_sip_event_init(struct fme_perf_priv *priv, u32 event, u32 portid)
-+{
-+	if (priv->id == FME_FEATURE_ID_GLOBAL_IPERF &&
-+	    event <= VTD_SIP_EVNT_MAX && is_portid_root(portid))
-+		return 0;
-+
-+	return -EINVAL;
-+}
-+
-+static u64 vtd_sip_read_event_counter(struct fme_perf_priv *priv, u32 event,
-+				      u32 portid)
-+{
-+	void __iomem *base = priv->ioaddr;
-+	u64 v;
-+
-+	v = readq(base + VTD_SIP_CTRL);
-+	v &= ~VTD_SIP_CTRL_EVNT;
-+	v |= FIELD_PREP(VTD_SIP_CTRL_EVNT, event);
-+	writeq(v, base + VTD_SIP_CTRL);
-+
-+	if (readq_poll_timeout_atomic(base + VTD_SIP_CNTR, v,
-+				      FIELD_GET(VTD_SIP_CNTR_EVNT, v) == event,
-+				      1, PERF_TIMEOUT)) {
-+		dev_err(priv->dev, "timeout, unmatched vtd sip event code in counter register\n");
-+		return 0;
-+	}
-+
-+	v = fme_read_perf_cntr_reg(base + VTD_SIP_CNTR);
-+	return FIELD_GET(VTD_SIP_CNTR_EVNT_CNTR, v);
-+}
-+
-+static struct fme_perf_event_ops fme_perf_event_ops[] = {
-+	[FME_EVTYPE_BASIC]	= {.event_init = basic_event_init,
-+				   .read_counter = basic_read_event_counter,},
-+	[FME_EVTYPE_CACHE]	= {.event_init = cache_event_init,
-+				   .read_counter = cache_read_event_counter,},
-+	[FME_EVTYPE_FABRIC]	= {.event_init = fabric_event_init,
-+				   .event_destroy = fabric_event_destroy,
-+				   .read_counter = fabric_read_event_counter,},
-+	[FME_EVTYPE_VTD]	= {.event_init = vtd_event_init,
-+				   .read_counter = vtd_read_event_counter,},
-+	[FME_EVTYPE_VTD_SIP]	= {.event_init = vtd_sip_event_init,
-+				   .read_counter = vtd_sip_read_event_counter,},
-+};
-+
-+static ssize_t fme_perf_event_show(struct device *dev,
-+				   struct device_attribute *attr, char *buf)
-+{
-+	struct dev_ext_attribute *eattr;
-+	unsigned long config;
-+	char *ptr = buf;
-+
-+	eattr = container_of(attr, struct dev_ext_attribute, attr);
-+	config = (unsigned long)eattr->var;
-+
-+	ptr += sprintf(ptr, "event=0x%02x", (unsigned int)get_event(config));
-+	ptr += sprintf(ptr, ",evtype=0x%02x", (unsigned int)get_evtype(config));
-+
-+	if (is_portid_root(get_portid(config)))
-+		ptr += sprintf(ptr, ",portid=0x%02x\n", FME_PORTID_ROOT);
-+	else
-+		ptr += sprintf(ptr, ",portid=?\n");
-+
-+	return (ssize_t)(ptr - buf);
-+}
-+
-+#define FME_EVENT_ATTR(_name) \
-+	__ATTR(_name, 0444, fme_perf_event_show, NULL)
-+
-+#define FME_PORT_EVENT_CONFIG(_event, _type)				\
-+	(void *)((((_event) << FME_EVENT_SHIFT) & FME_EVENT_MASK) |	\
-+		(((_type) << FME_EVTYPE_SHIFT) & FME_EVTYPE_MASK))
-+
-+#define FME_EVENT_CONFIG(_event, _type)					\
-+	(void *)((((_event) << FME_EVENT_SHIFT) & FME_EVENT_MASK) |	\
-+		(((_type) << FME_EVTYPE_SHIFT) & FME_EVTYPE_MASK) |	\
-+		(FME_PORTID_ROOT << FME_PORTID_SHIFT))
-+
-+/* FME Perf Basic Events */
-+#define FME_EVENT_BASIC(_name, _event)					\
-+static struct dev_ext_attribute fme_perf_event_##_name = {		\
-+	.attr = FME_EVENT_ATTR(_name),					\
-+	.var = FME_EVENT_CONFIG(_event, FME_EVTYPE_BASIC),		\
-+}
-+
-+FME_EVENT_BASIC(clock, BASIC_EVNT_CLK);
-+
-+static struct attribute *fme_perf_basic_events_attrs[] = {
-+	&fme_perf_event_clock.attr.attr,
-+	NULL,
-+};
-+
-+static const struct attribute_group fme_perf_basic_events_group = {
-+	.name = "events",
-+	.attrs = fme_perf_basic_events_attrs,
-+};
-+
-+/* FME Perf Cache Events */
-+#define FME_EVENT_CACHE(_name, _event)					\
-+static struct dev_ext_attribute fme_perf_event_cache_##_name = {	\
-+	.attr = FME_EVENT_ATTR(cache_##_name),				\
-+	.var = FME_EVENT_CONFIG(_event, FME_EVTYPE_CACHE),		\
-+}
-+
-+FME_EVENT_CACHE(read_hit,     CACHE_EVNT_RD_HIT);
-+FME_EVENT_CACHE(read_miss,    CACHE_EVNT_RD_MISS);
-+FME_EVENT_CACHE(write_hit,    CACHE_EVNT_WR_HIT);
-+FME_EVENT_CACHE(write_miss,   CACHE_EVNT_WR_MISS);
-+FME_EVENT_CACHE(hold_request, CACHE_EVNT_HOLD_REQ);
-+FME_EVENT_CACHE(tx_req_stall, CACHE_EVNT_TX_REQ_STALL);
-+FME_EVENT_CACHE(rx_req_stall, CACHE_EVNT_RX_REQ_STALL);
-+FME_EVENT_CACHE(eviction,     CACHE_EVNT_EVICTIONS);
-+FME_EVENT_CACHE(data_write_port_contention, CACHE_EVNT_DATA_WR_PORT_CONTEN);
-+FME_EVENT_CACHE(tag_write_port_contention,  CACHE_EVNT_TAG_WR_PORT_CONTEN);
-+
-+static struct attribute *fme_perf_cache_events_attrs[] = {
-+	&fme_perf_event_cache_read_hit.attr.attr,
-+	&fme_perf_event_cache_read_miss.attr.attr,
-+	&fme_perf_event_cache_write_hit.attr.attr,
-+	&fme_perf_event_cache_write_miss.attr.attr,
-+	&fme_perf_event_cache_hold_request.attr.attr,
-+	&fme_perf_event_cache_tx_req_stall.attr.attr,
-+	&fme_perf_event_cache_rx_req_stall.attr.attr,
-+	&fme_perf_event_cache_eviction.attr.attr,
-+	&fme_perf_event_cache_data_write_port_contention.attr.attr,
-+	&fme_perf_event_cache_tag_write_port_contention.attr.attr,
-+	NULL,
-+};
-+
-+static umode_t fme_perf_events_visible(struct kobject *kobj,
-+				       struct attribute *attr, int n)
-+{
-+	struct pmu *pmu = dev_get_drvdata(kobj_to_dev(kobj));
-+	struct fme_perf_priv *priv = to_fme_perf_priv(pmu);
-+
-+	return (priv->id == FME_FEATURE_ID_GLOBAL_IPERF) ? attr->mode : 0;
-+}
-+
-+static const struct attribute_group fme_perf_cache_events_group = {
-+	.name = "events",
-+	.attrs = fme_perf_cache_events_attrs,
-+	.is_visible = fme_perf_events_visible,
-+};
-+
-+/* FME Perf Fabric Events */
-+#define FME_EVENT_FABRIC(_name, _event)					\
-+static struct dev_ext_attribute fme_perf_event_fab_##_name = {		\
-+	.attr = FME_EVENT_ATTR(fab_##_name),				\
-+	.var = FME_EVENT_CONFIG(_event, FME_EVTYPE_FABRIC),		\
-+}
-+
-+#define FME_EVENT_FABRIC_PORT(_name, _event)				\
-+static struct dev_ext_attribute fme_perf_event_fab_port_##_name = {	\
-+	.attr = FME_EVENT_ATTR(fab_port_##_name),			\
-+	.var = FME_PORT_EVENT_CONFIG(_event, FME_EVTYPE_FABRIC),	\
-+}
-+
-+FME_EVENT_FABRIC(pcie0_read,  FAB_EVNT_PCIE0_RD);
-+FME_EVENT_FABRIC(pcie0_write, FAB_EVNT_PCIE0_WR);
-+FME_EVENT_FABRIC(pcie1_read,  FAB_EVNT_PCIE1_RD);
-+FME_EVENT_FABRIC(pcie1_write, FAB_EVNT_PCIE1_WR);
-+FME_EVENT_FABRIC(upi_read,    FAB_EVNT_UPI_RD);
-+FME_EVENT_FABRIC(upi_write,   FAB_EVNT_UPI_WR);
-+FME_EVENT_FABRIC(mmio_read,   FAB_EVNT_MMIO_RD);
-+FME_EVENT_FABRIC(mmio_write,  FAB_EVNT_MMIO_WR);
-+
-+FME_EVENT_FABRIC_PORT(pcie0_read,  FAB_EVNT_PCIE0_RD);
-+FME_EVENT_FABRIC_PORT(pcie0_write, FAB_EVNT_PCIE0_WR);
-+FME_EVENT_FABRIC_PORT(pcie1_read,  FAB_EVNT_PCIE1_RD);
-+FME_EVENT_FABRIC_PORT(pcie1_write, FAB_EVNT_PCIE1_WR);
-+FME_EVENT_FABRIC_PORT(upi_read,    FAB_EVNT_UPI_RD);
-+FME_EVENT_FABRIC_PORT(upi_write,   FAB_EVNT_UPI_WR);
-+FME_EVENT_FABRIC_PORT(mmio_read,   FAB_EVNT_MMIO_RD);
-+FME_EVENT_FABRIC_PORT(mmio_write,  FAB_EVNT_MMIO_WR);
-+
-+static struct attribute *fme_perf_fabric_events_attrs[] = {
-+	&fme_perf_event_fab_pcie0_read.attr.attr,
-+	&fme_perf_event_fab_pcie0_write.attr.attr,
-+	&fme_perf_event_fab_pcie1_read.attr.attr,
-+	&fme_perf_event_fab_pcie1_write.attr.attr,
-+	&fme_perf_event_fab_upi_read.attr.attr,
-+	&fme_perf_event_fab_upi_write.attr.attr,
-+	&fme_perf_event_fab_mmio_read.attr.attr,
-+	&fme_perf_event_fab_mmio_write.attr.attr,
-+	&fme_perf_event_fab_port_pcie0_read.attr.attr,
-+	&fme_perf_event_fab_port_pcie0_write.attr.attr,
-+	&fme_perf_event_fab_port_pcie1_read.attr.attr,
-+	&fme_perf_event_fab_port_pcie1_write.attr.attr,
-+	&fme_perf_event_fab_port_upi_read.attr.attr,
-+	&fme_perf_event_fab_port_upi_write.attr.attr,
-+	&fme_perf_event_fab_port_mmio_read.attr.attr,
-+	&fme_perf_event_fab_port_mmio_write.attr.attr,
-+	NULL,
-+};
-+
-+static umode_t fme_perf_fabric_events_visible(struct kobject *kobj,
-+					      struct attribute *attr, int n)
-+{
-+	struct pmu *pmu = dev_get_drvdata(kobj_to_dev(kobj));
-+	struct fme_perf_priv *priv = to_fme_perf_priv(pmu);
-+	struct dev_ext_attribute *eattr;
-+	unsigned long var;
-+
-+	eattr = container_of(attr, struct dev_ext_attribute, attr.attr);
-+	var = (unsigned long)eattr->var;
-+
-+	if (is_fabric_event_supported(priv, get_event(var), get_portid(var)))
-+		return attr->mode;
-+
-+	return 0;
-+}
-+
-+static const struct attribute_group fme_perf_fabric_events_group = {
-+	.name = "events",
-+	.attrs = fme_perf_fabric_events_attrs,
-+	.is_visible = fme_perf_fabric_events_visible,
-+};
-+
-+/* FME Perf VTD Events */
-+#define FME_EVENT_VTD_PORT(_name, _event)				\
-+static struct dev_ext_attribute fme_perf_event_vtd_port_##_name = {	\
-+	.attr = FME_EVENT_ATTR(vtd_port_##_name),			\
-+	.var = FME_PORT_EVENT_CONFIG(_event, FME_EVTYPE_VTD),		\
-+}
-+
-+FME_EVENT_VTD_PORT(read_transaction,  VTD_EVNT_AFU_MEM_RD_TRANS);
-+FME_EVENT_VTD_PORT(write_transaction, VTD_EVNT_AFU_MEM_WR_TRANS);
-+FME_EVENT_VTD_PORT(devtlb_read_hit,   VTD_EVNT_AFU_DEVTLB_RD_HIT);
-+FME_EVENT_VTD_PORT(devtlb_write_hit,  VTD_EVNT_AFU_DEVTLB_WR_HIT);
-+FME_EVENT_VTD_PORT(devtlb_4k_fill,    VTD_EVNT_DEVTLB_4K_FILL);
-+FME_EVENT_VTD_PORT(devtlb_2m_fill,    VTD_EVNT_DEVTLB_2M_FILL);
-+FME_EVENT_VTD_PORT(devtlb_1g_fill,    VTD_EVNT_DEVTLB_1G_FILL);
-+
-+static struct attribute *fme_perf_vtd_events_attrs[] = {
-+	&fme_perf_event_vtd_port_read_transaction.attr.attr,
-+	&fme_perf_event_vtd_port_write_transaction.attr.attr,
-+	&fme_perf_event_vtd_port_devtlb_read_hit.attr.attr,
-+	&fme_perf_event_vtd_port_devtlb_write_hit.attr.attr,
-+	&fme_perf_event_vtd_port_devtlb_4k_fill.attr.attr,
-+	&fme_perf_event_vtd_port_devtlb_2m_fill.attr.attr,
-+	&fme_perf_event_vtd_port_devtlb_1g_fill.attr.attr,
-+	NULL,
-+};
-+
-+static const struct attribute_group fme_perf_vtd_events_group = {
-+	.name = "events",
-+	.attrs = fme_perf_vtd_events_attrs,
-+	.is_visible = fme_perf_events_visible,
-+};
-+
-+/* FME Perf VTD SIP Events */
-+#define FME_EVENT_VTD_SIP(_name, _event)				\
-+static struct dev_ext_attribute fme_perf_event_vtd_sip_##_name = {	\
-+	.attr = FME_EVENT_ATTR(vtd_sip_##_name),			\
-+	.var = FME_EVENT_CONFIG(_event, FME_EVTYPE_VTD_SIP),		\
-+}
-+
-+FME_EVENT_VTD_SIP(iotlb_4k_hit,  VTD_SIP_EVNT_IOTLB_4K_HIT);
-+FME_EVENT_VTD_SIP(iotlb_2m_hit,  VTD_SIP_EVNT_IOTLB_2M_HIT);
-+FME_EVENT_VTD_SIP(iotlb_1g_hit,  VTD_SIP_EVNT_IOTLB_1G_HIT);
-+FME_EVENT_VTD_SIP(slpwc_l3_hit,  VTD_SIP_EVNT_SLPWC_L3_HIT);
-+FME_EVENT_VTD_SIP(slpwc_l4_hit,  VTD_SIP_EVNT_SLPWC_L4_HIT);
-+FME_EVENT_VTD_SIP(rcc_hit,       VTD_SIP_EVNT_RCC_HIT);
-+FME_EVENT_VTD_SIP(iotlb_4k_miss, VTD_SIP_EVNT_IOTLB_4K_MISS);
-+FME_EVENT_VTD_SIP(iotlb_2m_miss, VTD_SIP_EVNT_IOTLB_2M_MISS);
-+FME_EVENT_VTD_SIP(iotlb_1g_miss, VTD_SIP_EVNT_IOTLB_1G_MISS);
-+FME_EVENT_VTD_SIP(slpwc_l3_miss, VTD_SIP_EVNT_SLPWC_L3_MISS);
-+FME_EVENT_VTD_SIP(slpwc_l4_miss, VTD_SIP_EVNT_SLPWC_L4_MISS);
-+FME_EVENT_VTD_SIP(rcc_miss,      VTD_SIP_EVNT_RCC_MISS);
-+
-+static struct attribute *fme_perf_vtd_sip_events_attrs[] = {
-+	&fme_perf_event_vtd_sip_iotlb_4k_hit.attr.attr,
-+	&fme_perf_event_vtd_sip_iotlb_2m_hit.attr.attr,
-+	&fme_perf_event_vtd_sip_iotlb_1g_hit.attr.attr,
-+	&fme_perf_event_vtd_sip_slpwc_l3_hit.attr.attr,
-+	&fme_perf_event_vtd_sip_slpwc_l4_hit.attr.attr,
-+	&fme_perf_event_vtd_sip_rcc_hit.attr.attr,
-+	&fme_perf_event_vtd_sip_iotlb_4k_miss.attr.attr,
-+	&fme_perf_event_vtd_sip_iotlb_2m_miss.attr.attr,
-+	&fme_perf_event_vtd_sip_iotlb_1g_miss.attr.attr,
-+	&fme_perf_event_vtd_sip_slpwc_l3_miss.attr.attr,
-+	&fme_perf_event_vtd_sip_slpwc_l4_miss.attr.attr,
-+	&fme_perf_event_vtd_sip_rcc_miss.attr.attr,
-+	NULL,
-+};
-+
-+static const struct attribute_group fme_perf_vtd_sip_events_group = {
-+	.name = "events",
-+	.attrs = fme_perf_vtd_sip_events_attrs,
-+	.is_visible = fme_perf_events_visible,
-+};
-+
-+static const struct attribute_group *fme_perf_events_groups[] = {
-+	&fme_perf_basic_events_group,
-+	&fme_perf_cache_events_group,
-+	&fme_perf_fabric_events_group,
-+	&fme_perf_vtd_events_group,
-+	&fme_perf_vtd_sip_events_group,
-+	NULL,
-+};
-+
-+static struct fme_perf_event_ops *get_event_ops(u32 evtype)
-+{
-+	if (evtype > FME_EVTYPE_MAX)
-+		return NULL;
-+
-+	return &fme_perf_event_ops[evtype];
-+}
-+
-+static void fme_perf_event_destroy(struct perf_event *event)
-+{
-+	struct fme_perf_event_ops *ops = get_event_ops(event->hw.event_base);
-+	struct fme_perf_priv *priv = to_fme_perf_priv(event->pmu);
-+
-+	if (ops->event_destroy)
-+		ops->event_destroy(priv, event->hw.idx, event->hw.config_base);
-+}
-+
-+static int fme_perf_event_init(struct perf_event *event)
-+{
-+	struct fme_perf_priv *priv = to_fme_perf_priv(event->pmu);
-+	struct hw_perf_event *hwc = &event->hw;
-+	struct fme_perf_event_ops *ops;
-+	u32 eventid, evtype, portid;
-+
-+	/* test the event attr type check for PMU enumeration */
-+	if (event->attr.type != event->pmu->type)
-+		return -ENOENT;
-+
-+	/*
-+	 * fme counters are shared across all cores.
-+	 * Therefore, it does not support per-process mode.
-+	 * Also, it does not support event sampling mode.
-+	 */
-+	if (is_sampling_event(event) || event->attach_state & PERF_ATTACH_TASK)
-+		return -EINVAL;
-+
-+	if (event->cpu < 0)
-+		return -EINVAL;
-+
-+	if (event->cpu != priv->cpu)
-+		return -EINVAL;
-+
-+	eventid = get_event(event->attr.config);
-+	portid = get_portid(event->attr.config);
-+	evtype = get_evtype(event->attr.config);
-+	if (evtype > FME_EVTYPE_MAX)
-+		return -EINVAL;
-+
-+	hwc->event_base = evtype;
-+	hwc->idx = (int)eventid;
-+	hwc->config_base = portid;
-+
-+	event->destroy = fme_perf_event_destroy;
-+
-+	dev_dbg(priv->dev, "%s event=0x%x, evtype=0x%x, portid=0x%x,\n",
-+		__func__, eventid, evtype, portid);
-+
-+	ops = get_event_ops(evtype);
-+	if (ops->event_init)
-+		return ops->event_init(priv, eventid, portid);
-+
-+	return 0;
-+}
-+
-+static void fme_perf_event_update(struct perf_event *event)
-+{
-+	struct fme_perf_event_ops *ops = get_event_ops(event->hw.event_base);
-+	struct fme_perf_priv *priv = to_fme_perf_priv(event->pmu);
-+	struct hw_perf_event *hwc = &event->hw;
-+	u64 now, prev, delta;
-+
-+	now = ops->read_counter(priv, (u32)hwc->idx, hwc->config_base);
-+	prev = local64_read(&hwc->prev_count);
-+	delta = now - prev;
-+
-+	local64_add(delta, &event->count);
-+}
-+
-+static void fme_perf_event_start(struct perf_event *event, int flags)
-+{
-+	struct fme_perf_event_ops *ops = get_event_ops(event->hw.event_base);
-+	struct fme_perf_priv *priv = to_fme_perf_priv(event->pmu);
-+	struct hw_perf_event *hwc = &event->hw;
-+	u64 count;
-+
-+	count = ops->read_counter(priv, (u32)hwc->idx, hwc->config_base);
-+	local64_set(&hwc->prev_count, count);
-+}
-+
-+static void fme_perf_event_stop(struct perf_event *event, int flags)
-+{
-+	fme_perf_event_update(event);
-+}
-+
-+static int fme_perf_event_add(struct perf_event *event, int flags)
-+{
-+	if (flags & PERF_EF_START)
-+		fme_perf_event_start(event, flags);
-+
-+	return 0;
-+}
-+
-+static void fme_perf_event_del(struct perf_event *event, int flags)
-+{
-+	fme_perf_event_stop(event, PERF_EF_UPDATE);
-+}
-+
-+static void fme_perf_event_read(struct perf_event *event)
-+{
-+	fme_perf_event_update(event);
-+}
-+
-+static void fme_perf_setup_hardware(struct fme_perf_priv *priv)
-+{
-+	void __iomem *base = priv->ioaddr;
-+	u64 v;
-+
-+	/* read and save current working mode for fabric counters */
-+	v = readq(base + FAB_CTRL);
-+
-+	if (FIELD_GET(FAB_PORT_FILTER, v) == FAB_PORT_FILTER_DISABLE)
-+		priv->fab_port_id = FME_PORTID_ROOT;
-+	else
-+		priv->fab_port_id = FIELD_GET(FAB_PORT_ID, v);
-+}
-+
-+static int fme_perf_pmu_register(struct platform_device *pdev,
-+				 struct fme_perf_priv *priv)
-+{
-+	struct pmu *pmu = &priv->pmu;
-+	char *name;
-+	int ret;
-+
-+	spin_lock_init(&priv->fab_lock);
-+
-+	fme_perf_setup_hardware(priv);
-+
-+	pmu->task_ctx_nr =	perf_invalid_context;
-+	pmu->attr_groups =	fme_perf_groups;
-+	pmu->attr_update =	fme_perf_events_groups;
-+	pmu->event_init =	fme_perf_event_init;
-+	pmu->add =		fme_perf_event_add;
-+	pmu->del =		fme_perf_event_del;
-+	pmu->start =		fme_perf_event_start;
-+	pmu->stop =		fme_perf_event_stop;
-+	pmu->read =		fme_perf_event_read;
-+	pmu->capabilities =	PERF_PMU_CAP_NO_INTERRUPT |
-+				PERF_PMU_CAP_NO_EXCLUDE;
-+
-+	name = devm_kasprintf(priv->dev, GFP_KERNEL, "dfl_fme%d", pdev->id);
-+
-+	ret = perf_pmu_register(pmu, name, -1);
-+	if (ret)
-+		return ret;
-+
-+	return 0;
-+}
-+
-+static void fme_perf_pmu_unregister(struct fme_perf_priv *priv)
-+{
-+	perf_pmu_unregister(&priv->pmu);
-+}
-+
-+static int fme_perf_offline_cpu(unsigned int cpu, struct hlist_node *node)
-+{
-+	struct fme_perf_priv *priv;
-+	int target;
-+
-+	priv = hlist_entry_safe(node, struct fme_perf_priv, node);
-+
-+	if (cpu != priv->cpu)
-+		return 0;
-+
-+	target = cpumask_any_but(cpu_online_mask, cpu);
-+	if (target >= nr_cpu_ids)
-+		return 0;
-+
-+	priv->cpu = target;
-+	return 0;
-+}
-+
-+static int fme_perf_init(struct platform_device *pdev,
-+			 struct dfl_feature *feature)
-+{
-+	struct fme_perf_priv *priv;
-+	int ret;
-+
-+	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	priv->dev = &pdev->dev;
-+	priv->ioaddr = feature->ioaddr;
-+	priv->id = feature->id;
-+	priv->cpu = raw_smp_processor_id();
-+
-+	ret = cpuhp_setup_state_multi(CPUHP_AP_ONLINE_DYN,
-+				      "perf/fpga/dfl_fme:online",
-+				      NULL, fme_perf_offline_cpu);
-+	if (ret < 0)
-+		return ret;
-+
-+	priv->cpuhp_state = ret;
-+
-+	/* Register the pmu instance for cpu hotplug */
-+	ret = cpuhp_state_add_instance_nocalls(priv->cpuhp_state, &priv->node);
-+	if (ret)
-+		goto cpuhp_instance_err;
-+
-+	ret = fme_perf_pmu_register(pdev, priv);
-+	if (ret)
-+		goto pmu_register_err;
-+
-+	feature->priv = priv;
-+	return 0;
-+
-+pmu_register_err:
-+	cpuhp_state_remove_instance_nocalls(priv->cpuhp_state, &priv->node);
-+cpuhp_instance_err:
-+	cpuhp_remove_multi_state(priv->cpuhp_state);
-+	return ret;
-+}
-+
-+static void fme_perf_uinit(struct platform_device *pdev,
-+			   struct dfl_feature *feature)
-+{
-+	struct fme_perf_priv *priv = feature->priv;
-+
-+	fme_perf_pmu_unregister(priv);
-+	cpuhp_state_remove_instance_nocalls(priv->cpuhp_state, &priv->node);
-+	cpuhp_remove_multi_state(priv->cpuhp_state);
-+}
-+
-+const struct dfl_feature_id fme_perf_id_table[] = {
-+	{.id = FME_FEATURE_ID_GLOBAL_IPERF,},
-+	{.id = FME_FEATURE_ID_GLOBAL_DPERF,},
-+	{0,}
-+};
-+
-+const struct dfl_feature_ops fme_perf_ops = {
-+	.init = fme_perf_init,
-+	.uinit = fme_perf_uinit,
-+};
-diff --git a/drivers/fpga/dfl-fme.h b/drivers/fpga/dfl-fme.h
-index 6685c8e..4195dd6 100644
---- a/drivers/fpga/dfl-fme.h
-+++ b/drivers/fpga/dfl-fme.h
-@@ -38,5 +38,7 @@ struct dfl_fme {
- extern const struct dfl_feature_ops fme_global_err_ops;
- extern const struct dfl_feature_id fme_global_err_id_table[];
- extern const struct attribute_group fme_global_err_group;
-+extern const struct dfl_feature_ops fme_perf_ops;
-+extern const struct dfl_feature_id fme_perf_id_table[];
- 
- #endif /* __DFL_FME_H */
-diff --git a/drivers/fpga/dfl.h b/drivers/fpga/dfl.h
-index 9f0e656..d312678 100644
---- a/drivers/fpga/dfl.h
-+++ b/drivers/fpga/dfl.h
-@@ -197,12 +197,14 @@ struct dfl_feature_driver {
-  *		    feature dev (platform device)'s reources.
-  * @ioaddr: mapped mmio resource address.
-  * @ops: ops of this sub feature.
-+ * @priv: priv data of this feature.
-  */
- struct dfl_feature {
- 	u64 id;
- 	int resource_index;
- 	void __iomem *ioaddr;
- 	const struct dfl_feature_ops *ops;
-+	void *priv;
- };
- 
- #define DEV_STATUS_IN_USE	0
--- 
-1.8.3.1
+Thanks,
+Yi Liu
+> Alex
+> 
+> >
+> > /* Nesting Ops */
+> > #define VFIO_IOMMU_NESTING_OP_BIND_PGTBL        0
+> > #define VFIO_IOMMU_NESTING_OP_UNBIND_PGTBL      1
+> > #define VFIO_IOMMU_NESTING_OP_CACHE_INVLD       2
+> >
+> > Thanks,
+> > Yi Liu
+> >
 
