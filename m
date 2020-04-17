@@ -2,110 +2,96 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08188C38A29
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 09:32:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA5E4C352BE
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 09:33:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E589720776
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 09:32:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93D6320776
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 09:33:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730321AbgDQJcB convert rfc822-to-8bit (ORCPT
+        id S1730259AbgDQJdD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 05:32:01 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:40265 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730233AbgDQJcA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 05:32:00 -0400
-Received: by mail-oi1-f193.google.com with SMTP id t199so1543589oif.7;
-        Fri, 17 Apr 2020 02:31:58 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=Xdw7qE++WbJcYYYVLLUf8m1JuzUUrBMPMGWetZ3yNmk=;
-        b=umjJwxwdZaZ9suhke1DqinrYaXbobkasW/nYM7VcjfUZssTXIpgDBJ4S7TzzzcCIbU
-         3pOBuyrUOza3erBxhjDDROKuSmyQnkU5OD5JmUNHoOd4pL7qBKQ1+FE+GD2+X+TJsRg8
-         GelTKUOF0UwvvI8488HYvh6MqT0c7fiSo7lk+1R9dkCqWBqY2aER34VPCq+oC83SQghm
-         xJ0r9h1Dvr75ISlOkz9zB1v0LmXWmjCDYILCkFyX7bNVuYBXJzHnoKZ5yhJvFiBmsieR
-         6wETxkCiuNHJPxTWo+uSNN5OURyGsa/uiG8XGy4UdEZX04rMmufBwbLYz/KWTeRRbp1g
-         VN3g==
-X-Gm-Message-State: AGi0PuZcsWfKsnF4IkGOOuBUPMTYo0QvIQYsJpvuIxG8UA5UG7Yhwgs4
-        eQk6eM2AQOrNuaItQI7drBO+J+bjDhfPHnERFUA=
-X-Google-Smtp-Source: APiQypLK2MzhwAlU5maq3OzaoFcwlxith+KDd7vNSYpfBpMujUQxyS1N38HvpPJg+83Xryx07p4rjzYgxCDw7EU0uIE=
-X-Received: by 2002:a05:6808:8cf:: with SMTP id k15mr1541313oij.54.1587115918339;
- Fri, 17 Apr 2020 02:31:58 -0700 (PDT)
+        Fri, 17 Apr 2020 05:33:03 -0400
+Received: from foss.arm.com ([217.140.110.172]:48818 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730131AbgDQJdD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Apr 2020 05:33:03 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A017F30E;
+        Fri, 17 Apr 2020 02:33:02 -0700 (PDT)
+Received: from [10.37.12.128] (unknown [10.37.12.128])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 38E6E3F73D;
+        Fri, 17 Apr 2020 02:33:00 -0700 (PDT)
+Subject: Re: [PATCH 7/8] arm64: cpufeature: Relax checks for AArch32 support
+ at EL[0-2]
+To:     will@kernel.org
+Cc:     linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
+        linux-kernel@vger.kernel.org, mark.rutland@arm.com, maz@kernel.org,
+        anshuman.khandual@arm.com, catalin.marinas@arm.com,
+        saiprakash.ranjan@codeaurora.org, dianders@chromium.org,
+        kernel-team@android.com
+References: <20200414213114.2378-1-will@kernel.org>
+ <20200414213114.2378-8-will@kernel.org>
+ <714f124c-7eb7-b750-e98c-63da64ddae75@arm.com>
+ <20200415105843.GE12621@willie-the-truck>
+ <d1f538ec-e956-c136-d0f8-54e7351a28a9@arm.com>
+ <20200415122926.GA17095@willie-the-truck>
+From:   Suzuki K Poulose <suzuki.poulose@arm.com>
+Message-ID: <399dee05-9f47-2f91-a4e8-b4c9d3932b40@arm.com>
+Date:   Fri, 17 Apr 2020 10:37:50 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.7.0
 MIME-Version: 1.0
-References: <20200417092042.11994-1-yanaijie@huawei.com>
-In-Reply-To: <20200417092042.11994-1-yanaijie@huawei.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Fri, 17 Apr 2020 11:31:46 +0200
-Message-ID: <CAMuHMdUfwbsfLNSxJLqkwTNEQims1RHBn_EwBvBUqEZshHZHdQ@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: rza1: remove unused 'rza1l_swio_pins'
-To:     Jason Yan <yanaijie@huawei.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Nishka Dasgupta <nishkadg.linux@gmail.com>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Hulk Robot <hulkci@huawei.com>,
-        Chris Brandt <Chris.Brandt@renesas.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+In-Reply-To: <20200415122926.GA17095@willie-the-truck>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jason,
+On 04/15/2020 01:29 PM, Will Deacon wrote:
+> On Wed, Apr 15, 2020 at 12:37:31PM +0100, Suzuki K Poulose wrote:
+>> On 04/15/2020 11:58 AM, Will Deacon wrote:
+>>> On Wed, Apr 15, 2020 at 11:50:58AM +0100, Suzuki K Poulose wrote:
+>>>> On 04/14/2020 10:31 PM, Will Deacon wrote:
+>>>>> We don't need to be quite as strict about mismatched AArch32 support,
+>>>>> which is good because the friendly hardware folks have been busy
+>>>>> mismatching this to their hearts' content.
+>>>>>
+>>>>>      * We don't care about EL2 or EL3 (there are silly comments concerning
+>>>>>        the latter, so remove those)
+>>>>>
+>>>>>      * EL1 support is gated by the ARM64_HAS_32BIT_EL1 capability and handled
+>>>>>        gracefully when a mismatch occurs
+>>>>>
+>>>>>      * EL1 support is gated by the ARM64_HAS_32BIT_EL0 capability and handled
+>>>>
+>>>> s/EL1/EL0
+>>>>
+>>>>>        gracefully when a mismatch occurs
+>>>>>
+>>>>> Relax the AArch32 checks to FTR_NONSTRICT.
+>>>>
+>>>> Agreed. We should do something similar for the features exposed by the
+>>>> ELF_HWCAP, of course in a separate series.
+>>>
+>>> Hmm, I didn't think we needed to touch the HWCAPs, as they're derived from
+>>> the sanitised feature register values. What am I missing?
+>>
+>> sorry, that was cryptic. I was suggesting to relax the ftr fields to
+>> NONSTRICT for the fields covered by ELF HWCAPs (and other CPU hwcaps).
+> 
+> Ah, gotcha. Given that the HWCAPs usually describe EL0 features, I say we
+> can punt this down the road until people give us hardware with mismatched
+> AArch32 at EL0.
 
-On Fri, Apr 17, 2020 at 10:54 AM Jason Yan <yanaijie@huawei.com> wrote:
-> Fix the following gcc warning:
->
-> drivers/pinctrl/pinctrl-rza1.c:401:35: warning: ‘rza1l_swio_pins’
-> defined but not used [-Wunused-const-variable=]
->  static const struct rza1_swio_pin rza1l_swio_pins[] = {
->                                    ^~~~~~~~~~~~~~~
->
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: Jason Yan <yanaijie@huawei.com>
+Btw, this is not just mismatched AArch32, but mismatched AArch64 HWCAPs
+too, which I believe exists. Anyways as you said, we can delay this
+until we get the reports :-)
 
-Thanks for your patch!
-
-> --- a/drivers/pinctrl/pinctrl-rza1.c
-> +++ b/drivers/pinctrl/pinctrl-rza1.c
-> @@ -398,15 +398,6 @@ static const struct rza1_bidir_pin rza1l_bidir_pins_p9[] = {
->         { .pin = 5, .func = 3 },
->  };
->
-> -static const struct rza1_swio_pin rza1l_swio_pins[] = {
-> -       { .port = 2, .pin = 8, .func = 2, .input = 0 },
-> -       { .port = 5, .pin = 6, .func = 3, .input = 0 },
-> -       { .port = 6, .pin = 6, .func = 3, .input = 0 },
-> -       { .port = 6, .pin = 10, .func = 3, .input = 0 },
-> -       { .port = 7, .pin = 10, .func = 2, .input = 0 },
-> -       { .port = 8, .pin = 2, .func = 3, .input = 0 },
-> -};
-> -
->  static const struct rza1_bidir_entry rza1l_bidir_entries[RZA1_NPORTS] = {
->         [1] = { ARRAY_SIZE(rza1l_bidir_pins_p1), rza1l_bidir_pins_p1 },
->         [3] = { ARRAY_SIZE(rza1l_bidir_pins_p3), rza1l_bidir_pins_p3 },
-
-rza1l_swio_pins[] is unused because rza1l_swio_entries[] refers to the
-wrong array. So I'd rather see a patch to fix that instead.
-
-Thanks!
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Suzuki
