@@ -2,123 +2,137 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6893DC38A2C
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 14:51:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B451C2D0EF
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 14:52:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 42F702223C
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 14:51:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BFF52223C
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 14:52:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oO/L3Fvs"
+	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="BNAFCp5y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728277AbgDQOv4 (ORCPT
+        id S1728301AbgDQOwG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 10:51:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38772 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727850AbgDQOv4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 10:51:56 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C204EC061A0C;
-        Fri, 17 Apr 2020 07:51:55 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id v8so5123620wma.0;
-        Fri, 17 Apr 2020 07:51:55 -0700 (PDT)
+        Fri, 17 Apr 2020 10:52:06 -0400
+Received: from mail-eopbgr1410112.outbound.protection.outlook.com ([40.107.141.112]:10668
+        "EHLO JPN01-OS2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727850AbgDQOwF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Apr 2020 10:52:05 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=RVdDPiuRLKT1gR8uL1mJ8ZgEcwMvpfUOA8UWi4/3z4jx4c8AagiGsuCzrt4volXpMg5fncJdFrLRT5HKjgcGyqBvwfcXTpJsrHKr9HL7g9NL8t5obP1zzf3MUwtcQqq9ZTbpe1FFvSYieRbkGiRH1hovSGnse/cvopsf08Ms0yDyfS9rNsl/dBcr2CJCwNanOsvQvc5isxBR6f5h0D1u8P3ly1M9/j4hk4V8aoDblMWWtbCwsE3jQT3HQTjQJ5udxgz42gq9V58UJD6V+BSWlmFS/diLn0Z1hQY0VC6iHeulzQ9BT1YfQ7kUroIwzXMTiQHcPPR865N3uv1wjUNtwQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=/1fdMoDGB6F8qIilzAYbbvOc98a74UE7aYfSg0DBOSo=;
+ b=nQ4WRVBwX0BO0QGjYeW2/jwiGls46BVyB6eVRMWaJCKiEbAbAjVKTQ5Pvv1nCNRi2vfxRvimZnoQI0IyFPiZR8wCAp6m+kid398UMOfxwGypQLVIZFmj3XAk8l/fX2QwWxde7UhpWlGnUYX/5zQnB6JQ/Iol/8A7G8/u5t83swsZn2mOGmpt2e4YLlVmLPbTSXDxsgFY/6gRHdUUC4ZINL4cGRi7I7grptdsGPcvYi3ODdrvgAVcdWdp0qyRN58Xvm4jtCxTn1+Nyuya5rufRaiS5+Ys1cDVq5z7lmKS0oWKm0ufFqtJaU1fMguT3Pwp+5NaXCkUsx5LWh8KtLJaCw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
+ dkim=pass header.d=renesas.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=YW/m6LvUDm14fECG63jq0+bjFbSb+5TTFXaHDDYWM/I=;
-        b=oO/L3FvsHa0vf+P7DWAUzHQ73QNVuxOPnvkTd4rT9phupOkapPvk070rBoZgW+xy0D
-         bBraLamFCmnbcrAlrsiYyoRk5rmJWIOv+h2e2oMorq7g6AIw0S54ZrFGYkzkW/8ysGCR
-         467XRqy/nIN30SDMW5CFaebYQ3CZW3aFWT4U3yXgvtvF9ZAiMHwDHSfBNAKbHdwPfqKn
-         mYQxjNxlIlIg8bZGI9+qDFgv4TImLGRZ01pkiG82Jzd6zxQwXlAiiGvMNmmoyHe1kIQx
-         yY7bBcV1S6viIAdabkna4ltna5nQvqL/lIm9z6oh4V9h4TR1oxJV2GRNcwIWeT1yYWXo
-         Jl8A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=YW/m6LvUDm14fECG63jq0+bjFbSb+5TTFXaHDDYWM/I=;
-        b=U6zANE1LVAItm4jndZPzbd9JlqfTiPmzJCDS2jNNjfRtEfe3EoSgUz5EFYtIoYRy7m
-         PPJMPjxvBZdVg2TEbkZdQgM9/phVbZG+OL7N7nAQhFfkaAUIVBr4eA/u9gLAMugQSdMw
-         jIxgOL+MRyH6XsmeT9h7OCEjb2NRP57PA9TSvWY79JezZY9qBbyMgtzrV4MpcAVC8HIE
-         RwO0DQqLbd51dEvrB/I0+r1eOUmUjUbSzVETvJ/a+a1pzsDLkSlGwqKDBC4++lmplzpb
-         hjP0kOaO9bZqzPN4Dua7E7AK0IlJNWJmNd3u3RkES2pyhrmxW3+A/hdr8RgrnirYhrcY
-         nEHQ==
-X-Gm-Message-State: AGi0PuYXEIk1XCNSwvqenP9yOPrCTItRb9TYpX3y+M9iSyDRnjqOVuMk
-        kfQQIlCCZ4gGZy9kcAYPzxoJ8yhx
-X-Google-Smtp-Source: APiQypKAbsG2v1WQaLKRNFkDILulw/SdGDc5V6hyWNsZ+JF7kgVocqLc55OPtZ0/P5FUUcIX5qPzzg==
-X-Received: by 2002:a7b:cb59:: with SMTP id v25mr3769643wmj.139.1587135114085;
-        Fri, 17 Apr 2020 07:51:54 -0700 (PDT)
-Received: from [192.168.0.104] (p5B3F7443.dip0.t-ipconnect.de. [91.63.116.67])
-        by smtp.gmail.com with ESMTPSA id i25sm8298407wml.43.2020.04.17.07.51.53
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 17 Apr 2020 07:51:53 -0700 (PDT)
-Subject: Re: [PATCH v10 3/6] iio: adc: mp2629: Add support for mp2629 ADC
- driver
-To:     Randy Dunlap <rdunlap@infradead.org>, lee.jones@linaro.org,
-        andy.shevchenko@gmail.com, robh+dt@kernel.org, jic23@kernel.org,
-        knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, sre@kernel.org
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-iio@vger.kernel.org, linux-pm@vger.kernel.org
-References: <20200417085003.6124-1-sravanhome@gmail.com>
- <20200417085003.6124-4-sravanhome@gmail.com>
- <a8da9a3d-93a5-b926-b8c0-84138b59ad4f@infradead.org>
-From:   saravanan sekar <sravanhome@gmail.com>
-Message-ID: <2b4c7de2-aa85-65aa-be5e-3daed689c44d@gmail.com>
-Date:   Fri, 17 Apr 2020 16:51:52 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-MIME-Version: 1.0
-In-Reply-To: <a8da9a3d-93a5-b926-b8c0-84138b59ad4f@infradead.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+ d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=/1fdMoDGB6F8qIilzAYbbvOc98a74UE7aYfSg0DBOSo=;
+ b=BNAFCp5yulmS82rkRLjdVhnolpYLMmqqwhHg78yx8fUe1hkefuA/Sl54n57GIssDtC6bCT7IkZXlQ90xgGs/oPTo0BiUCvcmBG+IUHELEFz30pTKWtOu2FHDmdemUlek8bfA82aPgzJ/J0QYX+DH/9Izc30CDMxcE/CADzblxdw=
+Received: from OSBPR01MB2280.jpnprd01.prod.outlook.com (52.134.243.13) by
+ OSBPR01MB5095.jpnprd01.prod.outlook.com (20.179.184.21) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2900.26; Fri, 17 Apr 2020 14:52:02 +0000
+Received: from OSBPR01MB2280.jpnprd01.prod.outlook.com
+ ([fe80::c9a6:9735:12fc:ae04]) by OSBPR01MB2280.jpnprd01.prod.outlook.com
+ ([fe80::c9a6:9735:12fc:ae04%2]) with mapi id 15.20.2878.028; Fri, 17 Apr 2020
+ 14:52:02 +0000
+From:   Chris Paterson <Chris.Paterson2@renesas.com>
+To:     =?utf-8?B?RGFuaWVsIETDrWF6?= <daniel.diaz@linaro.org>,
+        Pavel Machek <pavel@denx.de>
+CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Shuah Khan <shuah@kernel.org>,
+        "patches@kernelci.org" <patches@kernelci.org>,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        "lkft-triage@lists.linaro.org" <lkft-triage@lists.linaro.org>,
+        linux- stable <stable@vger.kernel.org>
+Subject: RE: [PATCH 4.19 000/146] 4.19.116-rc1 review
+Thread-Topic: [PATCH 4.19 000/146] 4.19.116-rc1 review
+Thread-Index: AQHWE/IP8ULaCXtnbUepDpc5x6N8O6h9QXmAgAARcACAABIXkA==
+Date:   Fri, 17 Apr 2020 14:52:02 +0000
+Message-ID: <OSBPR01MB2280A113A45560747ECFE791B7D90@OSBPR01MB2280.jpnprd01.prod.outlook.com>
+References: <20200416131242.353444678@linuxfoundation.org>
+ <20200417123531.GA19028@duo.ucw.cz>
+ <CAEUSe7-CBJsB6Kpsg52rjywN7jNeQRu4fU7tWSeJn0zF7xA2zQ@mail.gmail.com>
+In-Reply-To: <CAEUSe7-CBJsB6Kpsg52rjywN7jNeQRu4fU7tWSeJn0zF7xA2zQ@mail.gmail.com>
+Accept-Language: en-GB, en-US
 Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Chris.Paterson2@renesas.com; 
+x-originating-ip: [151.224.220.27]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 0a0bfa58-ce89-4304-448f-08d7e2dee39c
+x-ms-traffictypediagnostic: OSBPR01MB5095:
+x-microsoft-antispam-prvs: <OSBPR01MB5095827A7889366A96C84789B7D90@OSBPR01MB5095.jpnprd01.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 0376ECF4DD
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:OSBPR01MB2280.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(4636009)(136003)(376002)(346002)(396003)(366004)(39860400002)(33656002)(54906003)(478600001)(186003)(81156014)(966005)(66574012)(71200400001)(8936002)(7696005)(6506007)(2906002)(26005)(110136005)(64756008)(55016002)(66946007)(8676002)(76116006)(86362001)(66446008)(66476007)(316002)(66556008)(9686003)(7416002)(5660300002)(4326008)(52536014);DIR:OUT;SFP:1102;
+received-spf: None (protection.outlook.com: renesas.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: LPiho8ekFM4GM8+IZ+82mSsVYeNS3+TWRCvjwREqt5txvV1j9AQBDr3NZyotG/8traqZ7p/aseJqX8wtomkpcUBAGBOotLNHU1WqPdGhPkHoARd5oAv7XubDpMDYDu4q6n71C0Jms3HKF/RIrfZzcxvnVP6N/ClkKj9ozuF8Dh4lk1fLZNcx4hmktV7whRPfr8RtUQE/t7YoveK4qoWsY3VicSupcnpcvQgQ9qOew3ah9mF+WeHZVvPi1ghUOPYJ2Wbej4JCzMo3SfQiPZ6eumMoab2BonukNzWwP/4A/RLtrn1o+3AGJrd4clISsDj6mHIUtz+AqeF1IcmymCe0R51KoyzItn+76Sj+M0I/nS9oglMZ+/ve3z78TCREi8NZqRdcknKwpWwgyCLkZaH18eMUNuAVKBUwsNHrOZNroSrAbp0dB67PVLMGTS2LLpeMznNMviWt+rD0K6S/epliD6Mjh9vCHRjuQEDaNaL6PmId2tQOR1rZHE3sMHVr6rFBr6Wqges/aj+JECUnTT9oGA==
+x-ms-exchange-antispam-messagedata: U49MuHcBod+zKL2lZ4oX4gs8vK1EE3GhZJXq8fsgELX33MNvkaHPUtgdInyqVdlong31NH4GZfV4WUvLx6vbVobDWFtdga9LfM6xEDE7gE/D6GX/6gXlqIRzH6oAGDwK7XXed9uv+I1Fab/zmwHD6A==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: renesas.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0a0bfa58-ce89-4304-448f-08d7e2dee39c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Apr 2020 14:52:02.3621
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: KTdXISOj1cEGsJcyxoB5c8dfovFehErXmiuqu+F8QhpocKnnttnYu1hjZp3eKNLlI0kCLecfopNg8iBxxvXAsn9QH+s5qq3oXlmvx88avQw=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: OSBPR01MB5095
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Randy,
-
-On 17/04/20 4:35 pm, Randy Dunlap wrote:
-> Hi--
->
-> On 4/17/20 1:50 AM, Saravanan Sekar wrote:
->> diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
->> index 82e33082958c..ef0c0cd31855 100644
->> --- a/drivers/iio/adc/Kconfig
->> +++ b/drivers/iio/adc/Kconfig
->> @@ -680,6 +680,16 @@ config MESON_SARADC
->>   	  To compile this driver as a module, choose M here: the
->>   	  module will be called meson_saradc.
->>   
->> +config MP2629_ADC
->> +	tristate "Monolithic MP2629 ADC driver"
->> +	depends on MFD_MP2629
-> 	depends on I2C
-> ?
-
-Made "depends on I2C" in MFD_MP2629, hope not needed becomes redundant here
-
-Thanks,
-Saravanan
-
->> +	help
->> +	  Say yes to have support for battery charger IC MP2629 ADC device
->> +	  accessed over I2C.
->> +
->> +	  This driver provides ADC conversion of system, input power supply
->> +	  and battery voltage & current information.
->> +
->>   config NAU7802
->>   	tristate "Nuvoton NAU7802 ADC driver"
->>   	depends on I2C
-> thanks.
+SGVsbG8gUGF2ZWwsDQoNCj4gRnJvbTogRGFuaWVsIETDrWF6IDxkYW5pZWwuZGlhekBsaW5hcm8u
+b3JnPg0KPiBTZW50OiAxNyBBcHJpbCAyMDIwIDE0OjM4DQo+IA0KPiBIZWxsbyENCj4gDQo+IE9u
+IEZyaSwgMTcgQXByIDIwMjAgYXQgMDc6MzUsIFBhdmVsIE1hY2hlayA8cGF2ZWxAZGVueC5kZT4g
+d3JvdGU6DQo+ID4NCj4gPiBIaSENCj4gPg0KPiA+ID4gVGhpcyBpcyB0aGUgc3RhcnQgb2YgdGhl
+IHN0YWJsZSByZXZpZXcgY3ljbGUgZm9yIHRoZSA0LjE5LjExNiByZWxlYXNlLg0KPiA+ID4gVGhl
+cmUgYXJlIDE0NiBwYXRjaGVzIGluIHRoaXMgc2VyaWVzLCBhbGwgd2lsbCBiZSBwb3N0ZWQgYXMg
+YSByZXNwb25zZQ0KPiA+ID4gdG8gdGhpcyBvbmUuICBJZiBhbnlvbmUgaGFzIGFueSBpc3N1ZXMg
+d2l0aCB0aGVzZSBiZWluZyBhcHBsaWVkLCBwbGVhc2UNCj4gPiA+IGxldCBtZSBrbm93Lg0KPiA+
+ID4NCj4gPiA+IFJlc3BvbnNlcyBzaG91bGQgYmUgbWFkZSBieSBTYXQsIDE4IEFwciAyMDIwIDEz
+OjExOjIwICswMDAwLg0KPiA+ID4gQW55dGhpbmcgcmVjZWl2ZWQgYWZ0ZXIgdGhhdCB0aW1lIG1p
+Z2h0IGJlIHRvbyBsYXRlLg0KPiA+ID4NCj4gPiA+IFRoZSB3aG9sZSBwYXRjaCBzZXJpZXMgY2Fu
+IGJlIGZvdW5kIGluIG9uZSBwYXRjaCBhdDoNCj4gPiA+ICAgICAgIGh0dHBzOi8vd3d3Lmtlcm5l
+bC5vcmcvcHViL2xpbnV4L2tlcm5lbC92NC54L3N0YWJsZS1yZXZpZXcvcGF0Y2gtDQo+IDQuMTku
+MTE2LXJjMS5neg0KPiA+ID4gb3IgaW4gdGhlIGdpdCB0cmVlIGFuZCBicmFuY2ggYXQ6DQo+ID4g
+PiAgICAgICBnaXQ6Ly9naXQua2VybmVsLm9yZy9wdWIvc2NtL2xpbnV4L2tlcm5lbC9naXQvc3Rh
+YmxlL2xpbnV4LXN0YWJsZS1yYy5naXQNCj4gbGludXgtNC4xOS55DQo+ID4gPiBhbmQgdGhlIGRp
+ZmZzdGF0IGNhbiBiZSBmb3VuZCBiZWxvdy4NCj4gPg0KPiA+IENJUCBwcm9qZWN0IHJhbiB0ZXN0
+cyBvbiB0aGlzIG9uZSwgYW5kIHdlIGhhdmUgZGUwLW5hbm8gZmFpbHVyZToNCj4gPg0KPiA+IGh0
+dHBzOi8vZ2l0bGFiLmNvbS9jaXAtcHJvamVjdC9jaXAtdGVzdGluZy9saW51eC1zdGFibGUtcmMt
+DQo+IGNpL3BpcGVsaW5lcy8xMzY3MDcwMjkNCj4gPg0KPiA+IERldGFpbGVkIHJlc3VsdHMgc2hv
+dWxkIGJlIGF0Og0KPiA+DQo+ID4gaHR0cHM6Ly9sYXZhLmNpcGxhdGZvcm0ub3JnL3NjaGVkdWxl
+ci9qb2IvMTQ3MTYNCj4gPiBodHRwczovL2xhdmEuY2lwbGF0Zm9ybS5vcmcvc2NoZWR1bGVyL2pv
+Yi8xNDcxNw0KPiA+DQo+ID4gLi5idXQgdGhvc2UgcmVzdWx0cyBkbyBub3QgbG9hZCBmb3IgbWUg
+KD8pLg0KPiANCj4gTG9va3MgbGlrZSB0aGUgZGV2aWNlIGZhaWxlZCBpdHMgaGVhbHRoIGpvYiBh
+bmQgd2VudCBpbnRvIGJhZCBzdGF0ZS4NCj4gSm9icyBzdWJtaXR0ZWQgZm9yIHRoYXQgZGV2aWNl
+IGFyZSBzdGlsbCBxdWV1ZWQsIGhlbmNlIHRoZSB0aW1lIG91dC4NCg0KRXhhY3RseSB0aGF0ICh0
+aGFua3MgRGFuaWVsKS4NCg0KVGhlIGJvYXJkIGlzIG5vdyBiYWNrIG9ubGluZSBhbmQgdGhlIHN1
+Ym1pdHRlZCBqb2JzIGhhdmUgcGFzc2VkLg0KDQpLaW5kIHJlZ2FyZHMsIENocmlzDQoNCj4gDQo+
+IEdyZWV0aW5ncyENCj4gDQo+IERhbmllbCBEw61heg0KPiBkYW5pZWwuZGlhekBsaW5hcm8ub3Jn
+DQo=
