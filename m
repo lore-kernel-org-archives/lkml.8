@@ -2,164 +2,110 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C32DC38A2C
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 09:31:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08188C38A29
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 09:32:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 27CB420776
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 09:31:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="By0UkC0U"
+	by mail.kernel.org (Postfix) with ESMTP id E589720776
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 09:32:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730307AbgDQJbc (ORCPT
+        id S1730321AbgDQJcB convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 05:31:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45390 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730284AbgDQJbb (ORCPT
+        Fri, 17 Apr 2020 05:32:01 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:40265 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730233AbgDQJcA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 05:31:31 -0400
-Received: from mail-vs1-xe43.google.com (mail-vs1-xe43.google.com [IPv6:2607:f8b0:4864:20::e43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22DDFC061A0C
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 02:31:31 -0700 (PDT)
-Received: by mail-vs1-xe43.google.com with SMTP id r7so772660vso.2
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 02:31:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=p64gz4wBBzrCn9693S5Yg9rZbwKOwkix1v4fg68Kaak=;
-        b=By0UkC0UOpKSJshUVUxtFt+AsHtAS3exQ/0f8C0eZVdh7ZlgbbEO/V4/W6S2CLvsEQ
-         la185+DwqLva/ga3ddjQJsHoOckWFGSG/bOGp4zRs8MW9lL1WDRMAoIIAPXCqAOLSeEL
-         F2zkDGqaH4/qUcByFpf7pU7/zVEfcs1IyMNpp8VCxDQqTMzYeTdlbiAaaG/RsazOJGmg
-         s6v79X0qRbhRxMcibMTRHPqhIzkzJW25rgkNY64JpOyVu2eiuCj83apSm9arX5dkAGFI
-         2kax/j+06Gb0y6o6BDMxUD2cbc/bXyuJqpu00MNatNuaDblJnHKjhPxUrsR/+cV5PDm8
-         VGug==
+        Fri, 17 Apr 2020 05:32:00 -0400
+Received: by mail-oi1-f193.google.com with SMTP id t199so1543589oif.7;
+        Fri, 17 Apr 2020 02:31:58 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=p64gz4wBBzrCn9693S5Yg9rZbwKOwkix1v4fg68Kaak=;
-        b=Vkjb88EAh4MODy5nms5NwNt/SjDrvkWbuGnTb+blvs+mnkhqs59ENJfjTPrH9SnZri
-         YfFsdBvNnxHyMHuvsq1pv3tGOOWH6XwXHQHRTjL4xo9e/8JdqgwrTxlYKdKpgM+Z/PLZ
-         3k1gn4I1KCTDm5GzD0dUQx7ip6bX9wRwKWWLoZmLCd6KhFtauHzy1Emv8vPancM9FVUc
-         I0OUy8VMiR4bGUtNBSQCxIFsrrMZWBrVDTFw/sTxolNzYW3AUN0jbGQLygtwgVFaC2gi
-         CPleihZvZZuoc46uZBXHSGhimqYJa64/+KA40S4QUT4Gg3x5tlbR4QxHk/JP0Oz1wZy7
-         H8tg==
-X-Gm-Message-State: AGi0PuY4z9yYw0EWCKqqjI3IYwMpe5DxcUlBaKrzG7ekEEqdf3dxuorb
-        MO5sZcNj/GpaTArGvmwvLV/EtDPpJm243m3f7A0eaA==
-X-Google-Smtp-Source: APiQypKTNkTpvRdq+a9PAoyBZV9h6xbL3cicvsKIs4XdjEhAkHKBJJUZuuhk8/gcK1ihy/h/WXevsS5Uvr1S19jnvHg=
-X-Received: by 2002:a05:6102:72d:: with SMTP id u13mr1392649vsg.35.1587115890241;
- Fri, 17 Apr 2020 02:31:30 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=Xdw7qE++WbJcYYYVLLUf8m1JuzUUrBMPMGWetZ3yNmk=;
+        b=umjJwxwdZaZ9suhke1DqinrYaXbobkasW/nYM7VcjfUZssTXIpgDBJ4S7TzzzcCIbU
+         3pOBuyrUOza3erBxhjDDROKuSmyQnkU5OD5JmUNHoOd4pL7qBKQ1+FE+GD2+X+TJsRg8
+         GelTKUOF0UwvvI8488HYvh6MqT0c7fiSo7lk+1R9dkCqWBqY2aER34VPCq+oC83SQghm
+         xJ0r9h1Dvr75ISlOkz9zB1v0LmXWmjCDYILCkFyX7bNVuYBXJzHnoKZ5yhJvFiBmsieR
+         6wETxkCiuNHJPxTWo+uSNN5OURyGsa/uiG8XGy4UdEZX04rMmufBwbLYz/KWTeRRbp1g
+         VN3g==
+X-Gm-Message-State: AGi0PuZcsWfKsnF4IkGOOuBUPMTYo0QvIQYsJpvuIxG8UA5UG7Yhwgs4
+        eQk6eM2AQOrNuaItQI7drBO+J+bjDhfPHnERFUA=
+X-Google-Smtp-Source: APiQypLK2MzhwAlU5maq3OzaoFcwlxith+KDd7vNSYpfBpMujUQxyS1N38HvpPJg+83Xryx07p4rjzYgxCDw7EU0uIE=
+X-Received: by 2002:a05:6808:8cf:: with SMTP id k15mr1541313oij.54.1587115918339;
+ Fri, 17 Apr 2020 02:31:58 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200416182402.16858-1-natechancellor@gmail.com>
-In-Reply-To: <20200416182402.16858-1-natechancellor@gmail.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Fri, 17 Apr 2020 11:30:54 +0200
-Message-ID: <CAPDyKFr4VX-3Z=iboMbDmhJvwh+GL5wg_50aPw+_j5jMLBWctg@mail.gmail.com>
-Subject: Re: [PATCH] mmc: sdhci-of-arasan: Remove uninitialized ret variables
-To:     Nathan Chancellor <natechancellor@gmail.com>
-Cc:     Adrian Hunter <adrian.hunter@intel.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Manish Narani <manish.narani@xilinx.com>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+References: <20200417092042.11994-1-yanaijie@huawei.com>
+In-Reply-To: <20200417092042.11994-1-yanaijie@huawei.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Fri, 17 Apr 2020 11:31:46 +0200
+Message-ID: <CAMuHMdUfwbsfLNSxJLqkwTNEQims1RHBn_EwBvBUqEZshHZHdQ@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: rza1: remove unused 'rza1l_swio_pins'
+To:     Jason Yan <yanaijie@huawei.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Nishka Dasgupta <nishkadg.linux@gmail.com>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        clang-built-linux@googlegroups.com,
-        "kernelci . org bot" <bot@kernelci.org>
+        Hulk Robot <hulkci@huawei.com>,
+        Chris Brandt <Chris.Brandt@renesas.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 16 Apr 2020 at 20:24, Nathan Chancellor
-<natechancellor@gmail.com> wrote:
->
-> Clang warns:
->
-> drivers/mmc/host/sdhci-of-arasan.c:784:9: warning: variable 'ret' is
-> uninitialized when used here [-Wuninitialized]
->         return ret;
->                ^~~
-> drivers/mmc/host/sdhci-of-arasan.c:738:9: note: initialize the variable
-> 'ret' to silence this warning
->         int ret;
->                ^
->                 = 0
-> drivers/mmc/host/sdhci-of-arasan.c:860:9: warning: variable 'ret' is
-> uninitialized when used here [-Wuninitialized]
->         return ret;
->                ^~~
-> drivers/mmc/host/sdhci-of-arasan.c:810:9: note: initialize the variable
-> 'ret' to silence this warning
->         int ret;
->                ^
->                 = 0
-> 2 warnings generated.
->
-> This looks like a copy paste error. Neither function has handling that
-> needs ret so just remove it and return 0 directly.
->
-> Fixes: f73e66a36772 ("sdhci: arasan: Add support for Versal Tap Delays")
-> Link: https://github.com/ClangBuiltLinux/linux/issues/996
-> Reported-by: kernelci.org bot <bot@kernelci.org>
-> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Hi Jason,
 
-Applied for next, thanks!
+On Fri, Apr 17, 2020 at 10:54 AM Jason Yan <yanaijie@huawei.com> wrote:
+> Fix the following gcc warning:
+>
+> drivers/pinctrl/pinctrl-rza1.c:401:35: warning: ‘rza1l_swio_pins’
+> defined but not used [-Wunused-const-variable=]
+>  static const struct rza1_swio_pin rza1l_swio_pins[] = {
+>                                    ^~~~~~~~~~~~~~~
+>
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: Jason Yan <yanaijie@huawei.com>
 
-Kind regards
-Uffe
+Thanks for your patch!
 
+> --- a/drivers/pinctrl/pinctrl-rza1.c
+> +++ b/drivers/pinctrl/pinctrl-rza1.c
+> @@ -398,15 +398,6 @@ static const struct rza1_bidir_pin rza1l_bidir_pins_p9[] = {
+>         { .pin = 5, .func = 3 },
+>  };
+>
+> -static const struct rza1_swio_pin rza1l_swio_pins[] = {
+> -       { .port = 2, .pin = 8, .func = 2, .input = 0 },
+> -       { .port = 5, .pin = 6, .func = 3, .input = 0 },
+> -       { .port = 6, .pin = 6, .func = 3, .input = 0 },
+> -       { .port = 6, .pin = 10, .func = 3, .input = 0 },
+> -       { .port = 7, .pin = 10, .func = 2, .input = 0 },
+> -       { .port = 8, .pin = 2, .func = 3, .input = 0 },
+> -};
+> -
+>  static const struct rza1_bidir_entry rza1l_bidir_entries[RZA1_NPORTS] = {
+>         [1] = { ARRAY_SIZE(rza1l_bidir_pins_p1), rza1l_bidir_pins_p1 },
+>         [3] = { ARRAY_SIZE(rza1l_bidir_pins_p3), rza1l_bidir_pins_p3 },
 
-> ---
->  drivers/mmc/host/sdhci-of-arasan.c | 6 ++----
->  1 file changed, 2 insertions(+), 4 deletions(-)
->
-> diff --git a/drivers/mmc/host/sdhci-of-arasan.c b/drivers/mmc/host/sdhci-of-arasan.c
-> index 16e26c217a77..18bf0e76b1eb 100644
-> --- a/drivers/mmc/host/sdhci-of-arasan.c
-> +++ b/drivers/mmc/host/sdhci-of-arasan.c
-> @@ -735,7 +735,6 @@ static int sdhci_versal_sdcardclk_set_phase(struct clk_hw *hw, int degrees)
->                 container_of(clk_data, struct sdhci_arasan_data, clk_data);
->         struct sdhci_host *host = sdhci_arasan->host;
->         u8 tap_delay, tap_max = 0;
-> -       int ret;
->
->         /*
->          * This is applicable for SDHCI_SPEC_300 and above
-> @@ -781,7 +780,7 @@ static int sdhci_versal_sdcardclk_set_phase(struct clk_hw *hw, int degrees)
->                 sdhci_writel(host, regval, SDHCI_ARASAN_OTAPDLY_REGISTER);
->         }
->
-> -       return ret;
-> +       return 0;
->  }
->
->  static const struct clk_ops versal_sdcardclk_ops = {
-> @@ -807,7 +806,6 @@ static int sdhci_versal_sampleclk_set_phase(struct clk_hw *hw, int degrees)
->                 container_of(clk_data, struct sdhci_arasan_data, clk_data);
->         struct sdhci_host *host = sdhci_arasan->host;
->         u8 tap_delay, tap_max = 0;
-> -       int ret;
->
->         /*
->          * This is applicable for SDHCI_SPEC_300 and above
-> @@ -857,7 +855,7 @@ static int sdhci_versal_sampleclk_set_phase(struct clk_hw *hw, int degrees)
->                 sdhci_writel(host, regval, SDHCI_ARASAN_ITAPDLY_REGISTER);
->         }
->
-> -       return ret;
-> +       return 0;
->  }
->
->  static const struct clk_ops versal_sampleclk_ops = {
->
-> base-commit: a3ca59b9af21e68069555ffff1ad89bd2a7c40fc
-> --
-> 2.26.1
->
+rza1l_swio_pins[] is unused because rza1l_swio_entries[] refers to the
+wrong array. So I'd rather see a patch to fix that instead.
+
+Thanks!
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
