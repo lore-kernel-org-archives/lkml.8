@@ -6,89 +6,95 @@ X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 393F5C38A2B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 13:22:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E03D7C38A2B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 13:23:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0B7A92087E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 13:22:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0EF720724
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 13:23:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587129744;
-	bh=ApBjG0GzABKPlb6hTloJ5iIZRTvdSJEPOLZX/3D9xdE=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
-	b=jX7PJwkDg6MAEZWUS7hHGUvk7l0JSbWom/x6Lkzn8s5DUel7iifXSlreL22RbRq0O
-	 faMgXZm4kRng/wKji9ckiVd1/2+m+Ngs0jy2DxY8ksjewIgvlZiqgf1gXwSreBAVJA
-	 pR3zFc2dLbTW9wM8vJWDA2ThUVwdchoQTb6PjtWk=
+	s=default; t=1587129786;
+	bh=ibA2rFMmnIgq8C4ss7cZI9qOp+zQGjoWhmj6CGUWqAg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=ZPTFeJ/NHph43AZDTwSHQyd2yEVk7dVMSMChF4Ygv74qK8M3wuQrkvDHf/m1qkFGA
+	 9Lz28IgCr22uvviD6laZL7EfvFyhHzyk8aJMIu2zxKKA8ad2V8bOjFuu2z+sDpr23e
+	 5G624XL4W6/wK3SKq/JzWvu7Cg/bey/73QDOnmX8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730591AbgDQNWX (ORCPT
+        id S1730609AbgDQNXF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 09:22:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58834 "EHLO mail.kernel.org"
+        Fri, 17 Apr 2020 09:23:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59272 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730358AbgDQNWW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 09:22:22 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1730059AbgDQNXF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Apr 2020 09:23:05 -0400
+Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F231E20724;
-        Fri, 17 Apr 2020 13:22:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6724E2087E;
+        Fri, 17 Apr 2020 13:23:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587129742;
-        bh=ApBjG0GzABKPlb6hTloJ5iIZRTvdSJEPOLZX/3D9xdE=;
-        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=aybB42pK1v8St7Ynd0lCznycB8uo8tw9o7vLKnthk6G+Nir90qAFjZiUGikUjSWaY
-         Pjqeqk48sBzHh5XJN0uOkSvEj6N9muanljwWT9YOzpKd36mnD8UL1sDd6jV+ulGi3O
-         7wN2ZI6jQwpvnhu6QzeM0YJ1TtfcbAPWIC3Sy1EY=
-Date:   Fri, 17 Apr 2020 14:22:20 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Alexandre Torgue <alexandre.torgue@st.com>,
-        "patrice.chotard@st.com" <patrice.chotard@st.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Benjamin Gaignard <benjamin.gaignard@st.com>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-spi@vger.kernel.org,
-        mcoquelin.stm32@gmail.com,
-        Christophe Kerello <christophe.kerello@st.com>
-In-Reply-To: <20200417121241.6473-1-patrice.chotard@st.com>
-References: <20200417121241.6473-1-patrice.chotard@st.com>
-Subject: Re: spi: stm32-qspi: Add pm_runtime support
-Message-Id: <158712973998.35869.11870096143660307572.b4-ty@kernel.org>
+        s=default; t=1587129784;
+        bh=ibA2rFMmnIgq8C4ss7cZI9qOp+zQGjoWhmj6CGUWqAg=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=pvPiMKv7ntfk8qZOizcPdx7MlEsmGycUZQCRnRz4+G33Qnrb37pOO/AkBi/nBjNGz
+         JGawS9KGQmeiK+KZ4CVHbiAykxm7qsStvYfaITLAWWvZ9vb3WTdPNYPHKZCsaMrHnM
+         /cSjDsDb8DkSjBk3ViQf2w2ZFSt60p7OA7aLRC48=
+Received: by mail-qk1-f174.google.com with SMTP id v7so2337747qkc.0;
+        Fri, 17 Apr 2020 06:23:04 -0700 (PDT)
+X-Gm-Message-State: AGi0Pub7VXXzN9GufKJILZdYdC6P1muKOdyDbHiGXDl4QG+m5uIedbQW
+        t9DLXnu5p/RPSKHuke0tmdSbh9PaNM9o+J6D9g==
+X-Google-Smtp-Source: APiQypIIPofmnn66BHXTWvxdCOKv9Ze/AyzaJMMc0phMuil4lY+bjO9YsYMgACjlOuTWT0n/sVIjD7KyQSkUmsGI8g4=
+X-Received: by 2002:a37:7dc6:: with SMTP id y189mr3324472qkc.223.1587129783565;
+ Fri, 17 Apr 2020 06:23:03 -0700 (PDT)
+MIME-Version: 1.0
+References: <1587012974-21219-1-git-send-email-gupt21@gmail.com>
+ <CAL_JsqLWMTpHG=bOmWgy1kg6d7vxRGbCda+febq=FnqbuRbPyQ@mail.gmail.com> <CALUj-gsuUFQbRLKX=nTbA+y6oTyEAnX7OaxkAX375rBBgNc44g@mail.gmail.com>
+In-Reply-To: <CALUj-gsuUFQbRLKX=nTbA+y6oTyEAnX7OaxkAX375rBBgNc44g@mail.gmail.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Fri, 17 Apr 2020 08:22:52 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqL1_3ZZW1F=J6J0J1rhsKu4psc-OF6OUqJ9+-H+Jpb8WQ@mail.gmail.com>
+Message-ID: <CAL_JsqL1_3ZZW1F=J6J0J1rhsKu4psc-OF6OUqJ9+-H+Jpb8WQ@mail.gmail.com>
+Subject: Re: [PATCH v3 1/4] dt-bindings: ttyvs: document serial null modem
+ driver bindings
+To:     rishi gupta <gupt21@gmail.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>, Jonathan Corbet <corbet@lwn.net>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        devicetree@vger.kernel.org,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 17 Apr 2020 14:12:41 +0200, patrice.chotard@st.com wrote:
-> From: Patrice Chotard <patrice.chotard@st.com>
-> 
-> By default, STM32_AUTOSUSPEND_DELAY is set to -1 which has for
-> effect to prevent runtime suspends.
-> Runtime suspends can be activated by setting autosuspend_delay_ms using
-> sysfs entry :
-> echo {delay_in_ms} > /sys/devices/platform/soc/58003000.spi/power/autosusp
-> end_delay_ms)
-> 
-> [...]
+On Fri, Apr 17, 2020 at 12:14 AM rishi gupta <gupt21@gmail.com> wrote:
+>
 
-Applied, thanks!
+Please don't top post.
 
-[1/1] spi: stm32-qspi: Add pm_runtime support
-      commit: 9d282c17b023a97516a63255ce7f7ee65c39bec1
+> Initially there was no DT support but later it was added as CONFIGFS
+> is optional.
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
+Make configfs required.
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+> DT is giving flexibility to use the driver.
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
+The DT belongs in the firmware for a platform like BIOS/EFI on your
+PC. Would you want to configure your driver in the BIOS?
 
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
+Rob
 
-Thanks,
-Mark
+>
+> On Fri, Apr 17, 2020 at 2:08 AM Rob Herring <robh+dt@kernel.org> wrote:
+> >
+> > On Wed, Apr 15, 2020 at 11:56 PM Rishi Gupta <gupt21@gmail.com> wrote:
+> > >
+> > > The ttyvs driver creates virtual tty devices. These devices can
+> > > also be created through device tree. This commit document this.
+> >
+> > Device tree is for real h/w devices. You have a configfs interface to
+> > set these up. I don't think we need both.
+> >
+> > Rob
