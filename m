@@ -2,144 +2,120 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA300C38A2B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 22:45:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FD2AC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 22:52:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A50DB214AF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 22:45:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="UfUOU6ds"
+	by mail.kernel.org (Postfix) with ESMTP id ED6A2214AF
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 22:52:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729063AbgDQWpF (ORCPT
+        id S1726086AbgDQWwV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 18:45:05 -0400
-Received: from mail-eopbgr1300101.outbound.protection.outlook.com ([40.107.130.101]:42570
-        "EHLO APC01-HK2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728482AbgDQWpD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 18:45:03 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=acxgRq0dahnOQuhHBXeAsFRUrjOZfTG7+KVaGsetEFQ1emJajlyw8Dhar57fl3bydfR85dmp9ImKiIIfolZKvUc344am3r8msMWyyiFqf2WWhAWWHiwdruo8zPVmmnyknVuwjbvSa4Cne3q3F+lB/IHGYQlU9x4KqUpVDz+ONEuyvM3glSp6arGhYbeYUM4DPcp9jtwpkzOnofIvPfAR0hiKm6FmxgFhCdMPDEaHPyVOc/FzXP1WyE6l+UflQ8fLGBQf1WdKTe9t0j08nDe6nKXnTTIeZ0ci6/BaMbvBubas9Jw/XkBsWCWkjeSvYqCl2IlLzWfi0HeV4YyFEelhGQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=jRo9cNd8X0MZrxBtPbVzGf0xk7XSRaNn2De4naZ6UGs=;
- b=U7XP+/tgb72C3ffj0ztMHYJKtCmaSh5tZHRPXn9g5IFBBCvH4TfxXkQiXRzaYZPLftLFTxgNAbhbNcZZNsM/Wd1igsfqvCK7ekxno1FguKObgljW2WrniXrXL0/jmrWjjGhY4tRiZiX9oOf4ng5ZE8JhB4vot8iHEudjNAHz0SLzJRwj9JA+Ivky9AparWSUD6lC15pKuaaie/4v27xcvWudPo2HHFn3/NYDZ/55cqTRD1o7t4/Wpb+ZsjT2dD23IER0UCBXmJmdYbXU9L/NlPQxDI+VwrpbwrRs2JubZdgAjUR0RWzcrLjMya9gMShkJ7eGKzQwF/3/Q3k1y96mfQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=jRo9cNd8X0MZrxBtPbVzGf0xk7XSRaNn2De4naZ6UGs=;
- b=UfUOU6dsJ8imR+JQEVLkw80FCeckafQdB5GEShfWaA0ht8y7OdZXBOum1kNLMjPSzqP5S9v6APP/v8xhkwIKKExOikfwJDYHaM4L/GFoKETjGXdf0JWdUAi6cguk3jCE3QINNL0iWoyLylhTmlsAD0kFS2kEqgI88wMxvGvQsMU=
-Received: from HK0P153MB0273.APCP153.PROD.OUTLOOK.COM (2603:1096:203:b2::12)
- by HK0P153MB0257.APCP153.PROD.OUTLOOK.COM (2603:1096:203:b1::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.4; Fri, 17 Apr
- 2020 22:44:39 +0000
-Received: from HK0P153MB0273.APCP153.PROD.OUTLOOK.COM
- ([fe80::2d07:e045:9d5b:898a]) by HK0P153MB0273.APCP153.PROD.OUTLOOK.COM
- ([fe80::2d07:e045:9d5b:898a%2]) with mapi id 15.20.2937.007; Fri, 17 Apr 2020
- 22:44:39 +0000
-From:   Dexuan Cui <decui@microsoft.com>
-To:     Wei Liu <wei.liu@kernel.org>
-CC:     "bp@alien8.de" <bp@alien8.de>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        "hpa@zytor.com" <hpa@zytor.com>, KY Srinivasan <kys@microsoft.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "x86@kernel.org" <x86@kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        vkuznets <vkuznets@redhat.com>
-Subject: RE: [PATCH] x86/hyperv: Suspend/resume the VP assist page for
- hibernation
-Thread-Topic: [PATCH] x86/hyperv: Suspend/resume the VP assist page for
- hibernation
-Thread-Index: AQHWFJewaoKQdpfmdUy/nWpslHqeNah96V2g
-Date:   Fri, 17 Apr 2020 22:44:39 +0000
-Message-ID: <HK0P153MB0273F49C7C59012A6BE0B304BFD90@HK0P153MB0273.APCP153.PROD.OUTLOOK.COM>
-References: <1587104999-28927-1-git-send-email-decui@microsoft.com>
- <20200417090748.r2c45se5paqz5766@debian>
-In-Reply-To: <20200417090748.r2c45se5paqz5766@debian>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=decui@microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-04-17T22:44:35.1962023Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=7d610e83-46e3-4c5e-8879-6a54a0f3001c;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=decui@microsoft.com; 
-x-originating-ip: [2601:600:a280:7f70:6de6:6792:4d71:47c3]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 3de2226e-a329-41df-4ce1-08d7e320e9ae
-x-ms-traffictypediagnostic: HK0P153MB0257:|HK0P153MB0257:|HK0P153MB0257:
-x-ms-exchange-transport-forked: True
-x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-x-microsoft-antispam-prvs: <HK0P153MB0257DA691D4C98CD34DFABF3BFD90@HK0P153MB0257.APCP153.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:7219;
-x-forefront-prvs: 0376ECF4DD
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HK0P153MB0273.APCP153.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(136003)(39860400002)(346002)(396003)(366004)(478600001)(186003)(76116006)(66476007)(10290500003)(64756008)(71200400001)(66556008)(66446008)(66946007)(8936002)(81156014)(8676002)(2906002)(52536014)(82960400001)(82950400001)(86362001)(6506007)(7696005)(9686003)(8990500004)(55016002)(4326008)(4744005)(5660300002)(316002)(6916009)(54906003)(33656002);DIR:OUT;SFP:1102;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: dmaSLNJRERY0Bzy6zMxLbdU49kmO8HC9f8wGe0h2kAiV+O1yt/aLZgZeYbu5jwIltanaXSHYWTKDboFdoSg2XXPAGn35sSXN4K+gMtMCLUxWgjYx7dRl+cHpEgC2lfGboPFsIpB0CFrX42GGzOSTPuhMkXePPuvp0R1WNyj3Q1VHSIcm1WHBjgQjbzUURGMUFWyw0JGL+OPCkBBm6IpRr0VxPO0y25joL9NSQ7oUSK6AN6v/rlqNffWb++8qPSEjjyIhUiWaQ0pHgLdABIJPStGmrc4GJGb5K47bUiDPSye/MBEeIyScSMe0Zt53j4BNbWiNjTHa6lD2z4XwQr5kcTf0jNspMk8LVpXV0fItBqdztSlaJSSZmAVGy5sMbXwoywIAwKqbog6qt4C6+NSUzWeqWsHOMvx+kMVr/FDBP2A74Cg2aYLLDys3zai6bNj/
-x-ms-exchange-antispam-messagedata: xP2nc1AT9/8eNdL54t48ruYxL+2faTSYtOkM/17zEay5T5t5QNist7apPCLfm7xdYaXZZwR1OWIsxlyGc6rH4Aad1Q7OIEX8iBQe82FjnGP49ona0qpkpA73j9FkZsXOT4et2XbvUb8ww/eStAFFlvUd3Vn//7jvK/bAfQ1FCMJl8DqqTwQZp2e27OOxmyA4cneHt8YmGlHgjp1Ro5T4KkyexYdQV/KCl5gXAY1oKLRPYIdeWrsK8/ZudurmKBsjnVjtsyuStZ2Tco3X+zMo7XUWKj2wjN4FXX3D5nXH0EzxhlQHeq9a0KGqEDeO+3XZfSyeIaHVs7aE7mHxcq8ld4RHuJbfq8fUt9yfheRbItckTZWpW5tAmDhI50E74MdBN0NPlBVYkoTkRLwVtQfOVTdb65YZiJ/CJQ8px78C013ZCys1RHcelaxLyQVsJWYmET2lcVSnpMSQ6Qf6+Lj0hZQnRS07qRU8fyl6d2q/yIuDs638HixRpZFoEY3iMEAA61NtKabArESxuHBQrUuJn/+XMbw5PST2V7rxJl0/ME9TxgzBdfLYtfPRu7KcizhqsjB2WB20VWzM05T+XCH9ldmhf1v/Aerafjbm0RxZ90cwUYcataKhsIt4SPs+MBREsHbfRP6TBQDmCtSv2EJ0HSm0X48qmTFks818vPsAtgT7bjwBsN8yrfZqgqNGEHamSL6erThbwb/rdsY16EjtKqnvJzP+jxUruki0VLBevCTPV0l2Prt9SwkTbecknKIwEiWmTveb3xjzvowQ+Gx02KkAR71C/eqst5dmeaOzFhnHdJMXuGtFuzA28cWA/NK0VQCENpJwReykI2PXJ5CjQJhbZ328bKnR4XT695mPsng=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3de2226e-a329-41df-4ce1-08d7e320e9ae
-X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Apr 2020 22:44:39.1159
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: oWt0d/8R1cuQ6QVyomB8s7gbAwKaM3s2ggODSa0iC6m3sAsvW1tBraePWr9iOcgfWJavFALCoBhnYgbA4UmDYA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: HK0P153MB0257
+        Fri, 17 Apr 2020 18:52:21 -0400
+Received: from baldur.buserror.net ([165.227.176.147]:41802 "EHLO
+        baldur.buserror.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725849AbgDQWwU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Apr 2020 18:52:20 -0400
+Received: from [2601:449:8480:af0:12bf:48ff:fe84:c9a0]
+        by baldur.buserror.net with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <oss@buserror.net>)
+        id 1jPZoE-0007S8-1q; Fri, 17 Apr 2020 17:50:06 -0500
+Message-ID: <eb73fb40c2d102f24cf4d9a4ba26ffeea278b715.camel@buserror.net>
+From:   Scott Wood <oss@buserror.net>
+To:     =?UTF-8?Q?=E7=8E=8B=E6=96=87=E8=99=8E?= <wenhu.wang@vivo.com>
+Cc:     Greg KH <gregkh@linuxfoundation.org>,
+        Rob Herring <robh@kernel.org>, linux-kernel@vger.kernel.org,
+        christophe.leroy@c-s.fr, linuxppc-dev@lists.ozlabs.org,
+        kernel@vivo.com
+Date:   Fri, 17 Apr 2020 17:50:04 -0500
+In-Reply-To: <APIAAAABCKquIIhDNOkcHqp9.3.1587132987353.Hmail.wenhu.wang@vivo.com>
+References: <APIAAAABCKquIIhDNOkcHqp9.3.1587132987353.Hmail.wenhu.wang@vivo.com>
+Organization: Red Hat
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2601:449:8480:af0:12bf:48ff:fe84:c9a0
+X-SA-Exim-Rcpt-To: wenhu.wang@vivo.com, gregkh@linuxfoundation.org, robh@kernel.org, linux-kernel@vger.kernel.org, christophe.leroy@c-s.fr, linuxppc-dev@lists.ozlabs.org, kernel@vivo.com
+X-SA-Exim-Mail-From: oss@buserror.net
+Subject: Re: [PATCH v4,4/4] drivers: uio: new driver for fsl_85xx_cache_sram
+X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
+X-SA-Exim-Scanned: Yes (on baldur.buserror.net)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> From: Wei Liu <wei.liu@kernel.org>
-> Sent: Friday, April 17, 2020 2:08 AM
-> > @@ -72,7 +72,8 @@ static int hv_cpu_init(unsigned int cpu)
-> >  	struct page *pg;
-> >
-> >  	input_arg =3D (void **)this_cpu_ptr(hyperv_pcpu_input_arg);
-> > -	pg =3D alloc_page(GFP_KERNEL);
-> > +	/* hv_cpu_init() can be called with IRQs disabled from hv_resume() */
-> > +	pg =3D alloc_page(GFP_ATOMIC);
->=20
-> IMHO it would be better to  only tap into the reserve pool if so
-> required, e.g.
->=20
->         pg =3D alloc_page(irqs_disabled() ? GFP_ATOMIC : GFP_KERNEL);
->=20
-> Wei.
+On Fri, 2020-04-17 at 22:16 +0800, 王文虎 wrote:
+> > On Fri, 2020-04-17 at 09:42 +0200, Greg KH wrote:>> On Thu, Apr 16, 2020
+> > at 11:58:29PM -0500, Scott Wood wrote:
+> > > > On Fri, 2020-04-17 at 10:31 +0800, 王文虎 wrote:
+> > > > > Sounds it is. And does the modification below fit well?
+> > > > > ---
+> > > > > -static const struct of_device_id uio_mpc85xx_l2ctlr_of_match[] = {
+> > > > > -       {       .compatible = "uio,mpc85xx-cache-sram", },
+> > > > > -       {},
+> > > > > +#ifdef CONFIG_OF
+> > > > > +static struct of_device_id uio_fsl_85xx_cache_sram_of_match[] = {
+> > > > > +       { /* This is filled with module_parm */ },
+> > > > > +       { /* Sentinel */ },
+> > > > >  };
+> > > > > +MODULE_DEVICE_TABLE(of, uio_fsl_85xx_cache_sram_of_match);
+> > > > > +module_param_string(of_id,
+> > > > > uio_fsl_85xx_cache_sram_of_match[0].compatible,
+> > > > > +                           sizeof(uio_fsl_85xx_cache_sram_of_match[
+> > > > > 0].c
+> > > > > ompa
+> > > > > tible), 0);
+> > > > > +MODULE_PARM_DESC(of_id, "platform device id to be handled by cache-
+> > > > > sram-
+> > > > > uio");
+> > > > > +#endif
+> > > > 
+> > > > No.  The point is that you wouldn't be configuring this with the
+> > > > device
+> > > > tree
+> > > > at all.
+> > > 
+> > > Wait, why not?  Don't force people to use module parameters, that is
+> > > crazy.  DT describes the hardware involved, if someone wants to bind to
+> > > a specific range of memory, as described by DT, why can't they do so?
+> > 
+> > Yes, DT describes the hardware, and as I've said a couple times already,
+> > this
+> > isn't hardware description.
+> > 
+> > I'm not forcing people to use module parameters.  That was a least-effort
+> > suggestion to avoid abusing the DT.  I later said I'd try to come up with
+> > a
+> > patch that allocates regions dynamically (and most likely doesn't use UIO
+> > at
+> > all).
+> > 
+> > > I can understand not liking the name "uio" in a dt tree, but there's no
+> > > reason that DT can not describe what a driver binds to here.
+> > 
+> > The DT already describes this hardware, and there is already code that
+> > binds
+> > to it.  This patch is trying to add a second node for it with
+> > configuration.
+> > 
+> 
+> Hi, Scott, Greg,
+> Seems like no balance here. How about I implement a driver of uio including
+> the l2ctrl and cache_sram related implementations?
+> And this way, the driver would be a hardware level driver and targeted for
+> uio.
 
-Ok, I'll follow the suggestion.
+No, duplicating the code makes no sense whatsoever.  Please just wait a bit
+and I'll send a patch to have the existing driver expose a dynamic allocation
+interface to userspace.
 
-BTW, there are indeed some usages like this, but not a lot:
-grep irqs_disabled drivers/acpi include/acpi drivers/trace -nr |grep GFP_AT=
-OMIC | grep GFP_KERNEL
+-Scott
 
-Thanks,
--- Dexuan
+
