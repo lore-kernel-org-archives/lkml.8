@@ -2,106 +2,82 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8856C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 08:06:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A489C2BB85
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 08:06:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 83FD920644
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 08:06:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28B7E20644
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 08:06:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UhE3qYTI"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="QEuXKVnz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729611AbgDQIGR (ORCPT
+        id S1729622AbgDQIGU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 04:06:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60300 "EHLO
+        Fri, 17 Apr 2020 04:06:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60302 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729495AbgDQIGR (ORCPT
+        by vger.kernel.org with ESMTP id S1729495AbgDQIGS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 04:06:17 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1BC7C061A0C;
-        Fri, 17 Apr 2020 01:06:16 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id u127so859229wmg.1;
-        Fri, 17 Apr 2020 01:06:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
-         :subject:to:cc;
-        bh=+kuS6BUfuBu5HQsWBXUl7gRKx/aytxpOX/9Vd+bRiDU=;
-        b=UhE3qYTId31hQmEicQpRzqVTz/HaCzfv2XHh+zezamt3bMmFiWFfIi9lnKbWmlLsxL
-         FVvrx6ojJiGisLq51N1uek+EP7NQbUZBk+AXhj0h5EJOgfk1zAdUJWN2g437P/z8QGU7
-         7bSxtaGlWCht3ouQ8krcoVnLUEh6HO9Kzflu96jOZn/vg2BLZfx3dQ8CCrvRs44kfEJ4
-         MpQbayGNRQuSvt/fYtDHNFh0CcOC4oTWYTgEoYwRjiJY1g4gQUI1FsuPTLXgF76Uyr4Y
-         /bpkdB01JJJ5rhGCXze3B080L6oRQZCtfD5HbQ/IKhQZvXHd0lfgmrRSpzNbFwLa04gT
-         QuOQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
-         :from:date:message-id:subject:to:cc;
-        bh=+kuS6BUfuBu5HQsWBXUl7gRKx/aytxpOX/9Vd+bRiDU=;
-        b=gfR+gK9N2lw+mITu/SnzJbhxDzoDiusE1rzzLtjwq11BZKcadN8HZx1OY5lfo+4nn5
-         +r3yXbBKka7fjc/9sp3CxmDatvFn5nC3rdiuHHwYJgbG3e60OUo5soMph6BNs2QFf2Be
-         gp5jkSv6X1np7g6QPamrCzVyaI8NPzUtxoLNuUcyiVe/IJ5juKuS2vno4GI4VALrTB/w
-         yHRfukU3qzBlYvRlbKJ3T3QInDeheab/tm1vKtiRIHPl0LSREh8umsHY9XwH8SXajGeX
-         FNwBjhQPPVWR4ysW9knwYESbu6cmPFLjY2XQzl9fbMNnVmBKvLmY4aZadw3HOGwiqQbV
-         RfXw==
-X-Gm-Message-State: AGi0PuZEJcX4PkbDZKhztGrJfGo1TdCROJrEoJ3YXVYhALik15ukO4/h
-        QMxfU5suQqmXzfDbz1uc4JAM4QZvqudFfWmTqrg=
-X-Google-Smtp-Source: APiQypI2US9O1jjsCOONSDLCRDOJ6V5P1ZOIQ4Y/j+Qbd7NUwkHmokUZzSEMhs1xsBgG22ouN4nGv+P1mws7n9z3HEM=
-X-Received: by 2002:a7b:cb86:: with SMTP id m6mr1977493wmi.64.1587110775555;
- Fri, 17 Apr 2020 01:06:15 -0700 (PDT)
+        Fri, 17 Apr 2020 04:06:18 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2728CC061A0C;
+        Fri, 17 Apr 2020 01:06:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=GdTc/Zzu7raszzr4RX7T2guEFF3lDB9CYabZTEfgBXY=; b=QEuXKVnz/XP2KY6qvCoCoaxFZL
+        YwfX8YOjMokAprB4nQ8NvkRK6Y7bq+HQj7ySjWENQUmqgjWp0Dyd40wFTB93WA0h1/EkJTY0PlArV
+        1RnVEggjkzQnKMr6CiIMwXPzvEyacIoHPOZm0owh/M0tBuS8aYB8th13ZpJhGGaTvDJUXLvDKapSN
+        AVegpSoGABDu6ZPjFVK5MKczDpqh7hhQbKXTWXU3Ne73CJspy8uLw2Et0VKGNC68byShygHd5meEG
+        hVUgUPYhWnYBbTJYPHw/n5U1wSTJ7ctlldij8PpHRRBT6w4Dz1CyX/r9eby2Jagy4Ld0jr+GkAsmD
+        oiPBO0cA==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jPM0t-00019y-2j; Fri, 17 Apr 2020 08:06:15 +0000
+Date:   Fri, 17 Apr 2020 01:06:15 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>, linux-mm@kvack.org,
+        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        Dave Chinner <david@fromorbit.com>
+Subject: Re: implicit AOP_FLAG_NOFS for grab_cache_page_write_begin
+Message-ID: <20200417080615.GA26880@infradead.org>
+References: <20200415070228.GW4629@dhcp22.suse.cz>
+ <20200417072931.GA20822@infradead.org>
+ <20200417080003.GH26707@dhcp22.suse.cz>
 MIME-Version: 1.0
-References: <20200417074558.12316-1-sedat.dilek@gmail.com> <87pnc6pmiw.fsf@kamboji.qca.qualcomm.com>
-In-Reply-To: <87pnc6pmiw.fsf@kamboji.qca.qualcomm.com>
-Reply-To: sedat.dilek@gmail.com
-From:   Sedat Dilek <sedat.dilek@gmail.com>
-Date:   Fri, 17 Apr 2020 10:06:04 +0200
-Message-ID: <CA+icZUUuC5axCJvGm68tCgRmhNA=PG5EZ2ioNfKwiZwfpz-yDQ@mail.gmail.com>
-Subject: Re: [PATCH wireless-drivers v3] iwlwifi: actually check allocated
- conf_tlv pointer
-To:     Kalle Valo <kvalo@codeaurora.org>
-Cc:     Johannes Berg <johannes.berg@intel.com>,
-        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
-        Intel Linux Wireless <linuxwifi@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Chris Rorvick <chris@rorvick.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200417080003.GH26707@dhcp22.suse.cz>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 17, 2020 at 10:03 AM Kalle Valo <kvalo@codeaurora.org> wrote:
->
-> Sedat Dilek <sedat.dilek@gmail.com> writes:
->
-> > From: Chris Rorvick <chris@rorvick.com>
-> >
-> > Commit 71bc0334a637 ("iwlwifi: check allocated pointer when allocating
-> > conf_tlvs") attempted to fix a typoe introduced by commit 17b809c9b22e
-> > ("iwlwifi: dbg: move debug data to a struct") but does not implement the
-> > check correctly.
-> >
-> > Fixes: 71bc0334a637 ("iwlwifi: check allocated pointer when allocating conf_tlvs")
-> > Tweeted-by: @grsecurity
-> > Message-Id: <20200402050219.4842-1-chris@rorvick.com>
-> > Signed-off-by: Chris Rorvick <chris@rorvick.com>
-> > Signed-off-by: Sedat Dilek <sedat.dilek@gmail.com>
->
-> Thanks, looks good to me. I'll just remove the Message-Id tag, it's not
-> really needed in this case.
->
+On Fri, Apr 17, 2020 at 10:00:03AM +0200, Michal Hocko wrote:
+> > commit aea1b9532143218f8599ecedbbd6bfbf812385e1
+> > Author: Dave Chinner <dchinner@redhat.com>
+> > Date:   Tue Jul 20 17:54:12 2010 +1000
+> > 
+> >     xfs: use GFP_NOFS for page cache allocation
+> > 
+> >     Avoid a lockdep warning by preventing page cache allocation from
+> >     recursing back into the filesystem during memory reclaim.
+> 
+> Thanks for digging this up! The changelog is not really clear whether
+> NOFS is to avoid false possitive lockup warnings or real ones. If the
+> former then we have grown __GFP_NOLOCKDEP flag to workaround the problem
+> if the later then can we use memalloc_nofs_{save,restore} in the xfs
+> specific code please?
 
-Thanks for all your suggestions and taking care, Kalle.
-
-- Sedat -
-
-> --
-> https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+As far as I can tell we are never in a file system transaction in XFS
+when allocating page cache pages.  We do, however usually have i_rwsem
+locked (or back in the day the XFS-specific predecessor).  I'm not
+sure what the current issues are, but maybe Dave remembers.  In doubt
+we should try removing the flag and run heavy stress testing with
+lockdep enabled and see if it screams.
