@@ -2,157 +2,114 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A5D6C352BE
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 11:25:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BAA9C352BE
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 11:26:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A0976208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 11:25:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35FF2208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 11:26:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gerhold.net header.i=@gerhold.net header.b="XCmye49i"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="NW9h3C7l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730295AbgDQLZM (ORCPT
+        id S1730310AbgDQL0t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 07:25:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34916 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730176AbgDQLZM (ORCPT
+        Fri, 17 Apr 2020 07:26:49 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:42686 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730176AbgDQL0t (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 07:25:12 -0400
-Received: from mo6-p00-ob.smtp.rzone.de (mo6-p00-ob.smtp.rzone.de [IPv6:2a01:238:20a:202:5300::7])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4BCDC061A0C
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 04:25:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1587122706;
-        s=strato-dkim-0002; d=gerhold.net;
-        h=In-Reply-To:References:Message-ID:Subject:Cc:To:From:Date:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=PL8NP1zjYSBNJ+7M2gB6mpIwxdDNW486VMAFOgdOofM=;
-        b=XCmye49ia90RQ2AhWuN2E6R2OuT5xYw5bDqQG3FH6IUhly9O8WBBEIKjlZYYjDWH+j
-        m/uHCBUZ/C46zoTYfYGmUCVRyEk8IruJCr7XAXX+LmiY/WsP762Ik46xDr/of3dXIfWK
-        IZmhyyAoY/g86SYNBrN2edp7sU1OMHl1U8LRtQ10eA5Frzx/QP09wFpnxIpKT77Qdk5t
-        kAfcV1HoKjD2a57foYBlV7XoC2cfke8cDpSCy9H25sE3432RSI6VtzGePKbPcPs/IO1v
-        izR49/fC76S3eC70GDh3TxYutEoexzg79xIV4mWNsgQgDIafofIcQWjbSJblLz7e2B4U
-        76jg==
-X-RZG-AUTH: ":P3gBZUipdd93FF5ZZvYFPugejmSTVR2nRPhVOQ/OcYgojyw4j34+u26zEodhPgRDZ8j8Ic/Fboo="
-X-RZG-CLASS-ID: mo00
-Received: from gerhold.net
-        by smtp.strato.de (RZmta 46.5.0 DYNA|AUTH)
-        with ESMTPSA id I0a766w3HBP11Vr
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-        (Client did not present a certificate);
-        Fri, 17 Apr 2020 13:25:01 +0200 (CEST)
-Date:   Fri, 17 Apr 2020 13:24:55 +0200
-From:   Stephan Gerhold <stephan@gerhold.net>
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc:     broonie@kernel.org, linux-kernel@vger.kernel.org,
-        alsa-devel@alsa-project.org, lgirdwood@gmail.com
-Subject: Re: [PATCH 0/2] ASoC: qdsp6: fix default FE dais and routings.
-Message-ID: <20200417112455.GA7558@gerhold.net>
-References: <20200311180422.28363-1-srinivas.kandagatla@linaro.org>
+        Fri, 17 Apr 2020 07:26:49 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03HBOxtT112760;
+        Fri, 17 Apr 2020 11:26:41 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=2O0V3yblK/29tvWyAvBHQUZ86B8G/e/jVaheTAg9ans=;
+ b=NW9h3C7l12IBiw3dwnhbItGHVe+6NB4UKB4+7UPW5vT91Y60g/arwqpQ3lh5UGmbyeqO
+ p2eEbhI74qD+NqeKdDkkoIuB4UbK3eTKI13UpccLSwMuyTrAMhUBS7Hx4NMmBC7d8RyF
+ SfrBD6hBkk9WWK4QQwFFqUG6A2pfMA8yLMNHvvRmVwdhBNFzBOsx7xoEHxwsPp5th4rj
+ cAubsGgVjpyVHc2KT17rEZ7a6DBA19GSf91Oi8L2FNNy991jl0+tN8AAKWA1J3V3UYW2
+ Zhw132HJLj0yiB5DwLmE4jRP41oym7DpKrTBxdb4TIMR42l4cgO6kQcHhT7TNBqSfQOO Wg== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 30dn95xk6x-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 17 Apr 2020 11:26:41 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03HBLMwB040528;
+        Fri, 17 Apr 2020 11:26:40 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3030.oracle.com with ESMTP id 30dn91c893-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 17 Apr 2020 11:26:40 +0000
+Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 03HBQb78005629;
+        Fri, 17 Apr 2020 11:26:38 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 17 Apr 2020 04:26:37 -0700
+Date:   Fri, 17 Apr 2020 14:26:24 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        selvin.xavier@broadcom.com, devesh.sharma@broadcom.com,
+        dledford@redhat.com, leon@kernel.org, colin.king@canonical.com,
+        roland@purestorage.com, linux-rdma@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] RDMA/ocrdma: Fix an off-by-one issue in 'ocrdma_add_stat'
+Message-ID: <20200417112624.GS1163@kadam>
+References: <20200328073040.24429-1-christophe.jaillet@wanadoo.fr>
+ <20200414183441.GA28870@ziepe.ca>
+ <20200416130847.GP1163@kadam>
+ <20200416184754.GZ5100@ziepe.ca>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200311180422.28363-1-srinivas.kandagatla@linaro.org>
+In-Reply-To: <20200416184754.GZ5100@ziepe.ca>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9593 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 mlxlogscore=999
+ suspectscore=0 malwarescore=0 spamscore=0 phishscore=0 adultscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004170091
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9593 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 clxscore=1015
+ malwarescore=0 bulkscore=0 priorityscore=1501 lowpriorityscore=0
+ mlxscore=0 phishscore=0 spamscore=0 impostorscore=0 suspectscore=0
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004170091
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Srini,
-
-On Wed, Mar 11, 2020 at 06:04:20PM +0000, Srinivas Kandagatla wrote:
-> QDSP6 Frontend dais can be configured to work in rx or tx or both rx/tx mode,
-> however the default routing do not honour this DT configuration making sound
-> card fail to probe. FE dais are also not fully honouring device tree configuration.
-> Fix both of them.
+On Thu, Apr 16, 2020 at 03:47:54PM -0300, Jason Gunthorpe wrote:
+> On Thu, Apr 16, 2020 at 04:08:47PM +0300, Dan Carpenter wrote:
+> > On Tue, Apr 14, 2020 at 03:34:41PM -0300, Jason Gunthorpe wrote:
+> > > The memcpy is still kind of silly right? What about this:
+> > > 
+> > > static int ocrdma_add_stat(char *start, char *pcur, char *name, u64 count)
+> > > {
+> > > 	size_t len = (start + OCRDMA_MAX_DBGFS_MEM) - pcur;
+> > > 	int cpy_len;
+> > > 
+> > > 	cpy_len = snprintf(pcur, len, "%s: %llu\n", name, count);
+> > > 	if (cpy_len >= len || cpy_len < 0) {
+> > 
+> > The kernel version of snprintf() doesn't and will never return
+> > negatives.  It would cause a huge security headache if it started
+> > returning negatives.
 > 
+> Begs the question why it returns an int then :)
 
-I discovered this patch set when QDSP6 audio stopped working after
-upgrading to Linux 5.7-rc1. As far as I understand, device tree bindings
-should attempt to be backwards compatible wherever possible.
-This isn't the case here, although this is not the reason for my mail.
-(I don't mind updating my device tree, especially since it is not
-upstream yet...)
+People should use "int" as their default type.  "int i;".  It means
+"This is a normal number.  Nothing special about it.  It's not too high.
+It's not defined by hardware requirements."  Other types call attention
+to themselves, but int is the humble datatype.
 
-I have a general question about the design here.
-
-I understand the original motivation for this patch set: Attempting to
-configure a TX/RX-only DAI was not possible due to the default routing.
-In my opinion this is only relevant for the compressed DAI case.
-
-If we ignore the compressed DAIs for a moment (which can be
-unidirectional only), I think we shouldn't care how userspace uses the
-available FE/MultiMedia DAIs. We have this huge routing matrix in q6routing,
-with 800+ mixers that can be configured in any way possible from userspace.
-
-In "ASoC: qdsp6: q6asm-dai: only enable dais from device tree" you mention:
-
-> This can lead to un-necessary dais in the system which will never be
-> used. So honour whats specfied in device tree.
-
-but IMO the FE DAIs are a negligible overhead compared to the routing 
-matrix and the many BE DAIs that are really never going to be used
-(because nothing is physically connected to the ports).
-
-Even if you restrict FE DAIs to RX/TX only, or disable them entirely,
-all the routing mixers still exist for them. They will just result in
-configurations that are not usable in any way. IMO the only thing we
-gain by restricting the FE DAIs is that the available mixers no longer
-match possible configurations.
-
-Before this patch set I used a slightly different approach in my device
-tree for MSM8916: I kept all FE DAIs bi-directional, and added DAI links
-for all of them. This means that I actually had 8 bi-directional PCM
-devices in userspace.
-
-I didn't use all of them - my ALSA UCM configuration only uses
-MultiMedia1 for playback and MultiMedia2 for capture.
-However, some other userspace (let's say Android) could have chosen
-different FE DAIs for whatever reason. We have the overhead for the
-routing matrix anyway, so we might as well expose it in my opinion.
-
-My question is: In what way are the FE DAIs really board-specific?
-
-If we expose only some FE DAIs with intended usage per board,
-e.g. MultiMedia1 for HDMI, MultiMedia2 for slimbus playback,
-     MultiMedia3 for slimbus capture,
-I could almost argue that we don't need DPCM at all.
-The FE DAIs are always going to be used for the same backend anyway.
-
-This is a bit exaggerated - for example if you have a single compress
-DAI per board you probably intend to use it for both HDMI/slimbus.
-But this is the feeling I get if we configure the FE DAIs separately
-for each board.
-
-I wonder if we should leave configuration of the FE DAIs up to userspace
-(e.g. ALSA UCM), and expose the same full set of FE DAIs for each board.
-
-I think this is mostly a matter of convention for configuring FE DAIs
-in the device tree - I have some ideas how to make that work
-with the existing device tree bindings and for compressed DAIs.
-But this mail is already long enough as-is. ;)
-
-I also don't mind if we keep everything as-is
-- I just wanted to share what I have been thinking about.
-
-What do you think?
-
-Thanks for reading! ;)
-Stephan
-
-> Originally  issue was reported by Vinod Koul
-> 
-> Srinivas Kandagatla (2):
->   ASoC: qdsp6: q6asm-dai: only enable dais from device tree
->   ASoC: qdsp6: q6routing: remove default routing
-> 
->  sound/soc/qcom/qdsp6/q6asm-dai.c | 30 +++++++++++++++++++++++-------
->  sound/soc/qcom/qdsp6/q6routing.c | 19 -------------------
->  2 files changed, 23 insertions(+), 26 deletions(-)
-> 
-> -- 
-> 2.21.0
-> 
+regards,
+dan carpenter
