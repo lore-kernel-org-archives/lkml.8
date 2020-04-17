@@ -2,457 +2,507 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 671B8C2D0EF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 17:21:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5921AC2D0EF
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 17:22:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 40D362078E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 17:21:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F34F208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 17:22:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729590AbgDQRVO convert rfc822-to-8bit (ORCPT
+        id S1729721AbgDQRWB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 13:21:14 -0400
-Received: from mailoutvs59.siol.net ([185.57.226.250]:40114 "EHLO
-        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728863AbgDQRVO (ORCPT
+        Fri, 17 Apr 2020 13:22:01 -0400
+Received: from m17618.mail.qiye.163.com ([59.111.176.18]:47606 "EHLO
+        m17618.mail.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728088AbgDQRWA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 13:21:14 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTP id 99F9D524C3A;
-        Fri, 17 Apr 2020 19:15:14 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at psrvmta09.zcs-production.pri
-Received: from mail.siol.net ([127.0.0.1])
-        by localhost (psrvmta09.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id b6KrGSb_97M0; Fri, 17 Apr 2020 19:15:13 +0200 (CEST)
-Received: from mail.siol.net (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTPS id AF4AA524C39;
-        Fri, 17 Apr 2020 19:15:13 +0200 (CEST)
-Received: from jernej-laptop.localnet (cpe-194-152-20-232.static.triera.net [194.152.20.232])
-        (Authenticated sender: jernej.skrabec@siol.net)
-        by mail.siol.net (Postfix) with ESMTPA id DD577524C3B;
-        Fri, 17 Apr 2020 19:15:12 +0200 (CEST)
-From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@siol.net>
-To:     robh+dt@kernel.org, andrew@lunn.ch, f.fainelli@gmail.com,
-        Heiner Kallweit <hkallweit1@gmail.com>
-Cc:     mripard@kernel.org, wens@csie.org, lee.jones@linaro.org,
-        linux@armlinux.org.uk, davem@davemloft.net,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Subject: Re: [RFC PATCH 2/4] net: phy: Add support for AC200 EPHY
-Date:   Fri, 17 Apr 2020 19:15:12 +0200
-Message-ID: <4409454.rnE6jSC6OK@jernej-laptop>
-In-Reply-To: <1d03b2a8-fed5-5de8-6326-81b7436637da@gmail.com>
-References: <20200416185758.1388148-1-jernej.skrabec@siol.net> <3035405.oiGErgHkdL@jernej-laptop> <1d03b2a8-fed5-5de8-6326-81b7436637da@gmail.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 17 Apr 2020 13:22:00 -0400
+Received: from ubuntu.localdomain (unknown [58.251.74.227])
+        by m17618.mail.qiye.163.com (Hmail) with ESMTPA id BAAE54E12BB;
+        Sat, 18 Apr 2020 01:21:53 +0800 (CST)
+From:   Wang Wenhu <wenhu.wang@vivo.com>
+To:     gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org
+Cc:     christophe.leroy@c-s.fr, oss@buserror.net, kernel@vivo.com,
+        robh@kernel.org, Wang Wenhu <wenhu.wang@vivo.com>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH] drivers: uio: new driver uio_fsl_85xx_cache_sram
+Date:   Fri, 17 Apr 2020 10:21:30 -0700
+Message-Id: <20200417172130.14287-1-wenhu.wang@vivo.com>
+X-Mailer: git-send-email 2.17.1
+X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgYFAkeWUFZT1VNQk9CQkJNQk9DSU9JSVlXWShZQU
+        hPN1dZLVlBSVdZCQ4XHghZQVk1NCk2OjckKS43PlkG
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Okk6KAw5Vjg4NA5JMRYOQksz
+        Dx5PCgNVSlVKTkNMSk9PSkpNSEpLVTMWGhIXVQweFRMOVQwaFRw7DRINFFUYFBZFWVdZEgtZQVlO
+        Q1VJTkpVTE9VSUlMWVdZCAFZQUpPQkpNNwY+
+X-HM-Tid: 0a7189293f939376kuwsbaae54e12bb
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dne petek, 17. april 2020 ob 18:29:04 CEST je Heiner Kallweit napisal(a):
-> On 17.04.2020 18:03, Jernej Škrabec wrote:
-> > Dne četrtek, 16. april 2020 ob 22:18:52 CEST je Heiner Kallweit 
-napisal(a):
-> >> On 16.04.2020 20:57, Jernej Skrabec wrote:
-> >>> AC200 MFD IC supports Fast Ethernet PHY. Add a driver for it.
-> >>> 
-> >>> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-> >>> ---
-> >>> 
-> >>>  drivers/net/phy/Kconfig  |   7 ++
-> >>>  drivers/net/phy/Makefile |   1 +
-> >>>  drivers/net/phy/ac200.c  | 206 +++++++++++++++++++++++++++++++++++++++
-> >>>  3 files changed, 214 insertions(+)
-> >>>  create mode 100644 drivers/net/phy/ac200.c
-> >>> 
-> >>> diff --git a/drivers/net/phy/Kconfig b/drivers/net/phy/Kconfig
-> >>> index 3fa33d27eeba..16af69f69eaf 100644
-> >>> --- a/drivers/net/phy/Kconfig
-> >>> +++ b/drivers/net/phy/Kconfig
-> >>> @@ -288,6 +288,13 @@ config ADIN_PHY
-> >>> 
-> >>>  	  - ADIN1300 - Robust,Industrial, Low Latency 10/100/1000 Gigabit
-> >>>  	  
-> >>>  	    Ethernet PHY
-> >>> 
-> >>> +config AC200_PHY
-> >>> +	tristate "AC200 EPHY"
-> >>> +	depends on NVMEM
-> >>> +	depends on OF
-> >>> +	help
-> >>> +	  Fast ethernet PHY as found in X-Powers AC200 multi-function
-> > 
-> > device.
-> > 
-> >>> +
-> >>> 
-> >>>  config AMD_PHY
-> >>>  
-> >>>  	tristate "AMD PHYs"
-> >>>  	---help---
-> >>> 
-> >>> diff --git a/drivers/net/phy/Makefile b/drivers/net/phy/Makefile
-> >>> index 2f5c7093a65b..b0c5b91900fa 100644
-> >>> --- a/drivers/net/phy/Makefile
-> >>> +++ b/drivers/net/phy/Makefile
-> >>> @@ -53,6 +53,7 @@ obj-$(CONFIG_SFP)		+= sfp.o
-> >>> 
-> >>>  sfp-obj-$(CONFIG_SFP)		+= sfp-bus.o
-> >>>  obj-y				+= $(sfp-obj-y) $(sfp-obj-m)
-> >>> 
-> >>> +obj-$(CONFIG_AC200_PHY)		+= ac200.o
-> >>> 
-> >>>  obj-$(CONFIG_ADIN_PHY)		+= adin.o
-> >>>  obj-$(CONFIG_AMD_PHY)		+= amd.o
-> >>>  aquantia-objs			+= aquantia_main.o
-> >>> 
-> >>> diff --git a/drivers/net/phy/ac200.c b/drivers/net/phy/ac200.c
-> >>> new file mode 100644
-> >>> index 000000000000..3d7856ff8f91
-> >>> --- /dev/null
-> >>> +++ b/drivers/net/phy/ac200.c
-> >>> @@ -0,0 +1,206 @@
-> >>> +// SPDX-License-Identifier: GPL-2.0+
-> >>> +/**
-> >>> + * Driver for AC200 Ethernet PHY
-> >>> + *
-> >>> + * Copyright (c) 2020 Jernej Skrabec <jernej.skrabec@siol.net>
-> >>> + */
-> >>> +
-> >>> +#include <linux/kernel.h>
-> >>> +#include <linux/module.h>
-> >>> +#include <linux/mfd/ac200.h>
-> >>> +#include <linux/nvmem-consumer.h>
-> >>> +#include <linux/of.h>
-> >>> +#include <linux/phy.h>
-> >>> +#include <linux/platform_device.h>
-> >>> +
-> >>> +#define AC200_EPHY_ID			0x00441400
-> >>> +#define AC200_EPHY_ID_MASK		0x0ffffff0
-> >>> +
-> >> 
-> >> You could use PHY_ID_MATCH_MODEL() here.
-> > 
-> > Ok.
-> > 
-> >>> +/* macros for system ephy control 0 register */
-> >>> +#define AC200_EPHY_RESET_INVALID	BIT(0)
-> >>> +#define AC200_EPHY_SYSCLK_GATING	BIT(1)
-> >>> +
-> >>> +/* macros for system ephy control 1 register */
-> >>> +#define AC200_EPHY_E_EPHY_MII_IO_EN	BIT(0)
-> >>> +#define AC200_EPHY_E_LNK_LED_IO_EN	BIT(1)
-> >>> +#define AC200_EPHY_E_SPD_LED_IO_EN	BIT(2)
-> >>> +#define AC200_EPHY_E_DPX_LED_IO_EN	BIT(3)
-> >>> +
-> >>> +/* macros for ephy control register */
-> >>> +#define AC200_EPHY_SHUTDOWN		BIT(0)
-> >>> +#define AC200_EPHY_LED_POL		BIT(1)
-> >>> +#define AC200_EPHY_CLK_SEL		BIT(2)
-> >>> +#define AC200_EPHY_ADDR(x)		(((x) & 0x1F) << 4)
-> >>> +#define AC200_EPHY_XMII_SEL		BIT(11)
-> >>> +#define AC200_EPHY_CALIB(x)		(((x) & 0xF) << 12)
-> >>> +
-> >>> +struct ac200_ephy_dev {
-> >>> +	struct phy_driver	*ephy;
-> >> 
-> >> Why embedding a pointer and not a struct phy_driver directly?
-> >> Then you could omit the separate allocation.
-> > 
-> > Right.
-> > 
-> >> ephy is not the best naming. It may be read as a phy_device.
-> >> Better use phydrv.
-> > 
-> > Ok.
-> > 
-> >>> +	struct regmap		*regmap;
-> >>> +};
-> >>> +
-> >>> +static char *ac200_phy_name = "AC200 EPHY";
-> >>> +
-> >> 
-> >> Why not using the name directly in the assignment?
-> > 
-> > phy_driver->name is pointer. Wouldn't that mean that string is allocated
-> > on
-> > stack and next time pointer is used, it will return garbage?
-> 
-> No, it's not on the stack. No problem here.
-> 
-> >> And better naming: "AC200 Fast Ethernet"
-> > 
-> > Ok.
-> > 
-> >>> +static int ac200_ephy_config_init(struct phy_device *phydev)
-> >>> +{
-> >>> +	const struct ac200_ephy_dev *priv = phydev->drv->driver_data;
-> >>> +	unsigned int value;
-> >>> +	int ret;
-> >>> +
-> >>> +	phy_write(phydev, 0x1f, 0x0100);	/* Switch to Page 1 */
-> >>> +	phy_write(phydev, 0x12, 0x4824);	/* Disable APS */
-> >>> +
-> >>> +	phy_write(phydev, 0x1f, 0x0200);	/* Switch to Page 2 */
-> >>> +	phy_write(phydev, 0x18, 0x0000);	/* PHYAFE TRX optimization */
-> >>> +
-> >>> +	phy_write(phydev, 0x1f, 0x0600);	/* Switch to Page 6 */
-> >>> +	phy_write(phydev, 0x14, 0x708f);	/* PHYAFE TX optimization */
-> >>> +	phy_write(phydev, 0x13, 0xF000);	/* PHYAFE RX optimization */
-> >>> +	phy_write(phydev, 0x15, 0x1530);
-> >>> +
-> >>> +	phy_write(phydev, 0x1f, 0x0800);	/* Switch to Page 6 */
-> >>> +	phy_write(phydev, 0x18, 0x00bc);	/* PHYAFE TRX optimization */
-> >>> +
-> >>> +	phy_write(phydev, 0x1f, 0x0100);	/* switch to page 1 */
-> >>> +	phy_clear_bits(phydev, 0x17, BIT(3));	/* disable intelligent
-> > 
-> > IEEE */
-> > 
-> >>> +
-> >>> +	/* next two blocks disable 802.3az IEEE */
-> >>> +	phy_write(phydev, 0x1f, 0x0200);	/* switch to page 2 */
-> >>> +	phy_write(phydev, 0x18, 0x0000);
-> >>> +
-> >>> +	phy_write(phydev, 0x1f, 0x0000);	/* switch to page 0 */
-> >>> +	phy_clear_bits_mmd(phydev, 0x7, 0x3c, BIT(1));
-> >> 
-> >> Better use the following:
-> >> phy_write_mmd(phydev, MDIO_MMD_AN, MDIO_AN_EEE_ADV, 0x0000);
-> >> It makes clear that you disable advertising EEE completely.
-> > 
-> > Ok.
-> > 
-> >>> +
-> >>> +	if (phydev->interface == PHY_INTERFACE_MODE_RMII)
-> >>> +		value = AC200_EPHY_XMII_SEL;
-> >>> +	else
-> >>> +		value = 0;
-> >>> +
-> >>> +	ret = regmap_update_bits(priv->regmap, AC200_EPHY_CTL,
-> >>> +				 AC200_EPHY_XMII_SEL, value);
-> >>> +	if (ret)
-> >>> +		return ret;
-> >>> +
-> >> 
-> >> I had a brief look at the spec, and it's not fully clear
-> >> to me what this register setting does. Does it affect the
-> >> MAC side and/or the PHY side?
-> > 
-> > It's my understanding that it selects interface mode on PHY. Besides
-> > datasheet mentioned in cover letter, BSP drivers (one for MFD and one for
-> > PHY) are the only other source of information. BSP PHY driver is located
-> > here:
-> > https://github.com/Allwinner-Homlet/H6-BSP4.9-linux/blob/master/drivers/ne
-> > t/ phy/sunxi-ephy.c
-> > 
-> >> If it affects the PHY side, then I'd expect that the chip
-> >> has to talk to the PHY via the MDIO bus. Means there should
-> >> be a PHY register for setting MII vs. RMII.
-> >> In this case the setup could be very much simplified.
-> >> Then the PHY driver wouldn't have to be embedded in the
-> >> platform driver.
-> > 
-> > Actually, PHY has to be configured first through I2C and then through
-> > MDIO. I2C is used to enable it (power it up), configure LED polarity, set
-> > PHY address, write calibration value stored elsewhere.
-> > 
-> > Based on all available documentation I have (code and datasheet), this I2C
-> > register is the only way to select MII or RMII mode.
-> 
-> Then how and where is the PHY interface mode configured on the MAC side?
-> If there is no such setting, then I'd assume that this register bit
-> configures both sides. This leads to the question whether the interface
-> mode really needs to be set in the PHY driver's config_init().
-> If we could avoid this, then you could make the PHY driver static.
+Implements a new uio driver for freescale 85xx platforms to access
+the Cache-Sram form user level. It is extremely helpful for the user
+space applications that require high performance memory accesses.
 
-Check patch 4. There is emac node added with property phy-mode = "rmii"; 
-AC200 and H6 are internally connected through RMII interface.
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Christophe Leroy <christophe.leroy@c-s.fr>
+Cc: Scott Wood <oss@buserror.net>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: linuxppc-dev@lists.ozlabs.org
+Signed-off-by: Wang Wenhu <wenhu.wang@vivo.com>
+---
+ drivers/uio/Kconfig                   |   8 +
+ drivers/uio/Makefile                  |   1 +
+ drivers/uio/uio_fsl_85xx_cache_sram.c | 407 ++++++++++++++++++++++++++
+ 3 files changed, 416 insertions(+)
+ create mode 100644 drivers/uio/uio_fsl_85xx_cache_sram.c
 
-Note that MAC has multiplexed interface and can either uses this copackaged 
-PHY or external PHY. External PHY usually uses RGMII interface.
-
-In 99% cases, this PHY driver will be used for copackaged AC200 with H6 SoC, 
-which means it will be used in RMII mode. Even if someone uses standalone 
-AC200 IC with mainline Linux, will probably still use RMII. But there is still 
-very small chance that someone will use it in MII mode.
-
-Anyway, if that special setting for H6 proves important, we will still need a 
-way to convey that information from platform driver to PHY. Easiest way to do 
-that is through driver_data.
-
-> 
-> You could set the PHY interface mode as soon as the PHY interface mode
-> is read from DT. So why not set the interface mode at the place where
-> you configure the other values like PHY address?
-
-PHY interface mode is actually set on MAC side in DT. This PHY has acutally 
-programmable PHY address through I2C. Currently I hardcoded it to 1.
-
-As I explained in cover letter, I don't really know how to properly present 
-this device in DT. Based on current DT documentation, PHY node would have to 
-be child node of mdio bus node and MFD node at the same time which is not 
-possible.
-
-> 
-> >>> +	/* FIXME: This is H6 specific */
-> >>> +	phy_set_bits(phydev, 0x13, BIT(12));
-> >>> +
-> >> 
-> >> This seems to indicate that the same PHY is used in a slightly
-> >> different version with other Hx models. Do they use different
-> >> PHY ID's?
-> > 
-> > Situation is a bit complicated. Same PHY, at least with same PHY ID, is
-> > used in different ways.
-> > 1. as part of standalone AC200 MFD IC
-> > 2. as part of AC200 wafer copackaged with H6 SoC wafer in same package.
-> > This in theory shouldn't be any different than standalone IC, but it
-> > apparently is, based on the BSP driver code.
-> > 3. integrated directly in SoCs like H3, H5 and V3s. There is no I2C access
-> > to configuration register. Instead, it's memory mapped and slightly
-> > different.
-> > 
-> > In all cases PHY ID is same, just glue logic is different.
-> > 
-> > I asked Allwinner if above setting is really necessary for H6 and what it
-> > does, but I didn't get any useful answer back.
-> > 
-> > So maybe another compatible is needed for H6.
-> > 
-> > Best regards,
-> > Jernej
-> > 
-> >>> +	return 0;
-> >>> +}
-> >>> +
-> >>> +static int ac200_ephy_probe(struct platform_device *pdev)
-> >>> +{
-> >>> +	struct ac200_dev *ac200 = dev_get_drvdata(pdev->dev.parent);
-> >>> +	struct device *dev = &pdev->dev;
-> >>> +	struct ac200_ephy_dev *priv;
-> >>> +	struct nvmem_cell *calcell;
-> >>> +	struct phy_driver *ephy;
-> >>> +	u16 *caldata, calib;
-> >>> +	size_t callen;
-> >>> +	int ret;
-> >>> +
-> >>> +	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-> >>> +	if (!priv)
-> >>> +		return -ENOMEM;
-> >>> +
-> >>> +	ephy = devm_kzalloc(dev, sizeof(*ephy), GFP_KERNEL);
-> >>> +	if (!ephy)
-> >>> +		return -ENOMEM;
-> >>> +
-> >>> +	calcell = devm_nvmem_cell_get(dev, "calibration");
-> >>> +	if (IS_ERR(calcell)) {
-> >>> +		dev_err(dev, "Unable to find calibration data!\n");
-> >>> +		return PTR_ERR(calcell);
-> >>> +	}
-> >>> +
-> >>> +	caldata = nvmem_cell_read(calcell, &callen);
-> >>> +	if (IS_ERR(caldata)) {
-> >>> +		dev_err(dev, "Unable to read calibration data!\n");
-> >>> +		return PTR_ERR(caldata);
-> >>> +	}
-> >>> +
-> >>> +	if (callen != 2) {
-> >>> +		dev_err(dev, "Calibration data has wrong length: 2 !=
-> > 
-> > %zu\n",
-> > 
-> >>> +			callen);
-> >>> +		kfree(caldata);
-> >>> +		return -EINVAL;
-> >>> +	}
-> >>> +
-> >>> +	calib = *caldata + 3;
-> >>> +	kfree(caldata);
-> >>> +
-> >>> +	ephy->phy_id = AC200_EPHY_ID;
-> >>> +	ephy->phy_id_mask = AC200_EPHY_ID_MASK;
-> >>> +	ephy->name = ac200_phy_name;
-> >>> +	ephy->driver_data = priv;
-> >>> +	ephy->soft_reset = genphy_soft_reset;
-> >>> +	ephy->config_init = ac200_ephy_config_init;
-> >>> +	ephy->suspend = genphy_suspend;
-> >>> +	ephy->resume = genphy_resume;
-> >>> +
-> >>> +	priv->ephy = ephy;
-> >>> +	priv->regmap = ac200->regmap;
-> >>> +	platform_set_drvdata(pdev, priv);
-> >>> +
-> >>> +	ret = regmap_write(ac200->regmap, AC200_SYS_EPHY_CTL0,
-> >>> +			   AC200_EPHY_RESET_INVALID |
-> >>> +			   AC200_EPHY_SYSCLK_GATING);
-> >>> +	if (ret)
-> >>> +		return ret;
-> >>> +
-> >>> +	ret = regmap_write(ac200->regmap, AC200_SYS_EPHY_CTL1,
-> >>> +			   AC200_EPHY_E_EPHY_MII_IO_EN |
-> >>> +			   AC200_EPHY_E_LNK_LED_IO_EN |
-> >>> +			   AC200_EPHY_E_SPD_LED_IO_EN |
-> >>> +			   AC200_EPHY_E_DPX_LED_IO_EN);
-> >>> +	if (ret)
-> >>> +		return ret;
-> >>> +
-> >>> +	ret = regmap_write(ac200->regmap, AC200_EPHY_CTL,
-> >>> +			   AC200_EPHY_LED_POL |
-> >>> +			   AC200_EPHY_CLK_SEL |
-> >>> +			   AC200_EPHY_ADDR(1) |
-> >>> +			   AC200_EPHY_CALIB(calib));
-> >>> +	if (ret)
-> >>> +		return ret;
-> >>> +
-> >>> +	ret = phy_driver_register(priv->ephy, THIS_MODULE);
-> >>> +	if (ret) {
-> >>> +		dev_err(dev, "Unable to register phy\n");
-> >>> +		return ret;
-> >>> +	}
-> >>> +
-> >>> +	return 0;
-> >>> +}
-> >>> +
-> >>> +static int ac200_ephy_remove(struct platform_device *pdev)
-> >>> +{
-> >>> +	struct ac200_ephy_dev *priv = platform_get_drvdata(pdev);
-> >>> +
-> >>> +	phy_driver_unregister(priv->ephy);
-> >>> +
-> >>> +	regmap_write(priv->regmap, AC200_EPHY_CTL, AC200_EPHY_SHUTDOWN);
-> >>> +	regmap_write(priv->regmap, AC200_SYS_EPHY_CTL1, 0);
-> >>> +	regmap_write(priv->regmap, AC200_SYS_EPHY_CTL0, 0);
-> >>> +
-> >>> +	return 0;
-> >>> +}
-> >>> +
-> >>> +static const struct of_device_id ac200_ephy_match[] = {
-> >>> +	{ .compatible = "x-powers,ac200-ephy" },
-> >>> +	{ /* sentinel */ }
-> >>> +};
-> >>> +MODULE_DEVICE_TABLE(of, ac200_ephy_match);
-> >>> +
-> >>> +static struct platform_driver ac200_ephy_driver = {
-> >>> +	.probe		= ac200_ephy_probe,
-> >>> +	.remove		= ac200_ephy_remove,
-> >>> +	.driver		= {
-> >>> +		.name		= "ac200-ephy",
-> >>> +		.of_match_table	= ac200_ephy_match,
-> >>> +	},
-> >>> +};
-> >>> +module_platform_driver(ac200_ephy_driver);
-> >>> +
-> >>> +MODULE_AUTHOR("Jernej Skrabec <jernej.skrabec@siol.net>");
-> >>> +MODULE_DESCRIPTION("AC200 Ethernet PHY driver");
-> >>> +MODULE_LICENSE("GPL");
-
-
-
+diff --git a/drivers/uio/Kconfig b/drivers/uio/Kconfig
+index 202ee81cfc2b..f6e6ec0089c0 100644
+--- a/drivers/uio/Kconfig
++++ b/drivers/uio/Kconfig
+@@ -105,6 +105,14 @@ config UIO_NETX
+ 	  To compile this driver as a module, choose M here; the module
+ 	  will be called uio_netx.
+ 
++config UIO_FSL_85XX_CACHE_SRAM
++	tristate "Freescale MPC85xx Cache-Sram driver"
++	depends on FSL_SOC_BOOKE && PPC32 && !FSL_85XX_CACHE_SRAM
++	help
++	  Generic driver for accessing the Cache-Sram form user level. This
++	  is extremely helpful for some user-space applications that require
++	  high performance memory accesses.
++
+ config UIO_FSL_ELBC_GPCM
+ 	tristate "eLBC/GPCM driver"
+ 	depends on FSL_LBC
+diff --git a/drivers/uio/Makefile b/drivers/uio/Makefile
+index c285dd2a4539..be2056cffc21 100644
+--- a/drivers/uio/Makefile
++++ b/drivers/uio/Makefile
+@@ -10,4 +10,5 @@ obj-$(CONFIG_UIO_NETX)	+= uio_netx.o
+ obj-$(CONFIG_UIO_PRUSS)         += uio_pruss.o
+ obj-$(CONFIG_UIO_MF624)         += uio_mf624.o
+ obj-$(CONFIG_UIO_FSL_ELBC_GPCM)	+= uio_fsl_elbc_gpcm.o
++obj-$(CONFIG_UIO_FSL_85XX_CACHE_SRAM)	+= uio_fsl_85xx_cache_sram.o
+ obj-$(CONFIG_UIO_HV_GENERIC)	+= uio_hv_generic.o
+diff --git a/drivers/uio/uio_fsl_85xx_cache_sram.c b/drivers/uio/uio_fsl_85xx_cache_sram.c
+new file mode 100644
+index 000000000000..312ca38e93e1
+--- /dev/null
++++ b/drivers/uio/uio_fsl_85xx_cache_sram.c
+@@ -0,0 +1,407 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (C) 2020 Vivo Communication Technology Co. Ltd.
++ * Copyright (C) 2020 Wang Wenhu <wenhu.wang@vivo.com>
++ * All rights reserved.
++ */
++
++#include <linux/platform_device.h>
++#include <linux/uio_driver.h>
++#include <linux/module.h>
++#include <linux/kernel.h>
++#include <linux/of_address.h>
++
++#define DRIVER_NAME	"uio_fsl_85xx_cache_sram"
++#define UIO_INFO_VER	"devicetree,pseudo"
++
++#define MAX_SRAM_UIO_INFOS	5
++
++#define L2CR_L2FI		0x40000000	/* L2 flash invalidate */
++#define L2CR_SRAM_FULL		0x00010000	/* L2SRAM full size */
++#define L2CR_SRAM_HALF		0x00020000	/* L2SRAM half size */
++#define L2CR_SRAM_QUART		0x00040000	/* L2SRAM one quarter size */
++#define L2CR_SRAM_EIGHTH	0x00060000	/* L2SRAM one eighth size */
++
++#define L2SRAM_BAR_MSK_LO18	0xFFFFC000	/* Lower 18 bits */
++#define L2SRAM_BARE_MSK_HI4	0x0000000F	/* Upper 4 bits */
++
++enum cache_sram_lock_ways {
++	LOCK_WAYS_ZERO,
++	LOCK_WAYS_EIGHTH,
++	LOCK_WAYS_TWO_EIGHTH,
++	LOCK_WAYS_HALF = 4,
++	LOCK_WAYS_FULL = 8,
++};
++
++struct mpc85xx_l2ctlr {
++	u32	ctl;		/* 0x000 - L2 control */
++	u8	res1[0xC];
++	u32	ewar0;		/* 0x010 - External write address 0 */
++	u32	ewarea0;	/* 0x014 - External write address extended 0 */
++	u32	ewcr0;		/* 0x018 - External write ctrl */
++	u8	res2[4];
++	u32	ewar1;		/* 0x020 - External write address 1 */
++	u32	ewarea1;	/* 0x024 - External write address extended 1 */
++	u32	ewcr1;		/* 0x028 - External write ctrl 1 */
++	u8	res3[4];
++	u32	ewar2;		/* 0x030 - External write address 2 */
++	u32	ewarea2;	/* 0x034 - External write address extended 2 */
++	u32	ewcr2;		/* 0x038 - External write ctrl 2 */
++	u8	res4[4];
++	u32	ewar3;		/* 0x040 - External write address 3 */
++	u32	ewarea3;	/* 0x044 - External write address extended 3 */
++	u32	ewcr3;		/* 0x048 - External write ctrl 3 */
++	u8	res5[0xB4];
++	u32	srbar0;		/* 0x100 - SRAM base address 0 */
++	u32	srbarea0;	/* 0x104 - SRAM base addr reg ext address 0 */
++	u32	srbar1;		/* 0x108 - SRAM base address 1 */
++	u32	srbarea1;	/* 0x10C - SRAM base addr reg ext address 1 */
++	u8	res6[0xCF0];
++	u32	errinjhi;	/* 0xE00 - Error injection mask high */
++	u32	errinjlo;	/* 0xE04 - Error injection mask low */
++	u32	errinjctl;	/* 0xE08 - Error injection tag/ecc control */
++	u8	res7[0x14];
++	u32	captdatahi;	/* 0xE20 - Error data high capture */
++	u32	captdatalo;	/* 0xE24 - Error data low capture */
++	u32	captecc;	/* 0xE28 - Error syndrome */
++	u8	res8[0x14];
++	u32	errdet;		/* 0xE40 - Error detect */
++	u32	errdis;		/* 0xE44 - Error disable */
++	u32	errinten;	/* 0xE48 - Error interrupt enable */
++	u32	errattr;	/* 0xE4c - Error attribute capture */
++	u32	erradrrl;	/* 0xE50 - Error address capture low */
++	u32	erradrrh;	/* 0xE54 - Error address capture high */
++	u32	errctl;		/* 0xE58 - Error control */
++	u8	res9[0x1A4];
++};
++
++/**
++ * struct uio_cache_sram - controller for cache-sram and uio devices
++ *
++ * @base_phys:	physical address of cache-sram
++ * @base_virt:	mapped virtual address of cache-sram
++ * @size:	size of the sram could be used by user
++ * @alloced:	size of the sram allocated while initiating uio_infos
++ * @l2cache_size: total size of the cache-sram
++ * @l2ctlr:	address of the l2-controller
++ * @info_count:	count of the uio devices(info) for the cache-sram
++ * @uio_infos:	address array of the uio devices(info)
++ */
++struct uio_cache_sram {
++	phys_addr_t base_phys;
++	void *base_virt;
++	unsigned int size;
++	unsigned int alloced;
++
++	unsigned int l2cache_size;
++
++	struct mpc85xx_l2ctlr __iomem *l2ctlr;
++
++	unsigned int info_count;
++	struct uio_info *uio_infos[MAX_SRAM_UIO_INFOS];
++};
++
++static int of_init_cache_sram(struct device_node *node,
++			      struct uio_cache_sram *cache_sram)
++{
++	const __be32 *cell;
++
++	if (of_property_read_u32(node, "cache-size",
++				&cache_sram->l2cache_size)) {
++		pr_err("%pOF: missing cache-size property\n", node);
++		return -EINVAL;
++	}
++
++	cell = of_get_property(node, "sram-range", NULL);
++	if (!cell) {
++		pr_err("%pOF: missing sram-range property\n", node);
++		return -EINVAL;
++	}
++
++	cache_sram->base_phys = of_read_number(cell, of_n_addr_cells(node));
++	cache_sram->size = of_read_number(cell + of_n_addr_cells(node),
++					  of_n_size_cells(node));
++
++	return 0;
++}
++
++static void l2ctrl_init(struct uio_cache_sram *cache_sram)
++{
++	struct mpc85xx_l2ctlr *l2ctlr = cache_sram->l2ctlr;
++
++	/* Write bits[0-17] to srbar0 */
++	out_be32(&l2ctlr->srbar0,
++		 lower_32_bits(cache_sram->base_phys) & L2SRAM_BAR_MSK_LO18);
++
++	/* Write bits[18-21] to srbare0 */
++#ifdef CONFIG_PHYS_64BIT
++	out_be32(&l2ctlr->srbarea0,
++		 upper_32_bits(cache_sram->base_phys) & L2SRAM_BARE_MSK_HI4);
++#endif
++
++	clrsetbits_be32(&l2ctlr->ctl, L2CR_L2E, L2CR_L2FI);
++
++	switch (LOCK_WAYS_FULL * cache_sram->size / cache_sram->l2cache_size) {
++	case LOCK_WAYS_EIGHTH:
++		setbits32(&l2ctlr->ctl,
++			  L2CR_L2E | L2CR_L2FI | L2CR_SRAM_EIGHTH);
++		break;
++
++	case LOCK_WAYS_TWO_EIGHTH:
++		setbits32(&l2ctlr->ctl,
++			  L2CR_L2E | L2CR_L2FI | L2CR_SRAM_QUART);
++		break;
++
++	case LOCK_WAYS_HALF:
++		setbits32(&l2ctlr->ctl,
++			  L2CR_L2E | L2CR_L2FI | L2CR_SRAM_HALF);
++		break;
++
++	case LOCK_WAYS_FULL:
++	default:
++		setbits32(&l2ctlr->ctl,
++			  L2CR_L2E | L2CR_L2FI | L2CR_SRAM_FULL);
++		break;
++	}
++	eieio();
++}
++
++static int uio_cache_sram_init(struct platform_device *pdev,
++			       struct uio_cache_sram *cache_sram)
++{
++	struct device_node *node = pdev->dev.of_node;
++	unsigned int rem;
++	unsigned char ways;
++	int ret;
++
++	ret = of_init_cache_sram(node, cache_sram);
++	if (ret)
++		return ret;
++
++	rem = cache_sram->l2cache_size % cache_sram->size;
++	ways = LOCK_WAYS_FULL * cache_sram->size / cache_sram->l2cache_size;
++	if (rem || (ways & (ways - 1))) {
++		dev_err(&pdev->dev, "Illegal cache-size in command line\n");
++		return -EINVAL;
++	}
++
++	cache_sram->l2ctlr = of_iomap(pdev->dev.of_node, 0);
++	if (!cache_sram->l2ctlr) {
++		dev_err(&pdev->dev, "error can't map l2-controller\n");
++		return -EINVAL;
++	}
++
++	l2ctrl_init(cache_sram);
++
++	if (!request_mem_region(cache_sram->base_phys, cache_sram->size,
++				"fsl_85xx_cache_sram")) {
++		dev_err(&pdev->dev, "%pOF: request memory failed\n",
++				pdev->dev.of_node);
++		ret = -ENXIO;
++		goto out_unmap;
++	}
++
++	cache_sram->base_virt = ioremap_coherent(cache_sram->base_phys,
++						 cache_sram->size);
++	if (!cache_sram->base_virt) {
++		dev_err(&pdev->dev, "%pOF: ioremap_coherent failed\n",
++			pdev->dev.of_node);
++		ret = -ENOMEM;
++		goto out_release;
++	}
++
++	return 0;
++out_release:
++	release_mem_region(cache_sram->base_phys, cache_sram->size);
++out_unmap:
++	iounmap(cache_sram->l2ctlr);
++	return ret;
++}
++
++static int uio_cache_sram_destroy(struct uio_cache_sram *cache_sram)
++{
++	iounmap(cache_sram->l2ctlr);
++	iounmap(cache_sram->base_virt);
++	release_mem_region(cache_sram->base_phys, cache_sram->size);
++
++	return 0;
++}
++
++static void uio_info_free_internal(struct uio_info *info)
++{
++	int i;
++
++	for (i = 0; i < MAX_UIO_MAPS; i++) {
++		struct uio_mem *uiomem = &info->mem[i];
++
++		if (uiomem->internal_addr)
++			memset(uiomem, 0, sizeof(*uiomem));
++	}
++}
++
++void uio_infos_unregister(struct uio_cache_sram *cache_sram)
++{
++	int i;
++
++	for (i = 0; i < cache_sram->info_count; i++) {
++		uio_unregister_device(cache_sram->uio_infos[i]);
++		uio_info_free_internal(cache_sram->uio_infos[i]);
++		cache_sram->uio_infos[i] = NULL;
++	}
++
++	cache_sram->info_count = 0;
++}
++
++static int uio_fsl_85xx_cache_sram_probe(struct platform_device *pdev)
++{
++	struct device_node *parent = pdev->dev.of_node;
++	struct device_node *node = NULL;
++	struct uio_cache_sram *cache_sram;
++	struct uio_info *info;
++	struct uio_mem *uiomem;
++	const unsigned int *p;
++	struct property *prop;
++	const char *dt_name;
++	u32 size;
++	int ret;
++
++	cache_sram = devm_kzalloc(&pdev->dev, sizeof(*cache_sram), GFP_KERNEL);
++	if (!cache_sram)
++		return -ENOMEM;
++
++	ret = uio_cache_sram_init(pdev, cache_sram);
++	if (ret)
++		return ret;
++
++	for_each_child_of_node(parent, node) {
++		char buf[24];
++		int map_idx = 0;
++
++		/* alloc uio_info for one uio device */
++		info = devm_kzalloc(&pdev->dev, sizeof(*info), GFP_KERNEL);
++		if (!info)
++			return -ENOMEM;
++
++		/* get optional uio name */
++		if (of_property_read_string(parent, "uio_name", &dt_name)) {
++			sprintf(buf, "uio-sram%d", cache_sram->info_count);
++			dt_name = buf;
++		}
++
++		info->name = devm_kstrdup(&pdev->dev, dt_name, GFP_KERNEL);
++		if (!info->name)
++			return -ENOMEM;
++
++		of_property_for_each_u32(node, "uiomaps", prop, p, size) {
++			char name[10];
++
++			/* size should not be less than 2 */
++			if (size < 2) {
++				pr_err("size %x less than 2\n", size);
++				return -EINVAL;
++			}
++
++			/* size should be 2^n aligned */
++			if (size != roundup_pow_of_two(size)) {
++				pr_err("size %x is not 2^n algiend\n", size);
++				return -EINVAL;
++			}
++
++			if (cache_sram->alloced + size > cache_sram->size) {
++				pr_err("size %x too big\n", size);
++				return -EINVAL;
++			}
++
++			uiomem = &info->mem[map_idx];
++			uiomem->addr = cache_sram->base_phys +
++				       cache_sram->alloced;
++			uiomem->internal_addr = cache_sram->base_virt +
++						cache_sram->alloced;
++			uiomem->size = size;
++			uiomem->memtype = UIO_MEM_PHYS;
++
++			cache_sram->alloced += size;
++
++			sprintf(name, "mem%d", map_idx);
++			uiomem->name = devm_kstrdup(&pdev->dev, name,
++						    GFP_KERNEL);
++
++			map_idx++;
++			if (map_idx >= MAX_UIO_MAPS) {
++				dev_warn(&pdev->dev, "more than %d uio-maps for device.\n",
++					 MAX_UIO_MAPS);
++				break;
++			}
++		}
++
++		if (map_idx == 0) {
++			dev_err(&pdev->dev, "error no valid uio-map configuration found\n");
++			ret = -EINVAL;
++			goto err_out;
++		}
++
++		info->version = UIO_INFO_VER;
++
++		/* register uio device */
++		if (uio_register_device(&pdev->dev, info)) {
++			dev_err(&pdev->dev, "error uio,cache-sram registration failed\n");
++			ret = -ENODEV;
++			goto err_out;
++		}
++
++		cache_sram->uio_infos[cache_sram->info_count] = info;
++		cache_sram->info_count++;
++
++		if (cache_sram->info_count >= MAX_SRAM_UIO_INFOS) {
++			dev_warn(&pdev->dev, "more than %d uio_info devices.\n",
++				 MAX_SRAM_UIO_INFOS);
++			break;
++		}
++	}
++
++	platform_set_drvdata(pdev, cache_sram);
++
++	return 0;
++err_out:
++	uio_infos_unregister(cache_sram);
++	return ret;
++}
++
++static int uio_fsl_85xx_cache_sram_remove(struct platform_device *pdev)
++{
++	struct uio_cache_sram *cache_sram = platform_get_drvdata(pdev);
++
++	uio_infos_unregister(cache_sram);
++
++	uio_cache_sram_destroy(cache_sram);
++
++	return 0;
++}
++
++#ifdef CONFIG_OF
++static struct of_device_id uio_fsl_85xx_cache_sram_of_match[] = {
++	{ /* This is filled with module_parm */ },
++	{ /* Sentinel */ },
++};
++MODULE_DEVICE_TABLE(of, uio_fsl_85xx_cache_sram_of_match);
++
++module_param_string(of_id, uio_fsl_85xx_cache_sram_of_match[0].compatible,
++		    sizeof(uio_fsl_85xx_cache_sram_of_match[0].compatible), 0);
++MODULE_PARM_DESC(of_id, "platform device id to be handled by cache-sram-uio");
++#endif
++
++static struct platform_driver uio_fsl_85xx_cache_sram = {
++	.probe = uio_fsl_85xx_cache_sram_probe,
++	.remove = uio_fsl_85xx_cache_sram_remove,
++	.driver = {
++		.name = DRIVER_NAME,
++		.of_match_table	= of_match_ptr(uio_fsl_85xx_cache_sram_of_match),
++	},
++};
++
++module_platform_driver(uio_fsl_85xx_cache_sram);
++
++MODULE_AUTHOR("Wang Wenhu <wenhu.wang@vivo.com>");
++MODULE_DESCRIPTION("Freescale MPC85xx Cache-Sram UIO Platform Driver");
++MODULE_ALIAS("platform:" DRIVER_NAME);
++MODULE_LICENSE("GPL v2");
+-- 
+2.17.1
 
