@@ -2,98 +2,157 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F229BC3815B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 09:34:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83DB7C352BE
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 09:34:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C3BEA208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 09:34:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 576F5208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 09:34:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dADWCXCS"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XZlBkOcm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730352AbgDQJeT (ORCPT
+        id S1730360AbgDQJex (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 05:34:19 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:34903 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730255AbgDQJeS (ORCPT
+        Fri, 17 Apr 2020 05:34:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45930 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730317AbgDQJew (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 05:34:18 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587116057;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=1Nf4mx1Q48p/GPxnpmj6YDUYrbnnZDvMi6tbZSve7oY=;
-        b=dADWCXCScaS9JoqLUJsBwscMQcrW29zGyQtYc7DpBkdk4mQSBheHnY6E5+3SWv2feYxKgY
-        7xb/PFmGWP9ZogvecKvaXb5iJAwlmacG83mB3B8S0uYB8jlw9EwJlou2rZw1dBPKnrEfsj
-        zn1dAdBorkNlZW0jPpZhidsHHtm0Qrg=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-475-45Ak_4WMOIGtSbuBaMmdUg-1; Fri, 17 Apr 2020 05:34:13 -0400
-X-MC-Unique: 45Ak_4WMOIGtSbuBaMmdUg-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A5593107B0E1;
-        Fri, 17 Apr 2020 09:34:11 +0000 (UTC)
-Received: from [10.72.13.157] (ovpn-13-157.pek2.redhat.com [10.72.13.157])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C510E60BE0;
-        Fri, 17 Apr 2020 09:33:57 +0000 (UTC)
-Subject: Re: [PATCH V2] vhost: do not enable VHOST_MENU by default
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
-        netdev@vger.kernel.org, geert@linux-m68k.org,
-        tsbogend@alpha.franken.de, benh@kernel.crashing.org,
-        paulus@samba.org, heiko.carstens@de.ibm.com, gor@linux.ibm.com,
-        borntraeger@de.ibm.com, Michael Ellerman <mpe@ellerman.id.au>
-References: <20200415024356.23751-1-jasowang@redhat.com>
- <20200416185426-mutt-send-email-mst@kernel.org>
- <b7e2deb7-cb64-b625-aeb4-760c7b28c0c8@redhat.com>
- <20200417022929-mutt-send-email-mst@kernel.org>
- <4274625d-6feb-81b6-5b0a-695229e7c33d@redhat.com>
- <20200417042912-mutt-send-email-mst@kernel.org>
- <fdb555a6-4b8d-15b6-0849-3fe0e0786038@redhat.com>
- <20200417044230-mutt-send-email-mst@kernel.org>
- <73843240-3040-655d-baa9-683341ed4786@redhat.com>
- <20200417050029-mutt-send-email-mst@kernel.org>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <ce8a18e5-3c74-73cc-57c5-10c40af838a3@redhat.com>
-Date:   Fri, 17 Apr 2020 17:33:56 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Fri, 17 Apr 2020 05:34:52 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 893D3C061A0F
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 02:34:52 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id e26so2226351wmk.5
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 02:34:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=OvjXVU28jbMJ/SyvS8SgkBEpU6urA9NsgGmyTGzgYIg=;
+        b=XZlBkOcmPfU++GHBPKBCzjgE8At1p5iEXdXZO8uQxHzg5cP0lgLNuxmYeeLAqd9g+Y
+         N112wp2gO2TAFGp8E9tzdwPdNoxAnwpd6e+ncVqFfZtitZ4CK3O8qOrTyq1MlM6y5a5d
+         iT7iHu/SXKpwbb0+b2rtDc2MyoMJC50DoCRl93lSiPGIXFOTAv0SiHdQKxWgebwhpmiX
+         nXXc+O5oGUtBpVDoRjcovUQrqJb9k5IhhszbHAp9we+FeogvdmgZH6be6JVD5Lznj7wF
+         6xFpPaRQ0mFllWrMDhfe9CUyEqodwLbj+GeAZFuYqoS8M+qzmSD/HXTH04/xrBlKmfiR
+         Z+2A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=OvjXVU28jbMJ/SyvS8SgkBEpU6urA9NsgGmyTGzgYIg=;
+        b=twlu/XUgy12WHZmoAzgVhV6oItIyuCDZoqEk6cG6y4qeOF/vgoUX0nyQqMJD9NgbD8
+         yxbTKLTINXytxxTxLvjzgbMM1/pSyKAHgjmrQmL0aq/5IrRhRDPZCbwBv5at446wFUFy
+         4hXpLLCRJ0MsJAtTtV+QiN1UI9KWVZ8Pm34w/KTNrPFaiYGPn9K8UhvaKhA407+5PFiy
+         pZ3zzqep5YUMOXqYZa5eLnkaNGrAr1Inly30fCtIi5HDYJsKxAJ3i9jGux9IjfL78NG9
+         hy5mCW5rJGN0KX2mi+tR+uJaDdRbsDHaWtUQWduGI4OR8s4+gEcKOx2zZqUy3f8qKIIn
+         gexA==
+X-Gm-Message-State: AGi0PuYo5mzoxAIj3P2xQMq9IjC4f1H7CqROEEC6oa4Hus1q/3plra7k
+        4fdhJLmgCD7mlLPNTlVqaj60zw==
+X-Google-Smtp-Source: APiQypL3gn0kmqRxE640EjZxZt4w3qfgjHKCmqJqWewlFwuKoauiPY0DOfBYfLnnkXXMbHOssnHqLw==
+X-Received: by 2002:a05:600c:210c:: with SMTP id u12mr2543730wml.135.1587116091155;
+        Fri, 17 Apr 2020 02:34:51 -0700 (PDT)
+Received: from dell ([95.149.164.124])
+        by smtp.gmail.com with ESMTPSA id j10sm7338895wmi.18.2020.04.17.02.34.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 17 Apr 2020 02:34:50 -0700 (PDT)
+Date:   Fri, 17 Apr 2020 10:35:51 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Dilip Kota <eswara.kota@linux.intel.com>
+Cc:     linux-kernel@vger.kernel.org, kishon@ti.com,
+        devicetree@vger.kernel.org, arnd@arndb.de, robh@kernel.org,
+        andriy.shevchenko@intel.com, cheol.yong.kim@intel.com,
+        chuanhua.lei@linux.intel.com, qi-ming.wu@intel.com,
+        yixin.zhu@intel.com
+Subject: Re: [RESEND PATCH v6 1/4] mfd: syscon: Add fwnode_to_regmap
+Message-ID: <20200417093551.GH2167633@dell>
+References: <cover.1585889042.git.eswara.kota@linux.intel.com>
+ <9c58aeb1561f28f302921d54aee75942545c4971.1585889042.git.eswara.kota@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20200417050029-mutt-send-email-mst@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <9c58aeb1561f28f302921d54aee75942545c4971.1585889042.git.eswara.kota@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, 06 Apr 2020, Dilip Kota wrote:
 
-On 2020/4/17 =E4=B8=8B=E5=8D=885:01, Michael S. Tsirkin wrote:
->> There could be some misunderstanding here. I thought it's somehow simi=
-lar: a
->> CONFIG_VHOST_MENU=3Dy will be left in the defconfigs even if CONFIG_VH=
-OST is
->> not set.
->>
->> Thanks
->>
-> BTW do entries with no prompt actually appear in defconfig?
->
+> Traverse regmap handle entry from firmware node handle.
+> 
+> Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
+> ---
+> Changes on v5:
+>   No changes
+>   
+> Changes on v5:
+>   No changes
+> 
+> Changes on v4:
+>   No changes
+> 
+>  drivers/mfd/syscon.c       | 8 ++++++++
+>  include/linux/mfd/syscon.h | 6 ++++++
+>  2 files changed, 14 insertions(+)
+> 
+> diff --git a/drivers/mfd/syscon.c b/drivers/mfd/syscon.c
+> index 3a97816d0cba..e085c50816b9 100644
+> --- a/drivers/mfd/syscon.c
+> +++ b/drivers/mfd/syscon.c
+> @@ -178,6 +178,14 @@ struct regmap *device_node_to_regmap(struct device_node *np)
+>  }
+>  EXPORT_SYMBOL_GPL(device_node_to_regmap);
+>  
+> +struct regmap *fwnode_to_regmap(struct fwnode_handle *fwnode)
+> +{
+> +	struct device_node *np = to_of_node(fwnode);
 
-Yes. I can see CONFIG_VHOST_DPN=3Dy after make ARCH=3Dm68k defconfig
+You are assuming that the fwnode was Device Tree pointer.
 
-Thanks
+The point of a fwnode is that it could be one of multiple types.
 
+What if it was a pointer to an ACPI property?
+
+> +	return device_node_get_regmap(np, false);
+> +}
+> +EXPORT_SYMBOL_GPL(fwnode_to_regmap);
+> +
+>  struct regmap *syscon_node_to_regmap(struct device_node *np)
+>  {
+>  	if (!of_device_is_compatible(np, "syscon"))
+> diff --git a/include/linux/mfd/syscon.h b/include/linux/mfd/syscon.h
+> index 7f20e9b502a5..dacab0b4a091 100644
+> --- a/include/linux/mfd/syscon.h
+> +++ b/include/linux/mfd/syscon.h
+> @@ -18,6 +18,7 @@ struct device_node;
+>  
+>  #ifdef CONFIG_MFD_SYSCON
+>  extern struct regmap *device_node_to_regmap(struct device_node *np);
+> +extern struct regmap *fwnode_to_regmap(struct fwnode_handle *fwnode);
+>  extern struct regmap *syscon_node_to_regmap(struct device_node *np);
+>  extern struct regmap *syscon_regmap_lookup_by_compatible(const char *s);
+>  extern struct regmap *syscon_regmap_lookup_by_phandle(
+> @@ -34,6 +35,11 @@ static inline struct regmap *device_node_to_regmap(struct device_node *np)
+>  	return ERR_PTR(-ENOTSUPP);
+>  }
+>  
+> +static inline struct regmap *fwnode_to_regmap(struct fwnode_handle *fwnode)
+> +{
+> +	return ERR_PTR(-ENOTSUPP);
+> +}
+> +
+>  static inline struct regmap *syscon_node_to_regmap(struct device_node *np)
+>  {
+>  	return ERR_PTR(-ENOTSUPP);
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
