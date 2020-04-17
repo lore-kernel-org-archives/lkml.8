@@ -2,72 +2,75 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 703ADC38A29
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 19:08:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79BF7C38A29
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 19:08:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5343A2084D
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 19:08:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53D2420780
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 19:08:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="VFWrd83n"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="CdJFoo8x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728826AbgDQTIn (ORCPT
+        id S1730019AbgDQTIt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 15:08:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50470 "EHLO
+        Fri, 17 Apr 2020 15:08:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50480 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726050AbgDQTIn (ORCPT
+        by vger.kernel.org with ESMTP id S1726050AbgDQTIp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 15:08:43 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA004C061A0C;
-        Fri, 17 Apr 2020 12:08:42 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id t63so2988055wmt.3;
-        Fri, 17 Apr 2020 12:08:42 -0700 (PDT)
+        Fri, 17 Apr 2020 15:08:45 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C70E5C061A0F;
+        Fri, 17 Apr 2020 12:08:44 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id k13so3067149wrw.7;
+        Fri, 17 Apr 2020 12:08:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=googlemail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=PMuvuyOtFyoLpiY9akzKJAflY+hfg2VBUUL0F5qxAe8=;
-        b=VFWrd83nihPAd9jGqMjJj7mOg7uSRRuJRre/cQRjri0xNaNlduifUNSMb23hB8pK61
-         aR0V7qTDd6xAXXytHpIulp6uwcM/jyxG5myWZIHq5cclm2JD2XW6jhwpsBzV6ieOc3RH
-         Ywo1LCk5SLOhNLgszZVxqedyiHcB/mP0DzLD6vo6gK2Igw37afpghTZBfKlEieCq6hbs
-         mxqwCuoYI0GnFfbKROnT93/1tdM245mHGpZhrcHzEQ721DuhYbQI7MkWF6u/ayUp3iav
-         iLI1ZPkio2N+5P6lIoFtRrBDxmQqG7i8AftYmJwLRMAD/gCn0cNvWQthBICnbuEbgv5z
-         wJTA==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=0n5h0em/Nkh2RKJZHyjjtZ5ecG51J1roeZUvKOcCbPU=;
+        b=CdJFoo8xQOIRbA85683Lw5+DGKDpA0LVrzc8RACY32VlWa3C3srqTXMosWANNzpQQq
+         gDLJcrkqKOW4zv0yf2zsVsLVXc+9/9APUcBqfHjj3Z1MDY5e+TSk++U1EF756tvmSFuZ
+         BLaQpuW8x+mkCwi4vyx1l3tYz4f+uNzRijv6bVC+LRwmjVnrw3b06cpRejtnrfxeY0df
+         8g4hAL57lWst3RbypPXYuscsifQUXTEDDe8m4wR+K09bsJ7dhi8p4aH9zWterHZluKDg
+         ijHtatg6kPH0GXZlK80S7m1dakMzurDGgcZeogjk1FZ94VCy0PknYTWzNfUXHQsUE7QJ
+         Qy3g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=PMuvuyOtFyoLpiY9akzKJAflY+hfg2VBUUL0F5qxAe8=;
-        b=IboTxiVhSkhWGe6KX9K41AieB2lK2nPF7vlV+L8vSdSPEwJKwJveRNsMx+QF4o7pEx
-         KN5djUQXU2+pW0oYgkaU3RsHhVXlR3xePP8c6jqH5KG5lMyQ2v4C3HQURwfnFXIwYiNJ
-         8Ou/LxdPYkaGQRv74BDR8moYAtKP7BIOp8xqDYeBlTCU5mHrh5e2QM5FW+TJSh8m3Uz1
-         fgA8B/pHYtWVMqItAi6Yq0305lur/e96UuqjHmDEMBepJNLNRsB0V7XgFrqZKEkiTBVR
-         SKUwAZZrlr3oBoCMuya1GpNkwxdGBoswvkEBO9QtxEvobIDsdLAHXU5G53S67p1t+03a
-         fU2w==
-X-Gm-Message-State: AGi0PuaFZjGsekN+vjUtum72F9clWHzY9JYda4NzZlgjSG2MjU41rjVe
-        vwvutq0vAenRTPSxaTfRDWI=
-X-Google-Smtp-Source: APiQypKLFPW0P7ews0g26VQ1VAHJSlCWTLKsKwNJUPZQRwT1ZhWrWrDunAJ+rJ+hoeml4OFa5XGZlw==
-X-Received: by 2002:a1c:4d17:: with SMTP id o23mr4589135wmh.47.1587150521550;
-        Fri, 17 Apr 2020 12:08:41 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=0n5h0em/Nkh2RKJZHyjjtZ5ecG51J1roeZUvKOcCbPU=;
+        b=V++Co6uB8oC1Jd4UvP85AtbzsuB+1v8WP/K4eNDZ3CqON190bm5fcHiI5Buvwm6Gis
+         70ySgT4+84g6nxYPYNmJpoFQzoB1hp2/8KX2Eu6c4VDA0uyHqW4XNArcuOi3kTfd05LZ
+         Yxj85WXQ6ihTftRkhO99GlAq3o9uGLBpqJrEPmFZOUaD34kR750LUZywYKHebzzJcukj
+         Ni9yv5NXH05lK8BCOjZC7pnf0mC7g2Jl/gbr4VTLCO3WRXhENt1B/8oKZe9vPzCi15RA
+         qCIpDJHcZCyGaBNCRLtUbp1HgL/yAuE/8HyrWWUi1XJzMXCQRVBRixUhkp0yUq9C5Gyb
+         RSZA==
+X-Gm-Message-State: AGi0PuZRs7KfQKK8Cpb+j8BmB0syFqvQ61cMQCynLcY3YNU49dXgPlJF
+        /ofGytW4Gwgr+zNWubwPZrI=
+X-Google-Smtp-Source: APiQypIFsvMSQP73dHqTXb7Xph+RtyVZSYMy9XHKo8uXqdgr54fAj+ozLVMozg+o08rkh4y0ch6EZg==
+X-Received: by 2002:adf:e5c8:: with SMTP id a8mr6000656wrn.56.1587150523506;
+        Fri, 17 Apr 2020 12:08:43 -0700 (PDT)
 Received: from localhost.localdomain (p200300F137142E00428D5CFFFEB99DB8.dip0.t-ipconnect.de. [2003:f1:3714:2e00:428d:5cff:feb9:9db8])
-        by smtp.googlemail.com with ESMTPSA id q17sm8722220wmj.45.2020.04.17.12.08.40
+        by smtp.googlemail.com with ESMTPSA id q17sm8722220wmj.45.2020.04.17.12.08.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Apr 2020 12:08:41 -0700 (PDT)
+        Fri, 17 Apr 2020 12:08:43 -0700 (PDT)
 From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 To:     robh+dt@kernel.org, khilman@baylibre.com, narmstrong@baylibre.com,
         linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org
 Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH v2 0/4] meson-ee-pwrc: support for Meson8/8b/8m2 and GX
-Date:   Fri, 17 Apr 2020 21:08:21 +0200
-Message-Id: <20200417190825.1363345-1-martin.blumenstingl@googlemail.com>
+Subject: [PATCH v2 2/4] dt-bindings: power: meson-ee-pwrc: add support for the Meson GX SoCs
+Date:   Fri, 17 Apr 2020 21:08:23 +0200
+Message-Id: <20200417190825.1363345-3-martin.blumenstingl@googlemail.com>
 X-Mailer: git-send-email 2.26.1
+In-Reply-To: <20200417190825.1363345-1-martin.blumenstingl@googlemail.com>
+References: <20200417190825.1363345-1-martin.blumenstingl@googlemail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -75,42 +78,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This series adds support for all "older" SoCs to the meson-ee-pwrc 
-driver. I wanted to compare as much as I could between my Meson8b EC-100
-(Endless Mini) and the Le Potato board so I added support for GXBB, GXL
-and GXM as well as for the SoCs that I'm actually working on. I will
-send the ARM64 dts patches once all of this is reviewed and merged.
+The power domains on the GX SoCs are very similar to G12A. The only
+known differences so far are:
+- The GX SoCs do not have the HHI_VPU_MEM_PD_REG2 register (for the
+  VPU power-domain)
+- The GX SoCs have an additional reset line called "dvin"
 
-I successfully tested the Meson8b part on EC-100 where u-boot does not
-initialize the VPU controller. So this the board where I have been
-struggling most.
+Add a new compatible string and adjust the reset line expectations for
+these SoCs.
 
-
-Changes since v1 at [0]:
-- rename PWRC_GXBB_ETH_ID to PWRC_GXBB_ETHERNET_MEM_ID. Spotted by
-  Neil, thanks!
-- update cover-letter since Neil confirmed (thanks!) that the "dvin"
-  reset really belongs to the VPU on GXBB, GXL and GXM
-- removed RFC status
-
-
-[0] https://patchwork.kernel.org/cover/11489163/
-
-
-Martin Blumenstingl (4):
-  dt-bindings: power: meson-ee-pwrc: add support for Meson8/8b/8m2
-  dt-bindings: power: meson-ee-pwrc: add support for the Meson GX SoCs
-  soc: amlogic: meson-ee-pwrc: add support for Meson8/Meson8b/Meson8m2
-  soc: amlogic: meson-ee-pwrc: add support for the Meson GX SoCs
-
- .../bindings/power/amlogic,meson-ee-pwrc.yaml | 102 +++++++++++++++---
- drivers/soc/amlogic/meson-ee-pwrc.c           |  98 ++++++++++++++++-
- include/dt-bindings/power/meson-gxbb-power.h  |  13 +++
- include/dt-bindings/power/meson8-power.h      |  13 +++
- 4 files changed, 204 insertions(+), 22 deletions(-)
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+---
+ .../bindings/power/amlogic,meson-ee-pwrc.yaml | 27 +++++++++++++++++++
+ include/dt-bindings/power/meson-gxbb-power.h  | 13 +++++++++
+ 2 files changed, 40 insertions(+)
  create mode 100644 include/dt-bindings/power/meson-gxbb-power.h
- create mode 100644 include/dt-bindings/power/meson8-power.h
 
+diff --git a/Documentation/devicetree/bindings/power/amlogic,meson-ee-pwrc.yaml b/Documentation/devicetree/bindings/power/amlogic,meson-ee-pwrc.yaml
+index a0e4cf143b9c..15a29ed19327 100644
+--- a/Documentation/devicetree/bindings/power/amlogic,meson-ee-pwrc.yaml
++++ b/Documentation/devicetree/bindings/power/amlogic,meson-ee-pwrc.yaml
+@@ -26,6 +26,7 @@ properties:
+       - amlogic,meson8-pwrc
+       - amlogic,meson8b-pwrc
+       - amlogic,meson8m2-pwrc
++      - amlogic,meson-gxbb-pwrc
+       - amlogic,meson-g12a-pwrc
+       - amlogic,meson-sm1-pwrc
+ 
+@@ -42,6 +43,7 @@ properties:
+ 
+   resets:
+     minItems: 11
++    maxItems: 12
+ 
+   "#power-domain-cells":
+     const: 1
+@@ -77,6 +79,31 @@ allOf:
+         - resets
+         - reset-names
+ 
++  - if:
++      properties:
++        compatible:
++          enum:
++            - amlogic,meson-gxbb-pwrc
++    then:
++      properties:
++        reset-names:
++          items:
++            - const: viu
++            - const: venc
++            - const: vcbus
++            - const: bt656
++            - const: dvin
++            - const: rdma
++            - const: venci
++            - const: vencp
++            - const: vdac
++            - const: vdi6
++            - const: vencl
++            - const: vid_lock
++      required:
++        - resets
++        - reset-names
++
+   - if:
+       properties:
+         compatible:
+diff --git a/include/dt-bindings/power/meson-gxbb-power.h b/include/dt-bindings/power/meson-gxbb-power.h
+new file mode 100644
+index 000000000000..1262dac696c0
+--- /dev/null
++++ b/include/dt-bindings/power/meson-gxbb-power.h
+@@ -0,0 +1,13 @@
++/* SPDX-License-Identifier: (GPL-2.0+ or MIT) */
++/*
++ * Copyright (c) 2019 BayLibre, SAS
++ * Author: Neil Armstrong <narmstrong@baylibre.com>
++ */
++
++#ifndef _DT_BINDINGS_MESON_GXBB_POWER_H
++#define _DT_BINDINGS_MESON_GXBB_POWER_H
++
++#define PWRC_GXBB_VPU_ID		0
++#define PWRC_GXBB_ETHERNET_MEM_ID	1
++
++#endif
 -- 
 2.26.1
 
