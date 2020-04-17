@@ -2,206 +2,120 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA1DAC38A2C
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 14:08:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE866C2D0EF
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 14:10:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9234321924
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 14:08:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6BD12223F
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 14:10:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="GtaNy2YZ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eCqbaZT2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731227AbgDQOI3 (ORCPT
+        id S1730920AbgDQOKt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 10:08:29 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:49898 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731215AbgDQOI1 (ORCPT
+        Fri, 17 Apr 2020 10:10:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60610 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730563AbgDQOKs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 10:08:27 -0400
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200417140825euoutp01f9c95a0ac470a983560bdcab3c268bfb~GoJq1pOdw1958019580euoutp01z
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 14:08:25 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200417140825euoutp01f9c95a0ac470a983560bdcab3c268bfb~GoJq1pOdw1958019580euoutp01z
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1587132505;
-        bh=R7Ur/56yFcr7YXkME4bM8JQPVy2Q7jo8CruJdpZeLM4=;
-        h=From:Subject:To:Cc:Date:In-Reply-To:References:From;
-        b=GtaNy2YZJGC9iO/7POSj8abHzal4DxGsT6o5mxuYAv95apR+wq2xoYB1Y86a4c+IU
-         4YoF9YpFohRiENRHjavh9X8dNyfBiSZidEQrPyCocx/H4Rvaao5MJqNlw2KNDTRmgg
-         NCMmwassC60ZIRAjwVkOfZCRvw4xGB5k9mwFPVu0=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20200417140824eucas1p15c9abdeb569eb28faa603877d192d210~GoJqqhz123049630496eucas1p1I;
-        Fri, 17 Apr 2020 14:08:24 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges1new.samsung.com (EUCPMTA) with SMTP id 0F.5C.61286.858B99E5; Fri, 17
-        Apr 2020 15:08:24 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20200417140824eucas1p1201a34566f7ad6b5e6a931423af26e0a~GoJqE_BH82643526435eucas1p1m;
-        Fri, 17 Apr 2020 14:08:24 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200417140824eusmtrp11b76d121f2c30c5f1f325a04ee2368ae~GoJqEc7l82228222282eusmtrp1h;
-        Fri, 17 Apr 2020 14:08:24 +0000 (GMT)
-X-AuditID: cbfec7f2-ef1ff7000001ef66-8f-5e99b858fa29
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id 35.D2.08375.858B99E5; Fri, 17
-        Apr 2020 15:08:24 +0100 (BST)
-Received: from [106.120.51.71] (unknown [106.120.51.71]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200417140823eusmtip2881adae30a45d44627b3212c29464aa4~GoJp1PAmi2541125411eusmtip2U;
-        Fri, 17 Apr 2020 14:08:23 +0000 (GMT)
-From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Subject: Re: [PATCH v4] video: fbdev: vesafb: add missed release_region
-To:     Chuhong Yuan <hslester96@gmail.com>
-Cc:     dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Message-ID: <0a42a3d3-fd71-2334-8c19-9455c0971c6f@samsung.com>
-Date:   Fri, 17 Apr 2020 16:08:23 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.8.0
+        Fri, 17 Apr 2020 10:10:48 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB243C061A0C
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 07:10:46 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id q22so2207721ljg.0
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 07:10:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=v1W0PODyJVZoCKaKuCcq89qVrtLZR8TZE0fDKQteYlY=;
+        b=eCqbaZT2CqSL+BVAbe8ZLyMgaFBngLYb6BoZKqsSYq47MuzhIaw7uNXYR87pvvZHyd
+         q+SAZ5qYuLMJErUhlnuJjUkFl2hDpdvA4D3m3t8KUpq1Q8500oIwMMXUXMN4Ls6WwV4D
+         geeKFWdYPOzoycUa13WJZX8hCXQXbg+XXSLwMlPUbiqvkQifhJynENRCJ8XtTzs/edH4
+         G0aWAnxkSNcGQGNKxwcnjrhPtzsNXy0FD4GMwqBWfvFp0nP2eKFGdB4AHp9SbA637E/l
+         VWR13bVyuyyQmXlnx92Eg5m0zXE3IvIgDlHoboQnsjUPu0KhRjAF3t5IjiFiJu/VxPfF
+         Bo/A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=v1W0PODyJVZoCKaKuCcq89qVrtLZR8TZE0fDKQteYlY=;
+        b=RNL7yp0+sMRs0ZcoIYwyYqMdVRygXdscZYEpb4Idn5kR0I6Is23lZ1Oo6kom/OHY50
+         mRo52J244jDhM/Txq53bfVrf+mXPLKCKPBW1iqmGGnG14LFHhHAA0rmzs/khuSRz9AUA
+         Eg5D0OXZkcrFmFZmePD1z2iAZvCXEcLvKrU/HJAXzKXKbqP9FqvqoqmZikIRPgEpc4q/
+         mNN3/Ri8SwvM8ZN+LMQrv6BnTv0aI25V0kbm2+7jwbicq2eJquxwQ2FkyELlJdBAVv9S
+         yEJRWx2WliwzJgqM+twFQt6IWiyHw2hGxR+Z4prtGrVrDZEH/O11i+kDrmy91F+D/UR3
+         XXgA==
+X-Gm-Message-State: AGi0PuausiB0Qu0UScdque8BJPGJrR04dNRh1uQ6e9mdmzzZdRISOMD5
+        P2tEtmCPqoS+jU5PSBSfC5pDjRraadYSE2JK7CY=
+X-Google-Smtp-Source: APiQypKsi89y/cDUeSzxmjRLqgmFQGEKO8p6ASmtU+lE0lwSURck3OyDqa3wK+tIeJnDiuUa6reGBfavzn6uRQOSQ0A=
+X-Received: by 2002:a05:651c:8:: with SMTP id n8mr2242323lja.196.1587132645214;
+ Fri, 17 Apr 2020 07:10:45 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200329145839.20076-1-hslester96@gmail.com>
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupnleLIzCtJLcpLzFFi42LZduznOd2IHTPjDObtMrC48vU9m8XsQy+Z
-        LU70fWC1uLxrDpsDi8fOWXfZPe53H2fy+LxJLoA5issmJTUnsyy1SN8ugStje8N/5oI2iYr1
-        XX9ZGhj7hbsYOTkkBEwkzn1ex9jFyMUhJLCCUeLm/NtMEM4XRomLC/6yQDifGSUOHdzDAtNy
-        tLGXGSKxnFFi792NUC1vGSXuHr7JBFLFJmAlMbF9FdBgDg5hAXeJRT+rQMIiAuoSn3ftZAex
-        mQUSJE4vuscCUsIrYCfxaYM0SJhFQFXi0vbDbCC2qECExKcHh1lBbF4BQYmTM5+A3cAJNL3l
-        +QYWiDHiEreezGeCsOUltr+dA3abhEA3u8TV7r1g8yUEXCQ2rg+DuF9Y4tXxLewQtozE6ck9
-        LBD16xgl/na8gGreziixfPI/Nogqa4k7536xgQxiFtCUWL9LH2Kmo8TmB8EQJp/EjbeCECfw
-        SUzaNp0ZIswr0dEmBDFDTWLDsg1sMFu7dq5knsCoNAvJY7OQPDMLyTOzENYuYGRZxSieWlqc
-        m55abJiXWq5XnJhbXJqXrpecn7uJEZhMTv87/mkH49dLSYcYBTgYlXh4DXpmxgmxJpYVV+Ye
-        YpTgYFYS4T3oBhTiTUmsrEotyo8vKs1JLT7EKM3BoiTOa7zoZayQQHpiSWp2ampBahFMlomD
-        U6qBccqtbaW975I55h35cetRBtPMgJfWE3OsYspvvOafU68bNeNM+BJ5c4Flsd3BnE81eaSn
-        sG+5Z9hjoxX+TTBboPPwKa7MRx1epxfMdDhvMEtG/PAaX88D+e4+dpuytbRYlgfoelj8+Gkf
-        0T8h8rlT+bzd9a6iOrWcdb8sDp0r3PglN8Hl+s9FSizFGYmGWsxFxYkAitB3tyIDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrIIsWRmVeSWpSXmKPExsVy+t/xe7oRO2bGGUxcy21x5et7NovZh14y
-        W5zo+8BqcXnXHDYHFo+ds+6ye9zvPs7k8XmTXABzlJ5NUX5pSapCRn5xia1StKGFkZ6hpYWe
-        kYmlnqGxeayVkamSvp1NSmpOZllqkb5dgl7G9ob/zAVtEhXru/6yNDD2C3cxcnJICJhIHG3s
-        Ze5i5OIQEljKKHFj5i/2LkYOoISMxPH1ZRA1whJ/rnWxQdS8ZpSYdHMVI0iCTcBKYmI7iM3B
-        ISzgLrHoZxVIWERAXeLzrp1gY5gFEiSezUuBaO1llNj45ipYnFfATuLTBmmQchYBVYlL2w+z
-        gdiiAhESh3fMApvOKyAocXLmExYQmxNoU8vzDWA2M9D4P/MuMUPY4hK3nsxngrDlJba/ncM8
-        gVFoFpL2WUhaZiFpmYWkZQEjyypGkdTS4tz03GJDveLE3OLSvHS95PzcTYzA6Nl27OfmHYyX
-        NgYfYhTgYFTi4TXomRknxJpYVlyZe4hRgoNZSYT3oBtQiDclsbIqtSg/vqg0J7X4EKMp0HMT
-        maVEk/OBkZ1XEm9oamhuYWlobmxubGahJM7bIXAwRkggPbEkNTs1tSC1CKaPiYNTqoHR9+LS
-        ZQW8nGsDVh1byb1qf0Djwws1i46sK54wPeP5nzUz9Fdabl+qveJc2G6+pQFq+eW+oV/+JBpt
-        8NcT1l98X6s7izuq3PzIvRXnPiZlPrxdzsdSs7nq+HYpxafHAtZwcvzcFHlXOq5/0d+VS2x8
-        n5X6vLMpXTtv6sStG1a+15CZ+drlurRZqRJLcUaioRZzUXEiABoQjDy0AgAA
-X-CMS-MailID: 20200417140824eucas1p1201a34566f7ad6b5e6a931423af26e0a
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200329145851eucas1p13777aa6188fc6886d150d9834dd0b257
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200329145851eucas1p13777aa6188fc6886d150d9834dd0b257
-References: <CGME20200329145851eucas1p13777aa6188fc6886d150d9834dd0b257@eucas1p1.samsung.com>
-        <20200329145839.20076-1-hslester96@gmail.com>
+References: <cover.1587088646.git.baolin.wang7@gmail.com> <dad648071fd163140f6534295cfce76562003b5a.1587088646.git.baolin.wang7@gmail.com>
+ <CAK8P3a22NMzCQHDoE7Ed0a1_f7yOTO4x4PM6KArXJnaaig4ZTw@mail.gmail.com>
+In-Reply-To: <CAK8P3a22NMzCQHDoE7Ed0a1_f7yOTO4x4PM6KArXJnaaig4ZTw@mail.gmail.com>
+From:   Baolin Wang <baolin.wang7@gmail.com>
+Date:   Fri, 17 Apr 2020 22:10:34 +0800
+Message-ID: <CADBw62q2+nWOFp+BLuNvpztyy-wYJYO=3024eBun4J=grqJhVg@mail.gmail.com>
+Subject: Re: [PATCH 2/2] soc: sprd: Add Spreadtrum special bits updating support
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Lee Jones <lee.jones@linaro.org>, Mark Brown <broonie@kernel.org>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Lyra Zhang <zhang.lyra@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Apr 17, 2020 at 9:39 PM Arnd Bergmann <arnd@arndb.de> wrote:
+>
+> On Fri, Apr 17, 2020 at 4:14 AM Baolin Wang <baolin.wang7@gmail.com> wrote:
+> > + *
+> > + * Note: there is a potential risk when users want to set and clear bits
+> > + * at the same time, since the set/clear method will always do bits setting
+> > + * before bits clearing, which may cause some unexpected results if the
+> > + * operation sequence is strict. Thus we recommend that do not set and
+> > + * clear bits at the same time if you are not sure the results.
+>
+> Would it make sense to have a
+>
+> WARN_ONCE(set && clk, "%s: non-atomic update", __func__);
+>
+> in the code to check for this?
 
-On 3/29/20 4:58 PM, Chuhong Yuan wrote:
-> The driver forgets to free the I/O region in remove and probe
-> failure.
-> Add the missed calls to fix it.
-> 
-> Since the success of request_region() is optional, add the "region" field
-> in vesafb_par to represent whether request_region() succeeds.
-> Then only call release_region() when "region" is not null.
-> 
-> Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+Yes, will add.
 
-Patch queued for v5.8, thanks.
+>
+> > +static int sprd_syscon_init(void)
+> > +{
+> > +       syscon_register_phys_regmap_bus(&sprd_syscon_regmap);
+> > +
+> > +       return 0;
+> > +}
+> > +core_initcall_sync(sprd_syscon_init);
+>
+> This no longer breaks at runtime based on the changes in the other
+> patch, but I still don't like how you have to manually load this module
+> on spreadtrum platforms.
+>
+> What I meant to suggest in my previous reply was to add the regmap_bus
+> instance into drivers/mfd/syscon.c itself.
 
-Best regards,
---
-Bartlomiej Zolnierkiewicz
-Samsung R&D Institute Poland
-Samsung Electronics
+Sorry, I misunderstood your meaning before, but what you suggested
+will add some vendor-specific things into the common syscon driver, if
+other platforms have different update bits method, we will add another
+vendor-specific regmap bus into the syscon.c, which will make syscon.c
+more complicated.
 
-> ---
-> Changes in v4:
->   - Add a field in vesafb_par to represent whether request_region() succeeds.
->   - Only call release_region() when request_region() succeeds.
->   - Adjust the order in the error handler of probe.
->   - Modify commit message.
-> 
->  drivers/video/fbdev/vesafb.c | 16 +++++++++++-----
->  1 file changed, 11 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/video/fbdev/vesafb.c b/drivers/video/fbdev/vesafb.c
-> index a1fe24ea869b..df6de5a9dd4c 100644
-> --- a/drivers/video/fbdev/vesafb.c
-> +++ b/drivers/video/fbdev/vesafb.c
-> @@ -32,6 +32,7 @@
->  struct vesafb_par {
->  	u32 pseudo_palette[256];
->  	int wc_cookie;
-> +	struct resource *region;
->  };
->  
->  static struct fb_var_screeninfo vesafb_defined = {
-> @@ -411,7 +412,7 @@ static int vesafb_probe(struct platform_device *dev)
->  
->  	/* request failure does not faze us, as vgacon probably has this
->  	 * region already (FIXME) */
-> -	request_region(0x3c0, 32, "vesafb");
-> +	par->region = request_region(0x3c0, 32, "vesafb");
->  
->  	if (mtrr == 3) {
->  		unsigned int temp_size = size_total;
-> @@ -439,7 +440,7 @@ static int vesafb_probe(struct platform_device *dev)
->  		       "vesafb: abort, cannot ioremap video memory 0x%x @ 0x%lx\n",
->  			vesafb_fix.smem_len, vesafb_fix.smem_start);
->  		err = -EIO;
-> -		goto err;
-> +		goto err_release_region;
->  	}
->  
->  	printk(KERN_INFO "vesafb: framebuffer at 0x%lx, mapped to 0x%p, "
-> @@ -458,19 +459,22 @@ static int vesafb_probe(struct platform_device *dev)
->  
->  	if (fb_alloc_cmap(&info->cmap, 256, 0) < 0) {
->  		err = -ENOMEM;
-> -		goto err;
-> +		goto err_release_region;
->  	}
->  	if (register_framebuffer(info)<0) {
->  		err = -EINVAL;
->  		fb_dealloc_cmap(&info->cmap);
-> -		goto err;
-> +		goto err_release_region;
->  	}
->  	fb_info(info, "%s frame buffer device\n", info->fix.id);
->  	return 0;
-> -err:
-> +err_release_region:
->  	arch_phys_wc_del(par->wc_cookie);
->  	if (info->screen_base)
->  		iounmap(info->screen_base);
-> +	if (par->region)
-> +		release_region(0x3c0, 32);
-> +err:
->  	framebuffer_release(info);
->  	release_mem_region(vesafb_fix.smem_start, size_total);
->  	return err;
-> @@ -481,6 +485,8 @@ static int vesafb_remove(struct platform_device *pdev)
->  	struct fb_info *info = platform_get_drvdata(pdev);
->  
->  	unregister_framebuffer(info);
-> +	if (((struct vesafb_par *)(info->par))->region)
-> +		release_region(0x3c0, 32);
->  	framebuffer_release(info);
->  
->  	return 0;
-> 
+But if you still prefer to add these vendor-specific things into the
+syscon.c, I will follow your suggestion in next version. Thanks.
+
+-- 
+Baolin Wang
