@@ -2,97 +2,125 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D92ADC352BE
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 12:40:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BB2BC2D0EF
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 12:41:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B58A02064A
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 12:40:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 455132064A
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 12:41:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="l8mddYZi"
+	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="rI7NENBD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729724AbgDQMkw (ORCPT
+        id S1729751AbgDQMlG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 08:40:52 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:19510 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727897AbgDQMkv (ORCPT
+        Fri, 17 Apr 2020 08:41:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46608 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727897AbgDQMlF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 08:40:51 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e99a3630001>; Fri, 17 Apr 2020 05:38:59 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Fri, 17 Apr 2020 05:40:51 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Fri, 17 Apr 2020 05:40:51 -0700
-Received: from HQMAIL107.nvidia.com (172.20.187.13) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 17 Apr
- 2020 12:40:50 +0000
-Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Fri, 17 Apr 2020 12:40:51 +0000
-Received: from moonraker.nvidia.com (Not Verified[10.26.73.163]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5e99a3d10003>; Fri, 17 Apr 2020 05:40:50 -0700
-From:   Jon Hunter <jonathanh@nvidia.com>
-To:     Thierry Reding <thierry.reding@gmail.com>
-CC:     <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Jon Hunter <jonathanh@nvidia.com>
-Subject: [PATCH] soc/tegra: fuse: Update the SoC revision attribute to display a name
-Date:   Fri, 17 Apr 2020 13:40:46 +0100
-Message-ID: <20200417124046.26400-1-jonathanh@nvidia.com>
-X-Mailer: git-send-email 2.17.1
-X-NVConfidentiality: public
+        Fri, 17 Apr 2020 08:41:05 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C35EC061A0C
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 05:41:05 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id g13so840505wrb.8
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 05:41:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=5d/+Mz/K41+l5nHe9+HnUq2CLogiiEQD3UQf60PXu/k=;
+        b=rI7NENBDqfn/fQ7qMbOy7mITJfkQZEgaC2hsDwXL+0KFHV3dDjMAv2g3Jg61nEmyy6
+         8ANMlYPUB/U1teG3lMdroPrkMNaHEAcZuqQlz64TkXMTB23LkwaBwjJgSomws8ogA52Z
+         XO0/dACcTP0sFZuFnhLB94gL5IKx/+KKdwRGWoQ41L43VgH1XL0sk7TJnEyVHMgQX4l5
+         CmweALmDi9EHLblVMek5HkyTylDkLdtzDp4iDrvtL1t7/rmTD3clnDBLUD80BVmdOQre
+         cCI2lzKvXTlC7kQHsFC/qUAtpETJqhlMaMkes8BMTqNdcFQUjXfz11aWAldnMRu9F/dG
+         6Mmw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5d/+Mz/K41+l5nHe9+HnUq2CLogiiEQD3UQf60PXu/k=;
+        b=YzyqfL7IHlnppIY0LxPGkEWaCS0INSJTkfPATTBwkX/69XYI38o+haXRSTsDff+8b+
+         7TlyXEpLHoRdjcVNxomNMKPBTpFZEf2a1y3LurwMJ0ZkBgQUB5l5JBI42X5t6x/RD5Op
+         4quJ5QGQE5SWyacKDz+S5FdVovnZPG4/WOE+YyNa/HMjMglUej5mxX1diZ+jl9+gERtq
+         +FK03tT+XZt73M6D1VJtRjzvU9IZPGJtgLyxwGY8xWWni+Jb/SvvJ8lYIKFwFzo6O3w3
+         p4dKHZWsXjzVO9T0nwfbpu3lD2BGa1WOHJlKv3lxtXWM/mBO1O3QgUoPuxMVuVvf+GQk
+         cDRA==
+X-Gm-Message-State: AGi0PubadctFaqGXSmo4WAbI5N4JG1+R5lJQXVdbLrOLAJKaV9yU+JmP
+        3rE34AaiqbqR5uw/xz/fYgoLHHFJneXGKQXJMNnkfw==
+X-Google-Smtp-Source: APiQypINgiS8TdVKf+DZcpqWM6CnJsqHx/bwUe303I5G+wpdbKEuPCqn6K1HfP0lC0KGhWUgUZW/5cGLYE2KWBl1U5E=
+X-Received: by 2002:adf:c601:: with SMTP id n1mr3534017wrg.381.1587127264046;
+ Fri, 17 Apr 2020 05:41:04 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1587127139; bh=J65c/MvkuaR8eKoN8yHmhT2faFLCAxi0NFqBMduNorA=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         X-NVConfidentiality:MIME-Version:Content-Type;
-        b=l8mddYZixe3VXl3ZUEHPqOeON88seL17bjq9mzY4KKSixB2p+mEZDsGr8EmKrHNhT
-         xcKdi5Ddhstp2a7p9Ze38tMDtI4VZzdgZzxhUlPR8z/GG8SZW1xhfFIxXtV4hvdVa4
-         csrmDRZLV3bRUBynsgPs/ySzbZUS/plL+xAqKJKo2qTnY+NlHV2h/DxUq9SCREYWjP
-         Z7hcyHSrYtnLiPL3qW8zII976N3c1to2Ju7H5GyhleqYI3mdoc0EPaZhVUEMxJKoUr
-         JfvUgsC61LFmQXnWlmcfDLjCQgisE5qw9hFdFG3eqcClvAQX6SDJLcb7Qy3iyCPZxy
-         +3n1epR+K65IA==
+References: <20200417121222.156422-1-wangkefeng.wang@huawei.com> <20200417121222.156422-2-wangkefeng.wang@huawei.com>
+In-Reply-To: <20200417121222.156422-2-wangkefeng.wang@huawei.com>
+From:   Anup Patel <anup@brainfault.org>
+Date:   Fri, 17 Apr 2020 18:10:51 +0530
+Message-ID: <CAAhSdy3_0-rLZQUv_u-Drdxy_nw4xzM85gN_Qo_WcXC8aGDhzw@mail.gmail.com>
+Subject: Re: [PATCH 2/3] tty: riscv: Using RISCV_SBI_V01 instead of RISCV_SBI
+To:     Kefeng Wang <wangkefeng.wang@huawei.com>
+Cc:     Atish Patra <atish.patra@wdc.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
+        linux-riscv <linux-riscv@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently the SoC revision attribute for Tegra devices displays the
-value of the enum associated with a particular revision. This is not
-very useful because to obtain the actual revision you need to
-use the tegra_revision enumeration to translate the value.
+On Fri, Apr 17, 2020 at 5:40 PM Kefeng Wang <wangkefeng.wang@huawei.com> wrote:
+>
+> As shown in SBI v0.2, the legacy console SBI functions (sbi_console_getchar()
+> and sbi_console_putchar()) are expected to be deprecated; they have no replacement.
+>
+> Let's HVC_RISCV_SBI and SERIAL_EARLYCON_RISCV_SBI depends on RISCV_SBI_V01.
+>
+> Fixes: efca13989250 ("RISC-V: Introduce a new config for SBI v0.1")
+> Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+> ---
+>  drivers/tty/hvc/Kconfig    | 2 +-
+>  drivers/tty/serial/Kconfig | 2 +-
+>  2 files changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/tty/hvc/Kconfig b/drivers/tty/hvc/Kconfig
+> index 31b7e1b03749..d1b27b0522a3 100644
+> --- a/drivers/tty/hvc/Kconfig
+> +++ b/drivers/tty/hvc/Kconfig
+> @@ -88,7 +88,7 @@ config HVC_DCC
+>
+>  config HVC_RISCV_SBI
+>         bool "RISC-V SBI console support"
+> -       depends on RISCV_SBI
+> +       depends on RISCV_SBI_V01
+>         select HVC_DRIVER
+>         help
+>           This enables support for console output via RISC-V SBI calls, which
+> diff --git a/drivers/tty/serial/Kconfig b/drivers/tty/serial/Kconfig
+> index 0aea76cd67ff..adf9e80e7dc9 100644
+> --- a/drivers/tty/serial/Kconfig
+> +++ b/drivers/tty/serial/Kconfig
+> @@ -86,7 +86,7 @@ config SERIAL_EARLYCON_ARM_SEMIHOST
+>
+>  config SERIAL_EARLYCON_RISCV_SBI
+>         bool "Early console using RISC-V SBI"
+> -       depends on RISCV_SBI
+> +       depends on RISCV_SBI_V01
+>         select SERIAL_CORE
+>         select SERIAL_CORE_CONSOLE
+>         select SERIAL_EARLYCON
+> --
+> 2.20.1
+>
 
-It is more meaningful to display a name for the revision, such as
-'A01', than the enumarated value and therefore, update the revision
-attribute to display a name. This change does alter the ABI, which
-is unfortunate, but this is more meaningful and maintable.
+Looks good to me.
 
-Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
----
- drivers/soc/tegra/fuse/fuse-tegra.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Reviewed-by: Anup Patel <anup@brainfault.org>
 
-diff --git a/drivers/soc/tegra/fuse/fuse-tegra.c b/drivers/soc/tegra/fuse/fuse-tegra.c
-index db65ddb6a5d2..d1f8dd0289e6 100644
---- a/drivers/soc/tegra/fuse/fuse-tegra.c
-+++ b/drivers/soc/tegra/fuse/fuse-tegra.c
-@@ -363,7 +363,8 @@ struct device * __init tegra_soc_device_register(void)
- 		return NULL;
- 
- 	attr->family = kasprintf(GFP_KERNEL, "Tegra");
--	attr->revision = kasprintf(GFP_KERNEL, "%d", tegra_sku_info.revision);
-+	attr->revision = kasprintf(GFP_KERNEL, "%s",
-+		tegra_revision_name[tegra_sku_info.revision]);
- 	attr->soc_id = kasprintf(GFP_KERNEL, "%u", tegra_get_chip_id());
- 	attr->custom_attr_group = fuse->soc->soc_attr_group;
- 
--- 
-2.17.1
-
+Regards,
+Anup
