@@ -2,130 +2,127 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CC41C2D0EF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 15:26:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1722C352BE
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 15:27:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5586D208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 15:26:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EA9D20857
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 15:27:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AJHNPZGa"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="PsghyDdO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729080AbgDQP0k (ORCPT
+        id S1729099AbgDQP11 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 11:26:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44256 "EHLO
+        Fri, 17 Apr 2020 11:27:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44382 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728542AbgDQP0j (ORCPT
+        by vger.kernel.org with ESMTP id S1728542AbgDQP11 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 11:26:39 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A343BC061A0C
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 08:26:39 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id d1so1217755pfh.1
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 08:26:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=DH5AjWb5Y/HC4rBu1O6z9vHzFuPiXlFK1AmlrEvjj1A=;
-        b=AJHNPZGamNVhXj58t/rjjOmLiPwPhdg3Cmlp2SvMNpyIAXJg83bmi/2+TShr3PED4q
-         Q+oIbSREwdqz6sKTkYNsDy+2g4NVIFHK+hEsTnRDyahOhREzVwCiKh4u1+/RYg+wzQOQ
-         bvycfFGUVNCpF049Gd0ffo45Z61vIZ0AKjf6DNu+s1orFIeOqJKxRc4JOO2TozTMxLwX
-         1GA/U1Hei91bRTglzUEw1StxZv3zDkxxZSzbThVAcXHfhyi6nDj5iRnX+q/TmiEd8yaL
-         8GdEOVaSOQNcRMwbq62nPCxZN4zgYtesoUzRZgo0yaBpnCECDPgQWaIutlScWzOL7mfV
-         Xoug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=DH5AjWb5Y/HC4rBu1O6z9vHzFuPiXlFK1AmlrEvjj1A=;
-        b=ev0jyNvdc8XHbP6uh2tM/e0CG+Sm8RbEDytHoX5wNtVBfzVi71AS0D9+HUwviJ6JMh
-         NzkkSOo389TF/7S0yoQjzEYF1JaJsqnxUtlwID8fDo2twBveC0iYoE5NbqiHUtAUh8Tw
-         x8bRZVPaYsrwbzjxgYx5RODHREBPYQts5cXxsmYmixmrL61gaOeGQ/tFQt1eNgfRczbz
-         R9kk8gQCuwaQF+faM8E6OkV2EQqmBmR0nYUjiOfs5CheZtfbAd5sazrSWBT3IiDIjPAW
-         FE/VrG2QgMTFdaXH1Ds1wKy5oYvatX/JFgH6gUJ27j7msFmYsrA07bbv1Y7f2/Ul+I3q
-         Hajg==
-X-Gm-Message-State: AGi0PuZNY6FY/zdKFs2gmgFOBgvBr0aP78TPgnDGgjQidNqNzdDzpSrR
-        xA2hqFyv76lnRpkRZ+tQyUQ=
-X-Google-Smtp-Source: APiQypKeRXG2E61w4rat3AOZywRaxqK4VdTTZAbbbIZ4/PWI3LoCg+td2GI0G3iPti4SdUu57/PgSg==
-X-Received: by 2002:aa7:9f93:: with SMTP id z19mr3832007pfr.187.1587137199052;
-        Fri, 17 Apr 2020 08:26:39 -0700 (PDT)
-Received: from minnich.svl.corp.google.com ([2620:15c:2c5:3:65f9:fd8e:a0b8:2917])
-        by smtp.googlemail.com with ESMTPSA id z6sm18265299pgg.39.2020.04.17.08.26.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Apr 2020 08:26:38 -0700 (PDT)
-From:   "Ronald G. Minnich" <rminnich@gmail.com>
-X-Google-Original-From: "Ronald G. Minnich" <rminnich@google.com>
-Cc:     "Ronald G. Minnich" <rminnich@google.com>,
-        Tudor Ambarus <tudor.ambarus@microchip.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        Jethro Beekman <jethro@fortanix.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alexander Sverdlin <alexander.sverdlin@nokia.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] mtd: spi-nor: controllers: intel-spi: Add support for command line partitions
-Date:   Fri, 17 Apr 2020 08:26:11 -0700
-Message-Id: <20200417152613.176554-1-rminnich@google.com>
-X-Mailer: git-send-email 2.26.1.301.g55bc3eb7cb9-goog
+        Fri, 17 Apr 2020 11:27:27 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C298C061A0C
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 08:27:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=Yqtf2Cr9VCQpUS0GldnV7JK60DFB1BUHRTQDFzdrac0=; b=PsghyDdOxbKQz5ubAHKB+S1KQ1
+        4WGvoF0mQLZg7hUM7fMf8NP5ldMyeI3yCYJx6RLRak2X5e+/Q9xDAZRUP0QQU9W1n2QQPTfGOggc1
+        7CqiU9OJaaxVW+QPFi4Dyfve2Njq9xOAD+9mHA8/u+KFHkSdq1bH9aDEzeFKrnuisXCs6Ycf4toKF
+        88xJh20yh3d3gSYbH10L6SP20nwScbLCX/6eZFXn2BOF4GtsdEOGKzF6nUJuak+7+vX9OIjbkXrE0
+        DUV9lrpFh2d5OVlZ+pHRjXK3TL/SFRewlLfAK1go3ND7b0enqZh42kTCvyg04auwwc3DAZLklUu69
+        Lr0cyH0w==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jPStE-0008Sz-Ht; Fri, 17 Apr 2020 15:26:48 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id DF502304E03;
+        Fri, 17 Apr 2020 17:26:45 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id BFFE02B12192B; Fri, 17 Apr 2020 17:26:45 +0200 (CEST)
+Date:   Fri, 17 Apr 2020 17:26:45 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Mark Rutland <mark.rutland@arm.com>
+Cc:     Sami Tolvanen <samitolvanen@google.com>,
+        Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        James Morse <james.morse@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Ingo Molnar <mingo@redhat.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Kees Cook <keescook@chromium.org>,
+        Laura Abbott <labbott@redhat.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Jann Horn <jannh@google.com>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        clang-built-linux@googlegroups.com,
+        kernel-hardening@lists.openwall.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v11 04/12] scs: disable when function graph tracing is
+ enabled
+Message-ID: <20200417152645.GH20730@hirez.programming.kicks-ass.net>
+References: <20191018161033.261971-1-samitolvanen@google.com>
+ <20200416161245.148813-1-samitolvanen@google.com>
+ <20200416161245.148813-5-samitolvanen@google.com>
+ <20200417100039.GS20730@hirez.programming.kicks-ass.net>
+ <20200417144620.GA9529@lakrids.cambridge.arm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200417144620.GA9529@lakrids.cambridge.arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Intel platforms, the usable SPI area is located several
-MiB in from the start, to leave room for descriptors and
-the Management Engine binary. Further, not all the remaining
-space can be used, as the last 16 MiB contains firmware.
+On Fri, Apr 17, 2020 at 03:46:21PM +0100, Mark Rutland wrote:
+> > > diff --git a/arch/Kconfig b/arch/Kconfig
+> > > index 691a552c2cc3..c53cb9025ad2 100644
+> > > --- a/arch/Kconfig
+> > > +++ b/arch/Kconfig
+> > > @@ -542,6 +542,7 @@ config ARCH_SUPPORTS_SHADOW_CALL_STACK
+> > >  
+> > >  config SHADOW_CALL_STACK
+> > >  	bool "Clang Shadow Call Stack"
+> > > +	depends on DYNAMIC_FTRACE_WITH_REGS || !FUNCTION_GRAPH_TRACER
+> > >  	depends on ARCH_SUPPORTS_SHADOW_CALL_STACK
+> > >  	help
+> > >  	  This option enables Clang's Shadow Call Stack, which uses a
+>  
+> > AFAICT you also need to kill KRETPROBES, which plays similar games.
+> 
+> Hmm... how does KREPROBES work? If you can only mess with the return
+> address when probing the first instruction in the function, it'll just
+> work for SCS or pointer authentication, as the LR is used at that
+> instant. If KRETPROBES tries to mess with the return address elsewhere
+> it'd be broken today...
 
-To make the SPI usable for mtdblock and other devices,
-it is necessary to enable command line partitions so the
-middle usable region can be specified.
+To be fair, I've not looked at the arm64 implementation. x86 does gross
+things like ftrace does. On x86 ftrace_graph and kretprobe also can't
+be on at the same time for the same function, there's some yuck around
+there.
 
-Add a part_probes array which includes only "cmdelineparts",
-and change to mtd_device_parse_register to use this part_probes.
+Rostedt was recently talking about cleaning some of that up.
 
-Signed-off-by: Ronald G. Minnich <rminnich@google.com>
----
- drivers/mtd/spi-nor/controllers/intel-spi.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+But if kretprobe can work on arm64, then ftrace_graph can too, but I
+think that links back to what you said earlier, you didn't want more
+ftrace variants or something.
 
-diff --git a/drivers/mtd/spi-nor/controllers/intel-spi.c b/drivers/mtd/spi-nor/controllers/intel-spi.c
-index 61d2a0ad2131..132129e89d07 100644
---- a/drivers/mtd/spi-nor/controllers/intel-spi.c
-+++ b/drivers/mtd/spi-nor/controllers/intel-spi.c
-@@ -894,6 +894,8 @@ static const struct spi_nor_controller_ops intel_spi_controller_ops = {
- 	.erase = intel_spi_erase,
- };
- 
-+static const char * const part_probes[] = { "cmdlinepart", NULL };
-+
- struct intel_spi *intel_spi_probe(struct device *dev,
- 	struct resource *mem, const struct intel_spi_boardinfo *info)
- {
-@@ -941,7 +943,8 @@ struct intel_spi *intel_spi_probe(struct device *dev,
- 	if (!ispi->writeable || !writeable)
- 		ispi->nor.mtd.flags &= ~MTD_WRITEABLE;
- 
--	ret = mtd_device_register(&ispi->nor.mtd, &part, 1);
-+	ret = mtd_device_parse_register(&ispi->nor.mtd, part_probes,
-+				       NULL, &part, 1);
- 	if (ret)
- 		return ERR_PTR(ret);
- 
--- 
-2.26.1.301.g55bc3eb7cb9-goog
+> > And doesn't BPF also do stuff like this?
+> 
+> Can BPF mess with return addresses now!?
 
+At least on x86 I think it does. But what do I know, I can't operate
+that stuff. Rostedt might know.
