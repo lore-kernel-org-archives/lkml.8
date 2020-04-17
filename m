@@ -2,209 +2,192 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74049C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 22:15:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9776C38A2B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 22:15:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4AE8C21744
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 22:15:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lRcq3dUu"
+	by mail.kernel.org (Postfix) with ESMTP id A6D2B2137B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 22:15:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728680AbgDQWPK (ORCPT
+        id S1728762AbgDQWPS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 18:15:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51050 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726284AbgDQWPI (ORCPT
+        Fri, 17 Apr 2020 18:15:18 -0400
+Received: from mail-il1-f200.google.com ([209.85.166.200]:39722 "EHLO
+        mail-il1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728711AbgDQWPR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 18:15:08 -0400
-Received: from mail-pl1-x64a.google.com (mail-pl1-x64a.google.com [IPv6:2607:f8b0:4864:20::64a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C15C1C061A0C
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 15:15:08 -0700 (PDT)
-Received: by mail-pl1-x64a.google.com with SMTP id d4so3013549plr.18
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 15:15:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=fUd4e7ib6miSI3t5irBL1ImGs5/WYOOO3j+GPX3G4w8=;
-        b=lRcq3dUuEu5g2QMOkNKjKJkQrMD5KPtroJhHUhI1PIxhhGT/r5NRAqCueq6tDc/XTt
-         aJ9rUaaUcg7abTz44b7JUfupMPrSgqg3bcCov2XaPBLBiLUuhYIsqLUbzTg7KwmXoqmX
-         9tFdWZj4VetAfDGu3VVsbEQkIBHYfvBt5MppI6CVmE3eSgJ6RxqLlwUi45BWMaFG0u9M
-         8hHVAUC9u/1Dj/BRlwe08QkG35bZtA0RoTbmyQCROtsBjWqEwjsHrR91dcil48pQ6BaA
-         F9yFoCrgzLY0ttvkyN5WXkZTDlzq8ATCXbilIW951vO/4fPcSB96TkWVJxUFYSUdYsez
-         XKCQ==
+        Fri, 17 Apr 2020 18:15:17 -0400
+Received: by mail-il1-f200.google.com with SMTP id e15so3988479ilc.6
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 15:15:15 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=fUd4e7ib6miSI3t5irBL1ImGs5/WYOOO3j+GPX3G4w8=;
-        b=C1XV30yInFHhYmhXI4hyWeUfsclzf54/lTJWkf39dfmZx2VnkqocmDTpYDtrc7w82h
-         DDUoTIZqivxbIeWTRbAT1d8bEVCOy0D0VgQEbuvFf3dO8Soidsr+w0JQ/r/M5ZjFAZ+C
-         pUUM0tDZr9YtdicWyUIIiKo2hq22YHPoN8KOASG1Et62RZDI4P2NWm92VlFNoaHazyDl
-         OzFGAkPQyUNGajfajIQRJO36S/BcnyhEBmyUWeNfsSsMl33F7+lMoZxf2aufY6dhI2so
-         S1ggxqkQEZzwypbbKPYTL5MjenGF3UjA8Du17wAwMafLGrplJqD1NmfbkxKO4dUvrKpL
-         MsbA==
-X-Gm-Message-State: AGi0PuZSVHsM/Lc7+W6saJpLFmI4UUlgSUrH5NKzRsdSFKT9v6I/ghSP
-        jt0wmY8ibg7+ekKfgU9Y9qts3KmV7OzSxA==
-X-Google-Smtp-Source: APiQypLSLh6jSBxbBtX2SkrqDIEjfwxQnKC5GoW9CO6XBLKWtU7T2gax2Vry4WQug150Tqnv8SHx8yFoe3ffkA==
-X-Received: by 2002:a17:90a:210b:: with SMTP id a11mr7283677pje.31.1587161708131;
- Fri, 17 Apr 2020 15:15:08 -0700 (PDT)
-Date:   Fri, 17 Apr 2020 15:14:46 -0700
-Message-Id: <20200417221446.108733-1-jcargill@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.26.1.301.g55bc3eb7cb9-goog
-Subject: [PATCH] kvm: add capability for halt polling
-From:   Jon Cargille <jcargill@google.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     David Matlack <dmatlack@google.com>,
-        Jon Cargille <jcargill@google.com>
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=WEcygz2yiTkhcSymwPQaWfTbOHv0m+f9utC1k92dGvI=;
+        b=ezu8p5kTBHser3siNJ9M5+eLc/dhumv8FfaMYPNS7b1XixRiQTftddoKtBtsg6AkUQ
+         9oo7sFdoeJ1P5fyTTCpEr1oztQOng7S3aWCe3nOjly+s2KXAu1JqILhs9axwLAkIRhIh
+         aMozGtbnsOZAI4zTyJq8052saWSEv8Gfcv6w3z2qqeulBwn4V3c4XNmg/Sy8ojqq+LFs
+         aiSDdaG1Hm/WIgAP0Xf6DF+DoWoWqJyUCMAVNS4CWl1J+Ef19DbgE4eG3ZpRXgQX8BEm
+         oMJvC4G9+uixiRiayprCyS9BxHN7QDw8lITkMWYzFZ/EevCsjcUs0cHoDmJHFZxQKv31
+         vwBw==
+X-Gm-Message-State: AGi0PuZcYcBHs+ej8K9MZzXsoAoEYXek/8n2IqPh2t+q5av6jyHGeNTz
+        U9rLUR6ih6EwX3hecx75X4mnhkWcKEfvpfklnsXA2UCz/sf+
+X-Google-Smtp-Source: APiQypLz91J++bbdaxnWO+tLXAVzyEHztNeUaUbTrzFAsi0kWHzaJJsszL47TVyJGvKnkGqeSqIa2qGqms/BCMpq2zimre8JILyu
+MIME-Version: 1.0
+X-Received: by 2002:a02:5184:: with SMTP id s126mr4928223jaa.81.1587161714629;
+ Fri, 17 Apr 2020 15:15:14 -0700 (PDT)
+Date:   Fri, 17 Apr 2020 15:15:14 -0700
+In-Reply-To: <0000000000006ed82e05a1c05dcc@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000033a1e005a383e276@google.com>
+Subject: Re: KASAN: use-after-free Read in hif_usb_regout_cb
+From:   syzbot <syzbot+b894396e6110e1df38c4@syzkaller.appspotmail.com>
+To:     andreyknvl@google.com, ath9k-devel@qca.qualcomm.com,
+        davem@davemloft.net, efault@gmx.de, hdanton@sina.com,
+        kvalo@codeaurora.org, linux-kernel@vger.kernel.org,
+        linux-usb@vger.kernel.org, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Matlack <dmatlack@google.com>
+syzbot has found a reproducer for the following crash on:
 
-KVM_CAP_HALT_POLL is a per-VM capability that lets userspace
-control the halt-polling time, allowing halt-polling to be tuned or
-disabled on particular VMs.
+HEAD commit:    0fa84af8 Merge tag 'usb-serial-5.7-rc1' of https://git.ker..
+git tree:       https://github.com/google/kasan.git usb-fuzzer
+console output: https://syzkaller.appspot.com/x/log.txt?x=160e64d7e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=6b9c154b0c23aecf
+dashboard link: https://syzkaller.appspot.com/bug?extid=b894396e6110e1df38c4
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=143956d7e00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=13dc3300100000
 
-With dynamic halt-polling, a VM's VCPUs can poll from anywhere from
-[0, halt_poll_ns] on each halt. KVM_CAP_HALT_POLL sets the
-upper limit on the poll time.
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+b894396e6110e1df38c4@syzkaller.appspotmail.com
 
-Signed-off-by: David Matlack <dmatlack@google.com>
-Signed-off-by: Jon Cargille <jcargill@google.com>
-Reviewed-by: Jim Mattson <jmattson@google.com>
----
- Documentation/virt/kvm/api.rst | 17 +++++++++++++++++
- include/linux/kvm_host.h       |  1 +
- include/uapi/linux/kvm.h       |  1 +
- virt/kvm/kvm_main.c            | 19 +++++++++++++++----
- 4 files changed, 34 insertions(+), 4 deletions(-)
+==================================================================
+BUG: KASAN: use-after-free in atomic_read include/asm-generic/atomic-instrumented.h:26 [inline]
+BUG: KASAN: use-after-free in refcount_read include/linux/refcount.h:134 [inline]
+BUG: KASAN: use-after-free in skb_unref include/linux/skbuff.h:1042 [inline]
+BUG: KASAN: use-after-free in kfree_skb+0x32/0x3d0 net/core/skbuff.c:692
+Read of size 4 at addr ffff8881d15fd854 by task swapper/1/0
 
-diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
-index efbbe570aa9b7b..d871dacb984e98 100644
---- a/Documentation/virt/kvm/api.rst
-+++ b/Documentation/virt/kvm/api.rst
-@@ -5802,6 +5802,23 @@ If present, this capability can be enabled for a VM, meaning that KVM
- will allow the transition to secure guest mode.  Otherwise KVM will
- veto the transition.
- 
-+7.20 KVM_CAP_HALT_POLL
-+----------------------
-+
-+:Architectures: all
-+:Target: VM
-+:Parameters: args[0] is the maximum poll time in nanoseconds
-+:Returns: 0 on success; -1 on error
-+
-+This capability overrides the kvm module parameter halt_poll_ns for the
-+target VM.
-+
-+VCPU polling allows a VCPU to poll for wakeup events instead of immediately
-+scheduling during guest halts. The maximum time a VCPU can spend polling is
-+controlled by the kvm module parameter halt_poll_ns. This capability allows
-+the maximum halt time to specified on a per-VM basis, effectively overriding
-+the module parameter for the target VM.
-+
- 8. Other capabilities.
- ======================
- 
-diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
-index 6d58beb65454f7..922b24ce5e7297 100644
---- a/include/linux/kvm_host.h
-+++ b/include/linux/kvm_host.h
-@@ -503,6 +503,7 @@ struct kvm {
- 	struct srcu_struct srcu;
- 	struct srcu_struct irq_srcu;
- 	pid_t userspace_pid;
-+	unsigned int max_halt_poll_ns;
- };
- 
- #define kvm_err(fmt, ...) \
-diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
-index 428c7dde6b4b37..ac9eba0289d1b6 100644
---- a/include/uapi/linux/kvm.h
-+++ b/include/uapi/linux/kvm.h
-@@ -1017,6 +1017,7 @@ struct kvm_ppc_resize_hpt {
- #define KVM_CAP_S390_VCPU_RESETS 179
- #define KVM_CAP_S390_PROTECTED 180
- #define KVM_CAP_PPC_SECURE_GUEST 181
-+#define KVM_CAP_HALT_POLL 182
- 
- #ifdef KVM_CAP_IRQ_ROUTING
- 
-diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-index 74bdb7bf32952e..ec038a9e60a275 100644
---- a/virt/kvm/kvm_main.c
-+++ b/virt/kvm/kvm_main.c
-@@ -710,6 +710,8 @@ static struct kvm *kvm_create_vm(unsigned long type)
- 			goto out_err_no_arch_destroy_vm;
- 	}
- 
-+	kvm->max_halt_poll_ns = halt_poll_ns;
-+
- 	r = kvm_arch_init_vm(kvm, type);
- 	if (r)
- 		goto out_err_no_arch_destroy_vm;
-@@ -2716,15 +2718,16 @@ void kvm_vcpu_block(struct kvm_vcpu *vcpu)
- 	if (!kvm_arch_no_poll(vcpu)) {
- 		if (!vcpu_valid_wakeup(vcpu)) {
- 			shrink_halt_poll_ns(vcpu);
--		} else if (halt_poll_ns) {
-+		} else if (vcpu->kvm->max_halt_poll_ns) {
- 			if (block_ns <= vcpu->halt_poll_ns)
- 				;
- 			/* we had a long block, shrink polling */
--			else if (vcpu->halt_poll_ns && block_ns > halt_poll_ns)
-+			else if (vcpu->halt_poll_ns &&
-+					block_ns > vcpu->kvm->max_halt_poll_ns)
- 				shrink_halt_poll_ns(vcpu);
- 			/* we had a short halt and our poll time is too small */
--			else if (vcpu->halt_poll_ns < halt_poll_ns &&
--				block_ns < halt_poll_ns)
-+			else if (vcpu->halt_poll_ns < vcpu->kvm->max_halt_poll_ns &&
-+					block_ns < vcpu->kvm->max_halt_poll_ns)
- 				grow_halt_poll_ns(vcpu);
- 		} else {
- 			vcpu->halt_poll_ns = 0;
-@@ -3516,6 +3519,7 @@ static long kvm_vm_ioctl_check_extension_generic(struct kvm *kvm, long arg)
- 	case KVM_CAP_IOEVENTFD_ANY_LENGTH:
- 	case KVM_CAP_CHECK_EXTENSION_VM:
- 	case KVM_CAP_ENABLE_CAP_VM:
-+	case KVM_CAP_HALT_POLL:
- 		return 1;
- #ifdef CONFIG_KVM_MMIO
- 	case KVM_CAP_COALESCED_MMIO:
-@@ -3566,6 +3570,13 @@ static int kvm_vm_ioctl_enable_cap_generic(struct kvm *kvm,
- 		return 0;
- 	}
- #endif
-+	case KVM_CAP_HALT_POLL: {
-+		if (cap->flags || cap->args[0] != (unsigned int)cap->args[0])
-+			return -EINVAL;
-+
-+		kvm->max_halt_poll_ns = cap->args[0];
-+		return 0;
-+	}
- 	default:
- 		return kvm_vm_ioctl_enable_cap(kvm, cap);
- 	}
--- 
-2.26.1.301.g55bc3eb7cb9-goog
+CPU: 1 PID: 0 Comm: swapper/1 Not tainted 5.6.0-rc7-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ <IRQ>
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0xef/0x16e lib/dump_stack.c:118
+ print_address_description.constprop.0.cold+0xd3/0x314 mm/kasan/report.c:374
+ __kasan_report.cold+0x37/0x77 mm/kasan/report.c:506
+ kasan_report+0xe/0x20 mm/kasan/common.c:641
+ check_memory_region_inline mm/kasan/generic.c:185 [inline]
+ check_memory_region+0x152/0x1c0 mm/kasan/generic.c:192
+ atomic_read include/asm-generic/atomic-instrumented.h:26 [inline]
+ refcount_read include/linux/refcount.h:134 [inline]
+ skb_unref include/linux/skbuff.h:1042 [inline]
+ kfree_skb+0x32/0x3d0 net/core/skbuff.c:692
+ hif_usb_regout_cb+0x14c/0x1b0 drivers/net/wireless/ath/ath9k/hif_usb.c:97
+ __usb_hcd_giveback_urb+0x1f2/0x470 drivers/usb/core/hcd.c:1648
+ usb_hcd_giveback_urb+0x368/0x420 drivers/usb/core/hcd.c:1713
+ dummy_timer+0x1258/0x32ae drivers/usb/gadget/udc/dummy_hcd.c:1966
+ call_timer_fn+0x195/0x6f0 kernel/time/timer.c:1404
+ expire_timers kernel/time/timer.c:1449 [inline]
+ __run_timers kernel/time/timer.c:1773 [inline]
+ __run_timers kernel/time/timer.c:1740 [inline]
+ run_timer_softirq+0x5f9/0x1500 kernel/time/timer.c:1786
+ __do_softirq+0x21e/0x950 kernel/softirq.c:292
+ invoke_softirq kernel/softirq.c:373 [inline]
+ irq_exit+0x178/0x1a0 kernel/softirq.c:413
+ exiting_irq arch/x86/include/asm/apic.h:546 [inline]
+ smp_apic_timer_interrupt+0x141/0x540 arch/x86/kernel/apic/apic.c:1146
+ apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:829
+ </IRQ>
+RIP: 0010:default_idle+0x28/0x300 arch/x86/kernel/process.c:696
+Code: cc cc 41 56 41 55 65 44 8b 2d 44 eb 71 7a 41 54 55 53 0f 1f 44 00 00 e8 f6 d7 b4 fb e9 07 00 00 00 0f 00 2d aa 7c 52 00 fb f4 <65> 44 8b 2d 20 eb 71 7a 0f 1f 44 00 00 5b 5d 41 5c 41 5d 41 5e c3
+RSP: 0018:ffff8881da22fda8 EFLAGS: 00000246 ORIG_RAX: ffffffffffffff13
+RAX: 0000000000000007 RBX: ffff8881da213100 RCX: 0000000000000000
+RDX: 0000000000000000 RSI: 0000000000000006 RDI: ffff8881da21394c
+RBP: ffffed103b442620 R08: ffff8881da213100 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000001
+R13: 0000000000000001 R14: ffffffff87e629c0 R15: 0000000000000000
+ cpuidle_idle_call kernel/sched/idle.c:154 [inline]
+ do_idle+0x3e0/0x500 kernel/sched/idle.c:269
+ cpu_startup_entry+0x14/0x20 kernel/sched/idle.c:361
+ start_secondary+0x2a4/0x390 arch/x86/kernel/smpboot.c:264
+ secondary_startup_64+0xb6/0xc0 arch/x86/kernel/head_64.S:242
+
+Allocated by task 21:
+ save_stack+0x1b/0x80 mm/kasan/common.c:72
+ set_track mm/kasan/common.c:80 [inline]
+ __kasan_kmalloc mm/kasan/common.c:515 [inline]
+ __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:488
+ slab_post_alloc_hook mm/slab.h:584 [inline]
+ slab_alloc_node mm/slub.c:2786 [inline]
+ kmem_cache_alloc_node+0xdc/0x330 mm/slub.c:2822
+ __alloc_skb+0xba/0x5a0 net/core/skbuff.c:198
+ alloc_skb include/linux/skbuff.h:1081 [inline]
+ htc_connect_service+0x2cc/0x840 drivers/net/wireless/ath/ath9k/htc_hst.c:257
+ ath9k_wmi_connect+0xd2/0x1a0 drivers/net/wireless/ath/ath9k/wmi.c:265
+ ath9k_init_htc_services.constprop.0+0xb4/0x650 drivers/net/wireless/ath/ath9k/htc_drv_init.c:146
+ ath9k_htc_probe_device+0x25a/0x1d80 drivers/net/wireless/ath/ath9k/htc_drv_init.c:959
+ ath9k_htc_hw_init+0x31/0x60 drivers/net/wireless/ath/ath9k/htc_hst.c:501
+ ath9k_hif_usb_firmware_cb+0x26b/0x500 drivers/net/wireless/ath/ath9k/hif_usb.c:1187
+ request_firmware_work_func+0x126/0x242 drivers/base/firmware_loader/main.c:976
+ process_one_work+0x94b/0x1620 kernel/workqueue.c:2266
+ worker_thread+0x96/0xe20 kernel/workqueue.c:2412
+ kthread+0x318/0x420 kernel/kthread.c:255
+ ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+
+Freed by task 21:
+ save_stack+0x1b/0x80 mm/kasan/common.c:72
+ set_track mm/kasan/common.c:80 [inline]
+ kasan_set_free_info mm/kasan/common.c:337 [inline]
+ __kasan_slab_free+0x117/0x160 mm/kasan/common.c:476
+ slab_free_hook mm/slub.c:1444 [inline]
+ slab_free_freelist_hook mm/slub.c:1477 [inline]
+ slab_free mm/slub.c:3034 [inline]
+ kmem_cache_free+0x9b/0x360 mm/slub.c:3050
+ kfree_skbmem net/core/skbuff.c:622 [inline]
+ kfree_skbmem+0xef/0x1b0 net/core/skbuff.c:616
+ __kfree_skb net/core/skbuff.c:679 [inline]
+ kfree_skb net/core/skbuff.c:696 [inline]
+ kfree_skb+0x102/0x3d0 net/core/skbuff.c:690
+ htc_connect_service.cold+0xa9/0x109 drivers/net/wireless/ath/ath9k/htc_hst.c:282
+ ath9k_wmi_connect+0xd2/0x1a0 drivers/net/wireless/ath/ath9k/wmi.c:265
+ ath9k_init_htc_services.constprop.0+0xb4/0x650 drivers/net/wireless/ath/ath9k/htc_drv_init.c:146
+ ath9k_htc_probe_device+0x25a/0x1d80 drivers/net/wireless/ath/ath9k/htc_drv_init.c:959
+ ath9k_htc_hw_init+0x31/0x60 drivers/net/wireless/ath/ath9k/htc_hst.c:501
+ ath9k_hif_usb_firmware_cb+0x26b/0x500 drivers/net/wireless/ath/ath9k/hif_usb.c:1187
+ request_firmware_work_func+0x126/0x242 drivers/base/firmware_loader/main.c:976
+ process_one_work+0x94b/0x1620 kernel/workqueue.c:2266
+ worker_thread+0x96/0xe20 kernel/workqueue.c:2412
+ kthread+0x318/0x420 kernel/kthread.c:255
+ ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+
+The buggy address belongs to the object at ffff8881d15fd780
+ which belongs to the cache skbuff_head_cache of size 224
+The buggy address is located 212 bytes inside of
+ 224-byte region [ffff8881d15fd780, ffff8881d15fd860)
+The buggy address belongs to the page:
+page:ffffea0007457f40 refcount:1 mapcount:0 mapping:ffff8881da16b400 index:0x0
+flags: 0x200000000000200(slab)
+raw: 0200000000000200 0000000000000000 0000000300000001 ffff8881da16b400
+raw: 0000000000000000 00000000800c000c 00000001ffffffff 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+ ffff8881d15fd700: fb fb fb fb fc fc fc fc fc fc fc fc fc fc fc fc
+ ffff8881d15fd780: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>ffff8881d15fd800: fb fb fb fb fb fb fb fb fb fb fb fb fc fc fc fc
+                                                 ^
+ ffff8881d15fd880: fc fc fc fc fc fc fc fc fb fb fb fb fb fb fb fb
+ ffff8881d15fd900: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+==================================================================
 
