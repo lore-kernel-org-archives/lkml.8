@@ -2,167 +2,114 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BECD8C2BB55
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 09:01:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 709D8C2BB85
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 09:05:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 98D55221E9
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 09:01:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dCeJxIQ3"
+	by mail.kernel.org (Postfix) with ESMTP id 45F0C221F7
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 09:05:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730125AbgDQJB1 (ORCPT
+        id S1730104AbgDQJFI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 05:01:27 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:54738 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730034AbgDQJBW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 05:01:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587114080;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=+LYdr3kSxXBMDicQAv0M7nkPT5YyAgLG/RWsjILE6Rk=;
-        b=dCeJxIQ3mkjtD9bwvPhSkJecKXOSnr8/RwDJB4Nl6IXCco0s/11pIy5So6pYFoqE4K+O1U
-        sSqecPQCDYVgHW98hMFlSqXfzWrbfPR0coKizjNN0xYorh2gthNVVqhxnjBGJqYwXFwMNg
-        EkjKPqgyYlc655//L9MTpoEeKKSX3z0=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-349-LJz_itl0Pj-aQQLRgnPMlA-1; Fri, 17 Apr 2020 05:01:18 -0400
-X-MC-Unique: LJz_itl0Pj-aQQLRgnPMlA-1
-Received: by mail-wm1-f71.google.com with SMTP id q5so674641wmc.9
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 02:01:18 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=+LYdr3kSxXBMDicQAv0M7nkPT5YyAgLG/RWsjILE6Rk=;
-        b=LVuakkwMIkp/84ws3sv+Efj2JFF6ZgWU2U0daKBPf6murUhCPDBCkZyhGSboxed5nq
-         bmRdqoqv9b+rwiAdcbslkx0VA9+aDn/qPfYodWzuKM1tdwczx0ONHWna+3OIPhMFvCvL
-         k93d93LrrhHbObV0C/l/WIYKBsKPzglMBwrZ9MsSnlaRoH2+6XiLJKhDtgetAAYeZRir
-         EQoYsr4PDz1pRGsug0aNBMkx0zidCJ73dkv3m0DX15k2X3HD2YpIUltNfuSct2QdyNaC
-         Ur9fxpeDl0czMu81YxkgBTTln3qjEu9xLDK403G1zP3GUYFrAcgUpYDmJQ0smfw7Ix47
-         9XrA==
-X-Gm-Message-State: AGi0PuZakDdAYWnO4HXrixg3iD0l58nC54Qm1RXbXWfY+euiD80oAMfd
-        zwJwRfTOtl4d+aN9NpKDUBMvzf7i4DaColW8+TSh67o9pa8HIyrHKRwc7scvqaFHVFYBXBw2Lbd
-        YGUwEfhUBqVG6+UXvAqUdHHKS
-X-Received: by 2002:a1c:7c18:: with SMTP id x24mr2155037wmc.146.1587114077407;
-        Fri, 17 Apr 2020 02:01:17 -0700 (PDT)
-X-Google-Smtp-Source: APiQypK2vbW1OnmBJFQVh7bub7YEhkI6cUby2dGaO6wz+YQlB7a8+Q2NUcfxoXyc58GWwBIeKSXJyQ==
-X-Received: by 2002:a1c:7c18:: with SMTP id x24mr2155008wmc.146.1587114077204;
-        Fri, 17 Apr 2020 02:01:17 -0700 (PDT)
-Received: from redhat.com (bzq-79-183-51-3.red.bezeqint.net. [79.183.51.3])
-        by smtp.gmail.com with ESMTPSA id c20sm7408863wmd.36.2020.04.17.02.01.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Apr 2020 02:01:16 -0700 (PDT)
-Date:   Fri, 17 Apr 2020 05:01:13 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Jason Wang <jasowang@redhat.com>
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
-        netdev@vger.kernel.org, geert@linux-m68k.org,
-        tsbogend@alpha.franken.de, benh@kernel.crashing.org,
-        paulus@samba.org, heiko.carstens@de.ibm.com, gor@linux.ibm.com,
-        borntraeger@de.ibm.com, Michael Ellerman <mpe@ellerman.id.au>
-Subject: Re: [PATCH V2] vhost: do not enable VHOST_MENU by default
-Message-ID: <20200417050029-mutt-send-email-mst@kernel.org>
-References: <20200415024356.23751-1-jasowang@redhat.com>
- <20200416185426-mutt-send-email-mst@kernel.org>
- <b7e2deb7-cb64-b625-aeb4-760c7b28c0c8@redhat.com>
- <20200417022929-mutt-send-email-mst@kernel.org>
- <4274625d-6feb-81b6-5b0a-695229e7c33d@redhat.com>
- <20200417042912-mutt-send-email-mst@kernel.org>
- <fdb555a6-4b8d-15b6-0849-3fe0e0786038@redhat.com>
- <20200417044230-mutt-send-email-mst@kernel.org>
- <73843240-3040-655d-baa9-683341ed4786@redhat.com>
+        Fri, 17 Apr 2020 05:05:08 -0400
+Received: from mga18.intel.com ([134.134.136.126]:27130 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728419AbgDQJFG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Apr 2020 05:05:06 -0400
+IronPort-SDR: 16Tx0uSrbMV34ixbWqLRGR1nMYsgmoFF4zjxesj+pG/gfVkXYEBITYhhEJ+El0nEvi4E6zgaB+
+ w7nP8U5ZBE5Q==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2020 02:05:05 -0700
+IronPort-SDR: iImZ98H6UD3xcWqYoNqzdpqoBINcrRfzHDRb1nBDIsxheRoaWWd338Fac35K5WTATRAqRj0z2X
+ Pzvhpr0Af3jQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,394,1580803200"; 
+   d="scan'208";a="364275266"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
+  by fmsmga001.fm.intel.com with SMTP; 17 Apr 2020 02:05:01 -0700
+Received: by lahna (sSMTP sendmail emulation); Fri, 17 Apr 2020 12:05:00 +0300
+Date:   Fri, 17 Apr 2020 12:05:00 +0300
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Brian Norris <briannorris@chromium.org>
+Cc:     =?utf-8?Q?Micha=C5=82?= Stanek <mst@semihalf.com>,
+        linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, stanekm@google.com,
+        stable@vger.kernel.org, Marcin Wojtas <mw@semihalf.com>,
+        levinale@chromium.org, andriy.shevchenko@linux.intel.com,
+        Linus Walleij <linus.walleij@linaro.org>,
+        bgolaszewski@baylibre.com, rafael.j.wysocki@intel.com,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH] pinctrl: cherryview: Add quirk with custom translation
+ of ACPI GPIO numbers
+Message-ID: <20200417090500.GM2586@lahna.fi.intel.com>
+References: <20200205194804.1647-1-mst@semihalf.com>
+ <20200206083149.GK2667@lahna.fi.intel.com>
+ <CAMiGqYi2rVAc=hepkY-4S1U_3dJdbR4pOoB0f8tbBL4pzWLdxA@mail.gmail.com>
+ <20200207075654.GB2667@lahna.fi.intel.com>
+ <CAMiGqYjmd2edUezEXsX4JBSyOozzks1Pu8miPEviGsx=x59nZQ@mail.gmail.com>
+ <20200210101414.GN2667@lahna.fi.intel.com>
+ <CAMiGqYiYp=aSgW-4ro5ceUEaB7g0XhepFg+HZgfPvtvQL9Z1jA@mail.gmail.com>
+ <20200310144913.GY2540@lahna.fi.intel.com>
+ <20200417020641.GA145784@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <73843240-3040-655d-baa9-683341ed4786@redhat.com>
+In-Reply-To: <20200417020641.GA145784@google.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 17, 2020 at 04:51:19PM +0800, Jason Wang wrote:
-> 
-> On 2020/4/17 下午4:46, Michael S. Tsirkin wrote:
-> > On Fri, Apr 17, 2020 at 04:39:49PM +0800, Jason Wang wrote:
-> > > On 2020/4/17 下午4:29, Michael S. Tsirkin wrote:
-> > > > On Fri, Apr 17, 2020 at 03:36:52PM +0800, Jason Wang wrote:
-> > > > > On 2020/4/17 下午2:33, Michael S. Tsirkin wrote:
-> > > > > > On Fri, Apr 17, 2020 at 11:12:14AM +0800, Jason Wang wrote:
-> > > > > > > On 2020/4/17 上午6:55, Michael S. Tsirkin wrote:
-> > > > > > > > On Wed, Apr 15, 2020 at 10:43:56AM +0800, Jason Wang wrote:
-> > > > > > > > > We try to keep the defconfig untouched after decoupling CONFIG_VHOST
-> > > > > > > > > out of CONFIG_VIRTUALIZATION in commit 20c384f1ea1a
-> > > > > > > > > ("vhost: refine vhost and vringh kconfig") by enabling VHOST_MENU by
-> > > > > > > > > default. Then the defconfigs can keep enabling CONFIG_VHOST_NET
-> > > > > > > > > without the caring of CONFIG_VHOST.
-> > > > > > > > > 
-> > > > > > > > > But this will leave a "CONFIG_VHOST_MENU=y" in all defconfigs and even
-> > > > > > > > > for the ones that doesn't want vhost. So it actually shifts the
-> > > > > > > > > burdens to the maintainers of all other to add "CONFIG_VHOST_MENU is
-> > > > > > > > > not set". So this patch tries to enable CONFIG_VHOST explicitly in
-> > > > > > > > > defconfigs that enables CONFIG_VHOST_NET and CONFIG_VHOST_VSOCK.
-> > > > > > > > > 
-> > > > > > > > > Acked-by: Christian Borntraeger<borntraeger@de.ibm.com>   (s390)
-> > > > > > > > > Acked-by: Michael Ellerman<mpe@ellerman.id.au>   (powerpc)
-> > > > > > > > > Cc: Thomas Bogendoerfer<tsbogend@alpha.franken.de>
-> > > > > > > > > Cc: Benjamin Herrenschmidt<benh@kernel.crashing.org>
-> > > > > > > > > Cc: Paul Mackerras<paulus@samba.org>
-> > > > > > > > > Cc: Michael Ellerman<mpe@ellerman.id.au>
-> > > > > > > > > Cc: Heiko Carstens<heiko.carstens@de.ibm.com>
-> > > > > > > > > Cc: Vasily Gorbik<gor@linux.ibm.com>
-> > > > > > > > > Cc: Christian Borntraeger<borntraeger@de.ibm.com>
-> > > > > > > > > Reported-by: Geert Uytterhoeven<geert@linux-m68k.org>
-> > > > > > > > > Signed-off-by: Jason Wang<jasowang@redhat.com>
-> > > > > > > > I rebased this on top of OABI fix since that
-> > > > > > > > seems more orgent to fix.
-> > > > > > > > Pushed to my vhost branch pls take a look and
-> > > > > > > > if possible test.
-> > > > > > > > Thanks!
-> > > > > > > I test this patch by generating the defconfigs that wants vhost_net or
-> > > > > > > vhost_vsock. All looks fine.
-> > > > > > > 
-> > > > > > > But having CONFIG_VHOST_DPN=y may end up with the similar situation that
-> > > > > > > this patch want to address.
-> > > > > > > Maybe we can let CONFIG_VHOST depends on !ARM || AEABI then add another
-> > > > > > > menuconfig for VHOST_RING and do something similar?
-> > > > > > > 
-> > > > > > > Thanks
-> > > > > > Sorry I don't understand. After this patch CONFIG_VHOST_DPN is just
-> > > > > > an internal variable for the OABI fix. I kept it separate
-> > > > > > so it's easy to revert for 5.8. Yes we could squash it into
-> > > > > > VHOST directly but I don't see how that changes logic at all.
-> > > > > Sorry for being unclear.
-> > > > > 
-> > > > > I meant since it was enabled by default, "CONFIG_VHOST_DPN=y" will be left
-> > > > > in the defconfigs.
-> > > > But who cares?
-> > > FYI, please seehttps://www.spinics.net/lists/kvm/msg212685.html
-> > The complaint was not about the symbol IIUC.  It was that we caused
-> > everyone to build vhost unless they manually disabled it.
-> 
-> 
-> There could be some misunderstanding here. I thought it's somehow similar: a
-> CONFIG_VHOST_MENU=y will be left in the defconfigs even if CONFIG_VHOST is
-> not set.
-> 
-> Thanks
-> 
+On Thu, Apr 16, 2020 at 07:06:41PM -0700, Brian Norris wrote:
+> If you just read the last sentence from Michal, you get the wrong
+> picture. There's no hard-coding of gpiochipX numbers going on. We only
+> had the pin offsets "hardcoded" (in ACPI), and the kernel driver
+> unilaterally changed from a contiguous mapping to a non-contiguous
+> mapping.
 
-BTW do entries with no prompt actually appear in defconfig?
+OK, I now understand the issue. My apologies that I was not able to
+figure that out from the previous explanation.
 
-> > 
+So indeed if relative GPIO numbering inside the gpiochip was changed
+then it is kernel regression and needs to be dealt with.
 
+> How do you recommend determining (both pre- and
+> post-commit-03c4749dd6c7ff94) whether pin 22 is at offset 22, vs. offset
+> 19?
+
+I wonder if we can add back the previous GPIO base like this?
+
+diff --git a/drivers/pinctrl/intel/pinctrl-cherryview.c b/drivers/pinctrl/intel/pinctrl-cherryview.c
+index 4c74fdde576d..f53de56bb763 100644
+--- a/drivers/pinctrl/intel/pinctrl-cherryview.c
++++ b/drivers/pinctrl/intel/pinctrl-cherryview.c
+@@ -1591,17 +1591,18 @@ static int chv_gpio_add_pin_ranges(struct gpio_chip *chip)
+ 	struct chv_pinctrl *pctrl = gpiochip_get_data(chip);
+ 	const struct chv_community *community = pctrl->community;
+ 	const struct chv_gpio_pinrange *range;
+-	int ret, i;
++	int ret, i, offset;
+ 
+-	for (i = 0; i < community->ngpio_ranges; i++) {
++	for (i = 0, offset = 0; i < community->ngpio_ranges; i++) {
+ 		range = &community->gpio_ranges[i];
+-		ret = gpiochip_add_pin_range(chip, dev_name(pctrl->dev),
+-					     range->base, range->base,
+-					     range->npins);
++		ret = gpiochip_add_pin_range(chip, dev_name(pctrl->dev), offset,
++					     range->base, range->npins);
+ 		if (ret) {
+ 			dev_err(pctrl->dev, "failed to add GPIO pin range\n");
+ 			return ret;
+ 		}
++
++		offset += range->npins;
+ 	}
+ 
+ 	return 0;
