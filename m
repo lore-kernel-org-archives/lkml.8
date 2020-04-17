@@ -2,87 +2,97 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE3D1C352BE
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 09:39:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BACC0C352BE
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 09:39:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AB04F208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 09:39:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 868FE21D91
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 09:39:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="WxsTLLlr"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JbqKbSdc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730418AbgDQJjH (ORCPT
+        id S1730425AbgDQJjU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 05:39:07 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:49158 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730334AbgDQJjE (ORCPT
+        Fri, 17 Apr 2020 05:39:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46614 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730334AbgDQJjU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 05:39:04 -0400
-X-UUID: a5014796a69e4ca3b5650e004148ca6b-20200417
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=iZuTCT/J0fHisHx7WtJAL9zKonXahC0te+mVqf6Soa0=;
-        b=WxsTLLlrQavvq6OkxUqojnXXIxiLR/1Mk2gAVpiZbI3c25gm3oBtivjnWU+ajRZIdMPzLG+FzkfuukLu7doTywFgMOXPdujZR2SP8AAVeUCrVHIvq2BCKtrWyzGuob98FogczhH76D9A6y/Ao2my2LR4E9kA8sHJfA9JSrcuRGs=;
-X-UUID: a5014796a69e4ca3b5650e004148ca6b-20200417
-Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw01.mediatek.com
-        (envelope-from <chuanjia.liu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1464473628; Fri, 17 Apr 2020 17:38:59 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Fri, 17 Apr 2020 17:38:57 +0800
-Received: from localhost.localdomain (10.17.3.153) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Fri, 17 Apr 2020 17:38:55 +0800
-From:   <chuanjia.liu@mediatek.com>
-To:     <robh+dt@kernel.org>, <bhelgaas@google.com>,
-        <matthias.bgg@gmail.com>, <lorenzo.pieralisi@arm.com>,
-        <amurray@thegoodpenguin.co.uk>
-CC:     <linux-pci@vger.kernel.org>, <linux-mediatek@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <ryder.lee@mediatek.com>,
-        <chuanjia.liu@mediatek.com>, <jianjun.wang@mediatek.com>,
-        <srv_heupstream@mediatek.com>
-Subject: [PATCH 0/4] Spilt PCIe node to comply with hardware design
-Date:   Fri, 17 Apr 2020 17:35:01 +0800
-Message-ID: <20200417093505.13978-1-chuanjia.liu@mediatek.com>
-X-Mailer: git-send-email 2.18.0
+        Fri, 17 Apr 2020 05:39:20 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED723C061A0C
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 02:39:18 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id x25so2268864wmc.0
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 02:39:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=sNSs/WMMs8v8LjUrmuY7lbgWrm5/KMfPWOpJUMEIGMY=;
+        b=JbqKbSdcMZexzofzc9Tq5ioiUHPtcqHNoP80MWNiHMvtWkRfplPiXtpRt7drnCbcN9
+         rKjiG756xPwfC6l1JaF/NFRdW+2kWQDPFrX1OwBZQauIi4x+sy2x4Dqc1HoNBgJSLgYX
+         eIijShSPioui6pcAky8KsSWFNu51TS5FZaBjH/4MNOVs4Tc6tuDvMflchE+v/bev1YAT
+         6NMfglbEG9f47JiuYUo2Dgz/WCeNpjdIhdUme0OZgQ3WbR0tdI5gmZ+9Zy4845YvNPmG
+         FW48wgsMsMaXEbZu8WmM3LcdW8DjOmE8GNwx+HMk/5H2b6lH7qF969czt/QGWjVvFXGy
+         XFeQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=sNSs/WMMs8v8LjUrmuY7lbgWrm5/KMfPWOpJUMEIGMY=;
+        b=LigX/MuYg64A8UsAIT0sS2H0MoSgGFNZ/lXN6JY6vG8C3Mtcms8wkp6DmhQ3dKSmgx
+         XaoLmbGW/mQupQOHBmIScAkjfFNhGcnln0wWl9C+0/nY5RGeoY5MKQz9NhguFeqt4q00
+         /Ed1YT69N6DDqpRCNh43y/RMOEvhjZNLv/NO41Y2HoGQ0oid0W3kaAWEizj7LA4uFlMe
+         8Q4nd2480H5ChV5rzOOS14IiNSqbz/JHGhYusRbVaVtzZ4MW3iFva0vpYD6mRVJftP2K
+         aMSaSgvVyruNeYcVYg2F0pXQxMpKKSiNFGMhkwbDI/0wptVrcU/4GiIGNqlwLZh5iPW6
+         H/+A==
+X-Gm-Message-State: AGi0PuYY2b1dMqHbz/GeaDufNH+Rg/Sd5PizuKLU6AA4yAPI45feziQM
+        AkHS6h8mp6oK+uvimaRhtlccsw==
+X-Google-Smtp-Source: APiQypLjCDr+lHOQd9iORXNvwi4wAxPgeC5qmc2MlHGFNNmFnbrdDVk1ilQZTEUF+aK84deHja4gzg==
+X-Received: by 2002:a1c:1b88:: with SMTP id b130mr2417599wmb.75.1587116357734;
+        Fri, 17 Apr 2020 02:39:17 -0700 (PDT)
+Received: from srini-hackbox.lan (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
+        by smtp.gmail.com with ESMTPSA id y18sm7719884wmc.45.2020.04.17.02.39.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 17 Apr 2020 02:39:16 -0700 (PDT)
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+To:     srini@kernel.org, gregkh@linuxfoundation.org
+Cc:     linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: [PATCH] slimbus: ngd: remove redundant assignment
+Date:   Fri, 17 Apr 2020 10:39:14 +0100
+Message-Id: <20200417093914.22052-1-srinivas.kandagatla@linaro.org>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-VGhlcmUgYXJlIHR3byBpbmRlcGVuZGVudCBQQ0llIGNvbnRyb2xsZXJzIGluIE1UMjcxMi9NVDc2
-MjIgcGxhdGZvcm0sDQphbmQgZWFjaCBvZiB0aGVtIHNob3VsZCBjb250YWluIGFuIGluZGVwZW5k
-ZW50IE1TSSBkb21haW4uDQoNCkluIGN1cnJlbnQgYXJjaGl0ZWN0dXJlLCBNU0kgZG9tYWluIHdp
-bGwgYmUgaW5oZXJpdGVkIGZyb20gdGhlIHJvb3QNCmJyaWRnZSwgYW5kIGFsbCBvZiB0aGUgZGV2
-aWNlcyB3aWxsIHNoYXJlIHRoZSBzYW1lIE1TSSBkb21haW4uDQpIZW5jZSB0aGF0LCB0aGUgUENJ
-ZSBkZXZpY2VzIHdpbGwgbm90IHdvcmsgcHJvcGVybHkgaWYgdGhlIGlycSBudW1iZXINCndoaWNo
-IHJlcXVpcmVkIGlzIG1vcmUgdGhhbiAzMi4NCg0KU3BsaXQgdGhlIFBDSWUgbm9kZSBmb3IgTVQy
-NzEyL01UNzYyMiBwbGF0Zm9ybSB0byBmaXggTVNJIGlzc3VlIGFuZA0KY29tcGx5IHdpdGggdGhl
-IGhhcmR3YXJlIGRlc2lnbi4NCg0KY2h1YW5qaWEubGl1ICg0KToNCiAgZHQtYmluZGluZ3M6IFBD
-STogTWVkaWF0ZWs6IFVwZGF0ZSBQQ0llIGJpbmRpbmcNCiAgUENJOiBtZWRpYXRlazogVXNlIHJl
-Z21hcCB0byBnZXQgc2hhcmVkIHBjaWUtY2ZnIGJhc2UNCiAgYXJtNjQ6IGR0czogbWVkaWF0ZWs6
-IFNwbGl0IFBDSWUgbm9kZSBmb3IgTVQyNzEyL01UNzYyMg0KICBBUk06IGR0czogbWVkaWF0ZWs6
-IFVwZGF0ZSBtdDc2MjkgUENJZSBub2RlDQoNCiAuLi4vYmluZGluZ3MvcGNpL21lZGlhdGVrLXBj
-aWUtY2ZnLnlhbWwgICAgICAgfCAgMzggKysrKysrDQogLi4uL2RldmljZXRyZWUvYmluZGluZ3Mv
-cGNpL21lZGlhdGVrLXBjaWUudHh0IHwgMTIwICsrKysrKysrKysrKy0tLS0tLQ0KIGFyY2gvYXJt
-L2Jvb3QvZHRzL210NzYyOS1yZmIuZHRzICAgICAgICAgICAgICB8ICAgMyArLQ0KIGFyY2gvYXJt
-L2Jvb3QvZHRzL210NzYyOS5kdHNpICAgICAgICAgICAgICAgICB8ICAyMyArKy0tDQogYXJjaC9h
-cm02NC9ib290L2R0cy9tZWRpYXRlay9tdDI3MTJlLmR0c2kgICAgIHwgIDUxICsrKysrLS0tDQog
-Li4uL2R0cy9tZWRpYXRlay9tdDc2MjItYmFuYW5hcGktYnBpLXI2NC5kdHMgIHwgIDE2ICstLQ0K
-IGFyY2gvYXJtNjQvYm9vdC9kdHMvbWVkaWF0ZWsvbXQ3NjIyLXJmYjEuZHRzICB8ICAgNiArLQ0K
-IGFyY2gvYXJtNjQvYm9vdC9kdHMvbWVkaWF0ZWsvbXQ3NjIyLmR0c2kgICAgICB8ICA2OCArKysr
-KystLS0tDQogZHJpdmVycy9wY2kvY29udHJvbGxlci9wY2llLW1lZGlhdGVrLmMgICAgICAgIHwg
-IDI1ICsrKy0NCiA5IGZpbGVzIGNoYW5nZWQsIDIzNCBpbnNlcnRpb25zKCspLCAxMTYgZGVsZXRp
-b25zKC0pDQogY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
-aW5ncy9wY2kvbWVkaWF0ZWstcGNpZS1jZmcueWFtbA0KDQotLQ0KMi4xOC4wIA0KDQo=
+remove redundant assignment, as this is already done fewlines lines before.
+
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+---
+ drivers/slimbus/qcom-ngd-ctrl.c | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/drivers/slimbus/qcom-ngd-ctrl.c b/drivers/slimbus/qcom-ngd-ctrl.c
+index 7426b5884218..743ee7b4e63f 100644
+--- a/drivers/slimbus/qcom-ngd-ctrl.c
++++ b/drivers/slimbus/qcom-ngd-ctrl.c
+@@ -1365,7 +1365,6 @@ static int of_qcom_slim_ngd_register(struct device *parent,
+ 		platform_device_add(ngd->pdev);
+ 		ngd->base = ctrl->base + ngd->id * data->offset +
+ 					(ngd->id - 1) * data->size;
+-		ctrl->ngd = ngd;
+ 
+ 		return 0;
+ 	}
+-- 
+2.21.0
 
