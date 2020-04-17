@@ -2,99 +2,135 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 148F8C352BE
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 11:45:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77AC5C352BE
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 11:45:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E2911206D9
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 11:45:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03FBC206D9
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 11:45:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="X6yVjy3o"
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="Bb8/szne"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730521AbgDQLpP (ORCPT
+        id S1730526AbgDQLp3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 07:45:15 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:15516 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730267AbgDQLpO (ORCPT
+        Fri, 17 Apr 2020 07:45:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38060 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730267AbgDQLp2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 07:45:14 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e99968e0000>; Fri, 17 Apr 2020 04:44:14 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Fri, 17 Apr 2020 04:45:14 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Fri, 17 Apr 2020 04:45:14 -0700
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 17 Apr
- 2020 11:45:13 +0000
-Received: from [10.26.73.163] (10.124.1.5) by DRHQMAIL107.nvidia.com
- (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 17 Apr
- 2020 11:45:12 +0000
-Subject: Re: [PATCH V2 2/3] soc/tegra: fuse: Correct Tegra194 revision
-To:     Thierry Reding <thierry.reding@gmail.com>
-CC:     <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20200331103341.19571-1-jonathanh@nvidia.com>
- <20200331103341.19571-2-jonathanh@nvidia.com>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <b4458eb2-192a-b5a3-8255-e42f9fc52c1a@nvidia.com>
-Date:   Fri, 17 Apr 2020 12:45:07 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Fri, 17 Apr 2020 07:45:28 -0400
+Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55065C061A0C
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 04:45:28 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 493Z5x2CTNz9sR4;
+        Fri, 17 Apr 2020 21:45:24 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1587123926;
+        bh=Ydrwh4zVWReMG0PuEe60Gimg3Ml7L8jwJayYN/OsWuc=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=Bb8/szneqPRZeh3W/59sO/wQx1gPp+qvmo9HKPkEM/acrIjhceUUYomLKSO+E6L7P
+         EYZgLtvrGIhmB+WS5gM8UmFkR2bV9WDWqp78xK500wUMrRSjh8bz2YbWWMXVYRe3Yh
+         lrRHXDQqmSfh4yl2v/ZX++9mgOShgNYGuxp3e7gRqX0tg2jDHZks9tU3l02uFVlqHw
+         ty2UZNwx5bkTe60+xAyb5L4OCJTqLQZcI9Pi33xLvS5K6lu8xzzkyywdZL4BdDZa67
+         SBu//M6pOphomQHiUXQUGvuwAeOrR/JIivCL3nI4UjLWt2U9Lavdwf13OmIBdIcROi
+         cQFht9S3/FRTA==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Steven Rostedt <rostedt@goodmis.org>, Qian Cai <cai@lca.pw>
+Cc:     Russell Currey <ruscur@russell.cc>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: POWER9 crash due to STRICT_KERNEL_RWX (WAS: Re: Linux-next POWER9 NULL pointer NIP...)
+In-Reply-To: <20200416221753.4e47080a@oasis.local.home>
+References: <15AC5B0E-A221-4B8C-9039-FA96B8EF7C88@lca.pw> <87eeszlb6u.fsf@mpe.ellerman.id.au> <0675B22E-8F32-432C-9378-FDE159DD1729@lca.pw> <20200407093054.3eb23e45@gandalf.local.home> <EA9F9A54-87BC-477A-BE8A-7D53F80C5223@lca.pw> <20200409101413.35d9c72d@gandalf.local.home> <06A2EA93-B730-4DB1-819F-D27E7032F0B3@lca.pw> <161662E3-5D9C-4C15-919C-CFEFE4CC35CB@lca.pw> <69F0448F-CA5B-497D-B8AF-2848175B9477@lca.pw> <20200416221753.4e47080a@oasis.local.home>
+Date:   Fri, 17 Apr 2020 21:45:34 +1000
+Message-ID: <87eesmibdt.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-In-Reply-To: <20200331103341.19571-2-jonathanh@nvidia.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- DRHQMAIL107.nvidia.com (10.27.9.16)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1587123855; bh=x3xNcjW5cEUnM1T8PUGYs+pLcMFOIuhwL7/hxdohjb4=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=X6yVjy3o+monjBvKX1QsjYWouFHKnL7OOjln23s0xB/VaHbYF8dQxHrKeV298YfGo
-         caZgHqkerRxCJ0A3r2S3OmPnRbas0CfcVCoyhFMlUvAPb+sP2g5H44P3a/+lqihM+Q
-         GaogPUGfcRREECkuLAAj7d1LCafGOARicrDPw79JQyKsN0RzRCi1aMy452QHxUkL1F
-         2apKfqVqZ5fgXFBKiH1fnNmFME/RP/2mUvmaN5gvILNWMPrt0nBYgn/3P9gF11x4EJ
-         N9nsY9E6wy/CAdM3bbVSwrBBiiee/jS+20q4maD9KPRx5wwV+N1H88Nsd46vzYGvpe
-         JOOPtGuCjQi+g==
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Steven Rostedt <rostedt@goodmis.org> writes:
+> On Thu, 16 Apr 2020 21:19:10 -0400
+> Qian Cai <cai@lca.pw> wrote:
+>
+>> OK, reverted the commit,
+>>=20
+>> c55d7b5e6426 (=E2=80=9Cpowerpc: Remove STRICT_KERNEL_RWX incompatibility=
+ with RELOCATABLE=E2=80=9D)
+>>=20
+>> or set STRICT_KERNEL_RWX=3Dn fixed the crash below and also mentioned in=
+ this thread,
+>
+> This may be a symptom and not a cure.
 
-On 31/03/2020 11:33, Jon Hunter wrote:
-> Determining the revision for Tegra194 devices is slightly different from
-> previous generations. For Tegra194, the majorrev field of the HIDREV
-> register determines if the major revision is A, B, C, etc and the
-> minorrev field determines if the minorrev is 01, 02, 03, etc.
-> 
-> For Tegra194, there are two main revisions which are A01 and A02.
-> Therefore, add a new function to correctly identify the revision for
-> Tegra194 devices.
-> 
-> Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
-> ---
->  drivers/soc/tegra/fuse/fuse-tegra20.c  |  3 ++-
->  drivers/soc/tegra/fuse/fuse-tegra30.c  |  8 ++++++-
->  drivers/soc/tegra/fuse/fuse.h          |  2 ++
->  drivers/soc/tegra/fuse/tegra-apbmisc.c | 29 ++++++++++++++++++++++++++
->  4 files changed, 40 insertions(+), 2 deletions(-)
+I think it is a cure.
 
-Although there is a slight difference, it turns out that the existing
-code does work fine for Tegra194 as well and so I will drop this change
-as it is not needed.
+But we still have a bug, which is that when STRICT_KERNEL_RWX is enabled
+we have some sort of corruption going on.
 
-Jon
+Enabling STRICT_KERNEL_RWX changes our implementation of
+patch_instruction() which is used by ftrace, so I suspect this is a
+powerpc bug.
 
--- 
-nvpublic
+>> [  148.110969][T13115] LTP: starting chown04_16
+>> [  148.255048][T13380] kernel tried to execute exec-protected page (c000=
+0000016804ac) - exploit attempt? (uid: 0)
+>> [  148.255099][T13380] BUG: Unable to handle kernel instruction fetch
+>> [  148.255122][T13380] Faulting instruction address: 0xc0000000016804ac
+>> [  148.255136][T13380] Oops: Kernel access of bad area, sig: 11 [#1]
+>> [  148.255157][T13380] LE PAGE_SIZE=3D64K MMU=3DRadix SMP NR_CPUS=3D256 =
+DEBUG_PAGEALLOC NUMA PowerNV
+>> [  148.255171][T13380] Modules linked in: loop kvm_hv kvm xfs sd_mod bnx=
+2x mdio ahci tg3 libahci libphy libata firmware_class dm_mirror dm_region_h=
+ash dm_log dm_mod
+>> [  148.255213][T13380] CPU: 45 PID: 13380 Comm: chown04_16 Tainted: G   =
+     W         5.6.0+ #7
+>> [  148.255236][T13380] NIP:  c0000000016804ac LR: c00800000fa60408 CTR: =
+c0000000016804ac
+>> [  148.255250][T13380] REGS: c0000010a6fafa00 TRAP: 0400   Tainted: G   =
+     W          (5.6.0+)
+>> [  148.255281][T13380] MSR:  9000000010009033 <SF,HV,EE,ME,IR,DR,RI,LE> =
+ CR: 84000248  XER: 20040000
+>> [  148.255310][T13380] CFAR: c00800000fa66534 IRQMASK: 0=20
+>> [  148.255310][T13380] GPR00: c000000000973268 c0000010a6fafc90 c0000000=
+01648200 0000000000000000=20
+>> [  148.255310][T13380] GPR04: c000000d8a22dc00 c0000010a6fafd30 00000000=
+b5e98331 ffffffff00012c9f=20
+>> [  148.255310][T13380] GPR08: c000000d8a22dc00 0000000000000000 00000000=
+00000000 c00000000163c520=20
+>> [  148.255310][T13380] GPR12: c0000000016804ac c000001ffffdad80 00000000=
+00000000 0000000000000000=20
+>> [  148.255310][T13380] GPR16: 0000000000000000 0000000000000000 00000000=
+00000000 0000000000000000=20
+>> [  148.255310][T13380] GPR20: 0000000000000000 0000000000000000 00000000=
+00000000 0000000000000000=20
+>> [  148.255310][T13380] GPR24: 00007fff8f5e2e48 0000000000000000 c0080000=
+0fa6a488 c0000010a6fafd30=20
+>> [  148.255310][T13380] GPR28: 0000000000000000 000000007fffffff c0080000=
+0fa60400 c000000efd0c6780=20
+>> [  148.255494][T13380] NIP [c0000000016804ac] sysctl_net_busy_read+0x0/0=
+x4
+>
+> The instruction pointer is on sysctl_net_busy_read? Isn't that data and
+> not code?
+
+Yes.
+
+But we're corrupting the text, or data, somewhere, so we can jump
+anywhere.
+
+I have another trace where vhost_init() appears to call into
+proc_dointvec() before crashing. vhost_init() is an empty function.
+
+cheers
