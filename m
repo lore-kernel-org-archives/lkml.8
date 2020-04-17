@@ -2,99 +2,94 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 108BDC2D0EF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 14:10:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 581C3C352BE
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 14:13:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D46C12223F
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 14:10:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E2E92223D
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 14:13:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587132653;
-	bh=iE50K8nUl0aeFIB2DRxf8FLJ39+6ykWPxyOtK9Yyb7E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Iv9Ujr+Xt1jVKHveONL7CXUrCUoJT79J1spVPe8C75hiIv8x/Wd12/lkwXuCn3oaW
-	 /iDEbFtLODqbjFT5FZno2B+UnZMZ2mCLI3Xdd1ZBwDPZCkAKRiSmffUk/l4JZnJINy
-	 PoiEIff7/2v4NUQngSZ3vRyHxXo+0F9MCnX6n/M4=
+	s=default; t=1587132788;
+	bh=1JUjU5UC/lICJ+oMTMy6s0YPiUazZbjkJAciKl03MlE=;
+	h=From:Date:Subject:To:Cc:List-ID:From;
+	b=HK1gQVGQbdpD2H1WfyzCISe8+2ESSZpOoF3kSqc4BYnZo07CU25RV/ZrB+Wszt2cb
+	 Xw1t8yfEtvAnzse6Xrqivu4K4FaNPCs94NF0a2bLSgXRkxISxnObhhapwWVXQCNZbS
+	 LuW9edaaShkEPkjWnDMHJjovqZshGgYm35tYpcD8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730975AbgDQOKx (ORCPT
+        id S1730899AbgDQONH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 10:10:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47024 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730899AbgDQOKt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 10:10:49 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EABA021924;
-        Fri, 17 Apr 2020 14:10:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587132649;
-        bh=iE50K8nUl0aeFIB2DRxf8FLJ39+6ykWPxyOtK9Yyb7E=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=u7G1ua1apO5bQaIiOG7EYZFM7PfKY3jLmckPPEAqC3l6DrPeY5yHHubY7Om1N+/tc
-         fR3UgREk7KhOx7bbDGixMVHP2FY/Nae3/GbdGrmBlrkpPvHCtZqCJShfvaeCNmsHiM
-         dyQ6Ja5wa7CiO6/erhe7QLMLGtBa1P35HoTP7emw=
-Date:   Fri, 17 Apr 2020 16:10:46 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Jon Hunter <jonathanh@nvidia.com>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-        patches@kernelci.org, ben.hutchings@codethink.co.uk,
-        lkft-triage@lists.linaro.org, stable@vger.kernel.org,
-        linux-tegra <linux-tegra@vger.kernel.org>
-Subject: Re: [PATCH 5.6 000/254] 5.6.5-rc1 review
-Message-ID: <20200417141046.GA657573@kroah.com>
-References: <20200416131325.804095985@linuxfoundation.org>
- <7d8d7d76-54e6-c8e4-9e3b-d8d599c26be9@nvidia.com>
+        Fri, 17 Apr 2020 10:13:07 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:38096 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730750AbgDQONG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Apr 2020 10:13:06 -0400
+Received: by mail-ot1-f68.google.com with SMTP id k21so1515791otl.5;
+        Fri, 17 Apr 2020 07:13:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=aoUIdBjTaN11kKJSU6IsZ2r0W/vYSM5CLodiWWDXF+U=;
+        b=jIXAVr/KTBi+XNwXD49TxWHINrqvUlY2x0kRCS4l6lZocUYIh+IgV2wFHviWSClKlG
+         A9kKzfYxx6Za5SJYKMzw/4XyDvHfvS7+9cLC/o4B/b86k5O8cADDAnbfviBpSiAPaTOI
+         iF0bI+/RnOn5ak1oPWOrZy4cryM99gFrXe6CjqmMjuD3z05CkHD/z/WTK645WT2sZwGY
+         DmWVhrQf1P7lY/kXErNZKT1xxhNCrb5Msufq/HXur7MQ990J0vI6pe60RwMPUH5NDo0v
+         5v3E5u+b0QstJq9sFYBnbwtjtG6YhK86f4cZWS34NmB3/GwCvhjonX4q44cTNAQ+FEGe
+         zS2g==
+X-Gm-Message-State: AGi0PuYW0g84iKRleh6/rGudba2JeAiIgolCoOalcx071bcvavqTMgZ1
+        PMcdYAV755ZS84NWfI1HEEUm0/QD9Mqg3HPfHjKBCcaB
+X-Google-Smtp-Source: APiQypL0si9YpyIahVYTr/KaMWSV7CQfS7jr1p2+4SXNHR7KGg9FED6IOoLuZ1PIvnJtZ5Rr9uUgqFvaXW841hySgl8=
+X-Received: by 2002:a9d:1d07:: with SMTP id m7mr2569158otm.167.1587132784974;
+ Fri, 17 Apr 2020 07:13:04 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7d8d7d76-54e6-c8e4-9e3b-d8d599c26be9@nvidia.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Fri, 17 Apr 2020 16:12:53 +0200
+Message-ID: <CAJZ5v0hX7hayUrCD3JA8USBhYthRcKKxdu6Ru_EB49=pCYSGKg@mail.gmail.com>
+Subject: [GIT PULL] Power management update for v5.7-rc2
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 17, 2020 at 10:45:29AM +0100, Jon Hunter wrote:
-> 
-> On 16/04/2020 14:21, Greg Kroah-Hartman wrote:
-> > This is the start of the stable review cycle for the 5.6.5 release.
-> > There are 254 patches in this series, all will be posted as a response
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
-> > 
-> > Responses should be made by Sat, 18 Apr 2020 13:11:20 +0000.
-> > Anything received after that time might be too late.
-> > 
-> > The whole patch series can be found in one patch at:
-> > 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.6.5-rc1.gz
-> > or in the git tree and branch at:
-> > 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.6.y
-> > and the diffstat can be found below.
-> > 
-> > thanks,
-> > 
-> > greg k-h
-> 
-> All tests are passing for Tegra ...
-> 
-> Test results for stable-v5.6:
->     13 builds:	13 pass, 0 fail
->     24 boots:	24 pass, 0 fail
->     40 tests:	40 pass, 0 fail
-> 
-> Linux version:	5.6.5-rc1-g576aa353744c
-> Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
->                 tegra194-p2972-0000, tegra20-ventana,
->                 tegra210-p2371-2180, tegra210-p3450-0000,
->                 tegra30-cardhu-a04
-> 
+Hi Linus,
 
-Thanks for testing all of these and letting me know.
+Please pull from the tag
 
-greg k-h
+ git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
+ pm-5.7-rc2
+
+with top-most commit 2c127c46ec98ff0f1cdb236321bdd54e6e43fcf5
+
+ Merge branch 'opp/linux-next' of
+git://git.kernel.org/pub/scm/linux/kernel/git/vireshk/pm
+
+on top of commit 8f3d9f354286745c751374f5f1fcafee6b3f3136
+
+ Linux 5.7-rc1
+
+to receive a power management update for 5.7-rc2.
+
+This allows the operating performance points (OPP) core to be used
+in the case when the same driver is used on different platforms,
+some of which have an OPP table and some of which have a clock
+node (Rajendra Nayak).
+
+Thanks!
+
+
+---------------
+
+Rajendra Nayak (1):
+      opp: Manage empty OPP tables with clk handle
+
+---------------
+
+ drivers/opp/core.c | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
