@@ -2,211 +2,185 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02B94C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 06:03:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F187EC2BB55
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 06:12:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D70A621973
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 06:03:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D26F721D82
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 06:12:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DWs0AAfB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727807AbgDQGDl convert rfc822-to-8bit (ORCPT
+        id S1726941AbgDQGMy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 02:03:41 -0400
-Received: from mga07.intel.com ([134.134.136.100]:14496 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726065AbgDQGDk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 02:03:40 -0400
-IronPort-SDR: WlHDknisBJA7/Icnj0vVNBF2i0rbvIfoEGwAe4h6Qt1ds5XJQdnHhTJ3aJKD51HoCIp3QTLVEp
- 2onnj4S5XlzA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2020 23:03:39 -0700
-IronPort-SDR: 3oJfBPD8w2SHu5GVkVWmPFJc87vuY35yXLmk5rjAhOJzer339y32ZGQGwFzeV1X5e+Kd9OhRYN
- 3y0MS1cieVfQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,393,1580803200"; 
-   d="scan'208";a="242903975"
-Received: from fmsmsx108.amr.corp.intel.com ([10.18.124.206])
-  by orsmga007.jf.intel.com with ESMTP; 16 Apr 2020 23:03:39 -0700
-Received: from fmsmsx608.amr.corp.intel.com (10.18.126.88) by
- FMSMSX108.amr.corp.intel.com (10.18.124.206) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Thu, 16 Apr 2020 23:03:39 -0700
-Received: from fmsmsx608.amr.corp.intel.com (10.18.126.88) by
- fmsmsx608.amr.corp.intel.com (10.18.126.88) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Thu, 16 Apr 2020 23:03:38 -0700
-Received: from shsmsx153.ccr.corp.intel.com (10.239.6.53) by
- fmsmsx608.amr.corp.intel.com (10.18.126.88) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
- via Frontend Transport; Thu, 16 Apr 2020 23:03:38 -0700
-Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.225]) by
- SHSMSX153.ccr.corp.intel.com ([169.254.12.89]) with mapi id 14.03.0439.000;
- Fri, 17 Apr 2020 14:03:35 +0800
-From:   "Liu, Yi L" <yi.l.liu@intel.com>
-To:     Alex Williamson <alex.williamson@redhat.com>
-CC:     "Tian, Kevin" <kevin.tian@intel.com>,
-        "eric.auger@redhat.com" <eric.auger@redhat.com>,
-        "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Tian, Jun J" <jun.j.tian@intel.com>,
-        "Sun, Yi Y" <yi.y.sun@intel.com>,
-        "jean-philippe@linaro.org" <jean-philippe@linaro.org>,
-        "peterx@redhat.com" <peterx@redhat.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Wu, Hao" <hao.wu@intel.com>
-Subject: RE: [PATCH v1 7/8] vfio/type1: Add VFIO_IOMMU_CACHE_INVALIDATE
-Thread-Topic: [PATCH v1 7/8] vfio/type1: Add VFIO_IOMMU_CACHE_INVALIDATE
-Thread-Index: AQHWAEUdcc1u01skwUmp6uBHREsZ66hl0sQAgACrzQCAAJWLAIAUkGLA///O0ICAAV9r0A==
-Date:   Fri, 17 Apr 2020 06:03:35 +0000
-Message-ID: <A2975661238FB949B60364EF0F2C25743A249BF6@SHSMSX104.ccr.corp.intel.com>
-References: <1584880325-10561-1-git-send-email-yi.l.liu@intel.com>
-        <1584880325-10561-8-git-send-email-yi.l.liu@intel.com>
-        <20200402142428.2901432e@w520.home>
-        <AADFC41AFE54684AB9EE6CBC0274A5D19D807C4A@SHSMSX104.ccr.corp.intel.com>
-        <20200403093436.094b1928@w520.home>
-        <A2975661238FB949B60364EF0F2C25743A231BAA@SHSMSX104.ccr.corp.intel.com>
- <20200416084031.7266ad40@w520.home>
-In-Reply-To: <20200416084031.7266ad40@w520.home>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-originating-ip: [10.239.127.40]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Fri, 17 Apr 2020 02:12:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42656 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726767AbgDQGMx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Apr 2020 02:12:53 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9D72C061A0F
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 23:12:51 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id r7so769791ljg.13
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 23:12:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=/FWw4e/+lDvAmu+pvQ9Pt7wJyGjaI+MJpbg/WlFhQoY=;
+        b=DWs0AAfBddGnQrOocMzjgWXUFlNZRjsMFKpZZk1alBffd05xn0vWCArXbzrXfZ/LoD
+         0MIuidiI9kFFFU9VG2rx0pZ9mqqEZ4VB/9MthpbhrjydeJA61GP5P9BCGKQ21OQqslps
+         FHb25rrBesneEq8UVU+lYTV1Nv9Xyj+FlRJVMZi4JNvOBBh6QrNsp97BUV68PMAGEsrk
+         wMyL54e0V5hqRNsHOVWpBx/Q51mdZSg+JvJ8rrugunPCO3poVwwe9J7xGwpFEHrGl46n
+         7UcOLOXM2Mw0UbmwE+JPFN5ktFTFuEIFM5OPAeIM76dFhWY/ISjVGiva7Ar4sEsleH7z
+         5PKw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=/FWw4e/+lDvAmu+pvQ9Pt7wJyGjaI+MJpbg/WlFhQoY=;
+        b=oxNv4DYpzuceH/XjBTGdMAfCEL8fYsXUzjvJ3Y2hv2kJw+7p7022d1a+P3/GCpZvt8
+         bzHjCVqziNhkrp0rYHx72povgWrsfcwOt7iNIAl7ZsznQYsdlvuaMGiC6LPUZ8jALWIl
+         HjDc2UZIuyxwOXoLoF2linmPJQ2fOzLmO2GEtDD+hgppoYZ2WFoFivFjCJmCEK9Asr9V
+         E5+m7JHzSP35vJJ7j8Xi7XjgL9DIx5eJ4sGNLlvufl0Y6MLPvRTZOrBzpD/+9SV8Ycdh
+         GICOBssBOa5+LNYAw3uvQycbIbM/0PvFDYNp3+fr0Id87nejMo6qouXrgCNHpazlc0bJ
+         kGoA==
+X-Gm-Message-State: AGi0PuZKc1c4UgH+VgIliNV6tS+A+8SYfxqGaFBIZeZD15tBqIw9vXP7
+        3wK2S4E6cVVeQa9fqmvi1UUiV3O5hK1umW5kS+pbrg==
+X-Google-Smtp-Source: APiQypKb3+zxnSo0/2D/NRf9zuuLTRuHXjegLXh+h+lcqb7FR4RKOujc/jxeRno9sG+zci/i/eKugeePtqHsRbEYKK4=
+X-Received: by 2002:a2e:b52f:: with SMTP id z15mr1078568ljm.38.1587103969891;
+ Thu, 16 Apr 2020 23:12:49 -0700 (PDT)
 MIME-Version: 1.0
+References: <20200416131242.353444678@linuxfoundation.org>
+In-Reply-To: <20200416131242.353444678@linuxfoundation.org>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Fri, 17 Apr 2020 11:42:38 +0530
+Message-ID: <CA+G9fYsjyFQxJBYS+i94cStSGTKUHydLcC9XT=x94km5mySxxg@mail.gmail.com>
+Subject: Re: [PATCH 4.19 000/146] 4.19.116-rc1 review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        lkft-triage@lists.linaro.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        linux- stable <stable@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Alex,
-> From: Alex Williamson <alex.williamson@redhat.com>
-> Sent: Thursday, April 16, 2020 10:41 PM
-> To: Liu, Yi L <yi.l.liu@intel.com>
-> Subject: Re: [PATCH v1 7/8] vfio/type1: Add VFIO_IOMMU_CACHE_INVALIDATE
-> 
-> On Thu, 16 Apr 2020 10:40:03 +0000
-> "Liu, Yi L" <yi.l.liu@intel.com> wrote:
-> 
-> > Hi Alex,
-> > Still have a direction question with you. Better get agreement with you
-> > before heading forward.
-> >
-> > > From: Alex Williamson <alex.williamson@redhat.com>
-> > > Sent: Friday, April 3, 2020 11:35 PM
-> > [...]
-> > > > > > + *
-> > > > > > + * returns: 0 on success, -errno on failure.
-> > > > > > + */
-> > > > > > +struct vfio_iommu_type1_cache_invalidate {
-> > > > > > +	__u32   argsz;
-> > > > > > +	__u32   flags;
-> > > > > > +	struct	iommu_cache_invalidate_info cache_info;
-> > > > > > +};
-> > > > > > +#define VFIO_IOMMU_CACHE_INVALIDATE      _IO(VFIO_TYPE,
-> > > VFIO_BASE
-> > > > > + 24)
-> > > > >
-> > > > > The future extension capabilities of this ioctl worry me, I wonder if
-> > > > > we should do another data[] with flag defining that data as CACHE_INFO.
-> > > >
-> > > > Can you elaborate? Does it mean with this way we don't rely on iommu
-> > > > driver to provide version_to_size conversion and instead we just pass
-> > > > data[] to iommu driver for further audit?
-> > >
-> > > No, my concern is that this ioctl has a single function, strictly tied
-> > > to the iommu uapi.  If we replace cache_info with data[] then we can
-> > > define a flag to specify that data[] is struct
-> > > iommu_cache_invalidate_info, and if we need to, a different flag to
-> > > identify data[] as something else.  For example if we get stuck
-> > > expanding cache_info to meet new demands and develop a new uapi to
-> > > solve that, how would we expand this ioctl to support it rather than
-> > > also create a new ioctl?  There's also a trade-off in making the ioctl
-> > > usage more difficult for the user.  I'd still expect the vfio layer to
-> > > check the flag and interpret data[] as indicated by the flag rather
-> > > than just passing a blob of opaque data to the iommu layer though.
-> > > Thanks,
-> >
-> > Based on your comments about defining a single ioctl and a unified
-> > vfio structure (with a @data[] field) for pasid_alloc/free, bind/
-> > unbind_gpasid, cache_inv. After some offline trying, I think it would
-> > be good for bind/unbind_gpasid and cache_inv as both of them use the
-> > iommu uapi definition. While the pasid alloc/free operation doesn't.
-> > It would be weird to put all of them together. So pasid alloc/free
-> > may have a separate ioctl. It would look as below. Does this direction
-> > look good per your opinion?
-> >
-> > ioctl #22: VFIO_IOMMU_PASID_REQUEST
-> > /**
-> >   * @pasid: used to return the pasid alloc result when flags == ALLOC_PASID
-> >   *         specify a pasid to be freed when flags == FREE_PASID
-> >   * @range: specify the allocation range when flags == ALLOC_PASID
-> >   */
-> > struct vfio_iommu_pasid_request {
-> > 	__u32	argsz;
-> > #define VFIO_IOMMU_ALLOC_PASID	(1 << 0)
-> > #define VFIO_IOMMU_FREE_PASID	(1 << 1)
-> > 	__u32	flags;
-> > 	__u32	pasid;
-> > 	struct {
-> > 		__u32	min;
-> > 		__u32	max;
-> > 	} range;
-> > };
-> 
-> Can't the ioctl return the pasid valid on alloc (like GET_DEVICE_FD)?
+On Thu, 16 Apr 2020 at 18:56, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 4.19.116 release.
+> There are 146 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Sat, 18 Apr 2020 13:11:20 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
+4.19.116-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-4.19.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
+>
 
-Yep, I think you mentioned before. At that time, I believed it would be
-better to return the result via a __u32 buffer so that make full use of
-the 32 bits. But looks like it doesn't make much difference. I'll follow
-your suggestion.
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
 
-> Would it be useful to support freeing a range of pasids?  If so then we
-> could simply use range for both, ie. allocate a pasid from this range
-> and return it, or free all pasids in this range?  vfio already needs to
-> track pasids to free them on release, so presumably this is something
-> we could support easily.
+Summary
+------------------------------------------------------------------------
 
-yes, I think it is a nice thing. then I can remove the @pasid field.
-will do it.
+kernel: 4.19.116-rc1
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
+le-rc.git
+git branch: linux-4.19.y
+git commit: 287f80e07bbc28d3a2a25d2b53674c912d515376
+git describe: v4.19.115-147-g287f80e07bbc
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.19-oe/bu=
+ild/v4.19.115-147-g287f80e07bbc
 
-> > ioctl #23: VFIO_IOMMU_NESTING_OP
-> > struct vfio_iommu_type1_nesting_op {
-> > 	__u32	argsz;
-> > 	__u32	flags;
-> > 	__u32	op;
-> > 	__u8	data[];
-> > };
-> 
-> data only has 4-byte alignment, I think we really want it at an 8-byte
-> alignment.  This is why I embedded the "op" into the flag for
-> DEVICE_FEATURE.  Thanks,
 
-got it. I may also merge the op into flags (maybe the lower 16 bits for
-op).
+No regressions (compared to build v4.19.114-55-g3b903e5affcf)
 
-Thanks,
-Yi Liu
-> Alex
-> 
-> >
-> > /* Nesting Ops */
-> > #define VFIO_IOMMU_NESTING_OP_BIND_PGTBL        0
-> > #define VFIO_IOMMU_NESTING_OP_UNBIND_PGTBL      1
-> > #define VFIO_IOMMU_NESTING_OP_CACHE_INVLD       2
-> >
-> > Thanks,
-> > Yi Liu
-> >
+No fixes (compared to build v4.19.114-55-g3b903e5affcf)
 
+Ran 31564 total tests in the following environments and test suites.
+
+Environments
+--------------
+- dragonboard-410c - arm64
+- hi6220-hikey - arm64
+- i386
+- juno-r2 - arm64
+- juno-r2-compat
+- juno-r2-kasan
+- nxp-ls2088
+- qemu_arm
+- qemu_arm64
+- qemu_i386
+- qemu_x86_64
+- x15 - arm
+- x86_64
+- x86-kasan
+
+Test Suites
+-----------
+* build
+* install-android-platform-tools-r2600
+* install-android-platform-tools-r2800
+* linux-log-parser
+* ltp-cve-tests
+* ltp-dio-tests
+* ltp-hugetlb-tests
+* ltp-io-tests
+* ltp-mm-tests
+* ltp-sched-tests
+* ltp-syscalls-tests
+* perf
+* kselftest
+* kvm-unit-tests
+* libhugetlbfs
+* ltp-cap_bounds-tests
+* ltp-commands-tests
+* ltp-containers-tests
+* ltp-cpuhotplug-tests
+* ltp-crypto-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-ipc-tests
+* ltp-math-tests
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-securebits-tests
+* network-basic-tests
+* ltp-fs-tests
+* ltp-open-posix-tests
+* v4l2-compliance
+* spectre-meltdown-checker-test
+* kselftest-vsyscall-mode-native
+* kselftest-vsyscall-mode-none
+
+--=20
+Linaro LKFT
+https://lkft.linaro.org
