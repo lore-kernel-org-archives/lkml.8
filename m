@@ -2,92 +2,97 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A1A8C2D0EF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 14:01:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5126CC38A2C
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 14:04:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3C56B20644
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 14:01:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31E2021924
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 14:04:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Z9BjD9UJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730818AbgDQOB0 (ORCPT
+        id S1730820AbgDQOEv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 10:01:26 -0400
-Received: from mga07.intel.com ([134.134.136.100]:17012 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730563AbgDQOB0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 10:01:26 -0400
-IronPort-SDR: 9G5Y4n+m+tA+3V/ar4rIO5XZI6Yb6RI7j8XrjHT+4sPh9x9DXqb28r4DM5LGQvpv8KH5D2q2dd
- BZ/bAv7CJvHw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2020 07:01:25 -0700
-IronPort-SDR: xEz2/0SJGhLBRYrVu2I7Ws34KqqK5pqUSvSLjjTEr/7tqRLaMzE2OaYX4cGlmmJzKLKuMfyUU7
- r5HAKpcCqDyA==
-X-IronPort-AV: E=Sophos;i="5.72,395,1580803200"; 
-   d="scan'208";a="428234168"
-Received: from mcintra-mobl.ger.corp.intel.com (HELO localhost) ([10.249.44.191])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2020 07:01:20 -0700
-From:   Jani Nikula <jani.nikula@linux.intel.com>
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     Saeed Mahameed <saeedm@mellanox.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        linux-kbuild@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Nicolas Pitre <nico@fluxnic.net>, narmstrong@baylibre.com,
-        Laurent.pinchart@ideasonboard.com, leon@kernel.org,
-        kieran.bingham+renesas@ideasonboard.com, jonas@kwiboo.se,
-        airlied@linux.ie, jernej.skrabec@siol.net,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        linux-rdma@vger.kernel.org, Andrzej Hajda <a.hajda@samsung.com>
-Subject: Re: [RFC PATCH 1/2] Kconfig: Introduce "uses" keyword
-In-Reply-To: <20200417122827.GD5100@ziepe.ca>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <20200417011146.83973-1-saeedm@mellanox.com> <87v9ly3a0w.fsf@intel.com> <20200417122827.GD5100@ziepe.ca>
-Date:   Fri, 17 Apr 2020 17:01:18 +0300
-Message-ID: <87h7xi2oup.fsf@intel.com>
+        Fri, 17 Apr 2020 10:04:51 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:45737 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730563AbgDQOEu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Apr 2020 10:04:50 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587132289;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=o8foZaTA908TKiqlCeHVCOn2XVeLTmA8LWaRlobZZ4U=;
+        b=Z9BjD9UJ2fi+kr27dht6blCvnJG921ImE0IManixaMa8RUczuwYy4/H4jCWPdu+dQXlJlD
+        GePxanydLnQqzbiKylsj/CSesF92gxHBgJQcqkXRhasZCrr4iR7RvJC30ZB+wZsP7CmYl7
+        vTYhtdpGLhP2GIuCwbM6+xX6fP3iJLU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-162-Q9v-mqkWMqK-jFQWshYwvg-1; Fri, 17 Apr 2020 10:04:47 -0400
+X-MC-Unique: Q9v-mqkWMqK-jFQWshYwvg-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id EF10B107ACC9;
+        Fri, 17 Apr 2020 14:04:45 +0000 (UTC)
+Received: from treble.redhat.com (ovpn-116-146.rdu2.redhat.com [10.10.116.146])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 2039E5C1C5;
+        Fri, 17 Apr 2020 14:04:45 +0000 (UTC)
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     live-patching@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Jessica Yu <jeyu@kernel.org>, Miroslav Benes <mbenes@suse.cz>
+Subject: [PATCH v2 1/9] livepatch: Disallow vmlinux.ko
+Date:   Fri, 17 Apr 2020 09:04:26 -0500
+Message-Id: <68b2d27ce7991873ae3932e0f8f3f05c44dbc4f8.1587131959.git.jpoimboe@redhat.com>
+In-Reply-To: <cover.1587131959.git.jpoimboe@redhat.com>
+References: <cover.1587131959.git.jpoimboe@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 17 Apr 2020, Jason Gunthorpe <jgg@ziepe.ca> wrote:
-> On Fri, Apr 17, 2020 at 09:23:59AM +0300, Jani Nikula wrote:
->
->> Which means that would have to split up to two. Not ideal, but
->> doable.
->
-> Why is this not ideal?
->
-> I think the one per line is easier to maintain (eg for merge
-> conflicts) and easier to read than a giant && expression.
->
-> I would not complicate things further by extending the boolean
-> language..
+This is purely a theoretical issue, but if there were a module named
+vmlinux.ko, the livepatch relocation code wouldn't be able to
+distinguish between vmlinux-specific and vmlinux.o-specific KLP
+relocations.
 
-Fair enough. I only found one instance where the patch at hand does not
-cut it:
+If CONFIG_LIVEPATCH is enabled, don't allow a module named vmlinux.ko.
 
-drivers/hwmon/Kconfig:  depends on !OF || IIO=n || IIO
+Suggested-by: Peter Zijlstra <peterz@infradead.org>
+Acked-by: Miroslav Benes <mbenes@suse.cz>
+Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+---
+ kernel/livepatch/core.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-That can of course be left as it is.
+diff --git a/kernel/livepatch/core.c b/kernel/livepatch/core.c
+index c3512e7e0801..40cfac8156fd 100644
+--- a/kernel/livepatch/core.c
++++ b/kernel/livepatch/core.c
+@@ -1139,6 +1139,11 @@ int klp_module_coming(struct module *mod)
+ 	if (WARN_ON(mod->state !=3D MODULE_STATE_COMING))
+ 		return -EINVAL;
+=20
++	if (!strcmp(mod->name, "vmlinux")) {
++		pr_err("vmlinux.ko: invalid module name");
++		return -EINVAL;
++	}
++
+ 	mutex_lock(&klp_mutex);
+ 	/*
+ 	 * Each module has to know that klp_module_coming()
+--=20
+2.21.1
 
-As to the bikeshedding topic, I think I'm now leaning towards Andrzej's
-suggestion:
-
-	optionally depends on FOO
-
-in [1]. But I reserve my right to change my mind. ;)
-
-BR,
-Jani.
-
-
-[1] http://lore.kernel.org/r/01f964ae-9c32-7531-1f07-2687616b6a71@samsung.com
-
--- 
-Jani Nikula, Intel Open Source Graphics Center
