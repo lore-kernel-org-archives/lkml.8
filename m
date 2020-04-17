@@ -2,197 +2,213 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89AC4C38A2B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 16:10:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C625AC38A2B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 16:11:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 616532087E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 16:10:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 979CC20771
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 16:11:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="f9ZMSWMu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729962AbgDQQKV (ORCPT
+        id S1729785AbgDQQL4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 12:10:21 -0400
-Received: from netrider.rowland.org ([192.131.102.5]:56977 "HELO
-        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1729888AbgDQQKV (ORCPT
+        Fri, 17 Apr 2020 12:11:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51300 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729282AbgDQQLz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 12:10:21 -0400
-Received: (qmail 9640 invoked by uid 500); 17 Apr 2020 12:10:19 -0400
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 17 Apr 2020 12:10:19 -0400
-Date:   Fri, 17 Apr 2020 12:10:19 -0400 (EDT)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@netrider.rowland.org
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
-cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Qais Yousef <qais.yousef@arm.com>,
-        USB list <linux-usb@vger.kernel.org>,
-        Linux-pm mailing list <linux-pm@vger.kernel.org>,
-        Kernel development list <linux-kernel@vger.kernel.org>
-Subject: Re: lockdep warning in urb.c:363 usb_submit_urb
-In-Reply-To: <2040116.cccRbkeLkK@kreacher>
-Message-ID: <Pine.LNX.4.44L0.2004171129430.30344-100000@netrider.rowland.org>
+        Fri, 17 Apr 2020 12:11:55 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B033C061A0C
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 09:11:55 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id t14so3639899wrw.12
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 09:11:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:from:to:references:autocrypt:organization:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Q1jvtWmH1/hDJjlwgsZYiirXm0mc3KLPHbxhYSYcx6A=;
+        b=f9ZMSWMuKB0LZ2jGAIsEtGY7MfjnD8lVlbIH85fUVNOw779x+OeEc084CIHMPvS6fs
+         wGCTxQFgZrp2Lu0ArwRYFEn2Fl+rFI/HdSxaEUtZZgzNKmz+kGbxQKxP6TnUteelIa8P
+         EuaB7NCZb4uEn8AI67jOYPkachqmvE8V4BufctSsvJ1EVvMrwctswQrfQtJhLB1fCTNN
+         fE6m3u4aOIzL+YLhlAVNgv5YOBHv97GrAVHY+HXaR2nECnsOsb3IFMP2vFlWX20Pxm5h
+         7UFKl4JfESaMhKdmJXy3uZTYV0YjWtkeyzi7fe0oeODXlTk3PZa2NXUjXrDqEYSTWHSZ
+         b2nQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:references:autocrypt
+         :organization:message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=Q1jvtWmH1/hDJjlwgsZYiirXm0mc3KLPHbxhYSYcx6A=;
+        b=SNnkeoZ9jDsAV/3rQdT0VrpTNV12NjHUsLTS/WjgGjVga9WJ+rj/JCpfA1Kqqt1TMW
+         FSFFiafc3V1V9QYpGiRobY8/353d6te1hBlvcz9VxeBITRqN3xrgDSsVIjp/sa6FDbwC
+         D+Yp0AVluE/wtoFGuNuJ3qS3FvCdwG3N1IEWa6dYygXp5sooj1NmgcWx3tX6rU73AVNL
+         poMv+VzsLuZtC1DC4XH5Wd7vEIyB1ERhcMVHlhXgJJKYxr8AD3wUw7kyH6GBC2m7FQbp
+         kqzEg+DVUL28U6tmypRVxVRiLjR3ZsZiFinfdyqrgUWP2XPVOHFFvgls0gpSi4v9n4js
+         xJZA==
+X-Gm-Message-State: AGi0PuYstm9obF68qDU6DEROz4fPTnqjSt9joDQHaEjPV3TR3G2wEBJc
+        pdf3GasMjKD9sDn22F7L+DbfPg==
+X-Google-Smtp-Source: APiQypIoqBB0RAMCM93pEYOe/cugCLXo6NmMSrYIWiT9G0ge/A4AGx8fx2tTdngNK9CJj4gElg7NRw==
+X-Received: by 2002:adf:83c2:: with SMTP id 60mr4583679wre.169.1587139913751;
+        Fri, 17 Apr 2020 09:11:53 -0700 (PDT)
+Received: from ?IPv6:2a01:e35:2ec0:82b0:39cc:a07:8b48:cc56? ([2a01:e35:2ec0:82b0:39cc:a07:8b48:cc56])
+        by smtp.gmail.com with ESMTPSA id o129sm2716864wme.16.2020.04.17.09.11.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 17 Apr 2020 09:11:53 -0700 (PDT)
+Subject: Re: [PATCH v5 1/8] drm/fourcc: Add modifier definitions for
+ describing Amlogic Video Framebuffer Compression
+From:   Neil Armstrong <narmstrong@baylibre.com>
+To:     dri-devel@lists.freedesktop.org, linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Kevin Hilman <khilman@baylibre.com>
+References: <20200416152500.29429-1-narmstrong@baylibre.com>
+ <20200416152500.29429-2-narmstrong@baylibre.com>
+ <20200417150729.GP3456981@phenom.ffwll.local>
+ <65879a34-2e31-2908-3cc4-183f62c70ca0@baylibre.com>
+Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
+ 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
+ BSwxi7g3Mu7u5kUByanqHyA=
+Organization: Baylibre
+Message-ID: <e0f0dd1c-a7ce-6371-cf9e-b817205dcd9d@baylibre.com>
+Date:   Fri, 17 Apr 2020 18:11:52 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+In-Reply-To: <65879a34-2e31-2908-3cc4-183f62c70ca0@baylibre.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 17 Apr 2020, Rafael J. Wysocki wrote:
-
-> On Thursday, April 16, 2020 5:18:15 PM CEST Alan Stern wrote:
-
-> > >   IOW, the
-> > > default value of power.may_skip_resume could be the return value of
-> > > dev_pm_skip_suspend()?]
-> > 
-> > How about this?  Let's set power.may_skip_resume to "true" for each
-> > device before issuing ->prepare.
+On 17/04/2020 18:05, Neil Armstrong wrote:
+> On 17/04/2020 17:07, Daniel Vetter wrote:
+>> On Thu, Apr 16, 2020 at 05:24:53PM +0200, Neil Armstrong wrote:
+>>> Amlogic uses a proprietary lossless image compression protocol and format
+>>> for their hardware video codec accelerators, either video decoders or
+>>> video input encoders.
+>>>
+>>> It considerably reduces memory bandwidth while writing and reading
+>>> frames in memory.
+>>>
+>>> The underlying storage is considered to be 3 components, 8bit or 10-bit
+>>> per component, YCbCr 420, single plane :
+>>> - DRM_FORMAT_YUV420_8BIT
+>>> - DRM_FORMAT_YUV420_10BIT
+>>>
+>>> This modifier will be notably added to DMA-BUF frames imported from the V4L2
+>>> Amlogic VDEC decoder.
+>>>
+>>> This introduces the basic layout composed of:
+>>> - a body content organized in 64x32 superblocks with 4096 bytes per
+>>>   superblock in default mode.
+>>> - a 32 bytes per 128x64 header block
+>>>
+>>> This layout is tranferrable between Amlogic SoCs supporting this modifier.
+>>>
+>>> Tested-by: Kevin Hilman <khilman@baylibre.com>
+>>> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+>>> ---
+>>>  include/uapi/drm/drm_fourcc.h | 39 +++++++++++++++++++++++++++++++++++
+>>>  1 file changed, 39 insertions(+)
+>>>
+>>> diff --git a/include/uapi/drm/drm_fourcc.h b/include/uapi/drm/drm_fourcc.h
+>>> index 8bc0b31597d8..a1b163a5641f 100644
+>>> --- a/include/uapi/drm/drm_fourcc.h
+>>> +++ b/include/uapi/drm/drm_fourcc.h
+>>> @@ -309,6 +309,7 @@ extern "C" {
+>>>  #define DRM_FORMAT_MOD_VENDOR_BROADCOM 0x07
+>>>  #define DRM_FORMAT_MOD_VENDOR_ARM     0x08
+>>>  #define DRM_FORMAT_MOD_VENDOR_ALLWINNER 0x09
+>>> +#define DRM_FORMAT_MOD_VENDOR_AMLOGIC 0x0a
+>>>  
+>>>  /* add more to the end as needed */
+>>>  
+>>> @@ -804,6 +805,44 @@ extern "C" {
+>>>   */
+>>>  #define DRM_FORMAT_MOD_ALLWINNER_TILED fourcc_mod_code(ALLWINNER, 1)
+>>>  
+>>> +/*
+>>> + * Amlogic Video Framebuffer Compression modifiers
+>>> + *
+>>> + * Amlogic uses a proprietary lossless image compression protocol and format
+>>> + * for their hardware video codec accelerators, either video decoders or
+>>> + * video input encoders.
+>>> + *
+>>> + * It considerably reduces memory bandwidth while writing and reading
+>>> + * frames in memory.
+>>> + *
+>>> + * The underlying storage is considered to be 3 components, 8bit or 10-bit
+>>> + * per component YCbCr 420, single plane :
+>>> + * - DRM_FORMAT_YUV420_8BIT
+>>> + * - DRM_FORMAT_YUV420_10BIT
+>>> + *
+>>> + * The first 8 bits of the mode defines the layout, then the following 8 bits
+>>> + * defines the options changing the layout.
+>>
+>> None of the modifiers you're doing seem to have these other 8 bits
+>> defined anywhere. And it's not encoded in your modifiers. Can't we just
+>> enumerate the ones we have/need and done?
 > 
-> Yes, it can be set to 'true' by default for all devices.
-> 
-> It doesn't need to be before ->prepare, it can be before ->suspend (as it
-> is now).
+> It's introduced in patch 5
 
-I suggested doing it before ->prepare so that subsystems can clear
-power.may_skip_resume in their ->prepare callbacks.  If you think the
-ability to do that isn't important then fine, initialize the flag
-before ->suspend.
+I did slit the options/layout for the last one: SCATTER so I could apply the BASIC and the option
+first then continue the discussion on the second SCATTER layout.
 
-> > The subsystem can set it to "false"
-> > if it wants to during any of the suspend-side callbacks.  Following the
-> > ->suspend_noirq callback, the core will do the equivalent of:
-> > 
-> > 	dev->power.may_skip_resume &= dev_pm_skip_suspend(dev);
-> > 
-> > before propagating the flag.  Any subsystem changes to support this
-> > should be minimal, since only ACPI and PCI currently use
-> > may_skip_resume.
-> 
-> IMO it can be simpler even.
-> 
-> Because power.may_skip_resume is taken into account along with
-> MAY_SKIP_RESUME and the driver setting the latter must be prepared
-> for skipping its resume callbacks regardless of the suspend side of
-> things, they may always be skipped (and the device may be left in
-> suspend accordingly) if there is a reason to avoid doing that.
-> 
-> The core doesn't know about those reasons, so it has no reason to
-> touch power.may_skip_resume after setting it at the outset and then
-> whoever sees a reason why these callbacks should run (the subsystem
-> or the driver) needs to clear power.may_skip_resume (and clearing it
-> more than once obviously makes no difference).
+So maybe I should add the option in the first patch.
 
-I was trying to implement your suggestion of making the default for
-power.may_skip_resume be the return value of dev_pm_skip_suspend().  
-However, making the default value be "true" is indeed simpler, and I
-think it would work okay.
-
-> > So here's what we've got:
-> > 
-> > > > Transition   Conditions for dev_pm_skip_resume() to return "true"
-> > > > ----------   ----------------------------------------------------
-> > > > 
-> > > > RESTORE      Never
-> > > 
-> > > Right.
-> > 
-> > >  THAW	         dev_pm_skip_suspend() returns "true".
-> > 
-> > >  RESUME        power.must_resume is clear (which requires
-> > >                  MAY_SKIP_RESUME and power.may_skip_resume to be set and
-> > >                  the runtime usage counter to be = 1, and which 
-> > >                  propagates up from dependent devices)
-> > > 
-> > > Nothing else is really strictly required IMO.
-> > 
-> > This seems very clear and simple.  And I will repeat here some of the 
-> > things posted earlier, to make the description more complete:
-> > 
-> > 	During the suspend side, for each of the
-> > 	{suspend,freeze,poweroff}_{late,noirq} phases: If
-> > 	dev_pm_skip_suspend() returns true then the subsystem should
-> > 	not invoke the driver's callback, and if there is no subsystem
-> > 	callback then the core will not invoke the driver's callback.
-> > 
-> > 	During the resume side, for each of the
-> > 	{resume,thaw,restore}_{early,noirq} phases: If
-> > 	dev_pm_skip_resume() returns true then the subsystem should
-> > 	not invoke the driver's callback, and if there is no subsystem
-> > 	callback then the core will not invoke the driver's callback.
-> > 
-> > 	dev_pm_skip_suspend() will return "true" if SMART_SUSPEND is
-> > 	set and the device's runtime status is "suspended".
-> > 
-> > 	For dev_pm_skip_resume() and power.must_resume, see above.
-> > 
-> > 	At the start of the {resume,thaw,restore}_noirq phase, if
-> > 	dev_pm_skip_resume() returns true then the core will set the
-> > 	runtime status to "suspended".  Otherwise it will set the
-> > 	runtime status to "active".  If this is not what the subsystem
-> > 	or driver wants, it must update the runtime status itself.
-> > 
-> > For this to work properly, we will have to rely on subsystems/drivers
-> > to call pm_runtime_resume() during the suspend/freeze transition if
-> > SMART_SUSPEND is clear.
-> 
-> That has been the case forever, though.
-
-I'm not so sure about that.  The existing PM core code doesn't ever get
-into a situation where it tries to set a device's runtime status to
-"active" while the parent's status is "suspended".
-
-> > Otherwise we could have the following scenario:
-> > 
-> > Device A has a child B, and both are runtime suspended when hibernation
-> > starts.  Suppose that the SMART_SUSPEND flag is set for A but not for
-> > B, and suppose that B's subsystem/driver neglects to call
-> > pm_runtime_resume() during the FREEZE transition.  Then during the THAW
-> > transition, dev_pm_skip_resume() will return "true" for A and "false"  
-> > for B.  This will lead to an error when the core tries to set B's
-> > runtime status to "active" while A's status is "suspended".
-> > 
-> > One way to avoid this is to have the core make the pm_runtime_resume()  
-> > call, but you have said that you don't like that approach.  Any 
-> > suggestions?
-> 
-> Because the core has not been calling pm_runtime_resume() during system-wide
-> suspend for devices with SMART_SUSPEND clear, that should not be changed or
-> we'll see regressions.
-> 
-> I know for a fact that some drivers expect the core to be doing nothing
-> with respect to that.
-> 
-> > Should the core take some special action following ->freeze_noirq if
-> > the runtime status is "suspended" and SMART_SUSPEND is clear?
-> 
-> Again, anything like that would change the current behavior which may
-> not be expected by at least some drivers, so I wouldn't change that.
-> 
-> IOW, SMART_SUSPEND clear means to the core that *it* need not care about
-> the suspend side at all (because somebody else will do that).
-
-But the core _does_ need to care, because if somebody else fails to
-take care of the suspend side then the core would trigger the WARN() in
-pm_runtime_enable() for the parent device.  I guess we could consider
-such a WARN() to be a symptom of a bug in the driver or subsystem,
-rather than in the core; is that how you want to handle the scenario
-above?
-
-This approach doesn't seem robust.  I can easily imagine cases where
-the parent's driver is aware of SMART_SUSPEND but the child's driver
-isn't.  Currently we don't require the child's driver to call 
-pm_runtime_resume().  Do you really want to consider all such cases to 
-be bugs?
-
-Basically, I'm saying that if the core allows things to arrive at a
-situation where we can come out of THAW with a runtime-suspended parent
-and a runtime-active child, it really should be considered to be the
-core's fault.
-
-Alan Stern
-
+Neil
