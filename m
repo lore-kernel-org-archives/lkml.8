@@ -2,90 +2,97 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FAF8C2D0EF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 20:20:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05829C38A2B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 20:20:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 66A0B206D9
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 20:20:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2D9F221F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 20:20:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730997AbgDQUUB (ORCPT
+        id S1731013AbgDQUU0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 16:20:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33282 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730573AbgDQUUB (ORCPT
+        Fri, 17 Apr 2020 16:20:26 -0400
+Received: from relay2-d.mail.gandi.net ([217.70.183.194]:51365 "EHLO
+        relay2-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730573AbgDQUUZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 16:20:01 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC658C061A0C
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 13:20:00 -0700 (PDT)
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jPXSw-0006dZ-Jf; Fri, 17 Apr 2020 22:19:58 +0200
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 1CCE3100C47; Fri, 17 Apr 2020 22:19:58 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Marc Dionne <marc.c.dionne@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Cc:     x86@kernel.org
-Subject: Re: FreeNAS VM disk access errors, bisected to commit 6f1a4891a592
-In-Reply-To: <CAB9dFdtBqrcmKcV=zxPyV5uNB7WeKOqqC4k5KtY+9vxS9ooKoA@mail.gmail.com>
-References: <CAB9dFdtBqrcmKcV=zxPyV5uNB7WeKOqqC4k5KtY+9vxS9ooKoA@mail.gmail.com>
-Date:   Fri, 17 Apr 2020 22:19:58 +0200
-Message-ID: <87d085zwy9.fsf@nanos.tec.linutronix.de>
+        Fri, 17 Apr 2020 16:20:25 -0400
+X-Originating-IP: 195.189.32.242
+Received: from pc.localdomain (unknown [195.189.32.242])
+        (Authenticated sender: contact@artur-rojek.eu)
+        by relay2-d.mail.gandi.net (Postfix) with ESMTPSA id 3B52840006;
+        Fri, 17 Apr 2020 20:20:20 +0000 (UTC)
+From:   Artur Rojek <contact@artur-rojek.eu>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Paul Cercueil <paul@crapouillou.net>
+Cc:     Heiko Stuebner <heiko@sntech.de>, linux-input@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-iio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Artur Rojek <contact@artur-rojek.eu>
+Subject: [RESEND PATCH v5 1/5] IIO: Ingenic JZ47xx: Add xlate cb to retrieve correct channel idx
+Date:   Fri, 17 Apr 2020 22:28:55 +0200
+Message-Id: <20200417202859.35427-1-contact@artur-rojek.eu>
+X-Mailer: git-send-email 2.26.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Marc,
+Provide an of_xlate callback in order to retrieve the correct channel
+specifier index from the IIO channels array.
 
-Marc Dionne <marc.c.dionne@gmail.com> writes:
+Signed-off-by: Artur Rojek <contact@artur-rojek.eu>
+Tested-by: Paul Cercueil <paul@crapouillou.net>
+---
 
-> Commit 6f1a4891a592 ("x86/apic/msi: Plug non-maskable MSI affinity
-> race") causes Linux VMs hosted on FreeNAS (bhyve hypervisor) to lose
-> access to their disk devices shortly after boot.  The disks are zfs
-> zvols on the host, presented to each VM.
->
-> Background: I recently updated some fedora 31 VMs running under the
-> bhyve hypervisor (hosted on a FreeNAS mini), and they moved to a
-> distro 5.5 kernel (5.5.15).  Shortly after reboot, the disks became
-> inaccessible with any operation getting EIO errors.  Booting back into
-> a 5.4 kernel, everything was fine.  I built a 5.7-rc1 kernel, which
-> showed the same symptoms, and was then able to bisect it down to
-> commit 6f1a4891a592.  Note that the symptoms do not occur on every
-> boot, but often enough (roughly 80%) to make bisection possible.
->
-> Applying a manual revert of 6f1a4891a592 on top of mainline from
-> yesterday gives me a kernel that works fine.
+ Changes:
 
-we tested on real hardware and various hypervisors that the fix actually
-works correctly.
+ v2-v5: no change
 
-That makes me assume that the staged approach of changing affinity for
-this non-maskable MSI mess makes your particular hypervisor unhappy.
+ drivers/iio/adc/ingenic-adc.c | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-Are there any messages like this:
+diff --git a/drivers/iio/adc/ingenic-adc.c b/drivers/iio/adc/ingenic-adc.c
+index 39c0a609fc94..7a24bc1dabe1 100644
+--- a/drivers/iio/adc/ingenic-adc.c
++++ b/drivers/iio/adc/ingenic-adc.c
+@@ -383,6 +383,21 @@ static int ingenic_adc_read_raw(struct iio_dev *iio_dev,
+ 	}
+ }
+ 
++static int ingenic_adc_of_xlate(struct iio_dev *iio_dev,
++				const struct of_phandle_args *iiospec)
++{
++	int i;
++
++	if (!iiospec->args_count)
++		return -EINVAL;
++
++	for (i = 0; i < iio_dev->num_channels; ++i)
++		if (iio_dev->channels[i].channel == iiospec->args[0])
++			return i;
++
++	return -EINVAL;
++}
++
+ static void ingenic_adc_clk_cleanup(void *data)
+ {
+ 	clk_unprepare(data);
+@@ -392,6 +407,7 @@ static const struct iio_info ingenic_adc_info = {
+ 	.write_raw = ingenic_adc_write_raw,
+ 	.read_raw = ingenic_adc_read_raw,
+ 	.read_avail = ingenic_adc_read_avail,
++	.of_xlate = ingenic_adc_of_xlate,
+ };
+ 
+ static const struct iio_chan_spec ingenic_channels[] = {
+-- 
+2.26.1
 
- "do_IRQ: 0.83 No irq handler for vector"
-
-in dmesg on the Linux side? If they happen then before the disk timeout
-happens.
-
-I have absolutely zero knowledge about bhyve, so may I suggest to talk
-to the bhyve experts about this.
-
-Thanks,
-
-        tglx
