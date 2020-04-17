@@ -4,65 +4,63 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10CCDC2D0EF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 17:45:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED406C3815B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 17:45:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E96402220A
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 17:45:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4D9F2076D
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 17:45:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587145527;
-	bh=Xh506Zyq34duiBjy5RIJXOsurvZFgmvBuURjJAGZS00=;
+	s=default; t=1587145529;
+	bh=BrFJxrqYZDOkpsWsyLDZYY/0Rr6+g3mUhvsS9Jj8SQE=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=NFRJ4J2p6lI+mNuqUIihXI1VLC9iv9+Cqxy5zkuUqqQUDxn1XxDC5WjFZN9+q44BE
-	 vI2BXbIHRtKh6WA5KDPpdGJnqbEYIYkoleLV0kGl7iJTkqST0jcokNNx3F0L3iWV//
-	 th3uxbxlrnJoZheEOo/a6R3th85JUsBAK5bZeA6Y=
+	b=WiK0T6hMD3xe2311XfIMiP3hkkrDl5pn6eqK8LCHsmn+DfutYI6lfvrtHSj/ojZjp
+	 m4uFmM8Gh6xN/dKqmPY4RDSLt2lt025R2GzwjtgCtH/eeXnRAOl6K+bZUYHtlx6etC
+	 oCiAlhfOJA4s51Cu9bmaWC8b3kjQuhWNP1+pQdC0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730099AbgDQRp1 (ORCPT
+        id S1730063AbgDQRp0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 13:45:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46076 "EHLO mail.kernel.org"
+        Fri, 17 Apr 2020 13:45:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46048 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729969AbgDQRpY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 13:45:24 -0400
-Subject: Re: [GIT PULL] libata fixes for 5.7-rc
+        id S1729966AbgDQRpX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Apr 2020 13:45:23 -0400
+Subject: Re: [GIT PULL] Power management update for v5.7-rc2
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1587145523;
-        bh=Xh506Zyq34duiBjy5RIJXOsurvZFgmvBuURjJAGZS00=;
+        bh=BrFJxrqYZDOkpsWsyLDZYY/0Rr6+g3mUhvsS9Jj8SQE=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=0U5O93DbxvrUs1w7+zGhDrXf2wznHS6moNEGw5Z1xaSQns5gdqDBjYrhW7z0oGRyV
-         hY171HO2Pfu35L1nNA4FU4Z+jP/nd9Wx89bnzGJ5FactJGnT1gyKczBtoXYuADtN+g
-         QkqvBqKpnh6Op66xZ67/7ODbcuUymC/u34IkRv8I=
+        b=FUHf184zlq+5yZVvTDcARPDGsAZP0TH1NGY9eztIVblzupU1Qr4wjyMLmUNDiUJJk
+         9pfS5lQwmW7yZqx+XpJJNYSKMxOJZQxct7B4/rzbjDpbVBNynr0Rv6nM/68t7hMCWY
+         bv/5NMxcVxy3feib0c16X9OQ8dVKmzpXhdIA7RJc=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <635fe4ef-c1e1-cba6-f4f6-a0c795b5fac8@kernel.dk>
-References: <635fe4ef-c1e1-cba6-f4f6-a0c795b5fac8@kernel.dk>
+In-Reply-To: <CAJZ5v0hX7hayUrCD3JA8USBhYthRcKKxdu6Ru_EB49=pCYSGKg@mail.gmail.com>
+References: <CAJZ5v0hX7hayUrCD3JA8USBhYthRcKKxdu6Ru_EB49=pCYSGKg@mail.gmail.com>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <635fe4ef-c1e1-cba6-f4f6-a0c795b5fac8@kernel.dk>
-X-PR-Tracked-Remote: git://git.kernel.dk/linux-block.git
- tags/libata-5.7-2020-04-17
-X-PR-Tracked-Commit-Id: 1f2ef049cb11c68134ce699f749f16ca8d34468e
+X-PR-Tracked-Message-Id: <CAJZ5v0hX7hayUrCD3JA8USBhYthRcKKxdu6Ru_EB49=pCYSGKg@mail.gmail.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git pm-5.7-rc2
+X-PR-Tracked-Commit-Id: 2c127c46ec98ff0f1cdb236321bdd54e6e43fcf5
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 2acbb9e670347879e4815b2010f46ee01f1caf30
-Message-Id: <158714552379.1625.3683346720457595526.pr-tracker-bot@kernel.org>
+X-PR-Merge-Commit-Id: 5a32fe48bcc7956f55a1bd2a2799f37020f5a208
+Message-Id: <158714552346.1625.3505718386073281658.pr-tracker-bot@kernel.org>
 Date:   Fri, 17 Apr 2020 17:45:23 +0000
-To:     Jens Axboe <axboe@kernel.dk>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        IDE/ATA development list <linux-ide@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Fri, 17 Apr 2020 09:12:01 -0600:
+The pull request you sent on Fri, 17 Apr 2020 16:12:53 +0200:
 
-> git://git.kernel.dk/linux-block.git tags/libata-5.7-2020-04-17
+> git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git pm-5.7-rc2
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/2acbb9e670347879e4815b2010f46ee01f1caf30
+https://git.kernel.org/torvalds/c/5a32fe48bcc7956f55a1bd2a2799f37020f5a208
 
 Thank you!
 
