@@ -2,62 +2,63 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17507C38A2B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 22:13:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6D04C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 22:13:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EBA2520715
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 22:13:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FBA620715
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 22:13:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CzHuzbBr"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oc0CHcHt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728598AbgDQWNr (ORCPT
+        id S1728659AbgDQWNu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 18:13:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50834 "EHLO
+        Fri, 17 Apr 2020 18:13:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50836 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726284AbgDQWNq (ORCPT
+        by vger.kernel.org with ESMTP id S1726284AbgDQWNs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 18:13:46 -0400
-Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88E37C061A0C;
-        Fri, 17 Apr 2020 15:13:46 -0700 (PDT)
-Received: by mail-qk1-x744.google.com with SMTP id t3so4214580qkg.1;
-        Fri, 17 Apr 2020 15:13:46 -0700 (PDT)
+        Fri, 17 Apr 2020 18:13:48 -0400
+Received: from mail-qv1-xf41.google.com (mail-qv1-xf41.google.com [IPv6:2607:f8b0:4864:20::f41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2AD40C061A0C;
+        Fri, 17 Apr 2020 15:13:48 -0700 (PDT)
+Received: by mail-qv1-xf41.google.com with SMTP id p13so1708681qvt.12;
+        Fri, 17 Apr 2020 15:13:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=iZwNKOyj4NwNMXhZfqTeRorCY/0+cxmYDzA7LdOH228=;
-        b=CzHuzbBrOPSwENlS63xf247SLJsqy+HezhesqQH2aCg8/sGnDMinR5qoBT8TPTqEY7
-         tlvgZPKQobRdwVWfgdgL+sTX0oiwb+4ISuYs6BrraipRJ0CsXL9RgFstY5ojbXd451w9
-         ywLkV4aJE1Y+5O5J1218vcROKvmij/ZmCdRi6HaTubypeNhWrZDPLPfWsj0hAJo6GNBc
-         BRDn4J7n736qVzg6dVZCQyC2ohRayKXEsj/FJq/juafyC62wgZnnQT47aggkWu/y7X2t
-         crZVIjiGAlKClP3Ce2+IwKGSPLIUHYKrgWadyt7llL2HaFLR56hgKrtIzeX/AYptvEj4
-         S4dg==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=7B6SrQT0D7WfMSqghGvoNR+EnmUDacbv7y61tIkDB3Y=;
+        b=oc0CHcHtczf3dVffDYydR4cn8a2ZWVKExiEWDzjGGYoGLV20k8nIoMVh+dqd3q0yKq
+         Zv4NUzZPjDj5k9NE4El1f63QgZZOXG2emf/goaFeJ5uw1E1QwVkqNjegWgSA2CZYno1z
+         Y4oVQa/g5CPm5LcLczRQ2lJEjs90TrAoiDoQ7zWVlS+T0Y2AKolfS0wkGCgTs4/yKXKx
+         4gDj2My8t05w5/lscDQSI7i4RegIfnTkUZi8u75r/1sgfHIu6seM4WGuyEB8rWFLMnyq
+         oLpdErOMlZXMIAQC+N3kVXg8OU3P+0l6fyQoHsoBpor8ocvCVswVng0ptRCgNcj7YaiD
+         ZaBQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=iZwNKOyj4NwNMXhZfqTeRorCY/0+cxmYDzA7LdOH228=;
-        b=IqzJ4adHHfaAiFxXEnFggBxGYdf5kowMVnc4EHZ+m/fv1cFEOtcCcT8dVRIQTkIkJN
-         GxxVypCiOxw0gdEvrd15vJA+4oOMwM6mXvuWOQrJ/pvbp1CbHHiYQ4pWqsECC1X4DczZ
-         qY9XuHDZVBF2ULkk+YlwSjk7svGuNkRgrd0/d6dhZJ7MaCksSnfM8rY06HpeuD1IyI9q
-         FBoSdhCtuv2InOEnp37jiKI2JpDSxyh5Wx7u6Oprcnib3tdxICIDcbW//00qEgTd6w5R
-         VbJG0s4V/JkVvSl36++WC7ibKjPoNfaiiZuKrNZqatDDODW4viTvmT5TMznvMCr86Kgx
-         Nnqg==
-X-Gm-Message-State: AGi0PuYKGJwP+EX4Iw4fCdo/2JWNBqzEvgdbV60kU9yMDZ6Lsn1iBsPE
-        oa8ifyfMV2o9XinnQtCXd+w=
-X-Google-Smtp-Source: APiQypKUWeVW/aqVwxqOtgWr0FHKUWN77nS8urp+P97zU8zc5k1GGUly5gXQ9YyRvDYFQjGofKgr9A==
-X-Received: by 2002:a05:620a:6b0:: with SMTP id i16mr5206640qkh.385.1587161625578;
-        Fri, 17 Apr 2020 15:13:45 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=7B6SrQT0D7WfMSqghGvoNR+EnmUDacbv7y61tIkDB3Y=;
+        b=Lx9u1ckgqPMUVgRo2L1PKlJ8+f3rHaBuZwDngTSCiiqtz59iXl7p8BlIswO5Xx5uTl
+         POQ7jlSIlQAg0agYlfIGGbYllV3vaUxVH+eYA5CymYpkLGWL5RuV859WLKP3NzFoa1pk
+         XGdAD0Sj0zaxZ4lHgoMH2EzflJUhnzFhKamY5r3BbEc3oLlkTyC++dz0tRZp7GeqKK1S
+         MMlUzuC3CqFT2aZwpihWALyjdifTnntiTiUSEghrS7lhNxContX3DebnY48n+n71/0+L
+         hZxiqywxgwN6HC0grTKj+USuRoXMXcmdDOPQqiPZFTZsidjSDAmZLiUTB1z3jVO6Jyx/
+         Qyqw==
+X-Gm-Message-State: AGi0PuY6sEbNcBDoKNnMZx2FSOf3vVMmm8LmzrvK+ZqrMX/6R9mZmkaH
+        VyH9CvrPWWD316Ba7ZXL8TA=
+X-Google-Smtp-Source: APiQypJJsAZpufMa9M6sPywhOPDKf3SvVgilv88LkY2zlOnxnyjqs3O4H5Hepq5+g9Ayq9kUxqNhoA==
+X-Received: by 2002:a0c:9aea:: with SMTP id k42mr4996795qvf.91.1587161626954;
+        Fri, 17 Apr 2020 15:13:46 -0700 (PDT)
 Received: from localhost.localdomain ([72.53.229.195])
-        by smtp.gmail.com with ESMTPSA id u65sm17780126qkh.100.2020.04.17.15.13.44
+        by smtp.gmail.com with ESMTPSA id u65sm17780126qkh.100.2020.04.17.15.13.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Apr 2020 15:13:45 -0700 (PDT)
+        Fri, 17 Apr 2020 15:13:46 -0700 (PDT)
 From:   Sven Van Asbroeck <thesven73@gmail.com>
 X-Google-Original-From: Sven Van Asbroeck <TheSven73@gmail.com>
 To:     Rob Herring <robh+dt@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
@@ -65,17 +66,29 @@ To:     Rob Herring <robh+dt@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
 Cc:     Liam Girdwood <lgirdwood@gmail.com>,
         Mark Brown <broonie@kernel.org>, alsa-devel@alsa-project.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/2] dt-bindings: sound: add Microsemi ZL38060 binding
-Date:   Fri, 17 Apr 2020 18:13:40 -0400
-Message-Id: <20200417221341.31428-1-TheSven73@gmail.com>
+Subject: [PATCH v2 2/2] ASoC: Add initial ZL38060 driver
+Date:   Fri, 17 Apr 2020 18:13:41 -0400
+Message-Id: <20200417221341.31428-2-TheSven73@gmail.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200417221341.31428-1-TheSven73@gmail.com>
+References: <20200417221341.31428-1-TheSven73@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add devicetree binding for the Microsemi ZL38060 Connected
-Home Audio Processor.
+The ZL38060 is a "Connected Home Audio Processor" from Microsemi,
+which consists of a Digital Signal Processor (DSP), several Digital
+Audio Interfaces (DAIs), analog outputs, and a block of 14 GPIOs.
+
+This driver supports only a tiny subset of the chip's functionality
+and possible configurations:
+- bypass mode (whole dsp block is bypassed)
+- chip's I2S DAI routed directly to/from DACs and microphone
+- chip's internal clock is driven by a 12 MHz external crystal
+- chip's DAI connected to CPU is I2S, and bit + frame clock master
+- chip must be strapped for "host boot": in this mode, firmware will
+  be provided by this driver.
 
 Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
 ---
@@ -84,90 +97,732 @@ Tree: v5.7-rc1
 
 v1->v2:
 
-- removed all properties related to amp-en-gpios
-- removed 'mscc,load-firmware' property
+Mark Brown:
 
-For further details, see v1->v2 notes in 2nd patch.
+- fixup comment style at top of file.
 
- .../devicetree/bindings/sound/zl38060.yaml    | 69 +++++++++++++++++++
- 1 file changed, 69 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/sound/zl38060.yaml
+- fixup curly braces in if-elseif-else statement.
 
-diff --git a/Documentation/devicetree/bindings/sound/zl38060.yaml b/Documentation/devicetree/bindings/sound/zl38060.yaml
+- explicitly put the chip in reset so it reverts to a known state.
+  
+- remove 'mscc,load-firmware' devicetree property, which provided support for
+  switching between chip bootstrap modes (host boot / auto boot from external
+  flash).
+  On reflection, I cannot test correct operation of auto-boot - it involves
+  interaction with the Bootloader Status Register, and I have no access to an
+  auto-boot zl38060.
+  This means the only tested and supported mode will be 'host boot', where the
+  firmware is programmed by the host CPU (ie. Linux).
+
+- remove amplifier enable gpio. if required, it should be part of the machine
+  layer.
+
+Sven Van Asbroeck:
+
+- add dapm widgets: DAC1, DAC2, DMICL. Routed to Playback and Capture,
+  respectively. This is required to drive a microphone amp-enable gpio
+  from the machine layer.
+
+
+ sound/soc/codecs/Kconfig   |  11 +
+ sound/soc/codecs/Makefile  |   2 +
+ sound/soc/codecs/zl38060.c | 638 +++++++++++++++++++++++++++++++++++++
+ 3 files changed, 651 insertions(+)
+ create mode 100644 sound/soc/codecs/zl38060.c
+
+diff --git a/sound/soc/codecs/Kconfig b/sound/soc/codecs/Kconfig
+index e6a0c5d05fa5..7cb032757d32 100644
+--- a/sound/soc/codecs/Kconfig
++++ b/sound/soc/codecs/Kconfig
+@@ -272,6 +272,7 @@ config SND_SOC_ALL_CODECS
+ 	imply SND_SOC_WM9712
+ 	imply SND_SOC_WM9713
+ 	imply SND_SOC_WSA881X
++	imply SND_SOC_ZL38060
+ 	help
+ 	  Normally ASoC codec drivers are only built if a machine driver which
+ 	  uses them is also built since they are only usable with a machine
+@@ -1642,6 +1643,16 @@ config SND_SOC_WSA881X
+ 	  This enables support for Qualcomm WSA8810/WSA8815 Class-D
+ 	  Smart Speaker Amplifier.
+ 
++config SND_SOC_ZL38060
++	tristate "Microsemi ZL38060 Connected Home Audio Processor"
++	depends on SPI_MASTER
++	select GPIOLIB
++	select REGMAP
++	help
++	  Support for ZL38060 Connected Home Audio Processor from Microsemi,
++	  which consists of a Digital Signal Processor (DSP), several Digital
++	  Audio Interfaces (DAIs), analog outputs, and a block of 14 GPIOs.
++
+ config SND_SOC_ZX_AUD96P22
+ 	tristate "ZTE ZX AUD96P22 CODEC"
+ 	depends on I2C
+diff --git a/sound/soc/codecs/Makefile b/sound/soc/codecs/Makefile
+index 03533157cda6..a603532c7af5 100644
+--- a/sound/soc/codecs/Makefile
++++ b/sound/soc/codecs/Makefile
+@@ -288,6 +288,7 @@ snd-soc-wm9712-objs := wm9712.o
+ snd-soc-wm9713-objs := wm9713.o
+ snd-soc-wm-hubs-objs := wm_hubs.o
+ snd-soc-wsa881x-objs := wsa881x.o
++snd-soc-zl38060-objs := zl38060.o
+ snd-soc-zx-aud96p22-objs := zx_aud96p22.o
+ # Amp
+ snd-soc-max9877-objs := max9877.o
+@@ -588,6 +589,7 @@ obj-$(CONFIG_SND_SOC_WM9713)	+= snd-soc-wm9713.o
+ obj-$(CONFIG_SND_SOC_WM_ADSP)	+= snd-soc-wm-adsp.o
+ obj-$(CONFIG_SND_SOC_WM_HUBS)	+= snd-soc-wm-hubs.o
+ obj-$(CONFIG_SND_SOC_WSA881X)	+= snd-soc-wsa881x.o
++obj-$(CONFIG_SND_SOC_ZL38060)	+= snd-soc-zl38060.o
+ obj-$(CONFIG_SND_SOC_ZX_AUD96P22) += snd-soc-zx-aud96p22.o
+ 
+ # Amp
+diff --git a/sound/soc/codecs/zl38060.c b/sound/soc/codecs/zl38060.c
 new file mode 100644
-index 000000000000..338e2a13c775
+index 000000000000..927ad849ad2d
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/zl38060.yaml
-@@ -0,0 +1,69 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/sound/zl38060.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
++++ b/sound/soc/codecs/zl38060.c
+@@ -0,0 +1,638 @@
++// SPDX-License-Identifier: GPL-2.0-only
++//
++// Codec driver for Microsemi ZL38060 Connected Home Audio Processor.
++//
++// Copyright(c) 2020 Sven Van Asbroeck
 +
-+title: ZL38060 Connected Home Audio Processor from Microsemi.
++// The ZL38060 is very flexible and configurable. This driver implements only a
++// tiny subset of the chip's possible configurations:
++//
++// - DSP block bypassed: DAI        routed straight to DACs
++//                       microphone routed straight to DAI
++// - chip's internal clock is driven by a 12 MHz external crystal
++// - chip's DAI connected to CPU is I2S, and bit + frame clock master
++// - chip must be strapped for "host boot": in this mode, firmware will be
++//   provided by this driver.
 +
-+description: |
-+  The ZL38060 is a "Connected Home Audio Processor" from Microsemi,
-+  which consists of a Digital Signal Processor (DSP), several Digital
-+  Audio Interfaces (DAIs), analog outputs, and a block of 14 GPIOs.
++#include <linux/gpio/consumer.h>
++#include <linux/gpio/driver.h>
++#include <linux/property.h>
++#include <linux/spi/spi.h>
++#include <linux/regmap.h>
++#include <linux/module.h>
++#include <linux/ihex.h>
 +
-+maintainers:
-+  - Jaroslav Kysela <perex@perex.cz>
-+  - Takashi Iwai <tiwai@suse.com>
++#include <sound/pcm_params.h>
++#include <sound/core.h>
++#include <sound/pcm.h>
++#include <sound/soc.h>
 +
-+properties:
-+  compatible:
-+    const: mscc,zl38060
++#define DRV_NAME		"zl38060"
 +
-+  reg:
-+    description:
-+      SPI device address.
-+    maxItems: 1
++#define ZL38_RATES		(SNDRV_PCM_RATE_8000  |\
++				SNDRV_PCM_RATE_16000 |\
++				SNDRV_PCM_RATE_48000)
++#define ZL38_FORMATS		SNDRV_PCM_FMTBIT_S16_LE
 +
-+  spi-max-frequency:
-+    maximum: 24000000
++#define HBI_FIRMWARE_PAGE	0xFF
++#define ZL38_MAX_RAW_XFER	0x100
 +
-+  reset-gpios:
-+    description:
-+      A GPIO line handling reset of the chip. As the line is active low,
-+      it should be marked GPIO_ACTIVE_LOW (see ../gpio/gpio.txt)
-+    maxItems: 1
++#define REG_TDMA_CFG_CLK	0x0262
++#define CFG_CLK_PCLK_SHIFT	4
++#define CFG_CLK_PCLK_MASK	(0x7ff << CFG_CLK_PCLK_SHIFT)
++#define CFG_CLK_PCLK(bits)	((bits - 1) << CFG_CLK_PCLK_SHIFT)
++#define CFG_CLK_MASTER		BIT(15)
++#define CFG_CLK_FSRATE_MASK	0x7
++#define CFG_CLK_FSRATE_8KHZ	0x1
++#define CFG_CLK_FSRATE_16KHZ	0x2
++#define CFG_CLK_FSRATE_48KHZ	0x6
 +
-+  '#gpio-cells':
-+    const: 2
++#define REG_CLK_CFG		0x0016
++#define CLK_CFG_SOURCE_XTAL	BIT(15)
 +
-+  gpio-controller: true
++#define REG_CLK_STATUS		0x0014
++#define CLK_STATUS_HWRST	BIT(0)
 +
-+  '#sound-dai-cells':
-+    const: 0
++#define REG_PARAM_RESULT	0x0034
++#define PARAM_RESULT_READY	0xD3D3
 +
-+required:
-+  - compatible
-+  - reg
-+  - '#gpio-cells'
-+  - gpio-controller
-+  - '#sound-dai-cells'
++#define REG_PG255_BASE_HI	0x000C
++#define REG_PG255_OFFS(addr)	((HBI_FIRMWARE_PAGE << 8) | (addr & 0xFF))
++#define REG_FWR_EXEC		0x012C
 +
-+additionalProperties: false
++#define REG_CMD			0x0032
++#define REG_HW_REV		0x0020
++#define REG_FW_PROD		0x0022
++#define REG_FW_REV		0x0024
 +
-+examples:
-+  - |
-+    #include <dt-bindings/gpio/gpio.h>
-+    spi0 {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
++#define REG_SEMA_FLAGS		0x0006
++#define SEMA_FLAGS_BOOT_CMD	BIT(0)
++#define SEMA_FLAGS_APP_REBOOT	BIT(1)
 +
-+        codec: zl38060@0 {
-+            gpio-controller;
-+            #gpio-cells = <2>;
-+            #sound-dai-cells = <0>;
-+            compatible = "mscc,zl38060";
-+            reg = <0>;
-+            spi-max-frequency = <12000000>;
-+            reset-gpios = <&gpio1 0 GPIO_ACTIVE_LOW>;
-+        };
-+    };
++#define REG_HW_REV		0x0020
++#define REG_FW_PROD		0x0022
++#define REG_FW_REV		0x0024
++#define REG_GPIO_DIR		0x02DC
++#define REG_GPIO_DAT		0x02DA
++
++#define BOOTCMD_LOAD_COMPLETE	0x000D
++#define BOOTCMD_FW_GO		0x0008
++
++#define FIRMWARE_MAJOR		2
++#define FIRMWARE_MINOR		2
++
++struct zl38_codec_priv {
++	struct device *dev;
++	struct regmap *regmap;
++	bool is_stream_in_use[2];
++	struct gpio_chip *gpio_chip;
++};
++
++static int zl38_fw_issue_command(struct regmap *regmap, u16 cmd)
++{
++	unsigned int val;
++	int err;
++
++	err = regmap_read_poll_timeout(regmap, REG_SEMA_FLAGS, val,
++				       !(val & SEMA_FLAGS_BOOT_CMD), 10000,
++				       10000 * 100);
++	if (err)
++		return err;
++	err = regmap_write(regmap, REG_CMD, cmd);
++	if (err)
++		return err;
++	err = regmap_update_bits(regmap, REG_SEMA_FLAGS, SEMA_FLAGS_BOOT_CMD,
++				 SEMA_FLAGS_BOOT_CMD);
++	if (err)
++		return err;
++
++	return regmap_read_poll_timeout(regmap, REG_CMD, val, !val, 10000,
++					10000 * 100);
++}
++
++static int zl38_fw_go(struct regmap *regmap)
++{
++	int err;
++
++	err = zl38_fw_issue_command(regmap, BOOTCMD_LOAD_COMPLETE);
++	if (err)
++		return err;
++
++	return zl38_fw_issue_command(regmap, BOOTCMD_FW_GO);
++}
++
++static int zl38_fw_enter_boot_mode(struct regmap *regmap)
++{
++	unsigned int val;
++	int err;
++
++	err = regmap_update_bits(regmap, REG_CLK_STATUS, CLK_STATUS_HWRST,
++				 CLK_STATUS_HWRST);
++	if (err)
++		return err;
++
++	return regmap_read_poll_timeout(regmap, REG_PARAM_RESULT, val,
++					val == PARAM_RESULT_READY, 1000, 50000);
++}
++
++static int
++zl38_fw_send_data(struct regmap *regmap, u32 addr, const void *data, u16 len)
++{
++	__be32 addr_base = cpu_to_be32(addr & ~0xFF);
++	int err;
++
++	err = regmap_raw_write(regmap, REG_PG255_BASE_HI, &addr_base,
++			       sizeof(addr_base));
++	if (err)
++		return err;
++	return regmap_raw_write(regmap, REG_PG255_OFFS(addr), data, len);
++}
++
++static int zl38_fw_send_xaddr(struct regmap *regmap, const void *data)
++{
++	/* execution address from ihex: 32-bit little endian.
++	 * device register expects 32-bit big endian.
++	 */
++	u32 addr = le32_to_cpup(data);
++	__be32 baddr = cpu_to_be32(addr);
++
++	return regmap_raw_write(regmap, REG_FWR_EXEC, &baddr, sizeof(baddr));
++}
++
++static int zl38_load_firmware(struct device *dev, struct regmap *regmap)
++{
++	const struct ihex_binrec *rec;
++	const struct firmware *fw;
++	u32 addr;
++	u16 len;
++	int err;
++
++	/* how to get this firmware:
++	 * 1. request and download chip firmware from Microsemi
++	 *    (provided by Microsemi in srec format)
++	 * 2. convert downloaded firmware from srec to ihex. Simple tool:
++	 *    https://gitlab.com/TheSven73/s3-to-irec
++	 * 3. convert ihex to binary (.fw) using ihex2fw tool which is included
++	 *    with the Linux kernel sources
++	 */
++	err = request_ihex_firmware(&fw, "zl38060.fw", dev);
++	if (err)
++		return err;
++	err = zl38_fw_enter_boot_mode(regmap);
++	if (err)
++		goto out;
++	rec = (const struct ihex_binrec *)fw->data;
++	while (rec) {
++		addr = be32_to_cpu(rec->addr);
++		len = be16_to_cpu(rec->len);
++		if (addr) {
++			/* regular data ihex record */
++			err = zl38_fw_send_data(regmap, addr, rec->data, len);
++		} else if (len == 4) {
++			/* execution address ihex record */
++			err = zl38_fw_send_xaddr(regmap, rec->data);
++		} else {
++			err = -EINVAL;
++		}
++		if (err)
++			goto out;
++		/* next ! */
++		rec = ihex_next_binrec(rec);
++	}
++	err = zl38_fw_go(regmap);
++
++out:
++	release_firmware(fw);
++	return err;
++}
++
++
++static int zl38_software_reset(struct regmap *regmap)
++{
++	unsigned int val;
++	int err;
++
++	err = regmap_update_bits(regmap, REG_SEMA_FLAGS, SEMA_FLAGS_APP_REBOOT,
++				 SEMA_FLAGS_APP_REBOOT);
++	if (err)
++		return err;
++
++	/* wait for host bus interface to settle.
++	 * Not sure if this is required: Microsemi's vendor driver does this,
++	 * but the firmware manual does not mention it. Leave it in, there's
++	 * little downside, apart from a slower reset.
++	 */
++	msleep(50);
++
++	return regmap_read_poll_timeout(regmap, REG_SEMA_FLAGS, val,
++					!(val & SEMA_FLAGS_APP_REBOOT), 10000,
++					10000 * 100);
++}
++
++static int zl38_set_fmt(struct snd_soc_dai *dai, unsigned int fmt)
++{
++	struct zl38_codec_priv *priv = snd_soc_dai_get_drvdata(dai);
++	int err;
++
++	switch (fmt & SND_SOC_DAIFMT_FORMAT_MASK) {
++	case SND_SOC_DAIFMT_I2S:
++		/* firmware default is normal i2s */
++		break;
++	default:
++		return -EINVAL;
++	}
++
++	switch (fmt & SND_SOC_DAIFMT_INV_MASK) {
++	case SND_SOC_DAIFMT_NB_NF:
++		/* firmware default is normal bitclock and frame */
++		break;
++	default:
++		return -EINVAL;
++	}
++
++	switch (fmt & SND_SOC_DAIFMT_MASTER_MASK) {
++	case SND_SOC_DAIFMT_CBM_CFM:
++		/* always 32 bits per frame (= 16 bits/channel, 2 channels) */
++		err = regmap_update_bits(priv->regmap, REG_TDMA_CFG_CLK,
++					 CFG_CLK_MASTER | CFG_CLK_PCLK_MASK,
++					 CFG_CLK_MASTER | CFG_CLK_PCLK(32));
++		if (err)
++			return err;
++		break;
++	default:
++		return -EINVAL;
++	}
++
++	return 0;
++}
++
++static int zl38_hw_params(struct snd_pcm_substream *substream,
++			  struct snd_pcm_hw_params *params,
++			  struct snd_soc_dai *dai)
++{
++	struct zl38_codec_priv *priv = snd_soc_dai_get_drvdata(dai);
++	bool tx = substream->stream == SNDRV_PCM_STREAM_PLAYBACK;
++	unsigned int fsrate;
++	int err;
++
++	/* We cannot change hw_params while the dai is already in use - the
++	 * software reset will corrupt the audio. However, this is not required,
++	 * as the chip's TDM buses are fully symmetric, which mandates identical
++	 * rates, channels, and samplebits for record and playback.
++	 */
++	if (priv->is_stream_in_use[!tx])
++		goto skip_setup;
++
++	switch (params_rate(params)) {
++	case 8000:
++		fsrate = CFG_CLK_FSRATE_8KHZ;
++		break;
++	case 16000:
++		fsrate = CFG_CLK_FSRATE_16KHZ;
++		break;
++	case 48000:
++		fsrate = CFG_CLK_FSRATE_48KHZ;
++		break;
++	default:
++		return -EINVAL;
++	};
++
++	err = regmap_update_bits(priv->regmap, REG_TDMA_CFG_CLK,
++				 CFG_CLK_FSRATE_MASK, fsrate);
++	if (err)
++		return err;
++
++	/* chip requires a software reset to apply audio register changes */
++	err = zl38_software_reset(priv->regmap);
++	if (err)
++		return err;
++
++skip_setup:
++	priv->is_stream_in_use[tx] = true;
++
++	return 0;
++}
++
++static int zl38_hw_free(struct snd_pcm_substream *substream,
++			struct snd_soc_dai *dai)
++{
++	struct zl38_codec_priv *priv = snd_soc_dai_get_drvdata(dai);
++	bool tx = substream->stream == SNDRV_PCM_STREAM_PLAYBACK;
++
++	priv->is_stream_in_use[tx] = false;
++
++	return 0;
++}
++
++/* stereo bypass with no AEC */
++static const struct reg_sequence cp_config_stereo_bypass[] = {
++	/* interconnects must be programmed first */
++	{ 0x0210, 0x0005 },	/* DAC1   in <= I2S1-L */
++	{ 0x0212, 0x0006 },	/* DAC2   in <= I2S1-R */
++	{ 0x0214, 0x0001 },	/* I2S1-L in <= MIC1   */
++	{ 0x0216, 0x0001 },	/* I2S1-R in <= MIC1   */
++	{ 0x0224, 0x0000 },	/* AEC-S  in <= n/a    */
++	{ 0x0226, 0x0000 },	/* AEC-R  in <= n/a    */
++	/* output enables must be programmed next */
++	{ 0x0202, 0x000F },	/* enable I2S1 + DAC   */
++};
++
++static const struct snd_soc_dai_ops zl38_dai_ops = {
++	.set_fmt = zl38_set_fmt,
++	.hw_params = zl38_hw_params,
++	.hw_free = zl38_hw_free,
++};
++
++static struct snd_soc_dai_driver zl38_dai = {
++	.name = "zl38060-tdma",
++	.playback = {
++		.stream_name = "Playback",
++		.channels_min = 2,
++		.channels_max = 2,
++		.rates = ZL38_RATES,
++		.formats = ZL38_FORMATS,
++	},
++	.capture = {
++		.stream_name = "Capture",
++		.channels_min = 2,
++		.channels_max = 2,
++		.rates = ZL38_RATES,
++		.formats = ZL38_FORMATS,
++	},
++	.ops = &zl38_dai_ops,
++	.symmetric_rates = 1,
++	.symmetric_samplebits = 1,
++	.symmetric_channels = 1,
++};
++
++static const struct snd_soc_dapm_widget zl38_dapm_widgets[] = {
++	SND_SOC_DAPM_OUTPUT("DAC1"),
++	SND_SOC_DAPM_OUTPUT("DAC2"),
++
++	SND_SOC_DAPM_INPUT("DMICL"),
++};
++
++static const struct snd_soc_dapm_route zl38_dapm_routes[] = {
++	{ "DAC1",  NULL, "Playback" },
++	{ "DAC2",  NULL, "Playback" },
++
++	{ "Capture",  NULL, "DMICL" },
++};
++
++static const struct snd_soc_component_driver zl38_component_dev = {
++	.dapm_widgets		= zl38_dapm_widgets,
++	.num_dapm_widgets	= ARRAY_SIZE(zl38_dapm_widgets),
++	.dapm_routes		= zl38_dapm_routes,
++	.num_dapm_routes	= ARRAY_SIZE(zl38_dapm_routes),
++	.endianness		= 1,
++	.non_legacy_dai_naming	= 1,
++};
++
++static void chip_gpio_set(struct gpio_chip *c, unsigned int offset, int val)
++{
++	struct regmap *regmap = gpiochip_get_data(c);
++	unsigned int mask = BIT(offset);
++
++	regmap_update_bits(regmap, REG_GPIO_DAT, mask, val ? mask : 0);
++}
++
++static int chip_gpio_get(struct gpio_chip *c, unsigned int offset)
++{
++	struct regmap *regmap = gpiochip_get_data(c);
++	unsigned int mask = BIT(offset);
++	unsigned int val;
++	int err;
++
++	err = regmap_read(regmap, REG_GPIO_DAT, &val);
++	if (err)
++		return err;
++
++	return !!(val & mask);
++}
++
++static int chip_direction_input(struct gpio_chip *c, unsigned int offset)
++{
++	struct regmap *regmap = gpiochip_get_data(c);
++	unsigned int mask = BIT(offset);
++
++	return regmap_update_bits(regmap, REG_GPIO_DIR, mask, 0);
++}
++
++static int
++chip_direction_output(struct gpio_chip *c, unsigned int offset, int val)
++{
++	struct regmap *regmap = gpiochip_get_data(c);
++	unsigned int mask = BIT(offset);
++
++	chip_gpio_set(c, offset, val);
++	return regmap_update_bits(regmap, REG_GPIO_DIR, mask, mask);
++}
++
++static const struct gpio_chip template_chip = {
++	.owner = THIS_MODULE,
++	.label = DRV_NAME,
++
++	.base = -1,
++	.ngpio = 14,
++	.direction_input = chip_direction_input,
++	.direction_output = chip_direction_output,
++	.get = chip_gpio_get,
++	.set = chip_gpio_set,
++
++	.can_sleep = true,
++};
++
++static int zl38_check_revision(struct device *dev, struct regmap *regmap)
++{
++	unsigned int hwrev, fwprod, fwrev;
++	int fw_major, fw_minor, fw_micro;
++	int err;
++
++	err = regmap_read(regmap, REG_HW_REV, &hwrev);
++	if (err)
++		return err;
++	err = regmap_read(regmap, REG_FW_PROD, &fwprod);
++	if (err)
++		return err;
++	err = regmap_read(regmap, REG_FW_REV, &fwrev);
++	if (err)
++		return err;
++
++	fw_major = (fwrev >> 12) & 0xF;
++	fw_minor = (fwrev >>  8) & 0xF;
++	fw_micro = fwrev & 0xFF;
++	dev_info(dev, "hw rev 0x%x, fw product code %d, firmware rev %d.%d.%d",
++		 hwrev & 0x1F, fwprod, fw_major, fw_minor, fw_micro);
++
++	if (fw_major != FIRMWARE_MAJOR || fw_minor < FIRMWARE_MINOR) {
++		dev_err(dev, "unsupported firmware. driver supports %d.%d",
++			FIRMWARE_MAJOR, FIRMWARE_MINOR);
++		return -EINVAL;
++	}
++
++	return 0;
++}
++
++static int zl38_bus_read(void *context,
++			 const void *reg_buf, size_t reg_size,
++			 void *val_buf, size_t val_size)
++{
++	struct spi_device *spi = context;
++	const u8 *reg_buf8 = reg_buf;
++	size_t len = 0;
++	u8 offs, page;
++	u8 txbuf[4];
++
++	if (reg_size != 2 || val_size > ZL38_MAX_RAW_XFER)
++		return -EINVAL;
++
++	offs = reg_buf8[1] >> 1;
++	page = reg_buf8[0];
++
++	if (page) {
++		txbuf[len++] = 0xFE;
++		txbuf[len++] = page == HBI_FIRMWARE_PAGE ? 0xFF : page - 1;
++		txbuf[len++] = offs;
++		txbuf[len++] = val_size / 2 - 1;
++	} else {
++		txbuf[len++] = offs | 0x80;
++		txbuf[len++] = val_size / 2 - 1;
++	}
++
++	return spi_write_then_read(spi, txbuf, len, val_buf, val_size);
++}
++
++static int zl38_bus_write(void *context, const void *data, size_t count)
++{
++	struct spi_device *spi = context;
++	u8 buf[4 + ZL38_MAX_RAW_XFER];
++	size_t val_len, len = 0;
++	const u8 *data8 = data;
++	u8 offs, page;
++
++	if (count > (2 + ZL38_MAX_RAW_XFER) || count < 4)
++		return -EINVAL;
++	val_len = count - 2;
++	offs = data8[1] >> 1;
++	page = data8[0];
++
++	if (page) {
++		buf[len++] = 0xFE;
++		buf[len++] = page == HBI_FIRMWARE_PAGE ? 0xFF : page - 1;
++		buf[len++] = offs;
++		buf[len++] = (val_len / 2 - 1) | 0x80;
++	} else {
++		buf[len++] = offs | 0x80;
++		buf[len++] = (val_len / 2 - 1) | 0x80;
++	}
++	memcpy(buf + len, data8 + 2, val_len);
++	len += val_len;
++
++	return spi_write(spi, buf, len);
++}
++
++static const struct regmap_bus zl38_regmap_bus = {
++	.read = zl38_bus_read,
++	.write = zl38_bus_write,
++	.max_raw_write = ZL38_MAX_RAW_XFER,
++	.max_raw_read = ZL38_MAX_RAW_XFER,
++};
++
++static const struct regmap_config zl38_regmap_conf = {
++	.reg_bits = 16,
++	.val_bits = 16,
++	.reg_stride = 2,
++	.use_single_read = true,
++	.use_single_write = true,
++};
++
++static int zl38_spi_probe(struct spi_device *spi)
++{
++	struct device *dev = &spi->dev;
++	struct zl38_codec_priv *priv;
++	struct gpio_desc *reset_gpio;
++	int err;
++
++	/* get the chip to a known state by putting it in reset */
++	reset_gpio = devm_gpiod_get_optional(dev, "reset", GPIOD_OUT_HIGH);
++	if (IS_ERR(reset_gpio))
++		return PTR_ERR(reset_gpio);
++	if (reset_gpio) {
++		/* datasheet: need > 10us for a digital + analog reset */
++		usleep_range(15, 50);
++		/* take the chip out of reset */
++		gpiod_set_value_cansleep(reset_gpio, 0);
++		/* datasheet: need > 3ms for digital section to become stable */
++		usleep_range(3000, 10000);
++	}
++
++	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
++	if (!priv)
++		return -ENOMEM;
++
++	priv->dev = dev;
++	dev_set_drvdata(dev, priv);
++	priv->regmap = devm_regmap_init(dev, &zl38_regmap_bus, spi,
++					&zl38_regmap_conf);
++	if (IS_ERR(priv->regmap))
++		return PTR_ERR(priv->regmap);
++
++	err = zl38_load_firmware(dev, priv->regmap);
++	if (err)
++		return err;
++
++	err = zl38_check_revision(dev, priv->regmap);
++	if (err)
++		return err;
++
++	priv->gpio_chip = devm_kmemdup(dev, &template_chip,
++				       sizeof(template_chip), GFP_KERNEL);
++	if (!priv->gpio_chip)
++		return -ENOMEM;
++#ifdef CONFIG_OF_GPIO
++	priv->gpio_chip->of_node = dev->of_node;
++#endif
++	err = devm_gpiochip_add_data(dev, priv->gpio_chip, priv->regmap);
++	if (err)
++		return err;
++
++	/* setup the cross-point switch for stereo bypass */
++	err = regmap_multi_reg_write(priv->regmap, cp_config_stereo_bypass,
++				     ARRAY_SIZE(cp_config_stereo_bypass));
++	if (err)
++		return err;
++	/* setup for 12MHz crystal connected to the chip */
++	err = regmap_update_bits(priv->regmap, REG_CLK_CFG, CLK_CFG_SOURCE_XTAL,
++				 CLK_CFG_SOURCE_XTAL);
++	if (err)
++		return err;
++
++	return devm_snd_soc_register_component(dev, &zl38_component_dev,
++					       &zl38_dai, 1);
++}
++
++static const struct of_device_id zl38_dt_ids[] = {
++	{ .compatible = "mscc,zl38060", },
++	{ /* sentinel */ }
++};
++MODULE_DEVICE_TABLE(of, zl38_dt_ids);
++
++static const struct spi_device_id zl38_spi_ids[] = {
++	{ "zl38060", 0 },
++	{ /* sentinel */ }
++};
++MODULE_DEVICE_TABLE(spi, zl38_spi_ids);
++
++static struct spi_driver zl38060_spi_driver = {
++	.driver	= {
++		.name = DRV_NAME,
++		.of_match_table = of_match_ptr(zl38_dt_ids),
++	},
++	.probe = zl38_spi_probe,
++	.id_table = zl38_spi_ids,
++};
++module_spi_driver(zl38060_spi_driver);
++
++MODULE_DESCRIPTION("ASoC ZL38060 driver");
++MODULE_AUTHOR("Sven Van Asbroeck <TheSven73@gmail.com>");
++MODULE_LICENSE("GPL v2");
 -- 
 2.17.1
 
