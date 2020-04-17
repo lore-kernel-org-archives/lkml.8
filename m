@@ -2,168 +2,218 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 887B3C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 00:54:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9F56C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 01:00:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5E48D2064A
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 00:54:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54D0520776
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 01:00:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=gibson.dropbear.id.au header.i=@gibson.dropbear.id.au header.b="nfuuW22a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728704AbgDQAyF (ORCPT
+        id S1728544AbgDQBAq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 20:54:05 -0400
-Received: from mga05.intel.com ([192.55.52.43]:14430 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725858AbgDQAyF (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 20:54:05 -0400
-IronPort-SDR: v7U9cyEAuUd4tpBLlTETgaDYiwR1Aw4cFkEe2n5hckkLU5EojOiNia2f1XVRmP2deqNGwHqvDr
- 6dX7ISAGk7Fg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2020 17:54:04 -0700
-IronPort-SDR: 9nrEFpP1p+k6NEwvNMf+6A30nG/noeLSahwQAPg1nLbSbDHwJC3beW6IcXWRudUHHd/vym74vE
- Tmgz4TiuNuDA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,392,1580803200"; 
-   d="scan'208";a="278199854"
-Received: from kbl-ppc.sh.intel.com ([10.239.159.118])
-  by fmsmga004.fm.intel.com with ESMTP; 16 Apr 2020 17:54:02 -0700
-From:   Jin Yao <yao.jin@linux.intel.com>
-To:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
-        mingo@redhat.com, alexander.shishkin@linux.intel.com
-Cc:     Linux-kernel@vger.kernel.org, ak@linux.intel.com,
-        kan.liang@intel.com, yao.jin@intel.com,
-        Jin Yao <yao.jin@linux.intel.com>
-Subject: [PATCH] perf stat: Improve runtime stat for interval mode
-Date:   Fri, 17 Apr 2020 08:51:54 +0800
-Message-Id: <20200417005154.9024-1-yao.jin@linux.intel.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 16 Apr 2020 21:00:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51010 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725858AbgDQBAp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 21:00:45 -0400
+X-Greylist: delayed 76000 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 16 Apr 2020 18:00:45 PDT
+Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 663ACC061A0C;
+        Thu, 16 Apr 2020 18:00:45 -0700 (PDT)
+Received: by ozlabs.org (Postfix, from userid 1007)
+        id 493Hp22p84z9sRN; Fri, 17 Apr 2020 11:00:42 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+        d=gibson.dropbear.id.au; s=201602; t=1587085242;
+        bh=g1ERQ546dSK/iDMW/vYxYEg//1XoTyotxttCfMkrVjg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=nfuuW22aTv5Z15ezeMLKG24F0NK/WIaRzA9pEnl6YeZIoRMNSHsrHTIENWaJm+v/y
+         rysf+XzfR1PJs5Y83K7zXL4c82mhHRPAyLLw+XtvglbTzwnw+LHNGzah11hglaA8lm
+         /WYJLFcQZUVeQFIrPX5NY0cH9c/WR1W0/JVSEBYk=
+Date:   Fri, 17 Apr 2020 10:47:28 +1000
+From:   David Gibson <david@gibson.dropbear.id.au>
+To:     =?iso-8859-1?Q?C=E9dric?= Le Goater <clg@kaod.org>
+Cc:     Paul Mackerras <paulus@ozlabs.org>, kvm@vger.kernel.org,
+        kvm-ppc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, groug@kaod.org
+Subject: Re: [PATCH] KVM: PPC: Book3S HV: Handle non-present PTEs in page
+ fault functions
+Message-ID: <20200417004728.GB2102@umbus.fritz.box>
+References: <20200416050335.GB10545@blackberry>
+ <a4e1bf29-af52-232e-d0d2-06206fa05fbe@kaod.org>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="U+BazGySraz5kW0T"
+Content-Disposition: inline
+In-Reply-To: <a4e1bf29-af52-232e-d0d2-06206fa05fbe@kaod.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-For interval mode, the metric is printed after # if it exists. But
-it's not calculated by the counts generated in this interval. See
-following examples,
 
- root@kbl-ppc:~# perf stat -M CPI -I1000 --interval-count 2
- #           time             counts unit events
-      1.000422803            764,809      inst_retired.any          #      2.9 CPI
-      1.000422803          2,234,932      cycles
-      2.001464585          1,960,061      inst_retired.any          #      1.6 CPI
-      2.001464585          4,022,591      cycles
+--U+BazGySraz5kW0T
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-The second CPI should not be 1.6 (4,022,591/1,960,061 is 2.1)
+On Thu, Apr 16, 2020 at 10:07:49AM +0200, C=E9dric Le Goater wrote:
+> On 4/16/20 7:03 AM, Paul Mackerras wrote:
+> > Since cd758a9b57ee "KVM: PPC: Book3S HV: Use __gfn_to_pfn_memslot in HPT
+> > page fault handler", it's been possible in fairly rare circumstances to
+> > load a non-present PTE in kvmppc_book3s_hv_page_fault() when running a
+> > guest on a POWER8 host.
+> >=20
+> > Because that case wasn't checked for, we could misinterpret the non-pre=
+sent
+> > PTE as being a cache-inhibited PTE.  That could mismatch with the
+> > corresponding hash PTE, which would cause the function to fail with -EF=
+AULT
+> > a little further down.  That would propagate up to the KVM_RUN ioctl()
+> > generally causing the KVM userspace (usually qemu) to fall over.
+> >=20
+> > This addresses the problem by catching that case and returning to the g=
+uest
+> > instead, letting it fault again, and retrying the whole page fault from
+> > the beginning.
+> >=20
+> > For completeness, this fixes the radix page fault handler in the same
+> > way.  For radix this didn't cause any obvious misbehaviour, because we
+> > ended up putting the non-present PTE into the guest's partition-scoped
+> > page tables, leading immediately to another hypervisor data/instruction
+> > storage interrupt, which would go through the page fault path again
+> > and fix things up.
+> >=20
+> > Fixes: cd758a9b57ee "KVM: PPC: Book3S HV: Use __gfn_to_pfn_memslot in H=
+PT page fault handler"
+> > Bugzilla: https://bugzilla.redhat.com/show_bug.cgi?id=3D1820402
+> > Reported-by: David Gibson <david@gibson.dropbear.id.au>
+> > Signed-off-by: Paul Mackerras <paulus@ozlabs.org>
+>=20
+> I didn't see the reported issue with the current 5.7-rc1. Anyhow I gave
+> this patch a try on a P8 host and a P9 host with a radix guest and a hash=
+=20
+> guest (using rhel6). Passthrough is fine also.
+>=20
+> Tested-by: C=E9dric Le Goater <clg@kaod.org>
+>=20
+> The code looks correct,
+>=20
+> Reviewed-by: C=E9dric Le Goater <clg@kaod.org>
 
- root@kbl-ppc:~# perf stat -e cycles,instructions -I1000 --interval-count 2
- #           time             counts unit events
-      1.000429493          2,869,311      cycles
-      1.000429493            816,875      instructions              #    0.28  insn per cycle
-      2.001516426          9,260,973      cycles
-      2.001516426          5,250,634      instructions              #    0.87  insn per cycle
+I ran my test case overnight with this patch for over 1000 iterations,
+without any apparent problems so
 
-The second 'insn per cycle' should not be 0.87 (5,250,634/9,260,973 is 0.57).
+Tested-by: David Gibson <david@gibson.dropbear.id.au>
 
-The current code uses a global variable rt_stat for tracking and
-updating the std dev of runtime stat. Unlike the counts, rt_stat is
-not reset for interval. While the counts are reset for interval.
+>=20
+> Thanks,
+>=20
+> C.=20
+>=20
+>=20
+> > ---
+> > This is a reworked version of the patch David Gibson sent recently,
+> > with the fix applied to the radix case as well. The commit message
+> > is mostly stolen from David's patch.
+> >=20
+> >  arch/powerpc/kvm/book3s_64_mmu_hv.c    | 9 +++++----
+> >  arch/powerpc/kvm/book3s_64_mmu_radix.c | 9 +++++----
+> >  2 files changed, 10 insertions(+), 8 deletions(-)
+> >=20
+> > diff --git a/arch/powerpc/kvm/book3s_64_mmu_hv.c b/arch/powerpc/kvm/boo=
+k3s_64_mmu_hv.c
+> > index 3aecec8..20b7dce 100644
+> > --- a/arch/powerpc/kvm/book3s_64_mmu_hv.c
+> > +++ b/arch/powerpc/kvm/book3s_64_mmu_hv.c
+> > @@ -604,18 +604,19 @@ int kvmppc_book3s_hv_page_fault(struct kvm_run *r=
+un, struct kvm_vcpu *vcpu,
+> >  	 */
+> >  	local_irq_disable();
+> >  	ptep =3D __find_linux_pte(vcpu->arch.pgdir, hva, NULL, &shift);
+> > +	pte =3D __pte(0);
+> > +	if (ptep)
+> > +		pte =3D *ptep;
+> > +	local_irq_enable();
+> >  	/*
+> >  	 * If the PTE disappeared temporarily due to a THP
+> >  	 * collapse, just return and let the guest try again.
+> >  	 */
+> > -	if (!ptep) {
+> > -		local_irq_enable();
+> > +	if (!pte_present(pte)) {
+> >  		if (page)
+> >  			put_page(page);
+> >  		return RESUME_GUEST;
+> >  	}
+> > -	pte =3D *ptep;
+> > -	local_irq_enable();
+> >  	hpa =3D pte_pfn(pte) << PAGE_SHIFT;
+> >  	pte_size =3D PAGE_SIZE;
+> >  	if (shift)
+> > diff --git a/arch/powerpc/kvm/book3s_64_mmu_radix.c b/arch/powerpc/kvm/=
+book3s_64_mmu_radix.c
+> > index 134fbc1..7bf94ba 100644
+> > --- a/arch/powerpc/kvm/book3s_64_mmu_radix.c
+> > +++ b/arch/powerpc/kvm/book3s_64_mmu_radix.c
+> > @@ -815,18 +815,19 @@ int kvmppc_book3s_instantiate_page(struct kvm_vcp=
+u *vcpu,
+> >  	 */
+> >  	local_irq_disable();
+> >  	ptep =3D __find_linux_pte(vcpu->arch.pgdir, hva, NULL, &shift);
+> > +	pte =3D __pte(0);
+> > +	if (ptep)
+> > +		pte =3D *ptep;
+> > +	local_irq_enable();
+> >  	/*
+> >  	 * If the PTE disappeared temporarily due to a THP
+> >  	 * collapse, just return and let the guest try again.
+> >  	 */
+> > -	if (!ptep) {
+> > -		local_irq_enable();
+> > +	if (!pte_present(pte)) {
+> >  		if (page)
+> >  			put_page(page);
+> >  		return RESUME_GUEST;
+> >  	}
+> > -	pte =3D *ptep;
+> > -	local_irq_enable();
+> > =20
+> >  	/* If we're logging dirty pages, always map single pages */
+> >  	large_enable =3D !(memslot->flags & KVM_MEM_LOG_DIRTY_PAGES);
+> >=20
+>=20
 
-perf_stat_process_counter()
-{
-	if (config->interval)
-		init_stats(ps->res_stats);
-}
+--=20
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
 
-So for interval, the rt_stat should be reset either.
+--U+BazGySraz5kW0T
+Content-Type: application/pgp-signature; name="signature.asc"
 
-This patch resets rt_stat before read_counters, so the runtime
-stat is only calculated by the counts generated in this interval.
+-----BEGIN PGP SIGNATURE-----
 
-With this patch,
+iQIzBAEBCAAdFiEEdfRlhq5hpmzETofcbDjKyiDZs5IFAl6Y/J8ACgkQbDjKyiDZ
+s5KeARAArge+EauSGPsWkcx5KJ/iOjUpSUSe5mHJXFyeD7zO+1qpwNVo0QIwKzGX
+aLQMtZ+t/rcs88mFkuXQG8aZyx4e3kD8WW8I0cFM8BvaKFLpoRb5JRSrd+hwa+Yd
+imn0LHe2UZlB5MFML9IV6zBFk0juz4mdxW9vYtLzIm1Icp2+u/t7k8iQyKNjvRKC
+p4EG5NI1rwRFT/vreArPc5EwtOAnAQlQpdijOc8uSCgJ60kqX1go4pMnmP8xK25t
+99vntr3jIIFY6C0rjRHh64mOClY3DW8b+0J6tEUKTQDV710mx1uvJJm/Oxwetxpk
+mefPm9FHtRfgpuMEO5nzovCfMlms6O4cQ7zsxHVt8LcUn4W8HuP4Od0HQv13Yfuh
+vbTjpEYUS1Ls+bh2DXbpSpGtlZY33FZN+adBxcYN+rOTlYXGKrkti2kGgjO1wGiE
+MpCEJx7VXgvpm2T9Q12DACTRT0uEIa9wwun2bTNepGTcQp35uX1HedjzWjNHxZu2
+Ou8RtC2zmVbauKk8UBlueqyqmHopcPPS72ef5AC9cHZSY0zyHrMC3lGvc0Pj5J3V
++kAMpuYufu2+46aFkZZcHz2pzJnw072qqx7KuVX0wdMC0r+wDFL1ULvAS82EjDmu
+S0lWrvygkvL9zjSFcp2K+dCtU6TwAg2LJBVCdvV/Zw9jqWWvE54=
+=ivnP
+-----END PGP SIGNATURE-----
 
- root@kbl-ppc:~# perf stat -M CPI -I1000 --interval-count 2
- #           time             counts unit events
-      1.000420924          2,408,818      inst_retired.any          #      2.1 CPI
-      1.000420924          5,010,111      cycles
-      2.001448579          2,798,407      inst_retired.any          #      1.6 CPI
-      2.001448579          4,599,861      cycles
-
- root@kbl-ppc:~# perf stat -e cycles,instructions -I1000 --interval-count 2
- #           time             counts unit events
-      1.000428555          2,769,714      cycles
-      1.000428555            774,462      instructions              #    0.28  insn per cycle
-      2.001471562          3,595,904      cycles
-      2.001471562          1,243,703      instructions              #    0.35  insn per cycle
-
-Now the second 'insn per cycle' and CPI are calculated by the counts
-generated in this interval.
-
-Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
----
- tools/perf/Documentation/perf-stat.txt | 2 ++
- tools/perf/builtin-stat.c              | 1 +
- tools/perf/util/stat-shadow.c          | 5 +++++
- tools/perf/util/stat.h                 | 1 +
- 4 files changed, 9 insertions(+)
-
-diff --git a/tools/perf/Documentation/perf-stat.txt b/tools/perf/Documentation/perf-stat.txt
-index 4d56586b2fb9..3fb5028aef08 100644
---- a/tools/perf/Documentation/perf-stat.txt
-+++ b/tools/perf/Documentation/perf-stat.txt
-@@ -176,6 +176,8 @@ Print count deltas every N milliseconds (minimum: 1ms)
- The overhead percentage could be high in some cases, for instance with small, sub 100ms intervals.  Use with caution.
- 	example: 'perf stat -I 1000 -e cycles -a sleep 5'
- 
-+If the metric exists, it is calculated by the counts generated in this interval and the metric is printed after #.
-+
- --interval-count times::
- Print count deltas for fixed number of times.
- This option should be used together with "-I" option.
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index ec053dc1e35c..d5c326ff46d0 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -359,6 +359,7 @@ static void process_interval(void)
- 	clock_gettime(CLOCK_MONOTONIC, &ts);
- 	diff_timespec(&rs, &ts, &ref_time);
- 
-+	perf_stat__reset_rt_stat();
- 	read_counters(&rs);
- 
- 	if (STAT_RECORD) {
-diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
-index 1ad5c5be7e97..c8f5ca6c8749 100644
---- a/tools/perf/util/stat-shadow.c
-+++ b/tools/perf/util/stat-shadow.c
-@@ -186,6 +186,11 @@ void perf_stat__reset_shadow_stats(void)
- 	memset(&walltime_nsecs_stats, 0, sizeof(walltime_nsecs_stats));
- }
- 
-+void perf_stat__reset_rt_stat(void)
-+{
-+	reset_stat(&rt_stat);
-+}
-+
- void perf_stat__reset_shadow_per_stat(struct runtime_stat *st)
- {
- 	reset_stat(st);
-diff --git a/tools/perf/util/stat.h b/tools/perf/util/stat.h
-index b4fdfaa7f2c0..2975494166dd 100644
---- a/tools/perf/util/stat.h
-+++ b/tools/perf/util/stat.h
-@@ -176,6 +176,7 @@ void runtime_stat__init(struct runtime_stat *st);
- void runtime_stat__exit(struct runtime_stat *st);
- void perf_stat__init_shadow_stats(void);
- void perf_stat__reset_shadow_stats(void);
-+void perf_stat__reset_rt_stat(void);
- void perf_stat__reset_shadow_per_stat(struct runtime_stat *st);
- void perf_stat__update_shadow_stats(struct evsel *counter, u64 count,
- 				    int cpu, struct runtime_stat *st);
--- 
-2.17.1
-
+--U+BazGySraz5kW0T--
