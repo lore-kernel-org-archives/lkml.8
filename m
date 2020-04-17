@@ -2,148 +2,141 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39BB9C2D0EF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 19:58:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4766BC38A29
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 20:00:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2079620776
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 19:58:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 262C4221EA
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 20:00:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LnUVsZT2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730780AbgDQT6S (ORCPT
+        id S1730892AbgDQUAw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 15:58:18 -0400
-Received: from smtprelay0225.hostedemail.com ([216.40.44.225]:37994 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730573AbgDQT6R (ORCPT
+        Fri, 17 Apr 2020 16:00:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58580 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730573AbgDQUAv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 15:58:17 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay04.hostedemail.com (Postfix) with ESMTP id D4035180A7344;
-        Fri, 17 Apr 2020 19:58:16 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: owl79_4831856ceed2e
-X-Filterd-Recvd-Size: 3676
-Received: from XPS-9350.home (unknown [47.151.136.130])
-        (Authenticated sender: joe@perches.com)
-        by omf02.hostedemail.com (Postfix) with ESMTPA;
-        Fri, 17 Apr 2020 19:58:15 +0000 (UTC)
-Message-ID: <51793346cd065247886af6d54c32691e94c9b843.camel@perches.com>
-Subject: Re: checkpatch.pl: WARNING: else is not generally useful after a
- break or return
-From:   Joe Perches <joe@perches.com>
-To:     Luben Tuikov <luben.tuikov@amd.com>,
-        Andy Whitcroft <apw@canonical.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Date:   Fri, 17 Apr 2020 12:56:03 -0700
-In-Reply-To: <064ada88-9fa3-6f6d-967c-00d4e2d325ae@amd.com>
-References: <064ada88-9fa3-6f6d-967c-00d4e2d325ae@amd.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.34.1-2 
+        Fri, 17 Apr 2020 16:00:51 -0400
+Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F556C061A0C;
+        Fri, 17 Apr 2020 13:00:51 -0700 (PDT)
+Received: by mail-ed1-x543.google.com with SMTP id r7so2366175edo.11;
+        Fri, 17 Apr 2020 13:00:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=joiVaQizEHaQZ2229PthKafbXhuM8H8qQDWmPkZCvPA=;
+        b=LnUVsZT2G4m7K2lZmIsUWXkdivVV7HhXp7uePi8XVh4Qriiw2cP6w0bxLLQvkkZCo2
+         mdeOh5wMSkjEB9Xp1TpEzd414vQnYcilg+41HBWsJyNeN8qjMp2hS7ElPg/O1d/Aj9wz
+         qi6KGI3SZcAvZRpN8+0+BQmZFjO97IiV5M3dSc6baK53+gtSmRAyLA0Ss33+3hoYPlF5
+         OSJHY0PopkE10g6GPTZ+QsB6HRj/Wfj2wiyKR5cWe96nc1Fdauos2edLzf2NYQoCPPuC
+         VXT7NZV8ej+/85a1lPIpdvg0IDCWxzsCMeyZwltHMZflAeaTdwgNp0mKuPIlcTVv0byq
+         TfIw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=joiVaQizEHaQZ2229PthKafbXhuM8H8qQDWmPkZCvPA=;
+        b=akT+S38ImNpMObn/zK+50LGtnAjegjtn7rtu43gaU7tvPJYnEYs5oX7gBvHE51U+PA
+         mOtmJv+pCjF2CMp25sb0xwNOtnEev8dx9YerFjGJgvy5pSO4BBdvWHPNnTRQKYz8QkHK
+         5TTimK9wJmHrW+I7TrnXindIX3hOHP7VOVOVtli9F+WgL/B/8R2KIZLdx1CNGTESnRl2
+         9FB8vhyihBx6XpsV3vYcFoemvCa1Kq5OrhVOD5Ga7VFIKJkZsIWmSX0xA881z0LVp/ui
+         ZRhcWltxe9oDiYCQKVsrfPV374yN92L8ecPNPdYqgN4d+6lUYmQ5zV30AUYQzIC03vpV
+         KRjg==
+X-Gm-Message-State: AGi0PuYYMI7LWk+Py1mPCaHPY1UG4aeDmcq/c43PyrSRVads49FTufrs
+        Dx0zH2H0+BkgQqogEz0Uunk0FqjGnHwj9uaqs9vEfg==
+X-Google-Smtp-Source: APiQypKyynWkw9qiXw74DF+bVe4DJIZMb0xgKZx3xRiuhX79mYKMVpvzm2p7v9bZYkxIhiNetPBgXQ6xsUuHUHAMwKY=
+X-Received: by 2002:a50:a2e5:: with SMTP id 92mr4787735edm.139.1587153649966;
+ Fri, 17 Apr 2020 13:00:49 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+References: <20200417192858.6997-1-michael@walle.cc> <20200417192858.6997-2-michael@walle.cc>
+ <20200417193905.GF785713@lunn.ch> <ef747b543bd8dd34aea89a6243de8da4@walle.cc>
+In-Reply-To: <ef747b543bd8dd34aea89a6243de8da4@walle.cc>
+From:   Vladimir Oltean <olteanv@gmail.com>
+Date:   Fri, 17 Apr 2020 23:00:38 +0300
+Message-ID: <CA+h21hoB5n9DM0kcH_-DOzyxXvs5oMg-wxp-KkNTZOpfFhbWVA@mail.gmail.com>
+Subject: Re: [PATCH net-next 2/3] net: phy: add Broadcom BCM54140 support
+To:     Michael Walle <michael@walle.cc>
+Cc:     Andrew Lunn <andrew@lunn.ch>, linux-hwmon@vger.kernel.org,
+        lkml <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        "David S . Miller" <davem@davemloft.net>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2020-04-17 at 15:20 -0400, Luben Tuikov wrote:
-> Hi,
-> 
-> I'm getting what seems to be a false positive in this case:
-> 
-> :32: WARNING: else is not generally useful after a break or return
-> #32: FILE: drivers/gpu/drm/amd/amdgpu/amdgpu_job.c:55:
-> +		return 0;
-> +	} else {
-> 
-> for the following code, at the bottom of a function:
-> 
-> 	if (amdgpu_device_should_recover_gpu(ring->adev)) {
-> 		amdgpu_device_gpu_recover(ring->adev, job);
-> 		return 0;
-> 	} else {
-> 		drm_sched_suspend_timeout(&ring->sched);
-> 		return 1;
-> 	}
-> }
-> 
-> Which seems to be coming from commit:
-> 
-> commit 032a4c0f9a77ce565355c6e191553e853ba66f09
-> Author: Joe Perches <joe@perches.com>
-> Date:   Wed Aug 6 16:10:29 2014 -0700
-> 
->     checkpatch: warn on unnecessary else after return or break
->     
->     Using an else following a break or return can unnecessarily indent code
->     blocks.
->     
->     ie:
->             for (i = 0; i < 100; i++) {
->                     int foo = bar();
->                     if (foo < 1)
->                             break;
->                     else
->                             usleep(1);
->             }
->     
->     is generally better written as:
->     
->             for (i = 0; i < 100; i++) {
->                     int foo = bar();
->                     if (foo < 1)
->                             break;
->                     usleep(1);
->             }
->     
->     Warn when a bare else statement is preceded by a break or return
->     indented 1 tab more than the else.
->     
->     Signed-off-by: Joe Perches <joe@perches.com>
->     Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
->     Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-> 
-> While I agree with what the commit is trying to do,
-> it doesn't seem to apply to the if-else statement which I quoted
-> above. That is, the "else" is not "bare"--to use the lingo of
-> the commit.
-> 
-> I suggest that no warning is issued when the "else" is a compound
-> statement, as shown in my example at the top of this email.
-> 
-> It is only natural to write:
-> 
-> 	if (amdgpu_device_should_recover_gpu(ring->adev)) {
-> 		amdgpu_device_gpu_recover(ring->adev, job);
-> 		return 0;
-> 	} else {
-> 		drm_sched_suspend_timeout(&ring->sched);
-> 		return 1;
-> 	}
-> }
-> 
-> instead of,
-> 
-> 	if (amdgpu_device_should_recover_gpu(ring->adev)) {
-> 		amdgpu_device_gpu_recover(ring->adev, job);
-> 		return 0;
-> 	}
-> 	drm_sched_suspend_timeout(&ring->sched);
-> 	return 1;
-> }
+Hi Michael,
 
-This is continuing an email thread sent privately to Andy and me.
+On Fri, 17 Apr 2020 at 22:52, Michael Walle <michael@walle.cc> wrote:
+>
+> Hi Andrew,
+>
+> Am 2020-04-17 21:39, schrieb Andrew Lunn:
+> > On Fri, Apr 17, 2020 at 09:28:57PM +0200, Michael Walle wrote:
+> >
+> >> +static int bcm54140_get_base_addr_and_port(struct phy_device *phydev)
+> >> +{
+> >> +    struct bcm54140_phy_priv *priv = phydev->priv;
+> >> +    struct mii_bus *bus = phydev->mdio.bus;
+> >> +    int addr, min_addr, max_addr;
+> >> +    int step = 1;
+> >> +    u32 phy_id;
+> >> +    int tmp;
+> >> +
+> >> +    min_addr = phydev->mdio.addr;
+> >> +    max_addr = phydev->mdio.addr;
+> >> +    addr = phydev->mdio.addr;
+> >> +
+> >> +    /* We scan forward and backwards and look for PHYs which have the
+> >> +     * same phy_id like we do. Step 1 will scan forward, step 2
+> >> +     * backwards. Once we are finished, we have a min_addr and
+> >> +     * max_addr which resembles the range of PHY addresses of the same
+> >> +     * type of PHY. There is one caveat; there may be many PHYs of
+> >> +     * the same type, but we know that each PHY takes exactly 4
+> >> +     * consecutive addresses. Therefore we can deduce our offset
+> >> +     * to the base address of this quad PHY.
+> >> +     */
+> >
+> > Hi Michael
+> >
+> > How much flexibility is there in setting the base address using
+> > strapping etc? Is it limited to a multiple of 4?
+>
+> You can just set the base address to any address. Then the following
+> addresses are used:
+>    base, base + 1, base + 2, base + 3, (base + 4)*
+>
+> It is not specified what happens if you set the base so that it would
+> overflow. I guess that is a invalid strapping.
+>
+> * (base + 4) is some kind of special PHY address which maps some kind
+> of moving window to a QSGMII address space. It is enabled by default,
+> could be disabled in software, but it doesn't share the same PHY id
+> for which this scans.
+>
+> So yes, if you look at the addresses and the phy ids, there are
+> always 4 of this.
+>
+> -michael
 
-I disagree and do not believe this should be implemented in
-checkpatch as an accepted typical coding style.
+What does the reading of the global register give you, when accessed
+through the master PHY ID vs any other PHY ID? Could you use that as
+an indication of this being the correct PHY ID, and scan only to the
+left?
 
-btw:
-
-Even in your example, amdgpu_device_gpu_recover has a return
-value, can fail, and likely should not just return 0.
-
-
-
+Regards,
+-Vladimir
