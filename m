@@ -2,113 +2,134 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78877C2BB55
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 05:34:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36CF2C2BB55
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 05:36:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 51BE921D91
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 05:34:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="uf+XpTVj"
+	by mail.kernel.org (Postfix) with ESMTP id 229A82223D
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 05:36:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726320AbgDQFe5 (ORCPT
+        id S1726469AbgDQFgN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 01:34:57 -0400
-Received: from Mailgw01.mediatek.com ([1.203.163.78]:24169 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725298AbgDQFe5 (ORCPT
+        Fri, 17 Apr 2020 01:36:13 -0400
+Received: from mail-il1-f197.google.com ([209.85.166.197]:51168 "EHLO
+        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725867AbgDQFgM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 01:34:57 -0400
-X-UUID: c9a7a2fb22524b9b862c1592da84e80e-20200417
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=bUFVZsbh1IFtMkOupYY4so6J8bYhLyH6LTR/8vJHYYg=;
-        b=uf+XpTVjXJS+lrsK/5Qf5Z0yXIvGYvYw932ay1v4cGU/vHmZOADuSKTptFKEtl8pnz7bRBa6nC9XNtEdKM4CYsyXjPK3Zbg1GBalU6HFmxKEfyvbPX7T+HDqIBYsOqACe27O+bX6DGjhHh1Vo2fCgwGN5niziDLsmJMUpSF/kKQ=;
-X-UUID: c9a7a2fb22524b9b862c1592da84e80e-20200417
-Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
-        (envelope-from <chunfeng.yun@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 886313153; Fri, 17 Apr 2020 13:34:50 +0800
-Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS31N1.mediatek.inc
- (172.27.4.69) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Fri, 17 Apr
- 2020 13:34:47 +0800
-Received: from [10.17.3.153] (10.17.3.153) by MTKCAS36.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Fri, 17 Apr 2020 13:34:47 +0800
-Message-ID: <1587101661.28772.40.camel@mhfsdcap03>
-Subject: Re: [PATCH 2/2] phy: phy-mtk-tphy: introduce force_vbus for u2 phy
-From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
-To:     Macpaul Lin <macpaul.lin@mediatek.com>
-CC:     Min Guo <min.Guo@mediatek.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        Mediatek WSD Upstream <wsd_upstream@mediatek.com>,
-        Macpaul Lin <macpaul.lin@gmail.com>
-Date:   Fri, 17 Apr 2020 13:34:21 +0800
-In-Reply-To: <1587100986-3104-2-git-send-email-macpaul.lin@mediatek.com>
-References: <1587100986-3104-1-git-send-email-macpaul.lin@mediatek.com>
-         <1587100986-3104-2-git-send-email-macpaul.lin@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Fri, 17 Apr 2020 01:36:12 -0400
+Received: by mail-il1-f197.google.com with SMTP id s7so1424262ilo.17
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 22:36:11 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=RG1OjG9ZdHjWBn7iqio0bdclmjO74pm7jn+YvPQidL0=;
+        b=L5GZyS4n8pK12qXY1yJoZz9Jg4KiDxrCsJZ2H+tak6SnjMribq9yg5uEYda2y/QTJS
+         LI0f1sfZ/k747RetvB0bvOP7EsSsn7bEhJPiSU8ndaUu+mwRAx/2jI2hgXyn1pp3Tit3
+         I64uEsYoaBfOY4oh5yMzI8wt+hlWwHR63Hh/KrU23AYB8gJCPLdoBJQNdSx/3Y+3cOr3
+         jZK67OtUD1nvryot1MkQ2XtOfKIzSBpFcTDYDBoODMq8BSb+iq4j+4Vs01JElp9NUORY
+         PrtenR4/xh+krDJMJSeaLdalA3pdmVg3P9duGDYqEu/h2AnLV2KM0APXt/BqrDWPALLZ
+         uzxw==
+X-Gm-Message-State: AGi0PuaVuBbmpWOsXqy32tF/rwohlJ3jH7TKXOBsrxyqeAe1Bz7SAvW9
+        gNKO1tSnJTT1xkGPwompS/oER0LkBReq5stJ+WWXM87IxUJ0
+X-Google-Smtp-Source: APiQypLvXl9tpCF4fnR+aei09iO499VlF+wR3/zjHxkwGFgHuFkXtq6v3vVfMQ5Dhd/rSCQ0GcFMPJIUbFK3kwrTdjVYsyin7M4F
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: BF05952D618A127CD5818E03CF14DCD593C923CD996704F9E83F26F467CE44782000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+X-Received: by 2002:a02:4445:: with SMTP id o66mr1759803jaa.36.1587101771040;
+ Thu, 16 Apr 2020 22:36:11 -0700 (PDT)
+Date:   Thu, 16 Apr 2020 22:36:11 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000490f1005a375ed34@google.com>
+Subject: WARNING in nf_nat_unregister_fn
+From:   syzbot <syzbot+33e06702fd6cffc24c40@syzkaller.appspotmail.com>
+To:     coreteam@netfilter.org, davem@davemloft.net, fw@strlen.de,
+        kadlec@netfilter.org, kuba@kernel.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        netfilter-devel@vger.kernel.org, pablo@netfilter.org,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgTWFjcGF1bCwNCg0KT24gRnJpLCAyMDIwLTA0LTE3IGF0IDEzOjIzICswODAwLCBNYWNwYXVs
-IExpbiB3cm90ZToNCj4gRm9yIHNvbWUgcGxhdGZvcm1zLCB0aGV5IGRvbid0IGhhdmUgdmJ1cyBw
-aW4gY29ubmVjdGlvbiBiZXR3ZWVuIHVzYiBwaHkgYW5kDQo+IG1hYy4gSGVuY2Ugd2UgbmVlZCB0
-byBjb250cm9sIGZvcmNlX3ZidXMgcmVsYXRlZCByZWdpc3RlcnMgdG8ga2VlcCBoYXJkd2FyZQ0K
-PiB3b3JrcyBub3JtYWwuDQo+IFRoaXMgcGF0Y2ggYWRkIGNvcnJlc3BvbmRpbmcgYmVoYXZpb3Ig
-b2YgZm9yY2UgdmJ1cyBpbiB1MiBwaHkgcmVsYXRlZA0KPiBmdW5jdGlvbnMuDQo+IA0KPiBTaWdu
-ZWQtb2ZmLWJ5OiBNYWNwYXVsIExpbiA8bWFjcGF1bC5saW5AbWVkaWF0ZWsuY29tPg0KTkFDSywg
-SSB0cmllZCB0byBzdXBwb3J0IGl0IGVhcmx5LCBidXQgZm91bmQgdGhpcyB3aWxsIGNhdXNlIHNv
-bWUgaXNzdWUNCmZvciBTUy9TU1AgZGV2aWNlIG9ubHkgbW9kZSwgc28gcGxlYXNlIGFiYW5kb24g
-dGhpcyBwYXRjaCwgdGhhbmtzDQoNCg0KPiAtLS0NCj4gIGRyaXZlcnMvcGh5L21lZGlhdGVrL3Bo
-eS1tdGstdHBoeS5jIHwgMTYgKysrKysrKysrKysrKysrLQ0KPiAgMSBmaWxlIGNoYW5nZWQsIDE1
-IGluc2VydGlvbnMoKyksIDEgZGVsZXRpb24oLSkNCj4gDQo+IGRpZmYgLS1naXQgYS9kcml2ZXJz
-L3BoeS9tZWRpYXRlay9waHktbXRrLXRwaHkuYyBiL2RyaXZlcnMvcGh5L21lZGlhdGVrL3BoeS1t
-dGstdHBoeS5jDQo+IGluZGV4IGNkYmNjNDlmNzExNS4uNDZmMGZlYTE3NWU1IDEwMDY0NA0KPiAt
-LS0gYS9kcml2ZXJzL3BoeS9tZWRpYXRlay9waHktbXRrLXRwaHkuYw0KPiArKysgYi9kcml2ZXJz
-L3BoeS9tZWRpYXRlay9waHktbXRrLXRwaHkuYw0KPiBAQCAtOTksNiArOTksNyBAQA0KPiAgDQo+
-ICAjZGVmaW5lIFUzUF9VMlBIWURUTTEJCTB4MDZDDQo+ICAjZGVmaW5lIFAyQ19SR19VQVJUX0VO
-CQkJQklUKDE2KQ0KPiArI2RlZmluZSBQMkNfRk9SQ0VfVkJVU1ZBTElECQlCSVQoMTMpDQo+ICAj
-ZGVmaW5lIFAyQ19GT1JDRV9JRERJRwkJQklUKDkpDQo+ICAjZGVmaW5lIFAyQ19SR19WQlVTVkFM
-SUQJCUJJVCg1KQ0KPiAgI2RlZmluZSBQMkNfUkdfU0VTU0VORAkJCUJJVCg0KQ0KPiBAQCAtMzE4
-LDYgKzMxOSw3IEBAIHN0cnVjdCBtdGtfdHBoeSB7DQo+ICAJaW50IG5waHlzOw0KPiAgCWludCBz
-cmNfcmVmX2NsazsgLyogTUhaLCByZWZlcmVuY2UgY2xvY2sgZm9yIHNsZXcgcmF0ZSBjYWxpYnJh
-dGUgKi8NCj4gIAlpbnQgc3JjX2NvZWY7IC8qIGNvZWZmaWNpZW50IGZvciBzbGV3IHJhdGUgY2Fs
-aWJyYXRlICovDQo+ICsJYm9vbCBmb3JjZV92YnVzOw0KPiAgfTsNCj4gIA0KPiAgc3RhdGljIHZv
-aWQgaHNfc2xld19yYXRlX2NhbGlicmF0ZShzdHJ1Y3QgbXRrX3RwaHkgKnRwaHksDQo+IEBAIC02
-MTEsMTMgKzYxMywyMCBAQCBzdGF0aWMgdm9pZCB1Ml9waHlfaW5zdGFuY2Vfc2V0X21vZGUoc3Ry
-dWN0IG10a190cGh5ICp0cGh5LA0KPiAgCXN3aXRjaCAobW9kZSkgew0KPiAgCWNhc2UgUEhZX01P
-REVfVVNCX0RFVklDRToNCj4gIAkJdG1wIHw9IFAyQ19GT1JDRV9JRERJRyB8IFAyQ19SR19JRERJ
-RzsNCj4gKwkJaWYgKHRwaHktPmZvcmNlX3ZidXMpDQo+ICsJCQl0bXAgfD0gUDJDX1JHX1ZCVVNW
-QUxJRCB8IFAyQ19GT1JDRV9WQlVTVkFMSUQ7DQo+ICAJCWJyZWFrOw0KPiAgCWNhc2UgUEhZX01P
-REVfVVNCX0hPU1Q6DQo+ICAJCXRtcCB8PSBQMkNfRk9SQ0VfSURESUc7DQo+IC0JCXRtcCAmPSB+
-UDJDX1JHX0lERElHOw0KPiArCQlpZiAodHBoeS0+Zm9yY2VfdmJ1cykNCj4gKwkJCXRtcCAmPSB+
-KFAyQ19SR19WQlVTVkFMSUQgfCBQMkNfRk9SQ0VfVkJVU1ZBTElEKTsNCj4gKwkJZWxzZQ0KPiAr
-CQkJdG1wICY9IH5QMkNfUkdfSURESUc7DQo+ICAJCWJyZWFrOw0KPiAgCWNhc2UgUEhZX01PREVf
-VVNCX09URzoNCj4gIAkJdG1wICY9IH4oUDJDX0ZPUkNFX0lERElHIHwgUDJDX1JHX0lERElHKTsN
-Cj4gKwkJaWYgKHRwaHktPmZvcmNlX3ZidXMpDQo+ICsJCQl0bXAgJj0gfihQMkNfUkdfVkJVU1ZB
-TElEIHwgUDJDX0ZPUkNFX1ZCVVNWQUxJRCk7DQo+ICAJCWJyZWFrOw0KPiAgCWRlZmF1bHQ6DQo+
-ICAJCXJldHVybjsNCj4gQEAgLTExODcsNiArMTE5NiwxMSBAQCBzdGF0aWMgaW50IG10a190cGh5
-X3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpDQo+ICAJCQlyZXR2YWwgPSBQVFJf
-RVJSKGluc3RhbmNlLT5kYV9yZWZfY2xrKTsNCj4gIAkJCWdvdG8gcHV0X2NoaWxkOw0KPiAgCQl9
-DQo+ICsNCj4gKwkJLyoNCj4gKwkJICogT24gc29tZSBwbGF0Zm9ybSwgdmJ1cyBpcyBkaXMtY29u
-bmVjdGVkIGJldHdlZW4gUEhZIGFuZCBNQUMuDQo+ICsJCSAqLw0KPiArCQl0cGh5LT5mb3JjZV92
-YnVzID0gZGV2aWNlX3Byb3BlcnR5X3JlYWRfYm9vbChkZXYsICJmb3JjZV92YnVzIik7DQo+ICAJ
-fQ0KPiAgDQo+ICAJcHJvdmlkZXIgPSBkZXZtX29mX3BoeV9wcm92aWRlcl9yZWdpc3RlcihkZXYs
-IG10a19waHlfeGxhdGUpOw0KDQo=
+Hello,
 
+syzbot found the following crash on:
+
+HEAD commit:    63bef48f Merge branch 'akpm' (patches from Andrew)
+git tree:       net-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=11e41777e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=94a7f1dec460ee83
+dashboard link: https://syzkaller.appspot.com/bug?extid=33e06702fd6cffc24c40
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+
+Unfortunately, I don't have any reproducer for this crash yet.
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+33e06702fd6cffc24c40@syzkaller.appspotmail.com
+
+------------[ cut here ]------------
+WARNING: CPU: 0 PID: 19934 at net/netfilter/nf_nat_core.c:1106 nf_nat_unregister_fn+0x532/0x5c0 net/netfilter/nf_nat_core.c:1106
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 0 PID: 19934 Comm: syz-executor.5 Not tainted 5.6.0-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x188/0x20d lib/dump_stack.c:118
+ panic+0x2e3/0x75c kernel/panic.c:221
+ __warn.cold+0x2f/0x35 kernel/panic.c:582
+ report_bug+0x27b/0x2f0 lib/bug.c:195
+ fixup_bug arch/x86/kernel/traps.c:175 [inline]
+ fixup_bug arch/x86/kernel/traps.c:170 [inline]
+ do_error_trap+0x12b/0x220 arch/x86/kernel/traps.c:267
+ do_invalid_op+0x32/0x40 arch/x86/kernel/traps.c:286
+ invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
+RIP: 0010:nf_nat_unregister_fn+0x532/0x5c0 net/netfilter/nf_nat_core.c:1106
+Code: ff df 48 c1 ea 03 80 3c 02 00 75 75 48 8b 44 24 10 4c 89 ef 48 c7 00 00 00 00 00 e8 e8 f8 53 fb e9 4d fe ff ff e8 ee 9c 16 fb <0f> 0b e9 41 fe ff ff e8 e2 45 54 fb e9 b5 fd ff ff 48 8b 7c 24 20
+RSP: 0018:ffffc90005487208 EFLAGS: 00010246
+RAX: 0000000000040000 RBX: 0000000000000004 RCX: ffffc9001444a000
+RDX: 0000000000040000 RSI: ffffffff865c94a2 RDI: 0000000000000005
+RBP: ffff88808b5cf000 R08: ffff8880a2620140 R09: fffffbfff14bcd79
+R10: ffffc90005487208 R11: fffffbfff14bcd78 R12: 0000000000000000
+R13: 0000000000000001 R14: 0000000000000001 R15: 0000000000000000
+ nf_nat_ipv6_unregister_fn net/netfilter/nf_nat_proto.c:1017 [inline]
+ nf_nat_inet_register_fn net/netfilter/nf_nat_proto.c:1038 [inline]
+ nf_nat_inet_register_fn+0xfc/0x140 net/netfilter/nf_nat_proto.c:1023
+ nf_tables_register_hook net/netfilter/nf_tables_api.c:224 [inline]
+ nf_tables_addchain.constprop.0+0x82e/0x13c0 net/netfilter/nf_tables_api.c:1981
+ nf_tables_newchain+0xf68/0x16a0 net/netfilter/nf_tables_api.c:2235
+ nfnetlink_rcv_batch+0x83a/0x1610 net/netfilter/nfnetlink.c:433
+ nfnetlink_rcv_skb_batch net/netfilter/nfnetlink.c:543 [inline]
+ nfnetlink_rcv+0x3af/0x420 net/netfilter/nfnetlink.c:561
+ netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
+ netlink_unicast+0x537/0x740 net/netlink/af_netlink.c:1329
+ netlink_sendmsg+0x882/0xe10 net/netlink/af_netlink.c:1918
+ sock_sendmsg_nosec net/socket.c:652 [inline]
+ sock_sendmsg+0xcf/0x120 net/socket.c:672
+ ____sys_sendmsg+0x6bf/0x7e0 net/socket.c:2362
+ ___sys_sendmsg+0x100/0x170 net/socket.c:2416
+ __sys_sendmsg+0xec/0x1b0 net/socket.c:2449
+ do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
+ entry_SYSCALL_64_after_hwframe+0x49/0xb3
+RIP: 0033:0x45c889
+Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007f2d5a3c6c78 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+RAX: ffffffffffffffda RBX: 00007f2d5a3c76d4 RCX: 000000000045c889
+RDX: 0000000000000000 RSI: 000000002000c2c0 RDI: 0000000000000003
+RBP: 000000000076bf00 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000004
+R13: 000000000000095d R14: 00000000004cc151 R15: 000000000000000c
+Kernel Offset: disabled
+Rebooting in 86400 seconds..
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
