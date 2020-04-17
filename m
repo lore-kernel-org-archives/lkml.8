@@ -2,148 +2,117 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41845C38A2B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 01:13:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55C8EC2D0EF
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 01:14:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 21055221F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 01:13:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="dB3/qAoN"
+	by mail.kernel.org (Postfix) with ESMTP id 3DC54218AC
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 01:14:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728748AbgDQBNC (ORCPT
+        id S1728073AbgDQBOe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 21:13:02 -0400
-Received: from mail-eopbgr00066.outbound.protection.outlook.com ([40.107.0.66]:6126
-        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725858AbgDQBM3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 21:12:29 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=eJbsQ0l3p051Ye9x4t1UjKMjAc5d3+A1NfMpmw8DN83RCNTYaaEtmIsewY4G9LHm9TDAjb3kGYReDZ5y/WedvH5yvoZmfhrc5Wglkvy9zP7Ym0RaIU8peVSzD4IEMFEAxWtFFVpk5Xq8INFN0sQy1vSbsO4Pj+BY7fiEwvzfupuPoZP2Re6lFWDWdq8YoWA9J0wqhRgbUq7oN8XDxhrwZS3QXFz4eZFnN4lHu/0VUGqHv0TWqRdsSXQ0i+n8WuwLCTcQSuUDmR1aGt5A2Bo6I/F0K43H6vP5oWr2GVBLdHHfUaYvzHMoJeg9WD8zTseKcWMZ2rIcnqBu6+uvmw9G7Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3908gRRsC5R9RqEQI8MM5RiPxynAWTWtPIBrXz1wJWk=;
- b=YQckjWxHge8oBoaAYfn0vBvpivCTy6sc/XahlXBhbUCDnZIWWQef0I6X+ybyiWhOOrheM5RVTgFXO1H1/y2qEGS9NWObib5tK8C0zNZaFpb6FJFwNZ7KK8iBJe7hvTlUGq1qBEuQ+Sm0hebPv7y0JAB1n1UM2UVyszg4+t++JWVuU4V9ne055T0LQwOAisaxST+1kHoM7r5zsaQNeTo+5HY8FZrz3xcnMrdSa/IGMzIS/7xJvbEI7/P/KWrITxtfgvKHsTcboHdqyZIWznoB1WpcLW/fzzIuZYsW12QwEHEYFbaoTeuho0rIE6r0N2KTnVJBomYiafsvDcl4dEfBEg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3908gRRsC5R9RqEQI8MM5RiPxynAWTWtPIBrXz1wJWk=;
- b=dB3/qAoNjnX8YlylwgpIfNLVDbGcBo2hV3aTTiUBjkwkCpIfVN7e12zsPrGabL9A6yzVvsYIrlhyMnkc0+/b7SDdqvvPHVvvNYXi3p8sszPV25cSy/+cd6RzijXfn710rDgt0xNVyZ6paR5MP8UjQp2jVMmBcm8dCfH5D4Cz43g=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=saeedm@mellanox.com; 
-Received: from VI1PR05MB5102.eurprd05.prod.outlook.com (2603:10a6:803:5e::23)
- by VI1PR05MB6237.eurprd05.prod.outlook.com (2603:10a6:803:d8::28) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.24; Fri, 17 Apr
- 2020 01:12:25 +0000
-Received: from VI1PR05MB5102.eurprd05.prod.outlook.com
- ([fe80::9d19:a564:b84e:7c19]) by VI1PR05MB5102.eurprd05.prod.outlook.com
- ([fe80::9d19:a564:b84e:7c19%7]) with mapi id 15.20.2900.030; Fri, 17 Apr 2020
- 01:12:25 +0000
-From:   Saeed Mahameed <saeedm@mellanox.com>
-To:     Masahiro Yamada <masahiroy@kernel.org>,
-        linux-kbuild@vger.kernel.org
-Cc:     Arnd Bergmann <arnd@arndb.de>, Jason Gunthorpe <jgg@ziepe.ca>,
-        Nicolas Pitre <nico@fluxnic.net>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Saeed Mahameed <saeedm@mellanox.com>, narmstrong@baylibre.com,
-        Laurent.pinchart@ideasonboard.com, leon@kernel.org,
-        kieran.bingham+renesas@ideasonboard.com, jonas@kwiboo.se,
-        airlied@linux.ie, jernej.skrabec@siol.net,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        linux-rdma@vger.kernel.org
-Subject: [RFC PATCH 2/2] net/mlx5: Kconfig: Use "uses" instead of "imply"
-Date:   Thu, 16 Apr 2020 18:11:46 -0700
-Message-Id: <20200417011146.83973-2-saeedm@mellanox.com>
-X-Mailer: git-send-email 2.25.2
-In-Reply-To: <20200417011146.83973-1-saeedm@mellanox.com>
-References: <20200417011146.83973-1-saeedm@mellanox.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: BYAPR08CA0041.namprd08.prod.outlook.com
- (2603:10b6:a03:117::18) To VI1PR05MB5102.eurprd05.prod.outlook.com
- (2603:10a6:803:5e::23)
+        Thu, 16 Apr 2020 21:14:34 -0400
+Received: from mga11.intel.com ([192.55.52.93]:14369 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725858AbgDQBOd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 21:14:33 -0400
+IronPort-SDR: XEFS9tfV/JgTyQfFuv4VlpD3+O4YSs4ZNqM+JaADKNRSKkqpXpayf2suA2yHs6TuSnVwC9Vis9
+ twYjrEzzzKWQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2020 18:14:32 -0700
+IronPort-SDR: sZlVw/7cjCHq0F1EFVv0TW8FklMi9s4vHlLYLRHCGjn12jklAHdg6QlmB19PsSs7PeDXqv0gk5
+ UINIzZVqpibg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,393,1580803200"; 
+   d="scan'208";a="272262073"
+Received: from orsmsx103.amr.corp.intel.com ([10.22.225.130])
+  by orsmga002.jf.intel.com with ESMTP; 16 Apr 2020 18:14:32 -0700
+Received: from orsmsx101.amr.corp.intel.com ([169.254.8.204]) by
+ ORSMSX103.amr.corp.intel.com ([169.254.5.143]) with mapi id 14.03.0439.000;
+ Thu, 16 Apr 2020 18:14:32 -0700
+From:   "Derrick, Jonathan" <jonathan.derrick@intel.com>
+To:     "joro@8bytes.org" <joro@8bytes.org>,
+        "drake@endlessm.com" <drake@endlessm.com>
+CC:     "heiko@sntech.de" <heiko@sntech.de>,
+        "kgene@kernel.org" <kgene@kernel.org>,
+        "jonathanh@nvidia.com" <jonathanh@nvidia.com>,
+        "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>,
+        "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
+        "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>,
+        "baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>,
+        "robin.murphy@arm.com" <robin.murphy@arm.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "linux-mediatek@lists.infradead.org" 
+        <linux-mediatek@lists.infradead.org>,
+        "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>,
+        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dwmw2@infradead.org" <dwmw2@infradead.org>,
+        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
+        "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>,
+        "jean-philippe@linaro.org" <jean-philippe@linaro.org>,
+        "will@kernel.org" <will@kernel.org>,
+        "krzk@kernel.org" <krzk@kernel.org>,
+        "linux-samsung-soc@vger.kernel.org" 
+        <linux-samsung-soc@vger.kernel.org>,
+        "robdclark@gmail.com" <robdclark@gmail.com>,
+        "gerald.schaefer@de.ibm.com" <gerald.schaefer@de.ibm.com>,
+        "linux-rockchip@lists.infradead.org" 
+        <linux-rockchip@lists.infradead.org>,
+        "agross@kernel.org" <agross@kernel.org>,
+        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
+Subject: Re: [PATCH v2 00/33] iommu: Move iommu_group setup to IOMMU core
+ code
+Thread-Topic: [PATCH v2 00/33] iommu: Move iommu_group setup to IOMMU core
+ code
+Thread-Index: AQHWEmDrg4k1XREwpUada/q2n6OD7qh8+KGAgAADDAA=
+Date:   Fri, 17 Apr 2020 01:14:30 +0000
+Message-ID: <aafed865c0254934986528b3ce9c4d34ff2fccad.camel@intel.com>
+References: <20200414131542.25608-1-joro@8bytes.org>
+         <20200417010335.31739-1-drake@endlessm.com>
+In-Reply-To: <20200417010335.31739-1-drake@endlessm.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.255.0.232]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <B8851D46B4E5F2468CD8AA858DAC2199@intel.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from smtp.office365.com (73.15.39.150) by BYAPR08CA0041.namprd08.prod.outlook.com (2603:10b6:a03:117::18) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2921.25 via Frontend Transport; Fri, 17 Apr 2020 01:12:20 +0000
-X-Mailer: git-send-email 2.25.2
-X-Originating-IP: [73.15.39.150]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: d4ee7aa6-cbbe-49a3-a6c2-08d7e26c6323
-X-MS-TrafficTypeDiagnostic: VI1PR05MB6237:|VI1PR05MB6237:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <VI1PR05MB62372DB416DADE4CDA71F651BED90@VI1PR05MB6237.eurprd05.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:7691;
-X-Forefront-PRVS: 0376ECF4DD
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR05MB5102.eurprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(396003)(39860400002)(376002)(136003)(346002)(366004)(4326008)(6512007)(316002)(66556008)(6666004)(86362001)(54906003)(26005)(66476007)(7416002)(6486002)(478600001)(36756003)(186003)(1076003)(2906002)(5660300002)(52116002)(16526019)(66946007)(8676002)(956004)(81156014)(6506007)(8936002)(2616005)(54420400002);DIR:OUT;SFP:1101;
-Received-SPF: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 6ZZi2itoorU+FjfkQ51ifIfclORohYCnaL+KT9PoN3gS3Sn6cpXdVkN0iFT/z0xMQesLRAezWRWQ28twNcN2UUczOsHvxVejwn0VS74RSbYeTBd20arGIelCKObllbrwkIDXGORGJRLaEmRDhjxFSjO1cigAl3TyQqIY0rN4tb3QdGxsTadgGxfYslpphB4CDX4kLZbsMFwh75H8gu/KxNysJkxX9EvHQQcTIfdutTXJm/Revxgy4qzuKj+gSMr4PVM4tADlEPVyY9izsrh0jK14y+YKEXIv39zyXnUCZot67vn2CMvblKWYhCpCV/VL66ceb4dnAnjcNIz1QtE7a1etQUCpVc4LYWaZLs1mMru28vnM/JbTmPimYgrdRhVdU3x311ZMQEg2UHdbcF8JxH0V0QmvyqZANPbO+RFFrYHsfOhZ0vsR7BuZyb/ZIm/CfEUazjPtFuTwMcjvkn/EkRIfdfer9Mto/j7k1OTQMhnY0NF59DNAzZwSEWm0P65i
-X-MS-Exchange-AntiSpam-MessageData: 83eFyu1R4fO+7UjyGhuYTL+4SAOzkjBJ3W0fnpk2q0AS8znOOBsVyYWLdWCwJMpv4VbOhaRcTMkrGBSNztqLT98hqNrvw9VMgkERQNqAHj4k6CU/x9ebZcpjdeg5G9y+FhSakdYLhdOtMCFz4feDBw==
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d4ee7aa6-cbbe-49a3-a6c2-08d7e26c6323
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Apr 2020 01:12:24.9257
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: yQNpT4GCQKc9lSZiHR0L9f1wD1MN/nCT25Px1aPKByhl6epZ/uFZBI+jWK3X48wm9SkjeTEWCY7hZiQAvQXN9A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB6237
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-mlx5 uses the imply keyword to force weak dependencies on the implied
-modules, to make sure they are always reachable by mlx5.
-
-"imply" doesn't work this way any more, and it was wrong to use it in
-first place.
-
-The right solution is to use: "depends on symbol || !symbol", which is
-exactly what the uses keyword is there for.
-
-Use the new "uses" keyword to replace all mlx5 implied dependencies.
-
-Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
-Cc: Masahiro Yamada <masahiroy@kernel.org>
-Cc: linux-kbuild@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
----
- drivers/net/ethernet/mellanox/mlx5/core/Kconfig | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/Kconfig b/drivers/net/ethernet/mellanox/mlx5/core/Kconfig
-index 312e0a1ad43d..4e07179217e8 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/Kconfig
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/Kconfig
-@@ -7,10 +7,10 @@ config MLX5_CORE
- 	tristate "Mellanox 5th generation network adapters (ConnectX series) core driver"
- 	depends on PCI
- 	select NET_DEVLINK
--	imply PTP_1588_CLOCK
--	imply VXLAN
--	imply MLXFW
--	imply PCI_HYPERV_INTERFACE
-+	uses PTP_1588_CLOCK
-+	uses VXLAN
-+	uses MLXFW
-+	uses PCI_HYPERV_INTERFACE
- 	default n
- 	---help---
- 	  Core driver for low level functionality of the ConnectX-4 and
--- 
-2.25.2
-
+SGkgRGFuaWVsLA0KDQpPbiBGcmksIDIwMjAtMDQtMTcgYXQgMDk6MDMgKzA4MDAsIERhbmllbCBE
+cmFrZSB3cm90ZToNCj4gSGkgSm9lcmcsDQo+IA0KPiA+IEhpLA0KPiA+IA0KPiA+IGhlcmUgaXMg
+dGhlIHNlY29uZCB2ZXJzaW9uIG9mIHRoaXMgcGF0Y2gtc2V0LiBUaGUgZmlyc3QgdmVyc2lvbiB3
+aXRoDQo+ID4gc29tZSBtb3JlIGludHJvZHVjdG9yeSB0ZXh0IGNhbiBiZSBmb3VuZCBoZXJlOg0K
+PiA+IA0KPiA+IAlodHRwczovL2xvcmUua2VybmVsLm9yZy9sa21sLzIwMjAwNDA3MTgzNzQyLjQz
+NDQtMS1qb3JvQDhieXRlcy5vcmcvDQo+IA0KPiBUaGFua3MgZm9yIHRoZSBjb250aW51ZWQgaW1w
+cm92ZW1lbnRzIGluIHRoaXMgYXJlYSENCj4gDQo+IEkgbWF5IGhhdmUgc3BvdHRlZCBhIHByb2Js
+ZW0gd2l0aCBzZXR1cHMgbGlrZSBWTUQuDQo+IA0KPiBUaGUgY29yZSBQQ0kgYnVzIGlzIHNldCB1
+cCBkdXJpbmcgZWFybHkgYm9vdC4NCj4gVGhlbiwgZm9yIHRoZSBQQ0kgYnVzLCB3ZSByZWFjaCBp
+b21tdV9idXNfaW5pdCgpIC0+IGJ1c19pb21tdV9wcm9iZSgpLg0KPiBJbiB0aGVyZSwgd2UgY2Fs
+bCBwcm9iZV9pb21tdV9ncm91cCgpIC0+IGRldl9pb21tdV9nZXQoKSBmb3IgZWFjaCBQQ0kNCj4g
+ZGV2aWNlLCB3aGljaCBhbGxvY2F0ZXMgZGV2LT5pb21tdSBpbiBlYWNoIGNhc2UuIFNvIGZhciBz
+byBnb29kLg0KPiANCj4gVGhlIHByb2JsZW0gaXMgdGhhdCB0aGlzIGlzIHRoZSBsYXN0IHRpbWUg
+dGhhdCB3ZSdsbCBjYWxsIGRldl9pb21tdV9nZXQoKS4NCj4gSWYgYW55IFBDSSBidXMgZGV2aWNl
+cyBnZXQgYWRkZWQgYWZ0ZXIgdGhpcyBwb2ludCwgdGhleSBkbyBub3QgZ2V0IHBhc3NlZA0KPiB0
+byBkZXZfaW9tbXVfZ2V0KCkuDQo+IA0KPiBTbyB3aGVuIHRoZSB2bWQgbW9kdWxlIGdldHMgbG9h
+ZGVkIGxhdGVyLCBhbmQgY3JlYXRlcyBtb3JlIFBDSSBkZXZpY2VzLA0KPiB3ZSBlbmQgdXAgaW4g
+aW9tbXVfYnVzX25vdGlmaWVyKCkgLT4gaW9tbXVfcHJvYmVfZGV2aWNlKCkNCj4gLT4gX19pb21t
+dV9wcm9iZV9kZXZpY2UoKSB3aGljaCBkb2VzOg0KPiANCj4gCWRldi0+aW9tbXUtPmlvbW11X2Rl
+diA9IGlvbW11X2RldjsNCj4gDQo+IGRldi0+aW9tbXUtPiBpcyBhIE5VTEwgZGVyZWZlcmVuY2Ug
+YmVjYXVzZSBkZXZfaW9tbXVfZ2V0KCkgd2FzIG5ldmVyDQo+IGNhbGxlZCBmb3IgdGhpcyBuZXcg
+ZGV2aWNlLg0KPiANCj4gRGFuaWVsDQo+IA0KDQpJIHNob3VsZCBoYXZlIENDZWQgeW91IG9uIHRo
+aXMsIGJ1dCBpdCBzaG91bGQgdGVtcG9yYXJpbHkgcmVzb2x2ZSB0aGF0DQppc3N1ZToNCmh0dHBz
+Oi8vbGlzdHMubGludXhmb3VuZGF0aW9uLm9yZy9waXBlcm1haWwvaW9tbXUvMjAyMC1BcHJpbC8w
+NDMyNTMuaHRtbA0KDQo=
