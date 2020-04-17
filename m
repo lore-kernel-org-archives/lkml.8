@@ -2,110 +2,127 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 717C6C38A2B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 23:24:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0EDDC352BE
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 23:37:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 44C292223C
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 23:24:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kJdb1cMF"
+	by mail.kernel.org (Postfix) with ESMTP id 89C802224F
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 23:37:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728278AbgDQXYH (ORCPT
+        id S1728311AbgDQXhh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 19:24:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33860 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726036AbgDQXYF (ORCPT
+        Fri, 17 Apr 2020 19:37:37 -0400
+Received: from netrider.rowland.org ([192.131.102.5]:33721 "HELO
+        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1726636AbgDQXhh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 19:24:05 -0400
-Received: from mail-yb1-xb2d.google.com (mail-yb1-xb2d.google.com [IPv6:2607:f8b0:4864:20::b2d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81C8AC061A0C;
-        Fri, 17 Apr 2020 16:24:05 -0700 (PDT)
-Received: by mail-yb1-xb2d.google.com with SMTP id l5so1921595ybf.5;
-        Fri, 17 Apr 2020 16:24:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=HoiSxHhSigFRcJk85mjSruoDJHuLkPKUFTIYImgm6Ug=;
-        b=kJdb1cMFcngGa0qp/KwVwgNtuNxTmrDtjaIwLAJFoNFpQhRy6q5sHg5MTKyXeGjwWu
-         vBHicJ4/2qO+c9u26+845klREFX9I5XdF+lkZsUOX2W59oXD0X0snxgaFfClthr3xbn7
-         CSudiFAf2zSIPObwc6IUG29u/5JVnUYcHJCsdF3lhu2ldziUi5lRt1Q4zpTHq3PeSNwp
-         Ng7+cMA/1D8kIComwJKKXIEVQliODb/0w0bKTuk3Wjf9vtPXDhcpIxgRPo+bitkuLBz8
-         T/MyKESZ3xGPBcP7fJ3cdb8wdGhksJnnBUgXmE7OdCW6qXouR6PLxcE4Ehr2Pan6h5je
-         ocIg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=HoiSxHhSigFRcJk85mjSruoDJHuLkPKUFTIYImgm6Ug=;
-        b=PpJ9P/8wjU3j4oc3yZw7kO8WwsGNPB8NCIPH30Tz6MYU7JIC3fRhBH8b2rEB7Jequj
-         m5qV+TMT/hjNrBibT7NSb+T1c73BcBaiBFi94ypGHFs6DQPLNaTZQybeWBDkdu7kk3ln
-         1BDDra7oOkvl9UwWvIHGZc5HcFqZmo4m+F+qDkZ7oC2hgqydndMhqJ1bp4lhLQG1g8/j
-         29fRPRgbdy7IY2SaDpFbEUPvsg39H8+QO0Bp5UGe19qV8ZE5xU6+rPlUFk0TcYDN1pLe
-         k7DwHR4YU7s4T9X3Xx2wg9JAZ2OHpn3WvWdV9HHxCeMOv48MtzoUxrsP8F/SQcR09qRT
-         582g==
-X-Gm-Message-State: AGi0PubH9hQX9syL+0r1MIJ3zNS+wTxwF1ydGLWBUuowGujn0jKFLV3r
-        mmJknmdUUZqsQSqMr7c/ZJXrFm4gz/5CSLU9ohzZvcEVB2g=
-X-Google-Smtp-Source: APiQypIaoZNcLb0nbIIWdy9AexGlinfJyksDNrXL01uuwQ39JevXQ5RG2DIGZoNajN0gFWDBeQoLtKsPk7LcZ6YXDU0=
-X-Received: by 2002:a25:aa0c:: with SMTP id s12mr2066981ybi.183.1587165844440;
- Fri, 17 Apr 2020 16:24:04 -0700 (PDT)
+        Fri, 17 Apr 2020 19:37:37 -0400
+Received: (qmail 14532 invoked by uid 500); 17 Apr 2020 19:37:36 -0400
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 17 Apr 2020 19:37:36 -0400
+Date:   Fri, 17 Apr 2020 19:37:36 -0400 (EDT)
+From:   Alan Stern <stern@rowland.harvard.edu>
+X-X-Sender: stern@netrider.rowland.org
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
+cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Qais Yousef <qais.yousef@arm.com>,
+        USB list <linux-usb@vger.kernel.org>,
+        Linux-pm mailing list <linux-pm@vger.kernel.org>,
+        Kernel development list <linux-kernel@vger.kernel.org>
+Subject: Re: lockdep warning in urb.c:363 usb_submit_urb
+In-Reply-To: <3462492.idEHzggvYf@kreacher>
+Message-ID: <Pine.LNX.4.44L0.2004171928160.13245-100000@netrider.rowland.org>
 MIME-Version: 1.0
-References: <3865908.1586874010@warthog.procyon.org.uk>
-In-Reply-To: <3865908.1586874010@warthog.procyon.org.uk>
-From:   Steve French <smfrench@gmail.com>
-Date:   Fri, 17 Apr 2020 18:23:53 -0500
-Message-ID: <CAH2r5mv5p=WJQu2SbTn53FeTsXyN6ke_CgEjVARQ3fX8QAtK_w@mail.gmail.com>
-Subject: Re: What's a good default TTL for DNS keys in the kernel
-To:     David Howells <dhowells@redhat.com>
-Cc:     linux-nfs <linux-nfs@vger.kernel.org>,
-        CIFS <linux-cifs@vger.kernel.org>, linux-afs@lists.infradead.org,
-        ceph-devel@vger.kernel.org, keyrings@vger.kernel.org,
-        Network Development <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, fweimer@redhat.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->> The question remains what the expected impact of TTL expiry is.  Will
->> the kernel just perform a new DNS query if it needs one?
+On Fri, 17 Apr 2020, Rafael J. Wysocki wrote:
 
-For SMB3/CIFS mounts, Paulo added support last year for automatic
-reconnect if the IP address of the server changes.  It also is helpful
-when DFS (global name space) addresses change.
+> There is one detail here that I missed, sorry about that.
+> 
+> Actually, the core can only set the runtime status to "active" for
+> devices where dev_pm_skip_suspend() returns 'true'.
+> 
+> First, if the device is not "suspended", its status is "active" already
+> anyway.
+> 
+> Second, if the device has SMART_SUSPEND clear, the driver may not expect
+> its runtime status to change from "suspended" to "active" during system-wide
+> resume-type transitions (the driver's system-wide PM callbacks may use
+> the runtime status to determine what to do and changing the status this
+> way may confuse that).
+> 
+> [Actually, the drivers that set neither SMART_SUSPEND nor MAY_SKIP_RESUME
+>  may not expect the runtime status to change during system-wide resume-type
+>  transitions at all, but there is the corner case when the driver can set
+>  MAY_SKIP_RESUME without setting SMART_SUSPEND.  In that case its "noirq"
+>  and "early" resume callbacks may be skipped and then it should expect
+>  the runtime status to sometimes change from "active" to "suspended" during
+>  RESUME transitions, but it may still not expect to see changes the other way
+>  around, as in that case all of its callbacks are going to be invoked and
+>  apply the internal runtime status handling mentioned above.]
+> 
+> So overall:
+> 
+>   At the start of the {resume,thaw,restore}_noirq phase, if
+>   dev_pm_skip_resume() returns true ,then the core will set the
+>   runtime status to "suspended".  Otherwise, if dev_pm_skip_suspend()
+>   also returns true, then the core will set the runtime status to "active".
+>   If this is not what the subsystem or driver wants, it must update the
+>   runtime status itself.
 
-It does not require a remount for SMB3/CIFS
+Sigh.  The bug which prompted this whole thread was when I forgot to 
+set the runtime PM status back to "active" in one of my drivers.  I was 
+hoping the core could handle it for me automatically.
 
-On Tue, Apr 14, 2020 at 11:09 AM David Howells <dhowells@redhat.com> wrote:
->
-> Since key.dns_resolver isn't given a TTL for the address information obtained
-> for getaddrinfo(), no expiry is set on dns_resolver keys in the kernel for
-> NFS, CIFS or Ceph.  AFS gets one if it looks up a cell SRV or AFSDB record
-> because that is looked up in the DNS directly, but it doesn't look up A or
-> AAAA records, so doesn't get an expiry for the addresses themselves.
->
-> I've previously asked the libc folks if there's a way to get this information
-> exposed in struct addrinfo, but I don't think that ended up going anywhere -
-> and, in any case, would take a few years to work through the system.
->
-> For the moment, I think I should put a default on any dns_resolver keys and
-> have it applied either by the kernel (configurable with a /proc/sys/ setting)
-> or by the key.dnf_resolver program (configurable with an /etc file).
->
-> Any suggestion as to the preferred default TTL?  10 minutes?
->
-> David
->
+I guess the answer is always to set the SMART_SUSPEND flag.
 
 
--- 
-Thanks,
+> > > > For this to work properly, we will have to rely on subsystems/drivers
+> > > > to call pm_runtime_resume() during the suspend/freeze transition if
+> > > > SMART_SUSPEND is clear.
+> > > 
+> > > That has been the case forever, though.
+> > 
+> > I'm not so sure about that.  The existing PM core code doesn't ever get
+> > into a situation where it tries to set a device's runtime status to
+> > "active" while the parent's status is "suspended".
+> 
+> I'm assuming that you refer to the scenario below.
+> 
+> > > > Otherwise we could have the following scenario:
+> > > > 
+> > > > Device A has a child B, and both are runtime suspended when hibernation
+> > > > starts.  Suppose that the SMART_SUSPEND flag is set for A but not for
+> > > > B, and suppose that B's subsystem/driver neglects to call
+> > > > pm_runtime_resume() during the FREEZE transition.  Then during the THAW
+> > > > transition, dev_pm_skip_resume() will return "true" for A and "false"  
+> > > > for B.  This will lead to an error when the core tries to set B's
+> > > > runtime status to "active" while A's status is "suspended".
+> 
+> That cannot happen, because dev_pm_smart_suspend() also returns 'false' for B
+> and so its runtime status will not be changed to "active".
 
-Steve
+Yes, your change to dev_pm_skip_resume() will prevent the problem from 
+arising.
+
+
+> BTW, I have updated my pm-sleep-core branch to reflect what appears to be
+> the current state-of-the-art to me.
+> 
+> I'm going to post a v2 of this patch series over the weekend for reference.
+
+Okay, I'll check it out.
+
+By the way, if you don't mind I may want to do some editing of 
+devices.rst.
+
+Alan Stern
+
+
