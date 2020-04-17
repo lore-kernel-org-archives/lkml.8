@@ -2,137 +2,301 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F006C38A29
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 10:25:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E59B6C38A2C
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 10:25:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2B103208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 10:25:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0007208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 10:25:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QF/62xKO"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="wFPCXDM9";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="AhWcqSBk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729277AbgDQKZJ (ORCPT
+        id S1729339AbgDQKZP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 06:25:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53772 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726207AbgDQKZJ (ORCPT
+        Fri, 17 Apr 2020 06:25:15 -0400
+Received: from new2-smtp.messagingengine.com ([66.111.4.224]:33327 "EHLO
+        new2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726207AbgDQKZM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 06:25:09 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D794DC061A0C;
-        Fri, 17 Apr 2020 03:25:08 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id h69so900780pgc.8;
-        Fri, 17 Apr 2020 03:25:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=b59Nt5scDU2I1ZDjfM7PvNLErzWlHfnlPXD2jIEsqco=;
-        b=QF/62xKOAGBXrpJVXe2CSzq0qfuJV5Jn7SLuPzRkDM4nnT6httYseD3xm1KN+exzJ0
-         3iKkz7+eNWQRw+cT9m4eZTnQy3Tsl1WNIxmUjXFLWKXJ7TKMw63RNaHN/EXoFzNRK3UR
-         KJ+dvaUFseoBPUECuk1agUwjwK5PNIHj1983Ona1WMgbwEO2izQfnYGSxO5YhrZfjrns
-         sM7Ncz8OeHUvb7/lpmMOa5WhKfVojort7uihb7WWkV4Ts8QyYDOKdQze8ORPoD4LjIlP
-         5pO9swd8Mh2Bjw/XYEbJXbm1U1SIQw+mzGmQeizLNi0BGA5mMG3FCv2EUgIMmFFVQ60i
-         JUgg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=b59Nt5scDU2I1ZDjfM7PvNLErzWlHfnlPXD2jIEsqco=;
-        b=Oijhq2f3DXgrcWVJCxlAcukulNOfbYPSlKnxLGFXLGeUwumGqE12mfiGZGyI1OXoRh
-         jGX3gpOgx4Q3bNlsWnmWVofR0/W6+4Yacs98gK3FZEKc0aoR9TrNvwnNx7Ie3N4tEErG
-         vI7B5CpcTTfk18ojj2rEHMkMhSAhSQmI1HsX/z9l+BCmw7HJKPgdFIfyO/f71WaQfI3T
-         7cQacOzP0DYfIFvhHeuLThPQP4+e59SK4RIHmV+OhH01nJmxTS/fDoHwDjACjmns/OLf
-         W4wLkiJmndN9kJz0yAacBsB0r87rFGpHQsJUy8YOR8/fgzLFzHQMtPxF6UgYABfcYDAs
-         yT8Q==
-X-Gm-Message-State: AGi0PuZuRD6ttE2O5IsJboSyuuDrh0ghHf9t02uefA0xkc6kraHAhAcU
-        5/S/7O0RmqPDuJ6rfg1/oyVtGjOppiuFflYQrqM=
-X-Google-Smtp-Source: APiQypJB5C0r8xWDag1OlivjFfDKudf0TLNN5OTS7UcWSbL6KeqEjucuUfSLSXFbYi3TBDhBThCAum6+tRIRm/lhiOg=
-X-Received: by 2002:aa7:9097:: with SMTP id i23mr2448171pfa.170.1587119108436;
- Fri, 17 Apr 2020 03:25:08 -0700 (PDT)
+        Fri, 17 Apr 2020 06:25:12 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 745C958044A;
+        Fri, 17 Apr 2020 06:25:09 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Fri, 17 Apr 2020 06:25:09 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm2; bh=6Fjyjvm8YMRLuu1BmCR24WjceIi
+        +YAIylzDdqTQnb3g=; b=wFPCXDM9IltWfPw0iWL5vGXhLWQwfrvIxIJ5jtqH5LP
+        iNYeF3dY1CbSLg8g63cxYe7g7OJrsLBzRTEV+CM7JGa0yjbulxBtPRDSQ7dvGn4K
+        Y20sHZhdRUBJXsE5BnNBRASZtt8Lt2js0NSTOCFn/TCPG9VYO+c3kj4ykbR2HxV5
+        FhPGRUT4sRAXTH5D/OtzTvAgS/rl8rGzjv5TMcdTR2+SZ2brDNijvCrJ/BMY6TXN
+        5A4D+0eIeQKvvPQ42e9SSDm78Pytcy3PFCuJUYsrkFjTgeTaD863wMI+ZBy4ezeB
+        +SG/SdXTccNJcWgTsLGSNRcmJIN0CRbG/fM5Xl7AsMg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=6Fjyjv
+        m8YMRLuu1BmCR24WjceIi+YAIylzDdqTQnb3g=; b=AhWcqSBkWGz1YpKq4MYJZo
+        a8nVeBhj8xS8Buguy6hDjd6IBa78G/FiJgIAbZIgu5KDP7HiVEJi2TidZxs+5gLF
+        Y6BnyqZ1NuYsU22cO5nD8JhddlpqDW97r7w7/Adw+THs+MkqCOXtezggmHoa2awd
+        vDWtHFMlTEXbzz8uaU0xPOXmnd4a/lieArch2a+dUpKV4uWJHD8+aZkrKFscMGhX
+        45iIyT/IS3zXi12CGaaCxtCDmmmGnp7DUXhmW+AF7XEwBCk/0k6gixXN+eR+W0/C
+        9h69MyD3jfgO9mdKsK6eUWr+HmMMGPxPtTuqVYUkFJqh+PwAMd/VMpbPFAY/8/7w
+        ==
+X-ME-Sender: <xms:_4OZXosKlW7Ziqa003eVVSDn-106QkPYgwtuzwnZBYp4KK8ICSRULg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrfeejgddvkecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkfhggtggujgesghdtreertddtvdenucfhrhhomhepofgrgihimhgv
+    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucfkphepledtrd
+    ekledrieekrdejieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhl
+    fhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
+X-ME-Proxy: <xmx:_4OZXsmQMbKzP6LsNMhzeUAWwm3Cj8oobZnq-LaWcg3Uk5z4DvDVkQ>
+    <xmx:_4OZXmK4VR4Xxb523QGjyKeiCfxgYgl0IPU2KNe2NVn5i5Y1QLo2tg>
+    <xmx:_4OZXk5436EodZEHPNEmPz7zqYFElXz76kJkCO0Qf2PbPpL6S_dq7A>
+    <xmx:BYSZXntJ4j6vhjl9_WHrQ3dw04z48QodLpsvUEblcIDFocYkKxBhLg>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 48A393280066;
+        Fri, 17 Apr 2020 06:25:03 -0400 (EDT)
+Date:   Fri, 17 Apr 2020 12:25:00 +0200
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc:     Neil Armstrong <narmstrong@baylibre.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        David Airlie <airlied@linux.ie>,
+        James Hogan <jhogan@kernel.org>,
+        dri-devel@lists.freedesktop.org, linux-mips@vger.kernel.org,
+        Paul Cercueil <paul@crapouillou.net>,
+        linux-samsung-soc@vger.kernel.org, letux-kernel@openphoenux.org,
+        Paul Burton <paulburton@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Tony Lindgren <tony@atomide.com>, Chen-Yu Tsai <wens@csie.org>,
+        Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org,
+        =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-omap@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Philipp Rossak <embed3d@gmail.com>,
+        openpvrsgx-devgroup@letux.org, linux-kernel@vger.kernel.org,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Daniel Vetter <daniel@ffwll.ch>, kernel@pyra-handheld.com
+Subject: Re: [PATCH v6 01/12] dt-bindings: add img, pvrsgx.yaml for
+ Imagination GPUs
+Message-ID: <20200417102500.erayf6quenp3cvn3@gilmour.lan>
+References: <cover.1586939718.git.hns@goldelico.com>
+ <06fb6569259bb9183d0a0d0fe70ec4f3033b8aab.1586939718.git.hns@goldelico.com>
+ <20200415101251.o3wi5t6xvf56xmhq@gilmour.lan>
+ <72919514-0657-4B71-902F-3E775E528F64@goldelico.com>
+ <f4fdca8a-d18c-a8d2-7f51-d1ebbbab3647@baylibre.com>
+ <535CAEBE-F43E-4BFC-B989-612C81F0D7EF@goldelico.com>
+ <20200415142124.yzfh6mtqq7cdq22e@gilmour.lan>
+ <DC0A2DE2-3D77-46F8-8DE1-55050FDACC9B@goldelico.com>
+ <20200415162151.rwym4ioqz27migfn@gilmour.lan>
+ <45F411C0-150B-4FBA-A0E1-B863B3F36DF6@goldelico.com>
 MIME-Version: 1.0
-References: <20200415212257.161238-1-alexandre.belloni@bootlin.com> <20200415212257.161238-3-alexandre.belloni@bootlin.com>
-In-Reply-To: <20200415212257.161238-3-alexandre.belloni@bootlin.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 17 Apr 2020 13:24:57 +0300
-Message-ID: <CAHp75VcHRYLqk_b6H6TXqer98c6ZzSKctW=CbMvHzdThPxjfgQ@mail.gmail.com>
-Subject: Re: [PATCH 2/3] iio: adc: ti-ads8344: remove tx_buf from driver data
-To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Gregory CLEMENT <gregory.clement@bootlin.com>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="2cdcxbvig57yd3pf"
+Content-Disposition: inline
+In-Reply-To: <45F411C0-150B-4FBA-A0E1-B863B3F36DF6@goldelico.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 16, 2020 at 4:08 AM Alexandre Belloni
-<alexandre.belloni@bootlin.com> wrote:
->
-> There is no need to keep tx_buf around, it is only used for the conversion.
->
 
-As Lars said. And some SPI controllers may want to DMA even one byte, so, NAK.
+--2cdcxbvig57yd3pf
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
+Hi,
 
-> Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-> ---
->  drivers/iio/adc/ti-ads8344.c | 18 ++++++------------
->  1 file changed, 6 insertions(+), 12 deletions(-)
->
-> diff --git a/drivers/iio/adc/ti-ads8344.c b/drivers/iio/adc/ti-ads8344.c
-> index 6da50ea35217..9b2d3a8ea6bd 100644
-> --- a/drivers/iio/adc/ti-ads8344.c
-> +++ b/drivers/iio/adc/ti-ads8344.c
-> @@ -22,13 +22,7 @@
->  struct ads8344 {
->         struct spi_device *spi;
->         struct regulator *reg;
-> -       /*
-> -        * Lock protecting access to adc->tx_buff and rx_buff,
-> -        * especially from concurrent read on sysfs file.
-> -        */
-> -       struct mutex lock;
-> -
-> -       u8 tx_buf ____cacheline_aligned;
-> +       struct mutex lock; /* protect from concurrent conversions */
->  };
->
->  #define ADS8344_VOLTAGE_CHANNEL(chan, si)                              \
-> @@ -77,13 +71,13 @@ static int ads8344_adc_conversion(struct ads8344 *adc, int channel,
->         int ret;
->         u8 buf[3];
->
-> -       adc->tx_buf = ADS8344_START;
-> +       buf[0] = ADS8344_START;
->         if (!differential)
-> -               adc->tx_buf |= ADS8344_SINGLE_END;
-> -       adc->tx_buf |= ADS8344_CHANNEL(channel);
-> -       adc->tx_buf |= ADS8344_CLOCK_INTERNAL;
-> +               buf[0] |= ADS8344_SINGLE_END;
-> +       buf[0] |= ADS8344_CHANNEL(channel);
-> +       buf[0] |= ADS8344_CLOCK_INTERNAL;
->
-> -       ret = spi_write(spi, &adc->tx_buf, 1);
-> +       ret = spi_write(spi, buf, 1);
->         if (ret)
->                 return ret;
->
-> --
-> 2.25.2
->
+On Wed, Apr 15, 2020 at 06:42:18PM +0200, H. Nikolaus Schaller wrote:
+> > Am 15.04.2020 um 18:21 schrieb Maxime Ripard <maxime@cerno.tech>:
+> >=20
+> > On Wed, Apr 15, 2020 at 05:09:45PM +0200, H. Nikolaus Schaller wrote:
+> >> Hi Maxime,
+> >>=20
+> >> Hm. Yes. We know that there likely are clocks and maybe reset
+> >> but for some SoC this seems to be undocumented and the reset
+> >> line the VHDL of the sgx gpu provides may be permanently tied
+> >> to "inactive".
+> >>=20
+> >> So if clocks are optional and not provided, a driver simply can assume
+> >> they are enabled somewhere else and does not have to care about. If
+> >> they are specified, the driver can enable/disable them.
+> >=20
+> > Except that at the hardware level, the clock is always going to be
+> > there. You can't control it, but it's there.
+>=20
+> Sure, we can deduce that from general hardware design knowledge.
+> But not every detail must be described in DT. Only the important
+> ones.
+>=20
+> >>> If OMAP is too much of a pain, you can also make
+> >>> a separate binding for it, and a generic one for the rest of us.
+> >>=20
+> >> No, omap isn't any pain at all.
+> >>=20
+> >> The pain is that some other SoC are most easily defined by clocks in
+> >> the gpu node which the omap doesn't need to explicitly specify.
+> >>=20
+> >> I would expect a much bigger nightmare if we split this into two
+> >> bindings variants.
+> >>=20
+> >>> I'd say that it's pretty unlikely that the clocks, interrupts (and
+> >>> even regulators) are optional. It might be fixed on some SoCs, but
+> >>> that's up to the DT to express that using fixed clocks / regulators,
+> >>> not the GPU binding itself.
+> >>=20
+> >> omap already has these defined them not to be part of the GPU binding.
+> >> The reason seems to be that this needs special clock gating control
+> >> especially for idle states which is beyond simple clock-enable.
+> >>=20
+> >> This sysc target-module@56000000 node is already merged and therefore
+> >> we are only adding the gpu child node. Without defining clocks.
+> >>=20
+> >> For example:
+> >>=20
+> >> 		sgx_module: target-module@56000000 {
+> >> 			compatible =3D "ti,sysc-omap4", "ti,sysc";
+> >> 			reg =3D <0x5600fe00 0x4>,
+> >> 			      <0x5600fe10 0x4>;
+> >> 			reg-names =3D "rev", "sysc";
+> >> 			ti,sysc-midle =3D <SYSC_IDLE_FORCE>,
+> >> 					<SYSC_IDLE_NO>,
+> >> 					<SYSC_IDLE_SMART>;
+> >> 			ti,sysc-sidle =3D <SYSC_IDLE_FORCE>,
+> >> 					<SYSC_IDLE_NO>,
+> >> 					<SYSC_IDLE_SMART>;
+> >> 			clocks =3D <&gpu_clkctrl OMAP5_GPU_CLKCTRL 0>;
+> >> 			clock-names =3D "fck";
+> >> 			#address-cells =3D <1>;
+> >> 			#size-cells =3D <1>;
+> >> 			ranges =3D <0 0x56000000 0x2000000>;
+> >>=20
+> >> 			gpu: gpu@0 {
+> >> 				compatible =3D "ti,omap5-sgx544-116", "img,sgx544-116", "img,sgx54=
+4";
+> >> 				reg =3D <0x0 0x10000>;
+> >> 				interrupts =3D <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>;
+> >> 			};
+> >> 		};
+> >>=20
+> >> The jz4780 example will like this:
+> >>=20
+> >> 	gpu: gpu@13040000 {
+> >> 		compatible =3D "ingenic,jz4780-sgx540-130", "img,sgx540-130", "img,s=
+gx540";
+> >> 		reg =3D <0x13040000 0x4000>;
+> >>=20
+> >> 		clocks =3D <&cgu JZ4780_CLK_GPU>;
+> >> 		clock-names =3D "gpu";
+> >>=20
+> >> 		interrupt-parent =3D <&intc>;
+> >> 		interrupts =3D <63>;
+> >> 	};
+> >>=20
+> >> So the question is which one is "generic for the rest of us"?
+> >=20
+> > I'd say the latter.
+>=20
+> Why?
+>=20
+> TI SoC seem to be the broadest number of available users
+> of sgx5xx in the past and nowadays. Others are more the exception.
 
+And maybe TI has some complicated stuff around the GPU that others don't ha=
+ve?
+If I look quickly at the Allwinner stuff, I see nothing looking alike in the
+SoC, so making the binding like that for everyone just because TI did somet=
+hing
+doesn't really make much sense.
 
--- 
-With Best Regards,
-Andy Shevchenko
+> > If your clock is optional, then you define it but don't mandate
+> > it. Not documenting it will only result in a mess where everyone will
+> > put some clock into it, possibly with different semantics each and
+> > every time.
+>=20
+> So you mean that we should require a dummy clock for the omap gpu node
+> or did I misunderstand that?
+>
+> Well, yes there is of course a clock connection between the
+> omap target-module and the sgx but it is IMHO pointless to
+> describe it because it can't and does not need to be controlled
+> separately.
+>=20
+> As said the target-module is already accepted and upstream and my
+> proposal is to get the gpu node described there. There is simply
+> no need for a clocks node for the omap.
+
+There is no need for a clocks property *currently* *on the OMAP*.
+
+> What I also assume is that developers of DTS know what they do.
+> So the risk that there is different semantics is IMHO very low.
+
+Well, they know what they do if you document the binding. Let's say I have =
+two
+clocks now on my SoC, and you just document that you want a clocks property,
+with a generic name in clock-names like "gpu".
+
+> If you agree I can add the clocks/clock-names property as an
+> optional property. This should solve omap and all others.
+
+With the above example, what clock should I put in there? In which order? T=
+his
+isn't some random example pulled out of nowhere. The Allwinner A31 has (at
+least) 4 clocks for the GPU, 1 reset line and 1 regulator, so I can only as=
+sume
+that the GPU actually needs at least that amount to be properly integrated =
+into
+an SoC.
+
+This has nothing to do with being dumb or smart.
+
+> > This has nothing to do with the binding being complete. And if you use
+> > a binding like this one, you'll be severely limited when you'll want
+> > to implement things like DVFS.
+>=20
+> Now you have unhooked me... Nobody seems to know if and how DVFS can be
+> applied to SGX. IMHO we should bake small bread first and get initial
+> support into mainline.
+
+On the software side, yes, of course. But the discussion here doesn't have =
+much
+to do with software support, this is about the hardware. No matter if you e=
+nable
+DVFS or not, you'll have those resources connected to the GPU.
+
+And if you want to enable the strict minimum in DT for now and expand it la=
+ter
+as the software gains support for more stuff, then you'll have to deal with=
+ the
+minimal stuff in software later-on to keep the backward compatibility.
+
+But given that the current state on the Allwinner SoCs (at least) is that y=
+ou
+can't even read a register, it might be a good idea to delay the introducti=
+on of
+that binding until you have something that works to avoid drowning under the
+number of special cases to deal with backward compatibility.
+
+Maxime
+
+--2cdcxbvig57yd3pf
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXpmD/AAKCRDj7w1vZxhR
+xS+DAQD1ud+4u/Gtzw+YK29b+79bwdplPbylCn4JhitPCi+ezgEAgOxiTpYRh+GB
+1bgxLBKhqARErScbQPmvn22AzLAomAY=
+=Hsz5
+-----END PGP SIGNATURE-----
+
+--2cdcxbvig57yd3pf--
