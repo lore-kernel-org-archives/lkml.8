@@ -2,487 +2,185 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2DF0C38A2C
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 18:08:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B83C0C38A2C
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 18:10:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8BA9822201
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 18:08:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E05922201
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 18:10:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="FUOUHmj2"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="nAYywgm9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730407AbgDQSIg (ORCPT
+        id S1730438AbgDQSKL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 14:08:36 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:38456 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730236AbgDQSIg (ORCPT
+        Fri, 17 Apr 2020 14:10:11 -0400
+Received: from mailout3.samsung.com ([203.254.224.33]:11547 "EHLO
+        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730261AbgDQSKK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 14:08:36 -0400
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 99AF997D;
-        Fri, 17 Apr 2020 20:08:31 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1587146911;
-        bh=ASCFaq4pCdIrf/Z9JD2dXcmN0chmxScgYusVvp/MvUw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=FUOUHmj2A6Wka2I40yjAK3OH6vFqnQfO//6m/DRmrs77J7nNDG5gQVwLZ3+U2wx62
-         8mFXPxU/JVFLTKAADh8cI7PXJPKGSmDHBnnkinnF5T5MZGihhrF0Z27A1QIq5wmcTw
-         wy3mffT1Loo1wcU9WLEFIbSUA6kM9BRMlk27Yrvk=
-Date:   Fri, 17 Apr 2020 21:08:19 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Doug Anderson <dianders@chromium.org>
-Cc:     Stephen Boyd <swboyd@chromium.org>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Sandeep Panda <spanda@codeaurora.org>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Rob Clark <robdclark@chromium.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/3] dt-bindings: drm/bridge: ti-sn65dsi86: Add hpd-gpios
- to the bindings
-Message-ID: <20200417180819.GE5861@pendragon.ideasonboard.com>
-References: <20200415084758.1.Ifcdc4ecb12742a27862744ee1e8753cb95a38a7f@changeid>
- <20200415084758.2.Ic98f6622c60a1aa547ed85781f2c3b9d3e56b734@changeid>
- <158698038289.105027.2860892334897893887@swboyd.mtv.corp.google.com>
- <20200415203256.GP4758@pendragon.ideasonboard.com>
- <CAD=FV=U1U7y_U4+zySzA9e_uYE0ECdM1Bd-ew0OxG3ciqjRVSA@mail.gmail.com>
- <20200416005409.GR4758@pendragon.ideasonboard.com>
- <CAD=FV=WWZ1txHYOQZuCASbspLUP-Ds6OtrzetbJLHySpUyW6YQ@mail.gmail.com>
+        Fri, 17 Apr 2020 14:10:10 -0400
+Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
+        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20200417181007epoutp03bbceebc566203e48edb827b2a8ed2276~GrctrAkFU0173901739epoutp03t
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 18:10:07 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20200417181007epoutp03bbceebc566203e48edb827b2a8ed2276~GrctrAkFU0173901739epoutp03t
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1587147007;
+        bh=oiCEJmK0tACS8TZgl1ceI/I0bD1xx/OZpcpK1o4POBw=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=nAYywgm9n8BZvjWDbJ8vVDFf3XFBfSFjt/GJ8rs1OX8dCIZKenAeMJiUkYv7I+quK
+         9IEeFH6R/eULYVZfxjJtGQwbLQij6O+/D7IRMuAc+BAkpmEDRtEHi9VNJ1deaKjrmS
+         DuybnZPtZdxN5GvgEYAlMgrElK7Dg+1B0OCyMjjI=
+Received: from epsmges5p2new.samsung.com (unknown [182.195.42.74]) by
+        epcas5p2.samsung.com (KnoxPortal) with ESMTP id
+        20200417181006epcas5p24f52712e1e973832095adc673595b5fc~GrcsqvLgV0105401054epcas5p2l;
+        Fri, 17 Apr 2020 18:10:06 +0000 (GMT)
+Received: from epcas5p1.samsung.com ( [182.195.41.39]) by
+        epsmges5p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        7C.16.04778.EF0F99E5; Sat, 18 Apr 2020 03:10:06 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
+        20200417181006epcas5p269f8c4b94e60962a0b0318ef64a65364~Grcr_R6fc0105401054epcas5p2i;
+        Fri, 17 Apr 2020 18:10:06 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200417181006epsmtrp13c850803575bf2e50771d3d72ad4fbef~Grcr9T4P60669906699epsmtrp1D;
+        Fri, 17 Apr 2020 18:10:06 +0000 (GMT)
+X-AuditID: b6c32a4a-353ff700000012aa-07-5e99f0fe34f7
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        2C.D0.04024.DF0F99E5; Sat, 18 Apr 2020 03:10:05 +0900 (KST)
+Received: from Jaguar.sa.corp.samsungelectronics.net (unknown
+        [107.108.73.139]) by epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200417181004epsmtip1781ed587c91bb31ddc46c8aecb30bdca~GrcqI7GJd2094920949epsmtip1E;
+        Fri, 17 Apr 2020 18:10:03 +0000 (GMT)
+From:   Alim Akhtar <alim.akhtar@samsung.com>
+To:     robh@kernel.org
+Cc:     devicetree@vger.kernel.org, linux-scsi@vger.kernel.org,
+        krzk@kernel.org, avri.altman@wdc.com, martin.petersen@oracle.com,
+        kwmad.kim@samsung.com, stanley.chu@mediatek.com,
+        cang@codeaurora.org, linux-samsung-soc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Alim Akhtar <alim.akhtar@samsung.com>
+Subject: [PATCH v6 0/10] exynos-ufs: Add support for UFS HCI
+Date:   Fri, 17 Apr 2020 23:29:34 +0530
+Message-Id: <20200417175944.47189-1-alim.akhtar@samsung.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAD=FV=WWZ1txHYOQZuCASbspLUP-Ds6OtrzetbJLHySpUyW6YQ@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrIKsWRmVeSWpSXmKPExsWy7bCmuu6/DzPjDH7e1rF4MG8bm8XLn1fZ
+        LD6tX8ZqMf/IOVaL8+c3sFvc3HKUxWLT42usFpd3zWGzmHF+H5NF9/UdbBbLj/9jsvi/Zwe7
+        xdKtNxkdeD0u9/UyeWxa1cnmsXlJvUfLyf0sHh+f3mLx6NuyitHj8yY5j/YD3UwBHFFcNimp
+        OZllqUX6dglcGbtPHGAsaJSsuPZ9CXMD41ThLkYODgkBE4kPDxm7GLk4hAR2M0p8X38WyvnE
+        KNG88CwrhPONUaLn2y+mLkZOsI4XH+6A2UICexklPi/ghihqYZLYeewjM0iCTUBb4u70LWBF
+        IgLCEke+tTGC2MwCN5gkHqx0AbGFBWwktq7ezQJiswioSvzuPARWzwsU72tvZoVYJi+xesMB
+        Zoi4oMTJmU9YIObISzRvnc0MslhC4DObxLL3p5khGlwktq/+B2ULS7w6voUdwpaSeNnfxg7x
+        c7ZEzy5jiHCNxNJ5x1ggbHuJA1fmsICUMAtoSqzfpQ+xik+i9/cTJohOXomONiGIalWJ5ndX
+        oTqlJSZ2d7NClHhIvJ6eDAmdWInXC2+yTWCUm4Xk/llI7p+FsGsBI/MqRsnUguLc9NRi0wKj
+        vNRyveLE3OLSvHS95PzcTYzghKTltYNx2TmfQ4wCHIxKPLwdfTPjhFgTy4orcw8xSnAwK4nw
+        HnQDCvGmJFZWpRblxxeV5qQWH2KU5mBREuedxHo1RkggPbEkNTs1tSC1CCbLxMEp1cDosML2
+        gelk/SMLq1f+F0jWO6LG+HJ+zLe81TZpOYa7a1lWzOSpM5xg47oinOf6zctbD7W37lz0a63a
+        sXCNr2nLX89N3Ps0IHBb5FP/p3mdVXllap1LdPpOLZnVsDPMz5+7YLnRIVV9O72Xvgdapq/s
+        E8i7vnUZe+mOo9krOJomv35z6FKJJlecEktxRqKhFnNRcSIAQEhZCUQDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrHLMWRmVeSWpSXmKPExsWy7bCSnO7fDzPjDLa8tLR4MG8bm8XLn1fZ
+        LD6tX8ZqMf/IOVaL8+c3sFvc3HKUxWLT42usFpd3zWGzmHF+H5NF9/UdbBbLj/9jsvi/Zwe7
+        xdKtNxkdeD0u9/UyeWxa1cnmsXlJvUfLyf0sHh+f3mLx6NuyitHj8yY5j/YD3UwBHFFcNimp
+        OZllqUX6dglcGbtPHGAsaJSsuPZ9CXMD41ThLkZODgkBE4kXH+4wdTFycQgJ7GaUWH5nCzNE
+        Qlri+sYJ7BC2sMTKf8/ZIYqamCTanq5jBUmwCWhL3J2+hQnEFgEqOvKtjRHEZhZ4xiRx6mEp
+        iC0sYCOxdfVuFhCbRUBV4nfnIbB6XqB4X3szK8QCeYnVGw4wQ8QFJU7OfAJUzwE0R11i/Twh
+        iJHyEs1bZzNPYOSfhaRqFkLVLCRVCxiZVzFKphYU56bnFhsWGOallusVJ+YWl+al6yXn525i
+        BMeKluYOxstL4g8xCnAwKvHwGvTMjBNiTSwrrsw9xCjBwawkwnvQDSjEm5JYWZValB9fVJqT
+        WnyIUZqDRUmc92nesUghgfTEktTs1NSC1CKYLBMHp1QDo2dZ7N5ZrxMmfZ+8YFP+P+PiDy2T
+        bKZaO9ZFb1n/8Jzd+ZerTF93Pysrdqxj3jg/wq5RuuxXYHvm8wnTLjY7dBXfzP04X8vzbtGm
+        9KNagk+Zt0zO4WBW0ZDzcZ731ubFhl+PZH1jLq/MOD1Ln/ne52Y1t9lfGmybjtuXaR1pa+vx
+        PzkvtejKBSWW4oxEQy3mouJEAK8j1oSRAgAA
+X-CMS-MailID: 20200417181006epcas5p269f8c4b94e60962a0b0318ef64a65364
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+CMS-TYPE: 105P
+X-CMS-RootMailID: 20200417181006epcas5p269f8c4b94e60962a0b0318ef64a65364
+References: <CGME20200417181006epcas5p269f8c4b94e60962a0b0318ef64a65364@epcas5p2.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Doug,
+This patch-set introduces UFS (Universal Flash Storage) host controller support
+for Samsung family SoC. Mostly, it consists of UFS PHY and host specific driver.
 
-On Thu, Apr 16, 2020 at 02:53:18PM -0700, Doug Anderson wrote:
-> On Wed, Apr 15, 2020 at 5:54 PM Laurent Pinchart wrote:
-> > On Wed, Apr 15, 2020 at 04:49:00PM -0700, Doug Anderson wrote:
-> > > On Wed, Apr 15, 2020 at 1:33 PM Laurent Pinchart wrote:
-> > > > On Wed, Apr 15, 2020 at 12:53:02PM -0700, Stephen Boyd wrote:
-> > > > > Quoting Douglas Anderson (2020-04-15 08:48:40)
-> > > > > > Allow people to specify to use a GPIO for hot-plug-detect.  Add an
-> > > > > > example.
-> > > > > >
-> > > > > > NOTE: The current patch adding support for hpd-gpios to the Linux
-> > > > > > driver for hpd-gpios only adds enough support to the driver so that
-> > > > > > the bridge can use one of its own GPIOs.  The bindings, however, are
-> > > > > > written generically.
-> > > > > >
-> > > > > > Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> > > > > > ---
-> > > > > >
-> > > > > >  .../bindings/display/bridge/ti,sn65dsi86.yaml          | 10 +++++++++-
-> > > > > >  1 file changed, 9 insertions(+), 1 deletion(-)
-> > > > > >
-> > > > > > diff --git a/Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.yaml b/Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.yaml
-> > > > > > index 8cacc6db33a9..554bfd003000 100644
-> > > > > > --- a/Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.yaml
-> > > > > > +++ b/Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.yaml
-> > > > > > @@ -60,6 +60,10 @@ properties:
-> > > > > >      const: 1
-> > > > > >      description: See ../../pwm/pwm.yaml for description of the cell formats.
-> > > > > >
-> > > > > > +  hpd-gpios:
-> > > > > > +    maxItems: 1
-> > > > > > +    description: If present use the given GPIO for hot-plug-detect.
-> > > > >
-> > > > > Shouldn't this go in the panel node? And the panel driver should get the
-> > > > > gpio and poll it after powering up the panel? Presumably that's why we
-> > > > > have the no-hpd property in the simple panel binding vs. putting it here
-> > > > > in the bridge.
-> > > >
-> > > > Same question really, I think this belongs to the panel (or connector)
-> > > > node indeed.
-> > >
-> > > Hrm.
-> > >
-> > > To me "no-hpd" feels OK in the panel because the lack of a connection
-> > > is somewhat symmetric.  Thus it's OK to say either "HPD isn't hooked
-> > > up to the panel in this system" or "HPD isn't hooked up to the bridge
-> > > in this system" and both express the same thing (AKA that there is no
-> > > HPD connection between the bridge and the panel).  In the case of
-> > > "no-hpd" it's more convenient to express it on the panel side because
-> > > the panel driver is the one whose behavior has to change if HPD isn't
-> > > hooked up.  The panel datasheet is the one that says how long of a
-> > > delay we need if HPD isn't hooked up.
-> > >
-> > > ...but when you're talking about where the bridge driver should look
-> > > to find the HPD signal that it needs, that really feels like it should
-> > > be described as part of the bridge.  Specifically imagine we were
-> > > using our bridge for DP, not for eDP.  In that case simple-panel
-> > > wouldn't be involved because we could get any type of display plugged
-> > > in.  Thus it couldn't go in the panel node.  Here it feels clearer
-> > > that hpd-gpio needs to be a property of the bridge driver.
-> >
-> > If you were using it for DP, you would need a DT node for the DP
-> > connector (with bindings to be added to
-> > Documentation/devicetree/bindings/display/connector/, similar to the
-> > ones we already have for other connectors). That DT node should
-> > reference the HPD pin GPIO. The bridge driver for the connector
-> > (drivers/gpu/drm/bridge/display-connector.c) would then handle HPD. The
-> > good news is that it already does :-)
+- Changes since v5:
+* re-introduce various quicks which was removed because of no driver
+* consumer of those quirks, initial 4 patches does the same.
+* Added Reviewed-by tags
+* rebased on top of v5.7-rc1
+* included Kiwoong's patch in this series, which this driver needs
 
-That's a long e-mail. Taking a deep breath :-)
+- Changes since v4:
+* Addressed review comments from Avir and Rob 
+* Minor improvment on the ufs phy and ufshc drivers
+* Added Tested-by from Pawel
+* Change UFS binding to DT schema format
 
-> I'm having a really hard time following, but maybe it's because my
-> knowledge of the DRM terminology is feeble at best?
-> 
-> Looking at it from a DRM driver perspective and thus looking in
-> 'drm/bridge/ti-sn65dsi86.c' I see that the driver for this bridge chip
-> effectively is both the bridge and the connector.  The struct
-> encapsulating the driver data has both:
-> 
->   struct drm_bridge bridge;
->   struct drm_connector connector;
-> 
-> ...in ti_sn_bridge_attach() the code calls drm_connector_init() for
-> the connector.
 
-That is correct, and that's the old mode. With the new model (based on
-the DRM_BRIDGE_ATTACH_NO_CONNECTOR flags and the drm_bridge_funcs
-.get_modes(), .get_edid(), .detect(), .hpd_enable() and .hpd_disabled()
-operations), the ti-sn65dsi86 will not create a drm_connector anymore.
-The two modes of operation will be temporarily supported to all display
-controller drivers to be migrated one by one to the new model. Once the
-conversion of all display controller drivers that use the ti-sn65dsi86
-will be complete, creation of a drm_connector will be removed completely
-from the ti-sn65dsi86 driver.
+- Changes since v3:
+* Addressed Kishon's and Avir's review comments
+* fixed make dt_binding_check error as pointed by Rob 
 
-> Looking at it from a device tree point of view, there is no separate
-> node representing an eDP connector for one mainline user of
-> 'ti,sn65dsi86' (sdm845-cheza).  The device tree node has one input
-> port (from "dsi0_out") and one output port (to "panel_in_edp").  There
-> is no separate connector node as I can see with "hdmi-connector".
-> ...and, as far as I can tell, sdm845-cheza is using the bindings as
-> documented.  The bindings say that the 'ti,sn65dsi86' node needs two
-> ports:
-> - Video port 0 for DSI input
-> - Video port 1 for eDP output
+- Changes since v2:
+* fixed build warning by kbuild test robot 
+* Added Reported-by tags
 
-You are right here. The confusing part is the word "connector".
-Historically, a DRM connector models a physical connector (VGA, HDMI,
-...). The concept was extended over time with more connector types,
-including connectors for display panels (LVDS, DSI, eDP, ...) that are
-integrated in the system and can't be hotplugged, unlike the user-facing
-VGA or HDMI connectors. A DRM connector thus represents the sink at the
-output of a display pipeline.
+- Changes since v1:
+* fixed make dt_binding_check error as pointed by Rob
+* Addressed Krzysztof's review comments
+* Added Reviewed-by tags
 
-When dealing with external monitors, they can't be represented in the
-device tree (or any other firmware) as they're hot-pluggable. Panels,
-however, are different, as they're part of the system, and are thus
-described in the firmware (DT in this case). Technically speaking,
-there's a physical connector for the panel, but it's irrelevant for the
-user, and the end of the display pipeline in the system isn't the
-connector, but the panel. For this reason, when dealing with panel,
-there's no DT node to represent the connector.
+Note: This series is based on Linux-5.7-rc1 (commit: 8f3d9f354286)
 
-The drm_connector object abstracts either a physical user-facing
-connector or a panel, and contains properties that are applicable to
-either the panel or the external monitor (such as the format of the
-data, the connection type, the physical size of the display, ...). It is
-part of the API exposed to userspace.
+Alim Akhtar (9):
+  scsi: ufs: add quirk to fix mishandling utrlclr/utmrlclr
+  scsi: ufs: add quirk to disallow reset of interrupt aggregation
+  scsi: ufs: add quirk to enable host controller without hce
+  scsi: ufs: introduce UFSHCD_QUIRK_PRDT_BYTE_GRAN quirk
+  dt-bindings: phy: Document Samsung UFS PHY bindings
+  phy: samsung-ufs: add UFS PHY driver for samsung SoC
+  dt-bindings: ufs: Add DT binding documentation for ufs
+  scsi: ufs-exynos: add UFS host support for Exynos SoCs
+  arm64: dts: Add node for ufs exynos7
 
-Inside the kernel, when the need for panel-specific code arose, the
-drm_panel object was created. It represents a panel, has properties and
-methods specific to panels, and is not exposed to userspace.
+Kiwoong Kim (1):
+  scsi: ufs: add quirk to fix abnormal ocs fatal error
 
-> So, though I'm probably terribly confused, I would tentatively say that:
-> 
-> - I'd guess that the 'ti,sn65dsi86' bindings were written / approved
-> back before people were encouraged to model the connector as a
-> separate node.
+ .../bindings/phy/samsung,ufs-phy.yaml         |   74 +
+ .../bindings/ufs/samsung,exynos-ufs.yaml      |   93 ++
+ .../boot/dts/exynos/exynos7-espresso.dts      |    4 +
+ arch/arm64/boot/dts/exynos/exynos7.dtsi       |   44 +-
+ drivers/phy/samsung/Kconfig                   |    9 +
+ drivers/phy/samsung/Makefile                  |    1 +
+ drivers/phy/samsung/phy-exynos7-ufs.h         |   85 ++
+ drivers/phy/samsung/phy-samsung-ufs.c         |  369 +++++
+ drivers/phy/samsung/phy-samsung-ufs.h         |  142 ++
+ drivers/scsi/ufs/Kconfig                      |   12 +
+ drivers/scsi/ufs/Makefile                     |    1 +
+ drivers/scsi/ufs/ufs-exynos.c                 | 1289 +++++++++++++++++
+ drivers/scsi/ufs/ufs-exynos.h                 |  284 ++++
+ drivers/scsi/ufs/ufshcd.c                     |  126 +-
+ drivers/scsi/ufs/ufshcd.h                     |   29 +
+ drivers/scsi/ufs/unipro.h                     |   36 +
+ 16 files changed, 2584 insertions(+), 14 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/phy/samsung,ufs-phy.yaml
+ create mode 100644 Documentation/devicetree/bindings/ufs/samsung,exynos-ufs.yaml
+ create mode 100644 drivers/phy/samsung/phy-exynos7-ufs.h
+ create mode 100644 drivers/phy/samsung/phy-samsung-ufs.c
+ create mode 100644 drivers/phy/samsung/phy-samsung-ufs.h
+ create mode 100644 drivers/scsi/ufs/ufs-exynos.c
+ create mode 100644 drivers/scsi/ufs/ufs-exynos.h
 
-Not exactly. The physical connector should only be modelled as a
-separate node when the connector is the output of the display pipeline
-for the system. As explained above, when the output of the display
-pipeline is a panel, there's no need for a connector DT node.
 
-> - In the case of 'ti,sn65dsi86' the current dts node is both the node
-> for the bridge and the connector.
-
-This one is a bit tricky :-) The DT node for the ti,sn65dsi86 represents
-the bridge only (it is linked in DT to a separate node for the panel).
-The corresponding driver instantiates a drm_bridge and a drm_connector,
-and delegates the drm_connector operations to the drm_panel object that
-handles the connected panel. This is the model that we're replacing, as
-the ti-sn65dsi86 driver should focus on the SN65DSI86 chip only, and
-shouldn't handle the connected panel. For all we know, it could be
-connected to an eDP to HDMI bridge, itself connected to an HDMI
-connector. We now want bridge drivers to focus only on the device they
-correspond to.
-
-> - If we want to try to deprecate the way that 'ti,sn65dsi86' works it
-> feels like a big-ish effort.  This would include adding a new "eDP"
-> connector class and trying to figure out how to deal with backward
-> compatibility for old dts files (assuming folks care).
-
-As I explained above (hopefully in a not too confusing way), no change
-is required in DT. On the kernel side, the ti-sn65dsi86 should stop
-creating a connector. The next component in the pipeline, in your case a
-panel, should be handled by a driver of its own, and in this case this
-is already possible with the help of drm_panel_bridge_add() (and related
-functions) that will wrap the drm_panel in a drm_bridge. This currently
-needs to be done by the ti-sn65dsi86 driver, but once all users of
-panels will use drm_panel_bridge_add(), I plan to make this handled by
-the DRM panel core, transparently for bridge drivers.
-
-For the case where a physical DP connector is present at the end of the
-pipeline, connected to an external DP monitor, there shall be a DT node
-for the DP connector (we have DT bindings for several connector types,
-creating bindings for DP connectors should be straightforward). The
-bridge/display-connector.c driver shall be extended to support the new
-compatible string, and I expect it won't take much more than
-
-diff --git a/drivers/gpu/drm/bridge/display-connector.c b/drivers/gpu/drm/bridge/display-connector.c
-index 4d278573cdb9..27185f324b2d 100644
---- a/drivers/gpu/drm/bridge/display-connector.c
-+++ b/drivers/gpu/drm/bridge/display-connector.c
-@@ -63,10 +63,11 @@ display_connector_detect(struct drm_bridge *bridge)
-
- 	case DRM_MODE_CONNECTOR_Composite:
- 	case DRM_MODE_CONNECTOR_SVIDEO:
-+	case DRM_MODE_CONNECTOR_DisplayPort:
- 	case DRM_MODE_CONNECTOR_VGA:
- 	default:
- 		/*
--		 * Composite and S-Video connectors have no other detection
-+		 * Composite, S-Video and DP connectors have no other detection
- 		 * mean than the HPD GPIO. For VGA connectors, even if we have
- 		 * an I2C bus, we can't assume that the cable is disconnected
- 		 * if drm_probe_ddc fails, as some cables don't wire the DDC
-@@ -172,11 +173,12 @@ static int display_connector_probe(struct platform_device *pdev)
- 	of_property_read_string(pdev->dev.of_node, "label", &label);
-
- 	/*
--	 * Get the HPD GPIO for DVI and HDMI connectors. If the GPIO can provide
--	 * edge interrupts, register an interrupt handler.
-+	 * Get the HPD GPIO for DVI, HDMI and DP connectors. If the GPIO can
-+	 * provide edge interrupts, register an interrupt handler.
- 	 */
- 	if (type == DRM_MODE_CONNECTOR_DVII ||
--	    type == DRM_MODE_CONNECTOR_HDMIA) {
-+	    type == DRM_MODE_CONNECTOR_HDMIA ||
-+	    type == DRM_MODE_CONNECTOR_DisplayPort) {
- 		conn->hpd_gpio = devm_gpiod_get_optional(&pdev->dev, "hpd",
- 							 GPIOD_IN);
- 		if (IS_ERR(conn->hpd_gpio)) {
-@@ -263,6 +265,9 @@ static const struct of_device_id display_connector_match[] = {
- 	{
- 		.compatible = "composite-video-connector",
- 		.data = (void *)DRM_MODE_CONNECTOR_Composite,
-+	}, {
-+		.compatible = "dp-connector",
-+		.data = (void *)DRM_MODE_CONNECTOR_DisplayPort,
- 	}, {
- 		.compatible = "dvi-connector",
- 		.data = (void *)DRM_MODE_CONNECTOR_DVII,
-
-With this, the display-connector driver will create a drm_bridge
-instance for the DP connector. The ti-sn65dsi86 will thus always be
-followed by a bridge, either a bridge wrapping a drm_panel, or a bridge
-for the connector.
-
-Once all pipelines are fully made of bridges until the last component,
-the drm_connector shall be created by the display controller driver,
-which shall pass the DRM_BRIDGE_ATTACH_NO_CONNECTOR flag to the bridges
-to prevent them from creating a drm_connector themselves. The
-drm_connector created by the display controller driver will need to
-implement operations such as .get_modes(), which will be delegated to
-the appropriate bridge in the chain. The drm_bridge_connector_init()
-helper automates this, making it straightforward for the display
-controller driver to create such a drm_connector. As explained in the
-helper's documentation,
-
- * To use the helper, display controller drivers create a bridge connector with
- * a call to drm_bridge_connector_init(). This associates the newly created
- * connector with the chain of bridges passed to the function and registers it
- * with the DRM device. At that point the connector becomes fully usable, no
- * further operation is needed.
-
-> Did I get that right?  If so, maybe my "hpd-gpios" is already part of
-> the "connector" node?
-
-You got it mostly right :-)
-
-As for the hpd-gpios, it should be specified in the DT node of the
-component that provides the HPD signal, and contain a GPIO specifier
-describing what the signal is connected to. When dealing with a physical
-DP connector and external monitor, the HPD signal is provided by the DP
-connector, the hpd-gpios property shall then be specified in the DP
-connector DT node. The display-connector driver already handles that
-property. When dealing with an eDP panel, the HPD signal is provided by
-the panel, the hpd-gpios property shall be specified in the panel DT
-node.
-
-> > > Looking at other usages of "hpd-gpio" in the kernel, it seems like the
-> > > usage I'm proposing is also common.  Grepping for "hpd-gpios" shows
-> > > numerous examples of "hpd-gpios" being defined at the display
-> > > controller level and (effectively) I believe the bridge is at the
-> > > equivalent level.
-> >
-> > Bridge drivers should only implement support for features available from
-> > the corresponding hardware. If an HPD signal is connected to a dedicated
-> > pin of the bridge, and the bridge can generate an interrupt and expose
-> > the HPD status through I2C, then it should implement HPD-related
-> > operations. If the HPD pin from the connector is hooked up to a GPIO of
-> > the SoC, it should be handled by the connector bridge driver.
-> 
-> So the case I'm trying to deal with is a little odd.  I tried to spell
-> it all out in patch #3 [1] but to talk about it here too:
-> 
-> 1. The 'ti,sn65dsi86' does have a hardware HPD pin.  That pin can
-> generate an interrupt.
-
-As the SN65DSI86 has native HPD detect capability with a dedicated HPD
-input (note that this doesn't make the SN65DSI86 a providder of the HPD
-signal in the sense described above), the bridge driver, in the new
-model, shall implement the HPD-related operations and the .detect()
-operation. The drm_bridge_connector_init() helper will then delegate HPD
-and detection to the ti-sn65dsi86 driver.
-
-This assumes that the HPD signal is routed to the SN65DSI86. That's not
-always the case, see below for an explanation of how to handle that.
-
-> 2. For reasons described in patch #3 (and the other commit it
-> references, c2bfc223882d), the hardware HPD pin on 'ti,sn65dsi86' is
-> nearly useless for eDP.  Specifically, eDP panels are usually
-> (always?) not removable and thus HPD isn't a signal that needs
-> debouncing.  ...yet the signal is debounced in hardware on
-> 'ti,sn65dsi86' and that means a delay of 100 - 200ms before you can
-> see the true value of HPD.  That's an extra 100 - 200ms before the
-> panel can turn on.
-> 
-> 3. Even if eDP panels aren't actually hot plugged, HPD is still a
-> useful concept for eDP.  It can be used to avoid hardcoded delays
-> since panels use it to signal when they're ready.  ...but if HPD is
-> debounced that doesn't work so well.
-> 
-> 4. 'ti,sn65dsi86' has some pins that can be used as GPIOs.  These are
-> ideal places to route HPD since they are not debounced and pretty much
-> a perfect fit for this signal (don't waste SoC GPIOs, routing signals
-> on your board is easier, pins are powered exactly when you need them).
-
-The new drm_bridge model has support for this use case. It makes a
-difference between the intrinsic capability of a device to provide a
-feature (for instance the SN65DSI86 has the intrinsic capability to
-provide the HPD feature), and the fact that the feature is actually
-provided by that device on a particular system (in the case you describe
-here, the SN65DSI86 intrinsic HPD capability isn't used, as the HPD
-signal isn't connect to the SN65DSI86 HPD input). The former is reported
-by implementing the corresponding drm_bridge_funcs operations, the
-latter is reported by setting DRM_BRIGE_OP_* flags in drm_bridge.ops.
-This mechanism allows bridge drivers to unconditionally set function
-pointers in their drm_bridge_funcs structure (allowing the structure to
-make stored in read-only memory), while exposing, for each device
-instance, whether the feature is actually provided or not.
-
-The drm_bridge_connector_init() helper, to delegate drm_connector
-operations to bridges, will look for the first bridge in the chain,
-starting at the output of the pipeline (connector or panel), that
-supports the corresponding feature. If your DP connector DT node, or
-your eDP connector DT node, specifies that the HPD signal is routed to a
-GPIO (through the hpd-gpios property), then the corresponding bridge
-driver shall reprot the DRM_BRIDGE_OP_DETECT and DRM_BRIDGE_OP_HPD
-capabilities. The display-connector driver already supports this, the
-panel bridge driver doesn't and needs to be extended. The
-drm_bridge_connector_init() helper will then detect that the drm_bridge
-for the DP connector or eDP panel supports HPD, and will delegate the
-related drm_connector operations to that bridge. If the HPD signal is
-routed to the HPD pin of the SN65DSI86, the DP connector or eDP panel DT
-node should not contain an hpd-gpios property, the corresponding
-drm_bridge will not set DRM_BRIDGE_OP_DETECT and DRM_BRIDGE_OP_HPD, and
-the drm_bridge_connector_init() will look at the next component in the
-next bridge in the chain, which will be the ti-sn65dsi86. That bridge
-will report support for the HPD-related operations, and will be used.
-
-To be fully correct the ti-sn65dsi86 shouldn't set the
-DRM_BRIDGE_OP_DETECT and DRM_BRIDGE_OP_HPD flags when the HPD signal
-isn't routed to its HPD input pin. As it should not peek into the DT
-node of the DP connector or eDP panel for its output, it should have an
-additional no-hpd DT property in this case. In practice that's may not
-always be required, as if an hpd-gpios property is specified in the DP
-connector or eDP panel DT node, the drm_bridge_connector_init() will not
-look further, but for the case where the HPD signal isn't routed
-anywhere, we need to make sure that the ti-sn65dsi86 driver will not
-incorrectly advertise HPD support.
-
-> 5. The GPIOs on 'ti,sn65dsi86' cannot generate IRQs and can only be
-> polled.  ...but this is OK.  I'm specifically trying to support the
-> case of a panel that is always connected and I just want HPD to be the
-> signal that the panel is ready for me to talk to it.  Polling is fine.
-> Specifically the bridge driver doesn't try to poll HPD to decide if we
-> have something connected--it always returns
-> 'connector_status_connected'.  ...and this is the correct behavior for
-> eDP because you know the hardware is always there and HPD won't even
-> be asserted until you start to power up the panel.
-
-If you look at bridge/display-connector.c, you will see that it reports
-DRM_BRIDGE_OP_DETECT if there's an hpd-gpios property, and additionally
-reports DRM_BRIDGE_OP_HPD if that GPIO has interrupt capability. If a
-bridge in the pipeline reports DRM_BRIDGE_OP_DETECT but no bridge
-reports DRM_BRIDGE_OP_HPD, drm_bridge_connector_init() creates a
-connector that uses polling. This is another reason why a no-hpd
-property is needed for the ti,sn65dsi86, as otherwise the helper would
-incorrectly consider that the SN65DSI86 will report HPD through an
-interrupt.
-
-> 6. My current implementation in patch #3 actually doesn't fully
-> implement a Linux GPIO provider in the bridge driver.  See that patch
-> for justification.  While I could do the work to do this and I'll do
-> it if folks insist, I think the current simpler code is nice.  If
-> there was a separate "edp-connector" driver then presumably I'd have
-> to add the complexity of implementing the GPIO provider API.
-
-This is the only reason why I don't like asking you to change your
-implementation, due to the additional complexity required to expose a
-GPIO provider. However, I think that the new bridge usage model is much
-cleaner than the current one, and this justifies in my opinion
-additional complexity in a small number of places, even if it's
-unfortunate. That being said, if we can put the DT properties where they
-belong for the new model with isolated bridge drivers to only handle the
-features of the hardware they correspond to, I wouldn't be opposed to a
-localized hack (without any derogatory meaning implied) on the driver
-side to ease the implementation. I'm willing to look at you at how this
-could be done, once we complete this discussion about the new model,
-with the hard rule that DT bindings should be designed based on the new
-model.
-
-> I guess to summarize my understanding of all the above:
-> 
-> - I think designing and adding a separate 'edp-connector' driver and
-> device tree node and migrating existing users over would be a big
-> chunk of work and is out of scope for me.
-> 
-> - I'm hoping that the current approach is still OK.
-> 
-> - If people really like the edp-connector concept and want to try to
-> adapt old code later there's nothing here that prevents it--it's just
-> a bunch of extra code.
-> 
-> 
-> [1] https://lore.kernel.org/r/20200415084758.3.Ia50267a5549392af8b37e67092ca653a59c95886@changeid
-
+base-commit: 8f3d9f354286745c751374f5f1fcafee6b3f3136
 -- 
-Regards,
+2.17.1
 
-Laurent Pinchart
