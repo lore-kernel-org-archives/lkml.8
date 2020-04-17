@@ -7,54 +7,55 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47A37C38A2C
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 19:42:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C52A1C38A29
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 19:42:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1E3F4206D9
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 19:42:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E69C206D9
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 19:42:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="biMvwV/e"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="O7vrYzR0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730711AbgDQTmf (ORCPT
+        id S1730808AbgDQTmt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 15:42:35 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:58137 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730418AbgDQTmc (ORCPT
+        Fri, 17 Apr 2020 15:42:49 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:28200 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730764AbgDQTmp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 15:42:32 -0400
+        Fri, 17 Apr 2020 15:42:45 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587152550;
+        s=mimecast20190719; t=1587152564;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=Sx8d7lrVpEcUzH6AwRgjUrQjeecIZrofUzOu/gD0BLs=;
-        b=biMvwV/ew+AS3Cwvcx2wl+MU/wNJd1cO+tQ+KYjRjYwFAi0Id5veaNNNzU43vhmwNvznuX
-        EY98g37if9EnxiVx2nTSZeCbXrDnYYS+KRAnv+2YBC3ql28iES5uTbt0Ap3bijSbI8N5Au
-        WRw+eKRFnuOGXs1IPNMUJAnMA4xGcak=
+        bh=ZWTsiKNhj6P9xR5Gj1CVXp5Rd5Inw4ERGco9o1NjySs=;
+        b=O7vrYzR0zQDqwSHIOvUPU5ZPa+zBovLPWomKq1GL36oECDXqos7unueElROUUS704jCL6u
+        H9cAjkOcBRbCr/wfbgqwFtQOyW9npizeCuFP4ttQfpZCSTkak7/RGb2mHEn5H4yxc3saeV
+        8D40MBSgjqs3RKWQDMFzJxJx9UKG6Ds=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-12-r966xwrGNKmN8EPj32UWHA-1; Fri, 17 Apr 2020 15:42:26 -0400
-X-MC-Unique: r966xwrGNKmN8EPj32UWHA-1
+ us-mta-72-kCvBgDPtNlu6dedeWPJLOQ-1; Fri, 17 Apr 2020 15:42:40 -0400
+X-MC-Unique: kCvBgDPtNlu6dedeWPJLOQ-1
 Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DFCD8149C3;
-        Fri, 17 Apr 2020 19:42:24 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2C2C28017FC;
+        Fri, 17 Apr 2020 19:42:39 +0000 (UTC)
 Received: from Ruby.redhat.com (ovpn-114-140.rdu2.redhat.com [10.10.114.140])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 025E85DA7C;
-        Fri, 17 Apr 2020 19:42:23 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 277325DA7B;
+        Fri, 17 Apr 2020 19:42:38 +0000 (UTC)
 From:   Lyude Paul <lyude@redhat.com>
 To:     dri-devel@lists.freedesktop.org
-Cc:     Daniel Vetter <daniel@ffwll.ch>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
+Cc:     Daniel Vetter <daniel@ffwll.ch>, Ben Skeggs <bskeggs@redhat.com>,
+        David Airlie <airlied@linux.ie>,
+        Ilia Mirkin <imirkin@alum.mit.edu>,
         Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org
-Subject: [RFC v3 01/11] drm/vblank: Register drmm cleanup action once per drm_vblank_crtc
-Date:   Fri, 17 Apr 2020 15:40:48 -0400
-Message-Id: <20200417194145.36350-2-lyude@redhat.com>
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        nouveau@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: [RFC v3 06/11] drm/nouveau/kms/nv50-: Fix disabling dithering
+Date:   Fri, 17 Apr 2020 15:40:53 -0400
+Message-Id: <20200417194145.36350-7-lyude@redhat.com>
 In-Reply-To: <20200417194145.36350-1-lyude@redhat.com>
 References: <20200417194145.36350-1-lyude@redhat.com>
 MIME-Version: 1.0
@@ -65,68 +66,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since we'll be allocating resources for kthread_create_worker() in the
-next commit (which could fail and require us to clean up the mess),
-let's simplify the cleanup process a bit by registering a
-drm_vblank_init_release() action for each drm_vblank_crtc so they're
-still cleaned up if we fail to initialize one of them.
+While we expose the ability to turn off hardware dithering for nouveau,
+we actually make the mistake of turning it on anyway, due to
+dithering_depth containing a non-zero value if our dithering depth isn't
+also set to 6 bpc.
+
+So, fix it by never enabling dithering when it's disabled.
 
 Signed-off-by: Lyude Paul <lyude@redhat.com>
 ---
- drivers/gpu/drm/drm_vblank.c | 22 ++++++++++------------
- 1 file changed, 10 insertions(+), 12 deletions(-)
+ drivers/gpu/drm/nouveau/dispnv50/head.c | 24 +++++++++++++-----------
+ 1 file changed, 13 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/gpu/drm/drm_vblank.c b/drivers/gpu/drm/drm_vblank.c
-index 758bf74e1cab..bf8de10c131f 100644
---- a/drivers/gpu/drm/drm_vblank.c
-+++ b/drivers/gpu/drm/drm_vblank.c
-@@ -491,16 +491,12 @@ static void vblank_disable_fn(struct timer_list *t)
-=20
- static void drm_vblank_init_release(struct drm_device *dev, void *ptr)
+diff --git a/drivers/gpu/drm/nouveau/dispnv50/head.c b/drivers/gpu/drm/no=
+uveau/dispnv50/head.c
+index e29ea40e7c33..72bc3bce396a 100644
+--- a/drivers/gpu/drm/nouveau/dispnv50/head.c
++++ b/drivers/gpu/drm/nouveau/dispnv50/head.c
+@@ -84,18 +84,20 @@ nv50_head_atomic_check_dither(struct nv50_head_atom *=
+armh,
  {
--	unsigned int pipe;
--
--	for (pipe =3D 0; pipe < dev->num_crtcs; pipe++) {
--		struct drm_vblank_crtc *vblank =3D &dev->vblank[pipe];
-+	struct drm_vblank_crtc *vblank =3D ptr;
+ 	u32 mode =3D 0x00;
 =20
--		WARN_ON(READ_ONCE(vblank->enabled) &&
--			drm_core_check_feature(dev, DRIVER_MODESET));
-+	WARN_ON(READ_ONCE(vblank->enabled) &&
-+		drm_core_check_feature(dev, DRIVER_MODESET));
-=20
--		del_timer_sync(&vblank->disable_timer);
+-	if (asyc->dither.mode =3D=3D DITHERING_MODE_AUTO) {
+-		if (asyh->base.depth > asyh->or.bpc * 3)
+-			mode =3D DITHERING_MODE_DYNAMIC2X2;
+-	} else {
+-		mode =3D asyc->dither.mode;
 -	}
-+	del_timer_sync(&vblank->disable_timer);
- }
++	if (asyc->dither.mode) {
++		if (asyc->dither.mode =3D=3D DITHERING_MODE_AUTO) {
++			if (asyh->base.depth > asyh->or.bpc * 3)
++				mode =3D DITHERING_MODE_DYNAMIC2X2;
++		} else {
++			mode =3D asyc->dither.mode;
++		}
 =20
- /**
-@@ -529,10 +525,6 @@ int drm_vblank_init(struct drm_device *dev, unsigned=
- int num_crtcs)
-=20
- 	dev->num_crtcs =3D num_crtcs;
-=20
--	ret =3D drmm_add_action(dev, drm_vblank_init_release, NULL);
--	if (ret)
--		return ret;
--
- 	for (i =3D 0; i < num_crtcs; i++) {
- 		struct drm_vblank_crtc *vblank =3D &dev->vblank[i];
-=20
-@@ -541,6 +533,12 @@ int drm_vblank_init(struct drm_device *dev, unsigned=
- int num_crtcs)
- 		init_waitqueue_head(&vblank->queue);
- 		timer_setup(&vblank->disable_timer, vblank_disable_fn, 0);
- 		seqlock_init(&vblank->seqlock);
-+
-+		ret =3D drmm_add_action(dev, drm_vblank_init_release, vblank);
-+		if (ret) {
-+			del_timer_sync(&vblank->disable_timer);
-+			return ret;
+-	if (asyc->dither.depth =3D=3D DITHERING_DEPTH_AUTO) {
+-		if (asyh->or.bpc >=3D 8)
+-			mode |=3D DITHERING_DEPTH_8BPC;
+-	} else {
+-		mode |=3D asyc->dither.depth;
++		if (asyc->dither.depth =3D=3D DITHERING_DEPTH_AUTO) {
++			if (asyh->or.bpc >=3D 8)
++				mode |=3D DITHERING_DEPTH_8BPC;
++		} else {
++			mode |=3D asyc->dither.depth;
 +		}
  	}
 =20
- 	DRM_INFO("Supports vblank timestamp caching Rev 2 (21.10.2013).\n");
+ 	asyh->dither.enable =3D mode;
 --=20
 2.25.1
 
