@@ -4,45 +4,45 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C1F7C352BE
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 14:26:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48829C2D0EF
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 14:26:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3B8322223F
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 14:26:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 226E220B1F
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 14:26:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="nm6ZgrA8"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="BaIKCdF/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727928AbgDQO0n (ORCPT
+        id S1728006AbgDQO04 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 10:26:43 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:34873 "EHLO
+        Fri, 17 Apr 2020 10:26:56 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:38374 "EHLO
         mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726530AbgDQO0j (ORCPT
+        by vger.kernel.org with ESMTP id S1728010AbgDQO0z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 10:26:39 -0400
+        Fri, 17 Apr 2020 10:26:55 -0400
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1587133598; h=Content-Transfer-Encoding: MIME-Version:
+ s=smtp; t=1587133614; h=Content-Transfer-Encoding: MIME-Version:
  References: In-Reply-To: Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=exe0jDNrYU/8faitGLG2j62JBYVnZ+/ME/RBOzwrR7Y=; b=nm6ZgrA8c2T5YHqEAyyQ3gOHRAdFB/R6c1iM5bCT7XVLzdr1VDreV5t4BxW8t+mW4ALPi8R8
- 6UqlU7N948oyzidlFH7CNIkp1y+B4rKTQHSyhjZzzMQV+2n0aki2XZgGuHoXh8vrnMFm8kvU
- aj56YQA4CgcpDHEtRoA9642io4o=
+ Sender; bh=fSWZYAx+xUo9BW8l9Vg7d7Qrc7pAbwtD1+dmCZo15aU=; b=BaIKCdF/1DE7jbJCb/IulSSmjWi+mzORwHKD6Vh18yBLpvuCHqVf1v77bVavCzDffcY6tyUz
+ JhoRXWR3KdbTPpKXk5i9yCmCVH8b1+0Abz8zAgGOCqxWlMP72UEFTXkWkQPCN9LnyI+7WgBn
+ m39ztzeSzureY3aKbpYXM0dw6FE=
 X-Mailgun-Sending-Ip: 104.130.122.26
 X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
 Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e99bc9d.7f540a9b5ed8-smtp-out-n04;
- Fri, 17 Apr 2020 14:26:37 -0000 (UTC)
+ by mxa.mailgun.org with ESMTP id 5e99bca5.7fe88aa9f960-smtp-out-n03;
+ Fri, 17 Apr 2020 14:26:45 -0000 (UTC)
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 63618C44791; Fri, 17 Apr 2020 14:26:36 +0000 (UTC)
+        id CAFB7C433BA; Fri, 17 Apr 2020 14:26:43 +0000 (UTC)
 Received: from blr-ubuntu-87.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: sibis)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id C1D7BC4478F;
-        Fri, 17 Apr 2020 14:26:31 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C1D7BC4478F
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 002ABC4478F;
+        Fri, 17 Apr 2020 14:26:39 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 002ABC4478F
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sibis@codeaurora.org
 From:   Sibi Sankar <sibis@codeaurora.org>
@@ -52,9 +52,9 @@ Cc:     agross@kernel.org, robh+dt@kernel.org,
         linux-kernel@vger.kernel.org, evgreen@chromium.org,
         ohad@wizery.com, mka@chromium.org, dianders@chromium.org,
         devicetree@vger.kernel.org, Sibi Sankar <sibis@codeaurora.org>
-Subject: [PATCH 3/5] arm64: dts: qcom: sc7180: Update reserved memory map
-Date:   Fri, 17 Apr 2020 19:56:03 +0530
-Message-Id: <20200417142605.28885-4-sibis@codeaurora.org>
+Subject: [PATCH 5/5] arm64: dts: qcom: sc7180: Update Q6V5 MSS node
+Date:   Fri, 17 Apr 2020 19:56:05 +0530
+Message-Id: <20200417142605.28885-6-sibis@codeaurora.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200417142605.28885-1-sibis@codeaurora.org>
 References: <20200417142605.28885-1-sibis@codeaurora.org>
@@ -65,193 +65,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add missing regions and remove unused regions from the reserved memory
-map, as described in version 5.
+Add TCSR node and update MSS node to support MSA based Modem boot on
+SC7180 SoCs.
 
 Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
 ---
- arch/arm64/boot/dts/qcom/sc7180-idp.dts | 63 +++++++++++++++++++
- arch/arm64/boot/dts/qcom/sc7180.dtsi    | 83 ++++++++++++++++++++++++-
- 2 files changed, 144 insertions(+), 2 deletions(-)
+
+Depends on the following bindings:
+iommus: https://patchwork.kernel.org/patch/11443101/
+spare-regs: https://patchwork.kernel.org/patch/11491425/
+
+ arch/arm64/boot/dts/qcom/sc7180-idp.dts | 42 +++++++++++++++++++++++++
+ arch/arm64/boot/dts/qcom/sc7180.dtsi    |  5 +++
+ 2 files changed, 47 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-index 17eadd80f15de..e613d70cc0198 100644
+index e613d70cc0198..6f472872be1a3 100644
 --- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
 +++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-@@ -28,6 +28,69 @@ chosen {
- 	};
+@@ -319,6 +319,48 @@ &qupv3_id_1 {
+ 	status = "okay";
  };
  
-+/*
-+ * Reserved memory changes
-+ *
-+ * Keep all modifications to the memory map (from sc7180.dtsi) in one place.
-+ * Delete all unused memory nodes and re-create atf_mem/venus_mem/camera_mem
-+ * and wlan_mem memory nodes.
-+ *
-+ */
++&remoteproc_mpss {
++	compatible = "qcom,sc7180-mss-pil";
++	reg = <0 0x04080000 0 0x410>, <0 0x04180000 0 0x48>;
++	reg-names = "qdsp6", "rmb";
 +
-+/delete-node/ &hyp_mem;
-+/delete-node/ &xbl_mem;
-+/delete-node/ &aop_mem;
-+/delete-node/ &sec_apps_mem;
-+/delete-node/ &tz_mem;
-+/delete-node/ &camera_mem;
-+/delete-node/ &npu_mem;
-+/delete-node/ &venus_mem;
-+/delete-node/ &cdsp_mem;
-+/delete-node/ &adsp_mem;
-+/delete-node/ &wlan_mem;
-+/delete-node/ &ipa_fw_mem;
-+/delete-node/ &ipa_gsi_mem;
-+/delete-node/ &gpu_mem;
++	clocks = <&gcc GCC_MSS_CFG_AHB_CLK>,
++		 <&gcc GCC_MSS_Q6_MEMNOC_AXI_CLK>,
++		 <&gcc GCC_MSS_NAV_AXI_CLK>,
++		 <&gcc GCC_MSS_SNOC_AXI_CLK>,
++		 <&gcc GCC_MSS_MFAB_AXIS_CLK>,
++		 <&rpmhcc RPMH_CXO_CLK>;
++	clock-names = "iface", "bus", "nav", "snoc_axi",
++		      "mnoc_axi", "xo";
 +
-+/* Increase the size from 132 MB to 140 MB */
-+&mpss_mem {
-+	reg = <0x0 0x86000000 0x0 0x8c00000>;
-+};
++	iommus = <&apps_smmu 0x460 0x1>, <&apps_smmu 0x444 0x2>;
 +
-+/* Increase the size from 2MB to 8MB */
-+&rmtfs_mem {
-+	reg = <0x0 0x84400000 0x0 0x800000>;
-+};
++	resets = <&aoss_reset AOSS_CC_MSS_RESTART>,
++		 <&pdc_reset PDC_MODEM_SYNC_RESET>;
++	reset-names = "mss_restart", "pdc_reset";
 +
-+/ {
-+	reserved-memory {
-+		atf_mem: memory@80b00000 {
-+			reg = <0x0 0x80b00000 0x0 0x100000>;
-+			no-map;
-+		};
++	qcom,halt-regs = <&tcsr_mutex_regs 0x23000 0x25000 0x24000>;
++	qcom,spare-regs = <&tcsr_regs 0xb3e4>;
 +
-+		camera_mem: memory@8ec00000 {
-+			reg = <0x0 0x8ec00000 0x0 0x500000>;
-+			no-map;
-+		};
++	power-domains = <&aoss_qmp AOSS_QMP_LS_MODEM>,
++			<&rpmhpd SC7180_CX>,
++			<&rpmhpd SC7180_MX>,
++			<&rpmhpd SC7180_MSS>;
++	power-domain-names = "load_state", "cx", "mx", "mss";
 +
-+		venus_mem: memory@8f600000 {
-+			reg = <0 0x8f600000 0 0x500000>;
-+			no-map;
-+		};
++	/delete-property/memory-region;
 +
-+		wlan_mem: memory@94100000 {
-+			reg = <0x0 0x94100000 0x0 0x200000>;
-+			no-map;
-+		};
++	status = "okay";
 +
-+		mba_mem: memory@94400000 {
-+			reg = <0x0 0x94400000 0x0 0x200000>;
-+			no-map;
-+		};
++	mba {
++		memory-region = <&mba_mem>;
++	};
++
++	mpss {
++		memory-region = <&mpss_mem>;
 +	};
 +};
 +
- &apps_rsc {
- 	pm6150-rpmh-regulators {
- 		compatible = "qcom,pm6150-rpmh-regulators";
+ &uart3 {
+ 	status = "okay";
+ 
 diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-index 853ba6e8a53ca..f73ffd74d4fcd 100644
+index e319762a0bffc..c49801ddb9d70 100644
 --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
 +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-@@ -69,18 +69,97 @@ reserved_memory: reserved-memory {
- 		#size-cells = <2>;
- 		ranges;
- 
-+		hyp_mem: memory@80000000 {
-+			reg = <0x0 0x80000000 0x0 0x600000>;
-+			no-map;
-+		};
-+
-+		xbl_mem: memory@80600000 {
-+			reg = <0x0 0x80600000 0x0 0x200000>;
-+			no-map;
-+		};
-+
-+		aop_mem: memory@80800000 {
-+			reg = <0x0 0x80800000 0x0 0x20000>;
-+			no-map;
-+		};
-+
- 		aop_cmd_db_mem: memory@80820000 {
- 			reg = <0x0 0x80820000 0x0 0x20000>;
- 			compatible = "qcom,cmd-db";
+@@ -981,6 +981,11 @@ tcsr_mutex_regs: syscon@1f40000 {
+ 			reg = <0 0x01f40000 0 0x40000>;
  		};
  
-+		sec_apps_mem: memory@808ff000 {
-+			reg = <0x0 0x808ff000 0x0 0x1000>;
-+			no-map;
++		tcsr_regs: syscon@1fc0000 {
++			compatible = "syscon";
++			reg = <0 0x01fc0000 0 0x40000>;
 +		};
 +
- 		smem_mem: memory@80900000 {
- 			reg = <0x0 0x80900000 0x0 0x200000>;
- 			no-map;
- 		};
- 
--		venus_mem: memory@8f600000 {
--			reg = <0 0x8f600000 0 0x500000>;
-+		tz_mem: memory@80b00000 {
-+			reg = <0x0 0x80b00000 0x0 0x3900000>;
-+			no-map;
-+		};
-+
-+		rmtfs_mem: memory@84400000 {
-+			compatible = "qcom,rmtfs-mem";
-+			reg = <0x0 0x84400000 0x0 0x200000>;
-+			no-map;
-+
-+			qcom,client-id = <1>;
-+			qcom,vmid = <15>;
-+		};
-+
-+		mpss_mem: memory@86000000 {
-+			reg = <0x0 0x86000000 0x0 0x8400000>;
-+			no-map;
-+		};
-+
-+		camera_mem: memory@8e400000 {
-+			reg = <0x0 0x8e400000 0x0 0x500000>;
-+			no-map;
-+		};
-+
-+		npu_mem: memory@8e900000 {
-+			reg = <0x0 0x8e900000 0x0 0x500000>;
-+			no-map;
-+		};
-+
-+		venus_mem: memory@8ee00000 {
-+			reg = <0x0 0x8ee00000 0x0 0x500000>;
-+			no-map;
-+		};
-+
-+		cdsp_mem: memory@8f300000 {
-+			reg = <0x0 0x8f300000 0x0 0x1e00000>;
-+			no-map;
-+		};
-+
-+		adsp_mem: memory@91100000 {
-+			reg = <0x0 0x91100000 0x0 0x2800000>;
-+			no-map;
-+		};
-+
-+		wlan_mem: memory@93900000 {
-+			reg = <0x0 0x93900000 0x0 0x200000>;
-+			no-map;
-+		};
-+
-+		ipa_fw_mem: memory@93b00000 {
-+			reg = <0x0 0x93b00000 0x0 0x10000>;
-+			no-map;
-+		};
-+
-+		ipa_gsi_mem: memory@93b10000 {
-+			reg = <0x0 0x93b10000 0x0 0x5000>;
-+			no-map;
-+		};
-+
-+		gpu_mem: memory@93b15000 {
-+			reg = <0x0 0x93b15000 0x0 0x2000>;
- 			no-map;
- 		};
- 	};
+ 		tlmm: pinctrl@3500000 {
+ 			compatible = "qcom,sc7180-pinctrl";
+ 			reg = <0 0x03500000 0 0x300000>,
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
