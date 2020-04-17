@@ -2,136 +2,156 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11815C352BE
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 09:26:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC88AC3815B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 09:27:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DB6DF206B9
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 09:26:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="y/Ywt9ad"
+	by mail.kernel.org (Postfix) with ESMTP id CBFB022201
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 09:27:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587115670;
+	bh=Vo2LY0S2FqXdQuFq7yapdEsm/GR56W2rJZDQ3Snu+5M=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
+	b=BtzRaqsvJbab7IwnEjF6w16ukQctLL0rq4FwcduB60VNrAX/MX8KLoWtgA4byXxKk
+	 FdkdMrUYuuDzPSDawZzk1C4RPMXf7L/JW0YnvUPGZ5QMk5pDIcxE4BtjLVss5rPrGP
+	 Prle+++3t/nUqpB2EM3qdkz8fJAg9m/t7duch4po=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730272AbgDQJ0J (ORCPT
+        id S1730274AbgDQJ1u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 05:26:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44548 "EHLO
+        Fri, 17 Apr 2020 05:27:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44810 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729987AbgDQJ0I (ORCPT
+        with ESMTP id S1729987AbgDQJ1t (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 05:26:08 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3066DC061A0C
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 02:26:08 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id d17so2206091wrg.11
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 02:26:08 -0700 (PDT)
+        Fri, 17 Apr 2020 05:27:49 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C341C061A0C;
+        Fri, 17 Apr 2020 02:27:49 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id g10so811008lfj.13;
+        Fri, 17 Apr 2020 02:27:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=XlGUZqw+jrAS6ieTYoAuxs9RQKcypT6nzhcddAJ3oBs=;
-        b=y/Ywt9ad2jWK04NVwdvXe99a6lul3V9rTx0HxhP56trpnnzty2YutCuV7V3HEQD78A
-         epYHZqmNexqv6IkOEFvC4Yzu5A2dQUABHZ+6jme5CCysIZqmR0U+fqeyEixt6xF7nfXw
-         Wr8IhEpagZWXPVPqysZwaQliHsHyMVn/Y4C+I2UC6UAn545+hDWFoQ4HKYOs0KpkpFB7
-         orR7GBGjPbo3fD9WoH8bjPYrS6AZg+K1+Xk5wSNrbmeZXMX6jVJ0s93VLpuBb6IWBswH
-         MTVaQSa5C/puzLPZWlG4ey1jcwPLo5A/pi6kQz+UG4za8+huqWy9Qs91XdIKunephl9s
-         HQzA==
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=z9TmZCPSYHLbADZtDk6utvoUiFo68AqRFtzXP1rnqCE=;
+        b=MvBk/l4Fv4PIGHuS/p6vhpQW5a7nV5pWTle6H/XQgHKCK90C3c+nRLMthbaPZt55Dc
+         XFUldyExOul3jWHUdr4fiIgp3W4dqedm7eZf7zTh99SRSq9yBniFulzQbr5Q9ebRr2oR
+         SYLu8z+JLw5oqXg0nEoPUsmuvU6tiA4JwswOE9TaNhF+Ezt1kmzh2cGmLjvr1iYdK+Jo
+         Dzvw2ry5wZ6lj9yv7iD7f1tO1t+fNlR2DIynnb1x6jryvZd7AHvQCcSARqT1kChLA1ox
+         5iJJoCPblDOz5+EJkn0P/fN+rqxH6sy7xmuFmUhYXBstY1I4mQOAC9QFR5L90adRXeUN
+         ixWQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=XlGUZqw+jrAS6ieTYoAuxs9RQKcypT6nzhcddAJ3oBs=;
-        b=dddIhZHJVeTAU1p51mlP5KmFUYe+qEjJmF/orBOKYOVij+kP7q4Mr42ZkSqd2aft5m
-         3zQipHMf72YffKincJgksPmx5KgaqEgke/5M+POcojUnjHFwY6hnnlGq0j45A7yGBuhm
-         13zhh+QsSRGkQhQ6+ftluu2M+aiOqpC2zYWMhJmJmbtl3Nc8z3dY7LKyRh9jl2RP/nmT
-         rn4dGzJjfgA38CT079Ir/iKhEo84JadstPjaF9H210JvJMjvKSWDl8gTX9LkBqMhkb9Q
-         dlWPF8o+XOV36RePzfSZxvvwBygZpNXpEA6lUnh5B3S+bZqrgxDhTcZ9/x+0SRc9GJrx
-         xpKQ==
-X-Gm-Message-State: AGi0PubtmC7jjISTULv4bAcuMdnNjzjTiRdQqrvJquACaN7RWN+ymYm9
-        +aKYK5wDO7em4p3fA7wu+gLewlv7C6g=
-X-Google-Smtp-Source: APiQypJEHKfVv7MN9RgD2/Dtw/QNQXo8fZLMPbHsDPSCSeVOHIEodPloz1SEk8G7V4umefGvssCHfw==
-X-Received: by 2002:a5d:69c9:: with SMTP id s9mr2846343wrw.307.1587115566938;
-        Fri, 17 Apr 2020 02:26:06 -0700 (PDT)
-Received: from dell ([95.149.164.124])
-        by smtp.gmail.com with ESMTPSA id h5sm12635867wrp.97.2020.04.17.02.26.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Apr 2020 02:26:06 -0700 (PDT)
-Date:   Fri, 17 Apr 2020 10:27:05 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Tang Bin <tangbin@cmss.chinamobile.com>
-Cc:     linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mfd:asic3:Delete redundant variable definition
-Message-ID: <20200417092705.GG2167633@dell>
-References: <20200403042020.17452-1-tangbin@cmss.chinamobile.com>
- <20200416070802.GQ2167633@dell>
- <211e7521-639d-804c-f332-bfed0cf315df@cmss.chinamobile.com>
+        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
+         :date:message-id:mime-version;
+        bh=z9TmZCPSYHLbADZtDk6utvoUiFo68AqRFtzXP1rnqCE=;
+        b=XFwlsWD8HsC1xBERGX4ksDxhk/399xBAfSUIO9m8jgeivoD67dJEIilLvKQVh1FME/
+         KxusJti2HeOP23+fs8FJyxoMm93HZNpnljSa/YVZBzgYyqvd+pK4r6r6n8SAMp5pobEh
+         Ac5Ydq1COTaPAyg2Yt0lV//DGugENibgwVXMnSikwndPKcNuzavwLPm0E2n/+e/74l1a
+         MnDShbm4H4IjFmfRYX9Htk2hXwYi5IYDTWDFTpNCva2gSUFfwcVHGXgkQ4cCjEmwVwoo
+         zgV/mcs3sy6GW7kywepboDHnxxehCz5bpAvIkITGbtKgTaK5JguUoPXzw0KkZz0ir3hc
+         uGbw==
+X-Gm-Message-State: AGi0Puawm9LHmaVgUv5vzNOnPvt/yZEI2ZbdvGLIHR8rgaN2vcvPjNOC
+        O2COUdIbLpItkz97uf4mRVkUiE4fcSuKzQ==
+X-Google-Smtp-Source: APiQypLrIi1dWDIOyFkDvv+ij+G6A3tYJRL5zY1ih24KqVVQuButGDmZGkxwR0p5LkrNgt3WHSRrug==
+X-Received: by 2002:ac2:46f9:: with SMTP id q25mr1493930lfo.149.1587115667392;
+        Fri, 17 Apr 2020 02:27:47 -0700 (PDT)
+Received: from saruman (91-155-214-58.elisa-laajakaista.fi. [91.155.214.58])
+        by smtp.gmail.com with ESMTPSA id 25sm17492628lft.68.2020.04.17.02.27.45
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 17 Apr 2020 02:27:46 -0700 (PDT)
+From:   Felipe Balbi <balbi@kernel.org>
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>
+Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Sandeep Maheswaram <sanm@codeaurora.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH 28/35] docs: dt: qcom,dwc3.txt: fix cross-reference for a converted file
+In-Reply-To: <24b30222392569e7aa5d61d46642a4c38a964512.1586359676.git.mchehab+huawei@kernel.org>
+References: <cover.1586359676.git.mchehab+huawei@kernel.org> <24b30222392569e7aa5d61d46642a4c38a964512.1586359676.git.mchehab+huawei@kernel.org>
+Date:   Fri, 17 Apr 2020 12:27:42 +0300
+Message-ID: <87h7xicvht.fsf@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <211e7521-639d-804c-f332-bfed0cf315df@cmss.chinamobile.com>
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 16 Apr 2020, Tang Bin wrote:
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-> Hi, Lee:
-> 
-> On 2020/4/16 15:08, Lee Jones wrote:
-> > On Fri, 03 Apr 2020, Tang Bin wrote:
-> > 
-> > > In this function, 'ret' is always assigned, even if 'pdata->leds'
-> > > don't carry out,it has already been assigned a value in the above
-> > > code, including '0',so it's redundant.
-> > Which line initialises/assigns 'ret' before this one?
-> 
->     I think it maybe my fault before, because I treat get resource and irq
-> succeed. But now I have two questions  to ask you:
-> 
->     Q1: About asic3_mfd_probe()?
-> 
->           In the function asic3_mfd_probe(), if get resource or irq failed,
-> the value returned just detected and dev_dbg() error message, but there were
-> no error return. What I think the modify should be as follows:
-> 
->     mem_sdio = platform_get_resource(pdev, IORESOURCE_MEM, 1);
->     if (!mem_sdio) {
->         dev_dbg(asic->dev, "no SDIO MEM resource\n");
->         ret = -EINVAL;
->         goto out;
->     }
-> 
->     irq = platform_get_irq(pdev, 1);
->     if (irq < 0) {
->         dev_dbg(asic->dev, "no SDIO IRQ resource\n");
->         ret = irq;
->         goto out;
->     }
-> 
->     If the function do like this, the 'ret = 0' in line 993 maybe redundant.
-> 
-> 
->    Q2: About asic3_probe()?
-> 
->           In the line 995, if the function asic3_irq_probe() failed, it will
-> print error message by the internally called function platform_get_irq(), so
-> the dev_err() in the line 997 is redundant, should be delete.
-> 
-> 
->     I'll wait actively, and submit the corresponding patch according to your
-> reply.
+Mauro Carvalho Chehab <mchehab+huawei@kernel.org> writes:
 
-Just submit the patch and we can discuss it there.
+> The qcom-qusb2-phy.txt file was converted and renamed to yaml.
+> Update cross-reference accordingly.
+>
+> Fixes: 8ce65d8d38df ("dt-bindings: phy: qcom,qusb2: Convert QUSB2 phy bin=
+dings to yaml")
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+> ---
+>  Documentation/devicetree/bindings/usb/qcom,dwc3.txt | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/usb/qcom,dwc3.txt b/Docume=
+ntation/devicetree/bindings/usb/qcom,dwc3.txt
+> index cb695aa3fba4..fbdd01756752 100644
+> --- a/Documentation/devicetree/bindings/usb/qcom,dwc3.txt
+> +++ b/Documentation/devicetree/bindings/usb/qcom,dwc3.txt
+> @@ -52,8 +52,8 @@ A child node must exist to represent the core DWC3 IP b=
+lock. The name of
+>  the node is not important. The content of the node is defined in dwc3.tx=
+t.
+>=20=20
+>  Phy documentation is provided in the following places:
+> -Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt   - USB3 QMP PHY
+> -Documentation/devicetree/bindings/phy/qcom-qusb2-phy.txt - USB2 QUSB2 PHY
+> +Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt    - USB3 QMP PHY
+> +Documentation/devicetree/bindings/phy/qcom,qusb2-phy.yaml - USB2 QUSB2 P=
+HY
+>=20=20
+>  Example device nodes:
 
-These kind of messages always require a lot of extra faff to process.
+Should I take this or will it go via e.g. trivial?
 
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+In any case:
+
+Acked-by: Felipe Balbi <balbi@kernel.org>
+
+=2D-=20
+balbi
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl6Zdo4ACgkQzL64meEa
+mQYUGw/+LzBLQ94ktYWYWxyCitvz+XIYayQ1/iMLn3p3cDv3jEzTF6PO9XWWyxsr
+9X6rmbmlmy0C9cohEthIzKVc1borij4pvn+dERuCAHNXSRkIQdIuiXBWgwSHJjdm
+iiSHotQboyX21IJbd1rbE8DHuGeQ7FX/57srSji8fs3WBxzdwG94uOnP8HmXnppg
+ZHVCj8V5EQPwjV3iyN5VjvTEb/54e5Levmn5RVkMJJxJT7AIkClVoOuqLvfUns+r
+fEEL3OGOVuoqj3DR/0uqaAdxkUJExGp+tmeRbomH6s9ygt9rby4LdC1b8J5ZlDF2
+PqxV+zromTmWBjZ4RjYQLR2iUvMamhwidrsqravshl2A/WYcpcF4hxkQHFs+oiZ+
+3YeGftUNO5yzxZQ+RznmgY9Sw7MLarA+F92Fxa1SaxW9eohUBr6BZo1gb//2izNR
+GO6elpHcMWuaBX/F/R9eliyY96jwjbmQZIe6XkctF8wJGahUlTpWAA1FDYwmSpBQ
+9TOybuw65rpSO14+CzmXUsovXn1bIzsvE8dYXJPQ77lgaAvivV65wZdCaBZJvpLT
+oc9uXg18N090wrdCCcxHodk/iKIW0Aamy6zBs9eXVX2zVf/830J6IcAjmkAyoDwa
+IRBcHPBI/8UXwVKqkuKL/+fSUXCCtv9b1c9h6E5WO6OhKgdVv20=
+=aXc/
+-----END PGP SIGNATURE-----
+--=-=-=--
