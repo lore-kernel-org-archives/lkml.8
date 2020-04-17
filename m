@@ -2,152 +2,150 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F77CC38A29
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 22:39:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86DA8C38A29
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 22:40:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1020720732
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 22:39:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C3C4221E9
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 22:40:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="lblLDBr1";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="JXpnxhep"
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="ntU3SF4p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729006AbgDQWjH (ORCPT
+        id S1729063AbgDQWkN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 18:39:07 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:14012 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728770AbgDQWjG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 18:39:06 -0400
-Received: from pps.filterd (m0001303.ppops.net [127.0.0.1])
-        by m0001303.ppops.net (8.16.0.42/8.16.0.42) with SMTP id 03HMcVHc019592;
-        Fri, 17 Apr 2020 15:38:33 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=date : from : to : cc :
- subject : message-id : references : content-type : in-reply-to :
- mime-version; s=facebook; bh=8awsTdtUXUkacfl7t6lf7HqPpjb5Hk45wGMQI1xpF68=;
- b=lblLDBr1GvRLfQbu3KNaOfZLEqdgbNoIQNAOUV8ZBuI85tVe+DtLSQAZuyVp5B2Unbj0
- kiU80TT6BN8rO0yGLwTjcZ85Obc+lNDErtRLFcQVS/yy5VfwJ0zzA3qymmj2vOD31JrH
- iTTYWnZY/J0NxW8fjNitlsd0Jh6d+L95kws= 
-Received: from mail.thefacebook.com ([163.114.132.120])
-        by m0001303.ppops.net with ESMTP id 30em7utsxy-4
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Fri, 17 Apr 2020 15:38:33 -0700
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (100.104.98.9) by
- o365-in.thefacebook.com (100.104.94.199) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1847.3; Fri, 17 Apr 2020 15:38:31 -0700
+        Fri, 17 Apr 2020 18:40:13 -0400
+Received: from mail-am6eur05on2068.outbound.protection.outlook.com ([40.107.22.68]:38456
+        "EHLO EUR05-AM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728762AbgDQWkM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Apr 2020 18:40:12 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=LsGHhyOtmKznwUo37T/xur5NZlmf0OD7wkuZhlj/bvSByNnZ1AMLLaujyteSuD9kWZrtUdTtTrZn6EqKxiwrKRQEEgLeiw1Np0FM/50ogtLfQD7b1RPmFC0dXkqJfTxiuzVM6FuTiTjnavEZcu2APAwqJyAqX0OftnhXiF84atNO7Iq93aIrSvTgPE+p7EfKeMturXSZ+zSHJW7m1mz6BOR3WESk+XYOz7XE8/6Xnz4gwbB6SbdmYAKiS0hmx02fXOk17bbiVWAvNYmkFx5gABNfu9K/0J7JsojN6hkdfhbIYcbUZkWPz2dyeme5P5jkzdv34seP34ZagMCt/x+DtA==
+ b=W40b3ZVj/ZQnCNUkMFgtpndw6UrqlDqZcmtZY+W8Xu35l7GXdEKZ7h9ZPAZwP/rXkGH+2hkgIahRjMb4ac5OfWGCBblOmmfutGPOILxo+RwToKGBws/i6C5qUikskihZmULxrZUDrokhnyASaDS3WY4oHJmUwqcOdhHvIiks8ODx1Q/8oGNOjAz6RY5J8a5ROclGflF2lBilS69/9UwCwrDvx+pg+7YhpfJdBvtb3Yyqvgvv0gZHP/8DbFteJby3ZUsBzjWVpT5W/aotsdFO421gN0z/z8C3iyVKwIx1sqJKg6R9L4iMcgb/rDnSfEXxv1qZkoSzoDtVQeoIe/pgZQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8awsTdtUXUkacfl7t6lf7HqPpjb5Hk45wGMQI1xpF68=;
- b=ZadIrsWnDcM2zVpCQ8w7sOo/v5SYUcpDdrOMTZo/eS2GkyHrAGWkVT8VBXQ199QJxzezFJP6N70CyMUptauz+cWe+x731grFKLgs/SHyTQnzs0HASQdQCn2Bho15gJzOVFOP8Mx8TKCI95D1DmTteqRT72eM5XRIpupsikwZ+2vneXxeWnfLn/COpTSFgu3Td+83uBhkvnqZVBFaAZWQoRE6d1u416XmKyWxJc4bpZQLwoVMNetJAAx0TXs37MFTBOjV9Fed3XFmwkU4bBzKXU9PxLN14TAyLPVcvqCu4XBPvaH1gy6cIV4cheHKVpwxetM/bmxzmmVEBn+hrbvMUA==
+ bh=WFYLOG8PlQwcjazfBlrgLn5HA6N64xytHHsBhOU37FM=;
+ b=jxXt9TUk7L+fQb0kkBKAtPPdpUVhvo35S6XYfrhj5xw9H+WPaXod8okiMKxwC9Abn8xqjTy6YjIJNYrsqDUBXTxz76Ceu8Ta/jjw+mDTogW42hLnoD80u/BLqx7dsUb3m2Zs8V6FsoRdRm3Pvz3Jo75Ytf+rlkr2tkt1gK8K5ayCgRvCcmMx7uQgaki0ePDB3w548nMw4OcItqUyfv6GAyLWYFIDABws0Q+AzrEdA99QauamifqM1krMB0+x9JgPIp9b/zH/m1WTCvDhOEi5lQRO3zee26PZdG9gNIRxnEf5XOUjCbG7rpckSi5ClyFW+aeCIt+MYvIEFdJVA/yVPQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
- header.d=fb.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector2-fb-onmicrosoft-com;
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8awsTdtUXUkacfl7t6lf7HqPpjb5Hk45wGMQI1xpF68=;
- b=JXpnxhepp3LbjY7/w/FTKIYV6PwpZ1OwyQ4M669ytO/YqNd4+s/RMnSMwQ6JIcHmwMZxf8XsHPxzgzYS6qDpbdfGivzrlTdsTiVgnwgauPaPPOjbTVCct5cW/rR9ZbXf9YuCZiBpBqnId+tDmrrxOikHUN9V3AMvnPKHnkD5BkQ=
-Received: from BYAPR15MB4119.namprd15.prod.outlook.com (2603:10b6:a02:cd::20)
- by BYAPR15MB3333.namprd15.prod.outlook.com (2603:10b6:a03:10c::11) with
+ bh=WFYLOG8PlQwcjazfBlrgLn5HA6N64xytHHsBhOU37FM=;
+ b=ntU3SF4pZka1sLn40qpFfJb6wa4F7fviKi0iagFUKOWG4eR0vxTXwApW5gXsfyvgmAas00FRodWzRAMraCxtco2gdjD/i0MTU3XsTlRQ21YjX0PoImmTJHku2fp90graY+ZcF5KijY2oS1jmMkNuS199qwjS66kMg8gdn+9rcZk=
+Received: from VI1PR05MB5102.eurprd05.prod.outlook.com (2603:10a6:803:5e::23)
+ by VI1PR05MB6350.eurprd05.prod.outlook.com (2603:10a6:803:fb::23) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2921.29; Fri, 17 Apr
- 2020 22:38:30 +0000
-Received: from BYAPR15MB4119.namprd15.prod.outlook.com
- ([fe80::90d6:ec75:fde:e992]) by BYAPR15MB4119.namprd15.prod.outlook.com
- ([fe80::90d6:ec75:fde:e992%7]) with mapi id 15.20.2900.028; Fri, 17 Apr 2020
- 22:38:30 +0000
-Date:   Fri, 17 Apr 2020 15:38:28 -0700
-From:   Andrey Ignatov <rdna@fb.com>
-To:     Matthew Wilcox <willy@infradead.org>
-CC:     Christoph Hellwig <hch@lst.de>, Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
-        <linux-fsdevel@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <bpf@vger.kernel.org>
-Subject: Re: [PATCH 6/6] sysctl: pass kernel pointers to ->proc_handler
-Message-ID: <20200417223828.GA41441@rdna-mbp>
-References: <20200417064146.1086644-1-hch@lst.de>
- <20200417064146.1086644-7-hch@lst.de>
- <20200417193910.GA7011@rdna-mbp>
- <20200417195015.GO5820@bombadil.infradead.org>
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200417195015.GO5820@bombadil.infradead.org>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-ClientProxiedBy: CO2PR05CA0078.namprd05.prod.outlook.com
- (2603:10b6:102:2::46) To BYAPR15MB4119.namprd15.prod.outlook.com
- (2603:10b6:a02:cd::20)
-MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from localhost (2620:10d:c090:400::5:6540) by CO2PR05CA0078.namprd05.prod.outlook.com (2603:10b6:102:2::46) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.6 via Frontend Transport; Fri, 17 Apr 2020 22:38:29 +0000
-X-Originating-IP: [2620:10d:c090:400::5:6540]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 61d6c455-2065-4947-97ef-08d7e3200d51
-X-MS-TrafficTypeDiagnostic: BYAPR15MB3333:
-X-Microsoft-Antispam-PRVS: <BYAPR15MB33331A99E453CC3C536AB771A8D90@BYAPR15MB3333.namprd15.prod.outlook.com>
-X-FB-Source: Internal
-X-MS-Oob-TLC-OOBClassifiers: OLM:519;
-X-Forefront-PRVS: 0376ECF4DD
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR15MB4119.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(7916004)(136003)(346002)(366004)(376002)(396003)(39860400002)(1076003)(316002)(7416002)(16526019)(86362001)(186003)(54906003)(4744005)(81156014)(8676002)(8936002)(52116002)(33656002)(66946007)(66556008)(478600001)(6486002)(6496006)(6916009)(66476007)(5660300002)(4326008)(33716001)(9686003)(2906002);DIR:OUT;SFP:1102;
-Received-SPF: None (protection.outlook.com: fb.com does not designate
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2921.27; Fri, 17 Apr
+ 2020 22:40:08 +0000
+Received: from VI1PR05MB5102.eurprd05.prod.outlook.com
+ ([fe80::9d19:a564:b84e:7c19]) by VI1PR05MB5102.eurprd05.prod.outlook.com
+ ([fe80::9d19:a564:b84e:7c19%7]) with mapi id 15.20.2900.030; Fri, 17 Apr 2020
+ 22:40:08 +0000
+From:   Saeed Mahameed <saeedm@mellanox.com>
+To:     "davem@davemloft.net" <davem@davemloft.net>,
+        "xianfengting221@163.com" <xianfengting221@163.com>,
+        "leon@kernel.org" <leon@kernel.org>
+CC:     "cai@lca.pw" <cai@lca.pw>,
+        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+        "lsahlber@redhat.com" <lsahlber@redhat.com>,
+        "kw@linux.com" <kw@linux.com>,
+        "xiubli@redhat.com" <xiubli@redhat.com>,
+        "airlied@redhat.com" <airlied@redhat.com>,
+        Moshe Shemesh <moshe@mellanox.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "wqu@suse.com" <wqu@suse.com>,
+        "chris@chris-wilson.co.uk" <chris@chris-wilson.co.uk>,
+        "yamada.masahiro@socionext.com" <yamada.masahiro@socionext.com>,
+        "stfrench@microsoft.com" <stfrench@microsoft.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+Subject: Re: [PATCH v2] net/mlx5: add the missing space character
+Thread-Topic: [PATCH v2] net/mlx5: add the missing space character
+Thread-Index: AQHWCXBS9ROcHN2SK0+YUleKNIIPWqhvqOGAgAw/QICAANnkAIAADjEAgAEvMQA=
+Date:   Fri, 17 Apr 2020 22:40:08 +0000
+Message-ID: <cc28a4bf79e8edbe4a27fac068ce556e8b9da2da.camel@mellanox.com>
+References: <20200403042659.9167-1-xianfengting221@163.com>
+         <14df0ecf093bb2df4efaf9e6f5220ea2bf863f53.camel@mellanox.com>
+         <fae7a094-62e8-d797-a89b-23faf0eb374e@163.com>
+         <a77ddcfad6bfd68b9d69e0d5a18cf5d66692d270.camel@mellanox.com>
+         <4861c789-a333-efea-6d51-ab5511645dcf@163.com>
+In-Reply-To: <4861c789-a333-efea-6d51-ab5511645dcf@163.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=saeedm@mellanox.com; 
+x-originating-ip: [73.15.39.150]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: b023c4bc-3bd6-4457-f2b0-08d7e3204841
+x-ms-traffictypediagnostic: VI1PR05MB6350:|VI1PR05MB6350:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VI1PR05MB6350A5DF1A31384D0EE0D815BED90@VI1PR05MB6350.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6430;
+x-forefront-prvs: 0376ECF4DD
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR05MB5102.eurprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(39860400002)(396003)(136003)(366004)(346002)(376002)(316002)(66476007)(478600001)(66556008)(66446008)(966005)(91956017)(66946007)(7416002)(64756008)(86362001)(110136005)(76116006)(4326008)(54906003)(6512007)(36756003)(2616005)(71200400001)(186003)(81156014)(5660300002)(6506007)(2906002)(6486002)(53546011)(8676002)(8936002)(26005);DIR:OUT;SFP:1101;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
  permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: IZgbSAktu/lNtxM70jMH4ZCg3RCH8ymHj/uzYjYPigDjjXARF7v2ImyU3yrvaSqSW/hN+ZQML306UDT0vrR/4lK6uneWLzlXmLxu7AoKcqQz8kKEWePDtiBw+8bdeWiGLGLb8kWOQQIkVmOWmjC48oYs9gz0fEPyZsBw4aSDxl3hnikQRvw2XqwnSW7fi7OmoTlyxqd11iF2k3DJFD0kkpnmg067Pdl7NGRBT9BK91Tk8WRfD1E7MJmJc9DIHInEdQiY12ZVPyzI4W5C7R+6IOXaix5E6+f1TpZDYGZaw8dKp7ZRtGdRotOz6C1qh4ZLMFN+xyK6VujCr9jqRhFXtWlQwbA+ntMdTHhUp+8BS4sSZx2PS7oFMjwJeSEd6kjTgVHGRAnUF7WdoXIVaQwaKEQuL9k7m7axCSC4g2vXs0LkRJklJHNYa8VjnvPBYxS3
-X-MS-Exchange-AntiSpam-MessageData: S150+3KneqW/WeFesQtLePM0Ez74L4EQSxoVLPM+8H08AylhjujfgF+Frp/h57dFdnuGF7HGcYgvHIehZ4eVj8PNrLS78tKi0dhy2OKmCxqOqwtEWcM88n/Rj8LIaVJe8Bj02MA4mO0SPeyOKdyIzPp8igUlzk+jInflV52WTuKD1ua5mPOKkhfj3tk9E5+b
-X-MS-Exchange-CrossTenant-Network-Message-Id: 61d6c455-2065-4947-97ef-08d7e3200d51
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Apr 2020 22:38:30.2691
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: f1BDd2SA8BHAXDLEpm/4AhJLZ570xFGWSPL+SI6m3uhJAt0eoytw1Vp4eOYvTkvtLpzA2MKRY2sUhPLFNp9E/vTK1PZzjG9Hl7yyFBIk/jZjVAoQQTFiIlR50FhltBwxNTU/IzhaM4EmZB9WQnxNffCSEE3Od4o4wms0uD0hynMRr5K9PqtbkHmSZ9QMknfIWtmbAAbGMCmTTyXErWEavFWPQP4S+TBbqJItkv6ApIJFlb9eEW9BjGhWAVn/ataEZYevYO3BkFGubWQ4US6hJeZJrk0Vl3XWB/8WvXz48pxLeGqW71JKycvUCM/VAvcRIqAkfSA9vev5FMxxDXZx59VHCdf8FLnL5eeki/PEDHQKSl80ZK318P+gkIqWKmUgfaCcW0em2Zn7w0kjRaZw8Wk57+lOFlBjskETSFhaWkBtQHR3x0rGob/YJCX5WZqjqRxKWOiGr2HG7l+YkFVADDOfF7gbc5UsWhvuCYHFxPIy1Fgrc7i6+xUWX+nswx2hYwpr2ft8N5/JP0zc3H/pxQ==
+x-ms-exchange-antispam-messagedata: Sf5t1Vi+yUuJZ5fg6tHgWm6TKu2zLfyUTIiKRF0wF8W0iOp5T59neiIzx0pRk7P9mWdkLEpqk6mSfoO0e3jIHn/U+mZAkBpbQV7nvhf1QokOo31iyzafjLJL6ejbvc7eW7mD5L28iiW8mPmwfS98Iw==
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <1D710F895E2AB8499BA13B3BEACB7FCA@eurprd05.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b023c4bc-3bd6-4457-f2b0-08d7e3204841
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Apr 2020 22:40:08.5635
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: bu7PZ9VjFlyqfhXpkMd6fzQyWlrunnpjTyF3Nhjy35+QGqIBieWRqlOtdwBp8xwp
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB3333
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-17_10:2020-04-17,2020-04-17 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 bulkscore=0 adultscore=0
- impostorscore=0 mlxscore=0 lowpriorityscore=0 clxscore=1011 malwarescore=0
- suspectscore=0 priorityscore=1501 phishscore=0 spamscore=0 mlxlogscore=886
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004170166
-X-FB-Internal: deliver
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 7ZaEGKBbImAOlN2MsyWUF4LnBtm/CObj5v53ENJ2d+s9cJpJHNTFbBFNmcjs6ZBZOLqLjLBMA9wRJplJXvl/fw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB6350
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Matthew Wilcox <willy@infradead.org> [Fri, 2020-04-17 12:50 -0700]:
-> On Fri, Apr 17, 2020 at 12:39:10PM -0700, Andrey Ignatov wrote:
-> > Though it breaks tools/testing/selftests/bpf/test_sysctl.c. I spent some
-> > time debugging and found a couple of problems -- see below. But there is
-> > something else .. Still I figured it's a good idea to give an early
-> > heads-up.
-> 
-> "see below"?  Really?  You're going to say that and then make people
-> scroll through thousands of lines of quoted material to find your new
-> contributions?  Please, learn to trim appropriately.
-
-Ack.
-
-> 
-> Here's about what you should have sent:
-
-Thanks.
-
--- 
-Andrey Ignatov
+T24gRnJpLCAyMDIwLTA0LTE3IGF0IDEyOjM0ICswODAwLCBIdSBIYW93ZW4gd3JvdGU6DQo+IE9u
+IDIwMjAvNC8xNyAxMTo0NCBBTSwgU2FlZWQgTWFoYW1lZWQgd3JvdGU6DQo+ID4gT24gVGh1LCAy
+MDIwLTA0LTE2IGF0IDIyOjQ0ICswODAwLCBIdSBIYW93ZW4gd3JvdGU6DQo+ID4gPiBPbiAyMDIw
+LzQvOSAzOjQyIEFNLCBTYWVlZCBNYWhhbWVlZCB3cm90ZToNCj4gPiA+ID4gT24gRnJpLCAyMDIw
+LTA0LTAzIGF0IDEyOjI2ICswODAwLCBIdSBIYW93ZW4gd3JvdGU6DQo+ID4gPiA+ID4gQ29tbWl0
+IDkxYjU2ZDg0NjJhOSAoIm5ldC9tbHg1OiBpbXByb3ZlIHNvbWUgY29tbWVudHMiKSBkaWQNCj4g
+PiA+ID4gPiBub3QNCj4gPiA+ID4gPiBhZGQNCj4gPiA+ID4gPiB0aGF0IG1pc3Npbmcgc3BhY2Ug
+Y2hhcmFjdGVyIGFuZCB0aGlzIGNvbW1pdCBpcyB1c2VkIHRvIGZpeA0KPiA+ID4gPiA+IGl0DQo+
+ID4gPiA+ID4gdXAuDQo+ID4gPiA+ID4gDQo+ID4gPiA+ID4gRml4ZXM6IDkxYjU2ZDg0NjJhOSAo
+Im5ldC9tbHg1OiBpbXByb3ZlIHNvbWUgY29tbWVudHMiKQ0KPiA+ID4gPiA+IA0KPiA+ID4gPiBQ
+bGVhc2UgcmUtc3BpbiBhbmQgc3VibWl0IHRvIG5ldC1uZXh0IG9uY2UgbmV0LW5leHQgcmUtb3Bl
+bnMsDQo+ID4gPiA+IGF2b2lkIHJlZmVyZW5jaW5nIHRoZSBhYm92ZSBjb21taXQgc2luY2UgdGhp
+cyBwYXRjaCBpcyBhIHN0YW5kDQo+ID4gPiA+IGFsb25lDQo+ID4gPiA+IGFuZCBoYXMgbm90aGlu
+ZyB0byBkbyB3aXRoIHRoYXQgcGF0Y2guLiBqdXN0IGhhdmUgYSBzdGFuZCBhbG9uZQ0KPiA+ID4g
+PiBjb21taXQNCj4gPiA+ID4gbWVzc2FnZSBleHBsYWluaW5nIHRoZSBzcGFjZSBmaXguDQo+ID4g
+PiBTb3JyeSBmb3IgbXkgbGF0ZSByZXBseS4gQmVjYXVzZSBJJ20gYSBrZXJuZWwgbmV3YmllLCBJ
+IGtub3cNCj4gPiA+IG5vdGhpbmcNCj4gPiA+IGFib3V0IHRoZSBiYXNpYyBtZXRob2RzIGFuZCBt
+YW5uZXJzIGluIHRoZSBrZXJuZWwgZGV2ZWxvcG1lbnQuDQo+ID4gPiBUaGFua3MNCj4gPiA+IGEg
+bG90IGZvciB5b3VyIHBhdGllbmNlIG9uIG15IG1pc3Rha2UsIHBvaW50aW5nIGl0IG91dCBhbmQg
+Zml4aW5nDQo+ID4gPiBpdA0KPiA+ID4gdXAuDQo+ID4gPiANCj4gPiA+IEJ0dywgZGlkIG5ldC1u
+ZXh0IHJlLW9wZW4gYW5kIGRpZCBteSBjaGFuZ2VzIGdldCBpbnRvIHRoZQ0KPiA+ID4gbWFpbmxp
+bmU/DQo+ID4gPiANCj4gPiA+IA0KPiA+IE5vcm1hbGx5IG5ldC1uZXh0IGNsb3NlcyBvbmNlIG1l
+cmdlIHdpbmRvdyBpcyBvcGVuIGF0IHRoZSBlbmQgb2YNCj4gPiByYzcvcmM4IGtlcm5lbCBjeWNs
+ZS4NCj4gPiANCj4gPiBhbmQgcmVvcGVucyBvbiB0aGUgd2VlayBvZiB0aGUga2VybmVsIHJlbGVh
+c2UsIGFmdGVyIHRoZSBtZXJnZQ0KPiA+IHdpbmRvdw0KPiA+IGlzIGNsb3NlZCAoMiB3ZWVrcyBh
+ZnRlciByYzcvOCBpcyBjbG9zZWQpLg0KPiA+IA0KPiA+IHlvdSBjYW4gdXNlIHRoaXMgbGluay4N
+Cj4gPiBodHRwOi8vdmdlci5rZXJuZWwub3JnL35kYXZlbS9uZXQtbmV4dC5odG1sDQo+IA0KPiBP
+aC4uLiBUaGFua3MuDQo+IA0KPiBCdXQgaXQncyBtb3JlIHRoYW4gMiB3ZWVrcyBzaW5jZSBMaW51
+eCA1LjYgd2FzIHJlbGVhc2VkLCBzbyBuZXQtbmV4dA0KPiBzaG91bGQgYmUgb3BlbiBub3cgYWNj
+b3JkaW5nIHRvIHlvdXIgd29yZHMuIEJ1dCBpdCdzIHN0aWxsIGNsb3NlZC4NCj4gDQo+IElzIG15
+IGlkZWEgd3Jvbmc/IERvZXMgImtlcm5lbCByZWxlYXNlIiBtZWFuIGFuIC1yYyByZWxlYXNlIG9y
+IGENCj4gZm9ybWFsDQo+IHJlbGVhc2U/DQoNCk9oLCBteSBiYWQsIA0KeWVzIHJlbGVhc2UgbWVh
+bnMgYSBrZXJuZWwgcmVsZWFzZSAuLiA1LngNCndoYXQgaSBtZWFudCBpcyB3aGVuIHRoZSByYzEg
+aXMgb3V0IHR3byB3ZWVrcyBhZnRlciB0aGUga2VybmVsIHJlbGVhc2UuDQoNCg==
