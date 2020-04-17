@@ -2,198 +2,284 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,TVD_PH_BODY_ACCOUNTS_PRE
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C029AC352BE
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 09:58:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B189C38A29
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 09:59:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A162421D94
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 09:58:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6797921D95
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 09:59:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728733AbgDQJ6A (ORCPT
+        id S1728117AbgDQJ7T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 05:58:00 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:55670 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726712AbgDQJ6A (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 05:58:00 -0400
-Received: from 185.80.35.16 (185.80.35.16) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.415)
- id 58873dd5037093b4; Fri, 17 Apr 2020 11:57:56 +0200
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Alan Stern <stern@rowland.harvard.edu>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Qais Yousef <qais.yousef@arm.com>,
-        USB list <linux-usb@vger.kernel.org>,
-        Linux-pm mailing list <linux-pm@vger.kernel.org>,
-        Kernel development list <linux-kernel@vger.kernel.org>
-Subject: Re: lockdep warning in urb.c:363 usb_submit_urb
-Date:   Fri, 17 Apr 2020 11:57:55 +0200
-Message-ID: <2040116.cccRbkeLkK@kreacher>
-In-Reply-To: <Pine.LNX.4.44L0.2004161036410.14937-100000@netrider.rowland.org>
-References: <Pine.LNX.4.44L0.2004161036410.14937-100000@netrider.rowland.org>
+        Fri, 17 Apr 2020 05:59:19 -0400
+Received: from v6.sk ([167.172.42.174]:43478 "EHLO v6.sk"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726618AbgDQJ7S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Apr 2020 05:59:18 -0400
+Received: from localhost (v6.sk [IPv6:::1])
+        by v6.sk (Postfix) with ESMTP id F1FFD610A6;
+        Fri, 17 Apr 2020 09:58:45 +0000 (UTC)
+Date:   Fri, 17 Apr 2020 11:58:43 +0200
+From:   Lubomir Rintel <lkundrak@v3.sk>
+To:     Dan Murphy <dmurphy@ti.com>
+Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, linux-kernel@vger.kernel.org,
+        linux-leds@vger.kernel.org
+Subject: Re: [PATCH v3] leds: ariel: Add driver for status LEDs on Dell Wyse
+ 3020
+Message-ID: <20200417095041.GA448088@furthur.local>
+References: <20200322074134.79237-1-lkundrak@v3.sk>
+ <ef7e8f03-0a43-156e-b86e-3ab3887f0245@ti.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ef7e8f03-0a43-156e-b86e-3ab3887f0245@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thursday, April 16, 2020 5:18:15 PM CEST Alan Stern wrote:
-> Thanks for all your help straightening this out.  I think the end 
-> result will be a distinct improvement over the old code.
-
-Yes, I believe so.
-
-> On Thu, 16 Apr 2020, Rafael J. Wysocki wrote:
+On Fri, Apr 03, 2020 at 02:37:49PM -0500, Dan Murphy wrote:
+> Lubomir
 > 
-> > This means that the dev_pm_skip_resume() logic really is relatively
-> > straightforward:
-> >  - If the current transition is RESTORE, return "false".
-> >  - Otherwise, if the current transition is THAW, return the return value
-> >    of dev_pm_skip_suspend().
-> >  - Otherwise (so the current transition is RESUME which is the only remaining
-> >    case), return the logical negation of power.must_resume.
+> On 3/22/20 2:41 AM, Lubomir Rintel wrote:
+> > This adds support for controlling the LEDs attached to the Embedded
+> > Controller on a Dell Wyse 3020 "Ariel" board.
 > > 
-> > > Also, it would mean 
-> > > that a device whose subsystem doesn't know about power.may_skip_resume 
-> > > would never be allowed to stay in runtime suspend.
+> > Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
 > > 
-> > Not really, because I want the core to set power.may_skip_resume for the
-> > devices for which dev_pm_skip_suspend() returns "true" if the "suspend_late"
-> > subsystem-level callback is not present.  [It might be more consistent
-> > to simply set it for all devices for which dev_pm_skip_suspend() returns
-> > "true" and let the subsystems update it should they want to?  IOW, the
-> > default value of power.may_skip_resume could be the return value of
-> > dev_pm_skip_suspend()?]
-> 
-> How about this?  Let's set power.may_skip_resume to "true" for each
-> device before issuing ->prepare.
-
-Yes, it can be set to 'true' by default for all devices.
-
-It doesn't need to be before ->prepare, it can be before ->suspend (as it
-is now).
-
-> The subsystem can set it to "false"
-> if it wants to during any of the suspend-side callbacks.  Following the
-> ->suspend_noirq callback, the core will do the equivalent of:
-> 
-> 	dev->power.may_skip_resume &= dev_pm_skip_suspend(dev);
-> 
-> before propagating the flag.  Any subsystem changes to support this
-> should be minimal, since only ACPI and PCI currently use
-> may_skip_resume.
-
-IMO it can be simpler even.
-
-Because power.may_skip_resume is taken into account along with
-MAY_SKIP_RESUME and the driver setting the latter must be prepared
-for skipping its resume callbacks regardless of the suspend side of
-things, they may always be skipped (and the device may be left in
-suspend accordingly) if there is a reason to avoid doing that.
-
-The core doesn't know about those reasons, so it has no reason to
-touch power.may_skip_resume after setting it at the outset and then
-whoever sees a reason why these callbacks should run (the subsystem
-or the driver) needs to clear power.may_skip_resume (and clearing it
-more than once obviously makes no difference).
-
-> > > What about the runtime PM usage counter?
+> > ---
+> > Changes since v2:
+> > - Hopefully sending out the correct patch this time...
 > > 
-> > Yes, it applies to that too.
+> > Changes since v1:
+> > - Reduce code duplication with a loop
+> > - Drop "ariel:" prefix from led names
+> > - Do not print a message after a successful probe
+> > ---
+> >   drivers/leds/Kconfig      |  11 ++++
+> >   drivers/leds/Makefile     |   1 +
+> >   drivers/leds/leds-ariel.c | 133 ++++++++++++++++++++++++++++++++++++++
+> >   3 files changed, 145 insertions(+)
+> >   create mode 100644 drivers/leds/leds-ariel.c
 > > 
-> > Of course, if dev_pm_skip_suspend() returns "true", the usage counter cannot
-> > be greater than 1 (for the given device as well as for any dependent devices).
+> > diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
+> > index d82f1dea37111..66424ee54cc01 100644
+> > --- a/drivers/leds/Kconfig
+> > +++ b/drivers/leds/Kconfig
+> > @@ -83,6 +83,17 @@ config LEDS_APU
+> >   	  To compile this driver as a module, choose M here: the
+> >   	  module will be called leds-apu.
+> > +config LEDS_ARIEL
+> > +	tristate "Dell Wyse 3020 status LED support"
+> > +	depends on LEDS_CLASS
+> > +	depends on (MACH_MMP3_DT && MFD_ENE_KB3930) || COMPILE_TEST
+> > +	help
+> > +	  This driver adds support for controlling the front panel status
+> > +	  LEDs on Dell Wyse 3020 (Ariel) board via the KB3930 Embedded
+> > +	  Controller.
+> > +
+> > +	  Say Y to if your machine is a Dell Wyse 3020 thin client.
+> > +
+> >   config LEDS_AS3645A
+> >   	tristate "AS3645A and LM3555 LED flash controllers support"
+> >   	depends on I2C && LEDS_CLASS_FLASH
+> > diff --git a/drivers/leds/Makefile b/drivers/leds/Makefile
+> > index d7e1107753fb1..bf3b22038d113 100644
+> > --- a/drivers/leds/Makefile
+> > +++ b/drivers/leds/Makefile
+> > @@ -10,6 +10,7 @@ obj-$(CONFIG_LEDS_TRIGGERS)		+= led-triggers.o
+> >   obj-$(CONFIG_LEDS_88PM860X)		+= leds-88pm860x.o
+> >   obj-$(CONFIG_LEDS_AAT1290)		+= leds-aat1290.o
+> >   obj-$(CONFIG_LEDS_APU)			+= leds-apu.o
+> > +obj-$(CONFIG_LEDS_ARIEL)		+= leds-ariel.o
+> >   obj-$(CONFIG_LEDS_AS3645A)		+= leds-as3645a.o
+> >   obj-$(CONFIG_LEDS_AN30259A)		+= leds-an30259a.o
+> >   obj-$(CONFIG_LEDS_BCM6328)		+= leds-bcm6328.o
+> > diff --git a/drivers/leds/leds-ariel.c b/drivers/leds/leds-ariel.c
+> > new file mode 100644
+> > index 0000000000000..8fc56722e12f4
+> > --- /dev/null
+> > +++ b/drivers/leds/leds-ariel.c
+> > @@ -0,0 +1,133 @@
+> > +// SPDX-License-Identifier: BSD-2-Clause OR GPL-2.0-or-later
+> > +/*
+> > + * Dell Wyse 3020 a.k.a. "Ariel" Embedded Controller LED Driver
+> > + *
+> > + * Copyright (C) 2020 Lubomir Rintel
+> > + */
+> > +
+> > +#include <linux/module.h>
+> > +#include <linux/leds.h>
+> > +#include <linux/regmap.h>
+> > +#include <linux/of_platform.h>
+> > +
+> > +enum ec_index {
+> > +	EC_BLUE_LED	= 0x01,
+> > +	EC_AMBER_LED	= 0x02,
 > 
-> Well, in theory the subsystem could call pm_runtime_get_noresume().  I 
-> can't imagine why it would want to, though.
+> Defining the value after the 0x0 is unnecessary as enums are incremental
+> only the first value needs to be defined if the following values are in
+> numerical order
 
-Indeed.
+I believe this improves readability, especially in case such as this
+where the actual numeric values matter.
 
-> So here's what we've got:
-> 
-> > > Transition   Conditions for dev_pm_skip_resume() to return "true"
-> > > ----------   ----------------------------------------------------
-> > > 
-> > > RESTORE      Never
-> > 
-> > Right.
-> 
-> >  THAW	         dev_pm_skip_suspend() returns "true".
-> 
-> >  RESUME        power.must_resume is clear (which requires
-> >                  MAY_SKIP_RESUME and power.may_skip_resume to be set and
-> >                  the runtime usage counter to be = 1, and which 
-> >                  propagates up from dependent devices)
-> > 
-> > Nothing else is really strictly required IMO.
-> 
-> This seems very clear and simple.  And I will repeat here some of the 
-> things posted earlier, to make the description more complete:
-> 
-> 	During the suspend side, for each of the
-> 	{suspend,freeze,poweroff}_{late,noirq} phases: If
-> 	dev_pm_skip_suspend() returns true then the subsystem should
-> 	not invoke the driver's callback, and if there is no subsystem
-> 	callback then the core will not invoke the driver's callback.
-> 
-> 	During the resume side, for each of the
-> 	{resume,thaw,restore}_{early,noirq} phases: If
-> 	dev_pm_skip_resume() returns true then the subsystem should
-> 	not invoke the driver's callback, and if there is no subsystem
-> 	callback then the core will not invoke the driver's callback.
-> 
-> 	dev_pm_skip_suspend() will return "true" if SMART_SUSPEND is
-> 	set and the device's runtime status is "suspended".
-> 
-> 	For dev_pm_skip_resume() and power.must_resume, see above.
-> 
-> 	At the start of the {resume,thaw,restore}_noirq phase, if
-> 	dev_pm_skip_resume() returns true then the core will set the
-> 	runtime status to "suspended".  Otherwise it will set the
-> 	runtime status to "active".  If this is not what the subsystem
-> 	or driver wants, it must update the runtime status itself.
-> 
-> For this to work properly, we will have to rely on subsystems/drivers
-> to call pm_runtime_resume() during the suspend/freeze transition if
-> SMART_SUSPEND is clear.
+> Can these also be #defined instead of an enum?  Not requesting them to be
+> just wondering about the design decision here.
 
-That has been the case forever, though.
+It seems to be that this is what enums are for and theres is no need to
+get the preprocessor involved?
 
-> Otherwise we could have the following scenario:
+I guess this might be a personal preference, but it seems to me that
+both enums and preprocessor defines are used across the code base.
+
+> > +	EC_GREEN_LED	= 0x03,
+> > +};
+> > +
+> > +enum {
+> > +	EC_LED_OFF	= 0x00,
+> > +	EC_LED_STILL	= 0x01,
+> Same comment as above
+> > +	EC_LED_FADE	= 0x02,
+> > +	EC_LED_BLINK	= 0x03,
+> > +};
+> > +
+> > +struct ariel_led {
+> > +	struct regmap *ec_ram;
+> > +	enum ec_index ec_index;
+> > +	struct led_classdev led_cdev;
+> > +};
+> > +
+> > +#define led_cdev_to_ariel_led(c) container_of(c, struct ariel_led, led_cdev)
+> > +
+> > +static enum led_brightness ariel_led_get(struct led_classdev *led_cdev)
+> > +{
+> > +	struct ariel_led *led = led_cdev_to_ariel_led(led_cdev);
+> > +	unsigned int led_status = 0;
+> > +
+> > +	if (regmap_read(led->ec_ram, led->ec_index, &led_status))
+> > +		return LED_OFF;
+> > +
+> > +	if (led_status == EC_LED_STILL)
+> > +		return LED_FULL;
+> > +	else
+> else is not needed here
+> > +		return LED_OFF;
+> > +}
+
+Yes, but should it be dropped? To me it seems like explicit else is
+better than implicit fallthrough. It is better when it's obvious that
+the LED_OFF is returned precisely only when the status is not
+EC_LED_STILL and that nothing ever happens afterwards -- and the
+compiler/linter will warn when anything unreachable is added afterwards.
+
+Not that it matters too much here. It's just that I've done this
+deliberately because it seems more readable to be and would prefer to
+leave it that way unless you really really care about that.
+
+> > +
+> > +static void ariel_led_set(struct led_classdev *led_cdev,
+> > +			  enum led_brightness brightness)
+> > +{
+> > +	struct ariel_led *led = led_cdev_to_ariel_led(led_cdev);
+> > +
+> > +	if (brightness == LED_OFF)
+> > +		regmap_write(led->ec_ram, led->ec_index, EC_LED_OFF);
+> > +	else
+> > +		regmap_write(led->ec_ram, led->ec_index, EC_LED_STILL);
+> > +}
+> > +
+> > +static int ariel_blink_set(struct led_classdev *led_cdev,
+> > +			   unsigned long *delay_on, unsigned long *delay_off)
+> > +{
+> > +	struct ariel_led *led = led_cdev_to_ariel_led(led_cdev);
+> > +
+> > +	if (*delay_on == 0 && *delay_off == 0)
+> > +		return -EINVAL;
+> > +
+> > +	if (*delay_on == 0) {
+> > +		regmap_write(led->ec_ram, led->ec_index, EC_LED_OFF);
+> > +	} else if (*delay_off == 0) {
+> > +		regmap_write(led->ec_ram, led->ec_index, EC_LED_STILL);
+> > +	} else {
+> > +		*delay_on = 500;
+> > +		*delay_off = 500;
+> > +		regmap_write(led->ec_ram, led->ec_index, EC_LED_BLINK);
+> > +	}
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +#define NLEDS 3
 > 
-> Device A has a child B, and both are runtime suspended when hibernation
-> starts.  Suppose that the SMART_SUSPEND flag is set for A but not for
-> B, and suppose that B's subsystem/driver neglects to call
-> pm_runtime_resume() during the FREEZE transition.  Then during the THAW
-> transition, dev_pm_skip_resume() will return "true" for A and "false"  
-> for B.  This will lead to an error when the core tries to set B's
-> runtime status to "active" while A's status is "suspended".
+> This define needs to be more unique.
 > 
-> One way to avoid this is to have the core make the pm_runtime_resume()  
-> call, but you have said that you don't like that approach.  Any 
-> suggestions?
+> Something like EC_NLEDS or EC_NUM_LEDS and should be moved to the top of the
+> file under the #includes
+> 
+> > +
+> > +static int ariel_led_probe(struct platform_device *pdev)
+> > +{
+> > +	struct device *dev = &pdev->dev;
+> > +	struct ariel_led *leds;
+> > +	struct regmap *ec_ram;
+> > +	int ret;
+> > +	int i;
+> > +
+> > +	leds = devm_kcalloc(dev, NLEDS, sizeof(*leds), GFP_KERNEL);
+> > +	if (!leds)
+> > +		return -ENOMEM;
+> > +
+> > +	ec_ram = dev_get_regmap(dev->parent, "ec_ram");
+> Maybe this should be checked before memory is allocated.
 
-Because the core has not been calling pm_runtime_resume() during system-wide
-suspend for devices with SMART_SUSPEND clear, that should not be changed or
-we'll see regressions.
+Will fix in next version.
 
-I know for a fact that some drivers expect the core to be doing nothing
-with respect to that.
+> > +	if (!ec_ram)
+> > +		return -ENODEV;
+> > +
+> > +	leds[0].ec_index = EC_BLUE_LED;
+> > +	leds[0].led_cdev.name = "blue:power",
+> > +	leds[0].led_cdev.default_trigger = "default-on";
+> > +
+> > +	leds[1].ec_index = EC_AMBER_LED;
+> > +	leds[1].led_cdev.name = "amber:status",
+> > +
+> > +	leds[2].ec_index = EC_GREEN_LED;
+> > +	leds[2].led_cdev.name = "green:status",
+> > +	leds[2].led_cdev.default_trigger = "default-on";
+> > +
+> > +	for (i = 0; i < NLEDS; i++) {
+> 
+> I don't understand this loop.  i is incremented but never used.
+> 
+> should the below be leds[i]?
 
-> Should the core take some special action following ->freeze_noirq if
-> the runtime status is "suspended" and SMART_SUSPEND is clear?
+Sorry for this; I ended up botching this in an attempt to fix things up.
+Will fix in the next version.
 
-Again, anything like that would change the current behavior which may
-not be expected by at least some drivers, so I wouldn't change that.
+> 
+> > +		leds[0].ec_ram = ec_ram;
+> > +		leds[0].led_cdev.brightness_get = ariel_led_get;
+> > +		leds[0].led_cdev.brightness_set = ariel_led_set;
+> > +		leds[0].led_cdev.blink_set = ariel_blink_set;
+> > +
+> > +		ret = devm_led_classdev_register(dev, &leds[0].led_cdev);
+> > +		if (ret)
+> > +			return ret;
+> > +	}
+> > +
+> 
+> Dan
 
-IOW, SMART_SUSPEND clear means to the core that *it* need not care about
-the suspend side at all (because somebody else will do that).
+Thank you!
 
+Lubo
 
-
+> 
+> 
