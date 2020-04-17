@@ -2,115 +2,297 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17BA1C38A2B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 21:40:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36A6EC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 21:47:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E728C214D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 21:40:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mIHO9lYz"
+	by mail.kernel.org (Postfix) with ESMTP id 1054E22243
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 21:47:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728236AbgDQVkC (ORCPT
+        id S1728343AbgDQVry (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 17:40:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45622 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728087AbgDQVkB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 17:40:01 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28A8BC061A0C;
-        Fri, 17 Apr 2020 14:40:01 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id k11so4680411wrp.5;
-        Fri, 17 Apr 2020 14:40:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=BX33Nlq2rNRQa3TPS+MKAJHFMMQ9tszkDs8MRHulQEo=;
-        b=mIHO9lYzoEk0nC+E43MFKDhIVzbEx/1UEXaDSzp1LhuwJzXr+DTJtyxGXdVUaBVgoK
-         y4mauhwmxJW0XVQMBmW0iZwPVb0wQuxD/zlGkqckFVt8rXcZiJufzFlRHNzDoTErptGj
-         R/y4gUO+Wfb77d3/W0ALeMx+7/Nz3mH9JOuQAkBCrA1L2tJd3J6W4qvC4OIlS3Z9QXaU
-         gsB1UwkhyCKnFHIt2NgwyMHPMlXP6pQzRBKsmpVMwaY8YhBotD8+dQBOFOIhWdOkE93m
-         78QmaNqLg/EdkZcF2gZwBs+7oNDoRtX/uer5H4PaqkOmOQb0V/r9bESDv6oBW2IjdUGE
-         eR4w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=BX33Nlq2rNRQa3TPS+MKAJHFMMQ9tszkDs8MRHulQEo=;
-        b=e5jyhHRPcXrR++841p6VOCD8PYdLapnPPcbmF29l6+1dXkdlDY4e6NeYdIGTSgF06r
-         laRd5Ru4DJz3DtzAM0gZnz53DVGTdObIJ5L7L2dPc8F/fz8m+CM55T1MHsjrOfpgqwig
-         IE/v3re60S0cWJ4nAdXiylyhpFWucpXFe87w/eRnK47dsq8cXqUEs+ROUpUun2mk3ytw
-         5lnGqBQbdnndVrpaUn1UxZC2LQ8XdiHCx9JNTxlJGZeJChEZd3NLnujEeOoFELKu8d5r
-         XHIYYZcmBf0GdIv4qOFRJByacZHOSoDZ2eF6huJ88/nkQ9sg489UWWcovqorESdU66rn
-         UKMA==
-X-Gm-Message-State: AGi0Pua1Kz2igEahNeEYj/YSJtXwS71L7Y7Sm9ZwU5JurLgTwBwU9o1q
-        /lW7q+uNspgguZyq53A65m0=
-X-Google-Smtp-Source: APiQypIDbikGNvjS42cYjvWs56Usv6lW8ne0pCO96idfnwqixzfmMM1zaKYnbjC4rxFS0Om1yU67Fw==
-X-Received: by 2002:a05:6000:f:: with SMTP id h15mr5877118wrx.408.1587159599795;
-        Fri, 17 Apr 2020 14:39:59 -0700 (PDT)
-Received: from localhost ([185.92.221.13])
-        by smtp.gmail.com with ESMTPSA id v16sm9079325wml.30.2020.04.17.14.39.59
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 17 Apr 2020 14:39:59 -0700 (PDT)
-From:   Wei Yang <richard.weiyang@gmail.com>
-To:     paulmck@kernel.org, josh@joshtriplett.org
-Cc:     rcu@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Wei Yang <richard.weiyang@gmail.com>
-Subject: [PATCH] rcu: simplify the calculation of rcu_state.ncpus
-Date:   Fri, 17 Apr 2020 21:39:51 +0000
-Message-Id: <20200417213951.29837-1-richard.weiyang@gmail.com>
-X-Mailer: git-send-email 2.11.0
+        Fri, 17 Apr 2020 17:47:54 -0400
+Received: from mga01.intel.com ([192.55.52.88]:46712 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728160AbgDQVrx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Apr 2020 17:47:53 -0400
+IronPort-SDR: 63wkaoaRGAy41sit5BJ2Yr2qiSMInCW0zg8bpPinSvXwd4a8JBKkBEXtDoorecDJZv5m1zqY/V
+ 8Nrc8PKYKNJg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2020 14:47:52 -0700
+IronPort-SDR: fFPddu3mvQupnlIsApYW5/xk/I9KK2P0rLOtk0tbtVHi50EszeoVAAgp3z+FTWg3dG5C7/mDO2
+ 24zX8lAx0MLg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,395,1580803200"; 
+   d="scan'208";a="364444563"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga001.fm.intel.com with ESMTP; 17 Apr 2020 14:47:52 -0700
+Received: from [10.252.130.106] (kliang2-mobl.ccr.corp.intel.com [10.252.130.106])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by linux.intel.com (Postfix) with ESMTPS id A17D15802C9;
+        Fri, 17 Apr 2020 14:47:50 -0700 (PDT)
+Subject: Re: [PATCH V4 00/17] Stitch LBR call stack (Perf Tools)
+To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Cc:     jolsa@redhat.com, peterz@infradead.org, mingo@redhat.com,
+        linux-kernel@vger.kernel.org, namhyung@kernel.org,
+        adrian.hunter@intel.com, mathieu.poirier@linaro.org,
+        ravi.bangoria@linux.ibm.com, alexey.budankov@linux.intel.com,
+        vitaly.slobodskoy@intel.com, pavel.gerasimov@intel.com,
+        mpe@ellerman.id.au, eranian@google.com, ak@linux.intel.com
+References: <20200319202517.23423-1-kan.liang@linux.intel.com>
+ <20200417174803.GA21512@kernel.org>
+From:   "Liang, Kan" <kan.liang@linux.intel.com>
+Message-ID: <2b34783b-85d1-6d30-d9e1-f550f8b6e9c0@linux.intel.com>
+Date:   Fri, 17 Apr 2020 17:47:49 -0400
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
+MIME-Version: 1.0
+In-Reply-To: <20200417174803.GA21512@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is only 1 bit set in mask, which means the difference between
-oldmask and the new one would be at the position where the bit is set in
-mask.
 
-Based on this knowledge, rcu_state.ncpus could be calculated by checking
-whether mask is already set in oldmask.
 
-BTW, the comment at the last of this line is mysterious. Not sure it
-could be removed or not.
+On 4/17/2020 1:48 PM, Arnaldo Carvalho de Melo wrote:
+> Em Thu, Mar 19, 2020 at 01:25:00PM -0700, kan.liang@linux.intel.com escreveu:
+>> From: Kan Liang <kan.liang@linux.intel.com>
+>>
+>> Changes since V3:
+>> - There is no dependency among the 'capabilities'. If perf fails to read
+>>    one, it should not impact others. Continue to parse the rest of caps.
+>>    (Patch 1)
+>> - Use list_for_each_entry() to replace perf_pmu__scan_caps() (Patch 1 &
+>>    2)
+>> - Combine the declaration plus assignment when possible (Patch 1 & 2)
+>> - Add check for script/report/c2c.. (Patch 13, 14 & 16)
+>>
+>> Changes since V2:
+>> - Check strdup() in Patch 1
+>> - Split several patches into smaller patches
+>>
+>> Changes since V1:
+>> - Rebase on top of commit 5100c2b77049 ("perf header: Add check for
+>>    unexpected use of reserved membrs in event attr")
+>> - Fix compling error with GCC9 in patch 1.
+>>
+>>
+>> The kernel patches have been merged into linux-next.
+>>    commit bbfd5e4fab63 ("perf/core: Add new branch sample type for HW
+>> index of raw branch records")
+>>    commit db278b90c326 ("perf/x86/intel: Output LBR TOS information
+>> correctly")
+>>
+>> Start from Haswell, Linux perf can utilize the existing Last Branch
+>> Record (LBR) facility to record call stack. However, the depth of the
+>> reconstructed LBR call stack limits to the number of LBR registers.
+>> E.g. on skylake, the depth of reconstructed LBR call stack is <= 32
+>> That's because HW will overwrite the oldest LBR registers when it's
+>> full.
+>>
+>> However, the overwritten LBRs may still be retrieved from previous
+>> sample. At that moment, HW hasn't overwritten the LBR registers yet.
+>> Perf tools can stitch those overwritten LBRs on current call stacks to
+>> get a more complete call stack.
+>>
+>> To determine if LBRs can be stitched, the maximum number of LBRs is
+>> required. Patch 1 - 4 retrieve the capabilities information from sysfs
+>> and save them in perf header.
+>>
+>> Patch 5 - 12 implements the LBR stitching approach.
+>>
+>> Users can use the options introduced in patch 13-16 to enable the LBR
+>> stitching approach for perf report, script, top and c2c.
+>>
+>> Patch 17 adds a fast path for duplicate entries check. It benefits all
+>> call stack parsing, not just for stitch LBR call stack. It can be
+>> merged independently.
+>>
+>> The stitching approach base on LBR call stack technology. The known
+>> limitations of LBR call stack technology still apply to the approach,
+>> e.g. Exception handing such as setjmp/longjmp will have calls/returns
+>> not match.
+>> This approach is not full proof. There can be cases where it creates
+>> incorrect call stacks from incorrect matches. There is no attempt
+>> to validate any matches in another way. So it is not enabled by default.
+>> However in many common cases with call stack overflows it can recreate
+>> better call stacks than the default lbr call stack output. So if there
+>> are problems with LBR overflows this is a possible workaround.
+>>
+>> Regression:
+>> Users may collect LBR call stack on a machine with new perf tool and
+>> new kernel (support LBR TOS). However, they may parse the perf.data with
+>> old perf tool (not support LBR TOS). The old tool doesn't check
+>> attr.branch_sample_type. Users probably get incorrect information
+>> without any warning.
+>>
+>> Performance impact:
+>> The processing time may increase with the LBR stitching approach
+>> enabled. The impact depends on the increased depth of call stacks.
+>>
+>> For a simple test case tchain_edit with 43 depth of call stacks.
+>> perf record --call-graph lbr -- ./tchain_edit
+>> perf report --stitch-lbr
+>>
+>> Without --stitch-lbr, perf report only display 32 depth of call stacks.
+>> With --stitch-lbr, perf report can display all 43 depth of call stacks.
+>> The depth of call stacks increase 34.3%.
+>>
+>> Correspondingly, the processing time of perf report increases 39%,
+>> Without --stitch-lbr:                           11.0 sec
+>> With --stitch-lbr:                              15.3 sec
+> 
+> Next time provide the full test proggie, I had to expand those ... to
+> reproduce your results,
 
-Signed-off-by: Wei Yang <richard.weiyang@gmail.com>
----
- kernel/rcu/tree.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+Sure, I will do so in the future.
 
-diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-index d91c9156fab2..f0d9251fa663 100644
---- a/kernel/rcu/tree.c
-+++ b/kernel/rcu/tree.c
-@@ -3364,7 +3364,6 @@ void rcu_cpu_starting(unsigned int cpu)
- {
- 	unsigned long flags;
- 	unsigned long mask;
--	int nbits;
- 	unsigned long oldmask;
- 	struct rcu_data *rdp;
- 	struct rcu_node *rnp;
-@@ -3381,10 +3380,9 @@ void rcu_cpu_starting(unsigned int cpu)
- 	rnp->qsmaskinitnext |= mask;
- 	oldmask = rnp->expmaskinitnext;
- 	rnp->expmaskinitnext |= mask;
--	oldmask ^= rnp->expmaskinitnext;
--	nbits = bitmap_weight(&oldmask, BITS_PER_LONG);
- 	/* Allow lockless access for expedited grace periods. */
--	smp_store_release(&rcu_state.ncpus, rcu_state.ncpus + nbits); /* ^^^ */
-+	if (!(oldmask & mask))
-+		smp_store_release(&rcu_state.ncpus, rcu_state.ncpus + 1); /* ^^^ */
- 	rcu_gpnum_ovf(rnp, rdp); /* Offline-induced counter wrap? */
- 	rdp->rcu_onl_gp_seq = READ_ONCE(rcu_state.gp_seq);
- 	rdp->rcu_onl_gp_flags = READ_ONCE(rcu_state.gp_flags);
--- 
-2.23.0
+> all I have is in perf/core, some patches are
+> still to be processed, will continue later, have to stop now, see:
+> 
+> https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/commit/?id=13cfba6b741ff
+> 
+> For my testing, looks really great!
 
+Thanks for the testing. :)
+
+Kan
+
+> 
+> - Arnaldo
+>   
+>> The source code of tchain_edit.c is something similar as below.
+>> noinline void f43(void)
+>> {
+>>          int i;
+>>          for (i = 0; i < 10000;) {
+>>
+>>                  if(i%2)
+>>                          i++;
+>>                  else
+>>                          i++;
+>>          }
+>> }
+>>
+>> noinline void f42(void)
+>> {
+>>          int i;
+>>          for (i = 0; i < 100; i++) {
+>>                  f43();
+>>                  f43();
+>>                  f43();
+>>          }
+>> }
+>>
+>> noinline void f41(void)
+>> {
+>>          int i;
+>>          for (i = 0; i < 100; i++) {
+>>                  f42();
+>>                  f42();
+>>                  f42();
+>>          }
+>> }
+>> noinline void f40(void)
+>> {
+>>          f41();
+>> }
+>>
+>> ... ...
+>>
+>> noinline void f32(void)
+>> {
+>>          f33();
+>> }
+>>
+>> noinline void f31(void)
+>> {
+>>          int i;
+>>
+>>          for (i = 0; i < 10000; i++) {
+>>                  if(i%2)
+>>                          i++;
+>>                  else
+>>                          i++;
+>>          }
+>>
+>>          f32();
+>> }
+>>
+>> noinline void f30(void)
+>> {
+>>          f31();
+>> }
+>>
+>> ... ...
+>>
+>> noinline void f1(void)
+>> {
+>>          f2();
+>> }
+>>
+>> int main()
+>> {
+>>          f1();
+>> }
+>>
+>> Kan Liang (17):
+>>    perf pmu: Add support for PMU capabilities
+>>    perf header: Support CPU PMU capabilities
+>>    perf record: Clear HEADER_CPU_PMU_CAPS for non LBR call stack mode
+>>    perf stat: Clear HEADER_CPU_PMU_CAPS
+>>    perf machine: Remove the indent in resolve_lbr_callchain_sample
+>>    perf machine: Refine the function for LBR call stack reconstruction
+>>    perf machine: Factor out lbr_callchain_add_kernel_ip()
+>>    perf machine: Factor out lbr_callchain_add_lbr_ip()
+>>    perf thread: Add a knob for LBR stitch approach
+>>    perf tools: Save previous sample for LBR stitching approach
+>>    perf tools: Save previous cursor nodes for LBR stitching approach
+>>    perf tools: Stitch LBR call stack
+>>    perf report: Add option to enable the LBR stitching approach
+>>    perf script: Add option to enable the LBR stitching approach
+>>    perf top: Add option to enable the LBR stitching approach
+>>    perf c2c: Add option to enable the LBR stitching approach
+>>    perf hist: Add fast path for duplicate entries check
+>>
+>>   tools/perf/Documentation/perf-c2c.txt         |  11 +
+>>   tools/perf/Documentation/perf-report.txt      |  11 +
+>>   tools/perf/Documentation/perf-script.txt      |  11 +
+>>   tools/perf/Documentation/perf-top.txt         |   9 +
+>>   .../Documentation/perf.data-file-format.txt   |  16 +
+>>   tools/perf/builtin-c2c.c                      |  12 +
+>>   tools/perf/builtin-record.c                   |   3 +
+>>   tools/perf/builtin-report.c                   |  12 +
+>>   tools/perf/builtin-script.c                   |  12 +
+>>   tools/perf/builtin-stat.c                     |   1 +
+>>   tools/perf/builtin-top.c                      |  11 +
+>>   tools/perf/util/branch.h                      |  19 +-
+>>   tools/perf/util/callchain.h                   |   8 +
+>>   tools/perf/util/env.h                         |   3 +
+>>   tools/perf/util/header.c                      | 108 +++++
+>>   tools/perf/util/header.h                      |   1 +
+>>   tools/perf/util/hist.c                        |  23 +
+>>   tools/perf/util/machine.c                     | 423 +++++++++++++++---
+>>   tools/perf/util/pmu.c                         |  82 ++++
+>>   tools/perf/util/pmu.h                         |   9 +
+>>   tools/perf/util/sort.c                        |   2 +-
+>>   tools/perf/util/sort.h                        |   2 +
+>>   tools/perf/util/thread.c                      |   2 +
+>>   tools/perf/util/thread.h                      |  35 ++
+>>   tools/perf/util/top.h                         |   1 +
+>>   25 files changed, 757 insertions(+), 70 deletions(-)
+>>
+>> -- 
+>> 2.17.1
+>>
+> 
