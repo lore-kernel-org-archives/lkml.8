@@ -2,125 +2,140 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D14E5C38A2B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 14:39:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F3EBC2D0EF
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 14:41:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B417621924
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 14:39:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19D5620936
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 14:41:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727909AbgDQOjg (ORCPT
+        id S1728045AbgDQOlA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 10:39:36 -0400
-Received: from smtp05.smtpout.orange.fr ([80.12.242.127]:49340 "EHLO
-        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726151AbgDQOjg (ORCPT
+        Fri, 17 Apr 2020 10:41:00 -0400
+Received: from out30-130.freemail.mail.aliyun.com ([115.124.30.130]:44814 "EHLO
+        out30-130.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726707AbgDQOlA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 10:39:36 -0400
-Received: from [192.168.42.210] ([93.22.148.45])
-        by mwinf5d09 with ME
-        id TqfX2200G0z0B2t03qfXU1; Fri, 17 Apr 2020 16:39:33 +0200
-X-ME-Helo: [192.168.42.210]
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Fri, 17 Apr 2020 16:39:33 +0200
-X-ME-IP: 93.22.148.45
-Subject: Re: [PATCH] RDMA/ocrdma: Fix an off-by-one issue in 'ocrdma_add_stat'
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     selvin.xavier@broadcom.com, devesh.sharma@broadcom.com,
-        dledford@redhat.com, leon@kernel.org, colin.king@canonical.com,
-        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-Newsgroups: gmane.linux.kernel.janitors,gmane.linux.drivers.rdma,gmane.linux.kernel
-References: <20200328073040.24429-1-christophe.jaillet@wanadoo.fr>
- <20200414183441.GA28870@ziepe.ca>
- <8c17ed4f-fb29-4ff8-35db-afab284c6e71@wanadoo.fr>
- <20200417135001.GE26002@ziepe.ca>
-From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Message-ID: <5c828086-e503-3f91-0589-9899c30c406e@wanadoo.fr>
-Date:   Fri, 17 Apr 2020 16:39:31 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Fri, 17 Apr 2020 10:41:00 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R871e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04357;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=39;SR=0;TI=SMTPD_---0TvqIRjz_1587134450;
+Received: from IT-FVFX43SYHV2H.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0TvqIRjz_1587134450)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Fri, 17 Apr 2020 22:40:52 +0800
+Subject: Re: [PATCH v8 03/10] mm/lru: replace pgdat lru_lock with lruvec lock
+To:     Johannes Weiner <hannes@cmpxchg.org>
+Cc:     akpm@linux-foundation.org, cgroups@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        mgorman@techsingularity.net, tj@kernel.org, hughd@google.com,
+        khlebnikov@yandex-team.ru, daniel.m.jordan@oracle.com,
+        yang.shi@linux.alibaba.com, willy@infradead.org,
+        shakeelb@google.com, Michal Hocko <mhocko@kernel.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Roman Gushchin <guro@fb.com>,
+        Chris Down <chris@chrisdown.name>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vlastimil Babka <vbabka@suse.cz>, Qian Cai <cai@lca.pw>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        David Rientjes <rientjes@google.com>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        swkhack <swkhack@gmail.com>,
+        "Potyra, Stefan" <Stefan.Potyra@elektrobit.com>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Colin Ian King <colin.king@canonical.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Peng Fan <peng.fan@nxp.com>,
+        Nikolay Borisov <nborisov@suse.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Yafang Shao <laoar.shao@gmail.com>,
+        Wei Yang <richard.weiyang@gmail.com>
+References: <1579143909-156105-1-git-send-email-alex.shi@linux.alibaba.com>
+ <1579143909-156105-4-git-send-email-alex.shi@linux.alibaba.com>
+ <20200116215222.GA64230@cmpxchg.org>
+ <cdcdb710-1d78-6fac-48d7-35519ddcdc6a@linux.alibaba.com>
+ <20200413180725.GA99267@cmpxchg.org>
+ <8e7bf170-2bb5-f862-c12b-809f7f7d96cb@linux.alibaba.com>
+ <20200414163114.GA136578@cmpxchg.org>
+ <54af0662-cbb4-88c7-7eae-f969684025dd@linux.alibaba.com>
+ <0bed9f1a-400d-d9a9-aeb4-de1dd9ccbb45@linux.alibaba.com>
+ <20200416152830.GA195132@cmpxchg.org>
+From:   Alex Shi <alex.shi@linux.alibaba.com>
+Message-ID: <2403add7-d468-7615-22c5-3fafb1264d54@linux.alibaba.com>
+Date:   Fri, 17 Apr 2020 22:39:59 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.6.0
 MIME-Version: 1.0
-In-Reply-To: <20200417135001.GE26002@ziepe.ca>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20200416152830.GA195132@cmpxchg.org>
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Le 17/04/2020 à 15:50, Jason Gunthorpe a écrit :
-> On Fri, Apr 17, 2020 at 03:28:21PM +0200, Marion & Christophe JAILLET wrote:
->> Le 14/04/2020 à 20:34, Jason Gunthorpe a écrit :
->>> On Sat, Mar 28, 2020 at 08:30:40AM +0100, Christophe JAILLET wrote:
->>>> There is an off-by-one issue when checking if there is enough space in the
->>>> output buffer, because we must keep some place for a final '\0'.
->>>>
->>>> While at it:
->>>>      - Use 'scnprintf' instead of 'snprintf' in order to avoid a superfluous
->>>>       'strlen'
->>>>      - avoid some useless initializations
->>>>      - avoida hard coded buffer size that can be computed at built time.
->>>>
->>>> Fixes: a51f06e1679e ("RDMA/ocrdma: Query controller information")
->>>> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
->>>> The '\0' comes from memset(..., 0, ...) in all callers.
->>>> This could be also avoided if needed.
->>>>    drivers/infiniband/hw/ocrdma/ocrdma_stats.c | 9 ++++-----
->>>>    1 file changed, 4 insertions(+), 5 deletions(-)
->>>>
->>>> diff --git a/drivers/infiniband/hw/ocrdma/ocrdma_stats.c b/drivers/infiniband/hw/ocrdma/ocrdma_stats.c
->>>> index 5f831e3bdbad..614a449e6b87 100644
->>>> +++ b/drivers/infiniband/hw/ocrdma/ocrdma_stats.c
->>>> @@ -49,13 +49,12 @@ static struct dentry *ocrdma_dbgfs_dir;
->>>>    static int ocrdma_add_stat(char *start, char *pcur,
->>>>    				char *name, u64 count)
->>>>    {
->>>> -	char buff[128] = {0};
->>>> -	int cpy_len = 0;
->>>> +	char buff[128];
->>>> +	int cpy_len;
->>>> -	snprintf(buff, 128, "%s: %llu\n", name, count);
->>>> -	cpy_len = strlen(buff);
->>>> +	cpy_len = scnprintf(buff, sizeof(buff), "%s: %llu\n", name, count);
->>>> -	if (pcur + cpy_len > start + OCRDMA_MAX_DBGFS_MEM) {
->>>> +	if (pcur + cpy_len >= start + OCRDMA_MAX_DBGFS_MEM) {
->>>>    		pr_err("%s: No space in stats buff\n", __func__);
->>>>    		return 0;
->>>>    	}
->>> The memcpy is still kind of silly right? What about this:
+
+
+在 2020/4/16 下午11:28, Johannes Weiner 写道:
+> Hi Alex,
+> 
+> On Thu, Apr 16, 2020 at 04:01:20PM +0800, Alex Shi wrote:
+>>
+>>
+>> 在 2020/4/15 下午9:42, Alex Shi 写道:
+>>> Hi Johannes,
 >>>
->>> static int ocrdma_add_stat(char *start, char *pcur, char *name, u64 count)
->>> {
->>> 	size_t len = (start + OCRDMA_MAX_DBGFS_MEM) - pcur;
->>> 	int cpy_len;
+>>> Thanks a lot for point out!
 >>>
->>> 	cpy_len = snprintf(pcur, len, "%s: %llu\n", name, count);
->>> 	if (cpy_len >= len || cpy_len < 0) {
->>> 		pr_err("%s: No space in stats buff\n", __func__);
->>> 		return 0;
->>> 	}
->>> 	return cpy_len;
->>> }
+>>> Charging in __read_swap_cache_async would ask for 3 layers function arguments
+>>> pass, that would be a bit ugly. Compare to this, could we move out the
+>>> lru_cache add after commit_charge, like ksm copied pages?
 >>>
->>> Jason
->> It can looks useless, but I think that the goal was to make sure that we
->> would not display truncated data. Each line is either complete or absent.
-> So it needsa *pcur = 0 in the error path?
->
-> Jason
->
-I guess it would keep the existing behavior, should it be needed.
+>>> That give a bit extra non lru list time, but the page just only be used only
+>>> after add_anon_rmap setting. Could it cause troubles?
+>>
+>> Hi Johannes & Andrew,
+>>
+>> Doing lru_cache_add_anon during swapin_readahead can give a very short timing 
+>> for possible page reclaiming for these few pages.
+>>
+>> If we delay these few pages lru adding till after the vm_fault target page 
+>> get memcg charging(mem_cgroup_commit_charge) and activate, we could skip the 
+>> mem_cgroup_try_charge/commit_charge/cancel_charge process in __read_swap_cache_async().
+>> But the cost is maximum SWAP_RA_ORDER_CEILING number pages on each cpu miss
+>> page reclaiming in a short time. On the other hand, save the target vm_fault
+>> page from reclaiming before activate it during that time.
+> 
+> The readahead pages surrounding the faulting page might never get
+> accessed and pile up to large amounts. Users can also trigger
+> non-faulting readahead with MADV_WILLNEED.
+> 
+> So unfortunately, I don't see a way to keep these pages off the
+> LRU. They do need to be reclaimable, or they become a DoS vector.
+> 
+> I'm currently preparing a small patch series to make swap ownership
+> tracking an integral part of memcg and change the swapin charging
+> sequence, then you don't have to worry about it. This will also
+> unblock Joonsoo's "workingset protection/detection on the anonymous
+> LRU list" patch series, since he is blocked on the same problem - he
+> needs the correct LRU available at swapin time to process refaults
+> correctly. Both of your patch series are already pretty large, they
+> shouldn't need to also deal with that.
+> 
 
-I leave maintainers to choose what looks more readable to them, or just 
-to ignore the patch if they think it is useless.
-Feel free to propose your version as a patch.
+That sounds great!
+BTW, the swapin target page will add into inactive_anon list and then activate
+after chaged. that left a minum time slot for this page to be reclaimed.
+May better activate it early?
 
-Anyway, thanks for sharing alternative solutions.
+Also I have 2 clean up patches, which may or may not useful for you. will send
+it to you. :)
 
-CJ
-
+Thanks
+Alex
