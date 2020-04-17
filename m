@@ -2,104 +2,164 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19826C38A2C
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 11:00:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DD21C3815B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 11:00:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0552221D95
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 11:00:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2BA7221F7
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 11:00:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587121214;
+	bh=rjbVBs3c1ISw00+yxXiYOPvpJRvAJL0FJTjarHYhJbE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=hAtqkXqENb8Gjl1bXUTX0QbOODfTZI5Trf5Ksng2DLKeH7xvttR53YRs2Y6rdPovD
+	 8dTuvqSEXZ+wXFA706UJHfI77t+OYiMNGGTgaVLgMTY8cu3meeg9BtOfVQ3xjsyTi7
+	 tW2zh+PKGRjknRe161+2vMad61TxL7OM4Ob1oXPY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730154AbgDQLAE (ORCPT
+        id S1730164AbgDQLAN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 07:00:04 -0400
-Received: from mx2.suse.de ([195.135.220.15]:36390 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729558AbgDQLAC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 07:00:02 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 1944AAD33;
-        Fri, 17 Apr 2020 11:00:01 +0000 (UTC)
-From:   Jiri Slaby <jslaby@suse.cz>
-To:     gregkh@linuxfoundation.org
-Cc:     linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jiri Slaby <jslaby@suse.cz>
-Subject: [PATCH 2/2] tty: rocket, avoid OOB access
-Date:   Fri, 17 Apr 2020 12:59:59 +0200
-Message-Id: <20200417105959.15201-2-jslaby@suse.cz>
-X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200417105959.15201-1-jslaby@suse.cz>
-References: <20200417105959.15201-1-jslaby@suse.cz>
+        Fri, 17 Apr 2020 07:00:13 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:39939 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729558AbgDQLAM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Apr 2020 07:00:12 -0400
+Received: by mail-wm1-f66.google.com with SMTP id a81so2511042wmf.5;
+        Fri, 17 Apr 2020 04:00:10 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=LhgE/f1EBRGWX6Y4huoPpvwd2o6+jMydBsQ1KJjHv1Q=;
+        b=RJovW3JPEWReiDFh5xm7qArlaRAq56a7g00/5GsGCQKxyni+vnxElx0fkHTgZTTz9a
+         R+Zj6VuBOuxHBc//OBzKMraZxQbjlxEz6K3lXrF6+oUSxYXEHITRZMqPRSOn4Mk+ZKTE
+         /j4QRlOOjodOHvb1qqooqkhpA9X86iYoa3EEnIdqrwXTfvV1Hj8lnIL37i8UQ9uk3+u7
+         kiJMkkGprEdpePmjHkcLM9dPKuTgb714ll2uDV87yKdAzUqZ00Uo9ugEBnmrJTfYQcLT
+         0dx5LG8FsqiV6PpZka9UNSXood0sHSJMh6MQAFtAr3bAkwViH6IlbnkDTfcv4pBCdPbq
+         AT9g==
+X-Gm-Message-State: AGi0PuZTR0Hu3GmAhiZkZ0arc1PgkrnZ0dmc7/TlFafDjCc0XQVjy986
+        hs3R2/trvygfndG4cu6hcVc=
+X-Google-Smtp-Source: APiQypK8Bo/MSKxXXaQaPjF1LGejnPhJegTJnzOfls9M1hQxZIlDy1nOgvYyBi5r+5CeRy5TwGxFRw==
+X-Received: by 2002:a7b:c1d4:: with SMTP id a20mr2883208wmj.111.1587121210149;
+        Fri, 17 Apr 2020 04:00:10 -0700 (PDT)
+Received: from debian (44.142.6.51.dyn.plus.net. [51.6.142.44])
+        by smtp.gmail.com with ESMTPSA id o16sm31831230wrs.44.2020.04.17.04.00.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 17 Apr 2020 04:00:09 -0700 (PDT)
+Date:   Fri, 17 Apr 2020 12:00:07 +0100
+From:   Wei Liu <wei.liu@kernel.org>
+To:     Dexuan Cui <decui@microsoft.com>
+Cc:     bp@alien8.de, haiyangz@microsoft.com, hpa@zytor.com,
+        kys@microsoft.com, linux-hyperv@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mingo@redhat.com,
+        sthemmin@microsoft.com, tglx@linutronix.de, x86@kernel.org,
+        mikelley@microsoft.com, vkuznets@redhat.com, wei.liu@kernel.org
+Subject: Re: [PATCH] x86/hyperv: Suspend/resume the VP assist page for
+ hibernation
+Message-ID: <20200417110007.uzfo6musx2x2suw7@debian>
+References: <1587104999-28927-1-git-send-email-decui@microsoft.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1587104999-28927-1-git-send-email-decui@microsoft.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-init_r_port can access pc104 array out of bounds. pc104 is a 2D array
-defined to have 4 members. Each member has 8 submembers.
-* we can have more than 4 (PCI) boards, i.e. [board] can be OOB
-* line is not modulo-ed by anything, so the first line on the second
-  board can be 4, on the 3rd 12 or alike (depending on previously
-  registered boards). It's zero only on the first line of the first
-  board. So even [line] can be OOB, quite soon (with the 2nd registered
-  board already).
+On Thu, Apr 16, 2020 at 11:29:59PM -0700, Dexuan Cui wrote:
+> Unlike the other CPUs, CPU0 is never offlined during hibernation. So in the
+> resume path, the "new" kernel's VP assist page is not suspended (i.e.
+> disabled), and later when we jump to the "old" kernel, the page is not
+> properly re-enabled for CPU0 with the allocated page from the old kernel.
+> 
+> So far, the VP assist page is only used by hv_apic_eoi_write(). When the
+> page is not properly re-enabled, hvp->apic_assist is always 0, so the
+> HV_X64_MSR_EOI MSR is always written. This is not ideal with respect to
+> performance, but Hyper-V can still correctly handle this.
+> 
+> The issue is: the hypervisor can corrupt the old kernel memory, and hence
+> sometimes cause unexpected behaviors, e.g. when the old kernel's non-boot
+> CPUs are being onlined in the resume path, the VM can hang or be killed
+> due to virtual triple fault.
 
-This code is broken for ages, so just avoid the OOB accesses and don't
-try to fix it as we would need to find out the correct line number. Use
-the default: RS232, if we are out.
+I don't quite follow here.
 
-Generally, if anyone needs to set the interface types, a module parameter
-is past the last thing that should be used for this purpose. The
-parameters' description says it's for ISA cards anyway.
+The first sentence is rather alarming -- why would Hyper-V corrupt
+guest's memory (kernel or not)?
 
-Signed-off-by: Jiri Slaby <jslaby@suse.cz>
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
----
- drivers/tty/rocket.c | 25 ++++++++++++++-----------
- 1 file changed, 14 insertions(+), 11 deletions(-)
+Secondly, code below only specifies cpu0. What does it do with non-boot
+cpus on the resume path?
 
-diff --git a/drivers/tty/rocket.c b/drivers/tty/rocket.c
-index 077ef849f8cb..2540b2e4c8e8 100644
---- a/drivers/tty/rocket.c
-+++ b/drivers/tty/rocket.c
-@@ -632,18 +632,21 @@ init_r_port(int board, int aiop, int chan, struct pci_dev *pci_dev)
- 	tty_port_init(&info->port);
- 	info->port.ops = &rocket_port_ops;
- 	info->flags &= ~ROCKET_MODE_MASK;
--	switch (pc104[board][line]) {
--	case 422:
--		info->flags |= ROCKET_MODE_RS422;
--		break;
--	case 485:
--		info->flags |= ROCKET_MODE_RS485;
--		break;
--	case 232:
--	default:
-+	if (board < ARRAY_SIZE(pc104) && line < ARRAY_SIZE(pc104_1))
-+		switch (pc104[board][line]) {
-+		case 422:
-+			info->flags |= ROCKET_MODE_RS422;
-+			break;
-+		case 485:
-+			info->flags |= ROCKET_MODE_RS485;
-+			break;
-+		case 232:
-+		default:
-+			info->flags |= ROCKET_MODE_RS232;
-+			break;
-+		}
-+	else
- 		info->flags |= ROCKET_MODE_RS232;
--		break;
--	}
- 
- 	info->intmask = RXF_TRIG | TXFIFO_MT | SRC_INT | DELTA_CD | DELTA_CTS | DELTA_DSR;
- 	if (sInitChan(ctlp, &info->channel, aiop, chan) == 0) {
--- 
-2.26.1
+Wei.
 
+> 
+> Fix the issue by calling hv_cpu_die()/hv_cpu_init() in the syscore ops.
+> 
+> Without the fix, hibernation can fail at a rate of 1/300 ~ 1/500.
+> With the fix, hibernation can pass a long-haul test of 2000 rounds.
+> 
+> Fixes: 05bd330a7fd8 ("x86/hyperv: Suspend/resume the hypercall page for hibernation")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Dexuan Cui <decui@microsoft.com>
+> ---
+>  arch/x86/hyperv/hv_init.c | 12 ++++++++++--
+>  1 file changed, 10 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
+> index b0da5320bcff..4d3ce86331a3 100644
+> --- a/arch/x86/hyperv/hv_init.c
+> +++ b/arch/x86/hyperv/hv_init.c
+> @@ -72,7 +72,8 @@ static int hv_cpu_init(unsigned int cpu)
+>  	struct page *pg;
+>  
+>  	input_arg = (void **)this_cpu_ptr(hyperv_pcpu_input_arg);
+> -	pg = alloc_page(GFP_KERNEL);
+> +	/* hv_cpu_init() can be called with IRQs disabled from hv_resume() */
+> +	pg = alloc_page(GFP_ATOMIC);
+>  	if (unlikely(!pg))
+>  		return -ENOMEM;
+>  	*input_arg = page_address(pg);
+> @@ -253,6 +254,7 @@ static int __init hv_pci_init(void)
+>  static int hv_suspend(void)
+>  {
+>  	union hv_x64_msr_hypercall_contents hypercall_msr;
+> +	int ret;
+>  
+>  	/*
+>  	 * Reset the hypercall page as it is going to be invalidated
+> @@ -269,12 +271,17 @@ static int hv_suspend(void)
+>  	hypercall_msr.enable = 0;
+>  	wrmsrl(HV_X64_MSR_HYPERCALL, hypercall_msr.as_uint64);
+>  
+> -	return 0;
+> +	ret = hv_cpu_die(0);
+> +	return ret;
+>  }
+>  
+>  static void hv_resume(void)
+>  {
+>  	union hv_x64_msr_hypercall_contents hypercall_msr;
+> +	int ret;
+> +
+> +	ret = hv_cpu_init(0);
+> +	WARN_ON(ret);
+>  
+>  	/* Re-enable the hypercall page */
+>  	rdmsrl(HV_X64_MSR_HYPERCALL, hypercall_msr.as_uint64);
+> @@ -287,6 +294,7 @@ static void hv_resume(void)
+>  	hv_hypercall_pg_saved = NULL;
+>  }
+>  
+> +/* Note: when the ops are called, only CPU0 is online and IRQs are disabled. */
+>  static struct syscore_ops hv_syscore_ops = {
+>  	.suspend	= hv_suspend,
+>  	.resume		= hv_resume,
+> -- 
+> 2.19.1
+> 
