@@ -2,92 +2,108 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F9E7C2D0EF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 18:46:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D26FC38A2B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 18:48:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 20C4622201
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 18:46:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F142207FC
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 18:48:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="RfQfUsRC"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="m55vm8qp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729409AbgDQSqD (ORCPT
+        id S1729241AbgDQSst (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 14:46:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46988 "EHLO
+        Fri, 17 Apr 2020 14:48:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47410 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727840AbgDQSqC (ORCPT
+        by vger.kernel.org with ESMTP id S1727919AbgDQSss (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 14:46:02 -0400
-Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3FA95C061A0C
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 11:46:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=VuZsWEhfzTLuKGA1NHD95YdTHFY/ejA3z6ZEjfk5sbs=; b=RfQfUsRCI/Tm6COLEP0qv9xl8M
-        9LwJZgSkrVJLotE94dvoWdnWSVAXgO2ykdMQclgybPk5xDIkGxKsuac9j+I42/hFQj48q1R/FIpoB
-        Dqn2fqpRqVWdpzRp8yGQ1erZ9mIpyhNIQIH/SLYIxbrm+6uARErB3Asitu97JGMXbfMvDaMwZhfG+
-        Afck5MbOiNB2QEWEr+EM74NILZfdfZKozuGoBp/9OdmvnEHOCED0/eAGpn6nZs6FzHWjvhR61MwhY
-        LRCtR5oof7b/+lovYI0UuUZCBnCF8b0AhKboGbJQ4Cn3eYqVvzSrpsLo03vsrIglnpFpI5L+N5SV/
-        FKKpWTEA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jPVzd-00083Z-VF; Fri, 17 Apr 2020 18:45:38 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 74A823010BC;
-        Fri, 17 Apr 2020 20:45:36 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 4F8B02B12520A; Fri, 17 Apr 2020 20:45:36 +0200 (CEST)
-Date:   Fri, 17 Apr 2020 20:45:36 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Stephane Eranian <eranian@google.com>,
-        KP Singh <kpsingh@google.com>
-Subject: Re: [PATCH] perf/core: fix parent pid/tid in task exit events
-Message-ID: <20200417184536.GK20730@hirez.programming.kicks-ass.net>
-References: <20200417182842.12522-1-irogers@google.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200417182842.12522-1-irogers@google.com>
+        Fri, 17 Apr 2020 14:48:48 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5837C061A10
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 11:48:48 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id p8so1526899pgi.5
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 11:48:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=/m8uFUPGMTXPG6uE9UPBDXEGsmlpHvFfRMPeQIRglr0=;
+        b=m55vm8qpsWewOdjKtNV9pAA/o9+H6/LdDotUxWcE6LTAdjTMH4J3LNhBIZ6wWCKmNo
+         99GRImy6d5PLzuLZIH/aZlDXNr4DtUD48apChLpnvfxnpETe7l3oPQ/WtRQkVvRbdfSu
+         skGOb/Tf+DAYWM4gntE5s80z0Yp0jHTWnqeG1ydjvMReWaJpGPGN3j/d1iPXF1Hn5uan
+         M2t5AhwXcWJNEYNQJATDZ8rLCSC+jlt2B2QpqBzhNwiOer5QagoHIXeHh6Argt7eoU4j
+         kU5xp6C9bqgXqa0hoED9I6CRFHE+bbrN49TWBqh14XXShfG5joisVXURuPXDedM/kDU7
+         Npqw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=/m8uFUPGMTXPG6uE9UPBDXEGsmlpHvFfRMPeQIRglr0=;
+        b=fn99uTxHYRgDBL04gQmIJ1FnnfyvkxhQVdC10hY7kCtFg6XcZe9yT1a39S/eYjmynI
+         KKHgVECCAEpzmOTiKQlJfRzDuPrlwqBgrkVvCR2+rkdNpgG+jJ9oCZfE6BLk0n2Z3VrD
+         f0+NHYw70KKCkvaWSEEiXItU5SAL/9GKd2wlR+n/lQWQtI5F/MYQ8GKNpj80jnIQh91k
+         N9lQEiMaUfSZn1mizFl4/1VIwMl8kDriGAQoVwEYAK7irXkfuGTuydBi0Yp7ou9ty/mV
+         M/I9OMhap86SBNxbncQ1kyJ09X3dI5kOED6pj+Knbm1wC5MCWeKfwxUxapax8WlGSEbk
+         VYSQ==
+X-Gm-Message-State: AGi0PuZ3gx7qE9eICFeqJkACt2GLh5FE7xCMJ8fJYceQ4d5iQgT1t1fL
+        v2Z6GRCxvz3z1IaDZUVHCRFEYGZn8Hs=
+X-Google-Smtp-Source: APiQypJVSsNxOrC49Bt1KeprvKNWUF/fOBKhWHYpgHUpDM7iS/wLjotWqC0uiFeh2vhCtRy4gCIUgQ==
+X-Received: by 2002:aa7:9207:: with SMTP id 7mr4521820pfo.178.1587149327949;
+        Fri, 17 Apr 2020 11:48:47 -0700 (PDT)
+Received: from nuc7.sifive.com (c-24-5-48-146.hsd1.ca.comcast.net. [24.5.48.146])
+        by smtp.gmail.com with ESMTPSA id l185sm18924449pfl.104.2020.04.17.11.48.46
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 17 Apr 2020 11:48:46 -0700 (PDT)
+From:   Alan Mikhak <alan.mikhak@sifive.com>
+X-Google-Original-From: Alan Mikhak < alan.mikhak@sifive.com >
+To:     linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-pci@vger.kernel.org, maz@kernel.org, tglx@linutronix.de,
+        gustavo.pimentel@synopsys.com, kishon@ti.com,
+        paul.walmsley@sifive.com
+Cc:     Alan Mikhak <alan.mikhak@sifive.com>
+Subject: [PATCH] genirq/msi: Check null pointer before copying struct msi_msg
+Date:   Fri, 17 Apr 2020 11:48:42 -0700
+Message-Id: <1587149322-28104-1-git-send-email-alan.mikhak@sifive.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 17, 2020 at 11:28:42AM -0700, Ian Rogers wrote:
-> Current logic yields the child task as the parent.
-> 
-> Before:
-> $ perf record bash -c "perf list > /dev/null"
-> $ perf script -D |grep 'FORK\|EXIT'
-> 4387036190981094 0x5a70 [0x30]: PERF_RECORD_FORK(10472:10472):(10470:10470)
-> 4387036606207580 0xf050 [0x30]: PERF_RECORD_EXIT(10472:10472):(10472:10472)
-> 4387036607103839 0x17150 [0x30]: PERF_RECORD_EXIT(10470:10470):(10470:10470)
->                                                    ^
->   Note the repeated values here -------------------/
-> 
-> After:
-> 383281514043 0x9d8 [0x30]: PERF_RECORD_FORK(2268:2268):(2266:2266)
-> 383442003996 0x2180 [0x30]: PERF_RECORD_EXIT(2268:2268):(2266:2266)
-> 383451297778 0xb70 [0x30]: PERF_RECORD_EXIT(2266:2266):(2265:2265)
-> 
+From: Alan Mikhak <alan.mikhak@sifive.com>
 
-Fixes: .... ?
+Modify __get_cached_msi_msg() to check both pointers for null before
+copying the contents from the struct msi_msg pointer to the pointer
+provided by caller.
 
-> Reported-by: KP Singh <kpsingh@google.com>
-> Signed-off-by: Ian Rogers <irogers@google.com>
+Without this sanity check, __get_cached_msi_msg() crashes when invoked by
+dw_edma_irq_request() in drivers/dma/dw-edma/dw-edma-core.c running on a
+Linux-based PCIe endpoint device. MSI interrupt are not received by PCIe
+endpoint devices. As a result, irq_get_msi_desc() returns null since there
+are no cached struct msi_msg entry on the endpoint side.
+
+Signed-off-by: Alan Mikhak <alan.mikhak@sifive.com>
+---
+ kernel/irq/msi.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/kernel/irq/msi.c b/kernel/irq/msi.c
+index eb95f6106a1e..f39d42ef0d50 100644
+--- a/kernel/irq/msi.c
++++ b/kernel/irq/msi.c
+@@ -58,7 +58,8 @@ void free_msi_entry(struct msi_desc *entry)
+ 
+ void __get_cached_msi_msg(struct msi_desc *entry, struct msi_msg *msg)
+ {
+-	*msg = entry->msg;
++	if (entry && msg)
++		*msg = entry->msg;
+ }
+ 
+ void get_cached_msi_msg(unsigned int irq, struct msi_msg *msg)
+-- 
+2.7.4
+
