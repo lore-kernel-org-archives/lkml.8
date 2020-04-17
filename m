@@ -2,133 +2,126 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BFCFC38A2B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 14:52:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34C8FC2D0EF
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 14:53:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E131B2223D
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 14:52:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="gTCksAoZ"
+	by mail.kernel.org (Postfix) with ESMTP id 156492223C
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 14:53:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728335AbgDQOwW (ORCPT
+        id S1728347AbgDQOxI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 10:52:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38842 "EHLO
+        Fri, 17 Apr 2020 10:53:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38958 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728087AbgDQOwV (ORCPT
+        with ESMTP id S1728075AbgDQOxH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 10:52:21 -0400
-Received: from mo6-p02-ob.smtp.rzone.de (mo6-p02-ob.smtp.rzone.de [IPv6:2a01:238:20a:202:5302::10])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C82CFC061A0C;
-        Fri, 17 Apr 2020 07:52:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1587135139;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=N2id5dDn08U6TAh/6+DD8aJi6egipg3kzd6Oo3+NmT8=;
-        b=gTCksAoZVXuZoUbEI2VMOJI4ZzJUM/YFWbtRJFKkhdWyKZUaxraLSaUqdRHPERC9nN
-        AIkAMqme+ivK+KZLEqaMKwfhlskmHhIwyuC0Nwy6rLallb1ISUB2XEua9qy5H8yjvP/a
-        j/aNkDXHGkJugR+P4SIgAvQBzH5mkYrOdv7akY9Y03hKucPHwzfzwunLaOYAw5KWoue8
-        ly8r6dMNot09b/kFDK9Iiu4ve5jxy+h/hFVxGwZ91tc+wImThozT0IwvIVHrCNGf0Qed
-        mVBL3OxIcZ4bRK85Z2Y9+0eerR6IGm5LIs5v7Ysj3BuNO60/+wIuQe3Noh0Q61q98gOS
-        Fnuw==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj7wpz8NMGH/PgwDWjbQ=="
-X-RZG-CLASS-ID: mo00
-Received: from imac.fritz.box
-        by smtp.strato.de (RZmta 46.5.0 DYNA|AUTH)
-        with ESMTPSA id g06d2dw3HEqF2G9
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
-        (Client did not present a certificate);
-        Fri, 17 Apr 2020 16:52:15 +0200 (CEST)
-Subject: Re: [PATCHv3] w1: omap-hdq: Simplify driver with PM runtime autosuspend
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+        Fri, 17 Apr 2020 10:53:07 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A3BEC061A0C
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 07:53:07 -0700 (PDT)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id 2BC642A2ABC
+Subject: Re: [PATCH v2 3/7] drm/mediatek: mtk_dsi: Rename bridge to
+ next_bridge
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Collabora Kernel ML <kernel@collabora.com>,
+        matthias.bgg@gmail.com, drinkcat@chromium.org, hsinyi@chromium.org,
+        Chun-Kuang Hu <chunkuang.hu@kernel.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org
+References: <20200416155720.2360443-1-enric.balletbo@collabora.com>
+ <20200416155720.2360443-4-enric.balletbo@collabora.com>
+ <20200416172435.GM4796@pendragon.ideasonboard.com>
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Message-ID: <c1319dc1-5fdf-7e7d-1410-a23ed1d87d67@collabora.com>
+Date:   Fri, 17 Apr 2020 16:53:02 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
+MIME-Version: 1.0
+In-Reply-To: <20200416172435.GM4796@pendragon.ideasonboard.com>
 Content-Type: text/plain; charset=utf-8
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-In-Reply-To: <20200417164340.3d9043d1@aktux>
-Date:   Fri, 17 Apr 2020 16:52:15 +0200
-Cc:     Tony Lindgren <tony@atomide.com>,
-        Evgeniy Polyakov <zbr@ioremap.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-omap <linux-omap@vger.kernel.org>,
-        Adam Ford <aford173@gmail.com>,
-        "Andrew F . Davis" <afd@ti.com>, Vignesh R <vigneshr@ti.com>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <6430AF54-849E-456B-8DB0-B4478BBDB78D@goldelico.com>
-References: <20191217004048.46298-1-tony@atomide.com> <7B8C7DD9-095B-48FC-9642-695D07B79E97@goldelico.com> <20200416184638.GI37466@atomide.com> <3197C3F0-DEB9-4221-AFBD-4F2A08C84C4C@goldelico.com> <20200417164340.3d9043d1@aktux>
-To:     Andreas Kemnade <andreas@kemnade.info>
-X-Mailer: Apple Mail (2.3124)
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Laurent,
 
-> Am 17.04.2020 um 16:43 schrieb Andreas Kemnade <andreas@kemnade.info>:
->=20
-> On Fri, 17 Apr 2020 16:22:47 +0200
-> "H. Nikolaus Schaller" <hns@goldelico.com> wrote:
->=20
->>> Am 16.04.2020 um 20:46 schrieb Tony Lindgren <tony@atomide.com>:
->>>=20
->>> * H. Nikolaus Schaller <hns@goldelico.com> [200416 15:04]: =20
->>>> Hi Tony,
->>>> it looks as if something with this patch is broken on GTA04. For =
-v5.6 and v5.7-rc1.
->>>>=20
->>>> HDQ battery access times out after ca. 15 seconds and I get =
-temperature of -273.1=C2=B0C...
->>>>=20
->>>> Reverting this patch and everything is ok again. =20
->>>=20
->>> Hmm OK interesting.
->>>=20
->>>> What is "ti,mode" about? Do we have that (indirectly) in =
-gta04.dtsi?
->>>> Or does this patch need some CONFIGs we do not happen to have? =20
->>>=20
->>> Sounds like you have things working though so there should be no
->>> need for having ti,mode =3D "1w" in the dts.
->>>=20
->>>>> 	pm_runtime_enable(&pdev->dev);
->>>>> +	pm_runtime_use_autosuspend(&pdev->dev);
->>>>> +	pm_runtime_set_autosuspend_delay(&pdev->dev, 300); =20
->>>=20
->>> Care to check if changing pm_runtime_set_autosuspend_delay value
->>> to -1 in probe makes the issue go away? Or change it manually
->>> to -1 via sysfs.
->>>=20
->>> If that helps, likely we have a missing pm_runtime_get_sync()
->>> somewhere in the driver. =20
->>=20
->> Yes, it does! It suffices to set it to -1 for one readout.
->> Aything else I can test?
->>=20
-> How does it depend on loaded drivers?
-> Is it really mainline kernel + config + devicetree or something else?
+On 16/4/20 19:24, Laurent Pinchart wrote:
+> Hi Enric,
+> 
+> Thank you for the patch.
+> 
+> On Thu, Apr 16, 2020 at 05:57:15PM +0200, Enric Balletbo i Serra wrote:
+>> This is really a cosmetic change just to make a bit more readable the
+>> code after convert the driver to drm_bridge. The bridge variable name
+>> will be used by the encoder drm_bridge, and the chained bridge will be
+>> named next_bridge.
+>>
+>> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+>> ---
+>>
+>> Changes in v2: None
+>>
+>>  drivers/gpu/drm/mediatek/mtk_dsi.c | 9 +++++----
+>>  1 file changed, 5 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/drivers/gpu/drm/mediatek/mtk_dsi.c b/drivers/gpu/drm/mediatek/mtk_dsi.c
+>> index cfa45d6abd74..44ee884cc31c 100644
+>> --- a/drivers/gpu/drm/mediatek/mtk_dsi.c
+>> +++ b/drivers/gpu/drm/mediatek/mtk_dsi.c
+>> @@ -182,7 +182,7 @@ struct mtk_dsi {
+>>  	struct drm_encoder encoder;
+>>  	struct drm_connector conn;
+>>  	struct drm_panel *panel;
+>> -	struct drm_bridge *bridge;
+>> +	struct drm_bridge *next_bridge;
+>>  	struct phy *phy;
+>>  
+>>  	void __iomem *regs;
+>> @@ -903,8 +903,9 @@ static int mtk_dsi_create_conn_enc(struct drm_device *drm, struct mtk_dsi *dsi)
+>>  	dsi->encoder.possible_crtcs = 1;
+>>  
+>>  	/* If there's a bridge, attach to it and let it create the connector */
+> 
+> Maybe s/bridge/next bridge/ here ? I expect this comment to go away
+> though, as there will always be a next bridge when the driver switches
+> to the DRM panel bridge helper.
+> 
 
-Well, I can revert the patch on the same
-kernel (5.6 or 5.7-rc1) + config + devicetree + user-space
-and the problem is gone.
+I'll rename it to next bridge for coherency, however, as you point this message
+is removed later.
 
-This means that something is different between the old and the new
-version which makes the hdq access delayed and failing. Of course I
-don't know the reason for it and what does influence it.
-
->=20
-> Can you reproduce the problem with init=3D/bin/bash
-> and then mount sysfs and modprobe omap_hdq?
-
-I am not sure how quickly I can test such a setup.
-
-> Regarding pm_runtime stuff I thought I have the worst case scenario.
-
-What may make a difference is the sequence in which drivers are loaded.
-
-BR,
-Nikolaus
-
+> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> 
+>> -	if (dsi->bridge) {
+>> -		ret = drm_bridge_attach(&dsi->encoder, dsi->bridge, NULL, 0);
+>> +	if (dsi->next_bridge) {
+>> +		ret = drm_bridge_attach(&dsi->encoder, dsi->next_bridge, NULL,
+>> +					0);
+>>  		if (ret) {
+>>  			DRM_ERROR("Failed to attach bridge to drm\n");
+>>  			goto err_encoder_cleanup;
+>> @@ -1185,7 +1186,7 @@ static int mtk_dsi_probe(struct platform_device *pdev)
+>>  	}
+>>  
+>>  	ret = drm_of_find_panel_or_bridge(dev->of_node, 0, 0,
+>> -					  &dsi->panel, &dsi->bridge);
+>> +					  &dsi->panel, &dsi->next_bridge);
+>>  	if (ret)
+>>  		goto err_unregister_host;
+>>  
+> 
