@@ -2,99 +2,78 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63CF9C352BE
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 17:01:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A919C2D0EF
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 17:04:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 370272054F
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 17:01:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="hFTCB2el"
+	by mail.kernel.org (Postfix) with ESMTP id 0B35B20771
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 17:04:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728531AbgDQRBu (ORCPT
+        id S1728162AbgDQREJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 13:01:50 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:44580 "EHLO vps0.lunn.ch"
+        Fri, 17 Apr 2020 13:04:09 -0400
+Received: from foss.arm.com ([217.140.110.172]:54086 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728092AbgDQRBs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 13:01:48 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=GDt6Kg65vGRHTbVpxtwsO49QfnwXL2hG69odrZ95CMU=; b=hFTCB2elCtEZeaC6o6m91HbKSs
-        e+jNfounAVKh/FRtsRCRy+TsjFMezugcIv1OgyXfebFunp2bndZ8jG4CHHlKqnoaTJBumqO7iwjyn
-        hFoD69plmRq81SR0UsS5SnRTFij5AMkSacKykva5C4O/TS1PCPjGqwDbcRh+lgLGUwhc=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1jPUN0-003JwF-8T; Fri, 17 Apr 2020 19:01:38 +0200
-Date:   Fri, 17 Apr 2020 19:01:38 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Jernej =?utf-8?Q?=C5=A0krabec?= <jernej.skrabec@siol.net>
-Cc:     robh+dt@kernel.org, f.fainelli@gmail.com,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        devicetree@vger.kernel.org, netdev@vger.kernel.org,
-        linux@armlinux.org.uk, mripard@kernel.org,
-        linux-kernel@vger.kernel.org, wens@csie.org, lee.jones@linaro.org,
-        davem@davemloft.net, linux-arm-kernel@lists.infradead.org
-Subject: Re: [RFC PATCH 2/4] net: phy: Add support for AC200 EPHY
-Message-ID: <20200417170138.GD785713@lunn.ch>
-References: <20200416185758.1388148-1-jernej.skrabec@siol.net>
- <20200416185758.1388148-3-jernej.skrabec@siol.net>
- <0340f85c-987f-900b-53c8-d29b4672a8fa@gmail.com>
- <6176364.4vTCxPXJkl@jernej-laptop>
+        id S1728067AbgDQREI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Apr 2020 13:04:08 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 339C2C14;
+        Fri, 17 Apr 2020 10:04:08 -0700 (PDT)
+Received: from gaia (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7AC873F6C4;
+        Fri, 17 Apr 2020 10:04:07 -0700 (PDT)
+Date:   Fri, 17 Apr 2020 18:04:05 +0100
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Will Deacon <will@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [GIT PULL] arm64 fixes for 5.7-rc2
+Message-ID: <20200417170403.GA15479@gaia>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <6176364.4vTCxPXJkl@jernej-laptop>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > You could use PHY_ID_MATCH_MODEL() here.
-> 
-> Hm... This doesn't work with dynamically allocated memory, right?
+Hi Linus,
 
-I would suggest we get the right structure first, then figure out
-details like this.
+Please pull the arm64 fixes below. Thanks.
 
-Depending on when the device will respond to MDIO, we might be able to
-make this a normal PHY driver. It then probes in the normal way, and
-all the horrible dependencies you talked about, module loading order,
-etc all go away.
+The following changes since commit 8f3d9f354286745c751374f5f1fcafee6b3f3136:
 
-There were 3 things you talked about to make the PHY usable:
+  Linux 5.7-rc1 (2020-04-12 12:35:55 -0700)
 
-1) Clock
-2) Reset
-3) Must be enabled and configured through I2C
+are available in the Git repository at:
 
-We already have the concept of a PHY device having a reset controller
-as a property. e.g. Documentation/devicetree/bindings/net/ethernet-phy.yaml
+  git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux tags/arm64-fixes
 
-resets = <&rst 8>;
+for you to fetch changes up to c9a4ef66450145a356a626c833d3d7b1668b3ded:
 
-So if the MFD exports a reset controller, we can control that from the
-PHY core. If the MFD has not probed yet, the reset core code will
-return EPROBE_DEFFER, and the PHY probe will get differed until late.
-That solves a lot of probe order issues.
+  arm64: Delete the space separator in __emit_inst (2020-04-15 13:07:12 +0100)
 
-The clock can be handled in two different ways, depending on if the
-clock needs to be ticking to read the PHY ID registers. If it does
-need to be ticking, we add support for a clks property in just the
-same way we have support for the reset property. The PHY core will
-clk_enable_prepare() the clock before probing the PHY. If the clock is
-not needed for probing, the PHY driver can enable the clock as needed.
+----------------------------------------------------------------
+- Remove vdso code trying to free unallocated pages.
 
-The last part, Must be enabled and configured through I2C, we need to
-look at the details. It could be the reset controller also enabled the
-PHY. If that is enough that the PHY then probes, the PHY driver can
-then configure the PHY as needed via i2c.
+- Delete the space separator in the __emit_inst macro as it breaks the
+  clang integrated assembler.
 
-     Andrew
+----------------------------------------------------------------
+Fangrui Song (1):
+      arm64: Delete the space separator in __emit_inst
+
+Mark Rutland (1):
+      arm64: vdso: don't free unallocated pages
+
+ arch/arm64/include/asm/sysreg.h |  4 +++-
+ arch/arm64/kernel/vdso.c        | 13 +------------
+ 2 files changed, 4 insertions(+), 13 deletions(-)
+
+-- 
+Catalin
