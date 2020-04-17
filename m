@@ -2,168 +2,197 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2526C352BE
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 16:10:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89AC4C38A2B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 16:10:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B8B9520771
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 16:10:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587139814;
-	bh=z9zZIiihBm9SCrbwX4CrR7nO+1x0aofYXpCKPneYiR0=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=kwTFgwyz5EPROUE6WHDsopYr1ZMg7JrAOB8mRSmi5j1Mr4t9OI5ztHHmCoa4n9zVA
-	 aqbLMLn46iNCSIzh0GGfapw6tikR8+LAYB37fKYpjyvF07XZ6MWOnDLLaGr2ok9QiZ
-	 D1hI6S3q6nTqAMWqsECBn9mZUmZKzjPjQF+h9/6k=
+	by mail.kernel.org (Postfix) with ESMTP id 616532087E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 16:10:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729837AbgDQQKO (ORCPT
+        id S1729962AbgDQQKV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 12:10:14 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:42893 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729282AbgDQQKN (ORCPT
+        Fri, 17 Apr 2020 12:10:21 -0400
+Received: from netrider.rowland.org ([192.131.102.5]:56977 "HELO
+        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1729888AbgDQQKV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 12:10:13 -0400
-Received: by mail-oi1-f195.google.com with SMTP id d7so2496182oif.9;
-        Fri, 17 Apr 2020 09:10:12 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=Z7Icz3q5Y10NxdDT78V7SC0TdioikLrX59l8qGxJLVI=;
-        b=R0v1A16M0D8vz/xxWlhlUYXo/ULe46F+Nq4K6U2rYnoMZPc+munV3Diiy9UZ5WdSGA
-         5npecKPykCsS+L31QTtv3wdPRjnffsn1/4hfoD25WiHPiBs/eBUoFK68Ohxx/0DCCPiO
-         zRD7gUWcfR73pJ71uNVvW2t88b8tHe6OS3uxiN5h3IHyKAsZ4v+SKgIG94AdUM5i65Q5
-         M/6aNfccD7KMNiHRs8lBKviDZsayR7+E6Q4k/jOq+M5QlK7Zn1eTIR+oJuuD/3mQVdAG
-         +wxhvDET4LlgLigEqckn9Or8IIlxm63bWFYzxAm1Etsc1aOsSbdrsIwZsd45zWhU7J1P
-         CnJg==
-X-Gm-Message-State: AGi0PuYezjygXTJcD/gmF2Qn3jDiUa4QKsKAhtI17jceMor4YZdbTz1Z
-        ZXZFxLMbEQ2JVeZLCpZDYAgVcxE=
-X-Google-Smtp-Source: APiQypLvRrO5P+cGBhbb4JDON5qfotnufzYAKhlxzKY8nGO1wnQN6jQfgltGn4XoBQVXPiNyxr7O8Q==
-X-Received: by 2002:aca:3106:: with SMTP id x6mr2555696oix.94.1587139811949;
-        Fri, 17 Apr 2020 09:10:11 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id d84sm8071869oig.33.2020.04.17.09.10.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Apr 2020 09:10:11 -0700 (PDT)
-Received: (nullmailer pid 16011 invoked by uid 1000);
-        Fri, 17 Apr 2020 16:10:10 -0000
-Date:   Fri, 17 Apr 2020 11:10:10 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        Frank Rowand <frowand.list@gmail.com>
-Subject: [GIT PULL] Devicetree fixes for v5.7, take 1
-Message-ID: <20200417161010.GA14296@bogus>
+        Fri, 17 Apr 2020 12:10:21 -0400
+Received: (qmail 9640 invoked by uid 500); 17 Apr 2020 12:10:19 -0400
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 17 Apr 2020 12:10:19 -0400
+Date:   Fri, 17 Apr 2020 12:10:19 -0400 (EDT)
+From:   Alan Stern <stern@rowland.harvard.edu>
+X-X-Sender: stern@netrider.rowland.org
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
+cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Qais Yousef <qais.yousef@arm.com>,
+        USB list <linux-usb@vger.kernel.org>,
+        Linux-pm mailing list <linux-pm@vger.kernel.org>,
+        Kernel development list <linux-kernel@vger.kernel.org>
+Subject: Re: lockdep warning in urb.c:363 usb_submit_urb
+In-Reply-To: <2040116.cccRbkeLkK@kreacher>
+Message-ID: <Pine.LNX.4.44L0.2004171129430.30344-100000@netrider.rowland.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus,
+On Fri, 17 Apr 2020, Rafael J. Wysocki wrote:
 
-Please pull.
+> On Thursday, April 16, 2020 5:18:15 PM CEST Alan Stern wrote:
 
-Rob
+> > >   IOW, the
+> > > default value of power.may_skip_resume could be the return value of
+> > > dev_pm_skip_suspend()?]
+> > 
+> > How about this?  Let's set power.may_skip_resume to "true" for each
+> > device before issuing ->prepare.
+> 
+> Yes, it can be set to 'true' by default for all devices.
+> 
+> It doesn't need to be before ->prepare, it can be before ->suspend (as it
+> is now).
 
+I suggested doing it before ->prepare so that subsystems can clear
+power.may_skip_resume in their ->prepare callbacks.  If you think the
+ability to do that isn't important then fine, initialize the flag
+before ->suspend.
 
-The following changes since commit 8f3d9f354286745c751374f5f1fcafee6b3f3136:
+> > The subsystem can set it to "false"
+> > if it wants to during any of the suspend-side callbacks.  Following the
+> > ->suspend_noirq callback, the core will do the equivalent of:
+> > 
+> > 	dev->power.may_skip_resume &= dev_pm_skip_suspend(dev);
+> > 
+> > before propagating the flag.  Any subsystem changes to support this
+> > should be minimal, since only ACPI and PCI currently use
+> > may_skip_resume.
+> 
+> IMO it can be simpler even.
+> 
+> Because power.may_skip_resume is taken into account along with
+> MAY_SKIP_RESUME and the driver setting the latter must be prepared
+> for skipping its resume callbacks regardless of the suspend side of
+> things, they may always be skipped (and the device may be left in
+> suspend accordingly) if there is a reason to avoid doing that.
+> 
+> The core doesn't know about those reasons, so it has no reason to
+> touch power.may_skip_resume after setting it at the outset and then
+> whoever sees a reason why these callbacks should run (the subsystem
+> or the driver) needs to clear power.may_skip_resume (and clearing it
+> more than once obviously makes no difference).
 
-  Linux 5.7-rc1 (2020-04-12 12:35:55 -0700)
+I was trying to implement your suggestion of making the default for
+power.may_skip_resume be the return value of dev_pm_skip_suspend().  
+However, making the default value be "true" is indeed simpler, and I
+think it would work okay.
 
-are available in the Git repository at:
+> > So here's what we've got:
+> > 
+> > > > Transition   Conditions for dev_pm_skip_resume() to return "true"
+> > > > ----------   ----------------------------------------------------
+> > > > 
+> > > > RESTORE      Never
+> > > 
+> > > Right.
+> > 
+> > >  THAW	         dev_pm_skip_suspend() returns "true".
+> > 
+> > >  RESUME        power.must_resume is clear (which requires
+> > >                  MAY_SKIP_RESUME and power.may_skip_resume to be set and
+> > >                  the runtime usage counter to be = 1, and which 
+> > >                  propagates up from dependent devices)
+> > > 
+> > > Nothing else is really strictly required IMO.
+> > 
+> > This seems very clear and simple.  And I will repeat here some of the 
+> > things posted earlier, to make the description more complete:
+> > 
+> > 	During the suspend side, for each of the
+> > 	{suspend,freeze,poweroff}_{late,noirq} phases: If
+> > 	dev_pm_skip_suspend() returns true then the subsystem should
+> > 	not invoke the driver's callback, and if there is no subsystem
+> > 	callback then the core will not invoke the driver's callback.
+> > 
+> > 	During the resume side, for each of the
+> > 	{resume,thaw,restore}_{early,noirq} phases: If
+> > 	dev_pm_skip_resume() returns true then the subsystem should
+> > 	not invoke the driver's callback, and if there is no subsystem
+> > 	callback then the core will not invoke the driver's callback.
+> > 
+> > 	dev_pm_skip_suspend() will return "true" if SMART_SUSPEND is
+> > 	set and the device's runtime status is "suspended".
+> > 
+> > 	For dev_pm_skip_resume() and power.must_resume, see above.
+> > 
+> > 	At the start of the {resume,thaw,restore}_noirq phase, if
+> > 	dev_pm_skip_resume() returns true then the core will set the
+> > 	runtime status to "suspended".  Otherwise it will set the
+> > 	runtime status to "active".  If this is not what the subsystem
+> > 	or driver wants, it must update the runtime status itself.
+> > 
+> > For this to work properly, we will have to rely on subsystems/drivers
+> > to call pm_runtime_resume() during the suspend/freeze transition if
+> > SMART_SUSPEND is clear.
+> 
+> That has been the case forever, though.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git tags/devicetree-fixes-for-5.7
+I'm not so sure about that.  The existing PM core code doesn't ever get
+into a situation where it tries to set a device's runtime status to
+"active" while the parent's status is "suspended".
 
-for you to fetch changes up to 0903060fe590105b7d31901c1ed67614c08cee08:
+> > Otherwise we could have the following scenario:
+> > 
+> > Device A has a child B, and both are runtime suspended when hibernation
+> > starts.  Suppose that the SMART_SUSPEND flag is set for A but not for
+> > B, and suppose that B's subsystem/driver neglects to call
+> > pm_runtime_resume() during the FREEZE transition.  Then during the THAW
+> > transition, dev_pm_skip_resume() will return "true" for A and "false"  
+> > for B.  This will lead to an error when the core tries to set B's
+> > runtime status to "active" while A's status is "suspended".
+> > 
+> > One way to avoid this is to have the core make the pm_runtime_resume()  
+> > call, but you have said that you don't like that approach.  Any 
+> > suggestions?
+> 
+> Because the core has not been calling pm_runtime_resume() during system-wide
+> suspend for devices with SMART_SUSPEND clear, that should not be changed or
+> we'll see regressions.
+> 
+> I know for a fact that some drivers expect the core to be doing nothing
+> with respect to that.
+> 
+> > Should the core take some special action following ->freeze_noirq if
+> > the runtime status is "suspended" and SMART_SUSPEND is clear?
+> 
+> Again, anything like that would change the current behavior which may
+> not be expected by at least some drivers, so I wouldn't change that.
+> 
+> IOW, SMART_SUSPEND clear means to the core that *it* need not care about
+> the suspend side at all (because somebody else will do that).
 
-  kbuild: check libyaml installation for 'make dt_binding_check' (2020-04-17 10:45:23 -0500)
+But the core _does_ need to care, because if somebody else fails to
+take care of the suspend side then the core would trigger the WARN() in
+pm_runtime_enable() for the parent device.  I guess we could consider
+such a WARN() to be a symptom of a bug in the driver or subsystem,
+rather than in the core; is that how you want to handle the scenario
+above?
 
-----------------------------------------------------------------
-Devicetree fixes for v5.7:
+This approach doesn't seem robust.  I can easily imagine cases where
+the parent's driver is aware of SMART_SUSPEND but the child's driver
+isn't.  Currently we don't require the child's driver to call 
+pm_runtime_resume().  Do you really want to consider all such cases to 
+be bugs?
 
-- Fix warnings from enabling more dtc warnings which landed in the merge
-  window and didn't get fixed in time.
+Basically, I'm saying that if the core allows things to arrive at a
+situation where we can come out of THAW with a runtime-suspended parent
+and a runtime-active child, it really should be considered to be the
+core's fault.
 
-- Fix some document references from DT schema conversions
+Alan Stern
 
-- Fix kmemleak errors in DT unittests
-
-----------------------------------------------------------------
-Alexandru Tachici (1):
-      dt-bindings: iio: dac: AD5570R fix bindings errors
-
-Fabio Estevam (4):
-      dt-bindings: iio: dac: ad5770r: Add vendor to compatible string
-      dt-bindings: iio: dac: ad5770r: Fix the file path
-      dt-bindings: touchscreen: edt-ft5x06: Remove unneeded I2C unit name
-      dt-bindings: clock: syscon-icst: Remove unneeded unit name
-
-Frank Rowand (5):
-      of: unittest: kmemleak on changeset destroy
-      of: unittest: kmemleak in of_unittest_platform_populate()
-      of: unittest: kmemleak in of_unittest_overlay_high_level()
-      of: overlay: kmemleak in dup_and_fixup_symbol_prop()
-      of: unittest: kmemleak in duplicate property update
-
-Geert Uytterhoeven (1):
-      dt-bindings: Fix misspellings of "Analog Devices"
-
-Masahiro Yamada (1):
-      kbuild: check libyaml installation for 'make dt_binding_check'
-
-Matti Vaittinen (1):
-      dt-bindings: BD718x7 - add missing I2C bus properties
-
-Mauro Carvalho Chehab (6):
-      docs: dt: fix broken reference to phy-cadence-torrent.yaml
-      docs: dt: qcom,dwc3.txt: fix cross-reference for a converted file
-      docs: dt: fix a broken reference for a file converted to json
-      docs: dt: rockchip,dwc3.txt: fix a pointer to a renamed file
-      MAINTAINERS: dt: update display/allwinner file entry
-      MAINTAINERS: dt: fix pointers for ARM Integrator, Versatile and RealView
-
-Rob Herring (4):
-      dt-bindings: Fix dtc warnings on reg and ranges in examples
-      dt-bindings: hwmon: Fix incorrect $id paths
-      dt-bindings: interrupt-controller: Fix loongson,parent_int_map property schema
-      dt-bindings: pwm: Fix cros-ec-pwm example dtc 'reg' warning
-
- .../arm/sunxi/allwinner,sun4i-a10-mbus.yaml        |  6 ++
- .../devicetree/bindings/clock/arm,syscon-icst.yaml |  2 +-
- .../bindings/display/bridge/adi,adv7123.txt        |  4 +-
- .../bindings/display/bridge/adi,adv7511.txt        |  4 +-
- .../devicetree/bindings/dma/adi,axi-dmac.txt       |  2 +-
- .../bindings/hwmon/adi,axi-fan-control.yaml        |  4 +-
- .../devicetree/bindings/hwmon/adt7475.yaml         |  2 +-
- .../devicetree/bindings/iio/dac/ad5755.txt         |  2 +-
- .../devicetree/bindings/iio/dac/adi,ad5770r.yaml   | 97 ++++++++++------------
- .../bindings/input/touchscreen/edt-ft5x06.yaml     |  2 +-
- .../interrupt-controller/loongson,liointc.yaml     |  5 +-
- .../memory-controllers/nvidia,tegra186-mc.yaml     | 41 +++++----
- .../devicetree/bindings/mfd/rohm,bd71837-pmic.yaml |  4 +-
- .../devicetree/bindings/mfd/rohm,bd71847-pmic.yaml |  4 +-
- .../devicetree/bindings/mfd/st,stpmic1.yaml        |  2 +-
- .../devicetree/bindings/net/qcom,ipq8064-mdio.yaml |  1 +
- .../devicetree/bindings/net/qualcomm-bluetooth.txt |  2 +-
- .../devicetree/bindings/phy/ti,phy-j721e-wiz.yaml  |  2 +-
- .../bindings/pwm/google,cros-ec-pwm.yaml           | 17 ++--
- .../devicetree/bindings/rng/brcm,bcm2835.yaml      |  2 +-
- .../bindings/spi/qcom,spi-qcom-qspi.yaml           |  2 +-
- .../devicetree/bindings/usb/ingenic,musb.yaml      |  2 +-
- .../devicetree/bindings/usb/qcom,dwc3.txt          |  4 +-
- .../devicetree/bindings/usb/rockchip,dwc3.txt      |  2 +-
- MAINTAINERS                                        |  7 +-
- drivers/of/overlay.c                               |  2 +
- .../of/unittest-data/overlay_bad_add_dup_prop.dts  | 23 ++++-
- drivers/of/unittest.c                              | 28 +++++--
- scripts/dtc/Makefile                               |  2 +-
- 29 files changed, 162 insertions(+), 115 deletions(-)
