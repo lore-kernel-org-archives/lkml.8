@@ -2,127 +2,167 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF6CFC2BB85
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 08:59:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BECD8C2BB55
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 09:01:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8F05C207FC
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 08:59:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98D55221E9
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 09:01:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="B+/KHfDo"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dCeJxIQ3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730119AbgDQI7Q (ORCPT
+        id S1730125AbgDQJB1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 04:59:16 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:50474 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729890AbgDQI7P (ORCPT
+        Fri, 17 Apr 2020 05:01:27 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:54738 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1730034AbgDQJBW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 04:59:15 -0400
+        Fri, 17 Apr 2020 05:01:22 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587113953;
-        h=from:from:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:in-reply-to:in-reply-to:  references:references;
-        bh=uHyoeCfhh0GMnSjf+OUTSeJqWjAVQ0tVBciKvtGhIOc=;
-        b=B+/KHfDoyA0XmljPNMtJiHCtPzFY7ICjJ/eTIpRVv4+Tql2+ibv3c6UjmNwZb0bMkx0cbb
-        V8Vi7CQkEaVaot+qyPA8PfmQb1/MhBGek4nO9rWwfaf/C7Q87LUbqX8xN775N61K0mw+yn
-        Ma6Ed9eEbUk9FuSgtWzN7s15WdOc6hw=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-463-jQjnlL5OMDCxpbdJdQm9iA-1; Fri, 17 Apr 2020 04:59:07 -0400
-X-MC-Unique: jQjnlL5OMDCxpbdJdQm9iA-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 080FC801A07;
-        Fri, 17 Apr 2020 08:59:06 +0000 (UTC)
-Received: from tucnak.zalov.cz (ovpn-112-104.ams2.redhat.com [10.36.112.104])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 9685960BE0;
-        Fri, 17 Apr 2020 08:59:05 +0000 (UTC)
-Received: from tucnak.zalov.cz (localhost [127.0.0.1])
-        by tucnak.zalov.cz (8.15.2/8.15.2) with ESMTP id 03H8x2pF004556;
-        Fri, 17 Apr 2020 10:59:02 +0200
-Received: (from jakub@localhost)
-        by tucnak.zalov.cz (8.15.2/8.15.2/Submit) id 03H8wxRp004555;
-        Fri, 17 Apr 2020 10:58:59 +0200
-Date:   Fri, 17 Apr 2020 10:58:59 +0200
-From:   Jakub Jelinek <jakub@redhat.com>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Sergei Trofimovich <slyfox@gentoo.org>,
-        Michael Matz <matz@suse.de>, linux-kernel@vger.kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>, x86@kernel.org
-Subject: Re: [PATCH v2] x86: fix early boot crash on gcc-10
-Message-ID: <20200417085859.GU2424@tucnak>
-Reply-To: Jakub Jelinek <jakub@redhat.com>
-References: <20200326223501.GK11398@zn.tnic>
- <20200328084858.421444-1-slyfox@gentoo.org>
- <20200413163540.GD3772@zn.tnic>
- <alpine.LSU.2.21.2004141343370.11688@wotan.suse.de>
- <20200415074842.GA31016@zn.tnic>
- <alpine.LSU.2.21.2004151445520.11688@wotan.suse.de>
- <20200415231930.19755bc7@sf>
- <20200417075739.GA7322@zn.tnic>
- <20200417080726.GS2424@tucnak>
- <20200417084224.GB7322@zn.tnic>
+        s=mimecast20190719; t=1587114080;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=+LYdr3kSxXBMDicQAv0M7nkPT5YyAgLG/RWsjILE6Rk=;
+        b=dCeJxIQ3mkjtD9bwvPhSkJecKXOSnr8/RwDJB4Nl6IXCco0s/11pIy5So6pYFoqE4K+O1U
+        sSqecPQCDYVgHW98hMFlSqXfzWrbfPR0coKizjNN0xYorh2gthNVVqhxnjBGJqYwXFwMNg
+        EkjKPqgyYlc655//L9MTpoEeKKSX3z0=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-349-LJz_itl0Pj-aQQLRgnPMlA-1; Fri, 17 Apr 2020 05:01:18 -0400
+X-MC-Unique: LJz_itl0Pj-aQQLRgnPMlA-1
+Received: by mail-wm1-f71.google.com with SMTP id q5so674641wmc.9
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 02:01:18 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=+LYdr3kSxXBMDicQAv0M7nkPT5YyAgLG/RWsjILE6Rk=;
+        b=LVuakkwMIkp/84ws3sv+Efj2JFF6ZgWU2U0daKBPf6murUhCPDBCkZyhGSboxed5nq
+         bmRdqoqv9b+rwiAdcbslkx0VA9+aDn/qPfYodWzuKM1tdwczx0ONHWna+3OIPhMFvCvL
+         k93d93LrrhHbObV0C/l/WIYKBsKPzglMBwrZ9MsSnlaRoH2+6XiLJKhDtgetAAYeZRir
+         EQoYsr4PDz1pRGsug0aNBMkx0zidCJ73dkv3m0DX15k2X3HD2YpIUltNfuSct2QdyNaC
+         Ur9fxpeDl0czMu81YxkgBTTln3qjEu9xLDK403G1zP3GUYFrAcgUpYDmJQ0smfw7Ix47
+         9XrA==
+X-Gm-Message-State: AGi0PuZakDdAYWnO4HXrixg3iD0l58nC54Qm1RXbXWfY+euiD80oAMfd
+        zwJwRfTOtl4d+aN9NpKDUBMvzf7i4DaColW8+TSh67o9pa8HIyrHKRwc7scvqaFHVFYBXBw2Lbd
+        YGUwEfhUBqVG6+UXvAqUdHHKS
+X-Received: by 2002:a1c:7c18:: with SMTP id x24mr2155037wmc.146.1587114077407;
+        Fri, 17 Apr 2020 02:01:17 -0700 (PDT)
+X-Google-Smtp-Source: APiQypK2vbW1OnmBJFQVh7bub7YEhkI6cUby2dGaO6wz+YQlB7a8+Q2NUcfxoXyc58GWwBIeKSXJyQ==
+X-Received: by 2002:a1c:7c18:: with SMTP id x24mr2155008wmc.146.1587114077204;
+        Fri, 17 Apr 2020 02:01:17 -0700 (PDT)
+Received: from redhat.com (bzq-79-183-51-3.red.bezeqint.net. [79.183.51.3])
+        by smtp.gmail.com with ESMTPSA id c20sm7408863wmd.36.2020.04.17.02.01.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 17 Apr 2020 02:01:16 -0700 (PDT)
+Date:   Fri, 17 Apr 2020 05:01:13 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Jason Wang <jasowang@redhat.com>
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
+        netdev@vger.kernel.org, geert@linux-m68k.org,
+        tsbogend@alpha.franken.de, benh@kernel.crashing.org,
+        paulus@samba.org, heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        borntraeger@de.ibm.com, Michael Ellerman <mpe@ellerman.id.au>
+Subject: Re: [PATCH V2] vhost: do not enable VHOST_MENU by default
+Message-ID: <20200417050029-mutt-send-email-mst@kernel.org>
+References: <20200415024356.23751-1-jasowang@redhat.com>
+ <20200416185426-mutt-send-email-mst@kernel.org>
+ <b7e2deb7-cb64-b625-aeb4-760c7b28c0c8@redhat.com>
+ <20200417022929-mutt-send-email-mst@kernel.org>
+ <4274625d-6feb-81b6-5b0a-695229e7c33d@redhat.com>
+ <20200417042912-mutt-send-email-mst@kernel.org>
+ <fdb555a6-4b8d-15b6-0849-3fe0e0786038@redhat.com>
+ <20200417044230-mutt-send-email-mst@kernel.org>
+ <73843240-3040-655d-baa9-683341ed4786@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200417084224.GB7322@zn.tnic>
-User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <73843240-3040-655d-baa9-683341ed4786@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 17, 2020 at 10:42:24AM +0200, Borislav Petkov wrote:
-> On Fri, Apr 17, 2020 at 10:07:26AM +0200, Jakub Jelinek wrote:
-> > If you want minimal changes, you can as I said earlier either
-> > mark cpu_startup_entry noreturn (in the declaration in some header so that
-> > smpboot.c sees it), or you could add something after the cpu_startup_entry
-> > call to ensure it is not tail call optimized (e.g. just
-> > 	/* Prevent tail call to cpu_startup_entry because the stack
-> > 	   protector guard has been changed in the middle of this function
-> > 	   and must not be checked before tail calling another function.  */
-> > 	asm ("");
+On Fri, Apr 17, 2020 at 04:51:19PM +0800, Jason Wang wrote:
 > 
-> That sounds ok-ish to me too.
+> On 2020/4/17 下午4:46, Michael S. Tsirkin wrote:
+> > On Fri, Apr 17, 2020 at 04:39:49PM +0800, Jason Wang wrote:
+> > > On 2020/4/17 下午4:29, Michael S. Tsirkin wrote:
+> > > > On Fri, Apr 17, 2020 at 03:36:52PM +0800, Jason Wang wrote:
+> > > > > On 2020/4/17 下午2:33, Michael S. Tsirkin wrote:
+> > > > > > On Fri, Apr 17, 2020 at 11:12:14AM +0800, Jason Wang wrote:
+> > > > > > > On 2020/4/17 上午6:55, Michael S. Tsirkin wrote:
+> > > > > > > > On Wed, Apr 15, 2020 at 10:43:56AM +0800, Jason Wang wrote:
+> > > > > > > > > We try to keep the defconfig untouched after decoupling CONFIG_VHOST
+> > > > > > > > > out of CONFIG_VIRTUALIZATION in commit 20c384f1ea1a
+> > > > > > > > > ("vhost: refine vhost and vringh kconfig") by enabling VHOST_MENU by
+> > > > > > > > > default. Then the defconfigs can keep enabling CONFIG_VHOST_NET
+> > > > > > > > > without the caring of CONFIG_VHOST.
+> > > > > > > > > 
+> > > > > > > > > But this will leave a "CONFIG_VHOST_MENU=y" in all defconfigs and even
+> > > > > > > > > for the ones that doesn't want vhost. So it actually shifts the
+> > > > > > > > > burdens to the maintainers of all other to add "CONFIG_VHOST_MENU is
+> > > > > > > > > not set". So this patch tries to enable CONFIG_VHOST explicitly in
+> > > > > > > > > defconfigs that enables CONFIG_VHOST_NET and CONFIG_VHOST_VSOCK.
+> > > > > > > > > 
+> > > > > > > > > Acked-by: Christian Borntraeger<borntraeger@de.ibm.com>   (s390)
+> > > > > > > > > Acked-by: Michael Ellerman<mpe@ellerman.id.au>   (powerpc)
+> > > > > > > > > Cc: Thomas Bogendoerfer<tsbogend@alpha.franken.de>
+> > > > > > > > > Cc: Benjamin Herrenschmidt<benh@kernel.crashing.org>
+> > > > > > > > > Cc: Paul Mackerras<paulus@samba.org>
+> > > > > > > > > Cc: Michael Ellerman<mpe@ellerman.id.au>
+> > > > > > > > > Cc: Heiko Carstens<heiko.carstens@de.ibm.com>
+> > > > > > > > > Cc: Vasily Gorbik<gor@linux.ibm.com>
+> > > > > > > > > Cc: Christian Borntraeger<borntraeger@de.ibm.com>
+> > > > > > > > > Reported-by: Geert Uytterhoeven<geert@linux-m68k.org>
+> > > > > > > > > Signed-off-by: Jason Wang<jasowang@redhat.com>
+> > > > > > > > I rebased this on top of OABI fix since that
+> > > > > > > > seems more orgent to fix.
+> > > > > > > > Pushed to my vhost branch pls take a look and
+> > > > > > > > if possible test.
+> > > > > > > > Thanks!
+> > > > > > > I test this patch by generating the defconfigs that wants vhost_net or
+> > > > > > > vhost_vsock. All looks fine.
+> > > > > > > 
+> > > > > > > But having CONFIG_VHOST_DPN=y may end up with the similar situation that
+> > > > > > > this patch want to address.
+> > > > > > > Maybe we can let CONFIG_VHOST depends on !ARM || AEABI then add another
+> > > > > > > menuconfig for VHOST_RING and do something similar?
+> > > > > > > 
+> > > > > > > Thanks
+> > > > > > Sorry I don't understand. After this patch CONFIG_VHOST_DPN is just
+> > > > > > an internal variable for the OABI fix. I kept it separate
+> > > > > > so it's easy to revert for 5.8. Yes we could squash it into
+> > > > > > VHOST directly but I don't see how that changes logic at all.
+> > > > > Sorry for being unclear.
+> > > > > 
+> > > > > I meant since it was enabled by default, "CONFIG_VHOST_DPN=y" will be left
+> > > > > in the defconfigs.
+> > > > But who cares?
+> > > FYI, please seehttps://www.spinics.net/lists/kvm/msg212685.html
+> > The complaint was not about the symbol IIUC.  It was that we caused
+> > everyone to build vhost unless they manually disabled it.
 > 
-> I know you probably can't tell the future :) but what stops gcc from
-> doing the tail-call optimization in the future?
 > 
-> Or are optimization decisions behind an inline asm a no-no and will
-> pretty much always stay that way?
+> There could be some misunderstanding here. I thought it's somehow similar: a
+> CONFIG_VHOST_MENU=y will be left in the defconfigs even if CONFIG_VHOST is
+> not set.
+> 
+> Thanks
+> 
 
-GCC intentionally treats asm as a black box, the only thing which it does
-with it is: non-volatile asm (but asm without outputs is implicitly
-volatile) can be CSEd, and if the compiler needs to estimate size, it
-uses some heuristics by counting ; and newlines.
-And it will stay this way.
+BTW do entries with no prompt actually appear in defconfig?
 
-> And I hope the clang folks don't come around and say, err, nope, we're
-> much more aggressive here.
-
-Unlike GCC, I think clang uses the builtin assembler to parse the string,
-but don't know if it still treats the asms more like black boxes or not.
-Certainly there is a lot of code in the wild that uses inline asm
-as optimization barriers, so if it doesn't, then it would cause a lot of
-problems.
-
-Or go with the for (;;);, I don't think any compiler optimizes those away;
-GCC 10 for C++ can optimize away infinite loops that have some conditional
-exit because the language guarantees forward progress, but the C language
-rules are different and for unconditional infinite loops GCC doesn't
-optimize them away even if explicitly asked to -ffinite-loops.
-
-	Jakub
+> > 
 
