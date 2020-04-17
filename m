@@ -2,213 +2,135 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C625AC38A2B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 16:11:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E137BC352BE
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 16:12:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 979CC20771
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 16:11:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE86720771
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 16:12:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="f9ZMSWMu"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="MpK588Jf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729785AbgDQQL4 (ORCPT
+        id S1729881AbgDQQMm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 12:11:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51300 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729282AbgDQQLz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 12:11:55 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B033C061A0C
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 09:11:55 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id t14so3639899wrw.12
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 09:11:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:from:to:references:autocrypt:organization:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Q1jvtWmH1/hDJjlwgsZYiirXm0mc3KLPHbxhYSYcx6A=;
-        b=f9ZMSWMuKB0LZ2jGAIsEtGY7MfjnD8lVlbIH85fUVNOw779x+OeEc084CIHMPvS6fs
-         wGCTxQFgZrp2Lu0ArwRYFEn2Fl+rFI/HdSxaEUtZZgzNKmz+kGbxQKxP6TnUteelIa8P
-         EuaB7NCZb4uEn8AI67jOYPkachqmvE8V4BufctSsvJ1EVvMrwctswQrfQtJhLB1fCTNN
-         fE6m3u4aOIzL+YLhlAVNgv5YOBHv97GrAVHY+HXaR2nECnsOsb3IFMP2vFlWX20Pxm5h
-         7UFKl4JfESaMhKdmJXy3uZTYV0YjWtkeyzi7fe0oeODXlTk3PZa2NXUjXrDqEYSTWHSZ
-         b2nQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:references:autocrypt
-         :organization:message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=Q1jvtWmH1/hDJjlwgsZYiirXm0mc3KLPHbxhYSYcx6A=;
-        b=SNnkeoZ9jDsAV/3rQdT0VrpTNV12NjHUsLTS/WjgGjVga9WJ+rj/JCpfA1Kqqt1TMW
-         FSFFiafc3V1V9QYpGiRobY8/353d6te1hBlvcz9VxeBITRqN3xrgDSsVIjp/sa6FDbwC
-         D+Yp0AVluE/wtoFGuNuJ3qS3FvCdwG3N1IEWa6dYygXp5sooj1NmgcWx3tX6rU73AVNL
-         poMv+VzsLuZtC1DC4XH5Wd7vEIyB1ERhcMVHlhXgJJKYxr8AD3wUw7kyH6GBC2m7FQbp
-         kqzEg+DVUL28U6tmypRVxVRiLjR3ZsZiFinfdyqrgUWP2XPVOHFFvgls0gpSi4v9n4js
-         xJZA==
-X-Gm-Message-State: AGi0PuYstm9obF68qDU6DEROz4fPTnqjSt9joDQHaEjPV3TR3G2wEBJc
-        pdf3GasMjKD9sDn22F7L+DbfPg==
-X-Google-Smtp-Source: APiQypIoqBB0RAMCM93pEYOe/cugCLXo6NmMSrYIWiT9G0ge/A4AGx8fx2tTdngNK9CJj4gElg7NRw==
-X-Received: by 2002:adf:83c2:: with SMTP id 60mr4583679wre.169.1587139913751;
-        Fri, 17 Apr 2020 09:11:53 -0700 (PDT)
-Received: from ?IPv6:2a01:e35:2ec0:82b0:39cc:a07:8b48:cc56? ([2a01:e35:2ec0:82b0:39cc:a07:8b48:cc56])
-        by smtp.gmail.com with ESMTPSA id o129sm2716864wme.16.2020.04.17.09.11.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 17 Apr 2020 09:11:53 -0700 (PDT)
-Subject: Re: [PATCH v5 1/8] drm/fourcc: Add modifier definitions for
- describing Amlogic Video Framebuffer Compression
-From:   Neil Armstrong <narmstrong@baylibre.com>
-To:     dri-devel@lists.freedesktop.org, linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Kevin Hilman <khilman@baylibre.com>
-References: <20200416152500.29429-1-narmstrong@baylibre.com>
- <20200416152500.29429-2-narmstrong@baylibre.com>
- <20200417150729.GP3456981@phenom.ffwll.local>
- <65879a34-2e31-2908-3cc4-183f62c70ca0@baylibre.com>
-Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
- 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
- BSwxi7g3Mu7u5kUByanqHyA=
-Organization: Baylibre
-Message-ID: <e0f0dd1c-a7ce-6371-cf9e-b817205dcd9d@baylibre.com>
-Date:   Fri, 17 Apr 2020 18:11:52 +0200
+        Fri, 17 Apr 2020 12:12:42 -0400
+Received: from mout.web.de ([212.227.17.12]:46877 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729282AbgDQQMk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Apr 2020 12:12:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1587139955;
+        bh=r+Ur8bmZ985qnsD/tK30ZIG/FnWrkrnOTjVz+w4V0nI=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=MpK588JfF4YWBHbIfoUDDKFb/93KSKV0x7pLEo2chPAMCloFGkxiD/BgpUImb/W0o
+         1FUG0EWpj8QhOpn5DdnmLIbUWtJHLJv24l4zLuy3adVAbDCsTvqIs2uN1zXWow5jKy
+         Wn6khS2dXmIVenY6xlYtw6tSsayi/qoP14qzy7H0=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([2.243.97.227]) by smtp.web.de (mrweb103
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 0LzbDC-1jCdlo3uPS-014gVx; Fri, 17
+ Apr 2020 18:12:35 +0200
+Subject: Re: [v2 4/7] remoteproc: Use kstrdup_const() rather than kstrdup()
+To:     Mathieu Poirier <mathieu.poirier@linaro.org>,
+        linux-remoteproc@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Alex Elder <elder@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Ohad Ben-Cohen <ohad@wizery.com>, Suman Anna <s-anna@ti.com>
+References: <20200415204858.2448-1-mathieu.poirier@linaro.org>
+ <20200415204858.2448-5-mathieu.poirier@linaro.org>
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ mQINBFg2+xABEADBJW2hoUoFXVFWTeKbqqif8VjszdMkriilx90WB5c0ddWQX14h6w5bT/A8
+ +v43YoGpDNyhgA0w9CEhuwfZrE91GocMtjLO67TAc2i2nxMc/FJRDI0OemO4VJ9RwID6ltwt
+ mpVJgXGKkNJ1ey+QOXouzlErVvE2fRh+KXXN1Q7fSmTJlAW9XJYHS3BDHb0uRpymRSX3O+E2
+ lA87C7R8qAigPDZi6Z7UmwIA83ZMKXQ5stA0lhPyYgQcM7fh7V4ZYhnR0I5/qkUoxKpqaYLp
+ YHBczVP+Zx/zHOM0KQphOMbU7X3c1pmMruoe6ti9uZzqZSLsF+NKXFEPBS665tQr66HJvZvY
+ GMDlntZFAZ6xQvCC1r3MGoxEC1tuEa24vPCC9RZ9wk2sY5Csbva0WwYv3WKRZZBv8eIhGMxs
+ rcpeGShRFyZ/0BYO53wZAPV1pEhGLLxd8eLN/nEWjJE0ejakPC1H/mt5F+yQBJAzz9JzbToU
+ 5jKLu0SugNI18MspJut8AiA1M44CIWrNHXvWsQ+nnBKHDHHYZu7MoXlOmB32ndsfPthR3GSv
+ jN7YD4Ad724H8fhRijmC1+RpuSce7w2JLj5cYj4MlccmNb8YUxsE8brY2WkXQYS8Ivse39MX
+ BE66MQN0r5DQ6oqgoJ4gHIVBUv/ZwgcmUNS5gQkNCFA0dWXznQARAQABtCZNYXJrdXMgRWxm
+ cmluZyA8TWFya3VzLkVsZnJpbmdAd2ViLmRlPokCVAQTAQgAPhYhBHDP0hzibeXjwQ/ITuU9
+ Figxg9azBQJYNvsQAhsjBQkJZgGABQsJCAcCBhUICQoLAgQWAgMBAh4BAheAAAoJEOU9Figx
+ g9azcyMP/iVihZkZ4VyH3/wlV3nRiXvSreqg+pGPI3c8J6DjP9zvz7QHN35zWM++1yNek7Ar
+ OVXwuKBo18ASlYzZPTFJZwQQdkZSV+atwIzG3US50ZZ4p7VyUuDuQQVVqFlaf6qZOkwHSnk+
+ CeGxlDz1POSHY17VbJG2CzPuqMfgBtqIU1dODFLpFq4oIAwEOG6fxRa59qbsTLXxyw+PzRaR
+ LIjVOit28raM83Efk07JKow8URb4u1n7k9RGAcnsM5/WMLRbDYjWTx0lJ2WO9zYwPgRykhn2
+ sOyJVXk9xVESGTwEPbTtfHM+4x0n0gC6GzfTMvwvZ9G6xoM0S4/+lgbaaa9t5tT/PrsvJiob
+ kfqDrPbmSwr2G5mHnSM9M7B+w8odjmQFOwAjfcxoVIHxC4Cl/GAAKsX3KNKTspCHR0Yag78w
+ i8duH/eEd4tB8twcqCi3aCgWoIrhjNS0myusmuA89kAWFFW5z26qNCOefovCx8drdMXQfMYv
+ g5lRk821ZCNBosfRUvcMXoY6lTwHLIDrEfkJQtjxfdTlWQdwr0mM5ye7vd83AManSQwutgpI
+ q+wE8CNY2VN9xAlE7OhcmWXlnAw3MJLW863SXdGlnkA3N+U4BoKQSIToGuXARQ14IMNvfeKX
+ NphLPpUUnUNdfxAHu/S3tPTc/E/oePbHo794dnEm57LuuQINBFg2+xABEADZg/T+4o5qj4cw
+ nd0G5pFy7ACxk28mSrLuva9tyzqPgRZ2bdPiwNXJUvBg1es2u81urekeUvGvnERB/TKekp25
+ 4wU3I2lEhIXj5NVdLc6eU5czZQs4YEZbu1U5iqhhZmKhlLrhLlZv2whLOXRlLwi4jAzXIZAu
+ 76mT813jbczl2dwxFxcT8XRzk9+dwzNTdOg75683uinMgskiiul+dzd6sumdOhRZR7YBT+xC
+ wzfykOgBKnzfFscMwKR0iuHNB+VdEnZw80XGZi4N1ku81DHxmo2HG3icg7CwO1ih2jx8ik0r
+ riIyMhJrTXgR1hF6kQnX7p2mXe6K0s8tQFK0ZZmYpZuGYYsV05OvU8yqrRVL/GYvy4Xgplm3
+ DuMuC7/A9/BfmxZVEPAS1gW6QQ8vSO4zf60zREKoSNYeiv+tURM2KOEj8tCMZN3k3sNASfoG
+ fMvTvOjT0yzMbJsI1jwLwy5uA2JVdSLoWzBD8awZ2X/eCU9YDZeGuWmxzIHvkuMj8FfX8cK/
+ 2m437UA877eqmcgiEy/3B7XeHUipOL83gjfq4ETzVmxVswkVvZvR6j2blQVr+MhCZPq83Ota
+ xNB7QptPxJuNRZ49gtT6uQkyGI+2daXqkj/Mot5tKxNKtM1Vbr/3b+AEMA7qLz7QjhgGJcie
+ qp4b0gELjY1Oe9dBAXMiDwARAQABiQI8BBgBCAAmFiEEcM/SHOJt5ePBD8hO5T0WKDGD1rMF
+ Alg2+xACGwwFCQlmAYAACgkQ5T0WKDGD1rOYSw/+P6fYSZjTJDAl9XNfXRjRRyJSfaw6N1pA
+ Ahuu0MIa3djFRuFCrAHUaaFZf5V2iW5xhGnrhDwE1Ksf7tlstSne/G0a+Ef7vhUyeTn6U/0m
+ +/BrsCsBUXhqeNuraGUtaleatQijXfuemUwgB+mE3B0SobE601XLo6MYIhPh8MG32MKO5kOY
+ hB5jzyor7WoN3ETVNQoGgMzPVWIRElwpcXr+yGoTLAOpG7nkAUBBj9n9TPpSdt/npfok9ZfL
+ /Q+ranrxb2Cy4tvOPxeVfR58XveX85ICrW9VHPVq9sJf/a24bMm6+qEg1V/G7u/AM3fM8U2m
+ tdrTqOrfxklZ7beppGKzC1/WLrcr072vrdiN0icyOHQlfWmaPv0pUnW3AwtiMYngT96BevfA
+ qlwaymjPTvH+cTXScnbydfOQW8220JQwykUe+sHRZfAF5TS2YCkQvsyf7vIpSqo/ttDk4+xc
+ Z/wsLiWTgKlih2QYULvW61XU+mWsK8+ZlYUrRMpkauN4CJ5yTpvp+Orcz5KixHQmc5tbkLWf
+ x0n1QFc1xxJhbzN+r9djSGGN/5IBDfUqSANC8cWzHpWaHmSuU3JSAMB/N+yQjIad2ztTckZY
+ pwT6oxng29LzZspTYUEzMz3wK2jQHw+U66qBFk8whA7B2uAU1QdGyPgahLYSOa4XAEGb6wbI FEE=
+Message-ID: <7e3f07b1-a45d-0800-e74f-7f042d22eb3c@web.de>
+Date:   Fri, 17 Apr 2020 18:12:34 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <65879a34-2e31-2908-3cc4-183f62c70ca0@baylibre.com>
+In-Reply-To: <20200415204858.2448-5-mathieu.poirier@linaro.org>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:iI/KFctlST+oA3KimBUzQs/7RsQPNDd6ACQGRFsaYdgZ9LDbdie
+ e+VFT4KP++IQEt/QbOJI0NjIlm+Gw4T4T3zbjfP8oEqadMJNK/aSO9Y+egew7k3Fi8QyKbp
+ 7ijE4BIvogprMP9F/8kGsF0AgC5spKzFv9C9cElaJduH64B0ismVKK7IcKv2ySrlkTUf9S3
+ KETMyjjmZq1oFE5qWixoQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:IxsCUy+Etl4=:ryp+yh+i9gK8wFzds9Nivn
+ YIYhOUj+JAdx24oT4Zu5iO8pDE0SamnUXQlyYKXsWB1ub10t4Z8aIyhKFq/5b+cKht2d5Ik8S
+ +5eY2mI40/j0WoqOxrTxE/gw1RRLdUdMgVGgpRhLchza33lZhGYtvxZoNh/3kexn70fpSXUUI
+ zizFloRGvfYNZBLpU26THjlXUtfVkCJMVfUKIvwtNeSYWBDheZwL6Lz0m47BOK6/4R4NlaUFv
+ qGkvt5nLnSn6Cnrcltw4w4VNL8PJGhoOCfC0lZPmlyFiX7CAW5yBNoT0kiIw1BYSd8lmkrs6t
+ A9p1f5enYfEquTt2tjbj5Ex1BeY6wQW0axYckBOKjJUg6Vx/oEhJ6rKy75xittybZonL7Nze4
+ Bt3BfusExmYGl3y+rd7x2Kmqgt9L15J9APekcYWWH9Mc3Yk62MYeR8fOmmJBMDo9XjYB+NoPI
+ CSwOGsgPLIior/Wwq7zJBYcXTFk/4kvwOdp+YOD8hGDgnl6AkTPLgVuZBgPc7DeiBgKICTwrS
+ JK6wMnrYo/YKKPbtzgMdpMl0EXJrPp/yr+K08Bvra3tRDefzKjRIFxR7wNYFKmgLF/V1cwgU6
+ a86wg/axsTZMjEEvM/55jV/nuhKF6t97516hNIGzmtvwvAYLiB0v+YVS1vzWAdMcX+Mn5Ob/S
+ /JoOO9zH8iZgzwHizL3upn0B2q+Ybokgn++IVY3LXePFw78JrmrwfVtJQSUO47SdKXZmIqgQI
+ k9WsHukDSxJ6hsOxG21vXIgSoxlftHmWlKZAaZ7mxgTuj+1m3aFj5Yjo23dR3lz4cYK9Pf6Vc
+ 0NrUNlCQqX0bEbv1QZ4X+icglsv191DAPCwpUzNf8gWllAEYU2FF1BI4xEXua1dldIgl76OSp
+ t6hvkdCF2scTY3i9paYHg3luvmJ0PgBljjpgX9D/4dxcsXidR/73p4kWPrWOt7/gtqzt79qVW
+ It43dP/8jBVhdYZ1s8Yieh9dAHM8JA4sFhojuSpHEaUOmKDYKUCoDxCZGcz8SN5Ktenc0vPWk
+ 9Zzv5Q6xov+Mu3GRv7ISi2hNC+TkQnMgxzLeFfmJeTeHqLCbKqTXd9neQde/vDItVuOj9o7dz
+ gED7Ta/DH/RdOWWeu5DkhmOmIpMbtz8SCjS+vHPitSVjMGWeB/f3XlujHhx3x+qoPU5ZFD5hf
+ kyZ+/ZHikjdMlWzXhE4ASq0FqYfX/1gZKFuIlK0BWYzKqH8fof8Kv+6K5tZk38gwxPPPSoDbH
+ +swk5dJ7oghjLwsZx
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 17/04/2020 18:05, Neil Armstrong wrote:
-> On 17/04/2020 17:07, Daniel Vetter wrote:
->> On Thu, Apr 16, 2020 at 05:24:53PM +0200, Neil Armstrong wrote:
->>> Amlogic uses a proprietary lossless image compression protocol and format
->>> for their hardware video codec accelerators, either video decoders or
->>> video input encoders.
->>>
->>> It considerably reduces memory bandwidth while writing and reading
->>> frames in memory.
->>>
->>> The underlying storage is considered to be 3 components, 8bit or 10-bit
->>> per component, YCbCr 420, single plane :
->>> - DRM_FORMAT_YUV420_8BIT
->>> - DRM_FORMAT_YUV420_10BIT
->>>
->>> This modifier will be notably added to DMA-BUF frames imported from the V4L2
->>> Amlogic VDEC decoder.
->>>
->>> This introduces the basic layout composed of:
->>> - a body content organized in 64x32 superblocks with 4096 bytes per
->>>   superblock in default mode.
->>> - a 32 bytes per 128x64 header block
->>>
->>> This layout is tranferrable between Amlogic SoCs supporting this modifier.
->>>
->>> Tested-by: Kevin Hilman <khilman@baylibre.com>
->>> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
->>> ---
->>>  include/uapi/drm/drm_fourcc.h | 39 +++++++++++++++++++++++++++++++++++
->>>  1 file changed, 39 insertions(+)
->>>
->>> diff --git a/include/uapi/drm/drm_fourcc.h b/include/uapi/drm/drm_fourcc.h
->>> index 8bc0b31597d8..a1b163a5641f 100644
->>> --- a/include/uapi/drm/drm_fourcc.h
->>> +++ b/include/uapi/drm/drm_fourcc.h
->>> @@ -309,6 +309,7 @@ extern "C" {
->>>  #define DRM_FORMAT_MOD_VENDOR_BROADCOM 0x07
->>>  #define DRM_FORMAT_MOD_VENDOR_ARM     0x08
->>>  #define DRM_FORMAT_MOD_VENDOR_ALLWINNER 0x09
->>> +#define DRM_FORMAT_MOD_VENDOR_AMLOGIC 0x0a
->>>  
->>>  /* add more to the end as needed */
->>>  
->>> @@ -804,6 +805,44 @@ extern "C" {
->>>   */
->>>  #define DRM_FORMAT_MOD_ALLWINNER_TILED fourcc_mod_code(ALLWINNER, 1)
->>>  
->>> +/*
->>> + * Amlogic Video Framebuffer Compression modifiers
->>> + *
->>> + * Amlogic uses a proprietary lossless image compression protocol and format
->>> + * for their hardware video codec accelerators, either video decoders or
->>> + * video input encoders.
->>> + *
->>> + * It considerably reduces memory bandwidth while writing and reading
->>> + * frames in memory.
->>> + *
->>> + * The underlying storage is considered to be 3 components, 8bit or 10-bit
->>> + * per component YCbCr 420, single plane :
->>> + * - DRM_FORMAT_YUV420_8BIT
->>> + * - DRM_FORMAT_YUV420_10BIT
->>> + *
->>> + * The first 8 bits of the mode defines the layout, then the following 8 bits
->>> + * defines the options changing the layout.
->>
->> None of the modifiers you're doing seem to have these other 8 bits
->> defined anywhere. And it's not encoded in your modifiers. Can't we just
->> enumerate the ones we have/need and done?
-> 
-> It's introduced in patch 5
+=E2=80=A6
+> +++ b/drivers/remoteproc/remoteproc_core.c
+> @@ -1982,7 +1982,7 @@ static const struct device_type rproc_type =3D {
+=E2=80=A6
+> -		p =3D kstrdup(firmware, GFP_KERNEL);
+> +		p =3D kstrdup_const(firmware, GFP_KERNEL);
 
-I did slit the options/layout for the last one: SCATTER so I could apply the BASIC and the option
-first then continue the discussion on the second SCATTER layout.
+How do you think about to avoid a typo for a function name in
+the final commit subject?
 
-So maybe I should add the option in the first patch.
-
-Neil
+Regards,
+Markus
