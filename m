@@ -2,101 +2,97 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.7 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9015C3815B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 09:18:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97A55C38A29
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 09:21:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7C617221EB
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 09:18:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I3NV9c53"
+	by mail.kernel.org (Postfix) with ESMTP id 77147221E9
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 09:21:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730206AbgDQJSl (ORCPT
+        id S1730207AbgDQJVy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 05:18:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43368 "EHLO
+        Fri, 17 Apr 2020 05:21:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43868 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729987AbgDQJSk (ORCPT
+        with ESMTP id S1730106AbgDQJVy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 05:18:40 -0400
-Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF154C061A0C;
-        Fri, 17 Apr 2020 02:18:40 -0700 (PDT)
-Received: by mail-il1-x142.google.com with SMTP id b18so1503034ilf.2;
-        Fri, 17 Apr 2020 02:18:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=iRWCVuq8TR2XzOv4hPXtI5URv7oqkeobScmDBMw46jU=;
-        b=I3NV9c53UUyM+RaFHpaI3ddEqtHTMNLrpnXEObfjp0e0mHLbguamjM20GafXHlc3ed
-         ZGR/ZJCgwJokyUJglSd8c8jXSWA9HKTJ5lwa7PCJGUsB+lbLZmvaasQt2pPpdEdT/WVm
-         frwUxDFnqxiS7bXG3yIqc7hmziyca70GVFOoKiSxseXhjKCcjYhqorn/jTqZKBdNQisF
-         AeOgu2i9w8/V6FSnr1gn2bOVuP+2Wb4uUtQbOD0DoqJnrGEWqRAPh/4CZ5DsYZFZNPc1
-         ns/6haYvqe0+gX3iZFgzvO7T8he9vfmOpoEeCOXB4RCCed9cEq0+7mVvTssFlwcKrxWV
-         E+Lg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=iRWCVuq8TR2XzOv4hPXtI5URv7oqkeobScmDBMw46jU=;
-        b=S+tbhKWbJSjXesJXz5yxGpoUh6INbLcps+urWhFEglaLTS3ZJ09EjiNB04At5Trak6
-         Tl3OKhzlKwxxmPmxpxtT4ZGFt/3o7rucoVKNn3xDbizWb1nISvD+SQtuz9Gz+Vuo8hxn
-         dF8/6pxhoA9jKi6Qwsy2K8unb9tqZDVENFcq+FreDN/QiF1+zUy/ujF9kYkaxremdRM6
-         CwNJEeUb+H4166V/NQpi02Mzlf/V1nCVTBf6sHfq81yBPHZVjJVmDIEFfZImPdEr8jO8
-         v3BRC0IshiYGjldsVwfYj7r1nMLPE2tMEpsWMkzfgKGkj1evKB9KrlSoF0s5bHa5inIz
-         FUSA==
-X-Gm-Message-State: AGi0Pua6bIdlZ2Fe/iIKjJcBTSXJDl1tS0qx4HBbqzsRVC6jitgSLFQV
-        yuJcz7jLtEU4fYLWj662x3GfSXEgJy+UIGVnrN8=
-X-Google-Smtp-Source: APiQypKLyZ1z8R9Bx3IFvmWATyK0p8QJ4t3dDqh+zoZfH4RuQzi8Op4IhAENVB998tQ83oZfu05nhEp28YrHD9cq+bY=
-X-Received: by 2002:a92:dc8d:: with SMTP id c13mr1915098iln.278.1587115120296;
- Fri, 17 Apr 2020 02:18:40 -0700 (PDT)
+        Fri, 17 Apr 2020 05:21:54 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21357C061A0C;
+        Fri, 17 Apr 2020 02:21:54 -0700 (PDT)
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1jPNBv-000577-NU; Fri, 17 Apr 2020 11:21:43 +0200
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 329E91C0072;
+        Fri, 17 Apr 2020 11:21:43 +0200 (CEST)
+Date:   Fri, 17 Apr 2020 09:21:42 -0000
+From:   "tip-bot2 for Tony Luck" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: ras/core] x86/mce: Drop bogus comment about mce.kflags
+Cc:     Tony Luck <tony.luck@intel.com>, Borislav Petkov <bp@suse.de>,
+        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200415195826.GA13681@agluck-desk2.amr.corp.intel.com>
+References: <20200415195826.GA13681@agluck-desk2.amr.corp.intel.com>
 MIME-Version: 1.0
-References: <20200417083448.9122-1-gmayyyha@gmail.com>
-In-Reply-To: <20200417083448.9122-1-gmayyyha@gmail.com>
-From:   Yanhu Cao <gmayyyha@gmail.com>
-Date:   Fri, 17 Apr 2020 17:18:29 +0800
-Message-ID: <CAB9OAC2VvwM5+L=N09Y-usxyXFRnzWFs8iN-zLHyEz7-twPOmQ@mail.gmail.com>
-Subject: Re: [PATCH] ceph: if we are blacklisted, __do_request returns directly
-To:     Jeff Layton <jlayton@kernel.org>
-Cc:     Sage Weil <sage@redhat.com>, Ilya Dryomov <idryomov@gmail.com>,
-        ceph-devel <ceph-devel@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Message-ID: <158711530270.28353.8482037623626742412.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DNM. will add test mount option recover_session.
+The following commit has been merged into the ras/core branch of tip:
 
-On Fri, Apr 17, 2020 at 4:35 PM Yanhu Cao <gmayyyha@gmail.com> wrote:
->
-> Signed-off-by: Yanhu Cao <gmayyyha@gmail.com>
-> ---
->  fs/ceph/mds_client.c | 5 +++++
->  1 file changed, 5 insertions(+)
->
-> diff --git a/fs/ceph/mds_client.c b/fs/ceph/mds_client.c
-> index 486f91f9685b..d2ea755b7c02 100644
-> --- a/fs/ceph/mds_client.c
-> +++ b/fs/ceph/mds_client.c
-> @@ -2708,6 +2708,11 @@ static void __do_request(struct ceph_mds_client *mdsc,
->
->         put_request_session(req);
->
-> +       if (mdsc->fsc->blacklisted) {
-> +               err = -EACCES;
-> +               goto finish;
-> +       }
-> +
->         mds = __choose_mds(mdsc, req, &random);
->         if (mds < 0 ||
->             ceph_mdsmap_get_state(mdsc->mdsmap, mds) < CEPH_MDS_STATE_ACTIVE) {
-> --
-> 2.24.2 (Apple Git-127)
->
+Commit-ID:     f82cdff1aa7f6dcf6625c7219342a6e5c977098d
+Gitweb:        https://git.kernel.org/tip/f82cdff1aa7f6dcf6625c7219342a6e5c977098d
+Author:        Tony Luck <tony.luck@intel.com>
+AuthorDate:    Wed, 15 Apr 2020 12:58:26 -07:00
+Committer:     Borislav Petkov <bp@suse.de>
+CommitterDate: Fri, 17 Apr 2020 11:12:21 +02:00
+
+x86/mce: Drop bogus comment about mce.kflags
+
+The bit definitions for kflags are for internal use only. A
+late edit moved them from uapi/asm/mce.h to the internal
+x86 <asm/mce.h>, but the comment saying "See below" was
+accidentally left here.
+
+Delete "See below". Just labelling this field as internal
+kernel use is sufficient.
+
+Fixes: 1de08dccd383 ("x86/mce: Add a struct mce.kflags field")
+Signed-off-by: Tony Luck <tony.luck@intel.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Link: https://lkml.kernel.org/r/20200415195826.GA13681@agluck-desk2.amr.corp.intel.com
+---
+ arch/x86/include/uapi/asm/mce.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/x86/include/uapi/asm/mce.h b/arch/x86/include/uapi/asm/mce.h
+index 5b59d80..db9adc0 100644
+--- a/arch/x86/include/uapi/asm/mce.h
++++ b/arch/x86/include/uapi/asm/mce.h
+@@ -35,7 +35,7 @@ struct mce {
+ 	__u64 ipid;		/* MCA_IPID MSR: only valid on SMCA systems */
+ 	__u64 ppin;		/* Protected Processor Inventory Number */
+ 	__u32 microcode;	/* Microcode revision */
+-	__u64 kflags;		/* Internal kernel use. See below */
++	__u64 kflags;		/* Internal kernel use */
+ };
+ 
+ #define MCE_GET_RECORD_LEN   _IOR('M', 1, int)
