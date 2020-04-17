@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1676AC3815B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 10:45:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0920BC352BE
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 10:45:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F14AE221EC
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 10:45:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E84F1221EC
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 10:45:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729977AbgDQKpf (ORCPT
+        id S1730007AbgDQKpj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 06:45:35 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:36174 "EHLO huawei.com"
+        Fri, 17 Apr 2020 06:45:39 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:39398 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729896AbgDQKpb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 06:45:31 -0400
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id D4E62AB3D0B362BDEA7C;
-        Fri, 17 Apr 2020 18:45:26 +0800 (CST)
+        id S1729942AbgDQKpd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Apr 2020 06:45:33 -0400
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id A3ACF16856F9D903B27A;
+        Fri, 17 Apr 2020 18:45:31 +0800 (CST)
 Received: from localhost.localdomain (10.69.192.58) by
  DGGEMS411-HUB.china.huawei.com (10.3.19.211) with Microsoft SMTP Server id
- 14.3.487.0; Fri, 17 Apr 2020 18:45:20 +0800
+ 14.3.487.0; Fri, 17 Apr 2020 18:45:21 +0800
 From:   John Garry <john.garry@huawei.com>
 To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
         <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
@@ -35,9 +35,9 @@ CC:     <ak@linux.intel.com>, <linuxarm@huawei.com>,
         <zhangshaokun@hisilicon.com>,
         <linux-arm-kernel@lists.infradead.org>,
         John Garry <john.garry@huawei.com>
-Subject: [RFC PATCH v2 07/13] perf pmu: Add pmu_id()
-Date:   Fri, 17 Apr 2020 18:41:18 +0800
-Message-ID: <1587120084-18990-8-git-send-email-john.garry@huawei.com>
+Subject: [RFC PATCH v2 10/13] perf metricgroup: Split up metricgroup__add_metric()
+Date:   Fri, 17 Apr 2020 18:41:21 +0800
+Message-ID: <1587120084-18990-11-git-send-email-john.garry@huawei.com>
 X-Mailer: git-send-email 2.8.1
 In-Reply-To: <1587120084-18990-1-git-send-email-john.garry@huawei.com>
 References: <1587120084-18990-1-git-send-email-john.garry@huawei.com>
@@ -50,88 +50,118 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a function to read the PMU id sysfs entry. We only do it for uncore
-PMUs where this would be relevant.
+To aid supporting system event metric groups, break up the function
+metricgroup__add_metric() into a part which iterates metrics and a part
+which actually "adds" the metric.
+
+No functional change intended.
 
 Signed-off-by: John Garry <john.garry@huawei.com>
 ---
- tools/perf/util/pmu.c | 36 ++++++++++++++++++++++++++++++++++++
- tools/perf/util/pmu.h |  1 +
- 2 files changed, 37 insertions(+)
+ tools/perf/util/metricgroup.c | 75 ++++++++++++++++++++++++++-----------------
+ 1 file changed, 45 insertions(+), 30 deletions(-)
 
-diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-index ef6a63f3d386..6a67c6a28d08 100644
---- a/tools/perf/util/pmu.c
-+++ b/tools/perf/util/pmu.c
-@@ -594,6 +594,7 @@ static struct perf_cpu_map *__pmu_cpumask(const char *path)
-  * Uncore PMUs have a "cpumask" file under sysfs. CPU PMUs (e.g. on arm/arm64)
-  * may have a "cpus" file.
-  */
-+#define CPUS_TEMPLATE_ID	"%s/bus/event_source/devices/%s/identifier"
- #define CPUS_TEMPLATE_UNCORE	"%s/bus/event_source/devices/%s/cpumask"
- #define CPUS_TEMPLATE_CPU	"%s/bus/event_source/devices/%s/cpus"
- 
-@@ -632,6 +633,39 @@ static bool pmu_is_uncore(const char *name)
- 	return file_available(path);
+diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
+index 926449a7cdbf..d1033756a1bc 100644
+--- a/tools/perf/util/metricgroup.c
++++ b/tools/perf/util/metricgroup.c
+@@ -231,6 +231,12 @@ static bool match_metric(const char *n, const char *list)
+ 	return false;
  }
  
-+static char *pmu_id(const char *name)
++static bool match_pe_metric(struct pmu_event *pe, const char *metric)
 +{
-+	char path[PATH_MAX], *id;
-+	const char *sysfs;
-+	FILE *file;
-+	int n;
-+
-+	sysfs = sysfs__mountpoint();
-+	snprintf(path, PATH_MAX, CPUS_TEMPLATE_ID, sysfs, name);
-+
-+	id = malloc(PATH_MAX);
-+	if (!id)
-+		return NULL;
-+
-+	file = fopen(path, "r");
-+	if (!file) {
-+		free(id);
-+		return NULL;
-+	}
-+
-+	n = fscanf(file, "%s", id);
-+
-+	fclose(file);
-+
-+	if (!n) {
-+		free(id);
-+		return NULL;
-+	}
-+
-+	return id;
++	return match_metric(pe->metric_group, metric) ||
++	       match_metric(pe->metric_name, metric);
 +}
 +
+ struct mep {
+ 	struct rb_node nd;
+ 	const char *name;
+@@ -485,6 +491,40 @@ static bool metricgroup__has_constraint(struct pmu_event *pe)
+ 	return false;
+ }
+ 
++static int metricgroup__add_metric_pmu_event(struct pmu_event *pe,
++					     struct strbuf *events,
++					     struct list_head *group_list)
++{
++	const char **ids;
++	int idnum;
++	struct egroup *eg;
 +
- /*
-  *  PMU CORE devices have different name other than cpu in sysfs on some
-  *  platforms.
-@@ -844,6 +878,8 @@ static struct perf_pmu *pmu_lookup(const char *name)
- 	pmu->name = strdup(name);
- 	pmu->type = type;
- 	pmu->is_uncore = pmu_is_uncore(name);
-+	if (pmu->is_uncore)
-+		pmu->id = pmu_id(name);
- 	pmu->max_precise = pmu_max_precise(name);
- 	pmu_add_cpu_aliases(&aliases, pmu);
++	pr_debug("metric expr %s for %s\n", pe->metric_expr, pe->metric_name);
++
++	if (expr__find_other(pe->metric_expr, NULL, &ids, &idnum) < 0)
++		return 0;
++
++	if (events->len > 0)
++		strbuf_addf(events, ",");
++
++	if (metricgroup__has_constraint(pe))
++		metricgroup__add_metric_non_group(events, ids, idnum);
++	else
++		metricgroup__add_metric_weak_group(events, ids, idnum);
++
++	eg = malloc(sizeof(*eg));
++	if (!eg)
++		return -ENOMEM;
++	eg->ids = ids;
++	eg->idnum = idnum;
++	eg->metric_name = pe->metric_name;
++	eg->metric_expr = pe->metric_expr;
++	eg->metric_unit = pe->unit;
++	list_add_tail(&eg->nd, group_list);
++
++	return 0;
++}
++
+ static int metricgroup__add_metric(const char *metric, struct strbuf *events,
+ 				   struct list_head *group_list)
+ {
+@@ -502,37 +542,12 @@ static int metricgroup__add_metric(const char *metric, struct strbuf *events,
+ 			break;
+ 		if (!pe->metric_expr)
+ 			continue;
+-		if (match_metric(pe->metric_group, metric) ||
+-		    match_metric(pe->metric_name, metric)) {
+-			const char **ids;
+-			int idnum;
+-			struct egroup *eg;
+-
+-			pr_debug("metric expr %s for %s\n", pe->metric_expr, pe->metric_name);
  
-diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
-index 5fb3f16828df..62ebca9481fe 100644
---- a/tools/perf/util/pmu.h
-+++ b/tools/perf/util/pmu.h
-@@ -24,6 +24,7 @@ struct perf_event_attr;
- 
- struct perf_pmu {
- 	char *name;
-+	char *id;
- 	__u32 type;
- 	bool selectable;
- 	bool is_uncore;
+-			if (expr__find_other(pe->metric_expr,
+-					     NULL, &ids, &idnum) < 0)
+-				continue;
+-			if (events->len > 0)
+-				strbuf_addf(events, ",");
+-
+-			if (metricgroup__has_constraint(pe))
+-				metricgroup__add_metric_non_group(events, ids, idnum);
+-			else
+-				metricgroup__add_metric_weak_group(events, ids, idnum);
+-
+-			eg = malloc(sizeof(struct egroup));
+-			if (!eg) {
+-				ret = -ENOMEM;
+-				break;
+-			}
+-			eg->ids = ids;
+-			eg->idnum = idnum;
+-			eg->metric_name = pe->metric_name;
+-			eg->metric_expr = pe->metric_expr;
+-			eg->metric_unit = pe->unit;
+-			list_add_tail(&eg->nd, group_list);
+-			ret = 0;
++		if (match_pe_metric(pe, metric)) {
++			ret = metricgroup__add_metric_pmu_event(pe, events,
++								group_list);
++			if (ret)
++				return ret;
+ 		}
+ 	}
+ 	return ret;
 -- 
 2.16.4
 
