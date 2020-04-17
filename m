@@ -2,104 +2,78 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F24B2C352BE
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 11:07:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77E43C38A2B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 11:07:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C3068208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 11:07:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vECTsvEY"
+	by mail.kernel.org (Postfix) with ESMTP id 5AACC21D95
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 11:07:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730135AbgDQLHc (ORCPT
+        id S1730183AbgDQLHg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 07:07:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60422 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729468AbgDQLHa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 07:07:30 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DFAC5C061A0C;
-        Fri, 17 Apr 2020 04:07:29 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id k18so851192pll.6;
-        Fri, 17 Apr 2020 04:07:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=qNf9by9mVcx85HZ3Z+9xf1bxw2bCzaI4yFqKMgY25eU=;
-        b=vECTsvEYtCiUnyh0jrR2BP47JKSMnXSneOq8aE+ziAeoBultIAJ9SDL6puyx2jvJiV
-         NUzONw91rE2WxcTpdbJqDEosmKReV2pO7jDNw+nN10Xqn6mLqkiqist5rs6+Z6PXJ//E
-         IriYo9AoMojrVc9xERoXFm2dwlte/y1RVLiIp5e+JuAKVVBEWuPmYjvB0OTUHv9ICczo
-         Lc2ryHpaeuNWqSW6O+In3y/kK920Y3z4M1ULJp2XOnCpCAkSbhZe7oHUIEmHnehITapW
-         XTUcy9KiAXg+fjMKesbp1y6Oe8BXtAKobO3mJu55bQQ4p33NdVUIHhP2plp9R/rYwrlD
-         h83A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=qNf9by9mVcx85HZ3Z+9xf1bxw2bCzaI4yFqKMgY25eU=;
-        b=rnPqG01RGnoqBWIAhWwfPgyedaHHhhJGSu5akoedQUvFObBZ10XE10o6hAMfJLfyCi
-         2IlzzocCG5aI2j7bCdZmh3IbDFZLGPnXCLwR37LYpU1Skg6B8mmYZOtknMdEG6eSiO0h
-         hs+cZ7ExnlRxItK1BYnB2dTreS1v7u+90VNeh5Qih+cIcb9yWm1ZHDsCpjKUGsgxSzZI
-         9ydedhufc+odD6qO84cRC0ps0xgVYBjZ4GPJymiO1EFiNfkM+gXTaT8HIcms0ryMZDKy
-         RR32KrsQHBkOcuqW1VN21pLT2WV3CTZK34tbIaWf4uv+T2i2Vsdk+B0Z3WVB9l7JJLmh
-         ihBA==
-X-Gm-Message-State: AGi0PuagntJwmoloWsEdWEmefF+hUGlFkr41LqmlEYFBM3TE6MGV9pnU
-        x8lJccRkBZFIudZR5AOpgS4=
-X-Google-Smtp-Source: APiQypK1myE3GOJyq4yhBXF+vSOhsaxqBAupzLHb28bW+kLmdZfh+X3lJzkCXKorMSM8GpuJgc45+w==
-X-Received: by 2002:a17:902:8a88:: with SMTP id p8mr2953777plo.134.1587121649228;
-        Fri, 17 Apr 2020 04:07:29 -0700 (PDT)
-Received: from MacBook-Pro.mshome.net ([122.224.153.228])
-        by smtp.googlemail.com with ESMTPSA id g3sm18011395pgd.64.2020.04.17.04.07.27
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 17 Apr 2020 04:07:28 -0700 (PDT)
-From:   Yanhu Cao <gmayyyha@gmail.com>
-To:     jlayton@kernel.org
-Cc:     sage@redhat.com, idryomov@gmail.com, ceph-devel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Yanhu Cao <gmayyyha@gmail.com>
-Subject: [v3] ceph: if we are blacklisted, __do_request returns directly
-Date:   Fri, 17 Apr 2020 19:07:23 +0800
-Message-Id: <20200417110723.12235-1-gmayyyha@gmail.com>
-X-Mailer: git-send-email 2.24.2 (Apple Git-127)
+        Fri, 17 Apr 2020 07:07:36 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:33870 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729468AbgDQLHg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Apr 2020 07:07:36 -0400
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 788EBBD8543B75C212DE;
+        Fri, 17 Apr 2020 19:07:34 +0800 (CST)
+Received: from huawei.com (10.175.124.28) by DGGEMS403-HUB.china.huawei.com
+ (10.3.19.203) with Microsoft SMTP Server id 14.3.487.0; Fri, 17 Apr 2020
+ 19:07:26 +0800
+From:   Jason Yan <yanaijie@huawei.com>
+To:     <f.fainelli@gmail.com>, <tglx@linutronix.de>,
+        <jason@lakedaemon.net>, <maz@kernel.org>, <justinpopo6@gmail.com>,
+        <bcm-kernel-feedback-list@broadcom.com>,
+        <linux-mips@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     Jason Yan <yanaijie@huawei.com>, Hulk Robot <hulkci@huawei.com>
+Subject: [PATCH v2] irqchip/irq-bcm7038-l1: make bcm7038_l1_of_init() static
+Date:   Fri, 17 Apr 2020 19:33:51 +0800
+Message-ID: <20200417113351.43839-1-yanaijie@huawei.com>
+X-Mailer: git-send-email 2.21.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.124.28]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If we mount cephfs by the recover_session option,
-__do_request can return directly until the client automatically reconnects.
+Fix the following sparse warning:
 
-Signed-off-by: Yanhu Cao <gmayyyha@gmail.com>
+drivers/irqchip/irq-bcm7038-l1.c:419:12: warning: symbol
+'bcm7038_l1_of_init' was not declared. Should it be static?
+
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Jason Yan <yanaijie@huawei.com>
 ---
- fs/ceph/mds_client.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ v1->v2: Reindent the second line of the function
 
-diff --git a/fs/ceph/mds_client.c b/fs/ceph/mds_client.c
-index 486f91f9685b..16ac5e5f7f79 100644
---- a/fs/ceph/mds_client.c
-+++ b/fs/ceph/mds_client.c
-@@ -2708,6 +2708,12 @@ static void __do_request(struct ceph_mds_client *mdsc,
+ drivers/irqchip/irq-bcm7038-l1.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/irqchip/irq-bcm7038-l1.c b/drivers/irqchip/irq-bcm7038-l1.c
+index eb9bce93cd05..90cac1cac177 100644
+--- a/drivers/irqchip/irq-bcm7038-l1.c
++++ b/drivers/irqchip/irq-bcm7038-l1.c
+@@ -416,8 +416,8 @@ static const struct irq_domain_ops bcm7038_l1_domain_ops = {
+ 	.map			= bcm7038_l1_map,
+ };
  
- 	put_request_session(req);
- 
-+	if (mdsc->fsc->blacklisted &&
-+	    ceph_test_mount_opt(mdsc->fsc, CLEANRECOVER)) {
-+		err = -EBLACKLISTED;
-+		goto finish;
-+	}
-+
- 	mds = __choose_mds(mdsc, req, &random);
- 	if (mds < 0 ||
- 	    ceph_mdsmap_get_state(mdsc->mdsmap, mds) < CEPH_MDS_STATE_ACTIVE) {
+-int __init bcm7038_l1_of_init(struct device_node *dn,
+-			      struct device_node *parent)
++static int __init bcm7038_l1_of_init(struct device_node *dn,
++				     struct device_node *parent)
+ {
+ 	struct bcm7038_l1_chip *intc;
+ 	int idx, ret;
 -- 
-2.24.2 (Apple Git-127)
+2.21.1
 
