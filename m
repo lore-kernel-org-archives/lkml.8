@@ -2,136 +2,93 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13E24C2D0EF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 13:22:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 393F5C38A2B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 13:22:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E262420724
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 13:22:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="Cy4c1ZQe"
+	by mail.kernel.org (Postfix) with ESMTP id 0B7A92087E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 13:22:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587129744;
+	bh=ApBjG0GzABKPlb6hTloJ5iIZRTvdSJEPOLZX/3D9xdE=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
+	b=jX7PJwkDg6MAEZWUS7hHGUvk7l0JSbWom/x6Lkzn8s5DUel7iifXSlreL22RbRq0O
+	 faMgXZm4kRng/wKji9ckiVd1/2+m+Ngs0jy2DxY8ksjewIgvlZiqgf1gXwSreBAVJA
+	 pR3zFc2dLbTW9wM8vJWDA2ThUVwdchoQTb6PjtWk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730575AbgDQNWE (ORCPT
+        id S1730591AbgDQNWX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 09:22:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52914 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730059AbgDQNWD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 09:22:03 -0400
-Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19007C061A0F
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 06:22:03 -0700 (PDT)
-Received: by mail-qt1-x842.google.com with SMTP id s30so1879442qth.2
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 06:22:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=Hprasaok50MZK/a/feo2e2oclDOFVapOraKUc6PEaaw=;
-        b=Cy4c1ZQe4G9SMrIOkfvW/lXRdE7J7My+efjCR36dpGMsNWVjE2WF0RjP/1LyW0EE9V
-         jLhFL2HqJbxsByPjW/xGuaB6H6DHwIQD3vnU5KqfqaUl4DpVTu6oCF82+AJTCKoZzA9b
-         eu1wuX9DIqmpGHx2mbpbKznE3HXjwCGDmt4dE5QrzkJVZVj2rpXlqnURyx4Nr0o5muN0
-         mIMyTNlbP2Ihpcvo93Z54eXzBKQQ6yvBCGjhHBY7fKT7pfp42Ac7OVhgA3rjiG+O6pej
-         WQlV44x9fx+V/4JTeeIrXd9P6rcUuL27qT16PaaKso5mO9s0mK+noBJW2bCVEvN/41Tm
-         e73A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=Hprasaok50MZK/a/feo2e2oclDOFVapOraKUc6PEaaw=;
-        b=WQiv38mbfnMupg0L0TRY5AYwRaUt9zeJBZ60LLCQ2dqovX+MqRyqBKMResIWr/tGcs
-         ce8eBIUGv/90TNU53TYGsaTcHsUvB8Za24HwAUe8JnqMZ7MwcqBITKtVpEOrdhWTfklG
-         eAiTSkp13IKeO9iJ+5vSJN9LHSQJyDggInbFOXA3wABeJlEfRnk45g+6WA0p4n3vYbzV
-         KKjgSF7UG1jKwB/vb2cFcBb/L1QfkGdZ9RG4ISZ6BEDhbWC3/1vPe8d3AT4aJUnNRWyT
-         jTqBiAAav35eAt+mihlEKssBfBZdvWiPB3NUuiG8XKjLoi5gAxYRZ+opoo67lxf6KEbX
-         tCLQ==
-X-Gm-Message-State: AGi0PuYcWdeFDPqnouii/aOpRKb4DkfN9KTCF/LzR2y7A/GkPVs7uHjA
-        UT3e+LEcCxW8I/mNAea3kZay3mna01U7uw==
-X-Google-Smtp-Source: APiQypLINBcGF72yF2OOfhsB7LCEXiY/71TAZiQ84OPjbI8O9xMYQgnMX9Pqn8PJ85t59l4ixc587Q==
-X-Received: by 2002:ac8:46d8:: with SMTP id h24mr2932189qto.352.1587129722173;
-        Fri, 17 Apr 2020 06:22:02 -0700 (PDT)
-Received: from [192.168.1.153] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id v76sm17479205qka.32.2020.04.17.06.22.01
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 17 Apr 2020 06:22:01 -0700 (PDT)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
-Subject: Re: [PATCH -next] kvm/svm: disable KCSAN for svm_vcpu_run()
-From:   Qian Cai <cai@lca.pw>
-In-Reply-To: <f02ca9b9-f0a6-dfb5-1ca0-32a12d4f56fb@redhat.com>
-Date:   Fri, 17 Apr 2020 09:21:59 -0400
-Cc:     Elver Marco <elver@google.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        kasan-dev <kasan-dev@googlegroups.com>, kvm@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <1F15D565-D34D-41F5-B1C5-B9A04626EE97@lca.pw>
-References: <20200415153709.1559-1-cai@lca.pw>
- <f02ca9b9-f0a6-dfb5-1ca0-32a12d4f56fb@redhat.com>
-To:     "paul E. McKenney" <paulmck@kernel.org>
-X-Mailer: Apple Mail (2.3608.80.23.2.2)
+        Fri, 17 Apr 2020 09:22:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58834 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730358AbgDQNWW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Apr 2020 09:22:22 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F231E20724;
+        Fri, 17 Apr 2020 13:22:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587129742;
+        bh=ApBjG0GzABKPlb6hTloJ5iIZRTvdSJEPOLZX/3D9xdE=;
+        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+        b=aybB42pK1v8St7Ynd0lCznycB8uo8tw9o7vLKnthk6G+Nir90qAFjZiUGikUjSWaY
+         Pjqeqk48sBzHh5XJN0uOkSvEj6N9muanljwWT9YOzpKd36mnD8UL1sDd6jV+ulGi3O
+         7wN2ZI6jQwpvnhu6QzeM0YJ1TtfcbAPWIC3Sy1EY=
+Date:   Fri, 17 Apr 2020 14:22:20 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Alexandre Torgue <alexandre.torgue@st.com>,
+        "patrice.chotard@st.com" <patrice.chotard@st.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Benjamin Gaignard <benjamin.gaignard@st.com>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-spi@vger.kernel.org,
+        mcoquelin.stm32@gmail.com,
+        Christophe Kerello <christophe.kerello@st.com>
+In-Reply-To: <20200417121241.6473-1-patrice.chotard@st.com>
+References: <20200417121241.6473-1-patrice.chotard@st.com>
+Subject: Re: spi: stm32-qspi: Add pm_runtime support
+Message-Id: <158712973998.35869.11870096143660307572.b4-ty@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, 17 Apr 2020 14:12:41 +0200, patrice.chotard@st.com wrote:
+> From: Patrice Chotard <patrice.chotard@st.com>
+> 
+> By default, STM32_AUTOSUSPEND_DELAY is set to -1 which has for
+> effect to prevent runtime suspends.
+> Runtime suspends can be activated by setting autosuspend_delay_ms using
+> sysfs entry :
+> echo {delay_in_ms} > /sys/devices/platform/soc/58003000.spi/power/autosusp
+> end_delay_ms)
+> 
+> [...]
 
+Applied, thanks!
 
-> On Apr 15, 2020, at 11:57 AM, Paolo Bonzini <pbonzini@redhat.com> =
-wrote:
->=20
-> On 15/04/20 17:37, Qian Cai wrote:
->> For some reasons, running a simple qemu-kvm command with KCSAN will
->> reset AMD hosts. It turns out svm_vcpu_run() could not be =
-instrumented.
->> Disable it for now.
->>=20
->> # /usr/libexec/qemu-kvm -name ubuntu-18.04-server-cloudimg -cpu host
->> 	-smp 2 -m 2G -hda ubuntu-18.04-server-cloudimg.qcow2
->>=20
->> =3D=3D=3D console output =3D=3D=3D
->> Kernel 5.6.0-next-20200408+ on an x86_64
->>=20
->> hp-dl385g10-05 login:
->>=20
->> <...host reset...>
->>=20
->> HPE ProLiant System BIOS A40 v1.20 (03/09/2018)
->> (C) Copyright 1982-2018 Hewlett Packard Enterprise Development LP
->> Early system initialization, please wait...
->>=20
->> Signed-off-by: Qian Cai <cai@lca.pw>
->> ---
->> arch/x86/kvm/svm/svm.c | 2 +-
->> 1 file changed, 1 insertion(+), 1 deletion(-)
->>=20
->> diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
->> index 2be5bbae3a40..1fdb300e9337 100644
->> --- a/arch/x86/kvm/svm/svm.c
->> +++ b/arch/x86/kvm/svm/svm.c
->> @@ -3278,7 +3278,7 @@ static void svm_cancel_injection(struct =
-kvm_vcpu *vcpu)
->>=20
->> bool __svm_vcpu_run(unsigned long vmcb_pa, unsigned long *regs);
->>=20
->> -static void svm_vcpu_run(struct kvm_vcpu *vcpu)
->> +static __no_kcsan void svm_vcpu_run(struct kvm_vcpu *vcpu)
->> {
->> 	struct vcpu_svm *svm =3D to_svm(vcpu);
->>=20
->>=20
->=20
-> I suppose you tested the patch to move cli/sti into the .S file.  =
-Anyway:
->=20
-> Acked-by: Paolo Bonzini <pbonzini@redhat.com>
+[1/1] spi: stm32-qspi: Add pm_runtime support
+      commit: 9d282c17b023a97516a63255ce7f7ee65c39bec1
 
-Paul, can you pick this up along with other KCSAN fixes?
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
 
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
