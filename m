@@ -2,95 +2,95 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1B73C38A29
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 10:56:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DB70C352BE
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 10:57:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8734E21D94
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 10:56:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CB6121D94
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 10:57:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=metafoo.de header.i=@metafoo.de header.b="VCPgZQK+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730040AbgDQK44 (ORCPT
+        id S1730077AbgDQK47 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 06:56:56 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:50316 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729558AbgDQK4z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 06:56:55 -0400
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 67D31B8AA93247920CBC;
-        Fri, 17 Apr 2020 18:56:51 +0800 (CST)
-Received: from [127.0.0.1] (10.166.213.7) by DGGEMS405-HUB.china.huawei.com
- (10.3.19.205) with Microsoft SMTP Server id 14.3.487.0; Fri, 17 Apr 2020
- 18:56:44 +0800
-Subject: Re: [PATCH] irqchip/irq-bcm7038-l1: make bcm7038_l1_of_init() static
-To:     Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
-        <f.fainelli@gmail.com>, <tglx@linutronix.de>,
-        <jason@lakedaemon.net>, <maz@kernel.org>, <justinpopo6@gmail.com>,
-        <bcm-kernel-feedback-list@broadcom.com>,
-        <linux-mips@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     Hulk Robot <hulkci@huawei.com>
-References: <20200417074036.46594-1-yanaijie@huawei.com>
- <ecb3e3e1-7761-faa7-10fa-67da69604306@cogentembedded.com>
-From:   Jason Yan <yanaijie@huawei.com>
-Message-ID: <b2f6f8cd-557c-3978-f176-e615cba8b458@huawei.com>
-Date:   Fri, 17 Apr 2020 18:56:43 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
+        Fri, 17 Apr 2020 06:56:59 -0400
+Received: from www381.your-server.de ([78.46.137.84]:55522 "EHLO
+        www381.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729558AbgDQK46 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Apr 2020 06:56:58 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=metafoo.de;
+         s=default2002; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
+        MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender:Reply-To:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=j+cEgbwCSj5I0F+f9tOfnSu7VZ50eB1wG2coGkbb6Zc=; b=VCPgZQK+tCpseUS8lA5ORgNM8B
+        vEz9p4GsBsvFB9QW51fnBm43zIJsX4ImBZBvKPUZapov2sd9mIJjiVTFl3uOTSGjzeeTAwec3ckEw
+        bdAeUeLgRffNatGv1NGelKMylqPQqMpvEREuXXZM8wHub0c1kDQc+GfIAIJHTwj6EzPAKMNA/TsNW
+        BNn3EWJh7Np/5RaY7sYJ+1AfSTcMGrXOcmJbNfBPyoZ677lVJHehEfhplJuU1RZrivJny31csYEm4
+        cBgyNdPrfFDq6hQVIVSZdxcHnfGIz/EqgbKpFOBZNh5K96ArKEbabWBnlpS5KpqNP1827iUK5P55k
+        GE6QgsGQ==;
+Received: from sslproxy03.your-server.de ([88.198.220.132])
+        by www381.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89_1)
+        (envelope-from <lars@metafoo.de>)
+        id 1jPOfx-0007Qi-Ke; Fri, 17 Apr 2020 12:56:49 +0200
+Received: from [82.135.79.46] (helo=[192.168.178.20])
+        by sslproxy03.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <lars@metafoo.de>)
+        id 1jPOfx-000Eah-4j; Fri, 17 Apr 2020 12:56:49 +0200
+Subject: Re: [PATCH v4 2/3] iio: DAC extension for ltc2634-12/10/8
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Chris Ruehl <chris.ruehl@gtsys.com.hk>
+Cc:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
+        devicetree <devicetree@vger.kernel.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alexandru Tachici <alexandru.tachici@analog.com>,
+        Steve Winslow <swinslow@gmail.com>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20200416012016.21422-1-chris.ruehl@gtsys.com.hk>
+ <20200416012016.21422-3-chris.ruehl@gtsys.com.hk>
+ <20200416065655.cxy67hlj267dpjrw@pengutronix.de>
+ <e4a6af21-a8ec-e9b5-2c5e-1e109888f0c7@gtsys.com.hk>
+ <CAHp75VfN4Fj0J4n2xKmK8fDKACT0epo_xXQnMzKDW-Y1XH46Pw@mail.gmail.com>
+From:   Lars-Peter Clausen <lars@metafoo.de>
+Message-ID: <cdea4538-ef75-f000-8b9c-db10a9bdd173@metafoo.de>
+Date:   Fri, 17 Apr 2020 12:56:46 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <ecb3e3e1-7761-faa7-10fa-67da69604306@cogentembedded.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
+In-Reply-To: <CAHp75VfN4Fj0J4n2xKmK8fDKACT0epo_xXQnMzKDW-Y1XH46Pw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.166.213.7]
-X-CFilter-Loop: Reflected
+Content-Language: en-US
+X-Authenticated-Sender: lars@metafoo.de
+X-Virus-Scanned: Clear (ClamAV 0.102.2/25784/Thu Apr 16 13:58:59 2020)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 4/17/20 12:27 PM, Andy Shevchenko wrote:
+> On Thu, Apr 16, 2020 at 10:15 AM Chris Ruehl <chris.ruehl@gtsys.com.hk> wrote:
+>> On 16/4/2020 2:56 pm, Uwe Kleine-König wrote:
+>>> dropped stefan.popa@analog.com from recipents as the address bounces for
+>>> me.
+>> the maintainer script added this email automatically , I will remove it
+>> in the future mails.
+> Somebody from Analog Devs should sent a patch as an urgent fix.
+> I also suffered from very same bounces.
+https://lkml.org/lkml/2020/3/21/63
 
-
-在 2020/4/17 18:26, Sergei Shtylyov 写道:
-> Hello!
-> 
-> On 17.04.2020 10:40, Jason Yan wrote:
-> 
->> Fix the following sparse warning:
->>
->> drivers/irqchip/irq-bcm7038-l1.c:419:12: warning: symbol
->> 'bcm7038_l1_of_init' was not declared. Should it be static?
->>
->> Reported-by: Hulk Robot <hulkci@huawei.com>
->> Signed-off-by: Jason Yan <yanaijie@huawei.com>
->> ---
->>   drivers/irqchip/irq-bcm7038-l1.c | 2 +-
->>   1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/drivers/irqchip/irq-bcm7038-l1.c 
->> b/drivers/irqchip/irq-bcm7038-l1.c
->> index eb9bce93cd05..fd7c537fb42a 100644
->> --- a/drivers/irqchip/irq-bcm7038-l1.c
->> +++ b/drivers/irqchip/irq-bcm7038-l1.c
->> @@ -416,7 +416,7 @@ static const struct irq_domain_ops 
->> bcm7038_l1_domain_ops = {
->>       .map            = bcm7038_l1_map,
->>   };
->> -int __init bcm7038_l1_of_init(struct device_node *dn,
->> +static int __init bcm7038_l1_of_init(struct device_node *dn,
->>                     struct device_node *parent)
-> 
->     Reindent the above line please, it should start under *struct* on 
-> the 1st line.
-
-OK, will cook a new one.
-
-> 
-> [...]
-> 
-> MBR, Sergei
-> 
-> .
 
