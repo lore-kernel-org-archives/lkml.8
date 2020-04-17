@@ -2,172 +2,353 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5CA4C2BB55
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 08:46:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7F35C2BB55
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 08:46:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BFCEB20656
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 08:46:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7241221E9
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 08:46:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OBjTYKGS"
+	dkim=pass (1024-bit key) header.d=maquefel.me header.i=@maquefel.me header.b="Pwqm/sF9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729912AbgDQIqT (ORCPT
+        id S1729924AbgDQIqv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 04:46:19 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:34249 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729809AbgDQIqR (ORCPT
+        Fri, 17 Apr 2020 04:46:51 -0400
+Received: from forward103o.mail.yandex.net ([37.140.190.177]:44269 "EHLO
+        forward103o.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729748AbgDQIqu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 04:46:17 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587113176;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=wE/WARZLg+d1WCxCwrHkOlSrWaAPnJuSBoxihd1UamI=;
-        b=OBjTYKGSJAINHUfpR4calOLk+SvqbiTWr+tY+zs3pzY5Flwpjk4cqBuG2x3aiRD4IVNhzg
-        dgqkfbn78l8hQEDDtCqLGyUN8+JPgq40klBBZ+xA0bHUJ1Ay+H7bhk+j1ZQtjvwM5naDj/
-        2Ids74giy7NIe+3J7I39Cr7UrcIDp5I=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-483-NRan9ghfPxqLuUVOsMsmeg-1; Fri, 17 Apr 2020 04:46:15 -0400
-X-MC-Unique: NRan9ghfPxqLuUVOsMsmeg-1
-Received: by mail-wr1-f69.google.com with SMTP id 11so664434wrc.3
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 01:46:14 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=wE/WARZLg+d1WCxCwrHkOlSrWaAPnJuSBoxihd1UamI=;
-        b=NRjLOn1KegWeU4ttQesDbKAlpF5gpK0gmcmk00CpSsirIggpMaGomDaNqTDvvDoXhV
-         ollZ+UJ4A4cwPhIZPAg+VooRxcAwcDyblmgFKRtXY9RufD8Bjs9ikPvSy4oArE3iEVuj
-         HqlANenaLW7X2u/tK34IZo4tM8buCnqzeeYUA8d8/DuXoFsxvk9F6mvtAArvvMdU/qYN
-         VeweI+StXOKOo3xG+vrT5cwT7IHBcTrdQV3NqhnPIG1J8HXEhorqDacLwb5o+ke+W4W8
-         109nolXKCxAF/xSPcQTJvjiMtHdpm5IiUnQEqdtXWmjgPaknavqHfJ+TwHRnV1zv/x3E
-         +0Ng==
-X-Gm-Message-State: AGi0PuZf4Dlqg5U5l7z9Rxcw1Qkb73IFKtfuFoz3xPx7hh6yMxzDGrZz
-        DIn6CV6yVgS1tQPrDopqozMBwhmPsw4EHGYLbMeKSCMopbw73sIZLZAac6VuVEVcBJjzH67H4xc
-        XkLZ5iTRjmhyCZYet3r8+bupv
-X-Received: by 2002:a1c:3b0a:: with SMTP id i10mr2207020wma.26.1587113173864;
-        Fri, 17 Apr 2020 01:46:13 -0700 (PDT)
-X-Google-Smtp-Source: APiQypL7wwVAY2VUk1Sf/olefVQONEzwVRmuwANF/2eIBwUJQiUqpjYTnQ3meLl2WX6+2mTArW0sHw==
-X-Received: by 2002:a1c:3b0a:: with SMTP id i10mr2206989wma.26.1587113173640;
-        Fri, 17 Apr 2020 01:46:13 -0700 (PDT)
-Received: from redhat.com (bzq-79-183-51-3.red.bezeqint.net. [79.183.51.3])
-        by smtp.gmail.com with ESMTPSA id l5sm31065502wrm.66.2020.04.17.01.46.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Apr 2020 01:46:13 -0700 (PDT)
-Date:   Fri, 17 Apr 2020 04:46:08 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Jason Wang <jasowang@redhat.com>
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
-        netdev@vger.kernel.org, geert@linux-m68k.org,
-        tsbogend@alpha.franken.de, benh@kernel.crashing.org,
-        paulus@samba.org, heiko.carstens@de.ibm.com, gor@linux.ibm.com,
-        borntraeger@de.ibm.com, Michael Ellerman <mpe@ellerman.id.au>
-Subject: Re: [PATCH V2] vhost: do not enable VHOST_MENU by default
-Message-ID: <20200417044230-mutt-send-email-mst@kernel.org>
-References: <20200415024356.23751-1-jasowang@redhat.com>
- <20200416185426-mutt-send-email-mst@kernel.org>
- <b7e2deb7-cb64-b625-aeb4-760c7b28c0c8@redhat.com>
- <20200417022929-mutt-send-email-mst@kernel.org>
- <4274625d-6feb-81b6-5b0a-695229e7c33d@redhat.com>
- <20200417042912-mutt-send-email-mst@kernel.org>
- <fdb555a6-4b8d-15b6-0849-3fe0e0786038@redhat.com>
+        Fri, 17 Apr 2020 04:46:50 -0400
+X-Greylist: delayed 492 seconds by postgrey-1.27 at vger.kernel.org; Fri, 17 Apr 2020 04:46:46 EDT
+Received: from forward100q.mail.yandex.net (forward100q.mail.yandex.net [IPv6:2a02:6b8:c0e:4b:0:640:4012:bb97])
+        by forward103o.mail.yandex.net (Yandex) with ESMTP id DAA255F815F1;
+        Fri, 17 Apr 2020 11:38:30 +0300 (MSK)
+Received: from mxback8q.mail.yandex.net (mxback8q.mail.yandex.net [IPv6:2a02:6b8:c0e:42:0:640:b38f:32ec])
+        by forward100q.mail.yandex.net (Yandex) with ESMTP id D6972708000F;
+        Fri, 17 Apr 2020 11:38:30 +0300 (MSK)
+Received: from vla4-2e76570dd7f5.qloud-c.yandex.net (vla4-2e76570dd7f5.qloud-c.yandex.net [2a02:6b8:c17:c8b:0:640:2e76:570d])
+        by mxback8q.mail.yandex.net (mxback/Yandex) with ESMTP id E6rQ5i51Ch-cUv4DKfb;
+        Fri, 17 Apr 2020 11:38:30 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=maquefel.me; s=mail; t=1587112710;
+        bh=Z/r9sPXyzAgfF2IdNrQfxxvSYafmWQ+plMFD75RRGMs=;
+        h=In-Reply-To:Subject:Cc:To:From:References:Date:Message-ID;
+        b=Pwqm/sF90AgalMwSAZcZePLUu1rWRP2rNVNQm1CFiPxL3MEudKhMR/c1Zs0Z5PqT0
+         iAsu4q4necJgu6A4kahefhtgN6R/Uu/P8UJLEh56Q0XIZeGDULsNSXAIgeQLS6Vr6T
+         mMwFV00axkKLRGwQhpZA64URL3RuIJ64U45/xc1I=
+Authentication-Results: mxback8q.mail.yandex.net; dkim=pass header.i=@maquefel.me
+Received: by vla4-2e76570dd7f5.qloud-c.yandex.net (smtp/Yandex) with ESMTPSA id pUbOzmqUBZ-cT2SmCps;
+        Fri, 17 Apr 2020 11:38:29 +0300
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (Client certificate not present)
+Date:   Fri, 17 Apr 2020 11:37:47 +0300
+From:   Nikita Shubin <nikita.shubin@maquefel.me>
+To:     Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc:     Nikita Shubin <NShubin@topcon.com>,
+        Ohad Ben-Cohen <ohad@wizery.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2 2/3] remoteproc: imx_rproc: mailbox support
+Message-ID: <20200417113747.00007cfb@maquefel.me>
+In-Reply-To: <20200414172004.GB24061@xps15>
+References: <20200304142628.8471-1-NShubin@topcon.com>
+ <20200406113310.3041-1-nikita.shubin@maquefel.me>
+ <20200406113310.3041-3-nikita.shubin@maquefel.me>
+ <20200414172004.GB24061@xps15>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <fdb555a6-4b8d-15b6-0849-3fe0e0786038@redhat.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 17, 2020 at 04:39:49PM +0800, Jason Wang wrote:
-> 
-> On 2020/4/17 下午4:29, Michael S. Tsirkin wrote:
-> > On Fri, Apr 17, 2020 at 03:36:52PM +0800, Jason Wang wrote:
-> > > On 2020/4/17 下午2:33, Michael S. Tsirkin wrote:
-> > > > On Fri, Apr 17, 2020 at 11:12:14AM +0800, Jason Wang wrote:
-> > > > > On 2020/4/17 上午6:55, Michael S. Tsirkin wrote:
-> > > > > > On Wed, Apr 15, 2020 at 10:43:56AM +0800, Jason Wang wrote:
-> > > > > > > We try to keep the defconfig untouched after decoupling CONFIG_VHOST
-> > > > > > > out of CONFIG_VIRTUALIZATION in commit 20c384f1ea1a
-> > > > > > > ("vhost: refine vhost and vringh kconfig") by enabling VHOST_MENU by
-> > > > > > > default. Then the defconfigs can keep enabling CONFIG_VHOST_NET
-> > > > > > > without the caring of CONFIG_VHOST.
-> > > > > > > 
-> > > > > > > But this will leave a "CONFIG_VHOST_MENU=y" in all defconfigs and even
-> > > > > > > for the ones that doesn't want vhost. So it actually shifts the
-> > > > > > > burdens to the maintainers of all other to add "CONFIG_VHOST_MENU is
-> > > > > > > not set". So this patch tries to enable CONFIG_VHOST explicitly in
-> > > > > > > defconfigs that enables CONFIG_VHOST_NET and CONFIG_VHOST_VSOCK.
-> > > > > > > 
-> > > > > > > Acked-by: Christian Borntraeger<borntraeger@de.ibm.com>  (s390)
-> > > > > > > Acked-by: Michael Ellerman<mpe@ellerman.id.au>  (powerpc)
-> > > > > > > Cc: Thomas Bogendoerfer<tsbogend@alpha.franken.de>
-> > > > > > > Cc: Benjamin Herrenschmidt<benh@kernel.crashing.org>
-> > > > > > > Cc: Paul Mackerras<paulus@samba.org>
-> > > > > > > Cc: Michael Ellerman<mpe@ellerman.id.au>
-> > > > > > > Cc: Heiko Carstens<heiko.carstens@de.ibm.com>
-> > > > > > > Cc: Vasily Gorbik<gor@linux.ibm.com>
-> > > > > > > Cc: Christian Borntraeger<borntraeger@de.ibm.com>
-> > > > > > > Reported-by: Geert Uytterhoeven<geert@linux-m68k.org>
-> > > > > > > Signed-off-by: Jason Wang<jasowang@redhat.com>
-> > > > > > I rebased this on top of OABI fix since that
-> > > > > > seems more orgent to fix.
-> > > > > > Pushed to my vhost branch pls take a look and
-> > > > > > if possible test.
-> > > > > > Thanks!
-> > > > > I test this patch by generating the defconfigs that wants vhost_net or
-> > > > > vhost_vsock. All looks fine.
-> > > > > 
-> > > > > But having CONFIG_VHOST_DPN=y may end up with the similar situation that
-> > > > > this patch want to address.
-> > > > > Maybe we can let CONFIG_VHOST depends on !ARM || AEABI then add another
-> > > > > menuconfig for VHOST_RING and do something similar?
-> > > > > 
-> > > > > Thanks
-> > > > Sorry I don't understand. After this patch CONFIG_VHOST_DPN is just
-> > > > an internal variable for the OABI fix. I kept it separate
-> > > > so it's easy to revert for 5.8. Yes we could squash it into
-> > > > VHOST directly but I don't see how that changes logic at all.
-> > > 
-> > > Sorry for being unclear.
-> > > 
-> > > I meant since it was enabled by default, "CONFIG_VHOST_DPN=y" will be left
-> > > in the defconfigs.
-> > But who cares?
-> 
-> 
-> FYI, please see https://www.spinics.net/lists/kvm/msg212685.html
+On Tue, 14 Apr 2020 11:20:05 -0600
+Mathieu Poirier <mathieu.poirier@linaro.org> wrote:
 
-The complaint was not about the symbol IIUC.  It was that we caused
-everyone to build vhost unless they manually disabled it.
-
-> 
-> > That does not add any code, does it?
-> 
-> 
-> It doesn't.
-> 
-> Thanks
-> 
-> 
+> On Mon, Apr 06, 2020 at 02:33:09PM +0300, nikita.shubin@maquefel.me
+> wrote:
+> > Add support for mailboxes to imx_rproc
 > > 
-> > > This requires the arch maintainers to add
-> > > "CONFIG_VHOST_VDPN is not set". (Geert complains about this)
-> > > 
-> > > Thanks
-> > > 
-> > > 
+> > Signed-off-by: Nikita Shubin <NShubin@topcon.com>
+> > ---
+> >  drivers/remoteproc/Kconfig     |   2 +
+> >  drivers/remoteproc/imx_rproc.c | 142
+> > ++++++++++++++++++++++++++++++++- 2 files changed, 143
+> > insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/remoteproc/Kconfig b/drivers/remoteproc/Kconfig
+> > index 94afdde4bc9f..02d23a54c9cf 100644
+> > --- a/drivers/remoteproc/Kconfig
+> > +++ b/drivers/remoteproc/Kconfig
+> > @@ -17,6 +17,8 @@ if REMOTEPROC
+> >  config IMX_REMOTEPROC
+> >  	tristate "IMX6/7 remoteproc support"
+> >  	depends on ARCH_MXC
+> > +	select MAILBOX
+> > +	select IMX_MBOX
+> >  	help
+> >  	  Say y here to support iMX's remote processors (Cortex M4
+> >  	  on iMX7D) via the remote processor framework.
+> > diff --git a/drivers/remoteproc/imx_rproc.c
+> > b/drivers/remoteproc/imx_rproc.c index bebc58d0f711..d2bede4ccb70
+> > 100644 --- a/drivers/remoteproc/imx_rproc.c
+> > +++ b/drivers/remoteproc/imx_rproc.c
+> > @@ -14,6 +14,9 @@
+> >  #include <linux/platform_device.h>
+> >  #include <linux/regmap.h>
+> >  #include <linux/remoteproc.h>
+> > +#include <linux/mailbox_client.h>
+> > +
+> > +#include "remoteproc_internal.h"
+> >  
+> >  #define IMX7D_SRC_SCR			0x0C
+> >  #define IMX7D_ENABLE_M4			BIT(3)
+> > @@ -47,6 +50,12 @@
+> >  
+> >  #define IMX_BOOT_PC			0x4
+> >  
+> > +#define IMX_MBOX_NB_VQ			2
+> > +#define IMX_MBOX_NB_MBX		2
+> 
+> Please align this.
+> 
+> > +
+> > +#define IMX_MBX_VQ0		"vq0"
+> > +#define IMX_MBX_VQ1		"vq1"
+> > +
+> >  /**
+> >   * struct imx_rproc_mem - slim internal memory structure
+> >   * @cpu_addr: MPU virtual address of the memory region
+> > @@ -80,6 +89,14 @@ struct imx_rproc_dcfg {
+> >  	size_t				att_size;
+> >  };
+> >  
+> > +struct imx_mbox {
+> > +	const unsigned char name[10];
+> > +	struct mbox_chan *chan;
+> > +	struct mbox_client client;
+> > +	struct work_struct vq_work;
+> > +	int vq_id;
+> > +};
+> > +
+> >  struct imx_rproc {
+> >  	struct device			*dev;
+> >  	struct regmap			*regmap;
+> > @@ -88,6 +105,8 @@ struct imx_rproc {
+> >  	struct imx_rproc_mem
+> > mem[IMX7D_RPROC_MEM_MAX]; struct clk			*clk;
+> >  	void __iomem			*bootreg;
+> > +	struct imx_mbox mb[IMX_MBOX_NB_MBX];
+> > +	struct workqueue_struct *workqueue;
+> >  };
+> >  
+> >  static const struct imx_rproc_att imx_rproc_att_imx7d[] = {
+> > @@ -251,10 +270,118 @@ static void *imx_rproc_da_to_va(struct rproc
+> > *rproc, u64 da, int len) return va;
+> >  }
+> >  
+> > +static void imx_rproc_mb_vq_work(struct work_struct *work)
+> > +{
+> > +	struct imx_mbox *mb = container_of(work, struct imx_mbox,
+> > vq_work);
+> > +	struct rproc *rproc = dev_get_drvdata(mb->client.dev);
+> > +
+> > +	if (rproc_vq_interrupt(rproc, mb->vq_id) == IRQ_NONE)
+> > +		dev_dbg(&rproc->dev, "no message found in vq%d\n",
+> > mb->vq_id); +}
+> > +
+> > +static void imx_rproc_mb_callback(struct mbox_client *cl, void
+> > *data) +{
+> > +	struct rproc *rproc = dev_get_drvdata(cl->dev);
+> > +	struct imx_mbox *mb = container_of(cl, struct imx_mbox,
+> > client);
+> > +	struct imx_rproc *ddata = rproc->priv;
+> > +
+> > +	queue_work(ddata->workqueue, &mb->vq_work);
+> > +}
+> > +
+> > +static const struct imx_mbox imx_rproc_mbox[IMX_MBOX_NB_MBX] = {
+> > +	{
+> > +		.name = IMX_MBX_VQ0,
+> > +		.vq_id = 0,
+> > +		.client = {
+> > +			.rx_callback = imx_rproc_mb_callback,
+> > +			.tx_block = false,
+> > +		},
+> > +	},
+> > +	{
+> > +		.name = IMX_MBX_VQ1,
+> > +		.vq_id = 1,
+> > +		.client = {
+> > +			.rx_callback = imx_rproc_mb_callback,
+> > +			.tx_block = false,
+> > +		},
+> > +	},
+> > +};
+> > +
+> > +static void imx_rproc_request_mbox(struct rproc *rproc)
+> > +{
+> > +	struct imx_rproc *ddata = rproc->priv;
+> > +	struct device *dev = &rproc->dev;
+> > +	unsigned int i;
+> > +	const unsigned char *name;
+> > +	struct mbox_client *cl;
+> > +
+> > +	/* Initialise mailbox structure table */
+> > +	memcpy(ddata->mb, imx_rproc_mbox, sizeof(imx_rproc_mbox));
+> > +
+> > +	for (i = 0; i < IMX_MBOX_NB_MBX; i++) {
+> > +		name = ddata->mb[i].name;
+> > +
+> > +		cl = &ddata->mb[i].client;
+> > +		cl->dev = dev->parent;
+> > +
+> > +		ddata->mb[i].chan =
+> > mbox_request_channel_byname(cl, name); +
+> > +		dev_dbg(dev, "%s: name=%s, idx=%u\n",
+> > +			__func__, name, ddata->mb[i].vq_id);
+> > +
+> > +		if (IS_ERR(ddata->mb[i].chan)) {
+> > +			dev_warn(dev, "cannot get %s mbox\n",
+> > name);
+> > +			ddata->mb[i].chan = NULL;
+> 
+> If the mailbox isn't ready this driver will fail without a chance of
+> recovery. Since most of the code in this patch is a carbon copy of
+> the implementation found in stm32_proc.c, I suggest you do the same
+> as they did in stm32_rproc_request_mbox() and privision for cases
+> where requesting a channel returns -EPROBE_DEFER.
+> 
+
+Noted, will be fixed.
+
+> > +		}
+> > +
+> > +		if (ddata->mb[i].vq_id >= 0)
+> > +			INIT_WORK(&ddata->mb[i].vq_work,
+> > imx_rproc_mb_vq_work);
+> > +	}
+> > +}
+> > +
+> > +static void imx_rproc_free_mbox(struct rproc *rproc)
+> > +{
+> > +	struct imx_rproc *ddata = rproc->priv;
+> > +	unsigned int i;
+> > +
+> > +	dev_dbg(&rproc->dev, "%s: %d boxes\n",
+> > +		__func__, ARRAY_SIZE(ddata->mb));
+> > +
+> > +	for (i = 0; i < ARRAY_SIZE(ddata->mb); i++) {
+> > +		if (ddata->mb[i].chan)
+> > +			mbox_free_channel(ddata->mb[i].chan);
+> > +		ddata->mb[i].chan = NULL;
+> > +	}
+> > +}
+> > +
+> > +static void imx_rproc_kick(struct rproc *rproc, int vqid)
+> > +{
+> > +	struct imx_rproc *ddata = rproc->priv;
+> > +	unsigned int i;
+> > +	int err;
+> > +
+> > +	if (WARN_ON(vqid >= IMX_MBOX_NB_VQ))
+> > +		return;
+> > +
+> > +	for (i = 0; i < IMX_MBOX_NB_MBX; i++) {
+> > +		if (vqid != ddata->mb[i].vq_id)
+> > +			continue;
+> > +		if (!ddata->mb[i].chan)
+> > +			return;
+> > +		dev_dbg(&rproc->dev, "sending message : vqid =
+> > %d\n", vqid);
+> > +		err = mbox_send_message(ddata->mb[i].chan, &vqid);
+> > +		if (err < 0)
+> > +			dev_err(&rproc->dev, "%s: failed (%s,
+> > err:%d)\n",
+> > +					__func__,
+> > ddata->mb[i].name, err);
+> > +			return;
+> > +	}
+> > +}
+> > +
+> >  static const struct rproc_ops imx_rproc_ops = {
+> >  	.start		= imx_rproc_start,
+> >  	.stop		= imx_rproc_stop,
+> >  	.da_to_va	= imx_rproc_da_to_va,
+> > +	.kick		= imx_rproc_kick,
+> >  	.get_boot_addr	= rproc_elf_get_boot_addr,
+> >  };
+> >  
+> > @@ -384,14 +511,26 @@ static int imx_rproc_probe(struct
+> > platform_device *pdev) goto err_put_rproc;
+> >  	}
+> >  
+> > +	priv->workqueue = create_workqueue(dev_name(dev));
+> > +	if (!priv->workqueue) {
+> > +		dev_err(dev, "cannot create workqueue\n");
+> > +		ret = -ENOMEM;
+> > +		goto err_put_clk;
+> > +	}
+> > +
+> > +	imx_rproc_request_mbox(rproc);
+> > +
+> >  	ret = rproc_add(rproc);
+> >  	if (ret) {
+> >  		dev_err(dev, "rproc_add failed\n");
+> > -		goto err_put_clk;
+> > +		goto err_free_mb;
+> >  	}
+> >  
+> >  	return 0;
+> >  
+> > +err_free_mb:
+> > +	imx_rproc_free_mbox(rproc);
+> > +	destroy_workqueue(priv->workqueue);
+> >  err_put_clk:
+> >  	clk_disable_unprepare(priv->clk);
+> >  err_put_rproc:
+> > @@ -407,6 +546,7 @@ static int imx_rproc_remove(struct
+> > platform_device *pdev) 
+> >  	clk_disable_unprepare(priv->clk);
+> >  	rproc_del(rproc);
+> > +	imx_rproc_free_mbox(rproc);
+> 
+> I have no issues with people reusing code already found in the kernel
+> - in fact I encourage it because it makes reviewing patches much
+> easier.  On the flip side you have to give credit where it is due.
+> Here adding a line in the changelog that mentions where you took your
+> inspiration from will be much appreciated.
+
+Please don't blame on things i never did citing my own self from 0/0:
+
+| Regarding mailboxes and memory regions :
+
+| This code is heavily derived from stm32-rproc (i.e. copy pasted) and
+| this fact needs to reflected in commits, please tell me how to
+| emphasize this fact.
+
+I am eager to give credits.
+
+
+> 
+> Thanks,
+> Mathieu
+> 
+> >  	rproc_free(rproc);
+> >  
+> >  	return 0;
+> > -- 
+> > 2.25.1
+> > 
 
