@@ -2,132 +2,99 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5DBAC38A2C
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 11:43:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 148F8C352BE
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 11:45:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 940872137B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 11:43:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2911206D9
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 11:45:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="EXTd0EIW"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="X6yVjy3o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730517AbgDQLny (ORCPT
+        id S1730521AbgDQLpP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 07:43:54 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:52148 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730267AbgDQLnx (ORCPT
+        Fri, 17 Apr 2020 07:45:15 -0400
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:15516 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730267AbgDQLpO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 07:43:53 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 03HBhZZg034317;
-        Fri, 17 Apr 2020 06:43:35 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1587123815;
-        bh=6aSSBM0i5VIvjL6XkO+db3ofrSudsLQ7qzAvGhFRHCU=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=EXTd0EIWvC7SWpmIxLbRFkVaZUc/KPij8Qp5DOBtz8sNc6xk9pyIK18WgTBiBJf/9
-         McKh1rsNmh9ja64Krjyhp4MsYvZBKp/OZjwo51hXVTOUqxHoBoIJ0oY4i20iR2nJrH
-         B5dNe1dnvLs2Cb+LrJ8VNLGS7qSqRAi4fdLlng9k=
-Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 03HBhZSL086674
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 17 Apr 2020 06:43:35 -0500
-Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 17
- Apr 2020 06:43:35 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Fri, 17 Apr 2020 06:43:35 -0500
-Received: from a0393678ub.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03HBhN9q088610;
-        Fri, 17 Apr 2020 06:43:32 -0500
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-To:     Tom Joseph <tjoseph@cadence.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>
-CC:     <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2 3/4] PCI: cadence: Remove "cdns,max-outbound-regions" DT property
-Date:   Fri, 17 Apr 2020 17:13:21 +0530
-Message-ID: <20200417114322.31111-4-kishon@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200417114322.31111-1-kishon@ti.com>
-References: <20200417114322.31111-1-kishon@ti.com>
+        Fri, 17 Apr 2020 07:45:14 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e99968e0000>; Fri, 17 Apr 2020 04:44:14 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Fri, 17 Apr 2020 04:45:14 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Fri, 17 Apr 2020 04:45:14 -0700
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 17 Apr
+ 2020 11:45:13 +0000
+Received: from [10.26.73.163] (10.124.1.5) by DRHQMAIL107.nvidia.com
+ (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 17 Apr
+ 2020 11:45:12 +0000
+Subject: Re: [PATCH V2 2/3] soc/tegra: fuse: Correct Tegra194 revision
+To:     Thierry Reding <thierry.reding@gmail.com>
+CC:     <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20200331103341.19571-1-jonathanh@nvidia.com>
+ <20200331103341.19571-2-jonathanh@nvidia.com>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <b4458eb2-192a-b5a3-8255-e42f9fc52c1a@nvidia.com>
+Date:   Fri, 17 Apr 2020 12:45:07 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+In-Reply-To: <20200331103341.19571-2-jonathanh@nvidia.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1587123855; bh=x3xNcjW5cEUnM1T8PUGYs+pLcMFOIuhwL7/hxdohjb4=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=X6yVjy3o+monjBvKX1QsjYWouFHKnL7OOjln23s0xB/VaHbYF8dQxHrKeV298YfGo
+         caZgHqkerRxCJ0A3r2S3OmPnRbas0CfcVCoyhFMlUvAPb+sP2g5H44P3a/+lqihM+Q
+         GaogPUGfcRREECkuLAAj7d1LCafGOARicrDPw79JQyKsN0RzRCi1aMy452QHxUkL1F
+         2apKfqVqZ5fgXFBKiH1fnNmFME/RP/2mUvmaN5gvILNWMPrt0nBYgn/3P9gF11x4EJ
+         N9nsY9E6wy/CAdM3bbVSwrBBiiee/jS+20q4maD9KPRx5wwV+N1H88Nsd46vzYGvpe
+         JOOPtGuCjQi+g==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-"cdns,max-outbound-regions" device tree property provides the
-maximum number of outbound regions supported by the Host PCIe
-controller. However the outbound regions are configured based
-on what is populated in the "ranges" DT property.
 
-Avoid using two properties for configuring outbound regions and
-use only "ranges" property instead.
+On 31/03/2020 11:33, Jon Hunter wrote:
+> Determining the revision for Tegra194 devices is slightly different from
+> previous generations. For Tegra194, the majorrev field of the HIDREV
+> register determines if the major revision is A, B, C, etc and the
+> minorrev field determines if the minorrev is 01, 02, 03, etc.
+> 
+> For Tegra194, there are two main revisions which are A01 and A02.
+> Therefore, add a new function to correctly identify the revision for
+> Tegra194 devices.
+> 
+> Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
+> ---
+>  drivers/soc/tegra/fuse/fuse-tegra20.c  |  3 ++-
+>  drivers/soc/tegra/fuse/fuse-tegra30.c  |  8 ++++++-
+>  drivers/soc/tegra/fuse/fuse.h          |  2 ++
+>  drivers/soc/tegra/fuse/tegra-apbmisc.c | 29 ++++++++++++++++++++++++++
+>  4 files changed, 40 insertions(+), 2 deletions(-)
 
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
----
- drivers/pci/controller/cadence/pcie-cadence-host.c | 6 ------
- drivers/pci/controller/cadence/pcie-cadence.h      | 2 --
- 2 files changed, 8 deletions(-)
+Although there is a slight difference, it turns out that the existing
+code does work fine for Tegra194 as well and so I will drop this change
+as it is not needed.
 
-diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
-index 60f912a657b9..8f72967f298f 100644
---- a/drivers/pci/controller/cadence/pcie-cadence-host.c
-+++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
-@@ -140,9 +140,6 @@ static int cdns_pcie_host_init_address_translation(struct cdns_pcie_rc *rc)
- 	for_each_of_pci_range(&parser, &range) {
- 		bool is_io;
- 
--		if (r >= rc->max_regions)
--			break;
--
- 		if ((range.flags & IORESOURCE_TYPE_BITS) == IORESOURCE_MEM)
- 			is_io = false;
- 		else if ((range.flags & IORESOURCE_TYPE_BITS) == IORESOURCE_IO)
-@@ -221,9 +218,6 @@ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
- 	pcie = &rc->pcie;
- 	pcie->is_rc = true;
- 
--	rc->max_regions = 32;
--	of_property_read_u32(np, "cdns,max-outbound-regions", &rc->max_regions);
--
- 	if (!of_pci_dma_range_parser_init(&parser, np))
- 		if (of_pci_range_parser_one(&parser, &range))
- 			rc->no_bar_nbits = ilog2(range.size);
-diff --git a/drivers/pci/controller/cadence/pcie-cadence.h b/drivers/pci/controller/cadence/pcie-cadence.h
-index a2b28b912ca4..6bd89a21bb1c 100644
---- a/drivers/pci/controller/cadence/pcie-cadence.h
-+++ b/drivers/pci/controller/cadence/pcie-cadence.h
-@@ -251,7 +251,6 @@ struct cdns_pcie {
-  * @bus_range: first/last buses behind the PCIe host controller
-  * @cfg_base: IO mapped window to access the PCI configuration space of a
-  *            single function at a time
-- * @max_regions: maximum number of regions supported by the hardware
-  * @no_bar_nbits: Number of bits to keep for inbound (PCIe -> CPU) address
-  *                translation (nbits sets into the "no BAR match" register)
-  * @vendor_id: PCI vendor ID
-@@ -262,7 +261,6 @@ struct cdns_pcie_rc {
- 	struct resource		*cfg_res;
- 	struct resource		*bus_range;
- 	void __iomem		*cfg_base;
--	u32			max_regions;
- 	u32			no_bar_nbits;
- 	u16			vendor_id;
- 	u16			device_id;
+Jon
+
 -- 
-2.17.1
-
+nvpublic
