@@ -2,40 +2,40 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04600C38A2B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 15:30:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00232C352BE
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 15:30:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E41FE20936
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 15:30:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF15A208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 15:30:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729160AbgDQPat (ORCPT
+        id S1729194AbgDQPav (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 11:30:49 -0400
-Received: from mout.kundenserver.de ([212.227.126.187]:57441 "EHLO
+        Fri, 17 Apr 2020 11:30:51 -0400
+Received: from mout.kundenserver.de ([212.227.126.131]:52003 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729083AbgDQPas (ORCPT
+        with ESMTP id S1729119AbgDQPat (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 11:30:48 -0400
+        Fri, 17 Apr 2020 11:30:49 -0400
 Received: from mail.cetitecgmbh.com ([87.190.42.90]) by
- mrelayeu.kundenserver.de (mreue011 [212.227.15.167]) with ESMTPSA (Nemesis)
- id 1Mbzdn-1ipIWA0C5f-00da7d; Fri, 17 Apr 2020 17:30:29 +0200
+ mrelayeu.kundenserver.de (mreue010 [212.227.15.167]) with ESMTPSA (Nemesis)
+ id 1N0WsG-1j4Nko1EJA-00wSVb; Fri, 17 Apr 2020 17:30:30 +0200
 Received: from pflvmailgateway.corp.cetitec.com (unknown [127.0.0.1])
-        by mail.cetitecgmbh.com (Postfix) with ESMTP id CA23C650CBC;
-        Fri, 17 Apr 2020 15:30:27 +0000 (UTC)
+        by mail.cetitecgmbh.com (Postfix) with ESMTP id B5F9E64ECEB;
+        Fri, 17 Apr 2020 15:30:28 +0000 (UTC)
 X-Virus-Scanned: amavisd-new at cetitec.com
 Received: from mail.cetitecgmbh.com ([127.0.0.1])
         by pflvmailgateway.corp.cetitec.com (pflvmailgateway.corp.cetitec.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id aO044AulWpIr; Fri, 17 Apr 2020 17:30:27 +0200 (CEST)
+        with ESMTP id V9ig1oZlNVEl; Fri, 17 Apr 2020 17:30:28 +0200 (CEST)
 Received: from pfwsexchange.corp.cetitec.com (unknown [10.10.1.99])
-        by mail.cetitecgmbh.com (Postfix) with ESMTPS id 7911A64ECEB;
-        Fri, 17 Apr 2020 17:30:27 +0200 (CEST)
+        by mail.cetitecgmbh.com (Postfix) with ESMTPS id 6E047650DE0;
+        Fri, 17 Apr 2020 17:30:28 +0200 (CEST)
 Received: from pflmmbl.corp.cetitec.com (10.8.5.29) by
  PFWSEXCHANGE.corp.cetitec.com (10.10.1.99) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Fri, 17 Apr 2020 17:30:27 +0200
+ id 15.0.1497.2; Fri, 17 Apr 2020 17:30:28 +0200
 From:   Matthias Blankertz <matthias.blankertz@cetitec.com>
 To:     Mark Brown <broonie@kernel.org>,
         Liam Girdwood <lgirdwood@gmail.com>
@@ -43,10 +43,12 @@ CC:     Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
         "Kuninori Morimoto" <kuninori.morimoto.gx@renesas.com>,
         <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
         <linux-renesas-soc@vger.kernel.org>
-Subject: [PATCH 0/2] ASoC: rsnd: multi-SSI setup fixes
-Date:   Fri, 17 Apr 2020 17:30:15 +0200
-Message-ID: <20200417153017.1744454-1-matthias.blankertz@cetitec.com>
+Subject: [PATCH 2/2] ASoC: rsnd: Fix "status check failed" spam for multi-SSI
+Date:   Fri, 17 Apr 2020 17:30:17 +0200
+Message-ID: <20200417153017.1744454-3-matthias.blankertz@cetitec.com>
 X-Mailer: git-send-email 2.26.1
+In-Reply-To: <20200417153017.1744454-1-matthias.blankertz@cetitec.com>
+References: <20200417153017.1744454-1-matthias.blankertz@cetitec.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7BIT
 Content-Type:   text/plain; charset=US-ASCII
@@ -55,56 +57,65 @@ X-ClientProxiedBy: PFWSEXCHANGE.corp.cetitec.com (10.10.1.99) To
  PFWSEXCHANGE.corp.cetitec.com (10.10.1.99)
 X-EsetResult: clean, is OK
 X-EsetId: 37303A290D7F536B64766A
-X-Provags-ID: V03:K1:QNcV6Oturueaw/p4lzF3+WWTDTwDcZBnAuBryfo+i2N5dtxH2uq
- +t6Sz/ge4PJmiEuMN90KdNq2xXZ02NBWyuFHv8I9ot/+JtE/D+grmpZfFzqFM502cVrvtu6
- 72WW2x5rokNOhTsiB5Ai2akfPhkovaE+x71vXV/8Zo4fpAKfbQbfJOkgW/ah5b5dIjHLY1d
- T5V2ieylNwuNfLpoY2BOw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:ZY7ZuWAKTR0=:uSfd8DHZnxk85uOJoy4lG4
- 3z1WmRTTkv5hQ3LHl/G5PQoBzvji083+YMfUQDrjh8UdZPwapZPXRt4vE5Qg2cHZDw3t1koAZ
- hnYuvEbfX4TPfrnkp6Cwl58P0Z+6Rqb/MYcvMVAu8hFB1rp+J7QKSnfqUGIoDZ+FatOOsnAEZ
- 03qJnzM77w0l7Tbsm8liZkYq2HDubdQd9LVkBmavBjNWbV76KZ11bK/sO8ztXDznbTy1DRdow
- rT4RVJG/mRTXXH5q4ixDdETbcPGREjvCDIgWStP7q976pMz40zfuqHdliOMlr/kELehOdZrUi
- PjEI21j6VWkt05BB4bcKoOOdEkEwHRrP2DfWFdMh68EWfuXmxIVjj8qK+G6dEgGCTVt7u8uc7
- wyH6yyvzlHY0vopeqrmCs6TCt3nEtkQ5GTtspI9skT+KBljm0lVTw7bR6ozJwwUNezT4ohQO8
- ONTGib4Sg1+Ew7lM4i1ZGwO9JnKGna9Rx++EVCy+OIoi659eoz1OqejL4VtZFW92bXsLTdYE5
- BDYFi0N7lZSV3BwW7C1T/v8QuJJjY2NeIWSeU7Z5K6AbISYY2tqb583x3zoahfn3UbZktmq6k
- Kn1WOp/SbbtsGC/1GoRf+itfCocvfEefCSNLC5l4XDpbGHW91C23PpC20zNsYbNbeJhlLzxap
- NRDqRwRfjLycKOQ1uQCzUu0e4OhIjs4i7B7Sd+fEnCa11+/sKglNfr4/xTiXgZzygfgFPObT5
- JyMaABfvJYPSflI1XHwWod1bBpoloPaBCjV1Wu8gPceiVJGjCqyNJcrTnCia4EH6sQeofyaZ0
- lenyy2Krirp5kkoB2gelXn1Y1lqjrGHE2tcMUEYu7cG+z5RZlXboz+WSLy/XmqDldzJetU7dE
- k/+OAsmI/bTPWkOQuSkw==
+X-Provags-ID: V03:K1:0iRD0Id+7QAfQTeP6+QurWwUltdZG+fqMJxBvkqJPUd9FojZGun
+ sf/9XgiwufPW5lLOJnygfUJDpIG3Z4/yUnjoh2uQ3UTbt+ieGVMXWejLjl4NJFwleR7VHXz
+ eRsYNxfKmS1M33G07P44CMIo742DTe2CGMpOqZivLTzQTkStbAMtWDN5CKCSydpQxOTyUkZ
+ FwuIJnLucp0OAHrIeur5g==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:qrbtVe90pA4=:tpoXoz3xiMvTH8cBv3+3P5
+ O4EfrILxVOr5loC4L9WtX5APJDqGNf3/02r4YxVynorLJGVCh/O4fVnfGLw7bn1ah8a2azkk9
+ GbUbFIDS9MYt5+SS2kfMgcoemth2pPdoReZlC3AempfKFBat9gacbxiGTH+zdL5pyXvXZ6P5b
+ i0rXQ3ka5ADlVHSX8K/wVthVsNVlKd9/f7238FjMJkns3Zk/b+HUfYa7gwOlBYqlMviXeUdCd
+ 6xf19mziHr6IBOetMAF1i2bVDnwU7xxFy1aYFIGXqzvpDGDvwTYEGpBGB+OvLhKLn1KOZBlXx
+ yHpsVOGpORrmCSQLRpNaMCymL6RoaDJCco3APjIMVIqyTBsvpDEVT6VF6y4BHbRs2Gv85ARNJ
+ DSX7qcjmp7FW2QHI/vUk9tcVuER2NYUWlRv5QPhbtp441llHqfXKfsogfMIbMBMQ7yzTKx4s2
+ 0sbIazv1WZR618d1aRS7H6N5/+Te/h2a5bC0KBLN3aacObwZCpGXRt3Gv2oLMGo4IidjwqEbD
+ RpvbEUHoAsBTR5X0Feqks9hQFhkJFU1ukodv65khpgHXq1+kPT350qQj27Eb+YjWyR5Q8Jk66
+ APq2T35CZTvLSAHG3IoAbxVEOcvfDH33qutyMOUDelS0C6i6xKnN6yb7wQmyF7meFkOtRdZsV
+ OH2IZCe3Q8X3nV//JRVeP5fa0yJpgqPmtbXsekghIoZ0DMhWdA3z0H2FOIAKFWIf8F7s3lmtt
+ bmOoT5ZGm/lwnPkCLZPwlARHRXc/zIi2RNJ3qfQiSxP0xDOy8fnTcKJmZiTWGw9iNPK6Wt1Ad
+ jUgYyQPkWFiAUeibo2fhkR/uZhGy4SJid8Ysld0jikN58hBAUX0hoXh9/fCDCC1W2IQIaHzkd
+ ebk9P8irWlOJkEzhT4sQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix rsnd_dai_call() operations being performed twice for the master SSI
-in multi-SSI setups, and fix the rsnd_ssi_stop operation for multi-SSI
-setups.
-The only visible effect of these issues was some "status check failed"
-spam when the rsnd_ssi_stop was called, but overall the code is cleaner
-now, and some questionable writes to the SSICR register which did not
-lead to any observable misbehaviour but were contrary to the datasheet
-are fixed.
+Fix the rsnd_ssi_stop function to skip disabling the individual SSIs of
+a multi-SSI setup, as the actual stop is performed by rsnd_ssiu_stop_gen2
+- the same logic as in rsnd_ssi_start. The attempt to disable these SSIs
+was harmless, but caused a "status check failed" message to be printed
+for every SSI in the multi-SSI setup.
+The disabling of interrupts is still performed, as they are enabled for
+all SSIs in rsnd_ssi_init, but care is taken to not accidentally set the
+EN bit for an SSI where it was not set by rsnd_ssi_start.
 
-Mark:
-The first patch kind of reverts my "ASoC: rsnd: Fix parent SSI
-start/stop in multi-SSI mode" from a few days ago and achieves the same
-effect in a simpler fashion, if you would prefer a clean patch series
-based on v5.6 drop me a note.
+Signed-off-by: Matthias Blankertz <matthias.blankertz@cetitec.com>
+---
+ sound/soc/sh/rcar/ssi.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-Greetings,
-	Matthias
-
-
-Matthias Blankertz (2):
-  ASoC: rsnd: Don't treat master SSI in multi SSI setup as parent
-  ASoC: rsnd: Fix "status check failed" spam for multi-SSI
-
- sound/soc/sh/rcar/ssi.c | 18 +++++++++++++-----
- 1 file changed, 13 insertions(+), 5 deletions(-)
-
-base-commit: 15a5760cb8b6d5c1ebbf1d2e1f0b77380ab68a82
+diff --git a/sound/soc/sh/rcar/ssi.c b/sound/soc/sh/rcar/ssi.c
+index 9900a4f6f4e5..4a7d3413917f 100644
+--- a/sound/soc/sh/rcar/ssi.c
++++ b/sound/soc/sh/rcar/ssi.c
+@@ -594,10 +594,16 @@ static int rsnd_ssi_stop(struct rsnd_mod *mod,
+ 	 * Capture:  It might not receave data. Do nothing
+ 	 */
+ 	if (rsnd_io_is_play(io)) {
+-		rsnd_mod_write(mod, SSICR, cr | EN);
++		rsnd_mod_write(mod, SSICR, cr | ssi->cr_en);
+ 		rsnd_ssi_status_check(mod, DIRQ);
+ 	}
+ 
++	/* In multi-SSI mode, stop is performed by setting ssi0129 in
++	 * SSI_CONTROL to 0 (in rsnd_ssio_stop_gen2). Do nothing here.
++	 */
++	if (rsnd_ssi_multi_slaves_runtime(io))
++		return 0;
++
+ 	/*
+ 	 * disable SSI,
+ 	 * and, wait idle state
 -- 
 2.26.1
 
