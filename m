@@ -2,93 +2,95 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99A71C38A2B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 21:34:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8E27C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 21:35:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 78B00206B9
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 21:34:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF962206B9
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 21:35:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="V6aPo1wP"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="pV2FmzW+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728352AbgDQVey (ORCPT
+        id S1728371AbgDQVfb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 17:34:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44846 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725873AbgDQVey (ORCPT
+        Fri, 17 Apr 2020 17:35:31 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:36334 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725873AbgDQVfb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 17:34:54 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53BC5C061A0C;
-        Fri, 17 Apr 2020 14:34:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description;
-        bh=a/5VyyW0f5t2tlerVMS31oR1lXYo8UFpY6MnzoWeS1s=; b=V6aPo1wPf4WiRa46EFNg38APJd
-        johrUKGR/XDYNfVUHf0eM48283ZCBSx4MuyMAlwIV+SxJrbOImRk1tNC1rpJjPYyqsW2wP6apdOUv
-        yaXkH8D3dvvZx+gsidFWr30ejybsVZqGPyiitMEov95HEyKNeVwLTLkZSWUcYYvSCW4Hnj9YbGcxd
-        jZvdKh2JKbpKCQMCnp4GiZP+DRVJWB8d1ToVIsB0i9I8eVJHNYALUduRm7IXmL/XR19uC6iY0Bpay
-        x0+Wtjt70hyZw8kwtFETmSxKG5SGP1iZDoSZf0fLfB5J0FKAgV7VNNs4r2UgbZh48c5j64E3r+UR7
-        Fwqq9q8Q==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jPYdM-0003Q3-1g; Fri, 17 Apr 2020 21:34:48 +0000
-Subject: Re: [PATCH] hwrng: cctrng - add missing include to linux/fips.h
-To:     Hadar Gat <hadar.gat@arm.com>, Matt Mackall <mpm@selenic.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Gilad Ben-Yossef <gilad@benyossef.com>,
-        Ofir Drang <ofir.drang@arm.com>, linux-crypto@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <1587155926-32663-1-git-send-email-hadar.gat@arm.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <096db769-a508-b0fa-f018-2c4c807061cb@infradead.org>
-Date:   Fri, 17 Apr 2020 14:34:44 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Fri, 17 Apr 2020 17:35:31 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03HLILig016868;
+        Fri, 17 Apr 2020 21:32:31 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : references : date : in-reply-to : message-id : mime-version :
+ content-type; s=corp-2020-01-29;
+ bh=Bjf1q6zUnnLKrptK1UtiDhBftkswIaoiuIfxtbTFFUI=;
+ b=pV2FmzW+nsi1iJT4Cz8R+skuOgki0Y/nfLUYAjVofl1rREN4Gw3uHIRE/ly7o5WnThi6
+ OUzfCd1BscjAPw29ay7hU7Azmc4T1bi+fhHgN8zdHb6z2SSsHadyUVGDTSPnAo5b6p3d
+ z84AGlAkeVs6x5L3QqeZ7tHoPwg/Nv4TJtAd7b01c2NQAGsDucvdv18j7qJgTRqwAi87
+ d3geB+JEG0s92UvJFDAbG2kfsIapMxBtLXxwqilg2pxE2WYBpa59UcWtyzuQjJPXaMlb
+ UOwictiaiP832yy3VpfZbB/Al4rAmnaqMQYvr+qYbSWHdGHyzyRZagISdnGpcP0pcLdv nA== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 30dn961c88-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 17 Apr 2020 21:32:31 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03HLDKQI100409;
+        Fri, 17 Apr 2020 21:32:30 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3030.oracle.com with ESMTP id 30dn928egq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 17 Apr 2020 21:32:30 +0000
+Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 03HLWSAG006990;
+        Fri, 17 Apr 2020 21:32:29 GMT
+Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 17 Apr 2020 14:32:27 -0700
+To:     Jason Yan <yanaijie@huawei.com>
+Cc:     <jejb@linux.ibm.com>, <martin.petersen@oracle.com>,
+        <ben.hutchings@codethink.co.uk>, <rfontana@redhat.com>,
+        <allison@lohutok.net>, <gregkh@linuxfoundation.org>,
+        <arnd@arndb.de>, <tglx@linutronix.de>,
+        <linux-scsi@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] scsi: mvsas: remove unused symbol 'mvs_th'
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+References: <20200415085053.7633-1-yanaijie@huawei.com>
+Date:   Fri, 17 Apr 2020 17:32:24 -0400
+In-Reply-To: <20200415085053.7633-1-yanaijie@huawei.com> (Jason Yan's message
+        of "Wed, 15 Apr 2020 16:50:53 +0800")
+Message-ID: <yq1v9lxn6hj.fsf@oracle.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
 MIME-Version: 1.0
-In-Reply-To: <1587155926-32663-1-git-send-email-hadar.gat@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9594 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 mlxlogscore=816
+ suspectscore=0 malwarescore=0 spamscore=0 phishscore=0 adultscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004170155
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9594 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 clxscore=1011
+ malwarescore=0 bulkscore=0 priorityscore=1501 lowpriorityscore=0
+ mlxscore=0 phishscore=0 spamscore=0 impostorscore=0 suspectscore=0
+ mlxlogscore=890 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004170155
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/17/20 1:38 PM, Hadar Gat wrote:
-> This fixes build failure when CONFIG_CRYPTO_FIPS is defined.
-> 
-> Signed-off-by: Hadar Gat <hadar.gat@arm.com>
 
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
-Acked-by: Randy Dunlap <rdunlap@infradead.org> # build-tested
+Jason,
 
-> ---
->  drivers/char/hw_random/cctrng.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/char/hw_random/cctrng.c b/drivers/char/hw_random/cctrng.c
-> index bdcd562..e82716c 100644
-> --- a/drivers/char/hw_random/cctrng.c
-> +++ b/drivers/char/hw_random/cctrng.c
-> @@ -15,6 +15,7 @@
->  #include <linux/completion.h>
->  #include <linux/of.h>
->  #include <linux/bitfield.h>
-> +#include <linux/fips.h>
->  
->  #include "cctrng.h"
->  
-> 
+> This symbol has no users so remove it.
 
-thanks.
+Applied to 5.8/scsi-queue, thanks!
+
 -- 
-~Randy
+Martin K. Petersen	Oracle Linux Engineering
