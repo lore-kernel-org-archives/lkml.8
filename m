@@ -2,200 +2,99 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F4EBC2BA2B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 02:27:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3869BC2BA2B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 02:27:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2691C221E9
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 02:27:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=russell.cc header.i=@russell.cc header.b="atz2j8Ob";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="gqd6KNRb"
+	by mail.kernel.org (Postfix) with ESMTP id 1CBC720776
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 02:27:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729252AbgDQC1s (ORCPT
+        id S1729286AbgDQC14 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 22:27:48 -0400
-Received: from wout1-smtp.messagingengine.com ([64.147.123.24]:39811 "EHLO
-        wout1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728969AbgDQC1r (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 22:27:47 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.west.internal (Postfix) with ESMTP id ACD62794;
-        Thu, 16 Apr 2020 22:27:46 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Thu, 16 Apr 2020 22:27:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=russell.cc; h=
-        message-id:subject:from:to:cc:date:in-reply-to:references
-        :content-type:mime-version:content-transfer-encoding; s=fm1; bh=
-        Z4EK0RmjHHENIp/2ipnM27VWqO3MyOqHeIqAH9ex9ZI=; b=atz2j8ObFE8ZQMZE
-        339vFt3PI4Nb+5auKOQLfY6DoHXpKfwh+tQAqaH/TLREs9YA9u5ZSA1wbB23mQAS
-        XBvxivytTpfrAm7HSCOkpF8E12utAiNrS92SMgWpXt8LtPR+ukkDS2CUURNtYLIR
-        m/d4rcq751Aok3KOyyeEgeTqSucaz7P18XqxwTzv4CBfcPI2LUK3lGVvSDCIL7dx
-        MqYWOzZrfMxFeY4nl1AoR1LMGLa8xOlSeqZfmBODKJN1+287NAi9BPntBZAgOS93
-        kOVhmLO8qE2JXyPjMINVHj99ouvYQImw5GYK+QUW12POopC3PsS/W/kThhzWHNIg
-        huPNqw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:content-type
-        :date:from:in-reply-to:message-id:mime-version:references
-        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm2; bh=Z4EK0RmjHHENIp/2ipnM27VWqO3MyOqHeIqAH9ex9
-        ZI=; b=gqd6KNRbc8C3IRSAKSfLTTG34ukwZDlP3e1gjR7KBK5BZ1F4X+N67rY1u
-        veUYE7rFa+Rdifi6nDJnv9d7yHdLX3p86KrWrh6BJSFGQXt8V980gl2I/KLKnxqT
-        Y+u3BM+zmdjlEg8mlFmjPp7EtXRPEF9VETi1LAN0q8BydG6m9SXTBU5lMPG9elJ1
-        NTM7Ik40sl7XUuL1AZ2UvFzHCoNV/G3du2n3Lu7N3Mk1u+67y/ckkAIPPdRh4OwT
-        RyybnBGxz8ZOgolYYTeINrTtklcY4AWFj0wBDI8ozvGuK40Om9uF4TNm/yO47cKk
-        k0PzCX7MbTRnQZRqGyX2CELNcptIA==
-X-ME-Sender: <xms:IRSZXgS_LELLZei2llCF1Y8PwZVs9FNzBHrrmXAFOJ3reQjFG_s80w>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrfeeigdehlecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenfg
-    hrlhcuvffnffculddvtddmnecujfgurhepkffuhffvffgjfhgtfggggfesthekredttder
-    jeenucfhrhhomheptfhushhsvghllhcuvehurhhrvgihuceorhhushgtuhhrsehruhhssh
-    gvlhhlrdgttgeqnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucfkphepuddvuddr
-    geehrddvuddvrddvfeelnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrg
-    hilhhfrhhomheprhhushgtuhhrsehruhhsshgvlhhlrdgttg
-X-ME-Proxy: <xmx:IRSZXhSiMiZfe2q4JTASJDPD3yIWG-pTzHSOQRS2ID3IqV-fbUXzPA>
-    <xmx:IRSZXknV7NFM6yI_95kCgzKdHXUbA6acshCybsM3b-Wbm7lyff69jA>
-    <xmx:IRSZXiRjheovvanl6DEIdL3lwDb4FjuWqt-NCW-ZLEsnp5ksF9xtNg>
-    <xmx:IhSZXjVYZWQPBvehUfecVASDPicIGngFYFLoW_jDaH3CtGbE-M2xUA>
-Received: from crackle.ozlabs.ibm.com (ppp121-45-212-239.bras1.cbr2.internode.on.net [121.45.212.239])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 86E173280063;
-        Thu, 16 Apr 2020 22:27:43 -0400 (EDT)
-Message-ID: <f733132895e14123995e6bdaa93854c5632672bc.camel@russell.cc>
-Subject: Re: POWER9 crash due to STRICT_KERNEL_RWX (WAS: Re: Linux-next
- POWER9 NULL pointer NIP...)
-From:   Russell Currey <ruscur@russell.cc>
-To:     Steven Rostedt <rostedt@goodmis.org>, Qian Cai <cai@lca.pw>
-Cc:     Michael Ellerman <mpe@ellerman.id.au>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Date:   Fri, 17 Apr 2020 12:27:41 +1000
-In-Reply-To: <20200416221753.4e47080a@oasis.local.home>
-References: <15AC5B0E-A221-4B8C-9039-FA96B8EF7C88@lca.pw>
-         <87eeszlb6u.fsf@mpe.ellerman.id.au>
-         <0675B22E-8F32-432C-9378-FDE159DD1729@lca.pw>
-         <20200407093054.3eb23e45@gandalf.local.home>
-         <EA9F9A54-87BC-477A-BE8A-7D53F80C5223@lca.pw>
-         <20200409101413.35d9c72d@gandalf.local.home>
-         <06A2EA93-B730-4DB1-819F-D27E7032F0B3@lca.pw>
-         <161662E3-5D9C-4C15-919C-CFEFE4CC35CB@lca.pw>
-         <69F0448F-CA5B-497D-B8AF-2848175B9477@lca.pw>
-         <20200416221753.4e47080a@oasis.local.home>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.1 
+        Thu, 16 Apr 2020 22:27:56 -0400
+Received: from mga03.intel.com ([134.134.136.65]:24612 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728969AbgDQC1z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 22:27:55 -0400
+IronPort-SDR: akVDUuNrUHwmhFapak8u7ylFTccawbIgZGl3YyM24j2rhOQLkJz5R1QVY7ocUm68cT2y43vzHS
+ KgQGfmbGJ3Fw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2020 19:27:55 -0700
+IronPort-SDR: o9hkvLAaiO9Rb19BdwJ3FoHao5MY1QDR6RB4lAjMFbD5RyuhafnYlDuWMDlgKtfhXe28uxz0AZ
+ JCgxPSKKjYdg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,393,1580803200"; 
+   d="scan'208";a="299480898"
+Received: from fmsmsx107.amr.corp.intel.com ([10.18.124.205])
+  by FMSMGA003.fm.intel.com with ESMTP; 16 Apr 2020 19:27:54 -0700
+Received: from shsmsx101.ccr.corp.intel.com (10.239.4.153) by
+ fmsmsx107.amr.corp.intel.com (10.18.124.205) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Thu, 16 Apr 2020 19:27:52 -0700
+Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.225]) by
+ SHSMSX101.ccr.corp.intel.com ([169.254.1.129]) with mapi id 14.03.0439.000;
+ Fri, 17 Apr 2020 10:27:49 +0800
+From:   "Tian, Kevin" <kevin.tian@intel.com>
+To:     Lu Baolu <baolu.lu@linux.intel.com>, Joerg Roedel <joro@8bytes.org>
+CC:     "Raj, Ashok" <ashok.raj@intel.com>,
+        "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
+        "Liu, Yi L" <yi.l.liu@intel.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v2 6/7] iommu/vt-d: Add page request draining support
+Thread-Topic: [PATCH v2 6/7] iommu/vt-d: Add page request draining support
+Thread-Index: AQHWEubS8xobodm1XE6sOT1OPN2bNqh579XggAD5A4CAAa9E8A==
+Date:   Fri, 17 Apr 2020 02:27:49 +0000
+Message-ID: <AADFC41AFE54684AB9EE6CBC0274A5D19D824051@SHSMSX104.ccr.corp.intel.com>
+References: <20200415052542.30421-1-baolu.lu@linux.intel.com>
+ <20200415052542.30421-7-baolu.lu@linux.intel.com>
+ <AADFC41AFE54684AB9EE6CBC0274A5D19D8209CE@SHSMSX104.ccr.corp.intel.com>
+ <acf26559-49d2-653c-156d-3ef383b43879@linux.intel.com>
+In-Reply-To: <acf26559-49d2-653c-156d-3ef383b43879@linux.intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [10.239.127.40]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2020-04-16 at 22:17 -0400, Steven Rostedt wrote:
-> On Thu, 16 Apr 2020 21:19:10 -0400
-> Qian Cai <cai@lca.pw> wrote:
-> 
-> > OK, reverted the commit,
-> > 
-> > c55d7b5e6426 (“powerpc: Remove STRICT_KERNEL_RWX incompatibility
-> > with RELOCATABLE”)
-> > 
-> > or set STRICT_KERNEL_RWX=n fixed the crash below and also mentioned
-> > in this thread,
-> 
-> This may be a symptom and not a cure.
-
-Reverting the patch with the given config will have the same effect as
-STRICT_KERNEL_RWX=n.  Not discounting that it could be a bug on the
-powerpc side (i.e. relocatable kernels with strict RWX on haven't been
-exhaustively tested yet), but we should definitely figure out what's
-going on with this bad access first.
-
-> 
-> > https://lore.kernel.org/lkml/15AC5B0E-A221-4B8C-9039-FA96B8EF7C88@lca.pw/
-> > 
-> > [  148.110969][T13115] LTP: starting chown04_16
-> > [  148.255048][T13380] kernel tried to execute exec-protected page
-> > (c0000000016804ac) - exploit attempt? (uid: 0)
-> > [  148.255099][T13380] BUG: Unable to handle kernel instruction
-> > fetch
-> > [  148.255122][T13380] Faulting instruction address:
-> > 0xc0000000016804ac
-> > [  148.255136][T13380] Oops: Kernel access of bad area, sig: 11
-> > [#1]
-> > [  148.255157][T13380] LE PAGE_SIZE=64K MMU=Radix SMP NR_CPUS=256
-> > DEBUG_PAGEALLOC NUMA PowerNV
-> > [  148.255171][T13380] Modules linked in: loop kvm_hv kvm xfs
-> > sd_mod bnx2x mdio ahci tg3 libahci libphy libata firmware_class
-> > dm_mirror dm_region_hash dm_log dm_mod
-> > [  148.255213][T13380] CPU: 45 PID: 13380 Comm: chown04_16 Tainted:
-> > G        W         5.6.0+ #7
-> > [  148.255236][T13380] NIP:  c0000000016804ac LR: c00800000fa60408
-> > CTR: c0000000016804ac
-> > [  148.255250][T13380] REGS: c0000010a6fafa00 TRAP: 0400   Tainted:
-> > G        W          (5.6.0+)
-> > [  148.255281][T13380] MSR:  9000000010009033
-> > <SF,HV,EE,ME,IR,DR,RI,LE>  CR: 84000248  XER: 20040000
-> > [  148.255310][T13380] CFAR: c00800000fa66534 IRQMASK: 0 
-> > [  148.255310][T13380] GPR00: c000000000973268 c0000010a6fafc90
-> > c000000001648200 0000000000000000 
-> > [  148.255310][T13380] GPR04: c000000d8a22dc00 c0000010a6fafd30
-> > 00000000b5e98331 ffffffff00012c9f 
-> > [  148.255310][T13380] GPR08: c000000d8a22dc00 0000000000000000
-> > 0000000000000000 c00000000163c520 
-> > [  148.255310][T13380] GPR12: c0000000016804ac c000001ffffdad80
-> > 0000000000000000 0000000000000000 
-> > [  148.255310][T13380] GPR16: 0000000000000000 0000000000000000
-> > 0000000000000000 0000000000000000 
-> > [  148.255310][T13380] GPR20: 0000000000000000 0000000000000000
-> > 0000000000000000 0000000000000000 
-> > [  148.255310][T13380] GPR24: 00007fff8f5e2e48 0000000000000000
-> > c00800000fa6a488 c0000010a6fafd30 
-> > [  148.255310][T13380] GPR28: 0000000000000000 000000007fffffff
-> > c00800000fa60400 c000000efd0c6780 
-> > [  148.255494][T13380] NIP [c0000000016804ac]
-> > sysctl_net_busy_read+0x0/0x4
-> 
-> The instruction pointer is on sysctl_net_busy_read? Isn't that data
-> and
-> not code?
-> 
-> In net/socket.c:
-> 
->   #ifdef CONFIG_NET_RX_BUSY_POLL
->   unsigned int sysctl_net_busy_read __read_mostly;
->   unsigned int sysctl_net_busy_poll __read_mostly;
->   #endif
-> 
-> -- Steve
-> 
-> 
-> > [  148.255516][T13380] LR [c00800000fa60408] find_free_cb+0x8/0x30
-> > [loop]
-> > [  148.255528][T13380] Call Trace:
-> > [  148.255538][T13380] [c0000010a6fafc90] [c0000000009732c0]
-> > idr_for_each+0xf0/0x170 (unreliable)
-> > [  148.255572][T13380] [c0000010a6fafd10] [c00800000fa626c4]
-> > loop_lookup.part.1+0x4c/0xb0 [loop]
-> > [  148.255597][T13380] [c0000010a6fafd50] [c00800000fa634d8]
-> > loop_control_ioctl+0x120/0x1d0 [loop]
-> > [  148.255623][T13380] [c0000010a6fafdb0] [c0000000004ddc08]
-> > ksys_ioctl+0xd8/0x130
-> > [  148.255636][T13380] [c0000010a6fafe00] [c0000000004ddc88]
-> > sys_ioctl+0x28/0x40
-> > [  148.255669][T13380] [c0000010a6fafe20] [c00000000000b378]
-> > system_call+0x5c/0x68
-> > [  148.255699][T13380] Instruction dump:
-> > [  148.255718][T13380] XXXXXXXX XXXXXXXX XXXXXXXX XXXXXXXX XXXXXXXX
-> > XXXXXXXX XXXXXXXX XXXXXXXX 
-> > [  148.255744][T13380] XXXXXXXX XXXXXXXX XXXXXXXX XXXXXXXX XXXXXXXX
-> > XXXXXXXX XXXXXXXX XXXXXXXX 
-> > [  148.255772][T13380] ---[ end trace a5894a74208c22ec ]---
-> > [  148.576663][T13380] 
-> > [  149.576765][T13380] Kernel panic - not syncing: Fatal exception
-> > 
-
+PiBGcm9tOiBMdSBCYW9sdSA8YmFvbHUubHVAbGludXguaW50ZWwuY29tPg0KPiBTZW50OiBUaHVy
+c2RheSwgQXByaWwgMTYsIDIwMjAgNDozOCBQTQ0KPiANCj4gSGkgS2V2aW4sDQo+IA0KPiBPbiAy
+MDIwLzQvMTUgMTk6MTAsIFRpYW4sIEtldmluIHdyb3RlOg0KPiA+IHRoZSBjb21wbGV0aW9uIG9m
+IGFib3ZlIHNlcXVlbmNlIGVuc3VyZXMgdGhhdCBwcmV2aW91cyBxdWV1ZWQNCj4gPiBwYWdlIGdy
+b3VwIHJlc3BvbnNlcyBhcmUgc2VudCBvdXQgYW5kIHJlY2VpdmVkIGJ5IHRoZSBlbmRwb2ludA0K
+PiA+IGFuZCB2aWNlIHZlcnNhIGFsbCBpbi1mbHkgcGFnZSByZXF1ZXN0cyBmcm9tIHRoZSBlbmRw
+b2ludCBhcmUgcXVldWVkDQo+ID4gaW4gaW9tbXUgcGFnZSByZXF1ZXN0IHF1ZXVlLiBUaGVuIGNv
+bWVzIGEgcHJvYmxlbSAtIHlvdSBkaWRuJ3QNCj4gPiB3YWl0IGZvciBjb21wbGV0aW9uIG9mIHRo
+b3NlIG5ld2x5LXF1ZXVlZCByZXF1ZXN0cyBhbmQgdGhlaXINCj4gPiByZXNwb25zZXMuDQo+IA0K
+PiBJIHRob3VnaHQgYWJvdXQgdGhpcyBhZ2Fpbi4NCj4gDQo+IFdlIGRvIHBhZ2UgcmVxdWVzdCBk
+cmFpbmluZyBhZnRlciBQQVNJRCB0YWJsZSBlbnRyeSBnZXRzIHRvcm4gZG93biBhbmQNCj4gdGhl
+IGRldlRMQiBnZXRzIGludmFsaWRhdGVkLiBBdCB0aGlzIHBvaW50LCBpZiBhbnkgbmV3IHBhZ2Ug
+cmVxdWVzdCBmb3INCj4gdGhpcyBwYXNpZCBjb21lcyBpbiwgSU9NTVUgd2lsbCBnZW5lcmF0ZSBh
+biB1bnJlY292ZXJhYmxlIGZhdWx0IGFuZA0KPiByZXNwb25zZSB0aGUgZGV2aWNlIHdpdGggSVIg
+KEludmFsaWQgUmVxdWVzdCkuIElPTU1VIHdvbid0IHB1dCB0aGlzIHBhZ2UNCj4gcmVxdWVzdCBp
+bnRvIHRoZSBxdWV1ZS4gW1ZULWQgc3BlYyA3LjQuMV0NCg0KTm9uLWNvdmVyYWJsZSBmYXVsdCBp
+bXBsaWVzIHNldmVyZSBlcnJvcnMsIHNvIEkgZG9uJ3Qgc2VlIHdoeSB3ZSBzaG91bGQNCmFsbG93
+IHN1Y2ggdGhpbmcgaGFwcGVuIHdoZW4gaGFuZGxpbmcgYSBub3JtYWwgc2l0dWF0aW9uLiBpZiB5
+b3UgbG9vayBhdA0KdGhlIHN0YXJ0IG9mIGNoYXB0ZXIgNzoNCi0tDQpOb24tcmVjb3ZlcmFibGUg
+RmF1bHRzOiBSZXF1ZXN0cyB0aGF0IGVuY291bnRlciBub24tcmVjb3ZlcmFibGUgDQphZGRyZXNz
+IHRyYW5zbGF0aW9uIGZhdWx0cyBhcmUgYWJvcnRlZCBieSB0aGUgcmVtYXBwaW5nIGhhcmR3YXJl
+LCANCmFuZCB0eXBpY2FsbHkgcmVxdWlyZSBhIHJlc2V0IG9mIHRoZSBkZXZpY2UgKHN1Y2ggYXMg
+dGhyb3VnaCBhIGZ1bmN0aW9uLQ0KbGV2ZWwtcmVzZXQpIHRvIHJlY292ZXIgYW5kIHJlLWluaXRp
+YWxpemUgdGhlIGRldmljZSB0byBwdXQgaXQgYmFjayBpbnRvIA0Kc2VydmljZS4NCi0tDQoNCj4g
+DQo+IEhlbmNlLCB3ZSBkb24ndCBuZWVkIHRvIHdvcnJ5IGFib3V0IHRoZSBuZXdseS1xdWV1ZWQg
+cmVxdWVzdHMgaGVyZS4NCj4gDQo+IEJlc3QgcmVnYXJkcywNCj4gQmFvbHUNCg0KVGhhbmtzDQpL
+ZXZpbg0K
