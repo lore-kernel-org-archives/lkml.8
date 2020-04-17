@@ -2,93 +2,101 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC818C2D0EF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 16:44:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 527A6C38A2C
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 16:47:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 84EAB20771
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 16:44:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D7D220771
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 16:47:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PzpfaCEA"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fwAAS0Z8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727123AbgDQQos (ORCPT
+        id S1726736AbgDQQry (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 12:44:48 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:53213 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726498AbgDQQos (ORCPT
+        Fri, 17 Apr 2020 12:47:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56876 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725877AbgDQQrx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 12:44:48 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587141887;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc; bh=FFr7Xpb7/1UqdoZBjTKNeIgRsFQa+LGb0mOrrAFMJFY=;
-        b=PzpfaCEAnd4iBWwWnxx3RiNb7pvLnsO7Vno4qQCv8xQRjl35xzn+WJuy6nJa2J7Ct36LSb
-        PlOIz5V50pQOd2oSvpEqmzU+xG7PvDz4tg+hKZ0PBBPckjIDjma+ViJ/57ktvZHILqKwO/
-        lSctwX5Rne7Zir12nXV0jrTpW34SmYE=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-433-uWHtHPv_NXmCRHfLaDQP3g-1; Fri, 17 Apr 2020 12:44:45 -0400
-X-MC-Unique: uWHtHPv_NXmCRHfLaDQP3g-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 89D2B1934100;
-        Fri, 17 Apr 2020 16:44:14 +0000 (UTC)
-Received: from virtlab511.virt.lab.eng.bos.redhat.com (virtlab511.virt.lab.eng.bos.redhat.com [10.19.152.198])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 007331001920;
-        Fri, 17 Apr 2020 16:44:13 +0000 (UTC)
-From:   Paolo Bonzini <pbonzini@redhat.com>
-To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>
-Subject: [PATCH 0/3] KVM: x86: move nested-related kvm_x86_ops to a separate struct
-Date:   Fri, 17 Apr 2020 12:44:10 -0400
-Message-Id: <20200417164413.71885-1-pbonzini@redhat.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+        Fri, 17 Apr 2020 12:47:53 -0400
+Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A854AC061A0C;
+        Fri, 17 Apr 2020 09:47:51 -0700 (PDT)
+Received: by mail-qk1-x741.google.com with SMTP id x66so3059965qkd.9;
+        Fri, 17 Apr 2020 09:47:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=jvi5l+Cvi7+NgWuXgV5x5iR99VCJS8AvoQUrjoNh1iw=;
+        b=fwAAS0Z8VVEix3VtEOuCR8z9wpk2fNcZK7Qkvt3g3XkUfLhz/kIb5d4M7u6NpWHWJA
+         +bYMFMTScvLn9wjE031jSdS+wkhDzoHPy64Afx8sguBoLms/sM+Ty4laFKJ60kAXeCwz
+         mMD4/ReAbq8GHpRhWugXIxemWk+iLiaiBI2bHZ3oiwwa9STBZPIjkMog8sgVq/cKAf9d
+         I1SI6dig7shAOIPBVbWtWb0Ej0RC0Od3haL8GEk5/CcDpj0YVxKqxtyaypmccG0RnPBA
+         5QUsbUmiVJ57IRhgC9ungYg63FWOgNXnlMa307KvzqwoCmoEk0yz+Ck/isfocLrmZHIN
+         vLgw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=jvi5l+Cvi7+NgWuXgV5x5iR99VCJS8AvoQUrjoNh1iw=;
+        b=VQrbDvJZDAkXuB8Ijh5VconkwlbqUNoQbAAKcI8Ey0tfMlYXXIO7wwTyczaUUmKj4D
+         ECXnIjDBywOjcSmKwjLSk1sswCNei2+ZTXk1yfNQ9ic23OwceU7esMd5zj6cHiX6yIrm
+         U2OP//LydSOGLkA8UScjCQSBNtnS4r+1/c2/YNkhj24yGYMlcFueUu0ijbm5RXIq68XP
+         fqZxPDF126vdJd5zwd0Q7Oga6c2Bt5AP7n+OECIthbT/oyQpFCJb2sCu4uiqMrbq3sUr
+         aO9D6vn6iYmHGgMaqwbeI5SkW59wZq8XKOoWxYF1NYl8t5DEsJMfgsiOkaiK4I8KH8Ya
+         s3ng==
+X-Gm-Message-State: AGi0PubfuSN9lYmdZC3QHBp7L4SJ8C44qA5eB+7V4StAhVRcSnoSF2HE
+        QrkUQKz5JstDcEXH9SXEzg0=
+X-Google-Smtp-Source: APiQypIGbp1/VjpCIVYUMxOaqqwFJua/la/07UT+Ab8011YYmPU3sQyokDfvSOJ697BZwJE8V4RtjA==
+X-Received: by 2002:a37:508:: with SMTP id 8mr4325358qkf.265.1587142070761;
+        Fri, 17 Apr 2020 09:47:50 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([179.97.37.151])
+        by smtp.gmail.com with ESMTPSA id k2sm17714599qte.16.2020.04.17.09.47.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 17 Apr 2020 09:47:49 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 1FD9F409A3; Fri, 17 Apr 2020 13:47:47 -0300 (-03)
+Date:   Fri, 17 Apr 2020 13:47:47 -0300
+To:     Alan Maguire <alan.maguire@oracle.com>
+Cc:     ast@kernel.org, daniel@iogearbox.net, yhs@fb.com, kafai@fb.com,
+        songliubraving@fb.com, andriin@fb.com, john.fastabend@gmail.com,
+        kpsingh@chromium.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, bpf@vger.kernel.org
+Subject: Re: [RFC PATCH bpf-next 0/6] bpf, printk: add BTF-based type printing
+Message-ID: <20200417164747.GD17973@kernel.org>
+References: <1587120160-3030-1-git-send-email-alan.maguire@oracle.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1587120160-3030-1-git-send-email-alan.maguire@oracle.com>
+X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Patch 3 follows the lead of the kvm_pmu_ops and moves callbacks related
-to nested virtualization to a separate struct.  Patches 1 and 2 are
-preparation (patch 1 mostly makes some lines shorter, while patch 2
-avoids semantic changes in KVM_GET_SUPPORTED_HV_CPUID).
+Em Fri, Apr 17, 2020 at 11:42:34AM +0100, Alan Maguire escreveu:
+> To give a flavour for what the printed-out data looks like,
+> here we use pr_info() to display a struct sk_buff *.  Note
+> we specify the 'N' modifier to show type field names:
+> 
+>   struct sk_buff *skb = alloc_skb(64, GFP_KERNEL);
+> 
+>   pr_info("%pTN<struct sk_buff>", skb);
+> 
+> ...gives us:
+> 
+> {{{.next=00000000c7916e9c,.prev=00000000c7916e9c,{.dev=00000000c7916e9c|.dev_scratch=0}}|.rbnode={.__rb_parent_color=0,.rb_right=00000000c7916e9c,.rb_left=00000000c7916e9c}|.list={.next=00000000c7916e9c,.prev=00000000c7916e9c}},{.sk=00000000c7916e9c|.ip_defrag_offset=0},{.tstamp=0|.skb_mstamp_ns=0},.cb=['\0'],{{._skb_refdst=0,.destructor=00000000c7916e9c}|.tcp_tsorted_anchor={.next=00000000c7916e9c,.prev=00000000c7916e9c}},._nfct=0,.len=0,.data_len=0,.mac_len=0,.hdr_len=0,.queue_mapping=0,.__cloned_offset=[],.cloned=0x0,.nohdr=0x0,.fclone=0x0,.peeked=0x0,.head_frag=0x0,.pfmemalloc=0x0,.active_extensions=0,.headers_start=[],.__pkt_type_offset=[],.pkt_type=0x0,.ignore_df=0x0,.nf_trace=0x0,.ip_summed=0x0,.ooo_okay=0x0,.l4_hash=0x0,.sw_hash=0x0,.wifi_acked_valid=0x0,.wifi_acked=0x0,.no_fcs=0x0,.encapsulation=0x0,.encap_hdr_csum=0x0,.csum_valid=0x0,.__pkt_vlan_present_offset=[],.vlan_present=0x0,.csum_complete_sw=0x0,.csum_level=0x0,.csum_not_inet=0x0,.dst_pending_co
 
-While this reintroduces some pointer chasing that was removed in
-afaf0b2f9b80 ("KVM: x86: Copy kvm_x86_ops by value to eliminate layer
-of indirection", 2020-03-31), the cost is small compared to retpolines
-and anyway most of the callbacks are not even remotely on a fastpath.
-In fact, only check_nested_events should be called during normal VM
-runtime.  When static calls are merged into Linux my plan is to use them
-instead of callbacks, and that will finally make things fast again by
-removing the retpolines.
-
-Thanks,
-
-Paolo
-
-Paolo Bonzini (3):
-  KVM: x86: check_nested_events is never NULL
-  KVM: eVMCS: check if nesting is enabled
-  KVM: x86: move nested-related kvm_x86_ops to a separate struct
-
- arch/x86/include/asm/kvm_host.h | 29 +++++++++++++++-------------
- arch/x86/kvm/hyperv.c           |  4 ++--
- arch/x86/kvm/svm/nested.c       |  6 +++++-
- arch/x86/kvm/svm/svm.c          | 13 +++++--------
- arch/x86/kvm/svm/svm.h          |  3 ++-
- arch/x86/kvm/vmx/evmcs.c        |  4 +++-
- arch/x86/kvm/vmx/nested.c       | 16 +++++++++-------
- arch/x86/kvm/vmx/nested.h       |  2 ++
- arch/x86/kvm/vmx/vmx.c          |  7 +------
- arch/x86/kvm/x86.c              | 34 ++++++++++++++++-----------------
- 10 files changed, 62 insertions(+), 56 deletions(-)
-
--- 
-2.18.2
-
+One suggestion, to make this more compact, one could have %pTNz<struct
+sk_buff>" that wouldn't print any integral type member that is zeroed
+:-)
+ 
+- Arnaldo
