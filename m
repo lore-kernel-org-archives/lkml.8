@@ -2,401 +2,162 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDEEBC38A2B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 21:04:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3027C38A29
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 21:04:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AE2CA2072D
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 21:04:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B13712072D
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 21:04:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="Um70ukBe"
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="j6MnWxfu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726687AbgDQVEF (ORCPT
+        id S1726759AbgDQVEY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 17:04:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40106 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726093AbgDQVEE (ORCPT
+        Fri, 17 Apr 2020 17:04:24 -0400
+Received: from ssl.serverraum.org ([176.9.125.105]:53495 "EHLO
+        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726093AbgDQVEY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 17:04:04 -0400
-Received: from mo6-p01-ob.smtp.rzone.de (mo6-p01-ob.smtp.rzone.de [IPv6:2a01:238:20a:202:5301::3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9C33C061A0C;
-        Fri, 17 Apr 2020 14:04:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1587157441;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=j1rZtNYCOuJ71ejCqEXPl4BLBezVcKcNenOU4xma8mA=;
-        b=Um70ukBeyFFmTHByFTZt5NNNpXTktXkR2StjA2XWIIAF4xVXm98YI/Kb7gxq+EXaVE
-        o3eU/R/IUcjo9HBOVhvyQ+lq0T8EU8Gykr6MoOSlCgWbnwHm2dJak2keZwHFyRruKbJd
-        WgXtNPQw+MMm17zg1/BROf/pLPEAD3C4wxzBUBaNdsw0V3qQp5ig4Tjz9GnrUVv74Qgk
-        4P7nG4F+edmzGo8pAPDtKk991m5M/MDw9vnEKU/icAQX2nQVS9ESsAUWfRAQh7dCx/1+
-        v5MalUYG2FfDqTgFPJSce7moKNIoBXp82yCQ5uPi453FwyQD5M0vUiKg+wIzmfIS2YMb
-        K+VA==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj7wpz8NMGH/PgwDWjbQ=="
-X-RZG-CLASS-ID: mo00
-Received: from imac.fritz.box
-        by smtp.strato.de (RZmta 46.5.0 DYNA|AUTH)
-        with ESMTPSA id g06d2dw3HL3n589
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
-        (Client did not present a certificate);
-        Fri, 17 Apr 2020 23:03:49 +0200 (CEST)
-Subject: Re: [PATCHv3] w1: omap-hdq: Simplify driver with PM runtime autosuspend
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Content-Type: text/plain; charset=us-ascii
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-In-Reply-To: <20200417150721.GL37466@atomide.com>
-Date:   Fri, 17 Apr 2020 23:03:48 +0200
-Cc:     Andreas Kemnade <andreas@kemnade.info>,
-        Evgeniy Polyakov <zbr@ioremap.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-omap <linux-omap@vger.kernel.org>,
-        Adam Ford <aford173@gmail.com>,
-        "Andrew F . Davis" <afd@ti.com>, Vignesh R <vigneshr@ti.com>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <8E062482-5D5D-4837-9980-D6C708DD24D4@goldelico.com>
-References: <20191217004048.46298-1-tony@atomide.com> <7B8C7DD9-095B-48FC-9642-695D07B79E97@goldelico.com> <20200416184638.GI37466@atomide.com> <3197C3F0-DEB9-4221-AFBD-4F2A08C84C4C@goldelico.com> <20200417164340.3d9043d1@aktux> <6430AF54-849E-456B-8DB0-B4478BBDB78D@goldelico.com> <20200417150721.GL37466@atomide.com>
-To:     Tony Lindgren <tony@atomide.com>
-X-Mailer: Apple Mail (2.3124)
+        Fri, 17 Apr 2020 17:04:24 -0400
+Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id 3010723058;
+        Fri, 17 Apr 2020 23:04:21 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1587157461;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=L/PN16jFZd/i+9d/mGAxYl50fVRiGccVhJ4spDDgVjQ=;
+        b=j6MnWxfue0MNQjUs8iKR91s6Ynf5MNFyFOmD27vkRN28tMCVaM96jvPZJ7+7SKMfI93iYb
+        pIHXNxfjr6MZq0K9Fi7kb4EVU3ZZ+/jv76wzGp/Sv22rsCbZQaKW/45vrkX/vBZHB83Z3w
+        tkYGSfwKKx7BL7TKvfnW+O7GKJsBiBw=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Fri, 17 Apr 2020 23:04:21 +0200
+From:   Michael Walle <michael@walle.cc>
+To:     Vladimir Oltean <olteanv@gmail.com>
+Cc:     Andrew Lunn <andrew@lunn.ch>, linux-hwmon@vger.kernel.org,
+        lkml <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        "David S . Miller" <davem@davemloft.net>
+Subject: Re: [PATCH net-next 2/3] net: phy: add Broadcom BCM54140 support
+In-Reply-To: <CA+h21hoB5n9DM0kcH_-DOzyxXvs5oMg-wxp-KkNTZOpfFhbWVA@mail.gmail.com>
+References: <20200417192858.6997-1-michael@walle.cc>
+ <20200417192858.6997-2-michael@walle.cc> <20200417193905.GF785713@lunn.ch>
+ <ef747b543bd8dd34aea89a6243de8da4@walle.cc>
+ <CA+h21hoB5n9DM0kcH_-DOzyxXvs5oMg-wxp-KkNTZOpfFhbWVA@mail.gmail.com>
+Message-ID: <8e11a4792db1312b402d37a6a612cf8c@walle.cc>
+X-Sender: michael@walle.cc
+User-Agent: Roundcube Webmail/1.3.10
+X-Spamd-Bar: +
+X-Rspamd-Server: web
+X-Rspamd-Queue-Id: 3010723058
+X-Spamd-Result: default: False [1.40 / 15.00];
+         FROM_HAS_DN(0.00)[];
+         TO_DN_SOME(0.00)[];
+         FREEMAIL_ENVRCPT(0.00)[gmail.com];
+         TO_MATCH_ENVRCPT_ALL(0.00)[];
+         TAGGED_RCPT(0.00)[];
+         MIME_GOOD(-0.10)[text/plain];
+         DKIM_SIGNED(0.00)[];
+         RCPT_COUNT_SEVEN(0.00)[11];
+         NEURAL_HAM(-0.00)[-0.239];
+         FREEMAIL_TO(0.00)[gmail.com];
+         RCVD_COUNT_ZERO(0.00)[0];
+         FROM_EQ_ENVFROM(0.00)[];
+         MIME_TRACE(0.00)[0:+];
+         FREEMAIL_CC(0.00)[lunn.ch,vger.kernel.org,suse.com,roeck-us.net,gmail.com,armlinux.org.uk,davemloft.net];
+         MID_RHS_MATCH_FROM(0.00)[];
+         SUSPICIOUS_RECIPS(1.50)[]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Tony,
+Hi Vladimir,
 
-> Am 17.04.2020 um 17:07 schrieb Tony Lindgren <tony@atomide.com>:
->=20
-> * H. Nikolaus Schaller <hns@goldelico.com> [200417 14:53]:
->>=20
->>> Am 17.04.2020 um 16:43 schrieb Andreas Kemnade =
-<andreas@kemnade.info>:
->>>=20
->>> On Fri, 17 Apr 2020 16:22:47 +0200
->>> "H. Nikolaus Schaller" <hns@goldelico.com> wrote:
->>>=20
->>>>> Am 16.04.2020 um 20:46 schrieb Tony Lindgren <tony@atomide.com>:
->>>>> Care to check if changing pm_runtime_set_autosuspend_delay value
->>>>> to -1 in probe makes the issue go away? Or change it manually
->>>>> to -1 via sysfs.
->>>>>=20
->>>>> If that helps, likely we have a missing pm_runtime_get_sync()
->>>>> somewhere in the driver. =20
->>>>=20
->>>> Yes, it does! It suffices to set it to -1 for one readout.
->>>> Aything else I can test?
->=20
-> You could sprinkle dev_info(dev, "%s\n", __func__) to the
-> omap_hdq_runtime_suspend() and omap_hdq_runtime_resume()
-> functions.
+Am 2020-04-17 22:00, schrieb Vladimir Oltean:
+> Hi Michael,
+> 
+> On Fri, 17 Apr 2020 at 22:52, Michael Walle <michael@walle.cc> wrote:
+>> 
+>> Hi Andrew,
+>> 
+>> Am 2020-04-17 21:39, schrieb Andrew Lunn:
+>> > On Fri, Apr 17, 2020 at 09:28:57PM +0200, Michael Walle wrote:
+>> >
+>> >> +static int bcm54140_get_base_addr_and_port(struct phy_device *phydev)
+>> >> +{
+>> >> +    struct bcm54140_phy_priv *priv = phydev->priv;
+>> >> +    struct mii_bus *bus = phydev->mdio.bus;
+>> >> +    int addr, min_addr, max_addr;
+>> >> +    int step = 1;
+>> >> +    u32 phy_id;
+>> >> +    int tmp;
+>> >> +
+>> >> +    min_addr = phydev->mdio.addr;
+>> >> +    max_addr = phydev->mdio.addr;
+>> >> +    addr = phydev->mdio.addr;
+>> >> +
+>> >> +    /* We scan forward and backwards and look for PHYs which have the
+>> >> +     * same phy_id like we do. Step 1 will scan forward, step 2
+>> >> +     * backwards. Once we are finished, we have a min_addr and
+>> >> +     * max_addr which resembles the range of PHY addresses of the same
+>> >> +     * type of PHY. There is one caveat; there may be many PHYs of
+>> >> +     * the same type, but we know that each PHY takes exactly 4
+>> >> +     * consecutive addresses. Therefore we can deduce our offset
+>> >> +     * to the base address of this quad PHY.
+>> >> +     */
+>> >
+>> > Hi Michael
+>> >
+>> > How much flexibility is there in setting the base address using
+>> > strapping etc? Is it limited to a multiple of 4?
+>> 
+>> You can just set the base address to any address. Then the following
+>> addresses are used:
+>>    base, base + 1, base + 2, base + 3, (base + 4)*
+>> 
+>> It is not specified what happens if you set the base so that it would
+>> overflow. I guess that is a invalid strapping.
+>> 
+>> * (base + 4) is some kind of special PHY address which maps some kind
+>> of moving window to a QSGMII address space. It is enabled by default,
+>> could be disabled in software, but it doesn't share the same PHY id
+>> for which this scans.
+>> 
+>> So yes, if you look at the addresses and the phy ids, there are
+>> always 4 of this.
+>> 
+>> -michael
+> 
+> What does the reading of the global register give you, when accessed
+> through the master PHY ID vs any other PHY ID? Could you use that as
+> an indication of this being the correct PHY ID, and scan only to the
+> left?
 
-I have done it incl. adding dev_info to hdq_read_byte(). It
-looks as if the read attempts already time out during boot,
-but after omap_hdq_runtime_resume(). And omap_hdq_runtime_resume()
-is done well after the last one. This looks ok.
+That was my first try, I thought it reads zero if you access a global
+register by a PHY address which is not the base one. So I've looked
+at registers which have at least one read-only 1 bit in it and scanned
+only backwards. Well it turns out, my assumption was wrong and it
+returns an old value of a successful read/write before. So it can just
+return anything. And yes, its likely that you could read another
+register and then probe the global register. But in the end I preferred
+scanning the (known) phy id registers over strange hacks. Broadcom
+could have just added a per-port register to actually read the base
+address, but well.. ;)
 
-echo -1 >autosuspend_delay_ms
-
-Does omap_hdq_runtime_resume() once.
-
-To me it looks as if reading hqd too quickly after =
-omap_hdq_runtime_resume()
-may be part of the problem, although it is 0.4 seconds between [   =
-18.355163]
-and [   18.745269]. So I am not sure about my interpretation.
-
-A different attempt for interpretation may be that trying to read the
-slave triggers omap_hdq_runtime_resume() just before doing the
-first hdq_read_byte().
-
-This may be different context from separating these steps into different
-processes/threads (echo + cat).
-
-I.e.
-
-[   18.355163] omap_hdq 480b2000.1w: omap_hdq_runtime_resume
-[   18.432403] omap_hdq 480b2000.1w: OMAP HDQ Hardware Rev 0.5. Driver =
-in Interrupt mode
-[   18.745269] omap_hdq 480b2000.1w: hdq_read_byte
-
-somehow differs from
-
-root@letux:~# echo -1 =
->/sys/bus/platform/drivers/omap_hdq/480b2000.1w/power/autosuspend_delay_ms=
-
-[  544.714904] omap_hdq 480b2000.1w: omap_hdq_runtime_resume
-root@letux:~# time cat /sys/class/power_supply/bq27000-battery/uevent
-[  551.704498] omap_hdq 480b2000.1w: hdq_read_byte
-
-BR,
-Nikolaus
-
-
-root@letux:~# dmesg|fgrep hdq
-[   18.355163] omap_hdq 480b2000.1w: omap_hdq_runtime_resume
-[   18.432403] omap_hdq 480b2000.1w: OMAP HDQ Hardware Rev 0.5. Driver =
-in Interrupt mode
-[   18.745269] omap_hdq 480b2000.1w: hdq_read_byte
-[   19.163055] omap_hdq 480b2000.1w: hdq_read_byte
-[   19.583099] omap_hdq 480b2000.1w: hdq_read_byte
-[   20.003051] omap_hdq 480b2000.1w: hdq_read_byte
-[   20.422973] omap_hdq 480b2000.1w: hdq_read_byte
-[   20.843109] omap_hdq 480b2000.1w: hdq_read_byte
-[   21.262908] omap_hdq 480b2000.1w: hdq_read_byte
-[   21.682922] omap_hdq 480b2000.1w: hdq_read_byte
-[   22.103149] omap_hdq 480b2000.1w: hdq_read_byte
-[   22.523040] omap_hdq 480b2000.1w: hdq_read_byte
-[   22.963012] omap_hdq 480b2000.1w: hdq_read_byte
-[   23.390197] omap_hdq 480b2000.1w: hdq_read_byte
-[   23.812988] omap_hdq 480b2000.1w: hdq_read_byte
-[   24.232971] omap_hdq 480b2000.1w: hdq_read_byte
-[   24.653167] omap_hdq 480b2000.1w: hdq_read_byte
-[   25.073028] omap_hdq 480b2000.1w: hdq_read_byte
-[   25.493011] omap_hdq 480b2000.1w: hdq_read_byte
-[   25.923095] omap_hdq 480b2000.1w: hdq_read_byte
-[   26.133392] omap_hdq 480b2000.1w: hdq_read_byte
-[   26.553009] omap_hdq 480b2000.1w: hdq_read_byte
-[   26.973083] omap_hdq 480b2000.1w: hdq_read_byte
-[   27.393035] omap_hdq 480b2000.1w: hdq_read_byte
-[   27.813354] omap_hdq 480b2000.1w: hdq_read_byte
-[   28.233367] omap_hdq 480b2000.1w: hdq_read_byte
-[   28.673309] omap_hdq 480b2000.1w: hdq_read_byte
-[   29.093322] omap_hdq 480b2000.1w: hdq_read_byte
-[   29.513366] omap_hdq 480b2000.1w: hdq_read_byte
-[   29.948089] omap_hdq 480b2000.1w: hdq_read_byte
-[   30.403076] omap_hdq 480b2000.1w: hdq_read_byte
-[   30.823303] omap_hdq 480b2000.1w: hdq_read_byte
-[   31.243408] omap_hdq 480b2000.1w: hdq_read_byte
-[   31.663085] omap_hdq 480b2000.1w: hdq_read_byte
-[   32.083312] omap_hdq 480b2000.1w: hdq_read_byte
-[   32.503326] omap_hdq 480b2000.1w: hdq_read_byte
-[   32.923309] omap_hdq 480b2000.1w: hdq_read_byte
-[   33.343353] omap_hdq 480b2000.1w: hdq_read_byte
-[   33.763305] omap_hdq 480b2000.1w: hdq_read_byte
-[   33.814392] Modules linked in: wl18xx wlcore mac80211 cfg80211 =
-libarc4 omapdrm cmac bnep panel_tpo_td028ttec1 pps_gpio =
-snd_soc_simple_card snd_soc_simple_card_utils pps_core simple_bridge =
-wwan_on_off snd_soc_omap_twl4030 snd_soc_w2cbw003_bt snd_soc_gtm601 =
-display_connector generic_adc_battery pwm_bl pwm_omap_dmtimer =
-omap_aes_driver crypto_engine omap_crypto wlcore_sdio omap3_isp =
-videobuf2_dma_contig omap_sham videobuf2_memops videobuf2_v4l2 =
-bq27xxx_battery_hdq bq27xxx_battery videobuf2_common omap2430 omap_hdq =
-bmp280_spi snd_soc_omap_mcbsp snd_soc_ti_sdma ov9655 bmp280_i2c =
-v4l2_fwnode bmp280 bmg160_i2c bmg160_core at24 tsc2007 videodev =
-leds_tca6507 mc bno055 bmc150_magn_i2c bmc150_accel_i2c bmc150_magn =
-bmc150_accel_core industrialio_triggered_buffer snd_soc_si47xx kfifo_buf =
-phy_twl4030_usb musb_hdrc twl4030_pwrbutton twl4030_vibra =
-snd_soc_twl4030 hci_uart btbcm twl4030_charger twl4030_madc industrialio =
-input_polldev gnss_sirf bluetooth gnss ecdh_generic ecc ehci_omap =
-omapdss omapdss_base
-[   34.363281] omap_hdq 480b2000.1w: hdq_read_byte
-[   34.783142] omap_hdq 480b2000.1w: hdq_read_byte
-[   35.203124] omap_hdq 480b2000.1w: hdq_read_byte
-[   35.623382] omap_hdq 480b2000.1w: hdq_read_byte
-[   36.043273] omap_hdq 480b2000.1w: hdq_read_byte
-[   36.463317] omap_hdq 480b2000.1w: hdq_read_byte
-[   36.883392] omap_hdq 480b2000.1w: hdq_read_byte
-[   37.303314] omap_hdq 480b2000.1w: hdq_read_byte
-[   37.723327] omap_hdq 480b2000.1w: hdq_read_byte
-[   38.143341] omap_hdq 480b2000.1w: hdq_read_byte
-[   38.563323] omap_hdq 480b2000.1w: hdq_read_byte
-[   38.983306] omap_hdq 480b2000.1w: hdq_read_byte
-[   39.403350] omap_hdq 480b2000.1w: hdq_read_byte
-[   39.823303] omap_hdq 480b2000.1w: hdq_read_byte
-[   40.243347] omap_hdq 480b2000.1w: hdq_read_byte
-[   40.663299] omap_hdq 480b2000.1w: hdq_read_byte
-[   41.083374] omap_hdq 480b2000.1w: hdq_read_byte
-[   41.503295] omap_hdq 480b2000.1w: hdq_read_byte
-[   41.923400] omap_hdq 480b2000.1w: hdq_read_byte
-[   42.343292] omap_hdq 480b2000.1w: hdq_read_byte
-[   42.763305] omap_hdq 480b2000.1w: hdq_read_byte
-[   43.183319] omap_hdq 480b2000.1w: hdq_read_byte
-[   43.603332] omap_hdq 480b2000.1w: hdq_read_byte
-[   44.188964] omap_hdq 480b2000.1w: omap_hdq_runtime_suspend
-root@letux:~# time cat /sys/class/power_supply/bq27000-battery/uevent
-[  383.654083] omap_hdq 480b2000.1w: omap_hdq_runtime_resume
-[  383.868103] omap_hdq 480b2000.1w: hdq_read_byte
-[  384.288055] omap_hdq 480b2000.1w: hdq_read_byte
-[  384.708129] omap_hdq 480b2000.1w: hdq_read_byte
-[  385.128173] omap_hdq 480b2000.1w: hdq_read_byte
-[  385.548156] omap_hdq 480b2000.1w: hdq_read_byte
-[  385.968139] omap_hdq 480b2000.1w: hdq_read_byte
-[  385.973052] omap_hdq 480b2000.1w: hdq_read_byte
-[  386.200683] omap_hdq 480b2000.1w: hdq_read_byte
-[  386.215606] omap_hdq 480b2000.1w: hdq_read_byte
-[  386.223358] omap_hdq 480b2000.1w: hdq_read_byte
-[  386.241729] omap_hdq 480b2000.1w: hdq_read_byte
-[  386.251129] omap_hdq 480b2000.1w: hdq_read_byte
-[  386.260986] omap_hdq 480b2000.1w: hdq_read_byte
-[  386.272460] omap_hdq 480b2000.1w: hdq_read_byte
-[  386.281402] omap_hdq 480b2000.1w: hdq_read_byte
-[  386.286865] omap_hdq 480b2000.1w: hdq_read_byte
-[  386.510711] omap_hdq 480b2000.1w: hdq_read_byte
-[  386.526153] omap_hdq 480b2000.1w: hdq_read_byte
-[  386.533905] omap_hdq 480b2000.1w: hdq_read_byte
-[  386.551818] omap_hdq 480b2000.1w: hdq_read_byte
-[  386.561065] omap_hdq 480b2000.1w: hdq_read_byte
-[  386.570922] omap_hdq 480b2000.1w: hdq_read_byte
-[  386.582641] omap_hdq 480b2000.1w: hdq_read_byte
-[  386.591339] omap_hdq 480b2000.1w: hdq_read_byte
-[  386.602508] omap_hdq 480b2000.1w: hdq_read_byte
-[  386.610900] omap_hdq 480b2000.1w: hdq_read_byte
-[  386.620941] omap_hdq 480b2000.1w: hdq_read_byte
-[  386.632476] omap_hdq 480b2000.1w: hdq_read_byte
-[  386.641387] omap_hdq 480b2000.1w: hdq_read_byte
-[  386.652709] omap_hdq 480b2000.1w: hdq_read_byte
-[  386.660949] omap_hdq 480b2000.1w: hdq_read_byte
-[  386.671051] omap_hdq 480b2000.1w: hdq_read_byte
-[  386.680908] omap_hdq 480b2000.1w: hdq_read_byte
-[  386.691986] omap_hdq 480b2000.1w: hdq_read_byte
-[  386.701324] omap_hdq 480b2000.1w: hdq_read_byte
-[  386.709045] omap_hdq 480b2000.1w: hdq_read_byte
-[  386.720886] omap_hdq 480b2000.1w: hdq_read_byte
-[  386.731872] omap_hdq 480b2000.1w: hdq_read_byte
-[  386.741424] omap_hdq 480b2000.1w: hdq_read_byte
-[  386.749053] omap_hdq 480b2000.1w: hdq_read_byte
-[  386.761413] omap_hdq 480b2000.1w: hdq_read_byte
-[  386.768798] omap_hdq 480b2000.1w: hdq_read_byte
-[  386.780853] omap_hdq 480b2000.1w: hdq_read_byte
-[  386.791839] omap_hdq 480b2000.1w: hdq_read_byte
-[  386.801635] omap_hdq 480b2000.1w: hdq_read_byte
-[  386.808746] omap_hdq 480b2000.1w: hdq_read_byte
-[  386.820831] omap_hdq 480b2000.1w: hdq_read_byte
-[  386.828124] omap_hdq 480b2000.1w: hdq_read_byte
-[  386.840362] omap_hdq 480b2000.1w: hdq_read_byte
-[  386.847534] omap_hdq 480b2000.1w: hdq_read_byte
-[  386.859680] omap_hdq 480b2000.1w: hdq_read_byte
-[  386.866882] omap_hdq 480b2000.1w: hdq_read_byte
-[  386.882263] omap_hdq 480b2000.1w: hdq_read_byte
-POWER_SUPPLY_NAME=3Dbq27000-battery
-POWER_SUPPLY_STATUS=3DDischarging
-POWER_SUPPLY_PRE[  386.897064] omap_hdq 480b2000.1w: hdq_read_byte
-SENT=3D1
-POWER_SUPPLY_VOLTAGE_NOW=3D4017000
-POWER_SUPPLY_CURRENT_NOW=3D226873
-POWER_SUPPLY_CAPACITY=3D83
-POWER_SUPPL[  386.911407] omap_hdq 480b2000.1w: hdq_read_byte
-Y_CAPACITY_LEVEL=3DNormal
-POWER_SUPPLY_TEMP=3D-2731
-POWER_SUPPLY_T[  386.922393] omap_hdq 480b2000.1w: hdq_read_byte
-IME_TO_EMPTY_NOW=3D900
-POWER_SUPPLY_TIME_TO_EMPTY_AVG=3D10860
-POWER_SUPPLY_TECHNOLOGY=3DLi-ion
-POWER_SUPPLY_CHARGE_FULL=3D858138
-POW[  386.937408] omap_hdq 480b2000.1w: hdq_read_byte
-ER_SUPPLY_CHARGE_NOW=3D716806
-POWER_SUPPLY_CHARGE_FULL_DESIGN=3D1233792
-POWER_SUPPLY_CYCLE_COUNT=3D80
-POWER_SUPPLY_[  386.951812] omap_hdq 480b2000.1w: hdq_read_byte
-ENERGY_NOW=3D2718520
-POWER_SUPPLY_POWER_AVG=3D900820
-POWER_SUPPLY_HEALTH=3DGood
-POWER_SUPPLY_MANUFACTURER=3DTexas Instruments
-
-real[  386.968322] omap_hdq 480b2000.1w: hdq_read_byte
-        0m3.267s
-user    0m0.002s
-sys     0m0.230s
-[  386.981445] omap_hdq 480b2000.1w: hdq_read_byte
-[  386.991394] omap_hdq 480b2000.1w: hdq_read_byte
-root@letux:~# [  387.001861] omap_hdq 480b2000.1w: hdq_read_byte
-[  387.012512] omap_hdq 480b2000.1w: hdq_read_byte
-[  387.020996] omap_hdq 480b2000.1w: hdq_read_byte
-[  387.378234] omap_hdq 480b2000.1w: omap_hdq_runtime_suspend
-
-root@letux:~#=20
-root@letux:~# echo -1 =
->/sys/bus/platform/drivers/omap_hdq/480b2000.1w/power/autosuspend_delay_ms=
-
-[  544.714904] omap_hdq 480b2000.1w: omap_hdq_runtime_resume
-root@letux:~# time cat /sys/class/power_supply/bq27000-battery/uevent
-[  551.704498] omap_hdq 480b2000.1w: hdq_read_byte
-[  551.711944] omap_hdq 480b2000.1w: hdq_read_byte
-[  551.727844] omap_hdq 480b2000.1w: hdq_read_byte
-[  551.735015] omap_hdq 480b2000.1w: hdq_read_byte
-[  551.748260] omap_hdq 480b2000.1w: hdq_read_byte
-[  551.755432] omap_hdq 480b2000.1w: hdq_read_byte
-[  551.768615] omap_hdq 480b2000.1w: hdq_read_byte
-[  551.775787] omap_hdq 480b2000.1w: hdq_read_byte
-[  551.788604] omap_hdq 480b2000.1w: hdq_read_byte
-[  551.795776] omap_hdq 480b2000.1w: hdq_read_byte
-[  551.808715] omap_hdq 480b2000.1w: hdq_read_byte
-[  551.815887] omap_hdq 480b2000.1w: hdq_read_byte
-[  551.828735] omap_hdq 480b2000.1w: hdq_read_byte
-[  551.839477] omap_hdq 480b2000.1w: hdq_read_byte
-[  551.849578] omap_hdq 480b2000.1w: hdq_read_byte
-[  551.859802] omap_hdq 480b2000.1w: hdq_read_byte
-[  551.869720] omap_hdq 480b2000.1w: hdq_read_byte
-[  551.879913] omap_hdq 480b2000.1w: hdq_read_byte
-[  551.889739] omap_hdq 480b2000.1w: hdq_read_byte
-[  551.899780] omap_hdq 480b2000.1w: hdq_read_byte
-[  551.909667] omap_hdq 480b2000.1w: hdq_read_byte
-[  551.919677] omap_hdq 480b2000.1w: hdq_read_byte
-[  551.929748] omap_hdq 480b2000.1w: hdq_read_byte
-[  551.939727] omap_hdq 480b2000.1w: hdq_read_byte
-[  551.949768] omap_hdq 480b2000.1w: hdq_read_byte
-[  551.959716] omap_hdq 480b2000.1w: hdq_read_byte
-[  551.969787] omap_hdq 480b2000.1w: hdq_read_byte
-[  551.979888] omap_hdq 480b2000.1w: hdq_read_byte
-[  551.987060] omap_hdq 480b2000.1w: hdq_read_byte
-[  551.999176] omap_hdq 480b2000.1w: hdq_read_byte
-[  552.007049] omap_hdq 480b2000.1w: hdq_read_byte
-[  552.019042] omap_hdq 480b2000.1w: hdq_read_byte
-[  552.026977] omap_hdq 480b2000.1w: hdq_read_byte
-[  552.039184] omap_hdq 480b2000.1w: hdq_read_byte
-[  552.046844] omap_hdq 480b2000.1w: hdq_read_byte
-[  552.058288] omap_hdq 480b2000.1w: hdq_read_byte
-[  552.065521] omap_hdq 480b2000.1w: hdq_read_byte
-[  552.078613] omap_hdq 480b2000.1w: hdq_read_byte
-[  552.085815] omap_hdq 480b2000.1w: hdq_read_byte
-[  552.098785] omap_hdq 480b2000.1w: hdq_read_byte
-[  552.106170] omap_hdq 480b2000.1w: hdq_read_byte
-[  552.118682] omap_hdq 480b2000.1w: hdq_read_byte
-[  552.126037] omap_hdq 480b2000.1w: hdq_read_byte
-[  552.138702] omap_hdq 480b2000.1w: hdq_read_byte
-[  552.146667] omap_hdq 480b2000.1w: hdq_read_byte
-[  552.159271] omap_hdq 480b2000.1w: hdq_read_byte
-[  552.166900] omap_hdq 480b2000.1w: hdq_read_byte
-[  552.181365] omap_hdq 480b2000.1w: hdq_read_byte
-POWER_SUPPLY_NAME=3Dbq27000-battery
-POWER_SUPPLY_STATUS=3DDischarging
-POWER_SUPPLY_PRESENT=3D1
-POWER_S[  552.199462] omap_hdq 480b2000.1w: hdq_read_byte
-UPPLY_VOLTAGE_NOW=3D4012000
-POWER_SUPPLY_CURRENT_NOW=3D220447
-POWE[  552.210998] omap_hdq 480b2000.1w: hdq_read_byte
-R_SUPPLY_CAPACITY=3D82
-POWER_SUPPLY_CAPACITY_LEVEL=3DNormal
-POWER_SUPPLY_TEMP=3D289
-POWER_SUPPLY_TIME_TO_EMPTY_NOW=3D11580
-POWER_SUPPLY_TIME_TO_EMPT[  552.227203] omap_hdq 480b2000.1w: =
-hdq_read_byte
-Y_AVG=3D11040
-POWER_SUPPLY_TECHNOLOGY=3DLi-ion
-POWER_SUPPLY_CHARGE_FULL=3D858138
-POWER_SUPPLY_CHARGE_NOW=3D706660
-PO[  552.241851] omap_hdq 480b2000.1w: hdq_read_byte
-WER_SUPPLY_CHARGE_FULL_DESIGN=3D1233792
-POWER_SUPPLY_CYCLE_COUNT=3D80
-POWER_SUPPLY_ENERGY_NOW=3D2680560
-POWER_SUPPLY_POWER_AVG=3D8760[  552.257995] omap_hdq 480b2000.1w: =
-hdq_read_byte
-00
-POWER_SUPPLY_HEALTH=3DGood
-POWER_SUPPLY_MANUFACTURER=3DTexas In[  552.269348] omap_hdq 480b2000.1w: =
-hdq_read_byte
-struments
-
-real    0m0.510s
-user    0m0.001s
-sys     0m0.192s
-root@letux:~# [  552.286468] omap_hdq 480b2000.1w: hdq_read_byte
-[  552.294067] omap_hdq 480b2000.1w: hdq_read_byte
-[  552.305786] omap_hdq 480b2000.1w: hdq_read_byte
-[  552.317443] omap_hdq 480b2000.1w: hdq_read_byte
-[  552.324645] omap_hdq 480b2000.1w: hdq_read_byte
-
+-michael
