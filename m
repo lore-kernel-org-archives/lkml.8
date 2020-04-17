@@ -2,71 +2,60 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,TVD_RCVD_SPACE_BRACKET,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32949C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 07:09:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3370AC2BB85
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 07:09:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E17F2206D5
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 07:09:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E842206D5
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 07:09:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728864AbgDQHJu (ORCPT
+        id S1728897AbgDQHJw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Fri, 17 Apr 2020 03:09:52 -0400
+Received: from baliza.dreformarra.com ([134.73.232.212]:3034 "HELO
+        elitetorrent1.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with SMTP id S1728414AbgDQHJu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 17 Apr 2020 03:09:50 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:2392 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728155AbgDQHJs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 03:09:48 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 6BE99B2A999737E74F7D;
-        Fri, 17 Apr 2020 15:09:46 +0800 (CST)
-Received: from huawei.com (10.175.124.28) by DGGEMS409-HUB.china.huawei.com
- (10.3.19.209) with Microsoft SMTP Server id 14.3.487.0; Fri, 17 Apr 2020
- 15:09:39 +0800
-From:   Jason Yan <yanaijie@huawei.com>
-To:     <hch@lst.de>, <m.szyprowski@samsung.com>, <robin.murphy@arm.com>,
-        <iommu@lists.linux-foundation.org>, <linux-kernel@vger.kernel.org>
-CC:     Jason Yan <yanaijie@huawei.com>, Hulk Robot <hulkci@huawei.com>
-Subject: [PATCH] dma-debug: make __dma_entry_alloc_check_leak() static
-Date:   Fri, 17 Apr 2020 15:36:05 +0800
-Message-ID: <20200417073605.43039-1-yanaijie@huawei.com>
-X-Mailer: git-send-email 2.21.1
+Received: from [184.69.250.35] by relay-x.misswldrs.com with SMTP; Thu, 16 Apr 2020 19:51:04 -1100
+Received: from mail.webhostings4u.com ([139.120.64.234]) by qnx.mdrost.com with NNFMP; Thu, 16 Apr 2020 19:41:49 -1100
+Received: from mmx09.tilkbans.com ([Thu, 16 Apr 2020 19:27:01 -1100])
+        by smtp.endend.nl with ASMTP; Thu, 16 Apr 2020 19:27:01 -1100
+Message-ID: <C59EC4E8.80BE2406@elitetorrent1.com>
+Date:   Thu, 16 Apr 2020 19:23:19 -1100
+From:   "elitetorrent1.com" <info@elitetorrent1.com>
+User-Agent: Mozilla/5.0 (Macintosh; U; Intel Mac OS X; fr; rv:1.8.1.16) Gecko/20080707 Thunderbird/2.0.0.16
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.124.28]
-X-CFilter-Loop: Reflected
+To:     <linux-assembly@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-msdos@vger.kernel.org>, <linux-raid@vger.kernel.org>,
+        <linux-scsi@vger.kernel.org>
+Subject: Download latest movies from elitetorrent1.com
+Content-Type: text/plain;
+        charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix the following sparse warning:
 
-kernel/dma/debug.c:659:6: warning: symbol '__dma_entry_alloc_check_leak'
-was not declared. Should it be static?
+While sitting home during the lock out, why not watch some nice movies. 
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Jason Yan <yanaijie@huawei.com>
----
- kernel/dma/debug.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+All for free, makes sense?
 
-diff --git a/kernel/dma/debug.c b/kernel/dma/debug.c
-index 9e1777c81f55..36c962a86bf2 100644
---- a/kernel/dma/debug.c
-+++ b/kernel/dma/debug.c
-@@ -656,7 +656,7 @@ static struct dma_debug_entry *__dma_entry_alloc(void)
- 	return entry;
- }
- 
--void __dma_entry_alloc_check_leak(void)
-+static void __dma_entry_alloc_check_leak(void)
- {
- 	u32 tmp = nr_total_entries % nr_prealloc_entries;
- 
--- 
-2.21.1
+visit us now
+https://elitetorrent1.com/
+
+
+
+
+
+Unsubscribe from our database here
+https://forms.icann.org/en/resources/compliance/complaints/registrars/stand
+ards-complaint-form
+
 
