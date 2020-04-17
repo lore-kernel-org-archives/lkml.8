@@ -2,106 +2,171 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C614C2D0EF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 15:08:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25B19C352BE
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 15:08:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 68A302223C
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 15:08:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0285221924
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 15:08:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="TFHquLUX"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ODR/DB+n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728830AbgDQPIO (ORCPT
+        id S1728847AbgDQPIi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 11:08:14 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:33090 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728337AbgDQPIO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 11:08:14 -0400
-Received: from zn.tnic (p200300EC2F0DA8006521B90827ED3880.dip0.t-ipconnect.de [IPv6:2003:ec:2f0d:a800:6521:b908:27ed:3880])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id B14561EC0CEA;
-        Fri, 17 Apr 2020 17:08:12 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1587136092;
+        Fri, 17 Apr 2020 11:08:38 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:22889 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728337AbgDQPIh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Apr 2020 11:08:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587136115;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=2zxRtAJv0oK4YmMaMhg1+TfTVEX2L2HVb0TUn9eAlBg=;
-        b=TFHquLUXOy13gJaCTXHadFj1fP60HW9igsdtiJQzpswguPpzNGf2/fuK3me+2SQL237Qow
-        0qYYFY40eneXariYSHfRxe7wVi1eRP4+KyZuu8qF6wV5HWLumxK/eS+BkeVMEwgdsd7GVf
-        Ab4qDVSUw3Rhijne9OjaU+jLgmDQ9Lc=
-Date:   Fri, 17 Apr 2020 17:08:08 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Mihai Carabas <mihai.carabas@oracle.com>
-Cc:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>
-Subject: Re: [PATCH] x86: microcode: fix return value for microcode late
- loading
-Message-ID: <20200417150808.GE7322@zn.tnic>
-References: <1586858135-29337-1-git-send-email-mihai.carabas@oracle.com>
+         in-reply-to:in-reply-to:references:references;
+        bh=YqfH2tuUhx4MypWhBY8HubmNqOx1ZV8YE9kd2MnuJzc=;
+        b=ODR/DB+n4yT1a/Ndy0u7/ovV4EvnwsdG1Hi5ZaW2XsLEC/DVZ9qR4hWm2nVwSMbAlA2hGm
+        +BP2Xj+O6thAaP3Ik50VXH21VKZLPMQqSgk1n3VanHTD4jr0FtBNfNGtAmRy6UsLZSHRKR
+        hSnsTtmCwnAGPIkUWn6COWKj2YtZzWo=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-124-ye6sOoP9MNixWq-uZjp1Qw-1; Fri, 17 Apr 2020 11:08:34 -0400
+X-MC-Unique: ye6sOoP9MNixWq-uZjp1Qw-1
+Received: by mail-wm1-f70.google.com with SMTP id y1so1110428wmj.3
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 08:08:33 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=YqfH2tuUhx4MypWhBY8HubmNqOx1ZV8YE9kd2MnuJzc=;
+        b=V3Y3NVFYKNa9wvPZ2EOgVOIJVVXVkj5i29Nt5ud3aqR7pzFGJOJj4INc0AF9NFC8pW
+         EgNx5OkMRVNMbHYomLVEDY3mA/rULU+VWBdhLG2rbHXn59hAiXpoVXr0dDn5OWucRGUN
+         2z/licS35mhV91xI2Y489GWzAB0m8g/d2UCXkqklkQJpOPLGB2tH+VBFsLuxqS/4HVb9
+         aEdlwo+0VKYQhlzUvxeEhRhunogeE+C9aumGF/1gTbch6vr2JptRjYKfd0hZuvCRxoVO
+         L534FQxjqETLqRnlLn22HlFMlmmN49s6WcV9uUaNcO0AlVjzLKa4BUfZ81w780uf+b2u
+         gMOQ==
+X-Gm-Message-State: AGi0PubYmzUveAc25TP5+FTnhJSuxbgt/KV32BAoa5lPQR7p5Hp9cAfT
+        8njDIhP8PjymDG4EsUYh7HE6LsXQ/BtImUHHitRHX3yuGjN64C2CDyT1uKM7yE9fLkIHZl0G6wZ
+        gNh1uleRxRfra1+5AVyRzqBwK
+X-Received: by 2002:adf:8b45:: with SMTP id v5mr4723634wra.175.1587136112535;
+        Fri, 17 Apr 2020 08:08:32 -0700 (PDT)
+X-Google-Smtp-Source: APiQypITpbGERYSOqn0nRYDvyV9U4ds1jvrBYZvrLO/HQZiZOCDrHAxk4Jao8PsBr6fnretvhDQ8zw==
+X-Received: by 2002:adf:8b45:: with SMTP id v5mr4723561wra.175.1587136111698;
+        Fri, 17 Apr 2020 08:08:31 -0700 (PDT)
+Received: from localhost.localdomain ([151.29.194.179])
+        by smtp.gmail.com with ESMTPSA id e5sm33289823wru.92.2020.04.17.08.08.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 17 Apr 2020 08:08:30 -0700 (PDT)
+Date:   Fri, 17 Apr 2020 17:08:28 +0200
+From:   Juri Lelli <juri.lelli@redhat.com>
+To:     Dietmar Eggemann <dietmar.eggemann@arm.com>
+Cc:     Valentin Schneider <valentin.schneider@arm.com>,
+        luca abeni <luca.abeni@santannapisa.it>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        Wei Wang <wvw@google.com>, Quentin Perret <qperret@google.com>,
+        Alessio Balsini <balsini@google.com>,
+        Pavan Kondeti <pkondeti@codeaurora.org>,
+        Patrick Bellasi <patrick.bellasi@matbug.net>,
+        Morten Rasmussen <morten.rasmussen@arm.com>,
+        Qais Yousef <qais.yousef@arm.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/4] sched/deadline: Improve admission control for
+ asymmetric CPU capacities
+Message-ID: <20200417150828.GS9767@localhost.localdomain>
+References: <20200408095012.3819-1-dietmar.eggemann@arm.com>
+ <20200408095012.3819-3-dietmar.eggemann@arm.com>
+ <jhjeesyw96u.mognet@arm.com>
+ <20200408153032.447e098d@nowhere>
+ <jhjblo2vx60.mognet@arm.com>
+ <31620965-e1e7-6854-ad46-8192ee4b41af@arm.com>
+ <20200417121945.GM9767@localhost.localdomain>
+ <8734b37e-5602-79dc-c7a8-c41fd9eb86b5@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1586858135-29337-1-git-send-email-mihai.carabas@oracle.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <8734b37e-5602-79dc-c7a8-c41fd9eb86b5@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 14, 2020 at 12:55:35PM +0300, Mihai Carabas wrote:
-> The return value from stop_machine might not be consistent.
+On 17/04/20 16:55, Dietmar Eggemann wrote:
+> On 17.04.20 14:19, Juri Lelli wrote:
+> > On 09/04/20 19:29, Dietmar Eggemann wrote:
 > 
-> stop_machine_cpuslocked returns:
-> - zero if all functions have returned 0
-> - a non-zero value if at least one of the functions returned
-> a non-zero value
+> [...]
 > 
-> There is no way to know if it is negative or positive. So make
-> __reload_late return 0 on success, or negative otherwise.
+> >> Maybe we can do a hybrid. We have rd->span and rd->sum_cpu_capacity and
+> >> with the help of an extra per-cpu cpumask we could just
+> > 
+> > Hummm, I like the idea, but
+> > 
+> >> DEFINE_PER_CPU(cpumask_var_t, dl_bw_mask);
+> >>
+> >> dl_bw_cpus(int i) {
+> > 
+> > This works if calls are always local to the rd we are interested into
+> > (argument 'i' isn't used). Are we always doing that?
 > 
-> Signed-off-by: Mihai Carabas <mihai.carabas@oracle.com>
-> ---
->  arch/x86/kernel/cpu/microcode/core.c | 11 ++++-------
->  1 file changed, 4 insertions(+), 7 deletions(-)
+> I thought so. The existing dl_bw_cpus(int i) implementation already
+> assumes this by using:
 > 
-> diff --git a/arch/x86/kernel/cpu/microcode/core.c b/arch/x86/kernel/cpu/microcode/core.c
-> index 7019d4b..336003e 100644
-> --- a/arch/x86/kernel/cpu/microcode/core.c
-> +++ b/arch/x86/kernel/cpu/microcode/core.c
-> @@ -545,8 +545,7 @@ static int __wait_for_cpus(atomic_t *t, long long timeout)
->  /*
->   * Returns:
->   * < 0 - on error
-> - *   0 - no update done
-> - *   1 - microcode was updated
-> + *   0 - success (no update done or microcode was updated)
->   */
->  static int __reload_late(void *info)
->  {
-> @@ -573,11 +572,9 @@ static int __reload_late(void *info)
->  	else
->  		goto wait_for_siblings;
->  
-> -	if (err > UCODE_NFOUND) {
-> +	if (err >= UCODE_NFOUND) {
+>     struct root_domain *rd = cpu_rq(i)->rd;
 
-It is not an error if no microcode was found.
+Hummm, can't dl_task_can_attach() call it with a dest_cpu different from
+this_cpu?
 
->  		pr_warn("Error reloading microcode on CPU %d\n", cpu);
-			^^^^^^^^^^
+Current implementation uses 'i' argument to get to the right root_domain
+(e.g., when moving tasks between execlusive set).
 
->  		ret = -1;
+>     ...
+> 
+>     for_each_cpu_and(i, rd->span, cpu_active_mask)
+> 
+> Or did you refer to something else here?
+> 
+> And the patch would not introduce new places in which we call
+> dl_bw_cpus(). It will just replace some with a dl_bw_capacity() call.
+> 
+> >>     struct cpumask *cpus = this_cpu_cpumask_var_ptr(dl_bw_mask);
+> >>     ...
+> >>     cpumask_and(cpus, rd->span, cpu_active_mask);
+> >>
+> >>     return cpumask_weight(cpus);
+> >> }
+> >>
+> >> and
+> >>
+> >> dl_bw_capacity(int i) {
+> >>
+> >>     struct cpumask *cpus = this_cpu_cpumask_var_ptr(dl_bw_mask);
+> >>     ...
+> >>     cpumask_and(cpus, rd->span, cpu_active_mask);
+> >>     if (cpumask_equal(cpus, rd->span))
+> >>         return rd->sum_cpu_capacity;
+> > 
+> > What if capacities change between invocations (with the same span)?
+> > Can that happen?
+> 
+> The CPU capacity should only change during initial bring-up. On
+> asymmetric CPU capacity systems we have to re-create the Sched Domain
+> (SD) topology after CPUfreq becomes available.
+> 
+> After the initial build and this first rebuild of the SD topology, the
+> CPU capacity should be stable.
+> 
+> Everything which might follow afterwards (starting EAS, exclusive
+> cpusets or CPU hp) will not change the CPU capacity.
+> 
+> Obviously, if you defer loading CPUfreq driver after you started DL
+> scheduling you can break things. But this is not considered a valid
+> environment here.
 
--- 
-Regards/Gruss,
-    Boris.
+OK. Makes sense.
 
-https://people.kernel.org/tglx/notes-about-netiquette
