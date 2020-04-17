@@ -2,121 +2,115 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A800C2D0EF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 14:42:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5903DC38A2B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 14:43:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 580C821924
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 14:42:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3487D2053B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 14:43:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V/dzyaF7"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="IvrRfNag"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728130AbgDQOmv (ORCPT
+        id S1728141AbgDQOnr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 10:42:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37340 "EHLO
+        Fri, 17 Apr 2020 10:43:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37498 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726707AbgDQOmu (ORCPT
+        with ESMTP id S1726707AbgDQOnr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 10:42:50 -0400
-Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06319C061A0C
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 07:42:47 -0700 (PDT)
-Received: by mail-qk1-x744.google.com with SMTP id g74so2542118qke.13
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 07:42:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=TjiV7u4brXrRJ5IxN3WtwuG8DEaXG0cd8LXnKPWpbro=;
-        b=V/dzyaF7RSh5O0l2+MRpIdt2aQclbzKFlQFbwC5/yMr7oN07H4vIGVHnMxGa4dgd7d
-         QizY/BYcymJDMybCmgfMzCjlgV+yXzkeHbh94lbxml7weOKMVO1EYrRaZpeAXMyreVhK
-         4xH0CEY1LxbnpiIKzi+GjVZ9tI8r6eRN5kiMZVqix34UJZTiWfYE/cx3mfwkGpkNNZeo
-         iI/RnYBKb6DsI06pOOZx6d1SHJCqGtY1PTsPrsE8+d5BTmU2ogqBAO6/+6PK7kUiU/8v
-         Y62JFQBbg7GZwHEOzLDWr1FuKSm8XqY58io3g2w/av+QLIxgVl+FG8aKoj0NumMrNd2j
-         BnfQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=TjiV7u4brXrRJ5IxN3WtwuG8DEaXG0cd8LXnKPWpbro=;
-        b=C19SIX6+NaahKrOdW5f399ldukbJe4z2jh73tnFbhrrqAyRFt/0zKmlzc9CfNumtDm
-         r9EYRcuzWhOFMYDSYwJ0IUAAVW+fBzArojylIhcBVxE36E5zN9mirV1mtOzsV56OE3ea
-         nl8fSQ8w5A69MynZz/KAuuuk6k9Ixi4mOCG4L7uFoLN5xFmGYn1TmmMWASnvwDmVBB81
-         Q+bdrXYHfd0EOUiD4SkkruEDcp94Rk/oxdR+h60+gFFcLI7K/wy+JCBSQeRjM0OXCrtZ
-         qwW2TFEk2kxgqMSj6abOpgOKP/UEGA4jSUCkzs/YC70fU5zaR2HqZ6X5Gp14ZejjIpgn
-         vQsA==
-X-Gm-Message-State: AGi0PuZDn8LG49PrUhiiaNu186iLAWi48JHIU3imoQl5E6k/xJsJjD7T
-        W5SSsBzBTyKhlTFod5Ki8gcW5BT2Jb6X3Q==
-X-Google-Smtp-Source: APiQypLOW9GOZ/kNhZgkZWEzWDniQCAXXIAAWjR9G5PdB1TGWxIQMz19Z/MQn17zBz/y7ZtOfViGmg==
-X-Received: by 2002:a37:68c5:: with SMTP id d188mr3728633qkc.85.1587134566149;
-        Fri, 17 Apr 2020 07:42:46 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([179.97.37.151])
-        by smtp.gmail.com with ESMTPSA id d186sm6625026qkc.45.2020.04.17.07.42.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Apr 2020 07:42:44 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id A6657409A3; Fri, 17 Apr 2020 11:42:42 -0300 (-03)
-Date:   Fri, 17 Apr 2020 11:42:42 -0300
-To:     kan.liang@linux.intel.com
-Cc:     jolsa@redhat.com, peterz@infradead.org, mingo@redhat.com,
-        linux-kernel@vger.kernel.org, namhyung@kernel.org,
-        adrian.hunter@intel.com, mathieu.poirier@linaro.org,
-        ravi.bangoria@linux.ibm.com, alexey.budankov@linux.intel.com,
-        vitaly.slobodskoy@intel.com, pavel.gerasimov@intel.com,
-        mpe@ellerman.id.au, eranian@google.com, ak@linux.intel.com
-Subject: Re: [PATCH V4 04/17] perf stat: Clear HEADER_CPU_PMU_CAPS
-Message-ID: <20200417144242.GB17973@kernel.org>
-References: <20200319202517.23423-1-kan.liang@linux.intel.com>
- <20200319202517.23423-5-kan.liang@linux.intel.com>
+        Fri, 17 Apr 2020 10:43:47 -0400
+X-Greylist: delayed 67125 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Fri, 17 Apr 2020 07:43:46 PDT
+Received: from mail.andi.de1.cc (mail.andi.de1.cc [IPv6:2a01:238:4321:8900:456f:ecd6:43e:202c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5D0FC061A0C;
+        Fri, 17 Apr 2020 07:43:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=kemnade.info; s=20180802; h=Content-Transfer-Encoding:Content-Type:
+        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=/hmksmsGyuMhDF92uqdHn8O29eanZGUNq3GHfegEg1I=; b=IvrRfNagm+RUlAWfZ02wQ4JUnd
+        HlzNDaAWoekfX5NbASWZRbXVmXboLuNX5chC5Kxd2Btv6DJ3Qpt/+1YIBwsWjb4CVNwsKTZqBD4L1
+        8cBSXL8XdEQAZyA9UsJqYBvBGqCVagikijx7n6ww0xx9zW7VQfQVvjo0jGmX5fUk8KtE=;
+Received: from p200300ccff0bc3001a3da2fffebfd33a.dip0.t-ipconnect.de ([2003:cc:ff0b:c300:1a3d:a2ff:febf:d33a] helo=aktux)
+        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <andreas@kemnade.info>)
+        id 1jPSDW-0007Ge-11; Fri, 17 Apr 2020 16:43:42 +0200
+Date:   Fri, 17 Apr 2020 16:43:40 +0200
+From:   Andreas Kemnade <andreas@kemnade.info>
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc:     Tony Lindgren <tony@atomide.com>,
+        Evgeniy Polyakov <zbr@ioremap.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-omap <linux-omap@vger.kernel.org>,
+        Adam Ford <aford173@gmail.com>,
+        "Andrew F . Davis" <afd@ti.com>, Vignesh R <vigneshr@ti.com>
+Subject: Re: [PATCHv3] w1: omap-hdq: Simplify driver with PM runtime
+ autosuspend
+Message-ID: <20200417164340.3d9043d1@aktux>
+In-Reply-To: <3197C3F0-DEB9-4221-AFBD-4F2A08C84C4C@goldelico.com>
+References: <20191217004048.46298-1-tony@atomide.com>
+        <7B8C7DD9-095B-48FC-9642-695D07B79E97@goldelico.com>
+        <20200416184638.GI37466@atomide.com>
+        <3197C3F0-DEB9-4221-AFBD-4F2A08C84C4C@goldelico.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200319202517.23423-5-kan.liang@linux.intel.com>
-X-Url:  http://acmel.wordpress.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Thu, Mar 19, 2020 at 01:25:04PM -0700, kan.liang@linux.intel.com escreveu:
-> From: Kan Liang <kan.liang@linux.intel.com>
-> 
-> The CPU PMU capabilities information is only useful for perf record with
-> LBR call stack.
-> 
-> Clear the header for perf stat.
+On Fri, 17 Apr 2020 16:22:47 +0200
+"H. Nikolaus Schaller" <hns@goldelico.com> wrote:
 
-Ditto.
- 
-> Reviewed-by: Andi Kleen <ak@linux.intel.com>
-> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
-> ---
->  tools/perf/builtin-stat.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-> index ec053dc1e35c..b5c8a5ab5e75 100644
-> --- a/tools/perf/builtin-stat.c
-> +++ b/tools/perf/builtin-stat.c
-> @@ -1595,6 +1595,7 @@ static void init_features(struct perf_session *session)
->  	perf_header__clear_feat(&session->header, HEADER_TRACING_DATA);
->  	perf_header__clear_feat(&session->header, HEADER_BRANCH_STACK);
->  	perf_header__clear_feat(&session->header, HEADER_AUXTRACE);
-> +	perf_header__clear_feat(&session->header, HEADER_CPU_PMU_CAPS);
->  }
->  
->  static int __cmd_record(int argc, const char **argv)
-> -- 
-> 2.17.1
-> 
+> > Am 16.04.2020 um 20:46 schrieb Tony Lindgren <tony@atomide.com>:
+> >=20
+> > * H. Nikolaus Schaller <hns@goldelico.com> [200416 15:04]: =20
+> >> Hi Tony,
+> >> it looks as if something with this patch is broken on GTA04. For v5.6 =
+and v5.7-rc1.
+> >>=20
+> >> HDQ battery access times out after ca. 15 seconds and I get temperatur=
+e of -273.1=C2=B0C...
+> >>=20
+> >> Reverting this patch and everything is ok again. =20
+> >=20
+> > Hmm OK interesting.
+> >  =20
+> >> What is "ti,mode" about? Do we have that (indirectly) in gta04.dtsi?
+> >> Or does this patch need some CONFIGs we do not happen to have? =20
+> >=20
+> > Sounds like you have things working though so there should be no
+> > need for having ti,mode =3D "1w" in the dts.
+> >  =20
+> >>> 	pm_runtime_enable(&pdev->dev);
+> >>> +	pm_runtime_use_autosuspend(&pdev->dev);
+> >>> +	pm_runtime_set_autosuspend_delay(&pdev->dev, 300); =20
+> >=20
+> > Care to check if changing pm_runtime_set_autosuspend_delay value
+> > to -1 in probe makes the issue go away? Or change it manually
+> > to -1 via sysfs.
+> >=20
+> > If that helps, likely we have a missing pm_runtime_get_sync()
+> > somewhere in the driver. =20
+>=20
+> Yes, it does! It suffices to set it to -1 for one readout.
+> Aything else I can test?
+>=20
+How does it depend on loaded drivers?
+Is it really mainline kernel + config + devicetree or something else?
 
--- 
+Can you reproduce the problem with init=3D/bin/bash
+and then mount sysfs and modprobe omap_hdq?
 
-- Arnaldo
+Regarding pm_runtime stuff I thought I have the worst case scenario.
+
+Regards,
+Andreas
