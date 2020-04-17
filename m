@@ -2,140 +2,95 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F53CC2D0EF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 16:15:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DAF7C2D0EF
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 16:15:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C9E5220857
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 16:15:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AC392072D
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 16:15:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="GZ8kjuE8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730035AbgDQQPZ convert rfc822-to-8bit (ORCPT
+        id S1730150AbgDQQP6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 12:15:25 -0400
-Received: from mailoutvs15.siol.net ([185.57.226.206]:45694 "EHLO
-        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728105AbgDQQPY (ORCPT
+        Fri, 17 Apr 2020 12:15:58 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:41360 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728105AbgDQQP6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 12:15:24 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTP id 7E3B3524BB0;
-        Fri, 17 Apr 2020 18:15:19 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at psrvmta09.zcs-production.pri
-Received: from mail.siol.net ([127.0.0.1])
-        by localhost (psrvmta09.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id 8zL-mRWm0sXI; Fri, 17 Apr 2020 18:15:19 +0200 (CEST)
-Received: from mail.siol.net (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTPS id 1358A524C5F;
-        Fri, 17 Apr 2020 18:15:19 +0200 (CEST)
-Received: from jernej-laptop.localnet (cpe-194-152-20-232.static.triera.net [194.152.20.232])
-        (Authenticated sender: jernej.skrabec@siol.net)
-        by mail.siol.net (Postfix) with ESMTPA id 03505524C64;
-        Fri, 17 Apr 2020 18:15:17 +0200 (CEST)
-From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@siol.net>
-To:     robh+dt@kernel.org, andrew@lunn.ch, f.fainelli@gmail.com,
-        Heiner Kallweit <hkallweit1@gmail.com>
-Cc:     mripard@kernel.org, wens@csie.org, lee.jones@linaro.org,
-        linux@armlinux.org.uk, davem@davemloft.net,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Subject: Re: [RFC PATCH 2/4] net: phy: Add support for AC200 EPHY
-Date:   Fri, 17 Apr 2020 18:15:17 +0200
-Message-ID: <6176364.4vTCxPXJkl@jernej-laptop>
-In-Reply-To: <0340f85c-987f-900b-53c8-d29b4672a8fa@gmail.com>
-References: <20200416185758.1388148-1-jernej.skrabec@siol.net> <20200416185758.1388148-3-jernej.skrabec@siol.net> <0340f85c-987f-900b-53c8-d29b4672a8fa@gmail.com>
+        Fri, 17 Apr 2020 12:15:58 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 03HGFuc9054021;
+        Fri, 17 Apr 2020 11:15:56 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1587140156;
+        bh=8XNtELKWzpnij+R4SB5BXR2hr1jNZvpQH8VXFu0sUks=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=GZ8kjuE85b2VfZ524qNbAeY4S3NlC6ub4zEj9qCT0khHFg+wOtwLXGfJhOe58r+Ul
+         Ob0zeSUOyRoRitpjiznPs8XzahJjjUgFMd8jxA6OEh+zhipR853asTCRT9VcYMZGPB
+         1rbUxnRc7Cd0YBaHzGOUngJR5nIBL+Afl9uURDvg=
+Received: from DLEE111.ent.ti.com (dlee111.ent.ti.com [157.170.170.22])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03HGFuVF127396;
+        Fri, 17 Apr 2020 11:15:56 -0500
+Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE111.ent.ti.com
+ (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 17
+ Apr 2020 11:15:56 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE106.ent.ti.com
+ (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Fri, 17 Apr 2020 11:15:56 -0500
+Received: from [10.250.48.148] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03HGFtos124883;
+        Fri, 17 Apr 2020 11:15:55 -0500
+Subject: Re: [v2 5/7] remoteproc: Restructure firmware name allocation
+To:     Markus Elfring <Markus.Elfring@web.de>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        <linux-remoteproc@vger.kernel.org>
+CC:     <linux-kernel@vger.kernel.org>, Alex Elder <elder@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Ohad Ben-Cohen <ohad@wizery.com>
+References: <20200415204858.2448-1-mathieu.poirier@linaro.org>
+ <20200415204858.2448-6-mathieu.poirier@linaro.org>
+ <aa565fea-b1c4-9b5c-73ed-591244afee19@web.de>
+ <e887c990-8cba-62b0-0f47-3ea0c166d603@ti.com>
+ <7a978c24-945d-8d39-3a0a-30e0678d569a@web.de>
+From:   Suman Anna <s-anna@ti.com>
+Message-ID: <9d3e4511-27f4-3523-a90c-2ff64d1d9c89@ti.com>
+Date:   Fri, 17 Apr 2020 11:15:50 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <7a978c24-945d-8d39-3a0a-30e0678d569a@web.de>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dne četrtek, 16. april 2020 ob 22:18:52 CEST je Heiner Kallweit napisal(a):
-> On 16.04.2020 20:57, Jernej Skrabec wrote:
-> > AC200 MFD IC supports Fast Ethernet PHY. Add a driver for it.
-> > 
-> > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-> > ---
-> > 
-> >  drivers/net/phy/Kconfig  |   7 ++
-> >  drivers/net/phy/Makefile |   1 +
-> >  drivers/net/phy/ac200.c  | 206 +++++++++++++++++++++++++++++++++++++++
-> >  3 files changed, 214 insertions(+)
-> >  create mode 100644 drivers/net/phy/ac200.c
-> > 
-> > diff --git a/drivers/net/phy/Kconfig b/drivers/net/phy/Kconfig
-> > index 3fa33d27eeba..16af69f69eaf 100644
-> > --- a/drivers/net/phy/Kconfig
-> > +++ b/drivers/net/phy/Kconfig
-> > @@ -288,6 +288,13 @@ config ADIN_PHY
-> > 
-> >  	  - ADIN1300 - Robust,Industrial, Low Latency 10/100/1000 Gigabit
-> >  	  
-> >  	    Ethernet PHY
-> > 
-> > +config AC200_PHY
-> > +	tristate "AC200 EPHY"
-> > +	depends on NVMEM
-> > +	depends on OF
-> > +	help
-> > +	  Fast ethernet PHY as found in X-Powers AC200 multi-function 
-device.
-> > +
-> > 
-> >  config AMD_PHY
-> >  
-> >  	tristate "AMD PHYs"
-> >  	---help---
-> > 
-> > diff --git a/drivers/net/phy/Makefile b/drivers/net/phy/Makefile
-> > index 2f5c7093a65b..b0c5b91900fa 100644
-> > --- a/drivers/net/phy/Makefile
-> > +++ b/drivers/net/phy/Makefile
-> > @@ -53,6 +53,7 @@ obj-$(CONFIG_SFP)		+= sfp.o
-> > 
-> >  sfp-obj-$(CONFIG_SFP)		+= sfp-bus.o
-> >  obj-y				+= $(sfp-obj-y) $(sfp-obj-m)
-> > 
-> > +obj-$(CONFIG_AC200_PHY)		+= ac200.o
-> > 
-> >  obj-$(CONFIG_ADIN_PHY)		+= adin.o
-> >  obj-$(CONFIG_AMD_PHY)		+= amd.o
-> >  aquantia-objs			+= aquantia_main.o
-> > 
-> > diff --git a/drivers/net/phy/ac200.c b/drivers/net/phy/ac200.c
-> > new file mode 100644
-> > index 000000000000..3d7856ff8f91
-> > --- /dev/null
-> > +++ b/drivers/net/phy/ac200.c
-> > @@ -0,0 +1,206 @@
-> > +// SPDX-License-Identifier: GPL-2.0+
-> > +/**
-> > + * Driver for AC200 Ethernet PHY
-> > + *
-> > + * Copyright (c) 2020 Jernej Skrabec <jernej.skrabec@siol.net>
-> > + */
-> > +
-> > +#include <linux/kernel.h>
-> > +#include <linux/module.h>
-> > +#include <linux/mfd/ac200.h>
-> > +#include <linux/nvmem-consumer.h>
-> > +#include <linux/of.h>
-> > +#include <linux/phy.h>
-> > +#include <linux/platform_device.h>
-> > +
-> > +#define AC200_EPHY_ID			0x00441400
-> > +#define AC200_EPHY_ID_MASK		0x0ffffff0
-> > +
+On 4/17/20 10:48 AM, Markus Elfring wrote:
+>>>      p = firmware ? kstrdup_const(…) : kasprintf(…);
+>>
+>> For simple assignments, I too prefer the ternary operator,
 > 
-> You could use PHY_ID_MATCH_MODEL() here.
+> Thanks for your feedback.
+> 
+> 
+>> but in this case, I think it is better to leave the current code as is.
+> 
+> Would you like to consider the use of the function “kvasprintf_const”
+> according to your review comment for the update step “[PATCH v2 4/7] remoteproc:
+> Use kstrdup_const() rather than kstrup()”?
 
-Hm... This doesn't work with dynamically allocated memory, right?
+This patch is just swapping the condition order, so will automatically 
+be adjusted for any changes in patch 4 during the rebase.
 
-Best regards,
-Jernej
-
-
+regards
+Suman
