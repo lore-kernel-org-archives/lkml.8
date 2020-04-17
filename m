@@ -2,251 +2,185 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE18FC2D0EF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 19:19:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C293C2D0EF
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 19:21:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B3127221F7
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 19:19:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5ACB2078E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 19:21:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="I7htG83b"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="HaSe/lW3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729995AbgDQTTs (ORCPT
+        id S1730178AbgDQTVR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 15:19:48 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:50216 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728260AbgDQTTs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 15:19:48 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03HJI2q5171302;
-        Fri, 17 Apr 2020 19:19:28 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=DddDipoAKPmmlgvP1sg97Rpg4mv9LGW+C80d1h3W6ec=;
- b=I7htG83bvhKtkA89NMN7DzU2BDXkf96/CG1UCgWrkgvdBT6EvZe239Utpt4nkfn0yDXH
- b+w0qkPPmxaTQJ0s0LcUPyj9K+9j+i44Hgay/mASxQK9lmdUHYDePVcy4tiNojm0ha8P
- mQ4CSwMjP+UzqvVTWKpLsIySCvKMmWjIEMHs27nhfg1w+pXgjjToyLO2WkOoCrWfspbN
- 3/vgz8lrtvT95kS8qPO4ozBuULlRpgL5TJiBsxO26KrfaD+EuSBi09ipQPnSwdH+Pimp
- bPVk7wMdkDFx0GImCPVrZFV2FUw7WYV8WOZV0rmw135K9S/ERyxpGyZjEEyTanHLEDfy 0Q== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 30e0aaecty-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 17 Apr 2020 19:19:28 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03HJHadA158293;
-        Fri, 17 Apr 2020 19:19:28 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3030.oracle.com with ESMTP id 30dn922stm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 17 Apr 2020 19:19:27 +0000
-Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 03HJJRvC014806;
-        Fri, 17 Apr 2020 19:19:27 GMT
-Received: from linux-1.home (/10.175.17.90)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 17 Apr 2020 12:19:26 -0700
-Subject: Re: [PATCH v5 04/17] x86,ftrace: Fix ftrace_regs_caller() unwind
-To:     Peter Zijlstra <peterz@infradead.org>, tglx@linutronix.de,
-        jpoimboe@redhat.com
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org, mhiramat@kernel.org,
-        mbenes@suse.cz, jthierry@redhat.com
-References: <20200416114706.625340212@infradead.org>
- <20200416115118.749606694@infradead.org>
-From:   Alexandre Chartre <alexandre.chartre@oracle.com>
-Message-ID: <243918fd-fa54-a8e5-bc70-67bf2d9f16a9@oracle.com>
-Date:   Fri, 17 Apr 2020 21:24:01 +0200
+        Fri, 17 Apr 2020 15:21:17 -0400
+Received: from mail-bn8nam11on2068.outbound.protection.outlook.com ([40.107.236.68]:6219
+        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728192AbgDQTVR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Apr 2020 15:21:17 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Dyr7Nb+Jtj6cmeKn7SMl8i8PKO0R3INypxsJuPLQORYExEuqYKMDtdCJXQz/6Zsvd3hZPTOMbUwB/YX5DhvVB2BeWmiFLALa2AzOChKsGjADDepajltONpdS68Bb/xLj1AIbd3IIb7PyPk8WnP9jmX5IzikEDv3CNR/whRShUPiNCR1jDYXS+xVEL4Kak3P9dOSipC02BmJ2PeXPQUhmDH2mpr8pD3M14g/ygsa8nJACIrnG6wiccP1JzeDJuSYMnyBBA26FChE9ADN4pqaleUXHzbCpIr/AwA382b5d3QUmzJQhLhhfVg7Plc5S3kBOV3uAhMEy5iajf2KBNc60Tg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Z5TXQaAaUheBv4usEsw0bry48IJMs/rJpQrcBTJfjE0=;
+ b=KoXyLjFgUriea/W/bXfJhkfjXv6ZgyDPpHZTXp4fMEPPuPqtb+YoMkTGhWvXFx/NKBIRh8Ln0rfSn9sUBiFh0/9FUEkdXGOcgWdB4btZfO9dzyh3AMLA4RFzNx3NRotI/Es/a1wS7VgZ0BljyOg9w6pDPD6CzphP4Rb0j+Hz3TAYm0AsdYjjb/7YeGzu7HcFO0gOERbwRdW4YzycMDZ/q9nzT024QEGflJy3SrL/iMANSeQ8KeSl5Fri9UNvppQn0ISeLQq3uWxjPPXHY7VXwH+Hppv6fH7jY+4nrnV0snPySKs9J6mZE9kNyFh+Qrik5u5rETQdyDd7ys/6kmYJqg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Z5TXQaAaUheBv4usEsw0bry48IJMs/rJpQrcBTJfjE0=;
+ b=HaSe/lW36Pd2ARL7Of0ZroWlaZX2/o+1DhdtLP8irCTtHhG0tI8BAu3e6GC48vA3xituuSeAj8criiwClby3oOVtwGI2Tu5ZMmcx8fg1QYC9RNIEdlktbetsLrNgoJWlpx/4aoQUEqxK1f7XIo3ouC9D+ALduyG388ybyq/Mzz4=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=Luben.Tuikov@amd.com; 
+Received: from DM6PR12MB3355.namprd12.prod.outlook.com (2603:10b6:5:115::26)
+ by DM6PR12MB4434.namprd12.prod.outlook.com (2603:10b6:5:2ad::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2921.29; Fri, 17 Apr
+ 2020 19:21:12 +0000
+Received: from DM6PR12MB3355.namprd12.prod.outlook.com
+ ([fe80::cd6e:7536:4dbb:aa85]) by DM6PR12MB3355.namprd12.prod.outlook.com
+ ([fe80::cd6e:7536:4dbb:aa85%5]) with mapi id 15.20.2921.027; Fri, 17 Apr 2020
+ 19:21:12 +0000
+To:     Joe Perches <joe@perches.com>, Andy Whitcroft <apw@canonical.com>,
+        LKML <linux-kernel@vger.kernel.org>
+From:   Luben Tuikov <luben.tuikov@amd.com>
+Subject: checkpatch.pl: WARNING: else is not generally useful after a break or
+ return
+Message-ID: <064ada88-9fa3-6f6d-967c-00d4e2d325ae@amd.com>
+Date:   Fri, 17 Apr 2020 15:20:56 -0400
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
-MIME-Version: 1.0
-In-Reply-To: <20200416115118.749606694@infradead.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+ Thunderbird/68.7.0
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-CA
 Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9594 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 mlxlogscore=790
- suspectscore=2 malwarescore=0 spamscore=0 phishscore=0 adultscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004170145
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9594 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 clxscore=1011
- impostorscore=0 mlxlogscore=848 mlxscore=0 lowpriorityscore=0
- suspectscore=2 adultscore=0 spamscore=0 malwarescore=0 phishscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004170145
+X-ClientProxiedBy: YTXPR0101CA0056.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:b00:1::33) To DM6PR12MB3355.namprd12.prod.outlook.com
+ (2603:10b6:5:115::26)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from localhost.localdomain (108.162.131.176) by YTXPR0101CA0056.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b00:1::33) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2921.25 via Frontend Transport; Fri, 17 Apr 2020 19:21:09 +0000
+X-Originating-IP: [108.162.131.176]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: f32ee956-31aa-4406-722a-08d7e3047d8c
+X-MS-TrafficTypeDiagnostic: DM6PR12MB4434:
+X-Microsoft-Antispam-PRVS: <DM6PR12MB4434BD4C2842FB95FFAACBAF99D90@DM6PR12MB4434.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:2201;
+X-Forefront-PRVS: 0376ECF4DD
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB3355.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(136003)(396003)(39860400002)(376002)(346002)(366004)(478600001)(26005)(86362001)(8676002)(81156014)(8936002)(31696002)(6512007)(6666004)(36756003)(2906002)(186003)(16526019)(44832011)(110136005)(316002)(2616005)(31686004)(956004)(55236004)(52116002)(6486002)(66556008)(66476007)(6506007)(66946007)(5660300002);DIR:OUT;SFP:1101;
+Received-SPF: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 1KYrTuz6Bg0mo2KutAm6HVJsAgF6nAMNhWk9X6sTlSPYZwefB/SCXiz5gSjUkyBqxXmIGKBsXcevRxN1WLKRKee9EwQ2VFM6Aj84eVIgoAZ/ZIXjYYPexHR444cVE6hYFh2e88LZz0TrVb8uzPLBUZhKPTsL/HDaAZ988ce2JLkjdg4XKD/VY5bxjEe9e7X2QbtUZvnd7eBkBd1KxQ0HM4IotGDOJ+CwU0m5yDmbLlXQp9xLQSsVXZ+SuoX0wipSumqeJVLt5ZwOc+kR8sPr+UOLo79ENR9sXs9tY8i2/GWfN0syLljI6bh/xfD5lXVSec/hUZcmhh1cvP4/RLfthiXKpDZb0J79JpMFzNiOLf4IW0bNTeHT9Lv+cmPcngpFRlhnkI9XQ0XcbX6GfgfG40lX8vCEIDS8UIGbiCdgVJxzXFqN77m1W8H8Zw+AYx02
+X-MS-Exchange-AntiSpam-MessageData: TNUSxArlVeyr6qzPQZ8VKECK+uVgAy9YxIpb0aDw1iyuuobmeFIytdJXSYnyHspHmFvcTjLQW7VmxyMZyn50zIH0lzzlZPPWgbzssPADJuZ9jdetPfgV8LGczDpuU8OtqhZhiFsk3/AevIDhci1iviNtSBI2++mXzPLIprOb0ciG9/YJKfR4CZzvzkTGfwGdMOsWBD0WIy5Cqc7PAi3c5zq+RnFrcJF8ECd8gudFmVADxfJMhAGdVk7lnUy2Q4GIHYoH5aDx3rh4C2gVUlG67SjDP54OTwJZo6Wz1Xtjb31VHDiKQWoHbmzp0kKR1ojH2y6M1M2fsxtBG9Tes1GPX9+8E2HHIDtzfsv5nfZPbizgliW7m3T1s5XWZQd4TIbjU0A3mTSHSEMVck2sH4M5NvNXFoHOzJUHOq3HezXwmLtRJl71Al/JRCSWt1x9Sgm8ZS6c7tfLIQQj5m7ued8Cd1HuyX/5EtY0/1gzkkFjTwv5JRKI21iZZ/Y/M+pR7CC8HSdICxl7dCgwrY8CJmFk9qvUD/QzR45IpoYpnlOdkxCh1RAQ+u8xTpwpHJv4G0jxjPgsLYb9gO8unp9bzVujwW1kTyjvXDilRDkjGT9oD2bwE17t7xmpY0ZxDIEzjdsbQ1CDoNarLxzqj5Mh54dJS/1vagJgbqpwkZ4n+YX1rdwkZ+nvTw3lr5PPRg/QCoO+K6qZIwwdeLiVl1sxbcwdeqvmwVfuoRPr2rdhtfWfwE4DvunFTkgXqLQjimJc8/yvpg3oHcsKLLzgi/cJAwXQn7z6rAe6ifs8k2cxHH1THi/qPD688C2WsUMydNBcH+Yu
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f32ee956-31aa-4406-722a-08d7e3047d8c
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Apr 2020 19:21:12.3764
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: +b6leHJVji+DnF+FHL7jk+S4c8xTlCxO5PJ92fTxGm5PYVLyiXXZlnW1vuo22E5h
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4434
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi,
 
-On 4/16/20 1:47 PM, Peter Zijlstra wrote:
-> The ftrace_regs_caller() trampoline does something 'funny' when there
-> is a direct-caller present. In that case it stuffs the 'direct-caller'
-> address on the return stack and then exits the function. This then
-> results in 'returning' to the direct-caller with the exact registers
-> we came in with -- an indirect tail-call without using a register.
-> 
-> This however (rightfully) confuses objtool because the function shares
-> a few instruction in order to have a single exit path, but the stack
-> layout is different for them, depending through which path we came
-> there.
-> 
-> This is currently cludged by forcing the stack state to the non-direct
-> case, but this generates actively wrong (ORC) unwind information for
-> the direct case, leading to potential broken unwinds.
-> 
-> Fix this issue by fully separating the exit paths. This results in
-> having to poke a second RET into the trampoline copy, see
-> ftrace_regs_caller_ret.
-> 
-> This brings us to a second objtool problem, in order for it to
-> perceive the 'jmp ftrace_epilogue' as a function exit, it needs to be
-> recognised as a tail call. In order to make that happen,
-> ftrace_epilogue needs to be the start of an STT_FUNC, so re-arrange
-> code to make this so.
-> 
-> Finally, a third issue is that objtool requires functions to exit with
-> the same stack layout they started with, which is obviously violated
-> in the direct case, employ the new HINT_RET_OFFSET to tell objtool
-> this is an expected exception.
-> 
-> Together, this results in generating correct ORC unwind information
-> for the ftrace_regs_caller() function and it's trampoline copies.
-> 
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> ---
->   arch/x86/kernel/ftrace.c    |   12 ++++++++++--
->   arch/x86/kernel/ftrace_64.S |   32 +++++++++++++++-----------------
->   2 files changed, 25 insertions(+), 19 deletions(-)
-> 
-> --- a/arch/x86/kernel/ftrace.c
-> +++ b/arch/x86/kernel/ftrace.c
-> @@ -282,7 +282,8 @@ static inline void tramp_free(void *tram
->   
->   /* Defined as markers to the end of the ftrace default trampolines */
->   extern void ftrace_regs_caller_end(void);
-> -extern void ftrace_epilogue(void);
-> +extern void ftrace_regs_caller_ret(void);
-> +extern void ftrace_caller_end(void);
->   extern void ftrace_caller_op_ptr(void);
->   extern void ftrace_regs_caller_op_ptr(void);
->   
-> @@ -334,7 +335,7 @@ create_trampoline(struct ftrace_ops *ops
->   		call_offset = (unsigned long)ftrace_regs_call;
->   	} else {
->   		start_offset = (unsigned long)ftrace_caller;
-> -		end_offset = (unsigned long)ftrace_epilogue;
-> +		end_offset = (unsigned long)ftrace_caller_end;
->   		op_offset = (unsigned long)ftrace_caller_op_ptr;
->   		call_offset = (unsigned long)ftrace_call;
->   	}
-> @@ -366,6 +367,13 @@ create_trampoline(struct ftrace_ops *ops
->   	if (WARN_ON(ret < 0))
->   		goto fail;
->   
-> +	if (ops->flags & FTRACE_OPS_FL_SAVE_REGS) {
-> +		ip = trampoline + (ftrace_regs_caller_ret - ftrace_regs_caller);
+I'm getting what seems to be a false positive in this case:
 
-It might be safer to use start_offset instead of ftrace_regs_caller (in
-case start_offset is ever changed to something different from ftrace_regs_caller
-in the future):
+:32: WARNING: else is not generally useful after a break or return
+#32: FILE: drivers/gpu/drm/amd/amdgpu/amdgpu_job.c:55:
++		return 0;
++	} else {
 
-          ip = trampoline + (ftrace_regs_caller_ret - start_offset);
+for the following code, at the bottom of a function:
 
-alex.
+	if (amdgpu_device_should_recover_gpu(ring->adev)) {
+		amdgpu_device_gpu_recover(ring->adev, job);
+		return 0;
+	} else {
+		drm_sched_suspend_timeout(&ring->sched);
+		return 1;
+	}
+}
 
-> +		ret = probe_kernel_read(ip, (void *)retq, RET_SIZE);
-> +		if (WARN_ON(ret < 0))
-> +			goto fail;
-> +	}
-> +
->   	/*
->   	 * The address of the ftrace_ops that is used for this trampoline
->   	 * is stored at the end of the trampoline. This will be used to
-> --- a/arch/x86/kernel/ftrace_64.S
-> +++ b/arch/x86/kernel/ftrace_64.S
-> @@ -157,8 +157,12 @@ SYM_INNER_LABEL(ftrace_call, SYM_L_GLOBA
->   	 * think twice before adding any new code or changing the
->   	 * layout here.
->   	 */
-> -SYM_INNER_LABEL(ftrace_epilogue, SYM_L_GLOBAL)
-> +SYM_INNER_LABEL(ftrace_caller_end, SYM_L_GLOBAL)
->   
-> +	jmp ftrace_epilogue
-> +SYM_FUNC_END(ftrace_caller);
-> +
-> +SYM_FUNC_START(ftrace_epilogue)
->   #ifdef CONFIG_FUNCTION_GRAPH_TRACER
->   SYM_INNER_LABEL(ftrace_graph_call, SYM_L_GLOBAL)
->   	jmp ftrace_stub
-> @@ -170,14 +174,12 @@ SYM_INNER_LABEL(ftrace_graph_call, SYM_L
->    */
->   SYM_INNER_LABEL_ALIGN(ftrace_stub, SYM_L_WEAK)
->   	retq
-> -SYM_FUNC_END(ftrace_caller)
-> +SYM_FUNC_END(ftrace_epilogue)
->   
->   SYM_FUNC_START(ftrace_regs_caller)
->   	/* Save the current flags before any operations that can change them */
->   	pushfq
->   
-> -	UNWIND_HINT_SAVE
-> -
->   	/* added 8 bytes to save flags */
->   	save_mcount_regs 8
->   	/* save_mcount_regs fills in first two parameters */
-> @@ -233,7 +235,10 @@ SYM_INNER_LABEL(ftrace_regs_call, SYM_L_
->   	movq ORIG_RAX(%rsp), %rax
->   	movq %rax, MCOUNT_REG_SIZE-8(%rsp)
->   
-> -	/* If ORIG_RAX is anything but zero, make this a call to that */
-> +	/*
-> +	 * If ORIG_RAX is anything but zero, make this a call to that.
-> +	 * See arch_ftrace_set_direct_caller().
-> +	 */
->   	movq ORIG_RAX(%rsp), %rax
->   	cmpq	$0, %rax
->   	je	1f
-> @@ -244,20 +249,14 @@ SYM_INNER_LABEL(ftrace_regs_call, SYM_L_
->   	movq %rax, MCOUNT_REG_SIZE(%rsp)
->   
->   	restore_mcount_regs 8
-> +	/* Restore flags */
-> +	popfq
->   
-> -	jmp	2f
-> +SYM_INNER_LABEL(ftrace_regs_caller_ret, SYM_L_GLOBAL);
-> +	UNWIND_HINT_RET_OFFSET
-> +	jmp	ftrace_epilogue
->   
->   1:	restore_mcount_regs
-> -
-> -
-> -2:
-> -	/*
-> -	 * The stack layout is nondetermistic here, depending on which path was
-> -	 * taken.  This confuses objtool and ORC, rightfully so.  For now,
-> -	 * pretend the stack always looks like the non-direct case.
-> -	 */
-> -	UNWIND_HINT_RESTORE
-> -
->   	/* Restore flags */
->   	popfq
->   
-> @@ -268,7 +267,6 @@ SYM_INNER_LABEL(ftrace_regs_call, SYM_L_
->   	 * to the return.
->   	 */
->   SYM_INNER_LABEL(ftrace_regs_caller_end, SYM_L_GLOBAL)
-> -
->   	jmp ftrace_epilogue
->   
->   SYM_FUNC_END(ftrace_regs_caller)
-> 
-> 
+Which seems to be coming from commit:
+
+commit 032a4c0f9a77ce565355c6e191553e853ba66f09
+Author: Joe Perches <joe@perches.com>
+Date:   Wed Aug 6 16:10:29 2014 -0700
+
+    checkpatch: warn on unnecessary else after return or break
+    
+    Using an else following a break or return can unnecessarily indent code
+    blocks.
+    
+    ie:
+            for (i = 0; i < 100; i++) {
+                    int foo = bar();
+                    if (foo < 1)
+                            break;
+                    else
+                            usleep(1);
+            }
+    
+    is generally better written as:
+    
+            for (i = 0; i < 100; i++) {
+                    int foo = bar();
+                    if (foo < 1)
+                            break;
+                    usleep(1);
+            }
+    
+    Warn when a bare else statement is preceded by a break or return
+    indented 1 tab more than the else.
+    
+    Signed-off-by: Joe Perches <joe@perches.com>
+    Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+    Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+
+While I agree with what the commit is trying to do,
+it doesn't seem to apply to the if-else statement which I quoted
+above. That is, the "else" is not "bare"--to use the lingo of
+the commit.
+
+I suggest that no warning is issued when the "else" is a compound
+statement, as shown in my example at the top of this email.
+
+It is only natural to write:
+
+	if (amdgpu_device_should_recover_gpu(ring->adev)) {
+		amdgpu_device_gpu_recover(ring->adev, job);
+		return 0;
+	} else {
+		drm_sched_suspend_timeout(&ring->sched);
+		return 1;
+	}
+}
+
+instead of,
+
+	if (amdgpu_device_should_recover_gpu(ring->adev)) {
+		amdgpu_device_gpu_recover(ring->adev, job);
+		return 0;
+	}
+	drm_sched_suspend_timeout(&ring->sched);
+	return 1;
+}
+
+Regards,
+-- 
+Luben
