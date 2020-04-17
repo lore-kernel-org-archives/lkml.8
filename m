@@ -2,164 +2,97 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B9DBC38A2B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 13:10:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D586C2D0EF
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 13:14:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4BB7420776
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 13:10:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72CA62064A
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 13:14:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="bYCVjtMI"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="AsaRh5/J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730552AbgDQNKT (ORCPT
+        id S1730118AbgDQNOh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 09:10:19 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:37714 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729799AbgDQNKS (ORCPT
+        Fri, 17 Apr 2020 09:14:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51756 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729799AbgDQNOg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 09:10:18 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03HD8ETx152452;
-        Fri, 17 Apr 2020 13:10:11 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=AjtxkhDippqjmbKdJrsNp6jAtRzGaVDPxncdrI9lIWU=;
- b=bYCVjtMIVEaMujhoppxNMGSyItJ/4HWhQUW5qnWzvTQHp719OMlO+nIixHidV5pY4hgW
- Uf1XyQIGgYYpyyCJdSpTBzi3U/99Ux2F7NTjlbghdWGEU4pg69Gpo0O425LaCOBlgRKo
- lAPQ0G+bdrXxMcON/5qWhiAqiQFJZGsunRSBlTuSXO1vzo9TbaS9WxKA3bjwe0hG7Nkx
- ORRIXROh6ayZSMlGaMQ8/Zbf5woL2Rkf2/DCBUs/MxjRYFageQO9gH48fT1QQIal6mJQ
- XxpKRYW0m0vASjX9esFVgqANCpdOScunQ7MQDJVXc0fRxpDsO8cZjrU2ObqA3OLJCLAu ag== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2120.oracle.com with ESMTP id 30dn95xyyn-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 17 Apr 2020 13:10:11 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03HD8Kur082364;
-        Fri, 17 Apr 2020 13:10:11 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3020.oracle.com with ESMTP id 30dn9jxru9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 17 Apr 2020 13:10:09 +0000
-Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 03HDA7lC009948;
-        Fri, 17 Apr 2020 13:10:07 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 17 Apr 2020 06:10:06 -0700
-Date:   Fri, 17 Apr 2020 16:09:55 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     g@ziepe.ca, Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        selvin.xavier@broadcom.com, devesh.sharma@broadcom.com,
-        dledford@redhat.com, leon@kernel.org, colin.king@canonical.com,
-        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] RDMA/ocrdma: Fix an off-by-one issue in 'ocrdma_add_stat'
-Message-ID: <20200417130955.GU1163@kadam>
-References: <20200328073040.24429-1-christophe.jaillet@wanadoo.fr>
- <20200414183441.GA28870@ziepe.ca>
- <20200416130847.GP1163@kadam>
- <20200416184754.GZ5100@ziepe.ca>
- <20200417112624.GS1163@kadam>
- <20200417122542.GC5100@ziepe.ca>
+        Fri, 17 Apr 2020 09:14:36 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CAA8CC061A0C
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 06:14:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=LHJhPbLaaNiTTXhuFNZjeRvwvUAbGtJVs/CsxLmZi2Y=; b=AsaRh5/JwJB0BAveJU7qOl7BgV
+        Kxanvr9ibiy07Do+GkhkdWMrI3SE7g5Mc/ovkUqWESOqzCT6o37hjv62GaHxl0z86fx4jOijm1pSt
+        ap+WOq6n7ApPSRZrlwfnWVn9ztMAZCzS+uqcZFSbPOBNmWUA7j0bTgnjcoUh3ssa9IPQOyQ0m6YsN
+        jjHvkMVxJvWY7cmuZ76/BQE6uoXKMD4C39VjQ3LRspJ2VaNuLMU+ZhmPldf4Sq0527zJ4Ckg94pH2
+        XlFzxzTdTitfu1K24WKOiIcewFoPNUDPC9TJ5ywjnzJ2O3gdni3UlDXGDV4yL1dB6qqIiq/+XoLDQ
+        gbKMRU3A==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jPQp9-0007LB-2S; Fri, 17 Apr 2020 13:14:27 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 247E53006E0;
+        Fri, 17 Apr 2020 15:14:25 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 062342B120754; Fri, 17 Apr 2020 15:14:24 +0200 (CEST)
+Date:   Fri, 17 Apr 2020 15:14:24 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org, jroedel@suse.de,
+        vbabka@suse.cz, urezki@gmail.com,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Olof Johansson <olof@lixom.net>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>
+Subject: Re: [PATCH] mm/vmalloc: Sanitize __get_vm_area() arguments
+Message-ID: <20200417131424.GR20713@hirez.programming.kicks-ass.net>
+References: <20200403163253.GU20730@hirez.programming.kicks-ass.net>
+ <20200406130155.GB29306@infradead.org>
+ <20200417125735.GN27762@paasikivi.fi.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200417122542.GC5100@ziepe.ca>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9593 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 mlxscore=0 adultscore=0
- spamscore=0 phishscore=0 bulkscore=0 suspectscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004170105
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9593 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 clxscore=1011
- malwarescore=0 bulkscore=0 priorityscore=1501 lowpriorityscore=0
- mlxscore=0 phishscore=0 spamscore=0 impostorscore=0 suspectscore=0
- mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004170105
+In-Reply-To: <20200417125735.GN27762@paasikivi.fi.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 17, 2020 at 09:25:42AM -0300, Jason Gunthorpe wrote:
-> On Fri, Apr 17, 2020 at 02:26:24PM +0300, Dan Carpenter wrote:
-> > On Thu, Apr 16, 2020 at 03:47:54PM -0300, Jason Gunthorpe wrote:
-> > > On Thu, Apr 16, 2020 at 04:08:47PM +0300, Dan Carpenter wrote:
-> > > > On Tue, Apr 14, 2020 at 03:34:41PM -0300, Jason Gunthorpe wrote:
-> > > > > The memcpy is still kind of silly right? What about this:
-> > > > > 
-> > > > > static int ocrdma_add_stat(char *start, char *pcur, char *name, u64 count)
-> > > > > {
-> > > > > 	size_t len = (start + OCRDMA_MAX_DBGFS_MEM) - pcur;
-> > > > > 	int cpy_len;
-> > > > > 
-> > > > > 	cpy_len = snprintf(pcur, len, "%s: %llu\n", name, count);
-> > > > > 	if (cpy_len >= len || cpy_len < 0) {
-> > > > 
-> > > > The kernel version of snprintf() doesn't and will never return
-> > > > negatives.  It would cause a huge security headache if it started
-> > > > returning negatives.
+On Fri, Apr 17, 2020 at 03:57:35PM +0300, Sakari Ailus wrote:
+> Hi Christoph,
+> 
+> On Mon, Apr 06, 2020 at 06:01:55AM -0700, Christoph Hellwig wrote:
+> > On Fri, Apr 03, 2020 at 06:32:53PM +0200, Peter Zijlstra wrote:
 > > > 
-> > > Begs the question why it returns an int then :)
+> > > __get_vm_area() is an exported symbol, make sure the callers stay in
+> > > the expected memory range. When calling this function with memory
+> > > ranges outside of the VMALLOC range *bad* things can happen.
+> > > 
+> > > (I noticed this when I managed to corrupt the kernel text by accident)
 > > 
-> > People should use "int" as their default type.  "int i;".  It means
-> > "This is a normal number.  Nothing special about it.  It's not too high.
-> > It's not defined by hardware requirements."  Other types call attention
-> > to themselves, but int is the humble datatype.
+> > Maybe it is time to unexport it?  There are only two users:
+> > 
+> >  - staging/media/ipu3 really should be using vmap.  And given that it
+> >    is a staging driver it really doesn't matter anyway if we break it.
 > 
-> No, I strongly disagree with this, it is one of my pet peeves to see
-> 'int' being used for data which is known to be only ever be positive
-> just to save typing 'unsigned'.
+> It's not very polite to suggest breaking other people's drivers for such a
+> small matter, staging or not. That'd be bound to break kernel compilation
+> for a lot of people, if for nothing else.
 > 
-> Not only is it confusing, but allowing signed values has caused tricky
-> security bugs, unfortuntely.
+> Anyway, thanks for cc'ing me. I agree with suggestion and I'll submit a
+> patch to address it.
 
-I have the opposite pet peeve.
+Already done, see:
 
-I complain about it a lot.  It pains me every time I see a "u32 i;".  I
-think there is a static analysis warning for using signed which
-encourages people to write code like that.  That warning really upsets
-me for two reasons 1) The static checker should know the range of values
-but it doesn't so it makes me sad to see inferior technology being used
-when it should deleted instead.  2)  I have never seen this warning
-prevent a real life bug.  You would need to hit a series of fairly rare
-events for this warning to be useful and I have never seen that happen
-yet.
-
-The most common bug caused by unsigned variables is that it breaks the
-kernel error handling but there are other problems as well.  There was
-an example a little while back where someone "fixed" a security problem
-by making things unsigned.
-
-	for (i = 0; i < user_value; i++) {
-
-Originally if user_value was an int then the loop would have been a
-harmless no-op but now it was a large positive value so it lead to
-memory corruption.  Another example is:
-
-	for (i = 0; i < user_value - 1; i++) {
-
-If "user_value" is zero the subtraction becomes UINT_MAX.  Or some
-people use a "u16 i;" but then the limit increases so the loop doesn't
-work any more.
-
-From my experience with static analysis and security audits, making
-things unsigned en mass causes more security bugs.  There are definitely
-times where making variables unsigned is correct for security reasons
-like when you are taking a size from userspace.
-
-Complicated types call attention to themselves and they hurt
-readability.  You sometimes *need* other datatypes and you want those to
-stand out but if everything is special then nothing is special.
-
-regards,
-dan carpenter
-
+  https://lkml.kernel.org/r/20200414131348.444715-5-hch@lst.de
