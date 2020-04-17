@@ -2,87 +2,78 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1096C2D0EF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 19:01:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FD43C2D0EF
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 19:05:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9894620780
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 19:01:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="nhSCvAIn"
+	by mail.kernel.org (Postfix) with ESMTP id 0D1C720780
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 19:05:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728223AbgDQTB4 (ORCPT
+        id S1728540AbgDQTFE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 15:01:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49432 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725960AbgDQTBz (ORCPT
+        Fri, 17 Apr 2020 15:05:04 -0400
+Received: from mail-il1-f197.google.com ([209.85.166.197]:41372 "EHLO
+        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727775AbgDQTFD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 15:01:55 -0400
-Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A6DEC061A0C;
-        Fri, 17 Apr 2020 12:01:55 -0700 (PDT)
-Received: by mail-ed1-x544.google.com with SMTP id d16so2263061edq.7;
-        Fri, 17 Apr 2020 12:01:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Ws0lGObjtWkfbXmBqtfEqFJnV5cJRhTx4fqD0Q8cnBs=;
-        b=nhSCvAIn9SOUp/QSQE0a0stljfg8bCGxS/WVOKNAq32tSji2T/MlLN6N5hKSkGs8Q1
-         1Hj1P4OBFNbPEuexW2ofGFBJfn2JCZo/h/oBQtj3R+49YApA8xLc9FcENfylm4uZsihr
-         PrN3wtI2fyzkxaICZKRlp0Q6qiVeoAMwvDPPmqTmKJpPBpHL9Wlb8FAhu4tTuWNXihox
-         i6BZIRxCvdlNTKi6P6++kC1qTTbz2pJsm8GwDRMi3IFnC6psIAObSJOyRv8SOy/9LDea
-         kVO0ulyl92+e3ra0I4rZpAXxTtOE5sSFn94sL9qAMs9BHRmLpMgIGprNpDuBiIo2aWcr
-         GtsQ==
+        Fri, 17 Apr 2020 15:05:03 -0400
+Received: by mail-il1-f197.google.com with SMTP id y2so3505288ilm.8
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 12:05:03 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Ws0lGObjtWkfbXmBqtfEqFJnV5cJRhTx4fqD0Q8cnBs=;
-        b=DeBDyJ1j5c+uddKUXViG6wxB3TSHkF0zo0oegZYpvhKuD+gd4PN3R/q+tSAUjCiRrZ
-         qMihFK9rcoyMgF3u0uYmeumo2rdKxV1Zn8CQ8nHCOAXYEr3rEuj9jO5UM6vq/Z8x0v2n
-         YscbK6zm3l/tiL0WsJHUqhq1azqIwyN+rzi9vrGY9GsCYVqGtJcwAT28xHMxGKaoFpWx
-         wqt+Vmb/W4tEhLKvtys3bFU7h7aeEa8F+b2zSXBLSVS0JQEWRTec67sPQj5g+dberjXm
-         dPy+UZAsXYkMu/hKZ6yK30yGA8mfamjGh5Li0FqF50igw+JlKDywx1ngZefIWxMWUKWm
-         IilQ==
-X-Gm-Message-State: AGi0PuZRPsFghET5JY3nsWRxFrDE/dH4wO2NPHkI1NZm80SL6wgpbaEV
-        PoKGvbCNRcIiMHfhyb++3JR1p49i7YKVUPIvjWo=
-X-Google-Smtp-Source: APiQypKxFRcocN12xEBF5koGWzrxYBcKMvJXbVGzd+MQqeyCeALK+IsccNlNdyjEYO6sxS47F8FsDBlkB2FlBJzQWwM=
-X-Received: by 2002:a05:6402:1496:: with SMTP id e22mr4449267edv.301.1587150114192;
- Fri, 17 Apr 2020 12:01:54 -0700 (PDT)
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=5c8LCDRq12f8g3OYrnBxOb2S1vJ1If0MMyvK95Cf5Fk=;
+        b=Nvqvgsd46DKEz3SayhUU1nOTIN274bhHkprfg9t3+H+bo8avxerqAr46A7G/ugytZa
+         bnmcNpxjRAcMdpP6S12w8r9TpAfnel8IZXq2rj/+3ZxDbJAITeLUuuicEqKvRs1mWbas
+         bI3wQ9W93rm/Ds+22Y9g0SL87KwmFyRunMxJPCxrqX0EQvlPEUaYBRhxXED0nii+H7Rs
+         Lo+Npmj7SgG6IRiAgB2Jb61qSOkrzojKD7RPc/4MZS4R+ULoI5pZ5aWfl7b3Q/Cwpmgn
+         EUPpNT6QlbPySd8JRBUbsrqaY+hXgUqMdXPReYVXnpiUSUUPqI6vNtYWrUOlG/TrFFcO
+         nNYg==
+X-Gm-Message-State: AGi0Pua6SqM4ZHMsPIf1P+fwZjhrGkWmcB7i2p++xUpFttjnEJdFi3YQ
+        06pERPLEJg4DKH01DjQsageMYAOrUjpKdNtITY4hyFk1PfI8
+X-Google-Smtp-Source: APiQypKsq7TxaiPrXeHTLAURaor6Vs0GiUzQw/HOVdjNTAiVTr5h6r9VDsXe7qVE1r1NZsa4mN8p+sOD4iQMPGQkiM1vyKec2V7l
 MIME-Version: 1.0
-References: <20200416121910.12723-1-narmstrong@baylibre.com> <20200416121910.12723-4-narmstrong@baylibre.com>
-In-Reply-To: <20200416121910.12723-4-narmstrong@baylibre.com>
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Fri, 17 Apr 2020 21:01:43 +0200
-Message-ID: <CAFBinCCPZCNsj=dA3_fzrPqGCrpRzeJ7OPGErFvUeKW=iW-r9g@mail.gmail.com>
-Subject: Re: [PATCH v3 3/8] usb: dwc3: meson-g12a: add support for GXL and GXM SoCs
-To:     Neil Armstrong <narmstrong@baylibre.com>
-Cc:     kishon@ti.com, balbi@kernel.org, khilman@baylibre.com,
-        linux-amlogic@lists.infradead.org, linux-usb@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+X-Received: by 2002:a92:b74e:: with SMTP id c14mr4736743ilm.52.1587150302788;
+ Fri, 17 Apr 2020 12:05:02 -0700 (PDT)
+Date:   Fri, 17 Apr 2020 12:05:02 -0700
+In-Reply-To: <00000000000088487805a116880c@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000000c55c05a3813a66@google.com>
+Subject: Re: KASAN: use-after-free Write in tcindex_change
+From:   syzbot <syzbot+ba4bcf1563f90386910f@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, jhs@mojatatu.com, jiri@resnulli.us,
+        kuba@kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        xiyou.wangcong@gmail.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 16, 2020 at 2:19 PM Neil Armstrong <narmstrong@baylibre.com> wrote:
->
-> In order to add support for the Amlogic GXL/GXM USB Glue, this adds
-> the corresponding :
-super nit-pick: if you have to re-send this for whatever reason, then
-please add "new compatible strings with" before "the corresponding"
+syzbot suspects this bug was fixed by commit:
 
-> - PHY names
-> - clock names
-> - USB2 PHY init and mode set
-> - regmap setup
->
-> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+commit 0d1c3530e1bd38382edef72591b78e877e0edcd3
+Author: Cong Wang <xiyou.wangcong@gmail.com>
+Date:   Thu Mar 12 05:42:28 2020 +0000
+
+    net_sched: keep alloc_hash updated after hash allocation
+
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=15a956d7e00000
+start commit:   ac309e77 Merge branch 'for-linus' of git://git.kernel.org/..
+git tree:       upstream
+kernel config:  https://syzkaller.appspot.com/x/.config?x=6dfa02302d6db985
+dashboard link: https://syzkaller.appspot.com/bug?extid=ba4bcf1563f90386910f
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1771b973e00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1248a61de00000
+
+If the result looks correct, please mark the bug fixed by replying with:
+
+#syz fix: net_sched: keep alloc_hash updated after hash allocation
+
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
