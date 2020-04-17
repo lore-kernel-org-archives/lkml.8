@@ -2,78 +2,101 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FD43C2D0EF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 19:05:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FF1AC2D0EF
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 19:06:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0D1C720780
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 19:05:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFA5420780
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 19:06:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CjH6Xkpp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728540AbgDQTFE (ORCPT
+        id S1729241AbgDQTGA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 15:05:04 -0400
-Received: from mail-il1-f197.google.com ([209.85.166.197]:41372 "EHLO
-        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727775AbgDQTFD (ORCPT
+        Fri, 17 Apr 2020 15:06:00 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:32332 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726554AbgDQTF7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 15:05:03 -0400
-Received: by mail-il1-f197.google.com with SMTP id y2so3505288ilm.8
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 12:05:03 -0700 (PDT)
+        Fri, 17 Apr 2020 15:05:59 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587150358;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=aexqVQ7wQQYqij2tXK706tjApKpXd1pq/NygCDJJnFw=;
+        b=CjH6Xkpp8diOEF+g4dDjcgQWbypn+TixbqYbwxLjeUbSQcKPW51ElkA2UGuqUqkWfqocxp
+        +ATSw7hlvPqhayt53nQdO0km7/01dJlrq1YR3KG+67EEk4dsokUBJ9+9OV8FZnh8VNUpZW
+        ltovXvMUMonMnrLEvi1tHDfzaFKLff0=
+Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
+ [209.85.219.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-108-BkyMJSxaPT-BauuTxllA0A-1; Fri, 17 Apr 2020 15:05:56 -0400
+X-MC-Unique: BkyMJSxaPT-BauuTxllA0A-1
+Received: by mail-qv1-f69.google.com with SMTP id et5so3149112qvb.5
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 12:05:55 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=5c8LCDRq12f8g3OYrnBxOb2S1vJ1If0MMyvK95Cf5Fk=;
-        b=Nvqvgsd46DKEz3SayhUU1nOTIN274bhHkprfg9t3+H+bo8avxerqAr46A7G/ugytZa
-         bnmcNpxjRAcMdpP6S12w8r9TpAfnel8IZXq2rj/+3ZxDbJAITeLUuuicEqKvRs1mWbas
-         bI3wQ9W93rm/Ds+22Y9g0SL87KwmFyRunMxJPCxrqX0EQvlPEUaYBRhxXED0nii+H7Rs
-         Lo+Npmj7SgG6IRiAgB2Jb61qSOkrzojKD7RPc/4MZS4R+ULoI5pZ5aWfl7b3Q/Cwpmgn
-         EUPpNT6QlbPySd8JRBUbsrqaY+hXgUqMdXPReYVXnpiUSUUPqI6vNtYWrUOlG/TrFFcO
-         nNYg==
-X-Gm-Message-State: AGi0Pua6SqM4ZHMsPIf1P+fwZjhrGkWmcB7i2p++xUpFttjnEJdFi3YQ
-        06pERPLEJg4DKH01DjQsageMYAOrUjpKdNtITY4hyFk1PfI8
-X-Google-Smtp-Source: APiQypKsq7TxaiPrXeHTLAURaor6Vs0GiUzQw/HOVdjNTAiVTr5h6r9VDsXe7qVE1r1NZsa4mN8p+sOD4iQMPGQkiM1vyKec2V7l
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=aexqVQ7wQQYqij2tXK706tjApKpXd1pq/NygCDJJnFw=;
+        b=IePEFIC8KDcThWH53lz9Svcn8MkrFTsi5iW+7TLgqhcmFq/CeG54wzRzeV4m+vWhaU
+         2Wv5jz7KteuSlmw6JvEh/gYP6hp1zF9TRgVVnP/hzBGeDuMajDssX9TDiQNGE3Illx/d
+         +iWb68mlNNotCjIdZ/sTcTfbwyBlQynyU9abI9AxF7TYMqKmK2jMqRp1FGxW3H+ZYcFN
+         WQFpkjXjNjOXAdwrVsj5YulR5zxi4+s+wHDkAhpCx3tlDVlk3wLL4iSqT4iCHf+xh2/L
+         RGJQypgUS/NDPNoJa1GZ2U1MLPLtcmemxZ3evZWKfaFfWUL3cziYYGzrTRtgM5h32qk3
+         tPHw==
+X-Gm-Message-State: AGi0PubGt918a7kG4Ri34Lx3/SoMAm4Ac8Wzzk1g/fPfywjcHZe6tzhJ
+        Hzatj8mc72pUBJhXf/CbLfwAJ7xM63bqAldLubYjGI7dG8kWdXR5bsxtyucdq0uJgV933071pO5
+        LtfKEdB4F/vHWOll8yCfggfLX
+X-Received: by 2002:ac8:6642:: with SMTP id j2mr4466577qtp.311.1587150355608;
+        Fri, 17 Apr 2020 12:05:55 -0700 (PDT)
+X-Google-Smtp-Source: APiQypJK47cUAW8UhtqP+6vEGJNWgIFR2kpnvCsa+tpq1Wupmn2CfkAR46gEVGsdrfyTnQkPGXbbBw==
+X-Received: by 2002:ac8:6642:: with SMTP id j2mr4466545qtp.311.1587150355360;
+        Fri, 17 Apr 2020 12:05:55 -0700 (PDT)
+Received: from xz-x1 ([2607:9880:19c0:32::2])
+        by smtp.gmail.com with ESMTPSA id y21sm17199104qka.37.2020.04.17.12.05.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 17 Apr 2020 12:05:54 -0700 (PDT)
+Date:   Fri, 17 Apr 2020 15:05:53 -0400
+From:   Peter Xu <peterx@redhat.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>
+Subject: Re: [PATCH 0/3] KVM: x86: move nested-related kvm_x86_ops to a
+ separate struct
+Message-ID: <20200417190553.GI287932@xz-x1>
+References: <20200417164413.71885-1-pbonzini@redhat.com>
 MIME-Version: 1.0
-X-Received: by 2002:a92:b74e:: with SMTP id c14mr4736743ilm.52.1587150302788;
- Fri, 17 Apr 2020 12:05:02 -0700 (PDT)
-Date:   Fri, 17 Apr 2020 12:05:02 -0700
-In-Reply-To: <00000000000088487805a116880c@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000000c55c05a3813a66@google.com>
-Subject: Re: KASAN: use-after-free Write in tcindex_change
-From:   syzbot <syzbot+ba4bcf1563f90386910f@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, jhs@mojatatu.com, jiri@resnulli.us,
-        kuba@kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        xiyou.wangcong@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200417164413.71885-1-pbonzini@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot suspects this bug was fixed by commit:
+On Fri, Apr 17, 2020 at 12:44:10PM -0400, Paolo Bonzini wrote:
+> While this reintroduces some pointer chasing that was removed in
+> afaf0b2f9b80 ("KVM: x86: Copy kvm_x86_ops by value to eliminate layer
+> of indirection", 2020-03-31), the cost is small compared to retpolines
+> and anyway most of the callbacks are not even remotely on a fastpath.
+> In fact, only check_nested_events should be called during normal VM
+> runtime.  When static calls are merged into Linux my plan is to use them
+> instead of callbacks, and that will finally make things fast again by
+> removing the retpolines.
 
-commit 0d1c3530e1bd38382edef72591b78e877e0edcd3
-Author: Cong Wang <xiyou.wangcong@gmail.com>
-Date:   Thu Mar 12 05:42:28 2020 +0000
+Paolo,
 
-    net_sched: keep alloc_hash updated after hash allocation
+Just out of curiousity: is there an explicit reason to not copy the
+whole kvm_x86_nested_ops but use pointers (since after all we just
+reworked kvm_x86_ops)?
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=15a956d7e00000
-start commit:   ac309e77 Merge branch 'for-linus' of git://git.kernel.org/..
-git tree:       upstream
-kernel config:  https://syzkaller.appspot.com/x/.config?x=6dfa02302d6db985
-dashboard link: https://syzkaller.appspot.com/bug?extid=ba4bcf1563f90386910f
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1771b973e00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1248a61de00000
+Thanks,
 
-If the result looks correct, please mark the bug fixed by replying with:
+-- 
+Peter Xu
 
-#syz fix: net_sched: keep alloc_hash updated after hash allocation
-
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
