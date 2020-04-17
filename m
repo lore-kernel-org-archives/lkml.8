@@ -2,168 +2,144 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9A37C3815B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 18:01:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5752C2D0EF
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 18:05:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D50BF2078E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 18:01:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0DB82078E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 18:05:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730371AbgDQSBh (ORCPT
+        id S1730362AbgDQSFX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 14:01:37 -0400
-Received: from out03.mta.xmission.com ([166.70.13.233]:49226 "EHLO
-        out03.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730278AbgDQSBg (ORCPT
+        Fri, 17 Apr 2020 14:05:23 -0400
+Received: from out30-44.freemail.mail.aliyun.com ([115.124.30.44]:51266 "EHLO
+        out30-44.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730236AbgDQSFW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 14:01:36 -0400
-Received: from in01.mta.xmission.com ([166.70.13.51])
-        by out03.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.90_1)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jPVJ0-0002nt-Hj; Fri, 17 Apr 2020 12:01:34 -0600
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jPVIy-0006x7-Sb; Fri, 17 Apr 2020 12:01:34 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     <linux-kernel@vger.kernel.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Alexey Gladkov <gladkov.alexey@gmail.com>
-Date:   Fri, 17 Apr 2020 12:58:31 -0500
-Message-ID: <87y2quc7ug.fsf@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Fri, 17 Apr 2020 14:05:22 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R191e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04394;MF=bo.liu@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0TvqiUma_1587146713;
+Received: from rsjd01523.et2sqa(mailfrom:bo.liu@linux.alibaba.com fp:SMTPD_---0TvqiUma_1587146713)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Sat, 18 Apr 2020 02:05:19 +0800
+Date:   Sat, 18 Apr 2020 02:05:13 +0800
+From:   Liu Bo <bo.liu@linux.alibaba.com>
+To:     Vivek Goyal <vgoyal@redhat.com>
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-nvdimm@lists.01.org, virtio-fs@redhat.com, miklos@szeredi.hu,
+        stefanha@redhat.com, dgilbert@redhat.com, mst@redhat.com
+Subject: Re: [PATCH 20/20] fuse,virtiofs: Add logic to free up a memory range
+Message-ID: <20200417180513.GA67026@rsjd01523.et2sqa>
+Reply-To: bo.liu@linux.alibaba.com
+References: <20200304165845.3081-1-vgoyal@redhat.com>
+ <20200304165845.3081-21-vgoyal@redhat.com>
+ <20200326000904.GA34937@rsjd01523.et2sqa>
+ <20200327140114.GB32717@redhat.com>
+ <20200327220606.GA119028@rsjd01523.et2sqa>
+ <20200414193045.GB210453@redhat.com>
+ <20200415172229.GA121484@rsjd01523.et2sqa>
+ <20200416190507.GC276932@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1jPVIy-0006x7-Sb;;;mid=<87y2quc7ug.fsf@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX18A/NXNfLi9rMluPPKH7xgUBMnP76m2akk=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: [GIT PULL] Please pull proc fixes for v5.7-rc2
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200416190507.GC276932@redhat.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-Linus,
-
-Please pull the for-linus branch from the git tree:
-
-   git://git.kernel.org/pub/scm/linux/kernel/git/ebiederm/user-namespace.git for-linus
-
-   HEAD: 4fa3b1c417377c352208ee9f487e17cfcee32348 proc: Handle umounts cleanly
-
-While running syzbot happened to spot one more oversight in my rework of
-proc_flush_task.  The fields proc_self and proc_thread_self were not
-being reinitialized on when proc was unmounted, which could cause
-problems if the mount of proc fails.
-
----
-
-From 4fa3b1c417377c352208ee9f487e17cfcee32348 Mon Sep 17 00:00:00 2001
-From: "Eric W. Biederman" <ebiederm@xmission.com>
-Date: Wed, 15 Apr 2020 12:37:27 -0500
-Subject: [PATCH] proc: Handle umounts cleanly
-
-syzbot writes:
-> KASAN: use-after-free Read in dput (2)
+On Thu, Apr 16, 2020 at 03:05:07PM -0400, Vivek Goyal wrote:
+> On Thu, Apr 16, 2020 at 01:22:29AM +0800, Liu Bo wrote:
+> > On Tue, Apr 14, 2020 at 03:30:45PM -0400, Vivek Goyal wrote:
+> > > On Sat, Mar 28, 2020 at 06:06:06AM +0800, Liu Bo wrote:
+> > > > On Fri, Mar 27, 2020 at 10:01:14AM -0400, Vivek Goyal wrote:
+> > > > > On Thu, Mar 26, 2020 at 08:09:05AM +0800, Liu Bo wrote:
+> > > > > 
+> > > > > [..]
+> > > > > > > +/*
+> > > > > > > + * Find first mapping in the tree and free it and return it. Do not add
+> > > > > > > + * it back to free pool. If fault == true, this function should be called
+> > > > > > > + * with fi->i_mmap_sem held.
+> > > > > > > + */
+> > > > > > > +static struct fuse_dax_mapping *inode_reclaim_one_dmap(struct fuse_conn *fc,
+> > > > > > > +							 struct inode *inode,
+> > > > > > > +							 bool fault)
+> > > > > > > +{
+> > > > > > > +	struct fuse_inode *fi = get_fuse_inode(inode);
+> > > > > > > +	struct fuse_dax_mapping *dmap;
+> > > > > > > +	int ret;
+> > > > > > > +
+> > > > > > > +	if (!fault)
+> > > > > > > +		down_write(&fi->i_mmap_sem);
+> > > > > > > +
+> > > > > > > +	/*
+> > > > > > > +	 * Make sure there are no references to inode pages using
+> > > > > > > +	 * get_user_pages()
+> > > > > > > +	 */
+> > > > > > > +	ret = fuse_break_dax_layouts(inode, 0, 0);
+> > > > > > 
+> > > > > > Hi Vivek,
+> > > > > > 
+> > > > > > This patch is enabling inline reclaim for fault path, but fault path
+> > > > > > has already holds a locked exceptional entry which I believe the above
+> > > > > > fuse_break_dax_layouts() needs to wait for, can you please elaborate
+> > > > > > on how this can be avoided?
+> > > > > > 
+> > > > > 
+> > > > > Hi Liubo,
+> > > > > 
+> > > > > Can you please point to the exact lock you are referring to. I will
+> > > > > check it out. Once we got rid of needing to take inode lock in
+> > > > > reclaim path, that opended the door to do inline reclaim in fault
+> > > > > path as well. But I was not aware of this exceptional entry lock.
+> > > > 
+> > > > Hi Vivek,
+> > > > 
+> > > > dax_iomap_{pte,pmd}_fault has called grab_mapping_entry to get a
+> > > > locked entry, when this fault gets into inline reclaim, would
+> > > > fuse_break_dax_layouts wait for the locked exceptional entry which is
+> > > > locked in dax_iomap_{pte,pmd}_fault?
+> > > 
+> > > Hi Liu Bo,
+> > > 
+> > > This is a good point. Indeed it can deadlock the way code is written
+> > > currently.
+> > >
+> > 
+> > It's 100% reproducible on 4.19, but not on 5.x which has xarray for
+> > dax_layout_busy_page.
+> > 
+> > It was weird that on 5.x kernel the deadlock is gone, it turned out
+> > that xarray search in dax_layout_busy_page simply skips the empty
+> > locked exceptional entry, I didn't get deeper to find out whether it's
+> > reasonable, but with that 5.x doesn't run to deadlock.
+> 
+> I found more problems with enabling inline reclaim in fault path. I
+> am holding fi->i_mmap_sem, shared and fuse_break_dax_layouts() can
+> drop fi->i_mmap_sem if page is busy. I don't think we can drop and
+> reacquire fi->i_mmap_sem while in fault path.
 >
-> proc_fill_super: allocate dentry failed
-> ==================================================================
-> BUG: KASAN: use-after-free in fast_dput fs/dcache.c:727 [inline]
-> BUG: KASAN: use-after-free in dput+0x53e/0xdf0 fs/dcache.c:846
-> Read of size 4 at addr ffff88808a618cf0 by task syz-executor.0/8426
+
+Good point, yes, dropping & reacquiring lock might bring more trouble
+w.r.t race on the i_mmap_sem.
+
+> Also fuse_break_dax_layouts() does not know if we are holding it
+> shared or exclusive.
+> 
+> So I will probably have to go back to disable inline reclaim in
+> fault path. If memory range is not available go back up in
+> fuse_dax_fault(), drop fi->i_mmap_sem lock and wait on wait queue for
+> a range to become free and retry.
+> 
+> I can retain the changes I did to break layout for a 2MB range only
+> and not the whole file. I think that's a good optimization to retain
+> anyway.
 >
-> CPU: 0 PID: 8426 Comm: syz-executor.0 Not tainted 5.6.0-next-20200412-syzkaller #0
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-> Call Trace:
->  __dump_stack lib/dump_stack.c:77 [inline]
->  dump_stack+0x188/0x20d lib/dump_stack.c:118
->  print_address_description.constprop.0.cold+0xd3/0x315 mm/kasan/report.c:382
->  __kasan_report.cold+0x35/0x4d mm/kasan/report.c:511
->  kasan_report+0x33/0x50 mm/kasan/common.c:625
->  fast_dput fs/dcache.c:727 [inline]
->  dput+0x53e/0xdf0 fs/dcache.c:846
->  proc_kill_sb+0x73/0xf0 fs/proc/root.c:195
->  deactivate_locked_super+0x8c/0xf0 fs/super.c:335
->  vfs_get_super+0x258/0x2d0 fs/super.c:1212
->  vfs_get_tree+0x89/0x2f0 fs/super.c:1547
->  do_new_mount fs/namespace.c:2813 [inline]
->  do_mount+0x1306/0x1b30 fs/namespace.c:3138
->  __do_sys_mount fs/namespace.c:3347 [inline]
->  __se_sys_mount fs/namespace.c:3324 [inline]
->  __x64_sys_mount+0x18f/0x230 fs/namespace.c:3324
->  do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
->  entry_SYSCALL_64_after_hwframe+0x49/0xb3
-> RIP: 0033:0x45c889
-> Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-> RSP: 002b:00007ffc1930ec48 EFLAGS: 00000246 ORIG_RAX: 00000000000000a5
-> RAX: ffffffffffffffda RBX: 0000000001324914 RCX: 000000000045c889
-> RDX: 0000000020000140 RSI: 0000000020000040 RDI: 0000000000000000
-> RBP: 000000000076bf00 R08: 0000000000000000 R09: 0000000000000000
-> R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000003
-> R13: 0000000000000749 R14: 00000000004ca15a R15: 0000000000000013
 
-Looking at the code now that it the internal mount of proc is no
-longer used it is possible to unmount proc.   If proc is unmounted
-the fields of the pid namespace that were used for filesystem
-specific state are not reinitialized.
+That part does look reasonable to me.
 
-Which means that proc_self and proc_thread_self can be pointers to
-already freed dentries.
-
-The reported user after free appears to be from mounting and
-unmounting proc followed by mounting proc again and using error
-injection to cause the new root dentry allocation to fail.  This in
-turn results in proc_kill_sb running with proc_self and
-proc_thread_self still retaining their values from the previous mount
-of proc.  Then calling dput on either proc_self of proc_thread_self
-will result in double put.  Which KASAN sees as a use after free.
-
-Solve this by always reinitializing the filesystem state stored
-in the struct pid_namespace, when proc is unmounted.
-
-Reported-by: syzbot+72868dd424eb66c6b95f@syzkaller.appspotmail.com
-Acked-by: Christian Brauner <christian.brauner@ubuntu.com>
-Fixes: 69879c01a0c3 ("proc: Remove the now unnecessary internal mount of proc")
-Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
----
- fs/proc/root.c | 7 +++++++
- 1 file changed, 7 insertions(+)
-
-diff --git a/fs/proc/root.c b/fs/proc/root.c
-index 2633f10446c3..cdbe9293ea55 100644
---- a/fs/proc/root.c
-+++ b/fs/proc/root.c
-@@ -196,6 +196,13 @@ static void proc_kill_sb(struct super_block *sb)
- 	if (ns->proc_thread_self)
- 		dput(ns->proc_thread_self);
- 	kill_anon_super(sb);
-+
-+	/* Make the pid namespace safe for the next mount of proc */
-+	ns->proc_self = NULL;
-+	ns->proc_thread_self = NULL;
-+	ns->pid_gid = GLOBAL_ROOT_GID;
-+	ns->hide_pid = 0;
-+
- 	put_pid_ns(ns);
- }
- 
--- 
-2.20.1
-
-
-
-
-
-
+thanks,
+liubo
