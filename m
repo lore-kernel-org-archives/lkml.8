@@ -2,77 +2,106 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4307AC3815B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 10:49:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EADFC3815B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 10:50:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2CC7021D94
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 10:49:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F55921D94
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 10:50:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BBjGapnQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729682AbgDQKtz (ORCPT
+        id S1729830AbgDQKum (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 06:49:55 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:2399 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729301AbgDQKtz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 06:49:55 -0400
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 85CFC75ABBDD60E2745D;
-        Fri, 17 Apr 2020 18:49:49 +0800 (CST)
-Received: from huawei.com (10.175.124.28) by DGGEMS404-HUB.china.huawei.com
- (10.3.19.204) with Microsoft SMTP Server id 14.3.487.0; Fri, 17 Apr 2020
- 18:49:39 +0800
-From:   Jason Yan <yanaijie@huawei.com>
-To:     <geert+renesas@glider.be>, <linus.walleij@linaro.org>,
-        <nishkadg.linux@gmail.com>, <linux-renesas-soc@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     Jason Yan <yanaijie@huawei.com>, Hulk Robot <hulkci@huawei.com>
-Subject: [PATCH] pinctrl: rza1: fix wrong array assignment of rza1l_swio_entries
-Date:   Fri, 17 Apr 2020 19:16:04 +0800
-Message-ID: <20200417111604.19143-1-yanaijie@huawei.com>
-X-Mailer: git-send-email 2.21.1
+        Fri, 17 Apr 2020 06:50:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57812 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729238AbgDQKul (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Apr 2020 06:50:41 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4FA2AC061A0C;
+        Fri, 17 Apr 2020 03:50:41 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id z6so828850plk.10;
+        Fri, 17 Apr 2020 03:50:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Je/eLmrKhS3hdneu92S4cmYbnB84FusrgAZoZiZ1TmY=;
+        b=BBjGapnQsGPSilyRxQstsGW/Tdd3ArqijwGKdeFMjiK+edNoW1X135JfO/AxTH3g+V
+         lWvkkrbv5jqrlhXzNZs+DVHpQw4ZdOEDqEHVtlud2p2K7NoxC1xB7NwGj3yLaoDZeHJV
+         59J/ovTk1OQsRqvHaSaiVgAu4HpQmWHGdL1K7RS0DP8qmeHYtpMYTXm0QGnL8SvL+iHH
+         K3wUvqyl8/nLq2ueQzzFbdpvT5IC9L+4DNaLqRtGb9ucRj0C+hHTVic4+1vqgX/ISK9v
+         PvZjVoNZafw+UlP8rZz4ION2Y1iVVxoDtk8fu2lMuc66duOMdbALlmPjWHIi+evdZEq2
+         3Gig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Je/eLmrKhS3hdneu92S4cmYbnB84FusrgAZoZiZ1TmY=;
+        b=dOcCZ7ME01YITBRl2jjxM73AQMIyw75+h1gZgDh7zZ5cfE6blW/JgvAdjDstHlDvdy
+         P1rrjIsbZUrInJFv+n1OARf+ImFc/WfNfz0ybxvmNviaPDRljnaLpGOGOk12vGlLiDqV
+         lVzpbK/iBKuIO9NqgLu0fFzX9Fecf7mrTTJr2SgiLxpa4T974tI5kRGXOAGaxYY99w1e
+         dtfCpNYcBNmzs6aLxVt5DuHMfagGqbcCEgbK7J6EsOFlb0M02U+5h0MtGsU2S8fIpPya
+         ZFxHTEnZhcXnc7KncOxCrqt1utGUhVq7rloQYx4qjC7k9qbzfMx0FqKhLVj8UkH0f+GW
+         XdtQ==
+X-Gm-Message-State: AGi0PuZIWZUY+DE6kABwVTsof9bfj4yFpOru6Co/iC3cdsjbTS8m2LEt
+        o0P2Jh68LbsEr1tFVyX/6Nu3Rq93lepN+SMbTfY=
+X-Google-Smtp-Source: APiQypLBwl6Gl7xdzmrIHTDp0wku+POYI6v/91l0vZXpBhC76ZlTjBtazQvlJtnJti5DsGxyTnbzzsF2RUN7oK9sNMQ=
+X-Received: by 2002:a17:90a:364c:: with SMTP id s70mr3597676pjb.143.1587120640825;
+ Fri, 17 Apr 2020 03:50:40 -0700 (PDT)
 MIME-Version: 1.0
+References: <20200417080549.23751-1-brgl@bgdev.pl> <20200417080549.23751-2-brgl@bgdev.pl>
+In-Reply-To: <20200417080549.23751-2-brgl@bgdev.pl>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Fri, 17 Apr 2020 13:50:29 +0300
+Message-ID: <CAHp75Vf_kBfb_oLB2Dp48iYiDgs2k_RgzpudTvQMoxNYGMz3TA@mail.gmail.com>
+Subject: Re: [PATCH v3 1/2] irq: make irq_domain_reset_irq_data() available
+ even for non-V2 users
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.175.124.28]
-X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The rza1l_swio_entries refered to the wrong array rza1h_swio_pins, which
-was intended to be rza1l_swio_pins. So let's fix it.
+On Fri, Apr 17, 2020 at 11:13 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+>
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+>
+> irq_domain_reset_irq_data() doesn't modify the parent data, so it can be
+> made available even if irq domain hierarchy is not being built. We'll
+> subsequently use it in irq_sim code.
 
-This is detected by the following gcc warning:
 
-drivers/pinctrl/pinctrl-rza1.c:401:35: warning: ‘rza1l_swio_pins’
-defined but not used [-Wunused-const-variable=]
- static const struct rza1_swio_pin rza1l_swio_pins[] = {
-                                   ^~~~~~~~~~~~~~~
+> @@ -475,7 +476,6 @@ extern int __irq_domain_alloc_irqs(struct irq_domain *domain, int irq_base,
+>  extern void irq_domain_free_irqs(unsigned int virq, unsigned int nr_irqs);
+>  extern int irq_domain_activate_irq(struct irq_data *irq_data, bool early);
+>  extern void irq_domain_deactivate_irq(struct irq_data *irq_data);
+> -
+>  static inline int irq_domain_alloc_irqs(struct irq_domain *domain,
+>                         unsigned int nr_irqs, int node, void *arg)
+>  {
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Jason Yan <yanaijie@huawei.com>
----
- drivers/pinctrl/pinctrl-rza1.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Seems extra hunk slipped to the patch.
 
-diff --git a/drivers/pinctrl/pinctrl-rza1.c b/drivers/pinctrl/pinctrl-rza1.c
-index da2d8365c690..ff4a7fb518bb 100644
---- a/drivers/pinctrl/pinctrl-rza1.c
-+++ b/drivers/pinctrl/pinctrl-rza1.c
-@@ -418,7 +418,7 @@ static const struct rza1_bidir_entry rza1l_bidir_entries[RZA1_NPORTS] = {
- };
- 
- static const struct rza1_swio_entry rza1l_swio_entries[] = {
--	[0] = { ARRAY_SIZE(rza1h_swio_pins), rza1h_swio_pins },
-+	[0] = { ARRAY_SIZE(rza1l_swio_pins), rza1l_swio_pins },
- };
- 
- /* RZ/A1L (r7s72102x) pinmux flags table */
 -- 
-2.21.1
-
+With Best Regards,
+Andy Shevchenko
