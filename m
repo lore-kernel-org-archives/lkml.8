@@ -2,182 +2,177 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 342FBC38A29
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 02:06:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50382C352BE
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 02:09:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1069821841
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 02:06:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DE1D21D93
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 02:09:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="FQVf+DFn"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="hd+9RLdO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729017AbgDQCGs (ORCPT
+        id S1729102AbgDQCJz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 22:06:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33034 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728954AbgDQCGr (ORCPT
+        Thu, 16 Apr 2020 22:09:55 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:46610 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728969AbgDQCJz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 22:06:47 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24ABDC061A41
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 19:06:46 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id c138so329813pfc.0
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 19:06:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=Hfdx7uDJvgrGkRYQDhx6DARmHevGcYuM4GwFr74akkA=;
-        b=FQVf+DFnRHPeQ/SGO5Hw0smu9KCNhym996v6AIV/dsuwaWRyhQrYQwMlpB1zt0+nX/
-         BSOYTHaqkFX/m3b9KlZPcrLzLGvOlmcJROEVN5Y5MvozAx1dvDjYDESncXlfAe105qfx
-         onkTOTzapOUqP3I+4socEd8Os145UAQyxt7/I=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=Hfdx7uDJvgrGkRYQDhx6DARmHevGcYuM4GwFr74akkA=;
-        b=ahZY0GNWIj9nS23cwfZtOLFgHnvQKIwP9lE09O9PQzPjmnjB8Wtx7+x0syg/DpaMj/
-         Q1mc+kI4I+dYgNwTkC3WmpKP9Ho7KVD2BA3/VFevcLOWWW2b+5O7QExEnVRvu+VVwIYO
-         /hzYZCaKdNd68wH78g16IT+G27CSYgQTunalCyYEH/8er4jXPk0pSS+iqPEHDxnk7YCa
-         6uN5eGV2S2EwL0gXVdWSpysROaYloPW0+63amalFSsQh47KSjeBl+/b7FZeGVW6kycVm
-         l7EgB5dTQb09paSBVASM8cACh51ao5wLEqq69TLb0qN6IoTuAOnzAPGOHIJhCBPeBUWG
-         9CLg==
-X-Gm-Message-State: AGi0Pua2OfadgzOSRoqP/AOdf2TGVGYTC/xABJnZMW32x5xIXx10Gk/k
-        uulW1bRC7bCC1bRCScxCSUxq6w==
-X-Google-Smtp-Source: APiQypIAm+eOkLnh9jfVGsJPFCRSE3u2oQZAeMT8zXL+p+ToKv0aaogvmqJScYekjpJ7CEwbwJZhCw==
-X-Received: by 2002:a63:2cce:: with SMTP id s197mr761627pgs.184.1587089205194;
-        Thu, 16 Apr 2020 19:06:45 -0700 (PDT)
-Received: from google.com ([2620:15c:202:1:534:b7c0:a63c:460c])
-        by smtp.gmail.com with ESMTPSA id t5sm365532pjo.19.2020.04.16.19.06.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Apr 2020 19:06:44 -0700 (PDT)
-Date:   Thu, 16 Apr 2020 19:06:41 -0700
-From:   Brian Norris <briannorris@chromium.org>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     =?utf-8?Q?Micha=C5=82?= Stanek <mst@semihalf.com>,
-        linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, stanekm@google.com,
-        stable@vger.kernel.org, Marcin Wojtas <mw@semihalf.com>,
-        levinale@chromium.org, andriy.shevchenko@linux.intel.com,
-        Linus Walleij <linus.walleij@linaro.org>,
-        bgolaszewski@baylibre.com, rafael.j.wysocki@intel.com,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH] pinctrl: cherryview: Add quirk with custom translation
- of ACPI GPIO numbers
-Message-ID: <20200417020641.GA145784@google.com>
-References: <20200205194804.1647-1-mst@semihalf.com>
- <20200206083149.GK2667@lahna.fi.intel.com>
- <CAMiGqYi2rVAc=hepkY-4S1U_3dJdbR4pOoB0f8tbBL4pzWLdxA@mail.gmail.com>
- <20200207075654.GB2667@lahna.fi.intel.com>
- <CAMiGqYjmd2edUezEXsX4JBSyOozzks1Pu8miPEviGsx=x59nZQ@mail.gmail.com>
- <20200210101414.GN2667@lahna.fi.intel.com>
- <CAMiGqYiYp=aSgW-4ro5ceUEaB7g0XhepFg+HZgfPvtvQL9Z1jA@mail.gmail.com>
- <20200310144913.GY2540@lahna.fi.intel.com>
+        Thu, 16 Apr 2020 22:09:55 -0400
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 074C697D;
+        Fri, 17 Apr 2020 04:09:51 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1587089392;
+        bh=aOJYR1rkQxzhPfNAEcrk20mLkVZECzCoRj7kVov3h0Y=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=hd+9RLdO3EIQiOjyOzIy3SGshr4Ot8mh0XQvXBVdxQdblIrY9LocV6mgBMEsq7mQj
+         GFiH8t7FF/FgZp0G0wovnbPJEYSd0EyKD+0lmgVrWHcIQIloACo5iJSUXxmxL3c+/x
+         LKMnXLpw7eBR/F4/bxhB022k91DSsdwgwrqC2TCE=
+Date:   Fri, 17 Apr 2020 05:09:39 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Lad Prabhakar <prabhakar.csengg@gmail.com>,
+        Maxime Ripard <maxime@cerno.tech>
+Subject: Re: [PATCH v5 2/5] media: i2c: ov5645: Drop reading clock-frequency
+ dt-property
+Message-ID: <20200417020939.GI28162@pendragon.ideasonboard.com>
+References: <1586191361-16598-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1586191361-16598-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20200406165108.GA7646@kekkonen.localdomain>
+ <20200406173234.GD16885@pendragon.ideasonboard.com>
+ <20200407062241.GA8883@kekkonen.localdomain>
+ <20200407122106.GD4751@pendragon.ideasonboard.com>
+ <20200407151401.GA5206@paasikivi.fi.intel.com>
+ <20200414205552.GN19819@pendragon.ideasonboard.com>
+ <20200415162722.GG27762@paasikivi.fi.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200310144913.GY2540@lahna.fi.intel.com>
+In-Reply-To: <20200415162722.GG27762@paasikivi.fi.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mika,
+Hi Sakari,
 
-I'm following along with attempts to "fix" our user space to paper over
-this issue, and I think some of this conversation missed the mark.
-(Sorry for jumping in late.)
-
-On Tue, Mar 10, 2020 at 04:49:13PM +0200, Mika Westerberg wrote:
-> On Tue, Mar 10, 2020 at 03:12:00PM +0100, Michał Stanek wrote:
-> > On Mon, Feb 10, 2020 at 11:14 AM Mika Westerberg
-> > <mika.westerberg@linux.intel.com> wrote:
-> > > On Sat, Feb 08, 2020 at 07:43:24PM +0100, Michał Stanek wrote:
-> > > > > >
-> > > > > > Hi Mika,
-> > > > > >
-> > > > > > The previous patches from Dmitry handled IRQ numbering, here we have a
-> > > > > > similar issue with GPIO to pin translation - hardcoded values in FW
-> > > > > > which do not agree with the (non-consecutive) numbering in newer
-> > > > > > kernels.
-> > > > >
-> > > > > Hmm, so instead of passing GpioIo/GpioInt resources to devices the
-> > > > > firmware uses some hard-coded Linux GPIO numbering scheme? Would you
-> > > > > able to share the exact firmware description where this happens?
-> > > >
-> > > > Actually it is a GPIO offset in ACPI tables for Braswell that was
-> > > > hardcoded in the old firmware to match the previous (consecutive)
-> > > > Linux GPIO numbering.
-> > >
-> > > Can you share the ACPI tables and point me to the GPIO that is using
-> > > Linux number?
+On Wed, Apr 15, 2020 at 07:27:22PM +0300, Sakari Ailus wrote:
+> On Tue, Apr 14, 2020 at 11:55:52PM +0300, Laurent Pinchart wrote:
+> > On Tue, Apr 07, 2020 at 06:14:01PM +0300, Sakari Ailus wrote:
+> >> On Tue, Apr 07, 2020 at 03:21:06PM +0300, Laurent Pinchart wrote:
+> >>> On Tue, Apr 07, 2020 at 09:22:41AM +0300, Sakari Ailus wrote:
+> >>>> On Mon, Apr 06, 2020 at 08:32:34PM +0300, Laurent Pinchart wrote:
+> >>>>> On Mon, Apr 06, 2020 at 07:51:08PM +0300, Sakari Ailus wrote:
+> >>>>>> On Mon, Apr 06, 2020 at 05:42:38PM +0100, Lad Prabhakar wrote:
+> >>>>>>> Modes in the driver are based on xvclk frequency fixed to 24MHz, but where
+> >>>>>>> as the OV5645 sensor can support the xvclk frequency ranging from 6MHz to
+> >>>>>>> 24MHz. So instead making clock-frequency as dt-property just let the
+> >>>>>>> driver enforce the required clock frequency.
+> >>>>>> 
+> >>>>>> Even if some current systems where the driver is used are using 24 MHz
+> >>>>>> clock, that doesn't mean there wouldn't be systems using another frequency
+> >>>>>> that the driver does not support right now.
+> >>>>>> 
+> >>>>>> The driver really should not set the frequency unless it gets it from DT,
+> >>>>>> but I think the preferred means is to use assigned-clock-rates instead, and
+> >>>>>> not to involve the driver with setting the frequency.
+> >>>>>> 
+> >>>>>> Otherwise we'll make it impossible to support other frequencies, at least
+> >>>>>> without more or less random defaults.
+> >>>>> 
+> >>>>> We're running in circles here.
+> >>>>> 
+> >>>>> As the driver only supports 24MHz at the moment, the frequency should be
+> >>>>> set by the driver, as it's a driver limitation. We can then work on
+> >>>>> supporting additional frequencies, which will require DT to provide a
+> >>>>> list of supported frequencies for the system, but that can be done on
+> >>>>> top.
+> >>>> 
+> >>>> I guess it would be possible to use different external clock frequencies on
+> >>>> a sensor in a given system but that seems to be a bit far fetched, to the
+> >>>> extent I've never seen anyone doing that in practice.
+> >>>> 
+> >>>> Originally, the driver set the frequency based on the clock-frequency
+> >>>> property. If we're removing that but use a fixed frequency instead, then
+> >>>> how is that going to work going forward when someone adds support for other
+> >>>> frequencies in the driver and has a system requiring that, while there are
+> >>>> some other platforms relying on the driver setting a particular frequency?
+> >>> 
+> >>> The standard property for this is link-frequencies, not clock-frequency.
+> >>> Deprecating clock-frequency now paves the way to use the standard
+> >>> property later when/if someone implements support for additional
+> >>> frequencies.
+> >> 
+> >> The external clock frequency and link frequency are different indeed, but
+> >> they are related. The link frequency has been selected in a way that it is
+> >> possible to generate that exact frequency using the chosen external clock
+> >> frequency. If you change the external clock frequency, chances are good
+> >> there is no PLL configuration to generate that link frequency.
 > > 
-> > I think this is the one:
-> > https://chromium-review.googlesource.com/c/chromiumos/third_party/coreboot/%2B/286534/2/src/mainboard/google/cyan/acpi/chromeos.asl
-> > 
-> > On Kefka the sysfs GPIO number for wpsw_cur was gpio392 before the
-> > translation change occurred in Linux.
+> > But aren't we supposed to pick the clock frequency based on the link
+> > frequency specified in DT ?
 > 
-> But that table does not seem to have any GPIO numbers in it.
-
-Actually, it's encoding pin numbers, not GPIO numbers. The 0x10016 (or
-now, 0x10013) is encoding a bank offset (0x10000) and pin number (0x16
-or 0x13). The actual pin numbers is 0x16, I believe, but someone decided
-to subtract 3, because the Linux numbering used to be contiguous,
-skipping over the hole between 11 and 15.
-
-So no, nobody was hard-coding gpiochip numbers -- we were hard-coding
-the contiguous pin number (relative to the bank). Now that commit
-03c4749dd6c7ff94 ("gpio / ACPI: Drop unnecessary ACPI GPIO to Linux GPIO
-translation") made those non-contiguous, we're kinda screwed -- we have
-to guess (based on the kernel version number) whether pin numbers
-(within a single bank!) are contiguous or not.
-
-> > > This is something that should be fixed in userspace. Using global Linux
-> > > GPIO or IRQ numbers is fragile and source of issues like this.
-
-To be clear, we're not hard-coding global <anything> numbers in user
-space.
-
-> > > in case of sysfs, you can
-> > > find the base of the chip
-
-We're doing that.
-
-> > > and then user relative numbering against it or
-> > > switch
-
-^^ This is the problem. The *bank-relative* numbers changed.
-
-> > > Both cases the GPIO number are relative against the GPIO chip so
-> > > they work even if global Linux GPIO numbering changes.
-> > 
-> > I analyzed crossystem source code and it looks like it is doing
-> > exactly what you're saying without any hardcoded assumptions.
-
-^^ Exactly.
-
-> > With the newer kernel the gpiochip%d number is different so crossystem
-> > ends up reading the wrong pin.
+> No. In a general case there is no reliable way to come up with an external
+> clock frequency based on another, different if related, frequency.
 > 
-> Hmm, so gpiochipX is also not considered a stable number. It is based on
-> ARCH_NR_GPIOS which may change. So if the userspace is relaying certain GPIO
-> chip is always gpichip200 for example then it is wrong.
+> > In any case, this policy needs to be carefully documented.
+> 
+> I thought after ten or so years this would be already an established
+> practice. :-)
+> 
+> I agree it should be documented. We don't seem to have specific
+> documentation for camera sensor drivers at the moment. I can submit a
+> patch...
+> 
+> >>>> Although, if you're saying that this driver only needs to work with DT that
+> >>>> comes with the kernel and you don't care about DT binary compatibility,
+> >>>> this would be fine.
+> >>> 
+> >>> I believe this series to not break backward compatibility, as the driver
+> >>> only works with a 24MHz clock, so I expect all DTs to specify that.
+> >> 
+> >> What you're still doing here is defining the DT bindings based on the
+> >> current driver implementation, not the device properties.
+> > 
+> > Quite the contrary, the device doesn't require any particular input
+> > clock frequency, so we're removing that from DT :-) Specifying the clock
+> > frequency in DT is in my opinion a manual workaround for not computing
+> > it at runtime based on the desired link frequency, while the link
+> > frequency is a property of the system as it specifies the range of link
+> > frequencies that are safe to use from an EMC point of view.
+> 
+> The external clock frequency is significantly lower than the link frequency
+> (usually), but it still comes out of the SoC (or a PMIC chip). The clock
+> signal track on PCB as well as wiring may also be rather long, depending on
+> where the camera sensor is --- quite possibly tens of centimetres.
+> Therefore I wouldn't categorically rule out possible EMC issues with that
+> one either.
 
-If you just read the last sentence from Michal, you get the wrong
-picture. There's no hard-coding of gpiochipX numbers going on. We only
-had the pin offsets "hardcoded" (in ACPI), and the kernel driver
-unilaterally changed from a contiguous mapping to a non-contiguous
-mapping.
+That's a valid point.
 
-How do you recommend determining (both pre- and
-post-commit-03c4749dd6c7ff94) whether pin 22 is at offset 22, vs. offset
-19?
+> The bottom line is: use a known-good, safe frequency.
 
-Brian
+What if different input clock frequencies are needed to achieve
+different link frequencies ?
+
+-- 
+Regards,
+
+Laurent Pinchart
