@@ -2,284 +2,152 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B189C38A29
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 09:59:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9127CC352BE
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 10:01:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6797921D95
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 09:59:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 720FC21D91
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 10:01:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="G25zyJyL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728117AbgDQJ7T (ORCPT
+        id S1728113AbgDQKBW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 05:59:19 -0400
-Received: from v6.sk ([167.172.42.174]:43478 "EHLO v6.sk"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726618AbgDQJ7S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 05:59:18 -0400
-Received: from localhost (v6.sk [IPv6:::1])
-        by v6.sk (Postfix) with ESMTP id F1FFD610A6;
-        Fri, 17 Apr 2020 09:58:45 +0000 (UTC)
-Date:   Fri, 17 Apr 2020 11:58:43 +0200
-From:   Lubomir Rintel <lkundrak@v3.sk>
-To:     Dan Murphy <dmurphy@ti.com>
-Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, linux-kernel@vger.kernel.org,
-        linux-leds@vger.kernel.org
-Subject: Re: [PATCH v3] leds: ariel: Add driver for status LEDs on Dell Wyse
- 3020
-Message-ID: <20200417095041.GA448088@furthur.local>
-References: <20200322074134.79237-1-lkundrak@v3.sk>
- <ef7e8f03-0a43-156e-b86e-3ab3887f0245@ti.com>
+        Fri, 17 Apr 2020 06:01:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50040 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726207AbgDQKBV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Apr 2020 06:01:21 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6E52C061A0C
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 03:01:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=/sCrLJsk9M0RFgQwNkauJ/Dtc5/K6rCJg0npReZJ/ZM=; b=G25zyJyLZs4ijof9NKQ93s/RtD
+        tp1CABmZSWsvURGWx1WS3YUul4JFfkwKfPlMdOUMLdf0WJVJTQmYH7kEnhXsJQOx0kyS3h3w+4g5E
+        s+xd6331OtUvGqwz0rttWZMMrZR+P8JR5WVKgcxW9SWh1X+w7ZXxIONjudPt4TumeaAQPaOiHvfJf
+        hqJFmA4o3d/ICe7K81YdhfKX/Cu65J5gdmf91MuW2YmlJLqzGWkPWtZYiYRHVPbv0K/7xLORS8GtG
+        SAJt6bXYa7kxdX69qaFDx4rwpwhNl0i+c4WbpER2GL+jX2fzS/+iDQNUr+t6P36U7llVMhvrYMKxh
+        yu548iOQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jPNne-000501-Rg; Fri, 17 Apr 2020 10:00:43 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 816003010BC;
+        Fri, 17 Apr 2020 12:00:39 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 6AB682B120750; Fri, 17 Apr 2020 12:00:39 +0200 (CEST)
+Date:   Fri, 17 Apr 2020 12:00:39 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Sami Tolvanen <samitolvanen@google.com>
+Cc:     Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        James Morse <james.morse@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Ingo Molnar <mingo@redhat.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Kees Cook <keescook@chromium.org>,
+        Laura Abbott <labbott@redhat.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Jann Horn <jannh@google.com>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        clang-built-linux@googlegroups.com,
+        kernel-hardening@lists.openwall.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v11 04/12] scs: disable when function graph tracing is
+ enabled
+Message-ID: <20200417100039.GS20730@hirez.programming.kicks-ass.net>
+References: <20191018161033.261971-1-samitolvanen@google.com>
+ <20200416161245.148813-1-samitolvanen@google.com>
+ <20200416161245.148813-5-samitolvanen@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ef7e8f03-0a43-156e-b86e-3ab3887f0245@ti.com>
+In-Reply-To: <20200416161245.148813-5-samitolvanen@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 03, 2020 at 02:37:49PM -0500, Dan Murphy wrote:
-> Lubomir
+On Thu, Apr 16, 2020 at 09:12:37AM -0700, Sami Tolvanen wrote:
+> The graph tracer hooks returns by modifying frame records on the
+> (regular) stack, but with SCS the return address is taken from the
+> shadow stack, and the value in the frame record has no effect. As we
+> don't currently have a mechanism to determine the corresponding slot
+> on the shadow stack (and to pass this through the ftrace
+> infrastructure), for now let's disable SCS when the graph tracer is
+> enabled.
 > 
-> On 3/22/20 2:41 AM, Lubomir Rintel wrote:
-> > This adds support for controlling the LEDs attached to the Embedded
-> > Controller on a Dell Wyse 3020 "Ariel" board.
-> > 
-> > Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-> > 
-> > ---
-> > Changes since v2:
-> > - Hopefully sending out the correct patch this time...
-> > 
-> > Changes since v1:
-> > - Reduce code duplication with a loop
-> > - Drop "ariel:" prefix from led names
-> > - Do not print a message after a successful probe
-> > ---
-> >   drivers/leds/Kconfig      |  11 ++++
-> >   drivers/leds/Makefile     |   1 +
-> >   drivers/leds/leds-ariel.c | 133 ++++++++++++++++++++++++++++++++++++++
-> >   3 files changed, 145 insertions(+)
-> >   create mode 100644 drivers/leds/leds-ariel.c
-> > 
-> > diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
-> > index d82f1dea37111..66424ee54cc01 100644
-> > --- a/drivers/leds/Kconfig
-> > +++ b/drivers/leds/Kconfig
-> > @@ -83,6 +83,17 @@ config LEDS_APU
-> >   	  To compile this driver as a module, choose M here: the
-> >   	  module will be called leds-apu.
-> > +config LEDS_ARIEL
-> > +	tristate "Dell Wyse 3020 status LED support"
-> > +	depends on LEDS_CLASS
-> > +	depends on (MACH_MMP3_DT && MFD_ENE_KB3930) || COMPILE_TEST
-> > +	help
-> > +	  This driver adds support for controlling the front panel status
-> > +	  LEDs on Dell Wyse 3020 (Ariel) board via the KB3930 Embedded
-> > +	  Controller.
-> > +
-> > +	  Say Y to if your machine is a Dell Wyse 3020 thin client.
-> > +
-> >   config LEDS_AS3645A
-> >   	tristate "AS3645A and LM3555 LED flash controllers support"
-> >   	depends on I2C && LEDS_CLASS_FLASH
-> > diff --git a/drivers/leds/Makefile b/drivers/leds/Makefile
-> > index d7e1107753fb1..bf3b22038d113 100644
-> > --- a/drivers/leds/Makefile
-> > +++ b/drivers/leds/Makefile
-> > @@ -10,6 +10,7 @@ obj-$(CONFIG_LEDS_TRIGGERS)		+= led-triggers.o
-> >   obj-$(CONFIG_LEDS_88PM860X)		+= leds-88pm860x.o
-> >   obj-$(CONFIG_LEDS_AAT1290)		+= leds-aat1290.o
-> >   obj-$(CONFIG_LEDS_APU)			+= leds-apu.o
-> > +obj-$(CONFIG_LEDS_ARIEL)		+= leds-ariel.o
-> >   obj-$(CONFIG_LEDS_AS3645A)		+= leds-as3645a.o
-> >   obj-$(CONFIG_LEDS_AN30259A)		+= leds-an30259a.o
-> >   obj-$(CONFIG_LEDS_BCM6328)		+= leds-bcm6328.o
-> > diff --git a/drivers/leds/leds-ariel.c b/drivers/leds/leds-ariel.c
-> > new file mode 100644
-> > index 0000000000000..8fc56722e12f4
-> > --- /dev/null
-> > +++ b/drivers/leds/leds-ariel.c
-> > @@ -0,0 +1,133 @@
-> > +// SPDX-License-Identifier: BSD-2-Clause OR GPL-2.0-or-later
-> > +/*
-> > + * Dell Wyse 3020 a.k.a. "Ariel" Embedded Controller LED Driver
-> > + *
-> > + * Copyright (C) 2020 Lubomir Rintel
-> > + */
-> > +
-> > +#include <linux/module.h>
-> > +#include <linux/leds.h>
-> > +#include <linux/regmap.h>
-> > +#include <linux/of_platform.h>
-> > +
-> > +enum ec_index {
-> > +	EC_BLUE_LED	= 0x01,
-> > +	EC_AMBER_LED	= 0x02,
+> With SCS the return address is taken from the shadow stack and the
+> value in the frame record has no effect. The mcount based graph tracer
+> hooks returns by modifying frame records on the (regular) stack, and
+> thus is not compatible. The patchable-function-entry graph tracer
+> used for DYNAMIC_FTRACE_WITH_REGS modifies the LR before it is saved
+> to the shadow stack, and is compatible.
 > 
-> Defining the value after the 0x0 is unnecessary as enums are incremental
-> only the first value needs to be defined if the following values are in
-> numerical order
-
-I believe this improves readability, especially in case such as this
-where the actual numeric values matter.
-
-> Can these also be #defined instead of an enum?  Not requesting them to be
-> just wondering about the design decision here.
-
-It seems to be that this is what enums are for and theres is no need to
-get the preprocessor involved?
-
-I guess this might be a personal preference, but it seems to me that
-both enums and preprocessor defines are used across the code base.
-
-> > +	EC_GREEN_LED	= 0x03,
-> > +};
-> > +
-> > +enum {
-> > +	EC_LED_OFF	= 0x00,
-> > +	EC_LED_STILL	= 0x01,
-> Same comment as above
-> > +	EC_LED_FADE	= 0x02,
-> > +	EC_LED_BLINK	= 0x03,
-> > +};
-> > +
-> > +struct ariel_led {
-> > +	struct regmap *ec_ram;
-> > +	enum ec_index ec_index;
-> > +	struct led_classdev led_cdev;
-> > +};
-> > +
-> > +#define led_cdev_to_ariel_led(c) container_of(c, struct ariel_led, led_cdev)
-> > +
-> > +static enum led_brightness ariel_led_get(struct led_classdev *led_cdev)
-> > +{
-> > +	struct ariel_led *led = led_cdev_to_ariel_led(led_cdev);
-> > +	unsigned int led_status = 0;
-> > +
-> > +	if (regmap_read(led->ec_ram, led->ec_index, &led_status))
-> > +		return LED_OFF;
-> > +
-> > +	if (led_status == EC_LED_STILL)
-> > +		return LED_FULL;
-> > +	else
-> else is not needed here
-> > +		return LED_OFF;
-> > +}
-
-Yes, but should it be dropped? To me it seems like explicit else is
-better than implicit fallthrough. It is better when it's obvious that
-the LED_OFF is returned precisely only when the status is not
-EC_LED_STILL and that nothing ever happens afterwards -- and the
-compiler/linter will warn when anything unreachable is added afterwards.
-
-Not that it matters too much here. It's just that I've done this
-deliberately because it seems more readable to be and would prefer to
-leave it that way unless you really really care about that.
-
-> > +
-> > +static void ariel_led_set(struct led_classdev *led_cdev,
-> > +			  enum led_brightness brightness)
-> > +{
-> > +	struct ariel_led *led = led_cdev_to_ariel_led(led_cdev);
-> > +
-> > +	if (brightness == LED_OFF)
-> > +		regmap_write(led->ec_ram, led->ec_index, EC_LED_OFF);
-> > +	else
-> > +		regmap_write(led->ec_ram, led->ec_index, EC_LED_STILL);
-> > +}
-> > +
-> > +static int ariel_blink_set(struct led_classdev *led_cdev,
-> > +			   unsigned long *delay_on, unsigned long *delay_off)
-> > +{
-> > +	struct ariel_led *led = led_cdev_to_ariel_led(led_cdev);
-> > +
-> > +	if (*delay_on == 0 && *delay_off == 0)
-> > +		return -EINVAL;
-> > +
-> > +	if (*delay_on == 0) {
-> > +		regmap_write(led->ec_ram, led->ec_index, EC_LED_OFF);
-> > +	} else if (*delay_off == 0) {
-> > +		regmap_write(led->ec_ram, led->ec_index, EC_LED_STILL);
-> > +	} else {
-> > +		*delay_on = 500;
-> > +		*delay_off = 500;
-> > +		regmap_write(led->ec_ram, led->ec_index, EC_LED_BLINK);
-> > +	}
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +#define NLEDS 3
+> Modifying the mcount based graph tracer to work with SCS would require
+> a mechanism to determine the corresponding slot on the shadow stack
+> (and to pass this through the ftrace infrastructure), and we expect
+> that everyone will eventually move to the patchable-function-entry
+> based graph tracer anyway, so for now let's disable SCS when the
+> mcount-based graph tracer is enabled.
 > 
-> This define needs to be more unique.
-> 
-> Something like EC_NLEDS or EC_NUM_LEDS and should be moved to the top of the
-> file under the #includes
-> 
-> > +
-> > +static int ariel_led_probe(struct platform_device *pdev)
-> > +{
-> > +	struct device *dev = &pdev->dev;
-> > +	struct ariel_led *leds;
-> > +	struct regmap *ec_ram;
-> > +	int ret;
-> > +	int i;
-> > +
-> > +	leds = devm_kcalloc(dev, NLEDS, sizeof(*leds), GFP_KERNEL);
-> > +	if (!leds)
-> > +		return -ENOMEM;
-> > +
-> > +	ec_ram = dev_get_regmap(dev->parent, "ec_ram");
-> Maybe this should be checked before memory is allocated.
+> SCS and patchable-function-entry are both supported from LLVM 10.x.
 
-Will fix in next version.
+SCS would actually provide another way to do return hooking. An arguably
+much saner model at that.
 
-> > +	if (!ec_ram)
-> > +		return -ENODEV;
-> > +
-> > +	leds[0].ec_index = EC_BLUE_LED;
-> > +	leds[0].led_cdev.name = "blue:power",
-> > +	leds[0].led_cdev.default_trigger = "default-on";
-> > +
-> > +	leds[1].ec_index = EC_AMBER_LED;
-> > +	leds[1].led_cdev.name = "amber:status",
-> > +
-> > +	leds[2].ec_index = EC_GREEN_LED;
-> > +	leds[2].led_cdev.name = "green:status",
-> > +	leds[2].led_cdev.default_trigger = "default-on";
-> > +
-> > +	for (i = 0; i < NLEDS; i++) {
-> 
-> I don't understand this loop.  i is incremented but never used.
-> 
-> should the below be leds[i]?
+The 'normal' way is to (temporary) replace the on-stack return value,
+and then replace it back in the return handler. This is because we can't
+simply push a fake return on the stack, because that would wreck the
+expected stack layout of the regular function.
 
-Sorry for this; I ended up botching this in an attempt to fix things up.
-Will fix in the next version.
+But there is nothing that would stop us from pushing an extra entry on
+the SCS. It would in fact be a much cleaner solution. The entry hook
+sticks an extra entry on the SCS, the function ignores what's on the
+normal stack and pops from the SCS, we return to the exit handler, which
+in turn pops from the SCS stack at which point we're back to regular.
 
-> 
-> > +		leds[0].ec_ram = ec_ram;
-> > +		leds[0].led_cdev.brightness_get = ariel_led_get;
-> > +		leds[0].led_cdev.brightness_set = ariel_led_set;
-> > +		leds[0].led_cdev.blink_set = ariel_blink_set;
-> > +
-> > +		ret = devm_led_classdev_register(dev, &leds[0].led_cdev);
-> > +		if (ret)
-> > +			return ret;
-> > +	}
-> > +
-> 
-> Dan
+The only 'funny' is that the exit handler itself should not push to the
+SCS, or we should frob the return-to-exit-handler such that it lands
+after the push.
 
-Thank you!
-
-Lubo
-
+> Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
+> Reviewed-by: Kees Cook <keescook@chromium.org>
+> Reviewed-by: Mark Rutland <mark.rutland@arm.com>
+> ---
+>  arch/Kconfig | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> 
+> diff --git a/arch/Kconfig b/arch/Kconfig
+> index 691a552c2cc3..c53cb9025ad2 100644
+> --- a/arch/Kconfig
+> +++ b/arch/Kconfig
+> @@ -542,6 +542,7 @@ config ARCH_SUPPORTS_SHADOW_CALL_STACK
+>  
+>  config SHADOW_CALL_STACK
+>  	bool "Clang Shadow Call Stack"
+> +	depends on DYNAMIC_FTRACE_WITH_REGS || !FUNCTION_GRAPH_TRACER
+>  	depends on ARCH_SUPPORTS_SHADOW_CALL_STACK
+>  	help
+>  	  This option enables Clang's Shadow Call Stack, which uses a
+
+AFAICT you also need to kill KRETPROBES, which plays similar games. And
+doesn't BPF also do stuff like this?
