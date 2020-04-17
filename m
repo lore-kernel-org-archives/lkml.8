@@ -2,119 +2,75 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5374C3815B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 10:04:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27448C352BE
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 10:04:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C073F21D91
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 10:04:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="oRilH+G7"
+	by mail.kernel.org (Postfix) with ESMTP id 0FF5F21D91
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 10:04:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728544AbgDQKEC (ORCPT
+        id S1728615AbgDQKEo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 06:04:02 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:46812 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727789AbgDQKEB (ORCPT
+        Fri, 17 Apr 2020 06:04:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50562 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726366AbgDQKEn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 06:04:01 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03H9veQY030546;
-        Fri, 17 Apr 2020 10:03:54 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : in-reply-to : message-id : references : mime-version :
- content-type; s=corp-2020-01-29;
- bh=dKO7ialKD2AiGPTJR46eRoXOPRYf6fFf+AEC/fzDvXM=;
- b=oRilH+G7Gvipo30QtdCGbuFyuso2wMFt4B9F0v4aRwYeTrgAT8Ar8ToIYI9aCB1WNl1O
- BbjFJ+V8MiXSwtWXOzxLzCfKxiEw/Di3Svh9i32gOJL6+53Jq6E0zv2xUsDDUuX2bFqY
- lOAVIL4qU94DIe8AiKEkJhAlKLt229OF74o3jZfQlFskePn5lQD5E8IzlAEIPAfMgV2M
- d4Q5DxGcutqfTiqKNFrQFehP6bwj99000rgie8wA0ukzV0WFQ9OpyFVMskRTdIKm1sY/
- mamLBDmpayhoVuUlOMVyrTJIOKBv+qADn4Jt2/s9D8iFZ0cSNQ7VRQtEzMzkJPgP4SC0 Bw== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 30e0aabtd3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 17 Apr 2020 10:03:54 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03H9vvxF046488;
-        Fri, 17 Apr 2020 10:03:53 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3030.oracle.com with ESMTP id 30dyp2655j-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 17 Apr 2020 10:03:53 +0000
-Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 03HA3qWK032622;
-        Fri, 17 Apr 2020 10:03:52 GMT
-Received: from dhcp-10-175-205-33.vpn.oracle.com (/10.175.205.33)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 17 Apr 2020 03:03:51 -0700
-Date:   Fri, 17 Apr 2020 11:03:43 +0100 (BST)
-From:   Alan Maguire <alan.maguire@oracle.com>
-X-X-Sender: alan@localhost
-To:     Marco Elver <elver@google.com>
-cc:     linux-kernel@vger.kernel.org, brendanhiggins@google.com,
-        linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
-        alan.maguire@oracle.com, frank.rowand@sony.com,
-        skhan@linuxfoundation.org
-Subject: Re: [PATCH] kunit: Add missing newline in summary message
-In-Reply-To: <20200416114256.226329-1-elver@google.com>
-Message-ID: <alpine.LRH.2.21.2004171103160.32364@localhost>
-References: <20200416114256.226329-1-elver@google.com>
-User-Agent: Alpine 2.21 (LRH 202 2017-01-01)
+        Fri, 17 Apr 2020 06:04:43 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0719C061A0C
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 03:04:43 -0700 (PDT)
+Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jPNrR-0005qF-FJ; Fri, 17 Apr 2020 12:04:37 +0200
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id 04063104096; Fri, 17 Apr 2020 12:04:36 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Tony Luck <tony.luck@intel.com>
+Cc:     Tony Luck <tony.luck@intel.com>, Ingo Molnar <mingo@kernel.org>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Borislav Petkov <bp@alien8.de>, H Peter Anvin <hpa@zytor.com>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Ravi V Shankar <ravi.v.shankar@intel.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        linux-kernel@vger.kernel.org, x86@kernel.org
+Subject: Re: [PATCH 2/3] x86/split_lock: Bits in IA32_CORE_CAPABILITIES are not architectural
+In-Reply-To: <20200416205754.21177-3-tony.luck@intel.com>
+References: <20200416205754.21177-1-tony.luck@intel.com> <20200416205754.21177-3-tony.luck@intel.com>
+Date:   Fri, 17 Apr 2020 12:04:36 +0200
+Message-ID: <878siumnrf.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9593 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 suspectscore=3
- malwarescore=0 phishscore=0 spamscore=0 adultscore=0 mlxscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004170078
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9593 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 clxscore=1011
- impostorscore=0 mlxlogscore=999 mlxscore=0 lowpriorityscore=0
- suspectscore=3 adultscore=0 spamscore=0 malwarescore=0 phishscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004170078
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 16 Apr 2020, Marco Elver wrote:
+Tony Luck <tony.luck@intel.com> writes:
+> +	m = x86_match_cpu(split_lock_cpu_ids);
+> +	if (!m)
+> +		return;
+> +
+> +	if (m->driver_data && cpu_has(c, X86_FEATURE_CORE_CAPABILITIES))
+> {
 
-> Add missing newline, as otherwise flushing of the final summary message
-> to the console log can be delayed.
-> 
-> Fixes: e2219db280e3 ("kunit: add debugfs /sys/kernel/debug/kunit/<suite>/results display")
-> Signed-off-by: Marco Elver <elver@google.com>
+This condition results in the following:
 
-Reviewed-by: Alan Maguire <alan.maguire@oracle.com>
+    driver_data     MSR_CORE_CAPS	 MSR_CORE_CAPS_SLD	SLD available
 
-Thanks for finding/fixing this!
+1       0             Don't care          Don't care               Y
+2       1                N                Don't care               Y
+3       1                Y                    Y                    Y
+4       1                Y                    N                    N
 
-Alan
+#2 does not make any sense to me.
 
-> ---
->  lib/kunit/test.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/lib/kunit/test.c b/lib/kunit/test.c
-> index 7a6430a7fca0..ccb2ffad8dcf 100644
-> --- a/lib/kunit/test.c
-> +++ b/lib/kunit/test.c
-> @@ -93,7 +93,7 @@ static void kunit_print_ok_not_ok(void *test_or_suite,
->  	 * representation.
->  	 */
->  	if (suite)
-> -		pr_info("%s %zd - %s",
-> +		pr_info("%s %zd - %s\n",
->  			kunit_status_to_string(is_ok),
->  			test_number, description);
->  	else
-> -- 
-> 2.26.1.301.g55bc3eb7cb9-goog
-> 
-> 
+Thanks,
+
+        tglx
