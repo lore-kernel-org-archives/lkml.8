@@ -4,67 +4,65 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BBDDC38A2B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 19:15:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7D69C38A2B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 19:15:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5327C20780
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 19:15:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A2912076D
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 19:15:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587150906;
-	bh=7R1rzHtiDxoGO20dRIbUXNsjrbIUZWB+0zMyRMWn/4A=;
+	s=default; t=1587150926;
+	bh=59QsyVQ+uH21tLg/8z12tr1wiCiqmq20dLhe9KhICgs=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=undFOokwKdj4y2NCsMEds0kAJYORo05z1D3lhpB+pbCjLkq0k2ust2dMIAXRrfd+1
-	 11tBkNzsgQIRNZEesJXWbSohrZJvTq7+82wg1WKF6JnpLq3qGlXW1AwB5qrXg0PXqN
-	 FdYVREBzs89CSf7Lr9OtkRmrdJUbFMGSZxL4xZL8=
+	b=pUBdPjpisx6vDKQ+RHmjiRPxUUsletvLPXXT+ZECtqtrNdnemrOQxPMbLjTLdOlbo
+	 10t9nCeaHvT4kX3NifhrrYvD4HVMhZ9PzCXtJdpuIpOjclKHAnrqcRJSewR1oQkW8R
+	 UvdDo4iBzcLs0MX7+qI2ZzdR2t4kfgVbkBjpwH2w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730463AbgDQTPF (ORCPT
+        id S1730504AbgDQTPZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 15:15:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38634 "EHLO mail.kernel.org"
+        Fri, 17 Apr 2020 15:15:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38762 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728151AbgDQTPF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 15:15:05 -0400
-Subject: Re: [GIT PULL REQUEST] watchdog - v5.7-rc2 Fixes
+        id S1729817AbgDQTPX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Apr 2020 15:15:23 -0400
+Subject: Re: [GIT PULL] Please pull proc fixes for v5.7-rc2
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587150904;
-        bh=7R1rzHtiDxoGO20dRIbUXNsjrbIUZWB+0zMyRMWn/4A=;
+        s=default; t=1587150923;
+        bh=59QsyVQ+uH21tLg/8z12tr1wiCiqmq20dLhe9KhICgs=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=h6D0MO4x/ertCcKRZ9IYBcEJ8v58DG1fP4+50W18nlSZvxtJwLfGouLudsfue6prT
-         lusuVVSvmLptt6XM7dXouFB67kJFdgSuEjW96v1oK5IMh5GWW1JCPEAB7XXFOU0ytX
-         7l5NxA+SnY6I9S1uF8/6K5zkv4c2QSSFIvhQojCk=
+        b=uY6ToPLdls/QzmoR/6ifqiKyPPsEY9axtnMxGXdJ38GjV7CdtBheaN9c+GlUrttOw
+         NZhhpJ/R5dPRSk6tfWoN3BEQGuCiduYTGnHxaAekQUGT6jdQctRej+e1HAp18X1HhZ
+         4nm1IHDMv/uidXRYodg3wNiSoAHhRuPN9S+EUVG0=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20200417144207.GA29911@www.linux-watchdog.org>
-References: <20200417144207.GA29911@www.linux-watchdog.org>
-X-PR-Tracked-List-Id: <linux-watchdog.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20200417144207.GA29911@www.linux-watchdog.org>
-X-PR-Tracked-Remote: git://www.linux-watchdog.org/linux-watchdog.git
- tags/linux-watchdog-5.7-rc2
-X-PR-Tracked-Commit-Id: ea104a9e4d3e9ebc26fb78dac35585b142ee288b
+In-Reply-To: <87y2quc7ug.fsf@x220.int.ebiederm.org>
+References: <87y2quc7ug.fsf@x220.int.ebiederm.org>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <87y2quc7ug.fsf@x220.int.ebiederm.org>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/ebiederm/user-namespace.git
+ for-linus
+X-PR-Tracked-Commit-Id: 4fa3b1c417377c352208ee9f487e17cfcee32348
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 1634615dc14d258f3c5695338db26d5f115dabc7
-Message-Id: <158715090464.7925.12968125380490341841.pr-tracker-bot@kernel.org>
-Date:   Fri, 17 Apr 2020 19:15:04 +0000
-To:     Wim Van Sebroeck <wim@linux-watchdog.org>
+X-PR-Merge-Commit-Id: 5d286d5ebcf6cb93b340f2439fe16a90b544c6e5
+Message-Id: <158715092303.7925.4541101563964901618.pr-tracker-bot@kernel.org>
+Date:   Fri, 17 Apr 2020 19:15:23 +0000
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux Watchdog Mailing List <linux-watchdog@vger.kernel.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Michael Walle <michael@walle.cc>
+        linux-kernel@vger.kernel.org,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Alexey Gladkov <gladkov.alexey@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Fri, 17 Apr 2020 16:42:07 +0200:
+The pull request you sent on Fri, 17 Apr 2020 12:58:31 -0500:
 
-> git://www.linux-watchdog.org/linux-watchdog.git tags/linux-watchdog-5.7-rc2
+> git://git.kernel.org/pub/scm/linux/kernel/git/ebiederm/user-namespace.git for-linus
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/1634615dc14d258f3c5695338db26d5f115dabc7
+https://git.kernel.org/torvalds/c/5d286d5ebcf6cb93b340f2439fe16a90b544c6e5
 
 Thank you!
 
