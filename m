@@ -2,184 +2,236 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D886C38A2B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 15:35:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29A09C2D0EF
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 15:35:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 48F7A20936
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 15:35:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587137738;
-	bh=Dval9ZkbP2smXT0AviNitjoGA8m0oFg4iCZLseezMFU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=MHMq9pKgIvXUbGIX5GG4PJyESPIYJSRjqgH2bgXPRSEgbNZTCbv8XkxGYwkyQ5006
-	 4AQfQvWC7uZDLFgR6HJ9NioVpQhi+9mu01Z4FvzkTc0JyVaAu0N5lmPpSZ0EuhdhMD
-	 GxMPk7AqFnJMKElhiFalYXPs7Ch1HXX9K96WX8KI=
+	by mail.kernel.org (Postfix) with ESMTP id 87E1820936
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 15:35:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gerhold.net header.i=@gerhold.net header.b="gN8Zqi9x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729287AbgDQPfh (ORCPT
+        id S1729300AbgDQPfp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 11:35:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45630 "EHLO
+        Fri, 17 Apr 2020 11:35:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45654 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728956AbgDQPfg (ORCPT
+        by vger.kernel.org with ESMTP id S1728956AbgDQPfp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 11:35:36 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDFEEC061A0C;
-        Fri, 17 Apr 2020 08:35:36 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id h69so1261511pgc.8;
-        Fri, 17 Apr 2020 08:35:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=2u7CFxnfcfWMFdE418oTd3URsuwKNqPkf1pPDTmN+qM=;
-        b=Zv01b7MphwVxL7xBaTjmYojKl5TmfhxIjLNk/b7ubMqPRDzD3Ju213kKg+ehfuYYSC
-         3f3t8oF5BpmvNnAiyuj5w72+9SuubT4iBcLJqcwbDFmArOhdCWtZl5s55+fLOqfbFCot
-         CPfT/1BV5abBdE7GaQ3D5kCAz0pkKiMKYJHbV8OvQQnNT5igVxpe/EvTWme9wRtNN7DO
-         DzBWAMdgmgw//maRaif/kEtyZAuNI39SUW2Gmwcw11kNR7OLEjPxtwj/24gkhVHeF1Vj
-         EJpU2xu5bWItdIXxMUS+ZQxmICHaOK8JgvUHdyYkx0FFC91s7NpM4KtZx0DwxC1vua0h
-         kPRw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=2u7CFxnfcfWMFdE418oTd3URsuwKNqPkf1pPDTmN+qM=;
-        b=JUz+Lc7HOvp0uEO7jKXa4K11X4uTLGS4qudd4P075LYT7iCBrj2Yn7cmKn4RtbTw+h
-         XyQ0xQVQchv8JPR71IphTwUtgVjp0XmO2y6rGHVRP4B3pQold8fI/KzN78QhUb505Jgk
-         vFyLIt6dSqBGpwLhmBEY4uTks7xVk6fOET0ouAdptdWRokgsOcId2ah91LBDqFooASaF
-         1kqVfsEoLWWYp8iTZoh1zUbsj7fitVqxrEvo9PKrjsD5XdQsMwxU0Ok4fTi/HCTppoXi
-         xdKcEc/DM+rW2mOZKtvRHJB+OlpsmZeUBayPKJXRiOJrDccZgpJrLt6y4CGfIvlMbOIn
-         nMAw==
-X-Gm-Message-State: AGi0PuZ2c+GInZB6u1bv5ZdeO0FwzDE7cZ8WI4OLQibLY4A4l/AjzcJC
-        piwW9uXJDdhhFSaHtHJdLY7Utqn/
-X-Google-Smtp-Source: APiQypL1Mv/tnH3sPHFVVIS3vVa46We6xBPi0OMFh3Dgi0WKemwQKdQH6UYDrS14q4x+HYk/7S6VbA==
-X-Received: by 2002:a63:894a:: with SMTP id v71mr3750537pgd.314.1587137736078;
-        Fri, 17 Apr 2020 08:35:36 -0700 (PDT)
-Received: from google.com ([2601:647:4001:3000::50e3])
-        by smtp.gmail.com with ESMTPSA id gv7sm2401249pjb.16.2020.04.17.08.35.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Apr 2020 08:35:35 -0700 (PDT)
-Date:   Fri, 17 Apr 2020 08:35:33 -0700
-From:   Minchan Kim <minchan@kernel.org>
-To:     Justin Gottula <justin@jgottula.com>
-Cc:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Nitin Gupta <ngupta@vflare.org>, Jens Axboe <axboe@kernel.dk>,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] zram: fix writeback_store returning zero in most
- situations
-Message-ID: <20200417153533.GB178621@google.com>
-References: <CAKuMfTUPzPjuNk+T_GQMCKoB9ssh2arr6xRiu6VODwwB0PMdZw@mail.gmail.com>
- <20200416214649.GA60148@google.com>
- <CAKuMfTVpaetB0qQ_hm8cSowtZN8HUKXdADWhKXC=4eKd1i5oSw@mail.gmail.com>
+        Fri, 17 Apr 2020 11:35:45 -0400
+Received: from mo6-p00-ob.smtp.rzone.de (mo6-p00-ob.smtp.rzone.de [IPv6:2a01:238:20a:202:5300::7])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90039C061A0C
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 08:35:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1587137743;
+        s=strato-dkim-0002; d=gerhold.net;
+        h=In-Reply-To:References:Message-ID:Subject:Cc:To:From:Date:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=Qaen0lQiP0FWn3qCidsRX3hKu//mw1RvQ8vN/KmdeWY=;
+        b=gN8Zqi9xos9QZGjWGqtQ8cOb69RRogf9Fg97bGM+h0pXnWrdZo/iMYPNP0anTMu43W
+        UlAH39DjhKgDHU5H0pVDaipLma3/f1AQZOZToTQerPb0tJwU1Zf/cnezhVYtP+hbALor
+        QGBExb7aCWafiWFzzL5YU84IqnGqJOwt96Yfs4uziKjyvFDFBJ85VHwTMkTE5SCUACvQ
+        UaO2E/V+2cZV8wg8nfdGNtXpghzgJeWwfpw4ymPhUWNDSGMfywB0G3EOmtT1o6qe/uVL
+        1zhvMG1gr2O/bxaBhPVU4YNSHKY7gtQ5BpynXNal4rKwwLDsLnGNlCo4D9KbZsHkgcDe
+        76xg==
+X-RZG-AUTH: ":P3gBZUipdd93FF5ZZvYFPugejmSTVR2nRPhVOQ/OcYgojyw4j34+u26zEodhPgRDZ8j8Ic/Fboo="
+X-RZG-CLASS-ID: mo00
+Received: from gerhold.net
+        by smtp.strato.de (RZmta 46.5.0 DYNA|AUTH)
+        with ESMTPSA id I0a766w3HFZe3da
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+        (Client did not present a certificate);
+        Fri, 17 Apr 2020 17:35:40 +0200 (CEST)
+Date:   Fri, 17 Apr 2020 17:35:34 +0200
+From:   Stephan Gerhold <stephan@gerhold.net>
+To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc:     broonie@kernel.org, linux-kernel@vger.kernel.org,
+        alsa-devel@alsa-project.org, lgirdwood@gmail.com
+Subject: Re: [PATCH 0/2] ASoC: qdsp6: fix default FE dais and routings.
+Message-ID: <20200417153534.GA65143@gerhold.net>
+References: <20200311180422.28363-1-srinivas.kandagatla@linaro.org>
+ <20200417112455.GA7558@gerhold.net>
+ <03d0d14c-d52c-460b-0232-184156f62eb7@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAKuMfTVpaetB0qQ_hm8cSowtZN8HUKXdADWhKXC=4eKd1i5oSw@mail.gmail.com>
+In-Reply-To: <03d0d14c-d52c-460b-0232-184156f62eb7@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Justin,
+On Fri, Apr 17, 2020 at 02:02:08PM +0100, Srinivas Kandagatla wrote:
+> 
+> 
+> On 17/04/2020 12:24, Stephan Gerhold wrote:
+> > Hi Srini,
+> > 
+> > On Wed, Mar 11, 2020 at 06:04:20PM +0000, Srinivas Kandagatla wrote:
+> > > QDSP6 Frontend dais can be configured to work in rx or tx or both rx/tx mode,
+> > > however the default routing do not honour this DT configuration making sound
+> > > card fail to probe. FE dais are also not fully honouring device tree configuration.
+> > > Fix both of them.
+> > > 
+> > 
+> > I discovered this patch set when QDSP6 audio stopped working after
+> > upgrading to Linux 5.7-rc1. As far as I understand, device tree bindings
+> > should attempt to be backwards compatible wherever possible.
+> > This isn't the case here, although this is not the reason for my mail.
+> > (I don't mind updating my device tree, especially since it is not
+> > upstream yet...)
+> > 
+> > I have a general question about the design here.
+> > 
+> > I understand the original motivation for this patch set: Attempting to
+> > configure a TX/RX-only DAI was not possible due to the default routing.
+> > In my opinion this is only relevant for the compressed DAI case.
+> > 
+> > If we ignore the compressed DAIs for a moment (which can be
+> > unidirectional only), I think we shouldn't care how userspace uses the
+> > available FE/MultiMedia DAIs. We have this huge routing matrix in q6routing,
+> > with 800+ mixers that can be configured in any way possible from userspace.
+> > 
+> > In "ASoC: qdsp6: q6asm-dai: only enable dais from device tree" you mention:
+> > 
+> > > This can lead to un-necessary dais in the system which will never be
+> > > used. So honour whats specfied in device tree.
+> > 
+> > but IMO the FE DAIs are a negligible overhead compared to the routing
+> > matrix and the many BE DAIs that are really never going to be used
+> > (because nothing is physically connected to the ports).
+> 
+> Two things, one unnecessary mixers, second thing is we need to know how many
+> FE dais are in the system, which should be derived from the number of dai
+> child nodes. These can potentially be SoC specific or firmware specific.
+> 
 
-On Thu, Apr 16, 2020 at 05:45:31PM -0700, Justin Gottula wrote:
-> On Thu, Apr 16, 2020 at 2:47 PM Minchan Kim <minchan@kernel.org> wrote:
-> > I couldn't remember why I wanted to do continue even though we knew
-> > the write was failure from the beginning.
-> >
-> > Couldn't we just bail out whenever we encounter the error?
-> > Sergey, Justin, what do you think?
-> >
-> > IMO, it would be more consistent with other error handling.
-> 
-> As far as being consistent with the rest of the error handling in the
-> loop, I think there's a reasonable distinction that can be drawn between
-> some of the error cases and others. With some, breaking out immediately is
-> obviously the correct action; but with others, it's not as clear-cut.
-> 
-> For the zram->wb_limit_enable && !zram->bd_wb_limit case, breaking out of
-> the loop and immediately returning makes complete sense: once we've hit
-> the writeback limit, there's nothing that could happen in future loop
-> iterations that could cause us to somehow _not_ be at the limit anymore.
-> So there's no reason to continue the loop.
-> 
-> Similarly, for the alloc_block_bdev(zram) failure case, breaking out of
-> the loop and immediately returning also makes complete sense: if we've
-> already run out of blocks on the backing device, then continuing to loop
-> isn't going to result in is somehow ending up with more backing device
-> blocks available. So there's no reason to continue the loop in that case
-> either.
-> 
-> With the zram_bvec_read and submit_bio_wait failure cases, though, it's
-> not nearly as clear that a failure on the current slot _automatically_
-> guarantees that all future slots would also have errors. For example, in
-> the zram_bvec_read failure case, it's entirely possible that the
-> decompression code in the currently-used compression backend might have
-> had a problem with the current buffer; but that doesn't necessarily seem
-> like a clear-cut indication that the same decompression error would
-> definitely happen on later iterations of the loop: in fact, many of the
-> later slots could very well be ZRAM_HUGE or ZRAM_SAME, and so they would
-> avoid that type of error entirely. And in the submit_bio_wait failure
-> case, it's also conceivable that the backing device may have had some sort
-> of write error with the current block and data buffer, but that the same
-> error might not happen again on future iterations of the loop when writing
-> a different buffer to potentially an entirely different block. (Especially
-> if the backing device happens to be using some kind of complicated driver,
-> like one of the weirder LVM/device-mapper backends or a network block
-> device.)
-> 
-> So, at least when it comes to "are these particular failure cases the kind
-> where it would certainly make no sense to continue with future loop
-> iterations because we would definitely have the same failures then too",
-> there's a reasonable argument that the zram_bvec_read and submit_bio_wait
-> error cases don't necessarily fit that logic and so potentially shouldn't
-> immediately break and return.
-> 
-> A couple of other considerations came to mind while thinking about this:
-> 
-> 1. From the standpoint of the user, what should they reasonably be
-> expecting to happen when writing "huge"/"idle" to the writeback file? A
-> best-effort attempt at doing all possible block writebacks (of the
-> requested type) that can possibly be successfully accomplished? Or,
-> writeback of only as many blocks as can be done until a (possibly
-> transient or not-applicable-to-all-blocks) error pops up, and then
-> stopping at that point? I tend to think that the former makes a bit more
-> sense, but I don't know for sure if it's the definite Right Answer.
+So there are SoCs/firmwares that just support e.g. MultiMedia1-4 and not
+all 8 MultiMedia FE DAIs?
 
-I agree it should be best effort.
-
+> My plan is to cleanup the BE DAIs as well!, any patches welcome!
 > 
-> 2. There is a bit of a predicament with the keep-going-even-if-an-error-
-> happened approach. There could be multiple submit_bio_wait failures (e.g.
-> due to a few blocks that couldn't be written-back due to transient write
-> errors on the backing device), each with their own error return value; but
-> we can only return one error code from writeback_store. So how do we even
-> communicate a multiple-errors-happened situation to the user properly? My
-> patch, as originally written, would give the user an errno corresponding
-> to the last submit_bio_wait failure to happen; but of course that leaves
-> out any other error codes that may have also come up on prior write
-> attempts that failed (and those failures could have been for different
-> reasons). And then also, it's entirely possible that submit_bio_wait may
-> return -EIO or -ENOSPC or -ENOMEM, which would be ambiguous with the other
-> meanings of those error codes from the writeback_store function itself
-> (-EIO for WB limit, -ENOSPC for no free blocks on backing device, -ENOMEM
-> if couldn't allocate the temporary page).
+> > 
+> > Even if you restrict FE DAIs to RX/TX only, or disable them entirely,
+> 
+> I think this is mistake from myside. Alteast according to bindings direction
+> property is only "Required for Compress offload dais", code should have
+> explicitly ignored it. Here is change that should fix it.
+> 
 
-Indeed.
+This would make the MultiMedia1-3 bi-directional in sdm845-db845c,
+but MultiMedia5-8 would still be disabled.
 
-What I wanted by my suggestion was that user could find the error
-as soon as something popped up so they could judge what they could
-as well as consistency of code structuring. But based on your comment,
-they couldn't since several errors are overloaded here. In that case,
-it makes my trial void. Another thought is if we could change writeback
-work asynchronously(and sync right before returning to the user), it also
-will make my trial void. So, yes, your suggestion is much sane.
+My question here would then be similar as above:
+Is this an arbitrary selection of a reasonable amount of FE DAIs,
+or actually based on some firmware limitations?
 
-Could you resend it with dealing with zram_bvec_read failure?
-And change footer with following
-Fixes: 3b82a051c101 ("zram: fix error return codes not being returned in writeback_store")
-Cc: stable@vger.kernel.org
+As I described in the rest of my mail (below your diff),
+before this patch set it was simple to just expose all 8 FE DAIs.
+At least on MSM8916 all of them work in exactly the same way,
+there is no difference between any of them.
+
+If we list what is working in SoC/firmware in the device tree,
+would I just list all 8 FE DAIs?
+
+Basically I'm still trying to understand why we limit the number of
+FE/MultiMedia DAIs that we expose, when all of them would be working
+fine. :)
+
+Thanks,
+Stephan
+
+> --------------------------->cut<---------------------------------
+> diff --git a/sound/soc/qcom/qdsp6/q6asm-dai.c
+> b/sound/soc/qcom/qdsp6/q6asm-dai.c
+> index 125af00bba53..31f46b25978e 100644
+> --- a/sound/soc/qcom/qdsp6/q6asm-dai.c
+> +++ b/sound/soc/qcom/qdsp6/q6asm-dai.c
+> @@ -1067,6 +1067,11 @@ static int of_q6asm_parse_dai_data(struct device
+> *dev,
+>                 dai_drv = &pdata->dais[idx++];
+>                 *dai_drv = q6asm_fe_dais_template[id];
+> 
+> +               if (of_property_read_bool(node, "is-compress-dai"))
+> +                       dai_drv->compress_new = snd_soc_new_compress;
+> +               else
+> +                       continue;
+> +
+>                 ret = of_property_read_u32(node, "direction", &dir);
+>                 if (ret)
+>                         continue;
+> @@ -1076,8 +1081,6 @@ static int of_q6asm_parse_dai_data(struct device *dev,
+>                 else if (dir == Q6ASM_DAI_TX)
+>                         dai_drv->playback = empty_stream;
+> 
+> -               if (of_property_read_bool(node, "is-compress-dai"))
+> -                       dai_drv->compress_new = snd_soc_new_compress;
+>         }
+> 
+>         return 0;
+> 
+> --------------------------->cut<---------------------------------
+> 
+> Thanks,
+> srini
+> 
+> > all the routing mixers still exist for them. They will just result in
+> > configurations that are not usable in any way. IMO the only thing we
+> > gain by restricting the FE DAIs is that the available mixers no longer
+> > match possible configurations.
+> > 
+> > Before this patch set I used a slightly different approach in my device
+> > tree for MSM8916: I kept all FE DAIs bi-directional, and added DAI links
+> > for all of them. This means that I actually had 8 bi-directional PCM
+> > devices in userspace.
+> > 
+> > I didn't use all of them - my ALSA UCM configuration only uses
+> > MultiMedia1 for playback and MultiMedia2 for capture.
+> > However, some other userspace (let's say Android) could have chosen
+> > different FE DAIs for whatever reason. We have the overhead for the
+> > routing matrix anyway, so we might as well expose it in my opinion.
+> > 
+> > My question is: In what way are the FE DAIs really board-specific?
+> > 
+> > If we expose only some FE DAIs with intended usage per board,
+> > e.g. MultiMedia1 for HDMI, MultiMedia2 for slimbus playback,
+> >       MultiMedia3 for slimbus capture,
+> > I could almost argue that we don't need DPCM at all.
+> > The FE DAIs are always going to be used for the same backend anyway.
+> > 
+> > This is a bit exaggerated - for example if you have a single compress
+> > DAI per board you probably intend to use it for both HDMI/slimbus.
+> > But this is the feeling I get if we configure the FE DAIs separately
+> > for each board.
+> > 
+> > I wonder if we should leave configuration of the FE DAIs up to userspace
+> > (e.g. ALSA UCM), and expose the same full set of FE DAIs for each board.
+> > 
+> > I think this is mostly a matter of convention for configuring FE DAIs
+> > in the device tree - I have some ideas how to make that work
+> > with the existing device tree bindings and for compressed DAIs.
+> > But this mail is already long enough as-is. ;)
+> > 
+> > I also don't mind if we keep everything as-is
+> > - I just wanted to share what I have been thinking about.
+> > 
+> > What do you think?
+> > 
+> > Thanks for reading! ;)
+> > Stephan
+> > 
+> > > Originally  issue was reported by Vinod Koul
+> > > 
+> > > Srinivas Kandagatla (2):
+> > >    ASoC: qdsp6: q6asm-dai: only enable dais from device tree
+> > >    ASoC: qdsp6: q6routing: remove default routing
+> > > 
+> > >   sound/soc/qcom/qdsp6/q6asm-dai.c | 30 +++++++++++++++++++++++-------
+> > >   sound/soc/qcom/qdsp6/q6routing.c | 19 -------------------
+> > >   2 files changed, 23 insertions(+), 26 deletions(-)
+> > > 
+> > > -- 
+> > > 2.21.0
+> > > 
