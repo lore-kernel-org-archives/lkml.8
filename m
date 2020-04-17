@@ -2,292 +2,149 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A50AC352BE
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 05:55:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9647C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 05:55:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6F97D221F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 05:55:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80F94221E9
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 05:55:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="sCZnqzN3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726726AbgDQFzA (ORCPT
+        id S1726748AbgDQFzo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 01:55:00 -0400
-Received: from mga04.intel.com ([192.55.52.120]:29978 "EHLO mga04.intel.com"
+        Fri, 17 Apr 2020 01:55:44 -0400
+Received: from mga06.intel.com ([134.134.136.31]:53911 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726065AbgDQFy7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 01:54:59 -0400
-IronPort-SDR: jJ36hJ7m69kFX2Jan1MToius1lO5VRhPFHcX5PURiptebgCXceC61vSEvbbneM1sCuJa/mbEmz
- zPA4OFzt40VA==
+        id S1726610AbgDQFzo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Apr 2020 01:55:44 -0400
+IronPort-SDR: U9u1JU5qwqizVgMNIL2wRsjnJuJSwmn4DDQLHVZQ8Rfli1Lmn4bRghzuV3P/8h3EgUm7h2GzrO
+ WpO7Ns7xcmUA==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2020 22:54:59 -0700
-IronPort-SDR: mzqN+WoRZIWgqv3y8GEaecLjcKXitNsfhx4O28rA130nB1coR27f5BLBTdDDwuI/ueJmo2VX/g
- TYD1dWz7lo3A==
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2020 22:55:42 -0700
+IronPort-SDR: iE7pmHXXcInbRzt/cr9tskj0laldmMsPhxnVV8VLiNoX0eYBo9aQsxwR6LQYdSiwZytk5aTPG9
+ wRmYA+dk+Pyg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.72,393,1580803200"; 
-   d="scan'208";a="272316801"
-Received: from sgsxdev001.isng.intel.com (HELO localhost) ([10.226.88.11])
-  by orsmga002.jf.intel.com with ESMTP; 16 Apr 2020 22:54:55 -0700
-From:   Rahul Tanwar <rahul.tanwar@linux.intel.com>
-To:     sboyd@kernel.org, mturquette@baylibre.com,
-        linux-clk@vger.kernel.org
-Cc:     robh@kernel.org, mark.rutland@arm.com,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        andriy.shevchenko@intel.com, qi-ming.wu@intel.com,
-        yixin.zhu@linux.intel.com, cheol.yong.kim@intel.com,
-        Rahul Tanwar <rahul.tanwar@linux.intel.com>
-Subject: [PATCH v8 1/2] dt-bindings: clk: intel: Add bindings document & header file for CGU
-Date:   Fri, 17 Apr 2020 13:54:46 +0800
-Message-Id: <8dce2be13195aab20c6b11fca6af0fffe22d5241.1587102634.git.rahul.tanwar@linux.intel.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <cover.1587102634.git.rahul.tanwar@linux.intel.com>
-References: <cover.1587102634.git.rahul.tanwar@linux.intel.com>
-In-Reply-To: <cover.1587102634.git.rahul.tanwar@linux.intel.com>
-References: <cover.1587102634.git.rahul.tanwar@linux.intel.com>
+   d="scan'208";a="428118665"
+Received: from orsmsx104.amr.corp.intel.com ([10.22.225.131])
+  by orsmga005.jf.intel.com with ESMTP; 16 Apr 2020 22:55:42 -0700
+Received: from ORSEDG002.ED.cps.intel.com (10.7.248.5) by
+ ORSMSX104.amr.corp.intel.com (10.22.225.131) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Thu, 16 Apr 2020 22:55:41 -0700
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (104.47.70.104)
+ by edgegateway.intel.com (134.134.137.101) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Thu, 16 Apr 2020 22:55:41 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=eUjUN+QPusQwQLGqrnRofg5NBT7bC6IZduPJ5dbOmdCd5CqNhs6VXjJofpVGBi5qNCLFqNgv4QWX4nLYliO0IOAukYUE0eEeEQ1fOQ48yw2HDcZjdR76mQiuM2ex1S27croA4Y9d4P54cvL9d17PJaFHOzhWKd8BF4gJOV7QP+OdLAY8m2WXTs1wMxaJRvO5MHe2GhtSBU9bqilSQTdWI1cZB2lpUbzCrQbOOADHwHBAzgSxKL7nGt+JAUmAd3216C26yiam0K90YjUIV6NwY3k1oHNKRGSef2sLIk8dPinaEoNSVFrW1BIc52ROvjQUrT+Ul1WbH6oBxU9OL9R41Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=6N5i5qYQd7B6sMzkkvo075WEO5nqw0XDDkCCx36BPns=;
+ b=kdN4LF0XAxtYbNQ3ariqJfzzlfRDMEP5pI7NFiBbO4n3E3UDeKxl25oi2bE/G3qZ7H+2kgtzXwsXN7B+/ybFq/9Xf8V2vVBDgI4fp5FGwd5X855tiveDJ/0MzQnuyPyPIk8w+rNGhlLP5LxeTsESewWxP+Cw4ooDnaqmwImTYpqptyB+9CoWEpmdFcPXq3DW1OjrrwHPH0/vIBHqjMZ8GtcjDCVTZEuypTyJBj5MAMCr855c9EmMDFvxVsIDza9N72WK5FiMc1tOsmwVjxYFhmuxQmVVL9opLoAp8Wn/8yDclcuTq5SLWOX7GwGwC02DQy8vfdV/E7vGidYtOukyUg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
+ s=selector2-intel-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=6N5i5qYQd7B6sMzkkvo075WEO5nqw0XDDkCCx36BPns=;
+ b=sCZnqzN360vVrb5AU/gidlGp6ccAipwLSlaiKPYQGozFrx1XeZTCaNvxaKZPskEHKwk2pfOHvFN6sdIX0vinZVZpP5G17cXSODvx6TC5o6DgGYfAtDuvmqcht6gA8VtkwXj8KZ+IBpJjH5Mn7NzOrbTJDraXT/w3PxVcfSWRDzc=
+Received: from DM6PR11MB3819.namprd11.prod.outlook.com (2603:10b6:5:13f::31)
+ by DM6PR11MB4027.namprd11.prod.outlook.com (2603:10b6:5:199::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.26; Fri, 17 Apr
+ 2020 05:55:39 +0000
+Received: from DM6PR11MB3819.namprd11.prod.outlook.com
+ ([fe80::98a:bb06:5551:e5a3]) by DM6PR11MB3819.namprd11.prod.outlook.com
+ ([fe80::98a:bb06:5551:e5a3%3]) with mapi id 15.20.2900.028; Fri, 17 Apr 2020
+ 05:55:39 +0000
+From:   "Wu, Hao" <hao.wu@intel.com>
+To:     "Xu, Yilun" <yilun.xu@intel.com>
+CC:     Tom Rix <trix@redhat.com>, "mdf@kernel.org" <mdf@kernel.org>,
+        "linux-fpga@vger.kernel.org" <linux-fpga@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "bhu@redhat.com" <bhu@redhat.com>
+Subject: RE: [PATCH 1/2] fpga: dfl: pci: reduce the scope of variable 'ret'
+Thread-Topic: [PATCH 1/2] fpga: dfl: pci: reduce the scope of variable 'ret'
+Thread-Index: AQHWE5193+0/nQdMD0KUurSvMI7dQ6h7YzcggACVlYCAAJaugIAAEAvggAAH1QCAACpPYA==
+Date:   Fri, 17 Apr 2020 05:55:39 +0000
+Message-ID: <DM6PR11MB381922556FF1BB3FB550358985D90@DM6PR11MB3819.namprd11.prod.outlook.com>
+References: <1587006712-22696-1-git-send-email-yilun.xu@intel.com>
+ <1587006712-22696-2-git-send-email-yilun.xu@intel.com>
+ <DM6PR11MB3819619E9B2C7326218247E385D80@DM6PR11MB3819.namprd11.prod.outlook.com>
+ <9b1d85e0-4f44-179b-c847-af858fcc212a@redhat.com>
+ <20200417015605.GA30618@yilunxu-OptiPlex-7050>
+ <DM6PR11MB381919B83DB49F937E3EDEEA85D90@DM6PR11MB3819.namprd11.prod.outlook.com>
+ <20200417032132.GA25293@yilunxu-OptiPlex-7050>
+In-Reply-To: <20200417032132.GA25293@yilunxu-OptiPlex-7050>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-reaction: no-action
+dlp-version: 11.2.0.6
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=hao.wu@intel.com; 
+x-originating-ip: [192.102.204.38]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 9bcebcfa-0248-4f3d-421c-08d7e293f548
+x-ms-traffictypediagnostic: DM6PR11MB4027:
+x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DM6PR11MB4027020DA1F954F6FAFCA9F985D90@DM6PR11MB4027.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2733;
+x-forefront-prvs: 0376ECF4DD
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR11MB3819.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(39860400002)(376002)(346002)(136003)(366004)(396003)(26005)(2906002)(6862004)(4326008)(86362001)(81156014)(186003)(8936002)(54906003)(55016002)(316002)(8676002)(9686003)(6636002)(5660300002)(4744005)(6506007)(71200400001)(478600001)(7696005)(52536014)(66446008)(64756008)(66556008)(66476007)(76116006)(66946007)(33656002);DIR:OUT;SFP:1102;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: Mv3cpmJyoisVAGQmzlaMykX8gmb59SsxMzKx7Y7y6wHnIhunw5PITAWyTC5+I7+LuAQgCvvKXpaiWLIV18xB5y+Sod5+RSoudWbc2q3i65BgFtX6BTKF1HvYAH728mdrhLMULXI89t+cXmtneYDfSYaKjdzmguAFDz21i9xY0F4uKMn/vDoY1ZOSZFukvKbhHwCAbROWA8g9jmfjM35WPvZmjebEJv7KbH5DrfdN69pWaZjkYKyMpU3072I8ZPzDLgyr8KFE/zr25IpDM95XdbOwOWFizSUg9+Fo1lUDWE5fjq/zexIKgndcp3kouqoFToJALeDECKI9kTXloLLBAQ3YTvrEONrmNchO/N5143oj+e3CHDdxHdj9dVYncn1b6+mnZp2jNZUzn+8hIlJkqAsadEri5RrHFn6HpMl60IFMn4V07GP6wPkrm8aG8gxT
+x-ms-exchange-antispam-messagedata: FVo1gBb6xalGYHJuaWugLWHEiG5DEw3zp0ZYMuDp/FTmEmbMLf1q6kMBQkIrkhbqvcBqk1nwvtc/hTlGsrj6Drd/kWuEzrgphCVGOImsT9Ue6Fh9K8uSEPc+piZM4m551VB7IUAcMSBLDfA4hpf12w==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9bcebcfa-0248-4f3d-421c-08d7e293f548
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Apr 2020 05:55:39.7948
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: GbaL3NdOjmnzCZwU6IlvpXL20tK7yRB28hCwIkuKCLWYH97a4Keaz6LFUhouZT2r+ZfOkGo/56rI4sLbTAWfvA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR11MB4027
+X-OriginatorOrg: intel.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Clock generation unit(CGU) is a clock controller IP of Intel's Lightning
-Mountain(LGM) SoC. Add DT bindings include file and document for CGU clock
-controller driver of LGM.
+> > > Subject: Re: [PATCH 1/2] fpga: dfl: pci: reduce the scope of variable=
+ 'ret'
+> > >
+> > > Hi Rix:
+> > >
+> > > This patch is based on linux-next. There is an preceding patch
+> > > (3c2760b78f90 "fpga: dfl: pci: fix return value of cci_pci_sriov_conf=
+igure",
+> > > Also see Fixes:) in linux-next but not merged in 5.7-rc1 yet.
+> > > This patch is to fix the lkp warning brought by the previous one.
+> >
+> > Yilun
+> >
+> > Is it possible that commit id may be different for master then?
+>=20
+> It is possible if the previous patch need a little change when merging
+> to master.
+>=20
+> I'm not sure how to handle this then. But the previous patch is simple
+> and is unlikely to change.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
----
- .../devicetree/bindings/clock/intel,cgu-lgm.yaml   |  44 ++++++
- include/dt-bindings/clock/intel,lgm-clk.h          | 165 +++++++++++++++++++++
- 2 files changed, 209 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/intel,cgu-lgm.yaml
- create mode 100644 include/dt-bindings/clock/intel,lgm-clk.h
+Maybe you can resend it once previous patch gets merged.
 
-diff --git a/Documentation/devicetree/bindings/clock/intel,cgu-lgm.yaml b/Documentation/devicetree/bindings/clock/intel,cgu-lgm.yaml
-new file mode 100644
-index 000000000000..6dc1414bfb7f
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/intel,cgu-lgm.yaml
-@@ -0,0 +1,44 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/clock/intel,cgu-lgm.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Intel Lightning Mountain SoC's Clock Controller(CGU) Binding
-+
-+maintainers:
-+  - Rahul Tanwar <rahul.tanwar@linux.intel.com>
-+
-+description: |
-+  Lightning Mountain(LGM) SoC's Clock Generation Unit(CGU) driver provides
-+  all means to access the CGU hardware module in order to generate a series
-+  of clocks for the whole system and individual peripherals.
-+
-+  Please refer to include/dt-bindings/clock/intel,lgm-clk.h header file, it
-+  defines all available clocks as macros. These macros can be used in device
-+  tree sources.
-+
-+properties:
-+  compatible:
-+    const: intel,cgu-lgm
-+
-+  reg:
-+    maxItems: 1
-+
-+  '#clock-cells':
-+    const: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - '#clock-cells'
-+
-+examples:
-+  - |
-+    cgu: clock-controller@e0200000 {
-+        compatible = "intel,cgu-lgm";
-+        reg = <0xe0200000 0x33c>;
-+        #clock-cells = <1>;
-+    };
-+
-+...
-diff --git a/include/dt-bindings/clock/intel,lgm-clk.h b/include/dt-bindings/clock/intel,lgm-clk.h
-new file mode 100644
-index 000000000000..92f5be6490bb
---- /dev/null
-+++ b/include/dt-bindings/clock/intel,lgm-clk.h
-@@ -0,0 +1,165 @@
-+/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause) */
-+/*
-+ * Copyright (C) 2020 Intel Corporation.
-+ * Lei Chuanhua <Chuanhua.lei@intel.com>
-+ * Zhu Yixin <Yixin.zhu@intel.com>
-+ */
-+#ifndef __INTEL_LGM_CLK_H
-+#define __INTEL_LGM_CLK_H
-+
-+/* PLL clocks */
-+#define LGM_CLK_OSC		1
-+#define LGM_CLK_PLLPP		2
-+#define LGM_CLK_PLL2		3
-+#define LGM_CLK_PLL0CZ		4
-+#define LGM_CLK_PLL0B		5
-+#define LGM_CLK_PLL1		6
-+#define LGM_CLK_LJPLL3		7
-+#define LGM_CLK_LJPLL4		8
-+#define LGM_CLK_PLL0CM0		9
-+#define LGM_CLK_PLL0CM1		10
-+
-+/* clocks from PLLs */
-+
-+/* ROPLL clocks */
-+#define LGM_CLK_PP_HW		15
-+#define LGM_CLK_PP_UC		16
-+#define LGM_CLK_PP_FXD		17
-+#define LGM_CLK_PP_TBM		18
-+
-+/* PLL2 clocks */
-+#define LGM_CLK_DDR		20
-+
-+/* PLL0CZ */
-+#define LGM_CLK_CM		25
-+#define LGM_CLK_IC		26
-+#define LGM_CLK_SDXC3		27
-+
-+/* PLL0B */
-+#define LGM_CLK_NGI		30
-+#define LGM_CLK_NOC4		31
-+#define LGM_CLK_SW		32
-+#define LGM_CLK_QSPI		33
-+#define LGM_CLK_CQEM		LGM_CLK_SW
-+#define LGM_CLK_EMMC5		LGM_CLK_NOC4
-+
-+/* PLL1 */
-+#define LGM_CLK_CT		35
-+#define LGM_CLK_DSP		36
-+#define LGM_CLK_VIF		37
-+
-+/* LJPLL3 */
-+#define LGM_CLK_CML		40
-+#define LGM_CLK_SERDES		41
-+#define LGM_CLK_POOL		42
-+#define LGM_CLK_PTP		43
-+
-+/* LJPLL4 */
-+#define LGM_CLK_PCIE		45
-+#define LGM_CLK_SATA		LGM_CLK_PCIE
-+
-+/* PLL0CM0 */
-+#define LGM_CLK_CPU0		50
-+
-+/* PLL0CM1 */
-+#define LGM_CLK_CPU1		55
-+
-+/* Miscellaneous clocks */
-+#define LGM_CLK_EMMC4		60
-+#define LGM_CLK_SDXC2		61
-+#define LGM_CLK_EMMC		62
-+#define LGM_CLK_SDXC		63
-+#define LGM_CLK_SLIC		64
-+#define LGM_CLK_DCL		65
-+#define LGM_CLK_DOCSIS		66
-+#define LGM_CLK_PCM		67
-+#define LGM_CLK_DDR_PHY		68
-+#define LGM_CLK_PONDEF		69
-+#define LGM_CLK_PL25M		70
-+#define LGM_CLK_PL10M		71
-+#define LGM_CLK_PL1544K		72
-+#define LGM_CLK_PL2048K		73
-+#define LGM_CLK_PL8K		74
-+#define LGM_CLK_PON_NTR		75
-+#define LGM_CLK_SYNC0		76
-+#define LGM_CLK_SYNC1		77
-+#define LGM_CLK_PROGDIV		78
-+#define LGM_CLK_OD0		79
-+#define LGM_CLK_OD1		80
-+#define LGM_CLK_CBPHY0		81
-+#define LGM_CLK_CBPHY1		82
-+#define LGM_CLK_CBPHY2		83
-+#define LGM_CLK_CBPHY3		84
-+
-+/* Gate clocks */
-+/* Gate CLK0 */
-+#define LGM_GCLK_C55		100
-+#define LGM_GCLK_QSPI		101
-+#define LGM_GCLK_EIP197		102
-+#define LGM_GCLK_VAULT		103
-+#define LGM_GCLK_TOE		104
-+#define LGM_GCLK_SDXC		105
-+#define LGM_GCLK_EMMC		106
-+#define LGM_GCLK_SPI_DBG	107
-+#define LGM_GCLK_DMA3		108
-+
-+/* Gate CLK1 */
-+#define LGM_GCLK_DMA0		120
-+#define LGM_GCLK_LEDC0		121
-+#define LGM_GCLK_LEDC1		122
-+#define LGM_GCLK_I2S0		123
-+#define LGM_GCLK_I2S1		124
-+#define LGM_GCLK_EBU		125
-+#define LGM_GCLK_PWM		126
-+#define LGM_GCLK_I2C0		127
-+#define LGM_GCLK_I2C1		128
-+#define LGM_GCLK_I2C2		129
-+#define LGM_GCLK_I2C3		130
-+#define LGM_GCLK_SSC0		131
-+#define LGM_GCLK_SSC1		132
-+#define LGM_GCLK_SSC2		133
-+#define LGM_GCLK_SSC3		134
-+#define LGM_GCLK_GPTC0		135
-+#define LGM_GCLK_GPTC1		136
-+#define LGM_GCLK_GPTC2		137
-+#define LGM_GCLK_GPTC3		138
-+#define LGM_GCLK_ASC0		139
-+#define LGM_GCLK_ASC1		140
-+#define LGM_GCLK_ASC2		141
-+#define LGM_GCLK_ASC3		142
-+#define LGM_GCLK_PCM0		143
-+#define LGM_GCLK_PCM1		144
-+#define LGM_GCLK_PCM2		145
-+
-+/* Gate CLK2 */
-+#define LGM_GCLK_PCIE10		150
-+#define LGM_GCLK_PCIE11		151
-+#define LGM_GCLK_PCIE30		152
-+#define LGM_GCLK_PCIE31		153
-+#define LGM_GCLK_PCIE20		154
-+#define LGM_GCLK_PCIE21		155
-+#define LGM_GCLK_PCIE40		156
-+#define LGM_GCLK_PCIE41		157
-+#define LGM_GCLK_XPCS0		158
-+#define LGM_GCLK_XPCS1		159
-+#define LGM_GCLK_XPCS2		160
-+#define LGM_GCLK_XPCS3		161
-+#define LGM_GCLK_SATA0		162
-+#define LGM_GCLK_SATA1		163
-+#define LGM_GCLK_SATA2		164
-+#define LGM_GCLK_SATA3		165
-+
-+/* Gate CLK3 */
-+#define LGM_GCLK_ARCEM4		170
-+#define LGM_GCLK_IDMAR1		171
-+#define LGM_GCLK_IDMAT0		172
-+#define LGM_GCLK_IDMAT1		173
-+#define LGM_GCLK_IDMAT2		174
-+#define LGM_GCLK_PPV4		175
-+#define LGM_GCLK_GSWIPO		176
-+#define LGM_GCLK_CQEM		177
-+#define LGM_GCLK_XPCS5		178
-+#define LGM_GCLK_USB1		179
-+#define LGM_GCLK_USB2		180
-+
-+#endif /* __INTEL_LGM_CLK_H */
--- 
-2.11.0
+Hao
 
