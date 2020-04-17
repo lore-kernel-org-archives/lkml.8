@@ -2,117 +2,167 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3FD7C38A2B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 14:05:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8111DC38A2E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 14:05:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B34E121924
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 14:05:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C39C21924
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 14:05:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="T9tVEiLD"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="cDTCrSpA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730958AbgDQOFY (ORCPT
+        id S1730968AbgDQOF1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 10:05:24 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:60075 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730859AbgDQOE6 (ORCPT
+        Fri, 17 Apr 2020 10:05:27 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:23788 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730956AbgDQOFZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 10:04:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587132297;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=tQvUbry9IMyI28UebIhxTY+721rvzbcFmWQGCJ8qdIY=;
-        b=T9tVEiLDfcJfDBRxirU1yuZcOB/t88BE4B5TJ6vxnHTGpUPsMf8tHixsiFEuW/c2mRxe6k
-        9uKEeMhJyenXHh6soMySJqWIYMHVc2POAA2IkaJYsDmd9uoMHz1OU3nrmkHujx/pA69ClY
-        YZZg6BbwwF1pbZ+xyUDR7nlgtQcVEaQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-84-TF4O6vvGNhWdNd59BSlMtg-1; Fri, 17 Apr 2020 10:04:54 -0400
-X-MC-Unique: TF4O6vvGNhWdNd59BSlMtg-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Fri, 17 Apr 2020 10:05:25 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1587132324; h=References: In-Reply-To: Message-Id: Date:
+ Subject: Cc: To: From: Sender;
+ bh=ZGMPRI6X+zC1V3u8H6EIQC5ZG6twErMMULJHtJ/RTpI=; b=cDTCrSpAHE4rGGNeOmvCr0CvlfB0AsUKXdE/ISV1QcHvBmzBguXT9qS5YRRmW5myh+SmQfFA
+ WnFzlf4dB+KpO9QY5ygalj0TqWj+3qaDjcq56mC0FEWz0sQpQQ1dxmQ1xRMpCfdZn9RcWBJL
+ E/hOuJoPRvube/Lo/E1yiELGpZ8=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e99b7a2.7fabf0b9e5a8-smtp-out-n04;
+ Fri, 17 Apr 2020 14:05:22 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 535CFC4478F; Fri, 17 Apr 2020 14:05:21 +0000 (UTC)
+Received: from blr-ubuntu-173.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id AA04B107B271;
-        Fri, 17 Apr 2020 14:04:53 +0000 (UTC)
-Received: from treble.redhat.com (ovpn-116-146.rdu2.redhat.com [10.10.116.146])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 0C4405C1C5;
-        Fri, 17 Apr 2020 14:04:52 +0000 (UTC)
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     live-patching@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jessica Yu <jeyu@kernel.org>
-Subject: [PATCH v2 9/9] module: Remove module_disable_ro()
-Date:   Fri, 17 Apr 2020 09:04:34 -0500
-Message-Id: <fe4dbdc12324b4fe3ade97591e0b11e638aad63f.1587131959.git.jpoimboe@redhat.com>
-In-Reply-To: <cover.1587131959.git.jpoimboe@redhat.com>
-References: <cover.1587131959.git.jpoimboe@redhat.com>
-MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-Content-Transfer-Encoding: quoted-printable
+        (Authenticated sender: rnayak)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 74279C433F2;
+        Fri, 17 Apr 2020 14:05:13 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 74279C433F2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
+From:   Rajendra Nayak <rnayak@codeaurora.org>
+To:     viresh.kumar@linaro.org, sboyd@kernel.org,
+        bjorn.andersson@linaro.org, agross@kernel.org
+Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mka@chromium.org,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Mark Brown <broonie@kernel.org>,
+        Alok Chauhan <alokc@codeaurora.org>,
+        Akash Asthana <akashast@codeaurora.org>,
+        linux-spi@vger.kernel.org
+Subject: [PATCH v2 02/17] spi: spi-geni-qcom: Use OPP API to set clk/perf state
+Date:   Fri, 17 Apr 2020 19:34:24 +0530
+Message-Id: <1587132279-27659-3-git-send-email-rnayak@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1587132279-27659-1-git-send-email-rnayak@codeaurora.org>
+References: <1587132279-27659-1-git-send-email-rnayak@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-module_disable_ro() has no more users.  Remove it.
+geni spi needs to express a perforamnce state requirement on CX
+depending on the frequency of the clock rates. Use OPP table from
+DT to register with OPP framework and use dev_pm_opp_set_rate() to
+set the clk/perf state.
 
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+Cc: Mark Brown <broonie@kernel.org>
+Cc: Alok Chauhan <alokc@codeaurora.org>
+Cc: Akash Asthana <akashast@codeaurora.org>
+Cc: linux-spi@vger.kernel.org
 ---
- include/linux/module.h |  2 --
- kernel/module.c        | 13 -------------
- 2 files changed, 15 deletions(-)
+ drivers/spi/spi-geni-qcom.c | 22 +++++++++++++++++++---
+ 1 file changed, 19 insertions(+), 3 deletions(-)
 
-diff --git a/include/linux/module.h b/include/linux/module.h
-index 1ad393e62bef..e4ef7b36feda 100644
---- a/include/linux/module.h
-+++ b/include/linux/module.h
-@@ -860,10 +860,8 @@ extern int module_sysfs_initialized;
-=20
- #ifdef CONFIG_STRICT_MODULE_RWX
- extern void module_enable_ro(const struct module *mod, bool after_init);
--extern void module_disable_ro(const struct module *mod);
- #else
- static inline void module_enable_ro(const struct module *mod, bool after=
-_init) { }
--static inline void module_disable_ro(const struct module *mod) { }
- #endif
-=20
- #ifdef CONFIG_GENERIC_BUG
-diff --git a/kernel/module.c b/kernel/module.c
-index d36ea8a8c3ec..b1d30ad67e82 100644
---- a/kernel/module.c
-+++ b/kernel/module.c
-@@ -1997,19 +1997,6 @@ static void frob_writable_data(const struct module=
-_layout *layout,
- 		   (layout->size - layout->ro_after_init_size) >> PAGE_SHIFT);
- }
-=20
--/* livepatching wants to disable read-only so it can frob module. */
--void module_disable_ro(const struct module *mod)
--{
--	if (!rodata_enabled)
--		return;
--
--	frob_text(&mod->core_layout, set_memory_rw);
--	frob_rodata(&mod->core_layout, set_memory_rw);
--	frob_ro_after_init(&mod->core_layout, set_memory_rw);
--	frob_text(&mod->init_layout, set_memory_rw);
--	frob_rodata(&mod->init_layout, set_memory_rw);
--}
--
- void module_enable_ro(const struct module *mod, bool after_init)
+diff --git a/drivers/spi/spi-geni-qcom.c b/drivers/spi/spi-geni-qcom.c
+index c397242..768b2fe 100644
+--- a/drivers/spi/spi-geni-qcom.c
++++ b/drivers/spi/spi-geni-qcom.c
+@@ -7,6 +7,7 @@
+ #include <linux/log2.h>
+ #include <linux/module.h>
+ #include <linux/platform_device.h>
++#include <linux/pm_opp.h>
+ #include <linux/pm_runtime.h>
+ #include <linux/qcom-geni-se.h>
+ #include <linux/spi/spi.h>
+@@ -86,6 +87,7 @@ struct spi_geni_master {
+ 	spinlock_t lock;
+ 	enum spi_m_cmd_opcode cur_mcmd;
+ 	int irq;
++	bool opp_table;
+ };
+ 
+ static int get_spi_clk_cfg(unsigned int speed_hz,
+@@ -95,7 +97,6 @@ static int get_spi_clk_cfg(unsigned int speed_hz,
  {
- 	if (!rodata_enabled)
---=20
-2.21.1
-
+ 	unsigned long sclk_freq;
+ 	unsigned int actual_hz;
+-	struct geni_se *se = &mas->se;
+ 	int ret;
+ 
+ 	ret = geni_se_clk_freq_match(&mas->se,
+@@ -112,9 +113,9 @@ static int get_spi_clk_cfg(unsigned int speed_hz,
+ 
+ 	dev_dbg(mas->dev, "req %u=>%u sclk %lu, idx %d, div %d\n", speed_hz,
+ 				actual_hz, sclk_freq, *clk_idx, *clk_div);
+-	ret = clk_set_rate(se->clk, sclk_freq);
++	ret = dev_pm_opp_set_rate(mas->dev, sclk_freq);
+ 	if (ret)
+-		dev_err(mas->dev, "clk_set_rate failed %d\n", ret);
++		dev_err(mas->dev, "dev_pm_opp_set_rate failed %d\n", ret);
+ 	return ret;
+ }
+ 
+@@ -561,6 +562,12 @@ static int spi_geni_probe(struct platform_device *pdev)
+ 	mas->se.wrapper = dev_get_drvdata(dev->parent);
+ 	mas->se.base = base;
+ 	mas->se.clk = clk;
++	mas->se.opp = dev_pm_opp_set_clkname(&pdev->dev, "se");
++	if (IS_ERR(mas->se.opp))
++		return PTR_ERR(mas->se.opp);
++	/* OPP table is optional */
++	if (!dev_pm_opp_of_add_table(&pdev->dev))
++		mas->opp_table = true;
+ 
+ 	spi->bus_num = -1;
+ 	spi->dev.of_node = dev->of_node;
+@@ -596,6 +603,9 @@ static int spi_geni_probe(struct platform_device *pdev)
+ spi_geni_probe_runtime_disable:
+ 	pm_runtime_disable(dev);
+ 	spi_master_put(spi);
++	if (mas->opp_table)
++		dev_pm_opp_of_remove_table(&pdev->dev);
++	dev_pm_opp_put_clkname(mas->se.opp);
+ 	return ret;
+ }
+ 
+@@ -604,6 +614,9 @@ static int spi_geni_remove(struct platform_device *pdev)
+ 	struct spi_master *spi = platform_get_drvdata(pdev);
+ 	struct spi_geni_master *mas = spi_master_get_devdata(spi);
+ 
++	if (mas->opp_table)
++		dev_pm_opp_of_remove_table(&pdev->dev);
++	dev_pm_opp_put_clkname(mas->se.opp);
+ 	/* Unregister _before_ disabling pm_runtime() so we stop transfers */
+ 	spi_unregister_master(spi);
+ 
+@@ -617,6 +630,9 @@ static int __maybe_unused spi_geni_runtime_suspend(struct device *dev)
+ 	struct spi_master *spi = dev_get_drvdata(dev);
+ 	struct spi_geni_master *mas = spi_master_get_devdata(spi);
+ 
++	/* Drop the performance state vote */
++	dev_pm_opp_set_rate(dev, 0);
++
+ 	return geni_se_resources_off(&mas->se);
+ }
+ 
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
