@@ -2,96 +2,184 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A29FC38A2C
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 15:12:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18D99C2D0EF
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 15:13:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2741321924
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 15:12:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EAC0C20644
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 15:13:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="rq2k6P67"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NjjjSCS8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729000AbgDQPMH (ORCPT
+        id S1728679AbgDQPNe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 11:12:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41904 "EHLO
+        Fri, 17 Apr 2020 11:13:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42124 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728272AbgDQPMG (ORCPT
+        by vger.kernel.org with ESMTP id S1728411AbgDQPNd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 11:12:06 -0400
-Received: from mail-pj1-x1033.google.com (mail-pj1-x1033.google.com [IPv6:2607:f8b0:4864:20::1033])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 690A4C061A0C
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 08:12:06 -0700 (PDT)
-Received: by mail-pj1-x1033.google.com with SMTP id hi11so531386pjb.3
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 08:12:06 -0700 (PDT)
+        Fri, 17 Apr 2020 11:13:33 -0400
+Received: from mail-yb1-xb43.google.com (mail-yb1-xb43.google.com [IPv6:2607:f8b0:4864:20::b43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB65AC061A0C
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 08:13:32 -0700 (PDT)
+Received: by mail-yb1-xb43.google.com with SMTP id g6so1186144ybh.12
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 08:13:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=to:cc:from:subject:message-id:date:user-agent:mime-version
-         :content-language:content-transfer-encoding;
-        bh=VssLVJtiB325wjdikuLcJO7qQVio1ynuoUzBYLGhnNA=;
-        b=rq2k6P675E8FoDCpcGOEyjYIk5Uu5aNHQHq/wjW42K2inZYWG54BH4x3amLttLWrew
-         jQVZAVPQhT6izA1LzJAKUn6lHqdRrLsLrbJ//hVQgsTCpzn3NCYDI5qsFTmM7bDm3rq9
-         7vMsw2WYNAETz5majoV2NIn2AE742Cu7KjVT936+lqATI6C8j4YVG7LOXgY6CJMLCRZF
-         toy6pjvJGreL8tJUaTsRMf8k52xpUt9eNyGl+nQ/51f1jgf09l2JLdc+irrGvC5SntCS
-         GHUIzoY1MHbEOu4fKlOhhHFa7yZk7hBLiyWyvieZLqxUPMZqi4cRYFZtDkvjJJXX1MEI
-         FLsA==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=RtVmmjrP6HO9dhoYxX3s6oFRIAVH6KdXNjgWOgECeoM=;
+        b=NjjjSCS8rScnBa/489Zt16Y6KM916Eq1Fnm8cMzBT2SxIqXOY8mnPZ+7qPMwfwITPr
+         lz6CS9DVXf4dAFkRTrUVB2jddZfjpU7Qa7qtbg6WurYf++g2PmmK8P53bkX7yMeXoJk2
+         xWa/AOS7Ok0Vfe2pmmAYQj1bsdXJ9XJRoZFbTCmNe0HJjO+wK9zZioBqPb1eE6Y5/BsR
+         NFiC1pbkfINWBvnEh1fz0VJ/fRWO6ZliXb/7cG9JE0M4pXFm4xBCstV2jbD25uDttrvy
+         epVUz+4y/1tevJ40dxkQE/M8cR9xZa+Ajod9wxHRxwWiuD8faV+MWMOgL3JGSOE3XJDI
+         8VGg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:cc:from:subject:message-id:date:user-agent
-         :mime-version:content-language:content-transfer-encoding;
-        bh=VssLVJtiB325wjdikuLcJO7qQVio1ynuoUzBYLGhnNA=;
-        b=WpzPFdMCH03dd9lqCxd5vM55gTL77CrV7t6++yShwhASlt7YydAwJ4KHwfUJtYHhgx
-         VZJU+5hP3Ckt67FQFbnvJPnheDpkP5D8RN/4zF157xRnx+zVb3r9LoWuAy5RnBtnEuLZ
-         CMXPLe4CmhegrzP0YPP1Fqzjtw/RMTsBrC0//BKdortyfA6752Y4pMWOVJJ3nHUJ9iiv
-         m6fsPfs+WPszM+M3MIU3B/QphQ6KCp1GYR8DUnPIAarU6cGVH1XtxfcE8fyHyYM++lht
-         51V2X/r3K+W7CiNssJVhd7SYv/ZXxst7qdGccAtc0ntCyxx4SLezlmllt5K7chmTd9rL
-         yFIA==
-X-Gm-Message-State: AGi0PuYpw2K6GJg6gOBCJfalDewTg+zpZtpfxw5TA3h4i0VknHTLBKrH
-        szPro9hMz5AlmkcPje8sUNxMq1rPUgOViA==
-X-Google-Smtp-Source: APiQypINOYdpsKWP7KepoP5+mAhJ99M+w/Qzo8/kTs+zMqUSKPmGL5ez8nr9Lie1TaawbtoChO0pig==
-X-Received: by 2002:a17:902:9b95:: with SMTP id y21mr3919438plp.101.1587136323895;
-        Fri, 17 Apr 2020 08:12:03 -0700 (PDT)
-Received: from [192.168.1.188] ([66.219.217.145])
-        by smtp.gmail.com with ESMTPSA id c84sm11569505pfb.153.2020.04.17.08.12.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 17 Apr 2020 08:12:03 -0700 (PDT)
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     IDE/ATA development list <linux-ide@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-From:   Jens Axboe <axboe@kernel.dk>
-Subject: [GIT PULL] libata fixes for 5.7-rc
-Message-ID: <635fe4ef-c1e1-cba6-f4f6-a0c795b5fac8@kernel.dk>
-Date:   Fri, 17 Apr 2020 09:12:01 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=RtVmmjrP6HO9dhoYxX3s6oFRIAVH6KdXNjgWOgECeoM=;
+        b=mByd3UI2u3aBaQNZY6liQ006Nh6v1yyRYja8VXjo7DRNccJ9cxqFxMRFM30SEM77ew
+         Msdyqjj8RNU8qzYrpGq/KAhj5MrKkfBMEN/lVqiVEhzVp+R+pdqUhjqOavgIwZB3taF6
+         zHtR+620iJszudFpdg9MwWshcSv6uMT+3v0vCvc7BpLTJqt/oyn/g+l7TZkuznABGSK8
+         3n37PM35svvfBD4K5sGgI6mgfWZ1ojMr0bbjCDZIlFaBErhblhtcNQowqQtTYwlMa/g8
+         dbtmGAL6K3knP0RJK+doVTMNZcPOKccDPYTTY20wcrqDhV34lQPLKU37yIAjyAm5AGsM
+         Udpw==
+X-Gm-Message-State: AGi0PuYIL3BhrWhLLGEq8h6rOMpQ+/AcOMlwQF3YqydOs202BstrBAZq
+        fqmdHmjW3l4z/RigKBFf9BWyuR6zNuJO1bhdY4rRzQ==
+X-Google-Smtp-Source: APiQypIdimcl/fK+LqHBMfTOxl3lLnAoIALiISIKuQMaY9pG55zJR5bjJgpyQnKGWfE1VAJwilD9WoZ9wzYei6/Llic=
+X-Received: by 2002:a05:6902:505:: with SMTP id x5mr6584279ybs.286.1587136411058;
+ Fri, 17 Apr 2020 08:13:31 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <1587120084-18990-1-git-send-email-john.garry@huawei.com> <1587120084-18990-6-git-send-email-john.garry@huawei.com>
+In-Reply-To: <1587120084-18990-6-git-send-email-john.garry@huawei.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Fri, 17 Apr 2020 08:13:19 -0700
+Message-ID: <CAP-5=fX0yt73ASQm-XD0Nqj8yNn=UhiaBr9T808ot=66SjSg6w@mail.gmail.com>
+Subject: Re: [RFC PATCH v2 05/13] perf vendor events arm64: Add Architected
+ events smmuv3-pmcg.json
+To:     John Garry <john.garry@huawei.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>, will@kernel.org,
+        Andi Kleen <ak@linux.intel.com>, linuxarm@huawei.com,
+        LKML <linux-kernel@vger.kernel.org>, qiangqing.zhang@nxp.com,
+        robin.murphy@arm.com, zhangshaokun@hisilicon.com,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On Fri, Apr 17, 2020 at 3:45 AM John Garry <john.garry@huawei.com> wrote:
+>
+> Add JSON for Architected events from [0], Section 10.3 .
+>
+> [0] https://static.docs.arm.com/ihi0070/a/IHI_0070A_SMMUv3.pdf
+>
+> Signed-off-by: John Garry <john.garry@huawei.com>
+> ---
+>  tools/perf/pmu-events/arch/arm64/smmuv3-pmcg.json | 58 +++++++++++++++++++++++
+>  tools/perf/pmu-events/jevents.c                   |  2 +
+>  2 files changed, 60 insertions(+)
+>  create mode 100644 tools/perf/pmu-events/arch/arm64/smmuv3-pmcg.json
+>
+> diff --git a/tools/perf/pmu-events/arch/arm64/smmuv3-pmcg.json b/tools/perf/pmu-events/arch/arm64/smmuv3-pmcg.json
+> new file mode 100644
+> index 000000000000..7ceb2b4372fa
+> --- /dev/null
+> +++ b/tools/perf/pmu-events/arch/arm64/smmuv3-pmcg.json
+> @@ -0,0 +1,58 @@
+> +[
+> +    {
+> +        "PublicDescription": "Clock cycles",
+> +        "EventCode": "0x00",
+> +        "EventName": "smmuv3_pmcg.CYCLES",
+> +        "BriefDescription": "Clock cycles"
+> +        "Unit": "smmuv3_pmcg",
+> +    },
+> +    {
+> +        "PublicDescription": "Transaction",
+> +        "EventCode": "0x01",
+> +        "EventName": "smmuv3_pmcg.TRANSACTION",
+> +        "BriefDescription": "Transaction"
+> +        "Unit": "smmuv3_pmcg",
+> +    },
+> +    {
+> +        "PublicDescription": "TLB miss caused by incomingtransaction or (ATS or non-ATS) translation request",
 
-Add yet another Comet Lake PCI ID for ahci.
+It looks like a space was missed in "incomingtransaction".
 
+> +        "EventCode": "0x02",
+> +        "EventName": "smmuv3_pmcg.TLB_MISS",
+> +        "BriefDescription": "TLB miss caused by incomingtransaction or (ATS or non-ATS) translation request"
 
-  git://git.kernel.dk/linux-block.git tags/libata-5.7-2020-04-17
+And here.
 
+Thanks,
+Ian
 
-----------------------------------------------------------------
-Kai-Heng Feng (1):
-      ahci: Add Intel Comet Lake PCH-U PCI ID
-
- drivers/ata/ahci.c | 1 +
- 1 file changed, 1 insertion(+)
-
--- 
-Jens Axboe
-
+> +        "Unit": "smmuv3_pmcg",
+> +    },
+> +    {
+> +        "PublicDescription": "Configuration cache miss caused by transaction or(ATS or non-ATS)translation request",
+> +        "EventCode": "0x03",
+> +        "EventName": "smmuv3_pmcg.CONFIG_CACHE_MISS",
+> +        "BriefDescription": "Configuration cache miss caused by transaction or(ATS or non-ATS)translation request"
+> +        "Unit": "smmuv3_pmcg",
+> +    },
+> +    {
+> +        "PublicDescription": "Translation table walk access",
+> +        "EventCode": "0x04",
+> +        "EventName": "smmuv3_pmcg.TRANS_TABLE_WALK_ACCESS",
+> +        "BriefDescription": "Translation table walk access"
+> +        "Unit": "smmuv3_pmcg",
+> +    },
+> +    {
+> +        "PublicDescription": "Configuration structure access",
+> +        "EventCode": "0x05",
+> +        "EventName": "smmuv3_pmcg.CONFIG_STRUCT_ACCESS",
+> +        "BriefDescription": "Configuration structure access"
+> +        "Unit": "smmuv3_pmcg",
+> +    },
+> +    {
+> +        "PublicDescription": "PCIe ATS Translation Request received",
+> +        "EventCode": "0x06",
+> +        "EventName": "smmuv3_pmcg.PCIE_ATS_TRANS_RQ",
+> +        "BriefDescription": "PCIe ATS Translation Request received"
+> +        "Unit": "smmuv3_pmcg",
+> +    },
+> +    {
+> +        "PublicDescription": "PCIe ATS Translated Transaction passed through SMMU",
+> +        "EventCode": "0x07",
+> +        "EventName": "smmuv3_pmcg.PCIE_ATS_TRANS_PASSED",
+> +        "BriefDescription": "PCIe ATS Translated Transaction passed through SMMU"
+> +        "Unit": "smmuv3_pmcg",
+> +    }
+> +]
+> diff --git a/tools/perf/pmu-events/jevents.c b/tools/perf/pmu-events/jevents.c
+> index acb6b77bddc0..76a84ec2ffc8 100644
+> --- a/tools/perf/pmu-events/jevents.c
+> +++ b/tools/perf/pmu-events/jevents.c
+> @@ -256,6 +256,8 @@ static struct map {
+>         { "hisi_sccl,ddrc", "hisi_sccl,ddrc" },
+>         { "hisi_sccl,hha", "hisi_sccl,hha" },
+>         { "hisi_sccl,l3c", "hisi_sccl,l3c" },
+> +       /* it's not realistic to keep adding these, we need something more scalable ... */
+> +       { "smmuv3_pmcg", "smmuv3_pmcg" },
+>         { "L3PMC", "amd_l3" },
+>         {}
+>  };
+> --
+> 2.16.4
+>
