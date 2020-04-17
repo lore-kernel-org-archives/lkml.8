@@ -2,157 +2,123 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83DB7C352BE
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 09:34:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0205CC352BE
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 09:35:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 576F5208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 09:34:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6791208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 09:35:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XZlBkOcm"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="T6IptGXX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730360AbgDQJex (ORCPT
+        id S1730328AbgDQJfq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 05:34:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45930 "EHLO
+        Fri, 17 Apr 2020 05:35:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46064 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730317AbgDQJew (ORCPT
+        with ESMTP id S1730231AbgDQJfp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 05:34:52 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 893D3C061A0F
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 02:34:52 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id e26so2226351wmk.5
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 02:34:52 -0700 (PDT)
+        Fri, 17 Apr 2020 05:35:45 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3EE37C061A0C
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 02:35:44 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id d17so2239295wrg.11
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 02:35:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=OvjXVU28jbMJ/SyvS8SgkBEpU6urA9NsgGmyTGzgYIg=;
-        b=XZlBkOcmPfU++GHBPKBCzjgE8At1p5iEXdXZO8uQxHzg5cP0lgLNuxmYeeLAqd9g+Y
-         N112wp2gO2TAFGp8E9tzdwPdNoxAnwpd6e+ncVqFfZtitZ4CK3O8qOrTyq1MlM6y5a5d
-         iT7iHu/SXKpwbb0+b2rtDc2MyoMJC50DoCRl93lSiPGIXFOTAv0SiHdQKxWgebwhpmiX
-         nXXc+O5oGUtBpVDoRjcovUQrqJb9k5IhhszbHAp9we+FeogvdmgZH6be6JVD5Lznj7wF
-         6xFpPaRQ0mFllWrMDhfe9CUyEqodwLbj+GeAZFuYqoS8M+qzmSD/HXTH04/xrBlKmfiR
-         Z+2A==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=eCVHboKKWOnwvWAz8+xL2mDoaCizI1H5EPD58JQK6Rk=;
+        b=T6IptGXXEQkhtJrMUTTA3jtihdAaJ+tHkexXg51Vh/hdym9qz6otEVa7epFXYPt0pg
+         TrjvTI3txaGa9GjA5HnEn3PgSx0/w3UAkIIJUYDfxEKKyvIGJse0wuWVDPGE/NxA+XaU
+         4tbwKw4ROj0kINMZRN8exQ8EmkktRpO1NQjnUDI706IXO9y+g1pQ8d7GIooWXpg2x2gp
+         MVMaRT0Y2gfp8nP0eq9iaxnfZ2+30LpGFbN8Za5fJIScOv+NQhkZUJoGDlUxSs9NTc9l
+         s/hCwy9lNBJhlGy18L9093l+xRIByTaz/sKhqo8gGGmYfcHUJLntHrf746YMhxk01acH
+         szQA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=OvjXVU28jbMJ/SyvS8SgkBEpU6urA9NsgGmyTGzgYIg=;
-        b=twlu/XUgy12WHZmoAzgVhV6oItIyuCDZoqEk6cG6y4qeOF/vgoUX0nyQqMJD9NgbD8
-         yxbTKLTINXytxxTxLvjzgbMM1/pSyKAHgjmrQmL0aq/5IrRhRDPZCbwBv5at446wFUFy
-         4hXpLLCRJ0MsJAtTtV+QiN1UI9KWVZ8Pm34w/KTNrPFaiYGPn9K8UhvaKhA407+5PFiy
-         pZ3zzqep5YUMOXqYZa5eLnkaNGrAr1Inly30fCtIi5HDYJsKxAJ3i9jGux9IjfL78NG9
-         hy5mCW5rJGN0KX2mi+tR+uJaDdRbsDHaWtUQWduGI4OR8s4+gEcKOx2zZqUy3f8qKIIn
-         gexA==
-X-Gm-Message-State: AGi0PuYo5mzoxAIj3P2xQMq9IjC4f1H7CqROEEC6oa4Hus1q/3plra7k
-        4fdhJLmgCD7mlLPNTlVqaj60zw==
-X-Google-Smtp-Source: APiQypL3gn0kmqRxE640EjZxZt4w3qfgjHKCmqJqWewlFwuKoauiPY0DOfBYfLnnkXXMbHOssnHqLw==
-X-Received: by 2002:a05:600c:210c:: with SMTP id u12mr2543730wml.135.1587116091155;
-        Fri, 17 Apr 2020 02:34:51 -0700 (PDT)
-Received: from dell ([95.149.164.124])
-        by smtp.gmail.com with ESMTPSA id j10sm7338895wmi.18.2020.04.17.02.34.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Apr 2020 02:34:50 -0700 (PDT)
-Date:   Fri, 17 Apr 2020 10:35:51 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Dilip Kota <eswara.kota@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org, kishon@ti.com,
-        devicetree@vger.kernel.org, arnd@arndb.de, robh@kernel.org,
-        andriy.shevchenko@intel.com, cheol.yong.kim@intel.com,
-        chuanhua.lei@linux.intel.com, qi-ming.wu@intel.com,
-        yixin.zhu@intel.com
-Subject: Re: [RESEND PATCH v6 1/4] mfd: syscon: Add fwnode_to_regmap
-Message-ID: <20200417093551.GH2167633@dell>
-References: <cover.1585889042.git.eswara.kota@linux.intel.com>
- <9c58aeb1561f28f302921d54aee75942545c4971.1585889042.git.eswara.kota@linux.intel.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=eCVHboKKWOnwvWAz8+xL2mDoaCizI1H5EPD58JQK6Rk=;
+        b=RvFVL3KehAUP67jQaca55CZZn9gVJZc2WKrDh5DuiP322cz/wcGdBqsNPEM5/NDIg+
+         mQxN+hPS3M38trjqx4WQT+AB9ZJDqMeHidisGbbSTu3CrqAhGgnS1P58jshG9R0bUlWP
+         /FYEdVL6iuzGX2utyQbYQbuDwPwjhjm3gNFmFV/OfCMrihLNhUCD2lkd5H5vJf8WbRpJ
+         CUcTD4b/ykAAo0aImk0jHse4UoFRTipBesGuisHALUEmh1nTjDf2lAqa8a3Ra868KJD0
+         98KV5+FC81w496AzSjZn7mtmIov9Lwc1XLN5A+YYbaUTl5moj6CVstbU7LD9eNfSy/Fn
+         veaw==
+X-Gm-Message-State: AGi0PuamrHowKb9iqG9I0byD9s5tNkGgZYl+i549R8q6RZaWgOvGbk6i
+        o/LvfUNHFTa2CFWipjLvkEP7tKLKUpk=
+X-Google-Smtp-Source: APiQypJIfwLF/8KROwCfC+/ond22ImgZcm7Tb1JWQFyUHiQTIwCxofND0HxoXClayCvlxRkhoaJEuA==
+X-Received: by 2002:a5d:634d:: with SMTP id b13mr2843037wrw.353.1587116142734;
+        Fri, 17 Apr 2020 02:35:42 -0700 (PDT)
+Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
+        by smtp.googlemail.com with ESMTPSA id h188sm7519481wme.8.2020.04.17.02.35.41
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 17 Apr 2020 02:35:42 -0700 (PDT)
+Subject: Re: [PATCH v1] slimbus: core: Fix mismatch in of_node_get/put
+To:     Saravana Kannan <saravanak@google.com>
+Cc:     kernel-team@android.com, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org
+References: <20200326173457.29233-1-saravanak@google.com>
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Message-ID: <5b5ec594-9e17-8504-4711-0db8a6a53c22@linaro.org>
+Date:   Fri, 17 Apr 2020 10:35:41 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <9c58aeb1561f28f302921d54aee75942545c4971.1585889042.git.eswara.kota@linux.intel.com>
+In-Reply-To: <20200326173457.29233-1-saravanak@google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 06 Apr 2020, Dilip Kota wrote:
 
-> Traverse regmap handle entry from firmware node handle.
+
+On 26/03/2020 17:34, Saravana Kannan wrote:
+> Also, remove some unnecessary NULL checks. The functions in question
+> already do NULL checks.
 > 
-> Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
+> Signed-off-by: Saravana Kannan <saravanak@google.com>
+
+Applied Thanks,
+--srini
+
 > ---
-> Changes on v5:
->   No changes
+>   drivers/slimbus/core.c | 8 +++-----
+>   1 file changed, 3 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/slimbus/core.c b/drivers/slimbus/core.c
+> index 44228a5b246d..ae1e248a8fb8 100644
+> --- a/drivers/slimbus/core.c
+> +++ b/drivers/slimbus/core.c
+> @@ -162,11 +162,8 @@ static int slim_add_device(struct slim_controller *ctrl,
+>   	sbdev->ctrl = ctrl;
+>   	INIT_LIST_HEAD(&sbdev->stream_list);
+>   	spin_lock_init(&sbdev->stream_list_lock);
+> -
+> -	if (node) {
+> -		sbdev->dev.of_node = of_node_get(node);
+> -		sbdev->dev.fwnode = of_fwnode_handle(node);
+> -	}
+> +	sbdev->dev.of_node = of_node_get(node);
+> +	sbdev->dev.fwnode = of_fwnode_handle(node);
 >   
-> Changes on v5:
->   No changes
+>   	dev_set_name(&sbdev->dev, "%x:%x:%x:%x",
+>   				  sbdev->e_addr.manf_id,
+> @@ -285,6 +282,7 @@ EXPORT_SYMBOL_GPL(slim_register_controller);
+>   /* slim_remove_device: Remove the effect of slim_add_device() */
+>   static void slim_remove_device(struct slim_device *sbdev)
+>   {
+> +	of_node_put(sbdev->dev.of_node);
+>   	device_unregister(&sbdev->dev);
+>   }
+>   
 > 
-> Changes on v4:
->   No changes
-> 
->  drivers/mfd/syscon.c       | 8 ++++++++
->  include/linux/mfd/syscon.h | 6 ++++++
->  2 files changed, 14 insertions(+)
-> 
-> diff --git a/drivers/mfd/syscon.c b/drivers/mfd/syscon.c
-> index 3a97816d0cba..e085c50816b9 100644
-> --- a/drivers/mfd/syscon.c
-> +++ b/drivers/mfd/syscon.c
-> @@ -178,6 +178,14 @@ struct regmap *device_node_to_regmap(struct device_node *np)
->  }
->  EXPORT_SYMBOL_GPL(device_node_to_regmap);
->  
-> +struct regmap *fwnode_to_regmap(struct fwnode_handle *fwnode)
-> +{
-> +	struct device_node *np = to_of_node(fwnode);
-
-You are assuming that the fwnode was Device Tree pointer.
-
-The point of a fwnode is that it could be one of multiple types.
-
-What if it was a pointer to an ACPI property?
-
-> +	return device_node_get_regmap(np, false);
-> +}
-> +EXPORT_SYMBOL_GPL(fwnode_to_regmap);
-> +
->  struct regmap *syscon_node_to_regmap(struct device_node *np)
->  {
->  	if (!of_device_is_compatible(np, "syscon"))
-> diff --git a/include/linux/mfd/syscon.h b/include/linux/mfd/syscon.h
-> index 7f20e9b502a5..dacab0b4a091 100644
-> --- a/include/linux/mfd/syscon.h
-> +++ b/include/linux/mfd/syscon.h
-> @@ -18,6 +18,7 @@ struct device_node;
->  
->  #ifdef CONFIG_MFD_SYSCON
->  extern struct regmap *device_node_to_regmap(struct device_node *np);
-> +extern struct regmap *fwnode_to_regmap(struct fwnode_handle *fwnode);
->  extern struct regmap *syscon_node_to_regmap(struct device_node *np);
->  extern struct regmap *syscon_regmap_lookup_by_compatible(const char *s);
->  extern struct regmap *syscon_regmap_lookup_by_phandle(
-> @@ -34,6 +35,11 @@ static inline struct regmap *device_node_to_regmap(struct device_node *np)
->  	return ERR_PTR(-ENOTSUPP);
->  }
->  
-> +static inline struct regmap *fwnode_to_regmap(struct fwnode_handle *fwnode)
-> +{
-> +	return ERR_PTR(-ENOTSUPP);
-> +}
-> +
->  static inline struct regmap *syscon_node_to_regmap(struct device_node *np)
->  {
->  	return ERR_PTR(-ENOTSUPP);
-
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
