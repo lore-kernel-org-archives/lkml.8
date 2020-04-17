@@ -2,83 +2,109 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AE51C2D0EF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 16:14:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43A7DC352BE
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 16:15:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E7E9E2072D
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 16:14:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23D8E20857
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 16:15:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587140119;
+	bh=ECCfbaSoEBEJ6WvTW36xUahNJiM0dMQr/S7euQZ88dw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Gp8djto5tj7DWgivkaMxi/eG5BVu27mw4wuLFiLbQbp3G+lOjRMazU0+ixKi1AGK/
+	 gzyAwssP8/Br6o7AxtkRVKPEhGBGwP/9llMt2pxNiP4UhHhW00aydrsh3dayc3mjbt
+	 1jtb0+P56r0BVWyfnirFTmnFrzV0NOA2xOY2OdNQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729891AbgDQQOl (ORCPT
+        id S1729903AbgDQQPS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 12:14:41 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2058 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728105AbgDQQOk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 12:14:40 -0400
-Received: from lhreml724-chm.china.huawei.com (unknown [172.18.7.107])
-        by Forcepoint Email with ESMTP id 770A64AD4C372DC997F5;
-        Fri, 17 Apr 2020 17:14:38 +0100 (IST)
-Received: from [127.0.0.1] (10.210.172.89) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Fri, 17 Apr
- 2020 17:14:36 +0100
-Subject: Re: [RFC PATCH v2 05/13] perf vendor events arm64: Add Architected
- events smmuv3-pmcg.json
-To:     Ian Rogers <irogers@google.com>
-CC:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>, <will@kernel.org>,
-        Andi Kleen <ak@linux.intel.com>, <linuxarm@huawei.com>,
-        LKML <linux-kernel@vger.kernel.org>, <qiangqing.zhang@nxp.com>,
-        <robin.murphy@arm.com>, <zhangshaokun@hisilicon.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-References: <1587120084-18990-1-git-send-email-john.garry@huawei.com>
- <1587120084-18990-6-git-send-email-john.garry@huawei.com>
- <CAP-5=fX0yt73ASQm-XD0Nqj8yNn=UhiaBr9T808ot=66SjSg6w@mail.gmail.com>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <9f5cafde-5aed-b626-5397-2ebed357dd8b@huawei.com>
-Date:   Fri, 17 Apr 2020 17:14:05 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        Fri, 17 Apr 2020 12:15:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37772 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728105AbgDQQPR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Apr 2020 12:15:17 -0400
+Received: from localhost (unknown [104.132.1.66])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1DF672072D;
+        Fri, 17 Apr 2020 16:15:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587140117;
+        bh=ECCfbaSoEBEJ6WvTW36xUahNJiM0dMQr/S7euQZ88dw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=AKJgxUHT9WLUQmTCNTg45NPovpnw3Zz+WXdmnua4zbrQuym9O5pYzYViZrtEaOwIJ
+         lgaLTU2oB/a8gRFrCD2mLR4aor/SqW1qEQg+EN3aMGtDILQhgawWD7PWB/DW6O1cjO
+         t4DLlGphDdhHzG+O9w0awnT2jYVYQo9OEwThD2Ws=
+Date:   Fri, 17 Apr 2020 09:15:16 -0700
+From:   Jaegeuk Kim <jaegeuk@kernel.org>
+To:     Chao Yu <yuchao0@huawei.com>
+Cc:     Sahitya Tummala <stummala@codeaurora.org>,
+        linux-kernel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net
+Subject: Re: [f2fs-dev] [PATCH] f2fs: prevent meta updates while checkpoint
+ is in progress
+Message-ID: <20200417161516.GA17901@google.com>
+References: <20200331035419.GB79749@google.com>
+ <20200331090608.GZ20234@codeaurora.org>
+ <20200331184307.GA198665@google.com>
+ <20200401050801.GA20234@codeaurora.org>
+ <20200403171727.GB68460@google.com>
+ <20200403172750.GD68460@google.com>
+ <20200413174237.GC39092@google.com>
+ <20200414134403.GA69282@google.com>
+ <20200416214045.GB196168@google.com>
+ <e1b763bf-7f72-01eb-a368-9b70e0f46f55@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <CAP-5=fX0yt73ASQm-XD0Nqj8yNn=UhiaBr9T808ot=66SjSg6w@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.210.172.89]
-X-ClientProxiedBy: lhreml735-chm.china.huawei.com (10.201.108.86) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e1b763bf-7f72-01eb-a368-9b70e0f46f55@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 17/04/2020 16:13, Ian Rogers wrote:
->> +        "PublicDescription": "TLB miss caused by incomingtransaction or (ATS or non-ATS) translation request",
-> It looks like a space was missed in "incomingtransaction".
+Hi Sahitya,
+
+Could you please test this patch fully? I didn't test at all.
+
+Thanks,
+
+On 04/17, Chao Yu wrote:
+> On 2020/4/17 5:40, Jaegeuk Kim wrote:
+> > On 04/14, Jaegeuk Kim wrote:
+> >> On 04/13, Jaegeuk Kim wrote:
+> >>> On 04/03, Jaegeuk Kim wrote:
+> >>>> On 04/03, Jaegeuk Kim wrote:
+> >>>>> On 04/01, Sahitya Tummala wrote:
+> >>>>>> Hi Jaegeuk,
+> >>>>>>
+> >>>>>> Got it.
+> >>>>>> The diff below looks good to me.
+> >>>>>> Would you like me to test it and put a patch for this?
+> >>>>>
+> >>>>> Sahitya, Chao,
+> >>>>>
+> >>>>> Could you please take a look at this patch and test intensively?
+> >>>>>
+> >>>>> Thanks,
+> > 
+> > v5:
+> >  - add signal handler
+> > 
+> > Sahitya raised an issue:
+> > - prevent meta updates while checkpoint is in progress
+> > 
+> > allocate_segment_for_resize() can cause metapage updates if
+> > it requires to change the current node/data segments for resizing.
+> > Stop these meta updates when there is a checkpoint already
+> > in progress to prevent inconsistent CP data.
+> > 
+> > Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
+> > Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 > 
->> +        "EventCode": "0x02",
->> +        "EventName": "smmuv3_pmcg.TLB_MISS",
->> +        "BriefDescription": "TLB miss caused by incomingtransaction or (ATS or non-ATS) translation request"
-> And here.
-
-Right, a copy-and-paste formatting error.
-
-Cheers,
-john
-
+> Reviewed-by: Chao Yu <yuchao0@huawei.com>
 > 
 > Thanks,
-> Ian
-> 
->> +
-
