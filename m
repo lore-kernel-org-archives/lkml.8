@@ -2,85 +2,98 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81492C2D0EF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 12:57:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0E1FC352BE
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 12:58:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 68DF5221EA
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 12:57:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C83062137B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 12:58:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="vJyLydBb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729983AbgDQM5m (ORCPT
+        id S1730042AbgDQM6W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 08:57:42 -0400
-Received: from mga02.intel.com ([134.134.136.20]:12923 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729034AbgDQM5l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 08:57:41 -0400
-IronPort-SDR: tGdSO4vVEbF0y1nW8gN/P2ipQL2UxgIOCYry3R5Viugxa3tuecHlO8vjRrnif8YfberYklG1/h
- hpvGKb+fWGkQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2020 05:57:40 -0700
-IronPort-SDR: EeKEeugl3hBbRh6rXGlGndnxkb9iEZCITynNpkA4RJIr2ivOTWYtNwkF0W6Xr9r3ij5alHXlXP
- RN6zTDTJ+6/w==
-X-IronPort-AV: E=Sophos;i="5.72,395,1580803200"; 
-   d="scan'208";a="279582510"
-Received: from paasikivi.fi.intel.com ([10.237.72.42])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2020 05:57:38 -0700
-Received: by paasikivi.fi.intel.com (Postfix, from userid 1000)
-        id D7FA720701; Fri, 17 Apr 2020 15:57:35 +0300 (EEST)
-Date:   Fri, 17 Apr 2020 15:57:35 +0300
-From:   Sakari Ailus <sakari.ailus@linux.intel.com>
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org, jroedel@suse.de,
-        vbabka@suse.cz, urezki@gmail.com,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Olof Johansson <olof@lixom.net>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>
-Subject: Re: [PATCH] mm/vmalloc: Sanitize __get_vm_area() arguments
-Message-ID: <20200417125735.GN27762@paasikivi.fi.intel.com>
-References: <20200403163253.GU20730@hirez.programming.kicks-ass.net>
- <20200406130155.GB29306@infradead.org>
+        Fri, 17 Apr 2020 08:58:22 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:47174 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729828AbgDQM6V (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Apr 2020 08:58:21 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 03HCw5Bn013732;
+        Fri, 17 Apr 2020 07:58:05 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1587128285;
+        bh=ANKUGmxjcIwlV3rIaZN/J5tOLrnX04VnB9EtUZpb2tU=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=vJyLydBbBLghDDKzGmRc4DlmcG68d0v5qQX4ps6ix7y5Wj/WoI7eSRdDPlnDeVPSD
+         5dwvxqb/ScdadpKBLv9PbtSwTHDnzKQ0RnR+hA2V1WBCLz2H4k31lh9Z79DphA/PdB
+         SdvuHmSScJ3mDfRYb/dp6dSedpamZCqRY4UiyHxw=
+Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 03HCw5kN056755
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 17 Apr 2020 07:58:05 -0500
+Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 17
+ Apr 2020 07:58:05 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE106.ent.ti.com
+ (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Fri, 17 Apr 2020 07:58:05 -0500
+Received: from a0393678ub.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03HCvsD7031089;
+        Fri, 17 Apr 2020 07:58:02 -0500
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+To:     Tom Joseph <tjoseph@cadence.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>
+CC:     Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH v3 02/14] linux/kernel.h: Add PTR_ALIGN_DOWN macro
+Date:   Fri, 17 Apr 2020 18:27:41 +0530
+Message-ID: <20200417125753.13021-3-kishon@ti.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200417125753.13021-1-kishon@ti.com>
+References: <20200417125753.13021-1-kishon@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200406130155.GB29306@infradead.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Christoph,
+Add a macro for aligning down a pointer. This is useful to get an
+aligned register address when a device allows only word access and
+doesn't allow half word or byte access.
 
-On Mon, Apr 06, 2020 at 06:01:55AM -0700, Christoph Hellwig wrote:
-> On Fri, Apr 03, 2020 at 06:32:53PM +0200, Peter Zijlstra wrote:
-> > 
-> > __get_vm_area() is an exported symbol, make sure the callers stay in
-> > the expected memory range. When calling this function with memory
-> > ranges outside of the VMALLOC range *bad* things can happen.
-> > 
-> > (I noticed this when I managed to corrupt the kernel text by accident)
-> 
-> Maybe it is time to unexport it?  There are only two users:
-> 
->  - staging/media/ipu3 really should be using vmap.  And given that it
->    is a staging driver it really doesn't matter anyway if we break it.
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+---
+ include/linux/kernel.h | 1 +
+ 1 file changed, 1 insertion(+)
 
-It's not very polite to suggest breaking other people's drivers for such a
-small matter, staging or not. That'd be bound to break kernel compilation
-for a lot of people, if for nothing else.
-
-Anyway, thanks for cc'ing me. I agree with suggestion and I'll submit a
-patch to address it.
-
+diff --git a/include/linux/kernel.h b/include/linux/kernel.h
+index 9b7a8d74a9d6..c3b361b5be54 100644
+--- a/include/linux/kernel.h
++++ b/include/linux/kernel.h
+@@ -34,6 +34,7 @@
+ #define ALIGN_DOWN(x, a)	__ALIGN_KERNEL((x) - ((a) - 1), (a))
+ #define __ALIGN_MASK(x, mask)	__ALIGN_KERNEL_MASK((x), (mask))
+ #define PTR_ALIGN(p, a)		((typeof(p))ALIGN((unsigned long)(p), (a)))
++#define PTR_ALIGN_DOWN(p, a)	((typeof(p))ALIGN_DOWN((unsigned long)(p), (a)))
+ #define IS_ALIGNED(x, a)		(((x) & ((typeof(x))(a) - 1)) == 0)
+ 
+ /* generic data direction definitions */
 -- 
-Regards,
+2.17.1
 
-Sakari Ailus
