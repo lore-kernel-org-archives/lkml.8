@@ -5,60 +5,60 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01B68C2BB55
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 08:50:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66CE5C3815B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 08:50:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D086D221F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 08:50:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47D51221EB
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 08:50:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W5OxyGua"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LflP60nJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729944AbgDQIu1 (ORCPT
+        id S1729960AbgDQIu3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 04:50:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38882 "EHLO
+        Fri, 17 Apr 2020 04:50:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38900 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729748AbgDQIuV (ORCPT
+        by vger.kernel.org with ESMTP id S1729941AbgDQIu0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 04:50:21 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF631C061A0F;
-        Fri, 17 Apr 2020 01:50:20 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id k13so889797wrw.7;
-        Fri, 17 Apr 2020 01:50:20 -0700 (PDT)
+        Fri, 17 Apr 2020 04:50:26 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44E44C061A0F;
+        Fri, 17 Apr 2020 01:50:26 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id k13so890101wrw.7;
+        Fri, 17 Apr 2020 01:50:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=NCVZU/bSt76/hiidvSrjEJc/qNxlzUEMq/1bB2ttNxY=;
-        b=W5OxyGuanL+7DSyVsNAI8cIt5HT0/VgXRrpMmjaQI1BDXmK8Yxs0x7vOR1XUp3quYc
-         dzU6XZejFy5lC+HqWU6Ayq0VY2qjpzYddZdj4EKfHK/FScdaXBscgJ6cEzVkeOYkwck4
-         1poskfy9VL94QkQPps57vIYyuPdLRkWCbAuDiOvL46aRJdEuHD5+ILOdfyhcGxQnHsrs
-         qFkmPr1BtneHJaLZWAFF1BpG/FUYmIrNUeSghiZpeNsgw27deK342yxwrvg2ENc9ggvt
-         xWpiwsbQ14O/qadvHmRhdzu+V76V4gfW8UnFj4auj7RpHkeuUGMzPbeWUFq/j6XjXpDT
-         Nu/A==
+        bh=2W4UC3XoSBhMgKjDSt7PXbJ9u9A1KBNdB31+oU0yG+c=;
+        b=LflP60nJ155kVwRRRRmvYgrxV+r4zteD1QlseoDQyql6JWMWisDG33oJ75/X7LZmNK
+         EKVdX7wVS7mhtedNHvaEOPwRcEL1OjAvzo0KypfDAW8cRlj9me1YcmO0eXd336Ww/Ww1
+         hCV+LTcOj+kItuxhiDr3pfiCXCE4K+0jf8Qi8VeHsdiPOC40FMUxHFoycNWQeqhKssp9
+         BdUFV+FXmti4ypdc53XGfBftv4SCw+IrRQP7cxnNraY3dA5aSQpFMahltbnM2lhQ7K3T
+         DoUaqI6lCSqT01DksEcfYHCiMNsNBx4LmylInYlrTqKbTfx/LzdrU51mWDrhyf6yRyd1
+         iGRA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=NCVZU/bSt76/hiidvSrjEJc/qNxlzUEMq/1bB2ttNxY=;
-        b=FThjYW7yKVENIH7WG1y7LyCMCsk3e6ZwPY+4auqv9sNjnJQxQXnUrSF/C9GrBJ2lPy
-         MHdos4D+NAMSH+wVX1xyN/8Tdoy1OZ+Q5/d/NEyRP9Qj3r3WhLZyfXXvatR3qEWGN4Lu
-         WjYTqmni+pxwKSQ4m2f6+cyQ5A9dENDr4T9nzWaXqdENrrhs4T/LDPfSowvQEjrC8+ws
-         JkDoDpy6O0tEZnHn/k28Jm+zs7li2z6D2Lo3twn6I+Wg7/8GE761XgOkX55cSND4pUSI
-         bpb94FPAAVvmtbXN7sKEHGSFPA22Qd4UHI6TYCrBn1NwqIp8hfBF7XeJvqB+Hi77MZA1
-         89uA==
-X-Gm-Message-State: AGi0PuacyPwye3IQblDZfYCY2hFgjAR/JLqIlaCAL+7oyzNDJxLV1CoF
-        1EhsPoqWvKyKpRMYYlw4Q9E=
-X-Google-Smtp-Source: APiQypLNnUiUNRL2Gm0jcpPDvKlx5obVgmeRPznD72jGzYOq+Buea79ag2FNssV2gDbPWsWGvIdZVA==
-X-Received: by 2002:a5d:60ca:: with SMTP id x10mr2641819wrt.407.1587113419736;
-        Fri, 17 Apr 2020 01:50:19 -0700 (PDT)
+        bh=2W4UC3XoSBhMgKjDSt7PXbJ9u9A1KBNdB31+oU0yG+c=;
+        b=HlV+Tf+kEBa5b9zI3vd1MJKB3UnJyGkIqSqTZ/klXyBM3mrHVkSWD3tR1F6iyDZm2N
+         P827XvT6g11RZYpdyTZl9grKHguKQ81DWz60K8x/NGKchJQewbsCKnAupdyiFR5H+9zl
+         ZPRT7AVZQegG9tEXFIVequ8qWx8cDLX+5fSfQtS1d3jCHCC74PCFoJnFCr+faOPE8Gf4
+         arQt/fmwENtAuBXUaA1egVKYSP6uGEziSzl7cM2A3NbRO8xwYYlYOwA+DjjFKWaKwi5j
+         wc8mQyD/y69XxyLdRXrzqPXiJSXpjTxo2bUEG20wLa9Lzd4UevLP1hBn2H0HwQpLiSFT
+         njWA==
+X-Gm-Message-State: AGi0PuauC7IwDrWC2t5D0iPQbVWh4a5RkxOq+AZEP1C6GufcjxmKPWQB
+        yJcQoMe0jIngWxRzZ3SDX6s=
+X-Google-Smtp-Source: APiQypJGknih8CDnfhLewE2PcY8h2h0cn7bLJCX+zTf7JzNGL4mUDgoi5LVeRl+QwZJnzBh8nEJZOg==
+X-Received: by 2002:a5d:6646:: with SMTP id f6mr2680761wrw.318.1587113424987;
+        Fri, 17 Apr 2020 01:50:24 -0700 (PDT)
 Received: from localhost.localdomain (p5B3F7443.dip0.t-ipconnect.de. [91.63.116.67])
-        by smtp.gmail.com with ESMTPSA id l5sm6807527wmi.22.2020.04.17.01.50.18
+        by smtp.gmail.com with ESMTPSA id l5sm6807527wmi.22.2020.04.17.01.50.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Apr 2020 01:50:19 -0700 (PDT)
+        Fri, 17 Apr 2020 01:50:24 -0700 (PDT)
 From:   Saravanan Sekar <sravanhome@gmail.com>
 To:     lee.jones@linaro.org, andy.shevchenko@gmail.com,
         robh+dt@kernel.org, jic23@kernel.org, knaack.h@gmx.de,
@@ -66,9 +66,9 @@ To:     lee.jones@linaro.org, andy.shevchenko@gmail.com,
 Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-iio@vger.kernel.org, linux-pm@vger.kernel.org,
         Saravanan Sekar <sravanhome@gmail.com>
-Subject: [PATCH v10 1/6] dt-bindings: mfd: add document bindings for mp2629
-Date:   Fri, 17 Apr 2020 10:49:58 +0200
-Message-Id: <20200417085003.6124-2-sravanhome@gmail.com>
+Subject: [PATCH v10 5/6] power: supply: mp2629: Add impedance compensation config
+Date:   Fri, 17 Apr 2020 10:50:02 +0200
+Message-Id: <20200417085003.6124-6-sravanhome@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200417085003.6124-1-sravanhome@gmail.com>
 References: <20200417085003.6124-1-sravanhome@gmail.com>
@@ -77,82 +77,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add device tree binding information for mp2629 mfd driver.
+Allows the user to compensate the intrinsic resistance of the battery
+to accelerate the charging cycle.
 
 Signed-off-by: Saravanan Sekar <sravanhome@gmail.com>
 Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 ---
- .../devicetree/bindings/mfd/mps,mp2629.yaml   | 61 +++++++++++++++++++
- 1 file changed, 61 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mfd/mps,mp2629.yaml
+ Documentation/ABI/testing/sysfs-class-power-mp2629 | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+ create mode 100644 Documentation/ABI/testing/sysfs-class-power-mp2629
 
-diff --git a/Documentation/devicetree/bindings/mfd/mps,mp2629.yaml b/Documentation/devicetree/bindings/mfd/mps,mp2629.yaml
+diff --git a/Documentation/ABI/testing/sysfs-class-power-mp2629 b/Documentation/ABI/testing/sysfs-class-power-mp2629
 new file mode 100644
-index 000000000000..b25b29259d67
+index 000000000000..327a07e22805
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/mfd/mps,mp2629.yaml
-@@ -0,0 +1,61 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/mfd/mps,mp2629.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
++++ b/Documentation/ABI/testing/sysfs-class-power-mp2629
+@@ -0,0 +1,8 @@
++What:		/sys/class/power_supply/mp2629_battery/batt_impedance_compen
++Date:		April 2020
++KernelVersion:	5.7
++Description:
++		Represents a battery impedance compensation to accelerate charging.
 +
-+title: MP2629 Battery Charger PMIC from Monolithic Power System.
-+
-+maintainers:
-+  - Saravanan Sekar <sravanhome@gmail.com>
-+
-+description: |
-+  MP2629 is a PMIC providing battery charging and power supply for smartphones,
-+  wireless camera and portable devices. Chip is controlled over I2C.
-+
-+  The battery charge management device handles battery charger controller and
-+  ADC IIO device for battery, system voltage
-+
-+properties:
-+  compatible:
-+    const: mps,mp2629
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  interrupt-controller: true
-+
-+  "#interrupt-cells":
-+    const: 2
-+    description:
-+      The first cell is the IRQ number, the second cell is the trigger type.
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - interrupt-controller
-+  - "#interrupt-cells"
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+    #include <dt-bindings/input/linux-event-codes.h>
-+    i2c@7e205000 {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+        reg = <0x7e205000 0x200>;
-+
-+        pmic@4b {
-+            compatible = "mps,mp2629";
-+            reg = <0x4b>;
-+
-+            interrupt-controller;
-+            interrupt-parent = <&gpio2>;
-+            #interrupt-cells = <2>;
-+            interrupts = <3 IRQ_TYPE_LEVEL_HIGH>;
-+        };
-+    };
++                Access: Read, Write
++                Valid values: Represented in milli-ohms. Valid range is [0, 140].
 -- 
 2.17.1
 
