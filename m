@@ -2,142 +2,288 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C972C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 01:37:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDD94C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 01:37:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 248CD206B9
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 01:37:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AECD321D95
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 01:37:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JBKZyw0G"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="C/XFIH5d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728772AbgDQBhY (ORCPT
+        id S1728816AbgDQBhh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 21:37:24 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:34532 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728461AbgDQBhX (ORCPT
+        Thu, 16 Apr 2020 21:37:37 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:45096 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725800AbgDQBhh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 21:37:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587087442;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=RH8c9mlh1Nn23MD937ZQ+ys6TCD7ufyPWJobVezo3i4=;
-        b=JBKZyw0GbFuNXE2vfTa0rJoACp0Ec62P1yYmnvpb1P0Tp2E4OWMgIJ6Ypd7ibhLTyO6N8a
-        bpT92SRH3L0xqdtk4mq/en4b9m1vbRgp7Rfk7m4EqowH+4i84TG0UOUJF6sO0ADcHF2/SR
-        9ZUecEQyzTPnxBU0FkSe6i3i7gUtmh8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-183-pCZE9mC2NWCH7FJKXvCtGg-1; Thu, 16 Apr 2020 21:37:20 -0400
-X-MC-Unique: pCZE9mC2NWCH7FJKXvCtGg-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 561ED13F9;
-        Fri, 17 Apr 2020 01:37:19 +0000 (UTC)
-Received: from treble (ovpn-116-146.rdu2.redhat.com [10.10.116.146])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 403D07E7EF;
-        Fri, 17 Apr 2020 01:37:17 +0000 (UTC)
-Date:   Thu, 16 Apr 2020 20:37:15 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Miroslav Benes <mbenes@suse.cz>
-Cc:     live-patching@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jessica Yu <jeyu@kernel.org>, linux-s390@vger.kernel.org,
-        heiko.carstens@de.ibm.com
-Subject: Re: [PATCH 4/7] s390/module: Use s390_kernel_write() for relocations
-Message-ID: <20200417013715.kj6g4byvdy5uzgev@treble>
-References: <cover.1586881704.git.jpoimboe@redhat.com>
- <e7f2ad87cf83dcdaa7b69b4e37c11fa355bdfe78.1586881704.git.jpoimboe@redhat.com>
- <alpine.LSU.2.21.2004161047410.10475@pobox.suse.cz>
- <20200416120651.wqmoaa35jft4prox@treble>
- <20200416131635.scbpuued6l4xb6qq@treble>
+        Thu, 16 Apr 2020 21:37:37 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03H1SCcn036015;
+        Fri, 17 Apr 2020 01:36:29 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=a6G0OEaJwRfYQ/vo87FSt169XCe+YA0xBy9A9/TJQNI=;
+ b=C/XFIH5dylBwMo99SoC/EjpugtIuSqw1odMVXiQ8238Ij8EfF4ZhRKmJSgsSOZwnfyGM
+ jyNjXPq9HE9UM2mWNnFvjSRoN6gNahgX8TEAvVuw/y9sTkeBQ4Ty74lmfvdLcd0KlEBd
+ Gu+xlSD+Noza9mDa6j2iExzzCmBe1ZDT9Z8gb/b0Kt+YsYDWPW45pHi2XN+uiu+89ghh
+ oPYxPwPqr85iuwOkWVt7T11Ue/ZkkTC+DCh+XN/1mRZS5TVeNf5EhTg2ELZ0LYEHCFch
+ L1NlJCL2ql4SAKY/wbcdecKraLt45owpCIp9p5q1H+COzzSnxUipJqcxEnuVG4TXHdEo Zg== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2120.oracle.com with ESMTP id 30dn95vmbs-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 17 Apr 2020 01:36:29 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03H1W92r037660;
+        Fri, 17 Apr 2020 01:34:29 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3020.oracle.com with ESMTP id 30dn9hbp57-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 17 Apr 2020 01:34:29 +0000
+Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 03H1YOL5026960;
+        Fri, 17 Apr 2020 01:34:24 GMT
+Received: from localhost.localdomain (/10.159.142.247)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 16 Apr 2020 18:34:23 -0700
+Subject: Re: [PATCH] KVM: nVMX: Remove non-functional "support" for CR3 target
+ values
+To:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200416000739.9012-1-sean.j.christopherson@intel.com>
+From:   Krish Sadhukhan <krish.sadhukhan@oracle.com>
+Message-ID: <2490337e-dc45-2363-3bab-fb9572dc9403@oracle.com>
+Date:   Thu, 16 Apr 2020 18:34:13 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200416131635.scbpuued6l4xb6qq@treble>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+In-Reply-To: <20200416000739.9012-1-sean.j.christopherson@intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9593 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 mlxscore=0 adultscore=0
+ spamscore=0 phishscore=0 bulkscore=0 suspectscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004170010
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9593 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 clxscore=1015
+ malwarescore=0 bulkscore=0 priorityscore=1501 lowpriorityscore=0
+ mlxscore=0 phishscore=0 spamscore=0 impostorscore=0 suspectscore=0
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004170009
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 16, 2020 at 08:16:35AM -0500, Josh Poimboeuf wrote:
-> On Thu, Apr 16, 2020 at 07:06:51AM -0500, Josh Poimboeuf wrote:
-> > On Thu, Apr 16, 2020 at 10:56:02AM +0200, Miroslav Benes wrote:
-> > > > +	bool early = me->state == MODULE_STATE_UNFORMED;
-> > > > +
-> > > > +	return __apply_relocate_add(sechdrs, strtab, symindex, relsec, me,
-> > > > +				    early ? memcpy : s390_kernel_write);
-> > > 
-> > > The compiler warns about
-> > > 
-> > > arch/s390/kernel/module.c: In function 'apply_relocate_add':
-> > > arch/s390/kernel/module.c:453:24: warning: pointer type mismatch in conditional expression
-> > >          early ? memcpy : s390_kernel_write);
-> > 
-> > Thanks, I'll get all that cleaned up.
-> > 
-> > I could have sworn I got a SUCCESS message from the kbuild bot.  Does it
-> > ignore warnings nowadays?
-> 
-> Here's a fix on top of the original patch.
-> 
-> I changed s390_kernel_write() to return "void *" to match memcpy()
-> (probably a separate patch).
-> 
-> I also grabbed the text_mutex for the !early case in
-> apply_relocate_add() -- will do something similar for x86.
-> 
-> Will try to test this on a 390 box.
 
-...and that borked the box pretty nicely.  Oops, big endian!  Need
-something like this on top.
-
-Sorry about not testing the patch in the first place, it looked trivial
-and somehow I was thinking Peter writes exclusively bug-free code.
-
-diff --git a/arch/s390/kernel/module.c b/arch/s390/kernel/module.c
-index ee0904a23e24..513e640430ae 100644
---- a/arch/s390/kernel/module.c
-+++ b/arch/s390/kernel/module.c
-@@ -198,21 +198,25 @@ static int apply_rela_bits(Elf_Addr loc, Elf_Addr val,
- 	}
- 
- 	if (bits == 8) {
--		write(dest, &val, 1);
-+		unsigned char tmp = val;
-+		write(dest, &tmp, 1);
- 	} else if (bits == 12) {
- 		unsigned short tmp = (val & 0xfff) |
- 			(*(unsigned short *) loc & 0xf000);
- 		write(dest, &tmp, 2);
- 	} else if (bits == 16) {
--		write(dest, &val, 2);
-+		unsigned short tmp = val;
-+		write(dest, &tmp, 2);
- 	} else if (bits == 20) {
- 		unsigned int tmp = (val & 0xfff) << 16 |
- 			(val & 0xff000) >> 4 | (*(unsigned int *) loc & 0xf00000ff);
- 		write(dest, &tmp, 4);
- 	} else if (bits == 32) {
--		write(dest, &val, 4);
-+		unsigned int tmp = val;
-+		write(dest, &tmp, 4);
- 	} else if (bits == 64) {
--		write(dest, &val, 8);
-+		unsigned long tmp = val;
-+		write(dest, &tmp, 8);
- 	}
- 	return 0;
- }
-
--- 
-Josh
-
+On 4/15/20 5:07 PM, Sean Christopherson wrote:
+> Remove all references to cr3_target_value[0-3] and replace the fields
+> in vmcs12 with "dead_space" to preserve the vmcs12 layout.  KVM doesn't
+> support emulating CR3-target values, despite a variety of code that
+> implies otherwise, as KVM unconditionally reports '0' for the number of
+> supported CR3-target values.
+>
+> This technically fixes a bug where KVM would incorrectly allow VMREAD
+> and VMWRITE to nonexistent fields, i.e. cr3_target_value[0-3].  Per
+> Intel's SDM, the number of supported CR3-target values reported in
+> VMX_MISC also enumerates the existence of the associated VMCS fields:
+>
+>    If a future implementation supports more than 4 CR3-target values, they
+>    will be encoded consecutively following the 4 encodings given here.
+>
+> Alternatively, the "bug" could be fixed by actually advertisting support
+> for 4 CR3-target values, but that'd likely just enable kvm-unit-tests
+> given that no one has complained about lack of support for going on ten
+> years, e.g. KVM, Xen and HyperV don't use CR3-target values.
+>
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> ---
+>
+> Krish's patch to allow L1 to disable unrestricted guest got me poking
+> around the related code.  That led me into nested_vmx_exit_handled_cr()
+> and handle_cr().  handle_cr() does WARN_ON_ONCE(enable_unrestricted_guest)
+> in the MOV-to-CR3 path, as KVM should never enable CR3-exiting for L1.
+> But the CR3-target matching nested_vmx_exit_handled_cr() meant that it
+> would be possible to trigger the warn by enabling CR3-exiting in L1 with
+> a valid list of CR3-targets.  I got so far as to write a patch and a unit
+> test, and then I checked MSR_IA32_VMX_MISC under KVM...
+>
+> AFAICT, properly emulating CR3-targets would be a trivial patch.  But, I
+> don't think there would be any meaningful users, e.g. Xen is the one
+> hypervisor (that I am aware of) that runs with EPT disabled for certain
+> use cases, and even Xen doesn't bother with CR3-targets.  On the other
+> hand, the odds of introducing a bug of one form or another seem high.
+>
+> Amusing side note, Xen's only reference to vmcs.CR3_TARGET_VALUE* is in
+> its vmcs_dump_vcpu(), which explains why KVM's dump_vmcs() bothers to spit
+> out the unused CR3-target fields :-).
+>
+>   Documentation/virt/kvm/nested-vmx.rst |  5 +----
+>   arch/x86/kvm/vmx/evmcs.c              |  8 --------
+>   arch/x86/kvm/vmx/nested.c             | 17 -----------------
+>   arch/x86/kvm/vmx/vmcs12.c             |  4 ----
+>   arch/x86/kvm/vmx/vmcs12.h             | 10 ++--------
+>   arch/x86/kvm/vmx/vmx.c                |  9 ---------
+>   6 files changed, 3 insertions(+), 50 deletions(-)
+>
+> diff --git a/Documentation/virt/kvm/nested-vmx.rst b/Documentation/virt/kvm/nested-vmx.rst
+> index 592b0ab6970b..89851cbb7df9 100644
+> --- a/Documentation/virt/kvm/nested-vmx.rst
+> +++ b/Documentation/virt/kvm/nested-vmx.rst
+> @@ -116,10 +116,7 @@ struct shadow_vmcs is ever changed.
+>   		natural_width cr4_guest_host_mask;
+>   		natural_width cr0_read_shadow;
+>   		natural_width cr4_read_shadow;
+> -		natural_width cr3_target_value0;
+> -		natural_width cr3_target_value1;
+> -		natural_width cr3_target_value2;
+> -		natural_width cr3_target_value3;
+> +		natural_width dead_space[4]; /* Last remnants of cr3_target_value[0-3]. */
+>   		natural_width exit_qualification;
+>   		natural_width guest_linear_address;
+>   		natural_width guest_cr0;
+> diff --git a/arch/x86/kvm/vmx/evmcs.c b/arch/x86/kvm/vmx/evmcs.c
+> index 303813423c3e..73f3e07c1852 100644
+> --- a/arch/x86/kvm/vmx/evmcs.c
+> +++ b/arch/x86/kvm/vmx/evmcs.c
+> @@ -160,14 +160,6 @@ const struct evmcs_field vmcs_field_to_evmcs_1[] = {
+>   		     HV_VMX_ENLIGHTENED_CLEAN_FIELD_ALL),
+>   	EVMCS1_FIELD(VM_ENTRY_MSR_LOAD_ADDR, vm_entry_msr_load_addr,
+>   		     HV_VMX_ENLIGHTENED_CLEAN_FIELD_ALL),
+> -	EVMCS1_FIELD(CR3_TARGET_VALUE0, cr3_target_value0,
+> -		     HV_VMX_ENLIGHTENED_CLEAN_FIELD_ALL),
+> -	EVMCS1_FIELD(CR3_TARGET_VALUE1, cr3_target_value1,
+> -		     HV_VMX_ENLIGHTENED_CLEAN_FIELD_ALL),
+> -	EVMCS1_FIELD(CR3_TARGET_VALUE2, cr3_target_value2,
+> -		     HV_VMX_ENLIGHTENED_CLEAN_FIELD_ALL),
+> -	EVMCS1_FIELD(CR3_TARGET_VALUE3, cr3_target_value3,
+> -		     HV_VMX_ENLIGHTENED_CLEAN_FIELD_ALL),
+>   
+>   	/* 32 bit rw */
+>   	EVMCS1_FIELD(TPR_THRESHOLD, tpr_threshold,
+> diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
+> index aca57d8da400..aeb56b515c5c 100644
+> --- a/arch/x86/kvm/vmx/nested.c
+> +++ b/arch/x86/kvm/vmx/nested.c
+> @@ -1785,10 +1785,6 @@ static int copy_enlightened_to_vmcs12(struct vcpu_vmx *vmx)
+>   	 * vmcs12->vm_exit_msr_store_addr = evmcs->vm_exit_msr_store_addr;
+>   	 * vmcs12->vm_exit_msr_load_addr = evmcs->vm_exit_msr_load_addr;
+>   	 * vmcs12->vm_entry_msr_load_addr = evmcs->vm_entry_msr_load_addr;
+> -	 * vmcs12->cr3_target_value0 = evmcs->cr3_target_value0;
+> -	 * vmcs12->cr3_target_value1 = evmcs->cr3_target_value1;
+> -	 * vmcs12->cr3_target_value2 = evmcs->cr3_target_value2;
+> -	 * vmcs12->cr3_target_value3 = evmcs->cr3_target_value3;
+>   	 * vmcs12->page_fault_error_code_mask =
+>   	 *		evmcs->page_fault_error_code_mask;
+>   	 * vmcs12->page_fault_error_code_match =
+> @@ -1862,10 +1858,6 @@ static int copy_vmcs12_to_enlightened(struct vcpu_vmx *vmx)
+>   	 * evmcs->vm_exit_msr_store_addr = vmcs12->vm_exit_msr_store_addr;
+>   	 * evmcs->vm_exit_msr_load_addr = vmcs12->vm_exit_msr_load_addr;
+>   	 * evmcs->vm_entry_msr_load_addr = vmcs12->vm_entry_msr_load_addr;
+> -	 * evmcs->cr3_target_value0 = vmcs12->cr3_target_value0;
+> -	 * evmcs->cr3_target_value1 = vmcs12->cr3_target_value1;
+> -	 * evmcs->cr3_target_value2 = vmcs12->cr3_target_value2;
+> -	 * evmcs->cr3_target_value3 = vmcs12->cr3_target_value3;
+>   	 * evmcs->tpr_threshold = vmcs12->tpr_threshold;
+>   	 * evmcs->virtual_processor_id = vmcs12->virtual_processor_id;
+>   	 * evmcs->exception_bitmap = vmcs12->exception_bitmap;
+> @@ -5540,15 +5532,6 @@ static bool nested_vmx_exit_handled_cr(struct kvm_vcpu *vcpu,
+>   				return true;
+>   			break;
+>   		case 3:
+> -			if ((vmcs12->cr3_target_count >= 1 &&
+> -					vmcs12->cr3_target_value0 == val) ||
+> -				(vmcs12->cr3_target_count >= 2 &&
+> -					vmcs12->cr3_target_value1 == val) ||
+> -				(vmcs12->cr3_target_count >= 3 &&
+> -					vmcs12->cr3_target_value2 == val) ||
+> -				(vmcs12->cr3_target_count >= 4 &&
+> -					vmcs12->cr3_target_value3 == val))
+> -				return false;
+>   			if (nested_cpu_has(vmcs12, CPU_BASED_CR3_LOAD_EXITING))
+>   				return true;
+>   			break;
+> diff --git a/arch/x86/kvm/vmx/vmcs12.c b/arch/x86/kvm/vmx/vmcs12.c
+> index 53dfb401316d..c8e51c004f78 100644
+> --- a/arch/x86/kvm/vmx/vmcs12.c
+> +++ b/arch/x86/kvm/vmx/vmcs12.c
+> @@ -115,10 +115,6 @@ const unsigned short vmcs_field_to_offset_table[] = {
+>   	FIELD(CR4_GUEST_HOST_MASK, cr4_guest_host_mask),
+>   	FIELD(CR0_READ_SHADOW, cr0_read_shadow),
+>   	FIELD(CR4_READ_SHADOW, cr4_read_shadow),
+> -	FIELD(CR3_TARGET_VALUE0, cr3_target_value0),
+> -	FIELD(CR3_TARGET_VALUE1, cr3_target_value1),
+> -	FIELD(CR3_TARGET_VALUE2, cr3_target_value2),
+> -	FIELD(CR3_TARGET_VALUE3, cr3_target_value3),
+>   	FIELD(EXIT_QUALIFICATION, exit_qualification),
+>   	FIELD(GUEST_LINEAR_ADDRESS, guest_linear_address),
+>   	FIELD(GUEST_CR0, guest_cr0),
+> diff --git a/arch/x86/kvm/vmx/vmcs12.h b/arch/x86/kvm/vmx/vmcs12.h
+> index d0c6df373f67..80232daf00ff 100644
+> --- a/arch/x86/kvm/vmx/vmcs12.h
+> +++ b/arch/x86/kvm/vmx/vmcs12.h
+> @@ -80,10 +80,7 @@ struct __packed vmcs12 {
+>   	natural_width cr4_guest_host_mask;
+>   	natural_width cr0_read_shadow;
+>   	natural_width cr4_read_shadow;
+> -	natural_width cr3_target_value0;
+> -	natural_width cr3_target_value1;
+> -	natural_width cr3_target_value2;
+> -	natural_width cr3_target_value3;
+> +	natural_width dead_space[4]; /* Last remnants of cr3_target_value[0-3]. */
+>   	natural_width exit_qualification;
+>   	natural_width guest_linear_address;
+>   	natural_width guest_cr0;
+> @@ -263,10 +260,7 @@ static inline void vmx_check_vmcs12_offsets(void)
+>   	CHECK_OFFSET(cr4_guest_host_mask, 352);
+>   	CHECK_OFFSET(cr0_read_shadow, 360);
+>   	CHECK_OFFSET(cr4_read_shadow, 368);
+> -	CHECK_OFFSET(cr3_target_value0, 376);
+> -	CHECK_OFFSET(cr3_target_value1, 384);
+> -	CHECK_OFFSET(cr3_target_value2, 392);
+> -	CHECK_OFFSET(cr3_target_value3, 400);
+> +	CHECK_OFFSET(dead_space, 376);
+>   	CHECK_OFFSET(exit_qualification, 408);
+>   	CHECK_OFFSET(guest_linear_address, 416);
+>   	CHECK_OFFSET(guest_cr0, 424);
+> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> index aa1b8cf7c915..1ba7722445cc 100644
+> --- a/arch/x86/kvm/vmx/vmx.c
+> +++ b/arch/x86/kvm/vmx/vmx.c
+> @@ -5711,7 +5711,6 @@ void dump_vmcs(void)
+>   	u32 cpu_based_exec_ctrl, pin_based_exec_ctrl, secondary_exec_control;
+>   	unsigned long cr4;
+>   	u64 efer;
+> -	int i, n;
+>   
+>   	if (!dump_invalid_vmcs) {
+>   		pr_warn_ratelimited("set kvm_intel.dump_invalid_vmcs=1 to dump internal KVM state.\n");
+> @@ -5848,14 +5847,6 @@ void dump_vmcs(void)
+>   		pr_err("PostedIntrVec = 0x%02x\n", vmcs_read16(POSTED_INTR_NV));
+>   	if ((secondary_exec_control & SECONDARY_EXEC_ENABLE_EPT))
+>   		pr_err("EPT pointer = 0x%016llx\n", vmcs_read64(EPT_POINTER));
+> -	n = vmcs_read32(CR3_TARGET_COUNT);
+> -	for (i = 0; i + 1 < n; i += 4)
+> -		pr_err("CR3 target%u=%016lx target%u=%016lx\n",
+> -		       i, vmcs_readl(CR3_TARGET_VALUE0 + i * 2),
+> -		       i + 1, vmcs_readl(CR3_TARGET_VALUE0 + i * 2 + 2));
+> -	if (i < n)
+> -		pr_err("CR3 target%u=%016lx\n",
+> -		       i, vmcs_readl(CR3_TARGET_VALUE0 + i * 2));
+>   	if (secondary_exec_control & SECONDARY_EXEC_PAUSE_LOOP_EXITING)
+>   		pr_err("PLE Gap=%08x Window=%08x\n",
+>   		       vmcs_read32(PLE_GAP), vmcs_read32(PLE_WINDOW));
+Reviewed-by: Krish Sadhukhan <krish.sadhukhan@oracle.com>
