@@ -2,192 +2,125 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBCD6C38A29
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 20:59:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E43B8C38A2B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 21:04:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A6314221E9
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 20:59:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k9YWGoBe"
+	by mail.kernel.org (Postfix) with ESMTP id B95EC20780
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 21:04:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587157440;
+	bh=DhWNVWOqZx1xUnVY8JrrFO5mlaVF1QdWfVeryqtw7YA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=tQ0r7ncmyCw7DXJIx+4VW0i5PGysX7BNWW3DRAnDIP6BcaiiKzpbzZWPVgV5STOX9
+	 LXXjjzvdAhqe+0a3N3RN+7iu/xLLiWKqX0MPykODItIQRyrSzBeZELAp50ZKkq1S7/
+	 /7gonJl3yweVzlFz1EPoD2BqIgHPji4uAbavXKK4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726701AbgDQU7Q (ORCPT
+        id S1726563AbgDQVD7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 16:59:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39356 "EHLO
+        Fri, 17 Apr 2020 17:03:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40088 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726093AbgDQU7P (ORCPT
+        with ESMTP id S1726093AbgDQVD7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 16:59:15 -0400
-Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1CD74C061A0C;
-        Fri, 17 Apr 2020 13:59:15 -0700 (PDT)
-Received: by mail-io1-xd41.google.com with SMTP id n10so3876885iom.3;
-        Fri, 17 Apr 2020 13:59:15 -0700 (PDT)
+        Fri, 17 Apr 2020 17:03:59 -0400
+Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5315CC061A0C
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 14:03:59 -0700 (PDT)
+Received: by mail-qt1-x844.google.com with SMTP id l60so3194204qtd.8
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 14:03:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=nSsX3bbUJ1nOO1RD+htfrcSV+1mM35MncUVMYikE8Vc=;
-        b=k9YWGoBeLv05KhqXY0SeQ7omYOQrJj2bvP2qZEQOtnixswHfEfNEXQ7b+DcZ7YxUJ7
-         h6HBT1MgmPfa4nfblCNTuG/PsHDX15vs5OsRlcVxwFvRDtoGtFaLe3vTbWwGLmAy53OC
-         vxzgilJp2U+7RJWV4AArATG971RPKoe9VA1nGNrjYOr3AdqBhEiOw+YPeYzbRDCYYRjW
-         FDWOpmXGyEEHl3KyMeQYUMBykP9AYulp00tqlcnPDCZZQi2QVQn5V6wNw+rISNRBNXkz
-         Hyv42sLSHDU8mEByGqgenikkLGB+GTbB1seyUhXl/XsX9Z0za8wxaxHk+3n7O1N4d8VK
-         xs+Q==
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=rayXkPMTvyEUYklaCAtMjFG9Chmi5MuVc5AOhvk8N7Q=;
+        b=YPNeihe8y1OAZFazdpXRjIQpI3r+nJVGEdfGAbNf5sYUf0qUhr8nj2WB/cVcf2K7WO
+         PgLDX2OHZG2G7hGYobOwJX8Q4Yg1dkOOaba8wIMc9vt+OQsPwFtiHBnb1hUyjGqX4LAe
+         ++wecYiw1HIsF+Avn+rrzd1SxpNqmZbVtGjGQmXbtl5jX2QIGIs5mLCs5g4ZzThIJiVc
+         1c6e5h2qpziyXZt5NqQdn8LlJfBNtHl1n843IUMSiEDrD3BY/tj7gOkhAnMl/cv+1SuW
+         cZc3gfv8k5daaugxxpOZS1I0iOI9iYqUyKEtbvZkyzlx/WTz26IOiWdb/OZvYK6GwOMD
+         EkxA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=nSsX3bbUJ1nOO1RD+htfrcSV+1mM35MncUVMYikE8Vc=;
-        b=QHBo5YDpszKvsyaZIMFenicBU2NCw060kLZkJagck0a5p1icpQrGKAWPgUMdDBLBN+
-         mfX/ogLtAsgqb8k1b+RM3WcL9dX0boLFpTXPX48CmtrRZhtPxLHQSq2fhszcoSKYxCS5
-         WvFsB5iN/Su/siPw6rEZnEiVxCKzbO/+VspGG5ltYl1KWEKlBlOS22eiFdDv5dP/s3ev
-         xudhTop7S6TdL2lTBoXa53WZzEOSCsh8g5We2/fgUCykQ7+nalaFkGyk0Vx24OAQBh0/
-         dshXFtsONJ7YrPqlvp77XKOQaZ1P8xVFGxpyLayoYVc+H2ODjy55WgeWIiswa0BeY1NX
-         ZJfw==
-X-Gm-Message-State: AGi0PuaH4uBPDeij/m2KsC5ux+sG5L0D/4/2yKzYB+gGfd+Y8D+WLd/V
-        psm/A+mjgqxwWwdGMzkbnLg/tKQm1kpqv4vRz9E=
-X-Google-Smtp-Source: APiQypKVOiN33pHXdR9HAj04IpYkBWToy5mE+4OFR3pMkFY7V3SzV03S4nJSgYdzFUxqSqaIapQOTUJmFBcnXYMLRe4=
-X-Received: by 2002:a02:c77b:: with SMTP id k27mr5133124jao.139.1587157154423;
- Fri, 17 Apr 2020 13:59:14 -0700 (PDT)
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=rayXkPMTvyEUYklaCAtMjFG9Chmi5MuVc5AOhvk8N7Q=;
+        b=aN+FcAhEGiwStXamyAzDaQeSoqaQiq6BoHSqa1UcDOGHKdda0JKTbedTj/POS78qeh
+         sCp2eD5Sha5X3b5ZevV5C96V91g4ktprjg/OIECVFnqaveaTuOj+72dFqiIwLjJlgGcp
+         dnSPKME9k5FwJJYapx10uei7Bm8ub96uAGZ3xyDthMtP1ywFWV+qxidRwV/YYDEaIO5+
+         uP2WnZQQPBwDS5qt8Pnop5LFQtpJ9lenRy5CXPMnheUx/Mr5Or2LN3m8LNrlnTDUCIRw
+         kvxq5cW9eZgtHHKW+88EhscxEdBaSYyTLRHWzyfRj29p6aIEQmKLSuXbcCgxCdHKdZr1
+         fJog==
+X-Gm-Message-State: AGi0PuaOW7OwaQiMv+PdSkg2bwhCBMJHREBoexOimLBqoIDHD2TPFhPK
+        +NuJbFKnMhUB2KCbzJ79TBPUKbk8pqw=
+X-Google-Smtp-Source: APiQypKIVQ8hdaQ1vCuE867BQCUCmtBXe+Xpywn6R7+5hJxsZTFQRclqRPdZKOoS8F649kM4cVnHXg==
+X-Received: by 2002:ac8:5645:: with SMTP id 5mr5021838qtt.151.1587157438243;
+        Fri, 17 Apr 2020 14:03:58 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:480::c4b0])
+        by smtp.gmail.com with ESMTPSA id l24sm9684293qtp.8.2020.04.17.14.03.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 17 Apr 2020 14:03:57 -0700 (PDT)
+Date:   Fri, 17 Apr 2020 17:03:56 -0400
+From:   Tejun Heo <tj@kernel.org>
+To:     Lyude Paul <lyude@redhat.com>
+Cc:     dri-devel@lists.freedesktop.org, Daniel Vetter <daniel@ffwll.ch>,
+        Ville =?iso-8859-1?Q?Syrj=E4l=E4?= 
+        <ville.syrjala@linux.intel.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org
+Subject: Re: [Poke: Tejun] Re: [RFC v3 03/11] drm/vblank: Add vblank works
+Message-ID: <20200417210356.GD43469@mtj.thefacebook.com>
+References: <20200417194145.36350-1-lyude@redhat.com>
+ <20200417194145.36350-4-lyude@redhat.com>
+ <ef9da9d93022822fe4bec7e906540fcc9852ce59.camel@redhat.com>
 MIME-Version: 1.0
-References: <20200417202859.35427-1-contact@artur-rojek.eu> <20200417202859.35427-3-contact@artur-rojek.eu>
-In-Reply-To: <20200417202859.35427-3-contact@artur-rojek.eu>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 17 Apr 2020 23:59:03 +0300
-Message-ID: <CAHp75Vcwnu8tw92nMYc_5-x_iX+FY8_OhtaJkSYNehmNUDkHGQ@mail.gmail.com>
-Subject: Re: [RESEND PATCH v5 3/5] IIO: Ingenic JZ47xx: Add touchscreen mode.
-To:     Artur Rojek <contact@artur-rojek.eu>
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Heiko Stuebner <heiko@sntech.de>,
-        linux-input <linux-input@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ef9da9d93022822fe4bec7e906540fcc9852ce59.camel@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 17, 2020 at 11:21 PM Artur Rojek <contact@artur-rojek.eu> wrote:
->
-> The SADC component in JZ47xx SoCs provides support for touchscreen
-> operations (pen position and pen down pressure) in single-ended and
-> differential modes.
->
-> Of the known hardware to use this controller, GCW Zero and Anbernic RG-350
-> utilize the touchscreen mode by having their joystick(s) attached to the
-> X/Y positive/negative input pins.
-> GCW Zero comes with a single joystick and is sufficiently handled with the
-> currently implemented single-ended mode. Support for boards with two
-> joysticks, where one is hooked up to Xn/Yn and the other to Xp/Yp channels
-> will need to be provided in the future.
->
-> The touchscreen component of SADC takes a significant time to stabilize
-> after first receiving the clock and a delay of 50ms has been empirically
-> proven to be a safe value before data sampling can begin.
->
-> All the boards which probe this driver have the interrupt provided from
-> devicetree, with no need to handle a case where the irq was not provided.
+Hello,
 
-Device Tree
-IRQ
-
+On Fri, Apr 17, 2020 at 04:16:28PM -0400, Lyude Paul wrote:
+> Hey Tejun! So I ended up rewriting the drm_vblank_work stuff so that it used
+> kthread_worker. Things seem to work alright now. But while we're doing just
+> fine with vblank workers on nouveau, we're still having trouble meeting the
+> time constraints needed for using vblank works for i915's needs. There still
+> seems to be a considerable latency between when the irq handler for the vblank
+> interrupts fires, and when the actual drm_vblank_work we scheduled starts:
 ...
+> Tejun, do you have any idea if we might be able to further reduce the latency
+> from the scheduler here? I believe we're already using pm_qos to at least
+> reduce the latency between when the vblank interrupt fires and the interrupt
+> handler starts, but that still isn't enough to fix the other latency issues
+> apparently. We're also already setting the priority of kthread_worker->task to
+> RT_FIFO as well.
 
-> +               .scan_type = {
-> +                       .sign = 'u',
-> +                       .realbits = 12,
+I don't think the kernel can do much better than what you're seeing. I don't
+know the time scale that you need - is it some tens of microseconds range? I'm
+definitely not an expert on the subject but on generic kernels I don't think
+you can achieve anything sub millisec with any kind of reliability.
 
-> +                       .storagebits = 16
+If the timing is that tight and it's not a hot path, the right solution may be
+polling for it rather than yielding the cpu and hoping to get scheduled in
+time.
 
-It's slightly better to leave comma in such cases.
+> Also, of course, let me know if you're not happy with the
+> __kthread_queue_work() changes/kthread_worker usage in drm_vblank_work as well
 
-> +               },
+Just glanced over it and I still wonder whether it needs to be that tightly
+integrated, but we can look into that once we settle on whether this is the
+right direction.
 
-> +               .scan_type = {
-> +                       .sign = 'u',
-> +                       .realbits = 12,
-
-> +                       .storagebits = 16
-
-Ditto.
-
-> +               },
-
-...
-
->                 .indexed = 1,
->                 .channel = INGENIC_ADC_AUX,
-> +               .scan_index = -1
-
-Ditto. You see above? Isn't it nice that you didn't touch that line?
-So, perhaps next developer can leverage this subtle kind of things.
-
->                 .indexed = 1,
->                 .channel = INGENIC_ADC_BATTERY,
-> +               .scan_index = -1
-
-Ditto.
-
->                 .indexed = 1,
->                 .channel = INGENIC_ADC_AUX2,
-> +               .scan_index = -1
-
-Ditto.
-
-...
-
-> +static int ingenic_adc_buffer_enable(struct iio_dev *iio_dev)
-> +{
-> +       struct ingenic_adc *adc = iio_priv(iio_dev);
-> +
-
-> +       clk_enable(adc->clk);
-
-Error check?
-
-> +       /* It takes significant time for the touchscreen hw to stabilize. */
-> +       msleep(50);
-> +       ingenic_adc_set_config(adc, JZ_ADC_REG_CFG_TOUCH_OPS_MASK,
-> +                              JZ_ADC_REG_CFG_SAMPLE_NUM(4) |
-> +                              JZ_ADC_REG_CFG_PULL_UP(4));
-> +       writew(80, adc->base + JZ_ADC_REG_ADWAIT);
-> +       writew(2, adc->base + JZ_ADC_REG_ADSAME);
-
-> +       writeb((u8)~JZ_ADC_IRQ_TOUCH, adc->base + JZ_ADC_REG_CTRL);
-
-Why casting?
-
-> +       writel(0, adc->base + JZ_ADC_REG_ADTCH);
-> +       ingenic_adc_enable(adc, 2, true);
-> +
-> +       return 0;
-> +}
-
-> +       irq = platform_get_irq(pdev, 0);
-
-Before it worked w/o IRQ, here is a regression you introduced.
-
-> +       if (irq < 0) {
-
-> +               dev_err(dev, "Failed to get irq: %d\n", irq);
-
-Redundant message.
-
-> +               return irq;
-> +       }
+Thanks.
 
 -- 
-With Best Regards,
-Andy Shevchenko
+tejun
