@@ -2,112 +2,150 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6E60C2D0EF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 15:03:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B8EDC2D0EF
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 15:06:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 818E121924
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 15:03:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587135832;
-	bh=CR+V2g4RH1TCJK3+XSyZGECwl1xXbqgOfYq+cx3FodQ=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=1/2oLHvG7pxaSARMjPSjXpvKn0Yxp+UOPrrOy1PiaV29q6Jna44yA6NLuzzp4Eqim
-	 TzW+KYNUSYmXjAZZZ8N6U7OV9NGavQBrZe9QMLCO8OVQ6reWe5iIlNBnRzLv2ICqYv
-	 xreHGf6GElgHbq0IhHpMJCGS3eosJuHMx2SJh/nk=
+	by mail.kernel.org (Postfix) with ESMTP id 42A2A20857
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 15:06:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="A4Vkbwwi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728587AbgDQPDv (ORCPT
+        id S1728510AbgDQPGT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 11:03:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33638 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728104AbgDQPDv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 11:03:51 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9E17820857;
-        Fri, 17 Apr 2020 15:03:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587135830;
-        bh=CR+V2g4RH1TCJK3+XSyZGECwl1xXbqgOfYq+cx3FodQ=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=m6Kd8/+97V/XdoSGVbAoZQwSvKyAlHkafA/dqrHzjp7ZedNq0kwcFoOxtScWFH7vL
-         Rq4fsQ1TU2niTL9oYJqsUrsMlpHUNoCMW1SSr5g0MwWtJs+E0aMJAx81e7LJ2lRuLk
-         2bZnZGdgC5qXQHiGNJXHe4+6L2C90I7qolArWZFs=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 70D1E3523234; Fri, 17 Apr 2020 08:03:50 -0700 (PDT)
-Date:   Fri, 17 Apr 2020 08:03:50 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Marco Elver <elver@google.com>
-Cc:     Wei Yongjun <weiyongjun1@huawei.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH -next] kcsan: Use GFP_ATOMIC under spin lock
-Message-ID: <20200417150350.GI17661@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200417025837.49780-1-weiyongjun1@huawei.com>
- <CANpmjNMzwqFaaA-zQh0Nv4SUdoJUFO_yTmTjfbMFqyxBea1U+Q@mail.gmail.com>
+        Fri, 17 Apr 2020 11:06:19 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:25146 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728273AbgDQPGS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Apr 2020 11:06:18 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587135977;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Bp+vURr2biqLIQDqjBK7OKDMnAtcGss9u7I1kEvxU7o=;
+        b=A4VkbwwiG7ebOzWEUEw3bnLJre4UUJGCRnH6W673/nsZ6VnY3CGEuUn2J5GIieB1k2h83u
+        LCxc4DiX498RwHMZB6jEv8QG0RapjxV9fTESjZFeMky9azHgX55IkDO87XaL7gjK9KjeoW
+        NeoI1XWRyzsfNtltwK6rcd1NxyrbBXA=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-392-iOVck_eoPJGW0oy4xdfjhw-1; Fri, 17 Apr 2020 11:06:14 -0400
+X-MC-Unique: iOVck_eoPJGW0oy4xdfjhw-1
+Received: by mail-wr1-f70.google.com with SMTP id j22so1161528wrb.4
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 08:06:14 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Bp+vURr2biqLIQDqjBK7OKDMnAtcGss9u7I1kEvxU7o=;
+        b=Ue8y1pvn+QhsoLxt5yJK+dHtRzWLSg/RQiU2xd/3mgjpNcHVP0yaRz+bDd9eNparYP
+         KBdg0wTRFjFRJHwCmk2BHjR9l9GJgiToNG/CLfrRX8EEuLLvrcAkWNy695YJZ4/lwI8z
+         /0Jdl8uN73x3a6lfNq0Y7qSY2QNKeDG1BdYYfQPJR/1VeCDrxAQkthn0aKCAI5iBUiRB
+         2NJ/WYytakRraUmmDzYABsNfJDAhBHvFzd3kLboE7gwFEkQZWP+rntrGyFjajNvhT1di
+         +eH9ESHr2vCZjFToAXQlR1DzMg/0miqmAsr00Nqecy7prRaL9i56GJDa9BkParDQkwti
+         oTxw==
+X-Gm-Message-State: AGi0Pub15193sydVP39FU6RGIqKVwR/4Gq5xAWV4Pcf8+sbWmMGGnu65
+        QS0tAArGpFanbokvQG25FDvTxwQkRGarVeLh8TKlZj0r3HnBnO+keblwMwWjkBeSTI0iayHC8b7
+        dV+WvwO7vWgT9hEao9TM+srz2
+X-Received: by 2002:a1c:2842:: with SMTP id o63mr3814740wmo.73.1587135972734;
+        Fri, 17 Apr 2020 08:06:12 -0700 (PDT)
+X-Google-Smtp-Source: APiQypIybFDt/Q7QlgX//9mu4+TS1KJE72qr+HgPLt/Lgs3Djdgs7WyjOeORMFpznBkzJGOS8lshRw==
+X-Received: by 2002:a1c:2842:: with SMTP id o63mr3814705wmo.73.1587135972411;
+        Fri, 17 Apr 2020 08:06:12 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:56e1:adff:fed9:caf0? ([2001:b07:6468:f312:56e1:adff:fed9:caf0])
+        by smtp.gmail.com with ESMTPSA id g25sm8045149wmh.24.2020.04.17.08.06.11
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 17 Apr 2020 08:06:11 -0700 (PDT)
+Subject: Re: [PATCH] KVM: Remove CREATE_IRQCHIP/SET_PIT2 race
+To:     Jon Cargille <jcargill@google.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Steve Rutherford <srutherford@google.com>
+References: <20200416191152.259434-1-jcargill@google.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <f7b8ca30-21fa-5268-7f17-889f10b90187@redhat.com>
+Date:   Fri, 17 Apr 2020 17:06:10 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CANpmjNMzwqFaaA-zQh0Nv4SUdoJUFO_yTmTjfbMFqyxBea1U+Q@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200416191152.259434-1-jcargill@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 17, 2020 at 11:23:05AM +0200, Marco Elver wrote:
-> On Fri, 17 Apr 2020 at 04:56, Wei Yongjun <weiyongjun1@huawei.com> wrote:
-> >
-> > A spin lock is taken here so we should use GFP_ATOMIC.
-> >
-> > Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
+On 16/04/20 21:11, Jon Cargille wrote:
+> From: Steve Rutherford <srutherford@google.com>
 > 
-> Good catch, thank you!
+> Fixes a NULL pointer dereference, caused by the PIT firing an interrupt
+> before the interrupt table has been initialized.
 > 
-> Reviewed-by: Marco Elver <elver@google.com>
+> SET_PIT2 can race with the creation of the IRQchip. In particular,
+> if SET_PIT2 is called with a low PIT timer period (after the creation of
+> the IOAPIC, but before the instantiation of the irq routes), the PIT can
+> fire an interrupt at an uninitialized table.
+> 
+> Signed-off-by: Steve Rutherford <srutherford@google.com>
+> Signed-off-by: Jon Cargille <jcargill@google.com>
+> Reviewed-by: Jim Mattson <jmattson@google.com>
+> ---
+>  arch/x86/kvm/x86.c | 10 ++++++++--
+>  1 file changed, 8 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index 027dfd278a973..3cc3f673785c8 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -5049,10 +5049,13 @@ long kvm_arch_vm_ioctl(struct file *filp,
+>  		r = -EFAULT;
+>  		if (copy_from_user(&u.ps, argp, sizeof(u.ps)))
+>  			goto out;
+> +		mutex_lock(&kvm->lock);
+>  		r = -ENXIO;
+>  		if (!kvm->arch.vpit)
+> -			goto out;
+> +			goto set_pit_out;
+>  		r = kvm_vm_ioctl_set_pit(kvm, &u.ps);
+> +set_pit_out:
+> +		mutex_unlock(&kvm->lock);
+>  		break;
+>  	}
+>  	case KVM_GET_PIT2: {
+> @@ -5072,10 +5075,13 @@ long kvm_arch_vm_ioctl(struct file *filp,
+>  		r = -EFAULT;
+>  		if (copy_from_user(&u.ps2, argp, sizeof(u.ps2)))
+>  			goto out;
+> +		mutex_lock(&kvm->lock);
+>  		r = -ENXIO;
+>  		if (!kvm->arch.vpit)
+> -			goto out;
+> +			goto set_pit2_out;
+>  		r = kvm_vm_ioctl_set_pit2(kvm, &u.ps2);
+> +set_pit2_out:
+> +		mutex_unlock(&kvm->lock);
+>  		break;
+>  	}
+>  	case KVM_REINJECT_CONTROL: {
+> 
 
-Queued and pushed, thank you both!
+Queued, thanks.
 
-							Thanx, Paul
+Paolo
 
-> > ---
-> >  kernel/kcsan/debugfs.c | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/kernel/kcsan/debugfs.c b/kernel/kcsan/debugfs.c
-> > index 1a08664a7fab..023e49c58d55 100644
-> > --- a/kernel/kcsan/debugfs.c
-> > +++ b/kernel/kcsan/debugfs.c
-> > @@ -230,7 +230,7 @@ static ssize_t insert_report_filterlist(const char *func)
-> >                 /* initial allocation */
-> >                 report_filterlist.addrs =
-> >                         kmalloc_array(report_filterlist.size,
-> > -                                     sizeof(unsigned long), GFP_KERNEL);
-> > +                                     sizeof(unsigned long), GFP_ATOMIC);
-> >                 if (report_filterlist.addrs == NULL) {
-> >                         ret = -ENOMEM;
-> >                         goto out;
-> > @@ -240,7 +240,7 @@ static ssize_t insert_report_filterlist(const char *func)
-> >                 size_t new_size = report_filterlist.size * 2;
-> >                 unsigned long *new_addrs =
-> >                         krealloc(report_filterlist.addrs,
-> > -                                new_size * sizeof(unsigned long), GFP_KERNEL);
-> > +                                new_size * sizeof(unsigned long), GFP_ATOMIC);
-> >
-> >                 if (new_addrs == NULL) {
-> >                         /* leave filterlist itself untouched */
-> >
-> >
-> >
-> >
-> >
