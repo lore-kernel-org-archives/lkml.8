@@ -5,61 +5,61 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDDB9C38A2B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 17:08:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E55DFC38A2B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 17:08:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE81920656
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 17:08:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C19C520656
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 17:08:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uTXlFR/g"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NXoAHHZi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728509AbgDQRIc (ORCPT
+        id S1728863AbgDQRIg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 13:08:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60066 "EHLO
+        Fri, 17 Apr 2020 13:08:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60080 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727913AbgDQRIa (ORCPT
+        with ESMTP id S1728556AbgDQRIe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 13:08:30 -0400
+        Fri, 17 Apr 2020 13:08:34 -0400
 Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84549C061A0C;
-        Fri, 17 Apr 2020 10:08:30 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id b11so3894621wrs.6;
-        Fri, 17 Apr 2020 10:08:30 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B469C061A0C;
+        Fri, 17 Apr 2020 10:08:34 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id k11so3903581wrp.5;
+        Fri, 17 Apr 2020 10:08:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=hmsV5eZJXnc9eG+jSXMH3ELzgDo10IgatuJIePLn5QU=;
-        b=uTXlFR/gyHMZJNZ1ZHMqQT3EfnIlp46bYaRMve4QvNvjgCV3LuiqHLvsJmocbwKPIE
-         ckbDmYyWizxQafxcKPWFJxIN6rLZzqVYmwmnCrnHVoXr3cItFwnoEGgoPNce3nZBfuhL
-         3bMnQL7OOSJ7PjQFahvNuLSQ79Mnh6aydZ0DLwVcIVu5ON/4GqiuJ4gO0mVgZZahB6dE
-         eHhJMhzCUqoJ0gHRd004jINQo2oAxx5QIoxjWAIP6wfcummsjbOiZbLaN76c9cLpkelt
-         kpiDWVpwRATys8nRLmbMr4y27IcFLZNMsDmsAIPJBFbAwMPpVcoHnRCqPuPJNxlGydot
-         rReA==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=KvsoRNaIPMpQAi34tFrpdDPuh9TmP9Et+cVWafVFTlM=;
+        b=NXoAHHZivibzY4yLgrYyRGMeRigrfaFJn6RcnnC6TiQoW2w8Zh2nPgZcOyN2RV+XqP
+         Q6ztj+Trlj1Qlk+Qx8ire2OlXys/jqrOdHPzzTML9oWz7pyz667kMojzdH76bq8P05DZ
+         2mxLP6HvQz6Jtn3AaA40ZvVCc0/0SM9NLecxExIsHO8mtHZwwqv0FA2e3lhEh0qOrC1E
+         7BN5vByv9s5bpfg05DqbBqPnuJ8VmlFnepygSgREONlycbbE0ILpAmrE5kCdlOjdALyS
+         TprgrtlXnpWqrg78lYEq/LLBDSmazQX8iLmoCU6radzCKe8E+JBS02hAm5Qwq3p7ro3E
+         0JEg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=hmsV5eZJXnc9eG+jSXMH3ELzgDo10IgatuJIePLn5QU=;
-        b=uFmykK5/OFUjJ4TdWuXs+9j9661/Jwh7fNwcEn04MYvcTenkcCFEKgW7XUbypo0erX
-         zUp/FqgsE1ZWO0+uQ5hrdaCZdraGQX3UEn1EMQj+fKyTa5lnsougEellrXYtrkGG49hx
-         Y47vR/ED6TlGMZTaNT3RXP0xKwXrhn8ZuvtMueb1LmuAMXoaex7yxIu1ADgVzo0Of+Wh
-         1TG6mSdXM/gWC/IoYhX5KJ1qOt21qZ8CFl9ui6xj7ZGO3sTL6vPIlolU928LNfkYxh8V
-         GuN6n8J3+Ofk9pob5P/Ok3HZk2wxGRE7gjkSUb0cAy+nZmYAGhctlkD3PFNTjgBM3d66
-         G6wg==
-X-Gm-Message-State: AGi0PubjhNttKVQ6imLJnGK5DDnfzlwPEIOyglpOF/aOxoHA9bhgd+7r
-        daSCTreMaRtarbO+K9vnoXs=
-X-Google-Smtp-Source: APiQypKQueQT8ZMI9JnPq3z4u6/W9TbWbCpMpxaHAnhXnWaZN7grXRuqK9n2P2wUP5BPCur6rCivdQ==
-X-Received: by 2002:a5d:6785:: with SMTP id v5mr4738957wru.376.1587143309289;
-        Fri, 17 Apr 2020 10:08:29 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=KvsoRNaIPMpQAi34tFrpdDPuh9TmP9Et+cVWafVFTlM=;
+        b=sF9ch2D8QOVd8mr5k2PX0d0tY9IpBHH7PKbL1yE3r3uXNemrADVYSMpxNRC+9rQZ1a
+         UVV0l6l94SG9YTl6pb3gKl0N61ghLhBRgCM7XfoXiV+5anyM6FlppYDVx091IJxmwk0n
+         kJSyARFt1yJLC+8lIv2Fj39c+GdkAroPlP/8mCMHO0EVGpVgnxFKu/EM8WEei3s5yc1f
+         AImhYehzlgAaaAS6prQhF7W8gnpFaqWaYe/eVs6dKz2qmj3WGT9QjzOA9jrl/5X87Vdm
+         ltlmNnq1HU9X5oYkdUBB7kNFlu3zW64RCHALBEuICHVGJBL5GHDOc8v/wK/Wty32d+Vz
+         rxDQ==
+X-Gm-Message-State: AGi0PuZXkQY0+VKfFLHTTXMyWl4/1Yq19vLi67wbwFgZx6QEzuHFHWrS
+        fi8HzZM3m2Dpmuibxln/rR4=
+X-Google-Smtp-Source: APiQypKgdT2gpDqOCdnzwUylz3VALkrAqFxBj0ZFndhgeiSg4ua55X8ZE1TIMBymhr+yqIxnbACHGQ==
+X-Received: by 2002:a5d:49c3:: with SMTP id t3mr4659554wrs.94.1587143313191;
+        Fri, 17 Apr 2020 10:08:33 -0700 (PDT)
 Received: from localhost (pD9E51D62.dip0.t-ipconnect.de. [217.229.29.98])
-        by smtp.gmail.com with ESMTPSA id l5sm8318280wmi.22.2020.04.17.10.08.27
+        by smtp.gmail.com with ESMTPSA id a7sm8419517wmj.12.2020.04.17.10.08.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Apr 2020 10:08:28 -0700 (PDT)
+        Fri, 17 Apr 2020 10:08:32 -0700 (PDT)
 From:   Thierry Reding <thierry.reding@gmail.com>
 To:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
         Alessandro Zummo <a.zummo@towertech.it>,
@@ -67,10 +67,12 @@ To:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
 Cc:     Jon Hunter <jonathanh@nvidia.com>, devicetree@vger.kernel.org,
         linux-rtc@vger.kernel.org, linux-tegra@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 1/3] dt-bindings: mfd: Document the RTC present on MAX77620
-Date:   Fri, 17 Apr 2020 19:08:23 +0200
-Message-Id: <20200417170825.2551367-1-thierry.reding@gmail.com>
+Subject: [PATCH 3/3] rtc: max77686: Use single-byte writes on MAX77620
+Date:   Fri, 17 Apr 2020 19:08:25 +0200
+Message-Id: <20200417170825.2551367-3-thierry.reding@gmail.com>
 X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200417170825.2551367-1-thierry.reding@gmail.com>
+References: <20200417170825.2551367-1-thierry.reding@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -80,48 +82,82 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Thierry Reding <treding@nvidia.com>
 
-The RTC present on MAX77620 can be used to generate an alarm at a given
-time, which in turn can be used as a wakeup source for the system if it
-is properly wired up.
-
-Document how to enable the RTC to act as a wakeup source.
+The MAX77620 doesn't support bulk writes, so make sure the regmap code
+breaks bulk writes into multiple single-byte writes.
 
 Signed-off-by: Thierry Reding <treding@nvidia.com>
 ---
- .../devicetree/bindings/mfd/max77620.txt          | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+ drivers/rtc/rtc-max77686.c | 22 ++++++++++++++++------
+ 1 file changed, 16 insertions(+), 6 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/mfd/max77620.txt b/Documentation/devicetree/bindings/mfd/max77620.txt
-index 5a642a51d58e..f05005b0993e 100644
---- a/Documentation/devicetree/bindings/mfd/max77620.txt
-+++ b/Documentation/devicetree/bindings/mfd/max77620.txt
-@@ -125,6 +125,17 @@ MAX77663 supports 20, 40, 80, 160, 320, 640, 1280 and 2540 microseconds.
- 			control) then, GPIO1/nRST_IO goes LOW.
- 			this property is valid for max20024 only.
- 
-+Realtime Clock
-+--------------
-+The MAX77620 family of power management ICs contain a realtime clock block
-+that can be used to keep track of time even when the system is powered off.
-+
-+The realtime clock can also be programmed to trigger alerts, which can be
-+used to wake the system up from sleep. In order to configure the RTC to act
-+as a wakeup source, add an "rtc" child node and add the "wakeup-source"
-+property.
-+
-+
- For DT binding details of different sub modules like GPIO, pincontrol,
- regulator, power, please refer respective device-tree binding document
- under their respective sub-system directories.
-@@ -159,4 +170,8 @@ max77620@3c {
- 			maxim,fps-event-source = <MAX77620_FPS_EVENT_SRC_SW>;
- 		};
- 	};
-+
-+	rtc {
-+		wakeup-source;
-+	};
+diff --git a/drivers/rtc/rtc-max77686.c b/drivers/rtc/rtc-max77686.c
+index 35fd74b83626..f53db4d6bead 100644
+--- a/drivers/rtc/rtc-max77686.c
++++ b/drivers/rtc/rtc-max77686.c
+@@ -78,6 +78,8 @@ struct max77686_rtc_driver_data {
+ 	int			alarm_pending_status_reg;
+ 	/* RTC IRQ CHIP for regmap */
+ 	const struct regmap_irq_chip *rtc_irq_chip;
++	/* regmap configuration for the chip */
++	const struct regmap_config *regmap_config;
  };
+ 
+ struct max77686_rtc_info {
+@@ -182,6 +184,11 @@ static const struct regmap_irq_chip max77686_rtc_irq_chip = {
+ 	.num_irqs	= ARRAY_SIZE(max77686_rtc_irqs),
+ };
+ 
++static const struct regmap_config max77686_rtc_regmap_config = {
++	.reg_bits = 8,
++	.val_bits = 8,
++};
++
+ static const struct max77686_rtc_driver_data max77686_drv_data = {
+ 	.delay = 16000,
+ 	.mask  = 0x7f,
+@@ -191,6 +198,13 @@ static const struct max77686_rtc_driver_data max77686_drv_data = {
+ 	.alarm_pending_status_reg = MAX77686_REG_STATUS2,
+ 	.rtc_i2c_addr = MAX77686_I2C_ADDR_RTC,
+ 	.rtc_irq_chip = &max77686_rtc_irq_chip,
++	.regmap_config = &max77686_rtc_regmap_config,
++};
++
++static const struct regmap_config max77620_rtc_regmap_config = {
++	.reg_bits = 8,
++	.val_bits = 8,
++	.use_single_write = true,
+ };
+ 
+ static const struct max77686_rtc_driver_data max77620_drv_data = {
+@@ -202,6 +216,7 @@ static const struct max77686_rtc_driver_data max77620_drv_data = {
+ 	.alarm_pending_status_reg = MAX77686_INVALID_REG,
+ 	.rtc_i2c_addr = MAX77620_I2C_ADDR_RTC,
+ 	.rtc_irq_chip = &max77686_rtc_irq_chip,
++	.regmap_config = &max77620_rtc_regmap_config,
+ };
+ 
+ static const unsigned int max77802_map[REG_RTC_END] = {
+@@ -658,11 +673,6 @@ static int max77686_rtc_init_reg(struct max77686_rtc_info *info)
+ 	return ret;
+ }
+ 
+-static const struct regmap_config max77686_rtc_regmap_config = {
+-	.reg_bits = 8,
+-	.val_bits = 8,
+-};
+-
+ static int max77686_init_rtc_regmap(struct max77686_rtc_info *info)
+ {
+ 	struct device *parent = info->dev->parent;
+@@ -698,7 +708,7 @@ static int max77686_init_rtc_regmap(struct max77686_rtc_info *info)
+ 	}
+ 
+ 	info->rtc_regmap = devm_regmap_init_i2c(info->rtc,
+-						&max77686_rtc_regmap_config);
++						info->drv_data->regmap_config);
+ 	if (IS_ERR(info->rtc_regmap)) {
+ 		ret = PTR_ERR(info->rtc_regmap);
+ 		dev_err(info->dev, "Failed to allocate RTC regmap: %d\n", ret);
 -- 
 2.24.1
 
