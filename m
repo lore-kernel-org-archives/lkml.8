@@ -2,72 +2,34 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5E49C352BE
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 09:37:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2696DC352BE
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 09:37:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 803F3208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 09:37:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IoD1s1Pm"
+	by mail.kernel.org (Postfix) with ESMTP id 0C22C208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 09:37:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730371AbgDQJhQ (ORCPT
+        id S1730380AbgDQJhb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 05:37:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46296 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730131AbgDQJhP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 05:37:15 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B80D2C061A0C;
-        Fri, 17 Apr 2020 02:37:15 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id p8so852847pgi.5;
-        Fri, 17 Apr 2020 02:37:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=8s/oCPK4WL2hZq8jZKgDQsrUlYP9Rih4kTn1YbLdhyY=;
-        b=IoD1s1Pm5TgClqU+qaJ499vn9G9Ss3sJxKlhQlqEOQ/X0SWCvAkxRdBkX6Ad/quAUy
-         lOwcGmWAIbv+B/8LNvqvvTEH4ojvCd55r7OMOVZGKotEzongZBq8wedbkEGntznmXZos
-         u2KQdRiJGW+phBf7Aqv3tEBHWEeUYwChH1UPgYvoXXwvsmrJ23iSRTpxhBb5wueWwAP3
-         DC2YGkaWhkgqy/eWFA6E6z+FEIq8qyWgHDJVB22V2vEuu/2dC7hxE7ChHmRXAoQzPrBE
-         sHXcseHzrK9ofDjDtJ81RTdUI3J0U/EoD24rElddOX3lzB8FaRhbZTHrLTh3MJA2KjUU
-         ujOg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=8s/oCPK4WL2hZq8jZKgDQsrUlYP9Rih4kTn1YbLdhyY=;
-        b=hoUHo7/1xhpqBhPy93uQZaTcrOoWytR4eeS9HtyfkG1qiMEV1V1vRvsWkR+P5miy7L
-         LDvxVwxoiiOV/2u6ttg70gbjGtEE9mBKc3la4LGFV3861Q5haIQC5s3dAy5gFveVfOJr
-         3hhccmFu/EdJIdLoAYlFb2CeZwJ0Hq1Dk/8hQLUbBL3oanWK1rOtUpIsMW6HeVThet1k
-         WXmgKy4td8N+tiRKpY/Ktr7w3jodGrxt3oxkDpwI3sGhG9Q8ljPa3ZK9gwfknCsWjhIu
-         PxFedUZCjGVJmETV/k9bSxmeTxLDj7s8AifmXWufW9j3kQHGSM9YAuZEo7vA3I4AgAZl
-         Bgcg==
-X-Gm-Message-State: AGi0PuYyLd48d+0n1MJzq1aKKN9q0lMQpW4nhCy/s/Y0ywZTHNQy1EEZ
-        t1GGWI1yOZAxcx8Za5DzxY4=
-X-Google-Smtp-Source: APiQypLL/2ihqphswfksyAaYitVMbud/Lkf3A6TDuyBvvgwaeM4JkyVm0IcSBYciFTrzPtfK8aZReg==
-X-Received: by 2002:a65:64d0:: with SMTP id t16mr2061265pgv.415.1587116235268;
-        Fri, 17 Apr 2020 02:37:15 -0700 (PDT)
-Received: from MacBook-Pro.mshome.net ([122.224.153.228])
-        by smtp.googlemail.com with ESMTPSA id g197sm17788539pfb.54.2020.04.17.02.37.12
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 17 Apr 2020 02:37:14 -0700 (PDT)
-From:   Yanhu Cao <gmayyyha@gmail.com>
-To:     jlayton@kernel.org
-Cc:     sage@redhat.com, idryomov@gmail.com, ceph-devel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Yanhu Cao <gmayyyha@gmail.com>
-Subject: [v2] ceph: if we are blacklisted, __do_request returns directly
-Date:   Fri, 17 Apr 2020 17:36:26 +0800
-Message-Id: <20200417093626.10892-1-gmayyyha@gmail.com>
-X-Mailer: git-send-email 2.24.2 (Apple Git-127)
+        Fri, 17 Apr 2020 05:37:31 -0400
+Received: from v6.sk ([167.172.42.174]:43458 "EHLO v6.sk"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730131AbgDQJha (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Apr 2020 05:37:30 -0400
+Received: from localhost (v6.sk [IPv6:::1])
+        by v6.sk (Postfix) with ESMTP id 9D3CC610A6;
+        Fri, 17 Apr 2020 09:37:28 +0000 (UTC)
+From:   Lubomir Rintel <lkundrak@v3.sk>
+To:     Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc:     Jonathan Corbet <corbet@lwn.net>, linux-media@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>
+Subject: [PATCH] media: marvell-ccic: Add support for runtime PM
+Date:   Fri, 17 Apr 2020 11:37:13 +0200
+Message-Id: <20200417093713.447777-1-lkundrak@v3.sk>
+X-Mailer: git-send-email 2.26.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -75,31 +37,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If we mount cephfs by the recover_session option,
-__do_request can return directly until the client automatically reconnects.
+On MMP3, the camera block lives on na separate power island. We want to
+turn it off if the CCIC is not in use to conserve power.
 
-Signed-off-by: Yanhu Cao <gmayyyha@gmail.com>
+Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
 ---
- fs/ceph/mds_client.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/media/platform/marvell-ccic/mcam-core.c  |  3 +++
+ drivers/media/platform/marvell-ccic/mmp-driver.c | 12 ++++++++----
+ 2 files changed, 11 insertions(+), 4 deletions(-)
 
-diff --git a/fs/ceph/mds_client.c b/fs/ceph/mds_client.c
-index 486f91f9685b..e6cda256b136 100644
---- a/fs/ceph/mds_client.c
-+++ b/fs/ceph/mds_client.c
-@@ -2708,6 +2708,12 @@ static void __do_request(struct ceph_mds_client *mdsc,
+diff --git a/drivers/media/platform/marvell-ccic/mcam-core.c b/drivers/media/platform/marvell-ccic/mcam-core.c
+index 09775b6624c6b..c2cd1d461bd06 100644
+--- a/drivers/media/platform/marvell-ccic/mcam-core.c
++++ b/drivers/media/platform/marvell-ccic/mcam-core.c
+@@ -24,6 +24,7 @@
+ #include <linux/clk.h>
+ #include <linux/clk-provider.h>
+ #include <linux/videodev2.h>
++#include <linux/pm_runtime.h>
+ #include <media/v4l2-device.h>
+ #include <media/v4l2-ioctl.h>
+ #include <media/v4l2-ctrls.h>
+@@ -901,6 +902,7 @@ static void mcam_clk_enable(struct mcam_camera *mcam)
+ {
+ 	unsigned int i;
  
- 	put_request_session(req);
++	pm_runtime_get_sync(mcam->dev);
+ 	for (i = 0; i < NR_MCAM_CLK; i++) {
+ 		if (!IS_ERR(mcam->clk[i]))
+ 			clk_prepare_enable(mcam->clk[i]);
+@@ -915,6 +917,7 @@ static void mcam_clk_disable(struct mcam_camera *mcam)
+ 		if (!IS_ERR(mcam->clk[i]))
+ 			clk_disable_unprepare(mcam->clk[i]);
+ 	}
++	pm_runtime_put(mcam->dev);
+ }
  
-+	if (mdsc->fsc->blacklisted &&
-+	    ceph_test_mount_opt(mdsc->fsc, CLEANRECOVER)) {
-+		err = -EACCES;
-+		goto finish;
-+	}
+ /* ---------------------------------------------------------------------- */
+diff --git a/drivers/media/platform/marvell-ccic/mmp-driver.c b/drivers/media/platform/marvell-ccic/mmp-driver.c
+index 92b92255dac66..eec482d16805b 100644
+--- a/drivers/media/platform/marvell-ccic/mmp-driver.c
++++ b/drivers/media/platform/marvell-ccic/mmp-driver.c
+@@ -24,6 +24,7 @@
+ #include <linux/list.h>
+ #include <linux/pm.h>
+ #include <linux/clk.h>
++#include <linux/pm_runtime.h>
+ 
+ #include "mcam-core.h"
+ 
+@@ -313,10 +314,12 @@ static int mmpcam_probe(struct platform_device *pdev)
+ 	cam->irq = res->start;
+ 	ret = devm_request_irq(&pdev->dev, cam->irq, mmpcam_irq, IRQF_SHARED,
+ 					"mmp-camera", mcam);
+-	if (ret == 0) {
+-		mmpcam_add_device(cam);
+-		return 0;
+-	}
++	if (ret)
++		goto out;
 +
- 	mds = __choose_mds(mdsc, req, &random);
- 	if (mds < 0 ||
- 	    ceph_mdsmap_get_state(mdsc->mdsmap, mds) < CEPH_MDS_STATE_ACTIVE) {
++	mmpcam_add_device(cam);
++	pm_runtime_enable(&pdev->dev);
++	return 0;
+ 
+ out:
+ 	fwnode_handle_put(mcam->asd.match.fwnode);
+@@ -332,6 +335,7 @@ static int mmpcam_remove(struct mmp_camera *cam)
+ 
+ 	mmpcam_remove_device(cam);
+ 	mccic_shutdown(mcam);
++	pm_runtime_force_suspend(mcam->dev);
+ 	return 0;
+ }
+ 
 -- 
-2.24.2 (Apple Git-127)
+2.26.0
 
