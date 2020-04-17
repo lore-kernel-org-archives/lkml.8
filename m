@@ -2,121 +2,158 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC6D8C38A2C
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 14:07:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E057C2D0EF
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 14:08:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9298821973
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 14:07:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2350A21973
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 14:08:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="gy59aPv8"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="VU2fA1YE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731184AbgDQOH4 (ORCPT
+        id S1731187AbgDQOIB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 10:07:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60158 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730850AbgDQOHx (ORCPT
+        Fri, 17 Apr 2020 10:08:01 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:49744 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730908AbgDQOH7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 10:07:53 -0400
-Received: from mail-qv1-xf43.google.com (mail-qv1-xf43.google.com [IPv6:2607:f8b0:4864:20::f43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 646ABC061A41
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 07:07:53 -0700 (PDT)
-Received: by mail-qv1-xf43.google.com with SMTP id c12so910032qvj.5
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 07:07:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=+LqhOO57sChESg9+cIngyrXtjaLelgEgf+v+L/tbLWk=;
-        b=gy59aPv8zMj56Mv03vyLFGLBjHJ7J1u+UArIzN0R+rT72xnw/cutPk5HRKX2d/1xSE
-         hKj5WfRwjwgNBiBwpu21u9UkwU1NN7FZGkJLCpxItWEKZUwsINzhO6JPR6PivXLj7MQo
-         DzlEdqiF/kNV0iIENDraE2hef4Q3wXijNqzULS2WDLUwm63Q6O7Y1oO0EPjvaSWN7MD0
-         AunwqeklzSrYcvc3UTO2x5yR3FPVWYFM74ybRxl3Xmx6E1s4oWCv/m8igVBmhfwOLa12
-         kXgIX2z40DDQpn1mBfE7DJmt9RJZ1SuirkW4fEIj9HgNfMqTedHLx/oI8bh09LtR45/s
-         R9gQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=+LqhOO57sChESg9+cIngyrXtjaLelgEgf+v+L/tbLWk=;
-        b=qxQ4Lpcj0akNnoC5ZABlckGIxC0d2Kqwjj9VTzptPSHlY31oM4NlQT3lhgFuiqdqzi
-         43v+H+21ycECXuJgJ6f+JGbHkl4XCVNWQ/r30ttFkGZPLrU5SUZdPcdo1/lL22em8Uhl
-         tyLDpaJkviglM8fvj0mEsnXlAdRaHpGzoFjLKOl++o5InEzjgkTgeU6qF3GcJJjEYBfQ
-         qoqLosxpqX507cAVNApPVlOaedhZ7+J19It0fclODmH/fCdQ5LlaV36HxhU7AR4O+ur1
-         UyCISJi8f9PslNEXmQlkBQS46MPR7kDosThnkNfcBIl8aL32DeV7UkfSLG2NLPckr8sW
-         WkPQ==
-X-Gm-Message-State: AGi0PuaeRqtQXdNbVeQpQVYK5+3DVzN/r9xB8RVuFnI4+2pz9XAiEFe+
-        ChluzYkNaw4DfGzt05aJ85dQnw==
-X-Google-Smtp-Source: APiQypKaGok3DQChb57xxsDjD/Iyacg7EOqm08DjV1CqcQ8BJaa7llQ5QiLWdRU37gbKKcQtu2odUg==
-X-Received: by 2002:a0c:b790:: with SMTP id l16mr2844426qve.244.1587132472350;
-        Fri, 17 Apr 2020 07:07:52 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
-        by smtp.gmail.com with ESMTPSA id n190sm16749764qkb.93.2020.04.17.07.07.51
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 17 Apr 2020 07:07:51 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1jPReo-0000hP-VC; Fri, 17 Apr 2020 11:07:50 -0300
-Date:   Fri, 17 Apr 2020 11:07:50 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Jani Nikula <jani.nikula@linux.intel.com>
-Cc:     Saeed Mahameed <saeedm@mellanox.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        linux-kbuild@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Nicolas Pitre <nico@fluxnic.net>, narmstrong@baylibre.com,
-        Laurent.pinchart@ideasonboard.com, leon@kernel.org,
-        kieran.bingham+renesas@ideasonboard.com, jonas@kwiboo.se,
-        airlied@linux.ie, jernej.skrabec@siol.net,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        linux-rdma@vger.kernel.org, Andrzej Hajda <a.hajda@samsung.com>
-Subject: Re: [RFC PATCH 1/2] Kconfig: Introduce "uses" keyword
-Message-ID: <20200417140750.GF26002@ziepe.ca>
-References: <20200417011146.83973-1-saeedm@mellanox.com>
- <87v9ly3a0w.fsf@intel.com>
- <20200417122827.GD5100@ziepe.ca>
- <87h7xi2oup.fsf@intel.com>
+        Fri, 17 Apr 2020 10:07:59 -0400
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200417140756euoutp01019994fa2423ec752bfbafa0f0ee8e72~GoJQWNSr91953319533euoutp01u
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 14:07:56 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200417140756euoutp01019994fa2423ec752bfbafa0f0ee8e72~GoJQWNSr91953319533euoutp01u
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1587132476;
+        bh=U6isxlo64PFJa4vVTOq4zR5g89yDZau5zSJd8NfSZ38=;
+        h=From:Subject:To:Cc:Date:In-Reply-To:References:From;
+        b=VU2fA1YEyF8mKDxMI//LiMgKVkQ3F6ndPdJv8c4vZWqwM95IwZCBVZntQWM2Xsdis
+         b0tsik41hOYaXOLaM3So8uE1pkDYFMAoIBE+flKQ82z2xAEHTi7t1MP54RvIeT83BB
+         AfeWjms+wPWPwaBqrQhZjFI8G1C3hVT705hhbG3Q=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20200417140756eucas1p20913872d30b9ae37d4613b2be9867a5f~GoJQBckud1677816778eucas1p2W;
+        Fri, 17 Apr 2020 14:07:56 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges1new.samsung.com (EUCPMTA) with SMTP id 1A.4C.61286.C38B99E5; Fri, 17
+        Apr 2020 15:07:56 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20200417140755eucas1p25c5b548c689ff267fad693b568029e85~GoJPfdFpA1773817738eucas1p28;
+        Fri, 17 Apr 2020 14:07:55 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200417140755eusmtrp150da5e7883cbac30ae58cabd7770b9fd~GoJPe6NKX2228222282eusmtrp1c;
+        Fri, 17 Apr 2020 14:07:55 +0000 (GMT)
+X-AuditID: cbfec7f2-ef1ff7000001ef66-31-5e99b83c1f1e
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id F0.E0.07950.B38B99E5; Fri, 17
+        Apr 2020 15:07:55 +0100 (BST)
+Received: from [106.120.51.71] (unknown [106.120.51.71]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20200417140755eusmtip289d5a8ab55a01e95669f065c851c8e12~GoJPKsPPD0417604176eusmtip2J;
+        Fri, 17 Apr 2020 14:07:55 +0000 (GMT)
+From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Subject: Re: [PATCH v2 0/6] video: fbdev: controlfb: small cleanup
+To:     linux-fbdev@vger.kernel.org
+Cc:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Sam Ravnborg <sam@ravnborg.org>
+Message-ID: <bf36874a-23d5-575a-c1b4-a4d2e3ae8861@samsung.com>
+Date:   Fri, 17 Apr 2020 16:07:55 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87h7xi2oup.fsf@intel.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200324134508.25120-1-b.zolnierkie@samsung.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Se0hTYRjG+XYuOy4nx6n4opJ1oOjqBYOGilREDKIIKlAh9ZgnFa/sqGUE
+        KV3mPW2wcIjGkLQVU8bmrZuuUksZeclsWIppqTEyTU0padtR8r/f+7zPw/s98FGYrJbwo1Iz
+        czhlJpvOkBK8pXvVejCyrToupLfUXW4zWAn58NIPUt5bMU/IhzpqSHnjqhkdIRTjpT0iRb3m
+        PamoMOmRYtG4/QweK4lM4tJT8zhlcFSCJGVyqZDILth2xdjUQhagJaoEuVFAH4KGhmmsBEko
+        Gd2I4POcjRCGXwjKJm1iYVhE0N8/hTYjt1Z0uLBoQDD6vY4UBjuCNYvZ5SLpcKhS6V3sRR+D
+        ZZWJcLI3HQhP76hEzgBGFyN4on2LORdSOgpemcdcAZzeBR9mHoud7ENHw8LES0LweMKb6inc
+        yW4Of7nG4spitC/YpupEAgdCq73G1QhonRgGJr6SwruPw7f6n5jAXjDXYxILHAB96jJcCBgQ
+        /C2a2Ui3ImhQr2+kI2DMuuZgynFiLzR1BAvyUWis7BI5ZaA9YNTuKTzCA+623MMEWQpFt2WC
+        ezc0P2gmN8+WtD/EKhGj3VJNu6WOdksd7f+79xGuR75cLp+RzPGhmdzlIJ7N4HMzk4MuZmUY
+        kePX9K33LLShpcFEC6IpxLhLQ8qq42QEm8fnZ1gQUBjjLe064ZCkSWz+VU6ZFa/MTed4C/Kn
+        cMZXGqabvSCjk9kcLo3jsjnl5lZEufkVIMY81dm7XHl4lu37ElSrjzjL+Nrlc5fEK+Wdwftp
+        H117t3/M6fmdccPXKjSFJz28jK3t0vOf7KaBAzfGNSrReHyfKMGk+20NK44YfNb9Zz3cs2qH
+        z56bibExI0Py4VN1AS/OmY2D16eH8g1VkYYR/XPT61mrOjitTv0uTB/96COD8yls6D5MybP/
+        AAckFvoxAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrPIsWRmVeSWpSXmKPExsVy+t/xe7rWO2bGGaydrGRxa905VosrX9+z
+        WZzo+8BqcXnXHDaLFT+3MjqwetzvPs7ksWTaVTaPvi2rGD0+b5ILYInSsynKLy1JVcjILy6x
+        VYo2tDDSM7S00DMysdQzNDaPtTIyVdK3s0lJzcksSy3St0vQy3j0tZG1oIG7YtP6bWwNjF85
+        uhg5OSQETCRavy9i6WLk4hASWMoocfrKBeYuRg6ghIzE8fVlEDXCEn+udbFB1LxmlDjRvZQd
+        JMEmYCUxsX0VI4gtLOAk8a19CyuILSIgL7Gnv50JpIFZoJNRYtnKVVDdExklNjxrB6viFbCT
+        OLL1Dlg3i4CqxPUXa8CmigpESBzeMYsRokZQ4uTMJywgNidQfe+0Q8wgNrOAusSfeZegbHGJ
+        W0/mM0HY8hLb385hnsAoNAtJ+ywkLbOQtMxC0rKAkWUVo0hqaXFuem6xkV5xYm5xaV66XnJ+
+        7iZGYGRtO/Zzyw7GrnfBhxgFOBiVeHgNembGCbEmlhVX5h5ilOBgVhLhPegGFOJNSaysSi3K
+        jy8qzUktPsRoCvTcRGYp0eR8YNTnlcQbmhqaW1gamhubG5tZKInzdggcjBESSE8sSc1OTS1I
+        LYLpY+LglGpgvCm7/ebTrfPtD1d1aTC+EvkrO3GWic7EaW2PL1Td5l7TKnvA3XZp2rSnAeW/
+        NepYvHnXey28+5VrypSPok//O0/mUIhcfO/ykTPzGsyWa729a7mXf4FjHQ/nOu/vG34L8n+9
+        5zh1/oMlF8/wzV+2p9jvW8+zP2xfkjb6zHyUKSfZZDbH0Npca7sSS3FGoqEWc1FxIgCTwOzo
+        wgIAAA==
+X-CMS-MailID: 20200417140755eucas1p25c5b548c689ff267fad693b568029e85
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200324134518eucas1p1440c92398ddcbe5ea72d6db3703d3f97
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200324134518eucas1p1440c92398ddcbe5ea72d6db3703d3f97
+References: <CGME20200324134518eucas1p1440c92398ddcbe5ea72d6db3703d3f97@eucas1p1.samsung.com>
+        <20200324134508.25120-1-b.zolnierkie@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 17, 2020 at 05:01:18PM +0300, Jani Nikula wrote:
-> On Fri, 17 Apr 2020, Jason Gunthorpe <jgg@ziepe.ca> wrote:
-> > On Fri, Apr 17, 2020 at 09:23:59AM +0300, Jani Nikula wrote:
-> >
-> >> Which means that would have to split up to two. Not ideal, but
-> >> doable.
-> >
-> > Why is this not ideal?
-> >
-> > I think the one per line is easier to maintain (eg for merge
-> > conflicts) and easier to read than a giant && expression.
-> >
-> > I would not complicate things further by extending the boolean
-> > language..
+
+On 3/24/20 2:45 PM, Bartlomiej Zolnierkiewicz wrote:
+> Hi,
 > 
-> Fair enough. I only found one instance where the patch at hand does not
-> cut it:
+> Small cleanup for controlfb driver:
 > 
-> drivers/hwmon/Kconfig:  depends on !OF || IIO=n || IIO
+> - fix sparse warnings
+> - remove not working module support
+> - add COMPILE_TEST support
+> - remove redundant function prototypes
+> 
+> Changes since v1
+> (https://lore.kernel.org/lkml/20200116140900.26363-1-b.zolnierkie@samsung.com/):
+> - use in_le32() instead of le32_to_cpup()
+> - use eieio() and dcbf() helpers
+> - add invalid_vram_cache() helper
+> - add more dummy CONFIG_PPC_PMAC=n helpers to avoid ifdefs
+> - add ACKs from Sam
+> 
+> Best regards,
+> --
+> Bartlomiej Zolnierkiewicz
+> Samsung R&D Institute Poland
+> Samsung Electronics
+> 
+> 
+> Bartlomiej Zolnierkiewicz (6):
+>   video: fbdev: controlfb: fix sparse warning about using incorrect type
+>   video: fbdev: controlfb: add COMPILE_TEST support
+>   video: fbdev: controlfb: remove obsolete module support
+>   video: fbdev: controlfb: remove function prototypes part #1
+>   video: fbdev: controlfb: remove function prototypes part #2
+>   video: fbdev: controlfb: remove function prototypes part #3
+> 
+>  drivers/video/fbdev/Kconfig     |   2 +-
+>  drivers/video/fbdev/controlfb.c | 828 +++++++++++++++-----------------
+>  2 files changed, 391 insertions(+), 439 deletions(-)
 
-Ideally this constraint would be expressed as:
+Patches #1-6 queued for v5.8.
 
-   optionally depends on OF && IIO
-
-And if the expression is n then IIO is not prevented from being y.
-
-Ie the code is just doing:
-
-#if defined(CONFIG_OF) && IS_ENABLED(CONFIG_IIO)
-
-Jason
+Best regards,
+--
+Bartlomiej Zolnierkiewicz
+Samsung R&D Institute Poland
+Samsung Electronics
