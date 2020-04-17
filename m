@@ -4,45 +4,45 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B33BC38A2B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 14:06:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B327C38A2B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 14:06:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 77664214AF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 14:06:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C67E214AF
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 14:06:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="cmNbeq/f"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="eTvumc4n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731162AbgDQOGl (ORCPT
+        id S1731176AbgDQOGo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 10:06:41 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:61937 "EHLO
+        Fri, 17 Apr 2020 10:06:44 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:62587 "EHLO
         mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731151AbgDQOGj (ORCPT
+        by vger.kernel.org with ESMTP id S1731146AbgDQOGj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 17 Apr 2020 10:06:39 -0400
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
  s=smtp; t=1587132398; h=References: In-Reply-To: Message-Id: Date:
  Subject: Cc: To: From: Sender;
- bh=MkGLn7lkOqxZllVszXuo1Fr40qbxDQiMjGnb44dbThE=; b=cmNbeq/foxSvo0/6sNr/Tvst6lDf/vielu3qTkazfjat64vLTAlT9JSeVjMXma7MBWmFCsV1
- fU9xhZViJEJDXod4OjkdDg9LAVJkZgGh13ScsE4LgZQT2KdXgvRDvNLfmiIByraBReDma2VB
- VaZUmbVpNodzafWCtxR/ZoMK4Ac=
+ bh=VRGQEHAggMo2ZFV3fV+HlcaX0fQgAnre1gFyy7VTB8c=; b=eTvumc4n62+e70id9A3+ukuq4yPgNamohUf4lMg1EdBqFMbxWjFgbuFJ0nNhe+hHhfvVfrSL
+ mD7kD+LSf6Mp8HgJEM4rj/VF4j3YaeHT9ge1D+2N0bf/SmQRen9PDfRTB+tcWaGx13m1rmVN
+ y2PcYuy3riT6ZQaKHkYhsy7a8MM=
 X-Mailgun-Sending-Ip: 104.130.122.27
 X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
 Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e99b7ed.7f951a888f48-smtp-out-n03;
- Fri, 17 Apr 2020 14:06:37 -0000 (UTC)
+ by mxa.mailgun.org with ESMTP id 5e99b7ec.7f30a6fe0298-smtp-out-n05;
+ Fri, 17 Apr 2020 14:06:36 -0000 (UTC)
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 6BB77C6473A; Fri, 17 Apr 2020 14:06:37 +0000 (UTC)
+        id 154ACC072B5; Fri, 17 Apr 2020 14:06:31 +0000 (UTC)
 Received: from blr-ubuntu-173.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: rnayak)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id C63BCC38567;
-        Fri, 17 Apr 2020 14:06:30 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C63BCC38567
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 7E848C690C5;
+        Fri, 17 Apr 2020 14:06:26 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 7E848C690C5
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
 From:   Rajendra Nayak <rnayak@codeaurora.org>
@@ -51,9 +51,9 @@ To:     viresh.kumar@linaro.org, sboyd@kernel.org,
 Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, mka@chromium.org,
         Rajendra Nayak <rnayak@codeaurora.org>
-Subject: [PATCH v2 17/17] arm64: dts: sc7180: Add qspi opps and power-domains
-Date:   Fri, 17 Apr 2020 19:34:39 +0530
-Message-Id: <1587132279-27659-18-git-send-email-rnayak@codeaurora.org>
+Subject: [PATCH v2 16/17] arm64: dts: sdm845: Add qspi opps and power-domains
+Date:   Fri, 17 Apr 2020 19:34:38 +0530
+Message-Id: <1587132279-27659-17-git-send-email-rnayak@codeaurora.org>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1587132279-27659-1-git-send-email-rnayak@codeaurora.org>
 References: <1587132279-27659-1-git-send-email-rnayak@codeaurora.org>
@@ -63,26 +63,31 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 Add the power domain supporting performance state and the corresponding
-OPP tables for the qspi device on sc7180
+OPP tables for the qspi device on sdm845
 
 Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
 ---
- arch/arm64/boot/dts/qcom/sc7180.dtsi | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
+ arch/arm64/boot/dts/qcom/sdm845.dtsi | 26 ++++++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-index b87f3eb..c340a63 100644
---- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-@@ -1421,6 +1421,25 @@
- 			#power-domain-cells = <1>;
+diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+index 67e3b90..1843123 100644
+--- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
++++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+@@ -3017,6 +3017,30 @@
+ 			status = "disabled";
  		};
  
 +		qspi_opp_table: qspi-opp-table {
 +			compatible = "operating-points-v2";
 +
-+			opp-75000000 {
-+				opp-hz = /bits/ 64 <75000000>;
++			opp-19200000 {
++				opp-hz = /bits/ 64 <19200000>;
++				required-opps = <&rpmhpd_opp_min_svs>;
++			};
++
++			opp-100000000 {
++				opp-hz = /bits/ 64 <100000000>;
 +				required-opps = <&rpmhpd_opp_low_svs>;
 +			};
 +
@@ -97,14 +102,14 @@ index b87f3eb..c340a63 100644
 +			};
 +		};
 +
- 		qspi: spi@88dc000 {
- 			compatible = "qcom,qspi-v1";
- 			reg = <0 0x088dc000 0 0x600>;
-@@ -1430,6 +1449,8 @@
+ 		qspi: spi@88df000 {
+ 			compatible = "qcom,sdm845-qspi", "qcom,qspi-v1";
+ 			reg = <0 0x088df000 0 0x600>;
+@@ -3026,6 +3050,8 @@
  			clocks = <&gcc GCC_QSPI_CNOC_PERIPH_AHB_CLK>,
  				 <&gcc GCC_QSPI_CORE_CLK>;
  			clock-names = "iface", "core";
-+			power-domains = <&rpmhpd SC7180_CX>;
++			power-domains = <&rpmhpd SDM845_CX>;
 +			operating-points-v2 = <&qspi_opp_table>;
  			status = "disabled";
  		};
