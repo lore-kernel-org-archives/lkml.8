@@ -2,142 +2,251 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A5D5C2D0EF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 19:15:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE18FC2D0EF
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 19:19:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 89E562076D
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 19:15:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3127221F7
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 19:19:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="I7htG83b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730539AbgDQTPe (ORCPT
+        id S1729995AbgDQTTs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 15:15:34 -0400
-Received: from netrider.rowland.org ([192.131.102.5]:36455 "HELO
-        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1728563AbgDQTPd (ORCPT
+        Fri, 17 Apr 2020 15:19:48 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:50216 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728260AbgDQTTs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 15:15:33 -0400
-Received: (qmail 26691 invoked by uid 500); 17 Apr 2020 15:15:32 -0400
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 17 Apr 2020 15:15:32 -0400
-Date:   Fri, 17 Apr 2020 15:15:32 -0400 (EDT)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@netrider.rowland.org
-To:     syzbot <syzbot+7bf5a7b0f0a1f9446f4c@syzkaller.appspotmail.com>
-cc:     andreyknvl@google.com, <gregkh@linuxfoundation.org>,
-        <ingrassia@epigenesys.com>, <linux-kernel@vger.kernel.org>,
-        <linux-usb@vger.kernel.org>, <syzkaller-bugs@googlegroups.com>
-Subject: Re: KASAN: use-after-free Read in usbhid_close (3)
-In-Reply-To: <00000000000002c98f05a31a949a@google.com>
-Message-ID: <Pine.LNX.4.44L0.2004171505170.25043-100000@netrider.rowland.org>
+        Fri, 17 Apr 2020 15:19:48 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03HJI2q5171302;
+        Fri, 17 Apr 2020 19:19:28 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=DddDipoAKPmmlgvP1sg97Rpg4mv9LGW+C80d1h3W6ec=;
+ b=I7htG83bvhKtkA89NMN7DzU2BDXkf96/CG1UCgWrkgvdBT6EvZe239Utpt4nkfn0yDXH
+ b+w0qkPPmxaTQJ0s0LcUPyj9K+9j+i44Hgay/mASxQK9lmdUHYDePVcy4tiNojm0ha8P
+ mQ4CSwMjP+UzqvVTWKpLsIySCvKMmWjIEMHs27nhfg1w+pXgjjToyLO2WkOoCrWfspbN
+ 3/vgz8lrtvT95kS8qPO4ozBuULlRpgL5TJiBsxO26KrfaD+EuSBi09ipQPnSwdH+Pimp
+ bPVk7wMdkDFx0GImCPVrZFV2FUw7WYV8WOZV0rmw135K9S/ERyxpGyZjEEyTanHLEDfy 0Q== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 30e0aaecty-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 17 Apr 2020 19:19:28 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03HJHadA158293;
+        Fri, 17 Apr 2020 19:19:28 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3030.oracle.com with ESMTP id 30dn922stm-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 17 Apr 2020 19:19:27 +0000
+Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 03HJJRvC014806;
+        Fri, 17 Apr 2020 19:19:27 GMT
+Received: from linux-1.home (/10.175.17.90)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 17 Apr 2020 12:19:26 -0700
+Subject: Re: [PATCH v5 04/17] x86,ftrace: Fix ftrace_regs_caller() unwind
+To:     Peter Zijlstra <peterz@infradead.org>, tglx@linutronix.de,
+        jpoimboe@redhat.com
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org, mhiramat@kernel.org,
+        mbenes@suse.cz, jthierry@redhat.com
+References: <20200416114706.625340212@infradead.org>
+ <20200416115118.749606694@infradead.org>
+From:   Alexandre Chartre <alexandre.chartre@oracle.com>
+Message-ID: <243918fd-fa54-a8e5-bc70-67bf2d9f16a9@oracle.com>
+Date:   Fri, 17 Apr 2020 21:24:01 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+In-Reply-To: <20200416115118.749606694@infradead.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9594 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 mlxlogscore=790
+ suspectscore=2 malwarescore=0 spamscore=0 phishscore=0 adultscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004170145
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9594 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 clxscore=1011
+ impostorscore=0 mlxlogscore=848 mlxscore=0 lowpriorityscore=0
+ suspectscore=2 adultscore=0 spamscore=0 malwarescore=0 phishscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004170145
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 12 Apr 2020, syzbot wrote:
 
-> syzbot has found a reproducer for the following crash on:
+On 4/16/20 1:47 PM, Peter Zijlstra wrote:
+> The ftrace_regs_caller() trampoline does something 'funny' when there
+> is a direct-caller present. In that case it stuffs the 'direct-caller'
+> address on the return stack and then exits the function. This then
+> results in 'returning' to the direct-caller with the exact registers
+> we came in with -- an indirect tail-call without using a register.
 > 
-> HEAD commit:    0fa84af8 Merge tag 'usb-serial-5.7-rc1' of https://git.ker..
-> git tree:       https://github.com/google/kasan.git usb-fuzzer
-> console output: https://syzkaller.appspot.com/x/log.txt?x=14453a8be00000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=6b9c154b0c23aecf
-> dashboard link: https://syzkaller.appspot.com/bug?extid=7bf5a7b0f0a1f9446f4c
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=140c644fe00000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=163fb28be00000
+> This however (rightfully) confuses objtool because the function shares
+> a few instruction in order to have a single exit path, but the stack
+> layout is different for them, depending through which path we came
+> there.
 > 
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+7bf5a7b0f0a1f9446f4c@syzkaller.appspotmail.com
+> This is currently cludged by forcing the stack state to the non-direct
+> case, but this generates actively wrong (ORC) unwind information for
+> the direct case, leading to potential broken unwinds.
 > 
-> ==================================================================
-> BUG: KASAN: use-after-free in atomic_read include/asm-generic/atomic-instrumented.h:26 [inline]
-> BUG: KASAN: use-after-free in usb_kill_urb drivers/usb/core/urb.c:696 [inline]
-> BUG: KASAN: use-after-free in usb_kill_urb+0x24b/0x2c0 drivers/usb/core/urb.c:688
-> Read of size 4 at addr ffff8881c6d6e210 by task systemd-udevd/1137
+> Fix this issue by fully separating the exit paths. This results in
+> having to poke a second RET into the trampoline copy, see
+> ftrace_regs_caller_ret.
+> 
+> This brings us to a second objtool problem, in order for it to
+> perceive the 'jmp ftrace_epilogue' as a function exit, it needs to be
+> recognised as a tail call. In order to make that happen,
+> ftrace_epilogue needs to be the start of an STT_FUNC, so re-arrange
+> code to make this so.
+> 
+> Finally, a third issue is that objtool requires functions to exit with
+> the same stack layout they started with, which is obviously violated
+> in the direct case, employ the new HINT_RET_OFFSET to tell objtool
+> this is an expected exception.
+> 
+> Together, this results in generating correct ORC unwind information
+> for the ftrace_regs_caller() function and it's trampoline copies.
+> 
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> ---
+>   arch/x86/kernel/ftrace.c    |   12 ++++++++++--
+>   arch/x86/kernel/ftrace_64.S |   32 +++++++++++++++-----------------
+>   2 files changed, 25 insertions(+), 19 deletions(-)
+> 
+> --- a/arch/x86/kernel/ftrace.c
+> +++ b/arch/x86/kernel/ftrace.c
+> @@ -282,7 +282,8 @@ static inline void tramp_free(void *tram
+>   
+>   /* Defined as markers to the end of the ftrace default trampolines */
+>   extern void ftrace_regs_caller_end(void);
+> -extern void ftrace_epilogue(void);
+> +extern void ftrace_regs_caller_ret(void);
+> +extern void ftrace_caller_end(void);
+>   extern void ftrace_caller_op_ptr(void);
+>   extern void ftrace_regs_caller_op_ptr(void);
+>   
+> @@ -334,7 +335,7 @@ create_trampoline(struct ftrace_ops *ops
+>   		call_offset = (unsigned long)ftrace_regs_call;
+>   	} else {
+>   		start_offset = (unsigned long)ftrace_caller;
+> -		end_offset = (unsigned long)ftrace_epilogue;
+> +		end_offset = (unsigned long)ftrace_caller_end;
+>   		op_offset = (unsigned long)ftrace_caller_op_ptr;
+>   		call_offset = (unsigned long)ftrace_call;
+>   	}
+> @@ -366,6 +367,13 @@ create_trampoline(struct ftrace_ops *ops
+>   	if (WARN_ON(ret < 0))
+>   		goto fail;
+>   
+> +	if (ops->flags & FTRACE_OPS_FL_SAVE_REGS) {
+> +		ip = trampoline + (ftrace_regs_caller_ret - ftrace_regs_caller);
 
-Details removed.  Given how hard this is to reproduce, it definitely 
-seems like some sort of race.  But it's very hard to tell what is 
-racing with what.
+It might be safer to use start_offset instead of ftrace_regs_caller (in
+case start_offset is ever changed to something different from ftrace_regs_caller
+in the future):
 
-Let's start off easy and get a little extra information at the point 
-where the bug occurs.  As far as I can tell, usbhid_close() is always 
-supposed to be called before usbhid_stop().
+          ip = trampoline + (ftrace_regs_caller_ret - start_offset);
 
-Alan Stern
+alex.
 
-#syz test: https://github.com/google/kasan.git 0fa84af8
-
-Index: usb-devel/drivers/hid/usbhid/hid-core.c
-===================================================================
---- usb-devel.orig/drivers/hid/usbhid/hid-core.c
-+++ usb-devel/drivers/hid/usbhid/hid-core.c
-@@ -747,6 +747,13 @@ static void usbhid_close(struct hid_devi
- 		return;
- 
- 	hid_cancel_delayed_stuff(usbhid);
-+	if (usbhid->alan_alloc == 0)
-+		dev_WARN(&usbhid->intf->dev, "Close after dealloc (open %d)\n",
-+				usbhid->alan_open);
-+	if (usbhid->alan_open != 1)
-+		dev_WARN(&usbhid->intf->dev, "Close while open = %d\n",
-+				usbhid->alan_open);
-+	--usbhid->alan_open;
- 	usb_kill_urb(usbhid->urbin);
- 	usbhid->intf->needs_remote_wakeup = 0;
- }
-@@ -1120,6 +1127,7 @@ static int usbhid_start(struct hid_devic
- 				continue;
- 			if (!(usbhid->urbin = usb_alloc_urb(0, GFP_KERNEL)))
- 				goto fail;
-+			++usbhid->alan_alloc;
- 			pipe = usb_rcvintpipe(dev, endpoint->bEndpointAddress);
- 			usb_fill_int_urb(usbhid->urbin, dev, pipe, usbhid->inbuf, insize,
- 					 hid_irq_in, hid, interval);
-@@ -1177,6 +1185,7 @@ static int usbhid_start(struct hid_devic
- 		usbhid_set_leds(hid);
- 		device_set_wakeup_enable(&dev->dev, 1);
- 	}
-+	++usbhid->alan_open;
- 	return 0;
- 
- fail:
-@@ -1197,6 +1206,9 @@ static void usbhid_stop(struct hid_devic
- 	if (WARN_ON(!usbhid))
- 		return;
- 
-+	if (usbhid->alan_open > 0)
-+		dev_WARN(&usbhid->intf->dev, "Stop while open (alloc = %d)\n",
-+				usbhid->alan_alloc);
- 	if (hid->quirks & HID_QUIRK_ALWAYS_POLL) {
- 		clear_bit(HID_IN_POLLING, &usbhid->iofl);
- 		usbhid->intf->needs_remote_wakeup = 0;
-@@ -1206,6 +1218,7 @@ static void usbhid_stop(struct hid_devic
- 	spin_lock_irq(&usbhid->lock);	/* Sync with error and led handlers */
- 	set_bit(HID_DISCONNECTED, &usbhid->iofl);
- 	spin_unlock_irq(&usbhid->lock);
-+	--usbhid->alan_alloc;
- 	usb_kill_urb(usbhid->urbin);
- 	usb_kill_urb(usbhid->urbout);
- 	usb_kill_urb(usbhid->urbctrl);
-Index: usb-devel/drivers/hid/usbhid/usbhid.h
-===================================================================
---- usb-devel.orig/drivers/hid/usbhid/usbhid.h
-+++ usb-devel/drivers/hid/usbhid/usbhid.h
-@@ -87,6 +87,9 @@ struct usbhid_device {
- 	unsigned int retry_delay;                                       /* Delay length in ms */
- 	struct work_struct reset_work;                                  /* Task context for resets */
- 	wait_queue_head_t wait;						/* For sleeping */
-+
-+	int alan_alloc;
-+	int alan_open;
- };
- 
- #define	hid_to_usb_dev(hid_dev) \
-
+> +		ret = probe_kernel_read(ip, (void *)retq, RET_SIZE);
+> +		if (WARN_ON(ret < 0))
+> +			goto fail;
+> +	}
+> +
+>   	/*
+>   	 * The address of the ftrace_ops that is used for this trampoline
+>   	 * is stored at the end of the trampoline. This will be used to
+> --- a/arch/x86/kernel/ftrace_64.S
+> +++ b/arch/x86/kernel/ftrace_64.S
+> @@ -157,8 +157,12 @@ SYM_INNER_LABEL(ftrace_call, SYM_L_GLOBA
+>   	 * think twice before adding any new code or changing the
+>   	 * layout here.
+>   	 */
+> -SYM_INNER_LABEL(ftrace_epilogue, SYM_L_GLOBAL)
+> +SYM_INNER_LABEL(ftrace_caller_end, SYM_L_GLOBAL)
+>   
+> +	jmp ftrace_epilogue
+> +SYM_FUNC_END(ftrace_caller);
+> +
+> +SYM_FUNC_START(ftrace_epilogue)
+>   #ifdef CONFIG_FUNCTION_GRAPH_TRACER
+>   SYM_INNER_LABEL(ftrace_graph_call, SYM_L_GLOBAL)
+>   	jmp ftrace_stub
+> @@ -170,14 +174,12 @@ SYM_INNER_LABEL(ftrace_graph_call, SYM_L
+>    */
+>   SYM_INNER_LABEL_ALIGN(ftrace_stub, SYM_L_WEAK)
+>   	retq
+> -SYM_FUNC_END(ftrace_caller)
+> +SYM_FUNC_END(ftrace_epilogue)
+>   
+>   SYM_FUNC_START(ftrace_regs_caller)
+>   	/* Save the current flags before any operations that can change them */
+>   	pushfq
+>   
+> -	UNWIND_HINT_SAVE
+> -
+>   	/* added 8 bytes to save flags */
+>   	save_mcount_regs 8
+>   	/* save_mcount_regs fills in first two parameters */
+> @@ -233,7 +235,10 @@ SYM_INNER_LABEL(ftrace_regs_call, SYM_L_
+>   	movq ORIG_RAX(%rsp), %rax
+>   	movq %rax, MCOUNT_REG_SIZE-8(%rsp)
+>   
+> -	/* If ORIG_RAX is anything but zero, make this a call to that */
+> +	/*
+> +	 * If ORIG_RAX is anything but zero, make this a call to that.
+> +	 * See arch_ftrace_set_direct_caller().
+> +	 */
+>   	movq ORIG_RAX(%rsp), %rax
+>   	cmpq	$0, %rax
+>   	je	1f
+> @@ -244,20 +249,14 @@ SYM_INNER_LABEL(ftrace_regs_call, SYM_L_
+>   	movq %rax, MCOUNT_REG_SIZE(%rsp)
+>   
+>   	restore_mcount_regs 8
+> +	/* Restore flags */
+> +	popfq
+>   
+> -	jmp	2f
+> +SYM_INNER_LABEL(ftrace_regs_caller_ret, SYM_L_GLOBAL);
+> +	UNWIND_HINT_RET_OFFSET
+> +	jmp	ftrace_epilogue
+>   
+>   1:	restore_mcount_regs
+> -
+> -
+> -2:
+> -	/*
+> -	 * The stack layout is nondetermistic here, depending on which path was
+> -	 * taken.  This confuses objtool and ORC, rightfully so.  For now,
+> -	 * pretend the stack always looks like the non-direct case.
+> -	 */
+> -	UNWIND_HINT_RESTORE
+> -
+>   	/* Restore flags */
+>   	popfq
+>   
+> @@ -268,7 +267,6 @@ SYM_INNER_LABEL(ftrace_regs_call, SYM_L_
+>   	 * to the return.
+>   	 */
+>   SYM_INNER_LABEL(ftrace_regs_caller_end, SYM_L_GLOBAL)
+> -
+>   	jmp ftrace_epilogue
+>   
+>   SYM_FUNC_END(ftrace_regs_caller)
+> 
+> 
