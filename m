@@ -2,96 +2,211 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA5E4C352BE
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 09:33:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AB86C3815B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 09:33:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 93D6320776
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 09:33:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E08A20776
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 09:33:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TEDWZSBS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730259AbgDQJdD (ORCPT
+        id S1730346AbgDQJdQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 05:33:03 -0400
-Received: from foss.arm.com ([217.140.110.172]:48818 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730131AbgDQJdD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 05:33:03 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A017F30E;
-        Fri, 17 Apr 2020 02:33:02 -0700 (PDT)
-Received: from [10.37.12.128] (unknown [10.37.12.128])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 38E6E3F73D;
-        Fri, 17 Apr 2020 02:33:00 -0700 (PDT)
-Subject: Re: [PATCH 7/8] arm64: cpufeature: Relax checks for AArch32 support
- at EL[0-2]
-To:     will@kernel.org
-Cc:     linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
-        linux-kernel@vger.kernel.org, mark.rutland@arm.com, maz@kernel.org,
-        anshuman.khandual@arm.com, catalin.marinas@arm.com,
-        saiprakash.ranjan@codeaurora.org, dianders@chromium.org,
-        kernel-team@android.com
-References: <20200414213114.2378-1-will@kernel.org>
- <20200414213114.2378-8-will@kernel.org>
- <714f124c-7eb7-b750-e98c-63da64ddae75@arm.com>
- <20200415105843.GE12621@willie-the-truck>
- <d1f538ec-e956-c136-d0f8-54e7351a28a9@arm.com>
- <20200415122926.GA17095@willie-the-truck>
-From:   Suzuki K Poulose <suzuki.poulose@arm.com>
-Message-ID: <399dee05-9f47-2f91-a4e8-b4c9d3932b40@arm.com>
-Date:   Fri, 17 Apr 2020 10:37:50 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.7.0
+        Fri, 17 Apr 2020 05:33:16 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:31820 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730333AbgDQJdO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Apr 2020 05:33:14 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587115992;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=JhGeUvxGcTXLdmHA9NT0UPQF+FHUIR0Zeja74ZUVplA=;
+        b=TEDWZSBS/UxK9PJgwSRIxgwJ4LqRjOtYQaz9knlty0tRviOy74zJH/qBM2Ar37nJSfJ8Xa
+        rxJ2vBqU0PDmNSTQn28wZsCQNUjjgH+6XI0ziwMhANOdB/skySQemJOhR77eGcA85OqxTy
+        1rLiCvqHJ6imUnMmKU74FRfE0plg62Y=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-369-OVKHQIXwNXKHVGLh1l_TJQ-1; Fri, 17 Apr 2020 05:33:08 -0400
+X-MC-Unique: OVKHQIXwNXKHVGLh1l_TJQ-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B3C53107ACCA;
+        Fri, 17 Apr 2020 09:33:06 +0000 (UTC)
+Received: from [10.72.13.157] (ovpn-13-157.pek2.redhat.com [10.72.13.157])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 86A0A5C1D6;
+        Fri, 17 Apr 2020 09:32:58 +0000 (UTC)
+Subject: Re: [PATCH V2] vhost: do not enable VHOST_MENU by default
+To:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        KVM list <kvm@vger.kernel.org>,
+        virtualization@lists.linux-foundation.org,
+        netdev <netdev@vger.kernel.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>
+References: <20200415024356.23751-1-jasowang@redhat.com>
+ <20200416185426-mutt-send-email-mst@kernel.org>
+ <b7e2deb7-cb64-b625-aeb4-760c7b28c0c8@redhat.com>
+ <20200417022929-mutt-send-email-mst@kernel.org>
+ <4274625d-6feb-81b6-5b0a-695229e7c33d@redhat.com>
+ <20200417042912-mutt-send-email-mst@kernel.org>
+ <fdb555a6-4b8d-15b6-0849-3fe0e0786038@redhat.com>
+ <20200417044230-mutt-send-email-mst@kernel.org>
+ <73843240-3040-655d-baa9-683341ed4786@redhat.com>
+ <20200417045454-mutt-send-email-mst@kernel.org>
+ <CAMuHMdXbzd9puG6gGri4jUtUT8rFrqnWwZ1NwP=47WQJ_eBC5g@mail.gmail.com>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <2f5681bb-a8e6-fe73-57f5-24de7a5a72e8@redhat.com>
+Date:   Fri, 17 Apr 2020 17:32:57 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20200415122926.GA17095@willie-the-truck>
+In-Reply-To: <CAMuHMdXbzd9puG6gGri4jUtUT8rFrqnWwZ1NwP=47WQJ_eBC5g@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/15/2020 01:29 PM, Will Deacon wrote:
-> On Wed, Apr 15, 2020 at 12:37:31PM +0100, Suzuki K Poulose wrote:
->> On 04/15/2020 11:58 AM, Will Deacon wrote:
->>> On Wed, Apr 15, 2020 at 11:50:58AM +0100, Suzuki K Poulose wrote:
->>>> On 04/14/2020 10:31 PM, Will Deacon wrote:
->>>>> We don't need to be quite as strict about mismatched AArch32 support,
->>>>> which is good because the friendly hardware folks have been busy
->>>>> mismatching this to their hearts' content.
->>>>>
->>>>>      * We don't care about EL2 or EL3 (there are silly comments concerning
->>>>>        the latter, so remove those)
->>>>>
->>>>>      * EL1 support is gated by the ARM64_HAS_32BIT_EL1 capability and handled
->>>>>        gracefully when a mismatch occurs
->>>>>
->>>>>      * EL1 support is gated by the ARM64_HAS_32BIT_EL0 capability and handled
->>>>
->>>> s/EL1/EL0
->>>>
->>>>>        gracefully when a mismatch occurs
->>>>>
->>>>> Relax the AArch32 checks to FTR_NONSTRICT.
->>>>
->>>> Agreed. We should do something similar for the features exposed by the
->>>> ELF_HWCAP, of course in a separate series.
+
+On 2020/4/17 =E4=B8=8B=E5=8D=885:25, Geert Uytterhoeven wrote:
+> Hi Michael,
+>
+> On Fri, Apr 17, 2020 at 10:57 AM Michael S. Tsirkin<mst@redhat.com>  wr=
+ote:
+>> On Fri, Apr 17, 2020 at 04:51:19PM +0800, Jason Wang wrote:
+>>> On 2020/4/17 =E4=B8=8B=E5=8D=884:46, Michael S. Tsirkin wrote:
+>>>> On Fri, Apr 17, 2020 at 04:39:49PM +0800, Jason Wang wrote:
+>>>>> On 2020/4/17 =E4=B8=8B=E5=8D=884:29, Michael S. Tsirkin wrote:
+>>>>>> On Fri, Apr 17, 2020 at 03:36:52PM +0800, Jason Wang wrote:
+>>>>>>> On 2020/4/17 =E4=B8=8B=E5=8D=882:33, Michael S. Tsirkin wrote:
+>>>>>>>> On Fri, Apr 17, 2020 at 11:12:14AM +0800, Jason Wang wrote:
+>>>>>>>>> On 2020/4/17 =E4=B8=8A=E5=8D=886:55, Michael S. Tsirkin wrote:
+>>>>>>>>>> On Wed, Apr 15, 2020 at 10:43:56AM +0800, Jason Wang wrote:
+>>>>>>>>>>> We try to keep the defconfig untouched after decoupling CONFI=
+G_VHOST
+>>>>>>>>>>> out of CONFIG_VIRTUALIZATION in commit 20c384f1ea1a
+>>>>>>>>>>> ("vhost: refine vhost and vringh kconfig") by enabling VHOST_=
+MENU by
+>>>>>>>>>>> default. Then the defconfigs can keep enabling CONFIG_VHOST_N=
+ET
+>>>>>>>>>>> without the caring of CONFIG_VHOST.
+>>>>>>>>>>>
+>>>>>>>>>>> But this will leave a "CONFIG_VHOST_MENU=3Dy" in all defconfi=
+gs and even
+>>>>>>>>>>> for the ones that doesn't want vhost. So it actually shifts t=
+he
+>>>>>>>>>>> burdens to the maintainers of all other to add "CONFIG_VHOST_=
+MENU is
+>>>>>>>>>>> not set". So this patch tries to enable CONFIG_VHOST explicit=
+ly in
+>>>>>>>>>>> defconfigs that enables CONFIG_VHOST_NET and CONFIG_VHOST_VSO=
+CK.
+>>>>>>>>>>>
+>>>>>>>>>>> Acked-by: Christian Borntraeger<borntraeger@de.ibm.com>    (s=
+390)
+>>>>>>>>>>> Acked-by: Michael Ellerman<mpe@ellerman.id.au>    (powerpc)
+>>>>>>>>>>> Cc: Thomas Bogendoerfer<tsbogend@alpha.franken.de>
+>>>>>>>>>>> Cc: Benjamin Herrenschmidt<benh@kernel.crashing.org>
+>>>>>>>>>>> Cc: Paul Mackerras<paulus@samba.org>
+>>>>>>>>>>> Cc: Michael Ellerman<mpe@ellerman.id.au>
+>>>>>>>>>>> Cc: Heiko Carstens<heiko.carstens@de.ibm.com>
+>>>>>>>>>>> Cc: Vasily Gorbik<gor@linux.ibm.com>
+>>>>>>>>>>> Cc: Christian Borntraeger<borntraeger@de.ibm.com>
+>>>>>>>>>>> Reported-by: Geert Uytterhoeven<geert@linux-m68k.org>
+>>>>>>>>>>> Signed-off-by: Jason Wang<jasowang@redhat.com>
+>>>>>>>>>> I rebased this on top of OABI fix since that
+>>>>>>>>>> seems more orgent to fix.
+>>>>>>>>>> Pushed to my vhost branch pls take a look and
+>>>>>>>>>> if possible test.
+>>>>>>>>>> Thanks!
+>>>>>>>>> I test this patch by generating the defconfigs that wants vhost=
+_net or
+>>>>>>>>> vhost_vsock. All looks fine.
+>>>>>>>>>
+>>>>>>>>> But having CONFIG_VHOST_DPN=3Dy may end up with the similar sit=
+uation that
+>>>>>>>>> this patch want to address.
+>>>>>>>>> Maybe we can let CONFIG_VHOST depends on !ARM || AEABI then add=
+ another
+>>>>>>>>> menuconfig for VHOST_RING and do something similar?
+>>>>>>>>>
+>>>>>>>>> Thanks
+>>>>>>>> Sorry I don't understand. After this patch CONFIG_VHOST_DPN is j=
+ust
+>>>>>>>> an internal variable for the OABI fix. I kept it separate
+>>>>>>>> so it's easy to revert for 5.8. Yes we could squash it into
+>>>>>>>> VHOST directly but I don't see how that changes logic at all.
+>>>>>>> Sorry for being unclear.
+>>>>>>>
+>>>>>>> I meant since it was enabled by default, "CONFIG_VHOST_DPN=3Dy" w=
+ill be left
+>>>>>>> in the defconfigs.
+>>>>>> But who cares?
+>>>>> FYI, please seehttps://www.spinics.net/lists/kvm/msg212685.html
+>>>> The complaint was not about the symbol IIUC.  It was that we caused
+>>>> everyone to build vhost unless they manually disabled it.
+>>> There could be some misunderstanding here. I thought it's somehow sim=
+ilar: a
+>>> CONFIG_VHOST_MENU=3Dy will be left in the defconfigs even if CONFIG_V=
+HOST is
+>>> not set.
 >>>
->>> Hmm, I didn't think we needed to touch the HWCAPs, as they're derived from
->>> the sanitised feature register values. What am I missing?
+>>> Thanks
+>> Hmm. So looking at Documentation/kbuild/kconfig-language.rst :
 >>
->> sorry, that was cryptic. I was suggesting to relax the ftr fields to
->> NONSTRICT for the fields covered by ELF HWCAPs (and other CPU hwcaps).
-> 
-> Ah, gotcha. Given that the HWCAPs usually describe EL0 features, I say we
-> can punt this down the road until people give us hardware with mismatched
-> AArch32 at EL0.
+>>          Things that merit "default y/m" include:
+>>
+>>          a) A new Kconfig option for something that used to always be =
+built
+>>             should be "default y".
+>>
+>>          b) A new gatekeeping Kconfig option that hides/shows other Kc=
+onfig
+>>             options (but does not generate any code of its own), shoul=
+d be
+>>             "default y" so people will see those other options.
+>>
+>>          c) Sub-driver behavior or similar options for a driver that i=
+s
+>>             "default n". This allows you to provide sane defaults.
+>>
+>>
+>> So it looks like VHOST_MENU is actually matching rule b).
+>> So what's the problem we are trying to solve with this patch, exactly?
+>>
+>> Geert could you clarify pls?
+> I can confirm VHOST_MENU is matching rule b), so it is safe to always
+> enable it.
+>
+> Gr{oetje,eeting}s,
+>
+>                          Geert
 
-Btw, this is not just mismatched AArch32, but mismatched AArch64 HWCAPs
-too, which I believe exists. Anyways as you said, we can delay this
-until we get the reports :-)
 
-Suzuki
+Right, so I think we can drop this patch.
+
+Thanks
+
+
