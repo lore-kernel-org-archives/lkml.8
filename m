@@ -2,140 +2,115 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96131C38A29
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 10:45:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05F5BC352BE
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 10:45:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7596D21D91
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 10:45:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA129221EC
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 10:45:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="vlbD23le"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YO8mOk7b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729812AbgDQKpL (ORCPT
+        id S1729844AbgDQKpN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 06:45:11 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:51642 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729143AbgDQKpK (ORCPT
+        Fri, 17 Apr 2020 06:45:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56946 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729143AbgDQKpM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 06:45:10 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03HAflIZ009346;
-        Fri, 17 Apr 2020 10:44:55 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references; s=corp-2020-01-29;
- bh=e4vydea3JrNyN7SfDwhIe+NaJTL/Jn1GNFvcBpuIocI=;
- b=vlbD23le87k9MsrdIrUJZoHkTmLNlDqlpJJW8H1xg+f2/rdWz/I4PE6magtD0tOxnce3
- sp7d6hzlS7vtHUBEt25Tt8tzhwjY7s6PYFp20qTGDQ5tNjYChEk8znuC/kpM7koEwZDr
- YKUKI8bF4OCA6OBZ2FviFDEs/w3Fa8XbgBxOaEt7+xTNtvwyzxviQaUBW5oeSEeYetq3
- VfDYSk43PYFSTVVQytO4jJNozuLyoU1ejwPZOji7psJDYZAwDkFDW6UzR8l9mJTt+FvC
- mPQv/fAKZFOQCjTv1GxVR/ZYWDIjM+/Rp+aj2+6/BDkyP7CR+jOAQeUguOI2ybdeg7RU Ew== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 30e0aaby6x-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 17 Apr 2020 10:44:55 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03HAcHHd002360;
-        Fri, 17 Apr 2020 10:42:54 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3020.oracle.com with ESMTP id 30dn9jkyrr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 17 Apr 2020 10:42:54 +0000
-Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 03HAgr4S008206;
-        Fri, 17 Apr 2020 10:42:53 GMT
-Received: from localhost.uk.oracle.com (/10.175.205.33)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 17 Apr 2020 03:42:53 -0700
-From:   Alan Maguire <alan.maguire@oracle.com>
-To:     ast@kernel.org, daniel@iogearbox.net, yhs@fb.com
-Cc:     kafai@fb.com, songliubraving@fb.com, andriin@fb.com,
-        john.fastabend@gmail.com, kpsingh@chromium.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, Alan Maguire <alan.maguire@oracle.com>
-Subject: [RFC PATCH bpf-next 1/6] bpf: provide function to get vmlinux BTF information
-Date:   Fri, 17 Apr 2020 11:42:35 +0100
-Message-Id: <1587120160-3030-2-git-send-email-alan.maguire@oracle.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1587120160-3030-1-git-send-email-alan.maguire@oracle.com>
-References: <1587120160-3030-1-git-send-email-alan.maguire@oracle.com>
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9593 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 mlxscore=0 adultscore=0
- spamscore=0 phishscore=0 bulkscore=0 suspectscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004170084
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9593 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 clxscore=1015
- impostorscore=0 mlxlogscore=999 mlxscore=0 lowpriorityscore=0
- suspectscore=0 adultscore=0 spamscore=0 malwarescore=0 phishscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004170084
+        Fri, 17 Apr 2020 06:45:12 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E527C061A0C
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 03:45:10 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id u10so1414386lfo.8
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 03:45:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=OOXAVYgcfazn+Kp2sijY0OnrpeLZ73nHGu/TeI4B9JM=;
+        b=YO8mOk7biFYLUfcg+pBXN/b07QrhLpOFRIuoeii6jVnK1g7X+SuODzlcfs4dkpFdy1
+         0P2qzCVH0Svgual9NVDEzB4dJQskrRK6wf2GGkSfH2Ea4y4dQAuptukNHA36Rm+T5U2A
+         ao9IsRvVc8cZDaNurdcapZNtmYo1RgAUlSTgh/ivR6tps7o6U6PbknpmN+xqWxF7QyVJ
+         wPbwLfAog3NH6iV3FlECfBKZV5i6XtHLxItDMCtSjMS76wbTa2Je+TTAJNBDbWPaHhsN
+         v4x0o3uX3dxW7oMQoQk+ubWyZBI4pFadJ3xUaCcH/6BdxH6iE988/ogAgwsvllZ7L2NL
+         ZJkA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=OOXAVYgcfazn+Kp2sijY0OnrpeLZ73nHGu/TeI4B9JM=;
+        b=kRS1CdGBq/oMrMRzUy9zPTnUGhfQ3NxZslXj++YumWcWxRJFYu2hlCIeMCSTEU3BeE
+         Br5uLKXg51qz6aAtFLL1/AO/B99/jSMC5w7lYQqyq8KWidmC2a9r2me5+1ZgF4wfVDL/
+         2HtS3sqbZfxLMhPucvZjhff5BQtKZXUIq/lWNlq/4TQ+wvNZgj1rI6q2PB49rY/it63P
+         /RwhOj5Fn6k5fkfHQo2BjSv90GOZ5oPLBMmr1ERfXP1WwoNOth10ioFKPtNgO+BtixAr
+         eqyigdXpD/lY0Oo3fvYerTtp1JFc2s2NCRDgyvUDaxLtFGiRe1I6OZi0ZBnNdaeFAHi/
+         b1CA==
+X-Gm-Message-State: AGi0PuaDCnXBWirqHkeLUxKVp4sMpKE8WCq9BygeYbwZm1NuRTa2AQeR
+        R/ZwBUw4KLrAkdTkq9E93RrGTYqL9ETB9zcUs16z3Q==
+X-Google-Smtp-Source: APiQypKryf1TaEj6EY1h8Sc7BIdHwd0eVmA52KHCrRd7x7r2BQz298tBmlXWjjDTDtxsguXhNOckrNYZ/Zq5AOeq4UM=
+X-Received: by 2002:ac2:41d9:: with SMTP id d25mr1677099lfi.204.1587120308928;
+ Fri, 17 Apr 2020 03:45:08 -0700 (PDT)
+MIME-Version: 1.0
+References: <1585286988-10671-1-git-send-email-sumit.garg@linaro.org>
+In-Reply-To: <1585286988-10671-1-git-send-email-sumit.garg@linaro.org>
+From:   Sumit Garg <sumit.garg@linaro.org>
+Date:   Fri, 17 Apr 2020 16:14:57 +0530
+Message-ID: <CAFA6WYOqB2BwrZhgm1=btEmPwxYVpKKFAgOE2mYOUrUykgmiLw@mail.gmail.com>
+Subject: Re: [PATCH v6 0/2] Enhance TEE kernel client interface
+To:     Jens Wiklander <jens.wiklander@linaro.org>
+Cc:     "tee-dev @ lists . linaro . org" <tee-dev@lists.linaro.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jerome Forissier <jerome@forissier.org>,
+        Stuart Yoder <stuart.yoder@arm.com>,
+        Daniel Thompson <daniel.thompson@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It will be used later for BTF printk() support
+Hi Jens,
 
-Signed-off-by: Alan Maguire <alan.maguire@oracle.com>
----
- include/linux/bpf.h   |  2 ++
- kernel/bpf/verifier.c | 18 ++++++++++++------
- 2 files changed, 14 insertions(+), 6 deletions(-)
+On Fri, 27 Mar 2020 at 11:00, Sumit Garg <sumit.garg@linaro.org> wrote:
+>
+> Earlier this patch-set was part of TEE Trusted keys patch-set [1]. But
+> since these are completely independent enhancements for TEE kernel
+> client interface which can be merged separately while TEE Trusted keys
+> discussions are ongoing.
+>
+> Patch #1 enables support for registered kernel shared memory with TEE.
+>
+> Patch #2 enables support for private kernel login method required for
+> cases like trusted keys where we don't wan't user-space to directly
+> access TEE service.
+>
+> [1] https://lkml.org/lkml/2019/10/31/430
+>
+> Changes in v6:
+> - Reserve only half of GP implementation defined range for kernel space.
+>
+> Changes in v5:
+> - Misc. renaming of variables.
+>
+> Sumit Garg (2):
+>   tee: enable support to register kernel memory
+>   tee: add private login method for kernel clients
+>
 
-diff --git a/include/linux/bpf.h b/include/linux/bpf.h
-index 40c5392..47d0fcd 100644
---- a/include/linux/bpf.h
-+++ b/include/linux/bpf.h
-@@ -1123,6 +1123,8 @@ int bpf_check(struct bpf_prog **fp, union bpf_attr *attr,
- 	      union bpf_attr __user *uattr);
- void bpf_patch_call_args(struct bpf_insn *insn, u32 stack_depth);
- 
-+struct btf *bpf_get_btf_vmlinux(void);
-+
- /* Map specifics */
- struct xdp_buff;
- struct sk_buff;
-diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
-index ae32517..87251fa 100644
---- a/kernel/bpf/verifier.c
-+++ b/kernel/bpf/verifier.c
-@@ -10039,6 +10039,17 @@ static int check_attach_btf_id(struct bpf_verifier_env *env)
- 	}
- }
- 
-+struct btf *bpf_get_btf_vmlinux(void)
-+{
-+	if (!btf_vmlinux && IS_ENABLED(CONFIG_DEBUG_INFO_BTF)) {
-+		mutex_lock(&bpf_verifier_lock);
-+		if (!btf_vmlinux)
-+			btf_vmlinux = btf_parse_vmlinux();
-+		mutex_unlock(&bpf_verifier_lock);
-+	}
-+	return btf_vmlinux;
-+}
-+
- int bpf_check(struct bpf_prog **prog, union bpf_attr *attr,
- 	      union bpf_attr __user *uattr)
- {
-@@ -10072,12 +10083,7 @@ int bpf_check(struct bpf_prog **prog, union bpf_attr *attr,
- 	env->ops = bpf_verifier_ops[env->prog->type];
- 	is_priv = capable(CAP_SYS_ADMIN);
- 
--	if (!btf_vmlinux && IS_ENABLED(CONFIG_DEBUG_INFO_BTF)) {
--		mutex_lock(&bpf_verifier_lock);
--		if (!btf_vmlinux)
--			btf_vmlinux = btf_parse_vmlinux();
--		mutex_unlock(&bpf_verifier_lock);
--	}
-+	bpf_get_btf_vmlinux();
- 
- 	/* grab the mutex to protect few globals used by verifier */
- 	if (!is_priv)
--- 
-1.8.3.1
+In case we don't have any further comments, would you like to pick up these?
 
+-Sumit
+
+>  drivers/tee/tee_core.c   |  7 +++++++
+>  drivers/tee/tee_shm.c    | 28 +++++++++++++++++++++++++---
+>  include/linux/tee_drv.h  |  1 +
+>  include/uapi/linux/tee.h |  9 +++++++++
+>  4 files changed, 42 insertions(+), 3 deletions(-)
+>
+> --
+> 2.7.4
+>
