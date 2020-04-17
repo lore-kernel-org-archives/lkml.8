@@ -2,105 +2,68 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E08C2C3815B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 17:42:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFB6CC2D0EF
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 17:45:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C7A762220A
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 17:42:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="hfCzRr7n"
+	by mail.kernel.org (Postfix) with ESMTP id A448322240
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 17:45:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587145523;
+	bh=/dnkughh1n8P56Pxh4knn3Doyi8au2e05RCMTooUCKc=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=ZBaIDu+WIHMq3u2d4wY0GIA10jpUu5PL+HvUaxHcthsptTkWsglGr+Ap1FQ89/ezx
+	 o38pnjlw7j7Ge0tFtTxpEU0Eud6s5dqwF7tnAHF1J/8r/EemDLzPggcEmNjisNRV3Z
+	 otvK4tfUK0qm0E6R741TZuzcDEbUQ5hZgFYiKD0A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730154AbgDQRme (ORCPT
+        id S1729965AbgDQRpW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 13:42:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37118 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730098AbgDQRmd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 13:42:33 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58C6AC061A0F
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 10:42:33 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id 7so2396821pjo.0
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 10:42:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=KjrOit2pYvG6gEqrAeDYI3gE0UdgfpjpULdnfz35SG4=;
-        b=hfCzRr7n9mEYTAzBtGsqWPrXejcBdO5Qow4g1jcQych3gq3xMjtal1xwI1r0Xaltxg
-         yOtWdQuQor/DxpjYesdIWV0ZJ0OS84Rbas3R5Jo6sGHlqZV8IucD609aVErkzYTaozDW
-         iZRPrR2VgmL6QzTT68OtXYFHagWH+Xrq2cJ5T7LGCn65ywk8bJGveZF5ugT8ycyWpad1
-         gzB9YmagGJgST/YiEpY5nw9TpSElJVBxpla1je6WnVaA7RC1tTXPHwHEln0rgGic2siW
-         kGIgF6hQ1pWO7t16HoW4SP7IVKGatWHYZkn70aDNcWTBQp3kJ1rLWPQRorrfjanJEROC
-         ZAaA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=KjrOit2pYvG6gEqrAeDYI3gE0UdgfpjpULdnfz35SG4=;
-        b=JbcxdJN0P/n/orfp92IIN52YvDeSbOlOg/l9udMAVFy5KDyQWYyTwevEDHEoB6eAR1
-         CpK3/W1jdYPOeIsL1DSVEG1j+Ep4mVuloPedcKU+PkhlMDueBBLEct82gRpuE13PrPxt
-         MyxnXsg9KDd3FVSSaFLm73CPYHPoKiL7zKIQa/Y+UMrK+2g9dHPiacGAKd8iZ/orD8+y
-         QjOv2yxo+HFGKBycbK+9/8yJGl5vhwQco5wN5CsuOaScJJS7V/tnkFZF+BYGxhKhR6da
-         gwl0Qd3a2CwC1hcz8r3kMIi3P8DQ81sF45pT1E5HvIspZanGj+IAR0Sjs4P7MI8EIjz+
-         pXNQ==
-X-Gm-Message-State: AGi0Pua2PlfRBAs2O1TFbXCmn4NSG0KR9wcMfP6J7Dcm2ts+NM5cfyCt
-        Hsbh4jz5wWrusqLli53nVPgLLg==
-X-Google-Smtp-Source: APiQypKVAurQv52m9wQY/0bAGCeuAPfRMLq4iN/ZNr5XO8b0GoTa0DND2q3neyht7vIzBR1tbdREHA==
-X-Received: by 2002:a17:90a:364c:: with SMTP id s70mr5685521pjb.143.1587145352627;
-        Fri, 17 Apr 2020 10:42:32 -0700 (PDT)
-Received: from [192.168.1.188] ([66.219.217.145])
-        by smtp.gmail.com with ESMTPSA id h15sm13021131pgj.35.2020.04.17.10.42.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 17 Apr 2020 10:42:31 -0700 (PDT)
-Subject: Re: [GIT PULL] io_uring fixes for 5.7-rc
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        io-uring <io-uring@vger.kernel.org>
-References: <2750fd4f-8edc-18c2-1991-c1dc794a431f@kernel.dk>
- <CAHk-=wiWP0M=ZAim7VVuoR+5ri+Ug+KZDE-TZskma4HV91ACxA@mail.gmail.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <53ee39ac-2d97-9bcc-80c9-5ed9b0868e8f@kernel.dk>
-Date:   Fri, 17 Apr 2020 11:42:29 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-MIME-Version: 1.0
-In-Reply-To: <CAHk-=wiWP0M=ZAim7VVuoR+5ri+Ug+KZDE-TZskma4HV91ACxA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Fri, 17 Apr 2020 13:45:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46006 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728421AbgDQRpW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Apr 2020 13:45:22 -0400
+Subject: Re: [GIT PULL] sound fixes for 5.7-rc2
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587145522;
+        bh=/dnkughh1n8P56Pxh4knn3Doyi8au2e05RCMTooUCKc=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=L7NkxHUrLfFYZ6sq+/APTjzwdA1SEvTjw6oO2Ovm6iLZ/56KFmHbcr3C7wx9FN4F2
+         0jv2a5qiAhGThjK8W8wQVhJj8FGOukcoJnQlMw4EiVdrCV+SYeqEG09lqddG/jyu0v
+         LTuy1SWOu03lBRcy2hZWSSj8TcHqJOCrT6fmtOxw=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <s5hr1wm9ud9.wl-tiwai@suse.de>
+References: <s5hr1wm9ud9.wl-tiwai@suse.de>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <s5hr1wm9ud9.wl-tiwai@suse.de>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/tiwai/sound.git
+ tags/sound-5.7-rc2
+X-PR-Tracked-Commit-Id: 9a6418487b566503c772cb6e7d3d44e652b019b0
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: c8a6552ff1155788b9a25ad376ab42e0742eef6b
+Message-Id: <158714552198.1625.111665942813850504.pr-tracker-bot@kernel.org>
+Date:   Fri, 17 Apr 2020 17:45:21 +0000
+To:     Takashi Iwai <tiwai@suse.de>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/17/20 11:26 AM, Linus Torvalds wrote:
-> On Fri, Apr 17, 2020 at 8:16 AM Jens Axboe <axboe@kernel.dk> wrote:
->>
->> - Work restore poll cancelation fix
-> 
-> That whole apoll thing is disgusting.
-> 
-> I cannot convince myself it is right. How do you convince yourself?
+The pull request you sent on Fri, 17 Apr 2020 14:20:18 +0200:
 
-req->poll is used for pure poll requests, req->apoll is used for poll
-that is armed on behalf of a non-poll request. So the paths are actually
-pretty well defined, for both the submission side entry, and the
-completion side which is through the wakeup handlers.
+> git://git.kernel.org/pub/scm/linux/kernel/git/tiwai/sound.git tags/sound-5.7-rc2
 
-The handlers that deal with the "poll on behalf of another request" is
-pretty short and limited. Anything that uses "poll on behalf of others"
-is not going to be queued async, which is the overlap with io_wq_work
-in the io_kiocb structure. The only part we have to be a bit careful
-with there is for the assume contexts, like mm etc. One of the fixes
-in this pull request deals with that.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/c8a6552ff1155788b9a25ad376ab42e0742eef6b
+
+Thank you!
 
 -- 
-Jens Axboe
-
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
