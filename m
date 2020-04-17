@@ -2,140 +2,174 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE89DC3815B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 09:23:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 989A8C3815B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 09:25:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BB62120644
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 09:23:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mHGfQckc"
+	by mail.kernel.org (Postfix) with ESMTP id 6D7AC206B9
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 09:25:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730248AbgDQJXf (ORCPT
+        id S1730270AbgDQJZg convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 05:23:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44126 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730200AbgDQJXd (ORCPT
+        Fri, 17 Apr 2020 05:25:36 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:40641 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730211AbgDQJZg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 05:23:33 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3D30C061A0C
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 02:23:32 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id o81so2206495wmo.2
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 02:23:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=B2EV7Dr9G55HYkfQfAu+FWAIDztvRbZhmJstqdWtxkc=;
-        b=mHGfQckcXTY3OTTrOiHgCXY+DEtOXW6whILiTwQMViLFk2xxhL0ohEkLxinS5qIwJv
-         Sp2wM2kODOih4Jvw3l0spWfdAQH9aw4LjmCzHNuDa2iBdu1f5y3sXgF49f9AyTu53Lzi
-         T0XTBiKAQwg3X6Cog6494wwQtTZObT0yKsRgsQ2wwZbEnxEMFPj+O4UT1GmIDtvwB2u0
-         hQFUJtnTcXpnXs/DSt+EvisGhWQPfFKUjaKJ86JWV289ERfIIDtJ1xG0gobInZKBYkwx
-         aWScF4SLYqYyJvDvk742vmlYD4JwPxnYeCGH8LDIT/H/nXTjxnTicWb1LMbiBVaNN2lH
-         ELew==
+        Fri, 17 Apr 2020 05:25:36 -0400
+Received: by mail-oi1-f193.google.com with SMTP id t199so1532330oif.7;
+        Fri, 17 Apr 2020 02:25:35 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=B2EV7Dr9G55HYkfQfAu+FWAIDztvRbZhmJstqdWtxkc=;
-        b=bfSEIWohB23YcqSDLAo5GjNA56v3IOs7nrNCuapsrMRaNEtsvhJN8sd3FRgIaGgwl1
-         RHbi/CX8AJRTR2IuK52STPSu4X9+iC6S0vikO61UNbEzByJpA4MLrJHEiECoxQd/CCwC
-         qrK9FVnXR6vQbiI4k7czBhATh8OjnQOvyLZ6FOWpoPBWVFGOK2Lpp2EWVPDgKBmfWxOU
-         OehCl636S3p5nHVabmJptadMLd3APknvYuMsCTi47AV53yQIhr58LGoqFKhQmCdPJHUD
-         U8XvwDjvRhjIbtqabwjx9x1tr+yFirn0CDnqOXaF0oXAEaKUOp6uXKutDnggY1asKohY
-         8HVQ==
-X-Gm-Message-State: AGi0Pubg1HKnjTfW8WtwZJAiGtm/C1veRqrX6E/S5X/Dlj3RpLeE1nrc
-        6IY3ZlXqLU7ZkZK+2/E3aThYh30EyHk=
-X-Google-Smtp-Source: APiQypIppZr/407qIeQiSZ9EWdSv165kLtjK+B5fx1fXkPd+6y30GQXlWG/yqKnV7BMkICzk//tfoA==
-X-Received: by 2002:a7b:c7d2:: with SMTP id z18mr2335863wmk.109.1587115411536;
-        Fri, 17 Apr 2020 02:23:31 -0700 (PDT)
-Received: from srini-hackbox.lan (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.gmail.com with ESMTPSA id o18sm4713830wrp.23.2020.04.17.02.23.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Apr 2020 02:23:30 -0700 (PDT)
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-To:     bjorn.andersson@linaro.org
-Cc:     agross@kernel.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH] arm64: dts: qcom: db820c: fix audio configuration
-Date:   Fri, 17 Apr 2020 10:23:27 +0100
-Message-Id: <20200417092327.7341-1-srinivas.kandagatla@linaro.org>
-X-Mailer: git-send-email 2.21.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=BWSTE4N/Wm9rwAUVp1UnC1E/i0r+ahDeY0nVMk2tI18=;
+        b=RSnd0XS0+dJ4dX7E+0NjRc5voZrcEAU8JK0DvLYK3rSpnJzRBWxflBEbQJqkHmyyOR
+         Pg1waFJBuwin507eQYcDZpag2Looce1JaJ9yJsk5DtFGU3NoJl0eie2gjOEO2P3VRvRn
+         HpkvLN27MTk9KKdIv99EQOdezL2WY5pXzPvpN5C44jVCHloufhqqHLogdj9EUwnpRskB
+         O+/pkGv3kyHOx9AwNWQatMPqfR3+zcUzQVRcoVxZiLQ+s9F+rHz27Y0GziQONctk5DGx
+         H7Ckbhadc09VOHUHsV9RM9FFZM9dT7fezoIXMtYnTXRdCeyzpn7I8SfVWp4IHmrV3PC9
+         5NwA==
+X-Gm-Message-State: AGi0PuYvSJDNrtOkoB/mcaTaZN10IOeoDsrH+2syikF18FqkvGGl6rGf
+        45bcqI2rp8jhvkx3muxgd9T+kg3fzWlvUgDbphDYZMnd
+X-Google-Smtp-Source: APiQypKOQv5qC1afvAW43RZ+soR2wpbEzQicoJCcDz/ilWYKQxCgXhQrGiZnQcdr5oL9NLxkkPtHOBZ4kMwMNNnvFv8=
+X-Received: by 2002:aca:cdd1:: with SMTP id d200mr1412099oig.153.1587115535289;
+ Fri, 17 Apr 2020 02:25:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200415024356.23751-1-jasowang@redhat.com> <20200416185426-mutt-send-email-mst@kernel.org>
+ <b7e2deb7-cb64-b625-aeb4-760c7b28c0c8@redhat.com> <20200417022929-mutt-send-email-mst@kernel.org>
+ <4274625d-6feb-81b6-5b0a-695229e7c33d@redhat.com> <20200417042912-mutt-send-email-mst@kernel.org>
+ <fdb555a6-4b8d-15b6-0849-3fe0e0786038@redhat.com> <20200417044230-mutt-send-email-mst@kernel.org>
+ <73843240-3040-655d-baa9-683341ed4786@redhat.com> <20200417045454-mutt-send-email-mst@kernel.org>
+In-Reply-To: <20200417045454-mutt-send-email-mst@kernel.org>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Fri, 17 Apr 2020 11:25:23 +0200
+Message-ID: <CAMuHMdXbzd9puG6gGri4jUtUT8rFrqnWwZ1NwP=47WQJ_eBC5g@mail.gmail.com>
+Subject: Re: [PATCH V2] vhost: do not enable VHOST_MENU by default
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     Jason Wang <jasowang@redhat.com>,
+        "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        KVM list <kvm@vger.kernel.org>,
+        virtualization@lists.linux-foundation.org,
+        netdev <netdev@vger.kernel.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-After patch f864edff110d ("ASoC: qdsp6: q6routing: remove default routing")
-and 9b60441692d9 ("ASoC: qdsp6: q6asm-dai: only enable dais from device tree")
-asm dais and routing needs to be properly specified at device tree level.
+Hi Michael,
 
-This patch fixes this.
+On Fri, Apr 17, 2020 at 10:57 AM Michael S. Tsirkin <mst@redhat.com> wrote:
+> On Fri, Apr 17, 2020 at 04:51:19PM +0800, Jason Wang wrote:
+> > On 2020/4/17 下午4:46, Michael S. Tsirkin wrote:
+> > > On Fri, Apr 17, 2020 at 04:39:49PM +0800, Jason Wang wrote:
+> > > > On 2020/4/17 下午4:29, Michael S. Tsirkin wrote:
+> > > > > On Fri, Apr 17, 2020 at 03:36:52PM +0800, Jason Wang wrote:
+> > > > > > On 2020/4/17 下午2:33, Michael S. Tsirkin wrote:
+> > > > > > > On Fri, Apr 17, 2020 at 11:12:14AM +0800, Jason Wang wrote:
+> > > > > > > > On 2020/4/17 上午6:55, Michael S. Tsirkin wrote:
+> > > > > > > > > On Wed, Apr 15, 2020 at 10:43:56AM +0800, Jason Wang wrote:
+> > > > > > > > > > We try to keep the defconfig untouched after decoupling CONFIG_VHOST
+> > > > > > > > > > out of CONFIG_VIRTUALIZATION in commit 20c384f1ea1a
+> > > > > > > > > > ("vhost: refine vhost and vringh kconfig") by enabling VHOST_MENU by
+> > > > > > > > > > default. Then the defconfigs can keep enabling CONFIG_VHOST_NET
+> > > > > > > > > > without the caring of CONFIG_VHOST.
+> > > > > > > > > >
+> > > > > > > > > > But this will leave a "CONFIG_VHOST_MENU=y" in all defconfigs and even
+> > > > > > > > > > for the ones that doesn't want vhost. So it actually shifts the
+> > > > > > > > > > burdens to the maintainers of all other to add "CONFIG_VHOST_MENU is
+> > > > > > > > > > not set". So this patch tries to enable CONFIG_VHOST explicitly in
+> > > > > > > > > > defconfigs that enables CONFIG_VHOST_NET and CONFIG_VHOST_VSOCK.
+> > > > > > > > > >
+> > > > > > > > > > Acked-by: Christian Borntraeger<borntraeger@de.ibm.com>   (s390)
+> > > > > > > > > > Acked-by: Michael Ellerman<mpe@ellerman.id.au>   (powerpc)
+> > > > > > > > > > Cc: Thomas Bogendoerfer<tsbogend@alpha.franken.de>
+> > > > > > > > > > Cc: Benjamin Herrenschmidt<benh@kernel.crashing.org>
+> > > > > > > > > > Cc: Paul Mackerras<paulus@samba.org>
+> > > > > > > > > > Cc: Michael Ellerman<mpe@ellerman.id.au>
+> > > > > > > > > > Cc: Heiko Carstens<heiko.carstens@de.ibm.com>
+> > > > > > > > > > Cc: Vasily Gorbik<gor@linux.ibm.com>
+> > > > > > > > > > Cc: Christian Borntraeger<borntraeger@de.ibm.com>
+> > > > > > > > > > Reported-by: Geert Uytterhoeven<geert@linux-m68k.org>
+> > > > > > > > > > Signed-off-by: Jason Wang<jasowang@redhat.com>
+> > > > > > > > > I rebased this on top of OABI fix since that
+> > > > > > > > > seems more orgent to fix.
+> > > > > > > > > Pushed to my vhost branch pls take a look and
+> > > > > > > > > if possible test.
+> > > > > > > > > Thanks!
+> > > > > > > > I test this patch by generating the defconfigs that wants vhost_net or
+> > > > > > > > vhost_vsock. All looks fine.
+> > > > > > > >
+> > > > > > > > But having CONFIG_VHOST_DPN=y may end up with the similar situation that
+> > > > > > > > this patch want to address.
+> > > > > > > > Maybe we can let CONFIG_VHOST depends on !ARM || AEABI then add another
+> > > > > > > > menuconfig for VHOST_RING and do something similar?
+> > > > > > > >
+> > > > > > > > Thanks
+> > > > > > > Sorry I don't understand. After this patch CONFIG_VHOST_DPN is just
+> > > > > > > an internal variable for the OABI fix. I kept it separate
+> > > > > > > so it's easy to revert for 5.8. Yes we could squash it into
+> > > > > > > VHOST directly but I don't see how that changes logic at all.
+> > > > > > Sorry for being unclear.
+> > > > > >
+> > > > > > I meant since it was enabled by default, "CONFIG_VHOST_DPN=y" will be left
+> > > > > > in the defconfigs.
+> > > > > But who cares?
+> > > > FYI, please seehttps://www.spinics.net/lists/kvm/msg212685.html
+> > > The complaint was not about the symbol IIUC.  It was that we caused
+> > > everyone to build vhost unless they manually disabled it.
+> >
+> > There could be some misunderstanding here. I thought it's somehow similar: a
+> > CONFIG_VHOST_MENU=y will be left in the defconfigs even if CONFIG_VHOST is
+> > not set.
+> >
+> > Thanks
+>
+> Hmm. So looking at Documentation/kbuild/kconfig-language.rst :
+>
+>         Things that merit "default y/m" include:
+>
+>         a) A new Kconfig option for something that used to always be built
+>            should be "default y".
+>
+>         b) A new gatekeeping Kconfig option that hides/shows other Kconfig
+>            options (but does not generate any code of its own), should be
+>            "default y" so people will see those other options.
+>
+>         c) Sub-driver behavior or similar options for a driver that is
+>            "default n". This allows you to provide sane defaults.
+>
+>
+> So it looks like VHOST_MENU is actually matching rule b).
+> So what's the problem we are trying to solve with this patch, exactly?
+>
+> Geert could you clarify pls?
 
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
----
- arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi | 22 +++++++++++++++++++-
- arch/arm64/boot/dts/qcom/msm8996.dtsi        |  2 ++
- 2 files changed, 23 insertions(+), 1 deletion(-)
+I can confirm VHOST_MENU is matching rule b), so it is safe to always
+enable it.
 
-diff --git a/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi b/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
-index 4692b7ad16b7..cf217b6b2b39 100644
---- a/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
-+++ b/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
-@@ -908,10 +908,30 @@
- 	status = "okay";
- };
- 
-+&q6asmdai {
-+	dai@0 {
-+		reg = <0>;
-+		direction = <2>;
-+	};
-+
-+	dai@1 {
-+		reg = <1>;
-+		direction = <2>;
-+	};
-+
-+	dai@2 {
-+		reg = <2>;
-+		direction = <1>;
-+	};
-+};
-+
- &sound {
- 	compatible = "qcom,apq8096-sndcard";
- 	model = "DB820c";
--	audio-routing =	"RX_BIAS", "MCLK";
-+	audio-routing =	"RX_BIAS", "MCLK",
-+		"MM_DL1",  "MultiMedia1 Playback",
-+		"MM_DL2",  "MultiMedia2 Playback",
-+		"MultiMedia3 Capture", "MM_UL3";
- 
- 	mm1-dai-link {
- 		link-name = "MultiMedia1";
-diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-index 14827adebd94..98634d5c4440 100644
---- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-@@ -2066,6 +2066,8 @@
- 						reg = <APR_SVC_ASM>;
- 						q6asmdai: dais {
- 							compatible = "qcom,q6asm-dais";
-+							#address-cells = <1>;
-+							#size-cells = <0>;
- 							#sound-dai-cells = <1>;
- 							iommus = <&lpass_q6_smmu 1>;
- 						};
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-2.21.0
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
