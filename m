@@ -2,135 +2,140 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCAD1C38A29
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 10:44:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96131C38A29
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 10:45:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ADF6421D91
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 10:44:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7596D21D91
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 10:45:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SVQ6DyRA"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="vlbD23le"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729707AbgDQKor (ORCPT
+        id S1729812AbgDQKpL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 06:44:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56872 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729143AbgDQKoq (ORCPT
+        Fri, 17 Apr 2020 06:45:11 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:51642 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729143AbgDQKpK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 06:44:46 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D431BC061A0C;
-        Fri, 17 Apr 2020 03:44:45 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id k18so834146pll.6;
-        Fri, 17 Apr 2020 03:44:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=d42f2h9ctMaCehQT0Tc2kOQMVp8paPlwrO5LTLzjmso=;
-        b=SVQ6DyRAWbehkdkiK/O0D40lSjnmEUva1SldvnuirK5asqzHVVStpftfknnhtopkoQ
-         JVR2ivIHCCcQPvzp/kbNI8Qi0j8gHg3Nsuwy2PK5ly3vp1XDM5Rrrp/rOo3RflYu9RJu
-         97UxjpxFCjRZSNgSUdy6OohTWetibZciF6Nx+Rnwswl5UumoY31//R/Nwk+OMdp4yf6w
-         5jnTxqBxXjkS7dsjSHxZq7uyM78L28GF0J8zkbcWPKF/x9dqvbWBWLLW4yCdg58+CsJ6
-         v6FVAj7gpnVWaNxy5G5uKYj+bESZXF8cQaQp+Ps4WM7+bszcJlzjJuE9IBVEHrhPLqU2
-         G07g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=d42f2h9ctMaCehQT0Tc2kOQMVp8paPlwrO5LTLzjmso=;
-        b=hGyuVPS5YLYPzG74GsGpGcPDueT/53U3UgT65EFpxOBRuCvTqiHSOlO6Wh/uWbqZJa
-         NZQ+hJxXV/doD1NKcL5zR4yVQWU8ZLof8znup7H3prv+jN/nHbgrvFF9i5EYa9x9B+yS
-         Fe1DYZQMd+1y/HiUbz4OyIGmcUFcyNhtF9ulbLlI6gMaHMl/2dMqQNPRjF3nIRowfKm1
-         l6VG3UEKYZNtSS/iNeV6h469UM2DX2S7ZSB6lo4jM4jJjx3qh+qnYfYsNY2ZPj32ERuY
-         SDoK1IOEy5HPW5uT1rrDWCBQufmllRhnZlZKMcYX0JV497ySvwKiJ1A6Z1VAx1DXJmfk
-         5rsA==
-X-Gm-Message-State: AGi0PuahxmIOVX5MTq7ruAlt3a1Nv6mzr/qCKP+pn2MHol+vC7zZBiuN
-        srd+/vMU9QEKnHZAL12MfWSgaifcTHIK5Gm/ZhQ=
-X-Google-Smtp-Source: APiQypJjy/nqbVYfePMYGlGonxzGHni7ixbPvw6nM8NVNtQvWlT+TZXaBKPQHXx4t6E3c5CrBIMxJnkLntjvHE9hVcc=
-X-Received: by 2002:a17:90a:364c:: with SMTP id s70mr3570968pjb.143.1587120285359;
- Fri, 17 Apr 2020 03:44:45 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200416205428.437503-1-alexandre.belloni@bootlin.com> <20200416205428.437503-2-alexandre.belloni@bootlin.com>
-In-Reply-To: <20200416205428.437503-2-alexandre.belloni@bootlin.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 17 Apr 2020 13:44:33 +0300
-Message-ID: <CAHp75Vddt-UKkP+b8W2CDYjt5kzggwQ+gTjrieigeYhM=e4Tig@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] iio: adc: ti-ads8344: properly byte swap value
-To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Gregory CLEMENT <gregory.clement@bootlin.com>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 17 Apr 2020 06:45:10 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03HAflIZ009346;
+        Fri, 17 Apr 2020 10:44:55 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references; s=corp-2020-01-29;
+ bh=e4vydea3JrNyN7SfDwhIe+NaJTL/Jn1GNFvcBpuIocI=;
+ b=vlbD23le87k9MsrdIrUJZoHkTmLNlDqlpJJW8H1xg+f2/rdWz/I4PE6magtD0tOxnce3
+ sp7d6hzlS7vtHUBEt25Tt8tzhwjY7s6PYFp20qTGDQ5tNjYChEk8znuC/kpM7koEwZDr
+ YKUKI8bF4OCA6OBZ2FviFDEs/w3Fa8XbgBxOaEt7+xTNtvwyzxviQaUBW5oeSEeYetq3
+ VfDYSk43PYFSTVVQytO4jJNozuLyoU1ejwPZOji7psJDYZAwDkFDW6UzR8l9mJTt+FvC
+ mPQv/fAKZFOQCjTv1GxVR/ZYWDIjM+/Rp+aj2+6/BDkyP7CR+jOAQeUguOI2ybdeg7RU Ew== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 30e0aaby6x-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 17 Apr 2020 10:44:55 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03HAcHHd002360;
+        Fri, 17 Apr 2020 10:42:54 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3020.oracle.com with ESMTP id 30dn9jkyrr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 17 Apr 2020 10:42:54 +0000
+Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 03HAgr4S008206;
+        Fri, 17 Apr 2020 10:42:53 GMT
+Received: from localhost.uk.oracle.com (/10.175.205.33)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 17 Apr 2020 03:42:53 -0700
+From:   Alan Maguire <alan.maguire@oracle.com>
+To:     ast@kernel.org, daniel@iogearbox.net, yhs@fb.com
+Cc:     kafai@fb.com, songliubraving@fb.com, andriin@fb.com,
+        john.fastabend@gmail.com, kpsingh@chromium.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, Alan Maguire <alan.maguire@oracle.com>
+Subject: [RFC PATCH bpf-next 1/6] bpf: provide function to get vmlinux BTF information
+Date:   Fri, 17 Apr 2020 11:42:35 +0100
+Message-Id: <1587120160-3030-2-git-send-email-alan.maguire@oracle.com>
+X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1587120160-3030-1-git-send-email-alan.maguire@oracle.com>
+References: <1587120160-3030-1-git-send-email-alan.maguire@oracle.com>
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9593 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 mlxscore=0 adultscore=0
+ spamscore=0 phishscore=0 bulkscore=0 suspectscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004170084
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9593 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 clxscore=1015
+ impostorscore=0 mlxlogscore=999 mlxscore=0 lowpriorityscore=0
+ suspectscore=0 adultscore=0 spamscore=0 malwarescore=0 phishscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004170084
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 16, 2020 at 11:55 PM Alexandre Belloni
-<alexandre.belloni@bootlin.com> wrote:
->
-> The first received byte is the MSB, followed by the LSB so the value needs
-> to be byte swapped.
->
-> Also, the ADC actually has a delay of one clock on the SPI bus. Read three
-> bytes to get the last bit.
->
+It will be used later for BTF printk() support
 
-Can you show example of what is read and what is expected to be a correct value?
-Because it seems I have been reported with similar issue on other TI
-ADC chip [1]. Perhaps we have to fix all of them?
+Signed-off-by: Alan Maguire <alan.maguire@oracle.com>
+---
+ include/linux/bpf.h   |  2 ++
+ kernel/bpf/verifier.c | 18 ++++++++++++------
+ 2 files changed, 14 insertions(+), 6 deletions(-)
 
-[1]: https://github.com/edison-fw/meta-intel-edison/issues/108
-
-> Fixes: 8dd2d7c0fed7 ("iio: adc: Add driver for the TI ADS8344 A/DC chips")
-> Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-> ---
->  drivers/iio/adc/ti-ads8344.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/iio/adc/ti-ads8344.c b/drivers/iio/adc/ti-ads8344.c
-> index 9a460807d46d..abe4b56c847c 100644
-> --- a/drivers/iio/adc/ti-ads8344.c
-> +++ b/drivers/iio/adc/ti-ads8344.c
-> @@ -29,7 +29,7 @@ struct ads8344 {
->         struct mutex lock;
->
->         u8 tx_buf ____cacheline_aligned;
-> -       u16 rx_buf;
-> +       u8 rx_buf[3];
->  };
->
->  #define ADS8344_VOLTAGE_CHANNEL(chan, si)                              \
-> @@ -89,11 +89,11 @@ static int ads8344_adc_conversion(struct ads8344 *adc, int channel,
->
->         udelay(9);
->
-> -       ret = spi_read(spi, &adc->rx_buf, 2);
-> +       ret = spi_read(spi, adc->rx_buf, sizeof(adc->rx_buf));
->         if (ret)
->                 return ret;
->
-> -       return adc->rx_buf;
-> +       return adc->rx_buf[0] << 9 | adc->rx_buf[1] << 1 | adc->rx_buf[2] >> 7;
->  }
->
->  static int ads8344_read_raw(struct iio_dev *iio,
-> --
-> 2.25.2
->
-
-
+diff --git a/include/linux/bpf.h b/include/linux/bpf.h
+index 40c5392..47d0fcd 100644
+--- a/include/linux/bpf.h
++++ b/include/linux/bpf.h
+@@ -1123,6 +1123,8 @@ int bpf_check(struct bpf_prog **fp, union bpf_attr *attr,
+ 	      union bpf_attr __user *uattr);
+ void bpf_patch_call_args(struct bpf_insn *insn, u32 stack_depth);
+ 
++struct btf *bpf_get_btf_vmlinux(void);
++
+ /* Map specifics */
+ struct xdp_buff;
+ struct sk_buff;
+diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
+index ae32517..87251fa 100644
+--- a/kernel/bpf/verifier.c
++++ b/kernel/bpf/verifier.c
+@@ -10039,6 +10039,17 @@ static int check_attach_btf_id(struct bpf_verifier_env *env)
+ 	}
+ }
+ 
++struct btf *bpf_get_btf_vmlinux(void)
++{
++	if (!btf_vmlinux && IS_ENABLED(CONFIG_DEBUG_INFO_BTF)) {
++		mutex_lock(&bpf_verifier_lock);
++		if (!btf_vmlinux)
++			btf_vmlinux = btf_parse_vmlinux();
++		mutex_unlock(&bpf_verifier_lock);
++	}
++	return btf_vmlinux;
++}
++
+ int bpf_check(struct bpf_prog **prog, union bpf_attr *attr,
+ 	      union bpf_attr __user *uattr)
+ {
+@@ -10072,12 +10083,7 @@ int bpf_check(struct bpf_prog **prog, union bpf_attr *attr,
+ 	env->ops = bpf_verifier_ops[env->prog->type];
+ 	is_priv = capable(CAP_SYS_ADMIN);
+ 
+-	if (!btf_vmlinux && IS_ENABLED(CONFIG_DEBUG_INFO_BTF)) {
+-		mutex_lock(&bpf_verifier_lock);
+-		if (!btf_vmlinux)
+-			btf_vmlinux = btf_parse_vmlinux();
+-		mutex_unlock(&bpf_verifier_lock);
+-	}
++	bpf_get_btf_vmlinux();
+ 
+ 	/* grab the mutex to protect few globals used by verifier */
+ 	if (!is_priv)
 -- 
-With Best Regards,
-Andy Shevchenko
+1.8.3.1
+
