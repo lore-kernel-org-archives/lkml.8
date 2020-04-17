@@ -2,198 +2,87 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D202C352BE
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 14:58:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98281C2D0EF
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 14:59:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5C75F20936
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 14:58:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="i0P3U0FK"
+	by mail.kernel.org (Postfix) with ESMTP id 7DB6720857
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 14:59:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728229AbgDQO6C (ORCPT
+        id S1728271AbgDQO7I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 10:58:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39718 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726707AbgDQO6B (ORCPT
+        Fri, 17 Apr 2020 10:59:08 -0400
+Received: from mout.kundenserver.de ([212.227.126.133]:44985 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726707AbgDQO7I (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 10:58:01 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 027AFC061A0C
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 07:57:59 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id g13so1360312wrb.8
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 07:57:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=60VGtzwTiYwzXu9gSno8Albggq78bUOmhCjrGHuqcH0=;
-        b=i0P3U0FK9NGXGLuA53xyepLNIxHPyEzf7CRFj1/kqsSEfq7usXaKYHjNKTVeO14lzm
-         l+gvwwwSsSJD6qsl78aOdUwoiz9aO9r2c9l0/jlX46E2T3Gzu306zNYpvRYW7zRPR818
-         hqjKDFWxbLlMW5LSLV8fkyGJLmhC7HPpcJbY8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to;
-        bh=60VGtzwTiYwzXu9gSno8Albggq78bUOmhCjrGHuqcH0=;
-        b=Z+VVXZ41z4WwzqWEiLkHOxyApywxC7aPoU0egBIYcmglI3o3YPm2eevlp1vKIj7NSZ
-         mntRPUY/nHVO9K+GJhvY0bhkredtApQktFtU3F6EYrRhx0RaS3KoKpwtOpgXwbx2s109
-         9CTvvI+DW1u58wGNsEtaiGEFA7ENDZu5Q6lpYa3n/zFElDqQ8YLfpx7yq1PQJc2xzgbK
-         aZf2wCDr7dhYcDev42az82h2B/RoKwMxGOLN/3Dg2xQ0tlWY8rESaRhw9WKszycrBbcR
-         9zwQgjqvtUuT75l1tmulahwqCq9WqqpS0Gl82NUW4tl67TIK9sqMyuolojGXQFKUXiEH
-         JruQ==
-X-Gm-Message-State: AGi0PuZ22lD5Xd1ru3ESKu6XiHLNSi3Hzyurk6Loppc/mqdZusbNFF9L
-        vo/Rny6AX5HsvxEEWzBj7jXX2g==
-X-Google-Smtp-Source: APiQypLKC1eYBIJEQSftPCEpKucLkLsl9E3R3bE56ebfjr+BqL6bkLixosIGS46bokv29dR4G89U2w==
-X-Received: by 2002:a5d:658e:: with SMTP id q14mr4572943wru.92.1587135478501;
-        Fri, 17 Apr 2020 07:57:58 -0700 (PDT)
-Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
-        by smtp.gmail.com with ESMTPSA id h16sm35085542wrw.36.2020.04.17.07.57.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Apr 2020 07:57:57 -0700 (PDT)
-Date:   Fri, 17 Apr 2020 16:57:55 +0200
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Yussuf Khalil <dev@pp3345.net>
-Cc:     Daniel Vetter <daniel@ffwll.ch>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@linux.ie>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/5] drm/modes: Indicate CEA-861 CE modes to user-space
-Message-ID: <20200417145755.GL3456981@phenom.ffwll.local>
-Mail-Followup-To: Yussuf Khalil <dev@pp3345.net>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-References: <20200413214024.46500-1-dev@pp3345.net>
- <20200413214024.46500-2-dev@pp3345.net>
- <20200414124132.GV3456981@phenom.ffwll.local>
- <ac01c47a3b2c2ac73368882fb90eb6ee4e07fd04.camel@pp3345.net>
+        Fri, 17 Apr 2020 10:59:08 -0400
+Received: from mail-qv1-f47.google.com ([209.85.219.47]) by
+ mrelayeu.kundenserver.de (mreue010 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1N0nzR-1j45oi1Oth-00wja3 for <linux-kernel@vger.kernel.org>; Fri, 17 Apr
+ 2020 16:59:05 +0200
+Received: by mail-qv1-f47.google.com with SMTP id fb4so999136qvb.7
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 07:59:05 -0700 (PDT)
+X-Gm-Message-State: AGi0Pub1o80bSk1vS6O4W4fRkE4eL2nUr4StB/wY1PwUiVwXWM8xMwDd
+        K9JPC5A9QxdhQemU/I0HkrS2E7I6MxRWO+3cKtg=
+X-Google-Smtp-Source: APiQypK6H2sYYYSZKAdSmmfa2MAlt0yW4aUSm3D2h6CUEgVPlGKHt4i/wv76jSZrzUssUtAvPLNxCQopFYs1B7Ph4Co=
+X-Received: by 2002:ad4:4d50:: with SMTP id m16mr1321929qvm.222.1587135544234;
+ Fri, 17 Apr 2020 07:59:04 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ac01c47a3b2c2ac73368882fb90eb6ee4e07fd04.camel@pp3345.net>
-X-Operating-System: Linux phenom 5.3.0-3-amd64 
+References: <20200408185834.434784-1-arnd@arndb.de> <20200408202421.GU25745@shell.armlinux.org.uk>
+In-Reply-To: <20200408202421.GU25745@shell.armlinux.org.uk>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Fri, 17 Apr 2020 16:58:47 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a0ZskJqBbTod-botFdx9fuWN9q5q25G1Gx=ky_Sg2cuHg@mail.gmail.com>
+Message-ID: <CAK8P3a0ZskJqBbTod-botFdx9fuWN9q5q25G1Gx=ky_Sg2cuHg@mail.gmail.com>
+Subject: Re: [PATCH] soc: fsl: dpio: avoid stack usage warning
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+List-Id: <soc.lore.kernel.org>
+Cc:     SoC Team <soc@kernel.org>, Roy Pledge <Roy.Pledge@nxp.com>,
+        Li Yang <leoyang.li@nxp.com>,
+        Youri Querry <youri.querry_1@nxp.com>,
+        Ioana Ciornei <ioana.ciornei@nxp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:0Xf3kd8qmZZJP+kgTxOQAPNO3HRa/kWEXxoDs+OkKemmdmv1ZYs
+ q65ymTiPADNYa5zUmwZg0c0omckOH4ww2CKNE38h6aN5VQa+fIsvNJMjcAXEmfLLoPXkrXA
+ lyepVNeRImIf5UiTEcCc/e5JLAylW2C8G/u4JAxc9j1Fdj1iwc0X63gaRYqe2lAIfndqOdo
+ JwG/VoZddd6XXOxsE7upQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:uB9wWKXQ4EQ=:TNy9dPS5hhJvgmjXVrOcCG
+ g/QMVqhGY961LMRsJopOPGs5KZaRXXUBj2L/8qY7Iktozcuq5h+C1xK3pth2wvwmlA4RAf72P
+ Mas1rcpJ0CXEzCEv3+2TTg5fl+AZ2kPoLYMlGSgBpMqovN5AI6DD4GY3kZuSuj7evydKY1YqD
+ BMIrHl25OFNcw8aoH3oP2+6a7IXzV+ObD3VqUCrjFsFYivrUlJAZjRB3tMYZZngUFTf7l+iZW
+ GFrJm/2N3h73ySpyghW77tGh2y5SAWTFnOmZqrGJn5SCdQPUrZjj1J2xOFAPiCI3HBlr55GWO
+ Tln3olNuOlfo4ezsPaq8iqY/6MvjjmEEOanDFQOvzTDcxAd1Vace+qVjXePInH8VEO24zkb7N
+ +GRcSCBsVP3Fc2iy37Bfy46TJttSIZtyx0+IoiWsAgoc3MlTtgWZK56JQcyTkGBAw8MqmpSIA
+ Z9q68US7waDOzXQOUgOEIxMlznT8T+pP/5d09sAr6w1djUa9OXazJeiOPaSPsjRWHCjxc3nrn
+ axBsDWazETErR7+x8dK55uzRVOJ2cpQ/CBkMEfSmHgKjwE7qiyRj1Q+wJ1Y5MUmj4G9ga0nya
+ LcrSjAOQVsS6EUOeJDX/Fb3oWhtWUT5Ary10YHcbPgkEoe32dTzwTnAmo/HY0fqvdSSOUynaW
+ ZPpTmzuiHOIefmvRslfYLJ4kS/XBjs85V7lGytXWDPr2nThgy4tkjbMiMuq2rQ8QV4D6Z0GuK
+ gtTZWWaV7b58nbsxEQffE3NQhZ8L46a//5w2/PMY3EquxgxsUpVVBMZfWvFoPSnxhPC9RY/gj
+ 3QcQ9EK+Jl6SFdsp9hrtv7c92NHSJwoy3aE00jXJjlMZYlqw68=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 16, 2020 at 03:51:36PM +0200, Yussuf Khalil wrote:
-> On Tue, 2020-04-14 at 14:41 +0200, Daniel Vetter wrote:
-> > On Mon, Apr 13, 2020 at 11:40:22PM +0200, Yussuf Khalil wrote:
-> > > Add a new flag to mark modes that are considered a CE mode
-> > > according to the
-> > > CEA-861 specification. Modes without this flag are implicitly
-> > > considered to
-> > > be IT modes.
-> > > 
-> > > User-space applications may use this flag to determine possible
-> > > implications of using a CE mode (e.g., limited RGB range).
-> > > 
-> > > There is no use for this flag inside the kernel, so we set it only
-> > > when
-> > > communicating a mode to user-space.
-> > > 
-> > > Signed-off-by: Yussuf Khalil <dev@pp3345.net>
-> > 
-> > Do we have userspace for this?
-> > 
-> > If we go with the existing quant range property you don't need new
-> > userspace for the property itself. But this flag here is new uapi, so
-> > needs userspace per
-> > 
-> > https://dri.freedesktop.org/docs/drm/gpu/drm-uapi.html#open-source-userspace-requirements
-> > 
-> > Also since this standardizes kms uapi, we need testcases per
-> > 
-> > https://dri.freedesktop.org/docs/drm/gpu/drm-uapi.html#testing-requirements-for-userspace-api
-> > 
-> > Cheers, Daniel
-> > 
-> > > ---
-> > >  drivers/gpu/drm/drm_modes.c | 14 ++++++++++++++
-> > >  include/uapi/drm/drm_mode.h |  2 ++
-> > >  2 files changed, 16 insertions(+)
-> > > 
-> > > diff --git a/drivers/gpu/drm/drm_modes.c
-> > > b/drivers/gpu/drm/drm_modes.c
-> > > index d4d64518e11b..0d8a032f437d 100644
-> > > --- a/drivers/gpu/drm/drm_modes.c
-> > > +++ b/drivers/gpu/drm/drm_modes.c
-> > > @@ -1973,6 +1973,14 @@ void drm_mode_convert_to_umode(struct
-> > > drm_mode_modeinfo *out,
-> > >  		break;
-> > >  	}
-> > >  
-> > > +	if (drm_match_cea_mode(in) > 1) {
-> > > +		/*
-> > > +		 * All modes in CTA-861-G Table 1 are CE modes, except
-> > > 640x480p
-> > > +		 * (VIC 1).
-> > > +		 */
-> > > +		out->flags |= DRM_MODE_FLAG_CEA_861_CE_MODE;
-> > > +	}
-> > > +
-> > >  	strncpy(out->name, in->name, DRM_DISPLAY_MODE_LEN);
-> > >  	out->name[DRM_DISPLAY_MODE_LEN-1] = 0;
-> > >  }
-> > > @@ -2045,6 +2053,12 @@ int drm_mode_convert_umode(struct drm_device
-> > > *dev,
-> > >  		return -EINVAL;
-> > >  	}
-> > >  
-> > > +	/*
-> > > +	 * The CEA-861 CE mode flag is purely informational and
-> > > intended for
-> > > +	 * userspace only.
-> > > +	 */
-> > > +	out->flags &= ~DRM_MODE_FLAG_CEA_861_CE_MODE;
-> > > +
-> > >  	out->status = drm_mode_validate_driver(dev, out);
-> > >  	if (out->status != MODE_OK)
-> > >  		return -EINVAL;
-> > > diff --git a/include/uapi/drm/drm_mode.h
-> > > b/include/uapi/drm/drm_mode.h
-> > > index 735c8cfdaaa1..5e78b350b2e2 100644
-> > > --- a/include/uapi/drm/drm_mode.h
-> > > +++ b/include/uapi/drm/drm_mode.h
-> > > @@ -124,6 +124,8 @@ extern "C" {
-> > >  #define  DRM_MODE_FLAG_PIC_AR_256_135 \
-> > >  			(DRM_MODE_PICTURE_ASPECT_256_135<<19)
-> > >  
-> > > +#define DRM_MODE_FLAG_CEA_861_CE_MODE (1<<23)
-> > > +
-> > >  #define  DRM_MODE_FLAG_ALL	(DRM_MODE_FLAG_PHSYNC |		\
-> > >  				 DRM_MODE_FLAG_NHSYNC |		\
-> > >  				 DRM_MODE_FLAG_PVSYNC |		\
-> > > -- 
-> > > 2.26.0
-> > > 
-> 
-> Sorry, I wasn't aware DRM had these additional requirements. I do have a user-
-> space implementation in mutter and gnome-control-center that makes use of the
-> new property and this flag on my local machine. I'll try to propose the branch
-> upstream before sending in the next revision of this patchset.
-> 
-> Do I understand it correctly that this will require test cases for both the
-> property itself and the new flag? I'll write a patch for IGT then.
+On Wed, Apr 8, 2020 at 10:24 PM Russell King - ARM Linux admin
+<linux@armlinux.org.uk> wrote:
+> On Wed, Apr 08, 2020 at 08:58:16PM +0200, Arnd Bergmann wrote:
+> > -     int i;
+> > -     struct qbman_eq_desc ed[32];
+> > +     struct qbman_eq_desc *ed = kcalloc(sizeof(struct qbman_eq_desc), 32, GFP_KERNEL);
+>
+> I think you need to rearrange this to be more compliant with the coding
+> style.
 
-Yup. We even have some edid injection stuff so you can (for some value of
-"can") test this on systems without such a monitor. That would obviously
-be the gold standard for this, so that CI systems can make sure we don't
-break any of this in the driver side.
--Daniel
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+Ok, I've updated this now to move the allocation into a new line
+and applied this and the other fsl patch into the arm/fixes
+branch for v5.7.
+
+       Arnd
