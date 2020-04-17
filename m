@@ -2,272 +2,242 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1275C38A2B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 15:13:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D47DCC2D0EF
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 15:14:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C710D207FC
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 15:13:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="E8GnvtLt"
+	by mail.kernel.org (Postfix) with ESMTP id AB2DB20857
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 15:14:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587136444;
+	bh=qooN1eiHA+0ky/PzXcYNX5LJvyxIt+2rmgYag6zhE4I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=w+Bj6T5grxjEhnrhPNILBGL8CoxPFgJi1Oehu+2FS5AVxlbdmqsPO56cxQsRUD7lE
+	 /dsmf4d1gYKhiwfivzCD20LBrCYKeLa/9p3n2VfD0FiB0RqW/izQbasFyXVRPAAK8w
+	 rZOAz7OeRaI/wYKHpvKsRJhxSvmpqkQy6L8qq58k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728792AbgDQPNk (ORCPT
+        id S1728835AbgDQPOD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 11:13:40 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:59170 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728680AbgDQPNj (ORCPT
+        Fri, 17 Apr 2020 11:14:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42202 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728272AbgDQPOC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 11:13:39 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03HF8I36079928;
-        Fri, 17 Apr 2020 15:13:30 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=xa9xmtWpvH2FBhnMESSZVdQ6E6Jn0rjpWUOR2tbuxbE=;
- b=E8GnvtLtAbq9CaKPW3HFkyoE9NPP+emzCB6eKwqbTe5Lo+qlPWP7YJA8atrRi8eY5kaD
- TFbI2cdVkePqSr7kLqyCFSY+B80Xv1BNFTu3GYII3YRBJYn8SJmN9oyPB43L8LcKdorJ
- KPnvlHkg82aRKwW7LgPZr/lwFjF7fo/7hYrMBI12TKRqVzrWd/SCeLCOGRAuutOGqhIq
- btMC0l+6VeysTOChrqCdVZlW1kRnwDaXLePFio7LQvDAjkUArpVvS1s8sqFuZmPs8lfp
- m5uTmqjGYOVbPsTge6flrDsa1YpMz29EJBTXYV/YHYN7aLmXefx4ZvMw33Ym8XQaRVxo XQ== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2120.oracle.com with ESMTP id 30dn95ym7p-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 17 Apr 2020 15:13:30 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03HFDLwo166456;
-        Fri, 17 Apr 2020 15:13:29 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3030.oracle.com with ESMTP id 30dn91pwja-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 17 Apr 2020 15:13:28 +0000
-Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 03HFDQ5M002940;
-        Fri, 17 Apr 2020 15:13:26 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 17 Apr 2020 08:13:25 -0700
-Date:   Fri, 17 Apr 2020 18:13:14 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     g@ziepe.ca, Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        selvin.xavier@broadcom.com, devesh.sharma@broadcom.com,
-        dledford@redhat.com, leon@kernel.org, colin.king@canonical.com,
-        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] RDMA/ocrdma: Fix an off-by-one issue in 'ocrdma_add_stat'
-Message-ID: <20200417151314.GV1163@kadam>
-References: <20200328073040.24429-1-christophe.jaillet@wanadoo.fr>
- <20200414183441.GA28870@ziepe.ca>
- <20200416130847.GP1163@kadam>
- <20200416184754.GZ5100@ziepe.ca>
- <20200417112624.GS1163@kadam>
- <20200417122542.GC5100@ziepe.ca>
- <20200417130955.GU1163@kadam>
- <20200417134816.GD26002@ziepe.ca>
+        Fri, 17 Apr 2020 11:14:02 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A73AC061A0C
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 08:14:02 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id nu11so1200714pjb.1
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 08:14:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=9vmUW9SF/4EBzVT/P6VKC9VFo38kAUkp6d4jrsY3VRw=;
+        b=InJizvVl/agy3Aur19LVdlrlh8Rz39sqzCHktUfl8x/wAfoyy9CM3XVeO1kdFK1xUy
+         f0clsMiNBrmnabYhmskW1amBATdI6IHRx2TDmRKnpH5o8pQvizMCsvoWSlmjjyd7/VW0
+         h0T3bXp1bR45FLMArd/UA0YhoEtTHf4n5I1Yul28g6l28R0M56Z7HxSG18DEgI0rBMwl
+         O1FLvtOzwD6SsOUb9eR1sK3wfwHBECpE3fUrzsBs7hLKnT9WCFW/Dc+i+8O3UJ9SpWy0
+         uczgCC5gypfa2aOYDrADVmM4+ommqAKBr83c8FmIjNUOQgvWz/e1njOP5Tn2EDqgp5pu
+         3W9Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=9vmUW9SF/4EBzVT/P6VKC9VFo38kAUkp6d4jrsY3VRw=;
+        b=FB3Hv+VOu6XlmOjVpvSBElH88R+2alSnYcgJ7uzwyt2maGKOoykArgPwGOcq5x32Xu
+         F1Go2x0GhzrILS0Uw+WHD0ga3OgRmRjUbUK6bOfZtpEH2sdYmFvdSkNgC0TlJUb/Zcq5
+         cVQfBGCLrGrCUVeIsrYpl82hVzK7Yu8//tZCs7iRctkrwREZpYfNILasMfa/3yzRgalM
+         OOovJI4cw4xiLqOJuZT4n3qyu4SFNKjzJqI9jgnyuI9/tpNT5IUnU24+7aQapxNaetC0
+         xmaoytEjQc2fLsVZRdPnYrN3ld1T+n4rf4SNfwaeTIBs8bWtExt2arzEItAiuvjMQBxH
+         2VHg==
+X-Gm-Message-State: AGi0PuZtZmBIIe2nveLIiU0xFSicnC5ZdFVEc6A0+mAOxq4UUmtS8//l
+        y893+Olw04T1rzVDUUEO2Y4=
+X-Google-Smtp-Source: APiQypKoiF0EMRbeJ6y9aifLrhJoEUfOjrvxJg7Ekv4h1orz4zptd56Qu1lK/8ymKoVCSIvLziwCfw==
+X-Received: by 2002:a17:902:c202:: with SMTP id 2mr3872132pll.196.1587136441695;
+        Fri, 17 Apr 2020 08:14:01 -0700 (PDT)
+Received: from google.com ([2601:647:4001:3000::50e3])
+        by smtp.gmail.com with ESMTPSA id a17sm7688794pfr.24.2020.04.17.08.13.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 17 Apr 2020 08:14:00 -0700 (PDT)
+Date:   Fri, 17 Apr 2020 08:13:58 -0700
+From:   Minchan Kim <minchan@kernel.org>
+To:     Jaewon Kim <jaewon31.kim@samsung.com>,
+        Johannes Weiner <hannes@cmpxchg.org>
+Cc:     mgorman@suse.de, m.szyprowski@samsung.com, mina86@mina86.com,
+        riel@redhat.com, akpm@linux-foundation.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, jaewon31.kim@gmail.com,
+        ytk.lee@samsung.com
+Subject: Re: [PATCH] mm/vmscan: skip layzfree page on
+ reclaim_clean_pages_from_list
+Message-ID: <20200417151358.GA178621@google.com>
+References: <CGME20200416033543epcas1p2b256bef770bb1310a9bf62bda80a976a@epcas1p2.samsung.com>
+ <20200416033514.6366-1-jaewon31.kim@samsung.com>
+ <20200417003837.GA90471@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200417134816.GD26002@ziepe.ca>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9594 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 mlxlogscore=999
- suspectscore=0 malwarescore=0 spamscore=0 phishscore=0 adultscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004170124
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9593 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 clxscore=1015
- malwarescore=0 bulkscore=0 priorityscore=1501 lowpriorityscore=0
- mlxscore=0 phishscore=0 spamscore=0 impostorscore=0 suspectscore=0
- mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004170123
+In-Reply-To: <20200417003837.GA90471@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 17, 2020 at 10:48:16AM -0300, Jason Gunthorpe wrote:
-> On Fri, Apr 17, 2020 at 04:09:55PM +0300, Dan Carpenter wrote:
-> > On Fri, Apr 17, 2020 at 09:25:42AM -0300, Jason Gunthorpe wrote:
-> > > On Fri, Apr 17, 2020 at 02:26:24PM +0300, Dan Carpenter wrote:
-> > > > On Thu, Apr 16, 2020 at 03:47:54PM -0300, Jason Gunthorpe wrote:
-> > > > > On Thu, Apr 16, 2020 at 04:08:47PM +0300, Dan Carpenter wrote:
-> > > > > > On Tue, Apr 14, 2020 at 03:34:41PM -0300, Jason Gunthorpe wrote:
-> > > > > > > The memcpy is still kind of silly right? What about this:
-> > > > > > > 
-> > > > > > > static int ocrdma_add_stat(char *start, char *pcur, char *name, u64 count)
-> > > > > > > {
-> > > > > > > 	size_t len = (start + OCRDMA_MAX_DBGFS_MEM) - pcur;
-> > > > > > > 	int cpy_len;
-> > > > > > > 
-> > > > > > > 	cpy_len = snprintf(pcur, len, "%s: %llu\n", name, count);
-> > > > > > > 	if (cpy_len >= len || cpy_len < 0) {
-> > > > > > 
-> > > > > > The kernel version of snprintf() doesn't and will never return
-> > > > > > negatives.  It would cause a huge security headache if it started
-> > > > > > returning negatives.
-> > > > > 
-> > > > > Begs the question why it returns an int then :)
-> > > > 
-> > > > People should use "int" as their default type.  "int i;".  It means
-> > > > "This is a normal number.  Nothing special about it.  It's not too high.
-> > > > It's not defined by hardware requirements."  Other types call attention
-> > > > to themselves, but int is the humble datatype.
-> > > 
-> > > No, I strongly disagree with this, it is one of my pet peeves to see
-> > > 'int' being used for data which is known to be only ever be positive
-> > > just to save typing 'unsigned'.
-> > > 
-> > > Not only is it confusing, but allowing signed values has caused tricky
-> > > security bugs, unfortuntely.
+On Thu, Apr 16, 2020 at 05:38:37PM -0700, Minchan Kim wrote:
+> Hi Jaewon,
+> 
+> On Thu, Apr 16, 2020 at 12:35:14PM +0900, Jaewon Kim wrote:
+> > This patch fix nr_isolate_* mismatch problem between cma and dirty
+> > lazyfree page.
 > > 
-> > I have the opposite pet peeve.
+> > If try_to_unmap_one is used for reclaim and it detects a dirty lazyfree
+> > page, then the lazyfree page is changed to a normal anon page having
+> > SwapBacked by commit 18863d3a3f59 ("mm: remove SWAP_DIRTY in ttu"). Even
+> > with the change, reclaim context correctly counts isolated files because
+> > it uses is_file_lru to distinguish file. And the change to anon is not
+> > happened if try_to_unmap_one is used for migration. So migration context
+> > like compaction also correctly counts isolated files even though it uses
+> > page_is_file_lru insted of is_file_lru. Recently page_is_file_cache was
+> > renamed to page_is_file_lru by commit 9de4f22a60f7 ("mm: code cleanup for
+> > MADV_FREE").
 > > 
-> > I complain about it a lot.  It pains me every time I see a "u32 i;".  I
-> > think there is a static analysis warning for using signed which
-> > encourages people to write code like that.  That warning really upsets
-> > me for two reasons 1) The static checker should know the range of values
-> > but it doesn't so it makes me sad to see inferior technology being used
-> > when it should deleted instead.  2)  I have never seen this warning
-> > prevent a real life bug.
-> 
-> I have.. But I'm having trouble finding it in the git torrent..
-> 
-> Maybe this one:
-> 
-> commit c2b37f76485f073f020e60b5954b6dc4e55f693c
-> Author: Boris Pismenny <borisp@mellanox.com>
-> Date:   Thu Mar 8 15:51:41 2018 +0200
-> 
->     IB/mlx5: Fix integer overflows in mlx5_ib_create_srq
-> 
-
-I was just meant unsigned iterators, not sizes.  I consider that to be a
-different sort of bug.  The original code did this:
-
-	desc_size = max_t(int, 32, desc_size);
-
-Using signed casts for min_t() always seems like a crazy thing to me.  I
-have a static checker warning for those but I think people didn't accept
-my patches for those if it was only for kernel hardenning and
-readability instead of to fix bugs.  I don't know why, maybe casting to
-an int is faster?
-
-> > You would need to hit a series of fairly rare events for this
-> > warning to be useful and I have never seen that happen yet.
-> 
-> IIRC the case was the uapi rightly used u32, which was then wrongly
-> implicitly cast to some internal function,  accepting int, which then
-> did something sort of like
-> 
->   int len
->   if (len >= sizeof(a))
->        return -EINVAL
->   copy_from_user(a, b, len)
-
-This code works.  "len" is type promoted to unsigned and negative values
-are rejected.
-
-> 
-> Which explodes when a negative len is implicitly cast to unsigned long
-> to call copy_from_user.
-> 
-> > The most common bug caused by unsigned variables is that it breaks the
-> > kernel error handling 
-> 
-> You mean returning -ERRNO? Sure, those should be int, but that is a
-> case where a value actually can take on -ve numbers, so it really
-> should be signed.
-> 
-> > but there are other problems as well.  There was an example a little
-> > while back where someone "fixed" a security problem by making things
-> > unsigned.
+> > But the nr_isolate_* mismatch problem happens on cma alloc. There is
+> > reclaim_clean_pages_from_list which is being used only by cma. It was
+> > introduced by commit 02c6de8d757c ("mm: cma: discard clean pages during
+> > contiguous allocation instead of migration") to reclaim clean file pages
+> > without migration. The cma alloc uses both reclaim_clean_pages_from_list
+> > and migrate_pages, and it uses page_is_file_lru to count isolated
+> > files. If there are dirty lazyfree pages allocated from cma memory
+> > region, the pages are counted as isolated file at the beginging but are
+> > counted as isolated anon after finished.
 > > 
-> > 	for (i = 0; i < user_value; i++) {
-> 
-> This is clearly missing input validation on user_value, the only
-> reason int helps at all here is pure dumb luck for this one case.
-> 
-> If it had used something like copy_to_user it would be broken.
-
-The real life example was slightly more complicated than that.  But the
-point is that a lot of people think unsigned values are inherently more
-safe and they use u32 everywhere as a default datatype.  I argue that
-the default should always be int unless there is a good reason
-otherwise.
-
-In my own Smatch code, I have a u16 struct member which constantly
-causes me bugs.  But I keep it because the struct is carefully aligned
-to save memory.  There are reasons for the other datatypes to exist, but
-using them is tricky so it's best to avoid it if you can.
-
-There is a lot of magic to making your limits unsigned long type.
-
-> 
-> > Originally if user_value was an int then the loop would have been a
-> > harmless no-op but now it was a large positive value so it lead to
-> > memory corruption.  Another example is:
+> > Mem-Info:
+> > Node 0 active_anon:3045904kB inactive_anon:611448kB active_file:14892kB inactive_file:205636kB unevictable:10416kB isolated(anon):0kB isolated(file):37664kB mapped:630216kB dirty:384kB writeback:0kB shmem:42576kB writeback_tmp:0kB unstable:0kB all_unreclaimable? no
 > > 
-> > 	for (i = 0; i < user_value - 1; i++) {
+> > Like log above, there was too much isolated file, 37664kB, which
+> > triggers too_many_isolated in reclaim when there is no isolated file in
+> > system wide. It could be reproducible by running two programs, doing
+> > MADV_FREE, writing and doing cma alloc, respectively. Although isolated
+> > anon is 0, I found that the internal value of isolated anon was the
+> > negative value of isolated file.
+> > 
+> > Fix this by skipping anon pages on reclaim_clean_pages_from_list. The
+> > lazyfree page can be checked by both PageAnon(page) and
+> > page_is_file_lru. But in this case, PageAnon is enough to skip all
+> > anon pages.
+> > 
+> > Reported-by: Yong-Taek Lee <ytk.lee@samsung.com>
+> > Signed-off-by: Jaewon Kim <jaewon31.kim@samsung.com>
 > 
-> Again, code like this is simply missing required input validation. The
-> for loop works with int by dumb luck, and this would be broken if it
-> called copy_from_user.
-
-The thing about int type is that it works like people expect normal
-numbers to work.  People normally think that zero minus one is going to
-be negative but if they change to u32 by default then it wraps to
-UINT_MAX and that's unexpected.  There is an element where the static
-checker encourages people to "change your types to match" and that's
-garbage advice.  Changing your types doesn't magically make things
-better and I would argue that it normally makes things worse.
-
-
->  
-> > From my experience with static analysis and security audits, making
-> > things unsigned en mass causes more security bugs.  There are definitely
-> > times where making variables unsigned is correct for security reasons
-> > like when you are taking a size from userspace.
+> Thanks for the investigation!
+> The thing is MADV_FREEed page since supporting swapless could change
+> his LRU status between reclaim.
 > 
-> Any code that casts a unsigned value from userspace to a signed value
-> in the kernel is deeply suspect, IMHO.
-
-Agreed.
-
+> I am worry about voiding the optimization we have kept in CMA but
+> also don't have good idea, either so I tend to agree with this.
 > 
-> If you get the in habit of using types properly then it is less likely
-> this bug-class will happen. If your habit is to just always use 'int'
-> for everything then you *will* accidently cause a user value to be
-> implicitly casted.
-
-This is an interesting theory but I haven't seen any evidence to support
-it.  My intuition is that it's better to only care when you have to
-otherwise you get overwhelmed.
-
+> Let me Cc Johannes who might have better idea.
 > 
-> > Complicated types call attention to themselves and they hurt
-> > readability.  You sometimes *need* other datatypes and you want those to
-> > stand out but if everything is special then nothing is special.
-> 
-> If the programmer knows the value is never negative it should be
-> recorded in the code, otherwise it is hard to tell if there are
-> problems or not.
-> 
-> Is this code wrong?
-> 
->  int array_idx;
->  ...
->  if (array_idx < ARRAY_SIZE(foo))
->     return foo[array_idx];
+> > ---
+> >  mm/vmscan.c | 3 +++
+> >  1 file changed, 3 insertions(+)
+> > 
+> > diff --git a/mm/vmscan.c b/mm/vmscan.c
+> > index b06868fc4926..9380a18eef5e 100644
+> > --- a/mm/vmscan.c
+> > +++ b/mm/vmscan.c
+> > @@ -1497,6 +1497,9 @@ unsigned long reclaim_clean_pages_from_list(struct zone *zone,
+> >  	LIST_HEAD(clean_pages);
+> >  
+> >  	list_for_each_entry_safe(page, next, page_list, lru) {
+> > +		/* to avoid race with MADV_FREE anon page */
+> > +		if (PageAnon(page))
+> > +			continue;
+> >  		if (page_is_file_lru(page) && !PageDirty(page) &&
+> >  		    !__PageMovable(page) && !PageUnevictable(page)) {
+> >  			ClearPageActive(page);
+> > -- 
+> > 2.13.7
+> > 
 
-In some ways, I'm the wrong person to ask because I know without even
-thinking about it that ARRAY_SIZE() is size_t so the code works fine...
+Hi Jaewon,
 
-regards,
-dan carpenter
+How about this idea? I think it could solve the issue with keeping
+CMA alloc latency optimization.
+
+diff --git a/include/linux/vmstat.h b/include/linux/vmstat.h
+index 292485f3d24d..10cc932e209a 100644
+--- a/include/linux/vmstat.h
++++ b/include/linux/vmstat.h
+@@ -29,6 +29,7 @@ struct reclaim_stat {
+ 	unsigned nr_activate[2];
+ 	unsigned nr_ref_keep;
+ 	unsigned nr_unmap_fail;
++	unsigned nr_lazyfree_fail;
+ };
+ 
+ enum writeback_stat_item {
+diff --git a/mm/vmscan.c b/mm/vmscan.c
+index 4c8a1cdccbba..b390f6094f2f 100644
+--- a/mm/vmscan.c
++++ b/mm/vmscan.c
+@@ -1296,11 +1296,15 @@ static unsigned long shrink_page_list(struct list_head *page_list,
+ 		 */
+ 		if (page_mapped(page)) {
+ 			enum ttu_flags flags = ttu_flags | TTU_BATCH_FLUSH;
++			bool lazyfree = PageAnon(page) && !PageSwapBacked(page);
+ 
+ 			if (unlikely(PageTransHuge(page)))
+ 				flags |= TTU_SPLIT_HUGE_PMD;
++
+ 			if (!try_to_unmap(page, flags)) {
+ 				stat->nr_unmap_fail += nr_pages;
++				if (lazyfree && PageSwapBacked(page))
++					stat->nr_lazyfree_fail += nr_pages;
+ 				goto activate_locked;
+ 			}
+ 		}
+@@ -1492,8 +1496,8 @@ unsigned long reclaim_clean_pages_from_list(struct zone *zone,
+ 		.priority = DEF_PRIORITY,
+ 		.may_unmap = 1,
+ 	};
+-	struct reclaim_stat dummy_stat;
+-	unsigned long ret;
++	struct reclaim_stat stat;
++	unsigned long reclaimed;
+ 	struct page *page, *next;
+ 	LIST_HEAD(clean_pages);
+ 
+@@ -1505,11 +1509,21 @@ unsigned long reclaim_clean_pages_from_list(struct zone *zone,
+ 		}
+ 	}
+ 
+-	ret = shrink_page_list(&clean_pages, zone->zone_pgdat, &sc,
+-			TTU_IGNORE_ACCESS, &dummy_stat, true);
++	reclaimed = shrink_page_list(&clean_pages, zone->zone_pgdat, &sc,
++			TTU_IGNORE_ACCESS, &stat, true);
+ 	list_splice(&clean_pages, page_list);
+-	mod_node_page_state(zone->zone_pgdat, NR_ISOLATED_FILE, -ret);
+-	return ret;
++	mod_node_page_state(zone->zone_pgdat, NR_ISOLATED_FILE, -reclaimed);
++	/*
++	 * Since lazyfree pages are isolated from file LRU from the beginning,
++	 * they will rotate back to anonymous LRU in the end if it failed to
++	 * discard so isolated count will be mismatched.
++	 * Compensate the isolated count for both LRU lists.
++	 */
++	mod_node_page_state(zone->zone_pgdat, NR_ISOLATED_ANON,
++					stat->nr_lazyfree_fail);
++	mod_node_page_state(zone->zone_pgdat, NR_ISOLATED_FILE,
++					-stat->nr_lazyfree_fail);
++	return reclaimed;
+ }
+ 
+ /*
+-- 
+2.26.1.301.g55bc3eb7cb9-goog
 
