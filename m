@@ -2,132 +2,168 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFAB4C38A2D
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 09:09:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 552AEC352BE
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 09:10:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CBE16207FC
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 09:09:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="i+qpCyA1"
+	by mail.kernel.org (Postfix) with ESMTP id 37C31207FC
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 09:10:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730194AbgDQJJT (ORCPT
+        id S1730198AbgDQJKS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 05:09:19 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:28502 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730169AbgDQJJR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 05:09:17 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587114556;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=2cCOf6XJLp8oVY3ARJuZvdamGJsDNMFwpwD+jmxrCyc=;
-        b=i+qpCyA1wuhio4PheKZiow/KpwSdGwSzeRdUSknjf+g6shwm4c1MChNNAFwvPJwnhaeFpU
-        Vb4VdvftfH8vypCjN0ycfzD/+VyD6gCtFjiKhKMsEZXxgPnqoUSwpYbJ9CpW0TOfdvwmQ+
-        YtfqdRjTcB2WoUitqMi0ARDhs8eBVa0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-271-H6wdLbRDNBil-5rkjGT0_Q-1; Fri, 17 Apr 2020 05:09:11 -0400
-X-MC-Unique: H6wdLbRDNBil-5rkjGT0_Q-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E6B5A107ACC4;
-        Fri, 17 Apr 2020 09:09:07 +0000 (UTC)
-Received: from krava (unknown [10.40.195.134])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id C7C8E100EBA4;
-        Fri, 17 Apr 2020 09:08:12 +0000 (UTC)
-Date:   Fri, 17 Apr 2020 11:08:10 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Igor Lubashev <ilubashe@akamai.com>,
-        Alexey Budankov <alexey.budankov@linux.intel.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Jiwei Sun <jiwei.sun@windriver.com>,
-        yuzhoujian <yuzhoujian@didichuxing.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Leo Yan <leo.yan@linaro.org>,
-        John Garry <john.garry@huawei.com>,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH v11 0/4] perf tools: add support for libpfm4
-Message-ID: <20200417090810.GA468827@krava>
-References: <20200416221457.46710-1-irogers@google.com>
+        Fri, 17 Apr 2020 05:10:18 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:2397 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729987AbgDQJKR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Apr 2020 05:10:17 -0400
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 2063C4944C6BE347FA91;
+        Fri, 17 Apr 2020 17:10:15 +0800 (CST)
+Received: from [127.0.0.1] (10.173.221.230) by DGGEMS409-HUB.china.huawei.com
+ (10.3.19.209) with Microsoft SMTP Server id 14.3.487.0; Fri, 17 Apr 2020
+ 17:10:07 +0800
+Subject: Re: [PATCH v2] KVM/arm64: Support enabling dirty log gradually in
+ small chunks
+To:     Paolo Bonzini <pbonzini@redhat.com>, Marc Zyngier <maz@kernel.org>
+References: <20200413122023.52583-1-zhukeqian1@huawei.com>
+ <be45ec89-2bdb-454b-d20a-c08898e26024@redhat.com>
+ <20200416160939.7e9c1621@why>
+ <442f288e-2934-120c-4994-5357e3e9216b@redhat.com>
+CC:     <kvm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <kvmarm@lists.cs.columbia.edu>,
+        "James Morse" <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Will Deacon <will@kernel.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Jay Zhou <jianjay.zhou@huawei.com>,
+        <wanghaibin.wang@huawei.com>
+From:   zhukeqian <zhukeqian1@huawei.com>
+Message-ID: <3e3ce7dd-af13-6daa-9ccf-747405d448cc@huawei.com>
+Date:   Fri, 17 Apr 2020 17:10:05 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.7.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200416221457.46710-1-irogers@google.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+In-Reply-To: <442f288e-2934-120c-4994-5357e3e9216b@redhat.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.173.221.230]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 16, 2020 at 03:14:53PM -0700, Ian Rogers wrote:
-> This patch links perf with the libpfm4 library if it is available
-> and NO_LIBPFM4 isn't passed to the build. The libpfm4 library
-> contains hardware event tables for all processors supported by
-> perf_events. It is a helper library that helps convert from a
-> symbolic event name to the event encoding required by the
-> underlying kernel interface. This library is open-source and
-> available from: http://perfmon2.sf.net.
->     
-> With this patch, it is possible to specify full hardware events
-> by name. Hardware filters are also supported. Events must be
-> specified via the --pfm-events and not -e option. Both options
-> are active at the same time and it is possible to mix and match:
->     
-> $ perf stat --pfm-events inst_retired:any_p:c=1:i -e cycles ....
-> 
-> v11 reformats the perf list output to be:
-> List of pre-defined events (to be used in -e):
-> 
->   branch-instructions OR branches                    [Hardware event]
->   branch-misses                                      [Hardware event]
-> ...
-> 
-> List of pre-defined events (to be used in --pfm-events):
-> 
-> ix86arch:
->   UNHALTED_CORE_CYCLES
->     [count core clock cycles whenever the clock signal on the specific core is running (not halted)]
->   INSTRUCTION_RETIRED
->     [count the number of instructions at retirement. For instructions that consists of multiple mic>
-> ...
-> skx:
->   UNHALTED_CORE_CYCLES
->     [Count core clock cycles whenever the clock signal on the specific core is running (not halted)]
-> ...
->   BACLEARS
->     [Branch re-steered]
->       BACLEARS:ANY
->         [Number of front-end re-steers due to BPU misprediction]
-> ...
+Hi Paolo,
 
-Acked-by: Jiri Olsa <jolsa@redhat.com>
+On 2020/4/16 23:55, Paolo Bonzini wrote:
+> On 16/04/20 17:09, Marc Zyngier wrote:
+>> On Wed, 15 Apr 2020 18:13:56 +0200
+>> Paolo Bonzini <pbonzini@redhat.com> wrote:
+>>
+>>> On 13/04/20 14:20, Keqian Zhu wrote:
+>>>> There is already support of enabling dirty log graually in small chunks
+>>>> for x86 in commit 3c9bd4006bfc ("KVM: x86: enable dirty log gradually in
+>>>> small chunks"). This adds support for arm64.
+>>>>
+>>>> x86 still writes protect all huge pages when DIRTY_LOG_INITIALLY_ALL_SET
+>>>> is eanbled. However, for arm64, both huge pages and normal pages can be
+>>>> write protected gradually by userspace.
+>>>>
+>>>> Under the Huawei Kunpeng 920 2.6GHz platform, I did some tests on 128G
+>>>> Linux VMs with different page size. The memory pressure is 127G in each
+>>>> case. The time taken of memory_global_dirty_log_start in QEMU is listed
+>>>> below:
+>>>>
+>>>> Page Size      Before    After Optimization
+>>>>   4K            650ms         1.8ms
+>>>>   2M             4ms          1.8ms
+>>>>   1G             2ms          1.8ms
+>>>>
+>>>> Besides the time reduction, the biggest income is that we will minimize
+>>>> the performance side effect (because of dissloving huge pages and marking
+>>>> memslots dirty) on guest after enabling dirty log.
+>>>>
+>>>> Signed-off-by: Keqian Zhu <zhukeqian1@huawei.com>
+>>>> ---
+>>>>  Documentation/virt/kvm/api.rst    |  2 +-
+>>>>  arch/arm64/include/asm/kvm_host.h |  3 +++
+>>>>  virt/kvm/arm/mmu.c                | 12 ++++++++++--
+>>>>  3 files changed, 14 insertions(+), 3 deletions(-)
+>>>>
+>>>> diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
+>>>> index efbbe570aa9b..0017f63fa44f 100644
+>>>> --- a/Documentation/virt/kvm/api.rst
+>>>> +++ b/Documentation/virt/kvm/api.rst
+>>>> @@ -5777,7 +5777,7 @@ will be initialized to 1 when created.  This also improves performance because
+>>>>  dirty logging can be enabled gradually in small chunks on the first call
+>>>>  to KVM_CLEAR_DIRTY_LOG.  KVM_DIRTY_LOG_INITIALLY_SET depends on
+>>>>  KVM_DIRTY_LOG_MANUAL_PROTECT_ENABLE (it is also only available on
+>>>> -x86 for now).
+>>>> +x86 and arm64 for now).
+>>>>  
+>>>>  KVM_CAP_MANUAL_DIRTY_LOG_PROTECT2 was previously available under the name
+>>>>  KVM_CAP_MANUAL_DIRTY_LOG_PROTECT, but the implementation had bugs that make
+>>>> diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/asm/kvm_host.h
+>>>> index 32c8a675e5a4..a723f84fab83 100644
+>>>> --- a/arch/arm64/include/asm/kvm_host.h
+>>>> +++ b/arch/arm64/include/asm/kvm_host.h
+>>>> @@ -46,6 +46,9 @@
+>>>>  #define KVM_REQ_RECORD_STEAL	KVM_ARCH_REQ(3)
+>>>>  #define KVM_REQ_RELOAD_GICv4	KVM_ARCH_REQ(4)
+>>>>  
+>>>> +#define KVM_DIRTY_LOG_MANUAL_CAPS   (KVM_DIRTY_LOG_MANUAL_PROTECT_ENABLE | \
+>>>> +				     KVM_DIRTY_LOG_INITIALLY_SET)
+>>>> +
+>>>>  DECLARE_STATIC_KEY_FALSE(userspace_irqchip_in_use);
+>>>>  
+>>>>  extern unsigned int kvm_sve_max_vl;
+>>>> diff --git a/virt/kvm/arm/mmu.c b/virt/kvm/arm/mmu.c
+>>>> index e3b9ee268823..1077f653a611 100644
+>>>> --- a/virt/kvm/arm/mmu.c
+>>>> +++ b/virt/kvm/arm/mmu.c
+>>>> @@ -2265,8 +2265,16 @@ void kvm_arch_commit_memory_region(struct kvm *kvm,
+>>>>  	 * allocated dirty_bitmap[], dirty pages will be be tracked while the
+>>>>  	 * memory slot is write protected.
+>>>>  	 */
+>>>> -	if (change != KVM_MR_DELETE && mem->flags & KVM_MEM_LOG_DIRTY_PAGES)
+>>>> -		kvm_mmu_wp_memory_region(kvm, mem->slot);
+>>>> +	if (change != KVM_MR_DELETE && mem->flags & KVM_MEM_LOG_DIRTY_PAGES) {
+>>>> +		/*
+>>>> +		 * If we're with initial-all-set, we don't need to write
+>>>> +		 * protect any pages because they're all reported as dirty.
+>>>> +		 * Huge pages and normal pages will be write protect gradually.
+>>>> +		 */
+>>>> +		if (!kvm_dirty_log_manual_protect_and_init_set(kvm)) {
+>>>> +			kvm_mmu_wp_memory_region(kvm, mem->slot);
+>>>> +		}
+>>>> +	}
+>>>>  }
+>>>>  
+>>>>  int kvm_arch_prepare_memory_region(struct kvm *kvm,
+>>>>   
+>>>
+>>> Marc, what is the status of this patch?
+>>
+>> I just had a look at it. Is there any urgency for merging it?
+> 
+> No, I thought I was still replying to the v1.
+Sorry that patch v1 is dropped. Because I realized that stage2 page tables
+will be unmapped during VM reboot, or they are not established soon after
+migration, so stage2 page tables can not be used to decide whether a page
+is needed to migrate.
 
-thanks,
-jirka
+Thanks,
+Keqian
+
+> 
+> Paolo
+> 
+> 
+> .
+> 
 
