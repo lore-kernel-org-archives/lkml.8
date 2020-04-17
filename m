@@ -2,199 +2,395 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FE04C38A2B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 16:08:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F709C2D0EF
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 16:08:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3EB7020771
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 16:08:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="RGrzQRJQ"
+	by mail.kernel.org (Postfix) with ESMTP id 1D3FD2078E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 16:08:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729798AbgDQQIT (ORCPT
+        id S1729837AbgDQQI1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 12:08:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50728 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729581AbgDQQIT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 12:08:19 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 000D6C061A0C;
-        Fri, 17 Apr 2020 09:08:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description;
-        bh=sQLrPZSB292xgwYR3ECM5Xmr1WY3xujzeEDsJwOuSKk=; b=RGrzQRJQG0jA774P/2t+rp/Pnb
-        VB13vmxbZKRTHp9y6xPbdxOkMBFZM9xMJwioP8UiTWMotWZ/Q8IDrAPxgc6SCQwqP+QEwqxF/QFEj
-        1GthXpsRwlTNdCwQlFFEo3D1qacEidIuQ0CZSS/NrdS9QxgHQu3ehvWJnYsYsm1F+eDhnFp+ddvNd
-        ba3q4rX3Qwva8+QxYVyu2Y0hKZAySU/CWK1pxdpvVZHN2euWqpEhoYQSMAEhQuCB5CBzHPQgPogiI
-        vGWii6zH8k8aUHyC+Br/K7bJjYP515BFVwlBnQHu7epiGeF8yjOAtXarngabuyj0jBRGvzQyz7AHQ
-        3xuADlYg==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jPTXK-0003s9-GV; Fri, 17 Apr 2020 16:08:14 +0000
-Subject: Re: [PATCH v1] kobject: make sure parent is not released before
- children
-To:     Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Brendan Higgins <brendanhiggins@google.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Rafael Wysocki <rafael.j.wysocki@intel.com>,
-        linux-kselftest@vger.kernel.org,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Shuah Khan <shuah@kernel.org>, anders.roxell@linaro.org,
-        lkft-triage@lists.linaro.org,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>
-References: <20200414204240.186377-1-brendanhiggins@google.com>
- <20200415061154.GA2496263@kroah.com>
- <20200415084653.GM2828150@kuha.fi.intel.com>
- <CAJZ5v0hNemTDVa_S-FfVMbrKjM-RWYoHh88asnUvTNxZinY2cw@mail.gmail.com>
- <20200415131018.GO2828150@kuha.fi.intel.com>
- <20200415133122.GB3461248@kroah.com>
- <20200417113956.GA3728594@kuha.fi.intel.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <e946febc-a1d6-6392-bb00-bc6a65d93c5a@infradead.org>
-Date:   Fri, 17 Apr 2020 09:08:12 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Fri, 17 Apr 2020 12:08:27 -0400
+Received: from mga05.intel.com ([192.55.52.43]:46840 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729581AbgDQQI0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Apr 2020 12:08:26 -0400
+IronPort-SDR: W5nMCeehHEFXOJou2gZJX+xaJNUsHZ8iyYUpzj6E42pt/IYvJ9KtFru+IubWY5AI6qUYyT1NMZ
+ EvgGm6OJhOUw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2020 09:08:26 -0700
+IronPort-SDR: x1yXukHxpXwBqfFqhGpgC0VsMHGzU8fWQNBTxcSzIj7Iyg+ZHQPMrRyn0/xdpJAJyY9mIYGc2F
+ 7/+EWtFz5Dow==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,395,1580803200"; 
+   d="scan'208";a="428271379"
+Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
+  by orsmga005.jf.intel.com with ESMTP; 17 Apr 2020 09:08:25 -0700
+Date:   Fri, 17 Apr 2020 09:14:21 -0700
+From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
+To:     Auger Eric <eric.auger@redhat.com>
+Cc:     Lu Baolu <baolu.lu@linux.intel.com>,
+        iommu@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Jean-Philippe Brucker <jean-philippe@linaro.com>,
+        Yi Liu <yi.l.liu@intel.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        Raj Ashok <ashok.raj@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        jacob.jun.pan@linux.intel.com
+Subject: Re: [PATCH v11 07/10] iommu/vt-d: Add svm/sva invalidate function
+Message-ID: <20200417091421.77238a4b@jacob-builder>
+In-Reply-To: <abee5ee3-ff7c-4849-4831-9591eb07ea63@redhat.com>
+References: <1585939334-21396-1-git-send-email-jacob.jun.pan@linux.intel.com>
+        <1585939334-21396-8-git-send-email-jacob.jun.pan@linux.intel.com>
+        <7867ade8-3e11-30af-b123-7f8ac3722b81@redhat.com>
+        <20200410145621.30242b2d@jacob-builder>
+        <abee5ee3-ff7c-4849-4831-9591eb07ea63@redhat.com>
+Organization: OTC
+X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20200417113956.GA3728594@kuha.fi.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/17/20 4:39 AM, Heikki Krogerus wrote:
-> Hi,
+On Thu, 16 Apr 2020 12:59:14 +0200
+Auger Eric <eric.auger@redhat.com> wrote:
+
+> Hi Jacob,
+> On 4/10/20 11:56 PM, Jacob Pan wrote:
+> > On Thu, 9 Apr 2020 10:50:34 +0200
+> > Auger Eric <eric.auger@redhat.com> wrote:
+> >   
+> >> Hi Jacob,
+> >>
+> >> On 4/3/20 8:42 PM, Jacob Pan wrote:  
+> >>> When Shared Virtual Address (SVA) is enabled for a guest OS via
+> >>> vIOMMU, we need to provide invalidation support at IOMMU API and
+> >>> driver level. This patch adds Intel VT-d specific function to
+> >>> implement iommu passdown invalidate API for shared virtual
+> >>> address.
+> >>>
+> >>> The use case is for supporting caching structure invalidation
+> >>> of assigned SVM capable devices. Emulated IOMMU exposes queue
+> >>> invalidation capability and passes down all descriptors from the
+> >>> guest to the physical IOMMU.
+> >>>
+> >>> The assumption is that guest to host device ID mapping should be
+> >>> resolved prior to calling IOMMU driver. Based on the device
+> >>> handle, host IOMMU driver can replace certain fields before
+> >>> submit to the invalidation queue.
+> >>>
+> >>> ---
+> >>> v11 - Removed 2D map array, use -EINVAL in granularity lookup
+> >>> array. Fixed devTLB invalidation granularity mapping. Disregard
+> >>> G=1 case and use address selective invalidation only.
+> >>>
+> >>> v7 review fixed in v10
+> >>> ---
+> >>>
+> >>> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> >>> Signed-off-by: Ashok Raj <ashok.raj@intel.com>
+> >>> Signed-off-by: Liu, Yi L <yi.l.liu@intel.com>
+> >>> ---
+> >>>  drivers/iommu/intel-iommu.c | 158
+> >>> ++++++++++++++++++++++++++++++++++++++++++++ 1 file changed, 158
+> >>> insertions(+)
+> >>>
+> >>> diff --git a/drivers/iommu/intel-iommu.c
+> >>> b/drivers/iommu/intel-iommu.c index 94c7993dac6a..045c5c08d71d
+> >>> 100644 --- a/drivers/iommu/intel-iommu.c
+> >>> +++ b/drivers/iommu/intel-iommu.c
+> >>> @@ -5594,6 +5594,163 @@ static void
+> >>> intel_iommu_aux_detach_device(struct iommu_domain *domain,
+> >>> aux_domain_remove_dev(to_dmar_domain(domain), dev); }
+> >>>  
+> >>> +/*
+> >>> + * 2D array for converting and sanitizing IOMMU generic TLB
+> >>> granularity to
+> >>> + * VT-d granularity. Invalidation is typically included in the
+> >>> unmap operation
+> >>> + * as a result of DMA or VFIO unmap. However, for assigned
+> >>> devices guest
+> >>> + * owns the first level page tables. Invalidations of translation
+> >>> caches in the
+> >>> + * guest are trapped and passed down to the host.
+> >>> + *
+> >>> + * vIOMMU in the guest will only expose first level page tables,
+> >>> therefore
+> >>> + * we do not support IOTLB granularity for request without PASID
+> >>> (second level).
+> >>> + *
+> >>> + * For example, to find the VT-d granularity encoding for IOTLB
+> >>> + * type and page selective granularity within PASID:
+> >>> + * X: indexed by iommu cache type
+> >>> + * Y: indexed by enum iommu_inv_granularity
+> >>> + * [IOMMU_CACHE_INV_TYPE_IOTLB][IOMMU_INV_GRANU_ADDR]
+> >>> + */
+> >>> +
+> >>> +const static int
+> >>> inv_type_granu_table[IOMMU_CACHE_INV_TYPE_NR][IOMMU_INV_GRANU_NR]
+> >>> = {
+> >>> +	/*
+> >>> +	 * PASID based IOTLB invalidation: PASID selective (per
+> >>> PASID),
+> >>> +	 * page selective (address granularity)
+> >>> +	 */
+> >>> +	{-EINVAL, QI_GRAN_NONG_PASID, QI_GRAN_PSI_PASID},
+> >>> +	/* PASID based dev TLBs */
+> >>> +	{-EINVAL, -EINVAL, QI_DEV_IOTLB_GRAN_PASID_SEL},
+> >>> +	/* PASID cache */
+> >>> +	{-EINVAL, -EINVAL, -EINVAL}
+> >>> +};
+> >>> +
+> >>> +static inline int to_vtd_granularity(int type, int granu)
+> >>> +{
+> >>> +	return inv_type_granu_table[type][granu];
+> >>> +}
+> >>> +
+> >>> +static inline u64 to_vtd_size(u64 granu_size, u64 nr_granules)
+> >>> +{
+> >>> +	u64 nr_pages = (granu_size * nr_granules) >>
+> >>> VTD_PAGE_SHIFT; +
+> >>> +	/* VT-d size is encoded as 2^size of 4K pages, 0 for 4k,
+> >>> 9 for 2MB, etc.
+> >>> +	 * IOMMU cache invalidate API passes granu_size in bytes,
+> >>> and number of
+> >>> +	 * granu size in contiguous memory.
+> >>> +	 */
+> >>> +	return order_base_2(nr_pages);
+> >>> +}
+> >>> +
+> >>> +#ifdef CONFIG_INTEL_IOMMU_SVM
+> >>> +static int intel_iommu_sva_invalidate(struct iommu_domain
+> >>> *domain,
+> >>> +		struct device *dev, struct
+> >>> iommu_cache_invalidate_info *inv_info) +{
+> >>> +	struct dmar_domain *dmar_domain = to_dmar_domain(domain);
+> >>> +	struct device_domain_info *info;
+> >>> +	struct intel_iommu *iommu;
+> >>> +	unsigned long flags;
+> >>> +	int cache_type;
+> >>> +	u8 bus, devfn;
+> >>> +	u16 did, sid;
+> >>> +	int ret = 0;
+> >>> +	u64 size = 0;
+> >>> +
+> >>> +	if (!inv_info || !dmar_domain ||
+> >>> +		inv_info->version !=
+> >>> IOMMU_CACHE_INVALIDATE_INFO_VERSION_1)
+> >>> +		return -EINVAL;
+> >>> +
+> >>> +	if (!dev || !dev_is_pci(dev))
+> >>> +		return -ENODEV;    
+> >>
+> >> Check (domain->flags & DOMAIN_FLAG_NESTING_MODE)?  
+> > Good point
+> >   
+> >>> +
+> >>> +	iommu = device_to_iommu(dev, &bus, &devfn);
+> >>> +	if (!iommu)
+> >>> +		return -ENODEV;
+> >>> +
+> >>> +	spin_lock_irqsave(&device_domain_lock, flags);
+> >>> +	spin_lock(&iommu->lock);
+> >>> +	info = iommu_support_dev_iotlb(dmar_domain, iommu, bus,
+> >>> devfn);
+> >>> +	if (!info) {
+> >>> +		ret = -EINVAL;
+> >>> +		goto out_unlock;
+> >>> +	}
+> >>> +	did = dmar_domain->iommu_did[iommu->seq_id];
+> >>> +	sid = PCI_DEVID(bus, devfn);
+> >>> +
+> >>> +	/* Size is only valid in non-PASID selective invalidation
+> >>> */
+> >>> +	if (inv_info->granularity != IOMMU_INV_GRANU_PASID)
+> >>> +		size =
+> >>> to_vtd_size(inv_info->addr_info.granule_size,
+> >>> +
+> >>> inv_info->addr_info.nb_granules); +
+> >>> +	for_each_set_bit(cache_type, (unsigned long
+> >>> *)&inv_info->cache, IOMMU_CACHE_INV_TYPE_NR) {
+> >>> +		int granu = 0;
+> >>> +		u64 pasid = 0;
+> >>> +
+> >>> +		granu = to_vtd_granularity(cache_type,
+> >>> inv_info->granularity);
+> >>> +		if (granu == -EINVAL) {
+> >>> +			pr_err("Invalid cache type and granu
+> >>> combination %d/%d\n", cache_type,
+> >>> +				inv_info->granularity);    
+> >> rate unlimited traces here and after.  
+> still to be fixed
+Yes. will do.
+
+> >> ret = -EINVAL?
+> >> also related to the discussion we had on the VFIO series. What is
+> >> the error policy?  
+> > Invalidation should not fail, there is no way to tell the guest.
+> > this can be a void function or VFIO can ignore it similar to what
+> > is done to iommu_unmap.  
+> OK it was just for reminder
+It will also be documented in an IOMMU UAPI doc, I plan to send out
+along with the feedback on UAPI version and sizing patchset.
+
+Could you check if the following statement is true.
+
+"TLB invalidations should always succeed from vIOMMU's
+perspective. There is no architectual way to report back the vIOMMU if
+the UAPI data is not compatible. For this reason the following IOMMU
+UAPIs cannot fail:
+
+1. Free PASID
+2. Unbind guest PASID
+3. Unbind guest PASID table (SMMU)
+4. Cache invalidate
+5. Page response
+"
+
+> > 
+> >   
+> >>> +			break;
+> >>> +		}
+> >>> +
+> >>> +		/* PASID is stored in different locations based
+> >>> on granularity */    
+> >> not sure the above comment really is requested  
+> > Just to explain the situation where PASID can be in pasid_info or
+> > addr_info.
+> >   
+> >>> +		if (inv_info->granularity ==
+> >>> IOMMU_INV_GRANU_PASID &&
+> >>> +			inv_info->pasid_info.flags &
+> >>> IOMMU_INV_PASID_FLAGS_PASID)
+> >>> +			pasid = inv_info->pasid_info.pasid;
+> >>> +		else if (inv_info->granularity ==
+> >>> IOMMU_INV_GRANU_ADDR &&
+> >>> +			inv_info->addr_info.flags &
+> >>> IOMMU_INV_ADDR_FLAGS_PASID)
+> >>> +			pasid = inv_info->addr_info.pasid;
+> >>> +
+> >>> +		switch (BIT(cache_type)) {
+> >>> +		case IOMMU_CACHE_INV_TYPE_IOTLB:
+> >>> +			if ((inv_info->granularity ==
+> >>> IOMMU_INV_GRANU_ADDR) &&
+> >>> +				size && (inv_info->addr_info.addr
+> >>> & ((BIT(VTD_PAGE_SHIFT + size)) - 1))) {
+> >>> +				pr_err("Address out of range,
+> >>> 0x%llx, size order %llu\n",
+> >>> +					inv_info->addr_info.addr,
+> >>> size);
+> >>> +				ret = -ERANGE;
+> >>> +				goto out_unlock;
+> >>> +			}
+> >>> +
+> >>> +			qi_flush_piotlb(iommu, did,
+> >>> +					pasid,
+> >>> +
+> >>> mm_to_dma_pfn(inv_info->addr_info.addr),    
+> >> This does not sound correct to me:
+> >> inv_info->addr_info.addr and inv_info->addr_info.flags are not
+> >> valid in case of PASID-selective invalidation  
+> > If granu is PASID-selective, this address is ignored. Since npages
+> > = -1.  
+> Ah OK. Maybe add a comment since it is a bit strange to see irrelevant
+> fields to be called in PASID-selective case.
 > 
->>>> An alternative might be to define something like __kobject_del() doing
->>>> everything that kobject_del() does *without* the
->>>> kobject_put(kobj->parent).
->>>>
->>>> Then, kobject_del() could be defined as something like (pseudocode):
->>>>
->>>> kobject_del(kobj)
->>>> {
->>>>     kobject *perent = kobj->parent;
->>>>
->>>>     __kobject_del(kobj);
->>>>     kobject_put(parent);
->>>> }
->>>>
->>>> and kobject_cleanup() could call __kobject_del() instead of
->>>> kobject_del() and then do the last kobject_put(parent) when it is done
->>>> with the child.
->>>>
->>>> Would that work?
->>>
->>> I think so. Greg, what do you think?
->>
->> Hm, maybe.  Can someone test it out with the reproducer?
+OK, will do.
+
+Thanks!
+> Thanks
 > 
-> Brendan, or Randy! Can you guys test Rafael's proposal? I think it
-> would look like this:
-
-patch is whitespace-damaged. did you copy-paste it from a screen?
-
-
-Anyway, it works for me. I loaded & unloaded test_printf.ko 5 times
-without a problem.
-
-Thanks.
-
-> diff --git a/lib/kobject.c b/lib/kobject.c
-> index 83198cb37d8d..2bd631460e18 100644
-> --- a/lib/kobject.c
-> +++ b/lib/kobject.c
-> @@ -599,14 +599,7 @@ int kobject_move(struct kobject *kobj, struct kobject *new_parent)
->  }
->  EXPORT_SYMBOL_GPL(kobject_move);
->  
-> -/**
-> - * kobject_del() - Unlink kobject from hierarchy.
-> - * @kobj: object.
-> - *
-> - * This is the function that should be called to delete an object
-> - * successfully added via kobject_add().
-> - */
-> -void kobject_del(struct kobject *kobj)
-> +static void __kobject_del(struct kobject *kobj)
->  {
->         struct kernfs_node *sd;
->         const struct kobj_type *ktype;
-> @@ -625,9 +618,23 @@ void kobject_del(struct kobject *kobj)
->  
->         kobj->state_in_sysfs = 0;
->         kobj_kset_leave(kobj);
-> -       kobject_put(kobj->parent);
->         kobj->parent = NULL;
->  }
-> +
-> +/**
-> + * kobject_del() - Unlink kobject from hierarchy.
-> + * @kobj: object.
-> + *
-> + * This is the function that should be called to delete an object
-> + * successfully added via kobject_add().
-> + */
-> +void kobject_del(struct kobject *kobj)
-> +{
-> +       struct kobject *parent = kobj->parent;
-> +
-> +       __kobject_del(kobj);
-> +       kobject_put(parent);
-> +}
->  EXPORT_SYMBOL(kobject_del);
->  
->  /**
-> @@ -663,6 +670,7 @@ EXPORT_SYMBOL(kobject_get_unless_zero);
->   */
->  static void kobject_cleanup(struct kobject *kobj)
->  {
-> +       struct kobject *parent = kobj->parent;
->         struct kobj_type *t = get_ktype(kobj);
->         const char *name = kobj->name;
->  
-> @@ -684,7 +692,7 @@ static void kobject_cleanup(struct kobject *kobj)
->         if (kobj->state_in_sysfs) {
->                 pr_debug("kobject: '%s' (%p): auto cleanup kobject_del\n",
->                          kobject_name(kobj), kobj);
-> -               kobject_del(kobj);
-> +               __kobject_del(kobj);
->         }
->  
->         if (t && t->release) {
-> @@ -698,6 +706,8 @@ static void kobject_cleanup(struct kobject *kobj)
->                 pr_debug("kobject: '%s': free name\n", name);
->                 kfree_const(name);
->         }
-> +
-> +       kobject_put(parent);
->  }
-> 
->  #ifdef CONFIG_DEBUG_KOBJECT_RELEASE
-> 
-> 
-> thanks,
+> Eric
+> >   
+> >>> +					(granu ==
+> >>> QI_GRAN_NONG_PASID) ? -1 : 1 << size,
+> >>> +					inv_info->addr_info.flags
+> >>> & IOMMU_INV_ADDR_FLAGS_LEAF); +
+> >>> +			/*
+> >>> +			 * Always flush device IOTLB if ATS is
+> >>> enabled. vIOMMU
+> >>> +			 * in the guest may assume IOTLB flush is
+> >>> inclusive,
+> >>> +			 * which is more efficient.
+> >>> +			 */
+> >>> +			if (info->ats_enabled)
+> >>> +				qi_flush_dev_iotlb_pasid(iommu,
+> >>> sid, info->pfsid,
+> >>> +						pasid,
+> >>> info->ats_qdep,
+> >>> +
+> >>> inv_info->addr_info.addr, size,    
+> >> same  
+> >>> +						granu);
+> >>> +			break;
+> >>> +		case IOMMU_CACHE_INV_TYPE_DEV_IOTLB:
+> >>> +			if (info->ats_enabled)
+> >>> +				qi_flush_dev_iotlb_pasid(iommu,
+> >>> sid, info->pfsid,
+> >>> +
+> >>> inv_info->addr_info.pasid, info->ats_qdep,    
+> >> nit: use pasid directly  
+> > will do.
+> >   
+> >>> +
+> >>> inv_info->addr_info.addr, size,
+> >>> +						granu);
+> >>> +			else
+> >>> +				pr_warn("Passdown device IOTLB
+> >>> flush w/o ATS!\n");
+> >>> +			break;
+> >>> +		case IOMMU_CACHE_INV_TYPE_PASID:
+> >>> +			qi_flush_pasid_cache(iommu, did, granu,
+> >>> inv_info->pasid_info.pasid);
+> >>> +			break;
+> >>> +		default:
+> >>> +			dev_err(dev, "Unsupported IOMMU
+> >>> invalidation type %d\n",
+> >>> +				cache_type);
+> >>> +			ret = -EINVAL;
+> >>> +		}
+> >>> +	}
+> >>> +out_unlock:
+> >>> +	spin_unlock(&iommu->lock);
+> >>> +	spin_unlock_irqrestore(&device_domain_lock, flags);
+> >>> +
+> >>> +	return ret;
+> >>> +}
+> >>> +#endif
+> >>> +
+> >>>  static int intel_iommu_map(struct iommu_domain *domain,
+> >>>  			   unsigned long iova, phys_addr_t hpa,
+> >>>  			   size_t size, int iommu_prot, gfp_t
+> >>> gfp) @@ -6179,6 +6336,7 @@ const struct iommu_ops intel_iommu_ops
+> >>> = { .is_attach_deferred	=
+> >>> intel_iommu_is_attach_deferred, .pgsize_bitmap		=
+> >>> INTEL_IOMMU_PGSIZES, #ifdef CONFIG_INTEL_IOMMU_SVM
+> >>> +	.cache_invalidate	= intel_iommu_sva_invalidate,
+> >>>  	.sva_bind_gpasid	= intel_svm_bind_gpasid,
+> >>>  	.sva_unbind_gpasid	= intel_svm_unbind_gpasid,
+> >>>  #endif
+> >>>     
+> >> Thanks
+> >>
+> >> Eric
+> >>  
+> > 
+> > [Jacob Pan]
+> >   
 > 
 
-
--- 
-~Randy
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
+[Jacob Pan]
