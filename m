@@ -2,107 +2,115 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 425AEC2D0EF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 19:06:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 703ADC38A29
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 19:08:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 19A9820780
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 19:06:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5343A2084D
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 19:08:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AhxeHMIZ"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="VFWrd83n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729749AbgDQTGY (ORCPT
+        id S1728826AbgDQTIn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 15:06:24 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:40077 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729287AbgDQTGX (ORCPT
+        Fri, 17 Apr 2020 15:08:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50470 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726050AbgDQTIn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 15:06:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587150382;
-        h=from:from:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:in-reply-to:in-reply-to:  references:references;
-        bh=l7NhxqPBgZKRGKonQi6tXhellcY9V1W8AoTLk+/o7jk=;
-        b=AhxeHMIZqqfumAhEEcGpEJT0vbq+K9osCYcm/FPh6HGkN2ruGA1677b0yV8yDVVmcZbaiY
-        RBYMKRnhW94QgDmwdjV/eBJTtaxBbI1X88SQB/k9MQzExmQNJHD1AazJ5AwOeRXtBfe28M
-        r0uEf22j0Nkqu8PTimCRWGUr97N948w=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-68-ETcNWG3XNDSFn1nDcYYgJg-1; Fri, 17 Apr 2020 15:06:20 -0400
-X-MC-Unique: ETcNWG3XNDSFn1nDcYYgJg-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E5842107ACC7;
-        Fri, 17 Apr 2020 19:06:18 +0000 (UTC)
-Received: from tucnak.zalov.cz (ovpn-112-104.ams2.redhat.com [10.36.112.104])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 1C485D7664;
-        Fri, 17 Apr 2020 19:06:17 +0000 (UTC)
-Received: from tucnak.zalov.cz (localhost [127.0.0.1])
-        by tucnak.zalov.cz (8.15.2/8.15.2) with ESMTP id 03HJ6EnA028978;
-        Fri, 17 Apr 2020 21:06:14 +0200
-Received: (from jakub@localhost)
-        by tucnak.zalov.cz (8.15.2/8.15.2/Submit) id 03HJ6785028977;
-        Fri, 17 Apr 2020 21:06:07 +0200
-Date:   Fri, 17 Apr 2020 21:06:07 +0200
-From:   Jakub Jelinek <jakub@redhat.com>
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Borislav Petkov <bp@alien8.de>,
-        Sergei Trofimovich <slyfox@gentoo.org>,
-        Michael Matz <matz@suse.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Subject: Re: [PATCH v2] x86: fix early boot crash on gcc-10
-Message-ID: <20200417190607.GY2424@tucnak>
-Reply-To: Jakub Jelinek <jakub@redhat.com>
-References: <20200415074842.GA31016@zn.tnic>
- <alpine.LSU.2.21.2004151445520.11688@wotan.suse.de>
- <20200415231930.19755bc7@sf>
- <20200417075739.GA7322@zn.tnic>
- <20200417080726.GS2424@tucnak>
- <20200417084224.GB7322@zn.tnic>
- <20200417085859.GU2424@tucnak>
- <20200417090909.GC7322@zn.tnic>
- <CAKwvOdnFXPBJsAUD++HtYS5JiR2KmX73M5GAUe-tvX-JYV7DaA@mail.gmail.com>
- <CAKwvOdmNwNwa6rMC27-QZq8VDrYdTQeQqss-bAwF1EMmnAHxdw@mail.gmail.com>
+        Fri, 17 Apr 2020 15:08:43 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA004C061A0C;
+        Fri, 17 Apr 2020 12:08:42 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id t63so2988055wmt.3;
+        Fri, 17 Apr 2020 12:08:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=PMuvuyOtFyoLpiY9akzKJAflY+hfg2VBUUL0F5qxAe8=;
+        b=VFWrd83nihPAd9jGqMjJj7mOg7uSRRuJRre/cQRjri0xNaNlduifUNSMb23hB8pK61
+         aR0V7qTDd6xAXXytHpIulp6uwcM/jyxG5myWZIHq5cclm2JD2XW6jhwpsBzV6ieOc3RH
+         Ywo1LCk5SLOhNLgszZVxqedyiHcB/mP0DzLD6vo6gK2Igw37afpghTZBfKlEieCq6hbs
+         mxqwCuoYI0GnFfbKROnT93/1tdM245mHGpZhrcHzEQ721DuhYbQI7MkWF6u/ayUp3iav
+         iLI1ZPkio2N+5P6lIoFtRrBDxmQqG7i8AftYmJwLRMAD/gCn0cNvWQthBICnbuEbgv5z
+         wJTA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=PMuvuyOtFyoLpiY9akzKJAflY+hfg2VBUUL0F5qxAe8=;
+        b=IboTxiVhSkhWGe6KX9K41AieB2lK2nPF7vlV+L8vSdSPEwJKwJveRNsMx+QF4o7pEx
+         KN5djUQXU2+pW0oYgkaU3RsHhVXlR3xePP8c6jqH5KG5lMyQ2v4C3HQURwfnFXIwYiNJ
+         8Ou/LxdPYkaGQRv74BDR8moYAtKP7BIOp8xqDYeBlTCU5mHrh5e2QM5FW+TJSh8m3Uz1
+         fgA8B/pHYtWVMqItAi6Yq0305lur/e96UuqjHmDEMBepJNLNRsB0V7XgFrqZKEkiTBVR
+         SKUwAZZrlr3oBoCMuya1GpNkwxdGBoswvkEBO9QtxEvobIDsdLAHXU5G53S67p1t+03a
+         fU2w==
+X-Gm-Message-State: AGi0PuaFZjGsekN+vjUtum72F9clWHzY9JYda4NzZlgjSG2MjU41rjVe
+        vwvutq0vAenRTPSxaTfRDWI=
+X-Google-Smtp-Source: APiQypKLFPW0P7ews0g26VQ1VAHJSlCWTLKsKwNJUPZQRwT1ZhWrWrDunAJ+rJ+hoeml4OFa5XGZlw==
+X-Received: by 2002:a1c:4d17:: with SMTP id o23mr4589135wmh.47.1587150521550;
+        Fri, 17 Apr 2020 12:08:41 -0700 (PDT)
+Received: from localhost.localdomain (p200300F137142E00428D5CFFFEB99DB8.dip0.t-ipconnect.de. [2003:f1:3714:2e00:428d:5cff:feb9:9db8])
+        by smtp.googlemail.com with ESMTPSA id q17sm8722220wmj.45.2020.04.17.12.08.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 17 Apr 2020 12:08:41 -0700 (PDT)
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+To:     robh+dt@kernel.org, khilman@baylibre.com, narmstrong@baylibre.com,
+        linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: [PATCH v2 0/4] meson-ee-pwrc: support for Meson8/8b/8m2 and GX
+Date:   Fri, 17 Apr 2020 21:08:21 +0200
+Message-Id: <20200417190825.1363345-1-martin.blumenstingl@googlemail.com>
+X-Mailer: git-send-email 2.26.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAKwvOdmNwNwa6rMC27-QZq8VDrYdTQeQqss-bAwF1EMmnAHxdw@mail.gmail.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 17, 2020 at 11:22:25AM -0700, Nick Desaulniers wrote:
-> > Sorry, I don't quite follow.  The idea is that an empty asm statement
-> > in foo() should prevent foo() from being inlined into bar()?
-> 
-> s/inlined/tail called/
+This series adds support for all "older" SoCs to the meson-ee-pwrc 
+driver. I wanted to compare as much as I could between my Meson8b EC-100
+(Endless Mini) and the Le Potato board so I added support for GXBB, GXL
+and GXM as well as for the SoCs that I'm actually working on. I will
+send the ARM64 dts patches once all of this is reviewed and merged.
 
-Yeah.  The thing is, the caller changes the stack protector guard base
-value, so at the start of the function it saves a different value then
-it compares at the end.  But, the function that it calls at the end
-actually doesn't return, so this isn't a problem.
-If it is tail called though, the stack protector guard checking is done
-before the tail call and it crashes.
-If the called function is marked with noreturn attribute or _Noreturn,
-at least GCC will also not tail call it and all is fine, but not sure
-what LLVM does in that case.
+I successfully tested the Meson8b part on EC-100 where u-boot does not
+initialize the VPU controller. So this the board where I have been
+struggling most.
 
-	Jakub
+
+Changes since v1 at [0]:
+- rename PWRC_GXBB_ETH_ID to PWRC_GXBB_ETHERNET_MEM_ID. Spotted by
+  Neil, thanks!
+- update cover-letter since Neil confirmed (thanks!) that the "dvin"
+  reset really belongs to the VPU on GXBB, GXL and GXM
+- removed RFC status
+
+
+[0] https://patchwork.kernel.org/cover/11489163/
+
+
+Martin Blumenstingl (4):
+  dt-bindings: power: meson-ee-pwrc: add support for Meson8/8b/8m2
+  dt-bindings: power: meson-ee-pwrc: add support for the Meson GX SoCs
+  soc: amlogic: meson-ee-pwrc: add support for Meson8/Meson8b/Meson8m2
+  soc: amlogic: meson-ee-pwrc: add support for the Meson GX SoCs
+
+ .../bindings/power/amlogic,meson-ee-pwrc.yaml | 102 +++++++++++++++---
+ drivers/soc/amlogic/meson-ee-pwrc.c           |  98 ++++++++++++++++-
+ include/dt-bindings/power/meson-gxbb-power.h  |  13 +++
+ include/dt-bindings/power/meson8-power.h      |  13 +++
+ 4 files changed, 204 insertions(+), 22 deletions(-)
+ create mode 100644 include/dt-bindings/power/meson-gxbb-power.h
+ create mode 100644 include/dt-bindings/power/meson8-power.h
+
+-- 
+2.26.1
 
