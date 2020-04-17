@@ -2,539 +2,311 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62A82C2D0EF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 14:05:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C0BAC352BE
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 14:05:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 35A2121973
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 14:05:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FA89214AF
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 14:05:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="AZ39Wd6P"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XRmqYuk/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730988AbgDQOFd (ORCPT
+        id S1730997AbgDQOFi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 10:05:33 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:18159 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730859AbgDQOFb (ORCPT
+        Fri, 17 Apr 2020 10:05:38 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:32670 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730563AbgDQOEx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 10:05:31 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1587132329; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=/ltPpy481iex064dQmCy9Hl9zgvp/4/awdqzGVGMVWI=; b=AZ39Wd6Pl63FOwBIP4nVNddoIeTRrqGU188r9FsYuqSF9ntAObsYUd/hVHjdmkLNcKgnyR7l
- YjOuWjlSSg36u/jKXqhgy0T5dlBlWLKgim/HKUwCjKg8vJsVz7QQqyKj4OR0XpvzyQ4/EoDR
- UEzdBKKPzZrKsWSgA9ljVZafNj4=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e99b7a8.7f2c6de86df8-smtp-out-n01;
- Fri, 17 Apr 2020 14:05:28 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id AE536C447A1; Fri, 17 Apr 2020 14:05:27 +0000 (UTC)
-Received: from blr-ubuntu-173.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        Fri, 17 Apr 2020 10:04:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587132291;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=i0tluceAt8IB57hg7L7VN2sNvLw35l5ZpHsApbRPqz0=;
+        b=XRmqYuk/mqagBaF8r+OyKUJFGYP+6sGyD7F0M3v+kLmbguncIi3DO9rDWJ9WZoe2FlshVf
+        8v+eLHkrj3YTaaDdoz72MpXv48Fg628fZUjd0u4oPbZ20jYTOSArSaK94DRk6rzHYoeNmc
+        h+CB/RZiXEBo8GH3rPhRia9+83ctDvY=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-113-wBCraTDHNdmEKgRrpIeXjg-1; Fri, 17 Apr 2020 10:04:48 -0400
+X-MC-Unique: wBCraTDHNdmEKgRrpIeXjg-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: rnayak)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id B673AC4478C;
-        Fri, 17 Apr 2020 14:05:19 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org B673AC4478C
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
-From:   Rajendra Nayak <rnayak@codeaurora.org>
-To:     viresh.kumar@linaro.org, sboyd@kernel.org,
-        bjorn.andersson@linaro.org, agross@kernel.org
-Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mka@chromium.org,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Stephen Boyd <swboyd@chromium.org>
-Subject: [PATCH v2 03/17] arm64: dts: sdm845: Add OPP table for all qup devices
-Date:   Fri, 17 Apr 2020 19:34:25 +0530
-Message-Id: <1587132279-27659-4-git-send-email-rnayak@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1587132279-27659-1-git-send-email-rnayak@codeaurora.org>
-References: <1587132279-27659-1-git-send-email-rnayak@codeaurora.org>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B67E58010F0;
+        Fri, 17 Apr 2020 14:04:47 +0000 (UTC)
+Received: from treble.redhat.com (ovpn-116-146.rdu2.redhat.com [10.10.116.146])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 16EF25C1C5;
+        Fri, 17 Apr 2020 14:04:46 +0000 (UTC)
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     live-patching@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Jessica Yu <jeyu@kernel.org>
+Subject: [PATCH v2 3/9] livepatch: Remove .klp.arch
+Date:   Fri, 17 Apr 2020 09:04:28 -0500
+Message-Id: <6d289a3de158bc84dd929e4555d4d81577c35635.1587131959.git.jpoimboe@redhat.com>
+In-Reply-To: <cover.1587131959.git.jpoimboe@redhat.com>
+References: <cover.1587131959.git.jpoimboe@redhat.com>
+MIME-Version: 1.0
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-qup has a requirement to vote on the performance state of the CX domain
-in sdm845 devices. Add OPP tables for these and also add power-domains
-property for all qup instances.
+From: Peter Zijlstra <peterz@infradead.org>
 
-Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
-Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+After the previous patch, vmlinux-specific KLP relocations are now
+applied early during KLP module load.  This means that .klp.arch
+sections are no longer needed for *vmlinux-specific* KLP relocations.
+
+One might think they're still needed for *module-specific* KLP
+relocations.  If a to-be-patched module is loaded *after* its
+corresponding KLP module is loaded, any corresponding KLP relocations
+will be delayed until the to-be-patched module is loaded.  If any
+special sections (.parainstructions, for example) rely on those
+relocations, their initializations (apply_paravirt) need to be done
+afterwards.  Thus the apparent need for arch_klp_init_object_loaded()
+and its corresponding .klp.arch sections -- it allows some of the
+special section initializations to be done at a later time.
+
+But... if you look closer, that dependency between the special sections
+and the module-specific KLP relocations doesn't actually exist in
+reality.  Looking at the contents of the .altinstructions and
+.parainstructions sections, there's not a realistic scenario in which a
+KLP module's .altinstructions or .parainstructions section needs to
+access a symbol in a to-be-patched module.  It might need to access a
+local symbol or even a vmlinux symbol; but not another module's symbol.
+When a special section needs to reference a local or vmlinux symbol, a
+normal rela can be used instead of a KLP rela.
+
+Since the special section initializations don't actually have any real
+dependency on module-specific KLP relocations, .klp.arch and
+arch_klp_init_object_loaded() no longer have a reason to exist.  So
+remove them.
+
+As Peter said much more succinctly:
+
+  So the reason for .klp.arch was that .klp.rela.* stuff would overwrite
+  paravirt instructions. If that happens you're doing it wrong. Those
+  RELAs are core kernel, not module, and thus should've happened in
+  .rela.* sections at patch-module loading time.
+
+  Reverting this removes the two apply_{paravirt,alternatives}() calls
+  from the late patching path, and means we don't have to worry about
+  them when removing module_disable_ro().
+
+[ jpoimboe: Rewrote patch description.  Tweaked klp_init_object_loaded()
+	    error path. ]
+
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
 ---
- arch/arm64/boot/dts/qcom/sdm845.dtsi | 115 +++++++++++++++++++++++++++++++++++
- 1 file changed, 115 insertions(+)
+ Documentation/livepatch/module-elf-format.rst | 15 +-----
+ arch/x86/kernel/Makefile                      |  1 -
+ arch/x86/kernel/livepatch.c                   | 53 -------------------
+ include/linux/livepatch.h                     |  3 --
+ kernel/livepatch/core.c                       | 27 ++++------
+ 5 files changed, 11 insertions(+), 88 deletions(-)
+ delete mode 100644 arch/x86/kernel/livepatch.c
 
-diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-index 8f926b5..36b9fb1 100644
---- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-@@ -804,6 +804,25 @@
- 			clock-names = "core";
- 		};
- 
-+		qup_opp_table: qup-opp-table {
-+			compatible = "operating-points-v2";
+diff --git a/Documentation/livepatch/module-elf-format.rst b/Documentatio=
+n/livepatch/module-elf-format.rst
+index 2a591e6f8e6c..8c6b894c4661 100644
+--- a/Documentation/livepatch/module-elf-format.rst
++++ b/Documentation/livepatch/module-elf-format.rst
+@@ -14,8 +14,7 @@ This document outlines the Elf format requirements that=
+ livepatch modules must f
+    4. Livepatch symbols
+       4.1 A livepatch module's symbol table
+       4.2 Livepatch symbol format
+-   5. Architecture-specific sections
+-   6. Symbol table and Elf section access
++   5. Symbol table and Elf section access
+=20
+ 1. Background and motivation
+ =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D
+@@ -298,17 +297,7 @@ Examples:
+   Note that the 'Ndx' (Section index) for these symbols is SHN_LIVEPATCH=
+ (0xff20).
+   "OS" means OS-specific.
+=20
+-5. Architecture-specific sections
+-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D
+-Architectures may override arch_klp_init_object_loaded() to perform
+-additional arch-specific tasks when a target module loads, such as apply=
+ing
+-arch-specific sections. On x86 for example, we must apply per-object
+-.altinstructions and .parainstructions sections when a target module loa=
+ds.
+-These sections must be prefixed with ".klp.arch.$objname." so that they =
+can
+-be easily identified when iterating through a patch module's Elf section=
+s
+-(See arch/x86/kernel/livepatch.c for a complete example).
+-
+-6. Symbol table and Elf section access
++5. Symbol table and Elf section access
+ =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+ A livepatch module's symbol table is accessible through module->symtab.
+=20
+diff --git a/arch/x86/kernel/Makefile b/arch/x86/kernel/Makefile
+index d6d61c4455fa..fc8834342516 100644
+--- a/arch/x86/kernel/Makefile
++++ b/arch/x86/kernel/Makefile
+@@ -94,7 +94,6 @@ obj-$(CONFIG_X86_MPPARSE)	+=3D mpparse.o
+ obj-y				+=3D apic/
+ obj-$(CONFIG_X86_REBOOTFIXUPS)	+=3D reboot_fixups_32.o
+ obj-$(CONFIG_DYNAMIC_FTRACE)	+=3D ftrace.o
+-obj-$(CONFIG_LIVEPATCH)	+=3D livepatch.o
+ obj-$(CONFIG_FUNCTION_TRACER)	+=3D ftrace_$(BITS).o
+ obj-$(CONFIG_FUNCTION_GRAPH_TRACER) +=3D ftrace.o
+ obj-$(CONFIG_FTRACE_SYSCALLS)	+=3D ftrace.o
+diff --git a/arch/x86/kernel/livepatch.c b/arch/x86/kernel/livepatch.c
+deleted file mode 100644
+index 6a68e41206e7..000000000000
+--- a/arch/x86/kernel/livepatch.c
++++ /dev/null
+@@ -1,53 +0,0 @@
+-// SPDX-License-Identifier: GPL-2.0-or-later
+-/*
+- * livepatch.c - x86-specific Kernel Live Patching Core
+- */
+-
+-#include <linux/module.h>
+-#include <linux/kallsyms.h>
+-#include <linux/livepatch.h>
+-#include <asm/text-patching.h>
+-
+-/* Apply per-object alternatives. Based on x86 module_finalize() */
+-void arch_klp_init_object_loaded(struct klp_patch *patch,
+-				 struct klp_object *obj)
+-{
+-	int cnt;
+-	struct klp_modinfo *info;
+-	Elf_Shdr *s, *alt =3D NULL, *para =3D NULL;
+-	void *aseg, *pseg;
+-	const char *objname;
+-	char sec_objname[MODULE_NAME_LEN];
+-	char secname[KSYM_NAME_LEN];
+-
+-	info =3D patch->mod->klp_info;
+-	objname =3D obj->name ? obj->name : "vmlinux";
+-
+-	/* See livepatch core code for BUILD_BUG_ON() explanation */
+-	BUILD_BUG_ON(MODULE_NAME_LEN < 56 || KSYM_NAME_LEN !=3D 128);
+-
+-	for (s =3D info->sechdrs; s < info->sechdrs + info->hdr.e_shnum; s++) {
+-		/* Apply per-object .klp.arch sections */
+-		cnt =3D sscanf(info->secstrings + s->sh_name,
+-			     ".klp.arch.%55[^.].%127s",
+-			     sec_objname, secname);
+-		if (cnt !=3D 2)
+-			continue;
+-		if (strcmp(sec_objname, objname))
+-			continue;
+-		if (!strcmp(".altinstructions", secname))
+-			alt =3D s;
+-		if (!strcmp(".parainstructions", secname))
+-			para =3D s;
+-	}
+-
+-	if (alt) {
+-		aseg =3D (void *) alt->sh_addr;
+-		apply_alternatives(aseg, aseg + alt->sh_size);
+-	}
+-
+-	if (para) {
+-		pseg =3D (void *) para->sh_addr;
+-		apply_paravirt(pseg, pseg + para->sh_size);
+-	}
+-}
+diff --git a/include/linux/livepatch.h b/include/linux/livepatch.h
+index 85fc23759dc1..533359e48c39 100644
+--- a/include/linux/livepatch.h
++++ b/include/linux/livepatch.h
+@@ -195,9 +195,6 @@ struct klp_patch {
+=20
+ int klp_enable_patch(struct klp_patch *);
+=20
+-void arch_klp_init_object_loaded(struct klp_patch *patch,
+-				 struct klp_object *obj);
+-
+ /* Called from the module loader during module coming/going states */
+ int klp_module_coming(struct module *mod);
+ void klp_module_going(struct module *mod);
+diff --git a/kernel/livepatch/core.c b/kernel/livepatch/core.c
+index 5fda3afc0285..9d865b08d0b0 100644
+--- a/kernel/livepatch/core.c
++++ b/kernel/livepatch/core.c
+@@ -741,12 +741,6 @@ static int klp_init_func(struct klp_object *obj, str=
+uct klp_func *func)
+ 			   func->old_sympos ? func->old_sympos : 1);
+ }
+=20
+-/* Arches may override this to finish any remaining arch-specific tasks =
+*/
+-void __weak arch_klp_init_object_loaded(struct klp_patch *patch,
+-					struct klp_object *obj)
+-{
+-}
+-
+ /* parts of the initialization that is done only when the object is load=
+ed */
+ static int klp_init_object_loaded(struct klp_patch *patch,
+ 				  struct klp_object *obj)
+@@ -755,10 +749,11 @@ static int klp_init_object_loaded(struct klp_patch =
+*patch,
+ 	int ret;
+ 	struct klp_modinfo *info =3D patch->mod->klp_info;
+=20
+-	mutex_lock(&text_mutex);
+-	module_disable_ro(patch->mod);
+-
+ 	if (klp_is_module(obj)) {
 +
-+			opp-19200000 {
-+				opp-hz = /bits/ 64 <19200000>;
-+				required-opps = <&rpmhpd_opp_min_svs>;
-+			};
++		mutex_lock(&text_mutex);
++		module_disable_ro(patch->mod);
 +
-+			opp-75000000 {
-+				opp-hz = /bits/ 64 <75000000>;
-+				required-opps = <&rpmhpd_opp_low_svs>;
-+			};
-+
-+			opp-100000000 {
-+				opp-hz = /bits/ 64 <100000000>;
-+				required-opps = <&rpmhpd_opp_svs>;
-+			};
-+		};
-+
- 		qupv3_id_0: geniqup@8c0000 {
- 			compatible = "qcom,geni-se-qup";
- 			reg = <0 0x008c0000 0 0x6000>;
-@@ -825,6 +844,8 @@
- 				interrupts = <GIC_SPI 601 IRQ_TYPE_LEVEL_HIGH>;
- 				#address-cells = <1>;
- 				#size-cells = <0>;
-+				power-domains = <&rpmhpd SDM845_CX>;
-+				operating-points-v2 = <&qup_opp_table>;
- 				status = "disabled";
- 			};
- 
-@@ -838,6 +859,8 @@
- 				interrupts = <GIC_SPI 601 IRQ_TYPE_LEVEL_HIGH>;
- 				#address-cells = <1>;
- 				#size-cells = <0>;
-+				power-domains = <&rpmhpd SDM845_CX>;
-+				operating-points-v2 = <&qup_opp_table>;
- 				status = "disabled";
- 			};
- 
-@@ -849,6 +872,8 @@
- 				pinctrl-names = "default";
- 				pinctrl-0 = <&qup_uart0_default>;
- 				interrupts = <GIC_SPI 601 IRQ_TYPE_LEVEL_HIGH>;
-+				power-domains = <&rpmhpd SDM845_CX>;
-+				operating-points-v2 = <&qup_opp_table>;
- 				status = "disabled";
- 			};
- 
-@@ -862,6 +887,8 @@
- 				interrupts = <GIC_SPI 602 IRQ_TYPE_LEVEL_HIGH>;
- 				#address-cells = <1>;
- 				#size-cells = <0>;
-+				power-domains = <&rpmhpd SDM845_CX>;
-+				operating-points-v2 = <&qup_opp_table>;
- 				status = "disabled";
- 			};
- 
-@@ -875,6 +902,8 @@
- 				interrupts = <GIC_SPI 602 IRQ_TYPE_LEVEL_HIGH>;
- 				#address-cells = <1>;
- 				#size-cells = <0>;
-+				power-domains = <&rpmhpd SDM845_CX>;
-+				operating-points-v2 = <&qup_opp_table>;
- 				status = "disabled";
- 			};
- 
-@@ -886,6 +915,8 @@
- 				pinctrl-names = "default";
- 				pinctrl-0 = <&qup_uart1_default>;
- 				interrupts = <GIC_SPI 602 IRQ_TYPE_LEVEL_HIGH>;
-+				power-domains = <&rpmhpd SDM845_CX>;
-+				operating-points-v2 = <&qup_opp_table>;
- 				status = "disabled";
- 			};
- 
-@@ -899,6 +930,8 @@
- 				interrupts = <GIC_SPI 603 IRQ_TYPE_LEVEL_HIGH>;
- 				#address-cells = <1>;
- 				#size-cells = <0>;
-+				power-domains = <&rpmhpd SDM845_CX>;
-+				operating-points-v2 = <&qup_opp_table>;
- 				status = "disabled";
- 			};
- 
-@@ -912,6 +945,8 @@
- 				interrupts = <GIC_SPI 603 IRQ_TYPE_LEVEL_HIGH>;
- 				#address-cells = <1>;
- 				#size-cells = <0>;
-+				power-domains = <&rpmhpd SDM845_CX>;
-+				operating-points-v2 = <&qup_opp_table>;
- 				status = "disabled";
- 			};
- 
-@@ -923,6 +958,8 @@
- 				pinctrl-names = "default";
- 				pinctrl-0 = <&qup_uart2_default>;
- 				interrupts = <GIC_SPI 603 IRQ_TYPE_LEVEL_HIGH>;
-+				power-domains = <&rpmhpd SDM845_CX>;
-+				operating-points-v2 = <&qup_opp_table>;
- 				status = "disabled";
- 			};
- 
-@@ -936,6 +973,8 @@
- 				interrupts = <GIC_SPI 604 IRQ_TYPE_LEVEL_HIGH>;
- 				#address-cells = <1>;
- 				#size-cells = <0>;
-+				power-domains = <&rpmhpd SDM845_CX>;
-+				operating-points-v2 = <&qup_opp_table>;
- 				status = "disabled";
- 			};
- 
-@@ -949,6 +988,8 @@
- 				interrupts = <GIC_SPI 604 IRQ_TYPE_LEVEL_HIGH>;
- 				#address-cells = <1>;
- 				#size-cells = <0>;
-+				power-domains = <&rpmhpd SDM845_CX>;
-+				operating-points-v2 = <&qup_opp_table>;
- 				status = "disabled";
- 			};
- 
-@@ -960,6 +1001,8 @@
- 				pinctrl-names = "default";
- 				pinctrl-0 = <&qup_uart3_default>;
- 				interrupts = <GIC_SPI 604 IRQ_TYPE_LEVEL_HIGH>;
-+				power-domains = <&rpmhpd SDM845_CX>;
-+				operating-points-v2 = <&qup_opp_table>;
- 				status = "disabled";
- 			};
- 
-@@ -973,6 +1016,8 @@
- 				interrupts = <GIC_SPI 605 IRQ_TYPE_LEVEL_HIGH>;
- 				#address-cells = <1>;
- 				#size-cells = <0>;
-+				power-domains = <&rpmhpd SDM845_CX>;
-+				operating-points-v2 = <&qup_opp_table>;
- 				status = "disabled";
- 			};
- 
-@@ -986,6 +1031,8 @@
- 				interrupts = <GIC_SPI 605 IRQ_TYPE_LEVEL_HIGH>;
- 				#address-cells = <1>;
- 				#size-cells = <0>;
-+				power-domains = <&rpmhpd SDM845_CX>;
-+				operating-points-v2 = <&qup_opp_table>;
- 				status = "disabled";
- 			};
- 
-@@ -997,6 +1044,8 @@
- 				pinctrl-names = "default";
- 				pinctrl-0 = <&qup_uart4_default>;
- 				interrupts = <GIC_SPI 605 IRQ_TYPE_LEVEL_HIGH>;
-+				power-domains = <&rpmhpd SDM845_CX>;
-+				operating-points-v2 = <&qup_opp_table>;
- 				status = "disabled";
- 			};
- 
-@@ -1010,6 +1059,8 @@
- 				interrupts = <GIC_SPI 606 IRQ_TYPE_LEVEL_HIGH>;
- 				#address-cells = <1>;
- 				#size-cells = <0>;
-+				power-domains = <&rpmhpd SDM845_CX>;
-+				operating-points-v2 = <&qup_opp_table>;
- 				status = "disabled";
- 			};
- 
-@@ -1023,6 +1074,8 @@
- 				interrupts = <GIC_SPI 606 IRQ_TYPE_LEVEL_HIGH>;
- 				#address-cells = <1>;
- 				#size-cells = <0>;
-+				power-domains = <&rpmhpd SDM845_CX>;
-+				operating-points-v2 = <&qup_opp_table>;
- 				status = "disabled";
- 			};
- 
-@@ -1034,6 +1087,8 @@
- 				pinctrl-names = "default";
- 				pinctrl-0 = <&qup_uart5_default>;
- 				interrupts = <GIC_SPI 606 IRQ_TYPE_LEVEL_HIGH>;
-+				power-domains = <&rpmhpd SDM845_CX>;
-+				operating-points-v2 = <&qup_opp_table>;
- 				status = "disabled";
- 			};
- 
-@@ -1047,6 +1102,8 @@
- 				interrupts = <GIC_SPI 607 IRQ_TYPE_LEVEL_HIGH>;
- 				#address-cells = <1>;
- 				#size-cells = <0>;
-+				power-domains = <&rpmhpd SDM845_CX>;
-+				operating-points-v2 = <&qup_opp_table>;
- 				status = "disabled";
- 			};
- 
-@@ -1060,6 +1117,8 @@
- 				interrupts = <GIC_SPI 607 IRQ_TYPE_LEVEL_HIGH>;
- 				#address-cells = <1>;
- 				#size-cells = <0>;
-+				power-domains = <&rpmhpd SDM845_CX>;
-+				operating-points-v2 = <&qup_opp_table>;
- 				status = "disabled";
- 			};
- 
-@@ -1071,6 +1130,8 @@
- 				pinctrl-names = "default";
- 				pinctrl-0 = <&qup_uart6_default>;
- 				interrupts = <GIC_SPI 607 IRQ_TYPE_LEVEL_HIGH>;
-+				power-domains = <&rpmhpd SDM845_CX>;
-+				operating-points-v2 = <&qup_opp_table>;
- 				status = "disabled";
- 			};
- 
-@@ -1084,6 +1145,8 @@
- 				interrupts = <GIC_SPI 608 IRQ_TYPE_LEVEL_HIGH>;
- 				#address-cells = <1>;
- 				#size-cells = <0>;
-+				power-domains = <&rpmhpd SDM845_CX>;
-+				operating-points-v2 = <&qup_opp_table>;
- 				status = "disabled";
- 			};
- 
-@@ -1097,6 +1160,8 @@
- 				interrupts = <GIC_SPI 608 IRQ_TYPE_LEVEL_HIGH>;
- 				#address-cells = <1>;
- 				#size-cells = <0>;
-+				power-domains = <&rpmhpd SDM845_CX>;
-+				operating-points-v2 = <&qup_opp_table>;
- 				status = "disabled";
- 			};
- 
-@@ -1108,6 +1173,8 @@
- 				pinctrl-names = "default";
- 				pinctrl-0 = <&qup_uart7_default>;
- 				interrupts = <GIC_SPI 608 IRQ_TYPE_LEVEL_HIGH>;
-+				power-domains = <&rpmhpd SDM845_CX>;
-+				operating-points-v2 = <&qup_opp_table>;
- 				status = "disabled";
- 			};
- 		};
-@@ -1133,6 +1200,8 @@
- 				interrupts = <GIC_SPI 353 IRQ_TYPE_LEVEL_HIGH>;
- 				#address-cells = <1>;
- 				#size-cells = <0>;
-+				power-domains = <&rpmhpd SDM845_CX>;
-+				operating-points-v2 = <&qup_opp_table>;
- 				status = "disabled";
- 			};
- 
-@@ -1146,6 +1215,8 @@
- 				interrupts = <GIC_SPI 353 IRQ_TYPE_LEVEL_HIGH>;
- 				#address-cells = <1>;
- 				#size-cells = <0>;
-+				power-domains = <&rpmhpd SDM845_CX>;
-+				operating-points-v2 = <&qup_opp_table>;
- 				status = "disabled";
- 			};
- 
-@@ -1157,6 +1228,8 @@
- 				pinctrl-names = "default";
- 				pinctrl-0 = <&qup_uart8_default>;
- 				interrupts = <GIC_SPI 353 IRQ_TYPE_LEVEL_HIGH>;
-+				power-domains = <&rpmhpd SDM845_CX>;
-+				operating-points-v2 = <&qup_opp_table>;
- 				status = "disabled";
- 			};
- 
-@@ -1170,6 +1243,8 @@
- 				interrupts = <GIC_SPI 354 IRQ_TYPE_LEVEL_HIGH>;
- 				#address-cells = <1>;
- 				#size-cells = <0>;
-+				power-domains = <&rpmhpd SDM845_CX>;
-+				operating-points-v2 = <&qup_opp_table>;
- 				status = "disabled";
- 			};
- 
-@@ -1183,6 +1258,8 @@
- 				interrupts = <GIC_SPI 354 IRQ_TYPE_LEVEL_HIGH>;
- 				#address-cells = <1>;
- 				#size-cells = <0>;
-+				power-domains = <&rpmhpd SDM845_CX>;
-+				operating-points-v2 = <&qup_opp_table>;
- 				status = "disabled";
- 			};
- 
-@@ -1194,6 +1271,8 @@
- 				pinctrl-names = "default";
- 				pinctrl-0 = <&qup_uart9_default>;
- 				interrupts = <GIC_SPI 354 IRQ_TYPE_LEVEL_HIGH>;
-+				power-domains = <&rpmhpd SDM845_CX>;
-+				operating-points-v2 = <&qup_opp_table>;
- 				status = "disabled";
- 			};
- 
-@@ -1207,6 +1286,8 @@
- 				interrupts = <GIC_SPI 355 IRQ_TYPE_LEVEL_HIGH>;
- 				#address-cells = <1>;
- 				#size-cells = <0>;
-+				power-domains = <&rpmhpd SDM845_CX>;
-+				operating-points-v2 = <&qup_opp_table>;
- 				status = "disabled";
- 			};
- 
-@@ -1220,6 +1301,8 @@
- 				interrupts = <GIC_SPI 355 IRQ_TYPE_LEVEL_HIGH>;
- 				#address-cells = <1>;
- 				#size-cells = <0>;
-+				power-domains = <&rpmhpd SDM845_CX>;
-+				operating-points-v2 = <&qup_opp_table>;
- 				status = "disabled";
- 			};
- 
-@@ -1231,6 +1314,8 @@
- 				pinctrl-names = "default";
- 				pinctrl-0 = <&qup_uart10_default>;
- 				interrupts = <GIC_SPI 355 IRQ_TYPE_LEVEL_HIGH>;
-+				power-domains = <&rpmhpd SDM845_CX>;
-+				operating-points-v2 = <&qup_opp_table>;
- 				status = "disabled";
- 			};
- 
-@@ -1244,6 +1329,8 @@
- 				interrupts = <GIC_SPI 356 IRQ_TYPE_LEVEL_HIGH>;
- 				#address-cells = <1>;
- 				#size-cells = <0>;
-+				power-domains = <&rpmhpd SDM845_CX>;
-+				operating-points-v2 = <&qup_opp_table>;
- 				status = "disabled";
- 			};
- 
-@@ -1257,6 +1344,8 @@
- 				interrupts = <GIC_SPI 356 IRQ_TYPE_LEVEL_HIGH>;
- 				#address-cells = <1>;
- 				#size-cells = <0>;
-+				power-domains = <&rpmhpd SDM845_CX>;
-+				operating-points-v2 = <&qup_opp_table>;
- 				status = "disabled";
- 			};
- 
-@@ -1268,6 +1357,8 @@
- 				pinctrl-names = "default";
- 				pinctrl-0 = <&qup_uart11_default>;
- 				interrupts = <GIC_SPI 356 IRQ_TYPE_LEVEL_HIGH>;
-+				power-domains = <&rpmhpd SDM845_CX>;
-+				operating-points-v2 = <&qup_opp_table>;
- 				status = "disabled";
- 			};
- 
-@@ -1281,6 +1372,8 @@
- 				interrupts = <GIC_SPI 357 IRQ_TYPE_LEVEL_HIGH>;
- 				#address-cells = <1>;
- 				#size-cells = <0>;
-+				power-domains = <&rpmhpd SDM845_CX>;
-+				operating-points-v2 = <&qup_opp_table>;
- 				status = "disabled";
- 			};
- 
-@@ -1294,6 +1387,8 @@
- 				interrupts = <GIC_SPI 357 IRQ_TYPE_LEVEL_HIGH>;
- 				#address-cells = <1>;
- 				#size-cells = <0>;
-+				power-domains = <&rpmhpd SDM845_CX>;
-+				operating-points-v2 = <&qup_opp_table>;
- 				status = "disabled";
- 			};
- 
-@@ -1305,6 +1400,8 @@
- 				pinctrl-names = "default";
- 				pinctrl-0 = <&qup_uart12_default>;
- 				interrupts = <GIC_SPI 357 IRQ_TYPE_LEVEL_HIGH>;
-+				power-domains = <&rpmhpd SDM845_CX>;
-+				operating-points-v2 = <&qup_opp_table>;
- 				status = "disabled";
- 			};
- 
-@@ -1318,6 +1415,8 @@
- 				interrupts = <GIC_SPI 358 IRQ_TYPE_LEVEL_HIGH>;
- 				#address-cells = <1>;
- 				#size-cells = <0>;
-+				power-domains = <&rpmhpd SDM845_CX>;
-+				operating-points-v2 = <&qup_opp_table>;
- 				status = "disabled";
- 			};
- 
-@@ -1331,6 +1430,8 @@
- 				interrupts = <GIC_SPI 358 IRQ_TYPE_LEVEL_HIGH>;
- 				#address-cells = <1>;
- 				#size-cells = <0>;
-+				power-domains = <&rpmhpd SDM845_CX>;
-+				operating-points-v2 = <&qup_opp_table>;
- 				status = "disabled";
- 			};
- 
-@@ -1342,6 +1443,8 @@
- 				pinctrl-names = "default";
- 				pinctrl-0 = <&qup_uart13_default>;
- 				interrupts = <GIC_SPI 358 IRQ_TYPE_LEVEL_HIGH>;
-+				power-domains = <&rpmhpd SDM845_CX>;
-+				operating-points-v2 = <&qup_opp_table>;
- 				status = "disabled";
- 			};
- 
-@@ -1355,6 +1458,8 @@
- 				interrupts = <GIC_SPI 359 IRQ_TYPE_LEVEL_HIGH>;
- 				#address-cells = <1>;
- 				#size-cells = <0>;
-+				power-domains = <&rpmhpd SDM845_CX>;
-+				operating-points-v2 = <&qup_opp_table>;
- 				status = "disabled";
- 			};
- 
-@@ -1368,6 +1473,8 @@
- 				interrupts = <GIC_SPI 359 IRQ_TYPE_LEVEL_HIGH>;
- 				#address-cells = <1>;
- 				#size-cells = <0>;
-+				power-domains = <&rpmhpd SDM845_CX>;
-+				operating-points-v2 = <&qup_opp_table>;
- 				status = "disabled";
- 			};
- 
-@@ -1379,6 +1486,8 @@
- 				pinctrl-names = "default";
- 				pinctrl-0 = <&qup_uart14_default>;
- 				interrupts = <GIC_SPI 359 IRQ_TYPE_LEVEL_HIGH>;
-+				power-domains = <&rpmhpd SDM845_CX>;
-+				operating-points-v2 = <&qup_opp_table>;
- 				status = "disabled";
- 			};
- 
-@@ -1392,6 +1501,8 @@
- 				interrupts = <GIC_SPI 360 IRQ_TYPE_LEVEL_HIGH>;
- 				#address-cells = <1>;
- 				#size-cells = <0>;
-+				power-domains = <&rpmhpd SDM845_CX>;
-+				operating-points-v2 = <&qup_opp_table>;
- 				status = "disabled";
- 			};
- 
-@@ -1405,6 +1516,8 @@
- 				interrupts = <GIC_SPI 360 IRQ_TYPE_LEVEL_HIGH>;
- 				#address-cells = <1>;
- 				#size-cells = <0>;
-+				power-domains = <&rpmhpd SDM845_CX>;
-+				operating-points-v2 = <&qup_opp_table>;
- 				status = "disabled";
- 			};
- 
-@@ -1416,6 +1529,8 @@
- 				pinctrl-names = "default";
- 				pinctrl-0 = <&qup_uart15_default>;
- 				interrupts = <GIC_SPI 360 IRQ_TYPE_LEVEL_HIGH>;
-+				power-domains = <&rpmhpd SDM845_CX>;
-+				operating-points-v2 = <&qup_opp_table>;
- 				status = "disabled";
- 			};
- 		};
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+ 		/*
+ 		 * Only write module-specific relocations here
+ 		 * (.klp.rela.{module}.*).  vmlinux-specific relocations were
+@@ -770,17 +765,13 @@ static int klp_init_object_loaded(struct klp_patch =
+*patch,
+ 					    patch->mod->core_kallsyms.strtab,
+ 					    info->symndx, patch->mod,
+ 					    obj->name);
+-		if (ret) {
+-			module_enable_ro(patch->mod, true);
+-			mutex_unlock(&text_mutex);
+-			return ret;
+-		}
+-	}
+=20
+-	arch_klp_init_object_loaded(patch, obj);
++		module_enable_ro(patch->mod, true);
++		mutex_unlock(&text_mutex);
+=20
+-	module_enable_ro(patch->mod, true);
+-	mutex_unlock(&text_mutex);
++		if (ret)
++			return ret;
++	}
+=20
+ 	klp_for_each_func(obj, func) {
+ 		ret =3D klp_find_object_symbol(obj->name, func->old_name,
+--=20
+2.21.1
+
