@@ -2,141 +2,110 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4766BC38A29
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 20:00:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D047EC2D0EF
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 20:06:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 262C4221EA
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 20:00:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LnUVsZT2"
+	by mail.kernel.org (Postfix) with ESMTP id B149E221EA
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 20:06:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730892AbgDQUAw (ORCPT
+        id S1730908AbgDQUGv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 16:00:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58580 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730573AbgDQUAv (ORCPT
+        Fri, 17 Apr 2020 16:06:51 -0400
+Received: from mout.kundenserver.de ([212.227.126.131]:37103 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730573AbgDQUGv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 16:00:51 -0400
-Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F556C061A0C;
-        Fri, 17 Apr 2020 13:00:51 -0700 (PDT)
-Received: by mail-ed1-x543.google.com with SMTP id r7so2366175edo.11;
-        Fri, 17 Apr 2020 13:00:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=joiVaQizEHaQZ2229PthKafbXhuM8H8qQDWmPkZCvPA=;
-        b=LnUVsZT2G4m7K2lZmIsUWXkdivVV7HhXp7uePi8XVh4Qriiw2cP6w0bxLLQvkkZCo2
-         mdeOh5wMSkjEB9Xp1TpEzd414vQnYcilg+41HBWsJyNeN8qjMp2hS7ElPg/O1d/Aj9wz
-         qi6KGI3SZcAvZRpN8+0+BQmZFjO97IiV5M3dSc6baK53+gtSmRAyLA0Ss33+3hoYPlF5
-         OSJHY0PopkE10g6GPTZ+QsB6HRj/Wfj2wiyKR5cWe96nc1Fdauos2edLzf2NYQoCPPuC
-         VXT7NZV8ej+/85a1lPIpdvg0IDCWxzsCMeyZwltHMZflAeaTdwgNp0mKuPIlcTVv0byq
-         TfIw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=joiVaQizEHaQZ2229PthKafbXhuM8H8qQDWmPkZCvPA=;
-        b=akT+S38ImNpMObn/zK+50LGtnAjegjtn7rtu43gaU7tvPJYnEYs5oX7gBvHE51U+PA
-         mOtmJv+pCjF2CMp25sb0xwNOtnEev8dx9YerFjGJgvy5pSO4BBdvWHPNnTRQKYz8QkHK
-         5TTimK9wJmHrW+I7TrnXindIX3hOHP7VOVOVtli9F+WgL/B/8R2KIZLdx1CNGTESnRl2
-         9FB8vhyihBx6XpsV3vYcFoemvCa1Kq5OrhVOD5Ga7VFIKJkZsIWmSX0xA881z0LVp/ui
-         ZRhcWltxe9oDiYCQKVsrfPV374yN92L8ecPNPdYqgN4d+6lUYmQ5zV30AUYQzIC03vpV
-         KRjg==
-X-Gm-Message-State: AGi0PuYYMI7LWk+Py1mPCaHPY1UG4aeDmcq/c43PyrSRVads49FTufrs
-        Dx0zH2H0+BkgQqogEz0Uunk0FqjGnHwj9uaqs9vEfg==
-X-Google-Smtp-Source: APiQypKyynWkw9qiXw74DF+bVe4DJIZMb0xgKZx3xRiuhX79mYKMVpvzm2p7v9bZYkxIhiNetPBgXQ6xsUuHUHAMwKY=
-X-Received: by 2002:a50:a2e5:: with SMTP id 92mr4787735edm.139.1587153649966;
- Fri, 17 Apr 2020 13:00:49 -0700 (PDT)
+        Fri, 17 Apr 2020 16:06:51 -0400
+Received: from mail-qt1-f180.google.com ([209.85.160.180]) by
+ mrelayeu.kundenserver.de (mreue010 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1M8QiW-1jL9XV33js-004UwX; Fri, 17 Apr 2020 22:06:49 +0200
+Received: by mail-qt1-f180.google.com with SMTP id x2so3110601qtr.0;
+        Fri, 17 Apr 2020 13:06:49 -0700 (PDT)
+X-Gm-Message-State: AGi0PubwJtWaPqKeB14VwyJ6MAaIMvki8umzIGon9wFv5dXOOshBcXnJ
+        wqTjwtkMvXna0/5SxOXODZzqRtA4CRcsPqzHehY=
+X-Google-Smtp-Source: APiQypIuVYTMsWNIMRfLctc2Px6V3Nv5laT/h9easo3nN8JdO/iC9u+TYaVOxEylqCGtuWj1RzmpVdKpAc4Qm4vntwk=
+X-Received: by 2002:ac8:6757:: with SMTP id n23mr4819273qtp.304.1587154008516;
+ Fri, 17 Apr 2020 13:06:48 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200417192858.6997-1-michael@walle.cc> <20200417192858.6997-2-michael@walle.cc>
- <20200417193905.GF785713@lunn.ch> <ef747b543bd8dd34aea89a6243de8da4@walle.cc>
-In-Reply-To: <ef747b543bd8dd34aea89a6243de8da4@walle.cc>
-From:   Vladimir Oltean <olteanv@gmail.com>
-Date:   Fri, 17 Apr 2020 23:00:38 +0300
-Message-ID: <CA+h21hoB5n9DM0kcH_-DOzyxXvs5oMg-wxp-KkNTZOpfFhbWVA@mail.gmail.com>
-Subject: Re: [PATCH net-next 2/3] net: phy: add Broadcom BCM54140 support
-To:     Michael Walle <michael@walle.cc>
-Cc:     Andrew Lunn <andrew@lunn.ch>, linux-hwmon@vger.kernel.org,
-        lkml <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        "David S . Miller" <davem@davemloft.net>
+References: <20200414070142.288696-1-hch@lst.de> <20200414070142.288696-5-hch@lst.de>
+ <CAK8P3a3HvbPKTkwfWr6PbZ96koO_NrJP1qgk8H1mgk=qUScGkQ@mail.gmail.com>
+ <20200415074514.GA1393@lst.de> <CAK8P3a0QGQX85LaqKC1UuTERk6Bpr5TW6aWF+jxi2cOpa4L_AA@mail.gmail.com>
+ <20200417132714.GA6401@lst.de> <87o8rqc7az.fsf@x220.int.ebiederm.org>
+In-Reply-To: <87o8rqc7az.fsf@x220.int.ebiederm.org>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Fri, 17 Apr 2020 22:06:32 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a0x0vsgVp-pRWd7rL-6Zg9KimNQjJpnp6KG+kS1=eK7wg@mail.gmail.com>
+Message-ID: <CAK8P3a0x0vsgVp-pRWd7rL-6Zg9KimNQjJpnp6KG+kS1=eK7wg@mail.gmail.com>
+Subject: Re: [PATCH 4/8] binfmt_elf: open code copy_siginfo_to_user to
+ kernelspace buffer
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Jeremy Kerr <jk@ozlabs.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:FJYARPUTcTI5ilVImAaKDLXrV419J/atlbHDqy6EpyXPfBFphnb
+ Wu7yOUxKWwqU3TrJgIzUTWyK+Aoj7DObEifzaOTXALipy1aXN3EYWzu71cl2nIIXGNafjRL
+ u1K1Y93P7sw2cdVx+jW5uYANF/5BVVjTu883KiqzIqFbian+a3floaeJshdvHYy2LxgZ/6D
+ MvcnnNvyF0F12SINkKi7g==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:8VDhBQqp7NI=:jpsEGnKPTVvn48t9buXnHl
+ 6Jq1w0wHxdwWyzV6tm1KaqKnx/Xob1WGBq0Jk2o93zy5Y6ftTNwO7dhUGxw4TLIFVYKzY1LQb
+ 0hqTM+7T6pM87aZxCKYBWRNcJwFR5Vju3cw0NqdmWbVLnN2kOfOTeFgLy1kur4YdgJjExKEoo
+ pb+5m8IUWay24ToMzgcTEhQ8IVdOZvJyWLAD4gbCqpfWcJ3pjjVgAIPnBpCyfi1w/oX4Z1ZCD
+ 9rMPzMKRD/tpHLPdSbaNhPS41rEiwJi76XKIMJvHhdJU4RO6NSDJJph5LwORSiQVXNCN7AW0f
+ 6OQzjAvM1I9QJubyg52ViS98YVmWVB/2wjTOavfWFJOd5jnLg2Au9Nx0OlyDAQOKBHd+udi1H
+ Umd8XBe6H/0p1q4wknQn0fgGmAsLBhz/vXRwPAEzoV1HAwnfHkFDdMDdFRFapMiZux7gP3Rfr
+ iFVL2+wcqSI2CdY9b9UePuolpJR60tpVy9GPwG0wSpdN5LOyLbra6RN1k4LUJVA8QB1Hb7TiK
+ eeFVBLRxdiJsnTC6HsdCg9lSMoF7drN1pNcJidJTJSMU1tF3hwYHWhlYMCzksTOODVwKTAI2M
+ MRL2jfTIlSnNKg2Z0+HXUQ1f5BVV1OHvfCSG1vCTkeyIDBQWK7gGmH5LeM3kyAhLsH/01Rl48
+ PDOkN1+sBWD3TwrH6PHij3lOGXAOL260fqMLLAx/BObKb0WQLzf+kRao12VdLLCiXynuH/MK2
+ +t5o3tjLN/RLiOmBsAbsZrMveDlNzFC/uJJxEnXsuXC1AQvSPF06HthAdP+3sCw30+wxCOPzv
+ e58tjvmiC73A9na962XZTKMh9rl/YRsy3NS0q2M2QzRlHxcyTM=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Michael,
-
-On Fri, 17 Apr 2020 at 22:52, Michael Walle <michael@walle.cc> wrote:
+On Fri, Apr 17, 2020 at 8:13 PM Eric W. Biederman <ebiederm@xmission.com> wrote:
 >
-> Hi Andrew,
+> Christoph Hellwig <hch@lst.de> writes:
 >
-> Am 2020-04-17 21:39, schrieb Andrew Lunn:
-> > On Fri, Apr 17, 2020 at 09:28:57PM +0200, Michael Walle wrote:
+> > On Wed, Apr 15, 2020 at 10:20:11AM +0200, Arnd Bergmann wrote:
+> >> > I'd rather keep it out of this series and to
+> >> > an interested party.  Then again x32 doesn't seem to have a whole lot
+> >> > of interested parties..
+> >>
+> >> Fine with me. It's on my mental list of things that we want to kill off
+> >> eventually as soon as the remaining users stop replying to questions
+> >> about it.
+> >>
+> >> In fact I should really turn that into a properly maintained list in
+> >> Documentation/... that contains any options that someone has
+> >> asked about removing in the past, along with the reasons for keeping
+> >> it around and a time at which we should ask about it again.
 > >
-> >> +static int bcm54140_get_base_addr_and_port(struct phy_device *phydev)
-> >> +{
-> >> +    struct bcm54140_phy_priv *priv = phydev->priv;
-> >> +    struct mii_bus *bus = phydev->mdio.bus;
-> >> +    int addr, min_addr, max_addr;
-> >> +    int step = 1;
-> >> +    u32 phy_id;
-> >> +    int tmp;
-> >> +
-> >> +    min_addr = phydev->mdio.addr;
-> >> +    max_addr = phydev->mdio.addr;
-> >> +    addr = phydev->mdio.addr;
-> >> +
-> >> +    /* We scan forward and backwards and look for PHYs which have the
-> >> +     * same phy_id like we do. Step 1 will scan forward, step 2
-> >> +     * backwards. Once we are finished, we have a min_addr and
-> >> +     * max_addr which resembles the range of PHY addresses of the same
-> >> +     * type of PHY. There is one caveat; there may be many PHYs of
-> >> +     * the same type, but we know that each PHY takes exactly 4
-> >> +     * consecutive addresses. Therefore we can deduce our offset
-> >> +     * to the base address of this quad PHY.
-> >> +     */
+> > To the newly added x86 maintainers:  Arnd brought up the point that
+> > elf_core_dump writes the ABI siginfo format into the core dump. That
+> > format differs for i386 vs x32.  Is there any good way to find out
+> > which is the right format when are not in a syscall?
 > >
-> > Hi Michael
-> >
-> > How much flexibility is there in setting the base address using
-> > strapping etc? Is it limited to a multiple of 4?
+> > As far a I can tell x32 vs i386 just seems to be based around what
+> > syscall table was used for the current syscall, but core dumps aren't
+> > always in syscall context.
 >
-> You can just set the base address to any address. Then the following
-> addresses are used:
->    base, base + 1, base + 2, base + 3, (base + 4)*
->
-> It is not specified what happens if you set the base so that it would
-> overflow. I guess that is a invalid strapping.
->
-> * (base + 4) is some kind of special PHY address which maps some kind
-> of moving window to a QSGMII address space. It is enabled by default,
-> could be disabled in software, but it doesn't share the same PHY id
-> for which this scans.
->
-> So yes, if you look at the addresses and the phy ids, there are
-> always 4 of this.
->
-> -michael
+> I don't think this matters.  The i386 and x32 signal structures
+> only differ for SIGCHLD.  The SIGCHLD signal does cause coredumps.
+> So as long as we get the 32bit vs 64bit distinct correct all should be
+> well.
 
-What does the reading of the global register give you, when accessed
-through the master PHY ID vs any other PHY ID? Could you use that as
-an indication of this being the correct PHY ID, and scan only to the
-left?
+Ok, makes sense. Thanks for taking a look into this!
 
-Regards,
--Vladimir
+      Arnd
