@@ -2,232 +2,178 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78A29C352BE
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 12:13:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEB43C352BE
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 12:13:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 566D32083E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 12:13:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95E2B2053B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 12:13:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="xiQKSdOl"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ep4RIh3t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727999AbgDQMNL (ORCPT
+        id S1728116AbgDQMNi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 08:13:11 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:46460 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726050AbgDQMNG (ORCPT
+        Fri, 17 Apr 2020 08:13:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42366 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726050AbgDQMNh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 08:13:06 -0400
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03HCBtKT019906;
-        Fri, 17 Apr 2020 14:12:54 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=STMicroelectronics;
- bh=Zi4SisZc6FbWXefWeIc3r0RkxSLPr1E5Mixl1wY/6PA=;
- b=xiQKSdOlH+AjgjhNE8ySveLSrC8OELwZvMSkj1mW7S2RXGnb1m7Yh5fFWcNDvZcKmAow
- zf55Y7nPpJGSQVhz7zbcJW3In8I0gZm+qrc1f7DZoR7CJCYbfPDt/GBj2yCdZbEcX1AT
- muse+PaOtVzAl9eJyMbzfz4kOg8Vu5VwIcxY6qvoaZrislI8j/TqDYJXvWHzeY6uHIbi
- SRDqgKYm5/ra17f4L3K8TqkvmTCthlDEy+fu6G3ofz4t7nQcnyRng45skGrVs9HOlbia
- Ijfl5DD13Rj8atERPO6TXmDmXDOOIQ2RK5MV9XMYKILVS3uvOyXk+bAFNzuaGv5B1xfo Fg== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 30dn761cja-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 17 Apr 2020 14:12:54 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id B27BB10002A;
-        Fri, 17 Apr 2020 14:12:53 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag6node3.st.com [10.75.127.18])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id A45532B0FC9;
-        Fri, 17 Apr 2020 14:12:53 +0200 (CEST)
-Received: from localhost (10.75.127.49) by SFHDAG6NODE3.st.com (10.75.127.18)
- with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 17 Apr 2020 14:12:52
- +0200
-From:   <patrice.chotard@st.com>
-To:     Mark Brown <broonie@kernel.org>,
-        Alexandre Torgue <alexandre.torgue@st.com>
-CC:     <mcoquelin.stm32@gmail.com>, <linux-spi@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        Patrice Chotard <patrice.chotard@st.com>,
-        Christophe Kerello <christophe.kerello@st.com>,
-        Benjamin Gaignard <benjamin.gaignard@st.com>
-Subject: spi: stm32-qspi: Add pm_runtime support
-Date:   Fri, 17 Apr 2020 14:12:41 +0200
-Message-ID: <20200417121241.6473-1-patrice.chotard@st.com>
-X-Mailer: git-send-email 2.17.1
+        Fri, 17 Apr 2020 08:13:37 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DFE72C061A0C
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 05:13:35 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id k1so2798163wrx.4
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 05:13:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=mNnMIm7y3TLbgC2SKE2kyFsJgudqeSj0Bi2fpMoZRKY=;
+        b=ep4RIh3tIW1VzAtQKToY7ctgjSYgXbhztPYJlZNR4C5EqQkwqb8PSP9YEkRC7cIzvz
+         UdnmWGlYyi9b1q3FNaRm4bEwgvcS/bIHUtnlLgdcl+EyDzdbDWeMC7IbKtOwSww+nQig
+         gFa8UmAl0eIduQC+u+mHu8eptQ8OYhRIoSGhdXwYEGXFA2SrgKgbR5+rRo9uPg7z70lB
+         0LtAffXccIHxhXctwDAu0d8Q2TfYuDNt3HJeD4qiH61Lccw746STX4kk1K6MJfxwuZ5m
+         hSx/cuAWTdUxDQogUYTnJ+dytA6yqCskZgMo5QWWnUcjGO6rHGUGVxM3CDa+abBk/Rco
+         y/rw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=mNnMIm7y3TLbgC2SKE2kyFsJgudqeSj0Bi2fpMoZRKY=;
+        b=VPT4VzeBld/iH1cdHo0a1TmCwzJyJuvGFQs8VkGkA8zD9XBnq0aaRmDKF6sOdcPosU
+         MEx+Fq1ewFQRlLNHqF/4NAaa8BcvgJQOip+Rv3CVxNwXB4v/so2rYFOmEYc3Ng7tY86L
+         LuyEYef8O0fSWC8+CpJlnm4o2/KHzEHv3IKpDudMalVGGarYvq4Ackl07s3J4B3/JJWo
+         HJTKDTRe8h2t9gTwEhXqjvPMwL9WmEBJOpOfvZv16eJO77raKRZzYOIs/IyRE7QyMwmj
+         ndfPpJLDEpXljAMYN/l8exe4VHm4WJ8G2wGKHWE7kJNNljMIWIkEvQeTBX2UollOLZ6+
+         LiiQ==
+X-Gm-Message-State: AGi0Pua+iy0QkibFV/2BvubG/vV8RqLItMyna5KW3+INKirSNOAkRGx5
+        dQpoEAZn0b/dZyeNtWPXveZ2vg==
+X-Google-Smtp-Source: APiQypLc3p+t7zActzehUoScSbYCET/ikWMq4tb12lSyG/I1Bw/fTisncRsfnx3PKbnDZ7rB5IsIJg==
+X-Received: by 2002:a5d:4a4b:: with SMTP id v11mr3503857wrs.32.1587125614348;
+        Fri, 17 Apr 2020 05:13:34 -0700 (PDT)
+Received: from srini-hackbox.lan (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
+        by smtp.gmail.com with ESMTPSA id a20sm9416375wra.26.2020.04.17.05.13.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 17 Apr 2020 05:13:33 -0700 (PDT)
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+To:     srini@kernel.org, gregkh@linuxfoundation.org
+Cc:     andrew@lunn.ch, linux-kernel@vger.kernel.org,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: [PATCH] nvmem: core: cleanup old eeprom compat entry attributes
+Date:   Fri, 17 Apr 2020 13:13:06 +0100
+Message-Id: <20200417121306.23121-1-srinivas.kandagatla@linaro.org>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.49]
-X-ClientProxiedBy: SFHDAG4NODE3.st.com (10.75.127.12) To SFHDAG6NODE3.st.com
- (10.75.127.18)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-17_03:2020-04-17,2020-04-17 signatures=0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Patrice Chotard <patrice.chotard@st.com>
+file permission are derived based on various configs for
+default nvmem sysfs file, reuse it to create the eeprom
+compat file too.
 
-By default, STM32_AUTOSUSPEND_DELAY is set to -1 which has for
-effect to prevent runtime suspends.
-Runtime suspends can be activated by setting autosuspend_delay_ms using
-sysfs entry :
-echo {delay_in_ms} > /sys/devices/platform/soc/58003000.spi/power/autosusp
-end_delay_ms)
-
-Signed-off-by: Christophe Kerello <christophe.kerello@st.com>
-Signed-off-by: Patrice Chotard <patrice.chotard@st.com>
-Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 ---
- drivers/spi/spi-stm32-qspi.c | 57 +++++++++++++++++++++++++++++++++---
- 1 file changed, 53 insertions(+), 4 deletions(-)
+ drivers/nvmem/core.c | 52 ++++++++++++--------------------------------
+ 1 file changed, 14 insertions(+), 38 deletions(-)
 
-diff --git a/drivers/spi/spi-stm32-qspi.c b/drivers/spi/spi-stm32-qspi.c
-index d066f5144c3e..2f2ea2c42d6e 100644
---- a/drivers/spi/spi-stm32-qspi.c
-+++ b/drivers/spi/spi-stm32-qspi.c
-@@ -16,6 +16,7 @@
- #include <linux/of.h>
- #include <linux/of_device.h>
- #include <linux/pinctrl/consumer.h>
-+#include <linux/pm_runtime.h>
- #include <linux/platform_device.h>
- #include <linux/reset.h>
- #include <linux/sizes.h>
-@@ -87,6 +88,7 @@
- #define STM32_BUSY_TIMEOUT_US 100000
- #define STM32_ABT_TIMEOUT_US 100000
- #define STM32_COMP_TIMEOUT_MS 1000
-+#define STM32_AUTOSUSPEND_DELAY -1
- 
- struct stm32_qspi_flash {
- 	struct stm32_qspi *qspi;
-@@ -431,10 +433,17 @@ static int stm32_qspi_exec_op(struct spi_mem *mem, const struct spi_mem_op *op)
- 	struct stm32_qspi *qspi = spi_controller_get_devdata(mem->spi->master);
- 	int ret;
- 
-+	ret = pm_runtime_get_sync(qspi->dev);
-+	if (ret < 0)
-+		return ret;
-+
- 	mutex_lock(&qspi->lock);
- 	ret = stm32_qspi_send(mem, op);
- 	mutex_unlock(&qspi->lock);
- 
-+	pm_runtime_mark_last_busy(qspi->dev);
-+	pm_runtime_put_autosuspend(qspi->dev);
-+
- 	return ret;
+diff --git a/drivers/nvmem/core.c b/drivers/nvmem/core.c
+index 05c6ae4b0b97..ad6e55a75bdb 100644
+--- a/drivers/nvmem/core.c
++++ b/drivers/nvmem/core.c
+@@ -167,11 +167,8 @@ static ssize_t bin_attr_nvmem_write(struct file *filp, struct kobject *kobj,
+ 	return count;
  }
  
-@@ -444,6 +453,7 @@ static int stm32_qspi_setup(struct spi_device *spi)
- 	struct stm32_qspi *qspi = spi_controller_get_devdata(ctrl);
- 	struct stm32_qspi_flash *flash;
- 	u32 presc;
-+	int ret;
+-static umode_t nvmem_bin_attr_is_visible(struct kobject *kobj,
+-					 struct bin_attribute *attr, int i)
++static umode_t nvmem_bin_attr_get_umode(struct nvmem_device *nvmem)
+ {
+-	struct device *dev = container_of(kobj, struct device, kobj);
+-	struct nvmem_device *nvmem = to_nvmem_device(dev);
+ 	umode_t mode = 0400;
  
- 	if (ctrl->busy)
- 		return -EBUSY;
-@@ -451,6 +461,10 @@ static int stm32_qspi_setup(struct spi_device *spi)
- 	if (!spi->max_speed_hz)
+ 	if (!nvmem->root_only)
+@@ -189,6 +186,15 @@ static umode_t nvmem_bin_attr_is_visible(struct kobject *kobj,
+ 	return mode;
+ }
+ 
++static umode_t nvmem_bin_attr_is_visible(struct kobject *kobj,
++					 struct bin_attribute *attr, int i)
++{
++	struct device *dev = container_of(kobj, struct device, kobj);
++	struct nvmem_device *nvmem = to_nvmem_device(dev);
++
++	return nvmem_bin_attr_get_umode(nvmem);
++}
++
+ /* default read/write permissions */
+ static struct bin_attribute bin_attr_rw_nvmem = {
+ 	.attr	= {
+@@ -215,34 +221,14 @@ static const struct attribute_group *nvmem_dev_groups[] = {
+ 	NULL,
+ };
+ 
+-/* read only permission */
+-static struct bin_attribute bin_attr_ro_nvmem = {
++static struct bin_attribute bin_attr_nvmem_eeprom_compat = {
+ 	.attr	= {
+-		.name	= "nvmem",
+-		.mode	= 0444,
+-	},
+-	.read	= bin_attr_nvmem_read,
+-};
+-
+-/* default read/write permissions, root only */
+-static struct bin_attribute bin_attr_rw_root_nvmem = {
+-	.attr	= {
+-		.name	= "nvmem",
+-		.mode	= 0600,
++		.name	= "eeprom",
+ 	},
+ 	.read	= bin_attr_nvmem_read,
+ 	.write	= bin_attr_nvmem_write,
+ };
+ 
+-/* read only permission, root only */
+-static struct bin_attribute bin_attr_ro_root_nvmem = {
+-	.attr	= {
+-		.name	= "nvmem",
+-		.mode	= 0400,
+-	},
+-	.read	= bin_attr_nvmem_read,
+-};
+-
+ /*
+  * nvmem_setup_compat() - Create an additional binary entry in
+  * drivers sys directory, to be backwards compatible with the older
+@@ -259,18 +245,8 @@ static int nvmem_sysfs_setup_compat(struct nvmem_device *nvmem,
+ 	if (!config->base_dev)
  		return -EINVAL;
  
-+	ret = pm_runtime_get_sync(qspi->dev);
-+	if (ret < 0)
-+		return ret;
-+
- 	presc = DIV_ROUND_UP(qspi->clk_rate, spi->max_speed_hz) - 1;
- 
- 	flash = &qspi->flash[spi->chip_select];
-@@ -467,6 +481,9 @@ static int stm32_qspi_setup(struct spi_device *spi)
- 	writel_relaxed(qspi->dcr_reg, qspi->io_base + QSPI_DCR);
- 	mutex_unlock(&qspi->lock);
- 
-+	pm_runtime_mark_last_busy(qspi->dev);
-+	pm_runtime_put_autosuspend(qspi->dev);
-+
- 	return 0;
- }
- 
-@@ -643,9 +660,20 @@ static int stm32_qspi_probe(struct platform_device *pdev)
- 	ctrl->num_chipselect = STM32_QSPI_MAX_NORCHIP;
- 	ctrl->dev.of_node = dev->of_node;
- 
-+	pm_runtime_set_autosuspend_delay(dev, STM32_AUTOSUSPEND_DELAY);
-+	pm_runtime_use_autosuspend(dev);
-+	pm_runtime_set_active(dev);
-+	pm_runtime_enable(dev);
-+	pm_runtime_get_noresume(dev);
-+
- 	ret = devm_spi_register_master(dev, ctrl);
--	if (!ret)
--		return 0;
-+	if (ret)
-+		goto err_qspi_release;
-+
-+	pm_runtime_mark_last_busy(dev);
-+	pm_runtime_put_autosuspend(dev);
-+
-+	return 0;
- 
- err_qspi_release:
- 	stm32_qspi_release(qspi);
-@@ -660,14 +688,28 @@ static int stm32_qspi_remove(struct platform_device *pdev)
- 	struct stm32_qspi *qspi = platform_get_drvdata(pdev);
- 
- 	stm32_qspi_release(qspi);
-+
- 	return 0;
- }
- 
--static int __maybe_unused stm32_qspi_suspend(struct device *dev)
-+static int __maybe_unused stm32_qspi_runtime_suspend(struct device *dev)
- {
- 	struct stm32_qspi *qspi = dev_get_drvdata(dev);
- 
- 	clk_disable_unprepare(qspi->clk);
-+
-+	return 0;
-+}
-+
-+static int __maybe_unused stm32_qspi_runtime_resume(struct device *dev)
-+{
-+	struct stm32_qspi *qspi = dev_get_drvdata(dev);
-+
-+	return clk_prepare_enable(qspi->clk);
-+}
-+
-+static int __maybe_unused stm32_qspi_suspend(struct device *dev)
-+{
- 	pinctrl_pm_select_sleep_state(dev);
- 
- 	return 0;
-@@ -683,10 +725,17 @@ static int __maybe_unused stm32_qspi_resume(struct device *dev)
- 	writel_relaxed(qspi->cr_reg, qspi->io_base + QSPI_CR);
- 	writel_relaxed(qspi->dcr_reg, qspi->io_base + QSPI_DCR);
- 
-+	pm_runtime_mark_last_busy(qspi->dev);
-+	pm_runtime_put_autosuspend(qspi->dev);
-+
- 	return 0;
- }
- 
--static SIMPLE_DEV_PM_OPS(stm32_qspi_pm_ops, stm32_qspi_suspend, stm32_qspi_resume);
-+static const struct dev_pm_ops stm32_qspi_pm_ops = {
-+	SET_RUNTIME_PM_OPS(stm32_qspi_runtime_suspend,
-+			   stm32_qspi_runtime_resume, NULL)
-+	SET_SYSTEM_SLEEP_PM_OPS(stm32_qspi_suspend, stm32_qspi_resume)
-+};
- 
- static const struct of_device_id stm32_qspi_match[] = {
- 	{.compatible = "st,stm32f469-qspi"},
+-	if (nvmem->read_only) {
+-		if (config->root_only)
+-			nvmem->eeprom = bin_attr_ro_root_nvmem;
+-		else
+-			nvmem->eeprom = bin_attr_ro_nvmem;
+-	} else {
+-		if (config->root_only)
+-			nvmem->eeprom = bin_attr_rw_root_nvmem;
+-		else
+-			nvmem->eeprom = bin_attr_rw_nvmem;
+-	}
+-	nvmem->eeprom.attr.name = "eeprom";
++	nvmem->eeprom = bin_attr_nvmem_eeprom_compat;
++	nvmem->eeprom.attr.mode = nvmem_bin_attr_get_umode(nvmem);
+ 	nvmem->eeprom.size = nvmem->size;
+ #ifdef CONFIG_DEBUG_LOCK_ALLOC
+ 	nvmem->eeprom.attr.key = &eeprom_lock_key;
 -- 
-2.17.1
+2.21.0
 
