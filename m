@@ -2,120 +2,104 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FD14C38A2B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 12:25:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38EC4C352BE
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 12:26:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E00ED221EA
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 12:25:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E96F221E9
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 12:26:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="Z9Ljm0d8"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="eBAYepU5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729108AbgDQMZq (ORCPT
+        id S1729167AbgDQM0S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 08:25:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44236 "EHLO
+        Fri, 17 Apr 2020 08:26:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44320 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728958AbgDQMZp (ORCPT
+        by vger.kernel.org with ESMTP id S1728751AbgDQM0R (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 08:25:45 -0400
-Received: from mail-qv1-xf41.google.com (mail-qv1-xf41.google.com [IPv6:2607:f8b0:4864:20::f41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61439C061A0F
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 05:25:45 -0700 (PDT)
-Received: by mail-qv1-xf41.google.com with SMTP id q73so757228qvq.2
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 05:25:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=b3iFtRhJs5VqWIfspmC5p02IfQnZ1OBoJDiilSZitow=;
-        b=Z9Ljm0d8QguBsl++bS9kVtdhIXM4iGBa3wZPoDF+/p5QDbbf+Ecx1WOeV/KWVqEAXj
-         ABy5J6+w2bDlgPY3w06H5Xmi/cS0kRvv5T8Ra6TZWtYIBGQu5I4Rx4AHl3+T2gROjJUI
-         0J0m16+FNgCJ90BwzGrj3pRV6Zus7SXB4Rjqp3UWJLn4YHfKIy4u4rXgTAeGs3KE6EUt
-         wQD9z1iG0OEn/tMOLZCt4+Kkayd7XfuvCsNuXdb4ntlg7V35JxLrywkpo+GJvWBjweCZ
-         Ep0gCRUjFRU+1N/O3lHk6ytDkXA+SH1mGrPuTDCuKZHiafjG1shCNAuJ0aW6sHAig3B0
-         xd2A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=b3iFtRhJs5VqWIfspmC5p02IfQnZ1OBoJDiilSZitow=;
-        b=jfFpmLi4AK32yKP6DfIbaQA4sONVG2MShj+TnumPiNp3PC0w0DOkv/oWdy24JQ1Q1W
-         vdw91v7XJBWT2hrB7W9dvXLmB9sfOVx/BhCyDlYTmw55qf52qaSUrOxdLefrLpmqdvOH
-         GccZ8lPfidLucErKu80b1zrTntmNvatDrUjN/AR2sLmzxKq8IMpQ8lcUFJ5B3k/vnffT
-         2vkVxdbnNpGAxnbEYN7X7QSKj4z0w1xqU/ZbeEENvvKZ+Dl14o3NAUtXnoxrpSXkezol
-         swx6i1PrNl5nnTRSyRH4+Qn9MaGb2AXKpAbGRUuXS/nWCbOz40YW7Icu1jZx+r5HwthV
-         IQJw==
-X-Gm-Message-State: AGi0Pua3gT/OH+/hgixIC4XcWA2AIE+6mxv0wXICE5unmtbrHeskBPLz
-        pnsFo/Kb23HtbYDWl2opFzt10Q==
-X-Google-Smtp-Source: APiQypKRejHQkO6SPjqQHCzSrXkoqY5ngsJkDP3GjBxzcNqfAerdMXzQrgdeW6YJO40tzYBCUCmAeQ==
-X-Received: by 2002:ad4:4c4d:: with SMTP id cs13mr2347165qvb.207.1587126344506;
-        Fri, 17 Apr 2020 05:25:44 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
-        by smtp.gmail.com with ESMTPSA id k2sm17252465qte.16.2020.04.17.05.25.43
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 17 Apr 2020 05:25:43 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1jPQ3y-0006eb-6h; Fri, 17 Apr 2020 09:25:42 -0300
-Date:   Fri, 17 Apr 2020 09:25:42 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Dan Carpenter <dan.carpenter@oracle.com>, g@ziepe.ca
-Cc:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        selvin.xavier@broadcom.com, devesh.sharma@broadcom.com,
-        dledford@redhat.com, leon@kernel.org, colin.king@canonical.com,
-        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] RDMA/ocrdma: Fix an off-by-one issue in 'ocrdma_add_stat'
-Message-ID: <20200417122542.GC5100@ziepe.ca>
-References: <20200328073040.24429-1-christophe.jaillet@wanadoo.fr>
- <20200414183441.GA28870@ziepe.ca>
- <20200416130847.GP1163@kadam>
- <20200416184754.GZ5100@ziepe.ca>
- <20200417112624.GS1163@kadam>
+        Fri, 17 Apr 2020 08:26:17 -0400
+Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3DE1AC061A0C
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 05:26:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=l1Lr/Pj4SmJ/DxvUqLYYQm3c2dPrEcOY6tYaIIm0uTM=; b=eBAYepU5Q4RB7VaBgQDiJ9Zlki
+        nHejyh786gQtNgBfQXQP6DnGzMIExZXR3Fb898iQVO9mpXhB+TSfh1/WoqhxNhmIKwqwPHku7b0Ky
+        enc92EEsNc1rxlZ8OWGRPChCcWFzUuI8God+c1fYY8cxALvUQJx2ECw7GCHoafsXRymlHTxidEO1D
+        f068bJS5SXhWGkRzpA4H2s58o7zNKIRKyt6s+fih8jWTYX0ETG0aIYmOvQob8DvUf8drfuV3UWrIM
+        yUlfecFfSPNPKLX4PUppu2l6jud3yuA/iP5t3qplcsje2nlOH0+H4uOfC+Uh+fijxklfZs73+jewR
+        AjKdb1tQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jPQ4A-0007oC-NE; Fri, 17 Apr 2020 12:25:54 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 41124307005;
+        Fri, 17 Apr 2020 14:25:53 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 267302B12162B; Fri, 17 Apr 2020 14:25:53 +0200 (CEST)
+Date:   Fri, 17 Apr 2020 14:25:53 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Miroslav Benes <mbenes@suse.cz>
+Cc:     tglx@linutronix.de, jpoimboe@redhat.com,
+        linux-kernel@vger.kernel.org, x86@kernel.org, mhiramat@kernel.org,
+        jthierry@redhat.com, alexandre.chartre@oracle.com
+Subject: Re: [PATCH v5 02/17] objtool: Better handle IRET
+Message-ID: <20200417122553.GD20730@hirez.programming.kicks-ass.net>
+References: <20200416114706.625340212@infradead.org>
+ <20200416115118.631224674@infradead.org>
+ <alpine.LSU.2.21.2004171326230.7737@pobox.suse.cz>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200417112624.GS1163@kadam>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <alpine.LSU.2.21.2004171326230.7737@pobox.suse.cz>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 17, 2020 at 02:26:24PM +0300, Dan Carpenter wrote:
-> On Thu, Apr 16, 2020 at 03:47:54PM -0300, Jason Gunthorpe wrote:
-> > On Thu, Apr 16, 2020 at 04:08:47PM +0300, Dan Carpenter wrote:
-> > > On Tue, Apr 14, 2020 at 03:34:41PM -0300, Jason Gunthorpe wrote:
-> > > > The memcpy is still kind of silly right? What about this:
-> > > > 
-> > > > static int ocrdma_add_stat(char *start, char *pcur, char *name, u64 count)
-> > > > {
-> > > > 	size_t len = (start + OCRDMA_MAX_DBGFS_MEM) - pcur;
-> > > > 	int cpy_len;
-> > > > 
-> > > > 	cpy_len = snprintf(pcur, len, "%s: %llu\n", name, count);
-> > > > 	if (cpy_len >= len || cpy_len < 0) {
-> > > 
-> > > The kernel version of snprintf() doesn't and will never return
-> > > negatives.  It would cause a huge security headache if it started
-> > > returning negatives.
-> > 
-> > Begs the question why it returns an int then :)
+On Fri, Apr 17, 2020 at 01:29:32PM +0200, Miroslav Benes wrote:
+> On Thu, 16 Apr 2020, Peter Zijlstra wrote:
+
+> > +		case INSN_EXCEPTION_RETURN:
+> > +			if (handle_insn_ops(insn, &state))
+> > +				return 1;
+> > +
+> > +			/*
+> > +			 * This handles x86's sync_core() case, where we use an
+> > +			 * IRET to self. All 'normal' IRET instructions are in
+> > +			 * STT_NOTYPE entry symbols.
+> > +			 */
+> > +			if (func)
+> > +				break;
+> > +
+> > +			return 0;
+> > +
+> >  		case INSN_CONTEXT_SWITCH:
+> >  			if (func && (!next_insn || !next_insn->hint)) {
+> >  				WARN_FUNC("unsupported instruction in callable function",
 > 
-> People should use "int" as their default type.  "int i;".  It means
-> "This is a normal number.  Nothing special about it.  It's not too high.
-> It's not defined by hardware requirements."  Other types call attention
-> to themselves, but int is the humble datatype.
+> It looks really simple.
+> 
+> Have you tried Julien's proposal about removing INSN_STACK altogether, 
+> move the x86 to arch/x86/ and call handle_insn_ops() unconditionally, or 
+> have you just postponed it? As I said, I think it could be better in the 
+> long term, but the above looks good for now as well.
 
-No, I strongly disagree with this, it is one of my pet peeves to see
-'int' being used for data which is known to be only ever be positive
-just to save typing 'unsigned'.
+If you look at this other set I send yesterday:
 
-Not only is it confusing, but allowing signed values has caused tricky
-security bugs, unfortuntely.
+  https://lkml.kernel.org/r/20200416150752.569029800@infradead.org
 
-Jason
+(also, sorry for not adding you to the Cc; also best look at the gitweb
+version, the patches I send out are missing a hunk and lacking some
+back-merges.. clearly I wasn't having a good day yesterday).
+
+it has this intra_function_calls crud that needs explicit conditional
+handle_insn_ops().
