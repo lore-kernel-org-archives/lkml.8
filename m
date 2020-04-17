@@ -2,156 +2,149 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70B03C2BB55
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 08:30:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1110C352BE
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 08:32:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4C69B221EA
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 08:30:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="E65N3BFe"
+	by mail.kernel.org (Postfix) with ESMTP id C030521D95
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 08:32:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587112341;
+	bh=8Oo4SxaoPhfNmNYW57QZmQMRfnVpjxTqOc+iHAbbQ/8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=oEZcB5Znkx7S15yykhLCtHIiyPqh0Xz9Mcq2YsclA58kwjUgZOc8TW74r3GaggCFl
+	 yexGFttgWKczXjtCR5AergR1hplddDDZwt5Ufa/kfQaLfEwfSB7Co251sFLg/jSNPA
+	 Pv/l0QKt16G5RAPxZg0ciu1MhG0ATRdDsnKy4l/A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729775AbgDQIaC (ORCPT
+        id S1729777AbgDQIcV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 04:30:02 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:33589 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729756AbgDQIaA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 04:30:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587112198;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=sq2go4oE4wkjjJo/d/qCXW8H/F2CZmjvC27LSvnbq6k=;
-        b=E65N3BFeCQ64cCR1AlsgBIt/+E+ikZXoAxQfpToXxAdkDByFokPrMXWCn5lJO3aob4IPC9
-        z36Z9v6QNwseZoKzQijnNACMMS49ZhLzk2XDcYON02BJ91Vk8H57BtRPXrvkKkqstc6PZN
-        mZybaFYAl8xuTPLUJI0ew3elDa6nTVc=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-75-WoaY_FbxP7KMMm4Qj1_TwQ-1; Fri, 17 Apr 2020 04:29:56 -0400
-X-MC-Unique: WoaY_FbxP7KMMm4Qj1_TwQ-1
-Received: by mail-wm1-f70.google.com with SMTP id t62so659548wma.0
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 01:29:56 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=sq2go4oE4wkjjJo/d/qCXW8H/F2CZmjvC27LSvnbq6k=;
-        b=jmdZwcs0YaC0gCntDAor2Er05jUIcTiNucOTaIFrPfGgbjyxzD8bQ7arKhudDd7f9Y
-         lgrVkwtTJOcZWDRtAA3IohEzyQZ4g/fvKRqc1LVbPcSqklO31nPA2lpntqT1mP8O4lKe
-         tKSaBzMqZ1bUj0EDWHOr1lZaCqPN67honqL7yF7rAI5dWwlW84DabveA3h+B4ATcrFhj
-         Tqg0BN3c441zpuLh3T0elTTcpEbo2CxktM6BA4qpYQjEobc4PKcWFxfuMiP0nUJBdbhg
-         NLYiA2K9joiAP8c47+BPLn/yXDaFCQwwfO749Pi4sXMD9GTQ8N/pOTBbwlxGdt3Eg9qy
-         uhYw==
-X-Gm-Message-State: AGi0PuZJLroQY8H0odn7LA+1i9PxlXnO9sq++1GLkMBWmgWRHh7Gcafa
-        TuDT+shCzT8uXSy9x841dN5XMn3boMIkPXkkclCx0CzZcNgla7RzdtomAITsS9D7adT69MefbuE
-        XQrBGd+2hauV1rxjgQ8FbUhs3
-X-Received: by 2002:a05:600c:2214:: with SMTP id z20mr2319810wml.189.1587112195127;
-        Fri, 17 Apr 2020 01:29:55 -0700 (PDT)
-X-Google-Smtp-Source: APiQypJKNV66xDbZPbEJ9pvldY03mzn5rKaoaGWZw2nM8sRe1qQQQA0lQolXxgIpPJn0ZvUYcb5Wmw==
-X-Received: by 2002:a05:600c:2214:: with SMTP id z20mr2319790wml.189.1587112194907;
-        Fri, 17 Apr 2020 01:29:54 -0700 (PDT)
-Received: from redhat.com (bzq-79-183-51-3.red.bezeqint.net. [79.183.51.3])
-        by smtp.gmail.com with ESMTPSA id k133sm7277794wma.0.2020.04.17.01.29.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Apr 2020 01:29:54 -0700 (PDT)
-Date:   Fri, 17 Apr 2020 04:29:50 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Jason Wang <jasowang@redhat.com>
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
-        netdev@vger.kernel.org, geert@linux-m68k.org,
-        tsbogend@alpha.franken.de, benh@kernel.crashing.org,
-        paulus@samba.org, heiko.carstens@de.ibm.com, gor@linux.ibm.com,
-        borntraeger@de.ibm.com, Michael Ellerman <mpe@ellerman.id.au>
-Subject: Re: [PATCH V2] vhost: do not enable VHOST_MENU by default
-Message-ID: <20200417042912-mutt-send-email-mst@kernel.org>
-References: <20200415024356.23751-1-jasowang@redhat.com>
- <20200416185426-mutt-send-email-mst@kernel.org>
- <b7e2deb7-cb64-b625-aeb4-760c7b28c0c8@redhat.com>
- <20200417022929-mutt-send-email-mst@kernel.org>
- <4274625d-6feb-81b6-5b0a-695229e7c33d@redhat.com>
+        Fri, 17 Apr 2020 04:32:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58982 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729650AbgDQIcU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Apr 2020 04:32:20 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EF58E2137B;
+        Fri, 17 Apr 2020 08:32:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587112338;
+        bh=8Oo4SxaoPhfNmNYW57QZmQMRfnVpjxTqOc+iHAbbQ/8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=1KXyNCnXvyew882v7GPf6JQBSdKhUiP+l08UaWXOoSE3vm2T4abn9z3zlkm1eJaaU
+         fnmB7+c/VNZvCNQjM/9D+B9P24ePfbRpp4aCnY9rAyxz1o6a1j2Cq9wfqYDAZ7rW97
+         Mw59enahMv55dCj7Y52+NUW6nk3lHpoRJVq3kYJU=
+Date:   Fri, 17 Apr 2020 10:32:16 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     "Luis R. Rodriguez" <mcgrof@kernel.org>
+Cc:     viro@zeniv.linux.org.uk, slyfox@gentoo.org, ast@kernel.org,
+        keescook@chromium.org, josh@joshtriplett.org, ravenexp@gmail.com,
+        chainsaw@gentoo.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH] coredump: fix crash when umh is disabled
+Message-ID: <20200417083216.GE140064@kroah.com>
+References: <20200416162859.26518-1-mcgrof@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <4274625d-6feb-81b6-5b0a-695229e7c33d@redhat.com>
+In-Reply-To: <20200416162859.26518-1-mcgrof@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 17, 2020 at 03:36:52PM +0800, Jason Wang wrote:
+On Thu, Apr 16, 2020 at 04:28:59PM +0000, Luis R. Rodriguez wrote:
+> From: Luis Chamberlain <mcgrof@kernel.org>
 > 
-> On 2020/4/17 下午2:33, Michael S. Tsirkin wrote:
-> > On Fri, Apr 17, 2020 at 11:12:14AM +0800, Jason Wang wrote:
-> > > On 2020/4/17 上午6:55, Michael S. Tsirkin wrote:
-> > > > On Wed, Apr 15, 2020 at 10:43:56AM +0800, Jason Wang wrote:
-> > > > > We try to keep the defconfig untouched after decoupling CONFIG_VHOST
-> > > > > out of CONFIG_VIRTUALIZATION in commit 20c384f1ea1a
-> > > > > ("vhost: refine vhost and vringh kconfig") by enabling VHOST_MENU by
-> > > > > default. Then the defconfigs can keep enabling CONFIG_VHOST_NET
-> > > > > without the caring of CONFIG_VHOST.
-> > > > > 
-> > > > > But this will leave a "CONFIG_VHOST_MENU=y" in all defconfigs and even
-> > > > > for the ones that doesn't want vhost. So it actually shifts the
-> > > > > burdens to the maintainers of all other to add "CONFIG_VHOST_MENU is
-> > > > > not set". So this patch tries to enable CONFIG_VHOST explicitly in
-> > > > > defconfigs that enables CONFIG_VHOST_NET and CONFIG_VHOST_VSOCK.
-> > > > > 
-> > > > > Acked-by: Christian Borntraeger<borntraeger@de.ibm.com>  (s390)
-> > > > > Acked-by: Michael Ellerman<mpe@ellerman.id.au>  (powerpc)
-> > > > > Cc: Thomas Bogendoerfer<tsbogend@alpha.franken.de>
-> > > > > Cc: Benjamin Herrenschmidt<benh@kernel.crashing.org>
-> > > > > Cc: Paul Mackerras<paulus@samba.org>
-> > > > > Cc: Michael Ellerman<mpe@ellerman.id.au>
-> > > > > Cc: Heiko Carstens<heiko.carstens@de.ibm.com>
-> > > > > Cc: Vasily Gorbik<gor@linux.ibm.com>
-> > > > > Cc: Christian Borntraeger<borntraeger@de.ibm.com>
-> > > > > Reported-by: Geert Uytterhoeven<geert@linux-m68k.org>
-> > > > > Signed-off-by: Jason Wang<jasowang@redhat.com>
-> > > > I rebased this on top of OABI fix since that
-> > > > seems more orgent to fix.
-> > > > Pushed to my vhost branch pls take a look and
-> > > > if possible test.
-> > > > Thanks!
-> > > 
-> > > I test this patch by generating the defconfigs that wants vhost_net or
-> > > vhost_vsock. All looks fine.
-> > > 
-> > > But having CONFIG_VHOST_DPN=y may end up with the similar situation that
-> > > this patch want to address.
-> > > Maybe we can let CONFIG_VHOST depends on !ARM || AEABI then add another
-> > > menuconfig for VHOST_RING and do something similar?
-> > > 
-> > > Thanks
-> > Sorry I don't understand. After this patch CONFIG_VHOST_DPN is just
-> > an internal variable for the OABI fix. I kept it separate
-> > so it's easy to revert for 5.8. Yes we could squash it into
-> > VHOST directly but I don't see how that changes logic at all.
+> Commit 64e90a8acb859 ("Introduce STATIC_USERMODEHELPER to mediate
+> call_usermodehelper()") added the optiont to disable all
+> call_usermodehelper() calls by setting STATIC_USERMODEHELPER_PATH to
+> an empty string. When this is done, and crashdump is triggered, it
+> will crash on null pointer dereference, since we make assumptions
+> over what call_usermodehelper_exec() did.
 > 
+> This has been reported by Sergey when one triggers a a coredump
+> with the following configuration:
 > 
-> Sorry for being unclear.
+> ```
+> CONFIG_STATIC_USERMODEHELPER=y
+> CONFIG_STATIC_USERMODEHELPER_PATH=""
+> kernel.core_pattern = |/usr/lib/systemd/systemd-coredump %P %u %g %s %t %c %h %e
+> ```
 > 
-> I meant since it was enabled by default, "CONFIG_VHOST_DPN=y" will be left
-> in the defconfigs.
+> The way disabling the umh was designed was that call_usermodehelper_exec()
+> would just return early, without an error. But coredump assumes
+> certain variables are set up for us when this happens, and calls
+> ile_start_write(cprm.file) with a NULL file.
+> 
+> [    2.819676] BUG: kernel NULL pointer dereference, address: 0000000000000020
+> [    2.819859] #PF: supervisor read access in kernel mode
+> [    2.820035] #PF: error_code(0x0000) - not-present page
+> [    2.820188] PGD 0 P4D 0
+> [    2.820305] Oops: 0000 [#1] SMP PTI
+> [    2.820436] CPU: 2 PID: 89 Comm: a Not tainted 5.7.0-rc1+ #7
+> [    2.820680] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS ?-20190711_202441-buildvm-armv7-10.arm.fedoraproject.org-2.fc31 04/01/2014
+> [    2.821150] RIP: 0010:do_coredump+0xd80/0x1060
+> [    2.821385] Code: e8 95 11 ed ff 48 c7 c6 cc a7 b4 81 48 8d bd 28 ff
+> ff ff 89 c2 e8 70 f1 ff ff 41 89 c2 85 c0 0f 84 72 f7 ff ff e9 b4 fe ff
+> ff <48> 8b 57 20 0f b7 02 66 25 00 f0 66 3d 00 8
+> 0 0f 84 9c 01 00 00 44
+> [    2.822014] RSP: 0000:ffffc9000029bcb8 EFLAGS: 00010246
+> [    2.822339] RAX: 0000000000000000 RBX: ffff88803f860000 RCX: 000000000000000a
+> [    2.822746] RDX: 0000000000000009 RSI: 0000000000000282 RDI: 0000000000000000
+> [    2.823141] RBP: ffffc9000029bde8 R08: 0000000000000000 R09: ffffc9000029bc00
+> [    2.823508] R10: 0000000000000001 R11: ffff88803dec90be R12: ffffffff81c39da0
+> [    2.823902] R13: ffff88803de84400 R14: 0000000000000000 R15: 0000000000000000
+> [    2.824285] FS:  00007fee08183540(0000) GS:ffff88803e480000(0000) knlGS:0000000000000000
+> [    2.824767] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [    2.825111] CR2: 0000000000000020 CR3: 000000003f856005 CR4: 0000000000060ea0
+> [    2.825479] Call Trace:
+> [    2.825790]  get_signal+0x11e/0x720
+> [    2.826087]  do_signal+0x1d/0x670
+> [    2.826361]  ? force_sig_info_to_task+0xc1/0xf0
+> [    2.826691]  ? force_sig_fault+0x3c/0x40
+> [    2.826996]  ? do_trap+0xc9/0x100
+> [    2.827179]  exit_to_usermode_loop+0x49/0x90
+> [    2.827359]  prepare_exit_to_usermode+0x77/0xb0
+> [    2.827559]  ? invalid_op+0xa/0x30
+> [    2.827747]  ret_from_intr+0x20/0x20
+> [    2.827921] RIP: 0033:0x55e2c76d2129
+> [    2.828107] Code: 2d ff ff ff e8 68 ff ff ff 5d c6 05 18 2f 00 00 01
+> c3 0f 1f 80 00 00 00 00 c3 0f 1f 80 00 00 00 00 e9 7b ff ff ff 55 48 89
+> e5 <0f> 0b b8 00 00 00 00 5d c3 66 2e 0f 1f 84 0
+> 0 00 00 00 00 0f 1f 40
+> [    2.828603] RSP: 002b:00007fffeba5e080 EFLAGS: 00010246
+> [    2.828801] RAX: 000055e2c76d2125 RBX: 0000000000000000 RCX: 00007fee0817c718
+> [    2.829034] RDX: 00007fffeba5e188 RSI: 00007fffeba5e178 RDI: 0000000000000001
+> [    2.829257] RBP: 00007fffeba5e080 R08: 0000000000000000 R09: 00007fee08193c00
+> [    2.829482] R10: 0000000000000009 R11: 0000000000000000 R12: 000055e2c76d2040
+> [    2.829727] R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
+> [    2.829964] CR2: 0000000000000020
+> [    2.830149] ---[ end trace ceed83d8c68a1bf1 ]---
+> ```
+> 
+> Cc: <stable@vger.kernel.org> # v4.11+
+> Fixes: 64e90a8acb859 ("Introduce STATIC_USERMODEHELPER to mediate call_usermodehelper()")
 
-But who cares? That does not add any code, does it?
+Nit, you don't need so many digits, it should be:
+Fixes: 64e90a8acb85 ("Introduce STATIC_USERMODEHELPER to mediate call_usermodehelper()")
 
-> This requires the arch maintainers to add
-> "CONFIG_VHOST_VDPN is not set". (Geert complains about this)
-> 
-> Thanks
-> 
-> 
-> > 
+> BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=199795
+> Reported-by: Tony Vroon <chainsaw@gentoo.org>
+> Reported-by: Sergey Kvachonok <ravenexp@gmail.com>
+> Tested-by: Sergei Trofimovich <slyfox@gentoo.org>
+> Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
+> ---
+>  fs/coredump.c | 8 ++++++++
+>  kernel/umh.c  | 5 +++++
+>  2 files changed, 13 insertions(+)
 
+Anyway, I can take this in my driver core tree if no one else objects.
+
+thanks,
+
+greg k-h
