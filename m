@@ -5,126 +5,123 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D060C352BE
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 14:08:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E011FC38A2B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 14:08:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 58F41214AF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 14:08:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB19F214AF
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 14:08:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="AxeZOeIz"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="TXP1WCvD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731197AbgDQOIO (ORCPT
+        id S1731204AbgDQOIU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 10:08:14 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:49833 "EHLO
+        Fri, 17 Apr 2020 10:08:20 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:49871 "EHLO
         mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730916AbgDQOIN (ORCPT
+        with ESMTP id S1731198AbgDQOIS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 10:08:13 -0400
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200417140810euoutp018e9cc3ce096faea29419c28e553d2533~GoJdqfk8G1887918879euoutp01Q
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 14:08:10 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200417140810euoutp018e9cc3ce096faea29419c28e553d2533~GoJdqfk8G1887918879euoutp01Q
+        Fri, 17 Apr 2020 10:08:18 -0400
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200417140817euoutp014b7b8255e591a0c9e0cbbe852b98fb4d~GoJjaee7_1953319533euoutp013
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 14:08:17 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200417140817euoutp014b7b8255e591a0c9e0cbbe852b98fb4d~GoJjaee7_1953319533euoutp013
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1587132490;
-        bh=fLaWqIeK65/g1ahWZCdiAY0bKhithxNEwtt9QffX0Rs=;
+        s=mail20170921; t=1587132497;
+        bh=16upKzKyTiu3aFEpAG+ygdLfWOrTahFZ2E9DYh1WVz0=;
         h=From:Subject:To:Cc:Date:In-Reply-To:References:From;
-        b=AxeZOeIz6Oyw6NXEZ7HTVwftvZmoLd35738hBGEqSr7FRe3DnHz813+DmeRCzF16w
-         jJC6ud2LU85S7LmDgEj9Td/XiSMvZBXECBLCvJIGVY+/UJsCpL7o/G2HzQ8Y01btNq
-         FeQSMqnCD6tkmJ5POCeNtpV5JDB489MnFrL6/UN0=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20200417140810eucas1p24b8b56eb6790fb89ee0357889ea25283~GoJdb66MB1677816778eucas1p2l;
-        Fri, 17 Apr 2020 14:08:10 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges1new.samsung.com (EUCPMTA) with SMTP id 17.5C.61286.A48B99E5; Fri, 17
-        Apr 2020 15:08:10 +0100 (BST)
+        b=TXP1WCvDURwwVBUlAblrIcX+XlyFW7vaGKQ7TGAnlHDiMorHWeOE5+ue8XCSFMBaP
+         33UfXO7WNyYAyq4KBtah1eFGcbuROAxM78XQMR+RF/q8ESD6oGe20Btt7mrrJQPJ/A
+         g28iHMba2BZwkYeP0meKdA19syL76xPd729ZL3tk=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20200417140816eucas1p18745d66b72be5c656f74ba76e0792e08~GoJjRamCy2643126431eucas1p1M;
+        Fri, 17 Apr 2020 14:08:16 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id A2.DA.60698.058B99E5; Fri, 17
+        Apr 2020 15:08:16 +0100 (BST)
 Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
         eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20200417140810eucas1p1b57dacb13bd60223b474d37d5c3d12df~GoJdIRCMv0071400714eucas1p1M;
-        Fri, 17 Apr 2020 14:08:10 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        20200417140816eucas1p17126f1fc212d31f1fc5a9d3e60c18986~GoJjDpSlW1463014630eucas1p1G;
+        Fri, 17 Apr 2020 14:08:16 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
         eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200417140810eusmtrp119c960141c4878ddddfa1d8806202662~GoJdHsbzd2228222282eusmtrp1K;
-        Fri, 17 Apr 2020 14:08:10 +0000 (GMT)
-X-AuditID: cbfec7f2-f0bff7000001ef66-5a-5e99b84a9bb8
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id 7E.C2.08375.A48B99E5; Fri, 17
-        Apr 2020 15:08:10 +0100 (BST)
+        20200417140816eusmtrp1e2ddd70c971b0b5624b45003ca841c3f~GoJjDE5sY2264522645eusmtrp1V;
+        Fri, 17 Apr 2020 14:08:16 +0000 (GMT)
+X-AuditID: cbfec7f5-a0fff7000001ed1a-e6-5e99b850ae95
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id 7C.E0.07950.058B99E5; Fri, 17
+        Apr 2020 15:08:16 +0100 (BST)
 Received: from [106.120.51.71] (unknown [106.120.51.71]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200417140809eusmtip247323fbec38e30efe3efec7945989bbc~GoJcoSBqD2969929699eusmtip2g;
-        Fri, 17 Apr 2020 14:08:09 +0000 (GMT)
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200417140816eusmtip1a9ffa33b586fcd376b7486c24b4cccea~GoJis6ED50847608476eusmtip1O;
+        Fri, 17 Apr 2020 14:08:16 +0000 (GMT)
 From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Subject: Re: [PATCH] video: fbdev: aty128fb: remove unused 'sdr_64'
-To:     Jason Yan <yanaijie@huawei.com>
-Cc:     paulus@samba.org, daniel.vetter@ffwll.ch,
-        linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, Hulk Robot <hulkci@huawei.com>
-Message-ID: <aec78fff-4a5b-1222-7758-99e9ea892a0c@samsung.com>
-Date:   Fri, 17 Apr 2020 16:08:09 +0200
+Subject: Re: [PATCH v3] fbdev: s1d13xxxfb: add missed unregister_framebuffer
+ in remove
+To:     Chuhong Yuan <hslester96@gmail.com>
+Cc:     Kristoffer Ericson <kristoffer.ericson@gmail.com>,
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Message-ID: <903cffdd-2f4e-b825-0d2f-7ffd2d0fc4e0@samsung.com>
+Date:   Fri, 17 Apr 2020 16:08:16 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
         Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20200417092318.13978-1-yanaijie@huawei.com>
+In-Reply-To: <20200324132311.21729-1-hslester96@gmail.com>
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrDKsWRmVeSWpSXmKPExsWy7djP87peO2bGGUzdqGqx8OFdZosrX9+z
-        WfxffoXR4kTfB1aLy7vmsFmsObKY3WLRnk5mB3aPvd8WsHi0HHnL6nG/+ziTx9xdfYwenzfJ
-        BbBGcdmkpOZklqUW6dslcGX8efCfqWAdV8WHjddZGxj/sXcxcnJICJhIzLg5C8jm4hASWMEo
-        0djRwwrhfGGU2HZ7DzOE85lRYsqPp6wwLW17X7FAJJYzSmxpfQrV/5ZR4vmN/2BVbAJWEhPb
-        VzGC2MICzhIv35wAWygioCzReH862A5mgTWMEsv3L2LqYuTg4BWwk7i+MQSkhkVAVeL/y/1g
-        vaICERKfHhwGm8krIChxcuYTFhCbU8BS4ujSL8wgNrOAuMStJ/OZIGx5ieats8HOlhDYxi7x
-        /eonFoizXSRmz5nPDGELS7w6vgUaAjISpyf3sEA0rGOU+NvxAqp7O9B1k/+xQVRZS9w594sN
-        5FJmAU2J9bv0IcKOEkdXzWUGCUsI8EnceCsIcQSfxKRt06HCvBIdbUIQ1WoSG5ZtYINZ27Vz
-        JfMERqVZSF6bheSdWUjemYWwdwEjyypG8dTS4tz01GLDvNRyveLE3OLSvHS95PzcTYzANHT6
-        3/FPOxi/Xko6xCjAwajEw2vQMzNOiDWxrLgy9xCjBAezkgjvQTegEG9KYmVValF+fFFpTmrx
-        IUZpDhYlcV7jRS9jhQTSE0tSs1NTC1KLYLJMHJxSDYy1i09uXZKsn8aeJjX1okTJrzkJbms1
-        qtP3hnWlqkw//qr8iob1vWcb018/CH6tXCWmwmOqXjx5UdmCcPkZ/16aeE2zP8P3L1+4ROGN
-        2YuIUNn4opXv/tyvfRv5OU2v181Ub8Kc2RXf9nUdTUqMFWDna68OMCned3HGC/+UqlOvuaVW
-        fJu845ESS3FGoqEWc1FxIgDOsWHkPwMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrNIsWRmVeSWpSXmKPExsVy+t/xe7peO2bGGfw9zG2x8OFdZosrX9+z
-        WfxffoXR4kTfB1aLy7vmsFmsObKY3WLRnk5mB3aPvd8WsHi0HHnL6nG/+ziTx9xdfYwenzfJ
-        BbBG6dkU5ZeWpCpk5BeX2CpFG1oY6RlaWugZmVjqGRqbx1oZmSrp29mkpOZklqUW6dsl6GX8
-        efCfqWAdV8WHjddZGxj/sXcxcnJICJhItO19xdLFyMUhJLCUUeLP541ADgdQQkbi+PoyiBph
-        iT/XuthAbCGB14wSk7aIg9hsAlYSE9tXMYLYwgLOEi/fnACbKSKgLNF4fzoriM0ssIZRYupE
-        Noj5PYwSL063soHM5xWwk7i+MQSkhkVAVeL/y/1gc0QFIiQO75gFZvMKCEqcnPmEBcTmFLCU
-        OLr0CzPETHWJP/MuQdniEreezGeCsOUlmrfOZp7AKDQLSfssJC2zkLTMQtKygJFlFaNIamlx
-        bnpusaFecWJucWleul5yfu4mRmDEbTv2c/MOxksbgw8xCnAwKvHwGvTMjBNiTSwrrsw9xCjB
-        wawkwnvQDSjEm5JYWZValB9fVJqTWnyI0RTouYnMUqLJ+cBkkFcSb2hqaG5haWhubG5sZqEk
-        ztshcDBGSCA9sSQ1OzW1ILUIpo+Jg1OqgTFs/tTm4KT+u61rlC8nKsbq+kdN2vSuu+POvWjl
-        vTb1C0SS2Fa1eehYpmkJWr0Ntv37e9+55pxj0g/jXFy46lfa/FLb9GG71V5fj6Sqznuztmkd
-        Oxkcb/333/+krZeEDV8kGF/Rt8xbsdrpvbbkoUUzpxwytDuhtKRJKuy+U+bcqoarjk/qLiqx
-        FGckGmoxFxUnAgBtblGRzgIAAA==
-X-CMS-MailID: 20200417140810eucas1p1b57dacb13bd60223b474d37d5c3d12df
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprKKsWRmVeSWpSXmKPExsWy7djPc7oBO2bGGSxsMbO48vU9m8XsQy+Z
+        LeadlLA40feB1eLyrjlsDqweO2fdZfe4332cyePzJrkA5igum5TUnMyy1CJ9uwSujP+PJrEW
+        fBeoOHx7EmMD4wfeLkZODgkBE4kD1y6xdjFycQgJrGCU+Lv4IxuE84VRYtWxPywQzmdGickb
+        fgCVcYC1XPnIDtItJLCcUeLoFTeImreMEpPObwRLsAlYSUxsX8UIYgsLREjMmjCLDcQWEVCX
+        +LxrJ1gNs8BURonXt3JBbF4BO4lZ058xgdgsAqoSe5euYAGxRYF6Pz04zApRIyhxcuYTsDgn
+        0PzvW9+xQMwRl7j1ZD4ThC0vsf3tHGaQgyQE+tklrs3+ywTxp4vEnKOHGCFsYYlXx7ewQ9gy
+        Eqcn97BANKwD+r/jBVT3dkaJ5ZP/sUFUWUvcOfeLDeR9ZgFNifW79CHCjhKLfx1ngYQKn8SN
+        t4IQR/BJTNo2nRkizCvR0SYEUa0msWHZBjaYtV07VzJPYFSaheS1WUjemYXknVkIexcwsqxi
+        FE8tLc5NTy02zkst1ytOzC0uzUvXS87P3cQITCyn/x3/uoNx35+kQ4wCHIxKPLwGPTPjhFgT
+        y4orcw8xSnAwK4nwHnQDCvGmJFZWpRblxxeV5qQWH2KU5mBREuc1XvQyVkggPbEkNTs1tSC1
+        CCbLxMEp1cB4/t4jnurY930mq415pll835domc9xLGiW4AJWK44Gz6BrF9I4JMNeqF969XLZ
+        3McZvvYiqu3C3qvn7jF39Xnz5tjpXIHttrtbAhkV/3bxh4VNU78rnbY4e59vl2jBiU3sdtrT
+        n1YzHNKZ/PWDy44T+U+2L/t/S8VWVbP0j2i74beSXT7xillKLMUZiYZazEXFiQDRZvRwKAMA
+        AA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrBIsWRmVeSWpSXmKPExsVy+t/xu7oBO2bGGUzYp2xx5et7NovZh14y
+        W8w7KWFxou8Dq8XlXXPYHFg9ds66y+5xv/s4k8fnTXIBzFF6NkX5pSWpChn5xSW2StGGFkZ6
+        hpYWekYmlnqGxuaxVkamSvp2NimpOZllqUX6dgl6Gf8fTWIt+C5Qcfj2JMYGxg+8XYwcHBIC
+        JhJXPrJ3MXJxCAksZZSYfm8PK0RcRuL4+rIuRk4gU1jiz7UuNoia14wSF87fYARJsAlYSUxs
+        XwVmCwtESMyaMIsNxBYRUJf4vGsn2FBmgamMEhM6JzJCdPcySry4fQWsg1fATmLW9GdMIDaL
+        gKrE3qUrWEBsUaBJh3fMgqoRlDg58wlYnBNo2/et78BsZqANf+ZdYoawxSVuPZnPBGHLS2x/
+        O4d5AqPQLCTts5C0zELSMgtJywJGllWMIqmlxbnpucVGesWJucWleel6yfm5mxiBsbTt2M8t
+        Oxi73gUfYhTgYFTi4TXomRknxJpYVlyZe4hRgoNZSYT3oBtQiDclsbIqtSg/vqg0J7X4EKMp
+        0HMTmaVEk/OBcZ5XEm9oamhuYWlobmxubGahJM7bIXAwRkggPbEkNTs1tSC1CKaPiYNTqoHx
+        8tu9C6c63bKdEGIhMydBeO3159IH7+x48p8x2nlj95Tp6r25Gb9dVk4rObgzcg9Lrc4U4WZ1
+        wxo9v1X5tZk3/s2cG2+kmm3+//glsw8C36+FzLpSUjbv6kLxo8cmWXjdf6z/yITD1fSdVkTu
+        9Glv7AO3JfwsiUqZ6F+8YPdUp2tMu+JOu003UGIpzkg01GIuKk4EABB23TG7AgAA
+X-CMS-MailID: 20200417140816eucas1p17126f1fc212d31f1fc5a9d3e60c18986
 X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200417085705eucas1p12357601660992a5fbef90358cc7aa219
+X-RootMTR: 20200324132625eucas1p1dc7c0d591946a44d149418e3525630ed
 X-EPHeader: CA
 CMS-TYPE: 201P
-X-CMS-RootMailID: 20200417085705eucas1p12357601660992a5fbef90358cc7aa219
-References: <CGME20200417085705eucas1p12357601660992a5fbef90358cc7aa219@eucas1p1.samsung.com>
-        <20200417092318.13978-1-yanaijie@huawei.com>
+X-CMS-RootMailID: 20200324132625eucas1p1dc7c0d591946a44d149418e3525630ed
+References: <CGME20200324132625eucas1p1dc7c0d591946a44d149418e3525630ed@eucas1p1.samsung.com>
+        <20200324132311.21729-1-hslester96@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-On 4/17/20 11:23 AM, Jason Yan wrote:
-> Fix the following gcc warning:
+On 3/24/20 2:23 PM, Chuhong Yuan wrote:
+> The driver calls register_framebuffer() in probe but does not call
+> unregister_framebuffer() in remove.
+> Rename current remove to __s1d13xxxfb_remove() for error handler.
+> Then add a new remove to call unregister_framebuffer().
 > 
-> drivers/video/fbdev/aty/aty128fb.c:337:36: warning: ‘sdr_64’ defined but
-> not used [-Wunused-const-variable=]
->  static const struct aty128_meminfo sdr_64 = {
->                                     ^~~~~~
-> 
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: Jason Yan <yanaijie@huawei.com>
+> Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
 
-Patch queued for v5.8, thanks.
+Patch queued for v5.8 (w/ extra newline removed), thanks.
 
 Best regards,
 --
@@ -133,32 +130,55 @@ Samsung R&D Institute Poland
 Samsung Electronics
 
 > ---
->  drivers/video/fbdev/aty/aty128fb.c | 14 --------------
->  1 file changed, 14 deletions(-)
+> Changes in v3:
+>   - Fix code style.
+>   - Set __s1d13xxxfb_remove() to return void.
+>   - Remove redundant check for info.
 > 
-> diff --git a/drivers/video/fbdev/aty/aty128fb.c b/drivers/video/fbdev/aty/aty128fb.c
-> index d7e41c8dd533..d05d4195acad 100644
-> --- a/drivers/video/fbdev/aty/aty128fb.c
-> +++ b/drivers/video/fbdev/aty/aty128fb.c
-> @@ -334,20 +334,6 @@ static const struct aty128_meminfo sdr_128 = {
->  	.name = "128-bit SDR SGRAM (1:1)",
->  };
+>  drivers/video/fbdev/s1d13xxxfb.c | 15 +++++++++++----
+>  1 file changed, 11 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/video/fbdev/s1d13xxxfb.c b/drivers/video/fbdev/s1d13xxxfb.c
+> index 8048499e398d..d51ef7619115 100644
+> --- a/drivers/video/fbdev/s1d13xxxfb.c
+> +++ b/drivers/video/fbdev/s1d13xxxfb.c
+> @@ -721,9 +721,7 @@ static void s1d13xxxfb_fetch_hw_state(struct fb_info *info)
+>  		xres, yres, xres_virtual, yres_virtual, is_color, is_dual, is_tft);
+>  }
 >  
-> -static const struct aty128_meminfo sdr_64 = {
-> -	.ML = 4,
-> -	.MB = 8,
-> -	.Trcd = 3,
-> -	.Trp = 3,
-> -	.Twr = 1,
-> -	.CL = 3,
-> -	.Tr2w = 1,
-> -	.LoopLatency = 17,
-> -	.DspOn = 46,
-> -	.Rloop = 17,
-> -	.name = "64-bit SDR SGRAM (1:1)",
-> -};
 > -
->  static const struct aty128_meminfo sdr_sgram = {
->  	.ML = 4,
->  	.MB = 4,
+> -static int
+> -s1d13xxxfb_remove(struct platform_device *pdev)
+> +static void __s1d13xxxfb_remove(struct platform_device *pdev)
+>  {
+>  	struct fb_info *info = platform_get_drvdata(pdev);
+>  	struct s1d13xxxfb_par *par = NULL;
+> @@ -749,9 +747,18 @@ s1d13xxxfb_remove(struct platform_device *pdev)
+>  			pdev->resource[0].end - pdev->resource[0].start +1);
+>  	release_mem_region(pdev->resource[1].start,
+>  			pdev->resource[1].end - pdev->resource[1].start +1);
+> +}
+> +
+> +static int s1d13xxxfb_remove(struct platform_device *pdev)
+> +{
+> +	struct fb_info *info = platform_get_drvdata(pdev);
+> +
+> +	unregister_framebuffer(info);
+> +	__s1d13xxxfb_remove(pdev);
+>  	return 0;
+>  }
+>  
+> +
+>  static int s1d13xxxfb_probe(struct platform_device *pdev)
+>  {
+>  	struct s1d13xxxfb_par *default_par;
+> @@ -895,7 +902,7 @@ static int s1d13xxxfb_probe(struct platform_device *pdev)
+>  	return 0;
+>  
+>  bail:
+> -	s1d13xxxfb_remove(pdev);
+> +	__s1d13xxxfb_remove(pdev);
+>  	return ret;
+>  
+>  }
 > 
