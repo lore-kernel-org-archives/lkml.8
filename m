@@ -2,204 +2,117 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64FAFC2D0EF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 14:05:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3FD7C38A2B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 14:05:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4413F21973
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 14:05:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B34E121924
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 14:05:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="KMZtU+cg"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="T9tVEiLD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730944AbgDQOFU (ORCPT
+        id S1730958AbgDQOFY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 10:05:20 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:57714 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730934AbgDQOFT (ORCPT
+        Fri, 17 Apr 2020 10:05:24 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:60075 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1730859AbgDQOE6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 10:05:19 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1587132318; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=0yvYjguOx84bHKDg7ORP2jVfhZBtiUmKbBffrVbFt34=; b=KMZtU+cgw6uOsXF4JVZ2ILX5yTpCBtm7nn+GEnO2rZyeUDmTgFgRbLqogmNyVy7671Vx+izc
- ERevvTc9A6qHa5i9Iu/2/MuWuJ4SeiZIP5kC59OmbE6I0MTJUwWzfwqB0Hz8rwgkv2XRKm5X
- 6GTQn/7HE3ZqFK2JUxkmY1DlLZg=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e99b79d.7f76c3c28a78-smtp-out-n05;
- Fri, 17 Apr 2020 14:05:17 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 80E0FC44795; Fri, 17 Apr 2020 14:05:15 +0000 (UTC)
-Received: from blr-ubuntu-173.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        Fri, 17 Apr 2020 10:04:58 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587132297;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=tQvUbry9IMyI28UebIhxTY+721rvzbcFmWQGCJ8qdIY=;
+        b=T9tVEiLDfcJfDBRxirU1yuZcOB/t88BE4B5TJ6vxnHTGpUPsMf8tHixsiFEuW/c2mRxe6k
+        9uKEeMhJyenXHh6soMySJqWIYMHVc2POAA2IkaJYsDmd9uoMHz1OU3nrmkHujx/pA69ClY
+        YZZg6BbwwF1pbZ+xyUDR7nlgtQcVEaQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-84-TF4O6vvGNhWdNd59BSlMtg-1; Fri, 17 Apr 2020 10:04:54 -0400
+X-MC-Unique: TF4O6vvGNhWdNd59BSlMtg-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: rnayak)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id A62C1C4478F;
-        Fri, 17 Apr 2020 14:05:07 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org A62C1C4478F
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
-From:   Rajendra Nayak <rnayak@codeaurora.org>
-To:     viresh.kumar@linaro.org, sboyd@kernel.org,
-        bjorn.andersson@linaro.org, agross@kernel.org
-Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mka@chromium.org,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Akash Asthana <akashast@codeaurora.org>,
-        linux-serial@vger.kernel.org
-Subject: [PATCH v2 01/17] tty: serial: qcom_geni_serial: Use OPP API to set clk/perf state
-Date:   Fri, 17 Apr 2020 19:34:23 +0530
-Message-Id: <1587132279-27659-2-git-send-email-rnayak@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1587132279-27659-1-git-send-email-rnayak@codeaurora.org>
-References: <1587132279-27659-1-git-send-email-rnayak@codeaurora.org>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id AA04B107B271;
+        Fri, 17 Apr 2020 14:04:53 +0000 (UTC)
+Received: from treble.redhat.com (ovpn-116-146.rdu2.redhat.com [10.10.116.146])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 0C4405C1C5;
+        Fri, 17 Apr 2020 14:04:52 +0000 (UTC)
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     live-patching@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Jessica Yu <jeyu@kernel.org>
+Subject: [PATCH v2 9/9] module: Remove module_disable_ro()
+Date:   Fri, 17 Apr 2020 09:04:34 -0500
+Message-Id: <fe4dbdc12324b4fe3ade97591e0b11e638aad63f.1587131959.git.jpoimboe@redhat.com>
+In-Reply-To: <cover.1587131959.git.jpoimboe@redhat.com>
+References: <cover.1587131959.git.jpoimboe@redhat.com>
+MIME-Version: 1.0
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-geni serial needs to express a perforamnce state requirement on CX
-powerdomain depending on the frequency of the clock rates.
-Use OPP table from DT to register with OPP framework and use
-dev_pm_opp_set_rate() to set the clk/perf state.
+module_disable_ro() has no more users.  Remove it.
 
-Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Akash Asthana <akashast@codeaurora.org>
-Cc: linux-serial@vger.kernel.org
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
 ---
- drivers/tty/serial/qcom_geni_serial.c | 30 +++++++++++++++++++++++++-----
- include/linux/qcom-geni-se.h          |  2 ++
- 2 files changed, 27 insertions(+), 5 deletions(-)
+ include/linux/module.h |  2 --
+ kernel/module.c        | 13 -------------
+ 2 files changed, 15 deletions(-)
 
-diff --git a/drivers/tty/serial/qcom_geni_serial.c b/drivers/tty/serial/qcom_geni_serial.c
-index 6119090..151012c 100644
---- a/drivers/tty/serial/qcom_geni_serial.c
-+++ b/drivers/tty/serial/qcom_geni_serial.c
-@@ -9,6 +9,7 @@
- #include <linux/module.h>
- #include <linux/of.h>
- #include <linux/of_device.h>
-+#include <linux/pm_opp.h>
- #include <linux/platform_device.h>
- #include <linux/pm_runtime.h>
- #include <linux/pm_wakeirq.h>
-@@ -128,6 +129,7 @@ struct qcom_geni_serial_port {
- 	int wakeup_irq;
- 	bool rx_tx_swap;
- 	bool cts_rts_swap;
-+	bool opp_table;
- };
- 
- static const struct uart_ops qcom_geni_console_pops;
-@@ -961,7 +963,7 @@ static void qcom_geni_serial_set_termios(struct uart_port *uport,
- 		goto out_restart_rx;
- 
- 	uport->uartclk = clk_rate;
--	clk_set_rate(port->se.clk, clk_rate);
-+	dev_pm_opp_set_rate(uport->dev, clk_rate);
- 	ser_clk_cfg = SER_CLK_EN;
- 	ser_clk_cfg |= clk_div << CLK_DIV_SHFT;
- 
-@@ -1198,8 +1200,11 @@ static void qcom_geni_serial_pm(struct uart_port *uport,
- 	if (new_state == UART_PM_STATE_ON && old_state == UART_PM_STATE_OFF)
- 		geni_se_resources_on(&port->se);
- 	else if (new_state == UART_PM_STATE_OFF &&
--			old_state == UART_PM_STATE_ON)
-+			old_state == UART_PM_STATE_ON) {
-+		/* Drop the performance state vote */
-+		dev_pm_opp_set_rate(uport->dev, 0);
- 		geni_se_resources_off(&port->se);
-+	}
+diff --git a/include/linux/module.h b/include/linux/module.h
+index 1ad393e62bef..e4ef7b36feda 100644
+--- a/include/linux/module.h
++++ b/include/linux/module.h
+@@ -860,10 +860,8 @@ extern int module_sysfs_initialized;
+=20
+ #ifdef CONFIG_STRICT_MODULE_RWX
+ extern void module_enable_ro(const struct module *mod, bool after_init);
+-extern void module_disable_ro(const struct module *mod);
+ #else
+ static inline void module_enable_ro(const struct module *mod, bool after=
+_init) { }
+-static inline void module_disable_ro(const struct module *mod) { }
+ #endif
+=20
+ #ifdef CONFIG_GENERIC_BUG
+diff --git a/kernel/module.c b/kernel/module.c
+index d36ea8a8c3ec..b1d30ad67e82 100644
+--- a/kernel/module.c
++++ b/kernel/module.c
+@@ -1997,19 +1997,6 @@ static void frob_writable_data(const struct module=
+_layout *layout,
+ 		   (layout->size - layout->ro_after_init_size) >> PAGE_SHIFT);
  }
- 
- static const struct uart_ops qcom_geni_console_pops = {
-@@ -1318,13 +1323,20 @@ static int qcom_geni_serial_probe(struct platform_device *pdev)
- 	if (of_property_read_bool(pdev->dev.of_node, "cts-rts-swap"))
- 		port->cts_rts_swap = true;
- 
-+	port->se.opp = dev_pm_opp_set_clkname(&pdev->dev, "se");
-+	if (IS_ERR(port->se.opp))
-+		return PTR_ERR(port->se.opp);
-+	/* OPP table is optional */
-+	if (!dev_pm_opp_of_add_table(&pdev->dev))
-+		port->opp_table = true;
-+
- 	uport->private_data = drv;
- 	platform_set_drvdata(pdev, port);
- 	port->handle_rx = console ? handle_rx_console : handle_rx_uart;
- 
- 	ret = uart_add_one_port(drv, uport);
- 	if (ret)
--		return ret;
-+		goto err;
- 
- 	irq_set_status_flags(uport->irq, IRQ_NOAUTOEN);
- 	ret = devm_request_irq(uport->dev, uport->irq, qcom_geni_serial_isr,
-@@ -1332,7 +1344,7 @@ static int qcom_geni_serial_probe(struct platform_device *pdev)
- 	if (ret) {
- 		dev_err(uport->dev, "Failed to get IRQ ret %d\n", ret);
- 		uart_remove_one_port(drv, uport);
--		return ret;
-+		goto err;
- 	}
- 
- 	/*
-@@ -1349,11 +1361,16 @@ static int qcom_geni_serial_probe(struct platform_device *pdev)
- 		if (ret) {
- 			device_init_wakeup(&pdev->dev, false);
- 			uart_remove_one_port(drv, uport);
--			return ret;
-+			goto err;
- 		}
- 	}
- 
- 	return 0;
-+err:
-+	if (port->opp_table)
-+		dev_pm_opp_of_remove_table(&pdev->dev);
-+	dev_pm_opp_put_clkname(port->se.opp);
-+	return ret;
- }
- 
- static int qcom_geni_serial_remove(struct platform_device *pdev)
-@@ -1361,6 +1378,9 @@ static int qcom_geni_serial_remove(struct platform_device *pdev)
- 	struct qcom_geni_serial_port *port = platform_get_drvdata(pdev);
- 	struct uart_driver *drv = port->uport.private_data;
- 
-+	if (port->opp_table)
-+		dev_pm_opp_of_remove_table(&pdev->dev);
-+	dev_pm_opp_put_clkname(port->se.opp);
- 	dev_pm_clear_wake_irq(&pdev->dev);
- 	device_init_wakeup(&pdev->dev, false);
- 	uart_remove_one_port(drv, &port->uport);
-diff --git a/include/linux/qcom-geni-se.h b/include/linux/qcom-geni-se.h
-index dd46494..737e713 100644
---- a/include/linux/qcom-geni-se.h
-+++ b/include/linux/qcom-geni-se.h
-@@ -24,6 +24,7 @@ enum geni_se_protocol_type {
- 
- struct geni_wrapper;
- struct clk;
-+struct opp_table;
- 
- /**
-  * struct geni_se - GENI Serial Engine
-@@ -39,6 +40,7 @@ struct geni_se {
- 	struct device *dev;
- 	struct geni_wrapper *wrapper;
- 	struct clk *clk;
-+	struct opp_table *opp;
- 	unsigned int num_clk_levels;
- 	unsigned long *clk_perf_tbl;
- };
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+=20
+-/* livepatching wants to disable read-only so it can frob module. */
+-void module_disable_ro(const struct module *mod)
+-{
+-	if (!rodata_enabled)
+-		return;
+-
+-	frob_text(&mod->core_layout, set_memory_rw);
+-	frob_rodata(&mod->core_layout, set_memory_rw);
+-	frob_ro_after_init(&mod->core_layout, set_memory_rw);
+-	frob_text(&mod->init_layout, set_memory_rw);
+-	frob_rodata(&mod->init_layout, set_memory_rw);
+-}
+-
+ void module_enable_ro(const struct module *mod, bool after_init)
+ {
+ 	if (!rodata_enabled)
+--=20
+2.21.1
+
