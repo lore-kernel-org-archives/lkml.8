@@ -2,142 +2,92 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BC2DC2BA2B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 02:52:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58080C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 02:55:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 645F221841
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 02:52:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3111121841
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 02:55:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="JhOQXdgu"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eDmuq3YR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729367AbgDQCwM (ORCPT
+        id S1729389AbgDQCzs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 22:52:12 -0400
-Received: from mailout3.samsung.com ([203.254.224.33]:39383 "EHLO
-        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729277AbgDQCwL (ORCPT
+        Thu, 16 Apr 2020 22:55:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40564 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726261AbgDQCzr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 22:52:11 -0400
-Received: from epcas2p3.samsung.com (unknown [182.195.41.55])
-        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20200417025208epoutp03ce79cb385773dd762736035443e1fc70~Ge7NGtQCW0544405444epoutp03d
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 02:52:08 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20200417025208epoutp03ce79cb385773dd762736035443e1fc70~Ge7NGtQCW0544405444epoutp03d
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1587091928;
-        bh=uHjnAsWICGbvd2UvAeIMZ3j2WHQsGzQDZG6azlJmziU=;
-        h=From:To:Cc:Subject:Date:References:From;
-        b=JhOQXdgurggunbQNvEQMf+Z9nurqXVNpY1/hTjRmxz6jxvb8SlkmNyyAnPgc3bBmq
-         qEqxMgaDZ4dwEIoa1+f0naKlf1qy5h+9fGuFqwoguYt38xB/trlTMFW06KZvqYhJqT
-         +Yw1HSvhzvUDg645/6m1+bz28rrHJiXjLSxIDLcM=
-Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
-        epcas2p3.samsung.com (KnoxPortal) with ESMTP id
-        20200417025208epcas2p38db948db38a6f7cdee1d09cf57c00699~Ge7MpVHTB3158331583epcas2p3i;
-        Fri, 17 Apr 2020 02:52:08 +0000 (GMT)
-Received: from epsmges2p3.samsung.com (unknown [182.195.40.188]) by
-        epsnrtp2.localdomain (Postfix) with ESMTP id 493LGY6rsgzMqYkc; Fri, 17 Apr
-        2020 02:52:05 +0000 (GMT)
-Received: from epcas2p4.samsung.com ( [182.195.41.56]) by
-        epsmges2p3.samsung.com (Symantec Messaging Gateway) with SMTP id
-        5B.EA.04393.5D9199E5; Fri, 17 Apr 2020 11:52:05 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas2p4.samsung.com (KnoxPortal) with ESMTPA id
-        20200417025205epcas2p46d33e64f2de49041d2ca68ecc98fc83e~Ge7J_VXhG3180931809epcas2p4L;
-        Fri, 17 Apr 2020 02:52:05 +0000 (GMT)
-Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200417025205epsmtrp11d28438d8dbd250622344386361fc7c6~Ge7J9d1lx3164331643epsmtrp1N;
-        Fri, 17 Apr 2020 02:52:05 +0000 (GMT)
-X-AuditID: b6c32a47-667ff70000001129-a4-5e9919d584f4
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        7D.32.04158.5D9199E5; Fri, 17 Apr 2020 11:52:05 +0900 (KST)
-Received: from coldbrew.dsn.sec.samsung.com (unknown [12.36.155.201]) by
-        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200417025205epsmtip10f68d62d315bad4db18b60a74fc0217f~Ge7JytNNp0040800408epsmtip1i;
-        Fri, 17 Apr 2020 02:52:05 +0000 (GMT)
-From:   sy0816.kang@samsung.com
-To:     mchehab@kernel.org
-Cc:     sy0816.kang@samsung.com, Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] media: v4l2-compat-ioctl32.c: copy reserved2 field in
- get_v4l2_buffer32
-Date:   Fri, 17 Apr 2020 11:45:23 +0900
-Message-Id: <20200417024543.66785-1-sy0816.kang@samsung.com>
-X-Mailer: git-send-email 2.26.1
+        Thu, 16 Apr 2020 22:55:47 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C885C061A0C
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 19:55:47 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id a81so1369030wmf.5
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 19:55:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0DibPFFhioacuiAlJY3PMsjdrjXFMiXNDUjStb6tKak=;
+        b=eDmuq3YRYdXSRscLvXyn8vUlhMUSyz7Te4LydPmgbbUKHLm+qk0PQHeIzhB4n4Ig3g
+         6odFjxYoe30guB6JQChzldUuA18w/rA7cXfSsVEsMWyxeRPHzGiBhVMyqimhUZmnRjBo
+         NBChvvzlDGzHzwcxdJbtG3IWFqc/F0+czJ4Up+1IgZUKj+RKhAIix67B0uH9vKMDg5Y6
+         RvJcg8dgReOsBhlNciVqliEJ5NsHZOeHKNJJa0yrMSnU+J766LTUS6thr4ooVAKjC1W/
+         s1EzOVP4B6I2wQQsIYAmB2mm259xXGB4ilXEfdW8XLviJUMAh+Wq9DhxMA6zJ72C462j
+         atnw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0DibPFFhioacuiAlJY3PMsjdrjXFMiXNDUjStb6tKak=;
+        b=mXDaMEPCUTIJ81lp3NpoZ977aDzvkgzW+hHfla3kI5On003o3St9IXnSLRRe6LLwgs
+         4lwlkI9qgj5ziWjAmRkPDZAI0ooLHLMbcYrjJN2NpUTtKmA2Lxe3ZCWmqOBZROXo0JpT
+         VnucZbbIsAIX5ckjUZ8V80JugH7XQyUWGvpEISEV8ZuvsRWVwFFRx/jAfA2q52o/Ry8I
+         cn3iKlIKBexD6zS4YRBz0CJW2V5arIiiO1B3ZkENnBVLwigpouwp9opmYlBGY2/KhMuC
+         wwNXFhOZ3XD4Ux8LOidhREug0l+8pGsQVSn+lSxysLGw4QT8B/qyFDuRhpcx696EpYOJ
+         Ex/Q==
+X-Gm-Message-State: AGi0PuZTInnCEMcL0ItllKGB/YE2iTZ9gv2KaeasrOo2WldtawDHQnS1
+        QaPTTZwPamD64vexYcIooClRFw3F2ubHKOKnqsgc67JyVZr9BmuE
+X-Google-Smtp-Source: APiQypJgPv2/C5+rAeThaQuCvauiAhxBD3c0FGqHKmy6F9qUYcHVGK2/1/0T3pR3cey6mxaJDGqS3F8P10mjk+JFk7g=
+X-Received: by 2002:a05:600c:4096:: with SMTP id k22mr877991wmh.99.1587092145594;
+ Thu, 16 Apr 2020 19:55:45 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA01Sa0hTYRjm2znbjpfFcZW9rZudkNLSttn0KNqFxIZZSPUjJFsHPThpN3a2
-        bhCZotXKtIumU2skiIxCWybLrMxC0R+rCLtBSHbBlKQ0o7xEZzuL/Pd8z/s83/O97/cSmNwp
-        URCFJhtrNTEGShKKtz+OoeMGFtfuVxZf0tCzF3ukdElji4R+XvsOp1901Evoc613xHSTZ0ZE
-        D31Kom97qrDNhHZ66iLSetxnJNoxn0+qfdhwQ6o93+ZG2gnPcm3/5IQ0W5pjSNWzTD5rjWJN
-        eeb8QlNBGrV9t26rTpOoVMWpkukkKsrEGNk0Kj0rOy6j0MA/ioo6xBjsPJXNcBy1fmOq1Wy3
-        sVF6M2dLo1hLvsGiUlniOcbI2U0F8XlmY4pKqVRreOUBg/7K4DPc8oo44nszKCpCXqkDhRBA
-        bgBn+W/cgUIJOelFcN3Rh4TDOIKqD3UBlZz8ieDV073/HPdqm0WC6D4Cb39j0D6FoL7nC+5X
-        SchlMN5VI/HjBWQkDLWPBEQYOY2g2dERKMwnc6CuqS6AcTIahia/if1YRqbCo/ZRkRC3AkpH
-        vEjgI6Cv9mMgAOP5kjt1mP9SIDsl8Pr12aAhHar7BpGA58NIb1uwUwV8qSgL4hNQPTEhFsyV
-        CIZdvWKhkADOz6d4M8EnxEBLx3o/BHIVPHkbzJ0Hpx/PSgVaBqfL5AKMhtZxtXDHEvj69QUS
-        aC1UVFLCDHPhwc16vBKtcM7pxTmnF+f/VBfC3CiStXDGApZTWxLm/qkHBfYydpsXtfuyuhFJ
-        ICpcdmBTzX65mDnEHTV2IyAwaoFsnoanZPnM0WOs1ayz2g0s1400/KgvYIqFeWZ+y002nUqj
-        TkxUJmtoTaKaphbJPGFv9snJAsbGHmRZC2v95xMRIYoihItxteJcWFpm15oMeu29q2PGl7u+
-        15SWVl0e2/GSqLp1Mo65W63bOrO5vHvUt2tlfbh+T3jnBleRO360Z2zd0iTX4aEGRj07nJnj
-        8f5pbA7t3/JdzD40ONsyrddGO/edcazeOfB+rfRXWHrXBdXwj5RvruI1Zbkn8hZWRFSuO17e
-        TOGcnlHFYlaO+QviXd1zrQMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrFLMWRmVeSWpSXmKPExsWy7bCSnO5VyZlxBi8/cln8nXSM3aJ58Xo2
-        i4sz77JYXN41h82iZ8NWVotlm/4wWTx6am6xedNUZgcOj9+/JjF6bFrVyebx7tw5do/9c9ew
-        e/RtWcXo8XmTnMepr5/ZA9ijuGxSUnMyy1KL9O0SuDKm37/AUnCdo+LczftMDYw72LsYOTkk
-        BEwkds9cwdTFyMUhJLCbUeLI3YUsXYwcQAlpif0bcyFqhCXutxxhhaj5wSjxZGkbI0iCTUBW
-        4tOBGWwgtoiAmMSjba9YQIqYBRqZJK5u+QCWEBaIkNjxag+YzSKgKvHo6wdWEJtXwEbi4LbX
-        TBAb5CVaX+1ghIgLSpyc+YQFxGYGijdvnc08gZFvFpLULCSpBYxMqxglUwuKc9Nziw0LjPJS
-        y/WKE3OLS/PS9ZLzczcxgkNYS2sH44kT8YcYBTgYlXh4E+xnxAmxJpYVV+YeYpTgYFYS4eUz
-        BQrxpiRWVqUW5ccXleakFh9ilOZgURLnlc8/FikkkJ5YkpqdmlqQWgSTZeLglGpg1LC9tLbS
-        pznbUHg30w8+z8tVLQYCpx5vmmjGXxA/3U7T/P69nzu8nNMPRjhcDGUonLB8Z9P539lhFa5S
-        t+sOP7t6v+YRYxxDoGD21bq4tATd9bcmvTRSEvea6s7x0fu/8KsdPY4TixOeWWut/L62fWt3
-        lOvkh+913+tcm+zsXbBXyMRMVLVdiaU4I9FQi7moOBEANh8L710CAAA=
-X-CMS-MailID: 20200417025205epcas2p46d33e64f2de49041d2ca68ecc98fc83e
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: AUTO_CONFIDENTIAL
-CMS-TYPE: 102P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20200417025205epcas2p46d33e64f2de49041d2ca68ecc98fc83e
-References: <CGME20200417025205epcas2p46d33e64f2de49041d2ca68ecc98fc83e@epcas2p4.samsung.com>
+References: <20200416114256.226329-1-elver@google.com>
+In-Reply-To: <20200416114256.226329-1-elver@google.com>
+From:   David Gow <davidgow@google.com>
+Date:   Fri, 17 Apr 2020 10:55:34 +0800
+Message-ID: <CABVgOSniuRdx1KjMLTZCJ3gWJo7rsrotpy0yfDhRCLqbjmgp-w@mail.gmail.com>
+Subject: Re: [PATCH] kunit: Add missing newline in summary message
+To:     Marco Elver <elver@google.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        KUnit Development <kunit-dev@googlegroups.com>,
+        Alan Maguire <alan.maguire@oracle.com>, frank.rowand@sony.com,
+        Shuah Khan <skhan@linuxfoundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sunyoung Kang <sy0816.kang@samsung.com>
+On Thu, Apr 16, 2020 at 7:43 PM 'Marco Elver' via KUnit Development
+<kunit-dev@googlegroups.com> wrote:
+>
+> Add missing newline, as otherwise flushing of the final summary message
+> to the console log can be delayed.
+>
+> Fixes: e2219db280e3 ("kunit: add debugfs /sys/kernel/debug/kunit/<suite>/results display")
+> Signed-off-by: Marco Elver <elver@google.com>
 
-get_v4l2_buffer32() didn't copy reserved2 field from userspace to driver.
-So the reserved2 value is not received through compat-ioctl32 in driver.
-This patch copy reserved2 field of v4l2_buffer in get_v4l2_buffer32().
+Tested-by: David Gow <davidgow@google.com>
 
-Signed-off-by: Sunyoung Kang <sy0816.kang@samsung.com>
----
- drivers/media/v4l2-core/v4l2-compat-ioctl32.c | 1 +
- 1 file changed, 1 insertion(+)
+Thanks a lot: this issue was starting to get annoying, and I can
+confirm this patch fixes it for me!
 
-diff --git a/drivers/media/v4l2-core/v4l2-compat-ioctl32.c b/drivers/media/v4l2-core/v4l2-compat-ioctl32.c
-index a99e82ec9ab6..e9b2b9c0ec9a 100644
---- a/drivers/media/v4l2-core/v4l2-compat-ioctl32.c
-+++ b/drivers/media/v4l2-core/v4l2-compat-ioctl32.c
-@@ -665,6 +665,7 @@ static int get_v4l2_buffer32(struct v4l2_buffer __user *p64,
- 	if (V4L2_TYPE_IS_OUTPUT(type))
- 		if (assign_in_user(&p64->bytesused, &p32->bytesused) ||
- 		    assign_in_user(&p64->field, &p32->field) ||
-+		    assign_in_user(&p64->reserved2, &p32->reserved2) ||
- 		    assign_in_user(&p64->timestamp.tv_sec,
- 				   &p32->timestamp.tv_sec) ||
- 		    assign_in_user(&p64->timestamp.tv_usec,
--- 
-2.20.1
-
+-- David
