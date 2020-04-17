@@ -2,103 +2,175 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58809C2BB55
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 08:42:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C8AFC2BB55
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 08:45:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2F7112137B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 08:42:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45D6A20656
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 08:45:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="OZrZ48BI"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iKvf7jQb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729878AbgDQIma (ORCPT
+        id S1729866AbgDQIpS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 04:42:30 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:57146 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729166AbgDQIm3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 04:42:29 -0400
-Received: from zn.tnic (p200300EC2F0DA8008DA98E92B4F5B53B.dip0.t-ipconnect.de [IPv6:2003:ec:2f0d:a800:8da9:8e92:b4f5:b53b])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id A24301EC0D33;
-        Fri, 17 Apr 2020 10:42:28 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1587112948;
+        Fri, 17 Apr 2020 04:45:18 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:35636 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729166AbgDQIpR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Apr 2020 04:45:17 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587113115;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=HpKmgFfZkprWvBMQTEBHQ+HqQrIoR6PYuFrabo8U0Yc=;
-        b=OZrZ48BIgwczXLH05Hga+F1Sauzh7avudhSxJLoODYgCXOozjmlN0sxAlEFVFSCm7Xw5mY
-        BF2x6f9h9TP3K/XjBTf9Jxrs5RbgsoviXnn/EOBSWJQ83LIs92SNGRd6UKU+a3TG3b0tWR
-        th5ZV1oNnqXyJ6Yzvr01jKDfdT1GGrc=
-Date:   Fri, 17 Apr 2020 10:42:24 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Jakub Jelinek <jakub@redhat.com>
-Cc:     Sergei Trofimovich <slyfox@gentoo.org>,
-        Michael Matz <matz@suse.de>, linux-kernel@vger.kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>, x86@kernel.org
-Subject: Re: [PATCH v2] x86: fix early boot crash on gcc-10
-Message-ID: <20200417084224.GB7322@zn.tnic>
-References: <20200326223501.GK11398@zn.tnic>
- <20200328084858.421444-1-slyfox@gentoo.org>
- <20200413163540.GD3772@zn.tnic>
- <alpine.LSU.2.21.2004141343370.11688@wotan.suse.de>
- <20200415074842.GA31016@zn.tnic>
- <alpine.LSU.2.21.2004151445520.11688@wotan.suse.de>
- <20200415231930.19755bc7@sf>
- <20200417075739.GA7322@zn.tnic>
- <20200417080726.GS2424@tucnak>
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=jlSmzPpbvnqZnwcalXuvPkUwVQHZbnaF9jJhRsTm+Sg=;
+        b=iKvf7jQb2IzJqoHtHc/NRC5jibNAzl1XmDix7qvcHyLEhss6SxXshU2Ri7bhjfrY30+umu
+        74W/2XmuAyWCmZ4ZAiCH6/69v2Hqmjzb5+qH00aNIxA+Qb3arw2oURSXaILTy1PqInM3sW
+        IGMwJIGAkMLVMZfl0ghi5IreVBAqdqQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-290-UJZeq6-DPWex82UXcQVOOA-1; Fri, 17 Apr 2020 04:45:13 -0400
+X-MC-Unique: UJZeq6-DPWex82UXcQVOOA-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 615DC85EE6B;
+        Fri, 17 Apr 2020 08:45:10 +0000 (UTC)
+Received: from gondolin (ovpn-112-200.ams2.redhat.com [10.36.112.200])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 303765C296;
+        Fri, 17 Apr 2020 08:44:53 +0000 (UTC)
+Date:   Fri, 17 Apr 2020 10:44:50 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Yan Zhao <yan.y.zhao@intel.com>
+Cc:     intel-gvt-dev@lists.freedesktop.org, libvir-list@redhat.com,
+        kvm@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, aik@ozlabs.ru,
+        Zhengxiao.zx@alibaba-inc.com, shuangtai.tst@alibaba-inc.com,
+        qemu-devel@nongnu.org, eauger@redhat.com, yi.l.liu@intel.com,
+        xin.zeng@intel.com, ziye.yang@intel.com, mlevitsk@redhat.com,
+        pasic@linux.ibm.com, felipe@nutanix.com, changpeng.liu@intel.com,
+        Ken.Xue@amd.com, jonathan.davies@nutanix.com,
+        shaopeng.he@intel.com, alex.williamson@redhat.com,
+        eskultet@redhat.com, dgilbert@redhat.com, kevin.tian@intel.com,
+        zhenyuw@linux.intel.com, zhi.a.wang@intel.com, cjia@nvidia.com,
+        kwankhede@nvidia.com, berrange@redhat.com, dinechin@redhat.com,
+        corbet@lwn.net
+Subject: Re: [PATCH v5 0/4] introduction of migration_version attribute for
+ VFIO live migration
+Message-ID: <20200417104450.2d2f2fa9.cohuck@redhat.com>
+In-Reply-To: <20200413055201.27053-1-yan.y.zhao@intel.com>
+References: <20200413055201.27053-1-yan.y.zhao@intel.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200417080726.GS2424@tucnak>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 17, 2020 at 10:07:26AM +0200, Jakub Jelinek wrote:
-> If you want minimal changes, you can as I said earlier either
-> mark cpu_startup_entry noreturn (in the declaration in some header so that
-> smpboot.c sees it), or you could add something after the cpu_startup_entry
-> call to ensure it is not tail call optimized (e.g. just
-> 	/* Prevent tail call to cpu_startup_entry because the stack
-> 	   protector guard has been changed in the middle of this function
-> 	   and must not be checked before tail calling another function.  */
-> 	asm ("");
+On Mon, 13 Apr 2020 01:52:01 -0400
+Yan Zhao <yan.y.zhao@intel.com> wrote:
 
-That sounds ok-ish to me too.
+> This patchset introduces a migration_version attribute under sysfs of VFIO
+> Mediated devices.
+> 
+> This migration_version attribute is used to check migration compatibility
+> between two mdev devices.
+> 
+> Currently, it has two locations:
+> (1) under mdev_type node,
+>     which can be used even before device creation, but only for mdev
+>     devices of the same mdev type.
+> (2) under mdev device node,
+>     which can only be used after the mdev devices are created, but the src
+>     and target mdev devices are not necessarily be of the same mdev type
+> (The second location is newly added in v5, in order to keep consistent
+> with the migration_version node for migratable pass-though devices)
 
-I know you probably can't tell the future :) but what stops gcc from
-doing the tail-call optimization in the future?
+What is the relationship between those two attributes?
 
-Or are optimization decisions behind an inline asm a no-no and will
-pretty much always stay that way?
+Is existence (and compatibility) of (1) a pre-req for possible
+existence (and compatibility) of (2)?
 
-And I hope the clang folks don't come around and say, err, nope, we're
-much more aggressive here.
+Does userspace need to check (1) or can it completely rely on (2), if
+it so chooses?
 
-However, if we do it with the explicit disabling with
--fno-stack-protector for only this compilation unit, then it is
+If devices with a different mdev type are indeed compatible, it seems
+userspace can only find out after the devices have actually been
+created, as (1) does not apply?
 
-1. clear why we're doing this
-2. no compiler would break it
+One of my worries is that the existence of an attribute with the same
+name in two similar locations might lead to confusion. But maybe it
+isn't a problem.
 
-So I'm still gravitating a bit towards the explicit thing...
+> 
+> Patch 1 defines migration_version attribute for the first location in
+> Documentation/vfio-mediated-device.txt
+> 
+> Patch 2 uses GVT as an example for patch 1 to show how to expose
+> migration_version attribute and check migration compatibility in vendor
+> driver.
+> 
+> Patch 3 defines migration_version attribute for the second location in
+> Documentation/vfio-mediated-device.txt
+> 
+> Patch 4 uses GVT as an example for patch 3 to show how to expose
+> migration_version attribute and check migration compatibility in vendor
+> driver.
+> 
+> (The previous "Reviewed-by" and "Acked-by" for patch 1 and patch 2 are
+> kept in v5, as there are only small changes to commit messages of the two
+> patches.)
+> 
+> v5:
+> added patch 2 and 4 for mdev device part of migration_version attribute.
+> 
+> v4:
+> 1. fixed indentation/spell errors, reworded several error messages
+> 2. added a missing memory free for error handling in patch 2
+> 
+> v3:
+> 1. renamed version to migration_version
+> 2. let errno to be freely defined by vendor driver
+> 3. let checking mdev_type be prerequisite of migration compatibility check
+> 4. reworded most part of patch 1
+> 5. print detailed error log in patch 2 and generate migration_version
+> string at init time
+> 
+> v2:
+> 1. renamed patched 1
+> 2. made definition of device version string completely private to vendor
+> driver
+> 3. reverted changes to sample mdev drivers
+> 4. described intent and usage of version attribute more clearly.
+> 
+> 
+> Yan Zhao (4):
+>   vfio/mdev: add migration_version attribute for mdev (under mdev_type
+>     node)
+>   drm/i915/gvt: export migration_version to mdev sysfs (under mdev_type
+>     node)
+>   vfio/mdev: add migration_version attribute for mdev (under mdev device
+>     node)
+>   drm/i915/gvt: export migration_version to mdev sysfs (under mdev
+>     device node)
+> 
+>  .../driver-api/vfio-mediated-device.rst       | 183 ++++++++++++++++++
+>  drivers/gpu/drm/i915/gvt/Makefile             |   2 +-
+>  drivers/gpu/drm/i915/gvt/gvt.c                |  39 ++++
+>  drivers/gpu/drm/i915/gvt/gvt.h                |   7 +
+>  drivers/gpu/drm/i915/gvt/kvmgt.c              |  55 ++++++
+>  drivers/gpu/drm/i915/gvt/migration_version.c  | 170 ++++++++++++++++
+>  drivers/gpu/drm/i915/gvt/vgpu.c               |  13 +-
+>  7 files changed, 466 insertions(+), 3 deletions(-)
+>  create mode 100644 drivers/gpu/drm/i915/gvt/migration_version.c
+> 
 
-Thx.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
