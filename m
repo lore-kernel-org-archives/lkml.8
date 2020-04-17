@@ -2,104 +2,158 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FBD8C352BE
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 10:27:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36673C352BE
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 10:30:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5D8DB221EA
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 10:27:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F45321D95
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 10:30:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KahVJP5I"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="OJJIIwuj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729470AbgDQK1x (ORCPT
+        id S1729307AbgDQKas (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 06:27:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54202 "EHLO
+        Fri, 17 Apr 2020 06:30:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54656 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728893AbgDQK1w (ORCPT
+        by vger.kernel.org with ESMTP id S1728830AbgDQKar (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 06:27:52 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F525C061A0F;
-        Fri, 17 Apr 2020 03:27:52 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id np9so914294pjb.4;
-        Fri, 17 Apr 2020 03:27:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=/sWUOMORUKum104p8fgduP75zm2yCeLIzJBIrqZB+Ps=;
-        b=KahVJP5ItSiIPFpot2mBBqQ9e76gqyDsccm5Ukxw//dMpOmX5viM8xZUjKXz/6lfi9
-         5Hvc7ldn+DOuaclp1L7zs7rnA4NM3ZI8bq7Ichtjfe5UDxStI3clkhfX3ca4jD/nUOmL
-         1TLjQOGtEd7MWJXjXSwUX+H4YoDGcoTobjSLqQUtXrkuCLK/sIyppBH6GF27qyKvxCK+
-         gO+vhwHWBV+pe1zqObTSMAjc684ujLkFfjX7nhG3Ehc+OeVEzKLfZauZEnviGakP/kQy
-         EhOX94KWOGczkebdlYbEJgAVo+9U6bwRZvJ1QjdBxzFfIWbamMAOUVW3teppP/S1aOh1
-         HfWw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=/sWUOMORUKum104p8fgduP75zm2yCeLIzJBIrqZB+Ps=;
-        b=K4to3HOWczvt9WFBg5+5hC7oGSOLSqQfbmqUJNkT2/zQ9ZCTvgIp9nKAd7D0Y9lSjt
-         5wdlUpehC1LzRZm8Zt7j3sRxQorrlXJ1/s1RLpUpid5sBEojw5MZPtQDTyaWyoTeECUE
-         dwtRXHo2STYzvmcpJ1FoPv3U3eLGjjmQ2ce5jhFPdVgP8FgRjCm8bAYZopJJn2Fm4UJS
-         wp+5kNympvbm0gjFg2vsljDgJEmhHDRym3gANbeICymFByKCfF/4k6vmQuG3dN9uPsIf
-         5NFDLd3bKd7DHc6ncOzck6XRpuVmCpAA1puTS2YfhsrfKPprfQorXDIgXFYFTclTgSPs
-         wYsA==
-X-Gm-Message-State: AGi0PuaPpDT2efc5mAeL0Np6XBjveCyBL/IC41H6MHWADzrQIWnuQwsj
-        znS30jmCr6j+bYiVx47ogA/vAFlOb7sxf+9HXAwFhzkWcNlIwA==
-X-Google-Smtp-Source: APiQypJJLjV2o0/L1MJrfkO016rcaDEjMxTgdiZvyKNt5MBCK0q9Wsq4v0LzlfRjwCzi73fcGjHqkEZULNtssGBUydY=
-X-Received: by 2002:a17:902:aa09:: with SMTP id be9mr2880287plb.18.1587119271627;
- Fri, 17 Apr 2020 03:27:51 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200416012016.21422-1-chris.ruehl@gtsys.com.hk>
- <20200416012016.21422-3-chris.ruehl@gtsys.com.hk> <20200416065655.cxy67hlj267dpjrw@pengutronix.de>
- <e4a6af21-a8ec-e9b5-2c5e-1e109888f0c7@gtsys.com.hk>
-In-Reply-To: <e4a6af21-a8ec-e9b5-2c5e-1e109888f0c7@gtsys.com.hk>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 17 Apr 2020 13:27:40 +0300
-Message-ID: <CAHp75VfN4Fj0J4n2xKmK8fDKACT0epo_xXQnMzKDW-Y1XH46Pw@mail.gmail.com>
-Subject: Re: [PATCH v4 2/3] iio: DAC extension for ltc2634-12/10/8
-To:     Chris Ruehl <chris.ruehl@gtsys.com.hk>
-Cc:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        devicetree <devicetree@vger.kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        Fri, 17 Apr 2020 06:30:47 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8DA77C061A0C;
+        Fri, 17 Apr 2020 03:30:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Transfer-Encoding
+        :Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+        Sender:Reply-To:Content-ID:Content-Description;
+        bh=5T+iJux5AD2LbQoaV8j0BcNwC32G2ubqGpp3NLw7K2U=; b=OJJIIwujh1arTkzUU+hPFfANoY
+        NiFEfLxyk7MLGkT08KL5BncSK7vyJY5V1xcSdc9lu4nmdLJWsOOjLtcHiAFMxitLUHUhiDjpxfur5
+        re+nSC6fHG0QGIQepP+ceQyfoA498aJNGGkDr8wP1kTpcdo48Dbs7e5ih92O3nndERPXsTZSpJ9J5
+        eGj1sgLq1Zy0x0/y/NQh7uct6dhQwwEu+QZ88iicydfw2e/NkA1C05v7rJHyuUD+IfeLPpFKwD4WA
+        Jc2eMY70zCMsMSJgshZNIsYf8F/uwbsy+9V7UIrA79dxto2GrGLCaxDqW56X6o2O4Y0O0qZg4kN5G
+        KvHh6R6Q==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jPOGL-0007BH-EK; Fri, 17 Apr 2020 10:30:21 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 1EEC53006E0;
+        Fri, 17 Apr 2020 12:30:17 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 075632B0DE450; Fri, 17 Apr 2020 12:30:17 +0200 (CEST)
+Date:   Fri, 17 Apr 2020 12:30:16 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     "Xu, Like" <like.xu@intel.com>
+Cc:     Like Xu <like.xu@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
+        Andi Kleen <ak@linux.intel.com>,
+        Jim Mattson <jmattson@google.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Liran Alon <liran.alon@oracle.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alexandru Tachici <alexandru.tachici@analog.com>,
-        Steve Winslow <swinslow@gmail.com>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Liang Kan <kan.liang@linux.intel.com>,
+        Wei Wang <wei.w.wang@intel.com>, linux-kernel@vger.kernel.org,
+        Ingo Molnar <mingo@kernel.org>
+Subject: Re: [PATCH v9 03/10] perf/x86: Add constraint to create guest LBR
+ event without hw counter
+Message-ID: <20200417103016.GV20730@hirez.programming.kicks-ass.net>
+References: <20200313021616.112322-1-like.xu@linux.intel.com>
+ <20200313021616.112322-4-like.xu@linux.intel.com>
+ <20200409163717.GD20713@hirez.programming.kicks-ass.net>
+ <0b89963d-33d8-3b0f-fc56-eff3ccce648d@intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <0b89963d-33d8-3b0f-fc56-eff3ccce648d@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 16, 2020 at 10:15 AM Chris Ruehl <chris.ruehl@gtsys.com.hk> wro=
-te:
-> On 16/4/2020 2:56 pm, Uwe Kleine-K=C3=B6nig wrote:
-> > dropped stefan.popa@analog.com from recipents as the address bounces fo=
-r
-> > me.
-> the maintainer script added this email automatically , I will remove it
-> in the future mails.
+On Fri, Apr 10, 2020 at 11:03:33AM +0800, Xu, Like wrote:
+> On 2020/4/10 0:37, Peter Zijlstra wrote:
 
-Somebody from Analog Devs should sent a patch as an urgent fix.
-I also suffered from very same bounces.
+> > That should sort the branches in order of: gp,fixed,bts,vlbr
+> 
+> Note the current order is: bts, pebs, fixed, gp.
 
+Yeah, and that means that gp (which is I think the most common case) is
+the most expensive.
 
---=20
-With Best Regards,
-Andy Shevchenko
+> Sure, let me try to refactor it in this way.
+
+Thanks!
+
+> > > +static inline bool is_guest_event(struct perf_event *event)
+> > > +{
+> > > +	if (event->attr.exclude_host && is_kernel_event(event))
+> > > +		return true;
+> > > +	return false;
+> > > +}
+> > I don't like this one, what if another in-kernel users generates an
+> > event with exclude_host set ?
+> Thanks for the clear attitude.
+> 
+> How about:
+> - remove the is_guest_event() to avoid potential misuse;
+> - move all checks into is_guest_lbr_event() and make it dedicated:
+> 
+> static inline bool is_guest_lbr_event(struct perf_event *event)
+> {
+>     if (is_kernel_event(event) &&
+>         event->attr.exclude_host && needs_branch_stack(event))
+>         return true;
+>     return false;
+> }
+> 
+> In this case, it's safe to generate an event with exclude_host set
+> and also use LBR to count guest or nothing for other in-kernel users
+> because the intel_guest_lbr_event_constraints() makes LBR exclusive.
+> 
+> For this generic usage, I may rename:
+> - is_guest_lbr_event() to is_lbr_no_counter_event();
+> - intel_guest_lbr_event_constraints() to
+> intel_lbr_no_counter_event_constraints();
+> 
+> Is this acceptable to you？
+
+I suppose so, please put a comment on top of that function though, so we
+don't forget.
+
+> > > @@ -181,9 +181,19 @@ struct x86_pmu_capability {
+> > >   #define GLOBAL_STATUS_UNC_OVF				BIT_ULL(61)
+> > >   #define GLOBAL_STATUS_ASIF				BIT_ULL(60)
+> > >   #define GLOBAL_STATUS_COUNTERS_FROZEN			BIT_ULL(59)
+> > > -#define GLOBAL_STATUS_LBRS_FROZEN			BIT_ULL(58)
+> > > +#define GLOBAL_STATUS_LBRS_FROZEN_BIT			58
+> > > +#define GLOBAL_STATUS_LBRS_FROZEN			BIT_ULL(GLOBAL_STATUS_LBRS_FROZEN_BIT)
+> > >   #define GLOBAL_STATUS_TRACE_TOPAPMI			BIT_ULL(55)
+> > > +/*
+> > > + * We model guest LBR event tracing as another fixed-mode PMC like BTS.
+> > > + *
+> > > + * We choose bit 58 (LBRS_FROZEN_BIT) which is used to indicate that the LBR
+> > > + * stack is frozen on a hardware PMI request in the PERF_GLOBAL_STATUS msr,
+> > > + * and the 59th PMC counter (if any) is not supposed to use it as well.
+> > Is this saying that STATUS.58 should never be set? I don't really
+> > understand the language.
+> My fault, and let me make it more clearly:
+> 
+> We choose bit 58 because it's used to indicate LBR stack frozen state
+> not like other overflow conditions in the PERF_GLOBAL_STATUS msr,
+> and it will not be used for any actual fixed events.
+
+That's only with v4, also we unconditionally mask that bit in
+handle_pmi_common(), so it'll never be set in the overflow handling.
+
+That's all fine, I suppose, all you want is means of programming the LBR
+registers, we don't actually do anything with then in the host context.
+Please write a more elaborate comment here.
