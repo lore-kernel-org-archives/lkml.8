@@ -2,100 +2,71 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 029AFC2BB55
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 08:36:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 156E7C352BE
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 08:36:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C5B9F2137B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 08:36:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YVgpdYoi"
+	by mail.kernel.org (Postfix) with ESMTP id F0D712137B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 08:36:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729830AbgDQIgB (ORCPT
+        id S1729842AbgDQIgv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 04:36:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36668 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729749AbgDQIgA (ORCPT
+        Fri, 17 Apr 2020 04:36:51 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:57462 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729732AbgDQIgv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 04:36:00 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A0F8C061A0C;
-        Fri, 17 Apr 2020 01:36:00 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id ay1so729613plb.0;
-        Fri, 17 Apr 2020 01:36:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=4QLRhq6ncbx33txx+lUViw8XofjfiGIYfFDkLE6el/g=;
-        b=YVgpdYoiePmKpjkxliGptstAUcntBCNcszJR4qwGZQTaLz/TeDVK+uCgOqvkKgBshz
-         4aXtaWtvivVpQdrRYXNVxAIRDU+C1oa+F5f0pihUBgxsINbo5zi4vsPOP7Syx0e0NA7u
-         aM2GVtro1ThlIhW1LZxc0DvrgYh2gjurdWQwFS/8/n1ATtkHivQQyeIcXtf2ZNDpw+FT
-         ACtDGHsHAvV5fq9aVRzmSMncXOTsKtAq9l3tFp02efakUxXXTZ0pvc0y7Bp5gaqnp9+N
-         mbrFnBlrEBnerUATsfirA5y5XBa4ySPfPCYLsR5OAXynyVVzUMjjSREOEaWrJa9HZ+Dp
-         gxkA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=4QLRhq6ncbx33txx+lUViw8XofjfiGIYfFDkLE6el/g=;
-        b=H+o71ORluC6oWIhq6lH9nu4vAbs27lGQN+FvQGumr9JV9SCr+uc9kjivY/kvNOQeLI
-         GnnSqYlAgE+wQve5eoyhD12R9WcTgySiRgOx5HpwWm7CNRahvSGZ5DVXRnbe9CrG9vGP
-         nvJxYuUEq2btASYWPdDOLXlQJUbiS2dQ+Qou7EDpOXUHCFjBHrSgGz+wwgU3Pv+e4roe
-         S85NY9CBPSrrZTIUaSpCmIS0u5UByJ4l/1hslSpOskEUUgIm+Kuf/5VB66+qzIEz2R+J
-         a4NzDqzLHvNVPTSANyOceLZ3vFjAW+1xancUPSt4GJV1MsSocLn/l3u8aIuqakx3KmYN
-         vqtA==
-X-Gm-Message-State: AGi0PuYqwXluFRPebJcNlVzAGW3EefkBCH5tbpw3HwSlKhpII1e71wjZ
-        S9tNS3zGJL4FCjZPf2TUVDFSbu9b
-X-Google-Smtp-Source: APiQypJioufUW7TEzYboWDBC3g+W2H1t4WIJr8JpXuTGtM3FNYBy6u4DU/LQafZmo5+wXrkf0vEQ7A==
-X-Received: by 2002:a17:902:9a82:: with SMTP id w2mr2445787plp.117.1587112559701;
-        Fri, 17 Apr 2020 01:35:59 -0700 (PDT)
-Received: from MacBook-Pro.mshome.net ([122.224.153.228])
-        by smtp.googlemail.com with ESMTPSA id ev5sm2690522pjb.1.2020.04.17.01.35.56
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 17 Apr 2020 01:35:59 -0700 (PDT)
-From:   Yanhu Cao <gmayyyha@gmail.com>
-To:     jlayton@kernel.org
-Cc:     sage@redhat.com, idryomov@gmail.com, ceph-devel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Yanhu Cao <gmayyyha@gmail.com>
-Subject: [PATCH] ceph: if we are blacklisted, __do_request returns directly
-Date:   Fri, 17 Apr 2020 16:34:48 +0800
-Message-Id: <20200417083448.9122-1-gmayyyha@gmail.com>
-X-Mailer: git-send-email 2.24.2 (Apple Git-127)
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Fri, 17 Apr 2020 04:36:51 -0400
+Received: from 61-220-137-37.hinet-ip.hinet.net ([61.220.137.37] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1jPMUP-00047h-Dy; Fri, 17 Apr 2020 08:36:45 +0000
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+To:     kbusch@kernel.org, axboe@fb.com, hch@lst.de, sagi@grimberg.me
+Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        linux-stable <stable@vger.kernel.org>,
+        linux-nvme@lists.infradead.org (open list:NVM EXPRESS DRIVER),
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] nvme/pci: Use Discard instead of Write Zeroes on SK hynix SC300
+Date:   Fri, 17 Apr 2020 16:36:41 +0800
+Message-Id: <20200417083641.28205-1-kai.heng.feng@canonical.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Signed-off-by: Yanhu Cao <gmayyyha@gmail.com>
----
- fs/ceph/mds_client.c | 5 +++++
- 1 file changed, 5 insertions(+)
+After commit 6e02318eaea5 ("nvme: add support for the Write Zeroes
+command"), SK hynix SC300 becomes very slow with the following error
+message:
+[  224.567695] blk_update_request: operation not supported error, dev nvme1n1, sector 499384320 op 0x9:(WRITE_ZEROES) flags 0x1000000 phys_seg 0 prio class 0]
 
-diff --git a/fs/ceph/mds_client.c b/fs/ceph/mds_client.c
-index 486f91f9685b..d2ea755b7c02 100644
---- a/fs/ceph/mds_client.c
-+++ b/fs/ceph/mds_client.c
-@@ -2708,6 +2708,11 @@ static void __do_request(struct ceph_mds_client *mdsc,
- 
- 	put_request_session(req);
- 
-+	if (mdsc->fsc->blacklisted) {
-+		err = -EACCES;
-+		goto finish;
-+	}
-+
- 	mds = __choose_mds(mdsc, req, &random);
- 	if (mds < 0 ||
- 	    ceph_mdsmap_get_state(mdsc->mdsmap, mds) < CEPH_MDS_STATE_ACTIVE) {
+Use quirk NVME_QUIRK_DEALLOCATE_ZEROES to workaround this issue.
+
+BugLink: https://bugs.launchpad.net/bugs/1872383
+Cc: linux-stable <stable@vger.kernel.org> # >= 5.1
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+---
+ drivers/nvme/host/pci.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
+index 4e79e412b276..e3f4dac823d8 100644
+--- a/drivers/nvme/host/pci.c
++++ b/drivers/nvme/host/pci.c
+@@ -3068,6 +3068,8 @@ static const struct pci_device_id nvme_id_table[] = {
+ 		.driver_data = NVME_QUIRK_DELAY_BEFORE_CHK_RDY, },
+ 	{ PCI_DEVICE(0x1c58, 0x0023),	/* WDC SN200 adapter */
+ 		.driver_data = NVME_QUIRK_DELAY_BEFORE_CHK_RDY, },
++	{ PCI_DEVICE(0x1c5c, 0x1504),	/* SK hynix SC300 */
++		.driver_data = NVME_QUIRK_DEALLOCATE_ZEROES, },
+ 	{ PCI_DEVICE(0x1c5f, 0x0540),	/* Memblaze Pblaze4 adapter */
+ 		.driver_data = NVME_QUIRK_DELAY_BEFORE_CHK_RDY, },
+ 	{ PCI_DEVICE(0x144d, 0xa821),   /* Samsung PM1725 */
 -- 
-2.24.2 (Apple Git-127)
+2.17.1
 
