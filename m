@@ -4,66 +4,64 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5903C2D0EF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 19:15:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A7ACC2D0EF
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 19:15:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8BAD02076D
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 19:15:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 759AF2076D
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 19:15:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587150928;
-	bh=+tua57vQELZzu82chP/E+EIujovOQck5GjGwA2IPaD4=;
+	s=default; t=1587150932;
+	bh=MQM53BbVC2OrZUMe236AuRXoO62cVGl+vSGKNZfke6o=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=AR38FTh6L0kYKx/17o++cHSII2NRGE3X88aEsqwETYFktoQvOC4IVUjQ5MOfHSwxd
-	 1ly0M3P9OFRabPEtNXWxvoYYY8xah8f/h4MTp74pqWoP2V0ysYsN0oh1RQJP+JetkL
-	 AoUxvuIO62xEkdbxTAqBGXUh2zqR2Kc5X0AkOW3o=
+	b=askrL0siMw8zwvg/VH/A4Gey2HeePkGBKQ/SrKoKOigcQVirGzD5SCxfwRF4VFd+z
+	 0PO4LvlbxJirt/rKsjwvcmta0Xp0lZQbJQFAKAELgweEv7YYjAebnPnka8VqSHeqQj
+	 RRiA4ZvXJIzNsQoaCdbl3Em/sdqmjg9gtryJzLyg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730516AbgDQTP1 (ORCPT
+        id S1730479AbgDQTPZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 15:15:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38744 "EHLO mail.kernel.org"
+        Fri, 17 Apr 2020 15:15:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38730 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728563AbgDQTPX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 15:15:23 -0400
-Subject: Re: [GIT PULL] mtd: Fixes for v5.7-rc2
+        id S1728151AbgDQTPW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Apr 2020 15:15:22 -0400
+Subject: Re: [GIT PULL] Devicetree fixes for v5.7, take 1
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1587150922;
-        bh=+tua57vQELZzu82chP/E+EIujovOQck5GjGwA2IPaD4=;
+        bh=MQM53BbVC2OrZUMe236AuRXoO62cVGl+vSGKNZfke6o=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=CP1tLFzrFvzsCMwiKbWC9/pXVBIXr1d4KuAfhzzrqrW0VmrjKxX59qiEZtitcAVRg
-         /tnZu0HDOWw23zlfzJ+Enedy5cvZkCj45I3hZMBQZDmp9x+wml9Kl6wtfhosOHvkNe
-         vUcWQsa15ARBAWYhxyBvyeZCrzBwgSoZzLM+vtZE=
+        b=PrVnpEiRYoRbGJSQDzAfbqHAKabQn0JD9WUnZi3+yGw4E2K3ysmHg2kyc24uJuP8A
+         yHJvxupNl80Qz9q9k3bn267tQVThkzlJhzWIq5eS0EUsTuYVBOD+PbJm/DqshMSMz0
+         SYl9shtvH6MnAMQZUMEEr/hXbz231tKSwZB3fw7E=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <58708601.124954.1587140866342.JavaMail.zimbra@nod.at>
-References: <58708601.124954.1587140866342.JavaMail.zimbra@nod.at>
+In-Reply-To: <20200417161010.GA14296@bogus>
+References: <20200417161010.GA14296@bogus>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <58708601.124954.1587140866342.JavaMail.zimbra@nod.at>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/mtd/linux.git
- tags/mtd/fixes-for-5.7-rc2
-X-PR-Tracked-Commit-Id: 2098c564701c0dde76063dd9c5c00a7a1f173541
+X-PR-Tracked-Message-Id: <20200417161010.GA14296@bogus>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git
+ tags/devicetree-fixes-for-5.7
+X-PR-Tracked-Commit-Id: 0903060fe590105b7d31901c1ed67614c08cee08
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: ceb1adbacb4971cd47533d667f91ed06a38d7d4a
-Message-Id: <158715092271.7925.6177261944461862662.pr-tracker-bot@kernel.org>
+X-PR-Merge-Commit-Id: 8fce9058ca8b1c784515e7986385f2b33927a44b
+Message-Id: <158715092222.7925.15410358690654400876.pr-tracker-bot@kernel.org>
 Date:   Fri, 17 Apr 2020 19:15:22 +0000
-To:     Richard Weinberger <richard@nod.at>
-Cc:     torvalds <torvalds@linux-foundation.org>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Tudor Ambarus <Tudor.Ambarus@microchip.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        Frank Rowand <frowand.list@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Fri, 17 Apr 2020 18:27:46 +0200 (CEST):
+The pull request you sent on Fri, 17 Apr 2020 11:10:10 -0500:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/mtd/linux.git tags/mtd/fixes-for-5.7-rc2
+> git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git tags/devicetree-fixes-for-5.7
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/ceb1adbacb4971cd47533d667f91ed06a38d7d4a
+https://git.kernel.org/torvalds/c/8fce9058ca8b1c784515e7986385f2b33927a44b
 
 Thank you!
 
