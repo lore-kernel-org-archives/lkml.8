@@ -2,119 +2,90 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B10C2C3815B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 10:55:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5302AC352BE
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 10:55:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9B50B21D94
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 10:55:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B39721D94
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 10:55:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729634AbgDQKy7 (ORCPT
+        id S1729832AbgDQKzv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 06:54:59 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:44328 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729364AbgDQKy7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 06:54:59 -0400
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 8087CD7DBF35CF8B1E2F;
-        Fri, 17 Apr 2020 18:54:50 +0800 (CST)
-Received: from localhost.localdomain (10.69.192.58) by
- DGGEMS412-HUB.china.huawei.com (10.3.19.212) with Microsoft SMTP Server id
- 14.3.487.0; Fri, 17 Apr 2020 18:54:41 +0800
-From:   John Garry <john.garry@huawei.com>
-To:     <will@kernel.org>, <mark.rutland@arm.com>
-CC:     <linux-kernel@vger.kernel.org>, <qiangqing.zhang@nxp.com>,
-        <jolsa@redhat.com>, <robin.murphy@arm.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <shameerali.kolothum.thodi@huawei.com>,
-        John Garry <john.garry@huawei.com>
-Subject: [RFC PATCH] perf/smmuv3: Support sysfs identifier file
-Date:   Fri, 17 Apr 2020 18:50:34 +0800
-Message-ID: <1587120634-19666-1-git-send-email-john.garry@huawei.com>
-X-Mailer: git-send-email 2.8.1
+        Fri, 17 Apr 2020 06:55:51 -0400
+Received: from mail1.bemta26.messagelabs.com ([85.158.142.3]:58823 "EHLO
+        mail1.bemta26.messagelabs.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729364AbgDQKzs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Apr 2020 06:55:48 -0400
+Received: from [100.113.1.220] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
+        by server-3.bemta.az-a.eu-central-1.aws.symcld.net id 88/C0-36550-13B899E5; Fri, 17 Apr 2020 10:55:45 +0000
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprAIsWRWlGSWpSXmKPExsVy8MN7XV3D7pl
+  xBit/8Fnc/3qU0eLyrjlsDkwed67tYfP4vEkugCmKNTMvKb8igTVj39rP7AX72SrePGVtYJzB
+  2sXIxSEksI5R4nrvCcYuRk4gp0Li76G5YDavgJvEgfkPmEFsNgELicknHrCB2CwCqhKL39wEi
+  nNwCAsESDy7GQZiigioSJx7Yw5iMgtESPw5xQwxRFDi5MwnLCA2s4CExMEXL5ghFhlInF7QyD
+  KBkXsWkrJZSMoWMDKtYrRIKspMzyjJTczM0TU0MNA1NDTWNdQ1tdBLrNJN1Est1U1OzSspSgR
+  K6iWWF+sVV+Ym56To5aWWbGIEBk5KIaPVDsata9/rHWKU5GBSEuVVapsZJ8SXlJ9SmZFYnBFf
+  VJqTWnyIUYaDQ0mCt6QLKCdYlJqeWpGWmQMMYpi0BAePkghvYidQmre4IDG3ODMdInWKUZdj5
+  9F5i5iFWPLy81KlxHllQGYIgBRllObBjYBF1CVGWSlhXkYGBgYhnoLUotzMElT5V4ziHIxKwr
+  zMIFN4MvNK4Da9AjqCCeiIaIfpIEeUJCKkpBqYNIubCq7Me5gXabqp/+SE9WxRT3SF+jlXxcr
+  eXMPce47pfixHbgrTzCePPgouY8vj+raBr5Ptxrbk6zPavmb6HZ0TO7ln7oyXm4Jt75hMmXyh
+  6e6ywjP35T3E7+UZ6P/eaLRjUkXcWSnD93ZSwUt6zVjD5lrtuvL5994ZV5MMBBLj2D/2H8xmu
+  LtDI1Th/tvisEVdkto9gtxsL/bP3ny/o689783EG0o7Jh1rPbjzq/zpe+k9Ojv2szxOOFIcc8
+  5tG//N0+u+Bh6osGwO8bqpe33Fvej0s69v19mxnntiue1RpKT8qcI+uYquH+sVP2w6pnvirP3
+  p9al+p+83vOaX31fhJ6tqftXq04TKc2ql55RYijMSDbWYi4oTAWLbJKkjAwAA
+X-Env-Sender: Adam.Thomson.Opensource@diasemi.com
+X-Msg-Ref: server-6.tower-229.messagelabs.com!1587120944!3257471!1
+X-Originating-IP: [193.240.239.45]
+X-SYMC-ESS-Client-Auth: outbound-route-from=pass
+X-StarScan-Received: 
+X-StarScan-Version: 9.50.1; banners=-,-,-
+X-VirusChecked: Checked
+Received: (qmail 9961 invoked from network); 17 Apr 2020 10:55:45 -0000
+Received: from unknown (HELO NB-EX-CASHUB01.diasemi.com) (193.240.239.45)
+  by server-6.tower-229.messagelabs.com with ECDHE-RSA-AES256-SHA384 encrypted SMTP; 17 Apr 2020 10:55:45 -0000
+Received: from swsrvapps-01.diasemi.com (10.20.28.141) by
+ NB-EX-CASHUB01.diasemi.com (10.1.16.140) with Microsoft SMTP Server id
+ 14.3.468.0; Fri, 17 Apr 2020 12:55:44 +0200
+Received: by swsrvapps-01.diasemi.com (Postfix, from userid 22379)      id
+ 1B4CD3FB8D; Fri, 17 Apr 2020 11:55:44 +0100 (BST)
+Message-ID: <cover.1587120185.git.Adam.Thomson.Opensource@diasemi.com>
+From:   Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+Date:   Fri, 17 Apr 2020 11:55:44 +0100
+Subject: [PATCH v3 0/2] Resolve revision handling and add support for DA silicon
+To:     Lee Jones <lee.jones@linaro.org>
+CC:     <linux-kernel@vger.kernel.org>,
+        Support Opensource <support.opensource@diasemi.com>
 MIME-Version: 1.0
 Content-Type: text/plain
-X-Originating-IP: [10.69.192.58]
-X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-For the perf tool to know the specific HW implementation, expose a HW
-identifier file for the PMU device.
+This patch set fixes the currently broken revision handling in the driver's
+i2c_probe() function and then adds DA support to existing permitted revisions.
 
-For now, we just support HiSilicon "hip08" through pre-existing ACPI
-options quirk framework. A minimalistic approach is used, based on the
-hope that a proper identification method will be available in a future
-SMMUv3 spec.
+v3:
+ - Replaced magic numbers around I2C paged access code with enums and defines
+ - Small style tidy ups as requested by Lee Jones
 
-Signed-off-by: John Garry <john.garry@huawei.com>
+v2:
+ - Use raw I2C read access instead of a temporary regmap to interrogate chip and
+   variant id registers
 
-diff --git a/drivers/perf/arm_smmuv3_pmu.c b/drivers/perf/arm_smmuv3_pmu.c
-index f01a57e5a5f3..0ed358cff4a7 100644
---- a/drivers/perf/arm_smmuv3_pmu.c
-+++ b/drivers/perf/arm_smmuv3_pmu.c
-@@ -113,6 +113,7 @@ struct smmu_pmu {
- 	u64 counter_mask;
- 	u32 options;
- 	bool global_filter;
-+	const char *identifier;
- };
- 
- #define to_smmu_pmu(p) (container_of(p, struct smmu_pmu, pmu))
-@@ -552,6 +553,27 @@ static struct attribute_group smmu_pmu_events_group = {
- 	.is_visible = smmu_pmu_event_is_visible,
- };
- 
-+static ssize_t smmu_pmu_identifier_attr_show(struct device *dev,
-+					struct device_attribute *attr,
-+					char *page)
-+{
-+	struct smmu_pmu *smmu_pmu = to_smmu_pmu(dev_get_drvdata(dev));
-+
-+	return sprintf(page, "%s\n", smmu_pmu->identifier);
-+}
-+
-+static struct device_attribute smmu_pmu_identifier_attr =
-+	__ATTR(identifier, 0444, smmu_pmu_identifier_attr_show, NULL);
-+
-+static struct attribute *smmu_pmu_identifier_attrs[] = {
-+	&smmu_pmu_identifier_attr.attr,
-+	NULL
-+};
-+
-+static struct attribute_group smmu_pmu_identifier_group = {
-+	.attrs = smmu_pmu_identifier_attrs,
-+};
-+
- /* Formats */
- PMU_FORMAT_ATTR(event,		   "config:0-15");
- PMU_FORMAT_ATTR(filter_stream_id,  "config1:0-31");
-@@ -575,6 +597,7 @@ static const struct attribute_group *smmu_pmu_attr_grps[] = {
- 	&smmu_pmu_cpumask_group,
- 	&smmu_pmu_events_group,
- 	&smmu_pmu_format_group,
-+	&smmu_pmu_identifier_group,
- 	NULL
- };
- 
-@@ -718,7 +741,10 @@ static void smmu_pmu_get_acpi_options(struct smmu_pmu *smmu_pmu)
- 	case IORT_SMMU_V3_PMCG_HISI_HIP08:
- 		/* HiSilicon Erratum 162001800 */
- 		smmu_pmu->options |= SMMU_PMCG_EVCNTR_RDONLY;
-+		smmu_pmu->identifier = "hip08";
- 		break;
-+	default:
-+		smmu_pmu->identifier = "none";
- 	}
- 
- 	dev_notice(smmu_pmu->dev, "option mask 0x%x\n", smmu_pmu->options);
+Adam Thomson (2):
+  mfd: da9063: Fix revision handling to correctly select reg tables
+  mfd: da9063: Add support for latest DA silicon revision
+
+ drivers/mfd/da9063-core.c            |  31 ----
+ drivers/mfd/da9063-i2c.c             | 271 +++++++++++++++++++++++++++++++----
+ include/linux/mfd/da9063/core.h      |   1 +
+ include/linux/mfd/da9063/registers.h |  15 +-
+ 4 files changed, 257 insertions(+), 61 deletions(-)
+
 -- 
-2.16.4
+1.9.1
 
