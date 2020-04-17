@@ -2,144 +2,155 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7B38C352BE
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 11:13:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5C07C352BE
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 11:15:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AD9CF221EC
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 11:13:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3DF221D94
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 11:15:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="L8F6v9W7"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="Xw4sYBrK";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="Lmxxw0DS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730262AbgDQLN2 (ORCPT
+        id S1730274AbgDQLO7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 07:13:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33090 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729846AbgDQLN1 (ORCPT
+        Fri, 17 Apr 2020 07:14:59 -0400
+Received: from esa2.hgst.iphmx.com ([68.232.143.124]:40391 "EHLO
+        esa2.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730091AbgDQLO6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 07:13:27 -0400
-Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3AAAC061A0C
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 04:13:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=Z9R8TwgFFZEdYwWvXS1m69C8jKNDkSMDggxlCSZl1WU=; b=L8F6v9W7jafZdYrltN0+Nk3whw
-        s6Meo+NJQv7L5JnhaN8h9qASZOrOcJXSAbUHL2gDOzzV90yyHnji1xkl/he04CybPyvwCE/DE5CuZ
-        RJGDNl3qhNG8TId7f4kKIrOg5IlYaqVFriwuWr7m4hoK4wnB95iD+08huaj/zPVCH8GI3wQ6MOnXD
-        +ktAJ4XpKKKZIi8U+Ek8w0uZVqGp9oiDwAE8WaKvn3erXlUgl1H9xI8ZMS05XCk+LJ9PxFalvdqac
-        AiFt4m4Ihdfoe2HBw56DHzw75lT0q8KcVhc+gGxQx6V6PUk/pcfvcsqTbHa+aLYbShky8TIGxDXWJ
-        b6Nt/E4w==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jPOva-0006AO-G8; Fri, 17 Apr 2020 11:12:58 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id BFCF2304E03;
-        Fri, 17 Apr 2020 13:12:55 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id AF8D72B1214AF; Fri, 17 Apr 2020 13:12:55 +0200 (CEST)
-Date:   Fri, 17 Apr 2020 13:12:55 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     vpillai <vpillai@digitalocean.com>,
-        Nishanth Aravamudan <naravamudan@digitalocean.com>,
-        Julien Desfossez <jdesfossez@digitalocean.com>,
-        Tim Chen <tim.c.chen@linux.intel.com>, mingo@kernel.org,
-        tglx@linutronix.de, pjt@google.com, torvalds@linux-foundation.org,
-        linux-kernel@vger.kernel.org, fweisbec@gmail.com,
-        keescook@chromium.org, kerrnel@google.com,
-        Phil Auld <pauld@redhat.com>, Aaron Lu <aaron.lwe@gmail.com>,
-        Aubrey Li <aubrey.intel@gmail.com>, aubrey.li@linux.intel.com,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: Re: [RFC PATCH 00/13] Core scheduling v5
-Message-ID: <20200417111255.GZ20730@hirez.programming.kicks-ass.net>
-References: <cover.1583332764.git.vpillai@digitalocean.com>
- <20200414142152.GV20730@hirez.programming.kicks-ass.net>
- <20200415163220.GA180518@google.com>
+        Fri, 17 Apr 2020 07:14:58 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1587122109; x=1618658109;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=uwDTJvQF+ggoZxXhliuBBdeLUlaT0MzSk4RdsQ7roSw=;
+  b=Xw4sYBrKzT1iU2wPCMc7FLdqGlV1vfQkbsPNDOyOLlIshhW4KK8HNqfe
+   cFvj8/gUUSzPYC+umyhsvysuxRhqBDOqJ6HeRd4kiNf+GadDfcj07YFPE
+   xBcobbrrEo2z+sZ65rMhu3cne2WZUMtmu0jYp6KjfqkB2jivT7WUwcPvS
+   665HYARw3qHwn5QfS5t0lG7X4KCmrHe/5Po1xD+Y19N1yVSm89n3gDsiV
+   x7PLdFEVRPVFZjzBMlaAsGZjRLfDFxvfpILg0AyP4Y5CzReVsdCeJqfdz
+   KM42XGBZTRLwdnKJVLqcMiZP47Ck1CprkWOe+h1K/RT2U1smkolHOfSi8
+   g==;
+IronPort-SDR: rc/HFN0ZDTThghrsf1Vi/CRIdSx9F6GnOBuHEpGAnyghoYf0+G3R46KW+i1Vkow29j2kH/uue7
+ uEvB0NIyfV42ovKRm5wPA6+o+xYuyToTP5aSyFuanZCDwvWbm2hzX+iJC22kWvZZx1g1UeJOUs
+ MPonszxaH6Dlshqhp7mo5gRv3nLYAhcZytXTPQ9udHgHYS1bo+tJt131GiwriVIM3k+CDCd+Ru
+ 1lDdnVzb7ABUPyaN4v2dUvvKIV05eXTosg62L9a+RpHr7VgDQ3uNaTg6jFSb76UlBaHlexd/lm
+ n9E=
+X-IronPort-AV: E=Sophos;i="5.72,394,1580745600"; 
+   d="scan'208";a="237986144"
+Received: from mail-sn1nam04lp2054.outbound.protection.outlook.com (HELO NAM04-SN1-obe.outbound.protection.outlook.com) ([104.47.44.54])
+  by ob1.hgst.iphmx.com with ESMTP; 17 Apr 2020 19:15:08 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=UeZRcIF/7+81DX65qo1gkl/KFaESYQNlHjQCW1/C3IeEMOoQU7HjaTfiuhpHBfWzZFPQ3m+D8CA8aX6vyTW7sgv8BMEI20KZgnOq/QDsGCTE8b2rhm3uhxMn5dtzqFiUYnBJwt0q/33Wjr8JH2KBykl55CX+Baj0HmVkUgoteobNC6msFy00xT4+5TLJZ9a3do0IElaGPd1i7FL2MIu4pubh0qAGnNy7VbgihRity0FLFnlof+xvHeT6B3C81TKSc0Z+vIkovYDPyHdZGkHQTY8Vgbrzu19AD6OOvZ9yvEvpBlggbuX84lN47ORgSRhtNYvcQSnijvEMZPipDgiHjg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=/gbcRDLUK/CWo+dnZdqMol9+5Qf+EmUyu4JbUzB/MHQ=;
+ b=F9EvrBsO5fgJzkEk4mOaGTDeIl00wOPe++hB4apgQ5JC8Qgu8yWtSld/Q/jqo2ZTej2BFiwlTKI2//ZN51StM2YgVEUOWfPCZh4fCKfdB0pnfGPr62+vRB5n3sCNx1ZqU04bZMIgzkweIEaYhAyOr5Y7m7Ea6Ic0JAL7c78roO+/0tBCG8vvfR7selxTNTPKwhIdOc7Ge0KM9kEVt4QaDfwam1kyLs8+7TkVnYtsSagcLRP5mLyXspqjCZUS19ADNweX2jvVhM3PTJ3Wz5wpuxHJMrIF1BXVAZbgo3GSbX1mf1NT1LlacV0YrEQYfKP9beQm1pyPsQzUPICRxKp5Tg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
+ header.d=wdc.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=/gbcRDLUK/CWo+dnZdqMol9+5Qf+EmUyu4JbUzB/MHQ=;
+ b=Lmxxw0DSPH+kPfTv14SzXH+WmYCXpZobRDm4XSzbX47hXYd/FVH+3764newITtRQusS46TPeD13hpv3qu/TUYxa7/lj8eXV6U5TqBAl+4fIhRN34886X4zYR7zRtO4EueZ8Bcc4YmkwI9vHF3uB6LnJTVtyPbOb4E5pY4mLePlQ=
+Received: from SN6PR04MB4640.namprd04.prod.outlook.com (2603:10b6:805:a4::19)
+ by SN6PR04MB4447.namprd04.prod.outlook.com (2603:10b6:805:2b::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2921.26; Fri, 17 Apr
+ 2020 11:14:56 +0000
+Received: from SN6PR04MB4640.namprd04.prod.outlook.com
+ ([fe80::3877:5e49:6cdd:c8b]) by SN6PR04MB4640.namprd04.prod.outlook.com
+ ([fe80::3877:5e49:6cdd:c8b%5]) with mapi id 15.20.2921.027; Fri, 17 Apr 2020
+ 11:14:56 +0000
+From:   Avri Altman <Avri.Altman@wdc.com>
+To:     "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Alim Akhtar <alim.akhtar@samsung.com>
+CC:     "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
+        "nguyenb@codeaurora.org" <nguyenb@codeaurora.org>,
+        "hongwus@codeaurora.org" <hongwus@codeaurora.org>,
+        "rnayak@codeaurora.org" <rnayak@codeaurora.org>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "kernel-team@android.com" <kernel-team@android.com>,
+        "saravanak@google.com" <saravanak@google.com>,
+        "salyzyn@google.com" <salyzyn@google.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        Bean Huo <beanhuo@micron.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Venkat Gopalakrishnan <venkatg@codeaurora.org>,
+        Tomas Winkler <tomas.winkler@intel.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        Can Guo <cang@codeaurora.org>
+Subject: RE: [PATCH v1 1/1] scsi: ufs: full reinit upon resume if link was off
+Thread-Topic: [PATCH v1 1/1] scsi: ufs: full reinit upon resume if link was
+ off
+Thread-Index: AQHWEfSTyhgt9a0PxkGvKkn0dRVeQKh9Lncw
+Date:   Fri, 17 Apr 2020 11:14:55 +0000
+Message-ID: <SN6PR04MB4640B897B44048D80E197F90FCD90@SN6PR04MB4640.namprd04.prod.outlook.com>
+References: <1585362454-5413-1-git-send-email-cang@codeaurora.org>
+ <yq1imi2vra7.fsf@oracle.com>
+In-Reply-To: <yq1imi2vra7.fsf@oracle.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Avri.Altman@wdc.com; 
+x-originating-ip: [77.138.4.172]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 7773aa92-5311-40eb-be54-08d7e2c08f42
+x-ms-traffictypediagnostic: SN6PR04MB4447:
+x-microsoft-antispam-prvs: <SN6PR04MB4447DCB49EA489449C3EA522FCD90@SN6PR04MB4447.namprd04.prod.outlook.com>
+wdcipoutbound: EOP-TRUE
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-forefront-prvs: 0376ECF4DD
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR04MB4640.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(4636009)(376002)(136003)(39860400002)(346002)(396003)(366004)(76116006)(66446008)(186003)(66946007)(64756008)(66556008)(4326008)(478600001)(4744005)(66476007)(71200400001)(26005)(52536014)(7416002)(6506007)(81156014)(33656002)(8676002)(8936002)(316002)(110136005)(55016002)(86362001)(54906003)(5660300002)(7696005)(2906002)(9686003);DIR:OUT;SFP:1102;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 3tma5WZ08GrrM4v3Fi3GrPvn/TF1Xka2A/ZZvBOeBXofzZJEr5xLw2Y2eXrU6p95jcMcx87oFbWYJXV2PFCOLUkxsuj3ikdCNuR13uZayhsHZ7P4Fa1jfZ9kQERkqMvcVT6ZIzvF4VBiinJQyRbaniCeiGSQsSj5RZ0545Bhg6HsEIhSX5kTPsvSR26SBgCf7XZjP8/8/f4HIigJIvPWsyf4v2++GgGcigTV5J7d9BpTyM+V6LA9xi3NZjDe6Yhg9eM4xPH6s3e/CFEJlvXzrYNi6tpScVNong1awU/qAW2ZwJzjtIf4/piEtnZ3x7nMniH9TGHgG0wmnRS143eFEgzXforpV0H0M+UdbASkV1bsIaxPb5axtFqr8n0s/4dmOfKEiS/UMCezI7n/mpzFixFXvEjatbqirzTtWhBu1rWC5KwyDCwczBnvese4hpSL
+x-ms-exchange-antispam-messagedata: hjIHUThXkxYJjl8AKd3TaHT0BaDn2n/t2DA+k0hrZojHOdUjOSxTstl1hao/KkomZeQv3qDajBTWJgrtTjcPp9nPuh17y/eQRHWQTRJ/u2u/gVOlo7DQSOoEUjQpOCFN9S5Iil8WfjnzT2pv3Whkwg==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200415163220.GA180518@google.com>
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7773aa92-5311-40eb-be54-08d7e2c08f42
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Apr 2020 11:14:55.9389
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: GtezYHn+ON/5P+SBffoTUcTtAPzq3ZxfI20sZ8SVSzz0dva0xVWuCQLNtP95kmSlJpQU3Io0NGP1TJlfDo68pQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR04MB4447
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 15, 2020 at 12:32:20PM -0400, Joel Fernandes wrote:
-> On Tue, Apr 14, 2020 at 04:21:52PM +0200, Peter Zijlstra wrote:
-> > On Wed, Mar 04, 2020 at 04:59:50PM +0000, vpillai wrote:
-> > > TODO
-> > > ----
-> > > - Work on merging patches that are ready to be merged
-> > > - Decide on the API for exposing the feature to userland
-> > > - Experiment with adding synchronization points in VMEXIT to mitigate
-> > >   the VM-to-host-kernel leaking
-> > 
-> > VMEXIT is too late, you need to hook irq_enter(), which is what makes
-> > the whole thing so horrible.
-> 
-> We came up with a patch to do this as well. Currently testing it more and it
-> looks clean, will share it soon.
+Hi,
+>=20
+>=20
+> > During suspend, if the link is put to off, it would require a full
+> > initialization during resume. This patch resets and restores both the
+> > hba and the card during initialization.
+>=20
+> Avri, Alim: Any opinions on this change in behavior wrt. your
+> controllers? Would a quirk or callback be preferred to changing this for
+> everyone?
+You have a v2 of this patch and a Reviewed-by tag by Alim.
+It looks fine to me as well.
 
-Thomas said we actually first do VMEXIT, and then enable interrupts. So
-the VMEXIT thing should actually work, and that is indeed much saner
-than sticking it in irq_enter().
+Thanks,
+Avri
 
-It does however put yet more nails in the out-of-tree hypervisors.
-
-> > > - Investigate the source of the overhead even when no tasks are tagged:
-> > >   https://lkml.org/lkml/2019/10/29/242
-> > 
-> >  - explain why we're all still doing this ....
-> > 
-> > Seriously, what actual problems does it solve? The patch-set still isn't
-> > L1TF complete and afaict it does exactly nothing for MDS.
-> 
-> The L1TF incompleteness is because of cross-HT attack from Guest vCPU
-> attacker to an interrupt/softirq executing on the other sibling correct? The
-> IRQ enter pausing the other sibling should fix that (which we will share in
-> a future series revision after adequate testing).
-
-Correct, the vCPU still running can glean host (kernel) state from the
-sibling handling the interrupt in the host kernel.
-
-> > Like I've written many times now, back when the world was simpler and
-> > all we had to worry about was L1TF, core-scheduling made some sense, but
-> > how does it make sense today?
-> 
-> For ChromeOS we're planning to tag each and every task seperately except for
-> trusted processes, so we are isolating untrusted tasks even from each other.
-> 
-> Sorry if this sounds like pushing my usecase, but we do get parallelism
-> advantage for the trusted tasks while still solving all security issues (for
-> ChromeOS). I agree that cross-HT user <-> kernel MDS is still an issue if
-> untrusted (tagged) tasks execute together on same core, but we are not
-> planning to do that on our setup at least.
-
-That doesn't completely solve things I think. Even if you run all
-untrusted tasks as core exclusive, you still have a problem of them vs
-interrupts on the other sibling.
-
-You need to somehow arrange all interrupts to the core happen on the
-same sibling that runs your untrusted task, such that the VERW on
-return-to-userspace works as intended.
-
-I suppose you can try and play funny games with interrupt routing tied
-to the force-idle state, but I'm dreading what that'll look like. Or
-were you going to handle this from your irq_enter() thing too?
-
-
-Can someone go write up a document that very clearly states all the
-problems and clearly explains how to use this feature?
-
-
+>=20
+> --
+> Martin K. Petersen      Oracle Linux Engineering
