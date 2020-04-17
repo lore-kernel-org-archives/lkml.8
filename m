@@ -2,152 +2,77 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2AC1C3815B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 10:09:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E0D1C352BE
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 10:10:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 806D3221EB
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 10:09:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PmBZ6s6g"
+	by mail.kernel.org (Postfix) with ESMTP id 30A0621D91
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 10:10:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728816AbgDQKJJ (ORCPT
+        id S1728761AbgDQKKt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 06:09:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51238 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725830AbgDQKJJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 06:09:09 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A083DC061A0C;
-        Fri, 17 Apr 2020 03:09:08 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id b11so2387179wrs.6;
-        Fri, 17 Apr 2020 03:09:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=cc:subject:to:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=YbQK9qqTQiwPps3zNgPuWa95hc6ZueRySP087ny5ENk=;
-        b=PmBZ6s6gB2kAVb0CXGcgeEjWaw/v2nBdGhnWLBnah8i2gpparN6TXRfTnZGcIiude1
-         SQnnZ7TSzayvbiUmcvtNKxO1+ARSOW5Cy8D1cSPaaQKINOateT6sHJX4RoPlet/+H/Jo
-         1rfZ/ipaSTmeF58KdaMEL/Do03fJhguoQlsBXygG/1ZlkTh32DJGT6JQ1AuPTFbtDg/T
-         9K+8a4U5FxE0f7Wh9G+f8qAASDLO6AnSTAAWM+nsdT9zkkUphQG+mGXvaRh/v5b4WnHg
-         Ko8qMKbcy+QX+N47FEBT2e2V8G7QLYI0WhEbok1jGgV5RAM9qzja7tIIogrnXA9Kd82O
-         vj4w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:cc:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=YbQK9qqTQiwPps3zNgPuWa95hc6ZueRySP087ny5ENk=;
-        b=H1uNGhTTThd+JvwF7hupmzBIaoKHEJbYzHV8yIYeunsRtpsGDZouS5kOxR+1pU8C8S
-         2/aB4CxdYfmZ/vHPn59ULwVObuwP4wDZbctNq3gNTPW8zlJ+/uPebtPgqCVgc5I7mXbP
-         UqONh/l+Vhs4BPMOSXIzAPGI8nebxX5xGfdLjAVjROfRLZKVnWbuf1wj/Sl/7c2pVgYU
-         esLF5J5Yig5o0p9T5wdWAZlrGSlQjGHtdGWpzDpdTgdOlDSJfkhL5E9DI1dUmw+Xf/NO
-         XFJ6g+Ugmym0MwjTyUOtIH8kMPakHcMB3hGyS2jqNdkZQOtCQapRje5Uv4neI/oQ00RW
-         Wz/g==
-X-Gm-Message-State: AGi0PuaT3JjMNLCgoBj0hnuWF7Ay/Ko6WTJIb5tyClczjY/ahwJ6vNUB
-        62jJsdtgUUXW0z07TZ/9IfJH1pPe
-X-Google-Smtp-Source: APiQypLha09XH0F2Owwo8u49JRobTHMw6E2L2t2qISNfYkDdujBq7HlHwG/2kGKsc/+QQWoWlJIP8A==
-X-Received: by 2002:adf:afdf:: with SMTP id y31mr3061238wrd.120.1587118147181;
-        Fri, 17 Apr 2020 03:09:07 -0700 (PDT)
-Received: from ?IPv6:2001:a61:2482:101:3351:6160:8173:cc31? ([2001:a61:2482:101:3351:6160:8173:cc31])
-        by smtp.gmail.com with ESMTPSA id g186sm7161924wme.7.2020.04.17.03.09.06
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 17 Apr 2020 03:09:06 -0700 (PDT)
-Cc:     mtk.manpages@gmail.com, linux-man@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] bpf.2: update enum bpf_map_type and enum bpf_prog_type
-To:     Peter Wu <peter@lekensteyn.nl>
-References: <20190804205353.2956-1-peter@lekensteyn.nl>
-From:   "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
-Message-ID: <fafd846d-d365-efc2-8a6a-a5a1b471e9cd@gmail.com>
-Date:   Fri, 17 Apr 2020 12:09:04 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Fri, 17 Apr 2020 06:10:49 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:2349 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725830AbgDQKKs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Apr 2020 06:10:48 -0400
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 250A4528DE1752884006;
+        Fri, 17 Apr 2020 18:10:47 +0800 (CST)
+Received: from localhost (10.166.215.154) by DGGEMS411-HUB.china.huawei.com
+ (10.3.19.211) with Microsoft SMTP Server id 14.3.487.0; Fri, 17 Apr 2020
+ 18:10:38 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <patrik.r.jakobsson@gmail.com>, <airlied@linux.ie>,
+        <daniel@ffwll.ch>
+CC:     <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH -next] drm/gma500: remove unused variable 'hdmi_ids'
+Date:   Fri, 17 Apr 2020 18:10:32 +0800
+Message-ID: <20200417101032.8140-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-In-Reply-To: <20190804205353.2956-1-peter@lekensteyn.nl>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.166.215.154]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Peter,
+drivers/gpu/drm/gma500/oaktrail_hdmi.c:676:35: warning: ‘hdmi_ids’ defined but not used [-Wunused-const-variable=]
+ static const struct pci_device_id hdmi_ids[] = {
+                                   ^~~~~~~~
 
-On 8/4/19 10:53 PM, Peter Wu wrote:
-> Taken from Linux v5.3-rc2. Add a reference to the header file to save
-> the future reader some time figuring out whether more entries exist.
+It is never used, remove it.
 
-Thanks. Patch applied.
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ drivers/gpu/drm/gma500/oaktrail_hdmi.c | 5 -----
+ 1 file changed, 5 deletions(-)
 
-Cheers,
-
-Michael
-
-
-> Signed-off-by: Peter Wu <peter@lekensteyn.nl>
-> ---
->  man2/bpf.2 | 27 +++++++++++++++++++++++++++
->  1 file changed, 27 insertions(+)
-> 
-> diff --git a/man2/bpf.2 b/man2/bpf.2
-> index 5a766aaa8..51e3bd111 100644
-> --- a/man2/bpf.2
-> +++ b/man2/bpf.2
-> @@ -367,6 +367,14 @@ enum bpf_map_type {
->      BPF_MAP_TYPE_DEVMAP,
->      BPF_MAP_TYPE_SOCKMAP,
->      BPF_MAP_TYPE_CPUMAP,
-> +    BPF_MAP_TYPE_XSKMAP,
-> +    BPF_MAP_TYPE_SOCKHASH,
-> +    BPF_MAP_TYPE_CGROUP_STORAGE,
-> +    BPF_MAP_TYPE_REUSEPORT_SOCKARRAY,
-> +    BPF_MAP_TYPE_PERCPU_CGROUP_STORAGE,
-> +    BPF_MAP_TYPE_QUEUE,
-> +    BPF_MAP_TYPE_STACK,
-> +    /* See /usr/include/linux/bpf.h for the full list. */
->  };
->  .EE
->  .in
-> @@ -756,6 +764,25 @@ enum bpf_prog_type {
->      BPF_PROG_TYPE_KPROBE,
->      BPF_PROG_TYPE_SCHED_CLS,
->      BPF_PROG_TYPE_SCHED_ACT,
-> +    BPF_PROG_TYPE_TRACEPOINT,
-> +    BPF_PROG_TYPE_XDP,
-> +    BPF_PROG_TYPE_PERF_EVENT,
-> +    BPF_PROG_TYPE_CGROUP_SKB,
-> +    BPF_PROG_TYPE_CGROUP_SOCK,
-> +    BPF_PROG_TYPE_LWT_IN,
-> +    BPF_PROG_TYPE_LWT_OUT,
-> +    BPF_PROG_TYPE_LWT_XMIT,
-> +    BPF_PROG_TYPE_SOCK_OPS,
-> +    BPF_PROG_TYPE_SK_SKB,
-> +    BPF_PROG_TYPE_CGROUP_DEVICE,
-> +    BPF_PROG_TYPE_SK_MSG,
-> +    BPF_PROG_TYPE_RAW_TRACEPOINT,
-> +    BPF_PROG_TYPE_CGROUP_SOCK_ADDR,
-> +    BPF_PROG_TYPE_LWT_SEG6LOCAL,
-> +    BPF_PROG_TYPE_LIRC_MODE2,
-> +    BPF_PROG_TYPE_SK_REUSEPORT,
-> +    BPF_PROG_TYPE_FLOW_DISSECTOR,
-> +    /* See /usr/include/linux/bpf.h for the full list. */
->  };
->  .EE
->  .in
-> 
-
-
+diff --git a/drivers/gpu/drm/gma500/oaktrail_hdmi.c b/drivers/gpu/drm/gma500/oaktrail_hdmi.c
+index b25086f252ae..a097a59a9eae 100644
+--- a/drivers/gpu/drm/gma500/oaktrail_hdmi.c
++++ b/drivers/gpu/drm/gma500/oaktrail_hdmi.c
+@@ -663,11 +663,6 @@ void oaktrail_hdmi_init(struct drm_device *dev,
+ 	kfree(gma_encoder);
+ }
+ 
+-static const struct pci_device_id hdmi_ids[] = {
+-	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x080d) },
+-	{ 0 }
+-};
+-
+ void oaktrail_hdmi_setup(struct drm_device *dev)
+ {
+ 	struct drm_psb_private *dev_priv = dev->dev_private;
 -- 
-Michael Kerrisk
-Linux man-pages maintainer; http://www.kernel.org/doc/man-pages/
-Linux/UNIX System Programming Training: http://man7.org/training/
+2.17.1
+
+
