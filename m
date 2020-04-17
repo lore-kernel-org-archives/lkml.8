@@ -2,107 +2,102 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B17D7C352BE
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 10:13:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47358C38A29
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 10:13:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 969E521D91
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 10:13:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2554221D91
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 10:13:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="utdWXHRD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728914AbgDQKNo (ORCPT
+        id S1728964AbgDQKNs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 06:13:44 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:2350 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728200AbgDQKNm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 06:13:42 -0400
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 6C24975D03EC80580986;
-        Fri, 17 Apr 2020 18:13:41 +0800 (CST)
-Received: from localhost (10.166.215.154) by DGGEMS407-HUB.china.huawei.com
- (10.3.19.207) with Microsoft SMTP Server id 14.3.487.0; Fri, 17 Apr 2020
- 18:13:31 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <harry.wentland@amd.com>, <sunpeng.li@amd.com>,
-        <alexander.deucher@amd.com>, <christian.koenig@amd.com>,
-        <David1.Zhou@amd.com>, <airlied@linux.ie>, <daniel@ffwll.ch>
-CC:     <amd-gfx@lists.freedesktop.org>, <dri-devel@lists.freedesktop.org>,
-        <linux-kernel@vger.kernel.org>, YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next] drm/amd/dc: remove unused variable 'video_optimized_pixel_rates'
-Date:   Fri, 17 Apr 2020 18:12:47 +0800
-Message-ID: <20200417101247.45616-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Fri, 17 Apr 2020 06:13:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51976 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728915AbgDQKNq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Apr 2020 06:13:46 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34A98C061A0F
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 03:13:46 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id x18so2435487wrq.2
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 03:13:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=Si8xNa2PRt0kIhccFd8IRCrcCliJZGdfrQl0M6nEdTs=;
+        b=utdWXHRDGLukUPDocwW6Cm48BY6bvFz80fFjJC3jpN5iRv2FnVhpn5i7lNKcBhS8sJ
+         xHiQQO2Jbegs0tzYojnLQ5M1vDah1L2xgfi1BzmqHjJKC0wTjgKJPL4ZiXUtHDEeWApp
+         G5pEAeVkba955wVhuY3VoZCj8teWpA60tuCqiu7FfOrsGWO49JAro14aLJNAoX+NQSD1
+         ncHthxk6aHwtjwlI2DB0JBVkqCBjdu3aXRQMKmFTfMcYQNw3MmhfDE8LHt2N8SOyCPsw
+         CAPXYAV9p4XxXipAbMvRb+N7NHpA6NGbsoM95P6IjYP1DspabfxVh/PdyVMd4UDDKbs7
+         uOig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=Si8xNa2PRt0kIhccFd8IRCrcCliJZGdfrQl0M6nEdTs=;
+        b=SAQ9qGabuJl3ZPQl4rODj0+y1V9C6HkHJC7IExhJhIRWmMWBoOrYQV1tiUY0ut37BR
+         PnWqNakWJXFhI7BdXf8uUBKrmpoFNVJMXAcp6LCVRFVzP49FnTPdM8k26rpnKKRjYsFD
+         tYLgGdOMjKYVW8zCqLVLLOG1Y4EJhpPYtRxBRszrTrKxF6OElAy0AF2i2Dmp380BTKRY
+         OWTewkmUDtfkFoLxagLxguV4VRr1+XZdTvxLiBbZ82+kT2hl7oAFWrsUGIVsiPA10Iue
+         UwLykF+PCfLjRiKdBpMFJIX7LS+Z7L35tqGYLPH+ZFe4bYY3Yvlo/6nid1yJVUU1NLw9
+         xqww==
+X-Gm-Message-State: AGi0PuZalLlSkRKVwDiPMLRMnS8E6n2KGx4fRqAbNyT68ln2SrbXSyij
+        dKq78kUdzxDn+gdjJb4OPqE7pQ==
+X-Google-Smtp-Source: APiQypJJoXQEbutIxLdmsu/x/STiUGWe4/3crlmEFrGGKFCFPbSIFAprP4Y9woxirt4trOT8/ToViw==
+X-Received: by 2002:a05:6000:8f:: with SMTP id m15mr3108271wrx.19.1587118424935;
+        Fri, 17 Apr 2020 03:13:44 -0700 (PDT)
+Received: from dell ([95.149.164.124])
+        by smtp.gmail.com with ESMTPSA id o18sm4886743wrp.23.2020.04.17.03.13.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 17 Apr 2020 03:13:44 -0700 (PDT)
+Date:   Fri, 17 Apr 2020 11:14:46 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc:     linux-i2c@vger.kernel.org,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/1] video: backlight: tosa_lcd: convert to use
+ i2c_new_client_device()
+Message-ID: <20200417101446.GB3737@dell>
+References: <20200326210959.13111-1-wsa+renesas@sang-engineering.com>
+ <20200326210959.13111-2-wsa+renesas@sang-engineering.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.166.215.154]
-X-CFilter-Loop: Reflected
+In-Reply-To: <20200326210959.13111-2-wsa+renesas@sang-engineering.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-drivers/gpu/drm/amd/amdgpu/../display/dc/dce/dce_clock_source.c:1017:50:
- warning: ‘video_optimized_pixel_rates’ defined but not used [-Wunused-const-variable=]
- static const struct pixel_rate_range_table_entry video_optimized_pixel_rates[] = {
-                                                  ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+On Thu, 26 Mar 2020, Wolfram Sang wrote:
 
-commit d8cd587d2bfd ("drm/amd/display: removing MODULO change for dcn2")
-left behind this unused vairable, remove it.
+> Move away from the deprecated API and return the shiny new ERRPTR where
+> useful.
+> 
+> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+> ---
+>  drivers/video/backlight/tosa_lcd.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- .../drm/amd/display/dc/dce/dce_clock_source.c | 33 -------------------
- 1 file changed, 33 deletions(-)
+Applied, thanks.
 
-diff --git a/drivers/gpu/drm/amd/display/dc/dce/dce_clock_source.c b/drivers/gpu/drm/amd/display/dc/dce/dce_clock_source.c
-index 2e992fbc0d71..d2ad0504b0de 100644
---- a/drivers/gpu/drm/amd/display/dc/dce/dce_clock_source.c
-+++ b/drivers/gpu/drm/amd/display/dc/dce/dce_clock_source.c
-@@ -1014,39 +1014,6 @@ struct pixel_rate_range_table_entry {
- 	unsigned short div_factor;
- };
- 
--static const struct pixel_rate_range_table_entry video_optimized_pixel_rates[] = {
--	// /1.001 rates
--	{25170, 25180, 25200, 1000, 1001},	//25.2MHz   ->   25.17
--	{59340, 59350, 59400, 1000, 1001},	//59.4Mhz   ->   59.340
--	{74170, 74180, 74250, 1000, 1001},	//74.25Mhz  ->   74.1758
--	{125870, 125880, 126000, 1000, 1001},	//126Mhz    ->  125.87
--	{148350, 148360, 148500, 1000, 1001},	//148.5Mhz  ->  148.3516
--	{167830, 167840, 168000, 1000, 1001},	//168Mhz    ->  167.83
--	{222520, 222530, 222750, 1000, 1001},	//222.75Mhz ->  222.527
--	{257140, 257150, 257400, 1000, 1001},	//257.4Mhz  ->  257.1429
--	{296700, 296710, 297000, 1000, 1001},	//297Mhz    ->  296.7033
--	{342850, 342860, 343200, 1000, 1001},	//343.2Mhz  ->  342.857
--	{395600, 395610, 396000, 1000, 1001},	//396Mhz    ->  395.6
--	{409090, 409100, 409500, 1000, 1001},	//409.5Mhz  ->  409.091
--	{445050, 445060, 445500, 1000, 1001},	//445.5Mhz  ->  445.055
--	{467530, 467540, 468000, 1000, 1001},	//468Mhz    ->  467.5325
--	{519230, 519240, 519750, 1000, 1001},	//519.75Mhz ->  519.231
--	{525970, 525980, 526500, 1000, 1001},	//526.5Mhz  ->  525.974
--	{545450, 545460, 546000, 1000, 1001},	//546Mhz    ->  545.455
--	{593400, 593410, 594000, 1000, 1001},	//594Mhz    ->  593.4066
--	{623370, 623380, 624000, 1000, 1001},	//624Mhz    ->  623.377
--	{692300, 692310, 693000, 1000, 1001},	//693Mhz    ->  692.308
--	{701290, 701300, 702000, 1000, 1001},	//702Mhz    ->  701.2987
--	{791200, 791210, 792000, 1000, 1001},	//792Mhz    ->  791.209
--	{890100, 890110, 891000, 1000, 1001},	//891Mhz    ->  890.1099
--	{1186810, 1186820, 1188000, 1000, 1001},//1188Mhz   -> 1186.8131
--
--	// *1.001 rates
--	{27020, 27030, 27000, 1001, 1000}, //27Mhz
--	{54050, 54060, 54000, 1001, 1000}, //54Mhz
--	{108100, 108110, 108000, 1001, 1000},//108Mhz
--};
--
- static bool dcn20_program_pix_clk(
- 		struct clock_source *clock_source,
- 		struct pixel_clk_params *pix_clk_params,
 -- 
-2.17.1
-
-
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
