@@ -2,173 +2,162 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48B39C38A2B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 19:41:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EABE6C2D0EF
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 19:42:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1B4DC20715
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 19:41:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6D03206D9
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 19:42:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="V2k+I/xQ"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="a9rPaHTY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730644AbgDQTlk (ORCPT
+        id S1730686AbgDQTmb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 15:41:40 -0400
-Received: from mout.gmx.net ([212.227.17.20]:40227 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730178AbgDQTlj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 15:41:39 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1587152490;
-        bh=BxSnRRs5hm+cSbHKgqSk/Joew1xaM+/aI7NALrThZ9U=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=V2k+I/xQiBAwTuKcZ1f3nGmHmG7sQXCbpUIHEnisXLyMce+MzQa4S+NKMx2ls+dWQ
-         W5/g2qcq9gbSovJb2DEVkeoIBqm86H+7PT4qUNf+UP96c0hYbdT+iI/T9vCo9gctnl
-         2CUfYJkcS+bbN9mhoZJznd9p34ff7Z5JkDs8SYFI=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from [192.168.178.23] ([77.1.39.83]) by mail.gmx.com (mrgmx105
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1Mwfac-1j10jY3JyU-00yDMy; Fri, 17
- Apr 2020 21:41:30 +0200
-Subject: Re: regression 5.6.4->5.6.5 at drivers/acpi/ec.c
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        ACPI Devel Mailing List <linux-acpi@vger.kernel.org>
-References: <fdd9ce1d-146a-5fbf-75c5-3a9384603312@gmx.de>
- <5478a950-4355-8084-ea7d-fe8b270bf2e3@infradead.org>
- <5392275.BHAU0OPJTB@kreacher> <4b21c095-fbe5-1138-b977-a505baa41a2b@gmx.de>
- <CAJZ5v0icdVL6_yGpfsorqszdi9GcLxzYdvDqTJyG4ENzkOG2pQ@mail.gmail.com>
-From:   =?UTF-8?Q?Toralf_F=c3=b6rster?= <toralf.foerster@gmx.de>
-Autocrypt: addr=toralf.foerster@gmx.de; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <d66ad8f1-d7c5-dd8a-0eb4-9e560dc9ada1@gmx.de>
-Date:   Fri, 17 Apr 2020 21:41:30 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Fri, 17 Apr 2020 15:42:31 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:41610 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1730178AbgDQTma (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Apr 2020 15:42:30 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587152549;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=0POUKn5el8rFXJ9SU/bGUJ9HAHH8PpwpgN/Gi+roguo=;
+        b=a9rPaHTYlZDqtqH2OfHbtI9x0jIl+UzOdtz90avX/JTUPSpDLcJpHXosW7N+6vq4u6xQlZ
+        XqUM5OdEqmsTkNy0nR43rbn6JzRGFv0Junv38F8nkDMpavN6u42erhnEeRE0HH55keORtG
+        7L+5tEwHspYXvOsnjVk/8DzZk6yPOCo=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-205-xtB5XGjZOqyG9S9NH0HXNg-1; Fri, 17 Apr 2020 15:42:27 -0400
+X-MC-Unique: xtB5XGjZOqyG9S9NH0HXNg-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9509F8010CA;
+        Fri, 17 Apr 2020 19:42:23 +0000 (UTC)
+Received: from Ruby.redhat.com (ovpn-114-140.rdu2.redhat.com [10.10.114.140])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 5B8645D9CA;
+        Fri, 17 Apr 2020 19:42:12 +0000 (UTC)
+From:   Lyude Paul <lyude@redhat.com>
+To:     dri-devel@lists.freedesktop.org
+Cc:     Daniel Vetter <daniel@ffwll.ch>, "David Airlie" <airlied@linux.ie>,
+        "Maarten Lankhorst" <maarten.lankhorst@linux.intel.com>,
+        linux-kernel@vger.kernel.org,
+        "Thomas Zimmermann" <tzimmermann@suse.de>,
+        "Maxime Ripard" <mripard@kernel.org>,
+        "Liang Chen" <cl@rock-chips.com>,
+        "Andrew Morton" <akpm@linux-foundation.org>,
+        "Thomas Gleixner" <tglx@linutronix.de>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        "Johannes Weiner" <hannes@cmpxchg.org>,
+        "Ben Dooks" <ben.dooks@codethink.co.uk>,
+        "Petr Mladek" <pmladek@suse.com>, "Tejun Heo" <tj@kernel.org>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        "Lyude Paul" <lyude@redhat.com>,
+        "Suren Baghdasaryan" <surenb@google.com>,
+        nouveau@lists.freedesktop.org, "Ben Skeggs" <bskeggs@redhat.com>,
+        "Ilia Mirkin" <imirkin@alum.mit.edu>,
+        "Peteris Rudzusiks" <peteris.rudzusiks@gmail.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        "Gerd Hoffmann" <kraxel@redhat.com>,
+        "Sam Ravnborg" <sam@ravnborg.org>,
+        "Alex Deucher" <alexander.deucher@amd.com>,
+        "Pankaj Bharadiya" <pankaj.laxminarayan.bharadiya@intel.com>,
+        "Takashi Iwai" <tiwai@suse.de>,
+        "Sean Paul" <seanpaul@chromium.org>,
+        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
+        <ville.syrjala@linux.intel.com>,
+        "Jani Nikula" <jani.nikula@intel.com>,
+        "Nicholas Kazlauskas" <nicholas.kazlauskas@amd.com>,
+        "Kate Stewart" <kstewart@linuxfoundation.org>
+Subject: [RFC v3 00/11] drm/nouveau: Introduce CRC support for gf119+
+Date:   Fri, 17 Apr 2020 15:40:47 -0400
+Message-Id: <20200417194145.36350-1-lyude@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <CAJZ5v0icdVL6_yGpfsorqszdi9GcLxzYdvDqTJyG4ENzkOG2pQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:2FtQasdkXOOQSixelBf5RFiuSdpd6nRc27IlFXe+hdGGuZ0VAPh
- orvae4e9mVEND6u5DAw28bOXrWIBIiq6Ba07ERX/eCplqsJ/HOgTn/LPy+Nnz0vi++4jICf
- TXf5pqTnnmtE+C3xtFysRru5KvwP6ie6sl3lUodpTDF3QyyfnRRoyES4aHoOi1p8NllmYNg
- FM4KW+MB71vSszpueyJ8A==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:UntVRQlGeFE=:qm9mNsPUhNnaXnKy4WxV9/
- bm7aIJoRHaFLhSY85jkXKRZUY3D2ouRIfzH+6r+OMILJOaz3mOn8GIzACJx9Awxd/tPjgG0t4
- iNBp41VlZKbyGmiAMtiwM9tRTFV0oB7qPCtCXqnMlBHAzVmkE6JzmAkZ4QtRFGU9wAEQqoajT
- ARkKJRBo+BH1ETGLDFJBAyLGYjOtA+8K3Kuv6UDtrOs7Q8wFIjONxHiJnTPZkHTJJuNzXRbmX
- NhjlQd3yRXNvryw6rtAm5bOkVYmul1lgnXNqdVCswdDF008DMFRwhVzlEh3bDRgdPTUfFpeVL
- 20XZWGfddMUPsGiuXe20XMYWbzzCeo+gYruYZ/u6rEgKJfrx0F9jWj3gNNmCeuQkcEE0Hpkbf
- 1ej84sWvLTivjCJ/eR/nK56+mrT0kkC5YI643fzArtQe0A9iIqBtLspqG99EAgdvYkxdKXcXa
- xYzv89Z+rIFAKBb//Rb5V1muj47Z9aN2Q1fkdKLgcWneXhtRr0zeUTWGWK9AXArjgff7o20Wv
- SJNkOSk18g1pR9Gdd+/XY17M8N5i3X/4IMVmubabVFJXMjX2mSEMU5TzCLw3k/b8AhbYlnVo2
- oN4k5cAF/XivvN7KXtPmVU+Xr2cGssRm3CD1cOe8ffD0wyhWY6MFkSxU9RCF8ITZx/hKoOScA
- KVIf12ZRMFzdtW0+EJ0u6kZgBjHG4syuvJCU/c7vr7mcsqGiyargWjJKZVy/yHXMYgh8v9VTw
- HPgD4Rm5OJkRaWKpgfGObup/sPCF3TicTZGvWlaF/JSjbsxwRGlu7OgfJmLL0mEKnslOJjUKb
- oGdMNTZTb7zYlX5XJh1PZr6nOtWoEd3NNFVDownUaQC6XOLdPzUecegeUW8qjI1BKjIcZMyaO
- P8tpvdRckJBF0Bg/cHBrH0JrqrdpgI0pCRtBXJKU8Voo1KPb4il+/21m1l7U6odkF/VXRu7ZO
- PaZgGZp+up4dW+7FnKx8qFYPqtEtBYZThwqzhs0dCqq7Ook4pDoZVNLA9JnBGg5JcoEsScbkA
- oO3O++EEa+bOEQZAJqpKkZ9aBeXtXuXxsj/hnwAYN/lGk48g1990cwxuu0ULy/FMCw3wW+PIn
- yN0Zw9xSnX7l6Y/1i6JsTdzGlx0QaglBTuGJWc4kCm4kYSlODnW5UKsMtZW/BVnyQ6LxN9Gg1
- aLajudAUcZL9ram8QqrpqszEsX6sd49zFFx08l2GqX1aQfWxx0DoQ7g+XUBlux5dJG9gRD1PO
- TK314YEY6r0RoT9lk
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/17/20 8:52 PM, Rafael J. Wysocki wrote:
-> On Fri, Apr 17, 2020 at 6:36 PM Toralf F=C3=B6rster <toralf.foerster@gmx=
-.de> wrote:
->>
->> On 4/17/20 5:53 PM, Rafael J. Wysocki wrote:
->>> Does the patch below (untested) make any difference?
->>>
->>> ---
->>>  drivers/acpi/ec.c |    5 ++++-
->>>  1 file changed, 4 insertions(+), 1 deletion(-)
->>>
->>> Index: linux-pm/drivers/acpi/ec.c
->>> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->>> --- linux-pm.orig/drivers/acpi/ec.c
->>> +++ linux-pm/drivers/acpi/ec.c
->>> @@ -2067,7 +2067,10 @@ static struct acpi_driver acpi_ec_driver
->>>               .add =3D acpi_ec_add,
->>>               .remove =3D acpi_ec_remove,
->>>               },
->>> -     .drv.pm =3D &acpi_ec_pm,
->>> +     .drv =3D {
->>> +             .probe_type =3D PROBE_FORCE_SYNCHRONOUS,
->>> +             .pm =3D &acpi_ec_pm,
->>> +     },
->>>  };
->>>
->>>  static void acpi_ec_destroy_workqueues(void)
->> I'd say no, but for completeness:
->
-> OK, it looks like mainline commit
->
-> 65a691f5f8f0 ("ACPI: EC: Do not clear boot_ec_is_ecdt in acpi_ec_add()")
->
-> was backported into 5.6.5 by mistake.
->
-> Can you please revert that patch and retest?
->
-Yes, reverting that commit solved the issue.
+Nvidia released some documentation on how CRC support works on their
+GPUs, hooray!
 
-=2D-
-Toralf
+So: this patch series implements said CRC support in nouveau, along with
+adding some special debugfs interfaces for some relevant igt-gpu-tools
+tests that we'll be sending in just a short bit.
+
+This additionally adds a feature that Ville Syrj=C3=A4l=C3=A4 came up wit=
+h: vblank
+works. Basically, this is just a generic DRM interface that allows for
+scheduling high-priority workers that start on a given vblank interrupt.
+Note that while we're currently only using this in nouveau, Intel has
+plans to use this for i915 as well (hence why they came up with it!).
+
+And finally: in order to implement the last feature, we expose some new
+functions in the kernel's kthread_worker infrastructure so that we can
+de-complicate our implementation of this.
+
+Anyway-welcome to the future! :)
+
+Major changes since v2:
+* Use kthread_worker instead of kthreadd for vblank workers
+* Don't check debugfs return values
+
+Lyude Paul (11):
+  drm/vblank: Register drmm cleanup action once per drm_vblank_crtc
+  kthread: Introduce __kthread_queue_work()
+  drm/vblank: Add vblank works
+  drm/nouveau/kms/nv50-: Unroll error cleanup in nv50_head_create()
+  drm/nouveau/kms/nv140-: Don't modify depth in state during atomic
+    commit
+  drm/nouveau/kms/nv50-: Fix disabling dithering
+  drm/nouveau/kms/nv50-: s/harm/armh/g
+  drm/nouveau/kms/nv140-: Track wndw mappings in nv50_head_atom
+  drm/nouveau/kms/nv50-: Expose nv50_outp_atom in disp.h
+  drm/nouveau/kms/nv50-: Move hard-coded object handles into header
+  drm/nouveau/kms/nvd9-: Add CRC support
+
+ drivers/gpu/drm/drm_vblank.c                | 314 ++++++++-
+ drivers/gpu/drm/nouveau/dispnv04/crtc.c     |  25 +-
+ drivers/gpu/drm/nouveau/dispnv50/Kbuild     |   4 +
+ drivers/gpu/drm/nouveau/dispnv50/atom.h     |  21 +
+ drivers/gpu/drm/nouveau/dispnv50/core.h     |   4 +
+ drivers/gpu/drm/nouveau/dispnv50/core907d.c |   3 +
+ drivers/gpu/drm/nouveau/dispnv50/core917d.c |   3 +
+ drivers/gpu/drm/nouveau/dispnv50/corec37d.c |   3 +
+ drivers/gpu/drm/nouveau/dispnv50/corec57d.c |   3 +
+ drivers/gpu/drm/nouveau/dispnv50/crc.c      | 715 ++++++++++++++++++++
+ drivers/gpu/drm/nouveau/dispnv50/crc.h      | 125 ++++
+ drivers/gpu/drm/nouveau/dispnv50/crc907d.c  | 139 ++++
+ drivers/gpu/drm/nouveau/dispnv50/crcc37d.c  | 153 +++++
+ drivers/gpu/drm/nouveau/dispnv50/disp.c     |  65 +-
+ drivers/gpu/drm/nouveau/dispnv50/disp.h     |  24 +
+ drivers/gpu/drm/nouveau/dispnv50/handles.h  |  16 +
+ drivers/gpu/drm/nouveau/dispnv50/head.c     | 142 +++-
+ drivers/gpu/drm/nouveau/dispnv50/head.h     |  13 +-
+ drivers/gpu/drm/nouveau/dispnv50/head907d.c |  14 +-
+ drivers/gpu/drm/nouveau/dispnv50/headc37d.c |  27 +-
+ drivers/gpu/drm/nouveau/dispnv50/headc57d.c |  20 +-
+ drivers/gpu/drm/nouveau/dispnv50/wndw.c     |  15 +-
+ drivers/gpu/drm/nouveau/nouveau_display.c   |  60 +-
+ include/drm/drm_vblank.h                    |  31 +
+ include/linux/kthread.h                     |   3 +
+ kernel/kthread.c                            |  34 +-
+ 26 files changed, 1831 insertions(+), 145 deletions(-)
+ create mode 100644 drivers/gpu/drm/nouveau/dispnv50/crc.c
+ create mode 100644 drivers/gpu/drm/nouveau/dispnv50/crc.h
+ create mode 100644 drivers/gpu/drm/nouveau/dispnv50/crc907d.c
+ create mode 100644 drivers/gpu/drm/nouveau/dispnv50/crcc37d.c
+ create mode 100644 drivers/gpu/drm/nouveau/dispnv50/handles.h
+
+--=20
+2.25.1
+
