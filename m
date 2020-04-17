@@ -2,265 +2,108 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65427C38A2C
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 13:32:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D05EC38A2B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 13:33:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3A33C2137B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 13:32:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 352192137B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 13:33:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="knXCgGMM"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="epcco69x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730706AbgDQNcm (ORCPT
+        id S1730691AbgDQNdT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 09:32:42 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:2466 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730351AbgDQNcm (ORCPT
+        Fri, 17 Apr 2020 09:33:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54646 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730562AbgDQNdS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 09:32:42 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e99af8a0000>; Fri, 17 Apr 2020 06:30:50 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Fri, 17 Apr 2020 06:32:41 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Fri, 17 Apr 2020 06:32:41 -0700
-Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL111.nvidia.com
- (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 17 Apr
- 2020 13:32:41 +0000
-Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL109.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Fri, 17 Apr 2020 13:32:41 +0000
-Received: from sandipan-pc.nvidia.com (Not Verified[10.24.42.163]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5e99aff60002>; Fri, 17 Apr 2020 06:32:40 -0700
-From:   Sandipan Patra <spatra@nvidia.com>
-To:     <treding@nvidia.com>, <robh+dt@kernel.org>,
-        <u.kleine-koenig@pengutronix.de>, <jonathanh@nvidia.com>
-CC:     <bbasu@nvidia.com>, <bbiswas@nvidia.com>,
-        <linux-pwm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Sandipan Patra <spatra@nvidia.com>
-Subject: [PATCH 2/2] hwmon: pwm-fan: Add profile support and add remove module support
-Date:   Fri, 17 Apr 2020 19:02:42 +0530
-Message-ID: <1587130362-6149-2-git-send-email-spatra@nvidia.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1587130362-6149-1-git-send-email-spatra@nvidia.com>
-References: <1587130362-6149-1-git-send-email-spatra@nvidia.com>
-X-NVConfidentiality: public
+        Fri, 17 Apr 2020 09:33:18 -0400
+Received: from mail-qv1-xf34.google.com (mail-qv1-xf34.google.com [IPv6:2607:f8b0:4864:20::f34])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67818C061A0C;
+        Fri, 17 Apr 2020 06:33:17 -0700 (PDT)
+Received: by mail-qv1-xf34.google.com with SMTP id q31so836662qvf.11;
+        Fri, 17 Apr 2020 06:33:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=rsGTgPNg0gRWQFVhxxKuk9eFwxrJEOjXFxqXlY1g5z4=;
+        b=epcco69xZAmv9uWNczNH7J2bL3Pr0XPUSc9ZREpu7yQBt6L6AaIlrpDgmTB0eKFhJz
+         4uvuUnGrEEngOQ0PpB3vSfBxMsHTg3nDb3EFX0Qaq2LMkUGxqsC798CprmxOQXbhxrDn
+         cR8+WfOKCPIoun3JzRe73Q+Iq56blgrrH//XAm4gVs2UCKhEOAZGBVzRUai2LYfzXxCE
+         a8luP2pqAmCCVp7zjPZXJnQz55CVGrkGkbkccVZhooBkZOCCv2lxidbAV71/f6ci8yYB
+         xBplb1jL9x12TTUJQbN2rWRq18bJX84NIy9carCcpR0HCcBeQyzHd5FDhz55RieMNktn
+         PIzA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=rsGTgPNg0gRWQFVhxxKuk9eFwxrJEOjXFxqXlY1g5z4=;
+        b=r/d0QajAurtKcehXirFEdirLbXOrT75TiXfwz+2QqWKjCYjMweeeqEOJlfWrhXGPAA
+         TyPGz3SVq5r5gAocWkY4j2gj/ySGikHr0JHiq3UczMuv0uV/dBwU3MVF48PEhIJIoCEI
+         TpOcJTQA22dc/Qw9lfAIm8pvudAM9dJoK67Fg0j9WuAURZTc8CWrHmUqKsHB7UEtdLqQ
+         GV0pTWoiNXhJFo3MTUM27RMcYBl1ScyrZcK05ArGWYUvm2G4XAbU1+PTugqs45YCEyAr
+         XwiNfIWlgO8ps79NQT3wec5BQJb7qKrub8ZcwLfAELahkqZ9AgXYvVlq44Ax8pgehYnB
+         o0zw==
+X-Gm-Message-State: AGi0PuZ8Nw6I+6jzu4oTl0tJqh8oZdQQpDoRGW+HSluV42/6LIsLXqrW
+        ReUu3IrukHDfhYiOnSWWjltqte91EKqsWNJT1Q==
+X-Google-Smtp-Source: APiQypJG6oFpnyio1PPFBWwCpYmnOYnIaMdVhY9EJy4Zv7COOdH/yMcJ5r6yBoDHlREoZ0NErbDn4nECeqFYYjVVo/U=
+X-Received: by 2002:ad4:4ae3:: with SMTP id cp3mr2545384qvb.136.1587130396490;
+ Fri, 17 Apr 2020 06:33:16 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1587130250; bh=sUsMPeOzmFx7PoX+RIgn634kmx6Ja5Z/eOIJTdL8m/4=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
-         Content-Type;
-        b=knXCgGMMCkrV4e9fKztshyDoP3Its64oMhQJwesBlbdackx+dXY5JKhXTaGZS4WHJ
-         pfoJegCIqy2gTXG6VcCrwnfyw/GDk8pb8uJbrz4zw2XBf4eREhmhyDDQEiqnjhHvcj
-         URHhrzCzVQM24MCah6z1MU62qbrqtposyIqnN3+MKyRwEcbGY/i3uP/U2x7wShqPou
-         9ON5kDxiDWUH7gfnvis7NZ1okOcXfVB4NOZahtxJKOtrd0GUWtlrM7Y6sJBS/EBGaS
-         +gdMLWZsIIZC5UzYkfEWudc7EEXl9WrkEh4GK+DObLmtJ94tT0jv5ZHmwo3BbXDIBM
-         RTy5EkxvHXJHg==
+References: <20200417081122.59d9a417@canb.auug.org.au>
+In-Reply-To: <20200417081122.59d9a417@canb.auug.org.au>
+From:   Rob Herring <robherring2@gmail.com>
+Date:   Fri, 17 Apr 2020 08:33:05 -0500
+Message-ID: <CAL_JsqK9dcuss5AzAauegZpL3=uaAn0zG3JOxyKSuDNgMsb76Q@mail.gmail.com>
+Subject: Re: linux-next: Fixes tag needs some work in the devicetree-fixes tree
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Alexandru Tachici <alexandru.tachici@analog.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This change has 2 parts:
-1. Add support for profiles mode settings.
-    This allows different fan settings for trip point temp/hyst/pwm.
-    T194 has multiple fan-profiles support.
+On Thu, Apr 16, 2020 at 5:11 PM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+>
+> Hi all,
+>
+> In commit
+>
+>   acca9cd4a084 ("dt-bindings: iio: dac: AD5570R fix bindings errors")
+>
+> Fixes tag
+>
+>   Fixes: ea52c21268e6 ("iio: dac: ad5770r: Add AD5770R support")
+>
+> has these problem(s):
+>
+>   - Subject does not match target commit subject
+>     Just use
+>         git log -1 --format='Fixes: %h ("%s")'
+>
+> Did you mean
+>
+> Fixes: ea52c21268e6 ("dt-bindings: iio: dac: Add docs for AD5770R DAC")
 
-2. Add pwm-fan remove support. This is essential since the config is
-    tristate capable.
+Sigh, yes. Now fixed.
 
-Signed-off-by: Sandipan Patra <spatra@nvidia.com>
----
- drivers/hwmon/pwm-fan.c | 113 +++++++++++++++++++++++++++++++++++++++++++-----
- 1 file changed, 101 insertions(+), 12 deletions(-)
+Thanks,
+Rob
 
-diff --git a/drivers/hwmon/pwm-fan.c b/drivers/hwmon/pwm-fan.c
-index 30b7b3e..6332ed8 100644
---- a/drivers/hwmon/pwm-fan.c
-+++ b/drivers/hwmon/pwm-fan.c
-@@ -3,8 +3,10 @@
-  * pwm-fan.c - Hwmon driver for fans connected to PWM lines.
-  *
-  * Copyright (c) 2014 Samsung Electronics Co., Ltd.
-+ * Copyright (c) 2020, NVIDIA Corporation.
-  *
-  * Author: Kamil Debski <k.debski@samsung.com>
-+ * Author: Sandipan Patra <spatra@nvidia.com>
-  */
- 
- #include <linux/hwmon.h>
-@@ -21,6 +23,8 @@
- #include <linux/timer.h>
- 
- #define MAX_PWM 255
-+/* Based on OF max device tree node name length */
-+#define MAX_PROFILE_NAME_LENGTH	31
- 
- struct pwm_fan_ctx {
- 	struct mutex lock;
-@@ -38,6 +42,12 @@ struct pwm_fan_ctx {
- 	unsigned int pwm_fan_state;
- 	unsigned int pwm_fan_max_state;
- 	unsigned int *pwm_fan_cooling_levels;
-+
-+	unsigned int pwm_fan_profiles;
-+	const char **fan_profile_names;
-+	unsigned int **fan_profile_cooling_levels;
-+	unsigned int fan_current_profile;
-+
- 	struct thermal_cooling_device *cdev;
- };
- 
-@@ -227,28 +237,86 @@ static int pwm_fan_of_get_cooling_data(struct device *dev,
- 				       struct pwm_fan_ctx *ctx)
- {
- 	struct device_node *np = dev->of_node;
-+	struct device_node *base_profile = NULL;
-+	struct device_node *profile_np = NULL;
-+	const char *default_profile = NULL;
- 	int num, i, ret;
- 
--	if (!of_find_property(np, "cooling-levels", NULL))
--		return 0;
-+	num = of_property_count_u32_elems(np, "cooling-levels");
-+	if (num <= 0) {
-+		base_profile = of_get_child_by_name(np, "profiles");
-+		if (!base_profile) {
-+			dev_err(dev, "Wrong Data\n");
-+			return -EINVAL;
-+		}
-+	}
-+
-+	if (base_profile) {
-+		ctx->pwm_fan_profiles =
-+			of_get_available_child_count(base_profile);
-+
-+		if (ctx->pwm_fan_profiles <= 0) {
-+			dev_err(dev, "Profiles used but not defined\n");
-+			return -EINVAL;
-+		}
- 
--	ret = of_property_count_u32_elems(np, "cooling-levels");
--	if (ret <= 0) {
--		dev_err(dev, "Wrong data!\n");
--		return ret ? : -EINVAL;
-+		ctx->fan_profile_names = devm_kzalloc(dev,
-+			sizeof(const char *) * ctx->pwm_fan_profiles,
-+							GFP_KERNEL);
-+		ctx->fan_profile_cooling_levels = devm_kzalloc(dev,
-+			sizeof(int *) * ctx->pwm_fan_profiles,
-+							GFP_KERNEL);
-+
-+		if (!ctx->fan_profile_names
-+				|| !ctx->fan_profile_cooling_levels)
-+			return -ENOMEM;
-+
-+		ctx->fan_current_profile = 0;
-+		i = 0;
-+		for_each_available_child_of_node(base_profile, profile_np) {
-+			num = of_property_count_u32_elems(profile_np,
-+							"cooling-levels");
-+			if (num <= 0) {
-+				dev_err(dev, "No data in cooling-levels inside profile node!\n");
-+				return -EINVAL;
-+			}
-+
-+			of_property_read_string(profile_np, "name",
-+						&ctx->fan_profile_names[i]);
-+			if (default_profile &&
-+				!strncmp(default_profile,
-+				ctx->fan_profile_names[i],
-+				MAX_PROFILE_NAME_LENGTH))
-+				ctx->fan_current_profile = i;
-+
-+			ctx->fan_profile_cooling_levels[i] =
-+				devm_kzalloc(dev, sizeof(int) * num,
-+							GFP_KERNEL);
-+			if (!ctx->fan_profile_cooling_levels[i])
-+				return -ENOMEM;
-+
-+			of_property_read_u32_array(profile_np, "cooling-levels",
-+				ctx->fan_profile_cooling_levels[i], num);
-+			i++;
-+		}
- 	}
- 
--	num = ret;
- 	ctx->pwm_fan_cooling_levels = devm_kcalloc(dev, num, sizeof(u32),
- 						   GFP_KERNEL);
- 	if (!ctx->pwm_fan_cooling_levels)
- 		return -ENOMEM;
- 
--	ret = of_property_read_u32_array(np, "cooling-levels",
--					 ctx->pwm_fan_cooling_levels, num);
--	if (ret) {
--		dev_err(dev, "Property 'cooling-levels' cannot be read!\n");
--		return ret;
-+	if (base_profile) {
-+		memcpy(ctx->pwm_fan_cooling_levels,
-+		  ctx->fan_profile_cooling_levels[ctx->fan_current_profile],
-+						num);
-+	} else {
-+		ret = of_property_read_u32_array(np, "cooling-levels",
-+				ctx->pwm_fan_cooling_levels, num);
-+		if (ret) {
-+			dev_err(dev, "Property 'cooling-levels' cannot be read!\n");
-+			return -EINVAL;
-+		}
- 	}
- 
- 	for (i = 0; i < num; i++) {
-@@ -390,6 +458,25 @@ static int pwm_fan_probe(struct platform_device *pdev)
- 	return 0;
- }
- 
-+static int pwm_fan_remove(struct platform_device *pdev)
-+{
-+	struct pwm_fan_ctx *ctx = platform_get_drvdata(pdev);
-+	struct pwm_args args;
-+
-+	if (!ctx)
-+		return -EINVAL;
-+
-+	if (IS_ENABLED(CONFIG_THERMAL))
-+		thermal_cooling_device_unregister(ctx->cdev);
-+
-+	pwm_get_args(ctx->pwm, &args);
-+	pwm_config(ctx->pwm, 0, args.period);
-+	pwm_disable(ctx->pwm);
-+
-+	return 0;
-+}
-+
-+
- static int pwm_fan_disable(struct device *dev)
- {
- 	struct pwm_fan_ctx *ctx = dev_get_drvdata(dev);
-@@ -465,6 +552,7 @@ MODULE_DEVICE_TABLE(of, of_pwm_fan_match);
- 
- static struct platform_driver pwm_fan_driver = {
- 	.probe		= pwm_fan_probe,
-+	.remove         = pwm_fan_remove,
- 	.shutdown	= pwm_fan_shutdown,
- 	.driver	= {
- 		.name		= "pwm-fan",
-@@ -476,6 +564,7 @@ static struct platform_driver pwm_fan_driver = {
- module_platform_driver(pwm_fan_driver);
- 
- MODULE_AUTHOR("Kamil Debski <k.debski@samsung.com>");
-+MODULE_AUTHOR("Sandipan Patra <spatra@nvidia.com>");
- MODULE_ALIAS("platform:pwm-fan");
- MODULE_DESCRIPTION("PWM FAN driver");
- MODULE_LICENSE("GPL");
--- 
-2.7.4
-
+>
+> or
+>
+> Fixes: cbbb819837f6 ("iio: dac: ad5770r: Add AD5770R support")
+>
+> --
+> Cheers,
+> Stephen Rothwell
