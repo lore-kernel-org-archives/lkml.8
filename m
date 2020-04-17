@@ -2,109 +2,124 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7488C2D0EF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 15:14:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43C1AC38A2B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 15:16:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AB26620936
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 15:14:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FCF520936
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 15:16:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="XASgXQK5"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="WETNw5cj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728922AbgDQPOw (ORCPT
+        id S1728703AbgDQPQm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 11:14:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42338 "EHLO
+        Fri, 17 Apr 2020 11:16:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42628 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728272AbgDQPOu (ORCPT
+        by vger.kernel.org with ESMTP id S1728114AbgDQPQl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 11:14:50 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E655FC061A0C;
-        Fri, 17 Apr 2020 08:14:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description;
-        bh=YfcdpQWtKsaw+yPCSMjyubrORmj0oCIV+0oQZL7RWS0=; b=XASgXQK5pLpEHZkviFU71mEj+0
-        yWwsFWDyefLn55gU9UbpLBPsyW8Ga+ODuvzm67RJRnuJeBJWZ6BOJG+XY28jwGaWYaSSRdysqksNm
-        CQisXfnjZsko3uHUDiHf89Cq6+IFII07ctHPYxMGo6/g/4wsHNmPnqMAj0idTtunEMmeUegwel1pf
-        NWZ66er5+AXg1u1yPuWfuTW28JZUAthvPg31VhS95B4j/szxhSNeEn914yeLudR3FISpqCOvWPXfo
-        aB/D7f6MQv2ooen6IA56FniP1G0WLD2NAKAI91alpDt6PK7IbxQ3bllskHnmtpPiz1hcLxBSvot1h
-        IylDvzeQ==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jPShe-0006IA-Mv; Fri, 17 Apr 2020 15:14:50 +0000
-Subject: Re: [PATCH v10 3/6] iio: adc: mp2629: Add support for mp2629 ADC
- driver
-To:     saravanan sekar <sravanhome@gmail.com>, lee.jones@linaro.org,
-        andy.shevchenko@gmail.com, robh+dt@kernel.org, jic23@kernel.org,
-        knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, sre@kernel.org
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-iio@vger.kernel.org, linux-pm@vger.kernel.org
-References: <20200417085003.6124-1-sravanhome@gmail.com>
- <20200417085003.6124-4-sravanhome@gmail.com>
- <a8da9a3d-93a5-b926-b8c0-84138b59ad4f@infradead.org>
- <2b4c7de2-aa85-65aa-be5e-3daed689c44d@gmail.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <f1e85fcd-e5e5-798c-6093-a195c5cbc08a@infradead.org>
-Date:   Fri, 17 Apr 2020 08:14:49 -0700
+        Fri, 17 Apr 2020 11:16:41 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79F89C061A0C
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 08:16:41 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id a22so1192393pjk.5
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 08:16:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=to:cc:from:subject:message-id:date:user-agent:mime-version
+         :content-language:content-transfer-encoding;
+        bh=YXR192pJ0exfYgl5biCYmiq8w0qm6d+pqJxZoijZXpM=;
+        b=WETNw5cjPKEZXdPr4UHoLTfslN5t+iZ3Lz4PInGXGGIn0Rq4Acr8uQ5HigeEMhJ2fO
+         mgbRUONJMqlCM0fEKUu5DQgokOZVPlfxZFvZ1cA4SsAYFxyQ5B8ovjpz+zcCFn4ygZeS
+         3NBv/N+NIgt3jpUwFE7REfsOvZIDLS2yt3S6VmFGFrB+5ScAU7py0F64usy65mYrB6qY
+         RT1cgbB/EdVBaiKxxCln6Ax052S1xRURHWkDUy0PF59h/LILN9IT46sb/psv9N4rh+GZ
+         ulRnqsyz8b+jwyeqSPdRocao6Uy0al72x9f98632KSYV8NJifn3+qqu3NeqcqKFwGPKM
+         E7IA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:to:cc:from:subject:message-id:date:user-agent
+         :mime-version:content-language:content-transfer-encoding;
+        bh=YXR192pJ0exfYgl5biCYmiq8w0qm6d+pqJxZoijZXpM=;
+        b=j42Ll+Aju+oTWfYj2NeBIvVFYH2IkL2WhAhRXdAzCXH5HtH1U2z4doUuDEo1KRsmKM
+         ZrWUU2jfzkAZAwx7Y1vFR6NX7Bk+0kNxCiF2fQhyTQdRWxc3rmyJfz0Fnpapl5Scf0xz
+         DQntT8kX8JJJDvw9wSc8m0hI9c55RsPr1Wi/XGCsb9gXtvGSqnWPglXvSAPFtTNeofFn
+         9U6sJqo65T5QxHhGdCZNdH95HdC1B6Y+nhb99iZJpSo4yMmHtZUJnkXcPu1D4Wf51A62
+         iibWMGpbp79DgAVmI1h8wliJFgXEgSnM5dNOFGd8BUHd7T9B90+Nhx+w8TQvWxLzQffd
+         sG+g==
+X-Gm-Message-State: AGi0Pub0YJFP19pqxES0eM2qxvtcRiV2XsDna0N1W/gKDrn4Qq7NlUrB
+        iFlg5R4T25HfyBbi3MSY+dK6SA==
+X-Google-Smtp-Source: APiQypIYts3zNYQ2qzCLlhtBdzBnl1UQdUdvk2IzdQmqGvmKKz/8pfPFk+wflUPTHjShsmnV/NqJwQ==
+X-Received: by 2002:a17:90a:af8c:: with SMTP id w12mr4948192pjq.37.1587136600941;
+        Fri, 17 Apr 2020 08:16:40 -0700 (PDT)
+Received: from [192.168.1.188] ([66.219.217.145])
+        by smtp.gmail.com with ESMTPSA id y26sm14710926pfq.107.2020.04.17.08.16.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 17 Apr 2020 08:16:39 -0700 (PDT)
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        io-uring <io-uring@vger.kernel.org>
+From:   Jens Axboe <axboe@kernel.dk>
+Subject: [GIT PULL] io_uring fixes for 5.7-rc
+Message-ID: <2750fd4f-8edc-18c2-1991-c1dc794a431f@kernel.dk>
+Date:   Fri, 17 Apr 2020 09:16:38 -0600
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <2b4c7de2-aa85-65aa-be5e-3daed689c44d@gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/17/20 7:51 AM, saravanan sekar wrote:
-> Hi Randy,
-> 
-> On 17/04/20 4:35 pm, Randy Dunlap wrote:
->> Hi--
->>
->> On 4/17/20 1:50 AM, Saravanan Sekar wrote:
->>> diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
->>> index 82e33082958c..ef0c0cd31855 100644
->>> --- a/drivers/iio/adc/Kconfig
->>> +++ b/drivers/iio/adc/Kconfig
->>> @@ -680,6 +680,16 @@ config MESON_SARADC
->>>         To compile this driver as a module, choose M here: the
->>>         module will be called meson_saradc.
->>>   +config MP2629_ADC
->>> +    tristate "Monolithic MP2629 ADC driver"
->>> +    depends on MFD_MP2629
->>     depends on I2C
->> ?
-> 
-> Made "depends on I2C" in MFD_MP2629, hope not needed becomes redundant here
-> 
-> Thanks,
-> Saravanan
+Hi Linus,
 
-I see. Thanks for explaining.
+- Series from Pavel, wrapping up the init/setup cleanup.
 
->>> +    help
->>> +      Say yes to have support for battery charger IC MP2629 ADC device
->>> +      accessed over I2C.
->>> +
->>> +      This driver provides ADC conversion of system, input power supply
->>> +      and battery voltage & current information.
->>> +
->>>   config NAU7802
->>>       tristate "Nuvoton NAU7802 ADC driver"
->>>       depends on I2C
->> thanks.
+- Series from Pavel fixing some issues around deferral sequences
 
+- Fix for splice punt check using the wrong struct file member
+
+- Apply poll re-arm logic for pollable retry too
+
+- Pollable retry should honor cancelation
+
+- Fix for setup time error handling syzbot reported crash
+
+- Work restore poll cancelation fix
+
+
+  git://git.kernel.dk/linux-block.git tags/io_uring-5.7-2020-04-17
+
+
+----------------------------------------------------------------
+Jens Axboe (4):
+      io_uring: correct O_NONBLOCK check for splice punt
+      io_uring: check for need to re-wait in polled async handling
+      io_uring: io_async_task_func() should check and honor cancelation
+      io_uring: only post events in io_poll_remove_all() if we completed some
+
+Pavel Begunkov (8):
+      io_uring: remove obsolete @mm_fault
+      io_uring: track mm through current->mm
+      io_uring: early submission req fail code
+      io_uring: keep all sqe->flags in req->flags
+      io_uring: move all request init code in one place
+      io_uring: fix cached_sq_head in io_timeout()
+      io_uring: kill already cached timeout.seq_offset
+      io_uring: don't count rqs failed after current one
+
+Xiaoguang Wang (1):
+      io_uring: restore req->work when canceling poll request
+
+ fs/io_uring.c | 301 +++++++++++++++++++++++++++++++---------------------------
+ 1 file changed, 162 insertions(+), 139 deletions(-)
 
 -- 
-~Randy
+Jens Axboe
 
