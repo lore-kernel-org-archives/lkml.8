@@ -2,162 +2,194 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3027C38A29
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 21:04:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE7EFC38A29
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 21:05:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B13712072D
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 21:04:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BADC420780
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 21:05:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="j6MnWxfu"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="of25Kvc4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726759AbgDQVEY (ORCPT
+        id S1727791AbgDQVFF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 17:04:24 -0400
-Received: from ssl.serverraum.org ([176.9.125.105]:53495 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726093AbgDQVEY (ORCPT
+        Fri, 17 Apr 2020 17:05:05 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:49538 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726093AbgDQVFE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 17:04:24 -0400
-Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id 3010723058;
-        Fri, 17 Apr 2020 23:04:21 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1587157461;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+        Fri, 17 Apr 2020 17:05:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1587157502; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=L/PN16jFZd/i+9d/mGAxYl50fVRiGccVhJ4spDDgVjQ=;
-        b=j6MnWxfue0MNQjUs8iKR91s6Ynf5MNFyFOmD27vkRN28tMCVaM96jvPZJ7+7SKMfI93iYb
-        pIHXNxfjr6MZq0K9Fi7kb4EVU3ZZ+/jv76wzGp/Sv22rsCbZQaKW/45vrkX/vBZHB83Z3w
-        tkYGSfwKKx7BL7TKvfnW+O7GKJsBiBw=
+        bh=MwwZLSGVJur6LaUyd5egp9oHyObYEUxgSPJSaKMnHDs=;
+        b=of25Kvc4pVxp/KwaBZNmu03Ftp1b0TRe3KlXFFsYvbjO8e6K3BO7lR0mMCttX7Hf+OGRv+
+        dLV9xBGI2nk4F724zfcDJqTVqkQ0mHbEiqCbMEY4N5zmg0ge/seJMmsX7A1MuKU0Byfemm
+        rExSBUKULDJWJdpjIxauV5jnAdqDaQs=
+Date:   Fri, 17 Apr 2020 23:04:51 +0200
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [RESEND PATCH v5 3/5] IIO: Ingenic JZ47xx: Add touchscreen mode.
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Artur Rojek <contact@artur-rojek.eu>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        linux-input <linux-input@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Message-Id: <3KAY8Q.NNI6X4F9QRIX1@crapouillou.net>
+In-Reply-To: <CAHp75Vcwnu8tw92nMYc_5-x_iX+FY8_OhtaJkSYNehmNUDkHGQ@mail.gmail.com>
+References: <20200417202859.35427-1-contact@artur-rojek.eu>
+        <20200417202859.35427-3-contact@artur-rojek.eu>
+        <CAHp75Vcwnu8tw92nMYc_5-x_iX+FY8_OhtaJkSYNehmNUDkHGQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Fri, 17 Apr 2020 23:04:21 +0200
-From:   Michael Walle <michael@walle.cc>
-To:     Vladimir Oltean <olteanv@gmail.com>
-Cc:     Andrew Lunn <andrew@lunn.ch>, linux-hwmon@vger.kernel.org,
-        lkml <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        "David S . Miller" <davem@davemloft.net>
-Subject: Re: [PATCH net-next 2/3] net: phy: add Broadcom BCM54140 support
-In-Reply-To: <CA+h21hoB5n9DM0kcH_-DOzyxXvs5oMg-wxp-KkNTZOpfFhbWVA@mail.gmail.com>
-References: <20200417192858.6997-1-michael@walle.cc>
- <20200417192858.6997-2-michael@walle.cc> <20200417193905.GF785713@lunn.ch>
- <ef747b543bd8dd34aea89a6243de8da4@walle.cc>
- <CA+h21hoB5n9DM0kcH_-DOzyxXvs5oMg-wxp-KkNTZOpfFhbWVA@mail.gmail.com>
-Message-ID: <8e11a4792db1312b402d37a6a612cf8c@walle.cc>
-X-Sender: michael@walle.cc
-User-Agent: Roundcube Webmail/1.3.10
-X-Spamd-Bar: +
-X-Rspamd-Server: web
-X-Rspamd-Queue-Id: 3010723058
-X-Spamd-Result: default: False [1.40 / 15.00];
-         FROM_HAS_DN(0.00)[];
-         TO_DN_SOME(0.00)[];
-         FREEMAIL_ENVRCPT(0.00)[gmail.com];
-         TO_MATCH_ENVRCPT_ALL(0.00)[];
-         TAGGED_RCPT(0.00)[];
-         MIME_GOOD(-0.10)[text/plain];
-         DKIM_SIGNED(0.00)[];
-         RCPT_COUNT_SEVEN(0.00)[11];
-         NEURAL_HAM(-0.00)[-0.239];
-         FREEMAIL_TO(0.00)[gmail.com];
-         RCVD_COUNT_ZERO(0.00)[0];
-         FROM_EQ_ENVFROM(0.00)[];
-         MIME_TRACE(0.00)[0:+];
-         FREEMAIL_CC(0.00)[lunn.ch,vger.kernel.org,suse.com,roeck-us.net,gmail.com,armlinux.org.uk,davemloft.net];
-         MID_RHS_MATCH_FROM(0.00)[];
-         SUSPICIOUS_RECIPS(1.50)[]
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Vladimir,
+Hi Andy,
 
-Am 2020-04-17 22:00, schrieb Vladimir Oltean:
-> Hi Michael,
-> 
-> On Fri, 17 Apr 2020 at 22:52, Michael Walle <michael@walle.cc> wrote:
->> 
->> Hi Andrew,
->> 
->> Am 2020-04-17 21:39, schrieb Andrew Lunn:
->> > On Fri, Apr 17, 2020 at 09:28:57PM +0200, Michael Walle wrote:
->> >
->> >> +static int bcm54140_get_base_addr_and_port(struct phy_device *phydev)
->> >> +{
->> >> +    struct bcm54140_phy_priv *priv = phydev->priv;
->> >> +    struct mii_bus *bus = phydev->mdio.bus;
->> >> +    int addr, min_addr, max_addr;
->> >> +    int step = 1;
->> >> +    u32 phy_id;
->> >> +    int tmp;
->> >> +
->> >> +    min_addr = phydev->mdio.addr;
->> >> +    max_addr = phydev->mdio.addr;
->> >> +    addr = phydev->mdio.addr;
->> >> +
->> >> +    /* We scan forward and backwards and look for PHYs which have the
->> >> +     * same phy_id like we do. Step 1 will scan forward, step 2
->> >> +     * backwards. Once we are finished, we have a min_addr and
->> >> +     * max_addr which resembles the range of PHY addresses of the same
->> >> +     * type of PHY. There is one caveat; there may be many PHYs of
->> >> +     * the same type, but we know that each PHY takes exactly 4
->> >> +     * consecutive addresses. Therefore we can deduce our offset
->> >> +     * to the base address of this quad PHY.
->> >> +     */
->> >
->> > Hi Michael
->> >
->> > How much flexibility is there in setting the base address using
->> > strapping etc? Is it limited to a multiple of 4?
->> 
->> You can just set the base address to any address. Then the following
->> addresses are used:
->>    base, base + 1, base + 2, base + 3, (base + 4)*
->> 
->> It is not specified what happens if you set the base so that it would
->> overflow. I guess that is a invalid strapping.
->> 
->> * (base + 4) is some kind of special PHY address which maps some kind
->> of moving window to a QSGMII address space. It is enabled by default,
->> could be disabled in software, but it doesn't share the same PHY id
->> for which this scans.
->> 
->> So yes, if you look at the addresses and the phy ids, there are
->> always 4 of this.
->> 
->> -michael
-> 
-> What does the reading of the global register give you, when accessed
-> through the master PHY ID vs any other PHY ID? Could you use that as
-> an indication of this being the correct PHY ID, and scan only to the
-> left?
+Le ven. 17 avril 2020 =E0 23:59, Andy Shevchenko=20
+<andy.shevchenko@gmail.com> a =E9crit :
+> On Fri, Apr 17, 2020 at 11:21 PM Artur Rojek <contact@artur-rojek.eu>=20
+> wrote:
+>>=20
+>>  The SADC component in JZ47xx SoCs provides support for touchscreen
+>>  operations (pen position and pen down pressure) in single-ended and
+>>  differential modes.
+>>=20
+>>  Of the known hardware to use this controller, GCW Zero and Anbernic=20
+>> RG-350
+>>  utilize the touchscreen mode by having their joystick(s) attached=20
+>> to the
+>>  X/Y positive/negative input pins.
+>>  GCW Zero comes with a single joystick and is sufficiently handled=20
+>> with the
+>>  currently implemented single-ended mode. Support for boards with two
+>>  joysticks, where one is hooked up to Xn/Yn and the other to Xp/Yp=20
+>> channels
+>>  will need to be provided in the future.
+>>=20
+>>  The touchscreen component of SADC takes a significant time to=20
+>> stabilize
+>>  after first receiving the clock and a delay of 50ms has been=20
+>> empirically
+>>  proven to be a safe value before data sampling can begin.
+>>=20
+>>  All the boards which probe this driver have the interrupt provided=20
+>> from
+>>  devicetree, with no need to handle a case where the irq was not=20
+>> provided.
+>=20
+> Device Tree
+> IRQ
+>=20
+> ...
+>=20
+>>  +               .scan_type =3D {
+>>  +                       .sign =3D 'u',
+>>  +                       .realbits =3D 12,
+>=20
+>>  +                       .storagebits =3D 16
+>=20
+> It's slightly better to leave comma in such cases.
+>=20
+>>  +               },
+>=20
+>>  +               .scan_type =3D {
+>>  +                       .sign =3D 'u',
+>>  +                       .realbits =3D 12,
+>=20
+>>  +                       .storagebits =3D 16
+>=20
+> Ditto.
+>=20
+>>  +               },
+>=20
+> ...
+>=20
+>>                  .indexed =3D 1,
+>>                  .channel =3D INGENIC_ADC_AUX,
+>>  +               .scan_index =3D -1
+>=20
+> Ditto. You see above? Isn't it nice that you didn't touch that line?
+> So, perhaps next developer can leverage this subtle kind of things.
+>=20
+>>                  .indexed =3D 1,
+>>                  .channel =3D INGENIC_ADC_BATTERY,
+>>  +               .scan_index =3D -1
+>=20
+> Ditto.
+>=20
+>>                  .indexed =3D 1,
+>>                  .channel =3D INGENIC_ADC_AUX2,
+>>  +               .scan_index =3D -1
+>=20
+> Ditto.
+>=20
+> ...
+>=20
+>>  +static int ingenic_adc_buffer_enable(struct iio_dev *iio_dev)
+>>  +{
+>>  +       struct ingenic_adc *adc =3D iio_priv(iio_dev);
+>>  +
+>=20
+>>  +       clk_enable(adc->clk);
+>=20
+> Error check?
+>=20
+>>  +       /* It takes significant time for the touchscreen hw to=20
+>> stabilize. */
+>>  +       msleep(50);
+>>  +       ingenic_adc_set_config(adc, JZ_ADC_REG_CFG_TOUCH_OPS_MASK,
+>>  +                              JZ_ADC_REG_CFG_SAMPLE_NUM(4) |
+>>  +                              JZ_ADC_REG_CFG_PULL_UP(4));
+>>  +       writew(80, adc->base + JZ_ADC_REG_ADWAIT);
+>>  +       writew(2, adc->base + JZ_ADC_REG_ADSAME);
+>=20
+>>  +       writeb((u8)~JZ_ADC_IRQ_TOUCH, adc->base + JZ_ADC_REG_CTRL);
+>=20
+> Why casting?
+>=20
+>>  +       writel(0, adc->base + JZ_ADC_REG_ADTCH);
+>>  +       ingenic_adc_enable(adc, 2, true);
+>>  +
+>>  +       return 0;
+>>  +}
+>=20
+>>  +       irq =3D platform_get_irq(pdev, 0);
+>=20
+> Before it worked w/o IRQ, here is a regression you introduced.
 
-That was my first try, I thought it reads zero if you access a global
-register by a PHY address which is not the base one. So I've looked
-at registers which have at least one read-only 1 bit in it and scanned
-only backwards. Well it turns out, my assumption was wrong and it
-returns an old value of a successful read/write before. So it can just
-return anything. And yes, its likely that you could read another
-register and then probe the global register. But in the end I preferred
-scanning the (known) phy id registers over strange hacks. Broadcom
-could have just added a per-port register to actually read the base
-address, but well.. ;)
+Before it simply did not need the IRQ, which is provided by the=20
+devicetree anyway. No regression here.
 
--michael
+-Paul
+
+>=20
+>>  +       if (irq < 0) {
+>=20
+>>  +               dev_err(dev, "Failed to get irq: %d\n", irq);
+>=20
+> Redundant message.
+>=20
+>>  +               return irq;
+>>  +       }
+>=20
+> --
+> With Best Regards,
+> Andy Shevchenko
+
+
