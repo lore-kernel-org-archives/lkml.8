@@ -2,451 +2,119 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 835D1C38A2B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 18:58:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5CB7C2D0EF
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 18:58:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6826E2223D
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 18:58:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B82AB206E9
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 18:58:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="fo9jdYtU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730331AbgDQS6P (ORCPT
+        id S1730407AbgDQS6T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 14:58:15 -0400
-Received: from out03.mta.xmission.com ([166.70.13.233]:38564 "EHLO
-        out03.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726432AbgDQS6N (ORCPT
+        Fri, 17 Apr 2020 14:58:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48864 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726432AbgDQS6R (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 14:58:13 -0400
-Received: from in02.mta.xmission.com ([166.70.13.52])
-        by out03.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.90_1)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jPWBl-0000c7-MH; Fri, 17 Apr 2020 12:58:09 -0600
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jPWBj-0005Qa-Vo; Fri, 17 Apr 2020 12:58:09 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     Alexey Gladkov <gladkov.alexey@gmail.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        Linux Security Module <linux-security-module@vger.kernel.org>,
-        Akinobu Mita <akinobu.mita@gmail.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Alexey Gladkov <legion@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Daniel Micay <danielmicay@gmail.com>,
-        Djalal Harouni <tixxdz@gmail.com>,
-        "Dmitry V . Levin" <ldv@altlinux.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        "J . Bruce Fields" <bfields@fieldses.org>,
-        Jeff Layton <jlayton@poochiereds.net>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        David Howells <dhowells@redhat.com>
-References: <20200409123752.1070597-1-gladkov.alexey@gmail.com>
-        <20200409123752.1070597-3-gladkov.alexey@gmail.com>
-Date:   Fri, 17 Apr 2020 13:55:05 -0500
-In-Reply-To: <20200409123752.1070597-3-gladkov.alexey@gmail.com> (Alexey
-        Gladkov's message of "Thu, 9 Apr 2020 14:37:46 +0200")
-Message-ID: <87tv1iaqnq.fsf@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Fri, 17 Apr 2020 14:58:17 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3BFEC061A0C;
+        Fri, 17 Apr 2020 11:58:16 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id pg17so2324357ejb.9;
+        Fri, 17 Apr 2020 11:58:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=nlMFBx94GCBfheLIsuK5jE2jfZjb/ff2QESeWVLDTaA=;
+        b=fo9jdYtU3T1u7shVeHbNWBxaUnvCMAs51p7ITTnBk0XK8aZFdpqwimCEkoVfVdHnX+
+         eRId7zN/unfZUtKp6jDQ3FZ9fokbx6h5lUxmOw9/lr69K4+EobBDQUq9Zlu/AWzommVO
+         i/b6Dd5ugZi29Y9v+q6rBQ+t0RVhn4RK02KBZnkgad3jJTc7X4TBZ/AQBwwQNtTon9rH
+         0tL3tUAXoIIVvkjz6Hdj6ERZCugZet/uwre/IkgFV32UXzCVmhjF0v1hQMoDGsUB8+SC
+         YV5lJYrq9j8rQCxT0faPnqY4mBz38lt7LNyPO+Gq70AhqrDKJXnyKYe8LU2mjkwTjfY+
+         L7zw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=nlMFBx94GCBfheLIsuK5jE2jfZjb/ff2QESeWVLDTaA=;
+        b=Pl4rPnKiLU3bVb8rB0j+9mZgjah8V8q9Hbx6Ntrp1V7mSXXtAmtWoxOEHPzsT8q1LV
+         /YQESFmhPXpWhaJDGD9ctAZloeyIs71YQceo22ztCO2Pky/UV7KxW1RQwuh54wVyC7w5
+         y+E8HDWo17UZUiho95S0pLWk8xmnyKiSY8DAUGvMp+sEM7OOCGzhZnipXZW7hSp3XNLw
+         yPJfnMk+X6i26Evmt5WfUa3hvxS13EaaCcuMMUOw+XElDvtiRkkudkW1/ORc6s/M+3zR
+         v0mi2cudPtzU8XSTI5BvIK78gWRiWNpUpI0dgTDpVQa2cvoPwZrGPTYWl91dMa7Z6LGJ
+         ClSA==
+X-Gm-Message-State: AGi0PubUorTE2k1+bgVxs90BIAf1f4xgW30uaK9OKpEzPsoLxcYO5CzA
+        SunA2ysqVDME8S7QXf7gOLPuboKwVQqQ4gCz5CFhZooRhJA=
+X-Google-Smtp-Source: APiQypJDTAOAKuxrm7soIeXoSsvXePAMrOLicPlcfUvzaZAHE61vBhTuJxahrdb1K9VgXzzNto7Uz3Fvb31Q2ubZeVk=
+X-Received: by 2002:a17:906:4048:: with SMTP id y8mr4465506ejj.258.1587149895198;
+ Fri, 17 Apr 2020 11:58:15 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1jPWBj-0005Qa-Vo;;;mid=<87tv1iaqnq.fsf@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX18JkROI2nWPSE5+pIhayhkWLUXbXWbGhIs=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: [PATCH RESEND v11 2/8] proc: allow to mount many instances of proc in one pid namespace
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
+References: <20200416121910.12723-1-narmstrong@baylibre.com> <20200416121910.12723-3-narmstrong@baylibre.com>
+In-Reply-To: <20200416121910.12723-3-narmstrong@baylibre.com>
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Date:   Fri, 17 Apr 2020 20:58:04 +0200
+Message-ID: <CAFBinCCUM1Ht1_yRcbG=exJBign=YBX1+xUr8kz=3pJy2PxsnQ@mail.gmail.com>
+Subject: Re: [PATCH v3 2/8] usb: dwc3: meson-g12a: support the GXL/GXM DWC3
+ host phy disconnect
+To:     Neil Armstrong <narmstrong@baylibre.com>
+Cc:     kishon@ti.com, balbi@kernel.org, khilman@baylibre.com,
+        linux-amlogic@lists.infradead.org, linux-usb@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Alexey Gladkov <gladkov.alexey@gmail.com> writes:
-
-> This patch allows to have multiple procfs instances inside the
-> same pid namespace. The aim here is lightweight sandboxes, and to allow
-> that we have to modernize procfs internals.
+On Thu, Apr 16, 2020 at 2:19 PM Neil Armstrong <narmstrong@baylibre.com> wrote:
 >
-> 1) The main aim of this work is to have on embedded systems one
-> supervisor for apps. Right now we have some lightweight sandbox support,
-> however if we create pid namespacess we have to manages all the
-> processes inside too, where our goal is to be able to run a bunch of
-> apps each one inside its own mount namespace without being able to
-> notice each other. We only want to use mount namespaces, and we want
-> procfs to behave more like a real mount point.
+> On the Amlogic GXL/GXM SoCs, the OTG PHY status signals are always
+> connected to the DWC3 controller, thus crashing the controller when
+> switching to OTG mode when port is not populated with a device/cable to
+> Host.
 >
-> 2) Linux Security Modules have multiple ptrace paths inside some
-> subsystems, however inside procfs, the implementation does not guarantee
-> that the ptrace() check which triggers the security_ptrace_check() hook
-> will always run. We have the 'hidepid' mount option that can be used to
-> force the ptrace_may_access() check inside has_pid_permissions() to run.
-> The problem is that 'hidepid' is per pid namespace and not attached to
-> the mount point, any remount or modification of 'hidepid' will propagate
-> to all other procfs mounts.
+> Amlogic added a bit to disconnect the OTG PHY status signals from the DWC3
+> to be used when switching the OTG PHY as Device to the DWC2 controller.
 >
-> This also does not allow to support Yama LSM easily in desktop and user
-> sessions. Yama ptrace scope which restricts ptrace and some other
-> syscalls to be allowed only on inferiors, can be updated to have a
-> per-task context, where the context will be inherited during fork(),
-> clone() and preserved across execve(). If we support multiple private
-> procfs instances, then we may force the ptrace_may_access() on
-> /proc/<pids>/ to always run inside that new procfs instances. This will
-> allow to specifiy on user sessions if we should populate procfs with
-> pids that the user can ptrace or not.
+> The drawback is that it makes the DWC3 port state machine stall and needs
+> a full reset of the DWC3 controller to get connect status to the port
+> connected to the OTG PHY, but not the other one.
 >
-> By using Yama ptrace scope, some restricted users will only be able to see
-> inferiors inside /proc, they won't even be able to see their other
-> processes. Some software like Chromium, Firefox's crash handler, Wine
-> and others are already using Yama to restrict which processes can be
-> ptracable. With this change this will give the possibility to restrict
-> /proc/<pids>/ but more importantly this will give desktop users a
-> generic and usuable way to specifiy which users should see all processes
-> and which users can not.
->
-> Side notes:
-> * This covers the lack of seccomp where it is not able to parse
-> arguments, it is easy to install a seccomp filter on direct syscalls
-> that operate on pids, however /proc/<pid>/ is a Linux ABI using
-> filesystem syscalls. With this change LSMs should be able to analyze
-> open/read/write/close...
->
-> In the new patchset version I removed the 'newinstance' option
-> as suggested by Eric W. Biederman.
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+one nit-pick below. apart from that:
+Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 
-Some very small requests.
+[...]
+>         if (mode == PHY_MODE_USB_DEVICE) {
+> +               if (priv->otg_mode != USB_DR_MODE_OTG &&
+> +                   priv->drvdata->otg_phy_host_port_disable)
+> +                       /* Isolate the OTG PHY port from the Host Controller */
+> +                       regmap_update_bits(priv->usb_glue_regmap, USB_R1,
+> +                               USB_R1_U3H_HOST_U2_PORT_DISABLE_MASK,
+> +                               FIELD_PREP(USB_R1_U3H_HOST_U2_PORT_DISABLE_MASK,
+> +                                          BIT(USB2_OTG_PHY)));
+if you have to re-send for whatever reason then I would like an empty
+line here to make the code easier to read
 
-1) Can you please not place fs_info in fs_context, and instead allocate
-   fs_info in fill_super?  Unless I have misread introduced a resource
-   leak if proc is not mounted or if proc is simply reconfigured.
-
-2) Can you please move hide_pid and pid_gid into fs_info in this patch?
-   As was shown by my recent bug fix 
-
-3) Can you please rebase on on v5.7-rc1 or v5.7-rc2 and repost these
-   patches please?  I thought I could do it safely but between my bug
-   fixes, and Alexey Dobriyan's parallel changes to proc these patches
-   do not apply cleanly.
-
-   Plus there is a resource leak in this patch.
-
-Eric
-
-
-> Signed-off-by: Alexey Gladkov <gladkov.alexey@gmail.com>
-> Reviewed-by: Alexey Dobriyan <adobriyan@gmail.com>
-> Reviewed-by: Kees Cook <keescook@chromium.org>
-> ---
->  fs/proc/base.c                | 13 +++++++----
->  fs/proc/inode.c               |  4 ++--
->  fs/proc/root.c                | 42 ++++++++++++++++++++++-------------
->  fs/proc/self.c                |  6 ++---
->  fs/proc/thread_self.c         |  6 ++---
->  include/linux/pid_namespace.h |  4 ----
->  include/linux/proc_fs.h       | 12 ++++++++++
->  7 files changed, 55 insertions(+), 32 deletions(-)
->
-> diff --git a/fs/proc/base.c b/fs/proc/base.c
-> index 74f948a6b621..3b9155a69ade 100644
-> --- a/fs/proc/base.c
-> +++ b/fs/proc/base.c
-> @@ -3301,6 +3301,7 @@ struct dentry *proc_pid_lookup(struct dentry *dentry, unsigned int flags)
->  {
->  	struct task_struct *task;
->  	unsigned tgid;
-> +	struct proc_fs_info *fs_info;
->  	struct pid_namespace *ns;
->  	struct dentry *result = ERR_PTR(-ENOENT);
->  
-> @@ -3308,7 +3309,8 @@ struct dentry *proc_pid_lookup(struct dentry *dentry, unsigned int flags)
->  	if (tgid == ~0U)
->  		goto out;
->  
-> -	ns = dentry->d_sb->s_fs_info;
-> +	fs_info = proc_sb_info(dentry->d_sb);
-> +	ns = fs_info->pid_ns;
->  	rcu_read_lock();
->  	task = find_task_by_pid_ns(tgid, ns);
->  	if (task)
-> @@ -3372,6 +3374,7 @@ static struct tgid_iter next_tgid(struct pid_namespace *ns, struct tgid_iter ite
->  int proc_pid_readdir(struct file *file, struct dir_context *ctx)
->  {
->  	struct tgid_iter iter;
-> +	struct proc_fs_info *fs_info = proc_sb_info(file_inode(file)->i_sb);
->  	struct pid_namespace *ns = proc_pid_ns(file_inode(file));
->  	loff_t pos = ctx->pos;
->  
-> @@ -3379,13 +3382,13 @@ int proc_pid_readdir(struct file *file, struct dir_context *ctx)
->  		return 0;
->  
->  	if (pos == TGID_OFFSET - 2) {
-> -		struct inode *inode = d_inode(ns->proc_self);
-> +		struct inode *inode = d_inode(fs_info->proc_self);
->  		if (!dir_emit(ctx, "self", 4, inode->i_ino, DT_LNK))
->  			return 0;
->  		ctx->pos = pos = pos + 1;
->  	}
->  	if (pos == TGID_OFFSET - 1) {
-> -		struct inode *inode = d_inode(ns->proc_thread_self);
-> +		struct inode *inode = d_inode(fs_info->proc_thread_self);
->  		if (!dir_emit(ctx, "thread-self", 11, inode->i_ino, DT_LNK))
->  			return 0;
->  		ctx->pos = pos = pos + 1;
-> @@ -3599,6 +3602,7 @@ static struct dentry *proc_task_lookup(struct inode *dir, struct dentry * dentry
->  	struct task_struct *task;
->  	struct task_struct *leader = get_proc_task(dir);
->  	unsigned tid;
-> +	struct proc_fs_info *fs_info;
->  	struct pid_namespace *ns;
->  	struct dentry *result = ERR_PTR(-ENOENT);
->  
-> @@ -3609,7 +3613,8 @@ static struct dentry *proc_task_lookup(struct inode *dir, struct dentry * dentry
->  	if (tid == ~0U)
->  		goto out;
->  
-> -	ns = dentry->d_sb->s_fs_info;
-> +	fs_info = proc_sb_info(dentry->d_sb);
-> +	ns = fs_info->pid_ns;
->  	rcu_read_lock();
->  	task = find_task_by_pid_ns(tid, ns);
->  	if (task)
-> diff --git a/fs/proc/inode.c b/fs/proc/inode.c
-> index 1e730ea1dcd6..6e4c6728338b 100644
-> --- a/fs/proc/inode.c
-> +++ b/fs/proc/inode.c
-> @@ -167,8 +167,8 @@ void proc_invalidate_siblings_dcache(struct hlist_head *inodes, spinlock_t *lock
->  
->  static int proc_show_options(struct seq_file *seq, struct dentry *root)
->  {
-> -	struct super_block *sb = root->d_sb;
-> -	struct pid_namespace *pid = sb->s_fs_info;
-> +	struct proc_fs_info *fs_info = proc_sb_info(root->d_sb);
-> +	struct pid_namespace *pid = fs_info->pid_ns;
->  
->  	if (!gid_eq(pid->pid_gid, GLOBAL_ROOT_GID))
->  		seq_printf(seq, ",gid=%u", from_kgid_munged(&init_user_ns, pid->pid_gid));
-> diff --git a/fs/proc/root.c b/fs/proc/root.c
-> index 2633f10446c3..b28adbb0b937 100644
-> --- a/fs/proc/root.c
-> +++ b/fs/proc/root.c
-> @@ -30,7 +30,7 @@
->  #include "internal.h"
->  
->  struct proc_fs_context {
-> -	struct pid_namespace	*pid_ns;
-> +	struct proc_fs_info	*fs_info;
-        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-Please don't do this. As best as I can tell that introduces a memory
-leak of proc is not mounted.  Please allocate fs_info in 
-
->  	unsigned int		mask;
->  	int			hidepid;
->  	int			gid;
-> @@ -92,7 +92,8 @@ static void proc_apply_options(struct super_block *s,
->  
->  static int proc_fill_super(struct super_block *s, struct fs_context *fc)
->  {
-> -	struct pid_namespace *pid_ns = get_pid_ns(s->s_fs_info);
-> +	struct proc_fs_context *ctx = fc->fs_private;
-> +	struct pid_namespace *pid_ns = get_pid_ns(ctx->fs_info->pid_ns);
->  	struct inode *root_inode;
->  	int ret;
->  
-> @@ -106,6 +107,7 @@ static int proc_fill_super(struct super_block *s, struct fs_context *fc)
->  	s->s_magic = PROC_SUPER_MAGIC;
->  	s->s_op = &proc_sops;
->  	s->s_time_gran = 1;
-> +	s->s_fs_info = ctx->fs_info;
->  
->  	/*
->  	 * procfs isn't actually a stacking filesystem; however, there is
-> @@ -113,7 +115,7 @@ static int proc_fill_super(struct super_block *s, struct fs_context *fc)
->  	 * top of it
->  	 */
->  	s->s_stack_depth = FILESYSTEM_MAX_STACK_DEPTH;
-> -	
-> +
->  	/* procfs dentries and inodes don't require IO to create */
->  	s->s_shrink.seeks = 0;
->  
-> @@ -140,7 +142,8 @@ static int proc_fill_super(struct super_block *s, struct fs_context *fc)
->  static int proc_reconfigure(struct fs_context *fc)
->  {
->  	struct super_block *sb = fc->root->d_sb;
-> -	struct pid_namespace *pid = sb->s_fs_info;
-> +	struct proc_fs_info *fs_info = proc_sb_info(sb);
-> +	struct pid_namespace *pid = fs_info->pid_ns;
->  
->  	sync_filesystem(sb);
->  
-> @@ -150,16 +153,14 @@ static int proc_reconfigure(struct fs_context *fc)
->  
->  static int proc_get_tree(struct fs_context *fc)
->  {
-> -	struct proc_fs_context *ctx = fc->fs_private;
-> -
-> -	return get_tree_keyed(fc, proc_fill_super, ctx->pid_ns);
-> +	return get_tree_nodev(fc, proc_fill_super);
->  }
->  
->  static void proc_fs_context_free(struct fs_context *fc)
->  {
->  	struct proc_fs_context *ctx = fc->fs_private;
->  
-> -	put_pid_ns(ctx->pid_ns);
-> +	put_pid_ns(ctx->fs_info->pid_ns);
->  	kfree(ctx);
->  }
->  
-> @@ -178,9 +179,15 @@ static int proc_init_fs_context(struct fs_context *fc)
->  	if (!ctx)
->  		return -ENOMEM;
->  
-> -	ctx->pid_ns = get_pid_ns(task_active_pid_ns(current));
-> +	ctx->fs_info = kzalloc(sizeof(struct proc_fs_info), GFP_KERNEL);
-> +	if (!ctx->fs_info) {
-> +		kfree(ctx);
-> +		return -ENOMEM;
-> +	}
-> +
-> +	ctx->fs_info->pid_ns = get_pid_ns(task_active_pid_ns(current));
->  	put_user_ns(fc->user_ns);
-> -	fc->user_ns = get_user_ns(ctx->pid_ns->user_ns);
-> +	fc->user_ns = get_user_ns(ctx->fs_info->pid_ns->user_ns);
->  	fc->fs_private = ctx;
->  	fc->ops = &proc_fs_context_ops;
->  	return 0;
-> @@ -188,15 +195,18 @@ static int proc_init_fs_context(struct fs_context *fc)
->  
->  static void proc_kill_sb(struct super_block *sb)
->  {
-> -	struct pid_namespace *ns;
-> +	struct proc_fs_info *fs_info = proc_sb_info(sb);
-> +	struct pid_namespace *ns = fs_info->pid_ns;
-> +
-> +	if (fs_info->proc_self)
-> +		dput(fs_info->proc_self);
-> +
-> +	if (fs_info->proc_thread_self)
-> +		dput(fs_info->proc_thread_self);
->  
-> -	ns = (struct pid_namespace *)sb->s_fs_info;
-> -	if (ns->proc_self)
-> -		dput(ns->proc_self);
-> -	if (ns->proc_thread_self)
-> -		dput(ns->proc_thread_self);
->  	kill_anon_super(sb);
->  	put_pid_ns(ns);
-> +	kfree(fs_info);
->  }
->  
->  static struct file_system_type proc_fs_type = {
-> diff --git a/fs/proc/self.c b/fs/proc/self.c
-> index 57c0a1047250..309301ac0136 100644
-> --- a/fs/proc/self.c
-> +++ b/fs/proc/self.c
-> @@ -36,10 +36,10 @@ static unsigned self_inum __ro_after_init;
->  int proc_setup_self(struct super_block *s)
->  {
->  	struct inode *root_inode = d_inode(s->s_root);
-> -	struct pid_namespace *ns = proc_pid_ns(root_inode);
-> +	struct proc_fs_info *fs_info = proc_sb_info(s);
->  	struct dentry *self;
->  	int ret = -ENOMEM;
-> -	
-> +
->  	inode_lock(root_inode);
->  	self = d_alloc_name(s->s_root, "self");
->  	if (self) {
-> @@ -62,7 +62,7 @@ int proc_setup_self(struct super_block *s)
->  	if (ret)
->  		pr_err("proc_fill_super: can't allocate /proc/self\n");
->  	else
-> -		ns->proc_self = self;
-> +		fs_info->proc_self = self;
->  
->  	return ret;
->  }
-> diff --git a/fs/proc/thread_self.c b/fs/proc/thread_self.c
-> index f61ae53533f5..2493cbbdfa6f 100644
-> --- a/fs/proc/thread_self.c
-> +++ b/fs/proc/thread_self.c
-> @@ -36,7 +36,7 @@ static unsigned thread_self_inum __ro_after_init;
->  int proc_setup_thread_self(struct super_block *s)
->  {
->  	struct inode *root_inode = d_inode(s->s_root);
-> -	struct pid_namespace *ns = proc_pid_ns(root_inode);
-> +	struct proc_fs_info *fs_info = proc_sb_info(s);
->  	struct dentry *thread_self;
->  	int ret = -ENOMEM;
->  
-> @@ -60,9 +60,9 @@ int proc_setup_thread_self(struct super_block *s)
->  	inode_unlock(root_inode);
->  
->  	if (ret)
-> -		pr_err("proc_fill_super: can't allocate /proc/thread_self\n");
-> +		pr_err("proc_fill_super: can't allocate /proc/thread-self\n");
->  	else
-> -		ns->proc_thread_self = thread_self;
-> +		fs_info->proc_thread_self = thread_self;
->  
->  	return ret;
->  }
-> diff --git a/include/linux/pid_namespace.h b/include/linux/pid_namespace.h
-> index 4956e362e55e..de4534d93cb6 100644
-> --- a/include/linux/pid_namespace.h
-> +++ b/include/linux/pid_namespace.h
-> @@ -32,10 +32,6 @@ struct pid_namespace {
->  	struct kmem_cache *pid_cachep;
->  	unsigned int level;
->  	struct pid_namespace *parent;
-> -#ifdef CONFIG_PROC_FS
-> -	struct dentry *proc_self;
-> -	struct dentry *proc_thread_self;
-> -#endif
->  #ifdef CONFIG_BSD_PROCESS_ACCT
->  	struct fs_pin *bacct;
->  #endif
-> diff --git a/include/linux/proc_fs.h b/include/linux/proc_fs.h
-> index 40a7982b7285..5920a4ecd71b 100644
-> --- a/include/linux/proc_fs.h
-> +++ b/include/linux/proc_fs.h
-> @@ -27,6 +27,17 @@ struct proc_ops {
->  	unsigned long (*proc_get_unmapped_area)(struct file *, unsigned long, unsigned long, unsigned long, unsigned long);
->  };
->  
-> +struct proc_fs_info {
-> +	struct pid_namespace *pid_ns;
-> +	struct dentry *proc_self;        /* For /proc/self */
-> +	struct dentry *proc_thread_self; /* For /proc/thread-self */
-> +};
-> +
-> +static inline struct proc_fs_info *proc_sb_info(struct super_block *sb)
-> +{
-> +	return sb->s_fs_info;
-> +}
-> +
->  #ifdef CONFIG_PROC_FS
->  
->  typedef int (*proc_write_t)(struct file *, char *, size_t);
-> @@ -161,6 +172,7 @@ int open_related_ns(struct ns_common *ns,
->  /* get the associated pid namespace for a file in procfs */
->  static inline struct pid_namespace *proc_pid_ns(const struct inode *inode)
->  {
-> +	return proc_sb_info(inode->i_sb)->pid_ns;
->  	return inode->i_sb->s_fs_info;
->  }
+>                 regmap_update_bits(priv->usb_glue_regmap, USB_R0,
+>                                 USB_R0_U2D_ACT, USB_R0_U2D_ACT);
+>                 regmap_update_bits(priv->usb_glue_regmap, USB_R0,
+> @@ -297,6 +318,12 @@ static void dwc3_meson_g12a_usb_otg_apply_mode(struct dwc3_meson_g12a *priv,
+>                 regmap_update_bits(priv->usb_glue_regmap, USB_R4,
+>                                 USB_R4_P21_SLEEP_M0, USB_R4_P21_SLEEP_M0);
+>         } else {
+> +               if (priv->otg_mode != USB_DR_MODE_OTG &&
+> +                   priv->drvdata->otg_phy_host_port_disable) {
+> +                       regmap_update_bits(priv->usb_glue_regmap, USB_R1,
+> +                               USB_R1_U3H_HOST_U2_PORT_DISABLE_MASK, 0);
+> +                       msleep(500);
+> +               }
+same as above - if you have to re-send for whatever reason then please
+add an empty line here
