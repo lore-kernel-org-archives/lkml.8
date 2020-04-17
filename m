@@ -2,112 +2,142 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.2 required=3.0 tests=DATE_IN_PAST_03_06,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56078C2BB55
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 06:34:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77000C2BB85
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 06:40:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 32D932063A
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 06:34:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=jonmasters-org.20150623.gappssmtp.com header.i=@jonmasters-org.20150623.gappssmtp.com header.b="olbb2NiO"
+	by mail.kernel.org (Postfix) with ESMTP id 5EDF720771
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 06:40:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728043AbgDQGe0 (ORCPT
+        id S1728028AbgDQGkq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 02:34:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45982 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728028AbgDQGeZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 02:34:25 -0400
-Received: from mail-pl1-x62d.google.com (mail-pl1-x62d.google.com [IPv6:2607:f8b0:4864:20::62d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D37AC061A0C
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 23:34:25 -0700 (PDT)
-Received: by mail-pl1-x62d.google.com with SMTP id ay1so624498plb.0
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 23:34:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=jonmasters-org.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:organization:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=AGtrib0SEzkR/i2V3s4NGjpmeVSFBI11mJRr1zQWoZ0=;
-        b=olbb2NiOwt83kdgpCRfGruCS9PsmIXJiG7v/4yuq2xN+fK5WmfIqyEsNMhGLmgFS6H
-         T6v8kzROEUmkQxcbYbsDIRgPKDEpeI7yIeZdsOObmTq94npTByiAYZVSH7bJ564in3xJ
-         lLysV9TQFWgvbCXhBDBufX6NdXmdbgDf8vlhAYtKDcz4jRkaw7ya2/cd3KUgVq6ftnLx
-         +PoC4yWKRe7YaqhlcFWKBbtbmB6ONuuajtXm4hCL+FNo1SNDtatWveDr5BoK/XEST1bl
-         sl7HPDpg3b9xOHqKWoK549yrBv00rzIjPzHoKUdW3buvLU96QMxx+MfUtdeOd+7Zv3kD
-         IDBA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:organization
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=AGtrib0SEzkR/i2V3s4NGjpmeVSFBI11mJRr1zQWoZ0=;
-        b=sVo79GbjprDhMcRXlM99Pww+akKOXKtf+tq3hd04ocuOe3bJiyX3ncJj9mh3kSbiJh
-         YZppjNUJQyvX12YJcl1prccDlqI8zvlMXtL9ShOEzog87wCgMG/bWFuUnLsOCGRcnJ+a
-         dS9G9KImYlX6kkFLi4QdQvW1LNiOcsYDsCbyadHlY2bvaGbLtdq8Bfi2bV8iVmDDWsK3
-         uFVFWbHm+py+K/49pVLmI93VqSOMPd7OIloizUl5/HuHO+dQDPixKovoQVjB5K+zhpxD
-         Izjvyx1asUwNy8DGOe3h4pQb4UHfgy/RxjCkYqyUd0sQZu5gYX6siSagOI11HCUwX8tv
-         4cpw==
-X-Gm-Message-State: AGi0PuYxVqvD+Dt0J+RZAyMiOHdwtTfXPC/Sx9OvzIQ4eVGY2YfVSaIZ
-        8dW6c2NJlEMMyz4l6Sl/lQDqVYkPORc=
-X-Google-Smtp-Source: APiQypIcuKO7DdOeAFhZLcOccIk4KE+dqVYWfOtGK7UqgbvAcMxBVzSjJZDCDStvQmzF+njQAdYZhg==
-X-Received: by 2002:a17:90a:a402:: with SMTP id y2mr2653604pjp.55.1587105264879;
-        Thu, 16 Apr 2020 23:34:24 -0700 (PDT)
-Received: from independence.bos.jonmasters.org (Boston.jonmasters.org. [50.195.43.97])
-        by smtp.gmail.com with ESMTPSA id o125sm17063631pgo.74.2020.04.16.23.34.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 16 Apr 2020 23:34:24 -0700 (PDT)
-Subject: Re: SPCR and default serial port
-To:     "Herrenschmidt, Benjamin" <benh@amazon.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc:     "x86@kernel.org" <x86@kernel.org>
-References: <364e0ff5da091ed7faa0232302b6181ac30000de.camel@amazon.com>
-From:   Jon Masters <jcm@jonmasters.org>
-Organization: World Organi{s,z}ation of Broken Dreams
-Message-ID: <2e2fe044-251d-eca9-3692-8f3182db3905@jonmasters.org>
-Date:   Thu, 16 Apr 2020 23:29:41 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Fri, 17 Apr 2020 02:40:46 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:2386 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728000AbgDQGkq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Apr 2020 02:40:46 -0400
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id CB58F782E7D097BE4BA6;
+        Fri, 17 Apr 2020 14:40:42 +0800 (CST)
+Received: from [127.0.0.1] (10.173.222.27) by DGGEMS402-HUB.china.huawei.com
+ (10.3.19.202) with Microsoft SMTP Server id 14.3.487.0; Fri, 17 Apr 2020
+ 14:40:32 +0800
+Subject: Re: [PATCH 2/2] KVM: arm64: vgic-its: Fix memory leak on the error
+ path of vgic_add_lpi()
+To:     Marc Zyngier <maz@kernel.org>
+CC:     <kvmarm@lists.cs.columbia.edu>, <james.morse@arm.com>,
+        <julien.thierry.kdev@gmail.com>, <suzuki.poulose@arm.com>,
+        <wanghaibin.wang@huawei.com>, <yezengruan@huawei.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20200414030349.625-1-yuzenghui@huawei.com>
+ <20200414030349.625-3-yuzenghui@huawei.com>
+ <610f2195-f85d-4beb-b711-47d63bb393d0@huawei.com>
+ <2173e13527cc9578838f0364ad29f6cc@kernel.org>
+From:   Zenghui Yu <yuzenghui@huawei.com>
+Message-ID: <de03883a-179f-fbe5-e5f4-6138e5684660@huawei.com>
+Date:   Fri, 17 Apr 2020 14:40:31 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.0
 MIME-Version: 1.0
-In-Reply-To: <364e0ff5da091ed7faa0232302b6181ac30000de.camel@amazon.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <2173e13527cc9578838f0364ad29f6cc@kernel.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.173.222.27]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/15/20 2:04 AM, Herrenschmidt, Benjamin wrote:
-> Hi !
+On 2020/4/17 1:23, Marc Zyngier wrote:
+> On 2020-04-16 02:17, Zenghui Yu wrote:
+>> On 2020/4/14 11:03, Zenghui Yu wrote:
+>>> If we're going to fail out the vgic_add_lpi(), let's make sure the
+>>> allocated vgic_irq memory is also freed. Though it seems that both
+>>> cases are unlikely to fail.
+>>>
+>>> Cc: Zengruan Ye <yezengruan@huawei.com>
+>>> Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
+>>> ---
+>>>   virt/kvm/arm/vgic/vgic-its.c | 8 ++++++--
+>>>   1 file changed, 6 insertions(+), 2 deletions(-)
+>>>
+>>> diff --git a/virt/kvm/arm/vgic/vgic-its.c b/virt/kvm/arm/vgic/vgic-its.c
+>>> index d53d34a33e35..3c3b6a0f2dce 100644
+>>> --- a/virt/kvm/arm/vgic/vgic-its.c
+>>> +++ b/virt/kvm/arm/vgic/vgic-its.c
+>>> @@ -98,12 +98,16 @@ static struct vgic_irq *vgic_add_lpi(struct kvm 
+>>> *kvm, u32 intid,
+>>>        * the respective config data from memory here upon mapping the 
+>>> LPI.
+>>>        */
+>>>       ret = update_lpi_config(kvm, irq, NULL, false);
+>>> -    if (ret)
+>>> +    if (ret) {
+>>> +        kfree(irq);
+>>>           return ERR_PTR(ret);
+>>> +    }
+>>>         ret = vgic_v3_lpi_sync_pending_status(kvm, irq);
+>>> -    if (ret)
+>>> +    if (ret) {
+>>> +        kfree(irq);
+>>>           return ERR_PTR(ret);
+>>> +    }
+>>
+>> Looking at it again, I realized that this error handling is still not
+>> complete. Maybe we should use a vgic_put_irq() instead so that we can
+>> also properly delete the vgic_irq from lpi_list.
 > 
-> Today, arm64 allows the serial port specified in ACPI SPCR table to be
-> selected as a default console, but x86 doesn't (second argument to
-> acpi_parse_spcr).
+> Yes, this is a more correct fix indeed. There is still a bit of a bizarre
+> behaviour if you have two vgic_add_lpi() racing to create the same 
+> interrupt,
+> which is pretty dodgy anyway (it means we have two MAPI at the same 
+> time...).
+> You end-up with re-reading the state from memory... Oh well.
 > 
-> I understand while we might have been worried of breaking existing
-> setups back then but should we re-think this, maybe via a CONFIG option
-> ?
+>> Marc, what do you think? Could you please help to fix it, or I can
+>> resend it.
 > 
-> It makes a lot of sense to have firmware tell us which of the
-> potentially many serial port in a system is our active console, along
-> with its configuration...
+> I've fixed it as such (with a comment for a good measure):
 > 
-> This also shouldn't cause problem on systems that already specify a
-> console explicitly on the command line.
+> diff --git a/virt/kvm/arm/vgic/vgic-its.c b/virt/kvm/arm/vgic/vgic-its.c
+> index 3c3b6a0f2dce..c012a52b19f5 100644
+> --- a/virt/kvm/arm/vgic/vgic-its.c
+> +++ b/virt/kvm/arm/vgic/vgic-its.c
+> @@ -96,16 +96,19 @@ static struct vgic_irq *vgic_add_lpi(struct kvm 
+> *kvm, u32 intid,
+>        * We "cache" the configuration table entries in our struct 
+> vgic_irq's.
+>        * However we only have those structs for mapped IRQs, so we read in
+>        * the respective config data from memory here upon mapping the LPI.
+> +     *
+> +     * Should any of these fail, behave as if we couldn't create the LPI
+> +     * by dropping the refcount and returning the error.
+>        */
+>       ret = update_lpi_config(kvm, irq, NULL, false);
+>       if (ret) {
+> -        kfree(irq);
+> +        vgic_put_irq(kvm, irq);
+>           return ERR_PTR(ret);
+>       }
 > 
-> Any opinion ?
+>       ret = vgic_v3_lpi_sync_pending_status(kvm, irq);
+>       if (ret) {
+> -        kfree(irq);
+> +        vgic_put_irq(kvm, irq);
+>           return ERR_PTR(ret);
+>       }
+> 
+> 
+> Let me know if you agree with that.
 
-I think it would be /great/ if x86 followed Arm. A config option would 
-allow it to be easily ignored by those who don't want it, but you'll 
-want to get data from e.g. distros on how many systems have weird BIOSes 
-that provide a non-useful table today.
+Agreed. Thanks for the fix!
 
-Jon.
 
--- 
-Computer Architect
+Zenghui
+
