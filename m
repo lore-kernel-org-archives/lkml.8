@@ -2,117 +2,163 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55C8EC2D0EF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 01:14:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95DF3C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 01:19:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3DC54218AC
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 01:14:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B12E221E8
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 01:19:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="Aj9G5jYC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728073AbgDQBOe (ORCPT
+        id S1728172AbgDQBTO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 21:14:34 -0400
-Received: from mga11.intel.com ([192.55.52.93]:14369 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725858AbgDQBOd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 21:14:33 -0400
-IronPort-SDR: XEFS9tfV/JgTyQfFuv4VlpD3+O4YSs4ZNqM+JaADKNRSKkqpXpayf2suA2yHs6TuSnVwC9Vis9
- twYjrEzzzKWQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2020 18:14:32 -0700
-IronPort-SDR: sZlVw/7cjCHq0F1EFVv0TW8FklMi9s4vHlLYLRHCGjn12jklAHdg6QlmB19PsSs7PeDXqv0gk5
- UINIzZVqpibg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,393,1580803200"; 
-   d="scan'208";a="272262073"
-Received: from orsmsx103.amr.corp.intel.com ([10.22.225.130])
-  by orsmga002.jf.intel.com with ESMTP; 16 Apr 2020 18:14:32 -0700
-Received: from orsmsx101.amr.corp.intel.com ([169.254.8.204]) by
- ORSMSX103.amr.corp.intel.com ([169.254.5.143]) with mapi id 14.03.0439.000;
- Thu, 16 Apr 2020 18:14:32 -0700
-From:   "Derrick, Jonathan" <jonathan.derrick@intel.com>
-To:     "joro@8bytes.org" <joro@8bytes.org>,
-        "drake@endlessm.com" <drake@endlessm.com>
-CC:     "heiko@sntech.de" <heiko@sntech.de>,
-        "kgene@kernel.org" <kgene@kernel.org>,
-        "jonathanh@nvidia.com" <jonathanh@nvidia.com>,
-        "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
-        "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
-        "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>,
-        "baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>,
-        "robin.murphy@arm.com" <robin.murphy@arm.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "linux-mediatek@lists.infradead.org" 
-        <linux-mediatek@lists.infradead.org>,
-        "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>,
-        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dwmw2@infradead.org" <dwmw2@infradead.org>,
-        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
-        "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>,
-        "jean-philippe@linaro.org" <jean-philippe@linaro.org>,
-        "will@kernel.org" <will@kernel.org>,
-        "krzk@kernel.org" <krzk@kernel.org>,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>,
-        "robdclark@gmail.com" <robdclark@gmail.com>,
-        "gerald.schaefer@de.ibm.com" <gerald.schaefer@de.ibm.com>,
-        "linux-rockchip@lists.infradead.org" 
-        <linux-rockchip@lists.infradead.org>,
-        "agross@kernel.org" <agross@kernel.org>,
-        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
-Subject: Re: [PATCH v2 00/33] iommu: Move iommu_group setup to IOMMU core
- code
-Thread-Topic: [PATCH v2 00/33] iommu: Move iommu_group setup to IOMMU core
- code
-Thread-Index: AQHWEmDrg4k1XREwpUada/q2n6OD7qh8+KGAgAADDAA=
-Date:   Fri, 17 Apr 2020 01:14:30 +0000
-Message-ID: <aafed865c0254934986528b3ce9c4d34ff2fccad.camel@intel.com>
-References: <20200414131542.25608-1-joro@8bytes.org>
-         <20200417010335.31739-1-drake@endlessm.com>
-In-Reply-To: <20200417010335.31739-1-drake@endlessm.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.255.0.232]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <B8851D46B4E5F2468CD8AA858DAC2199@intel.com>
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
+        Thu, 16 Apr 2020 21:19:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53870 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725858AbgDQBTN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 21:19:13 -0400
+Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7CD1AC061A0C
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 18:19:13 -0700 (PDT)
+Received: by mail-qt1-x844.google.com with SMTP id l13so729458qtr.7
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 18:19:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=pCwqpfgs7LGSQlluiA82lBftlzkWpGiJUBmelFG0C34=;
+        b=Aj9G5jYCoXCP4ueVnwSoIx17tBbEhdmn7F9xroe69R8jZb8w9GI7WUfC9U7KAlHAOb
+         AI+ZHQbNofg08analrNy3EtbTdsr2oSg7/6sOxx40Ve8L1WuSQ5hO05hte0zITOLw/Mn
+         GNrRD+EyWZjjjYDaqhyXueBe9qhJoYuILVb2Czzdkx6/s2gfSX5BNbhvXFlWQcan6Z8h
+         LbZa4TKGNTpYNonJU+JnhoKNCsJXiNwWC9BcmHfTGGYZzqjkXw0b9mKakMiyroWUk3vR
+         KGN6z7SLIxfIetuDas8v9I2Pxxx/xBw31dX8gkL0B9cvplgAC81/5iVeYJ21YCaBZC9i
+         rLwg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=pCwqpfgs7LGSQlluiA82lBftlzkWpGiJUBmelFG0C34=;
+        b=X/FZ7P8vhMieHn7cQa5Qd8IMZdln8+i1ef+Ck0nlchf+86OuTjGuCFQmrkDLE47pxQ
+         f11PGO56KeVEvzaxDRvFFZmJPCsvMXUGVdPvyoiW9ym2Bs7fm4JVRE0iiLy0lRt3TqCa
+         XOY/i6qKN7Z+wMLQ2FJjHT4tteaJjfQDSMFZCne5AIZkynkdH1URNbfRX401Nk1gpow3
+         hZViB3ZfZrHMlhI9X5gSWdj22bycebQiplZomN/dE3v4pS7uNBF8a/bkM4DjRlI3WLSw
+         AoFqVJzEWuWGwnkuxEsZmJrxP7A7I3aaCO5pYMRp5/eetursBjMYP0gzQ0hFqvHmdNjP
+         WQ4w==
+X-Gm-Message-State: AGi0PuYfRCOhvuZvM8UAfIS/4BSmNqPo61sEV+SGSn7rRYHJsdZQI2R6
+        0EMaLWfNXihkEAi5YL8TUI6aDg==
+X-Google-Smtp-Source: APiQypLXK7lxDKQDKeTcX+/os+B8404g4+lHsypoMx51Dm+gNRUP514l+5vWDgxNrUnY2GGNJNXg8g==
+X-Received: by 2002:ac8:7c96:: with SMTP id y22mr610880qtv.17.1587086352500;
+        Thu, 16 Apr 2020 18:19:12 -0700 (PDT)
+Received: from [192.168.1.153] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id a5sm15743797qkn.83.2020.04.16.18.19.11
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 16 Apr 2020 18:19:11 -0700 (PDT)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
+Subject: POWER9 crash due to STRICT_KERNEL_RWX (WAS: Re: Linux-next POWER9
+ NULL pointer NIP...)
+From:   Qian Cai <cai@lca.pw>
+In-Reply-To: <161662E3-5D9C-4C15-919C-CFEFE4CC35CB@lca.pw>
+Date:   Thu, 16 Apr 2020 21:19:10 -0400
+Cc:     Nicholas Piggin <npiggin@gmail.com>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <69F0448F-CA5B-497D-B8AF-2848175B9477@lca.pw>
+References: <15AC5B0E-A221-4B8C-9039-FA96B8EF7C88@lca.pw>
+ <87eeszlb6u.fsf@mpe.ellerman.id.au>
+ <0675B22E-8F32-432C-9378-FDE159DD1729@lca.pw>
+ <20200407093054.3eb23e45@gandalf.local.home>
+ <EA9F9A54-87BC-477A-BE8A-7D53F80C5223@lca.pw>
+ <20200409101413.35d9c72d@gandalf.local.home>
+ <06A2EA93-B730-4DB1-819F-D27E7032F0B3@lca.pw>
+ <161662E3-5D9C-4C15-919C-CFEFE4CC35CB@lca.pw>
+To:     Michael Ellerman <mpe@ellerman.id.au>,
+        Russell Currey <ruscur@russell.cc>
+X-Mailer: Apple Mail (2.3608.80.23.2.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgRGFuaWVsLA0KDQpPbiBGcmksIDIwMjAtMDQtMTcgYXQgMDk6MDMgKzA4MDAsIERhbmllbCBE
-cmFrZSB3cm90ZToNCj4gSGkgSm9lcmcsDQo+IA0KPiA+IEhpLA0KPiA+IA0KPiA+IGhlcmUgaXMg
-dGhlIHNlY29uZCB2ZXJzaW9uIG9mIHRoaXMgcGF0Y2gtc2V0LiBUaGUgZmlyc3QgdmVyc2lvbiB3
-aXRoDQo+ID4gc29tZSBtb3JlIGludHJvZHVjdG9yeSB0ZXh0IGNhbiBiZSBmb3VuZCBoZXJlOg0K
-PiA+IA0KPiA+IAlodHRwczovL2xvcmUua2VybmVsLm9yZy9sa21sLzIwMjAwNDA3MTgzNzQyLjQz
-NDQtMS1qb3JvQDhieXRlcy5vcmcvDQo+IA0KPiBUaGFua3MgZm9yIHRoZSBjb250aW51ZWQgaW1w
-cm92ZW1lbnRzIGluIHRoaXMgYXJlYSENCj4gDQo+IEkgbWF5IGhhdmUgc3BvdHRlZCBhIHByb2Js
-ZW0gd2l0aCBzZXR1cHMgbGlrZSBWTUQuDQo+IA0KPiBUaGUgY29yZSBQQ0kgYnVzIGlzIHNldCB1
-cCBkdXJpbmcgZWFybHkgYm9vdC4NCj4gVGhlbiwgZm9yIHRoZSBQQ0kgYnVzLCB3ZSByZWFjaCBp
-b21tdV9idXNfaW5pdCgpIC0+IGJ1c19pb21tdV9wcm9iZSgpLg0KPiBJbiB0aGVyZSwgd2UgY2Fs
-bCBwcm9iZV9pb21tdV9ncm91cCgpIC0+IGRldl9pb21tdV9nZXQoKSBmb3IgZWFjaCBQQ0kNCj4g
-ZGV2aWNlLCB3aGljaCBhbGxvY2F0ZXMgZGV2LT5pb21tdSBpbiBlYWNoIGNhc2UuIFNvIGZhciBz
-byBnb29kLg0KPiANCj4gVGhlIHByb2JsZW0gaXMgdGhhdCB0aGlzIGlzIHRoZSBsYXN0IHRpbWUg
-dGhhdCB3ZSdsbCBjYWxsIGRldl9pb21tdV9nZXQoKS4NCj4gSWYgYW55IFBDSSBidXMgZGV2aWNl
-cyBnZXQgYWRkZWQgYWZ0ZXIgdGhpcyBwb2ludCwgdGhleSBkbyBub3QgZ2V0IHBhc3NlZA0KPiB0
-byBkZXZfaW9tbXVfZ2V0KCkuDQo+IA0KPiBTbyB3aGVuIHRoZSB2bWQgbW9kdWxlIGdldHMgbG9h
-ZGVkIGxhdGVyLCBhbmQgY3JlYXRlcyBtb3JlIFBDSSBkZXZpY2VzLA0KPiB3ZSBlbmQgdXAgaW4g
-aW9tbXVfYnVzX25vdGlmaWVyKCkgLT4gaW9tbXVfcHJvYmVfZGV2aWNlKCkNCj4gLT4gX19pb21t
-dV9wcm9iZV9kZXZpY2UoKSB3aGljaCBkb2VzOg0KPiANCj4gCWRldi0+aW9tbXUtPmlvbW11X2Rl
-diA9IGlvbW11X2RldjsNCj4gDQo+IGRldi0+aW9tbXUtPiBpcyBhIE5VTEwgZGVyZWZlcmVuY2Ug
-YmVjYXVzZSBkZXZfaW9tbXVfZ2V0KCkgd2FzIG5ldmVyDQo+IGNhbGxlZCBmb3IgdGhpcyBuZXcg
-ZGV2aWNlLg0KPiANCj4gRGFuaWVsDQo+IA0KDQpJIHNob3VsZCBoYXZlIENDZWQgeW91IG9uIHRo
-aXMsIGJ1dCBpdCBzaG91bGQgdGVtcG9yYXJpbHkgcmVzb2x2ZSB0aGF0DQppc3N1ZToNCmh0dHBz
-Oi8vbGlzdHMubGludXhmb3VuZGF0aW9uLm9yZy9waXBlcm1haWwvaW9tbXUvMjAyMC1BcHJpbC8w
-NDMyNTMuaHRtbA0KDQo=
+OK, reverted the commit,
+
+c55d7b5e6426 (=E2=80=9Cpowerpc: Remove STRICT_KERNEL_RWX incompatibility =
+with RELOCATABLE=E2=80=9D)
+
+or set STRICT_KERNEL_RWX=3Dn fixed the crash below and also mentioned in =
+this thread,
+
+=
+https://lore.kernel.org/lkml/15AC5B0E-A221-4B8C-9039-FA96B8EF7C88@lca.pw/
+
+[  148.110969][T13115] LTP: starting chown04_16
+[  148.255048][T13380] kernel tried to execute exec-protected page =
+(c0000000016804ac) - exploit attempt? (uid: 0)
+[  148.255099][T13380] BUG: Unable to handle kernel instruction fetch
+[  148.255122][T13380] Faulting instruction address: 0xc0000000016804ac
+[  148.255136][T13380] Oops: Kernel access of bad area, sig: 11 [#1]
+[  148.255157][T13380] LE PAGE_SIZE=3D64K MMU=3DRadix SMP NR_CPUS=3D256 =
+DEBUG_PAGEALLOC NUMA PowerNV
+[  148.255171][T13380] Modules linked in: loop kvm_hv kvm xfs sd_mod =
+bnx2x mdio ahci tg3 libahci libphy libata firmware_class dm_mirror =
+dm_region_hash dm_log dm_mod
+[  148.255213][T13380] CPU: 45 PID: 13380 Comm: chown04_16 Tainted: G    =
+    W         5.6.0+ #7
+[  148.255236][T13380] NIP:  c0000000016804ac LR: c00800000fa60408 CTR: =
+c0000000016804ac
+[  148.255250][T13380] REGS: c0000010a6fafa00 TRAP: 0400   Tainted: G    =
+    W          (5.6.0+)
+[  148.255281][T13380] MSR:  9000000010009033 <SF,HV,EE,ME,IR,DR,RI,LE>  =
+CR: 84000248  XER: 20040000
+[  148.255310][T13380] CFAR: c00800000fa66534 IRQMASK: 0=20
+[  148.255310][T13380] GPR00: c000000000973268 c0000010a6fafc90 =
+c000000001648200 0000000000000000=20
+[  148.255310][T13380] GPR04: c000000d8a22dc00 c0000010a6fafd30 =
+00000000b5e98331 ffffffff00012c9f=20
+[  148.255310][T13380] GPR08: c000000d8a22dc00 0000000000000000 =
+0000000000000000 c00000000163c520=20
+[  148.255310][T13380] GPR12: c0000000016804ac c000001ffffdad80 =
+0000000000000000 0000000000000000=20
+[  148.255310][T13380] GPR16: 0000000000000000 0000000000000000 =
+0000000000000000 0000000000000000=20
+[  148.255310][T13380] GPR20: 0000000000000000 0000000000000000 =
+0000000000000000 0000000000000000=20
+[  148.255310][T13380] GPR24: 00007fff8f5e2e48 0000000000000000 =
+c00800000fa6a488 c0000010a6fafd30=20
+[  148.255310][T13380] GPR28: 0000000000000000 000000007fffffff =
+c00800000fa60400 c000000efd0c6780=20
+[  148.255494][T13380] NIP [c0000000016804ac] =
+sysctl_net_busy_read+0x0/0x4
+[  148.255516][T13380] LR [c00800000fa60408] find_free_cb+0x8/0x30 =
+[loop]
+[  148.255528][T13380] Call Trace:
+[  148.255538][T13380] [c0000010a6fafc90] [c0000000009732c0] =
+idr_for_each+0xf0/0x170 (unreliable)
+[  148.255572][T13380] [c0000010a6fafd10] [c00800000fa626c4] =
+loop_lookup.part.1+0x4c/0xb0 [loop]
+[  148.255597][T13380] [c0000010a6fafd50] [c00800000fa634d8] =
+loop_control_ioctl+0x120/0x1d0 [loop]
+[  148.255623][T13380] [c0000010a6fafdb0] [c0000000004ddc08] =
+ksys_ioctl+0xd8/0x130
+[  148.255636][T13380] [c0000010a6fafe00] [c0000000004ddc88] =
+sys_ioctl+0x28/0x40
+[  148.255669][T13380] [c0000010a6fafe20] [c00000000000b378] =
+system_call+0x5c/0x68
+[  148.255699][T13380] Instruction dump:
+[  148.255718][T13380] XXXXXXXX XXXXXXXX XXXXXXXX XXXXXXXX XXXXXXXX =
+XXXXXXXX XXXXXXXX XXXXXXXX=20
+[  148.255744][T13380] XXXXXXXX XXXXXXXX XXXXXXXX XXXXXXXX XXXXXXXX =
+XXXXXXXX XXXXXXXX XXXXXXXX=20
+[  148.255772][T13380] ---[ end trace a5894a74208c22ec ]---
+[  148.576663][T13380]=20
+[  149.576765][T13380] Kernel panic - not syncing: Fatal exception
+
+
