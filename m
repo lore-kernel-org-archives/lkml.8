@@ -2,178 +2,181 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48F50C38A2B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 11:27:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79FC9C352BE
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 11:28:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 26475208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 11:27:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FGtXg/Bf"
+	by mail.kernel.org (Postfix) with ESMTP id 608E4208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 11:28:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730336AbgDQL10 (ORCPT
+        id S1730365AbgDQL2m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 07:27:26 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:26894 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730312AbgDQL1Z (ORCPT
+        Fri, 17 Apr 2020 07:28:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35448 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730295AbgDQL2l (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 07:27:25 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587122843;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Vr7BOIbO9qakvttMKiL/rWtwPVentFYT4peua3moyXg=;
-        b=FGtXg/BfIeVUcUgJm7b4x1m+EyvkxAEy0Ybg6O7O7cujyo5jDZg7ZgHJEGU5B5YeWmAwhe
-        h5wX/4CVtEtoOjHorOJgrMWADX5nKe3hseRhazYPaUDLOfsZbRPX38lsrwV4sqN7mGFnL1
-        MBDy0UeGPxgQ4j29J931fc6z1LITVSM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-359-fiee8RQFNc2mMhyoQXOhVA-1; Fri, 17 Apr 2020 07:27:19 -0400
-X-MC-Unique: fiee8RQFNc2mMhyoQXOhVA-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A3B72107ACCA;
-        Fri, 17 Apr 2020 11:27:16 +0000 (UTC)
-Received: from gondolin (ovpn-112-200.ams2.redhat.com [10.36.112.200])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 330F75C1C5;
-        Fri, 17 Apr 2020 11:27:02 +0000 (UTC)
-Date:   Fri, 17 Apr 2020 13:24:57 +0200
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Yan Zhao <yan.y.zhao@intel.com>
-Cc:     "intel-gvt-dev@lists.freedesktop.org" 
-        <intel-gvt-dev@lists.freedesktop.org>,
-        "libvir-list@redhat.com" <libvir-list@redhat.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "aik@ozlabs.ru" <aik@ozlabs.ru>,
-        "Zhengxiao.zx@alibaba-inc.com" <Zhengxiao.zx@alibaba-inc.com>,
-        "shuangtai.tst@alibaba-inc.com" <shuangtai.tst@alibaba-inc.com>,
-        "qemu-devel@nongnu.org" <qemu-devel@nongnu.org>,
-        "eauger@redhat.com" <eauger@redhat.com>,
-        "Liu, Yi L" <yi.l.liu@intel.com>, "Zeng, Xin" <xin.zeng@intel.com>,
-        "Yang, Ziye" <ziye.yang@intel.com>,
-        "mlevitsk@redhat.com" <mlevitsk@redhat.com>,
-        "pasic@linux.ibm.com" <pasic@linux.ibm.com>,
-        "felipe@nutanix.com" <felipe@nutanix.com>,
-        "Liu, Changpeng" <changpeng.liu@intel.com>,
-        "Ken.Xue@amd.com" <Ken.Xue@amd.com>,
-        "jonathan.davies@nutanix.com" <jonathan.davies@nutanix.com>,
-        "He, Shaopeng" <shaopeng.he@intel.com>,
-        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        "eskultet@redhat.com" <eskultet@redhat.com>,
-        "dgilbert@redhat.com" <dgilbert@redhat.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        "zhenyuw@linux.intel.com" <zhenyuw@linux.intel.com>,
-        "Wang, Zhi A" <zhi.a.wang@intel.com>,
-        "cjia@nvidia.com" <cjia@nvidia.com>,
-        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
-        "berrange@redhat.com" <berrange@redhat.com>,
-        "dinechin@redhat.com" <dinechin@redhat.com>,
-        "corbet@lwn.net" <corbet@lwn.net>
-Subject: Re: [PATCH v5 0/4] introduction of migration_version attribute for
- VFIO live migration
-Message-ID: <20200417132457.45d91fe3.cohuck@redhat.com>
-In-Reply-To: <20200417095202.GD16688@joy-OptiPlex-7040>
-References: <20200413055201.27053-1-yan.y.zhao@intel.com>
-        <20200417104450.2d2f2fa9.cohuck@redhat.com>
-        <20200417095202.GD16688@joy-OptiPlex-7040>
-Organization: Red Hat GmbH
+        Fri, 17 Apr 2020 07:28:41 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 864CAC061A0F
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 04:28:41 -0700 (PDT)
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ore@pengutronix.de>)
+        id 1jPPAg-0004FF-Fj; Fri, 17 Apr 2020 13:28:34 +0200
+Received: from ore by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ore@pengutronix.de>)
+        id 1jPPAc-0002xV-I1; Fri, 17 Apr 2020 13:28:30 +0200
+Date:   Fri, 17 Apr 2020 13:28:30 +0200
+From:   Oleksij Rempel <o.rempel@pengutronix.de>
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     Andrew Lunn <andrew@lunn.ch>, Michal Kubecek <mkubecek@suse.cz>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mkl@pengutronix.de,
+        kernel@pengutronix.de, David Jander <david@protonic.nl>,
+        Jakub Kicinski <kuba@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Heiner Kallweit <hkallweit1@gmail.com>
+Subject: Re: [PATCH v1] ethtool: provide UAPI for PHY master/slave
+ configuration.
+Message-ID: <20200417112830.mhevvmnyxpve6xvk@pengutronix.de>
+References: <20200415121209.12197-1-o.rempel@pengutronix.de>
+ <20200415215739.GI657811@lunn.ch>
+ <20200417101145.GP25745@shell.armlinux.org.uk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="pykonr2qxhbolp4w"
+Content-Disposition: inline
+In-Reply-To: <20200417101145.GP25745@shell.armlinux.org.uk>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 12:26:47 up 154 days,  1:45, 169 users,  load average: 0.06, 0.02,
+ 0.03
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 17 Apr 2020 05:52:02 -0400
-Yan Zhao <yan.y.zhao@intel.com> wrote:
 
-> On Fri, Apr 17, 2020 at 04:44:50PM +0800, Cornelia Huck wrote:
-> > On Mon, 13 Apr 2020 01:52:01 -0400
-> > Yan Zhao <yan.y.zhao@intel.com> wrote:
-> >   
-> > > This patchset introduces a migration_version attribute under sysfs of VFIO
-> > > Mediated devices.
-> > > 
-> > > This migration_version attribute is used to check migration compatibility
-> > > between two mdev devices.
-> > > 
-> > > Currently, it has two locations:
-> > > (1) under mdev_type node,
-> > >     which can be used even before device creation, but only for mdev
-> > >     devices of the same mdev type.
-> > > (2) under mdev device node,
-> > >     which can only be used after the mdev devices are created, but the src
-> > >     and target mdev devices are not necessarily be of the same mdev type
-> > > (The second location is newly added in v5, in order to keep consistent
-> > > with the migration_version node for migratable pass-though devices)  
-> > 
-> > What is the relationship between those two attributes?
-> >   
-> (1) is for mdev devices specifically, and (2) is provided to keep the same
-> sysfs interface as with non-mdev cases. so (2) is for both mdev devices and
-> non-mdev devices.
-> 
-> in future, if we enable vfio-pci vendor ops, (i.e. a non-mdev device
-> is binding to vfio-pci, but is able to register migration region and do
-> migration transactions from a vendor provided affiliate driver),
-> the vendor driver would export (2) directly, under device node.
-> It is not able to provide (1) as there're no mdev devices involved.
+--pykonr2qxhbolp4w
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Ok, creating an alternate attribute for non-mdev devices makes sense.
-However, wouldn't that rather be a case (3)? The change here only
-refers to mdev devices.
+On Fri, Apr 17, 2020 at 11:11:45AM +0100, Russell King - ARM Linux admin wr=
+ote:
+> On Wed, Apr 15, 2020 at 11:57:39PM +0200, Andrew Lunn wrote:
+> > > diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_devic=
+e.c
+> > > index c8b0c34030d32..d5edf2bc40e43 100644
+> > > --- a/drivers/net/phy/phy_device.c
+> > > +++ b/drivers/net/phy/phy_device.c
+> > > @@ -604,6 +604,7 @@ struct phy_device *phy_device_create(struct mii_b=
+us *bus, int addr, u32 phy_id,
+> > >  	dev->asym_pause =3D 0;
+> > >  	dev->link =3D 0;
+> > >  	dev->interface =3D PHY_INTERFACE_MODE_GMII;
+> > > +	dev->master_slave =3D PORT_MODE_UNKNOWN;
+> >=20
+> > phydev->master_slave is how we want the PHY to be configured. I don't
+> > think PORT_MODE_UNKNOWN makes any sense in that contest. 802.3 gives
+> > some defaults. 9.12 should be 0, meaning manual master/slave
+> > configuration is disabled. The majority of linux devices are end
+> > systems. So we should default to a single point device. So i would
+> > initialise PORT_MODE_SLAVE, or whatever we end up calling that.
+>=20
+> I'm not sure that is a good idea given that we use phylib to drive
+> the built-in PHYs in DSA switches, which ought to prefer master mode
+> via the "is a multiport device" bit.
+>=20
+> Just to be clear, there are three bits that configure 1G PHYs, which
+> I've framed in briefer terminology:
+>=20
+> - 9.12: auto/manual configuration (1=3D manual 0=3D slave)
+> - 9.11: manual master/slave configuration (1=3D master, 0 =3D slave)
+> - 9.10: auto master/slave preference (1=3D multiport / master)
+>=20
+> It is recommended that multiport devices (such as DSA switches) set
+> 9.10 so they prefer to be master.
+>=20
+> It's likely that the reason is to reduce cross-talk interference
+> between neighbouring ports both inside the PHY, magnetics and the
+> board itself. I would suspect that this becomes critical when
+> operating at towards the maximum cable length.
+>=20
+> I've checked some of my DSA switches, and 9.10 appears to default to
+> one, as expected given what's in the specs.
 
-> 
-> > Is existence (and compatibility) of (1) a pre-req for possible
-> > existence (and compatibility) of (2)?
-> >  
-> no. (2) does not reply on (1).
+Hm..
+I've checked one of my DSA devices and 9.10 is by default 0 (proffered
+slave). It get slave even if it is preferred master and it is
+connected to a workstation (not multiport device) with a e1000e NIC.
+The e1000e is configured by default as preferred master.
 
-Hm. Non-existence of (1) seems to imply "this type does not support
-migration". If an mdev created for such a type suddenly does support
-migration, it feels a bit odd.
+Grepping over current linux kernel I see following attempts to
+configure master/slave modes:
+drivers/net/ethernet/intel/e1000e/phy.c:597
+  e1000_set_master_slave_mode()
 
-(It obviously cannot be a prereq for what I called (3) above.)
+all intel NICs have similar code code and do not touch preferred bit
+9.10. Only force master/slave modes. So the preferred master is probably
+PHY defaults, bootstrap or eeprom.
 
-> 
-> > Does userspace need to check (1) or can it completely rely on (2), if
-> > it so chooses?
-> >  
-> I think it can completely reply on (2) if compatibility check before
-> mdev creation is not required.
-> 
-> > If devices with a different mdev type are indeed compatible, it seems
-> > userspace can only find out after the devices have actually been
-> > created, as (1) does not apply?  
-> yes, I think so. 
+drivers/net/ethernet/broadcom/tg3.c
+this driver seems to always force master mode
 
-How useful would it be for userspace to even look at (1) in that case?
-It only knows if things have a chance of working if it actually goes
-ahead and creates devices.
+drivers/net/phy/broadcom.c:39
+if ethernet controller is BCMA_CHIP_ID_BCM53573 and the PHY is PHY_ID_BCM54=
+210E
+then force master mode.
 
-> 
-> > One of my worries is that the existence of an attribute with the same
-> > name in two similar locations might lead to confusion. But maybe it
-> > isn't a problem.
-> >  
-> Yes, I have the same feeling. but as (2) is for sysfs interface
-> consistency, to make it transparent to userspace tools like libvirt,
-> I guess the same name is necessary?
+drivers/net/phy/micrel.c:637
+Force master mode if devicetree property is set: micrel,force-master
 
-What do we actually need here, I wonder? (1) and (2) seem to serve
-slightly different purposes, while (2) and what I called (3) have the
-same purpose. Is it important to userspace that (1) and (2) have the
-same name?
+drivers/net/phy/realtek.c:173
+	/* RTL8211C has an issue when operating in Gigabit slave mode *=20
+	return phy_set_bits(phydev, MII_CTRL1000,
+		CTL1000_ENABLE_MASTER | CTL1000_AS_MASTER)
 
+Regards,
+Oleksij
+--=20
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+
+--pykonr2qxhbolp4w
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEERBNZvwSgvmcMY/T74omh9DUaUbMFAl6ZktoACgkQ4omh9DUa
+UbPEGw//VFNanq+Y6stjK9i/n3XiVe5KQ5YY8Ukr+2JLgV4Zfoeio7g62UAjWoNi
+FYLrHrXvUfsr1ZND43G7FyEyuMtVzy+FDN/Q7htTbZFTu1VHGOHXOeKpmZaLiQNN
+zlAtBTcrycqvkre+tClOz/uPmbzz3O4Ut/R1c01dTJXPf6NOlsl7ZNBPSx+b+hs2
+6idToq0yUZD6Jz4QZKdfsjZwXQ1lpdBwXjwJE3/pK+lEDrw4P274shA6hQ42I/2W
+fkx8W0w1008N5mXG8jkOBThrA1PmFd0J/J8iHxNmuAgSoPCwFOjoHUBsoXmCfHs1
+9o3UBNabwmKTrsGXxA3+5CQS61PCWo4a4h4uqEJRCjfkK+SC1iSVf2dRxw1kE5pI
+oiSHKOyVuoJsI02on3iwjOYHSkfWAtp+OrgbyKKzuTCaVllo0icK/SfEzLK3P6Ho
+UR28LrTz95Jfm5w5KbG5x97iC/SCeGvH6FMhXfBKN5kWFIj/T4TkTJVuoVSt6BVP
+pBO3gaJe1huQeOq5rV7KW5haDsZ+Sqi0hY/7ltyHGSJLKCM8ceFixnS8uHNehrzr
+uIKCQ4lg/YI35sLNtKFu+p3xgKO4jhycN2j+VL/+V/p7h9BtrOjcyzjmGF1YH0Eu
+V2Gfc2Db3zuOif+QSIcYqWjTQ0eNLwkOcrfm701eX7lXvOoZQO4=
+=Hlrq
+-----END PGP SIGNATURE-----
+
+--pykonr2qxhbolp4w--
