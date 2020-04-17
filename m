@@ -2,110 +2,113 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98C13C2BB55
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 07:01:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90A55C2BB55
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 07:01:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 78418221E9
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 07:01:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="N2oHjmSU"
+	by mail.kernel.org (Postfix) with ESMTP id 7136F221E9
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 07:01:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587106890;
+	bh=A6gsBqO/C5a7aGTcLYtMEYviXTXettEUMZQ5DBfDV8M=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=Be2/NlRtxxv6RUMfBgcI7IbBytkXTskUzXGivOVwqzXRWlrmhIPWe8JAVar6289Rr
+	 PPxF3k2IqHGBRHvgXM1ITQbMZ2/VjbKdhImw++rsVOlez3N1P8EUxG3ucLM+qyusnZ
+	 pn4wOQtS1qWDvQUyqyH2OKwwJtZ1bmbrVNeROvms=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728503AbgDQHB1 (ORCPT
+        id S1728537AbgDQHB3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 03:01:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50178 "EHLO
+        Fri, 17 Apr 2020 03:01:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50228 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728296AbgDQHBP (ORCPT
+        with ESMTP id S1728466AbgDQHB0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 03:01:15 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B621C0610D6
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 00:01:15 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id y25so641244pfn.5
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 00:01:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=EaN0Seks3JgknsK9BVWkgtTm/fzHe3RWKNOjTd9p+qc=;
-        b=N2oHjmSUk1H3eZy02ScumUxitUXE/7djA+CdKOZRbv02gbQB/4+1vOymlchCMXQgRf
-         sWhee0lK0XhaWru25QV0dQi88JkGU6QKvheoj5dnaoZEBXYJw/oNmQbw6n9/c+N8N9ln
-         VpWWQur1cUWtzOJNcWt7ldKd0CQjyWuqjod+/Re+S8czpvszlqcneqlWA2loOvY5AHiE
-         W+27jroj6PpmZCsdhMk0VwbaxZfe1h28snyy98zQPo51o5dD0OU59v1Rn57uen8M8RE/
-         fSr/TVwuviDyoTJl8NaFpXSliWhM8LZhf5RwSBwtzGKoDpUg/B0pIAqoEvsvDIjNFYuc
-         1EpQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=EaN0Seks3JgknsK9BVWkgtTm/fzHe3RWKNOjTd9p+qc=;
-        b=njSzmzP9PpGQLzuan7TM++7VzbQfY50R9pW0aOwH/lvONtKK0hbkwybkcWUo0nDrhv
-         IvZzNkedQgnc6wq2kzSKXYcMaHOw3wwx7FYGG2OWY9e39gH8sfL7W9kShNBffzLHVSRE
-         s+/S7vvTCcqXJm2beonU/r90TSPnQh28q40w9rHLcLeeOz2z2nrPmcNWQNpF954icjtn
-         sCAgx78yhzG+F/lJEubGbSKjppWjyg/ac6m1qF/PQmPxkLOw4mWyEt/4zhFv6bLa1OB3
-         aWB2UJ3g8KPpmpvJCBaWUB8R6QzUzmm6Lk5xBr62fM0tqM1hYzaMiFqtk/DN7FhpfN73
-         X0Kw==
-X-Gm-Message-State: AGi0Pua9w/7dZ7rPt2zV/cGMTCEsqg04Wm7fXTdc5bH24p+TuyqtUxLU
-        XYqZZaV5wVPqV1LCh8+dz3Un+A==
-X-Google-Smtp-Source: APiQypI4H58E4Hn7junl0qfO7JnmLs7Wc3DZgo9GXuO7Bx45z0RdlE5e+2Hj0zhyut03Ql8vjew09g==
-X-Received: by 2002:aa7:943c:: with SMTP id y28mr1780257pfo.171.1587106874750;
-        Fri, 17 Apr 2020 00:01:14 -0700 (PDT)
-Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id c125sm18561609pfa.142.2020.04.17.00.01.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Apr 2020 00:01:14 -0700 (PDT)
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 4/4] arm64: dts: qcom: msm8996: Make GPU node control GPU_GX GDSC
-Date:   Fri, 17 Apr 2020 00:00:44 -0700
-Message-Id: <20200417070044.1376212-5-bjorn.andersson@linaro.org>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20200417070044.1376212-1-bjorn.andersson@linaro.org>
-References: <20200417070044.1376212-1-bjorn.andersson@linaro.org>
+        Fri, 17 Apr 2020 03:01:26 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 473FBC061A0C;
+        Fri, 17 Apr 2020 00:01:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
+        From:Date:Sender:Reply-To:Content-ID:Content-Description;
+        bh=HVLDZVgokzWLzBs8K61qPV5biQljs7Uy59BS0iqfE0Q=; b=YO7SX7phIzs9cV/Zpf/QAQy6HD
+        fB/L442Hz6q/J8L44pykzCYyA7ekbxWv6YGEzwv1vvxmAkWOpRUV5cnR74lIH//lNIR3dfwppS5T8
+        K69yNUkJC0S+pBqWd9pCx7p6+0IhyOVd0XMlnsHBOEoGc+4TKcstgQdqNGYN5pfawgc6VHWvq8umF
+        W1q7GrbvLSCBbX+SKWQ83NXeIJi1Ay1KmB6dA2+rnXTZjAEAxwbqAbwiBMXPd6qgpf9YyI/gIMlvG
+        wUEdnR9xsMm5TK6+mI20dAXjIdSz/GJmP+UstscLOfjgTO1hnC4AdcjFht8wwDfTa+NQKQ6RWS2m4
+        zM0ApeQQ==;
+Received: from ip5f5ad4d8.dynamic.kabel-deutschland.de ([95.90.212.216] helo=coco.lan)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jPL05-000664-4K; Fri, 17 Apr 2020 07:01:21 +0000
+Date:   Fri, 17 Apr 2020 09:01:15 +0200
+From:   Mauro Carvalho Chehab <mchehab@kernel.org>
+To:     Ezequiel Garcia <ezequiel@collabora.com>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-media@vger.kernel.org, Hans Verkuil <hverkuil@xs4all.nl>
+Subject: Re: linux-next: build warning after merge of the v4l-dvb tree
+Message-ID: <20200417090115.3cccc9bd@coco.lan>
+In-Reply-To: <7faaec92dc9b5870b33c6dbb440de0698b5a70e7.camel@collabora.com>
+References: <20200417102226.11d54815@canb.auug.org.au>
+        <7faaec92dc9b5870b33c6dbb440de0698b5a70e7.camel@collabora.com>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Presumably the GPU node needs to control both the GPU and GPU GX power
-domains, but given that GPU GX now depends on the GPU GDSC both can
-effectively be controlled by controlling GPU GX. So use this instead.
+Em Fri, 17 Apr 2020 02:13:47 -0300
+Ezequiel Garcia <ezequiel@collabora.com> escreveu:
 
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
----
+> Hi Stephen,
+> 
+> On Fri, 2020-04-17 at 10:22 +1000, Stephen Rothwell wrote:
+> > Hi all,
+> > 
+> > After merging the v4l-dvb tree, today's linux-next build (arm
+> > multi_v7_defconfig) produced this warning:
+> > 
+> > WARNING: unmet direct dependencies detected for MEDIA_CONTROLLER_REQUEST_API
+> >   Depends on [n]: MEDIA_SUPPORT [=m] && MEDIA_CONTROLLER [=y] && STAGING_MEDIA [=n]
+> >   Selected by [m]:
+> >   - VIDEO_VIVID [=m] && MEDIA_SUPPORT [=m] && MEDIA_TEST_SUPPORT [=y] && V4L_TEST_DRIVERS [=y] && VIDEO_DEV [=m] && VIDEO_V4L2 [=m] && !SPARC32 &&
+> > !SPARC64 && FB [=y] && HAS_DMA [=y]
+> >   
+> 
+> Ugh, my bad. MEDIA_CONTROLLER_REQUEST_API can't
+> depend on staging, after this recently merged commit:
+> 
+> "media: Kconfig: Don't expose the Request API option"
+> 
+> So, we should fix that with:
+> 
+> diff --git a/drivers/media/mc/Kconfig b/drivers/media/mc/Kconfig
+> index 7c9628f37196..4815b9dde9af 100644
+> --- a/drivers/media/mc/Kconfig
+> +++ b/drivers/media/mc/Kconfig
+> @@ -14,7 +14,7 @@ config MEDIA_CONTROLLER_DVB
+>  
+>  config MEDIA_CONTROLLER_REQUEST_API
+>         bool
+> -       depends on MEDIA_CONTROLLER && STAGING_MEDIA
+> +       depends on MEDIA_CONTROLLER
+>         help
+>           DO NOT ENABLE THIS OPTION UNLESS YOU KNOW WHAT YOU'RE DOING.
+>  
+> Mauro what do you think?
 
-Changes since v1:
-- None
+Dropped the dependency and applied on media.
 
- arch/arm64/boot/dts/qcom/msm8996.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I also addressed the "select PCI" issue, with causes troubles on
+s390 random configs (due to HAS_PCI=n on s390).
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-index 895202d07a8b..af1f4977b97d 100644
---- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-@@ -639,7 +639,7 @@ gpu@b00000 {
- 				"mem",
- 				"mem_iface";
- 
--			power-domains = <&mmcc GPU_GDSC>;
-+			power-domains = <&mmcc GPU_GX_GDSC>;
- 			iommus = <&adreno_smmu 0>;
- 
- 			nvmem-cells = <&gpu_speed_bin>;
--- 
-2.24.0
-
+Thanks,
+Mauro
