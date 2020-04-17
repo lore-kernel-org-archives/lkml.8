@@ -2,93 +2,160 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F1F7C352BE
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 08:38:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72BFCC352BE
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 08:40:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E89FF221EC
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 08:38:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587112739;
-	bh=QOHiMxRFGEgVWn9nG00kwqQ0MK10y04DtBJYV1Gtnns=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=l00+ZMtuxGbIQbZRr6ZY1H4nJv42hfCzcmTfmN2Rt9xHhnn9WUqIUnIt4aq9CUgMT
-	 fLWnbtu3/nkyr4b9n8RTLAwTz2WuVr/f1rmWwMUemadfdcM7W2wapiG4mTOMPY0Weh
-	 +b5aMTEosJejFBir9ww3+AqbPXAuB4R1q4rQqqx4=
+	by mail.kernel.org (Postfix) with ESMTP id 47FF32137B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 08:40:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JpYAGBWM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729863AbgDQIi6 (ORCPT
+        id S1729880AbgDQIkH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 04:38:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33844 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729650AbgDQIi5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 04:38:57 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Fri, 17 Apr 2020 04:40:07 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:40204 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729796AbgDQIkH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Apr 2020 04:40:07 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587112805;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=0FUsH4tufAJaMC98c0oFTGbfyRpyKw0gpf2wi60SU+8=;
+        b=JpYAGBWMOBKA7ScThz0V9X4NcKKxgpodgzzWm62AJcrTFFt8PJ7QzKKVoX7yDxmjWK4LnX
+        Ya5IoHvtfKpNZd4YpVIZcXwqgzwmoXR2QUCKGlrXme8+4B97Owkx7ZpYvx7qb+6W+/3HJF
+        /bJ3BHXIP1LQuy5FmGAkO0pbO9MT8CA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-159-wDRv0H_YMDq_MOxphoyW1g-1; Fri, 17 Apr 2020 04:40:01 -0400
+X-MC-Unique: wDRv0H_YMDq_MOxphoyW1g-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D7DC22137B;
-        Fri, 17 Apr 2020 08:38:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587112737;
-        bh=QOHiMxRFGEgVWn9nG00kwqQ0MK10y04DtBJYV1Gtnns=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=E3N93+suml7yPvTnfmsMBk1KpYz4pg2br56Jaz0amqQbss17ly2R1og/L3WAld6m+
-         mTe07ipLXdomEfqEs3t/lOmvNIGTQhQbuJvxVUbzzOLLMOpLBa9/WavB5RNrmXORI8
-         CGBI+F2aAQyTs3V9tesWffQ7II2X5azdJbA6Rvpw=
-Date:   Fri, 17 Apr 2020 10:38:55 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        lkft-triage@lists.linaro.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        linux- stable <stable@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH 5.6 000/254] 5.6.5-rc1 review
-Message-ID: <20200417083855.GG141762@kroah.com>
-References: <20200416131325.804095985@linuxfoundation.org>
- <CA+G9fYtm0vpovNM5exU69WnQxpa3LHaumogCE9V8BCHgdcFr2A@mail.gmail.com>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4B23A107ACC4;
+        Fri, 17 Apr 2020 08:39:59 +0000 (UTC)
+Received: from [10.72.13.202] (ovpn-13-202.pek2.redhat.com [10.72.13.202])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 54BCA8D57F;
+        Fri, 17 Apr 2020 08:39:50 +0000 (UTC)
+Subject: Re: [PATCH V2] vhost: do not enable VHOST_MENU by default
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
+        netdev@vger.kernel.org, geert@linux-m68k.org,
+        tsbogend@alpha.franken.de, benh@kernel.crashing.org,
+        paulus@samba.org, heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        borntraeger@de.ibm.com, Michael Ellerman <mpe@ellerman.id.au>
+References: <20200415024356.23751-1-jasowang@redhat.com>
+ <20200416185426-mutt-send-email-mst@kernel.org>
+ <b7e2deb7-cb64-b625-aeb4-760c7b28c0c8@redhat.com>
+ <20200417022929-mutt-send-email-mst@kernel.org>
+ <4274625d-6feb-81b6-5b0a-695229e7c33d@redhat.com>
+ <20200417042912-mutt-send-email-mst@kernel.org>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <fdb555a6-4b8d-15b6-0849-3fe0e0786038@redhat.com>
+Date:   Fri, 17 Apr 2020 16:39:49 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CA+G9fYtm0vpovNM5exU69WnQxpa3LHaumogCE9V8BCHgdcFr2A@mail.gmail.com>
+In-Reply-To: <20200417042912-mutt-send-email-mst@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 16, 2020 at 11:37:47PM +0530, Naresh Kamboju wrote:
-> On Thu, 16 Apr 2020 at 19:26, Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
-> >
-> > This is the start of the stable review cycle for the 5.6.5 release.
-> > There are 254 patches in this series, all will be posted as a response
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
-> >
-> > Responses should be made by Sat, 18 Apr 2020 13:11:20 +0000.
-> > Anything received after that time might be too late.
-> >
-> > The whole patch series can be found in one patch at:
-> >         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.6.5-rc1.gz
-> > or in the git tree and branch at:
-> >         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.6.y
-> > and the diffstat can be found below.
-> >
-> > thanks,
-> >
-> > greg k-h
-> 
-> Results from Linaro’s test farm.
-> No regressions on arm64, arm, x86_64, and i386.
 
-Great!  Thanks for testing and letting me know.
+On 2020/4/17 =E4=B8=8B=E5=8D=884:29, Michael S. Tsirkin wrote:
+> On Fri, Apr 17, 2020 at 03:36:52PM +0800, Jason Wang wrote:
+>> On 2020/4/17 =E4=B8=8B=E5=8D=882:33, Michael S. Tsirkin wrote:
+>>> On Fri, Apr 17, 2020 at 11:12:14AM +0800, Jason Wang wrote:
+>>>> On 2020/4/17 =E4=B8=8A=E5=8D=886:55, Michael S. Tsirkin wrote:
+>>>>> On Wed, Apr 15, 2020 at 10:43:56AM +0800, Jason Wang wrote:
+>>>>>> We try to keep the defconfig untouched after decoupling CONFIG_VHO=
+ST
+>>>>>> out of CONFIG_VIRTUALIZATION in commit 20c384f1ea1a
+>>>>>> ("vhost: refine vhost and vringh kconfig") by enabling VHOST_MENU =
+by
+>>>>>> default. Then the defconfigs can keep enabling CONFIG_VHOST_NET
+>>>>>> without the caring of CONFIG_VHOST.
+>>>>>>
+>>>>>> But this will leave a "CONFIG_VHOST_MENU=3Dy" in all defconfigs an=
+d even
+>>>>>> for the ones that doesn't want vhost. So it actually shifts the
+>>>>>> burdens to the maintainers of all other to add "CONFIG_VHOST_MENU =
+is
+>>>>>> not set". So this patch tries to enable CONFIG_VHOST explicitly in
+>>>>>> defconfigs that enables CONFIG_VHOST_NET and CONFIG_VHOST_VSOCK.
+>>>>>>
+>>>>>> Acked-by: Christian Borntraeger<borntraeger@de.ibm.com>  (s390)
+>>>>>> Acked-by: Michael Ellerman<mpe@ellerman.id.au>  (powerpc)
+>>>>>> Cc: Thomas Bogendoerfer<tsbogend@alpha.franken.de>
+>>>>>> Cc: Benjamin Herrenschmidt<benh@kernel.crashing.org>
+>>>>>> Cc: Paul Mackerras<paulus@samba.org>
+>>>>>> Cc: Michael Ellerman<mpe@ellerman.id.au>
+>>>>>> Cc: Heiko Carstens<heiko.carstens@de.ibm.com>
+>>>>>> Cc: Vasily Gorbik<gor@linux.ibm.com>
+>>>>>> Cc: Christian Borntraeger<borntraeger@de.ibm.com>
+>>>>>> Reported-by: Geert Uytterhoeven<geert@linux-m68k.org>
+>>>>>> Signed-off-by: Jason Wang<jasowang@redhat.com>
+>>>>> I rebased this on top of OABI fix since that
+>>>>> seems more orgent to fix.
+>>>>> Pushed to my vhost branch pls take a look and
+>>>>> if possible test.
+>>>>> Thanks!
+>>>> I test this patch by generating the defconfigs that wants vhost_net =
+or
+>>>> vhost_vsock. All looks fine.
+>>>>
+>>>> But having CONFIG_VHOST_DPN=3Dy may end up with the similar situatio=
+n that
+>>>> this patch want to address.
+>>>> Maybe we can let CONFIG_VHOST depends on !ARM || AEABI then add anot=
+her
+>>>> menuconfig for VHOST_RING and do something similar?
+>>>>
+>>>> Thanks
+>>> Sorry I don't understand. After this patch CONFIG_VHOST_DPN is just
+>>> an internal variable for the OABI fix. I kept it separate
+>>> so it's easy to revert for 5.8. Yes we could squash it into
+>>> VHOST directly but I don't see how that changes logic at all.
+>>
+>> Sorry for being unclear.
+>>
+>> I meant since it was enabled by default, "CONFIG_VHOST_DPN=3Dy" will b=
+e left
+>> in the defconfigs.
+> But who cares?
 
-greg k-h
+
+FYI, please see https://www.spinics.net/lists/kvm/msg212685.html
+
+
+> That does not add any code, does it?
+
+
+It doesn't.
+
+Thanks
+
+
+>
+>> This requires the arch maintainers to add
+>> "CONFIG_VHOST_VDPN is not set". (Geert complains about this)
+>>
+>> Thanks
+>>
+>>
+
