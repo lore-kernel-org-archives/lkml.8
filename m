@@ -2,159 +2,92 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EA9BC38A2B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 13:59:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A1A8C2D0EF
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 14:01:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6D15E20B1F
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 13:59:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oTlzjn5U"
+	by mail.kernel.org (Postfix) with ESMTP id 3C56B20644
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 14:01:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730804AbgDQN70 (ORCPT
+        id S1730818AbgDQOB0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 09:59:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58760 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730563AbgDQN7Z (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 09:59:25 -0400
-Received: from mail-wr1-x42d.google.com (mail-wr1-x42d.google.com [IPv6:2a00:1450:4864:20::42d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71E94C061A0C
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 06:59:25 -0700 (PDT)
-Received: by mail-wr1-x42d.google.com with SMTP id b11so3168442wrs.6
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 06:59:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=nlisnDxdgaFK9V5Dj7hV44s/k7j4LFrmWkeS7EKcVH4=;
-        b=oTlzjn5Ubl4uDmSRbU3FNlxzwSOHUoZihX42C64UMjMeA6UmGMLSduRX2Njrfk0gQ8
-         D7e3DDH0eGcrclA1jzGtQm1/4cSMB4Tc2YEqQJu+mL2tFgr1UGH39zK6aGvKLeDvM8pG
-         Xk3RoqwzEVQLAltynnwp+6f4lM4fRkgbrkhQC+gA/+lo9QKvD+FlAv/X2YzsFuDNXUKn
-         X8+yg2mJz9U1D1JKy5l93PX9ooSZuVqTgwEslE+silEkn8aEg5PkQLkGKmaiBrrM4elF
-         4cltOgrlSgzxhBaXKqG5HQN/71J++ukpLMn3L86HnusRUKf/sYYZBaTz6/i57YuXt08e
-         AW0Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=nlisnDxdgaFK9V5Dj7hV44s/k7j4LFrmWkeS7EKcVH4=;
-        b=lz0A7kCyUgbRS/vtwmd4oFgQhRxaSIIfH9PaG6UspnbsOvLcSVn+LxF7r7948sEsAZ
-         quywZJloA1en5uHp/fOwFCNWkkmAzRQ533YJzDoCmR2vbqh/pNtRFBtKTWtfaCusElsd
-         Z2CBawU4p3wN7Xg+JXsQMhXHUedctxstMAVFEkHOgPibmZaC26KY3YgJoYwVhSsCDA0S
-         0Qwpv8e6MR8ghNAl9Dmi5tOCbmrs+5TREtHMrDACt2jQPWGWKU+AkJJwUuB4gvQ45pjT
-         brFAqxbm4Q3mNNiZGZFJZXyUOFqMj2pLSESG+0yLu8qMHCvuOLO419JF83UWcfmPFuS3
-         lv4w==
-X-Gm-Message-State: AGi0PuZVc4GvspP8dxFqqAsmScVNXr9oiYnIQ2Ki9fVhkYHYXuqRLHFe
-        1J8yw/+psInWUy8tFP7aJUmPRKLaeP0xupc+MOg=
-X-Google-Smtp-Source: APiQypJ5RuwNjBBNOOuUN0lsUE85uoH+Wm9g7IHWfDHg4sB7twV0nxMFj7A+ytVL+34mZSl79flpnTeuNeTKWvMKWbc=
-X-Received: by 2002:a5d:4106:: with SMTP id l6mr4013319wrp.111.1587131963996;
- Fri, 17 Apr 2020 06:59:23 -0700 (PDT)
+        Fri, 17 Apr 2020 10:01:26 -0400
+Received: from mga07.intel.com ([134.134.136.100]:17012 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730563AbgDQOB0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Apr 2020 10:01:26 -0400
+IronPort-SDR: 9G5Y4n+m+tA+3V/ar4rIO5XZI6Yb6RI7j8XrjHT+4sPh9x9DXqb28r4DM5LGQvpv8KH5D2q2dd
+ BZ/bAv7CJvHw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2020 07:01:25 -0700
+IronPort-SDR: xEz2/0SJGhLBRYrVu2I7Ws34KqqK5pqUSvSLjjTEr/7tqRLaMzE2OaYX4cGlmmJzKLKuMfyUU7
+ r5HAKpcCqDyA==
+X-IronPort-AV: E=Sophos;i="5.72,395,1580803200"; 
+   d="scan'208";a="428234168"
+Received: from mcintra-mobl.ger.corp.intel.com (HELO localhost) ([10.249.44.191])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2020 07:01:20 -0700
+From:   Jani Nikula <jani.nikula@linux.intel.com>
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     Saeed Mahameed <saeedm@mellanox.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        linux-kbuild@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Nicolas Pitre <nico@fluxnic.net>, narmstrong@baylibre.com,
+        Laurent.pinchart@ideasonboard.com, leon@kernel.org,
+        kieran.bingham+renesas@ideasonboard.com, jonas@kwiboo.se,
+        airlied@linux.ie, jernej.skrabec@siol.net,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        linux-rdma@vger.kernel.org, Andrzej Hajda <a.hajda@samsung.com>
+Subject: Re: [RFC PATCH 1/2] Kconfig: Introduce "uses" keyword
+In-Reply-To: <20200417122827.GD5100@ziepe.ca>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20200417011146.83973-1-saeedm@mellanox.com> <87v9ly3a0w.fsf@intel.com> <20200417122827.GD5100@ziepe.ca>
+Date:   Fri, 17 Apr 2020 17:01:18 +0300
+Message-ID: <87h7xi2oup.fsf@intel.com>
 MIME-Version: 1.0
-References: <20200417101247.45616-1-yuehaibing@huawei.com>
-In-Reply-To: <20200417101247.45616-1-yuehaibing@huawei.com>
-From:   Alex Deucher <alexdeucher@gmail.com>
-Date:   Fri, 17 Apr 2020 09:59:12 -0400
-Message-ID: <CADnq5_OCqKM3EYnjti0djh5hEPbRgO3qgJFeAU5tpqWc9PZiyA@mail.gmail.com>
-Subject: Re: [PATCH -next] drm/amd/dc: remove unused variable 'video_optimized_pixel_rates'
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     "Wentland, Harry" <harry.wentland@amd.com>,
-        "Leo (Sunpeng) Li" <sunpeng.li@amd.com>,
-        "Deucher, Alexander" <alexander.deucher@amd.com>,
-        Christian Koenig <christian.koenig@amd.com>,
-        Chunming Zhou <David1.Zhou@amd.com>,
-        Dave Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 17, 2020 at 9:16 AM YueHaibing <yuehaibing@huawei.com> wrote:
+On Fri, 17 Apr 2020, Jason Gunthorpe <jgg@ziepe.ca> wrote:
+> On Fri, Apr 17, 2020 at 09:23:59AM +0300, Jani Nikula wrote:
 >
-> drivers/gpu/drm/amd/amdgpu/../display/dc/dce/dce_clock_source.c:1017:50:
->  warning: =E2=80=98video_optimized_pixel_rates=E2=80=99 defined but not u=
-sed [-Wunused-const-variable=3D]
->  static const struct pixel_rate_range_table_entry video_optimized_pixel_r=
-ates[] =3D {
->                                                   ^~~~~~~~~~~~~~~~~~~~~~~=
-~~~~
+>> Which means that would have to split up to two. Not ideal, but
+>> doable.
 >
-> commit d8cd587d2bfd ("drm/amd/display: removing MODULO change for dcn2")
-> left behind this unused vairable, remove it.
+> Why is this not ideal?
 >
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> I think the one per line is easier to maintain (eg for merge
+> conflicts) and easier to read than a giant && expression.
+>
+> I would not complicate things further by extending the boolean
+> language..
 
-Applied.  Thanks!
+Fair enough. I only found one instance where the patch at hand does not
+cut it:
 
-Alex
+drivers/hwmon/Kconfig:  depends on !OF || IIO=n || IIO
 
-> ---
->  .../drm/amd/display/dc/dce/dce_clock_source.c | 33 -------------------
->  1 file changed, 33 deletions(-)
->
-> diff --git a/drivers/gpu/drm/amd/display/dc/dce/dce_clock_source.c b/driv=
-ers/gpu/drm/amd/display/dc/dce/dce_clock_source.c
-> index 2e992fbc0d71..d2ad0504b0de 100644
-> --- a/drivers/gpu/drm/amd/display/dc/dce/dce_clock_source.c
-> +++ b/drivers/gpu/drm/amd/display/dc/dce/dce_clock_source.c
-> @@ -1014,39 +1014,6 @@ struct pixel_rate_range_table_entry {
->         unsigned short div_factor;
->  };
->
-> -static const struct pixel_rate_range_table_entry video_optimized_pixel_r=
-ates[] =3D {
-> -       // /1.001 rates
-> -       {25170, 25180, 25200, 1000, 1001},      //25.2MHz   ->   25.17
-> -       {59340, 59350, 59400, 1000, 1001},      //59.4Mhz   ->   59.340
-> -       {74170, 74180, 74250, 1000, 1001},      //74.25Mhz  ->   74.1758
-> -       {125870, 125880, 126000, 1000, 1001},   //126Mhz    ->  125.87
-> -       {148350, 148360, 148500, 1000, 1001},   //148.5Mhz  ->  148.3516
-> -       {167830, 167840, 168000, 1000, 1001},   //168Mhz    ->  167.83
-> -       {222520, 222530, 222750, 1000, 1001},   //222.75Mhz ->  222.527
-> -       {257140, 257150, 257400, 1000, 1001},   //257.4Mhz  ->  257.1429
-> -       {296700, 296710, 297000, 1000, 1001},   //297Mhz    ->  296.7033
-> -       {342850, 342860, 343200, 1000, 1001},   //343.2Mhz  ->  342.857
-> -       {395600, 395610, 396000, 1000, 1001},   //396Mhz    ->  395.6
-> -       {409090, 409100, 409500, 1000, 1001},   //409.5Mhz  ->  409.091
-> -       {445050, 445060, 445500, 1000, 1001},   //445.5Mhz  ->  445.055
-> -       {467530, 467540, 468000, 1000, 1001},   //468Mhz    ->  467.5325
-> -       {519230, 519240, 519750, 1000, 1001},   //519.75Mhz ->  519.231
-> -       {525970, 525980, 526500, 1000, 1001},   //526.5Mhz  ->  525.974
-> -       {545450, 545460, 546000, 1000, 1001},   //546Mhz    ->  545.455
-> -       {593400, 593410, 594000, 1000, 1001},   //594Mhz    ->  593.4066
-> -       {623370, 623380, 624000, 1000, 1001},   //624Mhz    ->  623.377
-> -       {692300, 692310, 693000, 1000, 1001},   //693Mhz    ->  692.308
-> -       {701290, 701300, 702000, 1000, 1001},   //702Mhz    ->  701.2987
-> -       {791200, 791210, 792000, 1000, 1001},   //792Mhz    ->  791.209
-> -       {890100, 890110, 891000, 1000, 1001},   //891Mhz    ->  890.1099
-> -       {1186810, 1186820, 1188000, 1000, 1001},//1188Mhz   -> 1186.8131
-> -
-> -       // *1.001 rates
-> -       {27020, 27030, 27000, 1001, 1000}, //27Mhz
-> -       {54050, 54060, 54000, 1001, 1000}, //54Mhz
-> -       {108100, 108110, 108000, 1001, 1000},//108Mhz
-> -};
-> -
->  static bool dcn20_program_pix_clk(
->                 struct clock_source *clock_source,
->                 struct pixel_clk_params *pix_clk_params,
-> --
-> 2.17.1
->
->
-> _______________________________________________
-> amd-gfx mailing list
-> amd-gfx@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/amd-gfx
+That can of course be left as it is.
+
+As to the bikeshedding topic, I think I'm now leaning towards Andrzej's
+suggestion:
+
+	optionally depends on FOO
+
+in [1]. But I reserve my right to change my mind. ;)
+
+BR,
+Jani.
+
+
+[1] http://lore.kernel.org/r/01f964ae-9c32-7531-1f07-2687616b6a71@samsung.com
+
+-- 
+Jani Nikula, Intel Open Source Graphics Center
