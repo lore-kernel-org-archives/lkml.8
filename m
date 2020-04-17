@@ -2,592 +2,186 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 709E5C38A2D
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 16:56:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D4F6C38A2B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 16:59:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5558922202
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 16:56:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39E0B2054F
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 16:59:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587142784;
+	bh=110JSuqNaufVTndTClqbP9FRS7L9CGeJbqQdUnzV1GI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=QHfDpR0JLNoLvcArKpAnFf6hBnU8aAPw9BVHN4jmyeMuLAn7o5PI7O7wArFm49aXN
+	 DXSIuGv8dIROejC336ElxeAESI7b56nh58ot/ntV5jGtspWCa8yLwygrbXJeYAnKfj
+	 f2mQDTewFQuj3L5Cj1AI6g4bjwEkALPFmvDz4JEk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728088AbgDQQzm (ORCPT
+        id S1728098AbgDQQ7n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 12:55:42 -0400
-Received: from muru.com ([72.249.23.125]:50032 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728014AbgDQQzk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 12:55:40 -0400
-Received: from hillo.muru.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTP id 4E9D78161;
-        Fri, 17 Apr 2020 16:56:23 +0000 (UTC)
-From:   Tony Lindgren <tony@atomide.com>
-To:     linux-omap@vger.kernel.org
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Keerthy <j-keerthy@ti.com>, Lokesh Vutla <lokeshvutla@ti.com>,
-        Tero Kristo <t-kristo@ti.com>,
+        Fri, 17 Apr 2020 12:59:43 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:39027 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725877AbgDQQ7m (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Apr 2020 12:59:42 -0400
+Received: by mail-pl1-f196.google.com with SMTP id k18so1179905pll.6;
+        Fri, 17 Apr 2020 09:59:42 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=dC4k5ZLeGtiN4GIhih1iZ1bgexRzNsdtwNaiElYm8Sg=;
+        b=f+7xRZJ1zAfQ/YFQAFE8JytxkOAUuALVGitGUpCiFij5U6R4QieAmopNu9W/zJGCIb
+         aBq2H13waoip5fVg59E5nceoK1suBszCPN8TDLOxuiRqRoKiJOr75/asQTnfssUfhzgc
+         2jySc6SlixNJZuBhs+P3KvIZxPOZoA9UXoVx4o+ULxqdsVhsVsoV0YdOwDHmyU+YyLTi
+         nMyUjul6ujVmLEx2IP+bA+rhvtGmT6ZlIW15/ThmDpc5b+FtocNCxmTxkHTj4Ku/DB8T
+         kxr9G9cLj6niRl18HiWJnvD3MqcfUSP0wYZ8ZcoYYVTkjqHs4w+/RtbOHH2J0gpblXvd
+         8HZQ==
+X-Gm-Message-State: AGi0PuaamGkunOR5iMiCzqp3OjgWdrACFV/E6kWt/F0aCOgGavWIc/2E
+        LvZTkQk1EjuAbaQliD9g1YE=
+X-Google-Smtp-Source: APiQypJyo3WoccLcwNNQ+fwOqBLD9a9lBfmZ6A/DqglFmkq5PqBPr0Do8rh+fLQLEgOYtRUFMM8msg==
+X-Received: by 2002:a17:902:7289:: with SMTP id d9mr4273322pll.49.1587142781497;
+        Fri, 17 Apr 2020 09:59:41 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id q187sm15490054pfb.131.2020.04.17.09.59.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 17 Apr 2020 09:59:40 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id 52C344028E; Fri, 17 Apr 2020 16:59:39 +0000 (UTC)
+Date:   Fri, 17 Apr 2020 16:59:39 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     Vlastimil Babka <vbabka@suse.cz>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+        linux-mm@kvack.org, Ivan Teterevkov <ivan.teterevkov@nutanix.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        "Guilherme G . Piccoli" <gpiccoli@canonical.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        "H. Nikolaus Schaller" <hns@goldelico.com>,
-        Aaro Koskinen <aaro.koskinen@iki.fi>,
-        Adam Ford <aford173@gmail.com>,
-        Andreas Kemnade <andreas@kemnade.info>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org,
-        linux-clk@vger.kernel.org
-Subject: [PATCH 02/14] clocksource/drivers/timer-ti-dm: Add clockevent and clocksource support
-Date:   Fri, 17 Apr 2020 09:55:07 -0700
-Message-Id: <20200417165519.4979-3-tony@atomide.com>
-X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200417165519.4979-1-tony@atomide.com>
-References: <20200417165519.4979-1-tony@atomide.com>
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Christian Brauner <christian.brauner@ubuntu.com>
+Subject: Re: [PATCH v2 1/3] kernel/sysctl: support setting sysctl parameters
+ from kernel command line
+Message-ID: <20200417165939.GV11244@42.do-not-panic.com>
+References: <20200414113222.16959-1-vbabka@suse.cz>
+ <20200414113222.16959-2-vbabka@suse.cz>
+ <20200415180355.00bc828ea726c421638db871@kernel.org>
+ <20200416012931.GE11244@42.do-not-panic.com>
+ <20200416194955.3448c8526ea3f59e95c506da@kernel.org>
+ <20200416155327.GT11244@42.do-not-panic.com>
+ <20200417193442.b20394dcaac02d5aeef9b5ee@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200417193442.b20394dcaac02d5aeef9b5ee@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We can move the TI dmtimer clockevent and clocksource to live under
-drivers/clocksource if we rely only on the clock framework, and handle
-the module configuration directly in the clocksource driver.
+On Fri, Apr 17, 2020 at 07:34:42PM +0900, Masami Hiramatsu wrote:
+> On Thu, 16 Apr 2020 15:53:27 +0000
+> Luis Chamberlain <mcgrof@kernel.org> wrote:
+> 
+> > On Thu, Apr 16, 2020 at 07:49:55PM +0900, Masami Hiramatsu wrote:
+> > > Hi Luis,
+> > > 
+> > > On Thu, 16 Apr 2020 01:29:31 +0000
+> > > Luis Chamberlain <mcgrof@kernel.org> wrote:
+> > > 
+> > > > On Wed, Apr 15, 2020 at 06:03:55PM +0900, Masami Hiramatsu wrote:
+> > > > > On Tue, 14 Apr 2020 13:32:20 +0200
+> > > > > Vlastimil Babka <vbabka@suse.cz> wrote:
+> > > > > > diff --git a/init/main.c b/init/main.c
+> > > > > > index a48617f2e5e5..7b43118215d6 100644
+> > > > > > --- a/init/main.c
+> > > > > > +++ b/init/main.c
+> > > > > > @@ -1372,6 +1372,8 @@ static int __ref kernel_init(void *unused)
+> > > > > >  
+> > > > > >  	rcu_end_inkernel_boot();
+> > > > > >  
+> > > > > > +	do_sysctl_args();
+> > > > > > +
+> > > > > 
+> > > > > Ah, I see. Since the sysctl is designed to be called after all __init calls were
+> > > > > done, it shouldn't use bootconfig directly because bootconfig is full of __init
+> > > > > call.
+> > > > 
+> > > > The idea is bootconfig would be useful in the sense of a library set of
+> > > > helpers which could be modified to remove __init, and then used to
+> > > > instrument the cmdline depending on certain debugging kconfig entries.
+> > > 
+> > > Would you mean making bootconfig (parser and APIs) be more generic so that
+> > > other subsystem can reuse it with their data?
+> > > Or just make it available after boot? (I think this latter one will be
+> > > useful for module initialization)
+> > 
+> > The later. First use case that comes to mind is debugging cmdline, so
+> > to see if what one adds is what ends up happening at run time after
+> > boot.
+> 
+> Hmm, I think that's not so easy to debug command line after boot, because
+> the kernel command line is parsed (and handlers are executed) already in
+> boot time. We can not repeat it after boot.
 
-This removes the early dependency with system timers to the interconnect
-related code, and we can probe pretty much everything else later on at
-the module_init level.
+Unless you put into the command line everything you need to test on one
+boot.
 
-Let's first add a new driver for timer-ti-dm-systimer based on existing
-arch/arm/mach-omap2/timer.c. Then let's start moving SoCs to probe with
-device tree data while still keeping the old timer.c. And eventually we
-can just drop the old timer.c.
+> > > > We currently have no way to purposely extend / break the cmdline for
+> > > > debugging purposes, so, bootconfig's parsers, since it already has a
+> > > > way to extend the cmdlineline, might make it much easier to do this
+> > > > later.
+> > > > 
+> > > > Without bootconfig, if we wanted to add new kconfig to, for example,
+> > > > add new funny cmdline arguments to test they worked or not, we'd have
+> > > > to devise our own set of helpers now. ie, new functionality. bootconfig
+> > > > however already has existing functionality to tweak the cmdline, and so
+> > > > some code could be leveraged there for this purpose.
+> > > 
+> > > Hmm, you can use the bootconfig as a "supplemental" kernel command line,
+> > > but not tweak (like modify/replace) it. Would you like to change the
+> > > kernel command line parameter on-line?
+> > 
+> > It would be during boot. To augment it as if the user had used certain
+> > parameters on boot. But if only a new path is tested, and we can't
+> > reproduce as if the user had *not* used bootconfig, this idea would
+> > only be useful to test bootconfig parsing, nothing else. The hope was
+> > to do both.
+> 
+> As you may know, the bootconfig already supports "additional" kernel
+> command line. All keys which starts "kernel" is copied into kernel
+> command line at early boot timing. So if you want to write a test
+> parameter in the bootconfig, you can do it.
 
-Note the boards can optionally configure the timer source clock in using
-assigned-clock-parents.
+There are two bootparams paths now, the old way, and the new bootconfig
+path. Extending test coverage to test bootconfig seems rather easier to
+consider. However the hope was that there may be some existing code
+within bootconfig which would also allow one to test the old cmdline
+path, as if the cmdline had certain params present. It doesn't seem
+to be the case.
 
-Cc: linux-kernel@vger.kernel.org
-Cc: linux-omap@vger.kernel.org
-Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: Keerthy <j-keerthy@ti.com>
-Cc: Lokesh Vutla <lokeshvutla@ti.com>
-Cc: Tero Kristo <t-kristo@ti.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
----
- .../devicetree/bindings/timer/ti,timer.txt    |   2 +
- drivers/clocksource/Makefile                  |   1 +
- drivers/clocksource/timer-ti-dm-systimer.c    | 468 ++++++++++++++++++
- include/clocksource/timer-ti-dm.h             |   1 +
- 4 files changed, 472 insertions(+)
- create mode 100644 drivers/clocksource/timer-ti-dm-systimer.c
+> However, it is not a good idea to execute command line handlers
+> twice because it can be destructive or can append all parameters
+> (e.g. "console=" .)
 
-diff --git a/Documentation/devicetree/bindings/timer/ti,timer.txt b/Documentation/devicetree/bindings/timer/ti,timer.txt
---- a/Documentation/devicetree/bindings/timer/ti,timer.txt
-+++ b/Documentation/devicetree/bindings/timer/ti,timer.txt
-@@ -14,6 +14,8 @@ Required properties:
- 			ti,omap5430-timer (applicable to OMAP543x devices)
- 			ti,am335x-timer	(applicable to AM335x devices)
- 			ti,am335x-timer-1ms (applicable to AM335x devices)
-+			ti,dmtimer-clockevent (when used as for clockevent)
-+			ti,dmtimer-clocksource (when used as for clocksource)
- 
- - reg:			Contains timer register address range (base address and
- 			length).
-diff --git a/drivers/clocksource/Makefile b/drivers/clocksource/Makefile
---- a/drivers/clocksource/Makefile
-+++ b/drivers/clocksource/Makefile
-@@ -18,6 +18,7 @@ obj-$(CONFIG_CLKSRC_MMIO)	+= mmio.o
- obj-$(CONFIG_DAVINCI_TIMER)	+= timer-davinci.o
- obj-$(CONFIG_DIGICOLOR_TIMER)	+= timer-digicolor.o
- obj-$(CONFIG_OMAP_DM_TIMER)	+= timer-ti-dm.o
-+obj-$(CONFIG_OMAP_DM_TIMER)	+= timer-ti-dm-systimer.o
- obj-$(CONFIG_DW_APB_TIMER)	+= dw_apb_timer.o
- obj-$(CONFIG_DW_APB_TIMER_OF)	+= dw_apb_timer_of.o
- obj-$(CONFIG_FTTMR010_TIMER)	+= timer-fttmr010.o
-diff --git a/drivers/clocksource/timer-ti-dm-systimer.c b/drivers/clocksource/timer-ti-dm-systimer.c
-new file mode 100644
---- /dev/null
-+++ b/drivers/clocksource/timer-ti-dm-systimer.c
-@@ -0,0 +1,468 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+#include <linux/clk.h>
-+#include <linux/clocksource.h>
-+#include <linux/clockchips.h>
-+#include <linux/interrupt.h>
-+#include <linux/io.h>
-+#include <linux/iopoll.h>
-+#include <linux/err.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+#include <linux/of_irq.h>
-+#include <linux/sched_clock.h>
-+
-+#include <linux/clk/clk-conf.h>
-+
-+#include <clocksource/timer-ti-dm.h>
-+#include <dt-bindings/bus/ti-sysc.h>
-+
-+/* For type1, set SYSC_OMAP2_CLOCKACTIVITY for fck off on idle, l4 clock on */
-+#define DMTIMER_TYPE1_ENABLE	((1 << 9) | (SYSC_IDLE_SMART << 3) | \
-+				 SYSC_OMAP2_ENAWAKEUP | SYSC_OMAP2_AUTOIDLE)
-+
-+#define DMTIMER_TYPE2_ENABLE	(SYSC_IDLE_SMART_WKUP << 2)
-+#define DMTIMER_RESET_WAIT	100000
-+
-+struct dmtimer_clockevent {
-+	struct clock_event_device dev;
-+	struct omap_dm_timer timer;
-+};
-+
-+struct dmtimer_clocksource {
-+	struct clocksource dev;
-+	struct omap_dm_timer timer;
-+	unsigned int loadval;
-+};
-+
-+static int dmtimer_systimer_type1_reset(struct omap_dm_timer *timer)
-+{
-+	void __iomem *syss = timer->io_base + OMAP_TIMER_V1_SYS_STAT_OFFSET;
-+	int ret;
-+	u32 l;
-+
-+	__omap_dm_timer_write(timer, OMAP_TIMER_IF_CTRL_REG, 0x06, 0);
-+	ret = readl_poll_timeout_atomic(syss, l, l & BIT(0), 100,
-+					DMTIMER_RESET_WAIT);
-+
-+	return ret;
-+}
-+
-+/* Note we must use io_base instead of func_base for type2 OCP regs */
-+static int dmtimer_systimer_type2_reset(struct omap_dm_timer *timer)
-+{
-+	void __iomem *sysc = timer->io_base + OMAP_TIMER_OCP_CFG_OFFSET;
-+	u32 l;
-+
-+	return readl_poll_timeout_atomic(sysc, l, !(l & BIT(0)), 100,
-+					 DMTIMER_RESET_WAIT);
-+}
-+
-+static int dmtimer_systimer_reset(struct omap_dm_timer *timer)
-+{
-+	int ret;
-+
-+	if (timer->revision == 1)
-+		ret = dmtimer_systimer_type1_reset(timer);
-+	else
-+		ret = dmtimer_systimer_type2_reset(timer);
-+	if (ret < 0) {
-+		pr_err("%s failed with %i\n", __func__, ret);
-+
-+		return ret;
-+	}
-+
-+	timer->posted = 0;
-+
-+	return 0;
-+}
-+
-+/* Interface clocks are only available on some SoCs variants */
-+static int __init dmtimer_systimer_init_clock(struct omap_dm_timer *timer,
-+					      struct device_node *np,
-+					      struct clk **clk,
-+					      const char *name)
-+{
-+	struct clk *clock;
-+	int error;
-+
-+	clock = of_clk_get_by_name(np, name);
-+	if ((PTR_ERR(clock) == -EINVAL) && !strncmp(name, "ick", 3))
-+		return 0;
-+	else if (IS_ERR(clock))
-+		return PTR_ERR(clock);
-+
-+	error = clk_prepare_enable(clock);
-+	if (error)
-+		return error;
-+
-+	*clk = clock;
-+
-+	return 0;
-+}
-+
-+static void dmtimer_systimer_enable(struct omap_dm_timer *timer)
-+{
-+	void __iomem *sysc = timer->io_base + OMAP_TIMER_OCP_CFG_OFFSET;
-+	u32 val;
-+
-+	if (timer->revision == 1)
-+		val = DMTIMER_TYPE1_ENABLE;
-+	else
-+		val = DMTIMER_TYPE2_ENABLE;
-+
-+	writel_relaxed(val, sysc);
-+}
-+
-+static void dmtimer_systimer_disable(struct omap_dm_timer *timer)
-+{
-+	void __iomem *sysc = timer->io_base + OMAP_TIMER_OCP_CFG_OFFSET;
-+
-+	writel_relaxed(0, sysc);
-+}
-+
-+static int __init dmtimer_systimer_tag_disabled(struct device_node *np)
-+{
-+	struct property *prop;
-+
-+	prop = kzalloc(sizeof(*prop), GFP_KERNEL);
-+	if (!prop)
-+		return -ENOMEM;
-+
-+	prop->name = "status";
-+	prop->value = "disabled";
-+	prop->length = strlen(prop->value);
-+
-+	return of_add_property(np, prop);
-+}
-+
-+static int __init dmtimer_systimer_init(struct omap_dm_timer *timer,
-+					struct device_node *np)
-+{
-+	int error;
-+
-+	if (!of_device_is_compatible(np->parent, "ti,sysc"))
-+		return -EINVAL;
-+
-+	/*
-+	 * Enable optional assigned-clock-parents configured at the timer
-+	 * node level. For regular device drivers, this is done automatically
-+	 * by bus related code such as platform_drv_probe().
-+	 */
-+	error = of_clk_set_defaults(np, false);
-+	if (error < 0)
-+		pr_err("%s: clock source init failed: %i\n", __func__, error);
-+
-+	/* For ti-sysc, we have timer clocks at the parent module level */
-+	error = dmtimer_systimer_init_clock(timer, np->parent,
-+					    &timer->fclk, "fck");
-+	if (error)
-+		return error;
-+
-+	timer->rate = clk_get_rate(timer->fclk);
-+
-+	error = dmtimer_systimer_init_clock(timer, np->parent,
-+					    &timer->iclk, "ick");
-+	if (error)
-+		return error;
-+
-+	__omap_dm_timer_init_regs(timer);
-+	dmtimer_systimer_enable(timer);
-+	dmtimer_systimer_reset(timer);
-+	pr_debug("dmtimer rev %08x sysc %08x\n", readl_relaxed(timer->io_base),
-+		 readl_relaxed(timer->io_base + OMAP_TIMER_OCP_CFG_OFFSET));
-+
-+	if (of_find_property(np, "ti,timer-alwon", NULL))
-+		timer->capability |= OMAP_TIMER_ALWON;
-+
-+	/* Tag parent interconnect target module disabled for ti-sysc */
-+	error = dmtimer_systimer_tag_disabled(np->parent);
-+	if (error)
-+		pr_err("%s: failed to set %pOF disabled: %i\n",
-+		       __func__, np, error);
-+
-+	return 0;
-+}
-+
-+/* Clockevent */
-+static struct dmtimer_clockevent *
-+to_dmtimer_clockevent(struct clock_event_device *clockevent)
-+{
-+	return container_of(clockevent, struct dmtimer_clockevent, dev);
-+}
-+
-+static struct omap_dm_timer *
-+clockevent_to_dm_timer(struct clock_event_device *evt)
-+{
-+	struct dmtimer_clockevent *dmtce = to_dmtimer_clockevent(evt);
-+
-+	return &dmtce->timer;
-+}
-+
-+static irqreturn_t dmtimer_clockevent_interrupt(int irq, void *data)
-+{
-+	struct dmtimer_clockevent *dmtce = data;
-+
-+	__omap_dm_timer_write_status(&dmtce->timer, OMAP_TIMER_INT_OVERFLOW);
-+	dmtce->dev.event_handler(&dmtce->dev);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static struct irqaction dmtimer_clockevent_irq = {
-+	.name		= "gp_timer",
-+	.flags		= IRQF_TIMER | IRQF_IRQPOLL,
-+	.handler	= dmtimer_clockevent_interrupt,
-+};
-+
-+static int dmtimer_set_next_event(unsigned long cycles,
-+				  struct clock_event_device *evt)
-+{
-+	struct omap_dm_timer *timer = clockevent_to_dm_timer(evt);
-+
-+	__omap_dm_timer_load_start(timer, OMAP_TIMER_CTRL_ST,
-+				   0xffffffff - cycles, OMAP_TIMER_POSTED);
-+
-+	return 0;
-+}
-+
-+static int dmtimer_clockevent_shutdown(struct clock_event_device *evt)
-+{
-+	struct omap_dm_timer *timer = clockevent_to_dm_timer(evt);
-+
-+	__omap_dm_timer_stop(timer, OMAP_TIMER_POSTED, timer->rate);
-+
-+	return 0;
-+}
-+
-+static int dmtimer_set_periodic(struct clock_event_device *evt)
-+{
-+	struct omap_dm_timer *timer = clockevent_to_dm_timer(evt);
-+	u32 period;
-+
-+	__omap_dm_timer_stop(timer, OMAP_TIMER_POSTED, timer->rate);
-+
-+	period = timer->rate / HZ;
-+	period -= 1;
-+	/* Looks like we need to first set the load value separately */
-+	__omap_dm_timer_write(timer, OMAP_TIMER_LOAD_REG, 0xffffffff - period,
-+			      OMAP_TIMER_POSTED);
-+	__omap_dm_timer_load_start(timer,
-+				   OMAP_TIMER_CTRL_AR | OMAP_TIMER_CTRL_ST,
-+				   0xffffffff - period, OMAP_TIMER_POSTED);
-+	return 0;
-+}
-+
-+static void omap_clockevent_idle(struct clock_event_device *evt)
-+{
-+	struct omap_dm_timer *timer = clockevent_to_dm_timer(evt);
-+
-+	dmtimer_systimer_disable(timer);
-+}
-+
-+static void omap_clockevent_unidle(struct clock_event_device *evt)
-+{
-+	struct omap_dm_timer *timer = clockevent_to_dm_timer(evt);
-+
-+	dmtimer_systimer_enable(timer);
-+	__omap_dm_timer_int_enable(timer, OMAP_TIMER_INT_OVERFLOW);
-+}
-+
-+static int __init dmtimer_clockevent_init(struct device_node *np)
-+{
-+	struct dmtimer_clockevent *clkevt;
-+	struct clock_event_device *evt;
-+	struct omap_dm_timer *timer;
-+	int error;
-+	u32 pa;
-+
-+	clkevt = kzalloc(sizeof(*clkevt), GFP_KERNEL | __GFP_NOFAIL);
-+	if (!clkevt)
-+		return -ENOMEM;
-+
-+	timer = &clkevt->timer;
-+	evt = &clkevt->dev;
-+
-+	evt->features = CLOCK_EVT_FEAT_PERIODIC |
-+			CLOCK_EVT_FEAT_ONESHOT;
-+	evt->rating = 300;
-+	evt->set_next_event = dmtimer_set_next_event;
-+	evt->set_state_shutdown = dmtimer_clockevent_shutdown;
-+	evt->set_state_periodic = dmtimer_set_periodic;
-+	evt->set_state_oneshot = dmtimer_clockevent_shutdown;
-+	evt->tick_resume = dmtimer_clockevent_shutdown;
-+	evt->cpumask = cpu_possible_mask;
-+	evt->irq = timer->irq;
-+
-+	timer->irq = irq_of_parse_and_map(np, 0);
-+	if (!timer->irq) {
-+		error = -ENXIO;
-+		goto err_out_free;
-+	}
-+
-+	timer->io_base = of_iomap(np, 0);
-+	if (!timer->io_base) {
-+		error = -ENXIO;
-+		goto err_out_free;
-+	}
-+
-+	error = dmtimer_systimer_init(timer, np);
-+	if (error)
-+		goto err_out_unmap;
-+
-+	/*
-+	 * For clock-event timers we never read the timer counter and
-+	 * so we are not impacted by errata i103 and i767. Therefore,
-+	 * we can safely ignore this errata for clock-event timers.
-+	 */
-+	__omap_dm_timer_override_errata(timer, OMAP_TIMER_ERRATA_I103_I767);
-+
-+	dmtimer_clockevent_irq.dev_id = clkevt;
-+	setup_irq(timer->irq, &dmtimer_clockevent_irq);
-+
-+	__omap_dm_timer_int_enable(timer, OMAP_TIMER_INT_OVERFLOW);
-+
-+	pa = of_translate_address(np, of_get_address(np, 0, NULL, NULL));
-+	pr_info("TI gptimer clockevent: %stimer@%08x at %lu Hz\n",
-+		timer->capability & OMAP_TIMER_ALWON ? "always-on " : "",
-+		pa, timer->rate);
-+
-+	clockevents_config_and_register(evt, timer->rate,
-+					3, /* Timer internal resynch latency */
-+					0xffffffff);
-+
-+	if (of_device_is_compatible(np, "ti,am33xx") ||
-+	    of_device_is_compatible(np, "ti,am43")) {
-+		evt->suspend = omap_clockevent_idle;
-+		evt->resume = omap_clockevent_unidle;
-+	}
-+
-+	return 0;
-+
-+err_out_unmap:
-+	iounmap(timer->io_base);
-+err_out_free:
-+	kfree(clkevt);
-+
-+	return error;
-+}
-+
-+/* Clocksource */
-+static struct dmtimer_clocksource *
-+to_dmtimer_clocksource(struct clocksource *cs)
-+{
-+	return container_of(cs, struct dmtimer_clocksource, dev);
-+}
-+
-+static struct omap_dm_timer *
-+clocksource_to_dmtimer(struct clocksource *cs)
-+{
-+	struct dmtimer_clocksource *clksrc = to_dmtimer_clocksource(cs);
-+
-+	return &clksrc->timer;
-+}
-+
-+static u64 dmtimer_clocksource_read_cycles(struct clocksource *cs)
-+{
-+	struct omap_dm_timer *timer = clocksource_to_dmtimer(cs);
-+
-+	return (u64)__omap_dm_timer_read_counter(timer,
-+						 OMAP_TIMER_NONPOSTED);
-+}
-+
-+static void __iomem *dmtimer_sched_clock_counter;
-+
-+static u64 notrace dmtimer_read_sched_clock(void)
-+{
-+	return readl_relaxed(dmtimer_sched_clock_counter);
-+}
-+
-+static void dmtimer_clocksource_suspend(struct clocksource *cs)
-+{
-+	struct dmtimer_clocksource *clksrc = to_dmtimer_clocksource(cs);
-+	struct omap_dm_timer *timer = &clksrc->timer;
-+
-+	clksrc->loadval =
-+		__omap_dm_timer_read_counter(timer, OMAP_TIMER_NONPOSTED);
-+	dmtimer_systimer_disable(timer);
-+}
-+
-+static void dmtimer_clocksource_resume(struct clocksource *cs)
-+{
-+	struct dmtimer_clocksource *clksrc = to_dmtimer_clocksource(cs);
-+	struct omap_dm_timer *timer = &clksrc->timer;
-+
-+	dmtimer_systimer_enable(timer);
-+	__omap_dm_timer_load_start(timer,
-+				   OMAP_TIMER_CTRL_ST | OMAP_TIMER_CTRL_AR,
-+				   clksrc->loadval,
-+				   OMAP_TIMER_NONPOSTED);
-+}
-+
-+static int __init dmtimer_clocksource_init(struct device_node *np)
-+{
-+	struct dmtimer_clocksource *clksrc;
-+	struct omap_dm_timer *timer;
-+	struct clocksource *dev;
-+	int error;
-+	u32 pa;
-+
-+	clksrc = kzalloc(sizeof(*clksrc), GFP_KERNEL | __GFP_NOFAIL);
-+	if (!clksrc)
-+		return -ENOMEM;
-+
-+	timer = &clksrc->timer;
-+	dev = &clksrc->dev;
-+
-+	timer->io_base = of_iomap(np, 0);
-+	if (!timer->io_base) {
-+		pr_err("%s: could not iomap\n", __func__);
-+		return -ENODEV;
-+	}
-+
-+	error = dmtimer_systimer_init(timer, np);
-+	if (error)
-+		goto err_out_unmap;
-+
-+	dev->name = "dmtimer";
-+	dev->rating = 300;
-+	dev->read = dmtimer_clocksource_read_cycles;
-+	dev->mask = CLOCKSOURCE_MASK(32);
-+	dev->flags = CLOCK_SOURCE_IS_CONTINUOUS;
-+
-+	if (of_device_is_compatible(np, "ti,am33xx") ||
-+	    of_device_is_compatible(np, "ti,am43")) {
-+		dev->suspend = dmtimer_clocksource_suspend;
-+		dev->resume = dmtimer_clocksource_resume;
-+	}
-+
-+	__omap_dm_timer_load_start(timer,
-+				   OMAP_TIMER_CTRL_ST | OMAP_TIMER_CTRL_AR, 0,
-+				   OMAP_TIMER_NONPOSTED);
-+
-+	pa = of_translate_address(np, of_get_address(np, 0, NULL, NULL));
-+	pr_info("TI gptimer clocksource: %stimer@%08x %lu at Hz\n",
-+		timer->capability & OMAP_TIMER_ALWON ?
-+		"always-on " : "", pa, timer->rate);
-+
-+	if (!dmtimer_sched_clock_counter) {
-+		/* Mask out write pending bits for raw OMAP_TIMER_COUNTER_REG */
-+		dmtimer_sched_clock_counter =
-+			timer->func_base + (OMAP_TIMER_COUNTER_REG & 0xff);
-+		sched_clock_register(dmtimer_read_sched_clock, 32, timer->rate);
-+	}
-+
-+	if (clocksource_register_hz(dev, timer->rate))
-+		pr_err("Could not register clocksource %pOF\n", np);
-+
-+	return 0;
-+
-+err_out_unmap:
-+	iounmap(timer->io_base);
-+
-+	return -ENODEV;
-+}
-+
-+TIMER_OF_DECLARE(dmtimer_clockevent, "ti,dmtimer-clockevent",
-+		 dmtimer_clockevent_init);
-+TIMER_OF_DECLARE(dmtimer_clocksource, "ti,dmtimer-clocksource",
-+		 dmtimer_clocksource_init);
-diff --git a/include/clocksource/timer-ti-dm.h b/include/clocksource/timer-ti-dm.h
---- a/include/clocksource/timer-ti-dm.h
-+++ b/include/clocksource/timer-ti-dm.h
-@@ -97,6 +97,7 @@ struct omap_dm_timer {
- 	int id;
- 	int irq;
- 	struct clk *fclk;
-+	struct clk *iclk;
- 
- 	void __iomem	*io_base;
- 	void __iomem	*irq_stat;	/* TISR/IRQSTATUS interrupt status */
--- 
-2.26.1
+I see so bootconfig is mutually exclusive with the old cmdline?
+
+> For the new feature can natively use the bootconfig, for example
+> boot-time tracing (kernel/trace/trace_boot.c) is something like
+> this sysctl on boot, and natively uses the bootconfig because
+> the tracing parameter is too complex for kernel command line :)
+
+Neat.
+
+  Luis
