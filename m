@@ -2,122 +2,138 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7696C2D0EF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 13:28:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE433C38A2B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 13:30:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8316F20B1F
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 13:28:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 957652078E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 13:30:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aQ/O+ntB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730645AbgDQN21 (ORCPT
+        id S1730609AbgDQNaJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 09:28:27 -0400
-Received: from smtp12.smtpout.orange.fr ([80.12.242.134]:18088 "EHLO
-        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730322AbgDQN21 (ORCPT
+        Fri, 17 Apr 2020 09:30:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54162 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729760AbgDQNaJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 09:28:27 -0400
-Received: from [192.168.42.210] ([93.22.148.45])
-        by mwinf5d47 with ME
-        id TpUM2200B0z0B2t03pUMXb; Fri, 17 Apr 2020 15:28:23 +0200
-X-ME-Helo: [192.168.42.210]
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Fri, 17 Apr 2020 15:28:23 +0200
-X-ME-IP: 93.22.148.45
-Subject: Re: [PATCH] RDMA/ocrdma: Fix an off-by-one issue in 'ocrdma_add_stat'
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     selvin.xavier@broadcom.com, devesh.sharma@broadcom.com,
-        dledford@redhat.com, leon@kernel.org, colin.king@canonical.com,
-        roland@purestorage.com, linux-rdma@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-References: <20200328073040.24429-1-christophe.jaillet@wanadoo.fr>
- <20200414183441.GA28870@ziepe.ca>
-From:   Marion & Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Message-ID: <8c17ed4f-fb29-4ff8-35db-afab284c6e71@wanadoo.fr>
-Date:   Fri, 17 Apr 2020 15:28:21 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Fri, 17 Apr 2020 09:30:09 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0753FC061A0C;
+        Fri, 17 Apr 2020 06:30:09 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id np9so1111758pjb.4;
+        Fri, 17 Apr 2020 06:30:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=nFgweoCUYArCXLmSHj7utk/sJee8v5C3lAv/i/FUx1w=;
+        b=aQ/O+ntBegnk4W/OtDVTQdM4s+mxMi7A8JViJmfe29zvDuQt0zk42IrTp7ToBwGbVF
+         DauR3aFC+v6gd/oKXGFiiRcQ1gVAWfUhtnu7Q+FkyJMcSw/HJWQSSQTwpvT6OJrEuy0T
+         JaC8XuDhCGdeBk2KSmCbgzSiPTy99v9Je1TKz2vm2KpoKb5fzea81zTJ77MneecLE50l
+         6qKEsk8qvhTWDT6D9MchWi6sTRcMo/5C3UkLUQuzSAiRqSWZFDC/2N8DIp/qnD9w3awD
+         eumK9M4xPbbyGkLk1DdAMRbqx4PtdcjJL2heo8l4yAvDoYhopXWeaFn19wmcY2JAuxfv
+         LVJQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=nFgweoCUYArCXLmSHj7utk/sJee8v5C3lAv/i/FUx1w=;
+        b=DrF3bcECOyGVyTsFCz9aHgpdj6AqogtHVGGHpCVH1p/XP0yn6Dx9GrecnNhZ9dM4ob
+         sSw8XHPuXZh9b7yU0Jmip9w7kMzmH4pkjM+VuJMvPEwVPvAldLRxhCWKoOex4L+rpJqt
+         d6uage5HmKCiaIvT4AN2rI/DCZ45msQkVhQQnYrBv+lfrhTQMINAIQJMqsUb8G+gcG5S
+         of+kOeyZRE64PHs6MJLP+sbAXBPTHg3Y8XUCQ3IauV77gO2XN1vPYgJbLOfrwod6RWN5
+         bJg77k5ZcieGpgVZrfj1J+6IFIGR/QGqcywK1ZLSFw5djxfwb9i5CNIoPPBcGkyiVgBC
+         /Jqg==
+X-Gm-Message-State: AGi0PuZI5s4oZvcTSZSjv1JVM4ubK+dEQZz8iOOMlNpZN9/a83eVtyfm
+        K6jaP+iSF0Cdd7018t4l36Y1BQi7r+2yTsJE9KVbIFbEcAQ8fg==
+X-Google-Smtp-Source: APiQypIZ41rif2TPiH8bwogCPUbaADou1ObpE2/vh5ht0/qzSKIPn21jVVJoMoAC9WuAoeZkf5wP9nXkACbqxJueQko=
+X-Received: by 2002:a17:902:9306:: with SMTP id bc6mr3415223plb.255.1587130208465;
+ Fri, 17 Apr 2020 06:30:08 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200414183441.GA28870@ziepe.ca>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+References: <20200401080348.5128-1-hdegoede@redhat.com>
+In-Reply-To: <20200401080348.5128-1-hdegoede@redhat.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Fri, 17 Apr 2020 16:30:00 +0300
+Message-ID: <CAHp75VcO=cePNRmJGmvGPcD=CBD9kkXJyKqK7yMKNYrpKWSwuw@mail.gmail.com>
+Subject: Re: [PATCH] platform/x86: touchscreen_dmi: Add info for the MP-man
+ MPWIN895CL tablet
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-Le 14/04/2020 à 20:34, Jason Gunthorpe a écrit :
-> On Sat, Mar 28, 2020 at 08:30:40AM +0100, Christophe JAILLET wrote:
->> There is an off-by-one issue when checking if there is enough space in the
->> output buffer, because we must keep some place for a final '\0'.
->>
->> While at it:
->>     - Use 'scnprintf' instead of 'snprintf' in order to avoid a superfluous
->>      'strlen'
->>     - avoid some useless initializations
->>     - avoida hard coded buffer size that can be computed at built time.
->>
->> Fixes: a51f06e1679e ("RDMA/ocrdma: Query controller information")
->> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
->> ---
->> The '\0' comes from memset(..., 0, ...) in all callers.
->> This could be also avoided if needed.
->> ---
->>   drivers/infiniband/hw/ocrdma/ocrdma_stats.c | 9 ++++-----
->>   1 file changed, 4 insertions(+), 5 deletions(-)
->>
->> diff --git a/drivers/infiniband/hw/ocrdma/ocrdma_stats.c b/drivers/infiniband/hw/ocrdma/ocrdma_stats.c
->> index 5f831e3bdbad..614a449e6b87 100644
->> --- a/drivers/infiniband/hw/ocrdma/ocrdma_stats.c
->> +++ b/drivers/infiniband/hw/ocrdma/ocrdma_stats.c
->> @@ -49,13 +49,12 @@ static struct dentry *ocrdma_dbgfs_dir;
->>   static int ocrdma_add_stat(char *start, char *pcur,
->>   				char *name, u64 count)
->>   {
->> -	char buff[128] = {0};
->> -	int cpy_len = 0;
->> +	char buff[128];
->> +	int cpy_len;
->>   
->> -	snprintf(buff, 128, "%s: %llu\n", name, count);
->> -	cpy_len = strlen(buff);
->> +	cpy_len = scnprintf(buff, sizeof(buff), "%s: %llu\n", name, count);
->>   
->> -	if (pcur + cpy_len > start + OCRDMA_MAX_DBGFS_MEM) {
->> +	if (pcur + cpy_len >= start + OCRDMA_MAX_DBGFS_MEM) {
->>   		pr_err("%s: No space in stats buff\n", __func__);
->>   		return 0;
->>   	}
-> The memcpy is still kind of silly right? What about this:
+On Wed, Apr 1, 2020 at 11:03 AM Hans de Goede <hdegoede@redhat.com> wrote:
 >
-> static int ocrdma_add_stat(char *start, char *pcur, char *name, u64 count)
-> {
-> 	size_t len = (start + OCRDMA_MAX_DBGFS_MEM) - pcur;
-> 	int cpy_len;
+> Add touchscreen info for the MP-man MPWIN895CL tablet.
 >
-> 	cpy_len = snprintf(pcur, len, "%s: %llu\n", name, count);
-> 	if (cpy_len >= len || cpy_len < 0) {
-> 		pr_err("%s: No space in stats buff\n", __func__);
-> 		return 0;
-> 	}
-> 	return cpy_len;
-> }
+
+Pushed to my review and testing queue, thanks!
+
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> ---
+>  drivers/platform/x86/touchscreen_dmi.c | 25 +++++++++++++++++++++++++
+>  1 file changed, 25 insertions(+)
 >
-> Jason
+> diff --git a/drivers/platform/x86/touchscreen_dmi.c b/drivers/platform/x86/touchscreen_dmi.c
+> index 6ec8923dec1a..931814e62454 100644
+> --- a/drivers/platform/x86/touchscreen_dmi.c
+> +++ b/drivers/platform/x86/touchscreen_dmi.c
+> @@ -373,6 +373,23 @@ static const struct ts_dmi_data jumper_ezpad_mini3_data = {
+>         .properties     = jumper_ezpad_mini3_props,
+>  };
+>
+> +static const struct property_entry mpman_mpwin895cl_props[] = {
+> +       PROPERTY_ENTRY_U32("touchscreen-min-x", 3),
+> +       PROPERTY_ENTRY_U32("touchscreen-min-y", 9),
+> +       PROPERTY_ENTRY_U32("touchscreen-size-x", 1728),
+> +       PROPERTY_ENTRY_U32("touchscreen-size-y", 1150),
+> +       PROPERTY_ENTRY_BOOL("touchscreen-inverted-y"),
+> +       PROPERTY_ENTRY_STRING("firmware-name", "gsl3680-mpman-mpwin895cl.fw"),
+> +       PROPERTY_ENTRY_U32("silead,max-fingers", 10),
+> +       PROPERTY_ENTRY_BOOL("silead,home-button"),
+> +       { }
+> +};
+> +
+> +static const struct ts_dmi_data mpman_mpwin895cl_data = {
+> +       .acpi_name      = "MSSL1680:00",
+> +       .properties     = mpman_mpwin895cl_props,
+> +};
+> +
+>  static const struct property_entry myria_my8307_props[] = {
+>         PROPERTY_ENTRY_U32("touchscreen-size-x", 1720),
+>         PROPERTY_ENTRY_U32("touchscreen-size-y", 1140),
+> @@ -908,6 +925,14 @@ const struct dmi_system_id touchscreen_dmi_table[] = {
+>                         DMI_MATCH(DMI_PRODUCT_NAME, "FlexBook edge11 - M-FBE11"),
+>                 },
+>         },
+> +       {
+> +               /* MP Man MPWIN895CL */
+> +               .driver_data = (void *)&mpman_mpwin895cl_data,
+> +               .matches = {
+> +                       DMI_MATCH(DMI_SYS_VENDOR, "MPMAN"),
+> +                       DMI_MATCH(DMI_PRODUCT_NAME, "MPWIN8900CL"),
+> +               },
+> +       },
+>         {
+>                 /* Myria MY8307 */
+>                 .driver_data = (void *)&myria_my8307_data,
+> --
+> 2.26.0
+>
 
-It can looks useless, but I think that the goal was to make sure that we 
-would not display truncated data. Each line is either complete or absent.
 
-I don't have any strong opinion of what is best, but I can understand 
-the current logic.
-
-This function is not a hot spot, so useless memcpy is not a big issue.
-
-CJ
-
-
+-- 
+With Best Regards,
+Andy Shevchenko
