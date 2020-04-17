@@ -2,119 +2,91 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 257DAC38A2B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 19:55:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5642C38A29
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 19:56:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0825320776
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 19:55:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587153309;
-	bh=MXkXesSr/2VngDlTo0GDkfmqYvakMDA/xJhToAfs6Tc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=NEWma9gsHqUYQrYMVBwsVYIgbu6Alu33p4kaEkZ1Ne+vGtsnaqJKX2nbE63iHnKZ3
-	 9gClypdylrJdoCJ43BKjGw7ykkOJla22EhWPWcKSqKX0NGEl3OKoYwzbwe1+nZfWKb
-	 xYXlQIDOJYBBa0Znc+g6/Lbx5edUWb8BAWb7YKa8=
+	by mail.kernel.org (Postfix) with ESMTP id 9E7E220776
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 19:56:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730842AbgDQTzI convert rfc822-to-8bit (ORCPT
+        id S1730892AbgDQT4F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 15:55:08 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:35177 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730573AbgDQTzH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 15:55:07 -0400
-Received: by mail-ot1-f68.google.com with SMTP id e20so2468647otl.2;
-        Fri, 17 Apr 2020 12:55:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=irXuNro8HvnRk+BrWbbABXUvW4MljqIc9AUWoi1f2Eo=;
-        b=Hx40PtklOQjWpRU4woK0+sZwX9lJ18V/yloRjlwhrs9y6/7n25ydy2NPsNpMk7r2Ol
-         mORS1QiQH98RV3R2k4eKZvXV02QKaKfX1gahfecWCv10NdrG2a/BDDSVCrQNTWftVB0a
-         BmlNzyH2H3gfrV6uTfc6rTuo0pxBGnxLo2HHct2ZIxJhfOOkSnxskMmgxylK7MhLOyLb
-         vsepFZczZPihiEwN5MyZV3WM3+duvGBcTIcjxbSjLpWNJrpJxOJ1k4zrdjpdwOtEL2Ri
-         owtrJDvST2KE+Ibdq6XtehnBwc2Ge6oDnVY8WIbG1iX+T/u/DKXFarbtPLEQ1fKrWGJe
-         Ersw==
-X-Gm-Message-State: AGi0Pua+t8tU7LYNlTfnLEgYaExTqydMvyLcZG7EDG5EmBngYHrVqm40
-        fCGVCRB8OGkatbJDrudi/GoE/Y/RS0uHc2Oxd78=
-X-Google-Smtp-Source: APiQypI0BBzCQh563PyRKr+8vxbIskn+ZdpBUycqdaHyYpZErR2AUCMpj2pG/e17Vusf5CRqe6Ug/6dWW7CPyJqTQDA=
-X-Received: by 2002:a9d:1d07:: with SMTP id m7mr384246otm.167.1587153306213;
- Fri, 17 Apr 2020 12:55:06 -0700 (PDT)
+        Fri, 17 Apr 2020 15:56:05 -0400
+Received: from mga09.intel.com ([134.134.136.24]:42224 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730573AbgDQT4F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Apr 2020 15:56:05 -0400
+IronPort-SDR: bY+Nv4DwfffzSmk0QNIxEVXMojkanhI8Y1yehpOvtA9FBVafRPqvDQq2WOON/FdRnvI4uEw0QR
+ nG9QjhbjMQcw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2020 12:56:04 -0700
+IronPort-SDR: DSdNJnSTF08K8+2knzazgSJw4aK89y2I/PYIfXOevJJrdxvcH2YIgzuticvjcnp2CyXYPO616J
+ 7iX3UmwWbGFA==
+X-IronPort-AV: E=Sophos;i="5.72,395,1580803200"; 
+   d="scan'208";a="428339779"
+Received: from agluck-desk2.sc.intel.com (HELO agluck-desk2.amr.corp.intel.com) ([10.3.52.68])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2020 12:56:03 -0700
+Date:   Fri, 17 Apr 2020 12:56:01 -0700
+From:   "Luck, Tony" <tony.luck@intel.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Ingo Molnar <mingo@kernel.org>, Fenghua Yu <fenghua.yu@intel.com>,
+        Borislav Petkov <bp@alien8.de>, H Peter Anvin <hpa@zytor.com>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Ravi V Shankar <ravi.v.shankar@intel.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        linux-kernel@vger.kernel.org, x86@kernel.org
+Subject: Re: [PATCH 2/3] x86/split_lock: Bits in IA32_CORE_CAPABILITIES are
+ not architectural
+Message-ID: <20200417195601.GA22640@agluck-desk2.amr.corp.intel.com>
+References: <20200416205754.21177-1-tony.luck@intel.com>
+ <20200416205754.21177-3-tony.luck@intel.com>
+ <878siumnrf.fsf@nanos.tec.linutronix.de>
+ <20200417170607.GA18267@agluck-desk2.amr.corp.intel.com>
+ <87ftd1zzau.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-References: <fdd9ce1d-146a-5fbf-75c5-3a9384603312@gmx.de> <5478a950-4355-8084-ea7d-fe8b270bf2e3@infradead.org>
- <5392275.BHAU0OPJTB@kreacher> <4b21c095-fbe5-1138-b977-a505baa41a2b@gmx.de>
- <CAJZ5v0icdVL6_yGpfsorqszdi9GcLxzYdvDqTJyG4ENzkOG2pQ@mail.gmail.com> <d66ad8f1-d7c5-dd8a-0eb4-9e560dc9ada1@gmx.de>
-In-Reply-To: <d66ad8f1-d7c5-dd8a-0eb4-9e560dc9ada1@gmx.de>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Fri, 17 Apr 2020 21:54:54 +0200
-Message-ID: <CAJZ5v0iXJK_kFzr=cOdcTdc947MOcm2hvNV1WgvAnxOY7uvWfg@mail.gmail.com>
-Subject: Re: regression 5.6.4->5.6.5 at drivers/acpi/ec.c
-To:     =?UTF-8?Q?Toralf_F=C3=B6rster?= <toralf.foerster@gmx.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        ACPI Devel Mailing List <linux-acpi@vger.kernel.org>,
-        Stable <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87ftd1zzau.fsf@nanos.tec.linutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 17, 2020 at 9:41 PM Toralf Förster <toralf.foerster@gmx.de> wrote:
->
-> On 4/17/20 8:52 PM, Rafael J. Wysocki wrote:
-> > On Fri, Apr 17, 2020 at 6:36 PM Toralf Förster <toralf.foerster@gmx.de> wrote:
-> >>
-> >> On 4/17/20 5:53 PM, Rafael J. Wysocki wrote:
-> >>> Does the patch below (untested) make any difference?
-> >>>
-> >>> ---
-> >>>  drivers/acpi/ec.c |    5 ++++-
-> >>>  1 file changed, 4 insertions(+), 1 deletion(-)
-> >>>
-> >>> Index: linux-pm/drivers/acpi/ec.c
-> >>> ===================================================================
-> >>> --- linux-pm.orig/drivers/acpi/ec.c
-> >>> +++ linux-pm/drivers/acpi/ec.c
-> >>> @@ -2067,7 +2067,10 @@ static struct acpi_driver acpi_ec_driver
-> >>>               .add = acpi_ec_add,
-> >>>               .remove = acpi_ec_remove,
-> >>>               },
-> >>> -     .drv.pm = &acpi_ec_pm,
-> >>> +     .drv = {
-> >>> +             .probe_type = PROBE_FORCE_SYNCHRONOUS,
-> >>> +             .pm = &acpi_ec_pm,
-> >>> +     },
-> >>>  };
-> >>>
-> >>>  static void acpi_ec_destroy_workqueues(void)
-> >> I'd say no, but for completeness:
-> >
-> > OK, it looks like mainline commit
-> >
-> > 65a691f5f8f0 ("ACPI: EC: Do not clear boot_ec_is_ecdt in acpi_ec_add()")
-> >
-> > was backported into 5.6.5 by mistake.
-> >
-> > Can you please revert that patch and retest?
-> >
-> Yes, reverting that commit solved the issue.
+On Fri, Apr 17, 2020 at 09:29:13PM +0200, Thomas Gleixner wrote:
+> "Luck, Tony" <tony.luck@intel.com> writes:
+> > On Fri, Apr 17, 2020 at 12:04:36PM +0200, Thomas Gleixner wrote:
+> > +	if (!m->driver_data)
+> > +		goto setup;
+> > +	if (!cpu_has(c, X86_FEATURE_CORE_CAPABILITIES))
+> > +		return;
+> > +	rdmsrl(MSR_IA32_CORE_CAPS, ia32_core_caps);
+> > +	if (!(ia32_core_caps & MSR_IA32_CORE_CAPS_SPLIT_LOCK_DETECT))
+> > +		return;
+> > +setup:
+> > +	split_lock_setup();
+> 
+> Which looks nicer w/o the goto:
+> 
+> 	if (m->driver_data) {
+> 		if (!cpu_has(c, X86_FEATURE_CORE_CAPABILITIES))
+> 			return;
+> 		rdmsrl(MSR_IA32_CORE_CAPS, ia32_core_caps);
+> 		if (!(ia32_core_caps & MSR_IA32_CORE_CAPS_SPLIT_LOCK_DETECT))
+> 			return;
+> 	}
+> 
+> Hmm?
 
-OK, thanks!
+Swings and roundabouts ... getting rid of the goto makes for
+deeper indentation. But if you really want to get rid of the
+goto, then your version is fine with me.
 
-Greg, I'm not sure why commit 65a691f5f8f0 from the mainline ended up in 5.6.5.
+Do you want me to spin it into v3?
 
-It has not been marked for -stable or otherwise requested to be
-included AFAICS.  Also it depends on other mainline commits that have
-not been included into 5.6.5.
-
-Can you please drop it?
+-Tony
