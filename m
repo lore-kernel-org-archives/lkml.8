@@ -2,142 +2,228 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-22.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73A4BC38A2B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 17:26:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C011C2D0EF
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 17:27:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 518132078E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 17:26:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 593152078E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 17:27:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="m4bHE2uu"
+	dkim=pass (1024-bit key) header.d=maquefel.me header.i=@maquefel.me header.b="pE4GLC7e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729756AbgDQR0n (ORCPT
+        id S1729842AbgDQR1q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 13:26:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34672 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728657AbgDQR0n (ORCPT
+        Fri, 17 Apr 2020 13:27:46 -0400
+Received: from forward103p.mail.yandex.net ([77.88.28.106]:34230 "EHLO
+        forward103p.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728509AbgDQR1q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 13:26:43 -0400
-Received: from mail-pl1-x64a.google.com (mail-pl1-x64a.google.com [IPv6:2607:f8b0:4864:20::64a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9AA50C061A0C
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 10:26:41 -0700 (PDT)
-Received: by mail-pl1-x64a.google.com with SMTP id w16so2336370plq.1
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 10:26:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=ILn9zjMFZixAua0cC92upDzTyUw6GVgLI4zpVX2kQYA=;
-        b=m4bHE2uu45HdfP0Wgg1WKeRftDLvdgoru1dUCnwI5N5ZcXIEqAw44ycGeigdhBGqgs
-         4gLATlk+W9zI2KZK1Lt/toGa/OCNvjBCx2ZTGALAgAXL+RhHcCPn8vR7s5mVd+9vGY69
-         CQ+pEPqimKZwRh8X8sBLe004QRZ4TNCTWpD6qV4Yq9QjjGHJ7rGYCHre7qM0KjOdNOeR
-         N5b1Kq84Oa3zmlOGYY5p6Y8ClibEmKG2OJ1oFR3EtapNtR+nxZKKo9mLtDkcBFqMMFlC
-         bBNlZwjQ6WwPXp9WTZfdsbV3Y/mil/EBs+SJQkKKWL/1l3XZfMlDpSLCvShvXrO/e1xJ
-         eNQA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=ILn9zjMFZixAua0cC92upDzTyUw6GVgLI4zpVX2kQYA=;
-        b=cIpDhVaVcbahTihV4FdOdZf97RZSoxRDm/fKFEjL60r2tjhs7sji8Fn9ubbj4fLANA
-         TUqV+wTMrIKLP55eC0LMbwUKcgwQ1XzL7CMh32XM1uY1OhCgLeJAjsDNQvMSm9wIAWy6
-         QSxnl/DwxSaAR6ptXpP0Unddm5X/tQfe8BXZaVBP4fLatucp3AKhx4GEUMOEKlZoLcCK
-         XD9iqGj+uw8JirCO6+7aFy6NBF9pKRo61aKTeUiaMWyQ/sbxx4cH+UFjkpGB+/XdLQVg
-         R7IGYyjhNfc2fOUwpPzl0ntfu2U5aS4vUhaOD5+GYcEpPKak5Uf7OtfzW11hg+k67Tjg
-         DrYg==
-X-Gm-Message-State: AGi0PubSRjFjfmrXWhH8LQxy1UNgSjbeUMK67OgC9P1MPvholUHyfTxE
-        giJw3LNrpSAZM9umo+1+gfEWwYs4jy9c
-X-Google-Smtp-Source: APiQypIAfGVzmJZtnCGtNP6az31imBNTuf/QQ7pvHVtqHvvNRVRWycJ+wYPmL/y8uQCLRUrkdLYKhaN81O0s
-X-Received: by 2002:a17:90b:3443:: with SMTP id lj3mr5713388pjb.38.1587144401004;
- Fri, 17 Apr 2020 10:26:41 -0700 (PDT)
-Date:   Fri, 17 Apr 2020 10:25:56 -0700
-Message-Id: <20200417172556.217480-1-bgeffon@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.26.1.301.g55bc3eb7cb9-goog
-Subject: [PATCH] mm: Fix MREMAP_DONTUNMAP accounting on VMA merge
-From:   Brian Geffon <bgeffon@google.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Sonny Rao <sonnyrao@google.com>,
-        Jesse Barnes <jsbarnes@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Minchan Kim <minchan@kernel.org>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Vlastimil Babka <vbabka@suse.cz>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-api@vger.kernel.org,
-        Brian Geffon <bgeffon@google.com>,
-        syzbot <syzkaller@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 17 Apr 2020 13:27:46 -0400
+Received: from mxback24g.mail.yandex.net (mxback24g.mail.yandex.net [IPv6:2a02:6b8:0:1472:2741:0:8b7:324])
+        by forward103p.mail.yandex.net (Yandex) with ESMTP id AC7B318C1A51;
+        Fri, 17 Apr 2020 20:27:37 +0300 (MSK)
+Received: from myt5-95c1fb78270f.qloud-c.yandex.net (myt5-95c1fb78270f.qloud-c.yandex.net [2a02:6b8:c12:1725:0:640:95c1:fb78])
+        by mxback24g.mail.yandex.net (mxback/Yandex) with ESMTP id EKcukuagzZ-Ra70qsfR;
+        Fri, 17 Apr 2020 20:27:37 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=maquefel.me; s=mail; t=1587144457;
+        bh=bEQYQySpw3bm91XQ79ljUoQm7kSTivm9dk+9MeI0Tm0=;
+        h=In-Reply-To:Subject:Cc:To:From:References:Date:Message-ID;
+        b=pE4GLC7eZoOPzErAOndCGb+cA+eIPvlmHojLUkyEn7cDItw8m/LvyD7KhE6Ryo3DU
+         n6hXKla0b9kxUBt9Mc2F53kmjz2kZRFspjbIvsIlxoHMan7s9eFPj46tGzjgGQk8He
+         7JBLYZRk2bgUBxIxRVN/8csSvl0UDgISBnIUU55U=
+Authentication-Results: mxback24g.mail.yandex.net; dkim=pass header.i=@maquefel.me
+Received: by myt5-95c1fb78270f.qloud-c.yandex.net (smtp/Yandex) with ESMTPSA id g0wCxkGACe-RZ2iFG8N;
+        Fri, 17 Apr 2020 20:27:35 +0300
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (Client certificate not present)
+Date:   Fri, 17 Apr 2020 20:26:53 +0300
+From:   Nikita Shubin <nikita.shubin@maquefel.me>
+To:     Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc:     Nikita Shubin <nshubin@topcon.com>,
+        Ohad Ben-Cohen <ohad@wizery.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        "linux-remoteproc@vger.kernel.org" <linux-remoteproc@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 1/3] remoteproc: imx_rproc: set pc on start
+Message-ID: <20200417202653.00002500@maquefel.me>
+In-Reply-To: <CANLsYkxvuwFdG3YnE7tTxQaD7uF0d_XnPjt1KS++FFe0W3fbdw@mail.gmail.com>
+References: <20200304142628.8471-1-NShubin@topcon.com>
+        <20200406113310.3041-1-nikita.shubin@maquefel.me>
+        <20200406113310.3041-2-nikita.shubin@maquefel.me>
+        <20200414164519.GA24061@xps15>
+        <45761587100993@mail.yandex.ru>
+        <CANLsYkxvuwFdG3YnE7tTxQaD7uF0d_XnPjt1KS++FFe0W3fbdw@mail.gmail.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When remapping a mapping where a portion of a VMA is remapped
-into another portion of the VMA it can cause the VMA to become
-split. During the copy_vma operation the VMA can actually
-be remerged if it's an anonymous VMA whose pages have not yet
-been faulted. This isn't normally a problem because at the end
-of the remap the original portion is unmapped causing it to
-become split again.
+On Fri, 17 Apr 2020 11:01:22 -0600
+Mathieu Poirier <mathieu.poirier@linaro.org> wrote:
 
-However, MREMAP_DONTUNMAP leaves that original portion in place which
-means that the VMA which was split and then remerged is not actually
-split at the end of the mremap. This patch fixes a bug where
-we don't detect that the VMAs got remerged and we end up
-putting back VM_ACCOUNT on the next mapping which is completely
-unreleated. When that next mapping is unmapped it results in
-incorrectly unaccounting for the memory which was never accounted,
-and eventually we will underflow on the memory comittment.
+> On Thu, 16 Apr 2020 at 23:40, <nikita.shubin@maquefel.me> wrote:
+> >
+> > Hi Mathieue,
+> >
+> > Hi Nikita,
+> >
+> > On Mon, Apr 06, 2020 at 02:33:08PM +0300, nikita.shubin@maquefel.me
+> > wrote:
+> >
+> >  In case elf file interrupt vector is not supposed to be at OCRAM_S,
+> >  it is needed to write elf entry point to OCRAM_S + 0x4, to boot M4
+> >  firmware.
+> >
+> >  Otherwise firmware located anywhere besides OCRAM_S won't boot.
+> >
+> >  The firmware must set stack poiner as first instruction:
+> >
+> >  Reset_Handler:
+> >      ldr sp, = __stack /* set stack pointer */
+> >
+> >  Signed-off-by: Nikita Shubin <NShubin@topcon.com>
+> >
+> >
+> > The address in the SoB has to match what is found in the "From:"
+> > field of the email header. Checkpatch is complaining about that,
+> > something I would have expected to be fixed before sending this set
+> > out.
+> >
+> > Noted and will be fixed.
+> >
+> >  ---
+> >   drivers/remoteproc/imx_rproc.c | 16 +++++++++++++++-
+> >   1 file changed, 15 insertions(+), 1 deletion(-)
+> >
+> >  diff --git a/drivers/remoteproc/imx_rproc.c
+> > b/drivers/remoteproc/imx_rproc.c index 3e72b6f38d4b..bebc58d0f711
+> > 100644 --- a/drivers/remoteproc/imx_rproc.c
+> >  +++ b/drivers/remoteproc/imx_rproc.c
+> >  @@ -45,6 +45,8 @@
+> >
+> >   #define IMX7D_RPROC_MEM_MAX 8
+> >
+> >  +#define IMX_BOOT_PC 0x4
+> >  +
+> >   /**
+> >    * struct imx_rproc_mem - slim internal memory structure
+> >    * @cpu_addr: MPU virtual address of the memory region
+> >  @@ -85,6 +87,7 @@ struct imx_rproc {
+> >           const struct imx_rproc_dcfg *dcfg;
+> >           struct imx_rproc_mem mem[IMX7D_RPROC_MEM_MAX];
+> >           struct clk *clk;
+> >  + void __iomem *bootreg;
+> >   };
+> >
+> >   static const struct imx_rproc_att imx_rproc_att_imx7d[] = {
+> >  @@ -162,11 +165,16 @@ static int imx_rproc_start(struct rproc
+> > *rproc) struct device *dev = priv->dev;
+> >           int ret;
+> >
+> >  + /* write entry point to program counter */
+> >  + writel(rproc->bootaddr, priv->bootreg);
+> >
+> >
+> > What happens on all the other IMX systems where this fix is not
+> > needed? Will they continue to work properly?
+> >
+> > Yes, my bad, it is also needed for IMX6 (but even so i need to
+> > study this topic more carefully), this should be applied
+> > exclusively for imx7d for now, and if will be needed someone with
+> > imx6 hardware to test on can extend this on imx6 also.
+> >
+> >
+> >
+> >
+> >  +
+> >           ret = regmap_update_bits(priv->regmap, dcfg->src_reg,
+> >                                    dcfg->src_mask, dcfg->src_start);
+> >           if (ret)
+> >                   dev_err(dev, "Failed to enable M4!\n");
+> >
+> >  + dev_info(&rproc->dev, "Started from 0x%x\n", rproc->bootaddr);
+> >  +
+> >           return ret;
+> >   }
+> >
+> >  @@ -182,6 +190,9 @@ static int imx_rproc_stop(struct rproc *rproc)
+> >           if (ret)
+> >                   dev_err(dev, "Failed to stop M4!\n");
+> >
+> >  + /* clear entry points */
+> >  + writel(0, priv->bootreg);
+> >  +
+> >           return ret;
+> >   }
+> >
+> >  @@ -243,7 +254,8 @@ static void *imx_rproc_da_to_va(struct rproc
+> > *rproc, u64 da, int len) static const struct rproc_ops
+> > imx_rproc_ops = { .start = imx_rproc_start,
+> >           .stop = imx_rproc_stop,
+> >  - .da_to_va = imx_rproc_da_to_va,
+> >  + .da_to_va = imx_rproc_da_to_va,
+> >  + .get_boot_addr = rproc_elf_get_boot_addr,
+> >
+> >
+> > How is this useful? Sure it will set rproc->bootaddr in
+> > rproc_fw_boot() but what good does that do when it is invariably
+> > set again in imx_rproc_start() ?
+> >
+> > The priv->bootreg is the address where we are writing Entry Point
+> > and it is fixed, 0x04 address is translated to 0x00180004, so don't
+> > quite understand you we are writing rproc->bootaddr into
+> > priv->bootreg, not wiseversa.
+> >
+> 
+> What is your reason to set ops->get_boot_addr ?  How does that help
+> the work done in this patch?
 
-There is also another issue which is similar, we're currently
-accouting for the number of pages in the new_vma but that's wrong.
-We need to account for the length of the remap operation as that's
-all that is being added. If there was a mapping already at that
-location its comittment would have been adjusted as part of
-the munmap at the start of the mremap.
+The reason is the following :
 
-A really simple repro can be seen in:
-https://gist.github.com/bgaff/e101ce99da7d9a8c60acc641d07f312c
+remoteproc_core.c:
+| rproc_fw_boot(struct rproc *rproc, const struct firmware *fw)
+| rproc->bootaddr = rproc_get_boot_addr(rproc, fw);
 
-Fixes: e346b3813067 ("mm/mremap: add MREMAP_DONTUNMAP to mremap()")
-Reported-by: syzbot <syzkaller@googlegroups.com>
-Signed-off-by: Brian Geffon <bgeffon@google.com>
----
- mm/mremap.c | 13 ++++++++++++-
- 1 file changed, 12 insertions(+), 1 deletion(-)
+remoteproc_internal.h
+| static inline
+| u32 rproc_get_boot_addr(struct rproc *rproc, const struct firmware
+*fw) | {
+| 	if (rproc->ops->get_boot_addr)
+| 		return rproc->ops->get_boot_addr(rproc, fw);
+|
+|	return 0;
+| }
 
-diff --git a/mm/mremap.c b/mm/mremap.c
-index a7e282ead438..c881abeba0bf 100644
---- a/mm/mremap.c
-+++ b/mm/mremap.c
-@@ -413,9 +413,20 @@ static unsigned long move_vma(struct vm_area_struct *vma,
- 			/* Always put back VM_ACCOUNT since we won't unmap */
- 			vma->vm_flags |= VM_ACCOUNT;
- 
--			vm_acct_memory(vma_pages(new_vma));
-+			vm_acct_memory(new_len >> PAGE_SHIFT);
- 		}
- 
-+		/*
-+		 * VMAs can actually be merged back together in copy_vma
-+		 * calling merge_vma. This can happen with anonymous vmas
-+		 * which have not yet been faulted, so if we were to consider
-+		 * this VMA split we'll end up adding VM_ACCOUNT on the
-+		 * next VMA, which is completely unrelated if this VMA
-+		 * was re-merged.
-+		 */
-+		if (split && new_vma == vma)
-+			split = 0;
-+
- 		/* We always clear VM_LOCKED[ONFAULT] on the old vma */
- 		vma->vm_flags &= VM_LOCKED_CLEAR_MASK;
- 
--- 
-2.26.1.301.g55bc3eb7cb9-goog
+> 
+> >
+> >   };
+> >
+> >   static int imx_rproc_addr_init(struct imx_rproc *priv,
+> >  @@ -360,6 +372,8 @@ static int imx_rproc_probe(struct
+> > platform_device *pdev) goto err_put_rproc;
+> >           }
+> >
+> >  + priv->bootreg = imx_rproc_da_to_va(rproc, IMX_BOOT_PC,
+> > sizeof(u32)); +
+> >           /*
+> >            * clk for M4 block including memory. Should be
+> >            * enabled before .start for FW transfer.
+> >  --
+> >  2.25.1
+> >
 
