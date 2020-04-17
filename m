@@ -2,135 +2,142 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21B1BC2D0EF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 13:03:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 189ACC2D0EF
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 13:04:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0481D2076A
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 13:03:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E95E520776
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 13:04:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fz9XxbyB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730247AbgDQNDf (ORCPT
+        id S1730306AbgDQNEb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 09:03:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50072 "EHLO
+        Fri, 17 Apr 2020 09:04:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50214 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729845AbgDQNDe (ORCPT
+        by vger.kernel.org with ESMTP id S1729799AbgDQNEa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 09:03:34 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87D6BC061A0C
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 06:03:34 -0700 (PDT)
-Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jPQeU-0008Ta-Qk; Fri, 17 Apr 2020 15:03:26 +0200
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 49758104096; Fri, 17 Apr 2020 15:03:26 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Balbir Singh <sblbir@amazon.com>, linux-kernel@vger.kernel.org
-Cc:     jpoimboe@redhat.com, tony.luck@intel.com, keescook@chromium.org,
-        benh@kernel.crashing.org, x86@kernel.org, dave.hansen@intel.com,
-        Balbir Singh <sblbir@amazon.com>
-Subject: Re: [PATCH v3 2/5] arch/x86: Refactor tlbflush and l1d flush
-In-Reply-To: <20200408090229.16467-3-sblbir@amazon.com>
-References: <20200408090229.16467-1-sblbir@amazon.com> <20200408090229.16467-3-sblbir@amazon.com>
-Date:   Fri, 17 Apr 2020 15:03:26 +0200
-Message-ID: <87y2qul0wx.fsf@nanos.tec.linutronix.de>
+        Fri, 17 Apr 2020 09:04:30 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DAF16C061A0C
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 06:04:29 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id u127so1810768wmg.1
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 06:04:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=7271KD2VNpOMViwYotEslE4D6OjUz13Ef0kZtzEl5zY=;
+        b=fz9XxbyBBqtvW5YgOol8fJzRb6ZvBP6kWOp8cr9iR/HK2F0ZcfgYt28ellAJjD3PMB
+         qLzRKsqbBT/P0Jz1W6OOD8jeCmJnvM/NRYIwfcw8ju6Y6xNb9ACAmQYZGpzKXGgsavAa
+         6dfFJ4IATdHMcWceO4jTmCvtzA3C5LKr0lkn2OLP2AkvXxCZ1C2T8S+YjxvHfkNET7nl
+         I3M7+jQXHTw82I0vGzWjoVcpUKU32qLIwrH4uSUABmex0dFWN6Iri43auzhC4hQw8oyt
+         Xi+m7c4jhEItpC78WH0ze4FDa74rWS7JknFjPnCSRUyLnfCjCkJpXLTFJLsfqVE5+6x0
+         84AA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=7271KD2VNpOMViwYotEslE4D6OjUz13Ef0kZtzEl5zY=;
+        b=rCb24FkXUtToQshVzWuoEUoLRJI0VXUM/Za/pOkCVuXwROAsyuKiiOakhtqFIJCdHm
+         lYc9QexciEt/K5YjAyL74USeLuH1vD5DlNkoy/oKy1DHHwqeDzZVS9ax9M/YvneGJCgG
+         CheMLraMY2vDMczma24YfrSS1RG4SQ0vkydLv5dQV17V557y/ckZsYTsVeX1JMm8P2Tn
+         ZiOVXi1PuoHyLtU4ibc2s89vG5LVj8oWYIA0H4hIwe31j6cmNINDjng8Aq5KkBDvDwv/
+         B6kj3e0Llk863PWWq15k/BPJpztLD/TaM45g/O9dP/X+76dZzYx2hCMwO82piJTJJ6Ay
+         OxqA==
+X-Gm-Message-State: AGi0PuZd+82tBGKPgavdTHXV6/bz3Px3VSbW9KEw+/keP4DYrxqPITD8
+        8/qVQXH4QxUJsVGQ6lfdtsF3z2R1
+X-Google-Smtp-Source: APiQypL4OnX5WERtK+wI+mW9HBYL/JNaMj3Vi68Bikb523we8SnBClqp6R1HJspLG2lPE4E8sfwLew==
+X-Received: by 2002:a1c:9989:: with SMTP id b131mr3007477wme.176.1587128668578;
+        Fri, 17 Apr 2020 06:04:28 -0700 (PDT)
+Received: from ?IPv6:2a01:cb19:8b28:7600:a0b9:1c6f:cfba:2b21? ([2a01:cb19:8b28:7600:a0b9:1c6f:cfba:2b21])
+        by smtp.gmail.com with ESMTPSA id k3sm22998141wru.90.2020.04.17.06.04.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 17 Apr 2020 06:04:27 -0700 (PDT)
+Subject: Re: [PATCH] Changes in w1_therm.c and adding w1_therm.h
+To:     Evgeniy Polyakov <zbr@ioremap.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc:     Greg Kroah-Hartman <greg@kroah.com>
+References: <20200414170248.299534-1-akira215corp@gmail.com>
+ <20621587067856@mail.yandex.ru>
+From:   akira215 <akira215corp@gmail.com>
+Message-ID: <531d8c36-82d4-f589-e10d-f20d8b541777@gmail.com>
+Date:   Fri, 17 Apr 2020 15:04:26 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <20621587067856@mail.yandex.ru>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Balbir Singh <sblbir@amazon.com> writes:
-> +void populate_tlb_with_flush_pages(void *l1d_flush_pages);
-> +void flush_l1d_cache_sw(void *l1d_flush_pages);
-> +int flush_l1d_cache_hw(void);
+Hi,
 
-l1d_flush_populate_pages();
-l1d_flush_sw()
-l1d_flush_hw()
+Thanks for your answer and for your encouragement. Sorry for the 
+previous mail, it was a mistake from my side, you can obviously delete it.
 
-Hmm?
+Akira SHIMAHARA
 
-> +void populate_tlb_with_flush_pages(void *l1d_flush_pages)
-> +{
-> +	int size = PAGE_SIZE << L1D_CACHE_ORDER;
-> +
-> +	asm volatile(
-> +		/* First ensure the pages are in the TLB */
-> +		"xorl	%%eax, %%eax\n"
-> +		".Lpopulate_tlb:\n\t"
-> +		"movzbl	(%[flush_pages], %%" _ASM_AX "), %%ecx\n\t"
-> +		"addl	$4096, %%eax\n\t"
-> +		"cmpl	%%eax, %[size]\n\t"
-> +		"jne	.Lpopulate_tlb\n\t"
-> +		"xorl	%%eax, %%eax\n\t"
-> +		"cpuid\n\t"
-> +		:: [flush_pages] "r" (l1d_flush_pages),
-> +		    [size] "r" (size)
-> +		: "eax", "ebx", "ecx", "edx");
-> +}
-> +EXPORT_SYMBOL_GPL(populate_tlb_with_flush_pages);
-
-I probably missed the fine print in the change log why this is separate
-from the SW flush function.
-
-> +int flush_l1d_cache_hw(void)
-> +{
-> +	if (static_cpu_has(X86_FEATURE_FLUSH_L1D)) {
-> +		wrmsrl(MSR_IA32_FLUSH_CMD, L1D_FLUSH);
-> +		return 0;
-> +	}
-> +	return -ENOTSUPP;
-> +}
-> +EXPORT_SYMBOL_GPL(flush_l1d_cache_hw);
-
-along with the explanation why this needs to be two functions.
-
-> -	if (static_cpu_has(X86_FEATURE_FLUSH_L1D)) {
-> -		wrmsrl(MSR_IA32_FLUSH_CMD, L1D_FLUSH);
-> +	if (flush_l1d_cache_hw() == 0)
->  		return;
-> -	}
-
-	if (!l1d_flush_hw())
-		return;
-
-> -	asm volatile(
-> -		/* First ensure the pages are in the TLB */
-> -		"xorl	%%eax, %%eax\n"
-> -		".Lpopulate_tlb:\n\t"
-> -		"movzbl	(%[flush_pages], %%" _ASM_AX "), %%ecx\n\t"
-> -		"addl	$4096, %%eax\n\t"
-> -		"cmpl	%%eax, %[size]\n\t"
-> -		"jne	.Lpopulate_tlb\n\t"
-> -		"xorl	%%eax, %%eax\n\t"
-> -		"cpuid\n\t"
-> -		/* Now fill the cache */
-> -		"xorl	%%eax, %%eax\n"
-> -		".Lfill_cache:\n"
-> -		"movzbl	(%[flush_pages], %%" _ASM_AX "), %%ecx\n\t"
-> -		"addl	$64, %%eax\n\t"
-> -		"cmpl	%%eax, %[size]\n\t"
-> -		"jne	.Lfill_cache\n\t"
-> -		"lfence\n"
-> -		:: [flush_pages] "r" (vmx_l1d_flush_pages),
-> -		    [size] "r" (size)
-> -		: "eax", "ebx", "ecx", "edx");
-> +	preempt_disable();
-> +	populate_tlb_with_flush_pages(vmx_l1d_flush_pages);
-> +	flush_l1d_cache_sw(vmx_l1d_flush_pages);
-> +	preempt_enable();
-
-The preempt_disable/enable was not there before, right? Why do we need
-that now? If this is a fix, then that should be a separate patch.
-
-Thanks,
-
-        tglx
+Le 16/04/2020 à 22:12, Evgeniy Polyakov a écrit :
+> Hi
+> 
+> 14.04.2020, 20:03, "Akira Shimahara" <akira215corp@gmail.com>:
+>> From: Akira SHIMAHARA <akira215corp@gmail.com>
+>>
+>> Patch for enhacement of w1_therm module. Added features :
+>>   - Bulk read : send one command for all the slaves
+>>                   on the bus to trigger temperature conversion
+>>   - Optimized conversion time regarding to device resolution
+>>   - Dedicated sysfs entry for powering read,
+>>                   resolution set/get, eeprom save/restore
+>>   - Alarms settings and reading
+>>   - Code optimization to mitigate bus traffic
+>>                   (devices information are stored to avoid
+>>                  interrogating each device every-time)
+>>
+>> Following sysfs entry are added :
+>>   - temperature (RO) : return the temperature in 1/1000°
+>>   - ext_power (RO) : return the power status of the device
+>>   - resolution (RW) : get or set the device resolution (supported devices)
+>>   - eeprom (WO) :trigger a save or restore to/from device EEPROM
+>>   - alarms (RW) : read or write TH and TL in the device RAM
+>>   - therm_bulk_read (RW) : Attribute at master level to trigger
+>>                   bulk read and to survey the progress of devices conversions
+>>   - w1_slave has been kept for compatibility
+>>
+>> Main motivation was to improve temperature reading speed, which depend
+>> on resolution settings of devices. The module store the powwer status and
+>> the resolution of each device so that during reading operation, no
+>> transaction is required on the bus, which improve speed.
+>> The harware status is checked as soon as a new device is detected,
+>> when a user change occured, or when the corresponding sys file is
+>> accessed by user.
+>>
+>> The bulk read allow to trigger convserion of all devices on the bus at
+>> the same time. It will apply a strong pull up on the line if at least
+>> one device required it. The duration of the pull up is the max time
+>> required by a device on the line.
+>>
+>> Please let me know any feedback you have on this patch.
+>>
+>> Thanks ahead,
+>>
+>> Signed-off-by: Akira Shimahara <akira215corp@gmail.com>
+> 
+> Looks good to me, thank you!
+> These are really good changes.
+> 
+> Greg, please pull it into your tree, thank you.
+> 
+> Acked-by: Evgeniy Polyakov <zbr@ioremap.net>
+> 
