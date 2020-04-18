@@ -7,52 +7,56 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 000C1C38A2F
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 13:51:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10FBCC38A2F
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 13:51:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CFFCA2054F
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 13:51:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA07B2054F
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 13:51:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587217903;
-	bh=0PJdmnhUCsTCwdTxrc85iviAyXqH9RK8DKfgmt6eieQ=;
+	s=default; t=1587217910;
+	bh=TFFg3LbECDGuRvcOFMP9lajUE38r4GIFQSFV6ldiKTw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FapX0ZvrK2BbXDQMpRVHeHC91sBqH7beDcpXmU+wTbnI7twnLiNuOSmvlOp6mRq5R
-	 RmAHXt7QxDuBkAsmxzthb/RDljiWTvBO5vUdHTdADv6+dTQ2nnMgErAkTGOubjJUjk
-	 s/st4AKfXrYGdjeLX45qhpwrec81M15jYjypSPrM=
+	b=b8jeI1gbV7KD/TWPKLcBrXVRuoKbS8W9H9EnKFo0rxCJ6FDu2NGA99hN5I18j06kP
+	 csofQNjkxxS8Q/2rquxtHaNdxwZ39Ism3eiVh/0daUt94d+a60T1M8BQDHwCNt3PoZ
+	 HeeAul2tCuoHWbY+hh8qd443DkRQ58yLN8bd/Xf0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726666AbgDRNvj (ORCPT
+        id S1726899AbgDRNvu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 09:51:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55888 "EHLO mail.kernel.org"
+        Sat, 18 Apr 2020 09:51:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55826 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726715AbgDRNtH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 09:49:07 -0400
+        id S1726701AbgDRNtF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 09:49:05 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D73E822245;
-        Sat, 18 Apr 2020 13:49:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 587B62054F;
+        Sat, 18 Apr 2020 13:49:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587217746;
-        bh=0PJdmnhUCsTCwdTxrc85iviAyXqH9RK8DKfgmt6eieQ=;
+        s=default; t=1587217744;
+        bh=TFFg3LbECDGuRvcOFMP9lajUE38r4GIFQSFV6ldiKTw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=P+i2fI3Z0caSNMJPmVE/MZxiXD+uzsKh9Ec+8BHXwq/er1O21KZGFChN5B75w/loz
-         618EKmGXeMT0L15/kK5XKhLVumaUIAcC1z7pKLsglL4/HkzSvZhVn4zktfUhmoSJQm
-         WQGcVK4bvQTQ0kmr+RW3tFduOYNIlSgtJwblqa0I=
+        b=nXb/9yYtn4hRgwKnXdlfB0W52JV1mixk5lGKr2TdnMLtQrELsX/7yhd6gyprzuWuG
+         Olr5smq1eYDcZT/10gN1YEZf56xiQzzFX/UUKOvU8sd185psDG6QgDPbmBXZA9sXTe
+         BfzCQzzzRDsWZHs7ns9ug+xBP9sNsqh2R0IdhHgk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ganesh Goudar <ganeshgr@linux.ibm.com>,
-        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 5.6 40/73] powerpc/pseries: Fix MCE handling on pseries
-Date:   Sat, 18 Apr 2020 09:47:42 -0400
-Message-Id: <20200418134815.6519-40-sashal@kernel.org>
+Cc:     Sven Van Asbroeck <TheSven73@gmail.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Clemens Gruber <clemens.gruber@pqgruber.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pwm@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 38/73] pwm: pca9685: Fix PWM/GPIO inter-operation
+Date:   Sat, 18 Apr 2020 09:47:40 -0400
+Message-Id: <20200418134815.6519-38-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200418134815.6519-1-sashal@kernel.org>
 References: <20200418134815.6519-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -61,85 +65,203 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ganesh Goudar <ganeshgr@linux.ibm.com>
+From: Sven Van Asbroeck <TheSven73@gmail.com>
 
-[ Upstream commit a95a0a1654f16366360399574e10efd87e867b39 ]
+[ Upstream commit 9cc5f232a4b6a0ef6e9b57876d61b88f61bdd7c2 ]
 
-MCE handling on pSeries platform fails as recent rework to use common
-code for pSeries and PowerNV in machine check error handling tries to
-access per-cpu variables in realmode. The per-cpu variables may be
-outside the RMO region on pSeries platform and needs translation to be
-enabled for access. Just moving these per-cpu variable into RMO region
-did'nt help because we queue some work to workqueues in real mode, which
-again tries to touch per-cpu variables. Also fwnmi_release_errinfo()
-cannot be called when translation is not enabled.
+This driver allows pwms to be requested as gpios via gpiolib. Obviously,
+it should not be allowed to request a GPIO when its corresponding PWM is
+already requested (and vice versa). So it requires some exclusion code.
 
-This patch fixes this by enabling translation in the exception handler
-when all required real mode handling is done. This change only affects
-the pSeries platform.
+Given that the PWMm and GPIO cores are not synchronized with respect to
+each other, this exclusion code will also require proper
+synchronization.
 
-Without this fix below kernel crash is seen on injecting
-SLB multihit:
+Such a mechanism was in place, but was inadvertently removed by Uwe's
+clean-up in commit e926b12c611c ("pwm: Clear chip_data in pwm_put()").
 
-BUG: Unable to handle kernel data access on read at 0xc00000027b205950
-Faulting instruction address: 0xc00000000003b7e0
-Oops: Kernel access of bad area, sig: 11 [#1]
-LE PAGE_SIZE=64K MMU=Hash SMP NR_CPUS=2048 NUMA pSeries
-Modules linked in: mcetest_slb(OE+) af_packet(E) xt_tcpudp(E) ip6t_rpfilter(E) ip6t_REJECT(E) ipt_REJECT(E) xt_conntrack(E) ip_set(E) nfnetlink(E) ebtable_nat(E) ebtable_broute(E) ip6table_nat(E) ip6table_mangle(E) ip6table_raw(E) ip6table_security(E) iptable_nat(E) nf_nat(E) nf_conntrack(E) nf_defrag_ipv6(E) nf_defrag_ipv4(E) iptable_mangle(E) iptable_raw(E) iptable_security(E) ebtable_filter(E) ebtables(E) ip6table_filter(E) ip6_tables(E) iptable_filter(E) ip_tables(E) x_tables(E) xfs(E) ibmveth(E) vmx_crypto(E) gf128mul(E) uio_pdrv_genirq(E) uio(E) crct10dif_vpmsum(E) rtc_generic(E) btrfs(E) libcrc32c(E) xor(E) zstd_decompress(E) zstd_compress(E) raid6_pq(E) sr_mod(E) sd_mod(E) cdrom(E) ibmvscsi(E) scsi_transport_srp(E) crc32c_vpmsum(E) dm_mod(E) sg(E) scsi_mod(E)
-CPU: 34 PID: 8154 Comm: insmod Kdump: loaded Tainted: G OE 5.5.0-mahesh #1
-NIP: c00000000003b7e0 LR: c0000000000f2218 CTR: 0000000000000000
-REGS: c000000007dcb960 TRAP: 0300 Tainted: G OE (5.5.0-mahesh)
-MSR: 8000000000001003 <SF,ME,RI,LE> CR: 28002428 XER: 20040000
-CFAR: c0000000000f2214 DAR: c00000027b205950 DSISR: 40000000 IRQMASK: 0
-GPR00: c0000000000f2218 c000000007dcbbf0 c000000001544800 c000000007dcbd70
-GPR04: 0000000000000001 c000000007dcbc98 c008000000d00258 c0080000011c0000
-GPR08: 0000000000000000 0000000300000003 c000000001035950 0000000003000048
-GPR12: 000000027a1d0000 c000000007f9c000 0000000000000558 0000000000000000
-GPR16: 0000000000000540 c008000001110000 c008000001110540 0000000000000000
-GPR20: c00000000022af10 c00000025480fd70 c008000001280000 c00000004bfbb300
-GPR24: c000000001442330 c00800000800000d c008000008000000 4009287a77000510
-GPR28: 0000000000000000 0000000000000002 c000000001033d30 0000000000000001
-NIP [c00000000003b7e0] save_mce_event+0x30/0x240
-LR [c0000000000f2218] pseries_machine_check_realmode+0x2c8/0x4f0
-Call Trace:
-Instruction dump:
-3c4c0151 38429050 7c0802a6 60000000 fbc1fff0 fbe1fff8 f821ffd1 3d42ffaf
-3fc2ffaf e98d0030 394a1150 3bdef530 <7d6a62aa> 1d2b0048 2f8b0063 380b0001
----[ end trace 46fd63f36bbdd940 ]---
+Upon revisiting the synchronization mechanism, we found that
+theoretically, it could allow two threads to successfully request
+conflicting PWMs/GPIOs.
 
-Fixes: 9ca766f9891d ("powerpc/64s/pseries: machine check convert to use common event code")
-Reviewed-by: Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>
-Reviewed-by: Nicholas Piggin <npiggin@gmail.com>
-Signed-off-by: Ganesh Goudar <ganeshgr@linux.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20200320110119.10207-1-ganeshgr@linux.ibm.com
+Replace with a bitmap which tracks PWMs in-use, plus a mutex. As long as
+PWM and GPIO's respective request/free functions modify the in-use
+bitmap while holding the mutex, proper synchronization will be
+guaranteed.
+
+Reported-by: YueHaibing <yuehaibing@huawei.com>
+Fixes: e926b12c611c ("pwm: Clear chip_data in pwm_put()")
+Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+Cc: YueHaibing <yuehaibing@huawei.com>
+Link: https://lkml.org/lkml/2019/5/31/963
+Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
+Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+[cg: Tested on an i.MX6Q board with two NXP PCA9685 chips]
+Tested-by: Clemens Gruber <clemens.gruber@pqgruber.com>
+Reviewed-by: Sven Van Asbroeck <TheSven73@gmail.com> # cg's rebase
+Link: https://lore.kernel.org/lkml/20200330160238.GD2817345@ulmo/
+Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/platforms/pseries/ras.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ drivers/pwm/pwm-pca9685.c | 85 ++++++++++++++++++++++-----------------
+ 1 file changed, 48 insertions(+), 37 deletions(-)
 
-diff --git a/arch/powerpc/platforms/pseries/ras.c b/arch/powerpc/platforms/pseries/ras.c
-index 1d7f973c647b3..43710b69e09eb 100644
---- a/arch/powerpc/platforms/pseries/ras.c
-+++ b/arch/powerpc/platforms/pseries/ras.c
-@@ -683,6 +683,17 @@ static int mce_handle_error(struct pt_regs *regs, struct rtas_error_log *errp)
+diff --git a/drivers/pwm/pwm-pca9685.c b/drivers/pwm/pwm-pca9685.c
+index b07bdca3d510d..590375be52147 100644
+--- a/drivers/pwm/pwm-pca9685.c
++++ b/drivers/pwm/pwm-pca9685.c
+@@ -20,6 +20,7 @@
+ #include <linux/slab.h>
+ #include <linux/delay.h>
+ #include <linux/pm_runtime.h>
++#include <linux/bitmap.h>
+ 
+ /*
+  * Because the PCA9685 has only one prescaler per chip, changing the period of
+@@ -74,6 +75,7 @@ struct pca9685 {
+ #if IS_ENABLED(CONFIG_GPIOLIB)
+ 	struct mutex lock;
+ 	struct gpio_chip gpio;
++	DECLARE_BITMAP(pwms_inuse, PCA9685_MAXCHAN + 1);
  #endif
+ };
  
- out:
-+	/*
-+	 * Enable translation as we will be accessing per-cpu variables
-+	 * in save_mce_event() which may fall outside RMO region, also
-+	 * leave it enabled because subsequently we will be queuing work
-+	 * to workqueues where again per-cpu variables accessed, besides
-+	 * fwnmi_release_errinfo() crashes when called in realmode on
-+	 * pseries.
-+	 * Note: All the realmode handling like flushing SLB entries for
-+	 *       SLB multihit is done by now.
-+	 */
-+	mtmsr(mfmsr() | MSR_IR | MSR_DR);
- 	save_mce_event(regs, disposition == RTAS_DISP_FULLY_RECOVERED,
- 			&mce_err, regs->nip, eaddr, paddr);
+@@ -83,51 +85,51 @@ static inline struct pca9685 *to_pca(struct pwm_chip *chip)
+ }
  
+ #if IS_ENABLED(CONFIG_GPIOLIB)
+-static int pca9685_pwm_gpio_request(struct gpio_chip *gpio, unsigned int offset)
++static bool pca9685_pwm_test_and_set_inuse(struct pca9685 *pca, int pwm_idx)
+ {
+-	struct pca9685 *pca = gpiochip_get_data(gpio);
+-	struct pwm_device *pwm;
++	bool is_inuse;
+ 
+ 	mutex_lock(&pca->lock);
+-
+-	pwm = &pca->chip.pwms[offset];
+-
+-	if (pwm->flags & (PWMF_REQUESTED | PWMF_EXPORTED)) {
+-		mutex_unlock(&pca->lock);
+-		return -EBUSY;
++	if (pwm_idx >= PCA9685_MAXCHAN) {
++		/*
++		 * "all LEDs" channel:
++		 * pretend already in use if any of the PWMs are requested
++		 */
++		if (!bitmap_empty(pca->pwms_inuse, PCA9685_MAXCHAN)) {
++			is_inuse = true;
++			goto out;
++		}
++	} else {
++		/*
++		 * regular channel:
++		 * pretend already in use if the "all LEDs" channel is requested
++		 */
++		if (test_bit(PCA9685_MAXCHAN, pca->pwms_inuse)) {
++			is_inuse = true;
++			goto out;
++		}
+ 	}
+-
+-	pwm_set_chip_data(pwm, (void *)1);
+-
++	is_inuse = test_and_set_bit(pwm_idx, pca->pwms_inuse);
++out:
+ 	mutex_unlock(&pca->lock);
+-	pm_runtime_get_sync(pca->chip.dev);
+-	return 0;
++	return is_inuse;
+ }
+ 
+-static bool pca9685_pwm_is_gpio(struct pca9685 *pca, struct pwm_device *pwm)
++static void pca9685_pwm_clear_inuse(struct pca9685 *pca, int pwm_idx)
+ {
+-	bool is_gpio = false;
+-
+ 	mutex_lock(&pca->lock);
++	clear_bit(pwm_idx, pca->pwms_inuse);
++	mutex_unlock(&pca->lock);
++}
+ 
+-	if (pwm->hwpwm >= PCA9685_MAXCHAN) {
+-		unsigned int i;
+-
+-		/*
+-		 * Check if any of the GPIOs are requested and in that case
+-		 * prevent using the "all LEDs" channel.
+-		 */
+-		for (i = 0; i < pca->gpio.ngpio; i++)
+-			if (gpiochip_is_requested(&pca->gpio, i)) {
+-				is_gpio = true;
+-				break;
+-			}
+-	} else if (pwm_get_chip_data(pwm)) {
+-		is_gpio = true;
+-	}
++static int pca9685_pwm_gpio_request(struct gpio_chip *gpio, unsigned int offset)
++{
++	struct pca9685 *pca = gpiochip_get_data(gpio);
+ 
+-	mutex_unlock(&pca->lock);
+-	return is_gpio;
++	if (pca9685_pwm_test_and_set_inuse(pca, offset))
++		return -EBUSY;
++	pm_runtime_get_sync(pca->chip.dev);
++	return 0;
+ }
+ 
+ static int pca9685_pwm_gpio_get(struct gpio_chip *gpio, unsigned int offset)
+@@ -162,6 +164,7 @@ static void pca9685_pwm_gpio_free(struct gpio_chip *gpio, unsigned int offset)
+ 
+ 	pca9685_pwm_gpio_set(gpio, offset, 0);
+ 	pm_runtime_put(pca->chip.dev);
++	pca9685_pwm_clear_inuse(pca, offset);
+ }
+ 
+ static int pca9685_pwm_gpio_get_direction(struct gpio_chip *chip,
+@@ -213,12 +216,17 @@ static int pca9685_pwm_gpio_probe(struct pca9685 *pca)
+ 	return devm_gpiochip_add_data(dev, &pca->gpio, pca);
+ }
+ #else
+-static inline bool pca9685_pwm_is_gpio(struct pca9685 *pca,
+-				       struct pwm_device *pwm)
++static inline bool pca9685_pwm_test_and_set_inuse(struct pca9685 *pca,
++						  int pwm_idx)
+ {
+ 	return false;
+ }
+ 
++static inline void
++pca9685_pwm_clear_inuse(struct pca9685 *pca, int pwm_idx)
++{
++}
++
+ static inline int pca9685_pwm_gpio_probe(struct pca9685 *pca)
+ {
+ 	return 0;
+@@ -402,7 +410,7 @@ static int pca9685_pwm_request(struct pwm_chip *chip, struct pwm_device *pwm)
+ {
+ 	struct pca9685 *pca = to_pca(chip);
+ 
+-	if (pca9685_pwm_is_gpio(pca, pwm))
++	if (pca9685_pwm_test_and_set_inuse(pca, pwm->hwpwm))
+ 		return -EBUSY;
+ 	pm_runtime_get_sync(chip->dev);
+ 
+@@ -411,8 +419,11 @@ static int pca9685_pwm_request(struct pwm_chip *chip, struct pwm_device *pwm)
+ 
+ static void pca9685_pwm_free(struct pwm_chip *chip, struct pwm_device *pwm)
+ {
++	struct pca9685 *pca = to_pca(chip);
++
+ 	pca9685_pwm_disable(chip, pwm);
+ 	pm_runtime_put(chip->dev);
++	pca9685_pwm_clear_inuse(pca, pwm->hwpwm);
+ }
+ 
+ static const struct pwm_ops pca9685_pwm_ops = {
 -- 
 2.20.1
 
