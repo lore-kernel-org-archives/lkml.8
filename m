@@ -2,63 +2,64 @@ Return-Path: <SRS0=3CHW=6C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15335C38A2F
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 17:07:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBCC3C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 17:07:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DD2AE22209
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 17:07:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAE66221F7
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 17:07:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h6kMX8/a"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IQ9EFc/9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726144AbgDRRHU (ORCPT
+        id S1726798AbgDRRHW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 13:07:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55070 "EHLO
+        Sat, 18 Apr 2020 13:07:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55078 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725887AbgDRRHT (ORCPT
+        with ESMTP id S1725887AbgDRRHV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 13:07:19 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45948C061A0C;
-        Sat, 18 Apr 2020 10:07:19 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id l19so2795252lje.10;
-        Sat, 18 Apr 2020 10:07:19 -0700 (PDT)
+        Sat, 18 Apr 2020 13:07:21 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41FB5C061A0C;
+        Sat, 18 Apr 2020 10:07:21 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id e25so5341363ljg.5;
+        Sat, 18 Apr 2020 10:07:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=UjhBLAJmzhN057qQPLR85nlezCd0Cbg3wKL62JA+F0Y=;
-        b=h6kMX8/a/MD+21migy24dxFEqMf8aW6xXDbzepMropt4ZX8BHN3GOTPCB9P4/mWpfC
-         +zorigm2j4U6S9MKaU5zWQzA9Oek7rSlqwU7x5LeHtxj3w1+7hIoKiK0nI+eKB9bhRxp
-         BMTGfoe93olsIYCuJ6TWCK2m+09QR/m0F61d0ue8dFpZE7wPF3moZSILOtqf0BEhrgJD
-         sjcsOAd+kpRcbGfBeXpkdJSCmhN7KmwXcgj5dsqlkQaZSuqFAG8hlJaIUtDAAmYF0LGa
-         QglQCB/UuKgn86AN+Q712QZ2/xoXbQgDHpQPG8yMGSin3tZhOFN0K2lM/ABXT4mESoKq
-         Aw/A==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=GmbaXDj6/A2yy3AR+sXi1M1Zh+o7hArk00ZH5b0F9ZU=;
+        b=IQ9EFc/970LojBwLiW62BzGPBnOzmy32A9jVWoWDsei2DhVR8dy4ffZK8x9F8N/PT9
+         wz+97rXX+dPMgbFLEKEgQdx3eKpfxvKbKVItMhwDIZZM4azyCyXkzGwkA1cOCVO16rZW
+         ijs5x3KGwycbHCNqt377mxeBk5RpP4qSU/hhCb8VoluNtNwpdZk0fRsstUZ/wF6uSkIP
+         cH2DfNt7s4OhUz9VQoicOILzpbPXRXEOJ9miVMZ9abM3msVEBkoUeDljv5312QK5ipCx
+         mV4h5MQAtt6gTz0k6nhyJvwz5ONJBG8xfvHxyizNXWX3ekQx+Z2N98hMEt1qNfcYdgBC
+         FlVA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=UjhBLAJmzhN057qQPLR85nlezCd0Cbg3wKL62JA+F0Y=;
-        b=i3oHYzh/4nzlaKoKME9IFCYM6cmYcc9jnClD/FqZXHOwObI/5cjglbbRgibpgxjLu0
-         DjSk4wR1evqcoEmNhiga/czZx4u7jvUZnU9qXmgToopOkqzzr2svOWFngk0EQix8lniP
-         CNf7B7XOqADiETFEwrLWyBMBHB7ix7iPEuVCj4N7G9t8UaOwElEPIZIzkBxGHydA/dJQ
-         q81G0DQs/hJZ7YS4mJs+3AyAGDxagOkJDYVdsGHais630mV/qUBkQKKpNFtWH5MKbgE0
-         /QxoBEG7bwpWeIk40/khC+aJvlOkcg3tEWgD2z0cM+i8+M+f7hj4rIgSzBNchfLs0GBz
-         xpRA==
-X-Gm-Message-State: AGi0PuYUTHRJ064qT6Ca+8Fr8ZyNAA4uxKJr/h97O8dU+JsRmx3+mRv1
-        tZWU0+XSTQUd6vDIYkLPNqU=
-X-Google-Smtp-Source: APiQypJO9Q9iUvGnqWW4hjfAjTVkvpc+Xh9pA8t+jnQA9ei8M3XpSh8CGKey1LqD9LuS39c/Z617jg==
-X-Received: by 2002:a2e:7006:: with SMTP id l6mr5124806ljc.269.1587229637344;
-        Sat, 18 Apr 2020 10:07:17 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=GmbaXDj6/A2yy3AR+sXi1M1Zh+o7hArk00ZH5b0F9ZU=;
+        b=rOEmrC/y2lacksHnwEtk9Si1Ul3z8Xj4C7dhw5HMnyKTwe4VLkr7l50rXwZcDyjtHp
+         x2L47VlebHA33pXMlBGti9cyzuY52Zoy8fhHJwPjUnYhcIBw73as12BtxcGU9OeqJW9r
+         /rkk+WY/wM3TkLwig2FMBSzJyld5adGYbb77/yXQefDwv9ephw4ysQkO4mQRJzW8V7ji
+         R+Nsg25kFYwM2oSFFDfg9Qd2uGeVNijLru1cxQrqZPV9mELwAAQ187F0vjZkFIjhS2uZ
+         mHKUr5CNPhY9xwyRCttvZ3GEEEF9PkBNhwq6IQLrNxvkE0wheBYVrAekM8c8b4q8b5wN
+         64PQ==
+X-Gm-Message-State: AGi0Pub8xZoG8SqdjJoZmumrEaovOmMc62TxOJmS1rGRxB7Ul/1RoqWE
+        V3gNNCS717zAmBJTpXLK+GYaSUbo
+X-Google-Smtp-Source: APiQypJZeGBXci/SYfTR0hCgDyYACwvrJkNlkiEL97tY/h/8Q5HyrC0kRIAH1vune5hFb+wviydGyw==
+X-Received: by 2002:a2e:9a4c:: with SMTP id k12mr5235920ljj.189.1587229639769;
+        Sat, 18 Apr 2020 10:07:19 -0700 (PDT)
 Received: from localhost.localdomain (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
-        by smtp.gmail.com with ESMTPSA id e15sm8768909ljb.25.2020.04.18.10.07.16
+        by smtp.gmail.com with ESMTPSA id e15sm8768909ljb.25.2020.04.18.10.07.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 18 Apr 2020 10:07:16 -0700 (PDT)
+        Sat, 18 Apr 2020 10:07:19 -0700 (PDT)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         Sam Ravnborg <sam@ravnborg.org>,
@@ -67,10 +68,12 @@ To:     Thierry Reding <thierry.reding@gmail.com>,
         Frank Rowand <frowand.list@gmail.com>
 Cc:     dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v5 0/6] Support DRM bridges on NVIDIA Tegra
-Date:   Sat, 18 Apr 2020 20:06:57 +0300
-Message-Id: <20200418170703.1583-1-digetx@gmail.com>
+Subject: [PATCH v5 2/6] drm/of: Make drm_of_find_panel_or_bridge() to check graph's presence
+Date:   Sat, 18 Apr 2020 20:06:59 +0300
+Message-Id: <20200418170703.1583-3-digetx@gmail.com>
 X-Mailer: git-send-email 2.26.0
+In-Reply-To: <20200418170703.1583-1-digetx@gmail.com>
+References: <20200418170703.1583-1-digetx@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -78,63 +81,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+When graph isn't defined in a device-tree, the of_graph_get_remote_node()
+prints a noisy error message, telling that port node is not found. This is
+undesirable behaviour in our case because absence of a panel/bridge graph
+is a valid case. Let's check presence of the local port in a device-tree
+before proceeding with parsing the graph.
 
-This series adds initial support for the DRM bridges to NVIDIA Tegra DRM
-driver. This is required by newer device-trees where we model the LVDS
-encoder bridge properly.
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+---
+ drivers/gpu/drm/drm_of.c | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
 
-Changelog:
-
-v5: - Added new patches that make drm_of_find_panel_or_bridge() more usable
-      if graph isn't defined in a device-tree:
-
-        of_graph: add of_graph_get_local_port()
-        drm/of: Make drm_of_find_panel_or_bridge() to check graph's presence
-
-    - Updated "Support DRM bridges" patch to use drm_of_find_panel_or_bridge()
-      directly and added WARN_ON(output->panel || output->bridge) sanity-check.
-
-    - Added new "Wrap directly-connected panel into DRM bridge" patch, as
-      was suggested by Laurent Pinchart.
-
-v4: - Following review comments that were made by Laurent Pinchart to the v3,
-      we now create and use the "bridge connector".
-
-v3: - Following recommendation from Sam Ravnborg, the new bridge attachment
-      model is now being used, i.e. we ask bridge to *not* create a connector
-      using the DRM_BRIDGE_ATTACH_NO_CONNECTOR flag.
-
-    - The bridge is now created only for the RGB (LVDS) output, and only
-      when necessary. For now we don't need bridges for HDMI or DSI outputs.
-
-    - I noticed that we're leaking OF node in the panel's error code path,
-      this is fixed now by the new patch "Don't leak OF node on error".
-
-v2: - Added the new "rgb: Don't register connector if bridge is used"
-      patch, which hides the unused connector provided by the Tegra DRM
-      driver when bridge is used, since bridge provides its own connector
-      to us.
-
-    - Please notice that the first "Support DRM bridges" patch was previously
-      sent out as a standalone v1 change.
-
-Dmitry Osipenko (6):
-  of_graph: add of_graph_get_local_port()
-  drm/of: Make drm_of_find_panel_or_bridge() to check graph's presence
-  drm/tegra: output: Don't leak OF node on error
-  drm/tegra: output: Support DRM bridges
-  drm/tegra: output: rgb: Support LVDS encoder bridge
-  drm/tegra: output: rgb: Wrap directly-connected panel into DRM bridge
-
- drivers/gpu/drm/drm_of.c       | 13 +++++-
- drivers/gpu/drm/tegra/drm.h    |  2 +
- drivers/gpu/drm/tegra/output.c | 21 +++++++--
- drivers/gpu/drm/tegra/rgb.c    | 85 +++++++++++++++++++++-------------
- drivers/of/property.c          | 32 +++++++++----
- include/linux/of_graph.h       |  7 +++
- 6 files changed, 114 insertions(+), 46 deletions(-)
-
+diff --git a/drivers/gpu/drm/drm_of.c b/drivers/gpu/drm/drm_of.c
+index b50b44e76279..e0652c38f357 100644
+--- a/drivers/gpu/drm/drm_of.c
++++ b/drivers/gpu/drm/drm_of.c
+@@ -239,13 +239,24 @@ int drm_of_find_panel_or_bridge(const struct device_node *np,
+ 				struct drm_bridge **bridge)
+ {
+ 	int ret = -EPROBE_DEFER;
+-	struct device_node *remote;
++	struct device_node *local, *remote;
+ 
+ 	if (!panel && !bridge)
+ 		return -EINVAL;
+ 	if (panel)
+ 		*panel = NULL;
+ 
++	/*
++	 * of_graph_get_remote_node() produces a noisy error message if port
++	 * node isn't found and the absence of the port is a legit case here,
++	 * so at first we silently check presence of the local port.
++	 */
++	local = of_graph_get_local_port(np);
++	if (!local)
++		return -ENODEV;
++
++	of_node_put(local);
++
+ 	remote = of_graph_get_remote_node(np, port, endpoint);
+ 	if (!remote)
+ 		return -ENODEV;
 -- 
 2.26.0
 
