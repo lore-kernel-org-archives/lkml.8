@@ -4,57 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88636C38A29
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:51:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B577BC38A29
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:51:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 54B7421D79
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:51:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93A6721D79
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:51:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587221460;
-	bh=wWcxu4OCfXEK46Bg8kOK4Q6L/CNCdcIft+WVM10h9XI=;
+	s=default; t=1587221463;
+	bh=MwHKcYOjOGrxhsjnuqmIHb0rD2QYw2+Z9yeGtyMvrDA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=n4Rmz/vJvxIR3qpQOkZHZXjvwP4TGoT600zhN5WAnfmhuF0o5rcPcdvihyGPdvzGF
-	 86mwFDjH1f0DKxkZsa+j/QemMBEgVfs6CDH6n/rs9q0u0TnXs6UbyRM4/VPgRlQm85
-	 1GS5g01msAaPCUN1VhZzE4LSg1+Rkp2441PJJDw8=
+	b=w1RhzydZxKVN4v1hoAzaj0gemdxYtWduooCMpygaPIcZVpo9l8bud83EJh+7hJhYN
+	 SZgdE4DLEhh0QPvj9516fJ5PkZb6M8kG8wlKlVVeSWIWcsRtPCRl/OQCDaqPxXN423
+	 DM62mt3XJne7TDPnqtxoc53JllM+QFD4oyQc7kgc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728450AbgDROmw (ORCPT
+        id S1728704AbgDROvC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 10:42:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53142 "EHLO mail.kernel.org"
+        Sat, 18 Apr 2020 10:51:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53338 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728425AbgDROmr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 10:42:47 -0400
+        id S1726517AbgDROmw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 10:42:52 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 959E321D82;
-        Sat, 18 Apr 2020 14:42:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 754DA22202;
+        Sat, 18 Apr 2020 14:42:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587220967;
-        bh=wWcxu4OCfXEK46Bg8kOK4Q6L/CNCdcIft+WVM10h9XI=;
+        s=default; t=1587220972;
+        bh=MwHKcYOjOGrxhsjnuqmIHb0rD2QYw2+Z9yeGtyMvrDA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xPQwrTaA3xlN+eJCzkR8XxmlssJbjVeVAF3Sv/CnEGfKucsVW26NACTTuzxYIt277
-         GdEe1EGlFW8WTDx3cCpowA4AUd9tCFVJIhWLczBVMSyrj/iMWQ1yzl4qb8Y0MjdGgV
-         nwoKrg5r2vxg9N3RzMJIQJWiIpaywN/8mQw54uJs=
+        b=tZipFqJQa8Kfg6kvBmiJ75vjZNgl7j063zP8fp5Zd3vX/BQCPNDLtfRdAqABS3WPh
+         U3NSSnG8rxINwWh0qn4mPok3yY73ht0z8/Y76PI2NZDIjSBP7XzbIpfP8UOADuSvAJ
+         VPrcvGZhWNEvMnd5EyUf8MQJ0WsBJciRg0TvTSzM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Eric Biggers <ebiggers@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jeff Vander Stoep <jeffv@google.com>,
-        Jessica Yu <jeyu@kernel.org>,
-        Kees Cook <keescook@chromium.org>, NeilBrown <neilb@suse.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-kselftest@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 15/47] selftests: kmod: fix handling test numbers above 9
-Date:   Sat, 18 Apr 2020 10:41:55 -0400
-Message-Id: <20200418144227.9802-15-sashal@kernel.org>
+Cc:     Cornelia Huck <cohuck@redhat.com>,
+        Boris Fiuczynski <fiuczy@linux.ibm.com>,
+        Peter Oberparleiter <oberpar@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 19/47] s390/cio: avoid duplicated 'ADD' uevents
+Date:   Sat, 18 Apr 2020 10:41:59 -0400
+Message-Id: <20200418144227.9802-19-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200418144227.9802-1-sashal@kernel.org>
 References: <20200418144227.9802-1-sashal@kernel.org>
@@ -67,62 +61,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+From: Cornelia Huck <cohuck@redhat.com>
 
-[ Upstream commit 6d573a07528308eb77ec072c010819c359bebf6e ]
+[ Upstream commit 05ce3e53f375295c2940390b2b429e506e07655c ]
 
-get_test_count() and get_test_enabled() were broken for test numbers
-above 9 due to awk interpreting a field specification like '$0010' as
-octal rather than decimal.  Fix it by stripping the leading zeroes.
+The common I/O layer delays the ADD uevent for subchannels and
+delegates generating this uevent to the individual subchannel
+drivers. The io_subchannel driver will do so when the associated
+ccw_device has been registered -- but unconditionally, so more
+ADD uevents will be generated if a subchannel has been unbound
+from the io_subchannel driver and later rebound.
 
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Acked-by: Luis Chamberlain <mcgrof@kernel.org>
-Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Jeff Vander Stoep <jeffv@google.com>
-Cc: Jessica Yu <jeyu@kernel.org>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: NeilBrown <neilb@suse.com>
-Link: http://lkml.kernel.org/r/20200318230515.171692-5-ebiggers@kernel.org
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+To fix this, only generate the ADD event if uevents were still
+suppressed for the device.
+
+Fixes: fa1a8c23eb7d ("s390: cio: Delay uevents for subchannels")
+Message-Id: <20200327124503.9794-2-cohuck@redhat.com>
+Reported-by: Boris Fiuczynski <fiuczy@linux.ibm.com>
+Reviewed-by: Peter Oberparleiter <oberpar@linux.ibm.com>
+Reviewed-by: Boris Fiuczynski <fiuczy@linux.ibm.com>
+Signed-off-by: Cornelia Huck <cohuck@redhat.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/kmod/kmod.sh | 13 +++++++++----
+ drivers/s390/cio/device.c | 13 +++++++++----
  1 file changed, 9 insertions(+), 4 deletions(-)
 
-diff --git a/tools/testing/selftests/kmod/kmod.sh b/tools/testing/selftests/kmod/kmod.sh
-index 0a76314b44149..1f118916a83e4 100755
---- a/tools/testing/selftests/kmod/kmod.sh
-+++ b/tools/testing/selftests/kmod/kmod.sh
-@@ -505,18 +505,23 @@ function test_num()
- 	fi
- }
- 
--function get_test_count()
-+function get_test_data()
- {
- 	test_num $1
--	TEST_DATA=$(echo $ALL_TESTS | awk '{print $'$1'}')
-+	local field_num=$(echo $1 | sed 's/^0*//')
-+	echo $ALL_TESTS | awk '{print $'$field_num'}'
-+}
-+
-+function get_test_count()
-+{
-+	TEST_DATA=$(get_test_data $1)
- 	LAST_TWO=${TEST_DATA#*:*}
- 	echo ${LAST_TWO%:*}
- }
- 
- function get_test_enabled()
- {
--	test_num $1
--	TEST_DATA=$(echo $ALL_TESTS | awk '{print $'$1'}')
-+	TEST_DATA=$(get_test_data $1)
- 	echo ${TEST_DATA#*:*:}
- }
- 
+diff --git a/drivers/s390/cio/device.c b/drivers/s390/cio/device.c
+index 1540229a37bba..c9bc9a6bd73b7 100644
+--- a/drivers/s390/cio/device.c
++++ b/drivers/s390/cio/device.c
+@@ -827,8 +827,10 @@ static void io_subchannel_register(struct ccw_device *cdev)
+ 	 * Now we know this subchannel will stay, we can throw
+ 	 * our delayed uevent.
+ 	 */
+-	dev_set_uevent_suppress(&sch->dev, 0);
+-	kobject_uevent(&sch->dev.kobj, KOBJ_ADD);
++	if (dev_get_uevent_suppress(&sch->dev)) {
++		dev_set_uevent_suppress(&sch->dev, 0);
++		kobject_uevent(&sch->dev.kobj, KOBJ_ADD);
++	}
+ 	/* make it known to the system */
+ 	ret = ccw_device_add(cdev);
+ 	if (ret) {
+@@ -1036,8 +1038,11 @@ static int io_subchannel_probe(struct subchannel *sch)
+ 		 * Throw the delayed uevent for the subchannel, register
+ 		 * the ccw_device and exit.
+ 		 */
+-		dev_set_uevent_suppress(&sch->dev, 0);
+-		kobject_uevent(&sch->dev.kobj, KOBJ_ADD);
++		if (dev_get_uevent_suppress(&sch->dev)) {
++			/* should always be the case for the console */
++			dev_set_uevent_suppress(&sch->dev, 0);
++			kobject_uevent(&sch->dev.kobj, KOBJ_ADD);
++		}
+ 		cdev = sch_get_cdev(sch);
+ 		rc = ccw_device_add(cdev);
+ 		if (rc) {
 -- 
 2.20.1
 
