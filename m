@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C87B6C352BE
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 18:41:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9C3EC352BE
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 18:42:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A925C2223D
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 18:41:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8880C2223D
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 18:42:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="RZ4Q2VGM"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="j5q/SQ1+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728006AbgDRSlW (ORCPT
+        id S1728198AbgDRSmC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 14:41:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41190 "EHLO
+        Sat, 18 Apr 2020 14:42:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41214 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726086AbgDRSlR (ORCPT
+        by vger.kernel.org with ESMTP id S1727936AbgDRSlV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 14:41:17 -0400
+        Sat, 18 Apr 2020 14:41:21 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87487C061A0F;
-        Sat, 18 Apr 2020 11:41:17 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65C45C061A0C;
+        Sat, 18 Apr 2020 11:41:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         Content-Type:MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:
         To:From:Sender:Reply-To:Content-ID:Content-Description;
-        bh=g1ONOf6MGj3aToaUeBLhJbF3d+tY5CMeHHoXTtmPNsE=; b=RZ4Q2VGMoE1Bka/a+kMpugnl6V
-        WMVry8MWAMKA0AfBSRZP5GbN9pJJeG4gjR6sud7qBmDPy8K3i6BprqmwPWH5lOuW2gqRr/Z6Cm0gD
-        LgdYYpcS7u+9zN1adQU6TRExKq4DBbaLs/fZ8BFQwxY4cbSn3IER0BNxv3UJFdqify3T+1KdTD2Qi
-        vrHfuHPH4Z0QFf2MXKCGJ5k6d3bNzMgrjkWWTemljZSz/KV2Pcv1AoZFf0+EUry4IuzRrudoMMT/C
-        ei8L5wfK4u7V/ulhuTnRRFf6mMeS0g5tdTHkmzzebQf9iIBlwwM0f/XqpVSnBSOE3/pCfTfbCtZ3f
-        SvwQIVLw==;
+        bh=RAwgh7dK6Aq2GUmD2z2q67RSpKe0Qba5fsNnenVzxMI=; b=j5q/SQ1+k3/+/NWSTV/WCIkHyr
+        zch6FAcwYZsrW1PmSwaW8sUH6ZWeOC45ea2Cw5ovOtRwJLJOkQhRg13tWis5r+icV/DhjmdEjwv79
+        s2h+fCIcRl3RnLCdtSGFczimDTd9m/8AzLPWV2hp+UzgF8z2XnH0R/f/a5DQg9nNd3Y73Ad9ZrO4P
+        SE8YtJq+oauVuVNS6MyEi2RLVp6TVtw40sWJHw1JEOXlVu7aGBz0X1bug3Vw49BLE3fO57MGGN/q0
+        Pmq5oXAMF6sIRcv8GgeZALDInNNSJ4NKJzYxSO84gAsonX87pABbmdSy94HL9m+wa0jkyxTrzud66
+        2h6YWfaA==;
 Received: from [2601:1c0:6280:3f0::19c2] (helo=smtpauth.infradead.org)
         by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jPsOw-0007rZ-8d; Sat, 18 Apr 2020 18:41:14 +0000
+        id 1jPsP3-0007rZ-5p; Sat, 18 Apr 2020 18:41:21 +0000
 From:   Randy Dunlap <rdunlap@infradead.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Randy Dunlap <rdunlap@infradead.org>,
@@ -61,9 +61,9 @@ Cc:     Randy Dunlap <rdunlap@infradead.org>,
         "Martin K. Petersen" <martin.petersen@oracle.com>,
         linux-scsi@vger.kernel.org, target-devel@vger.kernel.org,
         Zzy Wysm <zzy@zzywysm.com>
-Subject: [RFC PATCH 1/9] kernel.h: add do_empty() macro
-Date:   Sat, 18 Apr 2020 11:41:03 -0700
-Message-Id: <20200418184111.13401-2-rdunlap@infradead.org>
+Subject: [PATCH 8/9] dax: fix empty-body warnings in bus.c
+Date:   Sat, 18 Apr 2020 11:41:10 -0700
+Message-Id: <20200418184111.13401-9-rdunlap@infradead.org>
 X-Mailer: git-send-email 2.16.4
 In-Reply-To: <20200418184111.13401-1-rdunlap@infradead.org>
 References: <20200418184111.13401-1-rdunlap@infradead.org>
@@ -75,55 +75,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the do_empty() macro to silence gcc warnings about an empty body
-following an "if" statement when -Wextra is used.
+Fix gcc empty-body warning when -Wextra is used:
 
-However, for debug printk calls that are being disabled, use either
-no_printk() or pr_debug() [and optionally dynamic printk debugging]
-instead.
+../drivers/dax/bus.c:93:27: warning: suggest braces around empty body in an ‘else’ statement [-Wempty-body]
+../drivers/dax/bus.c:98:29: warning: suggest braces around empty body in an ‘else’ statement [-Wempty-body]
 
 Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>
-Cc: linux-fsdevel@vger.kernel.org
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: linux-input@vger.kernel.org
-Cc: Jaroslav Kysela <perex@perex.cz>
-Cc: Takashi Iwai <tiwai@suse.com>
-Cc: alsa-devel@alsa-project.org
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: linux-usb@vger.kernel.org
-Cc: "J. Bruce Fields" <bfields@fieldses.org>
-Cc: Chuck Lever <chuck.lever@oracle.com>
-Cc: linux-nfs@vger.kernel.org
-Cc: Johannes Berg <johannes@sipsolutions.net>
 Cc: Dan Williams <dan.j.williams@intel.com>
 Cc: Vishal Verma <vishal.l.verma@intel.com>
 Cc: Dave Jiang <dave.jiang@intel.com>
 Cc: linux-nvdimm@lists.01.org
-Cc: "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc: linux-scsi@vger.kernel.org
-Cc: target-devel@vger.kernel.org
-Cc: Zzy Wysm <zzy@zzywysm.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>
 ---
- include/linux/kernel.h |    8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/dax/bus.c |    5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
---- linux-next-20200327.orig/include/linux/kernel.h
-+++ linux-next-20200327/include/linux/kernel.h
-@@ -40,6 +40,14 @@
- #define READ			0
- #define WRITE			1
+--- linux-next-20200417.orig/drivers/dax/bus.c
++++ linux-next-20200417/drivers/dax/bus.c
+@@ -2,6 +2,7 @@
+ /* Copyright(c) 2017-2018 Intel Corporation. All rights reserved. */
+ #include <linux/memremap.h>
+ #include <linux/device.h>
++#include <linux/kernel.h>
+ #include <linux/mutex.h>
+ #include <linux/list.h>
+ #include <linux/slab.h>
+@@ -90,12 +91,12 @@ static ssize_t do_id_store(struct device
+ 			} else
+ 				rc = -ENOMEM;
+ 		} else
+-			/* nothing to remove */;
++			do_empty(); /* nothing to remove */
+ 	} else if (action == ID_REMOVE) {
+ 		list_del(&dax_id->list);
+ 		kfree(dax_id);
+ 	} else
+-		/* dax_id already added */;
++		do_empty(); /* dax_id already added */
+ 	mutex_unlock(&dax_bus_lock);
  
-+/*
-+ * When using -Wextra, an "if" statement followed by an empty block
-+ * (containing only a ';'), produces a warning from gcc:
-+ * warning: suggest braces around empty body in an ‘if’ statement [-Wempty-body]
-+ * Replace the empty body with do_empty() to silence this warning.
-+ */
-+#define do_empty()		do { } while (0)
-+
- /**
-  * ARRAY_SIZE - get the number of elements in array @arr
-  * @arr: array to be sized
+ 	if (rc < 0)
