@@ -2,144 +2,98 @@ Return-Path: <SRS0=3CHW=6C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFF8AC3A5A0
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 18:05:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E71E1C352BE
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 18:05:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CCB7222209
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 18:05:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587233114;
-	bh=aFt/t+QixrMMhZc9iDNmw+15QdJdDJicEA9NNiDa52k=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=hElXVRQc8th2Mw5DcGiVtbXEwRTRRQnLgn3Nws7pZW7f2aa2vW4fE0j3vDnhEYnYW
-	 MMMQFbtXwVfpB2pO80uJmuw/mqURt8uooyIJy2UZVGhgDuYT0eRv7vXGBL0KRkOd99
-	 jGT9RUODEF84RsBb8dx6BbrEauI1s1yANyHxtZXg=
+	by mail.kernel.org (Postfix) with ESMTP id B28AB21D6C
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 18:05:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N9DcK5Q5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726907AbgDRSFO (ORCPT
+        id S1727782AbgDRSF6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 14:05:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45238 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725824AbgDRSFN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 14:05:13 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E5212221F7;
-        Sat, 18 Apr 2020 18:05:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587233113;
-        bh=aFt/t+QixrMMhZc9iDNmw+15QdJdDJicEA9NNiDa52k=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=sOsnuZNYWDkrln3yYM+cWcslPYPZ7hFBDCuZEvRhBDw76CZy3eA1IdaWPJeuRJoOp
-         u+yXv1NHJF/pMPTZ+xzrqxDt0tJGPG6iU7vrwa5Xc52eUawQnnXNKkwgbGhapQYTjP
-         3qaGvi6lTPtr5PQl7bYd6u9cEH9A/GxMJu/JJ7HU=
-Date:   Sat, 18 Apr 2020 19:05:08 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Guido =?UTF-8?B?R8O8bnRoZXI=?= <agx@sigxcpu.org>
-Cc:     Tomas Novotny <tomas@novotny.cz>, Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        "Angus Ainslie (Purism)" <angus@akkea.ca>,
-        Marco Felsch <m.felsch@pengutronix.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Nishant Malpani <nish.malpani25@gmail.com>
-Subject: Re: [PATCH v4 4/5] iio: vcnl4000: Export near level property for
- proximity sensor
-Message-ID: <20200418190508.49cc05ee@archlinux>
-In-Reply-To: <cfd5373665c4d314764c4dbe20b55de14fb6ba34.1586094535.git.agx@sigxcpu.org>
-References: <cover.1586094535.git.agx@sigxcpu.org>
-        <cfd5373665c4d314764c4dbe20b55de14fb6ba34.1586094535.git.agx@sigxcpu.org>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sat, 18 Apr 2020 14:05:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35844 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725824AbgDRSF6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 14:05:58 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18668C061A0C
+        for <linux-kernel@vger.kernel.org>; Sat, 18 Apr 2020 11:05:58 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id 188so64237wmc.2
+        for <linux-kernel@vger.kernel.org>; Sat, 18 Apr 2020 11:05:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=O4U+IPm6wwBCRpajIFNeENCy2/QtAFa0dBn73KPuzS0=;
+        b=N9DcK5Q5c7dscVTCmHncEZHvn9QX4LIQaYHTtnxcIQKGlCtdhSrUgAhl0wMSl+iurf
+         6qigTMAIFf3Yitgkkd+sYYo6Fh30a+MNeVvFsP8AOi1DSiiu2AUzZbyAzDO53C+M7mPt
+         2PXCZmav3ZFOA41sUWI26R1eWAkpMX9btDsJAlucku1yMp0dZvvu8ehgisWPK9DwuvO4
+         uTwVoTSvll/dgvx4vbUyVpc2D+5o7VPOzWn6KiSr+2CkGQwnREuI9xqOJ70CUnyaf7Gb
+         Q1kQojGVlpukIr2KkNux5t4b3whWlEIRZi5LOcsyeeGI8OV9k3P+aylBTRtuHEIgUlak
+         q5jA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=O4U+IPm6wwBCRpajIFNeENCy2/QtAFa0dBn73KPuzS0=;
+        b=cOf4AxF1r05orPOylkhwGqltEy0qU8IDlkq4piSuA2twE5vsMh7awkBFhxYGZhwjAs
+         vJd1Ci2tpMeMlclGrX/K1p7vPV9OwTfaqO+81/WZlA3v0xB8WuWijyuuemzzzppG1rR4
+         Iu+Q8++wDdjx/EZ5iA7r1bX5/jJoPqkAykxi7Ma6FprGYslXkj21/qRZr9OzuZgFR8lJ
+         jsIzyHnV1h6GAHq7DmudbcU3kZ6BKjmSMmDspF7F6TpdvddQTengGVp8V4pF/Rg598Ge
+         UgqzCPThm36gTTevpY8P5m9w/+bh9bf08W91lG/9XTqdpkQUXe9v8w8r1/FEIX4nLUF0
+         dPGA==
+X-Gm-Message-State: AGi0PuYNBXsPWATPRQhJGHV0zIi+lc6W1ScM41+ttCmPOvvS9W8R0lLg
+        x0YfiMho5MeRhqiVbYTQWLsddxy8
+X-Google-Smtp-Source: APiQypLoEkLQ5045RR7fd8D/nO+e0Qs985sAMMqOSmX3Xm1GzaQ8OBi0O1N4jaHnsPyR1rgZQ9001g==
+X-Received: by 2002:a1c:2002:: with SMTP id g2mr8755746wmg.109.1587233156597;
+        Sat, 18 Apr 2020 11:05:56 -0700 (PDT)
+Received: from [192.168.43.18] (188.29.165.57.threembb.co.uk. [188.29.165.57])
+        by smtp.gmail.com with ESMTPSA id l19sm12514363wmj.14.2020.04.18.11.05.55
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 18 Apr 2020 11:05:56 -0700 (PDT)
+Subject: Re: [PATCH 2/2] staging: vt6656: Fix functions' documentation
+To:     Oscar Carter <oscar.carter@gmx.com>,
+        Forest Bond <forest@alittletooquiet.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Quentin Deslandes <quentin.deslandes@itdev.co.uk>,
+        Amir Mahdi Ghorbanian <indigoomega021@gmail.com>,
+        Stefano Brivio <sbrivio@redhat.com>,
+        "John B. Wyatt IV" <jbwyatt4@gmail.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+References: <20200418123659.4475-1-oscar.carter@gmx.com>
+ <20200418123659.4475-3-oscar.carter@gmx.com>
+From:   Malcolm Priestley <tvboxspy@gmail.com>
+Message-ID: <adc4bc72-5c80-e8f4-8d48-052109ae18b7@gmail.com>
+Date:   Sat, 18 Apr 2020 19:05:53 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200418123659.4475-3-oscar.carter@gmx.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun,  5 Apr 2020 15:50:31 +0200
-Guido G=C3=BCnther <agx@sigxcpu.org> wrote:
+Actually I don't really think the function descriptions are needed at all the
+names of the functions are enough.
 
-> When an object can be considered close to the sensor is hardware
-> dependent. Allowing to configure the property via device tree
-> allows to configure this device specific value.
->=20
-> This is useful for e.g. iio-sensor-proxy to indicate to userspace
-> if an object is close to the sensor.
->=20
-> Signed-off-by: Guido G=C3=BCnther <agx@sigxcpu.org>
-Applied.  Thanks,
-> ---
->  drivers/iio/light/vcnl4000.c | 25 +++++++++++++++++++++++++
->  1 file changed, 25 insertions(+)
->=20
-> diff --git a/drivers/iio/light/vcnl4000.c b/drivers/iio/light/vcnl4000.c
-> index ec803c1e81df..985cc39ede8e 100644
-> --- a/drivers/iio/light/vcnl4000.c
-> +++ b/drivers/iio/light/vcnl4000.c
-> @@ -83,6 +83,7 @@ struct vcnl4000_data {
->  	struct mutex vcnl4000_lock;
->  	struct vcnl4200_channel vcnl4200_al;
->  	struct vcnl4200_channel vcnl4200_ps;
-> +	uint32_t near_level;
->  };
-> =20
->  struct vcnl4000_chip_spec {
-> @@ -343,6 +344,25 @@ static const struct vcnl4000_chip_spec vcnl4000_chip=
-_spec_cfg[] =3D {
->  	},
->  };
-> =20
-> +static ssize_t vcnl4000_read_near_level(struct iio_dev *indio_dev,
-> +					uintptr_t priv,
-> +					const struct iio_chan_spec *chan,
-> +					char *buf)
-> +{
-> +	struct vcnl4000_data *data =3D iio_priv(indio_dev);
-> +
-> +	return sprintf(buf, "%u\n", data->near_level);
-> +}
-> +
-> +static const struct iio_chan_spec_ext_info vcnl4000_ext_info[] =3D {
-> +	{
-> +		.name =3D "nearlevel",
-> +		.shared =3D IIO_SEPARATE,
-> +		.read =3D vcnl4000_read_near_level,
-> +	},
-> +	{ /* sentinel */ }
-> +};
-> +
->  static const struct iio_chan_spec vcnl4000_channels[] =3D {
->  	{
->  		.type =3D IIO_LIGHT,
-> @@ -351,6 +371,7 @@ static const struct iio_chan_spec vcnl4000_channels[]=
- =3D {
->  	}, {
->  		.type =3D IIO_PROXIMITY,
->  		.info_mask_separate =3D BIT(IIO_CHAN_INFO_RAW),
-> +		.ext_info =3D vcnl4000_ext_info,
->  	}
->  };
-> =20
-> @@ -440,6 +461,10 @@ static int vcnl4000_probe(struct i2c_client *client,
->  	dev_dbg(&client->dev, "%s Ambient light/proximity sensor, Rev: %02x\n",
->  		data->chip_spec->prod, data->rev);
-> =20
-> +	if (device_property_read_u32(&client->dev, "proximity-near-level",
-> +				     &data->near_level))
-> +		data->near_level =3D 0;
-> +
->  	indio_dev->dev.parent =3D &client->dev;
->  	indio_dev->info =3D &vcnl4000_info;
->  	indio_dev->channels =3D vcnl4000_channels;
+card.c needs to be removed the bss callers to baseband.c, the tbtt's to power.c
+and the rest to mac.c
 
+Regards
+
+Malcolm
