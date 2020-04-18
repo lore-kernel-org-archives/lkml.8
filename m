@@ -4,53 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0F95C38A2F
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:51:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07255C38A29
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:51:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AD02C21D79
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:51:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D95E121D6C
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:51:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587221493;
-	bh=lSpX98LlHpBgkq+KsmD2J8feAmxZfyFHyjH3hCAT2tg=;
+	s=default; t=1587221495;
+	bh=9TDw9yuVJzxDpPiNYhrOdUb18Ovrfl5nqHEqUdzq4q0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=trjZ4jy4opeh6+STDzlQoPfTS+w/VtwHv89gbtSWKWjtmrNnASxHmOPG5O+PqXuKm
-	 5Lwi4qcpRVMduCZ4V/EAe2jt3BPrnMq2rwFA5o7L7URzCAIPm61TpIu878nHHfwRkW
-	 UgSenRHFL/1JevM//h6pJxiS8F6smNsMI0UZddrc=
+	b=fHI2GEpgDIUWgnDRbtxPAo+6vflI9yr4cMySxzpMPMnqhtbWPnAR30IDDB1NVOyTd
+	 u+Hu84g43Pmlf8R7wkD3cpN3bj4HQRdDmNF40JNV46MtcOL02d7hEKojQjcngtpr0w
+	 uHi3HBF/ZHq9x/NCJa5qy1gJz331UBnrle321fyY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729065AbgDROvc (ORCPT
+        id S1729059AbgDROvb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 10:51:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52818 "EHLO mail.kernel.org"
+        Sat, 18 Apr 2020 10:51:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52880 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728388AbgDROmh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 10:42:37 -0400
+        id S1728392AbgDROmj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 10:42:39 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A5D9D22245;
-        Sat, 18 Apr 2020 14:42:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D24AB22240;
+        Sat, 18 Apr 2020 14:42:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587220957;
-        bh=lSpX98LlHpBgkq+KsmD2J8feAmxZfyFHyjH3hCAT2tg=;
+        s=default; t=1587220958;
+        bh=9TDw9yuVJzxDpPiNYhrOdUb18Ovrfl5nqHEqUdzq4q0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AXnxeqi27dTCI1sP8p2exFdrcFSCM2MBgEpf7q+XYMnyxCnDF8YInv1pcyvRqFZ3L
-         vy23XeIx2TfPZ9wOoBMAAnRVcE0Hd6TUPItyoEToHxEL9w1C53Ab3A23e584zsXzqs
-         SMSt+nltTILqzGHVKNjXx35DlSAkFRRVBmwLAhtg=
+        b=cQ4qmLSMFHOa+HGaJpOS+CAoD/qYZcxMfH45xlIMSEYMn1o/aeGvzD0onEtzfZpPL
+         CPxQplEwudx+zBlMaQE5PVICfwIxOmddVdRY/o5qTjEzQL5ToVhrOCkm+c/IqMWQos
+         SHsPct9OlIspBCwkyMcGJi1XrKk6u3r7A49uescs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Yan, Zheng" <zyan@redhat.com>, Jeff Layton <jlayton@kernel.org>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, ceph-devel@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 08/47] ceph: don't skip updating wanted caps when cap is stale
-Date:   Sat, 18 Apr 2020 10:41:48 -0400
-Message-Id: <20200418144227.9802-8-sashal@kernel.org>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pwm@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 09/47] pwm: rcar: Fix late Runtime PM enablement
+Date:   Sat, 18 Apr 2020 10:41:49 -0400
+Message-Id: <20200418144227.9802-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200418144227.9802-1-sashal@kernel.org>
 References: <20200418144227.9802-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -59,47 +63,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Yan, Zheng" <zyan@redhat.com>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-[ Upstream commit 0aa971b6fd3f92afef6afe24ef78d9bb14471519 ]
+[ Upstream commit 1451a3eed24b5fd6a604683f0b6995e0e7e16c79 ]
 
-1. try_get_cap_refs() fails to get caps and finds that mds_wanted
-   does not include what it wants. It returns -ESTALE.
-2. ceph_get_caps() calls ceph_renew_caps(). ceph_renew_caps() finds
-   that inode has cap, so it calls ceph_check_caps().
-3. ceph_check_caps() finds that issued caps (without checking if it's
-   stale) already includes caps wanted by open file, so it skips
-   updating wanted caps.
+Runtime PM should be enabled before calling pwmchip_add(), as PWM users
+can appear immediately after the PWM chip has been added.
+Likewise, Runtime PM should be disabled after the removal of the PWM
+chip.
 
-Above events can cause an infinite loop inside ceph_get_caps().
-
-Signed-off-by: "Yan, Zheng" <zyan@redhat.com>
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
-Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
+Fixes: ed6c1476bf7f16d5 ("pwm: Add support for R-Car PWM Timer")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ceph/caps.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/pwm/pwm-rcar.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
-diff --git a/fs/ceph/caps.c b/fs/ceph/caps.c
-index 4c0b220e20bab..5241102b81a82 100644
---- a/fs/ceph/caps.c
-+++ b/fs/ceph/caps.c
-@@ -1972,8 +1972,12 @@ void ceph_check_caps(struct ceph_inode_info *ci, int flags,
- 		}
+diff --git a/drivers/pwm/pwm-rcar.c b/drivers/pwm/pwm-rcar.c
+index 748f614d53755..b7d71bf297d69 100644
+--- a/drivers/pwm/pwm-rcar.c
++++ b/drivers/pwm/pwm-rcar.c
+@@ -232,24 +232,28 @@ static int rcar_pwm_probe(struct platform_device *pdev)
+ 	rcar_pwm->chip.base = -1;
+ 	rcar_pwm->chip.npwm = 1;
  
- 		/* want more caps from mds? */
--		if (want & ~(cap->mds_wanted | cap->issued))
--			goto ack;
-+		if (want & ~cap->mds_wanted) {
-+			if (want & ~(cap->mds_wanted | cap->issued))
-+				goto ack;
-+			if (!__cap_is_valid(cap))
-+				goto ack;
-+		}
++	pm_runtime_enable(&pdev->dev);
++
+ 	ret = pwmchip_add(&rcar_pwm->chip);
+ 	if (ret < 0) {
+ 		dev_err(&pdev->dev, "failed to register PWM chip: %d\n", ret);
++		pm_runtime_disable(&pdev->dev);
+ 		return ret;
+ 	}
  
- 		/* things we might delay */
- 		if ((cap->issued & ~retain) == 0 &&
+-	pm_runtime_enable(&pdev->dev);
+-
+ 	return 0;
+ }
+ 
+ static int rcar_pwm_remove(struct platform_device *pdev)
+ {
+ 	struct rcar_pwm_chip *rcar_pwm = platform_get_drvdata(pdev);
++	int ret;
++
++	ret = pwmchip_remove(&rcar_pwm->chip);
+ 
+ 	pm_runtime_disable(&pdev->dev);
+ 
+-	return pwmchip_remove(&rcar_pwm->chip);
++	return ret;
+ }
+ 
+ static const struct of_device_id rcar_pwm_of_table[] = {
 -- 
 2.20.1
 
