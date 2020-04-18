@@ -2,191 +2,118 @@ Return-Path: <SRS0=3CHW=6C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F2C8C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 15:01:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDF9CC38A29
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 15:04:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D821221EA
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 15:01:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E74E2076A
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 15:04:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f0gkVGdX"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="Opwic/Dt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726779AbgDRPBW (ORCPT
+        id S1726710AbgDRPEC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 11:01:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35932 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725914AbgDRPBW (ORCPT
+        Sat, 18 Apr 2020 11:04:02 -0400
+Received: from esa4.microchip.iphmx.com ([68.232.154.123]:65410 "EHLO
+        esa4.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725914AbgDRPEC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 11:01:22 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2288C061A0C;
-        Sat, 18 Apr 2020 08:01:21 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id v4so941840wme.1;
-        Sat, 18 Apr 2020 08:01:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=Q4NvKOF4jokQzr+OFpyWKzZTT39+gDgdtnGFKi9DkQI=;
-        b=f0gkVGdXy41TzPhlrnd9xVSLChePuts8KGhjCc/8ct72yDST2hg0iG5jdzLgg6oQXn
-         Dkg+JzpLhacK2grOpHsahRZ7CzV28WUUoanTMeTyRgmvtuv5bc5iR38qAVLZQe45C+KX
-         soSD2MQ4B1VUDmWZ1n15dWrOilf2T06CuaQSwIIUiPy9hj4OS+8yFyXpvHUPFAbSdUvR
-         TOawihRwaeoBvdKGcG0AigCYbFnTiD8F19JE+I9mKZSQjaOxZEVWglozlkHjgxilx0Bu
-         g8iiCQ/BVIH60BvQZGbks/ZKooIgRHq7MTvRtxDV9cbVT2vsi4q0ah4qNs505OyyC3Bk
-         CypQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=Q4NvKOF4jokQzr+OFpyWKzZTT39+gDgdtnGFKi9DkQI=;
-        b=QxKGz2tdcroFWeHR4A5JadwrgAPiMiNlQmQlRA56UZMq9bnaltF5c97UGqhNl5Psi/
-         0GbLuSFeI3WqkBkvVrM+VC/rpQhsqu3WL8hgFpmJzAl6aLSou9otI/KtkpVAGhWc5RsU
-         4QkMVO1XU6NoE1qAUHqnDzKKBT8jjas2E5I5g+158WbW+tCtxdF+buCJHs6ljGdlk52i
-         yod4Y+UujU+zVHFu87YbWnYMtI4DKVgoYV0+hSRG3eu8JYc4uaIlR5IV/b25sXqOMJUh
-         i4knmX13y4ZpTPvmuoTWnk9AJi0WvQ0dhlhJDEz4VRuYpuspx19P8zveb74SmxJJynLu
-         16WQ==
-X-Gm-Message-State: AGi0PuaeD084MUulrFX3gIZg4kHpVt0JcQ2gbb7QxOANouod74Z+s/Ua
-        tplr5BcLE1JIvNHT/6Li0NNevKBn
-X-Google-Smtp-Source: APiQypIN5NA6KodHBPEMoP6z2563/KeKGH3tYCZJZyg8FuCfNLIrq0LIntKIVGKusFMVERbX3kGbJg==
-X-Received: by 2002:a1c:7f86:: with SMTP id a128mr8498490wmd.95.1587222079707;
-        Sat, 18 Apr 2020 08:01:19 -0700 (PDT)
-Received: from [192.168.0.104] (p5B3F7F19.dip0.t-ipconnect.de. [91.63.127.25])
-        by smtp.gmail.com with ESMTPSA id y10sm11922561wma.5.2020.04.18.08.01.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 18 Apr 2020 08:01:18 -0700 (PDT)
-Subject: Re: [PATCH v10 1/6] dt-bindings: mfd: add document bindings for
- mp2629
-To:     Jonathan Cameron <jic23@kernel.org>
-Cc:     lee.jones@linaro.org, andy.shevchenko@gmail.com,
-        robh+dt@kernel.org, knaack.h@gmx.de, lars@metafoo.de,
-        pmeerw@pmeerw.net, sre@kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-pm@vger.kernel.org
-References: <20200417085003.6124-1-sravanhome@gmail.com>
- <20200417085003.6124-2-sravanhome@gmail.com>
- <20200418155308.681df38f@archlinux>
-From:   saravanan sekar <sravanhome@gmail.com>
-Message-ID: <50ffb42e-4080-415e-dd3d-e38f7b0a6071@gmail.com>
-Date:   Sat, 18 Apr 2020 17:01:17 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Sat, 18 Apr 2020 11:04:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1587222242; x=1618758242;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=P9QFx2m+EdJ/Sth2lo4BRux+9U5rJNWn4YuJ3jtIOzo=;
+  b=Opwic/DtKR4PaGtUgfDQ4B7TZeNMjVTBYxsiK2PgiFXgKuvHosSiIcN1
+   48oxBUmCE7oyqDVRgSOQFOA3c+He6Uj/u2IfVg/Wt7aj72cBO7fDJ2IqI
+   jUwf7sbhZZJ5ZIlWomHXegvKT5ujp/noIw04FwBVs6Z8mSmDPDhqLyFGA
+   IgwKZGoLTrak1G+S4Z01miN24XXNi27kNUv7aPFv0gltC71F84xMog2h4
+   y6LAt/PRzKo3NSoNXjPYxX2Q0kNnU0nznBnhfR7rYKktkFvpix/uydxG8
+   9/9X96QB8xeYGEI8/3PRNHPZkcUEV+vId11bk62+j9DIE4T5Sz8FrgyAO
+   A==;
+IronPort-SDR: m7UcQDlev/MKt25edmp7CE/m0IENiTcZaDPWD8ceyvWol8WUyzRYDRfwZGSvJDCwktDKYlJhdv
+ zova4dlOsJ+O0w24fAC3g8ZY5heKnK8FbwEOoEdQDRaof1nLJes/a82bgUqN8wfCLhGckv4bZ2
+ e2ezL5uEzWJ17uLjStcDpP27Katm+mLag5egXFW9yGSvIEzR/kAfI134xrSVjdibjiHCstvrkj
+ KZ2EdDzT+rAdenqomMynesgheJDMNLkwL/sieSaZwX81nig3xxw1LKDr1VRp9sPMO0/Izd5XS5
+ e18=
+X-IronPort-AV: E=Sophos;i="5.72,399,1580799600"; 
+   d="scan'208";a="70766323"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa4.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 18 Apr 2020 08:04:01 -0700
+Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Sat, 18 Apr 2020 08:04:06 -0700
+Received: from localhost (10.10.115.15) by chn-vm-ex04.mchp-main.com
+ (10.10.85.152) with Microsoft SMTP Server id 15.1.1713.5 via Frontend
+ Transport; Sat, 18 Apr 2020 08:04:00 -0700
+Date:   Sat, 18 Apr 2020 17:03:59 +0200
+From:   Horatiu Vultur <horatiu.vultur@microchip.com>
+To:     Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
+CC:     <davem@davemloft.net>, <jiri@resnulli.us>, <ivecera@redhat.com>,
+        <kuba@kernel.org>, <roopa@cumulusnetworks.com>,
+        <olteanv@gmail.com>, <andrew@lunn.ch>,
+        <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <bridge@lists.linux-foundation.org>, <UNGLinuxDriver@microchip.com>
+Subject: Re: [RFC net-next v5 0/9] net: bridge: mrp: Add support for Media
+ Redundancy Protocol(MRP)
+Message-ID: <20200418150359.no4qcgc7oxqunkjp@soft-dev3.microsemi.net>
+References: <20200414112618.3644-1-horatiu.vultur@microchip.com>
+ <59ccd697-3c97-207e-a89d-f73e594ec7eb@cumulusnetworks.com>
 MIME-Version: 1.0
-In-Reply-To: <20200418155308.681df38f@archlinux>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
+In-Reply-To: <59ccd697-3c97-207e-a89d-f73e594ec7eb@cumulusnetworks.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jonathan,
+The 04/18/2020 12:01, Nikolay Aleksandrov wrote:
+> EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
+> 
+> On 14/04/2020 14:26, Horatiu Vultur wrote:
+> > Media Redundancy Protocol is a data network protocol standardized by
+> > International Electrotechnical Commission as IEC 62439-2. It allows rings of
+> > Ethernet switches to overcome any single failure with recovery time faster than
+> > STP. It is primarily used in Industrial Ethernet applications.
+> >
+> > Based on the previous RFC[1][2][3][4], the MRP state machine and all the timers
+> > were moved to userspace, except for the timers used to generate MRP Test frames.
+> > In this way the userspace doesn't know and should not know if the HW or the
+> > kernel will generate the MRP Test frames. The following changes were added to
+> > the bridge to support the MRP:
+> > - the existing netlink interface was extended with MRP support,
+> > - allow to detect when a MRP frame was received on a MRP ring port
+> > - allow MRP instance to forward/terminate MRP frames
+> > - generate MRP Test frames in case the HW doesn't have support for this
+> >
+> > To be able to offload MRP support to HW, the switchdev API  was extend.
+> >
+> 
+> Hi Horatiu,
+> The set still has a few blocker issues (bisectability, sysfs error return, use of extack)
+> and a few other cleanup tasks as I've noted in my replies to the respective patches.
+> I think with those out of the way you can submit it for inclusion.
 
-On 18/04/20 4:53 pm, Jonathan Cameron wrote:
-> On Fri, 17 Apr 2020 10:49:58 +0200
-> Saravanan Sekar <sravanhome@gmail.com> wrote:
->
->> Add device tree binding information for mp2629 mfd driver.
->>
->> Signed-off-by: Saravanan Sekar <sravanhome@gmail.com>
->> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
->> ---
->>   .../devicetree/bindings/mfd/mps,mp2629.yaml   | 61 +++++++++++++++++++
->>   1 file changed, 61 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/mfd/mps,mp2629.yaml
->>
->> diff --git a/Documentation/devicetree/bindings/mfd/mps,mp2629.yaml b/Documentation/devicetree/bindings/mfd/mps,mp2629.yaml
->> new file mode 100644
->> index 000000000000..b25b29259d67
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/mfd/mps,mp2629.yaml
->> @@ -0,0 +1,61 @@
->> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/mfd/mps,mp2629.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: MP2629 Battery Charger PMIC from Monolithic Power System.
->> +
->> +maintainers:
->> +  - Saravanan Sekar <sravanhome@gmail.com>
->> +
->> +description: |
->> +  MP2629 is a PMIC providing battery charging and power supply for smartphones,
->> +  wireless camera and portable devices. Chip is controlled over I2C.
->> +
->> +  The battery charge management device handles battery charger controller and
->> +  ADC IIO device for battery, system voltage
->> +
->> +properties:
->> +  compatible:
->> +    const: mps,mp2629
->> +
->> +  reg:
->> +    maxItems: 1
->> +
->> +  interrupts:
->> +    maxItems: 1
->> +
->> +  interrupt-controller: true
->> +
->> +  "#interrupt-cells":
->> +    const: 2
->> +    description:
->> +      The first cell is the IRQ number, the second cell is the trigger type.
->> +
->> +required:
->> +  - compatible
->> +  - reg
->> +  - interrupts
->> +  - interrupt-controller
->> +  - "#interrupt-cells"
->> +
->> +examples:
->> +  - |
->> +    #include <dt-bindings/interrupt-controller/irq.h>
->> +    #include <dt-bindings/input/linux-event-codes.h>
->> +    i2c@7e205000 {
-> I thought the general trend for i2c devices was to leave the i2c
-> part 'vague'.
->
->      i2c {
->            #address-cells = <1>;
->            #size-cells = <0>;
->           
->            pmic@4b.. etc
-I agree with you and initial patch was as like above, but Lee was 
-somehow unhappy and not satisfied with
+Hi Nik,
 
-my explanations. Please find more info on v4.
+Thanks for the review. I really need to be more careful with the
+bisectability. I will update the code based on your comments and then
+send the patch series again.
 
-> Guess it doesn't matter if example contains too much information. Rob?
->
-> Otherwise looks good to me.
->
-> Thanks,
->
-> Jonathan
->   
->> +        #address-cells = <1>;
->> +        #size-cells = <0>;
->> +        reg = <0x7e205000 0x200>;
->> +
->> +        pmic@4b {
->> +            compatible = "mps,mp2629";
->> +            reg = <0x4b>;
->> +
->> +            interrupt-controller;
->> +            interrupt-parent = <&gpio2>;
->> +            #interrupt-cells = <2>;
->> +            interrupts = <3 IRQ_TYPE_LEVEL_HIGH>;
->> +        };
->> +    };
+> 
+> Cheers,
+>  Nik
+> 
+> 
+> 
+> 
+
+-- 
+/Horatiu
