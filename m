@@ -2,89 +2,117 @@ Return-Path: <SRS0=3CHW=6C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9827EC2BA19
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 03:24:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18AD7C38A2B
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 03:25:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 664EE2070B
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 03:24:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rjvdAzlZ"
+	by mail.kernel.org (Postfix) with ESMTP id E421C2070B
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 03:25:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725953AbgDRDYt (ORCPT
+        id S1725991AbgDRDZR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 23:24:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42436 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725320AbgDRDYt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 23:24:49 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 048C3C061A0C;
-        Fri, 17 Apr 2020 20:24:48 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id b8so2007399pfp.8;
-        Fri, 17 Apr 2020 20:24:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=BzICRuRvjPRdTPirDnTzrOCvzqk/XEDtlZnEDCIYLoY=;
-        b=rjvdAzlZKp6w6jFqmhVeYNTx5/gXO78Z5vRQAOBCHGIedmsm2elEBEitm+SCF82de0
-         wNCShDOZN4fbKSjPlK8hPQ95i9d7+RypUGG0rZ3jKMXkiHJjnioQ27BZI5lf7JSfXTyv
-         VA2PzizITqrlX+WSNiNXR9Z3foy514oe5RUIPANGcTPgJHzr0QNlbS9vQdKFppWRsqyC
-         acQ6Ut4HPVZ8SpgGgAXRCzccwlFIx7TYPgW6sAGcN3l9hTB3bHru4pjMYGdCRmxiKeOy
-         ma4PxJ+z1g9cXvjiOFrTHvXsfaYDZn1Jt6DIo8STBp7c+A2ipguCe60FPMmc8eR08BGa
-         dGgQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=BzICRuRvjPRdTPirDnTzrOCvzqk/XEDtlZnEDCIYLoY=;
-        b=rGVnYSPEA/1zBk9zXSawUWmZkQ+WNO/XCg8hlc4EWgsYQX2PdJuB3T1B81ccRapfBr
-         GRyDTKyXQlmGGjCuRbT44+gyxZaTA/szCiOCYkicNr9sDH2nY87JetxmZD/OxaPGRiJn
-         buNhLAASlNy3seTQSrI9l/AcXyGHIqj2W/gyvmOSQG7Ru6Xe8BaQNL2JtXNDqVXTdarI
-         NMnwEu74lDyCzk8AuuX5hNvkaHUGf9u6gWfAApTriyV7pif5PqXSwleUz4ELtsGSCSIH
-         Y5U+x2LqMJXqasT8v40TtZAOGSlGwAwlOW3TG+NKeHL9RCNp52IqV8PDiYfQmendfwW4
-         hLHg==
-X-Gm-Message-State: AGi0PuYJbPcNyc4TJiaHa0BDuuwNzfVg6UGgTiO+fZq9har243beAxQ+
-        NT8qRWq4Dh/j4fHcyeR+JYI=
-X-Google-Smtp-Source: APiQypIaI9zcregVywXTVg0wstUgRLl2Y1nF+aRzqE+UNWB4X8Pmj7nS8U8vgyfS/AbX5ck02DsoyQ==
-X-Received: by 2002:a62:5c1:: with SMTP id 184mr6768393pff.68.1587180288477;
-        Fri, 17 Apr 2020 20:24:48 -0700 (PDT)
-Received: from localhost (c-73-241-114-122.hsd1.ca.comcast.net. [73.241.114.122])
-        by smtp.gmail.com with ESMTPSA id f9sm19573203pgj.2.2020.04.17.20.24.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Apr 2020 20:24:48 -0700 (PDT)
-Date:   Fri, 17 Apr 2020 20:24:46 -0700
-From:   Richard Cochran <richardcochran@gmail.com>
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     min.li.xe@renesas.com, davem@davemloft.net, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next] ptp: idt82p33: Make two variables static
-Message-ID: <20200418032446.GB9457@localhost>
-References: <20200418020149.29796-1-yuehaibing@huawei.com>
+        Fri, 17 Apr 2020 23:25:17 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:39716 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725320AbgDRDZQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Apr 2020 23:25:16 -0400
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id B2E1FCF64FC93CB46B2A;
+        Sat, 18 Apr 2020 11:25:01 +0800 (CST)
+Received: from [127.0.0.1] (10.166.215.204) by DGGEMS406-HUB.china.huawei.com
+ (10.3.19.206) with Microsoft SMTP Server id 14.3.487.0; Sat, 18 Apr 2020
+ 11:24:54 +0800
+Subject: Re: [RFC] block: fix access of uninitialized pointer address in
+ bt_for_each()
+To:     Bart Van Assche <bvanassche@acm.org>, <axboe@kernel.dk>,
+        <ming.lei@redhat.com>
+CC:     <yi.zhang@huawei.com>, <yuyufen@huawei.com>,
+        <linux-block@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20200417125134.45117-1-yukuai3@huawei.com>
+ <340bed9b-e14d-5a22-1601-8fb7aad4ce7f@acm.org>
+From:   "yukuai (C)" <yukuai3@huawei.com>
+Message-ID: <f74ca075-7d29-a944-b49b-7b432f2a60c9@huawei.com>
+Date:   Sat, 18 Apr 2020 11:24:53 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200418020149.29796-1-yuehaibing@huawei.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <340bed9b-e14d-5a22-1601-8fb7aad4ce7f@acm.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.166.215.204]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Apr 18, 2020 at 10:01:49AM +0800, YueHaibing wrote:
-> Fix sparse warnings:
-> 
-> drivers/ptp/ptp_idt82p33.c:26:5: warning: symbol 'sync_tod_timeout' was not declared. Should it be static?
-> drivers/ptp/ptp_idt82p33.c:31:5: warning: symbol 'phase_snap_threshold' was not declared. Should it be static?
-> 
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+on 2020/4/17 22:26, Bart Van Assche wrote:
 
-Acked-by: Richard Cochran <richardcochran@gmail.com>
+> The alloc/free info refers to a data structure owned by the pipe
+> implementation. The use-after-free report refers to a data structure
+> owned by the block layer. How can that report make sense?
+
+Indeed, I'm comfused here, too.
+
+>> diff --git a/block/blk-mq.c b/block/blk-mq.c
+>> index 7ed16ed13976..48b74d0085c7 100644
+>> --- a/block/blk-mq.c
+>> +++ b/block/blk-mq.c
+>> @@ -485,6 +485,7 @@ static void __blk_mq_free_request(struct request *rq)
+>>   	struct blk_mq_hw_ctx *hctx = blk_mq_map_queue(q, ctx->cpu);
+>>   	const int sched_tag = rq->internal_tag;
+>>   
+>> +	hctx->tags->rqs[rq->tag] = NULL;
+>>   	if (rq->tag != -1)
+>>   		blk_mq_put_tag(hctx, hctx->tags, ctx, rq->tag);
+>>   	if (sched_tag != -1)
+> 
+> Can the above change trigger the following assignment?
+> 
+> hctx->tags->rqs[-1] = NULL?
+
+My bad, should be inside 'if'.
+
+> static inline void *kcalloc_node(size_t n, size_t size, gfp_t flags,
+>                                   int node)
+> {
+> 	return kmalloc_array_node(n, size, flags | __GFP_ZERO, node);
+> }
+> 
+> I think this means that kcalloc_node() already zeroes the allocated
+> memory and hence that changing kcalloc() into kzalloc() is not necessary.
+
+You are right.
+
+>> @@ -196,6 +196,7 @@ static inline void blk_mq_put_driver_tag_hctx(struct blk_mq_hw_ctx *hctx,
+>>   	if (rq->tag == -1 || rq->internal_tag == -1)
+>>   		return;
+>>   
+>> +	hctx->tags->rqs[rq->tag] = NULL;
+>>   	__blk_mq_put_driver_tag(hctx, rq);
+>>   }
+>>   
+>> @@ -207,6 +208,7 @@ static inline void blk_mq_put_driver_tag(struct request *rq)
+>>   		return;
+>>   
+>>   	hctx = blk_mq_map_queue(rq->q, rq->mq_ctx->cpu);
+>> +	hctx->tags->rqs[rq->tag] = NULL;
+>>   	__blk_mq_put_driver_tag(hctx, rq);
+>>   }
+> 
+> I don't think the above changes are sufficient to fix the
+> use-after-free. Has it been considered to free the memory that backs
+> tags->bitmap_tags only after an RCU grace period has expired? See also
+> blk_mq_free_tags().
+
+As you pointed out, kcalloc_node() already zeroes out the memory. What I 
+don't understand is that how could 'slab-out-of-bounds in bt_for_each' 
+triggered instead UAF.
+
+Thanks!
+Yu Kuai
+
+
