@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FF44C38A2F
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:11:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58ABDC38A29
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:11:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E7D7B21D79
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:11:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D72B21D6C
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:11:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587219072;
-	bh=WYwADE8W9KPmvHMc3c5wIpArVFGP+Hhg+m2Vbn8klTk=;
+	s=default; t=1587219077;
+	bh=Glbhs5XKHS8JbLZoCXE0HbUu4H1R3R/0vs0CNEX07Ik=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=N3lBLcjeiJMWsyfvN9ylX87Cr12GpA/loL9sPXklVM4Vo6gHunonA6qftryD4KLqN
-	 l71Zp2vdYOGAau2GNCEXs8sE0d74ieXU0G4L3pfV9hsNtzEGabRdixoG08P3ki//Kp
-	 y6ZXpxSoieu5L253TEmsUqDpnFPGEq1GLNf31+Lw=
+	b=CzXpO8WS1kwpgWx7H6SjFTD3ABY147+UXAJnBaCzkHpEOFeffTt8Z/xbbNOrY9AYs
+	 DNOCwBYHWAK55d+yCeHs67vHpW2F2jTUhe7Ymyzj769xvQjFsH2SBFeiAz412FnhUa
+	 ztBKSaZeIcQvhMgauIFW1Fx43WEMvCG1lt60IaiA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728050AbgDROLK (ORCPT
+        id S1728061AbgDROLQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 10:11:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39026 "EHLO mail.kernel.org"
+        Sat, 18 Apr 2020 10:11:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38886 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727921AbgDROKj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 10:10:39 -0400
+        id S1727897AbgDROKg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 10:10:36 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 692FF22253;
-        Sat, 18 Apr 2020 14:10:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B7F6C22250;
+        Sat, 18 Apr 2020 14:10:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587219039;
-        bh=WYwADE8W9KPmvHMc3c5wIpArVFGP+Hhg+m2Vbn8klTk=;
+        s=default; t=1587219035;
+        bh=Glbhs5XKHS8JbLZoCXE0HbUu4H1R3R/0vs0CNEX07Ik=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gs6g1+4VOiJQRNaBquvxYsDP9FI61vS+YZSuRnuCvgKuySinke+AGB3QDzTd6dr1K
-         q8UBPJ++zPffCeG1kZnqMRoyytth5h0h04cnbRLOPpBeXBtxV2hRNkE9QM1/wk6Y0I
-         FnCgLAXervzziEboou/TCOl3qhaSCvXkwpc5twZU=
+        b=DhmwXi/OJ2qCSKE0gaduOHArotaJ8kDGjdJnIPGpwmxmYc2aprjAKKQmUt0iY/SMk
+         zEAwPDgP1HNezlapW3TVdhLejj2qhFSiVa00DOKYzQGako8imH4fqyXiv28ofMbKP1
+         w+PrskHJRR7FwPc51jrgnYxqBRvd4/oWwTfXIHXc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Frederic Barrat <fbarrat@linux.ibm.com>,
-        Alastair D'Silva <alastair@d-silva.org>,
-        Andrew Donnellan <ajd@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org,
-        linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 72/75] pci/hotplug/pnv-php: Remove erroneous warning
-Date:   Sat, 18 Apr 2020 10:09:07 -0400
-Message-Id: <20200418140910.8280-72-sashal@kernel.org>
+Cc:     Yongqiang Sun <yongqiang.sun@amd.com>,
+        Tony Cheng <Tony.Cheng@amd.com>,
+        Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.5 69/75] drm/amd/display: Not doing optimize bandwidth if flip pending.
+Date:   Sat, 18 Apr 2020 10:09:04 -0400
+Message-Id: <20200418140910.8280-69-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200418140910.8280-1-sashal@kernel.org>
 References: <20200418140910.8280-1-sashal@kernel.org>
@@ -62,52 +62,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Frederic Barrat <fbarrat@linux.ibm.com>
+From: Yongqiang Sun <yongqiang.sun@amd.com>
 
-[ Upstream commit 658ab186dd22060408d94f5c5a6d02d809baba44 ]
+[ Upstream commit 9941b8129030c9202aaf39114477a0e58c0d6ffc ]
 
-On powernv, when removing a device through hotplug, the following
-warning is logged:
+[Why]
+In some scenario like 1366x768 VSR enabled connected with a 4K monitor
+and playing 4K video in clone mode, underflow will be observed due to
+decrease dppclk when previouse surface scan isn't finished
 
-     Invalid refcount <.> on <...>
+[How]
+In this use case, surface flip is switching between 4K and 1366x768,
+1366x768 needs smaller dppclk, and when decrease the clk and previous
+surface scan is for 4K and scan isn't done, underflow will happen.  Not
+doing optimize bandwidth in case of flip pending.
 
-It may be incorrect, the refcount may be set to a higher value than 1
-and be valid. of_detach_node() can drop more than one reference. As it
-doesn't seem trivial to assert the correct value, let's remove the
-warning.
-
-Reviewed-by: Alastair D'Silva <alastair@d-silva.org>
-Reviewed-by: Andrew Donnellan <ajd@linux.ibm.com>
-Signed-off-by: Frederic Barrat <fbarrat@linux.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20191121134918.7155-7-fbarrat@linux.ibm.com
+Signed-off-by: Yongqiang Sun <yongqiang.sun@amd.com>
+Reviewed-by: Tony Cheng <Tony.Cheng@amd.com>
+Acked-by: Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/hotplug/pnv_php.c | 6 ------
- 1 file changed, 6 deletions(-)
+ drivers/gpu/drm/amd/display/dc/core/dc.c | 23 +++++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
 
-diff --git a/drivers/pci/hotplug/pnv_php.c b/drivers/pci/hotplug/pnv_php.c
-index d7b2b47bc33eb..6037983c6e46b 100644
---- a/drivers/pci/hotplug/pnv_php.c
-+++ b/drivers/pci/hotplug/pnv_php.c
-@@ -151,17 +151,11 @@ static void pnv_php_rmv_pdns(struct device_node *dn)
- static void pnv_php_detach_device_nodes(struct device_node *parent)
- {
- 	struct device_node *dn;
--	int refcount;
- 
- 	for_each_child_of_node(parent, dn) {
- 		pnv_php_detach_device_nodes(dn);
- 
- 		of_node_put(dn);
--		refcount = kref_read(&dn->kobj.kref);
--		if (refcount != 1)
--			pr_warn("Invalid refcount %d on <%pOF>\n",
--				refcount, dn);
--
- 		of_detach_node(dn);
- 	}
+diff --git a/drivers/gpu/drm/amd/display/dc/core/dc.c b/drivers/gpu/drm/amd/display/dc/core/dc.c
+index d25e0a937bf57..870e3903f02b9 100644
+--- a/drivers/gpu/drm/amd/display/dc/core/dc.c
++++ b/drivers/gpu/drm/amd/display/dc/core/dc.c
+@@ -1281,6 +1281,26 @@ bool dc_commit_state(struct dc *dc, struct dc_state *context)
+ 	return (result == DC_OK);
  }
+ 
++static bool is_flip_pending_in_pipes(struct dc *dc, struct dc_state *context)
++{
++	int i;
++	struct pipe_ctx *pipe;
++
++	for (i = 0; i < MAX_PIPES; i++) {
++		pipe = &context->res_ctx.pipe_ctx[i];
++
++		if (!pipe->plane_state)
++			continue;
++
++		/* Must set to false to start with, due to OR in update function */
++		pipe->plane_state->status.is_flip_pending = false;
++		dc->hwss.update_pending_status(pipe);
++		if (pipe->plane_state->status.is_flip_pending)
++			return true;
++	}
++	return false;
++}
++
+ bool dc_post_update_surfaces_to_stream(struct dc *dc)
+ {
+ 	int i;
+@@ -1291,6 +1311,9 @@ bool dc_post_update_surfaces_to_stream(struct dc *dc)
+ 
+ 	post_surface_trace(dc);
+ 
++	if (is_flip_pending_in_pipes(dc, context))
++		return true;
++
+ 	for (i = 0; i < dc->res_pool->pipe_count; i++)
+ 		if (context->res_ctx.pipe_ctx[i].stream == NULL ||
+ 		    context->res_ctx.pipe_ctx[i].plane_state == NULL) {
 -- 
 2.20.1
 
