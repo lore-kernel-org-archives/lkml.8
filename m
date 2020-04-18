@@ -7,49 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18DE5C38A2F
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:43:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5EABC38A29
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:43:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E807B21D7E
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:43:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A634A22251
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:43:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587220981;
-	bh=3AjzAH6sCRBBQIALkZlA3mWNYY6eXAlOgczOsfvavPY=;
+	s=default; t=1587220982;
+	bh=r7W2BMvSVN2n2aUOBFfbrcyTxzO/sjlxfzlONt//hmY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vIOtI04DXKH3zshbq/xk0fmNSlMoThd/NZ4YOZbQFPFACohiNwNz0IS46Xha+0Fpm
-	 BCiMSKhl5IDP9iShjQjoQ+QkPgOc2aQ01Qrk7zK8B+WsoqklEgQxI9XXD+lHYISsAa
-	 Rq8d5tc+j85PcGSP2QuHHk0VxZWH2qBUWUqLJHoo=
+	b=MvKBwI3eUIa3HQGWnE2TdI735DqAKCeZ7dzkFejClygjEMt/vaN5atH9FbkEPSGh4
+	 8jRd+0ATSifvoJLm82wxXELMoN/U2X1I8NvL56BrmLticNJdEYka1d2aCXNzXtkyyP
+	 CQ2VAPKeCipd+97L/6Rj+fP5z6lhoz4keKYUw05E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728476AbgDROnA (ORCPT
+        id S1728485AbgDROnC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 10:43:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53362 "EHLO mail.kernel.org"
+        Sat, 18 Apr 2020 10:43:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53516 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728455AbgDROmy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 10:42:54 -0400
+        id S1728466AbgDROm4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 10:42:56 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AD44A22263;
-        Sat, 18 Apr 2020 14:42:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 84A7921D82;
+        Sat, 18 Apr 2020 14:42:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587220973;
-        bh=3AjzAH6sCRBBQIALkZlA3mWNYY6eXAlOgczOsfvavPY=;
+        s=default; t=1587220976;
+        bh=r7W2BMvSVN2n2aUOBFfbrcyTxzO/sjlxfzlONt//hmY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OiwNCumnsWeYmVHvTiYfIkcuxyyFiJjw4M2Y2HLsrCXirGrlMFxCe9sh9sAJv15b8
-         KxvEg0gMDLPYUIZ5aND0SYuiSAAdCA1WoQDxFJYJH6oMRa5tzY8o4qc33lof1qB3j6
-         b+bhHxEyRjDrlc2toQeFBj8XX831IKp9YvuL1KyM=
+        b=qWtxeHiX/YPNCOHPDbu8CUq9F4GdwkAtnN6InbNkHPbJdinrL1ck3NNS2x0TTi0Sx
+         Nvcd000nyJ+Vs/7c+M4wxSQ1N1UggmF+FKfmglUQQdQ+pW5D01xPUuaZG2rFQnKayY
+         PysPmvm9JpcDeWpFqZ8YIolJMmVHt7+FlZwdleJo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Evan Green <evgreen@chromium.org>,
-        Gwendal Grignou <gwendal@chromium.org>,
-        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
-        Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
-        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
-        Sasha Levin <sashal@kernel.org>, linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 20/47] loop: Better discard support for block devices
-Date:   Sat, 18 Apr 2020 10:42:00 -0400
-Message-Id: <20200418144227.9802-20-sashal@kernel.org>
+Cc:     Nicholas Piggin <npiggin@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 4.19 22/47] Revert "powerpc/64: irq_work avoid interrupt when called with hardware irqs enabled"
+Date:   Sat, 18 Apr 2020 10:42:02 -0400
+Message-Id: <20200418144227.9802-22-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200418144227.9802-1-sashal@kernel.org>
 References: <20200418144227.9802-1-sashal@kernel.org>
@@ -62,115 +59,108 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Evan Green <evgreen@chromium.org>
+From: Nicholas Piggin <npiggin@gmail.com>
 
-[ Upstream commit c52abf563049e787c1341cdf15c7dbe1bfbc951b ]
+[ Upstream commit abc3fce76adbdfa8f87272c784b388cd20b46049 ]
 
-If the backing device for a loop device is itself a block device,
-then mirror the "write zeroes" capabilities of the underlying
-block device into the loop device. Copy this capability into both
-max_write_zeroes_sectors and max_discard_sectors of the loop device.
+This reverts commit ebb37cf3ffd39fdb6ec5b07111f8bb2f11d92c5f.
 
-The reason for this is that REQ_OP_DISCARD on a loop device translates
-into blkdev_issue_zeroout(), rather than blkdev_issue_discard(). This
-presents a consistent interface for loop devices (that discarded data
-is zeroed), regardless of the backing device type of the loop device.
-There should be no behavior change for loop devices backed by regular
-files.
+That commit does not play well with soft-masked irq state
+manipulations in idle, interrupt replay, and possibly others due to
+tracing code sometimes using irq_work_queue (e.g., in
+trace_hardirqs_on()). That can cause PACA_IRQ_DEC to become set when
+it is not expected, and be ignored or cleared or cause warnings.
 
-This change fixes blktest block/003, and removes an extraneous
-error print in block/013 when testing on a loop device backed
-by a block device that does not support discard.
+The net result seems to be missing an irq_work until the next timer
+interrupt in the worst case which is usually not going to be noticed,
+however it could be a long time if the tick is disabled, which is
+against the spirit of irq_work and might cause real problems.
 
-Signed-off-by: Evan Green <evgreen@chromium.org>
-Reviewed-by: Gwendal Grignou <gwendal@chromium.org>
-Reviewed-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
-[used updated version of Evan's comment in loop_config_discard()]
-[moved backingq to local scope, removed redundant braces]
-Signed-off-by: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+The idea is still solid, but it would need more work. It's not really
+clear if it would be worth added complexity, so revert this for
+now (not a straight revert, but replace with a comment explaining why
+we might see interrupts happening, and gives git blame something to
+find).
+
+Fixes: ebb37cf3ffd3 ("powerpc/64: irq_work avoid interrupt when called with hardware irqs enabled")
+Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20200402120401.1115883-1-npiggin@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/block/loop.c | 42 +++++++++++++++++++++++++++++++-----------
- 1 file changed, 31 insertions(+), 11 deletions(-)
+ arch/powerpc/kernel/time.c | 44 +++++++++++---------------------------
+ 1 file changed, 13 insertions(+), 31 deletions(-)
 
-diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-index 9cd231a27328e..c1341c86bcded 100644
---- a/drivers/block/loop.c
-+++ b/drivers/block/loop.c
-@@ -426,11 +426,12 @@ static int lo_fallocate(struct loop_device *lo, struct request *rq, loff_t pos,
- 	 * information.
- 	 */
- 	struct file *file = lo->lo_backing_file;
-+	struct request_queue *q = lo->lo_queue;
- 	int ret;
- 
- 	mode |= FALLOC_FL_KEEP_SIZE;
- 
--	if ((!file->f_op->fallocate) || lo->lo_encrypt_key_size) {
-+	if (!blk_queue_discard(q)) {
- 		ret = -EOPNOTSUPP;
- 		goto out;
- 	}
-@@ -864,28 +865,47 @@ static void loop_config_discard(struct loop_device *lo)
- 	struct inode *inode = file->f_mapping->host;
- 	struct request_queue *q = lo->lo_queue;
- 
-+	/*
-+	 * If the backing device is a block device, mirror its zeroing
-+	 * capability. Set the discard sectors to the block device's zeroing
-+	 * capabilities because loop discards result in blkdev_issue_zeroout(),
-+	 * not blkdev_issue_discard(). This maintains consistent behavior with
-+	 * file-backed loop devices: discarded regions read back as zero.
-+	 */
-+	if (S_ISBLK(inode->i_mode) && !lo->lo_encrypt_key_size) {
-+		struct request_queue *backingq;
-+
-+		backingq = bdev_get_queue(inode->i_bdev);
-+		blk_queue_max_discard_sectors(q,
-+			backingq->limits.max_write_zeroes_sectors);
-+
-+		blk_queue_max_write_zeroes_sectors(q,
-+			backingq->limits.max_write_zeroes_sectors);
-+
- 	/*
- 	 * We use punch hole to reclaim the free space used by the
- 	 * image a.k.a. discard. However we do not support discard if
- 	 * encryption is enabled, because it may give an attacker
- 	 * useful information.
- 	 */
--	if ((!file->f_op->fallocate) ||
--	    lo->lo_encrypt_key_size) {
-+	} else if (!file->f_op->fallocate || lo->lo_encrypt_key_size) {
- 		q->limits.discard_granularity = 0;
- 		q->limits.discard_alignment = 0;
- 		blk_queue_max_discard_sectors(q, 0);
- 		blk_queue_max_write_zeroes_sectors(q, 0);
--		blk_queue_flag_clear(QUEUE_FLAG_DISCARD, q);
--		return;
--	}
- 
--	q->limits.discard_granularity = inode->i_sb->s_blocksize;
--	q->limits.discard_alignment = 0;
-+	} else {
-+		q->limits.discard_granularity = inode->i_sb->s_blocksize;
-+		q->limits.discard_alignment = 0;
- 
--	blk_queue_max_discard_sectors(q, UINT_MAX >> 9);
--	blk_queue_max_write_zeroes_sectors(q, UINT_MAX >> 9);
--	blk_queue_flag_set(QUEUE_FLAG_DISCARD, q);
-+		blk_queue_max_discard_sectors(q, UINT_MAX >> 9);
-+		blk_queue_max_write_zeroes_sectors(q, UINT_MAX >> 9);
-+	}
-+
-+	if (q->limits.max_write_zeroes_sectors)
-+		blk_queue_flag_set(QUEUE_FLAG_DISCARD, q);
-+	else
-+		blk_queue_flag_clear(QUEUE_FLAG_DISCARD, q);
+diff --git a/arch/powerpc/kernel/time.c b/arch/powerpc/kernel/time.c
+index 5449e76cf2dfd..f6c21f6af274e 100644
+--- a/arch/powerpc/kernel/time.c
++++ b/arch/powerpc/kernel/time.c
+@@ -492,35 +492,6 @@ static inline void clear_irq_work_pending(void)
+ 		"i" (offsetof(struct paca_struct, irq_work_pending)));
  }
  
- static void loop_unprepare_queue(struct loop_device *lo)
+-void arch_irq_work_raise(void)
+-{
+-	preempt_disable();
+-	set_irq_work_pending_flag();
+-	/*
+-	 * Non-nmi code running with interrupts disabled will replay
+-	 * irq_happened before it re-enables interrupts, so setthe
+-	 * decrementer there instead of causing a hardware exception
+-	 * which would immediately hit the masked interrupt handler
+-	 * and have the net effect of setting the decrementer in
+-	 * irq_happened.
+-	 *
+-	 * NMI interrupts can not check this when they return, so the
+-	 * decrementer hardware exception is raised, which will fire
+-	 * when interrupts are next enabled.
+-	 *
+-	 * BookE does not support this yet, it must audit all NMI
+-	 * interrupt handlers to ensure they call nmi_enter() so this
+-	 * check would be correct.
+-	 */
+-	if (IS_ENABLED(CONFIG_BOOKE) || !irqs_disabled() || in_nmi()) {
+-		set_dec(1);
+-	} else {
+-		hard_irq_disable();
+-		local_paca->irq_happened |= PACA_IRQ_DEC;
+-	}
+-	preempt_enable();
+-}
+-
+ #else /* 32-bit */
+ 
+ DEFINE_PER_CPU(u8, irq_work_pending);
+@@ -529,16 +500,27 @@ DEFINE_PER_CPU(u8, irq_work_pending);
+ #define test_irq_work_pending()		__this_cpu_read(irq_work_pending)
+ #define clear_irq_work_pending()	__this_cpu_write(irq_work_pending, 0)
+ 
++#endif /* 32 vs 64 bit */
++
+ void arch_irq_work_raise(void)
+ {
++	/*
++	 * 64-bit code that uses irq soft-mask can just cause an immediate
++	 * interrupt here that gets soft masked, if this is called under
++	 * local_irq_disable(). It might be possible to prevent that happening
++	 * by noticing interrupts are disabled and setting decrementer pending
++	 * to be replayed when irqs are enabled. The problem there is that
++	 * tracing can call irq_work_raise, including in code that does low
++	 * level manipulations of irq soft-mask state (e.g., trace_hardirqs_on)
++	 * which could get tangled up if we're messing with the same state
++	 * here.
++	 */
+ 	preempt_disable();
+ 	set_irq_work_pending_flag();
+ 	set_dec(1);
+ 	preempt_enable();
+ }
+ 
+-#endif /* 32 vs 64 bit */
+-
+ #else  /* CONFIG_IRQ_WORK */
+ 
+ #define test_irq_work_pending()	0
 -- 
 2.20.1
 
