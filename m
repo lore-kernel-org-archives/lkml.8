@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81437C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:49:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFB84C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:49:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 58D5A2072B
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:49:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C63CA20753
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:49:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587221395;
-	bh=ePMzA8G+GUVMHaLdyeNb6FpdBQ2qidUTn/hjMaGktEo=;
+	s=default; t=1587221399;
+	bh=GUP71k4DWLyje3IERdpzAzJTjDkOkehV0jMXlO3fw4Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tDDDUYhUQyFAAe0zR93cI0dtqIEJfMR7mzNlR0yKKSVi/5HbPDCY9OlqmA4xbMON4
-	 ye7cg6Gyu1o5a/+Cp2XM3lhrsEK96iNp02jaVfOiKLUmrPA+C98KEiPOouVYHgMibY
-	 SamKZ6eR5B46GksxRUjU5rBsyp8rx2LdbnxMe+uI=
+	b=RT6T2luK7UgrmQbhurEMKSN05SJlfz/Ii8/cwQeLUqzv0fC1apvKVLJ+JaZjok6QO
+	 QPDhJ0FB8uhG/diJVIsE5eelGd2TueYSHlOHTCKpphtmYcgCcEHCjbTi9vwoABAAWw
+	 jqlM5dUbntr1T0NBCx2GEq86P8M1La5K29KI8WrY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726728AbgDROnT (ORCPT
+        id S1728607AbgDROt6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 10:43:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53858 "EHLO mail.kernel.org"
+        Sat, 18 Apr 2020 10:49:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54286 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728502AbgDROnG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 10:43:06 -0400
+        id S1728549AbgDROnU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 10:43:20 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A250321D82;
-        Sat, 18 Apr 2020 14:43:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6DFFC21D82;
+        Sat, 18 Apr 2020 14:43:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587220985;
-        bh=ePMzA8G+GUVMHaLdyeNb6FpdBQ2qidUTn/hjMaGktEo=;
+        s=default; t=1587220999;
+        bh=GUP71k4DWLyje3IERdpzAzJTjDkOkehV0jMXlO3fw4Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=x26RgtWKFN4bEFWdEwYLOlEidHGVHp2PaLKp454a6/Akmt+9dTZaiSDbBwrV+cFNS
-         phM3GviDH508LGAo0nLLHVIypKZYm3ykEdd1GpGwwTy4Qz2B3O0zP/35ae70ST+C+j
-         3QIaT11VEhGSX/xVdXwKoxEnIgRhhUVKk15Jx6nw=
+        b=l8xQh4H3kSLSK4VtvjagZ4g/oJ9KvApxaoPctiCn5kNWKRULvD8njOF+O3bJNuqLY
+         OLH+78uzzJFKSL6/eQG0T9huFj3BeBgzUR5kFuNbXL6DDUdH9ev5WPiQGJ/OQa5HpQ
+         +Q7/UB0ooh1ZNsV5dvH4X8paIWPjDBs1SkgaUv4s=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Simon Gander <simon@tuxera.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Anton Altaparmakov <anton@tuxera.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-fsdevel@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 29/47] hfsplus: fix crash and filesystem corruption when deleting files
-Date:   Sat, 18 Apr 2020 10:42:09 -0400
-Message-Id: <20200418144227.9802-29-sashal@kernel.org>
+Cc:     Frederic Barrat <fbarrat@linux.ibm.com>,
+        Andrew Donnellan <ajd@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 4.19 41/47] powerpc/powernv/ioda: Fix ref count for devices with their own PE
+Date:   Sat, 18 Apr 2020 10:42:21 -0400
+Message-Id: <20200418144227.9802-41-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200418144227.9802-1-sashal@kernel.org>
 References: <20200418144227.9802-1-sashal@kernel.org>
@@ -61,54 +60,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Simon Gander <simon@tuxera.com>
+From: Frederic Barrat <fbarrat@linux.ibm.com>
 
-[ Upstream commit 25efb2ffdf991177e740b2f63e92b4ec7d310a92 ]
+[ Upstream commit 05dd7da76986937fb288b4213b1fa10dbe0d1b33 ]
 
-When removing files containing extended attributes, the hfsplus driver may
-remove the wrong entries from the attributes b-tree, causing major
-filesystem damage and in some cases even kernel crashes.
+The pci_dn structure used to store a pointer to the struct pci_dev, so
+taking a reference on the device was required. However, the pci_dev
+pointer was later removed from the pci_dn structure, but the reference
+was kept for the npu device.
+See commit 902bdc57451c ("powerpc/powernv/idoa: Remove unnecessary
+pcidev from pci_dn").
 
-To remove a file, all its extended attributes have to be removed as well.
-The driver does this by looking up all keys in the attributes b-tree with
-the cnid of the file.  Each of these entries then gets deleted using the
-key used for searching, which doesn't contain the attribute's name when it
-should.  Since the key doesn't contain the name, the deletion routine will
-not find the correct entry and instead remove the one in front of it.  If
-parent nodes have to be modified, these become corrupt as well.  This
-causes invalid links and unsorted entries that not even macOS's fsck_hfs
-is able to fix.
+We don't need to take a reference on the device when assigning the PE
+as the struct pnv_ioda_pe is cleaned up at the same time as
+the (physical) device is released. Doing so prevents the device from
+being released, which is a problem for opencapi devices, since we want
+to be able to remove them through PCI hotplug.
 
-To fix this, modify the search key before an entry is deleted from the
-attributes b-tree by copying the found entry's key into the search key,
-therefore ensuring that the correct entry gets removed from the tree.
+Now the ugly part: nvlink npu devices are not meant to be
+released. Because of the above, we've always leaked a reference and
+simply removing it now is dangerous and would likely require more
+work. There's currently no release device callback for nvlink devices
+for example. So to be safe, this patch leaks a reference on the npu
+device, but only for nvlink and not opencapi.
 
-Signed-off-by: Simon Gander <simon@tuxera.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Reviewed-by: Anton Altaparmakov <anton@tuxera.com>
-Cc: <stable@vger.kernel.org>
-Link: http://lkml.kernel.org/r/20200327155541.1521-1-simon@tuxera.com
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Frederic Barrat <fbarrat@linux.ibm.com>
+Reviewed-by: Andrew Donnellan <ajd@linux.ibm.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20191121134918.7155-2-fbarrat@linux.ibm.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/hfsplus/attributes.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ arch/powerpc/platforms/powernv/pci-ioda.c | 19 ++++++++++++-------
+ 1 file changed, 12 insertions(+), 7 deletions(-)
 
-diff --git a/fs/hfsplus/attributes.c b/fs/hfsplus/attributes.c
-index e6d554476db41..eeebe80c6be4a 100644
---- a/fs/hfsplus/attributes.c
-+++ b/fs/hfsplus/attributes.c
-@@ -292,6 +292,10 @@ static int __hfsplus_delete_attr(struct inode *inode, u32 cnid,
- 		return -ENOENT;
+diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
+index ecd211c5f24a5..19cd6affdd5fb 100644
+--- a/arch/powerpc/platforms/powernv/pci-ioda.c
++++ b/arch/powerpc/platforms/powernv/pci-ioda.c
+@@ -1071,14 +1071,13 @@ static struct pnv_ioda_pe *pnv_ioda_setup_dev_PE(struct pci_dev *dev)
+ 		return NULL;
  	}
  
-+	/* Avoid btree corruption */
-+	hfs_bnode_read(fd->bnode, fd->search_key,
-+			fd->keyoffset, fd->keylength);
+-	/* NOTE: We get only one ref to the pci_dev for the pdn, not for the
+-	 * pointer in the PE data structure, both should be destroyed at the
+-	 * same time. However, this needs to be looked at more closely again
+-	 * once we actually start removing things (Hotplug, SR-IOV, ...)
++	/* NOTE: We don't get a reference for the pointer in the PE
++	 * data structure, both the device and PE structures should be
++	 * destroyed at the same time. However, removing nvlink
++	 * devices will need some work.
+ 	 *
+ 	 * At some point we want to remove the PDN completely anyways
+ 	 */
+-	pci_dev_get(dev);
+ 	pdn->pe_number = pe->pe_number;
+ 	pe->flags = PNV_IODA_PE_DEV;
+ 	pe->pdev = dev;
+@@ -1093,7 +1092,6 @@ static struct pnv_ioda_pe *pnv_ioda_setup_dev_PE(struct pci_dev *dev)
+ 		pnv_ioda_free_pe(pe);
+ 		pdn->pe_number = IODA_INVALID_PE;
+ 		pe->pdev = NULL;
+-		pci_dev_put(dev);
+ 		return NULL;
+ 	}
+ 
+@@ -1213,6 +1211,14 @@ static struct pnv_ioda_pe *pnv_ioda_setup_npu_PE(struct pci_dev *npu_pdev)
+ 	struct pci_controller *hose = pci_bus_to_host(npu_pdev->bus);
+ 	struct pnv_phb *phb = hose->private_data;
+ 
++	/*
++	 * Intentionally leak a reference on the npu device (for
++	 * nvlink only; this is not an opencapi path) to make sure it
++	 * never goes away, as it's been the case all along and some
++	 * work is needed otherwise.
++	 */
++	pci_dev_get(npu_pdev);
 +
- 	err = hfs_brec_remove(fd);
- 	if (err)
- 		return err;
+ 	/*
+ 	 * Due to a hardware errata PE#0 on the NPU is reserved for
+ 	 * error handling. This means we only have three PEs remaining
+@@ -1236,7 +1242,6 @@ static struct pnv_ioda_pe *pnv_ioda_setup_npu_PE(struct pci_dev *npu_pdev)
+ 			 */
+ 			dev_info(&npu_pdev->dev,
+ 				"Associating to existing PE %x\n", pe_num);
+-			pci_dev_get(npu_pdev);
+ 			npu_pdn = pci_get_pdn(npu_pdev);
+ 			rid = npu_pdev->bus->number << 8 | npu_pdn->devfn;
+ 			npu_pdn->pe_number = pe_num;
 -- 
 2.20.1
 
