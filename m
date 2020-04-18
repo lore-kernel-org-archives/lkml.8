@@ -2,159 +2,105 @@ Return-Path: <SRS0=3CHW=6C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44F8CC38A29
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:49:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E082C38A2F
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:49:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1F28D2072B
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:49:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eg/8RqtP"
+	by mail.kernel.org (Postfix) with ESMTP id F301620753
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:49:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587221360;
+	bh=mPI7dZVIo4iPlgnoF2Ep7DFHWMf+nmIW9xdSfeatkag=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=j9lilnfZj4y3rQvC8VmhsBgHGeXnGlSjvLCRHOziP/5opVoeuawsDHcVCmhTQoKIm
+	 +miO1O2HDq/TGzd7H4YpR3PHR2U4LnTonka8aDIRC4m5hVqvKmAuuc+t4JQWF8OP/b
+	 r2ecpyecIWI3AzkSfAPGuZ+dBUrVfuJQTPsD48O4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728394AbgDROtM (ORCPT
+        id S1728613AbgDROnf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 10:49:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34068 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728806AbgDROtJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 10:49:09 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B64D3C061A0C;
-        Sat, 18 Apr 2020 07:49:08 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id r7so5038701ljg.13;
-        Sat, 18 Apr 2020 07:49:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ImPNJwime7TJeT3XgQ4z2h1a6tJfIAzafk9Ipn78EOg=;
-        b=eg/8RqtP8hp6m7VDX1kTRMtrNrn1z70pYwGd/UzVfwFqeb4xmdgkKUk1xpuk91Lf4v
-         8sLczYmjJMBMdQfuCSRQ1NPTFndUB9MT/fIJRjS8RwF72o1bZ1/U7uFSCKWuayGh1sJ+
-         xItBrIIuO6Dr2oVbiwDdhZnKfIatfhVvYYln03eijheBTYM9aA+MTUHZYCUQSJ+/l+pb
-         1ErXV7tP12Jqyf/WFPY72xJCGfosXqRuZf9Ho5k4NXRWe6Zy7neH9L5E0IuXZNahTWim
-         napSNjb85uraVBazBeWYw82J8AeZOBIbTKcA/9k8r5SpNW4KlJFEwwufFmcgO674zVMj
-         l6ig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ImPNJwime7TJeT3XgQ4z2h1a6tJfIAzafk9Ipn78EOg=;
-        b=kHlcy0f2SmlqdcFWjvQ8B+X9FL+MfbB6r9qtaSHeZOivhhockh5MANE3YUgDjdKXah
-         a2ggfleFxKrtxPXytq8YTCEds28jQBsY8LUKtTc5NXWEcsSbB1Zw9sJhKGi/bvEsiJhl
-         jMuLaEG5EY0gI13aEir7t260Ck/gYk3LKGLLNSzJQryirG7TzaX7DHnm/ONpbAt7N4Bv
-         TAcqE+EIaROrxf2SYGF1g2BdRu3Aod/GqFPqUnQ+7JOTQf4Lo3ItWQLgUuQPDPhSHio4
-         ztRZOhdDKsgDPNBVe091fxJamnqgZkK+LdBl2YyuIPtf/vjI22U3NwX2OO6jAEMd97+f
-         i4jQ==
-X-Gm-Message-State: AGi0PuajBJDMZaRuODHfJFt+5b78VQZy6rIdcQ2vxXUs/+D2KAuIGQ/k
-        5C7mWi8X3W6s5B+Zlemgz6NgfsCs
-X-Google-Smtp-Source: APiQypLwEs7WDsF7ida5jFoiQ53ASvaaT79S8m1jg1ou7DTPKRtgoHuDnQ7nNbKv+K/Kg83foi15lg==
-X-Received: by 2002:a2e:2a85:: with SMTP id q127mr4925603ljq.273.1587221347209;
-        Sat, 18 Apr 2020 07:49:07 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
-        by smtp.googlemail.com with ESMTPSA id q6sm12647849ljg.67.2020.04.18.07.49.06
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 18 Apr 2020 07:49:06 -0700 (PDT)
-Subject: Re: [PATCH v1] iio: magnetometer: ak8974: Silence deferred-probe
- error
-To:     Jonathan Cameron <jic23@kernel.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>
-References: <20200414222713.32660-1-digetx@gmail.com>
- <CACRpkdY_J8e127etFFYkoxLDDkc334Xgg8ZbapdU36oGsaZ08g@mail.gmail.com>
- <e08c487c-5c2a-3172-7c9c-0e7d2cd51769@gmail.com>
- <CACRpkdbMF4=-g2ic_SKgOkd6kfgKJqZ2UxCRaoXJjq0EiEn+pw@mail.gmail.com>
- <26f96265-c699-66aa-ec70-becd868bb795@gmail.com>
- <20200418153730.1e1d01ef@archlinux>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <33f96a81-dc45-6eb0-5f88-317a421c04b2@gmail.com>
-Date:   Sat, 18 Apr 2020 17:49:05 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Sat, 18 Apr 2020 10:43:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54430 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728570AbgDROnY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 10:43:24 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3613222251;
+        Sat, 18 Apr 2020 14:43:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587221004;
+        bh=mPI7dZVIo4iPlgnoF2Ep7DFHWMf+nmIW9xdSfeatkag=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=FmzAfwVYaOjh/O88VylBa2OfXxOz+svFYVgNHxTBrPM+rvi0NchqXvJSDVsn/UB7j
+         DJb+htZ0w6Q2HQ1plcHueaKezxKgglkjeYBJKAr42rASeX7vlqzxu6d+8v6GwaJQQk
+         fbClgMoHJONXF8srSs8cP7t+rb9LHXB9MYwXdQtQ=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Halil Pasic <pasic@linux.ibm.com>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Sasha Levin <sashal@kernel.org>,
+        virtualization@lists.linux-foundation.org,
+        linux-block@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 45/47] virtio-blk: improve virtqueue error to BLK_STS
+Date:   Sat, 18 Apr 2020 10:42:25 -0400
+Message-Id: <20200418144227.9802-45-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200418144227.9802-1-sashal@kernel.org>
+References: <20200418144227.9802-1-sashal@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20200418153730.1e1d01ef@archlinux>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-18.04.2020 17:37, Jonathan Cameron пишет:
-> On Thu, 16 Apr 2020 20:35:56 +0300
-> Dmitry Osipenko <digetx@gmail.com> wrote:
-> 
->> 16.04.2020 19:51, Linus Walleij пишет:
->>> On Thu, Apr 16, 2020 at 4:45 PM Dmitry Osipenko <digetx@gmail.com> wrote:  
->>>> 16.04.2020 14:33, Linus Walleij пишет:  
->>>   
->>>>> This misses some important aspects of dev_dbg(), notably this:
->>>>>
->>>>> #if defined(CONFIG_DYNAMIC_DEBUG)
->>>>> #define dev_dbg(dev, fmt, ...)                                          \
->>>>>         dynamic_dev_dbg(dev, dev_fmt(fmt), ##__VA_ARGS__)
->>>>> #elif defined(DEBUG)
->>>>> #define dev_dbg(dev, fmt, ...)                                          \
->>>>>         dev_printk(KERN_DEBUG, dev, dev_fmt(fmt), ##__VA_ARGS__)
->>>>> #else
->>>>> #define dev_dbg(dev, fmt, ...)                                          \
->>>>> ({                                                                      \
->>>>>         if (0)                                                          \
->>>>>                 dev_printk(KERN_DEBUG, dev, dev_fmt(fmt), ##__VA_ARGS__); \
->>>>> })
->>>>> #endif
->>>>>
->>>>> If DEBUG is not defined the entire dev_dbg() message is enclodes in if (0)
->>>>> and compiled out of the kernel, saving space. The above does not
->>>>> fulfil that.  
->>>>
->>>> Hello Linus,
->>>>
->>>> After some recent discussions in regards to the EPROBE_DEFER handling,
->>>> Thierry Reding suggested the form which is used in my patch and we
->>>> started to use it recently in the Tegra DRM driver [1]. The reason is
->>>> that we don't want to miss any deferred-probe messages under any
->>>> circumstances, for example like in a case of a disabled DYNAMIC_DEBUG.  
->>>
->>> I have a hard time to accept this reasoning.
->>>
->>> Who doesn't feel that way about their subsystem? If you don't want
->>> to miss the message under any circumstances then use dev_info().
->>> Don't override the default behaviour of dev_dbg().
->>>   
->>>> The debug messages are usually disabled in a release-build and when not
->>>> a very experienced person hands you KMSG for diagnosing a problem, the
->>>> KMSG is pretty much useless if error is hidden silently.  
->>>
->>> So use dev_info().
->>>   
->>>> By moving the message to a debug level, we reduce the noise in the KMSG
->>>> because usually people look for a bold-red error messages. Secondly, we
->>>> don't introduce an additional overhead to the kernel size since the same
->>>> text is reused for all error conditions.  
->>>
->>> dev_info() is not supposed to be an error message, it is supposed to
->>> be information, so use that.  
->>
->> Okay, I'll make a v2. Thank you for the review.
-> 
-> Ah I commented on this in v2 - now I see why you did it :)
-> Nope to dev_info. That will often spam normal logs and as Andy pointed
-> out for v2 that can be dozens of entries on a sophisticated board.  Much
-> better to stick to dev_dbg but I'd like to see it done explicitly in the
-> form you mention with the if / else
+From: Halil Pasic <pasic@linux.ibm.com>
 
-Alright, I'll make a v3.
+[ Upstream commit 3d973b2e9a625996ee997c7303cd793b9d197c65 ]
+
+Let's change the mapping between virtqueue_add errors to BLK_STS
+statuses, so that -ENOSPC, which indicates virtqueue full is still
+mapped to BLK_STS_DEV_RESOURCE, but -ENOMEM which indicates non-device
+specific resource outage is mapped to BLK_STS_RESOURCE.
+
+Signed-off-by: Halil Pasic <pasic@linux.ibm.com>
+Link: https://lore.kernel.org/r/20200213123728.61216-3-pasic@linux.ibm.com
+Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/block/virtio_blk.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/block/virtio_blk.c b/drivers/block/virtio_blk.c
+index 728c9a9609f0c..9a3c2b14ac378 100644
+--- a/drivers/block/virtio_blk.c
++++ b/drivers/block/virtio_blk.c
+@@ -277,9 +277,14 @@ static blk_status_t virtio_queue_rq(struct blk_mq_hw_ctx *hctx,
+ 		if (err == -ENOSPC)
+ 			blk_mq_stop_hw_queue(hctx);
+ 		spin_unlock_irqrestore(&vblk->vqs[qid].lock, flags);
+-		if (err == -ENOMEM || err == -ENOSPC)
++		switch (err) {
++		case -ENOSPC:
+ 			return BLK_STS_DEV_RESOURCE;
+-		return BLK_STS_IOERR;
++		case -ENOMEM:
++			return BLK_STS_RESOURCE;
++		default:
++			return BLK_STS_IOERR;
++		}
+ 	}
+ 
+ 	if (bd->last && virtqueue_kick_prepare(vblk->vqs[qid].vq))
+-- 
+2.20.1
 
