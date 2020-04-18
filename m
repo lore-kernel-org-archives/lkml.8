@@ -2,126 +2,145 @@ Return-Path: <SRS0=3CHW=6C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B90E9C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 15:13:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1D9CC38A29
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 15:14:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9520321D7E
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 15:13:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587222807;
-	bh=KqCHTGwt1fa8Is/VnfHILiRPxUCKBCE00PJ3kjgWfxo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=XzAGRA7fXnXxIH5yDJrGxOrjITnTjYyvld7EG/bENOmpOI7ReIy5FRWXffp9HCEub
-	 +SGZK+ALEAfbePjVVQtOyEvHnNLcln3M0fZ/ub0PhG+xoc/9MUsPKH1+J2nU3t42ku
-	 +VZJ9bqsBTzvUiFXkqZSJFjf7MH1feQZzyWAd2Jg=
+	by mail.kernel.org (Postfix) with ESMTP id 8E6302072B
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 15:14:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="Ys2kOrQf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726396AbgDRPN1 (ORCPT
+        id S1726724AbgDRPOQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 11:13:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43934 "EHLO mail.kernel.org"
+        Sat, 18 Apr 2020 11:14:16 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:31710 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725903AbgDRPN0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 11:13:26 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D95C12076A;
-        Sat, 18 Apr 2020 15:13:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587222806;
-        bh=KqCHTGwt1fa8Is/VnfHILiRPxUCKBCE00PJ3kjgWfxo=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=ImQbeWIiNMFkrxK1BHv32y8eAViALymou+rPJ3kCDM0yLC0GgbMmxy4uJT6Q0PFHw
-         RqA1jsnDU4xUn+O5udmI+Q/+LeB7YjA/Y5cFi5kuZPksYqMlIe35vvbZLySrDPlBpE
-         EYYQSqHXinXD2lun8YC24sZnrBnMkSoofJPf9tcc=
-Date:   Sat, 18 Apr 2020 16:13:22 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc:     Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Gregory CLEMENT <gregory.clement@bootlin.com>,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] iio: adc: ti-ads8344: optimize consumption
-Message-ID: <20200418161322.71b2b353@archlinux>
-In-Reply-To: <20200416205428.437503-3-alexandre.belloni@bootlin.com>
-References: <20200416205428.437503-1-alexandre.belloni@bootlin.com>
-        <20200416205428.437503-3-alexandre.belloni@bootlin.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1725903AbgDRPOQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 11:14:16 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 494GhN3XV3zB09Zc;
+        Sat, 18 Apr 2020 17:14:12 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=Ys2kOrQf; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id 2lcJkaGzkoJJ; Sat, 18 Apr 2020 17:14:12 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 494GhN2SjkzB09Zb;
+        Sat, 18 Apr 2020 17:14:12 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1587222852; bh=gkdO6wXUCMcpz7NxpipTTUJqjJLTk5RmhAdRmmr2lPk=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=Ys2kOrQf8+IsQpw3uLxwRHJvEe2aifLm5D4UpWeMK0kDv1AR/2xUb1tP1bpBnc6tU
+         /FXFqj/0reLL0AhKcAmepR4fiN+Nst88VgI4jysw3UkXqTDfBFUmEuw5zgvR7IUyfx
+         GD8U+NDoD3gPnh1LMFlS4lGOU/NlhxN/aglDeXYA=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 129F48BBCF;
+        Sat, 18 Apr 2020 17:14:14 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id CTX-Cucux1p0; Sat, 18 Apr 2020 17:14:14 +0200 (CEST)
+Received: from pc16570vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 5D8FE8B75E;
+        Sat, 18 Apr 2020 17:14:13 +0200 (CEST)
+Subject: Re: [PATCH] iommu: spapr_tce: Disable compile testing to fix build on
+ book3s_32 config
+To:     Krzysztof Kozlowski <krzk@kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
+Cc:     virtualization@lists.linux-foundation.org,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        linuxppc-dev@lists.ozlabs.org, netdev@vger.kernel.org,
+        Michael Ellerman <mpe@ellerman.id.au>
+References: <20200414142630.21153-1-krzk@kernel.org>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <a99ee461-664c-51ae-cb3a-cf5d87048d86@c-s.fr>
+Date:   Sat, 18 Apr 2020 15:14:02 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20200414142630.21153-1-krzk@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 16 Apr 2020 22:54:28 +0200
-Alexandre Belloni <alexandre.belloni@bootlin.com> wrote:
 
-> Set the clock mode only once, at probe time and then keep the ADC powered
-> down between conversions.
+
+On 04/14/2020 02:26 PM, Krzysztof Kozlowski wrote:
+> Although SPAPR_TCE_IOMMU itself can be compile tested on certain PowerPC
+> configurations, its presence makes arch/powerpc/kvm/Makefile to select
+> modules which do not build in such configuration.
 > 
-> Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Looks fine to me. I'd like to be lazy and not take this until the fix is
-in my upstream (even though I suspect the merge would be fine).
-
-Give me a poke if I seem to have forgotten this after that is true!
-
-Thanks,
-
-Jonathan
-
+> The arch/powerpc/kvm/ modules use kvm_arch.spapr_tce_tables which exists
+> only with CONFIG_PPC_BOOK3S_64.  However these modules are selected when
+> COMPILE_TEST and SPAPR_TCE_IOMMU are chosen leading to build failures:
+> 
+>      In file included from arch/powerpc/include/asm/book3s/64/mmu-hash.h:20:0,
+>                       from arch/powerpc/kvm/book3s_64_vio_hv.c:22:
+>      arch/powerpc/include/asm/book3s/64/pgtable.h:17:0: error: "_PAGE_EXEC" redefined [-Werror]
+>       #define _PAGE_EXEC  0x00001 /* execute permission */
+> 
+>      In file included from arch/powerpc/include/asm/book3s/32/pgtable.h:8:0,
+>                       from arch/powerpc/include/asm/book3s/pgtable.h:8,
+>                       from arch/powerpc/include/asm/pgtable.h:18,
+>                       from include/linux/mm.h:95,
+>                       from arch/powerpc/include/asm/io.h:29,
+>                       from include/linux/io.h:13,
+>                       from include/linux/irq.h:20,
+>                       from arch/powerpc/include/asm/hardirq.h:6,
+>                       from include/linux/hardirq.h:9,
+>                       from include/linux/kvm_host.h:7,
+>                       from arch/powerpc/kvm/book3s_64_vio_hv.c:12:
+>      arch/powerpc/include/asm/book3s/32/hash.h:29:0: note: this is the location of the previous definition
+>       #define _PAGE_EXEC 0x200 /* software: exec allowed */
+> 
+> Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
+> Fixes: e93a1695d7fb ("iommu: Enable compile testing for some of drivers")
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 > ---
->  drivers/iio/adc/ti-ads8344.c | 11 ++++++++---
->  1 file changed, 8 insertions(+), 3 deletions(-)
+>   drivers/iommu/Kconfig | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/drivers/iio/adc/ti-ads8344.c b/drivers/iio/adc/ti-ads8344.c
-> index abe4b56c847c..40e7a9eee189 100644
-> --- a/drivers/iio/adc/ti-ads8344.c
-> +++ b/drivers/iio/adc/ti-ads8344.c
-> @@ -72,7 +72,7 @@ static const struct iio_chan_spec ads8344_channels[] = {
->  };
->  
->  static int ads8344_adc_conversion(struct ads8344 *adc, int channel,
-> -				  bool differential)
-> +				  bool differential, u8 clock)
->  {
->  	struct spi_device *spi = adc->spi;
->  	int ret;
-> @@ -81,7 +81,7 @@ static int ads8344_adc_conversion(struct ads8344 *adc, int channel,
->  	if (!differential)
->  		adc->tx_buf |= ADS8344_SINGLE_END;
->  	adc->tx_buf |= ADS8344_CHANNEL(channel);
-> -	adc->tx_buf |= ADS8344_CLOCK_INTERNAL;
-> +	adc->tx_buf |= clock;
->  
->  	ret = spi_write(spi, &adc->tx_buf, 1);
->  	if (ret)
-> @@ -106,7 +106,7 @@ static int ads8344_read_raw(struct iio_dev *iio,
->  	case IIO_CHAN_INFO_RAW:
->  		mutex_lock(&adc->lock);
->  		*value = ads8344_adc_conversion(adc, channel->scan_index,
-> -						channel->differential);
-> +						channel->differential, 0);
->  		mutex_unlock(&adc->lock);
->  		if (*value < 0)
->  			return *value;
-> @@ -161,6 +161,11 @@ static int ads8344_probe(struct spi_device *spi)
->  	if (ret)
->  		return ret;
->  
-> +	/* Do a dummy read and set external clock mode */
-> +	ret = ads8344_adc_conversion(adc, 0, 0, ADS8344_CLOCK_INTERNAL);
-> +	if (ret < 0)
-> +		return ret;
-> +
->  	spi_set_drvdata(spi, indio_dev);
->  
->  	ret = iio_device_register(indio_dev);
+> diff --git a/drivers/iommu/Kconfig b/drivers/iommu/Kconfig
+> index 58b4a4dbfc78..3532b1ead19d 100644
+> --- a/drivers/iommu/Kconfig
+> +++ b/drivers/iommu/Kconfig
+> @@ -362,7 +362,7 @@ config IPMMU_VMSA
+>   
+>   config SPAPR_TCE_IOMMU
+>   	bool "sPAPR TCE IOMMU Support"
+> -	depends on PPC_POWERNV || PPC_PSERIES || (PPC && COMPILE_TEST)
+> +	depends on PPC_POWERNV || PPC_PSERIES
+>   	select IOMMU_API
+>   	help
+>   	  Enables bits of IOMMU API required by VFIO. The iommu_ops
+> 
 
+Should it be fixed the other way round, something like:
+
+diff --git a/arch/powerpc/kvm/Makefile b/arch/powerpc/kvm/Makefile
+index 2bfeaa13befb..906707d15810 100644
+--- a/arch/powerpc/kvm/Makefile
++++ b/arch/powerpc/kvm/Makefile
+@@ -135,4 +135,4 @@ obj-$(CONFIG_KVM_BOOK3S_32) += kvm.o
+  obj-$(CONFIG_KVM_BOOK3S_64_PR) += kvm-pr.o
+  obj-$(CONFIG_KVM_BOOK3S_64_HV) += kvm-hv.o
+
+-obj-y += $(kvm-book3s_64-builtin-objs-y)
++obj-$(CONFIG_KVM_BOOK3S_64) += $(kvm-book3s_64-builtin-objs-y)
+
+
+Christophe
