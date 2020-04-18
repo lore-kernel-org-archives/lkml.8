@@ -4,109 +4,107 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80A35C38A29
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:51:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 291F4C38A29
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:51:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 559FB20753
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:51:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 005AF21D6C
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:51:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587221483;
-	bh=qh+rRQ26snjET7PSeU8hJK8HLdSc6NZMY9RE8q3qkKs=;
+	s=default; t=1587221491;
+	bh=/0/tKzES9ZCvf0Wg4Gocxj57HzdAkbrdH3u/I+MnG38=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0yq9WC0I3t6h0azz9aXjI3n9yRy4DAmHKj3lmE5TG+cwwQndrlm0mGtf6DMHGo18I
-	 Sv/bRr+OajcAOIc1kAxxZLJLyObb2RVpWyok4+vbWE+3pKn9Loqwz+Usjbzq7FCu9A
-	 FcmQPF01Iy+XzFU/vOYqj+OHZe5ZpLylBgaKqOzM=
+	b=bmGARhYjmj3sGGPXEtx2bhB029e89VITqwYUBQupSolCjQcPlctT3LT0G0mLUNm8y
+	 N3/rOOFUufXRSwpokB+CyG1ufgUq6uhLrtdLsQHDFEwf+F9BF8qTmQHP0/renoCxIm
+	 TzPDTuMn3NY+plXb7umzyRRvA0R1/vdReFML9jlg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728575AbgDROvW (ORCPT
+        id S1728874AbgDROva (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 10:51:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53046 "EHLO mail.kernel.org"
+        Sat, 18 Apr 2020 10:51:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52904 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728418AbgDROmp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 10:42:45 -0400
+        id S1728393AbgDROmk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 10:42:40 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D7A0522250;
-        Sat, 18 Apr 2020 14:42:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 14E2C22202;
+        Sat, 18 Apr 2020 14:42:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587220965;
-        bh=qh+rRQ26snjET7PSeU8hJK8HLdSc6NZMY9RE8q3qkKs=;
+        s=default; t=1587220959;
+        bh=/0/tKzES9ZCvf0Wg4Gocxj57HzdAkbrdH3u/I+MnG38=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Rxfu24ofc7lpcp49YJET/5tHbvJt4Wk9Ek4V72eiBOJZtm1aRdz2qXrFwFx3xkj/L
-         WuWpwg43ZlAh+k2EyfMh2DNNPh7uKc2dtf4hiHuPHJnc/ySmhcDfxMLNWQW87r0Y/Q
-         qAram/QKvOlKF5CoCP2xGslppby9rJ43Z76SzTc4=
+        b=uhoIauFem9g/EqqRDTpMBeYL1FEEKdyNqA0dv4O5myaBoXv8sV2y1Z3p0sPoNbvdS
+         KebkVBKc657uruoQhEj3xmIJdWcSwKg85s8FVp7qFwjeF0qgvib8MxhA4rOb5wkv8Y
+         rz/ExioMhb1yLBkXC5zvHMHyqpDeizbpRnb8qko0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vasily Averin <vvs@virtuozzo.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Ingo Molnar <mingo@redhat.com>,
-        Manfred Spraul <manfred@colorfullife.com>,
-        NeilBrown <neilb@suse.com>, Steven Rostedt <rostedt@goodmis.org>,
-        Waiman Long <longman@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 14/47] kernel/gcov/fs.c: gcov_seq_next() should increase position index
-Date:   Sat, 18 Apr 2020 10:41:54 -0400
-Message-Id: <20200418144227.9802-14-sashal@kernel.org>
+Cc:     =?UTF-8?q?=EC=9D=B4=EA=B2=BD=ED=83=9D?= <gt82.lee@samsung.com>,
+        Vinod Koul <vkoul@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 4.19 10/47] ASoC: dpcm: allow start or stop during pause for backend
+Date:   Sat, 18 Apr 2020 10:41:50 -0400
+Message-Id: <20200418144227.9802-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200418144227.9802-1-sashal@kernel.org>
 References: <20200418144227.9802-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vasily Averin <vvs@virtuozzo.com>
+From: 이경택 <gt82.lee@samsung.com>
 
-[ Upstream commit f4d74ef6220c1eda0875da30457bef5c7111ab06 ]
+[ Upstream commit 21fca8bdbb64df1297e8c65a746c4c9f4a689751 ]
 
-If seq_file .next function does not change position index, read after
-some lseek can generate unexpected output.
+soc_compr_trigger_fe() allows start or stop after pause_push.
+In dpcm_be_dai_trigger(), however, only pause_release is allowed
+command after pause_push.
+So, start or stop after pause in compress offload is always
+returned as error if the compress offload is used with dpcm.
+To fix the problem, SND_SOC_DPCM_STATE_PAUSED should be allowed
+for start or stop command.
 
-https://bugzilla.kernel.org/show_bug.cgi?id=206283
-Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Acked-by: Peter Oberparleiter <oberpar@linux.ibm.com>
-Cc: Al Viro <viro@zeniv.linux.org.uk>
-Cc: Davidlohr Bueso <dave@stgolabs.net>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Manfred Spraul <manfred@colorfullife.com>
-Cc: NeilBrown <neilb@suse.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: Waiman Long <longman@redhat.com>
-Link: http://lkml.kernel.org/r/f65c6ee7-bd00-f910-2f8a-37cc67e4ff88@virtuozzo.com
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Gyeongtaek Lee <gt82.lee@samsung.com>
+Reviewed-by: Vinod Koul <vkoul@kernel.org>
+Link: https://lore.kernel.org/r/004d01d607c1$7a3d5250$6eb7f6f0$@samsung.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/gcov/fs.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/soc/soc-pcm.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/gcov/fs.c b/kernel/gcov/fs.c
-index 6e40ff6be083d..291e0797125b6 100644
---- a/kernel/gcov/fs.c
-+++ b/kernel/gcov/fs.c
-@@ -109,9 +109,9 @@ static void *gcov_seq_next(struct seq_file *seq, void *data, loff_t *pos)
- {
- 	struct gcov_iterator *iter = data;
+diff --git a/sound/soc/soc-pcm.c b/sound/soc/soc-pcm.c
+index 356d4e754561b..a0d1ce0edaf9a 100644
+--- a/sound/soc/soc-pcm.c
++++ b/sound/soc/soc-pcm.c
+@@ -2266,7 +2266,8 @@ int dpcm_be_dai_trigger(struct snd_soc_pcm_runtime *fe, int stream,
+ 		switch (cmd) {
+ 		case SNDRV_PCM_TRIGGER_START:
+ 			if ((be->dpcm[stream].state != SND_SOC_DPCM_STATE_PREPARE) &&
+-			    (be->dpcm[stream].state != SND_SOC_DPCM_STATE_STOP))
++			    (be->dpcm[stream].state != SND_SOC_DPCM_STATE_STOP) &&
++			    (be->dpcm[stream].state != SND_SOC_DPCM_STATE_PAUSED))
+ 				continue;
  
-+	(*pos)++;
- 	if (gcov_iter_next(iter))
- 		return NULL;
--	(*pos)++;
+ 			ret = dpcm_do_trigger(dpcm, be_substream, cmd);
+@@ -2296,7 +2297,8 @@ int dpcm_be_dai_trigger(struct snd_soc_pcm_runtime *fe, int stream,
+ 			be->dpcm[stream].state = SND_SOC_DPCM_STATE_START;
+ 			break;
+ 		case SNDRV_PCM_TRIGGER_STOP:
+-			if (be->dpcm[stream].state != SND_SOC_DPCM_STATE_START)
++			if ((be->dpcm[stream].state != SND_SOC_DPCM_STATE_START) &&
++			    (be->dpcm[stream].state != SND_SOC_DPCM_STATE_PAUSED))
+ 				continue;
  
- 	return iter;
- }
+ 			if (!snd_soc_dpcm_can_be_free_stop(fe, be, stream))
 -- 
 2.20.1
 
