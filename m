@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CBD0C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:13:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C228C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:13:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5F61321D6C
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:13:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42C2321BE5
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:13:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587219221;
-	bh=1RYs4Lz/2BnS7f8Vf4aqmZgljBRSOk3rbVPrrg1Tko4=;
+	s=default; t=1587219225;
+	bh=Xc3kVkDcDphF3/cM1fEX3LpTHlRX2wxUdtH4lsLODFk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=twRzHQVTEWb24zqt1riRo4RJ+yBuSHWKBrvIeBogAQ//Tj52OGJwcmotmUKC9v3bf
-	 M+o//cC+ZJRFmpzFjxqSJv9jRNJ2iLr15CdRjtpl/Rr6/V0ULsiBUBeBuk+YBfKzoe
-	 Ze8X6EeDwaJzR4BOI1pPHPhA4VW3pExt3Nxm6Dq0=
+	b=WhBe1MhigWINdWcsvcq1O9R84IVqoylYqIsZ7Yt9cAYnzpkDfF2KIKwp2fcr73Bwu
+	 BHN04gqz5UHL1tW8zOWTNue2H4eriALZ2pXtFZjvVH3ph9AAZftAay73vgwh6nwTAs
+	 zjseE0+wynbs4A2K1jYm4DQxXKApKQ7L/nSTms3E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728184AbgDRONk (ORCPT
+        id S1728036AbgDRONo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 10:13:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37090 "EHLO mail.kernel.org"
+        Sat, 18 Apr 2020 10:13:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37048 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726501AbgDROJf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 10:09:35 -0400
+        id S1726492AbgDROJe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 10:09:34 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 30D0221D6C;
-        Sat, 18 Apr 2020 14:09:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 047A622245;
+        Sat, 18 Apr 2020 14:09:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587218974;
-        bh=1RYs4Lz/2BnS7f8Vf4aqmZgljBRSOk3rbVPrrg1Tko4=;
+        s=default; t=1587218973;
+        bh=Xc3kVkDcDphF3/cM1fEX3LpTHlRX2wxUdtH4lsLODFk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vlWE9CwVUfv5NvsV0gtMEKzHahRfnUZDKMUWJU+zlgQVwzqYK48IJW7EpyC1s0dXf
-         MR0NC1JL0je6brwOJtdxWw+H5k1dhAoSKqUIR8akNZDC/RvrimLa+Vr8lcB4EIo6ZF
-         QgiRAtvUD1dVld0Xb30N0te2dfWFMxu0BN/opsj0=
+        b=V2hSBbOBoCKGAQxVnPLwDyPPjJISxRP6B+69eVhnsDN5SSUKn009VJeK2wmYKiIcr
+         pD6zusnjN8rXGU6OzqwPlAML1STmHTJhyQf11y3VUMEOjR/ilganjnuYCvCKsxBKg3
+         M4S5V94XSJeRPz7C0p87Yuyr7kIdmp3ntcdJbhHk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 5.5 20/75] ASoC: Intel: atom: Take the drv->lock mutex before calling sst_send_slot_map()
-Date:   Sat, 18 Apr 2020 10:08:15 -0400
-Message-Id: <20200418140910.8280-20-sashal@kernel.org>
+Cc:     Santosh Sivaraj <santosh@fossix.org>,
+        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-nvdimm@lists.01.org
+Subject: [PATCH AUTOSEL 5.5 19/75] tools/test/nvdimm: Fix out of tree build
+Date:   Sat, 18 Apr 2020 10:08:14 -0400
+Message-Id: <20200418140910.8280-19-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200418140910.8280-1-sashal@kernel.org>
 References: <20200418140910.8280-1-sashal@kernel.org>
@@ -60,40 +60,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Santosh Sivaraj <santosh@fossix.org>
 
-[ Upstream commit 81630dc042af998b9f58cd8e2c29dab9777ea176 ]
+[ Upstream commit 1f776799628139d0da47e710ad86eb58d987ff66 ]
 
-sst_send_slot_map() uses sst_fill_and_send_cmd_unlocked() because in some
-places it is called with the drv->lock mutex already held.
+Out of tree build using
 
-So it must always be called with the mutex locked. This commit adds missing
-locking in the sst_set_be_modules() code-path.
+   make M=tools/test/nvdimm O=/tmp/build -C /tmp/build
 
-Fixes: 24c8d14192cc ("ASoC: Intel: mrfld: add DSP core controls")
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Acked-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Link: https://lore.kernel.org/r/20200402185359.3424-1-hdegoede@redhat.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+fails with the following error
+
+make: Entering directory '/tmp/build'
+  CC [M]  tools/testing/nvdimm/test/nfit.o
+linux/tools/testing/nvdimm/test/nfit.c:19:10: fatal error: nd-core.h: No such file or directory
+   19 | #include <nd-core.h>
+      |          ^~~~~~~~~~~
+compilation terminated.
+
+That is because the kbuild file uses $(src) which points to
+tools/testing/nvdimm, $(srctree) correctly points to root of the linux
+source tree.
+
+Reported-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+Signed-off-by: Santosh Sivaraj <santosh@fossix.org>
+Link: https://lore.kernel.org/r/20200114054051.4115790-1-santosh@fossix.org
+Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/intel/atom/sst-atom-controls.c | 2 ++
- 1 file changed, 2 insertions(+)
+ tools/testing/nvdimm/Kbuild      | 4 ++--
+ tools/testing/nvdimm/test/Kbuild | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/sound/soc/intel/atom/sst-atom-controls.c b/sound/soc/intel/atom/sst-atom-controls.c
-index baef461a99f19..2c3798034b1de 100644
---- a/sound/soc/intel/atom/sst-atom-controls.c
-+++ b/sound/soc/intel/atom/sst-atom-controls.c
-@@ -966,7 +966,9 @@ static int sst_set_be_modules(struct snd_soc_dapm_widget *w,
- 	dev_dbg(c->dev, "Enter: widget=%s\n", w->name);
+diff --git a/tools/testing/nvdimm/Kbuild b/tools/testing/nvdimm/Kbuild
+index 6aca8d5be1593..0615fa3d9f7e9 100644
+--- a/tools/testing/nvdimm/Kbuild
++++ b/tools/testing/nvdimm/Kbuild
+@@ -22,8 +22,8 @@ DRIVERS := ../../../drivers
+ NVDIMM_SRC := $(DRIVERS)/nvdimm
+ ACPI_SRC := $(DRIVERS)/acpi/nfit
+ DAX_SRC := $(DRIVERS)/dax
+-ccflags-y := -I$(src)/$(NVDIMM_SRC)/
+-ccflags-y += -I$(src)/$(ACPI_SRC)/
++ccflags-y := -I$(srctree)/drivers/nvdimm/
++ccflags-y += -I$(srctree)/drivers/acpi/nfit/
  
- 	if (SND_SOC_DAPM_EVENT_ON(event)) {
-+		mutex_lock(&drv->lock);
- 		ret = sst_send_slot_map(drv);
-+		mutex_unlock(&drv->lock);
- 		if (ret)
- 			return ret;
- 		ret = sst_send_pipe_module_params(w, k);
+ obj-$(CONFIG_LIBNVDIMM) += libnvdimm.o
+ obj-$(CONFIG_BLK_DEV_PMEM) += nd_pmem.o
+diff --git a/tools/testing/nvdimm/test/Kbuild b/tools/testing/nvdimm/test/Kbuild
+index fb3c3d7cdb9bd..75baebf8f4ba1 100644
+--- a/tools/testing/nvdimm/test/Kbuild
++++ b/tools/testing/nvdimm/test/Kbuild
+@@ -1,6 +1,6 @@
+ # SPDX-License-Identifier: GPL-2.0
+-ccflags-y := -I$(src)/../../../../drivers/nvdimm/
+-ccflags-y += -I$(src)/../../../../drivers/acpi/nfit/
++ccflags-y := -I$(srctree)/drivers/nvdimm/
++ccflags-y += -I$(srctree)/drivers/acpi/nfit/
+ 
+ obj-m += nfit_test.o
+ obj-m += nfit_test_iomap.o
 -- 
 2.20.1
 
