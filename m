@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF3B2C38A30
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 13:50:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25889C38A2F
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 13:50:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AA8522054F
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 13:50:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EAFDE2054F
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 13:50:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587217807;
-	bh=LVsekz8INTXKUjpo9fil8pH2pEYtmSNN2pVUrHyIdXc=;
+	s=default; t=1587217813;
+	bh=T/YL4wSj4t5kATkJomXkEmdGf7krfiS37vvSS4eZTzk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WvKU1RK51vZcugaPymBrU0xHJcNY2LIY4aBCUCErlzYrHlqFo0Uw5PcG+u4L+z7mL
-	 67OX6ztSrq/iSjwCVHL6dzNz4eRbdmpOZzhUzY/veYTNJVRHYNZU0kTcbBWKztdaNZ
-	 AWiDA5jqRiqLcw9x193e3So3UHQZ8vfhEkWpREIk=
+	b=nI7IYMGpVwU0hZE5aTsQgYHpDKClz6neuTzpQl1TcCYZMUPGW5ulqg7fO5GxOndqM
+	 j04dS//eaBmKNji7owMKdDjXmfIVHJdk3M9ZGG+gUxzBxohziniGOj/Qgt3iGCNdHa
+	 d0/nud8pEv5+wIA9/KCNfWhwc2ThLbNJV3Ke5Xn0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727125AbgDRNuG (ORCPT
+        id S1727778AbgDRNuL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 09:50:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56970 "EHLO mail.kernel.org"
+        Sat, 18 Apr 2020 09:50:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56944 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726860AbgDRNtm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 09:49:42 -0400
+        id S1726854AbgDRNtl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 09:49:41 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BD11022240;
-        Sat, 18 Apr 2020 13:49:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 930E522262;
+        Sat, 18 Apr 2020 13:49:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587217781;
-        bh=LVsekz8INTXKUjpo9fil8pH2pEYtmSNN2pVUrHyIdXc=;
+        s=default; t=1587217780;
+        bh=T/YL4wSj4t5kATkJomXkEmdGf7krfiS37vvSS4eZTzk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EDrVrIhxnxJqrg75eqzSZcJv/yWIbZYiWjHKKKKKHA6IocMlw7eSErKckhJOZjb8y
-         frrufM715uyqoNeCDJp2IpnXCttrS2ww63LVJ9K06ys7jAboCnTVmzl/PXX3e/SzC6
-         ZGw58QBNkOYWZ8fT43liedB1bLkQDV6fqct45uQA=
+        b=mABKqiULCWNP3z6FtQcELgGhDkwzcSMn39/fegq0tzCXosx8WJ8Qv4Y1W1XhgHEFG
+         qnDwWNJCx/qivAkjRQK+48wAERknuc6YRUxkL4DjR/+gw5H6OITK4hJTJnAiFie4/r
+         VKo1nTJhTj+8DoVZwdv2vc05eRVkh4ddkLPRClJc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sreekanth Reddy <sreekanth.reddy@broadcom.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>,
-        MPT-FusionLinux.pdl@broadcom.com, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 69/73] scsi: mpt3sas: Fix kernel panic observed on soft HBA unplug
-Date:   Sat, 18 Apr 2020 09:48:11 -0400
-Message-Id: <20200418134815.6519-69-sashal@kernel.org>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.de>,
+        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 5.6 68/73] ALSA: hda/realtek - Add quirk for Lenovo Carbon X1 8th gen
+Date:   Sat, 18 Apr 2020 09:48:10 -0400
+Message-Id: <20200418134815.6519-68-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200418134815.6519-1-sashal@kernel.org>
 References: <20200418134815.6519-1-sashal@kernel.org>
@@ -60,78 +59,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sreekanth Reddy <sreekanth.reddy@broadcom.com>
+From: Hans de Goede <hdegoede@redhat.com>
 
-[ Upstream commit cc41f11a21a51d6869d71e525a7264c748d7c0d7 ]
+[ Upstream commit ca707b3f00b4f31a6e1eb37e8ae99f15f2bb1fe5 ]
 
-Generic protection fault type kernel panic is observed when user performs
-soft (ordered) HBA unplug operation while IOs are running on drives
-connected to HBA.
+The audio setup on the Lenovo Carbon X1 8th gen is the same as that on
+the Lenovo Carbon X1 7th gen, as such it needs the same
+ALC285_FIXUP_THINKPAD_HEADSET_JACK quirk.
 
-When user performs ordered HBA removal operation, the kernel calls PCI
-device's .remove() call back function where driver is flushing out all the
-outstanding SCSI IO commands with DID_NO_CONNECT host byte and also unmaps
-sg buffers allocated for these IO commands.
+This fixes volume control of the speaker not working among other things.
 
-However, in the ordered HBA removal case (unlike of real HBA hot removal),
-HBA device is still alive and hence HBA hardware is performing the DMA
-operations to those buffers on the system memory which are already unmapped
-while flushing out the outstanding SCSI IO commands and this leads to
-kernel panic.
-
-Don't flush out the outstanding IOs from .remove() path in case of ordered
-removal since HBA will be still alive in this case and it can complete the
-outstanding IOs. Flush out the outstanding IOs only in case of 'physical
-HBA hot unplug' where there won't be any communication with the HBA.
-
-During shutdown also it is possible that HBA hardware can perform DMA
-operations on those outstanding IO buffers which are completed with
-DID_NO_CONNECT by the driver from .shutdown(). So same above fix is applied
-in shutdown path as well.
-
-It is safe to drop the outstanding commands when HBA is inaccessible such
-as when permanent PCI failure happens, when HBA is in non-operational
-state, or when someone does a real HBA hot unplug operation. Since driver
-knows that HBA is inaccessible during these cases, it is safe to drop the
-outstanding commands instead of waiting for SCSI error recovery to kick in
-and clear these outstanding commands.
-
-Link: https://lore.kernel.org/r/1585302763-23007-1-git-send-email-sreekanth.reddy@broadcom.com
-Fixes: c666d3be99c0 ("scsi: mpt3sas: wait for and flush running commands on shutdown/unload")
-Cc: stable@vger.kernel.org #v4.14.174+
-Signed-off-by: Sreekanth Reddy <sreekanth.reddy@broadcom.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+BugLink: https://bugzilla.redhat.com/show_bug.cgi?id=1820196
+Cc: stable@vger.kernel.org
+Suggested-by: Jaroslav Kysela <perex@perex.cz>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Reviewed-by: Jaroslav Kysela <perex@perex.cz>
+Link: https://lore.kernel.org/r/20200402174311.238614-1-hdegoede@redhat.com
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/mpt3sas/mpt3sas_scsih.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ sound/pci/hda/patch_realtek.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/scsi/mpt3sas/mpt3sas_scsih.c b/drivers/scsi/mpt3sas/mpt3sas_scsih.c
-index c597d544eb392..a8ec1caf9c77c 100644
---- a/drivers/scsi/mpt3sas/mpt3sas_scsih.c
-+++ b/drivers/scsi/mpt3sas/mpt3sas_scsih.c
-@@ -9908,8 +9908,8 @@ static void scsih_remove(struct pci_dev *pdev)
- 
- 	ioc->remove_host = 1;
- 
--	mpt3sas_wait_for_commands_to_complete(ioc);
--	_scsih_flush_running_cmds(ioc);
-+	if (!pci_device_is_present(pdev))
-+		_scsih_flush_running_cmds(ioc);
- 
- 	_scsih_fw_event_cleanup_queue(ioc);
- 
-@@ -9992,8 +9992,8 @@ scsih_shutdown(struct pci_dev *pdev)
- 
- 	ioc->remove_host = 1;
- 
--	mpt3sas_wait_for_commands_to_complete(ioc);
--	_scsih_flush_running_cmds(ioc);
-+	if (!pci_device_is_present(pdev))
-+		_scsih_flush_running_cmds(ioc);
- 
- 	_scsih_fw_event_cleanup_queue(ioc);
- 
+diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
+index 5cced684cf41f..3f3484455080d 100644
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -7300,6 +7300,7 @@ static const struct snd_pci_quirk alc269_fixup_tbl[] = {
+ 	SND_PCI_QUIRK(0x17aa, 0x225d, "Thinkpad T480", ALC269_FIXUP_LIMIT_INT_MIC_BOOST),
+ 	SND_PCI_QUIRK(0x17aa, 0x2292, "Thinkpad X1 Yoga 7th", ALC285_FIXUP_THINKPAD_HEADSET_JACK),
+ 	SND_PCI_QUIRK(0x17aa, 0x2293, "Thinkpad X1 Carbon 7th", ALC285_FIXUP_THINKPAD_HEADSET_JACK),
++	SND_PCI_QUIRK(0x17aa, 0x22be, "Thinkpad X1 Carbon 8th", ALC285_FIXUP_THINKPAD_HEADSET_JACK),
+ 	SND_PCI_QUIRK(0x17aa, 0x30bb, "ThinkCentre AIO", ALC233_FIXUP_LENOVO_LINE2_MIC_HOTKEY),
+ 	SND_PCI_QUIRK(0x17aa, 0x30e2, "ThinkCentre AIO", ALC233_FIXUP_LENOVO_LINE2_MIC_HOTKEY),
+ 	SND_PCI_QUIRK(0x17aa, 0x310c, "ThinkCentre Station", ALC294_FIXUP_LENOVO_MIC_LOCATION),
 -- 
 2.20.1
 
