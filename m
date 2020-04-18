@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AE27C38A2F
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:10:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 843FDC38A29
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:10:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1A1A52224F
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:10:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F0F521BE5
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:10:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587219043;
-	bh=hu5t5gL/CrEI1D6zO0cR1HzJwCY5MbLX2lDBKqe0jsk=;
+	s=default; t=1587219050;
+	bh=cjm+5jK9JUTX8l5VP0UQ0cEZ1wmZM5yeytrvD0lGy+8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=thWAPXMQDQLtjkSAu8Iuk3g2ioOyOBk7w/lCA0M7CzDv+1DJAMXBoav4QkXlNb8Ne
-	 mKWmgdiYn+hKCAedOxJ+mk8MRTwvyYMflfx4S0HRVk+MpJvf/DQ+1ctgZLRI5D202e
-	 4bXWzdevwETGTM45mmewgNvgf/j33JLwGqiXzwI0=
+	b=06vSN2OztNrgBLEnpYwMJZfjpKTJQm2Zq8voFmaew/pY18jdwZYSKL703LMkvlUXH
+	 QsEKfN2dWd3HXBn4i2JxTxVOo/5oXlEBhbw4x0NqDea6vKVLu/+HENPDcTYQX0MTeF
+	 rsvvEc0A1YuEpiwvAM8z3ytpjUpV2AvfmtTrrgho=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727950AbgDROKm (ORCPT
+        id S1728015AbgDROKt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 10:10:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38796 "EHLO mail.kernel.org"
+        Sat, 18 Apr 2020 10:10:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39000 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727865AbgDROKe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 10:10:34 -0400
+        id S1727918AbgDROKi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 10:10:38 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8729621BE5;
-        Sat, 18 Apr 2020 14:10:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 49F702224F;
+        Sat, 18 Apr 2020 14:10:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587219033;
-        bh=hu5t5gL/CrEI1D6zO0cR1HzJwCY5MbLX2lDBKqe0jsk=;
+        s=default; t=1587219038;
+        bh=cjm+5jK9JUTX8l5VP0UQ0cEZ1wmZM5yeytrvD0lGy+8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MWcdq7FrzTDU9+8bCFB175iGFcWSZlZStc1JiPkxd1x9pW1q7W4RUOOmEwJFDGx9W
-         VompKH5T/50LOYFRSZueO2g/fa/LHvvEU/Qi+tU/zMyYtes1Rl0nZEZml4SY4X34SD
-         c4DK75TVbQb7QXYUPBkfzVXrnQFoVuctfnAWmrpg=
+        b=HpvlM3b3x+Q2c0uw730DMr3137yUtvAfuPupDr245GOY5zEQPRmUyV/upncpXxKW0
+         izH1aq6xUYaYF2Piqvt0O24fGitd2jMMYCtaaeZMQ1TZyUnyR7yqWJDOUqIACTjdqV
+         cvqzDV3Qjuu+ZMQfBcrxPQm8URYuC/g/3vFi4vy4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Mathias Nyman <mathias.nyman@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 67/75] xhci: Wait until link state trainsits to U0 after setting USB_SS_PORT_LS_U0
-Date:   Sat, 18 Apr 2020 10:09:02 -0400
-Message-Id: <20200418140910.8280-67-sashal@kernel.org>
+Cc:     Frederic Barrat <fbarrat@linux.ibm.com>,
+        Andrew Donnellan <ajd@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 5.5 71/75] powerpc/powernv/ioda: Fix ref count for devices with their own PE
+Date:   Sat, 18 Apr 2020 10:09:06 -0400
+Message-Id: <20200418140910.8280-71-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200418140910.8280-1-sashal@kernel.org>
 References: <20200418140910.8280-1-sashal@kernel.org>
@@ -60,137 +60,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+From: Frederic Barrat <fbarrat@linux.ibm.com>
 
-[ Upstream commit 0200b9f790b0fc9e9a42f685f5ad54b23fe959f4 ]
+[ Upstream commit 05dd7da76986937fb288b4213b1fa10dbe0d1b33 ]
 
-Like U3 case, xHCI spec doesn't specify the upper bound of U0 transition
-time. The 20ms is not enough for some devices.
+The pci_dn structure used to store a pointer to the struct pci_dev, so
+taking a reference on the device was required. However, the pci_dev
+pointer was later removed from the pci_dn structure, but the reference
+was kept for the npu device.
+See commit 902bdc57451c ("powerpc/powernv/idoa: Remove unnecessary
+pcidev from pci_dn").
 
-Intead of polling PLS or PLC, we can facilitate the port change event to
-know that the link transits to U0 is completed.
+We don't need to take a reference on the device when assigning the PE
+as the struct pnv_ioda_pe is cleaned up at the same time as
+the (physical) device is released. Doing so prevents the device from
+being released, which is a problem for opencapi devices, since we want
+to be able to remove them through PCI hotplug.
 
-While at it, also separate U0 and U3 case to make the code cleaner.
+Now the ugly part: nvlink npu devices are not meant to be
+released. Because of the above, we've always leaked a reference and
+simply removing it now is dangerous and would likely require more
+work. There's currently no release device callback for nvlink devices
+for example. So to be safe, this patch leaks a reference on the npu
+device, but only for nvlink and not opencapi.
 
-[variable rename to u3exit, and skip completion for usb2 ports -Mathias ]
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
-Link: https://lore.kernel.org/r/20200312144517.1593-8-mathias.nyman@linux.intel.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Frederic Barrat <fbarrat@linux.ibm.com>
+Reviewed-by: Andrew Donnellan <ajd@linux.ibm.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20191121134918.7155-2-fbarrat@linux.ibm.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/host/xhci-hub.c  | 44 +++++++++++++++++++++++++-----------
- drivers/usb/host/xhci-mem.c  |  1 +
- drivers/usb/host/xhci-ring.c |  1 +
- drivers/usb/host/xhci.h      |  1 +
- 4 files changed, 34 insertions(+), 13 deletions(-)
+ arch/powerpc/platforms/powernv/pci-ioda.c | 19 ++++++++++++-------
+ 1 file changed, 12 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/usb/host/xhci-hub.c b/drivers/usb/host/xhci-hub.c
-index 712cd44f05ace..02f52d4f74df8 100644
---- a/drivers/usb/host/xhci-hub.c
-+++ b/drivers/usb/host/xhci-hub.c
-@@ -1306,7 +1306,33 @@ int xhci_hub_control(struct usb_hcd *hcd, u16 typeReq, u16 wValue,
- 					 wIndex, link_state);
- 				goto error;
- 			}
-+
-+			if (link_state == USB_SS_PORT_LS_U0) {
-+				if ((temp & PORT_PLS_MASK) == XDEV_U0)
-+					break;
-+
-+				if (!((temp & PORT_PLS_MASK) == XDEV_U1 ||
-+				    (temp & PORT_PLS_MASK) == XDEV_U2 ||
-+				    (temp & PORT_PLS_MASK) == XDEV_U3)) {
-+					xhci_warn(xhci, "Can only set port %d to U0 from U state\n",
-+							wIndex);
-+					goto error;
-+				}
-+				reinit_completion(&bus_state->u3exit_done[wIndex]);
-+				xhci_set_link_state(xhci, ports[wIndex],
-+						    USB_SS_PORT_LS_U0);
-+				spin_unlock_irqrestore(&xhci->lock, flags);
-+				if (!wait_for_completion_timeout(&bus_state->u3exit_done[wIndex],
-+								 msecs_to_jiffies(100)))
-+					xhci_dbg(xhci, "missing U0 port change event for port %d\n",
-+						 wIndex);
-+				spin_lock_irqsave(&xhci->lock, flags);
-+				temp = readl(ports[wIndex]->addr);
-+				break;
-+			}
-+
- 			if (link_state == USB_SS_PORT_LS_U3) {
-+				int retries = 16;
- 				slot_id = xhci_find_slot_id_by_port(hcd, xhci,
- 						wIndex + 1);
- 				if (slot_id) {
-@@ -1317,26 +1343,18 @@ int xhci_hub_control(struct usb_hcd *hcd, u16 typeReq, u16 wValue,
- 					xhci_stop_device(xhci, slot_id, 1);
- 					spin_lock_irqsave(&xhci->lock, flags);
- 				}
--			}
--
--			xhci_set_link_state(xhci, ports[wIndex], link_state);
--
--			spin_unlock_irqrestore(&xhci->lock, flags);
--			if (link_state == USB_SS_PORT_LS_U3) {
--				int retries = 16;
--
-+				xhci_set_link_state(xhci, ports[wIndex], USB_SS_PORT_LS_U3);
-+				spin_unlock_irqrestore(&xhci->lock, flags);
- 				while (retries--) {
- 					usleep_range(4000, 8000);
- 					temp = readl(ports[wIndex]->addr);
- 					if ((temp & PORT_PLS_MASK) == XDEV_U3)
- 						break;
- 				}
--			}
--			spin_lock_irqsave(&xhci->lock, flags);
--
--			temp = readl(ports[wIndex]->addr);
--			if (link_state == USB_SS_PORT_LS_U3)
-+				spin_lock_irqsave(&xhci->lock, flags);
-+				temp = readl(ports[wIndex]->addr);
- 				bus_state->suspended_ports |= 1 << wIndex;
-+			}
- 			break;
- 		case USB_PORT_FEAT_POWER:
- 			/*
-diff --git a/drivers/usb/host/xhci-mem.c b/drivers/usb/host/xhci-mem.c
-index 884c601bfa15f..9764122c9cdf2 100644
---- a/drivers/usb/host/xhci-mem.c
-+++ b/drivers/usb/host/xhci-mem.c
-@@ -2552,6 +2552,7 @@ int xhci_mem_init(struct xhci_hcd *xhci, gfp_t flags)
- 		xhci->usb3_rhub.bus_state.resume_done[i] = 0;
- 		/* Only the USB 2.0 completions will ever be used. */
- 		init_completion(&xhci->usb2_rhub.bus_state.rexit_done[i]);
-+		init_completion(&xhci->usb3_rhub.bus_state.u3exit_done[i]);
+diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
+index 67e4628dd5274..b4afabe20744a 100644
+--- a/arch/powerpc/platforms/powernv/pci-ioda.c
++++ b/arch/powerpc/platforms/powernv/pci-ioda.c
+@@ -1062,14 +1062,13 @@ static struct pnv_ioda_pe *pnv_ioda_setup_dev_PE(struct pci_dev *dev)
+ 		return NULL;
  	}
  
- 	if (scratchpad_alloc(xhci, flags))
-diff --git a/drivers/usb/host/xhci-ring.c b/drivers/usb/host/xhci-ring.c
-index d23f7408c81f1..c1e63af88356c 100644
---- a/drivers/usb/host/xhci-ring.c
-+++ b/drivers/usb/host/xhci-ring.c
-@@ -1677,6 +1677,7 @@ static void handle_port_status(struct xhci_hcd *xhci,
- 	     (portsc & PORT_PLS_MASK) == XDEV_U1 ||
- 	     (portsc & PORT_PLS_MASK) == XDEV_U2)) {
- 		xhci_dbg(xhci, "resume SS port %d finished\n", port_id);
-+		complete(&bus_state->u3exit_done[hcd_portnum]);
- 		/* We've just brought the device into U0/1/2 through either the
- 		 * Resume state after a device remote wakeup, or through the
- 		 * U3Exit state after a host-initiated resume.  If it's a device
-diff --git a/drivers/usb/host/xhci.h b/drivers/usb/host/xhci.h
-index 3ecee10fdcdc7..fb1ab63b5fe25 100644
---- a/drivers/usb/host/xhci.h
-+++ b/drivers/usb/host/xhci.h
-@@ -1694,6 +1694,7 @@ struct xhci_bus_state {
- 	/* Which ports are waiting on RExit to U0 transition. */
- 	unsigned long		rexit_ports;
- 	struct completion	rexit_done[USB_MAXCHILDREN];
-+	struct completion	u3exit_done[USB_MAXCHILDREN];
- };
+-	/* NOTE: We get only one ref to the pci_dev for the pdn, not for the
+-	 * pointer in the PE data structure, both should be destroyed at the
+-	 * same time. However, this needs to be looked at more closely again
+-	 * once we actually start removing things (Hotplug, SR-IOV, ...)
++	/* NOTE: We don't get a reference for the pointer in the PE
++	 * data structure, both the device and PE structures should be
++	 * destroyed at the same time. However, removing nvlink
++	 * devices will need some work.
+ 	 *
+ 	 * At some point we want to remove the PDN completely anyways
+ 	 */
+-	pci_dev_get(dev);
+ 	pdn->pe_number = pe->pe_number;
+ 	pe->flags = PNV_IODA_PE_DEV;
+ 	pe->pdev = dev;
+@@ -1084,7 +1083,6 @@ static struct pnv_ioda_pe *pnv_ioda_setup_dev_PE(struct pci_dev *dev)
+ 		pnv_ioda_free_pe(pe);
+ 		pdn->pe_number = IODA_INVALID_PE;
+ 		pe->pdev = NULL;
+-		pci_dev_put(dev);
+ 		return NULL;
+ 	}
  
+@@ -1205,6 +1203,14 @@ static struct pnv_ioda_pe *pnv_ioda_setup_npu_PE(struct pci_dev *npu_pdev)
+ 	struct pci_controller *hose = pci_bus_to_host(npu_pdev->bus);
+ 	struct pnv_phb *phb = hose->private_data;
  
++	/*
++	 * Intentionally leak a reference on the npu device (for
++	 * nvlink only; this is not an opencapi path) to make sure it
++	 * never goes away, as it's been the case all along and some
++	 * work is needed otherwise.
++	 */
++	pci_dev_get(npu_pdev);
++
+ 	/*
+ 	 * Due to a hardware errata PE#0 on the NPU is reserved for
+ 	 * error handling. This means we only have three PEs remaining
+@@ -1228,7 +1234,6 @@ static struct pnv_ioda_pe *pnv_ioda_setup_npu_PE(struct pci_dev *npu_pdev)
+ 			 */
+ 			dev_info(&npu_pdev->dev,
+ 				"Associating to existing PE %x\n", pe_num);
+-			pci_dev_get(npu_pdev);
+ 			npu_pdn = pci_get_pdn(npu_pdev);
+ 			rid = npu_pdev->bus->number << 8 | npu_pdn->devfn;
+ 			npu_pdn->pe_number = pe_num;
 -- 
 2.20.1
 
