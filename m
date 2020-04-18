@@ -4,57 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31EC0C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:45:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 284A7C38A29
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:45:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 069A821BE5
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:45:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F14C421BE5
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:45:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587221149;
-	bh=kn3vplV2Ajsfs0kgxnWd05XDF0uaf40IGq6aiy9WXAM=;
+	s=default; t=1587221152;
+	bh=x2nQX49DejcTSMkqKDh8blNT4ob6Yff8fCJ441kAin0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DFPGaC549HYS6pgL7hf0kvnLn/QJeVBHBCj/fC5NQzRDdQ1pe0b3goBf4Pl9r8JEh
-	 XjYNAXIkU1UyBNN/M6SfLqsWbyXn+O/3F6rMetn8GIqnmCt5Oqd+ZAcVhcPwlH03KO
-	 LWmwwspBWL/37+2SJzGbM2Q7L/Tl9DN3jZ1PiU3A=
+	b=2CJ6r5OEjL4Ss+x8L5c4XJfkExJI2c/+0Q+S0bStsUswCi+6h2FThgchvN7kDqJSZ
+	 Ysv9gf1PtItO+dXYmeboLE0nho6L9mNMWkXf43CZNb7ITgU4gbkJZuyYmGzMlNX8O8
+	 QhBRP0HZqMkd+ARk2aMtjFH2oK7kE5RyJEpfCEFM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728980AbgDROps (ORCPT
+        id S1726476AbgDROor (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 10:45:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56794 "EHLO mail.kernel.org"
+        Sat, 18 Apr 2020 10:44:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56558 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728136AbgDROos (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 10:44:48 -0400
+        id S1726882AbgDROok (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 10:44:40 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A513A22253;
-        Sat, 18 Apr 2020 14:44:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 992C32220A;
+        Sat, 18 Apr 2020 14:44:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587221088;
-        bh=kn3vplV2Ajsfs0kgxnWd05XDF0uaf40IGq6aiy9WXAM=;
+        s=default; t=1587221080;
+        bh=x2nQX49DejcTSMkqKDh8blNT4ob6Yff8fCJ441kAin0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BUjciwsc+3glSNq+7EldfbHkh0r/1IZXFW0wyiRhKPa93cdS4TLC5h7pbAGOOy7jA
-         ULvPnKJm3CjlRT/hfObgxqG2IZdVpIQiOao1b7Rg6/u/tfucrReMkKCdxVBsZ47blU
-         r8qoU+TuiQJvo6Bm/psHPxqUSP1pMCCv5dCOtkso=
+        b=qjEwiTZPU227tN8tluk/2VRAXLDqnjzAu5Xc3bU3gREl8RW4Vp2XCd05F8jB6aF3/
+         u+NHuck+pvisNv0z02R/Z4L8xbOfrvMTEHCjkAw7s8vXlv7Uzir8rDYmo40p1/GDUz
+         7OEFQQrbXI5C0P9Cf9KkNdhYWW6xsNvCoOs/DXTQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vasily Averin <vvs@virtuozzo.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Ingo Molnar <mingo@redhat.com>,
-        Manfred Spraul <manfred@colorfullife.com>,
-        NeilBrown <neilb@suse.com>, Steven Rostedt <rostedt@goodmis.org>,
-        Waiman Long <longman@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.4 09/19] kernel/gcov/fs.c: gcov_seq_next() should increase position index
-Date:   Sat, 18 Apr 2020 10:44:26 -0400
-Message-Id: <20200418144436.10818-9-sashal@kernel.org>
+Cc:     Qiujun Huang <hqjagain@gmail.com>,
+        Jeff Layton <jlayton@kernel.org>,
+        Ilya Dryomov <idryomov@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, ceph-devel@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 03/19] ceph: return ceph_mdsc_do_request() errors from __get_parent()
+Date:   Sat, 18 Apr 2020 10:44:20 -0400
+Message-Id: <20200418144436.10818-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200418144436.10818-1-sashal@kernel.org>
 References: <20200418144436.10818-1-sashal@kernel.org>
@@ -67,46 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vasily Averin <vvs@virtuozzo.com>
+From: Qiujun Huang <hqjagain@gmail.com>
 
-[ Upstream commit f4d74ef6220c1eda0875da30457bef5c7111ab06 ]
+[ Upstream commit c6d50296032f0b97473eb2e274dc7cc5d0173847 ]
 
-If seq_file .next function does not change position index, read after
-some lseek can generate unexpected output.
+Return the error returned by ceph_mdsc_do_request(). Otherwise,
+r_target_inode ends up being NULL this ends up returning ENOENT
+regardless of the error.
 
-https://bugzilla.kernel.org/show_bug.cgi?id=206283
-Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Acked-by: Peter Oberparleiter <oberpar@linux.ibm.com>
-Cc: Al Viro <viro@zeniv.linux.org.uk>
-Cc: Davidlohr Bueso <dave@stgolabs.net>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Manfred Spraul <manfred@colorfullife.com>
-Cc: NeilBrown <neilb@suse.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: Waiman Long <longman@redhat.com>
-Link: http://lkml.kernel.org/r/f65c6ee7-bd00-f910-2f8a-37cc67e4ff88@virtuozzo.com
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
+Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/gcov/fs.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/ceph/export.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/kernel/gcov/fs.c b/kernel/gcov/fs.c
-index edf67c493a8e1..e473f6a1f6ca7 100644
---- a/kernel/gcov/fs.c
-+++ b/kernel/gcov/fs.c
-@@ -108,9 +108,9 @@ static void *gcov_seq_next(struct seq_file *seq, void *data, loff_t *pos)
- {
- 	struct gcov_iterator *iter = data;
- 
-+	(*pos)++;
- 	if (gcov_iter_next(iter))
- 		return NULL;
--	(*pos)++;
- 
- 	return iter;
- }
+diff --git a/fs/ceph/export.c b/fs/ceph/export.c
+index fe02ae7f056a3..ff9e60daf086b 100644
+--- a/fs/ceph/export.c
++++ b/fs/ceph/export.c
+@@ -146,6 +146,11 @@ static struct dentry *__get_parent(struct super_block *sb,
+ 	}
+ 	req->r_num_caps = 1;
+ 	err = ceph_mdsc_do_request(mdsc, NULL, req);
++	if (err) {
++		ceph_mdsc_put_request(req);
++		return ERR_PTR(err);
++	}
++
+ 	inode = req->r_target_inode;
+ 	if (inode)
+ 		ihold(inode);
 -- 
 2.20.1
 
