@@ -2,73 +2,151 @@ Return-Path: <SRS0=3CHW=6C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D819C2BA19
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 07:37:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E07E6C38A2B
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 07:44:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5DE18221F7
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 07:37:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587195444;
-	bh=iAPUXTKI3a4Lf919uOzpA7MzDqimctNSK52EDg5FgPA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Yw0b6yGK3MFQfg7he7gNnlmr/ZLx4Azpgo+5BLgZBbbK4oO/acjLjvEAq4lNoK7ho
-	 CIL880i9dE46PZQ3y+/fG2GXuYSpFgIwM3mtiiihQiGAO3kHFgm4Ceat+PmjbGET5y
-	 rSv6c7tNCsTZolmjncmv4bb5ZDGHgxPBuSwRHMOk=
+	by mail.kernel.org (Postfix) with ESMTP id BE49F221F7
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 07:44:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="opKoWBpd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725914AbgDRHhX (ORCPT
+        id S1725939AbgDRHoE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 03:37:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40834 "EHLO mail.kernel.org"
+        Sat, 18 Apr 2020 03:44:04 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:34019 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725862AbgDRHhX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 03:37:23 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1725849AbgDRHoD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 03:44:03 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 54978214D8;
-        Sat, 18 Apr 2020 07:37:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587195442;
-        bh=iAPUXTKI3a4Lf919uOzpA7MzDqimctNSK52EDg5FgPA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=WM0zWNRuWlPf4DLSvnGUmf+9//jgLQY689H0uzjPNPP4hJpNp8ieYEUEhuiuylV6j
-         Ow2WpVrnjrDjq2TsJfS6nIuDYViR2PElqgwfvlD3BmCAFV3NQXoYT1ywHQJ++3hkli
-         TMcsG4MC/2+8A5iS8dCZBWCrHhggd7tXpSIgxEj4=
-Date:   Sat, 18 Apr 2020 09:37:19 +0200
-From:   'Greg Kroah-Hartman' <gregkh@linuxfoundation.org>
-To:     Sunyoung Kang <sy0816.kang@samsung.com>
-Cc:     mchehab@kernel.org, 'Hans Verkuil' <hverkuil-cisco@xs4all.nl>,
-        'Arnd Bergmann' <arnd@arndb.de>,
-        'Thomas Gleixner' <tglx@linutronix.de>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] media: v4l2-compat-ioctl32.c: copy reserved2 field in
- get_v4l2_buffer32
-Message-ID: <20200418073719.GA2410414@kroah.com>
-References: <CGME20200417025205epcas2p46d33e64f2de49041d2ca68ecc98fc83e@epcas2p4.samsung.com>
- <20200417024543.66785-1-sy0816.kang@samsung.com>
- <20200417083506.GB141762@kroah.com>
- <145301d6152f$6d5b6240$481226c0$@samsung.com>
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4944hs26Dpz9sQx;
+        Sat, 18 Apr 2020 17:43:57 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1587195840;
+        bh=lsX1LshwCZNrx62Bs3fV3s4Q0snTkCIhD6+87FUwWMQ=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=opKoWBpdo/QgZ8aFY5W8WY8DV0z2DUZi597rOnunTMmBL8MJjeziC6hQa82YBKgLH
+         B0YQucMLdruk+v3O7E0wxuhPT9Y6uDznV/nqY9dbkc3kMv/Q7RNOp1cGYJCI+/+/5K
+         hgpDQkBhLFV0VjGPPZmcr3asPJgYq0X9208TkjG+H9FSj9fcbrlvj4+E9FdmlF7EjA
+         kvMrDnxANcNt1U3hrObY9LTClHzhfNEniNhytneYg4GGYOb5Asf37VZgJmF/3y2QYh
+         OUv3fytDY6ksdU4LqWAtqxd1Vkj0q4Ta343YT4s93pamxzsul9+lBvwgUpa5Fs8hhy
+         ZL+LYtGMzS+IA==
+Date:   Sat, 18 Apr 2020 17:43:53 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Dmitry Vyukov <dvyukov@google.com>
+Cc:     Alex Shi <alex.shi@linux.alibaba.com>,
+        Linux-Next Mailing List <linux-next@vger.kernel.org>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        syzbot <syzbot+826543256ed3b8c37f62@syzkaller.appspotmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Cgroups <cgroups@vger.kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>, Michal Hocko <mhocko@kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>
+Subject: Re: linux-next test error: BUG: using __this_cpu_read() in
+ preemptible code in __mod_memcg_state
+Message-ID: <20200418174353.02295792@canb.auug.org.au>
+In-Reply-To: <CACT4Y+Zfcs2MxD9-zR748UbkEpsV4BYjFgw1XgSqX4X8z=92CA@mail.gmail.com>
+References: <00000000000022640205a04a20d8@google.com>
+        <20200309092423.2ww3aw6yfyce7yty@box>
+        <5b1196be-09ce-51f7-f5e7-63f2e597f91e@linux.alibaba.com>
+        <d3fb0593-e483-3b69-bf2c-99ad6cd03567@linux.alibaba.com>
+        <CACT4Y+Zfcs2MxD9-zR748UbkEpsV4BYjFgw1XgSqX4X8z=92CA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <145301d6152f$6d5b6240$481226c0$@samsung.com>
+Content-Type: multipart/signed; boundary="Sig_/5HjOiotoj/lOEPJeGW0.wVY";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Apr 18, 2020 at 12:14:09PM +0900, Sunyoung Kang wrote:
-> Exynos video codec driver uses reserved2 value. How will reserved2 be used
-> for future use?
+--Sig_/5HjOiotoj/lOEPJeGW0.wVY
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-No driver should be using the "reserved" fields, as they are "reserved"
-by the api for future expansion of it.  They are not driver-specific
-fields to be used that way at all.
+Hi Dmitry,
 
-thanks,
+On Sat, 18 Apr 2020 09:04:38 +0200 Dmitry Vyukov <dvyukov@google.com> wrote:
+>
+> On Mon, Mar 9, 2020 at 2:27 PM Alex Shi <alex.shi@linux.alibaba.com> wrot=
+e:
+> > =E5=9C=A8 2020/3/9 =E4=B8=8B=E5=8D=885:56, Alex Shi =E5=86=99=E9=81=93:=
+ =20
+> > >
+> > >
+> > > =E5=9C=A8 2020/3/9 =E4=B8=8B=E5=8D=885:24, Kirill A. Shutemov =E5=86=
+=99=E9=81=93: =20
+> > >>> check_preemption_disabled: 3 callbacks suppressed
+> > >>> BUG: using __this_cpu_read() in preemptible [00000000] code: syz-fu=
+zzer/9432
+> > >>> caller is __mod_memcg_state+0x27/0x1a0 mm/memcontrol.c:689
+> > >>> CPU: 1 PID: 9432 Comm: syz-fuzzer Not tainted 5.6.0-rc4-next-202003=
+06-syzkaller #0
+> > >>> Hardware name: Google Google Compute Engine/Google Compute Engine, =
+BIOS Google 01/01/2011
+> > >>> Call Trace:
+> > >>>  __dump_stack lib/dump_stack.c:77 [inline]
+> > >>>  dump_stack+0x188/0x20d lib/dump_stack.c:118
+> > >>>  check_preemption_disabled lib/smp_processor_id.c:47 [inline]
+> > >>>  __this_cpu_preempt_check.cold+0x84/0x90 lib/smp_processor_id.c:64
+> > >>>  __mod_memcg_state+0x27/0x1a0 mm/memcontrol.c:689
+> > >>>  __split_huge_page mm/huge_memory.c:2575 [inline]
+> > >>>  split_huge_page_to_list+0x124b/0x3380 mm/huge_memory.c:2862
+> > >>>  split_huge_page include/linux/huge_mm.h:167 [inline] =20
+> > >> It looks like a regression due to c8cba0cc2a80 ("mm/thp: narrow lru
+> > >> locking"). =20
+> > >
+> > > yes, I guess so. =20
+> >
+> > Yes, it is a stupid mistake to pull out lock for __mod_memcg_state which
+> > should be in a lock.
+> >
+> > revert this patch should be all fine, since ClearPageCompound and page_=
+ref_inc
+> > later may related with lru_list valid issue in release_pges.
+> >
+> >
+> > Sorry for the disaster!
+> >
+> > Alex =20
+>=20
+> +linux-next, Stephen for currently open linux-next build/boot failure
+>=20
+> Hi Alex,
+>=20
+> What's the status of this? Was the guilty patch reverted? If so,
+> please mark it as invalid for syzbot, otherwise it still shows up as
+> open bug.
 
-greg k-h
+The patch was removed from Andrew's tree in March and never made it to
+Linus' tree.  I can't find how to tell syzbot that the patch went away ...
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/5HjOiotoj/lOEPJeGW0.wVY
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6ar7kACgkQAVBC80lX
+0GwY4wf/aR9/b0Bn1zKRTAs8KTvlcg21lG6elnys8xvDaiOu5ZAA0w9dM3e+d/SG
+lxroFSw0VID2lZkoSh8bIGx5RGyYE7xWKxKo/4OD8SmhUNiAF2+2C+DHtc84STNF
+7eskFXQ6ccvwGKaQR+bEKP7hmFCQvPSG9U0VWmOc5BwJM/nyA4S65KQMOo8Wx5q7
+XLFCLeYDTrL9lwTJXYjAJwtlzKu2pGqOlNaX5Sa7PO0HJAmX32vSehl4gQNcbygV
+KDPMFnAEDD8hiQDk9/4p6PRx2M5xWh+53WJX9HNt/Qr1LUYyyZal3gTPLst+wJBH
+d5poxN4kD1/w/D9hK+qukjB2ryevEg==
+=bX7+
+-----END PGP SIGNATURE-----
+
+--Sig_/5HjOiotoj/lOEPJeGW0.wVY--
