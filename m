@@ -2,285 +2,190 @@ Return-Path: <SRS0=3CHW=6C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 916BCC2BA19
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 08:05:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 690C8C2BA19
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 08:06:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 600EE20857
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 08:05:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 440BA20857
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 08:06:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="PRb7ziKc"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="poiD+xo7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725987AbgDRIFe (ORCPT
+        id S1726011AbgDRIGG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 04:05:34 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:7106 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725858AbgDRIFe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 04:05:34 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 49459h05LLz9txXw;
-        Sat, 18 Apr 2020 10:05:28 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=PRb7ziKc; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id 88HgkiXZBaj0; Sat, 18 Apr 2020 10:05:27 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 49459g5qG5z9txXv;
-        Sat, 18 Apr 2020 10:05:27 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1587197127; bh=eYFvX9PUHCxTTuXy9c9FJ+5YeTg8dwkbC0BOPikIolI=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=PRb7ziKcBPPHvQNn6ZND93ScBv1HV+KFZHgPLqCgcoRiPlr60EAAMT8LIWoJ7sGtq
-         /UyPHtcYH1AED4GIZ6+f1mh2u0t+LjHhiVIuaV8WMCJIF39zm5Ql+eQ80FECbo1Dvf
-         ghEG5THJ0t47/CEzV3YdJaXN5dEMEUTxYd9OKmXo=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id B0EF48B772;
-        Sat, 18 Apr 2020 10:05:28 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id OLa1DQYE8a_C; Sat, 18 Apr 2020 10:05:28 +0200 (CEST)
-Received: from [192.168.4.90] (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 453B68B75E;
-        Sat, 18 Apr 2020 10:05:27 +0200 (CEST)
-Subject: Re: [PATCH 1/2] signal: Factor copy_siginfo_to_external32 from
- copy_siginfo_to_user32
-To:     "Eric W. Biederman" <ebiederm@xmission.com>,
-        Christoph Hellwig <hch@lst.de>
-Cc:     Arnd Bergmann <arnd@arndb.de>, x86@kernel.org,
+        Sat, 18 Apr 2020 04:06:06 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:42811 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725858AbgDRIGF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 04:06:05 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1587197165; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=Ai272o6qy5R6nMdbdlalbR48K7Knpt+f0IeAypOdip0=; b=poiD+xo7iTbEET6KyZPdloSY40ARvPFKjZW2++pLf34j7btzNK9GhJkvNrECjqgTAzLxk2lh
+ KDEU0Mh8dFFFKZhNKk2OPqQt6jPjrQAew+522mDTuXuwn5VP34u85oUophsxQuTM44S2ZMLw
+ qYrBjHCABFq8SNngUNKOCIuw+/I=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e9ab4ec.7f887d6d4490-smtp-out-n01;
+ Sat, 18 Apr 2020 08:06:04 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 40007C432C2; Sat, 18 Apr 2020 08:06:04 +0000 (UTC)
+Received: from [10.131.205.89] (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: rnayak)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id BA99CC433F2;
+        Sat, 18 Apr 2020 08:05:59 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org BA99CC433F2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
+Subject: Re: [PATCH v2 01/17] tty: serial: qcom_geni_serial: Use OPP API to
+ set clk/perf state
+To:     Matthias Kaehlcke <mka@chromium.org>
+Cc:     viresh.kumar@linaro.org, sboyd@kernel.org,
+        bjorn.andersson@linaro.org, agross@kernel.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linuxppc-dev@lists.ozlabs.org, Jeremy Kerr <jk@ozlabs.org>
-References: <20200414070142.288696-1-hch@lst.de>
- <20200414070142.288696-3-hch@lst.de> <87pnc5akhk.fsf@x220.int.ebiederm.org>
- <87k12dakfx.fsf_-_@x220.int.ebiederm.org>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <c51c6192-2ea4-62d8-dd22-305f7a1e0dd3@c-s.fr>
-Date:   Sat, 18 Apr 2020 10:05:19 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Akash Asthana <akashast@codeaurora.org>,
+        linux-serial@vger.kernel.org
+References: <1587132279-27659-1-git-send-email-rnayak@codeaurora.org>
+ <1587132279-27659-2-git-send-email-rnayak@codeaurora.org>
+ <20200417180041.GD199755@google.com>
+From:   Rajendra Nayak <rnayak@codeaurora.org>
+Message-ID: <c7f6922a-47c2-9703-c8fa-92fdbe1f69ec@codeaurora.org>
+Date:   Sat, 18 Apr 2020 13:35:56 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-In-Reply-To: <87k12dakfx.fsf_-_@x220.int.ebiederm.org>
+In-Reply-To: <20200417180041.GD199755@google.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+On 4/17/2020 11:30 PM, Matthias Kaehlcke wrote:
+> Hi Rajendra,
 
-Le 17/04/2020 à 23:09, Eric W. Biederman a écrit :
-> 
-> To remove the use of set_fs in the coredump code there needs to be a
-> way to convert a kernel siginfo to a userspace compat siginfo.
-> 
-> Call that function copy_siginfo_to_compat and factor it out of
-> copy_siginfo_to_user32.
-
-I find it a pitty to do that.
-
-The existing function could have been easily converted to using 
-user_access_begin() + user_access_end() and use unsafe_put_user() to 
-copy to userspace to avoid copying through a temporary structure on the 
-stack.
-
-With your change, it becomes impossible to do that.
-
-Is that really an issue to use that set_fs() in the coredump code ?
-
-Christophe
+Hey Matthias,
 
 > 
-> The existence of x32 complicates this code.  On x32 SIGCHLD uses 64bit
-> times for utime and stime.  As only SIGCHLD is affected and SIGCHLD
-> never causes a coredump I have avoided handling that case.
+> On Fri, Apr 17, 2020 at 07:34:23PM +0530, Rajendra Nayak wrote:
+>> geni serial needs to express a perforamnce state requirement on CX
+>> powerdomain depending on the frequency of the clock rates.
+>> Use OPP table from DT to register with OPP framework and use
+>> dev_pm_opp_set_rate() to set the clk/perf state.
+>>
+>> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+>> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>> Cc: Akash Asthana <akashast@codeaurora.org>
+>> Cc: linux-serial@vger.kernel.org
+>> ---
+>>   drivers/tty/serial/qcom_geni_serial.c | 30 +++++++++++++++++++++++++-----
+>>   include/linux/qcom-geni-se.h          |  2 ++
+>>   2 files changed, 27 insertions(+), 5 deletions(-)
+>>
+>> diff --git a/drivers/tty/serial/qcom_geni_serial.c b/drivers/tty/serial/qcom_geni_serial.c
+>> index 6119090..151012c 100644
+>> --- a/drivers/tty/serial/qcom_geni_serial.c
+>> +++ b/drivers/tty/serial/qcom_geni_serial.c
+>> @@ -9,6 +9,7 @@
+>>   #include <linux/module.h>
+>>   #include <linux/of.h>
+>>   #include <linux/of_device.h>
+>> +#include <linux/pm_opp.h>
+>>   #include <linux/platform_device.h>
+>>   #include <linux/pm_runtime.h>
+>>   #include <linux/pm_wakeirq.h>
+>> @@ -128,6 +129,7 @@ struct qcom_geni_serial_port {
+>>   	int wakeup_irq;
+>>   	bool rx_tx_swap;
+>>   	bool cts_rts_swap;
+>> +	bool opp_table;
 > 
-> Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
-> ---
->   include/linux/compat.h |   1 +
->   kernel/signal.c        | 108 +++++++++++++++++++++++------------------
->   2 files changed, 63 insertions(+), 46 deletions(-)
+> The name of the variable suggests that it holds a OPP table, something
+> like 'has_opp_table' would be clearer.
+
+I agree with your suggestions, I will update the variable names when I respin.
+
 > 
-> diff --git a/include/linux/compat.h b/include/linux/compat.h
-> index 0480ba4db592..4962b254e550 100644
-> --- a/include/linux/compat.h
-> +++ b/include/linux/compat.h
-> @@ -402,6 +402,7 @@ long compat_get_bitmap(unsigned long *mask, const compat_ulong_t __user *umask,
->   		       unsigned long bitmap_size);
->   long compat_put_bitmap(compat_ulong_t __user *umask, unsigned long *mask,
->   		       unsigned long bitmap_size);
-> +void copy_siginfo_to_external32(struct compat_siginfo *to, const struct kernel_siginfo *from);
->   int copy_siginfo_from_user32(kernel_siginfo_t *to, const struct compat_siginfo __user *from);
->   int copy_siginfo_to_user32(struct compat_siginfo __user *to, const kernel_siginfo_t *from);
->   int get_compat_sigevent(struct sigevent *event,
-> diff --git a/kernel/signal.c b/kernel/signal.c
-> index e58a6c619824..578f196898cb 100644
-> --- a/kernel/signal.c
-> +++ b/kernel/signal.c
-> @@ -3235,90 +3235,106 @@ int copy_siginfo_from_user(kernel_siginfo_t *to, const siginfo_t __user *from)
->   }
->   
->   #ifdef CONFIG_COMPAT
-> -int copy_siginfo_to_user32(struct compat_siginfo __user *to,
-> -			   const struct kernel_siginfo *from)
-> -#if defined(CONFIG_X86_X32_ABI) || defined(CONFIG_IA32_EMULATION)
-> +void copy_siginfo_to_external32(struct compat_siginfo *to,
-> +				const struct kernel_siginfo *from)
->   {
-> -	return __copy_siginfo_to_user32(to, from, in_x32_syscall());
-> -}
-> -int __copy_siginfo_to_user32(struct compat_siginfo __user *to,
-> -			     const struct kernel_siginfo *from, bool x32_ABI)
-> -#endif
-> -{
-> -	struct compat_siginfo new;
-> -	memset(&new, 0, sizeof(new));
-> +	/*
-> +	 * This function does not work properly for SIGCHLD on x32,
-> +	 * but it does not need to as SIGCHLD never causes a coredump.
-> +	 */
-> +	memset(to, 0, sizeof(*to));
->   
-> -	new.si_signo = from->si_signo;
-> -	new.si_errno = from->si_errno;
-> -	new.si_code  = from->si_code;
-> +	to->si_signo = from->si_signo;
-> +	to->si_errno = from->si_errno;
-> +	to->si_code  = from->si_code;
->   	switch(siginfo_layout(from->si_signo, from->si_code)) {
->   	case SIL_KILL:
-> -		new.si_pid = from->si_pid;
-> -		new.si_uid = from->si_uid;
-> +		to->si_pid = from->si_pid;
-> +		to->si_uid = from->si_uid;
->   		break;
->   	case SIL_TIMER:
-> -		new.si_tid     = from->si_tid;
-> -		new.si_overrun = from->si_overrun;
-> -		new.si_int     = from->si_int;
-> +		to->si_tid     = from->si_tid;
-> +		to->si_overrun = from->si_overrun;
-> +		to->si_int     = from->si_int;
->   		break;
->   	case SIL_POLL:
-> -		new.si_band = from->si_band;
-> -		new.si_fd   = from->si_fd;
-> +		to->si_band = from->si_band;
-> +		to->si_fd   = from->si_fd;
->   		break;
->   	case SIL_FAULT:
-> -		new.si_addr = ptr_to_compat(from->si_addr);
-> +		to->si_addr = ptr_to_compat(from->si_addr);
->   #ifdef __ARCH_SI_TRAPNO
-> -		new.si_trapno = from->si_trapno;
-> +		to->si_trapno = from->si_trapno;
->   #endif
->   		break;
->   	case SIL_FAULT_MCEERR:
-> -		new.si_addr = ptr_to_compat(from->si_addr);
-> +		to->si_addr = ptr_to_compat(from->si_addr);
->   #ifdef __ARCH_SI_TRAPNO
-> -		new.si_trapno = from->si_trapno;
-> +		to->si_trapno = from->si_trapno;
->   #endif
-> -		new.si_addr_lsb = from->si_addr_lsb;
-> +		to->si_addr_lsb = from->si_addr_lsb;
->   		break;
->   	case SIL_FAULT_BNDERR:
-> -		new.si_addr = ptr_to_compat(from->si_addr);
-> +		to->si_addr = ptr_to_compat(from->si_addr);
->   #ifdef __ARCH_SI_TRAPNO
-> -		new.si_trapno = from->si_trapno;
-> +		to->si_trapno = from->si_trapno;
->   #endif
-> -		new.si_lower = ptr_to_compat(from->si_lower);
-> -		new.si_upper = ptr_to_compat(from->si_upper);
-> +		to->si_lower = ptr_to_compat(from->si_lower);
-> +		to->si_upper = ptr_to_compat(from->si_upper);
->   		break;
->   	case SIL_FAULT_PKUERR:
-> -		new.si_addr = ptr_to_compat(from->si_addr);
-> +		to->si_addr = ptr_to_compat(from->si_addr);
->   #ifdef __ARCH_SI_TRAPNO
-> -		new.si_trapno = from->si_trapno;
-> +		to->si_trapno = from->si_trapno;
->   #endif
-> -		new.si_pkey = from->si_pkey;
-> +		to->si_pkey = from->si_pkey;
->   		break;
->   	case SIL_CHLD:
-> -		new.si_pid    = from->si_pid;
-> -		new.si_uid    = from->si_uid;
-> -		new.si_status = from->si_status;
-> +		to->si_pid    = from->si_pid;
-> +		to->si_uid    = from->si_uid;
-> +		to->si_status = from->si_status;
-> +		to->si_utime = from->si_utime;
-> +		to->si_stime = from->si_stime;
->   #ifdef CONFIG_X86_X32_ABI
->   		if (x32_ABI) {
-> -			new._sifields._sigchld_x32._utime = from->si_utime;
-> -			new._sifields._sigchld_x32._stime = from->si_stime;
-> +			to->_sifields._sigchld_x32._utime = from->si_utime;
-> +			to->_sifields._sigchld_x32._stime = from->si_stime;
->   		} else
->   #endif
->   		{
-> -			new.si_utime = from->si_utime;
-> -			new.si_stime = from->si_stime;
->   		}
->   		break;
->   	case SIL_RT:
-> -		new.si_pid = from->si_pid;
-> -		new.si_uid = from->si_uid;
-> -		new.si_int = from->si_int;
-> +		to->si_pid = from->si_pid;
-> +		to->si_uid = from->si_uid;
-> +		to->si_int = from->si_int;
->   		break;
->   	case SIL_SYS:
-> -		new.si_call_addr = ptr_to_compat(from->si_call_addr);
-> -		new.si_syscall   = from->si_syscall;
-> -		new.si_arch      = from->si_arch;
-> +		to->si_call_addr = ptr_to_compat(from->si_call_addr);
-> +		to->si_syscall   = from->si_syscall;
-> +		to->si_arch      = from->si_arch;
->   		break;
->   	}
-> +}
-> +
-> +int copy_siginfo_to_user32(struct compat_siginfo __user *to,
-> +			   const struct kernel_siginfo *from)
-> +#if defined(CONFIG_X86_X32_ABI) || defined(CONFIG_IA32_EMULATION)
-> +{
-> +	return __copy_siginfo_to_user32(to, from, in_x32_syscall());
-> +}
-> +int __copy_siginfo_to_user32(struct compat_siginfo __user *to,
-> +			     const struct kernel_siginfo *from, bool x32_ABI)
-> +#endif
-> +{
-> +	struct compat_siginfo new;
-> +	copy_siginfo_to_external32(&new, from);
-> +#ifdef CONFIG_X86_X32_ABI
-> +	if (x32_ABI && from->si_signo == SIGCHLD) {
-> +		new._sifields._sigchld_x32._utime = from->si_utime;
-> +		new._sifields._sigchld_x32._stime = from->si_stime;
-> +	}
-> +#endif
->   
->   	if (copy_to_user(to, &new, sizeof(struct compat_siginfo)))
->   		return -EFAULT;
+>>   };
+>>   
+>>   static const struct uart_ops qcom_geni_console_pops;
+>> @@ -961,7 +963,7 @@ static void qcom_geni_serial_set_termios(struct uart_port *uport,
+>>   		goto out_restart_rx;
+>>   
+>>   	uport->uartclk = clk_rate;
+>> -	clk_set_rate(port->se.clk, clk_rate);
+>> +	dev_pm_opp_set_rate(uport->dev, clk_rate);
+>>   	ser_clk_cfg = SER_CLK_EN;
+>>   	ser_clk_cfg |= clk_div << CLK_DIV_SHFT;
+>>   
+>> @@ -1198,8 +1200,11 @@ static void qcom_geni_serial_pm(struct uart_port *uport,
+>>   	if (new_state == UART_PM_STATE_ON && old_state == UART_PM_STATE_OFF)
+>>   		geni_se_resources_on(&port->se);
+>>   	else if (new_state == UART_PM_STATE_OFF &&
+>> -			old_state == UART_PM_STATE_ON)
+>> +			old_state == UART_PM_STATE_ON) {
+>> +		/* Drop the performance state vote */
+>> +		dev_pm_opp_set_rate(uport->dev, 0);
+>>   		geni_se_resources_off(&port->se);
+>> +	}
+>>   }
+>>   
+>>   static const struct uart_ops qcom_geni_console_pops = {
+>> @@ -1318,13 +1323,20 @@ static int qcom_geni_serial_probe(struct platform_device *pdev)
+>>   	if (of_property_read_bool(pdev->dev.of_node, "cts-rts-swap"))
+>>   		port->cts_rts_swap = true;
+>>   
+>> +	port->se.opp = dev_pm_opp_set_clkname(&pdev->dev, "se");
+>> +	if (IS_ERR(port->se.opp))
+>> +		return PTR_ERR(port->se.opp);
+>> +	/* OPP table is optional */
+>> +	if (!dev_pm_opp_of_add_table(&pdev->dev))
 > 
+> Even if the OPP table is optional you probably want to fail if the error
+> is anything other than -ENODEV ("'operating-points' property is not found
+> or is invalid data in device node.").
+
+sounds valid. I will fix it up and respin. Will just wait a few days to see if
+I get any more reviews and feedback.
+
+> 
+>> diff --git a/include/linux/qcom-geni-se.h b/include/linux/qcom-geni-se.h
+>> index dd46494..737e713 100644
+>> --- a/include/linux/qcom-geni-se.h
+>> +++ b/include/linux/qcom-geni-se.h
+>> @@ -24,6 +24,7 @@ enum geni_se_protocol_type {
+>>   
+>>   struct geni_wrapper;
+>>   struct clk;
+>> +struct opp_table;
+>>   
+>>   /**
+>>    * struct geni_se - GENI Serial Engine
+>> @@ -39,6 +40,7 @@ struct geni_se {
+>>   	struct device *dev;
+>>   	struct geni_wrapper *wrapper;
+>>   	struct clk *clk;
+>> +	struct opp_table *opp;
+> 
+> This name suggests that the variable holds a single OPP ('struct
+> dev_pm_opp'). Most other code uses the name 'opp_table', which
+> also seems a good candidate here.
+
+Agree, thanks again for taking time to review.
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
