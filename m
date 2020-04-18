@@ -7,48 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D184AC3A5A0
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:10:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D886C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:10:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B1BB12220A
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:10:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED93C22244
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:10:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587219027;
-	bh=MuIOjmunTWEFlt5HQIFx2mjqJzIGMAOGls5X8CybAR8=;
+	s=default; t=1587219029;
+	bh=OieE0ed45h2bHXoLy6uX/VfWnlGezWHdPFYyZXS+NWM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Hwt1/tutcHVywMp6NgqB3iP5y89uaIo7Sc1q8pbIbmwsbNpKXq2obvfGkBEe6i5Pt
-	 pV1qlyV2xtm3K+2zRvnMMixQic9w0sZuAbS5SD6MiKnrnR1eJD4henzAe3g/yp9s/B
-	 9D3+bxQC9JmgpM3KALqi78P8NzFx/Kig6x0hcOR0=
+	b=WF8BbPCpK281EkBm1AQOsyyG7tgg/CJT0rrCm2yBWCWztNe6rVFuV8lGYfuGh7yWS
+	 8J6CmUCBZlbj66QRh+RORtCtBHSB6oGg01yQ7T3N+JQU+Q9wj8FItU4+p67oQujGDx
+	 Xr+iIoZdxgVNaIJpK5hHDa0rEBrcSOkZGxEpR/u8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727816AbgDROK0 (ORCPT
+        id S1727827AbgDROK1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 10:10:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38184 "EHLO mail.kernel.org"
+        Sat, 18 Apr 2020 10:10:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38304 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726857AbgDROKN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 10:10:13 -0400
+        id S1726904AbgDROKR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 10:10:17 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A653621D7E;
-        Sat, 18 Apr 2020 14:10:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C04AF21D6C;
+        Sat, 18 Apr 2020 14:10:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587219013;
-        bh=MuIOjmunTWEFlt5HQIFx2mjqJzIGMAOGls5X8CybAR8=;
+        s=default; t=1587219017;
+        bh=OieE0ed45h2bHXoLy6uX/VfWnlGezWHdPFYyZXS+NWM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VMw/W9efSZyCb6c1SfwUrOiOpw7B5kHEu/Lzbq0mT7SepFMxVSSeOfgEXNwYJEG/8
-         88VLOXPdLNcbYIp9yzIq+Zgn/KBY5yRxhsZZQYBu5h+i0lgkQ53+2diOBZyCQjwfMo
-         yeU/IgiQIZVcnX+vpjJYA3H9SZv9HtRZaRF/cYVU=
+        b=AlXmOckxByTE4raphNWGYGtqYNdnYcosoDsCIrq01gtsTs4+nCRuyxlEQMDOe6oqY
+         R7uYUG13Dx/0GZCCz9gcLJMUu/Vznbga7BvVxFy6LDmq6c6wmadYnKpovdhORkmjKO
+         aEBPrjmtn7H3JXFRJq/kQPQ2GnZ6cTUvD1HaNi0k=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Yicheng Li <yichengli@chromium.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Gwendal Grignou <gwendal@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.5 50/75] platform/chrome: cros_ec: Query EC protocol version if EC transitions between RO/RW
-Date:   Sat, 18 Apr 2020 10:08:45 -0400
-Message-Id: <20200418140910.8280-50-sashal@kernel.org>
+Cc:     Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>,
+        alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 5.5 53/75] ALSA: hda: Add driver blacklist
+Date:   Sat, 18 Apr 2020 10:08:48 -0400
+Message-Id: <20200418140910.8280-53-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200418140910.8280-1-sashal@kernel.org>
 References: <20200418140910.8280-1-sashal@kernel.org>
@@ -61,102 +58,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yicheng Li <yichengli@chromium.org>
+From: Takashi Iwai <tiwai@suse.de>
 
-[ Upstream commit 42cd0ab476e2daffc23982c37822a78f9a53cdd5 ]
+[ Upstream commit 3c6fd1f07ed03a04debbb9a9d782205f1ef5e2ab ]
 
-RO and RW of EC may have different EC protocol version. If EC transitions
-between RO and RW, but AP does not reboot (this is true for fingerprint
-microcontroller / cros_fp, but not true for main ec / cros_ec), the AP
-still uses the protocol version queried before transition, which can
-cause problems. In the case of fingerprint microcontroller, this causes
-AP to send the wrong version of EC_CMD_GET_NEXT_EVENT to RO in the
-interrupt handler, which in turn prevents RO to clear the interrupt
-line to AP, in an infinite loop.
+The recent AMD platform exposes an HD-audio bus but without any actual
+codecs, which is internally tied with a USB-audio device, supposedly.
+It results in "no codecs" error of HD-audio bus driver, and it's
+nothing but a waste of resources.
 
-Once an EC_HOST_EVENT_INTERFACE_READY is received, we know that there
-might have been a transition between RO and RW, so re-query the protocol.
+This patch introduces a static blacklist table for skipping such a
+known bogus PCI SSID entry.  As of writing this patch, the known SSIDs
+are:
+* 1043:874f - ASUS ROG Zenith II / Strix
+* 1462:cb59 - MSI TRX40 Creator
+* 1462:cb60 - MSI TRX40
 
-Signed-off-by: Yicheng Li <yichengli@chromium.org>
-Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Reviewed-by: Gwendal Grignou <gwendal@chromium.org>
-Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=206543
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200408140449.22319-2-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/chrome/cros_ec.c           | 30 +++++++++++++++++++++
- include/linux/platform_data/cros_ec_proto.h |  4 +++
- 2 files changed, 34 insertions(+)
+ sound/pci/hda/hda_intel.c | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-diff --git a/drivers/platform/chrome/cros_ec.c b/drivers/platform/chrome/cros_ec.c
-index 6d6ce86a1408a..e5e1bbb270914 100644
---- a/drivers/platform/chrome/cros_ec.c
-+++ b/drivers/platform/chrome/cros_ec.c
-@@ -137,6 +137,24 @@ static int cros_ec_sleep_event(struct cros_ec_device *ec_dev, u8 sleep_event)
- 	return ret;
+diff --git a/sound/pci/hda/hda_intel.c b/sound/pci/hda/hda_intel.c
+index 9d3b28bcba9b4..d2d5a19bdecce 100644
+--- a/sound/pci/hda/hda_intel.c
++++ b/sound/pci/hda/hda_intel.c
+@@ -2074,6 +2074,17 @@ static void pcm_mmap_prepare(struct snd_pcm_substream *substream,
+ #endif
  }
  
-+static int cros_ec_ready_event(struct notifier_block *nb,
-+			       unsigned long queued_during_suspend,
-+			       void *_notify)
-+{
-+	struct cros_ec_device *ec_dev = container_of(nb, struct cros_ec_device,
-+						     notifier_ready);
-+	u32 host_event = cros_ec_get_host_event(ec_dev);
++/* Blacklist for skipping the whole probe:
++ * some HD-audio PCI entries are exposed without any codecs, and such devices
++ * should be ignored from the beginning.
++ */
++static const struct snd_pci_quirk driver_blacklist[] = {
++	SND_PCI_QUIRK(0x1043, 0x874f, "ASUS ROG Zenith II / Strix", 0),
++	SND_PCI_QUIRK(0x1462, 0xcb59, "MSI TRX40 Creator", 0),
++	SND_PCI_QUIRK(0x1462, 0xcb60, "MSI TRX40", 0),
++	{}
++};
 +
-+	if (host_event & EC_HOST_EVENT_MASK(EC_HOST_EVENT_INTERFACE_READY)) {
-+		mutex_lock(&ec_dev->lock);
-+		cros_ec_query_all(ec_dev);
-+		mutex_unlock(&ec_dev->lock);
-+		return NOTIFY_OK;
+ static const struct hda_controller_ops pci_hda_ops = {
+ 	.disable_msi_reset_irq = disable_msi_reset_irq,
+ 	.pcm_mmap_prepare = pcm_mmap_prepare,
+@@ -2090,6 +2101,11 @@ static int azx_probe(struct pci_dev *pci,
+ 	bool schedule_probe;
+ 	int err;
+ 
++	if (snd_pci_quirk_lookup(pci, driver_blacklist)) {
++		dev_info(&pci->dev, "Skipping the blacklisted device\n");
++		return -ENODEV;
 +	}
 +
-+	return NOTIFY_DONE;
-+}
-+
- /**
-  * cros_ec_register() - Register a new ChromeOS EC, using the provided info.
-  * @ec_dev: Device to register.
-@@ -236,6 +254,18 @@ int cros_ec_register(struct cros_ec_device *ec_dev)
- 		dev_dbg(ec_dev->dev, "Error %d clearing sleep event to ec",
- 			err);
- 
-+	if (ec_dev->mkbp_event_supported) {
-+		/*
-+		 * Register the notifier for EC_HOST_EVENT_INTERFACE_READY
-+		 * event.
-+		 */
-+		ec_dev->notifier_ready.notifier_call = cros_ec_ready_event;
-+		err = blocking_notifier_chain_register(&ec_dev->event_notifier,
-+						      &ec_dev->notifier_ready);
-+		if (err)
-+			return err;
-+	}
-+
- 	dev_info(dev, "Chrome EC device registered\n");
- 
- 	return 0;
-diff --git a/include/linux/platform_data/cros_ec_proto.h b/include/linux/platform_data/cros_ec_proto.h
-index 30098a5515231..e6af1b4a7cbcf 100644
---- a/include/linux/platform_data/cros_ec_proto.h
-+++ b/include/linux/platform_data/cros_ec_proto.h
-@@ -126,6 +126,9 @@ struct cros_ec_command {
-  * @host_event_wake_mask: Mask of host events that cause wake from suspend.
-  * @last_event_time: exact time from the hard irq when we got notified of
-  *     a new event.
-+ * @notifier_ready: The notifier_block to let the kernel re-query EC
-+ *		    communication protocol when the EC sends
-+ *		    EC_HOST_EVENT_INTERFACE_READY.
-  * @ec: The platform_device used by the mfd driver to interface with the
-  *      main EC.
-  * @pd: The platform_device used by the mfd driver to interface with the
-@@ -167,6 +170,7 @@ struct cros_ec_device {
- 	u32 host_event_wake_mask;
- 	u32 last_resume_result;
- 	ktime_t last_event_time;
-+	struct notifier_block notifier_ready;
- 
- 	/* The platform devices used by the mfd driver */
- 	struct platform_device *ec;
+ 	if (dev >= SNDRV_CARDS)
+ 		return -ENODEV;
+ 	if (!enable[dev]) {
 -- 
 2.20.1
 
