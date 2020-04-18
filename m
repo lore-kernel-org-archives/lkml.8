@@ -2,96 +2,233 @@ Return-Path: <SRS0=3CHW=6C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3AC9C38A29
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 15:51:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D1CEC38A2F
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 15:53:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 99DFC21D93
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 15:51:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="inlWLnNh"
+	by mail.kernel.org (Postfix) with ESMTP id DAFF521D93
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 15:53:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587225198;
+	bh=ez2k39xLHi5LnhGPdODOtlKv7929LfkcIu5m1qslZic=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=RcGNa+INv5RfcuL48VVDncFxbupy179X5iU5zJCgJeQjZofQMU3g2iWqkn04BYJBh
+	 1nGJEJRk9uSQX3N5v+xcc1IGTFczZlctwY5jxa+WAOe0hv0aNXROkmVuJCfdI8hJQs
+	 brodTFH/k0hXY1ZzTMgfq4X2W+2/wGCqDKYeVvr4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726552AbgDRPvh (ORCPT
+        id S1726575AbgDRPxS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 11:51:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43540 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725879AbgDRPvg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 11:51:36 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6930C061A0C;
-        Sat, 18 Apr 2020 08:51:36 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id e6so30138pjt.4;
-        Sat, 18 Apr 2020 08:51:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=0TKQZ7Y52qkZE5tRa53qohqKu4aHiJzFT5U1ZhFT2Ho=;
-        b=inlWLnNhW0N6VWPrG1+xl4+2SvK3e3jybJXOw3fAz7kpLnitpyv6+7Ptjal/0PqDfd
-         7J9YeS9hvI6z6r07YdnB3G4nlH9srwLN803UwyyZB9qv++Ph7RaE7En/5s9kV6CGOVc+
-         b8nzoJnHf2wlbgHmy9RlK1xKnuuL6UiF+SRHB7C4qqV5cTKTyEx4kDz5VJdNRQQFij1c
-         raR8W6C8BQalbr28fmN6kkPPD+O0svAJYZfg5QEWD6GhoyUwMd1dyic+K915keqgP8zt
-         +ZQpNDsBwbv8v7WsN60V7SF+ABSTQfi9Tm+kTiSid3pDQax4eezAsySF+UyRFrQ+YiGk
-         TETA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=0TKQZ7Y52qkZE5tRa53qohqKu4aHiJzFT5U1ZhFT2Ho=;
-        b=oWmwsqNBcLXTVbDEuHCZSrWKh41SLQiXw6c0kXCp6OX3rNDtMxqqyDchcc/DTFx/m/
-         bqJlYjLTr/UfoMZVPU0hpDhnnTpCyR06ohhTx7gnjJk+EbIwh8c2NJ66mGPEptRjxvtB
-         BUs/hsJM0cXdXMhte3FRyG/z/GOFrcDz0BU5S35gfIncH3c0YIVKO+uav5asbaYg3Ewc
-         jyKE/nqkcLuC4u4165AIWWMUfC3kNxHWQXy3FuAa8f5Ht74b8Z1jYJ0IF67sTyzsrP0E
-         /TF5MYQhE4teJ9PQQ2kmhyusidxMNZnVhqcRllergBygebj6jjoyZxjDRQQPL6S3FoJo
-         86Cw==
-X-Gm-Message-State: AGi0PubfMMWfVzp6gE/5w160vIW3BiiQrHpCgREbX0qz4lKR3nV6DfGg
-        hhOk5rLkmfS8ODXYUEm2hVYB+xet
-X-Google-Smtp-Source: APiQypKtx8mEU3M5odve966NmskfRG9yFqqh4p3dHqHz77XNujWnD5vT68YT7sBC5CXhs6oVug7gLg==
-X-Received: by 2002:a17:90a:1743:: with SMTP id 3mr11250029pjm.106.1587225095709;
-        Sat, 18 Apr 2020 08:51:35 -0700 (PDT)
-Received: from [192.168.1.3] (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
-        by smtp.gmail.com with ESMTPSA id v26sm3859404pff.45.2020.04.18.08.51.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 18 Apr 2020 08:51:34 -0700 (PDT)
-Subject: Re: [PATCH] net: systemport: Omit superfluous error message in
- bcm_sysport_probe()
-To:     Tang Bin <tangbin@cmss.chinamobile.com>, f.fainelli@gmail.com,
-        davem@davemloft.net
-Cc:     bcm-kernel-feedback-list@broadcom.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200418085105.12584-1-tangbin@cmss.chinamobile.com>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <170ca41c-caa5-572b-9178-71e7235e05f6@gmail.com>
-Date:   Sat, 18 Apr 2020 08:51:32 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Firefox/68.0 Thunderbird/68.7.0
+        Sat, 18 Apr 2020 11:53:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33682 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725879AbgDRPxR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 11:53:17 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E071921973;
+        Sat, 18 Apr 2020 15:53:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587225197;
+        bh=ez2k39xLHi5LnhGPdODOtlKv7929LfkcIu5m1qslZic=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=I7NWwn3RJ0/mAlfY9NH/nqne0w7WJBn4OBY/+zCQMk9zW/agu3WpWvRLXO3P/LK2g
+         1qIxGtV/P9qLPWStj82rg/AuQ5cYJQ7RAHtPIbLFIZPeGHvTqmMFL+kWD4ARtaRipj
+         2L4Sb6J6bzM8BypsTTNVU3hecmUVXZ+IFVUrdK9Y=
+Date:   Sat, 18 Apr 2020 16:53:12 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Chris Ruehl <chris.ruehl@gtsys.com.hk>
+Cc:     devicetree@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Richard Fontana <rfontana@redhat.com>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        Michael Hennerich <Michael.Hennerich@analog.com>
+Subject: Re: [PATCH v4 3/3] iio/dac: convert ltc2632.txt to
+ lltc,ltc2632.yaml
+Message-ID: <20200418165312.5ed6ddb8@archlinux>
+In-Reply-To: <20200416012016.21422-4-chris.ruehl@gtsys.com.hk>
+References: <20200416012016.21422-1-chris.ruehl@gtsys.com.hk>
+        <20200416012016.21422-4-chris.ruehl@gtsys.com.hk>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20200418085105.12584-1-tangbin@cmss.chinamobile.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, 16 Apr 2020 09:20:11 +0800
+Chris Ruehl <chris.ruehl@gtsys.com.hk> wrote:
 
-
-On 4/18/2020 1:51 AM, Tang Bin wrote:
-> In the function bcm_sysport_probe(), when get irq failed, the function
-> platform_get_irq() logs an error message, so remove redundant message
-> here.
+> Conversion of the ltc2632 to yaml format and name the file 'lltc,ltc2632.yaml'.
 > 
-> Signed-off-by: Tang Bin <tangbin@cmss.chinamobile.com>
+> Signed-off-by: Chris Ruehl <chris.ruehl@gtsys.com.hk>
+> ---
+> V1-V4 patch set, no changes
+> 
+>  .../bindings/iio/dac/lltc,ltc2632.yaml        | 78 +++++++++++++++++++
+>  .../devicetree/bindings/iio/dac/ltc2632.txt   | 49 ------------
+>  2 files changed, 78 insertions(+), 49 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/iio/dac/lltc,ltc2632.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/iio/dac/ltc2632.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/dac/lltc,ltc2632.yaml b/Documentation/devicetree/bindings/iio/dac/lltc,ltc2632.yaml
+> new file mode 100644
+> index 000000000000..314bf700d934
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/dac/lltc,ltc2632.yaml
+> @@ -0,0 +1,78 @@
+> +# SPDX-License-Identifier: GPL-2.0 OR BSD-2-Clause
+> +# Copyright 2020 Christopher Ruehl <chris.ruehl@gtsys.com.hk>
+> +%YAML 1.2
+> +---
+> +$id: "http://devicetree.org/schemas/iio/dac/lltc,ltc2632.yaml#"
+> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> +
+> +title: Linear Technology LTC263x 12-/10-/8-Bit Rail-to-Rail DAC
+> +
+> +maintainers:
+> +  - Jonathan Cameron <jic23@kernel.org>
 
-Acked-by: Florian Fainelli <f.fainelli@gmail.com>
--- 
-Florian
+Surely we can stich someone at analog up with this one rather than me?
+
+Alex / Michael, who should we land this one on?
+
+> +
+> +description: |
+> +  Bindings for the Linear Technology LTC2632/2634/2636 DAC
+> +  Datasheet can be found here: https://www.analog.com/media/en/technical-documentation/data-sheets/LTC263[246].pdf
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - lltc,ltc2632-l12
+> +      - lltc,ltc2632-l10
+> +      - lltc,ltc2632-l8
+> +      - lltc,ltc2632-h12
+> +      - lltc,ltc2632-h10
+> +      - lltc,ltc2632-h8
+> +      - lltc,ltc2634-l12
+> +      - lltc,ltc2634-l10
+> +      - lltc,ltc2634-l8
+> +      - lltc,ltc2634-h12
+> +      - lltc,ltc2634-h10
+> +      - lltc,ltc2634-h8
+> +      - lltc,ltc2636-l12
+> +      - lltc,ltc2636-l10
+> +      - lltc,ltc2636-l8
+> +      - lltc,ltc2636-h12
+> +      - lltc,ltc2636-h10
+> +      - lltc,ltc2636-h8
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  spi-max-frequency:
+> +    maximum: 2000000
+> +
+> +  vref-supply:
+> +    description:
+> +	  Phandle to the external reference voltage supply. This should
+> +      only be set if there is an external reference voltage connected to the VREF
+> +      pin. If the property is not set the internal reference is used.
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - vref-supply
+
+No it isn't.  See internal reference comment above...
+
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    vref: regulator-vref {
+> +        compatible = "regulator-fixed";
+> +        regulator-name = "vref-ltc2632";
+> +        regulator-min-microvolt = <1250000>;
+> +        regulator-max-microvolt = <1250000>;
+> +        regulator-always-on;
+> +    };
+> +
+> +    spi_master {
+> +      #address-cells = <1>;
+> +      #size-cells = <0>;
+> +
+> +      dac: ltc2632@0 {
+> +        compatible = "lltc,ltc2632";
+> +        reg = <0>;    /* CS0 */
+> +        spi-max-frequency = <1000000>;
+> +        vref-supply = <&vref>;
+> +      };
+> +    };
+> diff --git a/Documentation/devicetree/bindings/iio/dac/ltc2632.txt b/Documentation/devicetree/bindings/iio/dac/ltc2632.txt
+> deleted file mode 100644
+> index 1ab9570cf219..000000000000
+> --- a/Documentation/devicetree/bindings/iio/dac/ltc2632.txt
+> +++ /dev/null
+> @@ -1,49 +0,0 @@
+> -Linear Technology LTC2632/2634/2636 DAC
+> -
+> -Required properties:
+> - - compatible: Has to contain one of the following:
+> -	lltc,ltc2632-l12
+> -	lltc,ltc2632-l10
+> -	lltc,ltc2632-l8
+> -	lltc,ltc2632-h12
+> -	lltc,ltc2632-h10
+> -	lltc,ltc2632-h8
+> -	lltc,ltc2634-l12
+> -	lltc,ltc2634-l10
+> -	lltc,ltc2634-l8
+> -	lltc,ltc2634-h12
+> -	lltc,ltc2634-h10
+> -	lltc,ltc2634-h8
+> -	lltc,ltc2636-l12
+> -	lltc,ltc2636-l10
+> -	lltc,ltc2636-l8
+> -	lltc,ltc2636-h12
+> -	lltc,ltc2636-h10
+> -	lltc,ltc2636-h8
+> -
+> -Property rules described in Documentation/devicetree/bindings/spi/spi-bus.txt
+> -apply. In particular, "reg" and "spi-max-frequency" properties must be given.
+> -
+> -Optional properties:
+> -	- vref-supply: Phandle to the external reference voltage supply. This should
+> -	  only be set if there is an external reference voltage connected to the VREF
+> -	  pin. If the property is not set the internal reference is used.
+> -
+> -Example:
+> -
+> -	vref: regulator-vref {
+> -		compatible = "regulator-fixed";
+> -		regulator-name = "vref-ltc2632";
+> -		regulator-min-microvolt = <1250000>;
+> -		regulator-max-microvolt = <1250000>;
+> -		regulator-always-on;
+> -	};
+> -
+> -	spi_master {
+> -		dac: ltc2632@0 {
+> -			compatible = "lltc,ltc2632-l12";
+> -			reg = <0>; /* CS0 */
+> -			spi-max-frequency = <1000000>;
+> -			vref-supply = <&vref>; /* optional */
+> -		};
+> -	};
+
