@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B4F5C38A2F
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:12:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8439EC3A5A0
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:12:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5940E21D79
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:12:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63ABF21D79
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:12:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587219149;
-	bh=b6vwiRyhH7IFsNLU2DodvnOmmbNwKwzQlS9KqINAFUA=;
+	s=default; t=1587219152;
+	bh=iljF7Edtms053YjF9mQtzQ/ve2E9hUgK2Tcg3enhmPM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aTj9ZKRs8SQYv+AGJU8vV0sqFEENpQcETofk81xjgYDPkc0rKKhpwQKJ8QQ/G7veU
-	 Ow14aFPfoANWCBdHOp5rXd4s65XRSxdUi9aZURFyU/Un5ijGPobOpsrkQwxFBh0Mli
-	 wdbdAB/4Cpwzg+DrGZVyYkXoLr9bDABGr5Ll5LdA=
+	b=b+aEL70Apxl81Y+ENnBiGwxmwMJ8TzDjWHAHEt6CKYWjIz4tEkP3A081kTjH2KdPr
+	 m6qmWFCxIGQBfR/6rMQ9KDjp40DZmEvTBBqfnQ3cwTd6DzNxRc0kVNajGaW1+exKzq
+	 GCk9Okkbx67hRo4VMMuygttAMZrdvZiA5NmpwXcM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728135AbgDROM2 (ORCPT
+        id S1726818AbgDROKG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 10:12:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38010 "EHLO mail.kernel.org"
+        Sat, 18 Apr 2020 10:10:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37720 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726833AbgDROKJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 10:10:09 -0400
+        id S1726760AbgDROJ6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 10:09:58 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4F11B2220A;
-        Sat, 18 Apr 2020 14:10:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 111C622240;
+        Sat, 18 Apr 2020 14:09:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587219009;
-        bh=b6vwiRyhH7IFsNLU2DodvnOmmbNwKwzQlS9KqINAFUA=;
+        s=default; t=1587218997;
+        bh=iljF7Edtms053YjF9mQtzQ/ve2E9hUgK2Tcg3enhmPM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jruncwRwttrROBiAB9mqI5i1m8Mh2BRavA2XWJK2UMhvHrX0XxkjMaN7HAuMm/vya
-         Dh8Szqu4cBoxMSe/QovD2x7aEzyqlMWMZQTrtY8rfvVEH7oB4A1+/wAY2SoJjqhE2q
-         CTCXoKyhDvykusFhT0ClYk3IO+Ji6SbcMwIVs4qg=
+        b=L2/8ubJbdZDKs+6bkDQgJpSKC6wNIRYrMu2OdgfbgsEGNuOR7gDjrtg4RoePTWCbN
+         eM5ty3+W8gQqnJA6B+4IxyvsRVIgS6cjCEtnz3MAshrvjccfc2vCg5rtnywUa22VXm
+         fJSFxVaKekrIaKjNW3Z0dSA6yx5T08Cy5xVYDJrI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     James Smart <jsmart2021@gmail.com>,
-        Dick Kennedy <dick.kennedy@broadcom.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 46/75] scsi: lpfc: Fix lockdep error - register non-static key
-Date:   Sat, 18 Apr 2020 10:08:41 -0400
-Message-Id: <20200418140910.8280-46-sashal@kernel.org>
+Cc:     Nicholas Piggin <npiggin@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 5.5 37/75] Revert "powerpc/64: irq_work avoid interrupt when called with hardware irqs enabled"
+Date:   Sat, 18 Apr 2020 10:08:32 -0400
+Message-Id: <20200418140910.8280-37-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200418140910.8280-1-sashal@kernel.org>
 References: <20200418140910.8280-1-sashal@kernel.org>
@@ -60,95 +59,108 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: James Smart <jsmart2021@gmail.com>
+From: Nicholas Piggin <npiggin@gmail.com>
 
-[ Upstream commit f861f596714bed06069f1109b89e51f3855c4ddf ]
+[ Upstream commit abc3fce76adbdfa8f87272c784b388cd20b46049 ]
 
-The following lockdep error was reported when unloading the lpfc driver:
+This reverts commit ebb37cf3ffd39fdb6ec5b07111f8bb2f11d92c5f.
 
-  INFO: trying to register non-static key.
-  the code is fine but needs lockdep annotation.
-  turning off the locking correctness validator.
-  ...
-  Call Trace:
-  dump_stack+0x96/0xe0
-  register_lock_class+0x8b8/0x8c0
-  ? lockdep_hardirqs_on+0x190/0x280
-  ? is_dynamic_key+0x150/0x150
-  ? wait_for_completion_interruptible+0x2a0/0x2a0
-  ? wake_up_q+0xd0/0xd0
-  __lock_acquire+0xda/0x21a0
-  ? register_lock_class+0x8c0/0x8c0
-  ? synchronize_rcu_expedited+0x500/0x500
-  ? __call_rcu+0x850/0x850
-  lock_acquire+0xf3/0x1f0
-  ? del_timer_sync+0x5/0xb0
-  del_timer_sync+0x3c/0xb0
-  ? del_timer_sync+0x5/0xb0
-  lpfc_pci_remove_one.cold.102+0x8b7/0x935 [lpfc]
-  ...
+That commit does not play well with soft-masked irq state
+manipulations in idle, interrupt replay, and possibly others due to
+tracing code sometimes using irq_work_queue (e.g., in
+trace_hardirqs_on()). That can cause PACA_IRQ_DEC to become set when
+it is not expected, and be ignored or cleared or cause warnings.
 
-Unloading the driver resulted in a call to del_timer_sync for the
-cpuhp_poll_timer. However the call to setup the timer had never been made,
-so the timer structures used by lockdep checking were not initialized.
+The net result seems to be missing an irq_work until the next timer
+interrupt in the worst case which is usually not going to be noticed,
+however it could be a long time if the tick is disabled, which is
+against the spirit of irq_work and might cause real problems.
 
-Unconditionally call setup_timer for the cpuhp_poll_timer during driver
-initialization. Calls to start the timer remain "as needed".
+The idea is still solid, but it would need more work. It's not really
+clear if it would be worth added complexity, so revert this for
+now (not a straight revert, but replace with a comment explaining why
+we might see interrupts happening, and gives git blame something to
+find).
 
-Link: https://lore.kernel.org/r/20200322181304.37655-3-jsmart2021@gmail.com
-Signed-off-by: James Smart <jsmart2021@gmail.com>
-Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Fixes: ebb37cf3ffd3 ("powerpc/64: irq_work avoid interrupt when called with hardware irqs enabled")
+Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20200402120401.1115883-1-npiggin@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/lpfc/lpfc_init.c | 5 ++---
- drivers/scsi/lpfc/lpfc_sli.c  | 6 ++----
- 2 files changed, 4 insertions(+), 7 deletions(-)
+ arch/powerpc/kernel/time.c | 44 +++++++++++---------------------------
+ 1 file changed, 13 insertions(+), 31 deletions(-)
 
-diff --git a/drivers/scsi/lpfc/lpfc_init.c b/drivers/scsi/lpfc/lpfc_init.c
-index d4a90bec93899..42ce31a8fb3c1 100644
---- a/drivers/scsi/lpfc/lpfc_init.c
-+++ b/drivers/scsi/lpfc/lpfc_init.c
-@@ -11209,11 +11209,9 @@ static void lpfc_cpuhp_add(struct lpfc_hba *phba)
+diff --git a/arch/powerpc/kernel/time.c b/arch/powerpc/kernel/time.c
+index 1168e8b37e306..716f8d0960a7b 100644
+--- a/arch/powerpc/kernel/time.c
++++ b/arch/powerpc/kernel/time.c
+@@ -522,35 +522,6 @@ static inline void clear_irq_work_pending(void)
+ 		"i" (offsetof(struct paca_struct, irq_work_pending)));
+ }
  
- 	rcu_read_lock();
- 
--	if (!list_empty(&phba->poll_list)) {
--		timer_setup(&phba->cpuhp_poll_timer, lpfc_sli4_poll_hbtimer, 0);
-+	if (!list_empty(&phba->poll_list))
- 		mod_timer(&phba->cpuhp_poll_timer,
- 			  jiffies + msecs_to_jiffies(LPFC_POLL_HB));
+-void arch_irq_work_raise(void)
+-{
+-	preempt_disable();
+-	set_irq_work_pending_flag();
+-	/*
+-	 * Non-nmi code running with interrupts disabled will replay
+-	 * irq_happened before it re-enables interrupts, so setthe
+-	 * decrementer there instead of causing a hardware exception
+-	 * which would immediately hit the masked interrupt handler
+-	 * and have the net effect of setting the decrementer in
+-	 * irq_happened.
+-	 *
+-	 * NMI interrupts can not check this when they return, so the
+-	 * decrementer hardware exception is raised, which will fire
+-	 * when interrupts are next enabled.
+-	 *
+-	 * BookE does not support this yet, it must audit all NMI
+-	 * interrupt handlers to ensure they call nmi_enter() so this
+-	 * check would be correct.
+-	 */
+-	if (IS_ENABLED(CONFIG_BOOKE) || !irqs_disabled() || in_nmi()) {
+-		set_dec(1);
+-	} else {
+-		hard_irq_disable();
+-		local_paca->irq_happened |= PACA_IRQ_DEC;
 -	}
+-	preempt_enable();
+-}
+-
+ #else /* 32-bit */
  
- 	rcu_read_unlock();
+ DEFINE_PER_CPU(u8, irq_work_pending);
+@@ -559,16 +530,27 @@ DEFINE_PER_CPU(u8, irq_work_pending);
+ #define test_irq_work_pending()		__this_cpu_read(irq_work_pending)
+ #define clear_irq_work_pending()	__this_cpu_write(irq_work_pending, 0)
  
-@@ -13179,6 +13177,7 @@ lpfc_pci_probe_one_s4(struct pci_dev *pdev, const struct pci_device_id *pid)
- 	lpfc_sli4_ras_setup(phba);
- 
- 	INIT_LIST_HEAD(&phba->poll_list);
-+	timer_setup(&phba->cpuhp_poll_timer, lpfc_sli4_poll_hbtimer, 0);
- 	cpuhp_state_add_instance_nocalls(lpfc_cpuhp_state, &phba->cpuhp);
- 
- 	return 0;
-diff --git a/drivers/scsi/lpfc/lpfc_sli.c b/drivers/scsi/lpfc/lpfc_sli.c
-index 909554c7c1273..409d54e05302f 100644
---- a/drivers/scsi/lpfc/lpfc_sli.c
-+++ b/drivers/scsi/lpfc/lpfc_sli.c
-@@ -14448,12 +14448,10 @@ static inline void lpfc_sli4_add_to_poll_list(struct lpfc_queue *eq)
++#endif /* 32 vs 64 bit */
++
+ void arch_irq_work_raise(void)
  {
- 	struct lpfc_hba *phba = eq->phba;
++	/*
++	 * 64-bit code that uses irq soft-mask can just cause an immediate
++	 * interrupt here that gets soft masked, if this is called under
++	 * local_irq_disable(). It might be possible to prevent that happening
++	 * by noticing interrupts are disabled and setting decrementer pending
++	 * to be replayed when irqs are enabled. The problem there is that
++	 * tracing can call irq_work_raise, including in code that does low
++	 * level manipulations of irq soft-mask state (e.g., trace_hardirqs_on)
++	 * which could get tangled up if we're messing with the same state
++	 * here.
++	 */
+ 	preempt_disable();
+ 	set_irq_work_pending_flag();
+ 	set_dec(1);
+ 	preempt_enable();
+ }
  
--	if (list_empty(&phba->poll_list)) {
--		timer_setup(&phba->cpuhp_poll_timer, lpfc_sli4_poll_hbtimer, 0);
--		/* kickstart slowpath processing for this eq */
-+	/* kickstart slowpath processing if needed */
-+	if (list_empty(&phba->poll_list))
- 		mod_timer(&phba->cpuhp_poll_timer,
- 			  jiffies + msecs_to_jiffies(LPFC_POLL_HB));
--	}
+-#endif /* 32 vs 64 bit */
+-
+ #else  /* CONFIG_IRQ_WORK */
  
- 	list_add_rcu(&eq->_poll_list, &phba->poll_list);
- 	synchronize_rcu();
+ #define test_irq_work_pending()	0
 -- 
 2.20.1
 
