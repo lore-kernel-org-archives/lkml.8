@@ -2,161 +2,97 @@ Return-Path: <SRS0=3CHW=6C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14B16C38A29
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:53:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBBD3C38A2F
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:53:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EA4712072B
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:53:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B02D2206D6
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:53:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587221601;
-	bh=UO9hE+5yzNPSpuvg9uhBYwowJGF7YGQ0bQZtDXJyLHk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=yHcLTFGC2Rv0066H9PD8MDdS+en23YigPy/LK8C7Qnp8dJHBlz5wZdiI5piLb0uPp
-	 3E8hj9vJZbDulP1ciFdOiaoTKYIvum4D6eX8EHyFDgdJtWhoCkvxEn1Okt5BEr3Yyq
-	 GayirCbZioGOPBdnD0vViRSyJ1oNjO4DfQPgn5jM=
+	s=default; t=1587221611;
+	bh=DsmAA6x1Ab/BTWu29Lvg7mHGSP99+DWYv/TQnagX4YY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=BkjhHw5GVqezNvGRaEcO59NN1g9d3/cziIozEBvkkJTs5GDQjyHmqiMZiLVnnkeM0
+	 EVVJo93hDqelrCLIfOOUDVLT/LAc2k8SS6KuD+gH0bEPguxS88/cYlh+HmHah7wJq4
+	 zQQ+yJc1d0yOGwlWgRURw5pGULadQh8eeS2DGxiE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727865AbgDROxT (ORCPT
+        id S1728397AbgDROx3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 10:53:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36822 "EHLO mail.kernel.org"
+        Sat, 18 Apr 2020 10:53:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51756 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728232AbgDROxO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 10:53:14 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1728212AbgDROmB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 10:42:01 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AA7E520753;
-        Sat, 18 Apr 2020 14:53:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 719FC21D7E;
+        Sat, 18 Apr 2020 14:42:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587221593;
-        bh=UO9hE+5yzNPSpuvg9uhBYwowJGF7YGQ0bQZtDXJyLHk=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=jJwBl5f8kZb+Vjb6gaXMx+rrc2lwQBFHn4Wp6+3JFe7HyvjEiFD8RVV83+7AX5MKg
-         QjTRUl0wdylXFGYyR3ES9F2crDjZUAluMZOYBVRqeNItFdkUZpzA9dMD6jkzpgcuMC
-         QCHNJDlz+0gYBX+jJAK1ayPCJDQ5RjKdfmJSRxZc=
-Date:   Sat, 18 Apr 2020 15:53:08 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Saravanan Sekar <sravanhome@gmail.com>
-Cc:     lee.jones@linaro.org, andy.shevchenko@gmail.com,
-        robh+dt@kernel.org, knaack.h@gmx.de, lars@metafoo.de,
-        pmeerw@pmeerw.net, sre@kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-pm@vger.kernel.org
-Subject: Re: [PATCH v10 1/6] dt-bindings: mfd: add document bindings for
- mp2629
-Message-ID: <20200418155308.681df38f@archlinux>
-In-Reply-To: <20200417085003.6124-2-sravanhome@gmail.com>
-References: <20200417085003.6124-1-sravanhome@gmail.com>
-        <20200417085003.6124-2-sravanhome@gmail.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        s=default; t=1587220921;
+        bh=DsmAA6x1Ab/BTWu29Lvg7mHGSP99+DWYv/TQnagX4YY=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=iUblp/NGzVkcuz9Xx80qnMIake9gMkYj7mQ92kEqbkpx6IL1k0Doy7iDC/ggXupT7
+         dXyt9r38kFnwbkoNIVWDR4++OyLDLVzZKZP/ImWKZMpN6dkppecUTLlus5/t6oJqXs
+         p87jBG/cqHBzIu5/5kLhmSgqXxcBevLrhvAMQUng=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.de>,
+        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 5.4 59/78] ALSA: hda/realtek - Add quirk for Lenovo Carbon X1 8th gen
+Date:   Sat, 18 Apr 2020 10:40:28 -0400
+Message-Id: <20200418144047.9013-59-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200418144047.9013-1-sashal@kernel.org>
+References: <20200418144047.9013-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 17 Apr 2020 10:49:58 +0200
-Saravanan Sekar <sravanhome@gmail.com> wrote:
+From: Hans de Goede <hdegoede@redhat.com>
 
-> Add device tree binding information for mp2629 mfd driver.
-> 
-> Signed-off-by: Saravanan Sekar <sravanhome@gmail.com>
-> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-> ---
->  .../devicetree/bindings/mfd/mps,mp2629.yaml   | 61 +++++++++++++++++++
->  1 file changed, 61 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mfd/mps,mp2629.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/mfd/mps,mp2629.yaml b/Documentation/devicetree/bindings/mfd/mps,mp2629.yaml
-> new file mode 100644
-> index 000000000000..b25b29259d67
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mfd/mps,mp2629.yaml
-> @@ -0,0 +1,61 @@
-> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/mfd/mps,mp2629.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: MP2629 Battery Charger PMIC from Monolithic Power System.
-> +
-> +maintainers:
-> +  - Saravanan Sekar <sravanhome@gmail.com>
-> +
-> +description: |
-> +  MP2629 is a PMIC providing battery charging and power supply for smartphones,
-> +  wireless camera and portable devices. Chip is controlled over I2C.
-> +
-> +  The battery charge management device handles battery charger controller and
-> +  ADC IIO device for battery, system voltage
-> +
-> +properties:
-> +  compatible:
-> +    const: mps,mp2629
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  interrupt-controller: true
-> +
-> +  "#interrupt-cells":
-> +    const: 2
-> +    description:
-> +      The first cell is the IRQ number, the second cell is the trigger type.
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - interrupt-controller
-> +  - "#interrupt-cells"
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/irq.h>
-> +    #include <dt-bindings/input/linux-event-codes.h>
-> +    i2c@7e205000 {
+[ Upstream commit ca707b3f00b4f31a6e1eb37e8ae99f15f2bb1fe5 ]
 
-I thought the general trend for i2c devices was to leave the i2c
-part 'vague'. 
+The audio setup on the Lenovo Carbon X1 8th gen is the same as that on
+the Lenovo Carbon X1 7th gen, as such it needs the same
+ALC285_FIXUP_THINKPAD_HEADSET_JACK quirk.
 
-    i2c {
-          #address-cells = <1>;
-          #size-cells = <0>;
-         
-          pmic@4b.. etc
+This fixes volume control of the speaker not working among other things.
 
-Guess it doesn't matter if example contains too much information. Rob?
+BugLink: https://bugzilla.redhat.com/show_bug.cgi?id=1820196
+Cc: stable@vger.kernel.org
+Suggested-by: Jaroslav Kysela <perex@perex.cz>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Reviewed-by: Jaroslav Kysela <perex@perex.cz>
+Link: https://lore.kernel.org/r/20200402174311.238614-1-hdegoede@redhat.com
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ sound/pci/hda/patch_realtek.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Otherwise looks good to me.
-
-Thanks,
-
-Jonathan
- 
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +        reg = <0x7e205000 0x200>;
-> +
-> +        pmic@4b {
-> +            compatible = "mps,mp2629";
-> +            reg = <0x4b>;
-> +
-> +            interrupt-controller;
-> +            interrupt-parent = <&gpio2>;
-> +            #interrupt-cells = <2>;
-> +            interrupts = <3 IRQ_TYPE_LEVEL_HIGH>;
-> +        };
-> +    };
+diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
+index 190c1aa6a4e62..7c327a37eba10 100644
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -7300,6 +7300,7 @@ static const struct snd_pci_quirk alc269_fixup_tbl[] = {
+ 	SND_PCI_QUIRK(0x17aa, 0x225d, "Thinkpad T480", ALC269_FIXUP_LIMIT_INT_MIC_BOOST),
+ 	SND_PCI_QUIRK(0x17aa, 0x2292, "Thinkpad X1 Yoga 7th", ALC285_FIXUP_THINKPAD_HEADSET_JACK),
+ 	SND_PCI_QUIRK(0x17aa, 0x2293, "Thinkpad X1 Carbon 7th", ALC285_FIXUP_THINKPAD_HEADSET_JACK),
++	SND_PCI_QUIRK(0x17aa, 0x22be, "Thinkpad X1 Carbon 8th", ALC285_FIXUP_THINKPAD_HEADSET_JACK),
+ 	SND_PCI_QUIRK(0x17aa, 0x30bb, "ThinkCentre AIO", ALC233_FIXUP_LENOVO_LINE2_MIC_HOTKEY),
+ 	SND_PCI_QUIRK(0x17aa, 0x30e2, "ThinkCentre AIO", ALC233_FIXUP_LENOVO_LINE2_MIC_HOTKEY),
+ 	SND_PCI_QUIRK(0x17aa, 0x310c, "ThinkCentre Station", ALC294_FIXUP_LENOVO_MIC_LOCATION),
+-- 
+2.20.1
 
