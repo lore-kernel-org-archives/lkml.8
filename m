@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBB7BC38A2F
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:42:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA105C38A2F
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:42:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B33EA21974
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:42:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD6AF21D7E
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:42:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587220965;
-	bh=QwpUR4Sev4OdidVpEE7Tp/e3xbHcp8sMGy/D/v65XMw=;
+	s=default; t=1587220968;
+	bh=/yBA27/kqdiy37hk84WYeY9GxI6HtW+l5MdCsPRFJ34=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sKqj0F+IlQt08JoY1ULHQw8C0tH1T1ys8+o2Igx+6sacYJkXhrJUzkSTr5XA+Uzfh
-	 6LkYM4gvY6EDloHPW0oVv9AfHsfdmFrZRIuNdiKJFiEnlk9UAtv9ZgAeH8S4QLm7p6
-	 i9ufKg97fszAMA6OeDVSlpX46wNtulFzbGMop3qg=
+	b=0xS1naEl/SHQbQX7QE37f7ud319uUHvjSd/SGSI7MAYyde2ea+fEB+Aw/Dt/9twlu
+	 p+/PMX2DiB9K1ojtT4rwH+aR2hjiQMCx4cwgVX86ciHgxQBv2JcS7UwngPmyt1yf/2
+	 N0MDUnSy0ly1hrOFRjNJ7iLg9S7NIKqgAOipxncs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728417AbgDROmp (ORCPT
+        id S1728427AbgDROmr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 10:42:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52968 "EHLO mail.kernel.org"
+        Sat, 18 Apr 2020 10:42:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52958 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728398AbgDROmm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728397AbgDROmm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 18 Apr 2020 10:42:42 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7621A21D7E;
-        Sat, 18 Apr 2020 14:42:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 39B4922262;
+        Sat, 18 Apr 2020 14:42:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587220962;
-        bh=QwpUR4Sev4OdidVpEE7Tp/e3xbHcp8sMGy/D/v65XMw=;
+        s=default; t=1587220961;
+        bh=/yBA27/kqdiy37hk84WYeY9GxI6HtW+l5MdCsPRFJ34=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WKSu0B74TQzMLFD9WEXxEt46ahrOJH3zdEDSimvL7nPUTeyvB5j1H2gP4PftcaZfc
-         MLFXnrdd0NkerAZp4mGPFbN+nzEfZrMVF2J2oqcd3NEPLSoaCFHLLl8m20twxxOGDq
-         PHfK3BlWJrAeyauKB4irjTx4Storke629u2me9yQ=
+        b=GXTYdjFwTyBGkrhDfy51XgW7A+/p4vDq8g2ds3IQMf6aVzccMFEkO76VDPswTG24T
+         AL867xS88JCjuwPVsyrDLxpbBbkI93NYw8mzu/yZT3WeSQd6s67YRu8LpkO75LvVdl
+         2YVDFAtXA6YXgjpJHT4tK30fi+1pyaCB7N5dPj5c=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 4.19 12/47] ASoC: Intel: atom: Take the drv->lock mutex before calling sst_send_slot_map()
-Date:   Sat, 18 Apr 2020 10:41:52 -0400
-Message-Id: <20200418144227.9802-12-sashal@kernel.org>
+Cc:     Wu Bo <wubo40@huawei.com>, Lee Duncan <lduncan@suse.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, open-iscsi@googlegroups.com,
+        linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 11/47] scsi: iscsi: Report unbind session event when the target has been removed
+Date:   Sat, 18 Apr 2020 10:41:51 -0400
+Message-Id: <20200418144227.9802-11-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200418144227.9802-1-sashal@kernel.org>
 References: <20200418144227.9802-1-sashal@kernel.org>
@@ -60,40 +60,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Wu Bo <wubo40@huawei.com>
 
-[ Upstream commit 81630dc042af998b9f58cd8e2c29dab9777ea176 ]
+[ Upstream commit 13e60d3ba287d96eeaf1deaadba51f71578119a3 ]
 
-sst_send_slot_map() uses sst_fill_and_send_cmd_unlocked() because in some
-places it is called with the drv->lock mutex already held.
+If the daemon is restarted or crashes while logging out of a session, the
+unbind session event sent by the kernel is not processed and is lost.  When
+the daemon starts again, the session can't be unbound because the daemon is
+waiting for the event message. However, the kernel has already logged out
+and the event will not be resent.
 
-So it must always be called with the mutex locked. This commit adds missing
-locking in the sst_set_be_modules() code-path.
+When iscsid restart is complete, logout session reports error:
 
-Fixes: 24c8d14192cc ("ASoC: Intel: mrfld: add DSP core controls")
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Acked-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Link: https://lore.kernel.org/r/20200402185359.3424-1-hdegoede@redhat.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Logging out of session [sid: 6, target: iqn.xxxxx, portal: xx.xx.xx.xx,3260]
+iscsiadm: Could not logout of [sid: 6, target: iscsiadm -m node iqn.xxxxx, portal: xx.xx.xx.xx,3260].
+iscsiadm: initiator reported error (9 - internal error)
+iscsiadm: Could not logout of all requested sessions
+
+Make sure the unbind event is emitted.
+
+[mkp: commit desc and applied by hand since patch was mangled]
+
+Link: https://lore.kernel.org/r/4eab1771-2cb3-8e79-b31c-923652340e99@huawei.com
+Reviewed-by: Lee Duncan <lduncan@suse.com>
+Signed-off-by: Wu Bo <wubo40@huawei.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/intel/atom/sst-atom-controls.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/scsi/scsi_transport_iscsi.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/sound/soc/intel/atom/sst-atom-controls.c b/sound/soc/intel/atom/sst-atom-controls.c
-index 3672d36b4b66f..d32d48e82a2af 100644
---- a/sound/soc/intel/atom/sst-atom-controls.c
-+++ b/sound/soc/intel/atom/sst-atom-controls.c
-@@ -974,7 +974,9 @@ static int sst_set_be_modules(struct snd_soc_dapm_widget *w,
- 	dev_dbg(c->dev, "Enter: widget=%s\n", w->name);
+diff --git a/drivers/scsi/scsi_transport_iscsi.c b/drivers/scsi/scsi_transport_iscsi.c
+index c0fb9e7890807..04d095488c764 100644
+--- a/drivers/scsi/scsi_transport_iscsi.c
++++ b/drivers/scsi/scsi_transport_iscsi.c
+@@ -2010,7 +2010,7 @@ static void __iscsi_unbind_session(struct work_struct *work)
+ 	if (session->target_id == ISCSI_MAX_TARGET) {
+ 		spin_unlock_irqrestore(&session->lock, flags);
+ 		mutex_unlock(&ihost->mutex);
+-		return;
++		goto unbind_session_exit;
+ 	}
  
- 	if (SND_SOC_DAPM_EVENT_ON(event)) {
-+		mutex_lock(&drv->lock);
- 		ret = sst_send_slot_map(drv);
-+		mutex_unlock(&drv->lock);
- 		if (ret)
- 			return ret;
- 		ret = sst_send_pipe_module_params(w, k);
+ 	target_id = session->target_id;
+@@ -2022,6 +2022,8 @@ static void __iscsi_unbind_session(struct work_struct *work)
+ 		ida_simple_remove(&iscsi_sess_ida, target_id);
+ 
+ 	scsi_remove_target(&session->dev);
++
++unbind_session_exit:
+ 	iscsi_session_event(session, ISCSI_KEVENT_UNBIND_SESSION);
+ 	ISCSI_DBG_TRANS_SESSION(session, "Completed target removal\n");
+ }
 -- 
 2.20.1
 
