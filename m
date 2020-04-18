@@ -2,103 +2,132 @@ Return-Path: <SRS0=3CHW=6C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B256BC3A5A0
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 18:58:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A914C38A29
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 18:59:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8CAEF2051A
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 18:58:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eHE56v2F"
+	by mail.kernel.org (Postfix) with ESMTP id 67578221F7
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 18:59:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728009AbgDRS6i (ORCPT
+        id S1728136AbgDRS7S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 14:58:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43890 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726086AbgDRS6h (ORCPT
+        Sat, 18 Apr 2020 14:59:18 -0400
+Received: from mail-io1-f72.google.com ([209.85.166.72]:35958 "EHLO
+        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726086AbgDRS7P (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 14:58:37 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8CA3C061A0C;
-        Sat, 18 Apr 2020 11:58:35 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id z26so5535929ljz.11;
-        Sat, 18 Apr 2020 11:58:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Dj6gxh78iTr/nqo+x5cdc1Pc/5Q+3/7zF1q1lmk/SYA=;
-        b=eHE56v2FPZyj2jphYl8E5RUXUJLL0WrGR/hZhiXOIKhKo4jp/HZAPu6q0iVpGwSU+H
-         cYbwCbiOx13wXtq867i4fCiLZfbfdlqTzCQCdKzcYyeJiUWNztZHDE+ZIDbcGCceGs9t
-         2kwwvLdFn7Hezol1gB/XucCgYk2sgjh80/8Z4NKbBGeX11ys5lxPr07yLHNt5pU0N6Qo
-         tukMhTvY0yv2iXKPmuCW+IHk0uihJVXylhFieyVNielcggh/M7HYQJN4vLfF06Tttvp7
-         p/BD+sljquTqef/mERfsEbpiSUYDlnRj4sZspaMK0MJtNZTjhgEQ1Bz10g7Etpg3Yz6g
-         1JFA==
+        Sat, 18 Apr 2020 14:59:15 -0400
+Received: by mail-io1-f72.google.com with SMTP id p9so6174242ioh.3
+        for <linux-kernel@vger.kernel.org>; Sat, 18 Apr 2020 11:59:14 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Dj6gxh78iTr/nqo+x5cdc1Pc/5Q+3/7zF1q1lmk/SYA=;
-        b=jKOda6nZHddaKt3DPR2Q1qbMWIpJwbixISsRyjH/ly1Vs1QLgVl61BtLttMrUT1FOt
-         xrrle8C07bpE+JPLvBm8wvjuKfP+N8MtMC5FfQ8JZF9gON4EeiM4JFY/FZBhgwIQm6PM
-         EWwq4+nu4vcr0XuV9EusxEcVremSnWtzPD6G4NGt5s7FGutJOoZYll2yaMp/Nab6GDi2
-         4hjiQDkna/d7jeGFv/IdhKzWQnk1VQ3V8rmDVNWhUlgqQgz/R6rOyo0hWtGWEzLTHl+i
-         1mPuPfnz6Fx/fO+MDV+rwOJdNaXjbfGfDrYu7slAsBr9/taBfHXdZNfs6UUmCwMVRLOU
-         sr/Q==
-X-Gm-Message-State: AGi0PuYOGmCBYvxyfKs/Ek2Ybxo/PJCMqpaBJ262NKfThOz2ZjgDfK83
-        CmVVXb/7l35/o2SDpcnLU6QMeVcr
-X-Google-Smtp-Source: APiQypKJ5eOYQAgEg46LJSr0ViweR75vxySLSUaWfBVZQugcY5w2kqBMQA6ltWrtGVxfxti9xurM6g==
-X-Received: by 2002:a2e:8954:: with SMTP id b20mr5173635ljk.176.1587236314241;
-        Sat, 18 Apr 2020 11:58:34 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
-        by smtp.googlemail.com with ESMTPSA id l7sm22390675lfg.79.2020.04.18.11.58.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 18 Apr 2020 11:58:33 -0700 (PDT)
-Subject: Re: [PATCH v3] iio: magnetometer: ak8974: Silence deferred-probe
- error
-To:     Jonathan Cameron <jic23@kernel.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200418171244.2320-1-digetx@gmail.com>
- <20200418192145.57fa291b@archlinux>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <92c2e6d7-8085-b448-f789-9ceecb6a4f74@gmail.com>
-Date:   Sat, 18 Apr 2020 21:58:32 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=lNGjideo7zFgJ779fKErVM6LqcZZT6w673OoXDkI/mI=;
+        b=nKg7IbKI32MVFuVN534l6bQdJ/ySrxkriiRYI3MowwRPw4AlhHrsimY4R5glglIQUT
+         r7udhechWYWeqksu5WnRNqw12vhFrcOgapOlkf2VbkCRzveAlykjRof93TfCxxO9NPI9
+         oeesFZGcyMIaLzP1bSoTLGMMq8boSOyoUejQPsHvUjjyHlxUlWs8Kl5jc1ogLMzFw+l5
+         UaVhx780gZnrpAxhoLPyEftnuPkYlgJyybKLkMeXqNcaGoYBgWiLmLIK+muPQb4CtQt2
+         9DTx6+HKYF+5kJgpgITZjF1cpjazROB61egmGvjx1JZuSu5nSLe00ECVFAu4D/UiEAL/
+         RFig==
+X-Gm-Message-State: AGi0PubLtQC30ZAeMy0S7of3OFezogZwUCNNV1tVPBvrE2rVaNIIZyXQ
+        X9MTVfFVL1rm+25VTtCHuNpK1myI+Sln7J67rY86cwqBdIXn
+X-Google-Smtp-Source: APiQypJ5LYYPmMiPhlLhndVNdNt2z1uXUt7Gts90Wfw8pxmW97GBxS/uMNXRXyuwqX8Z76kEamWgGZE98MyMCuOYIiL4zLfDMOkR
 MIME-Version: 1.0
-In-Reply-To: <20200418192145.57fa291b@archlinux>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a92:c004:: with SMTP id q4mr8533307ild.93.1587236353725;
+ Sat, 18 Apr 2020 11:59:13 -0700 (PDT)
+Date:   Sat, 18 Apr 2020 11:59:13 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000009dcd905a3954340@google.com>
+Subject: INFO: rcu detected stall in io_uring_release
+From:   syzbot <syzbot+66243bb7126c410cefe6@syzkaller.appspotmail.com>
+To:     axboe@kernel.dk, io-uring@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-18.04.2020 21:21, Jonathan Cameron пишет:
-> On Sat, 18 Apr 2020 20:12:44 +0300
-> Dmitry Osipenko <digetx@gmail.com> wrote:
-> 
->> It's not uncommon that voltage regulator becomes available later during
->> kernel's boot process. This patch adds info message about unavailable
->> regulators in a case of the deferred-probe error and also amends the
->> error message with a error code.
->>
->> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-> 
-> Applied to the togreg branch of iio.git and pushed out as testing for the
-> autobuilders to play with it.
+Hello,
 
-Awesome, thank you :)
+syzbot found the following crash on:
+
+HEAD commit:    8f3d9f35 Linux 5.7-rc1
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=115720c3e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=5d351a1019ed81a2
+dashboard link: https://syzkaller.appspot.com/bug?extid=66243bb7126c410cefe6
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+
+Unfortunately, I don't have any reproducer for this crash yet.
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+66243bb7126c410cefe6@syzkaller.appspotmail.com
+
+rcu: INFO: rcu_preempt self-detected stall on CPU
+rcu: 	0-....: (10500 ticks this GP) idle=57e/1/0x4000000000000002 softirq=44329/44329 fqs=5245 
+	(t=10502 jiffies g=79401 q=2096)
+NMI backtrace for cpu 0
+CPU: 0 PID: 23184 Comm: syz-executor.5 Not tainted 5.7.0-rc1-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ <IRQ>
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x188/0x20d lib/dump_stack.c:118
+ nmi_cpu_backtrace.cold+0x70/0xb1 lib/nmi_backtrace.c:101
+ nmi_trigger_cpumask_backtrace+0x231/0x27e lib/nmi_backtrace.c:62
+ trigger_single_cpu_backtrace include/linux/nmi.h:164 [inline]
+ rcu_dump_cpu_stacks+0x19b/0x1e5 kernel/rcu/tree_stall.h:254
+ print_cpu_stall kernel/rcu/tree_stall.h:475 [inline]
+ check_cpu_stall kernel/rcu/tree_stall.h:549 [inline]
+ rcu_pending kernel/rcu/tree.c:3225 [inline]
+ rcu_sched_clock_irq.cold+0x55d/0xcfa kernel/rcu/tree.c:2296
+ update_process_times+0x25/0x60 kernel/time/timer.c:1727
+ tick_sched_handle+0x9b/0x180 kernel/time/tick-sched.c:176
+ tick_sched_timer+0x4e/0x140 kernel/time/tick-sched.c:1320
+ __run_hrtimer kernel/time/hrtimer.c:1520 [inline]
+ __hrtimer_run_queues+0x5ca/0xed0 kernel/time/hrtimer.c:1584
+ hrtimer_interrupt+0x312/0x770 kernel/time/hrtimer.c:1646
+ local_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1113 [inline]
+ smp_apic_timer_interrupt+0x15b/0x600 arch/x86/kernel/apic/apic.c:1138
+ apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:829
+ </IRQ>
+RIP: 0010:io_ring_ctx_wait_and_kill+0x98/0x5a0 fs/io_uring.c:7301
+Code: 01 00 00 4d 89 f4 48 b8 00 00 00 00 00 fc ff df 4c 89 ed 49 c1 ec 03 48 c1 ed 03 49 01 c4 48 01 c5 eb 1c e8 3a ea 9d ff f3 90 <41> 80 3c 24 00 0f 85 53 04 00 00 48 83 bb 10 01 00 00 00 74 21 e8
+RSP: 0018:ffffc9000897fdf0 EFLAGS: 00000293 ORIG_RAX: ffffffffffffff13
+RAX: ffff888024082080 RBX: ffff88808df8e000 RCX: 1ffff9200112ffab
+RDX: 0000000000000000 RSI: ffffffff81d549c6 RDI: ffff88808df8e300
+RBP: ffffed1011bf1c2c R08: 0000000000000001 R09: ffffed1011bf1c61
+R10: ffff88808df8e307 R11: ffffed1011bf1c60 R12: ffffed1011bf1c22
+R13: ffff88808df8e160 R14: ffff88808df8e110 R15: ffffffff81d54ed0
+ io_uring_release+0x3e/0x50 fs/io_uring.c:7324
+ __fput+0x33e/0x880 fs/file_table.c:280
+ task_work_run+0xf4/0x1b0 kernel/task_work.c:123
+ tracehook_notify_resume include/linux/tracehook.h:188 [inline]
+ exit_to_usermode_loop+0x2fa/0x360 arch/x86/entry/common.c:165
+ prepare_exit_to_usermode arch/x86/entry/common.c:196 [inline]
+ syscall_return_slowpath arch/x86/entry/common.c:279 [inline]
+ do_syscall_64+0x6b1/0x7d0 arch/x86/entry/common.c:305
+ entry_SYSCALL_64_after_hwframe+0x49/0xb3
+RIP: 0033:0x416421
+Code: 75 14 b8 03 00 00 00 0f 05 48 3d 01 f0 ff ff 0f 83 04 1b 00 00 c3 48 83 ec 08 e8 0a fc ff ff 48 89 04 24 b8 03 00 00 00 0f 05 <48> 8b 3c 24 48 89 c2 e8 53 fc ff ff 48 89 d0 48 83 c4 08 48 3d 01
+RSP: 002b:00007ffc3c9f63d0 EFLAGS: 00000293 ORIG_RAX: 0000000000000003
+RAX: 0000000000000000 RBX: 0000000000000004 RCX: 0000000000416421
+RDX: 00000000000f4240 RSI: 0000000000000081 RDI: 0000000000000003
+RBP: 0000000000000000 R08: 0000000000000000 R09: 01ffffffffffffff
+R10: 0000000000770b20 R11: 0000000000000293 R12: 000000000076bfa0
+R13: 0000000000770b30 R14: 0000000000000001 R15: 000000000076bfac
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
