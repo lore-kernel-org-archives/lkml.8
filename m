@@ -2,152 +2,126 @@ Return-Path: <SRS0=3CHW=6C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC716C38A29
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 19:47:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC2E6C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 19:49:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9974022209
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 19:47:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587239252;
-	bh=mL2v7gmlY6YkAHHXMOzrKlSQV8Vf0xQE3kzf/miTo1Y=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=jR1wU+Pa2JrNfFmeAl2l6I97lV2OC6CsIPPfhJS8c3CfGIhqK3X72M1QeYszCukXZ
-	 KsGnYSSq5D7x70kceyzW0EnkvJ2VB+MDHttRUzUV9ZiRVJ46zcL+GRyoT3yR5ytPk9
-	 3SoZ15WkD2uapNLMibSEJLSRcFWbwozpRP7A0Mc8=
+	by mail.kernel.org (Postfix) with ESMTP id A6F6C21BE5
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 19:49:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="naDBULIb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728195AbgDRTrb (ORCPT
+        id S1728212AbgDRTtl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 15:47:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48552 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727927AbgDRTrb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 15:47:31 -0400
-Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CF8C221BE5;
-        Sat, 18 Apr 2020 19:47:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587239249;
-        bh=mL2v7gmlY6YkAHHXMOzrKlSQV8Vf0xQE3kzf/miTo1Y=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=LqL40KrjBv/tMd0dgpCqOmCDnDZBp0rKnLFw63kiV1onm9tEYBBmkse2SLh3zcA/H
-         C8l1WiDNa0QFzbRYAR6x4UoMjwnq1rhaWauLPdtFQmT7XvNfszS0WdZ3RwTGJ9XGzz
-         wClFtb3qbPzT23JrT4XCmyqOuDg4OLZ/nAP8uqD8=
-Date:   Sat, 18 Apr 2020 12:47:28 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     broonie@kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-next@vger.kernel.org, mhocko@suse.cz,
-        mm-commits@vger.kernel.org, sfr@canb.auug.org.au,
-        Phillip Lougher <phillip@squashfs.org.uk>,
-        squashfs-devel@lists.sourceforge.net,
-        Philippe Liard <pliard@google.com>
-Subject: Re: mmotm 2020-04-17-20-35 uploaded (squashfs)
-Message-Id: <20200418124728.51632dbebc8b5dbc864cc34f@linux-foundation.org>
-In-Reply-To: <319997c2-5fc8-f889-2ea3-d913308a7c1f@infradead.org>
-References: <20200418033629.oozqt8YrL%akpm@linux-foundation.org>
-        <319997c2-5fc8-f889-2ea3-d913308a7c1f@infradead.org>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Sat, 18 Apr 2020 15:49:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51662 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727927AbgDRTtk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 15:49:40 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6274AC061A0C;
+        Sat, 18 Apr 2020 12:49:40 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id x3so2881405pfp.7;
+        Sat, 18 Apr 2020 12:49:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id;
+        bh=Y/SzlNPnbUm7h0G2Yfc4g6XizOL6O0F1JAvmhHKZVeM=;
+        b=naDBULIbe3M5HUGt3xmozZ71nP1DE0go78SIXXjh0Vgli8hsNBtuLvKCTMJzDBC1PU
+         5VseFyLEzap45gv9EjhrZsDZIprgs7CylPVus1KQuXdRufjAFdOBiE9WXbr0eTwEOtfM
+         DNRhBMKgvURiv1xQPq4WxIrgenU+CExLbmGHgl7hmtoGhZ5IghnDHBTCIeuBp26MIqYK
+         LdZ9AfFOVpEg0VEKqONCpnUuB55Xzp5qdnqkukAyr56gPj9oNHgUopIRVbHpHu2iAq0d
+         gVUs7z1M2pInHcLNm44u8+4vL2kkxxtrlxvk9PAsYU2JiKN3qq+aStC0FOihV0WNcFjW
+         Gn5g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
+        bh=Y/SzlNPnbUm7h0G2Yfc4g6XizOL6O0F1JAvmhHKZVeM=;
+        b=r3gmMfalrY8/tpLIXtAIOpGZn1d+w8s8qczJKzgA75pjDmU5NL/GsehemLsZEa+NpK
+         T42+HghcHi6wriUku6P546K1FP1FR4VOWw0PPRgzz7M8EAjfCSJVDTgM5fas7MbUav9p
+         T2OXVfxQlAQ1VzkRnHRxyDn/Z5XCb2T+6j7vius+hM2YfYV/VVVAsnsX2kSorRj47sSr
+         yrrp0tIQYcGHmEmlUAZJu/fK+eYjHF80ztWCPXH4opGIhUps5BmalsdqlDNwmNrx1COv
+         pq52I7gjIUcQgdwfNMczkxJlbTG5ztkHMCHEIId+f//IzTemVy1o7Y8dIsn24T4CJ1m5
+         WjNw==
+X-Gm-Message-State: AGi0Pub+IF46r/NnUc185iH7biNLT0h+HV/c3S4ouYFsW9mgkCg6Ed6c
+        Eum7aD5GYabWTIqLe4H6iKvgAnSY
+X-Google-Smtp-Source: APiQypJcUt0Zv6YK1+BJROfQVMlRousdmqPvjcMziFa4YR5PMHcqEyEW6FLfdhjorsj2wH9Cam3D9A==
+X-Received: by 2002:aa7:864e:: with SMTP id a14mr9593864pfo.67.1587239379708;
+        Sat, 18 Apr 2020 12:49:39 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id y8sm9210745pja.26.2020.04.18.12.49.38
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Sat, 18 Apr 2020 12:49:38 -0700 (PDT)
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [GIT PULL] hwmon fixes for v5.7-rc2
+Date:   Sat, 18 Apr 2020 12:49:37 -0700
+Message-Id: <20200418194937.5589-1-linux@roeck-us.net>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 18 Apr 2020 08:56:31 -0700 Randy Dunlap <rdunlap@infradead.org> wrote:
+Hi Linus,
 
-> On 4/17/20 8:36 PM, akpm@linux-foundation.org wrote:
-> > The mm-of-the-moment snapshot 2020-04-17-20-35 has been uploaded to
-> > 
-> >    http://www.ozlabs.org/~akpm/mmotm/
-> > 
-> > mmotm-readme.txt says
-> > 
-> > README for mm-of-the-moment:
-> > 
-> > http://www.ozlabs.org/~akpm/mmotm/
-> > 
-> > This is a snapshot of my -mm patch queue.  Uploaded at random hopefully
-> > more than once a week.
-> > 
-> > You will need quilt to apply these patches to the latest Linus release (5.x
-> > or 5.x-rcY).  The series file is in broken-out.tar.gz and is duplicated in
-> > http://ozlabs.org/~akpm/mmotm/series
-> > 
-> > The file broken-out.tar.gz contains two datestamp files: .DATE and
-> > .DATE-yyyy-mm-dd-hh-mm-ss.  Both contain the string yyyy-mm-dd-hh-mm-ss,
-> > followed by the base kernel version against which this patch series is to
-> > be applied.
-> 
-> on x86_64:
-> 
->   CC      fs/squashfs/decompressor_multi_percpu.o
-> ../fs/squashfs/decompressor_multi_percpu.c:75:5: error: conflicting types for ‘squashfs_decompress’
->  int squashfs_decompress(struct squashfs_sb_info *msblk, struct buffer_head **bh,
->      ^~~~~~~~~~~~~~~~~~~
+Please pull hwmon fixes for Linux v5.7-rc2 from signed tag:
 
-Thanks.  Seems that file was missed.
+    git://git.kernel.org/pub/scm/linux/kernel/git/groeck/linux-staging.git hwmon-for-v5.7-rc2
 
-Also, this code jumps through horrifying hoops in order to initialize
-locals at their definition site.  But the code looks so much better if
-we Just Don't Do That!
+Thanks,
+Guenter
+------
 
+The following changes since commit 8f3d9f354286745c751374f5f1fcafee6b3f3136:
 
+  Linux 5.7-rc1 (2020-04-12 12:35:55 -0700)
 
-From: Andrew Morton <akpm@linux-foundation.org>
-Subject: squashfs-migrate-from-ll_rw_block-usage-to-bio-fix
+are available in the Git repository at:
 
-fix build error reported by Randy
+  git://git.kernel.org/pub/scm/linux/kernel/git/groeck/linux-staging.git tags/hwmon-for-v5.7-rc2
 
-Link: http://lkml.kernel.org/r/319997c2-5fc8-f889-2ea3-d913308a7c1f@infradead.org
-Cc: Adrien Schildknecht <adrien+dev@schischi.me>
-Cc: Christoph Hellwig <hch@lst.de>
-Cc: Daniel Rosenberg <drosen@google.com>
-Cc: Guenter Roeck <groeck@chromium.org>
-Cc: Philippe Liard <pliard@google.com>
-Cc: Phillip Lougher <phillip@squashfs.org.uk>
-Cc: Randy Dunlap <rdunlap@infradead.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
----
+for you to fetch changes up to c843b382e61b5f28a3d917712c69a344f632387c:
 
- fs/squashfs/decompressor_multi_percpu.c |   17 ++++++++++-------
- 1 file changed, 10 insertions(+), 7 deletions(-)
+  hwmon: (jc42) Fix name to have no illegal characters (2020-04-18 10:13:07 -0700)
 
---- a/fs/squashfs/decompressor_multi_percpu.c~squashfs-migrate-from-ll_rw_block-usage-to-bio-fix
-+++ a/fs/squashfs/decompressor_multi_percpu.c
-@@ -72,14 +72,17 @@ void squashfs_decompressor_destroy(struc
- 	}
- }
- 
--int squashfs_decompress(struct squashfs_sb_info *msblk, struct buffer_head **bh,
--	int b, int offset, int length, struct squashfs_page_actor *output)
-+int squashfs_decompress(struct squashfs_sb_info *msblk, struct bio *bio,
-+	int offset, int length, struct squashfs_page_actor *output)
- {
--	struct squashfs_stream __percpu *percpu =
--			(struct squashfs_stream __percpu *) msblk->stream;
--	struct squashfs_stream *stream = get_cpu_ptr(percpu);
--	int res = msblk->decompressor->decompress(msblk, stream->stream, bh, b,
--		offset, length, output);
-+	struct squashfs_stream __percpu *percpu;
-+	struct squashfs_stream *stream;
-+	int res;
-+
-+	percpu = (struct squashfs_stream __percpu *)msblk->stream;
-+	stream = get_cpu_ptr(percpu);
-+	res = msblk->decompressor->decompress(msblk, stream->stream, bio,
-+					      offset, length, output);
- 	put_cpu_ptr(stream);
- 
- 	if (res < 0)
-_
+----------------------------------------------------------------
+hwmon fixes for v5.7-rc2
 
+pmbus/isl68137:
+    Fix up chip IDs
+drivetemp:
+    Return -ENODATA for invalid temperatures
+    Use true module name
+k10temp:
+    Fix static symbol warnings
+jc42:
+    Use valid hwmon device name
+
+----------------------------------------------------------------
+Ann T Ropea (1):
+      hwmon: (drivetemp) Use drivetemp's true module name in Kconfig section
+
+Guenter Roeck (2):
+      hwmon: (pmbus/isl68137) Fix up chip IDs
+      hwmon: (drivetemp) Return -ENODATA for invalid temperatures
+
+Jason Yan (1):
+      hwmon: (k10temp) make some symbols static
+
+Sascha Hauer (1):
+      hwmon: (jc42) Fix name to have no illegal characters
+
+ Documentation/hwmon/isl68137.rst | 76 ++++++++++++++++-----------------
+ drivers/hwmon/Kconfig            |  2 +-
+ drivers/hwmon/drivetemp.c        |  6 +++
+ drivers/hwmon/jc42.c             |  2 +-
+ drivers/hwmon/k10temp.c          |  6 +--
+ drivers/hwmon/pmbus/isl68137.c   | 92 +++++++++++++++++++++++++++++++++++++---
+ 6 files changed, 134 insertions(+), 50 deletions(-)
