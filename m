@@ -7,54 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F00ABC3A5A0
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 13:48:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 131C0C38A30
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 13:49:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C399322244
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 13:48:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E80DA2054F
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 13:49:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587217738;
-	bh=tJx2Pw8jARz8g4y2ONxmN/CJIrowA+R2SLrDY7KpChs=;
+	s=default; t=1587217742;
+	bh=8FF1v0rY69L8p6oHi3x5IgDbWvw9BTh5mmYIlqVDmCE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=j0218DQZYumC9iHu5Dk127UzeY/Rn7QIMSrZ4JyciWkh5VWxXtUA0E+KAKrlmiuLV
-	 t4rdgOPhuPhIwkOz7AduSXn6OsqTphpohgpQdEgY1SZwNqX6j7BFJgo7/ftTXb43MW
-	 4ZME5HDlVk61UR97Z634BpLY9G/7l7S8yducMiDg=
+	b=zXGCPdg85w8rS7SMjeS0m/zmvGuRHRKJZko8d8bU6KOwMiqPuGp58equHncBj1Roo
+	 36sgV1eYm4pEQzSmahVhdgtEi18MTi1mvzaYg+LHd9H275OiiU8kfwZUUcBZfY/OUE
+	 Rs0QkvalJRb/i2HCXmjXFiAjfLaxtNCtudY3RsNs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726655AbgDRNs5 (ORCPT
+        id S1726692AbgDRNtC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 09:48:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55442 "EHLO mail.kernel.org"
+        Sat, 18 Apr 2020 09:49:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55542 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726581AbgDRNsv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 09:48:51 -0400
+        id S1726618AbgDRNsy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 09:48:54 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 57CC522251;
-        Sat, 18 Apr 2020 13:48:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D907A2054F;
+        Sat, 18 Apr 2020 13:48:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587217730;
-        bh=tJx2Pw8jARz8g4y2ONxmN/CJIrowA+R2SLrDY7KpChs=;
+        s=default; t=1587217733;
+        bh=8FF1v0rY69L8p6oHi3x5IgDbWvw9BTh5mmYIlqVDmCE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wMISkFbdygIIEkHJr0ePKnGQPKNIFQSqQaU0ycKemhEWkoATXOFfbqGeTKHYXLCOu
-         OCQGH243gKG8VwhvZzQ7yBIpfaJAa+Jm8+HapJBGicP+hAY/NBu0e+pd3D2TS8Jhbb
-         1buLvuIzrb+SB8Q47cRufJ4xf4b2Doy4uJmaYJOE=
+        b=g+obSpntA1ahXHnHqi+gEDNWYjbRRgLeDmPOgtAYpB0WQi9ngazDG0pmvDj+2QrWL
+         8QGC3K1b1gXMwN6B3Ai+FEj1xyddD0XjQz0mFoUTQ5Xa2+S1cWOhFhdLWQDoISaSCI
+         INfpctipZPMntb0m0/e3S4cj4FMOzsyNI299JrfE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Eric Biggers <ebiggers@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jeff Vander Stoep <jeffv@google.com>,
-        Jessica Yu <jeyu@kernel.org>,
-        Kees Cook <keescook@chromium.org>, NeilBrown <neilb@suse.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-kselftest@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 28/73] selftests: kmod: fix handling test numbers above 9
-Date:   Sat, 18 Apr 2020 09:47:30 -0400
-Message-Id: <20200418134815.6519-28-sashal@kernel.org>
+Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-kbuild@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 30/73] kconfig: qconf: Fix a few alignment issues
+Date:   Sat, 18 Apr 2020 09:47:32 -0400
+Message-Id: <20200418134815.6519-30-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200418134815.6519-1-sashal@kernel.org>
 References: <20200418134815.6519-1-sashal@kernel.org>
@@ -67,62 +59,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 
-[ Upstream commit 6d573a07528308eb77ec072c010819c359bebf6e ]
+[ Upstream commit 60969f02f07ae1445730c7b293c421d179da729c ]
 
-get_test_count() and get_test_enabled() were broken for test numbers
-above 9 due to awk interpreting a field specification like '$0010' as
-octal rather than decimal.  Fix it by stripping the leading zeroes.
+There are a few items with wrong alignments. Solve them.
 
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Acked-by: Luis Chamberlain <mcgrof@kernel.org>
-Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Jeff Vander Stoep <jeffv@google.com>
-Cc: Jessica Yu <jeyu@kernel.org>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: NeilBrown <neilb@suse.com>
-Link: http://lkml.kernel.org/r/20200318230515.171692-5-ebiggers@kernel.org
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/kmod/kmod.sh | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+ scripts/kconfig/qconf.cc | 13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
 
-diff --git a/tools/testing/selftests/kmod/kmod.sh b/tools/testing/selftests/kmod/kmod.sh
-index 8b944cf042f6c..315a43111e046 100755
---- a/tools/testing/selftests/kmod/kmod.sh
-+++ b/tools/testing/selftests/kmod/kmod.sh
-@@ -505,18 +505,23 @@ function test_num()
- 	fi
- }
- 
--function get_test_count()
-+function get_test_data()
+diff --git a/scripts/kconfig/qconf.cc b/scripts/kconfig/qconf.cc
+index 82773cc35d356..0f8c77f847114 100644
+--- a/scripts/kconfig/qconf.cc
++++ b/scripts/kconfig/qconf.cc
+@@ -627,7 +627,7 @@ void ConfigList::updateMenuList(ConfigItem *parent, struct menu* menu)
+ 			last = item;
+ 			continue;
+ 		}
+-	hide:
++hide:
+ 		if (item && item->menu == child) {
+ 			last = parent->firstChild();
+ 			if (last == item)
+@@ -692,7 +692,7 @@ void ConfigList::updateMenuList(ConfigList *parent, struct menu* menu)
+ 			last = item;
+ 			continue;
+ 		}
+-	hide:
++hide:
+ 		if (item && item->menu == child) {
+ 			last = (ConfigItem*)parent->topLevelItem(0);
+ 			if (last == item)
+@@ -1225,10 +1225,11 @@ QMenu* ConfigInfoView::createStandardContextMenu(const QPoint & pos)
  {
- 	test_num $1
--	TEST_DATA=$(echo $ALL_TESTS | awk '{print $'$1'}')
-+	local field_num=$(echo $1 | sed 's/^0*//')
-+	echo $ALL_TESTS | awk '{print $'$field_num'}'
-+}
+ 	QMenu* popup = Parent::createStandardContextMenu(pos);
+ 	QAction* action = new QAction("Show Debug Info", popup);
+-	  action->setCheckable(true);
+-	  connect(action, SIGNAL(toggled(bool)), SLOT(setShowDebug(bool)));
+-	  connect(this, SIGNAL(showDebugChanged(bool)), action, SLOT(setOn(bool)));
+-	  action->setChecked(showDebug());
 +
-+function get_test_count()
-+{
-+	TEST_DATA=$(get_test_data $1)
- 	LAST_TWO=${TEST_DATA#*:*}
- 	echo ${LAST_TWO%:*}
- }
- 
- function get_test_enabled()
- {
--	test_num $1
--	TEST_DATA=$(echo $ALL_TESTS | awk '{print $'$1'}')
-+	TEST_DATA=$(get_test_data $1)
- 	echo ${TEST_DATA#*:*:}
- }
- 
++	action->setCheckable(true);
++	connect(action, SIGNAL(toggled(bool)), SLOT(setShowDebug(bool)));
++	connect(this, SIGNAL(showDebugChanged(bool)), action, SLOT(setOn(bool)));
++	action->setChecked(showDebug());
+ 	popup->addSeparator();
+ 	popup->addAction(action);
+ 	return popup;
 -- 
 2.20.1
 
