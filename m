@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 608A1C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:10:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CE14C38A29
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:10:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3C0AB22276
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:10:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3C1921D7E
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:10:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587219002;
-	bh=59ExLV4e8OBoYTLJp6gv5Rvmogu6A7pDA+M2DHt5blg=;
+	s=default; t=1587219011;
+	bh=ZhDvk/Tm3Lrjc0LYu1kvazjKCu/HCv2q8Flw3W0Jvf8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Rl8KT7DFK9eb0P16wwDQcylYxnBbZQIKa0oAeOPLrFnVUIrIG64dA5/4/KdWq6Liw
-	 bgacr+aRmJjLCuaVlD9wjzBa3RynSnioA6ZeRziQxu4/9b0jfWIlhf/eGJVK37N7Fy
-	 CWId3MRrilMRBw8sqJK6OqRXm7tz5hzQxjSbiELA=
+	b=O1KUL2c6TimNNEcFM+ym32xSub22B3y6AKMNl2WuaPulQHdY//OPoNw/QpG27GuUX
+	 f/o3zbCw5OT1C5R6DRwIuyvkTkmSgVnhb4EUQsj8H8iSgt1Qir1uJeZ/oV9CkAU5vU
+	 JgDPQCswT5x9tt6Tok/+ROWRaU4AsOGHHk68c2nE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726784AbgDROKA (ORCPT
+        id S1726845AbgDROKK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 10:10:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37632 "EHLO mail.kernel.org"
+        Sat, 18 Apr 2020 10:10:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37812 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726727AbgDROJy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 10:09:54 -0400
+        id S1726780AbgDROKA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 10:10:00 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EED8821D7E;
-        Sat, 18 Apr 2020 14:09:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 54BC622263;
+        Sat, 18 Apr 2020 14:09:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587218993;
-        bh=59ExLV4e8OBoYTLJp6gv5Rvmogu6A7pDA+M2DHt5blg=;
+        s=default; t=1587219000;
+        bh=ZhDvk/Tm3Lrjc0LYu1kvazjKCu/HCv2q8Flw3W0Jvf8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RJTDdFxrZ85T4kF5UK7olwR7HAKqgL+wrb42yZsNdB+QxDEIMvBFI1Y0I75kNwh0W
-         mOIAyGRWFtfY5iQIwSn6/8VIUi6NCtVPhj+b+OY96KAwEAdEnNJioZZTrv9YSTh18B
-         O59zqoFqJVgLGP21GcBFPZqWCs1W5qDV77vfvsDI=
+        b=G8k/nEaHq6EP5MhbXv8kw8yEwo1Kxx+wRKbQoV+ZH+lcNlJR4bE6t8ntQuWHenCD4
+         NMsXJisGwKPCkZ3yZBm/yMQxhoUi2JCOxw4IzaGSIrez98wuAvtidZhMVzdyeVkvYR
+         tMc22hycmGl157SouciywjIpH/1byp8UTMbDl3jQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Cornelia Huck <cohuck@redhat.com>,
-        Boris Fiuczynski <fiuczy@linux.ibm.com>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 34/75] s390/cio: avoid duplicated 'ADD' uevents
-Date:   Sat, 18 Apr 2020 10:08:29 -0400
-Message-Id: <20200418140910.8280-34-sashal@kernel.org>
+Cc:     Jack Zhang <Jack.Zhang1@amd.com>, Nirmoy Das <nirmoy.das@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.5 39/75] drm/amdkfd: kfree the wrong pointer
+Date:   Sat, 18 Apr 2020 10:08:34 -0400
+Message-Id: <20200418140910.8280-39-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200418140910.8280-1-sashal@kernel.org>
 References: <20200418140910.8280-1-sashal@kernel.org>
@@ -61,63 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Cornelia Huck <cohuck@redhat.com>
+From: Jack Zhang <Jack.Zhang1@amd.com>
 
-[ Upstream commit 05ce3e53f375295c2940390b2b429e506e07655c ]
+[ Upstream commit 3148a6a0ef3cf93570f30a477292768f7eb5d3c3 ]
 
-The common I/O layer delays the ADD uevent for subchannels and
-delegates generating this uevent to the individual subchannel
-drivers. The io_subchannel driver will do so when the associated
-ccw_device has been registered -- but unconditionally, so more
-ADD uevents will be generated if a subchannel has been unbound
-from the io_subchannel driver and later rebound.
+Originally, it kfrees the wrong pointer for mem_obj.
+It would cause memory leak under stress test.
 
-To fix this, only generate the ADD event if uevents were still
-suppressed for the device.
-
-Fixes: fa1a8c23eb7d ("s390: cio: Delay uevents for subchannels")
-Message-Id: <20200327124503.9794-2-cohuck@redhat.com>
-Reported-by: Boris Fiuczynski <fiuczy@linux.ibm.com>
-Reviewed-by: Peter Oberparleiter <oberpar@linux.ibm.com>
-Reviewed-by: Boris Fiuczynski <fiuczy@linux.ibm.com>
-Signed-off-by: Cornelia Huck <cohuck@redhat.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Signed-off-by: Jack Zhang <Jack.Zhang1@amd.com>
+Acked-by: Nirmoy Das <nirmoy.das@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/s390/cio/device.c | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+ drivers/gpu/drm/amd/amdkfd/kfd_device.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/s390/cio/device.c b/drivers/s390/cio/device.c
-index 0c6245fc77069..983f9c9e08deb 100644
---- a/drivers/s390/cio/device.c
-+++ b/drivers/s390/cio/device.c
-@@ -849,8 +849,10 @@ static void io_subchannel_register(struct ccw_device *cdev)
- 	 * Now we know this subchannel will stay, we can throw
- 	 * our delayed uevent.
- 	 */
--	dev_set_uevent_suppress(&sch->dev, 0);
--	kobject_uevent(&sch->dev.kobj, KOBJ_ADD);
-+	if (dev_get_uevent_suppress(&sch->dev)) {
-+		dev_set_uevent_suppress(&sch->dev, 0);
-+		kobject_uevent(&sch->dev.kobj, KOBJ_ADD);
-+	}
- 	/* make it known to the system */
- 	ret = ccw_device_add(cdev);
- 	if (ret) {
-@@ -1058,8 +1060,11 @@ static int io_subchannel_probe(struct subchannel *sch)
- 		 * Throw the delayed uevent for the subchannel, register
- 		 * the ccw_device and exit.
- 		 */
--		dev_set_uevent_suppress(&sch->dev, 0);
--		kobject_uevent(&sch->dev.kobj, KOBJ_ADD);
-+		if (dev_get_uevent_suppress(&sch->dev)) {
-+			/* should always be the case for the console */
-+			dev_set_uevent_suppress(&sch->dev, 0);
-+			kobject_uevent(&sch->dev.kobj, KOBJ_ADD);
-+		}
- 		cdev = sch_get_cdev(sch);
- 		rc = ccw_device_add(cdev);
- 		if (rc) {
+diff --git a/drivers/gpu/drm/amd/amdkfd/kfd_device.c b/drivers/gpu/drm/amd/amdkfd/kfd_device.c
+index 4fa8834ce7cb0..fb22a58ce99b5 100644
+--- a/drivers/gpu/drm/amd/amdkfd/kfd_device.c
++++ b/drivers/gpu/drm/amd/amdkfd/kfd_device.c
+@@ -1086,9 +1086,9 @@ int kfd_gtt_sa_allocate(struct kfd_dev *kfd, unsigned int size,
+ 	return 0;
+ 
+ kfd_gtt_no_free_chunk:
+-	pr_debug("Allocation failed with mem_obj = %p\n", mem_obj);
++	pr_debug("Allocation failed with mem_obj = %p\n", *mem_obj);
+ 	mutex_unlock(&kfd->gtt_sa_lock);
+-	kfree(mem_obj);
++	kfree(*mem_obj);
+ 	return -ENOMEM;
+ }
+ 
 -- 
 2.20.1
 
