@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A90CC38A29
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:09:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 608A1C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:10:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0FBEB22252
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:09:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C0AB22276
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:10:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587218998;
-	bh=x+3uj04gfbt089WFQK1mEWtg4dmCnvjijoKeHZ4uEF4=;
+	s=default; t=1587219002;
+	bh=59ExLV4e8OBoYTLJp6gv5Rvmogu6A7pDA+M2DHt5blg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WojAb+QachH6GYDOVZGOiZJYP6rFUb1XSUJ3OP5bm7iNSIpBjDnkimeBa8bbiS01B
-	 EP4dc/jKZ73QV1qUel7qL8vmG/R23Mp6kHKfDAda1u3yyg8A3NzEnb/lM45Rc0Of5Z
-	 5bffeZ7R7s7Q+Nt6Sps+XKSKcM1hn7GIb7ULjvcQ=
+	b=Rl8KT7DFK9eb0P16wwDQcylYxnBbZQIKa0oAeOPLrFnVUIrIG64dA5/4/KdWq6Liw
+	 bgacr+aRmJjLCuaVlD9wjzBa3RynSnioA6ZeRziQxu4/9b0jfWIlhf/eGJVK37N7Fy
+	 CWId3MRrilMRBw8sqJK6OqRXm7tz5hzQxjSbiELA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726759AbgDROJ5 (ORCPT
+        id S1726784AbgDROKA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 10:09:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37578 "EHLO mail.kernel.org"
+        Sat, 18 Apr 2020 10:10:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37632 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726669AbgDROJx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 10:09:53 -0400
+        id S1726727AbgDROJy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 10:09:54 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AB82522263;
-        Sat, 18 Apr 2020 14:09:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EED8821D7E;
+        Sat, 18 Apr 2020 14:09:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587218992;
-        bh=x+3uj04gfbt089WFQK1mEWtg4dmCnvjijoKeHZ4uEF4=;
+        s=default; t=1587218993;
+        bh=59ExLV4e8OBoYTLJp6gv5Rvmogu6A7pDA+M2DHt5blg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nUu0OvJXMCd8GS9RAylSUz9T1yInVg2dZNPQ2mpMRJOOe8M+j9fS/hDDZMLfe+o6u
-         KvTEibdDQiBNxEtmviU4KC5zW7PO64f09H7uCscVuogT14uMJ0HHKzbEHqsA6Ro0XC
-         2P5EWoJrVWsPKsHyCeFf9gUoaXAU+H2CWiKHmdbA=
+        b=RJTDdFxrZ85T4kF5UK7olwR7HAKqgL+wrb42yZsNdB+QxDEIMvBFI1Y0I75kNwh0W
+         mOIAyGRWFtfY5iQIwSn6/8VIUi6NCtVPhj+b+OY96KAwEAdEnNJioZZTrv9YSTh18B
+         O59zqoFqJVgLGP21GcBFPZqWCs1W5qDV77vfvsDI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Cornelia Huck <cohuck@redhat.com>,
-        Eric Farman <farman@linux.ibm.com>,
+        Boris Fiuczynski <fiuczy@linux.ibm.com>,
+        Peter Oberparleiter <oberpar@linux.ibm.com>,
         Vasily Gorbik <gor@linux.ibm.com>,
-        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org,
-        kvm@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 33/75] s390/cio: generate delayed uevent for vfio-ccw subchannels
-Date:   Sat, 18 Apr 2020 10:08:28 -0400
-Message-Id: <20200418140910.8280-33-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 34/75] s390/cio: avoid duplicated 'ADD' uevents
+Date:   Sat, 18 Apr 2020 10:08:29 -0400
+Message-Id: <20200418140910.8280-34-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200418140910.8280-1-sashal@kernel.org>
 References: <20200418140910.8280-1-sashal@kernel.org>
@@ -63,44 +63,61 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Cornelia Huck <cohuck@redhat.com>
 
-[ Upstream commit 2bc55eaeb88d30accfc1b6ac2708d4e4b81ca260 ]
+[ Upstream commit 05ce3e53f375295c2940390b2b429e506e07655c ]
 
 The common I/O layer delays the ADD uevent for subchannels and
 delegates generating this uevent to the individual subchannel
-drivers. The vfio-ccw I/O subchannel driver, however, did not
-do that, and will not generate an ADD uevent for subchannels
-that had not been bound to a different driver (or none at all,
-which also triggers the uevent).
+drivers. The io_subchannel driver will do so when the associated
+ccw_device has been registered -- but unconditionally, so more
+ADD uevents will be generated if a subchannel has been unbound
+from the io_subchannel driver and later rebound.
 
-Generate the ADD uevent at the end of the probe function if
-uevents were still suppressed for the device.
+To fix this, only generate the ADD event if uevents were still
+suppressed for the device.
 
-Message-Id: <20200327124503.9794-3-cohuck@redhat.com>
-Fixes: 63f1934d562d ("vfio: ccw: basic implementation for vfio_ccw driver")
-Reviewed-by: Eric Farman <farman@linux.ibm.com>
+Fixes: fa1a8c23eb7d ("s390: cio: Delay uevents for subchannels")
+Message-Id: <20200327124503.9794-2-cohuck@redhat.com>
+Reported-by: Boris Fiuczynski <fiuczy@linux.ibm.com>
+Reviewed-by: Peter Oberparleiter <oberpar@linux.ibm.com>
+Reviewed-by: Boris Fiuczynski <fiuczy@linux.ibm.com>
 Signed-off-by: Cornelia Huck <cohuck@redhat.com>
 Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/s390/cio/vfio_ccw_drv.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/s390/cio/device.c | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/s390/cio/vfio_ccw_drv.c b/drivers/s390/cio/vfio_ccw_drv.c
-index e401a3d0aa570..339a6bc0339b0 100644
---- a/drivers/s390/cio/vfio_ccw_drv.c
-+++ b/drivers/s390/cio/vfio_ccw_drv.c
-@@ -167,6 +167,11 @@ static int vfio_ccw_sch_probe(struct subchannel *sch)
- 	if (ret)
- 		goto out_disable;
- 
+diff --git a/drivers/s390/cio/device.c b/drivers/s390/cio/device.c
+index 0c6245fc77069..983f9c9e08deb 100644
+--- a/drivers/s390/cio/device.c
++++ b/drivers/s390/cio/device.c
+@@ -849,8 +849,10 @@ static void io_subchannel_register(struct ccw_device *cdev)
+ 	 * Now we know this subchannel will stay, we can throw
+ 	 * our delayed uevent.
+ 	 */
+-	dev_set_uevent_suppress(&sch->dev, 0);
+-	kobject_uevent(&sch->dev.kobj, KOBJ_ADD);
 +	if (dev_get_uevent_suppress(&sch->dev)) {
 +		dev_set_uevent_suppress(&sch->dev, 0);
 +		kobject_uevent(&sch->dev.kobj, KOBJ_ADD);
 +	}
-+
- 	VFIO_CCW_MSG_EVENT(4, "bound to subchannel %x.%x.%04x\n",
- 			   sch->schid.cssid, sch->schid.ssid,
- 			   sch->schid.sch_no);
+ 	/* make it known to the system */
+ 	ret = ccw_device_add(cdev);
+ 	if (ret) {
+@@ -1058,8 +1060,11 @@ static int io_subchannel_probe(struct subchannel *sch)
+ 		 * Throw the delayed uevent for the subchannel, register
+ 		 * the ccw_device and exit.
+ 		 */
+-		dev_set_uevent_suppress(&sch->dev, 0);
+-		kobject_uevent(&sch->dev.kobj, KOBJ_ADD);
++		if (dev_get_uevent_suppress(&sch->dev)) {
++			/* should always be the case for the console */
++			dev_set_uevent_suppress(&sch->dev, 0);
++			kobject_uevent(&sch->dev.kobj, KOBJ_ADD);
++		}
+ 		cdev = sch_get_cdev(sch);
+ 		rc = ccw_device_add(cdev);
+ 		if (rc) {
 -- 
 2.20.1
 
