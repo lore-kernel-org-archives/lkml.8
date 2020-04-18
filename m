@@ -2,92 +2,86 @@ Return-Path: <SRS0=3CHW=6C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E13FC38A2B
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 01:35:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A5E6C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 01:38:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 53A0D214D8
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 01:35:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15BCA214D8
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 01:38:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726099AbgDRBfz (ORCPT
+        id S1725910AbgDRBia (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 21:35:55 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:46066 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725768AbgDRBfz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 21:35:55 -0400
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id C6AFFD08226995F308C4;
-        Sat, 18 Apr 2020 09:35:52 +0800 (CST)
-Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS411-HUB.china.huawei.com (10.3.19.211) with Microsoft SMTP Server id
- 14.3.487.0; Sat, 18 Apr 2020 09:35:52 +0800
-From:   Mao Wenan <maowenan@huawei.com>
-To:     <ast@kernel.org>, <daniel@iogearbox.net>, <kafai@fb.com>,
-        <songliubraving@fb.com>, <yhs@fb.com>, <andriin@fb.com>,
-        <john.fastabend@gmail.com>, <kpsingh@chromium.org>
-CC:     <netdev@vger.kernel.org>, <bpf@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <kernel-janitors@vger.kernel.org>
-Subject: [PATCH bpf-next v2] bpf: remove set but not used variable 'dst_known'
-Date:   Sat, 18 Apr 2020 09:37:35 +0800
-Message-ID: <20200418013735.67882-1-maowenan@huawei.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <8855e82a-88d0-8d1e-e5e0-47e781f9653c@huawei.com>
-References: <8855e82a-88d0-8d1e-e5e0-47e781f9653c@huawei.com>
-MIME-Version: 1.0
+        Fri, 17 Apr 2020 21:38:30 -0400
+Received: from m176150.mail.qiye.163.com ([59.111.176.150]:52580 "EHLO
+        m176150.mail.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725768AbgDRBi3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Apr 2020 21:38:29 -0400
+X-Greylist: delayed 332 seconds by postgrey-1.27 at vger.kernel.org; Fri, 17 Apr 2020 21:38:29 EDT
+Received: from vivo.com (wm-10.qy.internal [127.0.0.1])
+        by m176150.mail.qiye.163.com (Hmail) with ESMTP id 49E441A1744;
+        Sat, 18 Apr 2020 09:32:54 +0800 (CST)
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.175.113.25]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: base64
+Message-ID: <ALcAggApCIauiL91uBghEaoS.3.1587173574288.Hmail.bernard@vivo.com>
+To:     Christopher Lameter <cl@linux.com>
+Cc:     Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, kernel@vivo.com
+Subject: =?UTF-8?B?UmU6UmU6IFtQQVRDSF0ga21hbGxvY19pbmRleCBvcHRpbWl6YXRpb24oYWRkIGttYWxsb2MgbWF4IHNpemUgY2hlY2sp?=
+X-Priority: 3
+X-Mailer: HMail Webmail Server V2.0 Copyright (c) 2016-163.com
+X-Originating-IP: 157.0.31.122
+In-Reply-To: <alpine.DEB.2.21.2004171556170.29874@www.lameter.com>
+MIME-Version: 1.0
+Received: from bernard@vivo.com( [157.0.31.122) ] by ajax-webmail ( [127.0.0.1] ) ; Sat, 18 Apr 2020 09:32:54 +0800 (GMT+08:00)
+From:   =?UTF-8?B?6LW15Yab5aWO?= <bernard@vivo.com>
+Date:   Sat, 18 Apr 2020 09:32:54 +0800 (GMT+08:00)
+X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgYFAkeWUFZSFVOS0JLS0tIS0pITUpLQ1lXWShZQU
+        hPN1dZLVlBSVdZCQ4XHghZQVk1NCk2OjckKS43PlkG
+X-HM-Sender-Digest: e1kJHlYWEh9ZQUhMSUNDTkxCT0hIN1dZDB4ZWUEPCQ4eV1kSHx4VD1lB
+        WUc6Nxg6HBw6CzgyGg4SN0JKDjkcEz4aFChVSFVKTkNMSkxITkxNSENOVTMWGhIXVRkeCRUaCR87
+        DRINFFUYFBZFWVdZEgtZQVlKTkxVS1VISlVKSUlZV1kIAVlBT09NSjcG
+X-HM-Tid: 0a718aeac6a493b4kuws49e441a1744
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixes gcc '-Wunused-but-set-variable' warning:
-
-kernel/bpf/verifier.c:5603:18: warning: variable ‘dst_known’
-set but not used [-Wunused-but-set-variable], delete this
-variable.
-
-Signed-off-by: Mao Wenan <maowenan@huawei.com>
----
- v2: remove fixes tag in commit log. 
- kernel/bpf/verifier.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
-
-diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
-index 04c6630cc18f..c9f50969a689 100644
---- a/kernel/bpf/verifier.c
-+++ b/kernel/bpf/verifier.c
-@@ -5600,7 +5600,7 @@ static int adjust_scalar_min_max_vals(struct bpf_verifier_env *env,
- {
- 	struct bpf_reg_state *regs = cur_regs(env);
- 	u8 opcode = BPF_OP(insn->code);
--	bool src_known, dst_known;
-+	bool src_known;
- 	s64 smin_val, smax_val;
- 	u64 umin_val, umax_val;
- 	s32 s32_min_val, s32_max_val;
-@@ -5622,7 +5622,6 @@ static int adjust_scalar_min_max_vals(struct bpf_verifier_env *env,
- 
- 	if (alu32) {
- 		src_known = tnum_subreg_is_const(src_reg.var_off);
--		dst_known = tnum_subreg_is_const(dst_reg->var_off);
- 		if ((src_known &&
- 		     (s32_min_val != s32_max_val || u32_min_val != u32_max_val)) ||
- 		    s32_min_val > s32_max_val || u32_min_val > u32_max_val) {
-@@ -5634,7 +5633,6 @@ static int adjust_scalar_min_max_vals(struct bpf_verifier_env *env,
- 		}
- 	} else {
- 		src_known = tnum_is_const(src_reg.var_off);
--		dst_known = tnum_is_const(dst_reg->var_off);
- 		if ((src_known &&
- 		     (smin_val != smax_val || umin_val != umax_val)) ||
- 		    smin_val > smax_val || umin_val > umax_val) {
--- 
-2.17.1
-
+CgpGcm9tOiBDaHJpc3RvcGhlciBMYW1ldGVyIDxjbEBsaW51eC5jb20+CkRhdGU6IDIwMjAtMDQt
+MTcgMjM6NTk6MDAKVG86ICBCZXJuYXJkIFpoYW8gPGJlcm5hcmRAdml2by5jb20+CkNjOiAgUGVr
+a2EgRW5iZXJnIDxwZW5iZXJnQGtlcm5lbC5vcmc+LERhdmlkIFJpZW50amVzIDxyaWVudGplc0Bn
+b29nbGUuY29tPixKb29uc29vIEtpbSA8aWFtam9vbnNvby5raW1AbGdlLmNvbT4sQW5kcmV3IE1v
+cnRvbiA8YWtwbUBsaW51eC1mb3VuZGF0aW9uLm9yZz4sbGludXgtbW1Aa3ZhY2sub3JnLGxpbnV4
+LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmcsa2VybmVsQHZpdm8uY29tClN1YmplY3Q6IFJlOiBbUEFU
+Q0hdIGttYWxsb2NfaW5kZXggb3B0aW1pemF0aW9uKGFkZCBrbWFsbG9jIG1heCBzaXplIGNoZWNr
+KT5PbiBGcmksIDE3IEFwciAyMDIwLCBCZXJuYXJkIFpoYW8gd3JvdGU6Cj4KPj4ga21hbGxvYyBz
+aXplIHNob3VsZCBuZXZlciBleGNlZWQgS01BTExPQ19NQVhfU0laRS4KPj4ga21hbGxvY19pbmRl
+eCByZWFsaXNlIGlmIHNpemUgaXMgZXhjZWVkIEtNQUxMT0NfTUFYX1NJWkUsIGUuZyA2NE0sCj4+
+IGttYWxsb2NfaW5kZXgganVzdCByZXR1cm4gaW5kZXggMjYsIGJ1dCBuZXZlciBjaGVjayB3aXRo
+IE9TYHMgbWF4Cj4+IGttYWxsb2MgY29uZmlnIEtNQUxMT0NfTUFYX1NJWkUuIFRoaXMgaW5kZXhg
+cyBrbWFsbG9jIGNhY2hlcyBtYXliZQo+PiBub3QgY3JlYXRlIGluIGZ1bmN0aW9uIGNyZWF0ZV9r
+bWFsbG9jX2NhY2hlcy4KPj4gV2UgY2FuIHRocm93IGFuIHdhcm5pbmdpbmZvIGluIGttYWxsb2Mg
+YXQgdGhlIGJlZ2lubmluZywgaW5zdGVhZCBvZgo+PiBiZWluZyBndWFyYW50ZWVkIGJ5IHRoZSBi
+dWRkeSBhbGxvYyBiZWhpbmQuCj4KPmttYWxsb2NfaW5kZXgoMCBhbHJlYWR5IGJ1Z3MgaWYgdGhl
+IGFsbG9jYXRpb24gaXMgbW9yZSB0aGFuIDY0TQo+Cj4KPi4uLgo+Cj4gICBpZiAoc2l6ZSA8PSAg
+NjQgKiAxMDI0ICogMTAyNCkgcmV0dXJuIDI2Owo+ICAgICAgICBCVUcoKTsKPgo+Cj5Zb3UgY291
+bGQgbW9kaWZ5IHRoYXQgdG8gY2hlY2sgZm9yIEtNQUxMT0NfTUFYX1NJWkUgd2l0aCBzb21lIG1v
+cmUKPmNvbmRpdGlvbmFscyBidXQgdGhlbiBrbWFsbG9jX2luZGV4KSBpcyB3cml0dGVuIHNvIHRo
+YXQgdGhlIGNvbXBpbGVyIGdldHMKPmNvbnN0YW50IGZvbGRpbmcgcmlnaHQuCj4KPklmIHlvdSBo
+YXZlIGEgcGF0Y2ggbGlrZSB0aGF0IHRoZW4gcGxlYXNlIHZlcmlmeSB0aGF0IGFsbCBjIGNvbXBp
+bGVycyBpbgo+dXNlIHBlcmZvcm0gY29ycmVjdCBjb25zdGFudCBmb2xkaW5nIGFuZCBkbyBub3Qg
+YWRkIHVubmVjZXNzYXJ5IGNvZGUuCj4KPgoKU29ycnkgZm9yIHRoZSBtaXN1bmRlcnN0YW5kaW5n
+LgpXaGF0IEkgbWVhbnQgd2FzIHRoYXQgdGhlIOKAnGlm4oCdaW4ga21hbGxvY19pbmRleCBzaG91
+bGQgYmUgY29uc2lzdGVudCAKd2l0aCBLTUFMTE9DX01BWF9TSVpFLiBGb3IgZXhhbXBsZSwgaWYg
+dGhlIE1BWF9aT05FT1JERVIgY29uZmlndXJlZCAKYnkgdGhlIGtlcm5lbCBpcyAxMSwgd2hpY2gg
+aXMgNE0sIHRoZW4gc2l6ZSA+NE0gc2hvdWxkIHRyaWdnZXIgQlVHKCkuIElmIHRoZSAKY29uZmln
+dXJhdGlvbiBpcyBzbWFsbGVyLCBlLmcgTUFYX1pPTkVPUkRFUiBpcyA5LCAxTSwgdGhlbiB0aGUg
+c2l6ZSA+IDFNIApzaG91bGQgYmUgQlVHLiAKQnV0IHRoZSBjdXJyZW50IGNvZGUgaXMgbm90LCBr
+bWFsbG9jX2luZGV4IHdpbGwgb25seSBiZSBCVUcoKSB3aGVuIGl0IGV4Y2VlZHMgNjRNLgoKCg0K
+DQo=
