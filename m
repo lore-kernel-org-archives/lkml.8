@@ -1,139 +1,272 @@
 Return-Path: <SRS0=3CHW=6C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Level: *
+X-Spam-Status: No, score=1.4 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	URIBL_ABUSE_SURBL,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 420FBC3A5A0
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 17:23:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D8BCC3A5A0
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 17:25:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2152E221F7
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 17:23:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18F4E20776
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 17:25:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="gUWzyYOq"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="ovFlkDng"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726416AbgDRRXb (ORCPT
+        id S1727121AbgDRRZa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 13:23:31 -0400
-Received: from mout.web.de ([212.227.15.3]:54481 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725887AbgDRRXa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 13:23:30 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1587230597;
-        bh=5X9WcLil5scoD4ogMGlktyF9oZvON2fyMe52psILn1A=;
-        h=X-UI-Sender-Class:To:Cc:Subject:From:Date;
-        b=gUWzyYOqDt3bhHgBrS7/mTVD7REwUmradRWlfmi+JUrTbKk0qA5Dq7weeFOpYoXWb
-         pTBhf2zUnptoc7LwbFg3aRPl7rtb4VnEopXkxK75qqPvDqXW3PL5eiKbF6eYWcXQ8f
-         T1LpQB9eGzL/1k10bcBTp9XZSlwQfOBkDEzsvgN0=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([93.133.116.87]) by smtp.web.de (mrweb001
- [213.165.67.108]) with ESMTPSA (Nemesis) id 0LbZpT-1iwXeh3XY3-00lDLw; Sat, 18
- Apr 2020 19:23:16 +0200
-To:     Tiezhu Yang <yangtiezhu@loongson.cn>,
-        linux-kselftest@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Luis Chamberlain <mcgrof@kernel.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Xuefeng Li <lixuefeng@loongson.cn>
-Subject: Re: [PATCH 4/4] test_kmod: Avoid potential double free in
- trigger_config_run_type()
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <53bf9145-db17-9123-2489-540eaf2733a6@web.de>
-Date:   Sat, 18 Apr 2020 19:23:07 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Sat, 18 Apr 2020 13:25:30 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:46150 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726089AbgDRRZ3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 13:25:29 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1587230726; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=BJK3SzVpQ1si/reyVxcaxpHREQLlO3j66OLfCZHjFz8=;
+        b=ovFlkDngSG/UH+xUeOabMOqk8s3sWsFD3Ajn8VcLM8qAURKHeCHdwIj7x/gJoK4/NpubJI
+        myHC+zj7i0mU/gSasdHYFqsLUsoeJGpV/q0y8PqLe2XgILJUB29h+7/8tnQY/LFH+UYumP
+        YfxXY+P6PmNPBqiZzfguL8HLsdOb72c=
+Date:   Sat, 18 Apr 2020 19:25:15 +0200
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [RESEND PATCH v5 5/5] input: joystick: Add ADC attached joystick
+ driver.
+To:     Jonathan Cameron <jic23@kernel.org>
+Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Artur Rojek <contact@artur-rojek.eu>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        linux-input <linux-input@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Message-Id: <32VZ8Q.HWUYPX9U9OKT@crapouillou.net>
+In-Reply-To: <20200418152257.5f8a45bd@archlinux>
+References: <20200417202859.35427-1-contact@artur-rojek.eu>
+        <20200417202859.35427-5-contact@artur-rojek.eu>
+        <CAHp75VfRbnnuUhfyXpu+5dp4TutHSrHus=sX_vG_5F0dX4k0fQ@mail.gmail.com>
+        <UFBY8Q.ES4D59V22INC1@crapouillou.net>
+        <CAHp75VfEAtqucMPdkygfBhojTJoHO5vFk_o0suiyf7i2JCMw9Q@mail.gmail.com>
+        <7CFY8Q.68YMS0V08F992@crapouillou.net>
+        <CAHp75VeVvE8LAO8f=-cwfgL6erFZACGwMnriNRaQnfnHw31wkg@mail.gmail.com>
+        <0HGZ8Q.TO6FK92GVGIN3@crapouillou.net>
+        <CAHp75VdE=xHi8Kn=nZiH+shHvS6O2pc6W=FCs_VwrJq6Bfwx7w@mail.gmail.com>
+        <NXJZ8Q.5YQ6OBV5Y9V8@crapouillou.net> <20200418152257.5f8a45bd@archlinux>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:2BohLqIXxKS2n1REw16dX4v4Gs4g2i1hejGwEruRk5rAoYdYRu4
- vF0oftyf7RpN5bWomL5YNBfVzDe5oiTWDCPyndDyfudEHsiKa1z/niFO6K2wOJ6zk/sd3aE
- Dg1ecLHD2E1Z+2bYk/gmdoHlpW2dMwIqYRRznN3CzT5uf3P/9OK35HiHTS5F0WluNWj1KRg
- XrIF57H6FaU3sqU3H7u7w==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:js8vnVfIpgQ=:dwa4wBQT4S2QwxU6nYgFiJ
- MW00z4lPcQ1CbaSvPxIP7/jPvWvEGXfkgyn633sMTFCrJJ7+2UVurqj7/KuXFUcaIq00/mdCa
- V1zC/l6qxR5JSbtGwbt0nkH/b8THMj3lNkQWWyU22fvwRt8MoIOIZ6LFhEjEMDC9Lmqvp1u9o
- rM454q58tVW4bvGAVyJ7vMBBYjt8yEPHVPy362rH6zUsqkEcxmlqS8ua+NpED8CrmMaFQBejZ
- 8nr1r8meAKd/Ax3vRbBnBahPTeJOl0WpIvzHO17md4+Z3t1x2WBlxwHCWLtOxymWPuUn1aibo
- 3c+iJGk6QgUOyPJ+auWjAYHNNaMeZFhGNU82586+m3NDm2pgxWoKaF7pQ2aukH3LV/nWPEICr
- SnQtXo+A8aizQpZqBDzuNMKye4hIa9r3TE8rzOTnYaxjPi7TkOlc5IGcBXfJMYdiJiX4S0qey
- XT8U4o5YfyJgJuZyG1jKsxIxEcbKZtB+dxbTrLv4H7XeSS5cM4ZZQR7/cUjcQPcCEUIyaku9e
- 9cFkCyMF9mEj7e0hScCxTyJdRXLcp6aKc9NThsMrmuylfbV0Ma1uXqEP1al/hh3i7TXuOYqnn
- JYsSY7mK9k1h5a23/MTAKD7kYctP+4hZ53/csMAsPusvmDQkjyAnYmy9CKGhjyQ+JF7+0moHJ
- xLlyin0pYeEEyvl292IRACrlej/I5cTwanpLb9SHW56ApoDTps5wG4ogd1JeAQzd3mzkiR5T4
- wHw6a7Wy613+HjNffsF/jW9DSFWwHG61CARBxM0bj66p5NS6SC6Guz9NTCsE+lGjOw1itMQv0
- 5NwyY+E6njdh83Ukf/UD7OMZJ0ihjJJWPuTW5x1O7/EB3STC2s+CtFQtgVYj16tB3EjqWM9rj
- WRoOB0hvuOulDR+W/ZieZ0FKJu+2xbXy8CrdLlGfmLXJ3B/7tabg+6ezLWs6puVO+ldDRKgsG
- K3r6sTpVHYrdK6ueCWdJi1kmB3Ce2L+OJE4gAjWc4VZoxVIAWWKVPh+MJrwxj1v9w/gyqCLMD
- EgUQDpexXjy2Rs9cmm7t1bEbTRuhZ6qIZWcAagfoVWKJVU8QwKcLTS0zGxsmsNz0JXZJ9vJz9
- WkSmDWAe+nFntcX4CCo4vY82hBl4Sl+xMhtHcUZ1iNBqBnpsDnl0h2MUyQSm/PcF5ENCGjgOF
- YYrSoAdtMgebarEfHiSb7j1kCowZ9HTP3JuLS9PY4tpS2oOUMSFvRmjzHCqJBFiYfQU9gNP/K
- VvOZPrdTPBi19n7VS
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> It should set config->test_fs instead of config->test_driver as NULL
-> after kfree_const(config->test_fs) to avoid potential double free.
+Hi Jonathan,
 
-I suggest to improve this change description.
+Le sam. 18 avril 2020 =E0 15:22, Jonathan Cameron <jic23@kernel.org> a=20
+=E9crit :
+> On Sat, 18 Apr 2020 15:24:58 +0200
+> Paul Cercueil <paul@crapouillou.net> wrote:
+>=20
+>>  Le sam. 18 avril 2020 =E0 15:42, Andy Shevchenko
+>>  <andy.shevchenko@gmail.com> a =E9crit :
+>>  > On Sat, Apr 18, 2020 at 3:10 PM Paul Cercueil=20
+>> <paul@crapouillou.net>
+>>  > wrote:
+>>  >>  Le sam. 18 avril 2020 =E0 14:57, Andy Shevchenko
+>>  >>  <andy.shevchenko@gmail.com> a =E9crit :
+>>  >>  > On Sat, Apr 18, 2020 at 1:48 AM Paul Cercueil
+>>  >> <paul@crapouillou.net>
+>>  >>  > wrote:
+>>  >>  >>  Le sam. 18 avril 2020 =E0 0:49, Andy Shevchenko
+>>  >>  >>  <andy.shevchenko@gmail.com> a =E9crit :
+>>  >>  >>  > On Sat, Apr 18, 2020 at 12:24 AM Paul Cercueil
+>>  >>  >> <paul@crapouillou.net>
+>>  >>  >>  > wrote:
+>>  >>  >>  >>  Le sam. 18 avril 2020 =E0 0:10, Andy Shevchenko
+>>  >>  >>  >>  <andy.shevchenko@gmail.com> a =E9crit :
+>>  >>  >>  >>  > On Fri, Apr 17, 2020 at 11:21 PM Artur Rojek
+>>  >>  >>  >> <contact@artur-rojek.eu>
+>>  >>  >>  >>  > wrote:
+>>  >
+>>  > ...
+>>  >
+>>  >>  >>  >>  >>  +#include <linux/of.h>
+>>  >>  >>  >>  >
+>>  >>  >>  >>  > Do you really need this? (See below as well)
+>>  >>  >>  >
+>>  >>  >>  >>  >>  +static const struct of_device_id
+>>  >> adc_joystick_of_match[] =3D
+>>  >>  >> {
+>>  >>  >>  >>  >>  +       { .compatible =3D "adc-joystick", },
+>>  >>  >>  >>  >>  +       { },
+>>  >>  >>  >>  >>  +};
+>>  >>  >>  >>  >>  +MODULE_DEVICE_TABLE(of, adc_joystick_of_match);
+>>  >>  >>  >>  >>  +
+>>  >>  >>  >>  >>  +static struct platform_driver adc_joystick_driver=20
+>> =3D {
+>>  >>  >>  >>  >>  +       .driver =3D {
+>>  >>  >>  >>  >>  +               .name =3D "adc-joystick",
+>>  >>  >>  >>  >
+>>  >>  >>  >>  >>  +               .of_match_table =3D
+>>  >>  >>  >>  >> of_match_ptr(adc_joystick_of_match),
+>>  >>  >>  >>  >
+>>  >>  >>  >>  > Drop this a bit harmful of_match_ptr() macro. It=20
+>> should go
+>>  >>  >> with
+>>  >>  >>  >> ugly
+>>  >>  >>  >>  > #ifdeffery. Here you simple introduced a compiler=20
+>> warning.
+>>  >>  >>  >>
+>>  >>  >>  >>  I assume you mean #ifdef around the of_device_id +=20
+>> module
+>>  >> table
+>>  >>  >>  >> macro?
+>>  >>  >>  >
+>>  >>  >>  > Yes.
+>>  >>  >>  >
+>>  >>  >>  >>  > On top of that, you are using device property API, OF=20
+>> use
+>>  >> in
+>>  >>  >> this
+>>  >>  >>  >> case
+>>  >>  >>  >>  > is contradictory (at lest to some extend).
+>>  >>  >>  >>
+>>  >>  >>  >>  I don't see why. The fact that the driver can work when
+>>  >> probed
+>>  >>  >> from
+>>  >>  >>  >>  platform code
+>>  >>  >>  >
+>>  >>  >>  > Ha-ha, tell me how. I would like to be very surprised.
+>>  >>  >>
+>>  >>  >>  iio_map_array_register(),
+>>  >>  >>  pinctrl_register_mappings(),
+>>  >>  >>  platform_add_devices(),
+>>  >>  >>
+>>  >>  >>  you're welcome.
+>>  >>  >
+>>  >>  > I think above has no relation to what I'm talking about.
+>>  >>
+>>  >>  Yes it does. It allows you to map the IIO channels, set the=20
+>> pinctrl
+>>  >>  configurations and register a device from platform code instead=20
+>> of
+>>  >>  devicetree.
+>>  >
+>>  > I'm not talking about other drivers, I'm talking about this=20
+>> driver and
+>>  > how it will be instantiated. Above, according to the code, can't=20
+>> be
+>>  > comprehensive to fulfill this.
+>>=20
+>>  This is how the platform devices were instanciated on JZ4740 before=20
+>> we
+>>  switched everything to devicetree.
+>>=20
+>>  >>  > How *this* driver can work as a platform instantiated one?
+>>  >>  > We seems have a conceptual misunderstanding here.
+>>  >>  >
+>>  >>  > For example, how can probe of this driver not fail, if it is=20
+>> not
+>>  >>  > backed by a DT/ACPI properties?
+>>  >>
+>>  >>  platform_device_add_properties().
+>>  >
+>>  > Yes, I waited for this. And seems you don't understand the (scope=20
+>> of)
+>>  > API, you are trying to insist this driver can be used as a=20
+>> platform
+>>  > one.
+>>  > Sorry, I must to disappoint you, it can't. Above interface is=20
+>> created
+>>  > solely for quirks to support (broken) DT/ACPI tables. It's not
+>>  > supposed to be used as a main source for the device properties.
+>>=20
+>>  The fact that it was designed for something else doesn't mean it=20
+>> can't
+>>  be used.
+>>=20
+>>  Anyway, this discussion is pointless. I don't think anybody would=20
+>> want
+>>  to do that.
+>>=20
+>>  >>  >>  >>  doesn't mean that it shouldn't have a table to probe
+>>  >>  >>  >>  from devicetree.
+>>  >>  >>  >
+>>  >>  >>  > I didn't get what you are talking about here. The idea of
+>>  >>  >> _unified_
+>>  >>  >>  > device property API is to get rid of OF-centric code in
+>>  >> favour of
+>>  >>  >> more
+>>  >>  >>  > generic approach. Mixing those two can be done only in
+>>  >> specific
+>>  >>  >> cases
+>>  >>  >>  > (here is not the one).
+>>  >>  >>
+>>  >>  >>  And how are we mixing those two here? The only OF-centric=20
+>> thing
+>>  >>  >> here is
+>>  >>  >>  the device table, which is required if we want the driver to
+>>  >> probe
+>>  >>  >> from
+>>  >>  >>  devicetree.
+>>  >>  >
+>>  >>  > Table is fine(JFYI the types and sections are defined outside=20
+>> of
+>>  >> OF
+>>  >>  > stuff, though being [heavily] used by it) , API=20
+>> (of_match_ptr()
+>>  >> macro
+>>  >>  > use) is not.
+>>  >>
+>>  >>  Sorry, but that's just stupid. Please have a look at how
+>>  >> of_match_ptr()
+>>  >>  macro is defined in <linux/of.h>.
+>>  >
+>>  > Call it whatever you want, but above code is broken.
+>>=20
+>>  of_match_ptr() is basically defined like this:
+>>=20
+>>  #ifdef CONFIG_OF
+>>  #define of_match_ptr(x) (x)
+>>  #else
+>>  #define of_match_ptr(x) NULL
+>>  #endif
+>>=20
+>>  So please, enlighten me, tell me what is so wrong about what's being
+>>  done here.
+>>=20
+>>  > It needs either of:
+>>  > - ugly ifdeffery
+>>  > - dropping of_match_ptr()
+>>  > - explicit dependence to OF
+>>  >
+>>  > My choice is second one. Because it makes code better and allows=20
+>> also
+>>  > ACPI to use this driver (usually) without changes.
+>>=20
+>>  And how is unconditionally compiling the of_match_table make it
+>>  magically probe from ACPI, without a acpi_match_table?
+>>=20
+>>  -Paul
+>=20
+> Look up PRP0001 ACPI ID.  Magic trick ;)
+>=20
+> https://www.kernel.org/doc/html/latest/firmware-guide/acpi/enumeration.ht=
+ml?highlight=3DPRP0001
+>=20
+> It allows you to define an ACPI device in DSDT that is instantiated
+> from what is effectively the DT binding including the id table.
 
-* How do you think about a wording variant like the following?
+So what you're saying, is that the OF table should be present, even=20
+though CONFIG_OF is not set, just in case it is probed from ACPI?
 
-  Reset the member =E2=80=9Ctest_fs=E2=80=9D of the test configuration aft=
-er a call
-  of the function =E2=80=9Ckfree_const=E2=80=9D to a null pointer so that =
-a double
-  memory release will not be performed.
+-Paul
 
-* Would you like to add the tag =E2=80=9CFixes=E2=80=9D?
 
-Regards,
-Markus
