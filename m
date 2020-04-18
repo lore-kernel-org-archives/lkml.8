@@ -7,51 +7,57 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CABD5C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:41:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39C5AC3A5A0
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:41:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A12E021D7E
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:41:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1029D22240
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:41:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587220903;
-	bh=9d6dIVVW/eoJFIE97fA3VAir62eKBHLtOhBqUlU/lXE=;
+	s=default; t=1587220906;
+	bh=uRKGWEHffTzz+HeEoRdC6kD4Fwtd9WIkFuzd8NRpf9I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xVhZlMrL1pqgpkaGXslkbBWpCfDj8TZcVQqw/R0pNp/8q3km6TE1Y+EP3n1n/8o6Q
-	 DAaCMAg2HvBAsZ24s1za2YxvC4aoJHj3XkMexOcG5ow8xtkOJWtmsedwy3WrdqIzT0
-	 JTZXL6Vhg8kU1IlTUwNZloL4mX/gLU8IXG1NJ1Mc=
+	b=0HvDd6Obg/PE4JKfkArJTiXhWNaHq34h9gyAAGYdVraSQPnjA+vAo5vAOpu3EOacu
+	 M6nVHGBcrD8fwxE1slte1ilBKvtNkxQV/DB5Qdz3+uWv1X6peX136m9msZeHwcY4Ue
+	 tDbTQ80PaUGcXUBS84zTfg+thuLM+dvedV/5Wl8g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726353AbgDROlm (ORCPT
+        id S1728099AbgDROlp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 10:41:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50826 "EHLO mail.kernel.org"
+        Sat, 18 Apr 2020 10:41:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50978 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728039AbgDROlf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 10:41:35 -0400
+        id S1726335AbgDROlj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 10:41:39 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 78D272224F;
-        Sat, 18 Apr 2020 14:41:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D3EB02224F;
+        Sat, 18 Apr 2020 14:41:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587220895;
-        bh=9d6dIVVW/eoJFIE97fA3VAir62eKBHLtOhBqUlU/lXE=;
+        s=default; t=1587220899;
+        bh=uRKGWEHffTzz+HeEoRdC6kD4Fwtd9WIkFuzd8NRpf9I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aGwljTc2Ekawwp48D02rXFnwrqRfV94mwtOuNTuMtNHft0sK0DNxdP6t0JkEydiaR
-         RYZhsRzjksZHTxy/RswvCCnhOK0xSj5CmIYbJ7zOrNd7n/MGzWIsY4vNNaIyalTEtJ
-         wRDyCpfk4LyG4Xel2fwW+v41b4ZTGZvL4xXzhzw0=
+        b=f6M+wunHZ7LCC6+yNeYgLs/lwzMVMwBvRZbl8iq4TbYXcrOQX9l5SJ9beWH8EUO4P
+         Wqzmk2CHRrAxkoCHarK3HKrFkGMLEieLQMUYTvWknZxfC3wqZVLpkU64DBaWaddUgM
+         4Mcokfdqf1ZlpxdiNFvqNKTmyjcS1pBqzX7gyc68=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jack Zhang <Jack.Zhang1@amd.com>, Nirmoy Das <nirmoy.das@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.4 37/78] drm/amdkfd: kfree the wrong pointer
-Date:   Sat, 18 Apr 2020 10:40:06 -0400
-Message-Id: <20200418144047.9013-37-sashal@kernel.org>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pwm@vger.kernel.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.4 40/78] pwm: bcm2835: Dynamically allocate base
+Date:   Sat, 18 Apr 2020 10:40:09 -0400
+Message-Id: <20200418144047.9013-40-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200418144047.9013-1-sashal@kernel.org>
 References: <20200418144047.9013-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -60,37 +66,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jack Zhang <Jack.Zhang1@amd.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
 
-[ Upstream commit 3148a6a0ef3cf93570f30a477292768f7eb5d3c3 ]
+[ Upstream commit 2c25b07e5ec119cab609e41407a1fb3fa61442f5 ]
 
-Originally, it kfrees the wrong pointer for mem_obj.
-It would cause memory leak under stress test.
+The newer 2711 and 7211 chips have two PWM controllers and failure to
+dynamically allocate the PWM base would prevent the second PWM
+controller instance being probed for succeeding with an -EEXIST error
+from alloc_pwms().
 
-Signed-off-by: Jack Zhang <Jack.Zhang1@amd.com>
-Acked-by: Nirmoy Das <nirmoy.das@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Fixes: e5a06dc5ac1f ("pwm: Add BCM2835 PWM driver")
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+Reviewed-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdkfd/kfd_device.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/pwm/pwm-bcm2835.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/gpu/drm/amd/amdkfd/kfd_device.c b/drivers/gpu/drm/amd/amdkfd/kfd_device.c
-index 0dc1084b5e829..ad9483b9eea32 100644
---- a/drivers/gpu/drm/amd/amdkfd/kfd_device.c
-+++ b/drivers/gpu/drm/amd/amdkfd/kfd_device.c
-@@ -1112,9 +1112,9 @@ int kfd_gtt_sa_allocate(struct kfd_dev *kfd, unsigned int size,
- 	return 0;
+diff --git a/drivers/pwm/pwm-bcm2835.c b/drivers/pwm/pwm-bcm2835.c
+index 91e24f01b54ed..d78f86f8e4621 100644
+--- a/drivers/pwm/pwm-bcm2835.c
++++ b/drivers/pwm/pwm-bcm2835.c
+@@ -166,6 +166,7 @@ static int bcm2835_pwm_probe(struct platform_device *pdev)
  
- kfd_gtt_no_free_chunk:
--	pr_debug("Allocation failed with mem_obj = %p\n", mem_obj);
-+	pr_debug("Allocation failed with mem_obj = %p\n", *mem_obj);
- 	mutex_unlock(&kfd->gtt_sa_lock);
--	kfree(mem_obj);
-+	kfree(*mem_obj);
- 	return -ENOMEM;
- }
- 
+ 	pc->chip.dev = &pdev->dev;
+ 	pc->chip.ops = &bcm2835_pwm_ops;
++	pc->chip.base = -1;
+ 	pc->chip.npwm = 2;
+ 	pc->chip.of_xlate = of_pwm_xlate_with_flags;
+ 	pc->chip.of_pwm_n_cells = 3;
 -- 
 2.20.1
 
