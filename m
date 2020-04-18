@@ -7,44 +7,44 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A025C2D0EF
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 10:25:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FE81C2D0EF
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 10:25:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 408AA21D7E
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 10:25:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A5D5221F4
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 10:25:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SxlqnuPo"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CTKtiEtI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726385AbgDRKZE (ORCPT
+        id S1726409AbgDRKZK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 06:25:04 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:31969 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725988AbgDRKWl (ORCPT
+        Sat, 18 Apr 2020 06:25:10 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:34484 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725953AbgDRKWj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 06:22:41 -0400
+        Sat, 18 Apr 2020 06:22:39 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587205360;
+        s=mimecast20190719; t=1587205357;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=zxTOiAZFQUIPQ7LwD9H8y4khOH4iGHG3F8Nhf2kTwbA=;
-        b=SxlqnuPor74zXwloUO7I+4Ux612gJ2T0CP/71d8EyVhXKBhcHAfOEoTXblzsbDmWyKR92C
-        SYNXYFOf7CHBiPJsEKaNbZ1pYOA3NPXcWucJaZK7X0GfwmWEOi/uTYOyKvG2kga87Tlmdk
-        5XJucNXasQ6YSRmX7w3zVu5hmu0dwtI=
+        bh=vwWNaCCFGnInUmv5tpeoOpCpadYnvdzVMsJO2bg1Nbc=;
+        b=CTKtiEtIouzPa7qnoAsP3LlRzbTbaNdvxM1/IKEDF0hhQb36KMc/+9lU0F8plsJ8gAYflw
+        v8SI6mBSWBxDQBlFOBH+8k5jigRFHkT9bF/pYxsKxzqT7lJJV0hLDpAsukJZpI30rNGdAy
+        wIpuE1TF1Xxa744fpDSyu08VNy3hOvQ=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-495-YYG2JwGgNn2cI4pDjP6Vww-1; Sat, 18 Apr 2020 06:22:38 -0400
-X-MC-Unique: YYG2JwGgNn2cI4pDjP6Vww-1
+ us-mta-353-5AHjK9raMU2HXAvB4v78SQ-1; Sat, 18 Apr 2020 06:22:30 -0400
+X-MC-Unique: 5AHjK9raMU2HXAvB4v78SQ-1
 Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CC99A8017F5;
-        Sat, 18 Apr 2020 10:22:36 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 70BEB8018A3;
+        Sat, 18 Apr 2020 10:22:29 +0000 (UTC)
 Received: from eperezma.remote.csb (ovpn-112-94.ams2.redhat.com [10.36.112.94])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 76BCF1036D15;
-        Sat, 18 Apr 2020 10:22:34 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 137831001DC2;
+        Sat, 18 Apr 2020 10:22:26 +0000 (UTC)
 From:   =?UTF-8?q?Eugenio=20P=C3=A9rez?= <eperezma@redhat.com>
 To:     "Michael S. Tsirkin" <mst@redhat.com>
 Cc:     "virtualization@lists.linux-foundation.org" 
@@ -57,9 +57,9 @@ Cc:     "virtualization@lists.linux-foundation.org"
         kvm list <kvm@vger.kernel.org>,
         Stephen Rothwell <sfr@canb.auug.org.au>,
         Linux Next Mailing List <linux-next@vger.kernel.org>
-Subject: [PATCH v3 3/8] tools/virtio: Add --batch=random option
-Date:   Sat, 18 Apr 2020 12:22:12 +0200
-Message-Id: <20200418102217.32327-4-eperezma@redhat.com>
+Subject: [PATCH v3 1/8] vhost: Not cleaning batched descs in VHOST_SET_VRING_BASE ioctl
+Date:   Sat, 18 Apr 2020 12:22:10 +0200
+Message-Id: <20200418102217.32327-2-eperezma@redhat.com>
 In-Reply-To: <20200418102217.32327-1-eperezma@redhat.com>
 References: <20200418102217.32327-1-eperezma@redhat.com>
 MIME-Version: 1.0
@@ -71,72 +71,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-So we can test with non-deterministic batches in flight.
+They are cleaned in vhost_vq_set_backend, which can be called with an
+active backend. To set and remove backends already clean batched
+descriptors, so to do it here is completely redundant.
+
+Fixes: ("e7539c20a4a6 vhost: batching fetches")
 
 Signed-off-by: Eugenio P=C3=A9rez <eperezma@redhat.com>
 ---
- tools/virtio/virtio_test.c | 18 ++++++++++++++----
- 1 file changed, 14 insertions(+), 4 deletions(-)
+ drivers/vhost/vhost.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/tools/virtio/virtio_test.c b/tools/virtio/virtio_test.c
-index c30de9088f3c..4a2b9d11f287 100644
---- a/tools/virtio/virtio_test.c
-+++ b/tools/virtio/virtio_test.c
-@@ -19,6 +19,8 @@
- #include <linux/virtio_ring.h>
- #include "../../drivers/vhost/test.h"
-=20
-+#define RANDOM_BATCH -1
-+
- /* Unused */
- void *__kmalloc_fake, *__kfree_ignore_start, *__kfree_ignore_end;
-=20
-@@ -161,6 +163,7 @@ static void run_test(struct vdev_info *dev, struct vq=
-_info *vq,
- 	int r, test =3D 1;
- 	unsigned len;
- 	long long spurious =3D 0;
-+	const bool random_batch =3D batch =3D=3D RANDOM_BATCH;
- 	r =3D ioctl(dev->control, VHOST_TEST_RUN, &test);
- 	assert(r >=3D 0);
- 	for (;;) {
-@@ -168,6 +171,9 @@ static void run_test(struct vdev_info *dev, struct vq=
-_info *vq,
- 		completed_before =3D completed;
- 		started_before =3D started;
- 		do {
-+			if (random_batch)
-+				batch =3D (random() % vq->vring.num) + 1;
-+
- 			while (started < bufs &&
- 			       (started - completed) < batch) {
- 				sg_init_one(&sl, dev->buf, dev->buf_size);
-@@ -275,7 +281,7 @@ static void help(void)
- 		" [--no-event-idx]"
- 		" [--no-virtio-1]"
- 		" [--delayed-interrupt]"
--		" [--batch=3DN]"
-+		" [--batch=3Drandom/N]"
- 		"\n");
- }
-=20
-@@ -312,9 +318,13 @@ int main(int argc, char **argv)
- 			delayed =3D true;
- 			break;
- 		case 'b':
--			batch =3D strtol(optarg, NULL, 10);
--			assert(batch > 0);
--			assert(batch < (long)INT_MAX + 1);
-+			if (0 =3D=3D strcmp(optarg, "random")) {
-+				batch =3D RANDOM_BATCH;
-+			} else {
-+				batch =3D strtol(optarg, NULL, 10);
-+				assert(batch > 0);
-+				assert(batch < (long)INT_MAX + 1);
-+			}
- 			break;
- 		default:
- 			assert(0);
+diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
+index 0395229486a9..882d0df57e24 100644
+--- a/drivers/vhost/vhost.c
++++ b/drivers/vhost/vhost.c
+@@ -1579,7 +1579,6 @@ long vhost_vring_ioctl(struct vhost_dev *d, unsigne=
+d int ioctl, void __user *arg
+ 		vq->last_avail_idx =3D s.num;
+ 		/* Forget the cached index value. */
+ 		vq->avail_idx =3D vq->last_avail_idx;
+-		vq->ndescs =3D vq->first_desc =3D 0;
+ 		break;
+ 	case VHOST_GET_VRING_BASE:
+ 		s.index =3D idx;
 --=20
 2.18.1
 
