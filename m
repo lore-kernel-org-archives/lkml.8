@@ -2,168 +2,169 @@ Return-Path: <SRS0=3CHW=6C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8347C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 16:04:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66A58C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 16:05:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC4E521D93
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 16:04:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 454B421D6C
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 16:05:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="beu4al1M";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="kN+5Dcur"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f/A5Ngw4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726904AbgDRQEw (ORCPT
+        id S1727848AbgDRQFk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 12:04:52 -0400
-Received: from esa3.hgst.iphmx.com ([216.71.153.141]:64361 "EHLO
-        esa3.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726356AbgDRQEw (ORCPT
+        Sat, 18 Apr 2020 12:05:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45702 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726500AbgDRQFk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 12:04:52 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1587225891; x=1618761891;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=VT9asYG9+dpl6wZ6GecFzcx6XD7ODddghu32tuHgovk=;
-  b=beu4al1MNKRuM6UktQZKtS/KGBMaEwpoWNZVevMuCzq+quxhTjI7nUlA
-   JnhpzIBnfNvFZ73GEZRNmkxHr7DrfNTQ4JiXOWDfpCIXDu5sGx++L8u4a
-   OBlaOQ5KNIEjjhCctugycKLmwkp0dcfbKZHmy3dO9f/E60744251f0xCa
-   UxH4+TmZ8QJpKo+edNs+EfemVBJGwPACP7bR0xcXlAXHooWcR8Tt7lfhm
-   4t1SUaioJI405rMGyKDCOgunRzOHV4wqczPi/SBXtqovowh3BSvqkZqkp
-   L1OqJ2Y2d4BDm0TUDbMBQtecHS+XzyLFFC2wA9xCD47/JAipn332K9Xnq
-   w==;
-IronPort-SDR: NHwlOT3JApH8Oj4w6TaxWTHp3pHGgLe/ha12+IyFLE/1pZBvhkXnegCLj8Hfz/Ws1VrmCll5ba
- +7574xOH/7lpHYlpVk/L7/VFlwLv+A2gtLAR3HDyqoat6a70kDdGhOgeDGerIk4sWOHn8OYRH4
- QXh8XtZRquEMSp5f55V98ccTjTj6asb08b5IDbdrqBC8w+FRItcq9uXf+T+fxUushIOzjSNW47
- /0wUoFjJcL58DgIiotMyLLr+yHsVYq0TXQFym4qaSZSE+0kxLdKUgFovgRbbhQQQFYXeaz0J5P
- EZE=
-X-IronPort-AV: E=Sophos;i="5.72,399,1580745600"; 
-   d="scan'208";a="139967679"
-Received: from mail-dm6nam10lp2101.outbound.protection.outlook.com (HELO NAM10-DM6-obe.outbound.protection.outlook.com) ([104.47.58.101])
-  by ob1.hgst.iphmx.com with ESMTP; 19 Apr 2020 00:04:49 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=DeoJ/awOp584n7EWGviWtoP9oF6kNebsFTHnEmpHsrqhfRheZgmHtN7AUFFRCxpshUTBdFAOy7iCvaTR0rv1tk4GQv0U4J3x9MvY6e8wLuVNyLKRL/gOVPODYFVrLPlH22SXfhlsypR5pYZPxGlbsTb7HmrosE0crs2KtRIAeHQiwNLi/tk1ZGpqJM/puQSHDM5Qb5JHQWudmtdNseOFJ8C3/8ILaPiT+c6fgH3uQzdnkQQmHrFicwLVxnAUz8UTHdgNLsUBPbEy/ilBSrgSr4bBYwcRkYzWhv4sKtvgfaUoqaS5Y2cxffLj56WL09FjRDRMSZAFZySROVb+Bjfg9g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VT9asYG9+dpl6wZ6GecFzcx6XD7ODddghu32tuHgovk=;
- b=gQHe+SREPkIWl14NLtWZfcXNX3BRKw1C9s2NiGEFwQonjwgBLKwy8YKeBlbdqfC4JhxMTg0U5VozctWbQevesNww9hl5Um7e35BeF4LAmTEZiMhIkJqo1fre30vBdMcz+yEhHK02OV3FSPlURZHiXZmiToW9jIPXIalHR5++czIeVnjVmuwfDeqqE+XzkYbcbjqSuIUrjBUO/Ab8GWhUk+Zlawm3Dnl19GyCFaamC6scM27A2Mk1SMADjzNhzMwBAOIBaAl5VihMVptDAAEbi4dfKD2xJcyIxPG+0mWBplg4AQTT9Pf7bQ8rJHgiCnf1QlM8vvBSaX46JNsE3wWV1w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
+        Sat, 18 Apr 2020 12:05:40 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 406E4C061A0C;
+        Sat, 18 Apr 2020 09:05:40 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id u65so2679012pfb.4;
+        Sat, 18 Apr 2020 09:05:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VT9asYG9+dpl6wZ6GecFzcx6XD7ODddghu32tuHgovk=;
- b=kN+5Dcur3fqON7CBYFGtXnNIUus4zo5YoRQ9JYCCfDQn/CBTLmXoeXn0UPkq63FVK723O6btvhZ4owMC/Rgc41VX26bMUHxeBN41GbxSs7NkFr5ElbRrGhkoU3wVFXwEMpTtaHx0Vf1tvAcjEK3EiPiSrxVKK1v/Iw9jGD5eqM0=
-Received: from SN6PR04MB4640.namprd04.prod.outlook.com (2603:10b6:805:a4::19)
- by SN6PR04MB5134.namprd04.prod.outlook.com (2603:10b6:805:90::29) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2921.26; Sat, 18 Apr
- 2020 16:04:47 +0000
-Received: from SN6PR04MB4640.namprd04.prod.outlook.com
- ([fe80::3877:5e49:6cdd:c8b]) by SN6PR04MB4640.namprd04.prod.outlook.com
- ([fe80::3877:5e49:6cdd:c8b%5]) with mapi id 15.20.2921.027; Sat, 18 Apr 2020
- 16:04:47 +0000
-From:   Avri Altman <Avri.Altman@wdc.com>
-To:     Alim Akhtar <alim.akhtar@samsung.com>,
-        "robh@kernel.org" <robh@kernel.org>
-CC:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "krzk@kernel.org" <krzk@kernel.org>,
-        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
-        "kwmad.kim@samsung.com" <kwmad.kim@samsung.com>,
-        "stanley.chu@mediatek.com" <stanley.chu@mediatek.com>,
-        "cang@codeaurora.org" <cang@codeaurora.org>,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v6 0/10] exynos-ufs: Add support for UFS HCI
-Thread-Topic: [PATCH v6 0/10] exynos-ufs: Add support for UFS HCI
-Thread-Index: AQHWFONyboJhjuJWAki6eibLTJAA36h+0jPwgAAI5ICAAC8qUIAAAdbg
-Date:   Sat, 18 Apr 2020 16:04:47 +0000
-Message-ID: <SN6PR04MB4640E907A9A8F0709D4417D9FCD60@SN6PR04MB4640.namprd04.prod.outlook.com>
-References: <CGME20200417181006epcas5p269f8c4b94e60962a0b0318ef64a65364@epcas5p2.samsung.com>
-        <20200417175944.47189-1-alim.akhtar@samsung.com>
-        <SN6PR04MB46402211952BC3D427AADA00FCD60@SN6PR04MB4640.namprd04.prod.outlook.com>
- <002a01d61582$72250990$566f1cb0$@samsung.com>
- <SN6PR04MB464066C386886C45202E6107FCD60@SN6PR04MB4640.namprd04.prod.outlook.com>
-In-Reply-To: <SN6PR04MB464066C386886C45202E6107FCD60@SN6PR04MB4640.namprd04.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Avri.Altman@wdc.com; 
-x-originating-ip: [77.138.4.172]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 997d5c93-dfa0-4882-7fa0-08d7e3b237eb
-x-ms-traffictypediagnostic: SN6PR04MB5134:
-x-microsoft-antispam-prvs: <SN6PR04MB513446D58F7CAE1564A3B968FCD60@SN6PR04MB5134.namprd04.prod.outlook.com>
-wdcipoutbound: EOP-TRUE
-x-ms-oob-tlc-oobclassifiers: OLM:6790;
-x-forefront-prvs: 0377802854
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR04MB4640.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(4636009)(346002)(396003)(39860400002)(366004)(376002)(136003)(71200400001)(66556008)(66476007)(66946007)(8936002)(64756008)(76116006)(66446008)(7416002)(186003)(5660300002)(2906002)(81156014)(8676002)(316002)(33656002)(54906003)(9686003)(55016002)(7696005)(110136005)(6506007)(53546011)(26005)(4326008)(2940100002)(478600001)(52536014)(86362001);DIR:OUT;SFP:1102;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 3C+FMcceb1gQgWt54cm3x4dSpeZXao8FInPPhV2uI4pAhwKl6KmNXAyvov8CYlFP+txppBzYH/ro3XmAaZKgEA274kZf1EFykp+Q7JpUN60dUY12RJNVxjrwmG1kvwgAxV2VBkP6RbhkrliArtOgcsHtkXjjL46DxBSOkxpk4aCgf/BHl6dnbJ8ktSpq3+ym4APGr9FXetBCuCD2ZEoqJlXcBu9d5+zpVoJLvrcNIXf9A4+QL0NeJqTi/ib5c6Zth9oCtIYpwX4RZQmfhLoJdNkzXYmXrYpTzHyR8yPaLmy2IUxzAn9KEeUNnhpJBJ/VJ7M4iVcSg/mxhH/V3Srd2CqydtwbqI0myy7aClmiiMrhCnWjvhOvkxS+upVKyLnSi8m0ZAk5xfAuICD2nctVSPIayGxGfV7S/eievx+7EXBlLBbjFrxKGw4Wfpq8Ivf/
-x-ms-exchange-antispam-messagedata: Uf14vXdhiL71Ou1fr1epUb4mYXxm2zZ2BkXsmfcohqKYUBfAaQloQSteQ7RuW4/rmmeqj4OnxWO0b+skJPGCWvuiKksLzVA0a8R9Lxc+QY7SET7vU+TnXTbA3t6EK4rGXLwPyb/vN3EXwGNxqipftg==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=zQbxuYl7fJ5XgX5X7WJEBt7YB36RJC8DjH9MPhzDKf4=;
+        b=f/A5Ngw4MFJUz9/XhyRBsIuI4zQoGO+id+QicmyY9RVQgc/SZjNiYCccv0eA+ErUcq
+         EGJhurO61J0L1afHN/k8xB8VJJ6xtTPqhdzbyemqz03O/xf8V3Yxx1kU1JKCAGVjVOdM
+         jWKoUPHtw2LtjOXt7DS60LiVvZiBBdBcjemjLLjlNkepcU0GrcLfnsp54/9LHzKYdRtb
+         BS/8WcsLEop10Ds3ownBk1F+sZaDmeW2AFP764HhYuA52qa31JPXX96ID6srZFQNNiSC
+         Tj3kfuhjZFIT8otn78mf12DAxSxXQOQmEnOYfz6H+4H8p6ksvjDIdYFKwx781/kKv3Sd
+         uCjg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=zQbxuYl7fJ5XgX5X7WJEBt7YB36RJC8DjH9MPhzDKf4=;
+        b=G3fB589gKaDRPsZnO6xOCTTmJQLbJig0v4BG24oC0qYEGBYVD0fX1sasdLbgreYBhX
+         2gU1wTfTyyqOx/IHiRqDBSXaKZDED432D3xYZ9j7egTAu1RMf3gruPxCRrM4LP/zAkkL
+         Z/QIdYyrPcA54CjaV52ZQvu67aiV4MGcbZ+pE9tO3Cw0Eui4xW1aQJ8QNWT+EBtIzN6B
+         dTLOzTP0uKbduiNpIsSp1ljoDa+8YTHEceXisva8mslDSc10YIF22LwbQxCTvTJRnUi3
+         rLMTqgC368GizCRrOJUwo3w3y21SiIYf/+W/fQAd9rq5xC4KKSqJPOurLL7fPkdnHari
+         hh9Q==
+X-Gm-Message-State: AGi0PuZRdFcXW7Z7PGmJ1SLzVLSAJraSOwnXF+jM0QSuyimWwr2cqrHu
+        Mn/MRmKIGu9f3GwvY9Onskg=
+X-Google-Smtp-Source: APiQypLeiu7Gz9muc9e3XcwuWz5gH4N8+OXU4bhXe2B7sUGygjW1pcIFZKY52dsurQeO5CnY6cg7VQ==
+X-Received: by 2002:a62:19d5:: with SMTP id 204mr8805423pfz.75.1587225939559;
+        Sat, 18 Apr 2020 09:05:39 -0700 (PDT)
+Received: from ast-mbp ([2620:10d:c090:400::5:7a4])
+        by smtp.gmail.com with ESMTPSA id l37sm4860358pje.12.2020.04.18.09.05.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 18 Apr 2020 09:05:38 -0700 (PDT)
+Date:   Sat, 18 Apr 2020 09:05:36 -0700
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+To:     Alan Maguire <alan.maguire@oracle.com>
+Cc:     ast@kernel.org, daniel@iogearbox.net, yhs@fb.com, kafai@fb.com,
+        songliubraving@fb.com, andriin@fb.com, john.fastabend@gmail.com,
+        kpsingh@chromium.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, bpf@vger.kernel.org
+Subject: Re: [RFC PATCH bpf-next 0/6] bpf, printk: add BTF-based type printing
+Message-ID: <20200418160536.4mrvqh2lasqbyk77@ast-mbp>
+References: <1587120160-3030-1-git-send-email-alan.maguire@oracle.com>
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 997d5c93-dfa0-4882-7fa0-08d7e3b237eb
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Apr 2020 16:04:47.7379
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 012jZ+GclxiUjX3XM06snxtoXaFAp5gIL/2UVdYbyKroVrSShzJiU2/Kzn74lSO+3awfmozj4I2AXUT4FjJiPw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR04MB5134
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1587120160-3030-1-git-send-email-alan.maguire@oracle.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogQXZyaSBBbHRtYW4NCj4g
-U2VudDogU2F0dXJkYXksIEFwcmlsIDE4LCAyMDIwIDc6MDAgUE0NCj4gVG86IEFsaW0gQWtodGFy
-IDxhbGltLmFraHRhckBzYW1zdW5nLmNvbT47IHJvYmhAa2VybmVsLm9yZw0KPiBDYzogZGV2aWNl
-dHJlZUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LXNjc2lAdmdlci5rZXJuZWwub3JnOw0KPiBrcnpr
-QGtlcm5lbC5vcmc7IG1hcnRpbi5wZXRlcnNlbkBvcmFjbGUuY29tOyBrd21hZC5raW1Ac2Ftc3Vu
-Zy5jb207DQo+IHN0YW5sZXkuY2h1QG1lZGlhdGVrLmNvbTsgY2FuZ0Bjb2RlYXVyb3JhLm9yZzsg
-bGludXgtc2Ftc3VuZy0NCj4gc29jQHZnZXIua2VybmVsLm9yZzsgbGludXgtYXJtLWtlcm5lbEBs
-aXN0cy5pbmZyYWRlYWQub3JnOyBsaW51eC0NCj4ga2VybmVsQHZnZXIua2VybmVsLm9yZw0KPiBT
-dWJqZWN0OiBSRTogW1BBVENIIHY2IDAvMTBdIGV4eW5vcy11ZnM6IEFkZCBzdXBwb3J0IGZvciBV
-RlMgSENJDQo+IA0KPiA+ID4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gPiA+IEZyb206
-IEF2cmkgQWx0bWFuIDxBdnJpLkFsdG1hbkB3ZGMuY29tPg0KPiA+ID4gU2VudDogMTggQXByaWwg
-MjAyMCAxODowOQ0KPiA+ID4gVG86IEFsaW0gQWtodGFyIDxhbGltLmFraHRhckBzYW1zdW5nLmNv
-bT47IHJvYmhAa2VybmVsLm9yZw0KPiA+ID4gQ2M6IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3Jn
-OyBsaW51eC1zY3NpQHZnZXIua2VybmVsLm9yZzsNCj4gPiBrcnprQGtlcm5lbC5vcmc7DQo+ID4g
-PiBtYXJ0aW4ucGV0ZXJzZW5Ab3JhY2xlLmNvbTsga3dtYWQua2ltQHNhbXN1bmcuY29tOw0KPiA+
-ID4gc3RhbmxleS5jaHVAbWVkaWF0ZWsuY29tOyBjYW5nQGNvZGVhdXJvcmEub3JnOyBsaW51eC1z
-YW1zdW5nLQ0KPiA+ID4gc29jQHZnZXIua2VybmVsLm9yZzsgbGludXgtYXJtLWtlcm5lbEBsaXN0
-cy5pbmZyYWRlYWQub3JnOyBsaW51eC0NCj4gPiA+IGtlcm5lbEB2Z2VyLmtlcm5lbC5vcmcNCj4g
-PiA+IFN1YmplY3Q6IFJFOiBbUEFUQ0ggdjYgMC8xMF0gZXh5bm9zLXVmczogQWRkIHN1cHBvcnQg
-Zm9yIFVGUyBIQ0kNCj4gPiA+DQo+ID4gPg0KPiA+ID4gPg0KPiA+ID4gPiBUaGlzIHBhdGNoLXNl
-dCBpbnRyb2R1Y2VzIFVGUyAoVW5pdmVyc2FsIEZsYXNoIFN0b3JhZ2UpIGhvc3QNCj4gPiA+ID4g
-Y29udHJvbGxlciBzdXBwb3J0IGZvciBTYW1zdW5nIGZhbWlseSBTb0MuIE1vc3RseSwgaXQgY29u
-c2lzdHMgb2YgVUZTDQo+ID4gPiA+IFBIWSBhbmQgaG9zdCBzcGVjaWZpYyBkcml2ZXIuDQo+ID4g
-PiA+DQo+ID4gPiA+IC0gQ2hhbmdlcyBzaW5jZSB2NToNCj4gPiA+ID4gKiByZS1pbnRyb2R1Y2Ug
-dmFyaW91cyBxdWlja3Mgd2hpY2ggd2FzIHJlbW92ZWQgYmVjYXVzZSBvZiBubyBkcml2ZXINCj4g
-PiA+ID4gKiBjb25zdW1lciBvZiB0aG9zZSBxdWlya3MsIGluaXRpYWwgNCBwYXRjaGVzIGRvZXMg
-dGhlIHNhbWUuDQo+ID4gPiBZb3UgZm9yZ290IHRvIGFkZCB0aG9zZSBxdWlya3MgdG8gdWZzX2Zp
-eHVwcy4NCj4gPg0KPiA+IHVmc19maXh1cHMgYXJlIGZvciB1ZnMgX19kZXZpY2VfXyByZWxhdGVk
-IHF1aXJrcywgd2hhdCBJIGhhdmUgcG9zdGVkIGFyZSBhbGwNCj4gPiBob3N0IGNvbnRyb2xsZXIg
-cXVpcmtzLg0KPiBSaWdodC4NCj4gU28gd2hhdCBJIGFtIHNheWluZyBpcyB0aGF0IEkgYW0gbWlz
-c2luZyB0aGUgaGJhLT5xdWlya3MgfD0NCj4gVUZTSENJX1FVSVJLXzxuZXctcXVpcms+DQo+IElu
-IHVmcy1leHlub3MuYyBmb3IgZWFjaCBvbmUgb2YgdGhlIG5ldyBxdWlya3MuDQpPaCwgYnV0IHlv
-dSBhZGQgdGhvc2UgaW4gcGF0Y2ggIzkgLSANCk9rLiAgR290IGl0LiAgU29ycnkgYWJvdXQgdGhl
-IGNvbmZ1c2lvbi4NCg0KVGhhbmtzLA0KQXZyaQ0KDQo=
+On Fri, Apr 17, 2020 at 11:42:34AM +0100, Alan Maguire wrote:
+> The printk family of functions support printing specific pointer types
+> using %p format specifiers (MAC addresses, IP addresses, etc).  For
+> full details see Documentation/core-api/printk-formats.rst.
+> 
+> This RFC patchset proposes introducing a "print typed pointer" format
+> specifier "%pT<type>"; the type specified is then looked up in the BPF
+> Type Format (BTF) information provided for vmlinux to support display.
+
+This is great idea! Love it.
+
+> The above potential use cases hint at a potential reply to
+> a reasonable objection that such typed display should be
+> solved by tracing programs, where the in kernel tracing records
+> data and the userspace program prints it out.  While this
+> is certainly the recommended approach for most cases, I
+> believe having an in-kernel mechanism would be valuable
+> also.
+
+yep. This is useful for general purpose printk.
+The only piece that must be highlighted in the printk documentation
+that unlike the rest of BPF there are zero safety guarantees here.
+The programmer can pass wrong pointer to printk() and the kernel _will_ crash.
+
+>   struct sk_buff *skb = alloc_skb(64, GFP_KERNEL);
+> 
+>   pr_info("%pTN<struct sk_buff>", skb);
+
+why follow "TN" convention?
+I think "%p<struct sk_buff>" is much more obvious, unambiguous, and
+equally easy to parse.
+
+> ...gives us:
+> 
+> {{{.next=00000000c7916e9c,.prev=00000000c7916e9c,{.dev=00000000c7916e9c|.dev_scratch=0}}|.rbnode={.__rb_parent_color=0,
+
+This is unreadable.
+I like the choice of C style output, but please format it similar to drgn. Like:
+*(struct task_struct *)0xffff889ff8a08000 = {
+	.thread_info = (struct thread_info){
+		.flags = (unsigned long)0,
+		.status = (u32)0,
+	},
+	.state = (volatile long)1,
+	.stack = (void *)0xffffc9000c4dc000,
+	.usage = (refcount_t){
+		.refs = (atomic_t){
+			.counter = (int)2,
+		},
+	},
+	.flags = (unsigned int)4194560,
+	.ptrace = (unsigned int)0,
+
+I like Arnaldo's idea as well, but I prefer zeros to be dropped by default.
+Just like %d doesn't print leading zeros by default.
+"%p0<struct sk_buff>" would print them.
+
+> The patches are marked RFC for several reasons
+> 
+> - There's already an RFC patchset in flight dealing with BTF dumping;
+> 
+> https://www.spinics.net/lists/netdev/msg644412.html
+> 
+>   The reason I'm posting this is the approach is a bit different 
+>   and there may be ways of synthesizing the approaches.
+
+I see no overlap between patch sets whatsoever.
+Why do you think there is?
+
+> - The mechanism of vmlinux BTF initialization is not fit for purpose
+>   in a printk() setting as I understand it (it uses mutex locking
+>   to prevent multiple initializations of the BTF info).  A simple
+>   approach to support printk might be to simply initialize the
+>   BTF vmlinux case early in boot; it only needs to happen once.
+>   Any suggestions here would be great.
+> - BTF-based rendering is more complex than other printk() format
+>   specifier-driven methods; that said, because of its generality it
+>   does provide significant value I think
+> - More tests are needed.
+
+yep. Please make sure to add one to selftest/bpf as well.
+bpf maintainers don't run printk tests as part of workflow, so
+future BTF changes will surely break it if there are no selftests/bpf.
+
+Patch 2 isn't quite correct. Early parse of vmlinux BTF does not compute
+resolved_ids to save kernel memory. The trade off is execution time vs kernel
+memory. I believe that saving memory is more important here, since execution is
+not in critical path. There is __get_type_size(). It should be used in later
+patches instead of btf_type_id_size() that relies on pre-computed
+resolved_sizes and resolved_ids.
