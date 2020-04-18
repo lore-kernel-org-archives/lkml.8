@@ -2,91 +2,119 @@ Return-Path: <SRS0=3CHW=6C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C16FAC352BE
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 19:11:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95F86C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 19:13:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AA44221BE5
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 19:11:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7491320776
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 19:13:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Pbh2gwHB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728131AbgDRTL1 (ORCPT
+        id S1728152AbgDRTNl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 15:11:27 -0400
-Received: from mout.kundenserver.de ([212.227.126.133]:60367 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726751AbgDRTLZ (ORCPT
+        Sat, 18 Apr 2020 15:13:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46180 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726751AbgDRTNl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 15:11:25 -0400
-Received: from mail-qt1-f176.google.com ([209.85.160.176]) by
- mrelayeu.kundenserver.de (mreue010 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1MplLZ-1itsZi2HEb-00qEKQ for <linux-kernel@vger.kernel.org>; Sat, 18 Apr
- 2020 21:11:23 +0200
-Received: by mail-qt1-f176.google.com with SMTP id o10so5088085qtr.6
-        for <linux-kernel@vger.kernel.org>; Sat, 18 Apr 2020 12:11:23 -0700 (PDT)
-X-Gm-Message-State: AGi0Puatjr8ln1TD9BRyVfAaGoQzkASAwdA5xUhgHDazJl9E2N0VWnQm
-        PxWS/FX5AIeYSuoo1PWtlnlYCLwoIMD/VvWoHTs=
-X-Google-Smtp-Source: APiQypI5XWv+0v5CUPd6xcl5C/iLVZmU2I5uN+IAnHyrQzOErNeb/Vq46nsA5qUEtPCx2jH3AALWiUq8REeGQkl/9Vg=
-X-Received: by 2002:ac8:4c8d:: with SMTP id j13mr2801144qtv.142.1587237082474;
- Sat, 18 Apr 2020 12:11:22 -0700 (PDT)
+        Sat, 18 Apr 2020 15:13:41 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00C8AC061A0C;
+        Sat, 18 Apr 2020 12:13:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=1Xuy0hbaik5jnBw+JX74GiEbxwfdlzrwJ6CXAcCNKJ0=; b=Pbh2gwHBC+0n9j0XheYbIXwFQj
+        DLH/6PgobmCWmxlogha43zhUGSOtU89tXwjVH0o1Rho/S2T2EjJTPG70nmSsvSMvvLuonOlXdkiEF
+        yGJpGvfRz2PkLCG7L7Uy3m9lgzRa8kBf6U42WpkqqxMc3bt3hK4TRhmhD0zC1q2wsbCa9130nX/Tr
+        BTyG4Wi0/MtCFbctxHGNP3IoIr9AwF92URUTCaCCqCq81Wkivc6Os9SxUDznfhAgxmUgbP9sTqTjg
+        OQaGKDbNC89jhx9AoLbm18DH/xji73LaoYjLqiNC454x2nCt2c/0XKhdkme0M37SQxFbl37OzjXm7
+        wpboRveg==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jPsuI-0002hx-99; Sat, 18 Apr 2020 19:13:38 +0000
+Date:   Sat, 18 Apr 2020 12:13:38 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Joe Perches <joe@perches.com>
+Cc:     Randy Dunlap <rdunlap@infradead.org>, linux-kernel@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel@vger.kernel.org,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        linux-input@vger.kernel.org, Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        linux-nfs@vger.kernel.org,
+        Johannes Berg <johannes@sipsolutions.net>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>, linux-nvdimm@lists.01.org,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        linux-scsi@vger.kernel.org, target-devel@vger.kernel.org,
+        Zzy Wysm <zzy@zzywysm.com>
+Subject: Re: [PATCH 7/9] drivers/base: fix empty-body warnings in
+ devcoredump.c
+Message-ID: <20200418191338.GR5820@bombadil.infradead.org>
+References: <20200418184111.13401-1-rdunlap@infradead.org>
+ <20200418184111.13401-8-rdunlap@infradead.org>
+ <20200418185033.GQ5820@bombadil.infradead.org>
+ <b88d6f8b-e6af-7071-cefa-dc12e79116b6@infradead.org>
+ <d018321b0f281ff29efb04dd1496c8e6499812fb.camel@perches.com>
 MIME-Version: 1.0
-References: <20200418162157.50428-1-wenhu.wang@vivo.com> <20200418162157.50428-5-wenhu.wang@vivo.com>
-In-Reply-To: <20200418162157.50428-5-wenhu.wang@vivo.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Sat, 18 Apr 2020 21:11:06 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a0-7mLhGb=LCAQSTL4kNoGVcBcQOca=-tJkZAj1w2Bxsg@mail.gmail.com>
-Message-ID: <CAK8P3a0-7mLhGb=LCAQSTL4kNoGVcBcQOca=-tJkZAj1w2Bxsg@mail.gmail.com>
-Subject: Re: [PATCH v6,4/4] drivers: misc: new driver sram_uapi for user level
- SRAM access
-To:     Wang Wenhu <wenhu.wang@vivo.com>
-Cc:     gregkh <gregkh@linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Scott Wood <oss@buserror.net>,
-        christophe leroy <christophe.leroy@c-s.fr>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, kernel@vivo.com,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:uiior6wTE+Nc8Xy6ROxk5d7Gl0fCXFymWBmYxRzqnaUV9iQsD3Y
- 1SNbytK61CCgDvybTOJ+RZdkYAjRw60QdHDRRZvOpS+NDEVQDSz4MQDb+BfMqSHq4VZdM/4
- hQmrNOHlxN8vpCby0U8eJl6d8kW1cObz7iEyucSpWEAW2rBULnnELShjwsXUHPCqlS4W81E
- 6bKnPc4zuTILv8NOwa8Hw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:8pk3xkfJstQ=:AcY0KjOCY5BaKbtAFiyUnB
- GM40StUKPeB2olAHL+qSPDTHAKFRb+lJxHbZ8vNicgZmNeeqHLNEn34Edll9w6bAtGgbBcerF
- B682lDgKZWfwqvmyY0Jr0UdLVeiinJN5t+aSkuUm1UGQ91Q1nebJ7SrfWDGhVjDE8hCbv+qrK
- 27vPg0k2S4kHfIb0lEcum7JunZEh8Fi4Ze7POQHAHwwsfrIUsZ6Yynv45Lyrm05dwbS2eYs2x
- JOYok9uBeazSVeEd0Ucpk2+OQF8RQRHFtkv/Zh0DWMNQW3xml8CeBpOniWWJOnuBsXU9wj/hG
- kotOO7kYUE5Xh7OqBr4IgXX5fk8IiSK3tUDbmgExyVQ1KxHs0teQ12zAC/B+6l8bFjiLGQZqh
- gOar9Txv6tlVD25lHdwyuVgI4clnCr0BQMYCsglqi6KE3T0WHk/l0YhZGkSVQDcS6CcKtqBm6
- kAK9dq7TP+gb6UIooZM5QhUvMgM9hwoYAOT4qr6V4fygijAge2lVigsDitF4+hW5voVF+yybR
- GlDW4qvJo7jclj20QR3M9HMK1FT0vhlqMWbjU5NruT70ssYW+jcBNiCZ+zq9SEvOZqPG4H1nk
- ATxgYwqLCp21Gjq/4YYkxmb4rK8glNv8qbfjiR2w6TY9Der4WuBdUZePGLExrdktHGggtdylh
- WOa2kHZsobCPWv3RmC2hIEF5pSWTa191uM14fq+6bwSPxvhAUoWNjTwkDuTajFYvmc/OcZHCH
- bdf3cQgqWMfJLOIiL0B84nrvl98bn5DwuVhMqbL6KM5qKl7jbtAfDcc0E2VUGf4YT4nXGO1mS
- OcBfBm72A7A1N4koY7TGcDmWvN6pW00XXsdqwatxveYJQUUlgk=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d018321b0f281ff29efb04dd1496c8e6499812fb.camel@perches.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Apr 18, 2020 at 6:22 PM Wang Wenhu <wenhu.wang@vivo.com> wrote:
-> +#define DRIVER_NAME    "sram_uapi"
-> +
-> +#define SRAM_UAPI_IOCTL_SET_SRAM_TYPE  0
-> +#define SRAM_UAPI_IOCTL_ALLOC          1
-> +#define SRAM_UAPI_IOCTL_FREE           2
-> +
-> +struct res_info {
-> +       u32 offset;
-> +       u32 size;
-> +};
+On Sat, Apr 18, 2020 at 11:55:05AM -0700, Joe Perches wrote:
+> On Sat, 2020-04-18 at 11:53 -0700, Randy Dunlap wrote:
+> > On 4/18/20 11:50 AM, Matthew Wilcox wrote:
+> > > On Sat, Apr 18, 2020 at 11:41:09AM -0700, Randy Dunlap wrote:
+> > > > @@ -294,11 +295,11 @@ void dev_coredumpm(struct device *dev, s
+> > > >  
+> > > >  	if (sysfs_create_link(&devcd->devcd_dev.kobj, &dev->kobj,
+> > > >  			      "failing_device"))
+> > > > -		/* nothing - symlink will be missing */;
+> > > > +		do_empty(); /* nothing - symlink will be missing */
+> > > >  
+> > > >  	if (sysfs_create_link(&dev->kobj, &devcd->devcd_dev.kobj,
+> > > >  			      "devcoredump"))
+> > > > -		/* nothing - symlink will be missing */;
+> > > > +		do_empty(); /* nothing - symlink will be missing */
+> > > >  
+> > > >  	INIT_DELAYED_WORK(&devcd->del_wk, devcd_del);
+> > > >  	schedule_delayed_work(&devcd->del_wk, DEVCD_TIMEOUT);
+> > > 
+> > > Could just remove the 'if's?
+> > > 
+> > > +	sysfs_create_link(&devcd->devcd_dev.kobj, &dev->kobj,
+> > > +			"failing_device");
+> > > 
+> > 
+> > OK.
+> 
+> sysfs_create_link is __must_check
 
-This is of course not a proper ioctl interface at all, please see
-Documentation/driver-api/ioctl.rst for how to define the numbers
-in a uapi header file.
+Oh, I missed the declaration -- I just saw the definition.  This is a
+situation where __must_check hurts us and it should be removed.
 
-The offset/size arguments should probably be 64 bit wide.
+Or this code is wrong and it should be
 
-       Arnd
+	WARN(sysfs_create_link(&devcd->devcd_dev.kobj, &dev->kobj,
+			"failing_device");
+
+like drivers/pci/controller/vmd.c and drivers/i2c/i2c-mux.c
+
+Either way, the do_empty() construct feels like the wrong way of covering
+up the warning.
