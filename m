@@ -2,429 +2,159 @@ Return-Path: <SRS0=3CHW=6C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B728BC38A29
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 16:22:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27E96C38A2F
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 16:28:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8E7002054F
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 16:22:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01D3D20724
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 16:28:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="wqW/7aaG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727881AbgDRQWt (ORCPT
+        id S1726754AbgDRQ2n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 12:22:49 -0400
-Received: from m17618.mail.qiye.163.com ([59.111.176.18]:5644 "EHLO
-        m17618.mail.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727825AbgDRQWt (ORCPT
+        Sat, 18 Apr 2020 12:28:43 -0400
+Received: from mx0b-00128a01.pphosted.com ([148.163.139.77]:17194 "EHLO
+        mx0b-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726331AbgDRQ2m (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 12:22:49 -0400
-Received: from ubuntu.localdomain (unknown [58.251.74.226])
-        by m17618.mail.qiye.163.com (Hmail) with ESMTPA id 2D1144E14F9;
-        Sun, 19 Apr 2020 00:22:35 +0800 (CST)
-From:   Wang Wenhu <wenhu.wang@vivo.com>
-To:     gregkh@linuxfoundation.org, arnd@arndb.de,
-        linux-kernel@vger.kernel.org, oss@buserror.net,
-        christophe.leroy@c-s.fr, linuxppc-dev@lists.ozlabs.org
-Cc:     kernel@vivo.com, rdunlap@infradead.org,
-        Wang Wenhu <wenhu.wang@vivo.com>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH v6,4/4] drivers: misc: new driver sram_uapi for user level SRAM  access
-Date:   Sat, 18 Apr 2020 09:21:57 -0700
-Message-Id: <20200418162157.50428-5-wenhu.wang@vivo.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200418162157.50428-1-wenhu.wang@vivo.com>
-References: <20200418162157.50428-1-wenhu.wang@vivo.com>
-X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgYFAkeWUFZSFVLS05LS0tKSk9PT0tCSVlXWShZQU
-        hPN1dZLVlBSVdZCQ4XHghZQVk1NCk2OjckKS43PlkG
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Ojo6OQw5DjgxFg05OCkBLDUd
-        QwsKFCFVSlVKTkNMSUlNQk5DTEpLVTMWGhIXVQweFRMOVQwaFRw7DRINFFUYFBZFWVdZEgtZQVlO
-        Q1VJTkpVTE9VSUlNWVdZCAFZQUpLQk9CNwY+
-X-HM-Tid: 0a718e194eef9376kuws2d1144e14f9
+        Sat, 18 Apr 2020 12:28:42 -0400
+Received: from pps.filterd (m0167091.ppops.net [127.0.0.1])
+        by mx0b-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03IGR8sQ007648;
+        Sat, 18 Apr 2020 12:28:38 -0400
+Received: from nam11-co1-obe.outbound.protection.outlook.com (mail-co1nam11lp2170.outbound.protection.outlook.com [104.47.56.170])
+        by mx0b-00128a01.pphosted.com with ESMTP id 30fuab945j-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sat, 18 Apr 2020 12:28:38 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=BLTftFcMHfIArITX4nbNfOYe5IRXoSntXHE/1ZEERqYg/FDo1G0n8nJHLC4jQyQ4+BSbR8k5nx41WBP3iubc9ztZcSwLMSs6eAw5/ltVMKKdU6yEGxM6WCHgfSLDe5QD1yScCRIR/fvKIgseqqR3vEbMLYiIoR0nz3RQt1+BZpLz8kWNcXemuaS8URbaewmsvmz9leBnC08CJUwzEpZCExbs1SJSNazvFqtqjJ1Ovcv5vYOMwO4R29wlSv4n9z0kXsjcaeWhtzwFSZG2J3OjdHG9YwtUwwUz6s4o7uaAndc4oRV0UmhNl35BGx2ZDv7MAUpk6K/2Pc+NhRDm8krE2Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=LrdwHfWN4LBf8WpAZ6p8bvCffmk/LjveEJaEFWOEMw4=;
+ b=BsUHKeK4Y+bIOHYeBpckhMpslkaICgbPDj63A9L9jNt1zfqmvKfnThF0F2gn18yWopUiOLwMiZ35GxPMYvhsbwCtOpOWMZmhg5aE6usrEDeGhEmd1/dtqrH4pfvhsX/LfmfbE1BMzxzbRHaoXo5PqVxyeEUFTez2DjyFN9BpZA+0MxmQeT+CrP9eCWnhjm/tbh0VOxN+X511WK+PzL5TZ6+mxje+ofG1eJZAVNcq94hB1Qx9lTWK+VpWC8MPtmCoUSYY7HCDhiF1n8RQML/dDtPWTU666YGuh+yPqCERNgVurqNrzZ39HGlCo8RyT4J3cIRU/QJXNulim86lt4bh1g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=analog.com; dmarc=pass action=none header.from=analog.com;
+ dkim=pass header.d=analog.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=LrdwHfWN4LBf8WpAZ6p8bvCffmk/LjveEJaEFWOEMw4=;
+ b=wqW/7aaGT5Qw4cT8UHH19mFedn+nERiS+tjlsrpiTZ3zfxbcV0tYm9JNGD5Pdx6Ri8qySDsUj5dJU3jIMPp8xylXbRozaJjsVw/j6tIiQDf/JmhhSI0NuOK7NMzGihIrYqs+6uJC9nMufIC8g7nvNqoMrMvAT39yRBYqzbao92w=
+Received: from DM6PR03MB4411.namprd03.prod.outlook.com (2603:10b6:5:10f::14)
+ by DM6PR03MB4937.namprd03.prod.outlook.com (2603:10b6:5:1f1::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.17; Sat, 18 Apr
+ 2020 16:28:35 +0000
+Received: from DM6PR03MB4411.namprd03.prod.outlook.com
+ ([fe80::c47f:ceee:cfda:6a7f]) by DM6PR03MB4411.namprd03.prod.outlook.com
+ ([fe80::c47f:ceee:cfda:6a7f%3]) with mapi id 15.20.2921.027; Sat, 18 Apr 2020
+ 16:28:35 +0000
+From:   "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
+To:     "jic23@kernel.org" <jic23@kernel.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>
+Subject: Re: [PATCH] iio: core: fail early in iio_device_alloc() if we can't
+ get a device id
+Thread-Topic: [PATCH] iio: core: fail early in iio_device_alloc() if we can't
+ get a device id
+Thread-Index: AQHWE+sov3fwJDv9n0+XOleqcT5z7qh/A3eAgAASnoA=
+Date:   Sat, 18 Apr 2020 16:28:35 +0000
+Message-ID: <8df8a0d7d541b1f4f2a05f1191a148d3b56effe6.camel@analog.com>
+References: <20200416123331.68790-1-alexandru.ardelean@analog.com>
+         <20200418162555.4b6f4b8d@archlinux>
+In-Reply-To: <20200418162555.4b6f4b8d@archlinux>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [188.27.130.47]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 48571f93-9bc8-46fb-3f33-08d7e3b58b15
+x-ms-traffictypediagnostic: DM6PR03MB4937:
+x-microsoft-antispam-prvs: <DM6PR03MB4937DBC4EEB320F1706BA262F9D60@DM6PR03MB4937.namprd03.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6790;
+x-forefront-prvs: 0377802854
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR03MB4411.namprd03.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(366004)(376002)(39850400004)(136003)(346002)(396003)(54906003)(2616005)(71200400001)(36756003)(26005)(6486002)(478600001)(6506007)(4326008)(8936002)(5660300002)(64756008)(2906002)(66556008)(6916009)(186003)(76116006)(66946007)(66446008)(91956017)(66476007)(316002)(86362001)(8676002)(6512007)(81156014);DIR:OUT;SFP:1101;
+received-spf: None (protection.outlook.com: analog.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: Wuh3o4/CGJwtUmKlA/XGuoaKB9zK6XKCpri2gpKfswy0jyY70Hq3aX5KxgpaPoF/4rtBDw8fiN5t4o5FaPJaMp1yoaD/dpicd10hZcXQa9r5g5uiLMu7D3dRjdbZtEaBqU7MSvb/XPz9BJWg0WpQ5PHYtle3Xgb3ugpSYZcSODF52GrUVs/qIHbPN3PhYM7mqQFQ9X65gyKxBxBsAedFqcaKgSxgNzMj5vZDEqxgVeva4kjEFE8DXq6X4WAjuSRaOZmhVDL+REYlPQ4Ld4L+KAy5Mr4coZzvuYHBrew+Jw/BkECYywn4bG3dH1sa04zr0ykHmnyEKCIzcI5OihNfoVL10sD98yeeeD6vXaATcc89rVvg4bylIy5lfC4EcglLvgXmtTx/U94DAjAxzyNL8pzOq8KcYz4anOF0A5Nkz54iIhTj1KvbUa6hfHFAC8RX
+x-ms-exchange-antispam-messagedata: f9EcKP8WR7ZsVE6zvX5ol3JN5LH4GQPIeM7kB1nkSOc3k/Zw611hIzVX3MJD1EWx4gWiyMNQYvPvxIlQHC6SU9wmsl4YzxPSCxVrVPFz7n7+pVWhLB+2LECbcejU0utc/aBTMFjnUfunOJKqqR5qrw==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <0BEF4A78091CF649A9DC79AB06D8CAD5@namprd03.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: analog.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 48571f93-9bc8-46fb-3f33-08d7e3b58b15
+X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Apr 2020 16:28:35.7026
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: YNa4GRfEyrcBWkkvHSuoC3Qeb/n+3if44iaKujoDzw3SiBV0OXv3sK2xy3tKbj7kX9qbT0I8HJm6pXk0r088MswDSX+VmUy9CAAdqr5gYOw=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR03MB4937
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-18_07:2020-04-17,2020-04-18 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 suspectscore=0
+ mlxscore=0 bulkscore=0 impostorscore=0 spamscore=0 lowpriorityscore=0
+ mlxlogscore=999 adultscore=0 phishscore=0 priorityscore=1501
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004180137
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A generic User-Kernel interface that allows a misc device created
-by it to support file-operations of ioctl and mmap to access SRAM
-memory from user level. Different kinds of SRAM alloction and free
-APIs could be added to the available array and could be configured
-from user level.
-
-Signed-off-by: Wang Wenhu <wenhu.wang@vivo.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Christophe Leroy <christophe.leroy@c-s.fr>
-Cc: Scott Wood <oss@buserror.net>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Randy Dunlap <rdunlap@infradead.org>
-Cc: linuxppc-dev@lists.ozlabs.org
----
-Notes:
-	Implement the interface driver for SRAM access from user
-	level upon the comments from Scott.
-	The former versions(1-5) were implemented with UIO, but for this
-	version, UIO is not used as suggested by Scott.
-Links:
-	https://lore.kernel.org/patchwork/patch/1226475/
-	https://lore.kernel.org/patchwork/patch/1225798/
----
- drivers/misc/Kconfig     |  25 ++++
- drivers/misc/Makefile    |   1 +
- drivers/misc/sram_uapi.c | 294 +++++++++++++++++++++++++++++++++++++++
- 3 files changed, 320 insertions(+)
- create mode 100644 drivers/misc/sram_uapi.c
-
-diff --git a/drivers/misc/Kconfig b/drivers/misc/Kconfig
-index 99e151475d8f..e6897ba22684 100644
---- a/drivers/misc/Kconfig
-+++ b/drivers/misc/Kconfig
-@@ -465,6 +465,31 @@ config PVPANIC
- 	  a paravirtualized device provided by QEMU; it lets a virtual machine
- 	  (guest) communicate panic events to the host.
- 
-+config SRAM_UAPI
-+	bool "Generic SRAM User Level API driver"
-+	help
-+	  This driver allows you to create a misc device which could be used
-+	  as an interface to allocate SRAM memory from user level.
-+
-+	  It is extremely helpful for some user space applications that require
-+	  high performance memory accesses.
-+
-+	  If unsure, say N.
-+
-+if SRAM_UAPI
-+
-+config FSL_85XX_SRAM_UAPI
-+	bool "Freescale MPC85xx Cache-SRAM UAPI support"
-+	depends on FSL_SOC_BOOKE && PPC32
-+	select FSL_85XX_CACHE_SRAM
-+	help
-+	  This adds the Freescale MPC85xx Cache-SRAM memory allocation and
-+	  free interfaces to the available SRAM API array, which finally could
-+	  be used from user level to access the Freescale MPC85xx Cache-SRAM
-+	  memory.
-+
-+endif
-+
- source "drivers/misc/c2port/Kconfig"
- source "drivers/misc/eeprom/Kconfig"
- source "drivers/misc/cb710/Kconfig"
-diff --git a/drivers/misc/Makefile b/drivers/misc/Makefile
-index 9abf2923d831..794447ca07ca 100644
---- a/drivers/misc/Makefile
-+++ b/drivers/misc/Makefile
-@@ -46,6 +46,7 @@ obj-$(CONFIG_VMWARE_VMCI)	+= vmw_vmci/
- obj-$(CONFIG_LATTICE_ECP3_CONFIG)	+= lattice-ecp3-config.o
- obj-$(CONFIG_SRAM)		+= sram.o
- obj-$(CONFIG_SRAM_EXEC)		+= sram-exec.o
-+obj-$(CONFIG_SRAM_UAPI)		+= sram_uapi.o
- obj-y				+= mic/
- obj-$(CONFIG_GENWQE)		+= genwqe/
- obj-$(CONFIG_ECHO)		+= echo/
-diff --git a/drivers/misc/sram_uapi.c b/drivers/misc/sram_uapi.c
-new file mode 100644
-index 000000000000..53f818e1898d
---- /dev/null
-+++ b/drivers/misc/sram_uapi.c
-@@ -0,0 +1,294 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2020 Vivo Communication Technology Co. Ltd.
-+ * Copyright (C) 2020 Wang Wenhu <wenhu.wang@vivo.com>
-+ * All rights reserved.
-+ */
-+
-+#include <linux/module.h>
-+#include <linux/kernel.h>
-+#include <linux/slab.h>
-+#include <linux/mm.h>
-+#include <linux/miscdevice.h>
-+#include <linux/fs.h>
-+#include <linux/uaccess.h>
-+
-+#define DRIVER_NAME	"sram_uapi"
-+
-+#define SRAM_UAPI_IOCTL_SET_SRAM_TYPE	0
-+#define SRAM_UAPI_IOCTL_ALLOC		1
-+#define SRAM_UAPI_IOCTL_FREE		2
-+
-+struct res_info {
-+	u32 offset;
-+	u32 size;
-+};
-+
-+struct sram_resource {
-+	struct list_head	list;
-+	struct res_info		info;
-+	phys_addr_t		phys;
-+	void			*virt;
-+	struct vm_area_struct	*vma;
-+	struct sram_uapi	*parent;
-+};
-+
-+struct sram_api {
-+	u32 type;
-+	long (*sram_alloc)(u32 size, phys_addr_t *phys, u32 align);
-+	void (*sram_free)(void *ptr);
-+};
-+
-+struct sram_uapi {
-+	struct list_head	res_list;
-+	struct sram_api		*sa;
-+};
-+
-+enum SRAM_TYPE {
-+#ifdef FSL_85XX_CACHE_SRAM
-+	SRAM_TYPE_FSL_85XX_CACHE_SRAM,
-+#endif
-+	SRAM_TYPE_MAX,
-+};
-+
-+/* keep the SRAM_TYPE value the same with array index */
-+static struct sram_api srams[] = {
-+#ifdef FSL_85XX_CACHE_SRAM
-+	{
-+		.type		= SRAM_TYPE_FSL_85XX_CACHE_SRAM,
-+		.sram_alloc	= mpc85xx_cache_sram_alloc,
-+		.sram_free	= mpc85xx_cache_sram_free,
-+	},
-+#endif
-+};
-+
-+static void sram_uapi_res_insert(struct sram_uapi *uapi,
-+				 struct sram_resource *res)
-+{
-+	struct sram_resource *cur, *tmp;
-+	struct list_head *head = &uapi->res_list;
-+
-+	list_for_each_entry_safe(cur, tmp, head, list) {
-+		if (&tmp->list != head &&
-+		    (cur->info.offset + cur->info.size + res->info.size <=
-+		    tmp->info.offset)) {
-+			res->info.offset = cur->info.offset + cur->info.size;
-+			res->parent = uapi;
-+			list_add(&res->list, &cur->list);
-+			return;
-+		}
-+	}
-+
-+	if (list_empty(head))
-+		res->info.offset = 0;
-+	else {
-+		tmp = list_last_entry(head, struct sram_resource, list);
-+		res->info.offset = tmp->info.offset + tmp->info.size;
-+	}
-+	list_add_tail(&res->list, head);
-+}
-+
-+static struct sram_resource *sram_uapi_res_delete(struct sram_uapi *uapi,
-+						  struct res_info *info)
-+{
-+	struct sram_resource *res, *tmp;
-+
-+	list_for_each_entry_safe(res, tmp, &uapi->res_list, list) {
-+		if (res->info.offset == info->offset) {
-+			list_del(&res->list);
-+			res->parent = NULL;
-+			return res;
-+		}
-+	}
-+
-+	return NULL;
-+}
-+
-+static struct sram_resource *sram_uapi_find_res(struct sram_uapi *uapi,
-+						u32 offset)
-+{
-+	struct sram_resource *res;
-+
-+	list_for_each_entry(res, &uapi->res_list, list) {
-+		if (res->info.offset == offset)
-+			return res;
-+	}
-+
-+	return NULL;
-+}
-+
-+static int sram_uapi_open(struct inode *inode, struct file *filp)
-+{
-+	struct sram_uapi *uapi;
-+
-+	uapi = kzalloc(sizeof(*uapi), GFP_KERNEL);
-+	if (!uapi)
-+		return -ENOMEM;
-+
-+	INIT_LIST_HEAD(&uapi->res_list);
-+	filp->private_data = uapi;
-+
-+	return 0;
-+}
-+
-+static long sram_uapi_ioctl(struct file *filp, unsigned int cmd,
-+			    unsigned long arg)
-+{
-+	struct sram_uapi *uapi = filp->private_data;
-+	struct sram_resource *res;
-+	struct res_info info;
-+	long ret = -EINVAL;
-+	int size;
-+	u32 type;
-+
-+	if (!uapi)
-+		return ret;
-+
-+	switch (cmd) {
-+	case SRAM_UAPI_IOCTL_SET_SRAM_TYPE:
-+		size = copy_from_user((void *)&type, (const void __user *)arg,
-+				      sizeof(type));
-+		if (type >= SRAM_TYPE_MAX)
-+			return -EINVAL;
-+
-+		uapi->sa = &srams[type];
-+
-+		ret = 0;
-+		break;
-+
-+	case SRAM_UAPI_IOCTL_ALLOC:
-+		if (!uapi->sa)
-+			return -EINVAL;
-+
-+		res = kzalloc(sizeof(*res), GFP_KERNEL);
-+		if (!res)
-+			return -ENOMEM;
-+
-+		size = copy_from_user((void *)&res->info,
-+				      (const void __user *)arg,
-+				      sizeof(res->info));
-+		if (!PAGE_ALIGNED(res->info.size) || !res->info.size)
-+			return -EINVAL;
-+
-+		res->virt = (void *)uapi->sa->sram_alloc(res->info.size,
-+					&res->phys,
-+					roundup_pow_of_two(res->info.size));
-+		if (!res->virt) {
-+			kfree(res);
-+			return -ENOMEM;
-+		}
-+
-+		sram_uapi_res_insert(uapi, res);
-+		size = copy_to_user((void __user *)arg,
-+				    (const void *)&res->info,
-+				    sizeof(res->info));
-+
-+		ret = 0;
-+		break;
-+
-+	case SRAM_UAPI_IOCTL_FREE:
-+		if (!uapi->sa)
-+			return -EINVAL;
-+
-+		size = copy_from_user((void *)&info, (const void __user *)arg,
-+				      sizeof(info));
-+
-+		res = sram_uapi_res_delete(uapi, &info);
-+		if (!res) {
-+			pr_err("error no sram resource found\n");
-+			return -EINVAL;
-+		}
-+
-+		uapi->sa->sram_free(res->virt);
-+		kfree(res);
-+
-+		ret = 0;
-+		break;
-+
-+	default:
-+		pr_err("error no cmd not supported\n");
-+		break;
-+	}
-+
-+	return ret;
-+}
-+
-+static int sram_uapi_mmap(struct file *filp, struct vm_area_struct *vma)
-+{
-+	struct sram_uapi *uapi = filp->private_data;
-+	struct sram_resource *res;
-+
-+	res = sram_uapi_find_res(uapi, vma->vm_pgoff);
-+	if (!res)
-+		return -EINVAL;
-+
-+	if (vma->vm_end - vma->vm_start > res->info.size)
-+		return -EINVAL;
-+
-+	vma->vm_page_prot = pgprot_noncached(vma->vm_page_prot);
-+
-+	return remap_pfn_range(vma, vma->vm_start,
-+				res->phys >> PAGE_SHIFT,
-+				vma->vm_end - vma->vm_start,
-+				vma->vm_page_prot);
-+}
-+
-+static void sram_uapi_res_release(struct sram_uapi *uapi)
-+{
-+	struct sram_resource *res, *tmp;
-+
-+	list_for_each_entry_safe(res, tmp, &uapi->res_list, list) {
-+		list_del(&res->list);
-+		uapi->sa->sram_free(res->virt);
-+		kfree(res);
-+	}
-+}
-+
-+static int sram_uapi_release(struct inode *inodp, struct file *filp)
-+{
-+	struct sram_uapi *uapi = filp->private_data;
-+
-+	sram_uapi_res_release(uapi);
-+
-+	kfree(uapi);
-+
-+	return 0;
-+}
-+
-+static const struct file_operations sram_uapi_ops = {
-+	.owner = THIS_MODULE,
-+	.open = sram_uapi_open,
-+	.unlocked_ioctl = sram_uapi_ioctl,
-+	.mmap = sram_uapi_mmap,
-+	.release = sram_uapi_release,
-+};
-+
-+static struct miscdevice sram_uapi_miscdev = {
-+	MISC_DYNAMIC_MINOR,
-+	"sram-uapi",
-+	&sram_uapi_ops,
-+};
-+
-+static int __init sram_uapi_init(void)
-+{
-+	int ret;
-+
-+	ret = misc_register(&sram_uapi_miscdev);
-+	if (ret)
-+		pr_err("failed to register sram_uapi misc device\n");
-+
-+	return ret;
-+}
-+
-+static void __exit sram_uapi_exit(void)
-+{
-+	misc_deregister(&sram_uapi_miscdev);
-+}
-+
-+module_init(sram_uapi_init);
-+module_exit(sram_uapi_exit);
-+
-+MODULE_AUTHOR("Wang Wenhu <wenhu.wang@vivo.com>");
-+MODULE_DESCRIPTION("SRAM User API Driver");
-+MODULE_ALIAS("platform:" DRIVER_NAME);
-+MODULE_LICENSE("GPL v2");
--- 
-2.17.1
-
+T24gU2F0LCAyMDIwLTA0LTE4IGF0IDE2OjI1ICswMTAwLCBKb25hdGhhbiBDYW1lcm9uIHdyb3Rl
+Og0KPiBbRXh0ZXJuYWxdDQo+IA0KPiBPbiBUaHUsIDE2IEFwciAyMDIwIDE1OjMzOjMxICswMzAw
+DQo+IEFsZXhhbmRydSBBcmRlbGVhbiA8YWxleGFuZHJ1LmFyZGVsZWFuQGFuYWxvZy5jb20+IHdy
+b3RlOg0KPiANCj4gPiBUaGlzIGNoYW5nZSBtb3ZlcyB0aGUgJ2lkYV9zaW1wbGVfZ2V0KCknIGNh
+bGwgdG8gYmUgdGhlIGZpcnN0IG9uZSBpbg0KPiA+IGlpb19kZXZpY2VfYWxsb2MoKS4gSXQgY2xl
+YW5zIHVwIHRoZSBlcnJvciBwYXRoIGEgYml0IGFzIHdlIGRvbid0IG5lZWQgdG8NCj4gPiBjYWxs
+IGFueSBrZnJlZShkZXYpIGFueW1vcmUuIFdlIGFsbG9jYXRlIGFuIElJTyBkZXZpY2Ugb25seSBp
+ZiB3ZSBoYXZlDQo+ID4gbWFuYWdlZCB0byBvYnRhaW4gYSBkZXZpY2UgSUQuDQo+IA0KPiBXZSBq
+dXN0IHRocmV3IGF3YXkgYW4gSUQgaWYgdGhlIGt6YWxsb2MgdGhlbiBmYWlscyAob3IgYW0gSSBt
+aXNzaW5nDQo+IHNvbWV0aGluZz8pDQo+IFdpdGggdGhhdCBmaXhlZCBJIGNhbid0IHNlZSB0aGlz
+IGFzIGJlaW5nIG11Y2ggb2YgYW4gaW1wcm92ZW1lbnQuDQo+IEVpdGhlciB3YXkgb25lIGFsbG9j
+YXRpb24gbmVlZHMgdG8gYmUgdGlkaWVkIHVwLg0KDQpvb3BzLA0KdGhlIGlkYSB0aGluZ2kgZWx1
+ZGVkIG1lIHdoZW4gaSB3cm90ZSB0aGlzOw0KYXBvbG9naWVzIGZvciB0aGUgbm9pc2UNCg0KDQo+
+IA0KPiBKb25hdGhhbg0KPiANCj4gPiBTaWduZWQtb2ZmLWJ5OiBBbGV4YW5kcnUgQXJkZWxlYW4g
+PGFsZXhhbmRydS5hcmRlbGVhbkBhbmFsb2cuY29tPg0KPiA+IC0tLQ0KPiA+ICBkcml2ZXJzL2lp
+by9pbmR1c3RyaWFsaW8tY29yZS5jIHwgMTkgKysrKysrKysrKy0tLS0tLS0tLQ0KPiA+ICAxIGZp
+bGUgY2hhbmdlZCwgMTAgaW5zZXJ0aW9ucygrKSwgOSBkZWxldGlvbnMoLSkNCj4gPiANCj4gPiBk
+aWZmIC0tZ2l0IGEvZHJpdmVycy9paW8vaW5kdXN0cmlhbGlvLWNvcmUuYyBiL2RyaXZlcnMvaWlv
+L2luZHVzdHJpYWxpby0NCj4gPiBjb3JlLmMNCj4gPiBpbmRleCBmNGRhZjE5ZjJhM2IuLjdjMWQ4
+YTNhYjJmMyAxMDA2NDQNCj4gPiAtLS0gYS9kcml2ZXJzL2lpby9pbmR1c3RyaWFsaW8tY29yZS5j
+DQo+ID4gKysrIGIvZHJpdmVycy9paW8vaW5kdXN0cmlhbGlvLWNvcmUuYw0KPiA+IEBAIC0xNDk0
+LDYgKzE0OTQsMTQgQEAgc3RydWN0IGlpb19kZXYgKmlpb19kZXZpY2VfYWxsb2MoaW50IHNpemVv
+Zl9wcml2KQ0KPiA+ICB7DQo+ID4gIAlzdHJ1Y3QgaWlvX2RldiAqZGV2Ow0KPiA+ICAJc2l6ZV90
+IGFsbG9jX3NpemU7DQo+ID4gKwlpbnQgaWQ7DQo+ID4gKw0KPiA+ICsJaWQgPSBpZGFfc2ltcGxl
+X2dldCgmaWlvX2lkYSwgMCwgMCwgR0ZQX0tFUk5FTCk7DQo+ID4gKwlpZiAoaWQgPCAwKSB7DQo+
+ID4gKwkJLyogY2Fubm90IHVzZSBhIGRldl9lcnIgYXMgdGhlIG5hbWUgaXNuJ3QgYXZhaWxhYmxl
+ICovDQo+ID4gKwkJcHJfZXJyKCJmYWlsZWQgdG8gZ2V0IGRldmljZSBpZFxuIik7DQo+ID4gKwkJ
+cmV0dXJuIE5VTEw7DQo+ID4gKwl9DQo+ID4gIA0KPiA+ICAJYWxsb2Nfc2l6ZSA9IHNpemVvZihz
+dHJ1Y3QgaWlvX2Rldik7DQo+ID4gIAlpZiAoc2l6ZW9mX3ByaXYpIHsNCj4gPiBAQCAtMTUwNiw2
+ICsxNTE0LDggQEAgc3RydWN0IGlpb19kZXYgKmlpb19kZXZpY2VfYWxsb2MoaW50IHNpemVvZl9w
+cml2KQ0KPiA+ICAJZGV2ID0ga3phbGxvYyhhbGxvY19zaXplLCBHRlBfS0VSTkVMKTsNCj4gPiAg
+DQo+ID4gIAlpZiAoZGV2KSB7DQo+ID4gKwkJZGV2LT5pZCA9IGlkOw0KPiA+ICsJCWRldl9zZXRf
+bmFtZSgmZGV2LT5kZXYsICJpaW86ZGV2aWNlJWQiLCBkZXYtPmlkKTsNCj4gPiAgCQlkZXYtPmRl
+di5ncm91cHMgPSBkZXYtPmdyb3VwczsNCj4gPiAgCQlkZXYtPmRldi50eXBlID0gJmlpb19kZXZp
+Y2VfdHlwZTsNCj4gPiAgCQlkZXYtPmRldi5idXMgPSAmaWlvX2J1c190eXBlOw0KPiA+IEBAIC0x
+NTE0LDE1ICsxNTI0LDYgQEAgc3RydWN0IGlpb19kZXYgKmlpb19kZXZpY2VfYWxsb2MoaW50IHNp
+emVvZl9wcml2KQ0KPiA+ICAJCW11dGV4X2luaXQoJmRldi0+bWxvY2spOw0KPiA+ICAJCW11dGV4
+X2luaXQoJmRldi0+aW5mb19leGlzdF9sb2NrKTsNCj4gPiAgCQlJTklUX0xJU1RfSEVBRCgmZGV2
+LT5jaGFubmVsX2F0dHJfbGlzdCk7DQo+ID4gLQ0KPiA+IC0JCWRldi0+aWQgPSBpZGFfc2ltcGxl
+X2dldCgmaWlvX2lkYSwgMCwgMCwgR0ZQX0tFUk5FTCk7DQo+ID4gLQkJaWYgKGRldi0+aWQgPCAw
+KSB7DQo+ID4gLQkJCS8qIGNhbm5vdCB1c2UgYSBkZXZfZXJyIGFzIHRoZSBuYW1lIGlzbid0IGF2
+YWlsYWJsZSAqLw0KPiA+IC0JCQlwcl9lcnIoImZhaWxlZCB0byBnZXQgZGV2aWNlIGlkXG4iKTsN
+Cj4gPiAtCQkJa2ZyZWUoZGV2KTsNCj4gPiAtCQkJcmV0dXJuIE5VTEw7DQo+ID4gLQkJfQ0KPiA+
+IC0JCWRldl9zZXRfbmFtZSgmZGV2LT5kZXYsICJpaW86ZGV2aWNlJWQiLCBkZXYtPmlkKTsNCj4g
+PiAgCQlJTklUX0xJU1RfSEVBRCgmZGV2LT5idWZmZXJfbGlzdCk7DQo+ID4gIAl9DQo+ID4gIA0K
