@@ -2,157 +2,145 @@ Return-Path: <SRS0=3CHW=6C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AC73C2D0EF
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 10:55:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E356C352BE
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 10:55:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 633B722240
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 10:55:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47EA12220A
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 10:55:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="IYzPk/Zs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726050AbgDRKy6 (ORCPT
+        id S1726136AbgDRKz2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 06:54:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54646 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725923AbgDRKy5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 06:54:57 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99F4DC061A0C;
-        Sat, 18 Apr 2020 03:54:57 -0700 (PDT)
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1jPl7c-0007eh-JE; Sat, 18 Apr 2020 12:54:52 +0200
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 256FE1C03A9;
-        Sat, 18 Apr 2020 12:54:51 +0200 (CEST)
-Date:   Sat, 18 Apr 2020 10:54:50 -0000
-From:   "tip-bot2 for Tony Luck" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/urgent] x86/split_lock: Bits in IA32_CORE_CAPABILITIES are
- not architectural
-Cc:     Tony Luck <tony.luck@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200416205754.21177-3-tony.luck@intel.com>
-References: <20200416205754.21177-3-tony.luck@intel.com>
+        Sat, 18 Apr 2020 06:55:28 -0400
+Received: from mail-eopbgr50048.outbound.protection.outlook.com ([40.107.5.48]:23175
+        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726006AbgDRKz1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 06:55:27 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=F8R+BnJoEUBUQpUFGbZSSf+2/vi8NKa11KOc+AVxCjVGpoXTP1Mp0zvqsq33YKxSZf5n8TIoVQEwv6v+XA/DuFPQHo49Cxb3tTSNHxPZA65nOjNmkejFGlhETlvzK+CgnApMtlX5WO6U8SvYXyLM++PEybuGU+WevtNs6F0KJiNVXTdCDqrb6EW1mmfq29Oz9LA0/Qef9tOTRNWSb0Q7auvovkrLeIViyBtekU9ydKEmdeSsnM/OQ2/k6OXUzzIXY4gnBlU5kfd06IA0A82EKJqVKzMhFbl+YjvyZhwVoosnndV1tgTAzJwzzu+5csAZ1WJMpNg4JdnywhCq+ZboIg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=u3pQ5qbh6fZKhTz+r3wfdBfyccKt2U9UYOERnNSZgSc=;
+ b=Qz+4XwtgNPZoHj2vWXR+q9Gdv3/wtDYA1AjMsEbrLNyXt3nyQacYbs4xWf8U9yoZniV+B7u3+BxUXfEmhVrJUCZmyqTLcJdRJi/K1MYZkMeIPCjwsF6gDyDGULvwKzocT1HhkTJp1GuGgb3G2m4WQUHjTm3TBc6y58NOhO/Es5jGBCJaXNv9/8UQCW5ZBA15dWWBKKot1jgwDz2dUE8f98eUJF9kNEExgcfyBhclM0pAubl0+4vB9Q/FQJFR/3Qv9Tp3sh/ca/TX5yLiQmL3ELQXF0Qe0YyAgGI18thbMkyozSQK8s5FsWfzNwkVp2MUiO+4/yuXhCAqrWs12lVzJw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
+ dkim=pass header.d=oss.nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
+ s=selector2-NXP1-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=u3pQ5qbh6fZKhTz+r3wfdBfyccKt2U9UYOERnNSZgSc=;
+ b=IYzPk/ZsWaMtMXQ7PN9id7lUyXN8DsYdTr0PbW6TkTSlN93N242zJEPl7vFNz1SdRIesH43kPKqWyGbesAzsGvSUFPc5vukdjHsc5R8AHGij25/6uo8xYwhKc4PXz6A4+6ioxrYFFNY4BJaNI9xnl4YTjYdfpiBVRSo5KhUYJxo=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=calvin.johnson@oss.nxp.com; 
+Received: from AM0PR04MB5636.eurprd04.prod.outlook.com (2603:10a6:208:130::22)
+ by AM0PR04MB6899.eurprd04.prod.outlook.com (2603:10a6:208:183::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2921.29; Sat, 18 Apr
+ 2020 10:55:22 +0000
+Received: from AM0PR04MB5636.eurprd04.prod.outlook.com
+ ([fe80::c4fe:d4a4:f0e1:a75b]) by AM0PR04MB5636.eurprd04.prod.outlook.com
+ ([fe80::c4fe:d4a4:f0e1:a75b%4]) with mapi id 15.20.2921.027; Sat, 18 Apr 2020
+ 10:55:22 +0000
+From:   Calvin Johnson <calvin.johnson@oss.nxp.com>
+To:     linux.cj@gmail.com, Jeremy Linton <jeremy.linton@arm.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        Cristi Sovaiala <cristian.sovaiala@nxp.com>,
+        Florin Laurentiu Chiculita <florinlaurentiu.chiculita@nxp.com>,
+        Ioana Ciornei <ioana.ciornei@nxp.com>,
+        Madalin Bucur <madalin.bucur@oss.nxp.com>
+Cc:     netdev@vger.kernel.org, Laurentiu Tudor <laurentiu.tudor@nxp.com>,
+        linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Diana Madalina Craciun <diana.craciun@nxp.com>,
+        linux-kernel@vger.kernel.org, Varun Sethi <V.Sethi@nxp.com>,
+        Marcin Wojtas <mw@semihalf.com>,
+        "Rajesh V . Bikkina" <rajesh.bikkina@nxp.com>,
+        Pankaj Bansal <pankaj.bansal@nxp.com>,
+        Makarand Pawagi <makarand.pawagi@nxp.com>,
+        Calvin Johnson <calvin.johnson@oss.nxp.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Ioana Radulescu <ruxandra.radulescu@nxp.com>
+Subject: [RFC net-next PATCH v2 0/2] ACPI support for xgmac_mdio and dpaa2-mac drivers
+Date:   Sat, 18 Apr 2020 16:24:30 +0530
+Message-Id: <20200418105432.11233-1-calvin.johnson@oss.nxp.com>
+X-Mailer: git-send-email 2.17.1
+Content-Type: text/plain
+X-ClientProxiedBy: SG2PR03CA0099.apcprd03.prod.outlook.com
+ (2603:1096:4:7c::27) To AM0PR04MB5636.eurprd04.prod.outlook.com
+ (2603:10a6:208:130::22)
 MIME-Version: 1.0
-Message-ID: <158720729077.28353.13428455301119141580.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from lsv03152.swis.in-blr01.nxp.com (14.142.151.118) by SG2PR03CA0099.apcprd03.prod.outlook.com (2603:1096:4:7c::27) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.6 via Frontend Transport; Sat, 18 Apr 2020 10:55:16 +0000
+X-Mailer: git-send-email 2.17.1
+X-Originating-IP: [14.142.151.118]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 5108313c-21c2-484f-288a-08d7e386fdd6
+X-MS-TrafficTypeDiagnostic: AM0PR04MB6899:|AM0PR04MB6899:
+X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <AM0PR04MB6899E7CD1B0E4156B376BD69D2D60@AM0PR04MB6899.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:3276;
+X-Forefront-PRVS: 0377802854
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR04MB5636.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(346002)(376002)(39860400002)(366004)(136003)(396003)(478600001)(1076003)(86362001)(81156014)(26005)(4326008)(966005)(8676002)(8936002)(1006002)(6666004)(6512007)(316002)(6636002)(7416002)(186003)(16526019)(54906003)(110136005)(44832011)(2616005)(2906002)(956004)(52116002)(66476007)(55236004)(66556008)(6506007)(5660300002)(6486002)(66946007)(110426005)(921003);DIR:OUT;SFP:1101;
+Received-SPF: None (protection.outlook.com: oss.nxp.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: dSlqQ2auVSP/DMX1X32Ou6Qh7i+eotyFL8obA5aeCX57dmqOSZV0TNEdW/doa8ACni4BLWOT12YKdbhZ9nEqf6VjBVnU/o3zJ3W1sJzYt/r9b0F6asQ4jqBFb4xTTKzNucH+alNVSSYEMSBn/lJFjZZlB7g0O+HwI35tKM0r7902GTaVQdBPVifudoWzvlzNJAuM0Scx7yrD5pICzLS9rOM/QgVsoYdXIWxJ2sUhJFbPlxhji8BMaOPcV6SxhnU5dk+OC8x5ojZu6mBJDnJdb51Jzotg+62PbskGpRYIF7T2nz/gApVPcAaGJsEBBMsjE5IJbjLFaAtoa6JzyGDBYmYeJ8w1HmIj0mA9I39QiB+L8RjAsiF3sKgEvnscVgtYUU5tx30fQKbqX1QMz9fQiElae/H0yKKmziM2JtgOFOXP02lXZJ3XiqMrsgBa7lOGsFfJYNd3MCg1cciLc2CpwU8+i+J/avS/c6I5TB9SQcVvFie3eqBXwwOa5ZTQ1hZa6fOlOH6ke9GR+XCW4Z11odOZsMeLkFuHHw8iQrGehQbuhaO8BCWvlC5JzHHc5ilNbXLzGHypvMPn9s4wayf9DQ==
+X-MS-Exchange-AntiSpam-MessageData: 8oCsgWDs0f8ol1dwTAz4ib7erGi2xL+XD1nsMK6FPidAkRJhd5iBARdaUqZHzzrykcdbkB4aVkJQYQxDxtlmzFkUa92ULh9jtryMia/r1VG846kmRl7vQbFzjV2MMLKyezv1XAqaM5jOYkjTvgYxyg==
+X-OriginatorOrg: oss.nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5108313c-21c2-484f-288a-08d7e386fdd6
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Apr 2020 10:55:22.5115
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: ghnAzu4hc6cTcSkPgkCcQZs5oegK8OqL8S0AfJ6A6vf60JpIOPUrYHJo+SW9LE6xQD8myMbgH2Y31BZGqGLu7A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB6899
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/urgent branch of tip:
+Following other network drivers that supports ACPI,
+v2 of this patchset uses non-DT APIs to register mdiobus,
+register PHYs, create phylink and connect phy to mac.
 
-Commit-ID:     48fd5b5ee714714f4cf9f9e1cba3b49b1fd40ed6
-Gitweb:        https://git.kernel.org/tip/48fd5b5ee714714f4cf9f9e1cba3b49b1fd40ed6
-Author:        Tony Luck <tony.luck@intel.com>
-AuthorDate:    Thu, 16 Apr 2020 13:57:53 -07:00
-Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Sat, 18 Apr 2020 12:48:44 +02:00
+This patchset is dependent on fsl-mc-bus patch:
+https://lkml.org/lkml/2020/1/28/91
 
-x86/split_lock: Bits in IA32_CORE_CAPABILITIES are not architectural
+Two helper functions are borrowed from an old patch by Marcin
+Wojtas:(mdio_bus: Introduce fwnode MDIO helpers).
+https://lkml.org/lkml/2017/12/18/211
 
-The Intel Software Developers' Manual erroneously listed bit 5 of the
-IA32_CORE_CAPABILITIES register as an architectural feature. It is not.
+Changes in v2:
+- Use IS_ERR_OR_NULL for priv->mdio_base instead of plain NULL check
+- Add missing terminator of struct acpi_device_id
+- Use device_property_read_bool and avoid redundancy
+- Add helper functions xgmac_get_phy_id() and xgmac_mdiobus_register_phy()
+- Major change following other network drivers supporting ACPI
+- dropped v1 patches 1, 2, 4, 5 and 6 as they are no longer valid
+- incorporated other v1 review comments
 
-Features enumerated by IA32_CORE_CAPABILITIES are model specific and
-implementation details may vary in different cpu models. Thus it is only
-safe to trust features after checking the CPU model.
+Calvin Johnson (2):
+  net/fsl: add ACPI support for mdio bus
+  net: dpaa2-mac: Add ACPI support for DPAA2 MAC driver
 
-Icelake client and server models are known to implement the split lock
-detect feature even though they don't enumerate IA32_CORE_CAPABILITIES
+ .../net/ethernet/freescale/dpaa2/dpaa2-mac.c  | 122 +++++++++++----
+ drivers/net/ethernet/freescale/xgmac_mdio.c   | 143 +++++++++++++++---
+ 2 files changed, 215 insertions(+), 50 deletions(-)
 
-[ tglx: Use switch() for readability and massage comments ]
+-- 
+2.17.1
 
-Fixes: 6650cdd9a8cc ("x86/split_lock: Enable split lock detection by kernel")
-Signed-off-by: Tony Luck <tony.luck@intel.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20200416205754.21177-3-tony.luck@intel.com
-
----
- arch/x86/kernel/cpu/intel.c | 45 ++++++++++++++++++++++++------------
- 1 file changed, 31 insertions(+), 14 deletions(-)
-
-diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
-index ec0d8c7..c23ad48 100644
---- a/arch/x86/kernel/cpu/intel.c
-+++ b/arch/x86/kernel/cpu/intel.c
-@@ -1120,10 +1120,17 @@ void switch_to_sld(unsigned long tifn)
- }
- 
- /*
-- * The following processors have the split lock detection feature. But
-- * since they don't have the IA32_CORE_CAPABILITIES MSR, the feature cannot
-- * be enumerated. Enable it by family and model matching on these
-- * processors.
-+ * Bits in the IA32_CORE_CAPABILITIES are not architectural, so they should
-+ * only be trusted if it is confirmed that a CPU model implements a
-+ * specific feature at a particular bit position.
-+ *
-+ * The possible driver data field values:
-+ *
-+ * - 0: CPU models that are known to have the per-core split-lock detection
-+ *	feature even though they do not enumerate IA32_CORE_CAPABILITIES.
-+ *
-+ * - 1: CPU models which may enumerate IA32_CORE_CAPABILITIES and if so use
-+ *      bit 5 to enumerate the per-core split-lock detection feature.
-  */
- static const struct x86_cpu_id split_lock_cpu_ids[] __initconst = {
- 	X86_MATCH_INTEL_FAM6_MODEL(ICELAKE_X,		0),
-@@ -1133,19 +1140,29 @@ static const struct x86_cpu_id split_lock_cpu_ids[] __initconst = {
- 
- void __init cpu_set_core_cap_bits(struct cpuinfo_x86 *c)
- {
--	u64 ia32_core_caps = 0;
-+	const struct x86_cpu_id *m;
-+	u64 ia32_core_caps;
-+
-+	if (boot_cpu_has(X86_FEATURE_HYPERVISOR))
-+		return;
- 
--	if (c->x86_vendor != X86_VENDOR_INTEL)
-+	m = x86_match_cpu(split_lock_cpu_ids);
-+	if (!m)
- 		return;
--	if (cpu_has(c, X86_FEATURE_CORE_CAPABILITIES)) {
--		/* Enumerate features reported in IA32_CORE_CAPABILITIES MSR. */
-+
-+	switch (m->driver_data) {
-+	case 0:
-+		break;
-+	case 1:
-+		if (!cpu_has(c, X86_FEATURE_CORE_CAPABILITIES))
-+			return;
- 		rdmsrl(MSR_IA32_CORE_CAPS, ia32_core_caps);
--	} else if (!boot_cpu_has(X86_FEATURE_HYPERVISOR)) {
--		/* Enumerate split lock detection by family and model. */
--		if (x86_match_cpu(split_lock_cpu_ids))
--			ia32_core_caps |= MSR_IA32_CORE_CAPS_SPLIT_LOCK_DETECT;
-+		if (!(ia32_core_caps & MSR_IA32_CORE_CAPS_SPLIT_LOCK_DETECT))
-+			return;
-+		break;
-+	default:
-+		return;
- 	}
- 
--	if (ia32_core_caps & MSR_IA32_CORE_CAPS_SPLIT_LOCK_DETECT)
--		split_lock_setup();
-+	split_lock_setup();
- }
