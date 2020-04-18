@@ -2,157 +2,175 @@ Return-Path: <SRS0=3CHW=6C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 402C1C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 19:01:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A650BC352BE
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 19:08:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1933421BE5
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 19:01:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587236497;
-	bh=aEGEr5L3XuvVzyjAItGx+eb/8rzbQZvf2QRylZbYIBg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=JMUOK2OhlPeXebUeiZ5WBaM8oWupTvaX8aeL/4GXjvKTVSn3XO3DWXIl90IL76efG
-	 ZVe7SpztpiP0yO3i8nDoShjy3yu1Xr7B+fmeCQz8DxupZX8rIdsIHqIeWEZRR8laW5
-	 cWANhK1j8GUXYd15/j65fkG2T5/ITJhOJAc+j7Jo=
+	by mail.kernel.org (Postfix) with ESMTP id 8E79C21BE5
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 19:08:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728154AbgDRTBg (ORCPT
+        id S1728044AbgDRTIP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 15:01:36 -0400
-Received: from conssluserg-04.nifty.com ([210.131.2.83]:40962 "EHLO
-        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726382AbgDRTBf (ORCPT
+        Sat, 18 Apr 2020 15:08:15 -0400
+Received: from mout.kundenserver.de ([217.72.192.75]:36673 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727789AbgDRTIO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 15:01:35 -0400
-Received: from mail-vs1-f47.google.com (mail-vs1-f47.google.com [209.85.217.47]) (authenticated)
-        by conssluserg-04.nifty.com with ESMTP id 03IJ1JqZ013789;
-        Sun, 19 Apr 2020 04:01:20 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com 03IJ1JqZ013789
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1587236480;
-        bh=GMWTNYzKx2p6AtuFISRqos/DJ7YLVq9yd6sy0E83Y1g=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=LY2hnNJss/p/DNWumoPJe9gAxXBpbVoMn0t2qRNhlQQxjVYS0JB3OrNSi/keiWn63
-         qUnt2aRQuhmxHHrQw7xWa+eKAOJ8RcEuWZGU+e2MarByOILha83js6TWc3pU9wamhW
-         rSZ9JkyLNEFZHYAkYRtygosYGywyvChLBrx8JFXpqn7qvm5aVPOnLhyXQ8JBHHw9P9
-         T4cY2qtdZTxlR9mWd8DnW8ypzIW4K/HXQQAzMMWl8G+roCNcq8HlYapAIbOdxKGuDu
-         0udehiLgV2PCn0xVlijudxgzLIQgkSS0jvaDsWqA4t8reBddTl5XFEJAiC6ffP0mxA
-         mRezBbUXIw0Aw==
-X-Nifty-SrcIP: [209.85.217.47]
-Received: by mail-vs1-f47.google.com with SMTP id l25so644580vso.6;
-        Sat, 18 Apr 2020 12:01:20 -0700 (PDT)
-X-Gm-Message-State: AGi0PuYfws6fd8mY31j+wOcPlh7D+JMusWqwWzEdg2ZKFoOkK5BNj5/i
-        ue1FUkgU7vX8pkv2jAuHGzMNzCS7NZzXG6Cbk1Y=
-X-Google-Smtp-Source: APiQypL+1S2WFAmpkq0fehgFFzc8Ik838EWpRiGLQJSMMlxW7U+WjbXpVebmVboQpFuBxiXm25G25lJOBStn4Xyga6E=
-X-Received: by 2002:a67:3293:: with SMTP id y141mr6907237vsy.54.1587236479217;
- Sat, 18 Apr 2020 12:01:19 -0700 (PDT)
+        Sat, 18 Apr 2020 15:08:14 -0400
+Received: from mail-qt1-f178.google.com ([209.85.160.178]) by
+ mrelayeu.kundenserver.de (mreue106 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1MCJvA-1jYAYw3LrG-009RqB for <linux-kernel@vger.kernel.org>; Sat, 18 Apr
+ 2020 21:08:13 +0200
+Received: by mail-qt1-f178.google.com with SMTP id x2so5129571qtr.0
+        for <linux-kernel@vger.kernel.org>; Sat, 18 Apr 2020 12:08:12 -0700 (PDT)
+X-Gm-Message-State: AGi0PuZvEE+2HLyNpwWd1mvv1vE6/zeSDNvbGPhR49J717usGoo5jlbj
+        ypIXk4QkzuGryRR2dyAZe3YV7ywkwcZ/n38QAFo=
+X-Google-Smtp-Source: APiQypIQyXCRKSNvdaLZyvEmQlPP55qqr3ssdQ7+2edvP8fsUKvIDTOrd3u0yqw+zJY4D62C/KJ2CxmsV4AmsRa3J14=
+X-Received: by 2002:ac8:296f:: with SMTP id z44mr8929296qtz.18.1587236891632;
+ Sat, 18 Apr 2020 12:08:11 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200417011146.83973-1-saeedm@mellanox.com>
-In-Reply-To: <20200417011146.83973-1-saeedm@mellanox.com>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Sun, 19 Apr 2020 04:00:43 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQZd_LUyA2V_pCvMTr_201nSX1Nm0TDw5kOeNV64rOfpA@mail.gmail.com>
-Message-ID: <CAK7LNAQZd_LUyA2V_pCvMTr_201nSX1Nm0TDw5kOeNV64rOfpA@mail.gmail.com>
-Subject: Re: [RFC PATCH 1/2] Kconfig: Introduce "uses" keyword
-To:     Saeed Mahameed <saeedm@mellanox.com>
-Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>, Jason Gunthorpe <jgg@ziepe.ca>,
-        Nicolas Pitre <nico@fluxnic.net>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        jonas@kwiboo.se, David Airlie <airlied@linux.ie>,
-        jernej.skrabec@siol.net,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>, linux-rdma@vger.kernel.org
+References: <20200418162157.50428-1-wenhu.wang@vivo.com> <20200418162157.50428-5-wenhu.wang@vivo.com>
+In-Reply-To: <20200418162157.50428-5-wenhu.wang@vivo.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Sat, 18 Apr 2020 21:07:54 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a05Rr7q_OtqqtG5hCPO3cettAJQNpmD0ULec+3PS-QPHA@mail.gmail.com>
+Message-ID: <CAK8P3a05Rr7q_OtqqtG5hCPO3cettAJQNpmD0ULec+3PS-QPHA@mail.gmail.com>
+Subject: Re: [PATCH v6,4/4] drivers: misc: new driver sram_uapi for user level
+ SRAM access
+To:     Wang Wenhu <wenhu.wang@vivo.com>
+Cc:     gregkh <gregkh@linuxfoundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Scott Wood <oss@buserror.net>,
+        christophe leroy <christophe.leroy@c-s.fr>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, kernel@vivo.com,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Michael Ellerman <mpe@ellerman.id.au>
 Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:8ZxrgN2A1Lko1y08b0S35T9iptQBWw0tyEvHJw94iggeKE551jJ
+ EWyILGChISCD6nomyqQISA3vB9x9UBatj1S37cL4yAGSjuGO/7DSmIP9Leo1HSjSHzeLeQI
+ l0RGD5XCvD9zAs44AZsT0gOIFJsBb35KpnjRB9XKCNBKS7KL3exU3qz9i0lSNMO0plTbYIW
+ ca73fIeUMSyAK/X9Pzchg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:2BfJ2MlxJAY=:YWf+z0SU0dotGHqTPuf97B
+ R/hIO/5L9qXHLFqNjfvG6eCgWlARtldyDgwkg/wYSZj21T/RAyLK3AR1+ugyOHrpUHS09cxod
+ oS6J73J2kpUjiHnOKjGAyqsErm+p9cfrkjg61WXbfWuYww6ZSn1DD5OT/3P6sdYHQsFnhRCiz
+ axkA53nDB+7CMYvSyuPZkYM4KIvgtfI7f0pnB1R0ZhVw/77OigI7IBKIoW+UqqpIGJqfaXhU1
+ J+WxX57LSJZd0+jL2aP4GY2L2/botm4iAX2yjbAV34Z4ij38NMYhQiKoc/1oWIGVJ7gL6rLPZ
+ iTY7D1cyLbCh2oP1l2OS4VWZRaHn5SJf/i77/jgixshJdnDGc045NlTv8zhWkhTHLZVfhFo02
+ cxCwl/T4qhzrJAnjos7vwMwHFiY5HMsR2NXf80x7x+JBUg1XZrCj9zm4m62TXgZ5mRWpb9PGN
+ TgiU+sMn/ApAH+p2J5D9aBi253CSFLSZwtrTippLmL5ZDsPdJhuEhz/385gCw/3MuwyfrF+b5
+ VGkKnlLta8RA6xkWSZ70KhQigUJveYLibea3knxG+dbh1XdNlIVaiqgDqQPXHtqyqkDnBlUOg
+ FYHHSRZjkDnls+rR8XB1QcTo7xVTMv+JPJc9thwkhjHktp2QrAcSv9NgJBjy6eeI19tCFHp5N
+ G2OuTHN771ccpm9skuYTPq+ZrYnn+1qI9+2bE9HOwv3ImayWEXuE84uM5COHyFJzxo342HSXG
+ 8y8I4DKawVcNU/I+9uqGCnWvKK8kkVZUkz8kYcPSnMdGD9KQCyxFjnD15bBmSJARH+Uc1gZvH
+ +rchzaltaIzYai/eWDhQl4RVqCfXb/tWWzQ42skxmjtoJk9dfs=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 17, 2020 at 10:12 AM Saeed Mahameed <saeedm@mellanox.com> wrote:
+On Sat, Apr 18, 2020 at 6:22 PM Wang Wenhu <wenhu.wang@vivo.com> wrote:
 >
-> Due to the changes to the semantics of imply keyword [1], which now
-> doesn't force any config options to the implied configs any more.
->
-> A module (FOO) that has a weak dependency on some other modules (BAR)
-> is now broken if it was using imply to force dependency restrictions.
-> e.g.: FOO needs BAR to be reachable, especially when FOO=y and BAR=m.
-> Which might now introduce build/link errors.
->
-> There are two options to solve this:
-> 1. use IS_REACHABLE(BAR), everywhere BAR is referenced inside FOO.
-> 2. in FOO's Kconfig add: depends on (BAR || !BAR)
->
-> The first option is not desirable, and will leave the user confused when
-> setting FOO=y and BAR=m, FOO will never reach BAR even though both are
-> compiled.
->
-> The 2nd one is the preferred approach, and will guarantee BAR is always
-> reachable by FOO if both are compiled. But, (BAR || !BAR) is really
-> confusing for those who don't really get how kconfig tristate arithmetics
-> work.
->
-> To solve this and hide this weird expression and to avoid repetition
-> across the tree, we introduce new keyword "uses" to the Kconfig options
-> family.
->
-> uses BAR:
-> Equivalent to: depends on symbol || !symbol
-> Semantically it means, if FOO is enabled (y/m) and has the option:
-> uses BAR, make sure it can reach/use BAR when possible.
->
-> For example: if FOO=y and BAR=m, FOO will be forced to m.
->
-> [1] https://lore.kernel.org/linux-doc/20200302062340.21453-1-masahiroy@kernel.org/
->
-> Link: https://lkml.org/lkml/2020/4/8/839
-> Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
-> Cc: Masahiro Yamada <masahiroy@kernel.org>
-> Cc: linux-kbuild@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> ---
+> A generic User-Kernel interface that allows a misc device created
+> by it to support file-operations of ioctl and mmap to access SRAM
+> memory from user level. Different kinds of SRAM alloction and free
+> APIs could be added to the available array and could be configured
+> from user level.
+
+Having a generic user level interface seem reasonable, but it would
+be helpful to list one or more particular use cases.
+
+> +if SRAM_UAPI
+> +
+> +config FSL_85XX_SRAM_UAPI
+> +       bool "Freescale MPC85xx Cache-SRAM UAPI support"
+> +       depends on FSL_SOC_BOOKE && PPC32
+> +       select FSL_85XX_CACHE_SRAM
+> +       help
+> +         This adds the Freescale MPC85xx Cache-SRAM memory allocation and
+> +         free interfaces to the available SRAM API array, which finally could
+> +         be used from user level to access the Freescale MPC85xx Cache-SRAM
+> +         memory.
+
+Why do you need  a hardware specific Kconfig option here, shouldn't
+this just use the generic kernel abstraction for the sram?
+
+> +struct sram_api {
+> +       u32 type;
+> +       long (*sram_alloc)(u32 size, phys_addr_t *phys, u32 align);
+> +       void (*sram_free)(void *ptr);
+> +};
+> +
+> +struct sram_uapi {
+> +       struct list_head        res_list;
+> +       struct sram_api         *sa;
+> +};
+> +
+> +enum SRAM_TYPE {
+> +#ifdef FSL_85XX_CACHE_SRAM
+> +       SRAM_TYPE_FSL_85XX_CACHE_SRAM,
+> +#endif
+> +       SRAM_TYPE_MAX,
+> +};
+> +
+> +/* keep the SRAM_TYPE value the same with array index */
+> +static struct sram_api srams[] = {
+> +#ifdef FSL_85XX_CACHE_SRAM
+> +       {
+> +               .type           = SRAM_TYPE_FSL_85XX_CACHE_SRAM,
+> +               .sram_alloc     = mpc85xx_cache_sram_alloc,
+> +               .sram_free      = mpc85xx_cache_sram_free,
+> +       },
+> +#endif
+> +};
+
+If there is a indeed a requirement for hardware specific functions,
+I'd say these should be registered from the hardware specific driver
+rather than the generic driver having to know about every single
+instance.
+
+> +static long sram_uapi_ioctl(struct file *filp, unsigned int cmd,
+> +                           unsigned long arg)
+> +{
+> +       struct sram_uapi *uapi = filp->private_data;
+> +       struct sram_resource *res;
+> +       struct res_info info;
+> +       long ret = -EINVAL;
+> +       int size;
+> +       u32 type;
+> +
+> +       if (!uapi)
+> +               return ret;
+> +
+> +       switch (cmd) {
+> +       case SRAM_UAPI_IOCTL_SET_SRAM_TYPE:
+> +               size = copy_from_user((void *)&type, (const void __user *)arg,
+> +                                     sizeof(type));
+
+This could be a simpler get_user().
+
+> +static const struct file_operations sram_uapi_ops = {
+> +       .owner = THIS_MODULE,
+> +       .open = sram_uapi_open,
+> +       .unlocked_ioctl = sram_uapi_ioctl,
+> +       .mmap = sram_uapi_mmap,
+> +       .release = sram_uapi_release,
+> +};
+
+If you have a .unlocked_ioctl callback, there should also be a
+.compat_ioctl one. This can normally point to compat_ptr_ioctl().
+
+> +
+> +static struct miscdevice sram_uapi_miscdev = {
+> +       MISC_DYNAMIC_MINOR,
+> +       "sram-uapi",
+> +       &sram_uapi_ops,
+> +};
+
+The name of the character device should not contain "uapi", that
+is kind of implied here.
 
 
-I am not convinced with this patch.
-
-This patch adds another way to do the same thing.
-It is true that it _hides_ the problems, and
-makes the _surface_  cleaner at best,
-but the internal will be more complicated.
-
-(FOO || !FOO) is difficult to understand, but
-the behavior of "uses FOO" is as difficult to grasp.
-
-People would wonder, "what 'uses FOO' means?",
-then they would find the explanation in kconfig-language.rst:
-
-  "Equivalent to: depends on symbol || !symbol
-  Semantically it means, if FOO is enabled (y/m) and has the option:
-  uses BAR, make sure it can reach/use BAR when possible."
-
-To understand this correctly, people must study
-the arithmetic of (symbol || !symbol) anyway.
-
-I do not want to extend Kconfig for the iffy syntax sugar.
-
-
-(symbol || !symbol) is horrible.
-But, I am also scared to see people would think 'uses symbol'
-is the right thing to do, and start using it liberally
-all over the place.
-
-
-
-
-
---
-Best Regards
-
-Masahiro Yamada
+        Arnd
