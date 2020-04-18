@@ -2,87 +2,113 @@ Return-Path: <SRS0=3CHW=6C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31DBFC38A2C
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 08:12:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8604DC2BA19
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 08:14:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0FB762224E
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 08:12:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6102B221F7
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 08:14:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="aPe7GxGM"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="uw0O9D1c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725991AbgDRIMo (ORCPT
+        id S1726039AbgDRIOe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 04:12:44 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:56543 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725858AbgDRIMn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 04:12:43 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1587197563; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=xxwDid+GegRp2XEwGHjjbsx9T5wGtL4IDO6vWAN+KzQ=; b=aPe7GxGM/9OD4Pqr9oV1wFVt+SqOYcmBn58KcmY71e2g8C+s7fbwqbYZRrMT/3YBzekBdsvG
- Wch6jL/i5bbFNmZ7gqRCqPfiZpbjLol8m5w/zC/fDGTMmB7IlMjx6c5h0MQrICe8tLcQ7g5M
- MgPyCSzGVE3cFlVIbWYbh9cBVtA=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e9ab672.7f7bb7283b58-smtp-out-n01;
- Sat, 18 Apr 2020 08:12:34 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id A3E79C433BA; Sat, 18 Apr 2020 08:12:34 +0000 (UTC)
-Received: from [10.131.205.89] (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Sat, 18 Apr 2020 04:14:34 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:53005 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725801AbgDRIOe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 04:14:34 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        (Authenticated sender: rnayak)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 50856C433CB;
-        Sat, 18 Apr 2020 08:12:30 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 50856C433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
-Subject: Re: [PATCH v2 05/17] drm/msm/dpu: Use OPP API to set clk/perf state
-To:     Matthias Kaehlcke <mka@chromium.org>
-Cc:     viresh.kumar@linaro.org, sboyd@kernel.org,
-        bjorn.andersson@linaro.org, agross@kernel.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Rob Clark <robdclark@gmail.com>,
-        Sean Paul <sean@poorly.run>, dri-devel@lists.freedesktop.org
-References: <1587132279-27659-1-git-send-email-rnayak@codeaurora.org>
- <1587132279-27659-6-git-send-email-rnayak@codeaurora.org>
- <20200417181724.GE199755@google.com>
-From:   Rajendra Nayak <rnayak@codeaurora.org>
-Message-ID: <c4313eab-3f48-4817-5507-7e846a5e1eb8@codeaurora.org>
-Date:   Sat, 18 Apr 2020 13:42:27 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4945MX3Y9vz9sQx;
+        Sat, 18 Apr 2020 18:14:00 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1587197642;
+        bh=G8iMWCchG1teLmnVcfKg6CPEC0PAsZOhu4cHv56WVwE=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=uw0O9D1cGqHhSeRW4k7P7ETkAvMrg9aUTL/PWkY+SX9D/V8obRPCWQBAeiKCmK45w
+         R6NzzWSC9yOvWwgIX83jGnNWfrDZF98IEX7K9B0bZrHptZPm8llL+/SPVbNy/GxEyF
+         BO9eln5LihuGFiHyNxHL2XU2Szeoq9kZhbAjPUcj8lS0K1wTzAQiCokQ+aq51G9mII
+         bzOPZF0SEcq4m1fkeMWOwgxLq9+KGCMSlVOtd09Mbzfo7JTkWhWdEzgOYLOPNUaAG9
+         HZGlIi8OBSTukwDp9Iyt9EFINQw4A1wAMlS1jilXkn/sUhph4dhlju6KeEUZsKCs5g
+         ncOJCYKPGT8TQ==
+Date:   Sat, 18 Apr 2020 18:13:58 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Dmitry Vyukov <dvyukov@google.com>
+Cc:     Alex Shi <alex.shi@linux.alibaba.com>,
+        Linux-Next Mailing List <linux-next@vger.kernel.org>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        syzbot <syzbot+826543256ed3b8c37f62@syzkaller.appspotmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Cgroups <cgroups@vger.kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>, Michal Hocko <mhocko@kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>
+Subject: Re: linux-next test error: BUG: using __this_cpu_read() in
+ preemptible code in __mod_memcg_state
+Message-ID: <20200418181358.0a761486@canb.auug.org.au>
+In-Reply-To: <CACT4Y+ZsAgq0M=xUzrXTOYaaJfr_BrD8_5R5bhzr9k29jDSC+w@mail.gmail.com>
+References: <00000000000022640205a04a20d8@google.com>
+        <20200309092423.2ww3aw6yfyce7yty@box>
+        <5b1196be-09ce-51f7-f5e7-63f2e597f91e@linux.alibaba.com>
+        <d3fb0593-e483-3b69-bf2c-99ad6cd03567@linux.alibaba.com>
+        <CACT4Y+Zfcs2MxD9-zR748UbkEpsV4BYjFgw1XgSqX4X8z=92CA@mail.gmail.com>
+        <20200418174353.02295792@canb.auug.org.au>
+        <20200418175059.7100ed7b@canb.auug.org.au>
+        <CACT4Y+ZsAgq0M=xUzrXTOYaaJfr_BrD8_5R5bhzr9k29jDSC+w@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200417181724.GE199755@google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; boundary="Sig_/FO+IgIlyK6wXn_YCvpKjvSp";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+--Sig_/FO+IgIlyK6wXn_YCvpKjvSp
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-On 4/17/2020 11:47 PM, Matthias Kaehlcke wrote:
-> Hi Rajendra,
-> 
-> I have essentially the same comments as for "tty: serial: qcom_geni_serial:
-> Use OPP API to set clk/perf state" (https://patchwork.kernel.org/patch/11495209/).
-> about error handling of 'dev_pm_opp_of_add_table' and misleading struct
-> member names 'opp'/'opp_table'. Please apply the requested changes to the
-> entire series unless you disagree (we can keep the discussion in the patch
-> referenced above).
+Hi Dmitry,
 
-Thanks, yes, I will apply those changes across the series and respin.
-Will wait a few days to see I get any more feedback.
+On Sat, 18 Apr 2020 10:02:36 +0200 Dmitry Vyukov <dvyukov@google.com> wrote:
+> >
+> > #syz invalid =20
+>=20
+> This is correct, thanks!
+>=20
+> You may now see "Status: closed as invalid on 2020/04/18 07:51" at:
+> https://syzkaller.appspot.com/bug?extid=3D826543256ed3b8c37f62
+>=20
+> It does not show up as "open" and if this will happen again syzbot
+> will report it (rather than assume it's still the old bug happening).
 
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+OK, good, thanks.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/FO+IgIlyK6wXn_YCvpKjvSp
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6atsYACgkQAVBC80lX
+0GxKLgf7B1CaeOafVaZuCm00dKwG5hpfeoiZ90BssMjH+U91777VeGujRDCLsz82
+sgYE8FV3sqY5xnFkZi8SIMXUiVQnEVDLZiwe/gmNvS0zu9Uh9kUDUvwMhOlf6faB
+kSWu907utWkPrznsU36QctaVA5qwXpRDBUZX/NVBJkcBL6xAw1/ER1n/89kf2l7X
+IzJLEw68AAbwPlKAdiARMg0aQXvWbeRzs+C0HiH668G2XHL/usBBFdZT/lZCg5Xl
+tBe4s8bsxBHbv0lblZZNRFXUvCKB56TbpPCqAO+PQT+bKrKjA19xD8W74/EiMd9Y
+165rBH3gTrzj24jJwyJdUFNSH93Gkg==
+=ZnYC
+-----END PGP SIGNATURE-----
+
+--Sig_/FO+IgIlyK6wXn_YCvpKjvSp--
