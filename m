@@ -2,139 +2,113 @@ Return-Path: <SRS0=3CHW=6C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A0C5C38A29
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:39:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87F57C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:39:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E92E221D6C
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:39:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587220768;
-	bh=qQJgMOooEtedMzMts41BbX4i4dAdvd931W+ZKmtKv8w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=jucOHbE428F4tYqbBF7LWDa7QfHIrotNPVRPV+AqIo2TZRHLtII1TzttYVpayxg/A
-	 wzOimi47Lb2d40sLwH/r70YV0xTh9/JW9xguAVadr/2pvT/Ykp/4KWEE+8ZtwL37TH
-	 ii6pI7Qzv0dVhK+jSB62CbatMT0W0fpGn2Sbw9i4=
+	by mail.kernel.org (Postfix) with ESMTP id 68CA02220A
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:39:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E9cA2LGc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726389AbgDROj1 (ORCPT
+        id S1726457AbgDROjc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 10:39:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47932 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725879AbgDROj1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 10:39:27 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 443BC21974;
-        Sat, 18 Apr 2020 14:39:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587220766;
-        bh=qQJgMOooEtedMzMts41BbX4i4dAdvd931W+ZKmtKv8w=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Z9EK2swz5XvWX1LxrZv9QY67nbt5P9yi88uEnD+0ZO5wIsmb5VG+8LzM7USbPD7nw
-         s5ULpgvr1RK7XAE5Roj9nmfyV4VGqltF75ke/xmlt7XBnCJsLzAJdfVAreHqetUycL
-         STIenaXbXMaOBU2ZLnUPSDHJk5/KxlJCWBDYGVr4=
-Date:   Sat, 18 Apr 2020 16:39:24 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Matthew Garrett <mjg59@google.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        "Theodore Y . Ts'o" <tytso@mit.edu>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>, Jiri Slaby <jslaby@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>
-Subject: Re: [PATCH v3] Add kernel config option for tweaking kernel behavior.
-Message-ID: <20200418143924.GA3485638@kroah.com>
-References: <20200413063317.7164-1-penguin-kernel@I-love.SAKURA.ne.jp>
- <20200413081426.GA2791586@kroah.com>
- <85d9c411-f205-56bf-df6b-6d4fa39a134b@i-love.sakura.ne.jp>
+        Sat, 18 Apr 2020 10:39:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60804 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726396AbgDROjb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 10:39:31 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DDDD1C061A0C;
+        Sat, 18 Apr 2020 07:39:28 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id v8so7074484wma.0;
+        Sat, 18 Apr 2020 07:39:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=stLQlVuh4P5IJ5M0lj4/6uAQgTyw/bQBI8ltWxyZDXo=;
+        b=E9cA2LGcfpwjWkWL0LUCKY8rmu73mUw4/VIbbjYfLKPQwuWP9GEU6t7ShXY0UXKUmt
+         Z8fXWZurPul5Q9s9FOLmzG8iSW+h9wQGvfq/Vay0WY8Wa7Tz8vb4B2JnsAmuQHQQIOzr
+         jW2PHrACksVjQkQZd1h+cahQd+HTFKynZObqNlHA6BRUDaM/67kufXqd5vmEIFB3F5D+
+         T9p3+9Gkb010F2QJ0jY8Z9vjeEEAtCmOftABQtUOWhaWfAQdnBRi/2pOiSBw4FqLeuFj
+         Pr9VnRQ1cMPsoNr7KfX6BwqUkMOg1kFog4UDIjA0Qum20JgQHo2GbTunOfUK9YQa+HjZ
+         yB+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=stLQlVuh4P5IJ5M0lj4/6uAQgTyw/bQBI8ltWxyZDXo=;
+        b=iAtxmjmEZQ8W3oHtAST3O9aVMvY23WeKhGixAorKbSU9hLsa/BFjqMFTvQj04SDV8Y
+         BIIMT8nvAmNcP0v3V3JcUbf/yinHTDxinsnFqGjVslA8ux/PuynrmxrcvfJ/GD5dzrRR
+         u3t61QHBEjwiq3AC0/OvWjZgU4LoyZmgGry0hAVMvyca5y2yKdyb9fOcIG5q0sLpcek1
+         oeo5YhgGlkfvi8IDXc62+Hhe3oFz83ibfP3bOsH6i09+yb/egC1bYWna/ZKLU3TWn3gg
+         s3tpEsLUincJO1hJST0OZ3wE43JAdegQ682w+CuO3ZHNxVeEFfrwHh0IJOEk3EVebSZc
+         V/Kg==
+X-Gm-Message-State: AGi0PuZvo/SPF58/lZ5uEhqVhSCDPvYMPE8zpkizuLplLJM/PWg09w/d
+        qkeXc8Ly7wvns3ppIZgosrA=
+X-Google-Smtp-Source: APiQypJgp3beoqLe7KxcrcgO1iEb5Zi5/JPSvihpkv2bGufse5QTbKlcUIFXicuNuiKrgQXX+QJ18g==
+X-Received: by 2002:a05:600c:2255:: with SMTP id a21mr8551841wmm.150.1587220767261;
+        Sat, 18 Apr 2020 07:39:27 -0700 (PDT)
+Received: from localhost.localdomain ([2a01:e0a:1f1:d0f0:4e7:1fdd:b7c2:b3ab])
+        by smtp.gmail.com with ESMTPSA id s9sm25375322wrg.27.2020.04.18.07.39.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 18 Apr 2020 07:39:26 -0700 (PDT)
+From:   =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
+To:     Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>, Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>
+Cc:     alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
+Subject: [PATCH 0/7] Add H6 I2S support
+Date:   Sat, 18 Apr 2020 16:39:16 +0200
+Message-Id: <20200418143923.19608-1-peron.clem@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <85d9c411-f205-56bf-df6b-6d4fa39a134b@i-love.sakura.ne.jp>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Apr 18, 2020 at 11:28:22PM +0900, Tetsuo Handa wrote:
-> On 2020/04/13 17:14, Greg Kroah-Hartman wrote:
-> >> @@ -2223,4 +2223,15 @@ config HYPERV_TESTING
-> >>  
-> >>  endmenu # "Kernel Testing and Coverage"
-> >>  
-> >> +menuconfig TWEAK_KERNEL_BEHAVIOR
-> >> +	bool "Tweak kernel behavior"
-> >> +	help
-> >> +	  Saying Y here allows modifying kernel behavior via kernel
-> >> +	  config options which will become visible by selecting this
-> >> +	  config option.
-> > 
-> > This "help" text really only says "say Y here to allow for some config
-> > options".  It doesn't explain what these are for, or why anyone would
-> > select them, or what type of options are here at all.
-> > 
-> > I don't see how this option, by just looking at it, relates to your goal
-> > of doing things to make fuzzers' lives easier.
-> 
-> Well, we could add some more text (like shown below), but this option itself
-> is neutral. This option is not limiting the target to fuzzers.
-> Below 3 patches are an example of "a set of fine-grained configs" with
-> "some umbrella uber-config" approach. Linus, are you OK with this approach?
+Hi,
 
-Note, the word "tweak" is usually used where people want to get the most
-performance out of a system, while here you are using it to remove
-functionality out of the system.  You might want to pick a different
-word, naming is hard :(
+This is a sequel of Marcus Cooper serie[0], where remarks made by Maxime
+have been fixed.
 
-Anyway, a comment on your patch:
+I have tested it on my Beelink GS1 board.
 
-> >From f7f668896e188217b50c50a31c4ad1acb7556b36 Mon Sep 17 00:00:00 2001
-> From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-> Date: Sat, 18 Apr 2020 22:39:38 +0900
-> Subject: [PATCH 2/3] tweak: Allow disabling k_spec() function in drivers/tty/vt/keyboard.c
-> 
-> syzbot is reporting unexpected kernel reboots [1]. This seems to be
-> caused by triggering Ctrl-Alt-Del event via k_spec() function in
-> drivers/tty/vt/keyboard.c file, for the console output includes normal
-> restart sequence. Therefore, allow disabling only k_spec() function
-> in order to allow fuzzers to examine the remaining part in that file.
-> 
-> [1] https://syzkaller.appspot.com/bug?id=321861b1588b44d064b779b92293c5d55cfe8430
-> 
-> Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-> ---
->  drivers/tty/vt/keyboard.c | 2 ++
->  lib/Kconfig.tewak         | 7 +++++++
->  2 files changed, 9 insertions(+)
-> 
-> diff --git a/drivers/tty/vt/keyboard.c b/drivers/tty/vt/keyboard.c
-> index 15d33fa0c925..f08855c4c5ba 100644
-> --- a/drivers/tty/vt/keyboard.c
-> +++ b/drivers/tty/vt/keyboard.c
-> @@ -633,6 +633,8 @@ static void k_spec(struct vc_data *vc, unsigned char value, char up_flag)
->  	     kbd->kbdmode == VC_OFF) &&
->  	     value != KVAL(K_SAK))
->  		return;		/* SAK is allowed even in raw mode */
-> +	if (IS_ENABLED(CONFIG_TWEAK_DISABLE_KBD_K_SPEC_HANDLER))
-> +		return;
+Thanks,
+Clement
 
-Are you sure this is correct?  It seems like you just cut off a number
-of other keyboard function handlers instead of just the ctrl-alt-del
-functionality.  Did you really want to do that?
+0: https://lore.kernel.org/patchwork/cover/1139949/
 
-thanks,
+Jernej Skrabec (3):
+  dt-bindings: ASoC: sun4i-i2s: Add H6 compatible
+  ASoC: sun4i-i2s: Add support for H6 I2S
+  arm64: dts: sun50i-h6: Add HDMI audio to H6 DTSI
 
-greg k-h
+Marcus Cooper (4):
+  ASoC: sun4i-i2s: Adjust LRCLK width
+  ASoC: sun4i-i2s: Set sign extend sample
+  ASoc: sun4i-i2s: Add 20 and 24 bit support
+  ASoC: sun4i-i2s: Adjust regmap settings
+
+ .../sound/allwinner,sun4i-a10-i2s.yaml        |   2 +
+ arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi  |  31 ++
+ sound/soc/sunxi/sun4i-i2s.c                   | 286 ++++++++++++++++--
+ 3 files changed, 295 insertions(+), 24 deletions(-)
+
+-- 
+2.20.1
+
