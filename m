@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B1B4C38A29
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:47:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89A3FC38A29
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:47:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5AA3021D79
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:47:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EEEB21D6C
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:47:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587221224;
-	bh=busdwEqfqrOllh/yyOJYSdqfqInLmSqmqcQUKjFz8BA=;
+	s=default; t=1587221227;
+	bh=+7j9GFWXunKNP2Ttv6Fhq8oqYAqAHsbaixIo/ARYwLw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ntzlIJdxsdLRPHoiY+dXV3q9jxFnrJWN4jowjSpGHlRgMfHfdd3t354pLzRikVpxl
-	 6ai/WmnjVBndrRmO4KhJYm4NnZf1AdGKApVw9jsUjlCYZb1zjEGSrR7g73sinumcgv
-	 7EdoFyV5w3EdUNMYaZefHmb7G9ly69H3QfGOtBX4=
+	b=E4Y0BbBbomUacv2MOtMhdTw8ucRqwPscQ7cm8s4+46TtFSYAudQmXqh0A8Ew0hhBR
+	 myyU3+zbyPp8lIWUUjPoNcIDWT7OTvf4mxx7KJXTT6dqB/Tolibxcfrb9c5a/1rue5
+	 +R5GZA8StIg9+DxVfMwNHbCyS3kQLJtmKFBxOimg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729014AbgDROrD (ORCPT
+        id S1728047AbgDROoQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 10:47:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55868 "EHLO mail.kernel.org"
+        Sat, 18 Apr 2020 10:44:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55764 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728772AbgDROoR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 10:44:17 -0400
+        id S1728752AbgDROoL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 10:44:11 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1F03322245;
-        Sat, 18 Apr 2020 14:44:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 25DE92224F;
+        Sat, 18 Apr 2020 14:44:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587221056;
-        bh=busdwEqfqrOllh/yyOJYSdqfqInLmSqmqcQUKjFz8BA=;
+        s=default; t=1587221050;
+        bh=+7j9GFWXunKNP2Ttv6Fhq8oqYAqAHsbaixIo/ARYwLw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=A5NGYVYApDJkHUbXwt+15a1tSJAeKhFJ8z7LUltIeM5bHBf3mjsbTa0ZbfOKXA+R3
-         mAcxxu3OHXVVRxkWm39TnK/1kej/ZTOy6mZ9b0XZ4olCTm9RkdDub37xQDmZxFyg0t
-         buzT8hRVPVwetaFbI2PCzhaKA0IaOCSMyyLJie1s=
+        b=RDVxQdwzHcz/TdVf35Di5J4/uhqCBF8SuLL9bSQCzuzL2JrCypTdYGSj5hFURiWkG
+         iliISZd27f/0BotmLhH+fpFXc9BFm0hG6YFjIqq2FYWeECoGdq1ewDpPIiJwI1cH8P
+         tmehKzcxYEqilxxWkZ7iNmIbyCGoAkPwwH5oqdJ8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 4.9 09/23] ASoC: Intel: atom: Take the drv->lock mutex before calling sst_send_slot_map()
-Date:   Sat, 18 Apr 2020 10:43:51 -0400
-Message-Id: <20200418144405.10565-9-sashal@kernel.org>
+Cc:     Qiujun Huang <hqjagain@gmail.com>,
+        Jeff Layton <jlayton@kernel.org>,
+        Ilya Dryomov <idryomov@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, ceph-devel@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 04/23] ceph: return ceph_mdsc_do_request() errors from __get_parent()
+Date:   Sat, 18 Apr 2020 10:43:46 -0400
+Message-Id: <20200418144405.10565-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200418144405.10565-1-sashal@kernel.org>
 References: <20200418144405.10565-1-sashal@kernel.org>
@@ -60,40 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Qiujun Huang <hqjagain@gmail.com>
 
-[ Upstream commit 81630dc042af998b9f58cd8e2c29dab9777ea176 ]
+[ Upstream commit c6d50296032f0b97473eb2e274dc7cc5d0173847 ]
 
-sst_send_slot_map() uses sst_fill_and_send_cmd_unlocked() because in some
-places it is called with the drv->lock mutex already held.
+Return the error returned by ceph_mdsc_do_request(). Otherwise,
+r_target_inode ends up being NULL this ends up returning ENOENT
+regardless of the error.
 
-So it must always be called with the mutex locked. This commit adds missing
-locking in the sst_set_be_modules() code-path.
-
-Fixes: 24c8d14192cc ("ASoC: Intel: mrfld: add DSP core controls")
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Acked-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Link: https://lore.kernel.org/r/20200402185359.3424-1-hdegoede@redhat.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
+Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/intel/atom/sst-atom-controls.c | 2 ++
- 1 file changed, 2 insertions(+)
+ fs/ceph/export.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/sound/soc/intel/atom/sst-atom-controls.c b/sound/soc/intel/atom/sst-atom-controls.c
-index 0838478c4c3f9..92aa1518b7723 100644
---- a/sound/soc/intel/atom/sst-atom-controls.c
-+++ b/sound/soc/intel/atom/sst-atom-controls.c
-@@ -976,7 +976,9 @@ static int sst_set_be_modules(struct snd_soc_dapm_widget *w,
- 	dev_dbg(c->dev, "Enter: widget=%s\n", w->name);
+diff --git a/fs/ceph/export.c b/fs/ceph/export.c
+index 1780218a48f08..f8e1f31e46439 100644
+--- a/fs/ceph/export.c
++++ b/fs/ceph/export.c
+@@ -157,6 +157,11 @@ static struct dentry *__get_parent(struct super_block *sb,
  
- 	if (SND_SOC_DAPM_EVENT_ON(event)) {
-+		mutex_lock(&drv->lock);
- 		ret = sst_send_slot_map(drv);
-+		mutex_unlock(&drv->lock);
- 		if (ret)
- 			return ret;
- 		ret = sst_send_pipe_module_params(w, k);
+ 	req->r_num_caps = 1;
+ 	err = ceph_mdsc_do_request(mdsc, NULL, req);
++	if (err) {
++		ceph_mdsc_put_request(req);
++		return ERR_PTR(err);
++	}
++
+ 	inode = req->r_target_inode;
+ 	if (inode)
+ 		ihold(inode);
 -- 
 2.20.1
 
