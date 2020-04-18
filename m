@@ -2,113 +2,150 @@ Return-Path: <SRS0=3CHW=6C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D374EC2BA19
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 23:19:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F351C352BE
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 23:27:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ACBC921927
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 23:19:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F257121927
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 23:27:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kioM6o8T"
+	dkim=pass (1024-bit key) header.d=cs.washington.edu header.i=@cs.washington.edu header.b="E94FC9Je"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725958AbgDRXT0 (ORCPT
+        id S1725969AbgDRX1C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 19:19:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55742 "EHLO
+        Sat, 18 Apr 2020 19:27:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56906 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725804AbgDRXT0 (ORCPT
+        with ESMTP id S1725824AbgDRX1C (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 19:19:26 -0400
-Received: from mail-pf1-x449.google.com (mail-pf1-x449.google.com [IPv6:2607:f8b0:4864:20::449])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15877C061A0C
-        for <linux-kernel@vger.kernel.org>; Sat, 18 Apr 2020 16:19:24 -0700 (PDT)
-Received: by mail-pf1-x449.google.com with SMTP id r5so6171084pfh.12
-        for <linux-kernel@vger.kernel.org>; Sat, 18 Apr 2020 16:19:24 -0700 (PDT)
+        Sat, 18 Apr 2020 19:27:02 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1740AC061A10
+        for <linux-kernel@vger.kernel.org>; Sat, 18 Apr 2020 16:27:02 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id t4so2483154plq.12
+        for <linux-kernel@vger.kernel.org>; Sat, 18 Apr 2020 16:27:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=5+OU+kk7gBRhrOajisWPSOlUOJGHcphtukUia7SFCns=;
-        b=kioM6o8Tn3+JdhtYi4wpNbms3VD5EJaUVGk5v+iRB/fpfvTnXbAz1DsHz6U6fhywHi
-         /E//DL5EXAC7e6JC8hFlfOqzjLUoc8x5wwEIOznzrVR4W5HbpcmeQphuCHQfs/npAqGA
-         cgS2qmgKcwi+hJXojVrd/L5ykG6wVvO2BK1Ptsu+T4/0MIGVUK2GQ1nKKwW8J+IXebVL
-         zIg0GKoQl76nz32/mJvxwg7esQkKZVlh31VaNHTWgOcvtFF+AxgZwjI8Z57KN5wpEnvw
-         2LR2lDzbmohZabIa2Z/MNaAmrCE4wdL+gV5BsU8WWsOZy4Q1LVxyf+JpuqFalP8OGO6F
-         nbmQ==
+        d=cs.washington.edu; s=goo201206;
+        h=from:to:cc:subject:date:message-id;
+        bh=V1iSNi3FjSbFymrjsWR16L5sHfocV0iKd0ObfqLdCDE=;
+        b=E94FC9JeOPlEtesZY7pnic5oqXC1UEm6VlEGtC1YgAScMnSkB2LJY+O5H4diMpuWHL
+         d/no2M6eNI/dQY9j/v6SSyhcGs+aK1ScSuDvksCyuVmfHcNTBZoPi8j55p0j3j3YBUoZ
+         Dp5qeYnqs74jXMUqZHwc0BsGZWmWM+mqnvNTg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=5+OU+kk7gBRhrOajisWPSOlUOJGHcphtukUia7SFCns=;
-        b=g1n7w+vCisUTR6lYxtWEdWdKfZ4UyyZ4qKIBBTwz89W92ocHYe+eLLfQBUg19Nm/U6
-         npOGlovRA7GMs9cFWWvveDG16uRVCg2uyIkAXzrBjAjt974q3he1Lt+O3/yUJA+5+HJg
-         g/dvNF8I7f22e5iepM0rqbWG8UW2ozlDkGjTVUGyU8/M5/GLjqd9bcbvGTDXflNa4UrY
-         O+1UKjW8TO+U32TG7QLs11xoYpUEp0ldz9+Xfflea3QK8Og8nF46RNLw3swuJbzuyvHy
-         3azIqvxI/hA+prNuKkMkgQ20YoboSciL/MplXDS2Un78auaN1DdDTVuxa13El16vU1HF
-         QP1Q==
-X-Gm-Message-State: AGi0PubkADxUcsBSNMDrpzaMMd6W+ul34YHcfmEb86WG2gbAD7E6eVsX
-        IGgzsFC1YdAKRXDq7uMkZj43TNrkpE3Dv2nHF/PIsr3bxThdsTF825C+kpq9wwLQg8JJSSpXXaG
-        XjQ1QKtMaYlODXYKKlhG7W1uVzFrDR2ekpTHszQ42jX3vvJczuGvdYPBXYoqRNkygwywi4URm
-X-Google-Smtp-Source: APiQypIY2F/WbKr2ZYdWKm88gP38oKDYswZNpH/PW/N41rbYNjWgf9XcFW++fR3iRKAY28xc7x6f+mkmK/ma
-X-Received: by 2002:a17:90a:23e2:: with SMTP id g89mr12893148pje.105.1587251963143;
- Sat, 18 Apr 2020 16:19:23 -0700 (PDT)
-Date:   Sat, 18 Apr 2020 16:19:08 -0700
-Message-Id: <20200418231908.152212-1-eranian@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.26.1.301.g55bc3eb7cb9-goog
-Subject: [PATCH] perf/script: remove extraneous newline in perf_sample__fprintf_regs()
-From:   Stephane Eranian <eranian@google.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     peterz@infradead.org, mingo@elte.hu, acme@redhat.com,
-        jolsa@redhat.com, irogers@google.com, ak@linux.intel.com,
-        kan.liang@intel.com
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=V1iSNi3FjSbFymrjsWR16L5sHfocV0iKd0ObfqLdCDE=;
+        b=NZ3yBIrQGinMehOptHAT3MFdp7OMXjMjzpg9VAPZcACilxzjx1TCUIw266TrTWgw/E
+         oZ2LmZlhtl/YIDW3CfRkbEyHYtcflncV0oMgafu7KezPJi/6vCdfmzxYGR/Qm0EGl3N9
+         TcAPTBXedHnbHCOZyffCzwdA+nBIy3NapFiDXgi165d5KtNFpmdkdQmykMJ2wDwGtRnc
+         BcvhxygjDKeNG9hfvj51J74g2TZyXdaoJo5DQBl21QeHPXTZuhpeXt/+1nIXkaUzauFF
+         CIzYw68y5OEYlGiI2mQ0Gl9w7SujDkn+DOOqUi+9MUCeQLynsxRki72rigFKwvWEPjBe
+         9Wzg==
+X-Gm-Message-State: AGi0PuZJIfEy7bsfoacK03gDbIX1OKKZ9wQu16JPgCbQPQJe9ZTz6/XN
+        r4D9tkZnwJmrsjAbMYwUYt4o5g==
+X-Google-Smtp-Source: APiQypJUg540AgQ0gfERSdqKG3/UO/88BFVywKnBq0ADggzskh4vKGlmvKwDR8ejYqwi3brMfHgq9Q==
+X-Received: by 2002:a17:902:a511:: with SMTP id s17mr10176108plq.33.1587252420747;
+        Sat, 18 Apr 2020 16:27:00 -0700 (PDT)
+Received: from localhost.localdomain (c-73-53-94-119.hsd1.wa.comcast.net. [73.53.94.119])
+        by smtp.gmail.com with ESMTPSA id u7sm21429323pfu.90.2020.04.18.16.26.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 18 Apr 2020 16:27:00 -0700 (PDT)
+From:   Luke Nelson <lukenels@cs.washington.edu>
+X-Google-Original-From: Luke Nelson <luke.r.nels@gmail.com>
+To:     bpf@vger.kernel.org
+Cc:     Luke Nelson <luke.r.nels@gmail.com>, Xi Wang <xi.wang@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>, Shuah Khan <shuah@kernel.org>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org
+Subject: [PATCH bpf 1/2] bpf, x86: Fix encoding for lower 8-bit registers in BPF_STX BPF_B
+Date:   Sat, 18 Apr 2020 16:26:53 -0700
+Message-Id: <20200418232655.23870-1-luke.r.nels@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When printing iregs, there was a double newline printed because
-perf_sample__fprintf_regs() was printing its own and then at the
-end of all fields, perf script was adding one.
-This was causing blank line in the output:
+This patch fixes an encoding bug in emit_stx for BPF_B when the source
+register is BPF_REG_FP.
 
-Before:
-$ perf script -Fip,iregs
-           401b8d ABI:2    DX:0x100    SI:0x4a8340    DI:0x4a9340
+The current implementation for BPF_STX BPF_B in emit_stx saves one REX
+byte when the operands can be encoded using Mod-R/M alone. The lower 8
+bits of registers %rax, %rbx, %rcx, and %rdx can be accessed without using
+a REX prefix via %al, %bl, %cl, and %dl, respectively. Other registers,
+(e.g., %rsi, %rdi, %rbp, %rsp) require a REX prefix to use their 8-bit
+equivalents (%sil, %dil, %bpl, %spl).
 
-           401b8d ABI:2    DX:0x100    SI:0x4a9340    DI:0x4a8340
+The current code checks if the source for BPF_STX BPF_B is BPF_REG_1
+or BPF_REG_2 (which map to %rdi and %rsi), in which case it emits the
+required REX prefix. However, it misses the case when the source is
+BPF_REG_FP (mapped to %rbp).
 
-           401b8d ABI:2    DX:0x100    SI:0x4a8340    DI:0x4a9340
+The result is that BPF_STX BPF_B with BPF_REG_FP as the source operand
+will read from register %ch instead of the correct %bpl. This patch fixes
+the problem by fixing and refactoring the check on which registers need
+the extra REX byte. Since no BPF registers map to %rsp, there is no need
+to handle %spl.
 
-           401b8d ABI:2    DX:0x100    SI:0x4a9340    DI:0x4a8340
-
-After:
-$ perf script -Fip,iregs
-           401b8d ABI:2    DX:0x100    SI:0x4a8340    DI:0x4a9340
-           401b8d ABI:2    DX:0x100    SI:0x4a9340    DI:0x4a8340
-           401b8d ABI:2    DX:0x100    SI:0x4a8340    DI:0x4a9340
-
-Signed-off-by: Stephane Eranian <eranian@google.com>
+Fixes: 622582786c9e0 ("net: filter: x86: internal BPF JIT")
+Signed-off-by: Xi Wang <xi.wang@gmail.com>
+Signed-off-by: Luke Nelson <luke.r.nels@gmail.com>
 ---
- tools/perf/builtin-script.c | 2 --
- 1 file changed, 2 deletions(-)
+ arch/x86/net/bpf_jit_comp.c | 18 +++++++++++++++---
+ 1 file changed, 15 insertions(+), 3 deletions(-)
 
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index 1f57a7ecdf3d0..0c0b6e807d06e 100644
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -604,8 +604,6 @@ static int perf_sample__fprintf_regs(struct regs_dump *regs, uint64_t mask,
- 		printed += fprintf(fp, "%5s:0x%"PRIx64" ", perf_reg_name(r), val);
- 	}
- 
--	fprintf(fp, "\n");
--
- 	return printed;
+diff --git a/arch/x86/net/bpf_jit_comp.c b/arch/x86/net/bpf_jit_comp.c
+index 5ea7c2cf7ab4..42b6709e6dc7 100644
+--- a/arch/x86/net/bpf_jit_comp.c
++++ b/arch/x86/net/bpf_jit_comp.c
+@@ -158,6 +158,19 @@ static bool is_ereg(u32 reg)
+ 			     BIT(BPF_REG_AX));
  }
  
++/*
++ * is_ereg_8l() == true if BPF register 'reg' is mapped to access x86-64
++ * lower 8-bit registers dil,sil,bpl,spl,r8b..r15b, which need extra byte
++ * of encoding. al,cl,dl,bl have simpler encoding.
++ */
++static bool is_ereg_8l(u32 reg)
++{
++	return is_ereg(reg) ||
++	    (1 << reg) & (BIT(BPF_REG_1) |
++			  BIT(BPF_REG_2) |
++			  BIT(BPF_REG_FP));
++}
++
+ static bool is_axreg(u32 reg)
+ {
+ 	return reg == BPF_REG_0;
+@@ -598,9 +611,8 @@ static void emit_stx(u8 **pprog, u32 size, u32 dst_reg, u32 src_reg, int off)
+ 	switch (size) {
+ 	case BPF_B:
+ 		/* Emit 'mov byte ptr [rax + off], al' */
+-		if (is_ereg(dst_reg) || is_ereg(src_reg) ||
+-		    /* We have to add extra byte for x86 SIL, DIL regs */
+-		    src_reg == BPF_REG_1 || src_reg == BPF_REG_2)
++		if (is_ereg(dst_reg) || is_ereg_8l(src_reg))
++			/* Add extra byte for eregs or SIL,DIL,BPL in src_reg */
+ 			EMIT2(add_2mod(0x40, dst_reg, src_reg), 0x88);
+ 		else
+ 			EMIT1(0x88);
 -- 
-2.26.1.301.g55bc3eb7cb9-goog
+2.17.1
 
