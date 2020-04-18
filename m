@@ -2,118 +2,182 @@ Return-Path: <SRS0=3CHW=6C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADC42C2D0EF
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 10:10:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75E48C352BE
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 10:12:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7757C21D82
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 10:10:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K9fIql3m"
+	by mail.kernel.org (Postfix) with ESMTP id 53110221F4
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 10:12:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587204748;
+	bh=12+OiT5CsSGBAgtccVS9VdWP/G4qiRUN774ikuvhCGY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=Sd5tXIHGXyzy4NKWDdWlq811HwIqWuug9ATUEmnF6idR9pwkHW82+mIsT8LVx4nbM
+	 RYWnjRbq8pCfPYsBnSqcT4SdbaR5jH9oA2R7F1EW1+boBZoB6V9iUnfuZ6tbf/4z07
+	 uJWwqVmO3910Xc4qrtYMqq4TfoFZEA1qJ4OJdXMo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725914AbgDRKKK (ORCPT
+        id S1725991AbgDRKM0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 06:10:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47772 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725799AbgDRKKJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 06:10:09 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D87EAC061A0C;
-        Sat, 18 Apr 2020 03:10:07 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id a25so5846940wrd.0;
-        Sat, 18 Apr 2020 03:10:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=Qena3MtWCWW39FG/sL2IEnJF//vW5pRQm5AGBE6pZfs=;
-        b=K9fIql3mNM8DUze3LYpJq8hIxn2AbWQHpdVjOEFpNdg53lvoEz1UK9fBmuw3bINzDf
-         d+BKyBPyar9YdWtsiom/Mg4JBfehj8B3R1+7oH33sodNU67H74rbsulZEMbQHjr4YSub
-         +HTqKKFEojq8XJ+hC5IjCxeCMp366EjOllOO4YjpmxrGLFriF7VEa2A0lZGihbf+qtXf
-         gRE3UzCXoggGhRiOBDjeN/sL1qTj85olxCyG4RqsNtxkoz+hOe8W11IyWSgJw8Cl6lEH
-         qHjWnln/QBrY5jtSr+Tx+sx1ec5ysNiE3i/OLeKW+AcpjZ8l9NVz6kGlGExLiiyLlkGC
-         K2EA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=Qena3MtWCWW39FG/sL2IEnJF//vW5pRQm5AGBE6pZfs=;
-        b=gVDQYrTHCNgvjh6kbMvhqyBA4rp90VtiMaW2A8gQHe7RqyyQGrxUCH8nO3dDvtgi2u
-         9Add2vwJQQqfOgtN9e4ZWtpZPhqUa0pc1aA90CV3OZcmWceKlQpoD6S74rfVudV3pj3Q
-         dIydF+uFiffRaDC42pXwncSY0L5LFgsB3JLsZgCtfOMg0HSJ92VaMOax9IGx2CGZEWgK
-         jHO0Gz1ldDq5iHXyhidgPfop5T2+1T1ryzh4IPm8m+JRfBBNrBGMdQOuCLEI/9EVyw0Z
-         +KsbKQCaSuUxqwr5K0gLNRuPbcyWgmqELO6VBsfSKdLM/+NzufHAcK20qqiXTPSqYEaA
-         3djA==
-X-Gm-Message-State: AGi0PubAG6waSvRSkeQMA+yQRc+Ngi75A77HnNnV6nfx3wWQhDPZQS2v
-        jyqFnAq+PbeKMN36WK7wTr8=
-X-Google-Smtp-Source: APiQypJsEnFS9Q8J+bi+lqjec6s/dgGbyTxoCgCAdexX5/q13TcVfDXVpTDBzDHeNL+J8l0zlty3vg==
-X-Received: by 2002:adf:b1d1:: with SMTP id r17mr6511809wra.85.1587204605462;
-        Sat, 18 Apr 2020 03:10:05 -0700 (PDT)
-Received: from felia.fritz.box ([2001:16b8:2d7a:4700:391d:588b:ee8c:e294])
-        by smtp.gmail.com with ESMTPSA id h13sm23790689wrs.22.2020.04.18.03.10.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 18 Apr 2020 03:10:04 -0700 (PDT)
-From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
-To:     Boris Brezillon <bbrezillon@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     Sebastian Duda <sebastian.duda@fau.de>,
-        Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Joe Perches <joe@perches.com>, kernel-janitors@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Subject: [PATCH RESEND] MAINTAINERS: adjust to renaming physmap_of_versatile.c
-Date:   Sat, 18 Apr 2020 12:09:33 +0200
-Message-Id: <20200418100933.8012-1-lukas.bulwahn@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Sat, 18 Apr 2020 06:12:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36160 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725923AbgDRKMZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 06:12:25 -0400
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CD5C121D82;
+        Sat, 18 Apr 2020 10:12:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587204744;
+        bh=12+OiT5CsSGBAgtccVS9VdWP/G4qiRUN774ikuvhCGY=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=D8wGgaLJaE2TNVGN3niNHQRrlKbmQJyFxOhEG+VFJMFS+gIRhepW3JoFHFxxOZFaS
+         MUCdmir5gjoEUwTmo7qgZtstq8biCS0/5QRVFcAYL/vEYjhd1NV0sl3DgYD/I6AjPL
+         RHFP4s7Hp2QPyPQRaEGCZV98gsVaWLqtbswm2G4U=
+Date:   Sat, 18 Apr 2020 19:12:18 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Luis Chamberlain <mcgrof@kernel.org>
+Cc:     Vlastimil Babka <vbabka@suse.cz>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+        linux-mm@kvack.org, Ivan Teterevkov <ivan.teterevkov@nutanix.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        "Guilherme G . Piccoli" <gpiccoli@canonical.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Christian Brauner <christian.brauner@ubuntu.com>
+Subject: Re: [PATCH v2 1/3] kernel/sysctl: support setting sysctl parameters
+ from kernel command line
+Message-Id: <20200418191218.c3fa3b200730a852e9019421@kernel.org>
+In-Reply-To: <20200417165939.GV11244@42.do-not-panic.com>
+References: <20200414113222.16959-1-vbabka@suse.cz>
+        <20200414113222.16959-2-vbabka@suse.cz>
+        <20200415180355.00bc828ea726c421638db871@kernel.org>
+        <20200416012931.GE11244@42.do-not-panic.com>
+        <20200416194955.3448c8526ea3f59e95c506da@kernel.org>
+        <20200416155327.GT11244@42.do-not-panic.com>
+        <20200417193442.b20394dcaac02d5aeef9b5ee@kernel.org>
+        <20200417165939.GV11244@42.do-not-panic.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 6ca15cfa0788 ("mtd: maps: Rename physmap_of_{versatile, gemini}
-into physmap-{versatile, gemini}") renamed physmap_of_versatile.c to
-physmap-versatile.c, but did not adjust the MAINTAINERS entry.
+On Fri, 17 Apr 2020 16:59:39 +0000
+Luis Chamberlain <mcgrof@kernel.org> wrote:
 
-Since then, ./scripts/get_maintainer.pl --self-test complains:
+> > > > > > Ah, I see. Since the sysctl is designed to be called after all __init calls were
+> > > > > > done, it shouldn't use bootconfig directly because bootconfig is full of __init
+> > > > > > call.
+> > > > > 
+> > > > > The idea is bootconfig would be useful in the sense of a library set of
+> > > > > helpers which could be modified to remove __init, and then used to
+> > > > > instrument the cmdline depending on certain debugging kconfig entries.
+> > > > 
+> > > > Would you mean making bootconfig (parser and APIs) be more generic so that
+> > > > other subsystem can reuse it with their data?
+> > > > Or just make it available after boot? (I think this latter one will be
+> > > > useful for module initialization)
+> > > 
+> > > The later. First use case that comes to mind is debugging cmdline, so
+> > > to see if what one adds is what ends up happening at run time after
+> > > boot.
+> > 
+> > Hmm, I think that's not so easy to debug command line after boot, because
+> > the kernel command line is parsed (and handlers are executed) already in
+> > boot time. We can not repeat it after boot.
+> 
+> Unless you put into the command line everything you need to test on one
+> boot.
 
-  warning: no file matches F: drivers/mtd/maps/physmap_of_versatile.c
+I got it. But it requires completely another thing, because the command line
+handlers are __init function, which is also released after boot, and bootconfig
+is not designed for update (read only) so that we can remove locks.
 
-Rectify the ARM INTEGRATOR, VERSATILE AND REALVIEW SUPPORT entry and now
-also cover drivers/mtd/maps/physmap-versatile.h while at it.
+> 
+> > > > > We currently have no way to purposely extend / break the cmdline for
+> > > > > debugging purposes, so, bootconfig's parsers, since it already has a
+> > > > > way to extend the cmdlineline, might make it much easier to do this
+> > > > > later.
+> > > > > 
+> > > > > Without bootconfig, if we wanted to add new kconfig to, for example,
+> > > > > add new funny cmdline arguments to test they worked or not, we'd have
+> > > > > to devise our own set of helpers now. ie, new functionality. bootconfig
+> > > > > however already has existing functionality to tweak the cmdline, and so
+> > > > > some code could be leveraged there for this purpose.
+> > > > 
+> > > > Hmm, you can use the bootconfig as a "supplemental" kernel command line,
+> > > > but not tweak (like modify/replace) it. Would you like to change the
+> > > > kernel command line parameter on-line?
+> > > 
+> > > It would be during boot. To augment it as if the user had used certain
+> > > parameters on boot. But if only a new path is tested, and we can't
+> > > reproduce as if the user had *not* used bootconfig, this idea would
+> > > only be useful to test bootconfig parsing, nothing else. The hope was
+> > > to do both.
+> > 
+> > As you may know, the bootconfig already supports "additional" kernel
+> > command line. All keys which starts "kernel" is copied into kernel
+> > command line at early boot timing. So if you want to write a test
+> > parameter in the bootconfig, you can do it.
+> 
+> There are two bootparams paths now, the old way, and the new bootconfig
+> path. Extending test coverage to test bootconfig seems rather easier to
+> consider. However the hope was that there may be some existing code
+> within bootconfig which would also allow one to test the old cmdline
+> path, as if the cmdline had certain params present. It doesn't seem
+> to be the case.
 
-Co-developed-by: Sebastian Duda <sebastian.duda@fau.de>
-Signed-off-by: Sebastian Duda <sebastian.duda@fau.de>
-Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
----
-Boris, please pick or ack this patch.
-applies cleanly on current master and next-20200417
+Hmm, maybe you misunderstand how the bootconfig passes the options
+to command line. At the very early timing, it copies the kernel
+boot options into the existing legacy kernel command line. See
+setup_command_line()@init/main.c. The extra_command_line is what the
+bootconfig generated.
 
-v1: https://lore.kernel.org/lkml/20200228063338.4099-1-lukas.bulwahn@gmail.com/
-  - was wrongly sent to old boris.brezillon@bootlin.com address
-  - got Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+This extra_command_line is mixed with the old cmdline parameters
+and it is passed to the handlers via parse_args() on each init-level.
+(some handlers just set the option to its own variables and
+ use those variables in their __init functions)
 
- MAINTAINERS | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On the other hand, new code which uses the bootconfig, will use the
+bootconfig APIs (xbc_*) to find their related options in its __init
+functions.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index c77f02282044..52bb8819230a 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -1342,7 +1342,7 @@ F:	arch/arm/plat-versatile/
- F:	drivers/clk/versatile/
- F:	drivers/i2c/busses/i2c-versatile.c
- F:	drivers/irqchip/irq-versatile-fpga.c
--F:	drivers/mtd/maps/physmap_of_versatile.c
-+F:	drivers/mtd/maps/physmap-versatile.*
- F:	drivers/power/reset/arm-versatile-reboot.c
- F:	drivers/soc/versatile/
- 
+> > However, it is not a good idea to execute command line handlers
+> > twice because it can be destructive or can append all parameters
+> > (e.g. "console=" .)
+> 
+> I see so bootconfig is mutually exclusive with the old cmdline?
+
+If you put options under "kernel" or "init", those are inclusive to the
+old cmdline, but other keys are not visible from the old cmdline.
+
+Thank you,
+
+> 
+> > For the new feature can natively use the bootconfig, for example
+> > boot-time tracing (kernel/trace/trace_boot.c) is something like
+> > this sysctl on boot, and natively uses the bootconfig because
+> > the tracing parameter is too complex for kernel command line :)
+> 
+> Neat.
+> 
+>   Luis
+
+
 -- 
-2.17.1
-
+Masami Hiramatsu <mhiramat@kernel.org>
