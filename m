@@ -2,114 +2,93 @@ Return-Path: <SRS0=3CHW=6C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84634C38A29
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 17:18:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB1EDC3A5A0
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 17:21:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 601FE20776
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 17:18:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAC3C221E9
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 17:21:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NlZR3lEZ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PKlV8rD5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726661AbgDRRST (ORCPT
+        id S1726500AbgDRRVY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 13:18:19 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:60054 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725887AbgDRRSS (ORCPT
+        Sat, 18 Apr 2020 13:21:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57212 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725887AbgDRRVY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 13:18:18 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587230297;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=ie9EL70Lwd9PPSN1xNj6PeAxkZsghWSxXFhNLGVt4Vw=;
-        b=NlZR3lEZhphKk1c/QeQ9WzcfZdNpOUglmzLDbwSqOANyjzJDYDe/CQteaankg5uiDFjSl9
-        gyJTeuO6WF0XUaIANo293KC2hsBh/WEAQq0+lumS/Zw2s00I8Uf9sIr846UpDqwgYhFhaG
-        1AXtFZRGyRUOpo2P/0rtSPM/mM0JuQQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-204-96sEaGbqPjel3zKRyqR_Pg-1; Sat, 18 Apr 2020 13:18:15 -0400
-X-MC-Unique: 96sEaGbqPjel3zKRyqR_Pg-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 38ADDDB60;
-        Sat, 18 Apr 2020 17:18:14 +0000 (UTC)
-Received: from treble (ovpn-112-81.rdu2.redhat.com [10.10.112.81])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id D891012973B;
-        Sat, 18 Apr 2020 17:18:12 +0000 (UTC)
-Date:   Sat, 18 Apr 2020 12:18:10 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Miroslav Benes <mbenes@suse.cz>, jthierry@redhat.com
-Subject: Re: [PATCH v5 02/17] objtool: Better handle IRET
-Message-ID: <20200418171810.n4vcaihdfksltuqg@treble>
-References: <20200416114706.625340212@infradead.org>
- <20200416115118.631224674@infradead.org>
- <8692ee18-e553-6f90-5291-62d6d57407cd@oracle.com>
- <20200417182339.GJ20730@hirez.programming.kicks-ass.net>
- <CALCETrU58muwSVDstRJQGEn20aOOHFctzZkxHRGh-yEGR9x1VA@mail.gmail.com>
+        Sat, 18 Apr 2020 13:21:24 -0400
+Received: from mail-wm1-x332.google.com (mail-wm1-x332.google.com [IPv6:2a00:1450:4864:20::332])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A64B9C061A0C;
+        Sat, 18 Apr 2020 10:21:23 -0700 (PDT)
+Received: by mail-wm1-x332.google.com with SMTP id z6so6384698wml.2;
+        Sat, 18 Apr 2020 10:21:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=3Mmyrgp0gwbPy6iOJUPF/mmRY393aiDlZLAI44AwPnY=;
+        b=PKlV8rD5CiWKWjGUgZHEn7MV3BvKjxu5WxiIqR1UnvYtq3UeE/1Np9m4rHOGycHAcz
+         Qv02GlkcSHX34Obl14fZcil8Yn2wuBVtJ/Df8WudJ+mONpXAhQXH3gjbXTMhd9cjmGVM
+         vke2AET9Wk63y+GQcxFmPgRplSNAy28LR5bAPL2T9PkFy1ymGI5q/wU+JM3ZVov42GjV
+         kSNAWf+2KRNXz7gzS9K2PnAO9kifPYoBPjV8EqPSokrH+JsGc0hPuL6NmePyWmcTgx+C
+         ucRLyIxrmMXzRHYu7qjtAb5yhGskSoa/PdiQ7q6lAg4ITP0JYT937x5Vckzvy+1YGybJ
+         cW3Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=3Mmyrgp0gwbPy6iOJUPF/mmRY393aiDlZLAI44AwPnY=;
+        b=FFahLyrNtWF5MrL4YAzJAOPYOsJK0Gtt025obq2X85VJ0MXWGUUjw0F/t3Q7tdT/P7
+         +kRUf9x1jOyXpKewtN3rqJbTdUgLrtNPTIx0lzH7tJSFkff6Ftiso+Xh7bl5JbLMFb4l
+         rlVFBFMzBHLE4EuXRW2u6OVx1FmMrjieL45MGTBn/EAfnFiWhpsz862ks2RUlrWs/CNE
+         kKkz0aI2PHE5uBcCI8NbFcGu8O1giEvBc0+d0xZvHjEtRYgvHa6/868U8x97ejQDQja7
+         mf/9loiW4TuqjiiZbp2LlFQOMUxzKwElb7mbjbncDYrnLln+xj7Rkr9bYYeC9gDCcQJN
+         wskg==
+X-Gm-Message-State: AGi0PuaFe/BQbpTVeyp9frH/8vn4agrMQgp2J+jqoFxd+HJcuF7aVF2B
+        7VEE9DM5O+hHMBEuV3HgyWBmuSuO
+X-Google-Smtp-Source: APiQypIRlBCTZlXxHVqWq17ZY/wPksDEr9J5qLbuTCyeGbBLxwEaquHKaj9BCAioBLUjmVAeDNGuIg==
+X-Received: by 2002:a7b:c944:: with SMTP id i4mr9501673wml.144.1587230482199;
+        Sat, 18 Apr 2020 10:21:22 -0700 (PDT)
+Received: from localhost.localdomain ([109.126.129.227])
+        by smtp.gmail.com with ESMTPSA id b85sm12538247wmb.21.2020.04.18.10.21.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 18 Apr 2020 10:21:21 -0700 (PDT)
+From:   Pavel Begunkov <asml.silence@gmail.com>
+To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 0/2] CQ vs SQ timeout accounting
+Date:   Sat, 18 Apr 2020 20:20:09 +0300
+Message-Id: <cover.1587229607.git.asml.silence@gmail.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CALCETrU58muwSVDstRJQGEn20aOOHFctzZkxHRGh-yEGR9x1VA@mail.gmail.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 17, 2020 at 04:53:31PM -0700, Andy Lutomirski wrote:
-> I'm wondering if this would be easier if we just moved the guts of
-> sync_core() into asm.
-> 
-> In the near future, I think we want to rework it a tiny bit.  In
-> particular, I think we're going to want to make sync_core() do:
-> 
-> if (static_cpu_has(X86_FEATURE_SERIALIZE))
->   asm volatile ("serialize");
-> else
->   iret_to_self();
-> 
-> where iret_to_self() is the meat of the IRET hack.  And then we're
-> going to add a new thingy unmask_nmi() that does iret_to_self() on
-> everything except SEV-ES.  The near-term motivation is that I think we
-> have some genuine bugs in a couple of corner cases:
-> 
-> 1. On AMD chips, if NMI hits user code with invalid CS or SS, we will
-> enter on the NMI stack, switch to the normal stack, and return with
-> IRET, and the IRET will fail.  And then we end up in a nasty state in
-> which NMIs are masked but the code path we run doesn't expect that.
-> So we should unmask_nmi() in fixup_bad_iret() or similar.  Intel CPUs
-> are unaffected because Intel is differently quirky.
-> 
-> 2.  do_nmi() does this:
-> 
->     if (user_mode(regs))
->                 mds_user_clear_cpu_buffers();
-> 
-> because it can't safely call prepare_exit_to_usermode().  This is a
-> gross wart and I'd like to fix it.  Fixing it involves teaching the
-> relevant code paths to unmask_nmis() if they're going to so IRQs-on
-> exit work.
-> 
-> None of this is really relevant to the current patch, but it wouldn't
-> be unreasonable to turn the IRET thing from an inline asm into a real
-> asm function if it makes objtool's life easier.
+The first patch do the job, and triggers after __any__ CQEs, including
+ones from other timeouts. And it obviously fails to pass the tests. The
+second patch makes it to count only non-timeout CQEs, and passes
+the tests. Feel free to squash them.
 
-I don't think that would make objtool's life any easier -- it still has
-to understand the stack impact of the IRET-to-self thing regardless.
+Fixes Hrvoje's issue. Also, there is one more bug to be fixed.
+It's related to bulk completion, and manifests itself with both
+implementations.
+
+Pavel Begunkov (2):
+  io_uring: trigger timeout after any sqe->off CQEs
+  io_uring: don't trigger timeout with another t-out
+
+ fs/io_uring.c | 107 ++++++++++++++++----------------------------------
+ 1 file changed, 33 insertions(+), 74 deletions(-)
 
 -- 
-Josh
+2.24.0
 
