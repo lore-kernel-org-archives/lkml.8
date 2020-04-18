@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAC85C38A29
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:56:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43703C38A29
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:56:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7CE41206D6
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:56:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 175AF206D6
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:56:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587221769;
-	bh=WwMQnnlr9UFxuKnVYip2MbxhHSDl070mII4XwC96BvM=;
+	s=default; t=1587221772;
+	bh=sJRlZ3mJya5wdFuThA+patbUhvI8Xqv0PFU2vE8Muh8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZNdD8y3dAJIMMr/vp3pI5v5/YHwf1xXM9tuywBw6k8GYrUhHSRlU8PlafE2DkFYfX
-	 49FoWPShJIt7SGXAA6uPKF6Zu75jj38jz6oJ2O0+HM81JueGSb2nWG2+t73y9oZGJx
-	 Bb3rc8R9Csp4+yBKNBXZ+e4x962MhEYOHrLB87XU=
+	b=nXls1TrYWD1aolphQZIMaS0TTMS5DCUcn1ySQc++9mMv0TfAZPKCCGEF9XZPRKvH1
+	 gRUhS/PU7FBVY9mD9MxMRHcmismm7I55kD4dMBMqnoblbIwyUIDzh00kiUFTXienj0
+	 KSq81e9NAMds3hqIM9DL584csiQQawq5doR4PBpw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726769AbgDROkx (ORCPT
+        id S1728418AbgDRO4L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 10:40:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49292 "EHLO mail.kernel.org"
+        Sat, 18 Apr 2020 10:56:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49380 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725903AbgDROkv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 10:40:51 -0400
+        id S1726762AbgDROkx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 10:40:53 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 154F1221F4;
-        Sat, 18 Apr 2020 14:40:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4D8BC21D7E;
+        Sat, 18 Apr 2020 14:40:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587220850;
-        bh=WwMQnnlr9UFxuKnVYip2MbxhHSDl070mII4XwC96BvM=;
+        s=default; t=1587220853;
+        bh=sJRlZ3mJya5wdFuThA+patbUhvI8Xqv0PFU2vE8Muh8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2Vviwj5T4TctrLGU1yZC03N2m4txI8yJXAGxosGdCZXxazio8iYhZJ9uhN/I8tlFE
-         /hTgOIuO2E4KgNPrf7hS1M0tmXgvUPyw4NtrsGZ6cZ8UqKo/Qg2ahoid5cSRxmQsN/
-         bmQ5Xijw+UfIcTz/KX0YAkgK49QG3Mjs0ZbVa6zY=
+        b=z0aJj8VwhCcmSGuY+jo45ovtd8Gib7bhtWya8eu6FCDAud28Qf64GtYVWrbGYtyc2
+         exDedAk+NBSfdnOA9uUvJubtnMZZ+PMMx8f8wyR3nNkpwRaxbQgPQqP7y89A7j0dXG
+         oKbWwW+3CcC8UI5dmtVpG+TPz1x+NkTH5FAK640g=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jan Kara <jack@suse.cz>, Dan Williams <dan.j.williams@intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nvdimm@lists.01.org
-Subject: [PATCH AUTOSEL 5.4 02/78] tools/testing/nvdimm: Fix compilation failure without CONFIG_DEV_DAX_PMEM_COMPAT
-Date:   Sat, 18 Apr 2020 10:39:31 -0400
-Message-Id: <20200418144047.9013-2-sashal@kernel.org>
+Cc:     Amir Goldstein <amir73il@gmail.com>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, linux-unionfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 04/78] ovl: fix value of i_ino for lower hardlink corner case
+Date:   Sat, 18 Apr 2020 10:39:33 -0400
+Message-Id: <20200418144047.9013-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200418144047.9013-1-sashal@kernel.org>
 References: <20200418144047.9013-1-sashal@kernel.org>
@@ -58,42 +59,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jan Kara <jack@suse.cz>
+From: Amir Goldstein <amir73il@gmail.com>
 
-[ Upstream commit c0e71d602053e4e7637e4bc7d0bc9603ea77a33f ]
+[ Upstream commit 300b124fcf6ad2cd99a7b721e0f096785e0a3134 ]
 
-When a kernel is configured without CONFIG_DEV_DAX_PMEM_COMPAT, the
-compilation of tools/testing/nvdimm fails with:
+Commit 6dde1e42f497 ("ovl: make i_ino consistent with st_ino in more
+cases"), relaxed the condition nfs_export=on in order to set the value of
+i_ino to xino map of real ino.
 
-  Building modules, stage 2.
-  MODPOST 11 modules
-ERROR: "dax_pmem_compat_test" [tools/testing/nvdimm/test/nfit_test.ko] undefined!
+Specifically, it also relaxed the pre-condition that index=on for
+consistent i_ino. This opened the corner case of lower hardlink in
+ovl_get_inode(), which calls ovl_fill_inode() with ino=0 and then
+ovl_init_inode() is called to set i_ino to lower real ino without the xino
+mapping.
 
-Fix the problem by calling dax_pmem_compat_test() only if the kernel has
-the required functionality.
+Pass the correct values of ino;fsid in this case to ovl_fill_inode(), so it
+can initialize i_ino correctly.
 
-Signed-off-by: Jan Kara <jack@suse.cz>
-Link: https://lore.kernel.org/r/20200123154720.12097-1-jack@suse.cz
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+Fixes: 6dde1e42f497 ("ovl: make i_ino consistent with st_ino in more ...")
+Signed-off-by: Amir Goldstein <amir73il@gmail.com>
+Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/nvdimm/test/nfit.c | 2 ++
- 1 file changed, 2 insertions(+)
+ fs/overlayfs/inode.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/tools/testing/nvdimm/test/nfit.c b/tools/testing/nvdimm/test/nfit.c
-index bf6422a6af7ff..a8ee5c4d41ebb 100644
---- a/tools/testing/nvdimm/test/nfit.c
-+++ b/tools/testing/nvdimm/test/nfit.c
-@@ -3164,7 +3164,9 @@ static __init int nfit_test_init(void)
- 	mcsafe_test();
- 	dax_pmem_test();
- 	dax_pmem_core_test();
-+#ifdef CONFIG_DEV_DAX_PMEM_COMPAT
- 	dax_pmem_compat_test();
-+#endif
- 
- 	nfit_test_setup(nfit_test_lookup, nfit_test_evaluate_dsm);
- 
+diff --git a/fs/overlayfs/inode.c b/fs/overlayfs/inode.c
+index b045cf1826fc4..bb980721502dd 100644
+--- a/fs/overlayfs/inode.c
++++ b/fs/overlayfs/inode.c
+@@ -881,7 +881,7 @@ struct inode *ovl_get_inode(struct super_block *sb,
+ 	struct dentry *lowerdentry = lowerpath ? lowerpath->dentry : NULL;
+ 	bool bylower = ovl_hash_bylower(sb, upperdentry, lowerdentry,
+ 					oip->index);
+-	int fsid = bylower ? oip->lowerpath->layer->fsid : 0;
++	int fsid = bylower ? lowerpath->layer->fsid : 0;
+ 	bool is_dir, metacopy = false;
+ 	unsigned long ino = 0;
+ 	int err = oip->newinode ? -EEXIST : -ENOMEM;
+@@ -931,6 +931,8 @@ struct inode *ovl_get_inode(struct super_block *sb,
+ 			err = -ENOMEM;
+ 			goto out_err;
+ 		}
++		ino = realinode->i_ino;
++		fsid = lowerpath->layer->fsid;
+ 	}
+ 	ovl_fill_inode(inode, realinode->i_mode, realinode->i_rdev, ino, fsid);
+ 	ovl_inode_init(inode, upperdentry, lowerdentry, oip->lowerdata);
 -- 
 2.20.1
 
