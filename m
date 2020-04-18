@@ -7,149 +7,180 @@ X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CF18C2BA19
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 06:55:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7940C38A29
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 07:02:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D61DE214D8
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 06:55:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A767D221EA
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 07:02:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="umNoENMc"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eneHelWv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725949AbgDRGzX (ORCPT
+        id S1725914AbgDRHCz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 02:55:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46368 "EHLO
+        Sat, 18 Apr 2020 03:02:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47506 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725796AbgDRGzW (ORCPT
+        with ESMTP id S1725849AbgDRHCz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 02:55:22 -0400
-Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 523B1C061A0C
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 23:55:22 -0700 (PDT)
-Received: by mail-qk1-x744.google.com with SMTP id b62so4956161qkf.6
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 23:55:22 -0700 (PDT)
+        Sat, 18 Apr 2020 03:02:55 -0400
+Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A764AC061A0C
+        for <linux-kernel@vger.kernel.org>; Sat, 18 Apr 2020 00:02:53 -0700 (PDT)
+Received: by mail-qt1-x844.google.com with SMTP id x2so4067837qtr.0
+        for <linux-kernel@vger.kernel.org>; Sat, 18 Apr 2020 00:02:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=zA4TAPd3s2/1fOiuEWefHTUBEv1/DjG3SpNxlrduXbQ=;
-        b=umNoENMcCFivIrZCfObQF9v9E490r6JAMXgR2FmNKvXmJEhDCvwFhvAy/U9gfgs9ky
-         b4CALfBUQvsTVeIX3BYVbooOeyHCUITRMOUOXHANq9bUDYm4pbagGz+W8prCiITSLvBp
-         KVL3w8m6ImKQURJ3YfAUXs88taPQUSI4nemAyGF1qFL5gv2dnqmMzQzzqDg1C82Y19Sh
-         i6rUAjA78h69hhfshraz79CrOXrQ3yDgWjVWl5aIuZ3rwu5DwfMfYVXiSnLFa2WoIB84
-         LWG5+91pLI9G2revq93crU6K95jmq12DPbtJFzPComS+IaZYJpJxSLM6CZJi7fB1emIj
-         3+HQ==
+        bh=TjXmWmuINQagYGOhB0mh8AmFnIMZ72LlgvA/kNKwdwQ=;
+        b=eneHelWvQA1o2xZd7COnbAkMg2VijPrSKWln3C1KPWsKzKaxkBchi9lH3mm6z0mchu
+         bs0JjsONZdn1EW5Pa5rkEnyVwrcm1Xes/rbgpL6bD1OKq7M9E+4rryt6Zw8Vo7c14dm/
+         85kHXX1ylyxSOjBeELkVJa1w6RhDAf58NGAoh0pMlB6JwQWsGpHv7xZfT3vsG5wcU8PO
+         PO4Rx84G3YCeWDVr81SGT2C0srVpxwfHmc3kp1owb9mgCLLBYC0Y6VOoawwzTCKp4JmH
+         iZL2vDgA7Ta2F2bdfEt3J5CsDJ+Hco3D3DWELetZrFN+Ldj5y5ib+FWK5fd+pxaSWQJg
+         ew1g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=zA4TAPd3s2/1fOiuEWefHTUBEv1/DjG3SpNxlrduXbQ=;
-        b=gSnpgwioG0au/G2gEPLYvPZivbGCDWAbAsNxMZC+7JU4gxpDgWnaZhI0sjsW3+E7uC
-         Ki5O9tX9XTrqHBRiH9/iLkY1rWY3f3eHc+937T/SrX+9MFRSMY8MNnXSFbUstKXS6kBE
-         9h4AsqXiErwjBL6tCs4LATaGnm/0XZHual/j8KZwdUYDBVJQhsGHBrMKXQhuE0UCNCrv
-         YXM87B3Satn9Td+0TJrSysHUG/BNy02WwCGOKK2B4APO9aCb0QlKkn0kNakw0IKH3oIc
-         s3O/DGTR9uZj1fWJyYGS4Q8dGZimCQ2G5R1RzI86Yj9/bwf9+K4JGiKPwlZM6jdkrZLg
-         zI+Q==
-X-Gm-Message-State: AGi0PubA2gThYWFllfwsRuzCTjly9kizRm4cz3WoJTxDUHeX6NRuzX/V
-        Atzc+cTxW5eiK9XiGT8dGWlTgJ6lqEHJc0v7Qt+JBA==
-X-Google-Smtp-Source: APiQypLT6DBvh8lNY7n/+bua8Plt1jnVFwFhsgsnXXfNqkvH0aGOWlXlB3cYCGHa62n1T2KqMRvH1mrx7V+oT0oGhsQ=
-X-Received: by 2002:a37:4f13:: with SMTP id d19mr6557533qkb.43.1587192921116;
- Fri, 17 Apr 2020 23:55:21 -0700 (PDT)
+        bh=TjXmWmuINQagYGOhB0mh8AmFnIMZ72LlgvA/kNKwdwQ=;
+        b=hyuUzpF1IwBb99rznTG4Xu6jJZDQsMmnD7z5Rg9oYfeBhGofVo70aadj8ekCGv+a8S
+         oo7kPjf/iAGraLE4XifI4hjpotAd5ID8MIzawaNFvEMPBmvU9z6FxiBtDRVMwyn4p6qZ
+         b2yS7nB3pFFAV+lyUbqEvjES3fgnc797sBoIdPFo7tTzcbr9y15owikLxOo6A4G0JWkO
+         xD9Ng6cVnwrE0nUQgArKQ2z7vkjMRU+8pOYRPBmVEq66eaOdXCW53DWrkezzcBs8UHY9
+         Tu/FuwbyH9Mu0RFuS7bqlwnwIRp9Yjroa5wjS4xOvHoCOwFge/y0BuNHIM6jjUGPtxJA
+         iAmw==
+X-Gm-Message-State: AGi0PuZtueMOvh6anndawNVXZLJFQmCblcH7eWWFsG7lT1Q/tf8Sm2RQ
+        tZ9l7CzkP5Kafud9KlZyDPZOM9S+5ziytCopRIfJPQ==
+X-Google-Smtp-Source: APiQypLsCDn+7Nx+XS+vfQdJLSgMyJ6cAip9eoqxwKIcZG7bcNNfpWA3QWLCOsdYajOXxXkuacs3h/Laq/BJ+KxyQO4=
+X-Received: by 2002:ac8:1b6a:: with SMTP id p39mr6720360qtk.158.1587193372377;
+ Sat, 18 Apr 2020 00:02:52 -0700 (PDT)
 MIME-Version: 1.0
-References: <0000000000008832a805a38afe44@google.com>
-In-Reply-To: <0000000000008832a805a38afe44@google.com>
+References: <000000000000e642a905a0cbee6e@google.com>
+In-Reply-To: <000000000000e642a905a0cbee6e@google.com>
 From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Sat, 18 Apr 2020 08:55:09 +0200
-Message-ID: <CACT4Y+bXkW-pBuYyGppoizE4EiFxjeOKzLYTy7H3XsJccbXX5w@mail.gmail.com>
-Subject: Re: general protection fault in mm_update_next_owner (2)
-To:     syzbot <syzbot+a0f91e07da410c63b9c3@syzkaller.appspotmail.com>
-Cc:     Christian Brauner <christian@brauner.io>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Thomas Gleixner <tglx@linutronix.de>
+Date:   Sat, 18 Apr 2020 09:02:41 +0200
+Message-ID: <CACT4Y+YR5Y8OQ4MCdCA2eoQM=GdBXN39O4HahWtL0sdqwsB=mg@mail.gmail.com>
+Subject: Re: linux-next test error: WARNING: suspicious RCU usage in ovs_ct_exit
+To:     syzbot <syzbot+7ef50afd3a211f879112@syzkaller.appspotmail.com>,
+        Linux-Next Mailing List <linux-next@vger.kernel.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     David Miller <davem@davemloft.net>, dev@openvswitch.org,
+        kuba@kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        Pravin B Shelar <pshelar@ovn.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Apr 18, 2020 at 8:44 AM syzbot
-<syzbot+a0f91e07da410c63b9c3@syzkaller.appspotmail.com> wrote:
+On Sat, Mar 14, 2020 at 8:57 AM syzbot
+<syzbot+7ef50afd3a211f879112@syzkaller.appspotmail.com> wrote:
 >
 > Hello,
 >
 > syzbot found the following crash on:
 >
-> HEAD commit:    8f3d9f35 Linux 5.7-rc1
-> git tree:       upstream
-> console output: https://syzkaller.appspot.com/x/log.txt?x=119a1c07e00000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=5d351a1019ed81a2
-> dashboard link: https://syzkaller.appspot.com/bug?extid=a0f91e07da410c63b9c3
+> HEAD commit:    2e602db7 Add linux-next specific files for 20200313
+> git tree:       linux-next
+> console output: https://syzkaller.appspot.com/x/log.txt?x=16669919e00000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=cf2879fc1055b886
+> dashboard link: https://syzkaller.appspot.com/bug?extid=7ef50afd3a211f879112
 > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
 >
 > Unfortunately, I don't have any reproducer for this crash yet.
 >
 > IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+a0f91e07da410c63b9c3@syzkaller.appspotmail.com
+> Reported-by: syzbot+7ef50afd3a211f879112@syzkaller.appspotmail.com
 
-FWIW similar crashes also happened on 4.14 and 4.19 LTS. You may see
-more info about these crashes on the dashboard bug page.
++linux-next, Stephen for currently open linux-next build/boot failure
 
-> general protection fault, probably for non-canonical address 0xf1918d9191919193: 0000 [#1] PREEMPT SMP KASAN
-> KASAN: maybe wild-memory-access in range [0x8c8c8c8c8c8c8c98-0x8c8c8c8c8c8c8c9f]
-> CPU: 0 PID: 933 Comm: syz-executor.0 Not tainted 5.7.0-rc1-syzkaller #0
+> =============================
+> WARNING: suspicious RCU usage
+> 5.6.0-rc5-next-20200313-syzkaller #0 Not tainted
+> -----------------------------
+> net/openvswitch/conntrack.c:1898 RCU-list traversed in non-reader section!!
+>
+> other info that might help us debug this:
+>
+>
+> rcu_scheduler_active = 2, debug_locks = 1
+> 3 locks held by kworker/u4:3/127:
+>  #0: ffff8880a9771d28 ((wq_completion)netns){+.+.}, at: __write_once_size include/linux/compiler.h:250 [inline]
+>  #0: ffff8880a9771d28 ((wq_completion)netns){+.+.}, at: arch_atomic64_set arch/x86/include/asm/atomic64_64.h:34 [inline]
+>  #0: ffff8880a9771d28 ((wq_completion)netns){+.+.}, at: atomic64_set include/asm-generic/atomic-instrumented.h:856 [inline]
+>  #0: ffff8880a9771d28 ((wq_completion)netns){+.+.}, at: atomic_long_set include/asm-generic/atomic-long.h:41 [inline]
+>  #0: ffff8880a9771d28 ((wq_completion)netns){+.+.}, at: set_work_data kernel/workqueue.c:615 [inline]
+>  #0: ffff8880a9771d28 ((wq_completion)netns){+.+.}, at: set_work_pool_and_clear_pending kernel/workqueue.c:642 [inline]
+>  #0: ffff8880a9771d28 ((wq_completion)netns){+.+.}, at: process_one_work+0x82a/0x1690 kernel/workqueue.c:2237
+>  #1: ffffc900013a7dd0 (net_cleanup_work){+.+.}, at: process_one_work+0x85e/0x1690 kernel/workqueue.c:2241
+>  #2: ffffffff8a54df08 (pernet_ops_rwsem){++++}, at: cleanup_net+0x9b/0xa50 net/core/net_namespace.c:551
+>
+> stack backtrace:
+> CPU: 0 PID: 127 Comm: kworker/u4:3 Not tainted 5.6.0-rc5-next-20200313-syzkaller #0
 > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-> RIP: 0010:__read_once_size include/linux/compiler.h:199 [inline]
-> RIP: 0010:mm_update_next_owner+0x49b/0x7a0 kernel/exit.c:385
-> Code: 48 8d bd 48 03 00 00 48 89 f8 48 c1 e8 03 80 3c 18 00 0f 85 f4 02 00 00 48 8b ad 48 03 00 00 4c 8d 7d 10 4c 89 f8 48 c1 e8 03 <80> 3c 18 00 0f 85 cb 02 00 00 48 8b 45 10 48 8d a8 68 fa ff ff 49
-> RSP: 0018:ffffc90018517d20 EFLAGS: 00010a07
-> RAX: 1191919191919193 RBX: dffffc0000000000 RCX: ffffffff81459ed3
-> RDX: 0000000000000000 RSI: ffffffff81459ee1 RDI: ffff88800013e8e0
-> RBP: 8c8c8c8c8c8c8c8c R08: ffff8882123f0580 R09: fffffbfff1301219
-> R10: ffffffff898090c3 R11: fffffbfff1301218 R12: ffff88809552f800
-> R13: ffff88800013e1c0 R14: 0000000000000000 R15: 8c8c8c8c8c8c8c9c
-> FS:  0000000000000000(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 0000000000400200 CR3: 000000020b913000 CR4: 00000000001426f0
-> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> Workqueue: netns cleanup_net
 > Call Trace:
->  exit_mm kernel/exit.c:478 [inline]
->  do_exit+0xa49/0x2dd0 kernel/exit.c:782
->  do_group_exit+0x125/0x340 kernel/exit.c:893
->  __do_sys_exit_group kernel/exit.c:904 [inline]
->  __se_sys_exit_group kernel/exit.c:902 [inline]
->  __x64_sys_exit_group+0x3a/0x50 kernel/exit.c:902
->  do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
->  entry_SYSCALL_64_after_hwframe+0x49/0xb3
-> RIP: 0033:0x45c889
-> Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-> RSP: 002b:00007ffd4c670f58 EFLAGS: 00000246 ORIG_RAX: 00000000000000e7
-> RAX: ffffffffffffffda RBX: 000000000000001e RCX: 000000000045c889
-> RDX: 0000000000416421 RSI: fffffffffffffff7 RDI: 0000000000000000
-> RBP: 0000000000000000 R08: 01ffffffffffffff R09: 00007ffd4c670fb0
-> R10: 00000000007702b0 R11: 0000000000000246 R12: 0000000000000001
-> R13: 00007ffd4c670fb0 R14: 0000000000000000 R15: 00007ffd4c670fc0
-> Modules linked in:
-> ---[ end trace 30f7c81df55d5d82 ]---
-> RIP: 0010:__read_once_size include/linux/compiler.h:199 [inline]
-> RIP: 0010:mm_update_next_owner+0x49b/0x7a0 kernel/exit.c:385
-> Code: 48 8d bd 48 03 00 00 48 89 f8 48 c1 e8 03 80 3c 18 00 0f 85 f4 02 00 00 48 8b ad 48 03 00 00 4c 8d 7d 10 4c 89 f8 48 c1 e8 03 <80> 3c 18 00 0f 85 cb 02 00 00 48 8b 45 10 48 8d a8 68 fa ff ff 49
-> RSP: 0018:ffffc90018517d20 EFLAGS: 00010a07
-> RAX: 1191919191919193 RBX: dffffc0000000000 RCX: ffffffff81459ed3
-> RDX: 0000000000000000 RSI: ffffffff81459ee1 RDI: ffff88800013e8e0
-> RBP: 8c8c8c8c8c8c8c8c R08: ffff8882123f0580 R09: fffffbfff1301219
-> R10: ffffffff898090c3 R11: fffffbfff1301218 R12: ffff88809552f800
-> R13: ffff88800013e1c0 R14: 0000000000000000 R15: 8c8c8c8c8c8c8c9c
-> FS:  0000000000000000(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 0000000000400200 CR3: 000000020b913000 CR4: 00000000001426f0
-> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+>  __dump_stack lib/dump_stack.c:77 [inline]
+>  dump_stack+0x188/0x20d lib/dump_stack.c:118
+>  ovs_ct_limit_exit net/openvswitch/conntrack.c:1898 [inline]
+>  ovs_ct_exit+0x3db/0x558 net/openvswitch/conntrack.c:2295
+>  ovs_exit_net+0x1df/0xba0 net/openvswitch/datapath.c:2469
+>  ops_exit_list.isra.0+0xa8/0x150 net/core/net_namespace.c:172
+>  cleanup_net+0x511/0xa50 net/core/net_namespace.c:589
+>  process_one_work+0x94b/0x1690 kernel/workqueue.c:2266
+>  worker_thread+0x96/0xe20 kernel/workqueue.c:2412
+>  kthread+0x357/0x430 kernel/kthread.c:255
+>  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+> tipc: TX() has been purged, node left!
+>
+> =============================
+> WARNING: suspicious RCU usage
+> 5.6.0-rc5-next-20200313-syzkaller #0 Not tainted
+> -----------------------------
+> net/ipv4/ipmr.c:1757 RCU-list traversed in non-reader section!!
+>
+> other info that might help us debug this:
+>
+>
+> rcu_scheduler_active = 2, debug_locks = 1
+> 4 locks held by kworker/u4:3/127:
+>  #0: ffff8880a9771d28 ((wq_completion)netns){+.+.}, at: __write_once_size include/linux/compiler.h:250 [inline]
+>  #0: ffff8880a9771d28 ((wq_completion)netns){+.+.}, at: arch_atomic64_set arch/x86/include/asm/atomic64_64.h:34 [inline]
+>  #0: ffff8880a9771d28 ((wq_completion)netns){+.+.}, at: atomic64_set include/asm-generic/atomic-instrumented.h:856 [inline]
+>  #0: ffff8880a9771d28 ((wq_completion)netns){+.+.}, at: atomic_long_set include/asm-generic/atomic-long.h:41 [inline]
+>  #0: ffff8880a9771d28 ((wq_completion)netns){+.+.}, at: set_work_data kernel/workqueue.c:615 [inline]
+>  #0: ffff8880a9771d28 ((wq_completion)netns){+.+.}, at: set_work_pool_and_clear_pending kernel/workqueue.c:642 [inline]
+>  #0: ffff8880a9771d28 ((wq_completion)netns){+.+.}, at: process_one_work+0x82a/0x1690 kernel/workqueue.c:2237
+>  #1: ffffc900013a7dd0 (net_cleanup_work){+.+.}, at: process_one_work+0x85e/0x1690 kernel/workqueue.c:2241
+>  #2: ffffffff8a54df08 (pernet_ops_rwsem){++++}, at: cleanup_net+0x9b/0xa50 net/core/net_namespace.c:551
+>  #3: ffffffff8a559c80 (rtnl_mutex){+.+.}, at: ip6gre_exit_batch_net+0x88/0x700 net/ipv6/ip6_gre.c:1602
+>
+> stack backtrace:
+> CPU: 1 PID: 127 Comm: kworker/u4:3 Not tainted 5.6.0-rc5-next-20200313-syzkaller #0
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+> Workqueue: netns cleanup_net
+> Call Trace:
+>  __dump_stack lib/dump_stack.c:77 [inline]
+>  dump_stack+0x188/0x20d lib/dump_stack.c:118
+>  ipmr_device_event+0x240/0x2b0 net/ipv4/ipmr.c:1757
+>  notifier_call_chain+0xc0/0x230 kernel/notifier.c:83
+>  call_netdevice_notifiers_info net/core/dev.c:1948 [inline]
+>  call_netdevice_notifiers_info+0xb5/0x130 net/core/dev.c:1933
+>  call_netdevice_notifiers_extack net/core/dev.c:1960 [inline]
+>  call_netdevice_notifiers net/core/dev.c:1974 [inline]
+>  rollback_registered_many+0x75c/0xe70 net/core/dev.c:8810
+>  unregister_netdevice_many.part.0+0x16/0x1e0 net/core/dev.c:9966
+>  unregister_netdevice_many+0x36/0x50 net/core/dev.c:9965
+>  ip6gre_exit_batch_net+0x4e8/0x700 net/ipv6/ip6_gre.c:1605
+>  ops_exit_list.isra.0+0x103/0x150 net/core/net_namespace.c:175
+>  cleanup_net+0x511/0xa50 net/core/net_namespace.c:589
+>  process_one_work+0x94b/0x1690 kernel/workqueue.c:2266
+>  worker_thread+0x96/0xe20 kernel/workqueue.c:2412
+>  kthread+0x357/0x430 kernel/kthread.c:255
+>  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
 >
 >
 > ---
@@ -163,4 +194,4 @@ more info about these crashes on the dashboard bug page.
 > --
 > You received this message because you are subscribed to the Google Groups "syzkaller-bugs" group.
 > To unsubscribe from this group and stop receiving emails from it, send an email to syzkaller-bugs+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/syzkaller-bugs/0000000000008832a805a38afe44%40google.com.
+> To view this discussion on the web visit https://groups.google.com/d/msgid/syzkaller-bugs/000000000000e642a905a0cbee6e%40google.com.
