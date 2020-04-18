@@ -7,49 +7,57 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B54F3C38A2F
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 13:51:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6043C38A30
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 13:51:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 93CF62054F
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 13:51:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97B522054F
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 13:51:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587217890;
-	bh=xkAnrLZvTNvKX1L+pvH4etEqx+qyIWsoBOD+apAeDKw=;
+	s=default; t=1587217892;
+	bh=uRKGWEHffTzz+HeEoRdC6kD4Fwtd9WIkFuzd8NRpf9I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lyWqkk5b9CQ6AziEwQo6rZ0gW66jED4EYiccjpJCo/SCHv9B6S1Eqd79NkH7i5hyS
-	 Pb92R6SietLpTPYxtNY1xIU/SRfNZc2MySRiZU43YjmR4zHVu8Jnndo3PzXnGapeV5
-	 peSN5ahIz5rlmuodN9GEoLKuGfwc+omFN5YE2zoM=
+	b=D2VvG78d1kpyxXAbRR02eQXejLRmtVgxy/CKqy8bJEEyQlUsi5GIC0/uzchP6RP4i
+	 udhZhSJO5yJYl5FViaui4IsG3y7P7YUTnXICamuSap9nK9DcwTkbGyZK/VVMLiqJ7b
+	 XFxsY8UAV79r5CUshz/A/TpCdXxfFYqkuTfCRhEw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727895AbgDRNv3 (ORCPT
+        id S1727903AbgDRNvb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 09:51:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55926 "EHLO mail.kernel.org"
+        Sat, 18 Apr 2020 09:51:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56016 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726725AbgDRNtK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 09:49:10 -0400
+        id S1726745AbgDRNtM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 09:49:12 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 51D7D22272;
-        Sat, 18 Apr 2020 13:49:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 89ACD2227F;
+        Sat, 18 Apr 2020 13:49:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587217749;
-        bh=xkAnrLZvTNvKX1L+pvH4etEqx+qyIWsoBOD+apAeDKw=;
+        s=default; t=1587217751;
+        bh=uRKGWEHffTzz+HeEoRdC6kD4Fwtd9WIkFuzd8NRpf9I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GM81cbIiE9D1Kaj30nsH4oNqmA9CSNSlKJiFqMGH1afommewJJ7o900hYIB2QLQB4
-         1seWhofpiOoBJkhZK2VxL3RoD8JJCOdGwsiF7pOKki9uYHXmnfmZYP7Kg7g3BBPLod
-         8Loqi6iYuVJTvr+sR9nG2+IjuCgCNvo+8IPGAyHA=
+        b=MhPS1UldXjC+PKwuqyH3Dj0H6WCu/aQCBY5XdUfL2R7PXivNvY5bYZZGxgAmWV0nQ
+         E25GCT8r0Hxph8zr3/+LUkk++oGEOoy7A2vpeeP74o3pTy6iU9/zIdyhCOop0eHk8S
+         2KZIez7KfsgO2X89uqC/yX4Bws4h3qvCQZyMeQQY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nick Bowler <nbowler@draconx.ca>, Christoph Hellwig <hch@lst.de>,
-        Sasha Levin <sashal@kernel.org>, linux-nvme@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.6 42/73] nvme: fix compat address handling in several ioctls
-Date:   Sat, 18 Apr 2020 09:47:44 -0400
-Message-Id: <20200418134815.6519-42-sashal@kernel.org>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pwm@vger.kernel.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.6 44/73] pwm: bcm2835: Dynamically allocate base
+Date:   Sat, 18 Apr 2020 09:47:46 -0400
+Message-Id: <20200418134815.6519-44-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200418134815.6519-1-sashal@kernel.org>
 References: <20200418134815.6519-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -58,114 +66,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nick Bowler <nbowler@draconx.ca>
+From: Florian Fainelli <f.fainelli@gmail.com>
 
-[ Upstream commit c95b708d5fa65b4e51f088ee077d127fd5a57b70 ]
+[ Upstream commit 2c25b07e5ec119cab609e41407a1fb3fa61442f5 ]
 
-On a 32-bit kernel, the upper bits of userspace addresses passed via
-various ioctls are silently ignored by the nvme driver.
+The newer 2711 and 7211 chips have two PWM controllers and failure to
+dynamically allocate the PWM base would prevent the second PWM
+controller instance being probed for succeeding with an -EEXIST error
+from alloc_pwms().
 
-However on a 64-bit kernel running a compat task, these upper bits are
-not ignored and are in fact required to be zero for the ioctls to work.
-
-Unfortunately, this difference matters.  32-bit smartctl submits the
-NVME_IOCTL_ADMIN_CMD ioctl with garbage in these upper bits because it
-seems the pointer value it puts into the nvme_passthru_cmd structure is
-sign extended.  This works fine on 32-bit kernels but fails on a 64-bit
-one because (at least on my setup) the addresses smartctl uses are
-consistently above 2G.  For example:
-
-  # smartctl -x /dev/nvme0n1
-  smartctl 7.1 2019-12-30 r5022 [x86_64-linux-5.5.11] (local build)
-  Copyright (C) 2002-19, Bruce Allen, Christian Franke, www.smartmontools.org
-
-  Read NVMe Identify Controller failed: NVME_IOCTL_ADMIN_CMD: Bad address
-
-Since changing 32-bit kernels to actually check all of the submitted
-address bits now would break existing userspace, this patch fixes the
-compat problem by explicitly zeroing the upper bits in the compat case.
-This enables 32-bit smartctl to work on a 64-bit kernel.
-
-Signed-off-by: Nick Bowler <nbowler@draconx.ca>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+Fixes: e5a06dc5ac1f ("pwm: Add BCM2835 PWM driver")
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+Reviewed-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvme/host/core.c | 27 ++++++++++++++++++++-------
- 1 file changed, 20 insertions(+), 7 deletions(-)
+ drivers/pwm/pwm-bcm2835.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
-index a4d8c90ee7cc4..652ca87dac949 100644
---- a/drivers/nvme/host/core.c
-+++ b/drivers/nvme/host/core.c
-@@ -6,6 +6,7 @@
+diff --git a/drivers/pwm/pwm-bcm2835.c b/drivers/pwm/pwm-bcm2835.c
+index 91e24f01b54ed..d78f86f8e4621 100644
+--- a/drivers/pwm/pwm-bcm2835.c
++++ b/drivers/pwm/pwm-bcm2835.c
+@@ -166,6 +166,7 @@ static int bcm2835_pwm_probe(struct platform_device *pdev)
  
- #include <linux/blkdev.h>
- #include <linux/blk-mq.h>
-+#include <linux/compat.h>
- #include <linux/delay.h>
- #include <linux/errno.h>
- #include <linux/hdreg.h>
-@@ -1248,6 +1249,18 @@ static void nvme_enable_aen(struct nvme_ctrl *ctrl)
- 	queue_work(nvme_wq, &ctrl->async_event_work);
- }
- 
-+/*
-+ * Convert integer values from ioctl structures to user pointers, silently
-+ * ignoring the upper bits in the compat case to match behaviour of 32-bit
-+ * kernels.
-+ */
-+static void __user *nvme_to_user_ptr(uintptr_t ptrval)
-+{
-+	if (in_compat_syscall())
-+		ptrval = (compat_uptr_t)ptrval;
-+	return (void __user *)ptrval;
-+}
-+
- static int nvme_submit_io(struct nvme_ns *ns, struct nvme_user_io __user *uio)
- {
- 	struct nvme_user_io io;
-@@ -1271,7 +1284,7 @@ static int nvme_submit_io(struct nvme_ns *ns, struct nvme_user_io __user *uio)
- 
- 	length = (io.nblocks + 1) << ns->lba_shift;
- 	meta_len = (io.nblocks + 1) * ns->ms;
--	metadata = (void __user *)(uintptr_t)io.metadata;
-+	metadata = nvme_to_user_ptr(io.metadata);
- 
- 	if (ns->ext) {
- 		length += meta_len;
-@@ -1294,7 +1307,7 @@ static int nvme_submit_io(struct nvme_ns *ns, struct nvme_user_io __user *uio)
- 	c.rw.appmask = cpu_to_le16(io.appmask);
- 
- 	return nvme_submit_user_cmd(ns->queue, &c,
--			(void __user *)(uintptr_t)io.addr, length,
-+			nvme_to_user_ptr(io.addr), length,
- 			metadata, meta_len, lower_32_bits(io.slba), NULL, 0);
- }
- 
-@@ -1414,9 +1427,9 @@ static int nvme_user_cmd(struct nvme_ctrl *ctrl, struct nvme_ns *ns,
- 
- 	effects = nvme_passthru_start(ctrl, ns, cmd.opcode);
- 	status = nvme_submit_user_cmd(ns ? ns->queue : ctrl->admin_q, &c,
--			(void __user *)(uintptr_t)cmd.addr, cmd.data_len,
--			(void __user *)(uintptr_t)cmd.metadata,
--			cmd.metadata_len, 0, &result, timeout);
-+			nvme_to_user_ptr(cmd.addr), cmd.data_len,
-+			nvme_to_user_ptr(cmd.metadata), cmd.metadata_len,
-+			0, &result, timeout);
- 	nvme_passthru_end(ctrl, effects);
- 
- 	if (status >= 0) {
-@@ -1461,8 +1474,8 @@ static int nvme_user_cmd64(struct nvme_ctrl *ctrl, struct nvme_ns *ns,
- 
- 	effects = nvme_passthru_start(ctrl, ns, cmd.opcode);
- 	status = nvme_submit_user_cmd(ns ? ns->queue : ctrl->admin_q, &c,
--			(void __user *)(uintptr_t)cmd.addr, cmd.data_len,
--			(void __user *)(uintptr_t)cmd.metadata, cmd.metadata_len,
-+			nvme_to_user_ptr(cmd.addr), cmd.data_len,
-+			nvme_to_user_ptr(cmd.metadata), cmd.metadata_len,
- 			0, &cmd.result, timeout);
- 	nvme_passthru_end(ctrl, effects);
- 
+ 	pc->chip.dev = &pdev->dev;
+ 	pc->chip.ops = &bcm2835_pwm_ops;
++	pc->chip.base = -1;
+ 	pc->chip.npwm = 2;
+ 	pc->chip.of_xlate = of_pwm_xlate_with_flags;
+ 	pc->chip.of_pwm_n_cells = 3;
 -- 
 2.20.1
 
