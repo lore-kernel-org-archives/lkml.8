@@ -4,49 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27F2FC38A29
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:41:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E498CC38A2F
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:41:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 043942224E
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:41:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA9252224E
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:41:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587220918;
-	bh=isVRNvQT2EACdfwVZ9k/k4qA8as+uSSfDwj793vYOTM=;
+	s=default; t=1587220919;
+	bh=XlFxx7w9tq9hPc8Jl4nJlyASCZqXKW6voGb0AIZjCWM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=x1CXTkgGtulg0Ihu/pchIr7XAIEj9aBIGNDBFkD4ljnaguY2/iUL2qCATYB6dxZVH
-	 LohU4uW4LnTgr0LFn0A7O0UJRmQ9kcX3lBA31tRmPQOKMg0KBYO8g4co5mdwcDQynM
-	 ZPtDe+BbmO8gpVN7SSPuSk7jS+ukYWpoIEmObERg=
+	b=NIgzNOxR2gml1lJF2aW+rwzcDFC/ilZ5kf9qv3m8zU8ojYJ1JOhv7VErnSxJY4akn
+	 CXGr+Nn6bJhBHiXCyxv9QetYY1JrTX2ZgtIpv1twuixjQEwTacumE4R8Vmb1Rlawg8
+	 CIpcUuozrOcgebQbOXfQJmT+dFcn4ZxZgCzb6Ni8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728196AbgDROl4 (ORCPT
+        id S1728209AbgDROl6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 10:41:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51416 "EHLO mail.kernel.org"
+        Sat, 18 Apr 2020 10:41:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51584 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728107AbgDROlv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 10:41:51 -0400
+        id S1728154AbgDROlz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 10:41:55 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1844321D7E;
-        Sat, 18 Apr 2020 14:41:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A278321D7E;
+        Sat, 18 Apr 2020 14:41:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587220910;
-        bh=isVRNvQT2EACdfwVZ9k/k4qA8as+uSSfDwj793vYOTM=;
+        s=default; t=1587220915;
+        bh=XlFxx7w9tq9hPc8Jl4nJlyASCZqXKW6voGb0AIZjCWM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NjNcH/32wqeQpu0L5g5eY89JRM21ooL9KPLcXJfdltixK0T1ldyIfvRB2p1FCdR81
-         u+44Pxtzg/OEbN9zdcC1YHa6OMXVDO6LoEqUyLTIPMpAcytDPKACXBlW9zn47tAyvf
-         HL4XRXCkGEoksy3dlTBHEljxdV6h31z2vRSqOPi0=
+        b=PaKFNRa+9QdR82IZFrmf/1EIBmqxhcXNZG7rR8I1BYGUJLiVBrrnfWQ7Ubh3JNz5R
+         vTiClzRFrAfdYucPLZiPdsnDk67LEfrS6/aFFHCUKKlHyYKfYrtARQ18PgUdxmDnSX
+         wFifpXoIt6MB8QWGfMqBct1tXns93xlQ847VVFZU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jiri Olsa <jolsa@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.4 50/78] perf/core: Disable page faults when getting phys address
-Date:   Sat, 18 Apr 2020 10:40:19 -0400
-Message-Id: <20200418144047.9013-50-sashal@kernel.org>
+Cc:     Takashi Iwai <tiwai@suse.de>, Jaroslav Kysela <perex@perex.cz>,
+        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 5.4 54/78] ALSA: hda: Fix potential access overflow in beep helper
+Date:   Sat, 18 Apr 2020 10:40:23 -0400
+Message-Id: <20200418144047.9013-54-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200418144047.9013-1-sashal@kernel.org>
 References: <20200418144047.9013-1-sashal@kernel.org>
@@ -59,69 +58,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiri Olsa <jolsa@kernel.org>
+From: Takashi Iwai <tiwai@suse.de>
 
-[ Upstream commit d3296fb372bf7497b0e5d0478c4e7a677ec6f6e9 ]
+[ Upstream commit 0ad3f0b384d58f3bd1f4fb87d0af5b8f6866f41a ]
 
-We hit following warning when running tests on kernel
-compiled with CONFIG_DEBUG_ATOMIC_SLEEP=y:
+The beep control helper function blindly stores the values in two
+stereo channels no matter whether the actual control is mono or
+stereo.  This is practically harmless, but it annoys the recently
+introduced sanity check, resulting in an error when the checker is
+enabled.
 
- WARNING: CPU: 19 PID: 4472 at mm/gup.c:2381 __get_user_pages_fast+0x1a4/0x200
- CPU: 19 PID: 4472 Comm: dummy Not tainted 5.6.0-rc6+ #3
- RIP: 0010:__get_user_pages_fast+0x1a4/0x200
- ...
- Call Trace:
-  perf_prepare_sample+0xff1/0x1d90
-  perf_event_output_forward+0xe8/0x210
-  __perf_event_overflow+0x11a/0x310
-  __intel_pmu_pebs_event+0x657/0x850
-  intel_pmu_drain_pebs_nhm+0x7de/0x11d0
-  handle_pmi_common+0x1b2/0x650
-  intel_pmu_handle_irq+0x17b/0x370
-  perf_event_nmi_handler+0x40/0x60
-  nmi_handle+0x192/0x590
-  default_do_nmi+0x6d/0x150
-  do_nmi+0x2f9/0x3c0
-  nmi+0x8e/0xd7
+This patch corrects the behavior to store only on the defined array
+member.
 
-While __get_user_pages_fast() is IRQ-safe, it calls access_ok(),
-which warns on:
-
-  WARN_ON_ONCE(!in_task() && !pagefault_disabled())
-
-Peter suggested disabling page faults around __get_user_pages_fast(),
-which gets rid of the warning in access_ok() call.
-
-Suggested-by: Peter Zijlstra <peterz@infradead.org>
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Link: https://lkml.kernel.org/r/20200407141427.3184722-1-jolsa@kernel.org
+Fixes: 0401e8548eac ("ALSA: hda - Move beep helper functions to hda_beep.c")
+BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=207139
+Reviewed-by: Jaroslav Kysela <perex@perex.cz>
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200407084402.25589-2-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/events/core.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ sound/pci/hda/hda_beep.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 15b123bdcaf53..72d0cfd73cf11 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -6537,9 +6537,12 @@ static u64 perf_virt_to_phys(u64 virt)
- 		 * Try IRQ-safe __get_user_pages_fast first.
- 		 * If failed, leave phys_addr as 0.
- 		 */
--		if ((current->mm != NULL) &&
--		    (__get_user_pages_fast(virt, 1, 0, &p) == 1))
--			phys_addr = page_to_phys(p) + virt % PAGE_SIZE;
-+		if (current->mm != NULL) {
-+			pagefault_disable();
-+			if (__get_user_pages_fast(virt, 1, 0, &p) == 1)
-+				phys_addr = page_to_phys(p) + virt % PAGE_SIZE;
-+			pagefault_enable();
-+		}
- 
- 		if (p)
- 			put_page(p);
+diff --git a/sound/pci/hda/hda_beep.c b/sound/pci/hda/hda_beep.c
+index b7d9160ed8688..c6e1e03a5e4da 100644
+--- a/sound/pci/hda/hda_beep.c
++++ b/sound/pci/hda/hda_beep.c
+@@ -290,8 +290,12 @@ int snd_hda_mixer_amp_switch_get_beep(struct snd_kcontrol *kcontrol,
+ {
+ 	struct hda_codec *codec = snd_kcontrol_chip(kcontrol);
+ 	struct hda_beep *beep = codec->beep;
++	int chs = get_amp_channels(kcontrol);
++
+ 	if (beep && (!beep->enabled || !ctl_has_mute(kcontrol))) {
+-		ucontrol->value.integer.value[0] =
++		if (chs & 1)
++			ucontrol->value.integer.value[0] = beep->enabled;
++		if (chs & 2)
+ 			ucontrol->value.integer.value[1] = beep->enabled;
+ 		return 0;
+ 	}
 -- 
 2.20.1
 
