@@ -7,50 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54BD5C38A2F
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:54:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0421BC38A2F
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:54:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 290F521D6C
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:54:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3B5621D6C
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:54:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587221667;
-	bh=QSO+MTYLOIEKsq08PJYUz+Ls1m/XYejmU5s/QbqlFiI=;
+	s=default; t=1587221672;
+	bh=00ddRN8yKxFktcawj18Tti3yNrlFwEtVI74FidDtGrE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=reS5Kx4YUFycBdm7hNozIfLzF6HzIO6t+xRr7+chd9tdSu4cN1HgDwNNeo8Wy06ao
-	 y+S6FM0RUO3HMjattQpi81yhS6FY0FoCoHNAUX7fa7LOKAzOJYNE+73iAtOHsJsbl4
-	 C5cpw9cAhelG+yewklfe30x2J7tOFjWG3KhOKplw=
+	b=kAuIxJbx4t1v0xMvtMN+0N22vC/cnIuqoVdUz0mSEkSVtXob4RUdSp7zpo/t4DrGI
+	 SFH52vxgy28hvsYy+N+Ru9odWRf9ulR2rR4XZsvBDPqgX2qEwY/+KBgoTcNMpOB1LL
+	 vwg7DgfNZqfz/WNsr8wpvwSRICKnOqs+n/PwY+DA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728172AbgDROy0 (ORCPT
+        id S1728646AbgDROyb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 10:54:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51094 "EHLO mail.kernel.org"
+        Sat, 18 Apr 2020 10:54:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50858 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728081AbgDROlm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 10:41:42 -0400
+        id S1728019AbgDROlh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 10:41:37 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9F2EB21D79;
-        Sat, 18 Apr 2020 14:41:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B1A2E21974;
+        Sat, 18 Apr 2020 14:41:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587220901;
-        bh=QSO+MTYLOIEKsq08PJYUz+Ls1m/XYejmU5s/QbqlFiI=;
+        s=default; t=1587220896;
+        bh=00ddRN8yKxFktcawj18Tti3yNrlFwEtVI74FidDtGrE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WUaBi7Ded/wH/YxNrTWD6C3Grc5x57b3A93N0TgeT88oIir8kO4HriK6+wPQPzNfb
-         xvjp68kfyfisEI6LKsjozaeGQRBb1UQRaNVWS9Iv5xOAoU83MC+YE13labZFK19rfo
-         ILUceAw+G01MC39UvrBvHHFtUPHKJb/ftAvRiV5o=
+        b=1bfIXMn4sCYcuaXcIlV30SmUhwZ7Qv8XeZ/XQjWPgE8jwBm2x/D6llPpVjJoKh+XZ
+         Jxgr/C4VgeJNhZ9NUuTr4oq7n6U7yY/pfJ5TitYIjmvgBpJNpq7O/LKlHbWKxoWPJ7
+         nDcFtWHXj09bBLDfw0aKGlZ+wx3k91vKKm79FF+E=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Eric Auger <eric.auger@redhat.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Joerg Roedel <jroedel@suse.de>,
-        Sasha Levin <sashal@kernel.org>,
-        virtualization@lists.linux-foundation.org,
-        iommu@lists.linux-foundation.org
-Subject: [PATCH AUTOSEL 5.4 42/78] iommu/virtio: Fix freeing of incomplete domains
-Date:   Sat, 18 Apr 2020 10:40:11 -0400
-Message-Id: <20200418144047.9013-42-sashal@kernel.org>
+Cc:     Nick Bowler <nbowler@draconx.ca>, Christoph Hellwig <hch@lst.de>,
+        Sasha Levin <sashal@kernel.org>, linux-nvme@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.4 38/78] nvme: fix compat address handling in several ioctls
+Date:   Sat, 18 Apr 2020 10:40:07 -0400
+Message-Id: <20200418144047.9013-38-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200418144047.9013-1-sashal@kernel.org>
 References: <20200418144047.9013-1-sashal@kernel.org>
@@ -63,61 +58,114 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jean-Philippe Brucker <jean-philippe@linaro.org>
+From: Nick Bowler <nbowler@draconx.ca>
 
-[ Upstream commit 7062af3ed2ba451029e3733d9f677c68f5ea9e77 ]
+[ Upstream commit c95b708d5fa65b4e51f088ee077d127fd5a57b70 ]
 
-Calling viommu_domain_free() on a domain that hasn't been finalised (not
-attached to any device, for example) can currently cause an Oops,
-because we attempt to call ida_free() on ID 0, which may either be
-unallocated or used by another domain.
+On a 32-bit kernel, the upper bits of userspace addresses passed via
+various ioctls are silently ignored by the nvme driver.
 
-Only initialise the vdomain->viommu pointer, which denotes a finalised
-domain, at the end of a successful viommu_domain_finalise().
+However on a 64-bit kernel running a compat task, these upper bits are
+not ignored and are in fact required to be zero for the ioctls to work.
 
-Fixes: edcd69ab9a32 ("iommu: Add virtio-iommu driver")
-Reported-by: Eric Auger <eric.auger@redhat.com>
-Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
-Reviewed-by: Robin Murphy <robin.murphy@arm.com>
-Link: https://lore.kernel.org/r/20200326093558.2641019-3-jean-philippe@linaro.org
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Unfortunately, this difference matters.  32-bit smartctl submits the
+NVME_IOCTL_ADMIN_CMD ioctl with garbage in these upper bits because it
+seems the pointer value it puts into the nvme_passthru_cmd structure is
+sign extended.  This works fine on 32-bit kernels but fails on a 64-bit
+one because (at least on my setup) the addresses smartctl uses are
+consistently above 2G.  For example:
+
+  # smartctl -x /dev/nvme0n1
+  smartctl 7.1 2019-12-30 r5022 [x86_64-linux-5.5.11] (local build)
+  Copyright (C) 2002-19, Bruce Allen, Christian Franke, www.smartmontools.org
+
+  Read NVMe Identify Controller failed: NVME_IOCTL_ADMIN_CMD: Bad address
+
+Since changing 32-bit kernels to actually check all of the submitted
+address bits now would break existing userspace, this patch fixes the
+compat problem by explicitly zeroing the upper bits in the compat case.
+This enables 32-bit smartctl to work on a 64-bit kernel.
+
+Signed-off-by: Nick Bowler <nbowler@draconx.ca>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iommu/virtio-iommu.c | 16 +++++++++-------
- 1 file changed, 9 insertions(+), 7 deletions(-)
+ drivers/nvme/host/core.c | 27 ++++++++++++++++++++-------
+ 1 file changed, 20 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/iommu/virtio-iommu.c b/drivers/iommu/virtio-iommu.c
-index 3ea9d76829995..6c340a4f4fd28 100644
---- a/drivers/iommu/virtio-iommu.c
-+++ b/drivers/iommu/virtio-iommu.c
-@@ -614,18 +614,20 @@ static int viommu_domain_finalise(struct viommu_dev *viommu,
- 	int ret;
- 	struct viommu_domain *vdomain = to_viommu_domain(domain);
+diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
+index b8fe42f4b3c5b..f97c48fd3edae 100644
+--- a/drivers/nvme/host/core.c
++++ b/drivers/nvme/host/core.c
+@@ -6,6 +6,7 @@
  
--	vdomain->viommu		= viommu;
--	vdomain->map_flags	= viommu->map_flags;
-+	ret = ida_alloc_range(&viommu->domain_ids, viommu->first_domain,
-+			      viommu->last_domain, GFP_KERNEL);
-+	if (ret < 0)
-+		return ret;
-+
-+	vdomain->id		= (unsigned int)ret;
- 
- 	domain->pgsize_bitmap	= viommu->pgsize_bitmap;
- 	domain->geometry	= viommu->geometry;
- 
--	ret = ida_alloc_range(&viommu->domain_ids, viommu->first_domain,
--			      viommu->last_domain, GFP_KERNEL);
--	if (ret >= 0)
--		vdomain->id = (unsigned int)ret;
-+	vdomain->map_flags	= viommu->map_flags;
-+	vdomain->viommu		= viommu;
- 
--	return ret > 0 ? 0 : ret;
-+	return 0;
+ #include <linux/blkdev.h>
+ #include <linux/blk-mq.h>
++#include <linux/compat.h>
+ #include <linux/delay.h>
+ #include <linux/errno.h>
+ #include <linux/hdreg.h>
+@@ -1244,6 +1245,18 @@ static void nvme_enable_aen(struct nvme_ctrl *ctrl)
+ 	queue_work(nvme_wq, &ctrl->async_event_work);
  }
  
- static void viommu_domain_free(struct iommu_domain *domain)
++/*
++ * Convert integer values from ioctl structures to user pointers, silently
++ * ignoring the upper bits in the compat case to match behaviour of 32-bit
++ * kernels.
++ */
++static void __user *nvme_to_user_ptr(uintptr_t ptrval)
++{
++	if (in_compat_syscall())
++		ptrval = (compat_uptr_t)ptrval;
++	return (void __user *)ptrval;
++}
++
+ static int nvme_submit_io(struct nvme_ns *ns, struct nvme_user_io __user *uio)
+ {
+ 	struct nvme_user_io io;
+@@ -1267,7 +1280,7 @@ static int nvme_submit_io(struct nvme_ns *ns, struct nvme_user_io __user *uio)
+ 
+ 	length = (io.nblocks + 1) << ns->lba_shift;
+ 	meta_len = (io.nblocks + 1) * ns->ms;
+-	metadata = (void __user *)(uintptr_t)io.metadata;
++	metadata = nvme_to_user_ptr(io.metadata);
+ 
+ 	if (ns->ext) {
+ 		length += meta_len;
+@@ -1290,7 +1303,7 @@ static int nvme_submit_io(struct nvme_ns *ns, struct nvme_user_io __user *uio)
+ 	c.rw.appmask = cpu_to_le16(io.appmask);
+ 
+ 	return nvme_submit_user_cmd(ns->queue, &c,
+-			(void __user *)(uintptr_t)io.addr, length,
++			nvme_to_user_ptr(io.addr), length,
+ 			metadata, meta_len, lower_32_bits(io.slba), NULL, 0);
+ }
+ 
+@@ -1410,9 +1423,9 @@ static int nvme_user_cmd(struct nvme_ctrl *ctrl, struct nvme_ns *ns,
+ 
+ 	effects = nvme_passthru_start(ctrl, ns, cmd.opcode);
+ 	status = nvme_submit_user_cmd(ns ? ns->queue : ctrl->admin_q, &c,
+-			(void __user *)(uintptr_t)cmd.addr, cmd.data_len,
+-			(void __user *)(uintptr_t)cmd.metadata,
+-			cmd.metadata_len, 0, &result, timeout);
++			nvme_to_user_ptr(cmd.addr), cmd.data_len,
++			nvme_to_user_ptr(cmd.metadata), cmd.metadata_len,
++			0, &result, timeout);
+ 	nvme_passthru_end(ctrl, effects);
+ 
+ 	if (status >= 0) {
+@@ -1457,8 +1470,8 @@ static int nvme_user_cmd64(struct nvme_ctrl *ctrl, struct nvme_ns *ns,
+ 
+ 	effects = nvme_passthru_start(ctrl, ns, cmd.opcode);
+ 	status = nvme_submit_user_cmd(ns ? ns->queue : ctrl->admin_q, &c,
+-			(void __user *)(uintptr_t)cmd.addr, cmd.data_len,
+-			(void __user *)(uintptr_t)cmd.metadata, cmd.metadata_len,
++			nvme_to_user_ptr(cmd.addr), cmd.data_len,
++			nvme_to_user_ptr(cmd.metadata), cmd.metadata_len,
+ 			0, &cmd.result, timeout);
+ 	nvme_passthru_end(ctrl, effects);
+ 
 -- 
 2.20.1
 
