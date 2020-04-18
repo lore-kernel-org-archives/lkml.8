@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5CECC352BE
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 20:22:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9641FC352BE
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 20:22:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E9E821D93
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 20:22:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 726F421D93
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 20:22:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="CpqLi0Td"
+	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="UmUB6tg2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728929AbgDRUWt (ORCPT
+        id S1728933AbgDRUWx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 16:22:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56400 "EHLO
+        Sat, 18 Apr 2020 16:22:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56392 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728343AbgDRUUC (ORCPT
+        by vger.kernel.org with ESMTP id S1728334AbgDRUUA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 16:20:02 -0400
+        Sat, 18 Apr 2020 16:20:00 -0400
 Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04C94C061A10
-        for <linux-kernel@vger.kernel.org>; Sat, 18 Apr 2020 13:20:02 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id j2so7147211wrs.9
-        for <linux-kernel@vger.kernel.org>; Sat, 18 Apr 2020 13:20:01 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7BF19C061A0F
+        for <linux-kernel@vger.kernel.org>; Sat, 18 Apr 2020 13:20:00 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id g13so5130121wrb.8
+        for <linux-kernel@vger.kernel.org>; Sat, 18 Apr 2020 13:20:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=arista.com; s=googlenew;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=+30pBdntWlJcgkbolNjxFd/p/YpKCMUbtsGUF0cke54=;
-        b=CpqLi0TdivFtBdUYdlu0IK8kq03+7R/ZENpjm1PxBJ1oGUqdzIOIhyS2Nj/X0utCfc
-         B9p4j4Bjv5hZQE223ADJSzI59HTZY11SjvI0dZYnlsJhRrXkOOnZTavGsOlQ42ztSVjd
-         3LzEeCTHznGhIeo4WEPCNICxozCgHV2ha13BrAZrDyo5NWJXUZVIIfW/PL/3TDPT3NoI
-         kGdavhK1plQAUPwRv2CaCKve3TSC5HoGM0e2ZIaozI5J7cMdVFhuimrY2wdMRkikD0Or
-         aaW3MDikWIs6/9JOkt2Vrml99ykHIKRaseOpn8sc2Q6MPE9OApzYwVmKBL6B9o8ooxOU
-         egLg==
+        bh=zimCygk/GteosIyZqYA22VX02uWVm0axmp2+cSyxEk0=;
+        b=UmUB6tg2COFkhKDuApMoEkNTExQQ8zWlCYHCTwLkIEdbL36WyQ3PYYgOKLegDh6d13
+         DzYw8GkhIIH0MJVWi/dBd6XYZDvflywyb0bhoIeZla+jfYR8B2tdrAMdeVXfnuujTkQN
+         QhZADBr0lPCqEOTst6yj5MWFK/Pi6kqOKUakB7xWdpHdcXwF/eL9RIFDgnAOwuMTYziS
+         uBj1R6ECLpqqE3PysHGFOz5Q/ZjNLmvglWySYgJUjoAEO3vO4h6QkExwulCBUDSXri1A
+         5+4uxdC+Bsu5JoQi5294pfVzGeRFeSpgGOYEWLGkziQnZdoymCZTDTsvOia8zJCo5dQG
+         qt/w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=+30pBdntWlJcgkbolNjxFd/p/YpKCMUbtsGUF0cke54=;
-        b=Qdj3HiumzT4uAIVVz4/tt2Y6kKCQ3RmkuqbZ4ZHeyVG52F3m3FhvNjBZp0WV1s2a5m
-         mLW8YeZqb+0VmfPxKwSQKxDLsBMAudCg9VegeuXMDPQTdZDa0xqiXevlXEF537OHpj/R
-         VaH3mhBGvr7etSMPvDyTWH5DmViI0eLGfYCXhlvKVE6ir4+uM1t7PDLHD8Z5Xc3BV29u
-         c446drMFZIrcU3ggJ6KXg+qGm80y7Syyz7HwZoXfk9Ujhugc38J/HOfYRd0bK/+kA13P
-         iVo5DhpeazSaO6JKCQkbej3zvzo/u+ni2AHFaUWG1+ZxZMARiajcFrELdFRfbZhOyf57
-         tE2Q==
-X-Gm-Message-State: AGi0PuZG80YAZ3hrhO1PRqx9ho1c8/QV8n/gtwCyftuC1fI1yGfH8WaC
-        DRcUEUTRIRAlbJpmKZErGp0RklLY9TI=
-X-Google-Smtp-Source: APiQypLcXaHBnW9H0cOYu3yQzZUFMfmWLaUmw0+I88uE591C25vfvZ8CZwoW82VotrQ1EUmOsFrsIA==
-X-Received: by 2002:adf:dfc2:: with SMTP id q2mr11297074wrn.390.1587241200532;
-        Sat, 18 Apr 2020 13:20:00 -0700 (PDT)
+        bh=zimCygk/GteosIyZqYA22VX02uWVm0axmp2+cSyxEk0=;
+        b=nB7OpxtyYxwNnf+Wfq/CHkK6y8QGYYUfIZgg6EsZizktKyeLbr3afRpMEyYQmUAOcU
+         OObRJiI/ZcJRuHDbOvkF2oDqtSIMU0wt2bQ5KktH7nJUEsnKfdoqGz4pNqHlH1c3iq5g
+         rtjwQlFp7AtmtLQP6OKa5J0Wn5H0rNAqVtuP7r3oRBXAfIcLbFtYYph5NS12+b5lW3Ww
+         2ug5m6OnkU3yDaB6Gg0nVtYvZy59H8YaLIsucv7zMVd508R2BW8GzPM6K0PMqk+v5Ph5
+         w822e/3GTUOEPPGcJmkgISRVQXNqZmMrGUu6TG4OEu6Nt1jMICH8sYLtwj2bQWUaCBmX
+         v+RA==
+X-Gm-Message-State: AGi0PuZAAmq0N1dqqjoqDrPJVsLxBgghxhN2uzE0l1QmQgXoEdQZq87u
+        QPL+ChDb5epcvKDMT5FnkoxsIuFz7nQ=
+X-Google-Smtp-Source: APiQypIULAsyj4ToagbxJztVoEGMoFCVHOReiXnPFqUE3Mk26kvhIwJXZWTW9OZPiBDfvBni1MyhFA==
+X-Received: by 2002:a5d:6a04:: with SMTP id m4mr11199116wru.326.1587241198993;
+        Sat, 18 Apr 2020 13:19:58 -0700 (PDT)
 Received: from localhost.localdomain ([2a02:8084:e84:2480:228:f8ff:fe6f:83a8])
-        by smtp.gmail.com with ESMTPSA id m1sm31735255wro.64.2020.04.18.13.19.59
+        by smtp.gmail.com with ESMTPSA id m1sm31735255wro.64.2020.04.18.13.19.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 18 Apr 2020 13:19:59 -0700 (PDT)
+        Sat, 18 Apr 2020 13:19:58 -0700 (PDT)
 From:   Dmitry Safonov <dima@arista.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
@@ -74,9 +74,9 @@ Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
         Will Deacon <will@kernel.org>,
         linux-arm-kernel@lists.infradead.org,
         clang-built-linux@googlegroups.com
-Subject: [PATCHv3 07/50] arm: Wire up dump_backtrace_{entry,stm}
-Date:   Sat, 18 Apr 2020 21:19:01 +0100
-Message-Id: <20200418201944.482088-8-dima@arista.com>
+Subject: [PATCHv3 06/50] arm: Add loglvl to dump_backtrace()
+Date:   Sat, 18 Apr 2020 21:19:00 +0100
+Message-Id: <20200418201944.482088-7-dima@arista.com>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200418201944.482088-1-dima@arista.com>
 References: <20200418201944.482088-1-dima@arista.com>
@@ -103,7 +103,11 @@ Introducing log-level parameter and KERN_UNSUPPRESSED [1] seems
 an easier approach than introducing more printk buffers.
 Also, it will consolidate printings with headers.
 
-Now that c_backtrace() always emits correct loglvl, use it for printing.
+Add log level argument to dump_backtrace() as a preparation for
+introducing show_stack_loglvl().
+
+As a good side-effect __die() now prints not only "Stack:" header with
+KERN_EMERG, but the backtrace itself.
 
 Cc: Russell King <linux@armlinux.org.uk>
 Cc: Will Deacon <will@kernel.org>
@@ -112,47 +116,62 @@ Cc: clang-built-linux@googlegroups.com
 [1]: https://lore.kernel.org/lkml/20190528002412.1625-1-dima@arista.com/T/#u
 Signed-off-by: Dmitry Safonov <dima@arista.com>
 ---
- arch/arm/kernel/traps.c | 12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
+ arch/arm/kernel/traps.c | 16 +++++++++-------
+ 1 file changed, 9 insertions(+), 7 deletions(-)
 
 diff --git a/arch/arm/kernel/traps.c b/arch/arm/kernel/traps.c
-index 0f09ace18e6c..e1be6c85327c 100644
+index 685e17c2e275..0f09ace18e6c 100644
 --- a/arch/arm/kernel/traps.c
 +++ b/arch/arm/kernel/traps.c
-@@ -68,13 +68,15 @@ void dump_backtrace_entry(unsigned long where, unsigned long from,
- 	unsigned long end = frame + 4 + sizeof(struct pt_regs);
+@@ -202,17 +202,19 @@ static void dump_instr(const char *lvl, struct pt_regs *regs)
+ }
  
- #ifdef CONFIG_KALLSYMS
--	printk("[<%08lx>] (%ps) from [<%08lx>] (%pS)\n", where, (void *)where, from, (void *)from);
-+	printk("%s[<%08lx>] (%ps) from [<%08lx>] (%pS)\n",
-+		loglvl, where, (void *)where, from, (void *)from);
+ #ifdef CONFIG_ARM_UNWIND
+-static inline void dump_backtrace(struct pt_regs *regs, struct task_struct *tsk)
++static inline void dump_backtrace(struct pt_regs *regs, struct task_struct *tsk,
++				  const char *loglvl)
+ {
+-	unwind_backtrace(regs, tsk, KERN_DEFAULT);
++	unwind_backtrace(regs, tsk, loglvl);
+ }
  #else
--	printk("Function entered at [<%08lx>] from [<%08lx>]\n", where, from);
-+	printk("%sFunction entered at [<%08lx>] from [<%08lx>]\n",
-+		loglvl, where, from);
+-static void dump_backtrace(struct pt_regs *regs, struct task_struct *tsk)
++static void dump_backtrace(struct pt_regs *regs, struct task_struct *tsk,
++			   const char *loglvl)
+ {
+ 	unsigned int fp, mode;
+ 	int ok = 1;
+ 
+-	printk("Backtrace: ");
++	printk("%sBacktrace: ", loglvl);
+ 
+ 	if (!tsk)
+ 		tsk = current;
+@@ -239,13 +241,13 @@ static void dump_backtrace(struct pt_regs *regs, struct task_struct *tsk)
+ 	pr_cont("\n");
+ 
+ 	if (ok)
+-		c_backtrace(fp, mode, NULL);
++		c_backtrace(fp, mode, loglvl);
+ }
  #endif
  
- 	if (in_entry_text(from) && end <= ALIGN(frame, THREAD_SIZE))
--		dump_mem("", "Exception stack", frame + 4, end);
-+		dump_mem(loglvl, "Exception stack", frame + 4, end);
+ void show_stack(struct task_struct *tsk, unsigned long *sp)
+ {
+-	dump_backtrace(NULL, tsk);
++	dump_backtrace(NULL, tsk, KERN_DEFAULT);
+ 	barrier();
  }
  
- void dump_backtrace_stm(u32 *stack, u32 instruction, const char *loglvl)
-@@ -89,12 +91,12 @@ void dump_backtrace_stm(u32 *stack, u32 instruction, const char *loglvl)
- 			if (++x == 6) {
- 				x = 0;
- 				p = str;
--				printk("%s\n", str);
-+				printk("%s%s\n", loglvl, str);
- 			}
- 		}
+@@ -289,7 +291,7 @@ static int __die(const char *str, int err, struct pt_regs *regs)
+ 	if (!user_mode(regs) || in_interrupt()) {
+ 		dump_mem(KERN_EMERG, "Stack: ", regs->ARM_sp,
+ 			 THREAD_SIZE + (unsigned long)task_stack_page(tsk));
+-		dump_backtrace(regs, tsk);
++		dump_backtrace(regs, tsk, KERN_EMERG);
+ 		dump_instr(KERN_EMERG, regs);
  	}
- 	if (p != str)
--		printk("%s\n", str);
-+		printk("%s%s\n", loglvl, str);
- }
  
- #ifndef CONFIG_ARM_UNWIND
 -- 
 2.26.0
 
