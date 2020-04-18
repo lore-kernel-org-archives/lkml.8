@@ -4,57 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF140C38A29
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:42:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18DE5C38A2F
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:43:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 825F021D7E
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:42:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E807B21D7E
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:43:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587220975;
-	bh=eVdIKm2kuMC/roZW1kDDMJeJ4ns4NVmx3rwtzKl9sLk=;
+	s=default; t=1587220981;
+	bh=3AjzAH6sCRBBQIALkZlA3mWNYY6eXAlOgczOsfvavPY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=k6TXjIgw+iMBiJurh9pEAZf1uJS7aYYRo6Zxqu265pqUTVmOlyo8qZ5adYbYl3/9b
-	 RYVHwt0TJJXxgMysPuutAuhPpARz0TKC4o+6hDQlPKnTE/1Rdo+bNnFKKBhz+HgM3I
-	 NBdjXzmEuBOKINgVkFPHCZT320Hmuy/rl77RrqT4=
+	b=vIOtI04DXKH3zshbq/xk0fmNSlMoThd/NZ4YOZbQFPFACohiNwNz0IS46Xha+0Fpm
+	 BCiMSKhl5IDP9iShjQjoQ+QkPgOc2aQ01Qrk7zK8B+WsoqklEgQxI9XXD+lHYISsAa
+	 Rq8d5tc+j85PcGSP2QuHHk0VxZWH2qBUWUqLJHoo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728459AbgDROmy (ORCPT
+        id S1728476AbgDROnA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 10:42:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53184 "EHLO mail.kernel.org"
+        Sat, 18 Apr 2020 10:43:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53362 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728433AbgDROmt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 10:42:49 -0400
+        id S1728455AbgDROmy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 10:42:54 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5C80722272;
-        Sat, 18 Apr 2020 14:42:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AD44A22263;
+        Sat, 18 Apr 2020 14:42:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587220968;
-        bh=eVdIKm2kuMC/roZW1kDDMJeJ4ns4NVmx3rwtzKl9sLk=;
+        s=default; t=1587220973;
+        bh=3AjzAH6sCRBBQIALkZlA3mWNYY6eXAlOgczOsfvavPY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xRIUueMuZpkU592LSS+dW4dWgbbAvrNu4t4wSsw+dI+eafNj3ZVwIs3n24Tx48k3e
-         oTch8nE+wmV646sB/jy48g/3g5YfF+AdoSamNLNiPRG1RSn55GBwz6LTcXNmmDnWh8
-         TXnRHCNqfaSTCZHrD7EV7G7dGSB51Cwu00fGJvtM=
+        b=OiwNCumnsWeYmVHvTiYfIkcuxyyFiJjw4M2Y2HLsrCXirGrlMFxCe9sh9sAJv15b8
+         KxvEg0gMDLPYUIZ5aND0SYuiSAAdCA1WoQDxFJYJH6oMRa5tzY8o4qc33lof1qB3j6
+         b+bhHxEyRjDrlc2toQeFBj8XX831IKp9YvuL1KyM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vasily Averin <vvs@virtuozzo.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Waiman Long <longman@redhat.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Manfred Spraul <manfred@colorfullife.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Ingo Molnar <mingo@redhat.com>, NeilBrown <neilb@suse.com>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 16/47] ipc/util.c: sysvipc_find_ipc() should increase position index
-Date:   Sat, 18 Apr 2020 10:41:56 -0400
-Message-Id: <20200418144227.9802-16-sashal@kernel.org>
+Cc:     Evan Green <evgreen@chromium.org>,
+        Gwendal Grignou <gwendal@chromium.org>,
+        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
+        Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
+        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+        Sasha Levin <sashal@kernel.org>, linux-block@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 20/47] loop: Better discard support for block devices
+Date:   Sat, 18 Apr 2020 10:42:00 -0400
+Message-Id: <20200418144227.9802-20-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200418144227.9802-1-sashal@kernel.org>
 References: <20200418144227.9802-1-sashal@kernel.org>
@@ -67,50 +62,115 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vasily Averin <vvs@virtuozzo.com>
+From: Evan Green <evgreen@chromium.org>
 
-[ Upstream commit 89163f93c6f969da5811af5377cc10173583123b ]
+[ Upstream commit c52abf563049e787c1341cdf15c7dbe1bfbc951b ]
 
-If seq_file .next function does not change position index, read after
-some lseek can generate unexpected output.
+If the backing device for a loop device is itself a block device,
+then mirror the "write zeroes" capabilities of the underlying
+block device into the loop device. Copy this capability into both
+max_write_zeroes_sectors and max_discard_sectors of the loop device.
 
-https://bugzilla.kernel.org/show_bug.cgi?id=206283
-Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Acked-by: Waiman Long <longman@redhat.com>
-Cc: Davidlohr Bueso <dave@stgolabs.net>
-Cc: Manfred Spraul <manfred@colorfullife.com>
-Cc: Al Viro <viro@zeniv.linux.org.uk>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: NeilBrown <neilb@suse.com>
-Cc: Peter Oberparleiter <oberpar@linux.ibm.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Link: http://lkml.kernel.org/r/b7a20945-e315-8bb0-21e6-3875c14a8494@virtuozzo.com
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+The reason for this is that REQ_OP_DISCARD on a loop device translates
+into blkdev_issue_zeroout(), rather than blkdev_issue_discard(). This
+presents a consistent interface for loop devices (that discarded data
+is zeroed), regardless of the backing device type of the loop device.
+There should be no behavior change for loop devices backed by regular
+files.
+
+This change fixes blktest block/003, and removes an extraneous
+error print in block/013 when testing on a loop device backed
+by a block device that does not support discard.
+
+Signed-off-by: Evan Green <evgreen@chromium.org>
+Reviewed-by: Gwendal Grignou <gwendal@chromium.org>
+Reviewed-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
+[used updated version of Evan's comment in loop_config_discard()]
+[moved backingq to local scope, removed redundant braces]
+Signed-off-by: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- ipc/util.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/block/loop.c | 42 +++++++++++++++++++++++++++++++-----------
+ 1 file changed, 31 insertions(+), 11 deletions(-)
 
-diff --git a/ipc/util.c b/ipc/util.c
-index 0af05752969f1..b111e792b3125 100644
---- a/ipc/util.c
-+++ b/ipc/util.c
-@@ -735,13 +735,13 @@ static struct kern_ipc_perm *sysvipc_find_ipc(struct ipc_ids *ids, loff_t pos,
- 			total++;
+diff --git a/drivers/block/loop.c b/drivers/block/loop.c
+index 9cd231a27328e..c1341c86bcded 100644
+--- a/drivers/block/loop.c
++++ b/drivers/block/loop.c
+@@ -426,11 +426,12 @@ static int lo_fallocate(struct loop_device *lo, struct request *rq, loff_t pos,
+ 	 * information.
+ 	 */
+ 	struct file *file = lo->lo_backing_file;
++	struct request_queue *q = lo->lo_queue;
+ 	int ret;
+ 
+ 	mode |= FALLOC_FL_KEEP_SIZE;
+ 
+-	if ((!file->f_op->fallocate) || lo->lo_encrypt_key_size) {
++	if (!blk_queue_discard(q)) {
+ 		ret = -EOPNOTSUPP;
+ 		goto out;
  	}
+@@ -864,28 +865,47 @@ static void loop_config_discard(struct loop_device *lo)
+ 	struct inode *inode = file->f_mapping->host;
+ 	struct request_queue *q = lo->lo_queue;
  
-+	*new_pos = pos + 1;
- 	if (total >= ids->in_use)
- 		return NULL;
++	/*
++	 * If the backing device is a block device, mirror its zeroing
++	 * capability. Set the discard sectors to the block device's zeroing
++	 * capabilities because loop discards result in blkdev_issue_zeroout(),
++	 * not blkdev_issue_discard(). This maintains consistent behavior with
++	 * file-backed loop devices: discarded regions read back as zero.
++	 */
++	if (S_ISBLK(inode->i_mode) && !lo->lo_encrypt_key_size) {
++		struct request_queue *backingq;
++
++		backingq = bdev_get_queue(inode->i_bdev);
++		blk_queue_max_discard_sectors(q,
++			backingq->limits.max_write_zeroes_sectors);
++
++		blk_queue_max_write_zeroes_sectors(q,
++			backingq->limits.max_write_zeroes_sectors);
++
+ 	/*
+ 	 * We use punch hole to reclaim the free space used by the
+ 	 * image a.k.a. discard. However we do not support discard if
+ 	 * encryption is enabled, because it may give an attacker
+ 	 * useful information.
+ 	 */
+-	if ((!file->f_op->fallocate) ||
+-	    lo->lo_encrypt_key_size) {
++	} else if (!file->f_op->fallocate || lo->lo_encrypt_key_size) {
+ 		q->limits.discard_granularity = 0;
+ 		q->limits.discard_alignment = 0;
+ 		blk_queue_max_discard_sectors(q, 0);
+ 		blk_queue_max_write_zeroes_sectors(q, 0);
+-		blk_queue_flag_clear(QUEUE_FLAG_DISCARD, q);
+-		return;
+-	}
  
- 	for (; pos < IPCMNI; pos++) {
- 		ipc = idr_find(&ids->ipcs_idr, pos);
- 		if (ipc != NULL) {
--			*new_pos = pos + 1;
- 			rcu_read_lock();
- 			ipc_lock_object(ipc);
- 			return ipc;
+-	q->limits.discard_granularity = inode->i_sb->s_blocksize;
+-	q->limits.discard_alignment = 0;
++	} else {
++		q->limits.discard_granularity = inode->i_sb->s_blocksize;
++		q->limits.discard_alignment = 0;
+ 
+-	blk_queue_max_discard_sectors(q, UINT_MAX >> 9);
+-	blk_queue_max_write_zeroes_sectors(q, UINT_MAX >> 9);
+-	blk_queue_flag_set(QUEUE_FLAG_DISCARD, q);
++		blk_queue_max_discard_sectors(q, UINT_MAX >> 9);
++		blk_queue_max_write_zeroes_sectors(q, UINT_MAX >> 9);
++	}
++
++	if (q->limits.max_write_zeroes_sectors)
++		blk_queue_flag_set(QUEUE_FLAG_DISCARD, q);
++	else
++		blk_queue_flag_clear(QUEUE_FLAG_DISCARD, q);
+ }
+ 
+ static void loop_unprepare_queue(struct loop_device *lo)
 -- 
 2.20.1
 
