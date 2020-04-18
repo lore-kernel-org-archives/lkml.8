@@ -2,175 +2,90 @@ Return-Path: <SRS0=3CHW=6C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A650BC352BE
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 19:08:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA303C352BE
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 19:11:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8E79C21BE5
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 19:08:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BF2421BE5
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 19:11:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=pobox.com header.i=@pobox.com header.b="ZLJbYg4n";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=fluxnic.net header.i=@fluxnic.net header.b="unAv7lpB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728044AbgDRTIP (ORCPT
+        id S1728090AbgDRTLX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 15:08:15 -0400
-Received: from mout.kundenserver.de ([217.72.192.75]:36673 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727789AbgDRTIO (ORCPT
+        Sat, 18 Apr 2020 15:11:23 -0400
+Received: from pb-smtp20.pobox.com ([173.228.157.52]:58167 "EHLO
+        pb-smtp20.pobox.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726751AbgDRTLW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 15:08:14 -0400
-Received: from mail-qt1-f178.google.com ([209.85.160.178]) by
- mrelayeu.kundenserver.de (mreue106 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1MCJvA-1jYAYw3LrG-009RqB for <linux-kernel@vger.kernel.org>; Sat, 18 Apr
- 2020 21:08:13 +0200
-Received: by mail-qt1-f178.google.com with SMTP id x2so5129571qtr.0
-        for <linux-kernel@vger.kernel.org>; Sat, 18 Apr 2020 12:08:12 -0700 (PDT)
-X-Gm-Message-State: AGi0PuZvEE+2HLyNpwWd1mvv1vE6/zeSDNvbGPhR49J717usGoo5jlbj
-        ypIXk4QkzuGryRR2dyAZe3YV7ywkwcZ/n38QAFo=
-X-Google-Smtp-Source: APiQypIQyXCRKSNvdaLZyvEmQlPP55qqr3ssdQ7+2edvP8fsUKvIDTOrd3u0yqw+zJY4D62C/KJ2CxmsV4AmsRa3J14=
-X-Received: by 2002:ac8:296f:: with SMTP id z44mr8929296qtz.18.1587236891632;
- Sat, 18 Apr 2020 12:08:11 -0700 (PDT)
+        Sat, 18 Apr 2020 15:11:22 -0400
+Received: from pb-smtp20.pobox.com (unknown [127.0.0.1])
+        by pb-smtp20.pobox.com (Postfix) with ESMTP id AC690C0F89;
+        Sat, 18 Apr 2020 15:11:20 -0400 (EDT)
+        (envelope-from nico@fluxnic.net)
+DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=pobox.com; h=date:from:to
+        :cc:subject:in-reply-to:message-id:references:mime-version
+        :content-type; s=sasl; bh=VZi9Lq6WjEW2CMj7HADAyLMP9ZI=; b=ZLJbYg
+        4nliaG/wB0lpsHa9Ci3Ow858DxY3MSXbTL18SlWGyEOyg3pYK/1u/hodTrFUc2Zh
+        Pt8Muie1h9OY4vYRcfU48T2E23QAW11LwUri+mhm8h6gpdZJHAnu3n3wzbJFDDLm
+        b1LrWxyhFeW1Z2U1kqesZRruoqrGAfu6m9iWc=
+Received: from pb-smtp20.sea.icgroup.com (unknown [127.0.0.1])
+        by pb-smtp20.pobox.com (Postfix) with ESMTP id A322EC0F88;
+        Sat, 18 Apr 2020 15:11:20 -0400 (EDT)
+        (envelope-from nico@fluxnic.net)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed; d=fluxnic.net;
+ h=date:from:to:cc:subject:in-reply-to:message-id:references:mime-version:content-type; s=2016-12.pbsmtp; bh=tENhMTZ0DxDYPUZYBdHPCEQinqDZrI5H7ppeCRcGjKI=; b=unAv7lpBJ5hzW6YKxPPwiJaNbdzqxPfBLiZD0AZwW/+b0DjQD2STZ8xXtXxgO2/QDAcgR7LPXneVP9p5rJyAtdcNbD4PqSz/e5RTfd5AHN65Nek3vt0+2ZpaeS3kjoGzIpk1ue+PSNGlrK7rXV/rABLIbpo0yWip+9oe8GdYQb8=
+Received: from yoda.home (unknown [24.203.50.76])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by pb-smtp20.pobox.com (Postfix) with ESMTPSA id 9CC5CC0F87;
+        Sat, 18 Apr 2020 15:11:17 -0400 (EDT)
+        (envelope-from nico@fluxnic.net)
+Received: from xanadu.home (xanadu.home [192.168.2.2])
+        by yoda.home (Postfix) with ESMTPSA id 9E36C2DA0A70;
+        Sat, 18 Apr 2020 15:11:15 -0400 (EDT)
+Date:   Sat, 18 Apr 2020 15:11:15 -0400 (EDT)
+From:   Nicolas Pitre <nico@fluxnic.net>
+To:     Masahiro Yamada <masahiroy@kernel.org>
+cc:     Saeed Mahameed <saeedm@mellanox.com>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>, Jason Gunthorpe <jgg@ziepe.ca>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        jonas@kwiboo.se, David Airlie <airlied@linux.ie>,
+        jernej.skrabec@siol.net,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>, linux-rdma@vger.kernel.org
+Subject: Re: [RFC PATCH 1/2] Kconfig: Introduce "uses" keyword
+In-Reply-To: <CAK7LNAQZd_LUyA2V_pCvMTr_201nSX1Nm0TDw5kOeNV64rOfpA@mail.gmail.com>
+Message-ID: <nycvar.YSQ.7.76.2004181509030.2671@knanqh.ubzr>
+References: <20200417011146.83973-1-saeedm@mellanox.com> <CAK7LNAQZd_LUyA2V_pCvMTr_201nSX1Nm0TDw5kOeNV64rOfpA@mail.gmail.com>
+User-Agent: Alpine 2.21 (LFD 202 2017-01-01)
 MIME-Version: 1.0
-References: <20200418162157.50428-1-wenhu.wang@vivo.com> <20200418162157.50428-5-wenhu.wang@vivo.com>
-In-Reply-To: <20200418162157.50428-5-wenhu.wang@vivo.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Sat, 18 Apr 2020 21:07:54 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a05Rr7q_OtqqtG5hCPO3cettAJQNpmD0ULec+3PS-QPHA@mail.gmail.com>
-Message-ID: <CAK8P3a05Rr7q_OtqqtG5hCPO3cettAJQNpmD0ULec+3PS-QPHA@mail.gmail.com>
-Subject: Re: [PATCH v6,4/4] drivers: misc: new driver sram_uapi for user level
- SRAM access
-To:     Wang Wenhu <wenhu.wang@vivo.com>
-Cc:     gregkh <gregkh@linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Scott Wood <oss@buserror.net>,
-        christophe leroy <christophe.leroy@c-s.fr>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, kernel@vivo.com,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:8ZxrgN2A1Lko1y08b0S35T9iptQBWw0tyEvHJw94iggeKE551jJ
- EWyILGChISCD6nomyqQISA3vB9x9UBatj1S37cL4yAGSjuGO/7DSmIP9Leo1HSjSHzeLeQI
- l0RGD5XCvD9zAs44AZsT0gOIFJsBb35KpnjRB9XKCNBKS7KL3exU3qz9i0lSNMO0plTbYIW
- ca73fIeUMSyAK/X9Pzchg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:2BfJ2MlxJAY=:YWf+z0SU0dotGHqTPuf97B
- R/hIO/5L9qXHLFqNjfvG6eCgWlARtldyDgwkg/wYSZj21T/RAyLK3AR1+ugyOHrpUHS09cxod
- oS6J73J2kpUjiHnOKjGAyqsErm+p9cfrkjg61WXbfWuYww6ZSn1DD5OT/3P6sdYHQsFnhRCiz
- axkA53nDB+7CMYvSyuPZkYM4KIvgtfI7f0pnB1R0ZhVw/77OigI7IBKIoW+UqqpIGJqfaXhU1
- J+WxX57LSJZd0+jL2aP4GY2L2/botm4iAX2yjbAV34Z4ij38NMYhQiKoc/1oWIGVJ7gL6rLPZ
- iTY7D1cyLbCh2oP1l2OS4VWZRaHn5SJf/i77/jgixshJdnDGc045NlTv8zhWkhTHLZVfhFo02
- cxCwl/T4qhzrJAnjos7vwMwHFiY5HMsR2NXf80x7x+JBUg1XZrCj9zm4m62TXgZ5mRWpb9PGN
- TgiU+sMn/ApAH+p2J5D9aBi253CSFLSZwtrTippLmL5ZDsPdJhuEhz/385gCw/3MuwyfrF+b5
- VGkKnlLta8RA6xkWSZ70KhQigUJveYLibea3knxG+dbh1XdNlIVaiqgDqQPXHtqyqkDnBlUOg
- FYHHSRZjkDnls+rR8XB1QcTo7xVTMv+JPJc9thwkhjHktp2QrAcSv9NgJBjy6eeI19tCFHp5N
- G2OuTHN771ccpm9skuYTPq+ZrYnn+1qI9+2bE9HOwv3ImayWEXuE84uM5COHyFJzxo342HSXG
- 8y8I4DKawVcNU/I+9uqGCnWvKK8kkVZUkz8kYcPSnMdGD9KQCyxFjnD15bBmSJARH+Uc1gZvH
- +rchzaltaIzYai/eWDhQl4RVqCfXb/tWWzQ42skxmjtoJk9dfs=
+Content-Type: text/plain; charset=US-ASCII
+X-Pobox-Relay-ID: 61636EB6-81A8-11EA-ACEA-B0405B776F7B-78420484!pb-smtp20.pobox.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Apr 18, 2020 at 6:22 PM Wang Wenhu <wenhu.wang@vivo.com> wrote:
->
-> A generic User-Kernel interface that allows a misc device created
-> by it to support file-operations of ioctl and mmap to access SRAM
-> memory from user level. Different kinds of SRAM alloction and free
-> APIs could be added to the available array and could be configured
-> from user level.
+On Sun, 19 Apr 2020, Masahiro Yamada wrote:
 
-Having a generic user level interface seem reasonable, but it would
-be helpful to list one or more particular use cases.
+> (FOO || !FOO) is difficult to understand, but
+> the behavior of "uses FOO" is as difficult to grasp.
 
-> +if SRAM_UAPI
-> +
-> +config FSL_85XX_SRAM_UAPI
-> +       bool "Freescale MPC85xx Cache-SRAM UAPI support"
-> +       depends on FSL_SOC_BOOKE && PPC32
-> +       select FSL_85XX_CACHE_SRAM
-> +       help
-> +         This adds the Freescale MPC85xx Cache-SRAM memory allocation and
-> +         free interfaces to the available SRAM API array, which finally could
-> +         be used from user level to access the Freescale MPC85xx Cache-SRAM
-> +         memory.
+Can't this be expressed as the following instead:
 
-Why do you need  a hardware specific Kconfig option here, shouldn't
-this just use the generic kernel abstraction for the sram?
+	depends on FOO if FOO
 
-> +struct sram_api {
-> +       u32 type;
-> +       long (*sram_alloc)(u32 size, phys_addr_t *phys, u32 align);
-> +       void (*sram_free)(void *ptr);
-> +};
-> +
-> +struct sram_uapi {
-> +       struct list_head        res_list;
-> +       struct sram_api         *sa;
-> +};
-> +
-> +enum SRAM_TYPE {
-> +#ifdef FSL_85XX_CACHE_SRAM
-> +       SRAM_TYPE_FSL_85XX_CACHE_SRAM,
-> +#endif
-> +       SRAM_TYPE_MAX,
-> +};
-> +
-> +/* keep the SRAM_TYPE value the same with array index */
-> +static struct sram_api srams[] = {
-> +#ifdef FSL_85XX_CACHE_SRAM
-> +       {
-> +               .type           = SRAM_TYPE_FSL_85XX_CACHE_SRAM,
-> +               .sram_alloc     = mpc85xx_cache_sram_alloc,
-> +               .sram_free      = mpc85xx_cache_sram_free,
-> +       },
-> +#endif
-> +};
-
-If there is a indeed a requirement for hardware specific functions,
-I'd say these should be registered from the hardware specific driver
-rather than the generic driver having to know about every single
-instance.
-
-> +static long sram_uapi_ioctl(struct file *filp, unsigned int cmd,
-> +                           unsigned long arg)
-> +{
-> +       struct sram_uapi *uapi = filp->private_data;
-> +       struct sram_resource *res;
-> +       struct res_info info;
-> +       long ret = -EINVAL;
-> +       int size;
-> +       u32 type;
-> +
-> +       if (!uapi)
-> +               return ret;
-> +
-> +       switch (cmd) {
-> +       case SRAM_UAPI_IOCTL_SET_SRAM_TYPE:
-> +               size = copy_from_user((void *)&type, (const void __user *)arg,
-> +                                     sizeof(type));
-
-This could be a simpler get_user().
-
-> +static const struct file_operations sram_uapi_ops = {
-> +       .owner = THIS_MODULE,
-> +       .open = sram_uapi_open,
-> +       .unlocked_ioctl = sram_uapi_ioctl,
-> +       .mmap = sram_uapi_mmap,
-> +       .release = sram_uapi_release,
-> +};
-
-If you have a .unlocked_ioctl callback, there should also be a
-.compat_ioctl one. This can normally point to compat_ptr_ioctl().
-
-> +
-> +static struct miscdevice sram_uapi_miscdev = {
-> +       MISC_DYNAMIC_MINOR,
-> +       "sram-uapi",
-> +       &sram_uapi_ops,
-> +};
-
-The name of the character device should not contain "uapi", that
-is kind of implied here.
+That would be a little clearer.
 
 
-        Arnd
+Nicolas
