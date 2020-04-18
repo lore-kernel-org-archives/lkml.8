@@ -4,53 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AEA5C4CC77
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:49:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C277C38A29
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:49:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 31E562072B
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:49:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1916520753
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:49:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587221362;
-	bh=6EANkOU5+JVh6iSfkdwyirWkAQqzQTK44M4nd2mmmsA=;
+	s=default; t=1587221365;
+	bh=fgAPi6SmobpQ+fTyTrbXH1oguShDvqB2QYogzj2mDg0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iI7u7GMPfkwkgm9XA2uPpyD/WSdu0OeYbCqlDvCcqC/r+kR+zpmaNFU31b0dHLSDj
-	 N8VMMaHBgsLH6CZEKq2mxOcEk8f6DlNEofJG5TVRKgsn2bbdlGCtjx5GvBwzDadTor
-	 FP5ULGDgPb9sAbU9zHPxkrMT0XGw2Mxy+ey5C2rg=
+	b=CpPUMyFGqgpeGN7rg3W5tAwomwZAVlXmDYEurRgUsmSbpTMxrKBzniCrdhfXnwWhC
+	 8winDR/huL0lDCI5GI45LMq/6zpK+jXM+ajDFF40y7Q8nhrYW+a+EuEbPvbtlKEtRF
+	 v9AITz+hRzKgX9ckNTmMxUe3y2w5xm4ED11eQlZU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726877AbgDROnc (ORCPT
+        id S1728320AbgDROtX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 10:43:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54412 "EHLO mail.kernel.org"
+        Sat, 18 Apr 2020 10:49:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54782 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726745AbgDROnX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 10:43:23 -0400
+        id S1726842AbgDROne (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 10:43:34 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2A4DB21974;
-        Sat, 18 Apr 2020 14:43:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C04F321D82;
+        Sat, 18 Apr 2020 14:43:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587221002;
-        bh=6EANkOU5+JVh6iSfkdwyirWkAQqzQTK44M4nd2mmmsA=;
+        s=default; t=1587221014;
+        bh=fgAPi6SmobpQ+fTyTrbXH1oguShDvqB2QYogzj2mDg0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vYqA/GwhVsZPpI0UhOFGfVRNbVpP2erf6brmTjlLizzqm4iZI4HiMf8WR9/qNPjmk
-         179uzLwORFY/FQu2V7DWD2hm6TAhMM+D089sVOamUYinWgQQtShJbE+vBiCFT1RNiL
-         we49MqpbKQlSyfdbGG0PL0WBoc6OuHMkNpyC8Wu4=
+        b=aAHjYYyMT3K3BFaTODX+BeCbmaomr7P0wwxxy8INwxVm1fEcXLjiMga9vuw/766AK
+         qedne4XeipVxUj3cMFbPm2HhMhXjdh1CcgTZIpNS7+rDtXYrQzLx2AO7u0fptRqdmr
+         xUnhSKkb9RIvk1mrWzGH8RYiyErsa3ECsjW3N2Ks=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-kselftest@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 44/47] tracing/selftests: Turn off timeout setting
-Date:   Sat, 18 Apr 2020 10:42:24 -0400
-Message-Id: <20200418144227.9802-44-sashal@kernel.org>
+Cc:     Qiujun Huang <hqjagain@gmail.com>,
+        Jeff Layton <jlayton@kernel.org>,
+        Ilya Dryomov <idryomov@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, ceph-devel@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 05/28] ceph: return ceph_mdsc_do_request() errors from __get_parent()
+Date:   Sat, 18 Apr 2020 10:43:05 -0400
+Message-Id: <20200418144328.10265-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200418144227.9802-1-sashal@kernel.org>
-References: <20200418144227.9802-1-sashal@kernel.org>
+In-Reply-To: <20200418144328.10265-1-sashal@kernel.org>
+References: <20200418144328.10265-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,33 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+From: Qiujun Huang <hqjagain@gmail.com>
 
-[ Upstream commit b43e78f65b1d35fd3e13c7b23f9b64ea83c9ad3a ]
+[ Upstream commit c6d50296032f0b97473eb2e274dc7cc5d0173847 ]
 
-As the ftrace selftests can run for a long period of time, disable the
-timeout that the general selftests have. If a selftest hangs, then it
-probably means the machine will hang too.
+Return the error returned by ceph_mdsc_do_request(). Otherwise,
+r_target_inode ends up being NULL this ends up returning ENOENT
+regardless of the error.
 
-Link: https://lore.kernel.org/r/alpine.LSU.2.21.1911131604170.18679@pobox.suse.cz
-
-Suggested-by: Miroslav Benes <mbenes@suse.cz>
-Tested-by: Miroslav Benes <mbenes@suse.cz>
-Reviewed-by: Miroslav Benes <mbenes@suse.cz>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
+Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/ftrace/settings | 1 +
- 1 file changed, 1 insertion(+)
- create mode 100644 tools/testing/selftests/ftrace/settings
+ fs/ceph/export.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/tools/testing/selftests/ftrace/settings b/tools/testing/selftests/ftrace/settings
-new file mode 100644
-index 0000000000000..e7b9417537fbc
---- /dev/null
-+++ b/tools/testing/selftests/ftrace/settings
-@@ -0,0 +1 @@
-+timeout=0
+diff --git a/fs/ceph/export.c b/fs/ceph/export.c
+index 3c59ad180ef0b..4cfe1154d4c72 100644
+--- a/fs/ceph/export.c
++++ b/fs/ceph/export.c
+@@ -151,6 +151,11 @@ static struct dentry *__get_parent(struct super_block *sb,
+ 
+ 	req->r_num_caps = 1;
+ 	err = ceph_mdsc_do_request(mdsc, NULL, req);
++	if (err) {
++		ceph_mdsc_put_request(req);
++		return ERR_PTR(err);
++	}
++
+ 	inode = req->r_target_inode;
+ 	if (inode)
+ 		ihold(inode);
 -- 
 2.20.1
 
