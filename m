@@ -2,83 +2,89 @@ Return-Path: <SRS0=3CHW=6C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 430CEC38A2F
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ED67C3A5A0
 	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 13:45:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2C3722054F
+	by mail.kernel.org (Postfix) with ESMTP id 505692054F
 	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 13:45:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726024AbgDRNph (ORCPT
+        id S1726063AbgDRNpt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 09:45:37 -0400
-Received: from cmccmta2.chinamobile.com ([221.176.66.80]:11717 "EHLO
-        cmccmta2.chinamobile.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725879AbgDRNpg (ORCPT
+        Sat, 18 Apr 2020 09:45:49 -0400
+Received: from out30-44.freemail.mail.aliyun.com ([115.124.30.44]:54131 "EHLO
+        out30-44.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725879AbgDRNps (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 09:45:36 -0400
-Received: from spf.mail.chinamobile.com (unknown[172.16.121.13]) by rmmx-syy-dmz-app07-12007 (RichMail) with SMTP id 2ee75e9b0470c0a-aeed6; Sat, 18 Apr 2020 21:45:20 +0800 (CST)
-X-RM-TRANSID: 2ee75e9b0470c0a-aeed6
-X-RM-TagInfo: emlType=0                                       
-X-RM-SPAM-FLAG: 00000000
-Received: from localhost.localdomain (unknown[112.1.172.61])
-        by rmsmtp-syy-appsvr07-12007 (RichMail) with SMTP id 2ee75e9b046d98d-93ff7;
-        Sat, 18 Apr 2020 21:45:19 +0800 (CST)
-X-RM-TRANSID: 2ee75e9b046d98d-93ff7
-From:   Tang Bin <tangbin@cmss.chinamobile.com>
-To:     joro@8bytes.org, agross@kernel.org, bjorn.andersson@linaro.org,
-        robdclark@gmail.com
-Cc:     linux-arm-msm@vger.kernel.org, iommu@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org,
-        Tang Bin <tangbin@cmss.chinamobile.com>
-Subject: [PATCH v2]iommu/qcom:fix local_base status check
-Date:   Sat, 18 Apr 2020 21:47:03 +0800
-Message-Id: <20200418134703.1760-1-tangbin@cmss.chinamobile.com>
-X-Mailer: git-send-email 2.20.1.windows.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Sat, 18 Apr 2020 09:45:48 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R621e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04427;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---0TvvMGTO_1587217544;
+Received: from localhost(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0TvvMGTO_1587217544)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Sat, 18 Apr 2020 21:45:45 +0800
+From:   Alex Shi <alex.shi@linux.alibaba.com>
+Cc:     Alex Shi <alex.shi@linux.alibaba.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        cgroups@vger.kernel.org
+Subject: [PATCH v2 0/2] always record memcg id for swapped memcg pages 
+Date:   Sat, 18 Apr 2020 21:33:07 +0800
+Message-Id: <1587216789-42342-1-git-send-email-alex.shi@linux.alibaba.com>
+X-Mailer: git-send-email 1.8.3.1
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The function qcom_iommu_device_probe() does not perform sufficient
-error checking after executing devm_ioremap_resource(), which can
-result in crashes if a critical error path is encountered.
+Hi Johannes,
 
-Fixes: 0ae349a0f33f ("iommu/qcom: Add qcom_iommu")
+2 patches fold MEMCG_SWAP feature into kernel as default. I don't know if
+they could fit your new solution.
 
-Signed-off-by: Tang Bin <tangbin@cmss.chinamobile.com>
+But just in case if they can save you some typing. :)
+
+Thanks
+Alex
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Michal Hocko <mhocko@kernel.org>
+Cc: Vladimir Davydov <vdavydov.dev@gmail.com>
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-mm@kvack.org
+Cc: cgroups@vger.kernel.org
 ---
-v2:
- - fix commit message and add fixed tag
----
- drivers/iommu/qcom_iommu.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+Alex Shi (2):
+  memcg: folding CONFIG_MEMCG_SWAP as default
+  mm/memcg: remove swapaccount kernel parameter
 
-diff --git a/drivers/iommu/qcom_iommu.c b/drivers/iommu/qcom_iommu.c
-index 4328da0b0..b160cf140 100644
---- a/drivers/iommu/qcom_iommu.c
-+++ b/drivers/iommu/qcom_iommu.c
-@@ -813,8 +813,11 @@ static int qcom_iommu_device_probe(struct platform_device *pdev)
- 	qcom_iommu->dev = dev;
- 
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	if (res)
-+	if (res) {
- 		qcom_iommu->local_base = devm_ioremap_resource(dev, res);
-+		if (IS_ERR(qcom_iommu->local_base))
-+			return PTR_ERR(qcom_iommu->local_base);
-+	}
- 
- 	qcom_iommu->iface_clk = devm_clk_get(dev, "iface");
- 	if (IS_ERR(qcom_iommu->iface_clk)) {
+ Documentation/admin-guide/kernel-parameters.txt |  5 --
+ arch/arm/configs/omap2plus_defconfig            |  1 -
+ arch/arm64/configs/defconfig                    |  1 -
+ arch/mips/configs/db1xxx_defconfig              |  1 -
+ arch/mips/configs/generic_defconfig             |  1 -
+ arch/mips/configs/loongson3_defconfig           |  1 -
+ arch/parisc/configs/generic-64bit_defconfig     |  1 -
+ arch/powerpc/configs/powernv_defconfig          |  1 -
+ arch/powerpc/configs/pseries_defconfig          |  1 -
+ arch/s390/configs/debug_defconfig               |  1 -
+ arch/s390/configs/defconfig                     |  1 -
+ arch/sh/configs/sdk7786_defconfig               |  1 -
+ arch/sh/configs/urquell_defconfig               |  1 -
+ include/linux/memcontrol.h                      |  4 --
+ include/linux/swap.h                            | 27 ----------
+ include/linux/swap_cgroup.h                     | 30 -----------
+ init/Kconfig                                    | 20 --------
+ mm/Makefile                                     |  4 +-
+ mm/memcontrol.c                                 | 68 ++++++-------------------
+ mm/swap_cgroup.c                                |  7 ---
+ 20 files changed, 17 insertions(+), 160 deletions(-)
+
 -- 
-2.20.1.windows.1
-
-
+1.8.3.1
 
