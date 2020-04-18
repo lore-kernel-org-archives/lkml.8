@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42535C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:46:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E36CC38A2F
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:46:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1953921BE5
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:46:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F3AB21BE5
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:46:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587221198;
-	bh=YykEE0lTA5/lA1VLVm0ni2OOnqaYS3dSAahqYqP6bEk=;
+	s=default; t=1587221205;
+	bh=8ueGKzVpssWmv48W/XObwKppzjDuII99J2uriC02WAw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NyB9wmdUldoX6L4tsrxG5BJC+6fO6ydt1j7wcQNl/ZAjgJYmBNlkHhANgMF/ytqry
-	 0htl9TvXk8gm/taUBytlM2YTOLkSfAM23b+CznnO6N8pV8vxO+cLTytPqpRxBcczGU
-	 BTUraefKmIC6fpEX6UHx5aLfpucBVwspndh0Pd7Y=
+	b=oLliKTJn0zfEVP/5q+AjedBS54l+QR8teaAX21DMiYNC9aYzxgl9pUhlr3UahQ7UQ
+	 m41ZvM0Da1a7PKDvWUt/YIfAws+sZfo7TRhE5KxeCmJ6lpCVWE2C0BxkeOeGJEKvG+
+	 ebKXsLQ5V5qjQpiK2O8qf44KTk6PRF8+XwZhswIA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729006AbgDROqh (ORCPT
+        id S1728821AbgDROqn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 10:46:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56302 "EHLO mail.kernel.org"
+        Sat, 18 Apr 2020 10:46:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56130 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728819AbgDROob (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 10:44:31 -0400
+        id S1728813AbgDROo2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 10:44:28 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D322322250;
-        Sat, 18 Apr 2020 14:44:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1066621BE5;
+        Sat, 18 Apr 2020 14:44:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587221070;
-        bh=YykEE0lTA5/lA1VLVm0ni2OOnqaYS3dSAahqYqP6bEk=;
+        s=default; t=1587221067;
+        bh=8ueGKzVpssWmv48W/XObwKppzjDuII99J2uriC02WAw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gvC8w3BsaKXQqFJSEqDJa2WwYalb5HoaGe7bXz0Y2U5L0ciZN6IJ5WPzeUV6zSzH5
-         i9bk6vQQSJQ1QpKVpklwwqg7MQlhGA3F25n/1UybeglZ0V7EYy9DKn8KHOCTa45ozs
-         cowf+OqXLG32VJgJzXZDl4/0Y1AY+hb3oljT3Mz0=
+        b=DJDR61UE0bitsp066OveImHi48y8jhdNVvN3OYYv6pfw7vBXLuls032jM+37e+9jE
+         s6QmVvBXzD6xRpajGGo0n07FByz7/9x+cX8QBdp5DoYQCzpKz5QOY1ymga/MeBMr9Q
+         Nibuozi9kaQI8Fr9TKSf4iUx+ea63/xv0Ez+Ilh4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Simon Gander <simon@tuxera.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Anton Altaparmakov <anton@tuxera.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-fsdevel@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 19/23] hfsplus: fix crash and filesystem corruption when deleting files
-Date:   Sat, 18 Apr 2020 10:44:01 -0400
-Message-Id: <20200418144405.10565-19-sashal@kernel.org>
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-nvdimm@lists.01.org
+Subject: [PATCH AUTOSEL 4.9 17/23] libnvdimm: Out of bounds read in __nd_ioctl()
+Date:   Sat, 18 Apr 2020 10:43:59 -0400
+Message-Id: <20200418144405.10565-17-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200418144405.10565-1-sashal@kernel.org>
 References: <20200418144405.10565-1-sashal@kernel.org>
@@ -61,54 +59,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Simon Gander <simon@tuxera.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit 25efb2ffdf991177e740b2f63e92b4ec7d310a92 ]
+[ Upstream commit f84afbdd3a9e5e10633695677b95422572f920dc ]
 
-When removing files containing extended attributes, the hfsplus driver may
-remove the wrong entries from the attributes b-tree, causing major
-filesystem damage and in some cases even kernel crashes.
+The "cmd" comes from the user and it can be up to 255.  It it's more
+than the number of bits in long, it results out of bounds read when we
+check test_bit(cmd, &cmd_mask).  The highest valid value for "cmd" is
+ND_CMD_CALL (10) so I added a compare against that.
 
-To remove a file, all its extended attributes have to be removed as well.
-The driver does this by looking up all keys in the attributes b-tree with
-the cnid of the file.  Each of these entries then gets deleted using the
-key used for searching, which doesn't contain the attribute's name when it
-should.  Since the key doesn't contain the name, the deletion routine will
-not find the correct entry and instead remove the one in front of it.  If
-parent nodes have to be modified, these become corrupt as well.  This
-causes invalid links and unsorted entries that not even macOS's fsck_hfs
-is able to fix.
-
-To fix this, modify the search key before an entry is deleted from the
-attributes b-tree by copying the found entry's key into the search key,
-therefore ensuring that the correct entry gets removed from the tree.
-
-Signed-off-by: Simon Gander <simon@tuxera.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Reviewed-by: Anton Altaparmakov <anton@tuxera.com>
-Cc: <stable@vger.kernel.org>
-Link: http://lkml.kernel.org/r/20200327155541.1521-1-simon@tuxera.com
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: 62232e45f4a2 ("libnvdimm: control (ioctl) messages for nvdimm_bus and nvdimm devices")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Link: https://lore.kernel.org/r/20200225162055.amtosfy7m35aivxg@kili.mountain
+Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/hfsplus/attributes.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/nvdimm/bus.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/fs/hfsplus/attributes.c b/fs/hfsplus/attributes.c
-index d7455ea702878..0c4548d8cd0ba 100644
---- a/fs/hfsplus/attributes.c
-+++ b/fs/hfsplus/attributes.c
-@@ -291,6 +291,10 @@ static int __hfsplus_delete_attr(struct inode *inode, u32 cnid,
- 		return -ENOENT;
+diff --git a/drivers/nvdimm/bus.c b/drivers/nvdimm/bus.c
+index 5768a4749564a..65ac1d3870f93 100644
+--- a/drivers/nvdimm/bus.c
++++ b/drivers/nvdimm/bus.c
+@@ -851,8 +851,10 @@ static int __nd_ioctl(struct nvdimm_bus *nvdimm_bus, struct nvdimm *nvdimm,
+ 			return -EFAULT;
  	}
  
-+	/* Avoid btree corruption */
-+	hfs_bnode_read(fd->bnode, fd->search_key,
-+			fd->keyoffset, fd->keylength);
-+
- 	err = hfs_brec_remove(fd);
- 	if (err)
- 		return err;
+-	if (!desc || (desc->out_num + desc->in_num == 0) ||
+-			!test_bit(cmd, &cmd_mask))
++	if (!desc ||
++	    (desc->out_num + desc->in_num == 0) ||
++	    cmd > ND_CMD_CALL ||
++	    !test_bit(cmd, &cmd_mask))
+ 		return -ENOTTY;
+ 
+ 	/* fail write commands (when read-only) */
 -- 
 2.20.1
 
