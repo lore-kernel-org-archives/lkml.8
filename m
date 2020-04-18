@@ -7,46 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 131C0C38A30
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 13:49:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6221C38A2F
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 13:49:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E80DA2054F
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 13:49:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90D9321D6C
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 13:49:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587217742;
-	bh=8FF1v0rY69L8p6oHi3x5IgDbWvw9BTh5mmYIlqVDmCE=;
+	s=default; t=1587217746;
+	bh=hKu1vyMhVps1OAxX7R7Qf9/Zz7vCtRx4wUv23ATE3PU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zXGCPdg85w8rS7SMjeS0m/zmvGuRHRKJZko8d8bU6KOwMiqPuGp58equHncBj1Roo
-	 36sgV1eYm4pEQzSmahVhdgtEi18MTi1mvzaYg+LHd9H275OiiU8kfwZUUcBZfY/OUE
-	 Rs0QkvalJRb/i2HCXmjXFiAjfLaxtNCtudY3RsNs=
+	b=odJigo8l3ZWdAOEXsuubmlnSOa3YLFNvz7NTqhQ6hrl8dNqNHva8+aHwKsN/TQuv6
+	 CZk1LfW7GFvv5viUIsShy23C17neOl8M9eQ7Ns3VWFCiVo++yLqmshhrmDiZCpejcr
+	 SHqb6TwBYfXt+uNV3YJhy0y40WgPGo7yzV04FhIY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726692AbgDRNtC (ORCPT
+        id S1726702AbgDRNtF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 09:49:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55542 "EHLO mail.kernel.org"
+        Sat, 18 Apr 2020 09:49:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55584 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726618AbgDRNsy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 09:48:54 -0400
+        id S1726636AbgDRNsz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 09:48:55 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D907A2054F;
-        Sat, 18 Apr 2020 13:48:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 045C121D6C;
+        Sat, 18 Apr 2020 13:48:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587217733;
-        bh=8FF1v0rY69L8p6oHi3x5IgDbWvw9BTh5mmYIlqVDmCE=;
+        s=default; t=1587217734;
+        bh=hKu1vyMhVps1OAxX7R7Qf9/Zz7vCtRx4wUv23ATE3PU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=g+obSpntA1ahXHnHqi+gEDNWYjbRRgLeDmPOgtAYpB0WQi9ngazDG0pmvDj+2QrWL
-         8QGC3K1b1gXMwN6B3Ai+FEj1xyddD0XjQz0mFoUTQ5Xa2+S1cWOhFhdLWQDoISaSCI
-         INfpctipZPMntb0m0/e3S4cj4FMOzsyNI299JrfE=
+        b=FNWzrE17yZ4UYhT7Uw/vx788ekx8f5qU4cY/KczjLgRtsQ3+86pw/goUgLXXgQisq
+         Ezas4FkHqKwRq08v5UG1fGtvHFmPaz4YmC3uUkU6OGpFxDNzmdGlu1VK41S0Zkbvbu
+         F1fvVM/X2xAOJJZUm463MkMVAnapB3vjQP/UW/pM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-kbuild@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 30/73] kconfig: qconf: Fix a few alignment issues
-Date:   Sat, 18 Apr 2020 09:47:32 -0400
-Message-Id: <20200418134815.6519-30-sashal@kernel.org>
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        "Jason A . Donenfeld" <Jason@zx2c4.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.6 31/73] lib/raid6/test: fix build on distros whose /bin/sh is not bash
+Date:   Sat, 18 Apr 2020 09:47:33 -0400
+Message-Id: <20200418134815.6519-31-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200418134815.6519-1-sashal@kernel.org>
 References: <20200418134815.6519-1-sashal@kernel.org>
@@ -59,57 +62,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+From: Masahiro Yamada <masahiroy@kernel.org>
 
-[ Upstream commit 60969f02f07ae1445730c7b293c421d179da729c ]
+[ Upstream commit 06bd48b6cd97ef3889b68c8e09014d81dbc463f1 ]
 
-There are a few items with wrong alignments. Solve them.
+You can build a user-space test program for the raid6 library code,
+like this:
 
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+  $ cd lib/raid6/test
+  $ make
+
+The command in $(shell ...) function is evaluated by /bin/sh by default.
+(or, you can specify the shell by passing SHELL=<shell> from command line)
+
+Currently '>&/dev/null' is used to sink both stdout and stderr. Because
+this code is bash-ism, it only works when /bin/sh is a symbolic link to
+bash (this is the case on RHEL etc.)
+
+This does not work on Ubuntu where /bin/sh is a symbolic link to dash.
+
+I see lots of
+
+  /bin/sh: 1: Syntax error: Bad fd number
+
+and
+
+  warning "your version of binutils lacks ... support"
+
+Replace it with portable '>/dev/null 2>&1'.
+
+Fixes: 4f8c55c5ad49 ("lib/raid6: build proper files on corresponding arch")
 Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+Acked-by: H. Peter Anvin (Intel) <hpa@zytor.com>
+Reviewed-by: Jason A. Donenfeld <Jason@zx2c4.com>
+Acked-by: Ingo Molnar <mingo@kernel.org>
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- scripts/kconfig/qconf.cc | 13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
+ lib/raid6/test/Makefile | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/scripts/kconfig/qconf.cc b/scripts/kconfig/qconf.cc
-index 82773cc35d356..0f8c77f847114 100644
---- a/scripts/kconfig/qconf.cc
-+++ b/scripts/kconfig/qconf.cc
-@@ -627,7 +627,7 @@ void ConfigList::updateMenuList(ConfigItem *parent, struct menu* menu)
- 			last = item;
- 			continue;
- 		}
--	hide:
-+hide:
- 		if (item && item->menu == child) {
- 			last = parent->firstChild();
- 			if (last == item)
-@@ -692,7 +692,7 @@ void ConfigList::updateMenuList(ConfigList *parent, struct menu* menu)
- 			last = item;
- 			continue;
- 		}
--	hide:
-+hide:
- 		if (item && item->menu == child) {
- 			last = (ConfigItem*)parent->topLevelItem(0);
- 			if (last == item)
-@@ -1225,10 +1225,11 @@ QMenu* ConfigInfoView::createStandardContextMenu(const QPoint & pos)
- {
- 	QMenu* popup = Parent::createStandardContextMenu(pos);
- 	QAction* action = new QAction("Show Debug Info", popup);
--	  action->setCheckable(true);
--	  connect(action, SIGNAL(toggled(bool)), SLOT(setShowDebug(bool)));
--	  connect(this, SIGNAL(showDebugChanged(bool)), action, SLOT(setOn(bool)));
--	  action->setChecked(showDebug());
-+
-+	action->setCheckable(true);
-+	connect(action, SIGNAL(toggled(bool)), SLOT(setShowDebug(bool)));
-+	connect(this, SIGNAL(showDebugChanged(bool)), action, SLOT(setOn(bool)));
-+	action->setChecked(showDebug());
- 	popup->addSeparator();
- 	popup->addAction(action);
- 	return popup;
+diff --git a/lib/raid6/test/Makefile b/lib/raid6/test/Makefile
+index 3ab8720aa2f84..b9e6c3648be1a 100644
+--- a/lib/raid6/test/Makefile
++++ b/lib/raid6/test/Makefile
+@@ -35,13 +35,13 @@ endif
+ ifeq ($(IS_X86),yes)
+         OBJS   += mmx.o sse1.o sse2.o avx2.o recov_ssse3.o recov_avx2.o avx512.o recov_avx512.o
+         CFLAGS += $(shell echo "pshufb %xmm0, %xmm0" |		\
+-                    gcc -c -x assembler - >&/dev/null &&	\
++                    gcc -c -x assembler - >/dev/null 2>&1 &&	\
+                     rm ./-.o && echo -DCONFIG_AS_SSSE3=1)
+         CFLAGS += $(shell echo "vpbroadcastb %xmm0, %ymm1" |	\
+-                    gcc -c -x assembler - >&/dev/null &&	\
++                    gcc -c -x assembler - >/dev/null 2>&1 &&	\
+                     rm ./-.o && echo -DCONFIG_AS_AVX2=1)
+ 	CFLAGS += $(shell echo "vpmovm2b %k1, %zmm5" |          \
+-		    gcc -c -x assembler - >&/dev/null &&        \
++		    gcc -c -x assembler - >/dev/null 2>&1 &&	\
+ 		    rm ./-.o && echo -DCONFIG_AS_AVX512=1)
+ else ifeq ($(HAS_NEON),yes)
+         OBJS   += neon.o neon1.o neon2.o neon4.o neon8.o recov_neon.o recov_neon_inner.o
 -- 
 2.20.1
 
