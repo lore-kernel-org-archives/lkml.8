@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BE10C38A2F
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:42:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3B00C38A2F
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:42:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3276822252
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:42:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9AEB122251
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:42:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587220936;
-	bh=vfAHXFAy/Y/q0wkxF7wa7tNLX+mcFSUdnGqu55sY0aU=;
+	s=default; t=1587220939;
+	bh=WYwADE8W9KPmvHMc3c5wIpArVFGP+Hhg+m2Vbn8klTk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eufYt1bmHoeVpeuzEXbqocG3nSVlYWVAQ5TYxPk+AdC20VjWiZExTCXQqs0cYFY8r
-	 QSGi3+3EqBtkNctbplMqLS2deRDvWW15ceINAfyaFSgw6jyI5jg/ubA0lKNFV+M2+W
-	 +U1lpNc5l02jJjYaXJhZXjh0OuZ/hTy2xyQVp5lM=
+	b=fKpWC7QKQO0K8QJE5sfYcr2jqLIn8QYYAXrhbJSk7Ugvn7lOwU0OtLKLZnWiS8jUY
+	 QVz607qaAaiWaMM74I2h++wptJrY/JW/QIZHIXNHb0k9zoeSoelp8ghsG/GzLpTMIA
+	 TUosczI7SE0/Ss2zussmfOnJjrOkjMNLi7t4969o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728285AbgDROmP (ORCPT
+        id S1728299AbgDROmS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 10:42:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52006 "EHLO mail.kernel.org"
+        Sat, 18 Apr 2020 10:42:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52168 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728260AbgDROmK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 10:42:10 -0400
+        id S1728284AbgDROmP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 10:42:15 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AA30A21974;
-        Sat, 18 Apr 2020 14:42:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8885621D79;
+        Sat, 18 Apr 2020 14:42:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587220929;
-        bh=vfAHXFAy/Y/q0wkxF7wa7tNLX+mcFSUdnGqu55sY0aU=;
+        s=default; t=1587220934;
+        bh=WYwADE8W9KPmvHMc3c5wIpArVFGP+Hhg+m2Vbn8klTk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vusfOXdmo9YnisglNF7OfSpv+Ug3A9R0ZOI8kq6n1UGRNf4U2oPj1YMRyvaUe9nld
-         F+czt9aSwtYTl8Y7K24zJKkciNBZ13xwunljfXC4aBYZqSNWAGOvZa8bv50pwirg03
-         TroWXH6A/UVTQ/OPEx/EfZ4VMTBZtIqtbKBKz+Vc=
+        b=KlWxOd6Cj3oVEvsfE5qEUkJNFFRODhBE1iMrcG3PRcTuGNLrfwl+Lt1wvNYNYsmgk
+         Sw29nRjyfWo7lwniMzHEZW/N3/tiol0OfB1mp5lgHXSldawIZ0EHc4WjKf8SKZpWD+
+         aAbxuOTaHTRR+9vfkDo2QZu1Q0fPA4BIhr1rEfOU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Aurelien Jarno <aurelien@aurel32.net>,
-        Daniel Borkmann <daniel@iogearbox.net>,
+Cc:     Frederic Barrat <fbarrat@linux.ibm.com>,
+        Alastair D'Silva <alastair@d-silva.org>,
+        Andrew Donnellan <ajd@linux.ibm.com>,
         Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 66/78] libbpf: Fix readelf output parsing on powerpc with recent binutils
-Date:   Sat, 18 Apr 2020 10:40:35 -0400
-Message-Id: <20200418144047.9013-66-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org,
+        linux-pci@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 70/78] pci/hotplug/pnv-php: Remove erroneous warning
+Date:   Sat, 18 Apr 2020 10:40:39 -0400
+Message-Id: <20200418144047.9013-70-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200418144047.9013-1-sashal@kernel.org>
 References: <20200418144047.9013-1-sashal@kernel.org>
@@ -61,52 +62,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aurelien Jarno <aurelien@aurel32.net>
+From: Frederic Barrat <fbarrat@linux.ibm.com>
 
-[ Upstream commit 3464afdf11f9a1e031e7858a05351ceca1792fea ]
+[ Upstream commit 658ab186dd22060408d94f5c5a6d02d809baba44 ]
 
-On powerpc with recent versions of binutils, readelf outputs an extra
-field when dumping the symbols of an object file. For example:
+On powernv, when removing a device through hotplug, the following
+warning is logged:
 
-    35: 0000000000000838    96 FUNC    LOCAL  DEFAULT [<localentry>: 8]     1 btf_is_struct
+     Invalid refcount <.> on <...>
 
-The extra "[<localentry>: 8]" prevents the GLOBAL_SYM_COUNT variable to
-be computed correctly and causes the check_abi target to fail.
+It may be incorrect, the refcount may be set to a higher value than 1
+and be valid. of_detach_node() can drop more than one reference. As it
+doesn't seem trivial to assert the correct value, let's remove the
+warning.
 
-Fix that by looking for the symbol name in the last field instead of the
-8th one. This way it should also cope with future extra fields.
-
-Signed-off-by: Aurelien Jarno <aurelien@aurel32.net>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Tested-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/bpf/20191201195728.4161537-1-aurelien@aurel32.net
+Reviewed-by: Alastair D'Silva <alastair@d-silva.org>
+Reviewed-by: Andrew Donnellan <ajd@linux.ibm.com>
+Signed-off-by: Frederic Barrat <fbarrat@linux.ibm.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20191121134918.7155-7-fbarrat@linux.ibm.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/lib/bpf/Makefile | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/pci/hotplug/pnv_php.c | 6 ------
+ 1 file changed, 6 deletions(-)
 
-diff --git a/tools/lib/bpf/Makefile b/tools/lib/bpf/Makefile
-index 33e2638ef7f0d..122321d549227 100644
---- a/tools/lib/bpf/Makefile
-+++ b/tools/lib/bpf/Makefile
-@@ -145,7 +145,7 @@ PC_FILE		:= $(addprefix $(OUTPUT),$(PC_FILE))
+diff --git a/drivers/pci/hotplug/pnv_php.c b/drivers/pci/hotplug/pnv_php.c
+index d7b2b47bc33eb..6037983c6e46b 100644
+--- a/drivers/pci/hotplug/pnv_php.c
++++ b/drivers/pci/hotplug/pnv_php.c
+@@ -151,17 +151,11 @@ static void pnv_php_rmv_pdns(struct device_node *dn)
+ static void pnv_php_detach_device_nodes(struct device_node *parent)
+ {
+ 	struct device_node *dn;
+-	int refcount;
  
- GLOBAL_SYM_COUNT = $(shell readelf -s --wide $(BPF_IN_SHARED) | \
- 			   cut -d "@" -f1 | sed 's/_v[0-9]_[0-9]_[0-9].*//' | \
--			   awk '/GLOBAL/ && /DEFAULT/ && !/UND/ {print $$8}' | \
-+			   awk '/GLOBAL/ && /DEFAULT/ && !/UND/ {print $$NF}' | \
- 			   sort -u | wc -l)
- VERSIONED_SYM_COUNT = $(shell readelf -s --wide $(OUTPUT)libbpf.so | \
- 			      grep -Eo '[^ ]+@LIBBPF_' | cut -d@ -f1 | sort -u | wc -l)
-@@ -217,7 +217,7 @@ check_abi: $(OUTPUT)libbpf.so
- 		     "versioned in $(VERSION_SCRIPT)." >&2;		 \
- 		readelf -s --wide $(BPF_IN_SHARED) |			 \
- 		    cut -d "@" -f1 | sed 's/_v[0-9]_[0-9]_[0-9].*//' |	 \
--		    awk '/GLOBAL/ && /DEFAULT/ && !/UND/ {print $$8}'|   \
-+		    awk '/GLOBAL/ && /DEFAULT/ && !/UND/ {print $$NF}'|  \
- 		    sort -u > $(OUTPUT)libbpf_global_syms.tmp;		 \
- 		readelf -s --wide $(OUTPUT)libbpf.so |			 \
- 		    grep -Eo '[^ ]+@LIBBPF_' | cut -d@ -f1 |		 \
+ 	for_each_child_of_node(parent, dn) {
+ 		pnv_php_detach_device_nodes(dn);
+ 
+ 		of_node_put(dn);
+-		refcount = kref_read(&dn->kobj.kref);
+-		if (refcount != 1)
+-			pr_warn("Invalid refcount %d on <%pOF>\n",
+-				refcount, dn);
+-
+ 		of_detach_node(dn);
+ 	}
+ }
 -- 
 2.20.1
 
