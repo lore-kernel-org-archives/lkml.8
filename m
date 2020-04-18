@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC9B1C38A2F
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 13:49:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 699DAC3A5A0
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 13:49:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B9A5D2054F
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 13:49:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 395862054F
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 13:49:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587217784;
-	bh=z5dYLHcHjfsFQ8/0jvOvn36gZiwUOSgHbKRE0i4pM9Y=;
+	s=default; t=1587217788;
+	bh=hVGd1XVXIQixtTCRrA9xVPLTqm8xr2yA0JSWE2QJe5Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Z0UdvN69v/0+qZv/kETLGFadMMDSopT4fTXBPYDj2SuvHdLG/W6N3w8VgyEBctzPy
-	 geOT2GNf29ptaH6V2eKM8kkrJXDHiCQZEW/KcQUVCPMHYBf3aFwl8vfB8eAmkrr0wJ
-	 bHzW/u0exqzDo9D3lzbL9aloXaRp1QanjqkQfvUs=
+	b=wwTu3etKb/e8iTvUM6lBIyiTU+1BJ6+xGeUnd/Nm+5drhr5an9xqSSf9cvZYiL/x7
+	 rKv2kelOt1djnCdUv4cCTcKbYJX8HzTOfBMPicZbECiLYspOZ3df9ieTCufMzitvqZ
+	 W+O1RjA7PrMwh2iR8VCP/M81GwAaYSSdlMi3JV3I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726872AbgDRNtn (ORCPT
+        id S1726889AbgDRNtr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 09:49:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56846 "EHLO mail.kernel.org"
+        Sat, 18 Apr 2020 09:49:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57028 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726834AbgDRNti (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 09:49:38 -0400
+        id S1726861AbgDRNtn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 09:49:43 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3C14F2224E;
-        Sat, 18 Apr 2020 13:49:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DFAB722261;
+        Sat, 18 Apr 2020 13:49:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587217778;
-        bh=z5dYLHcHjfsFQ8/0jvOvn36gZiwUOSgHbKRE0i4pM9Y=;
+        s=default; t=1587217782;
+        bh=hVGd1XVXIQixtTCRrA9xVPLTqm8xr2yA0JSWE2QJe5Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hq44pBD75/jQ+0mI4iw1GD/sIo139vtFSGQUxs4ZL8vizJz8iDzkPibLtlTwKjghQ
-         6ugx95xRane3mJqzRCqodOE50kTYOsRhK5nRAIegl9t77u2c788CB1TyU81DgJutq5
-         h0Mr5pL0QMcMWYkSUIfGRup1VvPArkeLtMxKev9M=
+        b=Y/6dBpLm9OBzVrbHVw8Xinn/2zO+XOZp7L/DHYBWuuNdbhesKYazONWDNWIQ1yYgI
+         llPWttrdApYI3eCJ7vtLJ/otxRQ8fu/wUopvPKa7+P1zPJr2WgZToDSpc4iLpGrx3/
+         vmmD/da/ADFtArqAYXpAsK0cm/QT5WEtEAZBT6Kw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Wen Yang <wenyang@linux.alibaba.com>,
-        Corey Minyard <minyard@acm.org>, Arnd Bergmann <arnd@arndb.de>,
+Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Mathias Nyman <mathias.nyman@linux.intel.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        openipmi-developer@lists.sourceforge.net,
-        Corey Minyard <cminyard@mvista.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.6 66/73] ipmi: fix hung processes in __get_guid()
-Date:   Sat, 18 Apr 2020 09:48:08 -0400
-Message-Id: <20200418134815.6519-66-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 70/73] xhci: Ensure link state is U3 after setting USB_SS_PORT_LS_U3
+Date:   Sat, 18 Apr 2020 09:48:12 -0400
+Message-Id: <20200418134815.6519-70-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200418134815.6519-1-sashal@kernel.org>
 References: <20200418134815.6519-1-sashal@kernel.org>
@@ -62,70 +60,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wen Yang <wenyang@linux.alibaba.com>
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-[ Upstream commit 32830a0534700f86366f371b150b17f0f0d140d7 ]
+[ Upstream commit eb002726fac7cefb98ff39ddb89e150a1c24fe85 ]
 
-The wait_event() function is used to detect command completion.
-When send_guid_cmd() returns an error, smi_send() has not been
-called to send data. Therefore, wait_event() should not be used
-on the error path, otherwise it will cause the following warning:
+The xHCI spec doesn't specify the upper bound of U3 transition time. For
+some devices 20ms is not enough, so we need to make sure the link state
+is in U3 before further actions.
 
-[ 1361.588808] systemd-udevd   D    0  1501   1436 0x00000004
-[ 1361.588813]  ffff883f4b1298c0 0000000000000000 ffff883f4b188000 ffff887f7e3d9f40
-[ 1361.677952]  ffff887f64bd4280 ffffc90037297a68 ffffffff8173ca3b ffffc90000000010
-[ 1361.767077]  00ffc90037297ad0 ffff887f7e3d9f40 0000000000000286 ffff883f4b188000
-[ 1361.856199] Call Trace:
-[ 1361.885578]  [<ffffffff8173ca3b>] ? __schedule+0x23b/0x780
-[ 1361.951406]  [<ffffffff8173cfb6>] schedule+0x36/0x80
-[ 1362.010979]  [<ffffffffa071f178>] get_guid+0x118/0x150 [ipmi_msghandler]
-[ 1362.091281]  [<ffffffff810d5350>] ? prepare_to_wait_event+0x100/0x100
-[ 1362.168533]  [<ffffffffa071f755>] ipmi_register_smi+0x405/0x940 [ipmi_msghandler]
-[ 1362.258337]  [<ffffffffa0230ae9>] try_smi_init+0x529/0x950 [ipmi_si]
-[ 1362.334521]  [<ffffffffa022f350>] ? std_irq_setup+0xd0/0xd0 [ipmi_si]
-[ 1362.411701]  [<ffffffffa0232bd2>] init_ipmi_si+0x492/0x9e0 [ipmi_si]
-[ 1362.487917]  [<ffffffffa0232740>] ? ipmi_pci_probe+0x280/0x280 [ipmi_si]
-[ 1362.568219]  [<ffffffff810021a0>] do_one_initcall+0x50/0x180
-[ 1362.636109]  [<ffffffff812231b2>] ? kmem_cache_alloc_trace+0x142/0x190
-[ 1362.714330]  [<ffffffff811b2ae1>] do_init_module+0x5f/0x200
-[ 1362.781208]  [<ffffffff81123ca8>] load_module+0x1898/0x1de0
-[ 1362.848069]  [<ffffffff811202e0>] ? __symbol_put+0x60/0x60
-[ 1362.913886]  [<ffffffff8130696b>] ? security_kernel_post_read_file+0x6b/0x80
-[ 1362.998514]  [<ffffffff81124465>] SYSC_finit_module+0xe5/0x120
-[ 1363.068463]  [<ffffffff81124465>] ? SYSC_finit_module+0xe5/0x120
-[ 1363.140513]  [<ffffffff811244be>] SyS_finit_module+0xe/0x10
-[ 1363.207364]  [<ffffffff81003c04>] do_syscall_64+0x74/0x180
+I've tried to use U3 Entry Capability by setting U3 Entry Enable in
+config register, however the port change event for U3 transition
+interrupts the system suspend process.
 
-Fixes: 50c812b2b951 ("[PATCH] ipmi: add full sysfs support")
-Signed-off-by: Wen Yang <wenyang@linux.alibaba.com>
-Cc: Corey Minyard <minyard@acm.org>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: openipmi-developer@lists.sourceforge.net
-Cc: linux-kernel@vger.kernel.org
-Cc: stable@vger.kernel.org # 2.6.17-
-Message-Id: <20200403090408.58745-1-wenyang@linux.alibaba.com>
-Signed-off-by: Corey Minyard <cminyard@mvista.com>
+For now let's use the less ideal method by polling PLS.
+
+[use usleep_range(), and shorten the delay time while polling -Mathias]
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
+Link: https://lore.kernel.org/r/20200312144517.1593-7-mathias.nyman@linux.intel.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/char/ipmi/ipmi_msghandler.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/usb/host/xhci-hub.c | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/char/ipmi/ipmi_msghandler.c b/drivers/char/ipmi/ipmi_msghandler.c
-index cad9563f8f485..4c51f794d04ca 100644
---- a/drivers/char/ipmi/ipmi_msghandler.c
-+++ b/drivers/char/ipmi/ipmi_msghandler.c
-@@ -3188,8 +3188,8 @@ static void __get_guid(struct ipmi_smi *intf)
- 	if (rv)
- 		/* Send failed, no GUID available. */
- 		bmc->dyn_guid_set = 0;
--
--	wait_event(intf->waitq, bmc->dyn_guid_set != 2);
-+	else
-+		wait_event(intf->waitq, bmc->dyn_guid_set != 2);
+diff --git a/drivers/usb/host/xhci-hub.c b/drivers/usb/host/xhci-hub.c
+index af92b2576fe91..712cd44f05ace 100644
+--- a/drivers/usb/host/xhci-hub.c
++++ b/drivers/usb/host/xhci-hub.c
+@@ -1322,7 +1322,16 @@ int xhci_hub_control(struct usb_hcd *hcd, u16 typeReq, u16 wValue,
+ 			xhci_set_link_state(xhci, ports[wIndex], link_state);
  
- 	/* dyn_guid_set makes the guid data available. */
- 	smp_rmb();
+ 			spin_unlock_irqrestore(&xhci->lock, flags);
+-			msleep(20); /* wait device to enter */
++			if (link_state == USB_SS_PORT_LS_U3) {
++				int retries = 16;
++
++				while (retries--) {
++					usleep_range(4000, 8000);
++					temp = readl(ports[wIndex]->addr);
++					if ((temp & PORT_PLS_MASK) == XDEV_U3)
++						break;
++				}
++			}
+ 			spin_lock_irqsave(&xhci->lock, flags);
+ 
+ 			temp = readl(ports[wIndex]->addr);
 -- 
 2.20.1
 
