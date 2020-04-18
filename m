@@ -1,175 +1,113 @@
 Return-Path: <SRS0=3CHW=6C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: *
-X-Spam-Status: No, score=1.4 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_ABUSE_SURBL,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Level: 
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E10B9C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 12:10:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52065C38A2F
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 12:11:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C0D5A221F4
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 12:10:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="GnQ9Xu4N"
+	by mail.kernel.org (Postfix) with ESMTP id 3706421D79
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 12:11:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725990AbgDRMK2 (ORCPT
+        id S1726025AbgDRMLF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 08:10:28 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:60176 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725873AbgDRMK1 (ORCPT
+        Sat, 18 Apr 2020 08:11:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38210 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725873AbgDRMLE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 08:10:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1587211824; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=W8uyfORoWpoopNQAQRiFt0F12jT9ut5sphQKhCFCQnI=;
-        b=GnQ9Xu4NTvPUquR8iR0VIKLtACsC6IM+aIypTrEzV5CVG1YA9XS7UYVNec1wHO8ZKdcTBK
-        9jiuRA7KEcZet3Im5oH5sODW8CWKMPTHaQfOuCf/FqwNTQNly/9hTNGk47WsflgImO0Ob/
-        xS7TkvnoGiiaz2OKA8kw9JfZek7dLyk=
-Date:   Sat, 18 Apr 2020 14:10:12 +0200
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [RESEND PATCH v5 5/5] input: joystick: Add ADC attached joystick
- driver.
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Artur Rojek <contact@artur-rojek.eu>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        linux-input <linux-input@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Message-Id: <0HGZ8Q.TO6FK92GVGIN3@crapouillou.net>
-In-Reply-To: <CAHp75VeVvE8LAO8f=-cwfgL6erFZACGwMnriNRaQnfnHw31wkg@mail.gmail.com>
-References: <20200417202859.35427-1-contact@artur-rojek.eu>
-        <20200417202859.35427-5-contact@artur-rojek.eu>
-        <CAHp75VfRbnnuUhfyXpu+5dp4TutHSrHus=sX_vG_5F0dX4k0fQ@mail.gmail.com>
-        <UFBY8Q.ES4D59V22INC1@crapouillou.net>
-        <CAHp75VfEAtqucMPdkygfBhojTJoHO5vFk_o0suiyf7i2JCMw9Q@mail.gmail.com>
-        <7CFY8Q.68YMS0V08F992@crapouillou.net>
-        <CAHp75VeVvE8LAO8f=-cwfgL6erFZACGwMnriNRaQnfnHw31wkg@mail.gmail.com>
+        Sat, 18 Apr 2020 08:11:04 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDF30C061A0C;
+        Sat, 18 Apr 2020 05:11:04 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id F00092A0FCA;
+        Sat, 18 Apr 2020 13:11:01 +0100 (BST)
+Date:   Sat, 18 Apr 2020 14:10:58 +0200
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Cc:     Boris Brezillon <bbrezillon@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Sebastian Duda <sebastian.duda@fau.de>,
+        Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Joe Perches <joe@perches.com>, kernel-janitors@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
+        Richard Weinberger <richard@nod.at>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Vignesh R <vigneshr@ti.com>
+Subject: Re: [PATCH RESEND] MAINTAINERS: adjust to renaming
+ physmap_of_versatile.c
+Message-ID: <20200418141058.567a80d7@collabora.com>
+In-Reply-To: <20200418100933.8012-1-lukas.bulwahn@gmail.com>
+References: <20200418100933.8012-1-lukas.bulwahn@gmail.com>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
++ MTD maintainers and the MTD ML
 
+On Sat, 18 Apr 2020 12:09:33 +0200
+Lukas Bulwahn <lukas.bulwahn@gmail.com> wrote:
 
-Le sam. 18 avril 2020 =E0 14:57, Andy Shevchenko=20
-<andy.shevchenko@gmail.com> a =E9crit :
-> On Sat, Apr 18, 2020 at 1:48 AM Paul Cercueil <paul@crapouillou.net>=20
-> wrote:
->>=20
->>=20
->>=20
->>  Le sam. 18 avril 2020 =E0 0:49, Andy Shevchenko
->>  <andy.shevchenko@gmail.com> a =E9crit :
->>  > On Sat, Apr 18, 2020 at 12:24 AM Paul Cercueil=20
->> <paul@crapouillou.net>
->>  > wrote:
->>  >>  Le sam. 18 avril 2020 =E0 0:10, Andy Shevchenko
->>  >>  <andy.shevchenko@gmail.com> a =E9crit :
->>  >>  > On Fri, Apr 17, 2020 at 11:21 PM Artur Rojek
->>  >> <contact@artur-rojek.eu>
->>  >>  > wrote:
->>  >
->>  > ...
->>  >
->>  >>  >>  +#include <linux/of.h>
->>  >>  >
->>  >>  > Do you really need this? (See below as well)
->>  >
->>  >>  >>  +static const struct of_device_id adc_joystick_of_match[] =3D=20
->> {
->>  >>  >>  +       { .compatible =3D "adc-joystick", },
->>  >>  >>  +       { },
->>  >>  >>  +};
->>  >>  >>  +MODULE_DEVICE_TABLE(of, adc_joystick_of_match);
->>  >>  >>  +
->>  >>  >>  +static struct platform_driver adc_joystick_driver =3D {
->>  >>  >>  +       .driver =3D {
->>  >>  >>  +               .name =3D "adc-joystick",
->>  >>  >
->>  >>  >>  +               .of_match_table =3D
->>  >>  >> of_match_ptr(adc_joystick_of_match),
->>  >>  >
->>  >>  > Drop this a bit harmful of_match_ptr() macro. It should go=20
->> with
->>  >> ugly
->>  >>  > #ifdeffery. Here you simple introduced a compiler warning.
->>  >>
->>  >>  I assume you mean #ifdef around the of_device_id + module table
->>  >> macro?
->>  >
->>  > Yes.
->>  >
->>  >>  > On top of that, you are using device property API, OF use in=20
->> this
->>  >> case
->>  >>  > is contradictory (at lest to some extend).
->>  >>
->>  >>  I don't see why. The fact that the driver can work when probed=20
->> from
->>  >>  platform code
->>  >
->>  > Ha-ha, tell me how. I would like to be very surprised.
->>=20
->>  iio_map_array_register(),
->>  pinctrl_register_mappings(),
->>  platform_add_devices(),
->>=20
->>  you're welcome.
->=20
-> I think above has no relation to what I'm talking about.
+> Commit 6ca15cfa0788 ("mtd: maps: Rename physmap_of_{versatile, gemini}
+> into physmap-{versatile, gemini}") renamed physmap_of_versatile.c to
+> physmap-versatile.c, but did not adjust the MAINTAINERS entry.
+> 
+> Since then, ./scripts/get_maintainer.pl --self-test complains:
+> 
+>   warning: no file matches F: drivers/mtd/maps/physmap_of_versatile.c
+> 
+> Rectify the ARM INTEGRATOR, VERSATILE AND REALVIEW SUPPORT entry and now
+> also cover drivers/mtd/maps/physmap-versatile.h while at it.
+> 
+> Co-developed-by: Sebastian Duda <sebastian.duda@fau.de>
+> Signed-off-by: Sebastian Duda <sebastian.duda@fau.de>
+> Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+> ---
+> Boris, please pick or ack this patch.
+> applies cleanly on current master and next-20200417
 
-Yes it does. It allows you to map the IIO channels, set the pinctrl=20
-configurations and register a device from platform code instead of=20
-devicetree.
+Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
 
-> How *this* driver can work as a platform instantiated one?
-> We seems have a conceptual misunderstanding here.
->=20
-> For example, how can probe of this driver not fail, if it is not
-> backed by a DT/ACPI properties?
+> 
+> v1: https://lore.kernel.org/lkml/20200228063338.4099-1-lukas.bulwahn@gmail.com/
+>   - was wrongly sent to old boris.brezillon@bootlin.com address
 
-platform_device_add_properties().
+Please Cc the MTD ML and maintainers next time.
 
->=20
->>  >>  doesn't mean that it shouldn't have a table to probe
->>  >>  from devicetree.
->>  >
->>  > I didn't get what you are talking about here. The idea of=20
->> _unified_
->>  > device property API is to get rid of OF-centric code in favour of=20
->> more
->>  > generic approach. Mixing those two can be done only in specific=20
->> cases
->>  > (here is not the one).
->>=20
->>  And how are we mixing those two here? The only OF-centric thing=20
->> here is
->>  the device table, which is required if we want the driver to probe=20
->> from
->>  devicetree.
->=20
-> Table is fine(JFYI the types and sections are defined outside of OF
-> stuff, though being [heavily] used by it) , API (of_match_ptr() macro
-> use) is not.
+>   - got Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-Sorry, but that's just stupid. Please have a look at how of_match_ptr()=20
-macro is defined in <linux/of.h>.
+Linus' reviewed is missing in this version.
 
--Paul
-
+> 
+>  MAINTAINERS | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index c77f02282044..52bb8819230a 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -1342,7 +1342,7 @@ F:	arch/arm/plat-versatile/
+>  F:	drivers/clk/versatile/
+>  F:	drivers/i2c/busses/i2c-versatile.c
+>  F:	drivers/irqchip/irq-versatile-fpga.c
+> -F:	drivers/mtd/maps/physmap_of_versatile.c
+> +F:	drivers/mtd/maps/physmap-versatile.*
+>  F:	drivers/power/reset/arm-versatile-reboot.c
+>  F:	drivers/soc/versatile/
+>  
 
