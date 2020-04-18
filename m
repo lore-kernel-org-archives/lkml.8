@@ -2,74 +2,83 @@ Return-Path: <SRS0=3CHW=6C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65D8BC3A5A0
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 18:57:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B256BC3A5A0
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 18:58:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 412992223D
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 18:57:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CAEF2051A
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 18:58:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="KyiJJMam"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eHE56v2F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728222AbgDRS5f (ORCPT
+        id S1728009AbgDRS6i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 14:57:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43734 "EHLO
+        Sat, 18 Apr 2020 14:58:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43890 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726086AbgDRS5d (ORCPT
+        by vger.kernel.org with ESMTP id S1726086AbgDRS6h (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 14:57:33 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76398C061A0C;
-        Sat, 18 Apr 2020 11:57:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description;
-        bh=v6goMSiM3JqD5eRdn45ZDeyVAxJCt3W7fqpeEGrJJtc=; b=KyiJJMamxfOIjVFL72tLsYD7re
-        sd31vDw2o9XAGj4cjlL0iY4LlaG6HfVp+RX/eAnF8cs7BFGA7rm1P50OIDl4CJaSxdZP9IFpIodWa
-        qKFndBfM+66S0aonynhdQTK/wJPSVS1Y4GHEToI5QjfeKxEM5UcdrBqdzJ3gwI+cd+itnETKujVao
-        no3xr+EdUuBl8Nn1gwFz9atcofq1XkfodTx5dSOb3avPvgI/1CgyqkUdIR/uY0+1yXAWS0ASg6Ion
-        xZd3LmWJA+40BpAwWMUlGbYNQaWIgBlBDowZN86RmjMlnIBdG8kobJ5e86SBZIZs/svVAtt0wyDuC
-        yjEBGuCw==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jPseh-0000VM-7j; Sat, 18 Apr 2020 18:57:31 +0000
-Subject: Re: [PATCH 6/9] nfsd: fix empty-body warning in nfs4state.c
-To:     Joe Perches <joe@perches.com>, Chuck Lever <chuck.lever@oracle.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel@vger.kernel.org,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        linux-input@vger.kernel.org, Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org, Bruce Fields <bfields@fieldses.org>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>, linux-nvdimm@lists.01.org,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        linux-scsi@vger.kernel.org, target-devel@vger.kernel.org,
-        Zzy Wysm <zzy@zzywysm.com>
-References: <20200418184111.13401-1-rdunlap@infradead.org>
- <20200418184111.13401-7-rdunlap@infradead.org>
- <CDCF7717-7CBC-47CA-9E83-3A18ECB3AB89@oracle.com>
- <6c796219ea79d87093409f2dd1d3bf8e4a157ed7.camel@perches.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <c13ddc03-dfb4-9664-ce38-fc56389b67cd@infradead.org>
-Date:   Sat, 18 Apr 2020 11:57:28 -0700
+        Sat, 18 Apr 2020 14:58:37 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8CA3C061A0C;
+        Sat, 18 Apr 2020 11:58:35 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id z26so5535929ljz.11;
+        Sat, 18 Apr 2020 11:58:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Dj6gxh78iTr/nqo+x5cdc1Pc/5Q+3/7zF1q1lmk/SYA=;
+        b=eHE56v2FPZyj2jphYl8E5RUXUJLL0WrGR/hZhiXOIKhKo4jp/HZAPu6q0iVpGwSU+H
+         cYbwCbiOx13wXtq867i4fCiLZfbfdlqTzCQCdKzcYyeJiUWNztZHDE+ZIDbcGCceGs9t
+         2kwwvLdFn7Hezol1gB/XucCgYk2sgjh80/8Z4NKbBGeX11ys5lxPr07yLHNt5pU0N6Qo
+         tukMhTvY0yv2iXKPmuCW+IHk0uihJVXylhFieyVNielcggh/M7HYQJN4vLfF06Tttvp7
+         p/BD+sljquTqef/mERfsEbpiSUYDlnRj4sZspaMK0MJtNZTjhgEQ1Bz10g7Etpg3Yz6g
+         1JFA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Dj6gxh78iTr/nqo+x5cdc1Pc/5Q+3/7zF1q1lmk/SYA=;
+        b=jKOda6nZHddaKt3DPR2Q1qbMWIpJwbixISsRyjH/ly1Vs1QLgVl61BtLttMrUT1FOt
+         xrrle8C07bpE+JPLvBm8wvjuKfP+N8MtMC5FfQ8JZF9gON4EeiM4JFY/FZBhgwIQm6PM
+         EWwq4+nu4vcr0XuV9EusxEcVremSnWtzPD6G4NGt5s7FGutJOoZYll2yaMp/Nab6GDi2
+         4hjiQDkna/d7jeGFv/IdhKzWQnk1VQ3V8rmDVNWhUlgqQgz/R6rOyo0hWtGWEzLTHl+i
+         1mPuPfnz6Fx/fO+MDV+rwOJdNaXjbfGfDrYu7slAsBr9/taBfHXdZNfs6UUmCwMVRLOU
+         sr/Q==
+X-Gm-Message-State: AGi0PuYOGmCBYvxyfKs/Ek2Ybxo/PJCMqpaBJ262NKfThOz2ZjgDfK83
+        CmVVXb/7l35/o2SDpcnLU6QMeVcr
+X-Google-Smtp-Source: APiQypKJ5eOYQAgEg46LJSr0ViweR75vxySLSUaWfBVZQugcY5w2kqBMQA6ltWrtGVxfxti9xurM6g==
+X-Received: by 2002:a2e:8954:: with SMTP id b20mr5173635ljk.176.1587236314241;
+        Sat, 18 Apr 2020 11:58:34 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
+        by smtp.googlemail.com with ESMTPSA id l7sm22390675lfg.79.2020.04.18.11.58.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 18 Apr 2020 11:58:33 -0700 (PDT)
+Subject: Re: [PATCH v3] iio: magnetometer: ak8974: Silence deferred-probe
+ error
+To:     Jonathan Cameron <jic23@kernel.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200418171244.2320-1-digetx@gmail.com>
+ <20200418192145.57fa291b@archlinux>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <92c2e6d7-8085-b448-f789-9ceecb6a4f74@gmail.com>
+Date:   Sat, 18 Apr 2020 21:58:32 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <6c796219ea79d87093409f2dd1d3bf8e4a157ed7.camel@perches.com>
+In-Reply-To: <20200418192145.57fa291b@archlinux>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
@@ -78,68 +87,18 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/18/20 11:53 AM, Joe Perches wrote:
-> On Sat, 2020-04-18 at 14:45 -0400, Chuck Lever wrote:
->>> On Apr 18, 2020, at 2:41 PM, Randy Dunlap <rdunlap@infradead.org> wrote:
->>>
->>> Fix gcc empty-body warning when -Wextra is used:
->>>
->>> ../fs/nfsd/nfs4state.c:3898:3: warning: suggest braces around empty body in an ‘else’ statement [-Wempty-body]
->>>
->>> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
->>> Cc: Linus Torvalds <torvalds@linux-foundation.org>
->>> Cc: Andrew Morton <akpm@linux-foundation.org>
->>> Cc: "J. Bruce Fields" <bfields@fieldses.org>
->>> Cc: Chuck Lever <chuck.lever@oracle.com>
->>> Cc: linux-nfs@vger.kernel.org
->>
->> I have a patch in my queue that addresses this particular warning,
->> but your change works for me too.
->>
->> Acked-by: Chuck Lever <chuck.lever@oracle.com>
->>
->> Unless Bruce objects.
->>
->>
->>> ---
->>> fs/nfsd/nfs4state.c |    3 ++-
->>> 1 file changed, 2 insertions(+), 1 deletion(-)
->>>
->>> --- linux-next-20200417.orig/fs/nfsd/nfs4state.c
->>> +++ linux-next-20200417/fs/nfsd/nfs4state.c
->>> @@ -34,6 +34,7 @@
->>>
->>> #include <linux/file.h>
->>> #include <linux/fs.h>
->>> +#include <linux/kernel.h>
->>> #include <linux/slab.h>
->>> #include <linux/namei.h>
->>> #include <linux/swap.h>
->>> @@ -3895,7 +3896,7 @@ nfsd4_setclientid(struct svc_rqst *rqstp
->>> 		copy_clid(new, conf);
->>> 		gen_confirm(new, nn);
->>> 	} else /* case 4 (new client) or cases 2, 3 (client reboot): */
->>> -		;
->>> +		do_empty();
->>> 	new->cl_minorversion = 0;
->>> 	gen_callback(new, setclid, rqstp);
->>> 	add_to_unconfirmed(new);
+18.04.2020 21:21, Jonathan Cameron пишет:
+> On Sat, 18 Apr 2020 20:12:44 +0300
+> Dmitry Osipenko <digetx@gmail.com> wrote:
 > 
-> This empty else seems silly and could likely be better handled by
-> a comment above the first if, something like:
+>> It's not uncommon that voltage regulator becomes available later during
+>> kernel's boot process. This patch adds info message about unavailable
+>> regulators in a case of the deferred-probe error and also amends the
+>> error message with a error code.
+>>
+>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 > 
-> 	/* for now only handle case 1: probable callback update */
-> 	if (conf && same_verf(&conf->cl_verifier, &clverifier)) {
-> 		copy_clid(new, conf);
-> 		gen_confirm(new, nn);
-> 	}
-> 
-> with no else use.
+> Applied to the togreg branch of iio.git and pushed out as testing for the
+> autobuilders to play with it.
 
-I'll just let Chuck handle it with his current patch,
-whatever it is.
-
-thanks.
--- 
-~Randy
-
+Awesome, thank you :)
