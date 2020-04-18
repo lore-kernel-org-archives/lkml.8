@@ -2,98 +2,277 @@ Return-Path: <SRS0=3CHW=6C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3B37C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:48:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 774AFC38A29
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:48:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A3E721D7E
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:48:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587221334;
-	bh=1agSb1zZIzUexk6XfQ/mwSRAPiYjai1/twZXb2qC4fo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=U46XiPEwi3KKTO0sYhQ9cxZOH5miR7Z21jAVXbmb66mn6m+Hkw4uahrnyADjjEBiR
-	 DLwjqgOJrJRSuKSCGUeIHls08LPeE4zYO7ldWMwVISUItFUsPLrO0AaQxqRms1zlHx
-	 A0Is/9TVxI4Wi3KEl+z4DoM7QSaj+PyJTsYvVajA=
+	by mail.kernel.org (Postfix) with ESMTP id 52CB021BE5
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:48:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="aie41My6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728322AbgDROsx (ORCPT
+        id S1727769AbgDROs6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 10:48:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54896 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728627AbgDROnk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 10:43:40 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A888921D82;
-        Sat, 18 Apr 2020 14:43:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587221020;
-        bh=1agSb1zZIzUexk6XfQ/mwSRAPiYjai1/twZXb2qC4fo=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xC3ppgpyJ+CxJ8ldKfu3iCBpiOIpzg/sZ8334jc7u6bN00rwt9MNvTtN/6WET89z4
-         6iokR50nGzFexajnBaBz19L8w+YYM+AITs0LtOCfvlO7Wvve8zBFGUd4g8Uu6BfUZn
-         tpVBQDGQ50cnvL9tK+w7o0aq6aNwWNu0fGwLjQJA=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 4.14 10/28] ASoC: Intel: atom: Take the drv->lock mutex before calling sst_send_slot_map()
-Date:   Sat, 18 Apr 2020 10:43:10 -0400
-Message-Id: <20200418144328.10265-10-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200418144328.10265-1-sashal@kernel.org>
-References: <20200418144328.10265-1-sashal@kernel.org>
+        Sat, 18 Apr 2020 10:48:58 -0400
+Received: from esa6.microchip.iphmx.com ([216.71.154.253]:59343 "EHLO
+        esa6.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726921AbgDROsz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 10:48:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1587221334; x=1618757334;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=5aMZMPWPJ01c4ud7PttNThIhPars+cFRj/VqphxXMkA=;
+  b=aie41My6jHDOmohsriVDsJCAvCiXuSF5u/K5ZNMAM9RzpFwtGuXkA/sP
+   074uBJzqc+lOZGZul4Gr/4QxKDV/eAVYA0TP0wd79M5ya3m/mMUGePu4J
+   K4be713OvK/1ADWn+pahhLqGKxGIjxO6lt6dfH1R3XVX94fN+XK/sEseM
+   i+k40S6fU8rOCBoy8tVQqPtY7G6tMwZelg/TmM8aVk7KBqfNJ9SW5GhML
+   yDaxpV1lSOFxOCWsCcG69XNivMmId4LGDULsbgFYsUMLZ3A8D+2RcN3xl
+   NDMWIXgBSoo5AGt8O94NpULnO9+kulCtK6hqLj1rKYg6mq7BxtNHVa7h3
+   w==;
+IronPort-SDR: VTv0V/iVkXVnsoXPomnwZpETgmZoJaljdZRFU2DrfjUMRKfTdQidgDts9SQqKLMYl0+s7yUNDU
+ dvIXANFd7yd6BiKGaHkR7fiUQlOseCbfLUpPTzNPSSt37ag3Yh1OlWG01VceF/kpKlEOImaY8m
+ KhCSgG4rpP3CNbEPYLOv1xPp5gHcfej2FwmrKCZcsQ1Vh94NgNvmzusx7oSeDdScYypiE/L0ol
+ s2xJAcY7uwxDp5CTNMnI90sXdDX6MKVTxCmpuXJ+o+QCTU0JIJaKwAyFAkEl8Z0Y3uQpHVR3mw
+ Tu4=
+X-IronPort-AV: E=Sophos;i="5.72,399,1580799600"; 
+   d="scan'208";a="9620713"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 18 Apr 2020 07:48:53 -0700
+Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Sat, 18 Apr 2020 07:48:30 -0700
+Received: from localhost (10.10.115.15) by chn-vm-ex04.mchp-main.com
+ (10.10.85.152) with Microsoft SMTP Server id 15.1.1713.5 via Frontend
+ Transport; Sat, 18 Apr 2020 07:48:53 -0700
+Date:   Sat, 18 Apr 2020 16:48:52 +0200
+From:   Horatiu Vultur <horatiu.vultur@microchip.com>
+To:     Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
+CC:     <davem@davemloft.net>, <jiri@resnulli.us>, <ivecera@redhat.com>,
+        <kuba@kernel.org>, <roopa@cumulusnetworks.com>,
+        <olteanv@gmail.com>, <andrew@lunn.ch>,
+        <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <bridge@lists.linux-foundation.org>, <UNGLinuxDriver@microchip.com>
+Subject: Re: [RFC net-next v5 8/9] bridge: mrp: Implement netlink interface
+ to configure MRP
+Message-ID: <20200418144852.yfnxygdnxlcmmotj@soft-dev3.microsemi.net>
+References: <20200414112618.3644-1-horatiu.vultur@microchip.com>
+ <20200414112618.3644-9-horatiu.vultur@microchip.com>
+ <ef5f40ad-6d35-0897-3355-60c97777b79a@cumulusnetworks.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
+In-Reply-To: <ef5f40ad-6d35-0897-3355-60c97777b79a@cumulusnetworks.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+The 04/18/2020 11:21, Nikolay Aleksandrov wrote:
+> EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
+> 
+> On 14/04/2020 14:26, Horatiu Vultur wrote:
+> > Implement netlink interface to configure MRP. The implementation
+> > will do sanity checks over the attributes and then eventually call the MRP
+> > interface.
+> >
+> > Signed-off-by: Horatiu Vultur <horatiu.vultur@microchip.com>
+> > ---
+> >  net/bridge/br_mrp_netlink.c | 164 ++++++++++++++++++++++++++++++++++++
+> >  1 file changed, 164 insertions(+)
+> >  create mode 100644 net/bridge/br_mrp_netlink.c
+> >
+> > diff --git a/net/bridge/br_mrp_netlink.c b/net/bridge/br_mrp_netlink.c
+> > new file mode 100644
+> > index 000000000000..0d8253311595
+> > --- /dev/null> +++ b/net/bridge/br_mrp_netlink.c
+> > @@ -0,0 +1,164 @@
+> > +// SPDX-License-Identifier: GPL-2.0-or-later
+> > +
+> > +#include <net/genetlink.h>
+> > +
+> > +#include <uapi/linux/mrp_bridge.h>
+> > +#include "br_private.h"
+> > +#include "br_private_mrp.h"
+> > +
+> > +static const struct nla_policy br_mrp_policy[IFLA_BRIDGE_MRP_MAX + 1] = {
+> > +     [IFLA_BRIDGE_MRP_UNSPEC]        = { .type = NLA_REJECT },
+> > +     [IFLA_BRIDGE_MRP_INSTANCE]      = { .type = NLA_EXACT_LEN,
+> > +                                         .len = sizeof(struct br_mrp_instance)},
+> > +     [IFLA_BRIDGE_MRP_PORT_STATE]    = { .type = NLA_U32 },
+> > +     [IFLA_BRIDGE_MRP_PORT_ROLE]     = { .type = NLA_EXACT_LEN,
+> > +                                         .len = sizeof(struct br_mrp_port_role)},
+> > +     [IFLA_BRIDGE_MRP_RING_STATE]    = { .type = NLA_EXACT_LEN,
+> > +                                         .len = sizeof(struct br_mrp_ring_state)},
+> > +     [IFLA_BRIDGE_MRP_RING_ROLE]     = { .type = NLA_EXACT_LEN,
+> > +                                         .len = sizeof(struct br_mrp_ring_role)},
+> > +     [IFLA_BRIDGE_MRP_START_TEST]    = { .type = NLA_EXACT_LEN,
+> > +                                         .len = sizeof(struct br_mrp_start_test)},
+> > +};
+> > +
+> > +int br_mrp_parse(struct net_bridge *br, struct net_bridge_port *p,
+> > +              struct nlattr *attr, int cmd, struct netlink_ext_ack *extack)
+> > +{
+> > +     struct nlattr *tb[IFLA_BRIDGE_MRP_MAX + 1];
+> > +     int err;
+> > +
+> > +     if (br->stp_enabled != BR_NO_STP) {
+> > +             br_warn(br, "MRP can't be enabled if STP is already enabled\n");
+> 
+> Use extack.
+> 
+> > +             return -EINVAL;
+> > +     }
+> > +
+> > +     err = nla_parse_nested(tb, IFLA_BRIDGE_MRP_MAX, attr,
+> > +                            NULL, extack);
+> > +     if (err)
+> > +             return err;
+> > +
+> > +     if (tb[IFLA_BRIDGE_MRP_INSTANCE]) {
+> > +             struct br_mrp_instance *instance =
+> > +                     nla_data(tb[IFLA_BRIDGE_MRP_INSTANCE]);
+> > +
+> > +             if (cmd == RTM_SETLINK)
+> > +                     err = br_mrp_add(br, instance);
+> > +             else
+> > +                     err = br_mrp_del(br, instance);
+> > +             if (err)
+> > +                     return err;
+> > +     }
+> > +
+> > +     if (tb[IFLA_BRIDGE_MRP_PORT_STATE]) {
+> > +             enum br_mrp_port_state_type state =
+> > +                     nla_get_u32(tb[IFLA_BRIDGE_MRP_PORT_STATE]);
+> > +
+> > +             err = br_mrp_set_port_state(p, state);
+> > +             if (err)
+> > +                     return err;
+> > +     }
+> > +
+> > +     if (tb[IFLA_BRIDGE_MRP_PORT_ROLE]) {
+> > +             struct br_mrp_port_role *role =
+> > +                     nla_data(tb[IFLA_BRIDGE_MRP_PORT_ROLE]);
+> > +
+> > +             err = br_mrp_set_port_role(p, role);
+> > +             if (err)
+> > +                     return err;
+> > +     }
+> > +
+> > +     if (tb[IFLA_BRIDGE_MRP_RING_STATE]) {
+> > +             struct br_mrp_ring_state *state =
+> > +                     nla_data(tb[IFLA_BRIDGE_MRP_RING_STATE]);
+> > +
+> > +             err = br_mrp_set_ring_state(br, state);
+> > +             if (err)
+> > +                     return err;
+> > +     }
+> > +
+> > +     if (tb[IFLA_BRIDGE_MRP_RING_ROLE]) {
+> > +             struct br_mrp_ring_role *role =
+> > +                     nla_data(tb[IFLA_BRIDGE_MRP_RING_ROLE]);
+> > +
+> > +             err = br_mrp_set_ring_role(br, role);
+> > +             if (err)
+> > +                     return err;
+> > +     }
+> > +
+> > +     if (tb[IFLA_BRIDGE_MRP_START_TEST]) {
+> > +             struct br_mrp_start_test *test =
+> > +                     nla_data(tb[IFLA_BRIDGE_MRP_START_TEST]);
+> > +
+> > +             err = br_mrp_start_test(br, test);
+> > +             if (err)
+> > +                     return err;
+> > +     }
+> > +
+> > +     return 0;
+> > +}
+> > +
+> > +static inline size_t br_mrp_nlmsg_size(void)
+> > +{
+> > +     return NLMSG_ALIGN(sizeof(struct ifinfomsg))
+> > +             + nla_total_size(4); /* IFLA_BRIDGE_MRP_RING_OPEN */
+> > +}
+> > +
+> > +int br_mrp_port_open(struct net_device *dev, u8 loc)
+> > +{
+> > +     struct nlattr *af, *mrp;
+> > +     struct ifinfomsg *hdr;
+> > +     struct nlmsghdr *nlh;
+> > +     struct sk_buff *skb;
+> > +     int err = -ENOBUFS;
+> > +     struct net *net;
+> > +
+> > +     net = dev_net(dev);
+> > +
+> > +     skb = nlmsg_new(br_mrp_nlmsg_size(), GFP_ATOMIC);
+> > +     if (!skb)
+> > +             goto errout;
+> > +
+> > +     nlh = nlmsg_put(skb, 0, 0, RTM_NEWLINK, sizeof(*hdr), 0);
+> > +     if (!nlh)
+> > +             goto errout;
+> > +
+> > +     hdr = nlmsg_data(nlh);
+> > +     hdr->ifi_family = AF_BRIDGE;
+> > +     hdr->__ifi_pad = 0;
+> > +     hdr->ifi_type = dev->type;
+> > +     hdr->ifi_index = dev->ifindex;
+> > +     hdr->ifi_flags = dev_get_flags(dev);
+> > +     hdr->ifi_change = 0;
+> > +
+> > +     af = nla_nest_start_noflag(skb, IFLA_AF_SPEC);
+> > +     if (!af) {
+> > +             err = -EMSGSIZE;
+> > +             goto nla_put_failure;
+> > +     }
+> > +
+> > +     mrp = nla_nest_start_noflag(skb, IFLA_BRIDGE_MRP);
+> > +     if (!mrp) {
+> > +             err = -EMSGSIZE;
+> > +             goto nla_put_failure;
+> > +     }
+> > +
+> > +     err = nla_put_u32(skb, IFLA_BRIDGE_MRP_RING_OPEN, loc);
+> > +     if (err)
+> > +             goto nla_put_failure;
+> > +
+> > +     nla_nest_end(skb, mrp);
+> > +     nla_nest_end(skb, af);
+> > +     nlmsg_end(skb, nlh);
+> > +
+> > +     rtnl_notify(skb, net, 0, RTNLGRP_LINK, NULL, GFP_ATOMIC);
+> > +     return 0;
+> > +
+> > +nla_put_failure:
+> > +     nlmsg_cancel(skb, nlh);
+> > +     kfree_skb(skb);
+> > +
+> > +errout:
+> > +     rtnl_set_sk_err(net, RTNLGRP_LINK, err);
+> > +     return err;
+> > +}
+> > +EXPORT_SYMBOL(br_mrp_port_open);
+> >
+> 
+> Why do you need this function when you already have br_ifinfo_notify() ?
 
-[ Upstream commit 81630dc042af998b9f58cd8e2c29dab9777ea176 ]
+The reason of having this function was that, if I wanted to use the
+br_ifinfo_notify(), I had to add an extra field in the net_bridge_port
+just to store the loc variable. Which is not used anywhere else so I was
+not sure how good it is.
+But I can do these changes in the next version.
 
-sst_send_slot_map() uses sst_fill_and_send_cmd_unlocked() because in some
-places it is called with the drv->lock mutex already held.
+> 
 
-So it must always be called with the mutex locked. This commit adds missing
-locking in the sst_set_be_modules() code-path.
-
-Fixes: 24c8d14192cc ("ASoC: Intel: mrfld: add DSP core controls")
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Acked-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Link: https://lore.kernel.org/r/20200402185359.3424-1-hdegoede@redhat.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- sound/soc/intel/atom/sst-atom-controls.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/sound/soc/intel/atom/sst-atom-controls.c b/sound/soc/intel/atom/sst-atom-controls.c
-index 0f3604b559424..b04853bdaf377 100644
---- a/sound/soc/intel/atom/sst-atom-controls.c
-+++ b/sound/soc/intel/atom/sst-atom-controls.c
-@@ -974,7 +974,9 @@ static int sst_set_be_modules(struct snd_soc_dapm_widget *w,
- 	dev_dbg(c->dev, "Enter: widget=%s\n", w->name);
- 
- 	if (SND_SOC_DAPM_EVENT_ON(event)) {
-+		mutex_lock(&drv->lock);
- 		ret = sst_send_slot_map(drv);
-+		mutex_unlock(&drv->lock);
- 		if (ret)
- 			return ret;
- 		ret = sst_send_pipe_module_params(w, k);
 -- 
-2.20.1
-
+/Horatiu
