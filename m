@@ -2,130 +2,123 @@ Return-Path: <SRS0=3CHW=6C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8066BC38A29
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 15:21:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B3BBC3A5A0
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 15:26:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5B15320732
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 15:21:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Xjd8dKqq"
+	by mail.kernel.org (Postfix) with ESMTP id D745421D6C
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 15:26:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587223561;
+	bh=Bsx+dDMGy1HPzN7fo/yLW6PVUv+11YvSb7UygiTobq0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=XyYbbxcswAyTW2gtHw3kTpgYUKr7oaN+ZYwilSpvXyuOoxh+U9h5nhlage6aRYYoj
+	 Ws5DGXfEeuzlRimSWrfQUUNTMlPkTdd0iUSDiNmobDbnnQhWK0Bcb2RbLJjkFevYzj
+	 wk+5w69cmPRgovAjYkp10ERMQZuPIbRi/ORDALFU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726597AbgDRPVm (ORCPT
+        id S1726385AbgDRP0B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 11:21:42 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:31989 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725903AbgDRPVm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 11:21:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587223301;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=JvLhttfS/P2TlDwSsVUBOcQQgfZrp/EhHMfZ+MkQwFg=;
-        b=Xjd8dKqqrgOLD6UDmwe9PzSpytK+V9Csw6Yz09+Vf9id66uiVr/SE1iPRSWfrEm61ZlcYb
-        TN/XM/6fep6kMq8ZDDgOa+Z3x6jkfm76PxcmWFG1kGZTrMw86/JkjE9gPSUnM5SoFkGTXg
-        cFjNauoBzQ4IZaURwmNkjvm7ZGnhMn8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-265-CdiyjcWqPtiVODUaXU5P7g-1; Sat, 18 Apr 2020 11:21:37 -0400
-X-MC-Unique: CdiyjcWqPtiVODUaXU5P7g-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Sat, 18 Apr 2020 11:26:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54176 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725903AbgDRP0A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 11:26:00 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 12C81800D5C;
-        Sat, 18 Apr 2020 15:21:35 +0000 (UTC)
-Received: from file01.intranet.prod.int.rdu2.redhat.com (file01.intranet.prod.int.rdu2.redhat.com [10.11.5.7])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 9058D5C1C3;
-        Sat, 18 Apr 2020 15:21:31 +0000 (UTC)
-Received: from file01.intranet.prod.int.rdu2.redhat.com (localhost [127.0.0.1])
-        by file01.intranet.prod.int.rdu2.redhat.com (8.14.4/8.14.4) with ESMTP id 03IFLVw4030597;
-        Sat, 18 Apr 2020 11:21:31 -0400
-Received: from localhost (mpatocka@localhost)
-        by file01.intranet.prod.int.rdu2.redhat.com (8.14.4/8.14.4/Submit) with ESMTP id 03IFLR2e030593;
-        Sat, 18 Apr 2020 11:21:28 -0400
-X-Authentication-Warning: file01.intranet.prod.int.rdu2.redhat.com: mpatocka owned process doing -bs
-Date:   Sat, 18 Apr 2020 11:21:27 -0400 (EDT)
-From:   Mikulas Patocka <mpatocka@redhat.com>
-X-X-Sender: mpatocka@file01.intranet.prod.int.rdu2.redhat.com
-To:     David Laight <David.Laight@ACULAB.COM>
-cc:     Dan Williams <dan.j.williams@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>, X86 ML <x86@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        device-mapper development <dm-devel@redhat.com>
-Subject: RE: [PATCH] x86: introduce memcpy_flushcache_clflushopt
-In-Reply-To: <69c2e011c5814255926f309dd50e6d67@AcuMS.aculab.com>
-Message-ID: <alpine.LRH.2.02.2004181110160.30139@file01.intranet.prod.int.rdu2.redhat.com>
-References: <alpine.LRH.2.02.2004071029270.8662@file01.intranet.prod.int.rdu2.redhat.com> <CAPcyv4goJ2jbXNVZbMUKtRUominhuMhuTKrMh=fnhrfvC4jyjw@mail.gmail.com> <alpine.LRH.2.02.2004081439080.13932@file01.intranet.prod.int.rdu2.redhat.com>
- <CAPcyv4grNHvyYEc4W6PkymhEJvLb17tXbC3JZdqvtFxmMZ8DCQ@mail.gmail.com> <alpine.LRH.2.02.2004090612320.27517@file01.intranet.prod.int.rdu2.redhat.com> <alpine.LRH.2.02.2004160411460.7833@file01.intranet.prod.int.rdu2.redhat.com>
- <CAPcyv4gpe8u=zNrRhvd9ioVNGbOJfRUXzFZuV--be6Hbj0xXtQ@mail.gmail.com> <alpine.LRH.2.02.2004170831530.16047@file01.intranet.prod.int.rdu2.redhat.com> <69c2e011c5814255926f309dd50e6d67@AcuMS.aculab.com>
-User-Agent: Alpine 2.02 (LRH 1266 2009-07-14)
+        by mail.kernel.org (Postfix) with ESMTPSA id BFE7F20732;
+        Sat, 18 Apr 2020 15:25:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587223560;
+        bh=Bsx+dDMGy1HPzN7fo/yLW6PVUv+11YvSb7UygiTobq0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=myrou/+i7qw+laAzGraeX6Aio+kmcBH2Gm0ZG6iYIrAKBi+ClWzbVqn+JF7N7WaRg
+         CC0huTRN8WNE/ooMvO11mgk7bU5VhApaY1pGN8LuqrgVBr6JwGAvkZBps/FIEgeLQR
+         vcv4385XinA/UHHw12Zw3hx5hX54I4lXAqUkxQG8=
+Date:   Sat, 18 Apr 2020 16:25:55 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
+Cc:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] iio: core: fail early in iio_device_alloc() if we can't
+ get a device id
+Message-ID: <20200418162555.4b6f4b8d@archlinux>
+In-Reply-To: <20200416123331.68790-1-alexandru.ardelean@analog.com>
+References: <20200416123331.68790-1-alexandru.ardelean@analog.com>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, 16 Apr 2020 15:33:31 +0300
+Alexandru Ardelean <alexandru.ardelean@analog.com> wrote:
 
+> This change moves the 'ida_simple_get()' call to be the first one in
+> iio_device_alloc(). It cleans up the error path a bit as we don't need to
+> call any kfree(dev) anymore. We allocate an IIO device only if we have
+> managed to obtain a device ID.
 
-On Sat, 18 Apr 2020, David Laight wrote:
+We just threw away an ID if the kzalloc then fails (or am I missing something?)
+With that fixed I can't see this as being much of an improvement.
+Either way one allocation needs to be tidied up.
 
-> From: Mikulas Patocka
-> > Sent: 17 April 2020 13:47
-> ...
-> > Index: linux-2.6/drivers/md/dm-writecache.c
-> > ===================================================================
-> > --- linux-2.6.orig/drivers/md/dm-writecache.c	2020-04-17 14:06:35.139999000 +0200
-> > +++ linux-2.6/drivers/md/dm-writecache.c	2020-04-17 14:06:35.129999000 +0200
-> > @@ -1166,7 +1166,10 @@ static void bio_copy_block(struct dm_wri
-> >  			}
-> >  		} else {
-> >  			flush_dcache_page(bio_page(bio));
-> > -			memcpy_flushcache(data, buf, size);
-> > +			if (likely(size > 512))
-> > +				memcpy_flushcache_clflushopt(data, buf, size);
-> > +			else
-> > +				memcpy_flushcache(data, buf, size);
+Jonathan
+
 > 
-> Hmmm... have you looked at how long clflush actually takes?
-> It isn't too bad if you just do a small number, but using it
-> to flush large buffers can be very slow.
-
-Yes, I have. It's here: 
-http://people.redhat.com/~mpatocka/testcases/pmem/microbenchmarks/pmem.txt
-
-sequential write 8 + clflush	- 0.3 GB/s on nvdimm
-sequential write 8 + clflushopt - 1.6 GB/s on nvdimm
-sequential write-nt 8 bytes	- 1.3 GB/s on nvdimm
-
-> I've an Ivy bridge system where the X-server process requests the
-> frame buffer be flushed out every 10 seconds (no idea why).
-> With my 2560x1440 monitor this takes over 3ms.
+> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+> ---
+>  drivers/iio/industrialio-core.c | 19 ++++++++++---------
+>  1 file changed, 10 insertions(+), 9 deletions(-)
 > 
-> This really needs a cond_resched() every few clflush instructions.
-> 
-> 	David
-
-AFAIK Ivy Bridge doesn't have clflushopt, it only has clflush. clflush 
-only allows one outstanding cacle line flush, so it's very slow. 
-clflushopt and clwb relaxed this restriction and there can be multiple 
-cache-invalidation requests in flight until the user serializes it with 
-the sfence instruction.
-
-The patch checks for clflushopt with 
-"static_cpu_has(X86_FEATURE_CLFLUSHOPT)" and if it is not present, it 
-falls back to non-temporal stores.
-
-Mikulas
+> diff --git a/drivers/iio/industrialio-core.c b/drivers/iio/industrialio-core.c
+> index f4daf19f2a3b..7c1d8a3ab2f3 100644
+> --- a/drivers/iio/industrialio-core.c
+> +++ b/drivers/iio/industrialio-core.c
+> @@ -1494,6 +1494,14 @@ struct iio_dev *iio_device_alloc(int sizeof_priv)
+>  {
+>  	struct iio_dev *dev;
+>  	size_t alloc_size;
+> +	int id;
+> +
+> +	id = ida_simple_get(&iio_ida, 0, 0, GFP_KERNEL);
+> +	if (id < 0) {
+> +		/* cannot use a dev_err as the name isn't available */
+> +		pr_err("failed to get device id\n");
+> +		return NULL;
+> +	}
+>  
+>  	alloc_size = sizeof(struct iio_dev);
+>  	if (sizeof_priv) {
+> @@ -1506,6 +1514,8 @@ struct iio_dev *iio_device_alloc(int sizeof_priv)
+>  	dev = kzalloc(alloc_size, GFP_KERNEL);
+>  
+>  	if (dev) {
+> +		dev->id = id;
+> +		dev_set_name(&dev->dev, "iio:device%d", dev->id);
+>  		dev->dev.groups = dev->groups;
+>  		dev->dev.type = &iio_device_type;
+>  		dev->dev.bus = &iio_bus_type;
+> @@ -1514,15 +1524,6 @@ struct iio_dev *iio_device_alloc(int sizeof_priv)
+>  		mutex_init(&dev->mlock);
+>  		mutex_init(&dev->info_exist_lock);
+>  		INIT_LIST_HEAD(&dev->channel_attr_list);
+> -
+> -		dev->id = ida_simple_get(&iio_ida, 0, 0, GFP_KERNEL);
+> -		if (dev->id < 0) {
+> -			/* cannot use a dev_err as the name isn't available */
+> -			pr_err("failed to get device id\n");
+> -			kfree(dev);
+> -			return NULL;
+> -		}
+> -		dev_set_name(&dev->dev, "iio:device%d", dev->id);
+>  		INIT_LIST_HEAD(&dev->buffer_list);
+>  	}
+>  
 
