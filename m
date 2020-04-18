@@ -2,73 +2,82 @@ Return-Path: <SRS0=3CHW=6C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A54DC2BA19
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 04:36:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B47C8C38A2B
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 05:20:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 555E021D91
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 04:36:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 966CA21D91
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 05:20:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725862AbgDREfg (ORCPT
+        id S1725923AbgDRFUK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 00:35:36 -0400
-Received: from mga17.intel.com ([192.55.52.151]:1277 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725440AbgDREff (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 00:35:35 -0400
-IronPort-SDR: +4ArurAJ1BdXMpuOHTXLowKWJqSI0JqautlwESJAe2vPlwUx1SAPB1LJpuxBY/Bo0G94Ii5oqg
- 2udAAaKPoxLA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2020 21:35:34 -0700
-IronPort-SDR: VbHChn9YK7EmIZR5E0iZSzb6xSr24piTOHUo3BjKKMp0XmbgvhQLJp1fYnAUelkvrJ4yKJeWzo
- n8DEermTm58A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,397,1580803200"; 
-   d="scan'208";a="454939582"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by fmsmga005.fm.intel.com with ESMTP; 17 Apr 2020 21:35:35 -0700
-Date:   Fri, 17 Apr 2020 21:35:35 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Xiaoyao Li <xiaoyao.li@intel.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        "Luck, Tony" <tony.luck@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Borislav Petkov <bp@alien8.de>, H Peter Anvin <hpa@zytor.com>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Ravi V Shankar <ravi.v.shankar@intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        linux-kernel@vger.kernel.org, x86@kernel.org
-Subject: Re: [PATCH 2/3] x86/split_lock: Bits in IA32_CORE_CAPABILITIES are
- not architectural
-Message-ID: <20200418043534.GG15609@linux.intel.com>
-References: <873691zuqu.fsf@nanos.tec.linutronix.de>
- <651504d9-f458-1d25-870d-b8c55061be45@intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <651504d9-f458-1d25-870d-b8c55061be45@intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+        Sat, 18 Apr 2020 01:20:10 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:34238 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725796AbgDRFUJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 01:20:09 -0400
+Received: from linux.localdomain (unknown [113.200.148.30])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxj9wAjppe2UQpAA--.8S3;
+        Sat, 18 Apr 2020 13:20:02 +0800 (CST)
+From:   Tiezhu Yang <yangtiezhu@loongson.cn>
+To:     Luis Chamberlain <mcgrof@kernel.org>, Shuah Khan <shuah@kernel.org>
+Cc:     linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Xuefeng Li <lixuefeng@loongson.cn>
+Subject: [PATCH 2/4] kmod: Remove redundant "be an" in the comment
+Date:   Sat, 18 Apr 2020 13:19:58 +0800
+Message-Id: <1587187200-13109-2-git-send-email-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.1.0
+In-Reply-To: <1587187200-13109-1-git-send-email-yangtiezhu@loongson.cn>
+References: <1587187200-13109-1-git-send-email-yangtiezhu@loongson.cn>
+X-CM-TRANSID: AQAAf9Dxj9wAjppe2UQpAA--.8S3
+X-Coremail-Antispam: 1UD129KBjvdXoWrtw17Aw1DXw1rXry5Gr1UAwb_yoWfCwc_Wa
+        1kA3W7K34DCr9I93WDta13ZrWvgrWvv34xCa1xt3y8t3srJr1Ygws8CFZYyrnxGaykGrsr
+        Ca9rZ3s09r1fujkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUbhxFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+        6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI8067AKxVWUGwA2048vs2IY02
+        0Ec7CjxVAFwI0_Jrv_JF4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
+        wVC0I7IYx2IY67AKxVWUJVWUCwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwA2z4
+        x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l
+        e2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI
+        8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwAC
+        jcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc2xSY4AK67AK6r4rMxAIw2
+        8IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4l
+        x2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrw
+        CI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI
+        42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z2
+        80aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUbfgA5UUUUU==
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Apr 18, 2020 at 12:15:57PM +0800, Xiaoyao Li wrote:
-> So now, it's tightly associated with CPU model, which makes it harder to
-> expose this feature to guest. For guest, the CPU model can be configured to
-> anything.
-> 
-> As suggested by Sean internally, we'd better use a KVM CPUID to expose it to
-> guest, which makes it independent of CPU model.
+There exists redundant "be an" in the comment, remove it.
 
-Making this a paravirt feature from a KVM perspective would also let us do
-the whole STICKY bit thing straight away.  I don't like paravirtualizing
-something that could be emulated as-is, I but dislike it less than exposing
-features based on CPU model.
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+---
+ kernel/kmod.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
+
+diff --git a/kernel/kmod.c b/kernel/kmod.c
+index 37c3c4b..3cd075c 100644
+--- a/kernel/kmod.c
++++ b/kernel/kmod.c
+@@ -36,9 +36,8 @@
+  *
+  * If you need less than 50 threads would mean we're dealing with systems
+  * smaller than 3200 pages. This assumes you are capable of having ~13M memory,
+- * and this would only be an be an upper limit, after which the OOM killer
+- * would take effect. Systems like these are very unlikely if modules are
+- * enabled.
++ * and this would only be an upper limit, after which the OOM killer would take
++ * effect. Systems like these are very unlikely if modules are enabled.
+  */
+ #define MAX_KMOD_CONCURRENT 50
+ static atomic_t kmod_concurrent_max = ATOMIC_INIT(MAX_KMOD_CONCURRENT);
+-- 
+2.1.0
+
