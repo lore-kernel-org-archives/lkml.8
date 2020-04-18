@@ -2,88 +2,144 @@ Return-Path: <SRS0=3CHW=6C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5465C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:35:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37015C38A2F
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:37:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C52662070B
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:35:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="JoYHbgnQ"
+	by mail.kernel.org (Postfix) with ESMTP id 182F821D6C
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:37:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587220656;
+	bh=DsthRMTgouW7iFiF8BqnKI1i0lCywyw08im5vXB242Q=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=v2xz+wdZmlFpLVP0TEP7UmX4dXz4fNnbU5uSlZBFS/EdWVybm7N5caU5sdGn5TZMu
+	 1uQ0CK6FyqP//Z0WhISpSRVw7vGUuVuQdf4dEoq3pq1RoAAo0BuptHTzVcWx8CQ38/
+	 VnsFb6R0JY6OEywOFrUsXwSk3rty8VuQyOGfTVLk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726208AbgDROfQ (ORCPT
+        id S1726277AbgDROhf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 10:35:16 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:46466 "EHLO vps0.lunn.ch"
+        Sat, 18 Apr 2020 10:37:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47302 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725903AbgDROfQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 10:35:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=AZ/RMhwSUwQdo6J0IUbGcZIvgJfSETQ2FQQOLcJdtl4=; b=JoYHbgnQKNg8ELfaeVny9/OIK4
-        /aBwVhAONEQbN7jZtN6XnTXuSLlkLV4qe1CJdpyDqSdhvi+k4xyxPGwzbG8a59i2WjFKDhffnxMkX
-        mv2sAovqYEYe2TkU3ztt2F//DgZc/iqRZQlC4U8kwUpCxe74l7RDqPBreAm+yBfnSMUk=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1jPoYp-003TBM-5f; Sat, 18 Apr 2020 16:35:11 +0200
-Date:   Sat, 18 Apr 2020 16:35:11 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     netdev@vger.kernel.org, Heiner Kallweit <hkallweit1@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH net-next] dt-bindings: net: mdio: Document common
- properties
-Message-ID: <20200418143511.GE804711@lunn.ch>
-References: <20200418005126.15305-1-f.fainelli@gmail.com>
+        id S1725903AbgDROhf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 10:37:35 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1FED42070B;
+        Sat, 18 Apr 2020 14:37:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587220654;
+        bh=DsthRMTgouW7iFiF8BqnKI1i0lCywyw08im5vXB242Q=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=HeGRS4z/sL8oHL8Ki2MutJmZjXyHlPdU0J+dXt4th6BXT/k4jFt36w6CDdpVhCrce
+         qDL+bw5GxuharKFZXSPHI1F6c2rscInq6066uueWlcmFJ5xWBSdQg6xOauuqtJVsfG
+         bWPv7xI52wLkOyh9p3jQXUbhN8Y+cyvSW7FzXJJA=
+Date:   Sat, 18 Apr 2020 15:37:30 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH v1] iio: magnetometer: ak8974: Silence deferred-probe
+ error
+Message-ID: <20200418153730.1e1d01ef@archlinux>
+In-Reply-To: <26f96265-c699-66aa-ec70-becd868bb795@gmail.com>
+References: <20200414222713.32660-1-digetx@gmail.com>
+        <CACRpkdY_J8e127etFFYkoxLDDkc334Xgg8ZbapdU36oGsaZ08g@mail.gmail.com>
+        <e08c487c-5c2a-3172-7c9c-0e7d2cd51769@gmail.com>
+        <CACRpkdbMF4=-g2ic_SKgOkd6kfgKJqZ2UxCRaoXJjq0EiEn+pw@mail.gmail.com>
+        <26f96265-c699-66aa-ec70-becd868bb795@gmail.com>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200418005126.15305-1-f.fainelli@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 17, 2020 at 05:51:26PM -0700, Florian Fainelli wrote:
-> Some of the properties pertaining to the broken turn around or resets
-> were only documented in ethernet-phy.yaml while they are applicable
-> across all MDIO devices and not Ethernet PHYs specifically which are a
-> superset.
-> 
-> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-> ---
->  .../devicetree/bindings/net/mdio.yaml         | 27 +++++++++++++++++++
->  1 file changed, 27 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/net/mdio.yaml b/Documentation/devicetree/bindings/net/mdio.yaml
-> index 50c3397a82bc..58d486db5651 100644
-> --- a/Documentation/devicetree/bindings/net/mdio.yaml
-> +++ b/Documentation/devicetree/bindings/net/mdio.yaml
-> @@ -50,6 +50,33 @@ patternProperties:
->          description:
->            The ID number for the PHY.
->  
-> +      broken-turn-around:
-> +        $ref: /schemas/types.yaml#definitions/flag
-> +        description:
-> +          If set, indicates the PHY device does not correctly release
-> +          the turn around line low at the end of a MDIO transaction.
+On Thu, 16 Apr 2020 20:35:56 +0300
+Dmitry Osipenko <digetx@gmail.com> wrote:
 
-Hi Florian
+> 16.04.2020 19:51, Linus Walleij =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+> > On Thu, Apr 16, 2020 at 4:45 PM Dmitry Osipenko <digetx@gmail.com> wrot=
+e: =20
+> >> 16.04.2020 14:33, Linus Walleij =D0=BF=D0=B8=D1=88=D0=B5=D1=82: =20
+> >  =20
+> >>> This misses some important aspects of dev_dbg(), notably this:
+> >>>
+> >>> #if defined(CONFIG_DYNAMIC_DEBUG)
+> >>> #define dev_dbg(dev, fmt, ...)                                       =
+   \
+> >>>         dynamic_dev_dbg(dev, dev_fmt(fmt), ##__VA_ARGS__)
+> >>> #elif defined(DEBUG)
+> >>> #define dev_dbg(dev, fmt, ...)                                       =
+   \
+> >>>         dev_printk(KERN_DEBUG, dev, dev_fmt(fmt), ##__VA_ARGS__)
+> >>> #else
+> >>> #define dev_dbg(dev, fmt, ...)                                       =
+   \
+> >>> ({                                                                   =
+   \
+> >>>         if (0)                                                       =
+   \
+> >>>                 dev_printk(KERN_DEBUG, dev, dev_fmt(fmt), ##__VA_ARGS=
+__); \
+> >>> })
+> >>> #endif
+> >>>
+> >>> If DEBUG is not defined the entire dev_dbg() message is enclodes in i=
+f (0)
+> >>> and compiled out of the kernel, saving space. The above does not
+> >>> fulfil that. =20
+> >>
+> >> Hello Linus,
+> >>
+> >> After some recent discussions in regards to the EPROBE_DEFER handling,
+> >> Thierry Reding suggested the form which is used in my patch and we
+> >> started to use it recently in the Tegra DRM driver [1]. The reason is
+> >> that we don't want to miss any deferred-probe messages under any
+> >> circumstances, for example like in a case of a disabled DYNAMIC_DEBUG.=
+ =20
+> >=20
+> > I have a hard time to accept this reasoning.
+> >=20
+> > Who doesn't feel that way about their subsystem? If you don't want
+> > to miss the message under any circumstances then use dev_info().
+> > Don't override the default behaviour of dev_dbg().
+> >  =20
+> >> The debug messages are usually disabled in a release-build and when not
+> >> a very experienced person hands you KMSG for diagnosing a problem, the
+> >> KMSG is pretty much useless if error is hidden silently. =20
+> >=20
+> > So use dev_info().
+> >  =20
+> >> By moving the message to a debug level, we reduce the noise in the KMSG
+> >> because usually people look for a bold-red error messages. Secondly, we
+> >> don't introduce an additional overhead to the kernel size since the sa=
+me
+> >> text is reused for all error conditions. =20
+> >=20
+> > dev_info() is not supposed to be an error message, it is supposed to
+> > be information, so use that. =20
+>=20
+> Okay, I'll make a v2. Thank you for the review.
 
-Since this is a generic property, maybe this should be "the MDIO
-device"? Probably the whole document needs s/PHY/MDIO/g ?
+Ah I commented on this in v2 - now I see why you did it :)
+Nope to dev_info. That will often spam normal logs and as Andy pointed
+out for v2 that can be dozens of entries on a sophisticated board.  Much
+better to stick to dev_dbg but I'd like to see it done explicitly in the
+form you mention with the if / else
 
-	 Andrew
+Thanks,
+
+Jonathan
+
