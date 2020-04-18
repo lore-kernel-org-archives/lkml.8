@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C835AC38A2F
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 13:51:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 854E1C38A2F
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 13:51:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9BE2F214AF
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 13:51:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D3BC214AF
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 13:51:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587217863;
-	bh=fGz7a64lWYFN33TvpNVh9lbizXvizlbW6RS4o/D26oI=;
+	s=default; t=1587217869;
+	bh=bNVdSBgTrAiEhSZBP78RjqSO2iW2UM/yNJ3jlJzalm4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AQ7t7TQ78aeOTMvyHCTR149QQFWl+T01IJRCMNGRIDjZCqJ7OMe86LAcSIY1m/qOx
-	 R5UdjSoM/Z1W9WDiGPwrMc1b5xjc0B4cZ6db6JGZ7PO4N0B2j+yI7BAfzfKU7VMZBC
-	 /N7/vPKeWoM/INNWy6S4QA5G65N6dMuR9H7jAod4=
+	b=QRzR2MLZn5VwrKK6b2kT4hr5pIGA5vuIYoG7gbV2MjynCbqQrdKl/VIJuNIlpRzbs
+	 k9aHzdyMD/Ps81+MeX4OEemC429qd3fyPiLp0P4HKie5BNcwEuaadl8HvRo6mNNlga
+	 zzRRQINyXbNkXzJZ1wUTnRLLx6LRyRObPWi4701Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727858AbgDRNvC (ORCPT
+        id S1727872AbgDRNvI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 09:51:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56232 "EHLO mail.kernel.org"
+        Sat, 18 Apr 2020 09:51:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56206 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726780AbgDRNtV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 09:49:21 -0400
+        id S1726778AbgDRNtU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 09:49:20 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D468121D6C;
-        Sat, 18 Apr 2020 13:49:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AE6C3214AF;
+        Sat, 18 Apr 2020 13:49:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587217760;
-        bh=fGz7a64lWYFN33TvpNVh9lbizXvizlbW6RS4o/D26oI=;
+        s=default; t=1587217759;
+        bh=bNVdSBgTrAiEhSZBP78RjqSO2iW2UM/yNJ3jlJzalm4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zaxRevMjhn3strYvcQcVEVIgUY2/p3Ar+NJqZGEFG/gXZGG0lCRgZ4SPHRHWjbhiZ
-         w8zdQnkZccRUg8UDznTbbfRuvnbLhxURHnlylhPnk7ImHfpilueIsKx53nl7eXRTxU
-         gnQSawQs0ul0jrBPbzvP4uE8Uym2izNC+sI0MRsM=
+        b=iQ87l6nvehYlrY1OTspbMSj6Too27+G9UBUx0/10MmpPFnQ1WTzqWK2/ws7H+Ezg5
+         Gp+paEe0257SWiEhVYtx6nUIdRtj7dvMboQ1uhL72O88LaWt3n0o+ZahVIH8IlasxU
+         0n8DX5txU/Gw99r4mhFE5smFqopfWWdbg+uoFv1c=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Qian Cai <cai@lca.pw>, Lu Baolu <baolu.lu@linux.intel.com>,
-        Joerg Roedel <jroedel@suse.de>,
-        Sasha Levin <sashal@kernel.org>,
-        iommu@lists.linux-foundation.org
-Subject: [PATCH AUTOSEL 5.6 51/73] iommu/vt-d: Silence RCU-list debugging warning in dmar_find_atsr()
-Date:   Sat, 18 Apr 2020 09:47:53 -0400
-Message-Id: <20200418134815.6519-51-sashal@kernel.org>
+Cc:     James Smart <jsmart2021@gmail.com>,
+        Dick Kennedy <dick.kennedy@broadcom.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 50/73] scsi: lpfc: Fix lockdep error - register non-static key
+Date:   Sat, 18 Apr 2020 09:47:52 -0400
+Message-Id: <20200418134815.6519-50-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200418134815.6519-1-sashal@kernel.org>
 References: <20200418134815.6519-1-sashal@kernel.org>
@@ -60,53 +60,95 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qian Cai <cai@lca.pw>
+From: James Smart <jsmart2021@gmail.com>
 
-[ Upstream commit c6f4ebdeba4cff590594df931ff1ee610c426431 ]
+[ Upstream commit f861f596714bed06069f1109b89e51f3855c4ddf ]
 
-dmar_find_atsr() calls list_for_each_entry_rcu() outside of an RCU read
-side critical section but with dmar_global_lock held. Silence this
-false positive.
+The following lockdep error was reported when unloading the lpfc driver:
 
- drivers/iommu/intel-iommu.c:4504 RCU-list traversed in non-reader section!!
- 1 lock held by swapper/0/1:
- #0: ffffffff9755bee8 (dmar_global_lock){+.+.}, at: intel_iommu_init+0x1a6/0xe19
+  INFO: trying to register non-static key.
+  the code is fine but needs lockdep annotation.
+  turning off the locking correctness validator.
+  ...
+  Call Trace:
+  dump_stack+0x96/0xe0
+  register_lock_class+0x8b8/0x8c0
+  ? lockdep_hardirqs_on+0x190/0x280
+  ? is_dynamic_key+0x150/0x150
+  ? wait_for_completion_interruptible+0x2a0/0x2a0
+  ? wake_up_q+0xd0/0xd0
+  __lock_acquire+0xda/0x21a0
+  ? register_lock_class+0x8c0/0x8c0
+  ? synchronize_rcu_expedited+0x500/0x500
+  ? __call_rcu+0x850/0x850
+  lock_acquire+0xf3/0x1f0
+  ? del_timer_sync+0x5/0xb0
+  del_timer_sync+0x3c/0xb0
+  ? del_timer_sync+0x5/0xb0
+  lpfc_pci_remove_one.cold.102+0x8b7/0x935 [lpfc]
+  ...
 
- Call Trace:
-  dump_stack+0xa4/0xfe
-  lockdep_rcu_suspicious+0xeb/0xf5
-  dmar_find_atsr+0x1ab/0x1c0
-  dmar_parse_one_atsr+0x64/0x220
-  dmar_walk_remapping_entries+0x130/0x380
-  dmar_table_init+0x166/0x243
-  intel_iommu_init+0x1ab/0xe19
-  pci_iommu_init+0x1a/0x44
-  do_one_initcall+0xae/0x4d0
-  kernel_init_freeable+0x412/0x4c5
-  kernel_init+0x19/0x193
+Unloading the driver resulted in a call to del_timer_sync for the
+cpuhp_poll_timer. However the call to setup the timer had never been made,
+so the timer structures used by lockdep checking were not initialized.
 
-Signed-off-by: Qian Cai <cai@lca.pw>
-Acked-by: Lu Baolu <baolu.lu@linux.intel.com>
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Unconditionally call setup_timer for the cpuhp_poll_timer during driver
+initialization. Calls to start the timer remain "as needed".
+
+Link: https://lore.kernel.org/r/20200322181304.37655-3-jsmart2021@gmail.com
+Signed-off-by: James Smart <jsmart2021@gmail.com>
+Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iommu/intel-iommu.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/scsi/lpfc/lpfc_init.c | 5 ++---
+ drivers/scsi/lpfc/lpfc_sli.c  | 6 ++----
+ 2 files changed, 4 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
-index 4be5494786918..ef0a5246700e5 100644
---- a/drivers/iommu/intel-iommu.c
-+++ b/drivers/iommu/intel-iommu.c
-@@ -4501,7 +4501,8 @@ static struct dmar_atsr_unit *dmar_find_atsr(struct acpi_dmar_atsr *atsr)
- 	struct dmar_atsr_unit *atsru;
- 	struct acpi_dmar_atsr *tmp;
+diff --git a/drivers/scsi/lpfc/lpfc_init.c b/drivers/scsi/lpfc/lpfc_init.c
+index d2bbcf8cae4c3..48fde2b1ebbab 100644
+--- a/drivers/scsi/lpfc/lpfc_init.c
++++ b/drivers/scsi/lpfc/lpfc_init.c
+@@ -11203,11 +11203,9 @@ static void lpfc_cpuhp_add(struct lpfc_hba *phba)
  
--	list_for_each_entry_rcu(atsru, &dmar_atsr_units, list) {
-+	list_for_each_entry_rcu(atsru, &dmar_atsr_units, list,
-+				dmar_rcu_check()) {
- 		tmp = (struct acpi_dmar_atsr *)atsru->hdr;
- 		if (atsr->segment != tmp->segment)
- 			continue;
+ 	rcu_read_lock();
+ 
+-	if (!list_empty(&phba->poll_list)) {
+-		timer_setup(&phba->cpuhp_poll_timer, lpfc_sli4_poll_hbtimer, 0);
++	if (!list_empty(&phba->poll_list))
+ 		mod_timer(&phba->cpuhp_poll_timer,
+ 			  jiffies + msecs_to_jiffies(LPFC_POLL_HB));
+-	}
+ 
+ 	rcu_read_unlock();
+ 
+@@ -13173,6 +13171,7 @@ lpfc_pci_probe_one_s4(struct pci_dev *pdev, const struct pci_device_id *pid)
+ 	lpfc_sli4_ras_setup(phba);
+ 
+ 	INIT_LIST_HEAD(&phba->poll_list);
++	timer_setup(&phba->cpuhp_poll_timer, lpfc_sli4_poll_hbtimer, 0);
+ 	cpuhp_state_add_instance_nocalls(lpfc_cpuhp_state, &phba->cpuhp);
+ 
+ 	return 0;
+diff --git a/drivers/scsi/lpfc/lpfc_sli.c b/drivers/scsi/lpfc/lpfc_sli.c
+index de97727458fc7..396e24764a1b1 100644
+--- a/drivers/scsi/lpfc/lpfc_sli.c
++++ b/drivers/scsi/lpfc/lpfc_sli.c
+@@ -14457,12 +14457,10 @@ static inline void lpfc_sli4_add_to_poll_list(struct lpfc_queue *eq)
+ {
+ 	struct lpfc_hba *phba = eq->phba;
+ 
+-	if (list_empty(&phba->poll_list)) {
+-		timer_setup(&phba->cpuhp_poll_timer, lpfc_sli4_poll_hbtimer, 0);
+-		/* kickstart slowpath processing for this eq */
++	/* kickstart slowpath processing if needed */
++	if (list_empty(&phba->poll_list))
+ 		mod_timer(&phba->cpuhp_poll_timer,
+ 			  jiffies + msecs_to_jiffies(LPFC_POLL_HB));
+-	}
+ 
+ 	list_add_rcu(&eq->_poll_list, &phba->poll_list);
+ 	synchronize_rcu();
 -- 
 2.20.1
 
