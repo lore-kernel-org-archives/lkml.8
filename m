@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D618BC38A29
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:13:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CBD0C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:13:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AA6C921D6C
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:13:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F61321D6C
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:13:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587219217;
-	bh=vGj7oOkI4QUVbkPo0BS/gOiD5NfqXixQjx5CszSFFjA=;
+	s=default; t=1587219221;
+	bh=1RYs4Lz/2BnS7f8Vf4aqmZgljBRSOk3rbVPrrg1Tko4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=l0Q87ZcflZK0EmxDYe5cuYzWsTEBGQePtyIBrqrQNHMWCHPZVDdz3ojZtAgKqCfUf
-	 +7ZE6mjirPo6A2A5HV9pjwIhsiqX8IkX02W4NX8hjRBVgMv+fe3skxE/+/EONWEYBq
-	 PaGjZ16D/XaV3Ok1t8AwkSDdR5W5kk7bUhXKTrMU=
+	b=twRzHQVTEWb24zqt1riRo4RJ+yBuSHWKBrvIeBogAQ//Tj52OGJwcmotmUKC9v3bf
+	 M+o//cC+ZJRFmpzFjxqSJv9jRNJ2iLr15CdRjtpl/Rr6/V0ULsiBUBeBuk+YBfKzoe
+	 Ze8X6EeDwaJzR4BOI1pPHPhA4VW3pExt3Nxm6Dq0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726513AbgDROJf (ORCPT
+        id S1728184AbgDRONk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 10:09:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36904 "EHLO mail.kernel.org"
+        Sat, 18 Apr 2020 10:13:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37090 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726423AbgDROJ1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 10:09:27 -0400
+        id S1726501AbgDROJf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 10:09:35 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B452622260;
-        Sat, 18 Apr 2020 14:09:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 30D0221D6C;
+        Sat, 18 Apr 2020 14:09:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587218967;
-        bh=vGj7oOkI4QUVbkPo0BS/gOiD5NfqXixQjx5CszSFFjA=;
+        s=default; t=1587218974;
+        bh=1RYs4Lz/2BnS7f8Vf4aqmZgljBRSOk3rbVPrrg1Tko4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pO7ODp7BhxpTt86YkB4Mbdqr+Rg0AmwR6dqTaWjzrZypEm4qnylRWk1uJTFjCAG6V
-         ZpPaihzHQg9NvGyb5Z4TFP5xUSJTl77W0mhflxdAJENXzzfbkkd1ONvO5n1AK0idK7
-         Eh5vKvCyThjy0lw0omhXR30TffDJUJVnKpSBgatc=
+        b=vlWE9CwVUfv5NvsV0gtMEKzHahRfnUZDKMUWJU+zlgQVwzqYK48IJW7EpyC1s0dXf
+         MR0NC1JL0je6brwOJtdxWw+H5k1dhAoSKqUIR8akNZDC/RvrimLa+Vr8lcB4EIo6ZF
+         QgiRAtvUD1dVld0Xb30N0te2dfWFMxu0BN/opsj0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Yan, Zheng" <zyan@redhat.com>, Jeff Layton <jlayton@kernel.org>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, ceph-devel@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 14/75] ceph: don't skip updating wanted caps when cap is stale
-Date:   Sat, 18 Apr 2020 10:08:09 -0400
-Message-Id: <20200418140910.8280-14-sashal@kernel.org>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 5.5 20/75] ASoC: Intel: atom: Take the drv->lock mutex before calling sst_send_slot_map()
+Date:   Sat, 18 Apr 2020 10:08:15 -0400
+Message-Id: <20200418140910.8280-20-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200418140910.8280-1-sashal@kernel.org>
 References: <20200418140910.8280-1-sashal@kernel.org>
@@ -59,47 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Yan, Zheng" <zyan@redhat.com>
+From: Hans de Goede <hdegoede@redhat.com>
 
-[ Upstream commit 0aa971b6fd3f92afef6afe24ef78d9bb14471519 ]
+[ Upstream commit 81630dc042af998b9f58cd8e2c29dab9777ea176 ]
 
-1. try_get_cap_refs() fails to get caps and finds that mds_wanted
-   does not include what it wants. It returns -ESTALE.
-2. ceph_get_caps() calls ceph_renew_caps(). ceph_renew_caps() finds
-   that inode has cap, so it calls ceph_check_caps().
-3. ceph_check_caps() finds that issued caps (without checking if it's
-   stale) already includes caps wanted by open file, so it skips
-   updating wanted caps.
+sst_send_slot_map() uses sst_fill_and_send_cmd_unlocked() because in some
+places it is called with the drv->lock mutex already held.
 
-Above events can cause an infinite loop inside ceph_get_caps().
+So it must always be called with the mutex locked. This commit adds missing
+locking in the sst_set_be_modules() code-path.
 
-Signed-off-by: "Yan, Zheng" <zyan@redhat.com>
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
-Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
+Fixes: 24c8d14192cc ("ASoC: Intel: mrfld: add DSP core controls")
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Acked-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Link: https://lore.kernel.org/r/20200402185359.3424-1-hdegoede@redhat.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ceph/caps.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ sound/soc/intel/atom/sst-atom-controls.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/fs/ceph/caps.c b/fs/ceph/caps.c
-index 9d09bb53c1ab4..a02f7970b6e85 100644
---- a/fs/ceph/caps.c
-+++ b/fs/ceph/caps.c
-@@ -1972,8 +1972,12 @@ void ceph_check_caps(struct ceph_inode_info *ci, int flags,
- 		}
+diff --git a/sound/soc/intel/atom/sst-atom-controls.c b/sound/soc/intel/atom/sst-atom-controls.c
+index baef461a99f19..2c3798034b1de 100644
+--- a/sound/soc/intel/atom/sst-atom-controls.c
++++ b/sound/soc/intel/atom/sst-atom-controls.c
+@@ -966,7 +966,9 @@ static int sst_set_be_modules(struct snd_soc_dapm_widget *w,
+ 	dev_dbg(c->dev, "Enter: widget=%s\n", w->name);
  
- 		/* want more caps from mds? */
--		if (want & ~(cap->mds_wanted | cap->issued))
--			goto ack;
-+		if (want & ~cap->mds_wanted) {
-+			if (want & ~(cap->mds_wanted | cap->issued))
-+				goto ack;
-+			if (!__cap_is_valid(cap))
-+				goto ack;
-+		}
- 
- 		/* things we might delay */
- 		if ((cap->issued & ~retain) == 0)
+ 	if (SND_SOC_DAPM_EVENT_ON(event)) {
++		mutex_lock(&drv->lock);
+ 		ret = sst_send_slot_map(drv);
++		mutex_unlock(&drv->lock);
+ 		if (ret)
+ 			return ret;
+ 		ret = sst_send_pipe_module_params(w, k);
 -- 
 2.20.1
 
