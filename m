@@ -5,68 +5,67 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F0A4C352BE
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 08:24:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E0EAC2BA19
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 08:25:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 59C05214D8
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 08:24:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F93C214D8
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 08:25:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="udRAL9LO"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qbphPSFh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726136AbgDRIY4 (ORCPT
+        id S1726167AbgDRIY7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 04:24:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60024 "EHLO
+        Sat, 18 Apr 2020 04:24:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60030 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726086AbgDRIYy (ORCPT
+        with ESMTP id S1726089AbgDRIYy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 18 Apr 2020 04:24:54 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2E5BC061A0C
-        for <linux-kernel@vger.kernel.org>; Sat, 18 Apr 2020 01:24:52 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id u127so4226553wmg.1
-        for <linux-kernel@vger.kernel.org>; Sat, 18 Apr 2020 01:24:52 -0700 (PDT)
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1EBF2C061A0F
+        for <linux-kernel@vger.kernel.org>; Sat, 18 Apr 2020 01:24:54 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id g12so5330892wmh.3
+        for <linux-kernel@vger.kernel.org>; Sat, 18 Apr 2020 01:24:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=Z9RZqtfs5Cag4mQdzJShlNAQuGjvhVeQdujbGHU9q2o=;
-        b=udRAL9LOXx8sHcgH2psl9sOtzCWWqi5tKzVYRnHlvoLpQTwr8+MGGPyKtuAlLgLGA3
-         YJCW6HoZeFRDlle3YWdF4HgGB+obotwbPtAB5d1swWi9WjN+ky7grYmW8ot0WHnjVFrU
-         xkV/j4YkRMUTjTIQ6Oqslu9j+0nWCI8KPup1G5z2WaCTMAkDSyZnG/zSKrY4qHK/vUZW
-         Pxxeq9gRVGuSAe+kPYnFhS5yiHByv69mlep+El41GYxquHL40kj+tNNKpM0EmYWq9Fqr
-         Tw2KIvNkJnnR9G2nFk6hLs55hKiBv/Nbd3BSOOdZAlbGpkDUQHeV5mOT7dacVddaiNCm
-         zepQ==
+        bh=mKNbAPK+EGyLOfQgeFZW1qJkb+J+XOAX0oV59UJYhF0=;
+        b=qbphPSFhwmsnK8eujMKUPDuPD2WQjOHwLffxgOCegJrlv4+MIcaRXeIVQD519h2/RA
+         rLh7LMHlJXb8CkC5fTfcUAiUuzYECw+KrMkkJRwzrAU2LWIXUKVNHZhaFpydASrqMSQU
+         z2XWLaNk30rrO6Lbu747Jlb/ov6CSmRFQSxAaXzEgxqYXk2MKD/mPTkSS73FNoJXMo/O
+         PdGmT96XSAJANASddz13ACgLqLm4mD3nRuDds4nkPVWNSueS4dbFh1KL4F7n+FAZwfke
+         UohblkuNN3l03xAi+krTwXIrjBdpopR5CLCw1yVI2q7bw9b3pc5FWQLCg7yIzuqGSC4T
+         +tuQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=Z9RZqtfs5Cag4mQdzJShlNAQuGjvhVeQdujbGHU9q2o=;
-        b=AjSF4kwouEFr9UJmg6AweRWVSRBBpOlF0Te0t6+KDdjKTpWORHCkrNOpMHy7vWriG1
-         briseipk7dqZT88+2atabdpU4t+nXMuveZNEruI/tHaSd0mGj6JrvMmZY+iJKCNL/Etp
-         tyf6p6gUk7IxIyORoklq6qYyAqR0L1yZcjzfOpHB4N5rd8Swpy2vSN06j7Sapp5kdFVx
-         Ng7o59r8wipZMpF7XSg/zGjPMSBR0uu3w4wkp8UN0ACYM+Uanr8T4Sz9lxpDKnK9Ku8K
-         N07i0Le7Yrj6LF5OCXsFzDri22X30vn4TT3Q2w2UERfegylYuP8QXIw/lxaXZnSfCmI2
-         jzaQ==
-X-Gm-Message-State: AGi0PuYzKQt1yNMOtv+nEaskX+TF51FdpssKnpl5NFY9xTYaHuQiL8/t
-        zzzL5zx+6ejl6AFbo3hPauN1sSa5
-X-Google-Smtp-Source: APiQypIEIDe7Z/I6ywI8HeoGP5y+3cFVoP+kz/+v0w45dm8jPE+eWmm58eROAhUkism9qCx+x2h8/Q==
-X-Received: by 2002:a1c:ac44:: with SMTP id v65mr7261340wme.33.1587198291090;
-        Sat, 18 Apr 2020 01:24:51 -0700 (PDT)
+        bh=mKNbAPK+EGyLOfQgeFZW1qJkb+J+XOAX0oV59UJYhF0=;
+        b=Cq5/lpHSrmIzWCDO35Xx9+VqBK3PGJ93ZsCJvH0Enaf7mb5yJZBuFaJjT7zIPgldba
+         q4n8zvegIneiub3tDCYEBOZJDWcUo87kePJwEuNJPjdllBtV1t7JUvwMj5ifd+rVKC0p
+         7d1ghfliUNuyi814JSaSKkP2tBwBhxlGYXfrrGJisvFzUDCZJo2J8bwDyFn3JQkCy+gk
+         ga5bfvlHb2s/QLfO/1MZXGE0b5dHjJgfRM/GWrituKgunnVsgSaWaHKtYhPuEt1b2cxP
+         yVvyG5XNqdS7VRvXK2NcMXl+EZ19uC4mJZT5TCypKJo8GYwmx2kXgde/i1nWv6gh9h7Q
+         0ejA==
+X-Gm-Message-State: AGi0Pub3gdq1vcO2QddcOeR21yxB4YENI7gMSUlZhcbzkLqjcJ0y0UKx
+        cPVPzYNX0VvGZ2T+/uN/rNxSwR1t
+X-Google-Smtp-Source: APiQypI5B2aQ6EbjJuFamk6zcVY0a6VEe8jMySmVuZU2q7xh3EMqlO/qTASWKEopOaFgGVQ3XfqyVw==
+X-Received: by 2002:a1c:2d02:: with SMTP id t2mr7188000wmt.98.1587198292473;
+        Sat, 18 Apr 2020 01:24:52 -0700 (PDT)
 Received: from ogabbay-VM.habana-labs.com ([31.154.190.6])
-        by smtp.gmail.com with ESMTPSA id c190sm10898087wme.4.2020.04.18.01.24.49
+        by smtp.gmail.com with ESMTPSA id c190sm10898087wme.4.2020.04.18.01.24.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 18 Apr 2020 01:24:50 -0700 (PDT)
+        Sat, 18 Apr 2020 01:24:51 -0700 (PDT)
 From:   Oded Gabbay <oded.gabbay@gmail.com>
 To:     linux-kernel@vger.kernel.org, oshpigelman@habana.ai,
         ttayar@habana.ai
-Cc:     gregkh@linuxfoundation.org,
-        Christine Gharzuzi <cgharzuzi@habana.ai>
-Subject: [PATCH 4/5] habanalabs: support hwmon_reset_history attribute
-Date:   Sat, 18 Apr 2020 11:24:39 +0300
-Message-Id: <20200418082440.21277-4-oded.gabbay@gmail.com>
+Cc:     gregkh@linuxfoundation.org
+Subject: [PATCH 5/5] habanalabs: leave space for 2xMSG_PROT in CB
+Date:   Sat, 18 Apr 2020 11:24:40 +0300
+Message-Id: <20200418082440.21277-5-oded.gabbay@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200418082440.21277-1-oded.gabbay@gmail.com>
 References: <20200418082440.21277-1-oded.gabbay@gmail.com>
@@ -75,214 +74,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christine Gharzuzi <cgharzuzi@habana.ai>
+The user must leave space for 2xMSG_PROT in the external CB, so adjust the
+define of max size accordingly. The driver, however, can still create a CB
+with the maximum size of 2MB. Therefore, we need to add a check
+specifically for the user requested size.
 
-Support hwmon_temp_reset_histroy, hwmon_in_reset_history and
-hwmon_curr_reset attribute which resets the historical highest value.
-
-Signed-off-by: Christine Gharzuzi <cgharzuzi@habana.ai>
-Reviewed-by: Oded Gabbay <oded.gabbay@gmail.com>
 Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
 ---
- drivers/misc/habanalabs/habanalabs.h       |  4 ++
- drivers/misc/habanalabs/hwmon.c            | 75 ++++++++++++++++++++++
- drivers/misc/habanalabs/include/armcp_if.h | 21 +++++-
- 3 files changed, 97 insertions(+), 3 deletions(-)
+ drivers/misc/habanalabs/command_buffer.c | 24 +++++++++++++++++-------
+ include/uapi/misc/habanalabs.h           |  3 ++-
+ 2 files changed, 19 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/misc/habanalabs/habanalabs.h b/drivers/misc/habanalabs/habanalabs.h
-index a8ee241b2fce..0d3d3c59ae2b 100644
---- a/drivers/misc/habanalabs/habanalabs.h
-+++ b/drivers/misc/habanalabs/habanalabs.h
-@@ -1676,6 +1676,10 @@ void hl_set_pwm_info(struct hl_device *hdev, int sensor_index, u32 attr,
- 			long value);
- u64 hl_get_max_power(struct hl_device *hdev);
- void hl_set_max_power(struct hl_device *hdev, u64 value);
-+int hl_set_voltage(struct hl_device *hdev,
-+			int sensor_index, u32 attr, long value);
-+int hl_set_current(struct hl_device *hdev,
-+			int sensor_index, u32 attr, long value);
- 
- #ifdef CONFIG_DEBUG_FS
- 
-diff --git a/drivers/misc/habanalabs/hwmon.c b/drivers/misc/habanalabs/hwmon.c
-index a21a26e07c3b..8c6cd77e6af6 100644
---- a/drivers/misc/habanalabs/hwmon.c
-+++ b/drivers/misc/habanalabs/hwmon.c
-@@ -200,6 +200,7 @@ static int hl_write(struct device *dev, enum hwmon_sensor_types type,
- 	case hwmon_temp:
- 		switch (attr) {
- 		case hwmon_temp_offset:
-+		case hwmon_temp_reset_history:
- 			break;
- 		default:
- 			return -EINVAL;
-@@ -216,6 +217,24 @@ static int hl_write(struct device *dev, enum hwmon_sensor_types type,
- 		}
- 		hl_set_pwm_info(hdev, channel, attr, val);
- 		break;
-+	case hwmon_in:
-+		switch (attr) {
-+		case hwmon_in_reset_history:
-+			break;
-+		default:
-+			return -EINVAL;
-+		}
-+		hl_set_voltage(hdev, channel, attr, val);
-+		break;
-+	case hwmon_curr:
-+		switch (attr) {
-+		case hwmon_curr_reset_history:
-+			break;
-+		default:
-+			return -EINVAL;
-+		}
-+		hl_set_current(hdev, channel, attr, val);
-+		break;
- 	default:
- 		return -EINVAL;
+diff --git a/drivers/misc/habanalabs/command_buffer.c b/drivers/misc/habanalabs/command_buffer.c
+index 53fddbd8e693..6cb92efce4d9 100644
+--- a/drivers/misc/habanalabs/command_buffer.c
++++ b/drivers/misc/habanalabs/command_buffer.c
+@@ -105,10 +105,9 @@ int hl_cb_create(struct hl_device *hdev, struct hl_cb_mgr *mgr,
+ 		goto out_err;
  	}
-@@ -237,6 +256,8 @@ static umode_t hl_is_visible(const void *data, enum hwmon_sensor_types type,
- 			return 0444;
- 		case hwmon_temp_offset:
- 			return 0644;
-+		case hwmon_temp_reset_history:
-+			return 0200;
- 		}
- 		break;
- 	case hwmon_in:
-@@ -246,6 +267,8 @@ static umode_t hl_is_visible(const void *data, enum hwmon_sensor_types type,
- 		case hwmon_in_max:
- 		case hwmon_in_highest:
- 			return 0444;
-+		case hwmon_in_reset_history:
-+			return 0200;
- 		}
- 		break;
- 	case hwmon_curr:
-@@ -255,6 +278,8 @@ static umode_t hl_is_visible(const void *data, enum hwmon_sensor_types type,
- 		case hwmon_curr_max:
- 		case hwmon_curr_highest:
- 			return 0444;
-+		case hwmon_curr_reset_history:
-+			return 0200;
- 		}
- 		break;
- 	case hwmon_fan:
-@@ -462,6 +487,56 @@ void hl_set_pwm_info(struct hl_device *hdev, int sensor_index, u32 attr,
- 			sensor_index, rc);
- }
  
-+int hl_set_voltage(struct hl_device *hdev,
-+			int sensor_index, u32 attr, long value)
-+{
-+	struct armcp_packet pkt;
-+	int rc;
-+
-+	memset(&pkt, 0, sizeof(pkt));
-+
-+	pkt.ctl = cpu_to_le32(ARMCP_PACKET_VOLTAGE_SET <<
-+				ARMCP_PKT_CTL_OPCODE_SHIFT);
-+	pkt.sensor_index = __cpu_to_le16(sensor_index);
-+	pkt.type = __cpu_to_le16(attr);
-+	pkt.value = __cpu_to_le64(value);
-+
-+	rc = hdev->asic_funcs->send_cpu_message(hdev, (u32 *) &pkt, sizeof(pkt),
-+						SENSORS_PKT_TIMEOUT, NULL);
-+
-+	if (rc)
-+		dev_err(hdev->dev,
-+			"Failed to set voltage of sensor %d, error %d\n",
-+			sensor_index, rc);
-+
-+	return rc;
-+}
-+
-+int hl_set_current(struct hl_device *hdev,
-+			int sensor_index, u32 attr, long value)
-+{
-+	struct armcp_packet pkt;
-+	int rc;
-+
-+	memset(&pkt, 0, sizeof(pkt));
-+
-+	pkt.ctl = cpu_to_le32(ARMCP_PACKET_CURRENT_SET <<
-+				ARMCP_PKT_CTL_OPCODE_SHIFT);
-+	pkt.sensor_index = __cpu_to_le16(sensor_index);
-+	pkt.type = __cpu_to_le16(attr);
-+	pkt.value = __cpu_to_le64(value);
-+
-+	rc = hdev->asic_funcs->send_cpu_message(hdev, (u32 *) &pkt, sizeof(pkt),
-+						SENSORS_PKT_TIMEOUT, NULL);
-+
-+	if (rc)
-+		dev_err(hdev->dev,
-+			"Failed to set current of sensor %d, error %d\n",
-+			sensor_index, rc);
-+
-+	return rc;
-+}
-+
- int hl_hwmon_init(struct hl_device *hdev)
+-	if (cb_size > HL_MAX_CB_SIZE) {
+-		dev_err(hdev->dev,
+-			"CB size %d must be less then %d\n",
+-			cb_size, HL_MAX_CB_SIZE);
++	if (cb_size > SZ_2M) {
++		dev_err(hdev->dev, "CB size %d must be less than %d\n",
++			cb_size, SZ_2M);
+ 		rc = -EINVAL;
+ 		goto out_err;
+ 	}
+@@ -211,7 +210,7 @@ int hl_cb_ioctl(struct hl_fpriv *hpriv, void *data)
  {
- 	struct device *dev = hdev->pdev ? &hdev->pdev->dev : hdev->dev;
-diff --git a/drivers/misc/habanalabs/include/armcp_if.h b/drivers/misc/habanalabs/include/armcp_if.h
-index bdd0a4c3a9cf..9e3bc21f20a0 100644
---- a/drivers/misc/habanalabs/include/armcp_if.h
-+++ b/drivers/misc/habanalabs/include/armcp_if.h
-@@ -193,6 +193,16 @@ enum pq_init_status {
-  *       Set the value of the offset property of a specified thermal sensor.
-  *       The packet's arguments specify the desired sensor and the field to
-  *       set.
-+ *
-+ * ARMCP_PACKET_VOLTAGE_SET -
-+ *       Trigger the reset_history property of a specified voltage sensor.
-+ *       The packet's arguments specify the desired sensor and the field to
-+ *       set.
-+ *
-+ * ARMCP_PACKET_CURRENT_SET -
-+ *       Trigger the reset_history property of a specified current sensor.
-+ *       The packet's arguments specify the desired sensor and the field to
-+ *       set.
-  */
+ 	union hl_cb_args *args = data;
+ 	struct hl_device *hdev = hpriv->hdev;
+-	u64 handle;
++	u64 handle = 0;
+ 	int rc;
  
- enum armcp_packet_id {
-@@ -220,6 +230,8 @@ enum armcp_packet_id {
- 	ARMCP_PACKET_EEPROM_DATA_GET,		/* sysfs */
- 	ARMCP_RESERVED,
- 	ARMCP_PACKET_TEMPERATURE_SET,		/* sysfs */
-+	ARMCP_PACKET_VOLTAGE_SET,		/* sysfs */
-+	ARMCP_PACKET_CURRENT_SET,		/* sysfs */
- };
+ 	if (hl_device_disabled_or_in_reset(hdev)) {
+@@ -223,15 +222,26 @@ int hl_cb_ioctl(struct hl_fpriv *hpriv, void *data)
  
- #define ARMCP_PACKET_FENCE_VAL	0xFE8CE7A5
-@@ -288,21 +300,24 @@ enum armcp_temp_type {
- 	armcp_temp_crit,
- 	armcp_temp_crit_hyst,
- 	armcp_temp_offset = 19,
--	armcp_temp_highest = 22
-+	armcp_temp_highest = 22,
-+	armcp_temp_reset_history = 23
- };
+ 	switch (args->in.op) {
+ 	case HL_CB_OP_CREATE:
+-		rc = hl_cb_create(hdev, &hpriv->cb_mgr, args->in.cb_size,
+-					&handle, hpriv->ctx->asid);
++		if (args->in.cb_size > HL_MAX_CB_SIZE) {
++			dev_err(hdev->dev,
++				"User requested CB size %d must be less than %d\n",
++				args->in.cb_size, HL_MAX_CB_SIZE);
++			rc = -EINVAL;
++		} else {
++			rc = hl_cb_create(hdev, &hpriv->cb_mgr,
++						args->in.cb_size, &handle,
++						hpriv->ctx->asid);
++		}
++
+ 		memset(args, 0, sizeof(*args));
+ 		args->out.cb_handle = handle;
+ 		break;
++
+ 	case HL_CB_OP_DESTROY:
+ 		rc = hl_cb_destroy(hdev, &hpriv->cb_mgr,
+ 					args->in.cb_handle);
+ 		break;
++
+ 	default:
+ 		rc = -ENOTTY;
+ 		break;
+diff --git a/include/uapi/misc/habanalabs.h b/include/uapi/misc/habanalabs.h
+index 4d593050c42b..523e511e6cff 100644
+--- a/include/uapi/misc/habanalabs.h
++++ b/include/uapi/misc/habanalabs.h
+@@ -209,7 +209,8 @@ struct hl_info_args {
+ /* Opcode to destroy previously created command buffer */
+ #define HL_CB_OP_DESTROY	1
  
- enum armcp_in_attributes {
- 	armcp_in_input,
- 	armcp_in_min,
- 	armcp_in_max,
--	armcp_in_highest = 7
-+	armcp_in_highest = 7,
-+	armcp_in_reset_history
- };
+-#define HL_MAX_CB_SIZE		0x200000	/* 2MB */
++/* 2MB minus 32 bytes for 2xMSG_PROT */
++#define HL_MAX_CB_SIZE		(0x200000 - 32)
  
- enum armcp_curr_attributes {
- 	armcp_curr_input,
- 	armcp_curr_min,
- 	armcp_curr_max,
--	armcp_curr_highest = 7
-+	armcp_curr_highest = 7,
-+	armcp_curr_reset_history
- };
- 
- enum armcp_fan_attributes {
+ struct hl_cb_in {
+ 	/* Handle of CB or 0 if we want to create one */
 -- 
 2.17.1
 
