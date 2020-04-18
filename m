@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1563C38A29
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:48:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A132C38A2F
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:48:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 99A2F2072B
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:48:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DCEFF20753
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:48:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587221318;
-	bh=hsqNaKKlfFUobAtuu5bXo+fEnWq/rXn9x2jK23bzFZQ=;
+	s=default; t=1587221324;
+	bh=idX8PmflZUNNSTk/f1mwjwKr28IodT3JvA4+evJUmNk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=W/LktJWDd3ZQ6rYrxzUXKhy5k/Hl6VrUPOokIyT4Le/fnmtGVCh+OhGTpTmqMPWSR
-	 +oMKCn1r2Tgdmnu+MYC4vmNmN8Us9bpMzEfqpETARwGHwRiLmMiIRoIQtH3ohUNQtP
-	 P7VxtcorFJ7d8e0DzBPzLvk1PGlTguE5ScbGRLwo=
+	b=SG10YUmDopL7A3L00PZrEB+H/ILxQg6Zbx2NX9uJuOcLE9j+gzxW7DCMsazHIdtxH
+	 825OgW4DKulM/+G0wEQKQDHYXwiMuTwN9m7zG/maJyp7SYQ6b6JD8FO9vwfLmirC+M
+	 dLy62GuB10GMEj97X7wCqcxMZlkQynqeyaY2YFBI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728916AbgDROsh (ORCPT
+        id S1728652AbgDROno (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 10:48:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55096 "EHLO mail.kernel.org"
+        Sat, 18 Apr 2020 10:43:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54762 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728666AbgDROns (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 10:43:48 -0400
+        id S1728606AbgDROne (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 10:43:34 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 64FBF22202;
-        Sat, 18 Apr 2020 14:43:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9EE472072B;
+        Sat, 18 Apr 2020 14:43:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587221028;
-        bh=hsqNaKKlfFUobAtuu5bXo+fEnWq/rXn9x2jK23bzFZQ=;
+        s=default; t=1587221013;
+        bh=idX8PmflZUNNSTk/f1mwjwKr28IodT3JvA4+evJUmNk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EpMOYLjElQ6Y1U4ftzJHtWvNmosc8cxvPcZXaiobqM/uQJRyXyq++A5eC+aFvhqIL
-         lW16if4FmqxIKM8Sh3VvWCFN6jc6fdLRcxR0Uk1ZYuwmeGoQIRplaJRJZExfmMOoRp
-         6YN+0fz2gC+6yh6gVO4wcCaVdBbSd2MkOj8wUCrw=
+        b=kGcsDg2D7lpO0p9uBmpYIpZ0AqrVazSYX5Fdl18ByeIofQiCNzuZ3MFThjGTZPnyB
+         R1fMnN+X7tb3+UvWv6NAhjWe68I6RbGR5gZlpR3+5fRjlJIxrq0jU2c9ObIcMTvHgt
+         bztkEjlhyPHoEHEQFy6ekNa8mrqTg2RF+WrYzNgQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Cornelia Huck <cohuck@redhat.com>,
-        Boris Fiuczynski <fiuczy@linux.ibm.com>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 15/28] s390/cio: avoid duplicated 'ADD' uevents
-Date:   Sat, 18 Apr 2020 10:43:15 -0400
-Message-Id: <20200418144328.10265-15-sashal@kernel.org>
+Cc:     James Smart <jsmart2021@gmail.com>,
+        Dick Kennedy <dick.kennedy@broadcom.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 04/28] scsi: lpfc: Fix kasan slab-out-of-bounds error in lpfc_unreg_login
+Date:   Sat, 18 Apr 2020 10:43:04 -0400
+Message-Id: <20200418144328.10265-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200418144328.10265-1-sashal@kernel.org>
 References: <20200418144328.10265-1-sashal@kernel.org>
@@ -61,63 +60,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Cornelia Huck <cohuck@redhat.com>
+From: James Smart <jsmart2021@gmail.com>
 
-[ Upstream commit 05ce3e53f375295c2940390b2b429e506e07655c ]
+[ Upstream commit 38503943c89f0bafd9e3742f63f872301d44cbea ]
 
-The common I/O layer delays the ADD uevent for subchannels and
-delegates generating this uevent to the individual subchannel
-drivers. The io_subchannel driver will do so when the associated
-ccw_device has been registered -- but unconditionally, so more
-ADD uevents will be generated if a subchannel has been unbound
-from the io_subchannel driver and later rebound.
+The following kasan bug was called out:
 
-To fix this, only generate the ADD event if uevents were still
-suppressed for the device.
+ BUG: KASAN: slab-out-of-bounds in lpfc_unreg_login+0x7c/0xc0 [lpfc]
+ Read of size 2 at addr ffff889fc7c50a22 by task lpfc_worker_3/6676
+ ...
+ Call Trace:
+ dump_stack+0x96/0xe0
+ ? lpfc_unreg_login+0x7c/0xc0 [lpfc]
+ print_address_description.constprop.6+0x1b/0x220
+ ? lpfc_unreg_login+0x7c/0xc0 [lpfc]
+ ? lpfc_unreg_login+0x7c/0xc0 [lpfc]
+ __kasan_report.cold.9+0x37/0x7c
+ ? lpfc_unreg_login+0x7c/0xc0 [lpfc]
+ kasan_report+0xe/0x20
+ lpfc_unreg_login+0x7c/0xc0 [lpfc]
+ lpfc_sli_def_mbox_cmpl+0x334/0x430 [lpfc]
+ ...
 
-Fixes: fa1a8c23eb7d ("s390: cio: Delay uevents for subchannels")
-Message-Id: <20200327124503.9794-2-cohuck@redhat.com>
-Reported-by: Boris Fiuczynski <fiuczy@linux.ibm.com>
-Reviewed-by: Peter Oberparleiter <oberpar@linux.ibm.com>
-Reviewed-by: Boris Fiuczynski <fiuczy@linux.ibm.com>
-Signed-off-by: Cornelia Huck <cohuck@redhat.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+When processing the completion of a "Reg Rpi" login mailbox command in
+lpfc_sli_def_mbox_cmpl, a call may be made to lpfc_unreg_login. The vpi is
+extracted from the completing mailbox context and passed as an input for
+the next. However, the vpi stored in the mailbox command context is an
+absolute vpi, which for SLI4 represents both base + offset.  When used with
+a non-zero base component, (function id > 0) this results in an
+out-of-range access beyond the allocated phba->vpi_ids array.
+
+Fix by subtracting the function's base value to get an accurate vpi number.
+
+Link: https://lore.kernel.org/r/20200322181304.37655-2-jsmart2021@gmail.com
+Signed-off-by: James Smart <jsmart2021@gmail.com>
+Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/s390/cio/device.c | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+ drivers/scsi/lpfc/lpfc_sli.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/s390/cio/device.c b/drivers/s390/cio/device.c
-index e5c32f4b5287e..d2203cd178138 100644
---- a/drivers/s390/cio/device.c
-+++ b/drivers/s390/cio/device.c
-@@ -828,8 +828,10 @@ static void io_subchannel_register(struct ccw_device *cdev)
- 	 * Now we know this subchannel will stay, we can throw
- 	 * our delayed uevent.
- 	 */
--	dev_set_uevent_suppress(&sch->dev, 0);
--	kobject_uevent(&sch->dev.kobj, KOBJ_ADD);
-+	if (dev_get_uevent_suppress(&sch->dev)) {
-+		dev_set_uevent_suppress(&sch->dev, 0);
-+		kobject_uevent(&sch->dev.kobj, KOBJ_ADD);
-+	}
- 	/* make it known to the system */
- 	ret = ccw_device_add(cdev);
- 	if (ret) {
-@@ -1037,8 +1039,11 @@ static int io_subchannel_probe(struct subchannel *sch)
- 		 * Throw the delayed uevent for the subchannel, register
- 		 * the ccw_device and exit.
- 		 */
--		dev_set_uevent_suppress(&sch->dev, 0);
--		kobject_uevent(&sch->dev.kobj, KOBJ_ADD);
-+		if (dev_get_uevent_suppress(&sch->dev)) {
-+			/* should always be the case for the console */
-+			dev_set_uevent_suppress(&sch->dev, 0);
-+			kobject_uevent(&sch->dev.kobj, KOBJ_ADD);
-+		}
- 		cdev = sch_get_cdev(sch);
- 		rc = ccw_device_add(cdev);
- 		if (rc) {
+diff --git a/drivers/scsi/lpfc/lpfc_sli.c b/drivers/scsi/lpfc/lpfc_sli.c
+index d8e0ba68879c3..480d2d467f7a6 100644
+--- a/drivers/scsi/lpfc/lpfc_sli.c
++++ b/drivers/scsi/lpfc/lpfc_sli.c
+@@ -2271,6 +2271,8 @@ lpfc_sli_def_mbox_cmpl(struct lpfc_hba *phba, LPFC_MBOXQ_t *pmb)
+ 	    !pmb->u.mb.mbxStatus) {
+ 		rpi = pmb->u.mb.un.varWords[0];
+ 		vpi = pmb->u.mb.un.varRegLogin.vpi;
++		if (phba->sli_rev == LPFC_SLI_REV4)
++			vpi -= phba->sli4_hba.max_cfg_param.vpi_base;
+ 		lpfc_unreg_login(phba, vpi, rpi, pmb);
+ 		pmb->vport = vport;
+ 		pmb->mbox_cmpl = lpfc_sli_def_mbox_cmpl;
 -- 
 2.20.1
 
