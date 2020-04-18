@@ -7,49 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B676AC38A2F
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:11:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 143F1C38A29
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:11:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9235D21BE5
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:11:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E365821BE5
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:11:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587219109;
-	bh=aKvVJ6WNIThLwr7SwxRVNwUPVBfJAPy77N+K2WbjMNk=;
+	s=default; t=1587219115;
+	bh=KyrpO90/tqR+AI6DpqqySqtXff+7gxIIyn4vDSSV/D4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cxcDx1ougUA8pAJ6mk3XEO8dginGLpzw1u+3wc56MqvHE4rfjDigTWWOCmyU3RssV
-	 da2lwXgeSpR7iOqDkDlAjl9AvQkNVtXG7dkNL+fN7TdIkW6ktKY7PuCpKK2PQjnduW
-	 r7+jJilk2epvmX/bJbVW5b7p3R6sC7nzGWekSDSU=
+	b=xrFbL+tZgEg2h0MaDcW7m/s8dLoqQQWQMSVGUF+heV9IaA4bTEFIGgi8KQB8pG/0s
+	 IdNf09Gm1qUMahNA2TWqoGoNps9f2sJI5urKHzJJVwZGWCukeV7uV8Rju+tJkMODcr
+	 Bxv8EJuB6Abzp/hVXreRE7SPe9Esdst5v+t9ZWCQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728092AbgDROLs (ORCPT
+        id S1728095AbgDROLy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 10:11:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38434 "EHLO mail.kernel.org"
+        Sat, 18 Apr 2020 10:11:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38416 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727769AbgDROKW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 10:10:22 -0400
+        id S1726988AbgDROKV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 10:10:21 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CA7EC21D6C;
-        Sat, 18 Apr 2020 14:10:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BD82922287;
+        Sat, 18 Apr 2020 14:10:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587219021;
-        bh=aKvVJ6WNIThLwr7SwxRVNwUPVBfJAPy77N+K2WbjMNk=;
+        s=default; t=1587219020;
+        bh=KyrpO90/tqR+AI6DpqqySqtXff+7gxIIyn4vDSSV/D4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=u4cLfaR/BYbcdzPhTQozsPs6ODe3jcOlvw3DGZtBXJRwLvGe9Sk0Qaqq8nuvOTqu9
-         RrNLnGHNF6BUPzC/vUlHHK814iabXJ3fvDlD9cvCaawRkeLH9qpMGfImJkcBTfaCJ7
-         qkss1gZX6/gCFYiPUHRGHMwilfAt+w7v9aeJYW1o=
+        b=GTDLRDuVG+gDlpzdnlqxxRxFbV5OAYsUwbmE3i3vfmNXjArqSSIV+9RyV96Dv8UjP
+         zT0jE3Oa6I3kJGsTosA8cXxliBG5juelFzPOs9rogR9Pk7nL5f9gk5SFp7gqRncleU
+         FnAq3id8VHiHzDYT98I1jrsxlN4H5ekLNalI80XA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>,
-        Aric Cyr <Aric.Cyr@amd.com>,
-        Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.5 57/75] drm/amd/display: Calculate scaling ratios on every medium/full update
-Date:   Sat, 18 Apr 2020 10:08:52 -0400
-Message-Id: <20200418140910.8280-57-sashal@kernel.org>
+Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
+        linux-ide@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 56/75] libata: Return correct status in sata_pmp_eh_recover_pm() when ATA_DFLAG_DETACH is set
+Date:   Sat, 18 Apr 2020 10:08:51 -0400
+Message-Id: <20200418140910.8280-56-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200418140910.8280-1-sashal@kernel.org>
 References: <20200418140910.8280-1-sashal@kernel.org>
@@ -62,67 +59,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-[ Upstream commit 3bae20137cae6c03f58f96c0bc9f3d46f0bc17d4 ]
+[ Upstream commit 8305f72f952cff21ce8109dc1ea4b321c8efc5af ]
 
-[Why]
-If a plane isn't being actively enabled or disabled then DC won't
-always recalculate scaling rects and ratios for the primary plane.
+During system resume from suspend, this can be observed on ASM1062 PMP
+controller:
 
-This results in only a partial or corrupted rect being displayed on
-the screen instead of scaling to fit the screen.
+ata10.01: SATA link down (SStatus 0 SControl 330)
+ata10.02: hard resetting link
+ata10.02: SATA link down (SStatus 0 SControl 330)
+ata10.00: configured for UDMA/133
+Kernel panic - not syncing: stack-protector: Kernel
+ in: sata_pmp_eh_recover+0xa2b/0xa40
 
-[How]
-Add back the logic to recalculate the scaling rects into
-dc_commit_updates_for_stream since this is the expected place to
-do it in DC.
+CPU: 2 PID: 230 Comm: scsi_eh_9 Tainted: P OE
+#49-Ubuntu
+Hardware name: System manufacturer System Product
+ 1001 12/10/2017
+Call Trace:
+dump_stack+0x63/0x8b
+panic+0xe4/0x244
+? sata_pmp_eh_recover+0xa2b/0xa40
+__stack_chk_fail+0x19/0x20
+sata_pmp_eh_recover+0xa2b/0xa40
+? ahci_do_softreset+0x260/0x260 [libahci]
+? ahci_do_hardreset+0x140/0x140 [libahci]
+? ata_phys_link_offline+0x60/0x60
+? ahci_stop_engine+0xc0/0xc0 [libahci]
+sata_pmp_error_handler+0x22/0x30
+ahci_error_handler+0x45/0x80 [libahci]
+ata_scsi_port_error_handler+0x29b/0x770
+? ata_scsi_cmd_error_handler+0x101/0x140
+ata_scsi_error+0x95/0xd0
+? scsi_try_target_reset+0x90/0x90
+scsi_error_handler+0xd0/0x5b0
+kthread+0x121/0x140
+? scsi_eh_get_sense+0x200/0x200
+? kthread_create_worker_on_cpu+0x70/0x70
+ret_from_fork+0x22/0x40
+Kernel Offset: 0xcc00000 from 0xffffffff81000000
+(relocation range: 0xffffffff80000000-0xffffffffbfffffff)
 
-This was previously removed a few years ago to fix an underscan issue
-but underscan is still functional now with this change - and it should
-be, since this is only updating to the latest plane state getting passed
-in.
+Since sata_pmp_eh_recover_pmp() doens't set rc when ATA_DFLAG_DETACH is
+set, sata_pmp_eh_recover() continues to run. During retry it triggers
+the stack protector.
 
-Signed-off-by: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
-Reviewed-by: Aric Cyr <Aric.Cyr@amd.com>
-Acked-by: Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Set correct rc in sata_pmp_eh_recover_pmp() to let sata_pmp_eh_recover()
+jump to pmp_fail directly.
+
+BugLink: https://bugs.launchpad.net/bugs/1821434
+Cc: stable@vger.kernel.org
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/dc/core/dc.c | 13 ++++++++++++-
- 1 file changed, 12 insertions(+), 1 deletion(-)
+ drivers/ata/libata-pmp.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/core/dc.c b/drivers/gpu/drm/amd/display/dc/core/dc.c
-index 7fdbb47e8c259..d25e0a937bf57 100644
---- a/drivers/gpu/drm/amd/display/dc/core/dc.c
-+++ b/drivers/gpu/drm/amd/display/dc/core/dc.c
-@@ -2283,7 +2283,7 @@ void dc_commit_updates_for_stream(struct dc *dc,
- 	enum surface_update_type update_type;
- 	struct dc_state *context;
- 	struct dc_context *dc_ctx = dc->ctx;
--	int i;
-+	int i, j;
+diff --git a/drivers/ata/libata-pmp.c b/drivers/ata/libata-pmp.c
+index 3ff14071617cd..79f2aeeb482ab 100644
+--- a/drivers/ata/libata-pmp.c
++++ b/drivers/ata/libata-pmp.c
+@@ -763,6 +763,7 @@ static int sata_pmp_eh_recover_pmp(struct ata_port *ap,
  
- 	stream_status = dc_stream_get_status(stream);
- 	context = dc->current_state;
-@@ -2321,6 +2321,17 @@ void dc_commit_updates_for_stream(struct dc *dc,
- 
- 		copy_surface_update_to_plane(surface, &srf_updates[i]);
- 
-+		if (update_type >= UPDATE_TYPE_MED) {
-+			for (j = 0; j < dc->res_pool->pipe_count; j++) {
-+				struct pipe_ctx *pipe_ctx =
-+					&context->res_ctx.pipe_ctx[j];
-+
-+				if (pipe_ctx->plane_state != surface)
-+					continue;
-+
-+				resource_build_scaling_params(pipe_ctx);
-+			}
-+		}
+ 	if (dev->flags & ATA_DFLAG_DETACH) {
+ 		detach = 1;
++		rc = -ENODEV;
+ 		goto fail;
  	}
  
- 	copy_stream_update_to_stream(dc, context, stream, stream_update);
 -- 
 2.20.1
 
