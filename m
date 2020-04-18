@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A60BCC38A29
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 20:20:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9675CC352BE
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 20:20:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7C6F52223F
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 20:20:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6EA8B2223D
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 20:20:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="i3agjhla"
+	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="SRVPkLa/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728627AbgDRUUk (ORCPT
+        id S1728659AbgDRUUp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 16:20:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56548 "EHLO
+        Sat, 18 Apr 2020 16:20:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56570 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728584AbgDRUUf (ORCPT
+        by vger.kernel.org with ESMTP id S1728586AbgDRUUi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 16:20:35 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 209D8C061A10
-        for <linux-kernel@vger.kernel.org>; Sat, 18 Apr 2020 13:20:34 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id a81so6775904wmf.5
-        for <linux-kernel@vger.kernel.org>; Sat, 18 Apr 2020 13:20:34 -0700 (PDT)
+        Sat, 18 Apr 2020 16:20:38 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23625C061A0F
+        for <linux-kernel@vger.kernel.org>; Sat, 18 Apr 2020 13:20:38 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id d17so7134602wrg.11
+        for <linux-kernel@vger.kernel.org>; Sat, 18 Apr 2020 13:20:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=arista.com; s=googlenew;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=02ncpUWPOHgvp2gQK45y2PX57WXY5wDzEwn6uRMd/a4=;
-        b=i3agjhlaFSKeAt8OsfRmtLMa8qcY7EJbDdsYO22Dk6k4AWVwkJvEMJktfbxIcwgpgq
-         fxbFgXd8yNKqZlTPnkSguKMjNDMekZA+G3AahG8DBhRLRCLhutkN389E4EtlFW6b/0nI
-         /fRjaWX7MnAjz6q1tWpKw11Rdgr+Ehhknn+aPSG3Ez+RPzYIjYWB5vrS4gkCR/vB7fkK
-         IlD10mlWg+qtOW0/NGk1rlrHr89vb7+86XX7PirKXyKS2wD7RZZ3+rS1W1Y5hsBw1mdq
-         XLc/oTyRGJTot/C8BxU0Ii3KppIfF0utBwN3DDunikx9dyLd+QoMJimGBHtj/pMpeDht
-         imjQ==
+        bh=gtc/0k/27wMEJDXgbVIQe2rsiV0S3iSzsyKo7pDB7fw=;
+        b=SRVPkLa/P5zm7EFNpI8tQGM8IRFyIbkRpTw45j/JzRGBaiIKlPXR6sr37rYGv8zej0
+         yleYid4ikYPvCdXdowcswACqYEUsQ3Hc7iZteAFlU1dyU210LbRtbCs0/32heCizHvML
+         CXWEd8kxGNfgZxeQ4ePlKVa6+DrlJzxADfLy3ngkzR5oxNOeNVtQrjwQ80xYXbTSO4ni
+         RIoz3VHZvDyq4uPMYGwOSALTped9J2FxcnKlDqa3kvSNt/KPwtRQDS907VWa8E6OW5Wf
+         14HEkyI1a5bf47APVC6rOafr1u44BLTKwK4AWJ5tfLKFPzHfZN32hz4Hdf9jUY+hXesY
+         ERXQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=02ncpUWPOHgvp2gQK45y2PX57WXY5wDzEwn6uRMd/a4=;
-        b=ZNJWqILZvvAun5yfLBOlpW3WQ7wp6g+M8CaLUxl41JMOYUAwtTVks5oJdaLR5C0t3E
-         iyxEqtPuX+e9OQAu+8cLmnGzQdsG/THFmr9b11qJhduUh2+lzRYXrIr3asXaU3DQcJWy
-         M17dUDk/F1rzSa/xQQ7H8Hy+KgH+Q2/vwFFFdnLJ15+pO2zIoxQXLWDuumAo8mDjCFqs
-         myCQDBOjXwt/zPL6are7iB11yOViQQwlDeXevLIA1xUPSTUhI10bh3x2wTxRhJWX6GGr
-         pOTsp0CeqYF6Du245uXAFogd4PrW61j9xeWZrByaPAcjLHFCMD5tJfgOd7r8RKLgbTJl
-         m0pw==
-X-Gm-Message-State: AGi0PubaFmPa3ywxw6pm1cXC6flJDr9Ki4P4EhESIUs1PNiDZCg5fRg2
-        YqZ/7Gk2DXiCk/w/A4s/UL3HINduuF4=
-X-Google-Smtp-Source: APiQypLUZt3Vx49G1+SWsofQX0B1CdTrM3RUf80Hec5W2S04Ke5KQlEiu04eSHuB9S+4zGJS/kfVxQ==
-X-Received: by 2002:a1c:9c15:: with SMTP id f21mr9612350wme.139.1587241232531;
-        Sat, 18 Apr 2020 13:20:32 -0700 (PDT)
+        bh=gtc/0k/27wMEJDXgbVIQe2rsiV0S3iSzsyKo7pDB7fw=;
+        b=KxTG6pVEGTBb7gFK/GtQQpaxMkDwNU+R5zWE7jcfoPk0hI7qqLWpRmeLt/koAmMKHE
+         ICCRpsn1vdizJTiyazFiRhS1njrgjcvj9BU6t1cjHXGtFgx7VLiPn70W2S719ekQQ2yM
+         XCJ8RLWnIzm3nK4JZhUGVF7IQyYGllK+jK5IiIMthEii6o9LQGrJHtjz8tfYUwd+FeVP
+         rmYAn5DiXPWJcXTPPtz5MBbaDLa2NiLGHU+bFLnZo/P7ZekJD2Ay7tx++XCxq50OcWFO
+         Ri5bFC/6jyD615MPzEKdP73eKWIH1MbRKhDKovDe7fNzZo6edZONBc3fJ4ZnMTsJ/tL4
+         6gQA==
+X-Gm-Message-State: AGi0PubkHwF9aRiLv9+Lp9uKMmJYWvtQbGwB/+Nztli7JLXg5M7vdOnS
+        Y/h9Dz2VyMQtAMO1cZRWLH7+MECftmw=
+X-Google-Smtp-Source: APiQypKyem7/Bm22YNmIm+yusqua17x5av2cf7Ly8gAXFE+5gCTDqjKnb4Fv0xipR7HqarRAyefWXA==
+X-Received: by 2002:adf:fa03:: with SMTP id m3mr10544816wrr.68.1587241236552;
+        Sat, 18 Apr 2020 13:20:36 -0700 (PDT)
 Received: from localhost.localdomain ([2a02:8084:e84:2480:228:f8ff:fe6f:83a8])
-        by smtp.gmail.com with ESMTPSA id m1sm31735255wro.64.2020.04.18.13.20.31
+        by smtp.gmail.com with ESMTPSA id m1sm31735255wro.64.2020.04.18.13.20.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 18 Apr 2020 13:20:32 -0700 (PDT)
+        Sat, 18 Apr 2020 13:20:36 -0700 (PDT)
 From:   Dmitry Safonov <dima@arista.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
@@ -70,10 +70,10 @@ Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
         Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
         Steven Rostedt <rostedt@goodmis.org>,
         Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        Rich Felker <dalias@libc.org>, linux-sh@vger.kernel.org
-Subject: [PATCHv3 31/50] sh: Add loglvl to printk_address()
-Date:   Sat, 18 Apr 2020 21:19:25 +0100
-Message-Id: <20200418201944.482088-32-dima@arista.com>
+        "David S. Miller" <davem@davemloft.net>, sparclinux@vger.kernel.org
+Subject: [PATCHv3 34/50] sparc: Add show_stack_loglvl()
+Date:   Sat, 18 Apr 2020 21:19:28 +0100
+Message-Id: <20200418201944.482088-35-dima@arista.com>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200418201944.482088-1-dima@arista.com>
 References: <20200418201944.482088-1-dima@arista.com>
@@ -100,75 +100,118 @@ Introducing log-level parameter and KERN_UNSUPPRESSED [1] seems
 an easier approach than introducing more printk buffers.
 Also, it will consolidate printings with headers.
 
-Add log level argument to printk_address() as a preparation to introduce
-show_stack_loglvl().
+Introduce show_stack_loglvl(), that eventually will substitute
+show_stack().
 
-As a good side-effect show_fault_oops() now prints the address with
-KERN_EMREG as the rest of output, making sure there won't be situation
-where "PC: " is printed without actual address.
-
-Cc: Rich Felker <dalias@libc.org>
-Cc: linux-sh@vger.kernel.org
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: sparclinux@vger.kernel.org
 [1]: https://lore.kernel.org/lkml/20190528002412.1625-1-dima@arista.com/T/#u
+Acked-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Dmitry Safonov <dima@arista.com>
 ---
- arch/sh/include/asm/kdebug.h | 3 ++-
- arch/sh/kernel/dumpstack.c   | 6 +++---
- arch/sh/mm/fault.c           | 2 +-
- 3 files changed, 6 insertions(+), 5 deletions(-)
+ arch/sparc/kernel/process_32.c | 17 ++++++++++++-----
+ arch/sparc/kernel/traps_64.c   | 15 +++++++++++----
+ 2 files changed, 23 insertions(+), 9 deletions(-)
 
-diff --git a/arch/sh/include/asm/kdebug.h b/arch/sh/include/asm/kdebug.h
-index de8693fabb1d..960545306afa 100644
---- a/arch/sh/include/asm/kdebug.h
-+++ b/arch/sh/include/asm/kdebug.h
-@@ -12,7 +12,8 @@ enum die_val {
- };
- 
- /* arch/sh/kernel/dumpstack.c */
--extern void printk_address(unsigned long address, int reliable);
-+extern void printk_address(unsigned long address, int reliable,
-+			   const char *loglvl);
- extern void dump_mem(const char *str, const char *loglvl,
- 		     unsigned long bottom, unsigned long top);
- 
-diff --git a/arch/sh/kernel/dumpstack.c b/arch/sh/kernel/dumpstack.c
-index 2c1a78e5776b..959064b90055 100644
---- a/arch/sh/kernel/dumpstack.c
-+++ b/arch/sh/kernel/dumpstack.c
-@@ -44,9 +44,9 @@ void dump_mem(const char *str, const char *loglvl,
- 	}
+diff --git a/arch/sparc/kernel/process_32.c b/arch/sparc/kernel/process_32.c
+index 26cca65e9246..0b07de5618e5 100644
+--- a/arch/sparc/kernel/process_32.c
++++ b/arch/sparc/kernel/process_32.c
+@@ -145,10 +145,12 @@ void show_regs(struct pt_regs *r)
  }
  
--void printk_address(unsigned long address, int reliable)
-+void printk_address(unsigned long address, int reliable, const char *loglvl)
- {
--	printk(" [<%p>] %s%pS\n", (void *) address,
-+	printk("%s [<%p>] %s%pS\n", loglvl, (void *) address,
- 			reliable ? "" : "? ", (void *) address);
- }
- 
-@@ -118,7 +118,7 @@ static int print_trace_stack(void *data, char *name)
+ /*
+- * The show_stack is an external API which we do not use ourselves.
++ * The show_stack(), show_stack_loglvl() are external APIs which
++ * we do not use ourselves.
+  * The oops is printed in die_if_kernel.
   */
- static void print_trace_address(void *data, unsigned long addr, int reliable)
+-void show_stack(struct task_struct *tsk, unsigned long *_ksp)
++void show_stack_loglvl(struct task_struct *tsk, unsigned long *_ksp,
++		       const char *loglvl)
  {
--	printk_address(addr, reliable);
-+	printk_address(addr, reliable, (char *)data);
+ 	unsigned long pc, fp;
+ 	unsigned long task_base;
+@@ -170,11 +172,16 @@ void show_stack(struct task_struct *tsk, unsigned long *_ksp)
+ 			break;
+ 		rw = (struct reg_window32 *) fp;
+ 		pc = rw->ins[7];
+-		printk("[%08lx : ", pc);
+-		printk("%pS ] ", (void *) pc);
++		printk("%s[%08lx : ", loglvl, pc);
++		printk("%s%pS ] ", loglvl, (void *) pc);
+ 		fp = rw->ins[6];
+ 	} while (++count < 16);
+-	printk("\n");
++	printk("%s\n", loglvl);
++}
++
++void show_stack(struct task_struct *task, unsigned long *sp)
++{
++	show_stack_loglvl(task, sp, KERN_DEFAULT);
  }
  
- static const struct stacktrace_ops print_trace_ops = {
-diff --git a/arch/sh/mm/fault.c b/arch/sh/mm/fault.c
-index 5f23d7907597..f5da8f5ea389 100644
---- a/arch/sh/mm/fault.c
-+++ b/arch/sh/mm/fault.c
-@@ -196,7 +196,7 @@ show_fault_oops(struct pt_regs *regs, unsigned long address)
- 
- 	printk(KERN_CONT " at %08lx\n", address);
- 	printk(KERN_ALERT "PC:");
--	printk_address(regs->pc, 1);
-+	printk_address(regs->pc, 1, KERN_ALERT);
- 
- 	show_pte(NULL, address);
+ /*
+diff --git a/arch/sparc/kernel/traps_64.c b/arch/sparc/kernel/traps_64.c
+index 27778b65a965..8715bc93bd9d 100644
+--- a/arch/sparc/kernel/traps_64.c
++++ b/arch/sparc/kernel/traps_64.c
+@@ -18,6 +18,7 @@
+ #include <linux/smp.h>
+ #include <linux/mm.h>
+ #include <linux/init.h>
++#include <linux/kallsyms.h>
+ #include <linux/kdebug.h>
+ #include <linux/ftrace.h>
+ #include <linux/reboot.h>
+@@ -2452,7 +2453,8 @@ static void user_instruction_dump(unsigned int __user *pc)
+ 	printk("\n");
  }
+ 
+-void show_stack(struct task_struct *tsk, unsigned long *_ksp)
++void show_stack_loglvl(struct task_struct *tsk, unsigned long *_ksp,
++			 const char *loglvl)
+ {
+ 	unsigned long fp, ksp;
+ 	struct thread_info *tp;
+@@ -2476,7 +2478,7 @@ void show_stack(struct task_struct *tsk, unsigned long *_ksp)
+ 
+ 	fp = ksp + STACK_BIAS;
+ 
+-	printk("Call Trace:\n");
++	printk("%sCall Trace:\n", loglvl);
+ 	do {
+ 		struct sparc_stackf *sf;
+ 		struct pt_regs *regs;
+@@ -2497,14 +2499,14 @@ void show_stack(struct task_struct *tsk, unsigned long *_ksp)
+ 			fp = (unsigned long)sf->fp + STACK_BIAS;
+ 		}
+ 
+-		printk(" [%016lx] %pS\n", pc, (void *) pc);
++		print_ip_sym(loglvl, pc);
+ #ifdef CONFIG_FUNCTION_GRAPH_TRACER
+ 		if ((pc + 8UL) == (unsigned long) &return_to_handler) {
+ 			struct ftrace_ret_stack *ret_stack;
+ 			ret_stack = ftrace_graph_get_ret_stack(tsk, graph);
+ 			if (ret_stack) {
+ 				pc = ret_stack->ret;
+-				printk(" [%016lx] %pS\n", pc, (void *) pc);
++				print_ip_sym(loglvl, pc);
+ 				graph++;
+ 			}
+ 		}
+@@ -2512,6 +2514,11 @@ void show_stack(struct task_struct *tsk, unsigned long *_ksp)
+ 	} while (++count < 16);
+ }
+ 
++void show_stack(struct task_struct *tsk, unsigned long *_ksp)
++{
++	show_stack_loglvl(task, sp, KERN_DEFAULT);
++}
++
+ static inline struct reg_window *kernel_stack_up(struct reg_window *rw)
+ {
+ 	unsigned long fp = rw->ins[6];
 -- 
 2.26.0
 
