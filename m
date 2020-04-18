@@ -4,56 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C222C38A29
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:44:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 433D2C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:44:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1A5D42220A
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:44:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23C6922253
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:44:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587221077;
-	bh=OrQDEZwaBLAejk69UTzq40l8Q0RYaVFDj1NkNn8/XbQ=;
+	s=default; t=1587221080;
+	bh=UMlaP/NeGsbjNpFWIDP5Jdm0OEQJeTjnAjNiEBovdZU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cween9nuo4Vl5WWBmCZpALNudSURt8so77gbIuB0tSnwWpS3DFGvjoCm15hkSp/3G
-	 1xCvE7bCx62Xo4rMGn0r9BvZyfY4xh7TJvPG+9bSUo5VKcnnYWIpIhT+i8I/1XsWZD
-	 2b5kL7T1N8Q8ohQSKlBVv4RVfVSmo7wYW5nJVo6Y=
+	b=NnZ6XKc3/TCQdq+xIQ3KZELNiPshPq4xesm6LAV/EFfQbE+MXm3EHqxseCZ/P9w95
+	 mIWzXukmd5EuiTns93Ty3RpSCsvqoe82bTjfUz/q8vTguFyivAxMPKnxDYoLxif/g+
+	 7ocy7n6bXP19BYBVOAThBX4nVBUIu/VW3U7Ani5k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728845AbgDROof (ORCPT
+        id S1728847AbgDROoi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 10:44:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56232 "EHLO mail.kernel.org"
+        Sat, 18 Apr 2020 10:44:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56320 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728817AbgDROoa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 10:44:30 -0400
+        id S1728827AbgDROoc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 10:44:32 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1E8F121D79;
-        Sat, 18 Apr 2020 14:44:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1CD242220A;
+        Sat, 18 Apr 2020 14:44:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587221069;
-        bh=OrQDEZwaBLAejk69UTzq40l8Q0RYaVFDj1NkNn8/XbQ=;
+        s=default; t=1587221071;
+        bh=UMlaP/NeGsbjNpFWIDP5Jdm0OEQJeTjnAjNiEBovdZU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Yj2Oo5vdo0MfhFxW4lMc78xcoGgRCmt8MMj+cpE1EakzT4EmK+2RM+JpfyCYZB3b7
-         FyWuOQMrAZoI9LYm9FXSvfwTzNH3OjzDN/ypZbVhjTkrvhr3VBeDxeYxTIPEmqquZQ
-         GRDDJAGIcbT91hr6kte1NNMrqEJ72YnDI7M9prfY=
+        b=BCwEj0IEhUOw/uOJv4QiXZXKnTHkyr1D2X2vDosZd0+cIG8ylDjHCO8yL0bYpnfqh
+         gxSj5fgeyBdurnXQm3krwdD8iq2X/0GAwCyOXyU5iWP3XqbJqJZBXCqY4HGngxcBGI
+         0rZi3rxGGbOM3AeeUrcEoiIF4iWg7v88xWdFvSxo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Changwei Ge <chge@linux.alibaba.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Joseph Qi <joseph.qi@linux.alibaba.com>,
-        Mark Fasheh <mark@fasheh.com>,
-        Joel Becker <jlbec@evilplan.org>,
-        Junxiao Bi <junxiao.bi@oracle.com>,
-        Changwei Ge <gechangwei@live.cn>, Gang He <ghe@suse.com>,
-        Jun Piao <piaojun@huawei.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>, ocfs2-devel@oss.oracle.com
-Subject: [PATCH AUTOSEL 4.9 18/23] ocfs2: no need try to truncate file beyond i_size
-Date:   Sat, 18 Apr 2020 10:44:00 -0400
-Message-Id: <20200418144405.10565-18-sashal@kernel.org>
+Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
+        linux-ide@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 20/23] libata: Return correct status in sata_pmp_eh_recover_pm() when ATA_DFLAG_DETACH is set
+Date:   Sat, 18 Apr 2020 10:44:02 -0400
+Message-Id: <20200418144405.10565-20-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200418144405.10565-1-sashal@kernel.org>
 References: <20200418144405.10565-1-sashal@kernel.org>
@@ -66,60 +59,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Changwei Ge <chge@linux.alibaba.com>
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-[ Upstream commit 783fda856e1034dee90a873f7654c418212d12d7 ]
+[ Upstream commit 8305f72f952cff21ce8109dc1ea4b321c8efc5af ]
 
-Linux fallocate(2) with FALLOC_FL_PUNCH_HOLE mode set, its offset can
-exceed the inode size.  Ocfs2 now doesn't allow that offset beyond inode
-size.  This restriction is not necessary and violates fallocate(2)
-semantics.
+During system resume from suspend, this can be observed on ASM1062 PMP
+controller:
 
-If fallocate(2) offset is beyond inode size, just return success and do
-nothing further.
+ata10.01: SATA link down (SStatus 0 SControl 330)
+ata10.02: hard resetting link
+ata10.02: SATA link down (SStatus 0 SControl 330)
+ata10.00: configured for UDMA/133
+Kernel panic - not syncing: stack-protector: Kernel
+ in: sata_pmp_eh_recover+0xa2b/0xa40
 
-Otherwise, ocfs2 will crash the kernel.
+CPU: 2 PID: 230 Comm: scsi_eh_9 Tainted: P OE
+#49-Ubuntu
+Hardware name: System manufacturer System Product
+ 1001 12/10/2017
+Call Trace:
+dump_stack+0x63/0x8b
+panic+0xe4/0x244
+? sata_pmp_eh_recover+0xa2b/0xa40
+__stack_chk_fail+0x19/0x20
+sata_pmp_eh_recover+0xa2b/0xa40
+? ahci_do_softreset+0x260/0x260 [libahci]
+? ahci_do_hardreset+0x140/0x140 [libahci]
+? ata_phys_link_offline+0x60/0x60
+? ahci_stop_engine+0xc0/0xc0 [libahci]
+sata_pmp_error_handler+0x22/0x30
+ahci_error_handler+0x45/0x80 [libahci]
+ata_scsi_port_error_handler+0x29b/0x770
+? ata_scsi_cmd_error_handler+0x101/0x140
+ata_scsi_error+0x95/0xd0
+? scsi_try_target_reset+0x90/0x90
+scsi_error_handler+0xd0/0x5b0
+kthread+0x121/0x140
+? scsi_eh_get_sense+0x200/0x200
+? kthread_create_worker_on_cpu+0x70/0x70
+ret_from_fork+0x22/0x40
+Kernel Offset: 0xcc00000 from 0xffffffff81000000
+(relocation range: 0xffffffff80000000-0xffffffffbfffffff)
 
-  kernel BUG at fs/ocfs2//alloc.c:7264!
-   ocfs2_truncate_inline+0x20f/0x360 [ocfs2]
-   ocfs2_remove_inode_range+0x23c/0xcb0 [ocfs2]
-   __ocfs2_change_file_space+0x4a5/0x650 [ocfs2]
-   ocfs2_fallocate+0x83/0xa0 [ocfs2]
-   vfs_fallocate+0x148/0x230
-   SyS_fallocate+0x48/0x80
-   do_syscall_64+0x79/0x170
+Since sata_pmp_eh_recover_pmp() doens't set rc when ATA_DFLAG_DETACH is
+set, sata_pmp_eh_recover() continues to run. During retry it triggers
+the stack protector.
 
-Signed-off-by: Changwei Ge <chge@linux.alibaba.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
-Cc: Mark Fasheh <mark@fasheh.com>
-Cc: Joel Becker <jlbec@evilplan.org>
-Cc: Junxiao Bi <junxiao.bi@oracle.com>
-Cc: Changwei Ge <gechangwei@live.cn>
-Cc: Gang He <ghe@suse.com>
-Cc: Jun Piao <piaojun@huawei.com>
-Cc: <stable@vger.kernel.org>
-Link: http://lkml.kernel.org/r/20200407082754.17565-1-chge@linux.alibaba.com
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Set correct rc in sata_pmp_eh_recover_pmp() to let sata_pmp_eh_recover()
+jump to pmp_fail directly.
+
+BugLink: https://bugs.launchpad.net/bugs/1821434
+Cc: stable@vger.kernel.org
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ocfs2/alloc.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/ata/libata-pmp.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/fs/ocfs2/alloc.c b/fs/ocfs2/alloc.c
-index 06089becca607..dfb8a923921e0 100644
---- a/fs/ocfs2/alloc.c
-+++ b/fs/ocfs2/alloc.c
-@@ -7246,6 +7246,10 @@ int ocfs2_truncate_inline(struct inode *inode, struct buffer_head *di_bh,
- 	struct ocfs2_dinode *di = (struct ocfs2_dinode *)di_bh->b_data;
- 	struct ocfs2_inline_data *idata = &di->id2.i_data;
+diff --git a/drivers/ata/libata-pmp.c b/drivers/ata/libata-pmp.c
+index 85aa76116a305..7924d0635718d 100644
+--- a/drivers/ata/libata-pmp.c
++++ b/drivers/ata/libata-pmp.c
+@@ -764,6 +764,7 @@ static int sata_pmp_eh_recover_pmp(struct ata_port *ap,
  
-+	/* No need to punch hole beyond i_size. */
-+	if (start >= i_size_read(inode))
-+		return 0;
-+
- 	if (end > i_size_read(inode))
- 		end = i_size_read(inode);
+ 	if (dev->flags & ATA_DFLAG_DETACH) {
+ 		detach = 1;
++		rc = -ENODEV;
+ 		goto fail;
+ 	}
  
 -- 
 2.20.1
