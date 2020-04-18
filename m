@@ -2,277 +2,103 @@ Return-Path: <SRS0=3CHW=6C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 774AFC38A29
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:48:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96814C38A29
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:49:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 52CB021BE5
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:48:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="aie41My6"
+	by mail.kernel.org (Postfix) with ESMTP id 73A7921D7E
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:49:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587221344;
+	bh=vU+2AAZL6lc+EETr5u0F7lT9UJ/xX/iksxwZJPHuOmY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=rFDCN+aPMBv83r+GRXamA9Pg19lASUT/cVErb2oW6Gl+qEU6EtLdapmL7QTzevR+v
+	 /e6XooBOgn5mpHXCwKN8b3BHKnHcm+KKKaTYcHCESS5EbIdvStYGEHuryXLHLjrhkg
+	 7K3ELwXeWqGZAmfz6RuBn6+5RYt6n3jeEvZ1z8d4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727769AbgDROs6 (ORCPT
+        id S1728624AbgDROni (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 10:48:58 -0400
-Received: from esa6.microchip.iphmx.com ([216.71.154.253]:59343 "EHLO
-        esa6.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726921AbgDROsz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 10:48:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1587221334; x=1618757334;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=5aMZMPWPJ01c4ud7PttNThIhPars+cFRj/VqphxXMkA=;
-  b=aie41My6jHDOmohsriVDsJCAvCiXuSF5u/K5ZNMAM9RzpFwtGuXkA/sP
-   074uBJzqc+lOZGZul4Gr/4QxKDV/eAVYA0TP0wd79M5ya3m/mMUGePu4J
-   K4be713OvK/1ADWn+pahhLqGKxGIjxO6lt6dfH1R3XVX94fN+XK/sEseM
-   i+k40S6fU8rOCBoy8tVQqPtY7G6tMwZelg/TmM8aVk7KBqfNJ9SW5GhML
-   yDaxpV1lSOFxOCWsCcG69XNivMmId4LGDULsbgFYsUMLZ3A8D+2RcN3xl
-   NDMWIXgBSoo5AGt8O94NpULnO9+kulCtK6hqLj1rKYg6mq7BxtNHVa7h3
-   w==;
-IronPort-SDR: VTv0V/iVkXVnsoXPomnwZpETgmZoJaljdZRFU2DrfjUMRKfTdQidgDts9SQqKLMYl0+s7yUNDU
- dvIXANFd7yd6BiKGaHkR7fiUQlOseCbfLUpPTzNPSSt37ag3Yh1OlWG01VceF/kpKlEOImaY8m
- KhCSgG4rpP3CNbEPYLOv1xPp5gHcfej2FwmrKCZcsQ1Vh94NgNvmzusx7oSeDdScYypiE/L0ol
- s2xJAcY7uwxDp5CTNMnI90sXdDX6MKVTxCmpuXJ+o+QCTU0JIJaKwAyFAkEl8Z0Y3uQpHVR3mw
- Tu4=
-X-IronPort-AV: E=Sophos;i="5.72,399,1580799600"; 
-   d="scan'208";a="9620713"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 18 Apr 2020 07:48:53 -0700
-Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Sat, 18 Apr 2020 07:48:30 -0700
-Received: from localhost (10.10.115.15) by chn-vm-ex04.mchp-main.com
- (10.10.85.152) with Microsoft SMTP Server id 15.1.1713.5 via Frontend
- Transport; Sat, 18 Apr 2020 07:48:53 -0700
-Date:   Sat, 18 Apr 2020 16:48:52 +0200
-From:   Horatiu Vultur <horatiu.vultur@microchip.com>
-To:     Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
-CC:     <davem@davemloft.net>, <jiri@resnulli.us>, <ivecera@redhat.com>,
-        <kuba@kernel.org>, <roopa@cumulusnetworks.com>,
-        <olteanv@gmail.com>, <andrew@lunn.ch>,
-        <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <bridge@lists.linux-foundation.org>, <UNGLinuxDriver@microchip.com>
-Subject: Re: [RFC net-next v5 8/9] bridge: mrp: Implement netlink interface
- to configure MRP
-Message-ID: <20200418144852.yfnxygdnxlcmmotj@soft-dev3.microsemi.net>
-References: <20200414112618.3644-1-horatiu.vultur@microchip.com>
- <20200414112618.3644-9-horatiu.vultur@microchip.com>
- <ef5f40ad-6d35-0897-3355-60c97777b79a@cumulusnetworks.com>
+        Sat, 18 Apr 2020 10:43:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54470 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728575AbgDROn0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 10:43:26 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6B41421D82;
+        Sat, 18 Apr 2020 14:43:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587221005;
+        bh=vU+2AAZL6lc+EETr5u0F7lT9UJ/xX/iksxwZJPHuOmY=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=1eXVAXJrWGLmu4c2WjBk2sEnnq14va3olocuKk2c49kLDWaids4qGXafi27piWGho
+         TDroH9O6uvC3MCmg0WNQxZHMVZMLUT8ThkaCEWzh3e31zNKUhMRIehG9Icw9ywNw7W
+         RdMrKWgyKOzqtTgJa0MLzfbB/cGldpWU8h1anREs=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Murthy Bhat <Murthy.Bhat@microsemi.com>,
+        Scott Benesh <scott.benesh@microsemi.com>,
+        Scott Teel <scott.teel@microsemi.com>,
+        Kevin Barnett <kevin.barnett@microsemi.com>,
+        Don Brace <don.brace@microsemi.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, esc.storagedev@microsemi.com,
+        linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 46/47] scsi: smartpqi: fix call trace in device discovery
+Date:   Sat, 18 Apr 2020 10:42:26 -0400
+Message-Id: <20200418144227.9802-46-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200418144227.9802-1-sashal@kernel.org>
+References: <20200418144227.9802-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
-In-Reply-To: <ef5f40ad-6d35-0897-3355-60c97777b79a@cumulusnetworks.com>
-User-Agent: NeoMutt/20180716
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The 04/18/2020 11:21, Nikolay Aleksandrov wrote:
-> EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
-> 
-> On 14/04/2020 14:26, Horatiu Vultur wrote:
-> > Implement netlink interface to configure MRP. The implementation
-> > will do sanity checks over the attributes and then eventually call the MRP
-> > interface.
-> >
-> > Signed-off-by: Horatiu Vultur <horatiu.vultur@microchip.com>
-> > ---
-> >  net/bridge/br_mrp_netlink.c | 164 ++++++++++++++++++++++++++++++++++++
-> >  1 file changed, 164 insertions(+)
-> >  create mode 100644 net/bridge/br_mrp_netlink.c
-> >
-> > diff --git a/net/bridge/br_mrp_netlink.c b/net/bridge/br_mrp_netlink.c
-> > new file mode 100644
-> > index 000000000000..0d8253311595
-> > --- /dev/null> +++ b/net/bridge/br_mrp_netlink.c
-> > @@ -0,0 +1,164 @@
-> > +// SPDX-License-Identifier: GPL-2.0-or-later
-> > +
-> > +#include <net/genetlink.h>
-> > +
-> > +#include <uapi/linux/mrp_bridge.h>
-> > +#include "br_private.h"
-> > +#include "br_private_mrp.h"
-> > +
-> > +static const struct nla_policy br_mrp_policy[IFLA_BRIDGE_MRP_MAX + 1] = {
-> > +     [IFLA_BRIDGE_MRP_UNSPEC]        = { .type = NLA_REJECT },
-> > +     [IFLA_BRIDGE_MRP_INSTANCE]      = { .type = NLA_EXACT_LEN,
-> > +                                         .len = sizeof(struct br_mrp_instance)},
-> > +     [IFLA_BRIDGE_MRP_PORT_STATE]    = { .type = NLA_U32 },
-> > +     [IFLA_BRIDGE_MRP_PORT_ROLE]     = { .type = NLA_EXACT_LEN,
-> > +                                         .len = sizeof(struct br_mrp_port_role)},
-> > +     [IFLA_BRIDGE_MRP_RING_STATE]    = { .type = NLA_EXACT_LEN,
-> > +                                         .len = sizeof(struct br_mrp_ring_state)},
-> > +     [IFLA_BRIDGE_MRP_RING_ROLE]     = { .type = NLA_EXACT_LEN,
-> > +                                         .len = sizeof(struct br_mrp_ring_role)},
-> > +     [IFLA_BRIDGE_MRP_START_TEST]    = { .type = NLA_EXACT_LEN,
-> > +                                         .len = sizeof(struct br_mrp_start_test)},
-> > +};
-> > +
-> > +int br_mrp_parse(struct net_bridge *br, struct net_bridge_port *p,
-> > +              struct nlattr *attr, int cmd, struct netlink_ext_ack *extack)
-> > +{
-> > +     struct nlattr *tb[IFLA_BRIDGE_MRP_MAX + 1];
-> > +     int err;
-> > +
-> > +     if (br->stp_enabled != BR_NO_STP) {
-> > +             br_warn(br, "MRP can't be enabled if STP is already enabled\n");
-> 
-> Use extack.
-> 
-> > +             return -EINVAL;
-> > +     }
-> > +
-> > +     err = nla_parse_nested(tb, IFLA_BRIDGE_MRP_MAX, attr,
-> > +                            NULL, extack);
-> > +     if (err)
-> > +             return err;
-> > +
-> > +     if (tb[IFLA_BRIDGE_MRP_INSTANCE]) {
-> > +             struct br_mrp_instance *instance =
-> > +                     nla_data(tb[IFLA_BRIDGE_MRP_INSTANCE]);
-> > +
-> > +             if (cmd == RTM_SETLINK)
-> > +                     err = br_mrp_add(br, instance);
-> > +             else
-> > +                     err = br_mrp_del(br, instance);
-> > +             if (err)
-> > +                     return err;
-> > +     }
-> > +
-> > +     if (tb[IFLA_BRIDGE_MRP_PORT_STATE]) {
-> > +             enum br_mrp_port_state_type state =
-> > +                     nla_get_u32(tb[IFLA_BRIDGE_MRP_PORT_STATE]);
-> > +
-> > +             err = br_mrp_set_port_state(p, state);
-> > +             if (err)
-> > +                     return err;
-> > +     }
-> > +
-> > +     if (tb[IFLA_BRIDGE_MRP_PORT_ROLE]) {
-> > +             struct br_mrp_port_role *role =
-> > +                     nla_data(tb[IFLA_BRIDGE_MRP_PORT_ROLE]);
-> > +
-> > +             err = br_mrp_set_port_role(p, role);
-> > +             if (err)
-> > +                     return err;
-> > +     }
-> > +
-> > +     if (tb[IFLA_BRIDGE_MRP_RING_STATE]) {
-> > +             struct br_mrp_ring_state *state =
-> > +                     nla_data(tb[IFLA_BRIDGE_MRP_RING_STATE]);
-> > +
-> > +             err = br_mrp_set_ring_state(br, state);
-> > +             if (err)
-> > +                     return err;
-> > +     }
-> > +
-> > +     if (tb[IFLA_BRIDGE_MRP_RING_ROLE]) {
-> > +             struct br_mrp_ring_role *role =
-> > +                     nla_data(tb[IFLA_BRIDGE_MRP_RING_ROLE]);
-> > +
-> > +             err = br_mrp_set_ring_role(br, role);
-> > +             if (err)
-> > +                     return err;
-> > +     }
-> > +
-> > +     if (tb[IFLA_BRIDGE_MRP_START_TEST]) {
-> > +             struct br_mrp_start_test *test =
-> > +                     nla_data(tb[IFLA_BRIDGE_MRP_START_TEST]);
-> > +
-> > +             err = br_mrp_start_test(br, test);
-> > +             if (err)
-> > +                     return err;
-> > +     }
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > +static inline size_t br_mrp_nlmsg_size(void)
-> > +{
-> > +     return NLMSG_ALIGN(sizeof(struct ifinfomsg))
-> > +             + nla_total_size(4); /* IFLA_BRIDGE_MRP_RING_OPEN */
-> > +}
-> > +
-> > +int br_mrp_port_open(struct net_device *dev, u8 loc)
-> > +{
-> > +     struct nlattr *af, *mrp;
-> > +     struct ifinfomsg *hdr;
-> > +     struct nlmsghdr *nlh;
-> > +     struct sk_buff *skb;
-> > +     int err = -ENOBUFS;
-> > +     struct net *net;
-> > +
-> > +     net = dev_net(dev);
-> > +
-> > +     skb = nlmsg_new(br_mrp_nlmsg_size(), GFP_ATOMIC);
-> > +     if (!skb)
-> > +             goto errout;
-> > +
-> > +     nlh = nlmsg_put(skb, 0, 0, RTM_NEWLINK, sizeof(*hdr), 0);
-> > +     if (!nlh)
-> > +             goto errout;
-> > +
-> > +     hdr = nlmsg_data(nlh);
-> > +     hdr->ifi_family = AF_BRIDGE;
-> > +     hdr->__ifi_pad = 0;
-> > +     hdr->ifi_type = dev->type;
-> > +     hdr->ifi_index = dev->ifindex;
-> > +     hdr->ifi_flags = dev_get_flags(dev);
-> > +     hdr->ifi_change = 0;
-> > +
-> > +     af = nla_nest_start_noflag(skb, IFLA_AF_SPEC);
-> > +     if (!af) {
-> > +             err = -EMSGSIZE;
-> > +             goto nla_put_failure;
-> > +     }
-> > +
-> > +     mrp = nla_nest_start_noflag(skb, IFLA_BRIDGE_MRP);
-> > +     if (!mrp) {
-> > +             err = -EMSGSIZE;
-> > +             goto nla_put_failure;
-> > +     }
-> > +
-> > +     err = nla_put_u32(skb, IFLA_BRIDGE_MRP_RING_OPEN, loc);
-> > +     if (err)
-> > +             goto nla_put_failure;
-> > +
-> > +     nla_nest_end(skb, mrp);
-> > +     nla_nest_end(skb, af);
-> > +     nlmsg_end(skb, nlh);
-> > +
-> > +     rtnl_notify(skb, net, 0, RTNLGRP_LINK, NULL, GFP_ATOMIC);
-> > +     return 0;
-> > +
-> > +nla_put_failure:
-> > +     nlmsg_cancel(skb, nlh);
-> > +     kfree_skb(skb);
-> > +
-> > +errout:
-> > +     rtnl_set_sk_err(net, RTNLGRP_LINK, err);
-> > +     return err;
-> > +}
-> > +EXPORT_SYMBOL(br_mrp_port_open);
-> >
-> 
-> Why do you need this function when you already have br_ifinfo_notify() ?
+From: Murthy Bhat <Murthy.Bhat@microsemi.com>
 
-The reason of having this function was that, if I wanted to use the
-br_ifinfo_notify(), I had to add an extra field in the net_bridge_port
-just to store the loc variable. Which is not used anywhere else so I was
-not sure how good it is.
-But I can do these changes in the next version.
+[ Upstream commit b969261134c1b990b96ea98fe5e0fcf8ec937c04 ]
 
-> 
+Use sas_phy_delete rather than sas_phy_free which, according to
+comments, should not be called for PHYs that have been set up
+successfully.
 
+Link: https://lore.kernel.org/r/157048748876.11757.17773443136670011786.stgit@brunhilda
+Reviewed-by: Scott Benesh <scott.benesh@microsemi.com>
+Reviewed-by: Scott Teel <scott.teel@microsemi.com>
+Reviewed-by: Kevin Barnett <kevin.barnett@microsemi.com>
+Signed-off-by: Murthy Bhat <Murthy.Bhat@microsemi.com>
+Signed-off-by: Don Brace <don.brace@microsemi.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/scsi/smartpqi/smartpqi_sas_transport.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/scsi/smartpqi/smartpqi_sas_transport.c b/drivers/scsi/smartpqi/smartpqi_sas_transport.c
+index b209a35e482ef..01dfb97b07786 100644
+--- a/drivers/scsi/smartpqi/smartpqi_sas_transport.c
++++ b/drivers/scsi/smartpqi/smartpqi_sas_transport.c
+@@ -50,9 +50,9 @@ static void pqi_free_sas_phy(struct pqi_sas_phy *pqi_sas_phy)
+ 	struct sas_phy *phy = pqi_sas_phy->phy;
+ 
+ 	sas_port_delete_phy(pqi_sas_phy->parent_port->port, phy);
+-	sas_phy_free(phy);
+ 	if (pqi_sas_phy->added_to_port)
+ 		list_del(&pqi_sas_phy->phy_list_entry);
++	sas_phy_delete(phy);
+ 	kfree(pqi_sas_phy);
+ }
+ 
 -- 
-/Horatiu
+2.20.1
+
