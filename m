@@ -4,55 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACB03C38A2F
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:10:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FF23C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:10:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 84FF922244
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:10:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6ED8821D82
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:10:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587219031;
-	bh=Z7KdvEPwnuQWnkjL+BM3WAvJLHQISfNthr7UMBLVDas=;
+	s=default; t=1587219034;
+	bh=SC/vqzeMx1k3k9AAbtjSE5BmU6VVJ9MANDBe3abuSXk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BI854Rs1yBE5i5MZZ905KuIhV6Tb80CJ8UM0RgAc45c4RjS45RZGGdo15/1Bnx9sI
-	 oC0NrsKKMgoEzf4t59WqwG6wjvNN6uHEOtnFDW4LMsCRHuIRopUHfBNPLxxViyhGaj
-	 VklprRJUnIAY/03rza+jWVke8YsoKtEAACwBSuIU=
+	b=XBb6cLDu82DK9y0YLMxDLZn69AJyP9Q0g7/mL6wbsTgnwrEH8Y7Vmas50yuViyqnV
+	 F0obf3Dh/AzO8eaXZMu9K2LtOYatP1fVJYLtE2T4pczbFp/ZE5hJ58O579sgA9F2Ge
+	 WXmphNz2GF3AH6xGDdifnXINleDwPWIdpJVHST1M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727845AbgDROKa (ORCPT
+        id S1727877AbgDROKd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 10:10:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38522 "EHLO mail.kernel.org"
+        Sat, 18 Apr 2020 10:10:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38660 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727784AbgDROKZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 10:10:25 -0400
+        id S1727830AbgDROK3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 10:10:29 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 454A12220A;
-        Sat, 18 Apr 2020 14:10:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EF11F2220A;
+        Sat, 18 Apr 2020 14:10:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587219025;
-        bh=Z7KdvEPwnuQWnkjL+BM3WAvJLHQISfNthr7UMBLVDas=;
+        s=default; t=1587219028;
+        bh=SC/vqzeMx1k3k9AAbtjSE5BmU6VVJ9MANDBe3abuSXk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LPjHfaB6cbAYgyFxq46eK3590taEiut+Ul0PdN0HszhQAL5sbZEU09Aap1H6gupqF
-         yJVamQnH6cDO+/PvF5yL2BubSU3C+kDhtxDXDjoUskm51Vzd4fab6rp7AkuKmvh2Gc
-         vUcRFHPqCSwtX239jL1L5ePZWTJqvMEtTXB+GNdw=
+        b=T2COPg4SdTh/8TczdaIUExhQyRWawndAuyl3nBtO0Vs2XjWV5eOJ+KSbr5B+Xh/Xe
+         l0/bBkBcCej7bC+QTubQ2JEZeblM2VwIY1Ab/zTANfsGwDISi+Gt+4ruHTzlNIKW4m
+         2PDF+bJQ1OEWF1mvHCsnnNh2jf+R7ng/VpG3iHo0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     David Hildenbrand <david@redhat.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org,
-        linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 60/75] KVM: s390: vsie: Fix delivery of addressing exceptions
-Date:   Sat, 18 Apr 2020 10:08:55 -0400
-Message-Id: <20200418140910.8280-60-sashal@kernel.org>
+Cc:     =?UTF-8?q?Franti=C5=A1ek=20Ku=C4=8Dera?= <franta-linux@frantovo.cz>,
+        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>,
+        alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 5.5 63/75] ALSA: usb-audio: Add Pioneer DJ DJM-250MK2 quirk
+Date:   Sat, 18 Apr 2020 10:08:58 -0400
+Message-Id: <20200418140910.8280-63-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200418140910.8280-1-sashal@kernel.org>
 References: <20200418140910.8280-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -61,52 +60,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Hildenbrand <david@redhat.com>
+From: František Kučera <franta-linux@frantovo.cz>
 
-[ Upstream commit 4d4cee96fb7a3cc53702a9be8299bf525be4ee98 ]
+[ Upstream commit 73d8c94084341e2895169a0462dbc18167f01683 ]
 
-Whenever we get an -EFAULT, we failed to read in guest 2 physical
-address space. Such addressing exceptions are reported via a program
-intercept to the nested hypervisor.
+Pioneer DJ DJM-250MK2 is a mixer that acts like a USB sound card.
+The MIDI controller part is standard but the PCM part is "vendor specific".
+Output is enabled by this quirk: 8 channels, 48 000 Hz, S24_3LE.
+Input is not working.
 
-We faked the intercept, we have to return to guest 2. Instead, right
-now we would be returning -EFAULT from the intercept handler, eventually
-crashing the VM.
-the correct thing to do is to return 1 as rc == 1 is the internal
-representation of "we have to go back into g2".
-
-Addressing exceptions can only happen if the g2->g3 page tables
-reference invalid g2 addresses (say, either a table or the final page is
-not accessible - so something that basically never happens in sane
-environments.
-
-Identified by manual code inspection.
-
-Fixes: a3508fbe9dc6 ("KVM: s390: vsie: initial support for nested virtualization")
-Cc: <stable@vger.kernel.org> # v4.8+
-Signed-off-by: David Hildenbrand <david@redhat.com>
-Link: https://lore.kernel.org/r/20200403153050.20569-3-david@redhat.com
-Reviewed-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
-Reviewed-by: Christian Borntraeger <borntraeger@de.ibm.com>
-[borntraeger@de.ibm.com: fix patch description]
-Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
+Signed-off-by: František Kučera <franta-linux@frantovo.cz>
+Link: https://lore.kernel.org/r/20200401095907.3387-1-konference@frantovo.cz
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/kvm/vsie.c | 1 +
- 1 file changed, 1 insertion(+)
+ sound/usb/quirks-table.h | 42 ++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 42 insertions(+)
 
-diff --git a/arch/s390/kvm/vsie.c b/arch/s390/kvm/vsie.c
-index 076090f9e666c..4f6c22d72072a 100644
---- a/arch/s390/kvm/vsie.c
-+++ b/arch/s390/kvm/vsie.c
-@@ -1202,6 +1202,7 @@ static int vsie_run(struct kvm_vcpu *vcpu, struct vsie_page *vsie_page)
- 		scb_s->iprcc = PGM_ADDRESSING;
- 		scb_s->pgmilc = 4;
- 		scb_s->gpsw.addr = __rewind_psw(scb_s->gpsw, 4);
-+		rc = 1;
+diff --git a/sound/usb/quirks-table.h b/sound/usb/quirks-table.h
+index d187aa6d50db0..dcaf9eed9a415 100644
+--- a/sound/usb/quirks-table.h
++++ b/sound/usb/quirks-table.h
+@@ -3592,5 +3592,47 @@ AU0828_DEVICE(0x2040, 0x7270, "Hauppauge", "HVR-950Q"),
+ 		}
  	}
- 	return rc;
- }
+ },
++{
++	/*
++	 * Pioneer DJ DJM-250MK2
++	 * PCM is 8 channels out @ 48 fixed (endpoints 0x01).
++	 * The output from computer to the mixer is usable.
++	 *
++	 * The input (phono or line to computer) is not working.
++	 * It should be at endpoint 0x82 and probably also 8 channels,
++	 * but it seems that it works only with Pioneer proprietary software.
++	 * Even on officially supported OS, the Audacity was unable to record
++	 * and Mixxx to recognize the control vinyls.
++	 */
++	USB_DEVICE_VENDOR_SPEC(0x2b73, 0x0017),
++	.driver_info = (unsigned long) &(const struct snd_usb_audio_quirk) {
++		.ifnum = QUIRK_ANY_INTERFACE,
++		.type = QUIRK_COMPOSITE,
++		.data = (const struct snd_usb_audio_quirk[]) {
++			{
++				.ifnum = 0,
++				.type = QUIRK_AUDIO_FIXED_ENDPOINT,
++				.data = &(const struct audioformat) {
++					.formats = SNDRV_PCM_FMTBIT_S24_3LE,
++					.channels = 8, // outputs
++					.iface = 0,
++					.altsetting = 1,
++					.altset_idx = 1,
++					.endpoint = 0x01,
++					.ep_attr = USB_ENDPOINT_XFER_ISOC|
++						USB_ENDPOINT_SYNC_ASYNC,
++					.rates = SNDRV_PCM_RATE_48000,
++					.rate_min = 48000,
++					.rate_max = 48000,
++					.nr_rates = 1,
++					.rate_table = (unsigned int[]) { 48000 }
++				}
++			},
++			{
++				.ifnum = -1
++			}
++		}
++	}
++},
+ 
+ #undef USB_DEVICE_VENDOR_SPEC
 -- 
 2.20.1
 
