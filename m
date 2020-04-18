@@ -2,157 +2,171 @@ Return-Path: <SRS0=3CHW=6C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4259DC2BA19
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 03:14:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3A08C2BA19
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 03:18:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1E97021D94
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 03:14:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B23121D94
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 03:18:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="JpnN7FzC"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BhjWeQqf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726024AbgDRDOP (ORCPT
+        id S1725873AbgDRDSs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 23:14:15 -0400
-Received: from mailout1.samsung.com ([203.254.224.24]:29742 "EHLO
-        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725796AbgDRDOO (ORCPT
+        Fri, 17 Apr 2020 23:18:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41500 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725320AbgDRDSr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 23:14:14 -0400
-Received: from epcas2p2.samsung.com (unknown [182.195.41.54])
-        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200418031412epoutp01af1e67ff95ac774476c7cf936ac14f23~Gy3wwj-ij2190921909epoutp01C
-        for <linux-kernel@vger.kernel.org>; Sat, 18 Apr 2020 03:14:12 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200418031412epoutp01af1e67ff95ac774476c7cf936ac14f23~Gy3wwj-ij2190921909epoutp01C
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1587179652;
-        bh=crD58NOw86V85XwGNNcCoav9TwvzhMw5wIbsy3PoxVQ=;
-        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-        b=JpnN7FzCjGnm0Cj+kBHAZiBqDeqvB86fLt7+dIG+H02dvjDOfEV4uDxejuF/DH40t
-         uI8IIvqdxVoBqzaqyT+/yW3lhbb42VFrsglV/ANo9K8ToOeSgAX8jTBAkpDjdnbdLf
-         h08Yo//cVW8CWXyX10hPiZLp73JhNb+txdosXL2c=
-Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
-        epcas2p3.samsung.com (KnoxPortal) with ESMTP id
-        20200418031412epcas2p358a37f6d306712e71b47cf9faac6921d~Gy3wRM6r32383623836epcas2p3_;
-        Sat, 18 Apr 2020 03:14:12 +0000 (GMT)
-Received: from epsmges2p4.samsung.com (unknown [182.195.40.185]) by
-        epsnrtp4.localdomain (Postfix) with ESMTP id 493yjZ1mgLzMqYkV; Sat, 18 Apr
-        2020 03:14:10 +0000 (GMT)
-Received: from epcas2p3.samsung.com ( [182.195.41.55]) by
-        epsmges2p4.samsung.com (Symantec Messaging Gateway) with SMTP id
-        C8.FE.04647.2807A9E5; Sat, 18 Apr 2020 12:14:10 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas2p3.samsung.com (KnoxPortal) with ESMTPA id
-        20200418031409epcas2p320d403d8caaa77bfe526def8d237b0f7~Gy3t4pbOx0279702797epcas2p3E;
-        Sat, 18 Apr 2020 03:14:09 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200418031409epsmtrp18cb216f595057f72fc7d8a8d837144a2~Gy3t37qND0377203772epsmtrp19;
-        Sat, 18 Apr 2020 03:14:09 +0000 (GMT)
-X-AuditID: b6c32a48-88dff70000001227-0d-5e9a70823ee1
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        A9.2C.04024.1807A9E5; Sat, 18 Apr 2020 12:14:09 +0900 (KST)
-Received: from KORCO038849 (unknown [12.36.155.199]) by epsmtip1.samsung.com
-        (KnoxPortal) with ESMTPA id
-        20200418031409epsmtip141ab7faae12fac7e4e96d1addbddb9ff~Gy3tqaFNS2625326253epsmtip1R;
-        Sat, 18 Apr 2020 03:14:09 +0000 (GMT)
-From:   "Sunyoung Kang" <sy0816.kang@samsung.com>
-To:     "'Greg Kroah-Hartman'" <gregkh@linuxfoundation.org>
-Cc:     <mchehab@kernel.org>, "'Hans Verkuil'" <hverkuil-cisco@xs4all.nl>,
-        "'Arnd Bergmann'" <arnd@arndb.de>,
-        "'Thomas Gleixner'" <tglx@linutronix.de>,
-        <linux-media@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200417083506.GB141762@kroah.com>
-Subject: RE: [PATCH] media: v4l2-compat-ioctl32.c: copy reserved2 field in
- get_v4l2_buffer32
-Date:   Sat, 18 Apr 2020 12:14:09 +0900
-Message-ID: <145301d6152f$6d5b6240$481226c0$@samsung.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQJ7gu42VSZ3MiAb9Gs8yfburY36QgIZ9gAxAlM3OUqnD+90kA==
-Content-Language: ko
-X-Brightmail-Tracker: H4sIAAAAAAAAA01SaUwTWxT2dtqZqbyaa0E98ow2Y4xBg7TVlgHpi1Gik2gIavyDhjqhE0rs
-        MukUl5dnNM/I9ojiHiooUcKiJmgBxS2yGFGjKBISdyUCARNcaNQI1rwOUyP/vnPvt5xz76EJ
-        fS0ZT+d5/ILPw7sYcqr6ckdCcuK/YiDb+KI4hg0fvkOx+842kGx3+Ss123OtgmRLLzZr2Jrg
-        DxXbGDxGrKC48bHDiAueKya5D11dFHer8gLFhYJzuftfQlQmmeVKcwq8Q/AZBE+O15HnybUx
-        azfaV9ktVqMp0ZTCJjMGD+8WbEz6uszE1XmuSC+MYTvvyo8cZfKSxCT9lebz5vsFg9Mr+W2M
-        IDpcoskkLpF4t5TvyV2S43WnmoxGsyXC3Opyll5/TIoj2p19tXdUe9ERugRpacDLoG7oi7oE
-        TaX1uAXBx+shlVKMIggPDlBK8RVB46k21S9J/aXqKOsmgoGh7mgxjODN6AMks0icBIX7P1My
-        jsPJUNnXOWFF4F4EdTeaJqy02Ai191ojmKZjcTY8vbRQhmq8AK683SlDHU6B/Q9ny2Qdng73
-        yvvVMibwPLgyUkEo/Rjg+0CNRklaCf0t41FOHJwsLiDkVMDjJLSebqZkT8Dp8PQlp2hj4X1n
-        E6XgeBg+WBDFe+B4KKRRtGUIhqo6NcrFUggMFiLZh8AJ0HAtSbGcD7efR2OnQVFHOJqkg6IC
-        vQIXwMVRs+LxJ4yM9KAyxAQmzRWYNFdgUv+B31FVSH0OzRREyZ0rSGZx2eSfDqKJJV3EtaDW
-        rnXtCNOI+UNXdKA8W6/ht0u73O0IaIKJ07WtjhzpHPyuvwWf1+7LdwlSO7JEHv0QET8jxxtZ
-        eY/fbrKYrVZjioW1WM0sM0sXjHm2RY9zeb+wTRBEwfdLp6K18XuRJebg1frFPzeccTXx7RnV
-        Lfv+seFtIr37fRuz9GPOy6O9Jd13w+d9VOkJ/fFPfVndx7Kq6hrOxrY+fvegcIyzHi2cc7eZ
-        7yBSaw5VLLfZ02fscK5xVqd9CozRGT2DveEt2uoLr9ePPyrrvz/PsUn9rjGcsXnKk9SEb45H
-        8/v/6zrzmlFLTt60iPBJ/P87p9+IugMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprIIsWRmVeSWpSXmKPExsWy7bCSnG5jwaw4g1PbdCz+TjrGbtG8eD2b
-        xcWZd1ksLu+aw2bRs2Erq8WyTX+YLDZvmsrswO7x+9ckRo9NqzrZPN6dO8fusX/uGnaPz5vk
-        PE59/cwewBbFZZOSmpNZllqkb5fAldGz+wJbwVvOiofLjzE1ME7m6GLk5JAQMJFYuXEJUxcj
-        F4eQwG5GiQWPl7B0MXIAJaQl9m/MhagRlrjfcoQVxBYSeM4oMfGUKIjNJqAv0d76kR3EFhEw
-        l5j78Dg7yBxmgduMEmtOn2OBGLqJUaJ/21MWkCpOAQOJ5ScPMIHYwgIxEv/WzWYHWcYioCqx
-        /UEFiMkrYCnRelYSpIJXQFDi5MwnYOcwC+hJtG1kBAkzC8hLbH87hxniNAWJn0+XsUKc4CTx
-        ZMdvFogaEYnZnW3MExiFZyGZNAth0iwkk2Yh6VjAyLKKUTK1oDg3PbfYsMAwL7Vcrzgxt7g0
-        L10vOT93EyM4orQ0dzBeXhJ/iFGAg1GJh9egZ2acEGtiWXFl7iFGCQ5mJRHeg25AId6UxMqq
-        1KL8+KLSnNTiQ4zSHCxK4rxP845FCgmkJ5akZqemFqQWwWSZODilGhhXTX/grDnT0Hzt7ahY
-        nX21dazyT4Au7I73Mb1eeqV8n1WOm3Sf4Jl7vGteiT8wtv8iJ63BmOM8syRv8YKA8JN2X2x/
-        Los1CovzbQuKWSv+vEH0hEEgs1eLj7zV+R3vHdRdk11uXXsVd/+3eMUM1TKNdWcttua93fS+
-        uj14VsoRvcvLm3x4lViKMxINtZiLihMBErvG/qQCAAA=
-X-CMS-MailID: 20200418031409epcas2p320d403d8caaa77bfe526def8d237b0f7
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: AUTO_CONFIDENTIAL
-CMS-TYPE: 102P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20200417025205epcas2p46d33e64f2de49041d2ca68ecc98fc83e
-References: <CGME20200417025205epcas2p46d33e64f2de49041d2ca68ecc98fc83e@epcas2p4.samsung.com>
-        <20200417024543.66785-1-sy0816.kang@samsung.com>
-        <20200417083506.GB141762@kroah.com>
+        Fri, 17 Apr 2020 23:18:47 -0400
+Received: from mail-pl1-x64a.google.com (mail-pl1-x64a.google.com [IPv6:2607:f8b0:4864:20::64a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4BAC2C061A0C
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 20:18:47 -0700 (PDT)
+Received: by mail-pl1-x64a.google.com with SMTP id l1so3489534pld.14
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 20:18:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=KjuhJjKQQb7YT0HRwB6PPqCXcgSLxnxCVsCILm1vXYg=;
+        b=BhjWeQqf0jwxyLFd+gz30xGyWIGa/9G6Lxpa9R/Yvli5he47biVJDisY1gTdS/sLVZ
+         cb1NYUWi1xgWdkWR26A7ailOIScVbx6ixZky7TzTw3vOrmbxe/MHGH5C2x0QvSnogAgH
+         kj53OxkpJpZ18pJvXRpycV68TiDF5LXsYpL2ZtyA5q5hQhlv7avy1DYuey/N7ONPzAtB
+         vsEvA3+JAnkdTfF9MgbEdXD4wS7UNxYIFZoqo+7YBsFN7B3F5vEMzZ6gpkG0VGU/UGih
+         089QVeXThyXUABdz55pgwAhyx2kBLebgfbjwGtZ0MVLiDazMdRWowdoIoRZxsrxcPIXC
+         Y/AQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=KjuhJjKQQb7YT0HRwB6PPqCXcgSLxnxCVsCILm1vXYg=;
+        b=QcQdA0kNj5rs7sVe2tcYY+3bhNw6pzZpI0u8Mt6BnJ3hBVyKvnhq/QAm0kVLWkR/aL
+         902xcTRye8cYHX2XjdmXDFBurEvOuUyWl7A2oE7jCIfS9o3ci9N/xQ1cLgt1hd7rTwvd
+         5cUErg4Sv4avfrj8+brfsdxKjZx8ZgE2WnnvTkLpH0efVblo2OPJT8h8lwfFlAe2sx7z
+         m/eSKmT/tN5ciYaZfJ3lmtxy22ZDACRf6XvOKghCGe5TutG4/Ajv+Szgi+K6Le/y0/Ub
+         w/fpspapV7Y/iH6dEA+zYlnH/wlSTQHu7lzwJZ/F3zwqMcn27F+HFGhAsr3651SGeAr5
+         eQow==
+X-Gm-Message-State: AGi0PuYvwuys87Cdd0Fpj+GTTBIlXgZ6rzi+8FzueRDK+YMv44E20bnQ
+        WYih/8OdBHiJTjBF+tBXRJZqG9PLKc5UmQ==
+X-Google-Smtp-Source: APiQypLkPacc4j3rOyN49jUwOnpUASo2kT4u1R1meA5kQ6Q9TXZw3wcSS0ORxKvT7+0+NY/4qp6KGxJ2B5CKPQ==
+X-Received: by 2002:a63:d510:: with SMTP id c16mr6300263pgg.123.1587179926575;
+ Fri, 17 Apr 2020 20:18:46 -0700 (PDT)
+Date:   Fri, 17 Apr 2020 20:18:28 -0700
+Message-Id: <20200418031833.234942-1-davidgow@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.26.1.301.g55bc3eb7cb9-goog
+Subject: [PATCH v6 0/5] KUnit-KASAN Integration
+From:   David Gow <davidgow@google.com>
+To:     trishalfonso@google.com, brendanhiggins@google.com,
+        aryabinin@virtuozzo.com, dvyukov@google.com, mingo@redhat.com,
+        peterz@infradead.org, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org
+Cc:     David Gow <davidgow@google.com>, linux-kernel@vger.kernel.org,
+        kasan-dev@googlegroups.com, kunit-dev@googlegroups.com,
+        linux-kselftest@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Exynos video codec driver uses reserved2 value. How will reserved2 be used
-for future use?
+This patchset contains everything needed to integrate KASAN and KUnit.
 
-Thanks
-Sunyoung
+KUnit will be able to:
+(1) Fail tests when an unexpected KASAN error occurs
+(2) Pass tests when an expected KASAN error occurs
 
-> -----Original Message-----
-> From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Sent: Friday, April 17, 2020 5:35 PM
-> To: sy0816.kang@samsung.com
-> Cc: mchehab@kernel.org; Hans Verkuil <hverkuil-cisco@xs4all.nl>; Arnd
-> Bergmann <arnd@arndb.de>; Thomas Gleixner <tglx@linutronix.de>; linux-
-> media@vger.kernel.org; linux-kernel@vger.kernel.org
-> Subject: Re: [PATCH] media: v4l2-compat-ioctl32.c: copy reserved2 field in
-> get_v4l2_buffer32
-> 
-> On Fri, Apr 17, 2020 at 11:45:23AM +0900, sy0816.kang@samsung.com wrote:
-> > From: Sunyoung Kang <sy0816.kang@samsung.com>
-> >
-> > get_v4l2_buffer32() didn't copy reserved2 field from userspace to
-driver.
-> > So the reserved2 value is not received through compat-ioctl32 in driver.
-> > This patch copy reserved2 field of v4l2_buffer in get_v4l2_buffer32().
-> >
-> > Signed-off-by: Sunyoung Kang <sy0816.kang@samsung.com>
-> > ---
-> >  drivers/media/v4l2-core/v4l2-compat-ioctl32.c | 1 +
-> >  1 file changed, 1 insertion(+)
-> 
-> What driver is using the reserved fields?  They should be ignored as they
-> are "reserved" for future use.
-> 
-> thanks,
-> 
-> greg k-h
+Convert KASAN tests to KUnit with the exception of copy_user_test
+because KUnit is unable to test those.
+
+Add documentation on how to run the KASAN tests with KUnit and what to
+expect when running these tests.
+
+Depends on "[PATCH v3 kunit-next 0/2] kunit: extend kunit resources
+API" patchset [1]
+
+Changes from v5:
+ - Split out the panic_on_warn changes to a separate patch.
+ - Fix documentation to fewer to the new Kconfig names.
+ - Fix some changes which were in the wrong patch.
+ - Rebase on top of kselftest/kunit (currently identical to 5.7-rc1)
+
+Changes from v4:
+ - KASAN no longer will panic on errors if both panic_on_warn and
+   kasan_multishot are enabled.
+ - As a result, the KASAN tests will no-longer disable panic_on_warn.
+ - This also means panic_on_warn no-longer needs to be exported.
+ - The use of temporary "kasan_data" variables has been cleaned up
+   somewhat.
+ - A potential refcount/resource leak should multiple KASAN errors
+   appear during an assertion was fixed.
+ - Some wording changes to the KASAN test Kconfig entries.
+
+Changes from v3:
+ - KUNIT_SET_KASAN_DATA and KUNIT_DO_EXPECT_KASAN_FAIL have been
+ combined and included in KUNIT_DO_EXPECT_KASAN_FAIL() instead.
+ - Reordered logic in kasan_update_kunit_status() in report.c to be
+ easier to read.
+ - Added comment to not use the name "kasan_data" for any kunit tests
+ outside of KUNIT_EXPECT_KASAN_FAIL().
+
+Changes since v2:
+ - Due to Alan's changes in [1], KUnit can be built as a module.
+ - The name of the tests that could not be run with KUnit has been
+ changed to be more generic: test_kasan_module.
+ - Documentation on how to run the new KASAN tests and what to expect
+ when running them has been added.
+ - Some variables and functions are now static.
+ - Now save/restore panic_on_warn in a similar way to kasan_multi_shot
+ and renamed the init/exit functions to be more generic to accommodate.
+ - Due to [2] in kasan_strings, kasan_memchr, and
+ kasan_memcmp will fail if CONFIG_AMD_MEM_ENCRYPT is enabled so return
+ early and print message explaining this circumstance.
+ - Changed preprocessor checks to C checks where applicable.
+
+Changes since v1:
+ - Make use of Alan Maguire's suggestion to use his patch that allows
+   static resources for integration instead of adding a new attribute to
+   the kunit struct
+ - All KUNIT_EXPECT_KASAN_FAIL statements are local to each test
+ - The definition of KUNIT_EXPECT_KASAN_FAIL is local to the
+   test_kasan.c file since it seems this is the only place this will
+   be used.
+ - Integration relies on KUnit being builtin
+ - copy_user_test has been separated into its own file since KUnit
+   is unable to test these. This can be run as a module just as before,
+   using CONFIG_TEST_KASAN_USER
+ - The addition to the current task has been separated into its own
+   patch as this is a significant enough change to be on its own.
+
+
+[1] https://lore.kernel.org/linux-kselftest/1585313122-26441-1-git-send-email-alan.maguire@oracle.com/T/#t
+[2] https://bugzilla.kernel.org/show_bug.cgi?id=206337
+
+David Gow (1):
+  mm: kasan: Do not panic if both panic_on_warn and kasan_multishot set
+
+Patricia Alfonso (4):
+  Add KUnit Struct to Current Task
+  KUnit: KASAN Integration
+  KASAN: Port KASAN Tests to KUnit
+  KASAN: Testing Documentation
+
+ Documentation/dev-tools/kasan.rst |  70 +++
+ include/kunit/test.h              |   5 +
+ include/linux/kasan.h             |   6 +
+ include/linux/sched.h             |   4 +
+ lib/Kconfig.kasan                 |  18 +-
+ lib/Makefile                      |   3 +-
+ lib/kunit/test.c                  |  13 +-
+ lib/test_kasan.c                  | 682 +++++++++++++-----------------
+ lib/test_kasan_module.c           |  76 ++++
+ mm/kasan/report.c                 |  37 +-
+ 10 files changed, 513 insertions(+), 401 deletions(-)
+ create mode 100644 lib/test_kasan_module.c
+
+-- 
+2.26.1.301.g55bc3eb7cb9-goog
 
