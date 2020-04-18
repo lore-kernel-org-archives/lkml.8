@@ -2,441 +2,636 @@ Return-Path: <SRS0=3CHW=6C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07D8DC2BA19
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 03:07:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF7D3C2BA19
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 03:09:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D2AEC221F7
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 03:07:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99801221F7
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 03:09:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=atishpatra.org header.i=@atishpatra.org header.b="DI07qc34"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fMYnar6z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725862AbgDRDDR (ORCPT
+        id S1725960AbgDRDJT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 23:03:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39142 "EHLO
+        Fri, 17 Apr 2020 23:09:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40058 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725320AbgDRDDQ (ORCPT
+        by vger.kernel.org with ESMTP id S1725320AbgDRDJS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 23:03:16 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25BCAC061A0F
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 20:03:16 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id u13so5201835wrp.3
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 20:03:15 -0700 (PDT)
+        Fri, 17 Apr 2020 23:09:18 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60391C061A0C;
+        Fri, 17 Apr 2020 20:09:18 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id x26so2043093pgc.10;
+        Fri, 17 Apr 2020 20:09:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=atishpatra.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Cc6dPOKfGjGc1r9wBtzxlndIE5Gtel5BHaiZJdDMh8g=;
-        b=DI07qc34JrRYUwx2/j2KyDRxGbbePX0i1nFSPDAdGeo71Jt9xhZ2CaOiP2WHLVsGF/
-         +xmjoStayS0rRQsaaox8u/KqlT30vqjRqoizdl+DUh8LY2sjIlPdQNxTrzU+tCkZJtq0
-         j0kMwJ6lJMm9o1ukf57g9igbXo1h86OHMOdSUzyi1plPFbp0udZuwTVvLBV6bwbYsgSY
-         vPakwFyL1OERa2mSSJOTuUDl+OOCom8WrPWtIdcMbuI2F4p5tgJbaQLM8wm5UAeVeuHD
-         ucNjjJNXdffZtlMChSRzWyE2b8wtgue07ODEltZIGFG1Rx8XrSIOzBiDW1arHRG4UMYQ
-         50hA==
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=xUBf/PGWzTKQsCEO+nlF6TylRkukCQPUTSjokALqJCg=;
+        b=fMYnar6z1x87ve2AVXXLaZP/u7IPgl+9OLTN0xLSJ8IT2hZfa/kt08n/GRXWz0sW2y
+         vI2GDneODE4w8uzfglUrpV7s18yPGRKuTorWWuTVdPMJhNNPQus4O1X0hpeTheXnoPm4
+         sI2CAV04f21AsobDGx1IJ0fY85BvOkWTq/xURJ6FgIcc5tkZ/MBrZzmkb/S1yh8AO40y
+         jDW58dmYchS+gUcU7zlcxHzhGzeWnw6ArZ5MuchYCFW0poVFpdzuLOiVxFC02xyUpPO1
+         gQ2yN58f0tHmrQcPfyHrPdaLbC9pH67SthrLEFe5wPsb8iDLD/AqGvv5yaazTIffct+i
+         K/jg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Cc6dPOKfGjGc1r9wBtzxlndIE5Gtel5BHaiZJdDMh8g=;
-        b=V5xOuUR2e+8e2rLAbfJ/JWvmqp2NBGPSPWYv+dPYfZIBaFFz459/79PN/77X5gR/NF
-         bvesltTLo1gnAozEWo3MGCsIxdeeGOLZFjiL1EJ6Lx81vr/M2DfIKOz2k9gdlA5LuGsA
-         5wK1stjlDDWHaYHK5rs1jQKA40zxXxum0jK7sD9vphn3US0KB0Gc9DNw3oFapFuRT8+s
-         HjFZOzCDsvnSBfpBgbH2kwf6JAdCIzqZ5idNGc1k7JdwZMOF5qGVnzB1wN0cN/L+dH82
-         erw/DtIhZ3k5qV9RV/QwyASINMjV4erFhIKtUR0sPZcbOmtX/81qcXFU3lIM6iEEp9ka
-         txqQ==
-X-Gm-Message-State: AGi0PuYx7cY4XUP89Z/eiUfIn4yNvc8k764hxiiu7egQTP8k6oLECaQW
-        +zO8+bhJel86NrXPh9BDomLeyrLrkNURgud/9Qin
-X-Google-Smtp-Source: APiQypJZpGIcTdTcAmCbMwWA43uDwlzkxXnjBBuBETiNA9FKcB4sB2Bl1ulIkKpGgWUROepnqSaCp7kT6UF4kiN02jQ=
-X-Received: by 2002:a5d:4443:: with SMTP id x3mr6757506wrr.162.1587178994550;
- Fri, 17 Apr 2020 20:03:14 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200415195422.19866-1-atish.patra@wdc.com> <20200415195422.19866-6-atish.patra@wdc.com>
- <CAMj1kXFRqTYr7_M_j6oN1-xnQ6V4uCYK49yAbjvrf1BB823Cng@mail.gmail.com>
-In-Reply-To: <CAMj1kXFRqTYr7_M_j6oN1-xnQ6V4uCYK49yAbjvrf1BB823Cng@mail.gmail.com>
-From:   Atish Patra <atishp@atishpatra.org>
-Date:   Fri, 17 Apr 2020 20:03:03 -0700
-Message-ID: <CAOnJCUK3fqsR93ewYMUkanh+x1EJN_3QwkFjSDDZZr2MjzpnUQ@mail.gmail.com>
-Subject: Re: [v3 PATCH 5/5] RISC-V: Add EFI stub support.
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     Atish Patra <atish.patra@wdc.com>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=xUBf/PGWzTKQsCEO+nlF6TylRkukCQPUTSjokALqJCg=;
+        b=UEV9n3fpQiiGRJju83QHXiPt/qIuvFNBrfb0N0ctN/wNH+nTqbi02dPdCUqYINdwQU
+         y5LDxKNTgmvYNR4K6pG22gkz4OkjpeXHAHAOTdI1i9sMbdaptI6MO6DhyyLy9xLSoaMW
+         bFZ2mT0EjxCsW/Yf6V0evNQlnjH8e0xjg/zXgJVf5Pr6uCrc2wJ6XbteMhqkejQz+hcC
+         zRed5ku2mgAD4XfnpijOaM3oT8x9LOImeRbz+aJzVsOnjvyVXnDoy7vZ4UOohYbeOYvH
+         BUZdwS2Ru/mNHpjAl7daVjSSb0CAZEtkE3irSOKX2hCKRR/gAOLIIHoEnYIZvHeQ5bzj
+         FfDQ==
+X-Gm-Message-State: AGi0Puaf+HqQ43PhE2Vu8PpIbzAqt8rY5KCJqzN1rsasekvnQvhQw75r
+        K8zBihrfFOf0zdekXBIy93s=
+X-Google-Smtp-Source: APiQypLBHktItTeXICX5oDYP1McLtu1qvoO/slVhcXPfAelSYMWY1InkMoIq07qUTtlziOWXZImv3Q==
+X-Received: by 2002:a62:3812:: with SMTP id f18mr4503007pfa.173.1587179357625;
+        Fri, 17 Apr 2020 20:09:17 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id l30sm6934082pje.34.2020.04.17.20.09.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 17 Apr 2020 20:09:16 -0700 (PDT)
+Subject: Re: [PATCH net-next 3/3] net: phy: bcm54140: add hwmon support
+To:     Michael Walle <michael@walle.cc>, linux-hwmon@vger.kernel.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Cc:     Jean Delvare <jdelvare@suse.com>, Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
         Russell King <linux@armlinux.org.uk>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        Will Deacon <will@kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+        "David S . Miller" <davem@davemloft.net>
+References: <20200417192858.6997-1-michael@walle.cc>
+ <20200417192858.6997-3-michael@walle.cc>
+From:   Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+Message-ID: <74a19e1a-35cd-708c-2972-8782d21c8e7d@roeck-us.net>
+Date:   Fri, 17 Apr 2020 20:09:15 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
+MIME-Version: 1.0
+In-Reply-To: <20200417192858.6997-3-michael@walle.cc>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 16, 2020 at 12:41 AM Ard Biesheuvel <ardb@kernel.org> wrote:
->
-> On Wed, 15 Apr 2020 at 21:54, Atish Patra <atish.patra@wdc.com> wrote:
-> >
-> > Add a RISC-V architecture specific stub code that actually copies the
-> > actual kernel image to a valid address and jump to it after boot services
-> > are terminated. Enable UEFI related kernel configs as well for RISC-V.
-> >
-> > Signed-off-by: Atish Patra <atish.patra@wdc.com>
-> > ---
-> >  arch/riscv/Kconfig                        |  20 ++++
-> >  arch/riscv/Makefile                       |   1 +
-> >  arch/riscv/configs/defconfig              |   1 +
-> >  arch/riscv/include/asm/efi.h              |  44 +++++++++
-> >  drivers/firmware/efi/Kconfig              |   2 +-
-> >  drivers/firmware/efi/libstub/Makefile     |   7 ++
-> >  drivers/firmware/efi/libstub/riscv-stub.c | 111 ++++++++++++++++++++++
-> >  7 files changed, 185 insertions(+), 1 deletion(-)
-> >  create mode 100644 arch/riscv/include/asm/efi.h
-> >  create mode 100644 drivers/firmware/efi/libstub/riscv-stub.c
-> >
-> > diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-> > index f39e326a7a42..eb4f41c8f3ce 100644
-> > --- a/arch/riscv/Kconfig
-> > +++ b/arch/riscv/Kconfig
-> > @@ -379,10 +379,30 @@ config CMDLINE_FORCE
-> >
-> >  endchoice
-> >
-> > +config EFI_STUB
-> > +       bool
-> > +
-> > +config EFI
-> > +       bool "UEFI runtime support"
-> > +       depends on OF
-> > +       select LIBFDT
-> > +       select UCS2_STRING
-> > +       select EFI_PARAMS_FROM_FDT
-> > +       select EFI_STUB
-> > +       select EFI_GENERIC_STUB
-> > +       default y
-> > +       help
-> > +         This option provides support for runtime services provided
-> > +         by UEFI firmware (such as non-volatile variables, realtime
-> > +          clock, and platform reset). A UEFI stub is also provided to
-> > +         allow the kernel to be booted as an EFI application. This
-> > +         is only useful on systems that have UEFI firmware.
-> > +
-> >  endmenu
-> >
-> >  menu "Power management options"
-> >
-> >  source "kernel/power/Kconfig"
-> > +source "drivers/firmware/Kconfig"
-> >
-> >  endmenu
-> > diff --git a/arch/riscv/Makefile b/arch/riscv/Makefile
-> > index fb6e37db836d..079435804d6d 100644
-> > --- a/arch/riscv/Makefile
-> > +++ b/arch/riscv/Makefile
-> > @@ -80,6 +80,7 @@ head-y := arch/riscv/kernel/head.o
-> >  core-y += arch/riscv/
-> >
-> >  libs-y += arch/riscv/lib/
-> > +core-$(CONFIG_EFI_STUB) += $(objtree)/drivers/firmware/efi/libstub/lib.a
-> >
-> >  PHONY += vdso_install
-> >  vdso_install:
-> > diff --git a/arch/riscv/configs/defconfig b/arch/riscv/configs/defconfig
-> > index 4da4886246a4..ae69e12d306a 100644
-> > --- a/arch/riscv/configs/defconfig
-> > +++ b/arch/riscv/configs/defconfig
-> > @@ -129,3 +129,4 @@ CONFIG_DEBUG_BLOCK_EXT_DEVT=y
-> >  # CONFIG_RUNTIME_TESTING_MENU is not set
-> >  CONFIG_MEMTEST=y
-> >  # CONFIG_SYSFS_SYSCALL is not set
-> > +CONFIG_EFI=y
-> > diff --git a/arch/riscv/include/asm/efi.h b/arch/riscv/include/asm/efi.h
-> > new file mode 100644
-> > index 000000000000..62d7d5eafed8
-> > --- /dev/null
-> > +++ b/arch/riscv/include/asm/efi.h
-> > @@ -0,0 +1,44 @@
-> > +/* SPDX-License-Identifier: GPL-2.0 */
-> > +/*
-> > + * Copyright (C) 2020 Western Digital Corporation or its affiliates.
-> > + * Based on arch/arm64/include/asm/efi.h
-> > + */
-> > +#ifndef _ASM_EFI_H
-> > +#define _ASM_EFI_H
-> > +
-> > +#include <asm/io.h>
-> > +#include <asm/mmu_context.h>
-> > +#include <asm/ptrace.h>
-> > +#include <asm/tlbflush.h>
-> > +
-> > +#define VA_BITS_MIN 39
-> > +
-> > +/* on RISC-V, the FDT may be located anywhere in system RAM */
-> > +static inline unsigned long efi_get_max_fdt_addr(unsigned long dram_base)
-> > +{
-> > +       return ULONG_MAX;
-> > +}
-> > +
-> > +/* Load initrd at enough distance from DRAM start */
-> > +static inline unsigned long efi_get_max_initrd_addr(unsigned long dram_base,
-> > +                                                   unsigned long image_addr)
-> > +{
-> > +       return dram_base + SZ_256M;
-> > +}
-> > +
-> > +#define efi_bs_call(func, ...) efi_system_table()->boottime->func(__VA_ARGS__)
-> > +#define efi_rt_call(func, ...) efi_system_table()->runtime->func(__VA_ARGS__)
-> > +#define efi_is_native()                (true)
-> > +
-> > +#define efi_table_attr(inst, attr)     (inst->attr)
-> > +
-> > +#define efi_call_proto(inst, func, ...) inst->func(inst, ##__VA_ARGS__)
-> > +
-> > +#define alloc_screen_info(x...)                (&screen_info)
-> > +extern char stext_offset[];
-> > +
-> > +static inline void free_screen_info(struct screen_info *si)
-> > +{
-> > +}
-> > +
-> > +#endif /* _ASM_EFI_H */
-> > diff --git a/drivers/firmware/efi/Kconfig b/drivers/firmware/efi/Kconfig
-> > index 2a2b2b96a1dc..fcdc789d3f87 100644
-> > --- a/drivers/firmware/efi/Kconfig
-> > +++ b/drivers/firmware/efi/Kconfig
-> > @@ -111,7 +111,7 @@ config EFI_GENERIC_STUB
-> >
-> >  config EFI_ARMSTUB_DTB_LOADER
-> >         bool "Enable the DTB loader"
-> > -       depends on EFI_GENERIC_STUB
-> > +       depends on EFI_GENERIC_STUB && !RISCV
-> >         default y
-> >         help
-> >           Select this config option to add support for the dtb= command
-> > diff --git a/drivers/firmware/efi/libstub/Makefile b/drivers/firmware/efi/libstub/Makefile
-> > index 2b4e09bf987c..7d46b70b51f2 100644
-> > --- a/drivers/firmware/efi/libstub/Makefile
-> > +++ b/drivers/firmware/efi/libstub/Makefile
-> > @@ -22,6 +22,8 @@ cflags-$(CONFIG_ARM64)                := $(subst $(CC_FLAGS_FTRACE),,$(KBUILD_CFLAGS)) \
-> >  cflags-$(CONFIG_ARM)           := $(subst $(CC_FLAGS_FTRACE),,$(KBUILD_CFLAGS)) \
-> >                                    -fno-builtin -fpic \
-> >                                    $(call cc-option,-mno-single-pic-base)
-> > +cflags-$(CONFIG_RISCV)         := $(subst $(CC_FLAGS_FTRACE),,$(KBUILD_CFLAGS)) \
-> > +                                  -fpic
-> >
-> >  cflags-$(CONFIG_EFI_GENERIC_STUB)      += -I$(srctree)/scripts/dtc/libfdt
-> >
-> > @@ -57,6 +59,7 @@ lib-$(CONFIG_EFI_GENERIC_STUB)                += efi-stub.o fdt.o string.o \
-> >  lib-$(CONFIG_ARM)              += arm32-stub.o
-> >  lib-$(CONFIG_ARM64)            += arm64-stub.o
-> >  lib-$(CONFIG_X86)              += x86-stub.o
-> > +lib-$(CONFIG_RISCV)            += riscv-stub.o
-> >  CFLAGS_arm32-stub.o            := -DTEXT_OFFSET=$(TEXT_OFFSET)
-> >  CFLAGS_arm64-stub.o            := -DTEXT_OFFSET=$(TEXT_OFFSET)
-> >
-> > @@ -81,6 +84,10 @@ STUBCOPY_FLAGS-$(CONFIG_ARM64)       += --prefix-alloc-sections=.init \
-> >                                    --prefix-symbols=__efistub_
-> >  STUBCOPY_RELOC-$(CONFIG_ARM64) := R_AARCH64_ABS
-> >
-> > +STUBCOPY_FLAGS-$(CONFIG_RISCV) += --prefix-alloc-sections=.init \
-> > +                                  --prefix-symbols=__efistub_
-> > +STUBCOPY_RELOC-$(CONFIG_RISCV) := R_RISCV_HI20
-> > +
-> >  $(obj)/%.stub.o: $(obj)/%.o FORCE
-> >         $(call if_changed,stubcopy)
-> >
-> > diff --git a/drivers/firmware/efi/libstub/riscv-stub.c b/drivers/firmware/efi/libstub/riscv-stub.c
-> > new file mode 100644
-> > index 000000000000..69d13e0ebaea
-> > --- /dev/null
-> > +++ b/drivers/firmware/efi/libstub/riscv-stub.c
-> > @@ -0,0 +1,111 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/*
-> > + * Copyright (C) 2013, 2014 Linaro Ltd;  <roy.franz@linaro.org>
-> > + * Copyright (C) 2020 Western Digital Corporation or its affiliates.
-> > + *
-> > + * This file implements the EFI boot stub for the RISC-V kernel.
-> > + * Adapted from ARM64 version at drivers/firmware/efi/libstub/arm64-stub.c.
-> > + */
-> > +
-> > +#include <linux/efi.h>
-> > +#include <linux/libfdt.h>
-> > +#include <linux/libfdt_env.h>
-> > +#include <asm/efi.h>
-> > +#include <asm/sections.h>
-> > +
-> > +#include "efistub.h"
-> > +/*
-> > + * RISCV requires the kernel image to placed TEXT_OFFSET bytes beyond a 2 MB
-> > + * aligned base for 64 bit and 4MB for 32 bit.
-> > + */
+On 4/17/20 12:28 PM, Michael Walle wrote:
+> The PHY supports monitoring its die temperature as well as two analog
+> voltages. Add support for it.
+> 
+> Signed-off-by: Michael Walle <michael@walle.cc>
 
-Fixed the comment.
+This will probably fail to compile if HWMON is not enabled or if it is built
+as module and this driver is built into the kernel.
 
-> > +#ifdef CONFIG_64BIT
-> > +#define MIN_KIMG_ALIGN SZ_2M
-> > +#else
-> > +#define MIN_KIMG_ALIGN SZ_4M
-> > +#endif
-> > +
-> > +typedef __attribute__((noreturn)) void (*jump_kernel_func)(unsigned int,
-> > +                                                          unsigned long);
-> > +efi_status_t check_platform_features(void)
-> > +{
-> > +       return EFI_SUCCESS;
-> > +}
-> > +
-> > +static u32 get_boot_hartid_from_fdt(unsigned long fdt)
-> > +{
-> > +       int chosen_node, len;
-> > +       const fdt32_t *prop;
-> > +
-> > +       chosen_node = fdt_path_offset((void *)fdt, "/chosen");
-> > +       if (chosen_node < 0)
-> > +               return U32_MAX;
-> > +       prop = fdt_getprop((void *)fdt, chosen_node, "boot-hartid", &len);
-> > +       if (!prop || len != sizeof(u32))
-> > +               return U32_MAX;
-> > +
-> > +       return fdt32_to_cpu(*prop);
-> > +}
-> > +
-> > +/*
-> > + * Jump to real kernel here with following constraints.
-> > + * 1. MMU should be disabled.
-> > + * 2. a0 should contain hartid
-> > + * 3. a1 should DT address
-> > + */
-> > +void __noreturn efi_enter_kernel(unsigned long entrypoint, unsigned long fdt,
-> > +                                unsigned long fdt_size)
-> > +{
-> > +       unsigned long kernel_entry = entrypoint + (unsigned long)stext_offset;
-> > +       jump_kernel_func jump_kernel = (jump_kernel_func) kernel_entry;
-> > +       u32 hartid = get_boot_hartid_from_fdt(fdt);
-> > +
-> > +       if (hartid == U32_MAX)
-> > +               /* We can not use panic or BUG at this point */
-> > +               __asm__ __volatile__ ("ebreak");
-> > +       /* Disable MMU */
-> > +       csr_write(CSR_SATP, 0);
-> > +       jump_kernel(hartid, fdt);
-> > +}
-> > +
-> > +efi_status_t handle_kernel_image(unsigned long *image_addr,
-> > +                                unsigned long *image_size,
-> > +                                unsigned long *reserve_addr,
-> > +                                unsigned long *reserve_size,
-> > +                                unsigned long dram_base,
-> > +                                efi_loaded_image_t *image)
-> > +{
-> > +       efi_status_t status;
-> > +       unsigned long kernel_size, kernel_memsize = 0;
-> > +       unsigned long max_alloc_address;
-> > +
-> > +       if (image->image_base != _start)
-> > +               pr_efi_err("FIRMWARE BUG: efi_loaded_image_t::image_base has bogus value\n");
-> > +
->
-> I don't think you need this.
->
+> ---
+>  Documentation/hwmon/bcm54140.rst |  45 ++++
+>  Documentation/hwmon/index.rst    |   1 +
+>  drivers/net/phy/bcm54140.c       | 377 +++++++++++++++++++++++++++++++
+>  3 files changed, 423 insertions(+)
+>  create mode 100644 Documentation/hwmon/bcm54140.rst
+> 
+> diff --git a/Documentation/hwmon/bcm54140.rst b/Documentation/hwmon/bcm54140.rst
+> new file mode 100644
+> index 000000000000..bc6ea4b45966
+> --- /dev/null
+> +++ b/Documentation/hwmon/bcm54140.rst
+> @@ -0,0 +1,45 @@
+> +.. SPDX-License-Identifier: GPL-2.0-only
+> +
+> +Broadcom BCM54140 Quad SGMII/QSGMII PHY
+> +=======================================
+> +
+> +Supported chips:
+> +
+> +   * Broadcom BCM54140
+> +
+> +     Datasheet: not public
+> +
+> +Author: Michael Walle <michael@walle.cc>
+> +
+> +Description
+> +-----------
+> +
+> +The Broadcom BCM54140 is a Quad SGMII/QSGMII PHY which supports monitoring
+> +its die temperature as well as two analog voltages.
+> +
+> +The AVDDL is a 1.0V analogue voltage, the AVDDH is a 3.3V analogue voltage.
+> +Both voltages and the temperature are measured in a round-robin fashion.
+> +
+> +Sysfs entries
+> +-------------
+> +
+> +The following attributes are supported.
+> +
+> +======================= ========================================================
+> +in0_label		"AVDDL"
+> +in0_input		Measured AVDDL voltage.
+> +in0_min			Minimum AVDDL voltage.
+> +in0_max			Maximum AVDDL voltage.
+> +in0_alarm		AVDDL voltage alarm.
+> +
+> +in1_label		"AVDDH"
+> +in1_input		Measured AVDDH voltage.
+> +in1_min			Minimum AVDDH voltage.
+> +in1_max			Maximum AVDDH voltage.
+> +in1_alarm		AVDDH voltage alarm.
+> +
+> +temp1_input		Die temperature.
+> +temp1_min		Minimum die temperature.
+> +temp1_max		Maximum die temperature.
+> +temp1_alarm		Die temperature alarm.
+> +======================= ========================================================
+> diff --git a/Documentation/hwmon/index.rst b/Documentation/hwmon/index.rst
+> index f022583f96f6..19ad0846736d 100644
+> --- a/Documentation/hwmon/index.rst
+> +++ b/Documentation/hwmon/index.rst
+> @@ -42,6 +42,7 @@ Hardware Monitoring Kernel Drivers
+>     asb100
+>     asc7621
+>     aspeed-pwm-tacho
+> +   bcm54140
+>     bel-pfe
+>     coretemp
+>     da9052
+> diff --git a/drivers/net/phy/bcm54140.c b/drivers/net/phy/bcm54140.c
+> index 97465491b41b..97c364ce05e3 100644
+> --- a/drivers/net/phy/bcm54140.c
+> +++ b/drivers/net/phy/bcm54140.c
+> @@ -6,6 +6,7 @@
+>  
+>  #include <linux/bitfield.h>
+>  #include <linux/brcmphy.h>
+> +#include <linux/hwmon.h>
+>  #include <linux/module.h>
+>  #include <linux/phy.h>
+>  
+> @@ -50,6 +51,54 @@
+>  #define  BCM54140_RDB_TOP_IMR_PORT1	BIT(5)
+>  #define  BCM54140_RDB_TOP_IMR_PORT2	BIT(6)
+>  #define  BCM54140_RDB_TOP_IMR_PORT3	BIT(7)
+> +#define BCM54140_RDB_MON_CTRL		0x831	/* monitor control */
+> +#define  BCM54140_RDB_MON_CTRL_V_MODE	BIT(3)	/* voltage mode */
+> +#define  BCM54140_RDB_MON_CTRL_SEL_MASK	GENMASK(2, 1)
+> +#define  BCM54140_RDB_MON_CTRL_SEL_TEMP	0	/* meassure temperature */
+> +#define  BCM54140_RDB_MON_CTRL_SEL_1V0	1	/* meassure AVDDL 1.0V */
+> +#define  BCM54140_RDB_MON_CTRL_SEL_3V3	2	/* meassure AVDDH 3.3V */
+> +#define  BCM54140_RDB_MON_CTRL_SEL_RR	3	/* meassure all round-robin */
+> +#define  BCM54140_RDB_MON_CTRL_PWR_DOWN	BIT(0)	/* power-down monitor */
+> +#define BCM54140_RDB_MON_TEMP_VAL	0x832	/* temperature value */
+> +#define BCM54140_RDB_MON_TEMP_MAX	0x833	/* temperature high thresh */
+> +#define BCM54140_RDB_MON_TEMP_MIN	0x834	/* temperature low thresh */
+> +#define  BCM54140_RDB_MON_TEMP_DATA_MASK GENMASK(9, 0)
+> +#define BCM54140_RDB_MON_1V0_VAL	0x835	/* AVDDL 1.0V value */
+> +#define BCM54140_RDB_MON_1V0_MAX	0x836	/* AVDDL 1.0V high thresh */
+> +#define BCM54140_RDB_MON_1V0_MIN	0x837	/* AVDDL 1.0V low thresh */
+> +#define  BCM54140_RDB_MON_1V0_DATA_MASK	GENMASK(10, 0)
+> +#define BCM54140_RDB_MON_3V3_VAL	0x838	/* AVDDH 3.3V value */
+> +#define BCM54140_RDB_MON_3V3_MAX	0x839	/* AVDDH 3.3V high thresh */
+> +#define BCM54140_RDB_MON_3V3_MIN	0x83a	/* AVDDH 3.3V low thresh */
+> +#define  BCM54140_RDB_MON_3V3_DATA_MASK	GENMASK(11, 0)
+> +#define BCM54140_RDB_MON_ISR		0x83b	/* interrupt status */
+> +#define  BCM54140_RDB_MON_ISR_3V3	BIT(2)	/* AVDDH 3.3V alarm */
+> +#define  BCM54140_RDB_MON_ISR_1V0	BIT(1)	/* AVDDL 1.0V alarm */
+> +#define  BCM54140_RDB_MON_ISR_TEMP	BIT(0)	/* temperature alarm */
+> +
+> +/* According to the datasheet the formula is:
+> + *   T = 413.35 - (0.49055 * bits[9:0])
+> + */
+> +#define BCM54140_HWMON_TO_TEMP(v) (413350L - (v) * 491)
+> +#define BCM54140_HWMON_FROM_TEMP(v) DIV_ROUND_CLOSEST_ULL(413350L - (v), 491)
+> +
+> +/* According to the datasheet the formula is:
+> + *   U = bits[11:0] / 1024 * 220 / 0.2
+> + *
+> + * Normalized:
+> + *   U = bits[11:0] / 4096 * 2514
+> + */
+> +#define BCM54140_HWMON_TO_IN_1V0(v) ((v) * 2514 >> 11)
+> +#define BCM54140_HWMON_FROM_IN_1V0(v) DIV_ROUND_CLOSEST_ULL(((v) << 11), 2514)
+> +
+> +/* According to the datasheet the formula is:
+> + *   U = bits[10:0] / 1024 * 880 / 0.7
+> + *
+> + * Normalized:
+> + *   U = bits[10:0] / 2048 * 4400
+> + */
+> +#define BCM54140_HWMON_TO_IN_3V3(v) ((v) * 4400 >> 12)
+> +#define BCM54140_HWMON_FROM_IN_3V3(v) DIV_ROUND_CLOSEST_ULL(((v) << 12), 4400)
+>  
+>  #define BCM54140_DEFAULT_DOWNSHIFT 5
+>  #define BCM54140_MAX_DOWNSHIFT 9
+> @@ -57,6 +106,258 @@
+>  struct bcm54140_phy_priv {
+>  	int port;
+>  	int base_addr;
+> +	bool pkg_init;
+> +	u16 alarm;
+> +};
+> +
+> +static umode_t bcm54140_hwmon_is_visible(const void *data,
+> +					 enum hwmon_sensor_types type,
+> +					 u32 attr, int channel)
+> +{
+> +	switch (type) {
+> +	case hwmon_in:
+> +		switch (attr) {
+> +		case hwmon_in_min:
+> +		case hwmon_in_max:
+> +			return 0644;
+> +		case hwmon_in_label:
+> +		case hwmon_in_input:
+> +		case hwmon_in_alarm:
+> +			return 0444;
+> +		default:
+> +			return 0;
+> +		}
+> +	case hwmon_temp:
+> +		switch (attr) {
+> +		case hwmon_temp_min:
+> +		case hwmon_temp_max:
+> +			return 0644;
+> +		case hwmon_temp_input:
+> +		case hwmon_temp_alarm:
+> +			return 0444;
+> +		default:
+> +			return 0;
+> +		}
+> +	default:
+> +		return 0;
+> +	}
+> +}
+> +
+> +static int bcm54140_hwmon_read_alarm(struct device *dev, unsigned int bit,
+> +				     long *val)
+> +{
+> +	struct phy_device *phydev = dev_get_drvdata(dev);
+> +	struct bcm54140_phy_priv *priv = phydev->priv;
+> +	u16 tmp;
+> +
+> +	/* latch any alarm bits */
+> +	tmp = bcm_phy_read_rdb(phydev, BCM54140_RDB_MON_ISR);
+> +	if (tmp < 0)
+> +		return tmp;
+> +	priv->alarm |= tmp;
+> +
+> +	*val = !!(priv->alarm & bit);
+> +	priv->alarm &= ~bit;> +
+> +	return 0;
+> +}
+> +
+> +static int bcm54140_hwmon_read_temp(struct device *dev, u32 attr,
+> +				    int channel, long *val)
+> +{
+> +	struct phy_device *phydev = dev_get_drvdata(dev);
+> +	u16 reg, tmp;
+> +
+> +	switch (attr) {
+> +	case hwmon_temp_input:
+> +		reg = BCM54140_RDB_MON_TEMP_VAL;
+> +		break;
+> +	case hwmon_temp_min:
+> +		reg = BCM54140_RDB_MON_TEMP_MIN;
+> +		break;
+> +	case hwmon_temp_max:
+> +		reg = BCM54140_RDB_MON_TEMP_MAX;
+> +		break;
+> +	case hwmon_temp_alarm:
+> +		return bcm54140_hwmon_read_alarm(dev,
+> +						 BCM54140_RDB_MON_ISR_TEMP,
+> +						 val);
+> +	default:
+> +		return -EOPNOTSUPP;
+> +	}
+> +
+> +	tmp = bcm_phy_read_rdb(phydev, reg);
+> +	if (tmp < 0)
+> +		return tmp;
+> +
+> +	*val = BCM54140_HWMON_TO_TEMP(tmp & BCM54140_RDB_MON_TEMP_DATA_MASK);
+> +
+> +	return 0;
+> +}
+> +
+> +static int bcm54140_hwmon_read_in(struct device *dev, u32 attr,
+> +				  int channel, long *val)
+> +{
+> +	struct phy_device *phydev = dev_get_drvdata(dev);
+> +	u16 mask = (!channel) ? BCM54140_RDB_MON_1V0_DATA_MASK
+> +			      : BCM54140_RDB_MON_3V3_DATA_MASK;
+> +	u16 bit, reg, tmp;
+> +
+> +	switch (attr) {
+> +	case hwmon_in_input:
+> +		reg = (!channel) ? BCM54140_RDB_MON_1V0_VAL
+> +				 : BCM54140_RDB_MON_3V3_VAL;
 
-Sure. I will remove it. I guess ARM64 code has the error print for
-legacy loader code ?
+I am personally neither a friend of unnecessary () nor of
+unnecessary negations. Why not the following ?
 
-> > +       kernel_size = _edata - _start;
-> > +       kernel_memsize = kernel_size + (_end - _edata);
-> > +       max_alloc_address = round_up(dram_base, MIN_KIMG_ALIGN) +
-> > +                           kernel_memsize;
-> > +
->
-> You said the kernel could be anywhere in memory, as long as it is
-> aligned correctly, right?
+		reg = channel ? BCM54140_RDB_MON_3V3_VAL :
+				BCM54140_RDB_MON_1V0_VAL;
 
-Sorry I was wrong about this. RISC-V kernel maps PAGE_OFFSET virtual
-address to the
-physical address <xyz> where it is booted. That means memory between
-dram start and and <xyz> address
-will be unusable.
+Another option would be to read all those values from a set of
+defines, given the expressions are repeated several times.
 
-I also realized that the above computing max_address as above also
-won't work for the following reason.
-efi_allocate_pages_aligned actually ALIGN_DOWN the max_address. Thus,
-efi won't find enough
-free memory in this case if the max_address is computed from the dram_base.
+> +		break;
+> +	case hwmon_in_min:
+> +		reg = (!channel) ? BCM54140_RDB_MON_1V0_MIN
+> +				 : BCM54140_RDB_MON_3V3_MIN;
+> +		break;
+> +	case hwmon_in_max:
+> +		reg = (!channel) ? BCM54140_RDB_MON_1V0_MAX
+> +				 : BCM54140_RDB_MON_3V3_MAX;
+> +		break;
+> +	case hwmon_in_alarm:
+> +		bit = (!channel) ? BCM54140_RDB_MON_ISR_1V0
+> +				 : BCM54140_RDB_MON_ISR_3V3;
+> +		return bcm54140_hwmon_read_alarm(dev, bit, val);
+> +	default:
+> +		return -EOPNOTSUPP;
+> +	}
+> +
+> +	tmp = bcm_phy_read_rdb(phydev, reg);
+> +	if (tmp < 0)
+> +		return tmp;
+> +
+> +	if (!channel)
+> +		*val = BCM54140_HWMON_TO_IN_1V0(tmp & mask);
+> +	else
+> +		*val = BCM54140_HWMON_TO_IN_3V3(tmp & mask);
+> +
+> +	return 0;
+> +}
+> +
+> +static int bcm54140_hwmon_read(struct device *dev,
+> +			       enum hwmon_sensor_types type, u32 attr,
+> +			       int channel, long *val)
+> +{
+> +	switch (type) {
+> +	case hwmon_temp:
+> +		return bcm54140_hwmon_read_temp(dev, attr, channel, val);
+> +	case hwmon_in:
+> +		return bcm54140_hwmon_read_in(dev, attr, channel, val);
+> +	default:
+> +		return -EOPNOTSUPP;
+> +	}
+> +}
+> +
+> +static const char *const bcm54140_hwmon_in_labels[] = {
+> +	"AVDDL",
+> +	"AVDDH",
+> +};
+> +
+> +static int bcm54140_hwmon_read_string(struct device *dev,
+> +				      enum hwmon_sensor_types type, u32 attr,
+> +				      int channel, const char **str)
+> +{
+> +	switch (type) {
+> +	case hwmon_in:
+> +		switch (attr) {
+> +		case hwmon_in_label:
+> +			*str = bcm54140_hwmon_in_labels[channel];
+> +			return 0;
+> +		default:
+> +			return -EOPNOTSUPP;
+> +		}
+> +	default:
+> +		return -EOPNOTSUPP;
+> +	}
+> +}
+> +
+> +static int bcm54140_hwmon_write_temp(struct device *dev, u32 attr,
+> +				     int channel, long val)
+> +{
+> +	struct phy_device *phydev = dev_get_drvdata(dev);
+> +	u16 reg;
+> +
+> +	switch (attr) {
+> +	case hwmon_temp_min:
+> +		reg = BCM54140_RDB_MON_TEMP_MIN;
+> +		break;
+> +	case hwmon_temp_max:
+> +		reg = BCM54140_RDB_MON_TEMP_MAX;
+> +		break;
+> +	default:
+> +		return -EOPNOTSUPP;
+> +	}
+> +
+> +	return bcm_phy_modify_rdb(phydev, reg, BCM54140_RDB_MON_TEMP_DATA_MASK,
+> +				  BCM54140_HWMON_FROM_TEMP(val));
+> +}
+> +
+> +static int bcm54140_hwmon_write_in(struct device *dev, u32 attr,
+> +				   int channel, long val)
+> +{
+> +	struct phy_device *phydev = dev_get_drvdata(dev);
+> +	u16 mask = (!channel) ? BCM54140_RDB_MON_1V0_DATA_MASK
+> +			      : BCM54140_RDB_MON_3V3_DATA_MASK;
+> +	unsigned long raw = (!channel) ?  BCM54140_HWMON_FROM_IN_1V0(val)
+> +				       :  BCM54140_HWMON_FROM_IN_3V3(val);
+> +	u16 reg;
+> +
+> +	raw = clamp_val(raw, 0, mask);
+> +
+> +	switch (attr) {
+> +	case hwmon_in_min:
+> +		reg = (!channel) ? BCM54140_RDB_MON_1V0_MIN
+> +				 : BCM54140_RDB_MON_3V3_MIN;
+> +		break;
+> +	case hwmon_in_max:
+> +		reg = (!channel) ? BCM54140_RDB_MON_1V0_MAX
+> +				 : BCM54140_RDB_MON_3V3_MAX;
+> +		break;
+> +	default:
+> +		return -EOPNOTSUPP;
+> +	}
+> +
+> +	return bcm_phy_modify_rdb(phydev, reg, mask, raw);
+> +}
+> +
+> +static int bcm54140_hwmon_write(struct device *dev,
+> +				enum hwmon_sensor_types type, u32 attr,
+> +				int channel, long val)
+> +{
+> +	switch (type) {
+> +	case hwmon_temp:
+> +		return bcm54140_hwmon_write_temp(dev, attr, channel, val);
+> +	case hwmon_in:
+> +		return bcm54140_hwmon_write_in(dev, attr, channel, val);
+> +	default:
+> +		return -EOPNOTSUPP;
+> +	}
+> +}
+> +
+> +static const struct hwmon_channel_info *bcm54140_hwmon_info[] = {
+> +	HWMON_CHANNEL_INFO(temp,
+> +			   HWMON_T_INPUT | HWMON_T_MIN | HWMON_T_MAX |
+> +			   HWMON_T_ALARM),
+> +	HWMON_CHANNEL_INFO(in,
+> +			   HWMON_I_INPUT | HWMON_I_MIN | HWMON_I_MAX |
+> +			   HWMON_I_ALARM | HWMON_I_LABEL,
+> +			   HWMON_I_INPUT | HWMON_I_MIN | HWMON_I_MAX |
+> +			   HWMON_I_ALARM | HWMON_I_LABEL),
+> +	NULL
+> +};
+> +
+> +static const struct hwmon_ops bcm54140_hwmon_ops = {
+> +	.is_visible = bcm54140_hwmon_is_visible,
+> +	.read = bcm54140_hwmon_read,
+> +	.read_string = bcm54140_hwmon_read_string,
+> +	.write = bcm54140_hwmon_write,
+> +};
+> +
+> +static const struct hwmon_chip_info bcm54140_chip_info = {
+> +	.ops = &bcm54140_hwmon_ops,
+> +	.info = bcm54140_hwmon_info,
+>  };
+>  
+>  static int bcm54140_phy_base_read_rdb(struct phy_device *phydev, u16 rdb)
+> @@ -203,6 +504,74 @@ static int bcm54140_get_base_addr_and_port(struct phy_device *phydev)
+>  	return 0;
+>  }
+>  
+> +/* Check if one PHY has already done the init of the parts common to all PHYs
+> + * in the Quad PHY package.
+> + */
+> +static bool bcm54140_is_pkg_init(struct phy_device *phydev)
+> +{
+> +	struct mdio_device **map = phydev->mdio.bus->mdio_map;
+> +	struct bcm54140_phy_priv *priv;
+> +	struct phy_device *phy;
+> +	int i, addr;
+> +
+> +	/* Quad PHY */
+> +	for (i = 0; i < 4; i++) {
+> +		priv = phydev->priv;
+> +		addr = priv->base_addr + i;
+> +
+> +		if (!map[addr])
+> +			continue;
+> +
+> +		phy = container_of(map[addr], struct phy_device, mdio);
+> +
+> +		if ((phy->phy_id & phydev->drv->phy_id_mask) !=
+> +		    (phydev->drv->phy_id & phydev->drv->phy_id_mask))
+> +			continue;
+> +
+> +		priv = phy->priv;
+> +
+> +		if (priv && priv->pkg_init)
+> +			return true;
+> +	}
+> +
+> +	return false;
+> +}
+> +
+> +static int bcm54140_enable_monitoring(struct phy_device *phydev)
+> +{
+> +	u16 mask, set;
+> +
+> +	/* 3.3V voltage mode */
+> +	set = BCM54140_RDB_MON_CTRL_V_MODE;
+> +
+> +	/* select round-robin */
+> +	mask = BCM54140_RDB_MON_CTRL_SEL_MASK;
+> +	set |= FIELD_PREP(BCM54140_RDB_MON_CTRL_SEL_MASK,
+> +			  BCM54140_RDB_MON_CTRL_SEL_RR);
+> +
+> +	/* remove power-down bit */
+> +	mask |= BCM54140_RDB_MON_CTRL_PWR_DOWN;
+> +
+> +	return bcm_phy_modify_rdb(phydev, BCM54140_RDB_MON_CTRL, mask, set);
+> +}
+> +
+> +static int bcm54140_phy_probe_once(struct phy_device *phydev)
+> +{
+> +	struct device *hwmon;
+> +	int ret;
+> +
+> +	/* enable hardware monitoring */
+> +	ret = bcm54140_enable_monitoring(phydev);
+> +	if (ret)
+> +		return ret;
+> +
+> +	hwmon = devm_hwmon_device_register_with_info(&phydev->mdio.dev,
+> +						     "BCM54140", phydev,
+> +						     &bcm54140_chip_info,
+> +						     NULL);
+> +	return PTR_ERR_OR_ZERO(hwmon);
+> +}
+> +
+>  static int bcm54140_phy_probe(struct phy_device *phydev)
+>  {
+>  	struct bcm54140_phy_priv *priv;
+> @@ -218,6 +587,14 @@ static int bcm54140_phy_probe(struct phy_device *phydev)
+>  	if (ret)
+>  		return ret;
+>  
+> +	if (!bcm54140_is_pkg_init(phydev)) {
+> +		ret = bcm54140_phy_probe_once(phydev);
+> +		if (ret)
+> +			return ret;
+> +	}
+> +
+> +	priv->pkg_init = true;
+> +
+>  	dev_info(&phydev->mdio.dev,
+>  		 "probed (port %d, base PHY address %d)\n",
+>  		 priv->port, priv->base_addr);
+> 
 
-Is there an implicit requirement for efi_allocate_pages_aligned or
-efi_low_alloc_above should be tried in case of failure?
-
-> In that case, you don't need this, you can simply pass ULONG_MAX as
-> the max address.
->
-As RISC-V should allocate memory as low as possible to avoid memory
-wastage, I think the following should work.
-
-efi_low_alloc_above(*reserve_size, MIN_KIMG_ALIGN, reserve_addr, dram_base);
-
-If this looks okay to you, efi_low_alloc_above should be moved back to
-mem.c from relocate.c.
-Should I do it in a separate patch or the original patch should be
-modified so that efi_low_alloc_above was never moved to relocate.c
-
-> > +       if (IS_ALIGNED((u64)_start, MIN_KIMG_ALIGN)) {
-> > +               /*
-> > +                * Just execute from wherever we were loaded by the
-> > +                * UEFI PE/COFF loader if the alignment is suitable.
-> > +                */
-> > +               *image_addr = (u64)_start;
->
-> Change these casts to (unsigned long), as reported by the robot.
->
-Done.
-
-> So you no longer need the placement to be TEXT_OFFSET bytes past a
-> MIN_KIMG_ALIGN aligned boundary, right?
->
-
-Nope. EFI memory marked the firmware area as reserved. So EFI memory
-allocator will make sure that
-it never allocates memory from that region.
-
-> > +               *reserve_size = 0;
-> > +               return EFI_SUCCESS;
-> > +       }
-> > +       status = efi_allocate_pages_aligned(*reserve_size, reserve_addr,
-> > +                                           max_alloc_address, MIN_KIMG_ALIGN);
-> > +
-> > +       if (status != EFI_SUCCESS) {
-> > +               pr_efi_err("Failed to relocate kernel\n");
-> > +               *reserve_size = 0;
-> > +               return status;
-> > +       }
-> > +       *image_addr = *reserve_addr;
-> > +
-> > +       memcpy((void *)*image_addr, _start, kernel_size);
-> > +
-> > +       return EFI_SUCCESS;
-> > +}
-> > --
-> > 2.24.0
-> >
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
-
-
---
-Regards,
-Atish
