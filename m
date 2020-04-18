@@ -2,147 +2,96 @@ Return-Path: <SRS0=3CHW=6C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2D50C38A29
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 15:49:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3AC9C38A29
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 15:51:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B39221973
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 15:49:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99DFC21D93
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 15:51:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="inlWLnNh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726335AbgDRPtt (ORCPT
+        id S1726552AbgDRPvh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 11:49:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43266 "EHLO
+        Sat, 18 Apr 2020 11:51:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43540 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725879AbgDRPtt (ORCPT
+        by vger.kernel.org with ESMTP id S1725879AbgDRPvg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 11:49:49 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1AE18C061A0C;
-        Sat, 18 Apr 2020 08:49:49 -0700 (PDT)
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1jPpiz-0002yr-VC; Sat, 18 Apr 2020 17:49:46 +0200
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 647A51C0330;
-        Sat, 18 Apr 2020 17:49:45 +0200 (CEST)
-Date:   Sat, 18 Apr 2020 15:49:44 -0000
-From:   "tip-bot2 for Mark Brown" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/asm] x86/asm: Provide a Kconfig symbol for disabling old
- assembly annotations
-Cc:     Mark Brown <broonie@kernel.org>, Borislav Petkov <bp@suse.de>,
-        Jiri Slaby <jslaby@suse.cz>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200416182402.6206-1-broonie@kernel.org>
-References: <20200416182402.6206-1-broonie@kernel.org>
+        Sat, 18 Apr 2020 11:51:36 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6930C061A0C;
+        Sat, 18 Apr 2020 08:51:36 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id e6so30138pjt.4;
+        Sat, 18 Apr 2020 08:51:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=0TKQZ7Y52qkZE5tRa53qohqKu4aHiJzFT5U1ZhFT2Ho=;
+        b=inlWLnNhW0N6VWPrG1+xl4+2SvK3e3jybJXOw3fAz7kpLnitpyv6+7Ptjal/0PqDfd
+         7J9YeS9hvI6z6r07YdnB3G4nlH9srwLN803UwyyZB9qv++Ph7RaE7En/5s9kV6CGOVc+
+         b8nzoJnHf2wlbgHmy9RlK1xKnuuL6UiF+SRHB7C4qqV5cTKTyEx4kDz5VJdNRQQFij1c
+         raR8W6C8BQalbr28fmN6kkPPD+O0svAJYZfg5QEWD6GhoyUwMd1dyic+K915keqgP8zt
+         +ZQpNDsBwbv8v7WsN60V7SF+ABSTQfi9Tm+kTiSid3pDQax4eezAsySF+UyRFrQ+YiGk
+         TETA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=0TKQZ7Y52qkZE5tRa53qohqKu4aHiJzFT5U1ZhFT2Ho=;
+        b=oWmwsqNBcLXTVbDEuHCZSrWKh41SLQiXw6c0kXCp6OX3rNDtMxqqyDchcc/DTFx/m/
+         bqJlYjLTr/UfoMZVPU0hpDhnnTpCyR06ohhTx7gnjJk+EbIwh8c2NJ66mGPEptRjxvtB
+         BUs/hsJM0cXdXMhte3FRyG/z/GOFrcDz0BU5S35gfIncH3c0YIVKO+uav5asbaYg3Ewc
+         jyKE/nqkcLuC4u4165AIWWMUfC3kNxHWQXy3FuAa8f5Ht74b8Z1jYJ0IF67sTyzsrP0E
+         /TF5MYQhE4teJ9PQQ2kmhyusidxMNZnVhqcRllergBygebj6jjoyZxjDRQQPL6S3FoJo
+         86Cw==
+X-Gm-Message-State: AGi0PubfMMWfVzp6gE/5w160vIW3BiiQrHpCgREbX0qz4lKR3nV6DfGg
+        hhOk5rLkmfS8ODXYUEm2hVYB+xet
+X-Google-Smtp-Source: APiQypKtx8mEU3M5odve966NmskfRG9yFqqh4p3dHqHz77XNujWnD5vT68YT7sBC5CXhs6oVug7gLg==
+X-Received: by 2002:a17:90a:1743:: with SMTP id 3mr11250029pjm.106.1587225095709;
+        Sat, 18 Apr 2020 08:51:35 -0700 (PDT)
+Received: from [192.168.1.3] (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
+        by smtp.gmail.com with ESMTPSA id v26sm3859404pff.45.2020.04.18.08.51.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 18 Apr 2020 08:51:34 -0700 (PDT)
+Subject: Re: [PATCH] net: systemport: Omit superfluous error message in
+ bcm_sysport_probe()
+To:     Tang Bin <tangbin@cmss.chinamobile.com>, f.fainelli@gmail.com,
+        davem@davemloft.net
+Cc:     bcm-kernel-feedback-list@broadcom.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200418085105.12584-1-tangbin@cmss.chinamobile.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <170ca41c-caa5-572b-9178-71e7235e05f6@gmail.com>
+Date:   Sat, 18 Apr 2020 08:51:32 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Firefox/68.0 Thunderbird/68.7.0
 MIME-Version: 1.0
-Message-ID: <158722498497.28353.17087908645261344925.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <20200418085105.12584-1-tangbin@cmss.chinamobile.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/asm branch of tip:
 
-Commit-ID:     2ce0d7f9766f0e49bb54f149c77bae89464932fb
-Gitweb:        https://git.kernel.org/tip/2ce0d7f9766f0e49bb54f149c77bae89464932fb
-Author:        Mark Brown <broonie@kernel.org>
-AuthorDate:    Thu, 16 Apr 2020 19:24:02 +01:00
-Committer:     Borislav Petkov <bp@suse.de>
-CommitterDate: Sat, 18 Apr 2020 17:43:09 +02:00
 
-x86/asm: Provide a Kconfig symbol for disabling old assembly annotations
+On 4/18/2020 1:51 AM, Tang Bin wrote:
+> In the function bcm_sysport_probe(), when get irq failed, the function
+> platform_get_irq() logs an error message, so remove redundant message
+> here.
+> 
+> Signed-off-by: Tang Bin <tangbin@cmss.chinamobile.com>
 
-As x86 was converted to use the modern SYM_ annotations for assembly,
-ifdefs were added to remove the generic definitions of the old style
-annotations on x86. Rather than collect a list of architectures in the
-ifdefs as more architectures are converted over, provide a Kconfig
-symbol for this and update x86 to use it.
-
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Acked-by: Jiri Slaby <jslaby@suse.cz>
-Link: https://lkml.kernel.org/r/20200416182402.6206-1-broonie@kernel.org
----
- arch/x86/Kconfig        | 1 +
- include/linux/linkage.h | 8 ++++----
- lib/Kconfig             | 3 +++
- 3 files changed, 8 insertions(+), 4 deletions(-)
-
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index 1d6104e..e3d22ed 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -91,6 +91,7 @@ config X86
- 	select ARCH_USE_BUILTIN_BSWAP
- 	select ARCH_USE_QUEUED_RWLOCKS
- 	select ARCH_USE_QUEUED_SPINLOCKS
-+	select ARCH_USE_SYM_ANNOTATIONS
- 	select ARCH_WANT_BATCHED_UNMAP_TLB_FLUSH
- 	select ARCH_WANT_DEFAULT_BPF_JIT	if X86_64
- 	select ARCH_WANTS_DYNAMIC_TASK_STRUCT
-diff --git a/include/linux/linkage.h b/include/linux/linkage.h
-index 9280209..d796ec2 100644
---- a/include/linux/linkage.h
-+++ b/include/linux/linkage.h
-@@ -105,7 +105,7 @@
- 
- /* === DEPRECATED annotations === */
- 
--#ifndef CONFIG_X86
-+#ifndef CONFIG_ARCH_USE_SYM_ANNOTATIONS
- #ifndef GLOBAL
- /* deprecated, use SYM_DATA*, SYM_ENTRY, or similar */
- #define GLOBAL(name) \
-@@ -118,10 +118,10 @@
- #define ENTRY(name) \
- 	SYM_FUNC_START(name)
- #endif
--#endif /* CONFIG_X86 */
-+#endif /* CONFIG_ARCH_USE_SYM_ANNOTATIONS */
- #endif /* LINKER_SCRIPT */
- 
--#ifndef CONFIG_X86
-+#ifndef CONFIG_ARCH_USE_SYM_ANNOTATIONS
- #ifndef WEAK
- /* deprecated, use SYM_FUNC_START_WEAK* */
- #define WEAK(name)	   \
-@@ -143,7 +143,7 @@
- #define ENDPROC(name) \
- 	SYM_FUNC_END(name)
- #endif
--#endif /* CONFIG_X86 */
-+#endif /* CONFIG_ARCH_USE_SYM_ANNOTATIONS */
- 
- /* === generic annotations === */
- 
-diff --git a/lib/Kconfig b/lib/Kconfig
-index 5d53f96..e831e1f 100644
---- a/lib/Kconfig
-+++ b/lib/Kconfig
-@@ -80,6 +80,9 @@ config ARCH_USE_CMPXCHG_LOCKREF
- config ARCH_HAS_FAST_MULTIPLIER
- 	bool
- 
-+config ARCH_USE_SYM_ANNOTATIONS
-+	bool
-+
- config INDIRECT_PIO
- 	bool "Access I/O in non-MMIO mode"
- 	depends on ARM64
+Acked-by: Florian Fainelli <f.fainelli@gmail.com>
+-- 
+Florian
