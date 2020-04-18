@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17613C38A29
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:41:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C641C38A2F
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:41:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E876F2220A
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:41:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E62B21D6C
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:41:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587220864;
-	bh=eDTZP46Dc/orj50j4/6k5OiC257YQ0FfV+RyCDxPvF4=;
+	s=default; t=1587220866;
+	bh=9sDGtt4AzKAVwBWf89jS6ybRmtp4c5IDIplgFw7is60=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VaBw8ZKfjHaeaLQCDvubuEh4ekRwIjCdE/OXH0NQ3zarfvbyvPLL7d/3z5OBQKQbU
-	 o+ckbNtpjBZIyBmf1DdSfbyTyLMLVZtwdaHVNKxRM4NwPeMauMsKdGU4JAAKmUoQVv
-	 JXa+F4bgddIW9GnhXmbim/L2NduZD+LNtOL/7GU4=
+	b=jlutEo3K5rFCusqDtJlLbd+NPT+q3JsZjLtvhiqmQ8Z7LsunYXzqdghXsY4y0a262
+	 JB5hBzEmnaA3vaSF3kOKRmfu6mGLmcajYdbgvGR+yCJaoXCfBPEAjfw3Lzs2Hu22S4
+	 xsCYSixWSNawMFcvRdSbJlFcSBrrNN3nJ9OhyHcs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726885AbgDROlC (ORCPT
+        id S1726915AbgDROlF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 10:41:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49654 "EHLO mail.kernel.org"
+        Sat, 18 Apr 2020 10:41:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49724 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726844AbgDROlA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 10:41:00 -0400
+        id S1726882AbgDROlC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 10:41:02 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 665D021D82;
-        Sat, 18 Apr 2020 14:40:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ADB3422240;
+        Sat, 18 Apr 2020 14:41:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587220860;
-        bh=eDTZP46Dc/orj50j4/6k5OiC257YQ0FfV+RyCDxPvF4=;
+        s=default; t=1587220862;
+        bh=9sDGtt4AzKAVwBWf89jS6ybRmtp4c5IDIplgFw7is60=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NT+s+0x3BMWOSngFvoQZ4HE03qzM7nGJ+evD/dBWYIC+hpwybGZMIM06Iyx246Anm
-         UFBUfMe/kIt1airNK7UmkV07DYthtngoWtQ8mHcD435Xn39bE/RWnMv74tNJ/q8Ivm
-         kHcy7djMHNrfAcqHJHvJ/GIK7tBB7s5tltcxaNpk=
+        b=NvFv9DqwD756RbDvfl3h0l6rx20uPKmZeyyTkl/Mp7yiZlk66j6qDk9YA1c/kcmzx
+         HtQhWS1AUENYaTedis9BAf96V6V27hIJjmJkRsX/GYU/6g/B1UDTEiJIbpucgMmZpP
+         pGvJwLsNIAWuexIbsxKZ2zfFmAuojGdubSPKn+mg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     James Smart <jsmart2021@gmail.com>,
-        Dick Kennedy <dick.kennedy@broadcom.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 10/78] scsi: lpfc: Fix crash in target side cable pulls hitting WAIT_FOR_UNREG
-Date:   Sat, 18 Apr 2020 10:39:39 -0400
-Message-Id: <20200418144047.9013-10-sashal@kernel.org>
+Cc:     Qiujun Huang <hqjagain@gmail.com>,
+        Jeff Layton <jlayton@kernel.org>,
+        Ilya Dryomov <idryomov@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, ceph-devel@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 12/78] ceph: return ceph_mdsc_do_request() errors from __get_parent()
+Date:   Sat, 18 Apr 2020 10:39:41 -0400
+Message-Id: <20200418144047.9013-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200418144047.9013-1-sashal@kernel.org>
 References: <20200418144047.9013-1-sashal@kernel.org>
@@ -60,73 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: James Smart <jsmart2021@gmail.com>
+From: Qiujun Huang <hqjagain@gmail.com>
 
-[ Upstream commit 807e7353d8a7105ce884d22b0dbc034993c6679c ]
+[ Upstream commit c6d50296032f0b97473eb2e274dc7cc5d0173847 ]
 
-Kernel is crashing with the following stacktrace:
+Return the error returned by ceph_mdsc_do_request(). Otherwise,
+r_target_inode ends up being NULL this ends up returning ENOENT
+regardless of the error.
 
-  BUG: unable to handle kernel NULL pointer dereference at
-    00000000000005bc
-  IP: lpfc_nvme_register_port+0x1a8/0x3a0 [lpfc]
-  ...
-  Call Trace:
-  lpfc_nlp_state_cleanup+0x2b2/0x500 [lpfc]
-  lpfc_nlp_set_state+0xd7/0x1a0 [lpfc]
-  lpfc_cmpl_prli_prli_issue+0x1f7/0x450 [lpfc]
-  lpfc_disc_state_machine+0x7a/0x1e0 [lpfc]
-  lpfc_cmpl_els_prli+0x16f/0x1e0 [lpfc]
-  lpfc_sli_sp_handle_rspiocb+0x5b2/0x690 [lpfc]
-  lpfc_sli_handle_slow_ring_event_s4+0x182/0x230 [lpfc]
-  lpfc_do_work+0x87f/0x1570 [lpfc]
-  kthread+0x10d/0x130
-  ret_from_fork+0x35/0x40
-
-During target side fault injections, it is possible to hit the
-NLP_WAIT_FOR_UNREG case in lpfc_nvme_remoteport_delete. A prior commit
-fixed a rebind and delete race condition, but called lpfc_nlp_put
-unconditionally. This triggered a deletion and the crash.
-
-Fix by movng nlp_put to inside the NLP_WAIT_FOR_UNREG case, where the nlp
-will be being unregistered/removed. Leave the reference if the flag isn't
-set.
-
-Link: https://lore.kernel.org/r/20200322181304.37655-8-jsmart2021@gmail.com
-Fixes: b15bd3e6212e ("scsi: lpfc: Fix nvme remoteport registration race conditions")
-Signed-off-by: James Smart <jsmart2021@gmail.com>
-Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
+Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/lpfc/lpfc_nvme.c | 14 ++++++++------
- 1 file changed, 8 insertions(+), 6 deletions(-)
+ fs/ceph/export.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/scsi/lpfc/lpfc_nvme.c b/drivers/scsi/lpfc/lpfc_nvme.c
-index 8e0f03ef346b6..c475ae0f2f515 100644
---- a/drivers/scsi/lpfc/lpfc_nvme.c
-+++ b/drivers/scsi/lpfc/lpfc_nvme.c
-@@ -342,13 +342,15 @@ lpfc_nvme_remoteport_delete(struct nvme_fc_remote_port *remoteport)
- 	if (ndlp->upcall_flags & NLP_WAIT_FOR_UNREG) {
- 		ndlp->nrport = NULL;
- 		ndlp->upcall_flags &= ~NLP_WAIT_FOR_UNREG;
--	}
--	spin_unlock_irq(&vport->phba->hbalock);
-+		spin_unlock_irq(&vport->phba->hbalock);
+diff --git a/fs/ceph/export.c b/fs/ceph/export.c
+index b6bfa94332c30..79dc06881e78e 100644
+--- a/fs/ceph/export.c
++++ b/fs/ceph/export.c
+@@ -315,6 +315,11 @@ static struct dentry *__get_parent(struct super_block *sb,
  
--	/* Remove original register reference. The host transport
--	 * won't reference this rport/remoteport any further.
--	 */
--	lpfc_nlp_put(ndlp);
-+		/* Remove original register reference. The host transport
-+		 * won't reference this rport/remoteport any further.
-+		 */
-+		lpfc_nlp_put(ndlp);
-+	} else {
-+		spin_unlock_irq(&vport->phba->hbalock);
+ 	req->r_num_caps = 1;
+ 	err = ceph_mdsc_do_request(mdsc, NULL, req);
++	if (err) {
++		ceph_mdsc_put_request(req);
++		return ERR_PTR(err);
 +	}
- 
-  rport_err:
- 	return;
++
+ 	inode = req->r_target_inode;
+ 	if (inode)
+ 		ihold(inode);
 -- 
 2.20.1
 
