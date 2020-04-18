@@ -2,215 +2,167 @@ Return-Path: <SRS0=3CHW=6C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D17DEC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 01:30:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A454C352BE
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 01:30:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A6D2C214D8
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 01:30:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="E/BPFBUg"
+	by mail.kernel.org (Postfix) with ESMTP id EA1B4214D8
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 01:30:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725932AbgDRBaM (ORCPT
+        id S1725991AbgDRBaO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 21:30:12 -0400
-Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:46746 "EHLO
-        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725784AbgDRBaM (ORCPT
+        Fri, 17 Apr 2020 21:30:14 -0400
+Received: from netrider.rowland.org ([192.131.102.5]:36477 "HELO
+        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1725939AbgDRBaN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 21:30:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1587173410; x=1618709410;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=TgLOQP4KFPcpmO+XO0e5x6r7C5oHSSaPX8vPL0lmB6I=;
-  b=E/BPFBUgrQC+9CCoNC8kNx/eWdnBnpgUPi2mJ/4QFybC56h1WYoCP52b
-   VWkgeBLAhaqbUdKHv0kGzSDYSG1TyLEGDgQ6/cqYIoag2P6bKwQEaMsUm
-   ojU30wcJE4ZcPSDH8ITjVYHJEh0nbDNKInZwRjRYEXVjhFbYSnXoFEO2F
-   0=;
-IronPort-SDR: kmPzObV1aAY0fdgWl51VsWfHHXMDs4RQtEEFNupq43spAvkeUH+w4uhfkzb6l+xWZE7G0PlU2r
- SaoK67iW8NuA==
-X-IronPort-AV: E=Sophos;i="5.72,397,1580774400"; 
-   d="scan'208";a="37818996"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1e-c7c08562.us-east-1.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP; 18 Apr 2020 01:30:08 +0000
-Received: from EX13MTAUWB001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
-        by email-inbound-relay-1e-c7c08562.us-east-1.amazon.com (Postfix) with ESMTPS id 73C55240F92;
-        Sat, 18 Apr 2020 01:30:05 +0000 (UTC)
-Received: from EX13D01UWB003.ant.amazon.com (10.43.161.94) by
- EX13MTAUWB001.ant.amazon.com (10.43.161.207) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Sat, 18 Apr 2020 01:30:04 +0000
-Received: from EX13D01UWB002.ant.amazon.com (10.43.161.136) by
- EX13d01UWB003.ant.amazon.com (10.43.161.94) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Sat, 18 Apr 2020 01:30:03 +0000
-Received: from EX13D01UWB002.ant.amazon.com ([10.43.161.136]) by
- EX13d01UWB002.ant.amazon.com ([10.43.161.136]) with mapi id 15.00.1497.006;
- Sat, 18 Apr 2020 01:30:03 +0000
-From:   "Singh, Balbir" <sblbir@amazon.com>
-To:     "tglx@linutronix.de" <tglx@linutronix.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     "keescook@chromium.org" <keescook@chromium.org>,
-        "tony.luck@intel.com" <tony.luck@intel.com>,
-        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
-        "jpoimboe@redhat.com" <jpoimboe@redhat.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "dave.hansen@intel.com" <dave.hansen@intel.com>
-Subject: Re: [PATCH v3 4/5] arch/x86: Optionally flush L1D on context switch
-Thread-Topic: [PATCH v3 4/5] arch/x86: Optionally flush L1D on context switch
-Thread-Index: AQHWFSDiILymQ2sO/kG+/tLaFrB+SA==
-Date:   Sat, 18 Apr 2020 01:30:03 +0000
-Message-ID: <bdf950167b86a01db93a9633b708c17a66ad73d0.camel@amazon.com>
-References: <20200408090229.16467-1-sblbir@amazon.com>
-         <20200408090229.16467-5-sblbir@amazon.com>
-         <87mu7akwdx.fsf@nanos.tec.linutronix.de>
-In-Reply-To: <87mu7akwdx.fsf@nanos.tec.linutronix.de>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.43.162.239]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <7A44EE0D884B5844B68DA397B9CE9C7F@amazon.com>
-Content-Transfer-Encoding: base64
+        Fri, 17 Apr 2020 21:30:13 -0400
+Received: (qmail 23212 invoked by uid 500); 17 Apr 2020 21:30:12 -0400
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 17 Apr 2020 21:30:12 -0400
+Date:   Fri, 17 Apr 2020 21:30:12 -0400 (EDT)
+From:   Alan Stern <stern@rowland.harvard.edu>
+X-X-Sender: stern@netrider.rowland.org
+To:     syzbot <syzbot+7bf5a7b0f0a1f9446f4c@syzkaller.appspotmail.com>
+cc:     andreyknvl@google.com, <gregkh@linuxfoundation.org>,
+        <ingrassia@epigenesys.com>, <linux-kernel@vger.kernel.org>,
+        <linux-usb@vger.kernel.org>, <syzkaller-bugs@googlegroups.com>
+Subject: Re: KASAN: use-after-free Read in usbhid_close (3)
+In-Reply-To: <0000000000005f3ae305a3823448@google.com>
+Message-ID: <Pine.LNX.4.44L0.2004172128290.23070-100000@netrider.rowland.org>
 MIME-Version: 1.0
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gRnJpLCAyMDIwLTA0LTE3IGF0IDE2OjQxICswMjAwLCBUaG9tYXMgR2xlaXhuZXIgd3JvdGU6
-DQo+IA0KPiBCYWxiaXIgU2luZ2ggPHNibGJpckBhbWF6b24uY29tPiB3cml0ZXM6DQo+IA0KPiA+
-ICtzdGF0aWMgdm9pZCAqbDFkX2ZsdXNoX3BhZ2VzOw0KPiA+ICtzdGF0aWMgREVGSU5FX01VVEVY
-KGwxZF9mbHVzaF9tdXRleCk7DQo+ID4gKw0KPiA+ICtpbnQgZW5hYmxlX2wxZF9mbHVzaF9mb3Jf
-dGFzayhzdHJ1Y3QgdGFza19zdHJ1Y3QgKnRzaykNCj4gDQo+IHN0YXRpYyA/DQo+IA0KPiA+ICt7
-DQo+ID4gKyAgICAgc3RydWN0IHBhZ2UgKnBhZ2U7DQo+ID4gKyAgICAgaW50IHJldCA9IDA7DQo+
-ID4gKw0KPiA+ICsgICAgIGlmIChzdGF0aWNfY3B1X2hhcyhYODZfRkVBVFVSRV9GTFVTSF9MMUQp
-KQ0KPiA+ICsgICAgICAgICAgICAgZ290byBkb25lOw0KPiA+ICsNCj4gPiArICAgICBwYWdlID0g
-UkVBRF9PTkNFKGwxZF9mbHVzaF9wYWdlcyk7DQo+ID4gKyAgICAgaWYgKHVubGlrZWx5KCFwYWdl
-KSkgew0KPiA+ICsgICAgICAgICAgICAgbXV0ZXhfbG9jaygmbDFkX2ZsdXNoX211dGV4KTsNCj4g
-PiArICAgICAgICAgICAgIGlmICghbDFkX2ZsdXNoX3BhZ2VzKSB7DQo+ID4gKyAgICAgICAgICAg
-ICAgICAgICAgIGwxZF9mbHVzaF9wYWdlcyA9IGFsbG9jX2wxZF9mbHVzaF9wYWdlcygpOw0KPiA+
-ICsgICAgICAgICAgICAgICAgICAgICBpZiAoIWwxZF9mbHVzaF9wYWdlcykgew0KPiA+ICsgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgIG11dGV4X3VubG9jaygmbDFkX2ZsdXNoX211dGV4KTsN
-Cj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICByZXR1cm4gLUVOT01FTTsNCj4gPiAr
-ICAgICAgICAgICAgICAgICAgICAgfQ0KPiA+ICsgICAgICAgICAgICAgfQ0KPiA+ICsgICAgICAg
-ICAgICAgbXV0ZXhfdW5sb2NrKCZsMWRfZmx1c2hfbXV0ZXgpOw0KPiA+ICsgICAgIH0NCj4gDQo+
-IFNvIHRoaXMgaXMgKy8tIHRoZSBtdXRleCB0aGUgc2FtZSBjb2RlIGFzIEtWTSBoYXMuIFdoeSBp
-cyB0aGlzIG5vdCBtb3ZlZA0KPiBpbnRvIGwxZF9mbHVzaC5jLCBpLmUuDQo+IA0KPiBzdGF0aWMg
-dm9pZCAqbDFkX2ZsdXNoX3BhZ2VzOw0KPiBzdGF0aWMgREVGSU5FX01VVEVYKGwxZF9mbHVzaF9t
-dXRleCk7DQo+IA0KPiBpbnQgbDFkX2ZsdXNoX2luaXQodm9pZCkNCj4gew0KPiAgICAgICAgIGlu
-dCByZXQ7DQo+IA0KPiAgICAgICAgIGlmIChzdGF0aWNfY3B1X2hhcyhYODZfRkVBVFVSRV9GTFVT
-SF9MMUQpIHx8IGwxZF9mbHVzaF9wYWdlcykNCj4gICAgICAgICAgICAgICAgIHJldHVybiAwOw0K
-PiANCj4gICAgICAgICBtdXRleF9sb2NrKCZsMWRfZmx1c2hfbXV0ZXgpOw0KPiAgICAgICAgIGlm
-ICghbDFkX2ZsdXNoX3BhZ2VzKQ0KPiAgICAgICAgICAgICAgICAgbDFkX2ZsdXNoX3BhZ2VzID0g
-bDFkX2ZsdXNoX2FsbG9jX3BhZ2VzKCk7DQo+ICAgICAgICAgcmV0ID0gbDFkX2ZsdXNoX3BhZ2Vz
-ID8gMCA6IC1FTk9NRU07DQo+ICAgICAgICAgbXV0ZXhfdW5sb2NrKCZsMWRfZmx1c2hfbXV0ZXgp
-Ow0KPiAgICAgICAgIHJldHVybiByZXQ7DQo+IH0NCj4gRVhQT1JUX1NZTUJPTF9HUEwobDFkX2Zs
-dXNoX2luaXQpOw0KPiANCj4gd2hpY2ggcmVtb3ZlcyB0aGUgZXhwb3J0IG9mIGwxZF9mbHVzaF9h
-bGxvY19wYWdlcygpIGFuZCBnZXRzIHJpZCBvZiB0aGUNCj4gY2xlYW51cCBjb3VudGVycGFydC4g
-SW4gYSByZWFsIHdvcmxkIGRlcGxveW1lbnQgdW5sb2FkaW5nIG9mIFZNWCBpZiB1c2VkDQo+IG9u
-Y2UgaXMgdW5saWtlbHkgYW5kIHdpdGggdGhlIHRhc2sgYmFzZWQgb25lIHlvdSBlbmQgdXAgd2l0
-aCB0aGVzZSBwYWdlcw0KPiAnbGVha2VkJyBhbnl3YXkgaWYgdXNlZCBvbmNlLg0KPiANCg0KSSBk
-b24ndCB3YW50IHRoZSBwYXRjaGVzIHRvIGJlIGVuZm9yY2UgdGhhdCBvbmUgY2Fubm90IHVubG9h
-ZCB0aGUga3ZtIG1vZHVsZSwNCmJ1dCBJIGNhbiByZWZhY3RvciB0aG9zZSBiaXRzIGEgYml0IG1v
-cmUNCg0KDQo+IENhbiB3ZSBwbGVhc2UgbWFrZSB0aGlzIHNpbXBsZSBhbmQgY29uc2lzdGVudD8N
-Cg0KDQoNCj4gDQo+ID4gK2RvbmU6DQo+ID4gKyAgICAgc2V0X3RpX3RocmVhZF9mbGFnKCZ0c2st
-PnRocmVhZF9pbmZvLCBUSUZfU1BFQ19GTFVTSF9MMUQpOw0KPiA+ICsgICAgIHJldHVybiByZXQ7
-DQo+ID4gK30NCj4gPiArDQo+ID4gK2ludCBkaXNhYmxlX2wxZF9mbHVzaF9mb3JfdGFzayhzdHJ1
-Y3QgdGFza19zdHJ1Y3QgKnRzaykNCj4gDQo+IHN0YXRpYyB2b2lkPw0KPiANCj4gPiArew0KPiA+
-ICsgICAgIGNsZWFyX3RpX3RocmVhZF9mbGFnKCZ0c2stPnRocmVhZF9pbmZvLCBUSUZfU1BFQ19G
-TFVTSF9MMUQpOw0KPiA+ICsgICAgIHJldHVybiAwOw0KPiA+ICt9DQo+ID4gKw0KPiA+ICtpbnQg
-YXJjaF9wcmN0bF9sMWRfZmx1c2hfZ2V0KHN0cnVjdCB0YXNrX3N0cnVjdCAqdHNrKQ0KPiA+ICt7
-DQo+ID4gKyAgICAgcmV0dXJuIHRlc3RfdGlfdGhyZWFkX2ZsYWcoJnRzay0+dGhyZWFkX2luZm8s
-IFRJRl9TUEVDX0ZMVVNIX0wxRCk7DQo+ID4gK30NCj4gPiArDQo+ID4gK2ludCBhcmNoX3ByY3Rs
-X2wxZF9mbHVzaF9zZXQoc3RydWN0IHRhc2tfc3RydWN0ICp0c2ssIHVuc2lnbmVkIGxvbmcNCj4g
-PiBlbmFibGUpDQo+ID4gK3sNCj4gPiArICAgICBpZiAoZW5hYmxlKQ0KPiA+ICsgICAgICAgICAg
-ICAgcmV0dXJuIGVuYWJsZV9sMWRfZmx1c2hfZm9yX3Rhc2sodHNrKTsNCj4gPiArICAgICByZXR1
-cm4gZGlzYWJsZV9sMWRfZmx1c2hfZm9yX3Rhc2sodHNrKTsNCj4gPiArfQ0KPiANCj4gSWYgYW55
-IG90aGVyIGFyY2hpdGVjdHVyZSBlbmFibGVzIHRoaXMsIHRoZW4gaXQgd2lsbCBoYXZlIF9BTExf
-IG9mIHRoaXMNCj4gY29kZSBkdXBsaWNhdGVkLiBTbyB3ZSBzaG91bGQgcmF0aGVyIGhhdmU6DQoN
-CkJ1dCB0aGF0IGlzIGJlaW5nIGEgYml0IHByZXNjcmlwdGl2ZSB0byBhcmNoJ3MgdG8gaW1wbGVt
-ZW50IHRoZWlyIEwxRCBmbHVzaGluZw0KdXNpbmcgVElGIGZsYWdzLCBhcmNoJ3Mgc2hvdWxkIGJl
-IGZyZWUgdG8gdXNlIGJpdHMgaW4gc3RydWN0X21tIGZvciB0aGVpciBhcmNoDQppZiB0aGV5IGZl
-ZWwgc28uDQoNCj4gDQo+ICAgLSBDT05GSUdfRkxVU0hfTDFEIHdoaWNoIGdldHMgc2VsZWN0ZWQg
-YnkgZmVhdHVyZXMgcmVxdWVzdGluZw0KPiAgICAgaXQsIGkuZS4gWDg2ICsgVk1YDQo+IA0KPiAg
-IC0gQ09ORklHX0ZMVVNIX0wxRF9QUkNUTCB3aGljaCBnZXRzIHNlbGVjdGVkIGJ5IGFyY2hpdGVj
-dHVyZXMNCj4gICAgIHN1cHBvcnRpbmcgaXQsIGkuZS4gWDg2LiBUaGlzIHNlbGVjdHMgQ09ORklH
-X0ZMVVNIX0wxRCBhbmQgZW5hYmxlcw0KPiAgICAgdGhlIHByY3RsIGxvZ2ljLg0KPiANCj4gICAt
-IGFyY2gveHh4L2luY2x1ZGUvYXNtL2wxZF9mbHVzaC5oIHdoaWNoIGhhcyBmb3IgeDg2Og0KPiAN
-Cj4gICAgICNpbmNsdWRlIDxsaW51eC9sMWRfZmx1c2guaD4NCj4gICAgICNpbmNsdWRlIDxhc20v
-dGhyZWFkX2luZm8uaD4NCj4gDQo+ICAgICAjZGVmaW5lIEwxRF9DQUNIRV9PUkRFUiA0DQo+IA0K
-PiAgICAgc3RhdGljIGlubGluZSBib29sIGFyY2hfaGFzX2wxZF9mbHVzaF9odyh2b2lkKQ0KPiAg
-ICAgew0KPiAgICAgICAgIHJldHVybiBzdGF0aWNfY3B1X2hhcyhYODZfRkVBVFVSRV9GTFVTSF9M
-MUQpOw0KPiAgICAgfQ0KPiANCj4gICAgIC8vIFRoaXMgaXMgdG8gbWFrZSB0aGUgYWxsb2NhdGlv
-biBmdW5jdGlvbiBjb25kaXRpb25hbCBvciBpZiBhbg0KPiAgICAgLy8gYXJjaGl0ZWN0dXJlIGtu
-b3dzIHVwZnJvbnQgY29tcGlsZSB0aW1lIG9wdGltaXplZC4NCj4gDQo+ICAgICBzdGF0aWMgaW5s
-aW5lIHZvaWQgYXJjaF9sMWRfZmx1c2godm9pZCAqcGFnZXMsIHVuc2lnbmVkIGxvbmcgb3B0aW9u
-cykNCj4gICAgIHsNCj4gICAgICAgICBpZiAoc3RhdGljX2NwdV9oYXMoWDg2X0ZFQVRVUkVfRkxV
-U0hfTDFEKSkgew0KPiAgICAgICAgICAgICAgICAgLi4uDQo+ICAgICAgICAgICAgICAgICByZXR1
-cm47DQo+ICAgICAgICAgfQ0KPiANCj4gICAgICAgICBpZiAob3B0aW9ucyAmIFBPUFVMQVRFX1RM
-QikNCj4gICAgICAgICAgICAgICAgIGwxZF9mbHVzaF9wb3B1bGF0ZV90bGIocGFnZXMpOw0KPiAg
-ICAgICAgIGwxZF9mbHVzaF9zdyhwYWdlcyk7DQo+ICAgICB9DQo+IA0KPiAgICAgLy8gVGhlIG9w
-dGlvbiBiaXRzIGdvIGludG8gbGludXgvbDFkX2ZsdXNoLmggYW5kIHRoZSBhc20gaGVhZGVyIGhh
-cw0KPiAgICAgLy8gZXhhY3RseSBvbmUgZmlsZSB3aGljaCBpbmNsdWRlcyBpdDogbGliL2wxZF9m
-bHVzaC5jDQo+ICAgICAvLw0KPiAgICAgLy8gQWxsIG90aGVyIHBsYWNlcyAoVk1YLCBhcmNoIGNv
-bnRleHQgc3dpdGNoIGNvZGUpIGluY2x1ZGUNCj4gICAgIC8vIGxpbnV4L2wxZF9mbHVzaC5oIHdo
-aWNoIGFsc28gY29udGFpbnMgdGhlIHByb3RvdHlwZXMgZm9yDQo+ICAgICAvLyBsMWRfZmx1c2hf
-aW5pdCgpIGFuZCBsMWRfZmx1c2goKS4NCj4gDQo+ICAgLSBIYXZlIGwxZF9mbHVzaF9pbml0KCkg
-YW5kIHRoZSBhbGxvYyBmdW5jdGlvbiBpbiBsaWIvbDFkX2ZsdXNoLmMNCj4gDQo+ICAgLSBUaGUg
-Zmx1c2ggaW52b2NhdGlvbiBpbiBsaWIvbDFkX2ZsdXNoLmM6DQo+IA0KPiAgICAgdm9pZCBsMWRf
-Zmx1c2godW5zaWduZWQgbG9uZyBvcHRpb25zKQ0KPiAgICAgew0KPiAgICAgICAgIGFyY2hfbDFk
-X2ZsdXNoKGwxZF9mbHVzaF9wYWdlcywgb3B0aW9ucyk7DQo+ICAgICB9DQo+ICAgICBFWFBPUlRf
-U1lNQk9MX0dQTChsMWRfZmx1c2gpOw0KPiANCj4gICAtIEFsbCBhcmNoaXRlY3R1cmVzIGhhdmUg
-dG8gdXNlIFRJRl9TUEVDX0ZMVVNIX0wxRCBpZiB0aGV5IHdhbnQgdG8NCj4gICAgIHN1cHBvcnQg
-dGhlIHByY3RsLg0KPiANCg0KVGhhdCBpcyBhIGNvbmNlcm4gKHNlZSBhYm92ZSksIHNob3VsZCB3
-ZSBlbmZvcmNlIHRoaXM/DQoNCg0KPiAgICAgU28gYWxsIG9mIHRoZSBhYm92ZSBhcmNoX3ByY3Rs
-KigpIHN0dWZmIGJlY29tZXMgZ2VuZXJpYyBhbmQgc2l0cyBpbg0KPiAgICAgbGliL2wxZF9mbHVz
-aC5jIGhpZGRlbiBiZWhpbmQgQ09ORklHX0ZMVVNIX0wxRF9QUkNUTC4NCj4gDQo+ICAgICBUaGUg
-b25seSBhcmNoaXRlY3R1cmUgc3BlY2lmaWMgYml0cyBhcmUgaW4gdGhlIGFjdHVhbCBjb250ZXh0
-IHN3aXRjaA0KPiAgICAgY29kZS4NCj4gDQo+IEhtbT8NCj4gDQoNCkxldCBtZSByZXZpc2l0IHRo
-ZSBjb2RlIGFuZCBzZWUgaWYgSSBjYW4gcmVmYWN0b3IgaXQuDQoNCkJhbGJpcg0KDQo+ID4gZGlm
-ZiAtLWdpdCBhL2luY2x1ZGUvdWFwaS9saW51eC9wcmN0bC5oIGIvaW5jbHVkZS91YXBpL2xpbnV4
-L3ByY3RsLmgNCj4gPiBpbmRleCAwN2I0ZjgxMzFlMzYuLjQyY2IzMDM4YzgxYSAxMDA2NDQNCj4g
-PiAtLS0gYS9pbmNsdWRlL3VhcGkvbGludXgvcHJjdGwuaA0KPiA+ICsrKyBiL2luY2x1ZGUvdWFw
-aS9saW51eC9wcmN0bC5oDQo+ID4gQEAgLTIzOCw0ICsyMzgsOCBAQCBzdHJ1Y3QgcHJjdGxfbW1f
-bWFwIHsNCj4gPiAgI2RlZmluZSBQUl9TRVRfSU9fRkxVU0hFUiAgICAgICAgICAgIDU3DQo+ID4g
-ICNkZWZpbmUgUFJfR0VUX0lPX0ZMVVNIRVIgICAgICAgICAgICA1OA0KPiA+IA0KPiA+ICsvKiBG
-bHVzaCBMMUQgb24gY29udGV4dCBzd2l0Y2ggKG1tKSAqLw0KPiA+ICsjZGVmaW5lIFBSX1NFVF9M
-MURfRkxVU0ggICAgICAgICAgICAgNTkNCj4gPiArI2RlZmluZSBQUl9HRVRfTDFEX0ZMVVNIICAg
-ICAgICAgICAgIDYwDQo+ID4gKw0KPiA+ICAjZW5kaWYgLyogX0xJTlVYX1BSQ1RMX0ggKi8NCj4g
-PiBkaWZmIC0tZ2l0IGEva2VybmVsL3N5cy5jIGIva2VybmVsL3N5cy5jDQo+ID4gaW5kZXggZDMy
-NWYzYWI2MjRhLi41NzhhYThiNmQ4N2UgMTAwNjQ0DQo+ID4gLS0tIGEva2VybmVsL3N5cy5jDQo+
-ID4gKysrIGIva2VybmVsL3N5cy5jDQo+ID4gQEAgLTIyNjIsNiArMjI2MiwxNiBAQCBpbnQgX193
-ZWFrIGFyY2hfcHJjdGxfc3BlY19jdHJsX3NldChzdHJ1Y3QNCj4gPiB0YXNrX3N0cnVjdCAqdCwg
-dW5zaWduZWQgbG9uZyB3aGljaCwNCj4gPiAgICAgICByZXR1cm4gLUVJTlZBTDsNCj4gPiAgfQ0K
-PiA+IA0KPiA+ICtpbnQgX193ZWFrIGFyY2hfcHJjdGxfbDFkX2ZsdXNoX3NldChzdHJ1Y3QgdGFz
-a19zdHJ1Y3QgKnRzaywgdW5zaWduZWQNCj4gPiBsb25nIGVuYWJsZSkNCj4gPiArew0KPiA+ICsg
-ICAgIHJldHVybiAtRUlOVkFMOw0KPiA+ICt9DQo+ID4gKw0KPiA+ICtpbnQgX193ZWFrIGFyY2hf
-cHJjdGxfbDFkX2ZsdXNoX2dldChzdHJ1Y3QgdGFza19zdHJ1Y3QgKnQpDQo+ID4gK3sNCj4gPiAr
-ICAgICByZXR1cm4gLUVJTlZBTDsNCj4gPiArfQ0KPiA+ICsNCj4gPiAgI2RlZmluZSBQUl9JT19G
-TFVTSEVSIChQRl9NRU1BTExPQ19OT0lPIHwgUEZfTEVTU19USFJPVFRMRSkNCj4gPiANCj4gPiAg
-U1lTQ0FMTF9ERUZJTkU1KHByY3RsLCBpbnQsIG9wdGlvbiwgdW5zaWduZWQgbG9uZywgYXJnMiwg
-dW5zaWduZWQgbG9uZywNCj4gPiBhcmczLA0KPiA+IEBAIC0yNTE0LDYgKzI1MjQsMTYgQEAgU1lT
-Q0FMTF9ERUZJTkU1KHByY3RsLCBpbnQsIG9wdGlvbiwgdW5zaWduZWQgbG9uZywNCj4gPiBhcmcy
-LCB1bnNpZ25lZCBsb25nLCBhcmczLA0KPiA+IA0KPiA+ICAgICAgICAgICAgICAgZXJyb3IgPSAo
-Y3VycmVudC0+ZmxhZ3MgJiBQUl9JT19GTFVTSEVSKSA9PSBQUl9JT19GTFVTSEVSOw0KPiA+ICAg
-ICAgICAgICAgICAgYnJlYWs7DQo+ID4gKyAgICAgY2FzZSBQUl9TRVRfTDFEX0ZMVVNIOg0KPiA+
-ICsgICAgICAgICAgICAgaWYgKGFyZzMgfHwgYXJnNCB8fCBhcmc1KQ0KPiA+ICsgICAgICAgICAg
-ICAgICAgICAgICByZXR1cm4gLUVJTlZBTDsNCj4gPiArICAgICAgICAgICAgIGVycm9yID0gYXJj
-aF9wcmN0bF9sMWRfZmx1c2hfc2V0KG1lLCBhcmcyKTsNCj4gPiArICAgICAgICAgICAgIGJyZWFr
-Ow0KPiA+ICsgICAgIGNhc2UgUFJfR0VUX0wxRF9GTFVTSDoNCj4gPiArICAgICAgICAgICAgIGlm
-IChhcmcyIHx8IGFyZzMgfHwgYXJnNCB8fCBhcmc1KQ0KPiA+ICsgICAgICAgICAgICAgICAgICAg
-ICByZXR1cm4gLUVJTlZBTDsNCj4gPiArICAgICAgICAgICAgIGVycm9yID0gYXJjaF9wcmN0bF9s
-MWRfZmx1c2hfZ2V0KG1lKTsNCj4gPiArICAgICAgICAgICAgIGJyZWFrOw0KPiA+ICAgICAgIGRl
-ZmF1bHQ6DQo+ID4gICAgICAgICAgICAgICBlcnJvciA9IC1FSU5WQUw7DQo+ID4gICAgICAgICAg
-ICAgICBicmVhazsNCj4gDQo+IFRoZSBwcmN0bCBpdHNlbGYgbG9va3MgZmluZSB0byBtZS4NCj4g
-DQo+IFRoYW5rcywNCj4gDQo+ICAgICAgICAgdGdseA0KPiANCg0KVGhhbmtzLA0KQmFsYmlyDQo=
+On Fri, 17 Apr 2020, syzbot wrote:
+
+> Hello,
+> 
+> syzbot has tested the proposed patch but the reproducer still triggered crash:
+> WARNING in usbhid_stop
+> 
+> usb 2-1: USB disconnect, device number 5
+> ------------[ cut here ]------------
+> usbhid 2-1:0.0: Stop while open (alloc = 1)
+
+Okay, good.  usbhid_close() should have been called before this 
+happened.  Let's try tracing the pathway; maybe this will show where it 
+goes off the rails.
+
+Alan Stern
+
+
+#syz test: https://github.com/google/kasan.git 0fa84af8
+
+Index: usb-devel/drivers/hid/usbhid/hid-core.c
+===================================================================
+--- usb-devel.orig/drivers/hid/usbhid/hid-core.c
++++ usb-devel/drivers/hid/usbhid/hid-core.c
+@@ -747,6 +747,7 @@ static void usbhid_close(struct hid_devi
+ 		return;
+ 
+ 	hid_cancel_delayed_stuff(usbhid);
++	--hid->alan_open;
+ 	usb_kill_urb(usbhid->urbin);
+ 	usbhid->intf->needs_remote_wakeup = 0;
+ }
+@@ -1177,6 +1178,7 @@ static int usbhid_start(struct hid_devic
+ 		usbhid_set_leds(hid);
+ 		device_set_wakeup_enable(&dev->dev, 1);
+ 	}
++	++hid->alan_open;
+ 	return 0;
+ 
+ fail:
+@@ -1197,6 +1199,10 @@ static void usbhid_stop(struct hid_devic
+ 	if (WARN_ON(!usbhid))
+ 		return;
+ 
++	if (hid->alan_open > 0)
++		dev_WARN(&usbhid->intf->dev, "Stop while open = %d: %d %d %d\n",
++				hid->alan_open,
++				hid->alan1, hid->alan2, hid->alan3);
+ 	if (hid->quirks & HID_QUIRK_ALWAYS_POLL) {
+ 		clear_bit(HID_IN_POLLING, &usbhid->iofl);
+ 		usbhid->intf->needs_remote_wakeup = 0;
+Index: usb-devel/drivers/hid/hid-input.c
+===================================================================
+--- usb-devel.orig/drivers/hid/hid-input.c
++++ usb-devel/drivers/hid/hid-input.c
+@@ -1960,6 +1960,7 @@ void hidinput_disconnect(struct hid_devi
+ {
+ 	struct hid_input *hidinput, *next;
+ 
++	++hid->alan1;
+ 	hidinput_cleanup_battery(hid);
+ 
+ 	list_for_each_entry_safe(hidinput, next, &hid->inputs, list) {
+Index: usb-devel/drivers/input/evdev.c
+===================================================================
+--- usb-devel.orig/drivers/input/evdev.c
++++ usb-devel/drivers/input/evdev.c
+@@ -23,6 +23,7 @@
+ #include <linux/major.h>
+ #include <linux/device.h>
+ #include <linux/cdev.h>
++#include <linux/hid.h>
+ #include "input-compat.h"
+ 
+ struct evdev {
+@@ -1329,6 +1330,11 @@ static void evdev_mark_dead(struct evdev
+ static void evdev_cleanup(struct evdev *evdev)
+ {
+ 	struct input_handle *handle = &evdev->handle;
++	struct hid_device *hid;
++
++	hid = (struct hid_device *) input_get_drvdata(evdev->handle.dev);
++	if (hid)
++		++hid->alan3;
+ 
+ 	evdev_mark_dead(evdev);
+ 	evdev_hangup(evdev);
+Index: usb-devel/drivers/input/input.c
+===================================================================
+--- usb-devel.orig/drivers/input/input.c
++++ usb-devel/drivers/input/input.c
+@@ -23,6 +23,7 @@
+ #include <linux/device.h>
+ #include <linux/mutex.h>
+ #include <linux/rcupdate.h>
++#include <linux/hid.h>
+ #include "input-compat.h"
+ #include "input-poller.h"
+ 
+@@ -2081,7 +2082,11 @@ static void input_cleanse_bitmasks(struc
+ static void __input_unregister_device(struct input_dev *dev)
+ {
+ 	struct input_handle *handle, *next;
++	struct hid_device *hid;
+ 
++	hid = (struct hid_device *) input_get_drvdata(dev);
++	if (hid)
++		++hid->alan2;
+ 	input_disconnect_device(dev);
+ 
+ 	mutex_lock(&input_mutex);
+Index: usb-devel/include/linux/hid.h
+===================================================================
+--- usb-devel.orig/include/linux/hid.h
++++ usb-devel/include/linux/hid.h
+@@ -618,6 +618,9 @@ struct hid_device {							/* device repo
+ 	struct list_head debug_list;
+ 	spinlock_t  debug_list_lock;
+ 	wait_queue_head_t debug_wait;
++
++	int alan_open;
++	int alan1, alan2, alan3;
+ };
+ 
+ #define to_hid_device(pdev) \
+
