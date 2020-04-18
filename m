@@ -2,48 +2,49 @@ Return-Path: <SRS0=3CHW=6C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E69DC2D0EF
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 10:23:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53648C2D0EF
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 10:24:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4A766206CD
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 10:23:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 317B8206CD
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 10:24:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CE1Q/Z9Q"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PvKacxzu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725991AbgDRKXi (ORCPT
+        id S1726207AbgDRKX7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 06:23:38 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:36578 "EHLO
+        Sat, 18 Apr 2020 06:23:59 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:55680 "EHLO
         us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725939AbgDRKWi (ORCPT
+        by vger.kernel.org with ESMTP id S1726055AbgDRKW4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 06:22:38 -0400
+        Sat, 18 Apr 2020 06:22:56 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587205352;
+        s=mimecast20190719; t=1587205375;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=1YUNj0J7TkJiSbunnXUbMtu2GWAgY2j7p/Zlm7bbq2k=;
-        b=CE1Q/Z9Qv+jRm71HhrdWp1SfeALjhMN/yBtVANoo2dHinoqeegaC1CfZ6zCmwmA5uYZ6Nj
-        rTdSIMrEfiKhyogjRCF0duA2qLgTJLBkcKjSesM7m/W2mOtYvwZ06kAKYQ8XIoT07jFfK8
-        taFTaVmWCLwSuRz00WyHFkW43CCCnzE=
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=3lpbQnvyYAiZDMr8jgPD/xRUBOFhpQbJdeCf00ry9Oo=;
+        b=PvKacxzul0T27MdQe/WArcbO05Yp02+jxkMvXkrxzPfERqMYAIQ+PQXnerNrhNP90SxfZE
+        uQdzRoKxQIPe8gxkvzXAzWzD8F/bEK9ZOwoNhGXlRqePu/xK//NuVsTYYm55as69SEPrcb
+        hv8IfRlV9QDNC/AQvlB9pInHsWnU50k=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-392-hFGc7cjiNHuGB6rKmK9-Hg-1; Sat, 18 Apr 2020 06:22:29 -0400
-X-MC-Unique: hFGc7cjiNHuGB6rKmK9-Hg-1
+ us-mta-261-A_0BIWvgNwmlRfFa6cISHg-1; Sat, 18 Apr 2020 06:22:54 -0400
+X-MC-Unique: A_0BIWvgNwmlRfFa6cISHg-1
 Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id AD31418B9FC1;
-        Sat, 18 Apr 2020 10:22:26 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C9CBA18B9FC1;
+        Sat, 18 Apr 2020 10:22:52 +0000 (UTC)
 Received: from eperezma.remote.csb (ovpn-112-94.ams2.redhat.com [10.36.112.94])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 296401000325;
-        Sat, 18 Apr 2020 10:22:21 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id EE8581000325;
+        Sat, 18 Apr 2020 10:22:47 +0000 (UTC)
 From:   =?UTF-8?q?Eugenio=20P=C3=A9rez?= <eperezma@redhat.com>
 To:     "Michael S. Tsirkin" <mst@redhat.com>
 Cc:     "virtualization@lists.linux-foundation.org" 
@@ -56,9 +57,11 @@ Cc:     "virtualization@lists.linux-foundation.org"
         kvm list <kvm@vger.kernel.org>,
         Stephen Rothwell <sfr@canb.auug.org.au>,
         Linux Next Mailing List <linux-next@vger.kernel.org>
-Subject: [PATCH v3 0/8] tools/vhost: Reset virtqueue on tests
-Date:   Sat, 18 Apr 2020 12:22:09 +0200
-Message-Id: <20200418102217.32327-1-eperezma@redhat.com>
+Subject: [PATCH v3 7/8] tools/virtio: Reset index in virtio_test --reset.
+Date:   Sat, 18 Apr 2020 12:22:16 +0200
+Message-Id: <20200418102217.32327-8-eperezma@redhat.com>
+In-Reply-To: <20200418102217.32327-1-eperezma@redhat.com>
+References: <20200418102217.32327-1-eperezma@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
@@ -68,58 +71,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This series add tests used to validate the "vhost: Reset batched
-descriptors on SET_VRING_BASE call" series, with a few minor updates of
-them.
+This way behavior for vhost is more like a VM.
 
-They are based on the tests sent back them, the ones that were not
-included (reasons in that thread). This series changes:
+Signed-off-by: Eugenio P=C3=A9rez <eperezma@redhat.com>
+---
+ tools/virtio/virtio_test.c | 26 ++++++++++++++++++++++++--
+ 1 file changed, 24 insertions(+), 2 deletions(-)
 
-* Delete need to export the ugly function in virtio_ring, now all the
-code is added in tools/virtio (except the one line fix).
-* Add forgotten uses of vhost_vq_set_backend. Fix bad usage order in
-vhost_test_set_backend.
-* Drop random reset, not really needed.
-* Minor changes.
-
-The first patch of this patchset ("vhost: Not cleaning batched descs in
-VHOST_SET_VRING_BASE ioctl") should be squashed with ("vhost: batching
-fetches") (currenlty, commit e7539c20a4a60b3a1bda3e7218c0d2a20669f357
-in mst repository vhost branch).
-
-Thanks!
-
-Changes from v2:
-* Squashed commits with fixes.
-* Back to plain vring_*
-
-Changes from v1:
-* Different base, since branch was force-pushed.
-* Using new vring_legacy_*, as base uses them now.
-
-This serie is meant to be applied on top of
-801f9bae9cf35b3192c3959d81a717e7985c64ed in
-git.kernel.org/pub/scm/linux/kernel/git/mst/vhost.git.
-
-Eugenio P=C3=A9rez (8):
-  vhost: Not cleaning batched descs in VHOST_SET_VRING_BASE ioctl
-  tools/virtio: Add --batch option
-  tools/virtio: Add --batch=3Drandom option
-  tools/virtio: Add --reset
-  tools/virtio: Use __vring_new_virtqueue in virtio_test.c
-  tools/virtio: Extract virtqueue initialization in vq_reset
-  tools/virtio: Reset index in virtio_test --reset.
-  tools/virtio: Use tools/include/list.h instead of stubs
-
- drivers/vhost/test.c        |  57 +++++++++++++++
- drivers/vhost/test.h        |   1 +
- drivers/vhost/vhost.c       |   1 -
- tools/virtio/linux/kernel.h |   7 +-
- tools/virtio/linux/virtio.h |   5 +-
- tools/virtio/virtio_test.c  | 139 ++++++++++++++++++++++++++++++------
- tools/virtio/vringh_test.c  |   2 +
- 7 files changed, 182 insertions(+), 30 deletions(-)
-
+diff --git a/tools/virtio/virtio_test.c b/tools/virtio/virtio_test.c
+index bc16c818bda3..82902fc3ba2a 100644
+--- a/tools/virtio/virtio_test.c
++++ b/tools/virtio/virtio_test.c
+@@ -48,6 +48,7 @@ struct vdev_info {
+=20
+ static const struct vhost_vring_file no_backend =3D { .fd =3D -1 },
+ 				     backend =3D { .fd =3D 1 };
++static const struct vhost_vring_state null_state =3D {};
+=20
+ bool vq_notify(struct virtqueue *vq)
+ {
+@@ -173,14 +174,19 @@ static void run_test(struct vdev_info *dev, struct =
+vq_info *vq,
+ 	unsigned len;
+ 	long long spurious =3D 0;
+ 	const bool random_batch =3D batch =3D=3D RANDOM_BATCH;
++
+ 	r =3D ioctl(dev->control, VHOST_TEST_RUN, &test);
+ 	assert(r >=3D 0);
++	if (!reset_n) {
++		next_reset =3D INT_MAX;
++	}
++
+ 	for (;;) {
+ 		virtqueue_disable_cb(vq->vq);
+ 		completed_before =3D completed;
+ 		started_before =3D started;
+ 		do {
+-			const bool reset =3D reset_n && completed > next_reset;
++			const bool reset =3D completed > next_reset;
+ 			if (random_batch)
+ 				batch =3D (random() % vq->vring.num) + 1;
+=20
+@@ -223,10 +229,24 @@ static void run_test(struct vdev_info *dev, struct =
+vq_info *vq,
+ 			}
+=20
+ 			if (reset) {
++				struct vhost_vring_state s =3D { .index =3D 0 };
++
++				vq_reset(vq, vq->vring.num, &dev->vdev);
++
++				r =3D ioctl(dev->control, VHOST_GET_VRING_BASE,
++					  &s);
++				assert(!r);
++
++				s.num =3D 0;
++				r =3D ioctl(dev->control, VHOST_SET_VRING_BASE,
++					  &null_state);
++				assert(!r);
++
+ 				r =3D ioctl(dev->control, VHOST_TEST_SET_BACKEND,
+ 					  &backend);
+ 				assert(!r);
+=20
++				started =3D completed;
+ 				while (completed > next_reset)
+ 					next_reset +=3D completed;
+ 			}
+@@ -248,7 +268,9 @@ static void run_test(struct vdev_info *dev, struct vq=
+_info *vq,
+ 	test =3D 0;
+ 	r =3D ioctl(dev->control, VHOST_TEST_RUN, &test);
+ 	assert(r >=3D 0);
+-	fprintf(stderr, "spurious wakeups: 0x%llx\n", spurious);
++	fprintf(stderr,
++		"spurious wakeups: 0x%llx started=3D0x%lx completed=3D0x%lx\n",
++		spurious, started, completed);
+ }
+=20
+ const char optstring[] =3D "h";
 --=20
 2.18.1
 
