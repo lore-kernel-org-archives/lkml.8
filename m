@@ -4,53 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53795C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:10:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EF91C38A2F
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:10:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2893B21D82
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:10:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E94EE21D6C
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:10:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587219022;
-	bh=W8o+PisOtU2oX7Zz9Q/BVrsKAC2DBRGXAIHr24EMmzs=;
+	s=default; t=1587219026;
+	bh=O9zMXw7EVV/7T8D8FIM99Vc76xzMBdRqHU46kaUojBs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NdFQo/7/bf6PjY6QVMcmBvnKDpqZ9inGPJU/+yv9f24cHSnoBA/vTj4IvAhtulJrT
-	 c832moswQr3YurdW/OEW/z9AxcsqAT0oMmB+sQHLOme2oABMW0TjOpQwDFX26Ntxrr
-	 M2FarI4DTGm9hpDQNWDF1G+KnkBDPGHcUJGDH/6I=
+	b=nuWadm9/RUzKWtT/vrYPpdbQHeKkxOt45Rvi0gkRWLlj9fALnmACSy/x4BkLCY3tT
+	 VwMQ6UhN2T4hd/aE+nFfNitACtDeFvjFs7oyRJ8oYkfte8HfqqCmSaVOArifgdXT85
+	 lTRNRSqQbNr6gQjuDPUPXwSAmrt1giCPN+Bv6U04=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727768AbgDROKV (ORCPT
+        id S1727788AbgDROKZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 10:10:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37978 "EHLO mail.kernel.org"
+        Sat, 18 Apr 2020 10:10:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38164 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726823AbgDROKI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 10:10:08 -0400
+        id S1726855AbgDROKM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 10:10:12 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EDCD621D6C;
-        Sat, 18 Apr 2020 14:10:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8EE8821D6C;
+        Sat, 18 Apr 2020 14:10:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587219007;
-        bh=W8o+PisOtU2oX7Zz9Q/BVrsKAC2DBRGXAIHr24EMmzs=;
+        s=default; t=1587219012;
+        bh=O9zMXw7EVV/7T8D8FIM99Vc76xzMBdRqHU46kaUojBs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2Jw0S5Sklct9YnAAh92kdtbRUb4/hyLd2cdPTrcNcWfGmx7PCQKcHEN6oc4xfWcus
-         YgITxWneRZa58nPKIz95/l+IZN37841Rge3AsU8XslhZG1UFQb1NFdHLZAKSx+5z1n
-         EdSlPfub7b+iTMpZqzslpAxK+L+t2K3B2OHLRKck=
+        b=vsPEa9TWdu3BP2SyTFSV/dfPI7CcyeLC2i/XzFopQJ2xhpKY13p8Mbc5l6N4pFkBp
+         KQ0bPi96dALztuVv81hFJFkgqbscOJ8K+c6Z16ZMzdY2L6Ar3t3Su93LzC4rPDwslh
+         7k2q7gQBjquHBRbkxFwWWW6KksasdW+FoAvboKhk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Eric Auger <eric.auger@redhat.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Joerg Roedel <jroedel@suse.de>,
-        Sasha Levin <sashal@kernel.org>,
-        virtualization@lists.linux-foundation.org,
-        iommu@lists.linux-foundation.org
-Subject: [PATCH AUTOSEL 5.5 45/75] iommu/virtio: Fix freeing of incomplete domains
-Date:   Sat, 18 Apr 2020 10:08:40 -0400
-Message-Id: <20200418140910.8280-45-sashal@kernel.org>
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-nvdimm@lists.01.org
+Subject: [PATCH AUTOSEL 5.5 49/75] libnvdimm: Out of bounds read in __nd_ioctl()
+Date:   Sat, 18 Apr 2020 10:08:44 -0400
+Message-Id: <20200418140910.8280-49-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200418140910.8280-1-sashal@kernel.org>
 References: <20200418140910.8280-1-sashal@kernel.org>
@@ -63,61 +59,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jean-Philippe Brucker <jean-philippe@linaro.org>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit 7062af3ed2ba451029e3733d9f677c68f5ea9e77 ]
+[ Upstream commit f84afbdd3a9e5e10633695677b95422572f920dc ]
 
-Calling viommu_domain_free() on a domain that hasn't been finalised (not
-attached to any device, for example) can currently cause an Oops,
-because we attempt to call ida_free() on ID 0, which may either be
-unallocated or used by another domain.
+The "cmd" comes from the user and it can be up to 255.  It it's more
+than the number of bits in long, it results out of bounds read when we
+check test_bit(cmd, &cmd_mask).  The highest valid value for "cmd" is
+ND_CMD_CALL (10) so I added a compare against that.
 
-Only initialise the vdomain->viommu pointer, which denotes a finalised
-domain, at the end of a successful viommu_domain_finalise().
-
-Fixes: edcd69ab9a32 ("iommu: Add virtio-iommu driver")
-Reported-by: Eric Auger <eric.auger@redhat.com>
-Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
-Reviewed-by: Robin Murphy <robin.murphy@arm.com>
-Link: https://lore.kernel.org/r/20200326093558.2641019-3-jean-philippe@linaro.org
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Fixes: 62232e45f4a2 ("libnvdimm: control (ioctl) messages for nvdimm_bus and nvdimm devices")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Link: https://lore.kernel.org/r/20200225162055.amtosfy7m35aivxg@kili.mountain
+Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iommu/virtio-iommu.c | 16 +++++++++-------
- 1 file changed, 9 insertions(+), 7 deletions(-)
+ drivers/nvdimm/bus.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/iommu/virtio-iommu.c b/drivers/iommu/virtio-iommu.c
-index 315c7cc4f99d8..779a6025b5962 100644
---- a/drivers/iommu/virtio-iommu.c
-+++ b/drivers/iommu/virtio-iommu.c
-@@ -613,18 +613,20 @@ static int viommu_domain_finalise(struct viommu_dev *viommu,
- 	int ret;
- 	struct viommu_domain *vdomain = to_viommu_domain(domain);
+diff --git a/drivers/nvdimm/bus.c b/drivers/nvdimm/bus.c
+index a8b5159685699..09087c38fabdc 100644
+--- a/drivers/nvdimm/bus.c
++++ b/drivers/nvdimm/bus.c
+@@ -1042,8 +1042,10 @@ static int __nd_ioctl(struct nvdimm_bus *nvdimm_bus, struct nvdimm *nvdimm,
+ 			return -EFAULT;
+ 	}
  
--	vdomain->viommu		= viommu;
--	vdomain->map_flags	= viommu->map_flags;
-+	ret = ida_alloc_range(&viommu->domain_ids, viommu->first_domain,
-+			      viommu->last_domain, GFP_KERNEL);
-+	if (ret < 0)
-+		return ret;
-+
-+	vdomain->id		= (unsigned int)ret;
+-	if (!desc || (desc->out_num + desc->in_num == 0) ||
+-			!test_bit(cmd, &cmd_mask))
++	if (!desc ||
++	    (desc->out_num + desc->in_num == 0) ||
++	    cmd > ND_CMD_CALL ||
++	    !test_bit(cmd, &cmd_mask))
+ 		return -ENOTTY;
  
- 	domain->pgsize_bitmap	= viommu->pgsize_bitmap;
- 	domain->geometry	= viommu->geometry;
- 
--	ret = ida_alloc_range(&viommu->domain_ids, viommu->first_domain,
--			      viommu->last_domain, GFP_KERNEL);
--	if (ret >= 0)
--		vdomain->id = (unsigned int)ret;
-+	vdomain->map_flags	= viommu->map_flags;
-+	vdomain->viommu		= viommu;
- 
--	return ret > 0 ? 0 : ret;
-+	return 0;
- }
- 
- static void viommu_domain_free(struct iommu_domain *domain)
+ 	/* fail write commands (when read-only) */
 -- 
 2.20.1
 
