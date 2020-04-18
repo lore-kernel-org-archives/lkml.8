@@ -7,104 +7,94 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BDE0C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 13:52:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4333DC38A2F
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 13:52:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D54582054F
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 13:52:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 171EF2054F
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 13:52:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587217965;
-	bh=0tTVy2cifvjkYAguZoxHvbmgMCssyRY48Ll7njglOCo=;
+	s=default; t=1587217973;
+	bh=e50X4MmtkJexI4QRd79cP3skCvlBuDS3y6zV+tBhyIc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RT9XV2z1+Kin7OeBVJd1Df0XQl99mnqjrFqOM6zMUrjeLSV3J2GNTKRd4j/QrXFd7
-	 kLLETl/IzSpEx4rsCqzoOhJ9Kl31qUX2SZZLcTXuNW5s1nX4EQ3nLlUwsohwSoN6cz
-	 qFsd+ukFTyK1rjqOMPK3cfBCfh7FxOp3WC6UOTA4=
+	b=bIFevhr0IPHiiGW9orHOcXg75t4Xn6vFgkUNJ6VLb0pGCJdxsdR1aIFX9pJ3sTWdu
+	 VBc3jAwpIpISOcIVmzMU7cd95YMT1ywUs7alALIEn0XSuFaPZDIEjxsKD0wi72ToB9
+	 AHv/2xr7pl6TewbuLG4HHR6qjuvMOIjdJcDLN2e0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726893AbgDRNwo (ORCPT
+        id S1727968AbgDRNwv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 09:52:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54962 "EHLO mail.kernel.org"
+        Sat, 18 Apr 2020 09:52:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54810 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726468AbgDRNsj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 09:48:39 -0400
+        id S1726432AbgDRNse (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 09:48:34 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1D22422245;
-        Sat, 18 Apr 2020 13:48:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2607C22251;
+        Sat, 18 Apr 2020 13:48:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587217718;
-        bh=0tTVy2cifvjkYAguZoxHvbmgMCssyRY48Ll7njglOCo=;
+        s=default; t=1587217713;
+        bh=e50X4MmtkJexI4QRd79cP3skCvlBuDS3y6zV+tBhyIc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MwChRvRE+OzZ/TaDZ+I1svFaHyqRauDs6QevCyhi9ntjAd7iGnow1lUhq0oJGt9jg
-         X/l+Q2OFz4qTuDdktFIaOUooBD4FDmY7jroMJIEMVCuNCoG0TDw52TmfraSU9JDjtT
-         jtLZoxTvICEi5pFxBBROEFoEe/jb74+1VeAPxC2E=
+        b=P0JxDMtShXU4WvQsEJdvws8FtQqr4LySdJENHGgnXyTKGX9ZxCVeiiOj2mS5hKsXS
+         yQjuivrWnrweXEV8CKACQTZAJ5MBwSKw7rbSXcQ/1hCzHtCxkbGNMHQOa52XgNPRFm
+         SP4GGqgOEnhdf3C3wtW6zTG4SbrD/Fif/cfKXuQY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?=EC=9D=B4=EA=B2=BD=ED=83=9D?= <gt82.lee@samsung.com>,
-        Vinod Koul <vkoul@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 5.6 19/73] ASoC: dpcm: allow start or stop during pause for backend
-Date:   Sat, 18 Apr 2020 09:47:21 -0400
-Message-Id: <20200418134815.6519-19-sashal@kernel.org>
+Cc:     =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pwm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.6 15/73] pwm: imx27: Fix clock handling in pwm_imx27_apply()
+Date:   Sat, 18 Apr 2020 09:47:17 -0400
+Message-Id: <20200418134815.6519-15-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200418134815.6519-1-sashal@kernel.org>
 References: <20200418134815.6519-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: 이경택 <gt82.lee@samsung.com>
+From: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 
-[ Upstream commit 21fca8bdbb64df1297e8c65a746c4c9f4a689751 ]
+[ Upstream commit 15d4dbd601591858611184f9ddeb5bf21569159c ]
 
-soc_compr_trigger_fe() allows start or stop after pause_push.
-In dpcm_be_dai_trigger(), however, only pause_release is allowed
-command after pause_push.
-So, start or stop after pause in compress offload is always
-returned as error if the compress offload is used with dpcm.
-To fix the problem, SND_SOC_DPCM_STATE_PAUSED should be allowed
-for start or stop command.
+pwm_imx27_apply() enables the clocks if the previous PWM state was
+disabled. Given that the clocks are supposed to be left on iff the PWM
+is running, the decision to disable the clocks at the end of the
+function must not depend on the previous state.
 
-Signed-off-by: Gyeongtaek Lee <gt82.lee@samsung.com>
-Reviewed-by: Vinod Koul <vkoul@kernel.org>
-Link: https://lore.kernel.org/r/004d01d607c1$7a3d5250$6eb7f6f0$@samsung.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Without this fix the enable count of the two affected clocks increases
+by one whenever ->apply() changes from one disabled state to another.
+
+Fixes: bd88d319abe9 ("pwm: imx27: Unconditionally write state to hardware")
+Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/soc-pcm.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/pwm/pwm-imx27.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/soc/soc-pcm.c b/sound/soc/soc-pcm.c
-index 2c59b3688ca01..8f6f0ad502880 100644
---- a/sound/soc/soc-pcm.c
-+++ b/sound/soc/soc-pcm.c
-@@ -2236,7 +2236,8 @@ int dpcm_be_dai_trigger(struct snd_soc_pcm_runtime *fe, int stream,
- 		switch (cmd) {
- 		case SNDRV_PCM_TRIGGER_START:
- 			if ((be->dpcm[stream].state != SND_SOC_DPCM_STATE_PREPARE) &&
--			    (be->dpcm[stream].state != SND_SOC_DPCM_STATE_STOP))
-+			    (be->dpcm[stream].state != SND_SOC_DPCM_STATE_STOP) &&
-+			    (be->dpcm[stream].state != SND_SOC_DPCM_STATE_PAUSED))
- 				continue;
+diff --git a/drivers/pwm/pwm-imx27.c b/drivers/pwm/pwm-imx27.c
+index 35a7ac42269c2..7e5ed01529773 100644
+--- a/drivers/pwm/pwm-imx27.c
++++ b/drivers/pwm/pwm-imx27.c
+@@ -289,7 +289,7 @@ static int pwm_imx27_apply(struct pwm_chip *chip, struct pwm_device *pwm,
  
- 			ret = dpcm_do_trigger(dpcm, be_substream, cmd);
-@@ -2266,7 +2267,8 @@ int dpcm_be_dai_trigger(struct snd_soc_pcm_runtime *fe, int stream,
- 			be->dpcm[stream].state = SND_SOC_DPCM_STATE_START;
- 			break;
- 		case SNDRV_PCM_TRIGGER_STOP:
--			if (be->dpcm[stream].state != SND_SOC_DPCM_STATE_START)
-+			if ((be->dpcm[stream].state != SND_SOC_DPCM_STATE_START) &&
-+			    (be->dpcm[stream].state != SND_SOC_DPCM_STATE_PAUSED))
- 				continue;
+ 	writel(cr, imx->mmio_base + MX3_PWMCR);
  
- 			if (!snd_soc_dpcm_can_be_free_stop(fe, be, stream))
+-	if (!state->enabled && cstate.enabled)
++	if (!state->enabled)
+ 		pwm_imx27_clk_disable_unprepare(chip);
+ 
+ 	return 0;
 -- 
 2.20.1
 
