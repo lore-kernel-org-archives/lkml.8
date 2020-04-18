@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03E6EC3A5A9
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 13:50:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF3B2C38A30
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 13:50:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CD2A82054F
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 13:50:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA8522054F
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 13:50:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587217804;
-	bh=HDRVvxIprPJMsOxeeV4IKZ2/E6oVS200w4vIvpWIuqY=;
+	s=default; t=1587217807;
+	bh=LVsekz8INTXKUjpo9fil8pH2pEYtmSNN2pVUrHyIdXc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aXpad063bAs1xU/mwBGYJVewxSjeda1WL24U3rlU07sl1mREj/bKpU/M843e+uesg
-	 tMmzEzhwpccO8qSxBPWfz7UoYKdtH0MPniZmGJQygKJUXCCTK5WR7w7w03B2Vt31HB
-	 eUxtDzQOXdTZ82cy2uxsBd+WsT75pprnamq/mTjY=
+	b=WvKU1RK51vZcugaPymBrU0xHJcNY2LIY4aBCUCErlzYrHlqFo0Uw5PcG+u4L+z7mL
+	 67OX6ztSrq/iSjwCVHL6dzNz4eRbdmpOZzhUzY/veYTNJVRHYNZU0kTcbBWKztdaNZ
+	 AWiDA5jqRiqLcw9x193e3So3UHQZ8vfhEkWpREIk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726136AbgDRNtm (ORCPT
+        id S1727125AbgDRNuG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 09:49:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56792 "EHLO mail.kernel.org"
+        Sat, 18 Apr 2020 09:50:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56970 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726842AbgDRNth (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 09:49:37 -0400
+        id S1726860AbgDRNtm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 09:49:42 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 08D712054F;
-        Sat, 18 Apr 2020 13:49:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BD11022240;
+        Sat, 18 Apr 2020 13:49:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587217776;
-        bh=HDRVvxIprPJMsOxeeV4IKZ2/E6oVS200w4vIvpWIuqY=;
+        s=default; t=1587217781;
+        bh=LVsekz8INTXKUjpo9fil8pH2pEYtmSNN2pVUrHyIdXc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=T7pHu6Sgq7SpmUdUuIlsIxZk+CAI/onEx65tOMLoO399zhPF1xn81A4SYrjmGnLBM
-         FPiMfXH+EH9PejyFviuiNHL3HoIuPFi4wwplpzgc0EfSg26i+y3PC5l/7XcsXxAKTv
-         Q2+pdpVCL6QjzRz42p2LSMxLHS/smnqTdjKg/xUQ=
+        b=EDrVrIhxnxJqrg75eqzSZcJv/yWIbZYiWjHKKKKKHA6IocMlw7eSErKckhJOZjb8y
+         frrufM715uyqoNeCDJp2IpnXCttrS2ww63LVJ9K06ys7jAboCnTVmzl/PXX3e/SzC6
+         ZGw58QBNkOYWZ8fT43liedB1bLkQDV6fqct45uQA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 5.6 65/73] ASoC: Intel: bytcr_rt5640: Add quirk for MPMAN MPWIN895CL tablet
-Date:   Sat, 18 Apr 2020 09:48:07 -0400
-Message-Id: <20200418134815.6519-65-sashal@kernel.org>
+Cc:     Sreekanth Reddy <sreekanth.reddy@broadcom.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>,
+        MPT-FusionLinux.pdl@broadcom.com, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 69/73] scsi: mpt3sas: Fix kernel panic observed on soft HBA unplug
+Date:   Sat, 18 Apr 2020 09:48:11 -0400
+Message-Id: <20200418134815.6519-69-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200418134815.6519-1-sashal@kernel.org>
 References: <20200418134815.6519-1-sashal@kernel.org>
@@ -60,47 +60,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Sreekanth Reddy <sreekanth.reddy@broadcom.com>
 
-[ Upstream commit c8b78f24c1247b7bd0882885c672d9dec5800bc6 ]
+[ Upstream commit cc41f11a21a51d6869d71e525a7264c748d7c0d7 ]
 
-The MPMAN MPWIN895CL tablet almost fully works with out default settings.
-The only problem is that it has only 1 speaker so any sounds only playing
-on the right channel get lost.
+Generic protection fault type kernel panic is observed when user performs
+soft (ordered) HBA unplug operation while IOs are running on drives
+connected to HBA.
 
-Add a quirk for this model using the default settings + MONO_SPEAKER.
+When user performs ordered HBA removal operation, the kernel calls PCI
+device's .remove() call back function where driver is flushing out all the
+outstanding SCSI IO commands with DID_NO_CONNECT host byte and also unmaps
+sg buffers allocated for these IO commands.
 
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Acked-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Link: https://lore.kernel.org/r/20200405133726.24154-1-hdegoede@redhat.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+However, in the ordered HBA removal case (unlike of real HBA hot removal),
+HBA device is still alive and hence HBA hardware is performing the DMA
+operations to those buffers on the system memory which are already unmapped
+while flushing out the outstanding SCSI IO commands and this leads to
+kernel panic.
+
+Don't flush out the outstanding IOs from .remove() path in case of ordered
+removal since HBA will be still alive in this case and it can complete the
+outstanding IOs. Flush out the outstanding IOs only in case of 'physical
+HBA hot unplug' where there won't be any communication with the HBA.
+
+During shutdown also it is possible that HBA hardware can perform DMA
+operations on those outstanding IO buffers which are completed with
+DID_NO_CONNECT by the driver from .shutdown(). So same above fix is applied
+in shutdown path as well.
+
+It is safe to drop the outstanding commands when HBA is inaccessible such
+as when permanent PCI failure happens, when HBA is in non-operational
+state, or when someone does a real HBA hot unplug operation. Since driver
+knows that HBA is inaccessible during these cases, it is safe to drop the
+outstanding commands instead of waiting for SCSI error recovery to kick in
+and clear these outstanding commands.
+
+Link: https://lore.kernel.org/r/1585302763-23007-1-git-send-email-sreekanth.reddy@broadcom.com
+Fixes: c666d3be99c0 ("scsi: mpt3sas: wait for and flush running commands on shutdown/unload")
+Cc: stable@vger.kernel.org #v4.14.174+
+Signed-off-by: Sreekanth Reddy <sreekanth.reddy@broadcom.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/intel/boards/bytcr_rt5640.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ drivers/scsi/mpt3sas/mpt3sas_scsih.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/sound/soc/intel/boards/bytcr_rt5640.c b/sound/soc/intel/boards/bytcr_rt5640.c
-index 6bd9ae813be28..d14d5f7db1689 100644
---- a/sound/soc/intel/boards/bytcr_rt5640.c
-+++ b/sound/soc/intel/boards/bytcr_rt5640.c
-@@ -591,6 +591,17 @@ static const struct dmi_system_id byt_rt5640_quirk_table[] = {
- 					BYT_RT5640_SSP0_AIF1 |
- 					BYT_RT5640_MCLK_EN),
- 	},
-+	{
-+		/* MPMAN MPWIN895CL */
-+		.matches = {
-+			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "MPMAN"),
-+			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "MPWIN8900CL"),
-+		},
-+		.driver_data = (void *)(BYTCR_INPUT_DEFAULTS |
-+					BYT_RT5640_MONO_SPEAKER |
-+					BYT_RT5640_SSP0_AIF1 |
-+					BYT_RT5640_MCLK_EN),
-+	},
- 	{	/* MSI S100 tablet */
- 		.matches = {
- 			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Micro-Star International Co., Ltd."),
+diff --git a/drivers/scsi/mpt3sas/mpt3sas_scsih.c b/drivers/scsi/mpt3sas/mpt3sas_scsih.c
+index c597d544eb392..a8ec1caf9c77c 100644
+--- a/drivers/scsi/mpt3sas/mpt3sas_scsih.c
++++ b/drivers/scsi/mpt3sas/mpt3sas_scsih.c
+@@ -9908,8 +9908,8 @@ static void scsih_remove(struct pci_dev *pdev)
+ 
+ 	ioc->remove_host = 1;
+ 
+-	mpt3sas_wait_for_commands_to_complete(ioc);
+-	_scsih_flush_running_cmds(ioc);
++	if (!pci_device_is_present(pdev))
++		_scsih_flush_running_cmds(ioc);
+ 
+ 	_scsih_fw_event_cleanup_queue(ioc);
+ 
+@@ -9992,8 +9992,8 @@ scsih_shutdown(struct pci_dev *pdev)
+ 
+ 	ioc->remove_host = 1;
+ 
+-	mpt3sas_wait_for_commands_to_complete(ioc);
+-	_scsih_flush_running_cmds(ioc);
++	if (!pci_device_is_present(pdev))
++		_scsih_flush_running_cmds(ioc);
+ 
+ 	_scsih_fw_event_cleanup_queue(ioc);
+ 
 -- 
 2.20.1
 
