@@ -2,388 +2,141 @@ Return-Path: <SRS0=3CHW=6C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71342C38A30
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 12:37:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04BB6C38A2F
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 12:38:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4709B206D9
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 12:37:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D51CF206D9
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 12:38:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="c0tHAiCY"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="Lb9duceP";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="c9cXQNGe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726050AbgDRMh5 (ORCPT
+        id S1726089AbgDRMiz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 08:37:57 -0400
-Received: from mout.gmx.net ([212.227.15.15]:41333 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725804AbgDRMhy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 08:37:54 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1587213462;
-        bh=Nv/90+/Hq71cvdxi2hkZt7Oq59PfL7K9OjVLWz8Wb6E=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=c0tHAiCYl/tAzAdx48pC2y1yZ4u2SvgR4Tsr3H/pljz9Gd99YeEAWj3m/LnYMEZh2
-         JOzbjayfeGV385oIotZzyS9KRLyVBFHmerQcugmi2hEVZdzTds4u5jCsPB4KbWWs2v
-         r9kOGq5caQpFiM+jis1avBQ8ck719E6OMPXOajJg=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from localhost.localdomain ([83.52.229.196]) by mail.gmx.com
- (mrgmx005 [212.227.17.184]) with ESMTPSA (Nemesis) id
- 1MwQT9-1j9Lpw3ZUD-00sMNp; Sat, 18 Apr 2020 14:37:42 +0200
-From:   Oscar Carter <oscar.carter@gmx.com>
-To:     Forest Bond <forest@alittletooquiet.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Oscar Carter <oscar.carter@gmx.com>,
-        Quentin Deslandes <quentin.deslandes@itdev.co.uk>,
-        Malcolm Priestley <tvboxspy@gmail.com>,
-        Amir Mahdi Ghorbanian <indigoomega021@gmail.com>,
-        Stefano Brivio <sbrivio@redhat.com>,
-        "John B. Wyatt IV" <jbwyatt4@gmail.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] staging: vt6656: Fix functions' documentation
-Date:   Sat, 18 Apr 2020 14:36:59 +0200
-Message-Id: <20200418123659.4475-3-oscar.carter@gmx.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200418123659.4475-1-oscar.carter@gmx.com>
-References: <20200418123659.4475-1-oscar.carter@gmx.com>
+        Sat, 18 Apr 2020 08:38:55 -0400
+Received: from esa4.hgst.iphmx.com ([216.71.154.42]:57846 "EHLO
+        esa4.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725804AbgDRMix (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 08:38:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1587213532; x=1618749532;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=TiH9snXz0XEvk8v8qxtXR58X+4arid4AASGVYlL5WMM=;
+  b=Lb9duceP1WMKxDj/X5scufi5QX2m6ay99u/NTb0/ghlqzQlZlLPutbHx
+   eYGLtiTLYYvBM0qgWbZCXOMwgtTBU4Esmvjq6rkKjFiGzn1zmmaKAnNUX
+   Rja4qOd8gcsMrEpq2skLsfmLC1pHM4ms8+kIbgsf6WtIEJZ2o6eB96ube
+   xp9Y8cm50soqo49/NrndHSxDIE210NsaAauOMLlxmjNQUXtE+bNlkX0gM
+   gM4V0328/NBmDMXwzA6N8VBooPjgFdGlrAcTmO8/kG61g7R+lBC6h6IM3
+   o3dZBTmLLdeY9Y+k2oyOdgcSepzfWXsGIzLjafeDoqG8StPxivwcSk+K/
+   A==;
+IronPort-SDR: vc57xsbyunVEAX4o9G1nbyOiquX4PmFp+Bu2vNXZaHzJCJ6txQM+jLInHEMdNA71tPR1azBD+C
+ JocopYXglF972aqk6CrmSgS2EMVP/j6rmztti1tivO5sah3C/vcRy/Jf4/9hkUK9YhkeH2CMh/
+ n/kp+Oluss7alPJyFR3YdnsgM9hNlkwa9684BD31ZFya/BoqNBUH0dxFwUTe7ho3LAUO7zhzRk
+ KPdwo/nroV68Kd42J/4I47iQqdiZtysU5LiSlWFiEkSUlBqlMmdSANvUByAYngmSLta7QQOLkH
+ Jig=
+X-IronPort-AV: E=Sophos;i="5.72,399,1580745600"; 
+   d="scan'208";a="135618589"
+Received: from mail-sn1nam04lp2050.outbound.protection.outlook.com (HELO NAM04-SN1-obe.outbound.protection.outlook.com) ([104.47.44.50])
+  by ob1.hgst.iphmx.com with ESMTP; 18 Apr 2020 20:38:51 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=NLB0UgVW0EVdfOEWOZYaAgb0J7WlVUGLAtzsxp6zsY8M9R2+2DEeSffZc87+mOTnzFyYC7lPP/diCHliFOFqB1sElv4yo7qt8bbV1ciTULZ3bKhjOxHtnrHH90pMgnK4kGT935nfLtM7ikVy9rhoaSznjT0/NNe05SIua/hrDT68eltK1k+Nt/Ujm+ThWQXRFWA7JcneAN0s4P290G03/+GmPTFfzxvogWTqZV74BjUiRBbMSt2NicQ55AY917raUnb3NgfbRH9PCcf9asj3a5G0MSUE0KVCIb8glLwi2HP+PnZS4AAwLWhbMUb0wN4iF3Un9D4lTJRo+ptPMXLUWg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=TiH9snXz0XEvk8v8qxtXR58X+4arid4AASGVYlL5WMM=;
+ b=E+OVoZE1S6svvbNfShXNhPT3ZY+gxn/HtVsq6gXCUMb2vDNf8XWB8k3vTFy5NRi/apaSoieA6nXaB6P1h79InYhXCRjaGjw7CPew4rYcOFOWXyGVmE0yrMuJXWb1MOO2YwJ/AB2DGy9wx/kkZKdkRU0hZuuFywFd/GvS8Dl1SwIr4dSdKJ3sTcsmUfpDLQwAXzuyDOR2ctNPv0o9+KxTB7/kWYiq2wmZfm1dPjdpfjbMrQ94KAFspfoG7662LK46pN7krvHbxTONwHIQ9ZBpPHFn7pRWFO3iyiZaHi4oEQNCVfJXJDKiWnFtMvld+9uvSmqkH1NorwhAXuTeCK5NEw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
+ header.d=wdc.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=TiH9snXz0XEvk8v8qxtXR58X+4arid4AASGVYlL5WMM=;
+ b=c9cXQNGe9S96aEI2CruBRId9O59yETS2v4lH9w1DK5J05yPOWpS6bXBkLBVCRw/NAxgrxypXkNb0XAh0HJrplQ0/FVClWlbmhnm/KUrlmkB/0yWXEt95SUyRBfD/AgQDV04SEuwcVurBS7QyCUvztbT3b0s7Id9vESpd85U2V6A=
+Received: from SN6PR04MB4640.namprd04.prod.outlook.com (2603:10b6:805:a4::19)
+ by SN6PR04MB4448.namprd04.prod.outlook.com (2603:10b6:805:33::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2921.27; Sat, 18 Apr
+ 2020 12:38:49 +0000
+Received: from SN6PR04MB4640.namprd04.prod.outlook.com
+ ([fe80::3877:5e49:6cdd:c8b]) by SN6PR04MB4640.namprd04.prod.outlook.com
+ ([fe80::3877:5e49:6cdd:c8b%5]) with mapi id 15.20.2921.027; Sat, 18 Apr 2020
+ 12:38:49 +0000
+From:   Avri Altman <Avri.Altman@wdc.com>
+To:     Alim Akhtar <alim.akhtar@samsung.com>,
+        "robh@kernel.org" <robh@kernel.org>
+CC:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "krzk@kernel.org" <krzk@kernel.org>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        "kwmad.kim@samsung.com" <kwmad.kim@samsung.com>,
+        "stanley.chu@mediatek.com" <stanley.chu@mediatek.com>,
+        "cang@codeaurora.org" <cang@codeaurora.org>,
+        "linux-samsung-soc@vger.kernel.org" 
+        <linux-samsung-soc@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v6 0/10] exynos-ufs: Add support for UFS HCI
+Thread-Topic: [PATCH v6 0/10] exynos-ufs: Add support for UFS HCI
+Thread-Index: AQHWFONyboJhjuJWAki6eibLTJAA36h+0jPw
+Date:   Sat, 18 Apr 2020 12:38:48 +0000
+Message-ID: <SN6PR04MB46402211952BC3D427AADA00FCD60@SN6PR04MB4640.namprd04.prod.outlook.com>
+References: <CGME20200417181006epcas5p269f8c4b94e60962a0b0318ef64a65364@epcas5p2.samsung.com>
+ <20200417175944.47189-1-alim.akhtar@samsung.com>
+In-Reply-To: <20200417175944.47189-1-alim.akhtar@samsung.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Avri.Altman@wdc.com; 
+x-originating-ip: [77.138.4.172]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: fc5519b1-dc78-413a-af3d-08d7e3957185
+x-ms-traffictypediagnostic: SN6PR04MB4448:
+x-microsoft-antispam-prvs: <SN6PR04MB4448980B10780734E2CCEA44FCD60@SN6PR04MB4448.namprd04.prod.outlook.com>
+wdcipoutbound: EOP-TRUE
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-forefront-prvs: 0377802854
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR04MB4640.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(4636009)(39860400002)(396003)(346002)(366004)(376002)(136003)(26005)(4326008)(186003)(55016002)(110136005)(54906003)(2906002)(52536014)(6506007)(316002)(9686003)(478600001)(7416002)(7696005)(66476007)(66446008)(4744005)(86362001)(64756008)(66946007)(76116006)(66556008)(5660300002)(71200400001)(8936002)(33656002)(81156014)(8676002);DIR:OUT;SFP:1102;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: ygyG5LPPlSWbNn59FymYFrBite4r1fREZrZFTWQ2bY77RNV7Vn6sKOT/1SKbBdDVqWl/4i3ZmLxWyyufENzhVNKCJUZlQNKLKMgTiPil7VC+ASRBEtSFnYyAnQEkEHHL3in+Tok+RBNEFfsPlrWnbVCvOOeATh1kYaqMthJPqvlObfLJHeuGPTrNwfFSoCAwE/GNSr/od17eGxw3hSkgiF2RoiafzG/+UG7uCc7p1OAUm2fe6mwRP1WioltAcOUp89CE6GjNuQqKMcTIpCS115Hudcs4DMzfonAe8TLDZjwDZzAnuSk0pFIXC3clku45Pu9K+ptDWjhY6SQ90ccShmilNerLN13wuwvM4rrgG622ZrHONS0g6jiwJX121CzA8vFz5a3JT6m8DZT3VBtZmDTZArpoGhBsEyMPl0Dcj9OcOvjhCLm5K/vVWe/I1V/D
+x-ms-exchange-antispam-messagedata: ZqpNu6Uo1hp3vE61PbCawyilmx8aUXyrXnYb5jmFdbMiTyDOWdp2+ggWr0w1yEpv0zFx+ABXzCT6/LWWvfWCzqyso3K6fg8EQgYX1wcqTMmv0Ax/NphWeE3Z4w+ehkCTwoLKDmn45d9OqT80e/ZO4Q==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:mB4zQowuyWmvxC+Wq3YX8wOLaAnyQfTLIS2TSz5ejVjujx6ZJLE
- xqpP/0pUOoraAPpxY6+2CDpZGFhMVBgztmBjBkHUxEkR4+z0nmiH14CQvU7/eASxuZM6Utb
- hYRj1a3Knfbk5+b5zvT+4Y9HopDYe/1EgArk/r6O3AUSUPie/RdzUv1wvc3FtNlPk7Z6D2R
- 6YStcaMFYWEsBzgttydIg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:FBoiNOo5RIs=:E0OZgooBgRiI56cRGMzDMI
- m/s+rexf43ovAoikMZhz6uC8vTUhRdXUwUSwLHi1pFpAAX9iz2OAl1xKYUSXO4Iyycv8qH6LM
- VPGa9oyJYGYXKqVXAZ0wa58tPJJ9DDpH6i2Bado4Pz7/YJwIQWOB4XgucdXh1oYKMhX2CczSW
- cfaho26PIIWvXEUVTneMl0v3XrbLt91KpaULMt8ESmcGf2opAn5pgmXcYqZLT6gr6EMaMrhOH
- Yj/lc1KofAjVWz7BwK6uEdJ5IbscdvBuvAbyD3dpMAvWCh+6q80AYOmKM2XbiKuhEbwbNLAKN
- l9zBGDFqCxBhvr1e4NzhYg0cPrawiNKG6h+nx+UPgrHHG56PE06L09busfrS76MOZSOX5iUpZ
- MVQiQyYuiLDcx9sv4TXmEyV+1zD+UZZ+tGMEIeJ6aNruFyEXQU74A3BP/tibbk6zN/nuPiwxF
- oUa29HajsABuDbHIgcrHkCW8ssja+I7vSBifMKKIlTAP5zk1dddMu+ln65cYvsJjLrzZHNnk3
- 9vXkYDxQRksyIJj4Uzpjd22WF3yONySzzltWzdrlVE7R029QikkgNr9E7fZE8vaXEB/vroMbR
- oPY+njzWHlqmyU9lW9iM8llxYbaCPDMBVlepBBUKvr5X7CmzIrtTkJ1Uqimtu4BkQasj/gyZn
- A7Png1B6HVCbCRRHLIXQxkMRG03XZmnSAj+pWqFJfjX0qcuBCbKkC7rF6OJ23//is8YEUQTXW
- dW0hkPRU8VT11PTBc29GCB05dxMpfscdey+NGYvQBPCZv5CZA5pyIPaKPnW16rZNASDXoGi2E
- XxIdgKbUse899pa1qcVvreEPY8lopeA/M6vYrLlAToalbdxtQxw/wgvg0TRAGeqx6cmmolf4L
- rbaisiVXUqsXkLYIecSrJvjoUFsjmR0jdElY92pBO8ncjYSYgvRiwvQACTAOSNbA6Su+r+CGC
- BaOfvXF0hhc79UYjD5jk9i3JfF7hBxArOgZNnIADx8XjZF0Ppsp0BgDnkyIsKRyMj/2S2nyD+
- HgJWaNLag2h8WbFauVA4JNFuH4vqTRfVDS3tFt5YpYWZLDwPNE8qwMsTIS1viWUnngp4Xpge0
- EIGoX48lfnsvawuXxb0B6qJfw2w5Wj7O3ZK81lOxw0HMrOvI0juc+Ny9+SZkx1KuXUha3B+va
- rCnJseMpxBoxnkp/otyYp23cmUvQhl1I30jZmzDuKTCaNeXerTdEsPBslOcGB0c4KnBzCF2+h
- V1Q8FO2DqI2dUKxQe
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: fc5519b1-dc78-413a-af3d-08d7e3957185
+X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Apr 2020 12:38:48.9144
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: HZJOEsjaEK1e+s+1kscXQ4/1KUUVOSH4G/PGSTQsezxhJaWcUQXocAwEQFAJ/AWZpWeVC2Vdv1EMp+0a+ivb7A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR04MB4448
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Replace the functions' documentation by the kernel-doc style fixing the
-parameters and return value.
-
-Signed-off-by: Oscar Carter <oscar.carter@gmx.com>
-=2D--
- drivers/staging/vt6656/card.c  | 101 +++++++++++----------------------
- drivers/staging/vt6656/mac.c   |  67 ++++++++--------------
- drivers/staging/vt6656/power.c |  12 ++--
- 3 files changed, 61 insertions(+), 119 deletions(-)
-
-diff --git a/drivers/staging/vt6656/card.c b/drivers/staging/vt6656/card.c
-index 99ad56b7617d..51acf2212577 100644
-=2D-- a/drivers/staging/vt6656/card.c
-+++ b/drivers/staging/vt6656/card.c
-@@ -46,15 +46,12 @@ static const u16 cw_rxbcntsf_off[MAX_RATE] =3D {
- 	192, 96, 34, 17, 34, 23, 17, 11, 8, 5, 4, 3
- };
-
--/*
-- * Description: Set NIC media channel
-+/**
-+ * vnt_set_channel - Set NIC media channel.
-+ * @priv: The adapter to be set.
-+ * @connection_channel: The channel to be set.
-  *
-- * Parameters:
-- *  In:
-- *      pDevice             - The adapter to be set
-- *      connection_channel  - Channel to be set
-- *  Out:
-- *      none
-+ * Return: 0 if successful, or a negative error code on failure.
-  */
- int vnt_set_channel(struct vnt_private *priv, u32 connection_channel)
- {
-@@ -99,19 +96,13 @@ static const u8 vnt_rspinf_gb_table[] =3D {
- 	0x0e, 0x8d, 0x0a, 0x88, 0x0a, 0x8c, 0x0a, 0x8c, 0x0a
- };
-
--/*
-- * Description: Set RSPINF
-- *
-- * Parameters:
-- *  In:
-- *      pDevice             - The adapter to be set
-- *  Out:
-- *      none
-- *
-- * Return Value: None.
-+/**
-+ * vnt_set_rspinf - Set RSPINF.
-+ * @priv: The adapter to be set.
-+ * @bb_type: The base band type.
-  *
-+ * Return: 0 if successful, or a negative error code on failure.
-  */
--
- int vnt_set_rspinf(struct vnt_private *priv, u8 bb_type)
- {
- 	const u8 *data;
-@@ -145,17 +136,11 @@ int vnt_set_rspinf(struct vnt_private *priv, u8 bb_t=
-ype)
- 			       MESSAGE_REQUEST_MACREG, len, data);
- }
-
--/*
-- * Description: Update IFS
-- *
-- * Parameters:
-- *  In:
-- *	priv - The adapter to be set
-- * Out:
-- *	none
-- *
-- * Return Value: None.
-+/**
-+ * vnt_update_ifs - Update IFS.
-+ * @priv: The adapter to be set.
-  *
-+ * Return: 0 if successful, or a negative error code on failure.
-  */
- int vnt_update_ifs(struct vnt_private *priv)
- {
-@@ -300,20 +285,14 @@ u64 vnt_get_tsf_offset(u8 rx_rate, u64 tsf1, u64 tsf=
-2)
- 	return tsf1 - tsf2 - (u64)cw_rxbcntsf_off[rx_rate % MAX_RATE];
- }
-
--/*
-- * Description: Sync. TSF counter to BSS
-- *              Get TSF offset and write to HW
-- *
-- * Parameters:
-- *  In:
-- *      priv		- The adapter to be sync.
-- *      time_stamp	- Rx BCN's TSF
-- *      local_tsf	- Local TSF
-- *  Out:
-- *      none
-- *
-- * Return Value: none
-+/**
-+ * vnt_adjust_tsf - Sync TSF counter to BSS. Get TSF offset and write to =
-HW.
-+ * @priv: The adapter to be set.
-+ * @rx_rate: The Rx rate.
-+ * @time_stamp: The Rx BCN's TSF.
-+ * @local_tsf: The local TSF.
-  *
-+ * Return: 0 if successful, or a negative error code on failure.
-  */
- int vnt_adjust_tsf(struct vnt_private *priv, u8 rx_rate,
- 		   u64 time_stamp, u64 local_tsf)
-@@ -408,19 +387,13 @@ u64 vnt_get_next_tbtt(u64 tsf, u16 beacon_interval)
- 	return tsf;
- }
-
--/*
-- * Description: Set NIC TSF counter for first Beacon time
-- *              Get NEXTTBTT from adjusted TSF and Beacon Interval
-- *
-- * Parameters:
-- *  In:
-- *      dwIoBase        - IO Base
-- *	beacon_interval - Beacon Interval
-- *  Out:
-- *      none
-- *
-- * Return Value: none
-+/**
-+ * vnt_reset_next_tbtt - Set NIC TSF counter for first beacon time. Get
-+ *			 NEXTTBTT from adjusted TSF and beacon interval.
-+ * @priv: The adapter to be set.
-+ * @beacon_interval: The beacon interval.
-  *
-+ * Return: 0 if successful, or a negative error code on failure.
-  */
- int vnt_reset_next_tbtt(struct vnt_private *priv, u16 beacon_interval)
- {
-@@ -444,20 +417,14 @@ int vnt_reset_next_tbtt(struct vnt_private *priv, u1=
-6 beacon_interval)
- 			       MESSAGE_REQUEST_TBTT, 0, 8, data);
- }
-
--/*
-- * Description: Sync NIC TSF counter for Beacon time
-- *              Get NEXTTBTT and write to HW
-- *
-- * Parameters:
-- *  In:
-- *	priv		- The adapter to be set
-- *      tsf		- Current TSF counter
-- *      beacon_interval - Beacon Interval
-- *  Out:
-- *      none
-- *
-- * Return Value: none
-+/**
-+ * vnt_update_next_tbtt - Sync NIC TSF counter for beacon time. Get NEXTT=
-BTT
-+ *			  and write to HW.
-+ * @priv: The adapter to be set.
-+ * @tsf: The current TSF counter.
-+ * @beacon_interval: The beacon interval.
-  *
-+ * Return: 0 if successful, or a negative error code on failure.
-  */
- int vnt_update_next_tbtt(struct vnt_private *priv, u64 tsf,
- 			 u16 beacon_interval)
-diff --git a/drivers/staging/vt6656/mac.c b/drivers/staging/vt6656/mac.c
-index 639172fad0f3..c4b541178109 100644
-=2D-- a/drivers/staging/vt6656/mac.c
-+++ b/drivers/staging/vt6656/mac.c
-@@ -22,18 +22,12 @@
- #include "mac.h"
- #include "usbpipe.h"
-
--/*
-- * Description:
-- *      Write MAC Multicast Address Mask
-- *
-- * Parameters:
-- *  In:
-- *	mc_filter (mac filter)
-- *  Out:
-- *      none
-- *
-- * Return Value: none
-+/**
-+ * vnt_mac_set_filter - Write MAC multicast address mask.
-+ * @priv: The adapter to be set.
-+ * @mc_filter: The mac filter.
-  *
-+ * Return: 0 if successful, or a negative error code on failure.
-  */
- int vnt_mac_set_filter(struct vnt_private *priv, u64 mc_filter)
- {
-@@ -44,16 +38,11 @@ int vnt_mac_set_filter(struct vnt_private *priv, u64 m=
-c_filter)
- 			       (u8 *)&le_mc);
- }
-
--/*
-- * Description:
-- *      Shut Down MAC
-- *
-- * Parameters:
-- *  In:
-- *  Out:
-- *      none
-- *
-+/**
-+ * vnt_mac_shutdown - Shut down MAC.
-+ * @priv: The adapter to be set.
-  *
-+ * Return: 0 if successful, or a negative error code on failure.
-  */
- int vnt_mac_shutdown(struct vnt_private *priv)
- {
-@@ -72,19 +61,12 @@ int vnt_mac_set_bb_type(struct vnt_private *priv, u8 t=
-ype)
- 			       data);
- }
-
--/*
-- * Description:
-- *      Disable the Key Entry by MISCFIFO
-- *
-- * Parameters:
-- *  In:
-- *      dwIoBase        - Base Address for MAC
-- *
-- *  Out:
-- *      none
-- *
-- * Return Value: none
-+/**
-+ * vnt_mac_disable_keyentry - Disable the key entry by MISCFIFO.
-+ * @priv: The adapter to be set.
-+ * @entry_idx: The entry index.
-  *
-+ * Return: 0 if successful, or a negative error code on failure.
-  */
- int vnt_mac_disable_keyentry(struct vnt_private *priv, u8 entry_idx)
- {
-@@ -92,19 +74,16 @@ int vnt_mac_disable_keyentry(struct vnt_private *priv,=
- u8 entry_idx)
- 			       sizeof(entry_idx), &entry_idx);
- }
-
--/*
-- * Description:
-- *      Set the Key by MISCFIFO
-- *
-- * Parameters:
-- *  In:
-- *      dwIoBase        - Base Address for MAC
-- *
-- *  Out:
-- *      none
-- *
-- * Return Value: none
-+/**
-+ * vnt_mac_set_keyentry - Set the key by MISCFIFO.
-+ * @priv: The adapter to be set.
-+ * @key_ctl: The key control.
-+ * @entry_idx: The entry index.
-+ * @key_idx: The key index.
-+ * @addr: The ethernet address.
-+ * @key: The key.
-  *
-+ * Return: 0 if successful, or a negative error code on failure.
-  */
- int vnt_mac_set_keyentry(struct vnt_private *priv, u16 key_ctl, u32 entry=
-_idx,
- 			 u32 key_idx, u8 *addr, u8 *key)
-diff --git a/drivers/staging/vt6656/power.c b/drivers/staging/vt6656/power=
-.c
-index 2d8d5a332a63..cca50c9f4087 100644
-=2D-- a/drivers/staging/vt6656/power.c
-+++ b/drivers/staging/vt6656/power.c
-@@ -77,16 +77,12 @@ void vnt_enable_power_saving(struct vnt_private *priv,=
- u16 listen_interval)
- 	dev_dbg(&priv->usb->dev,  "PS:Power Saving Mode Enable...\n");
- }
-
--/*
-- *
-- * Routine Description:
-- * Disable hw power saving functions
-- *
-- * Return Value:
-- *    None.
-+/**
-+ * vnt_disable_power_saving - Disable hw power saving functions.
-+ * @priv: The adapter to be set.
-  *
-+ * Return: 0 if successful, or a negative error code on failure.
-  */
--
- int vnt_disable_power_saving(struct vnt_private *priv)
- {
- 	int ret;
-=2D-
-2.20.1
-
+IA0KPiANCj4gVGhpcyBwYXRjaC1zZXQgaW50cm9kdWNlcyBVRlMgKFVuaXZlcnNhbCBGbGFzaCBT
+dG9yYWdlKSBob3N0IGNvbnRyb2xsZXINCj4gc3VwcG9ydA0KPiBmb3IgU2Ftc3VuZyBmYW1pbHkg
+U29DLiBNb3N0bHksIGl0IGNvbnNpc3RzIG9mIFVGUyBQSFkgYW5kIGhvc3Qgc3BlY2lmaWMNCj4g
+ZHJpdmVyLg0KPiANCj4gLSBDaGFuZ2VzIHNpbmNlIHY1Og0KPiAqIHJlLWludHJvZHVjZSB2YXJp
+b3VzIHF1aWNrcyB3aGljaCB3YXMgcmVtb3ZlZCBiZWNhdXNlIG9mIG5vIGRyaXZlcg0KPiAqIGNv
+bnN1bWVyIG9mIHRob3NlIHF1aXJrcywgaW5pdGlhbCA0IHBhdGNoZXMgZG9lcyB0aGUgc2FtZS4N
+CllvdSBmb3Jnb3QgdG8gYWRkIHRob3NlIHF1aXJrcyB0byB1ZnNfZml4dXBzLg0KRWFjaCBwYXRj
+aCB0aGF0IGludHJvZHVjZXMgYSBxdWlyayBuZWVkcyB0byBpbnRyb2R1Y2UgaXRzIHVzZXJzIGFz
+IHdlbGwgLSANClRoaXMgaXMgdGhlIHJlYXNvbiBpdCB3YXMgcmVtb3ZlZCBpbiB0aGUgZmlyc3Qg
+cGxhY2UuDQoNClRoYW5rcywNCkF2cmkNCg==
