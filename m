@@ -7,49 +7,54 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 167D0C38A29
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:13:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64795C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:13:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E88F7221F4
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:13:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3777021D6C
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:13:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587219197;
-	bh=hKu1vyMhVps1OAxX7R7Qf9/Zz7vCtRx4wUv23ATE3PU=;
+	s=default; t=1587219203;
+	bh=CAicI7gA6f42ILjSONMP4Ge52JTdP/BKt71nHGSCMN8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=slWKYQgE4HMeMeng2+N58cV5smscy5nlJLlR69Erc4TRDcVKCxkp8RLZ2IAD3w/ZG
-	 L0gdzeaMEXOtiGWCp5w6UphM1CuJC8yVuret4fIczdCpwOSLx3Ckjj5uQ63eDKrf8s
-	 OF8dwNiRvAoOeKL6TIQAWJGBwDrgx91yHJxmlUNo=
+	b=K6Jff6jI7UWyTHtVgPbGJG4zgpNO6jijCKtX6khdR9NfodSFLQe+W8es4ei9MWP7w
+	 ZzOmeX/q0Obt/JkE171wr4Q3LFbWqMn0TyqN38VkaU9Sv9W+ZdxnVq9TjkDgxaqylH
+	 MmHpuOHE/F3erxGZ94ScLiwhqQkK5UmeuCyFP1vY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728173AbgDRONQ (ORCPT
+        id S1727882AbgDRONW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 10:13:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37478 "EHLO mail.kernel.org"
+        Sat, 18 Apr 2020 10:13:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37370 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726684AbgDROJr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 10:09:47 -0400
+        id S1726654AbgDROJp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 10:09:45 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6A1E222202;
-        Sat, 18 Apr 2020 14:09:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 809552227E;
+        Sat, 18 Apr 2020 14:09:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587218987;
-        bh=hKu1vyMhVps1OAxX7R7Qf9/Zz7vCtRx4wUv23ATE3PU=;
+        s=default; t=1587218984;
+        bh=CAicI7gA6f42ILjSONMP4Ge52JTdP/BKt71nHGSCMN8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XF7/aIlz3HB3AwNiH1Jo1ZjibgbDZGa4gDOaZFI+dZKUV4h+Tg45M6PnByfOqSXlP
-         4ZLaXpSpDez8lsfaD2bVKpwwZGpoQN8PxCoKf4mD63FavLDa/AL+2wm44gbTQvwUxe
-         NgpUUuIgdigAvGkM0txU1DvWKfXjLrtXrLw0/sEM=
+        b=dn/jGdKssBa6RYlAk0ta5LPxD2imfbqtxXFHtu007f/+GkmdGNw+4hwA1jyMYra5a
+         C0QKULxI2VXgV7eUAxCZx5Zy7hOw0gIVQlDBFuWFfAlA0K1yJWyCwqJkaLhFdrXpq4
+         1J1Nc5A5AVBkPi+FT39DFNvtcAuMwMhM6RPdcUIE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        "Jason A . Donenfeld" <Jason@zx2c4.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
+Cc:     Vasily Averin <vvs@virtuozzo.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Waiman Long <longman@redhat.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Manfred Spraul <manfred@colorfullife.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Ingo Molnar <mingo@redhat.com>, NeilBrown <neilb@suse.com>,
+        Peter Oberparleiter <oberpar@linux.ibm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.5 29/75] lib/raid6/test: fix build on distros whose /bin/sh is not bash
-Date:   Sat, 18 Apr 2020 10:08:24 -0400
-Message-Id: <20200418140910.8280-29-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.5 27/75] ipc/util.c: sysvipc_find_ipc() should increase position index
+Date:   Sat, 18 Apr 2020 10:08:22 -0400
+Message-Id: <20200418140910.8280-27-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200418140910.8280-1-sashal@kernel.org>
 References: <20200418140910.8280-1-sashal@kernel.org>
@@ -62,67 +67,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masahiro Yamada <masahiroy@kernel.org>
+From: Vasily Averin <vvs@virtuozzo.com>
 
-[ Upstream commit 06bd48b6cd97ef3889b68c8e09014d81dbc463f1 ]
+[ Upstream commit 89163f93c6f969da5811af5377cc10173583123b ]
 
-You can build a user-space test program for the raid6 library code,
-like this:
+If seq_file .next function does not change position index, read after
+some lseek can generate unexpected output.
 
-  $ cd lib/raid6/test
-  $ make
-
-The command in $(shell ...) function is evaluated by /bin/sh by default.
-(or, you can specify the shell by passing SHELL=<shell> from command line)
-
-Currently '>&/dev/null' is used to sink both stdout and stderr. Because
-this code is bash-ism, it only works when /bin/sh is a symbolic link to
-bash (this is the case on RHEL etc.)
-
-This does not work on Ubuntu where /bin/sh is a symbolic link to dash.
-
-I see lots of
-
-  /bin/sh: 1: Syntax error: Bad fd number
-
-and
-
-  warning "your version of binutils lacks ... support"
-
-Replace it with portable '>/dev/null 2>&1'.
-
-Fixes: 4f8c55c5ad49 ("lib/raid6: build proper files on corresponding arch")
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-Acked-by: H. Peter Anvin (Intel) <hpa@zytor.com>
-Reviewed-by: Jason A. Donenfeld <Jason@zx2c4.com>
-Acked-by: Ingo Molnar <mingo@kernel.org>
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+https://bugzilla.kernel.org/show_bug.cgi?id=206283
+Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Acked-by: Waiman Long <longman@redhat.com>
+Cc: Davidlohr Bueso <dave@stgolabs.net>
+Cc: Manfred Spraul <manfred@colorfullife.com>
+Cc: Al Viro <viro@zeniv.linux.org.uk>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: NeilBrown <neilb@suse.com>
+Cc: Peter Oberparleiter <oberpar@linux.ibm.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Link: http://lkml.kernel.org/r/b7a20945-e315-8bb0-21e6-3875c14a8494@virtuozzo.com
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- lib/raid6/test/Makefile | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ ipc/util.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/lib/raid6/test/Makefile b/lib/raid6/test/Makefile
-index 3ab8720aa2f84..b9e6c3648be1a 100644
---- a/lib/raid6/test/Makefile
-+++ b/lib/raid6/test/Makefile
-@@ -35,13 +35,13 @@ endif
- ifeq ($(IS_X86),yes)
-         OBJS   += mmx.o sse1.o sse2.o avx2.o recov_ssse3.o recov_avx2.o avx512.o recov_avx512.o
-         CFLAGS += $(shell echo "pshufb %xmm0, %xmm0" |		\
--                    gcc -c -x assembler - >&/dev/null &&	\
-+                    gcc -c -x assembler - >/dev/null 2>&1 &&	\
-                     rm ./-.o && echo -DCONFIG_AS_SSSE3=1)
-         CFLAGS += $(shell echo "vpbroadcastb %xmm0, %ymm1" |	\
--                    gcc -c -x assembler - >&/dev/null &&	\
-+                    gcc -c -x assembler - >/dev/null 2>&1 &&	\
-                     rm ./-.o && echo -DCONFIG_AS_AVX2=1)
- 	CFLAGS += $(shell echo "vpmovm2b %k1, %zmm5" |          \
--		    gcc -c -x assembler - >&/dev/null &&        \
-+		    gcc -c -x assembler - >/dev/null 2>&1 &&	\
- 		    rm ./-.o && echo -DCONFIG_AS_AVX512=1)
- else ifeq ($(HAS_NEON),yes)
-         OBJS   += neon.o neon1.o neon2.o neon4.o neon8.o recov_neon.o recov_neon_inner.o
+diff --git a/ipc/util.c b/ipc/util.c
+index 915eacb9c059d..7a3ab2eb90185 100644
+--- a/ipc/util.c
++++ b/ipc/util.c
+@@ -764,13 +764,13 @@ static struct kern_ipc_perm *sysvipc_find_ipc(struct ipc_ids *ids, loff_t pos,
+ 			total++;
+ 	}
+ 
++	*new_pos = pos + 1;
+ 	if (total >= ids->in_use)
+ 		return NULL;
+ 
+ 	for (; pos < ipc_mni; pos++) {
+ 		ipc = idr_find(&ids->ipcs_idr, pos);
+ 		if (ipc != NULL) {
+-			*new_pos = pos + 1;
+ 			rcu_read_lock();
+ 			ipc_lock_object(ipc);
+ 			return ipc;
 -- 
 2.20.1
 
