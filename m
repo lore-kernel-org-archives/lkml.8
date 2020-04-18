@@ -7,104 +7,113 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36BB8C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:47:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4160FC38A2F
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:47:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0B2A621BE5
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:47:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21FEB2072B
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:47:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587221243;
-	bh=8SSXiXogJwVJTyFikTz4+BrlOTu9SSlvc2vEw97k3NI=;
+	s=default; t=1587221250;
+	bh=VRbuhqsaG714iS2RnLYCQRuT3hk409iW9Hd2N+ezko4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yjDWwaL6d5BIo0W7U2nNGrCKozTCztSVddxD8KEfd4OXyy1dDydL64rAPuzNMIg5c
-	 XfUvDa6YrUdD0vSyaN8WHLECaO04HSOMUFriMYhoS0jehLA3yyiD0VGl32MbRjHBKw
-	 IboozJb3ti+LhUfgRBYsqLUOYnqKaWPeTMMiuvRE=
+	b=dx7e6UH1aW74vijWeqfk8LjvHOmevkwLq/i03tbPkqdAqbK/NFvrCi01CQZ8Jup3q
+	 AWJgdg7lnzZEoqEAXh6mZOHwbLX9tfOBqREggdX0A+LomjPb+qWj8R6Jtq86UvMDt/
+	 Okbz9KKrf4/c49prMH0yW1L9JiyxnIoO3JFPeoOM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728741AbgDROrN (ORCPT
+        id S1728348AbgDROr2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 10:47:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55840 "EHLO mail.kernel.org"
+        Sat, 18 Apr 2020 10:47:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55714 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728765AbgDROoP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 10:44:15 -0400
+        id S1728738AbgDROoK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 10:44:10 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A63BE21D79;
-        Sat, 18 Apr 2020 14:44:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 06DEA21D82;
+        Sat, 18 Apr 2020 14:44:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587221054;
-        bh=8SSXiXogJwVJTyFikTz4+BrlOTu9SSlvc2vEw97k3NI=;
+        s=default; t=1587221049;
+        bh=VRbuhqsaG714iS2RnLYCQRuT3hk409iW9Hd2N+ezko4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cIadFSDT5BB+oV9wBG7dBYcn7lb73Te3m/k5E+T48pz1UzLbAKzsWX2ntm7gxA78Y
-         S3KmYi0gCdLhQBlZvSvJ5eveqgFFUJ2DX4W8liv5j4qEvi/rFD911NTKYnswxEkS9F
-         wb6LR6a9+8bQhsdHANnhg7p8u3PvUPXUCzXCwcbg=
+        b=SGnjdxY95HeK/GPgdOvrmkDWZNnAAPaJF4RqFwoXJtW24Nsppn0wOEfIU1n/XUp8e
+         hW9qa5XLEekpE3871vsMG9y/G+Og8XbWCyVdE4Y7g0S85jHAzTj9kZWjxUhAl9N56a
+         3FAMT64scNd7rehKC9dlFiqFHM6BixhfriCDNsJM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?=EC=9D=B4=EA=B2=BD=ED=83=9D?= <gt82.lee@samsung.com>,
-        Vinod Koul <vkoul@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 4.9 07/23] ASoC: dpcm: allow start or stop during pause for backend
-Date:   Sat, 18 Apr 2020 10:43:49 -0400
-Message-Id: <20200418144405.10565-7-sashal@kernel.org>
+Cc:     James Smart <jsmart2021@gmail.com>,
+        Dick Kennedy <dick.kennedy@broadcom.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 03/23] scsi: lpfc: Fix kasan slab-out-of-bounds error in lpfc_unreg_login
+Date:   Sat, 18 Apr 2020 10:43:45 -0400
+Message-Id: <20200418144405.10565-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200418144405.10565-1-sashal@kernel.org>
 References: <20200418144405.10565-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: 이경택 <gt82.lee@samsung.com>
+From: James Smart <jsmart2021@gmail.com>
 
-[ Upstream commit 21fca8bdbb64df1297e8c65a746c4c9f4a689751 ]
+[ Upstream commit 38503943c89f0bafd9e3742f63f872301d44cbea ]
 
-soc_compr_trigger_fe() allows start or stop after pause_push.
-In dpcm_be_dai_trigger(), however, only pause_release is allowed
-command after pause_push.
-So, start or stop after pause in compress offload is always
-returned as error if the compress offload is used with dpcm.
-To fix the problem, SND_SOC_DPCM_STATE_PAUSED should be allowed
-for start or stop command.
+The following kasan bug was called out:
 
-Signed-off-by: Gyeongtaek Lee <gt82.lee@samsung.com>
-Reviewed-by: Vinod Koul <vkoul@kernel.org>
-Link: https://lore.kernel.org/r/004d01d607c1$7a3d5250$6eb7f6f0$@samsung.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+ BUG: KASAN: slab-out-of-bounds in lpfc_unreg_login+0x7c/0xc0 [lpfc]
+ Read of size 2 at addr ffff889fc7c50a22 by task lpfc_worker_3/6676
+ ...
+ Call Trace:
+ dump_stack+0x96/0xe0
+ ? lpfc_unreg_login+0x7c/0xc0 [lpfc]
+ print_address_description.constprop.6+0x1b/0x220
+ ? lpfc_unreg_login+0x7c/0xc0 [lpfc]
+ ? lpfc_unreg_login+0x7c/0xc0 [lpfc]
+ __kasan_report.cold.9+0x37/0x7c
+ ? lpfc_unreg_login+0x7c/0xc0 [lpfc]
+ kasan_report+0xe/0x20
+ lpfc_unreg_login+0x7c/0xc0 [lpfc]
+ lpfc_sli_def_mbox_cmpl+0x334/0x430 [lpfc]
+ ...
+
+When processing the completion of a "Reg Rpi" login mailbox command in
+lpfc_sli_def_mbox_cmpl, a call may be made to lpfc_unreg_login. The vpi is
+extracted from the completing mailbox context and passed as an input for
+the next. However, the vpi stored in the mailbox command context is an
+absolute vpi, which for SLI4 represents both base + offset.  When used with
+a non-zero base component, (function id > 0) this results in an
+out-of-range access beyond the allocated phba->vpi_ids array.
+
+Fix by subtracting the function's base value to get an accurate vpi number.
+
+Link: https://lore.kernel.org/r/20200322181304.37655-2-jsmart2021@gmail.com
+Signed-off-by: James Smart <jsmart2021@gmail.com>
+Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/soc-pcm.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/scsi/lpfc/lpfc_sli.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/sound/soc/soc-pcm.c b/sound/soc/soc-pcm.c
-index 9df0c8102dc03..b67d105b76e46 100644
---- a/sound/soc/soc-pcm.c
-+++ b/sound/soc/soc-pcm.c
-@@ -2062,7 +2062,8 @@ int dpcm_be_dai_trigger(struct snd_soc_pcm_runtime *fe, int stream,
- 		switch (cmd) {
- 		case SNDRV_PCM_TRIGGER_START:
- 			if ((be->dpcm[stream].state != SND_SOC_DPCM_STATE_PREPARE) &&
--			    (be->dpcm[stream].state != SND_SOC_DPCM_STATE_STOP))
-+			    (be->dpcm[stream].state != SND_SOC_DPCM_STATE_STOP) &&
-+			    (be->dpcm[stream].state != SND_SOC_DPCM_STATE_PAUSED))
- 				continue;
- 
- 			ret = dpcm_do_trigger(dpcm, be_substream, cmd);
-@@ -2092,7 +2093,8 @@ int dpcm_be_dai_trigger(struct snd_soc_pcm_runtime *fe, int stream,
- 			be->dpcm[stream].state = SND_SOC_DPCM_STATE_START;
- 			break;
- 		case SNDRV_PCM_TRIGGER_STOP:
--			if (be->dpcm[stream].state != SND_SOC_DPCM_STATE_START)
-+			if ((be->dpcm[stream].state != SND_SOC_DPCM_STATE_START) &&
-+			    (be->dpcm[stream].state != SND_SOC_DPCM_STATE_PAUSED))
- 				continue;
- 
- 			if (!snd_soc_dpcm_can_be_free_stop(fe, be, stream))
+diff --git a/drivers/scsi/lpfc/lpfc_sli.c b/drivers/scsi/lpfc/lpfc_sli.c
+index cbe808e83f477..1c34dc3355498 100644
+--- a/drivers/scsi/lpfc/lpfc_sli.c
++++ b/drivers/scsi/lpfc/lpfc_sli.c
+@@ -2210,6 +2210,8 @@ lpfc_sli_def_mbox_cmpl(struct lpfc_hba *phba, LPFC_MBOXQ_t *pmb)
+ 	    !pmb->u.mb.mbxStatus) {
+ 		rpi = pmb->u.mb.un.varWords[0];
+ 		vpi = pmb->u.mb.un.varRegLogin.vpi;
++		if (phba->sli_rev == LPFC_SLI_REV4)
++			vpi -= phba->sli4_hba.max_cfg_param.vpi_base;
+ 		lpfc_unreg_login(phba, vpi, rpi, pmb);
+ 		pmb->vport = vport;
+ 		pmb->mbox_cmpl = lpfc_sli_def_mbox_cmpl;
 -- 
 2.20.1
 
