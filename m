@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5777C38A2F
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:12:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B4F5C38A2F
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:12:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A677021D82
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:12:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5940E21D79
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:12:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587219145;
-	bh=CPSe29ViT0r704qAM5xHTZXfN6dqqCW5YxUuPD2sLW4=;
+	s=default; t=1587219149;
+	bh=b6vwiRyhH7IFsNLU2DodvnOmmbNwKwzQlS9KqINAFUA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fhxnH1eOeGhX3BOWOd+Uf6wVQb8UvFLohBziaXg98JPog2yhj6PHt51HRgkAldHzE
-	 XNRxP/54m7HzTFkG4nPhQngAWN7FHIb4ZRw/8VKgrAKWh/UJCVqdE2WrqEtzSu9bgW
-	 8DV2lGrCeDuA9fr/iI7ElNUJtwRbdinxn3gxLJNk=
+	b=aTj9ZKRs8SQYv+AGJU8vV0sqFEENpQcETofk81xjgYDPkc0rKKhpwQKJ8QQ/G7veU
+	 Ow14aFPfoANWCBdHOp5rXd4s65XRSxdUi9aZURFyU/Un5ijGPobOpsrkQwxFBh0Mli
+	 wdbdAB/4Cpwzg+DrGZVyYkXoLr9bDABGr5Ll5LdA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728124AbgDROMS (ORCPT
+        id S1728135AbgDROM2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 10:12:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38128 "EHLO mail.kernel.org"
+        Sat, 18 Apr 2020 10:12:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38010 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726842AbgDROKL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 10:10:11 -0400
+        id S1726833AbgDROKJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 10:10:09 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9776B22240;
-        Sat, 18 Apr 2020 14:10:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4F11B2220A;
+        Sat, 18 Apr 2020 14:10:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587219011;
-        bh=CPSe29ViT0r704qAM5xHTZXfN6dqqCW5YxUuPD2sLW4=;
+        s=default; t=1587219009;
+        bh=b6vwiRyhH7IFsNLU2DodvnOmmbNwKwzQlS9KqINAFUA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uue1iYwUlUwnFHjmg7f8Ut5bhBm6SZtj4kt2s6ayc7rqyTspTN9It2RZ1udqRrTIo
-         XhZipDwXvW+Qiv8Vc88mg59nWANCInUaAsHeEZ7DkErTk9dFOiOtp50+XBNcF0pqun
-         3uBtbUxISbUcBlpNZ7mxf8/pXj0YtGErAeqCoH8E=
+        b=jruncwRwttrROBiAB9mqI5i1m8Mh2BRavA2XWJK2UMhvHrX0XxkjMaN7HAuMm/vya
+         Dh8Szqu4cBoxMSe/QovD2x7aEzyqlMWMZQTrtY8rfvVEH7oB4A1+/wAY2SoJjqhE2q
+         CTCXoKyhDvykusFhT0ClYk3IO+Ji6SbcMwIVs4qg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Pi-Hsun Shih <pihsun@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.5 48/75] platform/chrome: cros_ec_rpmsg: Fix race with host event
-Date:   Sat, 18 Apr 2020 10:08:43 -0400
-Message-Id: <20200418140910.8280-48-sashal@kernel.org>
+Cc:     James Smart <jsmart2021@gmail.com>,
+        Dick Kennedy <dick.kennedy@broadcom.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 46/75] scsi: lpfc: Fix lockdep error - register non-static key
+Date:   Sat, 18 Apr 2020 10:08:41 -0400
+Message-Id: <20200418140910.8280-46-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200418140910.8280-1-sashal@kernel.org>
 References: <20200418140910.8280-1-sashal@kernel.org>
@@ -59,68 +60,95 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pi-Hsun Shih <pihsun@chromium.org>
+From: James Smart <jsmart2021@gmail.com>
 
-[ Upstream commit f775ac78fcfc6bdc96bdda07029d11f2a5e84869 ]
+[ Upstream commit f861f596714bed06069f1109b89e51f3855c4ddf ]
 
-Host event can be sent by remoteproc by any time, and
-cros_ec_rpmsg_callback would be called after cros_ec_rpmsg_create_ept.
-But the cros_ec_device is initialized after that, which cause host event
-handler to use cros_ec_device that are not initialized properly yet.
+The following lockdep error was reported when unloading the lpfc driver:
 
-Fix this by don't schedule host event handler before cros_ec_register
-returns. Instead, remember that we have a pending host event, and
-schedule host event handler after cros_ec_register.
+  INFO: trying to register non-static key.
+  the code is fine but needs lockdep annotation.
+  turning off the locking correctness validator.
+  ...
+  Call Trace:
+  dump_stack+0x96/0xe0
+  register_lock_class+0x8b8/0x8c0
+  ? lockdep_hardirqs_on+0x190/0x280
+  ? is_dynamic_key+0x150/0x150
+  ? wait_for_completion_interruptible+0x2a0/0x2a0
+  ? wake_up_q+0xd0/0xd0
+  __lock_acquire+0xda/0x21a0
+  ? register_lock_class+0x8c0/0x8c0
+  ? synchronize_rcu_expedited+0x500/0x500
+  ? __call_rcu+0x850/0x850
+  lock_acquire+0xf3/0x1f0
+  ? del_timer_sync+0x5/0xb0
+  del_timer_sync+0x3c/0xb0
+  ? del_timer_sync+0x5/0xb0
+  lpfc_pci_remove_one.cold.102+0x8b7/0x935 [lpfc]
+  ...
 
-Fixes: 71cddb7097e2 ("platform/chrome: cros_ec_rpmsg: Fix race with host command when probe failed.")
-Signed-off-by: Pi-Hsun Shih <pihsun@chromium.org>
-Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Unloading the driver resulted in a call to del_timer_sync for the
+cpuhp_poll_timer. However the call to setup the timer had never been made,
+so the timer structures used by lockdep checking were not initialized.
+
+Unconditionally call setup_timer for the cpuhp_poll_timer during driver
+initialization. Calls to start the timer remain "as needed".
+
+Link: https://lore.kernel.org/r/20200322181304.37655-3-jsmart2021@gmail.com
+Signed-off-by: James Smart <jsmart2021@gmail.com>
+Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/chrome/cros_ec_rpmsg.c | 16 +++++++++++++++-
- 1 file changed, 15 insertions(+), 1 deletion(-)
+ drivers/scsi/lpfc/lpfc_init.c | 5 ++---
+ drivers/scsi/lpfc/lpfc_sli.c  | 6 ++----
+ 2 files changed, 4 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/platform/chrome/cros_ec_rpmsg.c b/drivers/platform/chrome/cros_ec_rpmsg.c
-index bd068afe43b53..1b38bc8e164c3 100644
---- a/drivers/platform/chrome/cros_ec_rpmsg.c
-+++ b/drivers/platform/chrome/cros_ec_rpmsg.c
-@@ -42,6 +42,8 @@ struct cros_ec_rpmsg {
- 	struct completion xfer_ack;
- 	struct work_struct host_event_work;
- 	struct rpmsg_endpoint *ept;
-+	bool has_pending_host_event;
-+	bool probe_done;
- };
+diff --git a/drivers/scsi/lpfc/lpfc_init.c b/drivers/scsi/lpfc/lpfc_init.c
+index d4a90bec93899..42ce31a8fb3c1 100644
+--- a/drivers/scsi/lpfc/lpfc_init.c
++++ b/drivers/scsi/lpfc/lpfc_init.c
+@@ -11209,11 +11209,9 @@ static void lpfc_cpuhp_add(struct lpfc_hba *phba)
  
- /**
-@@ -175,7 +177,14 @@ static int cros_ec_rpmsg_callback(struct rpmsg_device *rpdev, void *data,
- 		memcpy(ec_dev->din, resp->data, len);
- 		complete(&ec_rpmsg->xfer_ack);
- 	} else if (resp->type == HOST_EVENT_MARK) {
--		schedule_work(&ec_rpmsg->host_event_work);
-+		/*
-+		 * If the host event is sent before cros_ec_register is
-+		 * finished, queue the host event.
-+		 */
-+		if (ec_rpmsg->probe_done)
-+			schedule_work(&ec_rpmsg->host_event_work);
-+		else
-+			ec_rpmsg->has_pending_host_event = true;
- 	} else {
- 		dev_warn(ec_dev->dev, "rpmsg received invalid type = %d",
- 			 resp->type);
-@@ -238,6 +247,11 @@ static int cros_ec_rpmsg_probe(struct rpmsg_device *rpdev)
- 		return ret;
- 	}
+ 	rcu_read_lock();
  
-+	ec_rpmsg->probe_done = true;
-+
-+	if (ec_rpmsg->has_pending_host_event)
-+		schedule_work(&ec_rpmsg->host_event_work);
-+
+-	if (!list_empty(&phba->poll_list)) {
+-		timer_setup(&phba->cpuhp_poll_timer, lpfc_sli4_poll_hbtimer, 0);
++	if (!list_empty(&phba->poll_list))
+ 		mod_timer(&phba->cpuhp_poll_timer,
+ 			  jiffies + msecs_to_jiffies(LPFC_POLL_HB));
+-	}
+ 
+ 	rcu_read_unlock();
+ 
+@@ -13179,6 +13177,7 @@ lpfc_pci_probe_one_s4(struct pci_dev *pdev, const struct pci_device_id *pid)
+ 	lpfc_sli4_ras_setup(phba);
+ 
+ 	INIT_LIST_HEAD(&phba->poll_list);
++	timer_setup(&phba->cpuhp_poll_timer, lpfc_sli4_poll_hbtimer, 0);
+ 	cpuhp_state_add_instance_nocalls(lpfc_cpuhp_state, &phba->cpuhp);
+ 
  	return 0;
- }
+diff --git a/drivers/scsi/lpfc/lpfc_sli.c b/drivers/scsi/lpfc/lpfc_sli.c
+index 909554c7c1273..409d54e05302f 100644
+--- a/drivers/scsi/lpfc/lpfc_sli.c
++++ b/drivers/scsi/lpfc/lpfc_sli.c
+@@ -14448,12 +14448,10 @@ static inline void lpfc_sli4_add_to_poll_list(struct lpfc_queue *eq)
+ {
+ 	struct lpfc_hba *phba = eq->phba;
  
+-	if (list_empty(&phba->poll_list)) {
+-		timer_setup(&phba->cpuhp_poll_timer, lpfc_sli4_poll_hbtimer, 0);
+-		/* kickstart slowpath processing for this eq */
++	/* kickstart slowpath processing if needed */
++	if (list_empty(&phba->poll_list))
+ 		mod_timer(&phba->cpuhp_poll_timer,
+ 			  jiffies + msecs_to_jiffies(LPFC_POLL_HB));
+-	}
+ 
+ 	list_add_rcu(&eq->_poll_list, &phba->poll_list);
+ 	synchronize_rcu();
 -- 
 2.20.1
 
