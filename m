@@ -7,49 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA2CFC38A30
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 13:50:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07D10C38A2F
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 13:50:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B2903221F4
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 13:50:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBBE822245
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 13:50:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587217830;
-	bh=K+Mwk65K/La2MVoY7m+jquMfV89IRWr8P72jJHI8WZ0=;
+	s=default; t=1587217834;
+	bh=Uj78nU54JZEgOtz3kuTazfdLV7hwQG1Bj8c8gsyMZNk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fjtC48ribeUY1FPJE9eU1YJWzD4/hRaYpEm3cxpOlWgNP4uToKHYuenpIqDGITTUp
-	 ut+Q3CcaFg5HkaOqjdaUE9ZJ/NircGMKnvkkVinrrDRf6g4BHXtlLWsHXKkm6LdKPD
-	 q8ABzWUj0rnzO6Z3yYhreC5ZG6cyxQs3RJhXmzbA=
+	b=15N2gAwd7DIrIg18yMy8aJJVGKks9k/reS5MJxhfaladFIIoUjx/8gHR6ZI4LBcXj
+	 OgaONLuP1JzUVrTBcIIsX9jhb5kE6FM58+Rdaqr3+wjrQKyPzjAljtMQcKscOtCu1t
+	 A8gkY0QDXfNifj8H09muCIRr7yp1B6vAXPxYXk4Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727820AbgDRNu3 (ORCPT
+        id S1727835AbgDRNud (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 09:50:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56616 "EHLO mail.kernel.org"
+        Sat, 18 Apr 2020 09:50:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56550 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726827AbgDRNtc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 09:49:32 -0400
+        id S1726818AbgDRNta (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 09:49:30 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4998F22240;
-        Sat, 18 Apr 2020 13:49:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 304FD22250;
+        Sat, 18 Apr 2020 13:49:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587217772;
-        bh=K+Mwk65K/La2MVoY7m+jquMfV89IRWr8P72jJHI8WZ0=;
+        s=default; t=1587217769;
+        bh=Uj78nU54JZEgOtz3kuTazfdLV7hwQG1Bj8c8gsyMZNk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LSJnoKgUNqNK57QZhDKX6KPrMC44MXs/LYyvY6ZBKGMKeaypZThiGALXe/MkP5ycM
-         72JuoUKRRYPcUZUF+eh9b3bUoehke+6cd0eVqcphTd1r7Wq06/8T3fZo1WSM5KNhtQ
-         JAxEeLH3+0kImT2+ICEWQPDlzGbZjAYj1+tQ6iUc=
+        b=HP37Oy/ZyUmIMDzZB6sFAtEjZw7OnmKqFguql81yxP9zlN6bj7/XnYCRAFm1Qkkrx
+         geKjJq+uFks5OE2m3jX2W9h1c6GoQuTjytarwD97OyHIdaB8gBupHl0Dc4NYkUr8xW
+         GfcEnOQS5oMJYiqxYX8WEKSM93A8o16nLnjPg2xU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>,
-        Aric Cyr <Aric.Cyr@amd.com>,
-        Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.6 61/73] drm/amd/display: Calculate scaling ratios on every medium/full update
-Date:   Sat, 18 Apr 2020 09:48:03 -0400
-Message-Id: <20200418134815.6519-61-sashal@kernel.org>
+Cc:     Jiri Olsa <jolsa@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.6 59/73] perf/core: Disable page faults when getting phys address
+Date:   Sat, 18 Apr 2020 09:48:01 -0400
+Message-Id: <20200418134815.6519-59-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200418134815.6519-1-sashal@kernel.org>
 References: <20200418134815.6519-1-sashal@kernel.org>
@@ -62,67 +59,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
+From: Jiri Olsa <jolsa@kernel.org>
 
-[ Upstream commit 3bae20137cae6c03f58f96c0bc9f3d46f0bc17d4 ]
+[ Upstream commit d3296fb372bf7497b0e5d0478c4e7a677ec6f6e9 ]
 
-[Why]
-If a plane isn't being actively enabled or disabled then DC won't
-always recalculate scaling rects and ratios for the primary plane.
+We hit following warning when running tests on kernel
+compiled with CONFIG_DEBUG_ATOMIC_SLEEP=y:
 
-This results in only a partial or corrupted rect being displayed on
-the screen instead of scaling to fit the screen.
+ WARNING: CPU: 19 PID: 4472 at mm/gup.c:2381 __get_user_pages_fast+0x1a4/0x200
+ CPU: 19 PID: 4472 Comm: dummy Not tainted 5.6.0-rc6+ #3
+ RIP: 0010:__get_user_pages_fast+0x1a4/0x200
+ ...
+ Call Trace:
+  perf_prepare_sample+0xff1/0x1d90
+  perf_event_output_forward+0xe8/0x210
+  __perf_event_overflow+0x11a/0x310
+  __intel_pmu_pebs_event+0x657/0x850
+  intel_pmu_drain_pebs_nhm+0x7de/0x11d0
+  handle_pmi_common+0x1b2/0x650
+  intel_pmu_handle_irq+0x17b/0x370
+  perf_event_nmi_handler+0x40/0x60
+  nmi_handle+0x192/0x590
+  default_do_nmi+0x6d/0x150
+  do_nmi+0x2f9/0x3c0
+  nmi+0x8e/0xd7
 
-[How]
-Add back the logic to recalculate the scaling rects into
-dc_commit_updates_for_stream since this is the expected place to
-do it in DC.
+While __get_user_pages_fast() is IRQ-safe, it calls access_ok(),
+which warns on:
 
-This was previously removed a few years ago to fix an underscan issue
-but underscan is still functional now with this change - and it should
-be, since this is only updating to the latest plane state getting passed
-in.
+  WARN_ON_ONCE(!in_task() && !pagefault_disabled())
 
-Signed-off-by: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
-Reviewed-by: Aric Cyr <Aric.Cyr@amd.com>
-Acked-by: Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Peter suggested disabling page faults around __get_user_pages_fast(),
+which gets rid of the warning in access_ok() call.
+
+Suggested-by: Peter Zijlstra <peterz@infradead.org>
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Link: https://lkml.kernel.org/r/20200407141427.3184722-1-jolsa@kernel.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/dc/core/dc.c | 13 ++++++++++++-
- 1 file changed, 12 insertions(+), 1 deletion(-)
+ kernel/events/core.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/core/dc.c b/drivers/gpu/drm/amd/display/dc/core/dc.c
-index fc25600107050..188e51600070b 100644
---- a/drivers/gpu/drm/amd/display/dc/core/dc.c
-+++ b/drivers/gpu/drm/amd/display/dc/core/dc.c
-@@ -2349,7 +2349,7 @@ void dc_commit_updates_for_stream(struct dc *dc,
- 	enum surface_update_type update_type;
- 	struct dc_state *context;
- 	struct dc_context *dc_ctx = dc->ctx;
--	int i;
-+	int i, j;
- 
- 	stream_status = dc_stream_get_status(stream);
- 	context = dc->current_state;
-@@ -2387,6 +2387,17 @@ void dc_commit_updates_for_stream(struct dc *dc,
- 
- 		copy_surface_update_to_plane(surface, &srf_updates[i]);
- 
-+		if (update_type >= UPDATE_TYPE_MED) {
-+			for (j = 0; j < dc->res_pool->pipe_count; j++) {
-+				struct pipe_ctx *pipe_ctx =
-+					&context->res_ctx.pipe_ctx[j];
-+
-+				if (pipe_ctx->plane_state != surface)
-+					continue;
-+
-+				resource_build_scaling_params(pipe_ctx);
-+			}
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index e453589da97ca..0e8a58ea0927b 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -6748,9 +6748,12 @@ static u64 perf_virt_to_phys(u64 virt)
+ 		 * Try IRQ-safe __get_user_pages_fast first.
+ 		 * If failed, leave phys_addr as 0.
+ 		 */
+-		if ((current->mm != NULL) &&
+-		    (__get_user_pages_fast(virt, 1, 0, &p) == 1))
+-			phys_addr = page_to_phys(p) + virt % PAGE_SIZE;
++		if (current->mm != NULL) {
++			pagefault_disable();
++			if (__get_user_pages_fast(virt, 1, 0, &p) == 1)
++				phys_addr = page_to_phys(p) + virt % PAGE_SIZE;
++			pagefault_enable();
 +		}
- 	}
  
- 	copy_stream_update_to_stream(dc, context, stream, stream_update);
+ 		if (p)
+ 			put_page(p);
 -- 
 2.20.1
 
