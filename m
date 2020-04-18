@@ -2,145 +2,131 @@ Return-Path: <SRS0=3CHW=6C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1D9CC38A29
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 15:14:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71554C38A2F
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 15:17:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8E6302072B
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 15:14:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="Ys2kOrQf"
+	by mail.kernel.org (Postfix) with ESMTP id 508A621D7E
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 15:17:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587223038;
+	bh=qugxNfPkvqYi5+IUgteDQlgxWnSNpZvobR+yGLVDicc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=oW+sm14nV295MHQ9ZhQwyzbKy755xq+EB/6v2Pwum//Lw88QHVWFkasQ2PhPY0Ep6
+	 LiiRAbNRSoLw0c3+la33kVD0ap0Px9chN3+ryiNIezIzFWHUPIlL9Tnuoi3r5aVR5t
+	 8EOJi6zymSv3sOAllOawKrjk7cQoyVki164+3apg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726724AbgDRPOQ (ORCPT
+        id S1726440AbgDRPRR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 11:14:16 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:31710 "EHLO pegase1.c-s.fr"
+        Sat, 18 Apr 2020 11:17:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48892 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725903AbgDRPOQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 11:14:16 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 494GhN3XV3zB09Zc;
-        Sat, 18 Apr 2020 17:14:12 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=Ys2kOrQf; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id 2lcJkaGzkoJJ; Sat, 18 Apr 2020 17:14:12 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 494GhN2SjkzB09Zb;
-        Sat, 18 Apr 2020 17:14:12 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1587222852; bh=gkdO6wXUCMcpz7NxpipTTUJqjJLTk5RmhAdRmmr2lPk=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=Ys2kOrQf8+IsQpw3uLxwRHJvEe2aifLm5D4UpWeMK0kDv1AR/2xUb1tP1bpBnc6tU
-         /FXFqj/0reLL0AhKcAmepR4fiN+Nst88VgI4jysw3UkXqTDfBFUmEuw5zgvR7IUyfx
-         GD8U+NDoD3gPnh1LMFlS4lGOU/NlhxN/aglDeXYA=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 129F48BBCF;
-        Sat, 18 Apr 2020 17:14:14 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id CTX-Cucux1p0; Sat, 18 Apr 2020 17:14:14 +0200 (CEST)
-Received: from pc16570vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 5D8FE8B75E;
-        Sat, 18 Apr 2020 17:14:13 +0200 (CEST)
-Subject: Re: [PATCH] iommu: spapr_tce: Disable compile testing to fix build on
- book3s_32 config
-To:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
-Cc:     virtualization@lists.linux-foundation.org,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        linuxppc-dev@lists.ozlabs.org, netdev@vger.kernel.org,
-        Michael Ellerman <mpe@ellerman.id.au>
-References: <20200414142630.21153-1-krzk@kernel.org>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <a99ee461-664c-51ae-cb3a-cf5d87048d86@c-s.fr>
-Date:   Sat, 18 Apr 2020 15:14:02 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.7.0
+        id S1725903AbgDRPRR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 11:17:17 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 489D22072B;
+        Sat, 18 Apr 2020 15:17:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587223036;
+        bh=qugxNfPkvqYi5+IUgteDQlgxWnSNpZvobR+yGLVDicc=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=BkhkS6zEdLKRGqWQpRLzde6OxUxvIwlsvwGWQPRdCua2pBb8tHU3aRvh2C5SCmGxF
+         hJJb3A/+a666MlSl69WLezjGQ6lb9GPV3C8sSkDhE+D/DkCU8wBeqbBydQz5q1+cfp
+         Px4H65dHyixYKeb6TjYi7fnmo/ai+VhYvqh6vU6A=
+Date:   Sat, 18 Apr 2020 16:17:10 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Rob Herring <robh+dt@kernel.org>, Vinod Koul <vkoul@kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Michael Hennerich <Michael.Hennerich@analog.com>,
+        Stefan Popa <stefan.popa@analog.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Nuno =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jiri Kosina <trivial@kernel.org>, devicetree@vger.kernel.org,
+        dmaengine@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-iio@vger.kernel.org, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH trivial 4/6] iio: Fix misspellings of "Analog Devices"
+Message-ID: <20200418161710.55ccf37c@archlinux>
+In-Reply-To: <20200416103058.15269-5-geert+renesas@glider.be>
+References: <20200416103058.15269-1-geert+renesas@glider.be>
+        <20200416103058.15269-5-geert+renesas@glider.be>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20200414142630.21153-1-krzk@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, 16 Apr 2020 12:30:56 +0200
+Geert Uytterhoeven <geert+renesas@glider.be> wrote:
 
+> According to https://www.analog.com/, the company name is spelled
+> "Analog Devices".
+> 
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-On 04/14/2020 02:26 PM, Krzysztof Kozlowski wrote:
-> Although SPAPR_TCE_IOMMU itself can be compile tested on certain PowerPC
-> configurations, its presence makes arch/powerpc/kvm/Makefile to select
-> modules which do not build in such configuration.
-> 
-> The arch/powerpc/kvm/ modules use kvm_arch.spapr_tce_tables which exists
-> only with CONFIG_PPC_BOOK3S_64.  However these modules are selected when
-> COMPILE_TEST and SPAPR_TCE_IOMMU are chosen leading to build failures:
-> 
->      In file included from arch/powerpc/include/asm/book3s/64/mmu-hash.h:20:0,
->                       from arch/powerpc/kvm/book3s_64_vio_hv.c:22:
->      arch/powerpc/include/asm/book3s/64/pgtable.h:17:0: error: "_PAGE_EXEC" redefined [-Werror]
->       #define _PAGE_EXEC  0x00001 /* execute permission */
-> 
->      In file included from arch/powerpc/include/asm/book3s/32/pgtable.h:8:0,
->                       from arch/powerpc/include/asm/book3s/pgtable.h:8,
->                       from arch/powerpc/include/asm/pgtable.h:18,
->                       from include/linux/mm.h:95,
->                       from arch/powerpc/include/asm/io.h:29,
->                       from include/linux/io.h:13,
->                       from include/linux/irq.h:20,
->                       from arch/powerpc/include/asm/hardirq.h:6,
->                       from include/linux/hardirq.h:9,
->                       from include/linux/kvm_host.h:7,
->                       from arch/powerpc/kvm/book3s_64_vio_hv.c:12:
->      arch/powerpc/include/asm/book3s/32/hash.h:29:0: note: this is the location of the previous definition
->       #define _PAGE_EXEC 0x200 /* software: exec allowed */
-> 
-> Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
-> Fixes: e93a1695d7fb ("iommu: Enable compile testing for some of drivers")
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Applied to the togreg branch of iio.git and pushed out as testing as there
+are other things in that tree that need a build test.
+
+Thanks,
+
+Jonathan
+
 > ---
->   drivers/iommu/Kconfig | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
+>  drivers/iio/adc/ad7791.c                       | 2 +-
+>  drivers/iio/trigger/iio-trig-hrtimer.c         | 2 +-
+>  drivers/staging/iio/Documentation/overview.txt | 2 +-
+>  3 files changed, 3 insertions(+), 3 deletions(-)
 > 
-> diff --git a/drivers/iommu/Kconfig b/drivers/iommu/Kconfig
-> index 58b4a4dbfc78..3532b1ead19d 100644
-> --- a/drivers/iommu/Kconfig
-> +++ b/drivers/iommu/Kconfig
-> @@ -362,7 +362,7 @@ config IPMMU_VMSA
->   
->   config SPAPR_TCE_IOMMU
->   	bool "sPAPR TCE IOMMU Support"
-> -	depends on PPC_POWERNV || PPC_PSERIES || (PPC && COMPILE_TEST)
-> +	depends on PPC_POWERNV || PPC_PSERIES
->   	select IOMMU_API
->   	help
->   	  Enables bits of IOMMU API required by VFIO. The iommu_ops
-> 
+> diff --git a/drivers/iio/adc/ad7791.c b/drivers/iio/adc/ad7791.c
+> index abb2393926317087..70bfc41052db2740 100644
+> --- a/drivers/iio/adc/ad7791.c
+> +++ b/drivers/iio/adc/ad7791.c
+> @@ -444,5 +444,5 @@ static struct spi_driver ad7791_driver = {
+>  module_spi_driver(ad7791_driver);
+>  
+>  MODULE_AUTHOR("Lars-Peter Clausen <lars@metafoo.de>");
+> -MODULE_DESCRIPTION("Analog Device AD7787/AD7788/AD7789/AD7790/AD7791 ADC driver");
+> +MODULE_DESCRIPTION("Analog Devices AD7787/AD7788/AD7789/AD7790/AD7791 ADC driver");
+>  MODULE_LICENSE("GPL v2");
+> diff --git a/drivers/iio/trigger/iio-trig-hrtimer.c b/drivers/iio/trigger/iio-trig-hrtimer.c
+> index a5e670726717f0d8..f59bf8d585866ea2 100644
+> --- a/drivers/iio/trigger/iio-trig-hrtimer.c
+> +++ b/drivers/iio/trigger/iio-trig-hrtimer.c
+> @@ -4,7 +4,7 @@
+>   *
+>   * Copyright (C) Intuitive Aerial AB
+>   * Written by Marten Svanfeldt, marten@intuitiveaerial.com
+> - * Copyright (C) 2012, Analog Device Inc.
+> + * Copyright (C) 2012, Analog Devices Inc.
+>   *	Author: Lars-Peter Clausen <lars@metafoo.de>
+>   * Copyright (C) 2015, Intel Corporation
+>   */
+> diff --git a/drivers/staging/iio/Documentation/overview.txt b/drivers/staging/iio/Documentation/overview.txt
+> index 43f92b06bc3e5574..ebdc64f451d7c798 100644
+> --- a/drivers/staging/iio/Documentation/overview.txt
+> +++ b/drivers/staging/iio/Documentation/overview.txt
+> @@ -34,7 +34,7 @@ turned on or off (if possible) via sysfs interfaces.
+>  fifo / ring buffers on the sensor chip.  These greatly reduce the load
+>  on the host CPU by buffering relatively large numbers of data samples
+>  based on an internal sampling clock. Examples include VTI SCA3000
+> -series and Analog Device ADXL345 accelerometers.  Each buffer supports
+> +series and Analog Devices ADXL345 accelerometers.  Each buffer supports
+>  polling to establish when data is available.
+>  
+>  * Trigger and software buffer support. In many data analysis
 
-Should it be fixed the other way round, something like:
-
-diff --git a/arch/powerpc/kvm/Makefile b/arch/powerpc/kvm/Makefile
-index 2bfeaa13befb..906707d15810 100644
---- a/arch/powerpc/kvm/Makefile
-+++ b/arch/powerpc/kvm/Makefile
-@@ -135,4 +135,4 @@ obj-$(CONFIG_KVM_BOOK3S_32) += kvm.o
-  obj-$(CONFIG_KVM_BOOK3S_64_PR) += kvm-pr.o
-  obj-$(CONFIG_KVM_BOOK3S_64_HV) += kvm-hv.o
-
--obj-y += $(kvm-book3s_64-builtin-objs-y)
-+obj-$(CONFIG_KVM_BOOK3S_64) += $(kvm-book3s_64-builtin-objs-y)
-
-
-Christophe
