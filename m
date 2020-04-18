@@ -4,52 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99467C38A2F
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:43:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A2A3C38A29
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:43:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 791D522252
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:43:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C11A22240
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:43:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587220993;
-	bh=jTuUCyPuJOG1nAdrPAoxt4PboG749EAUEnTxsfy/RmE=;
+	s=default; t=1587220996;
+	bh=g+/DlI/neXXLGTI4GaNTz0Xd8LaLWlzfFIRyTD5ifOs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jhKj161WAi3RJjd0wil3Od1gEzjPF/LoSw1kX7N/cxuY7IyfANEFS8Vra+yTdEwf8
-	 TlmO/50B+UOrXUeyXxytLVRYBVvUIO9RhmVrWtCh9Dbih3FkydGMYYKt/oDLfuHdjG
-	 EqQgfEJcGhcGcbVAc3XTJgeS31Km4ZU00n+5KJw0=
+	b=gTEiOCkIL5+kk5Gf34uR95oZ2NwQ0S3lr7J6FU1VQqJVGaNDcpdiwjqpAmtv3/3w1
+	 dUPCkid5AoOD51ztQdpahZNIczhUjk3vLVP5WzDQdeCymLYSIR1ibICs7x/0qhMyY6
+	 o4EaD5yUB37iQXVQk3HvzEh+fCZdsauIAU6I2EW4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728517AbgDROnM (ORCPT
+        id S1727798AbgDROnO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 10:43:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53692 "EHLO mail.kernel.org"
+        Sat, 18 Apr 2020 10:43:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53720 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728483AbgDROnB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 10:43:01 -0400
+        id S1728488AbgDROnC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 10:43:02 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 62FD521D82;
-        Sat, 18 Apr 2020 14:43:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B359321D7E;
+        Sat, 18 Apr 2020 14:43:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587220981;
-        bh=jTuUCyPuJOG1nAdrPAoxt4PboG749EAUEnTxsfy/RmE=;
+        s=default; t=1587220982;
+        bh=g+/DlI/neXXLGTI4GaNTz0Xd8LaLWlzfFIRyTD5ifOs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=F19wmD4jCz0CkmDTLVPpVQFEhmsV7156Rv+UIWcVAmcsNycuVLVmlDSpQ4OcHoYvF
-         aLXDUZZwgBmMCQjLtXGf2XuB1SGNrqSOlawBIkGGoIFX+fmleYEf6jMwpd5ZZOB8MP
-         mrDdaUGL2X+0BAaLb7iMguBNni4MfoHz4KEUSeho=
+        b=WamSD2RzXoByciS6WJW8ecal9JynqDMHV0Jgj9XXwrO3+LhAfK5mSg1QEIBV/d9sl
+         MIJe3UKWxmnvEMGKhi7tNb5k2UwuaCTqgby/5qXLQRwGar0t7DOURWJWwcm8OrjDm0
+         UH7635233XHXcI+pz9euriJhOJsVDd6aBYzPedPY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Stefan Wahren <stefan.wahren@i2se.com>,
-        Dave Stevenson <dave.stevenson@raspberrypi.com>,
-        Maxime Ripard <maxime@cerno.tech>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.19 26/47] drm/vc4: Fix HDMI mode validation
-Date:   Sat, 18 Apr 2020 10:42:06 -0400
-Message-Id: <20200418144227.9802-26-sashal@kernel.org>
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-nvdimm@lists.01.org
+Subject: [PATCH AUTOSEL 4.19 27/47] libnvdimm: Out of bounds read in __nd_ioctl()
+Date:   Sat, 18 Apr 2020 10:42:07 -0400
+Message-Id: <20200418144227.9802-27-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200418144227.9802-1-sashal@kernel.org>
 References: <20200418144227.9802-1-sashal@kernel.org>
@@ -62,59 +59,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit b1e7396a1d0e6af6806337fdaaa44098d6b3343c ]
+[ Upstream commit f84afbdd3a9e5e10633695677b95422572f920dc ]
 
-Current mode validation impedes setting up some video modes which should
-be supported otherwise. Namely 1920x1200@60Hz.
+The "cmd" comes from the user and it can be up to 255.  It it's more
+than the number of bits in long, it results out of bounds read when we
+check test_bit(cmd, &cmd_mask).  The highest valid value for "cmd" is
+ND_CMD_CALL (10) so I added a compare against that.
 
-Fix this by lowering the minimum HDMI state machine clock to pixel clock
-ratio allowed.
-
-Fixes: 32e823c63e90 ("drm/vc4: Reject HDMI modes with too high of clocks.")
-Reported-by: Stefan Wahren <stefan.wahren@i2se.com>
-Suggested-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
-Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Signed-off-by: Maxime Ripard <maxime@cerno.tech>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200326122001.22215-1-nsaenzjulienne@suse.de
+Fixes: 62232e45f4a2 ("libnvdimm: control (ioctl) messages for nvdimm_bus and nvdimm devices")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Link: https://lore.kernel.org/r/20200225162055.amtosfy7m35aivxg@kili.mountain
+Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/vc4/vc4_hdmi.c | 20 ++++++++++++++++----
- 1 file changed, 16 insertions(+), 4 deletions(-)
+ drivers/nvdimm/bus.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/vc4/vc4_hdmi.c b/drivers/gpu/drm/vc4/vc4_hdmi.c
-index fd5522fd179e5..86b98856756d9 100644
---- a/drivers/gpu/drm/vc4/vc4_hdmi.c
-+++ b/drivers/gpu/drm/vc4/vc4_hdmi.c
-@@ -698,11 +698,23 @@ static enum drm_mode_status
- vc4_hdmi_encoder_mode_valid(struct drm_encoder *crtc,
- 			    const struct drm_display_mode *mode)
- {
--	/* HSM clock must be 108% of the pixel clock.  Additionally,
--	 * the AXI clock needs to be at least 25% of pixel clock, but
--	 * HSM ends up being the limiting factor.
-+	/*
-+	 * As stated in RPi's vc4 firmware "HDMI state machine (HSM) clock must
-+	 * be faster than pixel clock, infinitesimally faster, tested in
-+	 * simulation. Otherwise, exact value is unimportant for HDMI
-+	 * operation." This conflicts with bcm2835's vc4 documentation, which
-+	 * states HSM's clock has to be at least 108% of the pixel clock.
-+	 *
-+	 * Real life tests reveal that vc4's firmware statement holds up, and
-+	 * users are able to use pixel clocks closer to HSM's, namely for
-+	 * 1920x1200@60Hz. So it was decided to have leave a 1% margin between
-+	 * both clocks. Which, for RPi0-3 implies a maximum pixel clock of
-+	 * 162MHz.
-+	 *
-+	 * Additionally, the AXI clock needs to be at least 25% of
-+	 * pixel clock, but HSM ends up being the limiting factor.
- 	 */
--	if (mode->clock > HSM_CLOCK_FREQ / (1000 * 108 / 100))
-+	if (mode->clock > HSM_CLOCK_FREQ / (1000 * 101 / 100))
- 		return MODE_CLOCK_HIGH;
+diff --git a/drivers/nvdimm/bus.c b/drivers/nvdimm/bus.c
+index 54a633e8cb5d2..48a070a37ea9b 100644
+--- a/drivers/nvdimm/bus.c
++++ b/drivers/nvdimm/bus.c
+@@ -984,8 +984,10 @@ static int __nd_ioctl(struct nvdimm_bus *nvdimm_bus, struct nvdimm *nvdimm,
+ 			return -EFAULT;
+ 	}
  
- 	return MODE_OK;
+-	if (!desc || (desc->out_num + desc->in_num == 0) ||
+-			!test_bit(cmd, &cmd_mask))
++	if (!desc ||
++	    (desc->out_num + desc->in_num == 0) ||
++	    cmd > ND_CMD_CALL ||
++	    !test_bit(cmd, &cmd_mask))
+ 		return -ENOTTY;
+ 
+ 	/* fail write commands (when read-only) */
 -- 
 2.20.1
 
