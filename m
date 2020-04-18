@@ -7,117 +7,104 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2E77C38A2F
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:44:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23309C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:44:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B98D221D7E
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:44:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F337221D6C
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:44:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587221094;
-	bh=OmsL5AT5dbpd9MY4DoICFXkIlbcngeocNeA2mHdqf/M=;
+	s=default; t=1587221098;
+	bh=mfxX7PAafVXkxizPZG1O4tlivuzwsl7OTye30ar63c0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=g13KRhvBUrT/m9qNZosdB0ND5DU1wugiKceuH57kLJztiJWMVxS456VXKXeOBSvsr
-	 vWVkomtG/rTDGfAPlxOuPaDFpo3DC4Z8Ll0aiXq2gleMJUEu5lA13Yi0JWg9LJdaAX
-	 afaN5aXBUb7ieOufM11UsCNX5zLLkHODoc5kHB1w=
+	b=SomMRrpYY05sRXs5pFnimpLJ8+p4gBkaWoJ2e09zOP45Z7mLnGl+OqO9oeynHBZZW
+	 VoYRFzhGE4zum1wFLilQ/m/6Q4F2wMaZhSO/xgwF0of/8f0/FiOfno10tFuGEPaVhX
+	 GY0bcMc96QS5aEv9Z8Yx3TpQI24PDYg6KG2BP7NY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726061AbgDROox (ORCPT
+        id S1728922AbgDROo5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 10:44:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56620 "EHLO mail.kernel.org"
+        Sat, 18 Apr 2020 10:44:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56658 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728867AbgDROon (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 10:44:43 -0400
+        id S1728871AbgDROoo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 10:44:44 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E2CAC2220A;
-        Sat, 18 Apr 2020 14:44:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2665322262;
+        Sat, 18 Apr 2020 14:44:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587221082;
-        bh=OmsL5AT5dbpd9MY4DoICFXkIlbcngeocNeA2mHdqf/M=;
+        s=default; t=1587221083;
+        bh=mfxX7PAafVXkxizPZG1O4tlivuzwsl7OTye30ar63c0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=a3qJla+w58qacsqo42TGq8t9EHBDmdsWGUclpgtFQBBeaPF3kc//NIuQpY3mBQsQb
-         7KL68EsN6DHZZSrhVwCD+YbS8sX8imc/+xs0qIjudq+65NcZDSobS93e+c3NkwdcPn
-         WGzq3pOOyxc4dORLGI4z7CIrPmP2C0mOlu3Fg7GA=
+        b=ZlBERxC3b2raEJhUA4vs+UeIOCg0dW0+NlhCa7v9eKvMSv+kw3raCqEFBT9A5nq8l
+         vgWgpnLgju6C3vArPUZcT64sKkjAEGWW/HA2Im4zSWBp4JhzGNXpoP1UOHBafug5ib
+         XPpSi7rirLoIp7WR/n3P5R2Dxyu1CTPS+c3wkP1U=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pwm@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 05/19] pwm: rcar: Fix late Runtime PM enablement
-Date:   Sat, 18 Apr 2020 10:44:22 -0400
-Message-Id: <20200418144436.10818-5-sashal@kernel.org>
+Cc:     =?UTF-8?q?=EC=9D=B4=EA=B2=BD=ED=83=9D?= <gt82.lee@samsung.com>,
+        Vinod Koul <vkoul@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 4.4 06/19] ASoC: dpcm: allow start or stop during pause for backend
+Date:   Sat, 18 Apr 2020 10:44:23 -0400
+Message-Id: <20200418144436.10818-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200418144436.10818-1-sashal@kernel.org>
 References: <20200418144436.10818-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: 이경택 <gt82.lee@samsung.com>
 
-[ Upstream commit 1451a3eed24b5fd6a604683f0b6995e0e7e16c79 ]
+[ Upstream commit 21fca8bdbb64df1297e8c65a746c4c9f4a689751 ]
 
-Runtime PM should be enabled before calling pwmchip_add(), as PWM users
-can appear immediately after the PWM chip has been added.
-Likewise, Runtime PM should be disabled after the removal of the PWM
-chip.
+soc_compr_trigger_fe() allows start or stop after pause_push.
+In dpcm_be_dai_trigger(), however, only pause_release is allowed
+command after pause_push.
+So, start or stop after pause in compress offload is always
+returned as error if the compress offload is used with dpcm.
+To fix the problem, SND_SOC_DPCM_STATE_PAUSED should be allowed
+for start or stop command.
 
-Fixes: ed6c1476bf7f16d5 ("pwm: Add support for R-Car PWM Timer")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
+Signed-off-by: Gyeongtaek Lee <gt82.lee@samsung.com>
+Reviewed-by: Vinod Koul <vkoul@kernel.org>
+Link: https://lore.kernel.org/r/004d01d607c1$7a3d5250$6eb7f6f0$@samsung.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pwm/pwm-rcar.c | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ sound/soc/soc-pcm.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pwm/pwm-rcar.c b/drivers/pwm/pwm-rcar.c
-index 6e99a63ffa290..df0723df1f997 100644
---- a/drivers/pwm/pwm-rcar.c
-+++ b/drivers/pwm/pwm-rcar.c
-@@ -232,24 +232,28 @@ static int rcar_pwm_probe(struct platform_device *pdev)
- 	rcar_pwm->chip.base = -1;
- 	rcar_pwm->chip.npwm = 1;
+diff --git a/sound/soc/soc-pcm.c b/sound/soc/soc-pcm.c
+index 7cffa98ec313c..d4bf3dc6b0158 100644
+--- a/sound/soc/soc-pcm.c
++++ b/sound/soc/soc-pcm.c
+@@ -1951,7 +1951,8 @@ int dpcm_be_dai_trigger(struct snd_soc_pcm_runtime *fe, int stream,
+ 		switch (cmd) {
+ 		case SNDRV_PCM_TRIGGER_START:
+ 			if ((be->dpcm[stream].state != SND_SOC_DPCM_STATE_PREPARE) &&
+-			    (be->dpcm[stream].state != SND_SOC_DPCM_STATE_STOP))
++			    (be->dpcm[stream].state != SND_SOC_DPCM_STATE_STOP) &&
++			    (be->dpcm[stream].state != SND_SOC_DPCM_STATE_PAUSED))
+ 				continue;
  
-+	pm_runtime_enable(&pdev->dev);
-+
- 	ret = pwmchip_add(&rcar_pwm->chip);
- 	if (ret < 0) {
- 		dev_err(&pdev->dev, "failed to register PWM chip: %d\n", ret);
-+		pm_runtime_disable(&pdev->dev);
- 		return ret;
- 	}
+ 			ret = dpcm_do_trigger(dpcm, be_substream, cmd);
+@@ -1981,7 +1982,8 @@ int dpcm_be_dai_trigger(struct snd_soc_pcm_runtime *fe, int stream,
+ 			be->dpcm[stream].state = SND_SOC_DPCM_STATE_START;
+ 			break;
+ 		case SNDRV_PCM_TRIGGER_STOP:
+-			if (be->dpcm[stream].state != SND_SOC_DPCM_STATE_START)
++			if ((be->dpcm[stream].state != SND_SOC_DPCM_STATE_START) &&
++			    (be->dpcm[stream].state != SND_SOC_DPCM_STATE_PAUSED))
+ 				continue;
  
--	pm_runtime_enable(&pdev->dev);
--
- 	return 0;
- }
- 
- static int rcar_pwm_remove(struct platform_device *pdev)
- {
- 	struct rcar_pwm_chip *rcar_pwm = platform_get_drvdata(pdev);
-+	int ret;
-+
-+	ret = pwmchip_remove(&rcar_pwm->chip);
- 
- 	pm_runtime_disable(&pdev->dev);
- 
--	return pwmchip_remove(&rcar_pwm->chip);
-+	return ret;
- }
- 
- static const struct of_device_id rcar_pwm_of_table[] = {
+ 			if (!snd_soc_dpcm_can_be_free_stop(fe, be, stream))
 -- 
 2.20.1
 
