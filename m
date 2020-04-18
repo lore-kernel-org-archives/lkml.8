@@ -7,49 +7,51 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E498CC38A2F
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:41:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B481C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:42:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA9252224E
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:41:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04D9E21D82
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:42:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587220919;
-	bh=XlFxx7w9tq9hPc8Jl4nJlyASCZqXKW6voGb0AIZjCWM=;
+	s=default; t=1587220924;
+	bh=SC/vqzeMx1k3k9AAbtjSE5BmU6VVJ9MANDBe3abuSXk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NIgzNOxR2gml1lJF2aW+rwzcDFC/ilZ5kf9qv3m8zU8ojYJ1JOhv7VErnSxJY4akn
-	 CXGr+Nn6bJhBHiXCyxv9QetYY1JrTX2ZgtIpv1twuixjQEwTacumE4R8Vmb1Rlawg8
-	 CIpcUuozrOcgebQbOXfQJmT+dFcn4ZxZgCzb6Ni8=
+	b=WXTES0rzWc1HSLVksB0XviBOicwjcIvu5S5jyO+kFQ/61QsPEcT/3PsUbekGLKaUO
+	 nIyUyINtXaIWXrTuxE8qtlr9xzGXGd1vAIV3ZBOP+hCv6piJb+KE1gCHP3M2nPV0Zw
+	 lnLdWlrV0HQ8UNON6eMkYL1TtUxxSQHzffdUudg8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728209AbgDROl6 (ORCPT
+        id S1728230AbgDROmC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 10:41:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51584 "EHLO mail.kernel.org"
+        Sat, 18 Apr 2020 10:42:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51736 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728154AbgDROlz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 10:41:55 -0400
+        id S1726625AbgDROmA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 10:42:00 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A278321D7E;
-        Sat, 18 Apr 2020 14:41:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 676292224F;
+        Sat, 18 Apr 2020 14:41:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587220915;
-        bh=XlFxx7w9tq9hPc8Jl4nJlyASCZqXKW6voGb0AIZjCWM=;
+        s=default; t=1587220920;
+        bh=SC/vqzeMx1k3k9AAbtjSE5BmU6VVJ9MANDBe3abuSXk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PaKFNRa+9QdR82IZFrmf/1EIBmqxhcXNZG7rR8I1BYGUJLiVBrrnfWQ7Ubh3JNz5R
-         vTiClzRFrAfdYucPLZiPdsnDk67LEfrS6/aFFHCUKKlHyYKfYrtARQ18PgUdxmDnSX
-         wFifpXoIt6MB8QWGfMqBct1tXns93xlQ847VVFZU=
+        b=HJ3ujVtXKNApUgyMIYJ5qtwCHZ3xirDfQyarkQxK95iX5NO3tOiartrji0/IL0/I1
+         UJWRM/QzuZgxKL8zt/kYGYdQoEw49Z0mYxd6zhmgUSCiv9yYeaXn85tXsWGXKQBeXU
+         nwFgkvqky+qqr89+NaH4ApIhfLgga5GNnMVW/Tqc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Takashi Iwai <tiwai@suse.de>, Jaroslav Kysela <perex@perex.cz>,
-        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 5.4 54/78] ALSA: hda: Fix potential access overflow in beep helper
-Date:   Sat, 18 Apr 2020 10:40:23 -0400
-Message-Id: <20200418144047.9013-54-sashal@kernel.org>
+Cc:     =?UTF-8?q?Franti=C5=A1ek=20Ku=C4=8Dera?= <franta-linux@frantovo.cz>,
+        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>,
+        alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 5.4 58/78] ALSA: usb-audio: Add Pioneer DJ DJM-250MK2 quirk
+Date:   Sat, 18 Apr 2020 10:40:27 -0400
+Message-Id: <20200418144047.9013-58-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200418144047.9013-1-sashal@kernel.org>
 References: <20200418144047.9013-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -58,48 +60,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: František Kučera <franta-linux@frantovo.cz>
 
-[ Upstream commit 0ad3f0b384d58f3bd1f4fb87d0af5b8f6866f41a ]
+[ Upstream commit 73d8c94084341e2895169a0462dbc18167f01683 ]
 
-The beep control helper function blindly stores the values in two
-stereo channels no matter whether the actual control is mono or
-stereo.  This is practically harmless, but it annoys the recently
-introduced sanity check, resulting in an error when the checker is
-enabled.
+Pioneer DJ DJM-250MK2 is a mixer that acts like a USB sound card.
+The MIDI controller part is standard but the PCM part is "vendor specific".
+Output is enabled by this quirk: 8 channels, 48 000 Hz, S24_3LE.
+Input is not working.
 
-This patch corrects the behavior to store only on the defined array
-member.
-
-Fixes: 0401e8548eac ("ALSA: hda - Move beep helper functions to hda_beep.c")
-BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=207139
-Reviewed-by: Jaroslav Kysela <perex@perex.cz>
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200407084402.25589-2-tiwai@suse.de
+Signed-off-by: František Kučera <franta-linux@frantovo.cz>
+Link: https://lore.kernel.org/r/20200401095907.3387-1-konference@frantovo.cz
 Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/pci/hda/hda_beep.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ sound/usb/quirks-table.h | 42 ++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 42 insertions(+)
 
-diff --git a/sound/pci/hda/hda_beep.c b/sound/pci/hda/hda_beep.c
-index b7d9160ed8688..c6e1e03a5e4da 100644
---- a/sound/pci/hda/hda_beep.c
-+++ b/sound/pci/hda/hda_beep.c
-@@ -290,8 +290,12 @@ int snd_hda_mixer_amp_switch_get_beep(struct snd_kcontrol *kcontrol,
- {
- 	struct hda_codec *codec = snd_kcontrol_chip(kcontrol);
- 	struct hda_beep *beep = codec->beep;
-+	int chs = get_amp_channels(kcontrol);
-+
- 	if (beep && (!beep->enabled || !ctl_has_mute(kcontrol))) {
--		ucontrol->value.integer.value[0] =
-+		if (chs & 1)
-+			ucontrol->value.integer.value[0] = beep->enabled;
-+		if (chs & 2)
- 			ucontrol->value.integer.value[1] = beep->enabled;
- 		return 0;
+diff --git a/sound/usb/quirks-table.h b/sound/usb/quirks-table.h
+index d187aa6d50db0..dcaf9eed9a415 100644
+--- a/sound/usb/quirks-table.h
++++ b/sound/usb/quirks-table.h
+@@ -3592,5 +3592,47 @@ AU0828_DEVICE(0x2040, 0x7270, "Hauppauge", "HVR-950Q"),
+ 		}
  	}
+ },
++{
++	/*
++	 * Pioneer DJ DJM-250MK2
++	 * PCM is 8 channels out @ 48 fixed (endpoints 0x01).
++	 * The output from computer to the mixer is usable.
++	 *
++	 * The input (phono or line to computer) is not working.
++	 * It should be at endpoint 0x82 and probably also 8 channels,
++	 * but it seems that it works only with Pioneer proprietary software.
++	 * Even on officially supported OS, the Audacity was unable to record
++	 * and Mixxx to recognize the control vinyls.
++	 */
++	USB_DEVICE_VENDOR_SPEC(0x2b73, 0x0017),
++	.driver_info = (unsigned long) &(const struct snd_usb_audio_quirk) {
++		.ifnum = QUIRK_ANY_INTERFACE,
++		.type = QUIRK_COMPOSITE,
++		.data = (const struct snd_usb_audio_quirk[]) {
++			{
++				.ifnum = 0,
++				.type = QUIRK_AUDIO_FIXED_ENDPOINT,
++				.data = &(const struct audioformat) {
++					.formats = SNDRV_PCM_FMTBIT_S24_3LE,
++					.channels = 8, // outputs
++					.iface = 0,
++					.altsetting = 1,
++					.altset_idx = 1,
++					.endpoint = 0x01,
++					.ep_attr = USB_ENDPOINT_XFER_ISOC|
++						USB_ENDPOINT_SYNC_ASYNC,
++					.rates = SNDRV_PCM_RATE_48000,
++					.rate_min = 48000,
++					.rate_max = 48000,
++					.nr_rates = 1,
++					.rate_table = (unsigned int[]) { 48000 }
++				}
++			},
++			{
++				.ifnum = -1
++			}
++		}
++	}
++},
+ 
+ #undef USB_DEVICE_VENDOR_SPEC
 -- 
 2.20.1
 
