@@ -4,56 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36A03C38A29
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:45:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A684AC38A29
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:45:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 117AB21D6C
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:45:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79C7921D6C
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:45:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587221117;
-	bh=chMJyRsPAQWfKB7X8givOIzUOPe9Rp0mRX+Bdx+GoPs=;
+	s=default; t=1587221120;
+	bh=DZSCDdCDB69HIfhhzIlKvyhVBwtzJQwmpG6SLjhFycQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SjkNzoEvP4ReCIMm9TdPOKq9wTUDj0FF2tg8nX0P4sh/f2uBEzCRB4UIECT+CJCt+
-	 G3DG0AH7tKItNh/OMQsbjZS/ey1ViRUNlgogJVFYp67xcf/+AGcZZNqryDiWE3hHDv
-	 7a9Kcis5grtkr6Psanh85T3lNgdonRaeiXOErz+A=
+	b=vjZZyKiKqRoZvSFL8U8HBCIbhmLEA6tbFxx9UtNF3/z5BMZlJATGSzGSLD+L3fAeJ
+	 CW8u9K1jez6hI7LSJqnNBNPNno1IZ3KfWJidEY7lkP71QMYAoMt2BNT5XfYJ0ShNSt
+	 XbwACNOyrWOwq0ffFOmtQw9/EGxWrYx8wxCO4V9s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728957AbgDROpO (ORCPT
+        id S1728969AbgDROpT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 10:45:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57048 "EHLO mail.kernel.org"
+        Sat, 18 Apr 2020 10:45:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57174 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728920AbgDROo5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 10:44:57 -0400
+        id S1728122AbgDROpA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 10:45:00 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1AF0E21D7E;
-        Sat, 18 Apr 2020 14:44:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2E01121BE5;
+        Sat, 18 Apr 2020 14:44:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587221096;
-        bh=chMJyRsPAQWfKB7X8givOIzUOPe9Rp0mRX+Bdx+GoPs=;
+        s=default; t=1587221099;
+        bh=DZSCDdCDB69HIfhhzIlKvyhVBwtzJQwmpG6SLjhFycQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KefqDbRXeIZZYZHcP5imz9+3UaUreFHS0iBwvlAbAex6WBBTx/MtkRQQ917yUMwjI
-         8cWrIDVqi132oox0NeAwf0nt3q8IbwO33wRmYRzSchELHpwV6xNEQb/qrZmSKdLLJu
-         m9FdvHYSOfBQozIKCjLNYUT8xH4zEMjZqRaPuCIo=
+        b=bFp4Bwj1sARjq+XIHvzbPve7olmfK1Y+N/J/h1xyobxT3bUzd151YcsQ5JBXCHnDA
+         MaWYNF4G+ORdnwIRvhvvFmmxwlzD9+/kLaXUaaxAoT57kel7lkgJz3YWG4Jm8HbiR6
+         HI+G13I0l+0Zz+LJEa02UhP5LjSE4hGT28tDxE0g=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Changwei Ge <chge@linux.alibaba.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Joseph Qi <joseph.qi@linux.alibaba.com>,
-        Mark Fasheh <mark@fasheh.com>,
-        Joel Becker <jlbec@evilplan.org>,
-        Junxiao Bi <junxiao.bi@oracle.com>,
-        Changwei Ge <gechangwei@live.cn>, Gang He <ghe@suse.com>,
-        Jun Piao <piaojun@huawei.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>, ocfs2-devel@oss.oracle.com
-Subject: [PATCH AUTOSEL 4.4 15/19] ocfs2: no need try to truncate file beyond i_size
-Date:   Sat, 18 Apr 2020 10:44:32 -0400
-Message-Id: <20200418144436.10818-15-sashal@kernel.org>
+Cc:     Takashi Iwai <tiwai@suse.de>, Jaroslav Kysela <perex@perex.cz>,
+        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 4.4 18/19] ALSA: ice1724: Fix invalid access for enumerated ctl items
+Date:   Sat, 18 Apr 2020 10:44:35 -0400
+Message-Id: <20200418144436.10818-18-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200418144436.10818-1-sashal@kernel.org>
 References: <20200418144436.10818-1-sashal@kernel.org>
@@ -66,61 +58,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Changwei Ge <chge@linux.alibaba.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-[ Upstream commit 783fda856e1034dee90a873f7654c418212d12d7 ]
+[ Upstream commit c47914c00be346bc5b48c48de7b0da5c2d1a296c ]
 
-Linux fallocate(2) with FALLOC_FL_PUNCH_HOLE mode set, its offset can
-exceed the inode size.  Ocfs2 now doesn't allow that offset beyond inode
-size.  This restriction is not necessary and violates fallocate(2)
-semantics.
+The access to Analog Capture Source control value implemented in
+prodigy_hifi.c is wrong, as caught by the recently introduced sanity
+check; it should be accessing value.enumerated.item[] instead of
+value.integer.value[].  This patch corrects the wrong access pattern.
 
-If fallocate(2) offset is beyond inode size, just return success and do
-nothing further.
-
-Otherwise, ocfs2 will crash the kernel.
-
-  kernel BUG at fs/ocfs2//alloc.c:7264!
-   ocfs2_truncate_inline+0x20f/0x360 [ocfs2]
-   ocfs2_remove_inode_range+0x23c/0xcb0 [ocfs2]
-   __ocfs2_change_file_space+0x4a5/0x650 [ocfs2]
-   ocfs2_fallocate+0x83/0xa0 [ocfs2]
-   vfs_fallocate+0x148/0x230
-   SyS_fallocate+0x48/0x80
-   do_syscall_64+0x79/0x170
-
-Signed-off-by: Changwei Ge <chge@linux.alibaba.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
-Cc: Mark Fasheh <mark@fasheh.com>
-Cc: Joel Becker <jlbec@evilplan.org>
-Cc: Junxiao Bi <junxiao.bi@oracle.com>
-Cc: Changwei Ge <gechangwei@live.cn>
-Cc: Gang He <ghe@suse.com>
-Cc: Jun Piao <piaojun@huawei.com>
+Fixes: 6b8d6e5518e2 ("[ALSA] ICE1724: Added support for Audiotrak Prodigy 7.1 HiFi & HD2, Hercules Fortissimo IV")
+BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=207139
+Reviewed-by: Jaroslav Kysela <perex@perex.cz>
 Cc: <stable@vger.kernel.org>
-Link: http://lkml.kernel.org/r/20200407082754.17565-1-chge@linux.alibaba.com
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Link: https://lore.kernel.org/r/20200407084402.25589-3-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ocfs2/alloc.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ sound/pci/ice1712/prodigy_hifi.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/fs/ocfs2/alloc.c b/fs/ocfs2/alloc.c
-index 93e6f029a3225..7e34be37c96d2 100644
---- a/fs/ocfs2/alloc.c
-+++ b/fs/ocfs2/alloc.c
-@@ -7206,6 +7206,10 @@ int ocfs2_truncate_inline(struct inode *inode, struct buffer_head *di_bh,
- 	struct ocfs2_dinode *di = (struct ocfs2_dinode *)di_bh->b_data;
- 	struct ocfs2_inline_data *idata = &di->id2.i_data;
+diff --git a/sound/pci/ice1712/prodigy_hifi.c b/sound/pci/ice1712/prodigy_hifi.c
+index 2697402b51957..41f6450a2539f 100644
+--- a/sound/pci/ice1712/prodigy_hifi.c
++++ b/sound/pci/ice1712/prodigy_hifi.c
+@@ -569,7 +569,7 @@ static int wm_adc_mux_enum_get(struct snd_kcontrol *kcontrol,
+ 	struct snd_ice1712 *ice = snd_kcontrol_chip(kcontrol);
  
-+	/* No need to punch hole beyond i_size. */
-+	if (start >= i_size_read(inode))
-+		return 0;
-+
- 	if (end > i_size_read(inode))
- 		end = i_size_read(inode);
+ 	mutex_lock(&ice->gpio_mutex);
+-	ucontrol->value.integer.value[0] = wm_get(ice, WM_ADC_MUX) & 0x1f;
++	ucontrol->value.enumerated.item[0] = wm_get(ice, WM_ADC_MUX) & 0x1f;
+ 	mutex_unlock(&ice->gpio_mutex);
+ 	return 0;
+ }
+@@ -583,7 +583,7 @@ static int wm_adc_mux_enum_put(struct snd_kcontrol *kcontrol,
  
+ 	mutex_lock(&ice->gpio_mutex);
+ 	oval = wm_get(ice, WM_ADC_MUX);
+-	nval = (oval & 0xe0) | ucontrol->value.integer.value[0];
++	nval = (oval & 0xe0) | ucontrol->value.enumerated.item[0];
+ 	if (nval != oval) {
+ 		wm_put(ice, WM_ADC_MUX, nval);
+ 		change = 1;
 -- 
 2.20.1
 
