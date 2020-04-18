@@ -7,49 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FDD6C38A2F
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:55:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46311C38A29
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:55:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 03330206D6
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:55:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2465C206D6
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:55:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587221725;
-	bh=t42lwvzvRuq+EdPO2A4ahvdJe7rqQ1zQNaWJvazif4g=;
+	s=default; t=1587221733;
+	bh=/wjEcidzZHShNwnxxS64gx2IXXTX7QTd31cbCKTc5lE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zTnuW3cqxOUSjW0lS2XSVfS5oqUnV2kHa93ke2+H12pjR/95v7aezurBZlkoA2sJ4
-	 0IXzfqe8LPhBBCC3wOhqvqMGP3JvLrRavq7PMRUo2VB4+F0N0luYxlPZJ4gDUrijSv
-	 ZrZ07KBx3v3cakFte8qfGE7c85afNQatMZum8ZQQ=
+	b=IyHBWGG3oZO3b0gdzmN4ptSZxle/YJfHIHmnrXl3KFKYq0gjcegF4GXzLF0Nhcbjx
+	 fZEecfvNrN0B0YsaKUvBiivea0sgNxBWmepPgzX0tawWZ93uC1ahaJZO801N5+5Hgo
+	 VQl3xhqarmsiib3J/lHOsvVVsGnbqcwTpu87WNgQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728964AbgDROzX (ORCPT
+        id S1728595AbgDROzc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 10:55:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50104 "EHLO mail.kernel.org"
+        Sat, 18 Apr 2020 10:55:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50050 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727823AbgDROlN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 10:41:13 -0400
+        id S1727797AbgDROlM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 10:41:12 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9DD1121974;
-        Sat, 18 Apr 2020 14:41:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5D8B322202;
+        Sat, 18 Apr 2020 14:41:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587220873;
-        bh=t42lwvzvRuq+EdPO2A4ahvdJe7rqQ1zQNaWJvazif4g=;
+        s=default; t=1587220872;
+        bh=/wjEcidzZHShNwnxxS64gx2IXXTX7QTd31cbCKTc5lE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Y/2W7rDJT+om6ZLVNOXlRd3v4danOoVeY8MzWmPiT4YgR9KL38Xop1vWcqx4F6HTQ
-         VIkawfknhvV+IdNFZWZD+acOLg2bQUrmsEoURMgSuDnDFL5aCV7KfS2c1C1RFx5FBs
-         18AvH2UNDNFTraICEDkfNoBBHm0ZWe+7FgAWz0+I=
+        b=WGnBdYe4N/gXHlmX+rBqJggDMbqg06LDWKF/+bpLT73TpjwwXmITs+kW+dQKGRMUM
+         BzTJ+vjCw4EPsP2neJPVRBPCYVcI5iGXTejscxdZQ7nBO+Iw5uj5iEM26cEi9+11qu
+         bY8zo23upw13CxuJy/Aan376Jv2gS19fYWpGwcdk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Isabel Zhang <isabel.zhang@amd.com>,
-        Alvin Lee <Alvin.Lee2@amd.com>,
-        Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.4 21/78] drm/amd/display: Update stream adjust in dc_stream_adjust_vmin_vmax
-Date:   Sat, 18 Apr 2020 10:39:50 -0400
-Message-Id: <20200418144047.9013-21-sashal@kernel.org>
+Cc:     Sagi Grimberg <sagi@grimberg.me>, Keith Busch <kbusch@kernel.org>,
+        Hannes Reinecke <hare@suse.de>, Christoph Hellwig <hch@lst.de>,
+        Sasha Levin <sashal@kernel.org>, linux-nvme@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.4 20/78] nvme: fix deadlock caused by ANA update wrong locking
+Date:   Sat, 18 Apr 2020 10:39:49 -0400
+Message-Id: <20200418144047.9013-20-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200418144047.9013-1-sashal@kernel.org>
 References: <20200418144047.9013-1-sashal@kernel.org>
@@ -62,40 +59,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Isabel Zhang <isabel.zhang@amd.com>
+From: Sagi Grimberg <sagi@grimberg.me>
 
-[ Upstream commit 346d8a0a3c91888a412c2735d69daa09c00f0203 ]
+[ Upstream commit 657f1975e9d9c880fa13030e88ba6cc84964f1db ]
 
-[Why]
-After v_total_min and max are updated in vrr structure, the changes are
-not reflected in stream adjust. When these values are read from stream
-adjust it does not reflect the actual state of the system.
+The deadlock combines 4 flows in parallel:
+- ns scanning (triggered from reconnect)
+- request timeout
+- ANA update (triggered from reconnect)
+- I/O coming into the mpath device
 
-[How]
-Set stream adjust values equal to vrr adjust values after vrr adjust
-values are updated.
+(1) ns scanning triggers disk revalidation -> update disk info ->
+    freeze queue -> but blocked, due to (2)
 
-Signed-off-by: Isabel Zhang <isabel.zhang@amd.com>
-Reviewed-by: Alvin Lee <Alvin.Lee2@amd.com>
-Acked-by: Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+(2) timeout handler reference the g_usage_counter - > but blocks in
+    the transport .timeout() handler, due to (3)
+
+(3) the transport timeout handler (indirectly) calls nvme_stop_queue() ->
+    which takes the (down_read) namespaces_rwsem - > but blocks, due to (4)
+
+(4) ANA update takes the (down_write) namespaces_rwsem -> calls
+    nvme_mpath_set_live() -> which synchronize the ns_head srcu
+    (see commit 504db087aacc) -> but blocks, due to (5)
+
+(5) I/O came into nvme_mpath_make_request -> took srcu_read_lock ->
+    direct_make_request > blk_queue_enter -> but blocked, due to (1)
+
+==> the request queue is under freeze -> deadlock.
+
+The fix is making ANA update take a read lock as the namespaces list
+is not manipulated, it is just the ns and ns->head that are being
+updated (which is protected with the ns->head lock).
+
+Fixes: 0d0b660f214dc ("nvme: add ANA support")
+Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
+Reviewed-by: Keith Busch <kbusch@kernel.org>
+Reviewed-by: Hannes Reinecke <hare@suse.de>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/dc/core/dc.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/nvme/host/multipath.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/core/dc.c b/drivers/gpu/drm/amd/display/dc/core/dc.c
-index 4704aac336c29..89bd0ba3db1df 100644
---- a/drivers/gpu/drm/amd/display/dc/core/dc.c
-+++ b/drivers/gpu/drm/amd/display/dc/core/dc.c
-@@ -283,6 +283,8 @@ bool dc_stream_adjust_vmin_vmax(struct dc *dc,
- 	int i = 0;
- 	bool ret = false;
+diff --git a/drivers/nvme/host/multipath.c b/drivers/nvme/host/multipath.c
+index aed6354cb2717..56caddeabb5e5 100644
+--- a/drivers/nvme/host/multipath.c
++++ b/drivers/nvme/host/multipath.c
+@@ -510,7 +510,7 @@ static int nvme_update_ana_state(struct nvme_ctrl *ctrl,
+ 	if (!nr_nsids)
+ 		return 0;
  
-+	stream->adjust = *adjust;
-+
- 	for (i = 0; i < MAX_PIPES; i++) {
- 		struct pipe_ctx *pipe = &dc->current_state->res_ctx.pipe_ctx[i];
+-	down_write(&ctrl->namespaces_rwsem);
++	down_read(&ctrl->namespaces_rwsem);
+ 	list_for_each_entry(ns, &ctrl->namespaces, list) {
+ 		unsigned nsid = le32_to_cpu(desc->nsids[n]);
+ 
+@@ -521,7 +521,7 @@ static int nvme_update_ana_state(struct nvme_ctrl *ctrl,
+ 		if (++n == nr_nsids)
+ 			break;
+ 	}
+-	up_write(&ctrl->namespaces_rwsem);
++	up_read(&ctrl->namespaces_rwsem);
+ 	return 0;
+ }
  
 -- 
 2.20.1
