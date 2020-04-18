@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9C3EC352BE
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 18:42:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19420C352BE
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 18:42:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8880C2223D
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 18:42:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDFA1221E9
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 18:42:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="j5q/SQ1+"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="rJ3FSC6+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728198AbgDRSmC (ORCPT
+        id S1728237AbgDRSmN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 14:42:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41214 "EHLO
+        Sat, 18 Apr 2020 14:42:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41212 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727936AbgDRSlV (ORCPT
+        by vger.kernel.org with ESMTP id S1727902AbgDRSlU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 14:41:21 -0400
+        Sat, 18 Apr 2020 14:41:20 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65C45C061A0C;
-        Sat, 18 Apr 2020 11:41:21 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78995C061A0C;
+        Sat, 18 Apr 2020 11:41:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         Content-Type:MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:
         To:From:Sender:Reply-To:Content-ID:Content-Description;
-        bh=RAwgh7dK6Aq2GUmD2z2q67RSpKe0Qba5fsNnenVzxMI=; b=j5q/SQ1+k3/+/NWSTV/WCIkHyr
-        zch6FAcwYZsrW1PmSwaW8sUH6ZWeOC45ea2Cw5ovOtRwJLJOkQhRg13tWis5r+icV/DhjmdEjwv79
-        s2h+fCIcRl3RnLCdtSGFczimDTd9m/8AzLPWV2hp+UzgF8z2XnH0R/f/a5DQg9nNd3Y73Ad9ZrO4P
-        SE8YtJq+oauVuVNS6MyEi2RLVp6TVtw40sWJHw1JEOXlVu7aGBz0X1bug3Vw49BLE3fO57MGGN/q0
-        Pmq5oXAMF6sIRcv8GgeZALDInNNSJ4NKJzYxSO84gAsonX87pABbmdSy94HL9m+wa0jkyxTrzud66
-        2h6YWfaA==;
+        bh=Z/ABBV2vtDLyfRcjamC38HwxTrQtSwsZcb0OzbkWsUE=; b=rJ3FSC6+DaZYG5qDC0wUPtN1SQ
+        6kc24pbTmZHwpWQG5VbJcOvhSND5w9lvWyU0STq3J5awSJ+mQGR6mBrLgoi2n3O6n9Jw35QUg9Y74
+        9mmpZhqsG2g9ClzjoUATTOR7PYeSeWpeoKr+IpZYuUcbVJVRFfFgNbPYgpOz2vwvO1ArJnNTugkXf
+        e5UqMYAoTNEErclRAZHOgSgCt9idLwF4FUQ0aYMp3ZrqvF+UofS5GPLc/CzBRVxKIeIMKMq5oaCq0
+        LHXEtvPs6ntRLkN71ahJU4FlZPCqVhnccZu4pp1C/uv0wBPvLn5xg26bBKm46QINfwvrPOOMyxieh
+        11sA8ibQ==;
 Received: from [2601:1c0:6280:3f0::19c2] (helo=smtpauth.infradead.org)
         by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jPsP3-0007rZ-5p; Sat, 18 Apr 2020 18:41:21 +0000
+        id 1jPsP2-0007rZ-8t; Sat, 18 Apr 2020 18:41:20 +0000
 From:   Randy Dunlap <rdunlap@infradead.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Randy Dunlap <rdunlap@infradead.org>,
@@ -61,9 +61,9 @@ Cc:     Randy Dunlap <rdunlap@infradead.org>,
         "Martin K. Petersen" <martin.petersen@oracle.com>,
         linux-scsi@vger.kernel.org, target-devel@vger.kernel.org,
         Zzy Wysm <zzy@zzywysm.com>
-Subject: [PATCH 8/9] dax: fix empty-body warnings in bus.c
-Date:   Sat, 18 Apr 2020 11:41:10 -0700
-Message-Id: <20200418184111.13401-9-rdunlap@infradead.org>
+Subject: [PATCH 7/9] drivers/base: fix empty-body warnings in devcoredump.c
+Date:   Sat, 18 Apr 2020 11:41:09 -0700
+Message-Id: <20200418184111.13401-8-rdunlap@infradead.org>
 X-Mailer: git-send-email 2.16.4
 In-Reply-To: <20200418184111.13401-1-rdunlap@infradead.org>
 References: <20200418184111.13401-1-rdunlap@infradead.org>
@@ -77,42 +77,38 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Fix gcc empty-body warning when -Wextra is used:
 
-../drivers/dax/bus.c:93:27: warning: suggest braces around empty body in an ‘else’ statement [-Wempty-body]
-../drivers/dax/bus.c:98:29: warning: suggest braces around empty body in an ‘else’ statement [-Wempty-body]
+../drivers/base/devcoredump.c:297:42: warning: suggest braces around empty body in an ‘if’ statement [-Wempty-body]
+../drivers/base/devcoredump.c:301:42: warning: suggest braces around empty body in an ‘if’ statement [-Wempty-body]
 
 Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: Vishal Verma <vishal.l.verma@intel.com>
-Cc: Dave Jiang <dave.jiang@intel.com>
-Cc: linux-nvdimm@lists.01.org
+Cc: Johannes Berg <johannes@sipsolutions.net>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Andrew Morton <akpm@linux-foundation.org>
 ---
- drivers/dax/bus.c |    5 +++--
+ drivers/base/devcoredump.c |    5 +++--
  1 file changed, 3 insertions(+), 2 deletions(-)
 
---- linux-next-20200417.orig/drivers/dax/bus.c
-+++ linux-next-20200417/drivers/dax/bus.c
-@@ -2,6 +2,7 @@
- /* Copyright(c) 2017-2018 Intel Corporation. All rights reserved. */
- #include <linux/memremap.h>
- #include <linux/device.h>
+--- linux-next-20200417.orig/drivers/base/devcoredump.c
++++ linux-next-20200417/drivers/base/devcoredump.c
+@@ -9,6 +9,7 @@
+  *
+  * Author: Johannes Berg <johannes@sipsolutions.net>
+  */
 +#include <linux/kernel.h>
- #include <linux/mutex.h>
- #include <linux/list.h>
- #include <linux/slab.h>
-@@ -90,12 +91,12 @@ static ssize_t do_id_store(struct device
- 			} else
- 				rc = -ENOMEM;
- 		} else
--			/* nothing to remove */;
-+			do_empty(); /* nothing to remove */
- 	} else if (action == ID_REMOVE) {
- 		list_del(&dax_id->list);
- 		kfree(dax_id);
- 	} else
--		/* dax_id already added */;
-+		do_empty(); /* dax_id already added */
- 	mutex_unlock(&dax_bus_lock);
+ #include <linux/module.h>
+ #include <linux/device.h>
+ #include <linux/devcoredump.h>
+@@ -294,11 +295,11 @@ void dev_coredumpm(struct device *dev, s
  
- 	if (rc < 0)
+ 	if (sysfs_create_link(&devcd->devcd_dev.kobj, &dev->kobj,
+ 			      "failing_device"))
+-		/* nothing - symlink will be missing */;
++		do_empty(); /* nothing - symlink will be missing */
+ 
+ 	if (sysfs_create_link(&dev->kobj, &devcd->devcd_dev.kobj,
+ 			      "devcoredump"))
+-		/* nothing - symlink will be missing */;
++		do_empty(); /* nothing - symlink will be missing */
+ 
+ 	INIT_DELAYED_WORK(&devcd->del_wk, devcd_del);
+ 	schedule_delayed_work(&devcd->del_wk, DEVCD_TIMEOUT);
