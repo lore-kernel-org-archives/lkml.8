@@ -4,38 +4,36 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D79BC2BA19
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 06:48:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 346D3C38A29
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 06:48:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 55566214D8
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 06:48:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B693214D8
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 06:48:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726228AbgDRGsc (ORCPT
+        id S1726121AbgDRGs1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 02:48:32 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:54288 "EHLO huawei.com"
+        Sat, 18 Apr 2020 02:48:27 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:54282 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726049AbgDRGsY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726024AbgDRGsY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 18 Apr 2020 02:48:24 -0400
 Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 26E4CABB9F7D3D80417B;
+        by Forcepoint Email with ESMTP id 226CC5B96F97D4DE5B2D;
         Sat, 18 Apr 2020 14:48:20 +0800 (CST)
 Received: from localhost.localdomain (10.69.192.56) by
  DGGEMS402-HUB.china.huawei.com (10.3.19.202) with Microsoft SMTP Server id
- 14.3.487.0; Sat, 18 Apr 2020 14:48:10 +0800
+ 14.3.487.0; Sat, 18 Apr 2020 14:48:11 +0800
 From:   Huazhong Tan <tanhuazhong@huawei.com>
 To:     <davem@davemloft.net>
 CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
         <linuxarm@huawei.com>, <kuba@kernel.org>,
-        Guojia Liao <liaoguojia@huawei.com>,
         Huazhong Tan <tanhuazhong@huawei.com>
-Subject: [PATCH net-next 04/10] net: hns3: remove useless proto_support field in struct hclge_fd_cfg
-Date:   Sat, 18 Apr 2020 14:47:03 +0800
-Message-ID: <1587192429-11463-5-git-send-email-tanhuazhong@huawei.com>
+Subject: [PATCH net-next 07/10] net: hns3: clean up some coding style issue
+Date:   Sat, 18 Apr 2020 14:47:06 +0800
+Message-ID: <1587192429-11463-8-git-send-email-tanhuazhong@huawei.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1587192429-11463-1-git-send-email-tanhuazhong@huawei.com>
 References: <1587192429-11463-1-git-send-email-tanhuazhong@huawei.com>
@@ -48,94 +46,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guojia Liao <liaoguojia@huawei.com>
+This patch removes some unnecessary blank lines, redundant
+parentheses, and changes one tab to blank in
+hclge_dbg_dump_reg_common().
 
-proto_support field in struct hclge_fd_cfg shows what protocols
-in flow direct table are supported now. It is unnecessary since
-checking which one is unsupported will be more efficient,
-so this patch removes it.
-
-Signed-off-by: Guojia Liao <liaoguojia@huawei.com>
 Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
 ---
- drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c | 17 ++++++-----------
- drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h |  1 -
- 2 files changed, 6 insertions(+), 12 deletions(-)
+ drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.c |  2 +-
+ drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c    | 10 +++-------
+ 2 files changed, 4 insertions(+), 8 deletions(-)
 
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.c
+index 1722828..cfc9300 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.c
+@@ -143,7 +143,7 @@ static void hclge_dbg_dump_reg_common(struct hclge_dev *hdev,
+ 		return;
+ 	}
+ 
+-	buf_len	= sizeof(struct hclge_desc) * bd_num;
++	buf_len = sizeof(struct hclge_desc) * bd_num;
+ 	desc_src = kzalloc(buf_len, GFP_KERNEL);
+ 	if (!desc_src)
+ 		return;
 diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-index 5f1bea3..90d2c77 100644
+index 3a08287..74efd95 100644
 --- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
 +++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-@@ -4876,9 +4876,6 @@ static int hclge_init_fd_config(struct hclge_dev *hdev)
- 		return -EOPNOTSUPP;
- 	}
- 
--	hdev->fd_cfg.proto_support =
--		TCP_V4_FLOW | UDP_V4_FLOW | SCTP_V4_FLOW | TCP_V6_FLOW |
--		UDP_V6_FLOW | SCTP_V6_FLOW | IPV4_USER_FLOW | IPV6_USER_FLOW;
- 	key_cfg = &hdev->fd_cfg.key_cfg[HCLGE_FD_STAGE_1];
- 	key_cfg->key_sel = HCLGE_FD_KEY_BASE_ON_TUPLE,
- 	key_cfg->inner_sipv6_word_en = LOW_2_WORDS;
-@@ -4892,11 +4889,9 @@ static int hclge_init_fd_config(struct hclge_dev *hdev)
- 				BIT(INNER_SRC_PORT) | BIT(INNER_DST_PORT);
- 
- 	/* If use max 400bit key, we can support tuples for ether type */
--	if (hdev->fd_cfg.max_key_length == MAX_KEY_LENGTH) {
--		hdev->fd_cfg.proto_support |= ETHER_FLOW;
-+	if (hdev->fd_cfg.fd_mode == HCLGE_FD_MODE_DEPTH_2K_WIDTH_400B_STAGE_1)
- 		key_cfg->tuple_active |=
- 				BIT(INNER_DST_MAC) | BIT(INNER_SRC_MAC);
--	}
- 
- 	/* roce_type is used to filter roce frames
- 	 * dst_vport is used to specify the rule
-@@ -5397,7 +5392,8 @@ static int hclge_fd_check_ext_tuple(struct hclge_dev *hdev,
- 	}
- 
- 	if (fs->flow_type & FLOW_MAC_EXT) {
--		if (!(hdev->fd_cfg.proto_support & ETHER_FLOW))
-+		if (hdev->fd_cfg.fd_mode !=
-+		    HCLGE_FD_MODE_DEPTH_2K_WIDTH_400B_STAGE_1)
- 			return -EOPNOTSUPP;
- 
- 		if (is_zero_ether_addr(fs->h_ext.h_dest))
-@@ -5413,21 +5409,20 @@ static int hclge_fd_check_spec(struct hclge_dev *hdev,
- 			       struct ethtool_rx_flow_spec *fs,
- 			       u32 *unused_tuple)
+@@ -5380,7 +5380,7 @@ static int hclge_fd_check_ext_tuple(struct hclge_dev *hdev,
+ 				    struct ethtool_rx_flow_spec *fs,
+ 				    u32 *unused_tuple)
  {
-+	u32 flow_type;
- 	int ret = 0;
+-	if ((fs->flow_type & FLOW_EXT)) {
++	if (fs->flow_type & FLOW_EXT) {
+ 		if (fs->h_ext.vlan_etype)
+ 			return -EOPNOTSUPP;
+ 		if (!fs->h_ext.vlan_tci)
+@@ -5401,7 +5401,7 @@ static int hclge_fd_check_ext_tuple(struct hclge_dev *hdev,
+ 		if (is_zero_ether_addr(fs->h_ext.h_dest))
+ 			*unused_tuple |= BIT(INNER_DST_MAC);
+ 		else
+-			*unused_tuple &= ~(BIT(INNER_DST_MAC));
++			*unused_tuple &= ~BIT(INNER_DST_MAC);
+ 	}
  
- 	if (fs->location >= hdev->fd_cfg.rule_num[HCLGE_FD_STAGE_1])
- 		return -EINVAL;
+ 	return 0;
+@@ -5674,7 +5674,7 @@ static int hclge_fd_get_tuple(struct hclge_dev *hdev,
+ 		break;
+ 	}
  
--	if (!(fs->flow_type & hdev->fd_cfg.proto_support))
--		return -EOPNOTSUPP;
+-	if ((fs->flow_type & FLOW_EXT)) {
++	if (fs->flow_type & FLOW_EXT) {
+ 		rule->tuples.vlan_tag1 = be16_to_cpu(fs->h_ext.vlan_tci);
+ 		rule->tuples_mask.vlan_tag1 = be16_to_cpu(fs->m_ext.vlan_tci);
+ 	}
+@@ -5785,7 +5785,6 @@ static int hclge_add_fd_entry(struct hnae3_handle *handle,
+ 	}
+ 
+ 	rule->flow_type = fs->flow_type;
 -
- 	if ((fs->flow_type & FLOW_EXT) &&
- 	    (fs->h_ext.data[0] != 0 || fs->h_ext.data[1] != 0)) {
- 		dev_err(&hdev->pdev->dev, "user-def bytes are not supported\n");
+ 	rule->location = fs->location;
+ 	rule->unused_tuple = unused;
+ 	rule->vf_id = dst_vport_id;
+@@ -6273,7 +6272,6 @@ static int hclge_add_fd_entry_by_arfs(struct hnae3_handle *handle, u16 queue_id,
+ 	 */
+ 	if (hdev->fd_active_type == HCLGE_FD_EP_ACTIVE) {
+ 		spin_unlock_bh(&hdev->fd_rule_lock);
+-
  		return -EOPNOTSUPP;
  	}
  
--	switch (fs->flow_type & ~(FLOW_EXT | FLOW_MAC_EXT)) {
-+	flow_type = fs->flow_type & ~(FLOW_EXT | FLOW_MAC_EXT);
-+	switch (flow_type) {
- 	case SCTP_V4_FLOW:
- 	case TCP_V4_FLOW:
- 	case UDP_V4_FLOW:
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h
-index 71df23d..a58c262 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h
-@@ -580,7 +580,6 @@ struct hclge_fd_key_cfg {
- struct hclge_fd_cfg {
- 	u8 fd_mode;
- 	u16 max_key_length; /* use bit as unit */
--	u32 proto_support;
- 	u32 rule_num[MAX_STAGE_NUM]; /* rule entry number */
- 	u16 cnt_num[MAX_STAGE_NUM]; /* rule hit counter number */
- 	struct hclge_fd_key_cfg key_cfg[MAX_STAGE_NUM];
+@@ -6287,14 +6285,12 @@ static int hclge_add_fd_entry_by_arfs(struct hnae3_handle *handle, u16 queue_id,
+ 		bit_id = find_first_zero_bit(hdev->fd_bmap, MAX_FD_FILTER_NUM);
+ 		if (bit_id >= hdev->fd_cfg.rule_num[HCLGE_FD_STAGE_1]) {
+ 			spin_unlock_bh(&hdev->fd_rule_lock);
+-
+ 			return -ENOSPC;
+ 		}
+ 
+ 		rule = kzalloc(sizeof(*rule), GFP_ATOMIC);
+ 		if (!rule) {
+ 			spin_unlock_bh(&hdev->fd_rule_lock);
+-
+ 			return -ENOMEM;
+ 		}
+ 
 -- 
 2.7.4
 
