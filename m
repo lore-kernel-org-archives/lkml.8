@@ -2,237 +2,133 @@ Return-Path: <SRS0=3CHW=6C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84CA5C38A29
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:50:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9CA2C38A29
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:50:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5F50F21D6C
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:50:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99AE92072B
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:50:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587221424;
-	bh=303gUJbQF+M2sNMQfQWkWiYpyN7ocLgZ90zjaTPj990=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=RvVogT9SC5a8IUnz+j0RBUkWMFSZR3er5kJsR4CUip0f1G7Oe4ZtTq2e6QbEymB41
-	 gTA0SzfCgifAfJCxpluF1LXn/vJWHFRvUWWfPyputiVLIdXsvpZNqEq4AQFij8qLa3
-	 pGhxzjGpg23WwtXkdVMmOMMnCmFOw+RggkW/dFC8=
+	s=default; t=1587221432;
+	bh=DaZJWPTSTAzcStopkRnvBbDOO8N2y9SEPL3j26QQpAs=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=DiLlAtDSCsXXAnAHB229UCvgamZIiB5xP8akNlqiYUKLJ+bYu3eMlgVJYi4YT4S7z
+	 sdfHxmnY0HAFvj7Q7++7vQFiMgESOLxXbHsTyjfJSwl447gY79/aaK/SmiUVnNtIwb
+	 uXaaSdnobR2FSaLYcZ8NKe0zeogIgvWtIBlu25I4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728997AbgDROuX (ORCPT
+        id S1728752AbgDROub (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 10:50:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34098 "EHLO mail.kernel.org"
+        Sat, 18 Apr 2020 10:50:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53928 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728900AbgDROuQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 10:50:16 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1728506AbgDROnJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 10:43:09 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6CC8720753;
-        Sat, 18 Apr 2020 14:50:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E656E22250;
+        Sat, 18 Apr 2020 14:43:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587221415;
-        bh=303gUJbQF+M2sNMQfQWkWiYpyN7ocLgZ90zjaTPj990=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=ZmDFCu/zIOt9fjM0A3rQjxYdSDMTYf13tFwjkP5Z6ju9nJpHJKQolJTMDHskcG9p2
-         Ij7hxUk2w0jcEBlOFmaNXjiI/x9dO8xrvOsZ8wHkWoPuoWzUXTTrSW7BtzjAyoI1Up
-         b2ojEx34NbaWlomL/f6PgV7B63vfd55n9baSYPP8=
-Date:   Sat, 18 Apr 2020 15:50:09 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Saravanan Sekar <sravanhome@gmail.com>
-Cc:     lee.jones@linaro.org, andy.shevchenko@gmail.com,
-        robh+dt@kernel.org, knaack.h@gmx.de, lars@metafoo.de,
-        pmeerw@pmeerw.net, sre@kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-pm@vger.kernel.org
-Subject: Re: [PATCH v10 2/6] mfd: mp2629: Add support for mps battery
- charger
-Message-ID: <20200418155009.0187b7fc@archlinux>
-In-Reply-To: <20200417085003.6124-3-sravanhome@gmail.com>
-References: <20200417085003.6124-1-sravanhome@gmail.com>
-        <20200417085003.6124-3-sravanhome@gmail.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        s=default; t=1587220988;
+        bh=DaZJWPTSTAzcStopkRnvBbDOO8N2y9SEPL3j26QQpAs=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=hsMRDIao9J61wIkweVAOOTY0YvgWEqfXZLLvs43P24d4ae+W8jcAOX/NPub9+ByWp
+         /YZ/KCLaU2/hHDG6YmM1XTBzsJ8UZMQKPexMvtMI0uyQbz4Oq3YvFEs3Et6/eMk61J
+         CE6kWR54KXaaFDOYzcTYATtrSrWJ9AJUd+v/GMa0=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
+        linux-ide@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 32/47] libata: Return correct status in sata_pmp_eh_recover_pm() when ATA_DFLAG_DETACH is set
+Date:   Sat, 18 Apr 2020 10:42:12 -0400
+Message-Id: <20200418144227.9802-32-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200418144227.9802-1-sashal@kernel.org>
+References: <20200418144227.9802-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 17 Apr 2020 10:49:59 +0200
-Saravanan Sekar <sravanhome@gmail.com> wrote:
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-> mp2629 is a highly-integrated switching-mode battery charge management
-> device for single-cell Li-ion or Li-polymer battery.
-> 
-> Add MFD core enables chip access for ADC driver for battery readings,
-> and a power supply battery-charger driver
-> 
-> Signed-off-by: Saravanan Sekar <sravanhome@gmail.com>
-> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+[ Upstream commit 8305f72f952cff21ce8109dc1ea4b321c8efc5af ]
 
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+During system resume from suspend, this can be observed on ASM1062 PMP
+controller:
 
-> ---
->  drivers/mfd/Kconfig        |  9 ++++
->  drivers/mfd/Makefile       |  2 +
->  drivers/mfd/mp2629.c       | 86 ++++++++++++++++++++++++++++++++++++++
->  include/linux/mfd/mp2629.h | 19 +++++++++
->  4 files changed, 116 insertions(+)
->  create mode 100644 drivers/mfd/mp2629.c
->  create mode 100644 include/linux/mfd/mp2629.h
-> 
-> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-> index 3c547ed575e6..85be799795aa 100644
-> --- a/drivers/mfd/Kconfig
-> +++ b/drivers/mfd/Kconfig
-> @@ -434,6 +434,15 @@ config MFD_MC13XXX_I2C
->  	help
->  	  Select this if your MC13xxx is connected via an I2C bus.
->  
-> +config MFD_MP2629
-> +	tristate "Monolithic power system MP2629 ADC and Battery charger"
-> +	depends on I2C
-> +	select REGMAP_I2C
-> +	help
-> +	  Select this option to enable support for monolithic power system
-> +	  battery charger. This provides ADC, thermal, battery charger power
-> +	  management functions on the systems.
-> +
->  config MFD_MXS_LRADC
->  	tristate "Freescale i.MX23/i.MX28 LRADC"
->  	depends on ARCH_MXS || COMPILE_TEST
-> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-> index f935d10cbf0f..d6c210f96d02 100644
-> --- a/drivers/mfd/Makefile
-> +++ b/drivers/mfd/Makefile
-> @@ -170,6 +170,8 @@ obj-$(CONFIG_MFD_MAX8925)	+= max8925.o
->  obj-$(CONFIG_MFD_MAX8997)	+= max8997.o max8997-irq.o
->  obj-$(CONFIG_MFD_MAX8998)	+= max8998.o max8998-irq.o
->  
-> +obj-$(CONFIG_MFD_MP2629)	+= mp2629.o
-> +
->  pcf50633-objs			:= pcf50633-core.o pcf50633-irq.o
->  obj-$(CONFIG_MFD_PCF50633)	+= pcf50633.o
->  obj-$(CONFIG_PCF50633_ADC)	+= pcf50633-adc.o
-> diff --git a/drivers/mfd/mp2629.c b/drivers/mfd/mp2629.c
-> new file mode 100644
-> index 000000000000..46242b1cdf24
-> --- /dev/null
-> +++ b/drivers/mfd/mp2629.c
-> @@ -0,0 +1,86 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +/*
-> + * MP2629 parent driver for ADC and battery charger
-> + *
-> + * Copyright 2020 Monolithic Power Systems, Inc
-> + *
-> + * Author: Saravanan Sekar <sravanhome@gmail.com>
-> + */
-> +
-> +#include <linux/i2c.h>
-> +#include <linux/kernel.h>
-> +#include <linux/mfd/core.h>
-> +#include <linux/mfd/mp2629.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/regmap.h>
-> +#include <linux/slab.h>
-> +
-> +enum {
-> +	MP2629_MFD_ADC,
-> +	MP2629_MFD_CHARGER,
-> +	MP2629_MFD_MAX
-> +};
-> +
-> +static const struct mfd_cell mp2629mfd[] = {
-> +	[MP2629_MFD_ADC] = {
-> +		.name = "mp2629_adc",
-> +		.of_compatible = "mps,mp2629_adc",
-> +	},
-> +	[MP2629_MFD_CHARGER] = {
-> +		.name = "mp2629_charger",
-> +		.of_compatible = "mps,mp2629_charger",
-> +	}
-> +};
-> +
-> +static const struct regmap_config mp2629_regmap_config = {
-> +	.reg_bits = 8,
-> +	.val_bits = 8,
-> +	.max_register = 0x17,
-> +};
-> +
-> +static int mp2629_probe(struct i2c_client *client)
-> +{
-> +	struct mp2629_info *ddata;
-> +	int ret;
-> +
-> +	ddata = devm_kzalloc(&client->dev, sizeof(*ddata), GFP_KERNEL);
-> +	if (!ddata)
-> +		return -ENOMEM;
-> +
-> +	ddata->dev = &client->dev;
-> +	i2c_set_clientdata(client, ddata);
-> +
-> +	ddata->regmap = devm_regmap_init_i2c(client, &mp2629_regmap_config);
-> +	if (IS_ERR(ddata->regmap)) {
-> +		dev_err(ddata->dev, "Failed to allocate regmap!\n");
-> +		return PTR_ERR(ddata->regmap);
-> +	}
-> +
-> +	ret = devm_mfd_add_devices(ddata->dev, PLATFORM_DEVID_NONE, mp2629mfd,
-> +				ARRAY_SIZE(mp2629mfd), NULL,
-> +				0, NULL);
-> +	if (ret)
-> +		dev_err(ddata->dev, "Failed to register sub-devices %d\n", ret);
-> +
-> +	return ret;
-> +}
-> +
-> +static const struct of_device_id mp2629_of_match[] = {
-> +	{ .compatible = "mps,mp2629"},
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(of, mp2629_of_match);
-> +
-> +static struct i2c_driver mp2629_driver = {
-> +	.driver = {
-> +		.name = "mp2629",
-> +		.of_match_table = mp2629_of_match,
-> +	},
-> +	.probe_new	= mp2629_probe,
-> +};
-> +module_i2c_driver(mp2629_driver);
-> +
-> +MODULE_AUTHOR("Saravanan Sekar <sravanhome@gmail.com>");
-> +MODULE_DESCRIPTION("MP2629 Battery charger parent driver");
-> +MODULE_LICENSE("GPL");
-> diff --git a/include/linux/mfd/mp2629.h b/include/linux/mfd/mp2629.h
-> new file mode 100644
-> index 000000000000..06985e41fc6f
-> --- /dev/null
-> +++ b/include/linux/mfd/mp2629.h
-> @@ -0,0 +1,19 @@
-> +/* SPDX-License-Identifier: GPL-2.0+ */
-> +/*
-> + * register definitions for MP2629 charger
-> + *
-> + * Copyright 2020 Monolithic Power Systems, Inc
-> + */
-> +
-> +#ifndef __MP2629_H__
-> +#define __MP2629_H__
-> +
-> +#include <linux/device.h>
-> +#include <linux/regmap.h>
-> +
-> +struct mp2629_info {
-> +	struct device *dev;
-> +	struct regmap *regmap;
-> +};
-> +
-> +#endif
+ata10.01: SATA link down (SStatus 0 SControl 330)
+ata10.02: hard resetting link
+ata10.02: SATA link down (SStatus 0 SControl 330)
+ata10.00: configured for UDMA/133
+Kernel panic - not syncing: stack-protector: Kernel
+ in: sata_pmp_eh_recover+0xa2b/0xa40
+
+CPU: 2 PID: 230 Comm: scsi_eh_9 Tainted: P OE
+#49-Ubuntu
+Hardware name: System manufacturer System Product
+ 1001 12/10/2017
+Call Trace:
+dump_stack+0x63/0x8b
+panic+0xe4/0x244
+? sata_pmp_eh_recover+0xa2b/0xa40
+__stack_chk_fail+0x19/0x20
+sata_pmp_eh_recover+0xa2b/0xa40
+? ahci_do_softreset+0x260/0x260 [libahci]
+? ahci_do_hardreset+0x140/0x140 [libahci]
+? ata_phys_link_offline+0x60/0x60
+? ahci_stop_engine+0xc0/0xc0 [libahci]
+sata_pmp_error_handler+0x22/0x30
+ahci_error_handler+0x45/0x80 [libahci]
+ata_scsi_port_error_handler+0x29b/0x770
+? ata_scsi_cmd_error_handler+0x101/0x140
+ata_scsi_error+0x95/0xd0
+? scsi_try_target_reset+0x90/0x90
+scsi_error_handler+0xd0/0x5b0
+kthread+0x121/0x140
+? scsi_eh_get_sense+0x200/0x200
+? kthread_create_worker_on_cpu+0x70/0x70
+ret_from_fork+0x22/0x40
+Kernel Offset: 0xcc00000 from 0xffffffff81000000
+(relocation range: 0xffffffff80000000-0xffffffffbfffffff)
+
+Since sata_pmp_eh_recover_pmp() doens't set rc when ATA_DFLAG_DETACH is
+set, sata_pmp_eh_recover() continues to run. During retry it triggers
+the stack protector.
+
+Set correct rc in sata_pmp_eh_recover_pmp() to let sata_pmp_eh_recover()
+jump to pmp_fail directly.
+
+BugLink: https://bugs.launchpad.net/bugs/1821434
+Cc: stable@vger.kernel.org
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/ata/libata-pmp.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/ata/libata-pmp.c b/drivers/ata/libata-pmp.c
+index 2ae1799f49927..51eeaea65833d 100644
+--- a/drivers/ata/libata-pmp.c
++++ b/drivers/ata/libata-pmp.c
+@@ -764,6 +764,7 @@ static int sata_pmp_eh_recover_pmp(struct ata_port *ap,
+ 
+ 	if (dev->flags & ATA_DFLAG_DETACH) {
+ 		detach = 1;
++		rc = -ENODEV;
+ 		goto fail;
+ 	}
+ 
+-- 
+2.20.1
 
