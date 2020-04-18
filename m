@@ -7,45 +7,53 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 802B9C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:12:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85F49C38A29
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:12:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 52AB721BE5
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:12:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EB5D21BE5
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:12:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587219121;
-	bh=/xdDyhpMsSbsCHdP6i4AtMBNInOW9/PEpb0r4nmGPz8=;
+	s=default; t=1587219129;
+	bh=8bPoquuPIG8DCqchvpjw9lTLeL0MKv0uYeSKMsQmhRQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mVpD8SgfPpwcs2Rp0+fJxwb9lWyLhPV8isgfg+pMdh3p8Ho2uOhF7K8YygnFi3mJJ
-	 8elNKXJ2AqeVLK3QjHKQhNJfkszMgXnU3/ZfI4dtGVI0Not0EM3mReaVH9JcxDsXJy
-	 Y8ZZrw+ZOn7xYtqy98t0I69OhF/Zzk626Zaxyolg=
+	b=lxX/5mbcz6cogGvhE9BlB/zTyWCxfsID21D9d6cMC39awUj+MvK1bSptjhxkJbBO5
+	 hpXSIMjoreZmY0GN6W3XFt2HcOQDQBFUU/wsding+1SRBJr3MFPJPPodmGd682WgUK
+	 bz3Zwg04wMcsQAtTj5m4s7l5Q3IgBOJce+HegRkY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728111AbgDROMA (ORCPT
+        id S1728118AbgDROMI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 10:12:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38344 "EHLO mail.kernel.org"
+        Sat, 18 Apr 2020 10:12:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38224 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726909AbgDROKS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 10:10:18 -0400
+        id S1726885AbgDROKP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 10:10:15 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B7E1E21D79;
-        Sat, 18 Apr 2020 14:10:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C8C1821D82;
+        Sat, 18 Apr 2020 14:10:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587219018;
-        bh=/xdDyhpMsSbsCHdP6i4AtMBNInOW9/PEpb0r4nmGPz8=;
+        s=default; t=1587219015;
+        bh=8bPoquuPIG8DCqchvpjw9lTLeL0MKv0uYeSKMsQmhRQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BV2rNPp0sWZxkFXhpI50ig1FMcM0iQ4vWDMmqcLxdElSGNIEGl5YxSNL4XdR3++FL
-         jUqY9eEb4+uELw168K/mXoFx+ZGacJrnURD+Kux5jYT6aFZxVnWCDdNLFmjEmfSWBU
-         VomVNvJcl1b7LY68Vw9PDB2cLRpmQ6OeFBPeKn40=
+        b=ABvp1WFoP+xmCsCQwAcxwjqNtmmchNSz/z1ha6cT+kNRP8aS/s5R5ol5QpY05HwMx
+         E+KN4qi+9pL7fLy4VhYc9VaC3vY8dJgAiol5kbqrzlSGJF8wzF/07lHvzEj/cYlA8C
+         yJMQyiVsyYKeWu6cijxY8lxA1JQbFTW8t8fbULW0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>,
-        alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 5.5 54/75] ALSA: hda/realtek - Add quirk for MSI GL63
-Date:   Sat, 18 Apr 2020 10:08:49 -0400
-Message-Id: <20200418140910.8280-54-sashal@kernel.org>
+Cc:     Changwei Ge <chge@linux.alibaba.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Joseph Qi <joseph.qi@linux.alibaba.com>,
+        Mark Fasheh <mark@fasheh.com>,
+        Joel Becker <jlbec@evilplan.org>,
+        Junxiao Bi <junxiao.bi@oracle.com>,
+        Changwei Ge <gechangwei@live.cn>, Gang He <ghe@suse.com>,
+        Jun Piao <piaojun@huawei.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>, ocfs2-devel@oss.oracle.com
+Subject: [PATCH AUTOSEL 5.5 51/75] ocfs2: no need try to truncate file beyond i_size
+Date:   Sat, 18 Apr 2020 10:08:46 -0400
+Message-Id: <20200418140910.8280-51-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200418140910.8280-1-sashal@kernel.org>
 References: <20200418140910.8280-1-sashal@kernel.org>
@@ -58,36 +66,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Changwei Ge <chge@linux.alibaba.com>
 
-[ Upstream commit 1d3aa4a5516d2e4933fe3cca11d3349ef63bc547 ]
+[ Upstream commit 783fda856e1034dee90a873f7654c418212d12d7 ]
 
-MSI GL63 laptop requires the similar quirk like other MSI models,
-ALC1220_FIXUP_CLEVO_P950.  The board BIOS doesn't provide a PCI SSID
-for the device, hence we need to take the codec SSID (1462:1275)
-instead.
+Linux fallocate(2) with FALLOC_FL_PUNCH_HOLE mode set, its offset can
+exceed the inode size.  Ocfs2 now doesn't allow that offset beyond inode
+size.  This restriction is not necessary and violates fallocate(2)
+semantics.
 
-BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=207157
+If fallocate(2) offset is beyond inode size, just return success and do
+nothing further.
+
+Otherwise, ocfs2 will crash the kernel.
+
+  kernel BUG at fs/ocfs2//alloc.c:7264!
+   ocfs2_truncate_inline+0x20f/0x360 [ocfs2]
+   ocfs2_remove_inode_range+0x23c/0xcb0 [ocfs2]
+   __ocfs2_change_file_space+0x4a5/0x650 [ocfs2]
+   ocfs2_fallocate+0x83/0xa0 [ocfs2]
+   vfs_fallocate+0x148/0x230
+   SyS_fallocate+0x48/0x80
+   do_syscall_64+0x79/0x170
+
+Signed-off-by: Changwei Ge <chge@linux.alibaba.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
+Cc: Mark Fasheh <mark@fasheh.com>
+Cc: Joel Becker <jlbec@evilplan.org>
+Cc: Junxiao Bi <junxiao.bi@oracle.com>
+Cc: Changwei Ge <gechangwei@live.cn>
+Cc: Gang He <ghe@suse.com>
+Cc: Jun Piao <piaojun@huawei.com>
 Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200408135645.21896-1-tiwai@suse.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Link: http://lkml.kernel.org/r/20200407082754.17565-1-chge@linux.alibaba.com
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/pci/hda/patch_realtek.c | 1 +
- 1 file changed, 1 insertion(+)
+ fs/ocfs2/alloc.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
-index f44d8e2589337..62eac992ebd55 100644
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -2449,6 +2449,7 @@ static const struct snd_pci_quirk alc882_fixup_tbl[] = {
- 	SND_PCI_QUIRK(0x1458, 0xa0b8, "Gigabyte AZ370-Gaming", ALC1220_FIXUP_GB_DUAL_CODECS),
- 	SND_PCI_QUIRK(0x1458, 0xa0cd, "Gigabyte X570 Aorus Master", ALC1220_FIXUP_CLEVO_P950),
- 	SND_PCI_QUIRK(0x1462, 0x1228, "MSI-GP63", ALC1220_FIXUP_CLEVO_P950),
-+	SND_PCI_QUIRK(0x1462, 0x1275, "MSI-GL63", ALC1220_FIXUP_CLEVO_P950),
- 	SND_PCI_QUIRK(0x1462, 0x1276, "MSI-GL73", ALC1220_FIXUP_CLEVO_P950),
- 	SND_PCI_QUIRK(0x1462, 0x1293, "MSI-GP65", ALC1220_FIXUP_CLEVO_P950),
- 	SND_PCI_QUIRK(0x1462, 0x7350, "MSI-7350", ALC889_FIXUP_CD),
+diff --git a/fs/ocfs2/alloc.c b/fs/ocfs2/alloc.c
+index 88534eb0e7c2a..3d5b6b989db26 100644
+--- a/fs/ocfs2/alloc.c
++++ b/fs/ocfs2/alloc.c
+@@ -7403,6 +7403,10 @@ int ocfs2_truncate_inline(struct inode *inode, struct buffer_head *di_bh,
+ 	struct ocfs2_dinode *di = (struct ocfs2_dinode *)di_bh->b_data;
+ 	struct ocfs2_inline_data *idata = &di->id2.i_data;
+ 
++	/* No need to punch hole beyond i_size. */
++	if (start >= i_size_read(inode))
++		return 0;
++
+ 	if (end > i_size_read(inode))
+ 		end = i_size_read(inode);
+ 
 -- 
 2.20.1
 
