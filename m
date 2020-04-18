@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B577BC38A29
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:51:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B21BC38A2F
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:51:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 93A6721D79
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:51:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1753221D79
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:51:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587221463;
-	bh=MwHKcYOjOGrxhsjnuqmIHb0rD2QYw2+Z9yeGtyMvrDA=;
+	s=default; t=1587221468;
+	bh=Vmaa9Wy7Y6nNBD+Df2+E06G8y9s2D5mYbsUi7aBJcbE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=w1RhzydZxKVN4v1hoAzaj0gemdxYtWduooCMpygaPIcZVpo9l8bud83EJh+7hJhYN
-	 SZgdE4DLEhh0QPvj9516fJ5PkZb6M8kG8wlKlVVeSWIWcsRtPCRl/OQCDaqPxXN423
-	 DM62mt3XJne7TDPnqtxoc53JllM+QFD4oyQc7kgc=
+	b=sz+r6LgkZ58pT8kTSg3YdAep12I4tcsy5ZhiqSQ8DsKdoPoxyz8EItbt4IGFG3bSt
+	 ZasHCUi8nCIiIb3Z2f41DRufUm1OJqIKRujz4GdBgD3e/rJ5oTR8KekXl39LvcbWA8
+	 dgMJ4g5PJvkvGsDZGJnfMqdh03zupHHJx23OqMks=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728704AbgDROvC (ORCPT
+        id S1729034AbgDROvG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 10:51:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53338 "EHLO mail.kernel.org"
+        Sat, 18 Apr 2020 10:51:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53286 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726517AbgDROmw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 10:42:52 -0400
+        id S1728446AbgDROmv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 10:42:51 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 754DA22202;
-        Sat, 18 Apr 2020 14:42:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3877D21D7E;
+        Sat, 18 Apr 2020 14:42:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587220972;
-        bh=MwHKcYOjOGrxhsjnuqmIHb0rD2QYw2+Z9yeGtyMvrDA=;
+        s=default; t=1587220971;
+        bh=Vmaa9Wy7Y6nNBD+Df2+E06G8y9s2D5mYbsUi7aBJcbE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tZipFqJQa8Kfg6kvBmiJ75vjZNgl7j063zP8fp5Zd3vX/BQCPNDLtfRdAqABS3WPh
-         U3NSSnG8rxINwWh0qn4mPok3yY73ht0z8/Y76PI2NZDIjSBP7XzbIpfP8UOADuSvAJ
-         VPrcvGZhWNEvMnd5EyUf8MQJ0WsBJciRg0TvTSzM=
+        b=lhpUdqYiaVFhbmIqsGLGVUfYGqCLNkpjfAtqS/npHPZomitMcQWPJfvU5Y1cPUF+H
+         ZS/I9m/vqwH9ahL0dYoALRJGoYu57lvb0v7l3CS+HySWV8tE0eSwihiwB1zxMin/tu
+         xM7+92Eo1goMpMFgZX2O4VpvU1u7ZOn+sLvhe2is=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Cornelia Huck <cohuck@redhat.com>,
-        Boris Fiuczynski <fiuczy@linux.ibm.com>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 19/47] s390/cio: avoid duplicated 'ADD' uevents
-Date:   Sat, 18 Apr 2020 10:41:59 -0400
-Message-Id: <20200418144227.9802-19-sashal@kernel.org>
+Cc:     David Hildenbrand <david@redhat.com>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org,
+        linux-s390@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 18/47] KVM: s390: vsie: Fix possible race when shadowing region 3 tables
+Date:   Sat, 18 Apr 2020 10:41:58 -0400
+Message-Id: <20200418144227.9802-18-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200418144227.9802-1-sashal@kernel.org>
 References: <20200418144227.9802-1-sashal@kernel.org>
@@ -61,63 +61,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Cornelia Huck <cohuck@redhat.com>
+From: David Hildenbrand <david@redhat.com>
 
-[ Upstream commit 05ce3e53f375295c2940390b2b429e506e07655c ]
+[ Upstream commit 1493e0f944f3c319d11e067c185c904d01c17ae5 ]
 
-The common I/O layer delays the ADD uevent for subchannels and
-delegates generating this uevent to the individual subchannel
-drivers. The io_subchannel driver will do so when the associated
-ccw_device has been registered -- but unconditionally, so more
-ADD uevents will be generated if a subchannel has been unbound
-from the io_subchannel driver and later rebound.
+We have to properly retry again by returning -EINVAL immediately in case
+somebody else instantiated the table concurrently. We missed to add the
+goto in this function only. The code now matches the other, similar
+shadowing functions.
 
-To fix this, only generate the ADD event if uevents were still
-suppressed for the device.
+We are overwriting an existing region 2 table entry. All allocated pages
+are added to the crst_list to be freed later, so they are not lost
+forever. However, when unshadowing the region 2 table, we wouldn't trigger
+unshadowing of the original shadowed region 3 table that we replaced. It
+would get unshadowed when the original region 3 table is modified. As it's
+not connected to the page table hierarchy anymore, it's not going to get
+used anymore. However, for a limited time, this page table will stick
+around, so it's in some sense a temporary memory leak.
 
-Fixes: fa1a8c23eb7d ("s390: cio: Delay uevents for subchannels")
-Message-Id: <20200327124503.9794-2-cohuck@redhat.com>
-Reported-by: Boris Fiuczynski <fiuczy@linux.ibm.com>
-Reviewed-by: Peter Oberparleiter <oberpar@linux.ibm.com>
-Reviewed-by: Boris Fiuczynski <fiuczy@linux.ibm.com>
-Signed-off-by: Cornelia Huck <cohuck@redhat.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Identified by manual code inspection. I don't think this classifies as
+stable material.
+
+Fixes: 998f637cc4b9 ("s390/mm: avoid races on region/segment/page table shadowing")
+Signed-off-by: David Hildenbrand <david@redhat.com>
+Link: https://lore.kernel.org/r/20200403153050.20569-4-david@redhat.com
+Reviewed-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
+Reviewed-by: Christian Borntraeger <borntraeger@de.ibm.com>
+Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/s390/cio/device.c | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+ arch/s390/mm/gmap.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/s390/cio/device.c b/drivers/s390/cio/device.c
-index 1540229a37bba..c9bc9a6bd73b7 100644
---- a/drivers/s390/cio/device.c
-+++ b/drivers/s390/cio/device.c
-@@ -827,8 +827,10 @@ static void io_subchannel_register(struct ccw_device *cdev)
- 	 * Now we know this subchannel will stay, we can throw
- 	 * our delayed uevent.
- 	 */
--	dev_set_uevent_suppress(&sch->dev, 0);
--	kobject_uevent(&sch->dev.kobj, KOBJ_ADD);
-+	if (dev_get_uevent_suppress(&sch->dev)) {
-+		dev_set_uevent_suppress(&sch->dev, 0);
-+		kobject_uevent(&sch->dev.kobj, KOBJ_ADD);
-+	}
- 	/* make it known to the system */
- 	ret = ccw_device_add(cdev);
- 	if (ret) {
-@@ -1036,8 +1038,11 @@ static int io_subchannel_probe(struct subchannel *sch)
- 		 * Throw the delayed uevent for the subchannel, register
- 		 * the ccw_device and exit.
- 		 */
--		dev_set_uevent_suppress(&sch->dev, 0);
--		kobject_uevent(&sch->dev.kobj, KOBJ_ADD);
-+		if (dev_get_uevent_suppress(&sch->dev)) {
-+			/* should always be the case for the console */
-+			dev_set_uevent_suppress(&sch->dev, 0);
-+			kobject_uevent(&sch->dev.kobj, KOBJ_ADD);
-+		}
- 		cdev = sch_get_cdev(sch);
- 		rc = ccw_device_add(cdev);
- 		if (rc) {
+diff --git a/arch/s390/mm/gmap.c b/arch/s390/mm/gmap.c
+index 911c7ded35f15..fd67684a305d4 100644
+--- a/arch/s390/mm/gmap.c
++++ b/arch/s390/mm/gmap.c
+@@ -1834,6 +1834,7 @@ int gmap_shadow_r3t(struct gmap *sg, unsigned long saddr, unsigned long r3t,
+ 		goto out_free;
+ 	} else if (*table & _REGION_ENTRY_ORIGIN) {
+ 		rc = -EAGAIN;		/* Race with shadow */
++		goto out_free;
+ 	}
+ 	crst_table_init(s_r3t, _REGION3_ENTRY_EMPTY);
+ 	/* mark as invalid as long as the parent table is not protected */
 -- 
 2.20.1
 
