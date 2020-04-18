@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58ABDC38A29
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:11:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEA53C38A2F
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:11:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2D72B21D6C
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:11:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8287321D6C
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:11:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587219077;
-	bh=Glbhs5XKHS8JbLZoCXE0HbUu4H1R3R/0vs0CNEX07Ik=;
+	s=default; t=1587219083;
+	bh=hVGd1XVXIQixtTCRrA9xVPLTqm8xr2yA0JSWE2QJe5Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CzXpO8WS1kwpgWx7H6SjFTD3ABY147+UXAJnBaCzkHpEOFeffTt8Z/xbbNOrY9AYs
-	 DNOCwBYHWAK55d+yCeHs67vHpW2F2jTUhe7Ymyzj769xvQjFsH2SBFeiAz412FnhUa
-	 ztBKSaZeIcQvhMgauIFW1Fx43WEMvCG1lt60IaiA=
+	b=WOt00mvN9G8/FSNGd2npJV3/j49FFxG4ewFYdnNFlrb4g4lwWMPs/m6HFTr80132J
+	 IPyDASep1fzdE6izU512z9B3s/snJTA6yzo6FKDrjx2PRqA809RkxqzB6Zc7E2YyQ7
+	 5Vptx9cxSW1b/ZRioGTxG/brGCm4kO8fPbMZRCCw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728061AbgDROLQ (ORCPT
+        id S1728071AbgDROLW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 10:11:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38886 "EHLO mail.kernel.org"
+        Sat, 18 Apr 2020 10:11:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38784 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727897AbgDROKg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 10:10:36 -0400
+        id S1727859AbgDROKc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 10:10:32 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B7F6C22250;
-        Sat, 18 Apr 2020 14:10:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4DDB822253;
+        Sat, 18 Apr 2020 14:10:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587219035;
-        bh=Glbhs5XKHS8JbLZoCXE0HbUu4H1R3R/0vs0CNEX07Ik=;
+        s=default; t=1587219032;
+        bh=hVGd1XVXIQixtTCRrA9xVPLTqm8xr2yA0JSWE2QJe5Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DhmwXi/OJ2qCSKE0gaduOHArotaJ8kDGjdJnIPGpwmxmYc2aprjAKKQmUt0iY/SMk
-         zEAwPDgP1HNezlapW3TVdhLejj2qhFSiVa00DOKYzQGako8imH4fqyXiv28ofMbKP1
-         w+PrskHJRR7FwPc51jrgnYxqBRvd4/oWwTfXIHXc=
+        b=NVni2rrFm7S7WKmMK9iENGcT4lvXuPUyAs1lBLNvMtViBQWfzrLvyI3h41ZnxoSva
+         ZoDBdpOWRavR8U3+0LMKaaVf60Iy2vjqRDNr8hfmm7h2PN78jM0qio6T4YzWFeRB8l
+         YIFh9LcHAjFnFyTqOGe6y7l/CHISzc6klXb7Q5HQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Yongqiang Sun <yongqiang.sun@amd.com>,
-        Tony Cheng <Tony.Cheng@amd.com>,
-        Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.5 69/75] drm/amd/display: Not doing optimize bandwidth if flip pending.
-Date:   Sat, 18 Apr 2020 10:09:04 -0400
-Message-Id: <20200418140910.8280-69-sashal@kernel.org>
+Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Mathias Nyman <mathias.nyman@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 66/75] xhci: Ensure link state is U3 after setting USB_SS_PORT_LS_U3
+Date:   Sat, 18 Apr 2020 10:09:01 -0400
+Message-Id: <20200418140910.8280-66-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200418140910.8280-1-sashal@kernel.org>
 References: <20200418140910.8280-1-sashal@kernel.org>
@@ -62,71 +60,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yongqiang Sun <yongqiang.sun@amd.com>
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-[ Upstream commit 9941b8129030c9202aaf39114477a0e58c0d6ffc ]
+[ Upstream commit eb002726fac7cefb98ff39ddb89e150a1c24fe85 ]
 
-[Why]
-In some scenario like 1366x768 VSR enabled connected with a 4K monitor
-and playing 4K video in clone mode, underflow will be observed due to
-decrease dppclk when previouse surface scan isn't finished
+The xHCI spec doesn't specify the upper bound of U3 transition time. For
+some devices 20ms is not enough, so we need to make sure the link state
+is in U3 before further actions.
 
-[How]
-In this use case, surface flip is switching between 4K and 1366x768,
-1366x768 needs smaller dppclk, and when decrease the clk and previous
-surface scan is for 4K and scan isn't done, underflow will happen.  Not
-doing optimize bandwidth in case of flip pending.
+I've tried to use U3 Entry Capability by setting U3 Entry Enable in
+config register, however the port change event for U3 transition
+interrupts the system suspend process.
 
-Signed-off-by: Yongqiang Sun <yongqiang.sun@amd.com>
-Reviewed-by: Tony Cheng <Tony.Cheng@amd.com>
-Acked-by: Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+For now let's use the less ideal method by polling PLS.
+
+[use usleep_range(), and shorten the delay time while polling -Mathias]
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
+Link: https://lore.kernel.org/r/20200312144517.1593-7-mathias.nyman@linux.intel.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/dc/core/dc.c | 23 +++++++++++++++++++++++
- 1 file changed, 23 insertions(+)
+ drivers/usb/host/xhci-hub.c | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/core/dc.c b/drivers/gpu/drm/amd/display/dc/core/dc.c
-index d25e0a937bf57..870e3903f02b9 100644
---- a/drivers/gpu/drm/amd/display/dc/core/dc.c
-+++ b/drivers/gpu/drm/amd/display/dc/core/dc.c
-@@ -1281,6 +1281,26 @@ bool dc_commit_state(struct dc *dc, struct dc_state *context)
- 	return (result == DC_OK);
- }
+diff --git a/drivers/usb/host/xhci-hub.c b/drivers/usb/host/xhci-hub.c
+index af92b2576fe91..712cd44f05ace 100644
+--- a/drivers/usb/host/xhci-hub.c
++++ b/drivers/usb/host/xhci-hub.c
+@@ -1322,7 +1322,16 @@ int xhci_hub_control(struct usb_hcd *hcd, u16 typeReq, u16 wValue,
+ 			xhci_set_link_state(xhci, ports[wIndex], link_state);
  
-+static bool is_flip_pending_in_pipes(struct dc *dc, struct dc_state *context)
-+{
-+	int i;
-+	struct pipe_ctx *pipe;
+ 			spin_unlock_irqrestore(&xhci->lock, flags);
+-			msleep(20); /* wait device to enter */
++			if (link_state == USB_SS_PORT_LS_U3) {
++				int retries = 16;
 +
-+	for (i = 0; i < MAX_PIPES; i++) {
-+		pipe = &context->res_ctx.pipe_ctx[i];
-+
-+		if (!pipe->plane_state)
-+			continue;
-+
-+		/* Must set to false to start with, due to OR in update function */
-+		pipe->plane_state->status.is_flip_pending = false;
-+		dc->hwss.update_pending_status(pipe);
-+		if (pipe->plane_state->status.is_flip_pending)
-+			return true;
-+	}
-+	return false;
-+}
-+
- bool dc_post_update_surfaces_to_stream(struct dc *dc)
- {
- 	int i;
-@@ -1291,6 +1311,9 @@ bool dc_post_update_surfaces_to_stream(struct dc *dc)
++				while (retries--) {
++					usleep_range(4000, 8000);
++					temp = readl(ports[wIndex]->addr);
++					if ((temp & PORT_PLS_MASK) == XDEV_U3)
++						break;
++				}
++			}
+ 			spin_lock_irqsave(&xhci->lock, flags);
  
- 	post_surface_trace(dc);
- 
-+	if (is_flip_pending_in_pipes(dc, context))
-+		return true;
-+
- 	for (i = 0; i < dc->res_pool->pipe_count; i++)
- 		if (context->res_ctx.pipe_ctx[i].stream == NULL ||
- 		    context->res_ctx.pipe_ctx[i].plane_state == NULL) {
+ 			temp = readl(ports[wIndex]->addr);
 -- 
 2.20.1
 
