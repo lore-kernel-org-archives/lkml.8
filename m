@@ -2,131 +2,75 @@ Return-Path: <SRS0=3CHW=6C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27D3EC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 03:19:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A695DC2BA19
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 03:20:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 078C4221EA
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 03:19:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587179965;
-	bh=BRPxEYxqPyP5CIPMdaAMBsOuPKCkanjJQ+re+uJ8/QA=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=HxsFpb5qozioT7FghnWXFwEeMA5BvubEOLfg+bybSAWKsv5hAsvh2M0PDiT5jzffk
-	 KjEy+g1DFHgRy34sXK7xm+xu30VnY8FLitroT92wC2/2x33FW73frXY7T0X62PSBCH
-	 fPcEdkyWP8/XTgcPv9Cvy3VW9NBhWcHDyNBcR2rI=
+	by mail.kernel.org (Postfix) with ESMTP id 8B685221EA
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 03:20:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726232AbgDRDTY (ORCPT
+        id S1726105AbgDRDUs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 23:19:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35452 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725939AbgDRDTX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 23:19:23 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1E62A21D94;
-        Sat, 18 Apr 2020 03:19:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587179963;
-        bh=BRPxEYxqPyP5CIPMdaAMBsOuPKCkanjJQ+re+uJ8/QA=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=zbqiZKSLCBs5B7jP+12cUhhFoE/+WI7eJpnczPaM62Uq2krCsxV/8/CECPYxA4sDT
-         fS7PldbcGCN2K6W5eY2L3CejSBf2Zk8GKH78Hx1mcZ2wVxmmLci5QZ1UZq86Luly3f
-         bNe/+05n6rWVHuDTOhnQ4orphsbeG2DQU2+yr3MQ=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id E6B0935233A2; Fri, 17 Apr 2020 20:19:22 -0700 (PDT)
-Date:   Fri, 17 Apr 2020 20:19:22 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Wei Yang <richard.weiyang@gmail.com>
-Cc:     josh@joshtriplett.org, rcu@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] rcu: simplify the calculation of rcu_state.ncpus
-Message-ID: <20200418031922.GR17661@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200417213951.29837-1-richard.weiyang@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200417213951.29837-1-richard.weiyang@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Fri, 17 Apr 2020 23:20:48 -0400
+Received: from m176115.mail.qiye.163.com ([59.111.176.115]:20404 "EHLO
+        m176115.mail.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725782AbgDRDUs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Apr 2020 23:20:48 -0400
+Received: from ubuntu.localdomain (unknown [157.0.31.122])
+        by m176115.mail.qiye.163.com (Hmail) with ESMTPA id 53852662D4B;
+        Sat, 18 Apr 2020 11:20:45 +0800 (CST)
+From:   Bernard Zhao <bernard@vivo.com>
+To:     Felix Kuehling <Felix.Kuehling@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Cc:     opensource.kernel@vivo.com, Bernard Zhao <bernard@vivo.com>
+Subject: [PATCH] reserve_bo_and_cond_vms: Remove unnecessary condition check
+Date:   Fri, 17 Apr 2020 20:20:36 -0700
+Message-Id: <1587180037-113840-1-git-send-email-bernard@vivo.com>
+X-Mailer: git-send-email 2.7.4
+X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgYFAkeWUFZSFVCSE9LS0tLSk5JTkNMQllXWShZQU
+        hPN1dZLVlBSVdZCQ4XHghZQVk1NCk2OjckKS43PlkG
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6OTY6ORw*NDg3Sw4MHzgUIlYI
+        N0oKCgFVSlVKTkNMSkNLS09OTkJDVTMWGhIXVRkeCRUaCR87DRINFFUYFBZFWVdZEgtZQVlKTkxV
+        S1VISlVKSUlZV1kIAVlBSUpJTzcG
+X-HM-Tid: 0a718b4d84d09373kuws53852662d4b
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 17, 2020 at 09:39:51PM +0000, Wei Yang wrote:
-> There is only 1 bit set in mask, which means the difference between
-> oldmask and the new one would be at the position where the bit is set in
-> mask.
-> 
-> Based on this knowledge, rcu_state.ncpus could be calculated by checking
-> whether mask is already set in oldmask.
+There is no need to if check again, maybe we could merge
+into the above else branch.
 
-Nice!!!  Good eyes!
+Signed-off-by: Bernard Zhao <bernard@vivo.com>
+---
+ drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-> BTW, the comment at the last of this line is mysterious. Not sure it
-> could be removed or not.
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c
+index 9dff792..327317c 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c
+@@ -735,10 +735,8 @@ static int reserve_bo_and_cond_vms(struct kgd_mem *mem,
+ 				     false, &ctx->duplicates);
+ 	if (!ret)
+ 		ctx->reserved = true;
+-	else
++	else {
+ 		pr_err("Failed to reserve buffers in ttm.\n");
+-
+-	if (ret) {
+ 		kfree(ctx->vm_pd);
+ 		ctx->vm_pd = NULL;
+ 	}
+-- 
+2.7.4
 
-The "^^^" in that comment says to look at the comment on the preceding
-line.  Memory-ordering functions like smp_store_release() are supposed
-to have comments indicating what they are ordering.  ;-)
-
-Could you please do the following things and resubmit?
-
-1.	Forward-port to -rcu branch dev?  This tree lives here:
-	git://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git
-
-2.	Given that oldmask is used only to test to see if a new bit
-	was set, why not just replace oldmask with a bool variable
-	that is set to "!(rnp->expmaskinitnext & mask)" before the
-	bit is ORed into rnp->expmaskinitnext?
-
-3.	Put the comment inside the "if" statement with the
-	smp_store_release().
-
-4.	In -rcu, you will find a ASSERT_EXCLUSIVE_WRITER() statement
-	that should also be placed inside the "if" statement with
-	the smp_store_release().
-
-							Thanx, Paul
-
-> Signed-off-by: Wei Yang <richard.weiyang@gmail.com>
-> ---
->  kernel/rcu/tree.c | 6 ++----
->  1 file changed, 2 insertions(+), 4 deletions(-)
-> 
-> diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-> index d91c9156fab2..f0d9251fa663 100644
-> --- a/kernel/rcu/tree.c
-> +++ b/kernel/rcu/tree.c
-> @@ -3364,7 +3364,6 @@ void rcu_cpu_starting(unsigned int cpu)
->  {
->  	unsigned long flags;
->  	unsigned long mask;
-> -	int nbits;
->  	unsigned long oldmask;
->  	struct rcu_data *rdp;
->  	struct rcu_node *rnp;
-> @@ -3381,10 +3380,9 @@ void rcu_cpu_starting(unsigned int cpu)
->  	rnp->qsmaskinitnext |= mask;
->  	oldmask = rnp->expmaskinitnext;
->  	rnp->expmaskinitnext |= mask;
-> -	oldmask ^= rnp->expmaskinitnext;
-> -	nbits = bitmap_weight(&oldmask, BITS_PER_LONG);
->  	/* Allow lockless access for expedited grace periods. */
-> -	smp_store_release(&rcu_state.ncpus, rcu_state.ncpus + nbits); /* ^^^ */
-> +	if (!(oldmask & mask))
-> +		smp_store_release(&rcu_state.ncpus, rcu_state.ncpus + 1); /* ^^^ */
->  	rcu_gpnum_ovf(rnp, rdp); /* Offline-induced counter wrap? */
->  	rdp->rcu_onl_gp_seq = READ_ONCE(rcu_state.gp_seq);
->  	rdp->rcu_onl_gp_flags = READ_ONCE(rcu_state.gp_flags);
-> -- 
-> 2.23.0
-> 
