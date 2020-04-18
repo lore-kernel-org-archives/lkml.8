@@ -4,51 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 005F0C38A29
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:55:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D926C38A29
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:55:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C891B21D82
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:55:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6E8B2072B
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:55:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587221704;
-	bh=1pQapq9m3603xrXiSN4BF3wGZPcBk5uTiJAJZ3h1E+A=;
+	s=default; t=1587221707;
+	bh=tJx2Pw8jARz8g4y2ONxmN/CJIrowA+R2SLrDY7KpChs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bjYm8C/0/fjR9s3lOmGACu8rd4raIApKDJPYGBCt9LywKjZS7OHqFughTMsPpIk40
-	 T3cnVK4BfcxdIgCryqYH0YJ02q5zLjfPYiJsQNnEkWLR8FcBfim7c5fRmpEm4okqjZ
-	 oDs9Xsjg0UzhZXBRpP+XQjRaycc1tHWMPXH0AJ30=
+	b=s2YpJcEHQXrSxgy6/W7qaIHzcj+uWBjL0XJe5QJTQJ91jFqdMevSCoUFb9Kz+7VSj
+	 9LlRUtwFhvmomHUXS2jpSvCFFMno43+64fp3wTL4aB2PZTq9UF35Ud3cDoXTHWW+Jc
+	 v4Iv1cNhAYQhxRjW9CWUs4JDHV3lpsNnVUPwUv9o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728940AbgDROzD (ORCPT
+        id S1727928AbgDROlX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 10:55:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50520 "EHLO mail.kernel.org"
+        Sat, 18 Apr 2020 10:41:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50364 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727941AbgDROlZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 10:41:25 -0400
+        id S1727881AbgDROlT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 10:41:19 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D2F5022245;
-        Sat, 18 Apr 2020 14:41:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DFE3621974;
+        Sat, 18 Apr 2020 14:41:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587220884;
-        bh=1pQapq9m3603xrXiSN4BF3wGZPcBk5uTiJAJZ3h1E+A=;
+        s=default; t=1587220879;
+        bh=tJx2Pw8jARz8g4y2ONxmN/CJIrowA+R2SLrDY7KpChs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0gZwiUwX+lnUePDlCUvK/58P+QNHuI8fpL+Peh5H7INT0o7NCqw3KMH26VSl2uJZi
-         KtU8rDLGjNwQrdeV1j50ifyxfxQ886gExMgZt14cUKuIoViyQCon8HcfJYrNicQ6JA
-         L5XL8viEoOkStdm+0XCvJYZwruhAyotpsJTbOmPY=
+        b=0soCJDICTF4hSE2Mvb7YsK2LwyVK6oYG62z2sCKyB081lKlJ2hH+16PujT7J0gxvb
+         7PuDHyEpHbmT9E0lBkrcF4bqVy/SSMNEq2B9AeaKA4G9qLt6mXQS5/OPicIGBaI3Do
+         L5t3JeNjOo8DQ2LQ/2dgTqX8V8g/8YkXEX9X9VrY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     David Hildenbrand <david@redhat.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org,
-        linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 29/78] KVM: s390: vsie: Fix possible race when shadowing region 3 tables
-Date:   Sat, 18 Apr 2020 10:39:58 -0400
-Message-Id: <20200418144047.9013-29-sashal@kernel.org>
+Cc:     Eric Biggers <ebiggers@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jeff Vander Stoep <jeffv@google.com>,
+        Jessica Yu <jeyu@kernel.org>,
+        Kees Cook <keescook@chromium.org>, NeilBrown <neilb@suse.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-kselftest@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 25/78] selftests: kmod: fix handling test numbers above 9
+Date:   Sat, 18 Apr 2020 10:39:54 -0400
+Message-Id: <20200418144047.9013-25-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200418144047.9013-1-sashal@kernel.org>
 References: <20200418144047.9013-1-sashal@kernel.org>
@@ -61,50 +67,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Hildenbrand <david@redhat.com>
+From: Eric Biggers <ebiggers@google.com>
 
-[ Upstream commit 1493e0f944f3c319d11e067c185c904d01c17ae5 ]
+[ Upstream commit 6d573a07528308eb77ec072c010819c359bebf6e ]
 
-We have to properly retry again by returning -EINVAL immediately in case
-somebody else instantiated the table concurrently. We missed to add the
-goto in this function only. The code now matches the other, similar
-shadowing functions.
+get_test_count() and get_test_enabled() were broken for test numbers
+above 9 due to awk interpreting a field specification like '$0010' as
+octal rather than decimal.  Fix it by stripping the leading zeroes.
 
-We are overwriting an existing region 2 table entry. All allocated pages
-are added to the crst_list to be freed later, so they are not lost
-forever. However, when unshadowing the region 2 table, we wouldn't trigger
-unshadowing of the original shadowed region 3 table that we replaced. It
-would get unshadowed when the original region 3 table is modified. As it's
-not connected to the page table hierarchy anymore, it's not going to get
-used anymore. However, for a limited time, this page table will stick
-around, so it's in some sense a temporary memory leak.
-
-Identified by manual code inspection. I don't think this classifies as
-stable material.
-
-Fixes: 998f637cc4b9 ("s390/mm: avoid races on region/segment/page table shadowing")
-Signed-off-by: David Hildenbrand <david@redhat.com>
-Link: https://lore.kernel.org/r/20200403153050.20569-4-david@redhat.com
-Reviewed-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
-Reviewed-by: Christian Borntraeger <borntraeger@de.ibm.com>
-Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Acked-by: Luis Chamberlain <mcgrof@kernel.org>
+Cc: Alexei Starovoitov <ast@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Jeff Vander Stoep <jeffv@google.com>
+Cc: Jessica Yu <jeyu@kernel.org>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: NeilBrown <neilb@suse.com>
+Link: http://lkml.kernel.org/r/20200318230515.171692-5-ebiggers@kernel.org
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/mm/gmap.c | 1 +
- 1 file changed, 1 insertion(+)
+ tools/testing/selftests/kmod/kmod.sh | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
 
-diff --git a/arch/s390/mm/gmap.c b/arch/s390/mm/gmap.c
-index edcdca97e85ee..06d602c5ec7b7 100644
---- a/arch/s390/mm/gmap.c
-+++ b/arch/s390/mm/gmap.c
-@@ -1840,6 +1840,7 @@ int gmap_shadow_r3t(struct gmap *sg, unsigned long saddr, unsigned long r3t,
- 		goto out_free;
- 	} else if (*table & _REGION_ENTRY_ORIGIN) {
- 		rc = -EAGAIN;		/* Race with shadow */
-+		goto out_free;
- 	}
- 	crst_table_init(s_r3t, _REGION3_ENTRY_EMPTY);
- 	/* mark as invalid as long as the parent table is not protected */
+diff --git a/tools/testing/selftests/kmod/kmod.sh b/tools/testing/selftests/kmod/kmod.sh
+index 8b944cf042f6c..315a43111e046 100755
+--- a/tools/testing/selftests/kmod/kmod.sh
++++ b/tools/testing/selftests/kmod/kmod.sh
+@@ -505,18 +505,23 @@ function test_num()
+ 	fi
+ }
+ 
+-function get_test_count()
++function get_test_data()
+ {
+ 	test_num $1
+-	TEST_DATA=$(echo $ALL_TESTS | awk '{print $'$1'}')
++	local field_num=$(echo $1 | sed 's/^0*//')
++	echo $ALL_TESTS | awk '{print $'$field_num'}'
++}
++
++function get_test_count()
++{
++	TEST_DATA=$(get_test_data $1)
+ 	LAST_TWO=${TEST_DATA#*:*}
+ 	echo ${LAST_TWO%:*}
+ }
+ 
+ function get_test_enabled()
+ {
+-	test_num $1
+-	TEST_DATA=$(echo $ALL_TESTS | awk '{print $'$1'}')
++	TEST_DATA=$(get_test_data $1)
+ 	echo ${TEST_DATA#*:*:}
+ }
+ 
 -- 
 2.20.1
 
