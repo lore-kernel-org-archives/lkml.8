@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBEADC3A5A0
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 13:48:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB450C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 13:48:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CC8E521D6C
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 13:48:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB92F22245
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 13:48:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587217724;
-	bh=4r6aacRDYq6Hlwz2V30XSValEQ2V7Q+sqM4zheLkdQc=;
+	s=default; t=1587217726;
+	bh=Zl39YaVNOpEw+1FqGTKQv1RKhpb4hDsvXuv532WrKls=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JZg1vCkCkuVq09SUuIRok33OyIRYjpm50CGO/2c4IPXK6YfzcPDxNmyHvXCj+hEQ+
-	 QID4Ou4LcURyHnYGrv6FyFI0mPJqpcNR/uk+KiCqXHG1WPfpUhJQMTvJlfd+ae+hRl
-	 Pfzmo4DPXlTw/x0gmjON8trj+YKDmnxklKShQmig=
+	b=GF3Rr1C0r7Fd+8dM0EQQJ3ipkV2aFa1/G1wSGeEqLpskZdt5eBGCNm2UXtG6IR9bY
+	 9maR+XXFSremeizRc8YalLeItjPtQIeUqLAKOAP60aWGHlTSjBAKhhwnkBuWIQ3efC
+	 x/lnieG13im+aPvPO8fUMkmRtNIX7wOVRF9JuSa4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726502AbgDRNsn (ORCPT
+        id S1726523AbgDRNsq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 09:48:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55016 "EHLO mail.kernel.org"
+        Sat, 18 Apr 2020 09:48:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55156 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726474AbgDRNsk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 09:48:40 -0400
+        id S1726089AbgDRNso (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 09:48:44 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3DF8122253;
-        Sat, 18 Apr 2020 13:48:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E07872220A;
+        Sat, 18 Apr 2020 13:48:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587217720;
-        bh=4r6aacRDYq6Hlwz2V30XSValEQ2V7Q+sqM4zheLkdQc=;
+        s=default; t=1587217723;
+        bh=Zl39YaVNOpEw+1FqGTKQv1RKhpb4hDsvXuv532WrKls=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mlPzr8eKaTO7rWGOYR6eDcuCDDxfhgR8/tdpEEk5nrOjruB1thke97WO8aZyQ7igR
-         FtI6V8vvzdgRjzngjcPG4E3u0ov1Rim5JbtyD9cIElrjjuDoraJimM5MCiMZL3eegh
-         3kQZxBEueoqJ3s/kgNoEnWLTJhLBZfzFdNNiQhPE=
+        b=hJCzfXEzNcz4pb1rE0t+djnFCfukNvl3sSsXpji72KF2J7P+ftPi/mvVHgczT+bvT
+         TWwB1S0cK0f9lrwOVFNFvmXuZ12TfeiGHm5N3cAmMVw3I+O6MBWlR/BuRVTYJ59OR7
+         gXkq/SIgQXGYXj8fD+tsODkZAjKtp16bGDHs09sI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Wu Bo <wubo40@huawei.com>, Lee Duncan <lduncan@suse.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, open-iscsi@googlegroups.com,
-        linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 20/73] scsi: iscsi: Report unbind session event when the target has been removed
-Date:   Sat, 18 Apr 2020 09:47:22 -0400
-Message-Id: <20200418134815.6519-20-sashal@kernel.org>
+Cc:     Sagi Grimberg <sagi@grimberg.me>, Keith Busch <kbusch@kernel.org>,
+        Hannes Reinecke <hare@suse.de>, Christoph Hellwig <hch@lst.de>,
+        Sasha Levin <sashal@kernel.org>, linux-nvme@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.6 23/73] nvme: fix deadlock caused by ANA update wrong locking
+Date:   Sat, 18 Apr 2020 09:47:25 -0400
+Message-Id: <20200418134815.6519-23-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200418134815.6519-1-sashal@kernel.org>
 References: <20200418134815.6519-1-sashal@kernel.org>
@@ -60,58 +59,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wu Bo <wubo40@huawei.com>
+From: Sagi Grimberg <sagi@grimberg.me>
 
-[ Upstream commit 13e60d3ba287d96eeaf1deaadba51f71578119a3 ]
+[ Upstream commit 657f1975e9d9c880fa13030e88ba6cc84964f1db ]
 
-If the daemon is restarted or crashes while logging out of a session, the
-unbind session event sent by the kernel is not processed and is lost.  When
-the daemon starts again, the session can't be unbound because the daemon is
-waiting for the event message. However, the kernel has already logged out
-and the event will not be resent.
+The deadlock combines 4 flows in parallel:
+- ns scanning (triggered from reconnect)
+- request timeout
+- ANA update (triggered from reconnect)
+- I/O coming into the mpath device
 
-When iscsid restart is complete, logout session reports error:
+(1) ns scanning triggers disk revalidation -> update disk info ->
+    freeze queue -> but blocked, due to (2)
 
-Logging out of session [sid: 6, target: iqn.xxxxx, portal: xx.xx.xx.xx,3260]
-iscsiadm: Could not logout of [sid: 6, target: iscsiadm -m node iqn.xxxxx, portal: xx.xx.xx.xx,3260].
-iscsiadm: initiator reported error (9 - internal error)
-iscsiadm: Could not logout of all requested sessions
+(2) timeout handler reference the g_usage_counter - > but blocks in
+    the transport .timeout() handler, due to (3)
 
-Make sure the unbind event is emitted.
+(3) the transport timeout handler (indirectly) calls nvme_stop_queue() ->
+    which takes the (down_read) namespaces_rwsem - > but blocks, due to (4)
 
-[mkp: commit desc and applied by hand since patch was mangled]
+(4) ANA update takes the (down_write) namespaces_rwsem -> calls
+    nvme_mpath_set_live() -> which synchronize the ns_head srcu
+    (see commit 504db087aacc) -> but blocks, due to (5)
 
-Link: https://lore.kernel.org/r/4eab1771-2cb3-8e79-b31c-923652340e99@huawei.com
-Reviewed-by: Lee Duncan <lduncan@suse.com>
-Signed-off-by: Wu Bo <wubo40@huawei.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+(5) I/O came into nvme_mpath_make_request -> took srcu_read_lock ->
+    direct_make_request > blk_queue_enter -> but blocked, due to (1)
+
+==> the request queue is under freeze -> deadlock.
+
+The fix is making ANA update take a read lock as the namespaces list
+is not manipulated, it is just the ns and ns->head that are being
+updated (which is protected with the ns->head lock).
+
+Fixes: 0d0b660f214dc ("nvme: add ANA support")
+Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
+Reviewed-by: Keith Busch <kbusch@kernel.org>
+Reviewed-by: Hannes Reinecke <hare@suse.de>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/scsi_transport_iscsi.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/nvme/host/multipath.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/scsi/scsi_transport_iscsi.c b/drivers/scsi/scsi_transport_iscsi.c
-index dfc726fa34e34..443ace019852f 100644
---- a/drivers/scsi/scsi_transport_iscsi.c
-+++ b/drivers/scsi/scsi_transport_iscsi.c
-@@ -2012,7 +2012,7 @@ static void __iscsi_unbind_session(struct work_struct *work)
- 	if (session->target_id == ISCSI_MAX_TARGET) {
- 		spin_unlock_irqrestore(&session->lock, flags);
- 		mutex_unlock(&ihost->mutex);
--		return;
-+		goto unbind_session_exit;
+diff --git a/drivers/nvme/host/multipath.c b/drivers/nvme/host/multipath.c
+index a11900cf3a365..906dc0faa48ec 100644
+--- a/drivers/nvme/host/multipath.c
++++ b/drivers/nvme/host/multipath.c
+@@ -514,7 +514,7 @@ static int nvme_update_ana_state(struct nvme_ctrl *ctrl,
+ 	if (!nr_nsids)
+ 		return 0;
+ 
+-	down_write(&ctrl->namespaces_rwsem);
++	down_read(&ctrl->namespaces_rwsem);
+ 	list_for_each_entry(ns, &ctrl->namespaces, list) {
+ 		unsigned nsid = le32_to_cpu(desc->nsids[n]);
+ 
+@@ -525,7 +525,7 @@ static int nvme_update_ana_state(struct nvme_ctrl *ctrl,
+ 		if (++n == nr_nsids)
+ 			break;
  	}
- 
- 	target_id = session->target_id;
-@@ -2024,6 +2024,8 @@ static void __iscsi_unbind_session(struct work_struct *work)
- 		ida_simple_remove(&iscsi_sess_ida, target_id);
- 
- 	scsi_remove_target(&session->dev);
-+
-+unbind_session_exit:
- 	iscsi_session_event(session, ISCSI_KEVENT_UNBIND_SESSION);
- 	ISCSI_DBG_TRANS_SESSION(session, "Completed target removal\n");
+-	up_write(&ctrl->namespaces_rwsem);
++	up_read(&ctrl->namespaces_rwsem);
+ 	return 0;
  }
+ 
 -- 
 2.20.1
 
