@@ -2,136 +2,112 @@ Return-Path: <SRS0=3CHW=6C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0746C38A29
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 07:19:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06164C2BA19
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 07:20:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C1A4021D91
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 07:19:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587194349;
-	bh=HtknloIa474ihedmZAofQ2+YIMgGcwVHwvhvyp4fUpU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=sJ8v/57GUEqY76S8fAbK5YiVBarfChADDc9FtEUe9jSl1g9TIZAML3eRadqCg68lr
-	 ly2t2E19/+KT7a9TJMwac9DNqQoxHXFLghplaolUOgxQlwvRCmrSDnsCyqyKKLMlDv
-	 xRbRMQKZnawdng7j4/jhvQh/b3DdN3KXXiYlEcgI=
+	by mail.kernel.org (Postfix) with ESMTP id E138521D91
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 07:20:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725891AbgDRHTI (ORCPT
+        id S1725964AbgDRHUH convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 03:19:08 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:33239 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725843AbgDRHTI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 03:19:08 -0400
-Received: by mail-pf1-f195.google.com with SMTP id c138so2235284pfc.0;
-        Sat, 18 Apr 2020 00:19:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=2tfGw4d3u9g+UFPVZL7i7ytHNA18syakdIUbMPCw9fk=;
-        b=HzHlBUoziKV7IAShIZZsEWav/DMYjBrKBtYchLX3Fo0TPZZEKF9Ge4VSCqgOOlEXjU
-         WDkV5DUMaepFrdsePtQbU47Z7ua3RG51ENgwMh8v96+2zIs83jD4BkKIp5HW6n9VGC9c
-         LllGG18g7qouxPZGNaF4dPVhDFydaBJOTYkWA2mzjOC7GGbR83BYr9BpCe7r7dqZctdS
-         oysofCc6KqIg0LoJgVUjd0pojQRGrPXd0uY3jXWJuuMyCE0dizxaGKl69dClvatMCqCq
-         tZpR37qpWdffhQX0aD4NEIGHgsK6DYIJAwJBljmlUYnN6mPARR8H+tFXjAOI2ew/qlvw
-         gu7g==
-X-Gm-Message-State: AGi0PuZlh/9MPH2C5PIDa66Y3kvJdznbZtnhUImAaYIye1RqhCOF6u60
-        0SFDxgfESWCZfw6mXZGNZqA=
-X-Google-Smtp-Source: APiQypI+72yk06Cjr8OXYOo8eGUbph5RuNlA8q6scYKXCohp1d6WX75FGadX+ZCWl4kUqBub0DIRGA==
-X-Received: by 2002:a63:585c:: with SMTP id i28mr6721801pgm.363.1587194347313;
-        Sat, 18 Apr 2020 00:19:07 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id 192sm3346445pfu.182.2020.04.18.00.19.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 18 Apr 2020 00:19:06 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id 68C5B4028E; Sat, 18 Apr 2020 07:19:05 +0000 (UTC)
-Date:   Sat, 18 Apr 2020 07:19:05 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Tiezhu Yang <yangtiezhu@loongson.cn>, Jessica Yu <jeyu@kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Shuah Khan <shuah@kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Xuefeng Li <lixuefeng@loongson.cn>
-Subject: Re: [PATCH 3/4] kmod: Return directly if module name is empty in
- request_module()
-Message-ID: <20200418071905.GE11244@42.do-not-panic.com>
-References: <1587187200-13109-1-git-send-email-yangtiezhu@loongson.cn>
- <1587187200-13109-3-git-send-email-yangtiezhu@loongson.cn>
- <20200418054519.GX11244@42.do-not-panic.com>
- <CAB=NE6XD7XCmsTAg3+mw=b8WZnKJiwha5t4DBJFt5w+b_DsNkg@mail.gmail.com>
- <b9c6e6e6-571a-b957-755f-72f2b0f538c5@loongson.cn>
+        Sat, 18 Apr 2020 03:20:07 -0400
+Received: from mga01.intel.com ([192.55.52.88]:10469 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725849AbgDRHUG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 03:20:06 -0400
+IronPort-SDR: 7977/lFMyuCx7o7GSQsvyx5lfoVDykO9llDNq+ibCvsYc+/WvL8y/ZATPSCo+bYxMjyN9/2Jyz
+ aIQhPZkCOR4A==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Apr 2020 00:20:06 -0700
+IronPort-SDR: v4U7ZaLM9+LM2u7p33DMl/Q9y5aKxDUg2DgZ4c1DuU7wNsKShgVtoHX7Bh1ODznrzNPY89mj+t
+ c4IoaU5ACLtQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,398,1580803200"; 
+   d="scan'208";a="272653993"
+Received: from fmsmsx107.amr.corp.intel.com ([10.18.124.205])
+  by orsmga002.jf.intel.com with ESMTP; 18 Apr 2020 00:20:05 -0700
+Received: from lcsmsx601.ger.corp.intel.com (10.109.210.10) by
+ fmsmsx107.amr.corp.intel.com (10.18.124.205) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Sat, 18 Apr 2020 00:20:05 -0700
+Received: from hasmsx602.ger.corp.intel.com (10.184.107.142) by
+ LCSMSX601.ger.corp.intel.com (10.109.210.10) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Sat, 18 Apr 2020 10:20:02 +0300
+Received: from hasmsx602.ger.corp.intel.com ([10.184.107.142]) by
+ HASMSX602.ger.corp.intel.com ([10.184.107.142]) with mapi id 15.01.1713.004;
+ Sat, 18 Apr 2020 10:20:02 +0300
+From:   "Winkler, Tomas" <tomas.winkler@intel.com>
+To:     Benjamin Lee <ben@b1c1l1.com>,
+        "Usyskin, Alexander" <alexander.usyskin@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH] mei: me: fix irq number stored in hw struct
+Thread-Topic: [PATCH] mei: me: fix irq number stored in hw struct
+Thread-Index: AQHWFOiiLxa+gQ/r/Uae7dYOsRB6uqh+ePhQ
+Date:   Sat, 18 Apr 2020 07:20:02 +0000
+Message-ID: <8a9bad577d4e4b019cb22e7e59f742b2@intel.com>
+References: <20200417184538.349550-1-ben@b1c1l1.com>
+In-Reply-To: <20200417184538.349550-1-ben@b1c1l1.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-reaction: no-action
+dlp-version: 11.2.0.6
+x-originating-ip: [10.184.70.1]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b9c6e6e6-571a-b957-755f-72f2b0f538c5@loongson.cn>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Apr 18, 2020 at 01:58:45PM +0800, Tiezhu Yang wrote:
-> On 04/18/2020 01:48 PM, Luis Chamberlain wrote:
-> > On Fri, Apr 17, 2020 at 11:45 PM Luis Chamberlain <mcgrof@kernel.org> wrote:
-> > > On Sat, Apr 18, 2020 at 01:19:59PM +0800, Tiezhu Yang wrote:
-> > > > If module name is empty, it is better to return directly at the beginning
-> > > > of request_module() without doing the needless call_modprobe() operation.
-> > > > 
-> > > > Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-> > > > ---
-> > > >   kernel/kmod.c | 5 +++++
-> > > >   1 file changed, 5 insertions(+)
-> > > > 
-> > > > diff --git a/kernel/kmod.c b/kernel/kmod.c
-> > > > index 3cd075c..5851444 100644
-> > > > --- a/kernel/kmod.c
-> > > > +++ b/kernel/kmod.c
-> > > > @@ -28,6 +28,8 @@
-> > > > 
-> > > >   #include <trace/events/module.h>
-> > > > 
-> > > > +#define MODULE_NOT_FOUND 256
-> > > > +
-> > > >   /*
-> > > >    * Assuming:
-> > > >    *
-> > > > @@ -144,6 +146,9 @@ int __request_module(bool wait, const char *fmt, ...)
-> > > >        if (ret >= MODULE_NAME_LEN)
-> > > >                return -ENAMETOOLONG;
-> > > > 
-> > > > +     if (strlen(module_name) == 0)
-> > > > +             return MODULE_NOT_FOUND;
-> > > I'd rather we just use something standard like -EINVAL.
-> > > What do we return if its not found? Then use that value.
-> > Also, are we testing for this condition yet? If not can we add one?
+
+> Commit 261b3e1f2a01 ("mei: me: store irq number in the hw struct.") stores
+> the irq number in the hw struct before MSI is enabled.  This caused a regression
+> for mei_me_synchronize_irq() waiting for the wrong irq number.  On my laptop
+> this causes a hang on shutdown.  Fix the issue by storing the irq number after
+> enabling MSI.
+
+Thanks a lot for cracking this down,  this should go to stable (5.5) as well. 
+
+We should be probably calling hw->irq = pci_irq_vector(pdev, 0);  as pci_enable_msi was deprecated. 
+Will try to  address this in a follow up patch. 
+
+> Fixes: 261b3e1f2a01 ("mei: me: store irq number in the hw struct.")
+> Signed-off-by: Benjamin Lee <ben@b1c1l1.com>
+> ---
+>  drivers/misc/mei/pci-me.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 > 
-> Yes, kmod_test_0001_driver() in tools/testing/selftests/kmod/kmod.sh tests
-> this case and expects result MODULE_NOT_FOUND which is 256.
+> diff --git a/drivers/misc/mei/pci-me.c b/drivers/misc/mei/pci-me.c index
+> 3d21c38e2dbb..0c390fe421ad 100644
+> --- a/drivers/misc/mei/pci-me.c
+> +++ b/drivers/misc/mei/pci-me.c
+> @@ -203,11 +203,12 @@ static int mei_me_probe(struct pci_dev *pdev, const
+> struct pci_device_id *ent)
+>  	}
+>  	hw = to_me_hw(dev);
+>  	hw->mem_addr = pcim_iomap_table(pdev)[0];
+> -	hw->irq = pdev->irq;
+>  	hw->read_fws = mei_me_read_fws;
+> 
+>  	pci_enable_msi(pdev);
+> 
+> +	hw->irq = pdev->irq;
+> +
+>  	 /* request and enable interrupt */
+>  	irqflags = pci_dev_msi_enabled(pdev) ? IRQF_ONESHOT :
+> IRQF_SHARED;
+> 
+> --
+> 2.26.1
 
-OK I see now I had put:
-
-errno_name_to_val()                                                             
-{                                                                               
-        case "$1" in                                                            
-	# kmod calls modprobe and upon of a module not found                    
-	# modprobe returns just 1... However in the
-	# kernel we *sometimes* see 256... 
-	MODULE_NOT_FOUND)                                                       
-		echo 256;;
-
-I found that through testing, however there was nothing set in stone,
-nothing documented. While you are at it, can you find the places where
-this is returned in the kernel code? We should clear this up and
-se things straight. We cannot change what we gave userspace already
-though.
-
-  Luis
