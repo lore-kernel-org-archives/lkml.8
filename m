@@ -2,132 +2,108 @@ Return-Path: <SRS0=3CHW=6C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A914C38A29
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 18:59:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC091C38A29
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 19:00:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 67578221F7
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 18:59:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB10221BE5
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 19:00:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="a4Ta2E5+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728136AbgDRS7S (ORCPT
+        id S1728144AbgDRTAZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 14:59:18 -0400
-Received: from mail-io1-f72.google.com ([209.85.166.72]:35958 "EHLO
-        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726086AbgDRS7P (ORCPT
+        Sat, 18 Apr 2020 15:00:25 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:42032 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727826AbgDRTAX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 14:59:15 -0400
-Received: by mail-io1-f72.google.com with SMTP id p9so6174242ioh.3
-        for <linux-kernel@vger.kernel.org>; Sat, 18 Apr 2020 11:59:14 -0700 (PDT)
+        Sat, 18 Apr 2020 15:00:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587236421;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=w0Gisw9hWUsG7t2w9OL7DQLlQmWjB8dYgMJG70gQDSw=;
+        b=a4Ta2E5+yaJoGONQxs8KxGyA7mkdoORM3CBb2+i7P+5DiyiQe28KhgfCDP6IS3PUtOEmUG
+        2eMu0lN61ee7KcSmnBi9OAeMTtaEI7SQGUv0jQRs3r4CBF4HC2lSU9UFG0ei2vb38E9g/k
+        RrtdrW5qACr9b29KAJVQyuTXFVEt68A=
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com
+ [209.85.222.198]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-239-WQXmeWD_PAiHtTNAXaZ2Yw-1; Sat, 18 Apr 2020 15:00:18 -0400
+X-MC-Unique: WQXmeWD_PAiHtTNAXaZ2Yw-1
+Received: by mail-qk1-f198.google.com with SMTP id x5so5507092qkn.20
+        for <linux-kernel@vger.kernel.org>; Sat, 18 Apr 2020 12:00:17 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=lNGjideo7zFgJ779fKErVM6LqcZZT6w673OoXDkI/mI=;
-        b=nKg7IbKI32MVFuVN534l6bQdJ/ySrxkriiRYI3MowwRPw4AlhHrsimY4R5glglIQUT
-         r7udhechWYWeqksu5WnRNqw12vhFrcOgapOlkf2VbkCRzveAlykjRof93TfCxxO9NPI9
-         oeesFZGcyMIaLzP1bSoTLGMMq8boSOyoUejQPsHvUjjyHlxUlWs8Kl5jc1ogLMzFw+l5
-         UaVhx780gZnrpAxhoLPyEftnuPkYlgJyybKLkMeXqNcaGoYBgWiLmLIK+muPQb4CtQt2
-         9DTx6+HKYF+5kJgpgITZjF1cpjazROB61egmGvjx1JZuSu5nSLe00ECVFAu4D/UiEAL/
-         RFig==
-X-Gm-Message-State: AGi0PubLtQC30ZAeMy0S7of3OFezogZwUCNNV1tVPBvrE2rVaNIIZyXQ
-        X9MTVfFVL1rm+25VTtCHuNpK1myI+Sln7J67rY86cwqBdIXn
-X-Google-Smtp-Source: APiQypJ5LYYPmMiPhlLhndVNdNt2z1uXUt7Gts90Wfw8pxmW97GBxS/uMNXRXyuwqX8Z76kEamWgGZE98MyMCuOYIiL4zLfDMOkR
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=w0Gisw9hWUsG7t2w9OL7DQLlQmWjB8dYgMJG70gQDSw=;
+        b=mUyV0exCSxyTn2iVjfr3RdFLSD61sGblwwIpWySncOoqp8NP4heAVWi3nxllAdhKfZ
+         wvTVN3Hub2lvvVQh2EtYI2RUA9qP79OjVQTGVx6x2HifvLLHwKuNgZ48WsEEYKM6Nqqo
+         icdVRsGKjCHmrP/WwL5K+77zNZK/qXr8OHpQWp+n1Bw+J4beUu5kHeNsSwVVwwEwPFRd
+         JP2dJsRvOEkKYoY57bc0OXOC7xW0jx8cB/Ecr/1V/jiCbz1OxpLgBk1Tg9a97YzNcFfW
+         KFrZBuVrLJPXixdKQi0ohZFfKxnry3KpUa9maIivxsgjqdvAk5tuvLZecvPsU6lOiDFv
+         6djA==
+X-Gm-Message-State: AGi0PuYKZvTGsiKRwnxYX7apUBafLJSFm8/01ztvj+hrblVOXgv2yJKR
+        tONGQ2rAsawAqoIWM5Pg4CZ8FDgfDrcwJ8Ez3C1KMc1F6ShHCtTmGtAfXvxTo/5w7My/n4JYXqK
+        fCpMLRMLbYnItCk3MQGkZCJmXsyQq9FaCZ+cMR5qH
+X-Received: by 2002:a37:d0a:: with SMTP id 10mr8976654qkn.288.1587236417119;
+        Sat, 18 Apr 2020 12:00:17 -0700 (PDT)
+X-Google-Smtp-Source: APiQypI2nHN5tNsMq4pPm5ciYHRA5VRWl7aSSu5+P9HKsSo/yFjTBtNzBH3IvuFjBQ139wkhhgPpEk79Jxs2c07SmRA=
+X-Received: by 2002:a37:d0a:: with SMTP id 10mr8976624qkn.288.1587236416872;
+ Sat, 18 Apr 2020 12:00:16 -0700 (PDT)
 MIME-Version: 1.0
-X-Received: by 2002:a92:c004:: with SMTP id q4mr8533307ild.93.1587236353725;
- Sat, 18 Apr 2020 11:59:13 -0700 (PDT)
-Date:   Sat, 18 Apr 2020 11:59:13 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000009dcd905a3954340@google.com>
-Subject: INFO: rcu detected stall in io_uring_release
-From:   syzbot <syzbot+66243bb7126c410cefe6@syzkaller.appspotmail.com>
-To:     axboe@kernel.dk, io-uring@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
+References: <20200416143532.11743-1-mszeredi@redhat.com> <c47459a5-3323-121e-ec66-4a8eb2a8afca@samba.org>
+In-Reply-To: <c47459a5-3323-121e-ec66-4a8eb2a8afca@samba.org>
+From:   Miklos Szeredi <mszeredi@redhat.com>
+Date:   Sat, 18 Apr 2020 21:00:05 +0200
+Message-ID: <CAOssrKe7RNyReAFLoQGBDm79qMdXEubhP5QhG_+UmGZXgeXBkA@mail.gmail.com>
+Subject: Re: [PATCH] vfs: add faccessat2 syscall
+To:     Stefan Metzmacher <metze@samba.org>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>,
+        lkml <linux-kernel@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Eric Sandeen <sandeen@sandeen.net>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Sat, Apr 18, 2020 at 8:36 PM Stefan Metzmacher <metze@samba.org> wrote:
+>
+> Hi Miklos,
+>
+> > POSIX defines faccessat() as having a fourth "flags" argument, while the
+> > linux syscall doesn't have it.  Glibc tries to emulate AT_EACCESS and
+> > AT_SYMLINK_NOFOLLOW, but AT_EACCESS emulation is broken.
+> >
+> > Add a new faccessat(2) syscall with the added flags argument and implement
+> > both flags.
+> >
+> > The value of AT_EACCESS is defined in glibc headers to be the same as
+> > AT_REMOVEDIR.  Use this value for the kernel interface as well, together
+> > with the explanatory comment.
+>
+> It would be nice if resolv_flags would also be passed in addition to the
+> at flags.
+> See:https://lore.kernel.org/linux-api/CAHk-=wiaL6zznNtCHKg6+MJuCqDxO=yVfms3qR9A0czjKuSSiA@mail.gmail.com/
+>
+> We should avoid expecting yet another syscall in near future.
 
-syzbot found the following crash on:
+What is the objection against
 
-HEAD commit:    8f3d9f35 Linux 5.7-rc1
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=115720c3e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=5d351a1019ed81a2
-dashboard link: https://syzkaller.appspot.com/bug?extid=66243bb7126c410cefe6
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+openat(... O_PATH)
+foobarat(fd, AT_EMPTY_PATH, ...)
 
-Unfortunately, I don't have any reproducer for this crash yet.
+?
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+66243bb7126c410cefe6@syzkaller.appspotmail.com
+Thanks,
+Miklos
 
-rcu: INFO: rcu_preempt self-detected stall on CPU
-rcu: 	0-....: (10500 ticks this GP) idle=57e/1/0x4000000000000002 softirq=44329/44329 fqs=5245 
-	(t=10502 jiffies g=79401 q=2096)
-NMI backtrace for cpu 0
-CPU: 0 PID: 23184 Comm: syz-executor.5 Not tainted 5.7.0-rc1-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- <IRQ>
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x188/0x20d lib/dump_stack.c:118
- nmi_cpu_backtrace.cold+0x70/0xb1 lib/nmi_backtrace.c:101
- nmi_trigger_cpumask_backtrace+0x231/0x27e lib/nmi_backtrace.c:62
- trigger_single_cpu_backtrace include/linux/nmi.h:164 [inline]
- rcu_dump_cpu_stacks+0x19b/0x1e5 kernel/rcu/tree_stall.h:254
- print_cpu_stall kernel/rcu/tree_stall.h:475 [inline]
- check_cpu_stall kernel/rcu/tree_stall.h:549 [inline]
- rcu_pending kernel/rcu/tree.c:3225 [inline]
- rcu_sched_clock_irq.cold+0x55d/0xcfa kernel/rcu/tree.c:2296
- update_process_times+0x25/0x60 kernel/time/timer.c:1727
- tick_sched_handle+0x9b/0x180 kernel/time/tick-sched.c:176
- tick_sched_timer+0x4e/0x140 kernel/time/tick-sched.c:1320
- __run_hrtimer kernel/time/hrtimer.c:1520 [inline]
- __hrtimer_run_queues+0x5ca/0xed0 kernel/time/hrtimer.c:1584
- hrtimer_interrupt+0x312/0x770 kernel/time/hrtimer.c:1646
- local_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1113 [inline]
- smp_apic_timer_interrupt+0x15b/0x600 arch/x86/kernel/apic/apic.c:1138
- apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:829
- </IRQ>
-RIP: 0010:io_ring_ctx_wait_and_kill+0x98/0x5a0 fs/io_uring.c:7301
-Code: 01 00 00 4d 89 f4 48 b8 00 00 00 00 00 fc ff df 4c 89 ed 49 c1 ec 03 48 c1 ed 03 49 01 c4 48 01 c5 eb 1c e8 3a ea 9d ff f3 90 <41> 80 3c 24 00 0f 85 53 04 00 00 48 83 bb 10 01 00 00 00 74 21 e8
-RSP: 0018:ffffc9000897fdf0 EFLAGS: 00000293 ORIG_RAX: ffffffffffffff13
-RAX: ffff888024082080 RBX: ffff88808df8e000 RCX: 1ffff9200112ffab
-RDX: 0000000000000000 RSI: ffffffff81d549c6 RDI: ffff88808df8e300
-RBP: ffffed1011bf1c2c R08: 0000000000000001 R09: ffffed1011bf1c61
-R10: ffff88808df8e307 R11: ffffed1011bf1c60 R12: ffffed1011bf1c22
-R13: ffff88808df8e160 R14: ffff88808df8e110 R15: ffffffff81d54ed0
- io_uring_release+0x3e/0x50 fs/io_uring.c:7324
- __fput+0x33e/0x880 fs/file_table.c:280
- task_work_run+0xf4/0x1b0 kernel/task_work.c:123
- tracehook_notify_resume include/linux/tracehook.h:188 [inline]
- exit_to_usermode_loop+0x2fa/0x360 arch/x86/entry/common.c:165
- prepare_exit_to_usermode arch/x86/entry/common.c:196 [inline]
- syscall_return_slowpath arch/x86/entry/common.c:279 [inline]
- do_syscall_64+0x6b1/0x7d0 arch/x86/entry/common.c:305
- entry_SYSCALL_64_after_hwframe+0x49/0xb3
-RIP: 0033:0x416421
-Code: 75 14 b8 03 00 00 00 0f 05 48 3d 01 f0 ff ff 0f 83 04 1b 00 00 c3 48 83 ec 08 e8 0a fc ff ff 48 89 04 24 b8 03 00 00 00 0f 05 <48> 8b 3c 24 48 89 c2 e8 53 fc ff ff 48 89 d0 48 83 c4 08 48 3d 01
-RSP: 002b:00007ffc3c9f63d0 EFLAGS: 00000293 ORIG_RAX: 0000000000000003
-RAX: 0000000000000000 RBX: 0000000000000004 RCX: 0000000000416421
-RDX: 00000000000f4240 RSI: 0000000000000081 RDI: 0000000000000003
-RBP: 0000000000000000 R08: 0000000000000000 R09: 01ffffffffffffff
-R10: 0000000000770b20 R11: 0000000000000293 R12: 000000000076bfa0
-R13: 0000000000770b30 R14: 0000000000000001 R15: 000000000076bfac
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
