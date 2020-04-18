@@ -2,133 +2,124 @@ Return-Path: <SRS0=3CHW=6C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83303C38A2B
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 00:51:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC302C352BE
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 01:01:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6146922246
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 00:51:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UHRsxs3d"
+	by mail.kernel.org (Postfix) with ESMTP id B67DA20771
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 01:01:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726115AbgDRAvb (ORCPT
+        id S1726094AbgDRBBT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 20:51:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47292 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725856AbgDRAvb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 20:51:31 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05298C061A0C;
-        Fri, 17 Apr 2020 17:51:30 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id w65so1848400pfc.12;
-        Fri, 17 Apr 2020 17:51:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=RG4zLqgfOd5eFwxQ5MLT79PGcVvleEGHuNZIiiWI3A8=;
-        b=UHRsxs3dACIIwT+uMU1k+HYIiaao56103YAWtZ9T82lMH2/6k+1bzrxddlKocwAjuh
-         uUYH05uZKQ/aA7TG+yPLJz/F9RRFyz34bHILVNLhPocsTu5vQe27bOkgo0lGXU+f5Hld
-         nYZVkck9WAKiSUmfozmvA3+ZDMGtDnBU3FHIsFFiNALSwlpJ9oaf2hs46yzarnOE51Mz
-         MmaNR2ZcuWpUnxCR4+Jqgka9loe6D29S1Kp+ROZ5vCvht+C9hlBqx9Q7+liIxjqnqe6b
-         LQiA2/u+bXiGy5nyrNjaZim8ba1qfsvrXjYz84IhmEPVbiNdhWcOrjqs9hXKvjygObHM
-         fcbg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=RG4zLqgfOd5eFwxQ5MLT79PGcVvleEGHuNZIiiWI3A8=;
-        b=syxAx19uOK5HQlAmsdra+0svwPVe6iMYhuhEhzHJtX/6FRe4pceEb2jHjH5zrejEWz
-         WWZ/QXJ19FRJuMM4BmosNrXKLa2k3jP8GYtMfJ2gx/l9vijK8iWS/dYHhWnw+IgIDMnG
-         yGGfajfc6aEz+8NHFmPqEog3RqjHHPMwigeNu3qYHtiGRwT5R9L+On79u9GtXDGNPrgB
-         /fWODvQvlh59RN/ueRWa7L9v7eQ/oAiRN+LUuNFZCwwaUQ6vC7WGkfZAzuie9bLfLiLL
-         ig9GlZrzf72lz2K0v15OpGQC2iRPun/pRF6tzlWOos7TJtyc5qlXkz31tmyVTTjoFvt8
-         tWsQ==
-X-Gm-Message-State: AGi0PuaBLXj84MLeI7vE8WvjrmoBMqH8GrU7ERAehCIZJznQNhL7BVKS
-        NWLJwCFWg3pTpPk31tABK5xdWKq7
-X-Google-Smtp-Source: APiQypL2znwCrCCrcxp1psP1Dxfxox0z8Es+9X/HyrMLS38/612Hq3MCaqcTnox76tSZZnkAxv3jqg==
-X-Received: by 2002:a62:404:: with SMTP id 4mr6267992pfe.110.1587171089817;
-        Fri, 17 Apr 2020 17:51:29 -0700 (PDT)
-Received: from localhost.localdomain (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
-        by smtp.gmail.com with ESMTPSA id a18sm6714082pjh.25.2020.04.17.17.51.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Apr 2020 17:51:29 -0700 (PDT)
-From:   Florian Fainelli <f.fainelli@gmail.com>
-To:     netdev@vger.kernel.org
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH net-next] dt-bindings: net: mdio: Document common properties
-Date:   Fri, 17 Apr 2020 17:51:26 -0700
-Message-Id: <20200418005126.15305-1-f.fainelli@gmail.com>
-X-Mailer: git-send-email 2.19.1
+        Fri, 17 Apr 2020 21:01:19 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:2401 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725768AbgDRBBT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Apr 2020 21:01:19 -0400
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id A47E78BB899F881ED6C9;
+        Sat, 18 Apr 2020 09:01:14 +0800 (CST)
+Received: from [127.0.0.1] (10.166.215.235) by DGGEMS409-HUB.china.huawei.com
+ (10.3.19.209) with Microsoft SMTP Server id 14.3.487.0; Sat, 18 Apr 2020
+ 09:01:06 +0800
+Subject: Re: [PATCH] buffer: remove useless comment and
+ WB_REASON_FREE_MORE_MEM, reason.
+To:     Jan Kara <jack@suse.cz>
+CC:     <viro@zeniv.linux.org.uk>, <rostedt@goodmis.org>,
+        <mingo@redhat.com>, "Jens Axboe" <axboe@kernel.dk>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        <linux-fsdevel@vger.kernel.org>, <tj@kernel.org>,
+        <bigeasy@linutronix.de>, linfeilong <linfeilong@huawei.com>,
+        Yanxiaodan <yanxiaodan@huawei.com>,
+        Mingfangsen <mingfangsen@huawei.com>,
+        renxudong <renxudong1@huawei.com>
+References: <5844aa66-de1e-278b-5491-b7e6839640e9@huawei.com>
+ <20200414150929.GD28226@quack2.suse.cz>
+From:   Zhiqiang Liu <liuzhiqiang26@huawei.com>
+Message-ID: <81bf1cd4-0319-bc62-dbdf-701d39edd23a@huawei.com>
+Date:   Sat, 18 Apr 2020 09:01:03 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200414150929.GD28226@quack2.suse.cz>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.166.215.235]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some of the properties pertaining to the broken turn around or resets
-were only documented in ethernet-phy.yaml while they are applicable
-across all MDIO devices and not Ethernet PHYs specifically which are a
-superset.
+friendly ping...
 
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
----
- .../devicetree/bindings/net/mdio.yaml         | 27 +++++++++++++++++++
- 1 file changed, 27 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/net/mdio.yaml b/Documentation/devicetree/bindings/net/mdio.yaml
-index 50c3397a82bc..58d486db5651 100644
---- a/Documentation/devicetree/bindings/net/mdio.yaml
-+++ b/Documentation/devicetree/bindings/net/mdio.yaml
-@@ -50,6 +50,33 @@ patternProperties:
-         description:
-           The ID number for the PHY.
- 
-+      broken-turn-around:
-+        $ref: /schemas/types.yaml#definitions/flag
-+        description:
-+          If set, indicates the PHY device does not correctly release
-+          the turn around line low at the end of a MDIO transaction.
-+
-+      resets:
-+        maxItems: 1
-+
-+      reset-names:
-+        const: phy
-+
-+      reset-gpios:
-+        maxItems: 1
-+        description:
-+          The GPIO phandle and specifier for the PHY reset signal.
-+
-+      reset-assert-us:
-+        description:
-+          Delay after the reset was asserted in microseconds. If this
-+          property is missing the delay will be skipped.
-+
-+      reset-deassert-us:
-+        description:
-+          Delay after the reset was deasserted in microseconds. If
-+          this property is missing the delay will be skipped.
-+
-     required:
-       - reg
- 
--- 
-2.19.1
+On 2020/4/14 23:09, Jan Kara wrote:
+> On Mon 13-04-20 13:12:10, Zhiqiang Liu wrote:
+>> From: Zhiqiang Liu <liuzhiqiang26@huawei.com>
+>>
+>> free_more_memory func has been completely removed in commit bc48f001de12
+>> ("buffer: eliminate the need to call free_more_memory() in __getblk_slow()")
+>>
+>> So comment and `WB_REASON_FREE_MORE_MEM` reason about free_more_memory
+>> are no longer needed.
+>>
+>> Signed-off-by: Zhiqiang Liu <liuzhiqiang26@huawei.com>
+> 
+> Thanks. The patch looks good to me. You can add:
+> 
+> Reviewed-by: Jan Kara <jack@suse.cz>
+> 
+> 								Honza
+> 
+>> ---
+>>  fs/buffer.c                      | 2 +-
+>>  include/linux/backing-dev-defs.h | 1 -
+>>  include/trace/events/writeback.h | 1 -
+>>  3 files changed, 1 insertion(+), 3 deletions(-)
+>>
+>> diff --git a/fs/buffer.c b/fs/buffer.c
+>> index b8d28370cfd7..07ab0405f3f5 100644
+>> --- a/fs/buffer.c
+>> +++ b/fs/buffer.c
+>> @@ -973,7 +973,7 @@ grow_dev_page(struct block_device *bdev, sector_t block,
+>>  	struct page *page;
+>>  	struct buffer_head *bh;
+>>  	sector_t end_block;
+>> -	int ret = 0;		/* Will call free_more_memory() */
+>> +	int ret = 0;
+>>  	gfp_t gfp_mask;
+>>
+>>  	gfp_mask = mapping_gfp_constraint(inode->i_mapping, ~__GFP_FS) | gfp;
+>> diff --git a/include/linux/backing-dev-defs.h b/include/linux/backing-dev-defs.h
+>> index 4fc87dee005a..ee577a83cfe6 100644
+>> --- a/include/linux/backing-dev-defs.h
+>> +++ b/include/linux/backing-dev-defs.h
+>> @@ -54,7 +54,6 @@ enum wb_reason {
+>>  	WB_REASON_SYNC,
+>>  	WB_REASON_PERIODIC,
+>>  	WB_REASON_LAPTOP_TIMER,
+>> -	WB_REASON_FREE_MORE_MEM,
+>>  	WB_REASON_FS_FREE_SPACE,
+>>  	/*
+>>  	 * There is no bdi forker thread any more and works are done
+>> diff --git a/include/trace/events/writeback.h b/include/trace/events/writeback.h
+>> index d94def25e4dc..85a33bea76f1 100644
+>> --- a/include/trace/events/writeback.h
+>> +++ b/include/trace/events/writeback.h
+>> @@ -36,7 +36,6 @@
+>>  	EM( WB_REASON_SYNC,			"sync")			\
+>>  	EM( WB_REASON_PERIODIC,			"periodic")		\
+>>  	EM( WB_REASON_LAPTOP_TIMER,		"laptop_timer")		\
+>> -	EM( WB_REASON_FREE_MORE_MEM,		"free_more_memory")	\
+>>  	EM( WB_REASON_FS_FREE_SPACE,		"fs_free_space")	\
+>>  	EMe(WB_REASON_FORKER_THREAD,		"forker_thread")
+>>
+>> -- 
+>> 2.19.1
+>>
+>>
 
