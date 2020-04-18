@@ -2,190 +2,121 @@ Return-Path: <SRS0=3CHW=6C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 690C8C2BA19
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 08:06:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56271C352BE
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 08:09:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 440BA20857
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 08:06:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="poiD+xo7"
+	by mail.kernel.org (Postfix) with ESMTP id 300EF221EA
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 08:09:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587197357;
+	bh=nw+VTw9UskCuMvCgX4Me999roXJP64ZnEdNNc8xXhJ4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=i+gbRvTW6BKHIsNeoGlSQulXRxQE/jvGKJ/rblhZdfZyrWdOeCP05+s7aYgYcT0Ox
+	 hRbWDzqVPewifhXamLU0VrbjwOkS4KMU07e46Mp90ZOYor4IuMlcZue/5YMpBVePbS
+	 +75mPL+SlbvMUmWxRUuuclew1ESSP+/wYtQH6c/k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726011AbgDRIGG (ORCPT
+        id S1725964AbgDRIJP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 04:06:06 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:42811 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725858AbgDRIGF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 04:06:05 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1587197165; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=Ai272o6qy5R6nMdbdlalbR48K7Knpt+f0IeAypOdip0=; b=poiD+xo7iTbEET6KyZPdloSY40ARvPFKjZW2++pLf34j7btzNK9GhJkvNrECjqgTAzLxk2lh
- KDEU0Mh8dFFFKZhNKk2OPqQt6jPjrQAew+522mDTuXuwn5VP34u85oUophsxQuTM44S2ZMLw
- qYrBjHCABFq8SNngUNKOCIuw+/I=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e9ab4ec.7f887d6d4490-smtp-out-n01;
- Sat, 18 Apr 2020 08:06:04 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 40007C432C2; Sat, 18 Apr 2020 08:06:04 +0000 (UTC)
-Received: from [10.131.205.89] (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Sat, 18 Apr 2020 04:09:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47166 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725856AbgDRIJO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 04:09:14 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: rnayak)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id BA99CC433F2;
-        Sat, 18 Apr 2020 08:05:59 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org BA99CC433F2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
-Subject: Re: [PATCH v2 01/17] tty: serial: qcom_geni_serial: Use OPP API to
- set clk/perf state
-To:     Matthias Kaehlcke <mka@chromium.org>
-Cc:     viresh.kumar@linaro.org, sboyd@kernel.org,
-        bjorn.andersson@linaro.org, agross@kernel.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Akash Asthana <akashast@codeaurora.org>,
-        linux-serial@vger.kernel.org
-References: <1587132279-27659-1-git-send-email-rnayak@codeaurora.org>
- <1587132279-27659-2-git-send-email-rnayak@codeaurora.org>
- <20200417180041.GD199755@google.com>
-From:   Rajendra Nayak <rnayak@codeaurora.org>
-Message-ID: <c7f6922a-47c2-9703-c8fa-92fdbe1f69ec@codeaurora.org>
-Date:   Sat, 18 Apr 2020 13:35:56 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        by mail.kernel.org (Postfix) with ESMTPSA id 50A9820857;
+        Sat, 18 Apr 2020 08:09:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587197353;
+        bh=nw+VTw9UskCuMvCgX4Me999roXJP64ZnEdNNc8xXhJ4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=V0xRHuyGIN1GggiMdr3RoQFAPmUy9SZjHIrt8NbV9p19Wfc5yAVLxnDziXEe8kzUe
+         MySocPsF/pd6Ig00xdFAHVi+2rC22mUhkv6ZSTH2A8k8+GtRpYEjgiqkBr56dfhJUt
+         iEgHqeL89iDRzZITbOL8o6c2b0r0mGvVdCwMeaGI=
+Date:   Sat, 18 Apr 2020 10:09:11 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Cc:     Toralf =?iso-8859-1?Q?F=F6rster?= <toralf.foerster@gmx.de>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Linux Kernel <linux-kernel@vger.kernel.org>,
+        ACPI Devel Mailing List <linux-acpi@vger.kernel.org>,
+        Stable <stable@vger.kernel.org>
+Subject: Re: regression 5.6.4->5.6.5 at drivers/acpi/ec.c
+Message-ID: <20200418080911.GA2412912@kroah.com>
+References: <fdd9ce1d-146a-5fbf-75c5-3a9384603312@gmx.de>
+ <5478a950-4355-8084-ea7d-fe8b270bf2e3@infradead.org>
+ <5392275.BHAU0OPJTB@kreacher>
+ <4b21c095-fbe5-1138-b977-a505baa41a2b@gmx.de>
+ <CAJZ5v0icdVL6_yGpfsorqszdi9GcLxzYdvDqTJyG4ENzkOG2pQ@mail.gmail.com>
+ <d66ad8f1-d7c5-dd8a-0eb4-9e560dc9ada1@gmx.de>
+ <CAJZ5v0iXJK_kFzr=cOdcTdc947MOcm2hvNV1WgvAnxOY7uvWfg@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200417180041.GD199755@google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAJZ5v0iXJK_kFzr=cOdcTdc947MOcm2hvNV1WgvAnxOY7uvWfg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 4/17/2020 11:30 PM, Matthias Kaehlcke wrote:
-> Hi Rajendra,
-
-Hey Matthias,
-
+On Fri, Apr 17, 2020 at 09:54:54PM +0200, Rafael J. Wysocki wrote:
+> On Fri, Apr 17, 2020 at 9:41 PM Toralf Förster <toralf.foerster@gmx.de> wrote:
+> >
+> > On 4/17/20 8:52 PM, Rafael J. Wysocki wrote:
+> > > On Fri, Apr 17, 2020 at 6:36 PM Toralf Förster <toralf.foerster@gmx.de> wrote:
+> > >>
+> > >> On 4/17/20 5:53 PM, Rafael J. Wysocki wrote:
+> > >>> Does the patch below (untested) make any difference?
+> > >>>
+> > >>> ---
+> > >>>  drivers/acpi/ec.c |    5 ++++-
+> > >>>  1 file changed, 4 insertions(+), 1 deletion(-)
+> > >>>
+> > >>> Index: linux-pm/drivers/acpi/ec.c
+> > >>> ===================================================================
+> > >>> --- linux-pm.orig/drivers/acpi/ec.c
+> > >>> +++ linux-pm/drivers/acpi/ec.c
+> > >>> @@ -2067,7 +2067,10 @@ static struct acpi_driver acpi_ec_driver
+> > >>>               .add = acpi_ec_add,
+> > >>>               .remove = acpi_ec_remove,
+> > >>>               },
+> > >>> -     .drv.pm = &acpi_ec_pm,
+> > >>> +     .drv = {
+> > >>> +             .probe_type = PROBE_FORCE_SYNCHRONOUS,
+> > >>> +             .pm = &acpi_ec_pm,
+> > >>> +     },
+> > >>>  };
+> > >>>
+> > >>>  static void acpi_ec_destroy_workqueues(void)
+> > >> I'd say no, but for completeness:
+> > >
+> > > OK, it looks like mainline commit
+> > >
+> > > 65a691f5f8f0 ("ACPI: EC: Do not clear boot_ec_is_ecdt in acpi_ec_add()")
+> > >
+> > > was backported into 5.6.5 by mistake.
+> > >
+> > > Can you please revert that patch and retest?
+> > >
+> > Yes, reverting that commit solved the issue.
 > 
-> On Fri, Apr 17, 2020 at 07:34:23PM +0530, Rajendra Nayak wrote:
->> geni serial needs to express a perforamnce state requirement on CX
->> powerdomain depending on the frequency of the clock rates.
->> Use OPP table from DT to register with OPP framework and use
->> dev_pm_opp_set_rate() to set the clk/perf state.
->>
->> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
->> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->> Cc: Akash Asthana <akashast@codeaurora.org>
->> Cc: linux-serial@vger.kernel.org
->> ---
->>   drivers/tty/serial/qcom_geni_serial.c | 30 +++++++++++++++++++++++++-----
->>   include/linux/qcom-geni-se.h          |  2 ++
->>   2 files changed, 27 insertions(+), 5 deletions(-)
->>
->> diff --git a/drivers/tty/serial/qcom_geni_serial.c b/drivers/tty/serial/qcom_geni_serial.c
->> index 6119090..151012c 100644
->> --- a/drivers/tty/serial/qcom_geni_serial.c
->> +++ b/drivers/tty/serial/qcom_geni_serial.c
->> @@ -9,6 +9,7 @@
->>   #include <linux/module.h>
->>   #include <linux/of.h>
->>   #include <linux/of_device.h>
->> +#include <linux/pm_opp.h>
->>   #include <linux/platform_device.h>
->>   #include <linux/pm_runtime.h>
->>   #include <linux/pm_wakeirq.h>
->> @@ -128,6 +129,7 @@ struct qcom_geni_serial_port {
->>   	int wakeup_irq;
->>   	bool rx_tx_swap;
->>   	bool cts_rts_swap;
->> +	bool opp_table;
+> OK, thanks!
 > 
-> The name of the variable suggests that it holds a OPP table, something
-> like 'has_opp_table' would be clearer.
-
-I agree with your suggestions, I will update the variable names when I respin.
-
+> Greg, I'm not sure why commit 65a691f5f8f0 from the mainline ended up in 5.6.5.
 > 
->>   };
->>   
->>   static const struct uart_ops qcom_geni_console_pops;
->> @@ -961,7 +963,7 @@ static void qcom_geni_serial_set_termios(struct uart_port *uport,
->>   		goto out_restart_rx;
->>   
->>   	uport->uartclk = clk_rate;
->> -	clk_set_rate(port->se.clk, clk_rate);
->> +	dev_pm_opp_set_rate(uport->dev, clk_rate);
->>   	ser_clk_cfg = SER_CLK_EN;
->>   	ser_clk_cfg |= clk_div << CLK_DIV_SHFT;
->>   
->> @@ -1198,8 +1200,11 @@ static void qcom_geni_serial_pm(struct uart_port *uport,
->>   	if (new_state == UART_PM_STATE_ON && old_state == UART_PM_STATE_OFF)
->>   		geni_se_resources_on(&port->se);
->>   	else if (new_state == UART_PM_STATE_OFF &&
->> -			old_state == UART_PM_STATE_ON)
->> +			old_state == UART_PM_STATE_ON) {
->> +		/* Drop the performance state vote */
->> +		dev_pm_opp_set_rate(uport->dev, 0);
->>   		geni_se_resources_off(&port->se);
->> +	}
->>   }
->>   
->>   static const struct uart_ops qcom_geni_console_pops = {
->> @@ -1318,13 +1323,20 @@ static int qcom_geni_serial_probe(struct platform_device *pdev)
->>   	if (of_property_read_bool(pdev->dev.of_node, "cts-rts-swap"))
->>   		port->cts_rts_swap = true;
->>   
->> +	port->se.opp = dev_pm_opp_set_clkname(&pdev->dev, "se");
->> +	if (IS_ERR(port->se.opp))
->> +		return PTR_ERR(port->se.opp);
->> +	/* OPP table is optional */
->> +	if (!dev_pm_opp_of_add_table(&pdev->dev))
+> It has not been marked for -stable or otherwise requested to be
+> included AFAICS.  Also it depends on other mainline commits that have
+> not been included into 5.6.5.
 > 
-> Even if the OPP table is optional you probably want to fail if the error
-> is anything other than -ENODEV ("'operating-points' property is not found
-> or is invalid data in device node.").
+> Can you please drop it?
 
-sounds valid. I will fix it up and respin. Will just wait a few days to see if
-I get any more reviews and feedback.
-
-> 
->> diff --git a/include/linux/qcom-geni-se.h b/include/linux/qcom-geni-se.h
->> index dd46494..737e713 100644
->> --- a/include/linux/qcom-geni-se.h
->> +++ b/include/linux/qcom-geni-se.h
->> @@ -24,6 +24,7 @@ enum geni_se_protocol_type {
->>   
->>   struct geni_wrapper;
->>   struct clk;
->> +struct opp_table;
->>   
->>   /**
->>    * struct geni_se - GENI Serial Engine
->> @@ -39,6 +40,7 @@ struct geni_se {
->>   	struct device *dev;
->>   	struct geni_wrapper *wrapper;
->>   	struct clk *clk;
->> +	struct opp_table *opp;
-> 
-> This name suggests that the variable holds a single OPP ('struct
-> dev_pm_opp'). Most other code uses the name 'opp_table', which
-> also seems a good candidate here.
-
-Agree, thanks again for taking time to review.
-
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+Will go do so right now, sorry about that.  Sasha, you might want to
+adjust your tools a bit...
