@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0BA0C4CC77
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 13:48:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4602C38A30
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 13:48:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 980C021D6C
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 13:48:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FE452054F
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 13:48:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587217728;
-	bh=ktOL1ydxzqjwgC18kkjSNwKIWzjyXW14+koKA7uZfqk=;
+	s=default; t=1587217734;
+	bh=EKyrqKcM92RTUv/jYokQKHedpF2ezK8XL3yesjlpMl4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ch9Q3Gqm31HD2BNma5V1nFCDjitI3YW4o9EbR9zO8moRiS+vW3+J5QQnBOmU9gqHD
-	 O86Q5NXABdsfhgHMJbns2/dmKADH2PCPSGCKXtiKhGkUjUdHGHsVU2cJuqcvcF4ng0
-	 1NBMTvzyPXwQ44NUkX6NAEInD/NjCFfVwzJzdObE=
+	b=Kgfifbpzgga8+m4cpz1d4Iej3WfHWxFFHYCww3JF+BbcMu9aWO96RmzJiR/DP8xMH
+	 cGgLVAb/RXA8R5Tl5QJ3ZF025fjBFN8Ct3L2vOiqiSs/W9l8w2Ldnqg/+9McpY7vLU
+	 pLxMdCaDPtYxoGFbRTZf7pjG3ck3CzZmb1SCMb/g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726551AbgDRNsr (ORCPT
+        id S1726611AbgDRNsx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 09:48:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55238 "EHLO mail.kernel.org"
+        Sat, 18 Apr 2020 09:48:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55302 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726507AbgDRNsp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 09:48:45 -0400
+        id S1726539AbgDRNsr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 09:48:47 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 28E6022250;
-        Sat, 18 Apr 2020 13:48:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8FBC5221F4;
+        Sat, 18 Apr 2020 13:48:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587217725;
-        bh=ktOL1ydxzqjwgC18kkjSNwKIWzjyXW14+koKA7uZfqk=;
+        s=default; t=1587217727;
+        bh=EKyrqKcM92RTUv/jYokQKHedpF2ezK8XL3yesjlpMl4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jTr6u198wX9KaGosz0zQPFqq1/Q3CHBeJzsOydehTxkJLlig6LXi1UoMlUO1KtAPs
-         AIKzZ0XQz5vIm2QDcuVInoK/xjmoA6uZnr0vGpm2ymgKYfYBqviqnkGxisy7i76VGs
-         zRgoeV+OaugVl6n5SQ/qiN3ZxntiznAwdQnrLde4=
+        b=G7QTssvgFogMpSSMGg1849eH7IpDibn8BTn40YkCDfo6hw4ALLW7ZbI7EZ5P8wLy+
+         vS0tf58nzV17Q8TUWJfEDoQ3ybKtG5djWxofa/fPgO1MboJ54GIVHZj7p6kGcqjJ9u
+         UEUZLIe5hTEknblkZHCY6wRg6inYOBpG2F64Jbyk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Isabel Zhang <isabel.zhang@amd.com>,
-        Alvin Lee <Alvin.Lee2@amd.com>,
-        Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.6 24/73] drm/amd/display: Update stream adjust in dc_stream_adjust_vmin_vmax
-Date:   Sat, 18 Apr 2020 09:47:26 -0400
-Message-Id: <20200418134815.6519-24-sashal@kernel.org>
+Cc:     Grygorii Strashko <grygorii.strashko@ti.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Sasha Levin <sashal@kernel.org>,
+        iommu@lists.linux-foundation.org
+Subject: [PATCH AUTOSEL 5.6 26/73] dma-debug: fix displaying of dma allocation type
+Date:   Sat, 18 Apr 2020 09:47:28 -0400
+Message-Id: <20200418134815.6519-26-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200418134815.6519-1-sashal@kernel.org>
 References: <20200418134815.6519-1-sashal@kernel.org>
@@ -62,41 +60,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Isabel Zhang <isabel.zhang@amd.com>
+From: Grygorii Strashko <grygorii.strashko@ti.com>
 
-[ Upstream commit 346d8a0a3c91888a412c2735d69daa09c00f0203 ]
+[ Upstream commit 9bb50ed7470944238ec8e30a94ef096caf9056ee ]
 
-[Why]
-After v_total_min and max are updated in vrr structure, the changes are
-not reflected in stream adjust. When these values are read from stream
-adjust it does not reflect the actual state of the system.
+The commit 2e05ea5cdc1a ("dma-mapping: implement dma_map_single_attrs using
+dma_map_page_attrs") removed "dma_debug_page" enum, but missed to update
+type2name string table. This causes incorrect displaying of dma allocation
+type.
+Fix it by removing "page" string from type2name string table and switch to
+use named initializers.
 
-[How]
-Set stream adjust values equal to vrr adjust values after vrr adjust
-values are updated.
+Before (dma_alloc_coherent()):
+k3-ringacc 4b800000.ringacc: scather-gather idx 2208 P=d1140000 N=d114 D=d1140000 L=40 DMA_BIDIRECTIONAL dma map error check not applicable
+k3-ringacc 4b800000.ringacc: scather-gather idx 2216 P=d1150000 N=d115 D=d1150000 L=40 DMA_BIDIRECTIONAL dma map error check not applicable
 
-Signed-off-by: Isabel Zhang <isabel.zhang@amd.com>
-Reviewed-by: Alvin Lee <Alvin.Lee2@amd.com>
-Acked-by: Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+After:
+k3-ringacc 4b800000.ringacc: coherent idx 2208 P=d1140000 N=d114 D=d1140000 L=40 DMA_BIDIRECTIONAL dma map error check not applicable
+k3-ringacc 4b800000.ringacc: coherent idx 2216 P=d1150000 N=d115 D=d1150000 L=40 DMA_BIDIRECTIONAL dma map error check not applicable
+
+Fixes: 2e05ea5cdc1a ("dma-mapping: implement dma_map_single_attrs using dma_map_page_attrs")
+Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/dc/core/dc.c | 2 ++
- 1 file changed, 2 insertions(+)
+ kernel/dma/debug.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/core/dc.c b/drivers/gpu/drm/amd/display/dc/core/dc.c
-index 04441dbcba76f..fc25600107050 100644
---- a/drivers/gpu/drm/amd/display/dc/core/dc.c
-+++ b/drivers/gpu/drm/amd/display/dc/core/dc.c
-@@ -283,6 +283,8 @@ bool dc_stream_adjust_vmin_vmax(struct dc *dc,
- 	int i = 0;
- 	bool ret = false;
+diff --git a/kernel/dma/debug.c b/kernel/dma/debug.c
+index 2031ed1ad7fa1..9e1777c81f559 100644
+--- a/kernel/dma/debug.c
++++ b/kernel/dma/debug.c
+@@ -137,9 +137,12 @@ static const char *const maperr2str[] = {
+ 	[MAP_ERR_CHECKED] = "dma map error checked",
+ };
  
-+	stream->adjust = *adjust;
-+
- 	for (i = 0; i < MAX_PIPES; i++) {
- 		struct pipe_ctx *pipe = &dc->current_state->res_ctx.pipe_ctx[i];
+-static const char *type2name[5] = { "single", "page",
+-				    "scather-gather", "coherent",
+-				    "resource" };
++static const char *type2name[] = {
++	[dma_debug_single] = "single",
++	[dma_debug_sg] = "scather-gather",
++	[dma_debug_coherent] = "coherent",
++	[dma_debug_resource] = "resource",
++};
  
+ static const char *dir2name[4] = { "DMA_BIDIRECTIONAL", "DMA_TO_DEVICE",
+ 				   "DMA_FROM_DEVICE", "DMA_NONE" };
 -- 
 2.20.1
 
