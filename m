@@ -1,272 +1,189 @@
 Return-Path: <SRS0=3CHW=6C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: *
-X-Spam-Status: No, score=1.4 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_ABUSE_SURBL,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Level: 
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D8BCC3A5A0
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 17:25:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B923DC3A5A0
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 17:26:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 18F4E20776
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 17:25:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 972E420776
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 17:26:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="ovFlkDng"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="hGVK77kM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727121AbgDRRZa (ORCPT
+        id S1727825AbgDRR0E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 13:25:30 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:46150 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726089AbgDRRZ3 (ORCPT
+        Sat, 18 Apr 2020 13:26:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57952 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726089AbgDRR0D (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 13:25:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1587230726; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=BJK3SzVpQ1si/reyVxcaxpHREQLlO3j66OLfCZHjFz8=;
-        b=ovFlkDngSG/UH+xUeOabMOqk8s3sWsFD3Ajn8VcLM8qAURKHeCHdwIj7x/gJoK4/NpubJI
-        myHC+zj7i0mU/gSasdHYFqsLUsoeJGpV/q0y8PqLe2XgILJUB29h+7/8tnQY/LFH+UYumP
-        YfxXY+P6PmNPBqiZzfguL8HLsdOb72c=
-Date:   Sat, 18 Apr 2020 19:25:15 +0200
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [RESEND PATCH v5 5/5] input: joystick: Add ADC attached joystick
- driver.
-To:     Jonathan Cameron <jic23@kernel.org>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Artur Rojek <contact@artur-rojek.eu>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        linux-input <linux-input@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Message-Id: <32VZ8Q.HWUYPX9U9OKT@crapouillou.net>
-In-Reply-To: <20200418152257.5f8a45bd@archlinux>
-References: <20200417202859.35427-1-contact@artur-rojek.eu>
-        <20200417202859.35427-5-contact@artur-rojek.eu>
-        <CAHp75VfRbnnuUhfyXpu+5dp4TutHSrHus=sX_vG_5F0dX4k0fQ@mail.gmail.com>
-        <UFBY8Q.ES4D59V22INC1@crapouillou.net>
-        <CAHp75VfEAtqucMPdkygfBhojTJoHO5vFk_o0suiyf7i2JCMw9Q@mail.gmail.com>
-        <7CFY8Q.68YMS0V08F992@crapouillou.net>
-        <CAHp75VeVvE8LAO8f=-cwfgL6erFZACGwMnriNRaQnfnHw31wkg@mail.gmail.com>
-        <0HGZ8Q.TO6FK92GVGIN3@crapouillou.net>
-        <CAHp75VdE=xHi8Kn=nZiH+shHvS6O2pc6W=FCs_VwrJq6Bfwx7w@mail.gmail.com>
-        <NXJZ8Q.5YQ6OBV5Y9V8@crapouillou.net> <20200418152257.5f8a45bd@archlinux>
+        Sat, 18 Apr 2020 13:26:03 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E4A7C061A10
+        for <linux-kernel@vger.kernel.org>; Sat, 18 Apr 2020 10:26:03 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id y25so2748649pfn.5
+        for <linux-kernel@vger.kernel.org>; Sat, 18 Apr 2020 10:26:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=from:subject:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=OMU4gc4xJrsz9oC2mAccr/thZgznAgM1yG5wcPECHkg=;
+        b=hGVK77kM162LwI61a0prF7TRDY3sTb+b5wvtpmeTOvBZSjhXTZ4KtYe+4KIMRdV7i7
+         sATr30xlpwsSy5LoneFDQ5Lm4qNwy1XZPOpsYs7AdIdCkSILl9o/eKhblnMatJ/DQ099
+         6O0bWbR+0j5NV+t/XiLqUMrAO+Rybib+2O03c=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:subject:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=OMU4gc4xJrsz9oC2mAccr/thZgznAgM1yG5wcPECHkg=;
+        b=SNMiaHl6H3t1Hwr+cFAqhJOV4Um0ka89bKFwq/Ornt9d79Boz5pOSdUtWn94+OF4H5
+         YEJC+VnG2o9UAGO5FzadjRzLLkUSTRzjRrD55/M4ZzGHmRi1reHhVbz5OZ4j0sU7HONt
+         9GDUivefHpVkL3orVLj9A0BJjLNERnC4He1noUPAyGHjnS+B9qm0VdJ79PoOSMu9xid+
+         gjPhRjkIImQa9OAlF41mHtbuWF75lECFo+/tP+fxNz70gQKZNZroegYIehX0ZZKKZdHb
+         u46+rc09jfoOJPlAwUXmUfJpgZBJEHrScJpS5yaa9ynm7lWfzHK2PwKO71eCQaXpD3wZ
+         u97Q==
+X-Gm-Message-State: AGi0PuYzKt32tGZqD+3B8yx+dN9gPOjjCUqhICUJngcFIQ2lPklHmbcO
+        YDEuv8HjAjLrBdM3A8IYqy00MQ==
+X-Google-Smtp-Source: APiQypI6VuVoh62mvFQq+xqE0yByeQ09p8pjSnT53bNRHnXhxn5ZoHPk2hUCiKeRmM+zA4cvz4Ls8Q==
+X-Received: by 2002:a62:d086:: with SMTP id p128mr9463319pfg.241.1587230762967;
+        Sat, 18 Apr 2020 10:26:02 -0700 (PDT)
+Received: from [10.136.13.65] ([192.19.228.250])
+        by smtp.gmail.com with ESMTPSA id u13sm9211650pjb.45.2020.04.18.10.25.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 18 Apr 2020 10:26:02 -0700 (PDT)
+From:   Scott Branden <scott.branden@broadcom.com>
+Subject: Re: [PATCH v2 6/7] misc: bcm-vk: add Broadcom VK driver
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     Luis Chamberlain <mcgrof@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        David Brown <david.brown@linaro.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Shuah Khan <shuah@kernel.org>, bjorn.andersson@linaro.org,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org,
+        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
+        Olof Johansson <olof@lixom.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Colin Ian King <colin.king@canonical.com>,
+        Kees Cook <keescook@chromium.org>,
+        Takashi Iwai <tiwai@suse.de>, linux-kselftest@vger.kernel.org,
+        Andy Gross <agross@kernel.org>,
+        Desmond Yan <desmond.yan@broadcom.com>,
+        James Hu <james.hu@broadcom.com>
+References: <20200220004825.23372-1-scott.branden@broadcom.com>
+ <20200220004825.23372-7-scott.branden@broadcom.com>
+ <20200220104321.GX7838@kadam>
+ <63c9dcda-7a31-78a7-1d11-9d9af38add46@broadcom.com>
+ <20200418114516.GE12862@kadam> <20200418114725.GF12862@kadam>
+Message-ID: <c781505e-5bbd-a259-4c2d-4481db3fabde@broadcom.com>
+Date:   Sat, 18 Apr 2020 10:25:58 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200418114725.GF12862@kadam>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jonathan,
+Thanks Dan, I'll send out new version as soon as my other patch (you had 
+requested for test_fx mutex cleanups)
+https://lore.kernel.org/linux-arm-msm/20200415002517.4328-1-scott.branden@broadcom.com/
 
-Le sam. 18 avril 2020 =E0 15:22, Jonathan Cameron <jic23@kernel.org> a=20
-=E9crit :
-> On Sat, 18 Apr 2020 15:24:58 +0200
-> Paul Cercueil <paul@crapouillou.net> wrote:
->=20
->>  Le sam. 18 avril 2020 =E0 15:42, Andy Shevchenko
->>  <andy.shevchenko@gmail.com> a =E9crit :
->>  > On Sat, Apr 18, 2020 at 3:10 PM Paul Cercueil=20
->> <paul@crapouillou.net>
->>  > wrote:
->>  >>  Le sam. 18 avril 2020 =E0 14:57, Andy Shevchenko
->>  >>  <andy.shevchenko@gmail.com> a =E9crit :
->>  >>  > On Sat, Apr 18, 2020 at 1:48 AM Paul Cercueil
->>  >> <paul@crapouillou.net>
->>  >>  > wrote:
->>  >>  >>  Le sam. 18 avril 2020 =E0 0:49, Andy Shevchenko
->>  >>  >>  <andy.shevchenko@gmail.com> a =E9crit :
->>  >>  >>  > On Sat, Apr 18, 2020 at 12:24 AM Paul Cercueil
->>  >>  >> <paul@crapouillou.net>
->>  >>  >>  > wrote:
->>  >>  >>  >>  Le sam. 18 avril 2020 =E0 0:10, Andy Shevchenko
->>  >>  >>  >>  <andy.shevchenko@gmail.com> a =E9crit :
->>  >>  >>  >>  > On Fri, Apr 17, 2020 at 11:21 PM Artur Rojek
->>  >>  >>  >> <contact@artur-rojek.eu>
->>  >>  >>  >>  > wrote:
->>  >
->>  > ...
->>  >
->>  >>  >>  >>  >>  +#include <linux/of.h>
->>  >>  >>  >>  >
->>  >>  >>  >>  > Do you really need this? (See below as well)
->>  >>  >>  >
->>  >>  >>  >>  >>  +static const struct of_device_id
->>  >> adc_joystick_of_match[] =3D
->>  >>  >> {
->>  >>  >>  >>  >>  +       { .compatible =3D "adc-joystick", },
->>  >>  >>  >>  >>  +       { },
->>  >>  >>  >>  >>  +};
->>  >>  >>  >>  >>  +MODULE_DEVICE_TABLE(of, adc_joystick_of_match);
->>  >>  >>  >>  >>  +
->>  >>  >>  >>  >>  +static struct platform_driver adc_joystick_driver=20
->> =3D {
->>  >>  >>  >>  >>  +       .driver =3D {
->>  >>  >>  >>  >>  +               .name =3D "adc-joystick",
->>  >>  >>  >>  >
->>  >>  >>  >>  >>  +               .of_match_table =3D
->>  >>  >>  >>  >> of_match_ptr(adc_joystick_of_match),
->>  >>  >>  >>  >
->>  >>  >>  >>  > Drop this a bit harmful of_match_ptr() macro. It=20
->> should go
->>  >>  >> with
->>  >>  >>  >> ugly
->>  >>  >>  >>  > #ifdeffery. Here you simple introduced a compiler=20
->> warning.
->>  >>  >>  >>
->>  >>  >>  >>  I assume you mean #ifdef around the of_device_id +=20
->> module
->>  >> table
->>  >>  >>  >> macro?
->>  >>  >>  >
->>  >>  >>  > Yes.
->>  >>  >>  >
->>  >>  >>  >>  > On top of that, you are using device property API, OF=20
->> use
->>  >> in
->>  >>  >> this
->>  >>  >>  >> case
->>  >>  >>  >>  > is contradictory (at lest to some extend).
->>  >>  >>  >>
->>  >>  >>  >>  I don't see why. The fact that the driver can work when
->>  >> probed
->>  >>  >> from
->>  >>  >>  >>  platform code
->>  >>  >>  >
->>  >>  >>  > Ha-ha, tell me how. I would like to be very surprised.
->>  >>  >>
->>  >>  >>  iio_map_array_register(),
->>  >>  >>  pinctrl_register_mappings(),
->>  >>  >>  platform_add_devices(),
->>  >>  >>
->>  >>  >>  you're welcome.
->>  >>  >
->>  >>  > I think above has no relation to what I'm talking about.
->>  >>
->>  >>  Yes it does. It allows you to map the IIO channels, set the=20
->> pinctrl
->>  >>  configurations and register a device from platform code instead=20
->> of
->>  >>  devicetree.
->>  >
->>  > I'm not talking about other drivers, I'm talking about this=20
->> driver and
->>  > how it will be instantiated. Above, according to the code, can't=20
->> be
->>  > comprehensive to fulfill this.
->>=20
->>  This is how the platform devices were instanciated on JZ4740 before=20
->> we
->>  switched everything to devicetree.
->>=20
->>  >>  > How *this* driver can work as a platform instantiated one?
->>  >>  > We seems have a conceptual misunderstanding here.
->>  >>  >
->>  >>  > For example, how can probe of this driver not fail, if it is=20
->> not
->>  >>  > backed by a DT/ACPI properties?
->>  >>
->>  >>  platform_device_add_properties().
->>  >
->>  > Yes, I waited for this. And seems you don't understand the (scope=20
->> of)
->>  > API, you are trying to insist this driver can be used as a=20
->> platform
->>  > one.
->>  > Sorry, I must to disappoint you, it can't. Above interface is=20
->> created
->>  > solely for quirks to support (broken) DT/ACPI tables. It's not
->>  > supposed to be used as a main source for the device properties.
->>=20
->>  The fact that it was designed for something else doesn't mean it=20
->> can't
->>  be used.
->>=20
->>  Anyway, this discussion is pointless. I don't think anybody would=20
->> want
->>  to do that.
->>=20
->>  >>  >>  >>  doesn't mean that it shouldn't have a table to probe
->>  >>  >>  >>  from devicetree.
->>  >>  >>  >
->>  >>  >>  > I didn't get what you are talking about here. The idea of
->>  >>  >> _unified_
->>  >>  >>  > device property API is to get rid of OF-centric code in
->>  >> favour of
->>  >>  >> more
->>  >>  >>  > generic approach. Mixing those two can be done only in
->>  >> specific
->>  >>  >> cases
->>  >>  >>  > (here is not the one).
->>  >>  >>
->>  >>  >>  And how are we mixing those two here? The only OF-centric=20
->> thing
->>  >>  >> here is
->>  >>  >>  the device table, which is required if we want the driver to
->>  >> probe
->>  >>  >> from
->>  >>  >>  devicetree.
->>  >>  >
->>  >>  > Table is fine(JFYI the types and sections are defined outside=20
->> of
->>  >> OF
->>  >>  > stuff, though being [heavily] used by it) , API=20
->> (of_match_ptr()
->>  >> macro
->>  >>  > use) is not.
->>  >>
->>  >>  Sorry, but that's just stupid. Please have a look at how
->>  >> of_match_ptr()
->>  >>  macro is defined in <linux/of.h>.
->>  >
->>  > Call it whatever you want, but above code is broken.
->>=20
->>  of_match_ptr() is basically defined like this:
->>=20
->>  #ifdef CONFIG_OF
->>  #define of_match_ptr(x) (x)
->>  #else
->>  #define of_match_ptr(x) NULL
->>  #endif
->>=20
->>  So please, enlighten me, tell me what is so wrong about what's being
->>  done here.
->>=20
->>  > It needs either of:
->>  > - ugly ifdeffery
->>  > - dropping of_match_ptr()
->>  > - explicit dependence to OF
->>  >
->>  > My choice is second one. Because it makes code better and allows=20
->> also
->>  > ACPI to use this driver (usually) without changes.
->>=20
->>  And how is unconditionally compiling the of_match_table make it
->>  magically probe from ACPI, without a acpi_match_table?
->>=20
->>  -Paul
->=20
-> Look up PRP0001 ACPI ID.  Magic trick ;)
->=20
-> https://www.kernel.org/doc/html/latest/firmware-guide/acpi/enumeration.ht=
-ml?highlight=3DPRP0001
->=20
-> It allows you to define an ACPI device in DSDT that is instantiated
-> from what is effectively the DT binding including the id table.
+hits the linux-next tree so this patch series will apply cleanly to 
+linux-next.
 
-So what you're saying, is that the OF table should be present, even=20
-though CONFIG_OF is not set, just in case it is probed from ACPI?
 
--Paul
 
+
+On 2020-04-18 4:47 a.m., Dan Carpenter wrote:
+> On Sat, Apr 18, 2020 at 02:45:16PM +0300, Dan Carpenter wrote:
+>> On Fri, Apr 17, 2020 at 02:49:11PM -0700, Scott Branden wrote:
+>>>>> +static int bcm_vk_dma_alloc(struct device *dev,
+>>>>> +			    struct bcm_vk_dma *dma,
+>>>>> +			    int direction,
+>>>>> +			    struct _vk_data *vkdata)
+>>>>> +{
+>>>>> +	dma_addr_t addr, sg_addr;
+>>>>> +	int err;
+>>>>> +	int i;
+>>>>> +	int offset;
+>>>>> +	uint32_t size;
+>>>>> +	uint32_t remaining_size;
+>>>>> +	uint32_t transfer_size;
+>>>>> +	uint64_t data;
+>>>>> +	unsigned long first, last;
+>>>>> +	struct _vk_data *sgdata;
+>>>>> +
+>>>>> +	/* Get 64-bit user address */
+>>>>> +	data = get_unaligned(&(vkdata->address));
+>>>> Extra parens.
+>>> removed
+>>>>> +
+>>>>> +	/* offset into first page */
+>>>>> +	offset = offset_in_page(data);
+>>>>> +
+>>>>> +	/* Calculate number of pages */
+>>>>> +	first = (data & PAGE_MASK) >> PAGE_SHIFT;
+>>>>> +	last  = ((data + vkdata->size - 1) & PAGE_MASK) >> PAGE_SHIFT;
+>>>>> +	dma->nr_pages = last - first + 1;
+>>>>> +
+>>>>> +	/* Allocate DMA pages */
+>>>>> +	dma->pages = kmalloc_array(dma->nr_pages,
+>>>>> +				   sizeof(struct page *),
+>>>>> +				   GFP_KERNEL);
+>>>>> +	if (dma->pages == NULL)
+>>>>> +		return -ENOMEM;
+>>>>> +
+>>>>> +	dev_dbg(dev, "Alloc DMA Pages [0x%llx+0x%x => %d pages]\n",
+>>>>> +		data, vkdata->size, dma->nr_pages);
+>>>>> +
+>>>>> +	dma->direction = direction;
+>>>>> +
+>>>>> +	/* Get user pages into memory */
+>>>>> +	err = get_user_pages_fast(data & PAGE_MASK,
+>>>>> +				  dma->nr_pages,
+>>>>> +				  direction == DMA_FROM_DEVICE,
+>>>>> +				  dma->pages);
+>>>>> +	if (err != dma->nr_pages) {
+>>>>> +		dma->nr_pages = (err >= 0) ? err : 0;
+>>>>> +		dev_err(dev, "get_user_pages_fast, err=%d [%d]\n",
+>>>>> +			err, dma->nr_pages);
+>>>>> +		return err < 0 ? err : -EINVAL;
+>>>>> +	}
+>>>>> +
+>>>>> +	/* Max size of sg list is 1 per mapped page + fields at start */
+>>>>> +	dma->sglen = (dma->nr_pages * sizeof(*sgdata)) +
+>>>>> +		     (sizeof(uint32_t) * SGLIST_VKDATA_START);
+>>>>> +
+>>>>> +	/* Allocate sglist */
+>>>>> +	dma->sglist = dma_alloc_coherent(dev,
+>>>>> +					 dma->sglen,
+>>>>> +					 &dma->handle,
+>>>>> +					 GFP_KERNEL);
+>>>> 	dma->sglist = dma_alloc_coherent(dev, dma->sglen, &dma->handle,
+>>>> 					 GFP_KERNEL);
+>>> done
+>>>>
+>>>>> +	if (!dma->sglist)
+>>>>> +		return -ENOMEM;
+>>>> No cleanup?
+>>> what needs to be cleaned up?
+>> dma->pages should be freed probably?  And a put_user_pages_fast()?
+> Sorry put_user_pages_fast() isn't a function.  My bad.
+>
+> regards,
+> dan carpenter
 
