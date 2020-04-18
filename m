@@ -6,35 +6,35 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 751ABC2BA19
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 06:49:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD14FC38A2B
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 06:49:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5689521D91
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 06:49:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0D5B21D91
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 06:49:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726460AbgDRGtG (ORCPT
+        id S1726444AbgDRGtF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 02:49:06 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:54156 "EHLO huawei.com"
+        Sat, 18 Apr 2020 02:49:05 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:54088 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725970AbgDRGsV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 02:48:21 -0400
+        id S1725884AbgDRGsW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 02:48:22 -0400
 Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 0ABA9546C26ADB52C2C9;
-        Sat, 18 Apr 2020 14:48:20 +0800 (CST)
+        by Forcepoint Email with ESMTP id E93ECC9F5F7DFA70A26B;
+        Sat, 18 Apr 2020 14:48:19 +0800 (CST)
 Received: from localhost.localdomain (10.69.192.56) by
  DGGEMS402-HUB.china.huawei.com (10.3.19.202) with Microsoft SMTP Server id
- 14.3.487.0; Sat, 18 Apr 2020 14:48:11 +0800
+ 14.3.487.0; Sat, 18 Apr 2020 14:48:09 +0800
 From:   Huazhong Tan <tanhuazhong@huawei.com>
 To:     <davem@davemloft.net>
 CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
         <linuxarm@huawei.com>, <kuba@kernel.org>,
-        Yufeng Mo <moyufeng@huawei.com>,
+        Jian Shen <shenjian15@huawei.com>,
         Huazhong Tan <tanhuazhong@huawei.com>
-Subject: [PATCH net-next 09/10] net: hns3: add support of dumping MAC reg in debugfs
-Date:   Sat, 18 Apr 2020 14:47:08 +0800
-Message-ID: <1587192429-11463-10-git-send-email-tanhuazhong@huawei.com>
+Subject: [PATCH net-next 01/10] net: hns3: split out hclge_fd_check_ether_tuple()
+Date:   Sat, 18 Apr 2020 14:47:00 +0800
+Message-ID: <1587192429-11463-2-git-send-email-tanhuazhong@huawei.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1587192429-11463-1-git-send-email-tanhuazhong@huawei.com>
 References: <1587192429-11463-1-git-send-email-tanhuazhong@huawei.com>
@@ -47,162 +47,368 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yufeng Mo <moyufeng@huawei.com>
+From: Jian Shen <shenjian15@huawei.com>
 
-This patch adds support of dumping MAC reg in debugfs,
-which will be helpful for debugging.
+For readability and maintainability, this patch separates the
+handling part of each flow type in hclge_fd_check_ether_tuple()
+into standalone functions.
 
-Signed-off-by: Yufeng Mo <moyufeng@huawei.com>
+Signed-off-by: Jian Shen <shenjian15@huawei.com>
 Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
 ---
- drivers/net/ethernet/hisilicon/hns3/hns3_debugfs.c |   2 +-
- .../ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.c | 113 +++++++++++++++++++++
- 2 files changed, 114 insertions(+), 1 deletion(-)
+ .../ethernet/hisilicon/hns3/hns3pf/hclge_main.c    | 285 +++++++++++++--------
+ 1 file changed, 173 insertions(+), 112 deletions(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_debugfs.c b/drivers/net/ethernet/hisilicon/hns3/hns3_debugfs.c
-index e1d8809..c934f32 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3_debugfs.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3_debugfs.c
-@@ -270,7 +270,7 @@ static void hns3_dbg_help(struct hnae3_handle *h)
- 		" [igu egu <port_id>] [rpu <tc_queue_num>]",
- 		HNS3_DBG_BUF_LEN - strlen(printf_buf) - 1);
- 	strncat(printf_buf + strlen(printf_buf),
--		" [rtc] [ppp] [rcb] [tqp <queue_num>]]\n",
-+		" [rtc] [ppp] [rcb] [tqp <queue_num>] [mac]]\n",
- 		HNS3_DBG_BUF_LEN - strlen(printf_buf) - 1);
- 	dev_info(&h->pdev->dev, "%s", printf_buf);
- 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.c
-index cfc9300..66c1ad3 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.c
-@@ -173,6 +173,114 @@ static void hclge_dbg_dump_reg_common(struct hclge_dev *hdev,
- 	kfree(desc_src);
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+index a758f9a..6381c0f 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+@@ -5244,157 +5244,158 @@ static int hclge_config_action(struct hclge_dev *hdev, u8 stage,
+ 	return hclge_fd_ad_config(hdev, stage, ad_data.ad_id, &ad_data);
  }
  
-+static void hclge_dbg_dump_mac_enable_status(struct hclge_dev *hdev)
-+{
-+	struct hclge_config_mac_mode_cmd *req;
-+	struct hclge_desc desc;
-+	u32 loop_en;
-+	int ret;
-+
-+	hclge_cmd_setup_basic_desc(&desc, HCLGE_OPC_CONFIG_MAC_MODE, true);
-+
-+	ret = hclge_cmd_send(&hdev->hw, &desc, 1);
-+	if (ret) {
-+		dev_err(&hdev->pdev->dev,
-+			"failed to dump mac enable status, ret = %d\n", ret);
-+		return;
-+	}
-+
-+	req = (struct hclge_config_mac_mode_cmd *)desc.data;
-+	loop_en = le32_to_cpu(req->txrx_pad_fcs_loop_en);
-+
-+	dev_info(&hdev->pdev->dev, "config_mac_trans_en: %#x\n",
-+		 hnae3_get_bit(loop_en, HCLGE_MAC_TX_EN_B));
-+	dev_info(&hdev->pdev->dev, "config_mac_rcv_en: %#x\n",
-+		 hnae3_get_bit(loop_en, HCLGE_MAC_RX_EN_B));
-+	dev_info(&hdev->pdev->dev, "config_pad_trans_en: %#x\n",
-+		 hnae3_get_bit(loop_en, HCLGE_MAC_PAD_TX_B));
-+	dev_info(&hdev->pdev->dev, "config_pad_rcv_en: %#x\n",
-+		 hnae3_get_bit(loop_en, HCLGE_MAC_PAD_RX_B));
-+	dev_info(&hdev->pdev->dev, "config_1588_trans_en: %#x\n",
-+		 hnae3_get_bit(loop_en, HCLGE_MAC_1588_TX_B));
-+	dev_info(&hdev->pdev->dev, "config_1588_rcv_en: %#x\n",
-+		 hnae3_get_bit(loop_en, HCLGE_MAC_1588_RX_B));
-+	dev_info(&hdev->pdev->dev, "config_mac_app_loop_en: %#x\n",
-+		 hnae3_get_bit(loop_en, HCLGE_MAC_APP_LP_B));
-+	dev_info(&hdev->pdev->dev, "config_mac_line_loop_en: %#x\n",
-+		 hnae3_get_bit(loop_en, HCLGE_MAC_LINE_LP_B));
-+	dev_info(&hdev->pdev->dev, "config_mac_fcs_tx_en: %#x\n",
-+		 hnae3_get_bit(loop_en, HCLGE_MAC_FCS_TX_B));
-+	dev_info(&hdev->pdev->dev, "config_mac_rx_oversize_truncate_en: %#x\n",
-+		 hnae3_get_bit(loop_en, HCLGE_MAC_RX_OVERSIZE_TRUNCATE_B));
-+	dev_info(&hdev->pdev->dev, "config_mac_rx_fcs_strip_en: %#x\n",
-+		 hnae3_get_bit(loop_en, HCLGE_MAC_RX_FCS_STRIP_B));
-+	dev_info(&hdev->pdev->dev, "config_mac_rx_fcs_en: %#x\n",
-+		 hnae3_get_bit(loop_en, HCLGE_MAC_RX_FCS_B));
-+	dev_info(&hdev->pdev->dev, "config_mac_tx_under_min_err_en: %#x\n",
-+		 hnae3_get_bit(loop_en, HCLGE_MAC_TX_UNDER_MIN_ERR_B));
-+	dev_info(&hdev->pdev->dev, "config_mac_tx_oversize_truncate_en: %#x\n",
-+		 hnae3_get_bit(loop_en, HCLGE_MAC_TX_OVERSIZE_TRUNCATE_B));
-+}
-+
-+static void hclge_dbg_dump_mac_frame_size(struct hclge_dev *hdev)
-+{
-+	struct hclge_config_max_frm_size_cmd *req;
-+	struct hclge_desc desc;
-+	int ret;
-+
-+	hclge_cmd_setup_basic_desc(&desc, HCLGE_OPC_CONFIG_MAX_FRM_SIZE, true);
-+
-+	ret = hclge_cmd_send(&hdev->hw, &desc, 1);
-+	if (ret) {
-+		dev_err(&hdev->pdev->dev,
-+			"failed to dump mac frame size, ret = %d\n", ret);
-+		return;
-+	}
-+
-+	req = (struct hclge_config_max_frm_size_cmd *)desc.data;
-+
-+	dev_info(&hdev->pdev->dev, "max_frame_size: %u\n",
-+		 le16_to_cpu(req->max_frm_size));
-+	dev_info(&hdev->pdev->dev, "min_frame_size: %u\n", req->min_frm_size);
-+}
-+
-+static void hclge_dbg_dump_mac_speed_duplex(struct hclge_dev *hdev)
-+{
-+#define HCLGE_MAC_SPEED_SHIFT	0
-+#define HCLGE_MAC_SPEED_MASK	GENMASK(5, 0)
-+#define HCLGE_MAC_DUPLEX_SHIFT	7
-+
-+	struct hclge_config_mac_speed_dup_cmd *req;
-+	struct hclge_desc desc;
-+	int ret;
-+
-+	hclge_cmd_setup_basic_desc(&desc, HCLGE_OPC_CONFIG_SPEED_DUP, true);
-+
-+	ret = hclge_cmd_send(&hdev->hw, &desc, 1);
-+	if (ret) {
-+		dev_err(&hdev->pdev->dev,
-+			"failed to dump mac speed duplex, ret = %d\n", ret);
-+		return;
-+	}
-+
-+	req = (struct hclge_config_mac_speed_dup_cmd *)desc.data;
-+
-+	dev_info(&hdev->pdev->dev, "speed: %#lx\n",
-+		 hnae3_get_field(req->speed_dup, HCLGE_MAC_SPEED_MASK,
-+				 HCLGE_MAC_SPEED_SHIFT));
-+	dev_info(&hdev->pdev->dev, "duplex: %#x\n",
-+		 hnae3_get_bit(req->speed_dup, HCLGE_MAC_DUPLEX_SHIFT));
-+}
-+
-+static void hclge_dbg_dump_mac(struct hclge_dev *hdev)
-+{
-+	hclge_dbg_dump_mac_enable_status(hdev);
-+
-+	hclge_dbg_dump_mac_frame_size(hdev);
-+
-+	hclge_dbg_dump_mac_speed_duplex(hdev);
-+}
-+
- static void hclge_dbg_dump_dcb(struct hclge_dev *hdev, const char *cmd_buf)
+-static int hclge_fd_check_spec(struct hclge_dev *hdev,
+-			       struct ethtool_rx_flow_spec *fs, u32 *unused)
++static int hclge_fd_check_tcpip4_tuple(struct ethtool_tcpip4_spec *spec,
++				       u32 *unused_tuple)
  {
- 	struct device *dev = &hdev->pdev->dev;
-@@ -304,6 +412,11 @@ static void hclge_dbg_dump_reg_cmd(struct hclge_dev *hdev, const char *cmd_buf)
- 		}
+-	struct ethtool_tcpip4_spec *tcp_ip4_spec;
+-	struct ethtool_usrip4_spec *usr_ip4_spec;
+-	struct ethtool_tcpip6_spec *tcp_ip6_spec;
+-	struct ethtool_usrip6_spec *usr_ip6_spec;
+-	struct ethhdr *ether_spec;
+-
+-	if (fs->location >= hdev->fd_cfg.rule_num[HCLGE_FD_STAGE_1])
++	if (!spec || !unused_tuple)
+ 		return -EINVAL;
+ 
+-	if (!(fs->flow_type & hdev->fd_cfg.proto_support))
+-		return -EOPNOTSUPP;
+-
+-	if ((fs->flow_type & FLOW_EXT) &&
+-	    (fs->h_ext.data[0] != 0 || fs->h_ext.data[1] != 0)) {
+-		dev_err(&hdev->pdev->dev, "user-def bytes are not supported\n");
+-		return -EOPNOTSUPP;
+-	}
++	*unused_tuple |= BIT(INNER_SRC_MAC) | BIT(INNER_DST_MAC);
+ 
+-	switch (fs->flow_type & ~(FLOW_EXT | FLOW_MAC_EXT)) {
+-	case SCTP_V4_FLOW:
+-	case TCP_V4_FLOW:
+-	case UDP_V4_FLOW:
+-		tcp_ip4_spec = &fs->h_u.tcp_ip4_spec;
+-		*unused |= BIT(INNER_SRC_MAC) | BIT(INNER_DST_MAC);
++	if (!spec->ip4src)
++		*unused_tuple |= BIT(INNER_SRC_IP);
+ 
+-		if (!tcp_ip4_spec->ip4src)
+-			*unused |= BIT(INNER_SRC_IP);
++	if (!spec->ip4dst)
++		*unused_tuple |= BIT(INNER_DST_IP);
+ 
+-		if (!tcp_ip4_spec->ip4dst)
+-			*unused |= BIT(INNER_DST_IP);
++	if (!spec->psrc)
++		*unused_tuple |= BIT(INNER_SRC_PORT);
+ 
+-		if (!tcp_ip4_spec->psrc)
+-			*unused |= BIT(INNER_SRC_PORT);
++	if (!spec->pdst)
++		*unused_tuple |= BIT(INNER_DST_PORT);
+ 
+-		if (!tcp_ip4_spec->pdst)
+-			*unused |= BIT(INNER_DST_PORT);
++	if (!spec->tos)
++		*unused_tuple |= BIT(INNER_IP_TOS);
+ 
+-		if (!tcp_ip4_spec->tos)
+-			*unused |= BIT(INNER_IP_TOS);
++	return 0;
++}
+ 
+-		break;
+-	case IP_USER_FLOW:
+-		usr_ip4_spec = &fs->h_u.usr_ip4_spec;
+-		*unused |= BIT(INNER_SRC_MAC) | BIT(INNER_DST_MAC) |
+-			BIT(INNER_SRC_PORT) | BIT(INNER_DST_PORT);
++static int hclge_fd_check_ip4_tuple(struct ethtool_usrip4_spec *spec,
++				    u32 *unused_tuple)
++{
++	if (!spec || !unused_tuple)
++		return -EINVAL;
+ 
+-		if (!usr_ip4_spec->ip4src)
+-			*unused |= BIT(INNER_SRC_IP);
++	*unused_tuple |= BIT(INNER_SRC_MAC) | BIT(INNER_DST_MAC) |
++		BIT(INNER_SRC_PORT) | BIT(INNER_DST_PORT);
+ 
+-		if (!usr_ip4_spec->ip4dst)
+-			*unused |= BIT(INNER_DST_IP);
++	if (!spec->ip4src)
++		*unused_tuple |= BIT(INNER_SRC_IP);
+ 
+-		if (!usr_ip4_spec->tos)
+-			*unused |= BIT(INNER_IP_TOS);
++	if (!spec->ip4dst)
++		*unused_tuple |= BIT(INNER_DST_IP);
+ 
+-		if (!usr_ip4_spec->proto)
+-			*unused |= BIT(INNER_IP_PROTO);
++	if (!spec->tos)
++		*unused_tuple |= BIT(INNER_IP_TOS);
+ 
+-		if (usr_ip4_spec->l4_4_bytes)
+-			return -EOPNOTSUPP;
++	if (!spec->proto)
++		*unused_tuple |= BIT(INNER_IP_PROTO);
+ 
+-		if (usr_ip4_spec->ip_ver != ETH_RX_NFC_IP4)
+-			return -EOPNOTSUPP;
++	if (spec->l4_4_bytes)
++		return -EOPNOTSUPP;
+ 
+-		break;
+-	case SCTP_V6_FLOW:
+-	case TCP_V6_FLOW:
+-	case UDP_V6_FLOW:
+-		tcp_ip6_spec = &fs->h_u.tcp_ip6_spec;
+-		*unused |= BIT(INNER_SRC_MAC) | BIT(INNER_DST_MAC) |
+-			BIT(INNER_IP_TOS);
++	if (spec->ip_ver != ETH_RX_NFC_IP4)
++		return -EOPNOTSUPP;
+ 
+-		/* check whether src/dst ip address used */
+-		if (!tcp_ip6_spec->ip6src[0] && !tcp_ip6_spec->ip6src[1] &&
+-		    !tcp_ip6_spec->ip6src[2] && !tcp_ip6_spec->ip6src[3])
+-			*unused |= BIT(INNER_SRC_IP);
++	return 0;
++}
+ 
+-		if (!tcp_ip6_spec->ip6dst[0] && !tcp_ip6_spec->ip6dst[1] &&
+-		    !tcp_ip6_spec->ip6dst[2] && !tcp_ip6_spec->ip6dst[3])
+-			*unused |= BIT(INNER_DST_IP);
++static int hclge_fd_check_tcpip6_tuple(struct ethtool_tcpip6_spec *spec,
++				       u32 *unused_tuple)
++{
++	if (!spec || !unused_tuple)
++		return -EINVAL;
+ 
+-		if (!tcp_ip6_spec->psrc)
+-			*unused |= BIT(INNER_SRC_PORT);
++	*unused_tuple |= BIT(INNER_SRC_MAC) | BIT(INNER_DST_MAC) |
++		BIT(INNER_IP_TOS);
+ 
+-		if (!tcp_ip6_spec->pdst)
+-			*unused |= BIT(INNER_DST_PORT);
++	/* check whether src/dst ip address used */
++	if (!spec->ip6src[0] && !spec->ip6src[1] &&
++	    !spec->ip6src[2] && !spec->ip6src[3])
++		*unused_tuple |= BIT(INNER_SRC_IP);
+ 
+-		if (tcp_ip6_spec->tclass)
+-			return -EOPNOTSUPP;
++	if (!spec->ip6dst[0] && !spec->ip6dst[1] &&
++	    !spec->ip6dst[2] && !spec->ip6dst[3])
++		*unused_tuple |= BIT(INNER_DST_IP);
+ 
+-		break;
+-	case IPV6_USER_FLOW:
+-		usr_ip6_spec = &fs->h_u.usr_ip6_spec;
+-		*unused |= BIT(INNER_SRC_MAC) | BIT(INNER_DST_MAC) |
+-			BIT(INNER_IP_TOS) | BIT(INNER_SRC_PORT) |
+-			BIT(INNER_DST_PORT);
++	if (!spec->psrc)
++		*unused_tuple |= BIT(INNER_SRC_PORT);
+ 
+-		/* check whether src/dst ip address used */
+-		if (!usr_ip6_spec->ip6src[0] && !usr_ip6_spec->ip6src[1] &&
+-		    !usr_ip6_spec->ip6src[2] && !usr_ip6_spec->ip6src[3])
+-			*unused |= BIT(INNER_SRC_IP);
++	if (!spec->pdst)
++		*unused_tuple |= BIT(INNER_DST_PORT);
+ 
+-		if (!usr_ip6_spec->ip6dst[0] && !usr_ip6_spec->ip6dst[1] &&
+-		    !usr_ip6_spec->ip6dst[2] && !usr_ip6_spec->ip6dst[3])
+-			*unused |= BIT(INNER_DST_IP);
++	if (spec->tclass)
++		return -EOPNOTSUPP;
+ 
+-		if (!usr_ip6_spec->l4_proto)
+-			*unused |= BIT(INNER_IP_PROTO);
++	return 0;
++}
+ 
+-		if (usr_ip6_spec->tclass)
+-			return -EOPNOTSUPP;
++static int hclge_fd_check_ip6_tuple(struct ethtool_usrip6_spec *spec,
++				    u32 *unused_tuple)
++{
++	if (!spec || !unused_tuple)
++		return -EINVAL;
+ 
+-		if (usr_ip6_spec->l4_4_bytes)
+-			return -EOPNOTSUPP;
++	*unused_tuple |= BIT(INNER_SRC_MAC) | BIT(INNER_DST_MAC) |
++		BIT(INNER_IP_TOS) | BIT(INNER_SRC_PORT) | BIT(INNER_DST_PORT);
+ 
+-		break;
+-	case ETHER_FLOW:
+-		ether_spec = &fs->h_u.ether_spec;
+-		*unused |= BIT(INNER_SRC_IP) | BIT(INNER_DST_IP) |
+-			BIT(INNER_SRC_PORT) | BIT(INNER_DST_PORT) |
+-			BIT(INNER_IP_TOS) | BIT(INNER_IP_PROTO);
++	/* check whether src/dst ip address used */
++	if (!spec->ip6src[0] && !spec->ip6src[1] &&
++	    !spec->ip6src[2] && !spec->ip6src[3])
++		*unused_tuple |= BIT(INNER_SRC_IP);
+ 
+-		if (is_zero_ether_addr(ether_spec->h_source))
+-			*unused |= BIT(INNER_SRC_MAC);
++	if (!spec->ip6dst[0] && !spec->ip6dst[1] &&
++	    !spec->ip6dst[2] && !spec->ip6dst[3])
++		*unused_tuple |= BIT(INNER_DST_IP);
+ 
+-		if (is_zero_ether_addr(ether_spec->h_dest))
+-			*unused |= BIT(INNER_DST_MAC);
++	if (!spec->l4_proto)
++		*unused_tuple |= BIT(INNER_IP_PROTO);
+ 
+-		if (!ether_spec->h_proto)
+-			*unused |= BIT(INNER_ETH_TYPE);
++	if (spec->tclass)
++		return -EOPNOTSUPP;
+ 
+-		break;
+-	default:
++	if (spec->l4_4_bytes)
+ 		return -EOPNOTSUPP;
+-	}
+ 
++	return 0;
++}
++
++static int hclge_fd_check_ether_tuple(struct ethhdr *spec, u32 *unused_tuple)
++{
++	if (!spec || !unused_tuple)
++		return -EINVAL;
++
++	*unused_tuple |= BIT(INNER_SRC_IP) | BIT(INNER_DST_IP) |
++		BIT(INNER_SRC_PORT) | BIT(INNER_DST_PORT) |
++		BIT(INNER_IP_TOS) | BIT(INNER_IP_PROTO);
++
++	if (is_zero_ether_addr(spec->h_source))
++		*unused_tuple |= BIT(INNER_SRC_MAC);
++
++	if (is_zero_ether_addr(spec->h_dest))
++		*unused_tuple |= BIT(INNER_DST_MAC);
++
++	if (!spec->h_proto)
++		*unused_tuple |= BIT(INNER_ETH_TYPE);
++
++	return 0;
++}
++
++static int hclge_fd_check_ext_tuple(struct hclge_dev *hdev,
++				    struct ethtool_rx_flow_spec *fs,
++				    u32 *unused_tuple)
++{
+ 	if ((fs->flow_type & FLOW_EXT)) {
+ 		if (fs->h_ext.vlan_etype)
+ 			return -EOPNOTSUPP;
+ 		if (!fs->h_ext.vlan_tci)
+-			*unused |= BIT(INNER_VLAN_TAG_FST);
++			*unused_tuple |= BIT(INNER_VLAN_TAG_FST);
+ 
+-		if (fs->m_ext.vlan_tci) {
+-			if (be16_to_cpu(fs->h_ext.vlan_tci) >= VLAN_N_VID)
+-				return -EINVAL;
+-		}
++		if (fs->m_ext.vlan_tci &&
++		    be16_to_cpu(fs->h_ext.vlan_tci) >= VLAN_N_VID)
++			return -EINVAL;
+ 	} else {
+-		*unused |= BIT(INNER_VLAN_TAG_FST);
++		*unused_tuple |= BIT(INNER_VLAN_TAG_FST);
  	}
  
-+	if (strncmp(cmd_buf, "mac", strlen("mac")) == 0) {
-+		hclge_dbg_dump_mac(hdev);
-+		has_dump = true;
+ 	if (fs->flow_type & FLOW_MAC_EXT) {
+@@ -5402,14 +5403,74 @@ static int hclge_fd_check_spec(struct hclge_dev *hdev,
+ 			return -EOPNOTSUPP;
+ 
+ 		if (is_zero_ether_addr(fs->h_ext.h_dest))
+-			*unused |= BIT(INNER_DST_MAC);
++			*unused_tuple |= BIT(INNER_DST_MAC);
+ 		else
+-			*unused &= ~(BIT(INNER_DST_MAC));
++			*unused_tuple &= ~(BIT(INNER_DST_MAC));
+ 	}
+ 
+ 	return 0;
+ }
+ 
++static int hclge_fd_check_spec(struct hclge_dev *hdev,
++			       struct ethtool_rx_flow_spec *fs,
++			       u32 *unused_tuple)
++{
++	int ret = 0;
++
++	if (fs->location >= hdev->fd_cfg.rule_num[HCLGE_FD_STAGE_1])
++		return -EINVAL;
++
++	if (!(fs->flow_type & hdev->fd_cfg.proto_support))
++		return -EOPNOTSUPP;
++
++	if ((fs->flow_type & FLOW_EXT) &&
++	    (fs->h_ext.data[0] != 0 || fs->h_ext.data[1] != 0)) {
++		dev_err(&hdev->pdev->dev, "user-def bytes are not supported\n");
++		return -EOPNOTSUPP;
 +	}
 +
- 	if (strncmp(cmd_buf, "dcb", 3) == 0) {
- 		hclge_dbg_dump_dcb(hdev, &cmd_buf[sizeof("dcb")]);
- 		has_dump = true;
++	switch (fs->flow_type & ~(FLOW_EXT | FLOW_MAC_EXT)) {
++	case SCTP_V4_FLOW:
++	case TCP_V4_FLOW:
++	case UDP_V4_FLOW:
++		ret = hclge_fd_check_tcpip4_tuple(&fs->h_u.tcp_ip4_spec,
++						  unused_tuple);
++		break;
++	case IP_USER_FLOW:
++		ret = hclge_fd_check_ip4_tuple(&fs->h_u.usr_ip4_spec,
++					       unused_tuple);
++		break;
++	case SCTP_V6_FLOW:
++	case TCP_V6_FLOW:
++	case UDP_V6_FLOW:
++		ret = hclge_fd_check_tcpip6_tuple(&fs->h_u.tcp_ip6_spec,
++						  unused_tuple);
++		break;
++	case IPV6_USER_FLOW:
++		ret = hclge_fd_check_ip6_tuple(&fs->h_u.usr_ip6_spec,
++					       unused_tuple);
++		break;
++	case ETHER_FLOW:
++		if (hdev->fd_cfg.fd_mode !=
++			HCLGE_FD_MODE_DEPTH_2K_WIDTH_400B_STAGE_1) {
++			dev_err(&hdev->pdev->dev,
++				"ETHER_FLOW is not supported in current fd mode!\n");
++			return -EOPNOTSUPP;
++		}
++
++		ret = hclge_fd_check_ether_tuple(&fs->h_u.ether_spec,
++						 unused_tuple);
++		break;
++	default:
++		return -EOPNOTSUPP;
++	}
++
++	if (ret)
++		return ret;
++
++	return hclge_fd_check_ext_tuple(hdev, fs, unused_tuple);
++}
++
+ static bool hclge_fd_rule_exist(struct hclge_dev *hdev, u16 location)
+ {
+ 	struct hclge_fd_rule *rule = NULL;
 -- 
 2.7.4
 
