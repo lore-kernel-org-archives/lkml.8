@@ -2,124 +2,85 @@ Return-Path: <SRS0=3CHW=6C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC302C352BE
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 01:01:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67F93C38A2B
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 01:01:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B67DA20771
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 01:01:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4ABDA221EA
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 01:01:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726094AbgDRBBT (ORCPT
+        id S1726144AbgDRBBV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Fri, 17 Apr 2020 21:01:21 -0400
+Received: from smtprelay0085.hostedemail.com ([216.40.44.85]:48134 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725949AbgDRBBT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 17 Apr 2020 21:01:19 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:2401 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725768AbgDRBBT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 21:01:19 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id A47E78BB899F881ED6C9;
-        Sat, 18 Apr 2020 09:01:14 +0800 (CST)
-Received: from [127.0.0.1] (10.166.215.235) by DGGEMS409-HUB.china.huawei.com
- (10.3.19.209) with Microsoft SMTP Server id 14.3.487.0; Sat, 18 Apr 2020
- 09:01:06 +0800
-Subject: Re: [PATCH] buffer: remove useless comment and
- WB_REASON_FREE_MORE_MEM, reason.
-To:     Jan Kara <jack@suse.cz>
-CC:     <viro@zeniv.linux.org.uk>, <rostedt@goodmis.org>,
-        <mingo@redhat.com>, "Jens Axboe" <axboe@kernel.dk>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        <linux-fsdevel@vger.kernel.org>, <tj@kernel.org>,
-        <bigeasy@linutronix.de>, linfeilong <linfeilong@huawei.com>,
-        Yanxiaodan <yanxiaodan@huawei.com>,
-        Mingfangsen <mingfangsen@huawei.com>,
-        renxudong <renxudong1@huawei.com>
-References: <5844aa66-de1e-278b-5491-b7e6839640e9@huawei.com>
- <20200414150929.GD28226@quack2.suse.cz>
-From:   Zhiqiang Liu <liuzhiqiang26@huawei.com>
-Message-ID: <81bf1cd4-0319-bc62-dbdf-701d39edd23a@huawei.com>
-Date:   Sat, 18 Apr 2020 09:01:03 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay04.hostedemail.com (Postfix) with ESMTP id 7E45F1801EDC8;
+        Sat, 18 Apr 2020 01:01:18 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: page10_627b1b350bf5d
+X-Filterd-Recvd-Size: 1847
+Received: from XPS-9350.home (unknown [47.151.136.130])
+        (Authenticated sender: joe@perches.com)
+        by omf11.hostedemail.com (Postfix) with ESMTPA;
+        Sat, 18 Apr 2020 01:01:16 +0000 (UTC)
+Message-ID: <13a8e8efd56d00945e375760f7f065fb020287a1.camel@perches.com>
+Subject: Re: [PATCH v9 3/3] MAINTAINERS: add HMM selftests
+From:   Joe Perches <joe@perches.com>
+To:     Ralph Campbell <rcampbell@nvidia.com>, linux-rdma@vger.kernel.org,
+        linux-mm@kvack.org, linux-kselftest@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Jerome Glisse <jglisse@redhat.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Shuah Khan <shuah@kernel.org>
+Date:   Fri, 17 Apr 2020 17:59:03 -0700
+In-Reply-To: <20200417235458.13462-4-rcampbell@nvidia.com>
+References: <20200417235458.13462-1-rcampbell@nvidia.com>
+         <20200417235458.13462-4-rcampbell@nvidia.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.34.1-2 
 MIME-Version: 1.0
-In-Reply-To: <20200414150929.GD28226@quack2.suse.cz>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.166.215.235]
-X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-friendly ping...
+On Fri, 2020-04-17 at 16:54 -0700, Ralph Campbell wrote:
+> Add files for HMM selftests.
+> 
+> Signed-off-by: Ralph Campbell <rcampbell@nvidia.com>
+> ---
+>  MAINTAINERS | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index e64e5db31497..072921b7bae2 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -7729,6 +7729,9 @@ S:	Maintained
+>  F:	Documentation/vm/hmm.rst
+>  F:	include/linux/hmm*
+>  F:	mm/hmm*
+> +F:	include/uapi/linux/test_hmm*
+> +F:	lib/test_hmm*
+> +F:	tools/testing/selftests/vm/*hmm*
 
-On 2020/4/14 23:09, Jan Kara wrote:
-> On Mon 13-04-20 13:12:10, Zhiqiang Liu wrote:
->> From: Zhiqiang Liu <liuzhiqiang26@huawei.com>
->>
->> free_more_memory func has been completely removed in commit bc48f001de12
->> ("buffer: eliminate the need to call free_more_memory() in __getblk_slow()")
->>
->> So comment and `WB_REASON_FREE_MORE_MEM` reason about free_more_memory
->> are no longer needed.
->>
->> Signed-off-by: Zhiqiang Liu <liuzhiqiang26@huawei.com>
-> 
-> Thanks. The patch looks good to me. You can add:
-> 
-> Reviewed-by: Jan Kara <jack@suse.cz>
-> 
-> 								Honza
-> 
->> ---
->>  fs/buffer.c                      | 2 +-
->>  include/linux/backing-dev-defs.h | 1 -
->>  include/trace/events/writeback.h | 1 -
->>  3 files changed, 1 insertion(+), 3 deletions(-)
->>
->> diff --git a/fs/buffer.c b/fs/buffer.c
->> index b8d28370cfd7..07ab0405f3f5 100644
->> --- a/fs/buffer.c
->> +++ b/fs/buffer.c
->> @@ -973,7 +973,7 @@ grow_dev_page(struct block_device *bdev, sector_t block,
->>  	struct page *page;
->>  	struct buffer_head *bh;
->>  	sector_t end_block;
->> -	int ret = 0;		/* Will call free_more_memory() */
->> +	int ret = 0;
->>  	gfp_t gfp_mask;
->>
->>  	gfp_mask = mapping_gfp_constraint(inode->i_mapping, ~__GFP_FS) | gfp;
->> diff --git a/include/linux/backing-dev-defs.h b/include/linux/backing-dev-defs.h
->> index 4fc87dee005a..ee577a83cfe6 100644
->> --- a/include/linux/backing-dev-defs.h
->> +++ b/include/linux/backing-dev-defs.h
->> @@ -54,7 +54,6 @@ enum wb_reason {
->>  	WB_REASON_SYNC,
->>  	WB_REASON_PERIODIC,
->>  	WB_REASON_LAPTOP_TIMER,
->> -	WB_REASON_FREE_MORE_MEM,
->>  	WB_REASON_FS_FREE_SPACE,
->>  	/*
->>  	 * There is no bdi forker thread any more and works are done
->> diff --git a/include/trace/events/writeback.h b/include/trace/events/writeback.h
->> index d94def25e4dc..85a33bea76f1 100644
->> --- a/include/trace/events/writeback.h
->> +++ b/include/trace/events/writeback.h
->> @@ -36,7 +36,6 @@
->>  	EM( WB_REASON_SYNC,			"sync")			\
->>  	EM( WB_REASON_PERIODIC,			"periodic")		\
->>  	EM( WB_REASON_LAPTOP_TIMER,		"laptop_timer")		\
->> -	EM( WB_REASON_FREE_MORE_MEM,		"free_more_memory")	\
->>  	EM( WB_REASON_FS_FREE_SPACE,		"fs_free_space")	\
->>  	EMe(WB_REASON_FORKER_THREAD,		"forker_thread")
->>
->> -- 
->> 2.19.1
->>
->>
+file patterns in alphabetic order please:
+
+F	Documentation/vm/hmm.rst
+F:	include/linux/hmm*
+F:	include/uapi/linux/test_hmm*
+F:	lib/test_hmm*
+F:	mm/hmm*
+F:	tools/testing/selftests/vm/*hmm*	
 
