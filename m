@@ -2,63 +2,63 @@ Return-Path: <SRS0=3CHW=6C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A9D2C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 20:22:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8177BC3A5A0
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 20:22:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF25F21D93
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 20:22:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 587EF22209
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 20:22:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="gNS9qIbI"
+	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="R0MRfBV9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728882AbgDRUWM (ORCPT
+        id S1728898AbgDRUWR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 16:22:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56492 "EHLO
+        Sat, 18 Apr 2020 16:22:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56478 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728505AbgDRUUX (ORCPT
+        by vger.kernel.org with ESMTP id S1728495AbgDRUUU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 16:20:23 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24EA0C061A0C
-        for <linux-kernel@vger.kernel.org>; Sat, 18 Apr 2020 13:20:23 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id h2so6497455wmb.4
-        for <linux-kernel@vger.kernel.org>; Sat, 18 Apr 2020 13:20:23 -0700 (PDT)
+        Sat, 18 Apr 2020 16:20:20 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ABE1BC061A41
+        for <linux-kernel@vger.kernel.org>; Sat, 18 Apr 2020 13:20:19 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id a81so6775492wmf.5
+        for <linux-kernel@vger.kernel.org>; Sat, 18 Apr 2020 13:20:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=arista.com; s=googlenew;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=bgkQndVSPCAXAdk55lj3SsyWy6EW/wW9GxO05KKgdOE=;
-        b=gNS9qIbIUIxrAJ8f0EREItvYgAmDrw9JMzuL9QhLLTRuGwWPLANT8JscbeNe7Ob8w7
-         AxUZBQjN0jubvGxly9D+ctqyrZaUPnpdw4B7579o4F7ZspjcczB106qsb7QE/VACRxXW
-         cSVbOA1Zu7jo2gjimWV92T5+7pXFG6mqs52kRRvVvlliLUR3HmE2xWubOA5F0NL/tP1l
-         e+5Ix71XxKexIDBxR4cjnyEpiHPTZug0JWaxRfPBvH8JkVZjzLPqdCWoX26GheEtnQSf
-         VC9LgqNuU+83n5z7LWXv9VpoQiLFQf5Cw9iPKcHqUoyQuf6zTwR/qvb3URzgzKFdvTf5
-         fixg==
+        bh=KXthq0beVn1b/Jm4pPQNCj7aWxL8Gh4NNaBiyfVk3X0=;
+        b=R0MRfBV9Gd66haBi9D3ueClx5ZSnhLckdmjiQzJOv2IPsF0ru2js1A1Cp4mL2iX6lk
+         JCOMPVi58fnnFkGaf1zOkp0aOFFHD3rtq0m6mnuNKdYpaRSpgXoZB0U3lfwcXKX8cHEh
+         CPE2sNS61aIkdpigc5XBKmkp4QWdPXUbHWLg/F+2w3yxQ1C3DVPcdiYKIbBnIegxa0Wt
+         QHLWpfWupDmgfRrrZ/uLEkJw0BzZ2G22TsQgWqYaJyykbY4P1qYHmS2H1SNJAEQ//hPs
+         d5J/ZtBfrYS7ev0m2e23zt0pnlIVJa5zfP0hZpu3eGc+B0MQaihhOhchHsdgVtfqywds
+         r/Eg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=bgkQndVSPCAXAdk55lj3SsyWy6EW/wW9GxO05KKgdOE=;
-        b=RwmTHEhPdrKc4qD3DlWpbiUXMR0xrUTDppfWJcr+ETqn9JYTKXFS5jcCW6X7e/pTdH
-         gwqafvr+uc11oM6O48odiIQzZxUAKf9O6O37jCGqgtshsKMy5bJv5Hog/dAni9Pssqph
-         At/XGh8wXs8ktHK+xKSXK/YxcqawIK1cMVRlwk61KKELsEYRMDe4/lV5FgbxTf3pKbbL
-         i0cLcfrpO0QcTO0rz6KMMZ2QURa4q3QABTZ82WaBeP6r1LPnvRVgtGDiD1t2QYLS95p/
-         Y8QX8ni9TAIxLI0b7L3wKVuksIs4kVrXKMAmmfFiyMTJmEpvySZCCjhvSKhkybLPgKRz
-         Qegg==
-X-Gm-Message-State: AGi0Puas/Fz9Z0kc7qM1CYWIfGPifk/HkmRJ52F2okPZkKy3p03EJBKF
-        IyxEl9SyhDVW6IdYnovu85rsPEbR8CY=
-X-Google-Smtp-Source: APiQypJxgZcfu1FPcrZ9G99YQ7RXLzWjDi9OvAmWUQQcF7ddUfc/mMNCCwzs1DT48sX/VY5VFwl9+w==
-X-Received: by 2002:a7b:cf27:: with SMTP id m7mr10116596wmg.183.1587241221553;
-        Sat, 18 Apr 2020 13:20:21 -0700 (PDT)
+        bh=KXthq0beVn1b/Jm4pPQNCj7aWxL8Gh4NNaBiyfVk3X0=;
+        b=fW8LW6ZTSVOiOi477yNCPI1Iwp/CrNvuMnDIHT+it01Pt81Tc3btCPzLeVEQx3x6nQ
+         TEBApnRkYoGau97HLRSYh0hKplxPI6kXPewFl8FskSj1yfWFvqAsH4fyF1IvreSJ3UQa
+         3Tbae4Y9fuSnZUS9hvdsjRoBUL6Vp1yB5Cciy+cdjM5UcNhdn8i5AsALKacw7rFSApPI
+         YVn7Zg/O29yIMHmzj9cGQrZY1BG+WoWpuhHzH9D4/orCyEQxCY0Z1T4eGpR7RdbqP9bB
+         4zp3OAVt/gw5kk0vszA7FiYMncphEgIsU+CJF27ukASFSonHsfb8I6d13D5aPb3rirv8
+         Fxfw==
+X-Gm-Message-State: AGi0Pua812RdgHvedgy7L1dOXsuQmtWCw69O/J64fVDjEfZrQQyYyzxh
+        zRvp1xXBywzUxolzCSs/NV0YE31Zwts=
+X-Google-Smtp-Source: APiQypLwnprpKA3nWw7LWuFkawgnHDVEf+RYxFbPPV/WfkwBuJAhv71JQulxXE+mI1aG3QgmcvCz3Q==
+X-Received: by 2002:a1c:ed04:: with SMTP id l4mr737085wmh.93.1587241218237;
+        Sat, 18 Apr 2020 13:20:18 -0700 (PDT)
 Received: from localhost.localdomain ([2a02:8084:e84:2480:228:f8ff:fe6f:83a8])
-        by smtp.gmail.com with ESMTPSA id m1sm31735255wro.64.2020.04.18.13.20.19
+        by smtp.gmail.com with ESMTPSA id m1sm31735255wro.64.2020.04.18.13.20.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 18 Apr 2020 13:20:21 -0700 (PDT)
+        Sat, 18 Apr 2020 13:20:17 -0700 (PDT)
 From:   Dmitry Safonov <dima@arista.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
@@ -70,11 +70,12 @@ Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
         Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
         Steven Rostedt <rostedt@goodmis.org>,
         Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        Ley Foon Tan <lftan@altera.com>,
-        nios2-dev@lists.rocketboards.org
-Subject: [PATCHv3 23/50] nios2: Add show_stack_loglvl()
-Date:   Sat, 18 Apr 2020 21:19:17 +0100
-Message-Id: <20200418201944.482088-24-dima@arista.com>
+        James Hogan <jhogan@kernel.org>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>, linux-mips@vger.kernel.org
+Subject: [PATCHv3 21/50] mips: Add show_stack_loglvl()
+Date:   Sat, 18 Apr 2020 21:19:15 +0100
+Message-Id: <20200418201944.482088-22-dima@arista.com>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200418201944.482088-1-dima@arista.com>
 References: <20200418201944.482088-1-dima@arista.com>
@@ -104,75 +105,142 @@ Also, it will consolidate printings with headers.
 Introduce show_stack_loglvl(), that eventually will substitute
 show_stack().
 
-Cc: Ley Foon Tan <lftan@altera.com>
-Cc: nios2-dev@lists.rocketboards.org
+Cc: James Hogan <jhogan@kernel.org>
+Cc: Paul Burton <paulburton@kernel.org>
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: linux-mips@vger.kernel.org
 [1]: https://lore.kernel.org/lkml/20190528002412.1625-1-dima@arista.com/T/#u
 Signed-off-by: Dmitry Safonov <dima@arista.com>
 ---
- arch/nios2/kernel/traps.c | 23 +++++++++++++++--------
- 1 file changed, 15 insertions(+), 8 deletions(-)
+ arch/mips/kernel/traps.c | 41 +++++++++++++++++++++++-----------------
+ 1 file changed, 24 insertions(+), 17 deletions(-)
 
-diff --git a/arch/nios2/kernel/traps.c b/arch/nios2/kernel/traps.c
-index 486db793923c..08071caa9b36 100644
---- a/arch/nios2/kernel/traps.c
-+++ b/arch/nios2/kernel/traps.c
-@@ -52,12 +52,14 @@ void _exception(int signo, struct pt_regs *regs, int code, unsigned long addr)
+diff --git a/arch/mips/kernel/traps.c b/arch/mips/kernel/traps.c
+index de05503c680c..077aabbd6b9f 100644
+--- a/arch/mips/kernel/traps.c
++++ b/arch/mips/kernel/traps.c
+@@ -106,26 +106,26 @@ void (*board_bind_eic_interrupt)(int irq, int regset);
+ void (*board_ebase_setup)(void);
+ void(*board_cache_error_setup)(void);
+ 
+-static void show_raw_backtrace(unsigned long reg29)
++static void show_raw_backtrace(unsigned long reg29, const char *loglvl)
+ {
+ 	unsigned long *sp = (unsigned long *)(reg29 & ~3);
+ 	unsigned long addr;
+ 
+-	printk("Call Trace:");
++	printk("%sCall Trace:", loglvl);
+ #ifdef CONFIG_KALLSYMS
+-	printk("\n");
++	printk("%s\n", loglvl);
+ #endif
+ 	while (!kstack_end(sp)) {
+ 		unsigned long __user *p =
+ 			(unsigned long __user *)(unsigned long)sp++;
+ 		if (__get_user(addr, p)) {
+-			printk(" (Bad stack address)");
++			printk("%s (Bad stack address)", loglvl);
+ 			break;
+ 		}
+ 		if (__kernel_text_address(addr))
+-			print_ip_sym(KERN_DEFAULT, addr);
++			print_ip_sym(loglvl, addr);
+ 	}
+-	printk("\n");
++	printk("%s\n", loglvl);
  }
  
- /*
-- * The show_stack is an external API which we do not use ourselves.
-+ * The show_stack(), show_stack_loglvl() are external API
-+ * which we do not use ourselves.
+ #ifdef CONFIG_KALLSYMS
+@@ -138,7 +138,8 @@ static int __init set_raw_show_trace(char *str)
+ __setup("raw_show_trace", set_raw_show_trace);
+ #endif
+ 
+-static void show_backtrace(struct task_struct *task, const struct pt_regs *regs)
++static void show_backtrace(struct task_struct *task, const struct pt_regs *regs,
++			   const char *loglvl)
+ {
+ 	unsigned long sp = regs->regs[29];
+ 	unsigned long ra = regs->regs[31];
+@@ -148,12 +149,12 @@ static void show_backtrace(struct task_struct *task, const struct pt_regs *regs)
+ 		task = current;
+ 
+ 	if (raw_show_trace || user_mode(regs) || !__kernel_text_address(pc)) {
+-		show_raw_backtrace(sp);
++		show_raw_backtrace(sp, loglvl);
+ 		return;
+ 	}
+-	printk("Call Trace:\n");
++	printk("%sCall Trace:\n", loglvl);
+ 	do {
+-		print_ip_sym(KERN_DEFAULT, pc);
++		print_ip_sym(loglvl, pc);
+ 		pc = unwind_stack(task, &sp, pc, &ra);
+ 	} while (pc);
+ 	pr_cont("\n");
+@@ -164,19 +165,19 @@ static void show_backtrace(struct task_struct *task, const struct pt_regs *regs)
+  * with at least a bit of error checking ...
   */
+ static void show_stacktrace(struct task_struct *task,
+-	const struct pt_regs *regs)
++	const struct pt_regs *regs, const char *loglvl)
+ {
+ 	const int field = 2 * sizeof(unsigned long);
+ 	long stackdata;
+ 	int i;
+ 	unsigned long __user *sp = (unsigned long __user *)regs->regs[29];
  
- int kstack_depth_to_print = 48;
+-	printk("Stack :");
++	printk("%sStack :", loglvl);
+ 	i = 0;
+ 	while ((unsigned long) sp & (PAGE_SIZE - 1)) {
+ 		if (i && ((i % (64 / field)) == 0)) {
+ 			pr_cont("\n");
+-			printk("       ");
++			printk("%s       ", loglvl);
+ 		}
+ 		if (i > 39) {
+ 			pr_cont(" ...");
+@@ -192,10 +193,11 @@ static void show_stacktrace(struct task_struct *task,
+ 		i++;
+ 	}
+ 	pr_cont("\n");
+-	show_backtrace(task, regs);
++	show_backtrace(task, regs, loglvl);
+ }
  
--void show_stack(struct task_struct *task, unsigned long *stack)
-+void show_stack_loglvl(struct task_struct *task, unsigned long *stack,
+-void show_stack(struct task_struct *task, unsigned long *sp)
++void show_stack_loglvl(struct task_struct *task, unsigned long *sp,
 +		       const char *loglvl)
  {
- 	unsigned long *endstack, addr;
- 	int i;
-@@ -72,16 +74,16 @@ void show_stack(struct task_struct *task, unsigned long *stack)
- 	addr = (unsigned long) stack;
- 	endstack = (unsigned long *) PAGE_ALIGN(addr);
- 
--	pr_emerg("Stack from %08lx:", (unsigned long)stack);
-+	printk("%sStack from %08lx:", loglvl, (unsigned long)stack);
- 	for (i = 0; i < kstack_depth_to_print; i++) {
- 		if (stack + 1 > endstack)
- 			break;
- 		if (i % 8 == 0)
--			pr_emerg("\n       ");
--		pr_emerg(" %08lx", *stack++);
-+			printk("%s\n       ", loglvl);
-+		printk("%s %08lx", loglvl, *stack++);
- 	}
- 
--	pr_emerg("\nCall Trace:");
-+	printk("%s\nCall Trace:", loglvl);
- 	i = 0;
- 	while (stack + 1 <= endstack) {
- 		addr = *stack++;
-@@ -97,11 +99,16 @@ void show_stack(struct task_struct *task, unsigned long *stack)
- 		     (addr <= (unsigned long) _etext))) {
- 			if (i % 4 == 0)
- 				pr_emerg("\n       ");
--			pr_emerg(" [<%08lx>]", addr);
-+			printk("%s [<%08lx>]", loglvl, addr);
- 			i++;
- 		}
- 	}
--	pr_emerg("\n");
-+	printk("%s\n", loglvl);
-+}
-+
-+void show_stack(struct task_struct *task, unsigned long *stack)
-+{
-+	show_stack_loglvl(task, stack, KERN_EMERG);
+ 	struct pt_regs regs;
+ 	mm_segment_t old_fs = get_fs();
+@@ -219,10 +221,15 @@ void show_stack(struct task_struct *task, unsigned long *sp)
+ 	 * the stack in the kernel (not user) address space.
+ 	 */
+ 	set_fs(KERNEL_DS);
+-	show_stacktrace(task, &regs);
++	show_stacktrace(task, &regs, loglvl);
+ 	set_fs(old_fs);
  }
  
- void __init trap_init(void)
++void show_stack(struct task_struct *task, unsigned long *sp)
++{
++	show_stack_loglvl(task, sp, KERN_DEFAULT)
++}
++
+ static void show_code(unsigned int __user *pc)
+ {
+ 	long i;
+@@ -371,7 +378,7 @@ void show_registers(struct pt_regs *regs)
+ 	if (!user_mode(regs))
+ 		/* Necessary for getting the correct stack content */
+ 		set_fs(KERNEL_DS);
+-	show_stacktrace(current, regs);
++	show_stacktrace(current, regs, KERN_DEFAULT);
+ 	show_code((unsigned int __user *) regs->cp0_epc);
+ 	printk("\n");
+ 	set_fs(old_fs);
 -- 
 2.26.0
 
