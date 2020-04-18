@@ -4,48 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8FB4C38A29
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:47:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E9ADC38A29
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:47:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8F79E21D6C
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:47:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E364A21D6C
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:47:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587221271;
-	bh=G9LiqHyPZiTF8B+ODzNtJIvbuwTfYcDs9golXx+qZ3A=;
+	s=default; t=1587221278;
+	bh=DZSCDdCDB69HIfhhzIlKvyhVBwtzJQwmpG6SLjhFycQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1Rcf6Jv6ME8ip+NbsefG1amtS/RNmeVUKlW0bDqt9TEA2l35Shu5z/cSerw0KDCwS
-	 nBepdmQcSQgnwhAmPMlmPtPZEeugjSZprAIg/tlb/heLoWw3TZQr69RwfYuZ/cnkPl
-	 +G4C6cjUeACYo0kkU7//UiQ73V6n3hamWA5kSZko=
+	b=hpR95qfOCVdFlOVmAb3a5r6kVs/NIUoLJGn6LWNkcnM6SzoQ3sEQ5TStkTiumzsHV
+	 5mYXLp1f4W9CvCUj4FIpK4NPs9sD7gK9qtVrJlunxOWzVPV09is2G46iXzjIeL4Ftr
+	 8Y/W4QpGB4uFwUUWidaLEHGyL/kAJXKGVNsejQIM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728103AbgDROru (ORCPT
+        id S1729044AbgDROr4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 10:47:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55544 "EHLO mail.kernel.org"
+        Sat, 18 Apr 2020 10:47:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55506 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728724AbgDROoC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 10:44:02 -0400
+        id S1728721AbgDROoB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 10:44:01 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2E49922253;
-        Sat, 18 Apr 2020 14:44:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1F4D222202;
+        Sat, 18 Apr 2020 14:44:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587221041;
-        bh=G9LiqHyPZiTF8B+ODzNtJIvbuwTfYcDs9golXx+qZ3A=;
+        s=default; t=1587221040;
+        bh=DZSCDdCDB69HIfhhzIlKvyhVBwtzJQwmpG6SLjhFycQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=He5OWSF6QvMrj04gEOOeJV49SfrPoE4peerDe8hyTrtEfY6DZLrQpI1ptuwuJwLCe
-         h7IpVVEndMqgp+7InWoH6caD6tBV0XPzD/fpR5TBDF3bb8ME1Rgo7peVb2sFB4RcXa
-         bGHpuKLnoc1CNGURw0eeQF8AlKnYlYUnG1LffiI0=
+        b=WvbZIK8bK90HWLYgFMJQgCR+UzR8eNn6Nkt1Du7dQRbEF27ug+LmvNrM/p9ivZ85q
+         lvCFZ0g8apUmknn4dEwDVBoe3Dubj08RPdQvWBjfzq10SAU8A1zWOwoeMLhNoOkg9z
+         3yDQ5U6CMjbwoeloD+JR/E/3S/WlAlRFRVBmPVks=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Takashi Iwai <tiwai@suse.de>, Jaroslav Kysela <perex@perex.cz>,
         Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 4.14 26/28] ALSA: hda: Fix potential access overflow in beep helper
-Date:   Sat, 18 Apr 2020 10:43:26 -0400
-Message-Id: <20200418144328.10265-26-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 25/28] ALSA: ice1724: Fix invalid access for enumerated ctl items
+Date:   Sat, 18 Apr 2020 10:43:25 -0400
+Message-Id: <20200418144328.10265-25-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200418144328.10265-1-sashal@kernel.org>
 References: <20200418144328.10265-1-sashal@kernel.org>
@@ -60,46 +60,46 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Takashi Iwai <tiwai@suse.de>
 
-[ Upstream commit 0ad3f0b384d58f3bd1f4fb87d0af5b8f6866f41a ]
+[ Upstream commit c47914c00be346bc5b48c48de7b0da5c2d1a296c ]
 
-The beep control helper function blindly stores the values in two
-stereo channels no matter whether the actual control is mono or
-stereo.  This is practically harmless, but it annoys the recently
-introduced sanity check, resulting in an error when the checker is
-enabled.
+The access to Analog Capture Source control value implemented in
+prodigy_hifi.c is wrong, as caught by the recently introduced sanity
+check; it should be accessing value.enumerated.item[] instead of
+value.integer.value[].  This patch corrects the wrong access pattern.
 
-This patch corrects the behavior to store only on the defined array
-member.
-
-Fixes: 0401e8548eac ("ALSA: hda - Move beep helper functions to hda_beep.c")
+Fixes: 6b8d6e5518e2 ("[ALSA] ICE1724: Added support for Audiotrak Prodigy 7.1 HiFi & HD2, Hercules Fortissimo IV")
 BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=207139
 Reviewed-by: Jaroslav Kysela <perex@perex.cz>
 Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200407084402.25589-2-tiwai@suse.de
+Link: https://lore.kernel.org/r/20200407084402.25589-3-tiwai@suse.de
 Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/pci/hda/hda_beep.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ sound/pci/ice1712/prodigy_hifi.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/sound/pci/hda/hda_beep.c b/sound/pci/hda/hda_beep.c
-index c397e7da0eacf..7ccfb09535e14 100644
---- a/sound/pci/hda/hda_beep.c
-+++ b/sound/pci/hda/hda_beep.c
-@@ -310,8 +310,12 @@ int snd_hda_mixer_amp_switch_get_beep(struct snd_kcontrol *kcontrol,
- {
- 	struct hda_codec *codec = snd_kcontrol_chip(kcontrol);
- 	struct hda_beep *beep = codec->beep;
-+	int chs = get_amp_channels(kcontrol);
-+
- 	if (beep && (!beep->enabled || !ctl_has_mute(kcontrol))) {
--		ucontrol->value.integer.value[0] =
-+		if (chs & 1)
-+			ucontrol->value.integer.value[0] = beep->enabled;
-+		if (chs & 2)
- 			ucontrol->value.integer.value[1] = beep->enabled;
- 		return 0;
- 	}
+diff --git a/sound/pci/ice1712/prodigy_hifi.c b/sound/pci/ice1712/prodigy_hifi.c
+index 2697402b51957..41f6450a2539f 100644
+--- a/sound/pci/ice1712/prodigy_hifi.c
++++ b/sound/pci/ice1712/prodigy_hifi.c
+@@ -569,7 +569,7 @@ static int wm_adc_mux_enum_get(struct snd_kcontrol *kcontrol,
+ 	struct snd_ice1712 *ice = snd_kcontrol_chip(kcontrol);
+ 
+ 	mutex_lock(&ice->gpio_mutex);
+-	ucontrol->value.integer.value[0] = wm_get(ice, WM_ADC_MUX) & 0x1f;
++	ucontrol->value.enumerated.item[0] = wm_get(ice, WM_ADC_MUX) & 0x1f;
+ 	mutex_unlock(&ice->gpio_mutex);
+ 	return 0;
+ }
+@@ -583,7 +583,7 @@ static int wm_adc_mux_enum_put(struct snd_kcontrol *kcontrol,
+ 
+ 	mutex_lock(&ice->gpio_mutex);
+ 	oval = wm_get(ice, WM_ADC_MUX);
+-	nval = (oval & 0xe0) | ucontrol->value.integer.value[0];
++	nval = (oval & 0xe0) | ucontrol->value.enumerated.item[0];
+ 	if (nval != oval) {
+ 		wm_put(ice, WM_ADC_MUX, nval);
+ 		change = 1;
 -- 
 2.20.1
 
