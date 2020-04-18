@@ -4,49 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4C59C38A29
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:41:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87894C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:41:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A7F8B22240
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:41:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 659BA22202
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:41:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587220909;
-	bh=5woW1Hev8PR1JzsTaygw1uSfdpUK6kXSaG0IuUcIShw=;
+	s=default; t=1587220911;
+	bh=B7l1JhQD7sZsRdFdz7Xv7IUnTyzfxeDDq7bjoIlTKh0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=onrktnsvkUjRkz4wRyOdNuQkKKGwffnTTrsqI7ur8js+WGBziogUUehJlpFQu+BDq
-	 s2tcXXtFVRDYKUwU+CSI9KTAEsrppPUzFNvAJSrmtxlkYVWjkWILLGZXYGBzol/Wv7
-	 SGUZrxOrVXXUJdvTlSU577uKDfYMbL/Q8hbAE/G0=
+	b=CCOx+5M41Dniv/al32t3qcJ0UABOl92XW5se/PVzkx6PcKdp1hIfZh3jNV+fUuk4V
+	 HPwj7gRXe3n8KYrna8Nr/hSyyxQ1G10gpHLPDuRqEsKwJG5pKWmlYooEJU1SAKdLSg
+	 trEbXOgukCoATmr7vIgzuLrSHre1flXh5ganOMgI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728127AbgDROls (ORCPT
+        id S1728145AbgDROlu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 10:41:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51168 "EHLO mail.kernel.org"
+        Sat, 18 Apr 2020 10:41:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51310 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728094AbgDROlo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 10:41:44 -0400
+        id S1728107AbgDROlq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 10:41:46 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 19CBD22240;
-        Sat, 18 Apr 2020 14:41:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 23D7D21D6C;
+        Sat, 18 Apr 2020 14:41:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587220903;
-        bh=5woW1Hev8PR1JzsTaygw1uSfdpUK6kXSaG0IuUcIShw=;
+        s=default; t=1587220906;
+        bh=B7l1JhQD7sZsRdFdz7Xv7IUnTyzfxeDDq7bjoIlTKh0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SdcsYWdEqO5sTLGXibWX2D/lZrJ1TrOeQJlQRI2HYVA+YtFs1l9Gbsq0Qy6DT1kLy
-         bhCfQtnV9IuQ6H1Ep/zmiaMvHFZYadNlG+5oP1HbpjTBhjiRJTKwku6JVzYLhUoGd2
-         3V90YVZzMRCW8b+eWr03kba2wFwuL9yRW5FhvAwM=
+        b=OT8wmrHC5gyMzn9IMd3AK51ZwD4LAUPtQAfh6i1hGEwdCFO2DpMdTQHgR+iG/cc+q
+         6DO0dfdQIcVoNRvGW2z45gy/ubrxDQfULDVHZv/64Tl1AfLzrXbC9mRWgJ8dzIAik9
+         GNehTACRevGpTMT2oYZhJPP6WHvrV+DcqRBchGKw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Pi-Hsun Shih <pihsun@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.4 44/78] platform/chrome: cros_ec_rpmsg: Fix race with host event
-Date:   Sat, 18 Apr 2020 10:40:13 -0400
-Message-Id: <20200418144047.9013-44-sashal@kernel.org>
+Cc:     Changwei Ge <chge@linux.alibaba.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Joseph Qi <joseph.qi@linux.alibaba.com>,
+        Mark Fasheh <mark@fasheh.com>,
+        Joel Becker <jlbec@evilplan.org>,
+        Junxiao Bi <junxiao.bi@oracle.com>,
+        Changwei Ge <gechangwei@live.cn>, Gang He <ghe@suse.com>,
+        Jun Piao <piaojun@huawei.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>, ocfs2-devel@oss.oracle.com
+Subject: [PATCH AUTOSEL 5.4 46/78] ocfs2: no need try to truncate file beyond i_size
+Date:   Sat, 18 Apr 2020 10:40:15 -0400
+Message-Id: <20200418144047.9013-46-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200418144047.9013-1-sashal@kernel.org>
 References: <20200418144047.9013-1-sashal@kernel.org>
@@ -59,67 +66,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pi-Hsun Shih <pihsun@chromium.org>
+From: Changwei Ge <chge@linux.alibaba.com>
 
-[ Upstream commit f775ac78fcfc6bdc96bdda07029d11f2a5e84869 ]
+[ Upstream commit 783fda856e1034dee90a873f7654c418212d12d7 ]
 
-Host event can be sent by remoteproc by any time, and
-cros_ec_rpmsg_callback would be called after cros_ec_rpmsg_create_ept.
-But the cros_ec_device is initialized after that, which cause host event
-handler to use cros_ec_device that are not initialized properly yet.
+Linux fallocate(2) with FALLOC_FL_PUNCH_HOLE mode set, its offset can
+exceed the inode size.  Ocfs2 now doesn't allow that offset beyond inode
+size.  This restriction is not necessary and violates fallocate(2)
+semantics.
 
-Fix this by don't schedule host event handler before cros_ec_register
-returns. Instead, remember that we have a pending host event, and
-schedule host event handler after cros_ec_register.
+If fallocate(2) offset is beyond inode size, just return success and do
+nothing further.
 
-Fixes: 71cddb7097e2 ("platform/chrome: cros_ec_rpmsg: Fix race with host command when probe failed.")
-Signed-off-by: Pi-Hsun Shih <pihsun@chromium.org>
-Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Otherwise, ocfs2 will crash the kernel.
+
+  kernel BUG at fs/ocfs2//alloc.c:7264!
+   ocfs2_truncate_inline+0x20f/0x360 [ocfs2]
+   ocfs2_remove_inode_range+0x23c/0xcb0 [ocfs2]
+   __ocfs2_change_file_space+0x4a5/0x650 [ocfs2]
+   ocfs2_fallocate+0x83/0xa0 [ocfs2]
+   vfs_fallocate+0x148/0x230
+   SyS_fallocate+0x48/0x80
+   do_syscall_64+0x79/0x170
+
+Signed-off-by: Changwei Ge <chge@linux.alibaba.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
+Cc: Mark Fasheh <mark@fasheh.com>
+Cc: Joel Becker <jlbec@evilplan.org>
+Cc: Junxiao Bi <junxiao.bi@oracle.com>
+Cc: Changwei Ge <gechangwei@live.cn>
+Cc: Gang He <ghe@suse.com>
+Cc: Jun Piao <piaojun@huawei.com>
+Cc: <stable@vger.kernel.org>
+Link: http://lkml.kernel.org/r/20200407082754.17565-1-chge@linux.alibaba.com
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/chrome/cros_ec_rpmsg.c | 16 +++++++++++++++-
- 1 file changed, 15 insertions(+), 1 deletion(-)
+ fs/ocfs2/alloc.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/platform/chrome/cros_ec_rpmsg.c b/drivers/platform/chrome/cros_ec_rpmsg.c
-index 0c3738c3244d8..aa2059b33ba56 100644
---- a/drivers/platform/chrome/cros_ec_rpmsg.c
-+++ b/drivers/platform/chrome/cros_ec_rpmsg.c
-@@ -42,6 +42,8 @@ struct cros_ec_rpmsg {
- 	struct completion xfer_ack;
- 	struct work_struct host_event_work;
- 	struct rpmsg_endpoint *ept;
-+	bool has_pending_host_event;
-+	bool probe_done;
- };
+diff --git a/fs/ocfs2/alloc.c b/fs/ocfs2/alloc.c
+index f9baefc76cf9b..0a6fe7d5aba74 100644
+--- a/fs/ocfs2/alloc.c
++++ b/fs/ocfs2/alloc.c
+@@ -7403,6 +7403,10 @@ int ocfs2_truncate_inline(struct inode *inode, struct buffer_head *di_bh,
+ 	struct ocfs2_dinode *di = (struct ocfs2_dinode *)di_bh->b_data;
+ 	struct ocfs2_inline_data *idata = &di->id2.i_data;
  
- /**
-@@ -186,7 +188,14 @@ static int cros_ec_rpmsg_callback(struct rpmsg_device *rpdev, void *data,
- 		memcpy(ec_dev->din, resp->data, len);
- 		complete(&ec_rpmsg->xfer_ack);
- 	} else if (resp->type == HOST_EVENT_MARK) {
--		schedule_work(&ec_rpmsg->host_event_work);
-+		/*
-+		 * If the host event is sent before cros_ec_register is
-+		 * finished, queue the host event.
-+		 */
-+		if (ec_rpmsg->probe_done)
-+			schedule_work(&ec_rpmsg->host_event_work);
-+		else
-+			ec_rpmsg->has_pending_host_event = true;
- 	} else {
- 		dev_warn(ec_dev->dev, "rpmsg received invalid type = %d",
- 			 resp->type);
-@@ -249,6 +258,11 @@ static int cros_ec_rpmsg_probe(struct rpmsg_device *rpdev)
- 		return ret;
- 	}
- 
-+	ec_rpmsg->probe_done = true;
++	/* No need to punch hole beyond i_size. */
++	if (start >= i_size_read(inode))
++		return 0;
 +
-+	if (ec_rpmsg->has_pending_host_event)
-+		schedule_work(&ec_rpmsg->host_event_work);
-+
- 	return 0;
- }
+ 	if (end > i_size_read(inode))
+ 		end = i_size_read(inode);
  
 -- 
 2.20.1
