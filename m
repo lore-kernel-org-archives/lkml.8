@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74AAEC38A29
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:42:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBB7BC38A2F
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:42:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 52DF321D82
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:42:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B33EA21974
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:42:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587220963;
-	bh=qNus+Aotl4Ykw5mSaayfce2H6rMn0LHCUbNcuJPfFkU=;
+	s=default; t=1587220965;
+	bh=QwpUR4Sev4OdidVpEE7Tp/e3xbHcp8sMGy/D/v65XMw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jDWDIEGWe5UfRAheo8NpyO0D/atWv7soI/rCFo3ZQiuHXeBKw5/J4h3zoLokHQVsH
-	 wh9hh/js20OdDKWvJCJ5UwTTELBYAmbmWT4eMl2w1woR2wWhioxmQVfamKTScsLkZr
-	 h556MGqPeka3pWCppYRSThqvEPl6WXU7+QozQlvA=
+	b=sKqj0F+IlQt08JoY1ULHQw8C0tH1T1ys8+o2Igx+6sacYJkXhrJUzkSTr5XA+Uzfh
+	 6LkYM4gvY6EDloHPW0oVv9AfHsfdmFrZRIuNdiKJFiEnlk9UAtv9ZgAeH8S4QLm7p6
+	 i9ufKg97fszAMA6OeDVSlpX46wNtulFzbGMop3qg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728399AbgDROmm (ORCPT
+        id S1728417AbgDROmp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 10:42:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52692 "EHLO mail.kernel.org"
+        Sat, 18 Apr 2020 10:42:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52968 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728370AbgDROme (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 10:42:34 -0400
+        id S1728398AbgDROmm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 10:42:42 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 395E421D79;
-        Sat, 18 Apr 2020 14:42:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7621A21D7E;
+        Sat, 18 Apr 2020 14:42:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587220954;
-        bh=qNus+Aotl4Ykw5mSaayfce2H6rMn0LHCUbNcuJPfFkU=;
+        s=default; t=1587220962;
+        bh=QwpUR4Sev4OdidVpEE7Tp/e3xbHcp8sMGy/D/v65XMw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZkwMqLhgyJKqaSg2BMl9Uz8Mw1/Ko0JpqMaUrx8q23J6jSIL5dppqTGVs+gOjQEzz
-         Jm95AeENO0KRkKUyyV15VwY9zcAVkhoGR1BSbZVdj2e+DvHgBs/lbtUSsdGOK/yMGQ
-         +9KT+6CcpxTukLxTYPo1hQWnVd4Wm6nIiUHBYWvs=
+        b=WKSu0B74TQzMLFD9WEXxEt46ahrOJH3zdEDSimvL7nPUTeyvB5j1H2gP4PftcaZfc
+         MLFXnrdd0NkerAZp4mGPFbN+nzEfZrMVF2J2oqcd3NEPLSoaCFHLLl8m20twxxOGDq
+         PHfK3BlWJrAeyauKB4irjTx4Storke629u2me9yQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     James Smart <jsmart2021@gmail.com>,
-        Dick Kennedy <dick.kennedy@broadcom.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 05/47] scsi: lpfc: Fix kasan slab-out-of-bounds error in lpfc_unreg_login
-Date:   Sat, 18 Apr 2020 10:41:45 -0400
-Message-Id: <20200418144227.9802-5-sashal@kernel.org>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 4.19 12/47] ASoC: Intel: atom: Take the drv->lock mutex before calling sst_send_slot_map()
+Date:   Sat, 18 Apr 2020 10:41:52 -0400
+Message-Id: <20200418144227.9802-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200418144227.9802-1-sashal@kernel.org>
 References: <20200418144227.9802-1-sashal@kernel.org>
@@ -60,60 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: James Smart <jsmart2021@gmail.com>
+From: Hans de Goede <hdegoede@redhat.com>
 
-[ Upstream commit 38503943c89f0bafd9e3742f63f872301d44cbea ]
+[ Upstream commit 81630dc042af998b9f58cd8e2c29dab9777ea176 ]
 
-The following kasan bug was called out:
+sst_send_slot_map() uses sst_fill_and_send_cmd_unlocked() because in some
+places it is called with the drv->lock mutex already held.
 
- BUG: KASAN: slab-out-of-bounds in lpfc_unreg_login+0x7c/0xc0 [lpfc]
- Read of size 2 at addr ffff889fc7c50a22 by task lpfc_worker_3/6676
- ...
- Call Trace:
- dump_stack+0x96/0xe0
- ? lpfc_unreg_login+0x7c/0xc0 [lpfc]
- print_address_description.constprop.6+0x1b/0x220
- ? lpfc_unreg_login+0x7c/0xc0 [lpfc]
- ? lpfc_unreg_login+0x7c/0xc0 [lpfc]
- __kasan_report.cold.9+0x37/0x7c
- ? lpfc_unreg_login+0x7c/0xc0 [lpfc]
- kasan_report+0xe/0x20
- lpfc_unreg_login+0x7c/0xc0 [lpfc]
- lpfc_sli_def_mbox_cmpl+0x334/0x430 [lpfc]
- ...
+So it must always be called with the mutex locked. This commit adds missing
+locking in the sst_set_be_modules() code-path.
 
-When processing the completion of a "Reg Rpi" login mailbox command in
-lpfc_sli_def_mbox_cmpl, a call may be made to lpfc_unreg_login. The vpi is
-extracted from the completing mailbox context and passed as an input for
-the next. However, the vpi stored in the mailbox command context is an
-absolute vpi, which for SLI4 represents both base + offset.  When used with
-a non-zero base component, (function id > 0) this results in an
-out-of-range access beyond the allocated phba->vpi_ids array.
-
-Fix by subtracting the function's base value to get an accurate vpi number.
-
-Link: https://lore.kernel.org/r/20200322181304.37655-2-jsmart2021@gmail.com
-Signed-off-by: James Smart <jsmart2021@gmail.com>
-Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Fixes: 24c8d14192cc ("ASoC: Intel: mrfld: add DSP core controls")
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Acked-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Link: https://lore.kernel.org/r/20200402185359.3424-1-hdegoede@redhat.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/lpfc/lpfc_sli.c | 2 ++
+ sound/soc/intel/atom/sst-atom-controls.c | 2 ++
  1 file changed, 2 insertions(+)
 
-diff --git a/drivers/scsi/lpfc/lpfc_sli.c b/drivers/scsi/lpfc/lpfc_sli.c
-index a801917d3c193..a56a939792ac1 100644
---- a/drivers/scsi/lpfc/lpfc_sli.c
-+++ b/drivers/scsi/lpfc/lpfc_sli.c
-@@ -2472,6 +2472,8 @@ lpfc_sli_def_mbox_cmpl(struct lpfc_hba *phba, LPFC_MBOXQ_t *pmb)
- 	    !pmb->u.mb.mbxStatus) {
- 		rpi = pmb->u.mb.un.varWords[0];
- 		vpi = pmb->u.mb.un.varRegLogin.vpi;
-+		if (phba->sli_rev == LPFC_SLI_REV4)
-+			vpi -= phba->sli4_hba.max_cfg_param.vpi_base;
- 		lpfc_unreg_login(phba, vpi, rpi, pmb);
- 		pmb->vport = vport;
- 		pmb->mbox_cmpl = lpfc_sli_def_mbox_cmpl;
+diff --git a/sound/soc/intel/atom/sst-atom-controls.c b/sound/soc/intel/atom/sst-atom-controls.c
+index 3672d36b4b66f..d32d48e82a2af 100644
+--- a/sound/soc/intel/atom/sst-atom-controls.c
++++ b/sound/soc/intel/atom/sst-atom-controls.c
+@@ -974,7 +974,9 @@ static int sst_set_be_modules(struct snd_soc_dapm_widget *w,
+ 	dev_dbg(c->dev, "Enter: widget=%s\n", w->name);
+ 
+ 	if (SND_SOC_DAPM_EVENT_ON(event)) {
++		mutex_lock(&drv->lock);
+ 		ret = sst_send_slot_map(drv);
++		mutex_unlock(&drv->lock);
+ 		if (ret)
+ 			return ret;
+ 		ret = sst_send_pipe_module_params(w, k);
 -- 
 2.20.1
 
