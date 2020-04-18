@@ -7,122 +7,104 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46311C38A29
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:55:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32316C38A2F
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:55:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2465C206D6
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:55:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08641206D6
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:55:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587221733;
-	bh=/wjEcidzZHShNwnxxS64gx2IXXTX7QTd31cbCKTc5lE=;
+	s=default; t=1587221738;
+	bh=yVaZQBxonER8jZTMeym+x1xZlWXLzTEuzQDTHefpOF4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IyHBWGG3oZO3b0gdzmN4ptSZxle/YJfHIHmnrXl3KFKYq0gjcegF4GXzLF0Nhcbjx
-	 fZEecfvNrN0B0YsaKUvBiivea0sgNxBWmepPgzX0tawWZ93uC1ahaJZO801N5+5Hgo
-	 VQl3xhqarmsiib3J/lHOsvVVsGnbqcwTpu87WNgQ=
+	b=Lz9BxNddV7uA+MhfXZgZhmn8T5WX6k3O8xdpfIfIRtpwhER4dygSKRRukq+7NvLjM
+	 zV6+16LRajtYptJD3u0xuv7NOWYoqy2Zo7tHbtwzrUEyFwCYnC6vFEZ1z7O5PKWsu9
+	 nSrxg3/4eZT67qQqxbPQbHOE2Ow54e/G4etBbcU8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728595AbgDROzc (ORCPT
+        id S1728739AbgDROzh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 10:55:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50050 "EHLO mail.kernel.org"
+        Sat, 18 Apr 2020 10:55:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49904 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727797AbgDROlM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 10:41:12 -0400
+        id S1727123AbgDROlH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 10:41:07 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5D8B322202;
-        Sat, 18 Apr 2020 14:41:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9605121D82;
+        Sat, 18 Apr 2020 14:41:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587220872;
-        bh=/wjEcidzZHShNwnxxS64gx2IXXTX7QTd31cbCKTc5lE=;
+        s=default; t=1587220867;
+        bh=yVaZQBxonER8jZTMeym+x1xZlWXLzTEuzQDTHefpOF4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WGnBdYe4N/gXHlmX+rBqJggDMbqg06LDWKF/+bpLT73TpjwwXmITs+kW+dQKGRMUM
-         BzTJ+vjCw4EPsP2neJPVRBPCYVcI5iGXTejscxdZQ7nBO+Iw5uj5iEM26cEi9+11qu
-         bY8zo23upw13CxuJy/Aan376Jv2gS19fYWpGwcdk=
+        b=lA6vdtITAad3tcK1uy8xkRRDdFgW0Rgi8Ro0lu6gbUC5Z/yUECmqnTiLpi9UlUet4
+         Am+vIhTVtpiaHwuX3uUKYWG7U89DidMUKAdLm0UIyyLfV2gXi06RubfUxxqES2Euw5
+         aJOdQG/RKLGq0j4eT5RAhifWXn6KuzcaL3L+XFoY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sagi Grimberg <sagi@grimberg.me>, Keith Busch <kbusch@kernel.org>,
-        Hannes Reinecke <hare@suse.de>, Christoph Hellwig <hch@lst.de>,
-        Sasha Levin <sashal@kernel.org>, linux-nvme@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.4 20/78] nvme: fix deadlock caused by ANA update wrong locking
-Date:   Sat, 18 Apr 2020 10:39:49 -0400
-Message-Id: <20200418144047.9013-20-sashal@kernel.org>
+Cc:     =?UTF-8?q?=EC=9D=B4=EA=B2=BD=ED=83=9D?= <gt82.lee@samsung.com>,
+        Vinod Koul <vkoul@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 5.4 16/78] ASoC: dpcm: allow start or stop during pause for backend
+Date:   Sat, 18 Apr 2020 10:39:45 -0400
+Message-Id: <20200418144047.9013-16-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200418144047.9013-1-sashal@kernel.org>
 References: <20200418144047.9013-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sagi Grimberg <sagi@grimberg.me>
+From: 이경택 <gt82.lee@samsung.com>
 
-[ Upstream commit 657f1975e9d9c880fa13030e88ba6cc84964f1db ]
+[ Upstream commit 21fca8bdbb64df1297e8c65a746c4c9f4a689751 ]
 
-The deadlock combines 4 flows in parallel:
-- ns scanning (triggered from reconnect)
-- request timeout
-- ANA update (triggered from reconnect)
-- I/O coming into the mpath device
+soc_compr_trigger_fe() allows start or stop after pause_push.
+In dpcm_be_dai_trigger(), however, only pause_release is allowed
+command after pause_push.
+So, start or stop after pause in compress offload is always
+returned as error if the compress offload is used with dpcm.
+To fix the problem, SND_SOC_DPCM_STATE_PAUSED should be allowed
+for start or stop command.
 
-(1) ns scanning triggers disk revalidation -> update disk info ->
-    freeze queue -> but blocked, due to (2)
-
-(2) timeout handler reference the g_usage_counter - > but blocks in
-    the transport .timeout() handler, due to (3)
-
-(3) the transport timeout handler (indirectly) calls nvme_stop_queue() ->
-    which takes the (down_read) namespaces_rwsem - > but blocks, due to (4)
-
-(4) ANA update takes the (down_write) namespaces_rwsem -> calls
-    nvme_mpath_set_live() -> which synchronize the ns_head srcu
-    (see commit 504db087aacc) -> but blocks, due to (5)
-
-(5) I/O came into nvme_mpath_make_request -> took srcu_read_lock ->
-    direct_make_request > blk_queue_enter -> but blocked, due to (1)
-
-==> the request queue is under freeze -> deadlock.
-
-The fix is making ANA update take a read lock as the namespaces list
-is not manipulated, it is just the ns and ns->head that are being
-updated (which is protected with the ns->head lock).
-
-Fixes: 0d0b660f214dc ("nvme: add ANA support")
-Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
-Reviewed-by: Keith Busch <kbusch@kernel.org>
-Reviewed-by: Hannes Reinecke <hare@suse.de>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Gyeongtaek Lee <gt82.lee@samsung.com>
+Reviewed-by: Vinod Koul <vkoul@kernel.org>
+Link: https://lore.kernel.org/r/004d01d607c1$7a3d5250$6eb7f6f0$@samsung.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvme/host/multipath.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ sound/soc/soc-pcm.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/nvme/host/multipath.c b/drivers/nvme/host/multipath.c
-index aed6354cb2717..56caddeabb5e5 100644
---- a/drivers/nvme/host/multipath.c
-+++ b/drivers/nvme/host/multipath.c
-@@ -510,7 +510,7 @@ static int nvme_update_ana_state(struct nvme_ctrl *ctrl,
- 	if (!nr_nsids)
- 		return 0;
+diff --git a/sound/soc/soc-pcm.c b/sound/soc/soc-pcm.c
+index d978df95c5c65..cc4e9aa80fb0d 100644
+--- a/sound/soc/soc-pcm.c
++++ b/sound/soc/soc-pcm.c
+@@ -2222,7 +2222,8 @@ int dpcm_be_dai_trigger(struct snd_soc_pcm_runtime *fe, int stream,
+ 		switch (cmd) {
+ 		case SNDRV_PCM_TRIGGER_START:
+ 			if ((be->dpcm[stream].state != SND_SOC_DPCM_STATE_PREPARE) &&
+-			    (be->dpcm[stream].state != SND_SOC_DPCM_STATE_STOP))
++			    (be->dpcm[stream].state != SND_SOC_DPCM_STATE_STOP) &&
++			    (be->dpcm[stream].state != SND_SOC_DPCM_STATE_PAUSED))
+ 				continue;
  
--	down_write(&ctrl->namespaces_rwsem);
-+	down_read(&ctrl->namespaces_rwsem);
- 	list_for_each_entry(ns, &ctrl->namespaces, list) {
- 		unsigned nsid = le32_to_cpu(desc->nsids[n]);
- 
-@@ -521,7 +521,7 @@ static int nvme_update_ana_state(struct nvme_ctrl *ctrl,
- 		if (++n == nr_nsids)
+ 			ret = dpcm_do_trigger(dpcm, be_substream, cmd);
+@@ -2252,7 +2253,8 @@ int dpcm_be_dai_trigger(struct snd_soc_pcm_runtime *fe, int stream,
+ 			be->dpcm[stream].state = SND_SOC_DPCM_STATE_START;
  			break;
- 	}
--	up_write(&ctrl->namespaces_rwsem);
-+	up_read(&ctrl->namespaces_rwsem);
- 	return 0;
- }
+ 		case SNDRV_PCM_TRIGGER_STOP:
+-			if (be->dpcm[stream].state != SND_SOC_DPCM_STATE_START)
++			if ((be->dpcm[stream].state != SND_SOC_DPCM_STATE_START) &&
++			    (be->dpcm[stream].state != SND_SOC_DPCM_STATE_PAUSED))
+ 				continue;
  
+ 			if (!snd_soc_dpcm_can_be_free_stop(fe, be, stream))
 -- 
 2.20.1
 
