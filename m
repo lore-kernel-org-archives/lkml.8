@@ -4,52 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3193C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:52:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BFB6C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:52:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B973521D79
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:52:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5403A21D79
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:52:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587221537;
-	bh=dyQ/jAoog3/afvIT8/E4Yzhzrzavmt+MBeOOR32Pl3A=;
+	s=default; t=1587221540;
+	bh=aBiKRtEwJSJ8EawSUmhre+WjRJEOrBukB4zaQ//1MYU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=m/IhE7DNfC4knrxJJse4+tngiogkwI5d0ZiDmQfkhvNE9klZbfkdqs6CESoYfmi48
-	 OFg/97h6IKUZZrNTVRIUhLwVMjHnhk6cySYP8Q9160PmucLFy7iwW7o8YfErAxCvxB
-	 kQZoyF/+FE9IprYZrJfCuGCYBDiZCsxrR3XJ+nkg=
+	b=a6Np5cst4eq+xAD+R1bfsgqil4yBdogILtohh32LwfRUah9m3mdHPwFXdjCWssVXu
+	 4yCSg6tbQK+OcSxxBMxU9Vf/aY8YC5qTAGNlGfVOz8Nd7knY21GXNnDpaiAn7QFqJr
+	 IE8y2RhBLzRK2wLCfXyK804eNjZ+b/tWojFS/l6I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728312AbgDROmV (ORCPT
+        id S1728766AbgDROwT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 10:42:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52264 "EHLO mail.kernel.org"
+        Sat, 18 Apr 2020 10:52:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52366 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728298AbgDROmS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 10:42:18 -0400
+        id S1728313AbgDROmV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 10:42:21 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2BC7C22244;
-        Sat, 18 Apr 2020 14:42:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D881522252;
+        Sat, 18 Apr 2020 14:42:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587220938;
-        bh=dyQ/jAoog3/afvIT8/E4Yzhzrzavmt+MBeOOR32Pl3A=;
+        s=default; t=1587220941;
+        bh=aBiKRtEwJSJ8EawSUmhre+WjRJEOrBukB4zaQ//1MYU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=i8N+SEyzgbFazV10LUi+yQmfL19an37EHygdBgSpsqn0Sr15jnIObGFdcCC60anld
-         27Tj+5vOD0lYp/7lkc3ICaKVTGD1fMLAtojxq516hnMWavim4jfLqeiKDPPiLYC89g
-         9s+Sm67snePGJRlKsRiYxCNtPnp7Ipt/J3yTlf/o=
+        b=ZCO5MiC9WXbVcnSkq8yXnLtFflNOWuXow1rAq7lR0jKRSp/hQiIG+1NaFCJORDaKq
+         nR8JxCi9SCDwDSphhg7xxlTUvD54bF3qAAXEle/wYpLWTkwyWzyMYuNTJsgR6pMOcP
+         ggeSh/mEWwfA7LBhrMNzYzhjsyFxtpsUlAb+94CE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Halil Pasic <pasic@linux.ibm.com>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Sasha Levin <sashal@kernel.org>,
-        virtualization@lists.linux-foundation.org,
-        linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 73/78] virtio-blk: improve virtqueue error to BLK_STS
-Date:   Sat, 18 Apr 2020 10:40:42 -0400
-Message-Id: <20200418144047.9013-73-sashal@kernel.org>
+Cc:     Murthy Bhat <Murthy.Bhat@microsemi.com>,
+        Scott Benesh <scott.benesh@microsemi.com>,
+        Scott Teel <scott.teel@microsemi.com>,
+        Kevin Barnett <kevin.barnett@microsemi.com>,
+        Don Brace <don.brace@microsemi.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, esc.storagedev@microsemi.com,
+        linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 75/78] scsi: smartpqi: fix call trace in device discovery
+Date:   Sat, 18 Apr 2020 10:40:44 -0400
+Message-Id: <20200418144047.9013-75-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200418144047.9013-1-sashal@kernel.org>
 References: <20200418144047.9013-1-sashal@kernel.org>
@@ -62,45 +64,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Halil Pasic <pasic@linux.ibm.com>
+From: Murthy Bhat <Murthy.Bhat@microsemi.com>
 
-[ Upstream commit 3d973b2e9a625996ee997c7303cd793b9d197c65 ]
+[ Upstream commit b969261134c1b990b96ea98fe5e0fcf8ec937c04 ]
 
-Let's change the mapping between virtqueue_add errors to BLK_STS
-statuses, so that -ENOSPC, which indicates virtqueue full is still
-mapped to BLK_STS_DEV_RESOURCE, but -ENOMEM which indicates non-device
-specific resource outage is mapped to BLK_STS_RESOURCE.
+Use sas_phy_delete rather than sas_phy_free which, according to
+comments, should not be called for PHYs that have been set up
+successfully.
 
-Signed-off-by: Halil Pasic <pasic@linux.ibm.com>
-Link: https://lore.kernel.org/r/20200213123728.61216-3-pasic@linux.ibm.com
-Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
+Link: https://lore.kernel.org/r/157048748876.11757.17773443136670011786.stgit@brunhilda
+Reviewed-by: Scott Benesh <scott.benesh@microsemi.com>
+Reviewed-by: Scott Teel <scott.teel@microsemi.com>
+Reviewed-by: Kevin Barnett <kevin.barnett@microsemi.com>
+Signed-off-by: Murthy Bhat <Murthy.Bhat@microsemi.com>
+Signed-off-by: Don Brace <don.brace@microsemi.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/block/virtio_blk.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ drivers/scsi/smartpqi/smartpqi_sas_transport.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/block/virtio_blk.c b/drivers/block/virtio_blk.c
-index c2ed3e9128e3a..a55383b139df9 100644
---- a/drivers/block/virtio_blk.c
-+++ b/drivers/block/virtio_blk.c
-@@ -345,9 +345,14 @@ static blk_status_t virtio_queue_rq(struct blk_mq_hw_ctx *hctx,
- 		if (err == -ENOSPC)
- 			blk_mq_stop_hw_queue(hctx);
- 		spin_unlock_irqrestore(&vblk->vqs[qid].lock, flags);
--		if (err == -ENOMEM || err == -ENOSPC)
-+		switch (err) {
-+		case -ENOSPC:
- 			return BLK_STS_DEV_RESOURCE;
--		return BLK_STS_IOERR;
-+		case -ENOMEM:
-+			return BLK_STS_RESOURCE;
-+		default:
-+			return BLK_STS_IOERR;
-+		}
- 	}
+diff --git a/drivers/scsi/smartpqi/smartpqi_sas_transport.c b/drivers/scsi/smartpqi/smartpqi_sas_transport.c
+index 6776dfc1d317c..b7e28b9f8589f 100644
+--- a/drivers/scsi/smartpqi/smartpqi_sas_transport.c
++++ b/drivers/scsi/smartpqi/smartpqi_sas_transport.c
+@@ -45,9 +45,9 @@ static void pqi_free_sas_phy(struct pqi_sas_phy *pqi_sas_phy)
+ 	struct sas_phy *phy = pqi_sas_phy->phy;
  
- 	if (bd->last && virtqueue_kick_prepare(vblk->vqs[qid].vq))
+ 	sas_port_delete_phy(pqi_sas_phy->parent_port->port, phy);
+-	sas_phy_free(phy);
+ 	if (pqi_sas_phy->added_to_port)
+ 		list_del(&pqi_sas_phy->phy_list_entry);
++	sas_phy_delete(phy);
+ 	kfree(pqi_sas_phy);
+ }
+ 
 -- 
 2.20.1
 
