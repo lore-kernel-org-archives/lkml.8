@@ -4,57 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E23D3C38A2F
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:41:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4858C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:41:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B5B4822250
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:41:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A2D621D7E
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:41:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587220871;
-	bh=pee3zUleh4ZtCgWyYYLwuFN+JFW53m0iamtGFVqoGCI=;
+	s=default; t=1587220874;
+	bh=1RYs4Lz/2BnS7f8Vf4aqmZgljBRSOk3rbVPrrg1Tko4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JdgjcWHsMBhAb+MpqM346NKiG1HbVHIJq88iAXZ6y1YUidEj9liASAl5KFwB5yuUE
-	 Vw0nerSZZaqQjwtT6GBwZD6HE+QtHB1BLXYWdLmHBwgyTGilXnn2atz0Dgglj/5eQx
-	 zNYuFxt1oZgQe875erxNH3NOExRkCQUgFELhzSE8=
+	b=LKA814PNvudVme0pEg6c6VtWJ7yWe4HWUfwdQzdefZ2xBTtkKcNkYi5qsCSPpU9mg
+	 uL5H1h1P8B/u/MUPyBPQfLzTJ22dxvkgC5BB6BkEpBo5X5S0y2TVPTyWMg9B8KzxUB
+	 Ux+EeDQ3w83lQ0iNXKm0ChsMBf4Kv7tqfveUM6QY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727794AbgDROlK (ORCPT
+        id S1727828AbgDROlO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 10:41:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49800 "EHLO mail.kernel.org"
+        Sat, 18 Apr 2020 10:41:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49992 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726471AbgDROlF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 10:41:05 -0400
+        id S1726471AbgDROlL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 10:41:11 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0A49D22261;
-        Sat, 18 Apr 2020 14:41:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 34B442220A;
+        Sat, 18 Apr 2020 14:41:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587220864;
-        bh=pee3zUleh4ZtCgWyYYLwuFN+JFW53m0iamtGFVqoGCI=;
+        s=default; t=1587220871;
+        bh=1RYs4Lz/2BnS7f8Vf4aqmZgljBRSOk3rbVPrrg1Tko4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gMtBR+GlQnL3PkVSg3T4PNeimrmVwXoepCmVAmeqBGfO3mbDvtVD4EPGDIgO8NZG0
-         nPqufEhE8K6yW2I/5hkLEW+e1KtIFrXFOH8v2jJ2gRuFBcwlQhxssdq4a4RcAoA2EJ
-         d7cnFSQUS1SVuD91+vEgCHP8h83kME5Kk/lr6cVQ=
+        b=v+JTI84TmsJ8Cq1KveSfFt9FcY9roYXoCxTJ2WfQPd0TpdXb/kkpJCsIA+OYkxD7t
+         bsUWdnumwxLR5GUP01X+45QQb75l/2nBVrIASm1hn8yWOtW4hZ36fJjSVIYoMVRKc+
+         f7tigYuq8uBJhHoxXFdTPpFoizmWkicXMtJBU9/o=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pwm@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 14/78] pwm: rcar: Fix late Runtime PM enablement
-Date:   Sat, 18 Apr 2020 10:39:43 -0400
-Message-Id: <20200418144047.9013-14-sashal@kernel.org>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 5.4 19/78] ASoC: Intel: atom: Take the drv->lock mutex before calling sst_send_slot_map()
+Date:   Sat, 18 Apr 2020 10:39:48 -0400
+Message-Id: <20200418144047.9013-19-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200418144047.9013-1-sashal@kernel.org>
 References: <20200418144047.9013-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -63,61 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: Hans de Goede <hdegoede@redhat.com>
 
-[ Upstream commit 1451a3eed24b5fd6a604683f0b6995e0e7e16c79 ]
+[ Upstream commit 81630dc042af998b9f58cd8e2c29dab9777ea176 ]
 
-Runtime PM should be enabled before calling pwmchip_add(), as PWM users
-can appear immediately after the PWM chip has been added.
-Likewise, Runtime PM should be disabled after the removal of the PWM
-chip.
+sst_send_slot_map() uses sst_fill_and_send_cmd_unlocked() because in some
+places it is called with the drv->lock mutex already held.
 
-Fixes: ed6c1476bf7f16d5 ("pwm: Add support for R-Car PWM Timer")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
+So it must always be called with the mutex locked. This commit adds missing
+locking in the sst_set_be_modules() code-path.
+
+Fixes: 24c8d14192cc ("ASoC: Intel: mrfld: add DSP core controls")
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Acked-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Link: https://lore.kernel.org/r/20200402185359.3424-1-hdegoede@redhat.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pwm/pwm-rcar.c | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ sound/soc/intel/atom/sst-atom-controls.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/pwm/pwm-rcar.c b/drivers/pwm/pwm-rcar.c
-index 852eb2347954d..b98ec8847b488 100644
---- a/drivers/pwm/pwm-rcar.c
-+++ b/drivers/pwm/pwm-rcar.c
-@@ -228,24 +228,28 @@ static int rcar_pwm_probe(struct platform_device *pdev)
- 	rcar_pwm->chip.base = -1;
- 	rcar_pwm->chip.npwm = 1;
+diff --git a/sound/soc/intel/atom/sst-atom-controls.c b/sound/soc/intel/atom/sst-atom-controls.c
+index baef461a99f19..2c3798034b1de 100644
+--- a/sound/soc/intel/atom/sst-atom-controls.c
++++ b/sound/soc/intel/atom/sst-atom-controls.c
+@@ -966,7 +966,9 @@ static int sst_set_be_modules(struct snd_soc_dapm_widget *w,
+ 	dev_dbg(c->dev, "Enter: widget=%s\n", w->name);
  
-+	pm_runtime_enable(&pdev->dev);
-+
- 	ret = pwmchip_add(&rcar_pwm->chip);
- 	if (ret < 0) {
- 		dev_err(&pdev->dev, "failed to register PWM chip: %d\n", ret);
-+		pm_runtime_disable(&pdev->dev);
- 		return ret;
- 	}
- 
--	pm_runtime_enable(&pdev->dev);
--
- 	return 0;
- }
- 
- static int rcar_pwm_remove(struct platform_device *pdev)
- {
- 	struct rcar_pwm_chip *rcar_pwm = platform_get_drvdata(pdev);
-+	int ret;
-+
-+	ret = pwmchip_remove(&rcar_pwm->chip);
- 
- 	pm_runtime_disable(&pdev->dev);
- 
--	return pwmchip_remove(&rcar_pwm->chip);
-+	return ret;
- }
- 
- static const struct of_device_id rcar_pwm_of_table[] = {
+ 	if (SND_SOC_DAPM_EVENT_ON(event)) {
++		mutex_lock(&drv->lock);
+ 		ret = sst_send_slot_map(drv);
++		mutex_unlock(&drv->lock);
+ 		if (ret)
+ 			return ret;
+ 		ret = sst_send_pipe_module_params(w, k);
 -- 
 2.20.1
 
