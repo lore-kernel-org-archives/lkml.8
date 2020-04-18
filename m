@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 094BAC38A29
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:52:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C85F2C38A2F
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:52:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D6ADB20753
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:52:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A808F20753
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:52:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587221574;
-	bh=4ZKCqnq3aMeP0p5bGe5j0lm2MElKEZ8zCA5qJu5O/l4=;
+	s=default; t=1587221578;
+	bh=5rg1mbDvVPgqk2qdN1TJwA1lpQ8pvGe+EL4GcEoRhmI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gfGcGu9KB25v7pR2MRnNBWxQVI6WU9JAkshbVu63XadTiZKknBqdngw+BcH3cZ4tt
-	 wwN4LSQcZK9V0CqJhlacPvanGr3c/Mu+mOTkR7PEq5Mr81FjzRmLq3OK4N6Y17R9rD
-	 SWJc6mqLTG3GtNmUwFUXl6guiBGoWafd/okemzTg=
+	b=N/c1dJCtWuOrcNsNNHX0EAb9Cwp7Nqax5WDT0nvLR9zTo9WXN7wIgEdkkcAbVGubu
+	 Qd0ZFMxjKkc+1M0oGU0FBbm94W5xv99Eti/Yfi7i8K/EFZOjWyqGGtFmivjiAYJtQw
+	 aWHVpqjgPO6Hji0o89CCPqOwfheAb/j+Aw8cD0aQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729090AbgDROwy (ORCPT
+        id S1728560AbgDROw5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 10:52:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51966 "EHLO mail.kernel.org"
+        Sat, 18 Apr 2020 10:52:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51914 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728253AbgDROmI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 10:42:08 -0400
+        id S1728250AbgDROmH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 10:42:07 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 880D222202;
-        Sat, 18 Apr 2020 14:42:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3A95222244;
+        Sat, 18 Apr 2020 14:42:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587220928;
-        bh=4ZKCqnq3aMeP0p5bGe5j0lm2MElKEZ8zCA5qJu5O/l4=;
+        s=default; t=1587220927;
+        bh=5rg1mbDvVPgqk2qdN1TJwA1lpQ8pvGe+EL4GcEoRhmI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=f7KTMu79CWekh+DAPfy2BnLf61nmYvma36h/K6tdLjMKzLr8L5oLKYEk0IrH+H8LP
-         MiFJnG1IpXt8aBKrZMpQG0skowd7qsqsFLSvtXWRRwViTYWa6zCe2ddJAb8X8Q/hNZ
-         CnizLvcO4P91yMv9Q/JIg156rOXGhnKWmHgcSFxk=
+        b=pD5m0sazOQZ2VF9jw75mDsKVphLY9+j2GaPBmYyywrRntcPkgdqZ2XSaimgSbMlXl
+         9mANJnGPolv7PkFM3An+iJ+QauBkpl5Rmn1Xe0V+FvyE/qbSca0PjHeQGuYT7LqbMv
+         OkYF0mbs7CJCq4vfrXumXWBbxu8h58I98Z6D9UTs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 65/78] PCI/PM: Add pcie_wait_for_link_delay()
-Date:   Sat, 18 Apr 2020 10:40:34 -0400
-Message-Id: <20200418144047.9013-65-sashal@kernel.org>
+Cc:     Yongqiang Sun <yongqiang.sun@amd.com>,
+        Tony Cheng <Tony.Cheng@amd.com>,
+        Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.4 64/78] drm/amd/display: Not doing optimize bandwidth if flip pending.
+Date:   Sat, 18 Apr 2020 10:40:33 -0400
+Message-Id: <20200418144047.9013-64-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200418144047.9013-1-sashal@kernel.org>
 References: <20200418144047.9013-1-sashal@kernel.org>
@@ -60,73 +62,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
+From: Yongqiang Sun <yongqiang.sun@amd.com>
 
-[ Upstream commit 4827d63891b6a839dac49c6ab62e61c4b011c4f2 ]
+[ Upstream commit 9941b8129030c9202aaf39114477a0e58c0d6ffc ]
 
-Add pcie_wait_for_link_delay().  Similar to pcie_wait_for_link() but allows
-passing custom activation delay in milliseconds.
+[Why]
+In some scenario like 1366x768 VSR enabled connected with a 4K monitor
+and playing 4K video in clone mode, underflow will be observed due to
+decrease dppclk when previouse surface scan isn't finished
 
-Link: https://lore.kernel.org/r/20191112091617.70282-2-mika.westerberg@linux.intel.com
-Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+[How]
+In this use case, surface flip is switching between 4K and 1366x768,
+1366x768 needs smaller dppclk, and when decrease the clk and previous
+surface scan is for 4K and scan isn't done, underflow will happen.  Not
+doing optimize bandwidth in case of flip pending.
+
+Signed-off-by: Yongqiang Sun <yongqiang.sun@amd.com>
+Reviewed-by: Tony Cheng <Tony.Cheng@amd.com>
+Acked-by: Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/pci.c | 21 ++++++++++++++++++---
- 1 file changed, 18 insertions(+), 3 deletions(-)
+ drivers/gpu/drm/amd/display/dc/core/dc.c | 23 +++++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
 
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 981ae16f935bc..94d6e120b4734 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -4605,14 +4605,17 @@ static int pci_pm_reset(struct pci_dev *dev, int probe)
- 
- 	return pci_dev_wait(dev, "PM D3->D0", PCIE_RESET_READY_POLL_MS);
- }
-+
- /**
-- * pcie_wait_for_link - Wait until link is active or inactive
-+ * pcie_wait_for_link_delay - Wait until link is active or inactive
-  * @pdev: Bridge device
-  * @active: waiting for active or inactive?
-+ * @delay: Delay to wait after link has become active (in ms)
-  *
-  * Use this to wait till link becomes active or inactive.
-  */
--bool pcie_wait_for_link(struct pci_dev *pdev, bool active)
-+static bool pcie_wait_for_link_delay(struct pci_dev *pdev, bool active,
-+				     int delay)
- {
- 	int timeout = 1000;
- 	bool ret;
-@@ -4649,13 +4652,25 @@ bool pcie_wait_for_link(struct pci_dev *pdev, bool active)
- 		timeout -= 10;
- 	}
- 	if (active && ret)
--		msleep(100);
-+		msleep(delay);
- 	else if (ret != active)
- 		pci_info(pdev, "Data Link Layer Link Active not %s in 1000 msec\n",
- 			active ? "set" : "cleared");
- 	return ret == active;
+diff --git a/drivers/gpu/drm/amd/display/dc/core/dc.c b/drivers/gpu/drm/amd/display/dc/core/dc.c
+index 71c574d1e8be2..2028dc017f7a0 100644
+--- a/drivers/gpu/drm/amd/display/dc/core/dc.c
++++ b/drivers/gpu/drm/amd/display/dc/core/dc.c
+@@ -1182,6 +1182,26 @@ bool dc_commit_state(struct dc *dc, struct dc_state *context)
+ 	return (result == DC_OK);
  }
  
-+/**
-+ * pcie_wait_for_link - Wait until link is active or inactive
-+ * @pdev: Bridge device
-+ * @active: waiting for active or inactive?
-+ *
-+ * Use this to wait till link becomes active or inactive.
-+ */
-+bool pcie_wait_for_link(struct pci_dev *pdev, bool active)
++static bool is_flip_pending_in_pipes(struct dc *dc, struct dc_state *context)
 +{
-+	return pcie_wait_for_link_delay(pdev, active, 100);
++	int i;
++	struct pipe_ctx *pipe;
++
++	for (i = 0; i < MAX_PIPES; i++) {
++		pipe = &context->res_ctx.pipe_ctx[i];
++
++		if (!pipe->plane_state)
++			continue;
++
++		/* Must set to false to start with, due to OR in update function */
++		pipe->plane_state->status.is_flip_pending = false;
++		dc->hwss.update_pending_status(pipe);
++		if (pipe->plane_state->status.is_flip_pending)
++			return true;
++	}
++	return false;
 +}
 +
- void pci_reset_secondary_bus(struct pci_dev *dev)
+ bool dc_post_update_surfaces_to_stream(struct dc *dc)
  {
- 	u16 ctrl;
+ 	int i;
+@@ -1192,6 +1212,9 @@ bool dc_post_update_surfaces_to_stream(struct dc *dc)
+ 
+ 	post_surface_trace(dc);
+ 
++	if (is_flip_pending_in_pipes(dc, context))
++		return true;
++
+ 	for (i = 0; i < dc->res_pool->pipe_count; i++)
+ 		if (context->res_ctx.pipe_ctx[i].stream == NULL ||
+ 		    context->res_ctx.pipe_ctx[i].plane_state == NULL) {
 -- 
 2.20.1
 
