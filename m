@@ -2,104 +2,124 @@ Return-Path: <SRS0=3CHW=6C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE616C38A2B
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 00:46:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DE58C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 00:49:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C33882223C
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 00:46:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587170818;
-	bh=14qSYdrLemwVEC2uAz97e2xRaw+5yWSJoO7bWCN/K+M=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=s+WSXwkmsVyLaf4iBqau3jInvGSA8Ukvlxx8HodQBKKohc2LSyFVi1TW/Rc80w3+r
-	 B7/kUMVM2ZLn1dV3B8wPaSbF6xLVM+REP91cjPGgDq5lDOr7gqTa6046RrcMaccsER
-	 CiIWm7Q9rXt7ui9NbsG8Qxp7diMuKQfpEJDZVUbo=
+	by mail.kernel.org (Postfix) with ESMTP id 4F9ED214D8
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 00:49:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X0i85OPn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726009AbgDRAq4 (ORCPT
+        id S1726036AbgDRAtt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 20:46:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53136 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725867AbgDRAq4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 20:46:56 -0400
-Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2E767214D8;
-        Sat, 18 Apr 2020 00:46:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587170815;
-        bh=14qSYdrLemwVEC2uAz97e2xRaw+5yWSJoO7bWCN/K+M=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=yxkA8fcXsZ3kHBWGVChkWfhLXCziPW7a3jxL/C2RqnxvOCRPknlE3ur4ow8QKyd1C
-         KRYzLVsbvXBu5n4P5eslol7AvQWnzw0Lxwn2EEBNGYbRtXL0EHdnqPh9H05MLVrh4w
-         FNWiKKtyNJWl/oZBQwCLwS+px7QRgKEm1hk2sSi8=
-Date:   Fri, 17 Apr 2020 17:46:54 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     "Guilherme G. Piccoli" <gpiccoli@canonical.com>
-Cc:     linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-        linux-doc@vger.kernel.org, mcgrof@kernel.org,
-        keescook@chromium.org, yzaikin@google.com, tglx@linutronix.de,
-        vbabka@suse.cz, rdunlap@infradead.org, willy@infradead.org,
-        kernel@gpiccoli.net
-Subject: Re: [PATCH V3] panic: Add sysctl to dump all CPUs backtraces on
- oops event
-Message-Id: <20200417174654.9af0c51afb5d9e35e5519113@linux-foundation.org>
-In-Reply-To: <20200327224116.21030-1-gpiccoli@canonical.com>
-References: <20200327224116.21030-1-gpiccoli@canonical.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Fri, 17 Apr 2020 20:49:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47016 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725856AbgDRAts (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Apr 2020 20:49:48 -0400
+Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67D96C061A0C
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 17:49:43 -0700 (PDT)
+Received: by mail-ed1-x541.google.com with SMTP id f12so2781572edn.12
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 17:49:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ILGJdPVopH8dcZhs9zo8meFz8ZU1EhEF7xfIxGI/Jew=;
+        b=X0i85OPnq74NVcUCzWPdo/3Sdhtgs2brEcb60Il8uSMv8zsbbwQn/ZVdUswz/2UnTl
+         Ke0gTwLzfULJVWmSGEfcGmrVBoKjNnY+fBVjbs4Hkc9XusQl20LxTGn0OBOw9gcbyHaQ
+         35EdYRiN+b+1dPnswJjZMB6TZS9qRsulPw6ORtRMzjxmXLBbsnCcX8p8y7cPoO1nAFZu
+         sjVMx6rk5DHzAHcdTNRPoME3pu7CmOWtZFfLowcGGSYTK/jsH8ALG31Ht9lc1pIRgdW0
+         EOcjo1mFOTtSQ10CzXCmgN41Tj5jSaL4GHEurN/NIqQN1wS3j8V/uSWICdBtpEq+B23X
+         p/xw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ILGJdPVopH8dcZhs9zo8meFz8ZU1EhEF7xfIxGI/Jew=;
+        b=MhGdhmZGRqTThinRH1wtFYFbbnFoPpuKGS7t5CmNTxN6gfSS43b7o3C/XxClFmuSJ7
+         N2pOrY4ik/IqVI2wgwl7UWtj4nqEAmeUr715LR0gJIKCshBssWifEzNo4LjH14cLuNGf
+         xomGQlveSfK12lWgrJ5uvF5DwlaYzbCkMLVArWN3fj3olYJ1ac73+OftVHjxqOar9Z2m
+         fGWY0Ps/+HnNytoV6ac3nvGWm6o6mGRij8v7r/hQNgyL7JUJAfH7l8soXdBGUQVugI3C
+         XVYvLA5YzaVxdbSdiKSKSRejW6cTkFC6IGmBMJcfqiFNrp7+YuNoXGQpeVbl/PTwy/sL
+         SHhg==
+X-Gm-Message-State: AGi0PuacRJ4Gaxq6FKodRsw6rUV4tT4yBY1G4IMjh9WXlpCaUGZ9SQoY
+        QjoEIyDPzZYipKEzGgJeqSWKKXwW80o/dSs/8uE=
+X-Google-Smtp-Source: APiQypIRQPCAz8bz0tv7D9Le7fVONYWs8EctkxowfXctDK40o7XMsRFbfGSCOUYS/Le3Qz3zTDKlljGXKeiZ6tx8d5M=
+X-Received: by 2002:a05:6402:120a:: with SMTP id c10mr5197545edw.15.1587170981913;
+ Fri, 17 Apr 2020 17:49:41 -0700 (PDT)
+MIME-Version: 1.0
+References: <CAB9dFdtBqrcmKcV=zxPyV5uNB7WeKOqqC4k5KtY+9vxS9ooKoA@mail.gmail.com>
+ <87d085zwy9.fsf@nanos.tec.linutronix.de>
+In-Reply-To: <87d085zwy9.fsf@nanos.tec.linutronix.de>
+From:   Marc Dionne <marc.c.dionne@gmail.com>
+Date:   Fri, 17 Apr 2020 21:49:30 -0300
+Message-ID: <CAB9dFdvJE0LhQsxdUTKmOxp_q1xF1Bpe9E-dNp1Pxg3T0B1xPQ@mail.gmail.com>
+Subject: Re: FreeNAS VM disk access errors, bisected to commit 6f1a4891a592
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        x86@kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 27 Mar 2020 19:41:16 -0300 "Guilherme G. Piccoli" <gpiccoli@canonical.com> wrote:
-
-> Usually when kernel reach an oops condition, it's a point of no return;
-> in case not enough debug information is available in the kernel splat,
-> one of the last resorts would be to collect a kernel crash dump and
-> analyze it. The problem with this approach is that in order to collect
-> the dump, a panic is required (to kexec-load the crash kernel). When
-> in an environment of multiple virtual machines, users may prefer to
-> try living with the oops, at least until being able to properly
-> shutdown their VMs / finish their important tasks.
-> 
-> This patch implements a way to collect a bit more debug details when an
-> oops event is reached, by printing all the CPUs backtraces through the
-> usage of NMIs (on architectures that support that). The sysctl added
-> (and documented) here was called "oops_all_cpu_backtrace", and when
-> set will (as the name suggests) dump all CPUs backtraces.
-> 
-> Far from ideal, this may be the last option though for users that for
-> some reason cannot panic on oops. Most of times oopses are clear enough
-> to indicate the kernel portion that must be investigated, but in virtual
-> environments it's possible to observe hypervisor/KVM issues that could
-> lead to oopses shown in other guests CPUs (like virtual APIC crashes).
-> This patch hence aims to help debug such complex issues without
-> resorting to kdump.
-> 
-> ...
+On Fri, Apr 17, 2020 at 5:19 PM Thomas Gleixner <tglx@linutronix.de> wrote:
 >
-> --- a/include/linux/kernel.h
-> +++ b/include/linux/kernel.h
-> @@ -513,6 +513,12 @@ static inline u32 int_sqrt64(u64 x)
->  }
->  #endif
->  
-> +#ifdef CONFIG_SMP
-> +extern unsigned int sysctl_oops_all_cpu_backtrace;
-> +#else
-> +#define sysctl_oops_all_cpu_backtrace 0
-> +#endif /* CONFIG_SMP */
-> +
+> Marc,
+>
+> Marc Dionne <marc.c.dionne@gmail.com> writes:
+>
+> > Commit 6f1a4891a592 ("x86/apic/msi: Plug non-maskable MSI affinity
+> > race") causes Linux VMs hosted on FreeNAS (bhyve hypervisor) to lose
+> > access to their disk devices shortly after boot.  The disks are zfs
+> > zvols on the host, presented to each VM.
+> >
+> > Background: I recently updated some fedora 31 VMs running under the
+> > bhyve hypervisor (hosted on a FreeNAS mini), and they moved to a
+> > distro 5.5 kernel (5.5.15).  Shortly after reboot, the disks became
+> > inaccessible with any operation getting EIO errors.  Booting back into
+> > a 5.4 kernel, everything was fine.  I built a 5.7-rc1 kernel, which
+> > showed the same symptoms, and was then able to bisect it down to
+> > commit 6f1a4891a592.  Note that the symptoms do not occur on every
+> > boot, but often enough (roughly 80%) to make bisection possible.
+> >
+> > Applying a manual revert of 6f1a4891a592 on top of mainline from
+> > yesterday gives me a kernel that works fine.
+>
+> we tested on real hardware and various hypervisors that the fix actually
+> works correctly.
+>
+> That makes me assume that the staged approach of changing affinity for
+> this non-maskable MSI mess makes your particular hypervisor unhappy.
+>
+> Are there any messages like this:
+>
+>  "do_IRQ: 0.83 No irq handler for vector"
 
-hm, we have a ton of junk in kernel.h just to communicate between
-sysctl.c and a handful of other files.  Perhaps one day someone can
-move all that into a new sysctl-externs.h.
+I haven't seen those although I only have a VNC console that scrolls
+by rather fast.
+I did see a report from someone running Ubuntu 18.04 which had this
+after the initial errors:
+
+  do_IRQ: 2.35 No irq handler for vector
+  ata1.00: revalidation failed (error=-5)
+
+> in dmesg on the Linux side? If they happen then before the disk timeout
+> happens.
+>
+> I have absolutely zero knowledge about bhyve, so may I suggest to talk
+> to the bhyve experts about this.
+
+I opened a ticket with iXsystems.  I noticed several people reporting
+the same problem in their community forums.
+
+Marc
