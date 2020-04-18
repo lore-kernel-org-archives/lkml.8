@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F429C38A2F
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 13:53:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6337C38A30
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 13:53:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 23CDE2054F
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 13:53:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86462214AF
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 13:53:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587217990;
-	bh=zxMAMCUGege0v8kJLkpgkDzKu7rKYEby4bGm0U/va+I=;
+	s=default; t=1587217992;
+	bh=eKkMLoWmmxBEA0EEWrqjo0000MnuLIWuCTCdkeZCa5U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RU/Tfgd5Nfs73tk73+BRL3rjQ77YHlTdBLesnuASjdjlmCs3+SS2znR5gKzHkIB32
-	 MGnfjmGudeO4k/wBkDJMl+shQGMf2ZUr/HiZJZAs7qEq9gNbUjReeKDhgmjGkLHBp4
-	 KPeV7rqjgsZmNsjn5MBnm8RDQhcY73m1mOJz/his=
+	b=VpeQ4syKEITDyhD67HBz2X3yL0ECZmS3P64V4VYaaIKwkhN8t5ixg0hLfku46thUr
+	 2E0nf88uFNZd9AEs2hsSpbu9QNp4INIjEn/bSG20/709B+NRHEzLcaOs9ZnGrrHF8X
+	 kNkcueWjPyHbuswUUzB3/uofvdnGv4mRO92XWqtc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727999AbgDRNxJ (ORCPT
+        id S1728012AbgDRNxL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 09:53:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54744 "EHLO mail.kernel.org"
+        Sat, 18 Apr 2020 09:53:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54644 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726396AbgDRNsa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 09:48:30 -0400
+        id S1726373AbgDRNs1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 09:48:27 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 891C9221F4;
-        Sat, 18 Apr 2020 13:48:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DB11F221F4;
+        Sat, 18 Apr 2020 13:48:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587217710;
-        bh=zxMAMCUGege0v8kJLkpgkDzKu7rKYEby4bGm0U/va+I=;
+        s=default; t=1587217706;
+        bh=eKkMLoWmmxBEA0EEWrqjo0000MnuLIWuCTCdkeZCa5U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CnG+BTpJVDcAmu9HFi3UCzPv1ChjwVaeLUKORpX5U+FhcnhmsK+d+beWuk3seDXoL
-         37WajJYb0tf92TXCsONixsgRwynKxxNiJ35GKXGtZcbgY/MtQ2ObGtL+KoPD07WR1S
-         uv8GoO2XIUSIBAeT1OeV4WsgIJrif4RbQUKLeiyM=
+        b=F9ofWDHi2kxOtbpMQbSV98Rn322Jp3OOQaezRkNOpD0n2bV0eyeIIp2G8wdIZiGif
+         omCxhHC9GzEGmYDhIbs8W1f8GQD7qm5gaUrrtyv245n8u7MGYReBZqByMm88bcvU/c
+         qFdcst746MaDMDi9COQ1U3C0yrDYqH1aPMJPgdt4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Javed Hasan <jhasan@marvell.com>,
-        Saurav Kashyap <skashyap@marvell.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 12/73] scsi: libfc: If PRLI rejected, move rport to PLOGI state
-Date:   Sat, 18 Apr 2020 09:47:14 -0400
-Message-Id: <20200418134815.6519-12-sashal@kernel.org>
+Cc:     Dave Chinner <dchinner@redhat.com>,
+        Brian Foster <bfoster@redhat.com>,
+        Allison Collins <allison.henderson@oracle.com>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-xfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 09/73] xfs: correctly acount for reclaimable slabs
+Date:   Sat, 18 Apr 2020 09:47:11 -0400
+Message-Id: <20200418134815.6519-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200418134815.6519-1-sashal@kernel.org>
 References: <20200418134815.6519-1-sashal@kernel.org>
@@ -60,42 +61,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Javed Hasan <jhasan@marvell.com>
+From: Dave Chinner <dchinner@redhat.com>
 
-[ Upstream commit 45e544bfdab2014d11c7595b8ccc3c4715a09015 ]
+[ Upstream commit d59eadaea2b9945095d4d6d44367ebabd604395c ]
 
-If PRLI reject code indicates "rejected status", move rport state machine
-back to PLOGI state.
+The XFS inode item slab actually reclaimed by inode shrinker
+callbacks from the memory reclaim subsystem. These should be marked
+as reclaimable so the mm subsystem has the full picture of how much
+memory it can actually reclaim from the XFS slab caches.
 
-Link: https://lore.kernel.org/r/20200327060208.17104-2-skashyap@marvell.com
-Signed-off-by: Javed Hasan <jhasan@marvell.com>
-Signed-off-by: Saurav Kashyap <skashyap@marvell.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Dave Chinner <dchinner@redhat.com>
+Reviewed-by: Brian Foster <bfoster@redhat.com>
+Reviewed-by: Allison Collins <allison.henderson@oracle.com>
+Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/libfc/fc_rport.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ fs/xfs/xfs_super.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/libfc/fc_rport.c b/drivers/scsi/libfc/fc_rport.c
-index da6e97d8dc3bb..6bb8917b99a19 100644
---- a/drivers/scsi/libfc/fc_rport.c
-+++ b/drivers/scsi/libfc/fc_rport.c
-@@ -1208,9 +1208,15 @@ static void fc_rport_prli_resp(struct fc_seq *sp, struct fc_frame *fp,
- 		rjt = fc_frame_payload_get(fp, sizeof(*rjt));
- 		if (!rjt)
- 			FC_RPORT_DBG(rdata, "PRLI bad response\n");
--		else
-+		else {
- 			FC_RPORT_DBG(rdata, "PRLI ELS rejected, reason %x expl %x\n",
- 				     rjt->er_reason, rjt->er_explan);
-+			if (rjt->er_reason == ELS_RJT_UNAB &&
-+			    rjt->er_explan == ELS_EXPL_PLOGI_REQD) {
-+				fc_rport_enter_plogi(rdata);
-+				goto out;
-+			}
-+		}
- 		fc_rport_error_retry(rdata, FC_EX_ELS_RJT);
- 	}
+diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
+index 2094386af8aca..68fea439d9743 100644
+--- a/fs/xfs/xfs_super.c
++++ b/fs/xfs/xfs_super.c
+@@ -1861,7 +1861,8 @@ xfs_init_zones(void)
+ 
+ 	xfs_ili_zone = kmem_cache_create("xfs_ili",
+ 					 sizeof(struct xfs_inode_log_item), 0,
+-					 SLAB_MEM_SPREAD, NULL);
++					 SLAB_RECLAIM_ACCOUNT | SLAB_MEM_SPREAD,
++					 NULL);
+ 	if (!xfs_ili_zone)
+ 		goto out_destroy_inode_zone;
  
 -- 
 2.20.1
