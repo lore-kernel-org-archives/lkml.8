@@ -2,85 +2,127 @@ Return-Path: <SRS0=3CHW=6C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB2E1C2BA19
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 03:44:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3078DC38A2B
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 04:09:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C717221D91
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 03:44:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11AEA221EA
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 04:09:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CGR92FnG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725862AbgDRDof (ORCPT
+        id S1725858AbgDREHA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 23:44:35 -0400
-Received: from m176115.mail.qiye.163.com ([59.111.176.115]:9789 "EHLO
-        m176115.mail.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725320AbgDRDof (ORCPT
+        Sat, 18 Apr 2020 00:07:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48904 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725747AbgDREHA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 23:44:35 -0400
-Received: from ubuntu.localdomain (unknown [157.0.31.122])
-        by m176115.mail.qiye.163.com (Hmail) with ESMTPA id 5EFF5663B47;
-        Sat, 18 Apr 2020 11:44:32 +0800 (CST)
-From:   Bernard Zhao <bernard@vivo.com>
-To:     Felix Kuehling <Felix.Kuehling@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Cc:     kernel@vivo.com, Bernard Zhao <bernard@vivo.com>
-Subject: [PATCH] amdgpu_amdkfd_gpuvm_free_memory_of_gpu, reduce noneed mutex_lock area
-Date:   Fri, 17 Apr 2020 20:44:24 -0700
-Message-Id: <1587181464-114215-1-git-send-email-bernard@vivo.com>
-X-Mailer: git-send-email 2.7.4
-X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgYFAkeWUFZT1VIS09CQkJDSUNISENNSVlXWShZQU
-        hPN1dZLVlBSVdZCQ4XHghZQVk1NCk2OjckKS43PlkG
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6OhA6NBw*NTgxPA49Hys#H00f
-        NzYwCSFVSlVKTkNMSkNKT0xJTUlCVTMWGhIXVRkeCRUaCR87DRINFFUYFBZFWVdZEgtZQVlKTkxV
-        S1VISlVKSUlZV1kIAVlBSU5KTTcG
-X-HM-Tid: 0a718b634b279373kuws5eff5663b47
+        Sat, 18 Apr 2020 00:07:00 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DCA5EC061A0C;
+        Fri, 17 Apr 2020 21:06:59 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id z6so1712046plk.10;
+        Fri, 17 Apr 2020 21:06:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=eH90KozuksShDLEA3UFs+8T8NeL3+L+gABGBzpWbZmo=;
+        b=CGR92FnGZ4icoBWX8hfN+/b0UlO1ETKueJ2FFj79/OgReXHdyZWQRzuA7fLFZP4wjA
+         y0bFX1tU7yThL+JSN6SKAmCbjz6oNAAvfEBTa5s6hZNVf8REkcHM9C/cnctYmeKI65sH
+         J4VI1Qn8gd2JEpy91B6Y/f9gLQCn7tbKl5+axa8qw3PCl81jx2LOnjylPnO4uESXBq3y
+         HqfHKSR6FtZiOlvWbhGhfUhpvBeK24/2kcszXi60AeCxskD+jIy2z8FOsrn5/pD9Tzit
+         VHwkvQMwG035b5bOEsKb5ZtY9t8NLEpzPjWXyPWkx5u0xXGfmSqfIpUkzEHTu5WyoCwj
+         MnTA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=eH90KozuksShDLEA3UFs+8T8NeL3+L+gABGBzpWbZmo=;
+        b=E0JRFrTHPXT3PyEktJ6l0j75er4T0liMIidbVCWchIxu7mVgiRRR+1ZG/2JyIHe07t
+         k2yCKWeNlHLFuSlHZYD5WipJBpvEEiIalT7H13xADofM5FCDAIvDypVJkXwVzRmaT6Pp
+         6Xjl9HCig9TiBTeds4OHj5TTJErqncjY799nGe7ahVbVSHcPohtqlrzNdotUWsjR71r+
+         I98SJUnHE1XprAbt8VxMPPHoACyt36+b7Wt0rGbxbGaOWF+iZX6Wj76kKgDX24ju79n2
+         paIkLMnkOpHoVdl7XZhZ8qfcXV9sPEpsX3zwF8ERLZro9+9Gg3p3VTpBLkByvbzy/zLa
+         mgsg==
+X-Gm-Message-State: AGi0PuYlYTC6R4xd8jt49jn7FeB8c3TaxsFiS5fOBOtSCA6iJKlo9S5L
+        pPtEwzOJ9TweqBTsdUW+3gv7dYp7
+X-Google-Smtp-Source: APiQypKSBYrQRjdu2X1NmLdY3oJtKp1sd0lQ5J4NxA8PeOi1ghfo8fO35p13uhjCnrefQji+o08Wcg==
+X-Received: by 2002:a17:90a:24ea:: with SMTP id i97mr8149595pje.189.1587182819249;
+        Fri, 17 Apr 2020 21:06:59 -0700 (PDT)
+Received: from localhost ([89.208.244.140])
+        by smtp.gmail.com with ESMTPSA id 13sm5903448pfv.95.2020.04.17.21.06.57
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 17 Apr 2020 21:06:58 -0700 (PDT)
+Date:   Sat, 18 Apr 2020 12:06:53 +0800
+From:   Dejin Zheng <zhengdejin5@gmail.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Wolfram Sang <wsa@the-dreams.de>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Pierre Yves MORDRET <pierre-yves.mordret@st.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre TORGUE <alexandre.torgue@st.com>,
+        Alain Volmat <alain.volmat@st.com>,
+        linux-i2c <linux-i2c@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v1] i2c: busses: convert to
+ devm_platform_get_and_ioremap_resource
+Message-ID: <20200418040653.GA7120@nuc8i5>
+References: <20200414134827.18674-1-zhengdejin5@gmail.com>
+ <20200415102158.GH1141@ninjato>
+ <20200415160757.GC17519@nuc8i5>
+ <CAHp75Vc+a7sQeY+W+4+-75TCMDCpnPRjUA5T8ZsBZi52PVB9dw@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAHp75Vc+a7sQeY+W+4+-75TCMDCpnPRjUA5T8ZsBZi52PVB9dw@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Maybe we could reduce the mutex_lock(&mem->lock)`s protected code area,
-and noneed to protect pr_debug.
+On Fri, Apr 17, 2020 at 11:46:33PM +0300, Andy Shevchenko wrote:
+> On Thu, Apr 16, 2020 at 3:19 AM Dejin Zheng <zhengdejin5@gmail.com> wrote:
+> >
+> > On Wed, Apr 15, 2020 at 12:21:58PM +0200, Wolfram Sang wrote:
+> > > On Tue, Apr 14, 2020 at 09:48:27PM +0800, Dejin Zheng wrote:
+> > > > use devm_platform_get_and_ioremap_resource() to simplify code, which
+> > > > contains platform_get_resource() and devm_ioremap_resource(), it also
+> > > > get the resource for use by the following code.
+> > > >
+> > > > Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
+> > >
+> > > Applied to for-next, because it seems 'the new way' but...
+> > >
+> > > > -   r_mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> > > > -   id->membase = devm_ioremap_resource(&pdev->dev, r_mem);
+> > > > +   id->membase = devm_platform_get_and_ioremap_resource(pdev, 0, &r_mem);
+> > >
+> > > ... guys, do you really think this one line reduction improves
+> > > readability? Oh well...
+> > >
+> > Wolfram, Thank you for accepting it. From my personal point of view,
+> > as long as the direction is correct, even small improvements are
+> > worth doing. Thanks again for your tolerance.
+> 
+> Do you have plans to move on from janitor work to something serious?
+>
+Andy, I want to do��but I don��t know where to start, Could you give me
+some suggestions? Thanks very much!
 
-Signed-off-by: Bernard Zhao <bernard@vivo.com>
----
- drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c
-index 327317c..3c3769e5 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c
-@@ -1285,17 +1285,18 @@ int amdgpu_amdkfd_gpuvm_free_memory_of_gpu(
- 	struct bo_vm_reservation_context ctx;
- 	struct ttm_validate_buffer *bo_list_entry;
- 	int ret;
-+	unsigned int mapped_to_gpu_memory;
- 
- 	mutex_lock(&mem->lock);
-+	mapped_to_gpu_memory = mem->mapped_to_gpu_memory;
-+	mutex_unlock(&mem->lock);
- 
--	if (mem->mapped_to_gpu_memory > 0) {
-+	if (mapped_to_gpu_memory > 0) {
- 		pr_debug("BO VA 0x%llx size 0x%lx is still mapped.\n",
- 				mem->va, bo_size);
--		mutex_unlock(&mem->lock);
- 		return -EBUSY;
- 	}
- 
--	mutex_unlock(&mem->lock);
- 	/* lock is not needed after this, since mem is unused and will
- 	 * be freed anyway
- 	 */
--- 
-2.7.4
-
+BR,
+Dejin
+> -- 
+> With Best Regards,
+> Andy Shevchenko
