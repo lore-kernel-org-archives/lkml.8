@@ -7,47 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09D75C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:56:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAC85C38A29
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:56:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D6E68206D6
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:56:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CE41206D6
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:56:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587221762;
-	bh=lkc0eqrv/NtbeoveeQDCwrHDxqsfFolHHHhsAt1a5gI=;
+	s=default; t=1587221769;
+	bh=WwMQnnlr9UFxuKnVYip2MbxhHSDl070mII4XwC96BvM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=N4iStpxe87Z+dreE+rYjsZvgaEoqw5m5m1TYCNROhiblUDKsHMVOisj3ZFPAf80T3
-	 kvuD2MGVjgjx9NJSsfpXTsv/39yQY9N0FioRy+7CAHCNJjkgX3LB3j44ykQ6Nlisdz
-	 XDHPz9m1BYcjHEXmP77gt98kNFqFICEr/0DQELuE=
+	b=ZNdD8y3dAJIMMr/vp3pI5v5/YHwf1xXM9tuywBw6k8GYrUhHSRlU8PlafE2DkFYfX
+	 49FoWPShJIt7SGXAA6uPKF6Zu75jj38jz6oJ2O0+HM81JueGSb2nWG2+t73y9oZGJx
+	 Bb3rc8R9Csp4+yBKNBXZ+e4x962MhEYOHrLB87XU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726420AbgDRO4B (ORCPT
+        id S1726769AbgDROkx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 10:56:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49544 "EHLO mail.kernel.org"
+        Sat, 18 Apr 2020 10:40:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49292 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726823AbgDROk6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 10:40:58 -0400
+        id S1725903AbgDROkv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 10:40:51 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 168D622245;
-        Sat, 18 Apr 2020 14:40:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 154F1221F4;
+        Sat, 18 Apr 2020 14:40:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587220857;
-        bh=lkc0eqrv/NtbeoveeQDCwrHDxqsfFolHHHhsAt1a5gI=;
+        s=default; t=1587220850;
+        bh=WwMQnnlr9UFxuKnVYip2MbxhHSDl070mII4XwC96BvM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rtaOxR1CmJ2ulrpMyMzpijqh74EcD0YRyuuJI+1Sl7lH3E9HTpm7QaQIrxjtYFvAA
-         tThXFvATSzp1x/DMJVS5g8cuTomzcRfwoSBisImtMpD0jmC28GP0kei2Zv5sSKta5h
-         B81OEqDpR6HQITEkTm+2yUZOdy1XcWM3c3jNdrmg=
+        b=2Vviwj5T4TctrLGU1yZC03N2m4txI8yJXAGxosGdCZXxazio8iYhZJ9uhN/I8tlFE
+         /hTgOIuO2E4KgNPrf7hS1M0tmXgvUPyw4NtrsGZ6cZ8UqKo/Qg2ahoid5cSRxmQsN/
+         bmQ5Xijw+UfIcTz/KX0YAkgK49QG3Mjs0ZbVa6zY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     James Smart <jsmart2021@gmail.com>,
-        Dick Kennedy <dick.kennedy@broadcom.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 08/78] scsi: lpfc: Fix kasan slab-out-of-bounds error in lpfc_unreg_login
-Date:   Sat, 18 Apr 2020 10:39:37 -0400
-Message-Id: <20200418144047.9013-8-sashal@kernel.org>
+Cc:     Jan Kara <jack@suse.cz>, Dan Williams <dan.j.williams@intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-nvdimm@lists.01.org
+Subject: [PATCH AUTOSEL 5.4 02/78] tools/testing/nvdimm: Fix compilation failure without CONFIG_DEV_DAX_PMEM_COMPAT
+Date:   Sat, 18 Apr 2020 10:39:31 -0400
+Message-Id: <20200418144047.9013-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200418144047.9013-1-sashal@kernel.org>
 References: <20200418144047.9013-1-sashal@kernel.org>
@@ -60,60 +58,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: James Smart <jsmart2021@gmail.com>
+From: Jan Kara <jack@suse.cz>
 
-[ Upstream commit 38503943c89f0bafd9e3742f63f872301d44cbea ]
+[ Upstream commit c0e71d602053e4e7637e4bc7d0bc9603ea77a33f ]
 
-The following kasan bug was called out:
+When a kernel is configured without CONFIG_DEV_DAX_PMEM_COMPAT, the
+compilation of tools/testing/nvdimm fails with:
 
- BUG: KASAN: slab-out-of-bounds in lpfc_unreg_login+0x7c/0xc0 [lpfc]
- Read of size 2 at addr ffff889fc7c50a22 by task lpfc_worker_3/6676
- ...
- Call Trace:
- dump_stack+0x96/0xe0
- ? lpfc_unreg_login+0x7c/0xc0 [lpfc]
- print_address_description.constprop.6+0x1b/0x220
- ? lpfc_unreg_login+0x7c/0xc0 [lpfc]
- ? lpfc_unreg_login+0x7c/0xc0 [lpfc]
- __kasan_report.cold.9+0x37/0x7c
- ? lpfc_unreg_login+0x7c/0xc0 [lpfc]
- kasan_report+0xe/0x20
- lpfc_unreg_login+0x7c/0xc0 [lpfc]
- lpfc_sli_def_mbox_cmpl+0x334/0x430 [lpfc]
- ...
+  Building modules, stage 2.
+  MODPOST 11 modules
+ERROR: "dax_pmem_compat_test" [tools/testing/nvdimm/test/nfit_test.ko] undefined!
 
-When processing the completion of a "Reg Rpi" login mailbox command in
-lpfc_sli_def_mbox_cmpl, a call may be made to lpfc_unreg_login. The vpi is
-extracted from the completing mailbox context and passed as an input for
-the next. However, the vpi stored in the mailbox command context is an
-absolute vpi, which for SLI4 represents both base + offset.  When used with
-a non-zero base component, (function id > 0) this results in an
-out-of-range access beyond the allocated phba->vpi_ids array.
+Fix the problem by calling dax_pmem_compat_test() only if the kernel has
+the required functionality.
 
-Fix by subtracting the function's base value to get an accurate vpi number.
-
-Link: https://lore.kernel.org/r/20200322181304.37655-2-jsmart2021@gmail.com
-Signed-off-by: James Smart <jsmart2021@gmail.com>
-Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Jan Kara <jack@suse.cz>
+Link: https://lore.kernel.org/r/20200123154720.12097-1-jack@suse.cz
+Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/lpfc/lpfc_sli.c | 2 ++
+ tools/testing/nvdimm/test/nfit.c | 2 ++
  1 file changed, 2 insertions(+)
 
-diff --git a/drivers/scsi/lpfc/lpfc_sli.c b/drivers/scsi/lpfc/lpfc_sli.c
-index e2cec1f6e659b..8836c5682c8d5 100644
---- a/drivers/scsi/lpfc/lpfc_sli.c
-+++ b/drivers/scsi/lpfc/lpfc_sli.c
-@@ -2480,6 +2480,8 @@ lpfc_sli_def_mbox_cmpl(struct lpfc_hba *phba, LPFC_MBOXQ_t *pmb)
- 	    !pmb->u.mb.mbxStatus) {
- 		rpi = pmb->u.mb.un.varWords[0];
- 		vpi = pmb->u.mb.un.varRegLogin.vpi;
-+		if (phba->sli_rev == LPFC_SLI_REV4)
-+			vpi -= phba->sli4_hba.max_cfg_param.vpi_base;
- 		lpfc_unreg_login(phba, vpi, rpi, pmb);
- 		pmb->vport = vport;
- 		pmb->mbox_cmpl = lpfc_sli_def_mbox_cmpl;
+diff --git a/tools/testing/nvdimm/test/nfit.c b/tools/testing/nvdimm/test/nfit.c
+index bf6422a6af7ff..a8ee5c4d41ebb 100644
+--- a/tools/testing/nvdimm/test/nfit.c
++++ b/tools/testing/nvdimm/test/nfit.c
+@@ -3164,7 +3164,9 @@ static __init int nfit_test_init(void)
+ 	mcsafe_test();
+ 	dax_pmem_test();
+ 	dax_pmem_core_test();
++#ifdef CONFIG_DEV_DAX_PMEM_COMPAT
+ 	dax_pmem_compat_test();
++#endif
+ 
+ 	nfit_test_setup(nfit_test_lookup, nfit_test_evaluate_dsm);
+ 
 -- 
 2.20.1
 
