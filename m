@@ -7,48 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A0B0C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 13:49:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B6A9C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 13:49:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D120F221F4
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 13:49:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D63212054F
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 13:49:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587217776;
-	bh=ePMzA8G+GUVMHaLdyeNb6FpdBQ2qidUTn/hjMaGktEo=;
+	s=default; t=1587217779;
+	bh=YJIxCNr0UP8TqTCKe4sYeYk4yVVj08ql7ZOB7G577O8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wsZcgJWzzGL9/4EMgaGoOKtiegKLpLy79znhy9kjMCklW32QKsZlwo+ZucUBvxsXv
-	 n3w+vDTCuABJFB2vQQpft8cvMb6ScBDVN/OH+Xe0q8ddGZ2DXe0jByMdnGqluQHUo/
-	 oJc8VaX1U4KSujpbDGqnoyKcYYIhydbXbLS4Qz8c=
+	b=HCeYINKrz13i87thkchFQfqseuLts558Ck9pta2W/2B/9oWUJ6SPV1IJyf/+pTgqC
+	 adLEGwWmsc3QJI2k8fNm4I7ctf5KwqkRAcaNdzrG4EIVBJLzP3GcRIKjp5rxODugjm
+	 H414SjAK4q+LXvJNi/JpeErg/M5pbgtGri+XGgG4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726839AbgDRNtg (ORCPT
+        id S1726848AbgDRNth (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 09:49:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56446 "EHLO mail.kernel.org"
+        Sat, 18 Apr 2020 09:49:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56616 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726803AbgDRNt1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 09:49:27 -0400
+        id S1726834AbgDRNte (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 09:49:34 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 03CC922202;
-        Sat, 18 Apr 2020 13:49:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B44BD214AF;
+        Sat, 18 Apr 2020 13:49:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587217766;
-        bh=ePMzA8G+GUVMHaLdyeNb6FpdBQ2qidUTn/hjMaGktEo=;
+        s=default; t=1587217774;
+        bh=YJIxCNr0UP8TqTCKe4sYeYk4yVVj08ql7ZOB7G577O8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=o+ZQmCu4+PWiic5YbmVqvss/+JrIuPnLS4MQuxGiErdwN73q8g4mc6jhKICcyibzx
-         ChHtP9AJdd6/6vIoFovW3Je1Q4bPvMYwuWcWuIC8G7lUi3YcY8oFc/9l+TNPvEAEAe
-         xnUE+7045CJtPWq3fymGiib0AwJApuY2HTA8E1co=
+        b=WFu4uq1l0WUs8qkFekn7QVgDH5h9g1DU7oXudUItyXvxPxTIDB31g3SRsPEYlR3Vy
+         yiKXlUoyxfzBp9ptbzP2Z6/rbshhVOcfhI+9c5NSv+E7EX+gpnDuX4wDmjc17eVO92
+         AQUlCguPMWfLO8lsgRTrtHJAkewvYFpL1MRp0QHU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Simon Gander <simon@tuxera.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Anton Altaparmakov <anton@tuxera.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-fsdevel@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 56/73] hfsplus: fix crash and filesystem corruption when deleting files
-Date:   Sat, 18 Apr 2020 09:47:58 -0400
-Message-Id: <20200418134815.6519-56-sashal@kernel.org>
+Cc:     Takashi Iwai <tiwai@suse.de>, Jaroslav Kysela <perex@perex.cz>,
+        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 5.6 63/73] ALSA: hda: Fix potential access overflow in beep helper
+Date:   Sat, 18 Apr 2020 09:48:05 -0400
+Message-Id: <20200418134815.6519-63-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200418134815.6519-1-sashal@kernel.org>
 References: <20200418134815.6519-1-sashal@kernel.org>
@@ -61,54 +58,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Simon Gander <simon@tuxera.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-[ Upstream commit 25efb2ffdf991177e740b2f63e92b4ec7d310a92 ]
+[ Upstream commit 0ad3f0b384d58f3bd1f4fb87d0af5b8f6866f41a ]
 
-When removing files containing extended attributes, the hfsplus driver may
-remove the wrong entries from the attributes b-tree, causing major
-filesystem damage and in some cases even kernel crashes.
+The beep control helper function blindly stores the values in two
+stereo channels no matter whether the actual control is mono or
+stereo.  This is practically harmless, but it annoys the recently
+introduced sanity check, resulting in an error when the checker is
+enabled.
 
-To remove a file, all its extended attributes have to be removed as well.
-The driver does this by looking up all keys in the attributes b-tree with
-the cnid of the file.  Each of these entries then gets deleted using the
-key used for searching, which doesn't contain the attribute's name when it
-should.  Since the key doesn't contain the name, the deletion routine will
-not find the correct entry and instead remove the one in front of it.  If
-parent nodes have to be modified, these become corrupt as well.  This
-causes invalid links and unsorted entries that not even macOS's fsck_hfs
-is able to fix.
+This patch corrects the behavior to store only on the defined array
+member.
 
-To fix this, modify the search key before an entry is deleted from the
-attributes b-tree by copying the found entry's key into the search key,
-therefore ensuring that the correct entry gets removed from the tree.
-
-Signed-off-by: Simon Gander <simon@tuxera.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Reviewed-by: Anton Altaparmakov <anton@tuxera.com>
+Fixes: 0401e8548eac ("ALSA: hda - Move beep helper functions to hda_beep.c")
+BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=207139
+Reviewed-by: Jaroslav Kysela <perex@perex.cz>
 Cc: <stable@vger.kernel.org>
-Link: http://lkml.kernel.org/r/20200327155541.1521-1-simon@tuxera.com
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Link: https://lore.kernel.org/r/20200407084402.25589-2-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/hfsplus/attributes.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ sound/pci/hda/hda_beep.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/fs/hfsplus/attributes.c b/fs/hfsplus/attributes.c
-index e6d554476db41..eeebe80c6be4a 100644
---- a/fs/hfsplus/attributes.c
-+++ b/fs/hfsplus/attributes.c
-@@ -292,6 +292,10 @@ static int __hfsplus_delete_attr(struct inode *inode, u32 cnid,
- 		return -ENOENT;
- 	}
- 
-+	/* Avoid btree corruption */
-+	hfs_bnode_read(fd->bnode, fd->search_key,
-+			fd->keyoffset, fd->keylength);
+diff --git a/sound/pci/hda/hda_beep.c b/sound/pci/hda/hda_beep.c
+index f5fd62ed4df5b..841523f6b88de 100644
+--- a/sound/pci/hda/hda_beep.c
++++ b/sound/pci/hda/hda_beep.c
+@@ -290,8 +290,12 @@ int snd_hda_mixer_amp_switch_get_beep(struct snd_kcontrol *kcontrol,
+ {
+ 	struct hda_codec *codec = snd_kcontrol_chip(kcontrol);
+ 	struct hda_beep *beep = codec->beep;
++	int chs = get_amp_channels(kcontrol);
 +
- 	err = hfs_brec_remove(fd);
- 	if (err)
- 		return err;
+ 	if (beep && (!beep->enabled || !ctl_has_mute(kcontrol))) {
+-		ucontrol->value.integer.value[0] =
++		if (chs & 1)
++			ucontrol->value.integer.value[0] = beep->enabled;
++		if (chs & 2)
+ 			ucontrol->value.integer.value[1] = beep->enabled;
+ 		return 0;
+ 	}
 -- 
 2.20.1
 
