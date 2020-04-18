@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FDEAC3A5A0
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:53:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5D21C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:53:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D9A0021D79
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:53:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B247221D79
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:53:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587221594;
-	bh=hVGd1XVXIQixtTCRrA9xVPLTqm8xr2yA0JSWE2QJe5Y=;
+	s=default; t=1587221597;
+	bh=3mZ81gq8PWCZ3W48CpsOWJmMFYDfG86U7IZ7TY1medI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Q3yKtMbNHEjFqf3c7lWTGqB20DlzB+QfR2FimHm01jKNFcK2VNcyfWIGg5eqLh71c
-	 gwiib6EqlNJ26CqEZKoSWVgPXOlhjf/F0bsaL3YkeZ+FJZrNvQgiBMQiZlsmmNg2Kd
-	 OS7RQT1oVstIHbwCALEfnOctDkX28/aPhJfcfics=
+	b=YYPzHH02vvcl9gPRyGck8fVwGKFdBqLzHclIODCp+CNh3qvFrTlpR738ZFhgBtqJx
+	 euIRO53nAHuAGAUSlKPhDJpej4FPiv6Q9tzMVVf9RyT2C0rmpZaW5IezFICecrj31p
+	 ZyCcrT19C00XEp1n+0pArL0tYgP8OLgDgFhXEbjk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728896AbgDROxN (ORCPT
+        id S1729101AbgDROxQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 10:53:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51814 "EHLO mail.kernel.org"
+        Sat, 18 Apr 2020 10:53:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51776 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728232AbgDROmD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728229AbgDROmD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 18 Apr 2020 10:42:03 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C124E221F4;
-        Sat, 18 Apr 2020 14:42:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9915922244;
+        Sat, 18 Apr 2020 14:42:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587220923;
-        bh=hVGd1XVXIQixtTCRrA9xVPLTqm8xr2yA0JSWE2QJe5Y=;
+        s=default; t=1587220922;
+        bh=3mZ81gq8PWCZ3W48CpsOWJmMFYDfG86U7IZ7TY1medI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ka8qhuJRcsw5tRjNrkJfQvFfZsNRlz83wGzAbDa5PaUABf+eFo+MNFtjLF1+rqZhR
-         c3vaRZGBCz/uctguncXZdpwVJmpS7wUMQN8P56QdAfJzIo40bCIWO2gCr2IAKsCmoG
-         kUo0qnP0t683v28s6k94HXT5uozdRJY3GmsDjWbs=
+        b=fENDGD46+vIel6E1B+DQWIjfIctsiAnj/CNnrlJaGgi8y7hdOCYi7AgctJZp2S/dI
+         u1FA5+DE/3nPzcPacHkUxSRC7rmF8nLD8dl3Aap8iFxIMOyCpMX0Vd8vaUY21G/aVb
+         L0oCHNY2IHUY36FwH3mIX5O+3odw/CuF+oTv1ehE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Mathias Nyman <mathias.nyman@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 61/78] xhci: Ensure link state is U3 after setting USB_SS_PORT_LS_U3
-Date:   Sat, 18 Apr 2020 10:40:30 -0400
-Message-Id: <20200418144047.9013-61-sashal@kernel.org>
+Cc:     Sreekanth Reddy <sreekanth.reddy@broadcom.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>,
+        MPT-FusionLinux.pdl@broadcom.com, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 60/78] scsi: mpt3sas: Fix kernel panic observed on soft HBA unplug
+Date:   Sat, 18 Apr 2020 10:40:29 -0400
+Message-Id: <20200418144047.9013-60-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200418144047.9013-1-sashal@kernel.org>
 References: <20200418144047.9013-1-sashal@kernel.org>
@@ -60,52 +60,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+From: Sreekanth Reddy <sreekanth.reddy@broadcom.com>
 
-[ Upstream commit eb002726fac7cefb98ff39ddb89e150a1c24fe85 ]
+[ Upstream commit cc41f11a21a51d6869d71e525a7264c748d7c0d7 ]
 
-The xHCI spec doesn't specify the upper bound of U3 transition time. For
-some devices 20ms is not enough, so we need to make sure the link state
-is in U3 before further actions.
+Generic protection fault type kernel panic is observed when user performs
+soft (ordered) HBA unplug operation while IOs are running on drives
+connected to HBA.
 
-I've tried to use U3 Entry Capability by setting U3 Entry Enable in
-config register, however the port change event for U3 transition
-interrupts the system suspend process.
+When user performs ordered HBA removal operation, the kernel calls PCI
+device's .remove() call back function where driver is flushing out all the
+outstanding SCSI IO commands with DID_NO_CONNECT host byte and also unmaps
+sg buffers allocated for these IO commands.
 
-For now let's use the less ideal method by polling PLS.
+However, in the ordered HBA removal case (unlike of real HBA hot removal),
+HBA device is still alive and hence HBA hardware is performing the DMA
+operations to those buffers on the system memory which are already unmapped
+while flushing out the outstanding SCSI IO commands and this leads to
+kernel panic.
 
-[use usleep_range(), and shorten the delay time while polling -Mathias]
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
-Link: https://lore.kernel.org/r/20200312144517.1593-7-mathias.nyman@linux.intel.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Don't flush out the outstanding IOs from .remove() path in case of ordered
+removal since HBA will be still alive in this case and it can complete the
+outstanding IOs. Flush out the outstanding IOs only in case of 'physical
+HBA hot unplug' where there won't be any communication with the HBA.
+
+During shutdown also it is possible that HBA hardware can perform DMA
+operations on those outstanding IO buffers which are completed with
+DID_NO_CONNECT by the driver from .shutdown(). So same above fix is applied
+in shutdown path as well.
+
+It is safe to drop the outstanding commands when HBA is inaccessible such
+as when permanent PCI failure happens, when HBA is in non-operational
+state, or when someone does a real HBA hot unplug operation. Since driver
+knows that HBA is inaccessible during these cases, it is safe to drop the
+outstanding commands instead of waiting for SCSI error recovery to kick in
+and clear these outstanding commands.
+
+Link: https://lore.kernel.org/r/1585302763-23007-1-git-send-email-sreekanth.reddy@broadcom.com
+Fixes: c666d3be99c0 ("scsi: mpt3sas: wait for and flush running commands on shutdown/unload")
+Cc: stable@vger.kernel.org #v4.14.174+
+Signed-off-by: Sreekanth Reddy <sreekanth.reddy@broadcom.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/host/xhci-hub.c | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+ drivers/scsi/mpt3sas/mpt3sas_scsih.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/usb/host/xhci-hub.c b/drivers/usb/host/xhci-hub.c
-index af92b2576fe91..712cd44f05ace 100644
---- a/drivers/usb/host/xhci-hub.c
-+++ b/drivers/usb/host/xhci-hub.c
-@@ -1322,7 +1322,16 @@ int xhci_hub_control(struct usb_hcd *hcd, u16 typeReq, u16 wValue,
- 			xhci_set_link_state(xhci, ports[wIndex], link_state);
+diff --git a/drivers/scsi/mpt3sas/mpt3sas_scsih.c b/drivers/scsi/mpt3sas/mpt3sas_scsih.c
+index c8e512ba6d398..aff630fccb07e 100644
+--- a/drivers/scsi/mpt3sas/mpt3sas_scsih.c
++++ b/drivers/scsi/mpt3sas/mpt3sas_scsih.c
+@@ -9747,8 +9747,8 @@ static void scsih_remove(struct pci_dev *pdev)
  
- 			spin_unlock_irqrestore(&xhci->lock, flags);
--			msleep(20); /* wait device to enter */
-+			if (link_state == USB_SS_PORT_LS_U3) {
-+				int retries = 16;
-+
-+				while (retries--) {
-+					usleep_range(4000, 8000);
-+					temp = readl(ports[wIndex]->addr);
-+					if ((temp & PORT_PLS_MASK) == XDEV_U3)
-+						break;
-+				}
-+			}
- 			spin_lock_irqsave(&xhci->lock, flags);
+ 	ioc->remove_host = 1;
  
- 			temp = readl(ports[wIndex]->addr);
+-	mpt3sas_wait_for_commands_to_complete(ioc);
+-	_scsih_flush_running_cmds(ioc);
++	if (!pci_device_is_present(pdev))
++		_scsih_flush_running_cmds(ioc);
+ 
+ 	_scsih_fw_event_cleanup_queue(ioc);
+ 
+@@ -9831,8 +9831,8 @@ scsih_shutdown(struct pci_dev *pdev)
+ 
+ 	ioc->remove_host = 1;
+ 
+-	mpt3sas_wait_for_commands_to_complete(ioc);
+-	_scsih_flush_running_cmds(ioc);
++	if (!pci_device_is_present(pdev))
++		_scsih_flush_running_cmds(ioc);
+ 
+ 	_scsih_fw_event_cleanup_queue(ioc);
+ 
 -- 
 2.20.1
 
