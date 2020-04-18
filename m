@@ -2,107 +2,247 @@ Return-Path: <SRS0=3CHW=6C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5999C352BE
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 20:09:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A145DC352BE
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 20:10:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A02BE221F7
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 20:09:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 746322051A
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 20:10:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="D10MxJEU"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="DjxMHR7w";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="HnnkUL4C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728281AbgDRUJw (ORCPT
+        id S1728310AbgDRUKk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 16:09:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54804 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727927AbgDRUJw (ORCPT
+        Sat, 18 Apr 2020 16:10:40 -0400
+Received: from bedivere.hansenpartnership.com ([66.63.167.143]:37190 "EHLO
+        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728143AbgDRUKj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 16:09:52 -0400
-Received: from ssl.serverraum.org (ssl.serverraum.org [IPv6:2a01:4f8:151:8464::1:2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B7EFC061A0C;
-        Sat, 18 Apr 2020 13:09:52 -0700 (PDT)
-Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
+        Sat, 18 Apr 2020 16:10:39 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by bedivere.hansenpartnership.com (Postfix) with ESMTP id 154E68EE0BA;
+        Sat, 18 Apr 2020 13:10:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1587240639;
+        bh=fxSMBWAcHn46gPyGniIU6pk1DWt9Hm05+Mq6xkW1veY=;
+        h=Subject:From:To:Cc:Date:From;
+        b=DjxMHR7wn6+hfqFJwYsZaaoPMJEQxp9Ph1ncIpTrZ1nSnTB05q3hSLsGXnJ2D3oU2
+         ZOXbqsyvpkRX+/ZzwW2R6qkDH3e9cUYfe9/ubkBC2lrr1bqeUOvX7TzA3Jj3QwCing
+         AsBJ50KLIz4HIspkDmSUWTohdzlvUDh+DiLIzhA8=
+Received: from bedivere.hansenpartnership.com ([127.0.0.1])
+        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id oh4tofBabwqc; Sat, 18 Apr 2020 13:10:38 -0700 (PDT)
+Received: from [153.66.254.194] (unknown [50.35.76.230])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id 5469423061;
-        Sat, 18 Apr 2020 22:09:48 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1587240589;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=lwbpohXkgA8LBRIp0lZ4q/XzjtDAPv3LIIeZKlx0qvo=;
-        b=D10MxJEUiC26rbD4lax+8UpzBji3cbsEhy6svKSmVTYs/aTYhWTaMNM79dEclTETomSKbS
-        4+Aa6fjWCkGhSbX24oo7qi9QGEyH3qgS+j1X9uOO6V4z/havW82dBC9vCFm8qniqhdyltm
-        vQHjJZkaRmNlylWtjnzbpTGTZLs7UbU=
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id 7341F8EE0AB;
+        Sat, 18 Apr 2020 13:10:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1587240638;
+        bh=fxSMBWAcHn46gPyGniIU6pk1DWt9Hm05+Mq6xkW1veY=;
+        h=Subject:From:To:Cc:Date:From;
+        b=HnnkUL4CCXrzs1iTreLsyzkqEv5Kch51WXCX2wU5CBV7GcgFANcojRolmRGuj01in
+         V4qITew6KX3QQ12Uz0FGCiSP79bKgOvrSa8WaKAkvgpcD4/Wzc0v24IMZM26owZcZQ
+         s5jPp7sFFVL7uiq8S3ZIxx8hr45sIBEE/I2dX0vw=
+Message-ID: <1587240636.7897.11.camel@HansenPartnership.com>
+Subject: [GIT PULL] SCSI fixes for 5.7-rc1
+From:   James Bottomley <James.Bottomley@HansenPartnership.com>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-scsi <linux-scsi@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Date:   Sat, 18 Apr 2020 13:10:36 -0700
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.6 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Date:   Sat, 18 Apr 2020 22:09:48 +0200
-From:   Michael Walle <michael@walle.cc>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     Andrew Lunn <andrew@lunn.ch>, linux-hwmon@vger.kernel.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        "David S . Miller" <davem@davemloft.net>
-Subject: Re: [PATCH net-next 1/3] net: phy: broadcom: add helper to write/read
- RDB registers
-In-Reply-To: <aa126ad1-ae29-3da6-bd50-2c0444cfd691@gmail.com>
-References: <20200417192858.6997-1-michael@walle.cc>
- <20200418141348.GA804711@lunn.ch>
- <aa126ad1-ae29-3da6-bd50-2c0444cfd691@gmail.com>
-Message-ID: <f264bcad85571a44fabf33fe7e13664e@walle.cc>
-X-Sender: michael@walle.cc
-User-Agent: Roundcube Webmail/1.3.10
-X-Spamd-Bar: +
-X-Rspamd-Server: web
-X-Rspamd-Queue-Id: 5469423061
-X-Spamd-Result: default: False [1.40 / 15.00];
-         FROM_HAS_DN(0.00)[];
-         TO_DN_SOME(0.00)[];
-         FREEMAIL_ENVRCPT(0.00)[gmail.com];
-         TO_MATCH_ENVRCPT_ALL(0.00)[];
-         TAGGED_RCPT(0.00)[];
-         MIME_GOOD(-0.10)[text/plain];
-         DKIM_SIGNED(0.00)[];
-         RCPT_COUNT_SEVEN(0.00)[10];
-         NEURAL_HAM(-0.00)[-0.968];
-         FREEMAIL_TO(0.00)[gmail.com];
-         RCVD_COUNT_ZERO(0.00)[0];
-         FROM_EQ_ENVFROM(0.00)[];
-         MIME_TRACE(0.00)[0:+];
-         FREEMAIL_CC(0.00)[lunn.ch,vger.kernel.org,suse.com,roeck-us.net,gmail.com,armlinux.org.uk,davemloft.net];
-         MID_RHS_MATCH_FROM(0.00)[];
-         SUSPICIOUS_RECIPS(1.50)[]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am 2020-04-18 17:55, schrieb Florian Fainelli:
-> On 4/18/2020 7:13 AM, Andrew Lunn wrote:
->> On Fri, Apr 17, 2020 at 09:28:56PM +0200, Michael Walle wrote:
->>> RDB regsiters are used on newer Broadcom PHYs. Add helper to read, 
->>> write
->>> and modify these registers.
->> 
->> It would be nice to give a hint what RDB means?
-> 
-> It means Register Data Base, it is meant to be a linear register
-> offset as opposed to the more convulated shadow 18, 1c or other
-> expansion registers.
+Seven fixes; three in target, one on a sg error leg, two in qla2xxx
+fixing warnings introduced in the last merge window and updating
+MAINTAINERS and one in hisi_sas fixing a problem introduced by libata.
 
-Oh I just found some comment to another linux patch explaining this.
-Because there is no trace what RDB actually means in the datasheets
-from Broadcom I've seen so far.
+The patch is available here:
 
--michael
+git://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi.git scsi-fixes
+
+The short changelog is:
+
+Bodo Stroesser (3):
+      scsi: target: tcmu: reset_ring should reset TCMU_DEV_BIT_BROKEN
+      scsi: target: fix PR IN / READ FULL STATUS for FC
+      scsi: target: Write NULL to *port_nexus_ptr if no ISID
+
+Li Bin (1):
+      scsi: sg: add sg_remove_request in sg_common_write
+
+Nilesh Javali (2):
+      scsi: MAINTAINERS: Update qla2xxx FC-SCSI driver maintainer
+      scsi: qla2xxx: Fix regression warnings
+
+YueHaibing (1):
+      scsi: hisi_sas: Fix build error without SATA_HOST
+
+And the diffstat:
+ MAINTAINERS                             | 3 ++-
+ drivers/scsi/hisi_sas/Kconfig           | 1 +
+ drivers/scsi/qla2xxx/qla_dbg.c          | 3 ++-
+ drivers/scsi/qla2xxx/qla_init.c         | 2 --
+ drivers/scsi/qla2xxx/qla_isr.c          | 1 -
+ drivers/scsi/qla2xxx/qla_mbx.c          | 2 --
+ drivers/scsi/sg.c                       | 4 +++-
+ drivers/target/target_core_fabric_lib.c | 5 +++--
+ drivers/target/target_core_user.c       | 1 +
+ 9 files changed, 12 insertions(+), 10 deletions(-)
+
+With full diff below.
+
+James
+
+---
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index e64e5db31497..e9a621e9f2aa 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -13853,7 +13853,8 @@ S:	Maintained
+ F:	drivers/scsi/qla1280.[ch]
+ 
+ QLOGIC QLA2XXX FC-SCSI DRIVER
+-M:	hmadhani@marvell.com
++M:	Nilesh Javali <njavali@marvell.com>
++M:	GR-QLogic-Storage-Upstream@marvell.com
+ L:	linux-scsi@vger.kernel.org
+ S:	Supported
+ F:	Documentation/scsi/LICENSE.qla2xxx
+diff --git a/drivers/scsi/hisi_sas/Kconfig b/drivers/scsi/hisi_sas/Kconfig
+index 90a17452a50d..13ed9073fc72 100644
+--- a/drivers/scsi/hisi_sas/Kconfig
++++ b/drivers/scsi/hisi_sas/Kconfig
+@@ -6,6 +6,7 @@ config SCSI_HISI_SAS
+ 	select SCSI_SAS_LIBSAS
+ 	select BLK_DEV_INTEGRITY
+ 	depends on ATA
++	select SATA_HOST
+ 	help
+ 		This driver supports HiSilicon's SAS HBA, including support based
+ 		on platform device
+diff --git a/drivers/scsi/qla2xxx/qla_dbg.c b/drivers/scsi/qla2xxx/qla_dbg.c
+index f301a8048b2f..bf1e98f11990 100644
+--- a/drivers/scsi/qla2xxx/qla_dbg.c
++++ b/drivers/scsi/qla2xxx/qla_dbg.c
+@@ -2539,7 +2539,6 @@ ql_dbg(uint level, scsi_qla_host_t *vha, uint id, const char *fmt, ...)
+ {
+ 	va_list va;
+ 	struct va_format vaf;
+-	char pbuf[64];
+ 
+ 	va_start(va, fmt);
+ 
+@@ -2547,6 +2546,8 @@ ql_dbg(uint level, scsi_qla_host_t *vha, uint id, const char *fmt, ...)
+ 	vaf.va = &va;
+ 
+ 	if (!ql_mask_match(level)) {
++		char pbuf[64];
++
+ 		if (vha != NULL) {
+ 			const struct pci_dev *pdev = vha->hw->pdev;
+ 			/* <module-name> <msg-id>:<host> Message */
+diff --git a/drivers/scsi/qla2xxx/qla_init.c b/drivers/scsi/qla2xxx/qla_init.c
+index 5b2deaa730bf..caa6b840e459 100644
+--- a/drivers/scsi/qla2xxx/qla_init.c
++++ b/drivers/scsi/qla2xxx/qla_init.c
+@@ -3611,8 +3611,6 @@ qla24xx_detect_sfp(scsi_qla_host_t *vha)
+ 			ha->lr_distance = LR_DISTANCE_5K;
+ 	}
+ 
+-	if (!vha->flags.init_done)
+-		rc = QLA_SUCCESS;
+ out:
+ 	ql_dbg(ql_dbg_async, vha, 0x507b,
+ 	    "SFP detect: %s-Range SFP %s (nvr=%x ll=%x lr=%x lrd=%x).\n",
+diff --git a/drivers/scsi/qla2xxx/qla_isr.c b/drivers/scsi/qla2xxx/qla_isr.c
+index 8d7a905f6247..8a78d395bbc8 100644
+--- a/drivers/scsi/qla2xxx/qla_isr.c
++++ b/drivers/scsi/qla2xxx/qla_isr.c
+@@ -87,7 +87,6 @@ qla24xx_process_abts(struct scsi_qla_host *vha, void *pkt)
+ 	}
+ 
+ 	/* terminate exchange */
+-	memset(rsp_els, 0, sizeof(*rsp_els));
+ 	rsp_els->entry_type = ELS_IOCB_TYPE;
+ 	rsp_els->entry_count = 1;
+ 	rsp_els->nport_handle = ~0;
+diff --git a/drivers/scsi/qla2xxx/qla_mbx.c b/drivers/scsi/qla2xxx/qla_mbx.c
+index 9fd83d1bffe0..4ed90437e8c4 100644
+--- a/drivers/scsi/qla2xxx/qla_mbx.c
++++ b/drivers/scsi/qla2xxx/qla_mbx.c
+@@ -4894,8 +4894,6 @@ qla25xx_set_els_cmds_supported(scsi_qla_host_t *vha)
+ 		return QLA_MEMORY_ALLOC_FAILED;
+ 	}
+ 
+-	memset(els_cmd_map, 0, ELS_CMD_MAP_SIZE);
+-
+ 	els_cmd_map[index] |= 1 << bit;
+ 
+ 	mcp->mb[0] = MBC_SET_RNID_PARAMS;
+diff --git a/drivers/scsi/sg.c b/drivers/scsi/sg.c
+index 4e6af592f018..9c0ee192f0f9 100644
+--- a/drivers/scsi/sg.c
++++ b/drivers/scsi/sg.c
+@@ -793,8 +793,10 @@ sg_common_write(Sg_fd * sfp, Sg_request * srp,
+ 			"sg_common_write:  scsi opcode=0x%02x, cmd_size=%d\n",
+ 			(int) cmnd[0], (int) hp->cmd_len));
+ 
+-	if (hp->dxfer_len >= SZ_256M)
++	if (hp->dxfer_len >= SZ_256M) {
++		sg_remove_request(sfp, srp);
+ 		return -EINVAL;
++	}
+ 
+ 	k = sg_start_req(srp, cmnd);
+ 	if (k) {
+diff --git a/drivers/target/target_core_fabric_lib.c b/drivers/target/target_core_fabric_lib.c
+index 6b4b354c88aa..1e031d81e59e 100644
+--- a/drivers/target/target_core_fabric_lib.c
++++ b/drivers/target/target_core_fabric_lib.c
+@@ -63,7 +63,7 @@ static int fc_get_pr_transport_id(
+ 	 * encoded TransportID.
+ 	 */
+ 	ptr = &se_nacl->initiatorname[0];
+-	for (i = 0; i < 24; ) {
++	for (i = 0; i < 23; ) {
+ 		if (!strncmp(&ptr[i], ":", 1)) {
+ 			i++;
+ 			continue;
+@@ -341,7 +341,8 @@ static char *iscsi_parse_pr_out_transport_id(
+ 			*p = tolower(*p);
+ 			p++;
+ 		}
+-	}
++	} else
++		*port_nexus_ptr = NULL;
+ 
+ 	return &buf[4];
+ }
+diff --git a/drivers/target/target_core_user.c b/drivers/target/target_core_user.c
+index 0b9dfa6b17bc..f769bb1e3735 100644
+--- a/drivers/target/target_core_user.c
++++ b/drivers/target/target_core_user.c
+@@ -2073,6 +2073,7 @@ static void tcmu_reset_ring(struct tcmu_dev *udev, u8 err_level)
+ 	mb->cmd_tail = 0;
+ 	mb->cmd_head = 0;
+ 	tcmu_flush_dcache_range(mb, sizeof(*mb));
++	clear_bit(TCMU_DEV_BIT_BROKEN, &udev->flags);
+ 
+ 	del_timer(&udev->cmd_timer);
+ 
+
