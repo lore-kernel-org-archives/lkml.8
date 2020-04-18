@@ -2,372 +2,131 @@ Return-Path: <SRS0=3CHW=6C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD6A4C2BA19
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 06:41:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7037AC38A2B
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 06:44:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 87E9F214D8
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 06:41:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59FBD221F7
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 06:44:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725990AbgDRGl1 (ORCPT
+        id S1725970AbgDRGoQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 02:41:27 -0400
-Received: from lucky1.263xmail.com ([211.157.147.130]:36294 "EHLO
-        lucky1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725782AbgDRGl1 (ORCPT
+        Sat, 18 Apr 2020 02:44:16 -0400
+Received: from mail-il1-f199.google.com ([209.85.166.199]:33536 "EHLO
+        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725782AbgDRGoP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 02:41:27 -0400
-Received: from localhost (unknown [192.168.167.8])
-        by lucky1.263xmail.com (Postfix) with ESMTP id 7F035AC422;
-        Sat, 18 Apr 2020 14:39:23 +0800 (CST)
-X-MAIL-GRAY: 0
-X-MAIL-DELIVERY: 1
-X-ADDR-CHECKED4: 1
-X-ANTISPAM-LEVEL: 2
-X-ABS-CHECKED: 0
-Received: from localhost.localdomain (unknown [61.183.83.60])
-        by smtp.263.net (postfix) whith ESMTP id P7184T140143329433344S1587191962824534_;
-        Sat, 18 Apr 2020 14:39:23 +0800 (CST)
-X-IP-DOMAINF: 1
-X-UNIQUE-TAG: <0c355390490829d06a03956be2b0c06f>
-X-RL-SENDER: caizhaopeng@uniontech.com
-X-SENDER: caizhaopeng@uniontech.com
-X-LOGIN-NAME: caizhaopeng@uniontech.com
-X-FST-TO: airlied@redhat.com
-X-SENDER-IP: 61.183.83.60
-X-ATTACHMENT-NUM: 0
-X-DNS-TYPE: 0
-X-System-Flag: 0
-From:   Caicai <caizhaopeng@uniontech.com>
-To:     Dave Airlie <airlied@redhat.com>
-Cc:     Gerd Hoffmann <kraxel@redhat.com>, David Airlie <airlied@linux.ie>,
-        virtualization@lists.linux-foundation.org,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        Zhangyueqian <zhangyueqian@uniontech.com>,
-        Zhangshuang <zhangshuang@uniontech.com>,
-        Zhangshiwen <zhangshiwen@uniontech.com>,
-        Caicai <caizhaopeng@uniontech.com>
-Subject: [PATCH 1/1] drm/qxl: add mutex_lock/mutex_unlock to ensure the order in which resources are released.
-Date:   Sat, 18 Apr 2020 14:39:17 +0800
-Message-Id: <20200418063917.26278-1-caizhaopeng@uniontech.com>
-X-Mailer: git-send-email 2.20.1
+        Sat, 18 Apr 2020 02:44:15 -0400
+Received: by mail-il1-f199.google.com with SMTP id l18so4813671ilg.0
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 23:44:15 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=Ju0UyNHzm8Bxnt/XyLuQ0hyMzA9hpJAW3BaCNcJ4ArM=;
+        b=pQR/80IrPtS8WZs3AKInDeOy1gNpZ7Nk4eGW4iLW/wBTju6TIOuguGwWLDe45E6umd
+         n74+1X3+hkhOwVV5VVxrd35U7/lQGJ8Oz/CM1JyDxpCDm+1wLPlWAI/CUvqSXpIoVOR9
+         mlJZJKnSlGktgLVWvtzmrjrKDpUPQFh3VygMafyESjwfALb9DzF3jRdsfkmaU/igtKkR
+         5XAzpU/N6DVuIXKqJO+/BwprZjnc2hLlkHr+wLk/j/tdicRMUfCJrS30CYDpWuN0i+dP
+         C0Km/SO0v553FKnvpoSgtvhGPZU5ZKexB5+JD4gEeGwA2Nqmf2Bq5CXY4/Kg4Ok1YpqL
+         y8Gw==
+X-Gm-Message-State: AGi0PuY0731R1aQqnWlus+U7Qao60SFjeegHU1Au9jITssjhypelkn6o
+        4Bi7LxcCtK256pjw7Ah5ShKB0jni0ynwytUweHOYlMB1vQJ5
+X-Google-Smtp-Source: APiQypKLjqiahVpx7Ssk+DzJg3tnzwqCO8ZGkJ4yIyyU8M19id4dsEYzaiAe+mpnwnxq7/wezasK2+7SZ5P5R+GnoF4bJ34PHCSK
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6e02:e03:: with SMTP id a3mr387477ilk.239.1587192254704;
+ Fri, 17 Apr 2020 23:44:14 -0700 (PDT)
+Date:   Fri, 17 Apr 2020 23:44:14 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000008832a805a38afe44@google.com>
+Subject: general protection fault in mm_update_next_owner (2)
+From:   syzbot <syzbot+a0f91e07da410c63b9c3@syzkaller.appspotmail.com>
+To:     christian@brauner.io, ebiederm@xmission.com,
+        linux-kernel@vger.kernel.org, mingo@kernel.org, oleg@redhat.com,
+        peterz@infradead.org, syzkaller-bugs@googlegroups.com,
+        tglx@linutronix.de
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When a qxl resource is released, the list that needs to be released is
-fetched from the linked list ring and cleared. When you empty the list,
-instead of trying to determine whether the ttm buffer object for each
-qxl in the list is locked, you release the qxl object and remove the
-element from the list until the list is empty. It was found that the
-linked list was cleared first, and that the lock on the corresponding
-ttm Bo for the QXL had not been released, so that the new qxl could not
-be locked when it used the TTM. By adding an additional mutex to ensure
-timing, qxl elements are not allowed to be removed from the list until
-ttm Bo's lock is released
+Hello,
 
-Signed-off-by: Caicai <caizhaopeng@uniontech.com>
+syzbot found the following crash on:
+
+HEAD commit:    8f3d9f35 Linux 5.7-rc1
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=119a1c07e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=5d351a1019ed81a2
+dashboard link: https://syzkaller.appspot.com/bug?extid=a0f91e07da410c63b9c3
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+
+Unfortunately, I don't have any reproducer for this crash yet.
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+a0f91e07da410c63b9c3@syzkaller.appspotmail.com
+
+general protection fault, probably for non-canonical address 0xf1918d9191919193: 0000 [#1] PREEMPT SMP KASAN
+KASAN: maybe wild-memory-access in range [0x8c8c8c8c8c8c8c98-0x8c8c8c8c8c8c8c9f]
+CPU: 0 PID: 933 Comm: syz-executor.0 Not tainted 5.7.0-rc1-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+RIP: 0010:__read_once_size include/linux/compiler.h:199 [inline]
+RIP: 0010:mm_update_next_owner+0x49b/0x7a0 kernel/exit.c:385
+Code: 48 8d bd 48 03 00 00 48 89 f8 48 c1 e8 03 80 3c 18 00 0f 85 f4 02 00 00 48 8b ad 48 03 00 00 4c 8d 7d 10 4c 89 f8 48 c1 e8 03 <80> 3c 18 00 0f 85 cb 02 00 00 48 8b 45 10 48 8d a8 68 fa ff ff 49
+RSP: 0018:ffffc90018517d20 EFLAGS: 00010a07
+RAX: 1191919191919193 RBX: dffffc0000000000 RCX: ffffffff81459ed3
+RDX: 0000000000000000 RSI: ffffffff81459ee1 RDI: ffff88800013e8e0
+RBP: 8c8c8c8c8c8c8c8c R08: ffff8882123f0580 R09: fffffbfff1301219
+R10: ffffffff898090c3 R11: fffffbfff1301218 R12: ffff88809552f800
+R13: ffff88800013e1c0 R14: 0000000000000000 R15: 8c8c8c8c8c8c8c9c
+FS:  0000000000000000(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000000400200 CR3: 000000020b913000 CR4: 00000000001426f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ exit_mm kernel/exit.c:478 [inline]
+ do_exit+0xa49/0x2dd0 kernel/exit.c:782
+ do_group_exit+0x125/0x340 kernel/exit.c:893
+ __do_sys_exit_group kernel/exit.c:904 [inline]
+ __se_sys_exit_group kernel/exit.c:902 [inline]
+ __x64_sys_exit_group+0x3a/0x50 kernel/exit.c:902
+ do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
+ entry_SYSCALL_64_after_hwframe+0x49/0xb3
+RIP: 0033:0x45c889
+Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007ffd4c670f58 EFLAGS: 00000246 ORIG_RAX: 00000000000000e7
+RAX: ffffffffffffffda RBX: 000000000000001e RCX: 000000000045c889
+RDX: 0000000000416421 RSI: fffffffffffffff7 RDI: 0000000000000000
+RBP: 0000000000000000 R08: 01ffffffffffffff R09: 00007ffd4c670fb0
+R10: 00000000007702b0 R11: 0000000000000246 R12: 0000000000000001
+R13: 00007ffd4c670fb0 R14: 0000000000000000 R15: 00007ffd4c670fc0
+Modules linked in:
+---[ end trace 30f7c81df55d5d82 ]---
+RIP: 0010:__read_once_size include/linux/compiler.h:199 [inline]
+RIP: 0010:mm_update_next_owner+0x49b/0x7a0 kernel/exit.c:385
+Code: 48 8d bd 48 03 00 00 48 89 f8 48 c1 e8 03 80 3c 18 00 0f 85 f4 02 00 00 48 8b ad 48 03 00 00 4c 8d 7d 10 4c 89 f8 48 c1 e8 03 <80> 3c 18 00 0f 85 cb 02 00 00 48 8b 45 10 48 8d a8 68 fa ff ff 49
+RSP: 0018:ffffc90018517d20 EFLAGS: 00010a07
+RAX: 1191919191919193 RBX: dffffc0000000000 RCX: ffffffff81459ed3
+RDX: 0000000000000000 RSI: ffffffff81459ee1 RDI: ffff88800013e8e0
+RBP: 8c8c8c8c8c8c8c8c R08: ffff8882123f0580 R09: fffffbfff1301219
+R10: ffffffff898090c3 R11: fffffbfff1301218 R12: ffff88809552f800
+R13: ffff88800013e1c0 R14: 0000000000000000 R15: 8c8c8c8c8c8c8c9c
+FS:  0000000000000000(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000000400200 CR3: 000000020b913000 CR4: 00000000001426f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+
+
 ---
- drivers/gpu/drm/qxl/qxl_cmd.c     | 12 +++++++++++-
- drivers/gpu/drm/qxl/qxl_display.c | 15 +++++++++++++++
- drivers/gpu/drm/qxl/qxl_draw.c    | 19 +++++++++++++++++++
- drivers/gpu/drm/qxl/qxl_drv.h     |  3 ++-
- drivers/gpu/drm/qxl/qxl_ioctl.c   |  3 +++
- drivers/gpu/drm/qxl/qxl_release.c |  2 ++
- 6 files changed, 52 insertions(+), 2 deletions(-)
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/drivers/gpu/drm/qxl/qxl_cmd.c b/drivers/gpu/drm/qxl/qxl_cmd.c
-index 208af9f37914..484405dae253 100644
---- a/drivers/gpu/drm/qxl/qxl_cmd.c
-+++ b/drivers/gpu/drm/qxl/qxl_cmd.c
-@@ -203,7 +203,9 @@ bool qxl_queue_garbage_collect(struct qxl_device *qdev, bool flush)
- 	if (!qxl_check_idle(qdev->release_ring)) {
- 		schedule_work(&qdev->gc_work);
- 		if (flush)
--			flush_work(&qdev->gc_work);
-+			//can't flush work, it may lead to deadlock
-+			usleep_range(500, 1000);
-+
- 		return true;
- 	}
- 	return false;
-@@ -241,7 +243,11 @@ int qxl_garbage_collect(struct qxl_device *qdev)
- 			}
- 			id = next_id;
- 
-+			mutex_lock(&release->async_release_mutex);
-+
- 			qxl_release_free(qdev, release);
-+
-+			mutex_unlock(&release->async_release_mutex);
- 			++i;
- 		}
- 	}
-@@ -475,6 +481,8 @@ int qxl_hw_surface_alloc(struct qxl_device *qdev,
- 	if (ret)
- 		return ret;
- 
-+	mutex_lock(&release->async_release_mutex);
-+
- 	cmd = (struct qxl_surface_cmd *)qxl_release_map(qdev, release);
- 	cmd->type = QXL_SURFACE_CMD_CREATE;
- 	cmd->flags = QXL_SURF_FLAG_KEEP_DATA;
-@@ -503,6 +511,8 @@ int qxl_hw_surface_alloc(struct qxl_device *qdev,
- 	qxl_push_command_ring_release(qdev, release, QXL_CMD_SURFACE, false);
- 	qxl_release_fence_buffer_objects(release);
- 
-+	mutex_unlock(&release->async_release_mutex);
-+
- 	surf->hw_surf_alloc = true;
- 	spin_lock(&qdev->surf_id_idr_lock);
- 	idr_replace(&qdev->surf_id_idr, surf, surf->surface_id);
-diff --git a/drivers/gpu/drm/qxl/qxl_display.c b/drivers/gpu/drm/qxl/qxl_display.c
-index 0570c6826bff..04bfb181a402 100644
---- a/drivers/gpu/drm/qxl/qxl_display.c
-+++ b/drivers/gpu/drm/qxl/qxl_display.c
-@@ -522,6 +522,8 @@ static int qxl_primary_apply_cursor(struct drm_plane *plane)
- 	if (ret)
- 		goto out_free_release;
- 
-+	mutex_lock(&release->async_release_mutex);
-+
- 	cmd = (struct qxl_cursor_cmd *)qxl_release_map(qdev, release);
- 	cmd->type = QXL_CURSOR_SET;
- 	cmd->u.set.position.x = plane->state->crtc_x + fb->hot_x;
-@@ -535,6 +537,8 @@ static int qxl_primary_apply_cursor(struct drm_plane *plane)
- 	qxl_push_cursor_ring_release(qdev, release, QXL_CMD_CURSOR, false);
- 	qxl_release_fence_buffer_objects(release);
- 
-+	mutex_unlock(&release->async_release_mutex);
-+
- 	return ret;
- 
- out_free_release:
-@@ -653,6 +657,8 @@ static void qxl_cursor_atomic_update(struct drm_plane *plane,
- 		if (ret)
- 			goto out_free_bo;
- 
-+		mutex_lock(&release->async_release_mutex);
-+
- 		ret = qxl_bo_kmap(cursor_bo, (void **)&cursor);
- 		if (ret)
- 			goto out_backoff;
-@@ -686,6 +692,8 @@ static void qxl_cursor_atomic_update(struct drm_plane *plane,
- 		if (ret)
- 			goto out_free_release;
- 
-+		mutex_lock(&release->async_release_mutex);
-+
- 		cmd = (struct qxl_cursor_cmd *) qxl_release_map(qdev, release);
- 		cmd->type = QXL_CURSOR_MOVE;
- 	}
-@@ -697,6 +705,8 @@ static void qxl_cursor_atomic_update(struct drm_plane *plane,
- 	qxl_push_cursor_ring_release(qdev, release, QXL_CMD_CURSOR, false);
- 	qxl_release_fence_buffer_objects(release);
- 
-+	mutex_unlock(&release->async_release_mutex);
-+
- 	if (old_cursor_bo)
- 		qxl_bo_unref(&old_cursor_bo);
- 
-@@ -706,6 +716,7 @@ static void qxl_cursor_atomic_update(struct drm_plane *plane,
- 
- out_backoff:
- 	qxl_release_backoff_reserve_list(release);
-+	mutex_unlock(&release->async_release_mutex);
- out_free_bo:
- 	qxl_bo_unref(&cursor_bo);
- out_kunmap:
-@@ -736,12 +747,16 @@ static void qxl_cursor_atomic_disable(struct drm_plane *plane,
- 		return;
- 	}
- 
-+	mutex_lock(&release->async_release_mutex);
-+
- 	cmd = (struct qxl_cursor_cmd *)qxl_release_map(qdev, release);
- 	cmd->type = QXL_CURSOR_HIDE;
- 	qxl_release_unmap(qdev, release, &cmd->release_info);
- 
- 	qxl_push_cursor_ring_release(qdev, release, QXL_CMD_CURSOR, false);
- 	qxl_release_fence_buffer_objects(release);
-+
-+	mutex_unlock(&release->async_release_mutex);
- }
- 
- static int qxl_plane_prepare_fb(struct drm_plane *plane,
-diff --git a/drivers/gpu/drm/qxl/qxl_draw.c b/drivers/gpu/drm/qxl/qxl_draw.c
-index 4d8681e84e68..4dc24739c79c 100644
---- a/drivers/gpu/drm/qxl/qxl_draw.c
-+++ b/drivers/gpu/drm/qxl/qxl_draw.c
-@@ -192,6 +192,8 @@ void qxl_draw_opaque_fb(const struct qxl_fb_image *qxl_fb_image,
- 	if (ret)
- 		goto out_free_palette;
- 
-+	mutex_lock(&release->async_release_mutex);
-+
- 	rect.left = x;
- 	rect.right = x + width;
- 	rect.top = y;
-@@ -200,6 +202,7 @@ void qxl_draw_opaque_fb(const struct qxl_fb_image *qxl_fb_image,
- 	ret = make_drawable(qdev, 0, QXL_DRAW_COPY, &rect, release);
- 	if (ret) {
- 		qxl_release_backoff_reserve_list(release);
-+		mutex_unlock(&release->async_release_mutex);
- 		goto out_free_palette;
- 	}
- 
-@@ -208,6 +211,7 @@ void qxl_draw_opaque_fb(const struct qxl_fb_image *qxl_fb_image,
- 			     width, height, depth, stride);
- 	if (ret) {
- 		qxl_release_backoff_reserve_list(release);
-+		mutex_unlock(&release->async_release_mutex);
- 		qxl_release_free(qdev, release);
- 		return;
- 	}
-@@ -244,6 +248,8 @@ void qxl_draw_opaque_fb(const struct qxl_fb_image *qxl_fb_image,
- 	qxl_push_command_ring_release(qdev, release, QXL_CMD_DRAW, false);
- 	qxl_release_fence_buffer_objects(release);
- 
-+	mutex_unlock(&release->async_release_mutex);
-+
- out_free_palette:
- 	if (palette_bo)
- 		qxl_bo_unref(&palette_bo);
-@@ -326,6 +332,8 @@ void qxl_draw_dirty_fb(struct qxl_device *qdev,
- 	if (ret)
- 		goto out_free_image;
- 
-+	mutex_lock(&release->async_release_mutex);
-+
- 	drawable_rect.left = left;
- 	drawable_rect.right = right;
- 	drawable_rect.top = top;
-@@ -387,6 +395,7 @@ void qxl_draw_dirty_fb(struct qxl_device *qdev,
- out_release_backoff:
- 	if (ret)
- 		qxl_release_backoff_reserve_list(release);
-+	mutex_unlock(&release->async_release_mutex);
- out_free_image:
- 	qxl_image_free_objects(qdev, dimage);
- out_free_clips:
-@@ -417,6 +426,8 @@ void qxl_draw_copyarea(struct qxl_device *qdev,
- 	if (ret)
- 		goto out_free_release;
- 
-+	mutex_lock(&release->async_release_mutex);
-+
- 	rect.left = dx;
- 	rect.top = dy;
- 	rect.right = dx + width;
-@@ -424,6 +435,7 @@ void qxl_draw_copyarea(struct qxl_device *qdev,
- 	ret = make_drawable(qdev, 0, QXL_COPY_BITS, &rect, release);
- 	if (ret) {
- 		qxl_release_backoff_reserve_list(release);
-+		mutex_unlock(&release->async_release_mutex);
- 		goto out_free_release;
- 	}
- 
-@@ -435,6 +447,8 @@ void qxl_draw_copyarea(struct qxl_device *qdev,
- 	qxl_push_command_ring_release(qdev, release, QXL_CMD_DRAW, false);
- 	qxl_release_fence_buffer_objects(release);
- 
-+	mutex_unlock(&release->async_release_mutex);
-+
- out_free_release:
- 	if (ret)
- 		free_drawable(qdev, release);
-@@ -459,9 +473,12 @@ void qxl_draw_fill(struct qxl_draw_fill *qxl_draw_fill_rec)
- 	if (ret)
- 		goto out_free_release;
- 
-+	mutex_lock(&release->async_release_mutex);
-+
- 	ret = make_drawable(qdev, 0, QXL_DRAW_FILL, &rect, release);
- 	if (ret) {
- 		qxl_release_backoff_reserve_list(release);
-+		mutex_unlock(&release->async_release_mutex);
- 		goto out_free_release;
- 	}
- 
-@@ -479,6 +496,8 @@ void qxl_draw_fill(struct qxl_draw_fill *qxl_draw_fill_rec)
- 	qxl_push_command_ring_release(qdev, release, QXL_CMD_DRAW, false);
- 	qxl_release_fence_buffer_objects(release);
- 
-+	mutex_unlock(&release->async_release_mutex);
-+
- out_free_release:
- 	if (ret)
- 		free_drawable(qdev, release);
-diff --git a/drivers/gpu/drm/qxl/qxl_drv.h b/drivers/gpu/drm/qxl/qxl_drv.h
-index 01220d386b0a..cbc7bdb5b8d3 100644
---- a/drivers/gpu/drm/qxl/qxl_drv.h
-+++ b/drivers/gpu/drm/qxl/qxl_drv.h
-@@ -54,7 +54,7 @@
- 
- #define DRIVER_NAME		"qxl"
- #define DRIVER_DESC		"RH QXL"
--#define DRIVER_DATE		"20120117"
-+#define DRIVER_DATE		"20200107"
- 
- #define DRIVER_MAJOR 0
- #define DRIVER_MINOR 1
-@@ -172,6 +172,7 @@ struct qxl_release {
- 	uint32_t surface_release_id;
- 	struct ww_acquire_ctx ticket;
- 	struct list_head bos;
-+	struct mutex	async_release_mutex;
- };
- 
- struct qxl_drm_chunk {
-diff --git a/drivers/gpu/drm/qxl/qxl_ioctl.c b/drivers/gpu/drm/qxl/qxl_ioctl.c
-index 6cc9f3367fa0..189d016b871b 100644
---- a/drivers/gpu/drm/qxl/qxl_ioctl.c
-+++ b/drivers/gpu/drm/qxl/qxl_ioctl.c
-@@ -250,6 +250,8 @@ static int qxl_process_single_command(struct qxl_device *qdev,
- 	if (ret)
- 		goto out_free_bos;
- 
-+	mutex_lock(&release->async_release_mutex);
-+
- 	for (i = 0; i < cmd->relocs_num; ++i) {
- 		if (reloc_info[i].type == QXL_RELOC_TYPE_BO)
- 			apply_reloc(qdev, &reloc_info[i]);
-@@ -263,6 +265,7 @@ static int qxl_process_single_command(struct qxl_device *qdev,
- 	else
- 		qxl_release_fence_buffer_objects(release);
- 
-+	mutex_unlock(&release->async_release_mutex);
- out_free_bos:
- out_free_release:
- 	if (ret)
-diff --git a/drivers/gpu/drm/qxl/qxl_release.c b/drivers/gpu/drm/qxl/qxl_release.c
-index e37f0097f744..f4c066dcabfe 100644
---- a/drivers/gpu/drm/qxl/qxl_release.c
-+++ b/drivers/gpu/drm/qxl/qxl_release.c
-@@ -133,6 +133,7 @@ qxl_release_alloc(struct qxl_device *qdev, int type,
- 	release->type = type;
- 	release->release_offset = 0;
- 	release->surface_release_id = 0;
-+	mutex_init(&release->async_release_mutex);
- 	INIT_LIST_HEAD(&release->bos);
- 
- 	idr_preload(GFP_KERNEL);
-@@ -343,6 +344,7 @@ int qxl_alloc_release_reserved(struct qxl_device *qdev, unsigned long size,
- 	}
- 
- 	mutex_lock(&qdev->release_mutex);
-+
- 	if (qdev->current_release_bo_offset[cur_idx] + 1 >= releases_per_bo[cur_idx]) {
- 		qxl_bo_unref(&qdev->current_release_bo[cur_idx]);
- 		qdev->current_release_bo_offset[cur_idx] = 0;
--- 
-2.20.1
-
-
-
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
