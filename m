@@ -2,123 +2,69 @@ Return-Path: <SRS0=3CHW=6C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4059CC38A2B
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 11:21:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9643EC2D0EF
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 11:31:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1FB3E221F4
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 11:21:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587208890;
-	bh=77wH0JlbUKInqkEkZYANjIIPct4Xemzg7GiHD8oFtqY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=g+QZwmG747DVsNTZ87yac7+XvbmmZwNcKQ7q50a79kVsF8Z7guUnTOzTgkRrE0SHz
-	 Io+uKuXbcY+AgSAaXZW8Bqr8XLowpoCAcSgI5a7wsSeTMvUxR5PeT7mHuWcZHCkh9J
-	 2YmSv8yJ6ae0PVuycB3CgGkzjibl45aTjdAj+f0A=
+	by mail.kernel.org (Postfix) with ESMTP id 7394E21D82
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 11:31:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725985AbgDRLV3 (ORCPT
+        id S1725953AbgDRL1L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 07:21:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49954 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725857AbgDRLV2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 07:21:28 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 911CA21D79;
-        Sat, 18 Apr 2020 11:21:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587208887;
-        bh=77wH0JlbUKInqkEkZYANjIIPct4Xemzg7GiHD8oFtqY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=NLB/ZicyUDIxey2fxqxQOXODT77sVJZQcqZKsU8IZeZMavmwzJxuF6Q9Yy9RgjJ2W
-         ArPRj/TRmUCFc3SkqTl999PoABRpxWrTNHqIug/WXL/ELyPnO8AW7C/RZIAQy2IQyk
-         ClGR2JVfFExTmtT9iTR5TJRakT0dLuyPppHumC+U=
-Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1jPlXJ-004Pmh-IF; Sat, 18 Apr 2020 12:21:25 +0100
-Date:   Sat, 18 Apr 2020 12:21:23 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     Alan Mikhak <alan.mikhak@sifive.com>
-Cc:     linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-pci@vger.kernel.org, tglx@linutronix.de,
-        gustavo.pimentel@synopsys.com, kishon@ti.com,
-        paul.walmsley@sifive.com
-Subject: Re: [PATCH] genirq/msi: Check null pointer before copying struct
- msi_msg
-Message-ID: <20200418122123.10157ddd@why>
-In-Reply-To: <1587149322-28104-1-git-send-email-alan.mikhak@sifive.com>
-References: <1587149322-28104-1-git-send-email-alan.mikhak@sifive.com>
-Organization: Approximate
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 62.31.163.78
-X-SA-Exim-Rcpt-To: alan.mikhak@sifive.com, linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org, linux-pci@vger.kernel.org, tglx@linutronix.de, gustavo.pimentel@synopsys.com, kishon@ti.com, paul.walmsley@sifive.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+        Sat, 18 Apr 2020 07:27:11 -0400
+Received: from m176115.mail.qiye.163.com ([59.111.176.115]:7731 "EHLO
+        m176115.mail.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725857AbgDRL1K (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 07:27:10 -0400
+Received: from wangqing-virtual-machine.localdomain (unknown [157.0.31.122])
+        by m176115.mail.qiye.163.com (Hmail) with ESMTPA id 2E18E6640D6;
+        Sat, 18 Apr 2020 19:27:07 +0800 (CST)
+From:   Wang Qing <wangqing@vivo.com>
+To:     gxt@pku.edu.cn, linux-kernel@vger.kernel.org, wangqing@vivo.com
+Cc:     opensource.kernel@vivo.com
+Subject: [PATCH] unicore32: fixed backtrace when task running on another cpu
+Date:   Sat, 18 Apr 2020 19:27:02 +0800
+Message-Id: <1587209222-5951-1-git-send-email-wangqing@vivo.com>
+X-Mailer: git-send-email 2.7.4
+X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgYFAkeWUFZT1VDTkNCQkJMSUJKTk1PQllXWShZQU
+        hPN1dZLVlBSVdZCQ4XHghZQVk1NCk2OjckKS43PlkG
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6PBw6Hgw*CTg1Eg0wKlEhURcx
+        ExowCzpVSlVKTkNMSUtCSUlMSEpDVTMWGhIXVQwaFRwKEhUcOw0SDRRVGBQWRVlXWRILWUFZSk5M
+        VUtVSEpVSklJWVdZCAFZQUpOT0g3Bg++
+X-HM-Tid: 0a718d0acbee9373kuws2e18e6640d6
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 17 Apr 2020 11:48:42 -0700
-Alan Mikhak <alan.mikhak@sifive.com> wrote:
+We cannot get FP when the task is currently running on another CPU,
+in this case, current stack is printed instead of the task.
+Also, thread_saved_fp() is the last time the task was switched out,
+we should not use too.
 
-Hi Alan,
+Signed-off-by: Wang Qing <wangqing@vivo.com>
+---
+ arch/unicore32/kernel/traps.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-> From: Alan Mikhak <alan.mikhak@sifive.com>
-> 
-> Modify __get_cached_msi_msg() to check both pointers for null before
-> copying the contents from the struct msi_msg pointer to the pointer
-> provided by caller.
-> 
-> Without this sanity check, __get_cached_msi_msg() crashes when invoked by
-> dw_edma_irq_request() in drivers/dma/dw-edma/dw-edma-core.c running on a
-> Linux-based PCIe endpoint device. MSI interrupt are not received by PCIe
-> endpoint devices. As a result, irq_get_msi_desc() returns null since there
-> are no cached struct msi_msg entry on the endpoint side.
-> 
-> Signed-off-by: Alan Mikhak <alan.mikhak@sifive.com>
-> ---
->  kernel/irq/msi.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/kernel/irq/msi.c b/kernel/irq/msi.c
-> index eb95f6106a1e..f39d42ef0d50 100644
-> --- a/kernel/irq/msi.c
-> +++ b/kernel/irq/msi.c
-> @@ -58,7 +58,8 @@ void free_msi_entry(struct msi_desc *entry)
->  
->  void __get_cached_msi_msg(struct msi_desc *entry, struct msi_msg *msg)
->  {
-> -	*msg = entry->msg;
-> +	if (entry && msg)
-> +		*msg = entry->msg;
->  }
->  
->  void get_cached_msi_msg(unsigned int irq, struct msi_msg *msg)
-
-I'm not convinced by this. If you know that, by construction, these
-interrupts are not associated with an underlying MSI, why calling
-get_cached_msi_msg() the first place?
-
-There seem to be some assumptions in the DW EDMA driver that the
-signaling would be MSI based, so maybe someone from Synopsys (Gustavo?)
-could clarify that. From my own perspective, running on an endpoint
-device means that it is *generating* interrupts, and I'm not sure what
-the MSIs represent here.
-
-Thanks,
-
-	M.
+diff --git a/arch/unicore32/kernel/traps.c b/arch/unicore32/kernel/traps.c
+index e24f672..3b9472a 100644
+--- a/arch/unicore32/kernel/traps.c
++++ b/arch/unicore32/kernel/traps.c
+@@ -151,6 +151,9 @@ static void dump_backtrace(struct pt_regs *regs, struct task_struct *tsk)
+ 	} else if (tsk != current) {
+ 		fp = thread_saved_fp(tsk);
+ 		mode = 0x10;
++	} else if (task_curr(tsk))
++		printk("tsk is running on another CPU, not trace!\n");
++		fp = 0;
+ 	} else {
+ 		asm("mov %0, fp" : "=r" (fp) : : "cc");
+ 		mode = 0x10;
 -- 
-Jazz is not dead. It just smells funny...
+2.7.4
+
