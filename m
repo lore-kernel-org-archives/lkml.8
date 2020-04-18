@@ -2,144 +2,117 @@ Return-Path: <SRS0=3CHW=6C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37015C38A2F
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:37:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DC36C38A29
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:39:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 182F821D6C
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:37:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587220656;
-	bh=DsthRMTgouW7iFiF8BqnKI1i0lCywyw08im5vXB242Q=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=v2xz+wdZmlFpLVP0TEP7UmX4dXz4fNnbU5uSlZBFS/EdWVybm7N5caU5sdGn5TZMu
-	 1uQ0CK6FyqP//Z0WhISpSRVw7vGUuVuQdf4dEoq3pq1RoAAo0BuptHTzVcWx8CQ38/
-	 VnsFb6R0JY6OEywOFrUsXwSk3rty8VuQyOGfTVLk=
+	by mail.kernel.org (Postfix) with ESMTP id 28F7E21974
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:39:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="UrQgm4vL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726277AbgDROhf (ORCPT
+        id S1726327AbgDROjL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 10:37:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47302 "EHLO mail.kernel.org"
+        Sat, 18 Apr 2020 10:39:11 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:46482 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725903AbgDROhf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 10:37:35 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1FED42070B;
-        Sat, 18 Apr 2020 14:37:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587220654;
-        bh=DsthRMTgouW7iFiF8BqnKI1i0lCywyw08im5vXB242Q=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=HeGRS4z/sL8oHL8Ki2MutJmZjXyHlPdU0J+dXt4th6BXT/k4jFt36w6CDdpVhCrce
-         qDL+bw5GxuharKFZXSPHI1F6c2rscInq6066uueWlcmFJ5xWBSdQg6xOauuqtJVsfG
-         bWPv7xI52wLkOyh9p3jQXUbhN8Y+cyvSW7FzXJJA=
-Date:   Sat, 18 Apr 2020 15:37:30 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH v1] iio: magnetometer: ak8974: Silence deferred-probe
- error
-Message-ID: <20200418153730.1e1d01ef@archlinux>
-In-Reply-To: <26f96265-c699-66aa-ec70-becd868bb795@gmail.com>
-References: <20200414222713.32660-1-digetx@gmail.com>
-        <CACRpkdY_J8e127etFFYkoxLDDkc334Xgg8ZbapdU36oGsaZ08g@mail.gmail.com>
-        <e08c487c-5c2a-3172-7c9c-0e7d2cd51769@gmail.com>
-        <CACRpkdbMF4=-g2ic_SKgOkd6kfgKJqZ2UxCRaoXJjq0EiEn+pw@mail.gmail.com>
-        <26f96265-c699-66aa-ec70-becd868bb795@gmail.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1725879AbgDROjK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 10:39:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=1LsCjVacgDNgCyib7rEtoSFJWVTL9FJKR4yzQpOfwYg=; b=UrQgm4vL1ovuJYFTO+d+97W3Qs
+        TCvDjd0CNLvezkYbzOVdaG5akr/ykupJjk7WO1yvDFwqYS16vyIEWFeY87wFH3ZtWJHL6Cr1zdiuO
+        Y0WiLKT375DuF8uGMnfREUff7WFSnp9EB7x6V+XcdicIyOPEwXy2PcZ+sWZo/hA2l26k=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1jPocZ-003TEL-8P; Sat, 18 Apr 2020 16:39:03 +0200
+Date:   Sat, 18 Apr 2020 16:39:03 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     Calvin Johnson <calvin.johnson@oss.nxp.com>, linux.cj@gmail.com,
+        Jeremy Linton <jeremy.linton@arm.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Cristi Sovaiala <cristian.sovaiala@nxp.com>,
+        Florin Laurentiu Chiculita <florinlaurentiu.chiculita@nxp.com>,
+        Ioana Ciornei <ioana.ciornei@nxp.com>,
+        Madalin Bucur <madalin.bucur@oss.nxp.com>,
+        netdev@vger.kernel.org, Laurentiu Tudor <laurentiu.tudor@nxp.com>,
+        linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Diana Madalina Craciun <diana.craciun@nxp.com>,
+        linux-kernel@vger.kernel.org, Varun Sethi <V.Sethi@nxp.com>,
+        Marcin Wojtas <mw@semihalf.com>,
+        "Rajesh V . Bikkina" <rajesh.bikkina@nxp.com>,
+        Pankaj Bansal <pankaj.bansal@nxp.com>,
+        Makarand Pawagi <makarand.pawagi@nxp.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: Re: [RFC net-next PATCH v2 1/2] net/fsl: add ACPI support for mdio
+ bus
+Message-ID: <20200418143903.GF804711@lunn.ch>
+References: <20200418105432.11233-1-calvin.johnson@oss.nxp.com>
+ <20200418105432.11233-2-calvin.johnson@oss.nxp.com>
+ <20200418114116.GU25745@shell.armlinux.org.uk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200418114116.GU25745@shell.armlinux.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 16 Apr 2020 20:35:56 +0300
-Dmitry Osipenko <digetx@gmail.com> wrote:
+> > +static int xgmac_mdiobus_register_phy(struct mii_bus *bus,
+> > +				      struct fwnode_handle *child, u32 addr)
+> > +{
+> > +	struct phy_device *phy;
+> > +	bool is_c45 = false;
+> > +	int rc;
+> > +	const char *cp;
+> > +	u32 phy_id;
+> > +
+> > +	fwnode_property_read_string(child, "compatible", &cp);
+> > +	if (!strcmp(cp, "ethernet-phy-ieee802.3-c45"))
+> > +		is_c45 = true;
+> > +
+> > +	if (!is_c45 && !xgmac_get_phy_id(child, &phy_id))
+> > +		phy = phy_device_create(bus, addr, phy_id, 0, NULL);
+> > +	else
+> > +		phy = get_phy_device(bus, addr, is_c45);
+> > +	if (IS_ERR(phy))
+> > +		return PTR_ERR(phy);
+> > +
+> > +	phy->irq = bus->irq[addr];
+> > +
+> > +	/* Associate the fwnode with the device structure so it
+> > +	 * can be looked up later.
+> > +	 */
+> > +	phy->mdio.dev.fwnode = child;
+> > +
+> > +	/* All data is now stored in the phy struct, so register it */
+> > +	rc = phy_device_register(phy);
+> > +	if (rc) {
+> > +		phy_device_free(phy);
+> > +		fwnode_handle_put(child);
+> > +		return rc;
+> > +	}
+> > +
+> > +	dev_dbg(&bus->dev, "registered phy at address %i\n", addr);
+> > +
+> > +	return 0;
+> 
+> You seem to be duplicating the OF implementation in a private driver,
+> converting it to fwnode.  This is not how we develop the Linux kernel.
+> We fix subsystem problems by fixing the subsystems, not by throwing
+> what should be subsystem code into private drivers.
 
-> 16.04.2020 19:51, Linus Walleij =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
-> > On Thu, Apr 16, 2020 at 4:45 PM Dmitry Osipenko <digetx@gmail.com> wrot=
-e: =20
-> >> 16.04.2020 14:33, Linus Walleij =D0=BF=D0=B8=D1=88=D0=B5=D1=82: =20
-> >  =20
-> >>> This misses some important aspects of dev_dbg(), notably this:
-> >>>
-> >>> #if defined(CONFIG_DYNAMIC_DEBUG)
-> >>> #define dev_dbg(dev, fmt, ...)                                       =
-   \
-> >>>         dynamic_dev_dbg(dev, dev_fmt(fmt), ##__VA_ARGS__)
-> >>> #elif defined(DEBUG)
-> >>> #define dev_dbg(dev, fmt, ...)                                       =
-   \
-> >>>         dev_printk(KERN_DEBUG, dev, dev_fmt(fmt), ##__VA_ARGS__)
-> >>> #else
-> >>> #define dev_dbg(dev, fmt, ...)                                       =
-   \
-> >>> ({                                                                   =
-   \
-> >>>         if (0)                                                       =
-   \
-> >>>                 dev_printk(KERN_DEBUG, dev, dev_fmt(fmt), ##__VA_ARGS=
-__); \
-> >>> })
-> >>> #endif
-> >>>
-> >>> If DEBUG is not defined the entire dev_dbg() message is enclodes in i=
-f (0)
-> >>> and compiled out of the kernel, saving space. The above does not
-> >>> fulfil that. =20
-> >>
-> >> Hello Linus,
-> >>
-> >> After some recent discussions in regards to the EPROBE_DEFER handling,
-> >> Thierry Reding suggested the form which is used in my patch and we
-> >> started to use it recently in the Tegra DRM driver [1]. The reason is
-> >> that we don't want to miss any deferred-probe messages under any
-> >> circumstances, for example like in a case of a disabled DYNAMIC_DEBUG.=
- =20
-> >=20
-> > I have a hard time to accept this reasoning.
-> >=20
-> > Who doesn't feel that way about their subsystem? If you don't want
-> > to miss the message under any circumstances then use dev_info().
-> > Don't override the default behaviour of dev_dbg().
-> >  =20
-> >> The debug messages are usually disabled in a release-build and when not
-> >> a very experienced person hands you KMSG for diagnosing a problem, the
-> >> KMSG is pretty much useless if error is hidden silently. =20
-> >=20
-> > So use dev_info().
-> >  =20
-> >> By moving the message to a debug level, we reduce the noise in the KMSG
-> >> because usually people look for a bold-red error messages. Secondly, we
-> >> don't introduce an additional overhead to the kernel size since the sa=
-me
-> >> text is reused for all error conditions. =20
-> >=20
-> > dev_info() is not supposed to be an error message, it is supposed to
-> > be information, so use that. =20
->=20
-> Okay, I'll make a v2. Thank you for the review.
+And i think a similar comment was given for v1, but i could be
+remembering wrongly.
 
-Ah I commented on this in v2 - now I see why you did it :)
-Nope to dev_info. That will often spam normal logs and as Andy pointed
-out for v2 that can be dozens of entries on a sophisticated board.  Much
-better to stick to dev_dbg but I'd like to see it done explicitly in the
-form you mention with the if / else
-
-Thanks,
-
-Jonathan
-
+	    Andrew
