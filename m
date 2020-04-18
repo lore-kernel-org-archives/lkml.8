@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA89DC4CC77
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:10:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AE27C38A2F
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:10:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A236522251
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:10:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A1A52224F
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:10:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587219037;
-	bh=cpAMGGfP/vuBzpkFWI/SKvrGzpquAnEwlNg3K7foEDU=;
+	s=default; t=1587219043;
+	bh=hu5t5gL/CrEI1D6zO0cR1HzJwCY5MbLX2lDBKqe0jsk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SST0d3FcjasxQqSYeYGiyEDSd8hhsCXbpZ0x4xAzUetwCEOQ6DsXQvKtfAIFhDPEY
-	 E4t/uC3iaYcb/rExxZ0oa73K01sjwfPprGwPN8KtHpRG6EDNLLKaWBBjasdkA3Zrow
-	 sdTqlrj22zdTmzd9tQ3gdnB0sS5bAdj4LTXbxPYU=
+	b=thWAPXMQDQLtjkSAu8Iuk3g2ioOyOBk7w/lCA0M7CzDv+1DJAMXBoav4QkXlNb8Ne
+	 mKWmgdiYn+hKCAedOxJ+mk8MRTwvyYMflfx4S0HRVk+MpJvf/DQ+1ctgZLRI5D202e
+	 4bXWzdevwETGTM45mmewgNvgf/j33JLwGqiXzwI0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727901AbgDROKg (ORCPT
+        id S1727950AbgDROKm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 10:10:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38716 "EHLO mail.kernel.org"
+        Sat, 18 Apr 2020 10:10:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38796 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727837AbgDROKa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 10:10:30 -0400
+        id S1727865AbgDROKe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 10:10:34 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 091FE21D79;
-        Sat, 18 Apr 2020 14:10:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8729621BE5;
+        Sat, 18 Apr 2020 14:10:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587219029;
-        bh=cpAMGGfP/vuBzpkFWI/SKvrGzpquAnEwlNg3K7foEDU=;
+        s=default; t=1587219033;
+        bh=hu5t5gL/CrEI1D6zO0cR1HzJwCY5MbLX2lDBKqe0jsk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pFautUt7Oby/mErimggAA8IuixWmJ6ItMmCvK1Df5FfqGqyhB0/9dSBHVcEpYqRDO
-         EtF/K4N1pyAwdpdoLjfQxbSpCY7C9LIJmw8ejRteujq/weGOYR3rPhdK6pRpXnG4HI
-         1PSCoIxtG/VJJ4slHKO6zrOL2RDX0XOqgae82ZJo=
+        b=MWcdq7FrzTDU9+8bCFB175iGFcWSZlZStc1JiPkxd1x9pW1q7W4RUOOmEwJFDGx9W
+         VompKH5T/50LOYFRSZueO2g/fa/LHvvEU/Qi+tU/zMyYtes1Rl0nZEZml4SY4X34SD
+         c4DK75TVbQb7QXYUPBkfzVXrnQFoVuctfnAWmrpg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.de>,
-        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 5.5 64/75] ALSA: hda/realtek - Add quirk for Lenovo Carbon X1 8th gen
-Date:   Sat, 18 Apr 2020 10:08:59 -0400
-Message-Id: <20200418140910.8280-64-sashal@kernel.org>
+Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Mathias Nyman <mathias.nyman@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 67/75] xhci: Wait until link state trainsits to U0 after setting USB_SS_PORT_LS_U0
+Date:   Sat, 18 Apr 2020 10:09:02 -0400
+Message-Id: <20200418140910.8280-67-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200418140910.8280-1-sashal@kernel.org>
 References: <20200418140910.8280-1-sashal@kernel.org>
@@ -59,40 +60,137 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-[ Upstream commit ca707b3f00b4f31a6e1eb37e8ae99f15f2bb1fe5 ]
+[ Upstream commit 0200b9f790b0fc9e9a42f685f5ad54b23fe959f4 ]
 
-The audio setup on the Lenovo Carbon X1 8th gen is the same as that on
-the Lenovo Carbon X1 7th gen, as such it needs the same
-ALC285_FIXUP_THINKPAD_HEADSET_JACK quirk.
+Like U3 case, xHCI spec doesn't specify the upper bound of U0 transition
+time. The 20ms is not enough for some devices.
 
-This fixes volume control of the speaker not working among other things.
+Intead of polling PLS or PLC, we can facilitate the port change event to
+know that the link transits to U0 is completed.
 
-BugLink: https://bugzilla.redhat.com/show_bug.cgi?id=1820196
-Cc: stable@vger.kernel.org
-Suggested-by: Jaroslav Kysela <perex@perex.cz>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Reviewed-by: Jaroslav Kysela <perex@perex.cz>
-Link: https://lore.kernel.org/r/20200402174311.238614-1-hdegoede@redhat.com
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+While at it, also separate U0 and U3 case to make the code cleaner.
+
+[variable rename to u3exit, and skip completion for usb2 ports -Mathias ]
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
+Link: https://lore.kernel.org/r/20200312144517.1593-8-mathias.nyman@linux.intel.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/pci/hda/patch_realtek.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/usb/host/xhci-hub.c  | 44 +++++++++++++++++++++++++-----------
+ drivers/usb/host/xhci-mem.c  |  1 +
+ drivers/usb/host/xhci-ring.c |  1 +
+ drivers/usb/host/xhci.h      |  1 +
+ 4 files changed, 34 insertions(+), 13 deletions(-)
 
-diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
-index 62eac992ebd55..e2c77d2ab26e9 100644
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -7300,6 +7300,7 @@ static const struct snd_pci_quirk alc269_fixup_tbl[] = {
- 	SND_PCI_QUIRK(0x17aa, 0x225d, "Thinkpad T480", ALC269_FIXUP_LIMIT_INT_MIC_BOOST),
- 	SND_PCI_QUIRK(0x17aa, 0x2292, "Thinkpad X1 Yoga 7th", ALC285_FIXUP_THINKPAD_HEADSET_JACK),
- 	SND_PCI_QUIRK(0x17aa, 0x2293, "Thinkpad X1 Carbon 7th", ALC285_FIXUP_THINKPAD_HEADSET_JACK),
-+	SND_PCI_QUIRK(0x17aa, 0x22be, "Thinkpad X1 Carbon 8th", ALC285_FIXUP_THINKPAD_HEADSET_JACK),
- 	SND_PCI_QUIRK(0x17aa, 0x30bb, "ThinkCentre AIO", ALC233_FIXUP_LENOVO_LINE2_MIC_HOTKEY),
- 	SND_PCI_QUIRK(0x17aa, 0x30e2, "ThinkCentre AIO", ALC233_FIXUP_LENOVO_LINE2_MIC_HOTKEY),
- 	SND_PCI_QUIRK(0x17aa, 0x310c, "ThinkCentre Station", ALC294_FIXUP_LENOVO_MIC_LOCATION),
+diff --git a/drivers/usb/host/xhci-hub.c b/drivers/usb/host/xhci-hub.c
+index 712cd44f05ace..02f52d4f74df8 100644
+--- a/drivers/usb/host/xhci-hub.c
++++ b/drivers/usb/host/xhci-hub.c
+@@ -1306,7 +1306,33 @@ int xhci_hub_control(struct usb_hcd *hcd, u16 typeReq, u16 wValue,
+ 					 wIndex, link_state);
+ 				goto error;
+ 			}
++
++			if (link_state == USB_SS_PORT_LS_U0) {
++				if ((temp & PORT_PLS_MASK) == XDEV_U0)
++					break;
++
++				if (!((temp & PORT_PLS_MASK) == XDEV_U1 ||
++				    (temp & PORT_PLS_MASK) == XDEV_U2 ||
++				    (temp & PORT_PLS_MASK) == XDEV_U3)) {
++					xhci_warn(xhci, "Can only set port %d to U0 from U state\n",
++							wIndex);
++					goto error;
++				}
++				reinit_completion(&bus_state->u3exit_done[wIndex]);
++				xhci_set_link_state(xhci, ports[wIndex],
++						    USB_SS_PORT_LS_U0);
++				spin_unlock_irqrestore(&xhci->lock, flags);
++				if (!wait_for_completion_timeout(&bus_state->u3exit_done[wIndex],
++								 msecs_to_jiffies(100)))
++					xhci_dbg(xhci, "missing U0 port change event for port %d\n",
++						 wIndex);
++				spin_lock_irqsave(&xhci->lock, flags);
++				temp = readl(ports[wIndex]->addr);
++				break;
++			}
++
+ 			if (link_state == USB_SS_PORT_LS_U3) {
++				int retries = 16;
+ 				slot_id = xhci_find_slot_id_by_port(hcd, xhci,
+ 						wIndex + 1);
+ 				if (slot_id) {
+@@ -1317,26 +1343,18 @@ int xhci_hub_control(struct usb_hcd *hcd, u16 typeReq, u16 wValue,
+ 					xhci_stop_device(xhci, slot_id, 1);
+ 					spin_lock_irqsave(&xhci->lock, flags);
+ 				}
+-			}
+-
+-			xhci_set_link_state(xhci, ports[wIndex], link_state);
+-
+-			spin_unlock_irqrestore(&xhci->lock, flags);
+-			if (link_state == USB_SS_PORT_LS_U3) {
+-				int retries = 16;
+-
++				xhci_set_link_state(xhci, ports[wIndex], USB_SS_PORT_LS_U3);
++				spin_unlock_irqrestore(&xhci->lock, flags);
+ 				while (retries--) {
+ 					usleep_range(4000, 8000);
+ 					temp = readl(ports[wIndex]->addr);
+ 					if ((temp & PORT_PLS_MASK) == XDEV_U3)
+ 						break;
+ 				}
+-			}
+-			spin_lock_irqsave(&xhci->lock, flags);
+-
+-			temp = readl(ports[wIndex]->addr);
+-			if (link_state == USB_SS_PORT_LS_U3)
++				spin_lock_irqsave(&xhci->lock, flags);
++				temp = readl(ports[wIndex]->addr);
+ 				bus_state->suspended_ports |= 1 << wIndex;
++			}
+ 			break;
+ 		case USB_PORT_FEAT_POWER:
+ 			/*
+diff --git a/drivers/usb/host/xhci-mem.c b/drivers/usb/host/xhci-mem.c
+index 884c601bfa15f..9764122c9cdf2 100644
+--- a/drivers/usb/host/xhci-mem.c
++++ b/drivers/usb/host/xhci-mem.c
+@@ -2552,6 +2552,7 @@ int xhci_mem_init(struct xhci_hcd *xhci, gfp_t flags)
+ 		xhci->usb3_rhub.bus_state.resume_done[i] = 0;
+ 		/* Only the USB 2.0 completions will ever be used. */
+ 		init_completion(&xhci->usb2_rhub.bus_state.rexit_done[i]);
++		init_completion(&xhci->usb3_rhub.bus_state.u3exit_done[i]);
+ 	}
+ 
+ 	if (scratchpad_alloc(xhci, flags))
+diff --git a/drivers/usb/host/xhci-ring.c b/drivers/usb/host/xhci-ring.c
+index d23f7408c81f1..c1e63af88356c 100644
+--- a/drivers/usb/host/xhci-ring.c
++++ b/drivers/usb/host/xhci-ring.c
+@@ -1677,6 +1677,7 @@ static void handle_port_status(struct xhci_hcd *xhci,
+ 	     (portsc & PORT_PLS_MASK) == XDEV_U1 ||
+ 	     (portsc & PORT_PLS_MASK) == XDEV_U2)) {
+ 		xhci_dbg(xhci, "resume SS port %d finished\n", port_id);
++		complete(&bus_state->u3exit_done[hcd_portnum]);
+ 		/* We've just brought the device into U0/1/2 through either the
+ 		 * Resume state after a device remote wakeup, or through the
+ 		 * U3Exit state after a host-initiated resume.  If it's a device
+diff --git a/drivers/usb/host/xhci.h b/drivers/usb/host/xhci.h
+index 3ecee10fdcdc7..fb1ab63b5fe25 100644
+--- a/drivers/usb/host/xhci.h
++++ b/drivers/usb/host/xhci.h
+@@ -1694,6 +1694,7 @@ struct xhci_bus_state {
+ 	/* Which ports are waiting on RExit to U0 transition. */
+ 	unsigned long		rexit_ports;
+ 	struct completion	rexit_done[USB_MAXCHILDREN];
++	struct completion	u3exit_done[USB_MAXCHILDREN];
+ };
+ 
+ 
 -- 
 2.20.1
 
