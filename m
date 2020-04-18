@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA47CC3A5A0
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:43:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22C60C38A29
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:43:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9FEB621D82
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:43:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E535D2072B
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:43:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587221028;
-	bh=xbmExh56ch6cRkQ8mOrEwKDL4r87ABw7JWBB5qt5uZg=;
+	s=default; t=1587221032;
+	bh=FtfC7Z9l+PF/gQBBs9jNp4cGmr4oyYE08j4RqK3c2XQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nQfY7383ldTkq60TjlFiVspxiMxYWXaRn74FL3GkE4/mvE0m6sDwWEdk07/jBEZw3
-	 hu5JZZGVBq9UL4AvFK/I1PRZjDZ9RJwV3Su9zlA7l7ZsmVSr1ap/kaa7DRM6vXxnWd
-	 asxS+DEolBILlN09mJVSwFZXfV9Ui2qTzd5m/bp4=
+	b=MitmsJcTx+6M11hu1e2AliICuOluoyK2X5/RYe8ZWLeZdgycgBdHk83rHr95N6eEd
+	 nZ+VXurpWWQ4o7fjBG/wTdVjcvIKYlpkmnY+QHhuLOdcqhjF33O6QUJkTaSKtNr9sF
+	 wfkVuUSAX0OQ6ZvH6IOg9IkM0skeMIorVx+jYKa4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728663AbgDROnr (ORCPT
+        id S1728678AbgDROnv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 10:43:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54818 "EHLO mail.kernel.org"
+        Sat, 18 Apr 2020 10:43:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54878 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728614AbgDROng (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 10:43:36 -0400
+        id S1728634AbgDROnj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 10:43:39 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DEF4A22244;
-        Sat, 18 Apr 2020 14:43:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6F9D122251;
+        Sat, 18 Apr 2020 14:43:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587221015;
-        bh=xbmExh56ch6cRkQ8mOrEwKDL4r87ABw7JWBB5qt5uZg=;
+        s=default; t=1587221019;
+        bh=FtfC7Z9l+PF/gQBBs9jNp4cGmr4oyYE08j4RqK3c2XQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JQEa1vZTQGaVw54ufFxxxPFTahJ6p1AraFbfRNvo8LjLEtBb6bnM0BEFXPjs9/Z6J
-         Ppn63EDu4U6ARobdmzG+CyplrqL0CjhT4JfmLzJvcGVIaaPYIpblHI8jrMITykCLZT
-         620scDdU3k8NpGHCKEn6TpJFRB7OWzCGxHIlNBsE=
+        b=DVF4ZtUU1EZ6Y6kTxAwhA0jaMc99VuF6otFLFeAjZrIs3yTFYRsle7Es9a4QAKdG8
+         55/MoXqJH22oBojFI7hvftggeFYbEhI2pofTyHGKtQh0PqR+gprGXkeGUHuYF9yd6D
+         KFYEO5vdJ2RfP2bQaN9OlSrpVv5Z2ud6nZxdVZPQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Yan, Zheng" <zyan@redhat.com>, Jeff Layton <jlayton@kernel.org>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, ceph-devel@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 06/28] ceph: don't skip updating wanted caps when cap is stale
-Date:   Sat, 18 Apr 2020 10:43:06 -0400
-Message-Id: <20200418144328.10265-6-sashal@kernel.org>
+Cc:     Wu Bo <wubo40@huawei.com>, Lee Duncan <lduncan@suse.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, open-iscsi@googlegroups.com,
+        linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 09/28] scsi: iscsi: Report unbind session event when the target has been removed
+Date:   Sat, 18 Apr 2020 10:43:09 -0400
+Message-Id: <20200418144328.10265-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200418144328.10265-1-sashal@kernel.org>
 References: <20200418144328.10265-1-sashal@kernel.org>
@@ -59,47 +60,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Yan, Zheng" <zyan@redhat.com>
+From: Wu Bo <wubo40@huawei.com>
 
-[ Upstream commit 0aa971b6fd3f92afef6afe24ef78d9bb14471519 ]
+[ Upstream commit 13e60d3ba287d96eeaf1deaadba51f71578119a3 ]
 
-1. try_get_cap_refs() fails to get caps and finds that mds_wanted
-   does not include what it wants. It returns -ESTALE.
-2. ceph_get_caps() calls ceph_renew_caps(). ceph_renew_caps() finds
-   that inode has cap, so it calls ceph_check_caps().
-3. ceph_check_caps() finds that issued caps (without checking if it's
-   stale) already includes caps wanted by open file, so it skips
-   updating wanted caps.
+If the daemon is restarted or crashes while logging out of a session, the
+unbind session event sent by the kernel is not processed and is lost.  When
+the daemon starts again, the session can't be unbound because the daemon is
+waiting for the event message. However, the kernel has already logged out
+and the event will not be resent.
 
-Above events can cause an infinite loop inside ceph_get_caps().
+When iscsid restart is complete, logout session reports error:
 
-Signed-off-by: "Yan, Zheng" <zyan@redhat.com>
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
-Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
+Logging out of session [sid: 6, target: iqn.xxxxx, portal: xx.xx.xx.xx,3260]
+iscsiadm: Could not logout of [sid: 6, target: iscsiadm -m node iqn.xxxxx, portal: xx.xx.xx.xx,3260].
+iscsiadm: initiator reported error (9 - internal error)
+iscsiadm: Could not logout of all requested sessions
+
+Make sure the unbind event is emitted.
+
+[mkp: commit desc and applied by hand since patch was mangled]
+
+Link: https://lore.kernel.org/r/4eab1771-2cb3-8e79-b31c-923652340e99@huawei.com
+Reviewed-by: Lee Duncan <lduncan@suse.com>
+Signed-off-by: Wu Bo <wubo40@huawei.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ceph/caps.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/scsi/scsi_transport_iscsi.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/fs/ceph/caps.c b/fs/ceph/caps.c
-index c3a3ee74e2d84..1b5a50848b5be 100644
---- a/fs/ceph/caps.c
-+++ b/fs/ceph/caps.c
-@@ -1863,8 +1863,12 @@ void ceph_check_caps(struct ceph_inode_info *ci, int flags,
- 		}
+diff --git a/drivers/scsi/scsi_transport_iscsi.c b/drivers/scsi/scsi_transport_iscsi.c
+index aecb563a2b4e3..9589015234693 100644
+--- a/drivers/scsi/scsi_transport_iscsi.c
++++ b/drivers/scsi/scsi_transport_iscsi.c
+@@ -2010,7 +2010,7 @@ static void __iscsi_unbind_session(struct work_struct *work)
+ 	if (session->target_id == ISCSI_MAX_TARGET) {
+ 		spin_unlock_irqrestore(&session->lock, flags);
+ 		mutex_unlock(&ihost->mutex);
+-		return;
++		goto unbind_session_exit;
+ 	}
  
- 		/* want more caps from mds? */
--		if (want & ~(cap->mds_wanted | cap->issued))
--			goto ack;
-+		if (want & ~cap->mds_wanted) {
-+			if (want & ~(cap->mds_wanted | cap->issued))
-+				goto ack;
-+			if (!__cap_is_valid(cap))
-+				goto ack;
-+		}
+ 	target_id = session->target_id;
+@@ -2022,6 +2022,8 @@ static void __iscsi_unbind_session(struct work_struct *work)
+ 		ida_simple_remove(&iscsi_sess_ida, target_id);
  
- 		/* things we might delay */
- 		if ((cap->issued & ~retain) == 0 &&
+ 	scsi_remove_target(&session->dev);
++
++unbind_session_exit:
+ 	iscsi_session_event(session, ISCSI_KEVENT_UNBIND_SESSION);
+ 	ISCSI_DBG_TRANS_SESSION(session, "Completed target removal\n");
+ }
 -- 
 2.20.1
 
