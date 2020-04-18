@@ -7,47 +7,54 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4602C38A30
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 13:48:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F00ABC3A5A0
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 13:48:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6FE452054F
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 13:48:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C399322244
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 13:48:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587217734;
-	bh=EKyrqKcM92RTUv/jYokQKHedpF2ezK8XL3yesjlpMl4=;
+	s=default; t=1587217738;
+	bh=tJx2Pw8jARz8g4y2ONxmN/CJIrowA+R2SLrDY7KpChs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Kgfifbpzgga8+m4cpz1d4Iej3WfHWxFFHYCww3JF+BbcMu9aWO96RmzJiR/DP8xMH
-	 cGgLVAb/RXA8R5Tl5QJ3ZF025fjBFN8Ct3L2vOiqiSs/W9l8w2Ldnqg/+9McpY7vLU
-	 pLxMdCaDPtYxoGFbRTZf7pjG3ck3CzZmb1SCMb/g=
+	b=j0218DQZYumC9iHu5Dk127UzeY/Rn7QIMSrZ4JyciWkh5VWxXtUA0E+KAKrlmiuLV
+	 t4rdgOPhuPhIwkOz7AduSXn6OsqTphpohgpQdEgY1SZwNqX6j7BFJgo7/ftTXb43MW
+	 4ZME5HDlVk61UR97Z634BpLY9G/7l7S8yducMiDg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726611AbgDRNsx (ORCPT
+        id S1726655AbgDRNs5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 09:48:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55302 "EHLO mail.kernel.org"
+        Sat, 18 Apr 2020 09:48:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55442 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726539AbgDRNsr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 09:48:47 -0400
+        id S1726581AbgDRNsv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 09:48:51 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8FBC5221F4;
-        Sat, 18 Apr 2020 13:48:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 57CC522251;
+        Sat, 18 Apr 2020 13:48:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587217727;
-        bh=EKyrqKcM92RTUv/jYokQKHedpF2ezK8XL3yesjlpMl4=;
+        s=default; t=1587217730;
+        bh=tJx2Pw8jARz8g4y2ONxmN/CJIrowA+R2SLrDY7KpChs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=G7QTssvgFogMpSSMGg1849eH7IpDibn8BTn40YkCDfo6hw4ALLW7ZbI7EZ5P8wLy+
-         vS0tf58nzV17Q8TUWJfEDoQ3ybKtG5djWxofa/fPgO1MboJ54GIVHZj7p6kGcqjJ9u
-         UEUZLIe5hTEknblkZHCY6wRg6inYOBpG2F64Jbyk=
+        b=wMISkFbdygIIEkHJr0ePKnGQPKNIFQSqQaU0ycKemhEWkoATXOFfbqGeTKHYXLCOu
+         OCQGH243gKG8VwhvZzQ7yBIpfaJAa+Jm8+HapJBGicP+hAY/NBu0e+pd3D2TS8Jhbb
+         1buLvuIzrb+SB8Q47cRufJ4xf4b2Doy4uJmaYJOE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Grygorii Strashko <grygorii.strashko@ti.com>,
-        Christoph Hellwig <hch@lst.de>,
+Cc:     Eric Biggers <ebiggers@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jeff Vander Stoep <jeffv@google.com>,
+        Jessica Yu <jeyu@kernel.org>,
+        Kees Cook <keescook@chromium.org>, NeilBrown <neilb@suse.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>,
-        iommu@lists.linux-foundation.org
-Subject: [PATCH AUTOSEL 5.6 26/73] dma-debug: fix displaying of dma allocation type
-Date:   Sat, 18 Apr 2020 09:47:28 -0400
-Message-Id: <20200418134815.6519-26-sashal@kernel.org>
+        linux-kselftest@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 28/73] selftests: kmod: fix handling test numbers above 9
+Date:   Sat, 18 Apr 2020 09:47:30 -0400
+Message-Id: <20200418134815.6519-28-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200418134815.6519-1-sashal@kernel.org>
 References: <20200418134815.6519-1-sashal@kernel.org>
@@ -60,53 +67,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Grygorii Strashko <grygorii.strashko@ti.com>
+From: Eric Biggers <ebiggers@google.com>
 
-[ Upstream commit 9bb50ed7470944238ec8e30a94ef096caf9056ee ]
+[ Upstream commit 6d573a07528308eb77ec072c010819c359bebf6e ]
 
-The commit 2e05ea5cdc1a ("dma-mapping: implement dma_map_single_attrs using
-dma_map_page_attrs") removed "dma_debug_page" enum, but missed to update
-type2name string table. This causes incorrect displaying of dma allocation
-type.
-Fix it by removing "page" string from type2name string table and switch to
-use named initializers.
+get_test_count() and get_test_enabled() were broken for test numbers
+above 9 due to awk interpreting a field specification like '$0010' as
+octal rather than decimal.  Fix it by stripping the leading zeroes.
 
-Before (dma_alloc_coherent()):
-k3-ringacc 4b800000.ringacc: scather-gather idx 2208 P=d1140000 N=d114 D=d1140000 L=40 DMA_BIDIRECTIONAL dma map error check not applicable
-k3-ringacc 4b800000.ringacc: scather-gather idx 2216 P=d1150000 N=d115 D=d1150000 L=40 DMA_BIDIRECTIONAL dma map error check not applicable
-
-After:
-k3-ringacc 4b800000.ringacc: coherent idx 2208 P=d1140000 N=d114 D=d1140000 L=40 DMA_BIDIRECTIONAL dma map error check not applicable
-k3-ringacc 4b800000.ringacc: coherent idx 2216 P=d1150000 N=d115 D=d1150000 L=40 DMA_BIDIRECTIONAL dma map error check not applicable
-
-Fixes: 2e05ea5cdc1a ("dma-mapping: implement dma_map_single_attrs using dma_map_page_attrs")
-Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Acked-by: Luis Chamberlain <mcgrof@kernel.org>
+Cc: Alexei Starovoitov <ast@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Jeff Vander Stoep <jeffv@google.com>
+Cc: Jessica Yu <jeyu@kernel.org>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: NeilBrown <neilb@suse.com>
+Link: http://lkml.kernel.org/r/20200318230515.171692-5-ebiggers@kernel.org
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/dma/debug.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ tools/testing/selftests/kmod/kmod.sh | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
 
-diff --git a/kernel/dma/debug.c b/kernel/dma/debug.c
-index 2031ed1ad7fa1..9e1777c81f559 100644
---- a/kernel/dma/debug.c
-+++ b/kernel/dma/debug.c
-@@ -137,9 +137,12 @@ static const char *const maperr2str[] = {
- 	[MAP_ERR_CHECKED] = "dma map error checked",
- };
+diff --git a/tools/testing/selftests/kmod/kmod.sh b/tools/testing/selftests/kmod/kmod.sh
+index 8b944cf042f6c..315a43111e046 100755
+--- a/tools/testing/selftests/kmod/kmod.sh
++++ b/tools/testing/selftests/kmod/kmod.sh
+@@ -505,18 +505,23 @@ function test_num()
+ 	fi
+ }
  
--static const char *type2name[5] = { "single", "page",
--				    "scather-gather", "coherent",
--				    "resource" };
-+static const char *type2name[] = {
-+	[dma_debug_single] = "single",
-+	[dma_debug_sg] = "scather-gather",
-+	[dma_debug_coherent] = "coherent",
-+	[dma_debug_resource] = "resource",
-+};
+-function get_test_count()
++function get_test_data()
+ {
+ 	test_num $1
+-	TEST_DATA=$(echo $ALL_TESTS | awk '{print $'$1'}')
++	local field_num=$(echo $1 | sed 's/^0*//')
++	echo $ALL_TESTS | awk '{print $'$field_num'}'
++}
++
++function get_test_count()
++{
++	TEST_DATA=$(get_test_data $1)
+ 	LAST_TWO=${TEST_DATA#*:*}
+ 	echo ${LAST_TWO%:*}
+ }
  
- static const char *dir2name[4] = { "DMA_BIDIRECTIONAL", "DMA_TO_DEVICE",
- 				   "DMA_FROM_DEVICE", "DMA_NONE" };
+ function get_test_enabled()
+ {
+-	test_num $1
+-	TEST_DATA=$(echo $ALL_TESTS | awk '{print $'$1'}')
++	TEST_DATA=$(get_test_data $1)
+ 	echo ${TEST_DATA#*:*:}
+ }
+ 
 -- 
 2.20.1
 
