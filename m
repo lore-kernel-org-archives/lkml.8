@@ -2,65 +2,96 @@ Return-Path: <SRS0=3CHW=6C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DC2BC38A2F
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:13:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF3B6C38A2F
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:14:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7EB9921D6C
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:13:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="APlZsfS4"
+	by mail.kernel.org (Postfix) with ESMTP id 857F021D6C
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:14:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587219246;
+	bh=9sDGtt4AzKAVwBWf89jS6ybRmtp4c5IDIplgFw7is60=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=PE54a6JF+VqmS9ADXEyeA9jsqgbTGeXTicJzKpVh4yvhXp6Gf6tx3qBVk0bq5MjzH
+	 yYMuGqQpBcf+DxiisRrtl9EMTvdQAoopXhdfZ6E5iyICO9P9M9x6cCLD6LCWO9M0XW
+	 7qD9FIaFXRSfwGFZxy0ln4Fovb2Ti/v7qY8UVoT0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728214AbgDRON5 (ORCPT
+        id S1728226AbgDROOG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 10:13:57 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:46400 "EHLO vps0.lunn.ch"
+        Sat, 18 Apr 2020 10:14:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36878 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727905AbgDRONy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 10:13:54 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=Sjo4RN4J6c+4xL5CYuv4o5kkfZ+wnVlnpvdEyHvvIxk=; b=APlZsfS4+qrhB7JQZoQRJaG0Sn
-        jUFbsPyOcgn/yHNmaXwU6p93mSRh8VmAjuwG49cXkEKqmESMdaXlvj9+/aI5BMw8Rn8oFBWK1+ywQ
-        /yAspNWIQYZtY5DN6tdYy595xnmUC1Ix3zlM84E7TQhNpSNd2fOyqN5jN8Zcmmkpo/Mc=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1jPoE8-003Sz2-Ku; Sat, 18 Apr 2020 16:13:48 +0200
-Date:   Sat, 18 Apr 2020 16:13:48 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Michael Walle <michael@walle.cc>
-Cc:     linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        "David S . Miller" <davem@davemloft.net>
-Subject: Re: [PATCH net-next 1/3] net: phy: broadcom: add helper to
- write/read RDB registers
-Message-ID: <20200418141348.GA804711@lunn.ch>
-References: <20200417192858.6997-1-michael@walle.cc>
+        id S1726421AbgDROJ0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 10:09:26 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 972D922245;
+        Sat, 18 Apr 2020 14:09:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587218966;
+        bh=9sDGtt4AzKAVwBWf89jS6ybRmtp4c5IDIplgFw7is60=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=VZ0GyHp2Mst/e+LWHWX5FFwp5zty3Pcltwwqj3eeDuhYsWTaQfFELr+sX6RiKnbw5
+         v5gl3S3txgvX5E+iPqIgOzQmsMglGmnnK8R1ScQdXqDaOBvuz64cB+qdIpwHzBdRE8
+         eLoORJy3mIdNim9CnH0wETWRsmUES+0W58tZ1Qvk=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Qiujun Huang <hqjagain@gmail.com>,
+        Jeff Layton <jlayton@kernel.org>,
+        Ilya Dryomov <idryomov@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, ceph-devel@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 13/75] ceph: return ceph_mdsc_do_request() errors from __get_parent()
+Date:   Sat, 18 Apr 2020 10:08:08 -0400
+Message-Id: <20200418140910.8280-13-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200418140910.8280-1-sashal@kernel.org>
+References: <20200418140910.8280-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200417192858.6997-1-michael@walle.cc>
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 17, 2020 at 09:28:56PM +0200, Michael Walle wrote:
-> RDB regsiters are used on newer Broadcom PHYs. Add helper to read, write
-> and modify these registers.
+From: Qiujun Huang <hqjagain@gmail.com>
 
-It would be nice to give a hint what RDB means?
+[ Upstream commit c6d50296032f0b97473eb2e274dc7cc5d0173847 ]
 
-Thanks
-	Andrew
+Return the error returned by ceph_mdsc_do_request(). Otherwise,
+r_target_inode ends up being NULL this ends up returning ENOENT
+regardless of the error.
+
+Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
+Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ fs/ceph/export.c | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/fs/ceph/export.c b/fs/ceph/export.c
+index b6bfa94332c30..79dc06881e78e 100644
+--- a/fs/ceph/export.c
++++ b/fs/ceph/export.c
+@@ -315,6 +315,11 @@ static struct dentry *__get_parent(struct super_block *sb,
+ 
+ 	req->r_num_caps = 1;
+ 	err = ceph_mdsc_do_request(mdsc, NULL, req);
++	if (err) {
++		ceph_mdsc_put_request(req);
++		return ERR_PTR(err);
++	}
++
+ 	inode = req->r_target_inode;
+ 	if (inode)
+ 		ihold(inode);
+-- 
+2.20.1
+
