@@ -4,59 +4,61 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 012DAC38A29
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:50:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88636C38A29
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:51:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CDC4A21D79
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:50:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54B7421D79
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:51:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587221453;
-	bh=3jyXQNdliyg0/srm3l5j7/EEi4rqjhuFR4BLL/s0Di0=;
+	s=default; t=1587221460;
+	bh=wWcxu4OCfXEK46Bg8kOK4Q6L/CNCdcIft+WVM10h9XI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SRowmFw1CixPNBYQaCRO0loF2ermY0aWyMXHGKAiVHhQ862YdR7q/gkk2ITHz81uY
-	 x/usYwIEcdhwQI3aZCn7Og3I7AAhNTk1yl16LekrTWDiMA+0J0DedWQ22ay9qZnY3u
-	 G+rggIhmDsF/l7cjqtnyILJk3joUaRmyqx9efC5g=
+	b=n4Rmz/vJvxIR3qpQOkZHZXjvwP4TGoT600zhN5WAnfmhuF0o5rcPcdvihyGPdvzGF
+	 86mwFDjH1f0DKxkZsa+j/QemMBEgVfs6CDH6n/rs9q0u0TnXs6UbyRM4/VPgRlQm85
+	 1GS5g01msAaPCUN1VhZzE4LSg1+Rkp2441PJJDw8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729027AbgDROux (ORCPT
+        id S1728450AbgDROmw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 10:50:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53418 "EHLO mail.kernel.org"
+        Sat, 18 Apr 2020 10:42:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53142 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728461AbgDROm4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 10:42:56 -0400
+        id S1728425AbgDROmr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 10:42:47 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1EB0622251;
-        Sat, 18 Apr 2020 14:42:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 959E321D82;
+        Sat, 18 Apr 2020 14:42:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587220975;
-        bh=3jyXQNdliyg0/srm3l5j7/EEi4rqjhuFR4BLL/s0Di0=;
+        s=default; t=1587220967;
+        bh=wWcxu4OCfXEK46Bg8kOK4Q6L/CNCdcIft+WVM10h9XI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=G1ZihzvpQqAKeQ0inl8O+1r3f8im8vaoq6TDavwBfOtDYMhlxTWxxDO2RoAIjk5yY
-         Obu9kWvhqrqfy0djYNIPrGx4MN2OWpVsVQ/NrP3Tap2zkgOC/oZxFL7cPj3pmMOYAR
-         /IC2MpyW30b0tvOZP039s0oraotkWSOgveev8EPs=
+        b=xPQwrTaA3xlN+eJCzkR8XxmlssJbjVeVAF3Sv/CnEGfKucsVW26NACTTuzxYIt277
+         GdEe1EGlFW8WTDx3cCpowA4AUd9tCFVJIhWLczBVMSyrj/iMWQ1yzl4qb8Y0MjdGgV
+         nwoKrg5r2vxg9N3RzMJIQJWiIpaywN/8mQw54uJs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sven Van Asbroeck <TheSven73@gmail.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Clemens Gruber <clemens.gruber@pqgruber.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pwm@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 21/47] pwm: pca9685: Fix PWM/GPIO inter-operation
-Date:   Sat, 18 Apr 2020 10:42:01 -0400
-Message-Id: <20200418144227.9802-21-sashal@kernel.org>
+Cc:     Eric Biggers <ebiggers@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jeff Vander Stoep <jeffv@google.com>,
+        Jessica Yu <jeyu@kernel.org>,
+        Kees Cook <keescook@chromium.org>, NeilBrown <neilb@suse.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-kselftest@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 15/47] selftests: kmod: fix handling test numbers above 9
+Date:   Sat, 18 Apr 2020 10:41:55 -0400
+Message-Id: <20200418144227.9802-15-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200418144227.9802-1-sashal@kernel.org>
 References: <20200418144227.9802-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -65,203 +67,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sven Van Asbroeck <TheSven73@gmail.com>
+From: Eric Biggers <ebiggers@google.com>
 
-[ Upstream commit 9cc5f232a4b6a0ef6e9b57876d61b88f61bdd7c2 ]
+[ Upstream commit 6d573a07528308eb77ec072c010819c359bebf6e ]
 
-This driver allows pwms to be requested as gpios via gpiolib. Obviously,
-it should not be allowed to request a GPIO when its corresponding PWM is
-already requested (and vice versa). So it requires some exclusion code.
+get_test_count() and get_test_enabled() were broken for test numbers
+above 9 due to awk interpreting a field specification like '$0010' as
+octal rather than decimal.  Fix it by stripping the leading zeroes.
 
-Given that the PWMm and GPIO cores are not synchronized with respect to
-each other, this exclusion code will also require proper
-synchronization.
-
-Such a mechanism was in place, but was inadvertently removed by Uwe's
-clean-up in commit e926b12c611c ("pwm: Clear chip_data in pwm_put()").
-
-Upon revisiting the synchronization mechanism, we found that
-theoretically, it could allow two threads to successfully request
-conflicting PWMs/GPIOs.
-
-Replace with a bitmap which tracks PWMs in-use, plus a mutex. As long as
-PWM and GPIO's respective request/free functions modify the in-use
-bitmap while holding the mutex, proper synchronization will be
-guaranteed.
-
-Reported-by: YueHaibing <yuehaibing@huawei.com>
-Fixes: e926b12c611c ("pwm: Clear chip_data in pwm_put()")
-Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-Cc: YueHaibing <yuehaibing@huawei.com>
-Link: https://lkml.org/lkml/2019/5/31/963
-Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
-Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-[cg: Tested on an i.MX6Q board with two NXP PCA9685 chips]
-Tested-by: Clemens Gruber <clemens.gruber@pqgruber.com>
-Reviewed-by: Sven Van Asbroeck <TheSven73@gmail.com> # cg's rebase
-Link: https://lore.kernel.org/lkml/20200330160238.GD2817345@ulmo/
-Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Acked-by: Luis Chamberlain <mcgrof@kernel.org>
+Cc: Alexei Starovoitov <ast@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Jeff Vander Stoep <jeffv@google.com>
+Cc: Jessica Yu <jeyu@kernel.org>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: NeilBrown <neilb@suse.com>
+Link: http://lkml.kernel.org/r/20200318230515.171692-5-ebiggers@kernel.org
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pwm/pwm-pca9685.c | 85 ++++++++++++++++++++++-----------------
- 1 file changed, 48 insertions(+), 37 deletions(-)
+ tools/testing/selftests/kmod/kmod.sh | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/pwm/pwm-pca9685.c b/drivers/pwm/pwm-pca9685.c
-index e1e5dfcb16f36..259fd58812aed 100644
---- a/drivers/pwm/pwm-pca9685.c
-+++ b/drivers/pwm/pwm-pca9685.c
-@@ -31,6 +31,7 @@
- #include <linux/slab.h>
- #include <linux/delay.h>
- #include <linux/pm_runtime.h>
-+#include <linux/bitmap.h>
- 
- /*
-  * Because the PCA9685 has only one prescaler per chip, changing the period of
-@@ -85,6 +86,7 @@ struct pca9685 {
- #if IS_ENABLED(CONFIG_GPIOLIB)
- 	struct mutex lock;
- 	struct gpio_chip gpio;
-+	DECLARE_BITMAP(pwms_inuse, PCA9685_MAXCHAN + 1);
- #endif
- };
- 
-@@ -94,51 +96,51 @@ static inline struct pca9685 *to_pca(struct pwm_chip *chip)
+diff --git a/tools/testing/selftests/kmod/kmod.sh b/tools/testing/selftests/kmod/kmod.sh
+index 0a76314b44149..1f118916a83e4 100755
+--- a/tools/testing/selftests/kmod/kmod.sh
++++ b/tools/testing/selftests/kmod/kmod.sh
+@@ -505,18 +505,23 @@ function test_num()
+ 	fi
  }
  
- #if IS_ENABLED(CONFIG_GPIOLIB)
--static int pca9685_pwm_gpio_request(struct gpio_chip *gpio, unsigned int offset)
-+static bool pca9685_pwm_test_and_set_inuse(struct pca9685 *pca, int pwm_idx)
+-function get_test_count()
++function get_test_data()
  {
--	struct pca9685 *pca = gpiochip_get_data(gpio);
--	struct pwm_device *pwm;
-+	bool is_inuse;
- 
- 	mutex_lock(&pca->lock);
--
--	pwm = &pca->chip.pwms[offset];
--
--	if (pwm->flags & (PWMF_REQUESTED | PWMF_EXPORTED)) {
--		mutex_unlock(&pca->lock);
--		return -EBUSY;
-+	if (pwm_idx >= PCA9685_MAXCHAN) {
-+		/*
-+		 * "all LEDs" channel:
-+		 * pretend already in use if any of the PWMs are requested
-+		 */
-+		if (!bitmap_empty(pca->pwms_inuse, PCA9685_MAXCHAN)) {
-+			is_inuse = true;
-+			goto out;
-+		}
-+	} else {
-+		/*
-+		 * regular channel:
-+		 * pretend already in use if the "all LEDs" channel is requested
-+		 */
-+		if (test_bit(PCA9685_MAXCHAN, pca->pwms_inuse)) {
-+			is_inuse = true;
-+			goto out;
-+		}
- 	}
--
--	pwm_set_chip_data(pwm, (void *)1);
--
-+	is_inuse = test_and_set_bit(pwm_idx, pca->pwms_inuse);
-+out:
- 	mutex_unlock(&pca->lock);
--	pm_runtime_get_sync(pca->chip.dev);
--	return 0;
-+	return is_inuse;
- }
- 
--static bool pca9685_pwm_is_gpio(struct pca9685 *pca, struct pwm_device *pwm)
-+static void pca9685_pwm_clear_inuse(struct pca9685 *pca, int pwm_idx)
- {
--	bool is_gpio = false;
--
- 	mutex_lock(&pca->lock);
-+	clear_bit(pwm_idx, pca->pwms_inuse);
-+	mutex_unlock(&pca->lock);
-+}
- 
--	if (pwm->hwpwm >= PCA9685_MAXCHAN) {
--		unsigned int i;
--
--		/*
--		 * Check if any of the GPIOs are requested and in that case
--		 * prevent using the "all LEDs" channel.
--		 */
--		for (i = 0; i < pca->gpio.ngpio; i++)
--			if (gpiochip_is_requested(&pca->gpio, i)) {
--				is_gpio = true;
--				break;
--			}
--	} else if (pwm_get_chip_data(pwm)) {
--		is_gpio = true;
--	}
-+static int pca9685_pwm_gpio_request(struct gpio_chip *gpio, unsigned int offset)
-+{
-+	struct pca9685 *pca = gpiochip_get_data(gpio);
- 
--	mutex_unlock(&pca->lock);
--	return is_gpio;
-+	if (pca9685_pwm_test_and_set_inuse(pca, offset))
-+		return -EBUSY;
-+	pm_runtime_get_sync(pca->chip.dev);
-+	return 0;
- }
- 
- static int pca9685_pwm_gpio_get(struct gpio_chip *gpio, unsigned int offset)
-@@ -173,6 +175,7 @@ static void pca9685_pwm_gpio_free(struct gpio_chip *gpio, unsigned int offset)
- 
- 	pca9685_pwm_gpio_set(gpio, offset, 0);
- 	pm_runtime_put(pca->chip.dev);
-+	pca9685_pwm_clear_inuse(pca, offset);
- }
- 
- static int pca9685_pwm_gpio_get_direction(struct gpio_chip *chip,
-@@ -224,12 +227,17 @@ static int pca9685_pwm_gpio_probe(struct pca9685 *pca)
- 	return devm_gpiochip_add_data(dev, &pca->gpio, pca);
- }
- #else
--static inline bool pca9685_pwm_is_gpio(struct pca9685 *pca,
--				       struct pwm_device *pwm)
-+static inline bool pca9685_pwm_test_and_set_inuse(struct pca9685 *pca,
-+						  int pwm_idx)
- {
- 	return false;
- }
- 
-+static inline void
-+pca9685_pwm_clear_inuse(struct pca9685 *pca, int pwm_idx)
-+{
+ 	test_num $1
+-	TEST_DATA=$(echo $ALL_TESTS | awk '{print $'$1'}')
++	local field_num=$(echo $1 | sed 's/^0*//')
++	echo $ALL_TESTS | awk '{print $'$field_num'}'
 +}
 +
- static inline int pca9685_pwm_gpio_probe(struct pca9685 *pca)
- {
- 	return 0;
-@@ -413,7 +421,7 @@ static int pca9685_pwm_request(struct pwm_chip *chip, struct pwm_device *pwm)
- {
- 	struct pca9685 *pca = to_pca(chip);
- 
--	if (pca9685_pwm_is_gpio(pca, pwm))
-+	if (pca9685_pwm_test_and_set_inuse(pca, pwm->hwpwm))
- 		return -EBUSY;
- 	pm_runtime_get_sync(chip->dev);
- 
-@@ -422,8 +430,11 @@ static int pca9685_pwm_request(struct pwm_chip *chip, struct pwm_device *pwm)
- 
- static void pca9685_pwm_free(struct pwm_chip *chip, struct pwm_device *pwm)
- {
-+	struct pca9685 *pca = to_pca(chip);
-+
- 	pca9685_pwm_disable(chip, pwm);
- 	pm_runtime_put(chip->dev);
-+	pca9685_pwm_clear_inuse(pca, pwm->hwpwm);
++function get_test_count()
++{
++	TEST_DATA=$(get_test_data $1)
+ 	LAST_TWO=${TEST_DATA#*:*}
+ 	echo ${LAST_TWO%:*}
  }
  
- static const struct pwm_ops pca9685_pwm_ops = {
+ function get_test_enabled()
+ {
+-	test_num $1
+-	TEST_DATA=$(echo $ALL_TESTS | awk '{print $'$1'}')
++	TEST_DATA=$(get_test_data $1)
+ 	echo ${TEST_DATA#*:*:}
+ }
+ 
 -- 
 2.20.1
 
