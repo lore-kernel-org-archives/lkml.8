@@ -2,413 +2,119 @@ Return-Path: <SRS0=3CHW=6C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD14FC38A2B
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 06:49:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6E17C38A29
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 06:53:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A0D5B21D91
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 06:49:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D901206CD
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 06:53:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726444AbgDRGtF (ORCPT
+        id S1725884AbgDRGxv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 02:49:05 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:54088 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725884AbgDRGsW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 02:48:22 -0400
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id E93ECC9F5F7DFA70A26B;
-        Sat, 18 Apr 2020 14:48:19 +0800 (CST)
-Received: from localhost.localdomain (10.69.192.56) by
- DGGEMS402-HUB.china.huawei.com (10.3.19.202) with Microsoft SMTP Server id
- 14.3.487.0; Sat, 18 Apr 2020 14:48:09 +0800
-From:   Huazhong Tan <tanhuazhong@huawei.com>
-To:     <davem@davemloft.net>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
-        <linuxarm@huawei.com>, <kuba@kernel.org>,
-        Jian Shen <shenjian15@huawei.com>,
-        Huazhong Tan <tanhuazhong@huawei.com>
-Subject: [PATCH net-next 01/10] net: hns3: split out hclge_fd_check_ether_tuple()
-Date:   Sat, 18 Apr 2020 14:47:00 +0800
-Message-ID: <1587192429-11463-2-git-send-email-tanhuazhong@huawei.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1587192429-11463-1-git-send-email-tanhuazhong@huawei.com>
-References: <1587192429-11463-1-git-send-email-tanhuazhong@huawei.com>
+        Sat, 18 Apr 2020 02:53:51 -0400
+Received: from sauhun.de ([88.99.104.3]:41048 "EHLO pokefinder.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725796AbgDRGxv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 02:53:51 -0400
+Received: from localhost (p5486CFBC.dip0.t-ipconnect.de [84.134.207.188])
+        by pokefinder.org (Postfix) with ESMTPSA id 8B95E2C1FB0;
+        Sat, 18 Apr 2020 08:53:48 +0200 (CEST)
+Date:   Sat, 18 Apr 2020 08:53:48 +0200
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Peter Rosin <peda@axentia.se>,
+        Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: [PULL REQUEST] i2c for v5.7
+Message-ID: <20200418065344.GA1880@kunai>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.69.192.56]
-X-CFilter-Loop: Reflected
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="MGYHOYXEY6WxJCY8"
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jian Shen <shenjian15@huawei.com>
 
-For readability and maintainability, this patch separates the
-handling part of each flow type in hclge_fd_check_ether_tuple()
-into standalone functions.
+--MGYHOYXEY6WxJCY8
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Signed-off-by: Jian Shen <shenjian15@huawei.com>
-Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
----
- .../ethernet/hisilicon/hns3/hns3pf/hclge_main.c    | 285 +++++++++++++--------
- 1 file changed, 173 insertions(+), 112 deletions(-)
+Linus,
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-index a758f9a..6381c0f 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-@@ -5244,157 +5244,158 @@ static int hclge_config_action(struct hclge_dev *hdev, u8 stage,
- 	return hclge_fd_ad_config(hdev, stage, ad_data.ad_id, &ad_data);
- }
- 
--static int hclge_fd_check_spec(struct hclge_dev *hdev,
--			       struct ethtool_rx_flow_spec *fs, u32 *unused)
-+static int hclge_fd_check_tcpip4_tuple(struct ethtool_tcpip4_spec *spec,
-+				       u32 *unused_tuple)
- {
--	struct ethtool_tcpip4_spec *tcp_ip4_spec;
--	struct ethtool_usrip4_spec *usr_ip4_spec;
--	struct ethtool_tcpip6_spec *tcp_ip6_spec;
--	struct ethtool_usrip6_spec *usr_ip6_spec;
--	struct ethhdr *ether_spec;
--
--	if (fs->location >= hdev->fd_cfg.rule_num[HCLGE_FD_STAGE_1])
-+	if (!spec || !unused_tuple)
- 		return -EINVAL;
- 
--	if (!(fs->flow_type & hdev->fd_cfg.proto_support))
--		return -EOPNOTSUPP;
--
--	if ((fs->flow_type & FLOW_EXT) &&
--	    (fs->h_ext.data[0] != 0 || fs->h_ext.data[1] != 0)) {
--		dev_err(&hdev->pdev->dev, "user-def bytes are not supported\n");
--		return -EOPNOTSUPP;
--	}
-+	*unused_tuple |= BIT(INNER_SRC_MAC) | BIT(INNER_DST_MAC);
- 
--	switch (fs->flow_type & ~(FLOW_EXT | FLOW_MAC_EXT)) {
--	case SCTP_V4_FLOW:
--	case TCP_V4_FLOW:
--	case UDP_V4_FLOW:
--		tcp_ip4_spec = &fs->h_u.tcp_ip4_spec;
--		*unused |= BIT(INNER_SRC_MAC) | BIT(INNER_DST_MAC);
-+	if (!spec->ip4src)
-+		*unused_tuple |= BIT(INNER_SRC_IP);
- 
--		if (!tcp_ip4_spec->ip4src)
--			*unused |= BIT(INNER_SRC_IP);
-+	if (!spec->ip4dst)
-+		*unused_tuple |= BIT(INNER_DST_IP);
- 
--		if (!tcp_ip4_spec->ip4dst)
--			*unused |= BIT(INNER_DST_IP);
-+	if (!spec->psrc)
-+		*unused_tuple |= BIT(INNER_SRC_PORT);
- 
--		if (!tcp_ip4_spec->psrc)
--			*unused |= BIT(INNER_SRC_PORT);
-+	if (!spec->pdst)
-+		*unused_tuple |= BIT(INNER_DST_PORT);
- 
--		if (!tcp_ip4_spec->pdst)
--			*unused |= BIT(INNER_DST_PORT);
-+	if (!spec->tos)
-+		*unused_tuple |= BIT(INNER_IP_TOS);
- 
--		if (!tcp_ip4_spec->tos)
--			*unused |= BIT(INNER_IP_TOS);
-+	return 0;
-+}
- 
--		break;
--	case IP_USER_FLOW:
--		usr_ip4_spec = &fs->h_u.usr_ip4_spec;
--		*unused |= BIT(INNER_SRC_MAC) | BIT(INNER_DST_MAC) |
--			BIT(INNER_SRC_PORT) | BIT(INNER_DST_PORT);
-+static int hclge_fd_check_ip4_tuple(struct ethtool_usrip4_spec *spec,
-+				    u32 *unused_tuple)
-+{
-+	if (!spec || !unused_tuple)
-+		return -EINVAL;
- 
--		if (!usr_ip4_spec->ip4src)
--			*unused |= BIT(INNER_SRC_IP);
-+	*unused_tuple |= BIT(INNER_SRC_MAC) | BIT(INNER_DST_MAC) |
-+		BIT(INNER_SRC_PORT) | BIT(INNER_DST_PORT);
- 
--		if (!usr_ip4_spec->ip4dst)
--			*unused |= BIT(INNER_DST_IP);
-+	if (!spec->ip4src)
-+		*unused_tuple |= BIT(INNER_SRC_IP);
- 
--		if (!usr_ip4_spec->tos)
--			*unused |= BIT(INNER_IP_TOS);
-+	if (!spec->ip4dst)
-+		*unused_tuple |= BIT(INNER_DST_IP);
- 
--		if (!usr_ip4_spec->proto)
--			*unused |= BIT(INNER_IP_PROTO);
-+	if (!spec->tos)
-+		*unused_tuple |= BIT(INNER_IP_TOS);
- 
--		if (usr_ip4_spec->l4_4_bytes)
--			return -EOPNOTSUPP;
-+	if (!spec->proto)
-+		*unused_tuple |= BIT(INNER_IP_PROTO);
- 
--		if (usr_ip4_spec->ip_ver != ETH_RX_NFC_IP4)
--			return -EOPNOTSUPP;
-+	if (spec->l4_4_bytes)
-+		return -EOPNOTSUPP;
- 
--		break;
--	case SCTP_V6_FLOW:
--	case TCP_V6_FLOW:
--	case UDP_V6_FLOW:
--		tcp_ip6_spec = &fs->h_u.tcp_ip6_spec;
--		*unused |= BIT(INNER_SRC_MAC) | BIT(INNER_DST_MAC) |
--			BIT(INNER_IP_TOS);
-+	if (spec->ip_ver != ETH_RX_NFC_IP4)
-+		return -EOPNOTSUPP;
- 
--		/* check whether src/dst ip address used */
--		if (!tcp_ip6_spec->ip6src[0] && !tcp_ip6_spec->ip6src[1] &&
--		    !tcp_ip6_spec->ip6src[2] && !tcp_ip6_spec->ip6src[3])
--			*unused |= BIT(INNER_SRC_IP);
-+	return 0;
-+}
- 
--		if (!tcp_ip6_spec->ip6dst[0] && !tcp_ip6_spec->ip6dst[1] &&
--		    !tcp_ip6_spec->ip6dst[2] && !tcp_ip6_spec->ip6dst[3])
--			*unused |= BIT(INNER_DST_IP);
-+static int hclge_fd_check_tcpip6_tuple(struct ethtool_tcpip6_spec *spec,
-+				       u32 *unused_tuple)
-+{
-+	if (!spec || !unused_tuple)
-+		return -EINVAL;
- 
--		if (!tcp_ip6_spec->psrc)
--			*unused |= BIT(INNER_SRC_PORT);
-+	*unused_tuple |= BIT(INNER_SRC_MAC) | BIT(INNER_DST_MAC) |
-+		BIT(INNER_IP_TOS);
- 
--		if (!tcp_ip6_spec->pdst)
--			*unused |= BIT(INNER_DST_PORT);
-+	/* check whether src/dst ip address used */
-+	if (!spec->ip6src[0] && !spec->ip6src[1] &&
-+	    !spec->ip6src[2] && !spec->ip6src[3])
-+		*unused_tuple |= BIT(INNER_SRC_IP);
- 
--		if (tcp_ip6_spec->tclass)
--			return -EOPNOTSUPP;
-+	if (!spec->ip6dst[0] && !spec->ip6dst[1] &&
-+	    !spec->ip6dst[2] && !spec->ip6dst[3])
-+		*unused_tuple |= BIT(INNER_DST_IP);
- 
--		break;
--	case IPV6_USER_FLOW:
--		usr_ip6_spec = &fs->h_u.usr_ip6_spec;
--		*unused |= BIT(INNER_SRC_MAC) | BIT(INNER_DST_MAC) |
--			BIT(INNER_IP_TOS) | BIT(INNER_SRC_PORT) |
--			BIT(INNER_DST_PORT);
-+	if (!spec->psrc)
-+		*unused_tuple |= BIT(INNER_SRC_PORT);
- 
--		/* check whether src/dst ip address used */
--		if (!usr_ip6_spec->ip6src[0] && !usr_ip6_spec->ip6src[1] &&
--		    !usr_ip6_spec->ip6src[2] && !usr_ip6_spec->ip6src[3])
--			*unused |= BIT(INNER_SRC_IP);
-+	if (!spec->pdst)
-+		*unused_tuple |= BIT(INNER_DST_PORT);
- 
--		if (!usr_ip6_spec->ip6dst[0] && !usr_ip6_spec->ip6dst[1] &&
--		    !usr_ip6_spec->ip6dst[2] && !usr_ip6_spec->ip6dst[3])
--			*unused |= BIT(INNER_DST_IP);
-+	if (spec->tclass)
-+		return -EOPNOTSUPP;
- 
--		if (!usr_ip6_spec->l4_proto)
--			*unused |= BIT(INNER_IP_PROTO);
-+	return 0;
-+}
- 
--		if (usr_ip6_spec->tclass)
--			return -EOPNOTSUPP;
-+static int hclge_fd_check_ip6_tuple(struct ethtool_usrip6_spec *spec,
-+				    u32 *unused_tuple)
-+{
-+	if (!spec || !unused_tuple)
-+		return -EINVAL;
- 
--		if (usr_ip6_spec->l4_4_bytes)
--			return -EOPNOTSUPP;
-+	*unused_tuple |= BIT(INNER_SRC_MAC) | BIT(INNER_DST_MAC) |
-+		BIT(INNER_IP_TOS) | BIT(INNER_SRC_PORT) | BIT(INNER_DST_PORT);
- 
--		break;
--	case ETHER_FLOW:
--		ether_spec = &fs->h_u.ether_spec;
--		*unused |= BIT(INNER_SRC_IP) | BIT(INNER_DST_IP) |
--			BIT(INNER_SRC_PORT) | BIT(INNER_DST_PORT) |
--			BIT(INNER_IP_TOS) | BIT(INNER_IP_PROTO);
-+	/* check whether src/dst ip address used */
-+	if (!spec->ip6src[0] && !spec->ip6src[1] &&
-+	    !spec->ip6src[2] && !spec->ip6src[3])
-+		*unused_tuple |= BIT(INNER_SRC_IP);
- 
--		if (is_zero_ether_addr(ether_spec->h_source))
--			*unused |= BIT(INNER_SRC_MAC);
-+	if (!spec->ip6dst[0] && !spec->ip6dst[1] &&
-+	    !spec->ip6dst[2] && !spec->ip6dst[3])
-+		*unused_tuple |= BIT(INNER_DST_IP);
- 
--		if (is_zero_ether_addr(ether_spec->h_dest))
--			*unused |= BIT(INNER_DST_MAC);
-+	if (!spec->l4_proto)
-+		*unused_tuple |= BIT(INNER_IP_PROTO);
- 
--		if (!ether_spec->h_proto)
--			*unused |= BIT(INNER_ETH_TYPE);
-+	if (spec->tclass)
-+		return -EOPNOTSUPP;
- 
--		break;
--	default:
-+	if (spec->l4_4_bytes)
- 		return -EOPNOTSUPP;
--	}
- 
-+	return 0;
-+}
-+
-+static int hclge_fd_check_ether_tuple(struct ethhdr *spec, u32 *unused_tuple)
-+{
-+	if (!spec || !unused_tuple)
-+		return -EINVAL;
-+
-+	*unused_tuple |= BIT(INNER_SRC_IP) | BIT(INNER_DST_IP) |
-+		BIT(INNER_SRC_PORT) | BIT(INNER_DST_PORT) |
-+		BIT(INNER_IP_TOS) | BIT(INNER_IP_PROTO);
-+
-+	if (is_zero_ether_addr(spec->h_source))
-+		*unused_tuple |= BIT(INNER_SRC_MAC);
-+
-+	if (is_zero_ether_addr(spec->h_dest))
-+		*unused_tuple |= BIT(INNER_DST_MAC);
-+
-+	if (!spec->h_proto)
-+		*unused_tuple |= BIT(INNER_ETH_TYPE);
-+
-+	return 0;
-+}
-+
-+static int hclge_fd_check_ext_tuple(struct hclge_dev *hdev,
-+				    struct ethtool_rx_flow_spec *fs,
-+				    u32 *unused_tuple)
-+{
- 	if ((fs->flow_type & FLOW_EXT)) {
- 		if (fs->h_ext.vlan_etype)
- 			return -EOPNOTSUPP;
- 		if (!fs->h_ext.vlan_tci)
--			*unused |= BIT(INNER_VLAN_TAG_FST);
-+			*unused_tuple |= BIT(INNER_VLAN_TAG_FST);
- 
--		if (fs->m_ext.vlan_tci) {
--			if (be16_to_cpu(fs->h_ext.vlan_tci) >= VLAN_N_VID)
--				return -EINVAL;
--		}
-+		if (fs->m_ext.vlan_tci &&
-+		    be16_to_cpu(fs->h_ext.vlan_tci) >= VLAN_N_VID)
-+			return -EINVAL;
- 	} else {
--		*unused |= BIT(INNER_VLAN_TAG_FST);
-+		*unused_tuple |= BIT(INNER_VLAN_TAG_FST);
- 	}
- 
- 	if (fs->flow_type & FLOW_MAC_EXT) {
-@@ -5402,14 +5403,74 @@ static int hclge_fd_check_spec(struct hclge_dev *hdev,
- 			return -EOPNOTSUPP;
- 
- 		if (is_zero_ether_addr(fs->h_ext.h_dest))
--			*unused |= BIT(INNER_DST_MAC);
-+			*unused_tuple |= BIT(INNER_DST_MAC);
- 		else
--			*unused &= ~(BIT(INNER_DST_MAC));
-+			*unused_tuple &= ~(BIT(INNER_DST_MAC));
- 	}
- 
- 	return 0;
- }
- 
-+static int hclge_fd_check_spec(struct hclge_dev *hdev,
-+			       struct ethtool_rx_flow_spec *fs,
-+			       u32 *unused_tuple)
-+{
-+	int ret = 0;
-+
-+	if (fs->location >= hdev->fd_cfg.rule_num[HCLGE_FD_STAGE_1])
-+		return -EINVAL;
-+
-+	if (!(fs->flow_type & hdev->fd_cfg.proto_support))
-+		return -EOPNOTSUPP;
-+
-+	if ((fs->flow_type & FLOW_EXT) &&
-+	    (fs->h_ext.data[0] != 0 || fs->h_ext.data[1] != 0)) {
-+		dev_err(&hdev->pdev->dev, "user-def bytes are not supported\n");
-+		return -EOPNOTSUPP;
-+	}
-+
-+	switch (fs->flow_type & ~(FLOW_EXT | FLOW_MAC_EXT)) {
-+	case SCTP_V4_FLOW:
-+	case TCP_V4_FLOW:
-+	case UDP_V4_FLOW:
-+		ret = hclge_fd_check_tcpip4_tuple(&fs->h_u.tcp_ip4_spec,
-+						  unused_tuple);
-+		break;
-+	case IP_USER_FLOW:
-+		ret = hclge_fd_check_ip4_tuple(&fs->h_u.usr_ip4_spec,
-+					       unused_tuple);
-+		break;
-+	case SCTP_V6_FLOW:
-+	case TCP_V6_FLOW:
-+	case UDP_V6_FLOW:
-+		ret = hclge_fd_check_tcpip6_tuple(&fs->h_u.tcp_ip6_spec,
-+						  unused_tuple);
-+		break;
-+	case IPV6_USER_FLOW:
-+		ret = hclge_fd_check_ip6_tuple(&fs->h_u.usr_ip6_spec,
-+					       unused_tuple);
-+		break;
-+	case ETHER_FLOW:
-+		if (hdev->fd_cfg.fd_mode !=
-+			HCLGE_FD_MODE_DEPTH_2K_WIDTH_400B_STAGE_1) {
-+			dev_err(&hdev->pdev->dev,
-+				"ETHER_FLOW is not supported in current fd mode!\n");
-+			return -EOPNOTSUPP;
-+		}
-+
-+		ret = hclge_fd_check_ether_tuple(&fs->h_u.ether_spec,
-+						 unused_tuple);
-+		break;
-+	default:
-+		return -EOPNOTSUPP;
-+	}
-+
-+	if (ret)
-+		return ret;
-+
-+	return hclge_fd_check_ext_tuple(hdev, fs, unused_tuple);
-+}
-+
- static bool hclge_fd_rule_exist(struct hclge_dev *hdev, u16 location)
- {
- 	struct hclge_fd_rule *rule = NULL;
--- 
-2.7.4
+I2C has some driver bugfixes and an old API removal this time.
 
+Please pull.
+
+Thanks,
+
+   Wolfram
+
+
+The following changes since commit 8f3d9f354286745c751374f5f1fcafee6b3f3136:
+
+  Linux 5.7-rc1 (2020-04-12 12:35:55 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux.git i2c/for-current
+
+for you to fetch changes up to 8814044fe0fa182abc9ff818d3da562de98bc9a7:
+
+  i2c: tegra: Synchronize DMA before termination (2020-04-15 18:27:31 +0200)
+
+----------------------------------------------------------------
+Dmitry Osipenko (2):
+      i2c: tegra: Better handle case where CPU0 is busy for a long time
+      i2c: tegra: Synchronize DMA before termination
+
+Hans de Goede (1):
+      i2c: designware: platdrv: Remove DPM_FLAG_SMART_SUSPEND flag on BYT and CHT
+
+Wolfram Sang (2):
+      i2c: altera: use proper variable to hold errno
+      i2c: remove i2c_new_probed_device API
+
+
+with much appreciated quality assurance from
+----------------------------------------------------------------
+Andy Shevchenko (1):
+      (Rev.) i2c: designware: platdrv: Remove DPM_FLAG_SMART_SUSPEND flag on BYT and CHT
+
+Thor Thayer (1):
+      (Rev.) i2c: altera: use proper variable to hold errno
+
+ drivers/i2c/busses/i2c-altera.c             |  9 ++++----
+ drivers/i2c/busses/i2c-designware-platdrv.c | 14 +++++++----
+ drivers/i2c/busses/i2c-tegra.c              | 36 +++++++++++++++++++----------
+ drivers/i2c/i2c-core-base.c                 | 13 -----------
+ include/linux/i2c.h                         |  6 -----
+ 5 files changed, 38 insertions(+), 40 deletions(-)
+
+--MGYHOYXEY6WxJCY8
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl6ao/QACgkQFA3kzBSg
+KbbefQ/9GqRCRANJ01H6ICQnHIHhKV1vdhDW7WLwKxNRkjZkNmXa52R7hey5tGDM
+Uz22YAyv5wOJWRjtGggLHCM3dn0nRmw2oQz++1d69mIdANvH9FsqR3T2GRkAOT18
+fmAOeKihyYVS9dGRV1am7X2FiHvu4XOrOSbxAk0I8gl4Ka0JXSVbhMCYAuG2xdxv
+gP3ejVg9YHYeyw1gkihxLFZpDXliOWa+SyndrVbf5eAuQO3/Nz/S5p+gj+YWiaUi
+WiYcbyznoqjf1Qp7NnqiuAaSJ4qKxAjWtHaf+y3QWilulyJkWL0j1lzaehQ9OH/a
+9pwy2MpSho56B3cymzEFImBXJK7pTi5f1bucV3r9x/3PLXHSAm1CnPqPiWHQRbt4
+RSYbVk7hZPnPTzKZe9PLRZ/UvItPOrysCRJgprsU++woOW8dTr7hzMI8EAQoZqIJ
+BlRFREBdp1fLYrNSxde9jd1NVQJzzX0IANLZC2tKBoijHr9nYIfDFbU2aP7U39dj
+0cDqwypbP3iBDpBMqt+KrbXFmCrWUIl8itDF3Al3WAJ2jK6/9ri7+EqUQKt/oQV5
+AYOSGecHfJG6CwNuktKCVZ1bTnrb00h78J2Sl7+dS4fp7JCJXV3gbpIpZUjiKzZ6
+uzHq/KW/khvqPB1L0HuMSh5r8nLDUTIhm/t7N9lBPNKA2T/5IzI=
+=iJfJ
+-----END PGP SIGNATURE-----
+
+--MGYHOYXEY6WxJCY8--
