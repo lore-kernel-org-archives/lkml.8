@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B356C38A29
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:14:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC1F2C38A29
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:14:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B65221D6C
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:14:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B0702076A
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:14:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587219252;
-	bh=WJRBcsxAK79g61H4Fc/xDp2BX3BUFqWwraXVccApZhg=;
+	s=default; t=1587219266;
+	bh=UhO+c8x0n3sXediqtPcDrQZozTjEpSVLq5Vr1OpONAg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Mr5Y4FlpDRh8+5V8PBDg7+bPlSBDsFchSa7C67cPoj7LdmdhuajAUJgpz6NstxsKg
-	 Jb6yddmAbe5KxJuPvnGcYJwbUHGjWJPvhHlkL8XTfloxE5CF+ls1cMAaIvw9AFNR0/
-	 zNnVxfQMP3mi0EciYbtQYBnm4jgNG442eRvFgHj8=
+	b=Qu02OMhN8YGKOBTZy2yMAKmSjEm9mMSx4kcxDTZUhMUOBidetHMMXvCGpvsDdI94B
+	 tVLW52ZxPOzersawPhOBu13nwLGU9zCNKrQHmi9oYdHZSVRJw7SV6UYgYaaI85x+Yf
+	 kGbDhyDwUPGATI+/3S2xpGeELS8WvBGOfmjd49z0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728239AbgDROOK (ORCPT
+        id S1728002AbgDROOZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 10:14:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36696 "EHLO mail.kernel.org"
+        Sat, 18 Apr 2020 10:14:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36644 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726020AbgDROJY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 10:09:24 -0400
+        id S1726160AbgDROJV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 10:09:21 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4EBC221D82;
-        Sat, 18 Apr 2020 14:09:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A6A0021D79;
+        Sat, 18 Apr 2020 14:09:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587218964;
-        bh=WJRBcsxAK79g61H4Fc/xDp2BX3BUFqWwraXVccApZhg=;
+        s=default; t=1587218960;
+        bh=UhO+c8x0n3sXediqtPcDrQZozTjEpSVLq5Vr1OpONAg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Hd7uiEtCo8CpQ7QzIvnsjRiNtnyoyLnoFP/KOjnOSffJTBgiwx5qAuz4/VzLtw5Pg
-         s+tWQXoTfAloTUPE4OIyMpCa5Ot6dxqtYDqrAWgrzkBJJhRvW1/csV9/KJbIC9wtZi
-         Wka6hQgvHtBh9PRymWQf1oMlgeOuHRQdIioVWIWA=
+        b=BGrFudvbpnisReOHoc4zPVZvELZJP02Dqad/6Y7AaOkbcZ8U+kLEueOrlvhBIgeJx
+         B6t4KoOqrRfxct+s+YEjPwGyZ24VpVsfw4V8KoZGx4uq7Lxthq4xYUccZ/Az3/s/8C
+         H6co/Flsg58sVzliw9oCOd0AWcMDs5+NPrXdt+XY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     James Smart <jsmart2021@gmail.com>,
         Dick Kennedy <dick.kennedy@broadcom.com>,
         "Martin K . Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 11/75] scsi: lpfc: Fix crash in target side cable pulls hitting WAIT_FOR_UNREG
-Date:   Sat, 18 Apr 2020 10:08:06 -0400
-Message-Id: <20200418140910.8280-11-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.5 08/75] scsi: lpfc: Fix kasan slab-out-of-bounds error in lpfc_unreg_login
+Date:   Sat, 18 Apr 2020 10:08:03 -0400
+Message-Id: <20200418140910.8280-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200418140910.8280-1-sashal@kernel.org>
 References: <20200418140910.8280-1-sashal@kernel.org>
@@ -62,71 +62,58 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: James Smart <jsmart2021@gmail.com>
 
-[ Upstream commit 807e7353d8a7105ce884d22b0dbc034993c6679c ]
+[ Upstream commit 38503943c89f0bafd9e3742f63f872301d44cbea ]
 
-Kernel is crashing with the following stacktrace:
+The following kasan bug was called out:
 
-  BUG: unable to handle kernel NULL pointer dereference at
-    00000000000005bc
-  IP: lpfc_nvme_register_port+0x1a8/0x3a0 [lpfc]
-  ...
-  Call Trace:
-  lpfc_nlp_state_cleanup+0x2b2/0x500 [lpfc]
-  lpfc_nlp_set_state+0xd7/0x1a0 [lpfc]
-  lpfc_cmpl_prli_prli_issue+0x1f7/0x450 [lpfc]
-  lpfc_disc_state_machine+0x7a/0x1e0 [lpfc]
-  lpfc_cmpl_els_prli+0x16f/0x1e0 [lpfc]
-  lpfc_sli_sp_handle_rspiocb+0x5b2/0x690 [lpfc]
-  lpfc_sli_handle_slow_ring_event_s4+0x182/0x230 [lpfc]
-  lpfc_do_work+0x87f/0x1570 [lpfc]
-  kthread+0x10d/0x130
-  ret_from_fork+0x35/0x40
+ BUG: KASAN: slab-out-of-bounds in lpfc_unreg_login+0x7c/0xc0 [lpfc]
+ Read of size 2 at addr ffff889fc7c50a22 by task lpfc_worker_3/6676
+ ...
+ Call Trace:
+ dump_stack+0x96/0xe0
+ ? lpfc_unreg_login+0x7c/0xc0 [lpfc]
+ print_address_description.constprop.6+0x1b/0x220
+ ? lpfc_unreg_login+0x7c/0xc0 [lpfc]
+ ? lpfc_unreg_login+0x7c/0xc0 [lpfc]
+ __kasan_report.cold.9+0x37/0x7c
+ ? lpfc_unreg_login+0x7c/0xc0 [lpfc]
+ kasan_report+0xe/0x20
+ lpfc_unreg_login+0x7c/0xc0 [lpfc]
+ lpfc_sli_def_mbox_cmpl+0x334/0x430 [lpfc]
+ ...
 
-During target side fault injections, it is possible to hit the
-NLP_WAIT_FOR_UNREG case in lpfc_nvme_remoteport_delete. A prior commit
-fixed a rebind and delete race condition, but called lpfc_nlp_put
-unconditionally. This triggered a deletion and the crash.
+When processing the completion of a "Reg Rpi" login mailbox command in
+lpfc_sli_def_mbox_cmpl, a call may be made to lpfc_unreg_login. The vpi is
+extracted from the completing mailbox context and passed as an input for
+the next. However, the vpi stored in the mailbox command context is an
+absolute vpi, which for SLI4 represents both base + offset.  When used with
+a non-zero base component, (function id > 0) this results in an
+out-of-range access beyond the allocated phba->vpi_ids array.
 
-Fix by movng nlp_put to inside the NLP_WAIT_FOR_UNREG case, where the nlp
-will be being unregistered/removed. Leave the reference if the flag isn't
-set.
+Fix by subtracting the function's base value to get an accurate vpi number.
 
-Link: https://lore.kernel.org/r/20200322181304.37655-8-jsmart2021@gmail.com
-Fixes: b15bd3e6212e ("scsi: lpfc: Fix nvme remoteport registration race conditions")
+Link: https://lore.kernel.org/r/20200322181304.37655-2-jsmart2021@gmail.com
 Signed-off-by: James Smart <jsmart2021@gmail.com>
 Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
 Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/lpfc/lpfc_nvme.c | 14 ++++++++------
- 1 file changed, 8 insertions(+), 6 deletions(-)
+ drivers/scsi/lpfc/lpfc_sli.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/scsi/lpfc/lpfc_nvme.c b/drivers/scsi/lpfc/lpfc_nvme.c
-index f6c8963c915d4..32b28651039e0 100644
---- a/drivers/scsi/lpfc/lpfc_nvme.c
-+++ b/drivers/scsi/lpfc/lpfc_nvme.c
-@@ -382,13 +382,15 @@ lpfc_nvme_remoteport_delete(struct nvme_fc_remote_port *remoteport)
- 	if (ndlp->upcall_flags & NLP_WAIT_FOR_UNREG) {
- 		ndlp->nrport = NULL;
- 		ndlp->upcall_flags &= ~NLP_WAIT_FOR_UNREG;
--	}
--	spin_unlock_irq(&vport->phba->hbalock);
-+		spin_unlock_irq(&vport->phba->hbalock);
- 
--	/* Remove original register reference. The host transport
--	 * won't reference this rport/remoteport any further.
--	 */
--	lpfc_nlp_put(ndlp);
-+		/* Remove original register reference. The host transport
-+		 * won't reference this rport/remoteport any further.
-+		 */
-+		lpfc_nlp_put(ndlp);
-+	} else {
-+		spin_unlock_irq(&vport->phba->hbalock);
-+	}
- 
-  rport_err:
- 	return;
+diff --git a/drivers/scsi/lpfc/lpfc_sli.c b/drivers/scsi/lpfc/lpfc_sli.c
+index 625c046ac4efa..993b1056beb83 100644
+--- a/drivers/scsi/lpfc/lpfc_sli.c
++++ b/drivers/scsi/lpfc/lpfc_sli.c
+@@ -2511,6 +2511,8 @@ lpfc_sli_def_mbox_cmpl(struct lpfc_hba *phba, LPFC_MBOXQ_t *pmb)
+ 	    !pmb->u.mb.mbxStatus) {
+ 		rpi = pmb->u.mb.un.varWords[0];
+ 		vpi = pmb->u.mb.un.varRegLogin.vpi;
++		if (phba->sli_rev == LPFC_SLI_REV4)
++			vpi -= phba->sli4_hba.max_cfg_param.vpi_base;
+ 		lpfc_unreg_login(phba, vpi, rpi, pmb);
+ 		pmb->vport = vport;
+ 		pmb->mbox_cmpl = lpfc_sli_def_mbox_cmpl;
 -- 
 2.20.1
 
