@@ -2,62 +2,93 @@ Return-Path: <SRS0=3CHW=6C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74BA0C38A29
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 18:00:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B222C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 18:03:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6075B20776
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 18:00:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A6F1206D6
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 18:03:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587233012;
+	bh=+vnN+b7oLErNPyZEiy/XOJsCfu+GJnqYQobwgFKDzCM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=Uow6lE9x1dwigYqGTb14AkwH2estipM6at7o58an6dSY1D4JJg7c0ia/k+0TJ0JP0
+	 tY6YwGMMqCEG+gbxeOWeREEbr3hySVnWzx4bNr3pG61HbPUYLwPSSZW2ANohVLopxq
+	 FI4xJQ+KCxom79wpzp6yS9X1O7aG285Jks5FmszU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726815AbgDRSAP (ORCPT
+        id S1726823AbgDRSDb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 14:00:15 -0400
-Received: from netrider.rowland.org ([192.131.102.5]:46145 "HELO
-        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1725887AbgDRSAP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 14:00:15 -0400
-Received: (qmail 2621 invoked by uid 500); 18 Apr 2020 14:00:14 -0400
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 18 Apr 2020 14:00:14 -0400
-Date:   Sat, 18 Apr 2020 14:00:14 -0400 (EDT)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@netrider.rowland.org
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
-cc:     Linux PM <linux-pm@vger.kernel.org>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Hans De Goede <hdegoede@redhat.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH v2 0/9] PM: sleep: core: Rearrange the handling of driver
- power management flags
-In-Reply-To: <5673945.BT02kTCndr@kreacher>
-Message-ID: <Pine.LNX.4.44L0.2004181356070.2069-100000@netrider.rowland.org>
+        Sat, 18 Apr 2020 14:03:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44090 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725824AbgDRSDa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 14:03:30 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D0ABB20776;
+        Sat, 18 Apr 2020 18:03:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587233010;
+        bh=+vnN+b7oLErNPyZEiy/XOJsCfu+GJnqYQobwgFKDzCM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=kuIcFw7xLh+30daWRlOe/jjcCMPUrqMszbDrcQoxckSvYPsG1aV8Z4Ymx4hFU/1KW
+         3WzXdM4Y7UfVDBKjEvJYTxth+ZE8O3FoBlvDjEXfKrTc07Zhc4yNS0lkVQfAWsEBH6
+         zCtz5fs/wo2/Iz6btLxRkh5LSknfH5n/VKHk36e4=
+Date:   Sat, 18 Apr 2020 19:03:24 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Guido =?UTF-8?B?R8O8bnRoZXI=?= <agx@sigxcpu.org>,
+        Tomas Novotny <tomas@novotny.cz>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        "Angus Ainslie (Purism)" <angus@akkea.ca>,
+        Marco Felsch <m.felsch@pengutronix.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Nishant Malpani <nish.malpani25@gmail.com>
+Subject: Re: [PATCH v4 2/5] dt-bindings: iio: Introduce common properties
+ for iio sensors
+Message-ID: <20200418190324.2372d36b@archlinux>
+In-Reply-To: <20200414214923.GA21041@bogus>
+References: <cover.1586094535.git.agx@sigxcpu.org>
+        <8b91f0b7fa76ca4b2f3cdc251411829f71f8d810.1586094535.git.agx@sigxcpu.org>
+        <20200414214923.GA21041@bogus>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 18 Apr 2020, Rafael J. Wysocki wrote:
+On Tue, 14 Apr 2020 16:49:23 -0500
+Rob Herring <robh@kernel.org> wrote:
 
-> Hi,
-> 
-> This is an update including some fixes and extra patches based on the
-> continuation of the discussion [1].
+> On Sun,  5 Apr 2020 15:50:29 +0200, =3D?UTF-8?q?Guido=3D20G=3DC3=3DBCnthe=
+r?=3D wrote:
+> > Introduce a file for common properties of iio sensors. So far this
+> > contains the new proximity-near-level property for proximity sensors
+> > that indicates when an object should be considered near.
+> >=20
+> > Signed-off-by: Guido G=C3=BCnther <agx@sigxcpu.org>
+> > ---
+> >  .../devicetree/bindings/iio/common.yaml       | 35 +++++++++++++++++++
+> >  1 file changed, 35 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/iio/common.yaml
+> >  =20
+>=20
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
-I haven't checked the updates in detail yet.  However, it seems that 
-dev_pm_skip_suspend() and dev_pm_skip_resume() should be EXPORTed, 
-since they are intended to be used by subsystems, which may be in 
-modules.
+Applied to the togreg branch of iio.git and pushed out as testing.
 
-Alan Stern
+Thanks
 
+Jonathan
