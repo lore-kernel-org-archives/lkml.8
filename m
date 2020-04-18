@@ -2,117 +2,99 @@ Return-Path: <SRS0=3CHW=6C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 111BBC3A5A0
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 15:06:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7158EC38A29
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 15:09:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E5BB421D6C
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 15:06:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587222374;
-	bh=WSSh4VYHIuXqS25vztwkH7Z0icJIFqorESdXxBszA/Y=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=0HuXSNHdrwTZYcA8xWKciSPkWXpVYgOAoVyAYAYQj99ShrJvN+4+QPDwuAqeynllG
-	 17VLy7FNlc80OOaUrarQJtx34Twe0Z6Mmmyo5tTr0E9Z00pBKJ2e5BkLEExEqGPc3u
-	 C84NOCZ6/54ZdPrVA44GuI430gjhE7NkOjqYCsGM=
+	by mail.kernel.org (Postfix) with ESMTP id 566AF2076A
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 15:09:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726505AbgDRPGO (ORCPT
+        id S1726384AbgDRPJk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 11:06:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41642 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725903AbgDRPGN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 11:06:13 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C2AA42076A;
-        Sat, 18 Apr 2020 15:06:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587222373;
-        bh=WSSh4VYHIuXqS25vztwkH7Z0icJIFqorESdXxBszA/Y=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=mfvJmDye3Fg0GYmcb8DGBu8CgrjFGuIGzOVuiVZIbjxX04w1Yry3WSUHv8/wHMg4o
-         NdeWO5t7yRzeg3BBuOXJsc2BQfebtaDlxk4KTaIk3PGC7929vRXCtDm5UYSKXjvzMg
-         bBTQVMVF6JB9EIEXzIXBp2Bs8dlhmReFMfEzhYsM=
-Date:   Sat, 18 Apr 2020 16:06:08 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc:     Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Gregory CLEMENT <gregory.clement@bootlin.com>,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] iio: adc: ti-ads8344: properly byte swap value
-Message-ID: <20200418160608.55046663@archlinux>
-In-Reply-To: <20200416205428.437503-2-alexandre.belloni@bootlin.com>
-References: <20200416205428.437503-1-alexandre.belloni@bootlin.com>
-        <20200416205428.437503-2-alexandre.belloni@bootlin.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sat, 18 Apr 2020 11:09:40 -0400
+Received: from www262.sakura.ne.jp ([202.181.97.72]:56007 "EHLO
+        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726069AbgDRPJj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 11:09:39 -0400
+Received: from fsav403.sakura.ne.jp (fsav403.sakura.ne.jp [133.242.250.102])
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 03IF8QuH065064;
+        Sun, 19 Apr 2020 00:08:26 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Received: from www262.sakura.ne.jp (202.181.97.72)
+ by fsav403.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav403.sakura.ne.jp);
+ Sun, 19 Apr 2020 00:08:26 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav403.sakura.ne.jp)
+Received: from [192.168.1.9] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
+        (authenticated bits=0)
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 03IF8JI6064953
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
+        Sun, 19 Apr 2020 00:08:25 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Subject: Re: [PATCH v3] Add kernel config option for tweaking kernel behavior.
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Matthew Garrett <mjg59@google.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        "Theodore Y . Ts'o" <tytso@mit.edu>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>, Jiri Slaby <jslaby@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>
+References: <20200413063317.7164-1-penguin-kernel@I-love.SAKURA.ne.jp>
+ <20200413081426.GA2791586@kroah.com>
+ <85d9c411-f205-56bf-df6b-6d4fa39a134b@i-love.sakura.ne.jp>
+ <20200418143924.GA3485638@kroah.com>
+From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Message-ID: <41a49d42-7119-62b9-085b-aa99cadc4dd1@i-love.sakura.ne.jp>
+Date:   Sun, 19 Apr 2020 00:08:13 +0900
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20200418143924.GA3485638@kroah.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 16 Apr 2020 22:54:27 +0200
-Alexandre Belloni <alexandre.belloni@bootlin.com> wrote:
-
-> The first received byte is the MSB, followed by the LSB so the value needs
-> to be byte swapped.
+On 2020/04/18 23:39, Greg Kroah-Hartman wrote:
+>> Well, we could add some more text (like shown below), but this option itself
+>> is neutral. This option is not limiting the target to fuzzers.
+>> Below 3 patches are an example of "a set of fine-grained configs" with
+>> "some umbrella uber-config" approach. Linus, are you OK with this approach?
 > 
-> Also, the ADC actually has a delay of one clock on the SPI bus. Read three
-> bytes to get the last bit.
+> Note, the word "tweak" is usually used where people want to get the most
+> performance out of a system, while here you are using it to remove
+> functionality out of the system.  You might want to pick a different
+> word, naming is hard :(
+
+Then, what about "twist" ?
+
+>> @@ -633,6 +633,8 @@ static void k_spec(struct vc_data *vc, unsigned char value, char up_flag)
+>>  	     kbd->kbdmode == VC_OFF) &&
+>>  	     value != KVAL(K_SAK))
+>>  		return;		/* SAK is allowed even in raw mode */
+>> +	if (IS_ENABLED(CONFIG_TWEAK_DISABLE_KBD_K_SPEC_HANDLER))
+>> +		return;
 > 
-> Fixes: 8dd2d7c0fed7 ("iio: adc: Add driver for the TI ADS8344 A/DC chips")
-> Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+> Are you sure this is correct?  It seems like you just cut off a number
+> of other keyboard function handlers instead of just the ctrl-alt-del
+> functionality.  Did you really want to do that?
 
-Applied to the fixes-togreg branch of iio.git.  Marked for stable.
-
-Random aside that I'll probably forget to clean up.
-
-Driver includes iio/buffer.h and doesn't use it...
-
-Thanks,
-
-Jonathan
-
-
-> ---
->  drivers/iio/adc/ti-ads8344.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/iio/adc/ti-ads8344.c b/drivers/iio/adc/ti-ads8344.c
-> index 9a460807d46d..abe4b56c847c 100644
-> --- a/drivers/iio/adc/ti-ads8344.c
-> +++ b/drivers/iio/adc/ti-ads8344.c
-> @@ -29,7 +29,7 @@ struct ads8344 {
->  	struct mutex lock;
->  
->  	u8 tx_buf ____cacheline_aligned;
-> -	u16 rx_buf;
-> +	u8 rx_buf[3];
->  };
->  
->  #define ADS8344_VOLTAGE_CHANNEL(chan, si)				\
-> @@ -89,11 +89,11 @@ static int ads8344_adc_conversion(struct ads8344 *adc, int channel,
->  
->  	udelay(9);
->  
-> -	ret = spi_read(spi, &adc->rx_buf, 2);
-> +	ret = spi_read(spi, adc->rx_buf, sizeof(adc->rx_buf));
->  	if (ret)
->  		return ret;
->  
-> -	return adc->rx_buf;
-> +	return adc->rx_buf[0] << 9 | adc->rx_buf[1] << 1 | adc->rx_buf[2] >> 7;
->  }
->  
->  static int ads8344_read_raw(struct iio_dev *iio,
+Maybe someday we update this filter more fine-grained. But I think this
+granularity is what syzkaller wants for now. The ctrl-alt-del ( k_spec()
+=> fn_boot_it() => ctrl_alt_del()) is simply one of them. There was RCU
+stall report caused by repeating SysRq-t from this path ( k_spec() =>
+fn_show_state() => show_state()) due to too much printk() calls.
 
