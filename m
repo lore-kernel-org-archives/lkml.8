@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C52DDC3A5A0
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:50:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9161EC38A2F
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:50:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A589B21D6C
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:50:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E0F021D6C
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:50:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587221439;
-	bh=JUaulxSquTbxuDaE3Xl3iEeHyI/GelL7SV6i8zDb0OM=;
+	s=default; t=1587221451;
+	bh=S5579T0/eEWJ0+afvsFWAkNck1Ara5B0uHZdI68kixg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AjW0liR6azf8d2NLuyfhDOx7IuPLgH0Xay8wAdEMw+8Qjz1Z3SyX8SstVx65sYyC8
-	 vZtJM6iN/c2za05j1AbEPXLtjoxC66cwTvccENJ0ZQZfp8S7AG0gbpM06pi3VecqVv
-	 AIhgBNCwkTUHEvjig97o1Wpplq7yzY6NEPWDYJHo=
+	b=xo1t2q/9Ahj2hJvQniC/zWlVKahD/IOBSwzED3ZmjFJRklnVn9mOmJovaww0faN42
+	 STISmThADhTDdM2YnC5FximfYEyakhn+n5OOGKV54fjxKNcmd0fHtVpli56fFKjCva
+	 C2FdzWcqjsAqCZnAd6EekY3T9m5902Bj7yH32SwE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729026AbgDROui (ORCPT
+        id S1728911AbgDROuu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 10:50:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53890 "EHLO mail.kernel.org"
+        Sat, 18 Apr 2020 10:50:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53588 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728504AbgDROnG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 10:43:06 -0400
+        id S1728470AbgDROm6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 10:42:58 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DA7CC22265;
-        Sat, 18 Apr 2020 14:43:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CC6F322274;
+        Sat, 18 Apr 2020 14:42:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587220986;
-        bh=JUaulxSquTbxuDaE3Xl3iEeHyI/GelL7SV6i8zDb0OM=;
+        s=default; t=1587220978;
+        bh=S5579T0/eEWJ0+afvsFWAkNck1Ara5B0uHZdI68kixg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DVPMgXQpSOND9aK5v9oNt3AaygE+yveCvkXt5xGkZpXYlgV9qXQm4TMVF/Uz5bbcs
-         spPTQdM5Sqvshd1FCDzLQmYzia7yxaixBiDAGpt+w+ngSSuaxAvjb941mpE6UJ4SsJ
-         VAfHp/iahPXFMD+XeKjWUzpJbUjym3VeX+aSc9tg=
+        b=1NjtUiqsgOa89vzLF/mIxhYVEBKXQ7qme06NuXUdXHo0G3j68tnboFNsFyyHfUuHK
+         Xlm1W1l0Ds2e0gKer0yutrspSnI7bB9Da81LxcDLV/y+VDk6s1B1Sr1xTsf0Mkn5D8
+         8Raqki9xwZ4k8KpzqNOo+nfWGi13lpeTTIqseEfc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>,
-        alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 4.19 30/47] ALSA: hda/realtek - Add quirk for MSI GL63
-Date:   Sat, 18 Apr 2020 10:42:10 -0400
-Message-Id: <20200418144227.9802-30-sashal@kernel.org>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pwm@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 24/47] pwm: renesas-tpu: Fix late Runtime PM enablement
+Date:   Sat, 18 Apr 2020 10:42:04 -0400
+Message-Id: <20200418144227.9802-24-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200418144227.9802-1-sashal@kernel.org>
 References: <20200418144227.9802-1-sashal@kernel.org>
@@ -58,36 +59,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-[ Upstream commit 1d3aa4a5516d2e4933fe3cca11d3349ef63bc547 ]
+[ Upstream commit d5a3c7a4536e1329a758e14340efd0e65252bd3d ]
 
-MSI GL63 laptop requires the similar quirk like other MSI models,
-ALC1220_FIXUP_CLEVO_P950.  The board BIOS doesn't provide a PCI SSID
-for the device, hence we need to take the codec SSID (1462:1275)
-instead.
+Runtime PM should be enabled before calling pwmchip_add(), as PWM users
+can appear immediately after the PWM chip has been added.
+Likewise, Runtime PM should always be disabled after the removal of the
+PWM chip, even if the latter failed.
 
-BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=207157
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200408135645.21896-1-tiwai@suse.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Fixes: 99b82abb0a35b073 ("pwm: Add Renesas TPU PWM driver")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/pci/hda/patch_realtek.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/pwm/pwm-renesas-tpu.c | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
-diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
-index 23aab2fdac468..72d3b74a42cbb 100644
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -2444,6 +2444,7 @@ static const struct snd_pci_quirk alc882_fixup_tbl[] = {
- 	SND_PCI_QUIRK(0x1458, 0xa0b8, "Gigabyte AZ370-Gaming", ALC1220_FIXUP_GB_DUAL_CODECS),
- 	SND_PCI_QUIRK(0x1458, 0xa0cd, "Gigabyte X570 Aorus Master", ALC1220_FIXUP_CLEVO_P950),
- 	SND_PCI_QUIRK(0x1462, 0x1228, "MSI-GP63", ALC1220_FIXUP_CLEVO_P950),
-+	SND_PCI_QUIRK(0x1462, 0x1275, "MSI-GL63", ALC1220_FIXUP_CLEVO_P950),
- 	SND_PCI_QUIRK(0x1462, 0x1276, "MSI-GL73", ALC1220_FIXUP_CLEVO_P950),
- 	SND_PCI_QUIRK(0x1462, 0x1293, "MSI-GP65", ALC1220_FIXUP_CLEVO_P950),
- 	SND_PCI_QUIRK(0x1462, 0x7350, "MSI-7350", ALC889_FIXUP_CD),
+diff --git a/drivers/pwm/pwm-renesas-tpu.c b/drivers/pwm/pwm-renesas-tpu.c
+index 29267d12fb4c9..9c7962f2f0aa4 100644
+--- a/drivers/pwm/pwm-renesas-tpu.c
++++ b/drivers/pwm/pwm-renesas-tpu.c
+@@ -423,16 +423,17 @@ static int tpu_probe(struct platform_device *pdev)
+ 	tpu->chip.base = -1;
+ 	tpu->chip.npwm = TPU_CHANNEL_MAX;
+ 
++	pm_runtime_enable(&pdev->dev);
++
+ 	ret = pwmchip_add(&tpu->chip);
+ 	if (ret < 0) {
+ 		dev_err(&pdev->dev, "failed to register PWM chip\n");
++		pm_runtime_disable(&pdev->dev);
+ 		return ret;
+ 	}
+ 
+ 	dev_info(&pdev->dev, "TPU PWM %d registered\n", tpu->pdev->id);
+ 
+-	pm_runtime_enable(&pdev->dev);
+-
+ 	return 0;
+ }
+ 
+@@ -442,12 +443,10 @@ static int tpu_remove(struct platform_device *pdev)
+ 	int ret;
+ 
+ 	ret = pwmchip_remove(&tpu->chip);
+-	if (ret)
+-		return ret;
+ 
+ 	pm_runtime_disable(&pdev->dev);
+ 
+-	return 0;
++	return ret;
+ }
+ 
+ #ifdef CONFIG_OF
 -- 
 2.20.1
 
