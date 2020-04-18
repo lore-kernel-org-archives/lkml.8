@@ -2,87 +2,64 @@ Return-Path: <SRS0=3CHW=6C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02265C2D0EF
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 11:52:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB96FC38A2B
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 11:54:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CAB7221D7E
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 11:52:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CZH3Cus2"
+	by mail.kernel.org (Postfix) with ESMTP id 8F84921D7E
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 11:54:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725949AbgDRLwn (ORCPT
+        id S1725982AbgDRLyF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 07:52:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35398 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725857AbgDRLwn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 07:52:43 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0053EC061A0C
-        for <linux-kernel@vger.kernel.org>; Sat, 18 Apr 2020 04:52:42 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id n6so1368219ljg.12
-        for <linux-kernel@vger.kernel.org>; Sat, 18 Apr 2020 04:52:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=7eUmf+WAv2BLj9CEZReyNvDx/uAPXOhPuyN7gz7wHH0=;
-        b=CZH3Cus2LkfjaOt4XF865pu2YA0kkcMclN3YmCk1rDG8pEIL3GtW8dxoupVGnWYTQX
-         BrhgwiUiSH7EK5xFtiG/9YxRSRXyml800hQJPm9bffhXke4cNTMSSk5oqKsgTl8ykCtx
-         qkrrZ5O28gE6pTZ/I0cKsZfrQm47ugAcqtaeMhjeXt1QM4wyW2n+YT2TCA90gc8p0TYC
-         FVGEIuLUGZXIMFrgx7Ix7YsvhMJ7koysvh7ZAIKpCbQO6zbfwpNaY3YWXqVAcIvbTitY
-         prvMR6h3U1nM6TfwMb6f8rJ/qNy+brRaP2HzMnOFwpw8hZG8kLgh9WsoqzAalcxCgSpB
-         qBhw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7eUmf+WAv2BLj9CEZReyNvDx/uAPXOhPuyN7gz7wHH0=;
-        b=qua2ZgyYWYvy3B/5Mffg2F9o46ETteubakJT+ffloaRDuMQlP8ytVz9os03NAFnPhq
-         PV1P/NeGuzCr0N7ClWscNYBBQP/XaGJhfiw5bLECmmuZZtNFeLvUegxJ1rgYWckaS2rv
-         LgKUqL72reytkl+DJXOLkD+EVHJH3+Z6XDhU0DX6z4hl6QcCxEDsatvMRZQ59zJkJXau
-         kSBDIOTw9UIwDqyHAuRzAiPFRm9Y5maL8CTQAQLG8Xj3ClCutD9gZcjdux6ZY3OGZUgn
-         tNKQsfzt69RdoqbYAqmp3kA3n8HsKc29CGncF8Md7/als/iz1O9QygP1ANS/AS0W5B4L
-         5Uyw==
-X-Gm-Message-State: AGi0PuZYpf01XAKwXWGFsZZo5IxqOofW5zNsIBWLy6QxcQZ8CIJKRcmj
-        5NblabUO3ua/EkU+fYdl0Iyi73aIIZA0NU8xhlU=
-X-Google-Smtp-Source: APiQypIoPOXthoeugdi2zbrZ1A+Rq6NhiFYpvl45kWI24oANIkiGjf895Deal92RFjEJ8qVQrAoKRRJg1vDl2o9ZuJo=
-X-Received: by 2002:a2e:a584:: with SMTP id m4mr4704366ljp.194.1587210761489;
- Sat, 18 Apr 2020 04:52:41 -0700 (PDT)
+        Sat, 18 Apr 2020 07:54:05 -0400
+Received: from 8bytes.org ([81.169.241.247]:36274 "EHLO theia.8bytes.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725857AbgDRLyE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 07:54:04 -0400
+Received: by theia.8bytes.org (Postfix, from userid 1000)
+        id F25AB342; Sat, 18 Apr 2020 13:54:02 +0200 (CEST)
+Date:   Sat, 18 Apr 2020 13:54:00 +0200
+From:   Joerg Roedel <joro@8bytes.org>
+To:     Tang Bin <tangbin@cmss.chinamobile.com>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>, agross@kernel.org,
+        robdclark@gmail.com, linux-arm-msm@vger.kernel.org,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] iommu/qcom:fix local_base status check
+Message-ID: <20200418115400.GF21900@8bytes.org>
+References: <20200402063302.20640-1-tangbin@cmss.chinamobile.com>
+ <20200402064552.GG663905@yoga>
+ <7a565c74-f223-83da-cf32-0474be6c9460@cmss.chinamobile.com>
 MIME-Version: 1.0
-References: <20200409001352.225135-1-irogers@google.com>
-In-Reply-To: <20200409001352.225135-1-irogers@google.com>
-From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date:   Sat, 18 Apr 2020 13:52:30 +0200
-Message-ID: <CANiq72mPwDD4UWP4bWzasMiiU2Y3khQLEeGsDHPQsaLs=hbCvw@mail.gmail.com>
-Subject: Re: [PATCH] clang-format: don't indent namespaces
-To:     Ian Rogers <irogers@google.com>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <7a565c74-f223-83da-cf32-0474be6c9460@cmss.chinamobile.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Ian,
+On Thu, Apr 16, 2020 at 02:42:23PM +0800, Tang Bin wrote:
+>         The function qcom_iommu_device_probe() does not perform sufficient
+> error checking after executing devm_ioremap_resource(), which can result in
+> crashes if a critical error path is encountered.
+> 
+> Fixes: 0ae349a0("iommu/qcom: Add qcom_iommu")
 
-On Thu, Apr 9, 2020 at 2:13 AM Ian Rogers <irogers@google.com> wrote:
->
-> This change doesn't affect existing code. Inner namespace indentation
-> can lead to a lot of indentation in the case of anonymous namespaces and
-> the like, impeding readability. Of the clang-format builtin styles
-> LLVM, Google, Chromium and Mozilla use None while WebKit uses Inner.
->
-> Signed-off-by: Ian Rogers <irogers@google.com>
+Yes, that sounds better. Please use it for the commit message and also
+add the Fixes line and resubmit the fix to me.
+Please make the fixes line:
 
-Picking it up for -rc2/3.
+	Fixes: 0ae349a0f33f ("iommu/qcom: Add qcom_iommu")
 
-Cheers,
-Miguel
+So that the commit-id is 12 characters long and a space between it and
+the subject.
+
+Thanks,
+
+	Joerg
+
