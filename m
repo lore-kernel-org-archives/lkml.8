@@ -7,35 +7,35 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18935C38A2C
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 06:48:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D79BC2BA19
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 06:48:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EFEF321D91
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 06:48:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55566214D8
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 06:48:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726183AbgDRGs3 (ORCPT
+        id S1726228AbgDRGsc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 02:48:29 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:54178 "EHLO huawei.com"
+        Sat, 18 Apr 2020 02:48:32 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:54288 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725983AbgDRGsX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 02:48:23 -0400
+        id S1726049AbgDRGsY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 02:48:24 -0400
 Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 10F22EB9EB761EFE19EE;
+        by Forcepoint Email with ESMTP id 26E4CABB9F7D3D80417B;
         Sat, 18 Apr 2020 14:48:20 +0800 (CST)
 Received: from localhost.localdomain (10.69.192.56) by
  DGGEMS402-HUB.china.huawei.com (10.3.19.202) with Microsoft SMTP Server id
- 14.3.487.0; Sat, 18 Apr 2020 14:48:12 +0800
+ 14.3.487.0; Sat, 18 Apr 2020 14:48:10 +0800
 From:   Huazhong Tan <tanhuazhong@huawei.com>
 To:     <davem@davemloft.net>
 CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
         <linuxarm@huawei.com>, <kuba@kernel.org>,
-        Yufeng Mo <moyufeng@huawei.com>,
+        Guojia Liao <liaoguojia@huawei.com>,
         Huazhong Tan <tanhuazhong@huawei.com>
-Subject: [PATCH net-next 10/10] net: hns3: add trace event support for PF/VF mailbox
-Date:   Sat, 18 Apr 2020 14:47:09 +0800
-Message-ID: <1587192429-11463-11-git-send-email-tanhuazhong@huawei.com>
+Subject: [PATCH net-next 04/10] net: hns3: remove useless proto_support field in struct hclge_fd_cfg
+Date:   Sat, 18 Apr 2020 14:47:03 +0800
+Message-ID: <1587192429-11463-5-git-send-email-tanhuazhong@huawei.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1587192429-11463-1-git-send-email-tanhuazhong@huawei.com>
 References: <1587192429-11463-1-git-send-email-tanhuazhong@huawei.com>
@@ -48,297 +48,94 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yufeng Mo <moyufeng@huawei.com>
+From: Guojia Liao <liaoguojia@huawei.com>
 
-This patch adds trace event support for PF/VF mailbox.
+proto_support field in struct hclge_fd_cfg shows what protocols
+in flow direct table are supported now. It is unnecessary since
+checking which one is unsupported will be more efficient,
+so this patch removes it.
 
-Signed-off-by: Yufeng Mo <moyufeng@huawei.com>
+Signed-off-by: Guojia Liao <liaoguojia@huawei.com>
 Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
 ---
- .../net/ethernet/hisilicon/hns3/hns3pf/Makefile    |  1 +
- .../net/ethernet/hisilicon/hns3/hns3pf/hclge_mbx.c |  7 ++
- .../ethernet/hisilicon/hns3/hns3pf/hclge_trace.h   | 87 ++++++++++++++++++++++
- .../net/ethernet/hisilicon/hns3/hns3vf/Makefile    |  1 +
- .../ethernet/hisilicon/hns3/hns3vf/hclgevf_mbx.c   |  7 ++
- .../ethernet/hisilicon/hns3/hns3vf/hclgevf_trace.h | 87 ++++++++++++++++++++++
- 6 files changed, 190 insertions(+)
- create mode 100644 drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_trace.h
- create mode 100644 drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_trace.h
+ drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c | 17 ++++++-----------
+ drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h |  1 -
+ 2 files changed, 6 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/Makefile b/drivers/net/ethernet/hisilicon/hns3/hns3pf/Makefile
-index 0fb61d4..6c28c8f 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/Makefile
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/Makefile
-@@ -4,6 +4,7 @@
- #
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+index 5f1bea3..90d2c77 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+@@ -4876,9 +4876,6 @@ static int hclge_init_fd_config(struct hclge_dev *hdev)
+ 		return -EOPNOTSUPP;
+ 	}
  
- ccflags-y := -I $(srctree)/drivers/net/ethernet/hisilicon/hns3
-+ccflags-y += -I $(srctree)/$(src)
+-	hdev->fd_cfg.proto_support =
+-		TCP_V4_FLOW | UDP_V4_FLOW | SCTP_V4_FLOW | TCP_V6_FLOW |
+-		UDP_V6_FLOW | SCTP_V6_FLOW | IPV4_USER_FLOW | IPV6_USER_FLOW;
+ 	key_cfg = &hdev->fd_cfg.key_cfg[HCLGE_FD_STAGE_1];
+ 	key_cfg->key_sel = HCLGE_FD_KEY_BASE_ON_TUPLE,
+ 	key_cfg->inner_sipv6_word_en = LOW_2_WORDS;
+@@ -4892,11 +4889,9 @@ static int hclge_init_fd_config(struct hclge_dev *hdev)
+ 				BIT(INNER_SRC_PORT) | BIT(INNER_DST_PORT);
  
- obj-$(CONFIG_HNS3_HCLGE) += hclge.o
- hclge-objs = hclge_main.o hclge_cmd.o hclge_mdio.o hclge_tm.o hclge_mbx.o hclge_err.o  hclge_debugfs.o
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_mbx.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_mbx.c
-index 7f24fcb..103c2ec 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_mbx.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_mbx.c
-@@ -5,6 +5,9 @@
- #include "hclge_mbx.h"
- #include "hnae3.h"
+ 	/* If use max 400bit key, we can support tuples for ether type */
+-	if (hdev->fd_cfg.max_key_length == MAX_KEY_LENGTH) {
+-		hdev->fd_cfg.proto_support |= ETHER_FLOW;
++	if (hdev->fd_cfg.fd_mode == HCLGE_FD_MODE_DEPTH_2K_WIDTH_400B_STAGE_1)
+ 		key_cfg->tuple_active |=
+ 				BIT(INNER_DST_MAC) | BIT(INNER_SRC_MAC);
+-	}
  
-+#define CREATE_TRACE_POINTS
-+#include "hclge_trace.h"
-+
- static u16 hclge_errno_to_resp(int errno)
+ 	/* roce_type is used to filter roce frames
+ 	 * dst_vport is used to specify the rule
+@@ -5397,7 +5392,8 @@ static int hclge_fd_check_ext_tuple(struct hclge_dev *hdev,
+ 	}
+ 
+ 	if (fs->flow_type & FLOW_MAC_EXT) {
+-		if (!(hdev->fd_cfg.proto_support & ETHER_FLOW))
++		if (hdev->fd_cfg.fd_mode !=
++		    HCLGE_FD_MODE_DEPTH_2K_WIDTH_400B_STAGE_1)
+ 			return -EOPNOTSUPP;
+ 
+ 		if (is_zero_ether_addr(fs->h_ext.h_dest))
+@@ -5413,21 +5409,20 @@ static int hclge_fd_check_spec(struct hclge_dev *hdev,
+ 			       struct ethtool_rx_flow_spec *fs,
+ 			       u32 *unused_tuple)
  {
- 	return abs(errno);
-@@ -90,6 +93,8 @@ static int hclge_send_mbx_msg(struct hclge_vport *vport, u8 *msg, u16 msg_len,
++	u32 flow_type;
+ 	int ret = 0;
  
- 	memcpy(&resp_pf_to_vf->msg.vf_mbx_msg_code, msg, msg_len);
+ 	if (fs->location >= hdev->fd_cfg.rule_num[HCLGE_FD_STAGE_1])
+ 		return -EINVAL;
  
-+	trace_hclge_pf_mbx_send(hdev, resp_pf_to_vf);
-+
- 	status = hclge_cmd_send(&hdev->hw, &desc, 1);
- 	if (status)
- 		dev_err(&hdev->pdev->dev,
-@@ -674,6 +679,8 @@ void hclge_mbx_handler(struct hclge_dev *hdev)
+-	if (!(fs->flow_type & hdev->fd_cfg.proto_support))
+-		return -EOPNOTSUPP;
+-
+ 	if ((fs->flow_type & FLOW_EXT) &&
+ 	    (fs->h_ext.data[0] != 0 || fs->h_ext.data[1] != 0)) {
+ 		dev_err(&hdev->pdev->dev, "user-def bytes are not supported\n");
+ 		return -EOPNOTSUPP;
+ 	}
  
- 		vport = &hdev->vport[req->mbx_src_vfid];
- 
-+		trace_hclge_pf_mbx_get(hdev, req);
-+
- 		switch (req->msg.code) {
- 		case HCLGE_MBX_MAP_RING_TO_VECTOR:
- 			ret = hclge_map_unmap_ring_to_vf_vector(vport, true,
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_trace.h b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_trace.h
-new file mode 100644
-index 0000000..5b0b71b
---- /dev/null
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_trace.h
-@@ -0,0 +1,87 @@
-+/* SPDX-License-Identifier: GPL-2.0+ */
-+/* Copyright (c) 2018-2020 Hisilicon Limited. */
-+
-+/* This must be outside ifdef _HCLGE_TRACE_H */
-+#undef TRACE_SYSTEM
-+#define TRACE_SYSTEM hns3
-+
-+#if !defined(_HCLGE_TRACE_H_) || defined(TRACE_HEADER_MULTI_READ)
-+#define _HCLGE_TRACE_H_
-+
-+#include <linux/tracepoint.h>
-+
-+#define PF_GET_MBX_LEN	(sizeof(struct hclge_mbx_vf_to_pf_cmd) / sizeof(u32))
-+#define PF_SEND_MBX_LEN	(sizeof(struct hclge_mbx_pf_to_vf_cmd) / sizeof(u32))
-+
-+TRACE_EVENT(hclge_pf_mbx_get,
-+	TP_PROTO(
-+		struct hclge_dev *hdev,
-+		struct hclge_mbx_vf_to_pf_cmd *req),
-+	TP_ARGS(hdev, req),
-+
-+	TP_STRUCT__entry(
-+		__field(u8, vfid)
-+		__field(u8, code)
-+		__field(u8, subcode)
-+		__string(pciname, pci_name(hdev->pdev))
-+		__string(devname, &hdev->vport[0].nic.kinfo.netdev->name)
-+		__array(u32, mbx_data, PF_GET_MBX_LEN)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->vfid = req->mbx_src_vfid;
-+		__entry->code = req->msg.code;
-+		__entry->subcode = req->msg.subcode;
-+		__assign_str(pciname, pci_name(hdev->pdev));
-+		__assign_str(devname, &hdev->vport[0].nic.kinfo.netdev->name);
-+		memcpy(__entry->mbx_data, req,
-+		       sizeof(struct hclge_mbx_vf_to_pf_cmd));
-+	),
-+
-+	TP_printk(
-+		"%s %s vfid:%u code:%u subcode:%u data:%s",
-+		__get_str(pciname), __get_str(devname), __entry->vfid,
-+		__entry->code, __entry->subcode,
-+		__print_array(__entry->mbx_data, PF_GET_MBX_LEN, sizeof(u32))
-+	)
-+);
-+
-+TRACE_EVENT(hclge_pf_mbx_send,
-+	TP_PROTO(
-+		struct hclge_dev *hdev,
-+		struct hclge_mbx_pf_to_vf_cmd *req),
-+	TP_ARGS(hdev, req),
-+
-+	TP_STRUCT__entry(
-+		__field(u8, vfid)
-+		__field(u16, code)
-+		__string(pciname, pci_name(hdev->pdev))
-+		__string(devname, &hdev->vport[0].nic.kinfo.netdev->name)
-+		__array(u32, mbx_data, PF_SEND_MBX_LEN)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->vfid = req->dest_vfid;
-+		__entry->code = req->msg.code;
-+		__assign_str(pciname, pci_name(hdev->pdev));
-+		__assign_str(devname, &hdev->vport[0].nic.kinfo.netdev->name);
-+		memcpy(__entry->mbx_data, req,
-+		       sizeof(struct hclge_mbx_pf_to_vf_cmd));
-+	),
-+
-+	TP_printk(
-+		"%s %s vfid:%u code:%u data:%s",
-+		__get_str(pciname), __get_str(devname), __entry->vfid,
-+		__entry->code,
-+		__print_array(__entry->mbx_data, PF_SEND_MBX_LEN, sizeof(u32))
-+	)
-+);
-+
-+#endif /* _HCLGE_TRACE_H_ */
-+
-+/* This must be outside ifdef _HCLGE_TRACE_H */
-+#undef TRACE_INCLUDE_PATH
-+#define TRACE_INCLUDE_PATH .
-+#undef TRACE_INCLUDE_FILE
-+#define TRACE_INCLUDE_FILE hclge_trace
-+#include <trace/define_trace.h>
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3vf/Makefile b/drivers/net/ethernet/hisilicon/hns3/hns3vf/Makefile
-index 53804d9..2c26ea6 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3vf/Makefile
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3vf/Makefile
-@@ -4,6 +4,7 @@
- #
- 
- ccflags-y := -I $(srctree)/drivers/net/ethernet/hisilicon/hns3
-+ccflags-y += -I $(srctree)/$(src)
- 
- obj-$(CONFIG_HNS3_HCLGEVF) += hclgevf.o
- hclgevf-objs = hclgevf_main.o hclgevf_cmd.o hclgevf_mbx.o
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_mbx.c b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_mbx.c
-index 9b81549..5b2dcd9 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_mbx.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_mbx.c
-@@ -5,6 +5,9 @@
- #include "hclgevf_main.h"
- #include "hnae3.h"
- 
-+#define CREATE_TRACE_POINTS
-+#include "hclgevf_trace.h"
-+
- static int hclgevf_resp_to_errno(u16 resp_code)
- {
- 	return resp_code ? -resp_code : 0;
-@@ -106,6 +109,8 @@ int hclgevf_send_mbx_msg(struct hclgevf_dev *hdev,
- 
- 	memcpy(&req->msg, send_msg, sizeof(struct hclge_vf_to_pf_msg));
- 
-+	trace_hclge_vf_mbx_send(hdev, req);
-+
- 	/* synchronous send */
- 	if (need_resp) {
- 		mutex_lock(&hdev->mbx_resp.mbx_mutex);
-@@ -179,6 +184,8 @@ void hclgevf_mbx_handler(struct hclgevf_dev *hdev)
- 			continue;
- 		}
- 
-+		trace_hclge_vf_mbx_get(hdev, req);
-+
- 		/* synchronous messages are time critical and need preferential
- 		 * treatment. Therefore, we need to acknowledge all the sync
- 		 * responses as quickly as possible so that waiting tasks do not
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_trace.h b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_trace.h
-new file mode 100644
-index 0000000..e4bfb61
---- /dev/null
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_trace.h
-@@ -0,0 +1,87 @@
-+/* SPDX-License-Identifier: GPL-2.0+ */
-+/* Copyright (c) 2018-2019 Hisilicon Limited. */
-+
-+/* This must be outside ifdef _HCLGEVF_TRACE_H */
-+#undef TRACE_SYSTEM
-+#define TRACE_SYSTEM hns3
-+
-+#if !defined(_HCLGEVF_TRACE_H_) || defined(TRACE_HEADER_MULTI_READ)
-+#define _HCLGEVF_TRACE_H_
-+
-+#include <linux/tracepoint.h>
-+
-+#define VF_GET_MBX_LEN	(sizeof(struct hclge_mbx_pf_to_vf_cmd) / sizeof(u32))
-+#define VF_SEND_MBX_LEN	(sizeof(struct hclge_mbx_vf_to_pf_cmd) / sizeof(u32))
-+
-+TRACE_EVENT(hclge_vf_mbx_get,
-+	TP_PROTO(
-+		struct hclgevf_dev *hdev,
-+		struct hclge_mbx_pf_to_vf_cmd *req),
-+	TP_ARGS(hdev, req),
-+
-+	TP_STRUCT__entry(
-+		__field(u8, vfid)
-+		__field(u16, code)
-+		__string(pciname, pci_name(hdev->pdev))
-+		__string(devname, &hdev->nic.kinfo.netdev->name)
-+		__array(u32, mbx_data, VF_GET_MBX_LEN)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->vfid = req->dest_vfid;
-+		__entry->code = req->msg.code;
-+		__assign_str(pciname, pci_name(hdev->pdev));
-+		__assign_str(devname, &hdev->nic.kinfo.netdev->name);
-+		memcpy(__entry->mbx_data, req,
-+		       sizeof(struct hclge_mbx_pf_to_vf_cmd));
-+	),
-+
-+	TP_printk(
-+		"%s %s vfid:%u code:%u data:%s",
-+		__get_str(pciname), __get_str(devname), __entry->vfid,
-+		__entry->code,
-+		__print_array(__entry->mbx_data, VF_GET_MBX_LEN, sizeof(u32))
-+	)
-+);
-+
-+TRACE_EVENT(hclge_vf_mbx_send,
-+	TP_PROTO(
-+		struct hclgevf_dev *hdev,
-+		struct hclge_mbx_vf_to_pf_cmd *req),
-+	TP_ARGS(hdev, req),
-+
-+	TP_STRUCT__entry(
-+		__field(u8, vfid)
-+		__field(u8, code)
-+		__field(u8, subcode)
-+		__string(pciname, pci_name(hdev->pdev))
-+		__string(devname, &hdev->nic.kinfo.netdev->name)
-+		__array(u32, mbx_data, VF_SEND_MBX_LEN)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->vfid = req->mbx_src_vfid;
-+		__entry->code = req->msg.code;
-+		__entry->subcode = req->msg.subcode;
-+		__assign_str(pciname, pci_name(hdev->pdev));
-+		__assign_str(devname, &hdev->nic.kinfo.netdev->name);
-+		memcpy(__entry->mbx_data, req,
-+		       sizeof(struct hclge_mbx_vf_to_pf_cmd));
-+	),
-+
-+	TP_printk(
-+		"%s %s vfid:%u code:%u subcode:%u data:%s",
-+		__get_str(pciname), __get_str(devname), __entry->vfid,
-+		__entry->code, __entry->subcode,
-+		__print_array(__entry->mbx_data, VF_SEND_MBX_LEN, sizeof(u32))
-+	)
-+);
-+
-+#endif /* _HCLGEVF_TRACE_H_ */
-+
-+/* This must be outside ifdef _HCLGEVF_TRACE_H */
-+#undef TRACE_INCLUDE_PATH
-+#define TRACE_INCLUDE_PATH .
-+#undef TRACE_INCLUDE_FILE
-+#define TRACE_INCLUDE_FILE hclgevf_trace
-+#include <trace/define_trace.h>
+-	switch (fs->flow_type & ~(FLOW_EXT | FLOW_MAC_EXT)) {
++	flow_type = fs->flow_type & ~(FLOW_EXT | FLOW_MAC_EXT);
++	switch (flow_type) {
+ 	case SCTP_V4_FLOW:
+ 	case TCP_V4_FLOW:
+ 	case UDP_V4_FLOW:
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h
+index 71df23d..a58c262 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h
+@@ -580,7 +580,6 @@ struct hclge_fd_key_cfg {
+ struct hclge_fd_cfg {
+ 	u8 fd_mode;
+ 	u16 max_key_length; /* use bit as unit */
+-	u32 proto_support;
+ 	u32 rule_num[MAX_STAGE_NUM]; /* rule entry number */
+ 	u16 cnt_num[MAX_STAGE_NUM]; /* rule hit counter number */
+ 	struct hclge_fd_key_cfg key_cfg[MAX_STAGE_NUM];
 -- 
 2.7.4
 
