@@ -2,115 +2,95 @@ Return-Path: <SRS0=3CHW=6C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABC04C38A29
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 15:32:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F6CEC3A5A0
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 15:35:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 88003221F7
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 15:32:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="PsrDyByw"
+	by mail.kernel.org (Postfix) with ESMTP id 48DC7221F7
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 15:35:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726812AbgDRPbz (ORCPT
+        id S1726361AbgDRPfp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 11:31:55 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:43046 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726412AbgDRPby (ORCPT
+        Sat, 18 Apr 2020 11:35:45 -0400
+Received: from mail-pl1-f169.google.com ([209.85.214.169]:42276 "EHLO
+        mail-pl1-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725879AbgDRPfo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 11:31:54 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03IFSJ3b001645;
-        Sat, 18 Apr 2020 15:31:18 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : mime-version : content-transfer-encoding;
- s=corp-2020-01-29; bh=8a+w9NGOzcwt8ZrjgWjkYPrl011hqP6PUDX4gumC2hE=;
- b=PsrDyBywc3kDlbGFShCPvH+jr1UdLgrRPClwqNA4VsGrj/zhKvETVImyP+RO1W/gvdig
- HSo26ThJAuNAA04y5o1RmN4N9f0GCVsQt+V8ytTws1Zzau3v1UhKfKbZNwiKzEVnaMXP
- 2wkA2a66FoqVhhFNsW+2T4OcFtjMoNEZqnpjPbrsrs6DrM57E1TBjAIuoiSGL4wtroj8
- cd1OWgFMA3aZ3xBqhO0qqLOGChq5XzHYdrGHCRzr/FYXuNDaEYK3gUplVpP+zYG//oi7
- By7hPrXwIw9DP2He6CZWHqgC1IPrqB0WRzTNZqP4fdkXhNkq9qhiwUP0vTVJMBGVhY+s lg== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 30ft6ms90u-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 18 Apr 2020 15:31:18 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03IFSFjV075944;
-        Sat, 18 Apr 2020 15:31:17 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-        by aserp3020.oracle.com with ESMTP id 30fvfce7fc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Sat, 18 Apr 2020 15:31:17 +0000
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 03IFVHFh081015;
-        Sat, 18 Apr 2020 15:31:17 GMT
-Received: from control-surface.uk.oracle.com (dhcp-10-175-171-153.vpn.oracle.com [10.175.171.153])
-        by aserp3020.oracle.com with ESMTP id 30fvfce7e4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-        Sat, 18 Apr 2020 15:31:17 +0000
-Received: from control-surface.uk.oracle.com (localhost [127.0.0.1])
-        by control-surface.uk.oracle.com (8.15.2/8.15.2) with ESMTPS id 03IFVE0Y019967
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
-        Sat, 18 Apr 2020 16:31:14 +0100
-Received: (from jch@localhost)
-        by control-surface.uk.oracle.com (8.15.2/8.15.2/Submit) id 03IFVCJF019966;
-        Sat, 18 Apr 2020 16:31:12 +0100
-X-Authentication-Warning: control-surface.uk.oracle.com: jch set sender to john.haxby@oracle.com using -f
-From:   John Haxby <john.haxby@oracle.com>
-To:     "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>
-Cc:     John Haxby <john.haxby@oracle.com>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        Sat, 18 Apr 2020 11:35:44 -0400
+Received: by mail-pl1-f169.google.com with SMTP id v2so2168816plp.9;
+        Sat, 18 Apr 2020 08:35:44 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=Psgi+/zrePQOhbWgK7zRQLxFfOZeE3TDZRkvLpnxtPc=;
+        b=ONOa7NptWWhRjwR2mD5E3phOOYvrq5yK+HzrdTSlreVnKyCdKxNMLjFYyNW4QcZhfK
+         sjipXjXVjMg8lVn++8i71kMzTfQ65ngGQjhTWqU/WRLjNaJ+YgiPu4dcxvA1hr2Esu0R
+         1sD1K0FYr2TUKtRCXb4lY7puWttJLwFGxdhyrPhk2uqKpPMqy+pXksFROFwkouuHC00m
+         194vraJx2WylFZSf/1isUxgxV4Y2uFb2/W1M6MOUD8BUee0BHX1a2sG+FKAYF/AkcgHG
+         NQgRt6FWhiH6cnUPADVe+/Uz+3aEzVly172KyJmgv6tzE1tAbqLONSFZu7xqjZjLu0Rp
+         0a4A==
+X-Gm-Message-State: AGi0PubpRX/VynJCA9umps8z6NyZy2DMyQn5+spiRvyyAt5lrC079cFj
+        arBFkK0qPQ4NlH15yDc2HaEJ5Oz37vQ=
+X-Google-Smtp-Source: APiQypKtOCRfcwVK3kxcv5Sh+mJi8Qa9YmrLFrob+FEdCJLFU14HhMbn46LPMbjC19W2hm7zOZJl9w==
+X-Received: by 2002:a17:90a:6fe4:: with SMTP id e91mr11144937pjk.28.1587224143340;
+        Sat, 18 Apr 2020 08:35:43 -0700 (PDT)
+Received: from ?IPv6:2601:647:4000:d7:551:c132:d476:f445? ([2601:647:4000:d7:551:c132:d476:f445])
+        by smtp.gmail.com with ESMTPSA id a12sm15973752pfr.28.2020.04.18.08.35.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 18 Apr 2020 08:35:42 -0700 (PDT)
+Subject: Re: [PATCH 1/8] bdi: move bdi_dev_name out of line
+To:     Christoph Hellwig <hch@lst.de>, axboe@kernel.dk
+Cc:     yuyufen@huawei.com, tj@kernel.org, jack@suse.cz, tytso@mit.edu,
+        gregkh@linuxfoundation.org, linux-block@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 0/1] ipv6: fix restrict IPV6_ADDRFORM operation
-Date:   Sat, 18 Apr 2020 16:30:48 +0100
-Message-Id: <cover.1587221721.git.john.haxby@oracle.com>
-X-Mailer: git-send-email 2.25.3
+References: <20200416165453.1080463-1-hch@lst.de>
+ <20200416165453.1080463-2-hch@lst.de>
+From:   Bart Van Assche <bvanassche@acm.org>
+Autocrypt: addr=bvanassche@acm.org; prefer-encrypt=mutual; keydata=
+ mQENBFSOu4oBCADcRWxVUvkkvRmmwTwIjIJvZOu6wNm+dz5AF4z0FHW2KNZL3oheO3P8UZWr
+ LQOrCfRcK8e/sIs2Y2D3Lg/SL7qqbMehGEYcJptu6mKkywBfoYbtBkVoJ/jQsi2H0vBiiCOy
+ fmxMHIPcYxaJdXxrOG2UO4B60Y/BzE6OrPDT44w4cZA9DH5xialliWU447Bts8TJNa3lZKS1
+ AvW1ZklbvJfAJJAwzDih35LxU2fcWbmhPa7EO2DCv/LM1B10GBB/oQB5kvlq4aA2PSIWkqz4
+ 3SI5kCPSsygD6wKnbRsvNn2mIACva6VHdm62A7xel5dJRfpQjXj2snd1F/YNoNc66UUTABEB
+ AAG0JEJhcnQgVmFuIEFzc2NoZSA8YnZhbmFzc2NoZUBhY20ub3JnPokBOQQTAQIAIwUCVI67
+ igIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEHFcPTXFzhAJ8QkH/1AdXblKL65M
+ Y1Zk1bYKnkAb4a98LxCPm/pJBilvci6boefwlBDZ2NZuuYWYgyrehMB5H+q+Kq4P0IBbTqTa
+ jTPAANn62A6jwJ0FnCn6YaM9TZQjM1F7LoDX3v+oAkaoXuq0dQ4hnxQNu792bi6QyVdZUvKc
+ macVFVgfK9n04mL7RzjO3f+X4midKt/s+G+IPr4DGlrq+WH27eDbpUR3aYRk8EgbgGKvQFdD
+ CEBFJi+5ZKOArmJVBSk21RHDpqyz6Vit3rjep7c1SN8s7NhVi9cjkKmMDM7KYhXkWc10lKx2
+ RTkFI30rkDm4U+JpdAd2+tP3tjGf9AyGGinpzE2XY1K5AQ0EVI67igEIAKiSyd0nECrgz+H5
+ PcFDGYQpGDMTl8MOPCKw/F3diXPuj2eql4xSbAdbUCJzk2ETif5s3twT2ER8cUTEVOaCEUY3
+ eOiaFgQ+nGLx4BXqqGewikPJCe+UBjFnH1m2/IFn4T9jPZkV8xlkKmDUqMK5EV9n3eQLkn5g
+ lco+FepTtmbkSCCjd91EfThVbNYpVQ5ZjdBCXN66CKyJDMJ85HVr5rmXG/nqriTh6cv1l1Js
+ T7AFvvPjUPknS6d+BETMhTkbGzoyS+sywEsQAgA+BMCxBH4LvUmHYhpS+W6CiZ3ZMxjO8Hgc
+ ++w1mLeRUvda3i4/U8wDT3SWuHcB3DWlcppECLkAEQEAAYkBHwQYAQIACQUCVI67igIbDAAK
+ CRBxXD01xc4QCZ4dB/0QrnEasxjM0PGeXK5hcZMT9Eo998alUfn5XU0RQDYdwp6/kMEXMdmT
+ oH0F0xB3SQ8WVSXA9rrc4EBvZruWQ+5/zjVrhhfUAx12CzL4oQ9Ro2k45daYaonKTANYG22y
+ //x8dLe2Fv1By4SKGhmzwH87uXxbTJAUxiWIi1np0z3/RDnoVyfmfbbL1DY7zf2hYXLLzsJR
+ mSsED/1nlJ9Oq5fALdNEPgDyPUerqHxcmIub+pF0AzJoYHK5punqpqfGmqPbjxrJLPJfHVKy
+ goMj5DlBMoYqEgpbwdUYkH6QdizJJCur4icy8GUNbisFYABeoJ91pnD4IGei3MTdvINSZI5e
+Message-ID: <331b41d1-948a-a5c0-b77d-714773ab4174@acm.org>
+Date:   Sat, 18 Apr 2020 08:35:41 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9595 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 bulkscore=0
- priorityscore=1501 impostorscore=0 adultscore=0 phishscore=0
- lowpriorityscore=0 malwarescore=0 clxscore=1011 mlxlogscore=846 mlxscore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004180130
+In-Reply-To: <20200416165453.1080463-2-hch@lst.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit b6f6118901d1 ("ipv6: restrict IPV6_ADDRFORM operation") added a
-check to ensure that sk->sk_prot is the default pointer for a TCP IPv6
-socket, an issue found by syzbot.
+On 2020-04-16 09:54, Christoph Hellwig wrote:
+> bdi_dev_name is not a fast path function, move it out of line.  This
+> prepares for using it from modular callers without having to export
+> an implementation detail like bdi_unknown_name.
 
-The earlier code simply had
-
-    if (sk->sk_protocol != IPPROTO_TCP)
-       break;
-
-and the new code degenerated to
-
-    if (sk->sk_protocol == IPPROTO_TCP)
-       break;
-
-the very opposite of what was intended.  The following patch
-rearranges the checks so that the original sk->sk_prot == &tcpv6_prot
-is just one of the series of checks made before moving the socket.
-
-jch
-
-John Haxby (1):
-  ipv6: fix restrict IPV6_ADDRFORM operation
-
- net/ipv6/ipv6_sockglue.c | 13 ++++++-------
- 1 file changed, 6 insertions(+), 7 deletions(-)
-
--- 
-2.25.3
-
+Reviewed-by: Bart Van Assche <bvanassche@acm.org>
