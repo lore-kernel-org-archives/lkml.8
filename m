@@ -4,53 +4,59 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8439EC3A5A0
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:12:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17242C4CC77
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:12:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 63ABF21D79
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:12:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB2B721D82
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:12:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587219152;
-	bh=iljF7Edtms053YjF9mQtzQ/ve2E9hUgK2Tcg3enhmPM=;
+	s=default; t=1587219155;
+	bh=TFFg3LbECDGuRvcOFMP9lajUE38r4GIFQSFV6ldiKTw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=b+aEL70Apxl81Y+ENnBiGwxmwMJ8TzDjWHAHEt6CKYWjIz4tEkP3A081kTjH2KdPr
-	 m6qmWFCxIGQBfR/6rMQ9KDjp40DZmEvTBBqfnQ3cwTd6DzNxRc0kVNajGaW1+exKzq
-	 GCk9Okkbx67hRo4VMMuygttAMZrdvZiA5NmpwXcM=
+	b=QV/0K7DNHbp7BTcJ00gAJTG0UOU8f9vGCNBZKw/siiSMwaT94IZjnciBd3xea4hfa
+	 U1AO0YdYvDRKbmCadckUh0+8gv9mHo1wX+FkXPAq3EZJvlJaVFqqlFMs22qiulifl/
+	 d3UlylPg7wGIW9HVqdJ7zAmsTgqjdV6Cu8AMve6c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726818AbgDROKG (ORCPT
+        id S1726801AbgDROKE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 10:10:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37720 "EHLO mail.kernel.org"
+        Sat, 18 Apr 2020 10:10:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37694 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726760AbgDROJ6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 10:09:58 -0400
+        id S1726756AbgDROJ5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 10:09:57 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 111C622240;
-        Sat, 18 Apr 2020 14:09:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9F0B121D7E;
+        Sat, 18 Apr 2020 14:09:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587218997;
-        bh=iljF7Edtms053YjF9mQtzQ/ve2E9hUgK2Tcg3enhmPM=;
+        s=default; t=1587218996;
+        bh=TFFg3LbECDGuRvcOFMP9lajUE38r4GIFQSFV6ldiKTw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=L2/8ubJbdZDKs+6bkDQgJpSKC6wNIRYrMu2OdgfbgsEGNuOR7gDjrtg4RoePTWCbN
-         eM5ty3+W8gQqnJA6B+4IxyvsRVIgS6cjCEtnz3MAshrvjccfc2vCg5rtnywUa22VXm
-         fJSFxVaKekrIaKjNW3Z0dSA6yx5T08Cy5xVYDJrI=
+        b=yjLQEP7prWt7ft9YZa1uElRGrvt3uaveJzme1gKzSBvm+etazBgdid5tSjoPi48ol
+         vpLXgcS73JjJUQ+YQ9Vkul//j9Lb6OkJPAIgJtm+DZ2TwuKD9B7ZLy5z7/Z0ydyza1
+         Y5H12nDdQ3VEDXZEgA7TMXQhG67/ee0wpePRMcsE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nicholas Piggin <npiggin@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 5.5 37/75] Revert "powerpc/64: irq_work avoid interrupt when called with hardware irqs enabled"
-Date:   Sat, 18 Apr 2020 10:08:32 -0400
-Message-Id: <20200418140910.8280-37-sashal@kernel.org>
+Cc:     Sven Van Asbroeck <TheSven73@gmail.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Clemens Gruber <clemens.gruber@pqgruber.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pwm@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 36/75] pwm: pca9685: Fix PWM/GPIO inter-operation
+Date:   Sat, 18 Apr 2020 10:08:31 -0400
+Message-Id: <20200418140910.8280-36-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200418140910.8280-1-sashal@kernel.org>
 References: <20200418140910.8280-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -59,108 +65,203 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicholas Piggin <npiggin@gmail.com>
+From: Sven Van Asbroeck <TheSven73@gmail.com>
 
-[ Upstream commit abc3fce76adbdfa8f87272c784b388cd20b46049 ]
+[ Upstream commit 9cc5f232a4b6a0ef6e9b57876d61b88f61bdd7c2 ]
 
-This reverts commit ebb37cf3ffd39fdb6ec5b07111f8bb2f11d92c5f.
+This driver allows pwms to be requested as gpios via gpiolib. Obviously,
+it should not be allowed to request a GPIO when its corresponding PWM is
+already requested (and vice versa). So it requires some exclusion code.
 
-That commit does not play well with soft-masked irq state
-manipulations in idle, interrupt replay, and possibly others due to
-tracing code sometimes using irq_work_queue (e.g., in
-trace_hardirqs_on()). That can cause PACA_IRQ_DEC to become set when
-it is not expected, and be ignored or cleared or cause warnings.
+Given that the PWMm and GPIO cores are not synchronized with respect to
+each other, this exclusion code will also require proper
+synchronization.
 
-The net result seems to be missing an irq_work until the next timer
-interrupt in the worst case which is usually not going to be noticed,
-however it could be a long time if the tick is disabled, which is
-against the spirit of irq_work and might cause real problems.
+Such a mechanism was in place, but was inadvertently removed by Uwe's
+clean-up in commit e926b12c611c ("pwm: Clear chip_data in pwm_put()").
 
-The idea is still solid, but it would need more work. It's not really
-clear if it would be worth added complexity, so revert this for
-now (not a straight revert, but replace with a comment explaining why
-we might see interrupts happening, and gives git blame something to
-find).
+Upon revisiting the synchronization mechanism, we found that
+theoretically, it could allow two threads to successfully request
+conflicting PWMs/GPIOs.
 
-Fixes: ebb37cf3ffd3 ("powerpc/64: irq_work avoid interrupt when called with hardware irqs enabled")
-Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20200402120401.1115883-1-npiggin@gmail.com
+Replace with a bitmap which tracks PWMs in-use, plus a mutex. As long as
+PWM and GPIO's respective request/free functions modify the in-use
+bitmap while holding the mutex, proper synchronization will be
+guaranteed.
+
+Reported-by: YueHaibing <yuehaibing@huawei.com>
+Fixes: e926b12c611c ("pwm: Clear chip_data in pwm_put()")
+Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+Cc: YueHaibing <yuehaibing@huawei.com>
+Link: https://lkml.org/lkml/2019/5/31/963
+Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
+Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+[cg: Tested on an i.MX6Q board with two NXP PCA9685 chips]
+Tested-by: Clemens Gruber <clemens.gruber@pqgruber.com>
+Reviewed-by: Sven Van Asbroeck <TheSven73@gmail.com> # cg's rebase
+Link: https://lore.kernel.org/lkml/20200330160238.GD2817345@ulmo/
+Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/kernel/time.c | 44 +++++++++++---------------------------
- 1 file changed, 13 insertions(+), 31 deletions(-)
+ drivers/pwm/pwm-pca9685.c | 85 ++++++++++++++++++++++-----------------
+ 1 file changed, 48 insertions(+), 37 deletions(-)
 
-diff --git a/arch/powerpc/kernel/time.c b/arch/powerpc/kernel/time.c
-index 1168e8b37e306..716f8d0960a7b 100644
---- a/arch/powerpc/kernel/time.c
-+++ b/arch/powerpc/kernel/time.c
-@@ -522,35 +522,6 @@ static inline void clear_irq_work_pending(void)
- 		"i" (offsetof(struct paca_struct, irq_work_pending)));
+diff --git a/drivers/pwm/pwm-pca9685.c b/drivers/pwm/pwm-pca9685.c
+index b07bdca3d510d..590375be52147 100644
+--- a/drivers/pwm/pwm-pca9685.c
++++ b/drivers/pwm/pwm-pca9685.c
+@@ -20,6 +20,7 @@
+ #include <linux/slab.h>
+ #include <linux/delay.h>
+ #include <linux/pm_runtime.h>
++#include <linux/bitmap.h>
+ 
+ /*
+  * Because the PCA9685 has only one prescaler per chip, changing the period of
+@@ -74,6 +75,7 @@ struct pca9685 {
+ #if IS_ENABLED(CONFIG_GPIOLIB)
+ 	struct mutex lock;
+ 	struct gpio_chip gpio;
++	DECLARE_BITMAP(pwms_inuse, PCA9685_MAXCHAN + 1);
+ #endif
+ };
+ 
+@@ -83,51 +85,51 @@ static inline struct pca9685 *to_pca(struct pwm_chip *chip)
  }
  
--void arch_irq_work_raise(void)
--{
--	preempt_disable();
--	set_irq_work_pending_flag();
--	/*
--	 * Non-nmi code running with interrupts disabled will replay
--	 * irq_happened before it re-enables interrupts, so setthe
--	 * decrementer there instead of causing a hardware exception
--	 * which would immediately hit the masked interrupt handler
--	 * and have the net effect of setting the decrementer in
--	 * irq_happened.
--	 *
--	 * NMI interrupts can not check this when they return, so the
--	 * decrementer hardware exception is raised, which will fire
--	 * when interrupts are next enabled.
--	 *
--	 * BookE does not support this yet, it must audit all NMI
--	 * interrupt handlers to ensure they call nmi_enter() so this
--	 * check would be correct.
--	 */
--	if (IS_ENABLED(CONFIG_BOOKE) || !irqs_disabled() || in_nmi()) {
--		set_dec(1);
--	} else {
--		hard_irq_disable();
--		local_paca->irq_happened |= PACA_IRQ_DEC;
--	}
--	preempt_enable();
--}
--
- #else /* 32-bit */
- 
- DEFINE_PER_CPU(u8, irq_work_pending);
-@@ -559,16 +530,27 @@ DEFINE_PER_CPU(u8, irq_work_pending);
- #define test_irq_work_pending()		__this_cpu_read(irq_work_pending)
- #define clear_irq_work_pending()	__this_cpu_write(irq_work_pending, 0)
- 
-+#endif /* 32 vs 64 bit */
-+
- void arch_irq_work_raise(void)
+ #if IS_ENABLED(CONFIG_GPIOLIB)
+-static int pca9685_pwm_gpio_request(struct gpio_chip *gpio, unsigned int offset)
++static bool pca9685_pwm_test_and_set_inuse(struct pca9685 *pca, int pwm_idx)
  {
-+	/*
-+	 * 64-bit code that uses irq soft-mask can just cause an immediate
-+	 * interrupt here that gets soft masked, if this is called under
-+	 * local_irq_disable(). It might be possible to prevent that happening
-+	 * by noticing interrupts are disabled and setting decrementer pending
-+	 * to be replayed when irqs are enabled. The problem there is that
-+	 * tracing can call irq_work_raise, including in code that does low
-+	 * level manipulations of irq soft-mask state (e.g., trace_hardirqs_on)
-+	 * which could get tangled up if we're messing with the same state
-+	 * here.
-+	 */
- 	preempt_disable();
- 	set_irq_work_pending_flag();
- 	set_dec(1);
- 	preempt_enable();
+-	struct pca9685 *pca = gpiochip_get_data(gpio);
+-	struct pwm_device *pwm;
++	bool is_inuse;
+ 
+ 	mutex_lock(&pca->lock);
+-
+-	pwm = &pca->chip.pwms[offset];
+-
+-	if (pwm->flags & (PWMF_REQUESTED | PWMF_EXPORTED)) {
+-		mutex_unlock(&pca->lock);
+-		return -EBUSY;
++	if (pwm_idx >= PCA9685_MAXCHAN) {
++		/*
++		 * "all LEDs" channel:
++		 * pretend already in use if any of the PWMs are requested
++		 */
++		if (!bitmap_empty(pca->pwms_inuse, PCA9685_MAXCHAN)) {
++			is_inuse = true;
++			goto out;
++		}
++	} else {
++		/*
++		 * regular channel:
++		 * pretend already in use if the "all LEDs" channel is requested
++		 */
++		if (test_bit(PCA9685_MAXCHAN, pca->pwms_inuse)) {
++			is_inuse = true;
++			goto out;
++		}
+ 	}
+-
+-	pwm_set_chip_data(pwm, (void *)1);
+-
++	is_inuse = test_and_set_bit(pwm_idx, pca->pwms_inuse);
++out:
+ 	mutex_unlock(&pca->lock);
+-	pm_runtime_get_sync(pca->chip.dev);
+-	return 0;
++	return is_inuse;
  }
  
--#endif /* 32 vs 64 bit */
+-static bool pca9685_pwm_is_gpio(struct pca9685 *pca, struct pwm_device *pwm)
++static void pca9685_pwm_clear_inuse(struct pca9685 *pca, int pwm_idx)
+ {
+-	bool is_gpio = false;
 -
- #else  /* CONFIG_IRQ_WORK */
+ 	mutex_lock(&pca->lock);
++	clear_bit(pwm_idx, pca->pwms_inuse);
++	mutex_unlock(&pca->lock);
++}
  
- #define test_irq_work_pending()	0
+-	if (pwm->hwpwm >= PCA9685_MAXCHAN) {
+-		unsigned int i;
+-
+-		/*
+-		 * Check if any of the GPIOs are requested and in that case
+-		 * prevent using the "all LEDs" channel.
+-		 */
+-		for (i = 0; i < pca->gpio.ngpio; i++)
+-			if (gpiochip_is_requested(&pca->gpio, i)) {
+-				is_gpio = true;
+-				break;
+-			}
+-	} else if (pwm_get_chip_data(pwm)) {
+-		is_gpio = true;
+-	}
++static int pca9685_pwm_gpio_request(struct gpio_chip *gpio, unsigned int offset)
++{
++	struct pca9685 *pca = gpiochip_get_data(gpio);
+ 
+-	mutex_unlock(&pca->lock);
+-	return is_gpio;
++	if (pca9685_pwm_test_and_set_inuse(pca, offset))
++		return -EBUSY;
++	pm_runtime_get_sync(pca->chip.dev);
++	return 0;
+ }
+ 
+ static int pca9685_pwm_gpio_get(struct gpio_chip *gpio, unsigned int offset)
+@@ -162,6 +164,7 @@ static void pca9685_pwm_gpio_free(struct gpio_chip *gpio, unsigned int offset)
+ 
+ 	pca9685_pwm_gpio_set(gpio, offset, 0);
+ 	pm_runtime_put(pca->chip.dev);
++	pca9685_pwm_clear_inuse(pca, offset);
+ }
+ 
+ static int pca9685_pwm_gpio_get_direction(struct gpio_chip *chip,
+@@ -213,12 +216,17 @@ static int pca9685_pwm_gpio_probe(struct pca9685 *pca)
+ 	return devm_gpiochip_add_data(dev, &pca->gpio, pca);
+ }
+ #else
+-static inline bool pca9685_pwm_is_gpio(struct pca9685 *pca,
+-				       struct pwm_device *pwm)
++static inline bool pca9685_pwm_test_and_set_inuse(struct pca9685 *pca,
++						  int pwm_idx)
+ {
+ 	return false;
+ }
+ 
++static inline void
++pca9685_pwm_clear_inuse(struct pca9685 *pca, int pwm_idx)
++{
++}
++
+ static inline int pca9685_pwm_gpio_probe(struct pca9685 *pca)
+ {
+ 	return 0;
+@@ -402,7 +410,7 @@ static int pca9685_pwm_request(struct pwm_chip *chip, struct pwm_device *pwm)
+ {
+ 	struct pca9685 *pca = to_pca(chip);
+ 
+-	if (pca9685_pwm_is_gpio(pca, pwm))
++	if (pca9685_pwm_test_and_set_inuse(pca, pwm->hwpwm))
+ 		return -EBUSY;
+ 	pm_runtime_get_sync(chip->dev);
+ 
+@@ -411,8 +419,11 @@ static int pca9685_pwm_request(struct pwm_chip *chip, struct pwm_device *pwm)
+ 
+ static void pca9685_pwm_free(struct pwm_chip *chip, struct pwm_device *pwm)
+ {
++	struct pca9685 *pca = to_pca(chip);
++
+ 	pca9685_pwm_disable(chip, pwm);
+ 	pm_runtime_put(chip->dev);
++	pca9685_pwm_clear_inuse(pca, pwm->hwpwm);
+ }
+ 
+ static const struct pwm_ops pca9685_pwm_ops = {
 -- 
 2.20.1
 
