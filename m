@@ -1,94 +1,195 @@
-Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=3CHW=6C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F6E9C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 23:57:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE452C38A2B
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 00:07:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 61C15214D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 23:57:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B815A2223C
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 00:07:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="R001cq9K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727123AbgDQX4u (ORCPT
+        id S1726525AbgDRAH4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 19:56:50 -0400
-Received: from mga12.intel.com ([192.55.52.136]:60765 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725985AbgDQX4V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 19:56:21 -0400
-IronPort-SDR: 9TWtQHfiLQMfgVFssZp9QxAyhD7yImG+Ob11/EqJ1bVITu7wWh/pKXJY0Pb9tIqILBpVklKKMb
- bLr0T/rwRbFA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2020 16:56:20 -0700
-IronPort-SDR: vNzogAsnRVwFrSPcqZfg1Yme60KK5X01STa3ojGfmp/1x3RLoqqUM+FS6KlGNhkgUg0tvz5Oxb
- F+RjmSNIL5tA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,395,1580803200"; 
-   d="scan'208";a="272581075"
-Received: from zhiwang1-mobl5.ger.corp.intel.com (HELO localhost) ([10.252.42.90])
-  by orsmga002.jf.intel.com with ESMTP; 17 Apr 2020 16:56:16 -0700
-Date:   Sat, 18 Apr 2020 02:56:16 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Sumit Garg <sumit.garg@linaro.org>
-Cc:     Mimi Zohar <zohar@linux.ibm.com>,
-        James Bottomley <jejb@linux.ibm.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Janne Karhunen <janne.karhunen@gmail.com>, kgoldman@us.ibm.com,
-        "Safford, David (GE Global Research, US)" <david.safford@ge.com>,
-        monty.wiseman@ge.com, Daniel Thompson <daniel.thompson@linaro.org>,
-        "open list:ASYMMETRIC KEYS" <keyrings@vger.kernel.org>,
-        linux-integrity@vger.kernel.org,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "tee-dev @ lists . linaro . org" <tee-dev@lists.linaro.org>
-Subject: Re: [PATCH] doc: trusted-encrypted: updates with TEE as a new trust
- source
-Message-ID: <20200417235616.GC85230@linux.intel.com>
-References: <1585636165-22481-1-git-send-email-sumit.garg@linaro.org>
- <20200416174617.GI199110@linux.intel.com>
- <CAFA6WYNJuxGToM1R02RsrZ_xK6Rfi1SndY1oVYaAbizMpeGPbg@mail.gmail.com>
+        Fri, 17 Apr 2020 20:07:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40594 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725985AbgDRAHz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Apr 2020 20:07:55 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99B9CC061A0C;
+        Fri, 17 Apr 2020 17:07:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description;
+        bh=g7qIA0lLgeeVqD3PfI2pPtZA8QSfsmbToQePnx+kR8E=; b=R001cq9K2VwF9GpezA1XeQZCXt
+        qlCdBWjL6l4sppvk1SwlVTp/sjzhp7xvcovIOdzbdesWoCa5KzrB6PiWPoAv6j9TdbI1NO2IjAo06
+        Dc5ftSN6I75E71l11fJQ77CuMpmQMeGvhJD+nDGjmB3ODIyEi/MBH0LVgBUWLqt4Ez/T94EPonLcV
+        Zq24+fRobNqoe1SC3QesG5gEGCTYl2/9KCSBaeyHyNZ7ek/713yix8IrYtDO/hUJgMGLqbMh2i4Z2
+        WvW60r3wj/w0Mh7D0SnPyL/Ge4A5GOu5H5WW2Tir3JaDeTmUdnRp2uRcR+0eokqhmOUWuyBKC9ZKF
+        i5FUlW+A==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jPb1P-00054S-7K; Sat, 18 Apr 2020 00:07:47 +0000
+Subject: Re: [PATCH v9 1/2] Documentation: fpga: dfl: add description for
+ performance reporting support
+To:     Wu Hao <hao.wu@intel.com>, will@kernel.org, mdf@kernel.org,
+        mark.rutland@arm.com, gregkh@linuxfoundation.org,
+        linux-fpga@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     linux-api@vger.kernel.org, atull@kernel.org, yilun.xu@intel.com,
+        trix@redhat.com, bhu@redhat.com
+References: <1587102000-18262-1-git-send-email-hao.wu@intel.com>
+ <1587102000-18262-2-git-send-email-hao.wu@intel.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <8aa60f7e-68d4-ca41-403f-37f430ce05c1@infradead.org>
+Date:   Fri, 17 Apr 2020 17:07:41 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAFA6WYNJuxGToM1R02RsrZ_xK6Rfi1SndY1oVYaAbizMpeGPbg@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <1587102000-18262-2-git-send-email-hao.wu@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 17, 2020 at 10:27:01AM +0530, Sumit Garg wrote:
-> On Thu, 16 Apr 2020 at 23:16, Jarkko Sakkinen
-> <jarkko.sakkinen@linux.intel.com> wrote:
-> >
-> > On Tue, Mar 31, 2020 at 11:59:25AM +0530, Sumit Garg wrote:
-> > > Update documentation for Trusted and Encrypted Keys with TEE as a new
-> > > trust source. Following is brief description of updates:
-> > >
-> > > - Add a section to demostrate a list of supported devices along with
-> > >   their security properties/guarantees.
-> > > - Add a key generation section.
-> > > - Updates for usage section including differences specific to a trust
-> > >   source.
-> > >
-> > > Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
-> >
-> > Overally this works for me. Can you bundle this with the code
-> > changes. Maybe some details needs to be fine tuned but easier
-> > to look into them in the context of rest of the patches.
-> >
+Hi--
+
+Here are a few comments for you:
+
+On 4/16/20 10:39 PM, Wu Hao wrote:
+> From: Xu Yilun <yilun.xu@intel.com>
 > 
-> Sure, I will send next version of complete patch-set.
+> This patch adds description for performance reporting support for
+> Device Feature List (DFL) based FPGA.
+> 
+> Signed-off-by: Xu Yilun <yilun.xu@intel.com>
+> Signed-off-by: Wu Hao <hao.wu@intel.com>
+> ---
+>  Documentation/fpga/dfl.rst | 84 ++++++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 84 insertions(+)
+> 
+> diff --git a/Documentation/fpga/dfl.rst b/Documentation/fpga/dfl.rst
+> index 094fc8a..6ccaf77 100644
+> --- a/Documentation/fpga/dfl.rst
+> +++ b/Documentation/fpga/dfl.rst
 
-Thanks.
+> @@ -378,6 +383,85 @@ The device nodes used for ioctl() or mmap() can be referenced through::
+>  	/sys/class/fpga_region/<regionX>/<dfl-port.n>/dev
+>  
+>  
+> +Performance Counters
+> +====================
+> +Performance reporting is one private feature implemented in FME. It could
+> +supports several independent, system-wide, device counter sets in hardware to
+> +monitor and count for performance events, including "basic", "cache", "fabric",
+> +"vtd" and "vtd_sip" counters. Users could use standard perf tool to monitor
+> +FPGA cache hit/miss rate, transaction number, interface clock counter of AFU
+> +and other FPGA performance events.
+> +
+> +Different FPGA devices may have different counter sets, it depends on hardware
 
-I think I just have forgot to process this before. I'm sorry about
-that.
+                                                     sets, depending on hardware
 
-/Jarkko
+> +implementation. e.g. some discrete FPGA cards don't have any cache. User could
+
+                   E.g., some
+
+> +use "perf list" to check which perf events are supported by target hardware.
+> +
+> +In order to allow user to use standard perf API to access these performance
+> +counters, driver creates a perf PMU, and related sysfs interfaces in
+> +/sys/bus/event_source/devices/dfl_fme* to describe available perf events and
+> +configuration options.
+> +
+> +The "format" directory describes the format of the config field of struct
+> +perf_event_attr. There are 3 bitfields for config, "evtype" defines which type
+
+                                              config: "evtype"
+
+> +the perf event belongs to. "event" is the identity of the event within its
+
+                  belongs to; "event" is
+
+> +category. "portid" is introduced to decide counters set to monitor on FPGA
+
+   category; "portid" is
+
+> +overall data or a specific port.
+> +
+> +The "events" directory describes the configuration templates for all available
+> +events which can be used with perf tool directly. For example, fab_mmio_read
+> +has the configuration "event=0x06,evtype=0x02,portid=0xff", which shows this
+> +event belongs to fabric type (0x02), the local event id is 0x06 and it is for
+> +overall monitoring (portid=0xff).
+> +
+> +Example usage of perf::
+> +
+> +  $# perf list |grep dfl_fme
+> +
+> +  dfl_fme0/fab_mmio_read/                              [Kernel PMU event]
+> +  <...>
+> +  dfl_fme0/fab_port_mmio_read,portid=?/                [Kernel PMU event]
+> +  <...>
+> +
+> +  $# perf stat -a -e dfl_fme0/fab_mmio_read/ <command>
+> +  or
+> +  $# perf stat -a -e dfl_fme0/event=0x06,evtype=0x02,portid=0xff/ <command>
+> +  or
+> +  $# perf stat -a -e dfl_fme0/config=0xff2006/ <command>
+> +
+> +Another example, fab_port_mmio_read monitors mmio read of a specific port. So
+> +its configuration template is "event=0x06,evtype=0x01,portid=?". The portid
+> +should be explicitly set.
+> +
+> +Its usage of perf::
+> +
+> +  $# perf stat -a -e dfl_fme0/fab_port_mmio_read,portid=0x0/ <command>
+> +  or
+> +  $# perf stat -a -e dfl_fme0/event=0x06,evtype=0x02,portid=0x0/ <command>
+> +  or
+> +  $# perf stat -a -e dfl_fme0/config=0x2006/ <command>
+> +
+> +Please note for fabric counters, overall perf events (fab_*) and port perf
+> +events (fab_port_*) actually share one set of counters in hardware, so it can't
+> +monitor both at the same time. If this set of counters is configured to monitor
+> +overall data, then per port perf data is not supported. See below example::
+> +
+> +  $# perf stat -e dfl_fme0/fab_mmio_read/,dfl_fme0/fab_port_mmio_write,\
+> +                                                    portid=0/ sleep 1
+> +
+> +  Performance counter stats for 'system wide':
+> +
+> +                 3      dfl_fme0/fab_mmio_read/
+> +   <not supported>      dfl_fme0/fab_port_mmio_write,portid=0x0/
+> +
+> +       1.001750904 seconds time elapsed
+> +
+> +The driver also provides a "cpumask" sysfs attribute, which contains only one
+> +cpu id used to access these perf events. Counting on multiple CPUs is not
+   CPU
+
+> +allowed since they are system-wide counters on FPGA device.
+> +
+> +The current driver does not support sampling. So "perf record" is unsupported.
+> +
+> +
+>  Add new FIUs support
+>  ====================
+>  It's possible that developers made some new function blocks (FIUs) under this
+> 
+
+thanks.
+-- 
+~Randy
+
