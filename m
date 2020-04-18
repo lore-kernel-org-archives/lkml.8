@@ -2,113 +2,216 @@ Return-Path: <SRS0=3CHW=6C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85796C2D0EF
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 11:59:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C74DC2D0EF
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 12:04:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6A27A206D9
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 11:59:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 279F721D79
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 12:04:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mMgStgWr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725985AbgDRL7B convert rfc822-to-8bit (ORCPT
+        id S1725939AbgDRMEI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 07:59:01 -0400
-Received: from out01.mta.xmission.com ([166.70.13.231]:60032 "EHLO
-        out01.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725869AbgDRL7B (ORCPT
+        Sat, 18 Apr 2020 08:04:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37148 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725809AbgDRMEH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 07:59:01 -0400
-Received: from in01.mta.xmission.com ([166.70.13.51])
-        by out01.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.90_1)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jPm7f-0007nX-II; Sat, 18 Apr 2020 05:58:59 -0600
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jPm7e-0001Xl-Io; Sat, 18 Apr 2020 05:58:59 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     Christophe Leroy <christophe.leroy@c-s.fr>
-Cc:     Christoph Hellwig <hch@lst.de>, Arnd Bergmann <arnd@arndb.de>,
-        x86@kernel.org, linux-kernel@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linuxppc-dev@lists.ozlabs.org, Jeremy Kerr <jk@ozlabs.org>
-References: <20200414070142.288696-1-hch@lst.de>
-        <20200414070142.288696-3-hch@lst.de>
-        <87pnc5akhk.fsf@x220.int.ebiederm.org>
-        <87k12dakfx.fsf_-_@x220.int.ebiederm.org>
-        <c51c6192-2ea4-62d8-dd22-305f7a1e0dd3@c-s.fr>
-Date:   Sat, 18 Apr 2020 06:55:56 -0500
-In-Reply-To: <c51c6192-2ea4-62d8-dd22-305f7a1e0dd3@c-s.fr> (Christophe Leroy's
-        message of "Sat, 18 Apr 2020 10:05:19 +0200")
-Message-ID: <87v9lx3t4j.fsf@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Sat, 18 Apr 2020 08:04:07 -0400
+Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5B56C061A0C
+        for <linux-kernel@vger.kernel.org>; Sat, 18 Apr 2020 05:04:07 -0700 (PDT)
+Received: by mail-qk1-x743.google.com with SMTP id l25so5416118qkk.3
+        for <linux-kernel@vger.kernel.org>; Sat, 18 Apr 2020 05:04:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=BZwlaHWeOeafAExOcOIbelNG2HeXx9/G4hvqk9vloyo=;
+        b=mMgStgWrMw67hjiTamIm6buAZPVe1wCbfjPELaYiDEL29wH0Ij/4O3xwJAjIuBUZ4A
+         ADQjW9Aon9Yl8GUDjGwmwrNg6Hj6yFSUAvvGCznXS/oC3JT6Pzxww2lvKHboYAYJ1/tq
+         waRtmiPmalo8eCeL3DHstUd1QkllCTARF5O3pB5TqdLKYNbIFbJ+IS8rpLTb5kbgv9Ft
+         qOr9XU0eF+jopJBgB8YLpGD4QmBWq8Fejhm37B+CX02VK8Z8ZI1bGoUMGaxMfGnieWAh
+         QUihX8h6Kr6S68UMNcjGCvepWKrSJCMrOZnqYcuqEMM3lPwvAdOGyND6RN0qfeLoKYMF
+         DCOA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=BZwlaHWeOeafAExOcOIbelNG2HeXx9/G4hvqk9vloyo=;
+        b=CRYxLt4Zr1U+TZHH6l1x7IwWfrRxukQLBDGwzxZefnJ8yakrDXHUavyOsWSJ72J0LR
+         KpXk4VvfxEoEBxAOYwkcSryp61qFQY8AImrg/b4ZfvuekK3W1DerIlLsMcoP+3E14nxt
+         oRQcwXBnDvx30L1dgSA1VaIDiWNxr60Ma7OSeX3rBjYJeLtDQAhR5cYQKBu6YejXpHjf
+         avZvXAVYgr0JnToT/6LkF7zr4i6XLq4xNr2R2NeaN2wQOlK/HKe3W3HmT6t7HJhE4Aay
+         m3k4xro8RanVGVwzmjnozMYisiEx/noaZNblHJuTu1GA7ID0B54enZ7r33YYCf2+X/CP
+         1/tA==
+X-Gm-Message-State: AGi0PuZgTbjdivbsWHTixHmhYSwdlJT3pCm+3MS08zgB0ZPLj4NSG91n
+        UTiLScXDbjM2YERstYDIxmd4DpC2HfI=
+X-Google-Smtp-Source: APiQypInWbjTJAt4tWKMWkO1EqKvHXa7Mg2NEEfLHwyt/lknjmZLJj85pTXnjef+kXGc8QvIg4TcLQ==
+X-Received: by 2002:a37:4a85:: with SMTP id x127mr7666693qka.152.1587211446588;
+        Sat, 18 Apr 2020 05:04:06 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([179.97.37.151])
+        by smtp.gmail.com with ESMTPSA id 11sm17558479qkg.122.2020.04.18.05.04.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 18 Apr 2020 05:04:06 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 0CDBD409A3; Sat, 18 Apr 2020 09:04:04 -0300 (-03)
+Date:   Sat, 18 Apr 2020 09:04:03 -0300
+To:     Adrian Hunter <adrian.hunter@intel.com>
+Cc:     Jiri Olsa <jolsa@redhat.com>, Andi Kleen <ak@linux.intel.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 12/16] perf tools: Move and globalize
+ perf_evsel__find_pmu() and perf_evsel__is_aux_event()
+Message-ID: <20200418120403.GB6031@kernel.org>
+References: <20200401101613.6201-1-adrian.hunter@intel.com>
+ <20200401101613.6201-13-adrian.hunter@intel.com>
+ <20200418115017.GA6031@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-X-XM-SPF: eid=1jPm7e-0001Xl-Io;;;mid=<87v9lx3t4j.fsf@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX18UJp5X1nu8GvTzwVNg4DhYMBf3vdPs/94=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: [PATCH 1/2] signal: Factor copy_siginfo_to_external32 from copy_siginfo_to_user32
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200418115017.GA6031@kernel.org>
+X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Christophe Leroy <christophe.leroy@c-s.fr> writes:
+Em Sat, Apr 18, 2020 at 08:50:17AM -0300, Arnaldo Carvalho de Melo escreveu:
+> Em Wed, Apr 01, 2020 at 01:16:09PM +0300, Adrian Hunter escreveu:
+> > Move and globalize 2 functions so that they can be reused.
+> 
+> So this breaks this:
+> 
+> [acme@five perf]$ perf test -v python
+> Couldn't bump rlimit(MEMLOCK), failures may take place when creating BPF maps, etc
+> 19: 'import perf' in python                               :
+> --- start ---
+> test child forked, pid 168414
+> Traceback (most recent call last):
+>   File "<stdin>", line 1, in <module>
+> ImportError: /tmp/build/perf/python/perf.so: undefined symbol: perf_pmu__scan
+> test child finished with -1
+> ---- end ----
+> 'import perf' in python: FAILED!
+> [acme@five perf]$
+> 
+> I'm trying to fix...
 
-> Le 17/04/2020 à 23:09, Eric W. Biederman a écrit :
->>
->> To remove the use of set_fs in the coredump code there needs to be a
->> way to convert a kernel siginfo to a userspace compat siginfo.
->>
->> Call that function copy_siginfo_to_compat and factor it out of
->> copy_siginfo_to_user32.
->
-> I find it a pitty to do that.
->
-> The existing function could have been easily converted to using
-> user_access_begin() + user_access_end() and use unsafe_put_user() to copy to
-> userspace to avoid copying through a temporary structure on the stack.
->
-> With your change, it becomes impossible to do that.
+I solved this by moving those functions to tools/perf/util/pmu.c
+instead.
 
-I don't follow.  You don't like temporary structures in the coredump
-code or temporary structures in copy_siginfo_to_user32?
+Please consider running 'perf test' before sending your patches to me
+next time,
 
-A temporary structure in copy_siginfo_to_user is pretty much required
-so that it can be zeroed to guarantee we don't pass a structure with
-holes to userspace.
+Thanks,
 
-The implementation of copy_siginfo_to_user32 used to use the equivalent
-of user_access_begin() and user_access_end() and the code was a mess
-that was very difficult to reason about.  I recall their being holes
-in the structure that were being copied to userspace.
+- Arnaldo
+  
+> > Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+> > ---
+> >  tools/perf/util/auxtrace.c | 19 -------------------
+> >  tools/perf/util/evsel.c    | 20 ++++++++++++++++++++
+> >  tools/perf/util/evsel.h    |  3 +++
+> >  3 files changed, 23 insertions(+), 19 deletions(-)
+> > 
+> > diff --git a/tools/perf/util/auxtrace.c b/tools/perf/util/auxtrace.c
+> > index 809a09e75c55..33ad33378a90 100644
+> > --- a/tools/perf/util/auxtrace.c
+> > +++ b/tools/perf/util/auxtrace.c
+> > @@ -58,25 +58,6 @@
+> >  #include "symbol/kallsyms.h"
+> >  #include <internal/lib.h>
+> >  
+> > -static struct perf_pmu *perf_evsel__find_pmu(struct evsel *evsel)
+> > -{
+> > -	struct perf_pmu *pmu = NULL;
+> > -
+> > -	while ((pmu = perf_pmu__scan(pmu)) != NULL) {
+> > -		if (pmu->type == evsel->core.attr.type)
+> > -			break;
+> > -	}
+> > -
+> > -	return pmu;
+> > -}
+> > -
+> > -static bool perf_evsel__is_aux_event(struct evsel *evsel)
+> > -{
+> > -	struct perf_pmu *pmu = perf_evsel__find_pmu(evsel);
+> > -
+> > -	return pmu && pmu->auxtrace;
+> > -}
+> > -
+> >  /*
+> >   * Make a group from 'leader' to 'last', requiring that the events were not
+> >   * already grouped to a different leader.
+> > diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+> > index 60e6cd49dee3..d4ab073c9fe7 100644
+> > --- a/tools/perf/util/evsel.c
+> > +++ b/tools/perf/util/evsel.c
+> > @@ -44,6 +44,7 @@
+> >  #include "stat.h"
+> >  #include "string2.h"
+> >  #include "memswap.h"
+> > +#include "pmu.h"
+> >  #include "util.h"
+> >  #include "../perf-sys.h"
+> >  #include "util/parse-branch-options.h"
+> > @@ -100,6 +101,25 @@ int perf_evsel__object_config(size_t object_size,
+> >  	return 0;
+> >  }
+> >  
+> > +struct perf_pmu *perf_evsel__find_pmu(struct evsel *evsel)
+> > +{
+> > +	struct perf_pmu *pmu = NULL;
+> > +
+> > +	while ((pmu = perf_pmu__scan(pmu)) != NULL) {
+> > +		if (pmu->type == evsel->core.attr.type)
+> > +			break;
+> > +	}
+> > +
+> > +	return pmu;
+> > +}
+> > +
+> > +bool perf_evsel__is_aux_event(struct evsel *evsel)
+> > +{
+> > +	struct perf_pmu *pmu = perf_evsel__find_pmu(evsel);
+> > +
+> > +	return pmu && pmu->auxtrace;
+> > +}
+> > +
+> >  #define FD(e, x, y) (*(int *)xyarray__entry(e->core.fd, x, y))
+> >  
+> >  int __perf_evsel__sample_size(u64 sample_type)
+> > diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
+> > index e64ed4202cab..a463bc65b001 100644
+> > --- a/tools/perf/util/evsel.h
+> > +++ b/tools/perf/util/evsel.h
+> > @@ -158,6 +158,9 @@ int perf_evsel__object_config(size_t object_size,
+> >  			      int (*init)(struct evsel *evsel),
+> >  			      void (*fini)(struct evsel *evsel));
+> >  
+> > +struct perf_pmu *perf_evsel__find_pmu(struct evsel *evsel);
+> > +bool perf_evsel__is_aux_event(struct evsel *evsel);
+> > +
+> >  struct evsel *perf_evsel__new_idx(struct perf_event_attr *attr, int idx);
+> >  
+> >  static inline struct evsel *evsel__new(struct perf_event_attr *attr)
+> > -- 
+> > 2.17.1
+> > 
+> 
+> -- 
+> 
+> - Arnaldo
 
-Meanwhile if you are going to set all of the bytes a cache hot temporary
-structure is quite cheap.
+-- 
 
-> Is that really an issue to use that set_fs() in the coredump code ?
-
-Using set_fs() is pretty bad and something that we would like to remove
-from the kernel entirely.  The fewer instances of set_fs() we have the
-better.
-
-I forget all of the details but set_fs() is both a type violation and an
-attack point when people are attacking the kernel.  The existence of
-set_fs() requires somethings that should be constants to be variables.
-Something about that means that our current code is difficult to protect
-from spectre style vulnerabilities.
-
-There was a very good thread about it all in I think 2018 but
-unfortunately I can't find it now.
-
-Eric
+- Arnaldo
