@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFB84C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:49:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14356C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:50:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C63CA20753
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:49:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E77FF20753
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:50:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587221399;
-	bh=GUP71k4DWLyje3IERdpzAzJTjDkOkehV0jMXlO3fw4Y=;
+	s=default; t=1587221405;
+	bh=XZdZZ43wVeDGvJmL7P9SqIIKj8Dd25pulCg1ZzJLMqk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RT6T2luK7UgrmQbhurEMKSN05SJlfz/Ii8/cwQeLUqzv0fC1apvKVLJ+JaZjok6QO
-	 QPDhJ0FB8uhG/diJVIsE5eelGd2TueYSHlOHTCKpphtmYcgCcEHCjbTi9vwoABAAWw
-	 jqlM5dUbntr1T0NBCx2GEq86P8M1La5K29KI8WrY=
+	b=MDbmB8HaeAA8jyHMqTSW0GbUhgIQXdRC7/vH537UMLV9uLi+AHYgIHUt+l52/bRrz
+	 NVPWnNuTJiGGPo5GDBinZTt/BMT+QvDnEHKpa72Re1YV654pvFn/gqXbjmH9gyamP+
+	 1T8jAl3HU9jnbJFkRK7Y1tFR333/VKW5kWlM4prs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728607AbgDROt6 (ORCPT
+        id S1728824AbgDROuF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 10:49:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54286 "EHLO mail.kernel.org"
+        Sat, 18 Apr 2020 10:50:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54136 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728549AbgDROnU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 10:43:20 -0400
+        id S1728524AbgDROnP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 10:43:15 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6DFFC21D82;
-        Sat, 18 Apr 2020 14:43:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7C2FE22261;
+        Sat, 18 Apr 2020 14:43:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587220999;
-        bh=GUP71k4DWLyje3IERdpzAzJTjDkOkehV0jMXlO3fw4Y=;
+        s=default; t=1587220994;
+        bh=XZdZZ43wVeDGvJmL7P9SqIIKj8Dd25pulCg1ZzJLMqk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=l8xQh4H3kSLSK4VtvjagZ4g/oJ9KvApxaoPctiCn5kNWKRULvD8njOF+O3bJNuqLY
-         OLH+78uzzJFKSL6/eQG0T9huFj3BeBgzUR5kFuNbXL6DDUdH9ev5WPiQGJ/OQa5HpQ
-         +Q7/UB0ooh1ZNsV5dvH4X8paIWPjDBs1SkgaUv4s=
+        b=cbU5R3INFrJyk+mWjLn0ArkTAzf7iOmLLN3f2f5psvgc71RQwXJtrnschPj9B1F/e
+         L2SgPhFKZP5AASidVgymHivtFEhw48Co53KHfPiJfdxpkR0NMQsxMIMUfJsMpByL2d
+         wFZLXerocZdf6lknyCikchasAGaST2kj0GePflQ4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Frederic Barrat <fbarrat@linux.ibm.com>,
-        Andrew Donnellan <ajd@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 4.19 41/47] powerpc/powernv/ioda: Fix ref count for devices with their own PE
-Date:   Sat, 18 Apr 2020 10:42:21 -0400
-Message-Id: <20200418144227.9802-41-sashal@kernel.org>
+Cc:     Wen Yang <wenyang@linux.alibaba.com>,
+        Corey Minyard <minyard@acm.org>, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        openipmi-developer@lists.sourceforge.net,
+        Corey Minyard <cminyard@mvista.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 37/47] ipmi: fix hung processes in __get_guid()
+Date:   Sat, 18 Apr 2020 10:42:17 -0400
+Message-Id: <20200418144227.9802-37-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200418144227.9802-1-sashal@kernel.org>
 References: <20200418144227.9802-1-sashal@kernel.org>
@@ -60,93 +62,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Frederic Barrat <fbarrat@linux.ibm.com>
+From: Wen Yang <wenyang@linux.alibaba.com>
 
-[ Upstream commit 05dd7da76986937fb288b4213b1fa10dbe0d1b33 ]
+[ Upstream commit 32830a0534700f86366f371b150b17f0f0d140d7 ]
 
-The pci_dn structure used to store a pointer to the struct pci_dev, so
-taking a reference on the device was required. However, the pci_dev
-pointer was later removed from the pci_dn structure, but the reference
-was kept for the npu device.
-See commit 902bdc57451c ("powerpc/powernv/idoa: Remove unnecessary
-pcidev from pci_dn").
+The wait_event() function is used to detect command completion.
+When send_guid_cmd() returns an error, smi_send() has not been
+called to send data. Therefore, wait_event() should not be used
+on the error path, otherwise it will cause the following warning:
 
-We don't need to take a reference on the device when assigning the PE
-as the struct pnv_ioda_pe is cleaned up at the same time as
-the (physical) device is released. Doing so prevents the device from
-being released, which is a problem for opencapi devices, since we want
-to be able to remove them through PCI hotplug.
+[ 1361.588808] systemd-udevd   D    0  1501   1436 0x00000004
+[ 1361.588813]  ffff883f4b1298c0 0000000000000000 ffff883f4b188000 ffff887f7e3d9f40
+[ 1361.677952]  ffff887f64bd4280 ffffc90037297a68 ffffffff8173ca3b ffffc90000000010
+[ 1361.767077]  00ffc90037297ad0 ffff887f7e3d9f40 0000000000000286 ffff883f4b188000
+[ 1361.856199] Call Trace:
+[ 1361.885578]  [<ffffffff8173ca3b>] ? __schedule+0x23b/0x780
+[ 1361.951406]  [<ffffffff8173cfb6>] schedule+0x36/0x80
+[ 1362.010979]  [<ffffffffa071f178>] get_guid+0x118/0x150 [ipmi_msghandler]
+[ 1362.091281]  [<ffffffff810d5350>] ? prepare_to_wait_event+0x100/0x100
+[ 1362.168533]  [<ffffffffa071f755>] ipmi_register_smi+0x405/0x940 [ipmi_msghandler]
+[ 1362.258337]  [<ffffffffa0230ae9>] try_smi_init+0x529/0x950 [ipmi_si]
+[ 1362.334521]  [<ffffffffa022f350>] ? std_irq_setup+0xd0/0xd0 [ipmi_si]
+[ 1362.411701]  [<ffffffffa0232bd2>] init_ipmi_si+0x492/0x9e0 [ipmi_si]
+[ 1362.487917]  [<ffffffffa0232740>] ? ipmi_pci_probe+0x280/0x280 [ipmi_si]
+[ 1362.568219]  [<ffffffff810021a0>] do_one_initcall+0x50/0x180
+[ 1362.636109]  [<ffffffff812231b2>] ? kmem_cache_alloc_trace+0x142/0x190
+[ 1362.714330]  [<ffffffff811b2ae1>] do_init_module+0x5f/0x200
+[ 1362.781208]  [<ffffffff81123ca8>] load_module+0x1898/0x1de0
+[ 1362.848069]  [<ffffffff811202e0>] ? __symbol_put+0x60/0x60
+[ 1362.913886]  [<ffffffff8130696b>] ? security_kernel_post_read_file+0x6b/0x80
+[ 1362.998514]  [<ffffffff81124465>] SYSC_finit_module+0xe5/0x120
+[ 1363.068463]  [<ffffffff81124465>] ? SYSC_finit_module+0xe5/0x120
+[ 1363.140513]  [<ffffffff811244be>] SyS_finit_module+0xe/0x10
+[ 1363.207364]  [<ffffffff81003c04>] do_syscall_64+0x74/0x180
 
-Now the ugly part: nvlink npu devices are not meant to be
-released. Because of the above, we've always leaked a reference and
-simply removing it now is dangerous and would likely require more
-work. There's currently no release device callback for nvlink devices
-for example. So to be safe, this patch leaks a reference on the npu
-device, but only for nvlink and not opencapi.
-
-Signed-off-by: Frederic Barrat <fbarrat@linux.ibm.com>
-Reviewed-by: Andrew Donnellan <ajd@linux.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20191121134918.7155-2-fbarrat@linux.ibm.com
+Fixes: 50c812b2b951 ("[PATCH] ipmi: add full sysfs support")
+Signed-off-by: Wen Yang <wenyang@linux.alibaba.com>
+Cc: Corey Minyard <minyard@acm.org>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: openipmi-developer@lists.sourceforge.net
+Cc: linux-kernel@vger.kernel.org
+Cc: stable@vger.kernel.org # 2.6.17-
+Message-Id: <20200403090408.58745-1-wenyang@linux.alibaba.com>
+Signed-off-by: Corey Minyard <cminyard@mvista.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/platforms/powernv/pci-ioda.c | 19 ++++++++++++-------
- 1 file changed, 12 insertions(+), 7 deletions(-)
+ drivers/char/ipmi/ipmi_msghandler.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
-index ecd211c5f24a5..19cd6affdd5fb 100644
---- a/arch/powerpc/platforms/powernv/pci-ioda.c
-+++ b/arch/powerpc/platforms/powernv/pci-ioda.c
-@@ -1071,14 +1071,13 @@ static struct pnv_ioda_pe *pnv_ioda_setup_dev_PE(struct pci_dev *dev)
- 		return NULL;
- 	}
+diff --git a/drivers/char/ipmi/ipmi_msghandler.c b/drivers/char/ipmi/ipmi_msghandler.c
+index 980eb7c609528..69734b1df7927 100644
+--- a/drivers/char/ipmi/ipmi_msghandler.c
++++ b/drivers/char/ipmi/ipmi_msghandler.c
+@@ -3134,8 +3134,8 @@ static void __get_guid(struct ipmi_smi *intf)
+ 	if (rv)
+ 		/* Send failed, no GUID available. */
+ 		bmc->dyn_guid_set = 0;
+-
+-	wait_event(intf->waitq, bmc->dyn_guid_set != 2);
++	else
++		wait_event(intf->waitq, bmc->dyn_guid_set != 2);
  
--	/* NOTE: We get only one ref to the pci_dev for the pdn, not for the
--	 * pointer in the PE data structure, both should be destroyed at the
--	 * same time. However, this needs to be looked at more closely again
--	 * once we actually start removing things (Hotplug, SR-IOV, ...)
-+	/* NOTE: We don't get a reference for the pointer in the PE
-+	 * data structure, both the device and PE structures should be
-+	 * destroyed at the same time. However, removing nvlink
-+	 * devices will need some work.
- 	 *
- 	 * At some point we want to remove the PDN completely anyways
- 	 */
--	pci_dev_get(dev);
- 	pdn->pe_number = pe->pe_number;
- 	pe->flags = PNV_IODA_PE_DEV;
- 	pe->pdev = dev;
-@@ -1093,7 +1092,6 @@ static struct pnv_ioda_pe *pnv_ioda_setup_dev_PE(struct pci_dev *dev)
- 		pnv_ioda_free_pe(pe);
- 		pdn->pe_number = IODA_INVALID_PE;
- 		pe->pdev = NULL;
--		pci_dev_put(dev);
- 		return NULL;
- 	}
- 
-@@ -1213,6 +1211,14 @@ static struct pnv_ioda_pe *pnv_ioda_setup_npu_PE(struct pci_dev *npu_pdev)
- 	struct pci_controller *hose = pci_bus_to_host(npu_pdev->bus);
- 	struct pnv_phb *phb = hose->private_data;
- 
-+	/*
-+	 * Intentionally leak a reference on the npu device (for
-+	 * nvlink only; this is not an opencapi path) to make sure it
-+	 * never goes away, as it's been the case all along and some
-+	 * work is needed otherwise.
-+	 */
-+	pci_dev_get(npu_pdev);
-+
- 	/*
- 	 * Due to a hardware errata PE#0 on the NPU is reserved for
- 	 * error handling. This means we only have three PEs remaining
-@@ -1236,7 +1242,6 @@ static struct pnv_ioda_pe *pnv_ioda_setup_npu_PE(struct pci_dev *npu_pdev)
- 			 */
- 			dev_info(&npu_pdev->dev,
- 				"Associating to existing PE %x\n", pe_num);
--			pci_dev_get(npu_pdev);
- 			npu_pdn = pci_get_pdn(npu_pdev);
- 			rid = npu_pdev->bus->number << 8 | npu_pdn->devfn;
- 			npu_pdn->pe_number = pe_num;
+ 	/* dyn_guid_set makes the guid data available. */
+ 	smp_rmb();
 -- 
 2.20.1
 
