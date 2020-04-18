@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3870C38A29
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:52:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88759C38A29
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:52:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A35AA2072B
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:52:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 610D22072B
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:52:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587221558;
-	bh=t8ELidcRfJWgFD6Yaefs6KTpIll3Zwk7H1XPAqtaCJE=;
+	s=default; t=1587221565;
+	bh=3JzdYpCqmji0rTehDTJoWII9UNX10mUkDZQu7QunwRA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Cl4wY24Km13OXLaaM7gf38ZHxLJi+tkZEm032n0qU0CJn7EGDREkBtI6N5howp5qp
-	 P6u/8q68J7gmiGE7TJtOGEX+pggXCnWhRLgfHPdpVYxRXaVVaxLm0hTzW/dF3a2xko
-	 8FTdG5nXFlHM3ArMVOitrLcUwAc2xQwioFaxcLTg=
+	b=sy+mRpUGUpKVF8DVm7oaRDKAEv9y1EAAhUrpKHXJB4LxVlIQ4/CRv1vK4Hd/dSzbK
+	 jyx6DnYE/A3RRxqcnKAgMyTV1LR6MLzi1uNlflSciDxtKpbuAvYYbJZlwDlmhT3Lx1
+	 w/PocM59DS32drBacA09t8KrTtRjXkygZPXwe1DE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728904AbgDROwh (ORCPT
+        id S1729081AbgDROwo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 10:52:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52122 "EHLO mail.kernel.org"
+        Sat, 18 Apr 2020 10:52:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52064 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728277AbgDROmN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 10:42:13 -0400
+        id S1728267AbgDROmM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 10:42:12 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6582022253;
-        Sat, 18 Apr 2020 14:42:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0D180221F4;
+        Sat, 18 Apr 2020 14:42:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587220933;
-        bh=t8ELidcRfJWgFD6Yaefs6KTpIll3Zwk7H1XPAqtaCJE=;
+        s=default; t=1587220930;
+        bh=3JzdYpCqmji0rTehDTJoWII9UNX10mUkDZQu7QunwRA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gZoI0R8FsLcCcm++7S5a71C6VnzCoSwQMqxwGSBf99bc/Cs1BT0UroWjRSLYkusNz
-         Yj6zZiIAJbz42S/sslInYCIE8dldHP4mwJ08HnZxGE/eZncS26hAQdY8WFkpHuqriM
-         +Jh0j8/6U3rMmHLxSTL2SemodcS3nF+1ML2OsUl4=
+        b=RyMNqm6zuTen0HuwCBlaPV4sk1L786h5u5ZJig23E0o68MpgSo/P0UbLkh2fhayG9
+         MNsVw0liauB1Bw6jCORHG+/yx4LdxOKWfBlFyGiARkK/fm57enT7nPVesq2Y3Z8F+U
+         0X563qrxJbfspBiuSeTV1/PbdwE4O1cRu7MoFb+I=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Frederic Barrat <fbarrat@linux.ibm.com>,
-        Andrew Donnellan <ajd@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 5.4 69/78] powerpc/powernv/ioda: Fix ref count for devices with their own PE
-Date:   Sat, 18 Apr 2020 10:40:38 -0400
-Message-Id: <20200418144047.9013-69-sashal@kernel.org>
+Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 67/78] PCI: pciehp: Prevent deadlock on disconnect
+Date:   Sat, 18 Apr 2020 10:40:36 -0400
+Message-Id: <20200418144047.9013-67-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200418144047.9013-1-sashal@kernel.org>
 References: <20200418144047.9013-1-sashal@kernel.org>
@@ -60,93 +60,275 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Frederic Barrat <fbarrat@linux.ibm.com>
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
 
-[ Upstream commit 05dd7da76986937fb288b4213b1fa10dbe0d1b33 ]
+[ Upstream commit 87d0f2a5536fdf5053a6d341880f96135549a644 ]
 
-The pci_dn structure used to store a pointer to the struct pci_dev, so
-taking a reference on the device was required. However, the pci_dev
-pointer was later removed from the pci_dn structure, but the reference
-was kept for the npu device.
-See commit 902bdc57451c ("powerpc/powernv/idoa: Remove unnecessary
-pcidev from pci_dn").
+This addresses deadlocks in these common cases in hierarchies containing
+two switches:
 
-We don't need to take a reference on the device when assigning the PE
-as the struct pnv_ioda_pe is cleaned up at the same time as
-the (physical) device is released. Doing so prevents the device from
-being released, which is a problem for opencapi devices, since we want
-to be able to remove them through PCI hotplug.
+  - All involved ports are runtime suspended and they are unplugged. This
+    can happen easily if the drivers involved automatically enable runtime
+    PM (xHCI for example does that).
 
-Now the ugly part: nvlink npu devices are not meant to be
-released. Because of the above, we've always leaked a reference and
-simply removing it now is dangerous and would likely require more
-work. There's currently no release device callback for nvlink devices
-for example. So to be safe, this patch leaks a reference on the npu
-device, but only for nvlink and not opencapi.
+  - System is suspended (e.g., closing the lid on a laptop) with a dock +
+    something else connected, and the dock is unplugged while suspended.
 
-Signed-off-by: Frederic Barrat <fbarrat@linux.ibm.com>
-Reviewed-by: Andrew Donnellan <ajd@linux.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20191121134918.7155-2-fbarrat@linux.ibm.com
+These cases lead to the following deadlock:
+
+  INFO: task irq/126-pciehp:198 blocked for more than 120 seconds.
+  irq/126-pciehp  D    0   198      2 0x80000000
+  Call Trace:
+   schedule+0x2c/0x80
+   schedule_timeout+0x246/0x350
+   wait_for_completion+0xb7/0x140
+   kthread_stop+0x49/0x110
+   free_irq+0x32/0x70
+   pcie_shutdown_notification+0x2f/0x50
+   pciehp_remove+0x27/0x50
+   pcie_port_remove_service+0x36/0x50
+   device_release_driver+0x12/0x20
+   bus_remove_device+0xec/0x160
+   device_del+0x13b/0x350
+   device_unregister+0x1a/0x60
+   remove_iter+0x1e/0x30
+   device_for_each_child+0x56/0x90
+   pcie_port_device_remove+0x22/0x40
+   pcie_portdrv_remove+0x20/0x60
+   pci_device_remove+0x3e/0xc0
+   device_release_driver_internal+0x18c/0x250
+   device_release_driver+0x12/0x20
+   pci_stop_bus_device+0x6f/0x90
+   pci_stop_bus_device+0x31/0x90
+   pci_stop_and_remove_bus_device+0x12/0x20
+   pciehp_unconfigure_device+0x88/0x140
+   pciehp_disable_slot+0x6a/0x110
+   pciehp_handle_presence_or_link_change+0x263/0x400
+   pciehp_ist+0x1c9/0x1d0
+   irq_thread_fn+0x24/0x60
+   irq_thread+0xeb/0x190
+   kthread+0x120/0x140
+
+  INFO: task irq/190-pciehp:2288 blocked for more than 120 seconds.
+  irq/190-pciehp  D    0  2288      2 0x80000000
+  Call Trace:
+   __schedule+0x2a2/0x880
+   schedule+0x2c/0x80
+   schedule_preempt_disabled+0xe/0x10
+   mutex_lock+0x2c/0x30
+   pci_lock_rescan_remove+0x15/0x20
+   pciehp_unconfigure_device+0x4d/0x140
+   pciehp_disable_slot+0x6a/0x110
+   pciehp_handle_presence_or_link_change+0x263/0x400
+   pciehp_ist+0x1c9/0x1d0
+   irq_thread_fn+0x24/0x60
+   irq_thread+0xeb/0x190
+   kthread+0x120/0x140
+
+What happens here is that the whole hierarchy is runtime resumed and the
+parent PCIe downstream port, which got the hot-remove event, starts
+removing devices below it, taking pci_lock_rescan_remove() lock. When the
+child PCIe port is runtime resumed it calls pciehp_check_presence() which
+ends up calling pciehp_card_present() and pciehp_check_link_active().  Both
+of these use pcie_capability_read_word(), which notices that the underlying
+device is already gone and returns PCIBIOS_DEVICE_NOT_FOUND with the
+capability value set to 0. When pciehp gets this value it thinks that its
+child device is also hot-removed and schedules its IRQ thread to handle the
+event.
+
+The deadlock happens when the child's IRQ thread runs and tries to acquire
+pci_lock_rescan_remove() which is already taken by the parent and the
+parent waits for the child's IRQ thread to finish.
+
+Prevent this from happening by checking the return value of
+pcie_capability_read_word() and if it is PCIBIOS_DEVICE_NOT_FOUND stop
+performing any hot-removal activities.
+
+[bhelgaas: add common scenarios to commit log]
+Link: https://lore.kernel.org/r/20191029170022.57528-2-mika.westerberg@linux.intel.com
+Tested-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/platforms/powernv/pci-ioda.c | 19 ++++++++++++-------
- 1 file changed, 12 insertions(+), 7 deletions(-)
+ drivers/pci/hotplug/pciehp.h      |  6 ++--
+ drivers/pci/hotplug/pciehp_core.c | 11 ++++--
+ drivers/pci/hotplug/pciehp_ctrl.c |  4 +--
+ drivers/pci/hotplug/pciehp_hpc.c  | 59 +++++++++++++++++++++++++------
+ 4 files changed, 61 insertions(+), 19 deletions(-)
 
-diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
-index 058223233088e..e9cda7e316a50 100644
---- a/arch/powerpc/platforms/powernv/pci-ioda.c
-+++ b/arch/powerpc/platforms/powernv/pci-ioda.c
-@@ -1062,14 +1062,13 @@ static struct pnv_ioda_pe *pnv_ioda_setup_dev_PE(struct pci_dev *dev)
- 		return NULL;
- 	}
+diff --git a/drivers/pci/hotplug/pciehp.h b/drivers/pci/hotplug/pciehp.h
+index 882ce82c46990..aa61d4c219d7b 100644
+--- a/drivers/pci/hotplug/pciehp.h
++++ b/drivers/pci/hotplug/pciehp.h
+@@ -174,10 +174,10 @@ void pciehp_set_indicators(struct controller *ctrl, int pwr, int attn);
  
--	/* NOTE: We get only one ref to the pci_dev for the pdn, not for the
--	 * pointer in the PE data structure, both should be destroyed at the
--	 * same time. However, this needs to be looked at more closely again
--	 * once we actually start removing things (Hotplug, SR-IOV, ...)
-+	/* NOTE: We don't get a reference for the pointer in the PE
-+	 * data structure, both the device and PE structures should be
-+	 * destroyed at the same time. However, removing nvlink
-+	 * devices will need some work.
- 	 *
- 	 * At some point we want to remove the PDN completely anyways
- 	 */
--	pci_dev_get(dev);
- 	pdn->pe_number = pe->pe_number;
- 	pe->flags = PNV_IODA_PE_DEV;
- 	pe->pdev = dev;
-@@ -1084,7 +1083,6 @@ static struct pnv_ioda_pe *pnv_ioda_setup_dev_PE(struct pci_dev *dev)
- 		pnv_ioda_free_pe(pe);
- 		pdn->pe_number = IODA_INVALID_PE;
- 		pe->pdev = NULL;
--		pci_dev_put(dev);
- 		return NULL;
- 	}
+ void pciehp_get_latch_status(struct controller *ctrl, u8 *status);
+ int pciehp_query_power_fault(struct controller *ctrl);
+-bool pciehp_card_present(struct controller *ctrl);
+-bool pciehp_card_present_or_link_active(struct controller *ctrl);
++int pciehp_card_present(struct controller *ctrl);
++int pciehp_card_present_or_link_active(struct controller *ctrl);
+ int pciehp_check_link_status(struct controller *ctrl);
+-bool pciehp_check_link_active(struct controller *ctrl);
++int pciehp_check_link_active(struct controller *ctrl);
+ void pciehp_release_ctrl(struct controller *ctrl);
  
-@@ -1205,6 +1203,14 @@ static struct pnv_ioda_pe *pnv_ioda_setup_npu_PE(struct pci_dev *npu_pdev)
- 	struct pci_controller *hose = pci_bus_to_host(npu_pdev->bus);
- 	struct pnv_phb *phb = hose->private_data;
+ int pciehp_sysfs_enable_slot(struct hotplug_slot *hotplug_slot);
+diff --git a/drivers/pci/hotplug/pciehp_core.c b/drivers/pci/hotplug/pciehp_core.c
+index 56daad828c9e0..312cc45c44c78 100644
+--- a/drivers/pci/hotplug/pciehp_core.c
++++ b/drivers/pci/hotplug/pciehp_core.c
+@@ -139,10 +139,15 @@ static int get_adapter_status(struct hotplug_slot *hotplug_slot, u8 *value)
+ {
+ 	struct controller *ctrl = to_ctrl(hotplug_slot);
+ 	struct pci_dev *pdev = ctrl->pcie->port;
++	int ret;
  
-+	/*
-+	 * Intentionally leak a reference on the npu device (for
-+	 * nvlink only; this is not an opencapi path) to make sure it
-+	 * never goes away, as it's been the case all along and some
-+	 * work is needed otherwise.
-+	 */
-+	pci_dev_get(npu_pdev);
+ 	pci_config_pm_runtime_get(pdev);
+-	*value = pciehp_card_present_or_link_active(ctrl);
++	ret = pciehp_card_present_or_link_active(ctrl);
+ 	pci_config_pm_runtime_put(pdev);
++	if (ret < 0)
++		return ret;
 +
++	*value = ret;
+ 	return 0;
+ }
+ 
+@@ -158,13 +163,13 @@ static int get_adapter_status(struct hotplug_slot *hotplug_slot, u8 *value)
+  */
+ static void pciehp_check_presence(struct controller *ctrl)
+ {
+-	bool occupied;
++	int occupied;
+ 
+ 	down_read(&ctrl->reset_lock);
+ 	mutex_lock(&ctrl->state_lock);
+ 
+ 	occupied = pciehp_card_present_or_link_active(ctrl);
+-	if ((occupied && (ctrl->state == OFF_STATE ||
++	if ((occupied > 0 && (ctrl->state == OFF_STATE ||
+ 			  ctrl->state == BLINKINGON_STATE)) ||
+ 	    (!occupied && (ctrl->state == ON_STATE ||
+ 			   ctrl->state == BLINKINGOFF_STATE)))
+diff --git a/drivers/pci/hotplug/pciehp_ctrl.c b/drivers/pci/hotplug/pciehp_ctrl.c
+index dd8e4a5fb2826..6503d15effbbd 100644
+--- a/drivers/pci/hotplug/pciehp_ctrl.c
++++ b/drivers/pci/hotplug/pciehp_ctrl.c
+@@ -226,7 +226,7 @@ void pciehp_handle_disable_request(struct controller *ctrl)
+ 
+ void pciehp_handle_presence_or_link_change(struct controller *ctrl, u32 events)
+ {
+-	bool present, link_active;
++	int present, link_active;
+ 
  	/*
- 	 * Due to a hardware errata PE#0 on the NPU is reserved for
- 	 * error handling. This means we only have three PEs remaining
-@@ -1228,7 +1234,6 @@ static struct pnv_ioda_pe *pnv_ioda_setup_npu_PE(struct pci_dev *npu_pdev)
- 			 */
- 			dev_info(&npu_pdev->dev,
- 				"Associating to existing PE %x\n", pe_num);
--			pci_dev_get(npu_pdev);
- 			npu_pdn = pci_get_pdn(npu_pdev);
- 			rid = npu_pdev->bus->number << 8 | npu_pdn->devfn;
- 			npu_pdn->pe_number = pe_num;
+ 	 * If the slot is on and presence or link has changed, turn it off.
+@@ -257,7 +257,7 @@ void pciehp_handle_presence_or_link_change(struct controller *ctrl, u32 events)
+ 	mutex_lock(&ctrl->state_lock);
+ 	present = pciehp_card_present(ctrl);
+ 	link_active = pciehp_check_link_active(ctrl);
+-	if (!present && !link_active) {
++	if (present <= 0 && link_active <= 0) {
+ 		mutex_unlock(&ctrl->state_lock);
+ 		return;
+ 	}
+diff --git a/drivers/pci/hotplug/pciehp_hpc.c b/drivers/pci/hotplug/pciehp_hpc.c
+index 86d97f3112f02..a2a263764ef88 100644
+--- a/drivers/pci/hotplug/pciehp_hpc.c
++++ b/drivers/pci/hotplug/pciehp_hpc.c
+@@ -201,17 +201,29 @@ static void pcie_write_cmd_nowait(struct controller *ctrl, u16 cmd, u16 mask)
+ 	pcie_do_write_cmd(ctrl, cmd, mask, false);
+ }
+ 
+-bool pciehp_check_link_active(struct controller *ctrl)
++/**
++ * pciehp_check_link_active() - Is the link active
++ * @ctrl: PCIe hotplug controller
++ *
++ * Check whether the downstream link is currently active. Note it is
++ * possible that the card is removed immediately after this so the
++ * caller may need to take it into account.
++ *
++ * If the hotplug controller itself is not available anymore returns
++ * %-ENODEV.
++ */
++int pciehp_check_link_active(struct controller *ctrl)
+ {
+ 	struct pci_dev *pdev = ctrl_dev(ctrl);
+ 	u16 lnk_status;
+-	bool ret;
++	int ret;
+ 
+-	pcie_capability_read_word(pdev, PCI_EXP_LNKSTA, &lnk_status);
+-	ret = !!(lnk_status & PCI_EXP_LNKSTA_DLLLA);
++	ret = pcie_capability_read_word(pdev, PCI_EXP_LNKSTA, &lnk_status);
++	if (ret == PCIBIOS_DEVICE_NOT_FOUND || lnk_status == (u16)~0)
++		return -ENODEV;
+ 
+-	if (ret)
+-		ctrl_dbg(ctrl, "%s: lnk_status = %x\n", __func__, lnk_status);
++	ret = !!(lnk_status & PCI_EXP_LNKSTA_DLLLA);
++	ctrl_dbg(ctrl, "%s: lnk_status = %x\n", __func__, lnk_status);
+ 
+ 	return ret;
+ }
+@@ -373,13 +385,29 @@ void pciehp_get_latch_status(struct controller *ctrl, u8 *status)
+ 	*status = !!(slot_status & PCI_EXP_SLTSTA_MRLSS);
+ }
+ 
+-bool pciehp_card_present(struct controller *ctrl)
++/**
++ * pciehp_card_present() - Is the card present
++ * @ctrl: PCIe hotplug controller
++ *
++ * Function checks whether the card is currently present in the slot and
++ * in that case returns true. Note it is possible that the card is
++ * removed immediately after the check so the caller may need to take
++ * this into account.
++ *
++ * It the hotplug controller itself is not available anymore returns
++ * %-ENODEV.
++ */
++int pciehp_card_present(struct controller *ctrl)
+ {
+ 	struct pci_dev *pdev = ctrl_dev(ctrl);
+ 	u16 slot_status;
++	int ret;
+ 
+-	pcie_capability_read_word(pdev, PCI_EXP_SLTSTA, &slot_status);
+-	return slot_status & PCI_EXP_SLTSTA_PDS;
++	ret = pcie_capability_read_word(pdev, PCI_EXP_SLTSTA, &slot_status);
++	if (ret == PCIBIOS_DEVICE_NOT_FOUND || slot_status == (u16)~0)
++		return -ENODEV;
++
++	return !!(slot_status & PCI_EXP_SLTSTA_PDS);
+ }
+ 
+ /**
+@@ -390,10 +418,19 @@ bool pciehp_card_present(struct controller *ctrl)
+  * Presence Detect State bit, this helper also returns true if the Link Active
+  * bit is set.  This is a concession to broken hotplug ports which hardwire
+  * Presence Detect State to zero, such as Wilocity's [1ae9:0200].
++ *
++ * Returns: %1 if the slot is occupied and %0 if it is not. If the hotplug
++ *	    port is not present anymore returns %-ENODEV.
+  */
+-bool pciehp_card_present_or_link_active(struct controller *ctrl)
++int pciehp_card_present_or_link_active(struct controller *ctrl)
+ {
+-	return pciehp_card_present(ctrl) || pciehp_check_link_active(ctrl);
++	int ret;
++
++	ret = pciehp_card_present(ctrl);
++	if (ret)
++		return ret;
++
++	return pciehp_check_link_active(ctrl);
+ }
+ 
+ int pciehp_query_power_fault(struct controller *ctrl)
 -- 
 2.20.1
 
