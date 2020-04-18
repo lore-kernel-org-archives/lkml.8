@@ -3,105 +3,182 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 409FBC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 01:03:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E5CDC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 01:12:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 111B620771
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 01:03:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="U4x5PtWj"
+	by mail.kernel.org (Postfix) with ESMTP id D5D462223C
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 01:12:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587172344;
+	bh=UT2kVX8P6Z5wAoCriq1S4SxzRtFl5D3xnEgjUEsn4qY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=WZwfW2DMh20LpaVrjISNx12FpoCla4KxfbV8QBrwqIwnY9kHhgvVAOdbfDWnSqapQ
+	 QuiR5yV/zWsyTAKYercuBQCHSWXovpHvkVtRFjzHVO+1D3t19RvXE01a/HbHw5/l3S
+	 pW5+EpXjf2HuGbsxcvV085fGkpYA3GKwrKHweOLA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725877AbgDRBDD (ORCPT
+        id S1725862AbgDRBMY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 21:03:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49048 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725784AbgDRBDC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 21:03:02 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DE76C061A0C
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 18:03:02 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id e2so584902eje.13
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 18:03:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Qs6wrAd2usiw5E/NvfsaWD9NmqabIB9KmK4sn2np7kI=;
-        b=U4x5PtWjYno+y9kpXnPl1TultiRn27j4BA37HWNBlr8kBkFNbIKmdMCjn5+3qALEe6
-         dRH3LlE3dIu3QUb/4qxHvQ9l4xMOL9Mb/kG0fdw89qIxkUEdLh7LgPPZdg/O0R+zWCWz
-         DW9rBf94bWBr7s2zss5IpNuRxdZPbLRIPLmgI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Qs6wrAd2usiw5E/NvfsaWD9NmqabIB9KmK4sn2np7kI=;
-        b=ZAb3rRrV/K01SrR/TVZJb5z8jufa6XgF54UawPQbQj8AErCPbQBvWUMEmmpcrZe4WE
-         ym5K+09edcTdRslo/kfJS1ylBsoyXaESwjtPz1NSBLWYivR1tzIklpstWOxHfMAkpTfu
-         6hnAf9Rwc4lJDrP4cM6B2PgDV3tKQVRavayzPhJpF6jdIE8ajS+lSHqFn5Ix62QeIX7N
-         HQOcrSoRcg0zct8+6rRP5IUyW2br+A8I49tXxIieaVYqegZwfrKper8yJXTqdi23BKGo
-         SozO8MaDlOpgpexPxR80v8Pdw7S1PvDFVqJf31KNx71etwvu+6oHzdgJBnyrPQ3qK/JJ
-         3BbQ==
-X-Gm-Message-State: AGi0PuaQPqY4FFC6aXzp7l5+z1I+EmYHe3nBTYxFjpJkwFl6ptc35Q4O
-        aaercmtU25IDgYuI8eZcRsc6khThNTE=
-X-Google-Smtp-Source: APiQypJPpJ6Lk50PJe3Is8FZU6xFxtNmsEkgqbBzt5VNbudJ9JJ+faJcrMfQ6IZ3poP/df/n43BT3Q==
-X-Received: by 2002:a17:906:496:: with SMTP id f22mr5611444eja.311.1587171780422;
-        Fri, 17 Apr 2020 18:03:00 -0700 (PDT)
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com. [209.85.208.44])
-        by smtp.gmail.com with ESMTPSA id qo12sm1583107ejb.14.2020.04.17.18.03.00
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 17 Apr 2020 18:03:00 -0700 (PDT)
-Received: by mail-ed1-f44.google.com with SMTP id r7so2808534edo.11
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 18:03:00 -0700 (PDT)
-X-Received: by 2002:ac2:4859:: with SMTP id 25mr3711879lfy.59.1587171355790;
- Fri, 17 Apr 2020 17:55:55 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200205194804.1647-1-mst@semihalf.com> <20200206083149.GK2667@lahna.fi.intel.com>
- <CAMiGqYi2rVAc=hepkY-4S1U_3dJdbR4pOoB0f8tbBL4pzWLdxA@mail.gmail.com>
- <20200207075654.GB2667@lahna.fi.intel.com> <CAMiGqYjmd2edUezEXsX4JBSyOozzks1Pu8miPEviGsx=x59nZQ@mail.gmail.com>
- <20200210101414.GN2667@lahna.fi.intel.com> <CAMiGqYiYp=aSgW-4ro5ceUEaB7g0XhepFg+HZgfPvtvQL9Z1jA@mail.gmail.com>
- <20200310144913.GY2540@lahna.fi.intel.com> <20200417020641.GA145784@google.com>
- <20200417090500.GM2586@lahna.fi.intel.com>
-In-Reply-To: <20200417090500.GM2586@lahna.fi.intel.com>
-From:   Brian Norris <briannorris@chromium.org>
-Date:   Fri, 17 Apr 2020 17:55:44 -0700
-X-Gmail-Original-Message-ID: <CA+ASDXM9mrkGfxtVVNWkqnDNzcok2LAqdfVbQL2RV7yWE0tMWw@mail.gmail.com>
-Message-ID: <CA+ASDXM9mrkGfxtVVNWkqnDNzcok2LAqdfVbQL2RV7yWE0tMWw@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: cherryview: Add quirk with custom translation of
- ACPI GPIO numbers
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     linux-gpio@vger.kernel.org,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        stanekm@google.com, stable <stable@vger.kernel.org>,
-        Marcin Wojtas <mw@semihalf.com>, levinale@chromium.org,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        bgolaszewski@baylibre.com,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 17 Apr 2020 21:12:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33322 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725298AbgDRBMX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Apr 2020 21:12:23 -0400
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4CB4920771;
+        Sat, 18 Apr 2020 01:12:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587172342;
+        bh=UT2kVX8P6Z5wAoCriq1S4SxzRtFl5D3xnEgjUEsn4qY=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=OcTgQhzfTOzYYRDDUQR48PZkWijpnM5ylDuJrh5wZD6eohiUaUiDzOPnb3h0QVhrU
+         KgR+af7gs1/pnoLnCOejc9pYTwjWevdJeObG7BGPAb7q5qwnyst3sycwp8p9tz0iKT
+         f+YFtQ3jCGGijFRIKv2Of2BTt+NiDrJqPJEjlfyg=
+Date:   Fri, 17 Apr 2020 18:12:19 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Dongli Zhang <dongli.zhang@oracle.com>
+Cc:     linux-mm@kvack.org, cl@linux.com, penberg@kernel.org,
+        rientjes@google.com, iamjoonsoo.kim@lge.com,
+        linux-kernel@vger.kernel.org, joe.jin@oracle.com
+Subject: Re: [PATCH 1/1] mm: slub: fix corrupted freechain in
+ deactivate_slab()
+Message-Id: <20200417181219.bef9b2f9ade92bf3798e3622@linux-foundation.org>
+In-Reply-To: <20200331031450.12182-1-dongli.zhang@oracle.com>
+References: <20200331031450.12182-1-dongli.zhang@oracle.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-- Michal (bouncing)
+On Mon, 30 Mar 2020 20:14:50 -0700 Dongli Zhang <dongli.zhang@oracle.com> wrote:
 
-On Fri, Apr 17, 2020 at 2:05 AM Mika Westerberg
-<mika.westerberg@linux.intel.com> wrote:
-> I wonder if we can add back the previous GPIO base like this?
+> The slub_debug is able to fix the corrupted slab freelist/page. However,
+> alloc_debug_processing() only checks the validity of current and next
+> freepointer during allocation path. As a result, once some objects have
+> their freepointers corrupted, deactivate_slab() may lead to page fault.
+> 
+> Below is from a test kernel module when
+> 'slub_debug=PUF,kmalloc-128 slub_nomerge'. The test kernel corrupts the
+> freepointer of one free object on purpose. Unfortunately, deactivate_slab()
+> does not detect it when iterating the freechain.
+> 
+> ...
+>
+> --- a/mm/slub.c
+> +++ b/mm/slub.c
+> @@ -2082,6 +2082,20 @@ static void deactivate_slab(struct kmem_cache *s, struct page *page,
+>  		void *prior;
+>  		unsigned long counters;
+>  
+> +		if ((s->flags & SLAB_CONSISTENCY_CHECKS) &&
+> +		    !check_valid_pointer(s, page, nextfree)) {
+> +			/*
+> +			 * If 'nextfree' is invalid, it is possible that
+> +			 * the object at 'freelist' is already corrupted.
+> +			 * Therefore, all objects starting at 'freelist'
+> +			 * are isolated.
+> +			 */
+> +			object_err(s, page, freelist, "Freechain corrupt");
+> +			freelist = NULL;
+> +			slab_fix(s, "Isolate corrupted freechain");
+> +			break;
+> +		}
+> +
+>  		do {
+>  			prior = page->freelist;
+>  			counters = page->counters;
 
-Thanks for the patch! At first glance, it looks like the right kind of
-thing. Unfortunately, it doesn't appear to work quite right for me.
-I'm out of time for today to look any further, but I (or perhaps
-someone else on this email) will try to follow up next week sometime.
+We could do it this way:
 
-Cheers,
-Brian
+--- a/mm/slub.c~mm-slub-fix-corrupted-freechain-in-deactivate_slab-fix
++++ a/mm/slub.c
+@@ -2083,6 +2083,7 @@ static void deactivate_slab(struct kmem_
+ 		void *prior;
+ 		unsigned long counters;
+ 
++#ifdef CONFIG_SLAB_DEBUG
+ 		if ((s->flags & SLAB_CONSISTENCY_CHECKS) &&
+ 		    !check_valid_pointer(s, page, nextfree)) {
+ 			/*
+@@ -2096,6 +2097,7 @@ static void deactivate_slab(struct kmem_
+ 			slab_fix(s, "Isolate corrupted freechain");
+ 			break;
+ 		}
++#endif
+ 
+ 		do {
+ 			prior = page->freelist;
+
+But it's a bit ugly.  How about this?
+
+--- a/mm/slub.c~mm-slub-fix-corrupted-freechain-in-deactivate_slab-fix
++++ a/mm/slub.c
+@@ -650,6 +650,20 @@ static void slab_bug(struct kmem_cache *
+ 	va_end(args);
+ }
+ 
++static bool freelist_corrupted(struct kmem_cache *s, struct page *page,
++			       void *freelist, void *nextfree)
++{
++	if ((s->flags & SLAB_CONSISTENCY_CHECKS) &&
++	    !check_valid_pointer(s, page, nextfree)) {
++		object_err(s, page, freelist, "Freechain corrupt");
++		freelist = NULL;
++		slab_fix(s, "Isolate corrupted freechain");
++		return true;
++	}
++
++	return false;
++}
++
+ static void slab_fix(struct kmem_cache *s, char *fmt, ...)
+ {
+ 	struct va_format vaf;
+@@ -1400,6 +1414,11 @@ static inline void inc_slabs_node(struct
+ static inline void dec_slabs_node(struct kmem_cache *s, int node,
+ 							int objects) {}
+ 
++static bool freelist_corrupted(struct kmem_cache *s, struct page *page,
++			       void *freelist, void *nextfree)
++{
++	return false;
++}
+ #endif /* CONFIG_SLUB_DEBUG */
+ 
+ /*
+@@ -2083,19 +2102,13 @@ static void deactivate_slab(struct kmem_
+ 		void *prior;
+ 		unsigned long counters;
+ 
+-		if ((s->flags & SLAB_CONSISTENCY_CHECKS) &&
+-		    !check_valid_pointer(s, page, nextfree)) {
+-			/*
+-			 * If 'nextfree' is invalid, it is possible that
+-			 * the object at 'freelist' is already corrupted.
+-			 * Therefore, all objects starting at 'freelist'
+-			 * are isolated.
+-			 */
+-			object_err(s, page, freelist, "Freechain corrupt");
+-			freelist = NULL;
+-			slab_fix(s, "Isolate corrupted freechain");
++		/*
++		 * If 'nextfree' is invalid, it is possible that the object at
++		 * 'freelist' is already corrupted.  So isolate all objects
++		 * starting at 'freelist'.
++		 */
++		if (freelist_corrupted(s, page, freelist, nextfree))
+ 			break;
+-		}
+ 
+ 		do {
+ 			prior = page->freelist;
+_
+
