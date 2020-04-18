@@ -4,52 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF63EC38A30
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 13:51:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B54F3C38A2F
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 13:51:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8B5B221BE5
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 13:51:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93CF62054F
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 13:51:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587217889;
-	bh=Ivk+dFE3vBDfPp2V+SICdUuKd5Bd1SZYW4iiGwIWm9I=;
+	s=default; t=1587217890;
+	bh=xkAnrLZvTNvKX1L+pvH4etEqx+qyIWsoBOD+apAeDKw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MNrCX8VerNyaR8543uasMjwBHzjy4F6Ge8P7QTKonORE4eVciutuslJC4Ox7vS7oS
-	 NOzL46MqhjylkpbZREh+9KulT3+IAVWQmM4najzCBSLl0G6wQli/Xpn5KLbtD+fZFu
-	 Nq8cAaKvyFJT+5ydoIWnSc0Y8cQNTfUaQmN86Kys=
+	b=lyWqkk5b9CQ6AziEwQo6rZ0gW66jED4EYiccjpJCo/SCHv9B6S1Eqd79NkH7i5hyS
+	 Pb92R6SietLpTPYxtNY1xIU/SRfNZc2MySRiZU43YjmR4zHVu8Jnndo3PzXnGapeV5
+	 peSN5ahIz5rlmuodN9GEoLKuGfwc+omFN5YE2zoM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726730AbgDRNtK (ORCPT
+        id S1727895AbgDRNv3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 09:49:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55788 "EHLO mail.kernel.org"
+        Sat, 18 Apr 2020 09:51:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55926 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726695AbgDRNtD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 09:49:03 -0400
+        id S1726725AbgDRNtK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 09:49:10 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E2CEE22262;
-        Sat, 18 Apr 2020 13:49:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 51D7D22272;
+        Sat, 18 Apr 2020 13:49:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587217742;
-        bh=Ivk+dFE3vBDfPp2V+SICdUuKd5Bd1SZYW4iiGwIWm9I=;
+        s=default; t=1587217749;
+        bh=xkAnrLZvTNvKX1L+pvH4etEqx+qyIWsoBOD+apAeDKw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qgI6tMvG8QHtPuyEmEXCy0g/2wFFK8bp9phylaS4DHdGMUbwkne7CZY+R4P7KV/Iw
-         fzqflO3SUrJSVrns0Nm2YGnN0lZQnks+nCw5XcWjNCjSFLd2Ve96irD2s2Y6Zjg/pX
-         p98LVevQaHBfnqq4lk/AGcpDRCrpDCKTRWasA/d4=
+        b=GM81cbIiE9D1Kaj30nsH4oNqmA9CSNSlKJiFqMGH1afommewJJ7o900hYIB2QLQB4
+         1seWhofpiOoBJkhZK2VxL3RoD8JJCOdGwsiF7pOKki9uYHXmnfmZYP7Kg7g3BBPLod
+         8Loqi6iYuVJTvr+sR9nG2+IjuCgCNvo+8IPGAyHA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Evan Green <evgreen@chromium.org>,
-        Gwendal Grignou <gwendal@chromium.org>,
-        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
-        Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
-        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
-        Sasha Levin <sashal@kernel.org>, linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 37/73] loop: Better discard support for block devices
-Date:   Sat, 18 Apr 2020 09:47:39 -0400
-Message-Id: <20200418134815.6519-37-sashal@kernel.org>
+Cc:     Nick Bowler <nbowler@draconx.ca>, Christoph Hellwig <hch@lst.de>,
+        Sasha Levin <sashal@kernel.org>, linux-nvme@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.6 42/73] nvme: fix compat address handling in several ioctls
+Date:   Sat, 18 Apr 2020 09:47:44 -0400
+Message-Id: <20200418134815.6519-42-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200418134815.6519-1-sashal@kernel.org>
 References: <20200418134815.6519-1-sashal@kernel.org>
@@ -62,115 +58,114 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Evan Green <evgreen@chromium.org>
+From: Nick Bowler <nbowler@draconx.ca>
 
-[ Upstream commit c52abf563049e787c1341cdf15c7dbe1bfbc951b ]
+[ Upstream commit c95b708d5fa65b4e51f088ee077d127fd5a57b70 ]
 
-If the backing device for a loop device is itself a block device,
-then mirror the "write zeroes" capabilities of the underlying
-block device into the loop device. Copy this capability into both
-max_write_zeroes_sectors and max_discard_sectors of the loop device.
+On a 32-bit kernel, the upper bits of userspace addresses passed via
+various ioctls are silently ignored by the nvme driver.
 
-The reason for this is that REQ_OP_DISCARD on a loop device translates
-into blkdev_issue_zeroout(), rather than blkdev_issue_discard(). This
-presents a consistent interface for loop devices (that discarded data
-is zeroed), regardless of the backing device type of the loop device.
-There should be no behavior change for loop devices backed by regular
-files.
+However on a 64-bit kernel running a compat task, these upper bits are
+not ignored and are in fact required to be zero for the ioctls to work.
 
-This change fixes blktest block/003, and removes an extraneous
-error print in block/013 when testing on a loop device backed
-by a block device that does not support discard.
+Unfortunately, this difference matters.  32-bit smartctl submits the
+NVME_IOCTL_ADMIN_CMD ioctl with garbage in these upper bits because it
+seems the pointer value it puts into the nvme_passthru_cmd structure is
+sign extended.  This works fine on 32-bit kernels but fails on a 64-bit
+one because (at least on my setup) the addresses smartctl uses are
+consistently above 2G.  For example:
 
-Signed-off-by: Evan Green <evgreen@chromium.org>
-Reviewed-by: Gwendal Grignou <gwendal@chromium.org>
-Reviewed-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
-[used updated version of Evan's comment in loop_config_discard()]
-[moved backingq to local scope, removed redundant braces]
-Signed-off-by: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+  # smartctl -x /dev/nvme0n1
+  smartctl 7.1 2019-12-30 r5022 [x86_64-linux-5.5.11] (local build)
+  Copyright (C) 2002-19, Bruce Allen, Christian Franke, www.smartmontools.org
+
+  Read NVMe Identify Controller failed: NVME_IOCTL_ADMIN_CMD: Bad address
+
+Since changing 32-bit kernels to actually check all of the submitted
+address bits now would break existing userspace, this patch fixes the
+compat problem by explicitly zeroing the upper bits in the compat case.
+This enables 32-bit smartctl to work on a 64-bit kernel.
+
+Signed-off-by: Nick Bowler <nbowler@draconx.ca>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/block/loop.c | 42 +++++++++++++++++++++++++++++++-----------
- 1 file changed, 31 insertions(+), 11 deletions(-)
+ drivers/nvme/host/core.c | 27 ++++++++++++++++++++-------
+ 1 file changed, 20 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-index 739b372a51128..d943e713d5e34 100644
---- a/drivers/block/loop.c
-+++ b/drivers/block/loop.c
-@@ -427,11 +427,12 @@ static int lo_fallocate(struct loop_device *lo, struct request *rq, loff_t pos,
- 	 * information.
- 	 */
- 	struct file *file = lo->lo_backing_file;
-+	struct request_queue *q = lo->lo_queue;
- 	int ret;
+diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
+index a4d8c90ee7cc4..652ca87dac949 100644
+--- a/drivers/nvme/host/core.c
++++ b/drivers/nvme/host/core.c
+@@ -6,6 +6,7 @@
  
- 	mode |= FALLOC_FL_KEEP_SIZE;
- 
--	if ((!file->f_op->fallocate) || lo->lo_encrypt_key_size) {
-+	if (!blk_queue_discard(q)) {
- 		ret = -EOPNOTSUPP;
- 		goto out;
- 	}
-@@ -865,28 +866,47 @@ static void loop_config_discard(struct loop_device *lo)
- 	struct inode *inode = file->f_mapping->host;
- 	struct request_queue *q = lo->lo_queue;
- 
-+	/*
-+	 * If the backing device is a block device, mirror its zeroing
-+	 * capability. Set the discard sectors to the block device's zeroing
-+	 * capabilities because loop discards result in blkdev_issue_zeroout(),
-+	 * not blkdev_issue_discard(). This maintains consistent behavior with
-+	 * file-backed loop devices: discarded regions read back as zero.
-+	 */
-+	if (S_ISBLK(inode->i_mode) && !lo->lo_encrypt_key_size) {
-+		struct request_queue *backingq;
-+
-+		backingq = bdev_get_queue(inode->i_bdev);
-+		blk_queue_max_discard_sectors(q,
-+			backingq->limits.max_write_zeroes_sectors);
-+
-+		blk_queue_max_write_zeroes_sectors(q,
-+			backingq->limits.max_write_zeroes_sectors);
-+
- 	/*
- 	 * We use punch hole to reclaim the free space used by the
- 	 * image a.k.a. discard. However we do not support discard if
- 	 * encryption is enabled, because it may give an attacker
- 	 * useful information.
- 	 */
--	if ((!file->f_op->fallocate) ||
--	    lo->lo_encrypt_key_size) {
-+	} else if (!file->f_op->fallocate || lo->lo_encrypt_key_size) {
- 		q->limits.discard_granularity = 0;
- 		q->limits.discard_alignment = 0;
- 		blk_queue_max_discard_sectors(q, 0);
- 		blk_queue_max_write_zeroes_sectors(q, 0);
--		blk_queue_flag_clear(QUEUE_FLAG_DISCARD, q);
--		return;
--	}
- 
--	q->limits.discard_granularity = inode->i_sb->s_blocksize;
--	q->limits.discard_alignment = 0;
-+	} else {
-+		q->limits.discard_granularity = inode->i_sb->s_blocksize;
-+		q->limits.discard_alignment = 0;
- 
--	blk_queue_max_discard_sectors(q, UINT_MAX >> 9);
--	blk_queue_max_write_zeroes_sectors(q, UINT_MAX >> 9);
--	blk_queue_flag_set(QUEUE_FLAG_DISCARD, q);
-+		blk_queue_max_discard_sectors(q, UINT_MAX >> 9);
-+		blk_queue_max_write_zeroes_sectors(q, UINT_MAX >> 9);
-+	}
-+
-+	if (q->limits.max_write_zeroes_sectors)
-+		blk_queue_flag_set(QUEUE_FLAG_DISCARD, q);
-+	else
-+		blk_queue_flag_clear(QUEUE_FLAG_DISCARD, q);
+ #include <linux/blkdev.h>
+ #include <linux/blk-mq.h>
++#include <linux/compat.h>
+ #include <linux/delay.h>
+ #include <linux/errno.h>
+ #include <linux/hdreg.h>
+@@ -1248,6 +1249,18 @@ static void nvme_enable_aen(struct nvme_ctrl *ctrl)
+ 	queue_work(nvme_wq, &ctrl->async_event_work);
  }
  
- static void loop_unprepare_queue(struct loop_device *lo)
++/*
++ * Convert integer values from ioctl structures to user pointers, silently
++ * ignoring the upper bits in the compat case to match behaviour of 32-bit
++ * kernels.
++ */
++static void __user *nvme_to_user_ptr(uintptr_t ptrval)
++{
++	if (in_compat_syscall())
++		ptrval = (compat_uptr_t)ptrval;
++	return (void __user *)ptrval;
++}
++
+ static int nvme_submit_io(struct nvme_ns *ns, struct nvme_user_io __user *uio)
+ {
+ 	struct nvme_user_io io;
+@@ -1271,7 +1284,7 @@ static int nvme_submit_io(struct nvme_ns *ns, struct nvme_user_io __user *uio)
+ 
+ 	length = (io.nblocks + 1) << ns->lba_shift;
+ 	meta_len = (io.nblocks + 1) * ns->ms;
+-	metadata = (void __user *)(uintptr_t)io.metadata;
++	metadata = nvme_to_user_ptr(io.metadata);
+ 
+ 	if (ns->ext) {
+ 		length += meta_len;
+@@ -1294,7 +1307,7 @@ static int nvme_submit_io(struct nvme_ns *ns, struct nvme_user_io __user *uio)
+ 	c.rw.appmask = cpu_to_le16(io.appmask);
+ 
+ 	return nvme_submit_user_cmd(ns->queue, &c,
+-			(void __user *)(uintptr_t)io.addr, length,
++			nvme_to_user_ptr(io.addr), length,
+ 			metadata, meta_len, lower_32_bits(io.slba), NULL, 0);
+ }
+ 
+@@ -1414,9 +1427,9 @@ static int nvme_user_cmd(struct nvme_ctrl *ctrl, struct nvme_ns *ns,
+ 
+ 	effects = nvme_passthru_start(ctrl, ns, cmd.opcode);
+ 	status = nvme_submit_user_cmd(ns ? ns->queue : ctrl->admin_q, &c,
+-			(void __user *)(uintptr_t)cmd.addr, cmd.data_len,
+-			(void __user *)(uintptr_t)cmd.metadata,
+-			cmd.metadata_len, 0, &result, timeout);
++			nvme_to_user_ptr(cmd.addr), cmd.data_len,
++			nvme_to_user_ptr(cmd.metadata), cmd.metadata_len,
++			0, &result, timeout);
+ 	nvme_passthru_end(ctrl, effects);
+ 
+ 	if (status >= 0) {
+@@ -1461,8 +1474,8 @@ static int nvme_user_cmd64(struct nvme_ctrl *ctrl, struct nvme_ns *ns,
+ 
+ 	effects = nvme_passthru_start(ctrl, ns, cmd.opcode);
+ 	status = nvme_submit_user_cmd(ns ? ns->queue : ctrl->admin_q, &c,
+-			(void __user *)(uintptr_t)cmd.addr, cmd.data_len,
+-			(void __user *)(uintptr_t)cmd.metadata, cmd.metadata_len,
++			nvme_to_user_ptr(cmd.addr), cmd.data_len,
++			nvme_to_user_ptr(cmd.metadata), cmd.metadata_len,
+ 			0, &cmd.result, timeout);
+ 	nvme_passthru_end(ctrl, effects);
+ 
 -- 
 2.20.1
 
