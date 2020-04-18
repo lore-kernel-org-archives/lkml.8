@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B21BC38A2F
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:51:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 195ABC38A2F
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:51:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1753221D79
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:51:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E39EA2072B
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:51:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587221468;
-	bh=Vmaa9Wy7Y6nNBD+Df2+E06G8y9s2D5mYbsUi7aBJcbE=;
+	s=default; t=1587221476;
+	bh=18SqyrRZK49Qas3xT+Wf30YPs7zYAKq0d/e1dxS3KiE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sz+r6LgkZ58pT8kTSg3YdAep12I4tcsy5ZhiqSQ8DsKdoPoxyz8EItbt4IGFG3bSt
-	 ZasHCUi8nCIiIb3Z2f41DRufUm1OJqIKRujz4GdBgD3e/rJ5oTR8KekXl39LvcbWA8
-	 dgMJ4g5PJvkvGsDZGJnfMqdh03zupHHJx23OqMks=
+	b=0il2Inuzh2ujAsL/h6V34kbL961PlFdTLf3RtsjS4dDBkxBWCI0rAm1+hEYPjzJsG
+	 lqOJdUWkMYyOol2xIazPnchyjCp08EFjtwjZo8FeTwokgbALhSm5JRYnx3n2Xo1Ulv
+	 HBS4tmMWTbD9Oo0Qu9ORGPSQpamEqsEy8J4yaTq0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729034AbgDROvG (ORCPT
+        id S1729055AbgDROvP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 10:51:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53286 "EHLO mail.kernel.org"
+        Sat, 18 Apr 2020 10:51:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53256 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728446AbgDROmv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 10:42:51 -0400
+        id S1728442AbgDROmu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 10:42:50 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3877D21D7E;
-        Sat, 18 Apr 2020 14:42:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 22D1122202;
+        Sat, 18 Apr 2020 14:42:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587220971;
-        bh=Vmaa9Wy7Y6nNBD+Df2+E06G8y9s2D5mYbsUi7aBJcbE=;
+        s=default; t=1587220969;
+        bh=18SqyrRZK49Qas3xT+Wf30YPs7zYAKq0d/e1dxS3KiE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lhpUdqYiaVFhbmIqsGLGVUfYGqCLNkpjfAtqS/npHPZomitMcQWPJfvU5Y1cPUF+H
-         ZS/I9m/vqwH9ahL0dYoALRJGoYu57lvb0v7l3CS+HySWV8tE0eSwihiwB1zxMin/tu
-         xM7+92Eo1goMpMFgZX2O4VpvU1u7ZOn+sLvhe2is=
+        b=LjVeAiQMrsWcV98KxF20rBk0vEnZQIsB8ShFREaJHEhSgn/VxczYH4nGJjxVPI/G1
+         7vYZBXJe9SsaRcqz/Koi4kpEVaZgfvcMLJjD/OTCKsGLfufQmhM3VQTEjqzV/2IleQ
+         iasqGxX0SgmBP6g//7mOEZS2eSQ1XyLXm8csCszM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     David Hildenbrand <david@redhat.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org,
-        linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 18/47] KVM: s390: vsie: Fix possible race when shadowing region 3 tables
-Date:   Sat, 18 Apr 2020 10:41:58 -0400
-Message-Id: <20200418144227.9802-18-sashal@kernel.org>
+Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-kbuild@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 17/47] kconfig: qconf: Fix a few alignment issues
+Date:   Sat, 18 Apr 2020 10:41:57 -0400
+Message-Id: <20200418144227.9802-17-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200418144227.9802-1-sashal@kernel.org>
 References: <20200418144227.9802-1-sashal@kernel.org>
@@ -61,50 +59,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Hildenbrand <david@redhat.com>
+From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 
-[ Upstream commit 1493e0f944f3c319d11e067c185c904d01c17ae5 ]
+[ Upstream commit 60969f02f07ae1445730c7b293c421d179da729c ]
 
-We have to properly retry again by returning -EINVAL immediately in case
-somebody else instantiated the table concurrently. We missed to add the
-goto in this function only. The code now matches the other, similar
-shadowing functions.
+There are a few items with wrong alignments. Solve them.
 
-We are overwriting an existing region 2 table entry. All allocated pages
-are added to the crst_list to be freed later, so they are not lost
-forever. However, when unshadowing the region 2 table, we wouldn't trigger
-unshadowing of the original shadowed region 3 table that we replaced. It
-would get unshadowed when the original region 3 table is modified. As it's
-not connected to the page table hierarchy anymore, it's not going to get
-used anymore. However, for a limited time, this page table will stick
-around, so it's in some sense a temporary memory leak.
-
-Identified by manual code inspection. I don't think this classifies as
-stable material.
-
-Fixes: 998f637cc4b9 ("s390/mm: avoid races on region/segment/page table shadowing")
-Signed-off-by: David Hildenbrand <david@redhat.com>
-Link: https://lore.kernel.org/r/20200403153050.20569-4-david@redhat.com
-Reviewed-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
-Reviewed-by: Christian Borntraeger <borntraeger@de.ibm.com>
-Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/mm/gmap.c | 1 +
- 1 file changed, 1 insertion(+)
+ scripts/kconfig/qconf.cc | 13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
 
-diff --git a/arch/s390/mm/gmap.c b/arch/s390/mm/gmap.c
-index 911c7ded35f15..fd67684a305d4 100644
---- a/arch/s390/mm/gmap.c
-+++ b/arch/s390/mm/gmap.c
-@@ -1834,6 +1834,7 @@ int gmap_shadow_r3t(struct gmap *sg, unsigned long saddr, unsigned long r3t,
- 		goto out_free;
- 	} else if (*table & _REGION_ENTRY_ORIGIN) {
- 		rc = -EAGAIN;		/* Race with shadow */
-+		goto out_free;
- 	}
- 	crst_table_init(s_r3t, _REGION3_ENTRY_EMPTY);
- 	/* mark as invalid as long as the parent table is not protected */
+diff --git a/scripts/kconfig/qconf.cc b/scripts/kconfig/qconf.cc
+index ef4310f2558b1..8f004db6f6034 100644
+--- a/scripts/kconfig/qconf.cc
++++ b/scripts/kconfig/qconf.cc
+@@ -627,7 +627,7 @@ void ConfigList::updateMenuList(ConfigItem *parent, struct menu* menu)
+ 			last = item;
+ 			continue;
+ 		}
+-	hide:
++hide:
+ 		if (item && item->menu == child) {
+ 			last = parent->firstChild();
+ 			if (last == item)
+@@ -692,7 +692,7 @@ void ConfigList::updateMenuList(ConfigList *parent, struct menu* menu)
+ 			last = item;
+ 			continue;
+ 		}
+-	hide:
++hide:
+ 		if (item && item->menu == child) {
+ 			last = (ConfigItem*)parent->topLevelItem(0);
+ 			if (last == item)
+@@ -1225,10 +1225,11 @@ QMenu* ConfigInfoView::createStandardContextMenu(const QPoint & pos)
+ {
+ 	QMenu* popup = Parent::createStandardContextMenu(pos);
+ 	QAction* action = new QAction("Show Debug Info", popup);
+-	  action->setCheckable(true);
+-	  connect(action, SIGNAL(toggled(bool)), SLOT(setShowDebug(bool)));
+-	  connect(this, SIGNAL(showDebugChanged(bool)), action, SLOT(setOn(bool)));
+-	  action->setChecked(showDebug());
++
++	action->setCheckable(true);
++	connect(action, SIGNAL(toggled(bool)), SLOT(setShowDebug(bool)));
++	connect(this, SIGNAL(showDebugChanged(bool)), action, SLOT(setOn(bool)));
++	action->setChecked(showDebug());
+ 	popup->addSeparator();
+ 	popup->addAction(action);
+ 	return popup;
 -- 
 2.20.1
 
