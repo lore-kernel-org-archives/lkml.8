@@ -2,79 +2,44 @@ Return-Path: <SRS0=3CHW=6C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7663C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 18:53:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8A36C352BE
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 18:55:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9724A21D93
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 18:53:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587236006;
-	bh=UgXOgSwIMyfiGPkOtWwuniPLy2NcYx/OJ8KMhNGbheM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=RObXVakJJBP9wtyVjzFwo4EGuStE6BYO0HndrzklywjjOPbkCDwHbI/aAdvRqgf6t
-	 6oOLVeYb8+jqQLr+1JI0Er0YjMib79JQ/kaXFq3a/SiPGyxOM4FMwAsw6T7Jj5XcVi
-	 rBJ6xbKDY6hfUDd5pRXQmIDPK+yyVH9BTYQFisfg=
+	by mail.kernel.org (Postfix) with ESMTP id 8326C21D93
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 18:55:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ZSd4gPvR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728146AbgDRSxZ (ORCPT
+        id S1728070AbgDRSzm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 14:53:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43096 "EHLO
+        Sat, 18 Apr 2020 14:55:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43452 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728130AbgDRSxY (ORCPT
+        by vger.kernel.org with ESMTP id S1726307AbgDRSzm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 14:53:24 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF2E7C061A10
-        for <linux-kernel@vger.kernel.org>; Sat, 18 Apr 2020 11:53:23 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id e25so5563127ljg.5
-        for <linux-kernel@vger.kernel.org>; Sat, 18 Apr 2020 11:53:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=pJRI8oZ6j+rGEg2+OCymOS7794uvyRZcSR2Htjt5TI4=;
-        b=Dab8X2CtWipiSivi9nyLxp8nBHQpWedKwzW35yNj8kBU3VxCHrB+3Kn5U3rtIjeKoA
-         Lw3k/ndceMaBnN8HktM5POukz2zYdQKxOk+s6N6D5bBob3ys4IoAy4L7IIPc1NiF89LI
-         qpPs2HFFi+SoqSVPJ7yi1QNfgGKP7Teiklti0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=pJRI8oZ6j+rGEg2+OCymOS7794uvyRZcSR2Htjt5TI4=;
-        b=gVy0cImD/r9sJMLCq04XHtEPoa/mXjmZfXx0myTkJDYwxEYFqXznrDAMj6CFjBxQtJ
-         yjC1/jnlNtiypW7AqnQb6ayiMjun41Jz490bf5afJC8TmGET3smdAUe7xSKQPzea8+lK
-         laJvXCq7yjcs0RYtDYxrpPwQcbQ4VxVQEYAp0am9cOeEUjzTEmHkDBJWKnsp1IF82fQB
-         8UDMQZ0OrfvM+Bv6k0dshOiREI/HzOheXu9ZBFVoDVzr4b8GQFBiymGrEMLXe/jXHF4y
-         czzll8A3DvwfSbbCcFlxsY7QfpItJEJksD7ooZM8QEyluBCEhMG31iPSXosrOW89nntq
-         m1IQ==
-X-Gm-Message-State: AGi0PuZAVfcLR2v0ZVgc7d4J4JMafsUIqi8GRmrRGFoSrmJ4S841XGd/
-        I7rQIuv8k8f/hnDAuFnmqztE8fDX2j0=
-X-Google-Smtp-Source: APiQypICP6M1270gL4lsm/8gNhm/azlUy7ce5MR/Yh7QrZEp7fT+W/MmOBdSE0UwGaC0c+W0H26ZIQ==
-X-Received: by 2002:a2e:870d:: with SMTP id m13mr5348632lji.64.1587236001146;
-        Sat, 18 Apr 2020 11:53:21 -0700 (PDT)
-Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com. [209.85.167.43])
-        by smtp.gmail.com with ESMTPSA id l18sm5156739ljg.98.2020.04.18.11.53.19
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 18 Apr 2020 11:53:19 -0700 (PDT)
-Received: by mail-lf1-f43.google.com with SMTP id 198so4575376lfo.7
-        for <linux-kernel@vger.kernel.org>; Sat, 18 Apr 2020 11:53:19 -0700 (PDT)
-X-Received: by 2002:a05:6512:405:: with SMTP id u5mr5483360lfk.192.1587235998911;
- Sat, 18 Apr 2020 11:53:18 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200418184111.13401-1-rdunlap@infradead.org> <20200418184111.13401-3-rdunlap@infradead.org>
-In-Reply-To: <20200418184111.13401-3-rdunlap@infradead.org>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Sat, 18 Apr 2020 11:53:03 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wjSzuTyyBkmMDG4fx_sXzLJsh+9Xk-ubgbpJzJq_kzPsA@mail.gmail.com>
-Message-ID: <CAHk-=wjSzuTyyBkmMDG4fx_sXzLJsh+9Xk-ubgbpJzJq_kzPsA@mail.gmail.com>
+        Sat, 18 Apr 2020 14:55:42 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 147D7C061A0C;
+        Sat, 18 Apr 2020 11:55:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description;
+        bh=Fw5l4YeyjM9q5bGtc9HETB0eI3KSL+di5A5JibSeUVA=; b=ZSd4gPvRX+1EcEyWBtmo2xeq+k
+        YGKz4bmzRQ0lBLMGURF5oh6CYWK4W10L7kKdDnAI5hJvRsl3/cWENuwUZYgrll4QOeY8IG2KAIwKm
+        DmODoHeVwqhNbpPD2mueD4eauFer8yFIuqk42bawnd9he64bV/jQfHVxkRxNmOAMcICHspMdvF49L
+        mwjxdxSsr1vLxgUV9OSBDAPsxY5sxHKI3ovi3k6+D0MPLbEOgd5u2ipYWdww6+1xj13RRsP3BbZTP
+        5/uu3l5yRFjedkT+1vldVo7jjG4LvH/c3xDAix8dZm74bZ5+P4Sk4RUlA1MpmcdYVcPWYAQRtLCOh
+        CMd3C1UQ==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jPscv-0000Nr-Nv; Sat, 18 Apr 2020 18:55:41 +0000
 Subject: Re: [PATCH 2/9] fs: fix empty-body warning in posix_acl.c
-To:     Randy Dunlap <rdunlap@infradead.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
 Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>,
         Alexander Viro <viro@zeniv.linux.org.uk>,
@@ -96,36 +61,55 @@ Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         linux-scsi <linux-scsi@vger.kernel.org>,
         target-devel <target-devel@vger.kernel.org>,
         Zzy Wysm <zzy@zzywysm.com>
-Content-Type: text/plain; charset="UTF-8"
+References: <20200418184111.13401-1-rdunlap@infradead.org>
+ <20200418184111.13401-3-rdunlap@infradead.org>
+ <CAHk-=wjSzuTyyBkmMDG4fx_sXzLJsh+9Xk-ubgbpJzJq_kzPsA@mail.gmail.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <722a746a-1438-60e3-04b2-c13eda2ad168@infradead.org>
+Date:   Sat, 18 Apr 2020 11:55:38 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
+MIME-Version: 1.0
+In-Reply-To: <CAHk-=wjSzuTyyBkmMDG4fx_sXzLJsh+9Xk-ubgbpJzJq_kzPsA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Apr 18, 2020 at 11:41 AM Randy Dunlap <rdunlap@infradead.org> wrote:
->
-> Fix gcc empty-body warning when -Wextra is used:
+On 4/18/20 11:53 AM, Linus Torvalds wrote:
+> On Sat, Apr 18, 2020 at 11:41 AM Randy Dunlap <rdunlap@infradead.org> wrote:
+>>
+>> Fix gcc empty-body warning when -Wextra is used:
+> 
+> Please don't do this.
+> 
+> First off, "do_empty()" adds nothing but confusion. Now it
+> syntactically looks like it does something, and it's a new pattern to
+> everybody. I've never seen it before.
+> 
+> Secondly, even if we were to do this, then the patch would be wrong:
+> 
+>>         if (cmpxchg(p, ACL_NOT_CACHED, sentinel) != ACL_NOT_CACHED)
+>> -               /* fall through */ ;
+>> +               do_empty(); /* fall through */
+> 
+> That comment made little sense before, but it makes _no_ sense now.
+> 
+> What fall-through? I'm guessing it meant to say "nothing", and
+> somebody was confused. With "do_empty()", it's even more confusing.
+> 
+> Thirdly, there's a *reason* why "-Wextra" isn't used.
+> 
+> The warnings enabled by -Wextra are usually complete garbage, and
+> trying to fix them often makes the code worse. Exactly like here.
 
-Please don't do this.
+OK, no problem.  That's why PATCH 0/9 says RFC.
 
-First off, "do_empty()" adds nothing but confusion. Now it
-syntactically looks like it does something, and it's a new pattern to
-everybody. I've never seen it before.
+Oops. Crap. It was *supposed* to say RFC. :(
 
-Secondly, even if we were to do this, then the patch would be wrong:
+-- 
+~Randy
 
->         if (cmpxchg(p, ACL_NOT_CACHED, sentinel) != ACL_NOT_CACHED)
-> -               /* fall through */ ;
-> +               do_empty(); /* fall through */
-
-That comment made little sense before, but it makes _no_ sense now.
-
-What fall-through? I'm guessing it meant to say "nothing", and
-somebody was confused. With "do_empty()", it's even more confusing.
-
-Thirdly, there's a *reason* why "-Wextra" isn't used.
-
-The warnings enabled by -Wextra are usually complete garbage, and
-trying to fix them often makes the code worse. Exactly like here.
-
-             Linus
