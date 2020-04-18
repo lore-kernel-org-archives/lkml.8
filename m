@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC1F2C38A29
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:14:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC1A5C38A29
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:14:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8B0702076A
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:14:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9E962076A
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:14:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587219266;
-	bh=UhO+c8x0n3sXediqtPcDrQZozTjEpSVLq5Vr1OpONAg=;
+	s=default; t=1587219271;
+	bh=6zGuVlsnnAF2MBnoLbzHZy4QBMSzi7A2hpbIrg/pvyI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Qu02OMhN8YGKOBTZy2yMAKmSjEm9mMSx4kcxDTZUhMUOBidetHMMXvCGpvsDdI94B
-	 tVLW52ZxPOzersawPhOBu13nwLGU9zCNKrQHmi9oYdHZSVRJw7SV6UYgYaaI85x+Yf
-	 kGbDhyDwUPGATI+/3S2xpGeELS8WvBGOfmjd49z0=
+	b=GqLxE/kXJFnF4sBnUoJyRFiWism2aEo/3342T1q18nO1mJ6aMH/kLONu11WsB2J4N
+	 0660hWeGEiXEmjVvdl1K4FMOS3q84ibozHVuThrqqfWD5koOL91au9+0y6qdpGn2C9
+	 CYd6w9KLh5f0pmPRilT0Ryl5i77ISA7FBIkVSMMM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728002AbgDROOZ (ORCPT
+        id S1728067AbgDROOa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 10:14:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36644 "EHLO mail.kernel.org"
+        Sat, 18 Apr 2020 10:14:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36618 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726160AbgDROJV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 10:09:21 -0400
+        id S1726086AbgDROJS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 10:09:18 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A6A0021D79;
-        Sat, 18 Apr 2020 14:09:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4786121BE5;
+        Sat, 18 Apr 2020 14:09:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587218960;
-        bh=UhO+c8x0n3sXediqtPcDrQZozTjEpSVLq5Vr1OpONAg=;
+        s=default; t=1587218958;
+        bh=6zGuVlsnnAF2MBnoLbzHZy4QBMSzi7A2hpbIrg/pvyI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BGrFudvbpnisReOHoc4zPVZvELZJP02Dqad/6Y7AaOkbcZ8U+kLEueOrlvhBIgeJx
-         B6t4KoOqrRfxct+s+YEjPwGyZ24VpVsfw4V8KoZGx4uq7Lxthq4xYUccZ/Az3/s/8C
-         H6co/Flsg58sVzliw9oCOd0AWcMDs5+NPrXdt+XY=
+        b=xXK4Z1pxrMHhdnTm0XMpDplF0ToVb+VPVaBIwNE3eISy5BtS4LNdACvvQx4XpnOVV
+         msJqTO3gqdHsanSsxJb/AX42pocJQWZ0afOQaB32ebqIOwIWbWxT1c2OtmucMn+Gdl
+         O9W3DmLX/fvBA+KMaaxWHaaP93y8KulAm35UYhDw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     James Smart <jsmart2021@gmail.com>,
-        Dick Kennedy <dick.kennedy@broadcom.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 08/75] scsi: lpfc: Fix kasan slab-out-of-bounds error in lpfc_unreg_login
-Date:   Sat, 18 Apr 2020 10:08:03 -0400
-Message-Id: <20200418140910.8280-8-sashal@kernel.org>
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-nvdimm@lists.01.org,
+        linux-acpi@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 06/75] acpi/nfit: improve bounds checking for 'func'
+Date:   Sat, 18 Apr 2020 10:08:01 -0400
+Message-Id: <20200418140910.8280-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200418140910.8280-1-sashal@kernel.org>
 References: <20200418140910.8280-1-sashal@kernel.org>
@@ -60,60 +60,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: James Smart <jsmart2021@gmail.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit 38503943c89f0bafd9e3742f63f872301d44cbea ]
+[ Upstream commit 01091c496f920e634ea84b689f480c39016752a8 ]
 
-The following kasan bug was called out:
+The 'func' variable can come from the user in the __nd_ioctl().  If it's
+too high then the (1 << func) shift in acpi_nfit_clear_to_send() is
+undefined.  In acpi_nfit_ctl() we pass 'func' to test_bit(func, &dsm_mask)
+which could result in an out of bounds access.
 
- BUG: KASAN: slab-out-of-bounds in lpfc_unreg_login+0x7c/0xc0 [lpfc]
- Read of size 2 at addr ffff889fc7c50a22 by task lpfc_worker_3/6676
- ...
- Call Trace:
- dump_stack+0x96/0xe0
- ? lpfc_unreg_login+0x7c/0xc0 [lpfc]
- print_address_description.constprop.6+0x1b/0x220
- ? lpfc_unreg_login+0x7c/0xc0 [lpfc]
- ? lpfc_unreg_login+0x7c/0xc0 [lpfc]
- __kasan_report.cold.9+0x37/0x7c
- ? lpfc_unreg_login+0x7c/0xc0 [lpfc]
- kasan_report+0xe/0x20
- lpfc_unreg_login+0x7c/0xc0 [lpfc]
- lpfc_sli_def_mbox_cmpl+0x334/0x430 [lpfc]
- ...
+To fix these issues, I introduced the NVDIMM_CMD_MAX (31) define and
+updated nfit_dsm_revid() to use that define as well instead of magic
+numbers.
 
-When processing the completion of a "Reg Rpi" login mailbox command in
-lpfc_sli_def_mbox_cmpl, a call may be made to lpfc_unreg_login. The vpi is
-extracted from the completing mailbox context and passed as an input for
-the next. However, the vpi stored in the mailbox command context is an
-absolute vpi, which for SLI4 represents both base + offset.  When used with
-a non-zero base component, (function id > 0) this results in an
-out-of-range access beyond the allocated phba->vpi_ids array.
-
-Fix by subtracting the function's base value to get an accurate vpi number.
-
-Link: https://lore.kernel.org/r/20200322181304.37655-2-jsmart2021@gmail.com
-Signed-off-by: James Smart <jsmart2021@gmail.com>
-Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Fixes: 11189c1089da ("acpi/nfit: Fix command-supported detection")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Reviewed-by: Dan Williams <dan.j.williams@intel.com>
+Link: https://lore.kernel.org/r/20200225161927.hvftuq7kjn547fyj@kili.mountain
+Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/lpfc/lpfc_sli.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/acpi/nfit/core.c | 10 ++++++----
+ drivers/acpi/nfit/nfit.h |  1 +
+ 2 files changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/scsi/lpfc/lpfc_sli.c b/drivers/scsi/lpfc/lpfc_sli.c
-index 625c046ac4efa..993b1056beb83 100644
---- a/drivers/scsi/lpfc/lpfc_sli.c
-+++ b/drivers/scsi/lpfc/lpfc_sli.c
-@@ -2511,6 +2511,8 @@ lpfc_sli_def_mbox_cmpl(struct lpfc_hba *phba, LPFC_MBOXQ_t *pmb)
- 	    !pmb->u.mb.mbxStatus) {
- 		rpi = pmb->u.mb.un.varWords[0];
- 		vpi = pmb->u.mb.un.varRegLogin.vpi;
-+		if (phba->sli_rev == LPFC_SLI_REV4)
-+			vpi -= phba->sli4_hba.max_cfg_param.vpi_base;
- 		lpfc_unreg_login(phba, vpi, rpi, pmb);
- 		pmb->vport = vport;
- 		pmb->mbox_cmpl = lpfc_sli_def_mbox_cmpl;
+diff --git a/drivers/acpi/nfit/core.c b/drivers/acpi/nfit/core.c
+index a3320f93616de..d0090f71585c4 100644
+--- a/drivers/acpi/nfit/core.c
++++ b/drivers/acpi/nfit/core.c
+@@ -360,7 +360,7 @@ static union acpi_object *acpi_label_info(acpi_handle handle)
+ 
+ static u8 nfit_dsm_revid(unsigned family, unsigned func)
+ {
+-	static const u8 revid_table[NVDIMM_FAMILY_MAX+1][32] = {
++	static const u8 revid_table[NVDIMM_FAMILY_MAX+1][NVDIMM_CMD_MAX+1] = {
+ 		[NVDIMM_FAMILY_INTEL] = {
+ 			[NVDIMM_INTEL_GET_MODES] = 2,
+ 			[NVDIMM_INTEL_GET_FWINFO] = 2,
+@@ -386,7 +386,7 @@ static u8 nfit_dsm_revid(unsigned family, unsigned func)
+ 
+ 	if (family > NVDIMM_FAMILY_MAX)
+ 		return 0;
+-	if (func > 31)
++	if (func > NVDIMM_CMD_MAX)
+ 		return 0;
+ 	id = revid_table[family][func];
+ 	if (id == 0)
+@@ -492,7 +492,8 @@ int acpi_nfit_ctl(struct nvdimm_bus_descriptor *nd_desc, struct nvdimm *nvdimm,
+ 	 * Check for a valid command.  For ND_CMD_CALL, we also have to
+ 	 * make sure that the DSM function is supported.
+ 	 */
+-	if (cmd == ND_CMD_CALL && !test_bit(func, &dsm_mask))
++	if (cmd == ND_CMD_CALL &&
++	    (func > NVDIMM_CMD_MAX || !test_bit(func, &dsm_mask)))
+ 		return -ENOTTY;
+ 	else if (!test_bit(cmd, &cmd_mask))
+ 		return -ENOTTY;
+@@ -3492,7 +3493,8 @@ static int acpi_nfit_clear_to_send(struct nvdimm_bus_descriptor *nd_desc,
+ 	if (nvdimm && cmd == ND_CMD_CALL &&
+ 			call_pkg->nd_family == NVDIMM_FAMILY_INTEL) {
+ 		func = call_pkg->nd_command;
+-		if ((1 << func) & NVDIMM_INTEL_SECURITY_CMDMASK)
++		if (func > NVDIMM_CMD_MAX ||
++		    (1 << func) & NVDIMM_INTEL_SECURITY_CMDMASK)
+ 			return -EOPNOTSUPP;
+ 	}
+ 
+diff --git a/drivers/acpi/nfit/nfit.h b/drivers/acpi/nfit/nfit.h
+index 24241941181ce..b317f4043705f 100644
+--- a/drivers/acpi/nfit/nfit.h
++++ b/drivers/acpi/nfit/nfit.h
+@@ -34,6 +34,7 @@
+ 		| ACPI_NFIT_MEM_NOT_ARMED | ACPI_NFIT_MEM_MAP_FAILED)
+ 
+ #define NVDIMM_FAMILY_MAX NVDIMM_FAMILY_HYPERV
++#define NVDIMM_CMD_MAX 31
+ 
+ #define NVDIMM_STANDARD_CMDMASK \
+ (1 << ND_CMD_SMART | 1 << ND_CMD_SMART_THRESHOLD | 1 << ND_CMD_DIMM_FLAGS \
 -- 
 2.20.1
 
