@@ -4,56 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2A0EC38A29
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:43:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CC24C38A2F
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:43:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A154721974
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:43:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DE2B2224E
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:43:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587220998;
-	bh=mpaYxTzLjdOcH9HCeP0ftNpOhjqmdUV0IM11ArpETdE=;
+	s=default; t=1587221002;
+	bh=bdRG4QJSIh1FzpVsaOuoYBVt/Quoq5dTXWozMxcztH0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qa3S/n0PHnPdi5z2H3n+FgSMjuAB4KyoD+XCcQQ+XXRU91rHY0x3vvuL6herpKGnR
-	 vQl2K/eYm6Ek7poKr+50T3dWuBlI/dNF6ZwSExMdSFT2uoVEyVK4Tcw4SkUcDLDSCz
-	 f3it2IrcSzJ8p0lVHl496ZsxVYIPINdI4Ggt5Ouc=
+	b=su2gWPy1m6CEDBOlShxWE3CC0NL8tjCIHRNVi1l+VDBuZR0TI9Xw0honwahv+krkA
+	 gpFqj7rm/UptHk+eOmFhUbCjUrTWz/B0za9+tucQfCesfJ0bTB1n8yKlH29U4qGrzN
+	 LVzaESLkbWQaKUQSOMt8ZGLf8H/C6Dy8A66oe4l0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728538AbgDROnR (ORCPT
+        id S1728559AbgDROnV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 10:43:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53806 "EHLO mail.kernel.org"
+        Sat, 18 Apr 2020 10:43:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54018 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728495AbgDROnE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 10:43:04 -0400
+        id S1726469AbgDROnL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 10:43:11 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DC185221F4;
-        Sat, 18 Apr 2020 14:43:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0B9E721D79;
+        Sat, 18 Apr 2020 14:43:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587220984;
-        bh=mpaYxTzLjdOcH9HCeP0ftNpOhjqmdUV0IM11ArpETdE=;
+        s=default; t=1587220990;
+        bh=bdRG4QJSIh1FzpVsaOuoYBVt/Quoq5dTXWozMxcztH0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MqM9X6X1vxApJ/Os5VeA77P8VfIK3VE6m3lPQwX3If8E5s367NOfH+XFNpDHtTWVK
-         pqPzxaXmCrXLapW6dBDA54CpuKdhrBZVonyKAjMRwF9YW6kM0NzPSTbUMMyl1yNDLm
-         8OXc3lqweMORk+p2nmciqPvS1E23g5dsl8hEB7Ro=
+        b=z9+/uCVUsIS1wA8A9iUrSz1hRaBoh789zdR0mIB+nIkmijPROSwwF9UHQ2fwH0mak
+         TvqP1vXkJ7KLKQUJLY1Ou4BSZBrlKxhTVt3hst+kEOIv/9L5ZiU0FgFHH9aDvi6hbK
+         H2h2p90J2iHh6oyAmL/0YUuuhckjsAd49iX6UGQ0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Changwei Ge <chge@linux.alibaba.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Joseph Qi <joseph.qi@linux.alibaba.com>,
-        Mark Fasheh <mark@fasheh.com>,
-        Joel Becker <jlbec@evilplan.org>,
-        Junxiao Bi <junxiao.bi@oracle.com>,
-        Changwei Ge <gechangwei@live.cn>, Gang He <ghe@suse.com>,
-        Jun Piao <piaojun@huawei.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>, ocfs2-devel@oss.oracle.com
-Subject: [PATCH AUTOSEL 4.19 28/47] ocfs2: no need try to truncate file beyond i_size
-Date:   Sat, 18 Apr 2020 10:42:08 -0400
-Message-Id: <20200418144227.9802-28-sashal@kernel.org>
+Cc:     Takashi Iwai <tiwai@suse.de>, Jaroslav Kysela <perex@perex.cz>,
+        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 4.19 34/47] ALSA: hda: Fix potential access overflow in beep helper
+Date:   Sat, 18 Apr 2020 10:42:14 -0400
+Message-Id: <20200418144227.9802-34-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200418144227.9802-1-sashal@kernel.org>
 References: <20200418144227.9802-1-sashal@kernel.org>
@@ -66,61 +58,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Changwei Ge <chge@linux.alibaba.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-[ Upstream commit 783fda856e1034dee90a873f7654c418212d12d7 ]
+[ Upstream commit 0ad3f0b384d58f3bd1f4fb87d0af5b8f6866f41a ]
 
-Linux fallocate(2) with FALLOC_FL_PUNCH_HOLE mode set, its offset can
-exceed the inode size.  Ocfs2 now doesn't allow that offset beyond inode
-size.  This restriction is not necessary and violates fallocate(2)
-semantics.
+The beep control helper function blindly stores the values in two
+stereo channels no matter whether the actual control is mono or
+stereo.  This is practically harmless, but it annoys the recently
+introduced sanity check, resulting in an error when the checker is
+enabled.
 
-If fallocate(2) offset is beyond inode size, just return success and do
-nothing further.
+This patch corrects the behavior to store only on the defined array
+member.
 
-Otherwise, ocfs2 will crash the kernel.
-
-  kernel BUG at fs/ocfs2//alloc.c:7264!
-   ocfs2_truncate_inline+0x20f/0x360 [ocfs2]
-   ocfs2_remove_inode_range+0x23c/0xcb0 [ocfs2]
-   __ocfs2_change_file_space+0x4a5/0x650 [ocfs2]
-   ocfs2_fallocate+0x83/0xa0 [ocfs2]
-   vfs_fallocate+0x148/0x230
-   SyS_fallocate+0x48/0x80
-   do_syscall_64+0x79/0x170
-
-Signed-off-by: Changwei Ge <chge@linux.alibaba.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
-Cc: Mark Fasheh <mark@fasheh.com>
-Cc: Joel Becker <jlbec@evilplan.org>
-Cc: Junxiao Bi <junxiao.bi@oracle.com>
-Cc: Changwei Ge <gechangwei@live.cn>
-Cc: Gang He <ghe@suse.com>
-Cc: Jun Piao <piaojun@huawei.com>
+Fixes: 0401e8548eac ("ALSA: hda - Move beep helper functions to hda_beep.c")
+BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=207139
+Reviewed-by: Jaroslav Kysela <perex@perex.cz>
 Cc: <stable@vger.kernel.org>
-Link: http://lkml.kernel.org/r/20200407082754.17565-1-chge@linux.alibaba.com
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Link: https://lore.kernel.org/r/20200407084402.25589-2-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ocfs2/alloc.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ sound/pci/hda/hda_beep.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/fs/ocfs2/alloc.c b/fs/ocfs2/alloc.c
-index a342f008e42f9..ff0e083ce2a1a 100644
---- a/fs/ocfs2/alloc.c
-+++ b/fs/ocfs2/alloc.c
-@@ -7403,6 +7403,10 @@ int ocfs2_truncate_inline(struct inode *inode, struct buffer_head *di_bh,
- 	struct ocfs2_dinode *di = (struct ocfs2_dinode *)di_bh->b_data;
- 	struct ocfs2_inline_data *idata = &di->id2.i_data;
- 
-+	/* No need to punch hole beyond i_size. */
-+	if (start >= i_size_read(inode))
-+		return 0;
+diff --git a/sound/pci/hda/hda_beep.c b/sound/pci/hda/hda_beep.c
+index 066b5b59c4d7c..0224011a240fb 100644
+--- a/sound/pci/hda/hda_beep.c
++++ b/sound/pci/hda/hda_beep.c
+@@ -297,8 +297,12 @@ int snd_hda_mixer_amp_switch_get_beep(struct snd_kcontrol *kcontrol,
+ {
+ 	struct hda_codec *codec = snd_kcontrol_chip(kcontrol);
+ 	struct hda_beep *beep = codec->beep;
++	int chs = get_amp_channels(kcontrol);
 +
- 	if (end > i_size_read(inode))
- 		end = i_size_read(inode);
- 
+ 	if (beep && (!beep->enabled || !ctl_has_mute(kcontrol))) {
+-		ucontrol->value.integer.value[0] =
++		if (chs & 1)
++			ucontrol->value.integer.value[0] = beep->enabled;
++		if (chs & 2)
+ 			ucontrol->value.integer.value[1] = beep->enabled;
+ 		return 0;
+ 	}
 -- 
 2.20.1
 
