@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7332DC38A29
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:45:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2D11C38A29
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:45:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4EF3D21D6C
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:45:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9650721BE5
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:45:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587221132;
-	bh=UMlaP/NeGsbjNpFWIDP5Jdm0OEQJeTjnAjNiEBovdZU=;
+	s=default; t=1587221138;
+	bh=v3+EC8N0fhkpUc99kbcDjUxlXl49k6/JZtXk0pRDeqg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RNEfUKYoBnhFNyyAyWwK4yXxwRSDzSCalTmGcOZf2mlGeW5LCAZnPc9EpnjEdNGAi
-	 7PJqMvRi/f0QrY5sssKohuk5gh6gaBG8sVJRZuNwBYSQ+Dl/r5iuCH9nwMc9WVnhiU
-	 /DqAi2GQz1NsSi/VcAAjgRa1coKWzus+SoNqbXNI=
+	b=U2pciwlPTbSC2/sCNjjASR1BmBGX24Yv8hIpXegJbRWdIDKCYkMjorNpoTCa4gfJ4
+	 TtUnhDz1X/GCLXWsFEB05vK7iqnZHWXfuZS7UoSgYK9zUXbbgnGl4sh/Kqc6KoYs41
+	 b9JcgU6bN0TgpnVDiYPvqjUJo50F7t939VgQkeaw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728971AbgDROpb (ORCPT
+        id S1728972AbgDROph (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 10:45:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57152 "EHLO mail.kernel.org"
+        Sat, 18 Apr 2020 10:45:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57004 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728931AbgDROo7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 10:44:59 -0400
+        id S1728187AbgDROoz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 10:44:55 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2148922263;
-        Sat, 18 Apr 2020 14:44:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ECADA21BE5;
+        Sat, 18 Apr 2020 14:44:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587221098;
-        bh=UMlaP/NeGsbjNpFWIDP5Jdm0OEQJeTjnAjNiEBovdZU=;
+        s=default; t=1587221094;
+        bh=v3+EC8N0fhkpUc99kbcDjUxlXl49k6/JZtXk0pRDeqg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oIr1hVngh3nSuk7gZ25Nz/WSa+iECJSJMDc4AF1OzkyzVxnVPhe3kN6vwF3wiJBP+
-         pI+zZsoD31cKPkSZEd68ggkr3SMHz+bW5JrDK5RxNire3gCU4WXC/kW5azyHZPVzgv
-         l6FLuW/a6SzbML7zSBBmZ+YIb1OYCtanx6lNxTRg=
+        b=Nc6rq8nGMKUxudM7Ct0ujp5RaEtN+xGKZrzg25AcsdaDrtawo6Ci9hEKMJrsDz9vF
+         LM7NmfzL4wWgpXir8J7bluRGGqs05cQtvdaU1RFN3lVqFxeIUoOe09ySkE2KpiTlSc
+         vYBsPw/jZwIFhSvLglypflWWz9ywbwQBgHePK3KM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
-        linux-ide@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 17/19] libata: Return correct status in sata_pmp_eh_recover_pm() when ATA_DFLAG_DETACH is set
-Date:   Sat, 18 Apr 2020 10:44:34 -0400
-Message-Id: <20200418144436.10818-17-sashal@kernel.org>
+Cc:     Qian Cai <cai@lca.pw>, Lu Baolu <baolu.lu@linux.intel.com>,
+        Joerg Roedel <jroedel@suse.de>,
+        Sasha Levin <sashal@kernel.org>,
+        iommu@lists.linux-foundation.org
+Subject: [PATCH AUTOSEL 4.4 14/19] iommu/vt-d: Silence RCU-list debugging warning in dmar_find_atsr()
+Date:   Sat, 18 Apr 2020 10:44:31 -0400
+Message-Id: <20200418144436.10818-14-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200418144436.10818-1-sashal@kernel.org>
 References: <20200418144436.10818-1-sashal@kernel.org>
@@ -59,76 +60,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+From: Qian Cai <cai@lca.pw>
 
-[ Upstream commit 8305f72f952cff21ce8109dc1ea4b321c8efc5af ]
+[ Upstream commit c6f4ebdeba4cff590594df931ff1ee610c426431 ]
 
-During system resume from suspend, this can be observed on ASM1062 PMP
-controller:
+dmar_find_atsr() calls list_for_each_entry_rcu() outside of an RCU read
+side critical section but with dmar_global_lock held. Silence this
+false positive.
 
-ata10.01: SATA link down (SStatus 0 SControl 330)
-ata10.02: hard resetting link
-ata10.02: SATA link down (SStatus 0 SControl 330)
-ata10.00: configured for UDMA/133
-Kernel panic - not syncing: stack-protector: Kernel
- in: sata_pmp_eh_recover+0xa2b/0xa40
+ drivers/iommu/intel-iommu.c:4504 RCU-list traversed in non-reader section!!
+ 1 lock held by swapper/0/1:
+ #0: ffffffff9755bee8 (dmar_global_lock){+.+.}, at: intel_iommu_init+0x1a6/0xe19
 
-CPU: 2 PID: 230 Comm: scsi_eh_9 Tainted: P OE
-#49-Ubuntu
-Hardware name: System manufacturer System Product
- 1001 12/10/2017
-Call Trace:
-dump_stack+0x63/0x8b
-panic+0xe4/0x244
-? sata_pmp_eh_recover+0xa2b/0xa40
-__stack_chk_fail+0x19/0x20
-sata_pmp_eh_recover+0xa2b/0xa40
-? ahci_do_softreset+0x260/0x260 [libahci]
-? ahci_do_hardreset+0x140/0x140 [libahci]
-? ata_phys_link_offline+0x60/0x60
-? ahci_stop_engine+0xc0/0xc0 [libahci]
-sata_pmp_error_handler+0x22/0x30
-ahci_error_handler+0x45/0x80 [libahci]
-ata_scsi_port_error_handler+0x29b/0x770
-? ata_scsi_cmd_error_handler+0x101/0x140
-ata_scsi_error+0x95/0xd0
-? scsi_try_target_reset+0x90/0x90
-scsi_error_handler+0xd0/0x5b0
-kthread+0x121/0x140
-? scsi_eh_get_sense+0x200/0x200
-? kthread_create_worker_on_cpu+0x70/0x70
-ret_from_fork+0x22/0x40
-Kernel Offset: 0xcc00000 from 0xffffffff81000000
-(relocation range: 0xffffffff80000000-0xffffffffbfffffff)
+ Call Trace:
+  dump_stack+0xa4/0xfe
+  lockdep_rcu_suspicious+0xeb/0xf5
+  dmar_find_atsr+0x1ab/0x1c0
+  dmar_parse_one_atsr+0x64/0x220
+  dmar_walk_remapping_entries+0x130/0x380
+  dmar_table_init+0x166/0x243
+  intel_iommu_init+0x1ab/0xe19
+  pci_iommu_init+0x1a/0x44
+  do_one_initcall+0xae/0x4d0
+  kernel_init_freeable+0x412/0x4c5
+  kernel_init+0x19/0x193
 
-Since sata_pmp_eh_recover_pmp() doens't set rc when ATA_DFLAG_DETACH is
-set, sata_pmp_eh_recover() continues to run. During retry it triggers
-the stack protector.
-
-Set correct rc in sata_pmp_eh_recover_pmp() to let sata_pmp_eh_recover()
-jump to pmp_fail directly.
-
-BugLink: https://bugs.launchpad.net/bugs/1821434
-Cc: stable@vger.kernel.org
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Qian Cai <cai@lca.pw>
+Acked-by: Lu Baolu <baolu.lu@linux.intel.com>
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/ata/libata-pmp.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/iommu/intel-iommu.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/ata/libata-pmp.c b/drivers/ata/libata-pmp.c
-index 85aa76116a305..7924d0635718d 100644
---- a/drivers/ata/libata-pmp.c
-+++ b/drivers/ata/libata-pmp.c
-@@ -764,6 +764,7 @@ static int sata_pmp_eh_recover_pmp(struct ata_port *ap,
+diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
+index ed6cb3abf645c..73ac0888d3995 100644
+--- a/drivers/iommu/intel-iommu.c
++++ b/drivers/iommu/intel-iommu.c
+@@ -4164,7 +4164,8 @@ static struct dmar_atsr_unit *dmar_find_atsr(struct acpi_dmar_atsr *atsr)
+ 	struct dmar_atsr_unit *atsru;
+ 	struct acpi_dmar_atsr *tmp;
  
- 	if (dev->flags & ATA_DFLAG_DETACH) {
- 		detach = 1;
-+		rc = -ENODEV;
- 		goto fail;
- 	}
- 
+-	list_for_each_entry_rcu(atsru, &dmar_atsr_units, list) {
++	list_for_each_entry_rcu(atsru, &dmar_atsr_units, list,
++				dmar_rcu_check()) {
+ 		tmp = (struct acpi_dmar_atsr *)atsru->hdr;
+ 		if (atsr->segment != tmp->segment)
+ 			continue;
 -- 
 2.20.1
 
