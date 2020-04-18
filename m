@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45433C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:54:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB17FC38A2F
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:54:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1B572206D6
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:54:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBE5B21D82
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:54:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587221659;
-	bh=TX443VW0wwGHwsW3eKFenSBCRAXdimDJM+ENiJ/1qn0=;
+	s=default; t=1587221661;
+	bh=wR40GoeRsbCaeLZmg7iG6efpBw+ES/ZLLE2S/S1kbak=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ImxzNC6KeZsg3HCL8fAahPdn1/JBvW1YOpkd8pJUbE/YN0KQDKPh58VbSqTXGn48z
-	 3ffPFS0Bn4CQm0M80s/5AhrOfmYsUwIbLJoR4GGQlsOSgS/DfayA1/9bwmjBhM9jOX
-	 wRjB4yIz7J0HSJZeJddz7y3xkFVJf/AerBkuW/wU=
+	b=HNfseQ/W2iugtSJ74VzUllSzpqw9Y6rFOdzvnT3gIUvaVZ7IvUGGNEwPYRLAzvzaA
+	 uqfxqfvvNj8QwyR8e+0SjZJ8DWY2CWbmWY9rqyWgDA0Pzz5W7x9PxFel3CR8Vf80jA
+	 Vm4hwJ5mzkOYZGfQc4ZDhTHPyZCqzCVbIuQlUlpg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728224AbgDROyS (ORCPT
+        id S1728643AbgDROyV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 10:54:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51142 "EHLO mail.kernel.org"
+        Sat, 18 Apr 2020 10:54:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51230 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728039AbgDROln (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 10:41:43 -0400
+        id S1728098AbgDROlp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 10:41:45 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E876D21D6C;
-        Sat, 18 Apr 2020 14:41:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 14CDE21D82;
+        Sat, 18 Apr 2020 14:41:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587220902;
-        bh=TX443VW0wwGHwsW3eKFenSBCRAXdimDJM+ENiJ/1qn0=;
+        s=default; t=1587220904;
+        bh=wR40GoeRsbCaeLZmg7iG6efpBw+ES/ZLLE2S/S1kbak=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SKeFF5sjsKwDTaL9YLJv+k62fkxv5Z0rL93EnwYNSCBtqYPGoM0j3IRN4M2V6zDB/
-         a8bjtG2+Aj81xQdG2awLi4G+caXAq1P7JAC+DOKs9Ybm25f1nM17JKZAxYU2r25l5d
-         r4OT4XUIsPg1A00xfWhwI+TLe63rWUD26L7RfoXI=
+        b=eBwXKWLwNN0QYmdmrboJBIPj5krT/n9aq/2k9HM+pC2ys08ZXznSVLaPRy4UaEypN
+         8CgxZBvYugt7f9Hh6NHZTl4yKjKPSK1lFnmMRzSl18T0pi9xwXvgbOIPv+41LEXGRV
+         WfVuzKT/7R1QYfwS/yFzhaACT3VmZriqQzDCJTEs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Qian Cai <cai@lca.pw>, Lu Baolu <baolu.lu@linux.intel.com>,
-        Joerg Roedel <jroedel@suse.de>,
-        Sasha Levin <sashal@kernel.org>,
-        iommu@lists.linux-foundation.org
-Subject: [PATCH AUTOSEL 5.4 43/78] iommu/vt-d: Silence RCU-list debugging warning in dmar_find_atsr()
-Date:   Sat, 18 Apr 2020 10:40:12 -0400
-Message-Id: <20200418144047.9013-43-sashal@kernel.org>
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-nvdimm@lists.01.org
+Subject: [PATCH AUTOSEL 5.4 45/78] libnvdimm: Out of bounds read in __nd_ioctl()
+Date:   Sat, 18 Apr 2020 10:40:14 -0400
+Message-Id: <20200418144047.9013-45-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200418144047.9013-1-sashal@kernel.org>
 References: <20200418144047.9013-1-sashal@kernel.org>
@@ -60,53 +59,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qian Cai <cai@lca.pw>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit c6f4ebdeba4cff590594df931ff1ee610c426431 ]
+[ Upstream commit f84afbdd3a9e5e10633695677b95422572f920dc ]
 
-dmar_find_atsr() calls list_for_each_entry_rcu() outside of an RCU read
-side critical section but with dmar_global_lock held. Silence this
-false positive.
+The "cmd" comes from the user and it can be up to 255.  It it's more
+than the number of bits in long, it results out of bounds read when we
+check test_bit(cmd, &cmd_mask).  The highest valid value for "cmd" is
+ND_CMD_CALL (10) so I added a compare against that.
 
- drivers/iommu/intel-iommu.c:4504 RCU-list traversed in non-reader section!!
- 1 lock held by swapper/0/1:
- #0: ffffffff9755bee8 (dmar_global_lock){+.+.}, at: intel_iommu_init+0x1a6/0xe19
-
- Call Trace:
-  dump_stack+0xa4/0xfe
-  lockdep_rcu_suspicious+0xeb/0xf5
-  dmar_find_atsr+0x1ab/0x1c0
-  dmar_parse_one_atsr+0x64/0x220
-  dmar_walk_remapping_entries+0x130/0x380
-  dmar_table_init+0x166/0x243
-  intel_iommu_init+0x1ab/0xe19
-  pci_iommu_init+0x1a/0x44
-  do_one_initcall+0xae/0x4d0
-  kernel_init_freeable+0x412/0x4c5
-  kernel_init+0x19/0x193
-
-Signed-off-by: Qian Cai <cai@lca.pw>
-Acked-by: Lu Baolu <baolu.lu@linux.intel.com>
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Fixes: 62232e45f4a2 ("libnvdimm: control (ioctl) messages for nvdimm_bus and nvdimm devices")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Link: https://lore.kernel.org/r/20200225162055.amtosfy7m35aivxg@kili.mountain
+Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iommu/intel-iommu.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/nvdimm/bus.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
-index 0d922eeae3579..773ac2b0d6068 100644
---- a/drivers/iommu/intel-iommu.c
-+++ b/drivers/iommu/intel-iommu.c
-@@ -4335,7 +4335,8 @@ static struct dmar_atsr_unit *dmar_find_atsr(struct acpi_dmar_atsr *atsr)
- 	struct dmar_atsr_unit *atsru;
- 	struct acpi_dmar_atsr *tmp;
+diff --git a/drivers/nvdimm/bus.c b/drivers/nvdimm/bus.c
+index d47412dcdf38d..5e5c6aafc070b 100644
+--- a/drivers/nvdimm/bus.c
++++ b/drivers/nvdimm/bus.c
+@@ -1010,8 +1010,10 @@ static int __nd_ioctl(struct nvdimm_bus *nvdimm_bus, struct nvdimm *nvdimm,
+ 			return -EFAULT;
+ 	}
  
--	list_for_each_entry_rcu(atsru, &dmar_atsr_units, list) {
-+	list_for_each_entry_rcu(atsru, &dmar_atsr_units, list,
-+				dmar_rcu_check()) {
- 		tmp = (struct acpi_dmar_atsr *)atsru->hdr;
- 		if (atsr->segment != tmp->segment)
- 			continue;
+-	if (!desc || (desc->out_num + desc->in_num == 0) ||
+-			!test_bit(cmd, &cmd_mask))
++	if (!desc ||
++	    (desc->out_num + desc->in_num == 0) ||
++	    cmd > ND_CMD_CALL ||
++	    !test_bit(cmd, &cmd_mask))
+ 		return -ENOTTY;
+ 
+ 	/* fail write commands (when read-only) */
 -- 
 2.20.1
 
