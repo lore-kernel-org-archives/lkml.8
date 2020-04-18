@@ -4,51 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 860C5C38A2F
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:53:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 731C7C38A2F
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:53:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 534D9206D6
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:53:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47AAC21D6C
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:53:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587221623;
-	bh=Z7KdvEPwnuQWnkjL+BM3WAvJLHQISfNthr7UMBLVDas=;
+	s=default; t=1587221630;
+	bh=kS84/PMzUhc05SlVzbqfWKPVeFTCGPqj3rCQ/hKNBfw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HbI8SO0F3x7uh0M4Fu3IpxiuBoSyF5k/FNvuPnrN2IugBSzBVrOi3hC3tF4c3h/HP
-	 nfRH23gDw6sOKLD1X9G3dLOruFXP5P+acgbX3aKnIFd34gm8dSW09J81dHln4EHEZt
-	 ught6II5pQkbH9SiR3bl6VcNkH1a42R6XRGqXZB8=
+	b=bp/wPUu1IVr1d/2T/E9L9QH7J/47+9kPIKHgUAY28MAeLD5jpCFtD9TtNWm0cCMA7
+	 6P+7OqC67tSMskmse6+MdByY/6LP/XzRW0Z1/hnasFnQ9U/GNwX72IuyyEub00ZZZK
+	 aLaudlJn1kIJYCLLIjiGyE5Cr6UibyTaijj3QgCM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728981AbgDROxm (ORCPT
+        id S1728936AbgDROxt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 10:53:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51630 "EHLO mail.kernel.org"
+        Sat, 18 Apr 2020 10:53:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51530 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728197AbgDROl5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 10:41:57 -0400
+        id S1728172AbgDROly (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 10:41:54 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B364321D82;
-        Sat, 18 Apr 2020 14:41:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8C98521D6C;
+        Sat, 18 Apr 2020 14:41:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587220916;
-        bh=Z7KdvEPwnuQWnkjL+BM3WAvJLHQISfNthr7UMBLVDas=;
+        s=default; t=1587220914;
+        bh=kS84/PMzUhc05SlVzbqfWKPVeFTCGPqj3rCQ/hKNBfw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rhJn0kgWvOGuMa0Y3i8mg2lj+N7vhFiskwT84YvqTvf8d87lrrqJAKIWY42yt0bp9
-         OGb1blYhCze6nj9/uyo2OO8KTeSHGQrhgs+lvqCk1JQdthJXs+488Z1HyEK1VPSK6F
-         wxIu7Qe4HU2q8q+0PhptOW4ygj8qQU+R7hQdyOC4=
+        b=Vq30iur+eUVtJV2VxeLJKTwYR40zeAQhBPQSnUSampsz7M/gsqznryuOQORBdHYHC
+         AkHfeK2IONjX9UL9j5jlmwyQBMgcrfXj66V0VzoKNSp1KIeYJ7OV7HX6u1nQqX51S8
+         o1rXgm3agEOmG+rva3JhGul6v8rcM4lgEH5qJX7M=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     David Hildenbrand <david@redhat.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org,
-        linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 55/78] KVM: s390: vsie: Fix delivery of addressing exceptions
-Date:   Sat, 18 Apr 2020 10:40:24 -0400
-Message-Id: <20200418144047.9013-55-sashal@kernel.org>
+Cc:     Takashi Iwai <tiwai@suse.de>, Jaroslav Kysela <perex@perex.cz>,
+        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 5.4 53/78] ALSA: ice1724: Fix invalid access for enumerated ctl items
+Date:   Sat, 18 Apr 2020 10:40:22 -0400
+Message-Id: <20200418144047.9013-53-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200418144047.9013-1-sashal@kernel.org>
 References: <20200418144047.9013-1-sashal@kernel.org>
@@ -61,52 +58,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Hildenbrand <david@redhat.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-[ Upstream commit 4d4cee96fb7a3cc53702a9be8299bf525be4ee98 ]
+[ Upstream commit c47914c00be346bc5b48c48de7b0da5c2d1a296c ]
 
-Whenever we get an -EFAULT, we failed to read in guest 2 physical
-address space. Such addressing exceptions are reported via a program
-intercept to the nested hypervisor.
+The access to Analog Capture Source control value implemented in
+prodigy_hifi.c is wrong, as caught by the recently introduced sanity
+check; it should be accessing value.enumerated.item[] instead of
+value.integer.value[].  This patch corrects the wrong access pattern.
 
-We faked the intercept, we have to return to guest 2. Instead, right
-now we would be returning -EFAULT from the intercept handler, eventually
-crashing the VM.
-the correct thing to do is to return 1 as rc == 1 is the internal
-representation of "we have to go back into g2".
-
-Addressing exceptions can only happen if the g2->g3 page tables
-reference invalid g2 addresses (say, either a table or the final page is
-not accessible - so something that basically never happens in sane
-environments.
-
-Identified by manual code inspection.
-
-Fixes: a3508fbe9dc6 ("KVM: s390: vsie: initial support for nested virtualization")
-Cc: <stable@vger.kernel.org> # v4.8+
-Signed-off-by: David Hildenbrand <david@redhat.com>
-Link: https://lore.kernel.org/r/20200403153050.20569-3-david@redhat.com
-Reviewed-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
-Reviewed-by: Christian Borntraeger <borntraeger@de.ibm.com>
-[borntraeger@de.ibm.com: fix patch description]
-Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
+Fixes: 6b8d6e5518e2 ("[ALSA] ICE1724: Added support for Audiotrak Prodigy 7.1 HiFi & HD2, Hercules Fortissimo IV")
+BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=207139
+Reviewed-by: Jaroslav Kysela <perex@perex.cz>
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200407084402.25589-3-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/kvm/vsie.c | 1 +
- 1 file changed, 1 insertion(+)
+ sound/pci/ice1712/prodigy_hifi.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/s390/kvm/vsie.c b/arch/s390/kvm/vsie.c
-index 076090f9e666c..4f6c22d72072a 100644
---- a/arch/s390/kvm/vsie.c
-+++ b/arch/s390/kvm/vsie.c
-@@ -1202,6 +1202,7 @@ static int vsie_run(struct kvm_vcpu *vcpu, struct vsie_page *vsie_page)
- 		scb_s->iprcc = PGM_ADDRESSING;
- 		scb_s->pgmilc = 4;
- 		scb_s->gpsw.addr = __rewind_psw(scb_s->gpsw, 4);
-+		rc = 1;
- 	}
- 	return rc;
+diff --git a/sound/pci/ice1712/prodigy_hifi.c b/sound/pci/ice1712/prodigy_hifi.c
+index 9d71e9d5c9a06..3cf41c11a4050 100644
+--- a/sound/pci/ice1712/prodigy_hifi.c
++++ b/sound/pci/ice1712/prodigy_hifi.c
+@@ -536,7 +536,7 @@ static int wm_adc_mux_enum_get(struct snd_kcontrol *kcontrol,
+ 	struct snd_ice1712 *ice = snd_kcontrol_chip(kcontrol);
+ 
+ 	mutex_lock(&ice->gpio_mutex);
+-	ucontrol->value.integer.value[0] = wm_get(ice, WM_ADC_MUX) & 0x1f;
++	ucontrol->value.enumerated.item[0] = wm_get(ice, WM_ADC_MUX) & 0x1f;
+ 	mutex_unlock(&ice->gpio_mutex);
+ 	return 0;
  }
+@@ -550,7 +550,7 @@ static int wm_adc_mux_enum_put(struct snd_kcontrol *kcontrol,
+ 
+ 	mutex_lock(&ice->gpio_mutex);
+ 	oval = wm_get(ice, WM_ADC_MUX);
+-	nval = (oval & 0xe0) | ucontrol->value.integer.value[0];
++	nval = (oval & 0xe0) | ucontrol->value.enumerated.item[0];
+ 	if (nval != oval) {
+ 		wm_put(ice, WM_ADC_MUX, nval);
+ 		change = 1;
 -- 
 2.20.1
 
