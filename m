@@ -2,88 +2,81 @@ Return-Path: <SRS0=3CHW=6C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4BF6C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 18:08:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E4F6C352BE
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 18:11:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E42921D6C
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 18:08:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587233294;
-	bh=HVEqCMbQpoqk8fz723Ul9qh0H6nyLUtRiFTekCs/prM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=LTMNUh0tuHbcxp2uMUGNTrXz5NhGGnm47tS4tMB7iH9rrL/uohOHhqM7iEVqRK2fi
-	 PmlUvd7HRDmJY8U0sLUTjVhizHA5gGxNbvoI98nwTssr98DPqBgUaTDwsRBB6YjUUF
-	 NJlhJccnvNBTsUnVxjVbVlGq/XW61PI731HIY8lg=
+	by mail.kernel.org (Postfix) with ESMTP id 4B2C122244
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 18:11:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fmR27FWL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726892AbgDRSIN (ORCPT
+        id S1726909AbgDRSLF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 14:08:13 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:34753 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725824AbgDRSIN (ORCPT
+        Sat, 18 Apr 2020 14:11:05 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:35612 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726086AbgDRSLD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 14:08:13 -0400
-Received: by mail-ot1-f66.google.com with SMTP id 8so397977otj.1;
-        Sat, 18 Apr 2020 11:08:12 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=DLJngupcywgnMR82TqdZKZr1eEprvnTgR3v/FNMOKrg=;
-        b=UBBU0CC828Q3eu8kWV1YswfgWGodW5jIUPAnnDJLOJr2PmTB5jSzhjFwgKrqYkYprN
-         u6qdWU4ckumoV0NZ2DpSR2gHMQUJiRP9xkk3y9/rhPB03AwG8Zs+2x92z6FDAvFkgP5C
-         SoV1PETRpBsyusUuGTvxzBrukc8RkYvRTLEIT2kN3RDPIqVHnaM78C8vf7ZhICOoouJp
-         kIU2ByMGOswadL9npUnxxr+4A6C1iCp2tGpFNCXjlrBwtKyHc7y3NiXsZHiqTjMcgyGg
-         6wF+3aEX7wBCnU5ZHH9mntSGxtl21p6MurqVTiO08ExC5JvPggPTmpD3QgspzuH/GKnW
-         UgAQ==
-X-Gm-Message-State: AGi0Pua66YupCBf/e/8ahZqjgsYwg89DbHtdx1Xuag72YCsPlr4VvICx
-        DSiAX6vfq7evKQZXwfdHxYowxuCWNOWsA14SikY=
-X-Google-Smtp-Source: APiQypJglJno/ncjr7rJgMge6SotqwSZ0EY57A3iTHjuavimH3o9LJ4snUV77A2wQh3CwWu523P9Or+ovKvgrhH74PA=
-X-Received: by 2002:a9d:1d07:: with SMTP id m7mr3529283otm.167.1587233292593;
- Sat, 18 Apr 2020 11:08:12 -0700 (PDT)
+        Sat, 18 Apr 2020 14:11:03 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587233462;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=4MjBHhLWma7Wyo6Y0oaah6/D7fXV7EHmjvl18i27sII=;
+        b=fmR27FWL2yLBFrSVJnhvzPFRJwD4ItzBNr6CtBjHA581JHeZypyZpFXr3TxTYPTLAX4oaU
+        edStjPyFqd4ryz41FGuZ99C4JGFrQgU5is4SY+F14U+f1OljhHmHhQBDjCT+6OZNwvRX8R
+        75u2l9M+DKCVXZLcduJQStJGaZWoKQM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-284-VnSCfK7uOTK_mHQ6IZsLpQ-1; Sat, 18 Apr 2020 14:10:58 -0400
+X-MC-Unique: VnSCfK7uOTK_mHQ6IZsLpQ-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1BD3D1005510;
+        Sat, 18 Apr 2020 18:10:57 +0000 (UTC)
+Received: from oldenburg2.str.redhat.com (ovpn-112-5.ams2.redhat.com [10.36.112.5])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 1BEF660C05;
+        Sat, 18 Apr 2020 18:10:54 +0000 (UTC)
+From:   Florian Weimer <fweimer@redhat.com>
+To:     Steve French <smfrench@gmail.com>
+Cc:     David Howells <dhowells@redhat.com>,
+        linux-nfs <linux-nfs@vger.kernel.org>,
+        CIFS <linux-cifs@vger.kernel.org>, linux-afs@lists.infradead.org,
+        ceph-devel@vger.kernel.org, keyrings@vger.kernel.org,
+        Network Development <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: What's a good default TTL for DNS keys in the kernel
+References: <3865908.1586874010@warthog.procyon.org.uk>
+        <CAH2r5mv5p=WJQu2SbTn53FeTsXyN6ke_CgEjVARQ3fX8QAtK_w@mail.gmail.com>
+Date:   Sat, 18 Apr 2020 20:10:53 +0200
+In-Reply-To: <CAH2r5mv5p=WJQu2SbTn53FeTsXyN6ke_CgEjVARQ3fX8QAtK_w@mail.gmail.com>
+        (Steve French's message of "Fri, 17 Apr 2020 18:23:53 -0500")
+Message-ID: <87a738aclu.fsf@oldenburg2.str.redhat.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.3 (gnu/linux)
 MIME-Version: 1.0
-References: <5673945.BT02kTCndr@kreacher> <Pine.LNX.4.44L0.2004181356070.2069-100000@netrider.rowland.org>
-In-Reply-To: <Pine.LNX.4.44L0.2004181356070.2069-100000@netrider.rowland.org>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Sat, 18 Apr 2020 20:08:01 +0200
-Message-ID: <CAJZ5v0hAyLv2+xE_eMgmra5kccDLGY941inJbKZyWPStKXk2nQ@mail.gmail.com>
-Subject: Re: [PATCH v2 0/9] PM: sleep: core: Rearrange the handling of driver
- power management flags
-To:     Alan Stern <stern@rowland.harvard.edu>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Hans De Goede <hdegoede@redhat.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Apr 18, 2020 at 8:00 PM Alan Stern <stern@rowland.harvard.edu> wrote:
->
-> On Sat, 18 Apr 2020, Rafael J. Wysocki wrote:
->
-> > Hi,
-> >
-> > This is an update including some fixes and extra patches based on the
-> > continuation of the discussion [1].
->
-> I haven't checked the updates in detail yet.  However, it seems that
-> dev_pm_skip_suspend() and dev_pm_skip_resume() should be EXPORTed,
-> since they are intended to be used by subsystems, which may be in
-> modules.
+* Steve French:
 
-OK, so what about an extra patch to export them?
+>>> The question remains what the expected impact of TTL expiry is.  Will
+>>> the kernel just perform a new DNS query if it needs one?
+>
+> For SMB3/CIFS mounts, Paulo added support last year for automatic
+> reconnect if the IP address of the server changes.  It also is helpful
+> when DFS (global name space) addresses change.
 
-Currently there are no modular users of these functions.
+Do you have reference to the source code implementation?  Thanks.
+
+Florian
+
