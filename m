@@ -2,85 +2,162 @@ Return-Path: <SRS0=3CHW=6C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CAC1C352BE
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 20:04:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5AAFC38A29
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 20:08:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F2C0F22209
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 20:04:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B392D2051A
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 20:08:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587240248;
-	bh=0nBNiOhYslBGZi3hU6t23pUnSQPLLvrhg3F00+x4rhQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=kBCH6uMwyjrDfZJpKaJpyyyhvcSUeFGlAGKMhinbwoYlBYtVLp5F4oYlCzHZq21KN
-	 pbodxVfRvj+D7PCGtE+dz/6Zg2A5QXFFhBjHtEnuOrFSx/ZGAJFaiq0CdzbsYd/bi5
-	 WBtTSkT42ByDnd3b/8RkEjLcJqNk3ShoJIG0B8gA=
+	s=default; t=1587240538;
+	bh=V3F5hwvoELzdxLSFOjkbEENRNeTxisdJFAY+ka+QaN4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=MZOZWrw/BxwlsxPCeKZJb8irFroXTNUmJIaFii2Iat9y7coMQg2zW90Ijw+aD9MzN
+	 t1RnA5ET/sWyvim9cbsNbwc5dTXst11C1jwl/rEtPaVCfWdxRNd4GKc2kzBDdsmtIX
+	 SnB+0hT/iydTWD1cGWsxhAONgUndCKR6/yG1sVbU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728155AbgDRUEH (ORCPT
+        id S1728253AbgDRUI6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 16:04:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51750 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727927AbgDRUEG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 16:04:06 -0400
-Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1593420732;
-        Sat, 18 Apr 2020 20:04:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587240246;
-        bh=0nBNiOhYslBGZi3hU6t23pUnSQPLLvrhg3F00+x4rhQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=TD5HNLsgCT1Q3YLxiBZsmnSj79nVmSV8L581P/wdVS3XDs/xJ5hqfRqky6pfIPPV3
-         dwGpvT4Lkp9bHL78VWhuGSgU0V5jme8Oz0Fy7uP/MX2HYmYyNTzJJTL8eKbEJne0E5
-         cY0alrHRaPcmdNeP7GotooiUy1MHA3VB8HiAociw=
-Date:   Sat, 18 Apr 2020 13:04:05 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Dongli Zhang <dongli.zhang@oracle.com>
-Cc:     linux-mm@kvack.org, cl@linux.com, penberg@kernel.org,
-        rientjes@google.com, iamjoonsoo.kim@lge.com,
-        linux-kernel@vger.kernel.org, joe.jin@oracle.com
-Subject: Re: [PATCH 1/1] mm: slub: fix corrupted freechain in
- deactivate_slab()
-Message-Id: <20200418130405.b1cc0a2d23cbe30d632a3ec7@linux-foundation.org>
-In-Reply-To: <d9ebb540-b3ec-a29a-1d7a-2f5762010b53@oracle.com>
-References: <20200331031450.12182-1-dongli.zhang@oracle.com>
-        <20200417181219.bef9b2f9ade92bf3798e3622@linux-foundation.org>
-        <d9ebb540-b3ec-a29a-1d7a-2f5762010b53@oracle.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Sat, 18 Apr 2020 16:08:58 -0400
+Received: from conssluserg-05.nifty.com ([210.131.2.90]:50151 "EHLO
+        conssluserg-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727927AbgDRUI5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 16:08:57 -0400
+Received: from mail-ua1-f50.google.com (mail-ua1-f50.google.com [209.85.222.50]) (authenticated)
+        by conssluserg-05.nifty.com with ESMTP id 03IK8KnK027464;
+        Sun, 19 Apr 2020 05:08:20 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com 03IK8KnK027464
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1587240501;
+        bh=FHGQZW3L61l0ht0FqMOh2lDbaq5P4UJ78OF0DaS8gXw=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=E90rOCkolc4VeNd0U16ZLeAyevVrnC0jfgTv/flP1QA6O5Xtu16KJ/yPoJSSWpIY/
+         NNoCDZD45SUBLY7346VKhAMDkrw4Tey3zmbXj49KOwBL+ZqWr1h1fwrIxp2J4d5ZHb
+         LL0TrFEGuddsTVn+f5JECpUepekY/yXP9R2hK3qzR+iyZ6A++b4ZwrLX9tIOwAT2Fp
+         Qv6mf9RSpzU7ROoCWZHAKuCZUUY/3ZPSuTXCuM9bGWFvQs/TplBdgsIc04TPy/3ZwE
+         zMJ1dk8Bn3BOxzTuuYivVdS6VW11gceVDlvgowTKUCbfpOubgijJh1wxn6iHStEgDJ
+         aXj+i0zaInSPA==
+X-Nifty-SrcIP: [209.85.222.50]
+Received: by mail-ua1-f50.google.com with SMTP id x18so2066557uap.8;
+        Sat, 18 Apr 2020 13:08:20 -0700 (PDT)
+X-Gm-Message-State: AGi0PuY+cgyHgUSBaNhdKiPkB8EqL1a+z+Zldb2A8OtToDR5Yq6ONeYS
+        /vw3Qb0Ol4M4dUJ4kKpxYr5IKTbuektTNpwQwkY=
+X-Google-Smtp-Source: APiQypLv56nIJHUkp6yZ1l2SZf5qOusJczTvcie3CqjRSju4r9GOlItOZ6lCW8Ag7V+ab1eP/w/DBkQLiUqCh/Jy9O8=
+X-Received: by 2002:ab0:1166:: with SMTP id g38mr1810895uac.40.1587240499498;
+ Sat, 18 Apr 2020 13:08:19 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200417011146.83973-1-saeedm@mellanox.com> <CAK7LNAQZd_LUyA2V_pCvMTr_201nSX1Nm0TDw5kOeNV64rOfpA@mail.gmail.com>
+ <nycvar.YSQ.7.76.2004181509030.2671@knanqh.ubzr>
+In-Reply-To: <nycvar.YSQ.7.76.2004181509030.2671@knanqh.ubzr>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Sun, 19 Apr 2020 05:07:43 +0900
+X-Gmail-Original-Message-ID: <CAK7LNATmPD1R+Ranis2u3yohx8b0+dGKAvFpjg8Eo9yEHRT6zQ@mail.gmail.com>
+Message-ID: <CAK7LNATmPD1R+Ranis2u3yohx8b0+dGKAvFpjg8Eo9yEHRT6zQ@mail.gmail.com>
+Subject: Re: [RFC PATCH 1/2] Kconfig: Introduce "uses" keyword
+To:     Nicolas Pitre <nico@fluxnic.net>
+Cc:     Saeed Mahameed <saeedm@mellanox.com>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>, Jason Gunthorpe <jgg@ziepe.ca>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        jonas@kwiboo.se, David Airlie <airlied@linux.ie>,
+        jernej.skrabec@siol.net,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>, linux-rdma@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 17 Apr 2020 18:56:51 -0700 Dongli Zhang <dongli.zhang@oracle.com> wrote:
+On Sun, Apr 19, 2020 at 4:11 AM Nicolas Pitre <nico@fluxnic.net> wrote:
+>
+> On Sun, 19 Apr 2020, Masahiro Yamada wrote:
+>
+> > (FOO || !FOO) is difficult to understand, but
+> > the behavior of "uses FOO" is as difficult to grasp.
+>
+> Can't this be expressed as the following instead:
+>
+>         depends on FOO if FOO
+>
+> That would be a little clearer.
+>
+>
+> Nicolas
 
-> > @@ -2096,6 +2097,7 @@ static void deactivate_slab(struct kmem_
-> >  			slab_fix(s, "Isolate corrupted freechain");
-> >  			break;
-> >  		}
-> > +#endif
-> >  
-> >  		do {
-> >  			prior = page->freelist;
-> > 
-> > But it's a bit ugly.  How about this?
-> 
-> Sorry that I did not realize check_valid_pointer() requires CONFIG_SLAB_DEBUG.
-> 
-> Yes, it is much better to encapsulate it into freelist_corrupted() and just
-> return false when CONFIG_SLAB_DEBUG is not involved. The check_object() has
-> similar implementation.
-> 
-> Should I resend with your "Signed-off-by" or you would just fix it when applying?
 
-That's OK.  I'll fold the patches together and update the changelog
-before sending the patch in to Linus.
 
+'depends on' does not take the 'if <expr>'
+
+'depends on A if B' is the syntax sugar of
+'depends on (A || !B), right ?
+
+I do not know how clearer it would make things.
+
+depends on (m || FOO != m)
+is another equivalent, but we are always
+talking about a matter of expression.
+
+
+How important is it to stick to
+depends on (FOO || !FOO)
+or its equivalents?
+
+
+If a driver wants to use the feature FOO
+in most usecases, 'depends on FOO' is sensible.
+
+If FOO is just optional, you can get rid of the dependency,
+and IS_REACHABLE() will do logically correct things.
+
+
+I do not think IS_REACHABLE() is too bad,
+but if it is confusing, we can add one more
+option to make it explicit.
+
+
+
+config DRIVER_X
+       tristate "driver x"
+
+config DRIVER_X_USES_FOO
+       bool "use FOO from driver X"
+       depends on DRIVER_X
+       depends on DRIVER_X <= FOO
+       help
+         DRIVER_X works without FOO, but
+         Using FOO will provide better usability.
+         Say Y if you want to make driver X use FOO.
+
+
+
+Of course,
+
+      if (IS_ENABLED(CONFIG_DRIVER_X_USES_FOO))
+               foo_init();
+
+works like
+
+      if (IS_REACHABLE(CONFIG_FOO))
+                foo_init();
+
+
+At lease, it will eliminate a question like
+"I loaded the module FOO, I swear.
+But my built-in driver X still would not use FOO, why?"
+
+
+
+
+
+-- 
+Best Regards
+Masahiro Yamada
