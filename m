@@ -2,106 +2,111 @@ Return-Path: <SRS0=3CHW=6C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A359CC3A5A0
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 16:13:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3E5DC38A29
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 16:16:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 79E02221F7
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 16:13:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587226434;
-	bh=KG5kr+r6xfH+Cc2DIMIM2ITLXapR56Y7u44/dQUvWBs=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=FC9lNTWiDN6SAlb8+iblalMQ4QF3o8uZ/8LRt4uyWV/ObbIP8R19tG3Ri9Us5bfDL
-	 m9IjV2DIQOEBycVR2L3NWP8I6xqejyg+lyuTy6j4IEkzeu3dCRN4QoFKTE1yrMaEcP
-	 rq7f+0Ea41TpfvchSR2dwXoobpQEw5N0N26Y/b+Q=
+	by mail.kernel.org (Postfix) with ESMTP id 7AD54206D9
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 16:16:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="AEV0Q8nz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726535AbgDRQNx (ORCPT
+        id S1726707AbgDRQQA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 12:13:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39206 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726069AbgDRQNx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 12:13:53 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0CE6921D6C;
-        Sat, 18 Apr 2020 16:13:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587226432;
-        bh=KG5kr+r6xfH+Cc2DIMIM2ITLXapR56Y7u44/dQUvWBs=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=w7W9GqsG82j2wtEFwhnIr+opivKUWBuD407VbUOdQ1dtb6eQudNFlRs+j8yZB459m
-         4JgZJdCIy9YEm9Fcl+RMOqq7Q8Ffq/Tv/CE3qfTehUaPjFelSsI2gq4KTCiAJETnMi
-         DfI0tPDYRKY3+o/3U8mzmNCF75Ri7K3LLARQ6+oM=
-Date:   Sat, 18 Apr 2020 17:13:48 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
-Cc:     "lars@engebretsen.ch" <lars@engebretsen.ch>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>
-Subject: Re: [PATCH v2] iio: core: remove extra semi-colon from
- devm_iio_device_register() macro
-Message-ID: <20200418171348.72f9d032@archlinux>
-In-Reply-To: <526f58cee9ef50cfb13af4b25d215735985cce9a.camel@analog.com>
-References: <20200415101043.32050-1-lars@engebretsen.ch>
-        <526f58cee9ef50cfb13af4b25d215735985cce9a.camel@analog.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sat, 18 Apr 2020 12:16:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47262 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726069AbgDRQQA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 12:16:00 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0CDD6C061A0F
+        for <linux-kernel@vger.kernel.org>; Sat, 18 Apr 2020 09:16:00 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id 188so2736240pgj.13
+        for <linux-kernel@vger.kernel.org>; Sat, 18 Apr 2020 09:16:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ynPs9yCTFEYeEFPuAm4M1vFpAEJsfkM86gMqu119GEg=;
+        b=AEV0Q8nz4bM1mFjWrAqmRb5Uk76KbAox9kQ7IFQwCyOcg4niMOPIZarlOuziLxs9sT
+         8eBlbsdiLAuvQaOOsmzd6Rd1IBXUTlnsU8eU+7EPHfuc1k+5NDECbQrewH26RG6Q+rEP
+         DorsroP/2q/HaX3wOR3bvW5Icj2qS8Z6O1hCA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ynPs9yCTFEYeEFPuAm4M1vFpAEJsfkM86gMqu119GEg=;
+        b=PiZO7nRDx4yNBJrTlsSUDM1TkSY40Tky8GG24vR/pJM9FwqIYHnqtverxW5oeK5bWj
+         948HTlwJyd4Hpa4SbkmYpgtFm30VLMfWxkhLas9sg1ti+wfu/lDfN6z0mjAWiWqmaMTx
+         D5ueTJm54kRelJoP6YLacuRDXjFx9iMSxHmnra155KER0g7f0XcCdzq/rpzHAVd21M0u
+         6iCDAJ3YWbsCgmH0I/dRZR14NzyAr9MwXV0JV/26OtQXqL/0n2I6Br1QKMNY3LOTIWTJ
+         s1mQZcEi5tUxiBvO/gzDGBw4Yf0I175VgVtrBUg73PzSg0rMvp4lXSNorzjA1cjCXiCo
+         CDPg==
+X-Gm-Message-State: AGi0PubDsf89FJ6b/rLON2exa3kEE7tX4/xxMd24nhtucmLvmapJPQD3
+        zDQEdFFGCB9Pf4k2fNn+/KrtXg==
+X-Google-Smtp-Source: APiQypLAxdOBnUjU+81Bxrc2gydUAnUtyWqhVEM5QLe5VrX10ZsCZcUUMHZw/dppb11GOcsoMh27YA==
+X-Received: by 2002:a65:6704:: with SMTP id u4mr8689747pgf.263.1587226559547;
+        Sat, 18 Apr 2020 09:15:59 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
+        by smtp.gmail.com with ESMTPSA id s129sm9456896pfb.3.2020.04.18.09.15.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 18 Apr 2020 09:15:58 -0700 (PDT)
+Date:   Sat, 18 Apr 2020 09:15:57 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Douglas Anderson <dianders@chromium.org>
+Cc:     bjorn.andersson@linaro.org, agross@kernel.org, swboyd@chromium.org,
+        mkshah@codeaurora.org, Evan Green <evgreen@chromium.org>,
+        Srinivas Rao L <lsrao@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] soc: qcom: rpmh: Dirt can only make you dirtier, not
+ cleaner
+Message-ID: <20200418161557.GF199755@google.com>
+References: <20200417141531.1.Ia4b74158497213eabad7c3d474c50bfccb3f342e@changeid>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200417141531.1.Ia4b74158497213eabad7c3d474c50bfccb3f342e@changeid>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 15 Apr 2020 11:41:24 +0000
-"Ardelean, Alexandru" <alexandru.Ardelean@analog.com> wrote:
-
-> On Wed, 2020-04-15 at 12:10 +0200, Lars Engebretsen wrote:
-> > This change removes the semi-colon from the devm_iio_device_register()
-> > macro which seems to have been added by accident via commit 63b19547cc3d9
-> > ("iio: Use macro magic to avoid manual assign of driver_module").
-> >   
+On Fri, Apr 17, 2020 at 02:15:47PM -0700, Douglas Anderson wrote:
+> Adding an item into the cache should never be able to make the cache
+> cleaner.  Use "|=" rather than "=" to update the dirty flag.
 > 
-> Reviewed-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-
-The above reference to where the bug was introduced should have been
-a Fixes: tag as that guides where this is backported to.
-
-I made it so whilst applying.
-
-Applied to the fixes-togreg branch of iio.git.
-
-Thanks,
-
-Jonathan
-
+> Fixes: bb7000677a1b ("soc: qcom: rpmh: Update dirty flag only when data changes")
+> Reported-by: Stephen Boyd <swboyd@chromium.org>
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> ---
 > 
-> > Signed-off-by: Lars Engebretsen <lars@engebretsen.ch>
-> > ---
-> > Changelog v1 -> v2:
-> > * added commit change description
-> > 
-> >  include/linux/iio/iio.h | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/include/linux/iio/iio.h b/include/linux/iio/iio.h
-> > index d63884a54939..76ba7c9fd3e0 100644
-> > --- a/include/linux/iio/iio.h
-> > +++ b/include/linux/iio/iio.h
-> > @@ -597,7 +597,7 @@ void iio_device_unregister(struct iio_dev *indio_dev);
-> >   * 0 on success, negative error number on failure.
-> >   */
-> >  #define devm_iio_device_register(dev, indio_dev) \
-> > -	__devm_iio_device_register((dev), (indio_dev), THIS_MODULE);
-> > +	__devm_iio_device_register((dev), (indio_dev), THIS_MODULE)
-> >  int __devm_iio_device_register(struct device *dev, struct iio_dev *indio_dev,
-> >  			       struct module *this_mod);
-> >  int iio_push_event(struct iio_dev *indio_dev, u64 ev_code, s64 timestamp);  
+>  drivers/soc/qcom/rpmh.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/soc/qcom/rpmh.c b/drivers/soc/qcom/rpmh.c
+> index 3abbb08cd6e1..d1626a1328d7 100644
+> --- a/drivers/soc/qcom/rpmh.c
+> +++ b/drivers/soc/qcom/rpmh.c
+> @@ -151,10 +151,10 @@ static struct cache_req *cache_rpm_request(struct rpmh_ctrlr *ctrlr,
+>  		break;
+>  	}
+>  
+> -	ctrlr->dirty = (req->sleep_val != old_sleep_val ||
+> -			req->wake_val != old_wake_val) &&
+> -			req->sleep_val != UINT_MAX &&
+> -			req->wake_val != UINT_MAX;
+> +	ctrlr->dirty |= (req->sleep_val != old_sleep_val ||
+> +			 req->wake_val != old_wake_val) &&
+> +			 req->sleep_val != UINT_MAX &&
+> +			 req->wake_val != UINT_MAX;
+>  
+>  unlock:
+>  	spin_unlock_irqrestore(&ctrlr->cache_lock, flags);
 
+Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
