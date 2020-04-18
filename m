@@ -2,193 +2,132 @@ Return-Path: <SRS0=3CHW=6C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5AABC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 00:30:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 519DCC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 00:42:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 809692076D
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 00:30:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DFDC21D94
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 00:42:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dabbelt-com.20150623.gappssmtp.com header.i=@dabbelt-com.20150623.gappssmtp.com header.b="TJAxg6Nj"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="MHucO/Xc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725939AbgDRAak (ORCPT
+        id S1725988AbgDRAmT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 20:30:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44116 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725766AbgDRAak (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 20:30:40 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12ADAC061A0C
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 17:30:40 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id u9so1837557pfm.10
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 17:30:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dabbelt-com.20150623.gappssmtp.com; s=20150623;
-        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
-         :content-transfer-encoding;
-        bh=0AfeFitryBiJJWIKCCwY7N0WlSHnDG6Y0BrOA9pYIjg=;
-        b=TJAxg6Nj7mvYe9W1fv1qsO7mUzp9flRqxmoqk6bQImYJehU7tMbjjTy3GYG7Ve8abr
-         ZhQ+lm4D3jFNcbv8/DP4L8GEWXfMvR2rODm0wJtp9r+UXsaXAwrwIN9Cl33l9WJCSbCt
-         NdY8K1h6whKlji5c2LAlvnwF3y+pMkt5FwHeW7vg+e4uPyQokPV3tPQKjjM7PeDGKVTc
-         YDguumzHMQZlK00MzNp39F2pNMNuFRqo7VyIzwlChH6/nYHAqZt6itpF9vdwQAj9nCAB
-         9sSBfMw3IH6UpronKtIWKd80yXcjPiEc9DlSS7camZjQWhmFra0AvLCCfjUHPgoefSbi
-         YTYg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
-         :mime-version:content-transfer-encoding;
-        bh=0AfeFitryBiJJWIKCCwY7N0WlSHnDG6Y0BrOA9pYIjg=;
-        b=tadzSPIYs+qg2/QXWnxEgPNGEcNEjNsJRDBT4sB3COTyTofg+3f7kzwJepvRrBwDOe
-         g2NQQF6s9bhAAx62UBXl4CWI9mVtCF0FLV51Ap8wx9q1pBDOMjBsLlOG6tJP/BoxBzgg
-         mLJLl2Vti7NIlNv8S3fjEe+idthcvJrOZc58r1wV/mchjVFSiCuCTe3wvGmOO073wJ7V
-         tUKCohlem3o2HiQ9EVrZ1mpnNZ+CBqpKZya9R5qcjpk6P8Xvd3A9c+S/de+1ixj2usxO
-         X4+mBvohtHR6T5f0x+IIwOvNc0A8y7JdsDetKS1LDsbzek7EIdQp23aCBKsyP92u9pgd
-         pIfw==
-X-Gm-Message-State: AGi0PuZJpkCYpfbqgMStgFxvWT6/qJ8JnGIsorwLbh5Fs3xCvRSF6rx7
-        50gfeDB7tOh5KNGtuQjeoeSTgw==
-X-Google-Smtp-Source: APiQypKUElb866HEHEtPLanFvP/5xIzuLq3qC6Q5JBOUeVvdZeVNhGXGCLpmMGvSEMhaHzmc/riFIg==
-X-Received: by 2002:aa7:9722:: with SMTP id k2mr5789777pfg.147.1587169839258;
-        Fri, 17 Apr 2020 17:30:39 -0700 (PDT)
-Received: from localhost (76-210-143-223.lightspeed.sntcca.sbcglobal.net. [76.210.143.223])
-        by smtp.gmail.com with ESMTPSA id t103sm6764185pjb.46.2020.04.17.17.30.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Apr 2020 17:30:38 -0700 (PDT)
-Date:   Fri, 17 Apr 2020 17:30:38 -0700 (PDT)
-X-Google-Original-Date: Fri, 17 Apr 2020 17:30:37 PDT (-0700)
-Subject:     Re: [PATCH v5 9/9] riscv: add STRICT_KERNEL_RWX support
-In-Reply-To: <100e739c5fd722a96fcc640c8ee0c82fe34fcb6a.1586332296.git.zong.li@sifive.com>
-CC:     Paul Walmsley <paul.walmsley@sifive.com>, aou@eecs.berkeley.edu,
-        mhiramat@kernel.org, linux-riscv@lists.infradead.org,
-        linux-kernel@vger.kernel.org, zong.li@sifive.com
-From:   Palmer Dabbelt <palmer@dabbelt.com>
-To:     zong.li@sifive.com
-Message-ID: <mhng-09f91ec8-5821-41ad-a743-3842ca10f9e2@palmerdabbelt-glaptop1>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+        Fri, 17 Apr 2020 20:42:19 -0400
+Received: from mail-bn8nam12on2105.outbound.protection.outlook.com ([40.107.237.105]:6401
+        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725856AbgDRAmS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Apr 2020 20:42:18 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=IE1YNnyhgG0dxPUBoWSG+dmaKLz0V0AA7U1r/01aC2DsE4tPakjhs/Evr/nco0b2vY9MLCf1Q/Ay/oTF8mMtExiT8G1jGwUQfjDbncroedFBn6xDGwWfmJZRlelPy9gNxTPbeOf5AzBpS9wK6j9WHGofzPsu1xZlU5g7L1qGls9s9UuxbunC7Lbv0FRESEqR9gaMw7X1TYR5dRxGhgs4/B6m5/OEQPiyDEM6KEwZXo1A0OWfyxGYB/HC2vpn2gpuHy1T235vGVFjt9iqsTARUPTb6ZKzwyX/GgfqJ+FT8JA/RlgOXZCvGMNXo4xCbyDj5PxJpYrn2qW2x1hL6b3tCw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=BzvYdIMAkBClYgO5clNltn42BywmXqTIe68+GqgAP4k=;
+ b=EjdG9UdhA9SFSWgpI8qJZhXYBwdxbUkhKEktiOfAkkOxMqSNXpBrgWJmSQcr5s0k3jXMEZzObZRrVhXWqb61Fl59sshGGCZq0mKNu+IYGxtYWzCLfRqXiyAMZSqtPMF5TWp8WsmWMj/GFMqTYKvOoPRB9G+ilDi5ND84tahBR61DyCqF47QploB50PqSO0NSTZXxrHMEYNd/ttry1agz2MAStpk7K9/Ym3ugWLtnPiPvhi9N8jcLLtskzudl9pW/XUmXIeMvsbyqBQkhPB6qpNzZ74mk5tpMiFO2CqXANaW+LjqBjcQ71PfmkVxDLvj21dXJVx1JUMgGaiDomitjjQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=BzvYdIMAkBClYgO5clNltn42BywmXqTIe68+GqgAP4k=;
+ b=MHucO/XcDZgwsiAn+1qcmXsuvEynhCxuyo/DZH+X+PIpbrq9f15bGR3CiMJtaI8fIMMCOHDJnIwqnEXj+pkof70pUmeKmZGlb+GjeCSLiTDMJIo55dszlVrYqS5lkot7l9UWsfvshUFeMe3COIsZ8DfxGOAXqH6sULJc2prwNqg=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=decui@microsoft.com; 
+Received: from BN8PR21MB1139.namprd21.prod.outlook.com (2603:10b6:408:72::10)
+ by BN8PR21MB1156.namprd21.prod.outlook.com (2603:10b6:408:73::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2921.10; Sat, 18 Apr
+ 2020 00:42:15 +0000
+Received: from BN8PR21MB1139.namprd21.prod.outlook.com
+ ([fe80::b01b:e85:784d:4581]) by BN8PR21MB1139.namprd21.prod.outlook.com
+ ([fe80::b01b:e85:784d:4581%8]) with mapi id 15.20.2937.000; Sat, 18 Apr 2020
+ 00:42:15 +0000
+From:   Dexuan Cui <decui@microsoft.com>
+To:     jejb@linux.ibm.com, martin.petersen@oracle.com,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        hch@lst.de, bvanassche@acm.org, hare@suse.de,
+        mikelley@microsoft.com, longli@microsoft.com, ming.lei@redhat.com
+Cc:     Dexuan Cui <decui@microsoft.com>
+Subject: [PATCH] scsi: core: Allow the state change from SDEV_QUIESCE to SDEV_BLOCK
+Date:   Fri, 17 Apr 2020 17:40:45 -0700
+Message-Id: <1587170445-50013-1-git-send-email-decui@microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
+Reply-To: decui@microsoft.com
+Content-Type: text/plain
+X-ClientProxiedBy: MW2PR16CA0041.namprd16.prod.outlook.com
+ (2603:10b6:907:1::18) To BN8PR21MB1139.namprd21.prod.outlook.com
+ (2603:10b6:408:72::10)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (13.77.154.182) by MW2PR16CA0041.namprd16.prod.outlook.com (2603:10b6:907:1::18) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2921.25 via Frontend Transport; Sat, 18 Apr 2020 00:42:13 +0000
+X-Mailer: git-send-email 1.8.3.1
+X-Originating-IP: [13.77.154.182]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 57bb415a-f2f4-4a31-c4fc-08d7e33156da
+X-MS-TrafficTypeDiagnostic: BN8PR21MB1156:|BN8PR21MB1156:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <BN8PR21MB1156D5160E597019EFF9ED10BFD60@BN8PR21MB1156.namprd21.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:5236;
+X-Forefront-PRVS: 0377802854
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN8PR21MB1139.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(4636009)(376002)(39860400002)(136003)(396003)(366004)(346002)(4326008)(10290500003)(8936002)(66556008)(36756003)(6512007)(107886003)(66476007)(6486002)(478600001)(66946007)(316002)(6666004)(8676002)(82960400001)(2906002)(3450700001)(956004)(2616005)(86362001)(186003)(81156014)(5660300002)(26005)(6506007)(16526019)(52116002)(82950400001)(921003);DIR:OUT;SFP:1102;
+Received-SPF: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: DbzYaRGIWME7SsF70pknn5umw8GswiinfsidFHjdVUjNO3TKLK9v0+cpfDq3irJE3+UrB3IKX4WhnEevrmrJ9mGes2BuPqIzVZ2SQpELRu3gG1KQyG3J8yuIQzcNghrXXkixJbLs7AWo6aQMRRmBTRlT/B9e8yMADvgvj+VlanQzL1F67bn6UayyZZbKVvFmliEcdIhMzockGdKnqor1KCTUKMxlCXCj7FahBmbqmGlYss/C2NPuSGk+efpSIs8B6G2eq9eCp6Y2euttxe9G25LtYTQ5X3Gy+HhwbpZ8NyXtrpKfDVcZKws25OXAiTiAYcCY8k3IfdvZktJenaytP2HoMXkpoiN5WR+6cbKp8jTOs9V3+bodJtC45bxfKbGRJ3czrw66+/VOq6oCCdh79+mrQ/dcgMWMMOvmY9fCC1SoAJCYeMIjhaURok0+Ntu+ZbO0/8TogCI4xOp6+Wwq05FTwJxXpdFDrVvT3tjHGBU=
+X-MS-Exchange-AntiSpam-MessageData: Dy9vkuwJhCOiM36AA1IWPzxuOsM0JCSmdvwhqtCjz+O1We1egWdN3Y9H37dPhyOqBroJP78KCAOpN1D38jEQbBBsvoxvK8gPKh8R+4tShm5Q9psgW9EPVD8dOq4CiIIvov36DjqziUlwApBFXSRQuQbab80gRKp4JSFwAPjhnBkfe+SVn8yJ89xsa6AUZBQ23wjj8eJc2radgn1LpMGfnUaaKaoAvHCHXUKh7JmHCHTNQFC6Wu47I8SrGVZFiZ2A2nnYG3dN4HSC4kIyb+dR2U2RIBDqFdiCPCoBQy2xn7PNO7C9OMz0VFUKCUAi4naHg+rRZJgstLIkqKVk/S2Eo7yuBThA+gBt+5qab3NrYhycv2CejWf86t1p7YDMg/aAUZivIih4n0vBnKYSrHfGzV/4pOiqbambdY5piffajwq6QlaLDO8PmcNQWjIQDVFoienZgHRqp1PycRE4CuBnA7bNtw9xwGA9zz0QZE+YbH76ipoJSUbmz999r9qMzujxnkT2g0BO4AFFG7vspD/k+OY/rHJ7piaGf0xsCXFsypbAiJs2uBZ1Uw3tteDDCcLGUg+PZhome+pwYUOW/rgPOS6yBZWpQB87e27ixielfz542bKCOJq+vHGPBLzjBofzf6OlUK9SUmlLmBswFpk6aRo3c1aLRFgAK3piObNdgdrBwYTKjqVhv/y72aFrFyhx/JfpzB/n18ZpjOPvd3Mmpu1rju2/J6xUlY1S2XY7swawxQl2ewzqKIQG+0MrsmmKzIc/9Sl1z0gqM6oFNmFQUWqiyntlenPFmuDIlqNV21M=
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 57bb415a-f2f4-4a31-c4fc-08d7e33156da
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Apr 2020 00:42:15.1202
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: teMvReK8se7Qe08QgEsPUhQN9/VpfGNtsMOj1NQtvoH9jabaK4cQdNL8kketPVkD402kzF8npCMo0pz9ZpNZsg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR21MB1156
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 08 Apr 2020 00:57:04 PDT (-0700), zong.li@sifive.com wrote:
-> The commit contains that make text section as non-writable, rodata
-> section as read-only, and data section as non-executable.
->
-> The init section should be changed to non-executable.
->
-> Signed-off-by: Zong Li <zong.li@sifive.com>
-> ---
->  arch/riscv/Kconfig                  |  1 +
->  arch/riscv/include/asm/set_memory.h |  8 ++++++
->  arch/riscv/mm/init.c                | 44 +++++++++++++++++++++++++++++
->  3 files changed, 53 insertions(+)
->
-> diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-> index 1e1efc998baf..58b556167d59 100644
-> --- a/arch/riscv/Kconfig
-> +++ b/arch/riscv/Kconfig
-> @@ -61,6 +61,7 @@ config RISCV
->  	select ARCH_HAS_GIGANTIC_PAGE
->  	select ARCH_HAS_SET_DIRECT_MAP
->  	select ARCH_HAS_SET_MEMORY
-> +	select ARCH_HAS_STRICT_KERNEL_RWX
->  	select ARCH_WANT_HUGE_PMD_SHARE if 64BIT
->  	select SPARSEMEM_STATIC if 32BIT
->  	select ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT if MMU
-> diff --git a/arch/riscv/include/asm/set_memory.h b/arch/riscv/include/asm/set_memory.h
-> index 4c5bae7ca01c..c38df4771c09 100644
-> --- a/arch/riscv/include/asm/set_memory.h
-> +++ b/arch/riscv/include/asm/set_memory.h
-> @@ -22,6 +22,14 @@ static inline int set_memory_x(unsigned long addr, int numpages) { return 0; }
->  static inline int set_memory_nx(unsigned long addr, int numpages) { return 0; }
->  #endif
->
-> +#ifdef CONFIG_STRICT_KERNEL_RWX
-> +void set_kernel_text_ro(void);
-> +void set_kernel_text_rw(void);
-> +#else
-> +static inline void set_kernel_text_ro(void) { }
-> +static inline void set_kernel_text_rw(void) { }
-> +#endif
-> +
->  int set_direct_map_invalid_noflush(struct page *page);
->  int set_direct_map_default_noflush(struct page *page);
->
-> diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
-> index fab855963c73..b55be44ff9bd 100644
-> --- a/arch/riscv/mm/init.c
-> +++ b/arch/riscv/mm/init.c
-> @@ -12,6 +12,7 @@
->  #include <linux/sizes.h>
->  #include <linux/of_fdt.h>
->  #include <linux/libfdt.h>
-> +#include <linux/set_memory.h>
->
->  #include <asm/fixmap.h>
->  #include <asm/tlbflush.h>
-> @@ -477,6 +478,17 @@ static void __init setup_vm_final(void)
->  	csr_write(CSR_SATP, PFN_DOWN(__pa_symbol(swapper_pg_dir)) | SATP_MODE);
->  	local_flush_tlb_all();
->  }
-> +
-> +void free_initmem(void)
-> +{
-> +	unsigned long init_begin = (unsigned long)__init_begin;
-> +	unsigned long init_end = (unsigned long)__init_end;
-> +
-> +	/* Make the region as non-execuatble. */
-> +	set_memory_nx(init_begin, (init_end - init_begin) >> PAGE_SHIFT);
-> +	free_initmem_default(POISON_FREE_INITMEM);
-> +}
-> +
->  #else
->  asmlinkage void __init setup_vm(uintptr_t dtb_pa)
->  {
-> @@ -488,6 +500,38 @@ static inline void setup_vm_final(void)
->  }
->  #endif /* CONFIG_MMU */
->
-> +#ifdef CONFIG_STRICT_KERNEL_RWX
-> +void set_kernel_text_rw(void)
-> +{
-> +	unsigned long text_start = (unsigned long)_text;
-> +	unsigned long text_end = (unsigned long)_etext;
-> +
-> +	set_memory_rw(text_start, (text_end - text_start) >> PAGE_SHIFT);
-> +}
-> +
-> +void set_kernel_text_ro(void)
-> +{
-> +	unsigned long text_start = (unsigned long)_text;
-> +	unsigned long text_end = (unsigned long)_etext;
-> +
-> +	set_memory_ro(text_start, (text_end - text_start) >> PAGE_SHIFT);
-> +}
-> +
-> +void mark_rodata_ro(void)
-> +{
-> +	unsigned long text_start = (unsigned long)_text;
-> +	unsigned long text_end = (unsigned long)_etext;
-> +	unsigned long rodata_start = (unsigned long)__start_rodata;
-> +	unsigned long data_start = (unsigned long)_data;
-> +	unsigned long max_low = (unsigned long)(__va(PFN_PHYS(max_low_pfn)));
-> +
-> +	set_memory_ro(text_start, (text_end - text_start) >> PAGE_SHIFT);
-> +	set_memory_ro(rodata_start, (data_start - rodata_start) >> PAGE_SHIFT);
-> +	set_memory_nx(rodata_start, (data_start - rodata_start) >> PAGE_SHIFT);
-> +	set_memory_nx(data_start, (max_low - data_start) >> PAGE_SHIFT);
-> +}
-> +#endif
-> +
->  void __init paging_init(void)
->  {
->  	setup_vm_final();
+The APIs scsi_host_block()/scsi_host_unblock() are recently added by:
+2bb955840c1d ("scsi: core: add scsi_host_(block,unblock) helper function")
+and so far the APIs are only used by:
+3d3ca53b1639 ("scsi: aacraid: use scsi_host_(block,unblock) to block I/O")
 
-Reviewed-by: Palmer Dabbelt <palmerdabbelt@google.com>
+However, from reading the code, I think the APIs don't really work for
+aacraid, because, in the resume path of hibernation, when aac_suspend() ->
+scsi_host_block() is called, scsi_device_quiesce() has set the state to
+SDEV_QUIESCE, so aac_suspend() -> scsi_host_block() returns -EINVAL.
+
+Fix the issue by allowing the state change.
+
+Fixes: 2bb955840c1d ("scsi: core: add scsi_host_(block,unblock) helper function")
+Signed-off-by: Dexuan Cui <decui@microsoft.com>
+---
+ drivers/scsi/scsi_lib.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/scsi/scsi_lib.c b/drivers/scsi/scsi_lib.c
+index 47835c4b4ee0..06c260f6cdae 100644
+--- a/drivers/scsi/scsi_lib.c
++++ b/drivers/scsi/scsi_lib.c
+@@ -2284,6 +2284,7 @@ scsi_device_set_state(struct scsi_device *sdev, enum scsi_device_state state)
+ 		switch (oldstate) {
+ 		case SDEV_RUNNING:
+ 		case SDEV_CREATED_BLOCK:
++		case SDEV_QUIESCE:
+ 		case SDEV_OFFLINE:
+ 			break;
+ 		default:
+-- 
+2.19.1
+
