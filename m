@@ -2,142 +2,93 @@ Return-Path: <SRS0=3CHW=6C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84B6BC38A30
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 13:53:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A585DC3A5A0
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 13:59:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5F654214AF
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 13:53:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587218010;
-	bh=6zGuVlsnnAF2MBnoLbzHZy4QBMSzi7A2hpbIrg/pvyI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DLv8zIXeDQ8wkoBU+mIgplQuzQn6wK+RY7HPWoLMZDshQZWYRIx/RXmcGwLbssIcQ
-	 iOsFI2+bAEEq9cvTKE7ssq3QtRGQOTDG8EX39iVHOtvg19GZ8PcDClzN1/4F60oNQl
-	 tvTDLy1uuOGSMvlgUMLgS3np0KpRg3xFfTfSbb5c=
+	by mail.kernel.org (Postfix) with ESMTP id 7EFC320776
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 13:59:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H2vZ4H7F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726890AbgDRNxZ (ORCPT
+        id S1726048AbgDRN7x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 09:53:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54508 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725879AbgDRNsY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 09:48:24 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 63F9122240;
-        Sat, 18 Apr 2020 13:48:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587217703;
-        bh=6zGuVlsnnAF2MBnoLbzHZy4QBMSzi7A2hpbIrg/pvyI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Sjz0FABcTdemgyS73Voi6gkuYKueGJoNGa0+Lr0pURax4G6sQHyFNfZG85Ivccwug
-         4YkDP3maTVO3TgLdiVHxzPiNaUceImyrh+A6DK+u/ggmU1SvB4CMLRkR9yRy3s05C0
-         rCIMFQDEKr+Dc5Wa3kRFXDRcZbWlnrhKC8IaBjeU=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nvdimm@lists.01.org,
-        linux-acpi@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 06/73] acpi/nfit: improve bounds checking for 'func'
-Date:   Sat, 18 Apr 2020 09:47:08 -0400
-Message-Id: <20200418134815.6519-6-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200418134815.6519-1-sashal@kernel.org>
-References: <20200418134815.6519-1-sashal@kernel.org>
+        Sat, 18 Apr 2020 09:59:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54770 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725887AbgDRN7x (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 09:59:53 -0400
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 750BCC061A0C;
+        Sat, 18 Apr 2020 06:59:51 -0700 (PDT)
+Received: by mail-lf1-x142.google.com with SMTP id r17so4122372lff.2;
+        Sat, 18 Apr 2020 06:59:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=JwkmxVU9G3R9bLQG5P17Fl62C7R0noZkjryh1/vwdL4=;
+        b=H2vZ4H7F/2SDq1uSiVUMpbk84rKvJBQWfuAD3TaJYN+qqBAbcaTpynx+2xK8oq+ZMY
+         1Tjt777floOIngeH0FCfftXYS04UdgCNVd6rZWo6kXhW8ol/SrxIFCPOD5Yow1VuwdIk
+         NWsCmE7OrnKCGtjY83O+j4Q9Lm+kUXJOnsVOVZAhhIdA8E19u3pqc/kycnmwETKpjZqU
+         eH8ZlOQYfp6x+DoaDcuJzYVw8oQEL1yWTo4X1y3QDhwdrB52wvod3F3nX0GJb5geqhJO
+         CWvFD89Mu3RvXRGR1hK55iWZG/vTHfRJvX5O5K5jS+7mUhwZ/jM7h+p4d7rt4JVC0fFC
+         /QSA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=JwkmxVU9G3R9bLQG5P17Fl62C7R0noZkjryh1/vwdL4=;
+        b=MajkOGakveUkjbcVUvS/Nx2Y7Oha6MXnpKm8A6mGbvmttFZytg9r2lzPmwJRWtvh9a
+         GLlLeURSkRr8z8C9vcCjcm+b3KJ7CQJI+54MLAhtGQJzaXvpadMvJ54OAsk0ua5nWA8I
+         yWcZcDNa4nMLiDM2oidM2t6VMrU45Xgu/ZsFNBfsa8YanoJO2HvcESVnPfXnNwF4KZ4Y
+         sU+GQ7VjIX5XaxcvEreJQQLX7w7S20FIY6d3NxDIZHkxRrp9eQ9oDXtHLr0deyy1srf4
+         0I6hyk4vFjs4V8HxXQFIstbnyGyFMYqX/kQcyUHjmJWeqSULNV7W65kUZtH15hySayqM
+         WYHA==
+X-Gm-Message-State: AGi0PuYQTqTBs2P+OV/C7AEHkksFprJIRodZS6IjK6hi6Bk0b0rXxIAM
+        dKaLtd1p3Xw7dJRQRyan1pA=
+X-Google-Smtp-Source: APiQypLNyHnQhiiDKDwvlH27vs0wbJdm6L5kOFttERej08ep+e5PcMo57aDtfF0AtnDOyXObx3wlcQ==
+X-Received: by 2002:ac2:5dd7:: with SMTP id x23mr5169760lfq.48.1587218389858;
+        Sat, 18 Apr 2020 06:59:49 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
+        by smtp.googlemail.com with ESMTPSA id k2sm6050947ljg.7.2020.04.18.06.59.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 18 Apr 2020 06:59:47 -0700 (PDT)
+Subject: Re: [PATCH v10 31/55] Input: atmel_mxt_ts - delay enabling IRQ when
+ not using regulators
+To:     "Wang, Jiada" <jiada_wang@mentor.com>, nick@shmanahar.org,
+        dmitry.torokhov@gmail.com, jikos@kernel.org,
+        benjamin.tissoires@redhat.com, bsz@semihalf.com
+Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        erosca@de.adit-jv.com, Andrew_Gabbasov@mentor.com
+References: <20200331105051.58896-1-jiada_wang@mentor.com>
+ <20200331105051.58896-32-jiada_wang@mentor.com>
+ <46e0b0cf-63f1-4b46-dc3e-0e6610e72d75@gmail.com>
+ <75f81c9a-e5ca-1382-43c9-8fd4acc36510@mentor.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <68267a10-9e3a-37a6-b3fe-9a1bf9f5916c@gmail.com>
+Date:   Sat, 18 Apr 2020 16:59:46 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
+In-Reply-To: <75f81c9a-e5ca-1382-43c9-8fd4acc36510@mentor.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+15.04.2020 17:44, Wang, Jiada пишет:
+..
+> thanks, I think your solution makes more sense,
+> I will replace with your suggested solution in next version
 
-[ Upstream commit 01091c496f920e634ea84b689f480c39016752a8 ]
-
-The 'func' variable can come from the user in the __nd_ioctl().  If it's
-too high then the (1 << func) shift in acpi_nfit_clear_to_send() is
-undefined.  In acpi_nfit_ctl() we pass 'func' to test_bit(func, &dsm_mask)
-which could result in an out of bounds access.
-
-To fix these issues, I introduced the NVDIMM_CMD_MAX (31) define and
-updated nfit_dsm_revid() to use that define as well instead of magic
-numbers.
-
-Fixes: 11189c1089da ("acpi/nfit: Fix command-supported detection")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Reviewed-by: Dan Williams <dan.j.williams@intel.com>
-Link: https://lore.kernel.org/r/20200225161927.hvftuq7kjn547fyj@kili.mountain
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/acpi/nfit/core.c | 10 ++++++----
- drivers/acpi/nfit/nfit.h |  1 +
- 2 files changed, 7 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/acpi/nfit/core.c b/drivers/acpi/nfit/core.c
-index a3320f93616de..d0090f71585c4 100644
---- a/drivers/acpi/nfit/core.c
-+++ b/drivers/acpi/nfit/core.c
-@@ -360,7 +360,7 @@ static union acpi_object *acpi_label_info(acpi_handle handle)
- 
- static u8 nfit_dsm_revid(unsigned family, unsigned func)
- {
--	static const u8 revid_table[NVDIMM_FAMILY_MAX+1][32] = {
-+	static const u8 revid_table[NVDIMM_FAMILY_MAX+1][NVDIMM_CMD_MAX+1] = {
- 		[NVDIMM_FAMILY_INTEL] = {
- 			[NVDIMM_INTEL_GET_MODES] = 2,
- 			[NVDIMM_INTEL_GET_FWINFO] = 2,
-@@ -386,7 +386,7 @@ static u8 nfit_dsm_revid(unsigned family, unsigned func)
- 
- 	if (family > NVDIMM_FAMILY_MAX)
- 		return 0;
--	if (func > 31)
-+	if (func > NVDIMM_CMD_MAX)
- 		return 0;
- 	id = revid_table[family][func];
- 	if (id == 0)
-@@ -492,7 +492,8 @@ int acpi_nfit_ctl(struct nvdimm_bus_descriptor *nd_desc, struct nvdimm *nvdimm,
- 	 * Check for a valid command.  For ND_CMD_CALL, we also have to
- 	 * make sure that the DSM function is supported.
- 	 */
--	if (cmd == ND_CMD_CALL && !test_bit(func, &dsm_mask))
-+	if (cmd == ND_CMD_CALL &&
-+	    (func > NVDIMM_CMD_MAX || !test_bit(func, &dsm_mask)))
- 		return -ENOTTY;
- 	else if (!test_bit(cmd, &cmd_mask))
- 		return -ENOTTY;
-@@ -3492,7 +3493,8 @@ static int acpi_nfit_clear_to_send(struct nvdimm_bus_descriptor *nd_desc,
- 	if (nvdimm && cmd == ND_CMD_CALL &&
- 			call_pkg->nd_family == NVDIMM_FAMILY_INTEL) {
- 		func = call_pkg->nd_command;
--		if ((1 << func) & NVDIMM_INTEL_SECURITY_CMDMASK)
-+		if (func > NVDIMM_CMD_MAX ||
-+		    (1 << func) & NVDIMM_INTEL_SECURITY_CMDMASK)
- 			return -EOPNOTSUPP;
- 	}
- 
-diff --git a/drivers/acpi/nfit/nfit.h b/drivers/acpi/nfit/nfit.h
-index 24241941181ce..b317f4043705f 100644
---- a/drivers/acpi/nfit/nfit.h
-+++ b/drivers/acpi/nfit/nfit.h
-@@ -34,6 +34,7 @@
- 		| ACPI_NFIT_MEM_NOT_ARMED | ACPI_NFIT_MEM_MAP_FAILED)
- 
- #define NVDIMM_FAMILY_MAX NVDIMM_FAMILY_HYPERV
-+#define NVDIMM_CMD_MAX 31
- 
- #define NVDIMM_STANDARD_CMDMASK \
- (1 << ND_CMD_SMART | 1 << ND_CMD_SMART_THRESHOLD | 1 << ND_CMD_DIMM_FLAGS \
--- 
-2.20.1
-
+Please feel free to CC me on the next version.
