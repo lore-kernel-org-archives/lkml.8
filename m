@@ -2,188 +2,179 @@ Return-Path: <SRS0=3CHW=6C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	HK_RANDOM_FROM,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71F71C2BA19
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 04:16:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E104C2BA19
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 04:24:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 57DE7221EA
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 04:16:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF254221EA
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 04:24:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TIoULuR6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725910AbgDREQD (ORCPT
+        id S1725869AbgDREYr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 00:16:03 -0400
-Received: from mga05.intel.com ([192.55.52.43]:22686 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725782AbgDREQC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 00:16:02 -0400
-IronPort-SDR: xZI/Ycn5yRyLkstBEYfIAIrcexxiME6hHzoDRvu1DtKVQQC0YTR9QlYkaPrEAeTS6E4Ba1G/nA
- ONfTy+4c+2sw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2020 21:16:01 -0700
-IronPort-SDR: RCBQioQJYCEZzgKpRw4Pohmp4A1QQXJfz1t4hNK1VYPzBCeDAwC3T/Ekz22h01VTlxucpzYDpx
- ruYn9k4Fxvhw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,397,1580803200"; 
-   d="scan'208";a="401252768"
-Received: from xiaoyaol-mobl.ccr.corp.intel.com (HELO [10.249.173.187]) ([10.249.173.187])
-  by orsmga004.jf.intel.com with ESMTP; 17 Apr 2020 21:15:58 -0700
-Subject: Re: [PATCH 2/3] x86/split_lock: Bits in IA32_CORE_CAPABILITIES are
- not architectural
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        "Luck, Tony" <tony.luck@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Ingo Molnar <mingo@kernel.org>, Fenghua Yu <fenghua.yu@intel.com>,
-        Borislav Petkov <bp@alien8.de>, H Peter Anvin <hpa@zytor.com>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Ravi V Shankar <ravi.v.shankar@intel.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        linux-kernel@vger.kernel.org, x86@kernel.org
-References: <873691zuqu.fsf@nanos.tec.linutronix.de>
-From:   Xiaoyao Li <xiaoyao.li@intel.com>
-Message-ID: <651504d9-f458-1d25-870d-b8c55061be45@intel.com>
-Date:   Sat, 18 Apr 2020 12:15:57 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Sat, 18 Apr 2020 00:24:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51604 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725440AbgDREYr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 00:24:47 -0400
+Received: from mail-ej1-x62b.google.com (mail-ej1-x62b.google.com [IPv6:2a00:1450:4864:20::62b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BBAF7C061A0C
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 21:24:45 -0700 (PDT)
+Received: by mail-ej1-x62b.google.com with SMTP id n17so3138749ejh.7
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Apr 2020 21:24:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=KBazz/io4zB337FE32+j8O9LmbM2Ojdb+G1jwNFZHzc=;
+        b=TIoULuR6pSS7qF+35ZooJKmh4zn0jJ0F0lmm72vtCaOAH9qI+I7DVatI+c2wyxBSL9
+         aMVhdNaSkwrjuTOUj1Wm5r/qtU2yqUb5N483BLnVxodd1IYwfTJgEPkDnFCGIU1qSYqz
+         KaChHwPnSE3WXcbmLkTlznL4PU9kpNxrhDxxIKf7PM7wYW1Qh1hi/xHrWYX7qJpmWO4f
+         a+uykNAKtIM286GEh3SO/ofUxuzNp8GGOSoG9pV7gYARfpt0O4E7TxvQYBsmoZlLrhPH
+         DTgh5CLWQZ4hTVgMGUz1KfFfVRNJMYVM8HEixCI37vge9CYgug2s+U96cMf6LJjUY7D3
+         /VGA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=KBazz/io4zB337FE32+j8O9LmbM2Ojdb+G1jwNFZHzc=;
+        b=LkEbml6oUbXW4/uzOBGR7ZqZMFp97QFdKzvI+GgvkLbwH7QqSgr1nSiGSnFfLZDD6v
+         gQBBCidJUaOoQzR9/nHrGHdHu45Qg+uLQvDKPWRmo6CIKHnzV+kPYee/pIdCkAbpSUOA
+         qA1+DrUHS8ASBSqwm8AyOZF/yIa7yn48UL0Z8BlL5ceKfsH5IORowiEL87uvOVtM4AFQ
+         pg0R7IKtsGctD4dzSaH/AvFjZo5LNJWqTku9tyLi7bFW4jOZYeXJjIBM7a7L9DqYaqkm
+         MP9QMBPbAa2wwMJjRMpvtNOiyvyagA17jOZOcjtPzx7eeeeZX11k1MHGFGnnQARswHdx
+         wQIA==
+X-Gm-Message-State: AGi0PuY5NSi1gHjey6w8/B9so3Baj8xMACddhh2emh/fobEewWKyYUh4
+        LNpZGKNkq/qXFuhKLHzlmRWzfE7JUjyJ4EX60OWEo26w
+X-Google-Smtp-Source: APiQypIACnYxc28zp8rR2XbSkGCVW0GqITrKgvddjeZlAneug7hNzxQ4GFs0nvOmQYlWEe7K7QjQpIWhModM9oXNcjs=
+X-Received: by 2002:a17:906:64b:: with SMTP id t11mr6229593ejb.336.1587183883952;
+ Fri, 17 Apr 2020 21:24:43 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <873691zuqu.fsf@nanos.tec.linutronix.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+From:   Dave Airlie <airlied@gmail.com>
+Date:   Sat, 18 Apr 2020 14:24:32 +1000
+Message-ID: <CAPM=9tyt1N=QTmsyBKYzMqYJLbNzrgrnNoqQrzn3735ePSCODQ@mail.gmail.com>
+Subject: [git pull] drm fixes for 5.7-rc2
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>
+Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/18/2020 5:07 AM, Thomas Gleixner wrote:
-> Tony,
-> 
-> Thomas Gleixner <tglx@linutronix.de> writes:
->> "Luck, Tony" <tony.luck@intel.com> writes:
->>> Swings and roundabouts ... getting rid of the goto makes for
->>> deeper indentation. But if you really want to get rid of the
->>> goto, then your version is fine with me.
->>>
->>> Do you want me to spin it into v3?
->>
->> Nah. I tweak it myself.
-> 
-> as I fear that the infinite wisdom of HW folks will add yet another
-> variant in the foreseeable future, I used a switch() right away and
-> tweaked the comments a bit.
-> 
-> Can you have a look, please?
-> 
-> Thanks,
-> 
->          tglx
-> 
-> 8<------------------
-> From: Tony Luck <tony.luck@intel.com>
-> Subject: x86/split_lock: Bits in IA32_CORE_CAPABILITIES are not architectural
-> Date: Thu, 16 Apr 2020 13:57:53 -0700
-> 
-> From: Tony Luck <tony.luck@intel.com>
-> 
-> The Intel Software Developers' Manual erroneously listed bit 5 of the
-> IA32_CORE_CAPABILITIES register as an architectural feature. It is not.
-> 
-> Features enumerated by IA32_CORE_CAPABILITIES are model specific and
-> implementation details may vary in different cpu models. Thus it is only
-> safe to trust features after checking the CPU model.
-> 
-> Icelake client and server models are known to implement the split lock
-> detect feature even though they don't enumerate IA32_CORE_CAPABILITIES
-> 
-> Fixes: 6650cdd9a8cc ("x86/split_lock: Enable split lock detection by kernel")
-> Signed-off-by: Tony Luck <tony.luck@intel.com>
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> Link: https://lkml.kernel.org/r/20200416205754.21177-3-tony.luck@intel.com
-> 
-> ---
->   arch/x86/kernel/cpu/intel.c |   45 ++++++++++++++++++++++++++++++--------------
->   1 file changed, 31 insertions(+), 14 deletions(-)
-> 
-> --- a/arch/x86/kernel/cpu/intel.c
-> +++ b/arch/x86/kernel/cpu/intel.c
-> @@ -1120,10 +1120,17 @@ void switch_to_sld(unsigned long tifn)
->   }
->   
->   /*
-> - * The following processors have the split lock detection feature. But
-> - * since they don't have the IA32_CORE_CAPABILITIES MSR, the feature cannot
-> - * be enumerated. Enable it by family and model matching on these
-> - * processors.
-> + * Bits in the IA32_CORE_CAPABILITIES are not architectural, so they should
-> + * only be trusted if it is confirmed that a CPU model implements a
-> + * specific feature at a particular bit position.
-> + *
-> + * The possible driver data field values:
-> + *
-> + * - 0: CPU models that are known to have the per-core split-lock detection
-> + *	feature even though they do not enumerate IA32_CORE_CAPABILITIES.
-> + *
-> + * - 1: CPU models which may enumerate IA32_CORE_CAPABILITIES and if so use
-> + *      bit 5 to enumerate the per-core split-lock detection feature.
+Hi Linus,
 
-So now, it's tightly associated with CPU model, which makes it harder to 
-expose this feature to guest. For guest, the CPU model can be configured 
-to anything.
+Quiet enough for rc2, mostly amdgpu fixes, a couple of i915 fixes, and
+one nouveau module firmware fix.
 
-As suggested by Sean internally, we'd better use a KVM CPUID to expose 
-it to guest, which makes it independent of CPU model.
+Regards,
+Dave.
 
-Paolo, tglx,
+drm-fixes-2020-04-18:
+drm fixes for 5.7-rc2
 
-What do you think?
+i915:
+- Fix guest page access by using the brand new VFIO dma r/w interface (Yan)
+- Fix for i915 perf read buffers (Ashutosh)
 
->    */
->   static const struct x86_cpu_id split_lock_cpu_ids[] __initconst = {
->   	X86_MATCH_INTEL_FAM6_MODEL(ICELAKE_X,		0),
-> @@ -1133,19 +1140,29 @@ static const struct x86_cpu_id split_loc
->   
->   void __init cpu_set_core_cap_bits(struct cpuinfo_x86 *c)
->   {
-> -	u64 ia32_core_caps = 0;
-> +	const struct x86_cpu_id *m;
-> +	u64 ia32_core_caps;
->   
-> -	if (c->x86_vendor != X86_VENDOR_INTEL)
-> +	if (boot_cpu_has(X86_FEATURE_HYPERVISOR))
->   		return;
-> -	if (cpu_has(c, X86_FEATURE_CORE_CAPABILITIES)) {
-> -		/* Enumerate features reported in IA32_CORE_CAPABILITIES MSR. */
-> +
-> +	m = x86_match_cpu(split_lock_cpu_ids);
-> +	if (!m)
-> +		return;
-> +
-> +	switch (m->driver_data) {
-> +	case 0:
-> +		break;
-> +	case 1:
-> +		if (!cpu_has(c, X86_FEATURE_CORE_CAPABILITIES))
-> +			return;
->   		rdmsrl(MSR_IA32_CORE_CAPS, ia32_core_caps);
-> -	} else if (!boot_cpu_has(X86_FEATURE_HYPERVISOR)) {
-> -		/* Enumerate split lock detection by family and model. */
-> -		if (x86_match_cpu(split_lock_cpu_ids))
-> -			ia32_core_caps |= MSR_IA32_CORE_CAPS_SPLIT_LOCK_DETECT;
-> +		if (!(ia32_core_caps & MSR_IA32_CORE_CAPS_SPLIT_LOCK_DETECT))
-> +			return;
-> +		break;
-> +	default:
-> +		return;
->   	}
->   
-> -	if (ia32_core_caps & MSR_IA32_CORE_CAPS_SPLIT_LOCK_DETECT)
-> -		split_lock_setup();
-> +	split_lock_setup();
->   }
-> 
+amdgpu:
+- gfx10 fix
+- SMU7 overclocking fix
+- RAS fix
+- GPU reset fix
+- Fix a regression in a previous s/r fix
+- Add a gfxoff quirk
 
+nouveau:
+- fix missing MODULE_FIRMWARE
+The following changes since commit 8f3d9f354286745c751374f5f1fcafee6b3f3136:
+
+  Linux 5.7-rc1 (2020-04-12 12:35:55 -0700)
+
+are available in the Git repository at:
+
+  git://anongit.freedesktop.org/drm/drm tags/drm-fixes-2020-04-18
+
+for you to fetch changes up to 4da858c086433cd012c0bb16b5921f6fafe3f803:
+
+  Merge branch 'linux-5.7' of git://github.com/skeggsb/linux into
+drm-fixes (2020-04-16 15:40:02 +1000)
+
+----------------------------------------------------------------
+drm fixes for 5.7-rc2
+
+i915:
+- Fix guest page access by using the brand new VFIO dma r/w interface (Yan)
+- Fix for i915 perf read buffers (Ashutosh)
+
+amdgpu:
+- gfx10 fix
+- SMU7 overclocking fix
+- RAS fix
+- GPU reset fix
+- Fix a regression in a previous s/r fix
+- Add a gfxoff quirk
+
+nouveau:
+- fix missing MODULE_FIRMWARE
+
+----------------------------------------------------------------
+Alex Deucher (1):
+      drm/amdgpu/gfx9: add gfxoff quirk
+
+Ashutosh Dixit (1):
+      drm/i915/perf: Do not clear pollin for small user read buffers
+
+Ben Skeggs (1):
+      drm/nouveau/sec2/gv100-: add missing MODULE_FIRMWARE()
+
+Dave Airlie (3):
+      Merge tag 'drm-intel-fixes-2020-04-15' of
+git://anongit.freedesktop.org/drm/drm-intel into drm-fixes
+      Merge tag 'amd-drm-fixes-5.7-2020-04-15' of
+git://people.freedesktop.org/~agd5f/linux into drm-fixes
+      Merge branch 'linux-5.7' of git://github.com/skeggsb/linux into drm-fixes
+
+Evan Quan (2):
+      drm/amd/powerplay: unload mp1 for Arcturus RAS baco reset
+      drm/amdgpu: fix wrong vram lost counter increment V2
+
+Likun Gao (1):
+      Revert "drm/amdgpu: change SH MEM alignment mode for gfx10"
+
+Prike Liang (1):
+      drm/amdgpu: fix the hw hang during perform system reboot and reset
+
+Rodrigo Vivi (1):
+      Merge tag 'gvt-fixes-2020-04-14' of
+https://github.com/intel/gvt-linux into drm-intel-fixes
+
+Sergei Lopatin (1):
+      drm/amd/powerplay: force the trim of the mclk dpm_levels if OD is enabled
+
+Yan Zhao (3):
+      drm/i915/gvt: hold reference of VFIO group during opening of vgpu
+      drm/i915/gvt: subsitute kvm_read/write_guest with vfio_dma_rw
+      drm/i915/gvt: switch to user vfio_group_pin/upin_pages
+
+ drivers/gpu/drm/amd/amdgpu/amdgpu_device.c       | 22 +++++++-
+ drivers/gpu/drm/amd/amdgpu/cik.c                 |  2 -
+ drivers/gpu/drm/amd/amdgpu/gfx_v10_0.c           |  2 +-
+ drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c            |  2 +
+ drivers/gpu/drm/amd/amdgpu/nv.c                  |  4 --
+ drivers/gpu/drm/amd/amdgpu/soc15.c               |  4 --
+ drivers/gpu/drm/amd/amdgpu/vi.c                  |  2 -
+ drivers/gpu/drm/amd/powerplay/hwmgr/smu7_hwmgr.c |  5 +-
+ drivers/gpu/drm/amd/powerplay/smu_v11_0.c        |  6 +++
+ drivers/gpu/drm/i915/gvt/kvmgt.c                 | 46 ++++++++---------
+ drivers/gpu/drm/i915/i915_perf.c                 | 65 ++++--------------------
+ drivers/gpu/drm/nouveau/nvkm/engine/sec2/gp108.c |  3 ++
+ drivers/gpu/drm/nouveau/nvkm/engine/sec2/tu102.c | 16 ++++++
+ 13 files changed, 85 insertions(+), 94 deletions(-)
