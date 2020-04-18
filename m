@@ -2,120 +2,136 @@ Return-Path: <SRS0=3CHW=6C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5928DC38A2B
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 07:13:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0746C38A29
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 07:19:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 36FEC21D82
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 07:13:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MPlfhCuK"
+	by mail.kernel.org (Postfix) with ESMTP id C1A4021D91
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 07:19:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587194349;
+	bh=HtknloIa474ihedmZAofQ2+YIMgGcwVHwvhvyp4fUpU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=sJ8v/57GUEqY76S8fAbK5YiVBarfChADDc9FtEUe9jSl1g9TIZAML3eRadqCg68lr
+	 ly2t2E19/+KT7a9TJMwac9DNqQoxHXFLghplaolUOgxQlwvRCmrSDnsCyqyKKLMlDv
+	 xRbRMQKZnawdng7j4/jhvQh/b3DdN3KXXiYlEcgI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725953AbgDRHM7 (ORCPT
+        id S1725891AbgDRHTI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 03:12:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49046 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725857AbgDRHM6 (ORCPT
+        Sat, 18 Apr 2020 03:19:08 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:33239 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725843AbgDRHTI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 03:12:58 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C3DDC061A0F
-        for <linux-kernel@vger.kernel.org>; Sat, 18 Apr 2020 00:12:58 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id q16so3074715pje.1
-        for <linux-kernel@vger.kernel.org>; Sat, 18 Apr 2020 00:12:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=9O0aopEBCTCXPKDGoPBM1d5DxPebLrpuZOmwI1ViU3o=;
-        b=MPlfhCuKMdPN6iwOaMoNiLqFWiHzDyLpZekidDQ3S2s8nfg8lcoExi4mNEXiCILHsF
-         WVKeT+UjynS9gCiho2r6P1agy/eepg2dweqpEudDsa+G+3nD/jv+H3iMPAv6iPZwJWua
-         9ppv2By5BIUqYldgqrKfgNkl6iGCEyBIWAnFmn5ylMiOI33pmId2kN+mI2VmMZtv5IFh
-         h/KW/qeBO9r6d+xuSh9PQKNe40pkZtT6qHKMXNdSmz1xkaD6pjI+OgysQZuVbuOgpT3R
-         uSeHHJAfY9M+njg1+MICXHUGV7dp3aA65dKHOSxVY0HO/HiS65f6E/osJDeVM/B4f6ch
-         jkLA==
+        Sat, 18 Apr 2020 03:19:08 -0400
+Received: by mail-pf1-f195.google.com with SMTP id c138so2235284pfc.0;
+        Sat, 18 Apr 2020 00:19:07 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=9O0aopEBCTCXPKDGoPBM1d5DxPebLrpuZOmwI1ViU3o=;
-        b=SlSxbiR0nGP6EyamR4b/bkvPrrtNdH/pNraLGnt73MyxqNI12lrm5I8CqPAeHogHk6
-         DwLirwxe1BuWUyhcK9au3O9ma7dqWI5oVZIhEUNlTo5yR5bv+o0b/9bgIY4L8GBPMeUH
-         6U2VE/1YnaO4G4bUisQ8LktRaJxFn6EhUS31IevZwvgJW9Z58ma3Ti3sxtZbi41ciSMv
-         1TsZlrp4SzCSQSQ+OyxZXiD9VKMafIBFw0elT3OcInOldTB69gWy1Jkbk0l5LZ9Jg2HP
-         EnSRKq5rIykM8I4zQpFfk0abLhr3zEqaEKJizsbQ8Vo9OQEi80vJTMITI4UQgZ0vqmuT
-         RChg==
-X-Gm-Message-State: AGi0PuapvN4BZKJAGg+Ki0im9vRuJWY50bv5TdMpTj3LY9ILtGFUJ+Ef
-        8DHoo1M8W6cNxpFfx0Yw/ArcoQ==
-X-Google-Smtp-Source: APiQypJOOUmRIXjCLoJCDfAURUKxoqz5ld8ftLF9ax/JQ06GdXXPxgL3CYNk5DQJPwa83qYQRrR/dA==
-X-Received: by 2002:a17:90a:9b17:: with SMTP id f23mr8804210pjp.118.1587193977569;
-        Sat, 18 Apr 2020 00:12:57 -0700 (PDT)
-Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id d8sm16157965pfd.159.2020.04.18.00.12.56
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=2tfGw4d3u9g+UFPVZL7i7ytHNA18syakdIUbMPCw9fk=;
+        b=HzHlBUoziKV7IAShIZZsEWav/DMYjBrKBtYchLX3Fo0TPZZEKF9Ge4VSCqgOOlEXjU
+         WDkV5DUMaepFrdsePtQbU47Z7ua3RG51ENgwMh8v96+2zIs83jD4BkKIp5HW6n9VGC9c
+         LllGG18g7qouxPZGNaF4dPVhDFydaBJOTYkWA2mzjOC7GGbR83BYr9BpCe7r7dqZctdS
+         oysofCc6KqIg0LoJgVUjd0pojQRGrPXd0uY3jXWJuuMyCE0dizxaGKl69dClvatMCqCq
+         tZpR37qpWdffhQX0aD4NEIGHgsK6DYIJAwJBljmlUYnN6mPARR8H+tFXjAOI2ew/qlvw
+         gu7g==
+X-Gm-Message-State: AGi0PuZlh/9MPH2C5PIDa66Y3kvJdznbZtnhUImAaYIye1RqhCOF6u60
+        0SFDxgfESWCZfw6mXZGNZqA=
+X-Google-Smtp-Source: APiQypI+72yk06Cjr8OXYOo8eGUbph5RuNlA8q6scYKXCohp1d6WX75FGadX+ZCWl4kUqBub0DIRGA==
+X-Received: by 2002:a63:585c:: with SMTP id i28mr6721801pgm.363.1587194347313;
+        Sat, 18 Apr 2020 00:19:07 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id 192sm3346445pfu.182.2020.04.18.00.19.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 18 Apr 2020 00:12:56 -0700 (PDT)
-Date:   Sat, 18 Apr 2020 00:13:17 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Jason Yan <yanaijie@huawei.com>
-Cc:     agross@kernel.org, alim.akhtar@samsung.com, avri.altman@wdc.com,
-        jejb@linux.ibm.com, martin.petersen@oracle.com,
-        p.zabel@pengutronix.de, cang@codeaurora.org,
-        linux-arm-msm@vger.kernel.org, linux-scsi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Hulk Robot <hulkci@huawei.com>
-Subject: Re: [PATCH] scsi: ufs-qcom: remove unneeded variable 'ret'
-Message-ID: <20200418071317.GO20625@builder.lan>
-References: <20200418070625.11756-1-yanaijie@huawei.com>
+        Sat, 18 Apr 2020 00:19:06 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id 68C5B4028E; Sat, 18 Apr 2020 07:19:05 +0000 (UTC)
+Date:   Sat, 18 Apr 2020 07:19:05 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Tiezhu Yang <yangtiezhu@loongson.cn>, Jessica Yu <jeyu@kernel.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Shuah Khan <shuah@kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Xuefeng Li <lixuefeng@loongson.cn>
+Subject: Re: [PATCH 3/4] kmod: Return directly if module name is empty in
+ request_module()
+Message-ID: <20200418071905.GE11244@42.do-not-panic.com>
+References: <1587187200-13109-1-git-send-email-yangtiezhu@loongson.cn>
+ <1587187200-13109-3-git-send-email-yangtiezhu@loongson.cn>
+ <20200418054519.GX11244@42.do-not-panic.com>
+ <CAB=NE6XD7XCmsTAg3+mw=b8WZnKJiwha5t4DBJFt5w+b_DsNkg@mail.gmail.com>
+ <b9c6e6e6-571a-b957-755f-72f2b0f538c5@loongson.cn>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200418070625.11756-1-yanaijie@huawei.com>
+In-Reply-To: <b9c6e6e6-571a-b957-755f-72f2b0f538c5@loongson.cn>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat 18 Apr 00:06 PDT 2020, Jason Yan wrote:
+On Sat, Apr 18, 2020 at 01:58:45PM +0800, Tiezhu Yang wrote:
+> On 04/18/2020 01:48 PM, Luis Chamberlain wrote:
+> > On Fri, Apr 17, 2020 at 11:45 PM Luis Chamberlain <mcgrof@kernel.org> wrote:
+> > > On Sat, Apr 18, 2020 at 01:19:59PM +0800, Tiezhu Yang wrote:
+> > > > If module name is empty, it is better to return directly at the beginning
+> > > > of request_module() without doing the needless call_modprobe() operation.
+> > > > 
+> > > > Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+> > > > ---
+> > > >   kernel/kmod.c | 5 +++++
+> > > >   1 file changed, 5 insertions(+)
+> > > > 
+> > > > diff --git a/kernel/kmod.c b/kernel/kmod.c
+> > > > index 3cd075c..5851444 100644
+> > > > --- a/kernel/kmod.c
+> > > > +++ b/kernel/kmod.c
+> > > > @@ -28,6 +28,8 @@
+> > > > 
+> > > >   #include <trace/events/module.h>
+> > > > 
+> > > > +#define MODULE_NOT_FOUND 256
+> > > > +
+> > > >   /*
+> > > >    * Assuming:
+> > > >    *
+> > > > @@ -144,6 +146,9 @@ int __request_module(bool wait, const char *fmt, ...)
+> > > >        if (ret >= MODULE_NAME_LEN)
+> > > >                return -ENAMETOOLONG;
+> > > > 
+> > > > +     if (strlen(module_name) == 0)
+> > > > +             return MODULE_NOT_FOUND;
+> > > I'd rather we just use something standard like -EINVAL.
+> > > What do we return if its not found? Then use that value.
+> > Also, are we testing for this condition yet? If not can we add one?
+> 
+> Yes, kmod_test_0001_driver() in tools/testing/selftests/kmod/kmod.sh tests
+> this case and expects result MODULE_NOT_FOUND which is 256.
 
-> Fix the following coccicheck warning:
-> 
-> drivers/scsi/ufs/ufs-qcom.c:575:5-8: Unneeded variable: "ret". Return
-> "0" on line 590
-> 
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: Jason Yan <yanaijie@huawei.com>
+OK I see now I had put:
 
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+errno_name_to_val()                                                             
+{                                                                               
+        case "$1" in                                                            
+	# kmod calls modprobe and upon of a module not found                    
+	# modprobe returns just 1... However in the
+	# kernel we *sometimes* see 256... 
+	MODULE_NOT_FOUND)                                                       
+		echo 256;;
 
-> ---
->  drivers/scsi/ufs/ufs-qcom.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/drivers/scsi/ufs/ufs-qcom.c b/drivers/scsi/ufs/ufs-qcom.c
-> index 19aa5c44e0da..701e9184adff 100644
-> --- a/drivers/scsi/ufs/ufs-qcom.c
-> +++ b/drivers/scsi/ufs/ufs-qcom.c
-> @@ -572,7 +572,6 @@ static int ufs_qcom_suspend(struct ufs_hba *hba, enum ufs_pm_op pm_op)
->  {
->  	struct ufs_qcom_host *host = ufshcd_get_variant(hba);
->  	struct phy *phy = host->generic_phy;
-> -	int ret = 0;
->  
->  	if (ufs_qcom_is_link_off(hba)) {
->  		/*
-> @@ -587,7 +586,7 @@ static int ufs_qcom_suspend(struct ufs_hba *hba, enum ufs_pm_op pm_op)
->  		ufs_qcom_disable_lane_clks(host);
->  	}
->  
-> -	return ret;
-> +	return 0;
->  }
->  
->  static int ufs_qcom_resume(struct ufs_hba *hba, enum ufs_pm_op pm_op)
-> -- 
-> 2.21.1
-> 
+I found that through testing, however there was nothing set in stone,
+nothing documented. While you are at it, can you find the places where
+this is returned in the kernel code? We should clear this up and
+se things straight. We cannot change what we gave userspace already
+though.
+
+  Luis
