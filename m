@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 633E7C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:11:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 784E0C38A29
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:11:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 41F6E21BE5
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:11:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48D2221BE5
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:11:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587219061;
-	bh=mbsr4pUywiBf3efxDxkiIZhl7JcP3EsZbHgjH0OG9wA=;
+	s=default; t=1587219065;
+	bh=zD789dP6I9c4Z+1f02WB1iPpEHekSNenlssybZAeuw0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=slsJr+yEvIVSBRJVIw0NdOAy0n8Q+Ytjn3TSqg/Nh3KbyK7pXzXSdi9oAogwRjQr7
-	 wyNnZ5pMBHzGMEbW0IGbMIHS2Kar76C8Cz44ESxgh4uPkzpuLIuqdSeS5jTOREnxd/
-	 qeFczu2qV/hz5FTQf4we2dyCN2Ch/4AqxnhnPBH4=
+	b=Wbzd2ayPy6KmUO4xTUfh/+qrfCmFv1eBRLhpUbqg7EwZuHJqcwoiFUfzSTnELBVpH
+	 u4QLgGBm41tFE6FNxEEanCbe50XzvKSWUY/trCcSMnvxVl8V8bsF3rpiY/uFN0dJsh
+	 Cni9i9MOhrC8plunacK+hqsukk3Ymt1O4CtoZo0I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727976AbgDROKp (ORCPT
+        id S1728040AbgDROLE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 10:10:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38830 "EHLO mail.kernel.org"
+        Sat, 18 Apr 2020 10:11:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39110 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727882AbgDROKf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 10:10:35 -0400
+        id S1727963AbgDROKn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 10:10:43 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AB2F522244;
-        Sat, 18 Apr 2020 14:10:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3341921D6C;
+        Sat, 18 Apr 2020 14:10:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587219034;
-        bh=mbsr4pUywiBf3efxDxkiIZhl7JcP3EsZbHgjH0OG9wA=;
+        s=default; t=1587219043;
+        bh=zD789dP6I9c4Z+1f02WB1iPpEHekSNenlssybZAeuw0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EESfvQ4cFc40DfIdl41ZhGtUS3bB5DJDl/f1dDeN9b4IXOT1lzNP0KAYblqT1/RyM
-         AvZUyLxeKmVwWX1LAUW2fkxGPSYe+dmX1vLRJUmdtjKn+RF2NTapjZA5NP0K2pnuM1
-         mQKnCur7xYGDQTh8D8dHkDOxTaVeN30jvosWgNVg=
+        b=Uwf//iDQQHmX0KoOaTnJoi7txlixRZEZiId/k4o6QZFx3FjDAjtBHJdtgVLo2ErX9
+         b2k5n6B6ikgnf11YQW+TTxFad1X2kpMcKRBlnzj37gV10cSS3x2Gm8dAtUk7ab6K7x
+         uxTqFi/cpDNLCiLStVlNjmf+IWScD1DPjXTjj0a4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mathias Nyman <mathias.nyman@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 68/75] xhci: Finetune host initiated USB3 rootport link suspend and resume
-Date:   Sat, 18 Apr 2020 10:09:03 -0400
-Message-Id: <20200418140910.8280-68-sashal@kernel.org>
+Cc:     Christoph Hellwig <hch@lst.de>, Qian Cai <cai@lca.pw>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
+        linux-block@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 75/75] block: fix busy device checking in blk_drop_partitions again
+Date:   Sat, 18 Apr 2020 10:09:10 -0400
+Message-Id: <20200418140910.8280-75-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200418140910.8280-1-sashal@kernel.org>
 References: <20200418140910.8280-1-sashal@kernel.org>
@@ -59,80 +59,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mathias Nyman <mathias.nyman@linux.intel.com>
+From: Christoph Hellwig <hch@lst.de>
 
-[ Upstream commit ceca49382ac20e06ce04c21279c7f2868c4ec1d4 ]
+[ Upstream commit cb6b771b05c3026a85ed4817c1b87c5e6f41d136 ]
 
-Depending on the current link state the steps to resume the link to U0
-varies. The normal case when a port is suspended (U3) we set the link
-to U0 and wait for a port event when U3exit completed and port moved to
-U0.
+The previous fix had an off by one in the bd_openers checking, counting
+the callers blkdev_get.
 
-If the port is in U1/U2, then no event is issued, just set link to U0
-
-If port is in Resume or Recovery state then the device has already
-initiated resume, and this host initiated resume is racing against it.
-Port event handler for device initiated resume will set link to U0,
-just wait for the port to reach U0 before returning.
-
-Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
-Link: https://lore.kernel.org/r/20200312144517.1593-9-mathias.nyman@linux.intel.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: d3ef5536274f ("block: fix busy device checking in blk_drop_partitions")
+Reported-by: Qian Cai <cai@lca.pw>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+Tested-by: Qian Cai <cai@lca.pw>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/host/xhci-hub.c | 36 +++++++++++++++++++++++++-----------
- 1 file changed, 25 insertions(+), 11 deletions(-)
+ block/partition-generic.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/usb/host/xhci-hub.c b/drivers/usb/host/xhci-hub.c
-index 02f52d4f74df8..a9c87eb8951e8 100644
---- a/drivers/usb/host/xhci-hub.c
-+++ b/drivers/usb/host/xhci-hub.c
-@@ -1307,20 +1307,34 @@ int xhci_hub_control(struct usb_hcd *hcd, u16 typeReq, u16 wValue,
- 				goto error;
- 			}
+diff --git a/block/partition-generic.c b/block/partition-generic.c
+index 5f3b2a959aa51..ebe4c2e9834bd 100644
+--- a/block/partition-generic.c
++++ b/block/partition-generic.c
+@@ -468,7 +468,7 @@ int blk_drop_partitions(struct gendisk *disk, struct block_device *bdev)
  
-+			/*
-+			 * set link to U0, steps depend on current link state.
-+			 * U3: set link to U0 and wait for u3exit completion.
-+			 * U1/U2:  no PLC complete event, only set link to U0.
-+			 * Resume/Recovery: device initiated U0, only wait for
-+			 * completion
-+			 */
- 			if (link_state == USB_SS_PORT_LS_U0) {
--				if ((temp & PORT_PLS_MASK) == XDEV_U0)
--					break;
-+				u32 pls = temp & PORT_PLS_MASK;
-+				bool wait_u0 = false;
- 
--				if (!((temp & PORT_PLS_MASK) == XDEV_U1 ||
--				    (temp & PORT_PLS_MASK) == XDEV_U2 ||
--				    (temp & PORT_PLS_MASK) == XDEV_U3)) {
--					xhci_warn(xhci, "Can only set port %d to U0 from U state\n",
--							wIndex);
--					goto error;
-+				/* already in U0 */
-+				if (pls == XDEV_U0)
-+					break;
-+				if (pls == XDEV_U3 ||
-+				    pls == XDEV_RESUME ||
-+				    pls == XDEV_RECOVERY) {
-+					wait_u0 = true;
-+					reinit_completion(&bus_state->u3exit_done[wIndex]);
-+				}
-+				if (pls <= XDEV_U3) /* U1, U2, U3 */
-+					xhci_set_link_state(xhci, ports[wIndex],
-+							    USB_SS_PORT_LS_U0);
-+				if (!wait_u0) {
-+					if (pls > XDEV_U3)
-+						goto error;
-+					break;
- 				}
--				reinit_completion(&bus_state->u3exit_done[wIndex]);
--				xhci_set_link_state(xhci, ports[wIndex],
--						    USB_SS_PORT_LS_U0);
- 				spin_unlock_irqrestore(&xhci->lock, flags);
- 				if (!wait_for_completion_timeout(&bus_state->u3exit_done[wIndex],
- 								 msecs_to_jiffies(100)))
+ 	if (!disk_part_scan_enabled(disk))
+ 		return 0;
+-	if (bdev->bd_part_count || bdev->bd_openers)
++	if (bdev->bd_part_count || bdev->bd_openers > 1)
+ 		return -EBUSY;
+ 	res = invalidate_partition(disk, 0);
+ 	if (res)
 -- 
 2.20.1
 
