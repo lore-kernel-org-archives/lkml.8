@@ -7,46 +7,54 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 195ABC38A2F
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:51:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80A35C38A29
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:51:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E39EA2072B
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:51:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 559FB20753
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:51:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587221476;
-	bh=18SqyrRZK49Qas3xT+Wf30YPs7zYAKq0d/e1dxS3KiE=;
+	s=default; t=1587221483;
+	bh=qh+rRQ26snjET7PSeU8hJK8HLdSc6NZMY9RE8q3qkKs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0il2Inuzh2ujAsL/h6V34kbL961PlFdTLf3RtsjS4dDBkxBWCI0rAm1+hEYPjzJsG
-	 lqOJdUWkMYyOol2xIazPnchyjCp08EFjtwjZo8FeTwokgbALhSm5JRYnx3n2Xo1Ulv
-	 HBS4tmMWTbD9Oo0Qu9ORGPSQpamEqsEy8J4yaTq0=
+	b=0yq9WC0I3t6h0azz9aXjI3n9yRy4DAmHKj3lmE5TG+cwwQndrlm0mGtf6DMHGo18I
+	 Sv/bRr+OajcAOIc1kAxxZLJLyObb2RVpWyok4+vbWE+3pKn9Loqwz+Usjbzq7FCu9A
+	 FcmQPF01Iy+XzFU/vOYqj+OHZe5ZpLylBgaKqOzM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729055AbgDROvP (ORCPT
+        id S1728575AbgDROvW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 10:51:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53256 "EHLO mail.kernel.org"
+        Sat, 18 Apr 2020 10:51:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53046 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728442AbgDROmu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 10:42:50 -0400
+        id S1728418AbgDROmp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 10:42:45 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 22D1122202;
-        Sat, 18 Apr 2020 14:42:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D7A0522250;
+        Sat, 18 Apr 2020 14:42:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587220969;
-        bh=18SqyrRZK49Qas3xT+Wf30YPs7zYAKq0d/e1dxS3KiE=;
+        s=default; t=1587220965;
+        bh=qh+rRQ26snjET7PSeU8hJK8HLdSc6NZMY9RE8q3qkKs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LjVeAiQMrsWcV98KxF20rBk0vEnZQIsB8ShFREaJHEhSgn/VxczYH4nGJjxVPI/G1
-         7vYZBXJe9SsaRcqz/Koi4kpEVaZgfvcMLJjD/OTCKsGLfufQmhM3VQTEjqzV/2IleQ
-         iasqGxX0SgmBP6g//7mOEZS2eSQ1XyLXm8csCszM=
+        b=Rxfu24ofc7lpcp49YJET/5tHbvJt4Wk9Ek4V72eiBOJZtm1aRdz2qXrFwFx3xkj/L
+         WuWpwg43ZlAh+k2EyfMh2DNNPh7uKc2dtf4hiHuPHJnc/ySmhcDfxMLNWQW87r0Y/Q
+         qAram/QKvOlKF5CoCP2xGslppby9rJ43Z76SzTc4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-kbuild@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 17/47] kconfig: qconf: Fix a few alignment issues
-Date:   Sat, 18 Apr 2020 10:41:57 -0400
-Message-Id: <20200418144227.9802-17-sashal@kernel.org>
+Cc:     Vasily Averin <vvs@virtuozzo.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Peter Oberparleiter <oberpar@linux.ibm.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Ingo Molnar <mingo@redhat.com>,
+        Manfred Spraul <manfred@colorfullife.com>,
+        NeilBrown <neilb@suse.com>, Steven Rostedt <rostedt@goodmis.org>,
+        Waiman Long <longman@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 14/47] kernel/gcov/fs.c: gcov_seq_next() should increase position index
+Date:   Sat, 18 Apr 2020 10:41:54 -0400
+Message-Id: <20200418144227.9802-14-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200418144227.9802-1-sashal@kernel.org>
 References: <20200418144227.9802-1-sashal@kernel.org>
@@ -59,57 +67,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+From: Vasily Averin <vvs@virtuozzo.com>
 
-[ Upstream commit 60969f02f07ae1445730c7b293c421d179da729c ]
+[ Upstream commit f4d74ef6220c1eda0875da30457bef5c7111ab06 ]
 
-There are a few items with wrong alignments. Solve them.
+If seq_file .next function does not change position index, read after
+some lseek can generate unexpected output.
 
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+https://bugzilla.kernel.org/show_bug.cgi?id=206283
+Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Acked-by: Peter Oberparleiter <oberpar@linux.ibm.com>
+Cc: Al Viro <viro@zeniv.linux.org.uk>
+Cc: Davidlohr Bueso <dave@stgolabs.net>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Manfred Spraul <manfred@colorfullife.com>
+Cc: NeilBrown <neilb@suse.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: Waiman Long <longman@redhat.com>
+Link: http://lkml.kernel.org/r/f65c6ee7-bd00-f910-2f8a-37cc67e4ff88@virtuozzo.com
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- scripts/kconfig/qconf.cc | 13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
+ kernel/gcov/fs.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/scripts/kconfig/qconf.cc b/scripts/kconfig/qconf.cc
-index ef4310f2558b1..8f004db6f6034 100644
---- a/scripts/kconfig/qconf.cc
-+++ b/scripts/kconfig/qconf.cc
-@@ -627,7 +627,7 @@ void ConfigList::updateMenuList(ConfigItem *parent, struct menu* menu)
- 			last = item;
- 			continue;
- 		}
--	hide:
-+hide:
- 		if (item && item->menu == child) {
- 			last = parent->firstChild();
- 			if (last == item)
-@@ -692,7 +692,7 @@ void ConfigList::updateMenuList(ConfigList *parent, struct menu* menu)
- 			last = item;
- 			continue;
- 		}
--	hide:
-+hide:
- 		if (item && item->menu == child) {
- 			last = (ConfigItem*)parent->topLevelItem(0);
- 			if (last == item)
-@@ -1225,10 +1225,11 @@ QMenu* ConfigInfoView::createStandardContextMenu(const QPoint & pos)
+diff --git a/kernel/gcov/fs.c b/kernel/gcov/fs.c
+index 6e40ff6be083d..291e0797125b6 100644
+--- a/kernel/gcov/fs.c
++++ b/kernel/gcov/fs.c
+@@ -109,9 +109,9 @@ static void *gcov_seq_next(struct seq_file *seq, void *data, loff_t *pos)
  {
- 	QMenu* popup = Parent::createStandardContextMenu(pos);
- 	QAction* action = new QAction("Show Debug Info", popup);
--	  action->setCheckable(true);
--	  connect(action, SIGNAL(toggled(bool)), SLOT(setShowDebug(bool)));
--	  connect(this, SIGNAL(showDebugChanged(bool)), action, SLOT(setOn(bool)));
--	  action->setChecked(showDebug());
-+
-+	action->setCheckable(true);
-+	connect(action, SIGNAL(toggled(bool)), SLOT(setShowDebug(bool)));
-+	connect(this, SIGNAL(showDebugChanged(bool)), action, SLOT(setOn(bool)));
-+	action->setChecked(showDebug());
- 	popup->addSeparator();
- 	popup->addAction(action);
- 	return popup;
+ 	struct gcov_iterator *iter = data;
+ 
++	(*pos)++;
+ 	if (gcov_iter_next(iter))
+ 		return NULL;
+-	(*pos)++;
+ 
+ 	return iter;
+ }
 -- 
 2.20.1
 
