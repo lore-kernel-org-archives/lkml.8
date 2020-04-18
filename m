@@ -2,136 +2,161 @@ Return-Path: <SRS0=3CHW=6C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5D21C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:53:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14B16C38A29
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:53:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B247221D79
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:53:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA4712072B
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:53:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587221597;
-	bh=3mZ81gq8PWCZ3W48CpsOWJmMFYDfG86U7IZ7TY1medI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YYPzHH02vvcl9gPRyGck8fVwGKFdBqLzHclIODCp+CNh3qvFrTlpR738ZFhgBtqJx
-	 euIRO53nAHuAGAUSlKPhDJpej4FPiv6Q9tzMVVf9RyT2C0rmpZaW5IezFICecrj31p
-	 ZyCcrT19C00XEp1n+0pArL0tYgP8OLgDgFhXEbjk=
+	s=default; t=1587221601;
+	bh=UO9hE+5yzNPSpuvg9uhBYwowJGF7YGQ0bQZtDXJyLHk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=yHcLTFGC2Rv0066H9PD8MDdS+en23YigPy/LK8C7Qnp8dJHBlz5wZdiI5piLb0uPp
+	 3E8hj9vJZbDulP1ciFdOiaoTKYIvum4D6eX8EHyFDgdJtWhoCkvxEn1Okt5BEr3Yyq
+	 GayirCbZioGOPBdnD0vViRSyJ1oNjO4DfQPgn5jM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729101AbgDROxQ (ORCPT
+        id S1727865AbgDROxT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 10:53:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51776 "EHLO mail.kernel.org"
+        Sat, 18 Apr 2020 10:53:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36822 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728229AbgDROmD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 10:42:03 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1728232AbgDROxO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 10:53:14 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9915922244;
-        Sat, 18 Apr 2020 14:42:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AA7E520753;
+        Sat, 18 Apr 2020 14:53:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587220922;
-        bh=3mZ81gq8PWCZ3W48CpsOWJmMFYDfG86U7IZ7TY1medI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fENDGD46+vIel6E1B+DQWIjfIctsiAnj/CNnrlJaGgi8y7hdOCYi7AgctJZp2S/dI
-         u1FA5+DE/3nPzcPacHkUxSRC7rmF8nLD8dl3Aap8iFxIMOyCpMX0Vd8vaUY21G/aVb
-         L0oCHNY2IHUY36FwH3mIX5O+3odw/CuF+oTv1ehE=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sreekanth Reddy <sreekanth.reddy@broadcom.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>,
-        MPT-FusionLinux.pdl@broadcom.com, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 60/78] scsi: mpt3sas: Fix kernel panic observed on soft HBA unplug
-Date:   Sat, 18 Apr 2020 10:40:29 -0400
-Message-Id: <20200418144047.9013-60-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200418144047.9013-1-sashal@kernel.org>
-References: <20200418144047.9013-1-sashal@kernel.org>
+        s=default; t=1587221593;
+        bh=UO9hE+5yzNPSpuvg9uhBYwowJGF7YGQ0bQZtDXJyLHk=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=jJwBl5f8kZb+Vjb6gaXMx+rrc2lwQBFHn4Wp6+3JFe7HyvjEiFD8RVV83+7AX5MKg
+         QjTRUl0wdylXFGYyR3ES9F2crDjZUAluMZOYBVRqeNItFdkUZpzA9dMD6jkzpgcuMC
+         QCHNJDlz+0gYBX+jJAK1ayPCJDQ5RjKdfmJSRxZc=
+Date:   Sat, 18 Apr 2020 15:53:08 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Saravanan Sekar <sravanhome@gmail.com>
+Cc:     lee.jones@linaro.org, andy.shevchenko@gmail.com,
+        robh+dt@kernel.org, knaack.h@gmx.de, lars@metafoo.de,
+        pmeerw@pmeerw.net, sre@kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
+        linux-pm@vger.kernel.org
+Subject: Re: [PATCH v10 1/6] dt-bindings: mfd: add document bindings for
+ mp2629
+Message-ID: <20200418155308.681df38f@archlinux>
+In-Reply-To: <20200417085003.6124-2-sravanhome@gmail.com>
+References: <20200417085003.6124-1-sravanhome@gmail.com>
+        <20200417085003.6124-2-sravanhome@gmail.com>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sreekanth Reddy <sreekanth.reddy@broadcom.com>
+On Fri, 17 Apr 2020 10:49:58 +0200
+Saravanan Sekar <sravanhome@gmail.com> wrote:
 
-[ Upstream commit cc41f11a21a51d6869d71e525a7264c748d7c0d7 ]
+> Add device tree binding information for mp2629 mfd driver.
+> 
+> Signed-off-by: Saravanan Sekar <sravanhome@gmail.com>
+> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> ---
+>  .../devicetree/bindings/mfd/mps,mp2629.yaml   | 61 +++++++++++++++++++
+>  1 file changed, 61 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/mps,mp2629.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/mfd/mps,mp2629.yaml b/Documentation/devicetree/bindings/mfd/mps,mp2629.yaml
+> new file mode 100644
+> index 000000000000..b25b29259d67
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mfd/mps,mp2629.yaml
+> @@ -0,0 +1,61 @@
+> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/mfd/mps,mp2629.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: MP2629 Battery Charger PMIC from Monolithic Power System.
+> +
+> +maintainers:
+> +  - Saravanan Sekar <sravanhome@gmail.com>
+> +
+> +description: |
+> +  MP2629 is a PMIC providing battery charging and power supply for smartphones,
+> +  wireless camera and portable devices. Chip is controlled over I2C.
+> +
+> +  The battery charge management device handles battery charger controller and
+> +  ADC IIO device for battery, system voltage
+> +
+> +properties:
+> +  compatible:
+> +    const: mps,mp2629
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  interrupt-controller: true
+> +
+> +  "#interrupt-cells":
+> +    const: 2
+> +    description:
+> +      The first cell is the IRQ number, the second cell is the trigger type.
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - interrupt-controller
+> +  - "#interrupt-cells"
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/irq.h>
+> +    #include <dt-bindings/input/linux-event-codes.h>
+> +    i2c@7e205000 {
 
-Generic protection fault type kernel panic is observed when user performs
-soft (ordered) HBA unplug operation while IOs are running on drives
-connected to HBA.
+I thought the general trend for i2c devices was to leave the i2c
+part 'vague'. 
 
-When user performs ordered HBA removal operation, the kernel calls PCI
-device's .remove() call back function where driver is flushing out all the
-outstanding SCSI IO commands with DID_NO_CONNECT host byte and also unmaps
-sg buffers allocated for these IO commands.
+    i2c {
+          #address-cells = <1>;
+          #size-cells = <0>;
+         
+          pmic@4b.. etc
 
-However, in the ordered HBA removal case (unlike of real HBA hot removal),
-HBA device is still alive and hence HBA hardware is performing the DMA
-operations to those buffers on the system memory which are already unmapped
-while flushing out the outstanding SCSI IO commands and this leads to
-kernel panic.
+Guess it doesn't matter if example contains too much information. Rob?
 
-Don't flush out the outstanding IOs from .remove() path in case of ordered
-removal since HBA will be still alive in this case and it can complete the
-outstanding IOs. Flush out the outstanding IOs only in case of 'physical
-HBA hot unplug' where there won't be any communication with the HBA.
+Otherwise looks good to me.
 
-During shutdown also it is possible that HBA hardware can perform DMA
-operations on those outstanding IO buffers which are completed with
-DID_NO_CONNECT by the driver from .shutdown(). So same above fix is applied
-in shutdown path as well.
+Thanks,
 
-It is safe to drop the outstanding commands when HBA is inaccessible such
-as when permanent PCI failure happens, when HBA is in non-operational
-state, or when someone does a real HBA hot unplug operation. Since driver
-knows that HBA is inaccessible during these cases, it is safe to drop the
-outstanding commands instead of waiting for SCSI error recovery to kick in
-and clear these outstanding commands.
-
-Link: https://lore.kernel.org/r/1585302763-23007-1-git-send-email-sreekanth.reddy@broadcom.com
-Fixes: c666d3be99c0 ("scsi: mpt3sas: wait for and flush running commands on shutdown/unload")
-Cc: stable@vger.kernel.org #v4.14.174+
-Signed-off-by: Sreekanth Reddy <sreekanth.reddy@broadcom.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/scsi/mpt3sas/mpt3sas_scsih.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/scsi/mpt3sas/mpt3sas_scsih.c b/drivers/scsi/mpt3sas/mpt3sas_scsih.c
-index c8e512ba6d398..aff630fccb07e 100644
---- a/drivers/scsi/mpt3sas/mpt3sas_scsih.c
-+++ b/drivers/scsi/mpt3sas/mpt3sas_scsih.c
-@@ -9747,8 +9747,8 @@ static void scsih_remove(struct pci_dev *pdev)
+Jonathan
  
- 	ioc->remove_host = 1;
- 
--	mpt3sas_wait_for_commands_to_complete(ioc);
--	_scsih_flush_running_cmds(ioc);
-+	if (!pci_device_is_present(pdev))
-+		_scsih_flush_running_cmds(ioc);
- 
- 	_scsih_fw_event_cleanup_queue(ioc);
- 
-@@ -9831,8 +9831,8 @@ scsih_shutdown(struct pci_dev *pdev)
- 
- 	ioc->remove_host = 1;
- 
--	mpt3sas_wait_for_commands_to_complete(ioc);
--	_scsih_flush_running_cmds(ioc);
-+	if (!pci_device_is_present(pdev))
-+		_scsih_flush_running_cmds(ioc);
- 
- 	_scsih_fw_event_cleanup_queue(ioc);
- 
--- 
-2.20.1
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +        reg = <0x7e205000 0x200>;
+> +
+> +        pmic@4b {
+> +            compatible = "mps,mp2629";
+> +            reg = <0x4b>;
+> +
+> +            interrupt-controller;
+> +            interrupt-parent = <&gpio2>;
+> +            #interrupt-cells = <2>;
+> +            interrupts = <3 IRQ_TYPE_LEVEL_HIGH>;
+> +        };
+> +    };
 
