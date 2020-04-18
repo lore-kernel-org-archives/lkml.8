@@ -2,121 +2,94 @@ Return-Path: <SRS0=3CHW=6C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.7 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03744C38A2B
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 10:53:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D7A7C2D0EF
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 10:55:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E15D6221F4
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 10:53:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 559152224E
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 10:55:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725994AbgDRKxi (ORCPT
+        id S1726069AbgDRKy7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 06:53:38 -0400
-Received: from gloria.sntech.de ([185.11.138.130]:48358 "EHLO gloria.sntech.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725857AbgDRKxh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 06:53:37 -0400
-Received: from p57b77241.dip0.t-ipconnect.de ([87.183.114.65] helo=phil.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <heiko@sntech.de>)
-        id 1jPl6J-00011g-3g; Sat, 18 Apr 2020 12:53:31 +0200
-From:   Heiko Stuebner <heiko@sntech.de>
-To:     Justin Swartz <justin.swartz@risingedge.co.za>
-Cc:     Johan Jonker <jbx6244@gmail.com>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-rockchip@lists.infradead.org, mark.rutland@arm.com,
-        robh+dt@kernel.org
-Subject: Re: [PATCH v4 2/3] ARM: dts: rockchip: add rga node for rk322x
-Date:   Sat, 18 Apr 2020 12:53:30 +0200
-Message-ID: <2533855.f5ZhyS2AsA@phil>
-In-Reply-To: <b77422198df7c285d824086131371284@risingedge.co.za>
-References: <be4f2c802a64562cbab629abc82dd7d228a1a747.1580768038.git.justin.swartz@risingedge.co.za> <3593382.iQIKm1rSL1@phil> <b77422198df7c285d824086131371284@risingedge.co.za>
+        Sat, 18 Apr 2020 06:54:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54648 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725994AbgDRKy5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 06:54:57 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A104FC061A0F;
+        Sat, 18 Apr 2020 03:54:57 -0700 (PDT)
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1jPl7c-0007eg-C9; Sat, 18 Apr 2020 12:54:52 +0200
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id ACC9E1C0330;
+        Sat, 18 Apr 2020 12:54:50 +0200 (CEST)
+Date:   Sat, 18 Apr 2020 10:54:50 -0000
+From:   "tip-bot2 for Tony Luck" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/urgent] x86/split_lock: Add Tremont family CPU models
+Cc:     Tony Luck <tony.luck@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200416205754.21177-4-tony.luck@intel.com>
+References: <20200416205754.21177-4-tony.luck@intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Message-ID: <158720729021.28353.6622662138639985599.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Samstag, 18. April 2020, 11:56:03 CEST schrieb Justin Swartz:
-> Hi Johan, Heiko,
-> 
-> On 2020-04-18 11:49, Heiko Stuebner wrote:
-> 
-> > Am Samstag, 18. April 2020, 11:15:27 CEST schrieb Johan Jonker:
-> > 
-> >> Hi Justin, Heiko,
-> >> 
-> >> In the discussion about "rockchip,px30-rga" it was mentioned that:
-> >> "no status for soc internal components without any board-specifics".
-> >> The binding is in mainline, but the dts node is missing I think.
-> >> Should this also be changed?
-> > 
-> > yep, drop the status disabled from the dtsi and that then results
-> > in not needing the board-level enablement
-> > 
-> > (background: rga is a simple mem2mem device without any
-> > board-specific hooks)
-> 
-> Shall I submit version 5 of this patch series?
+The following commit has been merged into the x86/urgent branch of tip:
 
-I guess so ... especially as we expect patch1 to go through the
-media tree and sending a new version might serve as a ping :-)
-and include the Ack by Rob for easy applying
+Commit-ID:     8b9a18a9f2494144fe23fe630d0734310fa65301
+Gitweb:        https://git.kernel.org/tip/8b9a18a9f2494144fe23fe630d0734310fa65301
+Author:        Tony Luck <tony.luck@intel.com>
+AuthorDate:    Thu, 16 Apr 2020 13:57:54 -07:00
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Sat, 18 Apr 2020 12:48:44 +02:00
 
+x86/split_lock: Add Tremont family CPU models
 
-Heiko
+Tremont CPUs support IA32_CORE_CAPABILITIES bits to indicate whether
+specific SKUs have support for split lock detection.
 
+Signed-off-by: Tony Luck <tony.luck@intel.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/20200416205754.21177-4-tony.luck@intel.com
 
-> 
-> > Johan
-> > 
-> > +&rga {
-> > +    status = "okay";
-> > +};
-> > +
-> > 
-> > Add a node to define the presence of RGA, a 2D raster
-> > graphic acceleration unit.
-> > 
-> > Signed-off-by: Justin Swartz <justin.swartz@risingedge.co.za>
-> > ---
-> > arch/arm/boot/dts/rk322x.dtsi | 11 +++++++++++
-> > 1 file changed, 11 insertions(+)
-> > 
-> > diff --git a/arch/arm/boot/dts/rk322x.dtsi 
-> > b/arch/arm/boot/dts/rk322x.dtsi
-> > index 340ed6ccb..29d50bebc 100644
-> > --- a/arch/arm/boot/dts/rk322x.dtsi
-> > +++ b/arch/arm/boot/dts/rk322x.dtsi
-> > @@ -621,6 +621,17 @@
-> > status = "disabled";
-> > };
-> > 
-> > +    rga: rga@20060000 {
-> > +        compatible = "rockchip,rk3228-rga", "rockchip,rk3288-rga";
-> > +        reg = <0x20060000 0x1000>;
-> > +        interrupts = <GIC_SPI 33 IRQ_TYPE_LEVEL_HIGH>;
-> > +        clocks = <&cru ACLK_RGA>, <&cru HCLK_RGA>, <&cru SCLK_RGA>;
-> > +        clock-names = "aclk", "hclk", "sclk";
-> > +        resets = <&cru SRST_RGA>, <&cru SRST_RGA_A>, <&cru 
-> > SRST_RGA_H>;
-> > +        reset-names = "core", "axi", "ahb";
-> > +        status = "disabled";
-> > remove?
-> > 
-> > +    };
-> > +
-> > iep_mmu: iommu@20070800 {
-> > compatible = "rockchip,iommu";
-> > reg = <0x20070800 0x100>;
-> 
+---
+ arch/x86/kernel/cpu/intel.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-
-
-
+diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
+index c23ad48..a19a680 100644
+--- a/arch/x86/kernel/cpu/intel.c
++++ b/arch/x86/kernel/cpu/intel.c
+@@ -1135,6 +1135,9 @@ void switch_to_sld(unsigned long tifn)
+ static const struct x86_cpu_id split_lock_cpu_ids[] __initconst = {
+ 	X86_MATCH_INTEL_FAM6_MODEL(ICELAKE_X,		0),
+ 	X86_MATCH_INTEL_FAM6_MODEL(ICELAKE_L,		0),
++	X86_MATCH_INTEL_FAM6_MODEL(ATOM_TREMONT,	1),
++	X86_MATCH_INTEL_FAM6_MODEL(ATOM_TREMONT_D,	1),
++	X86_MATCH_INTEL_FAM6_MODEL(ATOM_TREMONT_L,	1),
+ 	{}
+ };
+ 
