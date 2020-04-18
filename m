@@ -7,47 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CB56C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:48:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3B37C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:48:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E50D122202
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:48:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A3E721D7E
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:48:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587221332;
-	bh=5Huy8EbT72yQeMjjkhaQKsxa+gtwMnGMg2KZR+HbXI8=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=TAgbpCcEdUj/U8eckrPG1SLcSlbCumYrZuwTAPks3+s/vEA2m7y8s3TCPOANgX5xd
-	 9wGgvp0RVjJp1iBd9ObaFwfPUSbEhv3WIfahzwB0xdcvcVefJYa/hG39JpiHkxOES5
-	 qnETFaZ1K23Bqncaj2NcL46fJ99DcBf7TV9R0J+k=
+	s=default; t=1587221334;
+	bh=1agSb1zZIzUexk6XfQ/mwSRAPiYjai1/twZXb2qC4fo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=U46XiPEwi3KKTO0sYhQ9cxZOH5miR7Z21jAVXbmb66mn6m+Hkw4uahrnyADjjEBiR
+	 DLwjqgOJrJRSuKSCGUeIHls08LPeE4zYO7ldWMwVISUItFUsPLrO0AaQxqRms1zlHx
+	 A0Is/9TVxI4Wi3KEl+z4DoM7QSaj+PyJTsYvVajA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728633AbgDROnj (ORCPT
+        id S1728322AbgDROsx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 10:43:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54640 "EHLO mail.kernel.org"
+        Sat, 18 Apr 2020 10:48:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54896 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728590AbgDROna (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 10:43:30 -0400
+        id S1728627AbgDROnk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 10:43:40 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4729E22251;
-        Sat, 18 Apr 2020 14:43:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A888921D82;
+        Sat, 18 Apr 2020 14:43:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587221009;
-        bh=5Huy8EbT72yQeMjjkhaQKsxa+gtwMnGMg2KZR+HbXI8=;
-        h=From:To:Cc:Subject:Date:From;
-        b=p7t7khbucl1PO0nVBSHofd4ldr5DlzSZfKDZJeeqlu7/2SahRL86if87ts/lErLBf
-         m1Y6YcBVLPM+359c0Gx2rvOlKSwDug7Z7sc+eXHa9b1Tea1olDcDPw7hJg6zVE5wjF
-         j53WuT5LwRUl9PYSGnugMWIPDZA7MxVZ6/UdryWI=
+        s=default; t=1587221020;
+        bh=1agSb1zZIzUexk6XfQ/mwSRAPiYjai1/twZXb2qC4fo=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=xC3ppgpyJ+CxJ8ldKfu3iCBpiOIpzg/sZ8334jc7u6bN00rwt9MNvTtN/6WET89z4
+         6iokR50nGzFexajnBaBz19L8w+YYM+AITs0LtOCfvlO7Wvve8zBFGUd4g8Uu6BfUZn
+         tpVBQDGQ50cnvL9tK+w7o0aq6aNwWNu0fGwLjQJA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Adrian Huang <ahuang12@lenovo.com>, Joerg Roedel <jroedel@suse.de>,
-        Sasha Levin <sashal@kernel.org>,
-        iommu@lists.linux-foundation.org
-Subject: [PATCH AUTOSEL 4.14 01/28] iommu/amd: Fix the configuration of GCR3 table root pointer
-Date:   Sat, 18 Apr 2020 10:43:01 -0400
-Message-Id: <20200418144328.10265-1-sashal@kernel.org>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 4.14 10/28] ASoC: Intel: atom: Take the drv->lock mutex before calling sst_send_slot_map()
+Date:   Sat, 18 Apr 2020 10:43:10 -0400
+Message-Id: <20200418144328.10265-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200418144328.10265-1-sashal@kernel.org>
+References: <20200418144328.10265-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -57,36 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Adrian Huang <ahuang12@lenovo.com>
+From: Hans de Goede <hdegoede@redhat.com>
 
-[ Upstream commit c20f36534666e37858a14e591114d93cc1be0d34 ]
+[ Upstream commit 81630dc042af998b9f58cd8e2c29dab9777ea176 ]
 
-The SPA of the GCR3 table root pointer[51:31] masks 20 bits. However,
-this requires 21 bits (Please see the AMD IOMMU specification).
-This leads to the potential failure when the bit 51 of SPA of
-the GCR3 table root pointer is 1'.
+sst_send_slot_map() uses sst_fill_and_send_cmd_unlocked() because in some
+places it is called with the drv->lock mutex already held.
 
-Signed-off-by: Adrian Huang <ahuang12@lenovo.com>
-Fixes: 52815b75682e2 ("iommu/amd: Add support for IOMMUv2 domain mode")
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+So it must always be called with the mutex locked. This commit adds missing
+locking in the sst_set_be_modules() code-path.
+
+Fixes: 24c8d14192cc ("ASoC: Intel: mrfld: add DSP core controls")
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Acked-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Link: https://lore.kernel.org/r/20200402185359.3424-1-hdegoede@redhat.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iommu/amd_iommu_types.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/soc/intel/atom/sst-atom-controls.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/iommu/amd_iommu_types.h b/drivers/iommu/amd_iommu_types.h
-index 3054c0971759f..74c8638aac2b9 100644
---- a/drivers/iommu/amd_iommu_types.h
-+++ b/drivers/iommu/amd_iommu_types.h
-@@ -348,7 +348,7 @@
+diff --git a/sound/soc/intel/atom/sst-atom-controls.c b/sound/soc/intel/atom/sst-atom-controls.c
+index 0f3604b559424..b04853bdaf377 100644
+--- a/sound/soc/intel/atom/sst-atom-controls.c
++++ b/sound/soc/intel/atom/sst-atom-controls.c
+@@ -974,7 +974,9 @@ static int sst_set_be_modules(struct snd_soc_dapm_widget *w,
+ 	dev_dbg(c->dev, "Enter: widget=%s\n", w->name);
  
- #define DTE_GCR3_VAL_A(x)	(((x) >> 12) & 0x00007ULL)
- #define DTE_GCR3_VAL_B(x)	(((x) >> 15) & 0x0ffffULL)
--#define DTE_GCR3_VAL_C(x)	(((x) >> 31) & 0xfffffULL)
-+#define DTE_GCR3_VAL_C(x)	(((x) >> 31) & 0x1fffffULL)
- 
- #define DTE_GCR3_INDEX_A	0
- #define DTE_GCR3_INDEX_B	1
+ 	if (SND_SOC_DAPM_EVENT_ON(event)) {
++		mutex_lock(&drv->lock);
+ 		ret = sst_send_slot_map(drv);
++		mutex_unlock(&drv->lock);
+ 		if (ret)
+ 			return ret;
+ 		ret = sst_send_pipe_module_params(w, k);
 -- 
 2.20.1
 
