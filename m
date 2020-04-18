@@ -7,57 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6043C38A30
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 13:51:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C05EC38A30
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 13:51:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 97B522054F
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 13:51:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 466D92054F
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 13:51:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587217892;
-	bh=uRKGWEHffTzz+HeEoRdC6kD4Fwtd9WIkFuzd8NRpf9I=;
+	s=default; t=1587217902;
+	bh=iljF7Edtms053YjF9mQtzQ/ve2E9hUgK2Tcg3enhmPM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=D2VvG78d1kpyxXAbRR02eQXejLRmtVgxy/CKqy8bJEEyQlUsi5GIC0/uzchP6RP4i
-	 udhZhSJO5yJYl5FViaui4IsG3y7P7YUTnXICamuSap9nK9DcwTkbGyZK/VVMLiqJ7b
-	 XFxsY8UAV79r5CUshz/A/TpCdXxfFYqkuTfCRhEw=
+	b=1pWuthlbMooyVnMVjbDfVZuveSni6kCTcjgZHDN/03WQNfdKUPJxkBF11z8xGz26v
+	 chxw+XPIg7oJi4cy9powFS4O1jflSSqbfcGg1KiA1xeXLQd5AZBVfdzBel2z/lx7ZM
+	 ffLMSkesPF9dI+mFHesbTMF8atLBKI0SDd6QL0TM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727903AbgDRNvb (ORCPT
+        id S1727915AbgDRNvl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 09:51:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56016 "EHLO mail.kernel.org"
+        Sat, 18 Apr 2020 09:51:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55846 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726745AbgDRNtM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 09:49:12 -0400
+        id S1726636AbgDRNtG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 09:49:06 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 89ACD2227F;
-        Sat, 18 Apr 2020 13:49:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C444021D7E;
+        Sat, 18 Apr 2020 13:49:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587217751;
-        bh=uRKGWEHffTzz+HeEoRdC6kD4Fwtd9WIkFuzd8NRpf9I=;
+        s=default; t=1587217745;
+        bh=iljF7Edtms053YjF9mQtzQ/ve2E9hUgK2Tcg3enhmPM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MhPS1UldXjC+PKwuqyH3Dj0H6WCu/aQCBY5XdUfL2R7PXivNvY5bYZZGxgAmWV0nQ
-         E25GCT8r0Hxph8zr3/+LUkk++oGEOoy7A2vpeeP74o3pTy6iU9/zIdyhCOop0eHk8S
-         2KZIez7KfsgO2X89uqC/yX4Bws4h3qvCQZyMeQQY=
+        b=nelnPp9p0ObAwCqshiB1098EZ1Fd7wH+6yFGKyfFeTNqdFyUw4/3La5wsP/ZCVgCA
+         /TXhw1ig14tnEj7tR7liqj08gAD7StGbSdXam21FGaoamh8n0eOspTfQeF/Gsh9DjP
+         28TFmHZD+LxydSRKlNlcAF4uy7+3Js0N4lpSBLrs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pwm@vger.kernel.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.6 44/73] pwm: bcm2835: Dynamically allocate base
-Date:   Sat, 18 Apr 2020 09:47:46 -0400
-Message-Id: <20200418134815.6519-44-sashal@kernel.org>
+Cc:     Nicholas Piggin <npiggin@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 5.6 39/73] Revert "powerpc/64: irq_work avoid interrupt when called with hardware irqs enabled"
+Date:   Sat, 18 Apr 2020 09:47:41 -0400
+Message-Id: <20200418134815.6519-39-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200418134815.6519-1-sashal@kernel.org>
 References: <20200418134815.6519-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -66,37 +59,108 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Fainelli <f.fainelli@gmail.com>
+From: Nicholas Piggin <npiggin@gmail.com>
 
-[ Upstream commit 2c25b07e5ec119cab609e41407a1fb3fa61442f5 ]
+[ Upstream commit abc3fce76adbdfa8f87272c784b388cd20b46049 ]
 
-The newer 2711 and 7211 chips have two PWM controllers and failure to
-dynamically allocate the PWM base would prevent the second PWM
-controller instance being probed for succeeding with an -EEXIST error
-from alloc_pwms().
+This reverts commit ebb37cf3ffd39fdb6ec5b07111f8bb2f11d92c5f.
 
-Fixes: e5a06dc5ac1f ("pwm: Add BCM2835 PWM driver")
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-Reviewed-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
+That commit does not play well with soft-masked irq state
+manipulations in idle, interrupt replay, and possibly others due to
+tracing code sometimes using irq_work_queue (e.g., in
+trace_hardirqs_on()). That can cause PACA_IRQ_DEC to become set when
+it is not expected, and be ignored or cleared or cause warnings.
+
+The net result seems to be missing an irq_work until the next timer
+interrupt in the worst case which is usually not going to be noticed,
+however it could be a long time if the tick is disabled, which is
+against the spirit of irq_work and might cause real problems.
+
+The idea is still solid, but it would need more work. It's not really
+clear if it would be worth added complexity, so revert this for
+now (not a straight revert, but replace with a comment explaining why
+we might see interrupts happening, and gives git blame something to
+find).
+
+Fixes: ebb37cf3ffd3 ("powerpc/64: irq_work avoid interrupt when called with hardware irqs enabled")
+Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20200402120401.1115883-1-npiggin@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pwm/pwm-bcm2835.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/powerpc/kernel/time.c | 44 +++++++++++---------------------------
+ 1 file changed, 13 insertions(+), 31 deletions(-)
 
-diff --git a/drivers/pwm/pwm-bcm2835.c b/drivers/pwm/pwm-bcm2835.c
-index 91e24f01b54ed..d78f86f8e4621 100644
---- a/drivers/pwm/pwm-bcm2835.c
-+++ b/drivers/pwm/pwm-bcm2835.c
-@@ -166,6 +166,7 @@ static int bcm2835_pwm_probe(struct platform_device *pdev)
+diff --git a/arch/powerpc/kernel/time.c b/arch/powerpc/kernel/time.c
+index 1168e8b37e306..716f8d0960a7b 100644
+--- a/arch/powerpc/kernel/time.c
++++ b/arch/powerpc/kernel/time.c
+@@ -522,35 +522,6 @@ static inline void clear_irq_work_pending(void)
+ 		"i" (offsetof(struct paca_struct, irq_work_pending)));
+ }
  
- 	pc->chip.dev = &pdev->dev;
- 	pc->chip.ops = &bcm2835_pwm_ops;
-+	pc->chip.base = -1;
- 	pc->chip.npwm = 2;
- 	pc->chip.of_xlate = of_pwm_xlate_with_flags;
- 	pc->chip.of_pwm_n_cells = 3;
+-void arch_irq_work_raise(void)
+-{
+-	preempt_disable();
+-	set_irq_work_pending_flag();
+-	/*
+-	 * Non-nmi code running with interrupts disabled will replay
+-	 * irq_happened before it re-enables interrupts, so setthe
+-	 * decrementer there instead of causing a hardware exception
+-	 * which would immediately hit the masked interrupt handler
+-	 * and have the net effect of setting the decrementer in
+-	 * irq_happened.
+-	 *
+-	 * NMI interrupts can not check this when they return, so the
+-	 * decrementer hardware exception is raised, which will fire
+-	 * when interrupts are next enabled.
+-	 *
+-	 * BookE does not support this yet, it must audit all NMI
+-	 * interrupt handlers to ensure they call nmi_enter() so this
+-	 * check would be correct.
+-	 */
+-	if (IS_ENABLED(CONFIG_BOOKE) || !irqs_disabled() || in_nmi()) {
+-		set_dec(1);
+-	} else {
+-		hard_irq_disable();
+-		local_paca->irq_happened |= PACA_IRQ_DEC;
+-	}
+-	preempt_enable();
+-}
+-
+ #else /* 32-bit */
+ 
+ DEFINE_PER_CPU(u8, irq_work_pending);
+@@ -559,16 +530,27 @@ DEFINE_PER_CPU(u8, irq_work_pending);
+ #define test_irq_work_pending()		__this_cpu_read(irq_work_pending)
+ #define clear_irq_work_pending()	__this_cpu_write(irq_work_pending, 0)
+ 
++#endif /* 32 vs 64 bit */
++
+ void arch_irq_work_raise(void)
+ {
++	/*
++	 * 64-bit code that uses irq soft-mask can just cause an immediate
++	 * interrupt here that gets soft masked, if this is called under
++	 * local_irq_disable(). It might be possible to prevent that happening
++	 * by noticing interrupts are disabled and setting decrementer pending
++	 * to be replayed when irqs are enabled. The problem there is that
++	 * tracing can call irq_work_raise, including in code that does low
++	 * level manipulations of irq soft-mask state (e.g., trace_hardirqs_on)
++	 * which could get tangled up if we're messing with the same state
++	 * here.
++	 */
+ 	preempt_disable();
+ 	set_irq_work_pending_flag();
+ 	set_dec(1);
+ 	preempt_enable();
+ }
+ 
+-#endif /* 32 vs 64 bit */
+-
+ #else  /* CONFIG_IRQ_WORK */
+ 
+ #define test_irq_work_pending()	0
 -- 
 2.20.1
 
