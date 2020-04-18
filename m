@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F401C38A29
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:55:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26C1FC38A2F
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:55:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E31A2206D6
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:55:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06DB5206D6
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:55:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587221757;
-	bh=Mdw7Him3EymDcdIY7gAAk8w+vDf/GjKNRMZsatnbAuY=;
+	s=default; t=1587221758;
+	bh=S8BciryhmOjmP06oCroyDH/n35WS5a6CLZ6N5yiRrvQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YtGiSnvPs4YYY30z0syrYJYkK9oQZsE5ZNwnhWDPo4+2k6oVnmFQBcB8l26F7IxEl
-	 Qlgnq2bjXsea16fJ4LME8IQ3GVrEXyaC7RoDcfE/QM5r5J2zDT8X5HOl9MwjDbNWUW
-	 EkQrjiMop5/V8F4yi/JNkPQsgqUbVLqmqSlmZ2H8=
+	b=z1m9E9nv0VMzuaH3zTveRP0uEXN6hE4Wfo6DJfRqBMKcn3+KFAvPAIu9haHWv0wRJ
+	 obJGKG1rDHRwieNgeHgG3nMN2JCHXYaw8jygTGj8CI65HSNqrynBilFbkwbYTSP8Rk
+	 NqXyANK+LZnWKm72dd6y6R3A8t9zBgyR6dbRCki4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728273AbgDROzz (ORCPT
+        id S1726484AbgDROk7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 10:55:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49600 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726829AbgDROk7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 18 Apr 2020 10:40:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49424 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726803AbgDROk4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 10:40:56 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3E3CB22260;
-        Sat, 18 Apr 2020 14:40:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C3EBF21D79;
+        Sat, 18 Apr 2020 14:40:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587220859;
-        bh=Mdw7Him3EymDcdIY7gAAk8w+vDf/GjKNRMZsatnbAuY=;
+        s=default; t=1587220855;
+        bh=S8BciryhmOjmP06oCroyDH/n35WS5a6CLZ6N5yiRrvQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2bui66LWaOOdDNSxb1B78BTRiN08hljw/sQI/BU6T7cJn/wrhQSDA2zp3+baXbZcY
-         CZMGfBHkpOmhd2p0x/FY9wNz7Vp7jgCBimzSTnyOuXDaH6QbHVfQTDLm0LNNd7yhVt
-         CgWLgDwa9AA9WkPsWewFtboQwuJ2hYB0FH6PO8rc=
+        b=Rt/AlcNf0qrRm6RTnngQhxPdT52xUNQcYi0sLcXxGia119uwmf3NXmYk1nIszY+AI
+         sQtfFhayCrtrwb8GFyXPHjRopxraPqvAQgNOJqqeKpUXaHMHJegL13mx1JOhMp77aT
+         7d+JGL27IKZCHVM/ZsAOMrbS3NEXYGlLVC+SgnvM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     James Smart <jsmart2021@gmail.com>,
-        Dick Kennedy <dick.kennedy@broadcom.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 09/78] scsi: lpfc: Fix crash after handling a pci error
-Date:   Sat, 18 Apr 2020 10:39:38 -0400
-Message-Id: <20200418144047.9013-9-sashal@kernel.org>
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-nvdimm@lists.01.org,
+        linux-acpi@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 06/78] acpi/nfit: improve bounds checking for 'func'
+Date:   Sat, 18 Apr 2020 10:39:35 -0400
+Message-Id: <20200418144047.9013-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200418144047.9013-1-sashal@kernel.org>
 References: <20200418144047.9013-1-sashal@kernel.org>
@@ -60,45 +60,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: James Smart <jsmart2021@gmail.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit 4cd70891308dfb875ef31060c4a4aa8872630a2e ]
+[ Upstream commit 01091c496f920e634ea84b689f480c39016752a8 ]
 
-Injecting EEH on a 32GB card is causing kernel oops
+The 'func' variable can come from the user in the __nd_ioctl().  If it's
+too high then the (1 << func) shift in acpi_nfit_clear_to_send() is
+undefined.  In acpi_nfit_ctl() we pass 'func' to test_bit(func, &dsm_mask)
+which could result in an out of bounds access.
 
-The pci error handler is doing an IO flush and the offline code is also
-doing an IO flush. When the 1st flush is complete the hdwq is destroyed
-(freed), yet the second flush accesses the hdwq and crashes.
+To fix these issues, I introduced the NVDIMM_CMD_MAX (31) define and
+updated nfit_dsm_revid() to use that define as well instead of magic
+numbers.
 
-Added a check in lpfc_sli4_fush_io_rings to check both the HBA_IOQ_FLUSH
-flag and the hdwq pointer to see if it is already set and not already
-freed.
-
-Link: https://lore.kernel.org/r/20200322181304.37655-6-jsmart2021@gmail.com
-Signed-off-by: James Smart <jsmart2021@gmail.com>
-Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Fixes: 11189c1089da ("acpi/nfit: Fix command-supported detection")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Reviewed-by: Dan Williams <dan.j.williams@intel.com>
+Link: https://lore.kernel.org/r/20200225161927.hvftuq7kjn547fyj@kili.mountain
+Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/lpfc/lpfc_sli.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/acpi/nfit/core.c | 10 ++++++----
+ drivers/acpi/nfit/nfit.h |  1 +
+ 2 files changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/scsi/lpfc/lpfc_sli.c b/drivers/scsi/lpfc/lpfc_sli.c
-index 8836c5682c8d5..4e04270cc5c4f 100644
---- a/drivers/scsi/lpfc/lpfc_sli.c
-+++ b/drivers/scsi/lpfc/lpfc_sli.c
-@@ -4012,6 +4012,11 @@ lpfc_sli_flush_io_rings(struct lpfc_hba *phba)
- 	struct lpfc_iocbq *piocb, *next_iocb;
+diff --git a/drivers/acpi/nfit/core.c b/drivers/acpi/nfit/core.c
+index 14e68f202f810..12d980aafc5ff 100644
+--- a/drivers/acpi/nfit/core.c
++++ b/drivers/acpi/nfit/core.c
+@@ -360,7 +360,7 @@ static union acpi_object *acpi_label_info(acpi_handle handle)
  
- 	spin_lock_irq(&phba->hbalock);
-+	if (phba->hba_flag & HBA_IOQ_FLUSH ||
-+	    !phba->sli4_hba.hdwq) {
-+		spin_unlock_irq(&phba->hbalock);
-+		return;
-+	}
- 	/* Indicate the I/O queues are flushed */
- 	phba->hba_flag |= HBA_IOQ_FLUSH;
- 	spin_unlock_irq(&phba->hbalock);
+ static u8 nfit_dsm_revid(unsigned family, unsigned func)
+ {
+-	static const u8 revid_table[NVDIMM_FAMILY_MAX+1][32] = {
++	static const u8 revid_table[NVDIMM_FAMILY_MAX+1][NVDIMM_CMD_MAX+1] = {
+ 		[NVDIMM_FAMILY_INTEL] = {
+ 			[NVDIMM_INTEL_GET_MODES] = 2,
+ 			[NVDIMM_INTEL_GET_FWINFO] = 2,
+@@ -386,7 +386,7 @@ static u8 nfit_dsm_revid(unsigned family, unsigned func)
+ 
+ 	if (family > NVDIMM_FAMILY_MAX)
+ 		return 0;
+-	if (func > 31)
++	if (func > NVDIMM_CMD_MAX)
+ 		return 0;
+ 	id = revid_table[family][func];
+ 	if (id == 0)
+@@ -492,7 +492,8 @@ int acpi_nfit_ctl(struct nvdimm_bus_descriptor *nd_desc, struct nvdimm *nvdimm,
+ 	 * Check for a valid command.  For ND_CMD_CALL, we also have to
+ 	 * make sure that the DSM function is supported.
+ 	 */
+-	if (cmd == ND_CMD_CALL && !test_bit(func, &dsm_mask))
++	if (cmd == ND_CMD_CALL &&
++	    (func > NVDIMM_CMD_MAX || !test_bit(func, &dsm_mask)))
+ 		return -ENOTTY;
+ 	else if (!test_bit(cmd, &cmd_mask))
+ 		return -ENOTTY;
+@@ -3499,7 +3500,8 @@ static int acpi_nfit_clear_to_send(struct nvdimm_bus_descriptor *nd_desc,
+ 	if (nvdimm && cmd == ND_CMD_CALL &&
+ 			call_pkg->nd_family == NVDIMM_FAMILY_INTEL) {
+ 		func = call_pkg->nd_command;
+-		if ((1 << func) & NVDIMM_INTEL_SECURITY_CMDMASK)
++		if (func > NVDIMM_CMD_MAX ||
++		    (1 << func) & NVDIMM_INTEL_SECURITY_CMDMASK)
+ 			return -EOPNOTSUPP;
+ 	}
+ 
+diff --git a/drivers/acpi/nfit/nfit.h b/drivers/acpi/nfit/nfit.h
+index 24241941181ce..b317f4043705f 100644
+--- a/drivers/acpi/nfit/nfit.h
++++ b/drivers/acpi/nfit/nfit.h
+@@ -34,6 +34,7 @@
+ 		| ACPI_NFIT_MEM_NOT_ARMED | ACPI_NFIT_MEM_MAP_FAILED)
+ 
+ #define NVDIMM_FAMILY_MAX NVDIMM_FAMILY_HYPERV
++#define NVDIMM_CMD_MAX 31
+ 
+ #define NVDIMM_STANDARD_CMDMASK \
+ (1 << ND_CMD_SMART | 1 << ND_CMD_SMART_THRESHOLD | 1 << ND_CMD_DIMM_FLAGS \
 -- 
 2.20.1
 
