@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 030CCC38A29
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:44:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A59E9C38A29
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:44:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D37E821D7E
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:44:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BA2422202
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:44:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587221068;
-	bh=klBkbq68mGyRT+2KtEwZLVT96VkD8jSmhCqVYrAke5I=;
+	s=default; t=1587221074;
+	bh=7RfogpTkIK5I7EqQCPrEvs26vCxY4C5QUahlumpM6cA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LkIatJQlmuCaIxsqIBmrKddvqqTQuefOqUleJXi9vjtiE491TOjjYB2SsDE0KHf6q
-	 O7D2OTnaZKGxXwResU+NftdIAZr+9r86w8AxKvyH05GLpKaLX1b93tjkoATQnly5rP
-	 vn7a/TPLWD8yxiR7QBztHFOrrrnJ9Ygap+YTHZdg=
+	b=dztukfP20lt8ub0UcywNi/b+HN9JzWf/5ecWHAw88RmHPTlgDZ6uX+NGUH8ai0C60
+	 NjvDvwqIL0s8c4g5RyS9TwJiEN60eMJDjK5RTWJgSF8Pi9NqsWyTXKXCEilgyEv2Ng
+	 M4/9+RxvcZMEw/pxLd9v05N6Em/U40KQ+is+i8+g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728812AbgDROo1 (ORCPT
+        id S1728835AbgDROod (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 10:44:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56038 "EHLO mail.kernel.org"
+        Sat, 18 Apr 2020 10:44:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56118 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728792AbgDROoX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 10:44:23 -0400
+        id S1728803AbgDROo1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 10:44:27 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1386321D79;
-        Sat, 18 Apr 2020 14:44:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DB51421D79;
+        Sat, 18 Apr 2020 14:44:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587221062;
-        bh=klBkbq68mGyRT+2KtEwZLVT96VkD8jSmhCqVYrAke5I=;
+        s=default; t=1587221066;
+        bh=7RfogpTkIK5I7EqQCPrEvs26vCxY4C5QUahlumpM6cA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZiC/qNpEke1I0WXudk1oLlbOCES5WUD9kEeyiyOkFRQG3yUePnwU3u1H04fK5czV3
-         /oB+LXcbFWErjELMR4lg1kYlb3LqkV96uyszQ/O6BFooxR/4A6IuNqPBxfixayk5kY
-         3MV9Zf8XVQ7S8n5WPsiWm9Iy+BU+C5ecWYUsuXis=
+        b=jpIMx1EawXOgU/YtA7SZN+LshWQqlPJxsr/x3rlgInA4nJSZ1YRIWJ/KhmUqaXxoZ
+         +hjDrmkImy+5qWuPeZa29DACGX7GWkbckMee6pYtVv/5/bWc/MHO4Y7dHLgUgNoZv6
+         U1Urhfi4T44XslKImVTk4J/UJNodrKMMqxKSC8uA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Cornelia Huck <cohuck@redhat.com>,
-        Boris Fiuczynski <fiuczy@linux.ibm.com>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 13/23] s390/cio: avoid duplicated 'ADD' uevents
-Date:   Sat, 18 Apr 2020 10:43:55 -0400
-Message-Id: <20200418144405.10565-13-sashal@kernel.org>
+Cc:     Qian Cai <cai@lca.pw>, Lu Baolu <baolu.lu@linux.intel.com>,
+        Joerg Roedel <jroedel@suse.de>,
+        Sasha Levin <sashal@kernel.org>,
+        iommu@lists.linux-foundation.org
+Subject: [PATCH AUTOSEL 4.9 16/23] iommu/vt-d: Silence RCU-list debugging warning in dmar_find_atsr()
+Date:   Sat, 18 Apr 2020 10:43:58 -0400
+Message-Id: <20200418144405.10565-16-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200418144405.10565-1-sashal@kernel.org>
 References: <20200418144405.10565-1-sashal@kernel.org>
@@ -61,63 +60,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Cornelia Huck <cohuck@redhat.com>
+From: Qian Cai <cai@lca.pw>
 
-[ Upstream commit 05ce3e53f375295c2940390b2b429e506e07655c ]
+[ Upstream commit c6f4ebdeba4cff590594df931ff1ee610c426431 ]
 
-The common I/O layer delays the ADD uevent for subchannels and
-delegates generating this uevent to the individual subchannel
-drivers. The io_subchannel driver will do so when the associated
-ccw_device has been registered -- but unconditionally, so more
-ADD uevents will be generated if a subchannel has been unbound
-from the io_subchannel driver and later rebound.
+dmar_find_atsr() calls list_for_each_entry_rcu() outside of an RCU read
+side critical section but with dmar_global_lock held. Silence this
+false positive.
 
-To fix this, only generate the ADD event if uevents were still
-suppressed for the device.
+ drivers/iommu/intel-iommu.c:4504 RCU-list traversed in non-reader section!!
+ 1 lock held by swapper/0/1:
+ #0: ffffffff9755bee8 (dmar_global_lock){+.+.}, at: intel_iommu_init+0x1a6/0xe19
 
-Fixes: fa1a8c23eb7d ("s390: cio: Delay uevents for subchannels")
-Message-Id: <20200327124503.9794-2-cohuck@redhat.com>
-Reported-by: Boris Fiuczynski <fiuczy@linux.ibm.com>
-Reviewed-by: Peter Oberparleiter <oberpar@linux.ibm.com>
-Reviewed-by: Boris Fiuczynski <fiuczy@linux.ibm.com>
-Signed-off-by: Cornelia Huck <cohuck@redhat.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+ Call Trace:
+  dump_stack+0xa4/0xfe
+  lockdep_rcu_suspicious+0xeb/0xf5
+  dmar_find_atsr+0x1ab/0x1c0
+  dmar_parse_one_atsr+0x64/0x220
+  dmar_walk_remapping_entries+0x130/0x380
+  dmar_table_init+0x166/0x243
+  intel_iommu_init+0x1ab/0xe19
+  pci_iommu_init+0x1a/0x44
+  do_one_initcall+0xae/0x4d0
+  kernel_init_freeable+0x412/0x4c5
+  kernel_init+0x19/0x193
+
+Signed-off-by: Qian Cai <cai@lca.pw>
+Acked-by: Lu Baolu <baolu.lu@linux.intel.com>
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/s390/cio/device.c | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+ drivers/iommu/intel-iommu.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/s390/cio/device.c b/drivers/s390/cio/device.c
-index 6a58bc8f46e2a..1e97d1a034675 100644
---- a/drivers/s390/cio/device.c
-+++ b/drivers/s390/cio/device.c
-@@ -868,8 +868,10 @@ static void io_subchannel_register(struct ccw_device *cdev)
- 	 * Now we know this subchannel will stay, we can throw
- 	 * our delayed uevent.
- 	 */
--	dev_set_uevent_suppress(&sch->dev, 0);
--	kobject_uevent(&sch->dev.kobj, KOBJ_ADD);
-+	if (dev_get_uevent_suppress(&sch->dev)) {
-+		dev_set_uevent_suppress(&sch->dev, 0);
-+		kobject_uevent(&sch->dev.kobj, KOBJ_ADD);
-+	}
- 	/* make it known to the system */
- 	ret = ccw_device_add(cdev);
- 	if (ret) {
-@@ -1077,8 +1079,11 @@ static int io_subchannel_probe(struct subchannel *sch)
- 		 * Throw the delayed uevent for the subchannel, register
- 		 * the ccw_device and exit.
- 		 */
--		dev_set_uevent_suppress(&sch->dev, 0);
--		kobject_uevent(&sch->dev.kobj, KOBJ_ADD);
-+		if (dev_get_uevent_suppress(&sch->dev)) {
-+			/* should always be the case for the console */
-+			dev_set_uevent_suppress(&sch->dev, 0);
-+			kobject_uevent(&sch->dev.kobj, KOBJ_ADD);
-+		}
- 		cdev = sch_get_cdev(sch);
- 		rc = ccw_device_add(cdev);
- 		if (rc) {
+diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
+index 593a4bfcba428..31691d853a3cd 100644
+--- a/drivers/iommu/intel-iommu.c
++++ b/drivers/iommu/intel-iommu.c
+@@ -4300,7 +4300,8 @@ static struct dmar_atsr_unit *dmar_find_atsr(struct acpi_dmar_atsr *atsr)
+ 	struct dmar_atsr_unit *atsru;
+ 	struct acpi_dmar_atsr *tmp;
+ 
+-	list_for_each_entry_rcu(atsru, &dmar_atsr_units, list) {
++	list_for_each_entry_rcu(atsru, &dmar_atsr_units, list,
++				dmar_rcu_check()) {
+ 		tmp = (struct acpi_dmar_atsr *)atsru->hdr;
+ 		if (atsr->segment != tmp->segment)
+ 			continue;
 -- 
 2.20.1
 
