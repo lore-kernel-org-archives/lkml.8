@@ -2,135 +2,162 @@ Return-Path: <SRS0=3CHW=6C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F355C38A2B
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 09:15:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCBA9C352BE
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 09:20:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5A21D22209
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 09:15:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XkmM8Grt"
+	by mail.kernel.org (Postfix) with ESMTP id B0DEA22240
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 09:20:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726049AbgDRJPb (ORCPT
+        id S1725903AbgDRJUi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 05:15:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39494 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725857AbgDRJPb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 05:15:31 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6F4EC061A0C;
-        Sat, 18 Apr 2020 02:15:30 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id u127so4305940wmg.1;
-        Sat, 18 Apr 2020 02:15:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=to:cc:references:subject:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=bhjKQUnbVfHMUqcN6C3pNEvI0BmRCXrqJn+ILoBLgNE=;
-        b=XkmM8GrtAWmq88n7v4WYH6fYf+5ZAxXJw/ew3C3zLCtrrrXnrsQmkd2jAdRGBp/7Cx
-         RRm80J2pNErUhL/gsnwUPiJDq8a+qN0wz/LCvzM92JjQcz0KXmYeXfxgQB5h8e/rxenA
-         MifVfVQ6wmYplReoa9RCT08vHBEu3tcbcwRcx9iB9vMpig8K/N/iEvSshglaqwYnLDmg
-         +0ttbfmHuizmX3+MIDngAm2pkHvLDxq37KTK6Ft/HHzoQs4Y+Kpj2z6wGkpKjMzgqxLZ
-         V7Y8Is0oukpKZ+2JXZjYMrdtnOHzqtt18HvvGxb1fc0FvqMoaSPMbJniEDfqge1fV9YS
-         xI5Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:cc:references:subject:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=bhjKQUnbVfHMUqcN6C3pNEvI0BmRCXrqJn+ILoBLgNE=;
-        b=Ru3dzY/QzOMQBdko9cWh9INrBCmeZflzF/2BI0soxbGpYkWma94wnNIbI3DCUcAjcH
-         JMJfaXsRJOTl2WOO5PzYu44gA8GOpNkbVLJY9aLiMizTAuWRsQOkvwX3683PJe8zY/ri
-         YRLK4ZusLgIfQ3ruvmXcaQ4300rripfq2AxibZFf/kl94HsUFlq0hUY6NSwqjU5002HW
-         4jyoVUla+PjZvA+fF/z1bEOPuRySRLUXVU2N6Gio8PNExVfF9U/WbkEYJalg+JZpE6qs
-         7/MqW0U0M1C/oxe2fWDfGKhO53CBVywsg0uUNfz7IRm3ZI6J3HqK9V9VHjjR3NNFpXEa
-         ++BA==
-X-Gm-Message-State: AGi0PuYwa1ViKPZveDNHsXXnL+RZvFmSpjCCP8ZHy8Pk39AP0jZ8QJN8
-        mPUHCCIxnacJK9akYDZz9fa/gZjv
-X-Google-Smtp-Source: APiQypL+lEVsy+IjxBz7XNE27DJExvB6yoFZDOdt3iHp4l3KsnmgBJLkmn7TarbBva1+K29KE7xiVQ==
-X-Received: by 2002:a1c:ac44:: with SMTP id v65mr7447837wme.33.1587201329312;
-        Sat, 18 Apr 2020 02:15:29 -0700 (PDT)
-Received: from [192.168.2.1] (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id k23sm11359188wmi.46.2020.04.18.02.15.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 18 Apr 2020 02:15:28 -0700 (PDT)
-To:     justin.swartz@risingedge.co.za
-Cc:     devicetree@vger.kernel.org, heiko@sntech.de,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-rockchip@lists.infradead.org, mark.rutland@arm.com,
-        robh+dt@kernel.org
-References: <be4f2c802a64562cbab629abc82dd7d228a1a747.1580768038.git.justin.swartz@risingedge.co.za>
-Subject: Re: [PATCH v4 2/3] ARM: dts: rockchip: add rga node for rk322x
-From:   Johan Jonker <jbx6244@gmail.com>
-Message-ID: <bf3a2b97-4a24-e9f0-599b-4731cc94a067@gmail.com>
-Date:   Sat, 18 Apr 2020 11:15:27 +0200
-User-Agent: Mozilla/5.0 (X11; Linux i686; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Sat, 18 Apr 2020 05:20:38 -0400
+Received: from mx2.suse.de ([195.135.220.15]:44550 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725856AbgDRJUh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 05:20:37 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id BC2F5AB7F;
+        Sat, 18 Apr 2020 09:20:34 +0000 (UTC)
+Message-ID: <9c20715fdb2955a3974b3d11f6c4eaff588be536.camel@suse.de>
+Subject: Re: [PATCH v2 2/2] of: property: Do not link to disabled devices
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Saravana Kannan <saravanak@google.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
+Date:   Sat, 18 Apr 2020 11:20:34 +0200
+In-Reply-To: <CAGETcx81uPQLCurX6N6pMH+2jOZBcs-9u5yhBp83jQWJks0EFw@mail.gmail.com>
+References: <20200417165442.1856-1-nsaenzjulienne@suse.de>
+         <20200417165442.1856-3-nsaenzjulienne@suse.de>
+         <CAGETcx81uPQLCurX6N6pMH+2jOZBcs-9u5yhBp83jQWJks0EFw@mail.gmail.com>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-BqN1HHTsGcrPA2KLRaf6"
+User-Agent: Evolution 3.34.4 
 MIME-Version: 1.0
-In-Reply-To: <be4f2c802a64562cbab629abc82dd7d228a1a747.1580768038.git.justin.swartz@risingedge.co.za>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Justin, Heiko,
 
-In the discussion about "rockchip,px30-rga" it was mentioned that:
-"no status for soc internal components without any board-specifics".
-The binding is in mainline, but the dts node is missing I think.
-Should this also be changed?
+--=-BqN1HHTsGcrPA2KLRaf6
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Johan
+On Fri, 2020-04-17 at 14:08 -0700, Saravana Kannan wrote:
+> On Fri, Apr 17, 2020 at 9:54 AM Nicolas Saenz Julienne
+> <nsaenzjulienne@suse.de> wrote:
+> > When creating a consumer/supplier relationship between two devices,
+> > make sure the supplier node is actually active. Otherwise this will
+> > create a link relationship that will never be fulfilled. This, in the
+> > worst case scenario, will hang the system during boot.
+> >=20
+> > Note that, in practice, the fact that a device-tree represented
+> > consumer/supplier relationship isn't fulfilled will not prevent devices
+> > from successfully probing.
+> >=20
+> > Fixes: a3e1d1a7f5fc ("of: property: Add functional dependency link from=
+ DT
+> > bindings")
+> > Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> >=20
+> > ---
+> >=20
+> > Changes since v1:
+> >  - Move availability check into the compatible search routine and bail
+> >    if device node disabled
+> >=20
+> >  drivers/of/property.c | 19 ++++++++++++++++++-
+> >  1 file changed, 18 insertions(+), 1 deletion(-)
+> >=20
+> > diff --git a/drivers/of/property.c b/drivers/of/property.c
+> > index dc034eb45defd..14b6266dd054b 100644
+> > --- a/drivers/of/property.c
+> > +++ b/drivers/of/property.c
+> > @@ -1045,8 +1045,25 @@ static int of_link_to_phandle(struct device *dev=
+,
+> > struct device_node *sup_np,
+> >          * Find the device node that contains the supplier phandle.  It=
+ may
+> > be
+> >          * @sup_np or it may be an ancestor of @sup_np.
+> >          */
+> > -       while (sup_np && !of_find_property(sup_np, "compatible", NULL))
+> > +       while (sup_np) {
+> > +
+> > +               /*
+> > +                * Don't allow linking a device node as consumer of a
+> > disabled
+> > +                * node.
+> > +                */
+>=20
+> Minor nit: I'd just say "Don't allow linking to a disabled supplier".
+>=20
+> > +               if (!of_device_is_available(sup_np)) {
+> > +                       dev_dbg(dev, "Not linking to %pOFP - Not
+> > available\n",
+> > +                               sup_np);
+> > +                       of_node_put(sup_np);
+> > +                       return -ENODEV;
+> > +               }
+>=20
+> This if block looks very similar to the one right after the loop.
+> Maybe there's a nice way to combine it?
+>=20
+> If you replace this if block with this, it'll end up with the same result=
+.
+> if (!of_device_is_available(sup_np)) {
+>         of_node_put(sup_np);
+>         sup_np =3D NULL;
+> }
+>=20
+> of_get_next_parent() handles a NULL input properly. So that won't be a
+> problem. And "No device" is a valid statement for both cases I think.
+>=20
+> > +
+> > +               if (of_find_property(sup_np, "compatible", NULL))
+> > +                       break;
+> > +
+> >                 sup_np =3D of_get_next_parent(sup_np);
+> > +       }
+> > +
+> >         if (!sup_np) {
+> >                 dev_dbg(dev, "Not linking to %pOFP - No device\n", tmp_=
+np);
+> >                 return -ENODEV;
+>=20
+> However, not against this patch as is if Rob/Frank like it as is.
 
-+&rga {
-+	status = "okay";
-+};
-+
+Agree with your suggestions, I'll send an v3.
 
-> Add a node to define the presence of RGA, a 2D raster
-> graphic acceleration unit.
-> 
-> Signed-off-by: Justin Swartz <justin.swartz@risingedge.co.za>
-> ---
->  arch/arm/boot/dts/rk322x.dtsi | 11 +++++++++++
->  1 file changed, 11 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/rk322x.dtsi b/arch/arm/boot/dts/rk322x.dtsi
-> index 340ed6ccb..29d50bebc 100644
-> --- a/arch/arm/boot/dts/rk322x.dtsi
-> +++ b/arch/arm/boot/dts/rk322x.dtsi
-> @@ -621,6 +621,17 @@
->  		status = "disabled";
->  	};
->  
-> +	rga: rga@20060000 {
-> +		compatible = "rockchip,rk3228-rga", "rockchip,rk3288-rga";
-> +		reg = <0x20060000 0x1000>;
-> +		interrupts = <GIC_SPI 33 IRQ_TYPE_LEVEL_HIGH>;
-> +		clocks = <&cru ACLK_RGA>, <&cru HCLK_RGA>, <&cru SCLK_RGA>;
-> +		clock-names = "aclk", "hclk", "sclk";
-> +		resets = <&cru SRST_RGA>, <&cru SRST_RGA_A>, <&cru SRST_RGA_H>;
-> +		reset-names = "core", "axi", "ahb";
+Regards,
+Nicolas
 
-> +		status = "disabled";
 
-remove?
+--=-BqN1HHTsGcrPA2KLRaf6
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
 
-> +	};
-> +
->  	iep_mmu: iommu@20070800 {
->  		compatible = "rockchip,iommu";
->  		reg = <0x20070800 0x100>;
-> -- 
-> 2.11.0
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl6axmIACgkQlfZmHno8
+x/4tQwf/aCxO5DM4IyxA61VgCuBo+QzxtE6q4WBs20J4EKcM0tcoSwVQzCEJHC8f
+HEDszhegck501HhapWxgnZvHbR1pv5aLehwgl0j/3MTo8HTM/fe3/odQpOUfKY+y
+yjMWNULoy4iRQMsHDZHbdFKG4THQ/yz5vebhKVwxIlzlF37yDmMZgLBDlikbiJoa
+6CA4WlKlgc0QU5+6OhVNDcP5fB0JVCSnePVCEqM51Usyngg0JXlBCJ9WQnLVMXDb
+DtJy9sMC1GCYvuTp6BMWqsJ8ZUz0RAuQ0/bQtFKPvwsbpGDfR0EBl4KqTGH8BLjx
+ZuC3RL9z8aSEmrfBkIJ//DMR5K3YXA==
+=NwP/
+-----END PGP SIGNATURE-----
+
+--=-BqN1HHTsGcrPA2KLRaf6--
 
