@@ -4,60 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39C5AC3A5A0
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:41:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4C59C38A29
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:41:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1029D22240
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:41:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7F8B22240
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:41:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587220906;
-	bh=uRKGWEHffTzz+HeEoRdC6kD4Fwtd9WIkFuzd8NRpf9I=;
+	s=default; t=1587220909;
+	bh=5woW1Hev8PR1JzsTaygw1uSfdpUK6kXSaG0IuUcIShw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0HvDd6Obg/PE4JKfkArJTiXhWNaHq34h9gyAAGYdVraSQPnjA+vAo5vAOpu3EOacu
-	 M6nVHGBcrD8fwxE1slte1ilBKvtNkxQV/DB5Qdz3+uWv1X6peX136m9msZeHwcY4Ue
-	 tDbTQ80PaUGcXUBS84zTfg+thuLM+dvedV/5Wl8g=
+	b=onrktnsvkUjRkz4wRyOdNuQkKKGwffnTTrsqI7ur8js+WGBziogUUehJlpFQu+BDq
+	 s2tcXXtFVRDYKUwU+CSI9KTAEsrppPUzFNvAJSrmtxlkYVWjkWILLGZXYGBzol/Wv7
+	 SGUZrxOrVXXUJdvTlSU577uKDfYMbL/Q8hbAE/G0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728099AbgDROlp (ORCPT
+        id S1728127AbgDROls (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 10:41:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50978 "EHLO mail.kernel.org"
+        Sat, 18 Apr 2020 10:41:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51168 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726335AbgDROlj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 10:41:39 -0400
+        id S1728094AbgDROlo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 10:41:44 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D3EB02224F;
-        Sat, 18 Apr 2020 14:41:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 19CBD22240;
+        Sat, 18 Apr 2020 14:41:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587220899;
-        bh=uRKGWEHffTzz+HeEoRdC6kD4Fwtd9WIkFuzd8NRpf9I=;
+        s=default; t=1587220903;
+        bh=5woW1Hev8PR1JzsTaygw1uSfdpUK6kXSaG0IuUcIShw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=f6M+wunHZ7LCC6+yNeYgLs/lwzMVMwBvRZbl8iq4TbYXcrOQX9l5SJ9beWH8EUO4P
-         Wqzmk2CHRrAxkoCHarK3HKrFkGMLEieLQMUYTvWknZxfC3wqZVLpkU64DBaWaddUgM
-         4Mcokfdqf1ZlpxdiNFvqNKTmyjcS1pBqzX7gyc68=
+        b=SdcsYWdEqO5sTLGXibWX2D/lZrJ1TrOeQJlQRI2HYVA+YtFs1l9Gbsq0Qy6DT1kLy
+         bhCfQtnV9IuQ6H1Ep/zmiaMvHFZYadNlG+5oP1HbpjTBhjiRJTKwku6JVzYLhUoGd2
+         3V90YVZzMRCW8b+eWr03kba2wFwuL9yRW5FhvAwM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pwm@vger.kernel.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.4 40/78] pwm: bcm2835: Dynamically allocate base
-Date:   Sat, 18 Apr 2020 10:40:09 -0400
-Message-Id: <20200418144047.9013-40-sashal@kernel.org>
+Cc:     Pi-Hsun Shih <pihsun@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 44/78] platform/chrome: cros_ec_rpmsg: Fix race with host event
+Date:   Sat, 18 Apr 2020 10:40:13 -0400
+Message-Id: <20200418144047.9013-44-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200418144047.9013-1-sashal@kernel.org>
 References: <20200418144047.9013-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -66,37 +59,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Fainelli <f.fainelli@gmail.com>
+From: Pi-Hsun Shih <pihsun@chromium.org>
 
-[ Upstream commit 2c25b07e5ec119cab609e41407a1fb3fa61442f5 ]
+[ Upstream commit f775ac78fcfc6bdc96bdda07029d11f2a5e84869 ]
 
-The newer 2711 and 7211 chips have two PWM controllers and failure to
-dynamically allocate the PWM base would prevent the second PWM
-controller instance being probed for succeeding with an -EEXIST error
-from alloc_pwms().
+Host event can be sent by remoteproc by any time, and
+cros_ec_rpmsg_callback would be called after cros_ec_rpmsg_create_ept.
+But the cros_ec_device is initialized after that, which cause host event
+handler to use cros_ec_device that are not initialized properly yet.
 
-Fixes: e5a06dc5ac1f ("pwm: Add BCM2835 PWM driver")
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-Reviewed-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
+Fix this by don't schedule host event handler before cros_ec_register
+returns. Instead, remember that we have a pending host event, and
+schedule host event handler after cros_ec_register.
+
+Fixes: 71cddb7097e2 ("platform/chrome: cros_ec_rpmsg: Fix race with host command when probe failed.")
+Signed-off-by: Pi-Hsun Shih <pihsun@chromium.org>
+Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pwm/pwm-bcm2835.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/platform/chrome/cros_ec_rpmsg.c | 16 +++++++++++++++-
+ 1 file changed, 15 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/pwm/pwm-bcm2835.c b/drivers/pwm/pwm-bcm2835.c
-index 91e24f01b54ed..d78f86f8e4621 100644
---- a/drivers/pwm/pwm-bcm2835.c
-+++ b/drivers/pwm/pwm-bcm2835.c
-@@ -166,6 +166,7 @@ static int bcm2835_pwm_probe(struct platform_device *pdev)
+diff --git a/drivers/platform/chrome/cros_ec_rpmsg.c b/drivers/platform/chrome/cros_ec_rpmsg.c
+index 0c3738c3244d8..aa2059b33ba56 100644
+--- a/drivers/platform/chrome/cros_ec_rpmsg.c
++++ b/drivers/platform/chrome/cros_ec_rpmsg.c
+@@ -42,6 +42,8 @@ struct cros_ec_rpmsg {
+ 	struct completion xfer_ack;
+ 	struct work_struct host_event_work;
+ 	struct rpmsg_endpoint *ept;
++	bool has_pending_host_event;
++	bool probe_done;
+ };
  
- 	pc->chip.dev = &pdev->dev;
- 	pc->chip.ops = &bcm2835_pwm_ops;
-+	pc->chip.base = -1;
- 	pc->chip.npwm = 2;
- 	pc->chip.of_xlate = of_pwm_xlate_with_flags;
- 	pc->chip.of_pwm_n_cells = 3;
+ /**
+@@ -186,7 +188,14 @@ static int cros_ec_rpmsg_callback(struct rpmsg_device *rpdev, void *data,
+ 		memcpy(ec_dev->din, resp->data, len);
+ 		complete(&ec_rpmsg->xfer_ack);
+ 	} else if (resp->type == HOST_EVENT_MARK) {
+-		schedule_work(&ec_rpmsg->host_event_work);
++		/*
++		 * If the host event is sent before cros_ec_register is
++		 * finished, queue the host event.
++		 */
++		if (ec_rpmsg->probe_done)
++			schedule_work(&ec_rpmsg->host_event_work);
++		else
++			ec_rpmsg->has_pending_host_event = true;
+ 	} else {
+ 		dev_warn(ec_dev->dev, "rpmsg received invalid type = %d",
+ 			 resp->type);
+@@ -249,6 +258,11 @@ static int cros_ec_rpmsg_probe(struct rpmsg_device *rpdev)
+ 		return ret;
+ 	}
+ 
++	ec_rpmsg->probe_done = true;
++
++	if (ec_rpmsg->has_pending_host_event)
++		schedule_work(&ec_rpmsg->host_event_work);
++
+ 	return 0;
+ }
+ 
 -- 
 2.20.1
 
