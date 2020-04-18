@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E72FC3A5A0
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:09:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 504C3C38A29
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:09:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0F16E22202
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:09:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2108822202
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:09:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587218966;
-	bh=ljguKWcrb/KvyvbAtOdOVUE5y9/pc510QajRM4oGwfY=;
+	s=default; t=1587218971;
+	bh=ph0iQQL/AbdQ9iyH2X+nCR5kmfMMJ5dzpVPItmfr5Ow=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NKFxxzS7m9kxEKViYdVLx/eK9wRYILFSvXZcgerBj5hY/YUOnszEQ1GJuivN85qdh
-	 rrOHuPLJjxzfN5W0F1ksZE23YR+4h56v0YIVekOULTQpwF1aNRWP6iknR1Gay3+ibC
-	 sRnZtsV93x6mDCR7tadvdDx4ZRiBw5a5+tO/n4dg=
+	b=fyTiL64DiT1+vX1PQ5TSLI/JueqlpDXMTsFS+K5Nc5mhDMWoexIECF7FnuIau9hCW
+	 Z7uA4sGYnkN9WhsQL/XK5YASJR8XW0qXXtL8iYiBu2lvoorK+H6XaG6LDuE50UUaiN
+	 AH+UT/7txCu+gkMUFv4LrEqEQQQDFwZEYAeQwWXk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726414AbgDROJX (ORCPT
+        id S1726442AbgDROJ3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 10:09:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36660 "EHLO mail.kernel.org"
+        Sat, 18 Apr 2020 10:09:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36680 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726353AbgDROJW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 10:09:22 -0400
+        id S1726381AbgDROJX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 10:09:23 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D4C60221F4;
-        Sat, 18 Apr 2020 14:09:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1ECE221BE5;
+        Sat, 18 Apr 2020 14:09:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587218961;
-        bh=ljguKWcrb/KvyvbAtOdOVUE5y9/pc510QajRM4oGwfY=;
+        s=default; t=1587218962;
+        bh=ph0iQQL/AbdQ9iyH2X+nCR5kmfMMJ5dzpVPItmfr5Ow=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VKyib27qw46DYwg4BB+3x5fI/xjTL9dNhWBP6fo2sjFIVzS2PtkdlacmbCDvdoNCW
-         BUOdY9/MjCCpFXDQ06OH35DbZDSJTqWBA5TjY4towmFtsJH4V+eUFmpbUQrroynAx/
-         3lqqf/mshqZIL4AcaLSL8BvvCwdLfUt6oEWCW488=
+        b=edo3TLT8KEc3e6C7tue/mZiTpVHl7yJJT7KjDVDnGOdE2KyQ4uWLu1JQphQDn3jHS
+         fXu8SYXB4J2bQhYYIsnKhAAm5QQfISy1LwLuR9D1ARyXwC2NzN18w3XK12nnFZTqhe
+         BfosbJqMyhXac7he3IGf+OztvC1CEpATm2HhC4hI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dave Chinner <dchinner@redhat.com>,
-        Brian Foster <bfoster@redhat.com>,
-        Allison Collins <allison.henderson@oracle.com>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-xfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 09/75] xfs: correctly acount for reclaimable slabs
-Date:   Sat, 18 Apr 2020 10:08:04 -0400
-Message-Id: <20200418140910.8280-9-sashal@kernel.org>
+Cc:     James Smart <jsmart2021@gmail.com>,
+        Dick Kennedy <dick.kennedy@broadcom.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 10/75] scsi: lpfc: Fix crash after handling a pci error
+Date:   Sat, 18 Apr 2020 10:08:05 -0400
+Message-Id: <20200418140910.8280-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200418140910.8280-1-sashal@kernel.org>
 References: <20200418140910.8280-1-sashal@kernel.org>
@@ -61,39 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dave Chinner <dchinner@redhat.com>
+From: James Smart <jsmart2021@gmail.com>
 
-[ Upstream commit d59eadaea2b9945095d4d6d44367ebabd604395c ]
+[ Upstream commit 4cd70891308dfb875ef31060c4a4aa8872630a2e ]
 
-The XFS inode item slab actually reclaimed by inode shrinker
-callbacks from the memory reclaim subsystem. These should be marked
-as reclaimable so the mm subsystem has the full picture of how much
-memory it can actually reclaim from the XFS slab caches.
+Injecting EEH on a 32GB card is causing kernel oops
 
-Signed-off-by: Dave Chinner <dchinner@redhat.com>
-Reviewed-by: Brian Foster <bfoster@redhat.com>
-Reviewed-by: Allison Collins <allison.henderson@oracle.com>
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+The pci error handler is doing an IO flush and the offline code is also
+doing an IO flush. When the 1st flush is complete the hdwq is destroyed
+(freed), yet the second flush accesses the hdwq and crashes.
+
+Added a check in lpfc_sli4_fush_io_rings to check both the HBA_IOQ_FLUSH
+flag and the hdwq pointer to see if it is already set and not already
+freed.
+
+Link: https://lore.kernel.org/r/20200322181304.37655-6-jsmart2021@gmail.com
+Signed-off-by: James Smart <jsmart2021@gmail.com>
+Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/xfs/xfs_super.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/scsi/lpfc/lpfc_sli.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
-index d9ae27ddf253b..6c8e3789e0768 100644
---- a/fs/xfs/xfs_super.c
-+++ b/fs/xfs/xfs_super.c
-@@ -1872,7 +1872,8 @@ xfs_init_zones(void)
+diff --git a/drivers/scsi/lpfc/lpfc_sli.c b/drivers/scsi/lpfc/lpfc_sli.c
+index 993b1056beb83..909554c7c1273 100644
+--- a/drivers/scsi/lpfc/lpfc_sli.c
++++ b/drivers/scsi/lpfc/lpfc_sli.c
+@@ -4046,6 +4046,11 @@ lpfc_sli_flush_io_rings(struct lpfc_hba *phba)
+ 	struct lpfc_iocbq *piocb, *next_iocb;
  
- 	xfs_ili_zone = kmem_cache_create("xfs_ili",
- 					 sizeof(struct xfs_inode_log_item), 0,
--					 SLAB_MEM_SPREAD, NULL);
-+					 SLAB_RECLAIM_ACCOUNT | SLAB_MEM_SPREAD,
-+					 NULL);
- 	if (!xfs_ili_zone)
- 		goto out_destroy_inode_zone;
- 
+ 	spin_lock_irq(&phba->hbalock);
++	if (phba->hba_flag & HBA_IOQ_FLUSH ||
++	    !phba->sli4_hba.hdwq) {
++		spin_unlock_irq(&phba->hbalock);
++		return;
++	}
+ 	/* Indicate the I/O queues are flushed */
+ 	phba->hba_flag |= HBA_IOQ_FLUSH;
+ 	spin_unlock_irq(&phba->hbalock);
 -- 
 2.20.1
 
