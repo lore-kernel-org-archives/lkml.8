@@ -4,49 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADE4FC3A5A9
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:42:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF140C38A29
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:42:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8E4DA22245
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:42:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 825F021D7E
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:42:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587220971;
-	bh=j6iGxe6hgIhvhNhibRWCBc45s0hch/cUkLVkSENAXGI=;
+	s=default; t=1587220975;
+	bh=eVdIKm2kuMC/roZW1kDDMJeJ4ns4NVmx3rwtzKl9sLk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=T/AKGrd9Qhux1OvlX1u6znW4YThhFaMs8DtqDGY+Ci/AZuIrzrW5r89OQ3UolQT5Q
-	 of+fO7XclHtWetnL8eCJF2brkiD73/Fbs1u6BuNL2Sib1ubvh7QpFJcsb66rOy4Wg3
-	 MighHfLLRtizA+lD3CaOKY6nN92HkczgHO71XYNs=
+	b=k6TXjIgw+iMBiJurh9pEAZf1uJS7aYYRo6Zxqu265pqUTVmOlyo8qZ5adYbYl3/9b
+	 RYVHwt0TJJXxgMysPuutAuhPpARz0TKC4o+6hDQlPKnTE/1Rdo+bNnFKKBhz+HgM3I
+	 NBdjXzmEuBOKINgVkFPHCZT320Hmuy/rl77RrqT4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728440AbgDROmu (ORCPT
+        id S1728459AbgDROmy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 10:42:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53012 "EHLO mail.kernel.org"
+        Sat, 18 Apr 2020 10:42:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53184 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728405AbgDROmn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 10:42:43 -0400
+        id S1728433AbgDROmt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 10:42:49 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9EAB52224F;
-        Sat, 18 Apr 2020 14:42:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5C80722272;
+        Sat, 18 Apr 2020 14:42:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587220963;
-        bh=j6iGxe6hgIhvhNhibRWCBc45s0hch/cUkLVkSENAXGI=;
+        s=default; t=1587220968;
+        bh=eVdIKm2kuMC/roZW1kDDMJeJ4ns4NVmx3rwtzKl9sLk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GLn+XIU56ubevZudsbJhJkAxrGhPSxHTMFWzMPkRq5B2Yn3g4oiRlUiR5kptDi9Gy
-         /8+h/LS8Hjn16xxqM4zCYxjMT8zTxkZ28nIzZzerbxLgczAp30qxYh8FqdeV5KUW1S
-         DnGQRFrs4cM4yv4alOloZnbpIvU68BkoOckkgsdE=
+        b=xRIUueMuZpkU592LSS+dW4dWgbbAvrNu4t4wSsw+dI+eafNj3ZVwIs3n24Tx48k3e
+         oTch8nE+wmV646sB/jy48g/3g5YfF+AdoSamNLNiPRG1RSn55GBwz6LTcXNmmDnWh8
+         TXnRHCNqfaSTCZHrD7EV7G7dGSB51Cwu00fGJvtM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sagi Grimberg <sagi@grimberg.me>, Keith Busch <kbusch@kernel.org>,
-        Hannes Reinecke <hare@suse.de>, Christoph Hellwig <hch@lst.de>,
-        Sasha Levin <sashal@kernel.org>, linux-nvme@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 13/47] nvme: fix deadlock caused by ANA update wrong locking
-Date:   Sat, 18 Apr 2020 10:41:53 -0400
-Message-Id: <20200418144227.9802-13-sashal@kernel.org>
+Cc:     Vasily Averin <vvs@virtuozzo.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Waiman Long <longman@redhat.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Manfred Spraul <manfred@colorfullife.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Ingo Molnar <mingo@redhat.com>, NeilBrown <neilb@suse.com>,
+        Peter Oberparleiter <oberpar@linux.ibm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 16/47] ipc/util.c: sysvipc_find_ipc() should increase position index
+Date:   Sat, 18 Apr 2020 10:41:56 -0400
+Message-Id: <20200418144227.9802-16-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200418144227.9802-1-sashal@kernel.org>
 References: <20200418144227.9802-1-sashal@kernel.org>
@@ -59,70 +67,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sagi Grimberg <sagi@grimberg.me>
+From: Vasily Averin <vvs@virtuozzo.com>
 
-[ Upstream commit 657f1975e9d9c880fa13030e88ba6cc84964f1db ]
+[ Upstream commit 89163f93c6f969da5811af5377cc10173583123b ]
 
-The deadlock combines 4 flows in parallel:
-- ns scanning (triggered from reconnect)
-- request timeout
-- ANA update (triggered from reconnect)
-- I/O coming into the mpath device
+If seq_file .next function does not change position index, read after
+some lseek can generate unexpected output.
 
-(1) ns scanning triggers disk revalidation -> update disk info ->
-    freeze queue -> but blocked, due to (2)
-
-(2) timeout handler reference the g_usage_counter - > but blocks in
-    the transport .timeout() handler, due to (3)
-
-(3) the transport timeout handler (indirectly) calls nvme_stop_queue() ->
-    which takes the (down_read) namespaces_rwsem - > but blocks, due to (4)
-
-(4) ANA update takes the (down_write) namespaces_rwsem -> calls
-    nvme_mpath_set_live() -> which synchronize the ns_head srcu
-    (see commit 504db087aacc) -> but blocks, due to (5)
-
-(5) I/O came into nvme_mpath_make_request -> took srcu_read_lock ->
-    direct_make_request > blk_queue_enter -> but blocked, due to (1)
-
-==> the request queue is under freeze -> deadlock.
-
-The fix is making ANA update take a read lock as the namespaces list
-is not manipulated, it is just the ns and ns->head that are being
-updated (which is protected with the ns->head lock).
-
-Fixes: 0d0b660f214dc ("nvme: add ANA support")
-Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
-Reviewed-by: Keith Busch <kbusch@kernel.org>
-Reviewed-by: Hannes Reinecke <hare@suse.de>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+https://bugzilla.kernel.org/show_bug.cgi?id=206283
+Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Acked-by: Waiman Long <longman@redhat.com>
+Cc: Davidlohr Bueso <dave@stgolabs.net>
+Cc: Manfred Spraul <manfred@colorfullife.com>
+Cc: Al Viro <viro@zeniv.linux.org.uk>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: NeilBrown <neilb@suse.com>
+Cc: Peter Oberparleiter <oberpar@linux.ibm.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Link: http://lkml.kernel.org/r/b7a20945-e315-8bb0-21e6-3875c14a8494@virtuozzo.com
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvme/host/multipath.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ ipc/util.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/nvme/host/multipath.c b/drivers/nvme/host/multipath.c
-index e8bc25aed44ca..588864beabd80 100644
---- a/drivers/nvme/host/multipath.c
-+++ b/drivers/nvme/host/multipath.c
-@@ -402,7 +402,7 @@ static int nvme_update_ana_state(struct nvme_ctrl *ctrl,
- 	if (!nr_nsids)
- 		return 0;
- 
--	down_write(&ctrl->namespaces_rwsem);
-+	down_read(&ctrl->namespaces_rwsem);
- 	list_for_each_entry(ns, &ctrl->namespaces, list) {
- 		unsigned nsid = le32_to_cpu(desc->nsids[n]);
- 
-@@ -413,7 +413,7 @@ static int nvme_update_ana_state(struct nvme_ctrl *ctrl,
- 		if (++n == nr_nsids)
- 			break;
+diff --git a/ipc/util.c b/ipc/util.c
+index 0af05752969f1..b111e792b3125 100644
+--- a/ipc/util.c
++++ b/ipc/util.c
+@@ -735,13 +735,13 @@ static struct kern_ipc_perm *sysvipc_find_ipc(struct ipc_ids *ids, loff_t pos,
+ 			total++;
  	}
--	up_write(&ctrl->namespaces_rwsem);
-+	up_read(&ctrl->namespaces_rwsem);
- 	return 0;
- }
  
++	*new_pos = pos + 1;
+ 	if (total >= ids->in_use)
+ 		return NULL;
+ 
+ 	for (; pos < IPCMNI; pos++) {
+ 		ipc = idr_find(&ids->ipcs_idr, pos);
+ 		if (ipc != NULL) {
+-			*new_pos = pos + 1;
+ 			rcu_read_lock();
+ 			ipc_lock_object(ipc);
+ 			return ipc;
 -- 
 2.20.1
 
