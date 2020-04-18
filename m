@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E4BBC38A2F
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:46:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B1B4C38A29
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:47:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1053F21D6C
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:46:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5AA3021D79
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:47:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587221219;
-	bh=QfbcyYDaBWmJRjjiORon6lz8/Yn4d3ZYAl2wpL+C0Is=;
+	s=default; t=1587221224;
+	bh=busdwEqfqrOllh/yyOJYSdqfqInLmSqmqcQUKjFz8BA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UC9SG3wCfO/EvYVfp5POTcnXcHGRoh600JxNP3+Z6OvvznUMIjspKofZo79RmXwme
-	 awv7E/zxG2lWtASaTjnjF/tQ/yzG+56U73qoTiB1L91q0bUDwhW8+h9D6apFt2V2cC
-	 Z/uqPA6hVk+u/diDiCNCjfOhzLquy3Og1VkS1h34=
+	b=ntzlIJdxsdLRPHoiY+dXV3q9jxFnrJWN4jowjSpGHlRgMfHfdd3t354pLzRikVpxl
+	 6ai/WmnjVBndrRmO4KhJYm4NnZf1AdGKApVw9jsUjlCYZb1zjEGSrR7g73sinumcgv
+	 7EdoFyV5w3EdUNMYaZefHmb7G9ly69H3QfGOtBX4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728201AbgDROq5 (ORCPT
+        id S1729014AbgDROrD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 10:46:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56008 "EHLO mail.kernel.org"
+        Sat, 18 Apr 2020 10:47:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55868 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728785AbgDROoW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 10:44:22 -0400
+        id S1728772AbgDROoR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 10:44:17 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CCF872220A;
-        Sat, 18 Apr 2020 14:44:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1F03322245;
+        Sat, 18 Apr 2020 14:44:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587221061;
-        bh=QfbcyYDaBWmJRjjiORon6lz8/Yn4d3ZYAl2wpL+C0Is=;
+        s=default; t=1587221056;
+        bh=busdwEqfqrOllh/yyOJYSdqfqInLmSqmqcQUKjFz8BA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AfxXrtIF1wHRz7hV0sBSvjsJzlonDaMXVEe7irMo11x6jromX9m/EO33DoKrZ+7om
-         eY/nraggfz4mpxlsjOxaTBtKU3Ps+8Iw44fx1go3B+XjwoVOOtQR9b3EsPn2+7LaYi
-         k1d6Ynx7e55MUhEpZ9o7hvAlJln/fZALIePELmQM=
+        b=A5NGYVYApDJkHUbXwt+15a1tSJAeKhFJ8z7LUltIeM5bHBf3mjsbTa0ZbfOKXA+R3
+         mAcxxu3OHXVVRxkWm39TnK/1kej/ZTOy6mZ9b0XZ4olCTm9RkdDub37xQDmZxFyg0t
+         buzT8hRVPVwetaFbI2PCzhaKA0IaOCSMyyLJie1s=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     David Hildenbrand <david@redhat.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org,
-        linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 12/23] KVM: s390: vsie: Fix possible race when shadowing region 3 tables
-Date:   Sat, 18 Apr 2020 10:43:54 -0400
-Message-Id: <20200418144405.10565-12-sashal@kernel.org>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 4.9 09/23] ASoC: Intel: atom: Take the drv->lock mutex before calling sst_send_slot_map()
+Date:   Sat, 18 Apr 2020 10:43:51 -0400
+Message-Id: <20200418144405.10565-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200418144405.10565-1-sashal@kernel.org>
 References: <20200418144405.10565-1-sashal@kernel.org>
@@ -61,50 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Hildenbrand <david@redhat.com>
+From: Hans de Goede <hdegoede@redhat.com>
 
-[ Upstream commit 1493e0f944f3c319d11e067c185c904d01c17ae5 ]
+[ Upstream commit 81630dc042af998b9f58cd8e2c29dab9777ea176 ]
 
-We have to properly retry again by returning -EINVAL immediately in case
-somebody else instantiated the table concurrently. We missed to add the
-goto in this function only. The code now matches the other, similar
-shadowing functions.
+sst_send_slot_map() uses sst_fill_and_send_cmd_unlocked() because in some
+places it is called with the drv->lock mutex already held.
 
-We are overwriting an existing region 2 table entry. All allocated pages
-are added to the crst_list to be freed later, so they are not lost
-forever. However, when unshadowing the region 2 table, we wouldn't trigger
-unshadowing of the original shadowed region 3 table that we replaced. It
-would get unshadowed when the original region 3 table is modified. As it's
-not connected to the page table hierarchy anymore, it's not going to get
-used anymore. However, for a limited time, this page table will stick
-around, so it's in some sense a temporary memory leak.
+So it must always be called with the mutex locked. This commit adds missing
+locking in the sst_set_be_modules() code-path.
 
-Identified by manual code inspection. I don't think this classifies as
-stable material.
-
-Fixes: 998f637cc4b9 ("s390/mm: avoid races on region/segment/page table shadowing")
-Signed-off-by: David Hildenbrand <david@redhat.com>
-Link: https://lore.kernel.org/r/20200403153050.20569-4-david@redhat.com
-Reviewed-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
-Reviewed-by: Christian Borntraeger <borntraeger@de.ibm.com>
-Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
+Fixes: 24c8d14192cc ("ASoC: Intel: mrfld: add DSP core controls")
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Acked-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Link: https://lore.kernel.org/r/20200402185359.3424-1-hdegoede@redhat.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/mm/gmap.c | 1 +
- 1 file changed, 1 insertion(+)
+ sound/soc/intel/atom/sst-atom-controls.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/s390/mm/gmap.c b/arch/s390/mm/gmap.c
-index b6c85b760305d..099db32ed104a 100644
---- a/arch/s390/mm/gmap.c
-+++ b/arch/s390/mm/gmap.c
-@@ -1680,6 +1680,7 @@ int gmap_shadow_r3t(struct gmap *sg, unsigned long saddr, unsigned long r3t,
- 		goto out_free;
- 	} else if (*table & _REGION_ENTRY_ORIGIN) {
- 		rc = -EAGAIN;		/* Race with shadow */
-+		goto out_free;
- 	}
- 	crst_table_init(s_r3t, _REGION3_ENTRY_EMPTY);
- 	/* mark as invalid as long as the parent table is not protected */
+diff --git a/sound/soc/intel/atom/sst-atom-controls.c b/sound/soc/intel/atom/sst-atom-controls.c
+index 0838478c4c3f9..92aa1518b7723 100644
+--- a/sound/soc/intel/atom/sst-atom-controls.c
++++ b/sound/soc/intel/atom/sst-atom-controls.c
+@@ -976,7 +976,9 @@ static int sst_set_be_modules(struct snd_soc_dapm_widget *w,
+ 	dev_dbg(c->dev, "Enter: widget=%s\n", w->name);
+ 
+ 	if (SND_SOC_DAPM_EVENT_ON(event)) {
++		mutex_lock(&drv->lock);
+ 		ret = sst_send_slot_map(drv);
++		mutex_unlock(&drv->lock);
+ 		if (ret)
+ 			return ret;
+ 		ret = sst_send_pipe_module_params(w, k);
 -- 
 2.20.1
 
