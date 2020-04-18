@@ -4,50 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27D8DC38A2F
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:42:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49F33C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:42:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E849921D79
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:42:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 284CD21974
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:42:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587220944;
-	bh=6EANkOU5+JVh6iSfkdwyirWkAQqzQTK44M4nd2mmmsA=;
+	s=default; t=1587220947;
+	bh=yQ6aID271zdK9xX3B67e6G0sAZgVThLB4LeaZjRwPu8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=O21dTK3rK954d+hfuYLc/UyHrZpgxoqGc1YrrbKFzTpWvd4CItwXoC8Aj5u8gYHO/
-	 o/BpwlnVsTp6HfCyeAODEqtynnSMEJ6OGwVb6gri8f3S/jqVsQGa2k6t5YUx0QRy0j
-	 blzSuwevEgnvRIAJQ6SRmMwXZQyjYzLjM+5DkW1M=
+	b=cAmL86DsSA7x1Z8L5JEWv6w/ek+tSp7L6/PvlsrX3tcUw0Wr9o3Nd2cpnek7S2i7I
+	 5a1ao5MEdr/y24SGrj0vmQTPUZ7e33KM/MQ8OYSgabTnJJaU+0gXoS7MxFh2b2ABal
+	 FBhRzsAiywxEehtmi5rxdRuqMeeJ5Iikk3CrlAkc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728321AbgDROmW (ORCPT
+        id S1728336AbgDROm0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 10:42:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52250 "EHLO mail.kernel.org"
+        Sat, 18 Apr 2020 10:42:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52390 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728290AbgDROmR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 10:42:17 -0400
+        id S1728320AbgDROmX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 10:42:23 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1E91E21D82;
-        Sat, 18 Apr 2020 14:42:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 67CE8221F4;
+        Sat, 18 Apr 2020 14:42:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587220936;
-        bh=6EANkOU5+JVh6iSfkdwyirWkAQqzQTK44M4nd2mmmsA=;
+        s=default; t=1587220942;
+        bh=yQ6aID271zdK9xX3B67e6G0sAZgVThLB4LeaZjRwPu8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pifqaDuKwsz927WEe2zjlj3b8rWeIQ3Z2YdRSjPsuDxwnD9iopFKUsBp8gmYWp0Ev
-         70snWwSdyurF+O7UqfyV+yuegjM0CB5EgoaA/kmlET5hwl7G95SXcTnkTU0lrXqjNZ
-         BCvrFwFF97Wq0dvDzSrK5vM1YJK0BAQG6PmMJVfM=
+        b=IvN/eqq0QmxA5Z7GJnX4tc31KSnzAvxWYjaOHEOKRs2X+cRCpahkPcoOuBewsC/Bj
+         sC991lwqmC2HoOtBWssrQwXNoBC76HxiSNBhKj4onV0gvgPa2fSBFeE+MW39h7ilYq
+         WltBs56h5wM9l+M3vQkZ51RZeRl/FovuqerFp2VQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-kselftest@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 72/78] tracing/selftests: Turn off timeout setting
-Date:   Sat, 18 Apr 2020 10:40:41 -0400
-Message-Id: <20200418144047.9013-72-sashal@kernel.org>
+Cc:     Kevin Barnett <kevin.barnett@microsemi.com>,
+        Scott Benesh <scott.benesh@microsemi.com>,
+        Scott Teel <scott.teel@microsemi.com>,
+        Don Brace <don.brace@microsemi.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, esc.storagedev@microsemi.com,
+        linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 76/78] scsi: smartpqi: fix problem with unique ID for physical device
+Date:   Sat, 18 Apr 2020 10:40:45 -0400
+Message-Id: <20200418144047.9013-76-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200418144047.9013-1-sashal@kernel.org>
 References: <20200418144047.9013-1-sashal@kernel.org>
@@ -60,33 +63,172 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+From: Kevin Barnett <kevin.barnett@microsemi.com>
 
-[ Upstream commit b43e78f65b1d35fd3e13c7b23f9b64ea83c9ad3a ]
+[ Upstream commit 5b083b305b49f65269b888885455b8c0cf1a52e4 ]
 
-As the ftrace selftests can run for a long period of time, disable the
-timeout that the general selftests have. If a selftest hangs, then it
-probably means the machine will hang too.
+Obtain the unique IDs from the RLL and RPL instead of VPD page 83h.
 
-Link: https://lore.kernel.org/r/alpine.LSU.2.21.1911131604170.18679@pobox.suse.cz
-
-Suggested-by: Miroslav Benes <mbenes@suse.cz>
-Tested-by: Miroslav Benes <mbenes@suse.cz>
-Reviewed-by: Miroslav Benes <mbenes@suse.cz>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Link: https://lore.kernel.org/r/157048751833.11757.11996314786914610803.stgit@brunhilda
+Reviewed-by: Scott Benesh <scott.benesh@microsemi.com>
+Reviewed-by: Scott Teel <scott.teel@microsemi.com>
+Signed-off-by: Kevin Barnett <kevin.barnett@microsemi.com>
+Signed-off-by: Don Brace <don.brace@microsemi.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/ftrace/settings | 1 +
- 1 file changed, 1 insertion(+)
- create mode 100644 tools/testing/selftests/ftrace/settings
+ drivers/scsi/smartpqi/smartpqi.h      |  1 -
+ drivers/scsi/smartpqi/smartpqi_init.c | 99 ++++-----------------------
+ 2 files changed, 12 insertions(+), 88 deletions(-)
 
-diff --git a/tools/testing/selftests/ftrace/settings b/tools/testing/selftests/ftrace/settings
-new file mode 100644
-index 0000000000000..e7b9417537fbc
---- /dev/null
-+++ b/tools/testing/selftests/ftrace/settings
-@@ -0,0 +1 @@
-+timeout=0
+diff --git a/drivers/scsi/smartpqi/smartpqi.h b/drivers/scsi/smartpqi/smartpqi.h
+index 2aa81b22f2695..7a3a942b40df0 100644
+--- a/drivers/scsi/smartpqi/smartpqi.h
++++ b/drivers/scsi/smartpqi/smartpqi.h
+@@ -907,7 +907,6 @@ struct pqi_scsi_dev {
+ 	u8	scsi3addr[8];
+ 	__be64	wwid;
+ 	u8	volume_id[16];
+-	u8	unique_id[16];
+ 	u8	is_physical_device : 1;
+ 	u8	is_external_raid_device : 1;
+ 	u8	is_expander_smp_device : 1;
+diff --git a/drivers/scsi/smartpqi/smartpqi_init.c b/drivers/scsi/smartpqi/smartpqi_init.c
+index 793793343950e..5ae074505386a 100644
+--- a/drivers/scsi/smartpqi/smartpqi_init.c
++++ b/drivers/scsi/smartpqi/smartpqi_init.c
+@@ -648,79 +648,6 @@ static inline int pqi_scsi_inquiry(struct pqi_ctrl_info *ctrl_info,
+ 		buffer, buffer_length, vpd_page, NULL, NO_TIMEOUT);
+ }
+ 
+-static bool pqi_vpd_page_supported(struct pqi_ctrl_info *ctrl_info,
+-	u8 *scsi3addr, u16 vpd_page)
+-{
+-	int rc;
+-	int i;
+-	int pages;
+-	unsigned char *buf, bufsize;
+-
+-	buf = kzalloc(256, GFP_KERNEL);
+-	if (!buf)
+-		return false;
+-
+-	/* Get the size of the page list first */
+-	rc = pqi_scsi_inquiry(ctrl_info, scsi3addr,
+-				VPD_PAGE | SCSI_VPD_SUPPORTED_PAGES,
+-				buf, SCSI_VPD_HEADER_SZ);
+-	if (rc != 0)
+-		goto exit_unsupported;
+-
+-	pages = buf[3];
+-	if ((pages + SCSI_VPD_HEADER_SZ) <= 255)
+-		bufsize = pages + SCSI_VPD_HEADER_SZ;
+-	else
+-		bufsize = 255;
+-
+-	/* Get the whole VPD page list */
+-	rc = pqi_scsi_inquiry(ctrl_info, scsi3addr,
+-				VPD_PAGE | SCSI_VPD_SUPPORTED_PAGES,
+-				buf, bufsize);
+-	if (rc != 0)
+-		goto exit_unsupported;
+-
+-	pages = buf[3];
+-	for (i = 1; i <= pages; i++)
+-		if (buf[3 + i] == vpd_page)
+-			goto exit_supported;
+-
+-exit_unsupported:
+-	kfree(buf);
+-	return false;
+-
+-exit_supported:
+-	kfree(buf);
+-	return true;
+-}
+-
+-static int pqi_get_device_id(struct pqi_ctrl_info *ctrl_info,
+-	u8 *scsi3addr, u8 *device_id, int buflen)
+-{
+-	int rc;
+-	unsigned char *buf;
+-
+-	if (!pqi_vpd_page_supported(ctrl_info, scsi3addr, SCSI_VPD_DEVICE_ID))
+-		return 1; /* function not supported */
+-
+-	buf = kzalloc(64, GFP_KERNEL);
+-	if (!buf)
+-		return -ENOMEM;
+-
+-	rc = pqi_scsi_inquiry(ctrl_info, scsi3addr,
+-				VPD_PAGE | SCSI_VPD_DEVICE_ID,
+-				buf, 64);
+-	if (rc == 0) {
+-		if (buflen > 16)
+-			buflen = 16;
+-		memcpy(device_id, &buf[SCSI_VPD_DEVICE_ID_IDX], buflen);
+-	}
+-
+-	kfree(buf);
+-
+-	return rc;
+-}
+-
+ static int pqi_identify_physical_device(struct pqi_ctrl_info *ctrl_info,
+ 	struct pqi_scsi_dev *device,
+ 	struct bmic_identify_physical_device *buffer,
+@@ -1405,14 +1332,6 @@ static int pqi_get_device_info(struct pqi_ctrl_info *ctrl_info,
+ 		}
+ 	}
+ 
+-	if (pqi_get_device_id(ctrl_info, device->scsi3addr,
+-		device->unique_id, sizeof(device->unique_id)) < 0)
+-		dev_warn(&ctrl_info->pci_dev->dev,
+-			"Can't get device id for scsi %d:%d:%d:%d\n",
+-			ctrl_info->scsi_host->host_no,
+-			device->bus, device->target,
+-			device->lun);
+-
+ out:
+ 	kfree(buffer);
+ 
+@@ -6319,7 +6238,7 @@ static ssize_t pqi_unique_id_show(struct device *dev,
+ 	struct scsi_device *sdev;
+ 	struct pqi_scsi_dev *device;
+ 	unsigned long flags;
+-	unsigned char uid[16];
++	u8 unique_id[16];
+ 
+ 	sdev = to_scsi_device(dev);
+ 	ctrl_info = shost_to_hba(sdev->host);
+@@ -6332,16 +6251,22 @@ static ssize_t pqi_unique_id_show(struct device *dev,
+ 			flags);
+ 		return -ENODEV;
+ 	}
+-	memcpy(uid, device->unique_id, sizeof(uid));
++
++	if (device->is_physical_device) {
++		memset(unique_id, 0, 8);
++		memcpy(unique_id + 8, &device->wwid, sizeof(device->wwid));
++	} else {
++		memcpy(unique_id, device->volume_id, sizeof(device->volume_id));
++	}
+ 
+ 	spin_unlock_irqrestore(&ctrl_info->scsi_device_list_lock, flags);
+ 
+ 	return snprintf(buffer, PAGE_SIZE,
+ 		"%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X\n",
+-		uid[0], uid[1], uid[2], uid[3],
+-		uid[4], uid[5], uid[6], uid[7],
+-		uid[8], uid[9], uid[10], uid[11],
+-		uid[12], uid[13], uid[14], uid[15]);
++		unique_id[0], unique_id[1], unique_id[2], unique_id[3],
++		unique_id[4], unique_id[5], unique_id[6], unique_id[7],
++		unique_id[8], unique_id[9], unique_id[10], unique_id[11],
++		unique_id[12], unique_id[13], unique_id[14], unique_id[15]);
+ }
+ 
+ static ssize_t pqi_lunid_show(struct device *dev,
 -- 
 2.20.1
 
