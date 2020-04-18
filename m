@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0555EC38A29
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:46:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEB08C38A2F
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:46:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CC26321BE5
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:46:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9819C21BE5
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:46:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587221164;
-	bh=i9oB0dWxDNaCMNzJ49QtNMg8oBTQEzJPXjtqfewqocE=;
+	s=default; t=1587221172;
+	bh=Z5FTm0I7htD8O8iicnQOKr9GS7r2PJvsZxRMoXwPYHw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=im3c3dsBdEsft7nm8TWCKQcRhjFCl9HzIaBLkzAKXhRsmhjFKRP3byZkbMku9cg73
-	 Vu+TCGxAa2Dpr62iSUi4ULo2irEU07Kl3e9OOicAXF/Q6D1tIcLYla12P+/LtukYYZ
-	 +fbgQsZL9x6o5GhI9enwSlGxjtRggwW80duyKtMM=
+	b=qBkJ0kjSXDtZaLOaGk0dwwDyp6dxZxLO9w/QGF5h5bTfbQz0TGjX+2K2UlIt8tLkn
+	 hdnVwrG79N3AVS6C17IQuWXBHtppyglXsHIVi87DiF0dJ9MLlDOmCGgiKIukyxOKy1
+	 ZcuUCoPWfZNxtOguTcvhtq6xzH3cQ/hIaW+tDeu0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728641AbgDROqD (ORCPT
+        id S1728983AbgDROqL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 10:46:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56588 "EHLO mail.kernel.org"
+        Sat, 18 Apr 2020 10:46:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56498 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728104AbgDROol (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 10:44:41 -0400
+        id S1728849AbgDROoj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 10:44:39 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BCCF722202;
-        Sat, 18 Apr 2020 14:44:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7654C21D7E;
+        Sat, 18 Apr 2020 14:44:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587221081;
-        bh=i9oB0dWxDNaCMNzJ49QtNMg8oBTQEzJPXjtqfewqocE=;
+        s=default; t=1587221079;
+        bh=Z5FTm0I7htD8O8iicnQOKr9GS7r2PJvsZxRMoXwPYHw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BL8luFIVEgZ5URTqYhY9vcanD76ShAl/CZEGEZl6bDkwtHSMcATIZGDOQCDFQUBOw
-         IpMbO48NQY2rhMkU4+PcnQvFZi7WIjBV7e2Z+elmOJDmQ001ygo4proHpF+WMngopD
-         1iF2uLXEpj/LH+5yL0KzkfbgXkrJ4Q9IQGGyn1gM=
+        b=R5IrAEIyWR3tNj52aK5lK1afPErgcfOBOB/pKf9X9Mt23KQHDDUEmeLNRUHx5k+oT
+         4Ast+jCoMnSuKX+C6xJFh5pd5B8oOWOlYBR/bqJ35OLyzJMkGZ/4IkfAKgo3ugTjS1
+         uO1fYL8M0sU4Id6zCVrl5oWt4uMGTCL7bChCxxoo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Yan, Zheng" <zyan@redhat.com>, Jeff Layton <jlayton@kernel.org>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, ceph-devel@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 04/19] ceph: don't skip updating wanted caps when cap is stale
-Date:   Sat, 18 Apr 2020 10:44:21 -0400
-Message-Id: <20200418144436.10818-4-sashal@kernel.org>
+Cc:     James Smart <jsmart2021@gmail.com>,
+        Dick Kennedy <dick.kennedy@broadcom.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 02/19] scsi: lpfc: Fix kasan slab-out-of-bounds error in lpfc_unreg_login
+Date:   Sat, 18 Apr 2020 10:44:19 -0400
+Message-Id: <20200418144436.10818-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200418144436.10818-1-sashal@kernel.org>
 References: <20200418144436.10818-1-sashal@kernel.org>
@@ -59,47 +60,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Yan, Zheng" <zyan@redhat.com>
+From: James Smart <jsmart2021@gmail.com>
 
-[ Upstream commit 0aa971b6fd3f92afef6afe24ef78d9bb14471519 ]
+[ Upstream commit 38503943c89f0bafd9e3742f63f872301d44cbea ]
 
-1. try_get_cap_refs() fails to get caps and finds that mds_wanted
-   does not include what it wants. It returns -ESTALE.
-2. ceph_get_caps() calls ceph_renew_caps(). ceph_renew_caps() finds
-   that inode has cap, so it calls ceph_check_caps().
-3. ceph_check_caps() finds that issued caps (without checking if it's
-   stale) already includes caps wanted by open file, so it skips
-   updating wanted caps.
+The following kasan bug was called out:
 
-Above events can cause an infinite loop inside ceph_get_caps().
+ BUG: KASAN: slab-out-of-bounds in lpfc_unreg_login+0x7c/0xc0 [lpfc]
+ Read of size 2 at addr ffff889fc7c50a22 by task lpfc_worker_3/6676
+ ...
+ Call Trace:
+ dump_stack+0x96/0xe0
+ ? lpfc_unreg_login+0x7c/0xc0 [lpfc]
+ print_address_description.constprop.6+0x1b/0x220
+ ? lpfc_unreg_login+0x7c/0xc0 [lpfc]
+ ? lpfc_unreg_login+0x7c/0xc0 [lpfc]
+ __kasan_report.cold.9+0x37/0x7c
+ ? lpfc_unreg_login+0x7c/0xc0 [lpfc]
+ kasan_report+0xe/0x20
+ lpfc_unreg_login+0x7c/0xc0 [lpfc]
+ lpfc_sli_def_mbox_cmpl+0x334/0x430 [lpfc]
+ ...
 
-Signed-off-by: "Yan, Zheng" <zyan@redhat.com>
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
-Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
+When processing the completion of a "Reg Rpi" login mailbox command in
+lpfc_sli_def_mbox_cmpl, a call may be made to lpfc_unreg_login. The vpi is
+extracted from the completing mailbox context and passed as an input for
+the next. However, the vpi stored in the mailbox command context is an
+absolute vpi, which for SLI4 represents both base + offset.  When used with
+a non-zero base component, (function id > 0) this results in an
+out-of-range access beyond the allocated phba->vpi_ids array.
+
+Fix by subtracting the function's base value to get an accurate vpi number.
+
+Link: https://lore.kernel.org/r/20200322181304.37655-2-jsmart2021@gmail.com
+Signed-off-by: James Smart <jsmart2021@gmail.com>
+Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ceph/caps.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/scsi/lpfc/lpfc_sli.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/fs/ceph/caps.c b/fs/ceph/caps.c
-index aa4df4a022525..efdf81ea3b5f8 100644
---- a/fs/ceph/caps.c
-+++ b/fs/ceph/caps.c
-@@ -1734,8 +1734,12 @@ void ceph_check_caps(struct ceph_inode_info *ci, int flags,
- 		}
- 
- 		/* want more caps from mds? */
--		if (want & ~(cap->mds_wanted | cap->issued))
--			goto ack;
-+		if (want & ~cap->mds_wanted) {
-+			if (want & ~(cap->mds_wanted | cap->issued))
-+				goto ack;
-+			if (!__cap_is_valid(cap))
-+				goto ack;
-+		}
- 
- 		/* things we might delay */
- 		if ((cap->issued & ~retain) == 0 &&
+diff --git a/drivers/scsi/lpfc/lpfc_sli.c b/drivers/scsi/lpfc/lpfc_sli.c
+index 065fdc17bbfbb..7a94c2d352390 100644
+--- a/drivers/scsi/lpfc/lpfc_sli.c
++++ b/drivers/scsi/lpfc/lpfc_sli.c
+@@ -2186,6 +2186,8 @@ lpfc_sli_def_mbox_cmpl(struct lpfc_hba *phba, LPFC_MBOXQ_t *pmb)
+ 	    !pmb->u.mb.mbxStatus) {
+ 		rpi = pmb->u.mb.un.varWords[0];
+ 		vpi = pmb->u.mb.un.varRegLogin.vpi;
++		if (phba->sli_rev == LPFC_SLI_REV4)
++			vpi -= phba->sli4_hba.max_cfg_param.vpi_base;
+ 		lpfc_unreg_login(phba, vpi, rpi, pmb);
+ 		pmb->mbox_cmpl = lpfc_sli_def_mbox_cmpl;
+ 		rc = lpfc_sli_issue_mbox(phba, pmb, MBX_NOWAIT);
 -- 
 2.20.1
 
