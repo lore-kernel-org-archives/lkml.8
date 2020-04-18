@@ -2,144 +2,117 @@ Return-Path: <SRS0=3CHW=6C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2BACC38A2B
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 09:56:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DDDCC2D0EF
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 09:57:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8C6C9214D8
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 09:56:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F3B4221F4
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 09:57:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="W6gZCfXK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725958AbgDRJ4T (ORCPT
+        id S1725983AbgDRJ5C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 05:56:19 -0400
-Received: from outgoing15.flk.host-h.net ([197.242.87.49]:54181 "EHLO
-        outgoing15.flk.host-h.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725892AbgDRJ4T (ORCPT
+        Sat, 18 Apr 2020 05:57:02 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:35102 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725856AbgDRJ5B (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 05:56:19 -0400
-Received: from www31.flk1.host-h.net ([188.40.1.173])
-        by antispam4-flk1.host-h.net with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.92)
-        (envelope-from <justin.swartz@risingedge.co.za>)
-        id 1jPkCl-0003zf-DK; Sat, 18 Apr 2020 11:56:09 +0200
-Received: from roundcubeweb1.flk1.host-h.net ([138.201.244.33] helo=webmail9.konsoleh.co.za)
-        by www31.flk1.host-h.net with esmtpa (Exim 4.89)
-        (envelope-from <justin.swartz@risingedge.co.za>)
-        id 1jPkCi-0004Rl-1x; Sat, 18 Apr 2020 11:56:04 +0200
+        Sat, 18 Apr 2020 05:57:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587203820;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=wTcRkdSTcnogmYKb1vyPZlIFr7BRZzMxTKvCBHcehjE=;
+        b=W6gZCfXK7bdhvLH+4X2OkPJ8/q6/eXa/j6DCg2ZnMeT6dY1w6Od0juYBC+Pp2rFy8Wevaz
+        tMpYK0ZJ0BEji1rc32Np0+MOor+bjaIl0k4UgoSFE3Yi2pT+UdN+xxQ/NC4kD60/Zqeqc0
+        qbHhnshesBQlpACtpR8E9YMOBBDaJoA=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-221-kK7CS1NWPkS_OWysJgzybA-1; Sat, 18 Apr 2020 05:56:58 -0400
+X-MC-Unique: kK7CS1NWPkS_OWysJgzybA-1
+Received: by mail-wr1-f71.google.com with SMTP id i10so2421177wrq.8
+        for <linux-kernel@vger.kernel.org>; Sat, 18 Apr 2020 02:56:58 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=wTcRkdSTcnogmYKb1vyPZlIFr7BRZzMxTKvCBHcehjE=;
+        b=LqKLJc5lkzWQMKz9JzAFPqDx/YCpGoMvPeAC9eWRfn4KyeTzBh8WXbVfYC6HFAy3eN
+         ZU/VT5S5U3RaSMKUq+NgL43Pt2w/fjd/8WIn3hDyRIZajwICUcQtw5yzvNKd6fxoOTI6
+         xGX9hAjOwe1fRIv0Dc8uecvDWMyJasIOGEggXeqVLplaNq3g0H1JrrX/kRf8lAnR7B7b
+         MGmuPt8pxE7o4tboifnpeHW87zALqs6vtThY0NapMSYM7sMnC/7XgZ4wLyfpnEuPgoSI
+         t/kvHN2VMS7rAjih0hE/GyUwBdhgWIA2eH8w1oB40xSZ6sBp+56E8tUF/uvX5YYyc8la
+         ggJg==
+X-Gm-Message-State: AGi0PuZSQ0QtWPMyADPXmbcN2Jl+q5dVeAKTjSQRHd4HYkZwQkf55gZx
+        6MDyfHtUUs9h2QKpQPwRmOsWHHk+8baV2AdjAy2rdKwIFkceMxtDzV36pJN3P0/vahnH/+t4pDG
+        rQOkEERcfCH7RxRJWVVOZeHXV
+X-Received: by 2002:a5d:5651:: with SMTP id j17mr8094497wrw.406.1587203757741;
+        Sat, 18 Apr 2020 02:55:57 -0700 (PDT)
+X-Google-Smtp-Source: APiQypKaFYVKYrHh6jgP/k8hU9lt1vzMRnvu1GNp+mZ/1QD5M7AdEyKXjR5tLK6F6ffWE/fvI94HJg==
+X-Received: by 2002:a5d:5651:: with SMTP id j17mr8094485wrw.406.1587203757516;
+        Sat, 18 Apr 2020 02:55:57 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:e04c:97cb:a127:17b6? ([2001:b07:6468:f312:e04c:97cb:a127:17b6])
+        by smtp.gmail.com with ESMTPSA id g15sm12971965wrp.96.2020.04.18.02.55.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 18 Apr 2020 02:55:57 -0700 (PDT)
+Subject: Re: [PATCH 0/3] KVM: x86: move nested-related kvm_x86_ops to a
+ separate struct
+To:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Peter Xu <peterx@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        Vitaly Kuznetsov <vkuznets@redhat.com>
+References: <20200417164413.71885-1-pbonzini@redhat.com>
+ <20200417190553.GI287932@xz-x1> <20200417191159.GA14609@linux.intel.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <4c69d11e-40ab-fdb8-6f32-fdf7298d1277@redhat.com>
+Date:   Sat, 18 Apr 2020 11:55:56 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+In-Reply-To: <20200417191159.GA14609@linux.intel.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-Date:   Sat, 18 Apr 2020 11:56:03 +0200
-From:   Justin Swartz <justin.swartz@risingedge.co.za>
-To:     Heiko Stuebner <heiko@sntech.de>
-Cc:     Johan Jonker <jbx6244@gmail.com>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-rockchip@lists.infradead.org, mark.rutland@arm.com,
-        robh+dt@kernel.org
-Subject: Re: [PATCH v4 2/3] ARM: dts: rockchip: add rga node for rk322x
-Organization: Rising Edge Consulting (Pty) Ltd.
-In-Reply-To: <3593382.iQIKm1rSL1@phil>
-References: <be4f2c802a64562cbab629abc82dd7d228a1a747.1580768038.git.justin.swartz@risingedge.co.za>
- <bf3a2b97-4a24-e9f0-599b-4731cc94a067@gmail.com> <3593382.iQIKm1rSL1@phil>
-Message-ID: <b77422198df7c285d824086131371284@risingedge.co.za>
-X-Sender: justin.swartz@risingedge.co.za
-User-Agent: Roundcube Webmail/1.2.3
-X-Authenticated-Sender: justin.swartz@risingedge.co.za
-X-Virus-Scanned: Clear
-X-Originating-IP: 188.40.1.173
-X-SpamExperts-Domain: risingedge.co.za
-X-SpamExperts-Username: 
-Authentication-Results: host-h.net; auth=pass (login) smtp.auth=@risingedge.co.za
-X-SpamExperts-Outgoing-Class: ham
-X-SpamExperts-Outgoing-Evidence: Combined (0.03)
-X-Recommended-Action: accept
-X-Filter-ID: Mvzo4OR0dZXEDF/gcnlw0c6d8zDasFm/nDPEg7mmhmypSDasLI4SayDByyq9LIhVHYm7b54MofsP
- P7P4HLmGW0TNWdUk1Ol2OGx3IfrIJKyP9eGNFz9TW9u+Jt8z2T3K9N8RgbelEU3z4k5cN6Fx7gF4
- IxdPpqe03Ke3W55CSgGipX77xU2/OO3DievkIHLPfxKns5/jA/jb0AB/j1tpH5/cd7uPDhKhWGZM
- n/d4/07rfhJgg4j+T1FAIbCdkgBZfCzdNGNoLjYW00m5NbCHvBeT5wQmTgARe2GQxmQnRbjM24OD
- 2qGt6TVUNM5e7f/l0+1oQ9dbW2b4wUcsVhgjow+WYwXa7GcGa/wA/cDlM+P6m886XHyIQD/p5Il5
- tdzxoYPWT1EPgWcSbCHk8ujeSnbOj+JOCV+/R+gbydGJHww7+VDP+4gu9MM0P8MwqJbtWZ+mBFw9
- wbDfCbgPXUhoanzj5ZBolYt3lOJtwiLNmx2pKRVnMrHZos0/M6pU0hfymyBYx1qtDaSiXo0xo2LM
- mUL1Z4FithJQbhPXqfOZuDjg+BfHWJbc41rbg4WcJeyvwlzK01+6b05+4Lv/pcVBKbSIAO62+V2p
- H7ZPpEG6bBjHHjcTvuwcWprgtdAKuxeqzv2BE9ufKeYEt2P7UPu8FYh90mU5ltygBte98Lr3o1L6
- PRFBPTGx1Ut6/5oByZyEBYORon1HyENyISfTHOtpKTVgw9yWWIEWQ/ZfK1AKScQjMOukFP3P4kFf
- oa8491sqVkDREtHj5EdIfRWQU1iQcN9fxN2oReTDHAyOynaY0CkMg0bLHYOUd2k/FP4GZ8aMLaoD
- dgTYDNJYOqlsNiYINBaq6FA+N87m5dPuP1bu7yrY5Qx4fJOk03R5fJtf/Dv/oTkmxux7nkDlcqo4
- 0fvNe6qOBRNkqxqaHyOluuELaV/iA1tw7Cg2iBBUqc+VnwxMgxBYG44cJsHiAJUj2A0ZGRjKipVB
- PsGEs9WdtZIsKKJKTq/OlMObqOptAlx2sHDvpbjylqmC5Mk1B2fFLLRq9AM3V/uXrKlq++rODlln
- NUDihjA708Lg3Y2gXyaf+rIt2G7p5aZhaonSvSgNc8r+HETXd4ACBhnKCgIjlPF0gJGMaV6CJSmg
- U8pftbLkxChMcbUnuWly1fKGgusHp5Yiz+nQvc0qoAtxzv3f8GtQSFsBkqIPpf8+LdgXwjxPOBMx
- sdiFdDCFcQsgFkL4G7F2Av2/exi5Ms9gyaqIruy7eYaKVAcye5FPIQnr8/7he/iizki9qqiuW3Bk
- 5C+gdmOiVTCThXc0JQjVu0w41Mrtp0JBN8rqB+cgngTSjDAt8hSY
-X-Report-Abuse-To: spam@antispammaster.host-h.net
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Johan, Heiko,
+On 17/04/20 21:11, Sean Christopherson wrote:
+> Ya, my vote would be to copy by value as well.
 
-On 2020-04-18 11:49, Heiko Stuebner wrote:
+I'd rather avoid useless churn, because
 
-> Am Samstag, 18. April 2020, 11:15:27 CEST schrieb Johan Jonker:
-> 
->> Hi Justin, Heiko,
->> 
->> In the discussion about "rockchip,px30-rga" it was mentioned that:
->> "no status for soc internal components without any board-specifics".
->> The binding is in mainline, but the dts node is missing I think.
->> Should this also be changed?
-> 
-> yep, drop the status disabled from the dtsi and that then results
-> in not needing the board-level enablement
-> 
-> (background: rga is a simple mem2mem device without any
-> board-specific hooks)
+	vmx_x86_ops.nested = vmx_nested_ops;
 
-Shall I submit version 5 of this patch series?
+is much uglier than
 
-> Johan
+	.nested = &vmx_nested_ops,
+
+and with static calls the latter would not have any performance downside.
+
+> I'd also be in favor of
+> dropping the _ops part, e.g.
 > 
-> +&rga {
-> +    status = "okay";
-> +};
-> +
+>   struct kvm_x86_ops {
+>         struct kvm_x86_nested_ops nested;
 > 
-> Add a node to define the presence of RGA, a 2D raster
-> graphic acceleration unit.
+>         ...
+>   };
 > 
-> Signed-off-by: Justin Swartz <justin.swartz@risingedge.co.za>
-> ---
-> arch/arm/boot/dts/rk322x.dtsi | 11 +++++++++++
-> 1 file changed, 11 insertions(+)
+> and drop the "nested" parts from the ops, e.g.
 > 
-> diff --git a/arch/arm/boot/dts/rk322x.dtsi 
-> b/arch/arm/boot/dts/rk322x.dtsi
-> index 340ed6ccb..29d50bebc 100644
-> --- a/arch/arm/boot/dts/rk322x.dtsi
-> +++ b/arch/arm/boot/dts/rk322x.dtsi
-> @@ -621,6 +621,17 @@
-> status = "disabled";
-> };
-> 
-> +    rga: rga@20060000 {
-> +        compatible = "rockchip,rk3228-rga", "rockchip,rk3288-rga";
-> +        reg = <0x20060000 0x1000>;
-> +        interrupts = <GIC_SPI 33 IRQ_TYPE_LEVEL_HIGH>;
-> +        clocks = <&cru ACLK_RGA>, <&cru HCLK_RGA>, <&cru SCLK_RGA>;
-> +        clock-names = "aclk", "hclk", "sclk";
-> +        resets = <&cru SRST_RGA>, <&cru SRST_RGA_A>, <&cru 
-> SRST_RGA_H>;
-> +        reset-names = "core", "axi", "ahb";
-> +        status = "disabled";
-> remove?
-> 
-> +    };
-> +
-> iep_mmu: iommu@20070800 {
-> compatible = "rockchip,iommu";
-> reg = <0x20070800 0x100>;
+>   check_nested_events() -> check_events()
+
+Agreed on both, I'll send v2 with these changes.
+
+Paolo
+
