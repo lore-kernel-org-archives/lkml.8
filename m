@@ -4,53 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89A3FC38A29
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:47:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AF5BC3A5A0
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:47:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5EEEB21D6C
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:47:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED7C82072B
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:47:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587221227;
-	bh=+7j9GFWXunKNP2Ttv6Fhq8oqYAqAHsbaixIo/ARYwLw=;
+	s=default; t=1587221232;
+	bh=xV9REuOpUpnCxUDKzgm7XHp/MDIMvBN90V8kj2yUejU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=E4Y0BbBbomUacv2MOtMhdTw8ucRqwPscQ7cm8s4+46TtFSYAudQmXqh0A8Ew0hhBR
-	 myyU3+zbyPp8lIWUUjPoNcIDWT7OTvf4mxx7KJXTT6dqB/Tolibxcfrb9c5a/1rue5
-	 +R5GZA8StIg9+DxVfMwNHbCyS3kQLJtmKFBxOimg=
+	b=vATDkgRy16A0b2YlVEhU+qtiOwlGoLUcaDTMpswbbIqXDfAqHDT4WPbhaxCIgeBUA
+	 IXaO+TdCLW4y4wzv845dskGQRnoDm9Cry3EilMm3wTNB4+vBzJNRQOZ1jmXXOvlVIW
+	 eAdY+cKxMUZJfIMGpSPiMaMDXGINtkn6tkCWtjpY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728047AbgDROoQ (ORCPT
+        id S1728764AbgDROoO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 10:44:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55764 "EHLO mail.kernel.org"
+        Sat, 18 Apr 2020 10:44:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55626 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728752AbgDROoL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 10:44:11 -0400
+        id S1728735AbgDROoF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 10:44:05 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 25DE92224F;
-        Sat, 18 Apr 2020 14:44:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 872AC2072B;
+        Sat, 18 Apr 2020 14:44:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587221050;
-        bh=+7j9GFWXunKNP2Ttv6Fhq8oqYAqAHsbaixIo/ARYwLw=;
+        s=default; t=1587221044;
+        bh=xV9REuOpUpnCxUDKzgm7XHp/MDIMvBN90V8kj2yUejU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RDVxQdwzHcz/TdVf35Di5J4/uhqCBF8SuLL9bSQCzuzL2JrCypTdYGSj5hFURiWkG
-         iliISZd27f/0BotmLhH+fpFXc9BFm0hG6YFjIqq2FYWeECoGdq1ewDpPIiJwI1cH8P
-         tmehKzcxYEqilxxWkZ7iNmIbyCGoAkPwwH5oqdJ8=
+        b=hxYUBP9FEXZk+CJiTnCmynfJRkODalwp/3YEPJxZiqNxwnw/kyzK3ZldmAY77ZCWG
+         7zlKsynO6BZ9VSmYuC5cLqm0cb76Ca7mjOK49FT1VOPMLZR0lUcZFBsOEH65iVCtag
+         vbymTsta4zWy808ENkBOQ1LvShng/JomdVUha7b0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Qiujun Huang <hqjagain@gmail.com>,
-        Jeff Layton <jlayton@kernel.org>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, ceph-devel@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 04/23] ceph: return ceph_mdsc_do_request() errors from __get_parent()
-Date:   Sat, 18 Apr 2020 10:43:46 -0400
-Message-Id: <20200418144405.10565-4-sashal@kernel.org>
+Cc:     Sreekanth Reddy <sreekanth.reddy@broadcom.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>,
+        MPT-FusionLinux.pdl@broadcom.com, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 28/28] scsi: mpt3sas: Fix kernel panic observed on soft HBA unplug
+Date:   Sat, 18 Apr 2020 10:43:28 -0400
+Message-Id: <20200418144328.10265-28-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200418144405.10565-1-sashal@kernel.org>
-References: <20200418144405.10565-1-sashal@kernel.org>
+In-Reply-To: <20200418144328.10265-1-sashal@kernel.org>
+References: <20200418144328.10265-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,38 +60,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qiujun Huang <hqjagain@gmail.com>
+From: Sreekanth Reddy <sreekanth.reddy@broadcom.com>
 
-[ Upstream commit c6d50296032f0b97473eb2e274dc7cc5d0173847 ]
+[ Upstream commit cc41f11a21a51d6869d71e525a7264c748d7c0d7 ]
 
-Return the error returned by ceph_mdsc_do_request(). Otherwise,
-r_target_inode ends up being NULL this ends up returning ENOENT
-regardless of the error.
+Generic protection fault type kernel panic is observed when user performs
+soft (ordered) HBA unplug operation while IOs are running on drives
+connected to HBA.
 
-Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
-Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
+When user performs ordered HBA removal operation, the kernel calls PCI
+device's .remove() call back function where driver is flushing out all the
+outstanding SCSI IO commands with DID_NO_CONNECT host byte and also unmaps
+sg buffers allocated for these IO commands.
+
+However, in the ordered HBA removal case (unlike of real HBA hot removal),
+HBA device is still alive and hence HBA hardware is performing the DMA
+operations to those buffers on the system memory which are already unmapped
+while flushing out the outstanding SCSI IO commands and this leads to
+kernel panic.
+
+Don't flush out the outstanding IOs from .remove() path in case of ordered
+removal since HBA will be still alive in this case and it can complete the
+outstanding IOs. Flush out the outstanding IOs only in case of 'physical
+HBA hot unplug' where there won't be any communication with the HBA.
+
+During shutdown also it is possible that HBA hardware can perform DMA
+operations on those outstanding IO buffers which are completed with
+DID_NO_CONNECT by the driver from .shutdown(). So same above fix is applied
+in shutdown path as well.
+
+It is safe to drop the outstanding commands when HBA is inaccessible such
+as when permanent PCI failure happens, when HBA is in non-operational
+state, or when someone does a real HBA hot unplug operation. Since driver
+knows that HBA is inaccessible during these cases, it is safe to drop the
+outstanding commands instead of waiting for SCSI error recovery to kick in
+and clear these outstanding commands.
+
+Link: https://lore.kernel.org/r/1585302763-23007-1-git-send-email-sreekanth.reddy@broadcom.com
+Fixes: c666d3be99c0 ("scsi: mpt3sas: wait for and flush running commands on shutdown/unload")
+Cc: stable@vger.kernel.org #v4.14.174+
+Signed-off-by: Sreekanth Reddy <sreekanth.reddy@broadcom.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ceph/export.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/scsi/mpt3sas/mpt3sas_scsih.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/fs/ceph/export.c b/fs/ceph/export.c
-index 1780218a48f08..f8e1f31e46439 100644
---- a/fs/ceph/export.c
-+++ b/fs/ceph/export.c
-@@ -157,6 +157,11 @@ static struct dentry *__get_parent(struct super_block *sb,
+diff --git a/drivers/scsi/mpt3sas/mpt3sas_scsih.c b/drivers/scsi/mpt3sas/mpt3sas_scsih.c
+index 9ef0c6265cd2b..400c055167b0e 100644
+--- a/drivers/scsi/mpt3sas/mpt3sas_scsih.c
++++ b/drivers/scsi/mpt3sas/mpt3sas_scsih.c
+@@ -8280,8 +8280,8 @@ static void scsih_remove(struct pci_dev *pdev)
  
- 	req->r_num_caps = 1;
- 	err = ceph_mdsc_do_request(mdsc, NULL, req);
-+	if (err) {
-+		ceph_mdsc_put_request(req);
-+		return ERR_PTR(err);
-+	}
-+
- 	inode = req->r_target_inode;
- 	if (inode)
- 		ihold(inode);
+ 	ioc->remove_host = 1;
+ 
+-	mpt3sas_wait_for_commands_to_complete(ioc);
+-	_scsih_flush_running_cmds(ioc);
++	if (!pci_device_is_present(pdev))
++		_scsih_flush_running_cmds(ioc);
+ 
+ 	_scsih_fw_event_cleanup_queue(ioc);
+ 
+@@ -8354,8 +8354,8 @@ scsih_shutdown(struct pci_dev *pdev)
+ 
+ 	ioc->remove_host = 1;
+ 
+-	mpt3sas_wait_for_commands_to_complete(ioc);
+-	_scsih_flush_running_cmds(ioc);
++	if (!pci_device_is_present(pdev))
++		_scsih_flush_running_cmds(ioc);
+ 
+ 	_scsih_fw_event_cleanup_queue(ioc);
+ 
 -- 
 2.20.1
 
