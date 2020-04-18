@@ -4,51 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31F6DC38A2F
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 13:52:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 887B9C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 13:52:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F19E62054F
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 13:52:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EFB0214AF
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 13:52:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587217931;
-	bh=1pQapq9m3603xrXiSN4BF3wGZPcBk5uTiJAJZ3h1E+A=;
+	s=default; t=1587217933;
+	bh=no3knKj15K/kqw5BYs/rcA1+Ow+Jsr8lPJT0094hSSg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FXXiZrs7coPAiifsJwL9pSWvfsyKidOBmMZFIZcyf09wfKC7T9EV8e3LtelDsRW9d
-	 2HiBZvfodUH9KjjONVVa/8PkhRrxZgXe5y455TrhRCiqGHOTPrqLC/C6wBHTguVpi8
-	 59MPMksYHRm4oloHhFWL93Cj6jCfoOzySdLF7u9s=
+	b=htO6MkXsw+YxihIGJFz2mk2IIytEW6Bety7jBeKIcpPqRGu8bmx08fS3FhFR6+2uc
+	 m0UTK9lOhVwVzP1BtSUJ2GJNH38xaMbt2xyMPiuKkJljBlJ4/DTDoBX+UFM3Xakepm
+	 MlbK1I3GyQBOO+vEwoGVa37uqsM4tiZqq4EMimJo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727934AbgDRNwK (ORCPT
+        id S1726637AbgDRNsz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 09:52:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55650 "EHLO mail.kernel.org"
+        Sat, 18 Apr 2020 09:48:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55368 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726654AbgDRNs5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 09:48:57 -0400
+        id S1726575AbgDRNst (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 09:48:49 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5581421D7E;
-        Sat, 18 Apr 2020 13:48:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 98B0322202;
+        Sat, 18 Apr 2020 13:48:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587217737;
-        bh=1pQapq9m3603xrXiSN4BF3wGZPcBk5uTiJAJZ3h1E+A=;
+        s=default; t=1587217729;
+        bh=no3knKj15K/kqw5BYs/rcA1+Ow+Jsr8lPJT0094hSSg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TAwvHTQdJZG7qxmET/gQk+u6Ndlxn69kGa1ZtdgHZLBIp3GMSgL0S5gH5A/qepm9C
-         QLWB9LCR3NgVp/821f6rME4JRgTtz/6Kl3gYYlJcKwKdFFjbGZIteFpFZcb3hKua7I
-         O60QpjerqWHZ7XEV4T6NIU0Pe8el9mo1mXYH54vo=
+        b=1hawU1YCkLOUl6CsFQSxB5PvHLRV2oUr+qBq4ivcf8HtwKDoMfwe52cCQ4/ZWpsx5
+         KpK1z7YBX40ivHQcyIao+mU3gLiJY1JhAegac1NNujMim+h0vSYhPgk4Xd06A+kAhq
+         U2Rv1TYBoFkowvOwVqjgSX6+xEQ9SUg0x9PBbRE4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     David Hildenbrand <david@redhat.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org,
-        linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 33/73] KVM: s390: vsie: Fix possible race when shadowing region 3 tables
-Date:   Sat, 18 Apr 2020 09:47:35 -0400
-Message-Id: <20200418134815.6519-33-sashal@kernel.org>
+Cc:     Vasily Averin <vvs@virtuozzo.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Peter Oberparleiter <oberpar@linux.ibm.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Ingo Molnar <mingo@redhat.com>,
+        Manfred Spraul <manfred@colorfullife.com>,
+        NeilBrown <neilb@suse.com>, Steven Rostedt <rostedt@goodmis.org>,
+        Waiman Long <longman@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.6 27/73] kernel/gcov/fs.c: gcov_seq_next() should increase position index
+Date:   Sat, 18 Apr 2020 09:47:29 -0400
+Message-Id: <20200418134815.6519-27-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200418134815.6519-1-sashal@kernel.org>
 References: <20200418134815.6519-1-sashal@kernel.org>
@@ -61,50 +67,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Hildenbrand <david@redhat.com>
+From: Vasily Averin <vvs@virtuozzo.com>
 
-[ Upstream commit 1493e0f944f3c319d11e067c185c904d01c17ae5 ]
+[ Upstream commit f4d74ef6220c1eda0875da30457bef5c7111ab06 ]
 
-We have to properly retry again by returning -EINVAL immediately in case
-somebody else instantiated the table concurrently. We missed to add the
-goto in this function only. The code now matches the other, similar
-shadowing functions.
+If seq_file .next function does not change position index, read after
+some lseek can generate unexpected output.
 
-We are overwriting an existing region 2 table entry. All allocated pages
-are added to the crst_list to be freed later, so they are not lost
-forever. However, when unshadowing the region 2 table, we wouldn't trigger
-unshadowing of the original shadowed region 3 table that we replaced. It
-would get unshadowed when the original region 3 table is modified. As it's
-not connected to the page table hierarchy anymore, it's not going to get
-used anymore. However, for a limited time, this page table will stick
-around, so it's in some sense a temporary memory leak.
-
-Identified by manual code inspection. I don't think this classifies as
-stable material.
-
-Fixes: 998f637cc4b9 ("s390/mm: avoid races on region/segment/page table shadowing")
-Signed-off-by: David Hildenbrand <david@redhat.com>
-Link: https://lore.kernel.org/r/20200403153050.20569-4-david@redhat.com
-Reviewed-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
-Reviewed-by: Christian Borntraeger <borntraeger@de.ibm.com>
-Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
+https://bugzilla.kernel.org/show_bug.cgi?id=206283
+Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Acked-by: Peter Oberparleiter <oberpar@linux.ibm.com>
+Cc: Al Viro <viro@zeniv.linux.org.uk>
+Cc: Davidlohr Bueso <dave@stgolabs.net>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Manfred Spraul <manfred@colorfullife.com>
+Cc: NeilBrown <neilb@suse.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: Waiman Long <longman@redhat.com>
+Link: http://lkml.kernel.org/r/f65c6ee7-bd00-f910-2f8a-37cc67e4ff88@virtuozzo.com
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/mm/gmap.c | 1 +
- 1 file changed, 1 insertion(+)
+ kernel/gcov/fs.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/s390/mm/gmap.c b/arch/s390/mm/gmap.c
-index edcdca97e85ee..06d602c5ec7b7 100644
---- a/arch/s390/mm/gmap.c
-+++ b/arch/s390/mm/gmap.c
-@@ -1840,6 +1840,7 @@ int gmap_shadow_r3t(struct gmap *sg, unsigned long saddr, unsigned long r3t,
- 		goto out_free;
- 	} else if (*table & _REGION_ENTRY_ORIGIN) {
- 		rc = -EAGAIN;		/* Race with shadow */
-+		goto out_free;
- 	}
- 	crst_table_init(s_r3t, _REGION3_ENTRY_EMPTY);
- 	/* mark as invalid as long as the parent table is not protected */
+diff --git a/kernel/gcov/fs.c b/kernel/gcov/fs.c
+index e5eb5ea7ea598..cc4ee482d3fba 100644
+--- a/kernel/gcov/fs.c
++++ b/kernel/gcov/fs.c
+@@ -108,9 +108,9 @@ static void *gcov_seq_next(struct seq_file *seq, void *data, loff_t *pos)
+ {
+ 	struct gcov_iterator *iter = data;
+ 
++	(*pos)++;
+ 	if (gcov_iter_next(iter))
+ 		return NULL;
+-	(*pos)++;
+ 
+ 	return iter;
+ }
 -- 
 2.20.1
 
