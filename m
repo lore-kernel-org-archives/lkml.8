@@ -2,109 +2,109 @@ Return-Path: <SRS0=3CHW=6C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1344C352BE
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 18:53:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 155EAC38A29
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 18:53:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 95A0822209
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 18:53:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="GwZqVX1h"
+	by mail.kernel.org (Postfix) with ESMTP id EC293221E9
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 18:53:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587235993;
+	bh=6Z96Ro4J8eng7mjTKTrohKq7lCiEJvmaqF+1CM5f0AQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=WumNqTIIiW6wtB+VV/b/tHIrB42ghHfPn6i4krZ+GsPs02VWc5tsJa9kDaww/T3NC
+	 Vt5+XXpbf0RIEzHBXOKdzQLiWCTB2B2TOCkKsE2t81Pl00F9ChgueZqWaqSzE07g/A
+	 RQzsfJ8cKPB2V1fhln/8QmlTGnfZb+sj5YYHsxtA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728022AbgDRSxJ (ORCPT
+        id S1728126AbgDRSxL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Sat, 18 Apr 2020 14:53:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59990 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725824AbgDRSxJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 18 Apr 2020 14:53:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43050 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725824AbgDRSxI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 14:53:08 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31F51C061A0C;
-        Sat, 18 Apr 2020 11:53:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description;
-        bh=KGgaI7/aF8gM/DdPVeh3iRDUqP5nlN3BG5/ZUjntmeQ=; b=GwZqVX1hBQ8NWcNug1tIYKrz4R
-        U2IRF1+FEjojk+ZQVifHKsqFCF+H1fiJMydhq8YjDjbW9KtWGwn3olr7vK/HGNSu1WehIvKQtWosh
-        BMoPriJK/H+0lffwLs5E6nvv2/JNTOwtoaK7zBEb/dn8JEcPRvepUcxaZHR8H7DkIeSlWVcUS1WWV
-        CVUMlz5qooHHwL7XywdUi73jCtHRZnEwK1/5MDK68fwQFNLP2YhETImwB/mvOFWt+m48ND+munIaR
-        O+7wJI5R8Vlj3BiAZo2gPs9W/wVQEXfyqPWT2fnEqJLIFpbeht4HH8Yn4gA8r97+CDZtM4p+B4qCJ
-        wy6wnDqA==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jPsaQ-0005zR-VX; Sat, 18 Apr 2020 18:53:07 +0000
-Subject: Re: [PATCH 7/9] drivers/base: fix empty-body warnings in
- devcoredump.c
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel@vger.kernel.org,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        linux-input@vger.kernel.org, Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Chuck Lever <chuck.lever@oracle.com>,
-        linux-nfs@vger.kernel.org,
-        Johannes Berg <johannes@sipsolutions.net>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>, linux-nvdimm@lists.01.org,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        linux-scsi@vger.kernel.org, target-devel@vger.kernel.org,
-        Zzy Wysm <zzy@zzywysm.com>
-References: <20200418184111.13401-1-rdunlap@infradead.org>
- <20200418184111.13401-8-rdunlap@infradead.org>
- <20200418185033.GQ5820@bombadil.infradead.org>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <b88d6f8b-e6af-7071-cefa-dc12e79116b6@infradead.org>
-Date:   Sat, 18 Apr 2020 11:53:05 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3E66C21D93;
+        Sat, 18 Apr 2020 18:53:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587235989;
+        bh=6Z96Ro4J8eng7mjTKTrohKq7lCiEJvmaqF+1CM5f0AQ=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=cKnWoTG0IkKW0ofQ9Nq4hVMgRQX9VSEZ+LazEa+NX1mTkCXFSVX+PKs/cSyVlm5lP
+         QqHc6kNEfW88oWdk97kszhhlMc/IpVEOFZfzNpdLm8+aluT1MPewHxWF1rbBTY8TfM
+         0xhGYP24Nf1NRiE6ndWi85k0dltXMsJDLyuSceBY=
+Date:   Sat, 18 Apr 2020 19:53:03 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     mani@kernel.org
+Cc:     robh+dt@kernel.org, narcisaanamaria12@gmail.com, knaack.h@gmx.de,
+        lars@metafoo.de, pmeerw@pmeerw.net, linux-iio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        andy.shevchenko@gmail.com
+Subject: Re: [RESEND PATCH v3 0/3] Add Reset and Wakeup support for CCS811
+Message-ID: <20200418195303.5ddf7939@archlinux>
+In-Reply-To: <20200414184930.5576-1-mani@kernel.org>
+References: <20200414184930.5576-1-mani@kernel.org>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20200418185033.GQ5820@bombadil.infradead.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/18/20 11:50 AM, Matthew Wilcox wrote:
-> On Sat, Apr 18, 2020 at 11:41:09AM -0700, Randy Dunlap wrote:
->> @@ -294,11 +295,11 @@ void dev_coredumpm(struct device *dev, s
->>  
->>  	if (sysfs_create_link(&devcd->devcd_dev.kobj, &dev->kobj,
->>  			      "failing_device"))
->> -		/* nothing - symlink will be missing */;
->> +		do_empty(); /* nothing - symlink will be missing */
->>  
->>  	if (sysfs_create_link(&dev->kobj, &devcd->devcd_dev.kobj,
->>  			      "devcoredump"))
->> -		/* nothing - symlink will be missing */;
->> +		do_empty(); /* nothing - symlink will be missing */
->>  
->>  	INIT_DELAYED_WORK(&devcd->del_wk, devcd_del);
->>  	schedule_delayed_work(&devcd->del_wk, DEVCD_TIMEOUT);
-> 
-> Could just remove the 'if's?
-> 
-> +	sysfs_create_link(&devcd->devcd_dev.kobj, &dev->kobj,
-> +			"failing_device");
-> 
+On Wed, 15 Apr 2020 00:19:27 +0530
+mani@kernel.org wrote:
 
-OK.
+> From: Manivannan Sadhasivam <mani@kernel.org>
+> 
+> Hello,
+> 
+> This patchset adds external reset and wakeup support for CCS811 VOC
+> gas sensor. The nRESET and nWAKE pins available on the device are
+> utilised to provide these functionalities.
+> 
+> The patchset has been validated using CCS811 connected to STM32MP1 based
+> board over I2C.
+> 
+> While at it, the devicetree yaml binding and OF match table for this sensor
+> are also added.
+> 
+Looks good to me. I'd just like to give it a bit longer to allow dt
+maintainers to take a look if they wish.
 
-thanks.
--- 
-~Randy
+Thanks,
+
+Jonathan
+
+> Thanks,
+> Mani
+> 
+> Changes in v3:
+> 
+> * Added ccs811_set_wake(false) to all error paths before calling it actually
+> * Added Andy's reviewed-by tag
+> * Added comment for reset procedure and dropped error print for gpio request
+> 
+> Changes in v2:
+> 
+> * Fixed DT binding schema and switched to dual license (GPL/BSD)
+> * Returned actual error code from devm_gpiod_get_optional()
+> * Dropped of.h include and of_match_ptr()
+> 
+> Manivannan Sadhasivam (3):
+>   dt-bindings: iio: chemical: Add binding for CCS811 VOC sensor
+>   iio: chemical: Add support for external Reset and Wakeup in CCS811
+>   iio: chemical: Add OF match table for CCS811 VOC sensor
+> 
+>  .../bindings/iio/chemical/ams,ccs811.yaml     |  51 ++++++++
+>  drivers/iio/chemical/ccs811.c                 | 112 ++++++++++++++++--
+>  2 files changed, 152 insertions(+), 11 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/iio/chemical/ams,ccs811.yaml
+> 
 
