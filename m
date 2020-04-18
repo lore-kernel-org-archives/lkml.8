@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B5BDC38A2F
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:49:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECE26C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:49:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EFBBE21D79
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:49:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF09521D79
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:49:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587221382;
-	bh=PqxfRo3S7O7cb2pVeZtRdeQxVAfzEQvCA3RDsdW1uqk=;
+	s=default; t=1587221385;
+	bh=jLcx/PX4V1oqcaCLrKcQSdHT+RP0udwt28vs2JKiCNU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ig8P2Z+b0O5nZSZLVPHwA6Bo6S2tIoFL4Q26zpgG4WzsiBPvkVYQJQjuY8GktmJrH
-	 GIifNzu42ZgvBpIxYVyApK/16f8UCouatVOieAr1XCL5anHx8dFnUdrUrp1K+wGRnH
-	 93J3xWpta6MlQaunrxUJyeAEDobAgI2n3hX95M4Q=
+	b=lAsJ6AWBorTSKXd69Npsy9RIZIt/CJGV1PvZ3iYG9y/g0ik4h1HMYn40nWJDMZiye
+	 vDVCj9V9Qs9c03EBMdpMV5wWLuG3WYbE4g7fjcIUpXkHBNv/2gI30g9mxGA6ONSLLa
+	 JkH58OnUCf7a5MIiMiVyM1q28spndKyvPW7kLWQw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728565AbgDROnX (ORCPT
+        id S1728803AbgDROtp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 10:43:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54150 "EHLO mail.kernel.org"
+        Sat, 18 Apr 2020 10:49:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54366 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728526AbgDROnQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 10:43:16 -0400
+        id S1726729AbgDROnW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 10:43:22 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CD50A22252;
-        Sat, 18 Apr 2020 14:43:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DF21522240;
+        Sat, 18 Apr 2020 14:43:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587220995;
-        bh=PqxfRo3S7O7cb2pVeZtRdeQxVAfzEQvCA3RDsdW1uqk=;
+        s=default; t=1587221001;
+        bh=jLcx/PX4V1oqcaCLrKcQSdHT+RP0udwt28vs2JKiCNU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tl46rJbf6EqhpIgAJ3RdXa/vCGZJYZW+InXa6zLA5s5kcqAdZz+vi+QfxfokVKdSR
-         wEqAZGoDJn9QD/+lwe/LYj1xGX9js/gFeyJkLzFrxpll4f8RrHWdC5voSEws2SW8PB
-         TXiWfSwk3K3Zdm8REOHOP3QiqWsoI3QihYMGCnhw=
+        b=2RAY118gBcxrDKWDByccfPbk0jLpwBdjEqHwFQSyYMGcxVwfeGferzQGtWT4NH8i+
+         6+LYm+MJw4b5aJNp2pEMGG9izF0WXC3GQH9aYkZdauSwWlUoTnEhda53QA/cLLkUg4
+         ageYauy1W9n9jcHlToKiuLQ5rZ6iDiWY/sS2Nd3w=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sreekanth Reddy <sreekanth.reddy@broadcom.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>,
-        MPT-FusionLinux.pdl@broadcom.com, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 38/47] scsi: mpt3sas: Fix kernel panic observed on soft HBA unplug
-Date:   Sat, 18 Apr 2020 10:42:18 -0400
-Message-Id: <20200418144227.9802-38-sashal@kernel.org>
+Cc:     Frederic Barrat <fbarrat@linux.ibm.com>,
+        Alastair D'Silva <alastair@d-silva.org>,
+        Andrew Donnellan <ajd@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 4.19 43/47] ocxl: Add PCI hotplug dependency to Kconfig
+Date:   Sat, 18 Apr 2020 10:42:23 -0400
+Message-Id: <20200418144227.9802-43-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200418144227.9802-1-sashal@kernel.org>
 References: <20200418144227.9802-1-sashal@kernel.org>
@@ -60,78 +61,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sreekanth Reddy <sreekanth.reddy@broadcom.com>
+From: Frederic Barrat <fbarrat@linux.ibm.com>
 
-[ Upstream commit cc41f11a21a51d6869d71e525a7264c748d7c0d7 ]
+[ Upstream commit 49ce94b8677c7d7a15c4d7cbbb9ff1cd8387827b ]
 
-Generic protection fault type kernel panic is observed when user performs
-soft (ordered) HBA unplug operation while IOs are running on drives
-connected to HBA.
+The PCI hotplug framework is used to update the devices when a new
+image is written to the FPGA.
 
-When user performs ordered HBA removal operation, the kernel calls PCI
-device's .remove() call back function where driver is flushing out all the
-outstanding SCSI IO commands with DID_NO_CONNECT host byte and also unmaps
-sg buffers allocated for these IO commands.
-
-However, in the ordered HBA removal case (unlike of real HBA hot removal),
-HBA device is still alive and hence HBA hardware is performing the DMA
-operations to those buffers on the system memory which are already unmapped
-while flushing out the outstanding SCSI IO commands and this leads to
-kernel panic.
-
-Don't flush out the outstanding IOs from .remove() path in case of ordered
-removal since HBA will be still alive in this case and it can complete the
-outstanding IOs. Flush out the outstanding IOs only in case of 'physical
-HBA hot unplug' where there won't be any communication with the HBA.
-
-During shutdown also it is possible that HBA hardware can perform DMA
-operations on those outstanding IO buffers which are completed with
-DID_NO_CONNECT by the driver from .shutdown(). So same above fix is applied
-in shutdown path as well.
-
-It is safe to drop the outstanding commands when HBA is inaccessible such
-as when permanent PCI failure happens, when HBA is in non-operational
-state, or when someone does a real HBA hot unplug operation. Since driver
-knows that HBA is inaccessible during these cases, it is safe to drop the
-outstanding commands instead of waiting for SCSI error recovery to kick in
-and clear these outstanding commands.
-
-Link: https://lore.kernel.org/r/1585302763-23007-1-git-send-email-sreekanth.reddy@broadcom.com
-Fixes: c666d3be99c0 ("scsi: mpt3sas: wait for and flush running commands on shutdown/unload")
-Cc: stable@vger.kernel.org #v4.14.174+
-Signed-off-by: Sreekanth Reddy <sreekanth.reddy@broadcom.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Reviewed-by: Alastair D'Silva <alastair@d-silva.org>
+Reviewed-by: Andrew Donnellan <ajd@linux.ibm.com>
+Signed-off-by: Frederic Barrat <fbarrat@linux.ibm.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20191121134918.7155-12-fbarrat@linux.ibm.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/mpt3sas/mpt3sas_scsih.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/misc/ocxl/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/scsi/mpt3sas/mpt3sas_scsih.c b/drivers/scsi/mpt3sas/mpt3sas_scsih.c
-index d3c944d997039..5a5e5c3da6571 100644
---- a/drivers/scsi/mpt3sas/mpt3sas_scsih.c
-+++ b/drivers/scsi/mpt3sas/mpt3sas_scsih.c
-@@ -9841,8 +9841,8 @@ static void scsih_remove(struct pci_dev *pdev)
- 
- 	ioc->remove_host = 1;
- 
--	mpt3sas_wait_for_commands_to_complete(ioc);
--	_scsih_flush_running_cmds(ioc);
-+	if (!pci_device_is_present(pdev))
-+		_scsih_flush_running_cmds(ioc);
- 
- 	_scsih_fw_event_cleanup_queue(ioc);
- 
-@@ -9919,8 +9919,8 @@ scsih_shutdown(struct pci_dev *pdev)
- 
- 	ioc->remove_host = 1;
- 
--	mpt3sas_wait_for_commands_to_complete(ioc);
--	_scsih_flush_running_cmds(ioc);
-+	if (!pci_device_is_present(pdev))
-+		_scsih_flush_running_cmds(ioc);
- 
- 	_scsih_fw_event_cleanup_queue(ioc);
- 
+diff --git a/drivers/misc/ocxl/Kconfig b/drivers/misc/ocxl/Kconfig
+index 4bbdb0d3c8ee7..de7d25ba22e34 100644
+--- a/drivers/misc/ocxl/Kconfig
++++ b/drivers/misc/ocxl/Kconfig
+@@ -11,6 +11,7 @@ config OCXL
+ 	tristate "OpenCAPI coherent accelerator support"
+ 	depends on PPC_POWERNV && PCI && EEH
+ 	select OCXL_BASE
++	select HOTPLUG_PCI_POWERNV
+ 	default m
+ 	help
+ 	  Select this option to enable the ocxl driver for Open
 -- 
 2.20.1
 
