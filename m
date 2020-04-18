@@ -2,119 +2,110 @@ Return-Path: <SRS0=3CHW=6C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8708C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 17:13:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59861C38A29
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 17:18:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 98A7821D6C
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 17:13:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C05B20776
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 17:18:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CWaWe+CW"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VCUBphP/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726910AbgDRRNL (ORCPT
+        id S1726441AbgDRRSC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 13:13:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55960 "EHLO
+        Sat, 18 Apr 2020 13:18:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56700 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725939AbgDRRNJ (ORCPT
+        with ESMTP id S1725887AbgDRRSB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 13:13:09 -0400
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 515B5C061A0C;
-        Sat, 18 Apr 2020 10:13:09 -0700 (PDT)
-Received: by mail-lf1-x144.google.com with SMTP id m2so4393377lfo.6;
-        Sat, 18 Apr 2020 10:13:09 -0700 (PDT)
+        Sat, 18 Apr 2020 13:18:01 -0400
+Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB929C061A0C
+        for <linux-kernel@vger.kernel.org>; Sat, 18 Apr 2020 10:18:01 -0700 (PDT)
+Received: by mail-ot1-x343.google.com with SMTP id z17so4266959oto.4
+        for <linux-kernel@vger.kernel.org>; Sat, 18 Apr 2020 10:18:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=MLjKI5kt/nz0FED/E5fKjEGru5J5mggpxkmQ2KMue90=;
-        b=CWaWe+CWfqXHgxGpDddr3tkH0nm5YD9jlSvzsSoZ9cnPG6nw1jLYE6GRnYoQ9xC7Eo
-         G+ckb9pJtEb26m4jS7yqgTxzeNS46vdQ8Xa1uxJm9EOv/eKztTh+36lYlB7e/DIUCoeX
-         RrWfkpQoaaDxOlKFkX2xz56oW4uE21NTh16IvzxWDb15pQFlUvFtS1RGAuVyDOwOFdGB
-         wiWP7cpSzt7Q9vFFlCvyTrmRftJ19NXHvgMNPQLBw3RvSbveYsCVBKmYzeQQz1b12Z/I
-         XCEtzndP/7UNqRz/AR9HMUSEeUqhyisxl8XGhp6NWj2InJozDkzv4zJnnLj5k8H7oxRn
-         C+JA==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=b+oZTiGzIoWEHUhsSEJXo36P9ufCGQX7Nm3qT2iRUFY=;
+        b=VCUBphP/lQCBjUcR7RKTO5AyHZnA5qXxncxIH5PIKb+sZANfhgpsE3FbRQbpomso1u
+         kyeiFldVaDWbocm0Yq/J1DTutETMYlxFX8Q8megLpvw13CoQ0cbeiPKWV0QbpZ/KOG/e
+         6arSG3WmnxwJ1slfcuCPGLouKHNsxDhU0sLhK9XTD+h5sB0VR7KJ/IbEUyRsPJEi0Vx5
+         QJpiSjeFfvA01/4M0tBaR0QA30bdtWdSoTS/Dbxo2VKgO9JNcB376uRFxGXqNBSL7vnU
+         F+3vU7aP/us5dEocRP88L/slTkPRWmTpD6bI0Ic3N6HdbqqNfi+5PwL09b116YyjqC2k
+         8B+g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=MLjKI5kt/nz0FED/E5fKjEGru5J5mggpxkmQ2KMue90=;
-        b=hyWzTXQFj55jHGMkPy77WIZVqJpnndoJmWrNjjRVTwhsW9EfdyPOtXVj/iEN3xc3Wi
-         jH+EmhvGwB/Y6FM1umERcg6abbWBwProLcOWw9qax/DspOEMrS6L++8SpPR7t5klHx6h
-         pYYECNpxf74l3ca4IjyiGcLOyTnPgcA+eZ+xBkG0mdeDO9Zjg7KiEgHdbAukSq8FjRuR
-         72QRgoMm7Dct3PWDM5WyaXOuUlyI+1XjEIfco5fbgJCst9rhSU1f+ZAqwspcOlZnN+Iw
-         yn6xfwHnjJq3ydZJ8uyhxB5miNuttUgfUQOEsB/27XtNUOVK4ukw1NAgMXF971nYw0so
-         SDJA==
-X-Gm-Message-State: AGi0Pub/59xRgGPBPLkvEe9TA3Nkk1xxJwSt0DYUdZ6yDgJzvnquoCf/
-        xLHhzsyV8CSw0Kb5sc3/xeA=
-X-Google-Smtp-Source: APiQypJjd8R+7O0NwKgkpwn//Wp2XNZZdWoGXKroo34LXL/Br7hRxmsA7Vudy2CLquqr0blRBE3VfQ==
-X-Received: by 2002:ac2:4248:: with SMTP id m8mr5513826lfl.211.1587229987737;
-        Sat, 18 Apr 2020 10:13:07 -0700 (PDT)
-Received: from localhost.localdomain (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
-        by smtp.gmail.com with ESMTPSA id b2sm16465198lfi.14.2020.04.18.10.13.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 18 Apr 2020 10:13:07 -0700 (PDT)
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3] iio: magnetometer: ak8974: Silence deferred-probe error
-Date:   Sat, 18 Apr 2020 20:12:44 +0300
-Message-Id: <20200418171244.2320-1-digetx@gmail.com>
-X-Mailer: git-send-email 2.26.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=b+oZTiGzIoWEHUhsSEJXo36P9ufCGQX7Nm3qT2iRUFY=;
+        b=FkWynNOCD47UyqtarNGLoaAOhinRnGQzlQleK2J+wbxT9rsfk1/6phiN6eMMPJY303
+         ep5nAb3aTqntQd/WNMnM4is2gEUsyhLoBubQ4NL7yPS24DPC2ue0aw80Q26o08CaKcVq
+         uNKLfgSFzU2hqAZe0SuauEuCPiRrn3NM/vPUnbXXFIC+3Bjsp3S08pLwQuJKTasZzqum
+         iJPfSO95VRvEevrJHmnWCol9HtpdUffKjxKj0bfgytWtV342GxcegIt9J+Y7Nb6B5Bv5
+         wv93z5z8wtjsw1E8I8+yY3BN/nomANlgvI47ZJUTJcwBDg4tJrWPfr01nV/WuGSbkYGO
+         YhzQ==
+X-Gm-Message-State: AGi0PuaSXU/GQSY4EMLY+RF25fWubnjxCYCeJx7dWoWN1x1OJPNNrjrV
+        gEyZxg2eLaJW8j2kz8I+PuG5T4KM2dAhNVlKw1s=
+X-Google-Smtp-Source: APiQypK8OgOgvTM7AGxxDFGet6qN4tXXkUZmb198A2VVE21x08Kpvee6icHe4AebyfZGwiXHgBvFlWQCcO4rldfTcaQ=
+X-Received: by 2002:a9d:ec1:: with SMTP id 59mr1330816otj.143.1587230280929;
+ Sat, 18 Apr 2020 10:18:00 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200418082440.21277-1-oded.gabbay@gmail.com> <3fcee921-3eba-b7e7-8adf-d95db9aeeed2@infradead.org>
+In-Reply-To: <3fcee921-3eba-b7e7-8adf-d95db9aeeed2@infradead.org>
+From:   Oded Gabbay <oded.gabbay@gmail.com>
+Date:   Sat, 18 Apr 2020 20:17:33 +0300
+Message-ID: <CAFCwf10B+HRP7PfPv4G3aug4mXLfv-SoNt9eMpH_DJusr_25Aw@mail.gmail.com>
+Subject: Re: [PATCH 1/5] habanalabs: Add INFO IOCTL opcode for time sync information
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>,
+        Omer Shpigelman <oshpigelman@habana.ai>,
+        Tomer Tayar <ttayar@habana.ai>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It's not uncommon that voltage regulator becomes available later during
-kernel's boot process. This patch adds info message about unavailable
-regulators in a case of the deferred-probe error and also amends the
-error message with a error code.
+On Sat, Apr 18, 2020 at 6:31 PM Randy Dunlap <rdunlap@infradead.org> wrote:
+>
+> On 4/18/20 1:24 AM, Oded Gabbay wrote:
+> > From: Tomer Tayar <ttayar@habana.ai>
+> >
+> > Add a new opcode to the INFO IOCTL that retrieves the device time
+> > alongside the host time, to allow a user application that want to measure
+> > device time together with host time (such as a profiler) to synchronize
+> > these times.
+> >
+> > Signed-off-by: Tomer Tayar <ttayar@habana.ai>
+> > Reviewed-by: Oded Gabbay <oded.gabbay@gmail.com>
+> > Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
+> > ---
+> >  drivers/misc/habanalabs/goya/goya.c           | 10 +++-
+> >  drivers/misc/habanalabs/goya/goyaP.h          |  1 +
+> >  drivers/misc/habanalabs/habanalabs.h          |  2 +
+> >  drivers/misc/habanalabs/habanalabs_ioctl.c    | 19 +++++++
+> >  .../include/goya/asic_reg/goya_regs.h         |  1 +
+> >  .../goya/asic_reg/psoc_timestamp_regs.h       | 56 +++++++++++++++++++
+> >  include/uapi/misc/habanalabs.h                |  8 +++
+> >  7 files changed, 96 insertions(+), 1 deletion(-)
+> >  create mode 100644 drivers/misc/habanalabs/include/goya/asic_reg/psoc_timestamp_regs.h
+>
+> Hi,
+> Not a comment about this patch per se, but ioctls (main number, 'H' in this case)
+> should be documented in Documentation/userspace-api/ioctl/ioctl-number.rst.
 
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
----
+I'll send a patch, thanks for telling me.
+Oded
 
-Changelog:
-
-v3: - Replaced dev_info() with dev_dbg().
-
-v2: - Replaced dev_printk() with dev_info() for the deferred-probe error,
-      as was requested by Linus Walleij in a review comment to v1.
-
- drivers/iio/magnetometer/ak8974.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/iio/magnetometer/ak8974.c b/drivers/iio/magnetometer/ak8974.c
-index d32996702110..372c80c25dd4 100644
---- a/drivers/iio/magnetometer/ak8974.c
-+++ b/drivers/iio/magnetometer/ak8974.c
-@@ -746,7 +746,12 @@ static int ak8974_probe(struct i2c_client *i2c,
- 				      ARRAY_SIZE(ak8974->regs),
- 				      ak8974->regs);
- 	if (ret < 0) {
--		dev_err(&i2c->dev, "cannot get regulators\n");
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(&i2c->dev, "cannot get regulators: %d\n", ret);
-+		else
-+			dev_dbg(&i2c->dev,
-+				"regulators unavailable, deferring probe\n");
-+
- 		return ret;
- 	}
- 
--- 
-2.26.0
-
+>
+> thanks.
+> --
+> ~Randy
+>
