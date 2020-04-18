@@ -4,60 +4,60 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E33DC38A29
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:44:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC8F3C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:44:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 012DB21D82
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:44:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B97E21974
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:44:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587221047;
-	bh=xcrADyEDg2EnQ7Xpdv5Hhi8g3f0y/fZgGhF4abv15RU=;
+	s=default; t=1587221052;
+	bh=1SgW/ysHszzLwNS0KAzEGP8RyyZsEVAJdzYA/bUoOmE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XCId8DdJg3N/4sKyposNSQQmWktFhUdP8GDZFs/Nv9pSfb4rRv9jfMB+s2wcPxL5l
-	 OfsnwwSEuaEPLZ8eUOV1LuF/us+45ip42Pj4IOysmSeB3tkNvCN/TlgXDGJ5X4Em9h
-	 H70fIpCiQBkIJFp2bcGwLCnNjmR4LwVm2YcqHjPM=
+	b=tLwquZ9oSNfFSqpgOtiE3KxX4IGZ4gtCAIvNDhzG20Em4SR9P+JR7aEnk5TFNgNyQ
+	 3lYIlZQ1Q7RHqErluxk2Byn/PNRsQfMOz8TrODn+U/vJYRuvFj+0FGcs6AvqQmqvxR
+	 ZMJvCqBMW14gxh3mdMlXewrFPVOVE10PTIDE8agk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728731AbgDROoF (ORCPT
+        id S1728751AbgDROoL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 10:44:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55256 "EHLO mail.kernel.org"
+        Sat, 18 Apr 2020 10:44:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55364 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727865AbgDROnx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 10:43:53 -0400
+        id S1728698AbgDROn4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 10:43:56 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6168F2072B;
-        Sat, 18 Apr 2020 14:43:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EBD6521D7E;
+        Sat, 18 Apr 2020 14:43:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587221033;
-        bh=xcrADyEDg2EnQ7Xpdv5Hhi8g3f0y/fZgGhF4abv15RU=;
+        s=default; t=1587221036;
+        bh=1SgW/ysHszzLwNS0KAzEGP8RyyZsEVAJdzYA/bUoOmE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VVONIi76Ch7lreh8BLg8evd+lviQW9ScOUo6qMcVX+VkNOrFWZ0C+BzPRoGof5AP6
-         oHzNLXIR9f/xi5grAU9eti93zom8NSaTQWC0XD3sJ47bxVEALHK9ky61ImHHRLWLhb
-         HfOlxcFQYfbGWbcoe3gsW5hrwUSjacVtiAw7b3l4=
+        b=A+HIZ0EgsFyPScf7OpEcqaBGOTad12/c0uNrdDolFNR1hA7NXu7Iy6xVrJ79whrJh
+         SYmsqo9IclRpErdIWOOQ9jR/FSntvc54A7v+8VQl8eadqf8UxB9x0Wj7ncFgl8acZP
+         PAuO8ZLuESCjiUDzUWj7iruwH0fyTbz5KfjV2dtg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pwm@vger.kernel.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.14 19/28] pwm: bcm2835: Dynamically allocate base
-Date:   Sat, 18 Apr 2020 10:43:19 -0400
-Message-Id: <20200418144328.10265-19-sashal@kernel.org>
+Cc:     Changwei Ge <chge@linux.alibaba.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Joseph Qi <joseph.qi@linux.alibaba.com>,
+        Mark Fasheh <mark@fasheh.com>,
+        Joel Becker <jlbec@evilplan.org>,
+        Junxiao Bi <junxiao.bi@oracle.com>,
+        Changwei Ge <gechangwei@live.cn>, Gang He <ghe@suse.com>,
+        Jun Piao <piaojun@huawei.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>, ocfs2-devel@oss.oracle.com
+Subject: [PATCH AUTOSEL 4.14 21/28] ocfs2: no need try to truncate file beyond i_size
+Date:   Sat, 18 Apr 2020 10:43:21 -0400
+Message-Id: <20200418144328.10265-21-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200418144328.10265-1-sashal@kernel.org>
 References: <20200418144328.10265-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -66,37 +66,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Fainelli <f.fainelli@gmail.com>
+From: Changwei Ge <chge@linux.alibaba.com>
 
-[ Upstream commit 2c25b07e5ec119cab609e41407a1fb3fa61442f5 ]
+[ Upstream commit 783fda856e1034dee90a873f7654c418212d12d7 ]
 
-The newer 2711 and 7211 chips have two PWM controllers and failure to
-dynamically allocate the PWM base would prevent the second PWM
-controller instance being probed for succeeding with an -EEXIST error
-from alloc_pwms().
+Linux fallocate(2) with FALLOC_FL_PUNCH_HOLE mode set, its offset can
+exceed the inode size.  Ocfs2 now doesn't allow that offset beyond inode
+size.  This restriction is not necessary and violates fallocate(2)
+semantics.
 
-Fixes: e5a06dc5ac1f ("pwm: Add BCM2835 PWM driver")
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-Reviewed-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
+If fallocate(2) offset is beyond inode size, just return success and do
+nothing further.
+
+Otherwise, ocfs2 will crash the kernel.
+
+  kernel BUG at fs/ocfs2//alloc.c:7264!
+   ocfs2_truncate_inline+0x20f/0x360 [ocfs2]
+   ocfs2_remove_inode_range+0x23c/0xcb0 [ocfs2]
+   __ocfs2_change_file_space+0x4a5/0x650 [ocfs2]
+   ocfs2_fallocate+0x83/0xa0 [ocfs2]
+   vfs_fallocate+0x148/0x230
+   SyS_fallocate+0x48/0x80
+   do_syscall_64+0x79/0x170
+
+Signed-off-by: Changwei Ge <chge@linux.alibaba.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
+Cc: Mark Fasheh <mark@fasheh.com>
+Cc: Joel Becker <jlbec@evilplan.org>
+Cc: Junxiao Bi <junxiao.bi@oracle.com>
+Cc: Changwei Ge <gechangwei@live.cn>
+Cc: Gang He <ghe@suse.com>
+Cc: Jun Piao <piaojun@huawei.com>
+Cc: <stable@vger.kernel.org>
+Link: http://lkml.kernel.org/r/20200407082754.17565-1-chge@linux.alibaba.com
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pwm/pwm-bcm2835.c | 1 +
- 1 file changed, 1 insertion(+)
+ fs/ocfs2/alloc.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/pwm/pwm-bcm2835.c b/drivers/pwm/pwm-bcm2835.c
-index db001cba937fd..e340ad79a1ec9 100644
---- a/drivers/pwm/pwm-bcm2835.c
-+++ b/drivers/pwm/pwm-bcm2835.c
-@@ -166,6 +166,7 @@ static int bcm2835_pwm_probe(struct platform_device *pdev)
+diff --git a/fs/ocfs2/alloc.c b/fs/ocfs2/alloc.c
+index addd7c5f2d3e5..bed54e8adcf99 100644
+--- a/fs/ocfs2/alloc.c
++++ b/fs/ocfs2/alloc.c
+@@ -7240,6 +7240,10 @@ int ocfs2_truncate_inline(struct inode *inode, struct buffer_head *di_bh,
+ 	struct ocfs2_dinode *di = (struct ocfs2_dinode *)di_bh->b_data;
+ 	struct ocfs2_inline_data *idata = &di->id2.i_data;
  
- 	pc->chip.dev = &pdev->dev;
- 	pc->chip.ops = &bcm2835_pwm_ops;
-+	pc->chip.base = -1;
- 	pc->chip.npwm = 2;
- 	pc->chip.of_xlate = of_pwm_xlate_with_flags;
- 	pc->chip.of_pwm_n_cells = 3;
++	/* No need to punch hole beyond i_size. */
++	if (start >= i_size_read(inode))
++		return 0;
++
+ 	if (end > i_size_read(inode))
+ 		end = i_size_read(inode);
+ 
 -- 
 2.20.1
 
