@@ -2,404 +2,160 @@ Return-Path: <SRS0=3CHW=6C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D89BC38A30
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 12:39:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5548C38A30
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 12:40:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 41A1D206D9
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 12:39:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587213575;
-	bh=h6ka0hnORwbiBdpth5u7bPzPYm53tv9MYP0Khb2LRHg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=wpZoKRLbPC+g3FglIX4PsmsPGuMcsIGJsE8CW7HUlMJ3ppSWMCjdSGBq+Qln4D1MA
-	 nQD4qscWeFgk1W6kUMpTOn+1CnMVxQAH6lcAzJzMZ9uQORkf/GYZVz26HIBV4rjZ3s
-	 g7JgKdFkhX4rXQuOum+XXq6w4ntPpG3lnK0JWgxQ=
+	by mail.kernel.org (Postfix) with ESMTP id B46CC21D6C
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 12:40:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="cdfq9APS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726116AbgDRMje (ORCPT
+        id S1726054AbgDRMkD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 08:39:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35412 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725960AbgDRMjd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 08:39:33 -0400
-Received: from mail-il1-f181.google.com (mail-il1-f181.google.com [209.85.166.181])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E8B5822202;
-        Sat, 18 Apr 2020 12:39:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587213571;
-        bh=h6ka0hnORwbiBdpth5u7bPzPYm53tv9MYP0Khb2LRHg=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Oxty9sfz6VkLKanAqCaDDGpHBCtwaClPIhTetpVxdZEawsoMnFufsHQFeuGNFcDER
-         1GUre3wFTa5+VNvbqARoCHhwjwncuq2WGz5+7oaOVOPtx7XiMuigyv3zegRSKL6gOV
-         JG81OokSVQOZ9OOmgMICPqQhNbGGKy9NYj8PLQSI=
-Received: by mail-il1-f181.google.com with SMTP id i16so132383ils.12;
-        Sat, 18 Apr 2020 05:39:30 -0700 (PDT)
-X-Gm-Message-State: AGi0Pua6BmBlCvgkmfAmsLGmC9zqkndMzdbAgguq9mxJtMH7FuPG10g0
-        DUsmkz0BTBC9tos2a3lmlh+D09tnqfFQmlGfvrE=
-X-Google-Smtp-Source: APiQypKfIIyTsXDLfFzDJqjrx0Kk0+ds4ga76zyeuUiCVScbh6ScJBLu8gLI900AwF/wWuK4hPvvonXtySh3W6ST510=
-X-Received: by 2002:a92:39dd:: with SMTP id h90mr7710868ilf.80.1587213570123;
- Sat, 18 Apr 2020 05:39:30 -0700 (PDT)
+        Sat, 18 Apr 2020 08:40:03 -0400
+Received: from mail-eopbgr60071.outbound.protection.outlook.com ([40.107.6.71]:34528
+        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725903AbgDRMkC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 08:40:02 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=XWcItMsYOPC9QDwCwe0RTcNBkqVT6W69Af7dv+FJW0wdnqqOt6Y/HSn9q6YPy8nkTGaLS23/PHtAZFILmRF5MLR8ITwSettHBQYcN1TWI6ftE5mkOftGlS/MIOMwQ/eBJKB/7r4jP3iYVLQEKsGI/k1KvlkVO0kcmzSReaSDfHPcurXA+iCYXo44/8YpjCKdVtkiEcnFcbs0Ih3vVQerCmtAnz+O768rvPq5vKTgTe5FZlX15EaaOmXDab9Pc111YfbsMiRIjDrlnMzv7r3w20yVNNy9E3whqawLsLNaOqEf0VuSaP1rgu55gPGeZOaRLMElAkEzJbSSBq6nWLEJ8A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=tgzj0EPdQ6+1VipzqgvCpBatmaeafTHiCELdzqBsxl4=;
+ b=fJqlWUw3Nq2iFRJ+9sa75Eh7tOAOzaat05fFjV803fb/S5CAXlVIuCiR27DtOKeEBacsIJ8U1AUQLmweCDmZuNPjZZTpa8rhHltTDH2Wst9ddY3a03e9iUOHGSZcZUsF79UEB1RO84H52ww2ooMOyOrAq+IRXkb1RXHfqXEXUm4bXDR+oha/XJ5D1OQlEHY/P3MquNHZtwoN7LsSsWbaScAjrJp0DXJRjU2OHagrsGelvZSje3rPkuV3w8goIbHaGvv5rrEHaM3eErOZZOoiA7JLc8gUvlldRlGmi2Orl0XhwBGOHSTgPlZrhOPn68qWuQQbVkN4GBwH1GxtJoy38g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=tgzj0EPdQ6+1VipzqgvCpBatmaeafTHiCELdzqBsxl4=;
+ b=cdfq9APSrT5B3VhyjplZyV9LZDngqI3R2KHOiSUQobPumBAgVRulCIZV1c9f4B3l7qNqXtdVoycTpncwGDPwr/vQS47+ef83QsOQu4dQCaSaL8nFrsIS0GBWmDwSTBjclConm5HCL+BMrtT+I+QGaQENAo5F5RmdRjFoakvzNaQ=
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (2603:10a6:8:10::18)
+ by DB3PR0402MB3643.eurprd04.prod.outlook.com (2603:10a6:8:5::25) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2921.25; Sat, 18 Apr
+ 2020 12:39:58 +0000
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::3143:c46:62e4:8a8b]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::3143:c46:62e4:8a8b%7]) with mapi id 15.20.2900.028; Sat, 18 Apr 2020
+ 12:39:58 +0000
+From:   Anson Huang <anson.huang@nxp.com>
+To:     Aisheng Dong <aisheng.dong@nxp.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     dl-linux-imx <linux-imx@nxp.com>
+Subject: RE: [PATCH 1/2] arm64: dts: imx8qxp-mek: Sort labels alphabetically
+Thread-Topic: [PATCH 1/2] arm64: dts: imx8qxp-mek: Sort labels alphabetically
+Thread-Index: AQHWFHuqDS+qjcBTvkSC+6fN5KRxoKh+0MaAgAAB9+A=
+Date:   Sat, 18 Apr 2020 12:39:57 +0000
+Message-ID: <DB3PR0402MB3916E212269C5D5BD6E12D21F5D60@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+References: <1587101946-19495-1-git-send-email-Anson.Huang@nxp.com>
+ <AM6PR04MB496663AED27DFD38E648169C80D60@AM6PR04MB4966.eurprd04.prod.outlook.com>
+In-Reply-To: <AM6PR04MB496663AED27DFD38E648169C80D60@AM6PR04MB4966.eurprd04.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=anson.huang@nxp.com; 
+x-originating-ip: [183.192.13.100]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 81e307c4-b874-4691-fb90-08d7e3959aad
+x-ms-traffictypediagnostic: DB3PR0402MB3643:|DB3PR0402MB3643:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DB3PR0402MB364308271DA3850B448215BAF5D60@DB3PR0402MB3643.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 0377802854
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(396003)(366004)(136003)(346002)(376002)(39860400002)(8676002)(2906002)(71200400001)(7696005)(81156014)(6506007)(76116006)(33656002)(44832011)(966005)(5660300002)(478600001)(186003)(26005)(52536014)(64756008)(4326008)(66476007)(66946007)(86362001)(9686003)(66556008)(66446008)(55016002)(316002)(110136005)(8936002)(21314003)(921003)(32563001);DIR:OUT;SFP:1101;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 6VuWkPveEAGTPGc1xRqXnYySu9mjM8SThMoXzQtjTClAGKKlOJN+XaZBykF7aka6xAh/Ky4soyP0mX6LxlrhEmuGgp5kCnUCJ+vbXDui6DU/LB8MufwLFXxGcNj1sDkmXnHNW9SiX5uhpW47F8d++7KOd9rfuZ4K1Bptf2ykk7zzwLCWX1Tje2lFzauELYe153j5oUtPJ2OS5U3Jzv11Q3sT+EqAROrkKh9XjDTLeopfQ8Xgk9rGeSr1KK17VwedKshUUx0YPv8fM0EVUuV7PeJHMPkS7qMyyiJ9N+8TwXUTv47OTLDvrtKgjzfc73Slrh2Jr3Pvy9YwUe2zrtdHGtHdGgh/In3Xa07uPxnJcYJwNd36U4+5I1ZJyU72Zs4DGaYKnFp9uKD+9kErItrOjoJxQnEgNsfEZQLbAXtJoOKeB4FRTZxpnRnUkucRVgQOzwitYwTXtpBbuZMNcNi4e+sJxtbDAFqKcuSXJBVZ1/LxJjEAY97MLkKHFROX5g3fW31il+7sJUlDC/7ABFEWpyx0o0UIhxRroPkIr6r6E50HOXBSvJn5MTpoJJMQlcCjPVBQ6IQi0OpjsEeR0J/fnF28bU0250BvM2IR9cojARU=
+x-ms-exchange-antispam-messagedata: YdE/4hEjySUHbfVNyeostdOTtpLCkuD22UPsucV2nNV7o7+HEOgjiYNn1RurbZAlUwzOAuCJosk1haeO1EAzQfOo6qvPt7gt+B3uxU5oJStTAyThfcD4ZLMR4IGb+M68I1QvQAZ2owyh9d5X26DsLdAX06hiwlkx9Yd2oEzOgZlsAr3sjCGKtQDsWipU4dem2ZFtBt+D/UsY5yjVFYbMXkpJIVR/iYReXWR03hIZCBgemFifqlTLUvI9+97f3ledQTOHkHTrCUnlmGUgyefrk4YKCGkTLUN2C4BHe4JHKslBRuF+bCJo4iYP9kGuEfP2IM014atnxO6TtLn9Rghs7Hpk5zkRyFJOEkpjNQw30/4OVqb1iJd4Hvx90zQX/zpuLtBEXubKx0zjykppDociMFbry44DUVvZIgCNR/eexe+QB6BMfou/JxdnzvyZQ6vIgvlKqAA9N6jT6DN/J1F2w3FZzAri45FpkgGA2tMr09D/d8VCydRNFR4mdYfBd/lQ7xO9Kffd6ZAwz4sClGqm5ukkBhAkh0VEkeARkg3xO9PHSvqttL9FwZKYCUdU4Lx3s+ttaHaKlpQHMyNLeS8DwS2AN1XTqQVvmZKWz1rjo87ZH/GJUdn1UjDC90v7Be0cWBvLHx4QsOp/DdZitOJF/M4NyC+JjcKpTJ3HEyqtOQjirdaY00NV9nz3CF2vEQbtpHkg8nUGlbxxaIIHYvHDx+tn4JrNWRy7D3PiBXfToUvWzq49cnYeyOCj2BWYtmFfX0KYmjvvY2N7oXiMadO1OVx19etyOhK6yn1hwPb7T98=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20200415195422.19866-1-atish.patra@wdc.com> <20200415195422.19866-6-atish.patra@wdc.com>
- <CAMj1kXFRqTYr7_M_j6oN1-xnQ6V4uCYK49yAbjvrf1BB823Cng@mail.gmail.com>
- <CAOnJCUK3fqsR93ewYMUkanh+x1EJN_3QwkFjSDDZZr2MjzpnUQ@mail.gmail.com> <CAMj1kXFOkARJ9k81pu-LuHEd7H7AZRRrquzVN-WQ3J239JUZTw@mail.gmail.com>
-In-Reply-To: <CAMj1kXFOkARJ9k81pu-LuHEd7H7AZRRrquzVN-WQ3J239JUZTw@mail.gmail.com>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Sat, 18 Apr 2020 14:39:18 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXGv8XrXJ=Tx88O38a9UYM3iuBevg5NXRpMrny1XJZGB7A@mail.gmail.com>
-Message-ID: <CAMj1kXGv8XrXJ=Tx88O38a9UYM3iuBevg5NXRpMrny1XJZGB7A@mail.gmail.com>
-Subject: Re: [v3 PATCH 5/5] RISC-V: Add EFI stub support.
-To:     Atish Patra <atishp@atishpatra.org>
-Cc:     Atish Patra <atish.patra@wdc.com>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        Will Deacon <will@kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 81e307c4-b874-4691-fb90-08d7e3959aad
+X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Apr 2020 12:39:58.0150
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: otHPEVWQDTKW+AHRzaVsE0utMqZ853oGLCpbBOamlFF6QwSgMRPNxVF5ClzzFhDMObnr7LBS0yYNtMr8FMQzbg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3643
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 18 Apr 2020 at 12:51, Ard Biesheuvel <ardb@kernel.org> wrote:
->
-> On Sat, 18 Apr 2020 at 05:03, Atish Patra <atishp@atishpatra.org> wrote:
-> >
-> > On Thu, Apr 16, 2020 at 12:41 AM Ard Biesheuvel <ardb@kernel.org> wrote:
-> > >
-> > > On Wed, 15 Apr 2020 at 21:54, Atish Patra <atish.patra@wdc.com> wrote:
-> > > >
-> > > > Add a RISC-V architecture specific stub code that actually copies the
-> > > > actual kernel image to a valid address and jump to it after boot services
-> > > > are terminated. Enable UEFI related kernel configs as well for RISC-V.
-> > > >
-> > > > Signed-off-by: Atish Patra <atish.patra@wdc.com>
-> > > > ---
-> > > >  arch/riscv/Kconfig                        |  20 ++++
-> > > >  arch/riscv/Makefile                       |   1 +
-> > > >  arch/riscv/configs/defconfig              |   1 +
-> > > >  arch/riscv/include/asm/efi.h              |  44 +++++++++
-> > > >  drivers/firmware/efi/Kconfig              |   2 +-
-> > > >  drivers/firmware/efi/libstub/Makefile     |   7 ++
-> > > >  drivers/firmware/efi/libstub/riscv-stub.c | 111 ++++++++++++++++++++++
-> > > >  7 files changed, 185 insertions(+), 1 deletion(-)
-> > > >  create mode 100644 arch/riscv/include/asm/efi.h
-> > > >  create mode 100644 drivers/firmware/efi/libstub/riscv-stub.c
-> > > >
-> > > > diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-> > > > index f39e326a7a42..eb4f41c8f3ce 100644
-> > > > --- a/arch/riscv/Kconfig
-> > > > +++ b/arch/riscv/Kconfig
-> > > > @@ -379,10 +379,30 @@ config CMDLINE_FORCE
-> > > >
-> > > >  endchoice
-> > > >
-> > > > +config EFI_STUB
-> > > > +       bool
-> > > > +
-> > > > +config EFI
-> > > > +       bool "UEFI runtime support"
-> > > > +       depends on OF
-> > > > +       select LIBFDT
-> > > > +       select UCS2_STRING
-> > > > +       select EFI_PARAMS_FROM_FDT
-> > > > +       select EFI_STUB
-> > > > +       select EFI_GENERIC_STUB
-> > > > +       default y
-> > > > +       help
-> > > > +         This option provides support for runtime services provided
-> > > > +         by UEFI firmware (such as non-volatile variables, realtime
-> > > > +          clock, and platform reset). A UEFI stub is also provided to
-> > > > +         allow the kernel to be booted as an EFI application. This
-> > > > +         is only useful on systems that have UEFI firmware.
-> > > > +
-> > > >  endmenu
-> > > >
-> > > >  menu "Power management options"
-> > > >
-> > > >  source "kernel/power/Kconfig"
-> > > > +source "drivers/firmware/Kconfig"
-> > > >
-> > > >  endmenu
-> > > > diff --git a/arch/riscv/Makefile b/arch/riscv/Makefile
-> > > > index fb6e37db836d..079435804d6d 100644
-> > > > --- a/arch/riscv/Makefile
-> > > > +++ b/arch/riscv/Makefile
-> > > > @@ -80,6 +80,7 @@ head-y := arch/riscv/kernel/head.o
-> > > >  core-y += arch/riscv/
-> > > >
-> > > >  libs-y += arch/riscv/lib/
-> > > > +core-$(CONFIG_EFI_STUB) += $(objtree)/drivers/firmware/efi/libstub/lib.a
-> > > >
-> > > >  PHONY += vdso_install
-> > > >  vdso_install:
-> > > > diff --git a/arch/riscv/configs/defconfig b/arch/riscv/configs/defconfig
-> > > > index 4da4886246a4..ae69e12d306a 100644
-> > > > --- a/arch/riscv/configs/defconfig
-> > > > +++ b/arch/riscv/configs/defconfig
-> > > > @@ -129,3 +129,4 @@ CONFIG_DEBUG_BLOCK_EXT_DEVT=y
-> > > >  # CONFIG_RUNTIME_TESTING_MENU is not set
-> > > >  CONFIG_MEMTEST=y
-> > > >  # CONFIG_SYSFS_SYSCALL is not set
-> > > > +CONFIG_EFI=y
-> > > > diff --git a/arch/riscv/include/asm/efi.h b/arch/riscv/include/asm/efi.h
-> > > > new file mode 100644
-> > > > index 000000000000..62d7d5eafed8
-> > > > --- /dev/null
-> > > > +++ b/arch/riscv/include/asm/efi.h
-> > > > @@ -0,0 +1,44 @@
-> > > > +/* SPDX-License-Identifier: GPL-2.0 */
-> > > > +/*
-> > > > + * Copyright (C) 2020 Western Digital Corporation or its affiliates.
-> > > > + * Based on arch/arm64/include/asm/efi.h
-> > > > + */
-> > > > +#ifndef _ASM_EFI_H
-> > > > +#define _ASM_EFI_H
-> > > > +
-> > > > +#include <asm/io.h>
-> > > > +#include <asm/mmu_context.h>
-> > > > +#include <asm/ptrace.h>
-> > > > +#include <asm/tlbflush.h>
-> > > > +
-> > > > +#define VA_BITS_MIN 39
-> > > > +
-> > > > +/* on RISC-V, the FDT may be located anywhere in system RAM */
-> > > > +static inline unsigned long efi_get_max_fdt_addr(unsigned long dram_base)
-> > > > +{
-> > > > +       return ULONG_MAX;
-> > > > +}
-> > > > +
-> > > > +/* Load initrd at enough distance from DRAM start */
-> > > > +static inline unsigned long efi_get_max_initrd_addr(unsigned long dram_base,
-> > > > +                                                   unsigned long image_addr)
-> > > > +{
-> > > > +       return dram_base + SZ_256M;
-> > > > +}
-> > > > +
-> > > > +#define efi_bs_call(func, ...) efi_system_table()->boottime->func(__VA_ARGS__)
-> > > > +#define efi_rt_call(func, ...) efi_system_table()->runtime->func(__VA_ARGS__)
-> > > > +#define efi_is_native()                (true)
-> > > > +
-> > > > +#define efi_table_attr(inst, attr)     (inst->attr)
-> > > > +
-> > > > +#define efi_call_proto(inst, func, ...) inst->func(inst, ##__VA_ARGS__)
-> > > > +
-> > > > +#define alloc_screen_info(x...)                (&screen_info)
-> > > > +extern char stext_offset[];
-> > > > +
-> > > > +static inline void free_screen_info(struct screen_info *si)
-> > > > +{
-> > > > +}
-> > > > +
-> > > > +#endif /* _ASM_EFI_H */
-> > > > diff --git a/drivers/firmware/efi/Kconfig b/drivers/firmware/efi/Kconfig
-> > > > index 2a2b2b96a1dc..fcdc789d3f87 100644
-> > > > --- a/drivers/firmware/efi/Kconfig
-> > > > +++ b/drivers/firmware/efi/Kconfig
-> > > > @@ -111,7 +111,7 @@ config EFI_GENERIC_STUB
-> > > >
-> > > >  config EFI_ARMSTUB_DTB_LOADER
-> > > >         bool "Enable the DTB loader"
-> > > > -       depends on EFI_GENERIC_STUB
-> > > > +       depends on EFI_GENERIC_STUB && !RISCV
-> > > >         default y
-> > > >         help
-> > > >           Select this config option to add support for the dtb= command
-> > > > diff --git a/drivers/firmware/efi/libstub/Makefile b/drivers/firmware/efi/libstub/Makefile
-> > > > index 2b4e09bf987c..7d46b70b51f2 100644
-> > > > --- a/drivers/firmware/efi/libstub/Makefile
-> > > > +++ b/drivers/firmware/efi/libstub/Makefile
-> > > > @@ -22,6 +22,8 @@ cflags-$(CONFIG_ARM64)                := $(subst $(CC_FLAGS_FTRACE),,$(KBUILD_CFLAGS)) \
-> > > >  cflags-$(CONFIG_ARM)           := $(subst $(CC_FLAGS_FTRACE),,$(KBUILD_CFLAGS)) \
-> > > >                                    -fno-builtin -fpic \
-> > > >                                    $(call cc-option,-mno-single-pic-base)
-> > > > +cflags-$(CONFIG_RISCV)         := $(subst $(CC_FLAGS_FTRACE),,$(KBUILD_CFLAGS)) \
-> > > > +                                  -fpic
-> > > >
-> > > >  cflags-$(CONFIG_EFI_GENERIC_STUB)      += -I$(srctree)/scripts/dtc/libfdt
-> > > >
-> > > > @@ -57,6 +59,7 @@ lib-$(CONFIG_EFI_GENERIC_STUB)                += efi-stub.o fdt.o string.o \
-> > > >  lib-$(CONFIG_ARM)              += arm32-stub.o
-> > > >  lib-$(CONFIG_ARM64)            += arm64-stub.o
-> > > >  lib-$(CONFIG_X86)              += x86-stub.o
-> > > > +lib-$(CONFIG_RISCV)            += riscv-stub.o
-> > > >  CFLAGS_arm32-stub.o            := -DTEXT_OFFSET=$(TEXT_OFFSET)
-> > > >  CFLAGS_arm64-stub.o            := -DTEXT_OFFSET=$(TEXT_OFFSET)
-> > > >
-> > > > @@ -81,6 +84,10 @@ STUBCOPY_FLAGS-$(CONFIG_ARM64)       += --prefix-alloc-sections=.init \
-> > > >                                    --prefix-symbols=__efistub_
-> > > >  STUBCOPY_RELOC-$(CONFIG_ARM64) := R_AARCH64_ABS
-> > > >
-> > > > +STUBCOPY_FLAGS-$(CONFIG_RISCV) += --prefix-alloc-sections=.init \
-> > > > +                                  --prefix-symbols=__efistub_
-> > > > +STUBCOPY_RELOC-$(CONFIG_RISCV) := R_RISCV_HI20
-> > > > +
-> > > >  $(obj)/%.stub.o: $(obj)/%.o FORCE
-> > > >         $(call if_changed,stubcopy)
-> > > >
-> > > > diff --git a/drivers/firmware/efi/libstub/riscv-stub.c b/drivers/firmware/efi/libstub/riscv-stub.c
-> > > > new file mode 100644
-> > > > index 000000000000..69d13e0ebaea
-> > > > --- /dev/null
-> > > > +++ b/drivers/firmware/efi/libstub/riscv-stub.c
-> > > > @@ -0,0 +1,111 @@
-> > > > +// SPDX-License-Identifier: GPL-2.0
-> > > > +/*
-> > > > + * Copyright (C) 2013, 2014 Linaro Ltd;  <roy.franz@linaro.org>
-> > > > + * Copyright (C) 2020 Western Digital Corporation or its affiliates.
-> > > > + *
-> > > > + * This file implements the EFI boot stub for the RISC-V kernel.
-> > > > + * Adapted from ARM64 version at drivers/firmware/efi/libstub/arm64-stub.c.
-> > > > + */
-> > > > +
-> > > > +#include <linux/efi.h>
-> > > > +#include <linux/libfdt.h>
-> > > > +#include <linux/libfdt_env.h>
-> > > > +#include <asm/efi.h>
-> > > > +#include <asm/sections.h>
-> > > > +
-> > > > +#include "efistub.h"
-> > > > +/*
-> > > > + * RISCV requires the kernel image to placed TEXT_OFFSET bytes beyond a 2 MB
-> > > > + * aligned base for 64 bit and 4MB for 32 bit.
-> > > > + */
-> >
-> > Fixed the comment.
-> >
-> > > > +#ifdef CONFIG_64BIT
-> > > > +#define MIN_KIMG_ALIGN SZ_2M
-> > > > +#else
-> > > > +#define MIN_KIMG_ALIGN SZ_4M
-> > > > +#endif
-> > > > +
-> > > > +typedef __attribute__((noreturn)) void (*jump_kernel_func)(unsigned int,
-> > > > +                                                          unsigned long);
-> > > > +efi_status_t check_platform_features(void)
-> > > > +{
-> > > > +       return EFI_SUCCESS;
-> > > > +}
-> > > > +
-> > > > +static u32 get_boot_hartid_from_fdt(unsigned long fdt)
-> > > > +{
-> > > > +       int chosen_node, len;
-> > > > +       const fdt32_t *prop;
-> > > > +
-> > > > +       chosen_node = fdt_path_offset((void *)fdt, "/chosen");
-> > > > +       if (chosen_node < 0)
-> > > > +               return U32_MAX;
-> > > > +       prop = fdt_getprop((void *)fdt, chosen_node, "boot-hartid", &len);
-> > > > +       if (!prop || len != sizeof(u32))
-> > > > +               return U32_MAX;
-> > > > +
-> > > > +       return fdt32_to_cpu(*prop);
-> > > > +}
-> > > > +
-> > > > +/*
-> > > > + * Jump to real kernel here with following constraints.
-> > > > + * 1. MMU should be disabled.
-> > > > + * 2. a0 should contain hartid
-> > > > + * 3. a1 should DT address
-> > > > + */
-> > > > +void __noreturn efi_enter_kernel(unsigned long entrypoint, unsigned long fdt,
-> > > > +                                unsigned long fdt_size)
-> > > > +{
-> > > > +       unsigned long kernel_entry = entrypoint + (unsigned long)stext_offset;
-> > > > +       jump_kernel_func jump_kernel = (jump_kernel_func) kernel_entry;
-> > > > +       u32 hartid = get_boot_hartid_from_fdt(fdt);
-> > > > +
-> > > > +       if (hartid == U32_MAX)
-> > > > +               /* We can not use panic or BUG at this point */
-> > > > +               __asm__ __volatile__ ("ebreak");
-> > > > +       /* Disable MMU */
-> > > > +       csr_write(CSR_SATP, 0);
-> > > > +       jump_kernel(hartid, fdt);
-> > > > +}
-> > > > +
-> > > > +efi_status_t handle_kernel_image(unsigned long *image_addr,
-> > > > +                                unsigned long *image_size,
-> > > > +                                unsigned long *reserve_addr,
-> > > > +                                unsigned long *reserve_size,
-> > > > +                                unsigned long dram_base,
-> > > > +                                efi_loaded_image_t *image)
-> > > > +{
-> > > > +       efi_status_t status;
-> > > > +       unsigned long kernel_size, kernel_memsize = 0;
-> > > > +       unsigned long max_alloc_address;
-> > > > +
-> > > > +       if (image->image_base != _start)
-> > > > +               pr_efi_err("FIRMWARE BUG: efi_loaded_image_t::image_base has bogus value\n");
-> > > > +
-> > >
-> > > I don't think you need this.
-> > >
-> >
-> > Sure. I will remove it. I guess ARM64 code has the error print for
-> > legacy loader code ?
-> >
->
-> No, for broken distro versions of GRUB
->
-> > > > +       kernel_size = _edata - _start;
-> > > > +       kernel_memsize = kernel_size + (_end - _edata);
-> > > > +       max_alloc_address = round_up(dram_base, MIN_KIMG_ALIGN) +
-> > > > +                           kernel_memsize;
-> > > > +
-> > >
-> > > You said the kernel could be anywhere in memory, as long as it is
-> > > aligned correctly, right?
-> >
-> > Sorry I was wrong about this. RISC-V kernel maps PAGE_OFFSET virtual
-> > address to the
-> > physical address <xyz> where it is booted. That means memory between
-> > dram start and and <xyz> address
-> > will be unusable.
-> >
->
-> OK
->
-> > I also realized that the above computing max_address as above also
-> > won't work for the following reason.
-> > efi_allocate_pages_aligned actually ALIGN_DOWN the max_address. Thus,
-> > efi won't find enough
-> > free memory in this case if the max_address is computed from the dram_base.
-> >
-> > Is there an implicit requirement for efi_allocate_pages_aligned or
-> > efi_low_alloc_above should be tried in case of failure?
-> >
->
-> No not really. What ever works for your particular use case is acceptable to me.
->
-> > > In that case, you don't need this, you can simply pass ULONG_MAX as
-> > > the max address.
-> > >
-> > As RISC-V should allocate memory as low as possible to avoid memory
-> > wastage, I think the following should work.
-> >
-> > efi_low_alloc_above(*reserve_size, MIN_KIMG_ALIGN, reserve_addr, dram_base);
-> >
-> > If this looks okay to you, efi_low_alloc_above should be moved back to
-> > mem.c from relocate.c.
-> > Should I do it in a separate patch or the original patch should be
-> > modified so that efi_low_alloc_above was never moved to relocate.c
-> >
->
-> No, please keep efi_low_alloc_above() where it is, but drop the
-> static, and put back the declaration in efistub.h
->
-
-Alternatively, can you check whether efi_relocate_kernel() already
-does what you need?
+DQoNCj4gU3ViamVjdDogUkU6IFtQQVRDSCAxLzJdIGFybTY0OiBkdHM6IGlteDhxeHAtbWVrOiBT
+b3J0IGxhYmVscyBhbHBoYWJldGljYWxseQ0KPiANCj4gPiBGcm9tOiBBbnNvbiBIdWFuZyA8QW5z
+b24uSHVhbmdAbnhwLmNvbT4NCj4gPiBTZW50OiBGcmlkYXksIEFwcmlsIDE3LCAyMDIwIDE6Mzkg
+UE0NCj4gPg0KPiA+IFNvcnQgdGhlIGxhYmVscyBhbHBoYWJldGljYWxseSBmb3IgY29uc2lzdGVu
+Y3kuDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBBbnNvbiBIdWFuZyA8QW5zb24uSHVhbmdAbnhw
+LmNvbT4NCj4gDQo+IFRoaXMgcGF0Y2ggaXMgbWVhbmluZ2xlc3MgYXMgc3Vic3lzIHByZWZpeCAo
+ZS5nLiBhZG1hX3h4eCkgd2lsbCBiZSByZW1vdmVkDQo+IGxhdGVyIGFuZCBkZXZpY2VzIG5vZGVz
+IGFsbCBtb3ZlZCBpbnRvIHN1YnN5cyBkdHNpLg0KPiBJJ3ZlIHJlcGxpZWQgdGhpcyBiZWZvcmU6
+DQo+IGh0dHBzOi8vbGttbC5vcmcvbGttbC8yMDIwLzMvMTYvMjQ0DQoNCkkga25ldyB5b3UgcmVw
+bGllZCB0aGlzIGJlZm9yZSwgYnV0IGRvIHlvdSBoYXZlIGFuIGV4YWN0IGRheSBvZiB3aGVuIHN1
+YnN5cyBkdHNpIHdpbGwgYmUgaW1wbGVtZW50ZWQ/DQpNYW55IHByZXZpb3VzIHBhdGNoZXMgb2Yg
+bXkgbWluZSB0byBhZGQgZmVhdHVyZXMgdG8gRFRTIGZpbGUsIEkgaGF2ZSBiZWVuIGFza2VkIGJ5
+IFNoYXduIHRvDQphZGQgYSBuZXcgcGF0Y2ggdG8gaGVscCBzb3J0IHRoZSBsYWJlbHMsIEkgdGhp
+bmsgdGhpcyBpcyBzb21lIG1haW50YWluZXJzJyBob2JieSwgc28gaWYgU2hhd24gdGhpbmtzIG5v
+DQpuZWVkIHRoaXMgZm9yIDhRWFAsIEkgY2FuIGRyb3AgdGhpcyBwYXRjaC4NCg0KQW5zb24NCg0K
+DQo+IA0KPiBSZWdhcmRzDQo+IEFpc2hlbmcNCj4gDQo+ID4gLS0tDQo+ID4gIGFyY2gvYXJtNjQv
+Ym9vdC9kdHMvZnJlZXNjYWxlL2lteDhxeHAtbWVrLmR0cyB8IDYwDQo+ID4gKysrKysrKysrKysr
+Ky0tLS0tLS0tLS0tLS0tDQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCAzMCBpbnNlcnRpb25zKCspLCAz
+MCBkZWxldGlvbnMoLSkNCj4gPg0KPiA+IGRpZmYgLS1naXQgYS9hcmNoL2FybTY0L2Jvb3QvZHRz
+L2ZyZWVzY2FsZS9pbXg4cXhwLW1lay5kdHMNCj4gPiBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJl
+ZXNjYWxlL2lteDhxeHAtbWVrLmR0cw0KPiA+IGluZGV4IDEzNDYwYTMuLjJlZDdhYmEgMTAwNjQ0
+DQo+ID4gLS0tIGEvYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvaW14OHF4cC1tZWsuZHRz
+DQo+ID4gKysrIGIvYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvaW14OHF4cC1tZWsuZHRz
+DQo+ID4gQEAgLTMwLDI5ICszMCw4IEBADQo+ID4gIAl9Ow0KPiA+ICB9Ow0KPiA+DQo+ID4gLSZh
+ZG1hX2xwdWFydDAgew0KPiA+IC0JcGluY3RybC1uYW1lcyA9ICJkZWZhdWx0IjsNCj4gPiAtCXBp
+bmN0cmwtMCA9IDwmcGluY3RybF9scHVhcnQwPjsNCj4gPiAtCXN0YXR1cyA9ICJva2F5IjsNCj4g
+PiAtfTsNCj4gPiAtDQo+ID4gLSZmZWMxIHsNCj4gPiAtCXBpbmN0cmwtbmFtZXMgPSAiZGVmYXVs
+dCI7DQo+ID4gLQlwaW5jdHJsLTAgPSA8JnBpbmN0cmxfZmVjMT47DQo+ID4gLQlwaHktbW9kZSA9
+ICJyZ21paS1pZCI7DQo+ID4gLQlwaHktaGFuZGxlID0gPCZldGhwaHkwPjsNCj4gPiAtCWZzbCxt
+YWdpYy1wYWNrZXQ7DQo+ID4gKyZhZG1hX2RzcCB7DQo+ID4gIAlzdGF0dXMgPSAib2theSI7DQo+
+ID4gLQ0KPiA+IC0JbWRpbyB7DQo+ID4gLQkJI2FkZHJlc3MtY2VsbHMgPSA8MT47DQo+ID4gLQkJ
+I3NpemUtY2VsbHMgPSA8MD47DQo+ID4gLQ0KPiA+IC0JCWV0aHBoeTA6IGV0aGVybmV0LXBoeUAw
+IHsNCj4gPiAtCQkJY29tcGF0aWJsZSA9ICJldGhlcm5ldC1waHktaWVlZTgwMi4zLWMyMiI7DQo+
+ID4gLQkJCXJlZyA9IDwwPjsNCj4gPiAtCQl9Ow0KPiA+IC0JfTsNCj4gPiAgfTsNCj4gPg0KPiA+
+ICAmYWRtYV9pMmMxIHsNCj4gPiBAQCAtMTMxLDYgKzExMCwzNSBAQA0KPiA+ICAJfTsNCj4gPiAg
+fTsNCj4gPg0KPiA+ICsmYWRtYV9scHVhcnQwIHsNCj4gPiArCXBpbmN0cmwtbmFtZXMgPSAiZGVm
+YXVsdCI7DQo+ID4gKwlwaW5jdHJsLTAgPSA8JnBpbmN0cmxfbHB1YXJ0MD47DQo+ID4gKwlzdGF0
+dXMgPSAib2theSI7DQo+ID4gK307DQo+ID4gKw0KPiA+ICsmZmVjMSB7DQo+ID4gKwlwaW5jdHJs
+LW5hbWVzID0gImRlZmF1bHQiOw0KPiA+ICsJcGluY3RybC0wID0gPCZwaW5jdHJsX2ZlYzE+Ow0K
+PiA+ICsJcGh5LW1vZGUgPSAicmdtaWktaWQiOw0KPiA+ICsJcGh5LWhhbmRsZSA9IDwmZXRocGh5
+MD47DQo+ID4gKwlmc2wsbWFnaWMtcGFja2V0Ow0KPiA+ICsJc3RhdHVzID0gIm9rYXkiOw0KPiA+
+ICsNCj4gPiArCW1kaW8gew0KPiA+ICsJCSNhZGRyZXNzLWNlbGxzID0gPDE+Ow0KPiA+ICsJCSNz
+aXplLWNlbGxzID0gPDA+Ow0KPiA+ICsNCj4gPiArCQlldGhwaHkwOiBldGhlcm5ldC1waHlAMCB7
+DQo+ID4gKwkJCWNvbXBhdGlibGUgPSAiZXRoZXJuZXQtcGh5LWllZWU4MDIuMy1jMjIiOw0KPiA+
+ICsJCQlyZWcgPSA8MD47DQo+ID4gKwkJfTsNCj4gPiArCX07DQo+ID4gK307DQo+ID4gKw0KPiA+
+ICsmc2N1X2tleSB7DQo+ID4gKwlzdGF0dXMgPSAib2theSI7DQo+ID4gK307DQo+ID4gKw0KPiA+
+ICAmdXNkaGMxIHsNCj4gPiAgCWFzc2lnbmVkLWNsb2NrcyA9IDwmY2xrIElNWF9DT05OX1NESEMw
+X0NMSz47DQo+ID4gIAlhc3NpZ25lZC1jbG9jay1yYXRlcyA9IDwyMDAwMDAwMDA+Ow0KPiA+IEBA
+IC0yMjksMTEgKzIzNywzIEBADQo+ID4gIAkJPjsNCj4gPiAgCX07DQo+ID4gIH07DQo+ID4gLQ0K
+PiA+IC0mYWRtYV9kc3Agew0KPiA+IC0Jc3RhdHVzID0gIm9rYXkiOw0KPiA+IC19Ow0KPiA+IC0N
+Cj4gPiAtJnNjdV9rZXkgew0KPiA+IC0Jc3RhdHVzID0gIm9rYXkiOw0KPiA+IC19Ow0KPiA+IC0t
+DQo+ID4gMi43LjQNCg0K
