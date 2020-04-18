@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE03FC3A5A9
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:41:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17613C38A29
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:41:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 946AF2220A
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:41:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E876F2220A
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:41:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587220861;
-	bh=2t9JhdTexDKfy3vJF9n4wUfNR/wrU2njNHPwpTWhbTg=;
+	s=default; t=1587220864;
+	bh=eDTZP46Dc/orj50j4/6k5OiC257YQ0FfV+RyCDxPvF4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=h+3i4DyZhDFY6du14fN/rNUTBylgJadWn532g3nPAAV/Mu869015jM7ZRE5Zy+f2Z
-	 Yo5OK4uNmnwBkU7rlQjcNirKwK3YJk8fgNnKgXVfuxNHMpCLkOkK0LexWaGxqNBzzJ
-	 CT4rrnJ5VwD5MiB8Yw88ztXY1MbZzczttSmGmWd4=
+	b=VaBw8ZKfjHaeaLQCDvubuEh4ekRwIjCdE/OXH0NQ3zarfvbyvPLL7d/3z5OBQKQbU
+	 o+ckbNtpjBZIyBmf1DdSfbyTyLMLVZtwdaHVNKxRM4NwPeMauMsKdGU4JAAKmUoQVv
+	 JXa+F4bgddIW9GnhXmbim/L2NduZD+LNtOL/7GU4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726851AbgDROlA (ORCPT
+        id S1726885AbgDROlC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 10:41:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49476 "EHLO mail.kernel.org"
+        Sat, 18 Apr 2020 10:41:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49654 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726785AbgDROk5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 10:40:57 -0400
+        id S1726844AbgDROlA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 10:41:00 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E83E221D82;
-        Sat, 18 Apr 2020 14:40:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 665D021D82;
+        Sat, 18 Apr 2020 14:40:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587220856;
-        bh=2t9JhdTexDKfy3vJF9n4wUfNR/wrU2njNHPwpTWhbTg=;
+        s=default; t=1587220860;
+        bh=eDTZP46Dc/orj50j4/6k5OiC257YQ0FfV+RyCDxPvF4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XJmug0S9BAZHydcqKIK3xVY9ozJH23c17c+zPYUg+XQOkLsB8p19Uq7SdowlOwJhx
-         mmZFPkiUP4ZrpYkx+7ZFbUEhndQFjprkt44/twVBXS+dUYP0pbAAwZiR7hQ0S8tJ/D
-         WltCOAdpjuV8DiBnGvsQ6JG2WkKxTi/VpzofZVnQ=
+        b=NT+s+0x3BMWOSngFvoQZ4HE03qzM7nGJ+evD/dBWYIC+hpwybGZMIM06Iyx246Anm
+         UFBUfMe/kIt1airNK7UmkV07DYthtngoWtQ8mHcD435Xn39bE/RWnMv74tNJ/q8Ivm
+         kHcy7djMHNrfAcqHJHvJ/GIK7tBB7s5tltcxaNpk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Joerg Roedel <jroedel@suse.de>,
-        Sasha Levin <sashal@kernel.org>,
-        iommu@lists.linux-foundation.org
-Subject: [PATCH AUTOSEL 5.4 07/78] iommu/vt-d: Fix mm reference leak
-Date:   Sat, 18 Apr 2020 10:39:36 -0400
-Message-Id: <20200418144047.9013-7-sashal@kernel.org>
+Cc:     James Smart <jsmart2021@gmail.com>,
+        Dick Kennedy <dick.kennedy@broadcom.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 10/78] scsi: lpfc: Fix crash in target side cable pulls hitting WAIT_FOR_UNREG
+Date:   Sat, 18 Apr 2020 10:39:39 -0400
+Message-Id: <20200418144047.9013-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200418144047.9013-1-sashal@kernel.org>
 References: <20200418144047.9013-1-sashal@kernel.org>
@@ -61,45 +60,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jacob Pan <jacob.jun.pan@linux.intel.com>
+From: James Smart <jsmart2021@gmail.com>
 
-[ Upstream commit 902baf61adf6b187f0a6b789e70d788ea71ff5bc ]
+[ Upstream commit 807e7353d8a7105ce884d22b0dbc034993c6679c ]
 
-Move canonical address check before mmget_not_zero() to avoid mm
-reference leak.
+Kernel is crashing with the following stacktrace:
 
-Fixes: 9d8c3af31607 ("iommu/vt-d: IOMMU Page Request needs to check if address is canonical.")
-Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-Acked-by: Lu Baolu <baolu.lu@linux.intel.com>
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+  BUG: unable to handle kernel NULL pointer dereference at
+    00000000000005bc
+  IP: lpfc_nvme_register_port+0x1a8/0x3a0 [lpfc]
+  ...
+  Call Trace:
+  lpfc_nlp_state_cleanup+0x2b2/0x500 [lpfc]
+  lpfc_nlp_set_state+0xd7/0x1a0 [lpfc]
+  lpfc_cmpl_prli_prli_issue+0x1f7/0x450 [lpfc]
+  lpfc_disc_state_machine+0x7a/0x1e0 [lpfc]
+  lpfc_cmpl_els_prli+0x16f/0x1e0 [lpfc]
+  lpfc_sli_sp_handle_rspiocb+0x5b2/0x690 [lpfc]
+  lpfc_sli_handle_slow_ring_event_s4+0x182/0x230 [lpfc]
+  lpfc_do_work+0x87f/0x1570 [lpfc]
+  kthread+0x10d/0x130
+  ret_from_fork+0x35/0x40
+
+During target side fault injections, it is possible to hit the
+NLP_WAIT_FOR_UNREG case in lpfc_nvme_remoteport_delete. A prior commit
+fixed a rebind and delete race condition, but called lpfc_nlp_put
+unconditionally. This triggered a deletion and the crash.
+
+Fix by movng nlp_put to inside the NLP_WAIT_FOR_UNREG case, where the nlp
+will be being unregistered/removed. Leave the reference if the flag isn't
+set.
+
+Link: https://lore.kernel.org/r/20200322181304.37655-8-jsmart2021@gmail.com
+Fixes: b15bd3e6212e ("scsi: lpfc: Fix nvme remoteport registration race conditions")
+Signed-off-by: James Smart <jsmart2021@gmail.com>
+Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iommu/intel-svm.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ drivers/scsi/lpfc/lpfc_nvme.c | 14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/iommu/intel-svm.c b/drivers/iommu/intel-svm.c
-index 5313d043a6cf2..1d3816cd65d57 100644
---- a/drivers/iommu/intel-svm.c
-+++ b/drivers/iommu/intel-svm.c
-@@ -583,14 +583,15 @@ static irqreturn_t prq_event_thread(int irq, void *d)
- 		 * any faults on kernel addresses. */
- 		if (!svm->mm)
- 			goto bad_req;
--		/* If the mm is already defunct, don't handle faults. */
--		if (!mmget_not_zero(svm->mm))
--			goto bad_req;
+diff --git a/drivers/scsi/lpfc/lpfc_nvme.c b/drivers/scsi/lpfc/lpfc_nvme.c
+index 8e0f03ef346b6..c475ae0f2f515 100644
+--- a/drivers/scsi/lpfc/lpfc_nvme.c
++++ b/drivers/scsi/lpfc/lpfc_nvme.c
+@@ -342,13 +342,15 @@ lpfc_nvme_remoteport_delete(struct nvme_fc_remote_port *remoteport)
+ 	if (ndlp->upcall_flags & NLP_WAIT_FOR_UNREG) {
+ 		ndlp->nrport = NULL;
+ 		ndlp->upcall_flags &= ~NLP_WAIT_FOR_UNREG;
+-	}
+-	spin_unlock_irq(&vport->phba->hbalock);
++		spin_unlock_irq(&vport->phba->hbalock);
  
- 		/* If address is not canonical, return invalid response */
- 		if (!is_canonical_address(address))
- 			goto bad_req;
+-	/* Remove original register reference. The host transport
+-	 * won't reference this rport/remoteport any further.
+-	 */
+-	lpfc_nlp_put(ndlp);
++		/* Remove original register reference. The host transport
++		 * won't reference this rport/remoteport any further.
++		 */
++		lpfc_nlp_put(ndlp);
++	} else {
++		spin_unlock_irq(&vport->phba->hbalock);
++	}
  
-+		/* If the mm is already defunct, don't handle faults. */
-+		if (!mmget_not_zero(svm->mm))
-+			goto bad_req;
-+
- 		down_read(&svm->mm->mmap_sem);
- 		vma = find_extend_vma(svm->mm, address);
- 		if (!vma || address < vma->vm_start)
+  rport_err:
+ 	return;
 -- 
 2.20.1
 
