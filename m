@@ -2,107 +2,88 @@ Return-Path: <SRS0=3CHW=6C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB606C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 18:06:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4BF6C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 18:08:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C581E221F7
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 18:06:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E42921D6C
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 18:08:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587233208;
-	bh=Tjiq+jjCeCCPuoO5rbKEnElv5WiWarZq5dC2b4IddC8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=IXzto8xWMHYCKNuwygVdlpluiAGEEIyHgCyaeefvk1SMkM2Ha0JNOG8gzgpGPD7XR
-	 szyJmQJAq4bvnng1zl5uQfZ81ETZ9tzRwVD98HxjDbKOyAHCKcJSgZhJbPJwyGKHxc
-	 kezzagzsHqhHne+NYXy6S31AarQQwFiGgeqip6vc=
+	s=default; t=1587233294;
+	bh=HVEqCMbQpoqk8fz723Ul9qh0H6nyLUtRiFTekCs/prM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=LTMNUh0tuHbcxp2uMUGNTrXz5NhGGnm47tS4tMB7iH9rrL/uohOHhqM7iEVqRK2fi
+	 PmlUvd7HRDmJY8U0sLUTjVhizHA5gGxNbvoI98nwTssr98DPqBgUaTDwsRBB6YjUUF
+	 NJlhJccnvNBTsUnVxjVbVlGq/XW61PI731HIY8lg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727819AbgDRSGs (ORCPT
+        id S1726892AbgDRSIN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 14:06:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45612 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725824AbgDRSGr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 14:06:47 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0A14721D6C;
-        Sat, 18 Apr 2020 18:06:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587233207;
-        bh=Tjiq+jjCeCCPuoO5rbKEnElv5WiWarZq5dC2b4IddC8=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=lJV322+FUZdtnAlnguxVmT0S4xQfbeh1BVUwjpRPvk+8DOmAKISrbTHC5+h3Q+bqe
-         kJ6AMqD55vIPfOWynMJqSySmMa6Kzl4hiTd2dhxQTBScJB66tjwQI5s2rxoTXywGcx
-         YT6sC/Mc0maExmWosbbFLFjRfRT5B7+5iwyy9nMk=
-Date:   Sat, 18 Apr 2020 19:06:41 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Guido =?UTF-8?B?R8O8bnRoZXI=?= <agx@sigxcpu.org>
-Cc:     Tomas Novotny <tomas@novotny.cz>, Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        "Angus Ainslie (Purism)" <angus@akkea.ca>,
-        Marco Felsch <m.felsch@pengutronix.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Nishant Malpani <nish.malpani25@gmail.com>
-Subject: Re: [PATCH v4 5/5] Documentation: ABI: document IIO
- in_proximity_nearlevel file
-Message-ID: <20200418190641.72df5e92@archlinux>
-In-Reply-To: <4d3d41e42721128916640d097cc4dbf7b19fb525.1586094535.git.agx@sigxcpu.org>
-References: <cover.1586094535.git.agx@sigxcpu.org>
-        <4d3d41e42721128916640d097cc4dbf7b19fb525.1586094535.git.agx@sigxcpu.org>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sat, 18 Apr 2020 14:08:13 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:34753 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725824AbgDRSIN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 14:08:13 -0400
+Received: by mail-ot1-f66.google.com with SMTP id 8so397977otj.1;
+        Sat, 18 Apr 2020 11:08:12 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=DLJngupcywgnMR82TqdZKZr1eEprvnTgR3v/FNMOKrg=;
+        b=UBBU0CC828Q3eu8kWV1YswfgWGodW5jIUPAnnDJLOJr2PmTB5jSzhjFwgKrqYkYprN
+         u6qdWU4ckumoV0NZ2DpSR2gHMQUJiRP9xkk3y9/rhPB03AwG8Zs+2x92z6FDAvFkgP5C
+         SoV1PETRpBsyusUuGTvxzBrukc8RkYvRTLEIT2kN3RDPIqVHnaM78C8vf7ZhICOoouJp
+         kIU2ByMGOswadL9npUnxxr+4A6C1iCp2tGpFNCXjlrBwtKyHc7y3NiXsZHiqTjMcgyGg
+         6wF+3aEX7wBCnU5ZHH9mntSGxtl21p6MurqVTiO08ExC5JvPggPTmpD3QgspzuH/GKnW
+         UgAQ==
+X-Gm-Message-State: AGi0Pua66YupCBf/e/8ahZqjgsYwg89DbHtdx1Xuag72YCsPlr4VvICx
+        DSiAX6vfq7evKQZXwfdHxYowxuCWNOWsA14SikY=
+X-Google-Smtp-Source: APiQypJglJno/ncjr7rJgMge6SotqwSZ0EY57A3iTHjuavimH3o9LJ4snUV77A2wQh3CwWu523P9Or+ovKvgrhH74PA=
+X-Received: by 2002:a9d:1d07:: with SMTP id m7mr3529283otm.167.1587233292593;
+ Sat, 18 Apr 2020 11:08:12 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+References: <5673945.BT02kTCndr@kreacher> <Pine.LNX.4.44L0.2004181356070.2069-100000@netrider.rowland.org>
+In-Reply-To: <Pine.LNX.4.44L0.2004181356070.2069-100000@netrider.rowland.org>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Sat, 18 Apr 2020 20:08:01 +0200
+Message-ID: <CAJZ5v0hAyLv2+xE_eMgmra5kccDLGY941inJbKZyWPStKXk2nQ@mail.gmail.com>
+Subject: Re: [PATCH v2 0/9] PM: sleep: core: Rearrange the handling of driver
+ power management flags
+To:     Alan Stern <stern@rowland.harvard.edu>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Hans De Goede <hdegoede@redhat.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun,  5 Apr 2020 15:50:32 +0200
-Guido G=C3=BCnther <agx@sigxcpu.org> wrote:
+On Sat, Apr 18, 2020 at 8:00 PM Alan Stern <stern@rowland.harvard.edu> wrote:
+>
+> On Sat, 18 Apr 2020, Rafael J. Wysocki wrote:
+>
+> > Hi,
+> >
+> > This is an update including some fixes and extra patches based on the
+> > continuation of the discussion [1].
+>
+> I haven't checked the updates in detail yet.  However, it seems that
+> dev_pm_skip_suspend() and dev_pm_skip_resume() should be EXPORTed,
+> since they are intended to be used by subsystems, which may be in
+> modules.
 
-> The vcnl4000 IIO driver introduced a new attribute
-> "in_proximity_nearlevel".  This adds it to the list of documented ABI
-> for sysfs-bus-iio.
->=20
-> Signed-off-by: Guido G=C3=BCnther <agx@sigxcpu.org>
+OK, so what about an extra patch to export them?
 
-Applied to the togreg branch of iio.git and pushed out as testing for the
-autobuilders to play with it.
-
-Thanks,
-
-Jonathan
-
-> ---
->  Documentation/ABI/testing/sysfs-bus-iio-proximity | 10 ++++++++++
->  1 file changed, 10 insertions(+)
->  create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-proximity
->=20
-> diff --git a/Documentation/ABI/testing/sysfs-bus-iio-proximity b/Document=
-ation/ABI/testing/sysfs-bus-iio-proximity
-> new file mode 100644
-> index 000000000000..2172f3bb9c64
-> --- /dev/null
-> +++ b/Documentation/ABI/testing/sysfs-bus-iio-proximity
-> @@ -0,0 +1,10 @@
-> +What:		/sys/bus/iio/devices/iio:deviceX/in_proximity_nearlevel
-> +Date:		March 2020
-> +KernelVersion:	5.7
-> +Contact:	linux-iio@vger.kernel.org
-> +Description:
-> +		Near level for proximity sensors. This is a single integer
-> +		value that tells user space when an object should be
-> +		considered close to the device. If the value read from the
-> +		sensor is above or equal to the value in this file an object
-> +		should typically be considered near.
-
+Currently there are no modular users of these functions.
