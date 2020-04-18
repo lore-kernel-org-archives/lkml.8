@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A99B7C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:09:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E72FC3A5A0
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:09:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 835FD22202
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:09:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F16E22202
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:09:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587218963;
-	bh=2t9JhdTexDKfy3vJF9n4wUfNR/wrU2njNHPwpTWhbTg=;
+	s=default; t=1587218966;
+	bh=ljguKWcrb/KvyvbAtOdOVUE5y9/pc510QajRM4oGwfY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yyvS7Jee0pbpfm7EWez+gVTC9bj5N7izfrWUZhUPNM5rI45PEIKOKXNLpzN+Alk3p
-	 wqyffZGEe7r+4QU256QnQ47JZenMCDh6Y2Uu878MCEnJpl7+/V7HncFKRJIumh+SnV
-	 pkj3094MKGSqsotBh4WPHuXR6U02xisnkmwa/C1w=
+	b=NKFxxzS7m9kxEKViYdVLx/eK9wRYILFSvXZcgerBj5hY/YUOnszEQ1GJuivN85qdh
+	 rrOHuPLJjxzfN5W0F1ksZE23YR+4h56v0YIVekOULTQpwF1aNRWP6iknR1Gay3+ibC
+	 sRnZtsV93x6mDCR7tadvdDx4ZRiBw5a5+tO/n4dg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726377AbgDROJW (ORCPT
+        id S1726414AbgDROJX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 10:09:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36634 "EHLO mail.kernel.org"
+        Sat, 18 Apr 2020 10:09:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36660 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726307AbgDROJT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 10:09:19 -0400
+        id S1726353AbgDROJW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 10:09:22 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6F83A21D82;
-        Sat, 18 Apr 2020 14:09:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D4C60221F4;
+        Sat, 18 Apr 2020 14:09:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587218959;
-        bh=2t9JhdTexDKfy3vJF9n4wUfNR/wrU2njNHPwpTWhbTg=;
+        s=default; t=1587218961;
+        bh=ljguKWcrb/KvyvbAtOdOVUE5y9/pc510QajRM4oGwfY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CFgUwt0Vs1PvBkv7hjeLt6r2p2RrCbjn66T4hmJcsHVmpZm9O3D1+rOA6dtWcLJDk
-         AdWUPd8EBbyttalG4kbwVHfLV0rc8B6HDBHOTo98tc8NoApLvHfAz5W/3wfTYY0Rda
-         hfH1YpfRP16OimJ8LTzA+QsVL9IBtt3jlwqTJSpM=
+        b=VKyib27qw46DYwg4BB+3x5fI/xjTL9dNhWBP6fo2sjFIVzS2PtkdlacmbCDvdoNCW
+         BUOdY9/MjCCpFXDQ06OH35DbZDSJTqWBA5TjY4towmFtsJH4V+eUFmpbUQrroynAx/
+         3lqqf/mshqZIL4AcaLSL8BvvCwdLfUt6oEWCW488=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Joerg Roedel <jroedel@suse.de>,
-        Sasha Levin <sashal@kernel.org>,
-        iommu@lists.linux-foundation.org
-Subject: [PATCH AUTOSEL 5.5 07/75] iommu/vt-d: Fix mm reference leak
-Date:   Sat, 18 Apr 2020 10:08:02 -0400
-Message-Id: <20200418140910.8280-7-sashal@kernel.org>
+Cc:     Dave Chinner <dchinner@redhat.com>,
+        Brian Foster <bfoster@redhat.com>,
+        Allison Collins <allison.henderson@oracle.com>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-xfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 09/75] xfs: correctly acount for reclaimable slabs
+Date:   Sat, 18 Apr 2020 10:08:04 -0400
+Message-Id: <20200418140910.8280-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200418140910.8280-1-sashal@kernel.org>
 References: <20200418140910.8280-1-sashal@kernel.org>
@@ -61,45 +61,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jacob Pan <jacob.jun.pan@linux.intel.com>
+From: Dave Chinner <dchinner@redhat.com>
 
-[ Upstream commit 902baf61adf6b187f0a6b789e70d788ea71ff5bc ]
+[ Upstream commit d59eadaea2b9945095d4d6d44367ebabd604395c ]
 
-Move canonical address check before mmget_not_zero() to avoid mm
-reference leak.
+The XFS inode item slab actually reclaimed by inode shrinker
+callbacks from the memory reclaim subsystem. These should be marked
+as reclaimable so the mm subsystem has the full picture of how much
+memory it can actually reclaim from the XFS slab caches.
 
-Fixes: 9d8c3af31607 ("iommu/vt-d: IOMMU Page Request needs to check if address is canonical.")
-Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-Acked-by: Lu Baolu <baolu.lu@linux.intel.com>
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Signed-off-by: Dave Chinner <dchinner@redhat.com>
+Reviewed-by: Brian Foster <bfoster@redhat.com>
+Reviewed-by: Allison Collins <allison.henderson@oracle.com>
+Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iommu/intel-svm.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ fs/xfs/xfs_super.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/iommu/intel-svm.c b/drivers/iommu/intel-svm.c
-index 5313d043a6cf2..1d3816cd65d57 100644
---- a/drivers/iommu/intel-svm.c
-+++ b/drivers/iommu/intel-svm.c
-@@ -583,14 +583,15 @@ static irqreturn_t prq_event_thread(int irq, void *d)
- 		 * any faults on kernel addresses. */
- 		if (!svm->mm)
- 			goto bad_req;
--		/* If the mm is already defunct, don't handle faults. */
--		if (!mmget_not_zero(svm->mm))
--			goto bad_req;
+diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
+index d9ae27ddf253b..6c8e3789e0768 100644
+--- a/fs/xfs/xfs_super.c
++++ b/fs/xfs/xfs_super.c
+@@ -1872,7 +1872,8 @@ xfs_init_zones(void)
  
- 		/* If address is not canonical, return invalid response */
- 		if (!is_canonical_address(address))
- 			goto bad_req;
+ 	xfs_ili_zone = kmem_cache_create("xfs_ili",
+ 					 sizeof(struct xfs_inode_log_item), 0,
+-					 SLAB_MEM_SPREAD, NULL);
++					 SLAB_RECLAIM_ACCOUNT | SLAB_MEM_SPREAD,
++					 NULL);
+ 	if (!xfs_ili_zone)
+ 		goto out_destroy_inode_zone;
  
-+		/* If the mm is already defunct, don't handle faults. */
-+		if (!mmget_not_zero(svm->mm))
-+			goto bad_req;
-+
- 		down_read(&svm->mm->mmap_sem);
- 		vma = find_extend_vma(svm->mm, address);
- 		if (!vma || address < vma->vm_start)
 -- 
 2.20.1
 
