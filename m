@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D75CC38A2F
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:42:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BE10C38A2F
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:42:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6BCBC22260
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:42:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3276822252
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:42:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587220932;
-	bh=sFS1aTN77s462QSqkmbpOiTld0tKgWA3KLsgWWCSkBY=;
+	s=default; t=1587220936;
+	bh=vfAHXFAy/Y/q0wkxF7wa7tNLX+mcFSUdnGqu55sY0aU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=X3+/uT4jTCnj+dCR1r5pdPhZgBkSMzWbvFP+AGxwYj/649vPZWOWRxNE4YwSMW0Di
-	 i0DJfZ3G1cYW5SCJi/Nqbyzuk/Lz104D34ydDG8yOySMLPs4+IkrOVhz2MtgmjTCKR
-	 9V3DN1mLwGvCPhnvKQ//VXRcT7OQGGnlMvbtlQn8=
+	b=eufYt1bmHoeVpeuzEXbqocG3nSVlYWVAQ5TYxPk+AdC20VjWiZExTCXQqs0cYFY8r
+	 QSGi3+3EqBtkNctbplMqLS2deRDvWW15ceINAfyaFSgw6jyI5jg/ubA0lKNFV+M2+W
+	 +U1lpNc5l02jJjYaXJhZXjh0OuZ/hTy2xyQVp5lM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728268AbgDROmL (ORCPT
+        id S1728285AbgDROmP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 10:42:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51862 "EHLO mail.kernel.org"
+        Sat, 18 Apr 2020 10:42:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52006 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728243AbgDROmF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 10:42:05 -0400
+        id S1728260AbgDROmK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 10:42:10 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 091DB2224E;
-        Sat, 18 Apr 2020 14:42:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AA30A21974;
+        Sat, 18 Apr 2020 14:42:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587220924;
-        bh=sFS1aTN77s462QSqkmbpOiTld0tKgWA3KLsgWWCSkBY=;
+        s=default; t=1587220929;
+        bh=vfAHXFAy/Y/q0wkxF7wa7tNLX+mcFSUdnGqu55sY0aU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XoTQu4g8L/frPBHYqQMU7/KrUjzxi6Xlex0z1n4pD3W7EGfp7qLZweBv3u6472oKI
-         /7Eg64v+Sku8FwNzQrniqd/jx8BCnyYt58vqyGPs8uq7F5maqrx5Ei4Q2REU56hIUO
-         yxgh/9fszm4ly7QNQfPqkvzoGa5SwhrSJjl/YnZA=
+        b=vusfOXdmo9YnisglNF7OfSpv+Ug3A9R0ZOI8kq6n1UGRNf4U2oPj1YMRyvaUe9nld
+         F+czt9aSwtYTl8Y7K24zJKkciNBZ13xwunljfXC4aBYZqSNWAGOvZa8bv50pwirg03
+         TroWXH6A/UVTQ/OPEx/EfZ4VMTBZtIqtbKBKz+Vc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Mathias Nyman <mathias.nyman@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 62/78] xhci: Wait until link state trainsits to U0 after setting USB_SS_PORT_LS_U0
-Date:   Sat, 18 Apr 2020 10:40:31 -0400
-Message-Id: <20200418144047.9013-62-sashal@kernel.org>
+Cc:     Aurelien Jarno <aurelien@aurel32.net>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 66/78] libbpf: Fix readelf output parsing on powerpc with recent binutils
+Date:   Sat, 18 Apr 2020 10:40:35 -0400
+Message-Id: <20200418144047.9013-66-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200418144047.9013-1-sashal@kernel.org>
 References: <20200418144047.9013-1-sashal@kernel.org>
@@ -60,137 +61,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+From: Aurelien Jarno <aurelien@aurel32.net>
 
-[ Upstream commit 0200b9f790b0fc9e9a42f685f5ad54b23fe959f4 ]
+[ Upstream commit 3464afdf11f9a1e031e7858a05351ceca1792fea ]
 
-Like U3 case, xHCI spec doesn't specify the upper bound of U0 transition
-time. The 20ms is not enough for some devices.
+On powerpc with recent versions of binutils, readelf outputs an extra
+field when dumping the symbols of an object file. For example:
 
-Intead of polling PLS or PLC, we can facilitate the port change event to
-know that the link transits to U0 is completed.
+    35: 0000000000000838    96 FUNC    LOCAL  DEFAULT [<localentry>: 8]     1 btf_is_struct
 
-While at it, also separate U0 and U3 case to make the code cleaner.
+The extra "[<localentry>: 8]" prevents the GLOBAL_SYM_COUNT variable to
+be computed correctly and causes the check_abi target to fail.
 
-[variable rename to u3exit, and skip completion for usb2 ports -Mathias ]
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
-Link: https://lore.kernel.org/r/20200312144517.1593-8-mathias.nyman@linux.intel.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fix that by looking for the symbol name in the last field instead of the
+8th one. This way it should also cope with future extra fields.
+
+Signed-off-by: Aurelien Jarno <aurelien@aurel32.net>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Tested-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/bpf/20191201195728.4161537-1-aurelien@aurel32.net
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/host/xhci-hub.c  | 44 +++++++++++++++++++++++++-----------
- drivers/usb/host/xhci-mem.c  |  1 +
- drivers/usb/host/xhci-ring.c |  1 +
- drivers/usb/host/xhci.h      |  1 +
- 4 files changed, 34 insertions(+), 13 deletions(-)
+ tools/lib/bpf/Makefile | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/usb/host/xhci-hub.c b/drivers/usb/host/xhci-hub.c
-index 712cd44f05ace..02f52d4f74df8 100644
---- a/drivers/usb/host/xhci-hub.c
-+++ b/drivers/usb/host/xhci-hub.c
-@@ -1306,7 +1306,33 @@ int xhci_hub_control(struct usb_hcd *hcd, u16 typeReq, u16 wValue,
- 					 wIndex, link_state);
- 				goto error;
- 			}
-+
-+			if (link_state == USB_SS_PORT_LS_U0) {
-+				if ((temp & PORT_PLS_MASK) == XDEV_U0)
-+					break;
-+
-+				if (!((temp & PORT_PLS_MASK) == XDEV_U1 ||
-+				    (temp & PORT_PLS_MASK) == XDEV_U2 ||
-+				    (temp & PORT_PLS_MASK) == XDEV_U3)) {
-+					xhci_warn(xhci, "Can only set port %d to U0 from U state\n",
-+							wIndex);
-+					goto error;
-+				}
-+				reinit_completion(&bus_state->u3exit_done[wIndex]);
-+				xhci_set_link_state(xhci, ports[wIndex],
-+						    USB_SS_PORT_LS_U0);
-+				spin_unlock_irqrestore(&xhci->lock, flags);
-+				if (!wait_for_completion_timeout(&bus_state->u3exit_done[wIndex],
-+								 msecs_to_jiffies(100)))
-+					xhci_dbg(xhci, "missing U0 port change event for port %d\n",
-+						 wIndex);
-+				spin_lock_irqsave(&xhci->lock, flags);
-+				temp = readl(ports[wIndex]->addr);
-+				break;
-+			}
-+
- 			if (link_state == USB_SS_PORT_LS_U3) {
-+				int retries = 16;
- 				slot_id = xhci_find_slot_id_by_port(hcd, xhci,
- 						wIndex + 1);
- 				if (slot_id) {
-@@ -1317,26 +1343,18 @@ int xhci_hub_control(struct usb_hcd *hcd, u16 typeReq, u16 wValue,
- 					xhci_stop_device(xhci, slot_id, 1);
- 					spin_lock_irqsave(&xhci->lock, flags);
- 				}
--			}
--
--			xhci_set_link_state(xhci, ports[wIndex], link_state);
--
--			spin_unlock_irqrestore(&xhci->lock, flags);
--			if (link_state == USB_SS_PORT_LS_U3) {
--				int retries = 16;
--
-+				xhci_set_link_state(xhci, ports[wIndex], USB_SS_PORT_LS_U3);
-+				spin_unlock_irqrestore(&xhci->lock, flags);
- 				while (retries--) {
- 					usleep_range(4000, 8000);
- 					temp = readl(ports[wIndex]->addr);
- 					if ((temp & PORT_PLS_MASK) == XDEV_U3)
- 						break;
- 				}
--			}
--			spin_lock_irqsave(&xhci->lock, flags);
--
--			temp = readl(ports[wIndex]->addr);
--			if (link_state == USB_SS_PORT_LS_U3)
-+				spin_lock_irqsave(&xhci->lock, flags);
-+				temp = readl(ports[wIndex]->addr);
- 				bus_state->suspended_ports |= 1 << wIndex;
-+			}
- 			break;
- 		case USB_PORT_FEAT_POWER:
- 			/*
-diff --git a/drivers/usb/host/xhci-mem.c b/drivers/usb/host/xhci-mem.c
-index 884c601bfa15f..9764122c9cdf2 100644
---- a/drivers/usb/host/xhci-mem.c
-+++ b/drivers/usb/host/xhci-mem.c
-@@ -2552,6 +2552,7 @@ int xhci_mem_init(struct xhci_hcd *xhci, gfp_t flags)
- 		xhci->usb3_rhub.bus_state.resume_done[i] = 0;
- 		/* Only the USB 2.0 completions will ever be used. */
- 		init_completion(&xhci->usb2_rhub.bus_state.rexit_done[i]);
-+		init_completion(&xhci->usb3_rhub.bus_state.u3exit_done[i]);
- 	}
+diff --git a/tools/lib/bpf/Makefile b/tools/lib/bpf/Makefile
+index 33e2638ef7f0d..122321d549227 100644
+--- a/tools/lib/bpf/Makefile
++++ b/tools/lib/bpf/Makefile
+@@ -145,7 +145,7 @@ PC_FILE		:= $(addprefix $(OUTPUT),$(PC_FILE))
  
- 	if (scratchpad_alloc(xhci, flags))
-diff --git a/drivers/usb/host/xhci-ring.c b/drivers/usb/host/xhci-ring.c
-index f7a190fb2353d..a952d99f0456b 100644
---- a/drivers/usb/host/xhci-ring.c
-+++ b/drivers/usb/host/xhci-ring.c
-@@ -1673,6 +1673,7 @@ static void handle_port_status(struct xhci_hcd *xhci,
- 	     (portsc & PORT_PLS_MASK) == XDEV_U1 ||
- 	     (portsc & PORT_PLS_MASK) == XDEV_U2)) {
- 		xhci_dbg(xhci, "resume SS port %d finished\n", port_id);
-+		complete(&bus_state->u3exit_done[hcd_portnum]);
- 		/* We've just brought the device into U0/1/2 through either the
- 		 * Resume state after a device remote wakeup, or through the
- 		 * U3Exit state after a host-initiated resume.  If it's a device
-diff --git a/drivers/usb/host/xhci.h b/drivers/usb/host/xhci.h
-index 98b98a0cd2a8b..3ad4f80960d08 100644
---- a/drivers/usb/host/xhci.h
-+++ b/drivers/usb/host/xhci.h
-@@ -1694,6 +1694,7 @@ struct xhci_bus_state {
- 	/* Which ports are waiting on RExit to U0 transition. */
- 	unsigned long		rexit_ports;
- 	struct completion	rexit_done[USB_MAXCHILDREN];
-+	struct completion	u3exit_done[USB_MAXCHILDREN];
- };
- 
- 
+ GLOBAL_SYM_COUNT = $(shell readelf -s --wide $(BPF_IN_SHARED) | \
+ 			   cut -d "@" -f1 | sed 's/_v[0-9]_[0-9]_[0-9].*//' | \
+-			   awk '/GLOBAL/ && /DEFAULT/ && !/UND/ {print $$8}' | \
++			   awk '/GLOBAL/ && /DEFAULT/ && !/UND/ {print $$NF}' | \
+ 			   sort -u | wc -l)
+ VERSIONED_SYM_COUNT = $(shell readelf -s --wide $(OUTPUT)libbpf.so | \
+ 			      grep -Eo '[^ ]+@LIBBPF_' | cut -d@ -f1 | sort -u | wc -l)
+@@ -217,7 +217,7 @@ check_abi: $(OUTPUT)libbpf.so
+ 		     "versioned in $(VERSION_SCRIPT)." >&2;		 \
+ 		readelf -s --wide $(BPF_IN_SHARED) |			 \
+ 		    cut -d "@" -f1 | sed 's/_v[0-9]_[0-9]_[0-9].*//' |	 \
+-		    awk '/GLOBAL/ && /DEFAULT/ && !/UND/ {print $$8}'|   \
++		    awk '/GLOBAL/ && /DEFAULT/ && !/UND/ {print $$NF}'|  \
+ 		    sort -u > $(OUTPUT)libbpf_global_syms.tmp;		 \
+ 		readelf -s --wide $(OUTPUT)libbpf.so |			 \
+ 		    grep -Eo '[^ ]+@LIBBPF_' | cut -d@ -f1 |		 \
 -- 
 2.20.1
 
