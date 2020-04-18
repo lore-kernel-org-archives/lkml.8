@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6337C38A30
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 13:53:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BC12C38A2F
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 13:53:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 86462214AF
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 13:53:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24110214AF
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 13:53:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587217992;
-	bh=eKkMLoWmmxBEA0EEWrqjo0000MnuLIWuCTCdkeZCa5U=;
+	s=default; t=1587217995;
+	bh=9sDGtt4AzKAVwBWf89jS6ybRmtp4c5IDIplgFw7is60=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VpeQ4syKEITDyhD67HBz2X3yL0ECZmS3P64V4VYaaIKwkhN8t5ixg0hLfku46thUr
-	 2E0nf88uFNZd9AEs2hsSpbu9QNp4INIjEn/bSG20/709B+NRHEzLcaOs9ZnGrrHF8X
-	 kNkcueWjPyHbuswUUzB3/uofvdnGv4mRO92XWqtc=
+	b=Qy6P9wAbc6sRfWzyBpQF69OzzX9twNnsQvpeSep+BwWcGw/XWZ35A7U6DAKiUrU1f
+	 tTeQtywOlreIjDCaSrH5aQN6S8WULbmhPwhVYH0bqV0+T0e/LTCFq15P58JNG66SGQ
+	 xnZ0Y+iigUnVVvLff1InH3XnBVtG8AuFgBVZ3JLs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728012AbgDRNxL (ORCPT
+        id S1727988AbgDRNxH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 09:53:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54644 "EHLO mail.kernel.org"
+        Sat, 18 Apr 2020 09:53:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54754 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726373AbgDRNs1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 09:48:27 -0400
+        id S1726405AbgDRNsb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 09:48:31 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DB11F221F4;
-        Sat, 18 Apr 2020 13:48:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B015E2220A;
+        Sat, 18 Apr 2020 13:48:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587217706;
-        bh=eKkMLoWmmxBEA0EEWrqjo0000MnuLIWuCTCdkeZCa5U=;
+        s=default; t=1587217711;
+        bh=9sDGtt4AzKAVwBWf89jS6ybRmtp4c5IDIplgFw7is60=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=F9ofWDHi2kxOtbpMQbSV98Rn322Jp3OOQaezRkNOpD0n2bV0eyeIIp2G8wdIZiGif
-         omCxhHC9GzEGmYDhIbs8W1f8GQD7qm5gaUrrtyv245n8u7MGYReBZqByMm88bcvU/c
-         qFdcst746MaDMDi9COQ1U3C0yrDYqH1aPMJPgdt4=
+        b=td6gFUZV2tRq8Np7gC9LRJPjVEdkCKHmoxneKRDvkfwHzTL8KpsUhtwbAuFuptnu1
+         2Zx6jq4TLigN/iviWhwwiOijazKZgHsKc3Mkdr7AlbUEE33y8nMfrIETJriju8YNUt
+         SJof1PXrEUw2Adfdso9SVRd8jM6bd5Vl1xneIUio=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dave Chinner <dchinner@redhat.com>,
-        Brian Foster <bfoster@redhat.com>,
-        Allison Collins <allison.henderson@oracle.com>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-xfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 09/73] xfs: correctly acount for reclaimable slabs
-Date:   Sat, 18 Apr 2020 09:47:11 -0400
-Message-Id: <20200418134815.6519-9-sashal@kernel.org>
+Cc:     Qiujun Huang <hqjagain@gmail.com>,
+        Jeff Layton <jlayton@kernel.org>,
+        Ilya Dryomov <idryomov@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, ceph-devel@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 13/73] ceph: return ceph_mdsc_do_request() errors from __get_parent()
+Date:   Sat, 18 Apr 2020 09:47:15 -0400
+Message-Id: <20200418134815.6519-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200418134815.6519-1-sashal@kernel.org>
 References: <20200418134815.6519-1-sashal@kernel.org>
@@ -61,39 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dave Chinner <dchinner@redhat.com>
+From: Qiujun Huang <hqjagain@gmail.com>
 
-[ Upstream commit d59eadaea2b9945095d4d6d44367ebabd604395c ]
+[ Upstream commit c6d50296032f0b97473eb2e274dc7cc5d0173847 ]
 
-The XFS inode item slab actually reclaimed by inode shrinker
-callbacks from the memory reclaim subsystem. These should be marked
-as reclaimable so the mm subsystem has the full picture of how much
-memory it can actually reclaim from the XFS slab caches.
+Return the error returned by ceph_mdsc_do_request(). Otherwise,
+r_target_inode ends up being NULL this ends up returning ENOENT
+regardless of the error.
 
-Signed-off-by: Dave Chinner <dchinner@redhat.com>
-Reviewed-by: Brian Foster <bfoster@redhat.com>
-Reviewed-by: Allison Collins <allison.henderson@oracle.com>
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
+Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/xfs/xfs_super.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ fs/ceph/export.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
-index 2094386af8aca..68fea439d9743 100644
---- a/fs/xfs/xfs_super.c
-+++ b/fs/xfs/xfs_super.c
-@@ -1861,7 +1861,8 @@ xfs_init_zones(void)
+diff --git a/fs/ceph/export.c b/fs/ceph/export.c
+index b6bfa94332c30..79dc06881e78e 100644
+--- a/fs/ceph/export.c
++++ b/fs/ceph/export.c
+@@ -315,6 +315,11 @@ static struct dentry *__get_parent(struct super_block *sb,
  
- 	xfs_ili_zone = kmem_cache_create("xfs_ili",
- 					 sizeof(struct xfs_inode_log_item), 0,
--					 SLAB_MEM_SPREAD, NULL);
-+					 SLAB_RECLAIM_ACCOUNT | SLAB_MEM_SPREAD,
-+					 NULL);
- 	if (!xfs_ili_zone)
- 		goto out_destroy_inode_zone;
- 
+ 	req->r_num_caps = 1;
+ 	err = ceph_mdsc_do_request(mdsc, NULL, req);
++	if (err) {
++		ceph_mdsc_put_request(req);
++		return ERR_PTR(err);
++	}
++
+ 	inode = req->r_target_inode;
+ 	if (inode)
+ 		ihold(inode);
 -- 
 2.20.1
 
