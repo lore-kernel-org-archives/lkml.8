@@ -2,75 +2,128 @@ Return-Path: <SRS0=3CHW=6C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33653C2D0EF
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 09:45:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19EF0C2D0EF
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 09:46:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0E3DD214D8
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 09:45:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E76EF214D8
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 09:46:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YtK4TUya"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726025AbgDRJo7 (ORCPT
+        id S1726048AbgDRJqA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 05:44:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43952 "EHLO
+        Sat, 18 Apr 2020 05:46:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44110 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725887AbgDRJo7 (ORCPT
+        by vger.kernel.org with ESMTP id S1725869AbgDRJp7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 05:44:59 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C16C2C061A0C
-        for <linux-kernel@vger.kernel.org>; Sat, 18 Apr 2020 02:44:58 -0700 (PDT)
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jPk1w-0006ZA-G8; Sat, 18 Apr 2020 11:44:56 +0200
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id EE06E101304; Sat, 18 Apr 2020 11:44:55 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Marc Dionne <marc.c.dionne@gmail.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        x86@kernel.org
-Subject: Re: FreeNAS VM disk access errors, bisected to commit 6f1a4891a592
-In-Reply-To: <CAB9dFdvJE0LhQsxdUTKmOxp_q1xF1Bpe9E-dNp1Pxg3T0B1xPQ@mail.gmail.com>
-References: <CAB9dFdtBqrcmKcV=zxPyV5uNB7WeKOqqC4k5KtY+9vxS9ooKoA@mail.gmail.com> <87d085zwy9.fsf@nanos.tec.linutronix.de> <CAB9dFdvJE0LhQsxdUTKmOxp_q1xF1Bpe9E-dNp1Pxg3T0B1xPQ@mail.gmail.com>
-Date:   Sat, 18 Apr 2020 11:44:55 +0200
-Message-ID: <87sgh1xh48.fsf@nanos.tec.linutronix.de>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+        Sat, 18 Apr 2020 05:45:59 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A08EC061A0C;
+        Sat, 18 Apr 2020 02:45:59 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id y24so5463595wma.4;
+        Sat, 18 Apr 2020 02:45:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=0UEuFIPjoNbxDYPu32NzT8SOSNkovRtH6W5cOCdsS90=;
+        b=YtK4TUya4m/vtt85dkcu1lvnVB2s3OsUYcP6cX+GWKsuw2jUIBkPqolREhwLQ4za2K
+         rKioVN1zwUIT0dvmYhXY92Qcetc3U96S38I75jT0y9Re/ljjqMOev6er9P/uFwUsQ3t3
+         w47PTc0tZhT4GLFZJfIIZU23OhR3fvEWogygDBvQfFCv5gVWbbE/3Z9fC+RfvB+elGXO
+         MDpzX8ZP8vf3/cwpwdkbRL2FQ2AgQoHln3jm057pCkbqs+ojnOdwpnzk8EOKE9pwq+wb
+         SeP4+5DjeUk4x4c7tpXQq9oxmK2uvQhXiQVWb69H2uDvUrlQiayq1Y7GW5jCNZrdwcqz
+         AiMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=0UEuFIPjoNbxDYPu32NzT8SOSNkovRtH6W5cOCdsS90=;
+        b=CcZZmI4bqrUXVt0tCJCUOa/yjR8Zm6IxM6BOzPkgePyGjKi7VFA7FwR29KucTUjRDk
+         kiH2+n0U1qHqYfVXQCRjVeY7L9EX8hKcL7064ADgHJLboL4yowZspUbdUjGyyz7CE4Du
+         HpFaU1jFRUCovPuZfl12L7ZfASMb/toM48kOWg/GH1ysyiqrYGM7Q+7e1YeAfjOF22lD
+         dPJuy0GWP9a2gj0vCxeTKOR7tBfMruSykS2Sj50p6ei30gy561InXvmuceLrCVHdnz0W
+         ScgOHskypWUAElxnsINuAOukJQBB4praaF85PqJ6ODTvUGLcdDwGrt1Y24Mya3f8pjxf
+         52Pw==
+X-Gm-Message-State: AGi0Pua8LJ7sHqYk3H0WWELn4I0kdw6ISbLMMpjr8lfKZrY3Zo1ji56d
+        d6BD4E72sAvjgNtcVFKGh6I=
+X-Google-Smtp-Source: APiQypIyMO+4/quEJujpMCvgvclxIYY0si540fnIpBwrnWIVcZg7e3h0SnEd7u0Z+EkdgrrFIVzQhw==
+X-Received: by 2002:a05:600c:21d6:: with SMTP id x22mr7837208wmj.95.1587203157912;
+        Sat, 18 Apr 2020 02:45:57 -0700 (PDT)
+Received: from felia.fritz.box ([2001:16b8:2d7a:4700:391d:588b:ee8c:e294])
+        by smtp.gmail.com with ESMTPSA id z18sm28917997wrw.41.2020.04.18.02.45.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 18 Apr 2020 02:45:57 -0700 (PDT)
+From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Cc:     linux-media@vger.kernel.org, Joe Perches <joe@perches.com>,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Subject: [PATCH] MAINTAINERS: adjust entries to moving CEC USB drivers
+Date:   Sat, 18 Apr 2020 11:45:46 +0200
+Message-Id: <20200418094546.6742-1-lukas.bulwahn@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Marc,
+Commit a81068181aad ("media: move CEC USB drivers to a separate directory")
+moved drivers/media/usb/{pulse8,rainshadow}-cec to
+drivers/media/cec/usb/{rainshadow,pulse8}, but did not adjust the entries
+in MAINTAINERS.
 
-Marc Dionne <marc.c.dionne@gmail.com> writes:
-> On Fri, Apr 17, 2020 at 5:19 PM Thomas Gleixner <tglx@linutronix.de> wrote:
->> That makes me assume that the staged approach of changing affinity for
->> this non-maskable MSI mess makes your particular hypervisor unhappy.
->>
->> Are there any messages like this:
->>
->>  "do_IRQ: 0.83 No irq handler for vector"
->
-> I haven't seen those although I only have a VNC console that scrolls
-> by rather fast.
-> I did see a report from someone running Ubuntu 18.04 which had this
-> after the initial errors:
->
->   do_IRQ: 2.35 No irq handler for vector
->   ata1.00: revalidation failed (error=-5)
+Since then, ./scripts/get_maintainer.pl --self-test=patterns complains:
 
-I expected that and it points to an issue on the HV side either in
-affinity management or in the local APIC emulation. 
+  warning: no file matches F: drivers/media/usb/pulse8-cec/*
+  warning: no file matches F: drivers/media/usb/rainshadow-cec/*
 
-Thanks,
+Update the MAINTAINERS entries to the new file locations.
 
-        tglx
+Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+---
+Hans, please ack.
+Mauro, please pick this non-urgent minor clean-up patch on top of the
+CEC USB driver moves.
+
+applies cleanly on next-20200417
+
+This is the 'minimal' patch to address the warning.
+
+Alternatively, we could simply merge the two entries into one entry
+CEC USB (RAINSHADOW/PULSE8) DRIVERS.
+
+
+ MAINTAINERS | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index e965e5467a4d..3083282134de 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -13736,7 +13736,7 @@ L:	linux-media@vger.kernel.org
+ S:	Maintained
+ T:	git git://linuxtv.org/media_tree.git
+ F:	Documentation/admin-guide/media/pulse8-cec.rst
+-F:	drivers/media/usb/pulse8-cec/*
++F:	drivers/media/cec/usb/pulse8/
+ 
+ PVRUSB2 VIDEO4LINUX DRIVER
+ M:	Mike Isely <isely@pobox.com>
+@@ -14152,7 +14152,7 @@ M:	Hans Verkuil <hverkuil@xs4all.nl>
+ L:	linux-media@vger.kernel.org
+ S:	Maintained
+ T:	git git://linuxtv.org/media_tree.git
+-F:	drivers/media/usb/rainshadow-cec/*
++F:	drivers/media/cec/usb/rainshadow/
+ 
+ RALINK MIPS ARCHITECTURE
+ M:	John Crispin <john@phrozen.org>
+-- 
+2.17.1
+
