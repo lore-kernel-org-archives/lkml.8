@@ -2,126 +2,129 @@ Return-Path: <SRS0=3CHW=6C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC2E6C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 19:49:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BA90C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 19:52:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A6F6C21BE5
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 19:49:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="naDBULIb"
+	by mail.kernel.org (Postfix) with ESMTP id 85DE922209
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 19:52:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728212AbgDRTtl (ORCPT
+        id S1728167AbgDRTwF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 15:49:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51662 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727927AbgDRTtk (ORCPT
+        Sat, 18 Apr 2020 15:52:05 -0400
+Received: from mail-io1-f69.google.com ([209.85.166.69]:35204 "EHLO
+        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727951AbgDRTwE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 15:49:40 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6274AC061A0C;
-        Sat, 18 Apr 2020 12:49:40 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id x3so2881405pfp.7;
-        Sat, 18 Apr 2020 12:49:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id;
-        bh=Y/SzlNPnbUm7h0G2Yfc4g6XizOL6O0F1JAvmhHKZVeM=;
-        b=naDBULIbe3M5HUGt3xmozZ71nP1DE0go78SIXXjh0Vgli8hsNBtuLvKCTMJzDBC1PU
-         5VseFyLEzap45gv9EjhrZsDZIprgs7CylPVus1KQuXdRufjAFdOBiE9WXbr0eTwEOtfM
-         DNRhBMKgvURiv1xQPq4WxIrgenU+CExLbmGHgl7hmtoGhZ5IghnDHBTCIeuBp26MIqYK
-         LdZ9AfFOVpEg0VEKqONCpnUuB55Xzp5qdnqkukAyr56gPj9oNHgUopIRVbHpHu2iAq0d
-         gVUs7z1M2pInHcLNm44u8+4vL2kkxxtrlxvk9PAsYU2JiKN3qq+aStC0FOihV0WNcFjW
-         Gn5g==
+        Sat, 18 Apr 2020 15:52:04 -0400
+Received: by mail-io1-f69.google.com with SMTP id s26so6295237ioj.2
+        for <linux-kernel@vger.kernel.org>; Sat, 18 Apr 2020 12:52:03 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
-        bh=Y/SzlNPnbUm7h0G2Yfc4g6XizOL6O0F1JAvmhHKZVeM=;
-        b=r3gmMfalrY8/tpLIXtAIOpGZn1d+w8s8qczJKzgA75pjDmU5NL/GsehemLsZEa+NpK
-         T42+HghcHi6wriUku6P546K1FP1FR4VOWw0PPRgzz7M8EAjfCSJVDTgM5fas7MbUav9p
-         T2OXVfxQlAQ1VzkRnHRxyDn/Z5XCb2T+6j7vius+hM2YfYV/VVVAsnsX2kSorRj47sSr
-         yrrp0tIQYcGHmEmlUAZJu/fK+eYjHF80ztWCPXH4opGIhUps5BmalsdqlDNwmNrx1COv
-         pq52I7gjIUcQgdwfNMczkxJlbTG5ztkHMCHEIId+f//IzTemVy1o7Y8dIsn24T4CJ1m5
-         WjNw==
-X-Gm-Message-State: AGi0Pub+IF46r/NnUc185iH7biNLT0h+HV/c3S4ouYFsW9mgkCg6Ed6c
-        Eum7aD5GYabWTIqLe4H6iKvgAnSY
-X-Google-Smtp-Source: APiQypJcUt0Zv6YK1+BJROfQVMlRousdmqPvjcMziFa4YR5PMHcqEyEW6FLfdhjorsj2wH9Cam3D9A==
-X-Received: by 2002:aa7:864e:: with SMTP id a14mr9593864pfo.67.1587239379708;
-        Sat, 18 Apr 2020 12:49:39 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id y8sm9210745pja.26.2020.04.18.12.49.38
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 18 Apr 2020 12:49:38 -0700 (PDT)
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [GIT PULL] hwmon fixes for v5.7-rc2
-Date:   Sat, 18 Apr 2020 12:49:37 -0700
-Message-Id: <20200418194937.5589-1-linux@roeck-us.net>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=ProVAMl309G59qhkJMXmyS5J+8UD+08yaC3s25cSjaA=;
+        b=A9eBMbrgh7PSzfox4gSgayZvkX/epn9GE+WXolck5zRnR+AU6UPPHDtQ+HdGKURge3
+         kBEisYV33oBF5+7+h8yPGB4m9Q7FL88nUG2a2bC6d3aBgAlpoJhYfpmHDsynn5lGWhAA
+         GBa+J5466lcY0mnwXW7q0zzNEPqqAW6BEJLN/an4iTpJhNXZ5uO+wh9BaaF+mRrPLFLg
+         yy9u0liGl7eIBCAmlqoeQX6Q1b4vm/Byf6dBHFFPXbExvX3PEUMy88JSTLiKQkVVAhIP
+         STw9tHL7jGgDD009SeweesndxrligBLj8/2aSSpUkrd4Azpu1rAuYoKZg7PK7wK2Emoh
+         U38w==
+X-Gm-Message-State: AGi0PuYvCpi9X6VSndW05P2dCpsrQ7LZRyzOOAMhGb0XuxsgeGyLnFNk
+        v1PRevvHIM4SuFRGCs/e6AYeuBeNTzhXvnwqO/3+lOwIu5WF
+X-Google-Smtp-Source: APiQypIU4FMsUnj2gDoJUQ6nmrUZTSsET23b6mk2As9QAEz4lSJG0e+/u5CRnkfl6tNHtK5xksGQ4X4tBBL0i3+4p/asCplORPcQ
+MIME-Version: 1.0
+X-Received: by 2002:a5d:96ca:: with SMTP id r10mr9035169iol.19.1587239523505;
+ Sat, 18 Apr 2020 12:52:03 -0700 (PDT)
+Date:   Sat, 18 Apr 2020 12:52:03 -0700
+In-Reply-To: <Pine.LNX.4.44L0.2004181530500.8036-100000@netrider.rowland.org>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000f8e27205a395ff6e@google.com>
+Subject: Re: KASAN: use-after-free Read in usbhid_close (3)
+From:   syzbot <syzbot+7bf5a7b0f0a1f9446f4c@syzkaller.appspotmail.com>
+To:     andreyknvl@google.com, gregkh@linuxfoundation.org,
+        ingrassia@epigenesys.com, linux-kernel@vger.kernel.org,
+        linux-usb@vger.kernel.org, stern@rowland.harvard.edu,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+Hello,
 
-Please pull hwmon fixes for Linux v5.7-rc2 from signed tag:
+syzbot has tested the proposed patch but the reproducer still triggered crash:
+WARNING in usbhid_stop
 
-    git://git.kernel.org/pub/scm/linux/kernel/git/groeck/linux-staging.git hwmon-for-v5.7-rc2
+usb 6-1: USB disconnect, device number 2
+usbhid 6-1:0.0: Stop: 0 0 0
+------------[ cut here ]------------
+usbhid 6-1:0.0: Stop while open = 1
+WARNING: CPU: 1 PID: 17 at drivers/hid/usbhid/hid-core.c:1205 usbhid_stop.cold+0x1c7/0x5a6 drivers/hid/usbhid/hid-core.c:1205
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 1 PID: 17 Comm: kworker/1:0 Not tainted 5.6.0-rc7-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Workqueue: usb_hub_wq hub_event
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0xef/0x16e lib/dump_stack.c:118
+ panic+0x2aa/0x6e1 kernel/panic.c:221
+ __warn.cold+0x2f/0x30 kernel/panic.c:582
+ report_bug+0x27b/0x2f0 lib/bug.c:195
+ fixup_bug arch/x86/kernel/traps.c:174 [inline]
+ fixup_bug arch/x86/kernel/traps.c:169 [inline]
+ do_error_trap+0x12b/0x1e0 arch/x86/kernel/traps.c:267
+ do_invalid_op+0x32/0x40 arch/x86/kernel/traps.c:286
+ invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
+RIP: 0010:usbhid_stop.cold+0x1c7/0x5a6 drivers/hid/usbhid/hid-core.c:1205
+Code: 48 89 7c 24 08 e8 9f 5e bd fc 48 8b 7c 24 08 e8 c5 2e f7 fd 48 8b 14 24 44 89 f9 48 c7 c7 20 4b 84 86 48 89 c6 e8 47 ef 91 fc <0f> 0b e8 78 5e bd fc 48 8d bb ac 1e 00 00 b8 ff ff 37 00 48 89 fa
+RSP: 0018:ffff8881da267640 EFLAGS: 00010282
+RAX: 0000000000000000 RBX: ffff8881cd788000 RCX: 0000000000000000
+RDX: 0000000000000000 RSI: ffffffff812974dd RDI: ffffed103b44ceba
+RBP: ffff8881cd22c000 R08: ffff8881da24b100 R09: ffffed103b66439f
+R10: ffffed103b66439e R11: ffff8881db321cf3 R12: ffff8881cd789fd8
+R13: ffff8881cd22c008 R14: ffff8881d6c41000 R15: 0000000000000001
+ wacom_remove+0x88/0x3b0 drivers/hid/wacom_sys.c:2773
+ hid_device_remove+0xed/0x240 drivers/hid/hid-core.c:2296
+ __device_release_driver drivers/base/dd.c:1135 [inline]
+ device_release_driver_internal+0x231/0x500 drivers/base/dd.c:1168
+ bus_remove_device+0x2eb/0x5a0 drivers/base/bus.c:533
+ device_del+0x481/0xd30 drivers/base/core.c:2677
+ hid_remove_device drivers/hid/hid-core.c:2467 [inline]
+ hid_destroy_device+0xe1/0x150 drivers/hid/hid-core.c:2486
+ usbhid_disconnect+0x9f/0xe0 drivers/hid/usbhid/hid-core.c:1420
+ usb_unbind_interface+0x1bd/0x8a0 drivers/usb/core/driver.c:436
+ __device_release_driver drivers/base/dd.c:1137 [inline]
+ device_release_driver_internal+0x42f/0x500 drivers/base/dd.c:1168
+ bus_remove_device+0x2eb/0x5a0 drivers/base/bus.c:533
+ device_del+0x481/0xd30 drivers/base/core.c:2677
+ usb_disable_device+0x23d/0x790 drivers/usb/core/message.c:1238
+ usb_disconnect+0x293/0x900 drivers/usb/core/hub.c:2211
+ hub_port_connect drivers/usb/core/hub.c:5046 [inline]
+ hub_port_connect_change drivers/usb/core/hub.c:5335 [inline]
+ port_event drivers/usb/core/hub.c:5481 [inline]
+ hub_event+0x1a1d/0x4300 drivers/usb/core/hub.c:5563
+ process_one_work+0x94b/0x1620 kernel/workqueue.c:2266
+ worker_thread+0x96/0xe20 kernel/workqueue.c:2412
+ kthread+0x318/0x420 kernel/kthread.c:255
+ ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+Kernel Offset: disabled
+Rebooting in 86400 seconds..
 
-Thanks,
-Guenter
-------
 
-The following changes since commit 8f3d9f354286745c751374f5f1fcafee6b3f3136:
+Tested on:
 
-  Linux 5.7-rc1 (2020-04-12 12:35:55 -0700)
+commit:         0fa84af8 Merge tag 'usb-serial-5.7-rc1' of https://git.ker..
+git tree:       https://github.com/google/kasan.git
+console output: https://syzkaller.appspot.com/x/log.txt?x=165078f7e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=6b9c154b0c23aecf
+dashboard link: https://syzkaller.appspot.com/bug?extid=7bf5a7b0f0a1f9446f4c
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=15cef627e00000
 
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/groeck/linux-staging.git tags/hwmon-for-v5.7-rc2
-
-for you to fetch changes up to c843b382e61b5f28a3d917712c69a344f632387c:
-
-  hwmon: (jc42) Fix name to have no illegal characters (2020-04-18 10:13:07 -0700)
-
-----------------------------------------------------------------
-hwmon fixes for v5.7-rc2
-
-pmbus/isl68137:
-    Fix up chip IDs
-drivetemp:
-    Return -ENODATA for invalid temperatures
-    Use true module name
-k10temp:
-    Fix static symbol warnings
-jc42:
-    Use valid hwmon device name
-
-----------------------------------------------------------------
-Ann T Ropea (1):
-      hwmon: (drivetemp) Use drivetemp's true module name in Kconfig section
-
-Guenter Roeck (2):
-      hwmon: (pmbus/isl68137) Fix up chip IDs
-      hwmon: (drivetemp) Return -ENODATA for invalid temperatures
-
-Jason Yan (1):
-      hwmon: (k10temp) make some symbols static
-
-Sascha Hauer (1):
-      hwmon: (jc42) Fix name to have no illegal characters
-
- Documentation/hwmon/isl68137.rst | 76 ++++++++++++++++-----------------
- drivers/hwmon/Kconfig            |  2 +-
- drivers/hwmon/drivetemp.c        |  6 +++
- drivers/hwmon/jc42.c             |  2 +-
- drivers/hwmon/k10temp.c          |  6 +--
- drivers/hwmon/pmbus/isl68137.c   | 92 +++++++++++++++++++++++++++++++++++++---
- 6 files changed, 134 insertions(+), 50 deletions(-)
