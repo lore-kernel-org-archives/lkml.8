@@ -2,169 +2,175 @@ Return-Path: <SRS0=3CHW=6C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66A58C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 16:05:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84503C38A2F
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 16:06:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 454B421D6C
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 16:05:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f/A5Ngw4"
+	by mail.kernel.org (Postfix) with ESMTP id 5A35F221F7
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 16:06:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587225986;
+	bh=JuSdKC3YfFU3O7yh70vuZwZDMcNI49p545l1iBO/+1M=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=KXsmtEmk9oNy18vkV69ACkOEwqEqRUPPhtHRCZNuyMm5ASFBtAhlphhvEE1pv/blw
+	 uHMeAqdY7DN9dlpaM12GM6tthjryYb/Pi+71fVQCwPrrho9dWIgOipBqYdvCekPepn
+	 wlFFXKpazIqXHnfQ/amR9nw6o9YVbvzJlSLblpCc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727848AbgDRQFk (ORCPT
+        id S1726898AbgDRQGZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 12:05:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45702 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726500AbgDRQFk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 12:05:40 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 406E4C061A0C;
-        Sat, 18 Apr 2020 09:05:40 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id u65so2679012pfb.4;
-        Sat, 18 Apr 2020 09:05:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=zQbxuYl7fJ5XgX5X7WJEBt7YB36RJC8DjH9MPhzDKf4=;
-        b=f/A5Ngw4MFJUz9/XhyRBsIuI4zQoGO+id+QicmyY9RVQgc/SZjNiYCccv0eA+ErUcq
-         EGJhurO61J0L1afHN/k8xB8VJJ6xtTPqhdzbyemqz03O/xf8V3Yxx1kU1JKCAGVjVOdM
-         jWKoUPHtw2LtjOXt7DS60LiVvZiBBdBcjemjLLjlNkepcU0GrcLfnsp54/9LHzKYdRtb
-         BS/8WcsLEop10Ds3ownBk1F+sZaDmeW2AFP764HhYuA52qa31JPXX96ID6srZFQNNiSC
-         Tj3kfuhjZFIT8otn78mf12DAxSxXQOQmEnOYfz6H+4H8p6ksvjDIdYFKwx781/kKv3Sd
-         uCjg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=zQbxuYl7fJ5XgX5X7WJEBt7YB36RJC8DjH9MPhzDKf4=;
-        b=G3fB589gKaDRPsZnO6xOCTTmJQLbJig0v4BG24oC0qYEGBYVD0fX1sasdLbgreYBhX
-         2gU1wTfTyyqOx/IHiRqDBSXaKZDED432D3xYZ9j7egTAu1RMf3gruPxCRrM4LP/zAkkL
-         Z/QIdYyrPcA54CjaV52ZQvu67aiV4MGcbZ+pE9tO3Cw0Eui4xW1aQJ8QNWT+EBtIzN6B
-         dTLOzTP0uKbduiNpIsSp1ljoDa+8YTHEceXisva8mslDSc10YIF22LwbQxCTvTJRnUi3
-         rLMTqgC368GizCRrOJUwo3w3y21SiIYf/+W/fQAd9rq5xC4KKSqJPOurLL7fPkdnHari
-         hh9Q==
-X-Gm-Message-State: AGi0PuZRdFcXW7Z7PGmJ1SLzVLSAJraSOwnXF+jM0QSuyimWwr2cqrHu
-        Mn/MRmKIGu9f3GwvY9Onskg=
-X-Google-Smtp-Source: APiQypLeiu7Gz9muc9e3XcwuWz5gH4N8+OXU4bhXe2B7sUGygjW1pcIFZKY52dsurQeO5CnY6cg7VQ==
-X-Received: by 2002:a62:19d5:: with SMTP id 204mr8805423pfz.75.1587225939559;
-        Sat, 18 Apr 2020 09:05:39 -0700 (PDT)
-Received: from ast-mbp ([2620:10d:c090:400::5:7a4])
-        by smtp.gmail.com with ESMTPSA id l37sm4860358pje.12.2020.04.18.09.05.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 18 Apr 2020 09:05:38 -0700 (PDT)
-Date:   Sat, 18 Apr 2020 09:05:36 -0700
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-To:     Alan Maguire <alan.maguire@oracle.com>
-Cc:     ast@kernel.org, daniel@iogearbox.net, yhs@fb.com, kafai@fb.com,
-        songliubraving@fb.com, andriin@fb.com, john.fastabend@gmail.com,
-        kpsingh@chromium.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org
-Subject: Re: [RFC PATCH bpf-next 0/6] bpf, printk: add BTF-based type printing
-Message-ID: <20200418160536.4mrvqh2lasqbyk77@ast-mbp>
-References: <1587120160-3030-1-git-send-email-alan.maguire@oracle.com>
+        Sat, 18 Apr 2020 12:06:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38426 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726320AbgDRQGZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 12:06:25 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9495F21D6C;
+        Sat, 18 Apr 2020 16:06:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587225984;
+        bh=JuSdKC3YfFU3O7yh70vuZwZDMcNI49p545l1iBO/+1M=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=IU1dZ7BUfk8rsp7Qcv+f27KNZZMavfEOVxkvjXFRtX3/LnnGI/oQZMNjr8Xl5pSAL
+         HFMveFCU1fp/8ZrA7VY/9eWr+TmYcE/aMsZrXghVu+Ck9nczWPSN2R4gLaxquwjSE9
+         vvKX/Ywcc1wSupgLOi1u7VsJaT6DUWdsPZPGNpFE=
+Date:   Sat, 18 Apr 2020 17:06:19 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     saravanan sekar <sravanhome@gmail.com>
+Cc:     lee.jones@linaro.org, andy.shevchenko@gmail.com,
+        robh+dt@kernel.org, knaack.h@gmx.de, lars@metafoo.de,
+        pmeerw@pmeerw.net, sre@kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
+        linux-pm@vger.kernel.org
+Subject: Re: [PATCH v10 1/6] dt-bindings: mfd: add document bindings for
+ mp2629
+Message-ID: <20200418170619.155222fa@archlinux>
+In-Reply-To: <50ffb42e-4080-415e-dd3d-e38f7b0a6071@gmail.com>
+References: <20200417085003.6124-1-sravanhome@gmail.com>
+        <20200417085003.6124-2-sravanhome@gmail.com>
+        <20200418155308.681df38f@archlinux>
+        <50ffb42e-4080-415e-dd3d-e38f7b0a6071@gmail.com>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1587120160-3030-1-git-send-email-alan.maguire@oracle.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 17, 2020 at 11:42:34AM +0100, Alan Maguire wrote:
-> The printk family of functions support printing specific pointer types
-> using %p format specifiers (MAC addresses, IP addresses, etc).  For
-> full details see Documentation/core-api/printk-formats.rst.
+On Sat, 18 Apr 2020 17:01:17 +0200
+saravanan sekar <sravanhome@gmail.com> wrote:
+
+> Hi Jonathan,
 > 
-> This RFC patchset proposes introducing a "print typed pointer" format
-> specifier "%pT<type>"; the type specified is then looked up in the BPF
-> Type Format (BTF) information provided for vmlinux to support display.
-
-This is great idea! Love it.
-
-> The above potential use cases hint at a potential reply to
-> a reasonable objection that such typed display should be
-> solved by tracing programs, where the in kernel tracing records
-> data and the userspace program prints it out.  While this
-> is certainly the recommended approach for most cases, I
-> believe having an in-kernel mechanism would be valuable
-> also.
-
-yep. This is useful for general purpose printk.
-The only piece that must be highlighted in the printk documentation
-that unlike the rest of BPF there are zero safety guarantees here.
-The programmer can pass wrong pointer to printk() and the kernel _will_ crash.
-
->   struct sk_buff *skb = alloc_skb(64, GFP_KERNEL);
+> On 18/04/20 4:53 pm, Jonathan Cameron wrote:
+> > On Fri, 17 Apr 2020 10:49:58 +0200
+> > Saravanan Sekar <sravanhome@gmail.com> wrote:
+> >  
+> >> Add device tree binding information for mp2629 mfd driver.
+> >>
+> >> Signed-off-by: Saravanan Sekar <sravanhome@gmail.com>
+> >> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> >> ---
+> >>   .../devicetree/bindings/mfd/mps,mp2629.yaml   | 61 +++++++++++++++++++
+> >>   1 file changed, 61 insertions(+)
+> >>   create mode 100644 Documentation/devicetree/bindings/mfd/mps,mp2629.yaml
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/mfd/mps,mp2629.yaml b/Documentation/devicetree/bindings/mfd/mps,mp2629.yaml
+> >> new file mode 100644
+> >> index 000000000000..b25b29259d67
+> >> --- /dev/null
+> >> +++ b/Documentation/devicetree/bindings/mfd/mps,mp2629.yaml
+> >> @@ -0,0 +1,61 @@
+> >> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+> >> +%YAML 1.2
+> >> +---
+> >> +$id: http://devicetree.org/schemas/mfd/mps,mp2629.yaml#
+> >> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> >> +
+> >> +title: MP2629 Battery Charger PMIC from Monolithic Power System.
+> >> +
+> >> +maintainers:
+> >> +  - Saravanan Sekar <sravanhome@gmail.com>
+> >> +
+> >> +description: |
+> >> +  MP2629 is a PMIC providing battery charging and power supply for smartphones,
+> >> +  wireless camera and portable devices. Chip is controlled over I2C.
+> >> +
+> >> +  The battery charge management device handles battery charger controller and
+> >> +  ADC IIO device for battery, system voltage
+> >> +
+> >> +properties:
+> >> +  compatible:
+> >> +    const: mps,mp2629
+> >> +
+> >> +  reg:
+> >> +    maxItems: 1
+> >> +
+> >> +  interrupts:
+> >> +    maxItems: 1
+> >> +
+> >> +  interrupt-controller: true
+> >> +
+> >> +  "#interrupt-cells":
+> >> +    const: 2
+> >> +    description:
+> >> +      The first cell is the IRQ number, the second cell is the trigger type.
+> >> +
+> >> +required:
+> >> +  - compatible
+> >> +  - reg
+> >> +  - interrupts
+> >> +  - interrupt-controller
+> >> +  - "#interrupt-cells"
+> >> +
+> >> +examples:
+> >> +  - |
+> >> +    #include <dt-bindings/interrupt-controller/irq.h>
+> >> +    #include <dt-bindings/input/linux-event-codes.h>
+> >> +    i2c@7e205000 {  
+> > I thought the general trend for i2c devices was to leave the i2c
+> > part 'vague'.
+> >
+> >      i2c {
+> >            #address-cells = <1>;
+> >            #size-cells = <0>;
+> >           
+> >            pmic@4b.. etc  
+> I agree with you and initial patch was as like above, but Lee was 
+> somehow unhappy and not satisfied with
 > 
->   pr_info("%pTN<struct sk_buff>", skb);
+> my explanations. Please find more info on v4.
 
-why follow "TN" convention?
-I think "%p<struct sk_buff>" is much more obvious, unambiguous, and
-equally easy to parse.
+Ah. Curious.  Oh well - over to Rob for a definitive answer!
 
-> ...gives us:
 > 
-> {{{.next=00000000c7916e9c,.prev=00000000c7916e9c,{.dev=00000000c7916e9c|.dev_scratch=0}}|.rbnode={.__rb_parent_color=0,
+> > Guess it doesn't matter if example contains too much information. Rob?
+> >
+> > Otherwise looks good to me.
+> >
+> > Thanks,
+> >
+> > Jonathan
+> >     
+> >> +        #address-cells = <1>;
+> >> +        #size-cells = <0>;
+> >> +        reg = <0x7e205000 0x200>;
+> >> +
+> >> +        pmic@4b {
+> >> +            compatible = "mps,mp2629";
+> >> +            reg = <0x4b>;
+> >> +
+> >> +            interrupt-controller;
+> >> +            interrupt-parent = <&gpio2>;
+> >> +            #interrupt-cells = <2>;
+> >> +            interrupts = <3 IRQ_TYPE_LEVEL_HIGH>;
+> >> +        };
+> >> +    };  
 
-This is unreadable.
-I like the choice of C style output, but please format it similar to drgn. Like:
-*(struct task_struct *)0xffff889ff8a08000 = {
-	.thread_info = (struct thread_info){
-		.flags = (unsigned long)0,
-		.status = (u32)0,
-	},
-	.state = (volatile long)1,
-	.stack = (void *)0xffffc9000c4dc000,
-	.usage = (refcount_t){
-		.refs = (atomic_t){
-			.counter = (int)2,
-		},
-	},
-	.flags = (unsigned int)4194560,
-	.ptrace = (unsigned int)0,
-
-I like Arnaldo's idea as well, but I prefer zeros to be dropped by default.
-Just like %d doesn't print leading zeros by default.
-"%p0<struct sk_buff>" would print them.
-
-> The patches are marked RFC for several reasons
-> 
-> - There's already an RFC patchset in flight dealing with BTF dumping;
-> 
-> https://www.spinics.net/lists/netdev/msg644412.html
-> 
->   The reason I'm posting this is the approach is a bit different 
->   and there may be ways of synthesizing the approaches.
-
-I see no overlap between patch sets whatsoever.
-Why do you think there is?
-
-> - The mechanism of vmlinux BTF initialization is not fit for purpose
->   in a printk() setting as I understand it (it uses mutex locking
->   to prevent multiple initializations of the BTF info).  A simple
->   approach to support printk might be to simply initialize the
->   BTF vmlinux case early in boot; it only needs to happen once.
->   Any suggestions here would be great.
-> - BTF-based rendering is more complex than other printk() format
->   specifier-driven methods; that said, because of its generality it
->   does provide significant value I think
-> - More tests are needed.
-
-yep. Please make sure to add one to selftest/bpf as well.
-bpf maintainers don't run printk tests as part of workflow, so
-future BTF changes will surely break it if there are no selftests/bpf.
-
-Patch 2 isn't quite correct. Early parse of vmlinux BTF does not compute
-resolved_ids to save kernel memory. The trade off is execution time vs kernel
-memory. I believe that saving memory is more important here, since execution is
-not in critical path. There is __get_type_size(). It should be used in later
-patches instead of btf_type_id_size() that relies on pre-computed
-resolved_sizes and resolved_ids.
