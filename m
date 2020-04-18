@@ -1,165 +1,303 @@
 Return-Path: <SRS0=3CHW=6C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Level: *
+X-Spam-Status: No, score=1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_ABUSE_SURBL,URIBL_BLACK,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 913EDC352BE
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 18:18:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 668F3C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 18:20:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6660120724
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 18:18:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="oaBNuP9f"
+	by mail.kernel.org (Postfix) with ESMTP id 439ED2223D
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 18:20:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587234039;
+	bh=RY3/rZkHw0pUpUOCtMdwmal+jv6aWPjuMxoWke0TKSw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=Mx+Er6GaGrqf15ZW1dHBMnxl3Ki7/ApLBmboRr3z5vHRIggL5O1DIN48jDs/o1SJt
+	 p+W1K/dhWVMF9Rs06mYTI+1kThsBn+838Q3uWjiKEtjQG82BONKryqgjvnM+kBah9r
+	 GfuVG+yGeAXbwFJy3dbkVQ0VT3GoyKPKuvd68+Ag=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726544AbgDRSS1 (ORCPT
+        id S1726859AbgDRSUi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 14:18:27 -0400
-Received: from mout.web.de ([212.227.15.4]:58459 "EHLO mout.web.de"
+        Sat, 18 Apr 2020 14:20:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49256 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725824AbgDRSS0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 14:18:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1587233889;
-        bh=vH4kv+zAOYriDerXBYuJyXeMG/UMWETZBnRPa4scLRs=;
-        h=X-UI-Sender-Class:To:Cc:Subject:From:Date;
-        b=oaBNuP9frWGacySfLZNpUqjr5UZmHBhNburufDBa5fg20ANoQ/2h9oXbhZdnLP67k
-         zsvbtXoNyWql1rabiwFxuq5Jc/34UfhPy6ENyFSXhJjpWCV6c2YMyWkouWOK5UkFqu
-         qi+TgckNdltsGIlZ/vOCSI9IZ3QJzytCi2oNz3qs=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([93.133.116.87]) by smtp.web.de (mrweb003
- [213.165.67.108]) with ESMTPSA (Nemesis) id 0MVLY6-1jkCyd2afG-00Yka0; Sat, 18
- Apr 2020 20:18:09 +0200
-To:     Bernard Zhao <bernard@vivo.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
-        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org
-Cc:     =?UTF-8?Q?Felix_K=c3=bchling?= <Felix.Kuehling@amd.com>,
-        linux-kernel@vger.kernel.org, opensource.kernel@vivo.com,
-        Chunming Zhou <David1.Zhou@amd.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>
-Subject: Re: [PATCH] drm/amdgpu: Remove an unnecessary condition check in
- reserve_bo_and_cond_vms()
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <3dedf704-896c-b1c1-2609-066522f89274@web.de>
-Date:   Sat, 18 Apr 2020 20:18:06 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        id S1725903AbgDRSUi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 14:20:38 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4BB8421BE5;
+        Sat, 18 Apr 2020 18:20:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587234037;
+        bh=RY3/rZkHw0pUpUOCtMdwmal+jv6aWPjuMxoWke0TKSw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=vJwV9NzuqvSw2WTjS3WPgMt0BQ3sn6xCI9p5l4DCG2oNeO6mYS4ynGCJpsUN+lGCo
+         msEnz3dOVs0PiWYa8sIED+LmevLmx4MWgn98gFyCbjBWP/dJSqpPQSGwYslANJf1Il
+         H26BOgNB11R8gUYbBFgou8UOmrK2eK1ZFO25NT80=
+Date:   Sat, 18 Apr 2020 19:20:32 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Paul Cercueil <paul@crapouillou.net>
+Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Artur Rojek <contact@artur-rojek.eu>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        linux-input <linux-input@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [RESEND PATCH v5 5/5] input: joystick: Add ADC attached
+ joystick driver.
+Message-ID: <20200418192032.735a57c3@archlinux>
+In-Reply-To: <32VZ8Q.HWUYPX9U9OKT@crapouillou.net>
+References: <20200417202859.35427-1-contact@artur-rojek.eu>
+        <20200417202859.35427-5-contact@artur-rojek.eu>
+        <CAHp75VfRbnnuUhfyXpu+5dp4TutHSrHus=sX_vG_5F0dX4k0fQ@mail.gmail.com>
+        <UFBY8Q.ES4D59V22INC1@crapouillou.net>
+        <CAHp75VfEAtqucMPdkygfBhojTJoHO5vFk_o0suiyf7i2JCMw9Q@mail.gmail.com>
+        <7CFY8Q.68YMS0V08F992@crapouillou.net>
+        <CAHp75VeVvE8LAO8f=-cwfgL6erFZACGwMnriNRaQnfnHw31wkg@mail.gmail.com>
+        <0HGZ8Q.TO6FK92GVGIN3@crapouillou.net>
+        <CAHp75VdE=xHi8Kn=nZiH+shHvS6O2pc6W=FCs_VwrJq6Bfwx7w@mail.gmail.com>
+        <NXJZ8Q.5YQ6OBV5Y9V8@crapouillou.net>
+        <20200418152257.5f8a45bd@archlinux>
+        <32VZ8Q.HWUYPX9U9OKT@crapouillou.net>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:c4XtGVphCtLiCSGmpuQDxk4y/D81bApdqWv+ZW8Y/LlrUM+XmPd
- 95/v+QUGHvmYD+n3C4o1/usl2rO1M1ySaNXMqTg8ixgm19fh16KhJMPtYdJQugMYlD4x73t
- M9kQE0dWa6WsOqQ9sRJkCdYM9wsLJ/qzzxCIsS8LvCXSwOBPc7X2MKc/4WNP6RQBkCp/YWI
- +Jn1HiKwA5jCauB+S/9Zw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:yOqBPuac5Fs=:6haPW986vUtYVkbTK8C0Fz
- 5e9sk1ey8c5MdRWiCOmQFos8SL2csFQ/w1G5R7bcwWF04/Sx4QgUpgJlGVmUWc7mMWl4A2nA2
- Xgu7lrS+6jph0qOmCT4OrifTNSp1b8rCzQ9FxaztpZ6otpORLP9WLahzvZ6g4z4ycgogp0JyL
- xOYTHNaqbzZOxfjR0n0IvV6LBVI3U2VxZsL8mUY5xHqTTPQ2UKLsIdD7/K3VwfbkRPTDMMExE
- Bx0PyUOSWpsFGK/+Aca2wYp/iT8IUWMy5hdylOarbZaWJkjYQQGO4a7LUQ9Z/fffBG1HM4Saa
- I+izIOA6KexflLcv98ipkLD/y6TUoTv1BvSzef2p75GXsIAPMvMX+FnYwy4Csiil4fBx1jm+L
- dTjZlCpcD4CzxoatVIdSRbQrbufhDtONRPSiNYlm3p8+exAiwNvQxoTEAYBjDSOf5z6qF1cfx
- MY8fEoVeCEkIjnZFDVH00TjM6kfupeZs2nRYGUKuyYOHcIk8kM4OyjFop60gV7n6IOakGrcKw
- RSwoX0DM/v7+8H61EXNm+mA7hTMYi+YiswOrzSelZWhuRPFBygvvijVJFhe99TshI8NbOt+Gp
- TfEF+RrAUc31uwpRbk95DE/92D5jv6OHzNJnhaxkdlgtAKW+S9Nl+GqzO0tquM7ovN5qZuVl0
- EYKufsccgTuWOwOEMlE6KKgCqXGYKBpjlITXwdqxogljQKrQQMLhcvwNQIR/51ehUTNsZiuFa
- Ibw3OjUtFJFLc32D5ZZepLItq0HNMCTOV2Crp7khuyvSttzbb8eOCfPdoilUMvn3aZp8CcArd
- AbZA9EkT3G360gfdOzeuVWFqRLesDtyvohutRRG5gqIpBiYFbqtwD8G2PhS6ZoyZs0wXZGofj
- 7iXJkFkqsC6p1g2oShZR1Nv1o0x2R+gWdTWqQDrSVpICC0Oqhi6MQK33el6Dyj0S3+EOa919u
- QHqTGVUjdwewNE8wg0aPHhBHrKnMMWnY0CROoboUT3ojace/eaAVEoM4dlqWQp018NYP8+s1k
- kIcmN3iRSFUdEiSCNoiXmZVsmkaRWtOOxhmD64+KZLz799jra/oaRVJWbCCZDmfNYlyO6+4J2
- X1FAAfdgfNLrO7jQaGkjbdSaPbV/6RaizjfjYcw+wQIKDE+D/DfV67fkiMknICDD7LknnGKnL
- 4/RzcCwxRn4nv+Rz1UO+qGwyyBfzcDc10wp2FPOv+TsKqbkFBxYFASc462Vh63S/bNKI28AbK
- xkiMhOz1av26Ytotu
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> There is no need to if check again,
+On Sat, 18 Apr 2020 19:25:15 +0200
+Paul Cercueil <paul@crapouillou.net> wrote:
 
-Thanks for this information.
+> Hi Jonathan,
+>=20
+> Le sam. 18 avril 2020 =C3=A0 15:22, Jonathan Cameron <jic23@kernel.org> a=
+=20
+> =C3=A9crit :
+> > On Sat, 18 Apr 2020 15:24:58 +0200
+> > Paul Cercueil <paul@crapouillou.net> wrote:
+> >  =20
+> >>  Le sam. 18 avril 2020 =C3=A0 15:42, Andy Shevchenko
+> >>  <andy.shevchenko@gmail.com> a =C3=A9crit : =20
+> >>  > On Sat, Apr 18, 2020 at 3:10 PM Paul Cercueil  =20
+> >> <paul@crapouillou.net> =20
+> >>  > wrote: =20
+> >>  >>  Le sam. 18 avril 2020 =C3=A0 14:57, Andy Shevchenko
+> >>  >>  <andy.shevchenko@gmail.com> a =C3=A9crit : =20
+> >>  >>  > On Sat, Apr 18, 2020 at 1:48 AM Paul Cercueil =20
+> >>  >> <paul@crapouillou.net> =20
+> >>  >>  > wrote: =20
+> >>  >>  >>  Le sam. 18 avril 2020 =C3=A0 0:49, Andy Shevchenko
+> >>  >>  >>  <andy.shevchenko@gmail.com> a =C3=A9crit : =20
+> >>  >>  >>  > On Sat, Apr 18, 2020 at 12:24 AM Paul Cercueil =20
+> >>  >>  >> <paul@crapouillou.net> =20
+> >>  >>  >>  > wrote: =20
+> >>  >>  >>  >>  Le sam. 18 avril 2020 =C3=A0 0:10, Andy Shevchenko
+> >>  >>  >>  >>  <andy.shevchenko@gmail.com> a =C3=A9crit : =20
+> >>  >>  >>  >>  > On Fri, Apr 17, 2020 at 11:21 PM Artur Rojek =20
+> >>  >>  >>  >> <contact@artur-rojek.eu> =20
+> >>  >>  >>  >>  > wrote: =20
+> >>  >
+> >>  > ...
+> >>  > =20
+> >>  >>  >>  >>  >>  +#include <linux/of.h> =20
+> >>  >>  >>  >>  >
+> >>  >>  >>  >>  > Do you really need this? (See below as well) =20
+> >>  >>  >>  > =20
+> >>  >>  >>  >>  >>  +static const struct of_device_id =20
+> >>  >> adc_joystick_of_match[] =3D =20
+> >>  >>  >> { =20
+> >>  >>  >>  >>  >>  +       { .compatible =3D "adc-joystick", },
+> >>  >>  >>  >>  >>  +       { },
+> >>  >>  >>  >>  >>  +};
+> >>  >>  >>  >>  >>  +MODULE_DEVICE_TABLE(of, adc_joystick_of_match);
+> >>  >>  >>  >>  >>  +
+> >>  >>  >>  >>  >>  +static struct platform_driver adc_joystick_driver  =
+=20
+> >> =3D { =20
+> >>  >>  >>  >>  >>  +       .driver =3D {
+> >>  >>  >>  >>  >>  +               .name =3D "adc-joystick", =20
+> >>  >>  >>  >>  > =20
+> >>  >>  >>  >>  >>  +               .of_match_table =3D
+> >>  >>  >>  >>  >> of_match_ptr(adc_joystick_of_match), =20
+> >>  >>  >>  >>  >
+> >>  >>  >>  >>  > Drop this a bit harmful of_match_ptr() macro. It  =20
+> >> should go =20
+> >>  >>  >> with =20
+> >>  >>  >>  >> ugly =20
+> >>  >>  >>  >>  > #ifdeffery. Here you simple introduced a compiler  =20
+> >> warning. =20
+> >>  >>  >>  >>
+> >>  >>  >>  >>  I assume you mean #ifdef around the of_device_id +  =20
+> >> module =20
+> >>  >> table =20
+> >>  >>  >>  >> macro? =20
+> >>  >>  >>  >
+> >>  >>  >>  > Yes.
+> >>  >>  >>  > =20
+> >>  >>  >>  >>  > On top of that, you are using device property API, OF  =
+=20
+> >> use =20
+> >>  >> in =20
+> >>  >>  >> this =20
+> >>  >>  >>  >> case =20
+> >>  >>  >>  >>  > is contradictory (at lest to some extend). =20
+> >>  >>  >>  >>
+> >>  >>  >>  >>  I don't see why. The fact that the driver can work when =
+=20
+> >>  >> probed =20
+> >>  >>  >> from =20
+> >>  >>  >>  >>  platform code =20
+> >>  >>  >>  >
+> >>  >>  >>  > Ha-ha, tell me how. I would like to be very surprised. =20
+> >>  >>  >>
+> >>  >>  >>  iio_map_array_register(),
+> >>  >>  >>  pinctrl_register_mappings(),
+> >>  >>  >>  platform_add_devices(),
+> >>  >>  >>
+> >>  >>  >>  you're welcome. =20
+> >>  >>  >
+> >>  >>  > I think above has no relation to what I'm talking about. =20
+> >>  >>
+> >>  >>  Yes it does. It allows you to map the IIO channels, set the  =20
+> >> pinctrl =20
+> >>  >>  configurations and register a device from platform code instead  =
+=20
+> >> of =20
+> >>  >>  devicetree. =20
+> >>  >
+> >>  > I'm not talking about other drivers, I'm talking about this  =20
+> >> driver and =20
+> >>  > how it will be instantiated. Above, according to the code, can't  =
+=20
+> >> be =20
+> >>  > comprehensive to fulfill this. =20
+> >>=20
+> >>  This is how the platform devices were instanciated on JZ4740 before=20
+> >> we
+> >>  switched everything to devicetree.
+> >>  =20
+> >>  >>  > How *this* driver can work as a platform instantiated one?
+> >>  >>  > We seems have a conceptual misunderstanding here.
+> >>  >>  >
+> >>  >>  > For example, how can probe of this driver not fail, if it is  =
+=20
+> >> not =20
+> >>  >>  > backed by a DT/ACPI properties? =20
+> >>  >>
+> >>  >>  platform_device_add_properties(). =20
+> >>  >
+> >>  > Yes, I waited for this. And seems you don't understand the (scope  =
+=20
+> >> of) =20
+> >>  > API, you are trying to insist this driver can be used as a  =20
+> >> platform =20
+> >>  > one.
+> >>  > Sorry, I must to disappoint you, it can't. Above interface is  =20
+> >> created =20
+> >>  > solely for quirks to support (broken) DT/ACPI tables. It's not
+> >>  > supposed to be used as a main source for the device properties. =20
+> >>=20
+> >>  The fact that it was designed for something else doesn't mean it=20
+> >> can't
+> >>  be used.
+> >>=20
+> >>  Anyway, this discussion is pointless. I don't think anybody would=20
+> >> want
+> >>  to do that.
+> >>  =20
+> >>  >>  >>  >>  doesn't mean that it shouldn't have a table to probe
+> >>  >>  >>  >>  from devicetree. =20
+> >>  >>  >>  >
+> >>  >>  >>  > I didn't get what you are talking about here. The idea of =
+=20
+> >>  >>  >> _unified_ =20
+> >>  >>  >>  > device property API is to get rid of OF-centric code in =20
+> >>  >> favour of =20
+> >>  >>  >> more =20
+> >>  >>  >>  > generic approach. Mixing those two can be done only in =20
+> >>  >> specific =20
+> >>  >>  >> cases =20
+> >>  >>  >>  > (here is not the one). =20
+> >>  >>  >>
+> >>  >>  >>  And how are we mixing those two here? The only OF-centric  =20
+> >> thing =20
+> >>  >>  >> here is
+> >>  >>  >>  the device table, which is required if we want the driver to =
+=20
+> >>  >> probe =20
+> >>  >>  >> from
+> >>  >>  >>  devicetree. =20
+> >>  >>  >
+> >>  >>  > Table is fine(JFYI the types and sections are defined outside  =
+=20
+> >> of =20
+> >>  >> OF =20
+> >>  >>  > stuff, though being [heavily] used by it) , API  =20
+> >> (of_match_ptr() =20
+> >>  >> macro =20
+> >>  >>  > use) is not. =20
+> >>  >>
+> >>  >>  Sorry, but that's just stupid. Please have a look at how
+> >>  >> of_match_ptr()
+> >>  >>  macro is defined in <linux/of.h>. =20
+> >>  >
+> >>  > Call it whatever you want, but above code is broken. =20
+> >>=20
+> >>  of_match_ptr() is basically defined like this:
+> >>=20
+> >>  #ifdef CONFIG_OF
+> >>  #define of_match_ptr(x) (x)
+> >>  #else
+> >>  #define of_match_ptr(x) NULL
+> >>  #endif
+> >>=20
+> >>  So please, enlighten me, tell me what is so wrong about what's being
+> >>  done here.
+> >>  =20
+> >>  > It needs either of:
+> >>  > - ugly ifdeffery
+> >>  > - dropping of_match_ptr()
+> >>  > - explicit dependence to OF
+> >>  >
+> >>  > My choice is second one. Because it makes code better and allows  =
+=20
+> >> also =20
+> >>  > ACPI to use this driver (usually) without changes. =20
+> >>=20
+> >>  And how is unconditionally compiling the of_match_table make it
+> >>  magically probe from ACPI, without a acpi_match_table?
+> >>=20
+> >>  -Paul =20
+> >=20
+> > Look up PRP0001 ACPI ID.  Magic trick ;)
+> >=20
+> > https://www.kernel.org/doc/html/latest/firmware-guide/acpi/enumeration.=
+html?highlight=3DPRP0001
+> >=20
+> > It allows you to define an ACPI device in DSDT that is instantiated
+> > from what is effectively the DT binding including the id table. =20
+>=20
+> So what you're saying, is that the OF table should be present, even=20
+> though CONFIG_OF is not set, just in case it is probed from ACPI?
 
-* Should the function name be mentioned in this change description?
-
-* Would you like to adjust the patch subject?
+Exactly.  Weird isn't it :)
 
 
-> maybe we could merge into the above else branch.
 
-I suggest to reconsider this wording.
+>=20
+> -Paul
+>=20
+>=20
 
-
-=E2=80=A6
-> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c
-> @@ -735,10 +735,8 @@ static int reserve_bo_and_cond_vms(struct kgd_mem *=
-mem,
-=E2=80=A6
-
-I propose to take further coding style aspects into account.
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Do=
-cumentation/process/coding-style.rst?id=3D90280eaa88ac1a9140dc759941123530=
-d5545bb6#n191
-
-Possible refactoring:
-	if (ret) {
-		pr_err(=E2=80=A6);
-		=E2=80=A6
-	} else {
-		ctx->reserved =3D true;
-	}
-
-
-How do you think about to add the tag =E2=80=9CFixes=E2=80=9D?
-
-Regards,
-Markus
