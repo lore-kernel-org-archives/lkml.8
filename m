@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E714CC3A5A0
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:42:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDC30C38A29
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:42:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BD10E21D7E
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:42:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C48C522262
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:42:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587220955;
-	bh=h1ql2/BDJX9O8+6Tedw2yO7TNwFdReVLH5QvEUZ2310=;
+	s=default; t=1587220957;
+	bh=QeP+z2py5zehTf5cGkwbpGZ5Yi83zG6RPJpUo8i2+no=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0TYh02EQIHvRgcABB16xIlsTBkPO+nd648hPfeJ1wDxzBcSrx/tv/aN2xoGj4xPvP
-	 SqtRRa9FPban8t03XDrdNNfvw9TlCRZbGPzUfVz4290t3HKuxAObGhRXaxCIxaEy69
-	 Li0WoV+Z4wgRkdXlqz8OkXFTZ47SjTB+e/mI4C5M=
+	b=d5BAUroAEdPwRNfJGNfZryXDNOGcfRpUMf51b4so5M0+2gsHfbBzp67DmRk0I5Sfw
+	 4oUnw6a0lw+jVT8YNPYFegI9y9IrsEAyUOPe8h58HFIWOUe6Omwl4TGaByW9xSbaRu
+	 t2SMkbc7APIix6ddyYYJ4x/t0nC/GtgEDOBqmR1s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728371AbgDROme (ORCPT
+        id S1726697AbgDROmh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 10:42:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52614 "EHLO mail.kernel.org"
+        Sat, 18 Apr 2020 10:42:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52630 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726138AbgDROmc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 10:42:32 -0400
+        id S1728359AbgDROmd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 10:42:33 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 001EA21974;
-        Sat, 18 Apr 2020 14:42:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 133712220A;
+        Sat, 18 Apr 2020 14:42:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587220951;
-        bh=h1ql2/BDJX9O8+6Tedw2yO7TNwFdReVLH5QvEUZ2310=;
+        s=default; t=1587220952;
+        bh=QeP+z2py5zehTf5cGkwbpGZ5Yi83zG6RPJpUo8i2+no=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=i0D09pC0ksr5pGwEU5i8SFNGFzlhM1CD9FYO39ylBpKpPs19OHudU3MT71v0DM/0z
-         mNWXuIIWAmYblMKyOMGyvpyHwKSvnBc1ksATn9DdlczcbHXMgvNdmzhj9NVAxnXGCu
-         gZGWLHpmytmNwzV48wF009+fk6tsIKqg+ZuXoraM=
+        b=NcCM0N1H3FOXckIcNP5eMV2KVUJdZ8bZCZbUCB0JZC9rGH7z7uUD0bYf11bJc3Pgg
+         vpYqsfUxNZWf/JnB2arOqhk4nKvwQD2ceKosACQEitSIN4PNqQlqBkRUj1nXhnw90A
+         P5LWEbI4HxQ3AkAgfS3wBi8jhRxO/pmHT811TZGo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Amir Goldstein <amir73il@gmail.com>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, linux-unionfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 03/47] ovl: fix value of i_ino for lower hardlink corner case
-Date:   Sat, 18 Apr 2020 10:41:43 -0400
-Message-Id: <20200418144227.9802-3-sashal@kernel.org>
+Cc:     Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Joerg Roedel <jroedel@suse.de>,
+        Sasha Levin <sashal@kernel.org>,
+        iommu@lists.linux-foundation.org
+Subject: [PATCH AUTOSEL 4.19 04/47] iommu/vt-d: Fix mm reference leak
+Date:   Sat, 18 Apr 2020 10:41:44 -0400
+Message-Id: <20200418144227.9802-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200418144227.9802-1-sashal@kernel.org>
 References: <20200418144227.9802-1-sashal@kernel.org>
@@ -59,53 +61,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Amir Goldstein <amir73il@gmail.com>
+From: Jacob Pan <jacob.jun.pan@linux.intel.com>
 
-[ Upstream commit 300b124fcf6ad2cd99a7b721e0f096785e0a3134 ]
+[ Upstream commit 902baf61adf6b187f0a6b789e70d788ea71ff5bc ]
 
-Commit 6dde1e42f497 ("ovl: make i_ino consistent with st_ino in more
-cases"), relaxed the condition nfs_export=on in order to set the value of
-i_ino to xino map of real ino.
+Move canonical address check before mmget_not_zero() to avoid mm
+reference leak.
 
-Specifically, it also relaxed the pre-condition that index=on for
-consistent i_ino. This opened the corner case of lower hardlink in
-ovl_get_inode(), which calls ovl_fill_inode() with ino=0 and then
-ovl_init_inode() is called to set i_ino to lower real ino without the xino
-mapping.
-
-Pass the correct values of ino;fsid in this case to ovl_fill_inode(), so it
-can initialize i_ino correctly.
-
-Fixes: 6dde1e42f497 ("ovl: make i_ino consistent with st_ino in more ...")
-Signed-off-by: Amir Goldstein <amir73il@gmail.com>
-Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
+Fixes: 9d8c3af31607 ("iommu/vt-d: IOMMU Page Request needs to check if address is canonical.")
+Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+Acked-by: Lu Baolu <baolu.lu@linux.intel.com>
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/overlayfs/inode.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/iommu/intel-svm.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/fs/overlayfs/inode.c b/fs/overlayfs/inode.c
-index a138bb3bc2a5d..8b3c284ce92ea 100644
---- a/fs/overlayfs/inode.c
-+++ b/fs/overlayfs/inode.c
-@@ -884,7 +884,7 @@ struct inode *ovl_get_inode(struct super_block *sb,
- 	struct dentry *lowerdentry = lowerpath ? lowerpath->dentry : NULL;
- 	bool bylower = ovl_hash_bylower(sb, upperdentry, lowerdentry,
- 					oip->index);
--	int fsid = bylower ? oip->lowerpath->layer->fsid : 0;
-+	int fsid = bylower ? lowerpath->layer->fsid : 0;
- 	bool is_dir, metacopy = false;
- 	unsigned long ino = 0;
- 	int err = oip->newinode ? -EEXIST : -ENOMEM;
-@@ -934,6 +934,8 @@ struct inode *ovl_get_inode(struct super_block *sb,
- 			err = -ENOMEM;
- 			goto out_err;
- 		}
-+		ino = realinode->i_ino;
-+		fsid = lowerpath->layer->fsid;
- 	}
- 	ovl_fill_inode(inode, realinode->i_mode, realinode->i_rdev, ino, fsid);
- 	ovl_inode_init(inode, upperdentry, lowerdentry, oip->lowerdata);
+diff --git a/drivers/iommu/intel-svm.c b/drivers/iommu/intel-svm.c
+index 5944d3b4dca37..ef3aadec980ee 100644
+--- a/drivers/iommu/intel-svm.c
++++ b/drivers/iommu/intel-svm.c
+@@ -620,14 +620,15 @@ static irqreturn_t prq_event_thread(int irq, void *d)
+ 		 * any faults on kernel addresses. */
+ 		if (!svm->mm)
+ 			goto bad_req;
+-		/* If the mm is already defunct, don't handle faults. */
+-		if (!mmget_not_zero(svm->mm))
+-			goto bad_req;
+ 
+ 		/* If address is not canonical, return invalid response */
+ 		if (!is_canonical_address(address))
+ 			goto bad_req;
+ 
++		/* If the mm is already defunct, don't handle faults. */
++		if (!mmget_not_zero(svm->mm))
++			goto bad_req;
++
+ 		down_read(&svm->mm->mmap_sem);
+ 		vma = find_extend_vma(svm->mm, address);
+ 		if (!vma || address < vma->vm_start)
 -- 
 2.20.1
 
