@@ -7,45 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35AC2C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:09:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D64C4C4CC77
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:09:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1547D21D79
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:09:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B64D921BE5
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:09:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587218955;
-	bh=WwMQnnlr9UFxuKnVYip2MbxhHSDl070mII4XwC96BvM=;
+	s=default; t=1587218956;
+	bh=ddR3lY7X7Py94OEnLYZZsrm3gr2MaNXEqKJZwflfaEg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AIWxDrFRx3REpd2R+Uyf7iJ19ISaLCiUNFNlI3CKTzUmW7pLXaOYOSj77DJZj+8D0
-	 6SLAfqu+3KCVWMCVfg/SIZqKvNVsnsoeYnZJGAPZiRfAUwcxiW0rPqf15bMjb0fqyA
-	 WwnoQ5expio//Kqs6aY2EcERkseYKofza1UF0cCI=
+	b=x3jrbqQVHSoQoMWmr3EybKPGSt1+WQAC/j6xckZq9ninSw+14ZRnc0pxr3hZ1l2Ol
+	 ZwppkbGZvlR2QiBhSWuR6cBjUJyFwDTPOb2iwRsN2Qs5pH2fyNRSNF+lxhV9FzFJRZ
+	 jg41mhViopK7lbYNFIC9thYphqoWMv/N/IXMcH2E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726067AbgDROJO (ORCPT
+        id S1726141AbgDROJQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 10:09:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36406 "EHLO mail.kernel.org"
+        Sat, 18 Apr 2020 10:09:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36428 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725873AbgDROJN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 10:09:13 -0400
+        id S1725873AbgDROJO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 10:09:14 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AEFB221D79;
-        Sat, 18 Apr 2020 14:09:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C07EA21D6C;
+        Sat, 18 Apr 2020 14:09:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587218953;
-        bh=WwMQnnlr9UFxuKnVYip2MbxhHSDl070mII4XwC96BvM=;
+        s=default; t=1587218954;
+        bh=ddR3lY7X7Py94OEnLYZZsrm3gr2MaNXEqKJZwflfaEg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KioimVxkDf9q8ezG/fMIl9EZgYImY2MHrO9U0zmzMWAtQbavpupFUKU7fxpvqwR9l
-         GGooRMvvUlAMAfHL8V2Db418c2IE8lGGHoLGQak+eZttYcR84iyNGmSFw9p5kBFPzr
-         5GVbRGvy7T+A7oKsBmgfarIbRNfXPm+4WXROsHkE=
+        b=H9NJTnNYBSAOZR2vCSdgGYf7vlYvrp8G0ZbrzCw5S+AlL0xzUQv/vGErGBZ21VmE1
+         gphoihsO/uj4cAbJx6c+8LU09lHqE/oD2qGKox7fAvwNIdpT1MwPNlXRowR6Zw4sey
+         75bGAR0DEsv4gQICiCnvUrjwQdaZ9xf2La/mXchw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jan Kara <jack@suse.cz>, Dan Williams <dan.j.williams@intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nvdimm@lists.01.org
-Subject: [PATCH AUTOSEL 5.5 02/75] tools/testing/nvdimm: Fix compilation failure without CONFIG_DEV_DAX_PMEM_COMPAT
-Date:   Sat, 18 Apr 2020 10:07:57 -0400
-Message-Id: <20200418140910.8280-2-sashal@kernel.org>
+Cc:     Tero Kristo <t-kristo@ti.com>, Guenter Roeck <linux@roeck-us.net>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Sasha Levin <sashal@kernel.org>, linux-watchdog@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 03/75] watchdog: reset last_hw_keepalive time at start
+Date:   Sat, 18 Apr 2020 10:07:58 -0400
+Message-Id: <20200418140910.8280-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200418140910.8280-1-sashal@kernel.org>
 References: <20200418140910.8280-1-sashal@kernel.org>
@@ -58,41 +59,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jan Kara <jack@suse.cz>
+From: Tero Kristo <t-kristo@ti.com>
 
-[ Upstream commit c0e71d602053e4e7637e4bc7d0bc9603ea77a33f ]
+[ Upstream commit 982bb70517aef2225bad1d802887b733db492cc0 ]
 
-When a kernel is configured without CONFIG_DEV_DAX_PMEM_COMPAT, the
-compilation of tools/testing/nvdimm fails with:
+Currently the watchdog core does not initialize the last_hw_keepalive
+time during watchdog startup. This will cause the watchdog to be pinged
+immediately if enough time has passed from the system boot-up time, and
+some types of watchdogs like K3 RTI does not like this.
 
-  Building modules, stage 2.
-  MODPOST 11 modules
-ERROR: "dax_pmem_compat_test" [tools/testing/nvdimm/test/nfit_test.ko] undefined!
+To avoid the issue, setup the last_hw_keepalive time during watchdog
+startup.
 
-Fix the problem by calling dax_pmem_compat_test() only if the kernel has
-the required functionality.
-
-Signed-off-by: Jan Kara <jack@suse.cz>
-Link: https://lore.kernel.org/r/20200123154720.12097-1-jack@suse.cz
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+Signed-off-by: Tero Kristo <t-kristo@ti.com>
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+Link: https://lore.kernel.org/r/20200302200426.6492-3-t-kristo@ti.com
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Wim Van Sebroeck <wim@linux-watchdog.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/nvdimm/test/nfit.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/watchdog/watchdog_dev.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/tools/testing/nvdimm/test/nfit.c b/tools/testing/nvdimm/test/nfit.c
-index bf6422a6af7ff..a8ee5c4d41ebb 100644
---- a/tools/testing/nvdimm/test/nfit.c
-+++ b/tools/testing/nvdimm/test/nfit.c
-@@ -3164,7 +3164,9 @@ static __init int nfit_test_init(void)
- 	mcsafe_test();
- 	dax_pmem_test();
- 	dax_pmem_core_test();
-+#ifdef CONFIG_DEV_DAX_PMEM_COMPAT
- 	dax_pmem_compat_test();
-+#endif
- 
- 	nfit_test_setup(nfit_test_lookup, nfit_test_evaluate_dsm);
+diff --git a/drivers/watchdog/watchdog_dev.c b/drivers/watchdog/watchdog_dev.c
+index 8b5c742f24e81..7e4cd34a8c20e 100644
+--- a/drivers/watchdog/watchdog_dev.c
++++ b/drivers/watchdog/watchdog_dev.c
+@@ -282,6 +282,7 @@ static int watchdog_start(struct watchdog_device *wdd)
+ 	if (err == 0) {
+ 		set_bit(WDOG_ACTIVE, &wdd->status);
+ 		wd_data->last_keepalive = started_at;
++		wd_data->last_hw_keepalive = started_at;
+ 		watchdog_update_worker(wdd);
+ 	}
  
 -- 
 2.20.1
