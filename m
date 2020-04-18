@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14356C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:50:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11862C38A29
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:50:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E77FF20753
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:50:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D883020753
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 14:50:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587221405;
-	bh=XZdZZ43wVeDGvJmL7P9SqIIKj8Dd25pulCg1ZzJLMqk=;
+	s=default; t=1587221410;
+	bh=xWkh+wgmkv2dtOUT5TheKqZ9bLvgmKP42sLP6G2pLhA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MDbmB8HaeAA8jyHMqTSW0GbUhgIQXdRC7/vH537UMLV9uLi+AHYgIHUt+l52/bRrz
-	 NVPWnNuTJiGGPo5GDBinZTt/BMT+QvDnEHKpa72Re1YV654pvFn/gqXbjmH9gyamP+
-	 1T8jAl3HU9jnbJFkRK7Y1tFR333/VKW5kWlM4prs=
+	b=1oDT7PWZea38ZGBGLBYd5GzfTbnsgI6VrRfRWlkhmsnYVz3ZbQYmvIEUkhr4cD+45
+	 Zstc2blUA+ItwaTXbht6febjQPA3AuGHX41jSIRM2s5wDQTsippvE6eo2Fm21XEckv
+	 TH8dKzUQVFARC9B6BLTpjzJIcv8BitVT9ud5d0jU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728824AbgDROuF (ORCPT
+        id S1728878AbgDROuJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 10:50:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54136 "EHLO mail.kernel.org"
+        Sat, 18 Apr 2020 10:50:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54084 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728524AbgDROnP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 10:43:15 -0400
+        id S1728518AbgDROnN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 10:43:13 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7C2FE22261;
-        Sat, 18 Apr 2020 14:43:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 536F222244;
+        Sat, 18 Apr 2020 14:43:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587220994;
-        bh=XZdZZ43wVeDGvJmL7P9SqIIKj8Dd25pulCg1ZzJLMqk=;
+        s=default; t=1587220993;
+        bh=xWkh+wgmkv2dtOUT5TheKqZ9bLvgmKP42sLP6G2pLhA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cbU5R3INFrJyk+mWjLn0ArkTAzf7iOmLLN3f2f5psvgc71RQwXJtrnschPj9B1F/e
-         L2SgPhFKZP5AASidVgymHivtFEhw48Co53KHfPiJfdxpkR0NMQsxMIMUfJsMpByL2d
-         wFZLXerocZdf6lknyCikchasAGaST2kj0GePflQ4=
+        b=A5zC0A5ApyKYlHyYWd3PTN8sEva/9fo79WEVcz1bo2EMIi3PrkHvRBHmWQe15Sk71
+         5bFPt5j1oUQZ7yLMWJBrCGbwO4aCdvb+t/WyRlTt0+uVDEIFbTaVNNnLFHEgduclQA
+         R4NulQuaYh2T8+cdUS2J8Y0XiJYUh2ANGvGRPWBI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Wen Yang <wenyang@linux.alibaba.com>,
-        Corey Minyard <minyard@acm.org>, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        openipmi-developer@lists.sourceforge.net,
-        Corey Minyard <cminyard@mvista.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 37/47] ipmi: fix hung processes in __get_guid()
-Date:   Sat, 18 Apr 2020 10:42:17 -0400
-Message-Id: <20200418144227.9802-37-sashal@kernel.org>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 4.19 36/47] ASoC: Intel: bytcr_rt5640: Add quirk for MPMAN MPWIN895CL tablet
+Date:   Sat, 18 Apr 2020 10:42:16 -0400
+Message-Id: <20200418144227.9802-36-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200418144227.9802-1-sashal@kernel.org>
 References: <20200418144227.9802-1-sashal@kernel.org>
@@ -62,70 +60,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wen Yang <wenyang@linux.alibaba.com>
+From: Hans de Goede <hdegoede@redhat.com>
 
-[ Upstream commit 32830a0534700f86366f371b150b17f0f0d140d7 ]
+[ Upstream commit c8b78f24c1247b7bd0882885c672d9dec5800bc6 ]
 
-The wait_event() function is used to detect command completion.
-When send_guid_cmd() returns an error, smi_send() has not been
-called to send data. Therefore, wait_event() should not be used
-on the error path, otherwise it will cause the following warning:
+The MPMAN MPWIN895CL tablet almost fully works with out default settings.
+The only problem is that it has only 1 speaker so any sounds only playing
+on the right channel get lost.
 
-[ 1361.588808] systemd-udevd   D    0  1501   1436 0x00000004
-[ 1361.588813]  ffff883f4b1298c0 0000000000000000 ffff883f4b188000 ffff887f7e3d9f40
-[ 1361.677952]  ffff887f64bd4280 ffffc90037297a68 ffffffff8173ca3b ffffc90000000010
-[ 1361.767077]  00ffc90037297ad0 ffff887f7e3d9f40 0000000000000286 ffff883f4b188000
-[ 1361.856199] Call Trace:
-[ 1361.885578]  [<ffffffff8173ca3b>] ? __schedule+0x23b/0x780
-[ 1361.951406]  [<ffffffff8173cfb6>] schedule+0x36/0x80
-[ 1362.010979]  [<ffffffffa071f178>] get_guid+0x118/0x150 [ipmi_msghandler]
-[ 1362.091281]  [<ffffffff810d5350>] ? prepare_to_wait_event+0x100/0x100
-[ 1362.168533]  [<ffffffffa071f755>] ipmi_register_smi+0x405/0x940 [ipmi_msghandler]
-[ 1362.258337]  [<ffffffffa0230ae9>] try_smi_init+0x529/0x950 [ipmi_si]
-[ 1362.334521]  [<ffffffffa022f350>] ? std_irq_setup+0xd0/0xd0 [ipmi_si]
-[ 1362.411701]  [<ffffffffa0232bd2>] init_ipmi_si+0x492/0x9e0 [ipmi_si]
-[ 1362.487917]  [<ffffffffa0232740>] ? ipmi_pci_probe+0x280/0x280 [ipmi_si]
-[ 1362.568219]  [<ffffffff810021a0>] do_one_initcall+0x50/0x180
-[ 1362.636109]  [<ffffffff812231b2>] ? kmem_cache_alloc_trace+0x142/0x190
-[ 1362.714330]  [<ffffffff811b2ae1>] do_init_module+0x5f/0x200
-[ 1362.781208]  [<ffffffff81123ca8>] load_module+0x1898/0x1de0
-[ 1362.848069]  [<ffffffff811202e0>] ? __symbol_put+0x60/0x60
-[ 1362.913886]  [<ffffffff8130696b>] ? security_kernel_post_read_file+0x6b/0x80
-[ 1362.998514]  [<ffffffff81124465>] SYSC_finit_module+0xe5/0x120
-[ 1363.068463]  [<ffffffff81124465>] ? SYSC_finit_module+0xe5/0x120
-[ 1363.140513]  [<ffffffff811244be>] SyS_finit_module+0xe/0x10
-[ 1363.207364]  [<ffffffff81003c04>] do_syscall_64+0x74/0x180
+Add a quirk for this model using the default settings + MONO_SPEAKER.
 
-Fixes: 50c812b2b951 ("[PATCH] ipmi: add full sysfs support")
-Signed-off-by: Wen Yang <wenyang@linux.alibaba.com>
-Cc: Corey Minyard <minyard@acm.org>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: openipmi-developer@lists.sourceforge.net
-Cc: linux-kernel@vger.kernel.org
-Cc: stable@vger.kernel.org # 2.6.17-
-Message-Id: <20200403090408.58745-1-wenyang@linux.alibaba.com>
-Signed-off-by: Corey Minyard <cminyard@mvista.com>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Acked-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Link: https://lore.kernel.org/r/20200405133726.24154-1-hdegoede@redhat.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/char/ipmi/ipmi_msghandler.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ sound/soc/intel/boards/bytcr_rt5640.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-diff --git a/drivers/char/ipmi/ipmi_msghandler.c b/drivers/char/ipmi/ipmi_msghandler.c
-index 980eb7c609528..69734b1df7927 100644
---- a/drivers/char/ipmi/ipmi_msghandler.c
-+++ b/drivers/char/ipmi/ipmi_msghandler.c
-@@ -3134,8 +3134,8 @@ static void __get_guid(struct ipmi_smi *intf)
- 	if (rv)
- 		/* Send failed, no GUID available. */
- 		bmc->dyn_guid_set = 0;
--
--	wait_event(intf->waitq, bmc->dyn_guid_set != 2);
-+	else
-+		wait_event(intf->waitq, bmc->dyn_guid_set != 2);
- 
- 	/* dyn_guid_set makes the guid data available. */
- 	smp_rmb();
+diff --git a/sound/soc/intel/boards/bytcr_rt5640.c b/sound/soc/intel/boards/bytcr_rt5640.c
+index e58240e18b301..f29014a7d6723 100644
+--- a/sound/soc/intel/boards/bytcr_rt5640.c
++++ b/sound/soc/intel/boards/bytcr_rt5640.c
+@@ -588,6 +588,17 @@ static const struct dmi_system_id byt_rt5640_quirk_table[] = {
+ 					BYT_RT5640_SSP0_AIF1 |
+ 					BYT_RT5640_MCLK_EN),
+ 	},
++	{
++		/* MPMAN MPWIN895CL */
++		.matches = {
++			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "MPMAN"),
++			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "MPWIN8900CL"),
++		},
++		.driver_data = (void *)(BYTCR_INPUT_DEFAULTS |
++					BYT_RT5640_MONO_SPEAKER |
++					BYT_RT5640_SSP0_AIF1 |
++					BYT_RT5640_MCLK_EN),
++	},
+ 	{	/* MSI S100 tablet */
+ 		.matches = {
+ 			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Micro-Star International Co., Ltd."),
 -- 
 2.20.1
 
