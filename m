@@ -1,181 +1,112 @@
 Return-Path: <SRS0=L1Qp=6D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: *
-X-Spam-Status: No, score=1.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_ABUSE_SURBL autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Level: 
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04B93C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 12:55:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87713C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 12:56:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CFC31206D9
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 12:55:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=vanguardiasur-com-ar.20150623.gappssmtp.com header.i=@vanguardiasur-com-ar.20150623.gappssmtp.com header.b="u5lsvyNi"
+	by mail.kernel.org (Postfix) with ESMTP id 7118D206D9
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 12:56:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725964AbgDSMzE (ORCPT
+        id S1726012AbgDSM4B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Apr 2020 08:55:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39352 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725793AbgDSMzD (ORCPT
+        Sun, 19 Apr 2020 08:56:01 -0400
+Received: from outgoing15.flk.host-h.net ([197.242.87.49]:51627 "EHLO
+        outgoing15.flk.host-h.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725793AbgDSM4A (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Apr 2020 08:55:03 -0400
-Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC22CC061A0F
-        for <linux-kernel@vger.kernel.org>; Sun, 19 Apr 2020 05:55:02 -0700 (PDT)
-Received: by mail-ed1-x544.google.com with SMTP id s10so5144198edy.9
-        for <linux-kernel@vger.kernel.org>; Sun, 19 Apr 2020 05:55:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=vanguardiasur-com-ar.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=Pe8Qy0Gf3UYgcgfyDsFH4TWiKOw4rDRv4sJ8XYFqXvU=;
-        b=u5lsvyNiSZb72r61DjpSksiUWO68i7LgEwVmotr4VBUqiRFRHbu2EruGUR/XBlNEO0
-         w71OJJQA2nfs4t0byKoJVt3UH1HkQWxyvbQSfFBKBADfB3hAbDPA970lzbHMpYbIvwqL
-         RZ8lKNLdNGbBmxLFk9m5TQ/NmAZJJIDm1RHwU3fInbPJOk725NoYiS4UDtO199ntC7ep
-         dIbdnH6ZEg7srkRWiZQo2AFfsNsYI2pMQhYoRkdzl5fHj57TMSgxYcz07QJp/iUeySl9
-         h874sFgcXFQ4EfR7A7gVAKFCBENF8X40dhP9BkbjLSaY1E0q1cMS4g87YmZoAEnm25Jq
-         a0TA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=Pe8Qy0Gf3UYgcgfyDsFH4TWiKOw4rDRv4sJ8XYFqXvU=;
-        b=RXxPXILa2qII3uUl7w9SAGxQQ6Gp303TQW/rb7ShwKZomV6gnKdrCgNQi3XX3a+y/T
-         sBIkkBEbjO9CFX0WeVh6znu4lk/flXlkCUyHCyxZiJxlbWxv2YC/xJz0YFxm+fa/H1P6
-         1qjRpj06q0txunw9xFi6Cz5rR1pTEqArN9xN5W6dZQI4kthQ0BNgvH0xP2QZJBSHml0l
-         bD8COvy1iANryvAb5Y08GIbQ7Tc8LyzZskcvLKGp1RJ8vVitKlurUnRbgd/KkDLaajv0
-         emdCqO0zE5yt4Zg6ZJEg6VnNPL495hJip7XZFW1V2KnEDrLGqoa+ZXIQihf8MBBtyMC/
-         JLNw==
-X-Gm-Message-State: AGi0PuZEigXOIey0+TmMcKjoBVKYA2rCHLBgl3XKGccPcgBvmusVHBP1
-        nufrReMNHe78RgZE/FRPS47JwBd8s0RjVdLEPIpkcw==
-X-Google-Smtp-Source: APiQypJGVGjxtdPPkJ5/MNfOnUxhN+8psU1U9lQOyFemqbXIrJY0T9nZmKqlxy3Xpjm3uBwBmE88iVK+GHu7W9vYYM8=
-X-Received: by 2002:a05:6402:391:: with SMTP id o17mr4297099edv.71.1587300901412;
- Sun, 19 Apr 2020 05:55:01 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200417202859.35427-1-contact@artur-rojek.eu>
- <20200417202859.35427-3-contact@artur-rojek.eu> <CAHp75Vcwnu8tw92nMYc_5-x_iX+FY8_OhtaJkSYNehmNUDkHGQ@mail.gmail.com>
- <3KAY8Q.NNI6X4F9QRIX1@crapouillou.net> <CAHp75VfxQFFnVMhGvv0GCb3gv5jTPLDqLyhihRVc2earY=aYcg@mail.gmail.com>
- <86BY8Q.C5XO8D57M7BI1@crapouillou.net> <CAHp75VfULLBpFx-W04z+jRFv-hGZkTt1k7T9+eMurW55Mdc=+g@mail.gmail.com>
- <EFCY8Q.V3Q81CTO8TBP2@crapouillou.net> <CAHp75VdBr-o61QESQcbF97F5+JAU=XjVsvZ01M=nN-pe50-H9w@mail.gmail.com>
-In-Reply-To: <CAHp75VdBr-o61QESQcbF97F5+JAU=XjVsvZ01M=nN-pe50-H9w@mail.gmail.com>
-From:   Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
-Date:   Sun, 19 Apr 2020 09:54:49 -0300
-Message-ID: <CAAEAJfDLQnpsMPs8n4S1O6dA9155=mUPE7FqNQo_yNmp--UFgg@mail.gmail.com>
-Subject: Re: [RESEND PATCH v5 3/5] IIO: Ingenic JZ47xx: Add touchscreen mode.
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Paul Cercueil <paul@crapouillou.net>,
-        Artur Rojek <contact@artur-rojek.eu>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        linux-input <linux-input@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Sun, 19 Apr 2020 08:56:00 -0400
+Received: from www31.flk1.host-h.net ([188.40.1.173])
+        by antispam4-flk1.host-h.net with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.92)
+        (envelope-from <justin.swartz@risingedge.co.za>)
+        id 1jQ9UJ-0004EY-F2; Sun, 19 Apr 2020 14:55:57 +0200
+Received: from [130.255.73.16] (helo=v01.28459.vpscontrol.net)
+        by www31.flk1.host-h.net with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.89)
+        (envelope-from <justin.swartz@risingedge.co.za>)
+        id 1jQ9UH-0008SM-Gf; Sun, 19 Apr 2020 14:55:53 +0200
+From:   Justin Swartz <justin.swartz@risingedge.co.za>
+To:     Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     Justin Swartz <justin.swartz@risingedge.co.za>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v5 0/1] Add rga to rk322x device tree 
+Date:   Sun, 19 Apr 2020 12:51:32 +0000
+Message-Id: <20200419125134.29923-1-justin.swartz@risingedge.co.za>
+In-Reply-To: <558b35c3-7f75-8d0d-048b-c55c06fa8a53@gmail.com>
+References: <558b35c3-7f75-8d0d-048b-c55c06fa8a53@gmail.com>
+X-Authenticated-Sender: justin.swartz@risingedge.co.za
+X-Virus-Scanned: Clear
+X-Originating-IP: 188.40.1.173
+X-SpamExperts-Domain: risingedge.co.za
+X-SpamExperts-Username: 
+Authentication-Results: host-h.net; auth=pass (login) smtp.auth=@risingedge.co.za
+X-SpamExperts-Outgoing-Class: ham
+X-SpamExperts-Outgoing-Evidence: Combined (0.09)
+X-Recommended-Action: accept
+X-Filter-ID: Mvzo4OR0dZXEDF/gcnlw0c6d8zDasFm/nDPEg7mmhmypSDasLI4SayDByyq9LIhVNp0zUMatRwgR
+ z8NGlB62v0TNWdUk1Ol2OGx3IfrIJKyP9eGNFz9TW9u+Jt8z2T3K7uDjV/sFUXQr+CDrNQuIHgQg
+ mAX8Bxy/iUu0ThNZg0jxJtcVJProrT987X1VDPOqN+OoDzRTdku7DidYUZdNf38Sp7Of4wP429AA
+ f49baR+f3He7jw4SoVhmTJ/3eP9ORQWVx8ds1M4qmk3/bYr2p8zbg4Paoa3pNVQ0zl7t/+UfQLYB
+ qEPnp1U88kqVD8AM2G81dFO0E3gi+MOI1foZYzDggRXhpvoPtF3cVkniFXU3qJSqpdJudO6+rkiw
+ E5i8Wl78Q18OeOfsy4h7jF1Uv9lnibl3vcBqVmvQB4A18aev8yKdBC2waPTktEZ3EEGlAVXirbLu
+ Jjy3NtnGWLbnBGfrUBEXB2fYGLNieGQuoHtJvp0r29Rf3ZjFwL+MhHEWw/0qBlNDp8uABz3dkWV+
+ tnlsqEID1rwhWix/EYFNtp1TycYLFeAN4+MGwnsp7SkU6CLbyF0Zq4b1/7rjUzETJrWks4pbbQJq
+ 6gWopI3ep45X19ZysgQ+31LcAX8eoFXAhohfegXGH2GIVQVglJFbK771YV8YbC29CtmpcTqTfSIf
+ CWq9oj7OiT8GwpAriB+3/81I3rvR8KJ2fK9jiDYgijyqqY0rATpzHKGfmtNsYTr4SmDZ/bGW8xZC
+ RRs6ZD24UhFcZZEpLhnBCwImTQNvxaLyCc35VA7RvW/HGiGqxL09Cymermt8NAa/gGopT3kKfO4C
+ gvcKmV0o9jYzsFpuc43pp/LzIs3ornuRuAAdgrkq+6l7ZLNYJcf7Z6PCydDzoYZgInuDxgFOs7AZ
+ TwbwMdGiAezOfJNnrbxp9qi+/W6jZoRqxRLg4gP9h8BJWcIS38NrFoXSENXH6UXfnav35JPA4YfM
+ 6tBkXsqvKY6zoLLTPpuFqUUQz+mM8JAD4ECWNo09vb0YLIRnK477e9Xake5PIWKjIXX7qe2zOXoS
+ foxF5OBeEfTUrvq9Ipj0IAa6qZ5JdMFUcFLM1AfZpKHSiWbjO41FyBEqIaDudcVplPE6wCr6GXU1
+ lCw88ijyus1sGnWknJqS8gGhNQxpB5P3qu7c1xMljx2PG/R+pKBSKy8hXOgvE1zSS7XUhkYEQYeb
+ 3jR5NeVaJQBh0uawl0Cg8j+knAzOA9mmoJvkuhKHiekUuskYaI6ERCKp8gXWqnT9kLHhStr5fiGK
+ 7KncpWELuTEvuGslKTrRIXcXpFg5ivY=
+X-Report-Abuse-To: spam@antispammaster.host-h.net
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 17 Apr 2020 at 18:54, Andy Shevchenko <andy.shevchenko@gmail.com> w=
-rote:
->
-> On Sat, Apr 18, 2020 at 12:45 AM Paul Cercueil <paul@crapouillou.net> wro=
-te:
-> > Le sam. 18 avril 2020 =C3=A0 0:42, Andy Shevchenko
-> > <andy.shevchenko@gmail.com> a =C3=A9crit :
-> > > On Sat, Apr 18, 2020 at 12:18 AM Paul Cercueil <paul@crapouillou.net>
-> > > wrote:
-> > >>  Le sam. 18 avril 2020 =C3=A0 0:13, Andy Shevchenko
-> > >>  <andy.shevchenko@gmail.com> a =C3=A9crit :
-> > >>  > On Sat, Apr 18, 2020 at 12:05 AM Paul Cercueil
-> > >> <paul@crapouillou.net>
-> > >>  > wrote:
-> > >>  >>  Le ven. 17 avril 2020 =C3=A0 23:59, Andy Shevchenko
-> > >>  >>  <andy.shevchenko@gmail.com> a =C3=A9crit :
-> > >>  >>  > On Fri, Apr 17, 2020 at 11:21 PM Artur Rojek
-> > >>  >> <contact@artur-rojek.eu>
-> > >>  >>  > wrote:
-> > >>  >
-> > >>  > ...
-> > >>  >
-> > >>  >>  >>  +       irq =3D platform_get_irq(pdev, 0);
-> > >>  >>  >
-> > >>  >>  > Before it worked w/o IRQ, here is a regression you introduced=
-.
-> > >>  >>
-> > >>  >>  Before it simply did not need the IRQ, which is provided by the
-> > >>  >>  devicetree anyway. No regression here.
-> > >>  >
-> > >>  > Does it work without IRQ? Or it was a dead code till now?
-> > >>  > For me it's clear regression. Otherwise something is really wrong
-> > >> in a
-> > >>  > process of development of this driver.
-> > >>
-> > >>  Nothing wrong here. The IRQ was not used by the driver for the
-> > >>  functionality it provided before. It is required now to support the
-> > >>  touchscreen channels.
-> > >
-> > > This is exactly what's wrong.
-> > > Previous DTS for my (hypothetical) case has no IRQ defined. Everythin=
-g
-> > > works, right?
-> > > Now, due to this change it breaks my setup. Don't you see the problem=
-?
-> >
-> > The IRQ has been provided by every concerned DTS file since the
-> > introduction of this driver and the related bindings, even though it
-> > was not used by the driver.
->
-> Can you speak for all possible DTSs/DTBs in the wild?
-> Okay, in any case it will be problem of maintainers and yours if
-> somebody complains.
-> I'm not going to push this anyway -- your choice.
->
-> But I see a (potential) regression.
->
+This patchset aims to enable use of Rockchip's RGA, a 2D raster
+graphic acceleration unit, on rk322x based devices.
 
-So, there are a few things to keep in mind here.
+Changes in v5:
+  - Remove the patch to rockchip-rga device tree binding documentation
+    as Johan Jonker has already included mention of "rockchip,rk3228-rga"
+    since the conversion to YAML.
 
-Let's abstract ourselves from this specific driver
-for a minute.
+  - Remove the assignment of "disabled" to the rga "status" attribute
+    in rk322x.dtsi, as Heiko Stuebner has said:
+      "no status for soc internal components without any board-specifics"
 
-First, and just as Andy pointed out, we can never be fully
-sure about DTBs out there. These could be out of tree,
-so out of our control. By introducing a new requirement
-we break them, which may be seen as a regression.
+  - Remove the now unnecessary patch to enable rga for the rk3229-xms6
+    board.
 
-Second, the interrupt is not required as per
-current mainline bindings/iio/adc/ingenic,adc.txt,
-so it is perfectly legal for users to not have an interrupt
-specified.
+Changes in v4:
+  - Add a compatible value entry for the rk3228 to the rockchip-rga
+    device tree binding documentation.
 
-Now, back to this case, I think we can get away with this
-change, provided this hardware is not that widespread
-among developers/users that follow upstream closely.
+Changes in v3:
+  - Relocate rga node to the correct position in rk322x.dtsi, as
+    indicated by Johan Jonker.
 
-I suspect anyone developing a serious platform
-with this SoC is most likely using some vendor kernel.
+Changes in v2:
+  - Remove unnecessary "rockchip,rk3228-rga" device tree compatibility
+    string patch, as advised by Ezequiel Garcia.
 
-If that is not the case, i.e. if you have users _actually_
-using this upstream driver, then we should consider
-making the interrupt optional instead of required.
+  - Use both "rockchip,rk3228-rga" and "rockchip,rk3288-rga" in the
+    rga node's compatibility property, as suggested by Heiko Stuebner.
 
-Or we can also just break it and hope nobody
-complaints.
+Justin Swartz (1):
+  ARM: dts: rockchip: add rga node for rk322x
 
-BTW, this series looks great and I'm happy
-to see JZ47xx activity :-)
-
-Arthur: perhaps you can consider converting the txt dt binding
-to yaml?
-
-Cheers,
-Ezequiel
+ arch/arm/boot/dts/rk322x.dtsi | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
