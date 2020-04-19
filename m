@@ -2,131 +2,142 @@ Return-Path: <SRS0=L1Qp=6D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0401BC3A5A9
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 09:32:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E5CAC3A5A9
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 09:35:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BB407214AF
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 09:32:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5187C214AF
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 09:35:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="NH0bulwr"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="NGL2kl3S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725987AbgDSJcR (ORCPT
+        id S1726009AbgDSJfR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Apr 2020 05:32:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36526 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725306AbgDSJcP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Apr 2020 05:32:15 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 828E5C061A0C
-        for <linux-kernel@vger.kernel.org>; Sun, 19 Apr 2020 02:32:15 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id k21so6647499ljh.2
-        for <linux-kernel@vger.kernel.org>; Sun, 19 Apr 2020 02:32:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=/v/9MZ85W5Ot6ZouiFIXv368NZt8k8Og0OLJDhh34+s=;
-        b=NH0bulwrsnvt31tchVdyynbpbLgVBI1HP3Wa6GOh5EZ3Avqvjt8Ws1W0S4skKIE0JE
-         uuFvwHnFs3oUQXVFI6Uw/i025gYebahgui03U0O2zWDkm//77OlUL2W1AKMBSb9Ajkej
-         pH7FGvf7PIw3hRxqcpxFEFxOgYR/zkwsdko5P7TmbImGk2kTGiNw6chaFyxITHjQVqFY
-         uRAVMZmeGktYjCkJxVm65ElzX8WYSVJ2k7Gs01avu1wVrvwPeK6V94oh93DTqReUmhv8
-         6bEZuutMc2hlHCS5Rb8vzRuhQ8/sT8T6SFBRcGie5PJZH40vg8BxIcQxKKnbEzWKi12i
-         ZLwg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=/v/9MZ85W5Ot6ZouiFIXv368NZt8k8Og0OLJDhh34+s=;
-        b=LQy2eaVdLvm0pv7tHX/llMRh+ZM0REZPp47jyJJnvijjQmMDlXwhjgxv/DJaOQPskw
-         gD4kAVfiGV0YPGRSPXowI5PB5d43dZczrMFrMbnQcQbRf9ftMRoBYBmQOoTg7si/Oua9
-         l4u03KsaMydaKR7ZDbKLAf8B/9BsFDHFzGstaZ1Q+ymVtFQ7t+Gur/GPkh2OmNwsdiY1
-         QKHMgoLuyy4nyx9+sF7CGTI3Ur+JK5g07WVtWEbS0ByHBRubLaSztaFtkno6olr/NlwF
-         J3w95qvRAvM57fGwWh+CBic2Ntfh0PHZ60HsKoL4kGtSDbkueyBeHe0KzzYVInnyzqRD
-         YWag==
-X-Gm-Message-State: AGi0PuaCqKN2qx/P9NRA+K+ek9E+8jMq/SC7nvZp3tk5iTizgaDcaW7m
-        ARIH6T1XxvVEBLsDeEh0xcE+8A==
-X-Google-Smtp-Source: APiQypJtvjJEzhQ3IHjsR97nXY/X5+Mcqe2YVVnhcTkS4j8mOhshGgkVFOM17f0YxUmtnPiWj9nvZA==
-X-Received: by 2002:a2e:4942:: with SMTP id b2mr7168793ljd.135.1587288733899;
-        Sun, 19 Apr 2020 02:32:13 -0700 (PDT)
-Received: from ?IPv6:2a00:1fa0:2a7:ba19:e1ca:ac28:cceb:53f3? ([2a00:1fa0:2a7:ba19:e1ca:ac28:cceb:53f3])
-        by smtp.gmail.com with ESMTPSA id 64sm20404911ljj.41.2020.04.19.02.32.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 19 Apr 2020 02:32:13 -0700 (PDT)
-Subject: Re: [PATCH 6/9] nfsd: fix empty-body warning in nfs4state.c
-To:     Randy Dunlap <rdunlap@infradead.org>, linux-kernel@vger.kernel.org
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel@vger.kernel.org,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        linux-input@vger.kernel.org, Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Chuck Lever <chuck.lever@oracle.com>,
-        linux-nfs@vger.kernel.org,
-        Johannes Berg <johannes@sipsolutions.net>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>, linux-nvdimm@lists.01.org,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        linux-scsi@vger.kernel.org, target-devel@vger.kernel.org,
-        Zzy Wysm <zzy@zzywysm.com>
-References: <20200418184111.13401-1-rdunlap@infradead.org>
- <20200418184111.13401-7-rdunlap@infradead.org>
-From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Message-ID: <34fe524d-f9f0-ba8a-d5cb-ffbeacf1b5d8@cogentembedded.com>
-Date:   Sun, 19 Apr 2020 12:32:08 +0300
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
+        Sun, 19 Apr 2020 05:35:17 -0400
+Received: from mout.web.de ([217.72.192.78]:54673 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725905AbgDSJfQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 19 Apr 2020 05:35:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1587288890;
+        bh=aBvp8j+L1nTaifasG/k6Eo+pawLiP4BJx5o+pIro8s0=;
+        h=X-UI-Sender-Class:To:Cc:Subject:From:Date;
+        b=NGL2kl3SGeJGNdhv085qZJDI8JQKKK1KUB3SS5KkI6jkJAAv44o4ns7QXIan8EO0f
+         fERGM2/7NL4VW3J5GAntXx40oILNalQQ68f5qWGl//O4LDHw78+ZXbHApk151LbqTv
+         WcLni7ro2Ijf8liKzqGcp25a6Iockt/FByNL2AnE=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([2.243.85.208]) by smtp.web.de (mrweb101
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 0Lx7Ab-1jBBwm47jN-016bxG; Sun, 19
+ Apr 2020 11:34:50 +0200
+To:     Bernard Zhao <bernard@vivo.com>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org,
+        Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
+        Chunming Zhou <David1.Zhou@amd.com>
+Cc:     Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        Dhinakaran Pandiyan <dhinakaran.pandiyan@intel.com>,
+        =?UTF-8?Q?Jos=c3=a9_Roberto_de_Souza?= <jose.souza@intel.com>,
+        Lyude Paul <lyude@redhat.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Sam Ravnborg <sam@ravnborg.org>, linux-kernel@vger.kernel.org,
+        opensource.kernel@vivo.com
+Subject: Re: [PATCH] drm/amdgpu: Return more error codes in
+ amdgpu_connector_set_property()
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <a00cc21a-383f-67ca-cdc5-b727ae59d31c@web.de>
+Date:   Sun, 19 Apr 2020 11:34:47 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <20200418184111.13401-7-rdunlap@infradead.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:32A2D40OkSgOcF5U7bMgBASVmVpEIHqnEQAeY0qIr1t30awZDCv
+ dKG06tryG/C3sJ6q1+pylBfR81tovhOYb3Zp0CrR5ItgTtWjdAs3FqJyAc02g1KJr9CVhPw
+ DR+ej5uT+rp2Vhu5YYZB6ognP0v6Wc4MAzaVF5n/mLRNTpgCm8VfVP00kVGwERE2GYyD1Hp
+ p20p3jIjOjK82b42fQaNQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:7BxhmcytRdY=:fTRjN3HGS/7AbzQduubich
+ eeKu4J5yzbwF+70UnBon0fmKOIhqyaq6ipwA8RbA+v4+ow0jEjPiU/drOLFQTFr9faa8Drhxy
+ /5sRAiWsE4EGg+3BR/fRyBN4957pBwX+J6Ai7GI89cOQ6iNmUkIqZn0l/KW5lVWEo5c4C+q1r
+ +eWKX9pQ0yJVsCSgdXeP1SJs5iLKcRzrcCh5AyakT5GsxEihpQH/SxAav3I0qvmDQdxQwTsHY
+ UcArRghSx992CFbV6+XYzjIUP50Z31G7LoaPhNY1PHSKq4lMeXh7Vi7Ka59P5f+xkkXAPP5vF
+ Gqp3RNgLBcmW14TVjHuInyk7A2L0Yf5GnJaEjZmMrhnzw8M9juCo+T9RwvGErQ5xq8B9t1Hhb
+ W+jGfNNkyPvLn0gqulxbUTj5ZNaNDfJ0LQOnqzqyFJqaWnQn7E9aUPi2RoY19YQvFhkyWcmS2
+ o3r410BFdBkgM5fVkuRUlO4NI4vU1s4ayIlDlh275ko0Fufk3y846BMU+Z8GZCHZUpvqceiNi
+ 1zTlfydTNSZnv4UKuJ31G0NaE9BhKSYKxQns93zJWd/mR5AmJxBA0CWMqL5+9flVwRo5c9j/b
+ RWhQ/8O/qjzTKE1RpZXBg7zTeOSX0z4jgsZK88Sni+LpfsrusW2fn5T+/s5gE3cnOh9I0jnmV
+ i0vJZh9fQ5ILNyvjCdsIS4XTtP3Kd29GYkDMP0alyqJiUqxYjEx7h8utBVSembjoxvDiBrxEc
+ 64p8WbjW9iPrP6Kl732cS9xlKFc64Ol8vlCbIFOYq5LP7rmDYUT0LH65bMTdkh9wT11/kbYBG
+ pFOcjkLLafZwEfzy1EcyLkb6pAnqNMhvLyleZt070KG8IQwzAjp7fJv0qQH96qiRQ6Wp+/Ed5
+ X8g+Q1LLQQ/FmOYmPU//AjI1Rw75qw5tBqLjWNCYhnralLSclxPedSnS/uPR6PVe7QB8Vys4W
+ s72prYTTHER+nXyqJ1/oawoi/Mea62qNbeSZ75IoDBOUa9khIQ1sWGkjUqUSmLy8m3WivbWQX
+ SdKW2xwT7Y2Q+jwNUBd1UMZU3LAF+vxVkQpEY9/dkWCdCaR6nJphCe5GwpCFsfL8amj8Fxxr4
+ 2IhUCpgQM2UPpZDbO5uh3zbvcNXNgEODi7ciiqJ57yf1+Ww0cpWJ+xrLA3FvbkGLiM988v0st
+ G86CYnAaNsPDz4QsLO0KE5GbS3SaRwkjjvx2wC8rH8ER3vVWAXC5h2QCoMj13I4PqgfHeuMf2
+ s3oGdQUkXkWcqnwZb
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello!
+> The "if(!encoder)" branch return the same value 0 of the success
+> branch, maybe return -EINVAL is more better.
 
-On 18.04.2020 21:41, Randy Dunlap wrote:
+I suggest to improve the commit message.
 
-> Fix gcc empty-body warning when -Wextra is used:
-> 
-> ../fs/nfsd/nfs4state.c:3898:3: warning: suggest braces around empty body in an ‘else’ statement [-Wempty-body]
-> 
-> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-> Cc: Linus Torvalds <torvalds@linux-foundation.org>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: "J. Bruce Fields" <bfields@fieldses.org>
-> Cc: Chuck Lever <chuck.lever@oracle.com>
-> Cc: linux-nfs@vger.kernel.org
-> ---
->   fs/nfsd/nfs4state.c |    3 ++-
->   1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> --- linux-next-20200417.orig/fs/nfsd/nfs4state.c
-> +++ linux-next-20200417/fs/nfsd/nfs4state.c
-[...]
-> @@ -3895,7 +3896,7 @@ nfsd4_setclientid(struct svc_rqst *rqstp
->   		copy_clid(new, conf);
->   		gen_confirm(new, nn);
->   	} else /* case 4 (new client) or cases 2, 3 (client reboot): */
-> -		;
-> +		do_empty();
+* Would you like to adjust the patch subject?
 
-    In this case explicit {} would probably have been better, as described in 
-Documentation/process/coding-style.rst, clause (3).
+* How do you think about to add the tag =E2=80=9CFixes=E2=80=9D
+  because of adjustments for the exception handling?
 
-MBR, Sergei
+Regards,
+Markus
