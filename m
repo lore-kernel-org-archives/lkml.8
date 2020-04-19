@@ -2,103 +2,99 @@ Return-Path: <SRS0=L1Qp=6D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E24FC3A5A0
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 06:04:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A773C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 06:14:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3ED9B21973
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 06:04:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587276249;
-	bh=agNi+92Rk4VTgZzA3ehgkSQ9y4v1a+tAYpxKg5s3wAQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Xnk0RPZ30dIxhuyzypBYkjDd9C//Cn2LU1t06oj9po067WAsrEnA4vhNNtrLwfSd7
-	 NCJ5YL6T28dwl05hf91wThZW9sS4ADVqm8PSWohaHBDxQF9YdMdN0xuRPgR3jJN3As
-	 zijG4Tt8OifkN9saxBKaw5W1L8yWPh/fA/QGv9RE=
+	by mail.kernel.org (Postfix) with ESMTP id 0E07420753
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 06:14:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jtLjrTi+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726115AbgDSGEI (ORCPT
+        id S1725994AbgDSGO6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Apr 2020 02:04:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60428 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725914AbgDSGEH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Apr 2020 02:04:07 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 413BA2076A;
-        Sun, 19 Apr 2020 06:04:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587276247;
-        bh=agNi+92Rk4VTgZzA3ehgkSQ9y4v1a+tAYpxKg5s3wAQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=2a4P62AV1qdwRJhSwItZe45Wmyq7eJCSCexW9g0a3N4ujoGZ8gNWS52E9mXAEcDMu
-         MVTzEtKlOCze+k1ZHx9ZbgImXxdUJq4+HCQIb6h6A/d0jQvRT8FYmdVneCtPIDW3ea
-         oBSwXeCSPEAnzjcpBuad/kRHbvJ+xX2EHIlpiMHI=
-Date:   Sun, 19 Apr 2020 08:04:04 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Randy Dunlap <rdunlap@infradead.org>
+        Sun, 19 Apr 2020 02:14:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34672 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725914AbgDSGO5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 19 Apr 2020 02:14:57 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58890C061A0C
+        for <linux-kernel@vger.kernel.org>; Sat, 18 Apr 2020 23:14:56 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id r4so3409972pgg.4
+        for <linux-kernel@vger.kernel.org>; Sat, 18 Apr 2020 23:14:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=h4Kymai0tHPy4v24RW3/SFQROwJdZQGu5SVwP1QVDBk=;
+        b=jtLjrTi+k64qPZ5oc7RmnDFdZb3FRqqksFQzWwfC1GKWJmf3YUgPM0lIoX5nOTttKy
+         NbV3mMLOQy02gV5nk+O8c6dQhogEvoN2fIJY6ndaKWdKWL6ZffGx6UD3iFnrPWMIRmND
+         TCnPdQQ9FMbbQgMh7dTtCy62dtiWt2gOLYo1BjklxeK1ny/klNxdi62GXs2nH9vdbR5n
+         BuITglFBo2XKk3icSP187NpyITxHABbLGDf6/pQlWswMOoSl3tFv6bpWd06cjwRNg+gE
+         ZF1AiE8sd5OuQzIhZi9Be0rH93hxId6JYxmhCMQOUjzlsKS0Rmyy03m+Y//6ksfygbPL
+         sfpw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=h4Kymai0tHPy4v24RW3/SFQROwJdZQGu5SVwP1QVDBk=;
+        b=gyiccooYD3TOrKy2leD1FPiGtE2JHfpk8QVFfQewG/omlfi7WaqdFHklQvXmGuBxRB
+         Q7X7UQ5OJohs6x0TyhMSz0PgcieO3SlzQHVQU0hueGto2kfvd+DBKOvyAKlu6SXgxAXz
+         FcvE9Vq6COaC6t/MtMdmyrFsROUTVFRpQ1ZpmYFpmuhDOROZYVyH3JwY5zpjlIEOSAxX
+         7eY/6VTMgWeCBNvhg1MEJNB1ohRcsK/CqGgdtuAUgnea2ZavPevepu8cQPqUUn9GSs4g
+         +NfdNm3bBVsb5NPRMM66GYxgbvfvmHCHr7fTQ88EvhDmh2YkWFUE4egXWMUOaeXxI7+/
+         2uaA==
+X-Gm-Message-State: AGi0PuZvq5IKhJYpFx15xXrGwuwPgaNcDOYvYSQG8FAxyjx5uZv625xF
+        PlOacuSRTmYUVcVhceWB654=
+X-Google-Smtp-Source: APiQypLUzvDOyEEHsLKqhQ4+Q36lix/EwCAHkjPW1DD4ORP/OC3JwhPkdJcuIDIa7TCh1PnOtwieBw==
+X-Received: by 2002:a05:6a00:d:: with SMTP id h13mr11188350pfk.254.1587276894728;
+        Sat, 18 Apr 2020 23:14:54 -0700 (PDT)
+Received: from CentOS76.localdomain.localdomain ([27.59.158.48])
+        by smtp.gmail.com with ESMTPSA id q145sm9527932pfq.105.2020.04.18.23.14.52
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 18 Apr 2020 23:14:54 -0700 (PDT)
+From:   jagdsh.linux@gmail.com
+To:     jolsa@kernel.org, acme@redhat.com, ak@linux.intel.com
 Cc:     linux-kernel@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel@vger.kernel.org,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        linux-input@vger.kernel.org, Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
-        linux-usb@vger.kernel.org,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Chuck Lever <chuck.lever@oracle.com>,
-        linux-nfs@vger.kernel.org,
-        Johannes Berg <johannes@sipsolutions.net>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>, linux-nvdimm@lists.01.org,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        linux-scsi@vger.kernel.org, target-devel@vger.kernel.org,
-        Zzy Wysm <zzy@zzywysm.com>
-Subject: Re: [PATCH 7/9] drivers/base: fix empty-body warnings in
- devcoredump.c
-Message-ID: <20200419060404.GB3535909@kroah.com>
-References: <20200418184111.13401-1-rdunlap@infradead.org>
- <20200418184111.13401-8-rdunlap@infradead.org>
- <20200419060247.GA3535909@kroah.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200419060247.GA3535909@kroah.com>
+        Jagadeesh Pagadala <jagdsh.linux@gmail.com>
+Subject: [PATCH 2/7] tools/lib/perf/: Remove duplicate headers
+Date:   Sun, 19 Apr 2020 11:43:56 +0530
+Message-Id: <1587276836-17088-1-git-send-email-jagdsh.linux@gmail.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 19, 2020 at 08:02:47AM +0200, Greg Kroah-Hartman wrote:
-> On Sat, Apr 18, 2020 at 11:41:09AM -0700, Randy Dunlap wrote:
-> > Fix gcc empty-body warning when -Wextra is used:
-> > 
-> > ../drivers/base/devcoredump.c:297:42: warning: suggest braces around empty body in an ‘if’ statement [-Wempty-body]
-> > ../drivers/base/devcoredump.c:301:42: warning: suggest braces around empty body in an ‘if’ statement [-Wempty-body]
-> > 
-> > Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-> > Cc: Johannes Berg <johannes@sipsolutions.net>
-> > Cc: Linus Torvalds <torvalds@linux-foundation.org>
-> > Cc: Andrew Morton <akpm@linux-foundation.org>
-> > ---
-> >  drivers/base/devcoredump.c |    5 +++--
-> >  1 file changed, 3 insertions(+), 2 deletions(-)
-> > 
-> > --- linux-next-20200417.orig/drivers/base/devcoredump.c
-> > +++ linux-next-20200417/drivers/base/devcoredump.c
-> > @@ -9,6 +9,7 @@
-> >   *
-> >   * Author: Johannes Berg <johannes@sipsolutions.net>
-> >   */
-> > +#include <linux/kernel.h>
-> 
-> Why the need for this .h file being added for reformatting the code?
+From: Jagadeesh Pagadala <jagdsh.linux@gmail.com>
 
-Ah, the function you add, nevermind, need more coffee...
+Code cleanup: Remove duplicate headers which are included twice.
+
+Signed-off-by: Jagadeesh Pagadala <jagdsh.linux@gmail.com>
+---
+ tools/lib/perf/evlist.c | 2 --
+ 1 file changed, 2 deletions(-)
+
+diff --git a/tools/lib/perf/evlist.c b/tools/lib/perf/evlist.c
+index 5b9f2ca..def5505 100644
+--- a/tools/lib/perf/evlist.c
++++ b/tools/lib/perf/evlist.c
+@@ -11,10 +11,8 @@
+ #include <internal/mmap.h>
+ #include <internal/cpumap.h>
+ #include <internal/threadmap.h>
+-#include <internal/xyarray.h>
+ #include <internal/lib.h>
+ #include <linux/zalloc.h>
+-#include <sys/ioctl.h>
+ #include <stdlib.h>
+ #include <errno.h>
+ #include <unistd.h>
+-- 
+1.8.3.1
+
