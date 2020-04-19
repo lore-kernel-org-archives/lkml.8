@@ -2,119 +2,130 @@ Return-Path: <SRS0=L1Qp=6D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D208BC5321D
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 16:23:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF57CC38A30
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 16:29:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AD232206A2
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 16:23:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C9DC21744
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 16:29:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="H1CZqwge"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jXLgxdKl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726441AbgDSQXn (ORCPT
+        id S1726472AbgDSQ31 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Apr 2020 12:23:43 -0400
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:7140 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726195AbgDSQXn (ORCPT
+        Sun, 19 Apr 2020 12:29:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43914 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726181AbgDSQ31 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Apr 2020 12:23:43 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e9c7b020000>; Sun, 19 Apr 2020 09:23:30 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Sun, 19 Apr 2020 09:23:43 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Sun, 19 Apr 2020 09:23:43 -0700
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL111.nvidia.com
- (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sun, 19 Apr
- 2020 16:23:42 +0000
-Received: from [10.2.171.241] (10.124.1.5) by DRHQMAIL107.nvidia.com
- (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sun, 19 Apr
- 2020 16:23:41 +0000
-Subject: Re: [PATCH 4.19.113 0/3] Fix for long operation cmds busy detection
-To:     Greg KH <gregkh@linuxfoundation.org>
-CC:     <adrian.hunter@intel.com>, <ulf.hansson@linaro.org>,
-        <baolin.wang@linaro.org>, <kstewart@linuxfoundation.org>,
-        <tglx@linutronix.de>, <bradleybolen@gmail.com>,
-        <faiz_abbas@ti.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <bbiswas@nvidia.com>, <anrao@nvidia.com>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-mmc@vger.kernel.org>
-References: <1587150844-12003-1-git-send-email-skomatineni@nvidia.com>
- <20200419072030.GB3544449@kroah.com>
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-Message-ID: <6911ee08-1376-a515-9393-1ebc6cc6a255@nvidia.com>
-Date:   Sun, 19 Apr 2020 09:23:39 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <20200419072030.GB3544449@kroah.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- DRHQMAIL107.nvidia.com (10.27.9.16)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1587313410; bh=THXoFzL4jbGyEFhE13WdiyX6TS4MJeZeIi9LdpewNtg=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=H1CZqwgerootbdKx9l02gfJ/1LjDdG+zc+A0sxaenfQNcoEmHXA6xkbs/rMGiQro1
-         hBgdwSoqbG9KdHfLgNFvaDVU0CM1T1ALN4ey4+fxYSn8ZnZm2Yg9t04jrqiBBGuxMc
-         +5kIWEARJAzrZrkl+Jawi++Y++kCXrWrwAzK6orthe3K6Q8BacAteK8tCFM3/hE95g
-         85SSaaBKf5vmf3+TluBWT+9EUYqdl+5lnwE5Rkv8ScxKuU2S9I5GVExpKKrPqp2lAx
-         1ogIUb9zvX2Mo4KhygFQmUL8LnWblToPkMqYaeu0o7sLBYfSk2SSgj3RBhj0HSl179
-         8j8wn/E1Qi/nQ==
+        Sun, 19 Apr 2020 12:29:27 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7E4EC061A0C;
+        Sun, 19 Apr 2020 09:29:26 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id d17so3831450pgo.0;
+        Sun, 19 Apr 2020 09:29:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=0FiYUfEJjdc2qCXXLulXM9aMdQx537xDQqCGw0jD4yQ=;
+        b=jXLgxdKlSxG1q+KJVknY8KH+LOVrwgIXqfkbVXb1AyPU5A2XFZiItsMW4HDDiTHC4K
+         uQsjbGuE5effVjnpC7Gnq7gi2j64euL2zx/fO3Uh6skqEfV6e0CGUdLKqlBfV5klDRqb
+         BK3bCArjuwvKonXLHd5qmT4eyKdBvauvfR7LkMBbGPWoGkZs6Enr4rb5c02lgS+8wMva
+         0zEDVyBWzz45zwBnNqCZ9ZnXriRz/9GbHJsTU2rzf9LDC/as6FzKGcuqbdz+jTQrEGzq
+         SDGTjr/lLFYImJI7iYvo/9X6YA+bIVVGuJA0LWNrgf6i8qdMupqKIo+h7s52AKx0d5to
+         BN0Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=0FiYUfEJjdc2qCXXLulXM9aMdQx537xDQqCGw0jD4yQ=;
+        b=cpEY4buKRVAsvzVUX9LiIetvhpGfLDpqHyQ2jTg4Iwf1RNIrmF8+hgjlM5VrKshM/6
+         Kd9H+kSEsvnm1Le95KfwY00H1qa9Cu0S8e3p3DyvauDVuwv0ZHFI8Ja/tI7OMPEyOY+F
+         i4JowPAwQVAgozGOdp4fMMLkjX35EbExxSfP4bLUDjJWdpRVeJO4sfOra+F+0cJim4FJ
+         YpGhzQizsRvMduwKtzGWFewzavTKeZn64XzNqs0aV/9wLmqfVYAxd1VI0LO6mC4bvcPx
+         8ThVX4WW8wlF5d2mInIC93Z5I1GLNRst3lpET+eg4UygU5piQtx5OuE17V+abmYI5Vgx
+         QVUQ==
+X-Gm-Message-State: AGi0Pua4SUx3AKaCeaHM4TCNhtvgEfYsKHjaCw9O/KrqwGCkiLfR94Zz
+        px36T+8vEkB/qmImeAqSQ2E=
+X-Google-Smtp-Source: APiQypK1N/mC/hRovML5gGDssyc7j0IQSUwmDtRMCItqXJMWAZ3Z5O6cGwYu07wdf7ow+A62kfIJPQ==
+X-Received: by 2002:a62:dd4e:: with SMTP id w75mr1576877pff.221.1587313766325;
+        Sun, 19 Apr 2020 09:29:26 -0700 (PDT)
+Received: from localhost.localdomain ([2409:4072:610d:f65:24cf:c6c4:f8fd:66fc])
+        by smtp.gmail.com with ESMTPSA id x16sm11319197pfc.61.2020.04.19.09.29.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 19 Apr 2020 09:29:25 -0700 (PDT)
+From:   Aishwarya Ramakrishnan <aishwaryarj100@gmail.com>
+To:     Ariel Elior <aelior@marvell.com>, GR-everest-linux-l2@marvell.com,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     aishwaryarj100@gmail.com
+Subject: [PATCH] net: qed: Remove unneeded cast from memory allocation
+Date:   Sun, 19 Apr 2020 21:59:17 +0530
+Message-Id: <20200419162917.23030-1-aishwaryarj100@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Remove casting the values returned by memory allocation function.
 
-On 4/19/20 12:20 AM, Greg KH wrote:
-> External email: Use caution opening links or attachments
->
->
-> On Fri, Apr 17, 2020 at 12:14:01PM -0700, Sowjanya Komatineni wrote:
->> This series includes manually backported changes that implements Tegra
->> specific timeout callback to switch between finite and infinite HW busy
->> detection wait modes.
->>
->> sdhci-tegra driver patch implements set_timeout callback based on one of
->> the sdhci host driver patch that refactors sdhci_set_timeout and allows
->> drivers to call __sdhci_set_timeout with their timeout callback
->> implementation.
->>
->> Both of these patches are manually backported in this series.
-> Is this a bugfix or a new feature?  I can't tell, but it feels like it's
-> a new feature.  What's wrong with just using the 5.4.y kernel tree?
->
-> thanks,
->
-> greg k-h
-Ulf recent patches for increased timeout adds capability 
-MMC_CAP_NEED_RSP_BUSY for sdhci-tegra as well.
+Coccinelle emits WARNING: casting value returned by memory allocation
+function to struct pointer is useless.
 
-So, it will always use R1B for R1B type commands so there are no known 
-bugs or failures with mmc devices we use on our platforms.
+This issue was detected by using the Coccinelle.
 
-So, we can treat this patch as an improvement for long operation 
-commands where HW will wait as long as device is busy.
+Signed-off-by: Aishwarya Ramakrishnan <aishwaryarj100@gmail.com>
+---
+ drivers/net/ethernet/qlogic/qed/qed_roce.c | 17 ++++++++---------
+ 1 file changed, 8 insertions(+), 9 deletions(-)
 
-Yes, should be fine to have this from 5.4.y
-
-For 5.4.y and 5.5.y, we can back-port same patch that was applied to 5.6.y
-
-Will send back-port request of that..
-
-Thanks
-
-Sowjanya
+diff --git a/drivers/net/ethernet/qlogic/qed/qed_roce.c b/drivers/net/ethernet/qlogic/qed/qed_roce.c
+index 37e70562a964..475b89903f46 100644
+--- a/drivers/net/ethernet/qlogic/qed/qed_roce.c
++++ b/drivers/net/ethernet/qlogic/qed/qed_roce.c
+@@ -736,9 +736,9 @@ static int qed_roce_sp_destroy_qp_responder(struct qed_hwfn *p_hwfn,
+ 
+ 	p_ramrod = &p_ent->ramrod.roce_destroy_qp_resp;
+ 
+-	p_ramrod_res = (struct roce_destroy_qp_resp_output_params *)
+-	    dma_alloc_coherent(&p_hwfn->cdev->pdev->dev, sizeof(*p_ramrod_res),
+-			       &ramrod_res_phys, GFP_KERNEL);
++	p_ramrod_res = dma_alloc_coherent(&p_hwfn->cdev->pdev->dev,
++					  sizeof(*p_ramrod_res),
++					  &ramrod_res_phys, GFP_KERNEL);
+ 
+ 	if (!p_ramrod_res) {
+ 		rc = -ENOMEM;
+@@ -872,10 +872,10 @@ int qed_roce_query_qp(struct qed_hwfn *p_hwfn,
+ 	}
+ 
+ 	/* Send a query responder ramrod to FW to get RQ-PSN and state */
+-	p_resp_ramrod_res = (struct roce_query_qp_resp_output_params *)
+-	    dma_alloc_coherent(&p_hwfn->cdev->pdev->dev,
+-			       sizeof(*p_resp_ramrod_res),
+-			       &resp_ramrod_res_phys, GFP_KERNEL);
++	p_resp_ramrod_res =
++		dma_alloc_coherent(&p_hwfn->cdev->pdev->dev,
++				   sizeof(*p_resp_ramrod_res),
++				   &resp_ramrod_res_phys, GFP_KERNEL);
+ 	if (!p_resp_ramrod_res) {
+ 		DP_NOTICE(p_hwfn,
+ 			  "qed query qp failed: cannot allocate memory (ramrod)\n");
+@@ -920,8 +920,7 @@ int qed_roce_query_qp(struct qed_hwfn *p_hwfn,
+ 	}
+ 
+ 	/* Send a query requester ramrod to FW to get SQ-PSN and state */
+-	p_req_ramrod_res = (struct roce_query_qp_req_output_params *)
+-			   dma_alloc_coherent(&p_hwfn->cdev->pdev->dev,
++	p_req_ramrod_res = dma_alloc_coherent(&p_hwfn->cdev->pdev->dev,
+ 					      sizeof(*p_req_ramrod_res),
+ 					      &req_ramrod_res_phys,
+ 					      GFP_KERNEL);
+-- 
+2.17.1
 
