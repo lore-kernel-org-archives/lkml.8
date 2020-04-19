@@ -2,90 +2,117 @@ Return-Path: <SRS0=L1Qp=6D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB34DC3A5A9
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 09:51:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FF08C54F70
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 09:52:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9B19721473
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 09:51:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3956A21D82
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 09:52:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="p3g9j1xn"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FWRvVsQ1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725970AbgDSJvg (ORCPT
+        id S1726055AbgDSJwS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Apr 2020 05:51:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39474 "EHLO
+        Sun, 19 Apr 2020 05:52:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39592 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725905AbgDSJvg (ORCPT
+        by vger.kernel.org with ESMTP id S1725923AbgDSJwR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Apr 2020 05:51:36 -0400
-Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85014C061A0F
-        for <linux-kernel@vger.kernel.org>; Sun, 19 Apr 2020 02:51:34 -0700 (PDT)
-Received: by mail-lf1-x141.google.com with SMTP id w145so5420728lff.3
-        for <linux-kernel@vger.kernel.org>; Sun, 19 Apr 2020 02:51:34 -0700 (PDT)
+        Sun, 19 Apr 2020 05:52:17 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6475C061A0C;
+        Sun, 19 Apr 2020 02:52:17 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id o15so2974452pgi.1;
+        Sun, 19 Apr 2020 02:52:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=N9JI33hna/+DxESkUc7SCOMzfYQhchoF06eN0/wfACI=;
-        b=p3g9j1xnjdCtzhbgZS6lVhDB+mXR+o9+FTp1/dXRbri/Wmu8K7EsTY54Buw14cqV/t
-         VKxBLkOHqGwNawDndp5tVo/S7shTTp5VMCP5HXlx8k/HYr2tWG8IWRdGbpqCALRIZzQM
-         Uz+TJKMudQF8GP6epv9M+qUY0yPfFOA3Rtftp5MoijLCN0kLYX66lDmQHN005k+sIOr/
-         4WL3/aPNX72Hze9blP2PGXgcyc7ChGVoR33ORT9uk0i6aKO5Tp5fvInqHRq/KFyuRFxh
-         70sd1Nm6cx1GNlcjDDS6kH2o/l0cYZ87Zsa8nqUlRZhyHhUD5FqIDNJ3V6gaweMl1PwH
-         Ge+Q==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=+11ImWVoVHo1Abgo1KUvhS2FQIppsCfo6UH+T+/qzgs=;
+        b=FWRvVsQ1TN0ioGAeP+byZm1uP2+/Un1uA4Yij5mmCFDmuFOEH5LJ0Un71NJml3z2zS
+         RwqkhA8ucP14SMtr023/NLsNMRFzQOBlGsJXK6RccSIaGF9cuUsUqNGsCwhQCMZDm5kp
+         oPlT8jKmogxlORhe/7Mkirg4kuMV7n0tsmSiMCGWcgXsVxM72lnYMevctrLQ/PlyX4sR
+         NUBOqXht8yFnrc8C6Ng82pnF18qCTS7vFHYkwqDkJT61ZL2v1aYxm/F9hWPl5qOXCZma
+         Ikxgie+/qJyHPvrqviIVO5lfrbMLvejysrt61YFI7IJRsZJMgigQb9zUphubNm3Yw99N
+         ymnA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=N9JI33hna/+DxESkUc7SCOMzfYQhchoF06eN0/wfACI=;
-        b=PdfkTXzF41FMiNilC8ETAxP4oBuVzfRmIAcHNtwEOJk5VeDh1yAs597tcSvRxvEBEJ
-         sliPtWMs5cpANPoZN47ZopCKcMLhQaeewGQcHpGO1Pof4Z/MnJO0h7+xvo12ojhw5alG
-         uQTGxwtKajNAHOfmLZaztzIbf9ToLl6sxoNwNDcAcGySEtwO1mfO4GAdZlTtYVMUC6od
-         6xyRoVTcc7eScAwId9c2wlaLjKPv0pE4JxA+ww5QGro6t+5S/HSZWMMDo0IskEqzbGGC
-         TP6MKbuEYRj3CmVBHCxLc5bGsBtyjYRb8PzRaT41m5rqvzWyaAUAjPyf7W88KKTF4QYB
-         NNFw==
-X-Gm-Message-State: AGi0PuZtgTStrOc/UZ9Pk+3i/aMVBB1DbGt8aiF+70JCgB2E33ut+vnD
-        rOUtOsd4YffKIwF259IHxPHcAC5QqWEGutoOuL1CGg==
-X-Google-Smtp-Source: APiQypIlD7DYc2IomXQqpRtLDysv7ESAnj92UknD/T+xCMSjLv6O3t2ovN2pL1+lrcMzWtZaNVqxUacU/pQItDMN1+I=
-X-Received: by 2002:a05:6512:685:: with SMTP id t5mr7019601lfe.47.1587289892894;
- Sun, 19 Apr 2020 02:51:32 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=+11ImWVoVHo1Abgo1KUvhS2FQIppsCfo6UH+T+/qzgs=;
+        b=GHu+z26RdfTdvCM9VeP5bqbdK7jrlVJf+VYEMaQq1Sx+Dm7p61Zp/DGuxXnlb0cK4Z
+         DgZ0h4oMoVRjYWt83Md6HEYMYAaGLR4kvodwmirjrnb52DR4BEcLqFtIuSiHvFZrJ3oz
+         Gx5A5cNG+irKdgDYdfdbSNSMemEQ3pzncBG3J0BZOCFuMXFnya6bqA4ZX97s7fn5RAVv
+         HxCpsTv8giA0kN5VTNFe7I+KrtoO/fegq879WAVwIO+E+yUXPLN17HzSbH/1VkKpAu68
+         kNpdi9JSBrvpM+KiOxd8XvO1eQE3+0Oy59DUQVAAlhOSynXvGbMpmEsdRuU6Yaw/Deyn
+         XOeg==
+X-Gm-Message-State: AGi0PubJhaDQ9gGiZixeTXSFAya8ztzu+fjk+JkFBcnOSgrYNDStjc4d
+        eqxXi1Rn6OkSlvU55eHZn8c=
+X-Google-Smtp-Source: APiQypIV0Hhn3WvBrjTXwFhP/7vuLOvB5fDLVw64BVXPX8cdraufg3tgoyuc1aqBd6agwvtez4MFPg==
+X-Received: by 2002:aa7:8d52:: with SMTP id s18mr9868901pfe.72.1587289937219;
+        Sun, 19 Apr 2020 02:52:17 -0700 (PDT)
+Received: from CentOS76.localdomain.localdomain ([27.59.130.218])
+        by smtp.gmail.com with ESMTPSA id h193sm18745431pfe.30.2020.04.19.02.52.13
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 19 Apr 2020 02:52:16 -0700 (PDT)
+From:   jagdsh.linux@gmail.com
+To:     hadar.gat@arm.com, mpm@selenic.com, herbert@gondor.apana.org.au,
+        arnd@arndb.de, gregkh@linuxfoundation.org
+Cc:     linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jagadeesh Pagadala <jagdsh.linux@gmail.com>
+Subject: [PATCH] drivers/char/hw_random/cctrng.c: Compilation fix.
+Date:   Sun, 19 Apr 2020 15:21:18 +0530
+Message-Id: <1587289878-121900-1-git-send-email-jagdsh.linux@gmail.com>
+X-Mailer: git-send-email 1.8.3.1
 MIME-Version: 1.0
-References: <20200418081637.1585-1-christophe.jaillet@wanadoo.fr>
-In-Reply-To: <20200418081637.1585-1-christophe.jaillet@wanadoo.fr>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sun, 19 Apr 2020 11:51:21 +0200
-Message-ID: <CACRpkdZ347msE7ohENGw1nBLJX1zQybywKoMA8HgZ6Cc6d9Z-A@mail.gmail.com>
-Subject: Re: [PATCH] PCI: v3-semi: Fix a memory leak in some error handling
- paths in 'v3_pci_probe()'
-To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Apr 18, 2020 at 10:16 AM Christophe JAILLET
-<christophe.jaillet@wanadoo.fr> wrote:
+From: Jagadeesh Pagadala <jagdsh.linux@gmail.com>
 
-> IF we fails somewhere in 'v3_pci_probe()', we need to free 'host'.
-> Use the managed version of 'pci_alloc_host_bridge()' to do that easily.
-> The use of managed resources is already widely used in this driver.
->
-> Fixes: 68a15eb7bd0c ("PCI: v3-semi: Add V3 Semiconductor PCI host driver")
-> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Adding the needed header <linux/fips.h> to fix following compilation error.
 
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
+	CC      drivers/char/hw_random/cctrng.o
+	drivers/char/hw_random/cctrng.c: In function ‘cc_trng_compwork_handler’:
+	drivers/char/hw_random/cctrng.c:334:49: error: ‘fips_enabled’ undeclared (first use in this function)
+	  if (CC_REG_FLD_GET(RNG_ISR, CRNGT_ERR, isr) && fips_enabled) {
+							 ^
+	drivers/char/hw_random/cctrng.c:334:49: note: each undeclared identifier is reported only once for each function it appears in
+	drivers/char/hw_random/cctrng.c:335:3: error: implicit declaration of function ‘fips_fail_notify’ [-Werror=implicit-function-declaration]
+	   fips_fail_notify();
+	   ^
+	cc1: some warnings being treated as errors
+	make[4]: *** [drivers/char/hw_random/cctrng.o] Error 1
 
-Yours,
-Linus Walleij
+Signed-off-by: Jagadeesh Pagadala <jagdsh.linux@gmail.com>
+---
+ drivers/char/hw_random/cctrng.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/drivers/char/hw_random/cctrng.c b/drivers/char/hw_random/cctrng.c
+index bdcd562..3124269 100644
+--- a/drivers/char/hw_random/cctrng.c
++++ b/drivers/char/hw_random/cctrng.c
+@@ -18,6 +18,10 @@
+ 
+ #include "cctrng.h"
+ 
++#ifdef CONFIG_CRYPTO_FIPS
++#include <linux/fips.h>
++#endif
++
+ #define CC_REG_LOW(name)  (name ## _BIT_SHIFT)
+ #define CC_REG_HIGH(name) (CC_REG_LOW(name) + name ## _BIT_SIZE - 1)
+ #define CC_GENMASK(name)  GENMASK(CC_REG_HIGH(name), CC_REG_LOW(name))
+-- 
+1.8.3.1
+
