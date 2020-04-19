@@ -2,150 +2,138 @@ Return-Path: <SRS0=L1Qp=6D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AC36C38A30
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 18:17:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1544C54F70
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 18:23:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 24BAF20771
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 18:17:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1498214AF
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 18:23:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OFPZulq2"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Afs/bhME"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726772AbgDSSRT (ORCPT
+        id S1726423AbgDSSXB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Apr 2020 14:17:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60456 "EHLO
+        Sun, 19 Apr 2020 14:23:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33098 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726674AbgDSSRS (ORCPT
+        with ESMTP id S1725969AbgDSSXB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Apr 2020 14:17:18 -0400
-Received: from mail-oi1-x244.google.com (mail-oi1-x244.google.com [IPv6:2607:f8b0:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96141C061A0C;
-        Sun, 19 Apr 2020 11:17:18 -0700 (PDT)
-Received: by mail-oi1-x244.google.com with SMTP id k133so6840695oih.12;
-        Sun, 19 Apr 2020 11:17:18 -0700 (PDT)
+        Sun, 19 Apr 2020 14:23:01 -0400
+Received: from mail-ua1-x943.google.com (mail-ua1-x943.google.com [IPv6:2607:f8b0:4864:20::943])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF504C061A0F
+        for <linux-kernel@vger.kernel.org>; Sun, 19 Apr 2020 11:23:00 -0700 (PDT)
+Received: by mail-ua1-x943.google.com with SMTP id f59so2352376uaf.9
+        for <linux-kernel@vger.kernel.org>; Sun, 19 Apr 2020 11:23:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=lVp5J3L7xx8RfXE2l8kRTsve29d/FePp3kDwKpOyzDI=;
-        b=OFPZulq25UF5Y3RgTIxgelFvx960Yxgf5FCnStv1HtEKZb5UkQBgAl7dT4Q/nU+Nak
-         l/lwtgyWuFi3bkOfgmCowMtHeDiHNL/GBtFOSZ85BoP3gGmXR+mMeFhh0U1h+T+LcLoo
-         L+Q0w4AMISfeLKd+45klOzRkEoPCNPXRyQGMUig9xAbQCZJBbqSFRkJtCzYJaCecNPhe
-         AKzX2fj/GItNfLMCi+SOpOQeBsFYUoQNI5w6fNXFHwFVMunlTl8+Q5zwbvTLKc8AEJqP
-         U/Y0NlhUAstrzNaCxkxLgE7yhqmFx4XrZzzTXdCV+xTe0Jgjo7Kj4dsvk+oZ3/4x6MsS
-         cdlg==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:cc
+         :content-transfer-encoding;
+        bh=OkSXlLd1OI6YTd2bVj1Y/vakCv0k00Q6ubPQGf9tb58=;
+        b=Afs/bhMEDq2p1dCZuoTJywON2+IgPM8lLUhQ9O0GtNPjL0aIWgaI5nzl7Ukcrlbwrt
+         F0uRHV3C8VvOViv3vFJV/yd9EuepaKKEA+Nl4fPLLJxobSZFPSjvWg5uceQDZlus1/dV
+         KxQi8p7LBLMA4exdiEosaT1uuuPCwnJ7gB0bIsARwJDFptIPXTPEyLoUCHW21hja2pA/
+         lz7o/HRAQRJtMH1QW9ZYe/UJkC0uYonnOL/rrDqHSHphKHp5k4DuaztWRJ465OiLtrhB
+         LIvJYJXB4Clbe/dIg9Lh+Lsc8EwEHo09YRpuG+j3Lw+duGVleSvE3sPS9pJe+sqamBM6
+         qlDg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=lVp5J3L7xx8RfXE2l8kRTsve29d/FePp3kDwKpOyzDI=;
-        b=WdMlg8LpRYON/IEc6Nd1+GMIJDko19rqAzz7NBN8oy2rE15sO/f1tsGKwMha6JoBHq
-         408OTVJkAjTiYlrljyCCvM4tqASfHeab4Ilq6+aAMy9gz7qzrOQiBqkSX5X+ODv+4L6V
-         LHPwWYkvG0PoG0GQio//ChFbXWm6P1fmeY4ezZQYr9eE9Qo/jBrYNebrJMWdS8vDjL0C
-         RG9mfgTv084xZF64eBkFYUCwSs2Ij6KTe3UKTcQU8UP37aGVmsT+A8/+SaGocXCCTACX
-         293MqOwwsdntATbOWLYaCvLFZR/W3ojYTb128BfdLJ8GCT5FFKocogbdITlJHvsTCODR
-         srlw==
-X-Gm-Message-State: AGi0PubcLlvBbF5o0fJ+p1LlPAQWe067wYKJ/PiK0wrkjef/4ZcefGTj
-        /Dgtw7PYw05UE+Vx55Wi86c=
-X-Google-Smtp-Source: APiQypLC9nSr85KAnDCf/Fcm0RAg1jJAX5LAwsXyAPvAW1T3J4VBzxNDOpMV25OndERnFmP8FRHqUQ==
-X-Received: by 2002:aca:c70f:: with SMTP id x15mr8168206oif.80.1587320237904;
-        Sun, 19 Apr 2020 11:17:17 -0700 (PDT)
-Received: from ubuntu-s3-xlarge-x86 ([2604:1380:4111:8b00::3])
-        by smtp.gmail.com with ESMTPSA id r67sm9556198oie.19.2020.04.19.11.17.17
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 19 Apr 2020 11:17:17 -0700 (PDT)
-Date:   Sun, 19 Apr 2020 11:17:15 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Masahiro Yamada <masahiroy@kernel.org>
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com, linux-kbuild@vger.kernel.org,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Dmitry Golovin <dima@golovin.in>,
-        Sedat Dilek <sedat.dilek@gmail.com>
-Subject: Re: [PATCH 2/2] MIPS: VDSO: Do not disable VDSO when linking with
- ld.lld
-Message-ID: <20200419181715.GA36234@ubuntu-s3-xlarge-x86>
-References: <20200419180445.26722-1-natechancellor@gmail.com>
- <20200419180445.26722-2-natechancellor@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:cc:content-transfer-encoding;
+        bh=OkSXlLd1OI6YTd2bVj1Y/vakCv0k00Q6ubPQGf9tb58=;
+        b=EV+35QNUFJUtA+HcADJa2bJrfjJOp6Ha1wttmJbvAgD3d1NNLxyuU6AbhSBlz4IvWD
+         YdxfMz1YnhJ6clxu+XQHmWvLjhFDUZF9Qhfn6Vxw0Sdg0UnetzOop/LuhQ2KE3PaGvW1
+         H6qvZKgnyOSMNXvwXr5cgh1CQH9iuk8YXwqs7SINHYJNQ8mUhBzZwpfKaz8Qm2zORgUs
+         G22SoASwb1nB7KRdNoG3i60eSDX7+WAVsJeNyi06jtNa8CMWdfBT7taN81hv+avWGGBt
+         48jeubJewQG40l9ruRgpf7hW45GVi1sBz3CbMLzmJplmAj8HMkZhXFezb+IGD3VvM/Q7
+         WaLA==
+X-Gm-Message-State: AGi0PuZRyFnpgF1L11CGnGAONptOPJbW2OWi6XJbkgXvfECVc7igYJIr
+        KWuOR/fHuPB/6lBlGjn++oMt3W3YqsmzB/Ba3jY=
+X-Received: by 2002:ab0:375a:: with SMTP id i26mt6009964uat.120.1587320579776;
+ Sun, 19 Apr 2020 11:22:59 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200419180445.26722-2-natechancellor@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200419041651.GD166864@dtor-ws> <20200419074624.9955-1-priv.luk@gmail.com>
+ <20200419180136.GK166864@dtor-ws> <CAJmEJMzzFO1G=iQy=EfwQ89iWMjpcpupBjBkG29aigqYsc36bA@mail.gmail.com>
+In-Reply-To: <CAJmEJMzzFO1G=iQy=EfwQ89iWMjpcpupBjBkG29aigqYsc36bA@mail.gmail.com>
+From:   LuK1337 <priv.luk@gmail.com>
+Date:   Sun, 19 Apr 2020 20:22:48 +0200
+Message-ID: <CAJmEJMxDsPmOpYHYYzUXYxknFe6Uwo6OuF+=Q3bzUmqxK3Psag@mail.gmail.com>
+Subject: Re: [PATCH] Input: xpad - Update xboxone fw2015 init packet
+Cc:     LuK1337 <priv.luk@gmail.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Allison Randal <allison@lohutok.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Richard Fontana <rfontana@redhat.com>,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 19, 2020 at 11:04:45AM -0700, Nathan Chancellor wrote:
-> Currently, when linking with ld.lld, this warning pops up:
-> 
->     arch/mips/vdso/Makefile:70: MIPS VDSO requires binutils >= 2.25
-> 
-> ld-ifversion calls ld-version, which calls scripts/ld-version.sh, which
-> is specific to GNU ld. ld.lld has a completely different versioning
-> scheme (as it follows LLVM's versioning) and it does not have the issue
-> mentioned in the comment above this block so it should not be subjected
-> to this check.
-> 
-> With this patch, the VDSO successfully links and shows P_MIPS_PC32 in
-> vgettimeofday.o.
-> 
-> $ llvm-objdump -Dr arch/mips/vdso/vgettimeofday.o | grep R_MIPS_PC32
-> 			00000024:  R_MIPS_PC32	_start
-> 			000000b0:  R_MIPS_PC32	_start
-> 			000002bc:  R_MIPS_PC32	_start
-> 			0000036c:  R_MIPS_PC32	_start
-> 			00000468:  R_MIPS_PC32	_start
-> 
-> Link: https://github.com/ClangBuiltLinux/linux/issues/785
-> Link: https://github.com/llvm/llvm-project/commit/e364e2e9ce50c12eb2bf093560e1a1a8544d455a
-> Reported-by: Dmitry Golovin <dima@golovin.in>
-> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-> ---
->  arch/mips/vdso/Makefile | 8 +++++---
->  1 file changed, 5 insertions(+), 3 deletions(-)
-> 
-> diff --git a/arch/mips/vdso/Makefile b/arch/mips/vdso/Makefile
-> index d7fe8408603e..f99e583d14a1 100644
-> --- a/arch/mips/vdso/Makefile
-> +++ b/arch/mips/vdso/Makefile
-> @@ -65,9 +65,11 @@ DISABLE_VDSO := n
->  # the comments on that file.
->  #
->  ifndef CONFIG_CPU_MIPSR6
-> -  ifeq ($(call ld-ifversion, -lt, 225000000, y),y)
-> -    $(warning MIPS VDSO requires binutils >= 2.25)
-> -    DISABLE_VDSO := y
-> +  ifndef CONFIG_LD_IS_LLD
-> +    ifeq ($(call ld-ifversion, -lt, 225000000, y),y)
-> +      $(warning MIPS VDSO requires binutils >= 2.25)
-> +      DISABLE_VDSO := y
-> +    endif
->    endif
->  endif
->  
-> -- 
-> 2.26.1
-> 
+I had this issue with official Microsoft Xbox One S Controler (model: 1708)=
+;
+It might also be firmware version related as I recently updated my firmware
+to the latest one but I'm not sure about that.
 
-Hmmm, I still see this warning when first runing make <config>... I
-assume because this Makefile gets parsed before Kconfig runs.
-
-Perhaps it would be better to check if ld-version is 0 (since that means
-we are not using GNU ld):
-
-ifneq ($(call ld-ifversion, -eq, 0, y),y)
-
-I am open to suggestions though.
-
-Cheers,
-Nathan
+(also sorry for duplicate msgs that you might have received from me;
+I'm new to lkml)
+On Sun, Apr 19, 2020 at 8:14 PM LuK1337 <priv.luk@gmail.com> wrote:
+>
+> I had this issue with official Microsoft Xbox One S Controler (model: 170=
+8);
+> It might also be firmware version related as I recently updated my firmwa=
+re
+> to the latest one but I'm not sure about that.
+>
+> On Sun, Apr 19, 2020 at 8:01 PM Dmitry Torokhov <dmitry.torokhov@gmail.co=
+m> wrote:
+>>
+>> On Sun, Apr 19, 2020 at 09:46:23AM +0200, LuK1337 wrote:
+>> > From: =C5=81ukasz Patron <priv.luk@gmail.com>
+>> >
+>> > Appending { 0x05, 0x20, 0x02, 0x0f, 0x06 } to
+>> > xboxone_fw2015_init fixes an issue where the
+>> > controller is somewhat stuck in bluetooth
+>> > mode until you plug it into Windows PC.
+>> >
+>> > Signed-off-by: =C5=81ukasz Patron <priv.luk@gmail.com>
+>>
+>> Thank you =C5=81ukasz. Could you please tell me what device(s) have you
+>> observed the issue with? I am a bit worried if this may interfere with
+>> other devices that currently work fine with the driver. Cameron, Mark,
+>> do you have any concerns here?
+>>
+>> > ---
+>> >  drivers/input/joystick/xpad.c | 3 ++-
+>> >  1 file changed, 2 insertions(+), 1 deletion(-)
+>> >
+>> > diff --git a/drivers/input/joystick/xpad.c b/drivers/input/joystick/xp=
+ad.c
+>> > index 6b40a1c68f9f..894fa81f717a 100644
+>> > --- a/drivers/input/joystick/xpad.c
+>> > +++ b/drivers/input/joystick/xpad.c
+>> > @@ -455,7 +455,8 @@ struct xboxone_init_packet {
+>> >   * or later firmware installed (or present from the factory).
+>> >   */
+>> >  static const u8 xboxone_fw2015_init[] =3D {
+>> > -     0x05, 0x20, 0x00, 0x01, 0x00
+>> > +     0x05, 0x20, 0x00, 0x01, 0x00,
+>> > +     0x05, 0x20, 0x02, 0x0f, 0x06
+>> >  };
+>> >
+>> >  /*
+>> > --
+>> > 2.26.0
+>> >
+>>
+>> Thanks.
+>>
+>> --
+>> Dmitry
