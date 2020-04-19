@@ -2,111 +2,85 @@ Return-Path: <SRS0=L1Qp=6D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0949C38A30
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 19:26:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF965C38A30
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 19:28:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E5ED21473
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 19:26:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEB5321473
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 19:28:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UlBQrYXL"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="S+lOIHhu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726804AbgDST0s (ORCPT
+        id S1726412AbgDST2B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Apr 2020 15:26:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42858 "EHLO
+        Sun, 19 Apr 2020 15:28:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43046 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726743AbgDST0p (ORCPT
+        with ESMTP id S1725848AbgDST2A (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Apr 2020 15:26:45 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09438C061A0C;
-        Sun, 19 Apr 2020 12:26:45 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id a22so3464899pjk.5;
-        Sun, 19 Apr 2020 12:26:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=pMhdquAr/HzwmzyKmiKytwMMb3XOVcxGDwBpxb4EVIg=;
-        b=UlBQrYXLrdkGZ0G70SpLh4Q4zMV+/d8t+uiaDHD9q4axnbr0qlg85uy/xlPPPGwg/K
-         d9GWK1QnkWSDbYzAOGgD653D3GY/kVmCCFPmmnsmax3a+ntw2LoNSZMr6eM1RrfunqbQ
-         oOXOrQ9VJUKrRmZgOeHr7hEUEDiP0UQnHseBgOcvdbP7wbOJN8Qj4p/OyQXzFiZPRQld
-         WJH28TWhCGh/hYlE2n0e+sQp2jcczEzB8RpxsJQOKR/0CKZFKI2KyI86GeytmpGj63fg
-         rvAIR5+l5gbk8IHMKqHD8egXd2ZtreQFjlaN2KMA/9lBXEo6Sa0JqAA5/ibOKZWgTAoQ
-         JrAg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=pMhdquAr/HzwmzyKmiKytwMMb3XOVcxGDwBpxb4EVIg=;
-        b=JF5HwfXQS+h5O+o7Qmrl5Duh0GxABFFYe4YeyKyYK9wbgtlH9catu/tfsnWHDSsHAE
-         qtCggMuzlFOOXAjBL9S87WN3WXOaeUnod+viW+jUiuOrAYsOP8SmLczsduLimGwf7T05
-         +r9ziOjrp62XLoUL+hLvyeO5atyklcwBNdhaxmehA83/Upo7UWq1jcPC80E/hrx24SmW
-         VKr/23aIVwy5JPcJP5mORkBtPr0VwE1Udv/0VS04UDQqfTvzcbPgqUST/S8ZPqchG8kY
-         +cYErOMJ2gXNIe61FdzGIIhFra0AZdae1CNo5iCqS5uP2Nte6AcJsAIcnYMyn44D+EYS
-         u7uQ==
-X-Gm-Message-State: AGi0PubW0e0VGpZhni/IZk2/nx1Y72ncdCr8rGZa1s0umqCrU/beBEAf
-        j5FsJ4bFcuuY2LsXz/D2nJka8szDbt8=
-X-Google-Smtp-Source: APiQypJUCOnxdO12HZ7x4lmV0A3J9bRJMfas4lrJHVXpUZxKRi5IWl8oNDtC8PSwDtMu4uWwKPsB6A==
-X-Received: by 2002:a17:90a:d3ca:: with SMTP id d10mr4836977pjw.24.1587324404651;
-        Sun, 19 Apr 2020 12:26:44 -0700 (PDT)
-Received: from mail.broadcom.com ([192.19.231.250])
-        by smtp.gmail.com with ESMTPSA id x16sm22724383pfm.146.2020.04.19.12.26.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 19 Apr 2020 12:26:44 -0700 (PDT)
-From:   Kamal Dasu <kdasu.kdev@gmail.com>
-To:     Kamal Dasu <kdasu.kdev@gmail.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Mark Brown <broonie@kernel.org>
-Cc:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [Patch v2 9/9] spi: bcm-qspi: MSPI_SPCR0_MSB MSTR bit exists only on legacy controllers
-Date:   Sun, 19 Apr 2020 15:23:38 -0400
-Message-Id: <20200419192339.32023-10-kdasu.kdev@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200419192339.32023-1-kdasu.kdev@gmail.com>
-References: <20200419192339.32023-1-kdasu.kdev@gmail.com>
+        Sun, 19 Apr 2020 15:28:00 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83DC4C061A0C
+        for <linux-kernel@vger.kernel.org>; Sun, 19 Apr 2020 12:28:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=Om9Pn6c41Q2Pv/+P2olefe0VgPv5maq/6fkuXbhZtt8=; b=S+lOIHhuOL4BPLfPMD3fHu/zp3
+        SESIX52ZNdhZ97Lp8/MlUwvoJ9DqXPb+NyAjfQkzoXPdHExLGtJaDb93PUIfBeabVePFYnJyaoJRt
+        kqCEpvcM9vsP0H05fHUjQpVnlKYqFaKXRZCnxN7n93AuGH+1lxyCU1ZK6TCeEzLVR0locYeYtu7oH
+        ba4Fi/m2zv1g/S3HJqbecWFcMd08n/p/DUw15NTyO+jgSZ4OobyALl4GfhjVTQubNy0Qf1J3g0EdH
+        0P9JEfDo464SaTu8MpdGehEZE9C1a9DzL7sOaQzyfQz6Wz15DPZsB/IoIbdZeJ6+/865pQVPmwQ+2
+        L6kTOMoQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jQFbf-0001KT-Rv; Sun, 19 Apr 2020 19:27:56 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 3A00230275A;
+        Sun, 19 Apr 2020 21:27:54 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 1ECB72B4E42EA; Sun, 19 Apr 2020 21:27:54 +0200 (CEST)
+Date:   Sun, 19 Apr 2020 21:27:54 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     alexandre.chartre@oracle.com, linux-kernel@vger.kernel.org,
+        jthierry@redhat.com, tglx@linutronix.de, x86@kernel.org
+Subject: Re: [RFC][PATCH 3/7] objtool: Allow branches within the same
+ alternative.
+Message-ID: <20200419192754.GY20696@hirez.programming.kicks-ass.net>
+References: <20200416150752.569029800@infradead.org>
+ <20200416151024.885221682@infradead.org>
+ <20200419163219.b5dpg246xh6avsci@treble>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200419163219.b5dpg246xh6avsci@treble>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Set MASTER bit on the MSPI_SPCR0_MSB only for legacy MSPI and HIF_MSPI
-controllers.
+On Sun, Apr 19, 2020 at 11:32:19AM -0500, Josh Poimboeuf wrote:
+> On Thu, Apr 16, 2020 at 05:07:55PM +0200, Peter Zijlstra wrote:
+> > From: Alexandre Chartre <alexandre.chartre@oracle.com>
+> > 
+> > Currently objtool prevents any branch to an alternative. While preventing
+> > branching from the outside to the middle of an alternative makes perfect
+> > sense, branching within the same alternative should be allowed. To do so,
+> > identify each alternative and check that a branch to an alternative comes
+> > from the same alternative.
+> > 
+> > Signed-off-by: Alexandre Chartre <alexandre.chartre@oracle.com>
+> > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> > Link: https://lkml.kernel.org/r/20200414103618.12657-3-alexandre.chartre@oracle.com
+> 
+> I I think I'd rather just drop this patch.  It adds some complexity and
+> I don't really see a benefit to having the warning in the first place.
 
-Fixes: fa236a7ef240 ("spi: bcm-qspi: Add Broadcom MSPI driver")
-Signed-off-by: Kamal Dasu <kdasu.kdev@gmail.com>
----
- drivers/spi/spi-bcm-qspi.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/spi/spi-bcm-qspi.c b/drivers/spi/spi-bcm-qspi.c
-index 99f2cfcbb50c..681d09085175 100644
---- a/drivers/spi/spi-bcm-qspi.c
-+++ b/drivers/spi/spi-bcm-qspi.c
-@@ -576,11 +576,17 @@ static void bcm_qspi_hw_set_parms(struct bcm_qspi *qspi,
- 	spcr = clamp_val(spbr, bcm_qspi_spbr_min(qspi), QSPI_SPBR_MAX);
- 	bcm_qspi_write(qspi, MSPI, MSPI_SPCR0_LSB, spcr);
- 
--	spcr = MSPI_MASTER_BIT;
-+	if (!qspi->mspi_maj_rev)
-+		/* legacy controller */
-+		spcr = MSPI_MASTER_BIT;
-+	else
-+		spcr = 0;
-+
- 	/* for 16 bit the data should be zero */
- 	if (xp->bits_per_word != 16)
- 		spcr |= xp->bits_per_word << 2;
- 	spcr |= xp->mode & 3;
-+
- 	bcm_qspi_write(qspi, MSPI, MSPI_SPCR0_MSB, spcr);
- 
- 	if (bcm_qspi_has_fastbr(qspi)) {
--- 
-2.17.1
-
+Also; we totally don't need it, sorry for not realizing that earlier.
+Consider it gone.
