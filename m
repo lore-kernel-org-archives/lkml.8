@@ -2,138 +2,80 @@ Return-Path: <SRS0=L1Qp=6D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC821C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 21:55:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90A1EC38A29
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 21:55:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C014021973
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 21:55:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BFD120735
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 21:55:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="wjzgc90g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726091AbgDSVzr (ORCPT
+        id S1726144AbgDSVzy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Apr 2020 17:55:47 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:42208 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725848AbgDSVzr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Apr 2020 17:55:47 -0400
-Received: by mail-pf1-f193.google.com with SMTP id r20so3970153pfh.9;
-        Sun, 19 Apr 2020 14:55:46 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Br4qVD6vNcOTeGAPUTvXdaMBJRDE1FMGq+EEBulVyKA=;
-        b=HvvLL0OcZZ1bO0VhqygCu2a/3agaSD8bIGaoA5TyCemvfAvwMCUOWEpKw0GwvpHoVF
-         wVqxvbHAOA1o1YUJiBWHctCaanntEF8zi7PP9ohtah8I4MTGZZ/jRoW5QFl5AbdncZmo
-         IYK/LA6ZWY7pV5Zw1rv69RopcPv3dTNobpM2Vw88Jqhs1GV/zLsJ5g3hkFXDGUL6JulW
-         GvZ7YUO95/kD0GhEtORikQBld6wbQL69dcX+xFLczky0RVdz/QeR7bcd0FpYSzyCMo3u
-         1SPUbHMo/Av9FJofP0O/dLZxPgbhHBTHBc3I0SeRytLeb3fOmTDZyQHuaQVH2zAXmRRx
-         3dHQ==
-X-Gm-Message-State: AGi0PuYibJc/+rGrYfXM8hKy+Ycu24G/ZOEFfXmFm66lb4Zh2dl/3yit
-        qFOgBrx6NHB+tHalI4WuceU=
-X-Google-Smtp-Source: APiQypILUJeV066/FeccQlF/yOmA6aYxTTF0zi1MK6KK770wqgS/jEy9+PKiMhVDohfqUAoAFP9Tjw==
-X-Received: by 2002:aa7:8429:: with SMTP id q9mr13601282pfn.205.1587333345858;
-        Sun, 19 Apr 2020 14:55:45 -0700 (PDT)
-Received: from [100.124.11.78] ([104.129.198.64])
-        by smtp.gmail.com with ESMTPSA id 80sm24479420pgb.45.2020.04.19.14.55.43
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 19 Apr 2020 14:55:44 -0700 (PDT)
-Subject: Re: [PATCH v2 03/10] blktrace: fix debugfs use after free
-To:     Luis Chamberlain <mcgrof@kernel.org>, axboe@kernel.dk,
-        viro@zeniv.linux.org.uk, gregkh@linuxfoundation.org,
-        rostedt@goodmis.org, mingo@redhat.com, jack@suse.cz,
-        ming.lei@redhat.com, nstange@suse.de, akpm@linux-foundation.org
-Cc:     mhocko@suse.com, yukuai3@huawei.com, linux-block@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Omar Sandoval <osandov@fb.com>,
-        Hannes Reinecke <hare@suse.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        syzbot+603294af2d01acfdd6da@syzkaller.appspotmail.com
-References: <20200419194529.4872-1-mcgrof@kernel.org>
- <20200419194529.4872-4-mcgrof@kernel.org>
-From:   Bart Van Assche <bvanassche@acm.org>
-Message-ID: <91c82e6a-24ce-0b7d-e6e4-e8aa89f3fb79@acm.org>
-Date:   Sun, 19 Apr 2020 14:55:42 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Sun, 19 Apr 2020 17:55:54 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:49042 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725848AbgDSVzx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 19 Apr 2020 17:55:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=j46L+tn/U2w9KaKzwAJtWpSSbKCNxNLhJe4DrV1FHzA=; b=wjzgc90gDM3LyszNv3KxFSqR9Y
+        U/nBQdqgMv5h6YLPaM9tpkFAkQgEevPjZPs21m5YYFyDi1u1gAR2WfwyEoAgYgUrYm02uQzEJfLQq
+        grfldMBY+w8IoAXrq1AWPmkIYh4Db1+EU8Isc4Mqz0MRau8ZZQ3d54jAmAGONP13tlGs=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1jQHun-003hht-BS; Sun, 19 Apr 2020 23:55:49 +0200
+Date:   Sun, 19 Apr 2020 23:55:49 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Michael Walle <michael@walle.cc>
+Cc:     linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        "David S . Miller" <davem@davemloft.net>
+Subject: Re: [PATCH net-next 3/3] net: phy: bcm54140: add hwmon support
+Message-ID: <20200419215549.GR836632@lunn.ch>
+References: <20200417195003.GG785713@lunn.ch>
+ <35d00dfe1ad24b580dc247d882aa2e39@walle.cc>
+ <20200417201338.GI785713@lunn.ch>
+ <84679226df03bdd8060cb95761724d3a@walle.cc>
+ <20200417212829.GJ785713@lunn.ch>
+ <4f3ff33f78472f547212f87f75a37b66@walle.cc>
+ <20200419162928.GL836632@lunn.ch>
+ <ebc026792e09d5702d031398e96d34f2@walle.cc>
+ <20200419170547.GO836632@lunn.ch>
+ <0f7ea4522a76f977f3aa3a80dd62201d@walle.cc>
 MIME-Version: 1.0
-In-Reply-To: <20200419194529.4872-4-mcgrof@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0f7ea4522a76f977f3aa3a80dd62201d@walle.cc>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/19/20 12:45 PM, Luis Chamberlain wrote:
-> +int __must_check blk_queue_debugfs_register(struct request_queue *q)
-> +{
-> +	struct dentry *dir = NULL;
-> +
-> +	/* This can happen if we have a bug in the lower layers */
+> But what does that have to do with the shared structure? I don't think
+> you have to "bundle" the shared structure with the "access the global
+> registers" method.
 
-What does "this" refer to? Which layers does "lower layers" refer to? 
-Most software developers consider a module that calls directly into 
-another module as a higher layer (callbacks through function pointers do 
-not count; see also https://en.wikipedia.org/wiki/Modular_programming). 
-According to that definition block drivers are a software layer 
-immediately above the block layer core.
+We don't need to. But it would be a good way to clean up code which
+locks the mdio bus, does a register access on some other device, and
+then unlocks the bus.
 
-How about changing that comment into the following to make it 
-unambiguous (if this is what you meant)?
+As a general rule of thumb, it is better to have the core do the
+locking, rather than the driver. Driver writers don't always think
+about locking, so it is better to give driver writers safe APIs to
+use.
 
-	/*
-	 * Check whether the debugfs directory already exists. This can
-	 * only happen as the result of a bug in a block driver.
-	 */
+	Andrew
 
-> +	dir = debugfs_lookup(kobject_name(q->kobj.parent), blk_debugfs_root);
-> +	if (dir) {
-> +		pr_warn("%s: registering request_queue debugfs directory twice is not allowed\n",
-> +			kobject_name(q->kobj.parent));
-> +		dput(dir);
-> +		return -EALREADY;
-> +	}
-> +
-> +	q->debugfs_dir = debugfs_create_dir(kobject_name(q->kobj.parent),
-> +					    blk_debugfs_root);
-> +	if (!q->debugfs_dir)
-> +		return -ENOMEM;
-> +
-> +	return 0;
-> +}
-
-kobject_name(q->kobj.parent) is used three times in the above function. 
-How about introducing a local variable that holds the result of that 
-expression?
-
-> +static bool blk_trace_target_disk(const char *target, const char *diskname)
-> +{
-> +	if (strlen(target) != strlen(diskname))
-> +		return false;
-> +
-> +	if (!strncmp(target, diskname,
-> +		     min_t(size_t, strlen(target), strlen(diskname))))
-> +		return true;
-> +
-> +	return false;
-> +}
-
-The above code looks weird to me. When the second if-statement is 
-reached, it is guaranteed that 'target' and 'diskname' have the same 
-length. So why to calculate the minimum length in the second 
-if-statement of two strings that have the same length?
-
-Independent of what the purpose of the above code is, can that code be 
-rewritten such that it does not depend on the details of how names are 
-assigned to disks and partitions? Would disk_get_part() be useful here?
-
-Thanks,
-
-Bart.
