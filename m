@@ -6,22 +6,22 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4468C5321D
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 17:12:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE19EC38A30
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 17:12:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8EC5D206E9
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 17:12:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9587D206E9
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 17:12:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726861AbgDSRMy (ORCPT
+        id S1726872AbgDSRM5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Apr 2020 13:12:54 -0400
-Received: from v6.sk ([167.172.42.174]:44156 "EHLO v6.sk"
+        Sun, 19 Apr 2020 13:12:57 -0400
+Received: from v6.sk ([167.172.42.174]:44160 "EHLO v6.sk"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726211AbgDSRMw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Apr 2020 13:12:52 -0400
+        id S1726860AbgDSRMz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 19 Apr 2020 13:12:55 -0400
 Received: from localhost (v6.sk [IPv6:::1])
-        by v6.sk (Postfix) with ESMTP id 09D6B610B7;
-        Sun, 19 Apr 2020 17:12:21 +0000 (UTC)
+        by v6.sk (Postfix) with ESMTP id 687D5610B8;
+        Sun, 19 Apr 2020 17:12:23 +0000 (UTC)
 From:   Lubomir Rintel <lkundrak@v3.sk>
 List-Id: <soc.lore.kernel.org>
 To:     soc@kernel.org
@@ -32,9 +32,9 @@ Cc:     Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>,
         Robert Jarzmik <robert.jarzmik@free.fr>,
         linux-kernel@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>,
         Andrew Lunn <andrew@lunn.ch>
-Subject: [PATCH 08/15] ARM: dts: mmp*: Fix up encoding of the /rtc interrupts property
-Date:   Sun, 19 Apr 2020 19:11:50 +0200
-Message-Id: <20200419171157.672999-9-lkundrak@v3.sk>
+Subject: [PATCH 09/15] ARM: dts: mmp3: Fix L2 cache controller node name
+Date:   Sun, 19 Apr 2020 19:11:51 +0200
+Message-Id: <20200419171157.672999-10-lkundrak@v3.sk>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200419171157.672999-1-lkundrak@v3.sk>
 References: <20200419171157.672999-1-lkundrak@v3.sk>
@@ -45,44 +45,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This way the device tree validator learns that each cell of the property
-constitutes a separate item. Otherwise it gets unnecessairly upset:
+The current one makes validation unhappy:
 
-  mmp3-dell-ariel.dt.yaml: rtc@d4010000: interrupts: [[1, 0]] is too short
+  mmp3-dell-ariel.dt.yaml: l2-cache-controller@d0020000: $nodename:0:
+      'l2-cache-controller@d0020000' does not match
+      '^(cache-controller|cpu)(@[0-9a-f,]+)*$'
 
 Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
 Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 ---
- arch/arm/boot/dts/mmp2.dtsi | 2 +-
  arch/arm/boot/dts/mmp3.dtsi | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/mmp2.dtsi b/arch/arm/boot/dts/mmp2.dtsi
-index da10567b5aca6..4306f3a6742bf 100644
---- a/arch/arm/boot/dts/mmp2.dtsi
-+++ b/arch/arm/boot/dts/mmp2.dtsi
-@@ -364,7 +364,7 @@ twsi6: i2c@d4034000 {
- 			rtc: rtc@d4010000 {
- 				compatible = "mrvl,mmp-rtc";
- 				reg = <0xd4010000 0x1000>;
--				interrupts = <1 0>;
-+				interrupts = <1>, <0>;
- 				interrupt-names = "rtc 1Hz", "rtc alarm";
- 				interrupt-parent = <&intcmux5>;
- 				clocks = <&soc_clocks MMP2_CLK_RTC>;
 diff --git a/arch/arm/boot/dts/mmp3.dtsi b/arch/arm/boot/dts/mmp3.dtsi
-index 9b5087a95e736..3ac5e4e86e56d 100644
+index 3ac5e4e86e56d..531e1d85d5fa6 100644
 --- a/arch/arm/boot/dts/mmp3.dtsi
 +++ b/arch/arm/boot/dts/mmp3.dtsi
-@@ -474,7 +474,7 @@ twsi6: i2c@d4034000 {
- 			rtc: rtc@d4010000 {
- 				compatible = "mrvl,mmp-rtc";
- 				reg = <0xd4010000 0x1000>;
--				interrupts = <1 0>;
-+				interrupts = <1>, <0>;
- 				interrupt-names = "rtc 1Hz", "rtc alarm";
- 				interrupt-parent = <&rtc_mux>;
- 				clocks = <&soc_clocks MMP2_CLK_RTC>;
+@@ -523,7 +523,7 @@ ssp4: spi@d4039000 {
+ 			};
+ 		};
+ 
+-		l2: l2-cache-controller@d0020000 {
++		l2: cache-controller@d0020000 {
+ 			compatible = "marvell,tauros3-cache", "arm,pl310-cache";
+ 			reg = <0xd0020000 0x1000>;
+ 			cache-unified;
 -- 
 2.26.0
 
