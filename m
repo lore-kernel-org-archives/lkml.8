@@ -2,198 +2,112 @@ Return-Path: <SRS0=L1Qp=6D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3556FC38A30
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 14:59:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8857EC38A30
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 15:05:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0D854214D8
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 14:59:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10B5C214D8
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 15:05:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HLXSV3B6"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UB3Fbtbl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726491AbgDSO7e (ORCPT
+        id S1726521AbgDSPFg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Apr 2020 10:59:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58414 "EHLO
+        Sun, 19 Apr 2020 11:05:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59340 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725947AbgDSO7d (ORCPT
+        with ESMTP id S1726458AbgDSPFf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Apr 2020 10:59:33 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6FCB4C061A0C;
-        Sun, 19 Apr 2020 07:59:33 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id g30so3675240pfr.3;
-        Sun, 19 Apr 2020 07:59:33 -0700 (PDT)
+        Sun, 19 Apr 2020 11:05:35 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7082AC061A0C
+        for <linux-kernel@vger.kernel.org>; Sun, 19 Apr 2020 08:05:35 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id d17so8815559wrg.11
+        for <linux-kernel@vger.kernel.org>; Sun, 19 Apr 2020 08:05:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=kdyI82JjT3M56W4J6XJScvBjuJ26MbF7Q/2Npkyn2zY=;
-        b=HLXSV3B6MpciVNZO5VC7bSsaJmsaR6kf8peM/E6RZp9/NbzKOntDCNZ+ME5z7NLcZG
-         iuN/Te6ZU9e0LBgQDVVh0Iwdvy66+7Cml0fzbQdSOQyyVNBup9lEc8FriCfxaR2OvPYL
-         xw7bGJzbVsFt8LtxR1jsBDNnv2YfDGhFvYMC9f7ifdiIG+8eInZjON9YtILKe3y15tC/
-         RW8ccAZ+f+be6NQ2XnXfcZulTaRg+SVr7sNXOVOnTYiGIEYwHBv0uivEMAeayfXlHgfK
-         GIv0VnA89HaGMYuK7f2XEIVgQpqTZhJU5VdKg/BE2jtHqSn374WiVdbN+kBI9exdr4N0
-         ODwA==
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=f5P85hmUMhEq+eY3Fw9ehsoGgopm9PSDgtwYxrXj4Rw=;
+        b=UB3FbtblWCqsJJwAEUxsm67LpYnI51ri/oflUT3gRwEcpE3oOtro/2Pyno9yFIkw7R
+         SWvlGrvRGjUv6hsKiFXYvrTKl4JGNDkMsdXIg5aoa/LCGRqKKJtH/C0nGEgnlxH2TyU6
+         QxfF9kRqpei3BqZ2GmTVbISesOABpKjO8KEuZlfP3iJif4sfBx+8N2qjQ4YTvcKyWnH2
+         Zogz4jOcxDAwf15GHC0DgEeCZd0JKr4YabErRuvw3z6PRqHSn5l03f/RDIvj5CI7uCJH
+         iq8OCZhWD6c1voXRpao0tSEkJ+4FEWso57f7QnzvzOkZ0QpZPtIlNzghKlZRI2XmaPFC
+         YgkQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=kdyI82JjT3M56W4J6XJScvBjuJ26MbF7Q/2Npkyn2zY=;
-        b=sPvhPF55bpZ07u1ytSIAZVXxrJ7WLWAKwFrVz9rdcM7vdCH7wH1efOZIwinIPMO9xK
-         +56tCIar3h5wuoWtIIlOhDTeJ0jfV+KSud7IYi/Cts2VShiuSVV+sPrm1lo6pTO+/E4B
-         VPYLgdQjNy2tZ9K1z7T8PAcOhgeTMYuqb6xU3brPcoaenEQPN0s0/oiy+UtF2AOUQTOA
-         ob01/aDiEnffYnku0apcrqZAdsAcomzShIx6f89Jn9tWPoiHU2JECpj8pn5P3cVvHNcF
-         kON7JZ2JNfqR2aXf7eLt5vQlymrXO4zpC+c/C4AeL6EQdOKoHVXm8HupTxePWhMJu8Dp
-         7Y+w==
-X-Gm-Message-State: AGi0PuYYmgv1FA2Fx+PJQd+185+VT/CSWr9icrKbPWDlTDQV0QpQcLha
-        UZ/WriEnJrRxuf5on1h0t08=
-X-Google-Smtp-Source: APiQypL0kp5Zdl//h4W4UC2WtOAQlc6Kv1C0L0oEgDHxV9ag05+rmydqxq0cqFtIpM6w9abfHSJFQQ==
-X-Received: by 2002:a63:cf4e:: with SMTP id b14mr12869302pgj.344.1587308372933;
-        Sun, 19 Apr 2020 07:59:32 -0700 (PDT)
-Received: from nishad ([106.51.232.103])
-        by smtp.gmail.com with ESMTPSA id 17sm19487412pgg.76.2020.04.19.07.59.29
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 19 Apr 2020 07:59:32 -0700 (PDT)
-Date:   Sun, 19 Apr 2020 20:29:26 +0530
-From:   Nishad Kamdar <nishadkamdar@gmail.com>
-To:     Theodore Ts'o <tytso@mit.edu>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Joe Perches <joe@perches.com>
-Cc:     linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] ext4: Use the correct style for SPDX License Identifier
-Message-ID: <20200419145922.GA9713@nishad>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=f5P85hmUMhEq+eY3Fw9ehsoGgopm9PSDgtwYxrXj4Rw=;
+        b=GaoRdUf17C+SgRvR+3s2of/ZMfHNAlbCUhz0LdUNg4xvAkXQPCppri3uTTyTuGFkq1
+         i1UUV8Efp28l9DjaLeNKMSmeD09+1ehACZSic3GWxN62eSAHy04Of/CQstAmUKldeqRH
+         32bFjBP1kC7rDoWss4FFxLYEIo7qsqp7vlQIYJQBokBZU6l8l+CC7oBz3Yvu4x6uOGT4
+         AlgFDFjIljX3hzjmUXvs++FnXhFi67/4nV+KwNbCvRzpFWzUmr3DX0VdWihn/0UhCniy
+         SdiTr5hNcHhtclfzxOdSkXPScvt0kkEja1knU3HMv7A2kg68/nGMdXFR8MDrIggEuDDv
+         gm3w==
+X-Gm-Message-State: AGi0Pub+spQp7xBG/Sqap6mTZarVVaFouavX/A3zk03RY5QsiQzlAE0n
+        7rLzjFKISNEVlf59pAZiluIf6x+OawAaKFgeAWg=
+X-Google-Smtp-Source: APiQypKJVViZSl1iZBIeUYfV13AGcmfiqHfkciGRh6iFjmSPINU2ia6Mo5Hmv29OfSfWyivJZNe+7A==
+X-Received: by 2002:a5d:4306:: with SMTP id h6mr13371145wrq.234.1587308733878;
+        Sun, 19 Apr 2020 08:05:33 -0700 (PDT)
+Received: from lmecxl0524.home (2a01cb058702ff00947c0d9b78b8fa1e.ipv6.abo.wanadoo.fr. [2a01:cb05:8702:ff00:947c:d9b:78b8:fa1e])
+        by smtp.gmail.com with ESMTPSA id w12sm25948635wrk.56.2020.04.19.08.05.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 19 Apr 2020 08:05:33 -0700 (PDT)
+From:   Etienne Carriere <etienne.carriere@linaro.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     linux-arm-kernel@lists.infradead.org, james.morse@arm.com,
+        michal.simek@xilinx.com, richard.gong@linux.intel.com,
+        lorenzo.pieralisi@arm.com, mark.rutland@arm.com,
+        jens.wiklander@linaro.org, tee-dev@lists.linaro.org,
+        sudeep.holla@arm.com,
+        Etienne Carriere <etienne.carriere@linaro.org>
+Subject: [RFC PATCH 0/6] firmware: conduit method helpers for SMCCC v1.0 calls
+Date:   Sun, 19 Apr 2020 17:05:24 +0200
+Message-Id: <20200419150530.20508-1-etienne.carriere@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch corrects the SPDX License Identifier style in
-header files related to Ext4 File System support.
-For C header files Documentation/process/license-rules.rst
-mandates C-like comments (opposed to C source files where
-C++ style should be used).
+These changes propose helper functions and macros to consolidate choice of
+the conduit method among devices communicating with an secure world that
+complies with SMCCC v1.0 but not SMCCC v1.1 or later. The new helper
+functions mimic arm_smccc_1_1_*() function but for SMCCC v1.0 compliant
+firmwares.
 
-Changes made by using a script provided by Joe Perches here:
-https://lkml.org/lkml/2019/2/7/46.
+This series of changes updates several firmware drivers that each define a
+conduit method whereas kernel drivers are expected to use the very same
+conduit. This series obviously does not enforce these drivers to apply the
+proposed changes but the interest of the first patch is this series is that
+at least the PSCI driver upgrades as it will allow new drivers to benefit
+from the early initialized PSCI conduit method.
 
-Suggested-by: Joe Perches <joe@perches.com>
-Signed-off-by: Nishad Kamdar <nishadkamdar@gmail.com>
----
- fs/ext4/acl.h            | 2 +-
- fs/ext4/ext4.h           | 2 +-
- fs/ext4/ext4_extents.h   | 2 +-
- fs/ext4/ext4_jbd2.h      | 2 +-
- fs/ext4/extents_status.h | 2 +-
- fs/ext4/fsmap.h          | 2 +-
- fs/ext4/mballoc.h        | 2 +-
- fs/ext4/truncate.h       | 2 +-
- fs/ext4/xattr.h          | 2 +-
- 9 files changed, 9 insertions(+), 9 deletions(-)
+Etienne Carriere (6):
+  firmware: helper functions for SMCCC v1.0 invocation conduit
+  firmware: psci: set SMCCC v1.0 conduit and use helpers functions
+  tee: optee: use SMCCC v1.0 helper functions
+  firmware: arm_sdei: use SMCCC v1.0 helper functions
+  firmware: stratix10: use SMCCC v1.0 helper functions
+  firmware: zynqmp: use SMCCC v1.0 helper functions
 
-diff --git a/fs/ext4/acl.h b/fs/ext4/acl.h
-index 9b63f5416a2f..a48fc5ae2701 100644
---- a/fs/ext4/acl.h
-+++ b/fs/ext4/acl.h
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: GPL-2.0
-+/* SPDX-License-Identifier: GPL-2.0 */
- /*
-   File: fs/ext4/acl.h
- 
-diff --git a/fs/ext4/ext4.h b/fs/ext4/ext4.h
-index 91eb4381cae5..834db49f28db 100644
---- a/fs/ext4/ext4.h
-+++ b/fs/ext4/ext4.h
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: GPL-2.0
-+/* SPDX-License-Identifier: GPL-2.0 */
- /*
-  *  ext4.h
-  *
-diff --git a/fs/ext4/ext4_extents.h b/fs/ext4/ext4_extents.h
-index 1c216fcc202a..a49f4a9405c7 100644
---- a/fs/ext4/ext4_extents.h
-+++ b/fs/ext4/ext4_extents.h
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: GPL-2.0
-+/* SPDX-License-Identifier: GPL-2.0 */
- /*
-  * Copyright (c) 2003-2006, Cluster File Systems, Inc, info@clusterfs.com
-  * Written by Alex Tomas <alex@clusterfs.com>
-diff --git a/fs/ext4/ext4_jbd2.h b/fs/ext4/ext4_jbd2.h
-index 4b9002f0e84c..2d0b715f955e 100644
---- a/fs/ext4/ext4_jbd2.h
-+++ b/fs/ext4/ext4_jbd2.h
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: GPL-2.0+
-+/* SPDX-License-Identifier: GPL-2.0+ */
- /*
-  * ext4_jbd2.h
-  *
-diff --git a/fs/ext4/extents_status.h b/fs/ext4/extents_status.h
-index 4ec30a798260..7cf0e24e863d 100644
---- a/fs/ext4/extents_status.h
-+++ b/fs/ext4/extents_status.h
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: GPL-2.0
-+/* SPDX-License-Identifier: GPL-2.0 */
- /*
-  *  fs/ext4/extents_status.h
-  *
-diff --git a/fs/ext4/fsmap.h b/fs/ext4/fsmap.h
-index 68c8001fee85..e80bae62798f 100644
---- a/fs/ext4/fsmap.h
-+++ b/fs/ext4/fsmap.h
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: GPL-2.0+
-+/* SPDX-License-Identifier: GPL-2.0+ */
- /*
-  * Copyright (C) 2017 Oracle.  All Rights Reserved.
-  *
-diff --git a/fs/ext4/mballoc.h b/fs/ext4/mballoc.h
-index 88c98f17e3d9..dcf52540f379 100644
---- a/fs/ext4/mballoc.h
-+++ b/fs/ext4/mballoc.h
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: GPL-2.0
-+/* SPDX-License-Identifier: GPL-2.0 */
- /*
-  *  fs/ext4/mballoc.h
-  *
-diff --git a/fs/ext4/truncate.h b/fs/ext4/truncate.h
-index bcbe3668c1d4..e465183d963f 100644
---- a/fs/ext4/truncate.h
-+++ b/fs/ext4/truncate.h
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: GPL-2.0
-+/* SPDX-License-Identifier: GPL-2.0 */
- /*
-  * linux/fs/ext4/truncate.h
-  *
-diff --git a/fs/ext4/xattr.h b/fs/ext4/xattr.h
-index ffe21ac77f78..9308acd560f4 100644
---- a/fs/ext4/xattr.h
-+++ b/fs/ext4/xattr.h
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: GPL-2.0
-+/* SPDX-License-Identifier: GPL-2.0 */
- /*
-   File: fs/ext4/xattr.h
- 
+ drivers/firmware/Makefile            |   1 +
+ drivers/firmware/arm_sdei.c          |  79 +++++---------
+ drivers/firmware/arm_smccc_conduit.c | 147 +++++++++++++++++++++++++++
+ drivers/firmware/psci/psci.c         |  60 ++---------
+ drivers/firmware/stratix10-svc.c     |  97 ++----------------
+ drivers/firmware/xilinx/zynqmp.c     |  87 ++--------------
+ drivers/tee/optee/call.c             |  14 +--
+ drivers/tee/optee/core.c             |  85 ++++------------
+ drivers/tee/optee/optee_private.h    |   4 +-
+ include/linux/arm-smccc.h            | 106 +++++++++++++++++++
+ include/linux/psci.h                 |   1 -
+ 11 files changed, 337 insertions(+), 344 deletions(-)
+ create mode 100644 drivers/firmware/arm_smccc_conduit.c
+
 -- 
 2.17.1
 
