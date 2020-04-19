@@ -2,86 +2,120 @@ Return-Path: <SRS0=L1Qp=6D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	HK_RANDOM_FROM,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF899C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 08:24:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DBBCC2BA2B
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 08:28:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 85EC52145D
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 08:24:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB7332145D
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 08:28:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="ZoaByf8J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725970AbgDSIYb (ORCPT
+        id S1725963AbgDSI2R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Apr 2020 04:24:31 -0400
-Received: from mga07.intel.com ([134.134.136.100]:7687 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725446AbgDSIYa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Apr 2020 04:24:30 -0400
-IronPort-SDR: nfOT4gWQwHmRiLCWXHHmc4bxyWd/JtJzjEoU5XtLf1hgBEmlUjFNgK2T1a9EKL8jvohyuzXdIU
- P2DNdEU9haew==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2020 01:24:28 -0700
-IronPort-SDR: 5bTV3PMh/h/IpB7kLfIrzCg8Fo/mJzhnyaMGYARomkIW7rvbXCWMjVwZD/fKzDk1jnTpAU1Qxz
- 1DLl94MlS5Ow==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,402,1580803200"; 
-   d="scan'208";a="456070012"
-Received: from xiaoyaol-mobl.ccr.corp.intel.com (HELO [10.255.30.120]) ([10.255.30.120])
-  by fmsmga006.fm.intel.com with ESMTP; 19 Apr 2020 01:24:20 -0700
-Subject: Re: [PATCH] KVM: X86: Fix compile error in svm/sev.c
-To:     Tianjia Zhang <tianjia.zhang@linux.alibaba.com>,
-        pbonzini@redhat.com, tsbogend@alpha.franken.de, paulus@ozlabs.org,
-        mpe@ellerman.id.au, benh@kernel.crashing.org,
-        borntraeger@de.ibm.com, frankja@linux.ibm.com, david@redhat.com,
-        cohuck@redhat.com, heiko.carstens@de.ibm.com, gor@linux.ibm.com,
-        sean.j.christopherson@intel.com, vkuznets@redhat.com,
-        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
-        hpa@zytor.com, maz@kernel.org, james.morse@arm.com,
-        julien.thierry.kdev@gmail.com, suzuki.poulose@arm.com,
-        christoffer.dall@arm.com, peterx@redhat.com, thuth@redhat.com
-Cc:     kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kvmarm@lists.cs.columbia.edu, linux-mips@vger.kernel.org,
-        kvm-ppc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200419073047.14413-1-tianjia.zhang@linux.alibaba.com>
-From:   Xiaoyao Li <xiaoyao.li@intel.com>
-Message-ID: <82ce1798-1dab-d271-d084-e9a89bb44e71@intel.com>
-Date:   Sun, 19 Apr 2020 16:24:19 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Sun, 19 Apr 2020 04:28:17 -0400
+Received: from ssl.serverraum.org ([176.9.125.105]:34769 "EHLO
+        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725446AbgDSI2R (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 19 Apr 2020 04:28:17 -0400
+Received: from apollo.fritz.box (unknown [IPv6:2a02:810c:c200:2e91:6257:18ff:fec4:ca34])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id E81AA2305A;
+        Sun, 19 Apr 2020 10:28:11 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1587284893;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=N4f/9VBPhLcDkVM1aNxaUNDPUksCBDZa/OfflSf7YKw=;
+        b=ZoaByf8Jmeub8ToPvGK6RF6T7dRIyRys/a+ZNgoxwfbvWrXDGtWc+QuqZ8EIWN3kCAEQPA
+        Sd4KjusP9+fqIvJlPN+aK0RXugJmtPgHJ71QjAa26aP3sA1eKldGO/V9/WTz/YQ5ELbE/G
+        9yfbYlcRxyyLIGU2ImYcNFR+dN08gdg=
+From:   Michael Walle <michael@walle.cc>
+To:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        "David S . Miller" <davem@davemloft.net>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>,
+        Michael Walle <michael@walle.cc>
+Subject: [PATCH net-next] net: phy: mscc: use mdiobus_get_phy()
+Date:   Sun, 19 Apr 2020 10:27:57 +0200
+Message-Id: <20200419082757.5650-1-michael@walle.cc>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <20200419073047.14413-1-tianjia.zhang@linux.alibaba.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-Spamd-Bar: ++++++
+X-Rspamd-Server: web
+X-Rspamd-Queue-Id: E81AA2305A
+X-Spamd-Result: default: False [6.40 / 15.00];
+         FROM_HAS_DN(0.00)[];
+         TO_DN_SOME(0.00)[];
+         R_MISSING_CHARSET(2.50)[];
+         FREEMAIL_ENVRCPT(0.00)[gmail.com];
+         TAGGED_RCPT(0.00)[];
+         MIME_GOOD(-0.10)[text/plain];
+         BROKEN_CONTENT_TYPE(1.50)[];
+         TO_MATCH_ENVRCPT_ALL(0.00)[];
+         NEURAL_SPAM(0.00)[0.864];
+         DKIM_SIGNED(0.00)[];
+         RCPT_COUNT_SEVEN(0.00)[9];
+         MID_CONTAINS_FROM(1.00)[];
+         RCVD_COUNT_ZERO(0.00)[0];
+         FROM_EQ_ENVFROM(0.00)[];
+         MIME_TRACE(0.00)[0:+];
+         ASN(0.00)[asn:31334, ipnet:2a02:810c:8000::/33, country:DE];
+         FREEMAIL_CC(0.00)[lunn.ch,gmail.com,armlinux.org.uk,davemloft.net,nxp.com,walle.cc];
+         SUSPICIOUS_RECIPS(1.50)[]
+X-Spam: Yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/19/2020 3:30 PM, Tianjia Zhang wrote:
-> The compiler reported the following compilation errors:
-> 
-> arch/x86/kvm/svm/sev.c: In function ‘sev_pin_memory’:
-> arch/x86/kvm/svm/sev.c:361:3: error: implicit declaration of function
-> ‘release_pages’ [-Werror=implicit-function-declaration]
->     release_pages(pages, npinned);
->     ^~~~~~~~~~~~~
-> 
-> The reason is that the 'pagemap.h' header file is not included.
-> 
+Don't use internal knowledge of the mdio bus core, instead use
+mdiobus_get_phy() which does the same thing.
 
-FYI.
+Signed-off-by: Michael Walle <michael@walle.cc>
+---
+ drivers/net/phy/mscc/mscc_main.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-Boris has sent the Patch:
-https://lkml.kernel.org/r/20200411160927.27954-1-bp@alien8.de
-
-and it's already in kvm master/queue branch
-
-
+diff --git a/drivers/net/phy/mscc/mscc_main.c b/drivers/net/phy/mscc/mscc_main.c
+index acddef79f4e8..5391acdece05 100644
+--- a/drivers/net/phy/mscc/mscc_main.c
++++ b/drivers/net/phy/mscc/mscc_main.c
+@@ -1292,7 +1292,7 @@ static int vsc8584_config_pre_init(struct phy_device *phydev)
+  */
+ static bool vsc8584_is_pkg_init(struct phy_device *phydev, bool reversed)
+ {
+-	struct mdio_device **map = phydev->mdio.bus->mdio_map;
++	struct mii_bus *bus = phydev->mdio.bus;
+ 	struct vsc8531_private *vsc8531;
+ 	struct phy_device *phy;
+ 	int i, addr;
+@@ -1306,11 +1306,10 @@ static bool vsc8584_is_pkg_init(struct phy_device *phydev, bool reversed)
+ 		else
+ 			addr = vsc8531->base_addr + i;
+ 
+-		if (!map[addr])
++		phy = mdiobus_get_phy(bus, addr);
++		if (!phy)
+ 			continue;
+ 
+-		phy = container_of(map[addr], struct phy_device, mdio);
+-
+ 		if ((phy->phy_id & phydev->drv->phy_id_mask) !=
+ 		    (phydev->drv->phy_id & phydev->drv->phy_id_mask))
+ 			continue;
+-- 
+2.20.1
 
