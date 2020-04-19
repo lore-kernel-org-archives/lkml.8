@@ -2,128 +2,166 @@ Return-Path: <SRS0=L1Qp=6D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6ECFC38A2F
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 03:08:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C1B1C2BA19
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 03:17:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C3F8D21D7E
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 03:08:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35FDD20722
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 03:17:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JPZM61HU"
+	dkim=pass (1024-bit key) header.d=nic.cz header.i=@nic.cz header.b="DkRiHgjm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726121AbgDSDI4 (ORCPT
+        id S1725964AbgDSDRR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 23:08:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34532 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725879AbgDSDIz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 23:08:55 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21D16C061A0C;
-        Sat, 18 Apr 2020 20:08:55 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id 2so3279167pgp.11;
-        Sat, 18 Apr 2020 20:08:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=fimWZgjU4nYcjINsJ9VPZKF4HX+n2Gcou0MLoHNd/vU=;
-        b=JPZM61HUVUAXFJ508lbinQCLJXorqvSUIIW0BANuJHwfcw0zd3wSBZ0gZ8pvggTzRW
-         sjcKteQtUL9vc4zVZw8Wi4q6TimRx/aNDuvVymXpdTjPhNimRS1qHJ2+BGrr92Iqm8/t
-         GHZhWSUT6ueZG7XDWofyQ/OdS4OknI7ZNUu0/aOthc7w1HvbMaYTszttb/upd6AXcAX3
-         lA18oIqbHYWQGYlfW2l4vbSSkYM+uVctFgdfDUA4KKuegy34/YvZCeCq6QFnON69758d
-         R4g7G8eK1ya8xyunoNyvhK1+bVcqZXJJOB1W5WOsfKA61Zq3N+v5EQymx6y5CMi0xP59
-         Yjcw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=fimWZgjU4nYcjINsJ9VPZKF4HX+n2Gcou0MLoHNd/vU=;
-        b=hZfOQLz42EqtE6DOwLyD6aqO7VoZmPmQKGkQaP0UR/9WtpNN3AZDq0+4zr9ujVBUiV
-         Khj/gryBfQ4pxprhE2GIZpKNV16Qkh2OnmIGdWrUgbJIWbTFOlxaUqO/7a0GPH6NF4iE
-         F6L/ugTS8fKlzbl/QmZt6Xl/QU7OtPgGTVaxVdWaqKfdH/Fxkl6d2aubxnM4EbYmDKrk
-         AUXV71BWeVTUvPcohTfDJJnQub2EDpUvkd8qVSi1UTeqeWXSrITLARgsoV9aX6Qo2DVJ
-         lZp6VRlHfVKpNyp8C2AP7KeEwOHHAwojSgYOHcuX38QmKV4+FgXRkHcp6dvkA3DMplb8
-         N8UA==
-X-Gm-Message-State: AGi0PuZdn6kEDE5sDRLFt9i3BcJiX1e3EJ+yIBR/SpNdztZj3c4JmJjK
-        JuIJZmyd0LBS96VwhQVjUoQT78eZ
-X-Google-Smtp-Source: APiQypKpmvWN0SnL72c9Fu1U7jCrf8EKGtjFMFZpaFLAjA3mVyhqgxGLTujxOEMfbWcdKeFEl2pMUg==
-X-Received: by 2002:a62:1950:: with SMTP id 77mr10512221pfz.326.1587265733896;
-        Sat, 18 Apr 2020 20:08:53 -0700 (PDT)
-Received: from localhost.localdomain (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
-        by smtp.gmail.com with ESMTPSA id g12sm8686146pfm.129.2020.04.18.20.08.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 18 Apr 2020 20:08:53 -0700 (PDT)
-From:   Florian Fainelli <f.fainelli@gmail.com>
-To:     netdev@vger.kernel.org
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        "David S. Miller" <davem@davemloft.net>,
+        Sat, 18 Apr 2020 23:17:17 -0400
+Received: from lists.nic.cz ([217.31.204.67]:34892 "EHLO mail.nic.cz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725877AbgDSDRQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 23:17:16 -0400
+Received: from localhost (unknown [172.20.6.135])
+        by mail.nic.cz (Postfix) with ESMTPSA id 93A2F140B79;
+        Sun, 19 Apr 2020 05:17:11 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=nic.cz; s=default;
+        t=1587266231; bh=2SMeV527Nbyadf6AEvVhwsFqxTEiceDhuMGSBDI9NC0=;
+        h=Date:From:To;
+        b=DkRiHgjmGQjO7ATQ4kFjd44Ck4jVQwXzL6BbYkulfC80rjPunjE7oROVEK/Atn63N
+         i5AKW47UQ3E7O7nTQmI9LpFDbfgcEJlSNT7+bsuyutGZLdsR7+tT+H9FTBPpWl8IdM
+         +zricET13s6nTdS6htbH6C1Kl5h9/WwDay9ZUI+o=
+Date:   Sun, 19 Apr 2020 05:17:11 +0200
+From:   Marek Behun <marek.behun@nic.cz>
+To:     Pali =?UTF-8?B?Um9ow6Fy?= <pali@kernel.org>
+Cc:     Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
         Rob Herring <robh+dt@kernel.org>,
-        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH net-next v2 2/2] dt-bindings: net: mdio: Make descriptions more general
-Date:   Sat, 18 Apr 2020 20:08:43 -0700
-Message-Id: <20200419030843.18870-3-f.fainelli@gmail.com>
-X-Mailer: git-send-email 2.19.1
-In-Reply-To: <20200419030843.18870-1-f.fainelli@gmail.com>
-References: <20200419030843.18870-1-f.fainelli@gmail.com>
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Remi Pommarel <repk@triplefau.lt>,
+        Tomasz Maciej Nowak <tmn505@gmail.com>,
+        Xogium <contact@xogium.me>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH 5/8] PCI: aardvark: Set final controller speed based on
+ negotiated link speed
+Message-ID: <20200419051711.74114791@nic.cz>
+In-Reply-To: <20200415160348.1146-1-pali@kernel.org>
+References: <20200415160054.951-1-pali@kernel.org>
+        <20200415160348.1146-1-pali@kernel.org>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Virus-Scanned: clamav-milter 0.101.4 at mail
+X-Virus-Status: Clean
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A number of descriptions assume a PHY device, but since this binding
-describes a MDIO bus which can have different kinds of MDIO devices
-attached to it, rephrase some descriptions to be more general in that
-regard.
+On Wed, 15 Apr 2020 18:03:45 +0200
+Pali Roh=C3=A1r <pali@kernel.org> wrote:
 
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
----
- Documentation/devicetree/bindings/net/mdio.yaml | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+> Some Compex WLE900VX gen1 cards are unstable or even not detected when
+> aardvark PCI controller speed is set to gen2. Moreover when ASPM code tri=
+es
+> to retrain link second time then these cards stop responding and link goes
+> down. If aardvark PCI controller is set to gen1 then these cards work fine
+> without any problem.
+>=20
+> Unconditionally forcing aardvark controller to gen1 speed (either via DT
+> property max-link-speed or hardcoded value in driver itself) is not a
+> solution as it would have performance impact for fast gen2 sata cards.
+>=20
+> To overcome this problem, try all 3 possible speeds (gen3, gen2, gen1)
+> supported by aardvark PCI controller with respect to max-link-speed setti=
+ng
+> and after successful link training choose final controller speed based on
+> Negotiated Link Speed from Link Status register, which should match card
+> speed.
+>=20
+> I tested this change with Compex cards WLE200NX (pcie 1.0, gen1, ath9k),
+> WLE900VX (pcie 1.1, gen1, ath10k) and WLE1216V5-20 (pcie 2.0, gen2, ath10=
+k)
+> on Turris MOX. Tomasz Maciej Nowak tested JJPlus JWX6051 (ath9k), Intel
+> 622ANHMW, MT76 U7612E-H1 and Compex WLE1216V2-20 cards on Espressobin.
+>=20
+> Signed-off-by: Pali Roh=C3=A1r <pali@kernel.org>
+> ---
+>  drivers/pci/controller/pci-aardvark.c | 35 +++++++++++++++++++++++++--
+>  1 file changed, 33 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controll=
+er/pci-aardvark.c
+> index 02c69fc9aadf..a83bbc86e428 100644
+> --- a/drivers/pci/controller/pci-aardvark.c
+> +++ b/drivers/pci/controller/pci-aardvark.c
+> @@ -40,6 +40,7 @@
+>  #define PCIE_CORE_LINK_CTRL_STAT_REG				0xd0
+>  #define     PCIE_CORE_LINK_L0S_ENTRY				BIT(0)
+>  #define     PCIE_CORE_LINK_TRAINING				BIT(5)
+> +#define     PCIE_CORE_LINK_SPEED_SHIFT				16
+>  #define     PCIE_CORE_LINK_WIDTH_SHIFT				20
+>  #define PCIE_CORE_ERR_CAPCTL_REG				0x118
+>  #define     PCIE_CORE_ERR_CAPCTL_ECRC_CHK_TX			BIT(5)
+> @@ -276,7 +277,7 @@ static void advk_pcie_setup_hw(struct advk_pcie *pcie)
+>  {
+>  	struct device *dev =3D &pcie->pdev->dev;
+>  	struct device_node *node =3D dev->of_node;
+> -	int max_link_speed;
+> +	int max_link_speed, neg_link_speed;
+>  	u32 reg;
+> =20
+>  	/* Set to Direct mode */
+> @@ -378,7 +379,37 @@ static void advk_pcie_setup_hw(struct advk_pcie *pci=
+e)
+>  	reg |=3D PCIE_CORE_LINK_TRAINING;
+>  	advk_writel(pcie, reg, PCIE_CORE_LINK_CTRL_STAT_REG);
+> =20
+> -	advk_pcie_wait_for_link(pcie);
+> +	do {
+> +		if (advk_pcie_wait_for_link(pcie) < 0) {
+> +			max_link_speed--;
+> +		} else {
+> +			reg =3D advk_readl(pcie, PCIE_CORE_LINK_CTRL_STAT_REG);
+> +
+> +			neg_link_speed =3D
+> +				(reg >> PCIE_CORE_LINK_SPEED_SHIFT) & 0xf;
+> +			dev_info(dev, "negotiated link speed %d\n",
+> +				neg_link_speed);
+> +
+> +			if (neg_link_speed =3D=3D max_link_speed)
+> +				break;
+> +
+> +			if (neg_link_speed > 0 && neg_link_speed <=3D 3)
+> +				max_link_speed =3D neg_link_speed;
+> +			else
+> +				max_link_speed--;
+> +		}
+> +
+> +		if (max_link_speed =3D=3D 0)
+> +			break;
+> +
+> +		/* Set new decreased max link speed */
+> +		advk_pcie_setup_link_speed(pcie, max_link_speed);
+> +
+> +		/* And start link training again */
+> +		reg =3D advk_readl(pcie, PCIE_CORE_LINK_CTRL_STAT_REG);
+> +		reg |=3D PCIE_CORE_LINK_TRAINING;
+> +		advk_writel(pcie, reg, PCIE_CORE_LINK_CTRL_STAT_REG);
+> +	} while (1);
+> =20
 
-diff --git a/Documentation/devicetree/bindings/net/mdio.yaml b/Documentation/devicetree/bindings/net/mdio.yaml
-index d268ed80bb77..7ea0b5510bc3 100644
---- a/Documentation/devicetree/bindings/net/mdio.yaml
-+++ b/Documentation/devicetree/bindings/net/mdio.yaml
-@@ -31,13 +31,13 @@ properties:
-     maxItems: 1
-     description:
-       The phandle and specifier for the GPIO that controls the RESET
--      lines of all PHYs on that MDIO bus.
-+      lines of all devices on that MDIO bus.
- 
-   reset-delay-us:
-     description:
--      RESET pulse width in microseconds. It applies to all PHY devices
--      and must therefore be appropriately determined based on all PHY
--      requirements (maximum value of all per-PHY RESET pulse widths).
-+      RESET pulse width in microseconds. It applies to all MDIO devices
-+      and must therefore be appropriately determined based on all devices
-+      requirements (maximum value of all per-device RESET pulse widths).
- 
- patternProperties:
-   "^ethernet-phy@[0-9a-f]+$":
-@@ -48,7 +48,7 @@ patternProperties:
-         minimum: 0
-         maximum: 31
-         description:
--          The ID number for the PHY.
-+          The ID number for the device.
- 
-       broken-turn-around:
-         $ref: /schemas/types.yaml#definitions/flag
--- 
-2.19.1
+This do {} while(1) should be a for cycle iterating the max_link_speed
+variable, and probably in a separate function
+advk_pcie_negotiate_link_speed.
 
+A3700, which is the only SOC to use this driver, does not support PCIe
+gen 3, so this shouldn't be tried, at least if
+.compatible =3D=3D "marvell,armada-3700-pcie".
+
+Marek
