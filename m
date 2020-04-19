@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 489D2C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 01:58:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F898C2BA19
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 01:58:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 19EEE22251
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 01:58:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3ADEF21D93
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 01:58:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587261487;
-	bh=ZISZO3v3AhBff22PqMDVPy3sI56gdxu348tYny317jk=;
+	s=default; t=1587261491;
+	bh=9s1PS3TUw7Zsqgs3UGzHhRFfsoLeo9wjHRqNuA7KWTU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AyHw+AYsL0EFFhE87+7L2BwuuDs1nR0IyQBjsKQSwszxIOXRXh1Sa5p0GYGSQwa8X
-	 uRJxbFlkMVmtsXf+WZ9qHWMtz5Cei1X84mw2M5UVvJeXRgvB/n+KKbWaexhKxRSy23
-	 mDpR0kiDFyvnfQpBoQEWSb+6NdJ1qJuwy/rDG0+8=
+	b=1E7E6loyXkv/k7+TFbCDqH3PmCPdJDCzfNmn6i6/eSDnewP29iki5DgYfbgqtnLLt
+	 508LGH7J0YXVZznCwv4r487IGFjTS++bamLxdlZsa71YxX8s8x8/7RDV1i3Xo1dAYB
+	 b/OAKhcVeVH6QWm17v0CiOMQZ3xOH4Ji5kE6Ja1A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726144AbgDSB6G (ORCPT
+        id S1726189AbgDSB6J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 21:58:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35188 "EHLO mail.kernel.org"
+        Sat, 18 Apr 2020 21:58:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35214 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726067AbgDSB6E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 21:58:04 -0400
+        id S1726123AbgDSB6G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 21:58:06 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4385021D6C;
-        Sun, 19 Apr 2020 01:58:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 949B222209;
+        Sun, 19 Apr 2020 01:58:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587261484;
-        bh=ZISZO3v3AhBff22PqMDVPy3sI56gdxu348tYny317jk=;
+        s=default; t=1587261485;
+        bh=9s1PS3TUw7Zsqgs3UGzHhRFfsoLeo9wjHRqNuA7KWTU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vO04xpvD589wU5RKAbSud4WUn42oUxfTzgRyw0S6FrAQLG8fdzb66CNQkBBZzjHcH
-         VYYUCemvGSeK+EaYb3zTmROkvCdsYlQRNl1ch8HoOL9uVdKEuNX5Xv7sDxwX4DB2Rz
-         rSvFatQw0b5Hvfyd6KXjnXYmybiVfBQJEZj+r3IY=
+        b=ePzuP7ikNlCmbFI3pygAZAlpB685sVlxstJtdh/3uGQ9q3ofyqIhCPC0/V1EFw11M
+         F6TMxL/DDOqS0g7REkZiJYBRxe1sXydwl97KPIRIc9aYNIkwHxsKCybZ6c0/yU7huA
+         2DUrcK58MVTr/+/tzhnADlOW37eTIt+RJsGo0eZo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     mingo@kernel.org, peterz@infradead.org
 Cc:     linux-kernel@vger.kernel.org, tglx@linutronix.de, jolsa@redhat.com,
         alexey.budankov@linux.intel.com, songliubraving@fb.com,
         acme@redhat.com, allison@lohutok.net,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH v2 05/12] tools/lib/lockdep: add definition required for IRQ flag tracing
-Date:   Sat, 18 Apr 2020 21:57:47 -0400
-Message-Id: <20200419015754.24456-6-sashal@kernel.org>
+Subject: [PATCH v2 06/12] tools/kernel.h: add BUILD_BUG_ON_NOT_POWER_OF_2 macro
+Date:   Sat, 18 Apr 2020 21:57:48 -0400
+Message-Id: <20200419015754.24456-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200419015754.24456-1-sashal@kernel.org>
 References: <20200419015754.24456-1-sashal@kernel.org>
@@ -58,62 +58,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We are going to start building with CONFIG_TRACE_IRQFLAGS defined, so
-let's wire up a few dummy variables in our task_struct.
-
-This isn't needed in userspace, but due to some refactoring in
-kernel-side lockdep it's easier to just wire it up and enable
-CONFIG_TRACE_IRQFLAGS.
+This is now needed as a result of 12593b7467f9 ("locking/lockdep: Reduce
+space occupied by stack traces").
 
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/include/linux/lockdep.h | 8 ++++++++
- tools/lib/lockdep/lockdep.c   | 4 ++--
- 2 files changed, 10 insertions(+), 2 deletions(-)
+ tools/include/linux/kernel.h | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/tools/include/linux/lockdep.h b/tools/include/linux/lockdep.h
-index e56997288f2b0..3a9924d6d3ae8 100644
---- a/tools/include/linux/lockdep.h
-+++ b/tools/include/linux/lockdep.h
-@@ -23,6 +23,8 @@
+diff --git a/tools/include/linux/kernel.h b/tools/include/linux/kernel.h
+index d2b3e1cc0218e..cc3d60623ca47 100644
+--- a/tools/include/linux/kernel.h
++++ b/tools/include/linux/kernel.h
+@@ -38,6 +38,12 @@
+ #define BUILD_BUG_ON(condition) ((void)sizeof(char[1 - 2*!!(condition)]))
+ #define BUILD_BUG_ON_ZERO(e) (sizeof(struct { int:-!!(e); }))
  
- #include "../../../include/linux/lockdep.h"
- 
-+static bool early_boot_irqs_disabled;
++/* Force a compilation error if a constant expression is not a power of 2 */
++#define __BUILD_BUG_ON_NOT_POWER_OF_2(n)        \
++	BUILD_BUG_ON(((n) & ((n) - 1)) != 0)
++#define BUILD_BUG_ON_NOT_POWER_OF_2(n)                  \
++	BUILD_BUG_ON((n) == 0 || (((n) & ((n) - 1)) != 0))
 +
- struct task_struct {
- 	u64 curr_chain_key;
- 	int lockdep_depth;
-@@ -31,6 +33,12 @@ struct task_struct {
- 	gfp_t lockdep_reclaim_gfp;
- 	int pid;
- 	int state;
-+	int softirqs_enabled, hardirqs_enabled, softirqs_disabled, hardirqs_disabled, irq_events;
-+	unsigned long softirq_disable_ip, softirq_enable_ip;
-+	unsigned int softirq_disable_event, softirq_enable_event;
-+	unsigned long hardirq_disable_ip, hardirq_enable_ip;
-+	unsigned int hardirq_disable_event, hardirq_enable_event;
-+	int softirq_context, hardirq_context;
- 	char comm[17];
- };
- 
-diff --git a/tools/lib/lockdep/lockdep.c b/tools/lib/lockdep/lockdep.c
-index 348a9d0fb766a..9be12d233477a 100644
---- a/tools/lib/lockdep/lockdep.c
-+++ b/tools/lib/lockdep/lockdep.c
-@@ -15,10 +15,10 @@ u32 prandom_u32(void)
- 	abort();
- }
- 
--void print_irqtrace_events(struct task_struct *curr)
-+/*void print_irqtrace_events(struct task_struct *curr)
- {
- 	abort();
--}
-+}*/
- 
- static struct new_utsname *init_utsname(void)
- {
+ #ifndef max
+ #define max(x, y) ({				\
+ 	typeof(x) _max1 = (x);			\
 -- 
 2.20.1
 
