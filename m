@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8C8AC38A2F
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 01:58:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95978C2BA19
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 01:58:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C66A222209
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 01:58:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7278721D91
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 01:58:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587261508;
-	bh=ENuIonxA9t7MXcbRtsH6Z/8DcbDtTbt/JJI0qGNDi04=;
+	s=default; t=1587261511;
+	bh=vMUdywOiH45RYm8rBBrCFHjXlKwxhw+nAnJjls5FQRk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pG4IafWfMGDcKZlDhImrHAEQuZRfvQVDkJnmBvQ5B2wPtYo3YPYhTmYOdfSrFoo4F
-	 Jq/ZOJbvnqB95pASo3WXzFVtGcNlJdH0txWlPYFevmv4DEogU7t4ZqN+HSKv0JBpKz
-	 itnt06mAQwkNENXCBsx/pu7NCbig71JOU1fIso+0=
+	b=hdRQND5OktnsCtuejUrMzsISMLxRB8DJw9CT4bkCmV6ikZqEt/xwN3T88JQkhZf2L
+	 p73kqzrkOAzZObOMdP+istiqHM8oKs3x2cqsEvQj7eviiSUSFW+VROIKY/SoO+3Fd2
+	 0nN5ZPxS36Zxk0UEZW952U9Dg93suAJOaItyr2vM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726390AbgDSB60 (ORCPT
+        id S1726407AbgDSB63 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 21:58:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35490 "EHLO mail.kernel.org"
+        Sat, 18 Apr 2020 21:58:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35434 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726209AbgDSB6M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 21:58:12 -0400
+        id S1726207AbgDSB6L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 21:58:11 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7D7DC21D93;
-        Sun, 19 Apr 2020 01:58:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 30B0222251;
+        Sun, 19 Apr 2020 01:58:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587261492;
-        bh=ENuIonxA9t7MXcbRtsH6Z/8DcbDtTbt/JJI0qGNDi04=;
+        s=default; t=1587261491;
+        bh=vMUdywOiH45RYm8rBBrCFHjXlKwxhw+nAnJjls5FQRk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tpe20nnE/NiMKGg2lId1m4HZ8gWOgYPg/k9BbCxQdqWLw94TKl/qKXMIhSZXHdfCV
-         RN8Jyw/WhyfoQL2yMBuIuPoJh3dnVd71vPzD7WynNfK59J0/w2HOmZyQz+jLF157tP
-         hE4YJvj0qE5eS3hILLbKlIJhGmx6UFrzagWi+r04=
+        b=iUTjrZwFTApmSiQ/MUN/+utgOAjAilYJH903l9y5lrlkkPjWX+skNicYq4l7iacDy
+         eUsMO0cbXotULyBjgZmaF9QZQ2yThvvjO6XE1ndx8dnV/jYU0CpVBnnFaLK599oee3
+         Os6ChLbVJyzpNLy+9Ot6Q+6h39sixOmJkv2b1VMg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     mingo@kernel.org, peterz@infradead.org
 Cc:     linux-kernel@vger.kernel.org, tglx@linutronix.de, jolsa@redhat.com,
         alexey.budankov@linux.intel.com, songliubraving@fb.com,
         acme@redhat.com, allison@lohutok.net,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH v2 11/12] tools/lib/lockdep: call lockdep_init_task on init
-Date:   Sat, 18 Apr 2020 21:57:53 -0400
-Message-Id: <20200419015754.24456-12-sashal@kernel.org>
+Subject: [PATCH v2 10/12] tools/lib/lockdep: New stacktrace API
+Date:   Sat, 18 Apr 2020 21:57:52 -0400
+Message-Id: <20200419015754.24456-11-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200419015754.24456-1-sashal@kernel.org>
 References: <20200419015754.24456-1-sashal@kernel.org>
@@ -58,35 +58,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We now have to explicitly call lockdep_init_task() when starting up.
+The kernel switched to using kernel/stacktrace.c, and the API slightly
+changed.
+
+Adjust it to make stack traces work again.
 
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/lib/lockdep/preload.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ tools/include/linux/stacktrace.h | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/tools/lib/lockdep/preload.c b/tools/lib/lockdep/preload.c
-index 8f1adbe887b2f..578fdeda9422c 100644
---- a/tools/lib/lockdep/preload.c
-+++ b/tools/lib/lockdep/preload.c
-@@ -9,6 +9,8 @@
- #include "include/liblockdep/mutex.h"
- #include "../../include/linux/rbtree.h"
+diff --git a/tools/include/linux/stacktrace.h b/tools/include/linux/stacktrace.h
+index ae343ac35bfa7..b290b98d883aa 100644
+--- a/tools/include/linux/stacktrace.h
++++ b/tools/include/linux/stacktrace.h
+@@ -15,10 +15,18 @@ static inline void print_stack_trace(struct stack_trace *trace, int spaces)
+ 	backtrace_symbols_fd((void **)trace->entries, trace->nr_entries, 1);
+ }
  
-+extern struct task_struct *__curr(void);
++static inline void stack_trace_print(const long unsigned int *entries, unsigned int nr, int spaces)
++{
++	backtrace_symbols_fd((void **)entries, nr, 1);
++}
 +
- /**
-  * struct lock_lookup - liblockdep's view of a single unique lock
-  * @orig: pointer to the original pthread lock, used for lookups
-@@ -421,6 +423,8 @@ __attribute__((constructor)) static void init_preload(void)
- 	if (__init_state == done)
- 		return;
+ #define save_stack_trace(trace)	\
+ 	((trace)->nr_entries =	\
+ 		backtrace((void **)(trace)->entries, (trace)->max_entries))
  
-+	lockdep_init_task(__curr());
++#define stack_trace_save(e, m, x) \
++	backtrace((void **)(e), (m))
 +
- #ifndef __GLIBC__
- 	__init_state = prepare;
- 
+ static inline int dump_stack(void)
+ {
+ 	void *array[64];
 -- 
 2.20.1
 
