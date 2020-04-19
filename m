@@ -2,106 +2,109 @@ Return-Path: <SRS0=L1Qp=6D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 837A9C54F70
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 14:46:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00252C38A30
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 14:49:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 62B5921841
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 14:46:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2E7821973
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 14:49:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fIqX2YOW"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VRDLnidN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726460AbgDSOqn (ORCPT
+        id S1726468AbgDSOtD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Apr 2020 10:46:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56474 "EHLO
+        Sun, 19 Apr 2020 10:49:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56826 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726327AbgDSOqm (ORCPT
+        with ESMTP id S1725994AbgDSOtC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Apr 2020 10:46:42 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE336C061A0C;
-        Sun, 19 Apr 2020 07:46:42 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id ms17so3292412pjb.0;
-        Sun, 19 Apr 2020 07:46:42 -0700 (PDT)
+        Sun, 19 Apr 2020 10:49:02 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2145C061A0C
+        for <linux-kernel@vger.kernel.org>; Sun, 19 Apr 2020 07:49:02 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id r20so3650171pfh.9
+        for <linux-kernel@vger.kernel.org>; Sun, 19 Apr 2020 07:49:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=4ANh3iy/mPqMIDICrcxwt25Ikadv1fNohryvS64Y5Ic=;
-        b=fIqX2YOW3Z5Gg4Yo0893aOn1v6xaGRX6cKcQw5ykCjWv3rIZdewhJZVNkIhkw810bT
-         50myZO6zUTtVcKYvzBdZxmrvMlMq+sHcrdTnv85cc+L6fr7JpQp/F/wD9o1m4CMlLI6a
-         SiVxRGNVPrsfz9vGhyknCuLWb8Djr/DlP3CqZs3x6q9oIJFNQI7fpdltx1Ul9K60xc1T
-         0YxTi9xZK0kRvRnbPt/1+QDCgKSDtLzNq2sZzXEDMpw/0h82lBgpYnl/S+8JbmNzuVOq
-         fhNLI8irMqPZfr8mxt9WhH3xNg08DOOSAlvQAv+1QXaso/V4FzjMLuGn0LrT6hJH7LYF
-         U5nQ==
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=/Y9EEw8+vVKXR26VXHGaBoc+4Thx4gdgWJh52Fb86wo=;
+        b=VRDLnidNIQ94FASqAA6G3i2QeT/rvVAqB5LSMEooXFenJPdZobyzHyAkBrCSTRnE26
+         tqIj8It5BQWlWFcf9ixyxn7ww/1ndf9/uvD+Lj8KBGU4fNn25Mi79upymETY641UATtk
+         jNFfa37BcMrfLyS9yK+wF/v9tuuWiQF4y5i+sS6NPPy8N17y6gwe5mIo8pg8cC8NxFSm
+         uin61QRKfhdgPQafT/8eKYhZ3Q59CMO8RWGKhzSV1L76BT4vs78s5GtaqmV/7BAW66jc
+         5qenEjmB/QdUVwWAy9zw7ozpmRoOCKPAc6v5O70zm2HolR3a7oplNaPpUgtCLLxr72sx
+         1KfA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=4ANh3iy/mPqMIDICrcxwt25Ikadv1fNohryvS64Y5Ic=;
-        b=f/8YZANAbI24W8uPn9J2GfRpx1tXOPO1VTQeHvAFm0eevkgkSfveJmTwjH27pVyhWm
-         mJM1O781ggI6s6bhU1dApO2cVr81TYaQSexZi7BxGwuR0QH9Bp/c5gS9AaR29uvXhGOV
-         1w9By2LFkSCv2s2PcIstKFkHjVf7xISzIf2hh/cYYcbApoKTgrllIuJyjzw0aDrYMqYV
-         CCbQkuxhnSZyije0HOI6eUWOtVn65fxp9JkEhCjWFNEigvJtZ9xBc1NhX86meJ7ogl/Q
-         SpnBeHh/O6mLgVjDHO+qiXy4c1HClVHobD4yAuvQ/YrryKf4OVU9xlcw3drAzdp2Ix2d
-         0khg==
-X-Gm-Message-State: AGi0PuZ23iprtBfr2fg8l+G/8RnxX9n9WXl9MUEWwNAgJLDZCuS7bJW1
-        0RNI6mZzvIJ6Qsi4mPmuvKs=
-X-Google-Smtp-Source: APiQypI6PFLvrwCcVGIStbSxL8W1ovNeN6eQTo8pk3ibch/2uXo1kxA5JD5UNB9cEJQ5nDRlskMQeQ==
-X-Received: by 2002:a17:90a:c786:: with SMTP id gn6mr15790109pjb.147.1587307602531;
-        Sun, 19 Apr 2020 07:46:42 -0700 (PDT)
-Received: from localhost ([49.205.221.114])
-        by smtp.gmail.com with ESMTPSA id i128sm15713738pfc.149.2020.04.19.07.46.40
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=/Y9EEw8+vVKXR26VXHGaBoc+4Thx4gdgWJh52Fb86wo=;
+        b=ENiIIvO3dJFeY60Hf3DzMgrS8acl98539DZ2Fe1zeDuqVBvrABWQPg/RvABe0EhHPr
+         dUR2S/O2r9ClrjfS53tRSK3yDZ9SaVXTfG7Zfk+pXKMvpVCZyrR3097GM7yTcyY0Dw+R
+         TP+79UGV7zXNc4I+uaf+A2802k2XS5+ZNZ2ARw9XlbANBy6xL1+w46gKcNIJ+BgDRenH
+         KfCnIgkOJd6uC4+qvJkCs/bvdWZHCualXA5nHFQQwvZmJnUn6ksI6Sc6RSlRDkIX6bBs
+         1b7YP5CevSv/9NGkuadN3D4wUdUgxbylUCkVP2VoE3ur0sofBgVdh47iVQmlx/DElhDh
+         DEPw==
+X-Gm-Message-State: AGi0PuZSxxIHf+Eiss1VgxIaOsTLNUxZDZwFCCMJrsXl+2RS6vY41a6v
+        UrCCTlYlVAB9aFEI5VbLH4Y=
+X-Google-Smtp-Source: APiQypKXrkGJULiInhOYddfSqXGw/DiJQmKHwtfCSBWDQFR/Mwm1wJTiairEqo6yETBDP/QxRA0YhQ==
+X-Received: by 2002:a63:cc:: with SMTP id 195mr11999844pga.373.1587307742128;
+        Sun, 19 Apr 2020 07:49:02 -0700 (PDT)
+Received: from nishad ([106.51.232.103])
+        by smtp.gmail.com with ESMTPSA id f21sm11128349pfn.71.2020.04.19.07.48.59
         (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 19 Apr 2020 07:46:41 -0700 (PDT)
-Date:   Sun, 19 Apr 2020 20:16:38 +0530
-From:   afzal mohammed <afzal.mohd.ma@gmail.com>
-To:     Thomas Bogendoerfer <tbogendoerfer@suse.de>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org
-Subject: Re: [PATCH 0/3] Remove setup_percpu_irq() & remove_percpu_irq
-Message-ID: <20200419144638.ysghqzklebkeer4z@afzalpc>
-References: <cover.1586434781.git.afzal.mohd.ma@gmail.com>
+        Sun, 19 Apr 2020 07:49:01 -0700 (PDT)
+Date:   Sun, 19 Apr 2020 20:18:55 +0530
+From:   Nishad Kamdar <nishadkamdar@gmail.com>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Joe Perches <joe@perches.com>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [PATCH] debugfs: Use the correct style for SPDX License Identifier
+Message-ID: <20200419144852.GA9206@nishad>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <cover.1586434781.git.afzal.mohd.ma@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Thomas Gleixner,
+This patch corrects the SPDX License Identifier style in
+header file related to debugfs File System support.
+For C header files Documentation/process/license-rules.rst
+mandates C-like comments (opposed to C source files where
+C++ style should be used).
 
-On Sat, Apr 11, 2020 at 09:34:07PM +0530, afzal mohammed wrote:
+Changes made by using a script provided by Joe Perches here:
+https://lkml.org/lkml/2019/2/7/46.
 
-> While doing the removal of setup_irq(), it was observed that
-> setup_percpu_irq() also can be removed similarly by replacing it w/
-> request_percpu_irq(), which does allocate memory. In the initial
-> setup_irq() removal cover letters [1], it was mentioned that
-> setup_percpu_irq() is untouched.
-> 
-> After removing setup_irq(), it does not look good to let live
-> setup_percpu_irq(), especially since it being a low hanging fruit. Hence
-> replace setup_percpu_irq() by it's allocator equivalent.
-> request_percpu_irq() cannot be used since all the users need to pass
-> IRQF_TIMER flag, which it would not allow. Thus it's variant,
-> __request_percpu_irq() is used.
-> 
-> In addition to removing setup_percpu_irq() definition,
-> remove_percpu_irq(), unused, is also removed.
+Suggested-by: Joe Perches <joe@perches.com>
+Signed-off-by: Nishad Kamdar <nishadkamdar@gmail.com>
+---
+ fs/debugfs/internal.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Do you feel that this series adds value ?, if not, i will abandon this
-series.
-
-Thanks for your guidance w.r.t setup_irq() removal.
-
-Regards
-afzal
+diff --git a/fs/debugfs/internal.h b/fs/debugfs/internal.h
+index f0d73d86cc1a..034e6973cead 100644
+--- a/fs/debugfs/internal.h
++++ b/fs/debugfs/internal.h
+@@ -1,4 +1,4 @@
+-// SPDX-License-Identifier: GPL-2.0
++/* SPDX-License-Identifier: GPL-2.0 */
+ /*
+  *  internal.h - declarations internal to debugfs
+  *
+-- 
+2.17.1
 
