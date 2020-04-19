@@ -2,147 +2,188 @@ Return-Path: <SRS0=L1Qp=6D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C93EC38A30
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 16:50:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3AFFC38A30
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 16:50:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 17CCB21974
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 16:50:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FDD5214D8
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 16:50:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="AYTfGWLB"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Glnym17s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726832AbgDSQuC (ORCPT
+        id S1726841AbgDSQuH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Apr 2020 12:50:02 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:48580 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726651AbgDSQuB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Apr 2020 12:50:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=iLAOKXvu+P1RpppWXR9M05UcEWZPbpw6tXNqCN4/N04=; b=AYTfGWLB3TVTMutJPh8x2r1/zK
-        Tz1RrO27h+few0z0ptmLJ7SdDsScsB5MG5+tIeVvOz6+nyeutxhMb2m7aDcYjsMtUGntwkj0ySyq1
-        bnq4SwasyR1sJ4xcDgJGDjckMqNcWRxVdvruJk5DmGaaVI12+mHLhAoPqDBSRknGWGnI=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1jQD8o-003ezm-62; Sun, 19 Apr 2020 18:49:58 +0200
-Date:   Sun, 19 Apr 2020 18:49:58 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Michael Walle <michael@walle.cc>
-Cc:     linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        "David S . Miller" <davem@davemloft.net>
-Subject: Re: [PATCH net-next v2 2/3] net: phy: add Broadcom BCM54140 support
-Message-ID: <20200419164958.GN836632@lunn.ch>
-References: <20200419101249.28991-1-michael@walle.cc>
- <20200419101249.28991-2-michael@walle.cc>
- <20200419154943.GJ836632@lunn.ch>
- <d40eafc5ed95b62886e10159dcb7a509@walle.cc>
+        Sun, 19 Apr 2020 12:50:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47086 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726651AbgDSQuE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 19 Apr 2020 12:50:04 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2563CC061A0C;
+        Sun, 19 Apr 2020 09:50:04 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id o15so3267648pgi.1;
+        Sun, 19 Apr 2020 09:50:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=vFf25JxhgwXBtDCMayNFLRabViLC1GO2elBX7/IcCm4=;
+        b=Glnym17sUsSX41ofG4UmqR29XCHiL4heELaNJ1sDAutrVgW34z62UYmTH596IrA0DE
+         UPZFP356mZpa3HUeD7iQDrs9/ph3UCJNIG3jOdD/GppxyoPY00jjAWL/LFrw/As8xlgN
+         T+t+Qy3XwSxEThAbVn7OcyTfM+Z5TlGutIj3WdUurO+6s8yCXXh5iFy7CpyCPJkcsT0u
+         0Tn32mRQ+hMoGE1oZmxOuJyicFkKIbSlEa+PI5HIk0zOr3WUzJCehGugH7hTvM6yov1P
+         QdpuAm0UR/I3J8bM2Qa4L4SA3TlKzrWDJQ8hwpPo64R/72PgAHA2GPTAAUupdD5p8MLw
+         ba5Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=vFf25JxhgwXBtDCMayNFLRabViLC1GO2elBX7/IcCm4=;
+        b=eHDoXXrQTuswcd8elp76EaWosgdFaXoASM3B2NWzjOiP66hOZO6QqKWlXskI0iNgMz
+         tOpETfdLmX8foIbffnomYOKTWqMmqi/ReNJBR8zXO/BjAo/5TsvD+7jkmWDZEqmlYeGa
+         ZgplgJIF+IVUWQ6ZrvSf9bBqku0Df/IwqLTeWqczS1shPg3bPJFvL8xu8ca40drIsPpd
+         woiMczenKMGnd9SJcqQAcxcgv2PGfUzP1hJFE/LkOlL5QowgZvJTdWyxpaSObCsL9B5s
+         PvWsBhfUwGJEv+fE6ivksqha/IbdgInJQE0GesxEAhfxd/Vn8dJddBIQrtgfJ0isea3D
+         uz4w==
+X-Gm-Message-State: AGi0PuYOfXdkhkygqnFR9zXcAsKqg5T2LWGmuSBAMI4lfch+HPJSKzcB
+        ht66C5gBCyxH3h1qFrMdfgo=
+X-Google-Smtp-Source: APiQypKKwQ9b0XCfCqaY4E1mtQ3tzgW1xlLGiDrMkxSAIs3a/vob7kYwBn5q0HjlTvhNY3IuF7qFCg==
+X-Received: by 2002:a62:834a:: with SMTP id h71mr5626682pfe.307.1587315003529;
+        Sun, 19 Apr 2020 09:50:03 -0700 (PDT)
+Received: from localhost (89.208.244.140.16clouds.com. [89.208.244.140])
+        by smtp.gmail.com with ESMTPSA id q187sm20427444pfb.131.2020.04.19.09.50.02
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 19 Apr 2020 09:50:03 -0700 (PDT)
+From:   Dejin Zheng <zhengdejin5@gmail.com>
+To:     aisheng.dong@nxp.com, festevam@gmail.com, shawnguo@kernel.org,
+        stefan@agner.ch, kernel@pengutronix.de, linus.walleij@linaro.org,
+        s.hauer@pengutronix.de, geert+renesas@glider.be,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, jun.nie@linaro.org,
+        stephan@gerhold.net, linux-gpio@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Dejin Zheng <zhengdejin5@gmail.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: [PATCH v1] pinctrl: fix several typos
+Date:   Mon, 20 Apr 2020 00:49:56 +0800
+Message-Id: <20200419164956.3484-1-zhengdejin5@gmail.com>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d40eafc5ed95b62886e10159dcb7a509@walle.cc>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 19, 2020 at 06:33:40PM +0200, Michael Walle wrote:
-> > > +static int bcm54140_phy_probe(struct phy_device *phydev)
-> > > +{
-> > > +	struct bcm54140_phy_priv *priv;
-> > > +	int ret;
-> > > +
-> > > +	priv = devm_kzalloc(&phydev->mdio.dev, sizeof(*priv), GFP_KERNEL);
-> > > +	if (!priv)
-> > > +		return -ENOMEM;
-> > > +
-> > > +	phydev->priv = priv;
-> > > +
-> > > +	ret = bcm54140_get_base_addr_and_port(phydev);
-> > > +	if (ret)
-> > > +		return ret;
-> > > +
-> > > +	dev_info(&phydev->mdio.dev,
-> > > +		 "probed (port %d, base PHY address %d)\n",
-> > > +		 priv->port, priv->base_addr);
-> > 
-> > phydev_dbg() ? Do we need to see this message four times?
-> 
-> ok. every phy will have a different port. And keep in mind,
-> that you might have less than four ports/PHYs here. So I'd
-> like to keep that as a phydev_dbg() if you agree.
+use codespell to fix lots of typos over frontends.
 
-phydev_dbg() is fine.
+CC: Andy Shevchenko <andy.shevchenko@gmail.com>
+Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
+---
+ drivers/pinctrl/freescale/pinctrl-imx1-core.c    | 2 +-
+ drivers/pinctrl/nomadik/pinctrl-nomadik-db8500.c | 2 +-
+ drivers/pinctrl/pinctrl-lantiq.c                 | 2 +-
+ drivers/pinctrl/pinctrl-sx150x.c                 | 2 +-
+ drivers/pinctrl/sh-pfc/pfc-sh7269.c              | 2 +-
+ drivers/pinctrl/tegra/pinctrl-tegra-xusb.c       | 2 +-
+ drivers/pinctrl/zte/pinctrl-zx.c                 | 2 +-
+ 7 files changed, 7 insertions(+), 7 deletions(-)
 
+diff --git a/drivers/pinctrl/freescale/pinctrl-imx1-core.c b/drivers/pinctrl/freescale/pinctrl-imx1-core.c
+index c00d0022d311..ec0b1a273f7b 100644
+--- a/drivers/pinctrl/freescale/pinctrl-imx1-core.c
++++ b/drivers/pinctrl/freescale/pinctrl-imx1-core.c
+@@ -60,7 +60,7 @@ struct imx1_pinctrl {
+ 
+ /*
+  * IMX1 IOMUXC manages the pins based on ports. Each port has 32 pins. IOMUX
+- * control register are seperated into function, output configuration, input
++ * control register are separated into function, output configuration, input
+  * configuration A, input configuration B, GPIO in use and data direction.
+  *
+  * Those controls that are represented by 1 bit have a direct mapping between
+diff --git a/drivers/pinctrl/nomadik/pinctrl-nomadik-db8500.c b/drivers/pinctrl/nomadik/pinctrl-nomadik-db8500.c
+index b9246e0b4fe2..508f1b11a4df 100644
+--- a/drivers/pinctrl/nomadik/pinctrl-nomadik-db8500.c
++++ b/drivers/pinctrl/nomadik/pinctrl-nomadik-db8500.c
+@@ -418,7 +418,7 @@ static const unsigned lcdvsi1_a_1_pins[] = { DB8500_PIN_E2 };
+ static const unsigned lcd_d0_d7_a_1_pins[] = {
+ 	DB8500_PIN_G5, DB8500_PIN_G4, DB8500_PIN_H4, DB8500_PIN_H3,
+ 	DB8500_PIN_J3, DB8500_PIN_H2, DB8500_PIN_J2, DB8500_PIN_H1 };
+-/* D8 thru D11 often used as TVOUT lines */
++/* D8 through D11 often used as TVOUT lines */
+ static const unsigned lcd_d8_d11_a_1_pins[] = { DB8500_PIN_F4,
+ 	DB8500_PIN_E3, DB8500_PIN_E4, DB8500_PIN_D2 };
+ static const unsigned lcd_d12_d23_a_1_pins[] = {
+diff --git a/drivers/pinctrl/pinctrl-lantiq.c b/drivers/pinctrl/pinctrl-lantiq.c
+index aa92f141b865..626e02d7a1ba 100644
+--- a/drivers/pinctrl/pinctrl-lantiq.c
++++ b/drivers/pinctrl/pinctrl-lantiq.c
+@@ -221,7 +221,7 @@ static int match_mux(const struct ltq_mfp_pin *mfp, unsigned mux)
+ 	return i;
+ }
+ 
+-/* dont assume .mfp is linearly mapped. find the mfp with the correct .pin */
++/* don't assume .mfp is linearly mapped. find the mfp with the correct .pin */
+ static int match_mfp(const struct ltq_pinmux_info *info, int pin)
+ {
+ 	int i;
+diff --git a/drivers/pinctrl/pinctrl-sx150x.c b/drivers/pinctrl/pinctrl-sx150x.c
+index 6e74bd87d959..708bc91862fe 100644
+--- a/drivers/pinctrl/pinctrl-sx150x.c
++++ b/drivers/pinctrl/pinctrl-sx150x.c
+@@ -988,7 +988,7 @@ static unsigned int sx150x_maybe_swizzle(struct sx150x_pinctrl *pctl,
+ /*
+  * In order to mask the differences between 16 and 8 bit expander
+  * devices we set up a sligthly ficticious regmap that pretends to be
+- * a set of 32-bit (to accomodate RegSenseLow/RegSenseHigh
++ * a set of 32-bit (to accommodate RegSenseLow/RegSenseHigh
+  * pair/quartet) registers and transparently reconstructs those
+  * registers via multiple I2C/SMBus reads
+  *
+diff --git a/drivers/pinctrl/sh-pfc/pfc-sh7269.c b/drivers/pinctrl/sh-pfc/pfc-sh7269.c
+index d20974a55d93..0aed18863ba3 100644
+--- a/drivers/pinctrl/sh-pfc/pfc-sh7269.c
++++ b/drivers/pinctrl/sh-pfc/pfc-sh7269.c
+@@ -1963,7 +1963,7 @@ static const struct pinmux_func pinmux_func_gpios[] = {
+ static const struct pinmux_cfg_reg pinmux_config_regs[] = {
+ 	/* "name" addr register_size Field_Width */
+ 
+-	/* where Field_Width is 1 for single mode registers or 4 for upto 16
++	/* where Field_Width is 1 for single mode registers or 4 for up to 16
+ 	   mode registers and modes are described in assending order [0..16] */
+ 
+ 	{ PINMUX_CFG_REG("PAIOR0", 0xfffe3812, 16, 1, GROUP(
+diff --git a/drivers/pinctrl/tegra/pinctrl-tegra-xusb.c b/drivers/pinctrl/tegra/pinctrl-tegra-xusb.c
+index 6f7b3767f453..43922ab81666 100644
+--- a/drivers/pinctrl/tegra/pinctrl-tegra-xusb.c
++++ b/drivers/pinctrl/tegra/pinctrl-tegra-xusb.c
+@@ -123,7 +123,7 @@ static int tegra_xusb_padctl_get_group_pins(struct pinctrl_dev *pinctrl,
+ 					    unsigned *num_pins)
+ {
+ 	/*
+-	 * For the tegra-xusb pad controller groups are synonomous
++	 * For the tegra-xusb pad controller groups are synonymous
+ 	 * with lanes/pins and there is always one lane/pin per group.
+ 	 */
+ 	*pins = &pinctrl->desc->pins[group].number;
+diff --git a/drivers/pinctrl/zte/pinctrl-zx.c b/drivers/pinctrl/zte/pinctrl-zx.c
+index 786bf89487d6..80d00ab8c110 100644
+--- a/drivers/pinctrl/zte/pinctrl-zx.c
++++ b/drivers/pinctrl/zte/pinctrl-zx.c
+@@ -94,7 +94,7 @@ static int zx_set_mux(struct pinctrl_dev *pctldev, unsigned int func_selector,
+ 	if (data->aon_pin) {
+ 		/*
+ 		 * It's an AON pin, whose mux register offset and bit position
+-		 * can be caluculated from pin number.  Each register covers 16
++		 * can be calculated from pin number.  Each register covers 16
+ 		 * pins, and each pin occupies 2 bits.
+ 		 */
+ 		u16 aoffset = pindesc->number / 16 * 4;
+-- 
+2.25.0
 
-> 
-> > 
-> > > +
-> > > +	return 0;
-> > > +}
-> > > +
-> > > +static int bcm54140_config_init(struct phy_device *phydev)
-> > > +{
-> > > +	u16 reg = 0xffff;
-> > > +	int ret;
-> > > +
-> > > +	/* Apply hardware errata */
-> > > +	ret = bcm54140_b0_workaround(phydev);
-> > > +	if (ret)
-> > > +		return ret;
-> > > +
-> > > +	/* Unmask events we are interested in. */
-> > > +	reg &= ~(BCM54140_RDB_INT_DUPLEX |
-> > > +		 BCM54140_RDB_INT_SPEED |
-> > > +		 BCM54140_RDB_INT_LINK);
-> > > +	ret = bcm_phy_write_rdb(phydev, BCM54140_RDB_IMR, reg);
-> > > +	if (ret)
-> > > +		return ret;
-> > > +
-> > > +	/* LED1=LINKSPD[1], LED2=LINKSPD[2], LED3=ACTIVITY */
-> > > +	ret = bcm_phy_modify_rdb(phydev, BCM54140_RDB_SPARE1,
-> > > +				 0, BCM54140_RDB_SPARE1_LSLM);
-> > > +	if (ret)
-> > > +		return ret;
-> > 
-> > What are the reset default for LEDs? Can the LEDs be configured via
-> > strapping pins? There is currently no good solution for this. Whatever
-> > you pick will be wrong for somebody else. At minimum, strapping pins,
-> > if they exist, should not be overridden.
-> 
-> Fair enough. There are no strapping options, just the "default behaviour",
-> where LED1/2 indicates the speed, and LED3 just activity (no link
-> indication). And I just noticed that in this case the comment above is
-> wrong, because it is actually link/activity. Further, there are myriad
-> configuration options which I didn't want to encode altogether. So I've
-> just chosen the typical one (which actually matches our hardware), ie.
-> to have the "activity/led mode". The application note mentions some other
-> concrete modes, but I don't know if its worth implementing them. Maybe we
-> can have a enumeration of some distinct modes? Ie.
-> 
->    broadcom,led-mode = <BCM54140_NO_CHANGE>;
->    broadcom,led-mode = <BCM54140_ACT_LINK_MODE>;
-
-Configuring LEDs is a mess at the moment. No two PHYs do it the
-same. For a long time i've had a TODO item to make PHY LEDs work just
-like every other LED in linux, and you can set trigger actions which
-are then implemented in hardware.
-
-We have been pushing back on adding DT properties, it just makes the
-problem worse. If reset defaults are good enough for you, please leave
-it at that.
-
-Thanks
-   Andrew
