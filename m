@@ -2,107 +2,119 @@ Return-Path: <SRS0=L1Qp=6D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB9C9C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 04:27:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E544DC38A29
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 04:54:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9704E221F7
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 04:27:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF4E421D82
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 04:54:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="So01w+py"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nHn0HnEo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725969AbgDSE1l (ORCPT
+        id S1726050AbgDSEyK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Apr 2020 00:27:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46548 "EHLO
+        Sun, 19 Apr 2020 00:54:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50562 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725769AbgDSE1l (ORCPT
+        by vger.kernel.org with ESMTP id S1725763AbgDSEyJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Apr 2020 00:27:41 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3B3FC061A0C;
-        Sat, 18 Apr 2020 21:27:39 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id ng8so3061895pjb.2;
-        Sat, 18 Apr 2020 21:27:39 -0700 (PDT)
+        Sun, 19 Apr 2020 00:54:09 -0400
+Received: from mail-yb1-xb42.google.com (mail-yb1-xb42.google.com [IPv6:2607:f8b0:4864:20::b42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 343CAC061A0C;
+        Sat, 18 Apr 2020 21:54:09 -0700 (PDT)
+Received: by mail-yb1-xb42.google.com with SMTP id i2so3446439ybk.2;
+        Sat, 18 Apr 2020 21:54:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Fg1nBtscd0EnZj9z4stneXu5of0TAOGY9Mx+yinyRuE=;
-        b=So01w+pyjdVuDseUrJoqO/RyaAGna8aMbnWUPoms5gVndykw/c9fM9r1CuCNvNTqkm
-         vrEJXbyKIgKvjLCdfOWMYt/M0RdS43r7slg7gZbe+jEJaEXUgJ/4asHFmJ5BfLjCCJQA
-         8bfWx1oGF3aP8qaJiJDibREG9fJi5xIzifYvCaojDok874hovG1iaO0jSv5ak9CDtN5E
-         zHTJKYksKSmLA8jBgWFw6I/BAsdIStskSKQhcteeUQntpnrouvx8YPcM6t+3mRwz6RAU
-         PyITf2Pc9os/+rYCimh4Ha9JUr1dFVQ91RvzQ+BSGTc6Cph/GVR5VDOM0FSkKOjKJNCd
-         G5DQ==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Gog0dknM05EMtGVHWyU1DT7VuRc7nYwUpeTOmS66nno=;
+        b=nHn0HnEoktBrbfUcj+ZOPirGnQncKk4bHCrDStjtphOSF7bEr+pXuF9TflkLymQDwU
+         JLP9cTNkEi4eDTTijxfx8Lzqan2IONHkpataQ73Xi23AZLZKRTtqioenP1GMzUTW89F6
+         L/ZnDRYzmODT6t4cQAbj8orEcwDmfiOdLHrLOiLzFrB/RLeWqvOXv+FV/RM9nBV2mPoe
+         H7pGMrAI06Td1kFo9HT9S+PVFkqmIzWCrLdPJ1b1wVJgARkHy9dtWLdi1kLUySdJwXgQ
+         Umj4VWNaUTQPYwFkbjJStreNlh8SMLlUtVA8UogqzA5/CDHHUzIi7m7OLJah7i6spynI
+         MxUA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Fg1nBtscd0EnZj9z4stneXu5of0TAOGY9Mx+yinyRuE=;
-        b=ALXXlCQJoH5VxPMT0MI5koLiW5/RLUWFB8Uq2A+f+oQhdukdhpemXakTpSSvJkrf6e
-         EJtVl+majF9XNSCKfIIUopwxBfq78gz8HgZTL4zR7X6wtOTDL2E3j0hxWd/3SjuIh4r3
-         7dQiGRIbOD7SzypzpM0RmJtF7msobtGqbz0X2iM2RF7cAsLbcJjAmtFvEDYRTeKIgRWN
-         GepypVqnFoEPZK+cgXKKtB8ygCt7wiGdlpBXmcBEigxvYV/T+9JOrIvAvOIRWif7FfPr
-         1N5pq7ODzpDBo2bRFgTkfaPW0rUfIX2S5x60MoAfgL23T5BJebOrU6hdkwcfOXxUb+uY
-         LEvA==
-X-Gm-Message-State: AGi0PuYWMXznGv55ZHIpz8Uw+YZeT/uryYp6I/uE3mM3+vo2d8+SD+bE
-        oNlDVQw7d7yGmSyeb2K9vzM=
-X-Google-Smtp-Source: APiQypJ9w3xNbZHSC3ODse153GoeR6LMQDsn7t07Y0RrPNaHqBp05xk71/n+yRhtIMaCPVvHNCBVOQ==
-X-Received: by 2002:a17:90a:a402:: with SMTP id y2mr1198940pjp.55.1587270459105;
-        Sat, 18 Apr 2020 21:27:39 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:3c2a:73a9:c2cf:7f45])
-        by smtp.gmail.com with ESMTPSA id y26sm5004925pfn.185.2020.04.18.21.27.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 18 Apr 2020 21:27:38 -0700 (PDT)
-Date:   Sat, 18 Apr 2020 21:27:36 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc:     tglx@linutronix.de, linux-input@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] Input: Fix a typo in a module name in Kconfig
-Message-ID: <20200419042736.GI166864@dtor-ws>
-References: <20200412095711.9107-1-christophe.jaillet@wanadoo.fr>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Gog0dknM05EMtGVHWyU1DT7VuRc7nYwUpeTOmS66nno=;
+        b=pmO0GKLzeQCeMX+WO1ADP8AGlO5UZ87vALfJ4+9tEjXL9keJnjJbPsBYpOxUH/u+e2
+         1bhY1XVcx8Dv4sOmvFcMVBxbDqUx9mQYtaFf/6z3reOptWKV6wp0aiE9XzP/UQO92CZg
+         f5gznff4tG1umK2ETaVWkERJ8oB12RsIi3IQ+pkQ/y71QHHSwOwmX9X3UvbtNTkCBD5E
+         0uKzYnFwyAbVg6uhB9eJXeQKimPaiyWMbWOvzhqOP2ZrAhL3bDjrWjkM/uWmZ40/8EXp
+         ksalpqh8e+w63gkYdix8VdATtTG/UYLRRnS1nNP6wDYP1lsNvBi9g4uVVuF7HYf/ppdH
+         ZvaQ==
+X-Gm-Message-State: AGi0PuY75pTLjoU327C9OkLo5BptHF2bcfgLhDINaRp+SYaBE/pM2mjF
+        DG+tdaWiJUKe5d4kJWxzPjEk9WYMXaTo24NNM/s=
+X-Google-Smtp-Source: APiQypKexOfCMHJoNZ1DUDrRLe7fxIec4nFsf9towAfH9uHBxh8i1vwDgiNOHtLvi8jVmjXwsDfRpb2RLG/yU7rA8RU=
+X-Received: by 2002:a25:cf12:: with SMTP id f18mr9682392ybg.167.1587272048258;
+ Sat, 18 Apr 2020 21:54:08 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200412095711.9107-1-christophe.jaillet@wanadoo.fr>
+References: <3865908.1586874010@warthog.procyon.org.uk> <CAH2r5mv5p=WJQu2SbTn53FeTsXyN6ke_CgEjVARQ3fX8QAtK_w@mail.gmail.com>
+ <87a738aclu.fsf@oldenburg2.str.redhat.com>
+In-Reply-To: <87a738aclu.fsf@oldenburg2.str.redhat.com>
+From:   Steve French <smfrench@gmail.com>
+Date:   Sat, 18 Apr 2020 23:53:57 -0500
+Message-ID: <CAH2r5mth8Jc0dfAOP+hXTp-hJBHoNT4M=J8Ypcq+BhP4a_Wc6Q@mail.gmail.com>
+Subject: Re: What's a good default TTL for DNS keys in the kernel
+To:     Florian Weimer <fweimer@redhat.com>
+Cc:     David Howells <dhowells@redhat.com>,
+        linux-nfs <linux-nfs@vger.kernel.org>,
+        CIFS <linux-cifs@vger.kernel.org>, linux-afs@lists.infradead.org,
+        ceph-devel@vger.kernel.org, keyrings@vger.kernel.org,
+        Network Development <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 12, 2020 at 11:57:11AM +0200, Christophe JAILLET wrote:
-> A 'y' is missing in spear-keyboard.
-> 
-> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+commit 28eb24ff75c5ac130eb326b3b4d0dcecfc0f427d
+Author: Paulo Alcantara <paulo@paulo.ac>
+Date:   Tue Nov 20 15:16:36 2018 -0200
 
-Applied, thank you.
+    cifs: Always resolve hostname before reconnecting
 
-> ---
->  drivers/input/keyboard/Kconfig | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/input/keyboard/Kconfig b/drivers/input/keyboard/Kconfig
-> index 28de965a08d5..793ecbbda32c 100644
-> --- a/drivers/input/keyboard/Kconfig
-> +++ b/drivers/input/keyboard/Kconfig
-> @@ -701,7 +701,7 @@ config KEYBOARD_SPEAR
->  	  Say Y here if you want to use the SPEAR keyboard.
->  
->  	  To compile this driver as a module, choose M here: the
-> -	  module will be called spear-keboard.
-> +	  module will be called spear-keyboard.
->  
->  config KEYBOARD_TC3589X
->  	tristate "TC3589X Keypad support"
-> -- 
-> 2.20.1
-> 
+    In case a hostname resolves to a different IP address (e.g. long
+    running mounts), make sure to resolve it every time prior to calling
+    generic_ip_connect() in reconnect.
+...
+
+(Note that this patch may have some minor dependencies on a few other
+DFS related patches that were merged immediately before it.
+08744015492f cifs: Add support for failover in cifs_reconnect_tcon()
+a3a53b760379 cifs: Add support for failover in smb2_reconnect()
+23324407143d cifs: Only free DFS target list if we actually got one
+e511d31753e3 cifs: start DFS cache refresher in cifs_mount()
+93d5cb517db3 cifs: Add support for failover in cifs_reconnect()
+4a367dc04435 cifs: Add support for failover in cifs_mount()
+1c780228e9d4 cifs: Make use of DFS cache to get new DFS referrals
+
+On Sat, Apr 18, 2020 at 1:11 PM Florian Weimer <fweimer@redhat.com> wrote:
+>
+> * Steve French:
+>
+> >>> The question remains what the expected impact of TTL expiry is.  Will
+> >>> the kernel just perform a new DNS query if it needs one?
+> >
+> > For SMB3/CIFS mounts, Paulo added support last year for automatic
+> > reconnect if the IP address of the server changes.  It also is helpful
+> > when DFS (global name space) addresses change.
+>
+> Do you have reference to the source code implementation?  Thanks.
+>
+> Florian
+>
+
 
 -- 
-Dmitry
+Thanks,
+
+Steve
