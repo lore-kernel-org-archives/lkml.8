@@ -2,117 +2,129 @@ Return-Path: <SRS0=L1Qp=6D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAE6FC54F70
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 19:10:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A40E3C38A30
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 19:11:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A365621744
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 19:10:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D44D2145D
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 19:11:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AMF1DXFR"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TeAKEJzX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726424AbgDSTKu (ORCPT
+        id S1726484AbgDSTLy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Apr 2020 15:10:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40366 "EHLO
+        Sun, 19 Apr 2020 15:11:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40528 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725848AbgDSTKt (ORCPT
+        with ESMTP id S1725848AbgDSTLx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Apr 2020 15:10:49 -0400
-Received: from mail-oi1-x241.google.com (mail-oi1-x241.google.com [IPv6:2607:f8b0:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7AB3EC061A0C;
-        Sun, 19 Apr 2020 12:10:49 -0700 (PDT)
-Received: by mail-oi1-x241.google.com with SMTP id x10so6968854oie.1;
-        Sun, 19 Apr 2020 12:10:49 -0700 (PDT)
+        Sun, 19 Apr 2020 15:11:53 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5655C061A0C
+        for <linux-kernel@vger.kernel.org>; Sun, 19 Apr 2020 12:11:53 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id j2so9416949wrs.9
+        for <linux-kernel@vger.kernel.org>; Sun, 19 Apr 2020 12:11:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=gED75tHRUZsoWEBmkmqXmBkA+S7n+TXCiZUX+ASdEyA=;
-        b=AMF1DXFRPm9Bk2MU0CgrIARVheldiQhxEiQbB0EpUkPWCUMpk9ohQMAwbi4ShqBtdd
-         p3uu4cYI/3J8aCDSkzPifeuU4v6OK9jdP63Z8MqSalHHTYcf2Ky9o9DQLxOMmLIIvgU0
-         FoGFyJl3TZY7zrAU841JHbEE2tqAG1a/eAraXi9sKJpT6aDEtU/4m4OFMABqs2irQVhA
-         79AVHbzXGeIeCW5I3C3GJi1F7WBCY1a1YUrVfMAz8iDc6Znpxny4sb0eTxKyZ6AY9A+8
-         XzenocQ/xWKFrjh7QZ4llHhcPYnMmkxedz2lc5Cju6rY9fMqAEd3FBmoAO5FOxykeK3d
-         aYwg==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=FI/d5vUanPoY/w9CFz9ztVpckNOs2yAH7yeEI0jwxxk=;
+        b=TeAKEJzXgkKQhogSLGSn3QaBpFFxEN1BViaBJF/CftadXJ2I3zyKKZx0gMaO2FScIE
+         2NqxB2LNRovAFP/SWkRHiY44djHp4V1CKXU8CzD77GKxQA2AgVA9PuB9xxXYVAYZznI6
+         IufvgdMwOmyu7zNnNcerNjs3pyrlT0wIX1gMjOf20IDehbLEq1/QUD2BH5KSPGrbmPpx
+         pFZstrOVagYMhdr880HK8V0g8ZUcG8IIObqAFAKyYyvPWXmjYjdBMozf2wW1uZnWxAW0
+         S8Da0bZNpOOb/PBOedvafNDBingCq3Drfw8XOXRZD0l85k09dEQ8tySumOfWezGaFVJ6
+         k51g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=gED75tHRUZsoWEBmkmqXmBkA+S7n+TXCiZUX+ASdEyA=;
-        b=RzIm7/vAwX/xQEWOq1tOCRLnVc+obRdi/cgJEwpwMguF26qzJwrVJziwGER0ccdP9+
-         17mQqmVIsvwRuMYQ/szFSf4HcS007W9h1EDdjguhHNiBMVup+jjM6je7Z6/jVyQ+Ve/X
-         frGll5xqUwlzBIN1YXhM2IvrS7xwXc4WXKbLSBFdG6N/WbsVJBprY6okm7sC8lGeTCpQ
-         0K2u2LbUQgKVFJEKQUPHDNxy4aRsdHPO3Y6b9YF8npyhCF90tpDGXtNGxiwaoyHctnAr
-         crb8a+wu9/3B0TrFv/KbfMMOcYaUmqMhM9LaadzPTHIWnJah7IOFTVvpTbyLrX5fonXG
-         Byow==
-X-Gm-Message-State: AGi0PuZCS23G2uOP/+u4WXzwSkDXxuVa/Ex2vrTqe9sEBOAkidcq0MWm
-        mkGOyK7UAwqGtfeF9SB6CCPqYa74RKHveymF1QQ=
-X-Google-Smtp-Source: APiQypJy/sjdjUWZOujEBGWlWQXsxdIbkeokdvT3BGmONZYx9UDW/EoFLMydMrhyS4nVxPTI0l8LnJ60Q9sNUNhhjPg=
-X-Received: by 2002:aca:5d83:: with SMTP id r125mr8757326oib.8.1587323448883;
- Sun, 19 Apr 2020 12:10:48 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=FI/d5vUanPoY/w9CFz9ztVpckNOs2yAH7yeEI0jwxxk=;
+        b=D6TEq6IuQNef40mzEJtnqNg4eDluTzLdhIkBL5WzC/Jf4ZExIbtx+ztyRP2aCFI/xo
+         5acrqDA2NkSU+A3ud0k41TlzX1DmRR+j6hGb3niNrIgtBX0H8hsSpibkGJaDP3OWY4zg
+         fAeQ8veMTFE2zsnIN0cZjq1iFCMITIS8UGstrZAz+RsFpS4i+1IByv4H2QON7EI/DoWT
+         SUHWbbgO9U4qdVY1HmBMF5XjKOEVqEizgyPoJH9cHDhBlgyLkUA+J/PCpHp+6/dW91Fy
+         xSS6+LZw0JtkyQU/WfMT8wZzRAVrMFttN+jzdU+WDc/Yyp+m8XI047604CfSqCy3RXmr
+         rLwA==
+X-Gm-Message-State: AGi0PubY32qWHrpAzY+pYnPyrZtoWr3UGW6OSYW3581BkMKIeKz3nnyl
+        vlUiBpVQYMl0JyLgpNZtpfhDA1W0
+X-Google-Smtp-Source: APiQypJ7QXh3q+4eyBwvhIYkqxsNrT160nQ7vd8xptJcjjP5IyLErVTGIC/rUAmErJovrneYnG4Low==
+X-Received: by 2002:adf:b6a8:: with SMTP id j40mr15692991wre.255.1587323512211;
+        Sun, 19 Apr 2020 12:11:52 -0700 (PDT)
+Received: from [192.168.43.227] (188.29.165.57.threembb.co.uk. [188.29.165.57])
+        by smtp.gmail.com with ESMTPSA id x6sm10940118wrg.58.2020.04.19.12.11.50
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 19 Apr 2020 12:11:51 -0700 (PDT)
+Subject: Re: [PATCH] staging: vt6656: Refactor the vnt_ofdm_min_rate function
+To:     Stefano Brivio <sbrivio@redhat.com>,
+        Oscar Carter <oscar.carter@gmx.com>
+Cc:     Forest Bond <forest@alittletooquiet.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Quentin Deslandes <quentin.deslandes@itdev.co.uk>,
+        "John B . Wyatt IV" <jbwyatt4@gmail.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+References: <20200418134553.6415-1-oscar.carter@gmx.com>
+ <20200419195534.1463ddcd@elisabeth>
+From:   Malcolm Priestley <tvboxspy@gmail.com>
+Message-ID: <1c118ba5-627e-17ee-7f21-100e2eb67cf1@gmail.com>
+Date:   Sun, 19 Apr 2020 20:11:49 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-References: <1587302823-4435-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1587302823-4435-9-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com> <975f3a73bb272b8276687af609cd7e592d6ba9ac.camel@perches.com>
-In-Reply-To: <975f3a73bb272b8276687af609cd7e592d6ba9ac.camel@perches.com>
-From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Sun, 19 Apr 2020 20:10:22 +0100
-Message-ID: <CA+V-a8uADgccR7sr_Jc0t6gcwGSX5aOANF4NZeNY6ZoSaJJ4Xg@mail.gmail.com>
-Subject: Re: [PATCH v8 8/8] MAINTAINERS: Add file patterns for rcar PCI device
- tree bindings
-To:     Joe Perches <joe@perches.com>
-Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Tom Joseph <tjoseph@cadence.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        LAK <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200419195534.1463ddcd@elisabeth>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Joe,
+Hi all
 
-On Sun, Apr 19, 2020 at 5:38 PM Joe Perches <joe@perches.com> wrote:
->
-> On Sun, 2020-04-19 at 14:27 +0100, Lad Prabhakar wrote:
-> > Add file pattern entry for rcar PCI devicetree binding, so that when
-> > people run ./scripts/get_maintainer.pl the rcar PCI maintainers could also
-> > be listed.
-> []
-> > diff --git a/MAINTAINERS b/MAINTAINERS
-> []
-> > @@ -12933,6 +12933,7 @@ L:    linux-pci@vger.kernel.org
-> >  L:   linux-renesas-soc@vger.kernel.org
-> >  S:   Maintained
-> >  F:   drivers/pci/controller/*rcar*
-> > +F:   Documentation/devicetree/bindings/pci/*rcar*
->
-> MAINTAINERS was recently sorted for consistency.
->
-> Please move this new line above drivers/ to keep alphabetic ordering.
->
-Sure I will rebase this patch on -next and post this patch independently.
+On 19/04/2020 18:55, Stefano Brivio wrote:
+> Hi Oscar,
+> 
+> On Sat, 18 Apr 2020 15:45:53 +0200
+> Oscar Carter <oscar.carter@gmx.com> wrote:
+> 
+>> Replace the for loop by a ternary operator whose condition is an AND
+>> bitmask against the priv->basic_rates variable.
+>>
+>> The purpose of the for loop was to check if any of bits from RATE_54M to
+>> RATE_6M was set, but it's not necessary to check every individual bit.
+>> The same result can be achieved using only one single mask which
+>> comprises all the commented bits.
+<snip>
 
-Cheers,
---Prabhakar
+>>
+>> -int vnt_ofdm_min_rate(struct vnt_private *priv)
+>> +bool vnt_ofdm_min_rate(struct vnt_private *priv)
+>>   {
+>> -	int ii;
+>> -
+>> -	for (ii = RATE_54M; ii >= RATE_6M; ii--) {
+>> -		if ((priv->basic_rates) & ((u16)BIT(ii)))
+>> -			return true;
+>> -	}
+>> -
+>> -	return false;
+>> +	return priv->basic_rates & GENMASK(RATE_54M, RATE_6M) ? true : false;
+> 
+> priv->basic_rates & GENMASK(RATE_54M, RATE_6M) is already true if
+> non-zero and false otherwise. Note that I haven't checked if the
+> rest is correct.
+> 
+Yes only 1 or more needs to be true and it is false when none present.
+
+I have run-time checked the patch and it does function as before.
+
+Regards
+
+Malcolm.
