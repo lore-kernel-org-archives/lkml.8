@@ -2,147 +2,99 @@ Return-Path: <SRS0=L1Qp=6D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A894C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 10:03:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C26D1C38A30
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 10:08:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 441E521841
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 10:03:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A54621841
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 10:08:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kcP7+Kil"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726067AbgDSKDl (ORCPT
+        id S1725953AbgDSKI5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Apr 2020 06:03:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52030 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725914AbgDSKDl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Apr 2020 06:03:41 -0400
-Received: from ROU-LT-M43218B.mchp-main.com (amontpellier-556-1-155-96.w109-210.abo.wanadoo.fr [109.210.131.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7962321841;
-        Sun, 19 Apr 2020 10:03:36 +0000 (UTC)
-Date:   Sun, 19 Apr 2020 12:04:01 +0200
-From:   ludovic.desroches@microchip.com
-To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
-Cc:     linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        jic23@kernel.org, eugen.hristev@microchip.com
-Subject: Re: [PATCH v2 2/2] iio: at91-sama5d2_adc: adjust
- iio_triggered_buffer_{predisable,postenable} positions
-Message-ID: <20200419100401.cfrmeilkzzdxi4w7@ROU-LT-M43218B.mchp-main.com>
-References: <20200304084219.20810-1-alexandru.ardelean@analog.com>
- <20200304084219.20810-2-alexandru.ardelean@analog.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200304084219.20810-2-alexandru.ardelean@analog.com>
-User-Agent: NeoMutt/20180716
+        Sun, 19 Apr 2020 06:08:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42122 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725832AbgDSKI4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 19 Apr 2020 06:08:56 -0400
+Received: from mail-wr1-x44a.google.com (mail-wr1-x44a.google.com [IPv6:2a00:1450:4864:20::44a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8BB00C061A0C
+        for <linux-kernel@vger.kernel.org>; Sun, 19 Apr 2020 03:08:56 -0700 (PDT)
+Received: by mail-wr1-x44a.google.com with SMTP id v9so1225277wrt.7
+        for <linux-kernel@vger.kernel.org>; Sun, 19 Apr 2020 03:08:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=x4Jf9OoxVu57scXjQnvCCYWih0l2+dbJzXSbsRXxgIM=;
+        b=kcP7+KilBa7sG3vcdVd4D8AEvObD4rH5WrNB/oiGTKhdUEq4khUD/ZiKKw5dCSCXQb
+         bwvxhlHYDTdCAxs3M/3+jfMZGtGw6t4xthTlGtsrkUKI44c7ol9KkbGYNL0FM2TpgOlq
+         AymMh+gnuqABTrk0n/Sz5ivAhOI8HpWqYr32Ags6Flzj/iknuM0LqIkyGpesVw6lTj3U
+         Qwgnjn6peyTHioblgFMcxcQdeleUUgIuU0o1fKDs3rMHAqadTz7PQLwv4awoxYkyCLrP
+         upVRl00XpCNfjV/sK7g0mxOM7aNPFZR1I1kC22YmtkoXvFSEx2BeXmHwTzK+yCFzvTvJ
+         kcTw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=x4Jf9OoxVu57scXjQnvCCYWih0l2+dbJzXSbsRXxgIM=;
+        b=rNm9QRTt++A81ph436fKALN5iMjVfLBZiscj8PkHeX+8Hac8x4LQW/8QiWjRGgiyjt
+         AdT5K3wMM0Uexu+MC0PsUUVFz+vOnN2s6Gp4M/XgxOp/ka19MY/P596Tf8Utywi0vOlC
+         uCeCsnxnFtlHjsFqILJDOKIyHZqJF4PPUOetx1KemkvgUGkzoAYRCh1OTOeALOALyiW7
+         OIOVTT+oHQjI9rp28AcEOXH7LyzlCxSWjTc3uXGa7C3cJnFz+YkhMMj44rX5d/unT4bq
+         q4cwzZj3ytRrX1tfh8OQ82PH2sMcE/T+hYd3nsa/pPPCzUrwFsjuCR7opS6Sap/wq5Ai
+         07og==
+X-Gm-Message-State: AGi0PuZKrPGba//7C0BwxtL310q3XtvnIyu/F2aKtaykEQ+/GqBK73xI
+        jcO+33JZoBFANlKVxwqaI7jqjkIMw8Q=
+X-Google-Smtp-Source: APiQypJzb4jAH6/hnvA/J/izSVFGaHDo+5xwxvg6y5r3gpk40DTENHyCQ2KfTN2q1Dlnl9oRuIllu8Udmkk=
+X-Received: by 2002:a5d:5304:: with SMTP id e4mr12407894wrv.87.1587290934113;
+ Sun, 19 Apr 2020 03:08:54 -0700 (PDT)
+Date:   Sun, 19 Apr 2020 12:08:48 +0200
+Message-Id: <20200419100848.63472-1-glider@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.26.1.301.g55bc3eb7cb9-goog
+Subject: [PATCH] fs/binfmt_elf.c: allocate initialized memory in fill_thread_core_info()
+From:   glider@google.com
+To:     adobriyan@gmail.com, akpm@linux-foundation.org
+Cc:     linux-kernel@vger.kernel.org, sunhaoyl@outlook.com,
+        Alexander Potapenko <glider@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 04, 2020 at 10:42:19AM +0200, Alexandru Ardelean wrote:
-> EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
-> 
-> The iio_triggered_buffer_{predisable,postenable} functions attach/detach
-> poll functions.
-> 
-> In most cases the iio_triggered_buffer_postenable() should be called first
-> to attach the poll function, and then the driver can init the data to be
-> triggered.
-> In this case it's the other way around: the DMA code should be initialized
-> before the attaching the poll function and the reverse should be done when
-> un-initializing.
-> 
-> To make things easier when removing the iio_triggered_buffer_postenable() &
-> iio_triggered_buffer_predisable() functions from the IIO core API, the DMA
-> code has been moved into preenable() for init, and postdisable() for
-> uninit.
-> 
-> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+KMSAN reported uninitialized data being written to disk when dumping
+core. As a result, several kilobytes of kmalloc memory may be written to
+the core file and then read by a non-privileged user.
 
-Reviewed-by: Ludovic Desroches <ludovic.desroches@microchip.com>
+Reported-by: sam <sunhaoyl@outlook.com>
+Signed-off-by: Alexander Potapenko <glider@google.com>
 
-> ---
->  drivers/iio/adc/at91-sama5d2_adc.c | 32 ++++++++++++++++++++----------
->  1 file changed, 22 insertions(+), 10 deletions(-)
-> 
-> diff --git a/drivers/iio/adc/at91-sama5d2_adc.c b/drivers/iio/adc/at91-sama5d2_adc.c
-> index f2a74c47c768..2e01073d401d 100644
-> --- a/drivers/iio/adc/at91-sama5d2_adc.c
-> +++ b/drivers/iio/adc/at91-sama5d2_adc.c
-> @@ -882,7 +882,7 @@ static bool at91_adc_current_chan_is_touch(struct iio_dev *indio_dev)
->                                AT91_SAMA5D2_MAX_CHAN_IDX + 1);
->  }
-> 
-> -static int at91_adc_buffer_postenable(struct iio_dev *indio_dev)
-> +static int at91_adc_buffer_preenable(struct iio_dev *indio_dev)
->  {
->         int ret;
->         struct at91_adc_state *st = iio_priv(indio_dev);
-> @@ -902,13 +902,20 @@ static int at91_adc_buffer_postenable(struct iio_dev *indio_dev)
->                 return ret;
->         }
-> 
-> +       return 0;
-> +}
-> +
-> +static int at91_adc_buffer_postenable(struct iio_dev *indio_dev)
-> +{
-> +       if (at91_adc_current_chan_is_touch(indio_dev))
-> +               return 0;
-> +
->         return iio_triggered_buffer_postenable(indio_dev);
->  }
-> 
-> -static int at91_adc_buffer_predisable(struct iio_dev *indio_dev)
-> +static int at91_adc_buffer_postdisable(struct iio_dev *indio_dev)
->  {
->         struct at91_adc_state *st = iio_priv(indio_dev);
-> -       int ret;
->         u8 bit;
-> 
->         /* check if we are disabling triggered buffer or the touchscreen */
-> @@ -919,13 +926,8 @@ static int at91_adc_buffer_predisable(struct iio_dev *indio_dev)
->         if (!(indio_dev->currentmode & INDIO_ALL_TRIGGERED_MODES))
->                 return -EINVAL;
-> 
-> -       /* continue with the triggered buffer */
-> -       ret = iio_triggered_buffer_predisable(indio_dev);
-> -       if (ret < 0)
-> -               dev_err(&indio_dev->dev, "buffer predisable failed\n");
-> -
->         if (!st->dma_st.dma_chan)
-> -               return ret;
-> +               return 0;
-> 
->         /* if we are using DMA we must clear registers and end DMA */
->         dmaengine_terminate_sync(st->dma_st.dma_chan);
-> @@ -952,10 +954,20 @@ static int at91_adc_buffer_predisable(struct iio_dev *indio_dev)
-> 
->         /* read overflow register to clear possible overflow status */
->         at91_adc_readl(st, AT91_SAMA5D2_OVER);
-> -       return ret;
-> +       return 0;
-> +}
-> +
-> +static int at91_adc_buffer_predisable(struct iio_dev *indio_dev)
-> +{
-> +       if (at91_adc_current_chan_is_touch(indio_dev))
-> +               return 0;
-> +
-> +       return iio_triggered_buffer_predisable(indio_dev);
->  }
-> 
->  static const struct iio_buffer_setup_ops at91_buffer_setup_ops = {
-> +       .preenable = &at91_adc_buffer_preenable,
-> +       .postdisable = &at91_adc_buffer_postdisable,
->         .postenable = &at91_adc_buffer_postenable,
->         .predisable = &at91_adc_buffer_predisable,
->  };
-> --
-> 2.20.1
-> 
+---
+
+Note: Reported-by: line is subject to change
+---
+ fs/binfmt_elf.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/fs/binfmt_elf.c b/fs/binfmt_elf.c
+index 13f25e241ac4..25d489bc9453 100644
+--- a/fs/binfmt_elf.c
++++ b/fs/binfmt_elf.c
+@@ -1733,7 +1733,7 @@ static int fill_thread_core_info(struct elf_thread_core_info *t,
+ 		    (!regset->active || regset->active(t->task, regset) > 0)) {
+ 			int ret;
+ 			size_t size = regset_size(t->task, regset);
+-			void *data = kmalloc(size, GFP_KERNEL);
++			void *data = kzalloc(size, GFP_KERNEL);
+ 			if (unlikely(!data))
+ 				return 0;
+ 			ret = regset->get(t->task, regset,
+-- 
+2.26.1.301.g55bc3eb7cb9-goog
+
