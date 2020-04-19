@@ -2,123 +2,143 @@ Return-Path: <SRS0=L1Qp=6D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0472C38A29
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 22:42:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5DDAC38A29
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 22:44:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C60AD2075E
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 22:42:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75AF421D79
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 22:44:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587336266;
+	bh=nkfNhUxB7twrSGUzyUAMobuT5zi/cEpZEu4ZRGsuvo4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=v7ZO+VQW3IcyXKO9hAXj1jWeAYEizDg+uTqqG+XxYtOtYe0xzedFZ8hCbmcYfyuKo
+	 sw+gN4G2Rs7RfE8/musXsVIkcwu3nYnX+T9Ba0warbAKtkfjzQsbyhJkx3gS5ZZeJm
+	 zdrsZGE9jp5v2Dg6maewAXwGItfOUzwXw+VKpXgI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726006AbgDSWm1 (ORCPT
+        id S1726049AbgDSWoZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Apr 2020 18:42:27 -0400
-Received: from netrider.rowland.org ([192.131.102.5]:41821 "HELO
-        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1725905AbgDSWm0 (ORCPT
+        Sun, 19 Apr 2020 18:44:25 -0400
+Received: from conssluserg-03.nifty.com ([210.131.2.82]:57963 "EHLO
+        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725905AbgDSWoZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Apr 2020 18:42:26 -0400
-Received: (qmail 29224 invoked by uid 500); 19 Apr 2020 18:42:25 -0400
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 19 Apr 2020 18:42:25 -0400
-Date:   Sun, 19 Apr 2020 18:42:25 -0400 (EDT)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@netrider.rowland.org
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Jiri Kosina <jikos@kernel.org>
-cc:     Julian Squires <julian@cipht.net>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        syzbot <syzbot+7bf5a7b0f0a1f9446f4c@syzkaller.appspotmail.com>,
-        <linux-input@vger.kernel.org>, <andreyknvl@google.com>,
-        <gregkh@linuxfoundation.org>, <ingrassia@epigenesys.com>,
-        Kernel development list <linux-kernel@vger.kernel.org>,
-        USB list <linux-usb@vger.kernel.org>,
-        <syzkaller-bugs@googlegroups.com>, Ping Cheng <pingc@wacom.com>,
-        <pinglinux@gmail.com>, <killertofu@gmail.com>
-Subject: Re: KASAN: use-after-free Read in usbhid_close (3)
-In-Reply-To: <20200419171855.GJ166864@dtor-ws>
-Message-ID: <Pine.LNX.4.44L0.2004191835550.28419-100000@netrider.rowland.org>
+        Sun, 19 Apr 2020 18:44:25 -0400
+Received: from mail-vs1-f51.google.com (mail-vs1-f51.google.com [209.85.217.51]) (authenticated)
+        by conssluserg-03.nifty.com with ESMTP id 03JMhwJB009257;
+        Mon, 20 Apr 2020 07:43:59 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com 03JMhwJB009257
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1587336239;
+        bh=gV/58YzON11th09Ti+Q8EbO1d/yan4JpxqInk2QGwes=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=FgiQUpEnZCCVaIVWx/unrd1QG7sa9rq24slnHk0eFwMxg1QdlLrIjfH/SpHuWWCT5
+         ByafFrn4UMsGC5LRT59KG15IAFnUk6ok1l66FmrHu741j05+dv9Cxbrh3EHJT2wiw/
+         9UtixbBdOUORKCDFJj8ONXAtkO3k4EdtoRwZdbXzqaIdaBGlqdVj0ETACR89kuuLXn
+         1leWcw9phhOWGYISjDoJVjQD3T90V+7ftx8rSrz0gtz+645fhPhOU1y+qiJKFmPk9l
+         Z19jEmSzS7Y3mZkkyDOOVJFBqj3PMJlDStTC2hwOFu3Uy+zD3Z90inxZPeJ0F2CCNs
+         sdjP6Tv+tjlUw==
+X-Nifty-SrcIP: [209.85.217.51]
+Received: by mail-vs1-f51.google.com with SMTP id z1so4816150vsn.11;
+        Sun, 19 Apr 2020 15:43:59 -0700 (PDT)
+X-Gm-Message-State: AGi0PuaQCcQPIs8oHn7TeOVbbxkGH40jkE4x+oMYFK/uCImTCF9AmKku
+        rd/n1UbXIpFsuxUPWjrYM/psdaFF4otMHFIBKvs=
+X-Google-Smtp-Source: APiQypL18FhGmx9Srecmi4TdYq4Vj1H09SIbwKmnMxjZzAe5yiIXkku5jzH7VBRLIM/hcElDA0yKpv6VkHkLWl34k4c=
+X-Received: by 2002:a67:fa11:: with SMTP id i17mr9772277vsq.155.1587336237833;
+ Sun, 19 Apr 2020 15:43:57 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+References: <20200419222804.483191-1-masahiroy@kernel.org>
+In-Reply-To: <20200419222804.483191-1-masahiroy@kernel.org>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Mon, 20 Apr 2020 07:43:21 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQmdxmk7_fxo0v6T92GwXpXbmukcMBD_4Dp+L89ymM7=A@mail.gmail.com>
+Message-ID: <CAK7LNAQmdxmk7_fxo0v6T92GwXpXbmukcMBD_4Dp+L89ymM7=A@mail.gmail.com>
+Subject: Re: [PATCH] arch: split MODULE_ARCH_VERMAGIC definitions out to <asm/vermagic.h>
+To:     Jessica Yu <jeyu@kernel.org>
+Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Borislav Petkov <bp@suse.de>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 19 Apr 2020, Dmitry Torokhov wrote:
+On Mon, Apr 20, 2020 at 7:28 AM Masahiro Yamada <masahiroy@kernel.org> wrote:
+>
+> As the bug report [1] pointed out, <linux/vermagic.h> must be included
+> after <linux/module.h>.
+>
+> I believe we should be able to include headers in any order. We often
+> sort include directives alphabetically, but it is just coding style
+> convention. Technically, we can get rid of the include order restriction
+> by making every header self-contained.
+>
+> Currently, arch-specific MODULE_ARCH_VERMAGIC is defined in
+> <asm/module.h>, but it is not included from <linux/vermagic.h>.
+>
+> Hence, the straight-forward fix-up would be as follows:
+>
+> |--- a/include/linux/vermagic.h
+> |+++ b/include/linux/vermagic.h
+> |@@ -1,5 +1,6 @@
+> | /* SPDX-License-Identifier: GPL-2.0 */
+> | #include <generated/utsrelease.h>
+> |+#include <linux/module.h>
+> |
+> | /* Simply sanity version stamp for modules. */
+> | #ifdef CONFIG_SMP
+>
+> This works enough, but for further cleanups, I split MODULE_ARCH_VERMAGIC
+> definitions into <asm/vermagic.h>.
+>
+> With this, <linux/module.h> and <linux/vermagic.h> will be orthogonal,
+> and the location of MODULE_ARCH_VERMAGIC definitions will be consistent.
+>
+> For arc and ia64, MODULE_PROC_FAMILY is only used for defining
+> MODULE_ARCH_VERMAGIC. I squashed it.
+>
+> FOR hexagon, nds32, and xtensa, I removed <asm/modules.h> entirely
+> because they contained nothing but MODULE_ARCH_VERMAGIC definition.
+> Kbuild will automatically generate <asm/modules.h> at build-time,
+> wrapping <asm-generic/module.h>.
+>
+> [1] https://lore.kernel.org/lkml/20200411155623.GA22175@zn.tnic
+>
 
-> On Sun, Apr 19, 2020 at 10:07:34AM -0400, Alan Stern wrote:
-> > On Sat, 18 Apr 2020, Dmitry Torokhov wrote:
-> > 
-> > > On Sat, Apr 18, 2020 at 09:09:44PM -0700, Dmitry Torokhov wrote:
-> > > > Hi Alan,
-> > > > 
-> > > > On Sat, Apr 18, 2020 at 10:16:32PM -0400, Alan Stern wrote:
-> > > > > linux-input people:
-> > > > > 
-> > > > > syzbot has found a bug related to USB/HID/input, and I have narrowed it
-> > > > > down to the wacom driver.  As far as I can tell, the problem is caused
-> > > > > the fact that drivers/hid/wacom_sys.c calls input_register_device()
-> > > > > in several places, but it never calls input_unregister_device().
-> > > > > 
-> > > > > I know very little about the input subsystem, but this certainly seems 
-> > > > > like a bug.
-> > > > 
-> > > > Wacom driver uses devm_input_allocate_device(), so unregister should
-> > > > happen automatically on device removal once we exit wacom_probe().
-> > > > 
-> > > > > 
-> > > > > When the device is unplugged, the disconnect pathway doesn't call
-> > > > > hid_hw_close().  That routine doesn't get called until the user closes
-> > > > > the device file (which can be long after the device is gone and
-> > > > > hid_hw_stop() has run).  Then usbhid_close() gets a use-after-free
-> > > > > error when it tries to access data structures that were deallocated by
-> > > > > usbhid_stop().  No doubt there are other problems too, but this is
-> > > > > the one that syzbot found.
-> > > > 
-> > > > Unregistering the input device should result in calling wacom_close()
-> > > > (if device was previously opened), which, as far as I can tell, calls
-> > > > hid_hw_close().
-> > > > 
-> > > > I wonder if it is valid to call hid_hw_stop() before hid_hw_close()?
-> > 
-> > No, it isn't.  If it were, for example, why would evdev_disconnect() -> 
-> > evdev_cleanup() need to call input_close_device()?
-> 
-> Because input and HID are not the same. For input, when we attempt to
-> unregister an input device we will go through all attached input
-> handlers (like evdev) and if they believe they have the device open they
-> will attempt to close it. How close is implemented is up to particular
-> driver.
-> 
-> I am not sure about HID implementation details, but I could envision
-> transports where you can tell the transport that you no longer want
-> events to be delivered to you ("close") vs you want to disable hardware
-> ("stop") and support any order of them.
+I forgot to add this:
 
-Jiri, you should know: Are HID drivers supposed to work okay when the
-->close callback is issued after (or concurrently with) the ->stop
-callback?
+Reported-by: Borislav Petkov <bp@suse.de>
 
-The actual bug found by syzbot was a race between those two routines in 
-usbhid.
 
-> > And why would 
-> > usbhid_disconnect() deallocate the usbhid structure which usbhid_stop()
-> > accesses?
-> 
-> This happens only after we return from hid_destroy_device(), so
-> even in the presence of devm I'd expect that all devm-related stuff
-> instantiated by hid-wacom would have been completed before we get back
-> to usbhid_disconnect().
-> 
-> Can we validate that calls to wacom_close() happen?
 
-I could find out if you think it's important.  In the syzbot tests, the 
-crash occurs before wacom_close() is called.
+> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+> ---
+>
+> I do not mean to replace the work by Leon Romanovsky:
+> https://lkml.org/lkml/2020/4/19/201
+>
+> His work intends to hide <linux/vermagic.h> from driver writers.
+> It is solving a different problem.
+> It does not solve the include order restriction reported by [1].
+> It still relies on kernel/module.c and *.mod.c
+> include <linux/vermagic.h> after <linux/module.h>.
+>
+> I believe we should not impose any restriction about the include order.
+> So, this patch is the direct answer to the bug report [1].
+>
+> BTW, I think commit f58dd03b1157bdf3b64c36e9525f8d7f69c25df2
+> was a bad way to suppress the problem, but that is another story.
+>
 
-Alan Stern
 
+-- 
+Best Regards
+Masahiro Yamada
