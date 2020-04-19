@@ -2,107 +2,150 @@ Return-Path: <SRS0=L1Qp=6D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17892C38A30
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 18:14:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AC36C38A30
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 18:17:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E4BAA214AF
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 18:14:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587320084;
-	bh=bOt9BTn/I9BtpLW6MYPux7kH7zXf1KQ4OwttSbOUgxw=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=eCxBp4k61qSX/SXOeVlB5ac6tk/qTLkQ0a+wY5CVcFWvI3mUVOvJM82HKYvId57x6
-	 g6unj38EsmTnRt8x4laQ0k3ILX8cGg05f4gnCc8yWw9Uk+zjEB729F6l54Y+JsIKa+
-	 OXlZ2itj4ZO3KaPntH+qstLKw+ZIjYRXuO2qbl1k=
+	by mail.kernel.org (Postfix) with ESMTP id 24BAF20771
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 18:17:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OFPZulq2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726738AbgDSSOl (ORCPT
+        id S1726772AbgDSSRT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Apr 2020 14:14:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37082 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726440AbgDSSOk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Apr 2020 14:14:40 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3440920771;
-        Sun, 19 Apr 2020 18:14:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587320079;
-        bh=bOt9BTn/I9BtpLW6MYPux7kH7zXf1KQ4OwttSbOUgxw=;
-        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=F96kxGnwb5hbRo2uaveExMkh4pG5tmsfXC/X4f7LcIR9NVVk3+CXqwPimCRGIZsLq
-         200DZ+NlYkyxPrNFkbuYootDCzDqqWFu0hJkAVPZpKUAgkDDPBPfI6mIZvHi8k+VtM
-         aJNXnDOzYimf/GSU7Z8wIQIZEF7kJxvbDOxdjZqA=
-Content-Type: text/plain; charset="utf-8"
+        Sun, 19 Apr 2020 14:17:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60456 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726674AbgDSSRS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 19 Apr 2020 14:17:18 -0400
+Received: from mail-oi1-x244.google.com (mail-oi1-x244.google.com [IPv6:2607:f8b0:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96141C061A0C;
+        Sun, 19 Apr 2020 11:17:18 -0700 (PDT)
+Received: by mail-oi1-x244.google.com with SMTP id k133so6840695oih.12;
+        Sun, 19 Apr 2020 11:17:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=lVp5J3L7xx8RfXE2l8kRTsve29d/FePp3kDwKpOyzDI=;
+        b=OFPZulq25UF5Y3RgTIxgelFvx960Yxgf5FCnStv1HtEKZb5UkQBgAl7dT4Q/nU+Nak
+         l/lwtgyWuFi3bkOfgmCowMtHeDiHNL/GBtFOSZ85BoP3gGmXR+mMeFhh0U1h+T+LcLoo
+         L+Q0w4AMISfeLKd+45klOzRkEoPCNPXRyQGMUig9xAbQCZJBbqSFRkJtCzYJaCecNPhe
+         AKzX2fj/GItNfLMCi+SOpOQeBsFYUoQNI5w6fNXFHwFVMunlTl8+Q5zwbvTLKc8AEJqP
+         U/Y0NlhUAstrzNaCxkxLgE7yhqmFx4XrZzzTXdCV+xTe0Jgjo7Kj4dsvk+oZ3/4x6MsS
+         cdlg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=lVp5J3L7xx8RfXE2l8kRTsve29d/FePp3kDwKpOyzDI=;
+        b=WdMlg8LpRYON/IEc6Nd1+GMIJDko19rqAzz7NBN8oy2rE15sO/f1tsGKwMha6JoBHq
+         408OTVJkAjTiYlrljyCCvM4tqASfHeab4Ilq6+aAMy9gz7qzrOQiBqkSX5X+ODv+4L6V
+         LHPwWYkvG0PoG0GQio//ChFbXWm6P1fmeY4ezZQYr9eE9Qo/jBrYNebrJMWdS8vDjL0C
+         RG9mfgTv084xZF64eBkFYUCwSs2Ij6KTe3UKTcQU8UP37aGVmsT+A8/+SaGocXCCTACX
+         293MqOwwsdntATbOWLYaCvLFZR/W3ojYTb128BfdLJ8GCT5FFKocogbdITlJHvsTCODR
+         srlw==
+X-Gm-Message-State: AGi0PubcLlvBbF5o0fJ+p1LlPAQWe067wYKJ/PiK0wrkjef/4ZcefGTj
+        /Dgtw7PYw05UE+Vx55Wi86c=
+X-Google-Smtp-Source: APiQypLC9nSr85KAnDCf/Fcm0RAg1jJAX5LAwsXyAPvAW1T3J4VBzxNDOpMV25OndERnFmP8FRHqUQ==
+X-Received: by 2002:aca:c70f:: with SMTP id x15mr8168206oif.80.1587320237904;
+        Sun, 19 Apr 2020 11:17:17 -0700 (PDT)
+Received: from ubuntu-s3-xlarge-x86 ([2604:1380:4111:8b00::3])
+        by smtp.gmail.com with ESMTPSA id r67sm9556198oie.19.2020.04.19.11.17.17
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 19 Apr 2020 11:17:17 -0700 (PDT)
+Date:   Sun, 19 Apr 2020 11:17:15 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Masahiro Yamada <masahiroy@kernel.org>
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com, linux-kbuild@vger.kernel.org,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Dmitry Golovin <dima@golovin.in>,
+        Sedat Dilek <sedat.dilek@gmail.com>
+Subject: Re: [PATCH 2/2] MIPS: VDSO: Do not disable VDSO when linking with
+ ld.lld
+Message-ID: <20200419181715.GA36234@ubuntu-s3-xlarge-x86>
+References: <20200419180445.26722-1-natechancellor@gmail.com>
+ <20200419180445.26722-2-natechancellor@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200416005549.9683-2-robh@kernel.org>
-References: <20200416005549.9683-1-robh@kernel.org> <20200416005549.9683-2-robh@kernel.org>
-Subject: Re: [PATCH 2/2] dt-bindings: Remove cases of 'allOf' containing a '$ref'
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>, Vinod Koul <vkoul@kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Heiko Stuebner <heiko@sntech.de>, Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Fabio Estevam <festevam@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Amit Kucheria <amit.kucheria@linaro.org>,
-        Danie l Lezcano <daniel.lezcano@linaro.org>,
-        linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-i2c@vger.kernel.org,
-        linux-hwmon@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-input@vger.kernel.org, linux-leds@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-mmc@vger.kernel.org,
-        linux-mtd@lists.infradead.org, linux-can@vger.kernel.org,
-        netdev@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-remoteproc@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-rtc@vger.kernel.org, linux-serial@vger.kernel.org,
-        alsa-devel@alsa-project.org, linux-spi@vger.kernel.org
-To:     Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Date:   Sun, 19 Apr 2020 11:14:38 -0700
-Message-ID: <158732007844.132238.3936257450130949073@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200419180445.26722-2-natechancellor@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Rob Herring (2020-04-15 17:55:49)
-> json-schema versions draft7 and earlier have a weird behavior in that
-> any keywords combined with a '$ref' are ignored (silently). The correct
-> form was to put a '$ref' under an 'allOf'. This behavior is now changed
-> in the 2019-09 json-schema spec and '$ref' can be mixed with other
-> keywords. The json-schema library doesn't yet support this, but the
-> tooling now does a fixup for this and either way works.
->=20
-> This has been a constant source of review comments, so let's change this
-> treewide so everyone copies the simpler syntax.
->=20
-> Signed-off-by: Rob Herring <robh@kernel.org>
+On Sun, Apr 19, 2020 at 11:04:45AM -0700, Nathan Chancellor wrote:
+> Currently, when linking with ld.lld, this warning pops up:
+> 
+>     arch/mips/vdso/Makefile:70: MIPS VDSO requires binutils >= 2.25
+> 
+> ld-ifversion calls ld-version, which calls scripts/ld-version.sh, which
+> is specific to GNU ld. ld.lld has a completely different versioning
+> scheme (as it follows LLVM's versioning) and it does not have the issue
+> mentioned in the comment above this block so it should not be subjected
+> to this check.
+> 
+> With this patch, the VDSO successfully links and shows P_MIPS_PC32 in
+> vgettimeofday.o.
+> 
+> $ llvm-objdump -Dr arch/mips/vdso/vgettimeofday.o | grep R_MIPS_PC32
+> 			00000024:  R_MIPS_PC32	_start
+> 			000000b0:  R_MIPS_PC32	_start
+> 			000002bc:  R_MIPS_PC32	_start
+> 			0000036c:  R_MIPS_PC32	_start
+> 			00000468:  R_MIPS_PC32	_start
+> 
+> Link: https://github.com/ClangBuiltLinux/linux/issues/785
+> Link: https://github.com/llvm/llvm-project/commit/e364e2e9ce50c12eb2bf093560e1a1a8544d455a
+> Reported-by: Dmitry Golovin <dima@golovin.in>
+> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
 > ---
->  .../bindings/clock/fixed-factor-clock.yaml    |   5 +-
+>  arch/mips/vdso/Makefile | 8 +++++---
+>  1 file changed, 5 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/mips/vdso/Makefile b/arch/mips/vdso/Makefile
+> index d7fe8408603e..f99e583d14a1 100644
+> --- a/arch/mips/vdso/Makefile
+> +++ b/arch/mips/vdso/Makefile
+> @@ -65,9 +65,11 @@ DISABLE_VDSO := n
+>  # the comments on that file.
+>  #
+>  ifndef CONFIG_CPU_MIPSR6
+> -  ifeq ($(call ld-ifversion, -lt, 225000000, y),y)
+> -    $(warning MIPS VDSO requires binutils >= 2.25)
+> -    DISABLE_VDSO := y
+> +  ifndef CONFIG_LD_IS_LLD
+> +    ifeq ($(call ld-ifversion, -lt, 225000000, y),y)
+> +      $(warning MIPS VDSO requires binutils >= 2.25)
+> +      DISABLE_VDSO := y
+> +    endif
+>    endif
+>  endif
+>  
+> -- 
+> 2.26.1
+> 
 
-Reviewed-by: Stephen Boyd <sboyd@kernel.org> # clock
+Hmmm, I still see this warning when first runing make <config>... I
+assume because this Makefile gets parsed before Kconfig runs.
+
+Perhaps it would be better to check if ld-version is 0 (since that means
+we are not using GNU ld):
+
+ifneq ($(call ld-ifversion, -eq, 0, y),y)
+
+I am open to suggestions though.
+
+Cheers,
+Nathan
