@@ -2,151 +2,116 @@ Return-Path: <SRS0=L1Qp=6D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42457C38A30
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 17:13:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C95E4C54F70
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 17:13:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2722F22244
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 17:13:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A719B21473
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 17:13:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="TTrTHJ5R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726661AbgDSRNE (ORCPT
+        id S1726889AbgDSRNN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Apr 2020 13:13:04 -0400
-Received: from v6.sk ([167.172.42.174]:44168 "EHLO v6.sk"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726875AbgDSRNA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Apr 2020 13:13:00 -0400
-Received: from localhost (v6.sk [IPv6:::1])
-        by v6.sk (Postfix) with ESMTP id 8757B610BA;
-        Sun, 19 Apr 2020 17:12:28 +0000 (UTC)
-From:   Lubomir Rintel <lkundrak@v3.sk>
-List-Id: <soc.lore.kernel.org>
-To:     soc@kernel.org
-Cc:     Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Daniel Mack <daniel@zonque.org>,
-        Haojian Zhuang <haojian.zhuang@gmail.com>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        linux-kernel@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>,
-        Andrew Lunn <andrew@lunn.ch>
-Subject: [PATCH 11/15] ARM: dts: berlin*: Fix up the SDHCI node names
-Date:   Sun, 19 Apr 2020 19:11:53 +0200
-Message-Id: <20200419171157.672999-12-lkundrak@v3.sk>
-X-Mailer: git-send-email 2.26.0
-In-Reply-To: <20200419171157.672999-1-lkundrak@v3.sk>
-References: <20200419171157.672999-1-lkundrak@v3.sk>
+        Sun, 19 Apr 2020 13:13:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50642 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726668AbgDSRNN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 19 Apr 2020 13:13:13 -0400
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:3201:214:fdff:fe10:1be6])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BBC5BC061A0C;
+        Sun, 19 Apr 2020 10:13:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=zLl/O8f9jYA4cx5fo7LmDJmUNDdHX/VFattYUnbZWo8=; b=TTrTHJ5Rl6+8WqZ4OVlavXUHL
+        b/MV6/U2DqN0ZXFUb2Yoi2cyAb5MSV26h765gK+qxknuS9jU3aB7/puQhHat0yjv+wISB27caT4Za
+        uw0Lnm/WxRbGq3brZJb56U5bAQYtc5kYIXp2uhoyn99VfG6iP7DdPKBs6B2r9gyHqs18vlL3wXqN9
+        NxGHEHHpE9mvWtMGrKQEI2QdpQpS5Oty6IQ7+gZol1OElt//d4GhtdmGPYoGTPTLwmql+YZVlJpsj
+        j6ucxTdswTesUGNYNY395InePIr+nJScTsEhezWYe8XSlEgxQCeqlCdNWXPVsZsywAndOB9BPEtNk
+        niXy2U1Ag==;
+Received: from shell.armlinux.org.uk ([2002:4e20:1eda:1:5054:ff:fe00:4ec]:48106)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1jQDUo-0006lc-67; Sun, 19 Apr 2020 18:12:43 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1jQDUd-000515-O4; Sun, 19 Apr 2020 18:12:31 +0100
+Date:   Sun, 19 Apr 2020 18:12:31 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     Michael Walle <michael@walle.cc>, linux-hwmon@vger.kernel.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>
+Subject: Re: [PATCH net-next 3/3] net: phy: bcm54140: add hwmon support
+Message-ID: <20200419171231.GY25745@shell.armlinux.org.uk>
+References: <20200417192858.6997-1-michael@walle.cc>
+ <20200417192858.6997-3-michael@walle.cc>
+ <20200417195003.GG785713@lunn.ch>
+ <35d00dfe1ad24b580dc247d882aa2e39@walle.cc>
+ <20200417201338.GI785713@lunn.ch>
+ <84679226df03bdd8060cb95761724d3a@walle.cc>
+ <20200417212829.GJ785713@lunn.ch>
+ <4f3ff33f78472f547212f87f75a37b66@walle.cc>
+ <20200419162928.GL836632@lunn.ch>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200419162928.GL836632@lunn.ch>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The node name preferred by mmc-controller.yaml binding spec is "mmc":
+On Sun, Apr 19, 2020 at 06:29:28PM +0200, Andrew Lunn wrote:
+> On Sun, Apr 19, 2020 at 12:29:23PM +0200, Michael Walle wrote:
+> > Am 2020-04-17 23:28, schrieb Andrew Lunn:
+> > > On Fri, Apr 17, 2020 at 11:08:56PM +0200, Michael Walle wrote:
+> > > > Am 2020-04-17 22:13, schrieb Andrew Lunn:
+> > > > > > Correct, and this function was actually stolen from there ;) This was
+> > > > > > actually stolen from the mscc PHY ;)
+> > > > >
+> > > > > Which in itself indicates it is time to make it a helper :-)
+> > > > 
+> > > > Sure, do you have any suggestions?
+> > > 
+> > > mdiobus_get_phy() does the bit i was complaining about, the mdiobus
+> > > internal knowledge.
+> > 
+> > But that doesn't address your other comment.
+> 
+> Yes, you are right. But i don't think you can easily generalize the
+> rest. It needs knowledge of the driver private structure to reference
+> pkg_init. You would have to move that into phy_device.
+> 
+> > 
+> > > There is also the question of locking. What happens if the PHY devices
+> > > is unbound while you have an instance of its phydev?
+> > 
+> > Is there any lock one could take to avoid that?
+> 
+> phy_attach_direct() does a get_device(). That at least means the
+> struct device will not go away. I don't know the code well enough to
+> know if that will also stop the phy_device structure from being freed.
 
-  berlin2-sony-nsz-gs7.dt.yaml: sdhci@ab0000: $nodename:0:
-      'sdhci@ab0000' does not match '^mmc(@.*)?$'
-  berlin2-sony-nsz-gs7.dt.yaml: sdhci@ab0800: $nodename:0:
-      'sdhci@ab0800' does not match '^mmc(@.*)?$'
-  berlin2-sony-nsz-gs7.dt.yaml: sdhci@ab1000: $nodename:0:
-      'sdhci@ab1000' does not match '^mmc(@.*)?$'
-  berlin2cd-google-chromecast.dt.yaml: sdhci@ab0000: $nodename:0:
-      'sdhci@ab0000' does not match '^mmc(@.*)?$'
-  berlin2cd-valve-steamlink.dt.yaml: sdhci@ab0000: $nodename:0:
-      'sdhci@ab0000' does not match '^mmc(@.*)?$'
-  berlin2q-marvell-dmp.dt.yaml: sdhci@ab0000: $nodename:0:
-      'sdhci@ab0000' does not match '^mmc(@.*)?$'
-  berlin2q-marvell-dmp.dt.yaml: sdhci@ab0800: $nodename:0:
-      'sdhci@ab0800' does not match '^mmc(@.*)?$'
-  berlin2q-marvell-dmp.dt.yaml: sdhci@ab1000: $nodename:0:
-      'sdhci@ab1000' does not match '^mmc(@.*)?$'
+Well, struct device is embedded in struct mdio_device, which in turn
+is embedded in struct phy_device. So, if struct device can't go away
+because its refcount is held, the same is true of the structs
+embedding it.
 
-Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
----
- arch/arm/boot/dts/berlin2.dtsi   | 6 +++---
- arch/arm/boot/dts/berlin2cd.dtsi | 2 +-
- arch/arm/boot/dts/berlin2q.dtsi  | 6 +++---
- 3 files changed, 7 insertions(+), 7 deletions(-)
-
-diff --git a/arch/arm/boot/dts/berlin2.dtsi b/arch/arm/boot/dts/berlin2.dtsi
-index d2f7d984bba5c..3ab3cd250da70 100644
---- a/arch/arm/boot/dts/berlin2.dtsi
-+++ b/arch/arm/boot/dts/berlin2.dtsi
-@@ -77,7 +77,7 @@ soc@f7000000 {
- 
- 		ranges = <0 0xf7000000 0x1000000>;
- 
--		sdhci0: sdhci@ab0000 {
-+		sdhci0: mmc@ab0000 {
- 			compatible = "mrvl,pxav3-mmc";
- 			reg = <0xab0000 0x200>;
- 			clocks = <&chip_clk CLKID_SDIO0XIN>, <&chip_clk CLKID_SDIO0>;
-@@ -86,7 +86,7 @@ sdhci0: sdhci@ab0000 {
- 			status = "disabled";
- 		};
- 
--		sdhci1: sdhci@ab0800 {
-+		sdhci1: mmc@ab0800 {
- 			compatible = "mrvl,pxav3-mmc";
- 			reg = <0xab0800 0x200>;
- 			clocks = <&chip_clk CLKID_SDIO1XIN>, <&chip_clk CLKID_SDIO1>;
-@@ -95,7 +95,7 @@ sdhci1: sdhci@ab0800 {
- 			status = "disabled";
- 		};
- 
--		sdhci2: sdhci@ab1000 {
-+		sdhci2: mmc@ab1000 {
- 			compatible = "mrvl,pxav3-mmc";
- 			reg = <0xab1000 0x200>;
- 			interrupts = <GIC_SPI 28 IRQ_TYPE_LEVEL_HIGH>;
-diff --git a/arch/arm/boot/dts/berlin2cd.dtsi b/arch/arm/boot/dts/berlin2cd.dtsi
-index e5c1f4213ff90..7cf3e6302d75c 100644
---- a/arch/arm/boot/dts/berlin2cd.dtsi
-+++ b/arch/arm/boot/dts/berlin2cd.dtsi
-@@ -62,7 +62,7 @@ soc@f7000000 {
- 
- 		ranges = <0 0xf7000000 0x1000000>;
- 
--		sdhci0: sdhci@ab0000 {
-+		sdhci0: mmc@ab0000 {
- 			compatible = "mrvl,pxav3-mmc";
- 			reg = <0xab0000 0x200>;
- 			clocks = <&chip_clk CLKID_SDIO0XIN>, <&chip_clk CLKID_SDIO0>;
-diff --git a/arch/arm/boot/dts/berlin2q.dtsi b/arch/arm/boot/dts/berlin2q.dtsi
-index 99d6872a6dfcc..c44a32e873f44 100644
---- a/arch/arm/boot/dts/berlin2q.dtsi
-+++ b/arch/arm/boot/dts/berlin2q.dtsi
-@@ -122,7 +122,7 @@ soc@f7000000 {
- 		ranges = <0 0xf7000000 0x1000000>;
- 		interrupt-parent = <&gic>;
- 
--		sdhci0: sdhci@ab0000 {
-+		sdhci0: mmc@ab0000 {
- 			compatible = "mrvl,pxav3-mmc";
- 			reg = <0xab0000 0x200>;
- 			clocks = <&chip_clk CLKID_SDIO1XIN>, <&chip_clk CLKID_SDIO>;
-@@ -131,7 +131,7 @@ sdhci0: sdhci@ab0000 {
- 			status = "disabled";
- 		};
- 
--		sdhci1: sdhci@ab0800 {
-+		sdhci1: mmc@ab0800 {
- 			compatible = "mrvl,pxav3-mmc";
- 			reg = <0xab0800 0x200>;
- 			clocks = <&chip_clk CLKID_SDIO1XIN>, <&chip_clk CLKID_SDIO>;
-@@ -140,7 +140,7 @@ sdhci1: sdhci@ab0800 {
- 			status = "disabled";
- 		};
- 
--		sdhci2: sdhci@ab1000 {
-+		sdhci2: mmc@ab1000 {
- 			compatible = "mrvl,pxav3-mmc";
- 			reg = <0xab1000 0x200>;
- 			interrupts = <GIC_SPI 28 IRQ_TYPE_LEVEL_HIGH>;
 -- 
-2.26.0
-
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 10.2Mbps down 587kbps up
