@@ -2,91 +2,103 @@ Return-Path: <SRS0=L1Qp=6D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E4AAC38A30
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 11:53:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8C78C38A30
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 12:03:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 443CB214D8
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 11:53:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8451F21744
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 12:03:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mGNCuOkJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725963AbgDSLxj (ORCPT
+        id S1725969AbgDSMDC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Apr 2020 07:53:39 -0400
-Received: from out01.mta.xmission.com ([166.70.13.231]:59978 "EHLO
-        out01.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725841AbgDSLxj (ORCPT
+        Sun, 19 Apr 2020 08:03:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59604 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725841AbgDSMDC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Apr 2020 07:53:39 -0400
-Received: from in02.mta.xmission.com ([166.70.13.52])
-        by out01.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.90_1)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jQ8W1-0003fL-D0; Sun, 19 Apr 2020 05:53:37 -0600
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jQ8Vz-0006Fr-TU; Sun, 19 Apr 2020 05:53:37 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Jeremy Kerr <jk@ozlabs.org>, Arnd Bergmann <arnd@arndb.de>,
-        linuxppc-dev@lists.ozlabs.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200414070142.288696-1-hch@lst.de>
-        <87r1wl68gf.fsf@x220.int.ebiederm.org> <20200419081926.GA12539@lst.de>
-Date:   Sun, 19 Apr 2020 06:50:32 -0500
-In-Reply-To: <20200419081926.GA12539@lst.de> (Christoph Hellwig's message of
-        "Sun, 19 Apr 2020 10:19:26 +0200")
-Message-ID: <87o8rn3d9z.fsf@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Sun, 19 Apr 2020 08:03:02 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20075C061A0C;
+        Sun, 19 Apr 2020 05:03:02 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id k18so2857837pll.6;
+        Sun, 19 Apr 2020 05:03:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=mUMGk88U5GL86FJoQ9V9Sy5+QGtoY7CINQIBYemngGk=;
+        b=mGNCuOkJ1DqqRMQ/kQKpBjTPFmssVItDq4hi+RubmRd6V25lx3Rlg66wUxHjukAQVy
+         bCenWKIJuovAwd+EFIq0SDw43317uVGcOtk68a/qD7oXB7fvoLZZGIui2IXzfhHLFsNa
+         szLPWiuh7pEgXqIFo8oZcckGIN1oqCU+LYmgywWly6hTqsBsmf5zAI8lvIfmfe69IQiM
+         0faeVDeZCtz8aiNltK/ErIa/P/+R5mtt0sLHphidTBKyZjqs5/6jj4mrMLg5PVcOjI8a
+         ajNl9joot/hgx2AUPLp6u6fp7OfjisdoK0yOZFmMJfQTJEtTgjDAxCNRa9h/KPgF+BcK
+         CIMg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=mUMGk88U5GL86FJoQ9V9Sy5+QGtoY7CINQIBYemngGk=;
+        b=QN6yRyC3sPCf6J8Uwv5eOCy9Z6Natyr+erFbvbUQlIefh1N+C6EhrGoCj63QjxUe9C
+         ++7SrTQQfs8d8SyWLOLr/AvGkdbKm1Kh6XeV9vYTtknvDS2vPu2mwgepdNo6+KJseDyE
+         cRUtkPcwVoEV+B5TqLgqjqqtcXGjGOWzVFCjC7qAcDCbt97NwAAyuvdoZf5ckNylKm8C
+         b/YH0wlLzAj9F2U2TeONR91UqzT0f05uwsRv0CLUjqFpTh5gwQb3WfjrhxkzfzT392aO
+         3TEcbvejhTUVhNZyRbJ0WTmnXRRRYH9/LwbzXAT4yO8wmRxwP1HFc1LWQjUoHnChFPhv
+         YHhQ==
+X-Gm-Message-State: AGi0PubMogSTLY4fkfjTtvixdXtfm+MoFy/eKWzfO/T0IQHbB0a4f5KP
+        YJCKWmCxEgbrwJyYaY/z79I=
+X-Google-Smtp-Source: APiQypJ/bZH9MaTcH3mji4rprQa0VyYDHahZTEsbrXAoIJQXeW5SfXA+4idYBGMyIfl6i6Su2wVDSA==
+X-Received: by 2002:a17:902:b487:: with SMTP id y7mr4856941plr.230.1587297781641;
+        Sun, 19 Apr 2020 05:03:01 -0700 (PDT)
+Received: from localhost ([89.208.244.140])
+        by smtp.gmail.com with ESMTPSA id o11sm16358199pgb.71.2020.04.19.05.03.00
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 19 Apr 2020 05:03:00 -0700 (PDT)
+From:   Dejin Zheng <zhengdejin5@gmail.com>
+To:     davem@davemloft.net, f.fainelli@gmail.com, timur@kernel.org,
+        kstewart@linuxfoundation.org, hkallweit1@gmail.com,
+        tglx@linutronix.de, netdev@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Dejin Zheng <zhengdejin5@gmail.com>
+Subject: [PATCH net-next v1] net: ethernet: dnet: convert to devm_platform_get_and_ioremap_resource
+Date:   Sun, 19 Apr 2020 20:02:53 +0800
+Message-Id: <20200419120253.25742-1-zhengdejin5@gmail.com>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1jQ8Vz-0006Fr-TU;;;mid=<87o8rn3d9z.fsf@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX1++Xt8JJKQGcbPJViucMNdTMbptPpl2UTk=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: remove set_fs calls from the exec and coredump code v2
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Christoph Hellwig <hch@lst.de> writes:
+use devm_platform_get_and_ioremap_resource() to simplify code, which
+contains platform_get_resource() and devm_ioremap_resource(), it also
+get the resource for use by the following code.
 
-> On Fri, Apr 17, 2020 at 05:41:52PM -0500, Eric W. Biederman wrote:
->> > this series gets rid of playing with the address limit in the exec and
->> > coredump code.  Most of this was fairly trivial, the biggest changes are
->> > those to the spufs coredump code.
->> >
->> > Changes since v1:
->> >  - properly spell NUL
->> >  - properly handle the compat siginfo case in ELF coredumps
->> 
->> Quick question is exec from a kernel thread within the scope of what you
->> are looking at?
->> 
->> There is a set_fs(USER_DS) in flush_old_exec whose sole purpose appears
->> to be to allow exec from kernel threads.  Where the kernel threads
->> run with set_fs(KERNEL_DS) until they call exec.
->
-> This series doesn't really look at that area.  But I don't think exec
-> from a kernel thread makes any sense, and cleaning up how to set the
-> initial USER_DS vs KERNEL_DS state is something I'll eventually get to,
-> it seems like a major mess at the moment.
+Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
+---
+ drivers/net/ethernet/dnet.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-Fair enough.  I just wanted to make certain that it is on people's radar
-that when the kernel exec's init the arguments are read from kernel
-memory and the set_fs(USER_DS) in flush_old_exec() that makes that not
-work later.
+diff --git a/drivers/net/ethernet/dnet.c b/drivers/net/ethernet/dnet.c
+index 057a508dd6e2..db98274501a0 100644
+--- a/drivers/net/ethernet/dnet.c
++++ b/drivers/net/ethernet/dnet.c
+@@ -776,8 +776,7 @@ static int dnet_probe(struct platform_device *pdev)
+ 
+ 	spin_lock_init(&bp->lock);
+ 
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	bp->regs = devm_ioremap_resource(&pdev->dev, res);
++	bp->regs = devm_platform_get_and_ioremap_resource(pdev, 0, &res);
+ 	if (IS_ERR(bp->regs)) {
+ 		err = PTR_ERR(bp->regs);
+ 		goto err_out_free_dev;
+-- 
+2.25.0
 
-It is subtle and easy to miss.  So I figured I would mention it since
-I have been staring at the exec code a lot lately.
-
-Eric
