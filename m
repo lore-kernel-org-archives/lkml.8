@@ -2,163 +2,103 @@ Return-Path: <SRS0=L1Qp=6D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E947C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 05:53:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E623C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 06:02:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DF89122252
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 05:53:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LLnuM0lo"
+	by mail.kernel.org (Postfix) with ESMTP id 44BD521973
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 06:02:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587276172;
+	bh=r2AgjpwBy563/SvDhTEdOgTQsrTjb6KChd2dLbtCIIs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=TsmBu2KOTpnnxKnbDqO7ru643449FCqMz1x7N/WtPcN5HQuCIIFMa9A8MPTisDKvn
+	 +1W+e6nEBT3V4v3IlTfLHoUnACfNpc2/kAg7jO8GcKSVq3f3tXsIODwL3OUoVulHmB
+	 S9TYaIUfPZjhtRUzHv4Nenf4174mf9lX1eVDRarI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726121AbgDSFxn (ORCPT
+        id S1726048AbgDSGCv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Apr 2020 01:53:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59646 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725446AbgDSFxi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Apr 2020 01:53:38 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69352C061A0C;
-        Sat, 18 Apr 2020 22:53:38 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id j3so6347250ljg.8;
-        Sat, 18 Apr 2020 22:53:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=xN3miRWZzdsMsxxSHU7bXZvm24cCusdBgj9dMFbMgFE=;
-        b=LLnuM0lokDj6WShWfzAm7IQ3C2Ry/rP7akF1AWqIr1yEymcuF4s/lrT+i9l7w5Og4N
-         +dCqigzJ3ypQAXiJOYS+hpg63f926bI2Y9dxSo/zZmYSdDD9wmywtQw+Q7tsvag63jXb
-         V+VhY3w0Qsb4/2MqNWJvYbcfe+Gkao2oPUtIZG5jrxuWGUzA/xZVh0a49eaQ+qAeA5EC
-         0RxNFbVHQMAblEuTv+OLK8R3Ulr6MnGBj35OCOv8eB6ixelH8Li717QcTVYKY9q6nVl/
-         qYT/x2jZA2eZ9rm4j1y1tK+nObSOinZt9mDUvL2GGoBO5NgGJRPM8kVcqM+DJTOoy4xG
-         Ceqg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=xN3miRWZzdsMsxxSHU7bXZvm24cCusdBgj9dMFbMgFE=;
-        b=pkIK1wPExiCApO1okH3nddWdGaWrX+etTz6W1JEJGAo3r5Qj0IPh0uzwLPdN6v5OEE
-         sdX7/24cmnGn96OcQG1vLkYLPYHnEydZ3wWoqcmutiSVeuYwj6znYcQ4WhEC42JbYeTx
-         97KFgpnADPnfm3NGFqxOSPWVR3+GkpE6v6f8xVartqDe/HJ/NgGtfETP2nBT6tuCfADw
-         24J0UT5i9+aoEPBQFrARmAr1AHkcgxFdqIoCmD9XrWsC3V0yFryqxDgJr16nVdvcGKC5
-         zSZnUDzgoL+yY+63F+JEBy4IZyeoNQN2/q5pezZlB0AveT/XBYdvUkyVYAz9dtjzOSif
-         8aaA==
-X-Gm-Message-State: AGi0PuaxLmuTaftlHCaYa0vHcMMuyKi4oWd+ABN45sILiKE2bFqUZydq
-        V3f/drov2zlAD6mgmFlzMpk=
-X-Google-Smtp-Source: APiQypL9B78BpDHqzcdSxXcsbHU3s5I24MyU0cJ5Fjh+KgzcIB6iYgtHo9Bc5eUX8MkqBzw/Qqa6yA==
-X-Received: by 2002:a2e:9456:: with SMTP id o22mr6510374ljh.94.1587275616923;
-        Sat, 18 Apr 2020 22:53:36 -0700 (PDT)
-Received: from localhost.localdomain ([87.200.95.144])
-        by smtp.gmail.com with ESMTPSA id h7sm3366247ljg.37.2020.04.18.22.53.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 18 Apr 2020 22:53:36 -0700 (PDT)
-From:   Christian Hewitt <christianshewitt@gmail.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Christian Hewitt <christianshewitt@gmail.com>
-Subject: [PATCH 4/4] arm64: dts: meson-g12b-gtking-pro: add initial device-tree
-Date:   Sun, 19 Apr 2020 05:53:22 +0000
-Message-Id: <20200419055322.16138-5-christianshewitt@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200419055322.16138-1-christianshewitt@gmail.com>
-References: <20200419055322.16138-1-christianshewitt@gmail.com>
+        Sun, 19 Apr 2020 02:02:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60178 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725914AbgDSGCu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 19 Apr 2020 02:02:50 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A4A4B2076A;
+        Sun, 19 Apr 2020 06:02:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587276170;
+        bh=r2AgjpwBy563/SvDhTEdOgTQsrTjb6KChd2dLbtCIIs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=pTMv1wODwFpdjz0FVgzA+p2WSCpvCxj18+/q3aiIPhhtKR+jsjHHIdl5zJ2q2+RA3
+         +Tdmi8jGAiqk3VTvUYzIU3dTg9Q3SKwo6y6sZDkWyGvygbRRccfGpH1VpT4kAcKc5E
+         4lTNQxLSLwDJyeMo2kAEPugwsa59XjBdxg3VhiTs=
+Date:   Sun, 19 Apr 2020 08:02:47 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel@vger.kernel.org,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        linux-input@vger.kernel.org, Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
+        linux-usb@vger.kernel.org,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        linux-nfs@vger.kernel.org,
+        Johannes Berg <johannes@sipsolutions.net>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>, linux-nvdimm@lists.01.org,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        linux-scsi@vger.kernel.org, target-devel@vger.kernel.org,
+        Zzy Wysm <zzy@zzywysm.com>
+Subject: Re: [PATCH 7/9] drivers/base: fix empty-body warnings in
+ devcoredump.c
+Message-ID: <20200419060247.GA3535909@kroah.com>
+References: <20200418184111.13401-1-rdunlap@infradead.org>
+ <20200418184111.13401-8-rdunlap@infradead.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200418184111.13401-8-rdunlap@infradead.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Shenzen AZW (Beelink) GT-King Pro is based on the Amlogic W400 reference
-board with an S922X chip.
+On Sat, Apr 18, 2020 at 11:41:09AM -0700, Randy Dunlap wrote:
+> Fix gcc empty-body warning when -Wextra is used:
+> 
+> ../drivers/base/devcoredump.c:297:42: warning: suggest braces around empty body in an ‘if’ statement [-Wempty-body]
+> ../drivers/base/devcoredump.c:301:42: warning: suggest braces around empty body in an ‘if’ statement [-Wempty-body]
+> 
+> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+> Cc: Johannes Berg <johannes@sipsolutions.net>
+> Cc: Linus Torvalds <torvalds@linux-foundation.org>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> ---
+>  drivers/base/devcoredump.c |    5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+> 
+> --- linux-next-20200417.orig/drivers/base/devcoredump.c
+> +++ linux-next-20200417/drivers/base/devcoredump.c
+> @@ -9,6 +9,7 @@
+>   *
+>   * Author: Johannes Berg <johannes@sipsolutions.net>
+>   */
+> +#include <linux/kernel.h>
 
-- 4GB LPDDR4 RAM
-- 64GB eMMC storage
-- 10/100/1000 Base-T Ethernet
-- AP6356S Wireless (802.11 a/b/g/n/ac, BT 4.1)
-- HDMI 2.1 video
-- Analogue audio output
-- 1x RS232 port
-- 2x USB 2.0 port
-- 2x USB 3.0 ports
-- IR receiver
-- 1x full-size (not micro) SD card slot
-- 1x Power on/off button
+Why the need for this .h file being added for reformatting the code?
 
-The rear RS232 port is not currently supported in the device-tree.
+thanks,
 
-Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
----
- arch/arm64/boot/dts/amlogic/Makefile          |  1 +
- .../dts/amlogic/meson-g12b-gtking-pro.dts     | 39 +++++++++++++++++++
- 2 files changed, 40 insertions(+)
- create mode 100644 arch/arm64/boot/dts/amlogic/meson-g12b-gtking-pro.dts
-
-diff --git a/arch/arm64/boot/dts/amlogic/Makefile b/arch/arm64/boot/dts/amlogic/Makefile
-index 1fd28e84e808..0f377031cccb 100644
---- a/arch/arm64/boot/dts/amlogic/Makefile
-+++ b/arch/arm64/boot/dts/amlogic/Makefile
-@@ -4,6 +4,7 @@ dtb-$(CONFIG_ARCH_MESON) += meson-g12a-sei510.dtb
- dtb-$(CONFIG_ARCH_MESON) += meson-g12a-u200.dtb
- dtb-$(CONFIG_ARCH_MESON) += meson-g12a-x96-max.dtb
- dtb-$(CONFIG_ARCH_MESON) += meson-g12b-gtking.dtb
-+dtb-$(CONFIG_ARCH_MESON) += meson-g12b-gtking-pro.dtb
- dtb-$(CONFIG_ARCH_MESON) += meson-g12b-a311d-khadas-vim3.dtb
- dtb-$(CONFIG_ARCH_MESON) += meson-g12b-s922x-khadas-vim3.dtb
- dtb-$(CONFIG_ARCH_MESON) += meson-g12b-odroid-n2.dtb
-diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b-gtking-pro.dts b/arch/arm64/boot/dts/amlogic/meson-g12b-gtking-pro.dts
-new file mode 100644
-index 000000000000..c2bc1ca5a136
---- /dev/null
-+++ b/arch/arm64/boot/dts/amlogic/meson-g12b-gtking-pro.dts
-@@ -0,0 +1,39 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * Copyright (c) 2019 BayLibre, SAS
-+ * Author: Neil Armstrong <narmstrong@baylibre.com>
-+ * Copyright (c) 2019 Christian Hewitt <christianshewitt@gmail.com>
-+ */
-+
-+/dts-v1/;
-+
-+#include "meson-g12b-w400.dtsi"
-+#include "meson-g12-audio-hdmi.dtsi"
-+
-+/ {
-+	compatible = "azw,gtking", "amlogic,g12b";
-+	model = "Beelink GT-King Pro";
-+
-+	gpio-keys-polled {
-+		compatible = "gpio-keys-polled";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		poll-interval = <100>;
-+
-+		power-button {
-+			label = "suspend";
-+			linux,code = <KEY_POWER>;
-+			gpios = <&gpio_ao GPIOAO_3 GPIO_ACTIVE_LOW>;
-+		};
-+	};
-+
-+	leds {
-+		compatible = "gpio-leds";
-+
-+		white {
-+			label = "power:white";
-+			gpios = <&gpio_ao GPIOAO_11 GPIO_ACTIVE_HIGH>;
-+			default-state = "on";
-+		};
-+	};
-+};
--- 
-2.17.1
-
+greg k-h
