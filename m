@@ -2,84 +2,147 @@ Return-Path: <SRS0=L1Qp=6D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E00AC5321D
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 16:49:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C93EC38A30
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 16:50:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6865F21974
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 16:49:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17CCB21974
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 16:50:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="AYTfGWLB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726819AbgDSQtx (ORCPT
+        id S1726832AbgDSQuC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Apr 2020 12:49:53 -0400
-Received: from v6.sk ([167.172.42.174]:43732 "EHLO v6.sk"
+        Sun, 19 Apr 2020 12:50:02 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:48580 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726651AbgDSQtx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Apr 2020 12:49:53 -0400
-Received: from localhost (v6.sk [IPv6:::1])
-        by v6.sk (Postfix) with ESMTP id 987D5610A9;
-        Sun, 19 Apr 2020 16:49:21 +0000 (UTC)
-From:   Lubomir Rintel <lkundrak@v3.sk>
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Dan Williams <dan.j.williams@intel.com>, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>
-Subject: [PATCH 2/7] dmaengine: mmp_tdma: Drop "mmp_tdma: from error messages
-Date:   Sun, 19 Apr 2020 18:49:07 +0200
-Message-Id: <20200419164912.670973-3-lkundrak@v3.sk>
-X-Mailer: git-send-email 2.26.0
-In-Reply-To: <20200419164912.670973-1-lkundrak@v3.sk>
-References: <20200419164912.670973-1-lkundrak@v3.sk>
+        id S1726651AbgDSQuB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 19 Apr 2020 12:50:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=iLAOKXvu+P1RpppWXR9M05UcEWZPbpw6tXNqCN4/N04=; b=AYTfGWLB3TVTMutJPh8x2r1/zK
+        Tz1RrO27h+few0z0ptmLJ7SdDsScsB5MG5+tIeVvOz6+nyeutxhMb2m7aDcYjsMtUGntwkj0ySyq1
+        bnq4SwasyR1sJ4xcDgJGDjckMqNcWRxVdvruJk5DmGaaVI12+mHLhAoPqDBSRknGWGnI=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1jQD8o-003ezm-62; Sun, 19 Apr 2020 18:49:58 +0200
+Date:   Sun, 19 Apr 2020 18:49:58 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Michael Walle <michael@walle.cc>
+Cc:     linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        "David S . Miller" <davem@davemloft.net>
+Subject: Re: [PATCH net-next v2 2/3] net: phy: add Broadcom BCM54140 support
+Message-ID: <20200419164958.GN836632@lunn.ch>
+References: <20200419101249.28991-1-michael@walle.cc>
+ <20200419101249.28991-2-michael@walle.cc>
+ <20200419154943.GJ836632@lunn.ch>
+ <d40eafc5ed95b62886e10159dcb7a509@walle.cc>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d40eafc5ed95b62886e10159dcb7a509@walle.cc>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Drop a redundant "mmp_tdma:" from some error messages. The dev_err()
-appends mostly the same thing for us:
+On Sun, Apr 19, 2020 at 06:33:40PM +0200, Michael Walle wrote:
+> > > +static int bcm54140_phy_probe(struct phy_device *phydev)
+> > > +{
+> > > +	struct bcm54140_phy_priv *priv;
+> > > +	int ret;
+> > > +
+> > > +	priv = devm_kzalloc(&phydev->mdio.dev, sizeof(*priv), GFP_KERNEL);
+> > > +	if (!priv)
+> > > +		return -ENOMEM;
+> > > +
+> > > +	phydev->priv = priv;
+> > > +
+> > > +	ret = bcm54140_get_base_addr_and_port(phydev);
+> > > +	if (ret)
+> > > +		return ret;
+> > > +
+> > > +	dev_info(&phydev->mdio.dev,
+> > > +		 "probed (port %d, base PHY address %d)\n",
+> > > +		 priv->port, priv->base_addr);
+> > 
+> > phydev_dbg() ? Do we need to see this message four times?
+> 
+> ok. every phy will have a different port. And keep in mind,
+> that you might have less than four ports/PHYs here. So I'd
+> like to keep that as a phydev_dbg() if you agree.
 
-  [  120.756530] mmp-tdma d42a0800.adma: mmp_tdma: unknown burst size.
+phydev_dbg() is fine.
 
-Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
----
- drivers/dma/mmp_tdma.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/dma/mmp_tdma.c b/drivers/dma/mmp_tdma.c
-index 51e08c16756ae..d559bb4d6a31d 100644
---- a/drivers/dma/mmp_tdma.c
-+++ b/drivers/dma/mmp_tdma.c
-@@ -235,7 +235,7 @@ static int mmp_tdma_config_chan(struct dma_chan *chan)
- 			tdcr |= TDCR_BURSTSZ_128B;
- 			break;
- 		default:
--			dev_err(tdmac->dev, "mmp_tdma: unknown burst size.\n");
-+			dev_err(tdmac->dev, "unknown burst size.\n");
- 			return -EINVAL;
- 		}
- 
-@@ -250,7 +250,7 @@ static int mmp_tdma_config_chan(struct dma_chan *chan)
- 			tdcr |= TDCR_SSZ_32_BITS;
- 			break;
- 		default:
--			dev_err(tdmac->dev, "mmp_tdma: unknown bus size.\n");
-+			dev_err(tdmac->dev, "unknown bus size.\n");
- 			return -EINVAL;
- 		}
- 	} else if (tdmac->type == PXA910_SQU) {
-@@ -276,7 +276,7 @@ static int mmp_tdma_config_chan(struct dma_chan *chan)
- 			tdcr |= TDCR_BURSTSZ_SQU_32B;
- 			break;
- 		default:
--			dev_err(tdmac->dev, "mmp_tdma: unknown burst size.\n");
-+			dev_err(tdmac->dev, "unknown burst size.\n");
- 			return -EINVAL;
- 		}
- 	}
--- 
-2.26.0
+> 
+> > 
+> > > +
+> > > +	return 0;
+> > > +}
+> > > +
+> > > +static int bcm54140_config_init(struct phy_device *phydev)
+> > > +{
+> > > +	u16 reg = 0xffff;
+> > > +	int ret;
+> > > +
+> > > +	/* Apply hardware errata */
+> > > +	ret = bcm54140_b0_workaround(phydev);
+> > > +	if (ret)
+> > > +		return ret;
+> > > +
+> > > +	/* Unmask events we are interested in. */
+> > > +	reg &= ~(BCM54140_RDB_INT_DUPLEX |
+> > > +		 BCM54140_RDB_INT_SPEED |
+> > > +		 BCM54140_RDB_INT_LINK);
+> > > +	ret = bcm_phy_write_rdb(phydev, BCM54140_RDB_IMR, reg);
+> > > +	if (ret)
+> > > +		return ret;
+> > > +
+> > > +	/* LED1=LINKSPD[1], LED2=LINKSPD[2], LED3=ACTIVITY */
+> > > +	ret = bcm_phy_modify_rdb(phydev, BCM54140_RDB_SPARE1,
+> > > +				 0, BCM54140_RDB_SPARE1_LSLM);
+> > > +	if (ret)
+> > > +		return ret;
+> > 
+> > What are the reset default for LEDs? Can the LEDs be configured via
+> > strapping pins? There is currently no good solution for this. Whatever
+> > you pick will be wrong for somebody else. At minimum, strapping pins,
+> > if they exist, should not be overridden.
+> 
+> Fair enough. There are no strapping options, just the "default behaviour",
+> where LED1/2 indicates the speed, and LED3 just activity (no link
+> indication). And I just noticed that in this case the comment above is
+> wrong, because it is actually link/activity. Further, there are myriad
+> configuration options which I didn't want to encode altogether. So I've
+> just chosen the typical one (which actually matches our hardware), ie.
+> to have the "activity/led mode". The application note mentions some other
+> concrete modes, but I don't know if its worth implementing them. Maybe we
+> can have a enumeration of some distinct modes? Ie.
+> 
+>    broadcom,led-mode = <BCM54140_NO_CHANGE>;
+>    broadcom,led-mode = <BCM54140_ACT_LINK_MODE>;
 
+Configuring LEDs is a mess at the moment. No two PHYs do it the
+same. For a long time i've had a TODO item to make PHY LEDs work just
+like every other LED in linux, and you can set trigger actions which
+are then implemented in hardware.
+
+We have been pushing back on adding DT properties, it just makes the
+problem worse. If reset defaults are good enough for you, please leave
+it at that.
+
+Thanks
+   Andrew
