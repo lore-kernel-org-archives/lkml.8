@@ -6,54 +6,67 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29298C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 08:03:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F220AC2BA2B
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 08:05:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0C7DC206D5
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 08:03:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5A7421744
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 08:05:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725988AbgDSIDn (ORCPT
+        id S1726012AbgDSIFJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Apr 2020 04:03:43 -0400
-Received: from verein.lst.de ([213.95.11.211]:35696 "EHLO verein.lst.de"
+        Sun, 19 Apr 2020 04:05:09 -0400
+Received: from verein.lst.de ([213.95.11.211]:35714 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725903AbgDSIDm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Apr 2020 04:03:42 -0400
+        id S1725903AbgDSIFJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 19 Apr 2020 04:05:09 -0400
 Received: by verein.lst.de (Postfix, from userid 2407)
-        id ABB1568BEB; Sun, 19 Apr 2020 10:03:39 +0200 (CEST)
-Date:   Sun, 19 Apr 2020 10:03:39 +0200
+        id 03BEB68BEB; Sun, 19 Apr 2020 10:05:07 +0200 (CEST)
+Date:   Sun, 19 Apr 2020 10:05:06 +0200
 From:   Christoph Hellwig <hch@lst.de>
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
+To:     Christophe Leroy <christophe.leroy@c-s.fr>
+Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
+        Christoph Hellwig <hch@lst.de>, Arnd Bergmann <arnd@arndb.de>,
+        x86@kernel.org, linux-kernel@vger.kernel.org,
         Alexander Viro <viro@zeniv.linux.org.uk>,
-        Jeremy Kerr <jk@ozlabs.org>, Arnd Bergmann <arnd@arndb.de>,
-        linuxppc-dev@lists.ozlabs.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, x86@kernel.org
-Subject: Re: [PATCH 2/8] signal: clean up __copy_siginfo_to_user32
-Message-ID: <20200419080339.GC12222@lst.de>
-References: <20200414070142.288696-1-hch@lst.de> <20200414070142.288696-3-hch@lst.de> <87pnc5akhk.fsf@x220.int.ebiederm.org>
+        linux-fsdevel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linuxppc-dev@lists.ozlabs.org, Jeremy Kerr <jk@ozlabs.org>
+Subject: Re: [PATCH 1/2] signal: Factor copy_siginfo_to_external32 from
+ copy_siginfo_to_user32
+Message-ID: <20200419080506.GD12222@lst.de>
+References: <20200414070142.288696-1-hch@lst.de> <20200414070142.288696-3-hch@lst.de> <87pnc5akhk.fsf@x220.int.ebiederm.org> <87k12dakfx.fsf_-_@x220.int.ebiederm.org> <c51c6192-2ea4-62d8-dd22-305f7a1e0dd3@c-s.fr>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <87pnc5akhk.fsf@x220.int.ebiederm.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <c51c6192-2ea4-62d8-dd22-305f7a1e0dd3@c-s.fr>
 User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 17, 2020 at 04:08:23PM -0500, Eric W. Biederman wrote:
-> This bothers me because it makes all architectures pay for the sins of
-> x32.  Further it starts burying the details of the what is happening in
-> architecture specific helpers.  Hiding the fact that there is only
-> one niche architecture that does anything weird.
-> 
-> I am very sensitive to hiding away signal handling details right now
-> because way to much of the signal handling code got hidden in
-> architecture specific files and was quite buggy because as a result.
+On Sat, Apr 18, 2020 at 10:05:19AM +0200, Christophe Leroy wrote:
+>
+>
+> Le 17/04/2020 à 23:09, Eric W. Biederman a écrit :
+>>
+>> To remove the use of set_fs in the coredump code there needs to be a
+>> way to convert a kernel siginfo to a userspace compat siginfo.
+>>
+>> Call that function copy_siginfo_to_compat and factor it out of
+>> copy_siginfo_to_user32.
+>
+> I find it a pitty to do that.
+>
+> The existing function could have been easily converted to using 
+> user_access_begin() + user_access_end() and use unsafe_put_user() to copy 
+> to userspace to avoid copying through a temporary structure on the stack.
+>
+> With your change, it becomes impossible to do that.
 
-I much prefer the unconditional flags over the crazy ifdef mess in
-the current coe and your version.  Except for that and the rather
-strange and confusing copy_siginfo_to_external32 name it pretty much
-looks the same.
+As Eric said we need a struct to clear all padding.  Note that I
+though about converting to unsafe_copy_to_user in my variant as we
+can pretty easily do that if pre-filling the structure earlier.  But
+I didn't want to throw in such unrelated changes for now - I'll volunteer
+to do it later, though.
