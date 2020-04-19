@@ -1,191 +1,162 @@
 Return-Path: <SRS0=L1Qp=6D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: *
-X-Spam-Status: No, score=1.4 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_ABUSE_SURBL autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Level: 
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0805BC54F70
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 13:23:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E33B7C54F70
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 13:27:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D47E021D94
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 13:23:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="T4dD6Mu0"
+	by mail.kernel.org (Postfix) with ESMTP id CB28F21744
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 13:27:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726091AbgDSNXw (ORCPT
+        id S1726121AbgDSN1S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Apr 2020 09:23:52 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:39152 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725793AbgDSNXv (ORCPT
+        Sun, 19 Apr 2020 09:27:18 -0400
+Received: from relmlor2.renesas.com ([210.160.252.172]:12666 "EHLO
+        relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725793AbgDSN1R (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Apr 2020 09:23:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1587302628; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=V5aVne3toyOMR2QBY60+iBE8eXu6co6XW9dZTwffKo8=;
-        b=T4dD6Mu0qsqoFzPTaTcL7pzwWw/lgS57C09Bl5JrvBSbPnBP5j2jj6o88OOpnUIVgvXWIY
-        LSgZbBhuliIt625pMfgkVEdycqk70aK1fm5Q0GhjW+txD1T3dwTXdZTAHR3a/wiDAfbJXC
-        mKqFTGItPkROeChe5xiBfhaoqlWY62A=
-Date:   Sun, 19 Apr 2020 15:23:36 +0200
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [RESEND PATCH v5 3/5] IIO: Ingenic JZ47xx: Add touchscreen mode.
-To:     Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Artur Rojek <contact@artur-rojek.eu>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Sun, 19 Apr 2020 09:27:17 -0400
+X-IronPort-AV: E=Sophos;i="5.72,403,1580742000"; 
+   d="scan'208";a="44894763"
+Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
+  by relmlie6.idc.renesas.com with ESMTP; 19 Apr 2020 22:27:15 +0900
+Received: from localhost.localdomain (unknown [10.226.36.204])
+        by relmlir6.idc.renesas.com (Postfix) with ESMTP id B93BD422C025;
+        Sun, 19 Apr 2020 22:27:10 +0900 (JST)
+From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        linux-input <linux-input@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Message-Id: <CJE19Q.00J5TK0U2OLF3@crapouillou.net>
-In-Reply-To: <CAAEAJfDLQnpsMPs8n4S1O6dA9155=mUPE7FqNQo_yNmp--UFgg@mail.gmail.com>
-References: <20200417202859.35427-1-contact@artur-rojek.eu>
-        <20200417202859.35427-3-contact@artur-rojek.eu>
-        <CAHp75Vcwnu8tw92nMYc_5-x_iX+FY8_OhtaJkSYNehmNUDkHGQ@mail.gmail.com>
-        <3KAY8Q.NNI6X4F9QRIX1@crapouillou.net>
-        <CAHp75VfxQFFnVMhGvv0GCb3gv5jTPLDqLyhihRVc2earY=aYcg@mail.gmail.com>
-        <86BY8Q.C5XO8D57M7BI1@crapouillou.net>
-        <CAHp75VfULLBpFx-W04z+jRFv-hGZkTt1k7T9+eMurW55Mdc=+g@mail.gmail.com>
-        <EFCY8Q.V3Q81CTO8TBP2@crapouillou.net>
-        <CAHp75VdBr-o61QESQcbF97F5+JAU=XjVsvZ01M=nN-pe50-H9w@mail.gmail.com>
-        <CAAEAJfDLQnpsMPs8n4S1O6dA9155=mUPE7FqNQo_yNmp--UFgg@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Tom Joseph <tjoseph@cadence.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Heiko Stuebner <heiko@sntech.de>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        linux-rockchip@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        Lad Prabhakar <prabhakar.csengg@gmail.com>,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH v8 0/8] Add support for PCIe controller to work in endpoint mode on R-Car/RZ/G2x SoCs
+Date:   Sun, 19 Apr 2020 14:26:55 +0100
+Message-Id: <1587302823-4435-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Ezequiel,
+Hi All,
 
+This patch series adds support for PCIe controller on R-Car/RZ-G2x to work in
+endpoint mode, this also extends the epf framework to handle base region
+for mapping PCI address locally.
 
-Le dim. 19 avril 2020 =E0 9:54, Ezequiel Garcia=20
-<ezequiel@vanguardiasur.com.ar> a =E9crit :
-> On Fri, 17 Apr 2020 at 18:54, Andy Shevchenko=20
-> <andy.shevchenko@gmail.com> wrote:
->>=20
->>  On Sat, Apr 18, 2020 at 12:45 AM Paul Cercueil=20
->> <paul@crapouillou.net> wrote:
->>  > Le sam. 18 avril 2020 =E0 0:42, Andy Shevchenko
->>  > <andy.shevchenko@gmail.com> a =E9crit :
->>  > > On Sat, Apr 18, 2020 at 12:18 AM Paul Cercueil=20
->> <paul@crapouillou.net>
->>  > > wrote:
->>  > >>  Le sam. 18 avril 2020 =E0 0:13, Andy Shevchenko
->>  > >>  <andy.shevchenko@gmail.com> a =E9crit :
->>  > >>  > On Sat, Apr 18, 2020 at 12:05 AM Paul Cercueil
->>  > >> <paul@crapouillou.net>
->>  > >>  > wrote:
->>  > >>  >>  Le ven. 17 avril 2020 =E0 23:59, Andy Shevchenko
->>  > >>  >>  <andy.shevchenko@gmail.com> a =E9crit :
->>  > >>  >>  > On Fri, Apr 17, 2020 at 11:21 PM Artur Rojek
->>  > >>  >> <contact@artur-rojek.eu>
->>  > >>  >>  > wrote:
->>  > >>  >
->>  > >>  > ...
->>  > >>  >
->>  > >>  >>  >>  +       irq =3D platform_get_irq(pdev, 0);
->>  > >>  >>  >
->>  > >>  >>  > Before it worked w/o IRQ, here is a regression you=20
->> introduced.
->>  > >>  >>
->>  > >>  >>  Before it simply did not need the IRQ, which is provided=20
->> by the
->>  > >>  >>  devicetree anyway. No regression here.
->>  > >>  >
->>  > >>  > Does it work without IRQ? Or it was a dead code till now?
->>  > >>  > For me it's clear regression. Otherwise something is really=20
->> wrong
->>  > >> in a
->>  > >>  > process of development of this driver.
->>  > >>
->>  > >>  Nothing wrong here. The IRQ was not used by the driver for the
->>  > >>  functionality it provided before. It is required now to=20
->> support the
->>  > >>  touchscreen channels.
->>  > >
->>  > > This is exactly what's wrong.
->>  > > Previous DTS for my (hypothetical) case has no IRQ defined.=20
->> Everything
->>  > > works, right?
->>  > > Now, due to this change it breaks my setup. Don't you see the=20
->> problem?
->>  >
->>  > The IRQ has been provided by every concerned DTS file since the
->>  > introduction of this driver and the related bindings, even though=20
->> it
->>  > was not used by the driver.
->>=20
->>  Can you speak for all possible DTSs/DTBs in the wild?
->>  Okay, in any case it will be problem of maintainers and yours if
->>  somebody complains.
->>  I'm not going to push this anyway -- your choice.
->>=20
->>  But I see a (potential) regression.
->>=20
->=20
-> So, there are a few things to keep in mind here.
->=20
-> Let's abstract ourselves from this specific driver
-> for a minute.
->=20
-> First, and just as Andy pointed out, we can never be fully
-> sure about DTBs out there. These could be out of tree,
-> so out of our control. By introducing a new requirement
-> we break them, which may be seen as a regression.
->=20
-> Second, the interrupt is not required as per
-> current mainline bindings/iio/adc/ingenic,adc.txt,
-> so it is perfectly legal for users to not have an interrupt
-> specified.
->=20
-> Now, back to this case, I think we can get away with this
-> change, provided this hardware is not that widespread
-> among developers/users that follow upstream closely.
->=20
-> I suspect anyone developing a serious platform
-> with this SoC is most likely using some vendor kernel.
->=20
-> If that is not the case, i.e. if you have users _actually_
-> using this upstream driver, then we should consider
-> making the interrupt optional instead of required.
->=20
-> Or we can also just break it and hope nobody
-> complaints.
+Note:
+The cadence/rockchip/designware endpoint drivers are build tested only.
 
-The vast majority of Ingenic devices running Linux use a 3.x kernel=20
-with a lot of patches on top. These kernels don't support devicetree.=20
-So there is no problem with legacy devicetree files: there are no=20
-legacy devicetree files.
+Changes for v8:
+* Dropped adding R8A774C0 (0x002d) pci-id in pci_ids.h
+* Fixed typo in commit message for patch 2/8
+* Reworded commit message for patch 5/8 as suggested by Bjorn
+* Split up patch to add pci_epc_mem_init() interface to add page_size argument
+  as suggested by Bjorn.
 
-Of the few Ingenic devices running mainline kernels, all of them with=20
-an ADC node in the devicetree have the 'interrupts' property specified,=20
-out-of-tree or in-tree.
+Changes for v7:
+* Fixed review comments pointed by Shimoda-san
+  1] Made DT bindings dual licensed, added Shimoda-san as maintainer and fixed
+     the example as its built with #{address,size}-cells = <1>. I have still
+     restored the Ack from Rob and Shimoda-san with these changes.
+  2] Split up the patches so that they can be picked up by respective subsystem
+     patches 1/4-9/11 are now part of this series.
+  3] Dropped altering a comment in pci-epc.h
+  4] Used a local variable align_size in pci_epc_mem_alloc_addr() so that size
+     variable doesn't get overwritten in the loop.
+  5] Replaced i-=1 with i--
+  6] Replaced rcar with R-Car in patch subject and description.
+  7] Set MACCTLR in init() callback
 
-As the informal Ingenic SoCs maintainer I'm pretty aware of these=20
-things, and I can assure that we're not breaking anything. The only=20
-thing broken is the documentation which doesn't specify that the=20
-'interrupts' property is required.
+Changes for v6:
+1] Rebased patches on endpoint branch of https://git.kernel.org/pub/
+   scm/linux/kernel/git/lpieralisi/pci.git/
+2] Fixed review comments from Shimoda-san
+   a] Made sure defconfig changes were in separate patch
+   b] Created rcar_pcie_host/rcar_pcie_ep structures
+   c] Added pci-id for R8A774C0
+   d] Added entry in MAINTAINERS for dt-binding
+   e] Dropped unnecessary braces
+3] Added support for msi.
 
-> BTW, this series looks great and I'm happy
-> to see JZ47xx activity :-)
->=20
-> Arthur: perhaps you can consider converting the txt dt binding
-> to yaml?
+Changes for v5:
+1] Rebased patches on next branch of https://git.kernel.org/pub/scm/
+   linux/kernel/git/helgaas/pci.git
+2] Fixed review comments reported by Kishon while fetching the matching
+   window in function pci_epc_get_matching_window()
+3] Fixed review comments reported by Bjorn
+   a] Split patch up first patch so that its easier to review and incremental
+   b] Fixed typos
+4] Included Reviewed tag from Rob for the dt-binding patch
+5] Fixed issue reported by Nathan for assigning variable to itself
 
-That would be great.
+Changes for v4:
+1] Fixed dtb_check error reported by Rob
+2] Fixed review comments reported by Kishon
+   a] Dropped pci_epc_find_best_fit_window()
+   b] Fixed initializing mem ptr in __pci_epc_mem_init()
+   c] Dropped map_size from pci_epc_mem_window structure
 
--Paul
+Changes for v3:
+1] Fixed review comments from Bjorn and Kishon.
+3] Converted to DT schema
 
+Changes for v2:
+1] Fixed review comments from Biju for dt-bindings to include an example
+   for a tested platform.
+2] Fixed review comments from Kishon to extend the features of outbound
+   regions in epf framework.
+3] Added support to parse outbound-ranges in OF.
+
+Lad Prabhakar (8):
+  PCI: rcar: Rename pcie-rcar.c to pcie-rcar-host.c
+  PCI: rcar: Move shareable code to a common file
+  PCI: rcar: Fix calculating mask for PCIEPAMR register
+  PCI: endpoint: Pass page size as argument to pci_epc_mem_init()
+  PCI: endpoint: Add support to handle multiple base for mapping
+    outbound memory
+  dt-bindings: PCI: rcar: Add bindings for R-Car PCIe endpoint
+    controller
+  PCI: rcar: Add endpoint mode support
+  MAINTAINERS: Add file patterns for rcar PCI device tree bindings
+
+ .../devicetree/bindings/pci/rcar-pci-ep.yaml  |   77 ++
+ MAINTAINERS                                   |    1 +
+ drivers/pci/controller/Kconfig                |   18 +
+ drivers/pci/controller/Makefile               |    3 +-
+ .../pci/controller/cadence/pcie-cadence-ep.c  |    2 +-
+ .../pci/controller/dwc/pcie-designware-ep.c   |   16 +-
+ drivers/pci/controller/pcie-rcar-ep.c         |  555 ++++++++
+ drivers/pci/controller/pcie-rcar-host.c       | 1065 +++++++++++++++
+ drivers/pci/controller/pcie-rcar.c            | 1206 +----------------
+ drivers/pci/controller/pcie-rcar.h            |  140 ++
+ drivers/pci/controller/pcie-rockchip-ep.c     |    2 +-
+ drivers/pci/endpoint/pci-epc-mem.c            |  201 ++-
+ include/linux/pci-epc.h                       |   38 +-
+ 13 files changed, 2073 insertions(+), 1251 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pci/rcar-pci-ep.yaml
+ create mode 100644 drivers/pci/controller/pcie-rcar-ep.c
+ create mode 100644 drivers/pci/controller/pcie-rcar-host.c
+ create mode 100644 drivers/pci/controller/pcie-rcar.h
+
+-- 
+2.17.1
 
