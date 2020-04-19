@@ -2,120 +2,81 @@ Return-Path: <SRS0=L1Qp=6D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DBBCC2BA2B
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 08:28:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7FF1C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 08:38:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AB7332145D
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 08:28:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA44F21D82
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 08:38:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="ZoaByf8J"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XYDfh/nY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725963AbgDSI2R (ORCPT
+        id S1725969AbgDSIh7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Apr 2020 04:28:17 -0400
-Received: from ssl.serverraum.org ([176.9.125.105]:34769 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725446AbgDSI2R (ORCPT
+        Sun, 19 Apr 2020 04:37:59 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:40494 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725446AbgDSIh7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Apr 2020 04:28:17 -0400
-Received: from apollo.fritz.box (unknown [IPv6:2a02:810c:c200:2e91:6257:18ff:fec4:ca34])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-384) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id E81AA2305A;
-        Sun, 19 Apr 2020 10:28:11 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1587284893;
+        Sun, 19 Apr 2020 04:37:59 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587285478;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=N4f/9VBPhLcDkVM1aNxaUNDPUksCBDZa/OfflSf7YKw=;
-        b=ZoaByf8Jmeub8ToPvGK6RF6T7dRIyRys/a+ZNgoxwfbvWrXDGtWc+QuqZ8EIWN3kCAEQPA
-        Sd4KjusP9+fqIvJlPN+aK0RXugJmtPgHJ71QjAa26aP3sA1eKldGO/V9/WTz/YQ5ELbE/G
-        9yfbYlcRxyyLIGU2ImYcNFR+dN08gdg=
-From:   Michael Walle <michael@walle.cc>
-To:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        "David S . Miller" <davem@davemloft.net>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>,
-        Michael Walle <michael@walle.cc>
-Subject: [PATCH net-next] net: phy: mscc: use mdiobus_get_phy()
-Date:   Sun, 19 Apr 2020 10:27:57 +0200
-Message-Id: <20200419082757.5650-1-michael@walle.cc>
-X-Mailer: git-send-email 2.20.1
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=gtE/RAI8Ll8mxlz3GjJNNnyp/GGzHjOzYL41aghGZqo=;
+        b=XYDfh/nYwENIGUeOsYY5RwG1SvGWbgt3S4F1BW+bqX4QLsQIsi+5gWL9xIjBYDAf6+tKGy
+        YsAg2QV79CH+WCWVJV1gx293E/g4TEtG1SsCPU1Vhs1xtcqxgwLqbBdJqMuigs3z++OhHw
+        cghdzzTWnL1Hu6NCEXaSQpl8wBYnR/M=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-376-LHnNx2NRM0CC-We1R3FlPQ-1; Sun, 19 Apr 2020 04:37:56 -0400
+X-MC-Unique: LHnNx2NRM0CC-We1R3FlPQ-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D694318C35A0;
+        Sun, 19 Apr 2020 08:37:54 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-113-129.rdu2.redhat.com [10.10.113.129])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 0AB8FA1056;
+        Sun, 19 Apr 2020 08:37:52 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <CAH2r5mv5p=WJQu2SbTn53FeTsXyN6ke_CgEjVARQ3fX8QAtK_w@mail.gmail.com>
+References: <CAH2r5mv5p=WJQu2SbTn53FeTsXyN6ke_CgEjVARQ3fX8QAtK_w@mail.gmail.com> <3865908.1586874010@warthog.procyon.org.uk>
+To:     Steve French <smfrench@gmail.com>
+Cc:     dhowells@redhat.com, linux-nfs <linux-nfs@vger.kernel.org>,
+        CIFS <linux-cifs@vger.kernel.org>, linux-afs@lists.infradead.org,
+        ceph-devel@vger.kernel.org, keyrings@vger.kernel.org,
+        Network Development <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, fweimer@redhat.com
+Subject: Re: What's a good default TTL for DNS keys in the kernel
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spamd-Bar: ++++++
-X-Rspamd-Server: web
-X-Rspamd-Queue-Id: E81AA2305A
-X-Spamd-Result: default: False [6.40 / 15.00];
-         FROM_HAS_DN(0.00)[];
-         TO_DN_SOME(0.00)[];
-         R_MISSING_CHARSET(2.50)[];
-         FREEMAIL_ENVRCPT(0.00)[gmail.com];
-         TAGGED_RCPT(0.00)[];
-         MIME_GOOD(-0.10)[text/plain];
-         BROKEN_CONTENT_TYPE(1.50)[];
-         TO_MATCH_ENVRCPT_ALL(0.00)[];
-         NEURAL_SPAM(0.00)[0.864];
-         DKIM_SIGNED(0.00)[];
-         RCPT_COUNT_SEVEN(0.00)[9];
-         MID_CONTAINS_FROM(1.00)[];
-         RCVD_COUNT_ZERO(0.00)[0];
-         FROM_EQ_ENVFROM(0.00)[];
-         MIME_TRACE(0.00)[0:+];
-         ASN(0.00)[asn:31334, ipnet:2a02:810c:8000::/33, country:DE];
-         FREEMAIL_CC(0.00)[lunn.ch,gmail.com,armlinux.org.uk,davemloft.net,nxp.com,walle.cc];
-         SUSPICIOUS_RECIPS(1.50)[]
-X-Spam: Yes
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <927452.1587285472.1@warthog.procyon.org.uk>
+Date:   Sun, 19 Apr 2020 09:37:52 +0100
+Message-ID: <927453.1587285472@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Don't use internal knowledge of the mdio bus core, instead use
-mdiobus_get_phy() which does the same thing.
+Steve French <smfrench@gmail.com> wrote:
 
-Signed-off-by: Michael Walle <michael@walle.cc>
----
- drivers/net/phy/mscc/mscc_main.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+> For SMB3/CIFS mounts, Paulo added support last year for automatic
+> reconnect if the IP address of the server changes.  It also is helpful
+> when DFS (global name space) addresses change.
 
-diff --git a/drivers/net/phy/mscc/mscc_main.c b/drivers/net/phy/mscc/mscc_main.c
-index acddef79f4e8..5391acdece05 100644
---- a/drivers/net/phy/mscc/mscc_main.c
-+++ b/drivers/net/phy/mscc/mscc_main.c
-@@ -1292,7 +1292,7 @@ static int vsc8584_config_pre_init(struct phy_device *phydev)
-  */
- static bool vsc8584_is_pkg_init(struct phy_device *phydev, bool reversed)
- {
--	struct mdio_device **map = phydev->mdio.bus->mdio_map;
-+	struct mii_bus *bus = phydev->mdio.bus;
- 	struct vsc8531_private *vsc8531;
- 	struct phy_device *phy;
- 	int i, addr;
-@@ -1306,11 +1306,10 @@ static bool vsc8584_is_pkg_init(struct phy_device *phydev, bool reversed)
- 		else
- 			addr = vsc8531->base_addr + i;
- 
--		if (!map[addr])
-+		phy = mdiobus_get_phy(bus, addr);
-+		if (!phy)
- 			continue;
- 
--		phy = container_of(map[addr], struct phy_device, mdio);
--
- 		if ((phy->phy_id & phydev->drv->phy_id_mask) !=
- 		    (phydev->drv->phy_id & phydev->drv->phy_id_mask))
- 			continue;
--- 
-2.20.1
+What happens if the IP address the superblock is going to changes, then
+another mount is made back to the original IP address?  Does the second mount
+just pick the original superblock?
+
+David
 
