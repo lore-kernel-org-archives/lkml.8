@@ -6,34 +6,34 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A81C9C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 20:36:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA730C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 20:36:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8B4562145D
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 20:36:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E500221F4
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 20:36:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726327AbgDSUgY (ORCPT
+        id S1726365AbgDSUg3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Apr 2020 16:36:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53642 "EHLO
+        Sun, 19 Apr 2020 16:36:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53656 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726245AbgDSUgW (ORCPT
+        with ESMTP id S1726245AbgDSUg0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Apr 2020 16:36:22 -0400
+        Sun, 19 Apr 2020 16:36:26 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 375F4C061A0C
-        for <linux-kernel@vger.kernel.org>; Sun, 19 Apr 2020 13:36:22 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04114C061A0C
+        for <linux-kernel@vger.kernel.org>; Sun, 19 Apr 2020 13:36:26 -0700 (PDT)
 Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1jQGfo-0007O3-1o; Sun, 19 Apr 2020 22:36:16 +0200
+        id 1jQGfr-0007PY-Te; Sun, 19 Apr 2020 22:36:20 +0200
 Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
-        by nanos.tec.linutronix.de (Postfix) with ESMTP id 83CA0FFBA2;
-        Sun, 19 Apr 2020 22:36:15 +0200 (CEST)
-Message-Id: <20200419203336.839727891@linutronix.de>
+        by nanos.tec.linutronix.de (Postfix) with ESMTP id 353A7FFBA2;
+        Sun, 19 Apr 2020 22:36:19 +0200 (CEST)
+Message-Id: <20200419203337.118146892@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Sun, 19 Apr 2020 22:31:49 +0200
+Date:   Sun, 19 Apr 2020 22:31:52 +0200
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, Kees Cook <keescook@chromium.org>,
@@ -41,7 +41,7 @@ Cc:     x86@kernel.org, Kees Cook <keescook@chromium.org>,
         Thomas Lendacky <Thomas.Lendacky@amd.com>,
         Juergen Gross <jgross@suse.com>,
         Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Subject: [patch 12/15] x86/tlb: Uninline nmi_uaccess_okay()
+Subject: [patch 15/15] x86/tlb: Restrict access to tlbstate
 References: <20200419203137.214111265@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -54,103 +54,205 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-cpu_tlbstate is exported because various TLB related functions need access
-to it, but cpu_tlbstate is sensitive information which should only be
-accessed by well contained kernel functions and not be directly exposed to
-modules.
-
-nmi_access_ok() is the last inline function which requires access to
-cpu_tlbstate. Move it into the TLB code.
-
-No functional change.
+Hide tlbstate, flush_tlb_info and related helpers when tlbflush.h is
+included from a module. Modules have absolutely no business with these
+internals.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 ---
- arch/x86/include/asm/tlbflush.h |   33 +--------------------------------
- arch/x86/mm/tlb.c               |   32 ++++++++++++++++++++++++++++++++
- 2 files changed, 33 insertions(+), 32 deletions(-)
+ arch/x86/include/asm/tlbflush.h |  136 ++++++++++++++++++++--------------------
+ arch/x86/mm/init.c              |    1 
+ 2 files changed, 69 insertions(+), 68 deletions(-)
 
 --- a/arch/x86/include/asm/tlbflush.h
 +++ b/arch/x86/include/asm/tlbflush.h
-@@ -247,38 +247,7 @@ struct tlb_state {
- };
- DECLARE_PER_CPU_SHARED_ALIGNED(struct tlb_state, cpu_tlbstate);
+@@ -13,20 +13,69 @@
+ #include <asm/pti.h>
+ #include <asm/processor-flags.h>
  
--/*
-- * Blindly accessing user memory from NMI context can be dangerous
-- * if we're in the middle of switching the current user task or
-- * switching the loaded mm.  It can also be dangerous if we
-- * interrupted some kernel code that was temporarily using a
-- * different mm.
-- */
--static inline bool nmi_uaccess_okay(void)
--{
--	struct mm_struct *loaded_mm = this_cpu_read(cpu_tlbstate.loaded_mm);
--	struct mm_struct *current_mm = current->mm;
+-struct flush_tlb_info;
 -
--	VM_WARN_ON_ONCE(!loaded_mm);
--
--	/*
--	 * The condition we want to check is
--	 * current_mm->pgd == __va(read_cr3_pa()).  This may be slow, though,
--	 * if we're running in a VM with shadow paging, and nmi_uaccess_okay()
--	 * is supposed to be reasonably fast.
--	 *
--	 * Instead, we check the almost equivalent but somewhat conservative
--	 * condition below, and we rely on the fact that switch_mm_irqs_off()
--	 * sets loaded_mm to LOADED_MM_SWITCHING before writing to CR3.
--	 */
--	if (loaded_mm != current_mm)
--		return false;
--
--	VM_WARN_ON_ONCE(current_mm->pgd != __va(read_cr3_pa()));
--
--	return true;
--}
--
-+bool nmi_uaccess_okay(void);
- #define nmi_uaccess_okay nmi_uaccess_okay
+ void flush_tlb_local(void);
+ void flush_tlb_global(void);
+-void flush_tlb_one_user(unsigned long addr);
+-void flush_tlb_one_kernel(unsigned long addr);
+-void flush_tlb_others(const struct cpumask *cpumask,
+-		      const struct flush_tlb_info *info);
  
- void cr4_update_irqsoff(unsigned long set, unsigned long clear);
---- a/arch/x86/mm/tlb.c
-+++ b/arch/x86/mm/tlb.c
-@@ -1079,6 +1079,38 @@ void arch_tlbbatch_flush(struct arch_tlb
- 	put_cpu();
- }
+-#ifdef CONFIG_PARAVIRT
+-#include <asm/paravirt.h>
+-#endif
++#define TLB_FLUSH_ALL	-1UL
  
-+/*
-+ * Blindly accessing user memory from NMI context can be dangerous
-+ * if we're in the middle of switching the current user task or
-+ * switching the loaded mm.  It can also be dangerous if we
-+ * interrupted some kernel code that was temporarily using a
-+ * different mm.
+ /*
++ * flush everything
 + */
-+bool nmi_uaccess_okay(void)
++static inline void __flush_tlb_all(void)
 +{
-+	struct mm_struct *loaded_mm = this_cpu_read(cpu_tlbstate.loaded_mm);
-+	struct mm_struct *current_mm = current->mm;
-+
-+	VM_WARN_ON_ONCE(!loaded_mm);
-+
 +	/*
-+	 * The condition we want to check is
-+	 * current_mm->pgd == __va(read_cr3_pa()).  This may be slow, though,
-+	 * if we're running in a VM with shadow paging, and nmi_uaccess_okay()
-+	 * is supposed to be reasonably fast.
-+	 *
-+	 * Instead, we check the almost equivalent but somewhat conservative
-+	 * condition below, and we rely on the fact that switch_mm_irqs_off()
-+	 * sets loaded_mm to LOADED_MM_SWITCHING before writing to CR3.
++	 * This is to catch users with enabled preemption and the PGE feature
++	 * and don't trigger the warning in __native_flush_tlb().
 +	 */
-+	if (loaded_mm != current_mm)
-+		return false;
++	VM_WARN_ON_ONCE(preemptible());
 +
-+	VM_WARN_ON_ONCE(current_mm->pgd != __va(read_cr3_pa()));
-+
-+	return true;
++	if (boot_cpu_has(X86_FEATURE_PGE)) {
++		flush_tlb_global();
++	} else {
++		/*
++		 * !PGE -> !PCID (setup_pcid()), thus every flush is total.
++		 */
++		flush_tlb_local();
++	}
 +}
 +
- static ssize_t tlbflush_read_file(struct file *file, char __user *user_buf,
- 			     size_t count, loff_t *ppos)
++void cr4_update_irqsoff(unsigned long set, unsigned long clear);
++unsigned long cr4_read_shadow(void);
++
++/* Set in this cpu's CR4. */
++static inline void cr4_set_bits_irqsoff(unsigned long mask)
++{
++	cr4_update_irqsoff(mask, 0);
++}
++
++/* Clear in this cpu's CR4. */
++static inline void cr4_clear_bits_irqsoff(unsigned long mask)
++{
++	cr4_update_irqsoff(0, mask);
++}
++
++/* Set in this cpu's CR4. */
++static inline void cr4_set_bits(unsigned long mask)
++{
++	unsigned long flags;
++
++	local_irq_save(flags);
++	cr4_set_bits_irqsoff(mask);
++	local_irq_restore(flags);
++}
++
++/* Clear in this cpu's CR4. */
++static inline void cr4_clear_bits(unsigned long mask)
++{
++	unsigned long flags;
++
++	local_irq_save(flags);
++	cr4_clear_bits_irqsoff(mask);
++	local_irq_restore(flags);
++}
++
++#ifndef MODULE
++/*
+  * 6 because 6 should be plenty and struct tlb_state will fit in two cache
+  * lines.
+  */
+@@ -129,76 +178,18 @@ DECLARE_PER_CPU_SHARED_ALIGNED(struct tl
+ bool nmi_uaccess_okay(void);
+ #define nmi_uaccess_okay nmi_uaccess_okay
+ 
+-void cr4_update_irqsoff(unsigned long set, unsigned long clear);
+-unsigned long cr4_read_shadow(void);
+-
+ /* Initialize cr4 shadow for this CPU. */
+ static inline void cr4_init_shadow(void)
+ {
+ 	this_cpu_write(cpu_tlbstate.cr4, __read_cr4());
+ }
+ 
+-/* Set in this cpu's CR4. */
+-static inline void cr4_set_bits_irqsoff(unsigned long mask)
+-{
+-	cr4_update_irqsoff(mask, 0);
+-}
+-
+-/* Clear in this cpu's CR4. */
+-static inline void cr4_clear_bits_irqsoff(unsigned long mask)
+-{
+-	cr4_update_irqsoff(0, mask);
+-}
+-
+-/* Set in this cpu's CR4. */
+-static inline void cr4_set_bits(unsigned long mask)
+-{
+-	unsigned long flags;
+-
+-	local_irq_save(flags);
+-	cr4_set_bits_irqsoff(mask);
+-	local_irq_restore(flags);
+-}
+-
+-/* Clear in this cpu's CR4. */
+-static inline void cr4_clear_bits(unsigned long mask)
+-{
+-	unsigned long flags;
+-
+-	local_irq_save(flags);
+-	cr4_clear_bits_irqsoff(mask);
+-	local_irq_restore(flags);
+-}
+-
+ extern unsigned long mmu_cr4_features;
+ extern u32 *trampoline_cr4_features;
+ 
+ extern void initialize_tlbstate_and_flush(void);
+ 
+ /*
+- * flush everything
+- */
+-static inline void __flush_tlb_all(void)
+-{
+-	/*
+-	 * This is to catch users with enabled preemption and the PGE feature
+-	 * and don't trigger the warning in __native_flush_tlb().
+-	 */
+-	VM_WARN_ON_ONCE(preemptible());
+-
+-	if (boot_cpu_has(X86_FEATURE_PGE)) {
+-		flush_tlb_global();
+-	} else {
+-		/*
+-		 * !PGE -> !PCID (setup_pcid()), thus every flush is total.
+-		 */
+-		flush_tlb_local();
+-	}
+-}
+-
+-#define TLB_FLUSH_ALL	-1UL
+-
+-/*
+  * TLB flushing:
+  *
+  *  - flush_tlb_all() flushes all processes TLBs
+@@ -236,6 +227,15 @@ struct flush_tlb_info {
+ 	bool			freed_tables;
+ };
+ 
++void flush_tlb_one_user(unsigned long addr);
++void flush_tlb_one_kernel(unsigned long addr);
++void flush_tlb_others(const struct cpumask *cpumask,
++		      const struct flush_tlb_info *info);
++
++#ifdef CONFIG_PARAVIRT
++#include <asm/paravirt.h>
++#endif
++
+ #define flush_tlb_mm(mm)						\
+ 		flush_tlb_mm_range(mm, 0UL, TLB_FLUSH_ALL, 0UL, true)
+ 
+@@ -276,4 +276,6 @@ static inline void arch_tlbbatch_add_mm(
+ 
+ extern void arch_tlbbatch_flush(struct arch_tlbflush_unmap_batch *batch);
+ 
++#endif /* !MODULE */
++
+ #endif /* _ASM_X86_TLBFLUSH_H */
+--- a/arch/x86/mm/init.c
++++ b/arch/x86/mm/init.c
+@@ -970,7 +970,6 @@ void __init zone_sizes_init(void)
+ 	.next_asid = 1,
+ 	.cr4 = ~0UL,	/* fail hard if we screw up cr4 shadow initialization */
+ };
+-EXPORT_PER_CPU_SYMBOL(cpu_tlbstate);
+ 
+ void update_cache_mode_entry(unsigned entry, enum page_cache_mode cache)
  {
 
