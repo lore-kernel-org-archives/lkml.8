@@ -2,197 +2,106 @@ Return-Path: <SRS0=L1Qp=6D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CFFCC38A30
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 14:46:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 837A9C54F70
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 14:46:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1793A21841
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 14:46:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62B5921841
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 14:46:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ozlabs-ru.20150623.gappssmtp.com header.i=@ozlabs-ru.20150623.gappssmtp.com header.b="r6LmSt+G"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fIqX2YOW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726442AbgDSOqN (ORCPT
+        id S1726460AbgDSOqn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Apr 2020 10:46:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56392 "EHLO
+        Sun, 19 Apr 2020 10:46:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56474 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726327AbgDSOqL (ORCPT
+        with ESMTP id S1726327AbgDSOqm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Apr 2020 10:46:11 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A1EEC061A0C
-        for <linux-kernel@vger.kernel.org>; Sun, 19 Apr 2020 07:46:11 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id v2so2945282plp.9
-        for <linux-kernel@vger.kernel.org>; Sun, 19 Apr 2020 07:46:10 -0700 (PDT)
+        Sun, 19 Apr 2020 10:46:42 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE336C061A0C;
+        Sun, 19 Apr 2020 07:46:42 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id ms17so3292412pjb.0;
+        Sun, 19 Apr 2020 07:46:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ozlabs-ru.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=sC1jvpZIwy/fdjuN4GtP5Gh7hrBUTP9ZLUnFwvo8g+A=;
-        b=r6LmSt+GeDamv6qVHN9y6mmWSrp1R8BCCcMnUQhlEWDlCnB4YduqaGSpw3jNnY623Q
-         Ax4K1lkLfE1O+ExZE84DSgjoBtL8kT4QJ6do0hxbhnNLd6nsAM49UNl9/9OfU05IF5r/
-         GrAh4Xficfji9920F4n+4h4PoSZsZyjARwIq6ERNrczd9YmS9niaCHPYxhL8HJLape4C
-         llHGWLaQhH1iZBPEz91vTXb3pok/d9R4IQA9K24qqzP+W+89sL5HhrULBte1iu6cNNeN
-         +IelsqRzx1MZzthizHagR8IfU8hg4B0l8/I/nsEZWmD/oNioGZRGlform1Bwzlm3+QjO
-         Yd7g==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=4ANh3iy/mPqMIDICrcxwt25Ikadv1fNohryvS64Y5Ic=;
+        b=fIqX2YOW3Z5Gg4Yo0893aOn1v6xaGRX6cKcQw5ykCjWv3rIZdewhJZVNkIhkw810bT
+         50myZO6zUTtVcKYvzBdZxmrvMlMq+sHcrdTnv85cc+L6fr7JpQp/F/wD9o1m4CMlLI6a
+         SiVxRGNVPrsfz9vGhyknCuLWb8Djr/DlP3CqZs3x6q9oIJFNQI7fpdltx1Ul9K60xc1T
+         0YxTi9xZK0kRvRnbPt/1+QDCgKSDtLzNq2sZzXEDMpw/0h82lBgpYnl/S+8JbmNzuVOq
+         fhNLI8irMqPZfr8mxt9WhH3xNg08DOOSAlvQAv+1QXaso/V4FzjMLuGn0LrT6hJH7LYF
+         U5nQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=sC1jvpZIwy/fdjuN4GtP5Gh7hrBUTP9ZLUnFwvo8g+A=;
-        b=VHrCy/NF8t8O7IIwsmffs7DlvNmgRkZB+RkbmYMz7sX5heZy6Y9zJfHqsNf+EpAhxL
-         RElYRE8VzzO8mV5zbkcfxjeIun0d3Dyj5ezfvu79Ns3jS00jzPgyD5pWQNQuPihwmRCR
-         p+8i9rFllWCsK4HqhpBMTGKOGlzkJUwuZnWeGdvjkQDI1DA24ePT2JQFpRrtLjyvvLmp
-         cG0S8wQ02SzcDvzb6e6SJuD3Hf4bVLzk0wuSlNPsQwzntA9zma7Ek3bg9dmGNWSa1y7A
-         8HR4Rm4/XCuJTny7DczfyndptNIDByK/Q2gtaHqEYLa1k8ayz9/A/FJAHV2GsKltU7tS
-         R77Q==
-X-Gm-Message-State: AGi0PuYtANdH7f8+KMZjtpKJ3sXxM8XIZc8tE/jz4DF2Jd5By+1Y4rWR
-        ID/KVbTEKARXwd8NVubWuSFG1dMB0Iw=
-X-Google-Smtp-Source: APiQypI+VoIHehV8EwirzQB3px/gfckT//LNvqkHUkVhMLR/+wfnhva1o0226nEHpyKsw1A7r9PlYQ==
-X-Received: by 2002:a17:902:7007:: with SMTP id y7mr1155657plk.309.1587307570184;
-        Sun, 19 Apr 2020 07:46:10 -0700 (PDT)
-Received: from [192.168.10.94] (124-171-87-207.dyn.iinet.net.au. [124.171.87.207])
-        by smtp.gmail.com with ESMTPSA id o187sm24624950pfb.12.2020.04.19.07.46.06
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 19 Apr 2020 07:46:09 -0700 (PDT)
-Subject: Re: [PATCH 3/4] dma-mapping: add a dma_ops_bypass flag to struct
- device
-To:     Joerg Roedel <joro@8bytes.org>, Christoph Hellwig <hch@lst.de>
-Cc:     iommu@lists.linux-foundation.org, linuxppc-dev@lists.ozlabs.org,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        linux-kernel@vger.kernel.org
-References: <20200414122506.438134-1-hch@lst.de>
- <20200414122506.438134-4-hch@lst.de> <20200418124205.GD6113@8bytes.org>
- <20200419080058.GB12222@lst.de> <20200419122502.GI21900@8bytes.org>
-From:   Alexey Kardashevskiy <aik@ozlabs.ru>
-Autocrypt: addr=aik@ozlabs.ru; keydata=
- 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
-Message-ID: <9a2fbf06-49aa-e6df-1ff0-cf94753180bf@ozlabs.ru>
-Date:   Mon, 20 Apr 2020 00:46:04 +1000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=4ANh3iy/mPqMIDICrcxwt25Ikadv1fNohryvS64Y5Ic=;
+        b=f/8YZANAbI24W8uPn9J2GfRpx1tXOPO1VTQeHvAFm0eevkgkSfveJmTwjH27pVyhWm
+         mJM1O781ggI6s6bhU1dApO2cVr81TYaQSexZi7BxGwuR0QH9Bp/c5gS9AaR29uvXhGOV
+         1w9By2LFkSCv2s2PcIstKFkHjVf7xISzIf2hh/cYYcbApoKTgrllIuJyjzw0aDrYMqYV
+         CCbQkuxhnSZyije0HOI6eUWOtVn65fxp9JkEhCjWFNEigvJtZ9xBc1NhX86meJ7ogl/Q
+         SpnBeHh/O6mLgVjDHO+qiXy4c1HClVHobD4yAuvQ/YrryKf4OVU9xlcw3drAzdp2Ix2d
+         0khg==
+X-Gm-Message-State: AGi0PuZ23iprtBfr2fg8l+G/8RnxX9n9WXl9MUEWwNAgJLDZCuS7bJW1
+        0RNI6mZzvIJ6Qsi4mPmuvKs=
+X-Google-Smtp-Source: APiQypI6PFLvrwCcVGIStbSxL8W1ovNeN6eQTo8pk3ibch/2uXo1kxA5JD5UNB9cEJQ5nDRlskMQeQ==
+X-Received: by 2002:a17:90a:c786:: with SMTP id gn6mr15790109pjb.147.1587307602531;
+        Sun, 19 Apr 2020 07:46:42 -0700 (PDT)
+Received: from localhost ([49.205.221.114])
+        by smtp.gmail.com with ESMTPSA id i128sm15713738pfc.149.2020.04.19.07.46.40
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 19 Apr 2020 07:46:41 -0700 (PDT)
+Date:   Sun, 19 Apr 2020 20:16:38 +0530
+From:   afzal mohammed <afzal.mohd.ma@gmail.com>
+To:     Thomas Bogendoerfer <tbogendoerfer@suse.de>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org
+Subject: Re: [PATCH 0/3] Remove setup_percpu_irq() & remove_percpu_irq
+Message-ID: <20200419144638.ysghqzklebkeer4z@afzalpc>
+References: <cover.1586434781.git.afzal.mohd.ma@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200419122502.GI21900@8bytes.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1586434781.git.afzal.mohd.ma@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Thomas Gleixner,
 
+On Sat, Apr 11, 2020 at 09:34:07PM +0530, afzal mohammed wrote:
 
-On 19/04/2020 22:25, Joerg Roedel wrote:
-> On Sun, Apr 19, 2020 at 10:00:58AM +0200, Christoph Hellwig wrote:
->> The difference is that NULL ops mean imply the direct mapping is always
->> used, dma_ops_bypass means a direct mapping is used if no bounce buffering
->> using swiotlb is needed, which should also answer your first question.
->> The idea is to consolidate code in the core to use an opportunistic
->> direct mapping instead of the dynamic iommu mapping.  I though the cover
->> letter and commit log explained this well enough, but maybe I need to
->> do a better job.
+> While doing the removal of setup_irq(), it was observed that
+> setup_percpu_irq() also can be removed similarly by replacing it w/
+> request_percpu_irq(), which does allocate memory. In the initial
+> setup_irq() removal cover letters [1], it was mentioned that
+> setup_percpu_irq() is untouched.
 > 
-> Ah right, now I see it, when dma_ops_bypass is set it will only use
-> direct mapping when the available memory fits into the device's
-> dma_masks, and calls into dma_ops otherwise.
+> After removing setup_irq(), it does not look good to let live
+> setup_percpu_irq(), especially since it being a low hanging fruit. Hence
+> replace setup_percpu_irq() by it's allocator equivalent.
+> request_percpu_irq() cannot be used since all the users need to pass
+> IRQF_TIMER flag, which it would not allow. Thus it's variant,
+> __request_percpu_irq() is used.
 > 
-> I wonder how that will interact with an IOMMU driver, which has to make
-> sure that the direct mapping is accessible for the device at all.  It
-> can either put the device into a passthrough domain for direct mapping
-> or into a re-mapped domain, but then all DMA-API calls need to use dma-ops.
-> When the dma_mask covers available memory but coherent_mask doesn't,
-> the streaming calls will use dma-direct and alloc_coherent() calls into
-> dma-ops. There is no way for the IOMMU driver to ensure both works.
-> 
-> So what are the conditions under which an IOMMU driver would set
-> dma_ops_bypass to 1 and get a different result as to when setting
-> dev->dma_ops to NULL?
+> In addition to removing setup_percpu_irq() definition,
+> remove_percpu_irq(), unused, is also removed.
 
+Do you feel that this series adds value ?, if not, i will abandon this
+series.
 
-One example is powerpc64/pseries (arch/powerpc/kernel/dma-iommu.c) where
-dma_iommu_ops::dma_iommu_dma_supported() (i.e. need ops) decides whether
-to set dma_ops_bypass to 1. It tries creating a DMA window with 1:1
-mapping to fit maximum possible RAM address, if that works, then ops is
-not needed.
+Thanks for your guidance w.r.t setup_irq() removal.
 
+Regards
+afzal
 
--- 
-Alexey
