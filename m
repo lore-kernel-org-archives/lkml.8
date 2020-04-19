@@ -2,99 +2,120 @@ Return-Path: <SRS0=L1Qp=6D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4376C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 19:44:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C792FC54FC9
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 19:45:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A2AD92145D
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 19:44:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mHNRyoRP"
+	by mail.kernel.org (Postfix) with ESMTP id A19D321927
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 19:45:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587325544;
+	bh=mEncwTlPQ/QwNpZrdXPAXFRaRHDlumsKGBnaQpNcAaM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=pUuNIyYo/OmMikecWWkw6XSXeNZdwpI0XTcq2TwfBCcY3ImN4EV6wPGtjNWfD7dHb
+	 bCl8VFEB8L07NTTmEO8K9MW6pnU/ze++wyYalnkTKlYu6cZ24LolkgR2XqSi5sdgOV
+	 /ebKIOSWPQyk8jGdpHDIlduZabgJboii5WOcMZ3Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726468AbgDSToY (ORCPT
+        id S1726669AbgDSTpn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Apr 2020 15:44:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45558 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725848AbgDSToY (ORCPT
+        Sun, 19 Apr 2020 15:45:43 -0400
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:33992 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726557AbgDSTpn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Apr 2020 15:44:24 -0400
-Received: from mail-pg1-x52b.google.com (mail-pg1-x52b.google.com [IPv6:2607:f8b0:4864:20::52b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37967C061A0F;
-        Sun, 19 Apr 2020 12:44:24 -0700 (PDT)
-Received: by mail-pg1-x52b.google.com with SMTP id q18so426949pgm.11;
-        Sun, 19 Apr 2020 12:44:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=cA6qmkeyWrcnmDv7BglbhRft1zqjTVZsRxjICTNVaNc=;
-        b=mHNRyoRPXu0ih5Se4+KlXIQ/sypK/M6rYTOdovyWQuSPBd/j/bybAYlYAOGHJzuFYV
-         dWUaE5ttwpOtBx52ahgKS/sno2ZAnUM/Jbxc9SzdZIQp3fApQJkwDZxIgM6fI8jZLZVw
-         j2grjLoggKrbGq3vkSMU2xwiVPSprBUuLPctDUgekCYGWm82xkdgA7qguJHIIv8P9H/h
-         gu5kXSesE7BQNqu2fwGnIW4nKaza7DpOR96cjv7UWr1phKea2lqgw6w2Ne4e23s6l5Vp
-         wiePWuhugZrCBgDp47Oo/WZ8z7VLwa/oIN/qe1r+yCJhdh/eD82ROff0KSU4fXiVwiny
-         nb1Q==
+        Sun, 19 Apr 2020 15:45:43 -0400
+Received: by mail-pj1-f67.google.com with SMTP id q16so3964021pje.1;
+        Sun, 19 Apr 2020 12:45:42 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=cA6qmkeyWrcnmDv7BglbhRft1zqjTVZsRxjICTNVaNc=;
-        b=UbD+snsmqSnolooB4NLURF8SpuQYgTaCz6Zzeo9vhmH0xQ5UY2CW9AQa4mjnzoasNC
-         kycbcKjKIhCL664Nfr5EiDLIk5CDIdF5dRol3SLBdH7fjcabQIW8GMvD5NpJ4pigsaEI
-         95EApAoajPvgd+70N9sU/yOu69Beby0l2r5VcrHMEwVig/+uYfADyezQwdAFnQn0WCz8
-         zyZWwyUL7i3JNPOwCWdX/5v02KRlO0XazQ0zEiZ7VMKBG5J6IixfabpzUtKjZDWoFcMu
-         A8/rr/vu9yzzJgE5SQUrFEL4WsWCqoHRd9hDBelDIPGIA4Yb65uhlvOtZh2v2q4rp/cM
-         7BWA==
-X-Gm-Message-State: AGi0PuYsrLl6ApsaD/Q+qe5uHqWlwgqFwo7BJHvhUQkgNs7fnlR1nCOj
-        zgx7Z3zgEgnIy0JVNIaDjGNMbyHK
-X-Google-Smtp-Source: APiQypLTOfRQ8ljE00wRUP4agY2CBBc3JMTJ/+7RFpm5BXgIEYK17jmV8AJnDBQvT87sdku9s1t+JA==
-X-Received: by 2002:aa7:8f2c:: with SMTP id y12mr14125953pfr.80.1587325462790;
-        Sun, 19 Apr 2020 12:44:22 -0700 (PDT)
-Received: from [192.168.1.3] (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
-        by smtp.gmail.com with ESMTPSA id l7sm25358368pfl.171.2020.04.19.12.44.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 19 Apr 2020 12:44:14 -0700 (PDT)
-Subject: Re: [Patch v2 3/9] spi: bcm-qspi: Handle lack of MSPI_REV offset
-To:     Kamal Dasu <kdasu.kdev@gmail.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Mark Brown <broonie@kernel.org>
-Cc:     Florian Fainelli <f.fainelli@gmail.com>, linux-spi@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200419192339.32023-1-kdasu.kdev@gmail.com>
- <20200419192339.32023-4-kdasu.kdev@gmail.com>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <63176468-53b6-c11a-9e33-2ca9dd06f7a3@gmail.com>
-Date:   Sun, 19 Apr 2020 12:44:13 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Firefox/68.0 Thunderbird/68.7.0
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=M3p9eZkDL4rEHA+mf+DziMPxePr/ZoUmDl5szec5+p8=;
+        b=kR7P3BpAumPQtEMpAMmv0uihs24LdWxJtNtJ2omS7Ox0qs9r5J2qp9RrtvD88kWJY1
+         ij8zHez55DsUUyQZWftPGU1YUdc8en78zP8XOvjclDo1rvYNdRXFKnc3RyI71JVcWsiJ
+         bCieHoiHNVERbif90e3YALOBbdp+lt2cRnllLMiELsK2jfJEQk+2+WFWS5FIGgad9vN7
+         Yq3Yj5/Cz80aSvUyHNUvKv8styN7QUgVcUuRotby0/HidFwnpisc8UtwedwlcYPJPr9d
+         aUp3+zepgDIPzVZ+iHZRafmCRC+9gDXhAWr1fuwzWFR+EtKXxZeSmzAOHOa2IfggiSI+
+         Ir3A==
+X-Gm-Message-State: AGi0PuaJXAlcfUFCX6nxyLaZHUjg6T9zn9mmnYE2mo9fNogCLeaokZ1Y
+        EVtbjyw4CmdDM1+UtiB5UDE=
+X-Google-Smtp-Source: APiQypKEQ+ZAqACW0RZLGTrbfImbk5QqwTv9Koug1Ir4h4Bs5C6QKAeh0qwqzCBFedbk3w1nTzpjvQ==
+X-Received: by 2002:a17:90a:5b:: with SMTP id 27mr16351976pjb.190.1587325542367;
+        Sun, 19 Apr 2020 12:45:42 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id v4sm25201600pfb.31.2020.04.19.12.45.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 19 Apr 2020 12:45:39 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id 99AAB40E7B; Sun, 19 Apr 2020 19:45:38 +0000 (UTC)
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     axboe@kernel.dk, viro@zeniv.linux.org.uk, bvanassche@acm.org,
+        gregkh@linuxfoundation.org, rostedt@goodmis.org, mingo@redhat.com,
+        jack@suse.cz, ming.lei@redhat.com, nstange@suse.de,
+        akpm@linux-foundation.org
+Cc:     mhocko@suse.com, yukuai3@huawei.com, linux-block@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Luis Chamberlain <mcgrof@kernel.org>
+Subject: [PATCH v2 02/10] blktrace: move blktrace debugfs creation to helper function
+Date:   Sun, 19 Apr 2020 19:45:21 +0000
+Message-Id: <20200419194529.4872-3-mcgrof@kernel.org>
+X-Mailer: git-send-email 2.23.0.rc1
+In-Reply-To: <20200419194529.4872-1-mcgrof@kernel.org>
+References: <20200419194529.4872-1-mcgrof@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20200419192339.32023-4-kdasu.kdev@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Kamal,
+Move the work to create the debugfs directory used into a helper.
+It will make further checks easier to read. This commit introduces
+no functional changes.
 
-On 4/19/2020 12:23 PM, Kamal Dasu wrote:
-> Older MIPS chips have a QSPI/MSPI controller that does not have the
-> MSPI_REV offset, reading from that offset will cause a bus error. Match
-> their compatible string and do not perform a read from that register in
-> that case.
-> 
-> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-> Signed-off-by: Kamal Dasu <kdasu.kdev@gmail.com>
+Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
+---
+ kernel/trace/blktrace.c | 16 +++++++++++++---
+ 1 file changed, 13 insertions(+), 3 deletions(-)
 
-This patch should also have a From: that is from me.
+diff --git a/kernel/trace/blktrace.c b/kernel/trace/blktrace.c
+index ca39dc3230cb..2c6e6c386ace 100644
+--- a/kernel/trace/blktrace.c
++++ b/kernel/trace/blktrace.c
+@@ -468,6 +468,18 @@ static void blk_trace_setup_lba(struct blk_trace *bt,
+ 	}
+ }
+ 
++static struct dentry *blk_trace_debugfs_dir(struct blk_user_trace_setup *buts,
++					    struct blk_trace *bt)
++{
++	struct dentry *dir = NULL;
++
++	dir = debugfs_lookup(buts->name, blk_debugfs_root);
++	if (!dir)
++		bt->dir = dir = debugfs_create_dir(buts->name, blk_debugfs_root);
++
++	return dir;
++}
++
+ /*
+  * Setup everything required to start tracing
+  */
+@@ -509,9 +521,7 @@ static int do_blk_trace_setup(struct request_queue *q, char *name, dev_t dev,
+ 
+ 	ret = -ENOENT;
+ 
+-	dir = debugfs_lookup(buts->name, blk_debugfs_root);
+-	if (!dir)
+-		bt->dir = dir = debugfs_create_dir(buts->name, blk_debugfs_root);
++	dir = blk_trace_debugfs_dir(buts, bt);
+ 
+ 	bt->dev = dev;
+ 	atomic_set(&bt->dropped, 0);
 -- 
-Florian
+2.25.1
+
