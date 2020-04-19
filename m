@@ -7,51 +7,51 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21C5EC54FC9
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 19:46:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D08DDC54FCC
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 19:46:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF65E2145D
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 19:46:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0AD72145D
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 19:46:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587325571;
-	bh=4OhlOdyFnJ2tiRBSqEwNm/uy5s4uSzRF5PzKx9/Np+k=;
+	s=default; t=1587325562;
+	bh=0fEKditsiCBeZebRHug5c4iFSYsesSSDjhjURwpdjT0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pNMT4h8xRF2aHipg4WFlJFdHbJbYESK+UGQpXNAm+UZjApZx036EuUbDcPEQP5ZbQ
-	 MBaYVr6i97wqyGBlFIPUcPTkuXWSDn/dtbxrl8MgLaOiXGNLgUAXU51PmtnU5+K+cF
-	 bolZmG72EzHEncMJFAoEnv4hps426efQ7+mWNMTU=
+	b=cFmyKbcWkonEYmwAi22C0WVJGYp53CryfZGa33FeYqxRuKF1CQAPMa3BX5nVXAqhg
+	 c12gbeAos60J2LlMgUpjBSc+DgcjbKH12S5vXQGV/DRG2ifxYnxydnSH37Z8B/WJgj
+	 CSucEznOGZqLoPdcM7VqcknVV/vV5NfsGtSubZcw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726866AbgDSTqJ (ORCPT
+        id S1726852AbgDSTqA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Apr 2020 15:46:09 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:39336 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726790AbgDSTpt (ORCPT
+        Sun, 19 Apr 2020 15:46:00 -0400
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:50993 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726813AbgDSTpw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Apr 2020 15:45:49 -0400
-Received: by mail-pl1-f195.google.com with SMTP id k18so3128489pll.6;
-        Sun, 19 Apr 2020 12:45:49 -0700 (PDT)
+        Sun, 19 Apr 2020 15:45:52 -0400
+Received: by mail-pj1-f68.google.com with SMTP id t9so1475946pjw.0;
+        Sun, 19 Apr 2020 12:45:52 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=ocPGiMVOY8YbX62vNwIAKusoCpTyvn+IDMEr8V2SPWM=;
-        b=TZUwPDrv4qc/Gi+28U/DbZt6Xq/21p9IQxW8UZRcvMH0ePAhpn/BI7PMGA0jJ5eYt5
-         LdnHDq+GbuhDSdFCqAZ30501Qjxxwf9aZlsoU+4HX6aqzioC73s/8gU2JKH2rTzr06iM
-         sNFhGRjVa/K/owaUqxogmu2FsTkeSH+4ZHeAQtMKKQBv3mkkRfckMLAHoOcymH207tiW
-         yVAQ1v7GSNnmKcFUKGbUUiD6wwDbsuYXW6yYX51w/RLI3Hywivdo2JP7n9XO1Mu9IoRt
-         JIr1lsZK/GgEAY7xBapx+9TXP5HBCRfX48zc4iwSk2LnUm98acgTqXzV0zUpfwn8Qcf0
-         RNBg==
-X-Gm-Message-State: AGi0PuYomujpgMnSwfVstXuBfYVSsIzidsfktMEEjW/smTIYxLxp7ueg
-        M/pThJVKTacQp6dZNq3pTJ4=
-X-Google-Smtp-Source: APiQypKviuIIU6uo7RWeYDR6Y1M/9tlUiCmGKN/t71TBIfd8bt+jjyzreCRxLywsikXiZrAm1y65nA==
-X-Received: by 2002:a17:90a:f98b:: with SMTP id cq11mr757945pjb.193.1587325548759;
-        Sun, 19 Apr 2020 12:45:48 -0700 (PDT)
+        bh=JI0MWD+QJRNLm9H/ySGaj7rD32bWrmPpBuBR7vXM0po=;
+        b=FSJ85UrLjGmYQeyidAk9RbNmDPLXhoqbhpyk9DXkl8GmFnUNmj6xK9avazoX7e+v2a
+         yubrmnSJcrelYPc79zjTQnVncHM8t9RnTAcFcLnmBXNDTK5srsNIouENQhvr6qzX6DtS
+         mrO+foTLSt0khki2wpQsT4J1B9cgafDpTodUZePybyYZHO3aHc1HbREzoXsYTXMN2/+U
+         HNhM1sN7aDHazQ+GfLsFwVwzfC5g7Shj/cxZRnlgvJ8wAwgVYhSk8JDAske7GsuM3bgO
+         i4rG34RlZKPB4djq8QpVVh35J9lOyRXh7B/EVLhXtOMlGeYICVE6kr+9ZeGwpq9QaAgb
+         hgLA==
+X-Gm-Message-State: AGi0PubTppbpnuwqowBk7Hh7pCAZaZyBJg8BE0ax5eG9NyRi4WMjBBUA
+        J7FpEAurtWDS8qSWwoXhS6A=
+X-Google-Smtp-Source: APiQypI5CAO7B1a2nLDOtdLnxkI6y2BKcHcPj3NYYswPtP9sWC/TtH2DZACqpYblnpzrNGt00D3cQA==
+X-Received: by 2002:a17:90a:b10f:: with SMTP id z15mr15705940pjq.188.1587325551767;
+        Sun, 19 Apr 2020 12:45:51 -0700 (PDT)
 Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id u8sm11614115pjy.16.2020.04.19.12.45.42
+        by smtp.gmail.com with ESMTPSA id 1sm4588pff.151.2020.04.19.12.45.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Sun, 19 Apr 2020 12:45:43 -0700 (PDT)
 Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id 082A04223D; Sun, 19 Apr 2020 19:45:39 +0000 (UTC)
+        id 1D0CD42309; Sun, 19 Apr 2020 19:45:39 +0000 (UTC)
 From:   Luis Chamberlain <mcgrof@kernel.org>
 To:     axboe@kernel.dk, viro@zeniv.linux.org.uk, bvanassche@acm.org,
         gregkh@linuxfoundation.org, rostedt@goodmis.org, mingo@redhat.com,
@@ -60,9 +60,9 @@ To:     axboe@kernel.dk, viro@zeniv.linux.org.uk, bvanassche@acm.org,
 Cc:     mhocko@suse.com, yukuai3@huawei.com, linux-block@vger.kernel.org,
         linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
         linux-kernel@vger.kernel.org, Luis Chamberlain <mcgrof@kernel.org>
-Subject: [PATCH v2 08/10] blktrace: add checks for created debugfs files on setup
-Date:   Sun, 19 Apr 2020 19:45:27 +0000
-Message-Id: <20200419194529.4872-9-mcgrof@kernel.org>
+Subject: [PATCH v2 10/10] block: put_device() if device_add() fails
+Date:   Sun, 19 Apr 2020 19:45:29 +0000
+Message-Id: <20200419194529.4872-11-mcgrof@kernel.org>
 X-Mailer: git-send-email 2.23.0.rc1
 In-Reply-To: <20200419194529.4872-1-mcgrof@kernel.org>
 References: <20200419194529.4872-1-mcgrof@kernel.org>
@@ -73,45 +73,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Even though debugfs can be disabled, enabling BLK_DEV_IO_TRACE will
-select DEBUG_FS, and blktrace exposes an API which userspace uses
-relying on certain files created in debugfs. If files are not created
-blktrace will not work correctly, so we do want to ensure that a
-blktrace setup creates these files properly, and otherwise inform
-userspace.
+Through code inspection I've found that we don't put_device() if
+device_add() fails, and this must be done to decrement its refcount.
 
 Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
 ---
- kernel/trace/blktrace.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ block/genhd.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/trace/blktrace.c b/kernel/trace/blktrace.c
-index 9cc0153849c3..fc32a8665ce8 100644
---- a/kernel/trace/blktrace.c
-+++ b/kernel/trace/blktrace.c
-@@ -552,17 +552,19 @@ static int blk_trace_create_debugfs_files(struct blk_user_trace_setup *buts,
- 					  struct dentry *dir,
- 					  struct blk_trace *bt)
- {
--	int ret = -EIO;
--
- 	bt->dropped_file = debugfs_create_file("dropped", 0444, dir, bt,
- 					       &blk_dropped_fops);
-+	if (!bt->dropped_file)
-+		return -ENOMEM;
- 
- 	bt->msg_file = debugfs_create_file("msg", 0222, dir, bt, &blk_msg_fops);
-+	if (!bt->msg_file)
-+		return -ENOMEM;
- 
- 	bt->rchan = relay_open("trace", dir, buts->buf_size,
- 				buts->buf_nr, &blk_relay_callbacks, bt);
- 	if (!bt->rchan)
--		return ret;
-+		return -EIO;
- 
- 	return 0;
- }
+diff --git a/block/genhd.c b/block/genhd.c
+index 06b642b23a07..c52095a74792 100644
+--- a/block/genhd.c
++++ b/block/genhd.c
+@@ -721,8 +721,10 @@ static void register_disk(struct device *parent, struct gendisk *disk,
+ 		WARN_ON(ddev->groups);
+ 		ddev->groups = groups;
+ 	}
+-	if (device_add(ddev))
++	if (device_add(ddev)) {
++		put_device(ddev);
+ 		return;
++	}
+ 	if (!sysfs_deprecated) {
+ 		err = sysfs_create_link(block_depr, &ddev->kobj,
+ 					kobject_name(&ddev->kobj));
 -- 
 2.25.1
 
