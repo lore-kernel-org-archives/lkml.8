@@ -8,65 +8,65 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1771C2BA19
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 01:39:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BCFAC2BA19
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 01:39:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AD95221927
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 01:39:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC2E821927
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 01:39:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="t4fK9jlK"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ic9YCn4h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726099AbgDSBjj (ORCPT
+        id S1725994AbgDSBjc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 21:39:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49174 "EHLO
+        Sat, 18 Apr 2020 21:39:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49168 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726012AbgDSBjd (ORCPT
+        with ESMTP id S1725827AbgDSBjc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 21:39:33 -0400
-Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0B7EC061A0C
-        for <linux-kernel@vger.kernel.org>; Sat, 18 Apr 2020 18:39:32 -0700 (PDT)
-Received: by mail-ej1-x643.google.com with SMTP id pg17so4820181ejb.9
-        for <linux-kernel@vger.kernel.org>; Sat, 18 Apr 2020 18:39:32 -0700 (PDT)
+        Sat, 18 Apr 2020 21:39:32 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A545CC061A0F
+        for <linux-kernel@vger.kernel.org>; Sat, 18 Apr 2020 18:39:31 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id n17so4815510ejh.7
+        for <linux-kernel@vger.kernel.org>; Sat, 18 Apr 2020 18:39:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=bEpAYCD5bOLpZUQC8vcQ6f94jMBWQvvy2nCjFU0ls9c=;
-        b=t4fK9jlK1wgUSy+Pp+/3CzqaLFZ/PyK13I1ufEUVNj/FijAUxfHLltfr5bpd84ZhCS
-         3PUKQlbLSBRxWVL13fRsFXBu5QuoCjnlHC76ighBdO67VY96Se4SQvZutSJGHvP3JB8K
-         duGuAycRktDcEnZ+jhMTw0wrLBn+wQ6JN5xLnzMPjUy+B6hFHS3cYC3ZgliyE7tWl6bz
-         2qL++6iy73Rj6+ZbC601D9vsRxPWYunk6L6NbTykXXRZ2kyN0LJAOV+0FG6vy/b4O96V
-         +0ibXSLhcis1geYfN3aija8bdcn35ZVhqCfnQM/qTp/m5AI+8RWMdXSPsXkr95fkXZta
-         8zpQ==
+        bh=0z07W0i5lACCA4tx1d7PSEMm+ePwZcbmHDi4QNrUNW8=;
+        b=ic9YCn4huKX1BFpVVvXT8DU2gGd9dOXFhlxx+eI5j2c8I66fl2T9LdK7jfq6A+6O1G
+         g6NigPIbVwqrMeayiy1hOuVAsNSAK/syvhsRpHAcLVXTQ92vHZOMXIhTFN2rQlTPPs1g
+         Fk0gmRH5mYwtlJ8Cb3Jk7IhBLkrMThnNerPRpsoaFPh6/9S6UiEqnN7UV55Iys++dfy0
+         N+kgHg44B7jxTywaF354O0y+V9RySlEotFj1cQcULPCgUoYD0fTD/WAiXjTk58xGIvDn
+         LAyGTl+QKyn1RlgVTZRWLktRVYXJ6f1zj0ssPKGfIZzRFqntvnZ7LAgWMObcvUUouil7
+         fBPg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=bEpAYCD5bOLpZUQC8vcQ6f94jMBWQvvy2nCjFU0ls9c=;
-        b=gtpo3/bpxXV39dQSOtPadbUWbimKAkQTQphE+4qBHpjc8jo3QWPvTu8LA/zhl0hI4P
-         F3r6cdo6zs5b4Wt11dU5v+vKE6ebaSUp1dXiZTOFaUSMEOi5uB516pqv86SzhwAQw+Fv
-         QdSexp/LBdaZxc2RvFUHgdINAxhAOT1oIIt2pzvI8YZe+KjtnOKZUbeWWXw02/m/xUe2
-         U5iA6nkIPh3LfWl6kafcUPpYHdcZv1zurQ1+Yvsk2XuS5EUmyBt7EILnXQFVu7GKI4gY
-         bDSxQ8204P6ksgJ+n9nLJTBrUm6Q1egy6j76TNZAVuvObJD0Pz2Eld/efQZtZV4yPD35
-         Mv/g==
-X-Gm-Message-State: AGi0PuYCv2Oe0Z8iRh1kG5lAmr+k/1UNLvsGIh+/7ZKfVPeORI/2r8Lv
-        ueqp7SpQCSTtevdbEFRyX+g=
-X-Google-Smtp-Source: APiQypLwymbsIeu6DL+padVkq+SZ74RPG7CqKILycA3osCTvhH+R6l6a/35jhnjBHTa8yj3piGV0VQ==
-X-Received: by 2002:a17:906:a441:: with SMTP id cb1mr10262872ejb.242.1587260371291;
-        Sat, 18 Apr 2020 18:39:31 -0700 (PDT)
-Received: from localhost ([185.92.221.13])
-        by smtp.gmail.com with ESMTPSA id l2sm3615505ejz.29.2020.04.18.18.39.30
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        bh=0z07W0i5lACCA4tx1d7PSEMm+ePwZcbmHDi4QNrUNW8=;
+        b=CB9SyPOcfMX8Q9/oyjR95BeswXxjEP4Rac89S+PDGkTznZjnfyB3tUVwqe+BKBg2lq
+         4ZrJ8qzEZGmF8Q6KKwa6CMfMAtVWQB4vclWNn57Ek/bLZ0oWRe/6rQc1nGpvNblQb554
+         7Xni2lMgGRxsMdHGI0y2pVg19sE2nDQ9Ntc/Eh5IIvNBbxMxDiXRBYlblye8KHtNwN0U
+         YgkPmYRjqQFIxkHo04wBJKjSWRTgpoq6OcW16lThed8U075wAb+ZUF77JaFudZypV7QL
+         YbW/9pnKfeZ4jodyiLi03M3I7hHFmWB09Kq9RX0Exs78wp5b4xQkuUqT/fDrYD0bhb3B
+         Vucw==
+X-Gm-Message-State: AGi0PubYA003Hj/NEijnSpL2dyjvJhB/EhZBX5UoSnZb5f9/nfdOD3lF
+        HI+YPP41sTz/vZBOmB5W9BE=
+X-Google-Smtp-Source: APiQypLgDnYl2t/SpoaWdQtu4L+o6/wPL0v2CiO4qkeVDBcDEAQB5xhqxU7g3SeBX5A/86vcildY3w==
+X-Received: by 2002:a17:906:1641:: with SMTP id n1mr9988302ejd.365.1587260370404;
         Sat, 18 Apr 2020 18:39:30 -0700 (PDT)
+Received: from localhost ([185.92.221.13])
+        by smtp.gmail.com with ESMTPSA id e5sm3452394edq.76.2020.04.18.18.39.29
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Sat, 18 Apr 2020 18:39:29 -0700 (PDT)
 From:   Wei Yang <richard.weiyang@gmail.com>
 To:     akpm@linux-foundation.org
 Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
         tim.c.chen@linux.intel.com, ying.huang@intel.com,
         Wei Yang <richard.weiyang@gmail.com>
-Subject: [PATCH 3/4] mm/swapfile.c: compare tmp and max after trying to iterate on swap_map
-Date:   Sun, 19 Apr 2020 01:39:20 +0000
-Message-Id: <20200419013921.14390-3-richard.weiyang@gmail.com>
+Subject: [PATCH 2/4] mm/swapfile.c: tmp is always smaller than max
+Date:   Sun, 19 Apr 2020 01:39:19 +0000
+Message-Id: <20200419013921.14390-2-richard.weiyang@gmail.com>
 X-Mailer: git-send-email 2.11.0
 In-Reply-To: <20200419013921.14390-1-richard.weiyang@gmail.com>
 References: <20200419013921.14390-1-richard.weiyang@gmail.com>
@@ -75,32 +75,28 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are two duplicate code to handle the case when there is no
-available swap entry. Just let the code go through and do the check at
-second place.
+If tmp is bigger or equal to max, we would jump to new_cluster.
 
-No functional change is expected.
+Return true directly.
 
 Signed-off-by: Wei Yang <richard.weiyang@gmail.com>
 ---
- mm/swapfile.c | 4 ----
- 1 file changed, 4 deletions(-)
+ mm/swapfile.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/mm/swapfile.c b/mm/swapfile.c
-index 3aae700f9931..07b0bc095411 100644
+index 654bad5173bc..3aae700f9931 100644
 --- a/mm/swapfile.c
 +++ b/mm/swapfile.c
-@@ -629,10 +629,6 @@ static bool scan_swap_map_try_ssd_cluster(struct swap_info_struct *si,
- 	tmp = cluster->next;
- 	max = min_t(unsigned long, si->max,
- 		    (cluster_next(&cluster->index) + 1) * SWAPFILE_CLUSTER);
--	if (tmp >= max) {
--		cluster_set_null(&cluster->index);
--		goto new_cluster;
--	}
- 	ci = lock_cluster(si, tmp);
- 	while (tmp < max) {
- 		if (!si->swap_map[tmp])
+@@ -647,7 +647,7 @@ static bool scan_swap_map_try_ssd_cluster(struct swap_info_struct *si,
+ 	cluster->next = tmp + 1;
+ 	*offset = tmp;
+ 	*scan_base = tmp;
+-	return tmp < max;
++	return true;
+ }
+ 
+ static void __del_from_avail_list(struct swap_info_struct *p)
 -- 
 2.23.0
 
