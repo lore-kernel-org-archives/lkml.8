@@ -8,57 +8,57 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8954C38A2F
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D39A2C38A29
 	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 05:53:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9644B206B8
+	by mail.kernel.org (Postfix) with ESMTP id B4214221F7
 	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 05:53:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mXHHU4XZ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="doXg7c2i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726022AbgDSFxc (ORCPT
+        id S1726055AbgDSFxe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Apr 2020 01:53:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59620 "EHLO
+        Sun, 19 Apr 2020 01:53:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59628 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725446AbgDSFxb (ORCPT
+        with ESMTP id S1725446AbgDSFxd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Apr 2020 01:53:31 -0400
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD84EC061A0C;
-        Sat, 18 Apr 2020 22:53:30 -0700 (PDT)
-Received: by mail-lf1-x143.google.com with SMTP id k28so5208912lfe.10;
-        Sat, 18 Apr 2020 22:53:30 -0700 (PDT)
+        Sun, 19 Apr 2020 01:53:33 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4CD28C061A0C;
+        Sat, 18 Apr 2020 22:53:33 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id e25so6381402ljg.5;
+        Sat, 18 Apr 2020 22:53:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=Cp+YcW+uZwweqktYq1kPw5M/xoHZD09hBXWzWgZpn8o=;
-        b=mXHHU4XZ0bVgIZ8xBu5v+wSWHF77YPQuCaV2Ohf5J7nhQ+9RRUnj64tgiGpMfkHtQo
-         VSRKBf0X7fYqORWd+DiN7jwSHdexbNeClY7LsNIBBQGfFqKWNiGa0XFES5JuUdUykXzU
-         VSFBsFPFDSMKAZwOI4PujeDFObKpDL0kQdJpVcs+PVwtT4dIkl7oE0AdQJm90oiNDEai
-         7WoK51OpKMyZeYwFEAYddCaQgWRNJDTCJ3dCAd/qMhuPPr3mSG8pZzFjm/TdwlgL/hlj
-         4P42cFOcxrgL2xbgPGdYh+ZYlBDP5cO3DP9VcYlG1l+9/hMmpZojE5MfJ/C3H/mFxUx0
-         mTjA==
+        bh=ETRJ8mYOQ9yujZCmmqXpwwej2/FIPoryFM9Z1P/Qlt4=;
+        b=doXg7c2ioYYkK4WQWUgxwqfnC7y2oLopTk782suwNGNXZ0e7YECuLuH2BXq+6ZPgii
+         S6cwZkCRxikfxD7Xqvv8gidbuAvo0P4hWDBIPYgJhqmFpOYlo+HtrOhrFCtoirYr59FT
+         KWAErbGNxbllP5le9+rfK/vIHOhTjG0FEs2g3D3PIadq7Dl+3ywFMt5JDKt07zhqODJb
+         VPxDq2Gz1RetdyOB7gG/aoR9ARiVrg6PkCL398UN57t/fFLknoQt8gY2mYR7qCKYk/hE
+         PfoDt2bl2yJs2RrFXXNFeqLdVKOGa8PYT7aREueGPMA0xePcoCuEWLRiGuQRcGlDn0ZG
+         JBqw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=Cp+YcW+uZwweqktYq1kPw5M/xoHZD09hBXWzWgZpn8o=;
-        b=F2YTXgfFBymTu7ebX/y9+PITf04hA5YFo680YRKy/EJIF6So7jX2RoZq9ENnkRqKT7
-         yRp1B0MCewLnIQBBwoq9Ku6M03HSs7Dq2VpHlJFPh/h5i56W8NE36EcxVrtUp09l6DXS
-         lEoYKnnCBENG6rZvwcokQDfTF/Hze3Nj+lTAXKhFMzAcPygvD33dEw2nB9KpGy8Px0gY
-         lveBACvE+p33cbYqDDx9ZT+3Sa1d/0Lncc0wn9XFXDuyd4S9h3gXgk+lS8zPtbTv8BUN
-         Nq5dVzE55pAUJb7/eSMrjx7v5MF4QNWg3Oky0M4i1YsepVLdjKAn45mRsE3x4T1qjoG6
-         W6Yg==
-X-Gm-Message-State: AGi0PuZV6rxOrZXXP9JQnxP+GyUJjZEtBdWAb1Qa37FbLXXMQz1PNLbl
-        mK50HRBJ7rXyUQdbxgcsD90=
-X-Google-Smtp-Source: APiQypJoxv0TyES2AdqlW9umna3BrKG7kN4I69FJTVPxKmNrdHFQYkkPxXYmypsFbZTO7en3OnIJPg==
-X-Received: by 2002:a19:4841:: with SMTP id v62mr6609541lfa.66.1587275609345;
-        Sat, 18 Apr 2020 22:53:29 -0700 (PDT)
+        bh=ETRJ8mYOQ9yujZCmmqXpwwej2/FIPoryFM9Z1P/Qlt4=;
+        b=grFUTjgvqCtlIkVR1UaDbPiVBXbJmB9BgC4R+Y4ORiVg7WtzXCieQVNNDA1BPqAjJw
+         sXONciVi5WYLmc6THlBRHg7HmW95MLu1DbdCDzyekaazZxVRPp/5nkU1X3jVvenCLUen
+         zFo9/CKaAsbq7rUvLpPlbweWdlpqD0igUBp/XJB3GXQrip3UJ9W5qab8zFl8idDatlR5
+         RLwAmdw8WIX/bc+iGiVX/kxAikbDKp5lA9mKn3Ug5I27IP9L2HIoVmrpIPYAv+XmXeYe
+         dgu4xFm3LSn76b4tiZfTfMopR0mVyVE48RtMn2P3ncmwGlMT5oVWb5858LhrzUZHR9Y3
+         c3KA==
+X-Gm-Message-State: AGi0PuYAAF+h4+4ctOHmvZv8H/nk6Xp17z87f+lc2lGAc9tJGJI8dTBx
+        +aRUwV33qCOu1WNVWIvMrOg=
+X-Google-Smtp-Source: APiQypIpk5R47A7gcnVm6RNFywZg4lAADQNzbBgdyL8UkwtSc5G/cscsnrcEghuNWSwMncxxIZzIBQ==
+X-Received: by 2002:a2e:b889:: with SMTP id r9mr2631829ljp.203.1587275611832;
+        Sat, 18 Apr 2020 22:53:31 -0700 (PDT)
 Received: from localhost.localdomain ([87.200.95.144])
-        by smtp.gmail.com with ESMTPSA id h7sm3366247ljg.37.2020.04.18.22.53.27
+        by smtp.gmail.com with ESMTPSA id h7sm3366247ljg.37.2020.04.18.22.53.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 18 Apr 2020 22:53:28 -0700 (PDT)
+        Sat, 18 Apr 2020 22:53:31 -0700 (PDT)
 From:   Christian Hewitt <christianshewitt@gmail.com>
 To:     Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -66,9 +66,9 @@ To:     Rob Herring <robh+dt@kernel.org>,
         devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
 Cc:     Christian Hewitt <christianshewitt@gmail.com>
-Subject: [PATCH 1/4] dt-bindings: arm: amlogic: add support for the Beelink GT-King
-Date:   Sun, 19 Apr 2020 05:53:19 +0000
-Message-Id: <20200419055322.16138-2-christianshewitt@gmail.com>
+Subject: [PATCH 2/4] arm64: dts: meson-g12b-gtking: add initial device-tree
+Date:   Sun, 19 Apr 2020 05:53:20 +0000
+Message-Id: <20200419055322.16138-3-christianshewitt@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200419055322.16138-1-christianshewitt@gmail.com>
 References: <20200419055322.16138-1-christianshewitt@gmail.com>
@@ -80,23 +80,59 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 The Shenzen AZW (Beelink) GT-King is based on the Amlogic W400 reference
 board with an S922X chip.
 
+- 4GB LPDDR4 RAM
+- 64GB eMMC storage
+- 10/100/1000 Base-T Ethernet
+- AP6356S Wireless (802.11 a/b/g/n/ac, BT 4.1)
+- HDMI 2.1 video
+- S/PDIF optical output
+- Analogue audio output
+- 1x USB 2.0 port
+- 2x USB 3.0 ports
+- IR receiver
+- 1x micro SD card slot
+
 Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
 ---
- Documentation/devicetree/bindings/arm/amlogic.yaml | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm64/boot/dts/amlogic/Makefile             |  1 +
+ .../arm64/boot/dts/amlogic/meson-g12b-gtking.dts | 16 ++++++++++++++++
+ 2 files changed, 17 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/amlogic/meson-g12b-gtking.dts
 
-diff --git a/Documentation/devicetree/bindings/arm/amlogic.yaml b/Documentation/devicetree/bindings/arm/amlogic.yaml
-index f74aba48cec1..6bf9bbcf4968 100644
---- a/Documentation/devicetree/bindings/arm/amlogic.yaml
-+++ b/Documentation/devicetree/bindings/arm/amlogic.yaml
-@@ -148,6 +148,7 @@ properties:
-       - description: Boards with the Amlogic Meson G12B S922X SoC
-         items:
-           - enum:
-+              - azw,gtking
-               - hardkernel,odroid-n2
-               - khadas,vim3
-               - ugoos,am6
+diff --git a/arch/arm64/boot/dts/amlogic/Makefile b/arch/arm64/boot/dts/amlogic/Makefile
+index eef0045320f2..1fd28e84e808 100644
+--- a/arch/arm64/boot/dts/amlogic/Makefile
++++ b/arch/arm64/boot/dts/amlogic/Makefile
+@@ -3,6 +3,7 @@ dtb-$(CONFIG_ARCH_MESON) += meson-axg-s400.dtb
+ dtb-$(CONFIG_ARCH_MESON) += meson-g12a-sei510.dtb
+ dtb-$(CONFIG_ARCH_MESON) += meson-g12a-u200.dtb
+ dtb-$(CONFIG_ARCH_MESON) += meson-g12a-x96-max.dtb
++dtb-$(CONFIG_ARCH_MESON) += meson-g12b-gtking.dtb
+ dtb-$(CONFIG_ARCH_MESON) += meson-g12b-a311d-khadas-vim3.dtb
+ dtb-$(CONFIG_ARCH_MESON) += meson-g12b-s922x-khadas-vim3.dtb
+ dtb-$(CONFIG_ARCH_MESON) += meson-g12b-odroid-n2.dtb
+diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b-gtking.dts b/arch/arm64/boot/dts/amlogic/meson-g12b-gtking.dts
+new file mode 100644
+index 000000000000..461da47ed463
+--- /dev/null
++++ b/arch/arm64/boot/dts/amlogic/meson-g12b-gtking.dts
+@@ -0,0 +1,16 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++/*
++ * Copyright (c) 2019 BayLibre, SAS
++ * Author: Neil Armstrong <narmstrong@baylibre.com>
++ * Copyright (c) 2019 Christian Hewitt <christianshewitt@gmail.com>
++ */
++
++/dts-v1/;
++
++#include "meson-g12b-w400.dtsi"
++#include "meson-g12-audio-hdmi-spdif.dtsi"
++
++/ {
++	compatible = "azw,gtking", "amlogic,g12b";
++	model = "Beelink GT-King";
++};
 -- 
 2.17.1
 
