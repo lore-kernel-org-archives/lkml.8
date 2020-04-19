@@ -2,166 +2,118 @@ Return-Path: <SRS0=L1Qp=6D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C1B1C2BA19
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 03:17:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAF43C2BA19
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 03:17:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 35FDD20722
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 03:17:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC1C620722
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 03:17:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nic.cz header.i=@nic.cz header.b="DkRiHgjm"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RzPeGc2u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725964AbgDSDRR (ORCPT
+        id S1726024AbgDSDRW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 23:17:17 -0400
-Received: from lists.nic.cz ([217.31.204.67]:34892 "EHLO mail.nic.cz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725877AbgDSDRQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 23:17:16 -0400
-Received: from localhost (unknown [172.20.6.135])
-        by mail.nic.cz (Postfix) with ESMTPSA id 93A2F140B79;
-        Sun, 19 Apr 2020 05:17:11 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=nic.cz; s=default;
-        t=1587266231; bh=2SMeV527Nbyadf6AEvVhwsFqxTEiceDhuMGSBDI9NC0=;
-        h=Date:From:To;
-        b=DkRiHgjmGQjO7ATQ4kFjd44Ck4jVQwXzL6BbYkulfC80rjPunjE7oROVEK/Atn63N
-         i5AKW47UQ3E7O7nTQmI9LpFDbfgcEJlSNT7+bsuyutGZLdsR7+tT+H9FTBPpWl8IdM
-         +zricET13s6nTdS6htbH6C1Kl5h9/WwDay9ZUI+o=
-Date:   Sun, 19 Apr 2020 05:17:11 +0200
-From:   Marek Behun <marek.behun@nic.cz>
-To:     Pali =?UTF-8?B?Um9ow6Fy?= <pali@kernel.org>
-Cc:     Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Remi Pommarel <repk@triplefau.lt>,
-        Tomasz Maciej Nowak <tmn505@gmail.com>,
-        Xogium <contact@xogium.me>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH 5/8] PCI: aardvark: Set final controller speed based on
- negotiated link speed
-Message-ID: <20200419051711.74114791@nic.cz>
-In-Reply-To: <20200415160348.1146-1-pali@kernel.org>
-References: <20200415160054.951-1-pali@kernel.org>
-        <20200415160348.1146-1-pali@kernel.org>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sat, 18 Apr 2020 23:17:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35818 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725877AbgDSDRU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 23:17:20 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32398C061A0C;
+        Sat, 18 Apr 2020 20:17:20 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id x26so3290857pgc.10;
+        Sat, 18 Apr 2020 20:17:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=C/9+2blz+ncKnafHP5mTK7T5wzerurH4rJmG0iq1jbM=;
+        b=RzPeGc2uDHJyYc54hVb4zrjW/dtMrfhJtYsfQtby2LzFeLDRguQoOUEenfTO2pejMa
+         dvGLSJfjGN8Rsh4kqr45VtqfOckh5rATcxZDTeJQxFB20STcYrMlchU9zQtEQmkrB4uO
+         E6Jx4vMONwIQmyT0vUzMlzy1thj6vh016eWIArk4t5b9OeBqQ2Gr4h8pbhvdksoCYrZO
+         JOaztvSg7afpp1DqHCH45qDQsUmOKyRWiKw4JZ/+JSlsGTrWFOIr0z/vDuE4D+H21zlY
+         5cvlWIGE/vF9/1f1mXA2E4dyGWapsYXtFlUsu/ujHlSlhcqff5B/YJZ9e5KpCOFvQGQS
+         oL1g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=C/9+2blz+ncKnafHP5mTK7T5wzerurH4rJmG0iq1jbM=;
+        b=HsYbLnUphu2AcivYngoR9gcMebtq52Ln3Hfd4SsHXu2rH48YJXqu6Ycvy9L61XmKwF
+         BDyrhG+z//+QNoaz0I37eqYVkpmIcxRnWyM9iMVV6RelEr9axzbQk7VXb6zxO3M7VdlA
+         FR84RfK5d/lt4YNA+SvJ/BByLRMpM12zYRiLzBOKszyQSWe6nWTNIhwN/om0FtJKCA/p
+         p4VJ74lWwrdXWsXUQumrQtL7NgqsSp74xMdZiJnEclELfnIpHGTupMA6PzI16y6EC1JQ
+         5Nx4K9TPz+5m9SrisihGdEuWfsO0Wa+nyO/tq+gxtBGyQjqbDIN0rJfk0jLIEVv+OyiD
+         UXgQ==
+X-Gm-Message-State: AGi0Pua8BcUsDMye9RKjA6mrpwCOBXTbObVrjYxvPbN3sKU35x88Duxr
+        /c5coL0lg0DE6qs7z1gFtjS3j42Y
+X-Google-Smtp-Source: APiQypJsqkIKbDg1k4V/HocEOVPl2HjGe5ycVybOqgINQI/1mpMHdDKQGPOPUWyqHHDNZbUN77569w==
+X-Received: by 2002:aa7:8d06:: with SMTP id j6mr10674378pfe.237.1587266238819;
+        Sat, 18 Apr 2020 20:17:18 -0700 (PDT)
+Received: from localhost.localdomain (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
+        by smtp.gmail.com with ESMTPSA id c15sm21640294pgk.66.2020.04.18.20.17.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 18 Apr 2020 20:17:18 -0700 (PDT)
+From:   Florian Fainelli <f.fainelli@gmail.com>
+To:     netdev@vger.kernel.org
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH net-next] net: phy: Propagate error from bus->reset
+Date:   Sat, 18 Apr 2020 20:17:13 -0700
+Message-Id: <20200419031713.24423-1-f.fainelli@gmail.com>
+X-Mailer: git-send-email 2.19.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Virus-Scanned: clamav-milter 0.101.4 at mail
-X-Virus-Status: Clean
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 15 Apr 2020 18:03:45 +0200
-Pali Roh=C3=A1r <pali@kernel.org> wrote:
+If a bus->reset() call for the mii_bus structure returns an error (e.g.:
+-EPROE_DEFER) we should propagate it accordingly.
 
-> Some Compex WLE900VX gen1 cards are unstable or even not detected when
-> aardvark PCI controller speed is set to gen2. Moreover when ASPM code tri=
-es
-> to retrain link second time then these cards stop responding and link goes
-> down. If aardvark PCI controller is set to gen1 then these cards work fine
-> without any problem.
->=20
-> Unconditionally forcing aardvark controller to gen1 speed (either via DT
-> property max-link-speed or hardcoded value in driver itself) is not a
-> solution as it would have performance impact for fast gen2 sata cards.
->=20
-> To overcome this problem, try all 3 possible speeds (gen3, gen2, gen1)
-> supported by aardvark PCI controller with respect to max-link-speed setti=
-ng
-> and after successful link training choose final controller speed based on
-> Negotiated Link Speed from Link Status register, which should match card
-> speed.
->=20
-> I tested this change with Compex cards WLE200NX (pcie 1.0, gen1, ath9k),
-> WLE900VX (pcie 1.1, gen1, ath10k) and WLE1216V5-20 (pcie 2.0, gen2, ath10=
-k)
-> on Turris MOX. Tomasz Maciej Nowak tested JJPlus JWX6051 (ath9k), Intel
-> 622ANHMW, MT76 U7612E-H1 and Compex WLE1216V2-20 cards on Espressobin.
->=20
-> Signed-off-by: Pali Roh=C3=A1r <pali@kernel.org>
-> ---
->  drivers/pci/controller/pci-aardvark.c | 35 +++++++++++++++++++++++++--
->  1 file changed, 33 insertions(+), 2 deletions(-)
->=20
-> diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controll=
-er/pci-aardvark.c
-> index 02c69fc9aadf..a83bbc86e428 100644
-> --- a/drivers/pci/controller/pci-aardvark.c
-> +++ b/drivers/pci/controller/pci-aardvark.c
-> @@ -40,6 +40,7 @@
->  #define PCIE_CORE_LINK_CTRL_STAT_REG				0xd0
->  #define     PCIE_CORE_LINK_L0S_ENTRY				BIT(0)
->  #define     PCIE_CORE_LINK_TRAINING				BIT(5)
-> +#define     PCIE_CORE_LINK_SPEED_SHIFT				16
->  #define     PCIE_CORE_LINK_WIDTH_SHIFT				20
->  #define PCIE_CORE_ERR_CAPCTL_REG				0x118
->  #define     PCIE_CORE_ERR_CAPCTL_ECRC_CHK_TX			BIT(5)
-> @@ -276,7 +277,7 @@ static void advk_pcie_setup_hw(struct advk_pcie *pcie)
->  {
->  	struct device *dev =3D &pcie->pdev->dev;
->  	struct device_node *node =3D dev->of_node;
-> -	int max_link_speed;
-> +	int max_link_speed, neg_link_speed;
->  	u32 reg;
-> =20
->  	/* Set to Direct mode */
-> @@ -378,7 +379,37 @@ static void advk_pcie_setup_hw(struct advk_pcie *pci=
-e)
->  	reg |=3D PCIE_CORE_LINK_TRAINING;
->  	advk_writel(pcie, reg, PCIE_CORE_LINK_CTRL_STAT_REG);
-> =20
-> -	advk_pcie_wait_for_link(pcie);
-> +	do {
-> +		if (advk_pcie_wait_for_link(pcie) < 0) {
-> +			max_link_speed--;
-> +		} else {
-> +			reg =3D advk_readl(pcie, PCIE_CORE_LINK_CTRL_STAT_REG);
-> +
-> +			neg_link_speed =3D
-> +				(reg >> PCIE_CORE_LINK_SPEED_SHIFT) & 0xf;
-> +			dev_info(dev, "negotiated link speed %d\n",
-> +				neg_link_speed);
-> +
-> +			if (neg_link_speed =3D=3D max_link_speed)
-> +				break;
-> +
-> +			if (neg_link_speed > 0 && neg_link_speed <=3D 3)
-> +				max_link_speed =3D neg_link_speed;
-> +			else
-> +				max_link_speed--;
-> +		}
-> +
-> +		if (max_link_speed =3D=3D 0)
-> +			break;
-> +
-> +		/* Set new decreased max link speed */
-> +		advk_pcie_setup_link_speed(pcie, max_link_speed);
-> +
-> +		/* And start link training again */
-> +		reg =3D advk_readl(pcie, PCIE_CORE_LINK_CTRL_STAT_REG);
-> +		reg |=3D PCIE_CORE_LINK_TRAINING;
-> +		advk_writel(pcie, reg, PCIE_CORE_LINK_CTRL_STAT_REG);
-> +	} while (1);
-> =20
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+---
+ drivers/net/phy/mdio_bus.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-This do {} while(1) should be a for cycle iterating the max_link_speed
-variable, and probably in a separate function
-advk_pcie_negotiate_link_speed.
+diff --git a/drivers/net/phy/mdio_bus.c b/drivers/net/phy/mdio_bus.c
+index 7a4eb3f2cb74..346e88435d29 100644
+--- a/drivers/net/phy/mdio_bus.c
++++ b/drivers/net/phy/mdio_bus.c
+@@ -627,8 +627,11 @@ int __mdiobus_register(struct mii_bus *bus, struct module *owner)
+ 		gpiod_set_value_cansleep(gpiod, 0);
+ 	}
+ 
+-	if (bus->reset)
+-		bus->reset(bus);
++	if (bus->reset) {
++		err = bus->reset(bus);
++		if (err)
++			goto error_reset_gpiod;
++	}
+ 
+ 	for (i = 0; i < PHY_MAX_ADDR; i++) {
+ 		if ((bus->phy_mask & (1 << i)) == 0) {
+@@ -657,7 +660,7 @@ int __mdiobus_register(struct mii_bus *bus, struct module *owner)
+ 		mdiodev->device_remove(mdiodev);
+ 		mdiodev->device_free(mdiodev);
+ 	}
+-
++error_reset_gpiod:
+ 	/* Put PHYs in RESET to save power */
+ 	if (bus->reset_gpiod)
+ 		gpiod_set_value_cansleep(bus->reset_gpiod, 1);
+-- 
+2.19.1
 
-A3700, which is the only SOC to use this driver, does not support PCIe
-gen 3, so this shouldn't be tried, at least if
-.compatible =3D=3D "marvell,armada-3700-pcie".
-
-Marek
