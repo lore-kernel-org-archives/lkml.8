@@ -2,113 +2,125 @@ Return-Path: <SRS0=L1Qp=6D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 428E6C38A30
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 20:50:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 386B1C38A30
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 20:57:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0E35C21473
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 20:50:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587329442;
-	bh=jvFDAug2GFFX4yN2JsSrhlUT7KN9MeiQvzM1VGjlj/4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=1rCBlaAVfPD1eT3zQrvJ7O5gtK61wDqf0U3rMxtaQGETZsHcr+CxAG0No52noUuo4
-	 vSI5tiXcxUwokMcBGSqJhC3oulfJEwWvgO4MXTRKr06AJ6Po7CGIqpWaSxROIH/r4h
-	 alRHJHMR7yOvOXD4pc5LEiuO/5uJEOoZ6lrEbU2k=
+	by mail.kernel.org (Postfix) with ESMTP id 0C31C21473
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 20:57:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TTprQ7oF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726007AbgDSUul (ORCPT
+        id S1726012AbgDSU5c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Apr 2020 16:50:41 -0400
-Received: from conssluserg-04.nifty.com ([210.131.2.83]:24661 "EHLO
-        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725848AbgDSUuk (ORCPT
+        Sun, 19 Apr 2020 16:57:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56864 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725848AbgDSU5b (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Apr 2020 16:50:40 -0400
-Received: from mail-vs1-f53.google.com (mail-vs1-f53.google.com [209.85.217.53]) (authenticated)
-        by conssluserg-04.nifty.com with ESMTP id 03JKoAc2028808;
-        Mon, 20 Apr 2020 05:50:10 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com 03JKoAc2028808
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1587329411;
-        bh=b4Ak/xeyfOjeKfK1kzKYBYqfHPdfw20wYLgyLscinyQ=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=veXDidF6JjssluTfqXjUwFZskuHxFWjXJ5XI8XlVxaGx8/+pWk7jjSukVGsAe0wVH
-         IErWttooQsuYag7wgKv/tj2b6M4Le3knorzWgdAuHrxkjkY7Zr5JpHEQJJshyY3FwD
-         KXthGt+38WqrfyyT7RdVUyShtsZQXTrKsKhLN1i7IVSc5rNO5ZtWxrtbL9HMx7uAds
-         82Ex/Gl+brXDj/7UcSwfJ/F/P8Sq8yINAeZEv80cFx9lhk5eg3zISMh5deIqzUgpqQ
-         0Kk5bIM/nkgS9bR9dBEGGVH3A0bsAkJSaBBUx3+jwwkLuatA9RqAwZW//AJH+f1YwF
-         e5Vbx4LbQ1Clw==
-X-Nifty-SrcIP: [209.85.217.53]
-Received: by mail-vs1-f53.google.com with SMTP id h30so4282961vsr.5;
-        Sun, 19 Apr 2020 13:50:10 -0700 (PDT)
-X-Gm-Message-State: AGi0PuaKXP+xa7gBCVC4yaXSR5vTFLpFkx/3lZO2FnF2oLRR62pzb5LI
-        hoDfdVwE35pFwFe+DFxEErUMigIoN2wvYRN27go=
-X-Google-Smtp-Source: APiQypJndbmDUDapZ/+4dHGPMoEz4KcYAlKAXHkq6s8kl44aaHQr0IaIqZtwJ0YFLUjUWLALayZS/2ihkGm3UGtUt+M=
-X-Received: by 2002:a67:fa11:: with SMTP id i17mr9546654vsq.155.1587329409691;
- Sun, 19 Apr 2020 13:50:09 -0700 (PDT)
+        Sun, 19 Apr 2020 16:57:31 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ADAB4C061A0C
+        for <linux-kernel@vger.kernel.org>; Sun, 19 Apr 2020 13:57:31 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id t9so1516991pjw.0
+        for <linux-kernel@vger.kernel.org>; Sun, 19 Apr 2020 13:57:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=10wHTDV3Jlt1o/4dM6dKNqfxFvNQyp03MchNiw6CNvI=;
+        b=TTprQ7oF/qr5O2gY14ssBc2+YX0kYmNBCkX9t9k5Uq4nsNokKXIS5fzrJe4g6NsyQz
+         YhSafGLhKFFbMSh8I2ktuQUDCQkK3I3OHZ/xxc4M+aXrAhGVpN4vIHZgAVXDeE8gLsCw
+         p3gjJSNN4nS0O7kA6uiDNiTWRv8LX20XqeqhB08GTal/OjZtuPJaP6xhhUa3+J9FHo2s
+         l20AYfXAnRWzxfhdbCDaWlrhW5MfQrC97rV+o06IkU8NdDv9+zfPzi8DOD92SixLOnh1
+         VliQwl98W3bQpSzR6lPJKIqznYz9irARgmH33uGvHy0/S7fdRCMQYTYIMaZ5DjkiwlAW
+         i7UQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=10wHTDV3Jlt1o/4dM6dKNqfxFvNQyp03MchNiw6CNvI=;
+        b=KopJZwDrekAKbK26tbkK3lQv9JKkZSc8bldcl6onlio10irtdph9NZvqZLIi41yX0u
+         Sl5O/FbT91Uv7pUSGq0umYJZSuo7YCHaO5FYjOZ4QslNTaA18JLgpslkOIg2BvIXlGUc
+         DxCb6MscsbussE/hA8S46xfwcpft9itK4jY94NzCJrcm042qsUM3ZgdkEKzAHXvoWi+Q
+         OaHzbvm54gMkzNWLIWzl3Ok+694d3NDoXqcxMwxXklyQWyQWHhXH3PVHnHCAkwti97Io
+         4J7c95lTrzv7w85AOaaCzHvJLYBKXTXZBO8iL9fBJKbIxjM4+XeLioFjeoboRIbwQP94
+         pl5w==
+X-Gm-Message-State: AGi0Pubm3P8KY+79H2I+DCxY92a+hxKeNeLqtRGsOC7drdVZepgwgbKb
+        SRGToruJrl5rv8ptbO3EnBI=
+X-Google-Smtp-Source: APiQypJgkj5uU6XdvfpScoUbQerW8YThuQLYzrYHEdzNUz6J+baBEOVak35iML5kobr1tIWTj4SMsQ==
+X-Received: by 2002:a17:90a:266c:: with SMTP id l99mr16058863pje.186.1587329851021;
+        Sun, 19 Apr 2020 13:57:31 -0700 (PDT)
+Received: from localhost (g19.222-224-154.ppp.wakwak.ne.jp. [222.224.154.19])
+        by smtp.gmail.com with ESMTPSA id p8sm12089663pjd.10.2020.04.19.13.57.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 19 Apr 2020 13:57:30 -0700 (PDT)
+Date:   Mon, 20 Apr 2020 05:57:28 +0900
+From:   Stafford Horne <shorne@gmail.com>
+To:     Dmitry Safonov <dima@arista.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ingo Molnar <mingo@kernel.org>, Jiri Slaby <jslaby@suse.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Jonas Bonn <jonas@southpole.se>,
+        Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
+        openrisc@lists.librecores.org
+Subject: Re: [PATCHv3 24/50] openrisc: Add show_stack_loglvl()
+Message-ID: <20200419205728.GT7926@lianli.shorne-pla.net>
+References: <20200418201944.482088-1-dima@arista.com>
+ <20200418201944.482088-25-dima@arista.com>
 MIME-Version: 1.0
-References: <20200413014743.16353-1-masahiroy@kernel.org> <CAK7LNASzdC1ROArL0sxEE_TAw+kxher9YmDOeHi8SQ83men+Ew@mail.gmail.com>
-In-Reply-To: <CAK7LNASzdC1ROArL0sxEE_TAw+kxher9YmDOeHi8SQ83men+Ew@mail.gmail.com>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Mon, 20 Apr 2020 05:49:34 +0900
-X-Gmail-Original-Message-ID: <CAK7LNASnovOtP99fuxcoTknj1g1Uoa8U4YopRQfdFYjC998B=A@mail.gmail.com>
-Message-ID: <CAK7LNASnovOtP99fuxcoTknj1g1Uoa8U4YopRQfdFYjC998B=A@mail.gmail.com>
-Subject: Re: [PATCH] sh: fix build error in mm/init.c
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        David Hildenbrand <david@redhat.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Oscar Salvador <osalvador@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linux-sh list <linux-sh@vger.kernel.org>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200418201944.482088-25-dima@arista.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 20, 2020 at 5:46 AM Masahiro Yamada <masahiroy@kernel.org> wrote:
->
-> Hi Linus,
->
-> On Mon, Apr 13, 2020 at 10:48 AM Masahiro Yamada <masahiroy@kernel.org> wrote:
-> >
-> > The closing parenthesis is missing.
-> >
-> > Fixes: bfeb022f8fe4 ("mm/memory_hotplug: add pgprot_t to mhp_params")
-> > Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
->
->
->
-> Will you pick up this directly ?
-> The SuperH subsystem is inactive these days.
->
-> https://lore.kernel.org/patchwork/patch/1223032/
->
->
-> This is easy to review, and ARCH=sh build is apparently broken.
->
-> Thanks.
+On Sat, Apr 18, 2020 at 09:19:18PM +0100, Dmitry Safonov wrote:
+> Currently, the log-level of show_stack() depends on a platform
+> realization. It creates situations where the headers are printed with
+
+Instead of realization I would say "Implementation".
+
+> lower log level or higher than the stacktrace (depending on
+> a platform or user).
+> 
+> Furthermore, it forces the logic decision from user to an architecture
+> side. In result, some users as sysrq/kdb/etc are doing tricks with
+> temporary rising console_loglevel while printing their messages.
+> And in result it not only may print unwanted messages from other CPUs,
+> but also omit printing at all in the unlucky case where the printk()
+> was deferred.
+> 
+> Introducing log-level parameter and KERN_UNSUPPRESSED [1] seems
+> an easier approach than introducing more printk buffers.
+> Also, it will consolidate printings with headers.
+> 
+> Introduce show_stack_loglvl(), that eventually will substitute
+> show_stack().
+
+Will you do the work to replace show_stack(), when is that planned?
+
+Other than that small comment this looks fine.
+
+Acked-by: Stafford Horne <shorne@gmail.com>
 
 
-Sorry, I take it back.
-
-Guenter's one is already queued up in linux-next.
-
-Somebody will fix it eventually.
-
-
-
-
--- 
-Best Regards
-Masahiro Yamada
+> Cc: Jonas Bonn <jonas@southpole.se>
+> Cc: Stafford Horne <shorne@gmail.com>
+> Cc: Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>
+> Cc: openrisc@lists.librecores.org
+> [1]: https://lore.kernel.org/lkml/20190528002412.1625-1-dima@arista.com/T/#u
+> Signed-off-by: Dmitry Safonov <dima@arista.com>
