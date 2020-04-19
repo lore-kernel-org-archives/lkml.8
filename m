@@ -2,128 +2,58 @@ Return-Path: <SRS0=L1Qp=6D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38D56C38A29
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 23:05:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AAB8C38A29
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 23:07:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 00B10212CC
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 23:05:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587337542;
-	bh=LLnVsrBvFF4Q4H8/bhJRd/va7+cxlXiirJKCwIBmIOU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=q5ocKm1+RYVnuXUe2dG1zjBpoTHqW3Tlvj4hxMlOScjdtHOcjl4rEiiHfU26hOE4/
-	 gyH6gLLD/OOq9vZl5SJMHFBospatigPSiOD/CTDcHbgvndqyx6c+eGartSb1N/9/Qm
-	 JEQcoFGeg2TytYpBzgqvDsEPHMeeMHl8elgMJEIg=
+	by mail.kernel.org (Postfix) with ESMTP id 39107212CC
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 23:07:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726007AbgDSXFl (ORCPT
+        id S1726059AbgDSXHM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Apr 2020 19:05:41 -0400
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:40172 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725834AbgDSXFk (ORCPT
+        Sun, 19 Apr 2020 19:07:12 -0400
+Received: from baliza.dreformarra.com ([134.73.232.212]:4763 "HELO
+        elitetorrent1.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with SMTP id S1725834AbgDSXHM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Apr 2020 19:05:40 -0400
-Received: by mail-pj1-f68.google.com with SMTP id a22so3596140pjk.5;
-        Sun, 19 Apr 2020 16:05:40 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=YJTrIfx/lTXBrxRhvPPVDY2x+cMSRZK5c/JFw4v1j9o=;
-        b=TOuimSgxsnIPVDQcZ5MXMPBv8XcsuF9ob1z2tPxuRhXz7QpK/RLNOfZ5ObehfF7DY0
-         3a0B1GF4EvOQQnNHp6YdgiNUkv+Gnq+pA8a/99VBSOBluxE7PFYicYMuCVMnm3p6ZpE2
-         mubJl6OlH7S5fjtjrkBuqoAohuKU3WDqZRHEPwYWOYDSzwdq367CCOal84nvDHzXWaIs
-         uX81GMecv4WoUJKk71twMhcCYgRtTINJpqwsTiIrrcgBzOFBTPf2Feroo2ZmCAOZbH4h
-         dc9CScAI36bX/BN5nlAqY9/a53YoFtf9s77wmIURK29kKwwFxnh7SM3277PlSQ7+7JIz
-         4Z0A==
-X-Gm-Message-State: AGi0PuZPWac9BDV18cEqBzUQLReiSxG8G40qpNTS4EZ1R/WDIrCTblmc
-        olS3dqCrUys0BAHOpcE0Na4=
-X-Google-Smtp-Source: APiQypLX1bYPgykU3ZP7zEmkJU3lEhVMCZnqRms/YIQbuGnJEBd6DNYdezzhhxxk1VGEWWm12j1PtQ==
-X-Received: by 2002:a17:90a:414b:: with SMTP id m11mr17790229pjg.160.1587337539909;
-        Sun, 19 Apr 2020 16:05:39 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id i8sm7384626pfq.126.2020.04.19.16.05.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 19 Apr 2020 16:05:38 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id 6F34F403EA; Sun, 19 Apr 2020 23:05:37 +0000 (UTC)
-Date:   Sun, 19 Apr 2020 23:05:37 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Bart Van Assche <bvanassche@acm.org>
-Cc:     axboe@kernel.dk, viro@zeniv.linux.org.uk,
-        gregkh@linuxfoundation.org, rostedt@goodmis.org, mingo@redhat.com,
-        jack@suse.cz, ming.lei@redhat.com, nstange@suse.de,
-        akpm@linux-foundation.org, mhocko@suse.com, yukuai3@huawei.com,
-        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 08/10] blktrace: add checks for created debugfs files
- on setup
-Message-ID: <20200419230537.GG11244@42.do-not-panic.com>
-References: <20200419194529.4872-1-mcgrof@kernel.org>
- <20200419194529.4872-9-mcgrof@kernel.org>
- <38240225-e48e-3035-0baa-4929948b23a3@acm.org>
+        Sun, 19 Apr 2020 19:07:12 -0400
+Received: from [88.155.194.2] by smtp18.yenddx.com with ASMTP; Mon, 20 Apr 2020 02:51:56 +0400
+Message-ID: <A785ACBA.85DC652C@elitetorrent1.com>
+Date:   Mon, 20 Apr 2020 02:35:03 +0400
+Reply-To: "elitetorrent1.com" <info@elitetorrent1.com>
+From:   "elitetorrent1.com" <info@elitetorrent1.com>
+User-Agent: Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.7.12) Gecko/20050923 Thunderbird/1.0.7
+X-Accept-Language: en-us
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <38240225-e48e-3035-0baa-4929948b23a3@acm.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+To:     <linux-assembly@vger.kernel.org>
+Cc:     <linux-kernel@vger.kernel.org>, <linux-msdos@vger.kernel.org>,
+        <linux-raid@vger.kernel.org>, <linux-scsi@vger.kernel.org>
+Subject: Download latest movies from elitetorrent1.com
+Content-Type: text/plain;
+        charset="iso-8859-1"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 19, 2020 at 03:57:58PM -0700, Bart Van Assche wrote:
-> On 4/19/20 12:45 PM, Luis Chamberlain wrote:
-> > Even though debugfs can be disabled, enabling BLK_DEV_IO_TRACE will
-> > select DEBUG_FS, and blktrace exposes an API which userspace uses
-> > relying on certain files created in debugfs. If files are not created
-> > blktrace will not work correctly, so we do want to ensure that a
-> > blktrace setup creates these files properly, and otherwise inform
-> > userspace.
-> > 
-> > Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
-> > ---
-> >   kernel/trace/blktrace.c | 8 +++++---
-> >   1 file changed, 5 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/kernel/trace/blktrace.c b/kernel/trace/blktrace.c
-> > index 9cc0153849c3..fc32a8665ce8 100644
-> > --- a/kernel/trace/blktrace.c
-> > +++ b/kernel/trace/blktrace.c
-> > @@ -552,17 +552,19 @@ static int blk_trace_create_debugfs_files(struct blk_user_trace_setup *buts,
-> >   					  struct dentry *dir,
-> >   					  struct blk_trace *bt)
-> >   {
-> > -	int ret = -EIO;
-> > -
-> >   	bt->dropped_file = debugfs_create_file("dropped", 0444, dir, bt,
-> >   					       &blk_dropped_fops);
-> > +	if (!bt->dropped_file)
-> > +		return -ENOMEM;
-> >   	bt->msg_file = debugfs_create_file("msg", 0222, dir, bt, &blk_msg_fops);
-> > +	if (!bt->msg_file)
-> > +		return -ENOMEM;
-> >   	bt->rchan = relay_open("trace", dir, buts->buf_size,
-> >   				buts->buf_nr, &blk_relay_callbacks, bt);
-> >   	if (!bt->rchan)
-> > -		return ret;
-> > +		return -EIO;
-> >   	return 0;
-> >   }
-> 
-> I should have had a look at this patch before I replied to the previous
-> patch.
-> 
-> Do you agree that the following code can be triggered by
-> debugfs_create_file() and also that debugfs_create_file() never returns
-> NULL?
 
-If debugfs is enabled, and not that we know it is in this blktrace code,
-as we select it, it can return ERR_PTR(-ERROR) if an error occurs.
+While sitting home during the lock out, why not watch some nice movies. 
 
-  Luis
+All for free, makes sense?
+
+visit us now
+https://elitetorrent1.com/
+
+
+
+
+
+Unsubscribe from our database here
+https://forms.icann.org/en/resources/compliance/complaints/registrars/stand
+ards-complaint-form
+
+
